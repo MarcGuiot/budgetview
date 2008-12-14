@@ -35,7 +35,7 @@ public class GaugeChecker extends DataChecker {
 
   public GaugeChecker checkOverrun(double percentage, boolean isError) {
     Assert.assertEquals(percentage, gauge.getOverrunPercent(), 0.01);
-    Assert.assertEquals(isError, gauge.isOverrunErrorShown());
+    Assert.assertEquals(isError, gauge.isErrorOverrunShown());
     return this;
   }
 

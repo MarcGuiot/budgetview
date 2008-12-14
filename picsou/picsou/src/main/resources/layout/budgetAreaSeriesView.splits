@@ -18,7 +18,7 @@
                  tooltipText="$budgetview.tooltip.total.observed"/>
           <component ref="totalGauge" styleClass="totalGauge" gridPos="(1,0,1,2)" anchor="south" marginBottom="3"/>
           <label text="$budgetview.planned" styleClass="totalAmountTitle" gridPos="(2,0)"/>
-          <label ref="totalPlannedAmount" styleClass="totalAmount" gridPos="(2,1)"
+          <label ref="totalPlannedAmount" styleClass="totalAmount" gridPos="(2,1)" foreground=""
                  tooltipText="$budgetview.tooltip.total.planned"/>
         </grid>
 

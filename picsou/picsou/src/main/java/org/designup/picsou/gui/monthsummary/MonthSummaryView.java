@@ -2,10 +2,12 @@ package org.designup.picsou.gui.monthsummary;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.actions.ImportFileAction;
+import org.designup.picsou.gui.budget.BudgetAreaSummaryComputer;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.BalanceGraph;
 import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.components.Gauge;
+import org.designup.picsou.gui.components.TextDisplay;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.model.BalanceStat;
@@ -15,14 +17,11 @@ import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -34,32 +33,28 @@ import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.ChangeSetMatchers;
 import org.globsframework.model.utils.GlobMatcher;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
 
-public class MonthSummaryView extends View implements GlobSelectionListener, ColorChangeListener {
+public class MonthSummaryView extends View implements GlobSelectionListener {
   private static final GlobMatcher USER_SERIES_MATCHER =
     fieldIn(Series.BUDGET_AREA,
-                         BudgetArea.INCOME.getId(),
-                         BudgetArea.RECURRING.getId(),
-                         BudgetArea.ENVELOPES.getId(),
-                         BudgetArea.SPECIAL.getId(),
-                         BudgetArea.SAVINGS.getId());
+            BudgetArea.INCOME.getId(),
+            BudgetArea.RECURRING.getId(),
+            BudgetArea.ENVELOPES.getId(),
+            BudgetArea.SPECIAL.getId(),
+            BudgetArea.SAVINGS.getId());
   private CardHandler cards;
   private GlobStringifier budgetAreaStringifier;
   private ImportFileAction importFileAction;
   private Directory parentDirectory;
-  private Color normalAmountColor;
-  private Color overrunAmountColor;
 
   public MonthSummaryView(ImportFileAction importFileAction, GlobRepository repository, Directory parentDirectory) {
     super(repository, createDirectory(parentDirectory));
@@ -68,7 +63,6 @@ public class MonthSummaryView extends View implements GlobSelectionListener, Col
     SelectionService parentSelectionService = parentDirectory.get(SelectionService.class);
     parentSelectionService.addListener(this, Month.TYPE);
     budgetAreaStringifier = descriptionService.getStringifier(BudgetArea.TYPE);
-    colorService.addListener(this);
   }
 
   private static Directory createDirectory(Directory parentDirectory) {
@@ -148,11 +142,6 @@ public class MonthSummaryView extends View implements GlobSelectionListener, Col
     registerCardUpdater();
   }
 
-  public void colorsChanged(ColorLocator colorLocator) {
-    this.normalAmountColor = colorLocator.get("block.inner.amount");
-    this.overrunAmountColor = colorLocator.get("block.inner.amount.overrun");
-  }
-
   private void registerCardUpdater() {
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -199,19 +188,16 @@ public class MonthSummaryView extends View implements GlobSelectionListener, Col
   }
 
   private class BudgetAreaUpdater implements ChangeSetListener, GlobSelectionListener {
-    private BudgetArea budgetArea;
-    private JButton amountLabel;
-    private JLabel plannedLabel;
-    private Gauge gauge;
     private SortedSet<Integer> selectedMonths = new TreeSet<Integer>();
+    private BudgetAreaSummaryComputer summaryComputer;
 
     public BudgetAreaUpdater(BudgetArea budgetArea, JButton amountLabel, JLabel plannedLabel, Gauge gauge) {
-      this.budgetArea = budgetArea;
-      this.amountLabel = amountLabel;
-      this.plannedLabel = plannedLabel;
-      this.gauge = gauge;
       directory.get(SelectionService.class).addListener(this, Month.TYPE);
       repository.addChangeListener(this);
+      this.summaryComputer =
+        new BudgetAreaSummaryComputer(budgetArea,
+                                      TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
+                                      repository, directory);
       update();
     }
 
@@ -237,44 +223,9 @@ public class MonthSummaryView extends View implements GlobSelectionListener, Col
     }
 
     public void update() {
-      Double remaining = 0.0;
-      Double observed = 0.0;
-      Double planned = 0.0;
-      for (Glob balanceStat : repository.getAll(BalanceStat.TYPE, fieldIn(BalanceStat.MONTH, selectedMonths))) {
-        observed += balanceStat.get(BalanceStat.getObserved(budgetArea));
-        planned += balanceStat.get(BalanceStat.getPlanned(budgetArea));
-        remaining += balanceStat.get(BalanceStat.getRemaining(budgetArea));
-      }
-      double overrunPart = (remaining + observed) - planned;
-      double adjustedPlanned = Amounts.isNotZero(overrunPart) ? planned + overrunPart : planned;
-
-      amountLabel.setText(format(observed));
-      amountLabel.setVisible(true);
-      amountLabel.setBackground(Color.RED);
-      plannedLabel.setText(format(adjustedPlanned));
-      
-      if (Amounts.isNotZero(overrunPart)) {
-        plannedLabel.setForeground(overrunAmountColor);
-        plannedLabel.setToolTipText(Lang.get("monthsummary.planned.tooltip.overrun",
-                                             format(planned),
-                                             Formatting.toString(Math.abs(overrunPart))));
-      }
-      else {
-        plannedLabel.setForeground(normalAmountColor);
-        plannedLabel.setToolTipText(Lang.get("monthsummary.planned.tooltip.normal"));
-      }
-
-      gauge.setValues(updateSign(observed), updateSign(adjustedPlanned), Math.abs(overrunPart));
+      GlobList balanceStats = repository.getAll(BalanceStat.TYPE, fieldIn(BalanceStat.MONTH, selectedMonths));
+      summaryComputer.update(balanceStats);
     }
-
-    private double updateSign(double value) {
-      return budgetArea.isIncome() ? value : -value;
-    }
-
-    private String format(Double value) {
-      return Formatting.toString(value, budgetArea);
-    }
-
   }
 
   public void selectionUpdated(GlobSelection selection) {

@@ -20,10 +20,64 @@ public class MonthSummaryChecker extends DataChecker {
   private Window window;
   public final BalanceGraphChecker balanceGraph;
 
+  public final BudgetAreaChecker income = new BudgetAreaChecker(BudgetArea.INCOME);
+  public final BudgetAreaChecker recurring = new BudgetAreaChecker(BudgetArea.RECURRING);
+  public final BudgetAreaChecker envelopes = new BudgetAreaChecker(BudgetArea.ENVELOPES);
+  public final BudgetAreaChecker savings = new BudgetAreaChecker(BudgetArea.SAVINGS);
+  public final BudgetAreaChecker special = new BudgetAreaChecker(BudgetArea.SPECIAL);
+  public final BudgetAreaChecker occasional = new BudgetAreaChecker(BudgetArea.OCCASIONAL);
+
   public MonthSummaryChecker(Window window) {
     this.window = window;
     this.balanceGraph = new BalanceGraphChecker(window);
   }
+
+  public class BudgetAreaChecker {
+    private BudgetArea budgetArea;
+
+    public BudgetAreaChecker(BudgetArea budgetArea) {
+      this.budgetArea = budgetArea;
+    }
+
+    public BudgetAreaChecker checkObserved(double amount) {
+      MonthSummaryChecker.this.checkObserved(budgetArea, amount);
+      return this;
+    }
+
+    public BudgetAreaChecker checkPlanned(double amount) {
+      MonthSummaryChecker.this.checkPlanned(budgetArea, amount);
+      return this;
+    }
+
+    public BudgetAreaChecker checkValues(double observed, double planned) {
+      checkObserved(observed);
+      checkPlanned(planned);
+      return this;
+    }
+
+    public BudgetAreaChecker checkGauge(double actual, double target) {
+      MonthSummaryChecker.this.checkGauge(budgetArea, actual, target);
+      return this;
+    }
+
+    public BudgetAreaChecker checkGaugeOverrun(double actual, double target, double overrunPart) {
+      MonthSummaryChecker.this.checkGauge(budgetArea, actual, target, overrunPart);
+      return this;
+    }
+
+    public BudgetAreaChecker checkErrorOverrun() {
+      TextBox plannedLabel = getPlannedLabel(budgetArea);
+      assertThat(plannedLabel.foregroundNear("darkRed"));
+      return this;
+    }
+
+    public BudgetAreaChecker checkPositiveOverrun() {
+      TextBox plannedLabel = getPlannedLabel(budgetArea);
+      assertThat(plannedLabel.foregroundNear("darkBlue"));
+      return this;
+    }
+  }
+
 
   public void gotoBudget(BudgetArea budgetArea) {
     getPanel().getButton(budgetArea.getName()).click();
@@ -86,25 +140,6 @@ public class MonthSummaryChecker extends DataChecker {
     TextBox plannedLabel = getPlannedLabel(BudgetArea.ENVELOPES);
     assertThat(plannedLabel.foregroundNear("77787E"));
     assertThat(plannedLabel.tooltipEquals(Lang.get("monthsummary.planned.tooltip.normal")));
-    return this;
-  }
-
-  public MonthSummaryChecker checkIncomeOverrun(double amount, double adjustedPlanned, double overrunPart) {
-    return checkOverrun(BudgetArea.INCOME, amount, adjustedPlanned, overrunPart);
-  }
-
-  public MonthSummaryChecker checkEnvelopeOverrun(double amount, double adjustedPlanned, double overrunPart) {
-    return checkOverrun(BudgetArea.ENVELOPES, amount, adjustedPlanned, overrunPart);
-  }
-
-  private MonthSummaryChecker checkOverrun(BudgetArea budgetArea, double amount, double adjustedPlanned, double overrunPart) {
-    checkObserved(budgetArea, amount);
-    checkPlanned(budgetArea, adjustedPlanned);
-    checkGauge(budgetArea, amount, adjustedPlanned, overrunPart);
-
-    TextBox plannedLabel = getPlannedLabel(budgetArea);
-    assertThat(plannedLabel.foregroundNear("aa0000"));
-    assertThat(plannedLabel.tooltipContains("Overrun: " + toString(overrunPart)));
     return this;
   }
 

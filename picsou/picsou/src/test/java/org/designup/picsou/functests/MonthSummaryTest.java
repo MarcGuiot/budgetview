@@ -70,8 +70,11 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     monthSummary
-      .checkNoHelpMessageDisplayed()
-      .checkIncomeOverrun(1000.0, 1000.0, 1000.0);
+      .checkNoHelpMessageDisplayed();
+    monthSummary.income
+      .checkValues(1000.0, 1000.0)
+      .checkGauge(1000.0, 0.0)
+      .checkPositiveOverrun();
   }
 
   public void testOneMonth() throws Exception {
@@ -262,16 +265,18 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     timeline.selectMonth("2008/07");
-    monthSummary
-      .total(1000, 100)
-      .checkOccasional(100, 100);
+    monthSummary.total(1000, 100);
+    monthSummary.occasional
+      .checkValues(100, 100)
+      .checkGauge(-100, -100);
     mainAccounts.checkEstimatedPosition((500 - 75) - (1000 - 100));
     mainAccounts.checkNoEstimatedPositionDetails();
 
     timeline.selectMonth("2008/08");
-    monthSummary
-      .total(1000, 100)
-      .checkOccasional(25, 100);
+    monthSummary.total(1000, 100);
+    monthSummary.occasional
+      .checkValues(25, 100)
+      .checkGauge(-25, -100);
     mainAccounts.checkEstimatedPosition(500 - 75);
     mainAccounts.openEstimatedPositionDetails()
       .checkOccasional(-75)
@@ -293,9 +298,14 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/08");
     views.selectHome();
-    monthSummary
-      .checkIncomeOverrun(1200, 1200, 200)
-      .checkEnvelopeOverrun(150, 150, 50);
+    monthSummary.income
+      .checkValues(1200, 1200)
+      .checkGauge(1200, 1000)
+      .checkPositiveOverrun();
+    monthSummary.envelopes
+      .checkValues(150, 150)
+      .checkGauge(-150, -100)
+      .checkErrorOverrun();
   }
 
   public void testUncategorized() throws Exception {
@@ -375,9 +385,10 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     categorization.setOccasional("FNAC", MasterCategory.LEISURES);
 
     views.selectHome();
-    monthSummary
-      .checkIncome(1000, 1000)
-      .checkOccasional(10, 10);
+    monthSummary.checkIncome(1000, 1000);
+    monthSummary.occasional
+      .checkValues(10, 10)
+      .checkGauge(-10, -10);
   }
 
   public void testNavigatingToBudgetView() throws Exception {

@@ -9,8 +9,8 @@ import java.awt.*;
 
 public class Gauge extends JPanel {
 
-  private final boolean overrunIsAnError;
-  private final boolean invertedSignIsAnError;
+  private boolean overrunIsAnError;
+  private boolean invertedSignIsAnError;
 
   private double actualValue;
   private double targetValue;
@@ -52,36 +52,10 @@ public class Gauge extends JPanel {
   public void setValues(double actualValue, double targetValue) {
     this.actualValue = actualValue;
     this.targetValue = targetValue;
-    updateValues();
-    repaint();
-  }
-
-  public void setValues(double actualValue, double targetValue, double overrunPart) {
-    if ((overrunPart < 10E-6) || (actualValue > targetValue)) {
-      setValues(actualValue, targetValue);
-      return;
-    }
-
-    this.actualValue = actualValue;
-    this.targetValue = targetValue;
-    this.overrunPart = overrunPart;
-
-    double fillValue = actualValue - overrunPart;
-    fillPercent = Math.abs(fillValue / targetValue);
-    overrunPercent = Math.abs(overrunPart / targetValue);
-    emptyPercent = 1 - overrunPercent - fillPercent;
-    overrunError = overrunIsAnError;
-    double remainingValue = targetValue - actualValue;
-    setToolTip("gauge.partial.overrun." + (overrunIsAnError ? "error" : "ok"),
-               remainingValue, Math.abs(overrunPart));
-
-    repaint();
-  }
-
-  private void updateValues() {
-    boolean sameSign = Math.signum(actualValue) * Math.signum(targetValue) >= 0;
-    double absActual = Math.abs(actualValue);
-    double absTarget = Math.abs(targetValue);
+    
+    boolean sameSign = Math.signum(this.actualValue) * Math.signum(this.targetValue) >= 0;
+    double absActual = Math.abs(this.actualValue);
+    double absTarget = Math.abs(this.targetValue);
 
     if ((absTarget == 0) && (absActual == 0)) {
       fillPercent = 0;
@@ -128,6 +102,29 @@ public class Gauge extends JPanel {
       overrunError = false;
       setToolTip("gauge.partial", absTarget - absActual);
     }
+    repaint();
+  }
+
+  public void setValues(double actualValue, double targetValue, double partialOverrun) {
+    if (Amounts.isNearZero(partialOverrun) || (Math.abs(actualValue) > Math.abs(targetValue))) {
+      setValues(actualValue, targetValue);
+      return;
+    }
+
+    this.actualValue = actualValue;
+    this.targetValue = targetValue;
+    this.overrunPart = partialOverrun;
+
+    double fillValue = actualValue - partialOverrun;
+    fillPercent = Math.abs(fillValue / targetValue);
+    overrunPercent = Math.abs(partialOverrun / targetValue);
+    emptyPercent = 1 - overrunPercent - fillPercent;
+    overrunError = overrunIsAnError;
+    double remainingValue = targetValue - actualValue;
+    setToolTip("gauge.partial.overrun." + (overrunIsAnError ? "error" : "ok"),
+               remainingValue, Math.abs(partialOverrun));
+
+    repaint();
   }
 
   private void setToolTip(String key, Double... values) {
@@ -214,8 +211,16 @@ public class Gauge extends JPanel {
     return emptyPercent;
   }
 
-  public boolean isOverrunErrorShown() {
+  public void setOverrunIsAnError(boolean value) {
+    this.overrunIsAnError = value;
+  }
+
+  public boolean isErrorOverrunShown() {
     return overrunIsAnError && (overrunPercent > 0);
+  }
+
+  public boolean isPositiveOverrunShown() {
+    return !overrunIsAnError && (overrunPercent > 0);
   }
 
   public void setBorderColor(Color borderColor) {

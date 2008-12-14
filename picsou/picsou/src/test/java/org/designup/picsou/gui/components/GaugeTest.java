@@ -114,7 +114,7 @@ public class GaugeTest extends TestCase {
                     "</html>");
   }
 
-  public void testPartialOverrunIsIgnoredIfActualGreatedThanTarget() throws Exception {
+  public void testPartialOverrunIsIgnoredIfActualGreaterThanTarget() throws Exception {
     init(true, false)
       .set(40.0, 20.0, 5.0)
       .checkFill(0.5)

@@ -1,6 +1,5 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.BudgetViewChecker;
 import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
@@ -55,13 +54,17 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkSeries("Groceries", -145.0, -145.0);
 
     budgetView.income.checkTitle("Income");
-    budgetView.income.checkTotalAmounts(3740.0, 3540.00);
+    budgetView.income
+      .checkTotalAmounts(3740.0, 3740.00)
+      .checkTotalGauge(3740.0, 3540.00)
+      .checkTotalPositiveOverrun();
+
     budgetView.income.checkSeries("Salary", 3540.0, 3540.0);
     budgetView.income.checkSeries("Exceptional Income", 200.0, 0.0);
 
     budgetView.occasional.checkTitle("Occasional");
     budgetView.occasional.checkTotalAmount(0., 0.);
-    budgetView.checkBalance((double)(3540 - 145 - 84));
+    budgetView.checkBalance((3540 - 145 - 84));
 
     timeline.selectMonths("2008/08");
 
@@ -124,7 +127,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.getTable().selectRows(0, 1, 2);
     categorization.setUncategorized();
-    
+
     views.selectBudget();
     budgetView.occasional.checkNotDisplayed(MasterCategory.FOOD);
   }
@@ -215,8 +218,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Salary", 3540.0, 3540.0);
 
     budgetView.occasional.checkTitle("Occasional");
-    budgetView.occasional.checkTotalAmount((double)0, 0);
-    budgetView.checkBalance((double)(3540 - 145 - 29));
+    budgetView.occasional.checkTotalAmount(0, 0);
+    budgetView.checkBalance((3540 - 145 - 29));
   }
 
   public void testEditingASeriesWithTransactions() throws Exception {
@@ -295,8 +298,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkTotalAmounts(0.0, 3540.00);
     budgetView.income.checkSeries("Salary", 0.0, 3540.0);
 
-    budgetView.occasional.checkTotalAmount((double)0, 0);
-    budgetView.checkBalance((double)(3540 - 95 - 29));
+    budgetView.occasional.checkTotalAmount(0, 0);
+    budgetView.checkBalance(3540 - 95 - 29);
   }
 
   public void testSeveralMonthsShowOrNotSeries() throws Exception {
@@ -342,27 +345,26 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     timeline.selectMonths("2008/04", "2008/05", "2008/06", "2008/07");
 
-    BudgetViewChecker.BudgetAreaChecker budgetAreaChecker = budgetView.envelopes.checkSeries("courantMonoprix", -(double)50, -(double)200);
-    budgetAreaChecker.checkSeries("courantED", -(double)79, -(double)200);
+    budgetView.envelopes.checkSeries("courantMonoprix", -50, -200).checkSeries("courantED", -79, -200);
 
-    budgetView.specials.checkSeries("courantAuchan", -(double)95, -(double)100);
+    budgetView.specials.checkSeries("courantAuchan", -95, -100);
 
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("courantED", -(double)29, -(double)100)
+    budgetView.envelopes.checkSeries("courantED", -29, -100)
       .checkSeriesNotPresent("courantMonoprix");
 
     budgetView.specials
       .checkSeriesNotPresent("courantAuchan");
 
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("courantMonoprix", -(double)0, -(double)100)
+    budgetView.envelopes.checkSeries("courantMonoprix", -0, -100)
       .checkSeriesNotPresent("courantED");
 
-    budgetView.specials.checkSeries("courantAuchan", -(double)95, -(double)100);
+    budgetView.specials.checkSeries("courantAuchan", -95, -100);
 
     timeline.selectMonth("2008/07");
 
-    budgetView.envelopes.checkSeries("courantMonoprix", -(double)50, -(double)100)
+    budgetView.envelopes.checkSeries("courantMonoprix", -50, -100)
       .checkSeriesNotPresent("courantED");
 
     budgetView.specials
@@ -459,8 +461,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.HOUSE)
       .validate();
     timeline.selectMonth("2008/08");
-    budgetView.occasional.checkTotalAmount((double)0, 0);
-    budgetView.checkBalance((double)400);
+    budgetView.occasional.checkTotalAmount(0, 0);
+    budgetView.checkBalance(400);
 
     budgetView.recurring.createSeries()
       .setName("Loyer").switchToManual()
@@ -696,10 +698,10 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectData();
     transactions.initContent()
-    .add("12/07/2008", TransactionType.PLANNED, "Planned: Loto", "", 15.00, "Loto", MasterCategory.CLOTHING)
-    .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00)
-    .add("05/07/2008", TransactionType.VIREMENT, "Loto", "", 19.00)
-    .check();
+      .add("12/07/2008", TransactionType.PLANNED, "Planned: Loto", "", 15.00, "Loto", MasterCategory.CLOTHING)
+      .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00)
+      .add("05/07/2008", TransactionType.VIREMENT, "Loto", "", 19.00)
+      .check();
     views.selectCategorization();
     categorization.setEnvelope("Loto", "Loto", MasterCategory.CLOTHING, false);
     views.selectData();
@@ -754,7 +756,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("05/07/2008", TransactionType.VIREMENT, "Loto", "", 19.00)
       .check();
   }
-
 
   public void testSeriesBudgetEqualZero() throws Exception {
     OfxBuilder.init(this)

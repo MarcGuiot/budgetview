@@ -84,13 +84,31 @@ public class BudgetViewChecker extends DataChecker {
       return window.getPanel(panelName);
     }
 
-    public void checkTotalAmounts(double observed, double planned) {
+    public BudgetAreaChecker checkTotalAmounts(double observed, double planned) {
       Panel budgetPanel = getPanel();
       TextBox totalObserved = budgetPanel.getTextBox("totalObservedAmount");
       UISpecAssert.assertTrue(totalObserved.textEquals(convert(observed)));
 
       TextBox totalPlanned = budgetPanel.getTextBox("totalPlannedAmount");
       UISpecAssert.assertTrue(totalPlanned.textEquals(convert(planned)));
+      return this;
+    }
+
+    public BudgetAreaChecker checkTotalGauge(double actual, double target) {
+      GaugeChecker gauge = new GaugeChecker(getPanel(), "totalGauge");
+      gauge.checkActualValue(actual);
+      gauge.checkTargetValue(target);
+      return this;
+    }
+
+    public BudgetAreaChecker checkTotalPositiveOverrun() {
+      UISpecAssert.assertThat(getPanel().getTextBox("totalPlannedAmount").foregroundNear("0033AA"));
+      return this;
+    }
+
+    public BudgetAreaChecker checkTotalErrorOverrun() {
+      UISpecAssert.assertThat(getPanel().getTextBox("totalPlannedAmount").foregroundNear("darkRed"));
+      return this;
     }
 
     public BudgetAreaChecker checkSeries(String seriesName, double observedAmount, double plannedAmount) {
