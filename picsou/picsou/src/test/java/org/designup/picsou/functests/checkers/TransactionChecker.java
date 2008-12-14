@@ -270,16 +270,16 @@ public class TransactionChecker extends ViewChecker {
       for (int row = 0; row < table.getRowCount(); row++) {
         String type = table.getContentAt(row, 0, transactionTypeDumper).toString();
         String category = table.getContentAt(row, 0, categoryDumper).toString();
-        String date = table.getContentAt(row, 0).toString();
-        String bankDate = table.getContentAt(row, 1).toString();
-        String series = table.getContentAt(row, 2, new TableCellValueConverter() {
+        String date = table.getContentAt(row, TransactionView.DATE_COLUMN_INDEX).toString();
+        String bankDate = table.getContentAt(row, TransactionView.BANK_DATE_COLUMN_INDEX).toString();
+        String series = table.getContentAt(row, TransactionView.SERIES_COLUMN_INDEX, new TableCellValueConverter() {
           public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
             return SeriesCellConverter.extractSeries(renderedComponent);
           }
         }).toString();
-        String label = table.getContentAt(row, 4).toString();
-        String amount = table.getContentAt(row, 5).toString();
-        String note = table.getContentAt(row, 6).toString();
+        String label = table.getContentAt(row, TransactionView.LABEL_COLUMN_INDEX).toString();
+        String amount = table.getContentAt(row, TransactionView.AMOUNT_COLUMN_INDEX).toString();
+        String note = table.getContentAt(row, TransactionView.NOTE_COLUMN_INDEX).toString();
 
         builder.append(".add(\"")
           .append(date).append("\", ");

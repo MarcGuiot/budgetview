@@ -991,17 +991,17 @@ public class SeriesEditionDialog {
             if (series.get(Series.IS_AUTOMATIC)) {
               return;
             }
-            SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
-            Integer forAccountId = series.get(Series.TO_ACCOUNT) == null ?
-                                   series.get(Series.FROM_ACCOUNT) : series.get(Series.TO_ACCOUNT);
-            if (forAccountId == null) {
+            Integer fromAccountIdPointOfView = series.get(Series.TO_ACCOUNT) == null ?
+                                               series.get(Series.FROM_ACCOUNT) : series.get(Series.TO_ACCOUNT);
+            if (fromAccountIdPointOfView == null) {
               return;
             }
+            SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
             if (mainAccountChecker.isSame(series.get(Series.FROM_ACCOUNT))) {
-              forAccountId = series.get(Series.FROM_ACCOUNT);
+              fromAccountIdPointOfView = series.get(Series.FROM_ACCOUNT);
             }
             if (mainAccountChecker.isSame(series.get(Series.TO_ACCOUNT))) {
-              forAccountId = series.get(Series.TO_ACCOUNT);
+              fromAccountIdPointOfView = series.get(Series.TO_ACCOUNT);
             }
             Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
             Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
@@ -1009,7 +1009,7 @@ public class SeriesEditionDialog {
                 Account.areNoneImported(fromAccount, toAccount)) {
               double multiplier =
                 Account.getMultiplierForInOrOutputOfTheAccount(fromAccount, toAccount,
-                                                               repository.get(Key.create(Account.TYPE, forAccountId)));
+                                                               repository.get(Key.create(Account.TYPE, fromAccountIdPointOfView)));
               GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE,
                                                          fieldEquals(SeriesBudget.SERIES, key.get(Series.ID)));
               for (Glob budget : seriesBudgets) {

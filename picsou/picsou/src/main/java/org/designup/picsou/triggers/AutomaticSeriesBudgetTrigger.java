@@ -7,6 +7,7 @@ import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -34,16 +35,14 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
   public static void updateSeriesBudget(Key seriesKey, GlobRepository repository) {
     final Glob currentMonth = repository.get(CurrentMonth.KEY);
     Integer seriesId = seriesKey.get(Series.ID);
-//    Glob series = repository.get(seriesKey);
-//    Glob account = repository.findLinkTarget(series, Series.SAVINGS_ACCOUNT);
-//    if (account != null && !account.get(Account.IS_IMPORTED_ACCOUNT)) {
-//      return;
-//    }
     GlobList seriesBudgets =
       repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
         .getGlobs().sort(SeriesBudget.MONTH);
     Iterator<Glob> transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
-      .getGlobs().sort(TransactionComparator.ASCENDING).iterator();
+      .getGlobs().filterSelf(GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.MIRROR, false),
+                                              GlobMatchers.fieldEquals(Transaction.CREATED_BY_SERIES, false)),
+                             repository)
+      .sort(TransactionComparator.ASCENDING).iterator();
     Glob currentTransaction = transactions.hasNext() ? transactions.next() : null;
     Double amount = 0.;
     boolean firstUpdate = false;
