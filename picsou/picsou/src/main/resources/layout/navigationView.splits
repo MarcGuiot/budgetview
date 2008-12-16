@@ -44,7 +44,7 @@
 
           <grid>
             <button action="openHelpAction" styleClass="icon"
-                    icon="card_help_large.png" rolloverIcon="card_help_large_rollover.png"/>
+                    icon="card_help_large_new.png" rolloverIcon="card_help_large_rollover_new.png"/>
             <button action="openHelpAction" styleClass="rowTitle"/>
             <textArea text="$navigationView.help.text" styleClass="text"/>
           </grid>
