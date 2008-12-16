@@ -909,7 +909,9 @@ public class SeriesEditionDialog {
             Glob currentMonth = repository.get(CurrentMonth.KEY);
             for (Glob budget : seriesBudgets) {
               if (budget.get(SeriesBudget.MONTH) > currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
-                repository.update(budget.getKey(), SeriesBudget.AMOUNT, 0.0);
+                repository.update(budget.getKey(),
+                                  FieldValue.value(SeriesBudget.AMOUNT, 0.0),
+                                  FieldValue.value(SeriesBudget.OVERRUN_AMOUNT, 0.0));
               }
             }
           }

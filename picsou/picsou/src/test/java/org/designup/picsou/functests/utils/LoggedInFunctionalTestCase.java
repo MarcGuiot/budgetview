@@ -133,6 +133,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected void tearDown() throws Exception {
+//    operations.checkOk();
     super.tearDown();
     if (mainWindow != null) {
       mainWindow.dispose();

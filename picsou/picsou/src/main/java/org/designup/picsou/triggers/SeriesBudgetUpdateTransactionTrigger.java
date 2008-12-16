@@ -47,6 +47,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
           }
         }
         else if (values.contains(SeriesBudget.AMOUNT)) {
+//          Double diff = values.get(SeriesBudget.AMOUNT) - values.getPrevious(SeriesBudget.AMOUNT);
           Double diff = values.getPrevious(SeriesBudget.AMOUNT) - values.get(SeriesBudget.AMOUNT);
           Glob currentMonth = repository.get(CurrentMonth.KEY);
           TransactionPlannedTrigger.transfertAmount(
@@ -78,7 +79,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
       .findByIndex(Transaction.MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs()
       .filterSelf(GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.PLANNED, true),
                                    GlobMatchers.ALL
-//                                   GlobMatchers.not(GlobMatchers.fieldEquals(Transaction.MIRROR, true))
+//                                   GlobMatchers.fieldEquals(Transaction.MIRROR, false)
       ),
                   repository)
       .sort(Transaction.DAY);
@@ -97,9 +98,6 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
       account = Account.MAIN_SUMMARY_ACCOUNT_ID;
     }
     else {
-      if (Account.areNoneImported(fromAccount, toAccount)) {
-        return;
-      }
       if (fromAccount != null && Account.MAIN_SUMMARY_ACCOUNT_ID == fromAccount.get(Account.ID)) {
         account = fromAccount.get(Account.ID);
       }

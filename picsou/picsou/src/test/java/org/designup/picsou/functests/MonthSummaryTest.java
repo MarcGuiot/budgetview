@@ -25,7 +25,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     timeline.checkMonthTooltip("2008/08", "August 2008");
 
     String file = OfxBuilder.init(this)
-      .addBankAccount(12345, 456456, "120901111", 125.00, "2008/08/25")
+      .addBankAccount(12345, 456456, "120901111", 125.00, "2008/08/26")
       .addTransaction("2008/08/26", 1000, "Company")
       .save();
 

@@ -44,8 +44,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
 
         Glob seriesBudget = budgets.get(0);
         if (Amounts.isNearZero(seriesBudget.get(SeriesBudget.AMOUNT))) {
-          repository.update(seriesBudget.getKey(), SeriesBudget.OVERRUN_AMOUNT,
-                            seriesBudget.get(SeriesBudget.AMOUNT) - values.get(Transaction.AMOUNT));
+          GlobUtils.add(seriesBudget, SeriesBudget.OVERRUN_AMOUNT, values.get(Transaction.AMOUNT), repository);
         }
         else {
           transfertFromPlanned(series, seriesBudget, monthId, values.get(Transaction.AMOUNT), repository);
@@ -118,6 +117,18 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+        Integer seriesId = previousValues.get(Transaction.SERIES);
+        Glob series = repository.find(Key.create(Series.TYPE, seriesId));
+        if (series == null) {
+          return;
+        }
+        Glob currentMonth = repository.get(CurrentMonth.KEY);
+        try {
+          transfertAmount(series, -previousValues.get(Transaction.AMOUNT), previousValues.get(Transaction.MONTH),
+                          currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH), repository);
+        }
+        catch (InvalidState ignored) {
+        }
       }
     });
   }

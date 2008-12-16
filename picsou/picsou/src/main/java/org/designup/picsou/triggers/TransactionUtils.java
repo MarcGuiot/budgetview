@@ -41,7 +41,7 @@ public class TransactionUtils {
     boolean isPlanned = (seriesBudget.get(SeriesBudget.MONTH) >= currentMonthId) &&
                         ((seriesBudget.get(SeriesBudget.MONTH) > currentMonthId)
                          || (seriesBudget.get(SeriesBudget.DAY) > currentDay));
-    if (Math.abs(amount) > 0.0001) {
+    if (Math.abs(amount) > 0.0001 && !isPlanned) {
       Glob transaction =
         repository.create(Transaction.TYPE,
                           FieldValue.value(Transaction.AMOUNT, amount),

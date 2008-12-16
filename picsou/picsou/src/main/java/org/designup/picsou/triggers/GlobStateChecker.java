@@ -2,6 +2,7 @@ package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.*;
+import org.designup.picsou.model.util.Amounts;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -64,9 +65,20 @@ public class GlobStateChecker {
           amount += transaction.get(Transaction.AMOUNT);
         }
       }
-      if (plannedAmount != 0. && Math.abs(amount + plannedAmount) > Math.abs(budget.get(SeriesBudget.AMOUNT)) + 1.) {
-        transactionChecker.addError(budget.get(SeriesBudget.ID), budget.get(SeriesBudget.SERIES), budget.get(SeriesBudget.MONTH),
-                                    amount, plannedAmount, budget.get(SeriesBudget.AMOUNT));
+
+      if (!Amounts.isNearZero(budget.get(SeriesBudget.OVERRUN_AMOUNT)) && !Amounts.isNearZero(plannedAmount)) {
+        transactionChecker.addError(budget.get(SeriesBudget.ID), budget.get(SeriesBudget.SERIES),
+                                    budget.get(SeriesBudget.MONTH),
+                                    amount, plannedAmount, budget.get(SeriesBudget.AMOUNT),
+                                    budget.get(SeriesBudget.OVERRUN_AMOUNT));
+
+      }
+      else if (Math.abs(amount + plannedAmount) > Math.abs(budget.get(SeriesBudget.AMOUNT)) +
+                                                  Math.abs(budget.get(SeriesBudget.OVERRUN_AMOUNT)) + 1.) {
+        transactionChecker.addError(budget.get(SeriesBudget.ID), budget.get(SeriesBudget.SERIES),
+                                    budget.get(SeriesBudget.MONTH),
+                                    amount, plannedAmount, budget.get(SeriesBudget.AMOUNT),
+                                    budget.get(SeriesBudget.OVERRUN_AMOUNT));
       }
     }
   }
@@ -341,6 +353,7 @@ public class GlobStateChecker {
             .append(info.monthId)
             .append(" budget=").append(info.budgetAmount)
             .append(" real=").append(info.observedAmount)
+            .append(" overrun=").append(info.overrunAmount)
             .append(" planned=").append(info.plannedAmount).append("\n");
         }
       }
@@ -387,12 +400,12 @@ public class GlobStateChecker {
       }
     }
 
-    public void addError(Integer seriesBudgetId, Integer seriesID, Integer monthId, Double plannedAmount,
-                         Double observedAMount, Double budgetAmount) {
+    public void addError(Integer seriesBudgetId, Integer seriesID, Integer monthId, Double observedAmount,
+                         Double plannedAmount, Double budgetAmount, Double overrunAmount) {
       if (infos.isEmpty()) {
         corrections.add(this);
       }
-      infos.put(seriesID, new Info(seriesBudgetId, monthId, plannedAmount, observedAMount, budgetAmount));
+      infos.put(seriesID, new Info(seriesBudgetId, monthId, plannedAmount, observedAmount, budgetAmount, overrunAmount));
     }
 
     static class Info {
@@ -401,13 +414,16 @@ public class GlobStateChecker {
       private Double plannedAmount;
       private Double observedAmount;
       private Double budgetAmount;
+      private Double overrunAmount;
 
-      public Info(Integer seriesBudgetId, Integer monthId, Double plannedAmount, Double observedAmount, Double budgetAmount) {
+      public Info(Integer seriesBudgetId, Integer monthId, Double plannedAmount, Double observedAmount,
+                  Double budgetAmount, Double overrunAmount) {
         this.seriesBudgetId = seriesBudgetId;
         this.monthId = monthId;
         this.plannedAmount = plannedAmount;
         this.observedAmount = observedAmount;
         this.budgetAmount = budgetAmount;
+        this.overrunAmount = overrunAmount;
       }
     }
   }

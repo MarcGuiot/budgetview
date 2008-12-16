@@ -1,10 +1,6 @@
 package org.designup.picsou.importer.ofx;
 
-import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.Category;
-import org.designup.picsou.model.MasterCategory;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -40,10 +36,12 @@ public class OfxExporter {
       }
       if (!Boolean.TRUE.equals(account.get(Account.IS_CARD_ACCOUNT))) {
         writer.writeBankMsgHeader(account.get(Account.BANK_ENTITY), account.get(Account.BRANCH_ID), account.get(Account.NUMBER));
-        writeTransactions(account);
-        Date updateDate = account.get(Account.BALANCE_DATE);
-        writer.writeBankMsgFooter(account.get(Account.BALANCE),
-                                  toString(updateDate != null ? updateDate : TimeService.getToday()));
+        Date date = writeTransactions(account);
+        Date balanceDate = account.get(Account.BALANCE_DATE);
+        if (balanceDate == null) {
+          balanceDate = date;
+        }
+        writer.writeBankMsgFooter(account.get(Account.BALANCE), toString(balanceDate));
       }
     }
 
@@ -53,19 +51,30 @@ public class OfxExporter {
       }
       if (Boolean.TRUE.equals(account.get(Account.IS_CARD_ACCOUNT))) {
         writer.writeCardMsgHeader(account.get(Account.NUMBER));
-        writeTransactions(account);
-        writer.writeCardMsgFooter(account.get(Account.BALANCE), toString(account.get(Account.BALANCE_DATE)));
+        Date date = writeTransactions(account);
+        Date balanceDate = account.get(Account.BALANCE_DATE);
+        if (balanceDate == null) {
+          balanceDate = date;
+        }
+        writer.writeCardMsgFooter(account.get(Account.BALANCE), toString(balanceDate));
       }
     }
     writer.writeFooter();
   }
 
-  private void writeTransactions(Glob account) {
+  private Date writeTransactions(Glob account) {
     GlobList transactionsToWrite = new GlobList(repository.findLinkedTo(account, Transaction.ACCOUNT));
     Collections.sort(transactionsToWrite, TransactionComparator.ASCENDING_SPLIT_AFTER);
+    Date lastDate = new Date(0);
     for (Glob transaction : transactionsToWrite) {
       writeTransaction(transaction);
+      Date date = Month.toDate(transaction.get(Transaction.BANK_MONTH),
+                               transaction.get(Transaction.BANK_DAY));
+      if (date.after(lastDate)) {
+        lastDate = date;
+      }
     }
+    return lastDate;
   }
 
   private void writeTransaction(Glob transaction) {

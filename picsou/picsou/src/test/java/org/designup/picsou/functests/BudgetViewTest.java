@@ -835,6 +835,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.envelopes.checkTotalAmounts(0, 0);
     views.selectCategorization();
-
   }
+
 }

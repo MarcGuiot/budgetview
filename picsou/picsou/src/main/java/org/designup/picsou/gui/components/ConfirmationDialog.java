@@ -12,12 +12,12 @@ import java.awt.event.ActionEvent;
 public abstract class ConfirmationDialog {
   private PicsouDialog dialog;
 
-  public ConfirmationDialog(String titleKey, String contentKey, Window owner, Directory directory) {
+  public ConfirmationDialog(String titleKey, String contentKey, Window owner, Directory directory, String... args) {
     SplitsBuilder builder = SplitsBuilder.init(directory)
       .setSource(getClass(), "/layout/confirmationDialog.splits");
 
     builder.add("title", new JLabel(Lang.get(titleKey)));
-    builder.add("message", new JEditorPane("text/html", Lang.get(contentKey)));
+    builder.add("message", new JEditorPane("text/html", Lang.get(contentKey, args)));
 
     dialog = PicsouDialog.create(owner, directory);
     dialog.addPanelWithButtons(builder.<JPanel>load(), createOkAction(), createCancelAction());

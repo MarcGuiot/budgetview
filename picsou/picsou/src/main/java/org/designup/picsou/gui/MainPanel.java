@@ -13,6 +13,7 @@ import org.designup.picsou.gui.card.NavigationView;
 import org.designup.picsou.gui.categories.CategoryView;
 import org.designup.picsou.gui.categories.actions.EditCategoriesAction;
 import org.designup.picsou.gui.categorization.CategorizationView;
+import org.designup.picsou.gui.components.ConfirmationDialog;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.filtering.TextFilterPanel;
 import org.designup.picsou.gui.description.Formatting;
@@ -22,8 +23,8 @@ import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.monthsummary.InfoView;
 import org.designup.picsou.gui.monthsummary.MonthSummaryView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
-import org.designup.picsou.gui.series.view.SeriesView;
 import org.designup.picsou.gui.series.evolution.SeriesEvolutionView;
+import org.designup.picsou.gui.series.view.SeriesView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
@@ -303,15 +304,20 @@ public class MainPanel {
 
     public void actionPerformed(ActionEvent e) {
       GlobStateChecker globStateChecker = new GlobStateChecker(repository);
-      if (!globStateChecker.check()) {
+      boolean hasError = !globStateChecker.check();
+      StringWriter stringWriter = new StringWriter();
+      if (hasError) {
         java.util.List<GlobStateChecker.Correction> corrections = globStateChecker.getCorrections();
-        StringWriter stringWriter = new StringWriter();
         for (GlobStateChecker.Correction correction : corrections) {
           stringWriter.append(correction.info(repository, directory))
             .append("\n-----------------------------------------\n");
         }
-        System.out.println("ERROR find:\n" + stringWriter.toString());
       }
+      ConfirmationDialog confirm = new ConfirmationDialog("check.title",
+                                                          hasError ? "check.with.error" : "check.ok",
+                                                          directory.get(JFrame.class), directory, stringWriter.toString()) {
+      };
+      confirm.show();
     }
   }
 }

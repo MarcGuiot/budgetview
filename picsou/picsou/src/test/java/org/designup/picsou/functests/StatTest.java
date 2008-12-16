@@ -109,7 +109,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     monthSummary.envelopes
       .checkValues(110, 110 + 80)
-      .checkGaugeOverrun(-110, -110 - 80,  - 110 + 90)
+      .checkGaugeOverrun(-110, -110 - 80, -110 + 90)
       .checkErrorOverrun();
 
     views.selectBudget();
@@ -175,9 +175,9 @@ public class StatTest extends LoggedInFunctionalTestCase {
     monthSummary
       .checkBalance(110);
     mainAccounts
-      .checkEstimatedPosition(110);
+      .checkEstimatedPosition(400);
     mainAccounts.openEstimatedPositionDetails()
-      .checkInitialPosition(-290)
+      .checkInitialPosition(0)
       .close();
     views.selectBudget();
     budgetView.income.editSeriesList()
@@ -195,9 +195,9 @@ public class StatTest extends LoggedInFunctionalTestCase {
     monthSummary
       .checkBalance(-290);
     mainAccounts
-      .checkEstimatedPosition(-290);
+      .checkEstimatedPosition(0);
     mainAccounts.openEstimatedPositionDetails()
-      .checkInitialPosition(-290)
-      .close();      
+      .checkInitialPosition(0)
+      .close();
   }
 }

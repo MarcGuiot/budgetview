@@ -21,7 +21,7 @@ import java.util.Date;
 public class OfxBuilder {
 
   public static final String DEFAULT_ACCOUNT_ID = "00001123";
-public static final String DEFAULT_ACCOUNT_NAME = "Account n. 00001123";
+  public static final String DEFAULT_ACCOUNT_NAME = "Account n. 00001123";
 
   private GlobRepository repository;
   private String fileName;
@@ -69,7 +69,7 @@ public static final String DEFAULT_ACCOUNT_NAME = "Account n. 00001123";
                         FieldValue.value(Account.BRANCH_ID, branchId),
                         FieldValue.value(Account.NUMBER, accountNumber),
                         FieldValue.value(Account.BALANCE, balance),
-                        FieldValue.value(Account.BALANCE_DATE, Dates.parse(updateDate)));
+                        FieldValue.value(Account.BALANCE_DATE, updateDate != null ? Dates.parse(updateDate) : null));
     return this;
   }
 
@@ -78,7 +78,7 @@ public static final String DEFAULT_ACCOUNT_NAME = "Account n. 00001123";
       repository.create(Key.create(Account.TYPE, repository.getIdGenerator().getNextId(Account.ID, 1)),
                         FieldValue.value(Account.NUMBER, cardId),
                         FieldValue.value(Account.BALANCE, balance),
-                        FieldValue.value(Account.BALANCE_DATE, Dates.parse(updateDate)),
+                        FieldValue.value(Account.BALANCE_DATE, updateDate != null ? Dates.parse(updateDate) : null),
                         FieldValue.value(Account.IS_CARD_ACCOUNT, true));
     return this;
   }
@@ -146,7 +146,7 @@ public static final String DEFAULT_ACCOUNT_NAME = "Account n. 00001123";
   private OfxBuilder doAddTransaction(String userDate, String bankDate, double amount, String label, String note,
                                       Integer categoryId, Integer parentId, Boolean dispensable) {
     if (currentAccount == null) {
-      addBankAccount(30066, 1234, DEFAULT_ACCOUNT_ID, 0.0, "2006/05/24");
+      addBankAccount(30066, 1234, DEFAULT_ACCOUNT_ID, 0.0, null);
     }
     if (bankDate == null) {
       bankDate = userDate;

@@ -102,6 +102,7 @@ public class BalanceTrigger implements ChangeSetListener {
     if (transactionId == null) {
       pivot = transactions.length - 1;
       Double balance = account.get(Account.BALANCE);
+      Date balanceDate = account.get(Account.BALANCE_DATE);
       if (balance == null) {
         return false;
       }
@@ -109,7 +110,9 @@ public class BalanceTrigger implements ChangeSetListener {
       for (; pivot >= 0; pivot--) {
         Glob transaction = transactions[pivot];
         Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
-        if (checkSameAccount(account, transactionAccount) && !transaction.get(Transaction.PLANNED)) {
+        if (checkSameAccount(account, transactionAccount) && !transaction.get(Transaction.PLANNED)
+            && (balanceDate == null || !Month.toDate(transaction.get(Transaction.BANK_MONTH),
+                                                     transaction.get(Transaction.BANK_DAY)).after(balanceDate))) {
           positionBefore = positionAfter - transaction.get(Transaction.AMOUNT);
           repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, positionAfter);
           lastUpdateTransactionId = transaction.get(Transaction.ID);

@@ -25,12 +25,29 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         if (values.contains(Series.FROM_ACCOUNT) || values.contains(Series.TO_ACCOUNT)) {
           Glob series = repository.get(key);
+          // il faut detruire toutes les transactions : si soit TO soit FROM change il faut aussi detuire l'autre
           if (values.contains(Series.FROM_ACCOUNT)) {
-            deleteTransactionsIfNotImported(key, values.getPrevious(Series.FROM_ACCOUNT), repository);
+            Integer previousFrom = values.getPrevious(Series.FROM_ACCOUNT);
+            if (previousFrom != null) {
+              deleteTransactionsIfNotImported(key, previousFrom, repository);
+            }
+          }
+          Integer newFrom = series.get(Series.FROM_ACCOUNT);
+          if (newFrom != null) {
+            deleteTransactionsIfNotImported(key, newFrom, repository);
           }
           if (values.contains(Series.TO_ACCOUNT)) {
-            deleteTransactionsIfNotImported(key, values.getPrevious(Series.TO_ACCOUNT), repository);
+            Integer previousTo = values.getPrevious(Series.TO_ACCOUNT);
+            if (previousTo != null) {
+              deleteTransactionsIfNotImported(key, previousTo, repository);
+            }
           }
+
+          Integer newTo = series.get(Series.TO_ACCOUNT);
+          if (newTo != null) {
+            deleteTransactionsIfNotImported(key, newTo, repository);
+          }
+
           if (!Account.areNoneImported(repository.findLinkTarget(series, Series.FROM_ACCOUNT),
                                        repository.findLinkTarget(series, Series.TO_ACCOUNT))) {
             return;

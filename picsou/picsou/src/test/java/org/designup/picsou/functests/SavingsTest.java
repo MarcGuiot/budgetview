@@ -241,7 +241,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setToAccount("Epargne LCL")
       .validate();
     views.selectData();
-    transactions.initContent().add("10/08/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00)
+    transactions.initContent()
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00)
       .add("10/07/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00)
       .add("10/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00)
       .check();
@@ -339,7 +340,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   }
 
   // ==> test de l'effet de suppression de transaction référencé dans account
-  public void testUpdateAccountOnSeriesChangeFrom() throws Exception {
+  public void testUpdateAccountOnSeriesChange() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/10", -100.00, "Caf")
       .load();
@@ -361,24 +362,26 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkPosition("Epargne", 1000);
     timeline.selectMonth("2008/09");
     savingsAccounts.checkPosition("Epargne", 1100);
+    timeline.selectAll();
+    views.selectData();
+    transactions.initContent()
+      .add("05/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF", MasterCategory.SAVINGS)
+      .add("05/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF", MasterCategory.SAVINGS)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "Caf", "", -100.00)
+      .add("05/08/2008", TransactionType.VIREMENT, "CAF", "", 100.00, "CAF", MasterCategory.SAVINGS)
+      .check();
     views.selectBudget();
     budgetView.savings
       .editSeriesList()
       .selectSeries("CAF")
-      .switchToAutomatic()
       .setFromAccount("Main account")
+      .switchToAutomatic()
       .validate();
     timeline.selectAll();
     views.selectData();
-    transactions.initContent().dumpCode();
-//    views.selectHome();
-//    timeline.selectMonth("2008/08");
-//    savingsAccountView.checkPosition("Epargne", 1000);
-//    timeline.selectMonth("2008/09");
-//    savingsAccountView.checkPosition("Epargne", 1100);
-//    views.selectBudget();
-//    views.selectData();
-//    transactions.initContent().dumpCode();
+    transactions.initContent()
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "Caf", "", -100.00)
+      .check();
     views.selectCategorization();
     categorization
       .selectTableRows("Caf")
@@ -386,12 +389,21 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectSavingsSeries("CAF");
 
     views.selectData();
-    transactions.initContent().dumpCode();
+    transactions
+      .initContent()
+      .add("05/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF", MasterCategory.SAVINGS)
+      .add("05/10/2008", TransactionType.PLANNED, "Planned: CAF", "", -100.00, "CAF", MasterCategory.SAVINGS)
+      .add("05/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF", MasterCategory.SAVINGS)
+      .add("05/09/2008", TransactionType.PLANNED, "Planned: CAF", "", -100.00, "CAF", MasterCategory.SAVINGS)
+      .add("10/08/2008", TransactionType.VIREMENT, "Caf", "", 100.00, "CAF", MasterCategory.SAVINGS)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "Caf", "", -100.00, "CAF", MasterCategory.SAVINGS)
+      .check();
+
     views.selectBudget();
     timeline.selectMonth("2008/08");
-    savingsAccounts.checkPosition("Epargne", 1000);
-    timeline.selectMonth("2008/09");
     savingsAccounts.checkPosition("Epargne", 1100);
+    timeline.selectMonth("2008/09");
+    savingsAccounts.checkPosition("Epargne", 1200);
   }
 
   public void testAutomaticBudget() throws Exception {
@@ -409,7 +421,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setToAccount("Epargne")
       .validate();
     views.selectCategorization();
-    categorization.setSavings("Caf", "Caf");
+    categorization.setSavings("Caf", "CAF");
     timeline.selectAll();
     views.selectData();
     transactions.initContent()

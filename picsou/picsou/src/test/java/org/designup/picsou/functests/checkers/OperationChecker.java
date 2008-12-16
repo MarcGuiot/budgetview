@@ -146,7 +146,9 @@ public class OperationChecker {
     dumpMenu.click();
   }
 
-  public void check() {
-    checkMenu.click();
+  public void checkOk() {
+    Window dialog = WindowInterceptor.getModalDialog(checkMenu.triggerClick());
+    UISpecAssert.assertFalse(dialog.getTextBox("message").textDoesNotContain("No Error"));
+    dialog.getButton("ok").click();
   }
 }
