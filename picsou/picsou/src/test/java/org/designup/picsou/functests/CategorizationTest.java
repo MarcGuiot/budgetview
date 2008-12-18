@@ -1029,8 +1029,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/05");
     categorization.selectTableRows("Auchan");
     transactionDetails.split("9", "DVD");
+    operations.checkOk();
     categorization.selectOccasionalSeries(MasterCategory.LEISURES);
-
+    operations.checkOk();
     views.selectBudget();
     timeline.selectMonth("2008/05");
     budgetView.envelopes.checkSeries("Courant", -1, -1);
@@ -1044,6 +1045,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows(
       categorization.getTable().getRowIndex(CategorizationChecker.LABEL_COLUMN_INDEX, "Auchan"));
     transactionDetails.openSplitDialog().deleteRow(1).ok();
+    operations.checkOk();
 
     views.selectBudget();
     timeline.selectMonth("2008/05");

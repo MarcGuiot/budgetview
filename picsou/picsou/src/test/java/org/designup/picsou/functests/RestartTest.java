@@ -3,9 +3,9 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.CategorizationGaugeChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
-import org.designup.picsou.gui.TimeService;
 import org.globsframework.utils.Dates;
 
 public class RestartTest extends LoggedInFunctionalTestCase {
@@ -234,7 +234,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .add("10/08/2008", TransactionType.PRELEVEMENT, "Auchan", "", -400.00, "Course", MasterCategory.FOOD)
       .check();
   }
-  
+
   protected void restartApplication() {
     mainWindow.dispose();
     mainWindow = null;

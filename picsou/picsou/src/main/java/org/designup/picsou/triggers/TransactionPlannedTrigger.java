@@ -117,6 +117,10 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+        if (previousValues.get(Transaction.PLANNED) ||
+            previousValues.get(Transaction.MIRROR)) {
+          return;
+        }
         Integer seriesId = previousValues.get(Transaction.SERIES);
         Glob series = repository.find(Key.create(Series.TYPE, seriesId));
         if (series == null) {

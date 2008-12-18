@@ -4,26 +4,26 @@ import org.designup.picsou.model.*;
 import org.globsframework.model.*;
 
 public class TransactionUtils {
-  public static Integer createMirrorTransaction(Key mirroirOfTransactionKey, FieldValues values,
+  public static Integer createMirrorTransaction(Key mirroirOfTransactionKey, FieldValues transaction,
                                                 final Integer accountId, GlobRepository repository) {
-    Double amount = -values.get(Transaction.AMOUNT);
+    Double amount = -transaction.get(Transaction.AMOUNT);
     Glob savingsTransaction =
       repository.create(Transaction.TYPE,
                         FieldValue.value(Transaction.AMOUNT, amount),
                         FieldValue.value(Transaction.ACCOUNT, accountId),
-                        FieldValue.value(Transaction.BANK_DAY, values.get(Transaction.BANK_DAY)),
-                        FieldValue.value(Transaction.BANK_MONTH, values.get(Transaction.BANK_MONTH)),
-                        FieldValue.value(Transaction.DAY, values.get(Transaction.DAY)),
-                        FieldValue.value(Transaction.MONTH, values.get(Transaction.MONTH)),
+                        FieldValue.value(Transaction.BANK_DAY, transaction.get(Transaction.BANK_DAY)),
+                        FieldValue.value(Transaction.BANK_MONTH, transaction.get(Transaction.BANK_MONTH)),
+                        FieldValue.value(Transaction.DAY, transaction.get(Transaction.DAY)),
+                        FieldValue.value(Transaction.MONTH, transaction.get(Transaction.MONTH)),
                         FieldValue.value(Transaction.TRANSACTION_TYPE,
                                          amount > 0 ? TransactionType.VIREMENT.getId() : TransactionType.PRELEVEMENT.getId()),
                         FieldValue.value(Transaction.CATEGORY,
-                                         values.get(Transaction.CATEGORY)),
-                        FieldValue.value(Transaction.LABEL, values.get(Transaction.LABEL)),
-                        FieldValue.value(Transaction.SERIES, values.get(Transaction.SERIES)),
+                                         transaction.get(Transaction.CATEGORY)),
+                        FieldValue.value(Transaction.LABEL, transaction.get(Transaction.LABEL)),
+                        FieldValue.value(Transaction.SERIES, transaction.get(Transaction.SERIES)),
                         FieldValue.value(Transaction.MIRROR, true),
                         FieldValue.value(Transaction.PLANNED,
-                                         values.get(Transaction.PLANNED)));
+                                         transaction.get(Transaction.PLANNED)));
     repository.update(mirroirOfTransactionKey, Transaction.NOT_IMPORTED_TRANSACTION,
                       savingsTransaction.get(Transaction.ID));
     return savingsTransaction.get(Transaction.ID);

@@ -49,23 +49,69 @@ public class GlobStateChecker {
   }
 
   private void checkPlannedTransactionAmount() {
+    Glob currentMonth = repository.get(CurrentMonth.KEY);
     PlannedTransactionChecker transactionChecker = new PlannedTransactionChecker(corrections);
     GlobList seriesBudget = repository.getAll(SeriesBudget.TYPE);
     for (Glob budget : seriesBudget) {
+      if (budget.get(SeriesBudget.MONTH) < currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
+        continue;
+      }
       GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, budget.get(SeriesBudget.SERIES))
         .findByIndex(Transaction.MONTH, budget.get(SeriesBudget.MONTH))
         .getGlobs();
       Double plannedAmount = 0.;
       Double amount = 0.;
+      Double mirorPlannedAmount = 0.;
+      Double mirorAmount = 0.;
+      boolean hasMiror = false;
+      Integer forAccountId = null;
       for (Glob transaction : transactions) {
-        if (transaction.get(Transaction.PLANNED)) {
-          plannedAmount += transaction.get(Transaction.AMOUNT);
+        if (transaction.get(Transaction.MIRROR)) {
+          hasMiror = true;
+          if (transaction.get(Transaction.PLANNED)) {
+            mirorPlannedAmount += transaction.get(Transaction.AMOUNT);
+          }
+          else {
+            mirorAmount += transaction.get(Transaction.AMOUNT);
+          }
+          forAccountId = transaction.get(Transaction.ACCOUNT);
         }
         else {
-          amount += transaction.get(Transaction.AMOUNT);
+          if (transaction.get(Transaction.PLANNED)) {
+            plannedAmount += transaction.get(Transaction.AMOUNT);
+          }
+          else {
+            amount += transaction.get(Transaction.AMOUNT);
+          }
         }
       }
+      if (hasMiror) {
+        Glob series = repository.findLinkTarget(budget, SeriesBudget.SERIES);
+        Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
+        Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
+        Glob forAccount;
+        if (fromAccount != null && forAccountId.equals(fromAccount.get(Account.ID))) {
+          forAccount = fromAccount;
+        }
+        else {
+          forAccount = toAccount;
+        }
+        double multiplier = Account.getMultiplierForInOrOutputOfTheAccount(fromAccount, toAccount, forAccount);
+        if (!Amounts.isNearZero(budget.get(SeriesBudget.OVERRUN_AMOUNT)) && !Amounts.isNearZero(mirorPlannedAmount)) {
+          transactionChecker.addError(budget.get(SeriesBudget.ID), budget.get(SeriesBudget.SERIES),
+                                      budget.get(SeriesBudget.MONTH),
+                                      mirorAmount, mirorPlannedAmount, budget.get(SeriesBudget.AMOUNT),
+                                      budget.get(SeriesBudget.OVERRUN_AMOUNT));
 
+        }
+        else if (Math.abs(mirorAmount + mirorPlannedAmount +
+                          multiplier * (budget.get(SeriesBudget.AMOUNT) + budget.get(SeriesBudget.OVERRUN_AMOUNT))) > 1) {
+          transactionChecker.addError(budget.get(SeriesBudget.ID), budget.get(SeriesBudget.SERIES),
+                                      budget.get(SeriesBudget.MONTH),
+                                      mirorAmount, mirorPlannedAmount, budget.get(SeriesBudget.AMOUNT),
+                                      budget.get(SeriesBudget.OVERRUN_AMOUNT));
+        }
+      }
       if (!Amounts.isNearZero(budget.get(SeriesBudget.OVERRUN_AMOUNT)) && !Amounts.isNearZero(plannedAmount)) {
         transactionChecker.addError(budget.get(SeriesBudget.ID), budget.get(SeriesBudget.SERIES),
                                     budget.get(SeriesBudget.MONTH),
@@ -73,8 +119,8 @@ public class GlobStateChecker {
                                     budget.get(SeriesBudget.OVERRUN_AMOUNT));
 
       }
-      else if (Math.abs(amount + plannedAmount) > Math.abs(budget.get(SeriesBudget.AMOUNT)) +
-                                                  Math.abs(budget.get(SeriesBudget.OVERRUN_AMOUNT)) + 1.) {
+      else if (Math.abs(amount + plannedAmount -
+                        (budget.get(SeriesBudget.AMOUNT) + budget.get(SeriesBudget.OVERRUN_AMOUNT))) > 1) {
         transactionChecker.addError(budget.get(SeriesBudget.ID), budget.get(SeriesBudget.SERIES),
                                     budget.get(SeriesBudget.MONTH),
                                     amount, plannedAmount, budget.get(SeriesBudget.AMOUNT),
@@ -340,7 +386,7 @@ public class GlobStateChecker {
       GlobStringifier stringifier = descriptionService.getStringifier(Series.TYPE);
       for (Integer seriesId : infos.keySet()) {
         String name = stringifier.toString(repository.get(Key.create(Series.TYPE, seriesId)), repository);
-        if (seriesId.equals(Series.OCCASIONAL_SERIES_ID)) {
+        if (seriesId.equals(Series.UNCATEGORIZED_SERIES_ID)) {
           name = "'uncategorized series'";
         }
         if (name.equals("")) {
@@ -354,7 +400,8 @@ public class GlobStateChecker {
             .append(" budget=").append(info.budgetAmount)
             .append(" real=").append(info.observedAmount)
             .append(" overrun=").append(info.overrunAmount)
-            .append(" planned=").append(info.plannedAmount).append("\n");
+            .append(" planned=").append(info.plannedAmount)
+            .append("\n");
         }
       }
       return builder.toString();
@@ -405,7 +452,7 @@ public class GlobStateChecker {
       if (infos.isEmpty()) {
         corrections.add(this);
       }
-      infos.put(seriesID, new Info(seriesBudgetId, monthId, plannedAmount, observedAmount, budgetAmount, overrunAmount));
+      infos.put(seriesID, new Info(seriesBudgetId, monthId, observedAmount, plannedAmount, budgetAmount, overrunAmount));
     }
 
     static class Info {
@@ -416,7 +463,7 @@ public class GlobStateChecker {
       private Double budgetAmount;
       private Double overrunAmount;
 
-      public Info(Integer seriesBudgetId, Integer monthId, Double plannedAmount, Double observedAmount,
+      public Info(Integer seriesBudgetId, Integer monthId, Double observedAmount, Double plannedAmount,
                   Double budgetAmount, Double overrunAmount) {
         this.seriesBudgetId = seriesBudgetId;
         this.monthId = monthId;

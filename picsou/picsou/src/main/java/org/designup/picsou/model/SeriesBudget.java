@@ -60,12 +60,16 @@ public class SeriesBudget {
       output.writeDouble(fieldValues.get(SeriesBudget.AMOUNT));
       output.writeInteger(fieldValues.get(SeriesBudget.DAY));
       output.writeBoolean(fieldValues.get(SeriesBudget.ACTIVE));
+      output.writeDouble(fieldValues.get(SeriesBudget.OVERRUN_AMOUNT));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
+      }
+      if (version == 2) {
+        deserializeDataV2(fieldSetter, data);
       }
     }
 
@@ -76,10 +80,22 @@ public class SeriesBudget {
       fieldSetter.set(SeriesBudget.AMOUNT, input.readDouble());
       fieldSetter.set(SeriesBudget.DAY, input.readInteger());
       fieldSetter.set(SeriesBudget.ACTIVE, input.readBoolean());
+      fieldSetter.set(SeriesBudget.OVERRUN_AMOUNT, 0.);
     }
 
+    private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(SeriesBudget.SERIES, input.readInteger());
+      fieldSetter.set(SeriesBudget.MONTH, input.readInteger());
+      fieldSetter.set(SeriesBudget.AMOUNT, input.readDouble());
+      fieldSetter.set(SeriesBudget.DAY, input.readInteger());
+      fieldSetter.set(SeriesBudget.ACTIVE, input.readBoolean());
+      fieldSetter.set(SeriesBudget.OVERRUN_AMOUNT, input.readDouble());
+    }
+
+
     public int getWriteVersion() {
-      return 1;
+      return 2;
     }
   }
 }

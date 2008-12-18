@@ -636,6 +636,7 @@ public class SeriesEditionDialog {
           }
         }
       }
+      checkSavingsAccountChange();
       localRepository.commitChanges(false);
       localRepository.rollback();
       dialog.setVisible(false);
@@ -650,6 +651,53 @@ public class SeriesEditionDialog {
         localRepository.update(series.getKey(), Series.NAME, name.trim());
       }
     }
+  }
+
+  private void checkSavingsAccountChange() {
+    ChangeSet changeSet = localRepository.getCurrentChanges();
+    final LocalGlobRepository repository = LocalGlobRepositoryBuilder.init(localRepository).get();
+    changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
+      public void visitCreation(Key key, FieldValues values) throws Exception {
+      }
+
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+        if (values.contains(Series.TO_ACCOUNT) || values.contains(Series.FROM_ACCOUNT)) {
+          Glob series = localRepository.get(key);
+          int seriesId = repository.getIdGenerator().getNextId(Series.ID, 1);
+          repository.create(Key.create(Series.TYPE, seriesId), series.toArray());
+          GlobList budgets = localRepository.findByIndex(SeriesBudget.SERIES_INDEX,
+                                                         SeriesBudget.SERIES, series.get(Series.ID))
+            .getGlobs();
+          int budgetId = repository.getIdGenerator().getNextId(Series.ID, budgets.size());
+          for (Glob budget : budgets) {
+            FieldValue[] budgetValues = budget.toArray();
+            for (int i = 0; i < budgetValues.length; i++) {
+              if (budgetValues[i].getField().equals(SeriesBudget.SERIES)) {
+                budgetValues[i] = new FieldValue(SeriesBudget.SERIES, seriesId);
+              }
+            }
+            repository.create(Key.create(SeriesBudget.TYPE, budgetId), budgetValues);
+            budgetId++;
+          }
+          GlobList transactions = localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID))
+            .getGlobs().filterSelf(GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.PLANNED, false),
+                                                    GlobMatchers.fieldEquals(Transaction.CREATED_BY_SERIES, false)),
+                                   localRepository);
+          for (Glob transaction : transactions) {
+            localRepository.update(transaction.getKey(),
+                                   FieldValue.value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+                                   FieldValue.value(Transaction.CATEGORY, Category.NONE));
+          }
+          localRepository.commitChanges(false);
+          localRepository.delete(key);
+          localRepository.commitChanges(false);
+          repository.commitChanges(true);
+        }
+      }
+
+      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+      }
+    });
   }
 
   private class CancelAction extends AbstractAction {

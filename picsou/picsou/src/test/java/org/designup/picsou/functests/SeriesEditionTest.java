@@ -1393,9 +1393,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     SeriesEditionDialogChecker edition = categorization.selectSavings()
       .editSeries("epargne", true)
       .checkInAutomatic()
-      .setUnknown()
-      .setTwoMonths()
-      .checkInAutomatic();
+      .setTwoMonths();
+
     edition
       .checkInAutomatic()
       .switchToManual()

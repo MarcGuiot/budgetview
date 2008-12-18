@@ -4,12 +4,15 @@ import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
+import org.designup.picsou.triggers.GlobStateChecker;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
+
+import java.util.List;
 
 public class UpgradeService {
   private Directory directory;
@@ -35,6 +38,14 @@ public class UpgradeService {
       }
       if (version.get(VersionInformation.CURRENT_JAR_VERSION) <= 7) {
         repository.update(Account.MAIN_SUMMARY_KEY, Account.IS_IMPORTED_ACCOUNT, true);
+        GlobStateChecker checker = new GlobStateChecker(repository);
+        boolean b = checker.check();
+        if (!b) {
+          List<GlobStateChecker.Correction> correctionList = checker.getCorrections();
+          for (GlobStateChecker.Correction correction : correctionList) {
+            correction.correct(repository);
+          }
+        }
       }
       repository.update(VersionInformation.KEY, VersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
     }

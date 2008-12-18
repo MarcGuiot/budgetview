@@ -27,7 +27,10 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        Glob transaction = repository.get(key);
+        Glob transaction = repository.find(key);
+        if (transaction == null || transaction.get(Transaction.MIRROR)) {
+          return;
+        }
         Integer createdTransactionId = transaction.get(Transaction.NOT_IMPORTED_TRANSACTION);
         if (values.contains(Transaction.SERIES)) {
           Glob previousSeries = repository.find(Key.create(Series.TYPE,
