@@ -1,9 +1,9 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.CategoryEditionChecker;
-import org.designup.picsou.functests.checkers.CategoryDeletionChecker;
-import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.checkers.CategoryChooserChecker;
+import org.designup.picsou.functests.checkers.CategoryDeletionChecker;
+import org.designup.picsou.functests.checkers.CategoryEditionChecker;
+import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
@@ -174,9 +174,10 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCannotDeleteCategoryIfUsedInSeries() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2);
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/15", -2.0, "Auchan", MasterCategory.HOUSE)
+      .addTransaction("2008/03/15", -2.0, "Auchan", MasterCategory.HOUSE)
       .load();
 
     views.selectCategorization();

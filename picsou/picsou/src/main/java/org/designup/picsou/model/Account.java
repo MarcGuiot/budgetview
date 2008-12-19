@@ -1,6 +1,7 @@
 package org.designup.picsou.model;
 
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
+import org.designup.picsou.triggers.SameAccountChecker;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.DefaultInteger;
@@ -135,6 +136,27 @@ public class Account {
       return -1;
     }
     throw new RuntimeException("Call with bad for account");
+  }
+
+  public static double getMultiplierWithMainAsPointOfView(Glob fromAccount, Glob toAccount, GlobRepository repository) {
+    double multiplier;
+    Integer fromAccountIdPointOfView = toAccount == null ?
+                                       fromAccount.get(ID) : toAccount.get(ID);
+    if (fromAccountIdPointOfView == null) {
+      multiplier = 0;
+    }
+    else {
+      SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
+      if (fromAccount != null && mainAccountChecker.isSame(fromAccount.get(ID))) {
+        fromAccountIdPointOfView = fromAccount.get(ID);
+      }
+      if (toAccount != null && mainAccountChecker.isSame(toAccount.get(ID))) {
+        fromAccountIdPointOfView = toAccount.get(ID);
+      }
+      multiplier = getMultiplierForInOrOutputOfTheAccount(fromAccount, toAccount,
+                                                          repository.get(org.globsframework.model.Key.create(TYPE, fromAccountIdPointOfView)));
+    }
+    return multiplier;
   }
 
   public static class Serializer implements PicsouGlobSerializer {

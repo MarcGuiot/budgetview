@@ -89,14 +89,10 @@ public class GlobStateChecker {
         Glob series = repository.findLinkTarget(budget, SeriesBudget.SERIES);
         Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
         Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-        Glob forAccount;
-        if (fromAccount != null && forAccountId.equals(fromAccount.get(Account.ID))) {
-          forAccount = fromAccount;
+        double multiplier = -Account.getMultiplierWithMainAsPointOfView(fromAccount, toAccount, repository);
+        if (multiplier == 0) {
+          return;
         }
-        else {
-          forAccount = toAccount;
-        }
-        double multiplier = Account.getMultiplierForInOrOutputOfTheAccount(fromAccount, toAccount, forAccount);
         if (!Amounts.isNearZero(budget.get(SeriesBudget.OVERRUN_AMOUNT)) && !Amounts.isNearZero(mirorPlannedAmount)) {
           transactionChecker.addError(budget.get(SeriesBudget.ID), budget.get(SeriesBudget.SERIES),
                                       budget.get(SeriesBudget.MONTH),
@@ -104,8 +100,8 @@ public class GlobStateChecker {
                                       budget.get(SeriesBudget.OVERRUN_AMOUNT));
 
         }
-        else if (Math.abs(mirorAmount + mirorPlannedAmount +
-                          multiplier * (budget.get(SeriesBudget.AMOUNT) + budget.get(SeriesBudget.OVERRUN_AMOUNT))) > 1) {
+        else if (Math.abs(multiplier * (mirorAmount + mirorPlannedAmount) -
+                          (budget.get(SeriesBudget.AMOUNT) + budget.get(SeriesBudget.OVERRUN_AMOUNT))) > 1) {
           transactionChecker.addError(budget.get(SeriesBudget.ID), budget.get(SeriesBudget.SERIES),
                                       budget.get(SeriesBudget.MONTH),
                                       mirorAmount, mirorPlannedAmount, budget.get(SeriesBudget.AMOUNT),

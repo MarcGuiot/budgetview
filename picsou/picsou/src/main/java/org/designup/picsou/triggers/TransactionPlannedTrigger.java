@@ -1,5 +1,6 @@
 package org.designup.picsou.triggers;
 
+import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
@@ -150,14 +151,15 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     }
 
     Glob seriesBudget = budgets.get(0);
-    boolean isPositiveBudget = seriesBudget.get(SeriesBudget.AMOUNT) > 0;
     if (Amounts.isNearZero(seriesBudget.get(SeriesBudget.AMOUNT))) {
+      Glob monthStat = repository.get(Key.create(SeriesStat.SERIES, series.get(Series.ID), SeriesStat.MONTH, monthId));
       repository.update(seriesBudget.getKey(), SeriesBudget.OVERRUN_AMOUNT,
-                        seriesBudget.get(SeriesBudget.OVERRUN_AMOUNT) + amount);
+                        monthStat.get(SeriesStat.AMOUNT));
       GlobList plannedTransaction = getPlannedTransactions(repository, seriesId, monthId);
       repository.delete(plannedTransaction);
       return;
     }
+    boolean isPositiveBudget = seriesBudget.get(SeriesBudget.AMOUNT) > 0;
     if (isPositiveBudget) {
       if (amount < 0) {
         transfertToPlanned(series, seriesBudget, monthId, amount, monthInCurrentMonth,

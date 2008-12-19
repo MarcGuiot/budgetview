@@ -408,45 +408,45 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
   public void testAutomaticBudget() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/08/10", -100.00, "Caf")
+      .addTransaction("2008/08/10", -100.00, "Virement")
       .load();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectHome();
     savingsAccounts.createSavingsAccount("Epargne", 1000);
     views.selectBudget();
     budgetView.savings.createSeries()
-      .setName("CAF")
+      .setName("CA")
       .setCategory(MasterCategory.SAVINGS)
       .setFromAccount("Main account")
       .setToAccount("Epargne")
       .validate();
     views.selectCategorization();
-    categorization.setSavings("Caf", "CAF");
+    categorization.setSavings("Virement", "CA");
     timeline.selectAll();
     views.selectData();
     transactions.initContent()
-      .add("01/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF", MasterCategory.SAVINGS)
-      .add("01/10/2008", TransactionType.PLANNED, "Planned: CAF", "", -100.00, "CAF", MasterCategory.SAVINGS)
-      .add("01/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF", MasterCategory.SAVINGS)
-      .add("01/09/2008", TransactionType.PLANNED, "Planned: CAF", "", -100.00, "CAF", MasterCategory.SAVINGS)
-      .add("10/08/2008", TransactionType.VIREMENT, "Caf", "", 100.00, "CAF", MasterCategory.SAVINGS)
-      .add("10/08/2008", TransactionType.PRELEVEMENT, "Caf", "", -100.00, "CAF", MasterCategory.SAVINGS)
+      .add("01/10/2008", TransactionType.PLANNED, "Planned: CA", "", 100.00, "CA", MasterCategory.SAVINGS)
+      .add("01/10/2008", TransactionType.PLANNED, "Planned: CA", "", -100.00, "CA", MasterCategory.SAVINGS)
+      .add("01/09/2008", TransactionType.PLANNED, "Planned: CA", "", 100.00, "CA", MasterCategory.SAVINGS)
+      .add("01/09/2008", TransactionType.PLANNED, "Planned: CA", "", -100.00, "CA", MasterCategory.SAVINGS)
+      .add("10/08/2008", TransactionType.VIREMENT, "Virement", "", 100.00, "CA", MasterCategory.SAVINGS)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "CA", MasterCategory.SAVINGS)
       .check();
     views.selectBudget();
     budgetView.savings.editSeriesList()
-      .selectSeries("CAF")
+      .selectSeries("CA")
       .switchToManual()
       .switchToAutomatic()
       .validate();
     views.selectData();
     timeline.selectAll();
     transactions.initContent()
-      .add("01/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF", MasterCategory.SAVINGS)
-      .add("01/10/2008", TransactionType.PLANNED, "Planned: CAF", "", -100.00, "CAF", MasterCategory.SAVINGS)
-      .add("01/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF", MasterCategory.SAVINGS)
-      .add("01/09/2008", TransactionType.PLANNED, "Planned: CAF", "", -100.00, "CAF", MasterCategory.SAVINGS)
-      .add("10/08/2008", TransactionType.VIREMENT, "Caf", "", 100.00, "CAF", MasterCategory.SAVINGS)
-      .add("10/08/2008", TransactionType.PRELEVEMENT, "Caf", "", -100.00, "CAF", MasterCategory.SAVINGS)
+      .add("01/10/2008", TransactionType.PLANNED, "Planned: CA", "", 100.00, "CA", MasterCategory.SAVINGS)
+      .add("01/10/2008", TransactionType.PLANNED, "Planned: CA", "", -100.00, "CA", MasterCategory.SAVINGS)
+      .add("01/09/2008", TransactionType.PLANNED, "Planned: CA", "", 100.00, "CA", MasterCategory.SAVINGS)
+      .add("01/09/2008", TransactionType.PLANNED, "Planned: CA", "", -100.00, "CA", MasterCategory.SAVINGS)
+      .add("10/08/2008", TransactionType.VIREMENT, "Virement", "", 100.00, "CA", MasterCategory.SAVINGS)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "CA", MasterCategory.SAVINGS)
       .check();
   }
 }
