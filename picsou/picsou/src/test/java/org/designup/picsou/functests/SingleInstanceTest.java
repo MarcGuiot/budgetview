@@ -25,16 +25,17 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
   }
 
   public void testOpenRequestsDuringLoginAndInitialFileImport() throws Exception {
-    final String[] files = new String[3];
-    files[0] = OfxBuilder.init(this)
-      .addTransaction("2000/01/01", 1.2, "mac do")
-      .save();
-    files[1] = OfxBuilder.init(this)
-      .addTransaction("2000/01/02", 1.2, "quick")
-      .save();
-    files[2] = OfxBuilder.init(this)
-      .addTransaction("2000/01/03", 1.2, "pizza")
-      .save();
+    final String[] files = {
+      OfxBuilder.init(this)
+        .addTransaction("2000/01/01", 1.2, "mac do")
+        .save(),
+      OfxBuilder.init(this)
+        .addTransaction("2000/01/02", 1.2, "quick")
+        .save(),
+      OfxBuilder.init(this)
+        .addTransaction("2000/01/03", 1.2, "pizza")
+        .save()
+    };
 
     final ApplicationThread[] threads = new ApplicationThread[3];
     for (int i = 0; i < threads.length; i++) {

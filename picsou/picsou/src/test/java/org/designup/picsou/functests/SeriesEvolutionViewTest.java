@@ -31,11 +31,19 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.recurring.editSeries("Energy").setTwoMonths().validate();
 
+    timeline.selectMonth("2008/11");
+    budgetView.specials.createSeries()
+      .setName("Lottery")
+      .setCategory(MasterCategory.GIFTS)
+      .selectPositiveAmounts()
+      .setAmount(100.00)
+      .validate();
+    
     timeline.selectMonth("2008/12");
     budgetView.specials.createSeries()
       .setName("Christmas")
       .setCategory(MasterCategory.GIFTS)
-      .setAmount(200.00)
+      .setAmount(300.00)
       .validate();
 
     timeline.selectMonth("2008/07");
@@ -44,20 +52,21 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       "", "June 08", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09"
     );
     seriesEvolution.initContent()
-      .add("Balance", "", "80.00", "170.00", "120.00", "170.00", "120.00", "-30.00", "120.00")
-      .add("Main account", "", "25.00", "195.00", "315.00", "485.00", "605.00", "575.00", "695.00")
+      .add("Balance", "", "80.00", "170.00", "120.00", "170.00", "220.00", "-130.00", "120.00")
+      .add("Main account", "", "25.00", "195.00", "315.00", "485.00", "705.00", "575.00", "695.00")
       .add("Savings account", "", "", "", "", "", "", "", "")
-      .add("To categorize", "", "-40.00", "", "", "", "", "", "")
+      .add("To categorize", "", "40.00", "", "", "", "", "", "")
       .add("Income", "", "300.00", "300.00", "300.00", "300.00", "300.00", "300.00", "300.00")
       .add("Salary", "", "300.00", "300.00", "300.00", "300.00", "300.00", "300.00", "300.00")
-      .add("Recurring", "", "-80.00", "-30.00", "-80.00", "-30.00", "-80.00", "-30.00", "-80.00")
-      .add("Energy", "", "-50.00", "", "-50.00", "", "-50.00", "", "-50.00")
-      .add("Internet", "", "-30.00", "-30.00", "-30.00", "-30.00", "-30.00", "-30.00", "-30.00")
-      .add("Envelopes", "", "-100.00", "-100.00", "-100.00", "-100.00", "-100.00", "-100.00", "-100.00")
-      .add("Groceries", "", "-100.00", "-100.00", "-100.00", "-100.00", "-100.00", "-100.00", "-100.00")
+      .add("Recurring", "", "80.00", "30.00", "80.00", "30.00", "80.00", "30.00", "80.00")
+      .add("Energy", "", "50.00", "", "50.00", "", "50.00", "", "50.00")
+      .add("Internet", "", "30.00", "30.00", "30.00", "30.00", "30.00", "30.00", "30.00")
+      .add("Envelopes", "", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00")
+      .add("Groceries", "", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00")
       .add("Occasional", "", "", "", "", "", "", "", "")
-      .add("Special", "", "", "", "", "", "", "-200.00", "")
-      .add("Christmas", "", "", "", "", "", "", "-200.00", "")
+      .add("Special", "", "", "", "", "", "+100.00", "300.00", "")
+      .add("Christmas", "", "", "", "", "", "", "300.00", "")
+      .add("Lottery", "", "", "", "", "", "+100.00", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
       .check();
   }
@@ -93,7 +102,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       "", "June 08", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09"
     );
     seriesEvolution.checkRow(
-      "Christmas", "", "", "", "", "", "", "-200.00", ""
+      "Christmas", "", "", "", "", "", "", "200.00", ""
     );
 
     timeline.selectMonth("2008/10");
@@ -101,7 +110,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       "", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09", "Feb 09", "Mar 09", "Apr 09"
     );
     seriesEvolution.checkRow(
-      "Christmas", "", "", "", "-200.00", "", "", "", ""
+      "Christmas", "", "", "", "200.00", "", "", "", ""
     );
 
     timeline.selectMonths("2008/09", "2008/10", "2008/11");
@@ -109,7 +118,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       "", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09", "Feb 09", "Mar 09"
     );
     seriesEvolution.checkRow(
-      "Christmas", "", "", "", "", "-200.00", "", "", ""
+      "Christmas", "", "", "", "", "200.00", "", "", ""
     );
   }
 
@@ -130,7 +139,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       "", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09", "Feb 09"
     );
     seriesEvolution.checkRow(
-      "Groceries", "-100.00", "-100.00", "-100.00", "-100.00", "", "", "", ""
+      "Groceries", "100.00", "100.00", "100.00", "100.00", "", "", "", ""
     );
   }
 
@@ -196,7 +205,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       "", "June 08", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09"
     );
     seriesEvolution.checkRow(
-      "Groceries", "", "-100.00", "-100.00", "-100.00", "-100.00", "-100.00", "-100.00", "-100.00"
+      "Groceries", "", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00"
     );
 
     seriesEvolution.editSeries("Groceries", "Sep 08")
@@ -210,7 +219,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       "", "June 08", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09"
     );
     seriesEvolution.checkRow(
-      "Groceries", "", "-100.00", "-100.00", "-150.00", "-100.00", "", "", ""
+      "Groceries", "", "100.00", "100.00", "150.00", "100.00", "", "", ""
     );
   }
 
@@ -233,7 +242,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     views.selectEvolution();
     seriesEvolution.checkRow(
-      "Taxes", "", "-200.00", "-200.00", "-200.00", "-200.00", "-200.00", "-200.00", "-200.00"
+      "Taxes", "", "200.00", "200.00", "200.00", "200.00", "200.00", "200.00", "200.00"
     );
 
     views.selectBudget();
@@ -247,8 +256,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/08");
     seriesEvolution.checkRow(
-      "Taxes", "-200.00", "-200.00", "", "", "", "", "", ""
+      "Taxes", "200.00", "200.00", "", "", "", "", "", ""
     );
-
   }
 }

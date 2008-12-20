@@ -86,7 +86,7 @@ public class SeriesEvolutionColors implements ColorChangeListener {
           setSummaryColors(component, background, monthOffset);
         }
         else if (SeriesWrapper.UNCATEGORIZED_ID.equals(seriesWrapper.get(SeriesWrapper.ID))) {
-          setColors(uncategorizedText, summaryBg, summaryCurrentBg, component, background, monthOffset);
+          setColors(component, uncategorizedText, summaryBg, summaryCurrentBg, background, monthOffset);
         }
         else {
           setBudgetAreaColors(component, background, monthOffset);
@@ -104,24 +104,24 @@ public class SeriesEvolutionColors implements ColorChangeListener {
   }
 
   private void setSummaryColors(JComponent component, Paintable panel, int monthOffset) {
-    setColors(summaryText, summaryBg, summaryCurrentBg, component, panel, monthOffset);
+    setColors(component, summaryText, summaryBg, summaryCurrentBg, panel, monthOffset);
   }
 
   private void setBudgetAreaColors(JComponent component, Paintable panel, int monthOffset) {
-    setColors(budgetAreaText, budgetAreaBg, budgetAreaCurrentBg, component, panel, monthOffset);
+    setColors(component, budgetAreaText, budgetAreaBg, budgetAreaCurrentBg, panel, monthOffset);
   }
 
   private void setSeriesColors(JComponent component, Paintable panel, int monthOffset, int row) {
     if (row % 2 == 0) {
-      setColors(seriesText, seriesEvenBg, seriesCurrentEvenBg, component, panel, monthOffset);
+      setColors(component, seriesText, seriesEvenBg, seriesCurrentEvenBg, panel, monthOffset);
     }
     else {
-      setColors(seriesText, seriesOddBg, seriesCurrentOddBg, component, panel, monthOffset);
+      setColors(component, seriesText, seriesOddBg, seriesCurrentOddBg, panel, monthOffset);
     }
   }
 
-  private void setColors(Color textColor, Painter bgPainter, Painter currentMonthBgPainter,
-                         JComponent component, Paintable panel, int monthOffset) {
+  private void setColors(JComponent component, Color textColor, Painter bgPainter, Painter currentMonthBgPainter,
+                         Paintable panel, int monthOffset) {
     if (monthOffset == 0) {
       setColors(component, textColor, panel, currentMonthBgPainter);
     }

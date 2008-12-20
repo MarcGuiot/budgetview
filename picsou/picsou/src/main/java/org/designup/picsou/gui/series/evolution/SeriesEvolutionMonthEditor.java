@@ -106,27 +106,16 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
   private void updateBudgetAreaLabel(BudgetArea budgetArea) {
     Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, referenceMonthId));
     if (budgetArea.equals(BudgetArea.UNCATEGORIZED)) {
-      label.setText(format(balanceStat, BalanceStat.UNCATEGORIZED));
+      label.setText(format(balanceStat, BalanceStat.UNCATEGORIZED, budgetArea));
     }
     else {
       if (balanceStat != null) {
-        label.setText(format(balanceStat, BalanceStat.getPlanned(budgetArea)));
+        label.setText(format(balanceStat, BalanceStat.getPlanned(budgetArea), budgetArea));
       }
       else {
         label.setText("");
       }
     }
-  }
-
-  private String format(Glob glob, DoubleField field) {
-    if (glob == null) {
-      return "";
-    }
-    Double value = glob.get(field);
-    if (Amounts.isNullOrZero(value)) {
-      return "";
-    }
-    return Formatting.toString(value);
   }
 
   private void updateSeriesButton(Integer itemId, JButton button, PaintablePanel panel) {
@@ -138,7 +127,9 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
       button.setText("");
     }
     else {
-      button.setText(format(seriesStat, SeriesStat.PLANNED_AMOUNT));
+      Glob series = repository.find(Key.create(Series.TYPE, itemId));
+      BudgetArea budgeArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
+      button.setText(format(seriesStat, SeriesStat.PLANNED_AMOUNT, budgeArea));
     }
   }
 
@@ -146,17 +137,17 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
     Integer id = seriesWrapper.get(SeriesWrapper.ID);
     if (id.equals(SeriesWrapper.BALANCE_SUMMARY_ID)) {
       Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, referenceMonthId));
-      label.setText(format(balanceStat, BalanceStat.MONTH_BALANCE));
+      label.setText(format(balanceStat, BalanceStat.MONTH_BALANCE, null));
     }
     else if (id.equals(SeriesWrapper.MAIN_POSITION_SUMMARY_ID)) {
       Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, referenceMonthId));
-      label.setText(format(balanceStat, BalanceStat.END_OF_MONTH_ACCOUNT_POSITION));
+      label.setText(format(balanceStat, BalanceStat.END_OF_MONTH_ACCOUNT_POSITION, null));
     }
     else if (id.equals(SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID)) {
       Glob balanceStat = repository.find(Key.create(SavingsBalanceStat.MONTH, referenceMonthId,
                                                     SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID));
       if (balanceStat != null) {
-        label.setText(format(balanceStat, SavingsBalanceStat.END_OF_MONTH_POSITION));
+        label.setText(format(balanceStat, SavingsBalanceStat.END_OF_MONTH_POSITION, null));
       }
       else {
         label.setText(null);
@@ -165,6 +156,20 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
     else {
       throw new InvalidParameter("Unexpected ID: " + id);
     }
+  }
+
+  private String format(Glob glob, DoubleField field, BudgetArea budgetArea) {
+    if (glob == null) {
+      return "";
+    }
+    Double value = glob.get(field);
+    if (Amounts.isNullOrZero(value)) {
+      return "";
+    }
+    if (budgetArea != null) {
+      return Formatting.toString(value, budgetArea);
+    }
+    return Formatting.toString(value);
   }
 
   protected HyperlinkButton createHyperlinkButton(Action action) {
