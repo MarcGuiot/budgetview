@@ -465,6 +465,26 @@ public class Table extends AbstractSwingUIComponent {
     };
   }
 
+  public Assertion foregroundNear(final int row, final int column, final Object expected) {
+    return new Assertion() {
+      public void check() throws Exception {
+        final Component component = getSwingRendererComponentAt(row, column);
+        ColorUtils.assertSimilar("Error at (" + row + ", " + column + ")",
+                                 expected, component.getForeground());
+      }
+    };
+  }
+
+  public Assertion backgroundNear(final int row, final int column, final Object expected) {
+    return new Assertion() {
+      public void check() throws Exception {
+        final Component component = getSwingRendererComponentAt(row, column);
+        ColorUtils.assertSimilar("Error at (" + row + ", " + column + ")",
+                                 expected, component.getBackground());
+      }
+    };
+  }
+
   /**
    * Checks the background color of the table cells using either Color or String objects
    *
@@ -973,7 +993,7 @@ public class Table extends AbstractSwingUIComponent {
                                                      jTable.getModel().getValueAt(row, col),
                                                      jTable.isCellSelected(row, col),
                                                      false, row, col);
-        ColorUtils.assertEquals("Error at (" + row + ", " + col + ") -",
+        ColorUtils.assertEquals("Error at (" + row + ", " + col + ")",
                                 colors[row][col], accessor.getColor(component));
       }
     }
@@ -1048,7 +1068,7 @@ public class Table extends AbstractSwingUIComponent {
           cellRenderer.getTableCellRendererComponent(jTable,
                                                      jTable.getModel().getValueAt(row, col),
                                                      jTable.isCellSelected(row, col), false, row, col);
-        AssertAdapter.assertEquals("Error at (" + row + ", " + col + ") -",
+        AssertAdapter.assertEquals("Error at (" + row + ", " + col + ")",
                                    properties[row][col], accessor.getProperty(component));
       }
     }
