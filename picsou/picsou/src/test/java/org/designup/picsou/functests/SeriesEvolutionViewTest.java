@@ -3,6 +3,8 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.gui.model.BalanceStat;
+import org.globsframework.model.format.GlobPrinter;
 
 public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
@@ -14,7 +16,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
   public void testStandardDisplay() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "00000123", 25.0, "2008/07/12")
+      .addBankAccount(30006, 10674, "00000123", -125.0, "2008/07/12")
       .addTransaction("2008/07/12", -100.00, "Auchan")
       .addTransaction("2008/07/05", -30.00, "Free Telecom")
       .addTransaction("2008/07/05", -50.00, "EDF")
@@ -38,12 +40,18 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .selectPositiveAmounts()
       .setAmount(100.00)
       .validate();
-    
+
     timeline.selectMonth("2008/12");
     budgetView.specials.createSeries()
       .setName("Christmas")
       .setCategory(MasterCategory.GIFTS)
       .setAmount(300.00)
+      .validate();
+
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.editSeries("Groceries")
+      .switchToManual()
+      .setAmount(20)
       .validate();
 
     timeline.selectMonth("2008/07");
@@ -53,7 +61,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     );
     seriesEvolution.initContent()
       .add("Balance", "", "80.00", "170.00", "120.00", "170.00", "220.00", "-130.00", "120.00")
-      .add("Main account", "", "25.00", "195.00", "315.00", "485.00", "705.00", "575.00", "695.00")
+      .add("Main account", "", "-125.00", "45.00", "165.00", "335.00", "555.00", "425.00", "545.00")
       .add("Savings account", "", "", "", "", "", "", "", "")
       .add("To categorize", "", "40.00", "", "", "", "", "", "")
       .add("Income", "", "300.00", "300.00", "300.00", "300.00", "300.00", "300.00", "300.00")
@@ -69,6 +77,23 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Lottery", "", "", "", "", "", "+100.00", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
       .check();
+
+    seriesEvolution.checkForeground("To categorize", "Jul 08", "red");
+
+    seriesEvolution.checkForeground("Main account", "Jul 08", "darkRed");
+    seriesEvolution.checkForeground("Main account", "Aug 08", "darkGrey");
+    
+    seriesEvolution.checkForeground("Groceries", "Jul 08", "red");
+    seriesEvolution.checkForeground("Groceries", "Aug 08", "0022BB");
+
+    seriesEvolution.checkForeground("Envelopes", "Jul 08", "darkGrey"); // should be darkRed
+    seriesEvolution.checkForeground("Envelopes", "Aug 08", "darkGrey");
+
+    seriesEvolution.checkForeground("Recurring", "Jul 08", "darkGrey");
+    seriesEvolution.checkForeground("Recurring", "Aug 08", "darkGrey");
+
+    seriesEvolution.checkForeground("Energy", "Jul 08", "0022BB");
+    seriesEvolution.checkForeground("Energy", "Aug 08", "0022BB");
   }
 
   public void testNoData() throws Exception {

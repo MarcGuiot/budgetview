@@ -446,7 +446,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     mainAccounts
       .checkEstimatedPosition(100)
-      .checkEstimatedPositionColor("darkGreen")
+      .checkEstimatedPositionColor("darkGray")
       .checkLimit(0);
 
     mainAccounts
@@ -456,10 +456,10 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.setLimit(-2000, false)
       .checkLimit(-2000)
-      .checkEstimatedPositionColor("green");
+      .checkEstimatedPositionColor("darkGray");
 
     mainAccounts.setLimit(0, false)
-      .checkEstimatedPositionColor("darkGreen");
+      .checkEstimatedPositionColor("darkGray");
 
     timeline.selectMonth("2008/07");
     mainAccounts

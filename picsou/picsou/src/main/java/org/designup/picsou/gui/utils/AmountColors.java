@@ -8,17 +8,18 @@ import org.globsframework.gui.splits.color.ColorLocator;
 import java.awt.*;
 
 public class AmountColors implements ColorChangeListener {
-  public Color balanceZero;
-  public Color balancePlus4;
-  public Color balancePlus3;
-  public Color balancePlus2;
-  public Color balancePlus1;
-  public Color balancePlus05;
-  public Color balanceMinus4;
-  public Color balanceMinus3;
-  public Color balanceMinus2;
-  public Color balanceMinus1;
-  public Color balanceMinus05;
+  private Color balanceZero;
+  private Color balancePlus4;
+  private Color balancePlus3;
+  private Color balancePlus2;
+  private Color balancePlus1;
+  private Color balancePlus05;
+  private Color balanceMinus4;
+  private Color balanceMinus3;
+  private Color balanceMinus2;
+  private Color balanceMinus1;
+  private Color balanceMinus05;
+  private Color normalText;
 
   public AmountColors(Directory directory) {
     directory.get(ColorService.class).addListener(this);
@@ -36,9 +37,10 @@ public class AmountColors implements ColorChangeListener {
     balanceMinus2 = colorLocator.get(PicsouColors.PERIOD_BALANCE_MINUS_2);
     balanceMinus1 = colorLocator.get(PicsouColors.PERIOD_BALANCE_MINUS_1);
     balanceMinus05 = colorLocator.get(PicsouColors.PERIOD_BALANCE_MINUS_05);
+    normalText = colorLocator.get("block.total");
   }
 
-  public Color get(double diff) {
+  public Color getIndicatorColor(double diff) {
     Color color = balanceZero;
     if (diff > 400) {
       color = balancePlus4;
@@ -71,5 +73,30 @@ public class AmountColors implements ColorChangeListener {
       color = balanceMinus05;
     }
     return color;
-  }  
+  }
+
+  public Color getTextColor(double value) {
+    return getTextColor(value, normalText);
+  }
+
+  public Color getTextColor(double value, Color normalColor) {
+    Color color = normalColor;
+    if (value < -400) {
+      color = balanceMinus4;
+    }
+    else if (value < -200) {
+      color = balanceMinus3;
+    }
+    else if (value < -100) {
+      color = balanceMinus2;
+    }
+    else if (value < -50) {
+      color = balanceMinus1;
+    }
+    else if (value < 0) {
+      color = balanceMinus05;
+    }
+    return color;
+  }
+
 }

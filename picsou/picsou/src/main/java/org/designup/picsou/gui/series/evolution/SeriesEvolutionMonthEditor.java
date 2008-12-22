@@ -16,6 +16,7 @@ import org.globsframework.gui.splits.components.HyperlinkButton;
 import org.globsframework.gui.splits.painters.PaintablePanel;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.utils.LabelCustomizers;
+import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -23,7 +24,6 @@ import org.globsframework.model.KeyBuilder;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
-import org.globsframework.metamodel.fields.DoubleField;
 
 import javax.swing.*;
 import java.awt.*;
@@ -82,20 +82,20 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
 
     switch (SeriesWrapperType.get(seriesWrapper)) {
       case BUDGET_AREA:
-        updateBudgetAreaLabel(BudgetArea.get(itemId));
-        colors.setColors(seriesWrapper, row, offset, isSelected, label, labelPanel);
+        label.setText(getBudgetAreaLabelText(BudgetArea.get(itemId)));
+        colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, label, labelPanel);
         return labelPanel;
 
       case SERIES:
         JButton button = render ? rendererButton : editorButton;
+        button.setText(getSeriesButtonText(itemId));
         PaintablePanel panel = render ? rendererPanel : editorPanel;
-        updateSeriesButton(itemId, button, panel);
-        colors.setColors(seriesWrapper, row, offset, isSelected, button, panel);
+        colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, button, panel);
         return panel;
 
       case SUMMARY:
-        updateSummaryLabel(seriesWrapper);
-        colors.setColors(seriesWrapper, row, offset, isSelected, label, labelPanel);
+        label.setText(getSummaryLabelText(seriesWrapper));
+        colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, label, labelPanel);
         return labelPanel;
 
       default:
@@ -103,66 +103,78 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
     }
   }
 
-  private void updateBudgetAreaLabel(BudgetArea budgetArea) {
+  private String getBudgetAreaLabelText(BudgetArea budgetArea) {
     Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, referenceMonthId));
     if (budgetArea.equals(BudgetArea.UNCATEGORIZED)) {
-      label.setText(format(balanceStat, BalanceStat.UNCATEGORIZED, budgetArea));
+      return format(balanceStat, BalanceStat.UNCATEGORIZED, budgetArea);
     }
-    else {
-      if (balanceStat != null) {
-        label.setText(format(balanceStat, BalanceStat.getPlanned(budgetArea), budgetArea));
-      }
-      else {
-        label.setText("");
-      }
+    else if (balanceStat != null) {
+      return format(balanceStat, BalanceStat.getPlanned(budgetArea), budgetArea);
     }
+    return "";
   }
 
-  private void updateSeriesButton(Integer itemId, JButton button, PaintablePanel panel) {
+  private String getSeriesButtonText(Integer itemId) {
     Glob seriesStat = repository.find(KeyBuilder.init(SeriesStat.TYPE)
       .set(SeriesStat.MONTH, referenceMonthId)
       .set(SeriesStat.SERIES, itemId)
       .get());
-    if (seriesStat == null || Amounts.isNullOrZero(seriesStat.get(SeriesStat.PLANNED_AMOUNT))) {
-      button.setText("");
+    if (seriesStat == null) {
+      return "";
+    }
+
+    Double observed = seriesStat.get(SeriesStat.AMOUNT);
+    Double planned = seriesStat.get(SeriesStat.PLANNED_AMOUNT);
+    Double value;
+    if (!Amounts.isNullOrZero(observed) && !Amounts.isNullOrZero(planned)) {
+      if (observed < 0 && observed < planned) {
+        value = observed;
+      }
+      else {
+        value = planned;
+      }
+    }
+    else if (!Amounts.isNullOrZero(planned)) {
+      value = planned;
     }
     else {
-      Glob series = repository.find(Key.create(Series.TYPE, itemId));
-      BudgetArea budgeArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
-      button.setText(format(seriesStat, SeriesStat.PLANNED_AMOUNT, budgeArea));
+      value = observed;
     }
+
+    Glob series = repository.find(Key.create(Series.TYPE, itemId));
+    BudgetArea budgeArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
+    return format(value, budgeArea);
   }
 
-  private void updateSummaryLabel(Glob seriesWrapper) {
+  private String getSummaryLabelText(Glob seriesWrapper) {
     Integer id = seriesWrapper.get(SeriesWrapper.ID);
     if (id.equals(SeriesWrapper.BALANCE_SUMMARY_ID)) {
       Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, referenceMonthId));
-      label.setText(format(balanceStat, BalanceStat.MONTH_BALANCE, null));
+      return format(balanceStat, BalanceStat.MONTH_BALANCE, null);
     }
-    else if (id.equals(SeriesWrapper.MAIN_POSITION_SUMMARY_ID)) {
+
+    if (id.equals(SeriesWrapper.MAIN_POSITION_SUMMARY_ID)) {
       Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, referenceMonthId));
-      label.setText(format(balanceStat, BalanceStat.END_OF_MONTH_ACCOUNT_POSITION, null));
+      return format(balanceStat, BalanceStat.END_OF_MONTH_ACCOUNT_POSITION, null);
     }
-    else if (id.equals(SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID)) {
+
+    if (id.equals(SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID)) {
       Glob balanceStat = repository.find(Key.create(SavingsBalanceStat.MONTH, referenceMonthId,
                                                     SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID));
-      if (balanceStat != null) {
-        label.setText(format(balanceStat, SavingsBalanceStat.END_OF_MONTH_POSITION, null));
-      }
-      else {
-        label.setText(null);
-      }
+      return format(balanceStat, SavingsBalanceStat.END_OF_MONTH_POSITION, null);
     }
-    else {
-      throw new InvalidParameter("Unexpected ID: " + id);
-    }
+
+    throw new InvalidParameter("Unexpected ID: " + id);
   }
 
   private String format(Glob glob, DoubleField field, BudgetArea budgetArea) {
     if (glob == null) {
       return "";
     }
-    Double value = glob.get(field);
+    return format(glob.get(field), budgetArea);
+  }
+
+  private String format(Double value, BudgetArea budgetArea) {
     if (Amounts.isNullOrZero(value)) {
       return "";
     }

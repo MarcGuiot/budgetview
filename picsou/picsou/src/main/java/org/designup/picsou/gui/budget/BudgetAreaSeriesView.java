@@ -48,7 +48,7 @@ public class BudgetAreaSeriesView extends View {
   private GlobMatcher seriesFilter;
   private Repeat<Glob> seriesRepeat;
   private List<Key> currentSeries = Collections.emptyList();
-  private BudgetAreaSummaryComputer summaryComputer;
+  private BudgetAreaHeaderUpdater headerUpdater;
 
   protected BudgetAreaSeriesView(String name, final BudgetArea budgetArea, final GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -104,8 +104,9 @@ public class BudgetAreaSeriesView extends View {
   }
 
   void update() {
-    summaryComputer.update(repository.getAll(BalanceStat.TYPE,
-                                             GlobMatchers.fieldIn(BalanceStat.MONTH, selectedMonthIds)));
+    headerUpdater.update(repository.getAll(BalanceStat.TYPE,
+                                            GlobMatchers.fieldIn(BalanceStat.MONTH, selectedMonthIds)),
+                          budgetArea);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -119,13 +120,13 @@ public class BudgetAreaSeriesView extends View {
     Gauge gauge = BudgetAreaGaugeFactory.createGauge(budgetArea);
     builder.add("totalGauge", gauge);
 
-    this.summaryComputer =
-      new BudgetAreaSummaryComputer(budgetArea,
-                                    TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
-                                    repository, directory);
-    this.summaryComputer.setColors("block.total",
-                                   "block.total.overrun.error",
-                                   "block.total.overrun.positive");
+    this.headerUpdater =
+      new BudgetAreaHeaderUpdater(
+        TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
+                                   repository, directory);
+    this.headerUpdater.setColors("block.total",
+                                  "block.total.overrun.error",
+                                  "block.total.overrun.positive");
 
     seriesRepeat =
       builder.addRepeat("seriesRepeat",

@@ -70,7 +70,7 @@ public class MainAccountViewPanel extends AccountViewPanel {
 
     if (amount != null) {
       double diff = amount - AccountPositionThreshold.getValue(repository);
-      estimatedPositionButton.setForeground(amountColors.get(diff));
+      estimatedPositionButton.setForeground(amountColors.getTextColor(diff));
     }
   }
 

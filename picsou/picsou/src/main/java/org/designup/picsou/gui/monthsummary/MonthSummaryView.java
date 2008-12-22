@@ -3,6 +3,7 @@ package org.designup.picsou.gui.monthsummary;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.budget.BudgetAreaSummaryComputer;
+import org.designup.picsou.gui.budget.BudgetAreaHeaderUpdater;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.BalanceGraph;
 import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
@@ -41,7 +42,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.List;
 
 public class MonthSummaryView extends View implements GlobSelectionListener {
   private static final GlobMatcher USER_SERIES_MATCHER =
@@ -190,14 +190,16 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
   private class BudgetAreaUpdater implements ChangeSetListener, GlobSelectionListener {
     private SortedSet<Integer> selectedMonths = new TreeSet<Integer>();
     private BudgetAreaSummaryComputer summaryComputer;
+    private BudgetArea budgetArea;
 
     public BudgetAreaUpdater(BudgetArea budgetArea, JButton amountLabel, JLabel plannedLabel, Gauge gauge) {
+      this.budgetArea = budgetArea;
       directory.get(SelectionService.class).addListener(this, Month.TYPE);
       repository.addChangeListener(this);
       this.summaryComputer =
-        new BudgetAreaSummaryComputer(budgetArea,
-                                      TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
-                                      repository, directory);
+        new BudgetAreaHeaderUpdater(
+          TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
+                                     repository, directory);
       update();
     }
 
@@ -224,7 +226,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
     public void update() {
       GlobList balanceStats = repository.getAll(BalanceStat.TYPE, fieldIn(BalanceStat.MONTH, selectedMonths));
-      summaryComputer.update(balanceStats);
+      summaryComputer.update(balanceStats, budgetArea);
     }
   }
 

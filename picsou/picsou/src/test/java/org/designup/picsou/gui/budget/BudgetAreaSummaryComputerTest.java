@@ -212,11 +212,11 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
       directory.add(new ColorService());
 
       this.computer =
-        new BudgetAreaSummaryComputer(budgetArea,
-                                      TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
-                                      repository, directory);
+        new BudgetAreaHeaderUpdater(
+          TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
+                                     repository, directory);
 
-      this.computer.update(new GlobList(balanceStat));
+      this.computer.update(new GlobList(balanceStat), budgetArea);
     }
 
     public Checker checkObserved(String label) {

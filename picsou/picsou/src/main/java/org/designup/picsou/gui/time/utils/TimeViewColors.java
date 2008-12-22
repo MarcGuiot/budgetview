@@ -78,6 +78,6 @@ public class TimeViewColors implements ColorChangeListener {
   }
 
   public Color getAmountColor(double diff) {
-    return amountColors.get(diff);
+    return amountColors.getIndicatorColor(diff);
   }
 }

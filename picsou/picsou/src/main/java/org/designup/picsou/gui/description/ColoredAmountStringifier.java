@@ -32,7 +32,7 @@ public class ColoredAmountStringifier implements GlobListStringifier {
     StringBuilder builder = new StringBuilder();
     builder
       .append("<font color='")
-      .append(colors.get(total))
+      .append(colors.getIndicatorColor(total))
       .append("'>");
 
     if (total == 0) {

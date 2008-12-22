@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import junit.framework.AssertionFailedError;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.ProfileType;
@@ -75,7 +76,12 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public TextBox getAmountTextBox() {
-    return dialog.getInputTextBox("amountEditor");
+    try {
+      return dialog.getInputTextBox("amountEditor");
+    }
+    catch (ItemNotFoundException e) {
+      throw new AssertionFailedError("Amount editor not found - make sure the series is in manual mode");
+    }
   }
 
   public SeriesEditionDialogChecker setAmount(double value) {
