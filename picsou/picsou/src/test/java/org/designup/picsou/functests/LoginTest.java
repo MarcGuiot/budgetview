@@ -284,7 +284,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
           window.getButton("Import").click();
           assertTrue(window.getComboBox("accountBank")
             .contentEquals("Autre", "AXA Banque", "BNP", "Caisse d'épargne", "CIC",
-                           "Crédit Agricole", "Crédit Mutuel", "La Poste", "LCL",
+                           "Crédit Agricole", "Crédit Mutuel", "ING Direct", "La Poste", "LCL",
                            "Société Générale"));
           return window.getButton("Skip file").triggerClick();
         }

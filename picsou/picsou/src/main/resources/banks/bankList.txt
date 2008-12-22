@@ -8,3 +8,4 @@ bnp.xml
 creditMutuel.xml
 lcl.xml
 axa.xml
+ingdirect.xml
