@@ -103,7 +103,20 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
         try {
           repository.startChangeSet();
           for (Glob transaction : currentTransactions) {
-            repository.setTarget(transaction.getKey(), Transaction.SERIES, seriesKey);
+            Glob series = repository.get(seriesKey);
+            Glob mirorSeries = repository.findLinkTarget(series, Series.MIROR_SERIES);
+            if (mirorSeries != null) {
+              Integer account = transaction.get(Transaction.ACCOUNT);
+              if (account.equals(series.get(Series.TO_ACCOUNT))) {
+                repository.setTarget(transaction.getKey(), Transaction.SERIES, seriesKey);
+              }
+              else {
+                repository.setTarget(transaction.getKey(), Transaction.SERIES, mirorSeries.getKey());
+              }
+            }
+            else {
+              repository.setTarget(transaction.getKey(), Transaction.SERIES, seriesKey);
+            }
             repository.setTarget(transaction.getKey(), Transaction.CATEGORY, categoryKey);
           }
         }

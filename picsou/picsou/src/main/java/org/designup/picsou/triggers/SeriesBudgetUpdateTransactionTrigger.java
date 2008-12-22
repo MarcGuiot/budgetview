@@ -94,7 +94,14 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
     int account;
     Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
     Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-    if (fromAccount == null && toAccount == null) {
+
+    if (series.get(Series.MIROR_SERIES) != null) {
+      account = toAccount.get(Account.ID);
+    }
+    else if (series.get(Series.IS_MIROR)) {
+      account = fromAccount.get(Account.ID);
+    }
+    else if (fromAccount == null && toAccount == null) {
       account = Account.MAIN_SUMMARY_ACCOUNT_ID;
     }
     else {

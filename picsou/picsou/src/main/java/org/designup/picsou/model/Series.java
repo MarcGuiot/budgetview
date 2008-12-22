@@ -69,6 +69,12 @@ public class Series {
   @Target(Account.class)
   public static LinkField TO_ACCOUNT;
 
+  @Target(Series.class)
+  public static LinkField MIROR_SERIES; // si les deux comptes sont importés.
+
+  @DefaultBoolean(false)
+  public static BooleanField IS_MIROR;
+
   @DefaultBoolean(true)
   public static BooleanField JANUARY;
 

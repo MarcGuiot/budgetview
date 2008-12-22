@@ -29,7 +29,8 @@ import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
-import static org.globsframework.gui.views.utils.LabelCustomizers.*;
+import static org.globsframework.gui.views.utils.LabelCustomizers.autoTooltip;
+import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
@@ -203,11 +204,13 @@ public class CategorizationView extends View implements TableView, Filterable {
       public void selectionUpdated(GlobSelection selection) {
         currentTransactions = selection.getAll(Transaction.TYPE);
         Set<Integer> months = new HashSet<Integer>();
+        Set<Integer> accounts = new HashSet<Integer>();
         for (Glob transaction : currentTransactions) {
           months.add(transaction.get(Transaction.MONTH));
+          accounts.add(transaction.get(Transaction.ACCOUNT));
         }
         for (Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat> filter : seriesRepeat) {
-          filter.getFirst().filterDates(months);
+          filter.getFirst().filterDates(months, accounts);
           filter.getSecond().setFilter(filter.getFirst());
         }
         colors.setSplitGroupSourceId(getSplitGroupSourceId());
