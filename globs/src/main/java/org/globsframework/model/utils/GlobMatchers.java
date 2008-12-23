@@ -164,6 +164,13 @@ public class GlobMatchers {
     return fieldEquals(link, targetvalue);
   }
 
+  public static GlobMatcher linkedTo(Key target, final LinkField link) {
+    if (target == null) {
+      return NONE;
+    }
+    final Integer targetvalue = target.get(link.getTargetKeyField());
+    return fieldEquals(link, targetvalue);
+  }
 
   public static GlobMatcher linkTargetFieldEquals(final Link link, final Field targetField,
                                                   final Object targetFieldValue) {

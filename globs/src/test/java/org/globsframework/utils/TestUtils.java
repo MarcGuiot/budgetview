@@ -145,6 +145,14 @@ public class TestUtils {
     }
   }
 
+  public static <T> void assertNotContains(Collection<T> actual, T... expectedItems) {
+    for (T item : expectedItems) {
+      if (actual.contains(item)) {
+        Assert.fail("Item '" + item + "' was found - actual collection: " + actual);
+      }
+    }
+  }
+
   public static void assertDateEquals(Date date1, Date date2, int margin) throws Exception {
     if (Math.abs(date1.getTime() - date2.getTime()) > margin) {
       Assert.assertEquals(date1, date2);
