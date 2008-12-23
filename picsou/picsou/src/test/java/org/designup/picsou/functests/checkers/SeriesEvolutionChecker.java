@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.AssertionFailedError;
 import org.designup.picsou.gui.series.evolution.SeriesEvolutionView;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
@@ -10,6 +11,7 @@ import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.utils.ColorUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +61,7 @@ public class SeriesEvolutionChecker extends DataChecker {
   private Table getTable() {
     if (table == null) {
       table = mainWindow.getTable("seriesEvolutionTable");
-      table.setCellValueConverter(0, new BlancColumnConverter());
+      table.setCellValueConverter(0, new BlankColumnConverter());
       MonthColumnConverter converter = new MonthColumnConverter();
       for (int i = 2; i < 2 + SeriesEvolutionView.MONTH_COLUMNS_COUNT; i++) {
         table.setCellValueConverter(i, converter);
@@ -95,6 +97,40 @@ public class SeriesEvolutionChecker extends DataChecker {
     UISpecAssert.assertFalse(getTable().containsRow(SeriesEvolutionView.LABEL_COLUMN_INDEX, seriesName));
   }
 
+  public SeriesEvolutionChecker checkValue(String rowLabel, String columnLabel, String displayedValue) {
+    Table table = getTable();
+    int row = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, rowLabel);
+    int column = table.getHeader().findColumnIndex(columnLabel);
+    assertThat(table.cellEquals(row, column, displayedValue));
+    return this;
+  }
+
+  public SeriesEvolutionChecker checkForeground(String rowLabel, String columnLabel, String expectedColor) {
+    Table table = getTable();
+    int row = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, rowLabel);
+    int column = table.getHeader().findColumnIndex(columnLabel);
+    final JComponent component = getTextComponent(row, column);
+    ColorUtils.assertSimilar("Error at (" + row + "," + column + ") - value=" + table.getContentAt(row, column),
+                             expectedColor, component.getForeground());
+    return this;
+  }
+
+  private JComponent getTextComponent(int row, int column) {
+    final Component renderer = table.getSwingRendererComponentAt(row, column);
+    org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)renderer);
+    JButton button = panel.findSwingComponent(JButton.class);
+    if (button != null) {
+      return button;
+    }
+
+    JLabel label = panel.findSwingComponent(JLabel.class);
+    if (label != null) {
+      return label;
+    }
+
+    throw new AssertionFailedError("unexpected component: " + panel.getDescription());
+  }
+
   public class SeriesTableChecker extends TableChecker {
 
     public SeriesTableChecker add(String label, String... monthValues) {
@@ -107,7 +143,7 @@ public class SeriesEvolutionChecker extends DataChecker {
     }
   }
 
-  private class BlancColumnConverter implements TableCellValueConverter {
+  private class BlankColumnConverter implements TableCellValueConverter {
     public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
       return "";
     }

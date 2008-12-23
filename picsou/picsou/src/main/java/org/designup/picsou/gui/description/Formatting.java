@@ -29,7 +29,7 @@ public class Formatting {
     if (value == null) {
       return "";
     }
-    if (value <= 0.) {
+    if (value <= 0) {
       return DECIMAL_FORMAT.format(value);
     }
     else {

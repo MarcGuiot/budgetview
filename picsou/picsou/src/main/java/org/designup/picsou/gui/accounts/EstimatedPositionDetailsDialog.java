@@ -6,6 +6,7 @@ import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.fields.DoubleField;
@@ -88,7 +89,8 @@ public class EstimatedPositionDetailsDialog {
       if (balanceStat == null) {
         return "";
       }
-      return Formatting.toString(Month.getLastDay(balanceStat.get(BalanceStat.MONTH)));
+      final String date = Formatting.toString(Month.getLastDay(balanceStat.get(BalanceStat.MONTH)));
+      return Lang.get("estimatedPositionDetails.date", date);
     }
   }
 

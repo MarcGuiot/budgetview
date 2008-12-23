@@ -20,6 +20,8 @@ public class HyperlinkButtonUI extends BasicButtonUI {
   private int descent;
   private boolean underline = true;
   private boolean autoHideIfDisabled = true;
+  private boolean useNormalColorWhenDisabled = false;
+
   private Color rolloverColor = Color.BLUE.brighter();
   private Color disabledColor = Color.GRAY;
   private PropertyChangeListener autoHideListener;
@@ -71,6 +73,10 @@ public class HyperlinkButtonUI extends BasicButtonUI {
     this.autoHideIfDisabled = autoHideIfDisabled;
   }
 
+  public void setUseNormalColorWhenDisabled(boolean value) {
+    this.useNormalColorWhenDisabled = value;
+  }
+
   public void setUnderline(boolean underline) {
     this.underline = underline;
   }
@@ -105,7 +111,7 @@ public class HyperlinkButtonUI extends BasicButtonUI {
     if (button.getModel().isRollover() || button.getModel().isArmed()) {
       d.setColor(rolloverColor);
     }
-    else if (!button.isEnabled()) {
+    else if (!button.isEnabled() && !useNormalColorWhenDisabled) {
       d.setColor(disabledColor);
     }
     else {
@@ -113,7 +119,8 @@ public class HyperlinkButtonUI extends BasicButtonUI {
     }
 
     d.drawString(text, x1, y1);
-    if (underline || button.getModel().isRollover()) {
+
+    if (button.isEnabled() && (underline || button.getModel().isRollover())) {
       d.drawLine(x1, y1 + 1, x1 + textWidth, y1 + 1);
     }
   }

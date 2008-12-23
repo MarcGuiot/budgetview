@@ -230,7 +230,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
         {"10/01/2006", "First operation", "-1.10"}
       })
       .doImport()
-      .checkImportMessage("You must select the account bank")
+      .checkImportMessage("You must select a bank for this account")
       .skipFile()
       .checkImportMessage("")
       .checkFileContent(new Object[][]{
@@ -288,7 +288,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkNoAccountBankSelected()
       .setAccountNumber("0123546")
       .doImport()
-      .checkImportMessage("You must select the account bank")
+      .checkImportMessage("You must select a bank for this account")
       .skipFile();
   }
 

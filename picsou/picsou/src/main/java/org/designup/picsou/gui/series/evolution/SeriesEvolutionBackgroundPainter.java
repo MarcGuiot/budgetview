@@ -23,7 +23,7 @@ public class SeriesEvolutionBackgroundPainter implements CellPainter, Paintable 
                     int row, int column,
                     boolean isSelected, boolean hasFocus,
                     int width, int height) {
-    seriesEvolutionColors.setColors(seriesWrapper, row, -1, isSelected, null, this);
+    seriesEvolutionColors.setColors(seriesWrapper, row, -1, -1, isSelected, null, this);
     painter.paint(g, width, height);
   }
 }

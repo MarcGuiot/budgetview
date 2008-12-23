@@ -1,7 +1,5 @@
 package org.designup.picsou.gui.budget;
 
-import org.designup.picsou.gui.components.Gauge;
-import org.designup.picsou.gui.components.TextDisplay;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.model.BudgetArea;
@@ -18,37 +16,28 @@ import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
 
-public class BudgetAreaSummaryComputer implements ColorChangeListener {
-  private BudgetArea budgetArea;
-  private TextDisplay amountLabel;
-  private TextDisplay plannedLabel;
-  private Gauge gauge;
-  private GlobRepository repository;
+public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
+  protected final GlobRepository repository;
 
-  private double overrun;
-  private double observed;
-  private double initiallyPlanned;
-  private double adjustedPlanned;
+  protected double overrun;
+  protected double observed;
+  protected double initiallyPlanned;
+  protected double adjustedPlanned;
 
-  private boolean isPartialOverrun;
-  private double gaugeActual;
-  private double gaugeTarget;
+  protected boolean isPartialOverrun;
+  protected double gaugeActual;
+  protected double gaugeTarget;
 
-  private Color normalAmountColor;
-  private Color errorOverrunAmountColor;
-  private Color positiveOverrunAmountColor;
+  protected Color normalAmountColor;
+  protected Color errorOverrunAmountColor;
+  protected Color positiveOverrunAmountColor;
+
   private String normalAmountColorKey = "block.inner.amount";
   private String errorOverrunAmountColorKey = "block.inner.amount.overrun.error";
   private String positiveOverrunAmountColorKey = "block.inner.amount.overrun.positive";
   private ColorService colorService;
 
-  public BudgetAreaSummaryComputer(BudgetArea budgetArea,
-                                   TextDisplay amountLabel, TextDisplay plannedLabel, Gauge gauge,
-                                   GlobRepository repository, Directory directory) {
-    this.budgetArea = budgetArea;
-    this.amountLabel = amountLabel;
-    this.plannedLabel = plannedLabel;
-    this.gauge = gauge;
+  public BudgetAreaSummaryComputer(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.colorService = directory.get(ColorService.class);
     this.colorService.addListener(this);
@@ -69,7 +58,7 @@ public class BudgetAreaSummaryComputer implements ColorChangeListener {
     this.positiveOverrunAmountColor = colorLocator.get(positiveOverrunAmountColorKey);
   }
 
-  public void update(GlobList balanceStats) {
+  public void update(GlobList balanceStats, BudgetArea budgetArea) {
     if (balanceStats.isEmpty()) {
       clearComponents();
       return;
@@ -171,7 +160,7 @@ public class BudgetAreaSummaryComputer implements ColorChangeListener {
       }
     }
 
-    updateComponents();
+    updateComponents(budgetArea);
   }
 
   private boolean isPastMonths(GlobList balanceStats) {
@@ -185,18 +174,18 @@ public class BudgetAreaSummaryComputer implements ColorChangeListener {
     return lastStat < currentMonthId;
   }
 
-  public String getObservedLabel() {
-    return format(observed);
+  public String getObservedLabel(BudgetArea budgetArea) {
+    return format(observed, budgetArea);
   }
 
-  public String getPlannedLabel() {
-    return format(adjustedPlanned);
+  public String getPlannedLabel(BudgetArea budgetArea) {
+    return format(adjustedPlanned, budgetArea);
   }
 
-  public String getPlannedTooltip() {
+  public String getPlannedTooltip(BudgetArea budgetArea) {
     if (Amounts.isNotZero(overrun)) {
       return Lang.get("monthsummary.planned.tooltip.overrun",
-                      format(initiallyPlanned),
+                      format(initiallyPlanned, budgetArea),
                       Formatting.toString(Math.abs(overrun)));
     }
     else {
@@ -216,39 +205,11 @@ public class BudgetAreaSummaryComputer implements ColorChangeListener {
     return Amounts.isNotZero(overrun) && overrun < 0;
   }
 
-  private String format(Double value) {
+  private String format(Double value, final BudgetArea budgetArea) {
     return Formatting.toString(value, budgetArea);
   }
 
-  private void clearComponents() {
-    amountLabel.setText(null);
-    plannedLabel.setText(null);
-    gauge.setValues(0, 0);
-  }
+  protected abstract void clearComponents();
 
-  private void updateComponents() {
-    amountLabel.setText(getObservedLabel());
-    amountLabel.setVisible(true);
-
-    plannedLabel.setText(getPlannedLabel());
-    plannedLabel.setToolTipText(getPlannedTooltip());
-    if (hasErrorOverrun()) {
-      plannedLabel.setForeground(errorOverrunAmountColor);
-    }
-    else if (hasPositiveOverrun()) {
-      plannedLabel.setForeground(positiveOverrunAmountColor);
-    }
-    else {
-      plannedLabel.setForeground(normalAmountColor);
-    }
-
-    gauge.setOverrunIsAnError(observed < 0);
-    if (isPartialOverrun) {
-      gauge.setValues(gaugeActual, gaugeTarget, overrun);
-    }
-    else {
-      gauge.setValues(gaugeActual, gaugeTarget);
-    }
-
-  }
+  protected abstract void updateComponents(BudgetArea budgetArea);
 }

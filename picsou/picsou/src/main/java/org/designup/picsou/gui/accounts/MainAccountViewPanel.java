@@ -32,6 +32,7 @@ public class MainAccountViewPanel extends AccountViewPanel {
     this.estimatedPositionButton.setAction(new OpenDetailsAction(directory));
     HyperlinkButtonUI hyperlinkButtonUI = new HyperlinkButtonUI();
     hyperlinkButtonUI.setAutoHideIfDisabled(false);
+    hyperlinkButtonUI.setUseNormalColorWhenDisabled(true);
     this.estimatedPositionButton.setUI(hyperlinkButtonUI);
     this.amountColors = new AmountColors(directory);
     this.estimatedPositionDetailsDialog =
@@ -70,7 +71,7 @@ public class MainAccountViewPanel extends AccountViewPanel {
 
     if (amount != null) {
       double diff = amount - AccountPositionThreshold.getValue(repository);
-      estimatedPositionButton.setForeground(amountColors.get(diff));
+      estimatedPositionButton.setForeground(amountColors.getTextColor(diff));
     }
   }
 

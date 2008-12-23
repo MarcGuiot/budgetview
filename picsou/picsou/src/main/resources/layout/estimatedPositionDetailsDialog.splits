@@ -2,8 +2,17 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
+
+    <style selector="label#estimatedPosition"
+           font="-,bold,20" fill="none" anchor="center" marginTop="20"/>
+
+    <style selector="label#estimatedPositionDate"
+           font="-,plain,9" foreground="estimatedPosition.label"
+           fill="none" anchor="center" marginTop="0" marginBottom="20"/>
+
     <style selector="label#message" foreground="estimatedPosition.message"
-           fill="horizontal" anchor="center" horizontalAlignment="center"
+           fill="horizontal" anchor="center" horizontalAlignment="left"
+           border="matte(0,0,1,0,#AAAAAA)"
            font="-,plain,10" marginBottom="5"/>
 
     <style selector="label.header" foreground="estimatedPosition.header" font="-,bold,12"
@@ -12,22 +21,22 @@
     <style selector="label.amountLabel" foreground="estimatedPosition.label" font="-,plain,10"
            fill="horizontal" anchor="center" horizontalAlignment="right" weightX="10"/>
 
-    <style selector="label.amount" foreground="estimatedPosition.amount"
+    <style selector="label.amount"
+           font="-,bold,11" foreground="estimatedPosition.amount"
            fill="none" anchor="right" marginLeft="15" marginRight="10" weightX="0"
            border="empty(5,0,5,0)"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(400,420)">
+  <panel styleClass="dialog" preferredSize="(400,450)">
     <column styleClass="innerDialog">
 
       <label text="$estimatedPositionDetails.title" styleClass="title"/>
 
       <scrollPane>
-        <column margin="10" opaque="false">
+        <column margin="10" marginTop="0" opaque="false">
 
-          <label ref="estimatedPosition" styleClass="totalAmount"/>
-          <label ref="estimatedPositionDate" styleClass="totalAmount"/>
-
+          <label ref="estimatedPosition"/>
+          <label ref="estimatedPositionDate"/>
 
           <label name="message" text="$estimatedPositionDetails.message"/>
 

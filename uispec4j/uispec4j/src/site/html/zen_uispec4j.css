@@ -6,7 +6,7 @@ img, div {
 /** body **/
 body {
   background-color: white;
-  background-image: url('bg_gradient.png');
+  background-image: url( 'bg_gradient.png' );
   background-repeat: repeat-x;
   font-family: Arial, sans-serif;
   color: #333;
@@ -70,6 +70,11 @@ h1.title {
   font-size: 30pt;
   color: #404040;
   margin-bottom: 0.5em;
+}
+
+h2 {
+  font-size: 24pt;
+  margin-bottom: 0;
 }
 
 h3 {
@@ -201,7 +206,6 @@ table#news td.content {
 
 }
 
-
 /* --- Sidebar --- */
 
 .with-navbar #sidebar-right {
@@ -302,16 +306,6 @@ div#footer A:visited {
   color: #bbb;
 }
 
-/** --- Other --- **/
-
-td.view-field-node-data-field-cover-field-cover-fid {
-  text-align: center;
-}
-
-a.feed-icon img {
-  margin-left: 2em;
-}
-
 #content-inner {
   background: white;
   padding-top: 0;
@@ -340,6 +334,59 @@ div.columns {
 img.triangle {
   margin-right: 0.2em;
 }
+
+/* ==================================================================================== */
+/* Download page table */
+/* ==================================================================================== */
+
+table#download {
+  width: 86%;
+  margin-left: auto;
+  margin-right: auto;
+  border: solid 1px #AAA;
+  padding: 10px;
+}
+
+table#download thead tr {
+  background: #EEEEEE;
+  border-bottom: solid 1px #AAA;;
+}
+
+table#download thead th {
+  text-align: left;
+  font-weight: normal;
+  padding: 5px 15px 5px 10px;
+}
+
+table#download td {
+  padding: 5px 15px 5px 10px;
+}
+
+/* ==================================================================================== */
+/* ChangeLog page */
+/* ==================================================================================== */
+
+div#changeLog th {
+  display: none;
+}
+
+div#changeLog td {
+  padding-bottom: 5px;
+}
+
+div#changeLog td {
+  vertical-align: top;
+  padding-right: 10px;
+}
+
+div#changeLog td a {
+  font-size: 8pt;
+  text-align: right;
+}
+
+/* ==================================================================================== */
+/*  MISC */
+/* ==================================================================================== */
 
 p.email-address {
   margin-top: 2em;
@@ -519,7 +566,10 @@ li a.active {
   color: #000;
 }
 
+/* ==================================================================================== */
 /** Drupal forms **/
+/* ==================================================================================== */
+
 .form-item, /* Wrapper for a form element (or group of form elements) and its label */
 .form-checkboxes,
   .form-radios {
@@ -573,10 +623,12 @@ li a.active {
   font-size: 0.9em;
 }
 
+/* ==================================================================================== */
 /** Drupal admin tables **/
 /* We overrode these styles in html-elements.css, but restore them for the
 * admin section of the site.
 */
+/* ==================================================================================== */
 
 .section-admin #content table {
   float: none;
@@ -621,13 +673,13 @@ div.code {
   border-width: 1px;
   border-color: #CCC;
   padding: 10px;
-  :
+:
 }
 
 pre {
-white-space: pre-wrap; /* css-3 */
-white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
-white-space: -pre-wrap; /* Opera 4-6 */
-white-space: -o-pre-wrap; /* Opera 7 */
-word-wrap: break-word; /* Internet Explorer 5.5+ */
+  white-space: pre-wrap; /* css-3 */
+  white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
+  white-space: -pre-wrap; /* Opera 4-6 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
 }

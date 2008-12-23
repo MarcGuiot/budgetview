@@ -21,6 +21,10 @@
         Added AbstractUIComponent methods foregroundNear() and backgroundNear() for approximative comparisons, and
         added named colors darkGrey, darkRed, darkGreen and darkBlue.
       </action>
+      <action dev="rmedina" type="add">
+        Added Table.foregroundNear(row, column, color) and Table.backgroundNear(row, column, color) for 
+        approximative comparisons.
+      </action>
       <action dev="mguiot" type="add">
         Add Key.MINUS and Key.ADD.
       </action>

@@ -57,18 +57,21 @@ public class AccountEditionPanel {
     builder = new GlobsPanelBuilder(getClass(), "/layout/accountEditionPanel.splits",
                                     repository, localDirectory);
 
-    builder.addCombo("accountBank", Bank.TYPE).setSelectionHandler(new GlobComboView.GlobSelectionHandler() {
-      public void processSelection(Glob bank) {
-        if (bank == null) {
-          return;
+    builder.addCombo("accountBank", Bank.TYPE)
+      .setShowEmptyOption(true)
+      .setEmptyOptionLabel(Lang.get("account.select.bank"))
+      .setSelectionHandler(new GlobComboView.GlobSelectionHandler() {
+        public void processSelection(Glob bank) {
+          if (bank == null) {
+            return;
+          }
+          GlobList entities = repository.findLinkedTo(bank, BankEntity.BANK);
+          Glob account = AccountEditionPanel.this.account;
+          if (account != null) {
+            repository.setTarget(account.getKey(), Account.BANK_ENTITY, entities.get(0).getKey());
+          }
         }
-        GlobList entities = repository.findLinkedTo(bank, BankEntity.BANK);
-        Glob account = AccountEditionPanel.this.account;
-        if (account != null) {
-          repository.setTarget(account.getKey(), Account.BANK_ENTITY, entities.get(0).getKey());
-        }
-      }
-    });
+      });
     builder.addEditor("name", Account.NAME).setNotifyOnKeyPressed(true);
     builder.addEditor("number", Account.NUMBER).setNotifyOnKeyPressed(true);
     builder.add("type", createAccountTypeCombo());

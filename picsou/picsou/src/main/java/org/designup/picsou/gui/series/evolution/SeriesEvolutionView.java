@@ -95,7 +95,7 @@ public class SeriesEvolutionView extends View {
       }
     };
 
-    SeriesEvolutionColors colors = new SeriesEvolutionColors(directory);
+    SeriesEvolutionColors colors = new SeriesEvolutionColors(parentRepository, directory);
     CellPainter backgroundPainter = new SeriesEvolutionBackgroundPainter(colors);
     TableExpansionColumn expandColumn = new TableExpansionColumn(backgroundPainter);
 
