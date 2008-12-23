@@ -35,11 +35,11 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
         if (values.contains(Transaction.SERIES)) {
           Glob previousSeries = repository.find(Key.create(Series.TYPE,
                                                            values.getPrevious(Transaction.SERIES)));
-          if (previousSeries != null) {
-            if (createdTransactionId != null) {
-              repository.delete(Key.create(Transaction.TYPE, createdTransactionId));
-            }
+//          if (previousSeries != null) {
+          if (createdTransactionId != null) {
+            repository.delete(Key.create(Transaction.TYPE, createdTransactionId));
           }
+//          }
           Integer newSeriesId = values.get(Transaction.SERIES);
           if (newSeriesId != null) {
             Glob series = repository.find(Key.create(Series.TYPE, newSeriesId));

@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.utils;
 
 import org.designup.picsou.model.*;
+import org.designup.picsou.triggers.SameAccountChecker;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -131,18 +132,48 @@ public class PicsouMatchers {
     private Integer budgetAreaId;
     private boolean exclusive;
     private Set<Integer> monthIds = Collections.emptySet();
+    private Set<Integer> accounts = Collections.emptySet();
 
     private SeriesFirstEndDateFilter(Integer budgetAreaId, boolean isExclusive) {
       this.budgetAreaId = budgetAreaId;
       exclusive = isExclusive;
     }
 
-    public void filterDates(Set<Integer> monthIds) {
+    public void filterDates(Set<Integer> monthIds, Set<Integer> accounts) {
       this.monthIds = monthIds;
+      this.accounts = accounts;
     }
 
     public boolean matches(Glob series, GlobRepository repository) {
       if (budgetAreaId.equals(series.get(Series.BUDGET_AREA))) {
+        Integer toAccount = series.get(Series.TO_ACCOUNT);
+        Integer fromAccount = series.get(Series.FROM_ACCOUNT);
+        if (exclusive) {
+          if (toAccount == null && fromAccount == null) {
+            SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
+            for (Integer account : accounts) {
+              if (!mainAccountChecker.isSame(account)) {
+                return false;
+              }
+            }
+          }
+          else {
+            if (series.get(Series.IS_MIROR)) {
+              return false;
+            }
+            SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
+            for (Integer account : accounts) {
+              if (toAccount != null && (account.equals(toAccount) || (toAccount == Account.MAIN_SUMMARY_ACCOUNT_ID && mainAccountChecker.isSame(account)))) {
+                continue;
+              }
+              if (fromAccount != null && (account.equals(fromAccount) || (fromAccount == Account.MAIN_SUMMARY_ACCOUNT_ID && mainAccountChecker.isSame(account)))) {
+                continue;
+              }
+              return false;
+            }
+          }
+        }
+
         Integer firstMonth = series.get(Series.FIRST_MONTH);
         Integer lastMonth = series.get(Series.LAST_MONTH);
         if (firstMonth == null && lastMonth == null) {

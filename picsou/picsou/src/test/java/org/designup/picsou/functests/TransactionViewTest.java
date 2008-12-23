@@ -181,7 +181,9 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     transactions.checkCategorizeIsDisable(0);
 
     views.selectBudget();
+    System.out.println("TransactionViewTest.testNavigatingInCategoriszationIsDisableForMirroirAndCreatedFromSeries");
     budgetView.savings.editSeries("Epargne")
+      .setName("new name for Epargne")
       .setFromAccount("External account")
       .selectAllMonths()
       .setAmount("100")
@@ -190,7 +192,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initContent()
-      .add("11/01/2006", TransactionType.VIREMENT, "Epargne", "", 100.00, "Epargne", MasterCategory.SAVINGS)
+      .add("11/01/2006", TransactionType.VIREMENT, "new name for Epargne", "", 100.00, "new name for Epargne", MasterCategory.SAVINGS)
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Virement", "", -100.00)
       .check();
 

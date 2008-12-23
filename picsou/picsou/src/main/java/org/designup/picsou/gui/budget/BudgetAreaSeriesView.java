@@ -59,7 +59,7 @@ public class BudgetAreaSeriesView extends View {
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
-        seriesDateFilter.filterDates(selectedMonthIds);
+        seriesDateFilter.filterDates(selectedMonthIds, Collections.<Integer>emptySet());
         updateRepeat(repository);
         update();
       }

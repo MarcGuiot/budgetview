@@ -118,6 +118,12 @@ public class Account {
     return !toAccount.get(Account.IS_IMPORTED_ACCOUNT) && !fromAccount.get(Account.IS_IMPORTED_ACCOUNT);
   }
 
+  public static boolean areBothImported(Glob fromAccount, Glob toAccount) {
+    return !(fromAccount == null || toAccount == null)
+           && toAccount.get(Account.IS_IMPORTED_ACCOUNT)
+           && fromAccount.get(Account.IS_IMPORTED_ACCOUNT);
+  }
+
   public static double getMultiplierForInOrOutputOfTheAccount(Glob fromAccount, Glob toAccount, Glob forAccount) {
 
     if (fromAccount == null && toAccount == null) {

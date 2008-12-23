@@ -14,50 +14,10 @@ import java.util.*;
 
 public class BalanceTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    GlobList account = null;
-    boolean updatePlannedOnly = false;
 
     if (changeSet.containsCreationsOrDeletions(Transaction.TYPE) ||
-        changeSet.containsUpdates(Transaction.AMOUNT)) {
-      Set<Key> created = changeSet.getCreated(Transaction.TYPE);
-      if (!created.isEmpty()) {
-//        if (!repository.get(key).get(Transaction.PLANNED)) {
-        account = repository.getAll(Account.TYPE);
-//        }
-      }
-      if (account == null) {
-        Set<Key> deleted = changeSet.getDeleted(Transaction.TYPE);
-        for (Key key : deleted) {
-          if (!changeSet.getPreviousValue(key).get(Transaction.PLANNED)) {
-            account = repository.getAll(Account.TYPE);
-            break;
-          }
-        }
-      }
-      if (account == null) {
-        Set<Key> updated = changeSet.getUpdated(Transaction.AMOUNT);
-        for (Key key : updated) {
-          if (!repository.get(key).get(Transaction.PLANNED)) {
-            account = repository.getAll(Account.TYPE);
-            break;
-          }
-        }
-      }
-
-      if (account == null) {
-        updatePlannedOnly = true;
-        account = GlobList.EMPTY;
-      }
-    }
-    else if (changeSet.containsChanges(Account.TYPE)) {
-      Set<Key> keySet = changeSet.getUpdated(Account.TYPE);
-      keySet.addAll(changeSet.getCreated(Account.TYPE));
-      account = new GlobList();
-      for (Key key : keySet) {
-        account.add(repository.get(key));
-      }
-    }
-    if (account != null) {
+        changeSet.containsUpdates(Transaction.AMOUNT) || changeSet.containsChanges(Account.TYPE)) {
+      GlobList account = repository.getAll(Account.TYPE);
       updateTransactionBalance(repository, account, false);
     }
   }
