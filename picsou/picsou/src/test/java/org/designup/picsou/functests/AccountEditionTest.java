@@ -53,6 +53,21 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
+  public void testABankMustBeSelected() throws Exception {
+    views.selectHome();
+
+    mainAccounts.createNewAccount()
+      .setAccountName("Main")
+      .checkNoBankSelected()
+      .checkValidationError("You must select a bank for this account")
+      .selectBank("Autre")
+      .validate();
+
+    mainAccounts.edit("Main")
+      .checkSelectedBank("Autre")
+      .cancel();
+  }
+
   public void testEmptyAccountNamesAreNotAllowed() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(30006, 10674, "0000123", 100.00, "15/10/2008")

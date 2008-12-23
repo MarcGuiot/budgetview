@@ -25,6 +25,18 @@ public class AccountEditionChecker extends DataChecker {
     return this;
   }
 
+  public AccountEditionChecker checkNoBankSelected() {
+    ComboBox accountBankCombo = dialog.getComboBox("accountBank");
+    assertThat(accountBankCombo.selectionEquals(null));
+    return this;
+  }
+
+  public AccountEditionChecker checkSelectedBank(String name) {
+    ComboBox accountBankCombo = dialog.getComboBox("accountBank");
+    assertThat(accountBankCombo.selectionEquals(name));
+    return this;
+  }
+
   public AccountEditionChecker checkAccountName(String name) {
     TextBox accountNameField = dialog.getInputTextBox("name");
     assertThat(accountNameField.textEquals(name));
