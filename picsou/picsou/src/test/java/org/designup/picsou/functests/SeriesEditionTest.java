@@ -2,6 +2,7 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.CategoryChooserChecker;
 import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
+import org.designup.picsou.functests.checkers.SeriesDeleteDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
@@ -880,7 +881,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.income.createSeries()
       .setName("AA")
-      .deleteSeries()
+      .deleteSelectedSeries()
       .checkSeriesListIsEmpty();
   }
 
@@ -898,15 +899,55 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.FOOD)
       .validate();
     categorization.setEnvelope("Forfait Kro", "AA", MasterCategory.FOOD, false);
+
     views.selectBudget();
-    SeriesEditionDialogChecker edition = budgetView.envelopes
-      .editSeriesList();
-    edition
+    SeriesEditionDialogChecker edition = budgetView.envelopes.editSeriesList();
+
+    SeriesDeleteDialogChecker deleteDialog = edition
       .selectSeries("AA")
-      .deleteSeriesWithConfirmation()
+      .deleteSelectedSeriesWithConfirmation();
+
+    deleteDialog
       .checkMessage()
       .validate();
+
     edition.checkSeriesListIsEmpty();
+    edition.validate();
+    budgetView.envelopes.checkSeriesNotPresent("AA");
+  }
+
+  public void testDeleteFromSingleSeriesEditionDialog() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -60, "Forfait Kro")
+      .load();
+
+    views.selectCategorization();
+    categorization.setEnvelope("Forfait Kro", "Drinks", MasterCategory.FOOD, true);
+    categorization.checkTable(new Object[][]{
+      {"30/06/2008", "Drinks", "Forfait Kro", -60.0}
+    });
+
+    views.selectBudget();
+    budgetView.envelopes.editSeries("Drinks").deleteCurrentSeriesWithConfirmationAndCancel().validate();
+    budgetView.envelopes.checkSeriesPresent("Drinks");
+    budgetView.envelopes.editSeries("Drinks").deleteCurrentSeriesWithConfirmation();
+    budgetView.envelopes.checkSeriesNotPresent("Drinks");
+
+    views.selectCategorization();
+    categorization.checkTable(new Object[][]{
+      {"30/06/2008", "", "Forfait Kro", -60.0}
+    });
+
+    views.selectBudget();
+    budgetView.envelopes.createSeries()
+      .setName("Empty")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+
+    budgetView.envelopes.editSeries("Empty").deleteCurrentSeries();
+    budgetView.envelopes.checkSeriesNotPresent("Empty");
+
   }
 
   public void testFillNameAndAmountWithKeyPressed() throws Exception {

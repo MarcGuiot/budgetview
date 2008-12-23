@@ -19,7 +19,7 @@
           </scrollPane>
         </column>
 
-        <column weightX="7" preferredSize="(440,500)">
+        <column weightX="7" preferredSize="(550,500)">
           <grid weightY="0.1">
             <label gridPos="(0,0)" text="$seriesEdition.name" styleClass="formLabel" marginBottom="4"/>
             <textField gridPos="(1,0,3,1)" ref="nameField" marginBottom="4"/>
@@ -119,10 +119,10 @@
         </column>
       </horizontalSplit>
 
-      <row ref="buttonSeriesPanel" styleClass="iconButtonGroup">
+      <row ref="seriesListButtonPanel" styleClass="iconButtonGroup">
         <button action="create" name="create" tooltipText="$series.create.tooltip"
                 icon='button_plus.png' disabledIcon='button_plus_disabled.png'/>
-        <button action="delete" name="delete" tooltipText="$series.delete.tooltip"
+        <button action="delete" name="deleteSelected" tooltipText="$series.delete.tooltip"
                 icon='button_minus.png' disabledIcon='button_minus_disabled.png'/>
         <filler fill="horizontal"/>
       </row>

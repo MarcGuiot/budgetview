@@ -3,9 +3,6 @@ TransactionDetails
 * Label
 * Type
 
-SeriesEditionDialog
-* Afficher/modifier le jour de debit pour les recurrences
-
 CategorizationView
 * Recherche/filtrage table
 * Selection d'operations similaires : ne pas scroller la table
@@ -14,6 +11,7 @@ CategorizationView
 
 TransactionView
 * Suppression de transactions ghost pour cloturer une serie ? (= alignement prevu / depense)
+* Filtrage transactions par TransactionType
 
 AccountView
 * Selection des comptes integres dans le total (exclusion comptes epargne)
@@ -48,9 +46,7 @@ Packaging
 * Desactiver choix langue dans l'installer, forcer en français
 
 General
-* Supprimer les subcats par defaut (mode avance - apporte plus de confusion que de valeur pour les novices)
 * Copier les donnees des tables dans le clipboard
-* voir opacite/joliesse des fenetres Globs de creation/deletion
 
 Undo/redo
 * Test Import
@@ -64,10 +60,6 @@ Gestion des banques
 
 Creation de transactions
  (soit achats effectues mais pas encore dans les releves, soit previsions plus vagues)
-
-Compte demo (pour essai par les utilisateurs + nos screencasts)
-* Mise au point fichier
-* Mode special full mais sans import
 
 Legal
 * Validation SLA par utilisateur a l'install ou a la creation de compte
@@ -95,17 +87,10 @@ I18N
 Nouveau
 -------
 
-* Affichage synthèse des mois suivants (+/- MonthSummaryView en sequence horizontale, avec projets)
 * Mecanique de backup/restore pour les utilisateurs (crypte ou non?)
-* Decouverte des mois actifs pour les series a partir des transactions
-* SMS ==> previsions de soldes de fin de mois
 * Remboursements
 
 * Vue intra-mois
-
-* Virements internes
-* Gerer la notion d'epargne (virements internes ?)
-
 
 ----
 

@@ -529,7 +529,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     SeriesEditionDialogChecker editionDialogChecker = budgetView.recurring.editSeriesList()
       .selectSeries("Groceries");
     editionDialogChecker
-      .deleteSeriesWithConfirmation()
+      .deleteSelectedSeriesWithConfirmation()
       .validate();
     editionDialogChecker.validate();
     budgetView.recurring.checkSeriesNotPresent("Groceries");

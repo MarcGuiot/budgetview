@@ -104,7 +104,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.envelopes.editSeriesList()
       .selectSeries("New envelope")
-      .deleteSeries()
+      .deleteSelectedSeries()
       .validate();
 
     views.selectData();

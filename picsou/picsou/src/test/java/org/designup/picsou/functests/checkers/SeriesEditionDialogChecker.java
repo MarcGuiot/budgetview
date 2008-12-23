@@ -434,8 +434,32 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker deleteSeries() {
-    dialog.getButton("delete").click();
+  public SeriesEditionDialogChecker deleteSelectedSeries() {
+    dialog.getButton("deleteSelected").click();
+    return this;
+  }
+
+  public SeriesDeleteDialogChecker deleteSelectedSeriesWithConfirmation() {
+    return SeriesDeleteDialogChecker.init(dialog.getButton("deleteSelected").triggerClick());
+  }
+
+  public void deleteCurrentSeries() {
+    dialog.getButton("Delete...").click();
+    assertFalse(dialog.isVisible());
+  }
+
+  public void deleteCurrentSeriesWithConfirmation() {
+    SeriesDeleteDialogChecker.init(dialog.getButton("Delete...").triggerClick())
+      .checkMessage()
+      .validate();
+    assertFalse(dialog.isVisible());
+  }
+
+  public SeriesEditionDialogChecker deleteCurrentSeriesWithConfirmationAndCancel() {
+    SeriesDeleteDialogChecker.init(dialog.getButton("Delete...").triggerClick())
+      .checkMessage()
+      .cancel();
+    assertTrue(dialog.isVisible());
     return this;
   }
 
@@ -632,10 +656,6 @@ public class SeriesEditionDialogChecker extends DataChecker {
     return this;
   }
 
-  public SeriesDeleteDialogChecker deleteSeriesWithConfirmation() {
-    return new SeriesDeleteDialogChecker(WindowInterceptor.getModalDialog(dialog.getButton("delete").triggerClick()));
-  }
-
   public SeriesEditionDialogChecker checkProfiles(String... profiles) {
     UISpecAssert.assertThat(getProfileCombo().contentEquals(profiles));
     return this;
@@ -716,15 +736,19 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkSeriesListIsHidden() {
-    checkComponentVisible(dialog, JPanel.class, "buttonSeriesPanel", false);
-    checkComponentVisible(dialog, JPanel.class, "seriesPanel", false);
+    checkSeriesListVisible(false);
     return this;
   }
 
   public SeriesEditionDialogChecker checkSeriesListIsVisible() {
-    checkComponentVisible(dialog, JPanel.class, "buttonSeriesPanel", true);
-    checkComponentVisible(dialog, JPanel.class, "seriesPanel", true);
+    checkSeriesListVisible(true);
     return this;
+  }
+
+  private void checkSeriesListVisible(boolean visible) {
+    checkComponentVisible(dialog, JPanel.class, "seriesListButtonPanel", visible);
+    checkComponentVisible(dialog, JPanel.class, "seriesPanel", visible);
+    checkComponentVisible(dialog, JButton.class, "deleteSingleSeries", !visible);
   }
 
   public SeriesEditionDialogChecker checkAmountIsDisabled() {

@@ -45,8 +45,8 @@ public class DialogDemo {
 
 //    showHelpDialog(repository, directory, frame);
 //    showSeriesWizardDialog(repository, directory, frame);
-//    showSeriesEditionDialog(repository, directory, frame);
-    showLicenseExpirationDialog(repository, directory, frame);
+    showSeriesEditionDialog(repository, directory, frame);
+//    showLicenseExpirationDialog(repository, directory, frame);
 //    showCategoriesEditionDialog(repository, directory);
   }
 
@@ -69,7 +69,7 @@ public class DialogDemo {
   private static void showSeriesEditionDialog(GlobRepository repository, Directory directory, JFrame frame) {
     SeriesEditionDialog dialog = new SeriesEditionDialog(frame, repository, directory);
     SplitsEditor.show(dialog.getDialog(), directory);
-//    dialog.show(BudgetArea.EXPENSES_ENVELOPE, Collections.singleton(200808));
+//    dialog.show(BudgetArea.ENVELOPES, Collections.singleton(200808));
     SplitsEditor.show(dialog.getDialog(), directory);
     dialog.show(BudgetArea.RECURRING, Collections.singleton(200808), null);
   }

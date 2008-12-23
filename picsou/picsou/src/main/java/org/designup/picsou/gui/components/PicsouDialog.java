@@ -77,19 +77,19 @@ public class PicsouDialog extends JDialog {
   }
 
   public void addPanelWithButtons(JPanel panel, Action ok, Action cancel) {
-    closeAction = cancel;
-    int buttonCount = 0;
-    if (ok != null) {
-      buttonCount++;
-    }
-    if (cancel != null) {
-      buttonCount++;
-    }
-    Insets noInsets = Gui.NO_INSETS;
-    GridBagBuilder builder = GridBagBuilder.init()
-      .add(panel, 0, 0, buttonCount + 1, 1, noInsets);
+    addPanelWithButtons(panel, ok, cancel, null);
+  }
 
-    builder.add(Box.createHorizontalGlue(), 0, 1, 1, 1, 1000, 0, Fill.HORIZONTAL, Anchor.CENTER);
+  public void addPanelWithButtons(JPanel panel, Action ok, Action cancel, JButton additionalAction) {
+    closeAction = cancel;
+    GridBagBuilder builder = GridBagBuilder.init()
+      .add(panel, 0, 0, 4 + 1, 1, Gui.NO_INSETS);
+
+    if (additionalAction != null) {
+      builder.add(additionalAction, 0, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS);
+    }
+
+    builder.add(Box.createHorizontalGlue(), 1, 1, 1, 1, 1000, 0, Fill.HORIZONTAL, Anchor.CENTER);
 
     JButton cancelButton = createButton(cancel);
     JButton okButton = createButton(ok);
@@ -97,17 +97,18 @@ public class PicsouDialog extends JDialog {
 
     Insets buttonInsets = new Insets(0, 10, 10, 10);
     if (Gui.isMacOSX()) {
-      builder.add(cancelButton, 1, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
-      builder.add(okButton, 2, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
+      builder.add(cancelButton, 2, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS);
+      builder.add(okButton, 3, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS);
     }
     else {
-      builder.add(okButton, 1, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
-      builder.add(cancelButton, 2, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, buttonInsets);
+      builder.add(okButton, 2, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS);
+      builder.add(cancelButton, 3, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS);
     }
 
     JPanel contentPane = builder.getPanel();
     setContentPane(contentPane);
   }
+
 
   public void setContentPane(Container contentPane) {
     ColorUpdater updater = new BackgroundColorUpdater("dialog.bg.bottom", contentPane);

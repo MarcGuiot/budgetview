@@ -806,7 +806,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectEnvelopes()
       .editSeries(false)
       .selectSeries("series1")
-      .deleteSeries()
+      .deleteSelectedSeries()
       .validate();
   }
 

@@ -146,6 +146,14 @@ public class BudgetViewChecker extends DataChecker {
       return builder.toString();
     }
 
+    public BudgetAreaChecker checkSeriesPresent(String... seriesName) {
+      Panel budgetPanel = getPanel();
+      for (String name : seriesName) {
+        UISpecAssert.assertTrue(budgetPanel.containsUIComponent(Button.class, name));
+      }
+      return this;
+    }
+
     public BudgetAreaChecker checkSeriesNotPresent(String... seriesName) {
       Panel budgetPanel = getPanel();
       for (String name : seriesName) {

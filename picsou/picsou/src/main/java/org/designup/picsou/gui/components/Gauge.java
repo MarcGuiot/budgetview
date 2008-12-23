@@ -1,11 +1,14 @@
 package org.designup.picsou.gui.components;
 
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.utils.Lang;
 import org.designup.picsou.model.util.Amounts;
+import org.designup.picsou.utils.Lang;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Gauge extends JPanel {
 
@@ -47,12 +50,41 @@ public class Gauge extends JPanel {
     setPreferredSize(new Dimension(200, 28));
 
     setToolTip("gauge.unset");
+
+    addMouseListener(new MouseAdapter() {
+      public void mouseClicked(MouseEvent e) {
+        System.out.println("Gauge.mouseClicked: ");
+        hideToolTip(Gauge.this);
+        showToolTip(Gauge.this);
+      }
+    }
+    );
+  }
+
+  public static void showToolTip(JComponent comp) {
+    Action action = comp.getActionMap().get("postTip");
+    if (action == null) {
+      return;
+    }
+    ActionEvent event = new ActionEvent(comp, ActionEvent.ACTION_PERFORMED,
+                                        "postTip", EventQueue.getMostRecentEventTime(), 0);
+    action.actionPerformed(event);
+  }
+
+  public static void hideToolTip(JComponent comp) {
+    Action action = comp.getActionMap().get("hideTip");
+    if (action == null) {
+      return;
+    }
+    ActionEvent event = new ActionEvent(comp, ActionEvent.ACTION_PERFORMED,
+                                        "hideTip", EventQueue.getMostRecentEventTime(), 0);
+    action.actionPerformed(event);
   }
 
   public void setValues(double actualValue, double targetValue) {
     this.actualValue = actualValue;
     this.targetValue = targetValue;
-    
+
     boolean sameSign = Math.signum(this.actualValue) * Math.signum(this.targetValue) >= 0;
     double absActual = Math.abs(this.actualValue);
     double absTarget = Math.abs(this.targetValue);

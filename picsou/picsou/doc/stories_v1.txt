@@ -3,19 +3,13 @@
 
 - Marc: Probleme de transaction plannifié a 0 (?)
 
-- Memory leak
-
 - Gestion des transactions decalees en debut de mois suivant
-
-- SED: suppression de serie quand la liste n'est pas affichee
 
 - Bug bouton "annuler filtrage"
 
 - Compte demo
 
 - Revoir explication seuil
-
-- AccountView : creation d'un compte d'epargne => le mettre directement en "epargne"
 
 - SED: Changement d'un mois sur une serie SINGLE_MONTH : preserver le montant et la selection
 
@@ -30,10 +24,6 @@
 
 ========================================================================================================
 
-====================================
-               RESTE
-====================================
-
 - saisie balance : maj date
 
 - tests d'undo/redo
@@ -44,8 +34,6 @@
 
 - TransactionDetails : mettre le compte, la date et le montant (faire un seul label ?)
 
-- TransactionView : Filtrage transactions par TransactionType
-- TransactionView : click sur serie d'une planned : ouvrir SED
 - transactionView : colonne compte
 
 - Verifier comportement appli avec firewall qui bloque les ports

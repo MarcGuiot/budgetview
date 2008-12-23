@@ -76,13 +76,14 @@ public class SeriesEditionDialog {
   private JPanel seriesPanel;
   private Key createdSeries;
   Integer currentlySelectedCategory;
-  private JPanel buttonSeriePanel;
+  private JPanel seriesListButtonPanel;
   private SeriesBudgetEditionPanel budgetEditionPanel;
   private GlobList selectedTransactions = new EmptyGlobList();
   private GlobLinkComboEditor fromAccountsCombo;
   private GlobLinkComboEditor toAccountsCombo;
   private JComboBox dateChooser;
   private CardHandler monthSelectionCards;
+  private JButton singleSeriesDeleteButton;
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -131,10 +132,10 @@ public class SeriesEditionDialog {
 
     builder.add("seriesList", seriesList.getComponent());
 
-    buttonSeriePanel = new JPanel();
-    builder.add("buttonSeriesPanel", buttonSeriePanel);
+    seriesListButtonPanel = new JPanel();
+    builder.add("seriesListButtonPanel", seriesListButtonPanel);
     builder.add("create", new CreateSeriesAction());
-    builder.add("delete", new DeleteSeriesAction());
+    builder.add("delete", new DeleteSeriesAction(false));
 
     nameEditor = builder.addEditor("nameField", Series.LABEL).setNotifyOnKeyPressed(true);
 
@@ -237,7 +238,10 @@ public class SeriesEditionDialog {
 
     JPanel panel = builder.load();
     okAction = new ValidateAction();
-    dialog.addPanelWithButtons(panel, okAction, new CancelAction());
+    singleSeriesDeleteButton = new JButton(new DeleteSeriesAction(true));
+    singleSeriesDeleteButton.setOpaque(false);
+    singleSeriesDeleteButton.setName("deleteSingleSeries");
+    dialog.addPanelWithButtons(panel, okAction, new CancelAction(), singleSeriesDeleteButton);
   }
 
   public static void addSeriesCreationTriggers(GlobRepository repository,
@@ -373,8 +377,7 @@ public class SeriesEditionDialog {
     finally {
       localRepository.completeChangeSet();
     }
-    seriesPanel.setVisible(true);
-    buttonSeriePanel.setVisible(true);
+    setSeriesListVisible(true);
     Glob series = null;
     if (seriesId != null) {
       series = localRepository.get(Key.create(Series.TYPE, seriesId));
@@ -391,8 +394,9 @@ public class SeriesEditionDialog {
     finally {
       localRepository.completeChangeSet();
     }
+    setSeriesListVisible(false);
     seriesPanel.setVisible(false);
-    buttonSeriePanel.setVisible(false);
+    seriesListButtonPanel.setVisible(false);
     doShow(monthIds, localRepository.get(series.getKey()), false);
   }
 
@@ -420,15 +424,18 @@ public class SeriesEditionDialog {
     finally {
       localRepository.completeChangeSet();
     }
-    seriesPanel.setVisible(false);
-    buttonSeriePanel.setVisible(false);
+    setSeriesListVisible(false);
+
     this.createdSeries = null;
     this.currentlySelectedCategory = null;
     doShow(selectedMonths.getValueSet(Month.ID), createdSeries, true);
-    if (this.createdSeries != null) {
-      return this.createdSeries;
-    }
-    return null;
+    return this.createdSeries;
+  }
+
+  private void setSeriesListVisible(boolean visible) {
+    seriesPanel.setVisible(visible);
+    seriesListButtonPanel.setVisible(visible);
+    singleSeriesDeleteButton.setVisible(!visible);
   }
 
   private Glob createSeries(String label, Integer day) {
@@ -730,9 +737,11 @@ public class SeriesEditionDialog {
   private class DeleteSeriesAction extends AbstractAction {
     private GlobList seriesToDelete = GlobList.EMPTY;
     private SeriesDeleteDialog seriesDeleteDialog;
+    private boolean closeOnDelete;
 
-    public DeleteSeriesAction() {
-      super("delete");
+    public DeleteSeriesAction(boolean closeOnDelete) {
+      super(Lang.get("seriesEdition.delete"));
+      this.closeOnDelete = closeOnDelete;
       selectionService.addListener(new GlobSelectionListener() {
         public void selectionUpdated(GlobSelection selection) {
           seriesToDelete = selection.getAll(Series.TYPE);
@@ -746,20 +755,28 @@ public class SeriesEditionDialog {
       if (seriesToDelete.isEmpty()) {
         return;
       }
+
       Set<Integer> series = seriesToDelete.getValueSet(Series.ID);
       GlobList transactionsForSeries = localRepository.getAll(Transaction.TYPE, fieldIn(Transaction.SERIES, series));
+      boolean deleted = false;
       if (transactionsForSeries.isEmpty()) {
         localRepository.delete(seriesToDelete);
+        deleted = true;
       }
-      else {
-        if (seriesDeleteDialog.show()) {
-          localRepository.delete(seriesToDelete);
-          for (Glob transaction : transactionsForSeries) {
-            localRepository.update(transaction.getKey(), Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID);
-          }
-          GlobList seriesToCategory = localRepository.getAll(SeriesToCategory.TYPE, fieldIn(SeriesToCategory.SERIES, series));
-          localRepository.delete(seriesToCategory);
+      else if (seriesDeleteDialog.show()) {
+        localRepository.delete(seriesToDelete);
+        for (Glob transaction : transactionsForSeries) {
+          localRepository.update(transaction.getKey(), Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID);
         }
+        GlobList seriesToCategory = localRepository.getAll(SeriesToCategory.TYPE, fieldIn(SeriesToCategory.SERIES, series));
+        localRepository.delete(seriesToCategory);
+        deleted = true;
+      }
+
+      if (deleted && closeOnDelete) {
+        localRepository.commitChanges(false);
+        localRepository.rollback();
+        dialog.setVisible(false);
       }
     }
   }
