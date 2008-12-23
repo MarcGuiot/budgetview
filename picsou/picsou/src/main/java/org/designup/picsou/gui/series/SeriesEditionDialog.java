@@ -102,6 +102,7 @@ public class SeriesEditionDialog {
         return selectedTransactions.getSortedSet(Transaction.MONTH);
       }
     });
+    localRepository.addTrigger(new UpdateMiror());
     localRepository.addTrigger(new UpdateBudgetOnSeriesAccountsChange());
     localRepository.addChangeListener(new ProfileTypeChangeListener());
     selectionService = new SelectionService();
@@ -774,26 +775,29 @@ public class SeriesEditionDialog {
       GlobIdGenerator generator = repository.getIdGenerator();
       int mirorId = generator.getNextId(Series.ID, 1);
       for (int i = 0; i < seriesFieldValues.length; i++) {
-        if (seriesFieldValues[i].getField().equals(Series.ID)) {
-          seriesFieldValues[i] = new FieldValue(Series.ID, mirorId);
-        }
-        else if (seriesFieldValues[i].getField().equals(Series.IS_MIROR)) {
+        if (seriesFieldValues[i].getField().equals(Series.IS_MIROR)) {
           seriesFieldValues[i] = new FieldValue(Series.IS_MIROR, true);
         }
+        else if (seriesFieldValues[i].getField().equals(Series.MIROR_SERIES)) {
+          seriesFieldValues[i] = new FieldValue(Series.MIROR_SERIES, null);
+        }
       }
-      Glob mirorSeries = repository.create(Series.TYPE, seriesFieldValues);
+      Glob mirorSeries = repository.create(Key.create(Series.TYPE, mirorId), seriesFieldValues);
       repository.update(key, Series.MIROR_SERIES, mirorSeries.get(Series.ID));
 
-      GlobList targetBudget =
+      GlobList targetBudgets =
         repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirorId).getGlobs();
 
-      ReadOnlyGlobRepository.MultiFieldIndexed sourceBudget =
+      ReadOnlyGlobRepository.MultiFieldIndexed sourceBudgets =
         repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID));
-      for (Glob budget : targetBudget) {
+      for (Glob budget : targetBudgets) {
+        Glob sourceBudget = sourceBudgets.findByIndex(SeriesBudget.MONTH, budget.get(SeriesBudget.MONTH))
+          .getGlobs().getFirst();
         repository.update(budget.getKey(), SeriesBudget.AMOUNT,
-                          sourceBudget.findByIndex(SeriesBudget.MONTH, budget.get(SeriesBudget.MONTH))
-                            .getGlobs().getFirst().get(SeriesBudget.AMOUNT));
+                          -Math.abs(sourceBudget.get(SeriesBudget.AMOUNT)));
+        repository.update(sourceBudget.getKey(), SeriesBudget.AMOUNT, Math.abs(sourceBudget.get(SeriesBudget.AMOUNT)));
       }
+
       return mirorId;
     }
     return null;
@@ -1131,6 +1135,96 @@ public class SeriesEditionDialog {
     }
   }
 
+  private static class UpdateMiror extends DefaultChangeSetListener {
+
+    public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
+
+      changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
+        public void visitCreation(Key key, FieldValues values) throws Exception {
+        }
+
+        public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+          Glob series = repository.get(key);
+          Integer miror = series.get(Series.MIROR_SERIES);
+          if (miror != null) {
+            final Key mirorKey = Key.create(Series.TYPE, miror);
+            values.safeApply(new FieldValues.Functor() {
+              public void process(Field field, Object value) throws Exception {
+                if (!field.equals(Series.MIROR_SERIES)) {
+                  repository.update(mirorKey, field, value);
+                }
+              }
+            });
+          }
+        }
+
+        public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+          Integer miror = previousValues.get(Series.MIROR_SERIES);
+          if (miror != null) {
+            repository.delete(Key.create(Series.TYPE, miror));
+          }
+        }
+      });
+
+      changeSet.safeVisit(SeriesBudget.TYPE, new ChangeSetVisitor() {
+        public void visitCreation(Key key, FieldValues values) throws Exception {
+          Integer seriesId = values.get(SeriesBudget.SERIES);
+          Glob series = repository.get(Key.create(Series.TYPE, seriesId));
+          Integer mirorSeriesId = series.get(Series.MIROR_SERIES);
+          if (mirorSeriesId != null) {
+            FieldValue[] fieldValues = values.toArray();
+            for (int i = 0; i < fieldValues.length; i++) {
+              FieldValue value = fieldValues[i];
+              if (value.getField().equals(SeriesBudget.SERIES)) {
+                fieldValues[i] = new FieldValue(SeriesBudget.SERIES, mirorSeriesId);
+              }
+              else if (value.getField().equals(SeriesBudget.AMOUNT)) {
+                fieldValues[i] = new FieldValue(SeriesBudget.AMOUNT, -values.get(SeriesBudget.AMOUNT));
+              }
+            }
+            repository.create(Key.create(SeriesBudget.TYPE, repository.getIdGenerator()
+              .getNextId(SeriesBudget.ID, 1)), fieldValues);
+          }
+        }
+
+        public void visitUpdate(Key key, final FieldValuesWithPrevious values) throws Exception {
+          Glob budget = repository.get(key);
+          Integer seriesId = budget.get(SeriesBudget.SERIES);
+          Glob series = repository.get(Key.create(Series.TYPE, seriesId));
+          Integer mirorSeriesId = series.get(Series.MIROR_SERIES);
+          if (mirorSeriesId != null) {
+            final Glob mirorBudget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirorSeriesId)
+              .findByIndex(SeriesBudget.MONTH, budget.get(SeriesBudget.MONTH)).getGlobs().getFirst();
+            values.safeApply(new FieldValues.Functor() {
+              public void process(Field field, Object value) throws Exception {
+                if (field.equals(SeriesBudget.AMOUNT)) {
+                  repository.update(mirorBudget.getKey(), field, -values.get(SeriesBudget.AMOUNT));
+                }
+                else {
+                  repository.update(mirorBudget.getKey(), field, value);
+                }
+              }
+            });
+          }
+        }
+
+        public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+          Integer seriesId = previousValues.get(SeriesBudget.SERIES);
+          Glob series = repository.find(Key.create(Series.TYPE, seriesId));
+          if (series == null){
+            return ;
+          }
+          Integer mirorSeriesId = series.get(Series.MIROR_SERIES);
+          if (mirorSeriesId != null) {
+            Glob budget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirorSeriesId)
+              .findByIndex(SeriesBudget.MONTH, previousValues.get(SeriesBudget.MONTH)).getGlobs().getFirst();
+            repository.delete(budget.getKey());
+          }
+        }
+      });
+    }
+  }
+
   private static class UpdateBudgetOnSeriesAccountsChange extends DefaultChangeSetListener {
     public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
       changeSet.safeVisit(Series.TYPE, new DefaultChangeSetVisitor() {
@@ -1153,6 +1247,16 @@ public class SeriesEditionDialog {
               for (Glob budget : seriesBudgets) {
                 repository.update(budget.getKey(), SeriesBudget.AMOUNT,
                                   multiplier * Math.abs(budget.get(SeriesBudget.AMOUNT)));
+              }
+            }
+            else if (Account.areBothImported(fromAccount, toAccount)) {
+              if (!series.get(Series.IS_MIROR)) {
+                GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE,
+                                                           fieldEquals(SeriesBudget.SERIES, key.get(Series.ID)));
+                for (Glob budget : seriesBudgets) {
+                  repository.update(budget.getKey(), SeriesBudget.AMOUNT,
+                                    Math.abs(budget.get(SeriesBudget.AMOUNT)));
+                }
               }
             }
           }

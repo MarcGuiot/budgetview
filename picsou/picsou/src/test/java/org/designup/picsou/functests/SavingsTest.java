@@ -490,6 +490,44 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   }
 
   public void testImportedSavingAccountWithMainAccountInManual() throws Exception {
-
+    OfxBuilder.init(this)
+      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/10")
+      .addTransaction("2008/08/10", 100.00, "Virement")
+      .load();
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/10", -100.00, "Virement")
+      .load();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    views.selectHome();
+    this.mainAccounts.edit("Account n. 111")
+      .setAsSavings()
+      .validate();
+    views.selectBudget();
+    budgetView.savings.createSeries()
+      .setName("CA")
+      .setCategory(MasterCategory.SAVINGS)
+      .setFromAccount("Main account")
+      .setToAccount("Account n. 111")
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount(50)
+      .validate();
+    views.selectCategorization();
+    categorization.setSavings("Virement", "CA");
+    timeline.selectAll();
+    views.selectData();
+    transactions.initContent()
+      .add("01/10/2008", TransactionType.PLANNED, "Planned: CA", "", 50.00, "CA", MasterCategory.SAVINGS)
+      .add("01/10/2008", TransactionType.PLANNED, "Planned: CA", "", -50.00, "CA", MasterCategory.SAVINGS)
+      .add("01/09/2008", TransactionType.PLANNED, "Planned: CA", "", 50.00, "CA", MasterCategory.SAVINGS)
+      .add("01/09/2008", TransactionType.PLANNED, "Planned: CA", "", -50.00, "CA", MasterCategory.SAVINGS)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "CA", MasterCategory.SAVINGS)
+      .add("10/08/2008", TransactionType.VIREMENT, "Virement", "", 100.00, "CA", MasterCategory.SAVINGS)
+      .check();
+    views.selectHome();
+    timeline.selectMonth("2008/10");
+    savingsAccounts.checkPosition("Account n. 111", 1100);
+    mainAccounts.checkEstimatedPosition(-100);
+    
   }
 }
