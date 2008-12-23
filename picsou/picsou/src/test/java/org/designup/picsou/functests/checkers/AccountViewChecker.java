@@ -14,6 +14,7 @@ import org.uispec4j.finder.ComponentMatcher;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
+import javax.swing.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,6 +43,14 @@ public class AccountViewChecker extends DataChecker {
 
   public void checkNoAccountsDisplayed() {
     TestUtils.assertEmpty(getDisplayedAccounts());
+  }
+
+  public void checkContainsAccount(String accountName) {
+    TestUtils.assertContains(getDisplayedAccounts(), accountName);
+  }
+
+  public void checkNotPresent(String accountName) {
+    TestUtils.assertNotContains(getDisplayedAccounts(), accountName);
   }
 
   public void checkAccount(String accountName, double balance, String updateDate) {

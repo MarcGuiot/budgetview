@@ -136,9 +136,9 @@ public abstract class AccountViewPanel {
 
   protected abstract void setEstimatedPositionLabels(Double amount, String date);
 
-  protected abstract JLabel getEstimatedAccountPositionLabel(Glob account);
+  protected abstract JLabel getEstimatedAccountPositionLabel(Key accountKey);
 
-  protected abstract JLabel getEstimatedAccountPositionDateLabel(Glob account);
+  protected abstract JLabel getEstimatedAccountPositionDateLabel(Key accountKey);
 
   private class AccountRepeatFactory implements RepeatComponentFactory<Glob> {
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob account) {
@@ -177,8 +177,8 @@ public abstract class AccountViewPanel {
                             }).forceSelection(account);
       cellBuilder.add("accountPosition", balance.getComponent());
 
-      cellBuilder.add("estimatedAccountPosition", getEstimatedAccountPositionLabel(account));
-      cellBuilder.add("estimatedAccountPositionDate", getEstimatedAccountPositionDateLabel(account));
+      cellBuilder.add("estimatedAccountPosition", getEstimatedAccountPositionLabel(account.getKey()));
+      cellBuilder.add("estimatedAccountPositionDate", getEstimatedAccountPositionDateLabel(account.getKey()));
 
       cellBuilder.addDisposeListener(balance);
     }

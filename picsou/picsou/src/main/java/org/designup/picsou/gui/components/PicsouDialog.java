@@ -77,7 +77,11 @@ public class PicsouDialog extends JDialog {
   }
 
   public void addPanelWithButtons(JPanel panel, Action ok, Action cancel) {
-    addPanelWithButtons(panel, ok, cancel, null);
+    addPanelWithButtons(panel, ok, cancel, (JButton)null);
+  }
+
+  public void addPanelWithButtons(JPanel panel, Action ok, Action cancel, Action additionalAction) {
+    addPanelWithButtons(panel, ok, cancel, createButton(additionalAction));
   }
 
   public void addPanelWithButtons(JPanel panel, Action ok, Action cancel, JButton additionalAction) {
@@ -109,16 +113,15 @@ public class PicsouDialog extends JDialog {
     setContentPane(contentPane);
   }
 
-
   public void setContentPane(Container contentPane) {
     ColorUpdater updater = new BackgroundColorUpdater("dialog.bg.bottom", contentPane);
     updater.install(colorService);
     super.setContentPane(contentPane);
   }
 
-  public void setVisible(boolean b) {
+  public void setVisible(boolean visible) {
     final OpenRequestManager requestManager = directory.get(OpenRequestManager.class);
-    if (b && !openRequestIsManaged) {
+    if (visible && !openRequestIsManaged) {
       requestManager.pushCallback(new OpenRequestManager.Callback() {
         public boolean accept() {
           return false;
@@ -133,8 +136,8 @@ public class PicsouDialog extends JDialog {
         }
       });
     }
-    super.setVisible(b);
-    if (b && !openRequestIsManaged) {
+    super.setVisible(visible);
+    if (visible && !openRequestIsManaged) {
       requestManager.popCallback();
     }
   }

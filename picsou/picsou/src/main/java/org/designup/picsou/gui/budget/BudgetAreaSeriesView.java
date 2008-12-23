@@ -105,8 +105,8 @@ public class BudgetAreaSeriesView extends View {
 
   void update() {
     headerUpdater.update(repository.getAll(BalanceStat.TYPE,
-                                            GlobMatchers.fieldIn(BalanceStat.MONTH, selectedMonthIds)),
-                          budgetArea);
+                                           GlobMatchers.fieldIn(BalanceStat.MONTH, selectedMonthIds)),
+                         budgetArea);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -123,10 +123,10 @@ public class BudgetAreaSeriesView extends View {
     this.headerUpdater =
       new BudgetAreaHeaderUpdater(
         TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
-                                   repository, directory);
+        repository, directory);
     this.headerUpdater.setColors("block.total",
-                                  "block.total.overrun.error",
-                                  "block.total.overrun.positive");
+                                 "block.total.overrun.error",
+                                 "block.total.overrun.positive");
 
     seriesRepeat =
       builder.addRepeat("seriesRepeat",
@@ -175,12 +175,12 @@ public class BudgetAreaSeriesView extends View {
     seriesFilter = new GlobMatcher() {
       public boolean matches(Glob periodSeriesStat, GlobRepository repository) {
         Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
-        ReadOnlyGlobRepository.MultiFieldIndexed seruesBudgetIndex = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES,
-                                                                                            series.get(Series.ID));
+        ReadOnlyGlobRepository.MultiFieldIndexed seriesBudgetIndex =
+          repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID));
         int notActive = 0;
         for (Integer monthId : selectedMonthIds) {
           GlobList seriesBudget =
-            seruesBudgetIndex.findByIndex(SeriesBudget.MONTH, monthId).getGlobs();
+            seriesBudgetIndex.findByIndex(SeriesBudget.MONTH, monthId).getGlobs();
           if (seriesBudget.size() == 0 || !seriesBudget.get(0).get(SeriesBudget.ACTIVE)) {
             notActive++;
           }

@@ -2,6 +2,8 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.model.MasterCategory;
 
 public class AccountEditionTest extends LoggedInFunctionalTestCase {
   public void testEditingAnExistingAccount() throws Exception {
@@ -126,5 +128,108 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.edit("Account n. 0000123")
       .checkIsMain()
       .cancel();
+  }
+
+  public void testDeletingAnEmptyAccount() throws Exception {
+    views.selectHome();
+    mainAccounts.createNewAccount()
+      .setAccountName("Main")
+      .selectBank("CIC")
+      .validate();
+
+    mainAccounts.edit("Main").delete()
+      .checkContainsText("No operations are related to this account")
+      .validate();
+
+    mainAccounts.checkNotPresent("Main");
+  }
+
+  public void testDeletingAnAccountAndRelatedTransactions() throws Exception {
+
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "0000123", 100.00, "15/10/2008")
+      .addTransaction("2008/10/01", 15.00, "MacDo")
+      .load();
+
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "0000666", 100.00, "15/10/2008")
+      .addTransaction("2008/10/05", 15.00, "Quick")
+      .load();
+
+    views.selectData();
+    transactions.initContent()
+      .add("05/10/2008", TransactionType.VIREMENT, "Quick", "", 15.00)
+      .add("01/10/2008", TransactionType.VIREMENT, "MacDo", "", 15.00)
+      .check();
+
+    views.selectHome();
+    mainAccounts.edit("Account n. 0000123").delete()
+      .checkContainsText("All the operations associated to this account will be deleted")
+      .validate();
+    mainAccounts.checkNotPresent("Account n. 0000123");
+
+    views.selectData();
+    transactions.initContent()
+      .add("05/10/2008", TransactionType.VIREMENT, "Quick", "", 15.00)
+      .check();
+  }
+
+  public void testDeletingAnAccountAndRelatedSeries() throws Exception {
+
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "0000123", 100.00, "15/10/2008")
+      .addTransaction("2008/10/01", 15.00, "Virement octobre")
+      .load();
+
+    views.selectHome();
+    mainAccounts.edit("Account n. 0000123")
+      .setAccountName("Livret")
+      .selectBank("ING Direct")
+      .setAsSavings()
+      .validate();
+    savingsAccounts.createNewAccount()
+      .setAccountName("Codevi")
+      .selectBank("ING Direct")
+      .validate();
+
+    views.selectBudget();
+    budgetView.savings.createSeries()
+      .setName("Series 1 for Livret")
+      .setCategory(MasterCategory.SAVINGS)
+      .setFromAccount("Main accounts")
+      .setToAccount("Livret")
+      .validate();
+    budgetView.savings.createSeries()
+      .setName("Series 2 for Livret")
+      .setCategory(MasterCategory.SAVINGS)
+      .setFromAccount("Livret")
+      .setToAccount("Main accounts")
+      .validate();
+    budgetView.savings.createSeries()
+      .setName("Series 3 for Codevi")
+      .setCategory(MasterCategory.SAVINGS)
+      .setFromAccount("Main accounts")
+      .setToAccount("Codevi")
+      .validate();
+
+    views.selectHome();
+    savingsAccounts.edit("Livret").delete()
+      .checkContainsText("All the operations and series associated to this account will be deleted")
+      .validate();
+    savingsAccounts.checkNotPresent("Livret");
+
+    views.selectBudget();
+    budgetView.savings.checkSeriesNotPresent("Series 1 for Livret", "Series 2 for Livret");
+    budgetView.savings.checkSeriesPresent("Series 3 for Codevi");
+    
+    views.selectData();
+    transactions.checkTableIsEmpty();
+
+
+    views.selectHome();
+    savingsAccounts.edit("Codevi").delete()
+      .checkContainsText("All the series associated to this account will be deleted")
+      .validate();
+    savingsAccounts.checkNotPresent("Codevi");
   }
 }

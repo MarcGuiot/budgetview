@@ -38,7 +38,7 @@ public class TransactionChecker extends ViewChecker {
     mainWindow = window;
   }
 
-  public void assertEmpty() {
+  public void checkTableIsEmpty() {
     assertTrue(getTable().isEmpty());
   }
 

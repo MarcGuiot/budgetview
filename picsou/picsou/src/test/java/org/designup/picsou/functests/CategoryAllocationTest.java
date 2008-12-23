@@ -92,7 +92,7 @@ public class CategoryAllocationTest extends LoggedInFunctionalTestCase {
     categories.checkSelection(MasterCategory.NONE);
     timeline.checkSelection("2006/01");
 
-    transactions.assertEmpty();
+    transactions.checkTableIsEmpty();
   }
 
   public void testNonAllocatedTransactionsHaveARedLabel() throws Exception {

@@ -75,11 +75,11 @@ public class MainAccountViewPanel extends AccountViewPanel {
     }
   }
 
-  protected JLabel getEstimatedAccountPositionLabel(Glob account) {
+  protected JLabel getEstimatedAccountPositionLabel(Key accountKey) {
     return Gui.createInvisibleLabel();
   }
 
-  protected JLabel getEstimatedAccountPositionDateLabel(Glob account) {
+  protected JLabel getEstimatedAccountPositionDateLabel(Key accountKey) {
     return Gui.createInvisibleLabel();
   }
 

@@ -118,6 +118,10 @@ public class AccountEditionChecker extends DataChecker {
     return this;
   }
 
+  public ConfirmationDialogChecker delete() {
+    return ConfirmationDialogChecker.init(dialog.getButton("Delete...").triggerClick());
+  }
+
   public void validate() {
     dialog.getButton("OK").click();
     assertFalse(dialog.isVisible());

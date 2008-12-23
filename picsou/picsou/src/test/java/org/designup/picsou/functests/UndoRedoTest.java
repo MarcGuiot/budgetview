@@ -65,7 +65,7 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
     operations.undo();
     operations.undo();
 
-    transactions.assertEmpty();
+    transactions.checkTableIsEmpty();
   }
 
 

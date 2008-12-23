@@ -17,9 +17,6 @@ import java.util.SortedSet;
 
 public class MonthStatTrigger implements ChangeSetListener {
 
-  public MonthStatTrigger() {
-  }
-
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     final Map<Integer, Integer> categoryToMaster = new HashMap<Integer, Integer>();
     changeSet.safeVisit(Category.TYPE, new DefaultChangeSetVisitor() {

@@ -1,18 +1,17 @@
 package org.designup.picsou.gui.accounts;
 
+import org.designup.picsou.gui.components.ConfirmationDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.Bank;
-import org.designup.picsou.model.BankEntity;
-import org.designup.picsou.model.AccountType;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.FieldValue;
-import static org.globsframework.model.FieldValue.value;
+import org.globsframework.model.utils.GlobMatcher;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.Directory;
@@ -23,15 +22,19 @@ import java.awt.event.ActionEvent;
 
 public class AccountEditionDialog {
   private PicsouDialog dialog;
-  private Directory directory;
   private AccountEditionPanel accountEditionPanel;
   private LocalGlobRepository localRepository;
   private Glob currentAccount;
+  private Window owner;
+  private GlobRepository parentRepository;
+  private Directory directory;
 
-  public AccountEditionDialog(Window owner, GlobRepository repository, Directory directory) {
+  public AccountEditionDialog(Window owner, GlobRepository parentRepository, Directory directory) {
+    this.owner = owner;
+    this.parentRepository = parentRepository;
     this.directory = directory;
 
-    this.localRepository = LocalGlobRepositoryBuilder.init(repository)
+    this.localRepository = LocalGlobRepositoryBuilder.init(parentRepository)
       .copy(Bank.TYPE, BankEntity.TYPE)
       .get();
 
@@ -40,13 +43,13 @@ public class AccountEditionDialog {
 
     JLabel messageLabel = builder.add("message", new JLabel());
 
-    accountEditionPanel = new AccountEditionPanel(localRepository, this.directory, messageLabel);
+    accountEditionPanel = new AccountEditionPanel(localRepository, directory, messageLabel);
     builder.add("panel", accountEditionPanel.getPanel());
 
-    dialog =
-      PicsouDialog.createWithButtons(owner, builder.<JPanel>load(),
-                                     new OkAction(), new CancelAction(),
-                                     directory);
+    dialog = PicsouDialog.create(owner, directory);
+    dialog.addPanelWithButtons(builder.<JPanel>load(),
+                               new OkAction(), new CancelAction(),
+                               new DeleteAction());
   }
 
   public void show(Glob account) {
@@ -92,6 +95,55 @@ public class AccountEditionDialog {
 
     public void actionPerformed(ActionEvent e) {
       dialog.setVisible(false);
+    }
+  }
+
+  private class DeleteAction extends AbstractAction {
+    private GlobMatcher transactionMatcher;
+    private GlobMatcher seriesMatcher;
+
+    private DeleteAction() {
+      super(Lang.get("accountEdition.delete"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      transactionMatcher = linkedTo(currentAccount, Transaction.ACCOUNT);
+      seriesMatcher = or(linkedTo(currentAccount, Series.FROM_ACCOUNT),
+                         linkedTo(currentAccount, Series.TO_ACCOUNT));
+
+      ConfirmationDialog confirmDialog = new ConfirmationDialog("accountDeletion.confirm.title",
+                                                                getMessageKey(), owner, directory) {
+        protected void postValidate() {
+          try {
+            parentRepository.startChangeSet();
+            parentRepository.delete(currentAccount.getKey());
+            parentRepository.delete(parentRepository.getAll(Series.TYPE, seriesMatcher));
+            parentRepository.delete(parentRepository.getAll(Transaction.TYPE, transactionMatcher));
+          }
+          finally {
+            parentRepository.completeChangeSet();
+          }
+          dialog.setVisible(false);
+        }
+      };
+      confirmDialog.show();
+    }
+
+    private String getMessageKey() {
+
+      boolean hasTransactions = parentRepository.contains(Transaction.TYPE, transactionMatcher);
+      boolean hasSeries = parentRepository.contains(Series.TYPE, seriesMatcher);
+
+      if (hasTransactions && hasSeries) {
+        return "accountDeletion.confirm.all";
+      }
+      if (hasTransactions) {
+        return "accountDeletion.confirm.transactions";
+      }
+      if (hasSeries) {
+        return "accountDeletion.confirm.series";
+      }
+      return "accountDeletion.confirm.unused";
     }
   }
 }

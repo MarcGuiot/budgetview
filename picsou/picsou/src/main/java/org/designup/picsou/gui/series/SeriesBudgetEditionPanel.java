@@ -9,8 +9,8 @@ import org.designup.picsou.gui.description.MonthListStringifier;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
-import org.designup.picsou.triggers.SameAccountChecker;
 import org.designup.picsou.model.util.Amounts;
+import org.designup.picsou.triggers.SameAccountChecker;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -25,6 +25,7 @@ import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
+import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
@@ -91,8 +92,9 @@ public class SeriesBudgetEditionPanel {
       .addColumn(Lang.get("seriesBudgetEdition.month"), new MonthStringifier())
       .addColumn(Lang.get("seriesBudgetEdition.observed.amount"),
                  new ObservedAmountStringifier(repository, descriptionService),
-                 new ObservedLabelCustomizer(repository))
-      .addColumn(Lang.get("seriesBudgetEdition.amount"), new AmountStringifier(), LabelCustomizers.ALIGN_RIGHT);
+                 chain(new ObservedLabelCustomizer(repository), LabelCustomizers.ALIGN_RIGHT))
+      .addColumn(Lang.get("seriesBudgetEdition.amount"),
+                 new AmountStringifier(), LabelCustomizers.ALIGN_RIGHT);
     PicsouTableHeaderPainter.install(budgetTable, directory);
 
     selectionService = directory.get(SelectionService.class);

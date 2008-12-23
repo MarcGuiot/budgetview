@@ -46,7 +46,7 @@ public class SavingsAccountViewPanel extends AccountViewPanel {
                not(fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)));
   }
 
-  protected JLabel getEstimatedAccountPositionLabel(final Glob account) {
+  protected JLabel getEstimatedAccountPositionLabel(final Key accountKey) {
     GlobLabelView accountPosition =
       GlobLabelView.init(Month.TYPE, repository, directory,
                          new GlobListStringifier() {
@@ -57,19 +57,24 @@ public class SavingsAccountViewPanel extends AccountViewPanel {
                                return null;
                              }
                              Integer monthId = lastMonth.get(Month.ID);
-                             Glob stats = repository.find(Key.create(SavingsBalanceStat.ACCOUNT, account.get(Account.ID),
+                             Glob stats = repository.find(Key.create(SavingsBalanceStat.ACCOUNT, accountKey.get(Account.ID),
                                                                      SavingsBalanceStat.MONTH, monthId));
-                             if (stats == null) return "";
+                             if (stats == null) {
+                               return "";
+                             }
                              return Formatting.toString(stats.get(SavingsBalanceStat.END_OF_MONTH_POSITION));
                            }
                          })
         .setUpdateMatcher(ChangeSetMatchers.changesForType(SavingsBalanceStat.TYPE))
         .setAutoHideIfEmpty(true);
-    accountPosition.setName("estimatedAccountPosition." + account.get(Account.NAME));
+    Glob account = repository.find(accountKey);
+    if (account != null) {
+      accountPosition.setName("estimatedAccountPosition." + account.get(Account.NAME));
+    }
     return accountPosition.getComponent();
   }
 
-  protected JLabel getEstimatedAccountPositionDateLabel(final Glob account) {
+  protected JLabel getEstimatedAccountPositionDateLabel(final Key accountKey) {
     GlobLabelView accountPosition =
       GlobLabelView.init(Month.TYPE, repository, directory,
                          new GlobListStringifier() {
@@ -83,7 +88,10 @@ public class SavingsAccountViewPanel extends AccountViewPanel {
                              return Formatting.toString(Month.getLastDay(monthId));
                            }
                          });
-    accountPosition.setName("estimatedAccountPositionDate." + account.get(Account.NAME));
+    Glob account = repository.find(accountKey);
+    if (account != null) {
+      accountPosition.setName("estimatedAccountPositionDate." + account.get(Account.NAME));
+    }
     return accountPosition.getComponent();
   }
 
