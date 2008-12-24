@@ -148,18 +148,29 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     OfxBuilder.init(this)
       .addBankAccount(30006, 10674, "0000123", 100.00, "15/10/2008")
-      .addTransaction("2008/10/01", 15.00, "MacDo")
+      .addTransaction("2008/10/01", 1000.00, "WorldCo")
+      .addTransaction("2008/10/05", -15.00, "MacDo")
       .load();
 
     OfxBuilder.init(this)
       .addBankAccount(30006, 10674, "0000666", 100.00, "15/10/2008")
-      .addTransaction("2008/10/05", 15.00, "Quick")
+      .addTransaction("2008/10/10", -15.00, "Quick")
       .load();
+
+    views.selectCategorization();
+    categorization.setIncome("WorldCo", "Salaire", true);
+    categorization.setEnvelope("MacDo", "Gastronomie", MasterCategory.FOOD, true);
+    categorization.setEnvelope("Quick", "Sante", MasterCategory.FOOD, true);
+
+    views.selectHome();
+    monthSummary.checkIncome(1000);
+    monthSummary.checkEnvelope(30);
 
     views.selectData();
     transactions.initContent()
-      .add("05/10/2008", TransactionType.VIREMENT, "Quick", "", 15.00)
-      .add("01/10/2008", TransactionType.VIREMENT, "MacDo", "", 15.00)
+      .add("10/10/2008", TransactionType.PRELEVEMENT, "Quick", "", -15.00, "Sante", MasterCategory.FOOD)
+      .add("05/10/2008", TransactionType.PRELEVEMENT, "MacDo", "", -15.00, "Gastronomie", MasterCategory.FOOD)
+      .add("01/10/2008", TransactionType.VIREMENT, "WorldCo", "", 1000.00, "Salaire", MasterCategory.INCOME)
       .check();
 
     views.selectHome();
@@ -170,18 +181,32 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.initContent()
-      .add("05/10/2008", TransactionType.VIREMENT, "Quick", "", 15.00)
+      .add("10/10/2008", TransactionType.PRELEVEMENT, "Quick", "", -15.00, "Sante", MasterCategory.FOOD)
       .check();
-  }
-
-  public void testDeletingAnAccountAndRelatedSeries() throws Exception {
-
-    OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0000123", 100.00, "15/10/2008")
-      .addTransaction("2008/10/01", 15.00, "Virement octobre")
-      .load();
 
     views.selectHome();
+    monthSummary.checkIncome(0);
+    monthSummary.checkEnvelope(15);
+  }
+
+  public void testDeletingASavingsAccountWithSeries() throws Exception {
+
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "0000100", 900.00, "15/10/2008")
+      .addTransaction("2008/10/01", 1000.00, "Salaire/oct")
+      .load();
+
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "0000123", 200000.00, "15/10/2008")
+      .addTransaction("2008/10/05", 200.00, "Virement octobre")
+      .load();
+
+    views.selectCategorization();
+    categorization.setIncome("Salaire/oct", "Salaire", true);
+    categorization.setEnvelope("Virement octobre", "Savings", MasterCategory.SAVINGS, true);
+
+    views.selectHome();
+    monthSummary.checkIncome(1000.0);
     mainAccounts.edit("Account n. 0000123")
       .setAccountName("Livret")
       .selectBank("ING Direct")
@@ -223,8 +248,9 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkSeriesPresent("Series 3 for Codevi");
     
     views.selectData();
-    transactions.checkTableIsEmpty();
-
+    transactions.initContent()
+      .add("01/10/2008", TransactionType.VIREMENT, "Salaire/oct", "", 1000.00, "Salaire", MasterCategory.INCOME)
+      .check();
 
     views.selectHome();
     savingsAccounts.edit("Codevi").delete()
