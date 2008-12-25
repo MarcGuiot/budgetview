@@ -99,6 +99,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .validate();
     savingsAccounts.createNewAccount()
       .setAccountName("Livret")
+      .setBalance(1000)
       .selectBank("CIC")
       .validate();
 

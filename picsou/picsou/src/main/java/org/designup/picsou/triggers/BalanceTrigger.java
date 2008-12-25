@@ -18,7 +18,7 @@ public class BalanceTrigger implements ChangeSetListener {
     if (changeSet.containsCreationsOrDeletions(Transaction.TYPE) ||
         changeSet.containsUpdates(Transaction.AMOUNT) || changeSet.containsChanges(Account.TYPE)) {
       GlobList account = repository.getAll(Account.TYPE);
-      updateTransactionBalance(repository, account, false);
+      updateTransactionBalance(repository, account);
     }
   }
 
@@ -26,27 +26,32 @@ public class BalanceTrigger implements ChangeSetListener {
   }
 
 
-  private void updateTransactionBalance(GlobRepository repository, GlobList updatedAccount,
-                                        boolean updatePlannedOnly) {
+  private void updateTransactionBalance(GlobRepository repository, GlobList updatedAccount) {
     TransactionComparator comparator = TransactionComparator.ASCENDING_BANK;
     GlobMatcher globMatcher = GlobMatchers.ALL;
-    if (updatePlannedOnly) {
-      globMatcher = GlobMatchers.fieldEquals(Transaction.PLANNED, true);
-    }
     SortedSet<Glob> trs = repository.getSorted(Transaction.TYPE, comparator, globMatcher);
 
     Glob[] transactions = trs.toArray(new Glob[trs.size()]);
-    boolean balanceComputed = true;
     for (Integer accountId : Account.SUMMARY_ACCOUNT) {
       updatedAccount.remove(repository.get(Key.create(Account.TYPE, accountId)));
     }
+    SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
+    boolean mainBalanceComputed = true;
+    boolean savingsBalanceComputed = true;
     for (Glob account : updatedAccount) {
-      balanceComputed &= computeAccountBalance(repository, comparator, transactions, account);
+      if (mainAccountChecker.isSame(account.get(Account.ID))) {
+        mainBalanceComputed &= computeAccountBalance(repository, comparator, transactions, account);
+      }
+      else {
+        savingsBalanceComputed &= computeAccountBalance(repository, comparator, transactions, account);
+      }
     }
 
-    if (balanceComputed || updatePlannedOnly) {
+    if (mainBalanceComputed) {
       computeTotalBalance(repository, transactions,
                           new SameAccountChecker(AccountType.MAIN.getId(), repository));
+    }
+    if (savingsBalanceComputed) {
       computeTotalBalance(repository, transactions,
                           new SameAccountChecker(AccountType.SAVINGS.getId(), repository));
     }
