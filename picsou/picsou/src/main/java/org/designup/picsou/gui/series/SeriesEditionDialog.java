@@ -82,7 +82,7 @@ public class SeriesEditionDialog {
   private GlobList selectedTransactions = new EmptyGlobList();
   private GlobLinkComboEditor fromAccountsCombo;
   private GlobLinkComboEditor toAccountsCombo;
-  private JComboBox dateChooser;
+  private JComboBox dayChooser;
   private CardHandler monthSelectionCards;
   private JButton singleSeriesDeleteButton;
 
@@ -152,28 +152,28 @@ public class SeriesEditionDialog {
     fromAccountsCombo = new GlobLinkComboEditor(Series.FROM_ACCOUNT, localRepository, localDirectory)
       .setFilter(accountFilter)
       .setShowEmptyOption(true)
-      .setEmptyOptionLabel(Lang.get("seriesedition.account.external"));
+      .setEmptyOptionLabel(Lang.get("seriesEdition.account.external"));
     builder.add("fromAccount", fromAccountsCombo);
 
     toAccountsCombo = new GlobLinkComboEditor(Series.TO_ACCOUNT, localRepository, localDirectory)
       .setFilter(accountFilter)
       .setShowEmptyOption(true)
-      .setEmptyOptionLabel(Lang.get("seriesedition.account.external"));
+      .setEmptyOptionLabel(Lang.get("seriesEdition.account.external"));
     builder.add("toAccount", toAccountsCombo);
 
     Integer[] days = new Integer[31];
     for (int i = 0; i < days.length; i++) {
       days[i] = i + 1;
     }
-    dateChooser = new JComboBox(days);
-    dateChooser.addActionListener(new ActionListener() {
+    dayChooser = new JComboBox(days);
+    dayChooser.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         if (currentSeries != null) {
-          localRepository.update(currentSeries.getKey(), Series.DAY, dateChooser.getSelectedItem());
+          localRepository.update(currentSeries.getKey(), Series.DAY, dayChooser.getSelectedItem());
         }
       }
     });
-    builder.add("dateChooser", dateChooser);
+    builder.add("dayChooser", dayChooser);
 
     GlobLinkComboEditor profileTypeCombo =
       new GlobLinkComboEditor(Series.PROFILE_TYPE, localRepository, localDirectory);
@@ -207,8 +207,8 @@ public class SeriesEditionDialog {
           boolean isSavingsSeries = currentSeries.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId());
           fromAccountsCombo.setEnabled(isSavingsSeries);
           toAccountsCombo.setEnabled(isSavingsSeries);
-          dateChooser.setEnabled(isSavingsSeries);
-          dateChooser.setSelectedItem(currentSeries.get(Series.DAY));
+          dayChooser.setEnabled(isSavingsSeries);
+          dayChooser.setSelectedItem(currentSeries.get(Series.DAY));
         }
         else {
           multiCategoryList.setFilter(GlobMatchers.NONE);
@@ -1139,7 +1139,7 @@ public class SeriesEditionDialog {
                 repository.update(budget.getKey(), SeriesBudget.AMOUNT, 0.);
               }
             }
-            SeriesEditionDialog.this.dateChooser.setEnabled(noneImported);
+            SeriesEditionDialog.this.dayChooser.setEnabled(noneImported);
           }
         }
 

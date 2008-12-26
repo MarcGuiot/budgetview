@@ -4,19 +4,21 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
-import org.designup.picsou.gui.license.LicenseExpirationDialog;
 import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.help.HelpService;
+import org.designup.picsou.gui.license.LicenseExpirationDialog;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.series.wizard.SeriesWizardDialog;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.generator.PicsouSampleGenerator;
-import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.FieldValue;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -68,10 +70,8 @@ public class DialogDemo {
 
   private static void showSeriesEditionDialog(GlobRepository repository, Directory directory, JFrame frame) {
     SeriesEditionDialog dialog = new SeriesEditionDialog(frame, repository, directory);
-    SplitsEditor.show(dialog.getDialog(), directory);
-//    dialog.show(BudgetArea.ENVELOPES, Collections.singleton(200808));
-    SplitsEditor.show(dialog.getDialog(), directory);
-    dialog.show(BudgetArea.RECURRING, Collections.singleton(200808), null);
+//    SplitsEditor.show(dialog.getDialog(), directory);
+    dialog.showNewSeries(GlobList.EMPTY, new GlobList(200808), BudgetArea.SAVINGS);
   }
 
   private static void showCategoriesEditionDialog(GlobRepository repository, Directory directory) {

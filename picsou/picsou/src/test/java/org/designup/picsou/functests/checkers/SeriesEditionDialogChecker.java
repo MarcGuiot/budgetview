@@ -777,12 +777,12 @@ public class SeriesEditionDialogChecker extends DataChecker {
   }
 
   public SeriesEditionDialogChecker checkDateChooserIsHidden() {
-    assertFalse(dialog.getComboBox("dateChooser").isVisible());
+    assertFalse(dialog.getComboBox("dayChooser").isVisible());
     return this;
   }
 
   public SeriesEditionDialogChecker setDate(String date) {
-    dialog.getComboBox("dateChooser").select(date);
+    dialog.getComboBox("dayChooser").select(date);
     return this;
   }
 }
