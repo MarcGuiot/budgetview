@@ -28,7 +28,6 @@ public class Account {
   public static final int MAIN_SUMMARY_ACCOUNT_ID = -1;
   public static final int SAVINGS_SUMMARY_ACCOUNT_ID = -2;
   public static final int ALL_SUMMARY_ACCOUNT_ID = -3;
-  public static final int EXERNAL_ACCOUNT_ID = -4;
   public static final Set<Integer> SUMMARY_ACCOUNT = new HashSet<Integer>();
   public static org.globsframework.model.Key MAIN_SUMMARY_KEY;
   public static org.globsframework.model.Key SAVINGS_SUMMARY_KEY;

@@ -183,11 +183,10 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount()
       .setAccountName("Livret")
       .selectBank("ING Direct")
+      .setBalance(1000)
       .validate();
 
     views.selectBudget();
-
-
 
     //======== PROVISIONS ===========
 
