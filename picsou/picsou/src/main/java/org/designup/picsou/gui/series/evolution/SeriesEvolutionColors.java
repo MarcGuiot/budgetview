@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.series.evolution;
 
+import org.designup.picsou.gui.budget.BudgetAreaSummaryComputer;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.model.SavingsBalanceStat;
 import org.designup.picsou.gui.model.SeriesStat;
@@ -7,7 +8,6 @@ import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.gui.utils.AmountColors;
 import org.designup.picsou.gui.utils.PicsouColors;
-import org.designup.picsou.gui.budget.BudgetAreaSummaryComputer;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountPositionThreshold;
 import org.designup.picsou.model.BudgetArea;
@@ -19,9 +19,9 @@ import org.globsframework.gui.splits.painters.GradientPainter;
 import org.globsframework.gui.splits.painters.Paintable;
 import org.globsframework.gui.splits.painters.Painter;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.GlobList;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -134,7 +134,11 @@ public class SeriesEvolutionColors implements ColorChangeListener {
       Glob balanceStat = parentRepository.find(Key.create(BalanceStat.TYPE, referenceMonthId));
       if (balanceStat != null) {
         Double threshold = AccountPositionThreshold.getValue(parentRepository);
-        final double diff = balanceStat.get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION) - threshold;
+        Double amount = balanceStat.get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION);
+        if (amount == null) {
+          return amountColors.getTextColor(0., summaryText);
+        }
+        final double diff = amount - threshold;
         return amountColors.getTextColor(diff, summaryText);
       }
     }

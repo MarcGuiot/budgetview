@@ -90,6 +90,15 @@ public class OfxParserTest extends TestCase {
     checkParsing(TEXT_WITH_NO_HEADER);
   }
 
+  public void testOneLine() throws Exception {
+    String text = TEXT_WITH_NO_HEADER.replace("\n", "");
+    StringWriter writer = new StringWriter();
+    OfxBeautifier functor = new OfxBeautifier(writer);
+    OfxParser parser = new OfxParser();
+    parser.parse(new StringReader(text), functor);
+    assertEquals(TEXT_WITH_NO_HEADER, writer.toString());
+  }
+
   private void checkParsing(String text) throws IOException {
     StringWriter writer = new StringWriter();
     OfxBeautifier functor = new OfxBeautifier(writer);

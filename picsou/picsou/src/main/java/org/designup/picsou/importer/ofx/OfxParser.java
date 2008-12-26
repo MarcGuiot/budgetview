@@ -14,9 +14,11 @@ public class OfxParser {
   private Pattern contentTagRegexp = Pattern.compile("^<([A-z0-9]+)>(.+)$");
 
   public void parse(Reader reader, OfxFunctor functor) throws IOException {
+
     BufferedReader buffer = new BufferedReader(reader);
+    OfxReader ofxReader = new OfxReader(buffer);
     while (true) {
-      String nextLine = buffer.readLine();
+      String nextLine = ofxReader.readNext();
       if (nextLine == null) {
         break;
       }
@@ -43,5 +45,45 @@ public class OfxParser {
       }
     }
     functor.end();
+  }
+
+  private static class OfxReader {
+    private BufferedReader buffer;
+    private StringBuffer stringBuffer = new StringBuffer();
+
+    public OfxReader(BufferedReader buffer) {
+      this.buffer = buffer;
+    }
+
+    public String readNext() throws IOException {
+      if (stringBuffer == null) {
+        return null;
+      }
+      String tmp = stringBuffer.toString();
+      if (tmp.length() > 1) {
+        int index = tmp.indexOf('<', 1);
+        if (index != -1) {
+          stringBuffer = new StringBuffer();
+          stringBuffer.append(tmp.substring(index));
+          return tmp.substring(0, index);
+        }
+        stringBuffer = new StringBuffer();
+        return tmp;
+      }
+
+      String line = buffer.readLine();
+      if (line == null) {
+        String ret = stringBuffer.toString();
+        stringBuffer = null;
+        return ret;
+      }
+      line = line.trim();
+      int index = line.indexOf('<', 1);
+      if (index != -1) {
+        stringBuffer.append(line.substring(index));
+        return line.substring(0, index);
+      }
+      return line;
+    }
   }
 }
