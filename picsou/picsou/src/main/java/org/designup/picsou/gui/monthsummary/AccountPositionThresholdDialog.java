@@ -2,6 +2,7 @@ package org.designup.picsou.gui.monthsummary;
 
 import org.designup.picsou.gui.components.CloseAction;
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.model.AccountPositionThreshold;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -33,6 +34,7 @@ public class AccountPositionThresholdDialog {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountPositionThresholdDialog.splits",
                                                       localRepository, directory);
 
+
     OkAction okAction = new OkAction();
 
     editor = builder.addEditor("editor", AccountPositionThreshold.THRESHOLD)
@@ -40,6 +42,9 @@ public class AccountPositionThresholdDialog {
       .forceSelection(localRepository.findOrCreate(AccountPositionThreshold.KEY));
 
     dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+
+    builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
+
     dialog.addPanelWithButtons(builder.<JPanel>load(), okAction, new CloseAction(dialog));
     dialog.setAutoFocusOnOpen(editor.getComponent());
     dialog.pack();

@@ -56,7 +56,8 @@
           <button action="createAccount" styleClass="create" tooltipText="$accountView.create.tooltip"/>
         </row>
         <filler fill="horizontal"/>
-        <button action="accountPositionThreshold" styleClass="hyperlink"/>
+        <button action="accountPositionThreshold" styleClass="hyperlink"
+                tooltipText="$accountPositionThresholdAction.tooltip"/>
       </row>
     </column>
   </panel>

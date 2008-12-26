@@ -175,7 +175,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     //======== POSITION LEVEL ===========
 
     views.selectHome();
-    mainAccounts.setLimit(4100, false);
+    mainAccounts.setThreshold(4100, false);
 
     //======== SAVINGS ===========
 

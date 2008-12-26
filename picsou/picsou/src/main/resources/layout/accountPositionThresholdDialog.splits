@@ -7,7 +7,7 @@
 
       <label text="$accountPositionThresholdDialog.title" styleClass="title"/>
 
-      <htmlEditorPane text="$accountPositionThresholdDialog.message"/>
+      <htmlEditorPane text="$accountPositionThresholdDialog.message" hyperlinkListener="hyperlinkHandler"/>
 
       <row marginTop="10">
         <label text="$accountPositionThresholdDialog.editor"  foreground="gauge.categorization.label" styleClass="formLabel"/>

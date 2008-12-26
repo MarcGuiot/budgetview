@@ -26,7 +26,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     monthSummary.checkNoSeriesMessage();
     mainAccounts
       .checkEstimatedPosition(0.00)
-      .setLimit(25.00, true);
+      .setThreshold(25.00, true);
 
     views.selectData();
     transactions.initContent()
