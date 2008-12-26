@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 public class NavigationView extends View {
 
-  private static Card[] CARDS = {Card.BUDGET, Card.SERIES_EVOLUTION, Card.DATA, Card.CATEGORIZATION};
+  private static Card[] CARDS = {Card.BUDGET, Card.EVOLUTION, Card.DATA, Card.CATEGORIZATION};
 
   public NavigationView(GlobRepository repository, Directory directory) {
     super(repository, directory);

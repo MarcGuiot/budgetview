@@ -21,7 +21,7 @@ public class ViewSelectionChecker extends DataChecker {
   }
 
   public void selectEvolution() {
-    select("seriesEvolution");
+    select("evolution");
   }
 
   public void selectBudget() {

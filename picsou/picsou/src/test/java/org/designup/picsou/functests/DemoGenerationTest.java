@@ -36,7 +36,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(12).validate();
 
     OfxBuilder.init(OFX_PATH)
-      .addBankAccount(30006, 10678, "00000123456", 1410.20, "2008/11/15")
+      .addBankAccount(30066, 10678, "00000123456", 1410.20, "2008/11/15")
         // Income
       .addTransaction("2008/10/28", 1760.50, "WORLDCO")
       .addTransaction("2008/10/29", 1312.80, "BIGCORP")
@@ -96,10 +96,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     mainAccounts.edit("Account n. 00000123456")
       .setAccountName("Compte courant")
-      .validate();
-    savingsAccounts.createNewAccount()
-      .setAccountName("Livret")
-      .selectBank("CIC")
       .validate();
 
     //======== CATEGORIZATION ===========
@@ -182,6 +178,24 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     mainAccounts.setLimit(4100, false);
 
     //======== SAVINGS ===========
+
+    views.selectHome();
+    savingsAccounts.createNewAccount()
+      .setAccountName("Livret")
+      .selectBank("ING Direct")
+      .validate();
+
+    views.selectBudget();
+
+
+
+    //======== PROVISIONS ===========
+
+    views.selectHome();
+    savingsAccounts.createNewAccount()
+      .setAccountName("Compte provisions")
+      .selectBank("CIC")
+      .validate();
 
     views.selectBudget();
     timeline.selectMonth("2008/12");

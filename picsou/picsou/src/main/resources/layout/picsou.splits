@@ -123,7 +123,7 @@
           <panel ref="budgetView"/>
         </card>
 
-        <card name="seriesEvolution">
+        <card name="evolution">
           <panel ref="seriesEvolutionView"/>
         </card>
 

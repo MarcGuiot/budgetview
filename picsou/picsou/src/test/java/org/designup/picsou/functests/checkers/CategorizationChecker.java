@@ -372,10 +372,10 @@ public class CategorizationChecker extends DataChecker {
     return this;
   }
 
-  public CategorizationChecker selectAndCreateSavingsSeries(String savingsName, String toAccount) {
+  public CategorizationChecker selectAndCreateSavingsSeries(String savingsName, String fromAccount) {
     createSavingsSeries()
       .setName(savingsName)
-      .setFromAccount(toAccount)
+      .setFromAccount(fromAccount)
       .setCategory(MasterCategory.SAVINGS)
       .validate();
     return this;
@@ -740,25 +740,23 @@ public class CategorizationChecker extends DataChecker {
   }
 
   public CategorizationChecker setSavings(String label, String seriesName) {
-    int[] indices = getRowIndices(label);
-    for (int indice : indices) {
-      setSavings(indice, seriesName);
+    for (int index : getRowIndices(label)) {
+      setSavings(index, seriesName);
     }
     return this;
   }
 
-  public CategorizationChecker createAndSetSavings(String label, String seriesName, String toAccount) {
-    int[] indices = getRowIndices(label);
+  public CategorizationChecker createAndSetSavings(String label, String seriesName, String fromAccount) {
     boolean first = true;
-    for (int indice : indices) {
+    for (int index : getRowIndices(label)) {
       if (first) {
-        selectTableRows(indice);
+        selectTableRows(index);
         selectSavings();
-        selectAndCreateSavingsSeries(seriesName, toAccount);
+        selectAndCreateSavingsSeries(seriesName, fromAccount);
         first = false;
       }
       else {
-        setSavings(indice, seriesName);
+        setSavings(index, seriesName);
       }
     }
     return this;

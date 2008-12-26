@@ -50,15 +50,6 @@ public class Gauge extends JPanel {
     setPreferredSize(new Dimension(200, 28));
 
     setToolTip("gauge.unset");
-
-    addMouseListener(new MouseAdapter() {
-      public void mouseClicked(MouseEvent e) {
-        System.out.println("Gauge.mouseClicked: ");
-        hideToolTip(Gauge.this);
-        showToolTip(Gauge.this);
-      }
-    }
-    );
   }
 
   public static void showToolTip(JComponent comp) {

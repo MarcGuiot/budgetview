@@ -32,7 +32,7 @@ public class NavigationIcons {
         return "home";
       case BUDGET:
         return "budget";
-      case SERIES_EVOLUTION:
+      case EVOLUTION:
         return "line";
       case DATA:
         return "list";
