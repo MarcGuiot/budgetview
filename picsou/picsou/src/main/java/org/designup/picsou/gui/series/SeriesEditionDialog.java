@@ -459,15 +459,19 @@ public class SeriesEditionDialog {
                                               value(Series.NOVEMBER, true),
                                               value(Series.DECEMBER, true)));
     if (budgetArea == BudgetArea.SPECIAL) {
+      values.add(value(Series.IS_AUTOMATIC, false));
       SelectionService selectionService = directory.get(SelectionService.class);
       if (!selectedTransactions.isEmpty()) {
         SortedSet<Integer> months = selectedTransactions.getSortedSet(Transaction.MONTH);
         values.add(value(Series.FIRST_MONTH, months.first()));
         values.add(value(Series.LAST_MONTH, months.last()));
+        if (selectedTransactions.size() == 1) {
+          values.add(value(Series.PROFILE_TYPE, ProfileType.SINGLE_MONTH.getId()));
+          values.add(value(Series.INITIAL_AMOUNT, selectedTransactions.getFirst().get(Transaction.AMOUNT)));
+        }
       }
       else {
         GlobList monthIds = selectionService.getSelection(Month.TYPE).sort(Month.ID);
-        values.add(value(Series.IS_AUTOMATIC, false));
         if (!monthIds.isEmpty()) {
           values.add(value(Series.FIRST_MONTH, monthIds.getFirst().get(Month.ID)));
           values.add(value(Series.LAST_MONTH, monthIds.getLast().get(Month.ID)));

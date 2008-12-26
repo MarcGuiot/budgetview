@@ -1089,7 +1089,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkSeries("Courant", 0, -20);
     timeline.selectMonth("2008/08");
     budgetView.envelopes.checkSeries("Courant", 0, -20);
-
   }
 
   public void testAutoCategoriseWithFirstSelectedCategory() throws Exception {

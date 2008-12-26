@@ -1569,7 +1569,25 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testSpecial() throws Exception {
+  public void testSpecialWithOnlyOneMonth() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2007/05/04", -100.00, "Virement")
+      .addTransaction("2007/06/04", -100.00, "CENTER PARC")
+      .addTransaction("2008/07/04", -10.00, "McDo")
+      .load();
+    views.selectCategorization();
+    categorization.selectTableRows("CENTER PARC");
+    categorization.selectSpecial()
+      .createSpecialSeries()
+      .setName("Center Parc")
+      .setCategory(MasterCategory.LEISURES)
+      .checkSingleMonthSelected()
+      .checkSingleMonthDate("June 2007")
+      .checkInManual()
+      .validate();
+  }
+
+  public void testSpecialWithSeveralMonths() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2007/05/04", -100.00, "Virement")
       .addTransaction("2007/06/04", -100.00, "CENTER PARC")
@@ -1586,6 +1604,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkEveryMonthSelected()
       .checkStartDate("June 2007")
       .checkEndDate("Mar 2008")
+      .checkInManual()
       .validate();
   }
 
