@@ -1,4 +1,4 @@
-package com.fourmics;
+package com.cashpilot;
 
 import sun.security.action.GetPropertyAction;
 
@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 public class Main {
   private static final String MAC_PLATFORM_ID = "Mac OS X";
   private static final String LINUX_PLATFORM_ID = "Linux";
-  private static final String PICSOU = "fourmics";
+  private static final String PICSOU = "cashpilot";
   private static final Pattern FILTER = Pattern.compile(PICSOU + "[0-9][0-9]*" + "\\.jar");
   private static final String JAR_DIRECTORY = "/jars";
 
@@ -24,10 +24,10 @@ public class Main {
 
   private void go(String[] args) throws Exception {
 
-    String pathToInstallDir = System.getProperty("fourmics.exe.dir");
+    String pathToInstallDir = System.getProperty("cashpilot.exe.dir");
     if (pathToInstallDir == null) {
       if (isMacOSX()) {
-        pathToInstallDir = System.getProperty("user.dir") + "/Fourmics.app/Contents/Resources/";
+        pathToInstallDir = System.getProperty("user.dir") + "/CashPilot.app/Contents/Resources/";
       }
       else {
         pathToInstallDir = System.getProperty("user.dir");

@@ -1,6 +1,6 @@
 #/bin/sh
 
-SOFT_VERSION=`java -jar ../picsou/obfuscated/fourmics.jar -v -soft | grep "Software version:" |
+SOFT_VERSION=`java -jar ../picsou/obfuscated/cashpilot.jar -v -soft | grep "Software version:" |
               sed -e 's/Software version://g' | sed -e 's/  *//g'`
 
-mv Fourmics.dmg Fourmics-${SOFT_VERSION}.dmg
+mv CashPilot.dmg CashPilot-${SOFT_VERSION}.dmg

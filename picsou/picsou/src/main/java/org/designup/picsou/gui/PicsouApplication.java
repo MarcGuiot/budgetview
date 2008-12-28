@@ -52,7 +52,7 @@ public class PicsouApplication {
   public static final Long BANK_CONFIG_VERSION = 5L;
   private static final String JAR_DIRECTORY = "jars";
   private static final String BANK_CONFIG_DIRECTORY = "configs";
-  public static final String APPNAME = "fourmics";
+  public static final String APPNAME = "cashpilot";
   private static final String CONFIG = "config";
   private static final Pattern CONFIG_FILTER = Pattern.compile(CONFIG + "[0-9][0-9]*" + "\\.jar");
 
@@ -226,12 +226,12 @@ public class PicsouApplication {
 
   public static String getDataPath() {
     if (Gui.isMacOSX() && System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
-      return System.getProperty("user.home") + "/Library/Application Support/Fourmics";
+      return System.getProperty("user.home") + "/Library/Application Support/CashPilot";
     }
     if (Gui.isWindows() && System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
-      return System.getProperty("user.home") + "/Application Data/Fourmics";
+      return System.getProperty("user.home") + "/Application Data/CashPilot";
     }
-    return getSystemValue(LOCAL_PREVAYLER_PATH_PROPERTY, System.getProperty("user.home") + "/.fourmics");
+    return getSystemValue(LOCAL_PREVAYLER_PATH_PROPERTY, System.getProperty("user.home") + "/.cashpilot");
   }
 
   public static String getBankConfigPath() {

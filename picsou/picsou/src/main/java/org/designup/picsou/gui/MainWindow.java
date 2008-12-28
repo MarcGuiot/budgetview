@@ -41,7 +41,7 @@ public class MainWindow {
   public MainWindow() throws Exception {
     frame = new PicsouFrame(Lang.get("application"));
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    ImageIcon icon = Gui.IMAGE_LOCATOR.get("fourmics_icon_128.png");
+    ImageIcon icon = Gui.IMAGE_LOCATOR.get("app_icon_128.png");
     frame.setIconImage(icon.getImage());
   }
 
