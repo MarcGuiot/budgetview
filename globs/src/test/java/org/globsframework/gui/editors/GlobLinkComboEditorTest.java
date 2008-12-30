@@ -1,10 +1,14 @@
 package org.globsframework.gui.editors;
 
 import org.globsframework.gui.utils.GuiComponentTestCase;
+import org.globsframework.gui.DummySelectionListener;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObjectWithLinks;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.Key;
+import org.globsframework.model.utils.GlobBuilder;
 import org.uispec4j.ComboBox;
 
 import java.util.Arrays;
@@ -106,7 +110,38 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
 
     selectionService.select(glob1);
     changeListener.assertNoChanges();
+  }
 
+  public void testListensToChanges() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' link='2'/>" +
+                    "<dummyObject id='2' name='name2' link='1'/>" +
+                    "<dummyObject id='3' name='name3'/>");
+    repository.addChangeListener(changeListener);
+    Glob glob1 = repository.get(key1);
+    Glob glob2 = repository.get(key2);
+
+    GlobLinkComboEditor editor = new GlobLinkComboEditor(DummyObject.LINK, repository, directory);
+    ComboBox combo = new ComboBox(editor.getComponent());
+
+    selectionService.select(glob1);
+    assertTrue(combo.selectionEquals("name2"));
+
+    repository.update(key1, DummyObject.LINK, 3);
+    assertTrue(combo.selectionEquals("name3"));
+    assertThat(combo.isEnabled());
+
+    repository.update(key1, DummyObject.LINK, null);
+    assertTrue(combo.selectionEquals(null));
+    assertThat(combo.isEnabled());
+
+    repository.update(key1, DummyObject.LINK, 3);
+    assertTrue(combo.selectionEquals("name3"));
+    assertThat(combo.isEnabled());
+
+    repository.delete(key1);
+    assertTrue(combo.selectionEquals(null));
+    assertFalse(combo.isEnabled());
   }
 
   public void testComparator() throws Exception {
@@ -126,5 +161,38 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
     ComboBox combo = new ComboBox(editor.getComponent());
 
     assertTrue(combo.contentEquals("name3", "name2", "name1"));
+  }
+
+  public void testResetClearsTheCurrentSelection() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' link='2'/>" +
+                    "<dummyObject id='2' name='name2' link='1'/>" +
+                    "<dummyObject id='3' name='name3'/>");
+    repository.addChangeListener(changeListener);
+    Glob glob1 = repository.get(key1);
+    Glob glob2 = repository.get(key2);
+
+    GlobLinkComboEditor editor = new GlobLinkComboEditor(DummyObject.LINK, repository, directory);
+    ComboBox combo = new ComboBox(editor.getComponent());
+
+    selectionService.select(glob1);
+    assertTrue(combo.contentEquals("", "name1", "name2", "name3"));
+    assertTrue(combo.selectionEquals("name2"));
+
+    DummySelectionListener selectionListener = DummySelectionListener.register(selectionService, DummyObject.TYPE);
+
+    repository.reset(new GlobList(GlobBuilder.create(DummyObject.TYPE,
+                                                     value(DummyObject.ID, 1),
+                                                     value(DummyObject.LINK, 3),
+                                                     value(DummyObject.NAME, "newName1")),
+                                  GlobBuilder.create(DummyObject.TYPE,
+                                                     value(DummyObject.ID, 3),
+                                                     value(DummyObject.NAME, "newName3"))),
+                     DummyObject.TYPE);
+
+    changeListener.assertNoChanges();
+    assertFalse(combo.isEnabled());
+    assertThat(combo.selectionEquals(null));
+    selectionListener.assertEmpty();
   }
 }
