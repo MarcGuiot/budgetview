@@ -1,16 +1,15 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.CategorizationChecker;
-import org.designup.picsou.functests.checkers.OperationChecker;
-import org.designup.picsou.functests.checkers.TransactionChecker;
-import org.designup.picsou.functests.checkers.ViewSelectionChecker;
+import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
-import org.designup.picsou.utils.Lang;
-import org.uispec4j.*;
+import org.uispec4j.ToggleButton;
+import org.uispec4j.Trigger;
+import org.uispec4j.UISpecAdapter;
+import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
@@ -18,11 +17,8 @@ import org.uispec4j.interception.WindowInterceptor;
 public class LoginTest extends StartUpFunctionalTestCase {
 
   private Window window;
-  private TextBox userField;
-  private PasswordField passwordField;
-  private CheckBox createUserCheckbox;
-  private Button loginButton;
   private PicsouApplication picsouApplication;
+  private LoginChecker login;
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -50,10 +46,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     window.getAwtComponent().setVisible(false);
     window.dispose();
     window = null;
-    userField = null;
-    passwordField = null;
-    createUserCheckbox = null;
-    loginButton = null;
+    login = null;
     picsouApplication.shutdown();
     picsouApplication = null;
   }
@@ -65,10 +58,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       picsouApplication.shutdown();
     }
     window = getMainWindow();
-    userField = window.getInputTextBox("name");
-    passwordField = window.getPasswordField("password");
-    createUserCheckbox = window.getCheckBox();
-    loginButton = window.getButton("Enter");
+    login = new LoginChecker(window);
   }
 
   public void testCreatingAUserAndLoggingInAgain() throws Exception {
@@ -78,7 +68,8 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .addTransaction("2006/01/11", -12.0, "Cheque 12345")
       .save();
 
-    createUser("toto", "p4ssw0rd", filePath);
+    login.logNewUser("toto", "p4ssw0rd");
+    OperationChecker.init(window).importOfxFile(filePath);
     getTransactionView()
       .initContent()
       .add("11/01/2006", TransactionType.CHECK, "CHEQUE N. 12345", "", -12.00, MasterCategory.NONE)
@@ -86,7 +77,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .check();
 
     openNewLoginWindow();
-    login("toto", "p4ssw0rd");
+    login.logExistingUser("toto", "p4ssw0rd");
     getTransactionView()
       .initContent()
       .add("11/01/2006", TransactionType.CHECK, "CHEQUE N. 12345", "", -12.00, MasterCategory.NONE)
@@ -101,19 +92,20 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .addTransaction("2006/01/11", -12.0, "Cheque 12345")
       .save();
 
-    createUser("toto", "p4ssw0rd", filePath);
+    login.logNewUser("toto", "p4ssw0rd");
+    OperationChecker.init(window).importOfxFile(filePath);
     checkBankOnImport(filePath);
 
     openNewLoginWindow();
-    login("toto", "p4ssw0rd");
+    login.logExistingUser("toto", "p4ssw0rd");
     checkBankOnImport(filePath);
   }
 
   public void testLoginFailsIfUserNotRegistered() throws Exception {
-    enterUserPassword("toto", "titi", false);
-    checkNoErrorDisplayed();
-    loginButton.click();
-    checkErrorMessage("login.invalid.credentials");
+    login.enterUserAndPassword("toto", "titi");
+    login.checkNoErrorDisplayed();
+    login.clickEnter();
+    login.checkErrorMessage("login.invalid.credentials");
   }
 
   public void testCannotUseTheSameLoginTwice() throws Exception {
@@ -122,57 +114,79 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
 
-    createUser("toto", "p4ssw0rd", path);
+    login.logNewUser("toto", "p4ssw0rd");
+    OperationChecker.init(window).importOfxFile(path);
 
     openNewLoginWindow();
-    createUserCheckbox.select();
-    enterUserPassword("toto", "an0th3rPwd", true);
-    loginButton.click();
 
-    checkErrorMessage("login.user.exists");
+    login.enterUserName("toto")
+      .setCreation()
+      .enterPassword("an0th3rPwd")
+      .confirmPassword("an0th3rPwd")
+      .loginAndSkipSla();
+
+    login.checkErrorMessage("login.user.exists");
   }
 
   public void testUserAndPasswordRules() throws Exception {
-    createUserCheckbox.select();
+    login.setCreation();
 
-    loginButton.click();
-    checkErrorMessage("login.user.required");
+    login.clickEnter()
+      .checkErrorMessage("login.user.required");
 
-    userField.setText("t");
-    checkNoErrorDisplayed();
-    loginButton.click();
-    checkErrorMessage("login.user.too.short");
+    login.enterUserName("t")
+      .checkNoErrorDisplayed()
+      .clickEnter()
+      .checkErrorMessage("login.user.too.short");
 
-    userField.setText("toto");
-    checkNoErrorDisplayed();
-    loginButton.click();
-    checkErrorMessage("login.password.required");
+    login.enterUserName("toto")
+      .checkNoErrorDisplayed()
+      .clickEnter()
+      .checkErrorMessage("login.password.required");
 
-    passwordField.setPassword("pwd");
-    checkNoErrorDisplayed();
-    loginButton.click();
-    checkErrorMessage("login.password.too.short");
+    login.enterPassword("pwd")
+      .checkNoErrorDisplayed()
+      .clickEnter()
+      .checkErrorMessage("login.password.too.short");
   }
 
   public void testPasswordMustBeConfirmedWhenCreatingAnAccount() throws Exception {
-    enterUserPassword("toto", "p4ssw0rd", false);
-    checkConfirmPasswordVisible(false);
+    login.enterUserAndPassword("toto", "p4ssw0rd");
+    login.checkConfirmPasswordVisible(false);
 
-    createUserCheckbox.select();
-    checkConfirmPasswordVisible(true);
+    login.setCreation();
+    login.checkConfirmPasswordVisible(true);
 
-    loginButton.click();
-    checkErrorMessage("login.confirm.required");
+    login.clickEnter();
+    login.checkErrorMessage("login.confirm.required");
 
-    setConfirmPassword("somethingElse");
-    loginButton.click();
-    checkErrorMessage("login.confirm.error");
+    login.confirmPassword("somethingElse");
+    login.clickEnter();
+    login.checkErrorMessage("login.confirm.error");
   }
 
-  private void createNewUser() {
-    createUserCheckbox.select();
-    enterUserPassword("toto", "p4ssw0rd", true);
-    loginButton.click();
+  public void testValidatingTheLicenseAgreement() throws Exception {
+    login.enterUserAndPassword("toto", "p4assw0rd")
+      .setCreation()
+      .confirmPassword("p4assw0rd");
+
+    login.clickEnterAndGetSlaDialog()
+      .checkTitle("End-User License Agreement")
+      .cancel();
+
+    login.checkComponentsVisible();
+    assertFalse(window.containsMenuBar());
+
+    login.clickEnterAndGetSlaDialog()
+      .checkTitle("End-User License Agreement")
+      .checkNoErrorMessage()
+      .checkValidationFailed()
+      .checkErrorMessage("You must agree with these terms")
+      .acceptTerms()
+      .checkNoErrorMessage()
+      .validate();
+
+    assertTrue(window.containsMenuBar());
   }
 
   public void testTransactionAndCategorisationWorkAfterReload() throws Exception {
@@ -180,7 +194,9 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
-    createUser("toto", "p4ssw0rd", path);
+
+    login.logNewUser("toto", "p4ssw0rd");
+    OperationChecker.init(window).importOfxFile(path);
     getTransactionView()
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
@@ -189,10 +205,9 @@ public class LoginTest extends StartUpFunctionalTestCase {
     getCategorizationView().setOccasional("Menu K", MasterCategory.FOOD);
 
     openNewLoginWindow();
-    enterUserPassword("toto", "p4ssw0rd", false);
-    loginButton.click();
-    
-    UISpecAssert.assertTrue(window.containsMenuBar());
+    login.logExistingUser("toto", "p4ssw0rd");
+
+    assertThat(window.containsMenuBar());
     OfxBuilder
       .init(this, new OperationChecker(window))
       .addTransaction("2006/01/12", -2, "Menu A")
@@ -209,55 +224,6 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .addOccasional("12/01/2006", TransactionType.PRELEVEMENT, "Menu A", "", -2, MasterCategory.FOOD)
       .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.FOOD)
       .check();
-  }
-
-  private void login(String user, String password) {
-    enterUserPassword(user, password, false);
-    loginButton.click();
-  }
-
-  private void createUser(String user, String password, String filePath) {
-    createUserCheckbox.select();
-    enterUserPassword(user, password, true);
-    loginButton.click();
-
-    UISpecAssert.waitUntil(window.containsMenuBar(), 10000);
-
-    OperationChecker operations = new OperationChecker(window);
-    operations.importOfxFile(filePath);
-  }
-
-  private void enterUserPassword(String user, String password, boolean confirm) {
-    userField.setText(user);
-    passwordField.setPassword(password);
-    if (confirm) {
-      setConfirmPassword(password);
-    }
-  }
-
-  private void checkNoErrorDisplayed() {
-    assertTrue(window.getTextBox("message").textIsEmpty());
-  }
-
-  private void checkErrorMessage(String message) {
-    assertTrue(window.getTextBox("message").textContains(Lang.get(message)));
-  }
-
-  private void setConfirmPassword(String text) {
-    getConfirmPassword().setPassword(text);
-  }
-
-  private PasswordField getConfirmPassword() {
-    return window.getPasswordField("confirmPassword");
-  }
-
-  private void checkConfirmPasswordVisible(boolean visible) {
-    if (visible) {
-      assertNotNull(getConfirmPassword());
-    }
-    else {
-      window.containsUIComponent(TextBox.class, "confirmPassword");
-    }
   }
 
   private TransactionChecker getTransactionView() {

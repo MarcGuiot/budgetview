@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.about;
 
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -36,10 +37,7 @@ public class AboutDialog {
     String version = Lang.get("about.version", PicsouApplication.APPLICATION_VERSION);
     builder.add("versionLabel", new JLabel(version));
 
-    JEditorPane configurationEditor = builder.add("configurationArea", new JEditorPane());
-    configurationEditor.setContentType("text/html");
-    configurationEditor.setText(getConfiguration());
-    configurationEditor.setCaretPosition(0);
+    builder.add("configurationArea", Gui.createHtmlEditor(getConfiguration()));
 
     dialog = PicsouDialog.createWithButton(directory.get(JFrame.class), builder.<JPanel>load(),
                                            new AbstractAction(Lang.get("close")) {

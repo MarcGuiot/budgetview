@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CategorizationChecker extends DataChecker {
+public class CategorizationChecker extends GuiChecker {
   private Window mainWindow;
   public static final int LABEL_COLUMN_INDEX = 2;
   public static final int AMOUNT_COLUMN_INDEX = 3;

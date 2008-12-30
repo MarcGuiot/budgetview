@@ -3,7 +3,7 @@ package org.designup.picsou.functests.checkers;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
 
-public class NavigationViewChecker extends DataChecker {
+public class NavigationViewChecker extends GuiChecker {
   private Window window;
 
   public NavigationViewChecker(Window window) {

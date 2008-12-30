@@ -4,7 +4,7 @@ import junit.framework.Assert;
 import org.designup.picsou.gui.components.Gauge;
 import org.uispec4j.Panel;
 
-public class GaugeChecker extends DataChecker {
+public class GaugeChecker extends GuiChecker {
   private Gauge gauge;
 
   public GaugeChecker(Panel panel, String componentName) {

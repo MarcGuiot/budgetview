@@ -5,7 +5,7 @@ import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.assertion.UISpecAssert;
 
-public class ViewSelectionChecker extends DataChecker {
+public class ViewSelectionChecker extends GuiChecker {
   private Window window;
 
   public ViewSelectionChecker(Window window) {

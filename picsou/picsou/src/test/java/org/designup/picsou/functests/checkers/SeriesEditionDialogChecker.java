@@ -15,7 +15,7 @@ import org.uispec4j.interception.WindowInterceptor;
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 
-public class SeriesEditionDialogChecker extends DataChecker {
+public class SeriesEditionDialogChecker extends GuiChecker {
   private Window dialog;
   private boolean singleCategorySeries;
   private Table table;

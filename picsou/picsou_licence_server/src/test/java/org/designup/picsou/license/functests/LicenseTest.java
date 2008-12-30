@@ -63,7 +63,7 @@ public class LicenseTest extends LicenseTestCase {
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startPicsou();
     LoginChecker loginChecker = new LoginChecker(window);
-    loginChecker.logUser("user", "passw@rd");
+    loginChecker.logExistingUser("user", "passw@rd");
 
     Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 2L);
     assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
@@ -101,7 +101,7 @@ public class LicenseTest extends LicenseTestCase {
     startPicsou();
     checkRepoIdIsUpdated(connection, 2L, null);
     loginChecker = new LoginChecker(window);
-    loginChecker.logUser("user", "passw@rd");
+    loginChecker.logExistingUser("user", "passw@rd");
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     OperationChecker operations = new OperationChecker(window);
     operations.openPreferences().setFutureMonthsCount(3);
@@ -143,7 +143,7 @@ public class LicenseTest extends LicenseTestCase {
     startPicsou();
 
     LoginChecker loginChecker = new LoginChecker(window);
-    loginChecker.logUser("user", "passw@rd");
+    loginChecker.logExistingUser("user", "passw@rd");
     LicenseChecker.enterBadLicense(window, "titi@foo.org", "4321");
 
     Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 2L);
@@ -205,7 +205,7 @@ public class LicenseTest extends LicenseTestCase {
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startPicsou();
     LoginChecker login = new LoginChecker(window);
-    login.logUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd");
     TimeViewChecker timeView = new TimeViewChecker(window);
     timeView.checkSpanEquals("2008/07", "2010/07");
     window.dispose();
@@ -216,7 +216,7 @@ public class LicenseTest extends LicenseTestCase {
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startPicsou();
     LoginChecker login = new LoginChecker(window);
-    login.logUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd");
     TimeViewChecker timeView = new TimeViewChecker(window);
     timeView.checkSpanEquals("2008/07", "2010/07");
     LicenseChecker license = new LicenseChecker(window);
@@ -233,7 +233,7 @@ public class LicenseTest extends LicenseTestCase {
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startPicsou();
     LoginChecker loginChecker = new LoginChecker(window);
-    loginChecker.logUser("user", "passw@rd");
+    loginChecker.logExistingUser("user", "passw@rd");
     TimeViewChecker timeView = new TimeViewChecker(window);
     if (lastMonth.equals("2008/07")) {
       timeView.checkDisplays("2008/07");

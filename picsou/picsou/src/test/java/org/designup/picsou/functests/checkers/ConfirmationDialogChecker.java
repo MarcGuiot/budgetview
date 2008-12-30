@@ -5,7 +5,7 @@ import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
 
-public class ConfirmationDialogChecker extends DataChecker {
+public class ConfirmationDialogChecker extends GuiChecker {
   private Window dialog;
 
   public static ConfirmationDialogChecker init(Trigger trigger) {

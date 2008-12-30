@@ -64,7 +64,7 @@ public class TransactionChecker extends ViewChecker {
     if (category == MasterCategory.NONE) {
       return "";
     }
-    return DataChecker.getCategoryName(category);
+    return GuiChecker.getCategoryName(category);
   }
 
   public TransactionChecker categorize(final int... rows) {

@@ -220,6 +220,14 @@ public class Gui {
     return isMacOSX() ? KeyEvent.META_DOWN_MASK : KeyEvent.CTRL_DOWN_MASK;
   }
 
+  public static JEditorPane createHtmlEditor(String text) {
+    JEditorPane editor = new JEditorPane();
+    editor.setContentType("text/html");
+    editor.setText(text);
+    editor.setCaretPosition(0);
+    return editor;
+  }
+
   public static class RolloverColorListener extends MouseAdapter {
     private final JComponent component;
     private final Color rolloverColor;

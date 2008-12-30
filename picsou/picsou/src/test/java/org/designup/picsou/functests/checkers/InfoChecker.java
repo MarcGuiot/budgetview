@@ -6,7 +6,7 @@ import org.uispec4j.assertion.UISpecAssert;
 
 import javax.swing.*;
 
-public class InfoChecker extends DataChecker {
+public class InfoChecker extends GuiChecker {
   private Window mainWindow;
 
   public InfoChecker(Window mainWindow) {

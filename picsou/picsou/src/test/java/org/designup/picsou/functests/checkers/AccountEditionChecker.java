@@ -8,7 +8,7 @@ import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 
-public class AccountEditionChecker extends DataChecker {
+public class AccountEditionChecker extends GuiChecker {
   private Window dialog;
 
   public static AccountEditionChecker open(Trigger trigger) {

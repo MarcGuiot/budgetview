@@ -8,7 +8,7 @@ import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.utils.Utils;
 
-public class BudgetLabelChecker extends DataChecker {
+public class BudgetLabelChecker extends GuiChecker {
   private Panel mainWindow;
 
   public BudgetLabelChecker(Panel mainWindow) {

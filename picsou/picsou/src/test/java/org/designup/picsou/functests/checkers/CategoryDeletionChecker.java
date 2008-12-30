@@ -7,7 +7,7 @@ import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
-public class CategoryDeletionChecker extends DataChecker {
+public class CategoryDeletionChecker extends GuiChecker {
   private Window window;
 
   public CategoryDeletionChecker(Window window) {

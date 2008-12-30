@@ -1,6 +1,7 @@
 package org.designup.picsou.server;
 
 import org.designup.picsou.functests.checkers.OperationChecker;
+import org.designup.picsou.functests.checkers.LoginChecker;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Button;
@@ -26,22 +27,16 @@ public class LoginFuncTest extends ServerFuncTestCase {
 
     Files.copyStreamTofile(LoginFuncTest.class.getResourceAsStream(PICSOU_DEV_TESTFILES_SG1_QIF), fileName);
 
-    TextBox textBox = window.getTextBox("name");
-    textBox.setText("user1");
+    LoginChecker login = new LoginChecker(window);
+    login.enterUserAndPassword("user1", "_user1")
+      .setCreation()
+      .confirmPassword("_user1")
+      .loginAndSkipSla()
+      .waitForApplicationToLoad();
 
-    PasswordField password = window.getPasswordField("password");
-    PasswordField confirmPassword = window.getPasswordField("confirmPassword");
 
-    CheckBox createAccount = window.getCheckBox("createAccountCheckBox");
-    password.setPassword("_user1");
-    createAccount.click();
-    confirmPassword.setPassword("_user1");
-
-    window.getButton("login").click();
-
-    UISpecAssert.waitUntil(window.containsMenuBar(), 10000);
-    OperationChecker operations = new OperationChecker(window);
-    operations.openImportDialog()
+    OperationChecker.init(window)
+      .openImportDialog()
       .selectFiles(fileName)
       .acceptFile()
       .selectBank("Société Générale")

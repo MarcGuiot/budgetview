@@ -9,7 +9,7 @@ import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
-public class OccasionalSerieEditionChecker extends DataChecker {
+public class OccasionalSerieEditionChecker extends GuiChecker {
   private Window dialog;
   private Table table;
 

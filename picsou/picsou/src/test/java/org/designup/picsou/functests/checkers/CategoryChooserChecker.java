@@ -12,7 +12,7 @@ import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 
-public class CategoryChooserChecker extends DataChecker {
+public class CategoryChooserChecker extends GuiChecker {
   private Window window;
 
   public CategoryChooserChecker(Window window) {

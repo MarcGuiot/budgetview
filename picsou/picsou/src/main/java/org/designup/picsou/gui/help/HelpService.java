@@ -45,7 +45,7 @@ public class HelpService {
     }
 
     public String getContent(String ref) {
-      return Lang.getFile(ref + ".html");
+      return Lang.getHelpFile(ref + ".html");
     }
   }
 }

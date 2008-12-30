@@ -6,7 +6,7 @@ import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
 import org.designup.picsou.gui.PicsouApplication;
 
-public class AboutChecker extends DataChecker {
+public class AboutChecker extends GuiChecker {
   private Window dialog;
 
   public static AboutChecker open(Trigger trigger) {

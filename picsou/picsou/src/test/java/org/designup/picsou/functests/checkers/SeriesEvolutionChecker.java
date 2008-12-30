@@ -17,7 +17,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 
-public class SeriesEvolutionChecker extends DataChecker {
+public class SeriesEvolutionChecker extends GuiChecker {
   private Table table;
   private Window mainWindow;
 

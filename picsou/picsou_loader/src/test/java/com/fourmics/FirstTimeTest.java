@@ -147,7 +147,7 @@ public class FirstTimeTest extends UISpecTestCase {
     series
       .setName("impots")
       .setCustom().toggleMonth(1, 3, 4, 5, 7, 8, 10, 11, 12)
-      .openCategory().selectCategory(DataChecker.getCategoryName(MasterCategory.TAXES), true);
+      .openCategory().selectCategory(GuiChecker.getCategoryName(MasterCategory.TAXES), true);
     series.validate();
     categorization
       .setRecurring("Gaz de France", "Gas", MasterCategory.HOUSE, false)
@@ -359,7 +359,7 @@ public class FirstTimeTest extends UISpecTestCase {
       }
     });
     LoginChecker login = new LoginChecker(window);
-    login.logUser("toto", "toto");
+    login.logExistingUser("toto", "toto");
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectHome();
@@ -436,7 +436,7 @@ public class FirstTimeTest extends UISpecTestCase {
       }
     });
     LoginChecker login = new LoginChecker(window);
-    login.logUser("toto", "toto");
+    login.logExistingUser("toto", "toto");
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectHome();
@@ -515,7 +515,7 @@ public class FirstTimeTest extends UISpecTestCase {
       }
     });
     LoginChecker login = new LoginChecker(window);
-    login.logUser("toto", "toto");
+    login.logExistingUser("toto", "toto");
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectHome();

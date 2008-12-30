@@ -6,7 +6,7 @@ import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
 
-public class LicenseExpirationChecker extends DataChecker {
+public class LicenseExpirationChecker extends GuiChecker {
   private Window window;
 
 
