@@ -4,6 +4,9 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 
 public class MultiAcountTest extends LoggedInFunctionalTestCase {
 
+  public void test() throws Exception {
+  }
+
   public void testChangeDayChangeTransactionFromPlannedToRealAndViceversa() throws Exception {
   }
 

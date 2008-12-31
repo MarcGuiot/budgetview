@@ -114,9 +114,11 @@ public class BalanceTrigger implements ChangeSetListener {
     repository.update(account.getKey(), Account.TRANSACTION_ID, lastUpdateTransactionId);
     if (lastUpdateTransactionId != null) {
       Glob lastTransaction = repository.get(Key.create(Transaction.TYPE, lastUpdateTransactionId));
-      repository.update(account.getKey(), Account.BALANCE_DATE,
-                        Month.toDate(lastTransaction.get(Transaction.BANK_MONTH),
-                                     lastTransaction.get(Transaction.BANK_DAY)));
+      repository.update(account.getKey(), FieldValue.value(Account.BALANCE_DATE,
+                                                           Month.toDate(lastTransaction.get(Transaction.BANK_MONTH),
+                                                                        lastTransaction.get(Transaction.BANK_DAY))),
+                        FieldValue.value(Account.BALANCE, lastTransaction.get(Transaction.ACCOUNT_POSITION))
+      );
     }
     return true;
   }
@@ -147,12 +149,6 @@ public class BalanceTrigger implements ChangeSetListener {
       i++;
     }
     double balance = 0;
-//    if (updatePlannedOnly) {
-//      Double summaryBalance = repository.get(sameCheckerAccount.getSummary()).get(Account.BALANCE);
-//      if (summaryBalance != null) {
-//        balance = summaryBalance;
-//      }
-//    }
 
     int lastCloseIndex = 0;
     Double realBalance = null;
@@ -186,11 +182,9 @@ public class BalanceTrigger implements ChangeSetListener {
         repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, balance);
       }
     }
-//    if (!updatePlannedOnly) {
     repository.update(sameCheckerAccount.getSummary(),
                       FieldValue.value(Account.BALANCE, realBalance),
                       FieldValue.value(Account.BALANCE_DATE, balanceDate));
-//    }
   }
 
 }

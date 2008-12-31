@@ -80,7 +80,7 @@ public class BudgetViewChecker extends DataChecker {
       UISpecAssert.assertThat(label.textEquals(title));
     }
 
-    private Panel getPanel() {
+    public Panel getPanel() {
       return window.getPanel(panelName);
     }
 

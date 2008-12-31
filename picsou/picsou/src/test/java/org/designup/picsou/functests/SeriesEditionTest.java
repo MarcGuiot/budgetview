@@ -1,16 +1,20 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.CategoryChooserChecker;
-import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.checkers.SeriesDeleteDialogChecker;
+import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.uispec4j.Key;
 import org.uispec4j.TextBox;
+import org.uispec4j.Window;
+import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
@@ -1728,5 +1732,51 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkTable(new Object[][]{
         {"2008", "October", "", "0"}})
       .validate();
+  }
+
+  public void testEditingMirorSerieRedirectToMainEdit() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/10")
+      .addTransaction("2008/08/10", 100.00, "Virement")
+      .load();
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/10", -100.00, "Virement")
+      .load();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    views.selectHome();
+    this.mainAccounts.edit("Account n. 111")
+      .setAsSavings()
+      .validate();
+    views.selectBudget();
+    budgetView.savings.createSeries()
+      .setName("CA")
+      .setCategory(MasterCategory.SAVINGS)
+      .setFromAccount("Main account")
+      .setToAccount("Account n. 111")
+      .validate();
+    views.selectCategorization();
+    categorization.selectTableRow(1)
+      .selectSavings()
+      .editSeries("CA", true)
+      .setName("Autre")
+      .validate();
+
+    views.selectBudget();
+    Component[] seriesButtons = budgetView.savings.getPanel().getSwingComponents(JButton.class, "Autre");
+    assertEquals(2, seriesButtons.length);
+
+    SeriesEditionDialogChecker firstSeriesChecker = getSerieChecker(seriesButtons[0]);
+    firstSeriesChecker.switchToManual().selectAllMonths().setAmount(50).validate();
+    SeriesEditionDialogChecker secondSeriesChecker = getSerieChecker(seriesButtons[1]);
+    secondSeriesChecker.checkInManual()
+      .switchToAutomatic()
+      .validate();
+    firstSeriesChecker = getSerieChecker(seriesButtons[0]);
+    firstSeriesChecker.checkInAutomatic().validate();
+  }
+
+  private SeriesEditionDialogChecker getSerieChecker(Component component) {
+    Window firstSeries = WindowInterceptor.getModalDialog(new org.uispec4j.Button((JButton)component).triggerClick());
+    return new SeriesEditionDialogChecker(firstSeries, true);
   }
 }

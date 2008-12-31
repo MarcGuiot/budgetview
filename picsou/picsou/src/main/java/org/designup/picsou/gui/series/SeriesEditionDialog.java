@@ -519,6 +519,9 @@ public class SeriesEditionDialog {
   }
 
   private void doShow(Set<Integer> monthIds, Glob series, final Boolean selectName) {
+    if (series.get(Series.IS_MIROR)) {
+      series = repository.findLinkTarget(series, Series.MIROR_SERIES);
+    }
     this.currentSeries = series;
     this.currentMonthIds = new TreeSet<Integer>(monthIds);
     if (currentSeries != null) {
@@ -675,6 +678,9 @@ public class SeriesEditionDialog {
         Glob toAccount = localRepository.findLinkTarget(series, Series.TO_ACCOUNT);
         if (Account.areBothImported(fromAccount, toAccount)) {
           Integer mirorSeries = series.get(Series.MIROR_SERIES);
+          if (series.get(Series.IS_MIROR)) {
+            return;
+          }
           final Glob mirorBudget = localRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirorSeries)
             .findByIndex(SeriesBudget.MONTH, budget.get(SeriesBudget.MONTH)).getGlobs().getFirst();
           values.safeApply(new FieldValues.Functor() {
@@ -722,7 +728,7 @@ public class SeriesEditionDialog {
           GlobList transactions = uncategorize(series.get(Series.ID));
           Integer mirorId = createMirorSeries(newSeries.getKey(), newSeries, tmpRepo);
           GlobList mirorTransactions = GlobList.EMPTY;
-          if (series.get(Series.MIROR_SERIES) != null) {
+          if (series.get(Series.MIROR_SERIES) != null && !series.get(Series.IS_MIROR)) {
             Integer seriesToDelete = series.get(Series.MIROR_SERIES);
             localRepository.delete(Key.create(Series.TYPE, seriesToDelete));
             mirorTransactions = uncategorize(seriesToDelete);
@@ -741,7 +747,7 @@ public class SeriesEditionDialog {
         else {
           Glob series = localRepository.get(key);
           final Glob miror = localRepository.findLinkTarget(series, Series.MIROR_SERIES);
-          if (miror != null) {
+          if (miror != null && !series.get((Series.IS_MIROR))) {
             values.safeApply(new FieldValues.Functor() {
               public void process(Field field, Object value) throws Exception {
                 localRepository.update(miror.getKey(), field, value);
@@ -786,7 +792,7 @@ public class SeriesEditionDialog {
           seriesFieldValues[i] = new FieldValue(Series.IS_MIROR, true);
         }
         else if (seriesFieldValues[i].getField().equals(Series.MIROR_SERIES)) {
-          seriesFieldValues[i] = new FieldValue(Series.MIROR_SERIES, null);
+          seriesFieldValues[i] = new FieldValue(Series.MIROR_SERIES, key.get(Series.ID));
         }
       }
       Glob mirorSeries = repository.create(Key.create(Series.TYPE, mirorId), seriesFieldValues);
@@ -1163,7 +1169,7 @@ public class SeriesEditionDialog {
         public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
           Glob series = repository.get(key);
           Integer miror = series.get(Series.MIROR_SERIES);
-          if (miror != null) {
+          if (miror != null && !series.get(Series.IS_MIROR)) {
             final Key mirorKey = Key.create(Series.TYPE, miror);
             values.safeApply(new FieldValues.Functor() {
               public void process(Field field, Object value) throws Exception {
@@ -1177,7 +1183,7 @@ public class SeriesEditionDialog {
 
         public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
           Integer miror = previousValues.get(Series.MIROR_SERIES);
-          if (miror != null) {
+          if (miror != null && !previousValues.get(Series.IS_MIROR)) {
             repository.delete(Key.create(Series.TYPE, miror));
           }
         }
@@ -1188,7 +1194,7 @@ public class SeriesEditionDialog {
           Integer seriesId = values.get(SeriesBudget.SERIES);
           Glob series = repository.get(Key.create(Series.TYPE, seriesId));
           Integer mirorSeriesId = series.get(Series.MIROR_SERIES);
-          if (mirorSeriesId != null) {
+          if (mirorSeriesId != null && !series.get(Series.IS_MIROR)) {
             FieldValue[] fieldValues = values.toArray();
             for (int i = 0; i < fieldValues.length; i++) {
               FieldValue value = fieldValues[i];
@@ -1209,13 +1215,13 @@ public class SeriesEditionDialog {
           Integer seriesId = budget.get(SeriesBudget.SERIES);
           Glob series = repository.get(Key.create(Series.TYPE, seriesId));
           Integer mirorSeriesId = series.get(Series.MIROR_SERIES);
-          if (mirorSeriesId != null) {
+          if (mirorSeriesId != null && !series.get(Series.IS_MIROR)) {
             final Glob mirorBudget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirorSeriesId)
               .findByIndex(SeriesBudget.MONTH, budget.get(SeriesBudget.MONTH)).getGlobs().getFirst();
             values.safeApply(new FieldValues.Functor() {
               public void process(Field field, Object value) throws Exception {
                 if (field.equals(SeriesBudget.AMOUNT)) {
-                  repository.update(mirorBudget.getKey(), field, -values.get(SeriesBudget.AMOUNT));
+                  repository.update(mirorBudget.getKey(), field, -((Double)value));
                 }
                 else {
                   repository.update(mirorBudget.getKey(), field, value);
@@ -1228,11 +1234,11 @@ public class SeriesEditionDialog {
         public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
           Integer seriesId = previousValues.get(SeriesBudget.SERIES);
           Glob series = repository.find(Key.create(Series.TYPE, seriesId));
-          if (series == null){
-            return ;
+          if (series == null) {
+            return;
           }
           Integer mirorSeriesId = series.get(Series.MIROR_SERIES);
-          if (mirorSeriesId != null) {
+          if (mirorSeriesId != null && !series.get(Series.IS_MIROR)) {
             Glob budget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirorSeriesId)
               .findByIndex(SeriesBudget.MONTH, previousValues.get(SeriesBudget.MONTH)).getGlobs().getFirst();
             repository.delete(budget.getKey());

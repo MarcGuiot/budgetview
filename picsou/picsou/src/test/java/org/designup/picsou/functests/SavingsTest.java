@@ -529,7 +529,4 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkPosition("Account n. 111", 1100);
     mainAccounts.checkEstimatedPosition(-100);
   }
-
-  public void testMultiple() throws Exception {
-  }
 }
