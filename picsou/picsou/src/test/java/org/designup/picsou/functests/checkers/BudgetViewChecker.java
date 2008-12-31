@@ -13,7 +13,7 @@ import org.uispec4j.interception.WindowInterceptor;
 import javax.swing.*;
 import java.awt.*;
 
-public class BudgetViewChecker extends DataChecker {
+public class BudgetViewChecker extends GuiChecker {
 
   public final BudgetAreaChecker income;
   public final BudgetAreaChecker recurring;

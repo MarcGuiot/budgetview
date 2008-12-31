@@ -9,7 +9,7 @@ import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 import javax.swing.*;
 
-public class BalanceEditionChecker extends DataChecker {
+public class BalanceEditionChecker extends GuiChecker {
   private Window window;
 
   public BalanceEditionChecker(Window window) {

@@ -174,7 +174,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected String getCategoryName(MasterCategory master) {
-    return DataChecker.getCategoryName(master);
+    return GuiChecker.getCategoryName(master);
   }
 
   public void setInMemory(boolean inMemory) {

@@ -16,7 +16,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-public abstract class DataChecker {
+public abstract class GuiChecker {
   private static DecimalFormat format = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.US));
 
   protected String toString(double value) {

@@ -4,7 +4,13 @@
   </properties>
 
   <body>
-    <release version="2.0" date="???">
+    <release version="2.0x" date="???">
+      <action dev="rmedina" type="add">
+        Added ComponentMatchers.toolTipEquals(String)
+      </action>
+    </release>
+
+    <release version="2.0-RC1" date="???">
       <action dev="rmedina,sroussea" type="fix">
         Migrated the whole API to take advantage of JDK 1.5 language features.
       </action>
@@ -22,7 +28,7 @@
         added named colors darkGrey, darkRed, darkGreen and darkBlue.
       </action>
       <action dev="rmedina" type="add">
-        Added Table.foregroundNear(row, column, color) and Table.backgroundNear(row, column, color) for 
+        Added Table.foregroundNear(row, column, color) and Table.backgroundNear(row, column, color) for
         approximative comparisons.
       </action>
       <action dev="mguiot" type="add">

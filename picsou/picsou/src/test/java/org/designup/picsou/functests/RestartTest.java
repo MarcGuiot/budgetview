@@ -26,7 +26,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     monthSummary.checkNoSeriesMessage();
     mainAccounts
       .checkEstimatedPosition(0.00)
-      .setLimit(25.00, true);
+      .setThreshold(25.00, true);
 
     views.selectData();
     transactions.initContent()
@@ -234,6 +234,42 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .add("10/08/2008", TransactionType.PRELEVEMENT, "Auchan", "", -400.00, "Course", MasterCategory.FOOD)
       .check();
   }
+
+  public void testChangeDayChangeTransactionFromPlannedToRealAndViceversaForNotImportedAccount() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    views.selectHome();
+    savingsAccounts.createSavingsAccount("Epargne", 1000);
+    views.selectBudget();
+    budgetView.income.createSeries()
+      .setName("CAF")
+      .setFromAccount("External account")
+      .setToAccount("Epargne")
+      .selectAllMonths()
+      .setAmount("100")
+      .setDate("5")
+      .validate();
+    views.selectData();
+    timeline.selectAll();
+    transactions.initContent()
+      .add("05/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF", MasterCategory.INCOME)
+      .add("05/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF", MasterCategory.INCOME)
+      .add("05/08/2008", TransactionType.VIREMENT, "CAF", "", 100.00, "CAF", MasterCategory.INCOME)
+      .check();
+    mainWindow.dispose();
+    mainWindow = null;
+    TimeService.setCurrentDate(Dates.parse("2008/09/06"));
+    mainWindow = getMainWindow();
+    initCheckers();
+    views.selectData();
+    timeline.selectAll();
+    transactions.initContent()
+      .add("05/11/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF", MasterCategory.INCOME)
+      .add("05/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF", MasterCategory.INCOME)
+      .add("05/09/2008", TransactionType.VIREMENT, "CAF", "", 100.00, "CAF", MasterCategory.INCOME)
+      .add("05/08/2008", TransactionType.VIREMENT, "CAF", "", 100.00, "CAF", MasterCategory.INCOME)
+      .check();
+  }
+
 
   protected void restartApplication() {
     mainWindow.dispose();

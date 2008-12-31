@@ -6,7 +6,7 @@ import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
-public class CategoryEditionChecker extends DataChecker {
+public class CategoryEditionChecker extends GuiChecker {
   private Window dialog;
 
   public CategoryEditionChecker(Window dialog) {

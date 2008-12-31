@@ -3,13 +3,12 @@ package org.designup.picsou.functests.checkers;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Button;
-import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import org.designup.picsou.gui.components.Gauge;
 
-public class CategorizationGaugeChecker extends DataChecker {
+public class CategorizationGaugeChecker extends GuiChecker {
   private Panel panel;
   private TextBox progressMessage;
   private Button hideButton;

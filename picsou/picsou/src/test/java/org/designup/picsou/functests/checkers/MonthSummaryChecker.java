@@ -16,7 +16,7 @@ import org.uispec4j.finder.ComponentMatchers;
 import javax.swing.*;
 import java.awt.*;
 
-public class MonthSummaryChecker extends DataChecker {
+public class MonthSummaryChecker extends GuiChecker {
   private Window window;
   public final BalanceGraphChecker balanceGraph;
 

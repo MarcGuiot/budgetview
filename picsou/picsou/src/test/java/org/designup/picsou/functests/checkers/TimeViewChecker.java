@@ -12,7 +12,7 @@ import org.uispec4j.assertion.UISpecAssert;
 
 import java.util.*;
 
-public class TimeViewChecker extends DataChecker {
+public class TimeViewChecker extends GuiChecker {
   protected TimeViewPanel timeViewPanel;
 
   public TimeViewChecker(Panel panel) {

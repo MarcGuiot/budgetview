@@ -3,12 +3,9 @@ package org.designup.picsou.functests.checkers;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.Month;
 import org.uispec4j.*;
-import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import org.uispec4j.interception.WindowHandler;
-import org.uispec4j.interception.WindowInterceptor;
 
-public class EstimatedPositionDetailsChecker extends DataChecker {
+public class EstimatedPositionDetailsChecker extends GuiChecker {
   private Window window;
 
   public EstimatedPositionDetailsChecker(Window window) {

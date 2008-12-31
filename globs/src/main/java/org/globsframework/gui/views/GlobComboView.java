@@ -117,7 +117,7 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
     return this;
   }
 
-  public void setEnable(boolean enable) {
+  public void setEnabled(boolean enable) {
     jComboBox.setEnabled(enable);
   }
 

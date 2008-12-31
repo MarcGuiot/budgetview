@@ -3,7 +3,7 @@ package org.designup.picsou.functests.checkers;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 
-public class PreferencesChecker extends DataChecker {
+public class PreferencesChecker extends GuiChecker {
   private Window window;
 
   public PreferencesChecker(Window window) {

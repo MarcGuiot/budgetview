@@ -3,7 +3,7 @@ AllowLanguageSelection
 No
 
 AppName
-Fourmics
+CashPilot
 
 ApplicationID
 C2342569-C720-485C-A1B4-2453930EEB03
@@ -27,7 +27,7 @@ CommandLineFailureAction
 {Fail (recommended)}
 
 Company
-Fourmics
+CashPilot
 
 CompressionLevel
 6
@@ -57,10 +57,10 @@ ExtractSolidArchivesOnStartup
 No
 
 Icon
-../images/fourmics_icon_48.png
+../images/cashpilot_icon_48.png
 
 Image
-../images/fourmics_icon_128.png
+../images/cashpilot_icon_128.png
 
 IncludeDebugging
 Yes
@@ -147,7 +147,7 @@ ScriptExt
 .sh
 
 ShortAppName
-Fourmics
+CashPilot
 
 SkipUnusedFileGroups
 Yes
@@ -212,12 +212,12 @@ test
 FileGroup ::8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42 -setup Install -active Yes -platforms Windows -name {Program Files} -parent FileGroups
 File ::2B46BFAC-3F00-4290-B80A-D790CCEB6778 -name msvcr71.dll -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::09B3F2A4-3934-FAA3-B4DF-514E8A7332E9 -name license.txt -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
-File ::2FD90047-B823-2003-90B2-D3469C68FBE9 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou_loader/dev/install/fourmics.exe -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
-File ::7D0C4D57-E1C1-C244-4722-B0DDFF5C6150 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou_loader/dev/images/fourmics_icon_32.ico -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
+File ::2FD90047-B823-2003-90B2-D3469C68FBE9 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou_loader/dev/install/cashpilot.exe -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
+File ::7D0C4D57-E1C1-C244-4722-B0DDFF5C6150 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou_loader/dev/images/cashpilot_icon_32.ico -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::A427121E-CA00-2A1E-B0AF-61AAE6EB9666 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/obfuscated/JAR_FOURMICS.jar -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 FileGroup ::89CD3510-FDE9-0208-D7B5-DE37109ECD51 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-x86 HPUX-hppa Linux-x86 MacOS-X Solaris-sparc TarArchive} -name {linux program files} -parent FileGroups
-File ::2FB1AD48-CACB-8786-FF0B-91202764BB49 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/dev/images/fourmics_icon_32.png -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
-File ::4C60DC39-5780-FE0B-6BF3-22B7D15526FC -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/dev/install/fourmics.sh -permissions 00555 -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
+File ::2FB1AD48-CACB-8786-FF0B-91202764BB49 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/dev/images/cashpilot_icon_32.png -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
+File ::4C60DC39-5780-FE0B-6BF3-22B7D15526FC -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/dev/install/cashpilot.sh -permissions 00555 -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
 File ::49DA2101-38B8-6939-FCAE-79D836889D7C -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/striped_picsou.jar -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
 Component ::89CFA7AC-2A3E-4B5F-AFAA-A115D2FE6F92 -setup Install -active Yes -platforms {Solaris-sparc Windows} -name {Default Component} -parent Components
 Component ::BEF85513-C17E-C854-1584-C6A50E5E906C -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-x86 HPUX-hppa Linux-x86 MacOS-X Solaris-sparc} -name {unix component} -parent Components
@@ -682,7 +682,7 @@ text/ofx
 text/qif
 
 4A6ADC8C-83B7-433C-AE38-4A306C5E9671,IconPath
-{<%InstallDir%>\fourmics_icon_32.ico}
+{<%InstallDir%>\cashpilot_icon_32.ico}
 
 4A6ADC8C-83B7-433C-AE38-4A306C5E9671,Title
 {qif file}
@@ -718,7 +718,7 @@ false
 {can create}
 
 518566B8-E4AF-6C59-4C80-8E4545D21CA6,Command
-{<%InstallDir%>\fourmics.exe -l <%Language%> "%1"}
+{<%InstallDir%>\cashpilot.exe -l <%Language%> "%1"}
 
 518566B8-E4AF-6C59-4C80-8E4545D21CA6,CommandName
 Open
@@ -730,7 +730,7 @@ Open
 text/ofx
 
 518566B8-E4AF-6C59-4C80-8E4545D21CA6,MenuName
-Fourmics
+CashPilot
 
 543B491A-8B68-44DC-87A8-C63B7444E8E5,CheckCondition
 {Before Action is Executed}
@@ -973,7 +973,7 @@ CreateDesktopShortcut
 text/ofx
 
 7CF1E2B3-AFC2-9E68-1E2B-50FE90B9420C,IconPath
-{<%InstallDir%>\fourmics_icon_32.ico}
+{<%InstallDir%>\cashpilot_icon_32.ico}
 
 7CF1E2B3-AFC2-9E68-1E2B-50FE90B9420C,Title
 {ofx file}
@@ -1195,7 +1195,7 @@ AIX-ppc,InstallType
 Typical
 
 AIX-ppc,ProgramExecutable
-<%InstallDir%>/fourmics
+<%InstallDir%>/cashpilot
 
 AIX-ppc,ProgramFolderAllUsers
 No
@@ -1297,7 +1297,7 @@ BEF85513-C17E-C854-1584-C6A50E5E906C,Name
 {unix component}
 
 C02FF264-188D-4CAA-9DB6-68552CDEE2A2,Command
-{<%InstallDir%>\fourmics.exe  -l <%Language%> "%1"}
+{<%InstallDir%>\cashpilot.exe  -l <%Language%> "%1"}
 
 C02FF264-188D-4CAA-9DB6-68552CDEE2A2,CommandName
 Open
@@ -1309,7 +1309,7 @@ C02FF264-188D-4CAA-9DB6-68552CDEE2A2,FileType
 text/qif
 
 C02FF264-188D-4CAA-9DB6-68552CDEE2A2,MenuName
-Fourmics
+CashPilot
 
 C0B3224F-2662-4A1D-A052-7CB2682D290D,CheckCondition
 {Before Action is Executed}
@@ -1624,7 +1624,7 @@ FreeBSD-4-x86,InstallType
 Typical
 
 FreeBSD-4-x86,ProgramExecutable
-<%InstallDir%>/fourmics
+<%InstallDir%>/cashpilot
 
 FreeBSD-4-x86,ProgramFolderAllUsers
 No
@@ -1675,7 +1675,7 @@ FreeBSD-x86,InstallType
 Typical
 
 FreeBSD-x86,ProgramExecutable
-<%InstallDir%>/fourmics
+<%InstallDir%>/cashpilot
 
 FreeBSD-x86,ProgramFolderAllUsers
 No
@@ -1726,7 +1726,7 @@ HPUX-hppa,InstallType
 Typical
 
 HPUX-hppa,ProgramExecutable
-<%InstallDir%>/fourmics
+<%InstallDir%>/cashpilot
 
 HPUX-hppa,ProgramFolderAllUsers
 No
@@ -1777,7 +1777,7 @@ Linux-x86,InstallType
 Typical
 
 Linux-x86,ProgramExecutable
-<%InstallDir%>/fourmics
+<%InstallDir%>/cashpilot
 
 Linux-x86,ProgramFolderAllUsers
 No
@@ -1828,7 +1828,7 @@ Solaris-sparc,InstallType
 Typical
 
 Solaris-sparc,ProgramExecutable
-<%InstallDir%>/fourmics
+<%InstallDir%>/cashpilot
 
 Solaris-sparc,ProgramFolderAllUsers
 No
@@ -1933,7 +1933,7 @@ Windows,InstallType
 Typical
 
 Windows,ProgramExecutable
-<%InstallDir%>/fourmics.exe
+<%InstallDir%>/cashpilot.exe
 
 Windows,ProgramFolderAllUsers
 Yes
@@ -1951,7 +1951,7 @@ Windows,ProgramReadme
 <%InstallDir%>/README.txt
 
 Windows,WindowsIcon
-/home/guiot/dev/java/lesueur/ref/picsou/picsou_loader/dev/images/fourmics_icon_32.ico
+/home/guiot/dev/java/lesueur/ref/picsou/picsou_loader/dev/images/cashpilot_icon_32.ico
 
 ZipArchive,Active
 No

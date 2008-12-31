@@ -36,7 +36,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(12).validate();
 
     OfxBuilder.init(OFX_PATH)
-      .addBankAccount(30006, 10678, "00000123456", 1410.20, "2008/11/15")
+      .addBankAccount(30066, 10678, "00000123456", 1410.20, "2008/11/15")
         // Income
       .addTransaction("2008/10/28", 1760.50, "WORLDCO")
       .addTransaction("2008/10/29", 1312.80, "BIGCORP")
@@ -64,6 +64,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/10/07", -260.30, "HYPER M")
       .addTransaction("2008/10/15", -160.00, "HYPER M")
       .addTransaction("2008/10/23", -220.30, "HYPER M")
+      .addTransaction("2008/11/05", -181.20, "HYPER M")
       .addTransaction("2008/10/19", -35.50, "BIO PLUS")
       .addTransaction("2008/10/11", -41.15, "BIO PLUS")
       .addTransaction("2008/10/08", -20.00, "RETRAIT GAB 4463")
@@ -80,7 +81,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/10/11", -155.65, "CHAUSS'MODE")
       .addTransaction("2008/10/26", -69.90, "AU PIED AGILE")
       .addTransaction("2008/10/27", -50.00, "PARIS MODE CENTRE")
-      .addTransaction("2008/11/07", -158.00, "PARIS MODE CENTRE")
+      .addTransaction("2008/11/07", -358.00, "PARIS MODE CENTRE")
         // OCCASIONAL
       .addTransaction("2008/10/19", -13.50, "ZINGMAN")
       .addTransaction("2008/11/09", -6.50, "DAILY MAGS")
@@ -96,11 +97,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     mainAccounts.edit("Account n. 00000123456")
       .setAccountName("Compte courant")
-      .validate();
-    savingsAccounts.createNewAccount()
-      .setAccountName("Livret")
-      .setBalance(1000)
-      .selectBank("CIC")
       .validate();
 
     //======== CATEGORIZATION ===========
@@ -180,9 +176,26 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     //======== POSITION LEVEL ===========
 
     views.selectHome();
-    mainAccounts.setLimit(4100, false);
+    mainAccounts.setThreshold(4100, false);
 
     //======== SAVINGS ===========
+
+    views.selectHome();
+    savingsAccounts.createNewAccount()
+      .setAccountName("Livret")
+      .selectBank("ING Direct")
+      .setBalance(1000)
+      .validate();
+
+    views.selectBudget();
+
+    //======== PROVISIONS ===========
+
+    views.selectHome();
+    savingsAccounts.createNewAccount()
+      .setAccountName("Compte provisions")
+      .selectBank("CIC")
+      .validate();
 
     views.selectBudget();
     timeline.selectMonth("2008/12");

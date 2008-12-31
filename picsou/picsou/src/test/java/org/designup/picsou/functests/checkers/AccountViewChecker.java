@@ -14,12 +14,11 @@ import org.uispec4j.finder.ComponentMatcher;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
-import javax.swing.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AccountViewChecker extends DataChecker {
+public class AccountViewChecker extends GuiChecker {
   protected Panel panel;
 
   public AccountViewChecker(Panel panel, String panelName) {

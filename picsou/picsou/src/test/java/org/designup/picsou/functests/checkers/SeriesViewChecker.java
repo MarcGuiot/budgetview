@@ -10,7 +10,7 @@ import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 import javax.swing.*;
 
-public class SeriesViewChecker extends DataChecker {
+public class SeriesViewChecker extends GuiChecker {
   private Window mainWindow;
 
   public SeriesViewChecker(Window mainWindow) {

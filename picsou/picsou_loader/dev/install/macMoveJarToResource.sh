@@ -1,6 +1,6 @@
 #/bin/sh
 
-rm -f ../picsou/fourmics.jar
-VERSION=`java -jar ../picsou/obfuscated/fourmics.jar -v -jar`
+rm -f ../picsou/cashpilot.jar
+VERSION=`java -jar ../picsou/obfuscated/cashpilot.jar -v -jar`
 JAR_VERSION=`echo $VERSION | grep "Jar version:" | sed -e 's/Jar version://g' | sed -e 's/  *//g'`
-cp ../picsou/obfuscated/fourmics.jar Fourmics/Fourmics.app/Contents/Resources/fourmics${JAR_VERSION}.jar
+cp ../picsou/obfuscated/cashpilot.jar CashPilot/CashPilot.app/Contents/Resources/cashpilot${JAR_VERSION}.jar

@@ -6,14 +6,11 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.GlobMatcher;
-import static org.globsframework.model.utils.GlobMatchers.*;
-import org.globsframework.model.utils.LocalGlobRepository;
-import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.model.utils.*;
+import static org.globsframework.model.utils.GlobMatchers.linkedTo;
+import static org.globsframework.model.utils.GlobMatchers.or;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -79,8 +76,14 @@ public class AccountEditionDialog {
         return;
       }
       try {
+        localRepository.getCurrentChanges().safeVisit(Account.TYPE, new DefaultChangeSetVisitor() {
+          public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+            if (values.contains(Account.ACCOUNT_TYPE)) {
+              removeUncategorize(key, parentRepository);
+            }
+          }
+        });
         localRepository.commitChanges(true);
-//        directory.get(SelectionService.class).select(currentAccount);
       }
       finally {
         dialog.setVisible(false);
@@ -146,4 +149,16 @@ public class AccountEditionDialog {
       return "accountDeletion.confirm.unused";
     }
   }
+
+  public void removeUncategorize(Key account, GlobRepository repository) {
+    GlobList transactions = repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.ACCOUNT,
+                                                                                         account.get(Account.ID)));
+    for (Glob transaction : transactions) {
+      repository.update(transaction.getKey(),
+                        FieldValue.value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+                        FieldValue.value(Transaction.CATEGORY, Category.NONE));
+    }
+
+  }
+
 }

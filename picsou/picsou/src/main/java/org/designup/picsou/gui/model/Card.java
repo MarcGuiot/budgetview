@@ -16,7 +16,7 @@ public enum Card implements GlobConstantContainer {
   HOME("home", 0),
   CATEGORIZATION("categorization", 1),
   BUDGET("budget", 2),
-  SERIES_EVOLUTION("seriesEvolution", 3),
+  EVOLUTION("evolution", 3),
   DATA("data", 4);
 
   public static GlobType TYPE;
@@ -61,7 +61,7 @@ public enum Card implements GlobConstantContainer {
       case 2:
         return BUDGET;
       case 3:
-        return SERIES_EVOLUTION;
+        return EVOLUTION;
       case 4:
         return DATA;
     }

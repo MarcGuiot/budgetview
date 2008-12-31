@@ -42,7 +42,7 @@
 
 - Fichier licences pour Package install / About / etc :
 
-- Message upgrade : lien vers http://www.fourmics.com/changes ou versions
+- Message upgrade : lien vers http://www.cashpilot.com/changes ou versions
 
 - Voir message dans l'appli si pb licence et reenvoi de mail
 

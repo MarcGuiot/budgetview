@@ -12,7 +12,7 @@ import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 
-public class TransactionDetailsChecker extends DataChecker {
+public class TransactionDetailsChecker extends GuiChecker {
   private Window window;
 
   public TransactionDetailsChecker(Window window) {

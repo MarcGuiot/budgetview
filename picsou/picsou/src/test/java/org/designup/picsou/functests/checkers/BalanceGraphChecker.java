@@ -6,7 +6,7 @@ import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import junit.framework.Assert;
 
-public class BalanceGraphChecker extends DataChecker {
+public class BalanceGraphChecker extends GuiChecker {
   private BalanceGraph graph;
   private Window window;
 

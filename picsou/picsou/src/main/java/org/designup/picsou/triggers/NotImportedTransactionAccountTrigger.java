@@ -102,11 +102,25 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
                               ((transaction.get(Transaction.MONTH) > currentMonthId)
                                || (transaction.get(Transaction.DAY) > currentDay));
 
-          repository.update(transaction.getKey(), Transaction.PLANNED, isPlanned);
+          if (transaction.get(Transaction.PLANNED) != isPlanned) {
+            repository.update(transaction.getKey(),
+                              FieldValue.value(Transaction.PLANNED, isPlanned),
+                              FieldValue.value(Transaction.LABEL, getLabel(isPlanned, oneSeries)));
+          }
         }
       }
     }
   }
+
+  private String getLabel(boolean planned, Glob series) {
+    if (planned) {
+      return Series.getPlannedTransactionLabel(series.get(Series.ID), series);
+    }
+    else {
+      return series.get(Series.LABEL);
+    }
+  }
+
 
   private void updateFromSeriesBudgetChange(final ChangeSet changeSet, final GlobRepository repository,
                                             final Map<Integer, List<Integer>> seriesToNotImportedAccount) {

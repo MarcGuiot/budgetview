@@ -1,7 +1,7 @@
-open "fourmics.jar"
-     -"fourmics.jar!apple/laf/*.class"
-     -"fourmics.jar!net/roydesign/mac/*.class"
-     -"fourmics.jar!net/roydesign/event/*.class";
+open "cashpilot.jar"
+     -"cashpilot.jar!apple/laf/*.class"
+     -"cashpilot.jar!net/roydesign/mac/*.class"
+     -"cashpilot.jar!net/roydesign/event/*.class";
 
 exclude   picsou.^Main and
           picsou.Main main(*) and

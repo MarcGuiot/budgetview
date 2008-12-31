@@ -1,30 +1,30 @@
 #!/bin/sh
 
-VERSION=`java -jar ../picsou/obfuscated/fourmics.jar -v -jar`
+VERSION=`java -jar ../picsou/obfuscated/cashpilot.jar -v -jar`
 JAR_VERSION=`echo $VERSION | grep "Jar version:" | sed -e 's/Jar version://g' | sed -e 's/  *//g'`
 
-SOFT_VERSION=`java -jar ../picsou/obfuscated/fourmics.jar -v -soft | grep "Software version:" |
+SOFT_VERSION=`java -jar ../picsou/obfuscated/cashpilot.jar -v -soft | grep "Software version:" |
               sed -e 's/Software version://g' | sed -e 's/  *//g'`
 
-rm ../picsou/obfuscated/fourmics${JAR_VERSION}.jar
-cp ../picsou/obfuscated/fourmics.jar ../picsou/obfuscated/fourmics${JAR_VERSION}.jar
+rm ../picsou/obfuscated/cashpilot${JAR_VERSION}.jar
+cp ../picsou/obfuscated/cashpilot.jar ../picsou/obfuscated/cashpilot${JAR_VERSION}.jar
 mkdir -p src/test/resources/jars
-cp ../picsou/obfuscated/fourmics.jar src/test/resources/jars/fourmics.jar
+cp ../picsou/obfuscated/cashpilot.jar src/test/resources/jars/cashpilot.jar
 
-rm -rf fourmics fourmics.zip
-mkdir -p fourmics
-java -jar ../picsou/obfuscated/fourmics.jar -v  > fourmics/version.txt
-cp dev/images/fourmics_icon_16.png fourmics/
-cp dev/images/fourmics_icon_32.png fourmics/
-cp dev/images/fourmics_icon_48.png fourmics/
-cp dev/images/fourmics_icon_128.png fourmics/
-cp dev/install/fourmics.sh fourmics/
-cp dev/install/license.txt fourmics/
-cp target/fourmicsloader-1.0.jar fourmics/
-cp ../picsou/obfuscated/fourmics${JAR_VERSION}.jar fourmics/
-zip fourmics.zip fourmics/fourmics.sh fourmics/license.txt fourmics/fourmics${JAR_VERSION}.jar \
-    fourmics/fourmicsloader-1.0.jar fourmics/fourmics_icon_16.png fourmics/fourmics_icon_32.png \
-    fourmics/fourmics_icon_48.png fourmics/fourmics_icon_128.png fourmics/version.txt
+rm -rf cashpilot cashpilot.zip
+mkdir -p cashpilot
+java -jar ../picsou/obfuscated/cashpilot.jar -v  > cashpilot/version.txt
+cp dev/images/cashpilot_icon_16.png cashpilot/
+cp dev/images/cashpilot_icon_32.png cashpilot/
+cp dev/images/cashpilot_icon_48.png cashpilot/
+cp dev/images/cashpilot_icon_128.png cashpilot/
+cp dev/install/cashpilot.sh cashpilot/
+cp dev/install/license.txt cashpilot/
+cp target/cashpilotloader-1.0.jar cashpilot/
+cp ../picsou/obfuscated/cashpilot${JAR_VERSION}.jar cashpilot/
+zip cashpilot.zip cashpilot/cashpilot.sh cashpilot/license.txt cashpilot/cashpilot${JAR_VERSION}.jar \
+    cashpilot/cashpilotloader-1.0.jar cashpilot/cashpilot_icon_16.png cashpilot/cashpilot_icon_32.png \
+    cashpilot/cashpilot_icon_48.png cashpilot/cashpilot_icon_128.png cashpilot/version.txt
 
-mv fourmics.zip fourmics-${SOFT_VERSION}.zip
-rm -rf fourmics
+mv cashpilot.zip cashpilot-${SOFT_VERSION}.zip
+rm -rf cashpilot

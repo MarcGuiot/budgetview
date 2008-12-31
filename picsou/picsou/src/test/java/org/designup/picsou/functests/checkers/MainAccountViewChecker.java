@@ -45,7 +45,7 @@ public class MainAccountViewChecker extends AccountViewChecker {
     return this;
   }
 
-  public MainAccountViewChecker setLimit(final double amount, final boolean validateThroughTextField) {
+  public MainAccountViewChecker setThreshold(final double amount, final boolean validateThroughTextField) {
     WindowInterceptor.init(panel.getButton("accountPositionThreshold").triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {

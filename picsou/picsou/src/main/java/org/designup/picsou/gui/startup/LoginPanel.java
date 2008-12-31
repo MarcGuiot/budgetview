@@ -146,6 +146,10 @@ public class LoginPanel {
       createUser = true;
     }
 
+    if (createUser && !SlaValidationDialog.termsAccepted(mainWindow.getFrame(), directory)) {
+      return;
+    }
+
     setComponentsEnabled(false);
     progressPanel.start();
 

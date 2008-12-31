@@ -44,8 +44,16 @@ public class Lang {
     return formatter;
   }
 
-  public static String getFile(String fileName) {
-    String filePath = "/help/" + LOCALE.getLanguage() + "/" + fileName;
+  public static String getHelpFile(String fileName) {
+    return getFile("help", fileName);
+  }
+
+  public static String getDocFile(String fileName) {
+    return getFile("docs", fileName);
+  }
+
+  private static String getFile(String dir, String fileName) {
+    String filePath = "/" + dir + "/" + LOCALE.getLanguage() + "/" + fileName;
     InputStream stream = Lang.class.getResourceAsStream(filePath);
     if (stream == null) {
       throw new ResourceAccessFailed("File " + filePath);

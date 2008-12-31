@@ -34,7 +34,7 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(3).validate();
     TextBox box = mainWindow.getTextBox("licenseMessage");
     UISpecAssert.assertTrue(box.isVisible());
-    UISpecAssert.assertTrue(box.textEquals("This is your last day with fourmics."));
+    UISpecAssert.assertTrue(box.textEquals("This is your last day with cashpilot."));
   }
 
   public void testLicenseExpired() throws Exception {

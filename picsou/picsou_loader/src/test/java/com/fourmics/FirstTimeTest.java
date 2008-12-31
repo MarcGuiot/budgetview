@@ -1,4 +1,4 @@
-package com.fourmics;
+package com.cashpilot;
 
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.utils.OfxBuilder;
@@ -56,7 +56,7 @@ public class FirstTimeTest extends UISpecTestCase {
     Window window = WindowInterceptor.run(new Trigger() {
       public void run() throws Exception {
 
-        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "fourmics";
+        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "cashpilot";
         String tmpJarDir = tmpDir + File.separator + "jars";
         File jarDir = new File(tmpJarDir);
         File prevaylerDir = new File(tmpDir + File.separator + "data");
@@ -65,10 +65,10 @@ public class FirstTimeTest extends UISpecTestCase {
         jarDir.mkdirs();
         prevaylerDir.mkdirs();
         InputStream stream =
-          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "fourmics.jar");
-        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/fourmics1.jar");
-        System.setProperty("fourmics.exe.dir", jarDir.getAbsolutePath());
-        System.setProperty("fourmics.prevayler.path", prevaylerDir.getAbsolutePath());
+          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "cashpilot.jar");
+        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot1.jar");
+        System.setProperty("cashpilot.exe.dir", jarDir.getAbsolutePath());
+        System.setProperty("cashpilot.prevayler.path", prevaylerDir.getAbsolutePath());
         Main.main(new String[0]);
       }
     });
@@ -147,7 +147,7 @@ public class FirstTimeTest extends UISpecTestCase {
     series
       .setName("impots")
       .setCustom().toggleMonth(1, 3, 4, 5, 7, 8, 10, 11, 12)
-      .openCategory().selectCategory(DataChecker.getCategoryName(MasterCategory.TAXES), true);
+      .openCategory().selectCategory(GuiChecker.getCategoryName(MasterCategory.TAXES), true);
     series.validate();
     categorization
       .setRecurring("Gaz de France", "Gas", MasterCategory.HOUSE, false)
@@ -329,7 +329,7 @@ public class FirstTimeTest extends UISpecTestCase {
     Window window = WindowInterceptor.run(new Trigger() {
       public void run() throws Exception {
         String userId = "795391559";
-        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "fourmics";
+        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "cashpilot";
         String tmpJarDir = tmpDir + File.separator + "jars";
         File jarDir = new File(tmpJarDir);
         File prevaylerDir = new File(tmpDir + File.separator + "data");
@@ -351,15 +351,15 @@ public class FirstTimeTest extends UISpecTestCase {
         Files.copyStreamTofile(usersDataStream, userDir.getAbsolutePath() + "/0000000000000000003.snapshot");
 
         InputStream stream =
-          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "fourmics.jar");
-        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/fourmics1.jar");
-        System.setProperty("fourmics.exe.dir", jarDir.getAbsolutePath());
-        System.setProperty("fourmics.prevayler.path", prevaylerDir.getAbsolutePath());
+          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "cashpilot.jar");
+        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot1.jar");
+        System.setProperty("cashpilot.exe.dir", jarDir.getAbsolutePath());
+        System.setProperty("cashpilot.prevayler.path", prevaylerDir.getAbsolutePath());
         Main.main(new String[0]);
       }
     });
     LoginChecker login = new LoginChecker(window);
-    login.logUser("toto", "toto");
+    login.logExistingUser("toto", "toto");
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectHome();
@@ -406,7 +406,7 @@ public class FirstTimeTest extends UISpecTestCase {
     Window window = WindowInterceptor.run(new Trigger() {
       public void run() throws Exception {
         String userId = "49585955";
-        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "fourmics";
+        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "cashpilot";
         String tmpJarDir = tmpDir + File.separator + "jars";
         File jarDir = new File(tmpJarDir);
         File prevaylerDir = new File(tmpDir + File.separator + "data");
@@ -428,15 +428,15 @@ public class FirstTimeTest extends UISpecTestCase {
         Files.copyStreamTofile(usersDataStream, userDir.getAbsolutePath() + "/0000000000000000003.snapshot");
 
         InputStream stream =
-          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "fourmics.jar");
-        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/fourmics1.jar");
-        System.setProperty("fourmics.exe.dir", jarDir.getAbsolutePath());
-        System.setProperty("fourmics.prevayler.path", prevaylerDir.getAbsolutePath());
+          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "cashpilot.jar");
+        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot1.jar");
+        System.setProperty("cashpilot.exe.dir", jarDir.getAbsolutePath());
+        System.setProperty("cashpilot.prevayler.path", prevaylerDir.getAbsolutePath());
         Main.main(new String[0]);
       }
     });
     LoginChecker login = new LoginChecker(window);
-    login.logUser("toto", "toto");
+    login.logExistingUser("toto", "toto");
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectHome();
@@ -485,7 +485,7 @@ public class FirstTimeTest extends UISpecTestCase {
     Window window = WindowInterceptor.run(new Trigger() {
       public void run() throws Exception {
         String userId = "1801464342";
-        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "fourmics";
+        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "cashpilot";
         String tmpJarDir = tmpDir + File.separator + "jars";
         File jarDir = new File(tmpJarDir);
         File prevaylerDir = new File(tmpDir + File.separator + "data");
@@ -507,15 +507,15 @@ public class FirstTimeTest extends UISpecTestCase {
         Files.copyStreamTofile(usersDataStream, userDir.getAbsolutePath() + "/0000000000000000003.snapshot");
 
         InputStream stream =
-          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "fourmics.jar");
-        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/fourmics1.jar");
-        System.setProperty("fourmics.exe.dir", jarDir.getAbsolutePath());
-        System.setProperty("fourmics.prevayler.path", prevaylerDir.getAbsolutePath());
+          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "cashpilot.jar");
+        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot1.jar");
+        System.setProperty("cashpilot.exe.dir", jarDir.getAbsolutePath());
+        System.setProperty("cashpilot.prevayler.path", prevaylerDir.getAbsolutePath());
         Main.main(new String[0]);
       }
     });
     LoginChecker login = new LoginChecker(window);
-    login.logUser("toto", "toto");
+    login.logExistingUser("toto", "toto");
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectHome();

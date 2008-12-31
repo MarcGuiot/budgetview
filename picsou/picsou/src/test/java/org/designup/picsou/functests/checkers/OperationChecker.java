@@ -22,6 +22,10 @@ public class OperationChecker {
   public static final String DEFAULT_ACCOUNT_NAME = "Account n. 11111";
   private Window window;
 
+  public static OperationChecker init(Window window) {
+    return new OperationChecker(window);
+  }
+
   public OperationChecker(Window window) {
     this.window = window;
     MenuItem fileMenu = window.getMenuBar().getMenu("File");

@@ -429,44 +429,6 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testEditingTheAccountBalanceLimit() throws Exception {
-
-    OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "000123", 100, "2008/08/26")
-      .addTransaction("2008/07/26", 1000, "WorldCo")
-      .addTransaction("2008/08/26", 1000, "WorldCo")
-      .addTransaction("2008/08/26", -800, "FNAC")
-      .load();
-
-    views.selectCategorization();
-    categorization.setIncome("WorldCo", "Salary", true);
-
-    views.selectHome();
-    timeline.selectMonth("2008/08");
-
-    mainAccounts
-      .checkEstimatedPosition(100)
-      .checkEstimatedPositionColor("darkGray")
-      .checkLimit(0);
-
-    mainAccounts
-      .setLimit(1000, true)
-      .checkLimit(1000)
-      .checkEstimatedPositionColor("red");
-
-    mainAccounts.setLimit(-2000, false)
-      .checkLimit(-2000)
-      .checkEstimatedPositionColor("darkGray");
-
-    mainAccounts.setLimit(0, false)
-      .checkEstimatedPositionColor("darkGray");
-
-    timeline.selectMonth("2008/07");
-    mainAccounts
-      .checkEstimatedPosition(-100)
-      .checkEstimatedPositionColor("darkRed");
-  }
-
   public void testMonthTooltipWithNoPositionAvailable() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(30006, 10674, "000123", 100, "2008/08/26")

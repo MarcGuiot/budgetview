@@ -8,7 +8,7 @@ import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 
-public class MonthChooserChecker extends DataChecker {
+public class MonthChooserChecker extends GuiChecker {
   private Window dialog;
 
   public MonthChooserChecker(Window dialog) {

@@ -5,7 +5,7 @@ import org.uispec4j.Trigger;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.assertion.UISpecAssert;
 
-public class SeriesDeleteDialogChecker extends DataChecker {
+public class SeriesDeleteDialogChecker extends GuiChecker {
   private Window dialog;
 
   public static SeriesDeleteDialogChecker init(Trigger trigger) {

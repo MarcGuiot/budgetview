@@ -1,0 +1,30 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="checkBox" marginTop="5" marginBottom="5"/>
+    <style selector="label.message"/>
+  </styles>
+
+  <panel styleClass="dialog" preferredSize="(600,500)" opaque="true">
+    <column styleClass="innerDialog">
+
+      <label text="$slaValidation.title" name="title" styleClass="title"/>
+
+      <label text="$slaValidation.message" styleClass="message"/>
+
+      <scrollPane weightY="100">
+        <htmlEditorPane ref="editor" opaque="false" foreground="#222222"/>
+      </scrollPane>
+
+      <checkBox ref="checkBox" text="$slaValidation.checkBox"/>
+
+      <column minimumSize="(200,30)" preferredSize="(200,30)">
+        <label ref="errorMessage" text="$slaValidation.error"
+               styleClass="errorMessage" anchor="east" fill="none"/>
+      </column>
+
+    </column>
+  </panel>
+
+</splits>

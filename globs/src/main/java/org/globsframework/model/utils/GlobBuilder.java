@@ -17,6 +17,30 @@ public class GlobBuilder implements FieldValues.Functor, FieldSetter {
     return new GlobBuilder(globType);
   }
 
+  public static Glob create(GlobType type, FieldValue... values) {
+    return init(type, values).get();
+  }
+
+  public static GlobBuilder init(GlobType type, FieldValues values) {
+    GlobBuilder builder = new GlobBuilder(type);
+    values.safeApply(builder);
+    return builder;
+  }
+
+  public static GlobBuilder init(GlobType type, FieldValue... values) {
+    GlobBuilder builder = new GlobBuilder(type);
+    FieldValues fieldValues = new ArrayFieldValues(values);
+    fieldValues.safeApply(builder);
+    return builder;
+  }
+
+  public static GlobBuilder init(Key key, FieldValues values) {
+    GlobBuilder builder = new GlobBuilder(key.getGlobType());
+    key.safeApply(builder);
+    values.safeApply(builder);
+    return builder;
+  }
+
   public GlobBuilder set(DoubleField field, Double value) {
     fieldValuesBuilder.set(field, value);
     return this;
@@ -81,26 +105,6 @@ public class GlobBuilder implements FieldValues.Functor, FieldSetter {
     for (Field field : globType.getFields()) {
       fieldValuesBuilder.setValue(field, field.getDefaultValue());
     }
-  }
-
-  public static GlobBuilder init(GlobType type, FieldValues values) {
-    GlobBuilder builder = new GlobBuilder(type);
-    values.safeApply(builder);
-    return builder;
-  }
-
-  public static GlobBuilder init(GlobType type, FieldValue... values) {
-    GlobBuilder builder = new GlobBuilder(type);
-    FieldValues fieldValues = new ArrayFieldValues(values);
-    fieldValues.safeApply(builder);
-    return builder;
-  }
-
-  public static GlobBuilder init(Key key, FieldValues values) {
-    GlobBuilder builder = new GlobBuilder(key.getGlobType());
-    key.safeApply(builder);
-    values.safeApply(builder);
-    return builder;
   }
 
   public void process(Field field, Object value) throws Exception {

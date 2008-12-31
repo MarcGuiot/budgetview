@@ -6,7 +6,7 @@ import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
 
-public class SeriesWizardChecker extends DataChecker {
+public class SeriesWizardChecker extends GuiChecker {
   private Window dialog;
   private Panel content;
 
