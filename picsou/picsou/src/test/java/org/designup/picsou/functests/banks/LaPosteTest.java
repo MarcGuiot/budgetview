@@ -32,7 +32,7 @@ public class LaPosteTest extends SpecificBankTestCase {
       .add("23/12/2008", TransactionType.CHECK, "CHEQUE N. 8582011", "", -15.00)
       .add("23/12/2008", TransactionType.VIREMENT, "RGF MFP", "", 7.50)
       .add("23/12/2008", TransactionType.DEPOSIT, "REMISE CHEQUES", "", 12.50)
-      .add("22/12/2008", TransactionType.VIREMENT, "XXX         .", "", 1688.86)
+      .add("22/12/2008", TransactionType.VIREMENT, "XXX .", "", 1688.86)
       .add("15/12/2008", "16/12/2008", TransactionType.CREDIT_CARD, "FREE", "", -36.16)
       .add("15/12/2008", TransactionType.PRELEVEMENT, "PRELEVEMENT SFR", "", -49.39)
       .add("12/12/2008", "15/12/2008", TransactionType.WITHDRAWAL, "RETRAIT VISA 14H11", "", -80.00)
