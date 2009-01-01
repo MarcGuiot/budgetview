@@ -30,6 +30,7 @@ R help/
 R images/
 R icons/
 R jide/
+R docs/
 R colors/
 R fonts.properties
 R logging.properties

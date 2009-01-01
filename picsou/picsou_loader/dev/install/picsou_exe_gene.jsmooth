@@ -9,15 +9,15 @@
   <arguments></arguments>
   <currentDirectory>${EXECUTABLEPATH}</currentDirectory>
   <embeddedJar>true</embeddedJar>
-  <executableName>fourmics.exe</executableName>
-  <iconLocation>../images/fourmics_icon_32.png</iconLocation>
+  <executableName>cashpilot.exe</executableName>
+  <iconLocation>../images/cashpilot_icon_32.png</iconLocation>
   <initialMemoryHeap>-1</initialMemoryHeap>
-  <jarLocation>../../target/fourmicsloader-1.0.jar</jarLocation>
+  <jarLocation>../../target/cashpilotloader-1.0.jar</jarLocation>
   <javaProperties>
-    <name>fourmics.exe.dir</name>
+    <name>cashpilot.exe.dir</name>
     <value>${EXECUTABLEPATH}</value>
   </javaProperties>
-  <mainClassName>com.fourmics.Main</mainClassName>
+  <mainClassName>com.cashpilot.Main</mainClassName>
   <maximumMemoryHeap>134217728</maximumMemoryHeap>
   <maximumVersion></maximumVersion>
   <minimumVersion>1.5</minimumVersion>
