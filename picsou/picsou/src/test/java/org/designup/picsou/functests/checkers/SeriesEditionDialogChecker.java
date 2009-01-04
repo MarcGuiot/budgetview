@@ -761,6 +761,12 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker checkAccountsComboAreHidden() {
+    assertFalse(dialog.getComboBox("fromAccount").isVisible());
+    assertFalse(dialog.getComboBox("toAccount").isVisible());
+    return this;
+  }
+
   public SeriesEditionDialogChecker checkToAccount(String account) {
     assertThat(dialog.getComboBox("toAccount").selectionEquals(account));
     return this;

@@ -205,8 +205,8 @@ public class SeriesEditionDialog {
         if (currentSeries != null) {
           multiCategoryList.setFilter(fieldEquals(SeriesToCategory.SERIES, currentSeries.get(Series.ID)));
           boolean isSavingsSeries = currentSeries.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId());
-          fromAccountsCombo.setEnabled(isSavingsSeries);
-          toAccountsCombo.setEnabled(isSavingsSeries);
+          fromAccountsCombo.setVisible(isSavingsSeries);
+          toAccountsCombo.setVisible(isSavingsSeries);
           dayChooser.setEnabled(isSavingsSeries);
           dayChooser.setSelectedItem(currentSeries.get(Series.DAY));
         }

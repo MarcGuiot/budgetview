@@ -35,11 +35,12 @@
             <button gridPos="(3,1)" action="assignCategory" anchor="northwest" weightX="0.1"/>
             <label gridPos="(1,2,3,1)" ref="missingCategoryLabel" fill="horizontal" marginTop="4"/>
 
-            <label gridPos="(0,3)" text="$seriesEdition.fromAccount" styleClass="formLabel" autoHideSource="fromAccount"/>
-            <comboBox gridPos="(1,3,2,1)" ref="fromAccount" autoHideIfDisabled="true" marginTop="4"/>
+            <label gridPos="(0,3)" text="$seriesEdition.fromAccount" styleClass="formLabel"
+                   autoHideSource="fromAccount"/>
+            <comboBox gridPos="(1,3,2,1)" ref="fromAccount" marginTop="4"/>
 
             <label gridPos="(0,4)" text="$seriesEdition.toAccount" styleClass="formLabel" autoHideSource="toAccount"/>
-            <comboBox gridPos="(1,4,2,1)" ref="toAccount" autoHideIfDisabled="true" marginTop="4"/>
+            <comboBox gridPos="(1,4,2,1)" ref="toAccount" marginTop="4"/>
           </grid>
 
           <column weightY="10" marginTop="20">

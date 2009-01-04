@@ -98,6 +98,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.editSeries("Internet")
       .checkName("Internet")
       .setName("Free")
+      .checkAccountsComboAreHidden()
       .switchToManual()
       .checkTable(new Object[][]{
         {"2008", "August", "29.00", "29.00"},
