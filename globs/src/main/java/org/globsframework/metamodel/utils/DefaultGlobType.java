@@ -22,8 +22,8 @@ public class DefaultGlobType extends AnnotatedPropertyHolder<GlobType> implement
   private Map<String, Link> outboundLinksByName = new HashMap<String, Link>();
   private List<Link> inboundLinks = new ArrayList<Link>();
   private GlobList constants = new GlobList();
-  private Map<String, Index> indices = new HashMap<String, Index>();
-  private Map<String, MultiFieldIndex> multiFieldIndices = new HashMap<String, MultiFieldIndex>();
+  private Map<String, Index> indices = new HashMap<String, Index>(2, 1);
+  private Map<String, MultiFieldIndex> multiFieldIndices = new HashMap<String, MultiFieldIndex>(2, 1);
 
   public DefaultGlobType(String name, Map<Class<? extends Annotation>, Annotation> annotationsByClass) {
     super(annotationsByClass);

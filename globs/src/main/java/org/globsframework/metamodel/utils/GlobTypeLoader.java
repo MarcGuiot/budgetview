@@ -117,7 +117,7 @@ public class GlobTypeLoader {
 
   private void processFieldAnnotations(java.lang.reflect.Field field) {
     Map<Class<? extends Annotation>, Annotation> fieldAnnotationToClass =
-      new HashMap<Class<? extends Annotation>, Annotation>();
+      new HashMap<Class<? extends Annotation>, Annotation>(2, 1);
     for (Annotation annotation : field.getAnnotations()) {
       fieldAnnotationToClass.put(annotation.annotationType(), annotation);
     }
@@ -252,7 +252,7 @@ public class GlobTypeLoader {
   }
 
   private String getFieldName(java.lang.reflect.Field field) {
-    if (field.getName().length() == 1){
+    if (field.getName().length() == 1) {
       return field.getName();
     }
     return Strings.toNiceLowerCase(field.getName());

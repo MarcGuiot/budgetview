@@ -10,7 +10,6 @@ import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.*;
 import org.globsframework.metamodel.Field;
@@ -162,6 +161,7 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     GlobViewModel model = new GlobViewModel(type, repository, comparator, listener);
     model.setFilter(matcher, true);
     Repeat<Glob> repeat = builder.addRepeat(name, model.getAll(), factory);
+    builder.addDisposable(model);
     listener.set(model, repeat);
     return listener;
   }
