@@ -10,11 +10,12 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.Set;
 
-public class EditCategoriesAction extends AbstractAction implements GlobSelectionListener {
+public abstract class EditCategoriesAction extends AbstractAction implements GlobSelectionListener {
   private GlobRepository repository;
   private Directory directory;
   private Set<Integer> categories = Collections.emptySet();
@@ -27,9 +28,16 @@ public class EditCategoriesAction extends AbstractAction implements GlobSelectio
   }
 
   public void actionPerformed(ActionEvent e) {
-    CategoryEditionDialog dialog = new CategoryEditionDialog(repository, directory);
+    CategoryEditionDialog dialog = new CategoryEditionDialog(repository, directory) {
+
+      public Window getParent() {
+        return EditCategoriesAction.this.getParent();
+      }
+    };
     dialog.show(categories);
   }
+
+  public abstract Window getParent();
 
   public void selectionUpdated(GlobSelection selection) {
     categories = selection.getAll(Category.TYPE).getValueSet(Category.ID);

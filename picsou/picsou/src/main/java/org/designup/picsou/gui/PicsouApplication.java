@@ -79,6 +79,7 @@ public class PicsouApplication {
   private static final String SERIES_TOGGLE_UI = "org" + dot() + "designup.picsou.gui.components.SelectionToggleUI";
   private static final String BUTTON_PANEL_UI = "org" + dot() + "designup.picsou.gui.plaf.ButtonPanelItemUI";
   private static final String ARROW_BUTTON_UI = "org" + dot() + "designup.picsou.gui.components.ArrowButtonUI";
+  private WindowAdapter windowOpenListener;
 
   static {
     PicsouMacLookAndFeel.initApplicationName();
@@ -183,11 +184,16 @@ public class PicsouApplication {
     final MainWindow mainWindow = new MainWindow();
     final LoginPanel loginPanel = new LoginPanel(getServerAddress(), getLocalPrevaylerPath(), isDataInMemory(),
                                                  mainWindow, directory);
-    mainWindow.getFrame().addWindowListener(new WindowAdapter() {
+    windowOpenListener = new WindowAdapter() {
       public void windowOpened(WindowEvent e) {
         loginPanel.initFocus();
+        // pour que loginPanel passe au GC
+        mainWindow.getFrame().removeWindowListener(windowOpenListener);
+        windowOpenListener = null;
       }
-
+    };
+    mainWindow.getFrame().addWindowListener(windowOpenListener);
+    mainWindow.getFrame().addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
         shutdown();
       }

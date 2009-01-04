@@ -6,6 +6,7 @@ import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.model.PeriodOccasionalSeriesStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.gui.utils.SetFieldValueAction;
 import org.designup.picsou.model.BudgetArea;
@@ -19,12 +20,12 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+import static org.globsframework.model.utils.GlobMatchers.not;
 import org.globsframework.model.utils.ReplicationGlobRepository;
-import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -65,15 +66,17 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budgetView.splits",
                                                       repository, parentDirectory);
 
+    SeriesEditionDialog seriesEditionDialog = new SeriesEditionDialog(directory.get(JFrame.class), repository, directory);
+
     BudgetLabel budgetLabel = new BudgetLabel(repository, parentDirectory);
     builder.add("budgetLabel", budgetLabel.getLabel());
 
-    addBudgetAreaView("incomeBudgetView", BudgetArea.INCOME, builder);
-    addBudgetAreaView("recurringBudgetView", BudgetArea.RECURRING, builder);
-    addBudgetAreaView("envelopeBudgetView", BudgetArea.ENVELOPES, builder);
-    addBudgetAreaView("occasionalBudgetView", BudgetArea.OCCASIONAL, builder);
-    addBudgetAreaView("projectsBudgetView", BudgetArea.SPECIAL, builder);
-    addBudgetAreaView("savingsBudgetView", BudgetArea.SAVINGS, builder);
+    addBudgetAreaView("incomeBudgetView", BudgetArea.INCOME, builder, seriesEditionDialog);
+    addBudgetAreaView("recurringBudgetView", BudgetArea.RECURRING, builder, seriesEditionDialog);
+    addBudgetAreaView("envelopeBudgetView", BudgetArea.ENVELOPES, builder, seriesEditionDialog);
+    addBudgetAreaView("occasionalBudgetView", BudgetArea.OCCASIONAL, builder, seriesEditionDialog);
+    addBudgetAreaView("projectsBudgetView", BudgetArea.SPECIAL, builder, seriesEditionDialog);
+    addBudgetAreaView("savingsBudgetView", BudgetArea.SAVINGS, builder, seriesEditionDialog);
 
     builder.add("horizontalSplitPane", new JideSplitPane());
     builder.add("firstVerticalSplitPane", new JideSplitPane());
@@ -93,13 +96,14 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
     repository.addChangeListener(this);
   }
 
-  private void addBudgetAreaView(String name, BudgetArea budgetArea, GlobsPanelBuilder builder) {
+  private void addBudgetAreaView(String name, BudgetArea budgetArea, GlobsPanelBuilder builder, final SeriesEditionDialog seriesEditionDialog) {
     View view;
     if (budgetArea == BudgetArea.OCCASIONAL) {
       view = new OccasionalSeriesView(name, repository, directory);
     }
     else {
-      view = new BudgetAreaSeriesView(name, budgetArea, repository, directory);
+      view = new BudgetAreaSeriesView(name, budgetArea, repository, directory,
+                                      seriesEditionDialog);
     }
     view.registerComponents(builder);
   }
@@ -128,9 +132,9 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
     if (prefs != null) {
       helpMessage.setVisible(Boolean.TRUE.equals(prefs.get(UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE)) &&
                              parentRepository.contains(Series.TYPE,
-                                  not(fieldIn(Series.ID,
-                                              Series.OCCASIONAL_SERIES_ID,
-                                              Series.UNCATEGORIZED_SERIES_ID))));
+                                                       not(fieldIn(Series.ID,
+                                                                   Series.OCCASIONAL_SERIES_ID,
+                                                                   Series.UNCATEGORIZED_SERIES_ID))));
     }
   }
 

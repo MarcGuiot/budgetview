@@ -50,12 +50,12 @@ public class BudgetAreaSeriesView extends View {
   private List<Key> currentSeries = Collections.emptyList();
   private BudgetAreaHeaderUpdater headerUpdater;
 
-  protected BudgetAreaSeriesView(String name, final BudgetArea budgetArea, final GlobRepository repository, Directory directory) {
+  protected BudgetAreaSeriesView(String name, final BudgetArea budgetArea, final GlobRepository repository, Directory directory, final SeriesEditionDialog seriesEditionDialog) {
     super(repository, directory);
     this.name = name;
     this.budgetArea = budgetArea;
     this.totalMatcher = GlobMatchers.linkTargetFieldEquals(PeriodSeriesStat.SERIES, Series.BUDGET_AREA, budgetArea.getId());
-    seriesEditionDialog = new SeriesEditionDialog(directory.get(JFrame.class), repository, directory);
+    this.seriesEditionDialog = seriesEditionDialog;
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);

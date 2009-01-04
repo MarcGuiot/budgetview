@@ -34,7 +34,6 @@ import java.util.Arrays;
 public class LoginPanel {
   private ServerAccess serverAccess;
 
-  private JPanel panel;
   private JTextField userField = new JTextField(15);
   private JPasswordField passwordField = new JPasswordField(15);
   private JPasswordField confirmPasswordField = new JPasswordField(15);
@@ -48,6 +47,8 @@ public class LoginPanel {
   private MainWindow mainWindow;
   private Directory directory;
   private ServerDirectory serverDirectory;
+  private SplitsBuilder builder;
+  private JPanel panel;
 
   public LoginPanel(String remoteAdress, String prevaylerPath, boolean dataInMemory,
                     MainWindow mainWindow, Directory directory) {
@@ -55,24 +56,7 @@ public class LoginPanel {
     this.directory = directory;
     initServerAccess(remoteAdress, prevaylerPath, dataInMemory);
 
-    Runtime.getRuntime().addShutdownHook(new Thread() {
-      public void run() {
-        try {
-          if (serverAccess != null) {
-            serverAccess.takeSnapshot();
-            serverAccess.disconnect();
-            serverAccess = null;
-          }
-          if (serverDirectory != null) {
-            serverDirectory.close();
-            serverDirectory = null;
-          }
-        }
-        catch (Exception ex) {
-          ex.printStackTrace();
-        }
-      }
-    });
+    Runtime.getRuntime().addShutdownHook(new ShutDownThread(serverAccess, serverDirectory));
     this.loginButton.setOpaque(false);
     initPanel();
   }
@@ -90,7 +74,7 @@ public class LoginPanel {
   }
 
   private void initPanel() {
-    initFocusChain(userField, passwordField, confirmPasswordField, loginButton, creationCheckBox);
+//    initFocusChain(userField, passwordField, confirmPasswordField, loginButton, creationCheckBox);
     initAutoClear(userField, passwordField, confirmPasswordField);
 
     passwordField.addActionListener(new LoginAction());
@@ -105,7 +89,7 @@ public class LoginPanel {
 
     setVisible(creationComponents, false);
 
-    SplitsBuilder builder = SplitsBuilder.init(directory).setSource(getClass(), "/layout/loginPanel.splits");
+    builder = SplitsBuilder.init(directory).setSource(getClass(), "/layout/loginPanel.splits");
     builder.add("name", userField);
     builder.add("password", passwordField);
     builder.add("confirmPassword", confirmPasswordField);
@@ -118,6 +102,9 @@ public class LoginPanel {
     builder.addLoader(new SplitsLoader() {
       public void load(Component component) {
         panel = (JPanel)component;
+        mainWindow.getFrame().setFocusTraversalPolicy(
+          new MyOwnFocusTraversalPolicy(userField, passwordField, confirmPasswordField,
+                                        loginButton, creationCheckBox));
         mainWindow.setPanel(panel);
       }
     })
@@ -182,6 +169,9 @@ public class LoginPanel {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
             mainPanel.show();
+            builder.dispose();
+            mainWindow.getFrame().setFocusTraversalPolicy(null);
+            panel = null;
           }
         });
       }
@@ -294,11 +284,51 @@ public class LoginPanel {
     messageLabel.setText("<html><font color=red>" + Lang.get(key) + (complement == null ? "" : complement) + "</font></html>");
   }
 
-  private void initFocusChain(JComponent... components) {
-    for (int i = 0; i < components.length - 1; i++) {
-      components[i].setNextFocusableComponent(components[i + 1]);
+  public static class MyOwnFocusTraversalPolicy extends FocusTraversalPolicy {
+    private java.util.List<Component> order;
+
+    public MyOwnFocusTraversalPolicy(Component... order) {
+      this.order = Arrays.asList(order);
     }
-    components[components.length - 1].setNextFocusableComponent(components[0]);
+
+    public Component getComponentAfter(Container focusCycleRoot,
+                                       Component aComponent) {
+      int idx = (order.indexOf(aComponent) + 1) % order.size();
+      Component component = order.get(idx);
+      if (component.isVisible()) {
+        return component;
+      }
+      else {
+        return getComponentAfter(focusCycleRoot, component);
+      }
+    }
+
+    public Component getComponentBefore(Container focusCycleRoot,
+                                        Component aComponent) {
+      int idx = order.indexOf(aComponent) - 1;
+      if (idx < 0) {
+        idx = order.size() - 1;
+      }
+      Component component = order.get(idx);
+      if (component.isVisible()) {
+        return component;
+      }
+      else {
+        return getComponentBefore(focusCycleRoot, component);
+      }
+    }
+
+    public Component getDefaultComponent(Container focusCycleRoot) {
+      return order.get(0);
+    }
+
+    public Component getLastComponent(Container focusCycleRoot) {
+      return order.get(order.size() - 1);
+    }
+
+    public Component getFirstComponent(Container focusCycleRoot) {
+      return order.get(0);
+    }
   }
 
   private void initServerAccess(String remoteAdress, String prevaylerPath, boolean dataInMemory) {
@@ -311,10 +341,6 @@ public class LoginPanel {
         new EncrypterToTransportServerAccess(new HttpsClientTransport(remoteAdress), directory));
     }
     serverAccess.connect();
-  }
-
-  public JPanel getJPanel() {
-    return panel;
   }
 
   private class LoginAction extends AbstractAction {
@@ -330,6 +356,33 @@ public class LoginPanel {
   private void setVisible(Component[] components, boolean visible) {
     for (Component component : components) {
       component.setVisible(visible);
+    }
+  }
+
+  private static class ShutDownThread extends Thread {
+    private ServerAccess serverAccess;
+    private ServerDirectory serverDirectory;
+
+    public ShutDownThread(ServerAccess serverAccess, ServerDirectory serverDirectory) {
+      this.serverAccess = serverAccess;
+      this.serverDirectory = serverDirectory;
+    }
+
+    public void run() {
+      try {
+        if (serverAccess != null) {
+          serverAccess.takeSnapshot();
+          serverAccess.disconnect();
+          serverAccess = null;
+        }
+        if (serverDirectory != null) {
+          serverDirectory.close();
+          serverDirectory = null;
+        }
+      }
+      catch (Exception ex) {
+        ex.printStackTrace();
+      }
     }
   }
 }

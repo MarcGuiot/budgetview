@@ -13,6 +13,7 @@ import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
@@ -42,6 +43,8 @@ public class CategoryChooserDialog implements ChangeSetListener {
   private Dialog parent;
   private boolean monoSelection;
   private Integer categoryIdToExclude;
+  private GlobRepeat repeat;
+  private GlobsPanelBuilder builder;
 
   public CategoryChooserDialog(CategoryChooserCallback callback, Dialog parent, boolean monoSelection,
                                Integer categoryIdToExclude, GlobRepository repository, Directory directory) {
@@ -72,6 +75,9 @@ public class CategoryChooserDialog implements ChangeSetListener {
 
   private void close() {
     dialog.setVisible(false);
+    dialog.dispose();
+    repository.removeChangeListener(this);
+    builder.dispose();
   }
 
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
@@ -88,37 +94,42 @@ public class CategoryChooserDialog implements ChangeSetListener {
 
   private void loadDialogContent() {
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categoryChooserDialog.splits",
-                                                      repository, directory);
-    builder.addRepeat("masterRepeat",
-                      Category.TYPE,
-                      getMasterMatcher(),
-                      new RepeatComponentFactory<Glob>() {
-                        public void registerComponents(RepeatCellBuilder masterCellBuilder, Glob master) {
-                          JToggleButton masterToggle = createCategoryToggle(master);
-                          masterCellBuilder.add("masterLabel", masterToggle);
-                          GlobsPanelBuilder.addRepeat(
-                            "subcatRepeat",
-                            Category.TYPE,
-                            getSubMatcher(master),
-                            new CategoryComparator(repository, directory),
-                            repository,
-                            masterCellBuilder,
-                            new RepeatComponentFactory<Glob>() {
-                              public void registerComponents(RepeatCellBuilder subCatCellBuilder, final Glob subcat) {
-                                final JToggleButton toggle = createCategoryToggle(subcat);
-                                subCatCellBuilder.add("subcatLabel", toggle);
-                                subCatCellBuilder.addDisposeListener(new DisposeToggleListener(subcat, toggle));
-                              }
-                            });
-                          masterCellBuilder.addDisposeListener(new DisposeToggleListener(master, masterToggle));
-                        }
-                      });
+    builder = new GlobsPanelBuilder(getClass(), "/layout/categoryChooserDialog.splits",
+                                    repository, directory);
+    repeat = builder.addRepeat("masterRepeat",
+                               Category.TYPE,
+                               getMasterMatcher(),
+                               new RepeatComponentFactory<Glob>() {
+                                 public void registerComponents(RepeatCellBuilder masterCellBuilder, Glob master) {
+                                   JToggleButton masterToggle = createCategoryToggle(master);
+                                   masterCellBuilder.add("masterLabel", masterToggle);
+                                   GlobsPanelBuilder.addRepeat(
+                                     "subcatRepeat",
+                                     Category.TYPE,
+                                     getSubMatcher(master),
+                                     new CategoryComparator(repository, directory),
+                                     repository,
+                                     masterCellBuilder,
+                                     new RepeatComponentFactory<Glob>() {
+                                       public void registerComponents(RepeatCellBuilder subCatCellBuilder, final Glob subcat) {
+                                         final JToggleButton toggle = createCategoryToggle(subcat);
+                                         subCatCellBuilder.add("subcatLabel", toggle);
+                                         subCatCellBuilder.addDisposeListener(new DisposeToggleListener(subcat, toggle));
+                                       }
+                                     });
+                                   masterCellBuilder.addDisposeListener(new DisposeToggleListener(master, masterToggle));
+                                 }
+                               });
 
     JLabel title = new JLabel();
     title.setText(Lang.get(monoSelection ? "choose.category.title.single" : "choose.category.title.multiple"));
     builder.add("title", title);
-    builder.add("editCategories", new EditCategoriesAction(repository, localDirectory));
+    EditCategoriesAction categoriesAction = new EditCategoriesAction(repository, localDirectory) {
+      public Window getParent() {
+        return dialog;
+      }
+    };
+    builder.add("editCategories", categoriesAction);
 
     dialog = PicsouDialog.createWithButtons(parent,
                                             builder.<JPanel>load(),

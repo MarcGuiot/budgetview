@@ -219,7 +219,7 @@ public class CategoryEditionTest extends LoggedInFunctionalTestCase {
       .selectMaster(MasterCategory.FOOD)
       .deleteMasterCategoryWithTransactionUpdate(MasterCategory.TRANSPORTS)
       .validate();
-    categoryChooser.selectCategory(MasterCategory.TRANSPORTS).validate();
+    categoryChooser.selectCategory(MasterCategory.TRANSPORTS);
     seriesDialog.setName("New series").validate();
 
     budgetView.envelopes.editSeries("Courant")

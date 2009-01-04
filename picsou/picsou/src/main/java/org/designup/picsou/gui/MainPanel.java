@@ -118,7 +118,11 @@ public class MainPanel {
     };
     exitAction = new ExitAction(directory);
 
-    builder.add("editCategories", new EditCategoriesAction(repository, directory));
+    builder.add("editCategories", new EditCategoriesAction(repository, directory) {
+      public Window getParent() {
+        return parent;
+      }
+    });
 
     TextFilterPanel search = new TextFilterPanel(transactionView.getFilterSet(), repository, directory) {
       protected GlobMatcher createMatcher(String searchFilter) {

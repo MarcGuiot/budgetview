@@ -449,7 +449,11 @@ public class CategorizationView extends View implements TableView, Filterable {
     }
 
     public void actionPerformed(ActionEvent e) {
-      CategoryEditionDialog dialog = new CategoryEditionDialog(repository, directory);
+      CategoryEditionDialog dialog = new CategoryEditionDialog(repository, directory) {
+        public Window getParent() {
+          return directory.get(JFrame.class);
+        }
+      };
       dialog.show(GlobList.EMPTY);
     }
   }

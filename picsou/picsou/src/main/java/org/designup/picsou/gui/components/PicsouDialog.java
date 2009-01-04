@@ -30,6 +30,7 @@ public class PicsouDialog extends JDialog {
   private Action closeAction;
   private Directory directory;
   private boolean openRequestIsManaged = false;
+  private ColorUpdater updater;
 
   public static PicsouDialog create(Window owner, Directory directory) {
     return create(owner, true, directory);
@@ -113,8 +114,14 @@ public class PicsouDialog extends JDialog {
     setContentPane(contentPane);
   }
 
+  public void dispose() {
+    updater.dispose();
+    GuiUtils.removeShortcut(getRootPane(), "ESCAPE", KeyStroke.getKeyStroke("ESCAPE"));
+    super.dispose();
+  }
+
   public void setContentPane(Container contentPane) {
-    ColorUpdater updater = new BackgroundColorUpdater("dialog.bg.bottom", contentPane);
+    updater = new BackgroundColorUpdater("dialog.bg.bottom", contentPane);
     updater.install(colorService);
     super.setContentPane(contentPane);
   }

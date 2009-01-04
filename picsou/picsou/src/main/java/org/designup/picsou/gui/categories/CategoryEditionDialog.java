@@ -29,7 +29,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CategoryEditionDialog {
+public abstract class CategoryEditionDialog {
   private JDialog dialog;
   private GlobRepository repository;
   private Directory directory;
@@ -93,12 +93,14 @@ public class CategoryEditionDialog {
     masterList.setFilter(PicsouMatchers.masterUserCategories());
     initListener(subList);
 
-    dialog = PicsouDialog.createWithButtons(directory.get(JFrame.class),
+    dialog = PicsouDialog.createWithButtons(getParent(),
                                             builder.<JPanel>load(),
                                             new ValidateAction(), new CancelAction(), directory);
     //On ecoute les creation apres la mise a jour de la listView.
     initListenerForSelectionOnCreate();
   }
+
+  public abstract Window getParent();
 
   private void initListenerForSelectionOnCreate() {
     localRepository.addChangeListener(new ChangeSetListener() {

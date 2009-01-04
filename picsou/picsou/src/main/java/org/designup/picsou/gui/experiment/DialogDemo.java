@@ -12,17 +12,14 @@ import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.series.wizard.SeriesWizardDialog;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.generator.PicsouSampleGenerator;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.FieldValue;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.util.Collections;
+import java.awt.*;
 
 public class DialogDemo {
   public static void main(String[] args) throws Exception {
@@ -74,8 +71,12 @@ public class DialogDemo {
     dialog.showNewSeries(GlobList.EMPTY, new GlobList(200808), BudgetArea.SAVINGS);
   }
 
-  private static void showCategoriesEditionDialog(GlobRepository repository, Directory directory) {
-    CategoryEditionDialog dialog = new CategoryEditionDialog(repository, directory);
+  private static void showCategoriesEditionDialog(GlobRepository repository, Directory directory, final JFrame frame) {
+    CategoryEditionDialog dialog = new CategoryEditionDialog(repository, directory) {
+      public Window getParent() {
+        return frame;
+      }
+    };
 //    SplitsEditor.show(dialog.getDialog(), directory);
     dialog.show(GlobList.EMPTY);
   }

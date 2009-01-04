@@ -851,7 +851,6 @@ public class SeriesEditionDialog {
 
   private class DeleteSeriesAction extends AbstractAction {
     private GlobList seriesToDelete = GlobList.EMPTY;
-    private SeriesDeleteDialog seriesDeleteDialog;
     private boolean closeOnDelete;
 
     public DeleteSeriesAction(boolean closeOnDelete) {
@@ -863,7 +862,6 @@ public class SeriesEditionDialog {
           setEnabled(!seriesToDelete.isEmpty());
         }
       }, Series.TYPE);
-      seriesDeleteDialog = new SeriesDeleteDialog(localRepository, localDirectory, dialog);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -874,6 +872,7 @@ public class SeriesEditionDialog {
       Set<Integer> series = seriesToDelete.getValueSet(Series.ID);
       GlobList transactionsForSeries = localRepository.getAll(Transaction.TYPE, fieldIn(Transaction.SERIES, series));
       boolean deleted = false;
+      SeriesDeleteDialog seriesDeleteDialog = new SeriesDeleteDialog(localRepository, localDirectory, dialog);
       if (transactionsForSeries.isEmpty()) {
         localRepository.delete(seriesToDelete);
         deleted = true;
