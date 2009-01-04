@@ -167,4 +167,8 @@ public class GlobLinkComboEditor
   public void setEnabled(boolean enable) {
     globComboView.setEnabled(enable);
   }
+
+  public void setVisible(boolean visible) {
+    globComboView.setVisible(visible);
+  }
 }

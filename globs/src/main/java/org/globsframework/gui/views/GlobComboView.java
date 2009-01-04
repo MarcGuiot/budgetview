@@ -121,6 +121,10 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
     jComboBox.setEnabled(enable);
   }
 
+  public void setVisible(boolean visible) {
+    jComboBox.setVisible(visible);
+  }
+
   public interface GlobSelectionHandler {
     void processSelection(Glob glob);
   }
