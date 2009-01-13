@@ -8,8 +8,8 @@ import org.globsframework.utils.serialization.SerializedOutput;
 import java.util.Map;
 
 public class SerializableGlobSerializer {
-  public void serialize(SerializedOutput output,
-                        MapOfMaps<String, Integer, SerializableGlobType> dataByGlobTypeAndId) {
+  static public void serialize(SerializedOutput output,
+                               MapOfMaps<String, Integer, SerializableGlobType> dataByGlobTypeAndId) {
     int globTypeCount = dataByGlobTypeAndId.keys().size();
     output.write(globTypeCount);
     for (String globTypeName : dataByGlobTypeAndId.keys()) {
@@ -24,8 +24,8 @@ public class SerializableGlobSerializer {
     }
   }
 
-  public void deserialize(SerializedInput serializedInput,
-                          MapOfMaps<String, Integer, SerializableGlobType> data) {
+  static public void deserialize(SerializedInput serializedInput,
+                                 MapOfMaps<String, Integer, SerializableGlobType> data) {
     int globTypeCount = serializedInput.readNotNullInt();
     while (globTypeCount > 0) {
       String globTypeName = serializedInput.readString();

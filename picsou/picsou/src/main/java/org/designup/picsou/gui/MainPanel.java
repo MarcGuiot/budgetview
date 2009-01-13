@@ -6,6 +6,8 @@ import org.designup.picsou.gui.accounts.AccountView;
 import org.designup.picsou.gui.actions.ExitAction;
 import org.designup.picsou.gui.actions.ExportFileAction;
 import org.designup.picsou.gui.actions.ImportFileAction;
+import org.designup.picsou.gui.backup.BackupAction;
+import org.designup.picsou.gui.backup.RestoreAction;
 import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.card.NavigationService;
@@ -63,6 +65,8 @@ public class MainPanel {
   private PicsouFrame parent;
   private ImportFileAction importFileAction;
   private ExportFileAction exportFileAction;
+  private BackupAction backupAction;
+  private RestoreAction restoreAction;
   private PreferencesAction preferencesAction;
   private ExitAction exitAction;
   protected GlobsPanelBuilder builder;
@@ -76,13 +80,14 @@ public class MainPanel {
   private CategoryView categoryView;
   private SeriesView seriesView;
 
-  public static MainPanel init(GlobRepository repository, Directory directory, MainWindow mainWindow) {
-    MainPanel panel = new MainPanel(repository, directory, mainWindow);
+  public static MainPanel init(GlobRepository repository, Directory directory,
+                               MainWindow mainWindow, BackupGenerator backupGenerator) {
+    MainPanel panel = new MainPanel(repository, directory, mainWindow, backupGenerator);
     mainWindow.getFrame().setRepository(repository);
     return panel;
   }
 
-  private MainPanel(final GlobRepository repository, Directory directory, MainWindow mainWindow) {
+  private MainPanel(final GlobRepository repository, Directory directory, MainWindow mainWindow, BackupGenerator generator) {
     this.repository = repository;
     this.directory = directory;
     this.mainWindow = mainWindow;
@@ -108,6 +113,8 @@ public class MainPanel {
 
     importFileAction = ImportFileAction.initAndRegisterToOpenRequestManager(Lang.get("import"), repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
+    backupAction = new BackupAction(repository, directory, generator);
+    restoreAction = new RestoreAction(repository, directory, generator);
     preferencesAction = new PreferencesAction(repository, directory);
     registerAction = new RegisterLicenseAction(parent, repository, directory);
     check = new CheckRepositoryAction(directory, repository);
@@ -207,6 +214,9 @@ public class MainPanel {
     JMenu menu = new JMenu(Lang.get("file"));
     menu.add(importFileAction);
     menu.add(exportFileAction);
+    menu.addSeparator();
+    menu.add(backupAction);
+    menu.add(restoreAction);
 
     if (useMacOSMenu()) {
       MRJAdapter.setPreferencesEnabled(true);

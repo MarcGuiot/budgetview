@@ -1,0 +1,14 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="dialog" preferredSize="(500,500)">
+    <column styleClass="innerDialog">
+
+      <label ref="message"/>
+      <textArea ref="file"/>
+
+    </column>
+  </panel>
+
+</splits>

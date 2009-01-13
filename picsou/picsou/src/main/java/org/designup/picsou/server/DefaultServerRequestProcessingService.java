@@ -50,6 +50,12 @@ public class DefaultServerRequestProcessingService implements ServerRequestProce
     connected.getUserData(input, output);
   }
 
+  public void getUserId(Long sessionId, SerializedInput input, SerializedOutput output) {
+    SessionState sessionState = sessionService.getSessionState(sessionId);
+    ConnectedState connected = sessionState.connected();
+    connected.getUserId(input, output);
+  }
+
   public void addUserData(Long sessionId, SerializedInput input, SerializedOutput output) throws InvalidActionForState {
     SessionState state = sessionService.getSessionState(sessionId);
     state.connected().updateData(input, output);
@@ -63,5 +69,10 @@ public class DefaultServerRequestProcessingService implements ServerRequestProce
   public void takeSnapshot(Long sessionId, SerializedInput input) {
     SessionState state = sessionService.getSessionState(sessionId);
     state.connected().takeSnapshot(input);
+  }
+
+  public void restore(Long sessionId, SerializedInput input, SerializedOutput output) {
+    SessionState state = sessionService.getSessionState(sessionId);
+    state.connected().restore(input, output);
   }
 }

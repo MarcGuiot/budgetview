@@ -81,6 +81,10 @@ public class PrevaylerPersistence implements Persistence {
     accountDataManager.takeSnapshot(userId);
   }
 
+  public boolean restore(SerializedInput input, Integer userId) {
+    return accountDataManager.restore(input, userId);
+  }
+
   public void getData(SerializedOutput output, Integer userId) {
     accountDataManager.getUserData(output, userId);
   }

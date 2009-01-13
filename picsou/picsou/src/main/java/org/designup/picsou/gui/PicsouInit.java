@@ -11,6 +11,8 @@ import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.initial.InitialCategories;
 import org.designup.picsou.model.initial.InitialSeries;
+import org.designup.picsou.server.model.SerializableGlobType;
+import org.designup.picsou.server.persistence.direct.ReadOnlyAccountDataManager;
 import org.designup.picsou.triggers.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobModel;
@@ -23,6 +25,7 @@ import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.model.utils.CachedGlobIdGenerator;
 import org.globsframework.model.utils.DefaultChangeSetListener;
+import org.globsframework.utils.MapOfMaps;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
@@ -36,22 +39,25 @@ import java.util.Collection;
 public class PicsouInit {
 
   private GlobRepository repository;
+  private ServerAccess serverAccess;
   private Directory directory;
+  private DefaultGlobIdGenerator idGenerator;
 
   public static PicsouInit init(ServerAccess serverAccess, String user, boolean newUser, Directory directory) throws IOException {
     return new PicsouInit(serverAccess, user, newUser, directory);
   }
 
   private PicsouInit(ServerAccess serverAccess, String user, boolean newUser, final Directory directory) throws IOException {
+    this.serverAccess = serverAccess;
     this.directory = directory;
 
-    final DefaultGlobIdGenerator generator = new DefaultGlobIdGenerator();
+    idGenerator = new DefaultGlobIdGenerator();
     repository =
-      GlobRepositoryBuilder.init(new CachedGlobIdGenerator(generator))
+      GlobRepositoryBuilder.init(new CachedGlobIdGenerator(idGenerator))
         .add(directory.get(GlobModel.class).getConstants())
         .get();
 
-    generator.setRepository(repository);
+    idGenerator.setRepository(repository);
 
     repository.addChangeListener(new ServerChangeSetListener(serverAccess));
 
@@ -87,7 +93,7 @@ public class PicsouInit {
       GlobList userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdate() {
 
         public void update(IntegerField field, Integer lastAllocatedId) {
-          generator.update(field, lastAllocatedId);
+          idGenerator.update(field, lastAllocatedId);
         }
       });
       Collection<GlobType> serverTypes = userData.getTypes();
@@ -189,6 +195,28 @@ public class PicsouInit {
     directory.add(TransactionAnalyzerFactory.class, factory);
     ImportService importService = new ImportService();
     directory.add(ImportService.class, importService);
+  }
+
+  public void restore(InputStream stream) {
+    MapOfMaps<String, Integer, SerializableGlobType> serverData =
+      new MapOfMaps<String, Integer, SerializableGlobType>();
+    ReadOnlyAccountDataManager.readSnapshot(serverData, stream);
+    serverAccess.replaceData(serverData);
+
+    MutableChangeSet changeSet = new DefaultChangeSet();
+    GlobList userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdate() {
+
+      public void update(IntegerField field, Integer lastAllocatedId) {
+        idGenerator.update(field, lastAllocatedId);
+      }
+    });
+    Collection<GlobType> serverTypes = userData.getTypes();
+    repository.reset(userData, serverTypes.toArray(new GlobType[serverTypes.size()]));
+  }
+
+  public void generateBackupIn(String file) throws IOException {
+    MapOfMaps<String, Integer, SerializableGlobType> serverData = serverAccess.getServerData();
+    ReadOnlyAccountDataManager.writeSnapshot_V2(serverData, new File(file));
   }
 
   private static class ServerChangeSetListener extends DefaultChangeSetListener {

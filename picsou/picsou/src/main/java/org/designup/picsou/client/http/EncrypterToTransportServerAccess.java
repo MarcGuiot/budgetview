@@ -179,6 +179,27 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     clientTransport.updateUserData(sessionId, bytes);
   }
 
+  public MapOfMaps<String, Integer, SerializableGlobType> getServerData() {
+    checkConnected();
+    SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
+    outputStream.getOutput().writeBytes(privateId);
+    SerializedInput input = clientTransport.getUserData(sessionId,
+                                                        outputStream.toByteArray());
+    SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
+    MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
+    serializableGlobSerializer.deserialize(input, data);
+    return data;
+  }
+
+  public void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data) {
+    checkConnected();
+    SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
+    outputStream.getOutput().writeBytes(privateId);
+    SerializableGlobSerializer.serialize(outputStream.getOutput(), data);
+
+    clientTransport.restore(sessionId, outputStream.toByteArray());
+  }
+
   public GlobList getUserData(MutableChangeSet changeSet, IdUpdate idUpdate) {
     checkConnected();
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();

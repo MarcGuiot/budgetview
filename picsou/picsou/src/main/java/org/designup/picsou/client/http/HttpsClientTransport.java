@@ -70,6 +70,10 @@ public class HttpsClientTransport implements ClientTransport {
     return sendRequest(sessionId, "/getUserData", bytes);
   }
 
+  public SerializedInput restore(Long sessionId, byte[] bytes) {
+    return sendRequest(sessionId, "/replaceUserData", bytes);
+  }
+
   public void disconnect(Long sessionId, byte[] bytes) {
     sendRequest(sessionId, "/disconnect", bytes);
   }

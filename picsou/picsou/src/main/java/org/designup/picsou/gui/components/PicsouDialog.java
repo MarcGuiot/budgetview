@@ -77,6 +77,10 @@ public class PicsouDialog extends JDialog {
     setContentPane(contentPane);
   }
 
+  public void addPanelWithButtons(JPanel panel, Action ok) {
+    addPanelWithButtons(panel, ok, null, (JButton)null);
+  }
+
   public void addPanelWithButtons(JPanel panel, Action ok, Action cancel) {
     addPanelWithButtons(panel, ok, cancel, (JButton)null);
   }
@@ -96,18 +100,30 @@ public class PicsouDialog extends JDialog {
 
     builder.add(Box.createHorizontalGlue(), 1, 1, 1, 1, 1000, 0, Fill.HORIZONTAL, Anchor.CENTER);
 
-    JButton cancelButton = createButton(cancel);
+    JButton cancelButton = null;
+    if (cancel != null) {
+      cancelButton = createButton(cancel);
+    }
     JButton okButton = createButton(ok);
-    adjustSizes(cancelButton, okButton);
+    if (cancel != null) {
+      adjustSizes(cancelButton, okButton);
+    }
 
     Insets buttonInsets = new Insets(0, 10, 10, 10);
     if (Gui.isMacOSX()) {
-      builder.add(cancelButton, 2, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS);
+      if (cancelButton != null) {
+        builder.add(cancelButton, 2, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS);
+      }
       builder.add(okButton, 3, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS);
     }
     else {
-      builder.add(okButton, 2, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS);
-      builder.add(cancelButton, 3, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS);
+      if (cancelButton != null) {
+        builder.add(okButton, 2, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS);
+        builder.add(cancelButton, 3, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS);
+      }
+      else {
+        builder.add(okButton, 3, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS);
+      }
     }
 
     JPanel contentPane = builder.getPanel();

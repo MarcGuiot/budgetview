@@ -2,10 +2,12 @@ package org.designup.picsou.functests.utils;
 
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.server.model.SerializableGlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.delta.MutableChangeSet;
+import org.globsframework.utils.MapOfMaps;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +31,13 @@ public class DummyServerAccess implements ServerAccess {
   }
 
   public void connect() {
+  }
+
+  public MapOfMaps<String, Integer, SerializableGlobType> getServerData() {
+    return null;
+  }
+
+  public void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data) {
   }
 
   public void addTransaction(GlobList transactions) {

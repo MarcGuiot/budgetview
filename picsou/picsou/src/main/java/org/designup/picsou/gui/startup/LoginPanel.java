@@ -27,6 +27,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -74,7 +75,6 @@ public class LoginPanel {
   }
 
   private void initPanel() {
-//    initFocusChain(userField, passwordField, confirmPasswordField, loginButton, creationCheckBox);
     initAutoClear(userField, passwordField, confirmPasswordField);
 
     passwordField.addActionListener(new LoginAction());
@@ -158,14 +158,23 @@ public class LoginPanel {
 
     public void run() {
       try {
-        if (createUser) {
-          serverAccess.createUser(user, password);
+        if (user.equals("demo")) {
+          initDemoServerAccess();
+          serverAccess.createUser("anonymous", "password".toCharArray());
         }
         else {
-          serverAccess.initConnection(user, password, false);
+          if (createUser) {
+            serverAccess.createUser(user, password);
+          }
+          else {
+            serverAccess.initConnection(user, password, false);
+          }
         }
         PicsouInit init = PicsouInit.init(serverAccess, user, creationCheckBox.isSelected(), directory);
-        final MainPanel mainPanel = MainPanel.init(init.getRepository(), init.getDirectory(), mainWindow);
+        final MainPanel mainPanel =
+          MainPanel.init(init.getRepository(), init.getDirectory(),
+                         mainWindow,
+                         new BackupGeneratorImpl(init));
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
             mainPanel.show();
@@ -334,12 +343,22 @@ public class LoginPanel {
   private void initServerAccess(String remoteAdress, String prevaylerPath, boolean dataInMemory) {
     if (!remoteAdress.startsWith("http")) {
       serverDirectory = new ServerDirectory(prevaylerPath, dataInMemory);
-      serverAccess = new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()), directory);
+      serverAccess = new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
+                                                          directory);
     }
     else {
       serverAccess = new ConnectionRetryServerAccess(
         new EncrypterToTransportServerAccess(new HttpsClientTransport(remoteAdress), directory));
     }
+    serverAccess.connect();
+  }
+
+  private void initDemoServerAccess() {
+    InputStream stream = this.getClass().getResourceAsStream("/demo/demo.snapshot");
+    serverDirectory = new ServerDirectory(stream);
+    serverAccess = new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
+                                                        directory);
+
     serverAccess.connect();
   }
 

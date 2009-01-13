@@ -8,11 +8,10 @@ import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 public class SerializableGlobSerializerTest extends TestCase {
 
   public void test() throws Exception {
-    SerializableGlobSerializer serializer = new SerializableGlobSerializer();
     SerializedByteArrayOutput byteArrayOutput = new SerializedByteArrayOutput();
-    serializer.serialize(byteArrayOutput.getOutput(), init());
+    SerializableGlobSerializer.serialize(byteArrayOutput.getOutput(), init());
     MapOfMaps<String, Integer, SerializableGlobType> actual = new MapOfMaps<String, Integer, SerializableGlobType>();
-    serializer.deserialize(byteArrayOutput.getInput(), actual);
+    SerializableGlobSerializer.deserialize(byteArrayOutput.getInput(), actual);
     assertEquals(1, actual.get("A").size());
     assertEquals(1, actual.get("B").size());
     assertEquals(2, actual.get("A").get(1).getVersion());

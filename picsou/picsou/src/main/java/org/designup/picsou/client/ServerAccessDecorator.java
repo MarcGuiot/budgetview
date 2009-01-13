@@ -2,10 +2,12 @@ package org.designup.picsou.client;
 
 import org.designup.picsou.client.exceptions.IdentificationFailed;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
+import org.designup.picsou.server.model.SerializableGlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.delta.MutableChangeSet;
+import org.globsframework.utils.MapOfMaps;
 
 public class ServerAccessDecorator implements ServerAccess {
   private ServerAccess serverAccess;
@@ -36,6 +38,14 @@ public class ServerAccessDecorator implements ServerAccess {
 
   public void connect() {
     serverAccess.connect();
+  }
+
+  public MapOfMaps<String, Integer, SerializableGlobType> getServerData() {
+    return serverAccess.getServerData();
+  }
+
+  public void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data) {
+    serverAccess.replaceData(data);
   }
 
   public GlobList getUserData(MutableChangeSet changeSet, IdUpdate idUpdate) {

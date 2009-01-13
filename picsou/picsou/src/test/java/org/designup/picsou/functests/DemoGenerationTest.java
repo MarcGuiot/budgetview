@@ -4,6 +4,7 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 
+import java.io.File;
 import java.util.Locale;
 
 public class DemoGenerationTest extends LoggedInFunctionalTestCase {
@@ -18,6 +19,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   public static void main(String[] args) throws Exception {
 
     System.setProperty("uispec4j.test.library", "junit");
+
     Locale.setDefault(Locale.FRENCH);
 
     DemoGenerationTest test = new DemoGenerationTest();
@@ -220,6 +222,13 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectCategorization();
+
+    String outputFile = System.getProperty("outfile");
+    if (outputFile != null) {
+      File out = new File(outputFile);
+      String file = operations.backup(out.getAbsoluteFile().getParent());
+      assertTrue(new File(file).renameTo(out));
+    }
   }
 
   // affectations en boucle pour identifier les memory leaks

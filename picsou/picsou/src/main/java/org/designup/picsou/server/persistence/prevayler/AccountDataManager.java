@@ -17,4 +17,6 @@ public interface AccountDataManager {
   void close(Integer userId);
 
   void takeSnapshot(Integer userId);
+
+  boolean restore(SerializedInput input, Integer userId);
 }

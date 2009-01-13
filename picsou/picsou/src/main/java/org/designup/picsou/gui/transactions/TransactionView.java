@@ -44,7 +44,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
   public static final int LABEL_COLUMN_INDEX = 4;
   public static final int AMOUNT_COLUMN_INDEX = 5;
   public static final int NOTE_COLUMN_INDEX = 6;
-  public static final int ACCOUNT_BALANCE__INDEX = 7;
+  public static final int ACCOUNT_BALANCE_INDEX = 7;
   public static final int BALANCE_INDEX = 8;
 
   private static final int[] COLUMN_SIZES = {10, 10, 10, 10, 30, 9, 15, 10, 10};

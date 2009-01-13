@@ -1,12 +1,14 @@
 package org.designup.picsou.gui.accounts;
 
-import org.globsframework.utils.directory.Directory;
-import org.globsframework.gui.views.GlobComboView;
-import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.GlobRepository;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.gui.description.AccountComparator;
+import org.designup.picsou.gui.utils.PicsouMatchers;
+import org.designup.picsou.model.Account;
+import org.globsframework.gui.views.GlobComboView;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -24,7 +26,11 @@ public class AccountFilteringCombo {
   }
 
   public GlobMatcher getCurrentAccountFilter() {
-    Integer accountId = accountFilteringCombo.getCurrentSelection().get(Account.ID);
+    Glob currentSelection = accountFilteringCombo.getCurrentSelection();
+    if (currentSelection == null || !currentSelection.exists()) {
+      return GlobMatchers.ALL;
+    }
+    Integer accountId = currentSelection.get(Account.ID);
     return PicsouMatchers.transactionsForAccounts(Collections.singleton(accountId), repository);
   }
 

@@ -1,6 +1,5 @@
 package org.designup.picsou.functests.utils;
 
-import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.functests.FunctionalTestCase;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.gui.MainWindowLauncher;
@@ -44,7 +43,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   protected GlobRepository repository;
   private Directory directory;
-  protected ServerAccess serverAccess;
 
   private Date currentDate = Dates.parse("2008/08/31");
   private boolean isInMemory = true;
@@ -160,7 +158,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     repository = null;
     clearDirectory();
     directory = null;
-    serverAccess = null;
   }
 
   private void clearDirectory() {

@@ -2,11 +2,13 @@ package org.designup.picsou.client.http;
 
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.*;
+import org.designup.picsou.server.model.SerializableGlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.utils.Log;
+import org.globsframework.utils.MapOfMaps;
 import org.globsframework.utils.exceptions.InvalidState;
 
 import java.util.concurrent.ExecutorService;
@@ -86,6 +88,14 @@ public class DispatcherServerAccess implements ServerAccess {
       catch (Exception e) {
       }
     }
+  }
+
+  public MapOfMaps<String, Integer, SerializableGlobType> getServerData() {
+    return localServerAccess.getServerData();
+  }
+
+  public void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data) {
+    localServerAccess.replaceData(data);
   }
 
   public void localRegister(byte[] mail, byte[] signature, String activationCode) {

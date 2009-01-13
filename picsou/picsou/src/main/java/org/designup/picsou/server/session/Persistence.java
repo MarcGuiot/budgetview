@@ -33,6 +33,8 @@ public interface Persistence {
 
   void takeSnapshot(Integer userId);
 
+  boolean restore(SerializedInput input, Integer userId);
+
   class UserInfo {
     final public Integer userId;
     final public boolean isRegistered;

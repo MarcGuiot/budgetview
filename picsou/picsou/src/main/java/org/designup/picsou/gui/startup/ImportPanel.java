@@ -678,7 +678,7 @@ public class ImportPanel {
       File path = null;
       if (usePreferedPath) {
         Glob preferences = localRepository.get(UserPreferences.KEY);
-        String directory = preferences.get(UserPreferences.LAST_DIRECTORY);
+        String directory = preferences.get(UserPreferences.LAST_IMPORT_DIRECTORY);
         if (directory != null) {
           path = new File(directory);
         }
@@ -692,7 +692,7 @@ public class ImportPanel {
             buffer.append(";");
           }
           if (usePreferedPath) {
-            localRepository.update(UserPreferences.KEY, UserPreferences.LAST_DIRECTORY,
+            localRepository.update(UserPreferences.KEY, UserPreferences.LAST_IMPORT_DIRECTORY,
                                    files[i].getAbsoluteFile().getParent());
           }
         }

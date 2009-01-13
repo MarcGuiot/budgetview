@@ -1,10 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.utils.Lang;
-import org.uispec4j.Button;
-import org.uispec4j.MenuItem;
-import org.uispec4j.Trigger;
-import org.uispec4j.Window;
+import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
@@ -13,6 +10,8 @@ import org.uispec4j.interception.WindowInterceptor;
 public class OperationChecker {
   private MenuItem importMenu;
   private MenuItem exportMenu;
+  private MenuItem backupMenu;
+  private MenuItem restoreMenu;
   private MenuItem preferencesMenu;
   private MenuItem undoMenu;
   private MenuItem redoMenu;
@@ -31,6 +30,8 @@ public class OperationChecker {
     MenuItem fileMenu = window.getMenuBar().getMenu("File");
     importMenu = fileMenu.getSubMenu("Import");
     exportMenu = fileMenu.getSubMenu("Export");
+    backupMenu = fileMenu.getSubMenu("Backup");
+    restoreMenu = fileMenu.getSubMenu("Restore");
     preferencesMenu = fileMenu.getSubMenu("Preferences");
 
     MenuItem editMenu = window.getMenuBar().getMenu("Edit");
@@ -95,6 +96,36 @@ public class OperationChecker {
     WindowInterceptor
       .init(exportMenu.triggerClick())
       .process(FileChooserHandler.init().select(name))
+      .run();
+  }
+
+  public String backup(String name) {
+    final String[] fileName = new String[1];
+    WindowInterceptor
+      .init(backupMenu.triggerClick())
+      .process(FileChooserHandler.init().select(name))
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          UISpecAssert.assertTrue(window.getTextBox("message").textContains("Backup done in file"));
+          TextBox box = window.getInputTextBox("file");
+          fileName[0] = box.getText();
+          return window.getButton().triggerClick();
+        }
+      })
+      .run();
+    return fileName[0];
+  }
+
+  public void restore(String name) {
+    WindowInterceptor
+      .init(restoreMenu.triggerClick())
+      .process(FileChooserHandler.init().select(name))
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          UISpecAssert.assertTrue(window.getTextBox("message").textContains("Restore done"));
+          return window.getButton().triggerClick();
+        }
+      })
       .run();
   }
 

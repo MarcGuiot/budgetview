@@ -5,11 +5,13 @@ import org.designup.picsou.client.exceptions.IdentificationFailed;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.client.exceptions.UserNotRegistered;
 import org.designup.picsou.client.http.PasswordBasedEncryptor;
+import org.designup.picsou.server.model.SerializableGlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.delta.MutableChangeSet;
+import org.globsframework.utils.MapOfMaps;
 
 public interface ServerAccess {
 
@@ -26,6 +28,10 @@ public interface ServerAccess {
   void takeSnapshot();
 
   void connect();
+
+  MapOfMaps<String, Integer, SerializableGlobType> getServerData();
+
+  void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data);
 
   interface IdUpdate {
     void update(IntegerField field, Integer lastAllocatedId);
@@ -54,6 +60,13 @@ public interface ServerAccess {
     }
 
     public void connect() {
+    }
+
+    public MapOfMaps<String, Integer, SerializableGlobType> getServerData() {
+      return null;
+    }
+
+    public void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data) {
     }
 
     public GlobList getUserData(MutableChangeSet upgradeChangeSetToApply, IdUpdate idUpdate) {

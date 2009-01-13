@@ -42,8 +42,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     MapOfMaps<String, Integer, SerializableGlobType> globs = new MapOfMaps<String, Integer, SerializableGlobType>();
     long transactionId = readData(userId, globs);
     outputStreamMap.put(userId, new DurableOutputStream(transactionId, userId));
-    SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
-    serializableGlobSerializer.serialize(output, globs);
+    SerializableGlobSerializer.serialize(output, globs);
   }
 
   private long readData(Integer userId, MapOfMaps<String, Integer, SerializableGlobType> globs) {
@@ -143,33 +142,11 @@ public class DirectAccountDataManager implements AccountDataManager {
   }
 
   void readSnapshot(MapOfMaps<String, Integer, SerializableGlobType> globs, File file) {
-    BufferedInputStream inputStream = null;
     try {
-      inputStream = new BufferedInputStream(new FileInputStream(file));
-      SerializedInput serializedInput =
-        SerializedInputOutputFactory.init(inputStream);
-      String version = serializedInput.readString();
-      if ("2".equals(version)) {
-        readVersion2(serializedInput, globs);
-      }
+      ReadOnlyAccountDataManager.readSnapshot(globs, new FileInputStream(file));
     }
     catch (FileNotFoundException e) {
     }
-    finally {
-      if (inputStream != null) {
-        try {
-          inputStream.close();
-        }
-        catch (IOException e) {
-        }
-      }
-    }
-  }
-
-  private void readVersion2(SerializedInput serializedInput,
-                            MapOfMaps<String, Integer, SerializableGlobType> data) {
-    SerializableGlobSerializer serializer = new SerializableGlobSerializer();
-    serializer.deserialize(serializedInput, data);
   }
 
   public void updateUserData(SerializedInput input, Integer userId) {
@@ -204,6 +181,9 @@ public class DirectAccountDataManager implements AccountDataManager {
   }
 
   public void takeSnapshot(Integer userId) {
+    if (inMemory) {
+      return;
+    }
     PrevaylerDirectory directory = new PrevaylerDirectory(getPath(userId));
     MapOfMaps<String, Integer, SerializableGlobType> globs = new MapOfMaps<String, Integer, SerializableGlobType>();
     long transactionId = readData(userId, globs);
@@ -217,11 +197,24 @@ public class DirectAccountDataManager implements AccountDataManager {
     }
   }
 
+  public boolean restore(SerializedInput input, Integer userId) {
+    DirectAccountDataManager.DurableOutputStream durableOutputStream = outputStreamMap.get(userId);
+    MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
+    SerializableGlobSerializer.deserialize(input, data);
+    try {
+      writeSnapshot(durableOutputStream.nextTransactionVersion, data, durableOutputStream.prevaylerDirectory);
+    }
+    catch (IOException e) {
+      return false;
+    }
+    return true;
+  }
+
   private void writeSnapshot(long transactionId, MapOfMaps<String, Integer, SerializableGlobType> data,
                              PrevaylerDirectory directory) throws IOException {
     File tempFile = directory.createTempFile("snapshot" + transactionId + "temp", "generatingSnapshot");
 
-    writeSnapshot_V2(data, tempFile);
+    ReadOnlyAccountDataManager.writeSnapshot_V2(data, tempFile);
 
     File permanent = directory.snapshotFile(transactionId, "snapshot");
     permanent.delete();
@@ -229,16 +222,6 @@ public class DirectAccountDataManager implements AccountDataManager {
       throw new IOFailure("Temporary snapshot file generated: " + tempFile +
                           "\nUnable to rename it permanently to: " + permanent);
     }
-  }
-
-  private void writeSnapshot_V2(MapOfMaps<String, Integer, SerializableGlobType> data, File file) throws IOException {
-    FileOutputStream outputStream = new FileOutputStream(file);
-    SerializedOutput serializedOutput =
-      SerializedInputOutputFactory.init(outputStream);
-    serializedOutput.writeString("2");
-    SerializableGlobSerializer serializer = new SerializableGlobSerializer();
-    serializer.serialize(serializedOutput, data);
-    outputStream.close();
   }
 
   private class DurableOutputStream {

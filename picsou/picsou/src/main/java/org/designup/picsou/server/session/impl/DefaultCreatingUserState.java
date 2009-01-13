@@ -6,7 +6,7 @@ import org.globsframework.utils.serialization.SerializedInput;
 
 public class DefaultCreatingUserState extends AbstractSessionState implements CreatingUserState {
   private Persistence persistence;
-  private Persistence.UserInfo userInfo;
+  private boolean registered;
 
   public DefaultCreatingUserState(Persistence persistence,
                                   DefaultSessionService defaultSessionService, Long sessionId, byte[] privateId) {
@@ -24,11 +24,12 @@ public class DefaultCreatingUserState extends AbstractSessionState implements Cr
     byte[] encryptedPassword = input.readBytes();
     byte[] linkInfo = input.readBytes();
     byte[] encryptedLinkInfo = input.readBytes();
-    userInfo = persistence.createUser(name, false, encryptedPassword, linkInfo, encryptedLinkInfo);
+    Persistence.UserInfo userInfo = persistence.createUser(name, false, encryptedPassword, linkInfo, encryptedLinkInfo);
     new DefaultConnectedState(persistence, userInfo.userId, getDefaultSessionService(), getSessionId(), getPrivateId());
+    registered = userInfo.isRegistered;
   }
 
   public Boolean getIsRegisteredUser() {
-    return userInfo.isRegistered;
+    return registered;
   }
 }
