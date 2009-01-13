@@ -101,6 +101,10 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
     if (budgetArea == BudgetArea.OCCASIONAL) {
       view = new OccasionalSeriesView(name, repository, directory);
     }
+    else if (budgetArea == BudgetArea.SAVINGS) {
+      view = new BudgetAreaSeriesView(name, budgetArea, repository, directory,
+                                      seriesEditionDialog);
+    }
     else {
       view = new BudgetAreaSeriesView(name, budgetArea, repository, directory,
                                       seriesEditionDialog);
@@ -193,8 +197,7 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
       repository.update(stat.getKey(),
                         FieldValue.value(PeriodSeriesStat.AMOUNT, amount),
                         FieldValue.value(PeriodSeriesStat.PLANNED_AMOUNT, plannedAmount),
-                        FieldValue.value(PeriodSeriesStat.ABS_SUM_AMOUNT, Math.abs(plannedAmount) + Math.abs(amount))
-      );
+                        FieldValue.value(PeriodSeriesStat.ABS_SUM_AMOUNT, Math.abs(plannedAmount) + Math.abs(amount)));
       stats.add(stat);
     }
 

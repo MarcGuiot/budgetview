@@ -286,23 +286,44 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
 
   public void testExternalToNotImportedSavingsWithDate() throws Exception {
+    // force creation of month in the past
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/10", -100.00, "FNAC")
+      .load();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectHome();
     savingsAccounts.createSavingsAccount("Epargne", 1000);
     views.selectBudget();
-    budgetView.income.createSeries()
+    budgetView.savings.createSeries()
       .setName("CAF")
+      .setCategory(MasterCategory.INCOME)
       .setFromAccount("External account")
       .setToAccount("Epargne")
       .selectAllMonths()
-      .setAmount("100")
+      .setAmount("300")
       .setDate("5")
       .validate();
     views.selectHome();
     timeline.selectMonth("2008/08");
     savingsAccounts.checkPosition("Epargne", 1000);
     timeline.selectMonth("2008/09");
-    savingsAccounts.checkPosition("Epargne", 1100);
+    savingsAccounts.checkPosition("Epargne", 1300);
+    views.selectData();
+    timeline.selectAll();
+    transactions.initContent()
+      .add("05/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF", MasterCategory.INCOME)
+      .add("05/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF", MasterCategory.INCOME)
+      .add("05/08/2008", TransactionType.VIREMENT, "CAF", "", 300.00, "CAF", MasterCategory.INCOME)
+      .add("05/07/2008", TransactionType.VIREMENT, "CAF", "", 300.00, "CAF", MasterCategory.INCOME)
+      .add("10/06/2008", TransactionType.PRELEVEMENT, "FNAC", "", -100.00)
+      .add("05/06/2008", TransactionType.VIREMENT, "CAF", "", 300.00, "CAF", MasterCategory.INCOME)
+      .check();
+
+    views.selectBudget();
+    timeline.selectMonth("2008/06");
+    budgetView.savings.checkTotalAmounts(300, 300);
+    timeline.selectMonth("2008/08");
+    budgetView.savings.checkTotalAmounts(300, 300);
   }
 
   // ==> test de l'effet de suppression de transaction référencé dans account

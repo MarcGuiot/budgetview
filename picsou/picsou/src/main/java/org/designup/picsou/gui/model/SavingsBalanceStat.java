@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.model;
 
 import org.designup.picsou.model.Account;
+import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultDouble;
@@ -10,6 +11,7 @@ import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 public class SavingsBalanceStat {
   public static GlobType TYPE;
@@ -55,5 +57,29 @@ public class SavingsBalanceStat {
 
   static {
     GlobTypeLoader.init(SavingsBalanceStat.class);
+  }
+
+  public static DoubleField getObserved(BudgetArea budgetArea) {
+    switch (budgetArea) {
+      case SAVINGS:
+        return SAVINGS;
+    }
+    throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
+  }
+
+  public static DoubleField getPlanned(BudgetArea budgetArea) {
+    switch (budgetArea) {
+      case SAVINGS:
+        return SAVINGS_PLANNED;
+    }
+    throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
+  }
+
+  public static DoubleField getRemaining(BudgetArea budgetArea) {
+    switch (budgetArea) {
+      case SAVINGS:
+        return SAVINGS_REMAINING;
+    }
+    throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
   }
 }

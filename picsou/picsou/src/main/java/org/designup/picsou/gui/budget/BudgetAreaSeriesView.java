@@ -9,6 +9,7 @@ import org.designup.picsou.gui.components.TextDisplay;
 import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
+import org.designup.picsou.gui.model.SavingsBalanceStat;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.PicsouMatchers;
@@ -66,13 +67,13 @@ public class BudgetAreaSeriesView extends View {
     }, Month.TYPE);
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(BalanceStat.TYPE)) {
+        if (changeSet.containsChanges(BalanceStat.TYPE) || changeSet.containsChanges(SavingsBalanceStat.TYPE)) {
           update();
         }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        if (changedTypes.contains(BalanceStat.TYPE)) {
+        if (changedTypes.contains(BalanceStat.TYPE) || changedTypes.contains(SavingsBalanceStat.TYPE)) {
           update();
         }
       }
@@ -104,9 +105,14 @@ public class BudgetAreaSeriesView extends View {
   }
 
   void update() {
-    headerUpdater.update(repository.getAll(BalanceStat.TYPE,
-                                           GlobMatchers.fieldIn(BalanceStat.MONTH, selectedMonthIds)),
-                         budgetArea);
+    GlobList balanceStat = new GlobList();
+    if (budgetArea == BudgetArea.SAVINGS) {
+      balanceStat = repository.getAll(SavingsBalanceStat.TYPE,
+                                      GlobMatchers.fieldIn(SavingsBalanceStat.MONTH, selectedMonthIds));
+    }
+    balanceStat.addAll(repository.getAll(BalanceStat.TYPE,
+                                         GlobMatchers.fieldIn(BalanceStat.MONTH, selectedMonthIds)));
+    headerUpdater.update(balanceStat, budgetArea);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -121,9 +127,8 @@ public class BudgetAreaSeriesView extends View {
     builder.add("totalGauge", gauge);
 
     this.headerUpdater =
-      new BudgetAreaHeaderUpdater(
-        TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
-        repository, directory);
+      new BudgetAreaHeaderUpdater(TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
+                                  repository, directory);
     this.headerUpdater.setColors("block.total",
                                  "block.total.overrun.error",
                                  "block.total.overrun.positive");
