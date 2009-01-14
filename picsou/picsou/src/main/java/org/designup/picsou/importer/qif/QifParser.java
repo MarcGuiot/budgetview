@@ -83,7 +83,7 @@ public class QifParser {
               value = pValue;
             }
             if (!Strings.isNullOrEmpty(mValue) && !Strings.isNullOrEmpty(pValue)) {
-              if (mValue.startsWith(pValue)) {
+              if (mValue.startsWith(pValue.substring(0, pValue.length() > 10 ? 10 : pValue.length()))) {
                 value = mValue;
               }
               else {

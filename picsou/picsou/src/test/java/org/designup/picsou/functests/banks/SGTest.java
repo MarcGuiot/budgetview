@@ -48,6 +48,7 @@ public class SGTest extends SpecificBankTestCase {
       .add("28/08/2008", "28/08/2008", TransactionType.VIREMENT, "CPAM VAL D'OISE MOTIF: 082400010802 082400010802", "", 36.40)
       .add("26/08/2008", "27/08/2008", TransactionType.CREDIT_CARD, "ED HERBLAY 2", "", -153.35)
       .add("26/08/2008", "27/08/2008", TransactionType.CREDIT_CARD, "LEROY MERLIN", "", -28.25)
+      .add("27/08/2008", "27/08/2008", TransactionType.CREDIT_CARD, "LEROY MERLIN", "", -28.25)
       .add("26/08/2008", "26/08/2008", TransactionType.DEPOSIT, "REMISE CHEQUE  DE    1 CHQ 03281", "", 31.72)
       .add("22/08/2008", "26/08/2008", TransactionType.CREDIT_CARD, "APRR AUTOROUTE", "", -26.20)
       .add("25/08/2008", "25/08/2008", TransactionType.CHECK, "CHEQUE N. 628", "", -730.53)

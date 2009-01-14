@@ -42,7 +42,10 @@
     <transactionTypeMatcher regexp="REMISE CHEQUE[\s]+[\d]+[\s]+[\d]+(.*)"
                             transactionTypeName="deposit" label="REMISE CHEQUE $1"/>
 
-    <transactionTypeMatcher regexp="VIR (.*)"
+    <transactionTypeMatcher regexp="VIR PERM[\s]*(.*)"
+                            transactionTypeName="virement" label="$1"/>
+
+    <transactionTypeMatcher regexp="VIR[\s]*(.*)"
                             transactionTypeName="virement" label="$1"/>
 
   </bank>

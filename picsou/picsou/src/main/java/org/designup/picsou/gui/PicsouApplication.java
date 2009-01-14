@@ -195,6 +195,7 @@ public class PicsouApplication {
     mainWindow.getFrame().addWindowListener(windowOpenListener);
     mainWindow.getFrame().addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
+        System.out.println("PicsouApplication.windowClosing");
         shutdown();
       }
     });
