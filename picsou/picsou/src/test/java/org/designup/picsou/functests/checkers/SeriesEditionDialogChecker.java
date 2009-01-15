@@ -792,8 +792,8 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker setDate(String date) {
-    dialog.getComboBox("dayChooser").select(date);
+  public SeriesEditionDialogChecker setDay(String day) {
+    dialog.getComboBox("dayChooser").select(day);
     return this;
   }
 

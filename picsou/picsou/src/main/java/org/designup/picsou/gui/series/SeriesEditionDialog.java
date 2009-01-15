@@ -207,8 +207,11 @@ public class SeriesEditionDialog {
           boolean isSavingsSeries = currentSeries.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId());
           fromAccountsCombo.setVisible(isSavingsSeries);
           toAccountsCombo.setVisible(isSavingsSeries);
-          dayChooser.setEnabled(isSavingsSeries);
           dayChooser.setSelectedItem(currentSeries.get(Series.DAY));
+          Glob fromAccount = repository.findLinkTarget(currentSeries, Series.FROM_ACCOUNT);
+          Glob toAccount = repository.findLinkTarget(currentSeries, Series.TO_ACCOUNT);
+          boolean noneImported = Account.areNoneImported(fromAccount, toAccount);
+          dayChooser.setVisible(noneImported);
         }
         else {
           multiCategoryList.setFilter(GlobMatchers.NONE);
@@ -1149,7 +1152,7 @@ public class SeriesEditionDialog {
                 repository.update(budget.getKey(), SeriesBudget.AMOUNT, 0.);
               }
             }
-            SeriesEditionDialog.this.dayChooser.setEnabled(noneImported);
+            SeriesEditionDialog.this.dayChooser.setVisible(noneImported);
           }
         }
 

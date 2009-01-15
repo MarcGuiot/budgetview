@@ -246,7 +246,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .setToAccount("Epargne")
       .selectAllMonths()
       .setAmount("100")
-      .setDate("5")
+      .setDay("5")
       .validate();
     views.selectData();
     timeline.selectAll();

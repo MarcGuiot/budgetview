@@ -301,7 +301,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setToAccount("Epargne")
       .selectAllMonths()
       .setAmount("300")
-      .setDate("5")
+      .setDay("5")
       .validate();
     views.selectHome();
     timeline.selectMonth("2008/08");
@@ -324,6 +324,17 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkTotalAmounts(300, 300);
     timeline.selectMonth("2008/08");
     budgetView.savings.checkTotalAmounts(300, 300);
+
+    // back to normal to see if dateChooser is hidden
+
+    budgetView.savings.editSeries("CAF")
+      .setFromAccount("Main account")
+      .checkDateChooserIsHidden()
+      .validate();
+
+    budgetView.savings.editSeries("CAF")
+      .checkDateChooserIsHidden()
+      .cancel();
   }
 
   // ==> test de l'effet de suppression de transaction référencé dans account
@@ -342,7 +353,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setToAccount("Epargne")
       .selectAllMonths()
       .setAmount("100")
-      .setDate("5")
+      .setDay("5")
       .validate();
     views.selectHome();
     timeline.selectMonth("2008/08");
@@ -561,5 +572,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 //
 //  public void testMixeTypeOfSavingsSeriesShouldUpdateCorrectlyTheBudgetView() throws Exception {
 //    fail("Sur les series externe vers comptes d'épargne non importé ont doit inversé les signes dans le calcul des stats");
+//
 //  }
 }

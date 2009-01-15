@@ -1841,6 +1841,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
+//  public void testDefaultSavingSeriesShouldBeFromMainAccount() throws Exception {
+//    fail("Mettre les bonne valeur par defaut");
+//  }
+
   private SeriesEditionDialogChecker getSerieChecker(Component component) {
     Window firstSeries = WindowInterceptor.getModalDialog(new org.uispec4j.Button((JButton)component).triggerClick());
     return new SeriesEditionDialogChecker(firstSeries, true);
