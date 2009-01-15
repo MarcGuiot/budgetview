@@ -4,10 +4,7 @@ import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
@@ -51,12 +48,16 @@ public class SeriesWizardEntry {
       return;
     }
 
-    Glob series = repository.create(Series.TYPE,
-                                    value(Series.LABEL, name),
-                                    value(Series.NAME, name),
-                                    value(Series.BUDGET_AREA, budgetArea.getId()),
-                                    value(Series.PROFILE_TYPE, profileType.getId()),
-                                    value(Series.DEFAULT_CATEGORY, categoryId));
+    FieldValuesBuilder builder = FieldValuesBuilder.init().set(Series.LABEL, name).
+      set(Series.NAME, name).set(Series.BUDGET_AREA, budgetArea.getId())
+      .set(Series.PROFILE_TYPE, profileType.getId())
+      .set(Series.DEFAULT_CATEGORY, categoryId);
+
+    if (budgetArea == BudgetArea.SAVINGS) {
+      builder.set(Series.FROM_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID);
+    }
+
+    Glob series = repository.create(Series.TYPE, builder.toArray());
 
     if (budgetArea.isMultiCategories()) {
       GlobList all = new GlobList();

@@ -52,6 +52,7 @@ public class SeriesWizardModel {
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "mortgage", MasterCategory.HOUSE, "credit");
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "electricity", MasterCategory.HOUSE, "energie");
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "gas", MasterCategory.HOUSE, "energie");
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "water", MasterCategory.HOUSE, "energie");
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "carCredit", MasterCategory.TRANSPORTS, false);
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "carInsurance", MasterCategory.TRANSPORTS, false);
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "incomeTaxes", MasterCategory.TAXES, false);

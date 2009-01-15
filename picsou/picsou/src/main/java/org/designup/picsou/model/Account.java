@@ -146,7 +146,8 @@ public class Account {
   public static double getMultiplierWithMainAsPointOfView(Glob fromAccount, Glob toAccount, GlobRepository repository) {
     double multiplier;
     Integer fromAccountIdPointOfView = toAccount == null ?
-                                       fromAccount.get(ID) : toAccount.get(ID);
+                                       (fromAccount == null ? null : fromAccount.get(ID))
+                                       : toAccount.get(ID);
     if (fromAccountIdPointOfView == null) {
       multiplier = 0;
     }

@@ -5,16 +5,12 @@ import org.designup.picsou.functests.checkers.SeriesDeleteDialogChecker;
 import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.uispec4j.Key;
 import org.uispec4j.TextBox;
-import org.uispec4j.Window;
-import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
@@ -1628,201 +1624,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
-  public void testSavings() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/06/04", -10.00, "McDo")
-      .load();
-
-    timeline.selectLast();
-    views.selectHome();
-    savingsAccounts.createNewAccount().setAsSavings()
-      .setAccountName("Epargne LCL")
-      .selectBank("LCL")
-      .setBalance(1000)
-      .validate();
-
-    views.selectBudget();
-    budgetView.savings
-      .createSeries()
-      .setFromAccount("Main accounts")
-      .setToAccount("Epargne LCL")
-      .setName("Epargne")
-      .setCategory(MasterCategory.SAVINGS)
-      .checkOkEnabled(true)
-      .validate();
-
-    budgetView.savings
-      .editSeries("Epargne")
-      .checkToAccount("Epargne LCL")
-      .switchToManual()
-      .setToAccount("Main accounts")
-      .setFromAccount("Epargne LCL")
-      .checkAmountsRadioAreNotVisible()
-      .selectMonth(200808)
-      .setAmount("100")
-      .checkAmount("100")
-      .setFromAccount("Main accounts")
-      .setToAccount("Epargne LCL")
-      .checkAmount("100")
-      .validate();
-  }
-
-  public void testSwitchBetweenSavingsSeries() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/06/04", -10.00, "McDo")
-      .load();
-
-    operations.openPreferences().setFutureMonthsCount(3).validate();
-    timeline.selectLast();
-    views.selectHome();
-    savingsAccounts.createNewAccount().setAsSavings()
-      .setAccountName("Epargne LCL")
-      .selectBank("LCL")
-      .setBalance(1000)
-      .validate();
-
-    savingsAccounts.createNewAccount().setAsSavings()
-      .setAccountName("Epargne CA")
-      .selectBank("CA")
-      .setBalance(1000)
-      .validate();
-
-    views.selectBudget();
-    budgetView.savings
-      .createSeries()
-      .setName("Epargne")
-      .setFromAccount("Main accounts")
-      .setToAccount("Epargne LCL")
-      .setCategory(MasterCategory.SAVINGS)
-      .checkOkEnabled(true)
-      .validate();
-
-    budgetView.savings
-      .createSeries()
-      .setName("Veranda")
-      .setToAccount("Main accounts")
-      .setFromAccount("Epargne CA")
-      .setCategory(MasterCategory.HOUSE)
-      .switchToManual()
-      .setSingleMonth()
-      .setSingleMonthDate(200810)
-      .selectMonth(200810)
-      .setAmount(10000)
-      .validate();
-
-    budgetView.savings.editSeriesList()
-      .selectSeries("Veranda")
-      .checkSingleMonthSelected()
-      .checkSingleMonthDate("Oct 2008")
-      .checkFromAccount("Epargne CA")
-      .checkToAccount("Main accounts")
-      .checkSingleMonthSelected()
-      .selectSeries("Epargne")
-      .checkFromAccount("Main accounts")
-      .checkToAccount("Epargne LCL")
-      .checkInAutomatic()
-      .cancel();
-  }
-
-  public void testMirorSeriesAreNotVisibleInSeriesList() throws Exception {
-    OfxBuilder.init(this)
-      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/10")
-      .addTransaction("2008/08/10", 100.00, "Virement")
-      .load();
-    OfxBuilder.init(this)
-      .addTransaction("2008/08/10", -100.00, "Virement")
-      .load();
-
-    views.selectHome();
-    this.mainAccounts.edit("Account n. 111")
-      .setAsSavings()
-      .validate();
-
-    views.selectBudget();
-    budgetView.savings.createSeries()
-      .setName("CA")
-      .setCategory(MasterCategory.SAVINGS)
-      .setFromAccount("Main account")
-      .setToAccount("Account n. 111")
-      .validate();
-
-    budgetView.savings.editSeriesList()
-      .checkSeriesListEquals("CA")
-      .validate();
-
-  }
-
-  public void testUseSingleMonthCreateSeriesBudget() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/06/04", -10.00, "McDo")
-      .load();
-
-    operations.openPreferences().setFutureMonthsCount(3).validate();
-    timeline.selectLast();
-    views.selectHome();
-    savingsAccounts.createNewAccount().setAsSavings()
-      .setAccountName("Epargne LCL")
-      .selectBank("LCL")
-      .setBalance(1000)
-      .validate();
-    views.selectBudget();
-
-    budgetView.savings
-      .createSeries()
-      .setFromAccount("Main accounts")
-      .setToAccount("Epargne LCL")
-      .setName("Epargne")
-      .setCategory(MasterCategory.SAVINGS)
-      .setSixMonths()
-      .setSingleMonth()
-      .setSingleMonthDate(200810)
-      .switchToManual()
-      .checkTable(new Object[][]{
-        {"2008", "October", "", "0"}})
-      .validate();
-  }
-
-  public void testEditingMirorSerieRedirectToMainEdit() throws Exception {
-    OfxBuilder.init(this)
-      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/10")
-      .addTransaction("2008/08/10", 100.00, "Virement")
-      .load();
-    OfxBuilder.init(this)
-      .addTransaction("2008/08/10", -100.00, "Virement")
-      .load();
-    operations.openPreferences().setFutureMonthsCount(2).validate();
-    views.selectHome();
-    this.mainAccounts.edit("Account n. 111")
-      .setAsSavings()
-      .validate();
-    views.selectBudget();
-    budgetView.savings.createSeries()
-      .setName("CA")
-      .setCategory(MasterCategory.SAVINGS)
-      .setFromAccount("Main account")
-      .setToAccount("Account n. 111")
-      .validate();
-    views.selectCategorization();
-    categorization.selectTableRow(1)
-      .selectSavings()
-      .editSeries("CA", true)
-      .setName("Autre")
-      .validate();
-
-    views.selectBudget();
-    Component[] seriesButtons = budgetView.savings.getPanel().getSwingComponents(JButton.class, "Autre");
-    assertEquals(2, seriesButtons.length);
-
-    SeriesEditionDialogChecker firstSeriesChecker = getSerieChecker(seriesButtons[0]);
-    firstSeriesChecker.switchToManual().selectAllMonths().setAmount(50).validate();
-    SeriesEditionDialogChecker secondSeriesChecker = getSerieChecker(seriesButtons[1]);
-    secondSeriesChecker.checkInManual()
-      .switchToAutomatic()
-      .validate();
-    firstSeriesChecker = getSerieChecker(seriesButtons[0]);
-    firstSeriesChecker.checkInAutomatic().validate();
-  }
-
   public void testOneTimeAYearCanBeChangeWhenATransactionWithDifferentMonthIsSelected() throws Exception {
     OfxBuilder
       .init(this)
@@ -1845,8 +1646,4 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 //    fail("Mettre les bonne valeur par defaut");
 //  }
 
-  private SeriesEditionDialogChecker getSerieChecker(Component component) {
-    Window firstSeries = WindowInterceptor.getModalDialog(new org.uispec4j.Button((JButton)component).triggerClick());
-    return new SeriesEditionDialogChecker(firstSeries, true);
-  }
 }

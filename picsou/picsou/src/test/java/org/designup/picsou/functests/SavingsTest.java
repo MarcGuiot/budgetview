@@ -72,7 +72,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setCategories(MasterCategory.SAVINGS)
       .setToAccount("Epargne LCL")
       .setFromAccount("Main accounts")
-      .switchToAutomatic()
       .validate();
     views.selectBudget();
     budgetView.savings.createSeries()
@@ -118,6 +117,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings
       .createSeries()
+      .setFromAccount("External Account")
       .setToAccount("Epargne LCL")
       .setName("Epargne")
       .setCategory(MasterCategory.SAVINGS)

@@ -85,6 +85,7 @@ public class SeriesEditionDialog {
   private JComboBox dayChooser;
   private CardHandler monthSelectionCards;
   private JButton singleSeriesDeleteButton;
+  private JLabel savingsMessage;
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -161,6 +162,9 @@ public class SeriesEditionDialog {
       .setEmptyOptionLabel(Lang.get("seriesEdition.account.external"));
     builder.add("toAccount", toAccountsCombo);
 
+    savingsMessage = new JLabel(Lang.get("seriesEdition.savingsMessagesError"));
+    builder.add("savingsMessage", savingsMessage);
+
     Integer[] days = new Integer[31];
     for (int i = 0; i < days.length; i++) {
       days[i] = i + 1;
@@ -212,6 +216,11 @@ public class SeriesEditionDialog {
           Glob toAccount = repository.findLinkTarget(currentSeries, Series.TO_ACCOUNT);
           boolean noneImported = Account.areNoneImported(fromAccount, toAccount);
           dayChooser.setVisible(noneImported);
+          boolean savingsOnError = fromAccount == null && toAccount == null;
+          savingsMessage.setVisible(savingsOnError);
+          if (isSavingsSeries && savingsOnError) {
+            okAction.setEnabled(false);
+          }
         }
         else {
           multiCategoryList.setFilter(GlobMatchers.NONE);
@@ -491,6 +500,9 @@ public class SeriesEditionDialog {
     }
     if (budgetArea == BudgetArea.INCOME) {
       values.add(value(Series.DEFAULT_CATEGORY, MasterCategory.INCOME.getId()));
+    }
+    if (budgetArea == BudgetArea.SAVINGS) {
+      values.add(value(Series.FROM_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID));
     }
     return localRepository.create(Series.TYPE, values.toArray(new FieldValue[values.size()]));
   }
@@ -1030,7 +1042,10 @@ public class SeriesEditionDialog {
     private void update(GlobRepository repository) {
       GlobList series = repository.getAll(Series.TYPE);
       for (Glob glob : series) {
-        if (!BudgetArea.UNCATEGORIZED.getId().equals(glob.get(Series.BUDGET_AREA)) && glob.get(Series.DEFAULT_CATEGORY) == null) {
+        if ((!BudgetArea.UNCATEGORIZED.getId().equals(glob.get(Series.BUDGET_AREA))
+             && glob.get(Series.DEFAULT_CATEGORY) == null)
+            || ((BudgetArea.SAVINGS.getId().equals(glob.get(Series.BUDGET_AREA))) &&
+                (glob.get(Series.FROM_ACCOUNT) == null && glob.get(Series.TO_ACCOUNT) == null))) {
           okAction.setEnabled(false);
           return;
         }
@@ -1153,6 +1168,7 @@ public class SeriesEditionDialog {
               }
             }
             SeriesEditionDialog.this.dayChooser.setVisible(noneImported);
+            SeriesEditionDialog.this.savingsMessage.setVisible(fromAccount == null && toAccount == null);
           }
         }
 

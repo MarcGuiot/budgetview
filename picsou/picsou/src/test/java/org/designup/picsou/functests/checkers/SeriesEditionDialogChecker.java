@@ -797,4 +797,11 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker checkSavingsMessageVisibility(boolean isVisible) {
+    if (isVisible) {
+      assertTrue(dialog.getTextBox("savingsMessage").textEquals("At least one of the account may be an existing account"));
+    }
+    assertEquals(isVisible, dialog.getTextBox("savingsMessage").isVisible());
+    return this;
+  }
 }
