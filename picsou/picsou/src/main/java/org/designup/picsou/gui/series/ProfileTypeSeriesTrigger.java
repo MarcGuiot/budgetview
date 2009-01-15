@@ -37,7 +37,7 @@ public class ProfileTypeSeriesTrigger implements ChangeSetListener {
           }
           return;
         }
-        updateProfileType(repository.get(key));
+        updateProfileType(repository.get(key), true);
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
@@ -50,16 +50,18 @@ public class ProfileTypeSeriesTrigger implements ChangeSetListener {
           return;
         }
 
-        updateProfileType(repository.get(key));
+        updateProfileType(repository.get(key), values.contains(Series.PROFILE_TYPE));
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
       }
 
-      private void updateProfileType(Glob series) {
+      private void updateProfileType(Glob series, boolean profileTypeChange) {
         boolean atLeatOneIsSelected = false;
 
-        tryUpdate(repository, series);
+        if (profileTypeChange) {
+          tryUpdate(repository, series);
+        }
 
         for (BooleanField field : Series.getMonths()) {
           if (series.get(field)) {

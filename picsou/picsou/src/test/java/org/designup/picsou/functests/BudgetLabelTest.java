@@ -24,7 +24,15 @@ public class BudgetLabelTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/10", -200.0, "Auchan")
       .addTransaction("2008/07/5", -50, "FNAC")
       .load();
-   
+
+    views.selectBudget();
+    timeline.checkSelection("2008/07");
+    timeline.selectAll();
+    budgetView.getLabel()
+      .checkUncategorized(1000.00 + 200. + 50.);
+
+    timeline.selectMonth("2008/07");
+
     views.selectCategorization();
     categorization.setIncome("WorldCo", "Salary", true);
     categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
@@ -35,14 +43,14 @@ public class BudgetLabelTest extends LoggedInFunctionalTestCase {
       .checkMultiNotShown()
       .checkMonthBalance(+750.00)
       .checkEndBalance(2300.00)
-      .checkUncategorized(-50.00);
+      .checkUncategorized(50.00);
 
     timeline.selectAll();
     budgetView.getLabel()
       .checkMulti(2)
       .checkMonthBalance(+1550.00)
       .checkEndBalance(2300.00)
-      .checkUncategorized(-50.00);
+      .checkUncategorized(50.00);
 
     timeline.selectMonth("2008/06");
     budgetView.getLabel()
@@ -61,6 +69,6 @@ public class BudgetLabelTest extends LoggedInFunctionalTestCase {
       .checkMonthBalance(+750.00)
       .checkEndBalance(2300.00)
       .checkUncategorizedNotShown();
-    
+
   }
 }

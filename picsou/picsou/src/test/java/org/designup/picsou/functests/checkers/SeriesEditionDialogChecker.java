@@ -720,13 +720,18 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker checkEveryMonthSelected() {
-    assertThat(getProfileCombo().selectionEquals(ProfileType.EVERY_MONTH.getLabel()));
+  public SeriesEditionDialogChecker setOnceAYear() {
+    getProfileCombo().select(ProfileType.ONCE_A_YEAR.getLabel());
     return this;
   }
 
   public SeriesEditionDialogChecker setSingleMonth() {
     getProfileCombo().select(ProfileType.SINGLE_MONTH.getLabel());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkEveryMonthSelected() {
+    assertThat(getProfileCombo().selectionEquals(ProfileType.EVERY_MONTH.getLabel()));
     return this;
   }
 
@@ -791,4 +796,5 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     dialog.getComboBox("dayChooser").select(date);
     return this;
   }
+
 }

@@ -550,4 +550,16 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkPosition("Account n. 111", 1100);
     mainAccounts.checkEstimatedPosition(-100);
   }
+
+//  public void testSavingWithNoTransactionShouldNotBeIgnored() throws Exception {
+//    fail("Comme il n'y a pas de transaction sur ce compte il n'est pas vu pour le calcul du solde total");
+//  }
+//
+//  public void testSavingEstimated() throws Exception {
+//    fail("On devrait pouvoir afficher une position estimé de la somme des comptes d'epargne");
+//  }
+//
+//  public void testMixeTypeOfSavingsSeriesShouldUpdateCorrectlyTheBudgetView() throws Exception {
+//    fail("Sur les series externe vers comptes d'épargne non importé ont doit inversé les signes dans le calcul des stats");
+//  }
 }

@@ -1,15 +1,15 @@
 package org.designup.picsou.gui.description;
 
-import org.globsframework.utils.Strings;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.util.Amounts;
+import org.globsframework.utils.Strings;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class Formatting {
   public static final DecimalFormat INTEGER_FORMAT = new DecimalFormat("0");
@@ -48,7 +48,7 @@ public class Formatting {
   }
 
   public static String toString(Double value, BudgetArea area) {
-    if (area.isIncome()) {
+    if (area.isIncome() || area == BudgetArea.UNCATEGORIZED) {
       return toString(value);
     }
     else if (Amounts.isNearZero(value)) {

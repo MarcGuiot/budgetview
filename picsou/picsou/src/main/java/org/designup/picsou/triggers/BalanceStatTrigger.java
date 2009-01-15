@@ -226,7 +226,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
           }
         }
         else {
-          amounts.uncategorized += amount;
+          amounts.uncategorized += Math.abs(amount);
         }
 
         if (transaction.get(Transaction.PLANNED)) {

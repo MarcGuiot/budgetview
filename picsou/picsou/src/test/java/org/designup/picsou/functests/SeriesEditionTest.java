@@ -1823,6 +1823,24 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     firstSeriesChecker.checkInAutomatic().validate();
   }
 
+  public void testOneTimeAYearCanBeChangeWhenATransactionWithDifferentMonthIsSelected() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/12/30", -20., "PointP")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRows("PointP");
+    categorization.selectEnvelopes()
+      .createEnvelopeSeries()
+      .setName("Brico")
+      .setCategory(MasterCategory.HOUSE)
+      .setOnceAYear()
+      .toggleMonth(11)
+      .checkMonthIsChecked(11)
+      .cancel();
+  }
+
   private SeriesEditionDialogChecker getSerieChecker(Component component) {
     Window firstSeries = WindowInterceptor.getModalDialog(new org.uispec4j.Button((JButton)component).triggerClick());
     return new SeriesEditionDialogChecker(firstSeries, true);
