@@ -135,7 +135,12 @@ public class BudgetViewChecker extends GuiChecker {
 
     private String convert(double amount) {
       StringBuilder builder = new StringBuilder();
-      if (budgetArea.isIncome()) {
+      if (budgetArea == BudgetArea.SAVINGS) {
+        if (amount < 0) {
+          builder.append("-");
+        }
+      }
+      else if (budgetArea.isIncome()) {
         builder.append(amount < 0 ? "-" : "");
       }
       else {

@@ -124,18 +124,32 @@ public class PicsouMatchers {
     };
   }
 
-  public static SeriesFirstEndDateFilter seriesDateFilter(Integer budgetAreaId, boolean isExclusive) {
-    return new SeriesFirstEndDateFilter(budgetAreaId, isExclusive);
+  public static SeriesFirstEndDateFilter seriesDateFilter(final Integer budgetAreaId, boolean isExclusive) {
+    return new SeriesFirstEndDateFilter(isExclusive) {
+
+      protected boolean isEligible(Glob series) {
+        return budgetAreaId.equals(series.get(Series.BUDGET_AREA));
+      }
+    };
   }
 
-  static public class SeriesFirstEndDateFilter implements GlobMatcher {
-    private Integer budgetAreaId;
+  public static SeriesFirstEndDateFilter seriesDateSavingsAndAccountFilter(final Integer accountId, boolean isExclusive) {
+    return new SeriesFirstEndDateFilter(isExclusive) {
+
+      protected boolean isEligible(Glob series) {
+        return series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId()) &&
+               (accountId.equals(series.get(Series.FROM_ACCOUNT))
+                || accountId.equals(series.get(Series.TO_ACCOUNT)));
+      }
+    };
+  }
+
+  static public abstract class SeriesFirstEndDateFilter implements GlobMatcher {
     private boolean exclusive;
     private Set<Integer> monthIds = Collections.emptySet();
     private Set<Integer> accounts = Collections.emptySet();
 
-    private SeriesFirstEndDateFilter(Integer budgetAreaId, boolean isExclusive) {
-      this.budgetAreaId = budgetAreaId;
+    private SeriesFirstEndDateFilter(boolean isExclusive) {
       exclusive = isExclusive;
     }
 
@@ -145,7 +159,7 @@ public class PicsouMatchers {
     }
 
     public boolean matches(Glob series, GlobRepository repository) {
-      if (budgetAreaId.equals(series.get(Series.BUDGET_AREA))) {
+      if (isEligible(series)) {
         Integer toAccount = series.get(Series.TO_ACCOUNT);
         Integer fromAccount = series.get(Series.FROM_ACCOUNT);
         if (exclusive) {
@@ -194,5 +208,7 @@ public class PicsouMatchers {
       }
       return false;
     }
+
+    protected abstract boolean isEligible(Glob series);
   }
 }

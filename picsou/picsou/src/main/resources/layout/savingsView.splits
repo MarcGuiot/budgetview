@@ -1,0 +1,34 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <column styleClass="main">
+    <label name="budgetAreaTitle" text="$budgetArea.savings" styleClass="blockTitle" marginTop="5"/>
+
+    <panel styleClass="block" preferredSize="(300,400)">
+      <column border="empty(10)">
+        <grid weightY="0" marginLeft="20" marginRight="20">
+          <label text="$budgetview.observed" styleClass="totalAmountTitle" gridPos="(0,0)"/>
+          <label ref="totalObservedAmount" styleClass="totalAmount" gridPos="(0,1)"
+                 tooltipText="$budgetview.tooltip.total.observed"/>
+          <component ref="totalGauge" styleClass="totalGauge" gridPos="(1,0,1,2)" anchor="south" marginBottom="3"/>
+          <label text="$budgetview.planned" styleClass="totalAmountTitle" gridPos="(2,0)"/>
+          <label ref="totalPlannedAmount" styleClass="totalAmount" gridPos="(2,1)" foreground=""
+                 tooltipText="$budgetview.tooltip.total.planned"/>
+        </grid>
+        <panel preferredSize="(300,400)">
+          <scrollPane marginBottom="0" verticalUnitIncrement="10">
+            <repeat ref="accounts">
+              <panel ref="account"/>
+            </repeat>
+          </scrollPane>
+        </panel>
+        <row styleClass="iconButtonGroup">
+          <button action="createSeries" styleClass="create" tooltipText="$series.create.tooltip"/>
+          <button action="editAllSeries" styleClass="list" tooltipText="$series.list.tooltip"/>
+          <filler fill="horizontal"/>
+        </row>
+      </column>
+    </panel>
+  </column>
+
+</splits>

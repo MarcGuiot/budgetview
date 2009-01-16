@@ -85,7 +85,7 @@
            font="-,plain,10" foreground="dialog.separator.title"/>
 
     <style selector="label.errorMessage" horizontalAlignment="center" foreground="#FF0000" font="-,bold,12"
-               fill="horizontal" anchor="center"/>
+           fill="horizontal" anchor="center"/>
 
     <!-- Hyperlinks -->
 
@@ -130,10 +130,10 @@
     <style selector=".innerBlock label.largeAmount" foreground="block.inner.amount" font="-,bold,13" anchor="top"/>
     <style selector=".innerBlock .hyperlink" foreground="block.inner.hyperlink" font="-,plain,10"/>
 
-    <style selector=".block button.amountLink" ui="hyperlinkButtonWithoutUnderline"
+    <style selector="button.amountLink" ui="hyperlinkButtonWithoutUnderline"
            fill="none" anchor="right" horizontalAlignment="right"
            foreground="block.amount.link" font="-,bold,11"/>
-    <style selector=".block button.itemLink" ui="hyperlinkButtonWithoutUnderline"
+    <style selector="button.itemLink" ui="hyperlinkButtonWithoutUnderline"
            fill="none" anchor="right" horizontalAlignment="right"
            foreground="block.item.link"/>
 

@@ -229,6 +229,10 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
     }
   }
 
+  public void dispose() {
+    colorService.removeListener(this);
+  }
+
   public boolean isPartialOverrun() {
     return isPartialOverrun;
   }

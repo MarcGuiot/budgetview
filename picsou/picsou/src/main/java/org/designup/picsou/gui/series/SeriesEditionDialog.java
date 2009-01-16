@@ -217,7 +217,7 @@ public class SeriesEditionDialog {
           boolean noneImported = Account.areNoneImported(fromAccount, toAccount);
           dayChooser.setVisible(noneImported);
           boolean savingsOnError = fromAccount == null && toAccount == null;
-          savingsMessage.setVisible(savingsOnError);
+          savingsMessage.setVisible(isSavingsSeries && savingsOnError);
           if (isSavingsSeries && savingsOnError) {
             okAction.setEnabled(false);
           }

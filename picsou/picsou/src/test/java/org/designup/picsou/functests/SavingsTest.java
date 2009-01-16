@@ -30,7 +30,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectBudget();
     budgetView.savings
-      .checkSeries("Epargne", -300, -500);
+      .checkSeries("Main accounts.Epargne", -300, -500);
     views.selectData();
     transactions.initContent()
       .add("10/10/2008", TransactionType.PLANNED, "Planned: Epargne", "", 100.00, "Epargne", MasterCategory.SAVINGS)

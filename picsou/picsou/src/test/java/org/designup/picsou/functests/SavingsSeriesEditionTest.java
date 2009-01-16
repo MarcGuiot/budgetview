@@ -36,7 +36,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.savings
-      .editSeries("Epargne")
+      .editSeries("Main accounts.Epargne")
       .checkToAccount("Epargne LCL")
       .switchToManual()
       .setToAccount("Main accounts")

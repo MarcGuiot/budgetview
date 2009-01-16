@@ -182,7 +182,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     System.out.println("TransactionViewTest.testNavigatingInCategoriszationIsDisableForMirroirAndCreatedFromSeries");
-    budgetView.savings.editSeries("Epargne")
+    budgetView.savings.editSeries("Main accounts.Epargne")
       .setName("new name for Epargne")
       .setFromAccount("External account")
       .selectAllMonths()

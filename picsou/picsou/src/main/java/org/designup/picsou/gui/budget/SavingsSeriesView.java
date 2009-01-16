@@ -1,90 +1,80 @@
 package org.designup.picsou.gui.budget;
 
-import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
-import org.designup.picsou.gui.components.Gauge;
 import org.designup.picsou.gui.components.GlobGaugeView;
-import org.designup.picsou.gui.components.TextDisplay;
-import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
-import org.designup.picsou.gui.model.BalanceStat;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.model.SavingsBalanceStat;
-import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.PicsouMatchers;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.model.*;
+import org.designup.picsou.model.util.Amounts;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.views.GlobButtonView;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
+import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.format.GlobListStringifiers;
+import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
+import java.awt.*;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-public class BudgetAreaSeriesView extends View {
-  private String name;
-  private BudgetArea budgetArea;
-  private GlobMatcher totalMatcher;
+public class SavingsSeriesView {
+  private Glob account;
+  private GlobRepository repository;
+  private Directory directory;
   private SeriesEditionDialog seriesEditionDialog;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
   private PicsouMatchers.SeriesFirstEndDateFilter seriesDateFilter;
   private GlobMatcher seriesFilter;
   private Repeat<Glob> seriesRepeat;
   private List<Key> currentSeries = Collections.emptyList();
-  private BudgetAreaHeaderUpdater headerUpdater;
+  private GlobStringifier accountStringifier;
+  private SelectionService selectionService;
+  private Component panel;
+  private GlobsPanelBuilder builder;
+  private GlobSelectionListener selectionListener;
+  private GlobStringifier seriesStringifier;
 
-  protected BudgetAreaSeriesView(String name, final BudgetArea budgetArea, final GlobRepository repository, Directory directory, final SeriesEditionDialog seriesEditionDialog) {
-    super(repository, directory);
-    this.name = name;
-    this.budgetArea = budgetArea;
-    this.totalMatcher = GlobMatchers.linkTargetFieldEquals(PeriodSeriesStat.SERIES, Series.BUDGET_AREA, budgetArea.getId());
+  protected SavingsSeriesView(Glob account, final GlobRepository repository,
+                              Directory directory, final SeriesEditionDialog seriesEditionDialog) {
+    this.account = account;
+    this.repository = repository;
+    this.directory = directory;
     this.seriesEditionDialog = seriesEditionDialog;
-    selectionService.addListener(new GlobSelectionListener() {
+    selectionService = directory.get(SelectionService.class);
+    selectionListener = new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
         seriesDateFilter.filterDates(selectedMonthIds, Collections.<Integer>emptySet());
         updateRepeat(repository);
-        update();
       }
-    }, Month.TYPE);
-    repository.addChangeListener(new ChangeSetListener() {
-      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(BalanceStat.TYPE) || changeSet.containsChanges(SavingsBalanceStat.TYPE)) {
-          update();
-        }
-      }
+    };
+    selectionService.addListener(selectionListener, Month.TYPE);
+    accountStringifier = directory.get(DescriptionService.class).getStringifier(Account.TYPE);
+    seriesStringifier = directory.get(DescriptionService.class).getStringifier(Series.TYPE);
+    registerComponents();
+  }
 
-      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        if (changedTypes.contains(BalanceStat.TYPE) || changedTypes.contains(SavingsBalanceStat.TYPE)) {
-          update();
-        }
-      }
-    });
+  public Component getPanel() {
+    return panel;
   }
 
   private void updateRepeat(final GlobRepository repository) {
     Comparator<Glob> comparator = new GlobFieldComparator(PeriodSeriesStat.ABS_SUM_AMOUNT);
-    if (!budgetArea.isIncome()) {
-      comparator = Collections.reverseOrder(comparator);
-    }
     List<Key> newSeries = repository.getAll(PeriodSeriesStat.TYPE, seriesFilter)
       .sort(comparator)
       .toKeyList();
@@ -104,45 +94,19 @@ public class BudgetAreaSeriesView extends View {
     currentSeries = newSeries;
   }
 
-  void update() {
-    GlobList balanceStat = new GlobList();
-    if (budgetArea == BudgetArea.SAVINGS) {
-      balanceStat = repository.getAll(SavingsBalanceStat.TYPE,
-                                      GlobMatchers.fieldIn(SavingsBalanceStat.MONTH, selectedMonthIds));
-    }
-    balanceStat.addAll(repository.getAll(BalanceStat.TYPE,
-                                         GlobMatchers.fieldIn(BalanceStat.MONTH, selectedMonthIds)));
-    headerUpdater.update(balanceStat, budgetArea);
-  }
+  public void registerComponents() {
+    builder = new GlobsPanelBuilder(getClass(), "/layout/budgetAreaAccountSeriesView.splits",
+                                    repository, directory);
 
-  public void registerComponents(GlobsPanelBuilder parentBuilder) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budgetAreaSeriesView.splits",
-                                                      repository, directory);
-
-    builder.add("budgetAreaTitle", new JLabel(budgetArea.getLabel()));
-    JLabel amountLabel = builder.add("totalObservedAmount", new JLabel());
-    JLabel plannedLabel = builder.add("totalPlannedAmount", new JLabel());
-
-    Gauge gauge = BudgetAreaGaugeFactory.createGauge(budgetArea);
-    builder.add("totalGauge", gauge);
-
-    this.headerUpdater =
-      new BudgetAreaHeaderUpdater(TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
-                                  repository, directory);
-    this.headerUpdater.setColors("block.total",
-                                 "block.total.overrun.error",
-                                 "block.total.overrun.positive");
-
+    String accountName = Lang.get("budgetView.savings.accountName.from",
+                                  accountStringifier.toString(account, repository));
+    builder.add("accountName", new JLabel(accountName));
     seriesRepeat =
-      builder.addRepeat("seriesRepeat", new GlobList(), new SeriesRepeatComponentFactory());
+      builder.addRepeat("seriesRepeat",
+                        new GlobList(),
+                        new SeriesRepeatComponentFactory(accountName));
 
-    builder.add("createSeries", new CreateSeriesAction());
-
-    builder.add("editAllSeries",
-                new EditSeriesAction(repository, directory, seriesEditionDialog, budgetArea));
-
-    parentBuilder.add(name, builder);
-    seriesDateFilter = PicsouMatchers.seriesDateFilter(budgetArea.getId(), false);
+    seriesDateFilter = PicsouMatchers.seriesDateSavingsAndAccountFilter(account.get(Account.ID), false);
     seriesFilter = new GlobMatcher() {
       public boolean matches(Glob periodSeriesStat, GlobRepository repository) {
         Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
@@ -159,17 +123,21 @@ public class BudgetAreaSeriesView extends View {
         return !(selectedMonthIds.size() == notActive) && seriesDateFilter.matches(series, repository);
       }
     };
+    panel = builder.load();
   }
 
-  private class CreateSeriesAction extends AbstractAction {
-    public void actionPerformed(ActionEvent e) {
-      seriesEditionDialog.showNewSeries(GlobList.EMPTY,
-                                        selectionService.getSelection(Month.TYPE),
-                                        budgetArea);
-    }
+  public void dispose() {
+    builder.dispose();
+    selectionService.removeListener(selectionListener);
   }
 
   private class SeriesRepeatComponentFactory implements RepeatComponentFactory<Glob> {
+    private String accountName;
+
+    public SeriesRepeatComponentFactory(String accountName) {
+      this.accountName = accountName;
+    }
+
 
     private class EditSeriesFunctor implements GlobListFunctor {
       public void run(GlobList list, GlobRepository repository) {
@@ -183,6 +151,7 @@ public class BudgetAreaSeriesView extends View {
 
       final GlobButtonView seriesNameButton =
         GlobButtonView.init(Series.TYPE, repository, directory, new EditSeriesFunctor())
+          .setName(accountName + "." + seriesStringifier.toString(series, repository))
           .forceSelection(series);
       cellBuilder.add("seriesName", seriesNameButton.getComponent());
 
@@ -199,7 +168,7 @@ public class BudgetAreaSeriesView extends View {
       });
 
       final GlobGaugeView gaugeView =
-        new GlobGaugeView(PeriodSeriesStat.TYPE, budgetArea, PeriodSeriesStat.AMOUNT,
+        new GlobGaugeView(PeriodSeriesStat.TYPE, BudgetArea.SAVINGS, PeriodSeriesStat.AMOUNT,
                           PeriodSeriesStat.PLANNED_AMOUNT,
                           GlobMatchers.fieldEquals(PeriodSeriesStat.SERIES, series.get(Series.ID)),
                           repository, directory);
@@ -215,15 +184,26 @@ public class BudgetAreaSeriesView extends View {
                                  RepeatCellBuilder cellBuilder,
                                  final GlobListFunctor callback) {
       final GlobButtonView globButtonView =
-        GlobButtonView.init(PeriodSeriesStat.TYPE, repository, directory, getStringifier(field), callback)
+        GlobButtonView.init(PeriodSeriesStat.TYPE, repository, directory, getStringifier(series, field), callback)
           .setFilter(GlobMatchers.linkedTo(series, PeriodSeriesStat.SERIES));
       cellBuilder.add(name, globButtonView.getComponent());
       cellBuilder.addDisposeListener(globButtonView);
     }
 
-    private GlobListStringifier getStringifier(final DoubleField field) {
-      return new ForcedPlusGlobListStringifier(budgetArea,
-                                               GlobListStringifiers.sum(field, decimalFormat, !budgetArea.isIncome()));
+    private GlobListStringifier getStringifier(Glob series, final DoubleField field) {
+      final double multiplier = Account.getMultiplierForInOrOutputOfTheAccount(repository.findLinkTarget(series, Series.FROM_ACCOUNT),
+                                                                               repository.findLinkTarget(series, Series.TO_ACCOUNT),
+                                                                               account);
+      return new GlobListStringifier() {
+        public String toString(GlobList list, GlobRepository repository) {
+          Glob first = list.getFirst();
+          if (first == null) {
+            return "";
+          }
+          Double amount = Math.abs(first.get(field));
+          return Formatting.DECIMAL_FORMAT.format(Amounts.isNearZero(amount) ? 0 : multiplier * amount);
+        }
+      };
     }
 
     private void showSeriesEdition(Glob series) {

@@ -102,8 +102,7 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
       view = new OccasionalSeriesView(name, repository, directory);
     }
     else if (budgetArea == BudgetArea.SAVINGS) {
-      view = new BudgetAreaSeriesView(name, budgetArea, repository, directory,
-                                      seriesEditionDialog);
+      view = new SavingsView(name, repository, directory, seriesEditionDialog);
     }
     else {
       view = new BudgetAreaSeriesView(name, budgetArea, repository, directory,

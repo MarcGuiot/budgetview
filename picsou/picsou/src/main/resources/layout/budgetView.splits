@@ -1,5 +1,5 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
-  
+
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <styles>
@@ -21,13 +21,13 @@
     <horizontalSplit ref="horizontalSplitPane">
 
       <verticalSplit ref="firstVerticalSplitPane">
-        <panel ref="incomeBudgetView" weightY="5"/>
-        <panel ref="occasionalBudgetView" weightY="5"/>
+        <panel ref="incomeBudgetView" weightY="4"/>
+        <panel ref="savingsBudgetView" weightY="6"/>
       </verticalSplit>
 
       <verticalSplit ref="secondVerticalSplitPane">
         <panel ref="recurringBudgetView" weightY="6"/>
-        <panel ref="savingsBudgetView" weightY="4"/>
+        <panel ref="occasionalBudgetView" weightY="4"/>
       </verticalSplit>
 
       <verticalSplit ref="thirdVerticalSplitPane">
