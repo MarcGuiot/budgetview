@@ -11,6 +11,7 @@ public class ComponentMatchersTest extends PanelComponentFinderTestCase {
   private JButton button1;
   private JButton button2;
   private JTextField textField;
+  private Component otherButton;
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -20,8 +21,8 @@ public class ComponentMatchersTest extends PanelComponentFinderTestCase {
     button2.setName("inner2");
     textField = addComponent(JTextField.class, "displayed1");
     textField.setName("inner1");
-    Component component = addComponent(JButton.class, "other");
-    component.setName("else");
+    otherButton = addComponent(JButton.class, "other");
+    otherButton.setName("else");
   }
 
   public void testClassComponentMatcher() throws Exception {
@@ -136,7 +137,7 @@ public class ComponentMatchersTest extends PanelComponentFinderTestCase {
     TestUtils.assertUIComponentRefersTo(button1,
                                         panel.getButton(ComponentMatchers.toolTipEquals("button 1")));
 
-    TestUtils.assertSwingComponentsEquals(new Component[]{button2, textField},
+    TestUtils.assertSwingComponentsEquals(new Component[]{button2, textField, otherButton},
                                           panel.getSwingComponents(ComponentMatchers.toolTipEquals(null)));
   }
 }
