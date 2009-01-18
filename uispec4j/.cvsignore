@@ -1,9 +1,0 @@
-*.log
-*.ipr
-*.iws
-*.iml
-.clover
-target
-*.ser
-distributions.tar.gz
-junit*.properties

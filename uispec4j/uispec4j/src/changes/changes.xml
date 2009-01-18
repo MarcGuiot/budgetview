@@ -4,13 +4,28 @@
   </properties>
 
   <body>
-    <release version="2.0x" date="???">
+    <release version="2.0-RC2" date="2009-01-18">
+      <action dev="mguiot" type="fix">
+        In class WindowInterceptor, revert call to TriggerRunner.runInSwingThread in call to TriggerRunner.runInCurrentThread
+      </action>
+      <action dev="mguiot" type="fix">
+        In ComboBox.selectionEquals : use the rendered value in assert if selection is null
+      </action>
+      <action dev="pratmarty" type="fix">
+        Fixed TestNG library adapter:  reversed expected and actual parameters in 'assertEquals(String expected, String actual)'
+      </action>
       <action dev="rmedina" type="add">
         Added ComponentMatchers.toolTipEquals(String)
       </action>
+      <action dev="rmedina" type="add">
+        Added Table.foregroundNear(row, column, color) and Table.backgroundNear(row, column, color) for
+        approximative comparisons.
+      </action>
+      <action dev="mguiot" type="fix">
+       Improved the handling of multi-threading conditions in the window interception mechanism.
+      </action>
     </release>
-
-    <release version="2.0-RC1" date="???">
+    <release version="2.0-RC1" date="2008-12-25">
       <action dev="rmedina,sroussea" type="fix">
         Migrated the whole API to take advantage of JDK 1.5 language features.
       </action>
@@ -20,16 +35,9 @@
       <action dev="pratmarty" type="add">
         Migrated the project to Maven 2
       </action>
-      <action dev="mguiot" type="fix">
-        Improved the handling of multi-threading conditions in the window interception mechanism.
-      </action>
       <action dev="rmedina" type="add">
         Added AbstractUIComponent methods foregroundNear() and backgroundNear() for approximative comparisons, and
         added named colors darkGrey, darkRed, darkGreen and darkBlue.
-      </action>
-      <action dev="rmedina" type="add">
-        Added Table.foregroundNear(row, column, color) and Table.backgroundNear(row, column, color) for
-        approximative comparisons.
       </action>
       <action dev="mguiot" type="add">
         Add Key.MINUS and Key.ADD.

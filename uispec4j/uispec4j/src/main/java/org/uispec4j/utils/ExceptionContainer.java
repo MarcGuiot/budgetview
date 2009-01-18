@@ -1,15 +1,15 @@
 package org.uispec4j.utils;
 
 public class ExceptionContainer {
-  private RuntimeException callerStack;
   private RuntimeException exception;
   private Error error;
+  private StackTraceElement[] stackTraceElements;
 
   public ExceptionContainer() {
   }
 
   public ExceptionContainer(RuntimeException callerStack) {
-    this.callerStack = callerStack;
+    stackTraceElements = callerStack.getStackTrace();
   }
 
   public void set(Throwable e) {
@@ -31,16 +31,14 @@ public class ExceptionContainer {
   public void rethrowIfNeeded() {
     try {
       if (error != null) {
-        if (callerStack != null) {
-          callerStack.initCause(error);
-          throw callerStack;
+        if (stackTraceElements != null) {
+          completeStackTrace(error);
         }
         throw error;
       }
       if (exception != null) {
-        if (callerStack != null) {
-          callerStack.initCause(exception);
-          throw callerStack;
+        if (stackTraceElements != null) {
+          completeStackTrace(exception);
         }
         throw exception;
       }
@@ -50,11 +48,23 @@ public class ExceptionContainer {
     }
   }
 
+  private void completeStackTrace(Throwable exception) {
+    StackTraceElement[] stackTraceElements1 = exception.getStackTrace();
+    StackTraceElement[] newStack = new StackTraceElement[stackTraceElements.length + stackTraceElements1.length];
+    int i =0;
+    for (StackTraceElement element : stackTraceElements) {
+      newStack[i] = element;
+      i++;
+    }
+    for (StackTraceElement element : stackTraceElements1) {
+      newStack[i] = element;
+      i++;
+    }
+    exception.setStackTrace(newStack);
+  }
+
   public void reset() {
     exception = null;
     error = null;
-    if (callerStack != null) {
-      callerStack = null; //it is not possible to call initCause twice
-    }
   }
 }
