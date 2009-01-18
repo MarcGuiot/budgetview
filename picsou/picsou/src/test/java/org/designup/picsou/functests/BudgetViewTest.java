@@ -157,6 +157,12 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSavingsSeries() throws Exception {
+    savingsAccounts.createNewAccount()
+      .setAccountName("Livret")
+      .selectBank("ING Direct")
+      .setBalance(1000)
+      .validate();
+
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -25.00, "Virt Compte Epargne")
       .load();
@@ -166,14 +172,17 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("12/07/2008", TransactionType.PRELEVEMENT, "Virt Compte Epargne", "", -25.00)
       .check();
 
+
+
     views.selectCategorization();
-    categorization.createAndSetSavings("Virt Compte Epargne", "Epargne", "Main account");
+    categorization.createAndSetSavings("Virt Compte Epargne", "Epargne", "Main account", "Livret");
 
     views.selectBudget();
 
     budgetView.savings.checkTitle("Savings");
-    budgetView.savings.checkTotalAmounts(-25.0, -25.0);
-    budgetView.savings.checkSeries("Epargne", -25.0, -25.0);
+    budgetView.savings.checkTotalAmounts(25.0, 25.0);
+    budgetView.savings.checkSeries("Livret.Epargne", 25.0, 25.0);
+    budgetView.savings.checkSeries("Main Accounts.Epargne", -25.0, -25.0);
 
     views.selectCategorization();
     categorization.checkSavingsSeriesIsSelected("Epargne", MasterCategory.SAVINGS);

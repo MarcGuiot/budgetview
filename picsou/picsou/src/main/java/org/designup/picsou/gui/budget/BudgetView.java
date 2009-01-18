@@ -66,6 +66,8 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budgetView.splits",
                                                       repository, parentDirectory);
 
+    repository.addChangeListener(this);
+    
     SeriesEditionDialog seriesEditionDialog = new SeriesEditionDialog(directory.get(JFrame.class), repository, directory);
 
     BudgetLabel budgetLabel = new BudgetLabel(repository, parentDirectory);
@@ -93,7 +95,6 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
 
     parentBuilder.add("budgetView", builder);
 
-    repository.addChangeListener(this);
   }
 
   private void addBudgetAreaView(String name, BudgetArea budgetArea, GlobsPanelBuilder builder, final SeriesEditionDialog seriesEditionDialog) {
@@ -178,6 +179,7 @@ public class BudgetView extends View implements GlobSelectionListener, ChangeSet
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     selectedMonths = GlobList.EMPTY;
+    updateSelection();
   }
 
   private static class PeriodSeriesStatFunctor implements GlobFunctor {

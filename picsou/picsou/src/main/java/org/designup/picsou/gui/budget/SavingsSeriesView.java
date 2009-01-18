@@ -13,6 +13,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -67,6 +68,8 @@ public class SavingsSeriesView {
     accountStringifier = directory.get(DescriptionService.class).getStringifier(Account.TYPE);
     seriesStringifier = directory.get(DescriptionService.class).getStringifier(Series.TYPE);
     registerComponents();
+    selectionListener
+      .selectionUpdated(GlobSelectionBuilder.create(selectionService.getSelection(Month.TYPE), Month.TYPE));
   }
 
   public Component getPanel() {

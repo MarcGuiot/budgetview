@@ -299,6 +299,61 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testSavingsSeries() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    views.selectHome();
+    savingsAccounts.createSavingsAccount("Epargne", 1000);
+    views.selectBudget();
+    budgetView.savings.createSeries()
+      .setName("CAF")
+      .setCategory(MasterCategory.INCOME)
+      .setFromAccount("External account")
+      .setToAccount("Epargne")
+      .selectAllMonths()
+      .setAmount("300")
+      .setDay("25")
+      .validate();
+    views.selectHome();
+    timeline.selectMonth("2008/08");
+    savingsAccounts.checkPosition("Epargne", 1300);
+    timeline.selectMonth("2008/09");
+    savingsAccounts.checkPosition("Epargne", 1600);
+    views.selectData();
+    timeline.selectAll();
+    transactions.initContent()
+      .add("25/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF", MasterCategory.INCOME)
+      .add("25/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF", MasterCategory.INCOME)
+      .add("25/08/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF", MasterCategory.INCOME)
+      .check();
+
+    views.selectBudget();
+    timeline.selectMonth("2008/08");
+    budgetView.savings.checkTotalAmounts(0, 300);
+
+    budgetView.savings.checkSeriesPresent("Epargne.CAF");
+
+    restartApplication();
+
+    views.selectBudget();
+    
+    budgetView.savings.checkSeries("Epargne.CAF", 0, 300);
+    timeline.selectMonth("2008/08");
+    budgetView.savings.checkTotalAmounts(0, 300);
+
+    views.selectHome();
+    timeline.selectMonth("2008/08");
+    savingsAccounts.checkPosition("Epargne", 1300);
+    timeline.selectMonth("2008/09");
+    savingsAccounts.checkPosition("Epargne", 1600);
+    views.selectData();
+    timeline.selectAll();
+    transactions.initContent()
+      .add("25/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF", MasterCategory.INCOME)
+      .add("25/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF", MasterCategory.INCOME)
+      .add("25/08/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF", MasterCategory.INCOME)
+      .check();
+  }
+
   protected void restartApplication() {
     mainWindow.dispose();
     mainWindow = null;

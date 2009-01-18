@@ -138,6 +138,7 @@ public class PicsouMatchers {
 
       protected boolean isEligible(Glob series) {
         return series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId()) &&
+               !series.get(Series.IS_MIROR) &&
                (accountId.equals(series.get(Series.FROM_ACCOUNT))
                 || accountId.equals(series.get(Series.TO_ACCOUNT)));
       }

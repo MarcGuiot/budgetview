@@ -746,13 +746,19 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
-  public CategorizationChecker createAndSetSavings(String label, String seriesName, String fromAccount) {
+  public CategorizationChecker createAndSetSavings(String label, String seriesName, String fromAccount, String toAccount) {
     boolean first = true;
     for (int index : getRowIndices(label)) {
       if (first) {
         selectTableRows(index);
         selectSavings();
-        selectAndCreateSavingsSeries(seriesName, fromAccount);
+        createSavingsSeries()
+          .setName(seriesName)
+          .setFromAccount(fromAccount)
+          .setToAccount(toAccount)
+          .setCategory(MasterCategory.SAVINGS)
+          .validate();
+
         first = false;
       }
       else {

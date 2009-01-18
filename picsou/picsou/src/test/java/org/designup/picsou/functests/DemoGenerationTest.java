@@ -136,7 +136,17 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     categorization.setSpecial("PLOMBERIE 24/7", "Plombier", MasterCategory.HOUSE, true);
 
-    categorization.createAndSetSavings("VIRT MENS. LIVRET", "Virt. auto livret", "Main account");
+    //  ================ SAVINGS   ================
+    views.selectHome();
+    savingsAccounts.createNewAccount()
+      .setAccountName("Livret")
+      .selectBank("ING Direct")
+      .setBalance(1000)
+      .validate();
+
+    views.selectCategorization();
+    
+    categorization.createAndSetSavings("VIRT MENS. LIVRET", "Virt. auto livret", "Main account", "Livret");
 
     categorization.getGauge().hideProgressMessage();
 
@@ -182,12 +192,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     //======== SAVINGS ===========
 
-    views.selectHome();
-    savingsAccounts.createNewAccount()
-      .setAccountName("Livret")
-      .selectBank("ING Direct")
-      .setBalance(1000)
-      .validate();
 
     views.selectBudget();
 

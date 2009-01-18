@@ -332,7 +332,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .checkDateChooserIsHidden()
       .validate();
 
-    budgetView.savings.editSeries("CAF")
+    budgetView.savings.editSeries("Epargne.CAF")
       .checkDateChooserIsHidden()
       .cancel();
   }
