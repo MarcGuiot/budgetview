@@ -5,6 +5,7 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Log;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -42,10 +43,11 @@ public class BackupAction extends AbstractBackupRestoreAction {
         dialog.show("backup.ok", backupFile.getAbsolutePath());
       }
       catch (Exception ex) {
+        ex.printStackTrace();
+        Log.write("During backup", ex);
         MessageFileDialog dialog = new MessageFileDialog(repository, directory);
         dialog.show("backup.error", backupFile.getAbsolutePath());
       }
     }
   }
-
 }

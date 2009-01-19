@@ -12,6 +12,8 @@ import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class BudgetViewChecker extends GuiChecker {
 
@@ -20,7 +22,7 @@ public class BudgetViewChecker extends GuiChecker {
   public final BudgetAreaChecker envelopes;
   public final OccasionalAreaChecker occasional;
   public final BudgetAreaChecker specials;
-  public final BudgetAreaChecker savings;
+  public final SavingsAreaChecker savings;
 
   private Window window;
 
@@ -31,7 +33,7 @@ public class BudgetViewChecker extends GuiChecker {
     this.envelopes = new BudgetAreaChecker("envelopeBudgetView", false, BudgetArea.ENVELOPES);
     this.occasional = new OccasionalAreaChecker();
     this.specials = new BudgetAreaChecker("projectsBudgetView", false, BudgetArea.SPECIAL);
-    this.savings = new BudgetAreaChecker("savingsBudgetView", true, BudgetArea.SAVINGS);
+    this.savings = new SavingsAreaChecker("savingsBudgetView", true, BudgetArea.SAVINGS);
   }
 
   private int getIndex(JPanel panel, Component component) {
@@ -215,6 +217,30 @@ public class BudgetViewChecker extends GuiChecker {
         UIComponent component = uiComponents[i];
         UISpecAssert.assertThat(((Button)component).textEquals(seriesNames[i]));
       }
+      return this;
+    }
+  }
+
+  public class SavingsAreaChecker extends BudgetAreaChecker {
+
+    public SavingsAreaChecker(String panelName, boolean singleCategorySeries, BudgetArea budgetArea) {
+      super(panelName, singleCategorySeries, budgetArea);
+    }
+
+    private Set<String> getDisplayedAccounts() {
+      UIComponent[] uiComponents = getPanel().getUIComponents(TextBox.class, "accountName");
+      Set<String> existingNames = new HashSet<String>();
+      for (UIComponent uiComponent : uiComponents) {
+        TextBox label = (TextBox)uiComponent;
+        if (label.getAwtComponent().isVisible()) {
+          existingNames.add(label.getText());
+        }
+      }
+      return existingNames;
+    }
+
+    public BudgetAreaChecker checkNoAccountsDisplayed() {
+      org.globsframework.utils.TestUtils.assertEmpty(getDisplayedAccounts());
       return this;
     }
   }
