@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(500,500)">
+  <panel styleClass="dialog" preferredSize="(250,200)">
     <column styleClass="innerDialog">
 
       <label ref="message"/>

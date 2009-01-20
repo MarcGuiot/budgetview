@@ -1,9 +1,6 @@
 package org.designup.picsou.gui.accounts;
 
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.AccountType;
-import org.designup.picsou.model.Bank;
-import org.designup.picsou.model.BankEntity;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -14,6 +11,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.DefaultChangeSetListener;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -33,6 +31,7 @@ public class AccountEditionPanel {
   private JTextField balanceEditor;
   private JComboBox accountTypeCombo;
   private AccountTypeSelector[] accountTypeSelectors = createAccountTypeSelectors();
+  private JLabel messageSavingsWarning;
 
   public AccountEditionPanel(final GlobRepository repository, Directory directory, JLabel messageLabel) {
     this.repository = repository;
@@ -75,6 +74,9 @@ public class AccountEditionPanel {
     builder.addEditor("name", Account.NAME).setNotifyOnKeyPressed(true);
     builder.addEditor("number", Account.NUMBER).setNotifyOnKeyPressed(true);
     builder.add("type", createAccountTypeCombo());
+    messageSavingsWarning = new JLabel(Lang.get("account.savings.warning"));
+    builder.add("savingsMessageWarning", messageSavingsWarning);
+    messageSavingsWarning.setVisible(false);
 
     balanceEditor = builder.addEditor("balance", Account.BALANCE).setNotifyOnKeyPressed(true).getComponent();
 
@@ -154,6 +156,10 @@ public class AccountEditionPanel {
 
   public void setBalanceEditorVisible(boolean visible) {
     balanceEditor.setVisible(visible);
+  }
+
+  public void setMessageSavingsWarning(boolean visible) {
+    messageSavingsWarning.setVisible(visible);
   }
 
   public GlobsPanelBuilder getBuilder() {

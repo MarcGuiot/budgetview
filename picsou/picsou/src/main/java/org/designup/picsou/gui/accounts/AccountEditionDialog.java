@@ -26,7 +26,7 @@ public class AccountEditionDialog {
   private GlobRepository parentRepository;
   private Directory directory;
 
-  public AccountEditionDialog(Window owner, GlobRepository parentRepository, Directory directory) {
+  public AccountEditionDialog(Window owner, final GlobRepository parentRepository, Directory directory) {
     this.owner = owner;
     this.parentRepository = parentRepository;
     this.directory = directory;
@@ -42,6 +42,32 @@ public class AccountEditionDialog {
 
     accountEditionPanel = new AccountEditionPanel(localRepository, directory, messageLabel);
     builder.add("panel", accountEditionPanel.getPanel());
+
+    localRepository.addChangeListener(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsUpdates(Account.ACCOUNT_TYPE)) {
+          Integer accountType = repository.get(currentAccount.getKey()).get(Account.ACCOUNT_TYPE);
+          if (!accountType.equals(AccountType.SAVINGS.getId())) {
+            accountEditionPanel.setMessageSavingsWarning(false);
+            return;
+          }
+          GlobList transactions = parentRepository.getAll(Transaction.TYPE, new GlobMatcher() {
+            public boolean matches(Glob item, GlobRepository repository) {
+              if (!item.get(Transaction.ACCOUNT).equals(currentAccount.get(Account.ID))) {
+                return false;
+              }
+              Glob series = repository.findLinkTarget(item, Transaction.SERIES);
+              if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
+                return true;
+              }
+              return !(series.get(Series.FROM_ACCOUNT).equals(currentAccount.get(Account.ID))
+                       || series.get(Series.TO_ACCOUNT).equals(currentAccount.get(Account.ID)));
+            }
+          });
+          accountEditionPanel.setMessageSavingsWarning(!transactions.isEmpty());
+        }
+      }
+    });
 
     dialog = PicsouDialog.create(owner, directory);
     dialog.addPanelWithButtons(builder.<JPanel>load(),
@@ -79,7 +105,7 @@ public class AccountEditionDialog {
         localRepository.getCurrentChanges().safeVisit(Account.TYPE, new DefaultChangeSetVisitor() {
           public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
             if (values.contains(Account.ACCOUNT_TYPE)) {
-              removeUncategorize(key, parentRepository);
+              uncategorize(key, parentRepository);
             }
           }
         });
@@ -150,7 +176,7 @@ public class AccountEditionDialog {
     }
   }
 
-  public void removeUncategorize(Key account, GlobRepository repository) {
+  private void uncategorize(Key account, GlobRepository repository) {
     GlobList transactions = repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.ACCOUNT,
                                                                                          account.get(Account.ID)));
     for (Glob transaction : transactions) {

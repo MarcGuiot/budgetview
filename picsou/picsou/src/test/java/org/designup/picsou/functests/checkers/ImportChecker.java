@@ -99,7 +99,7 @@ public class ImportChecker {
   }
 
   public ImportChecker checkErrorMessage(String message, String... arg) {
-    assertTrue(dialog.getTextBox("message").textContains(Lang.get(message, arg)));
+    assertTrue(dialog.getTextBox("importMessage").textContains(Lang.get(message, arg)));
     return this;
   }
 
@@ -124,7 +124,7 @@ public class ImportChecker {
   }
 
   public ImportChecker checkNoErrorMessage() {
-    TextBox message = (TextBox)dialog.findUIComponent(ComponentMatchers.innerNameIdentity("message"));
+    TextBox message = (TextBox)dialog.findUIComponent(ComponentMatchers.innerNameIdentity("importMessage"));
     if (message != null) {
       assertTrue(message.textIsEmpty());
     }

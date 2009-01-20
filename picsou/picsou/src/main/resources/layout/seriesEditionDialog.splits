@@ -41,7 +41,7 @@
 
             <label gridPos="(0,4)" text="$seriesEdition.toAccount" styleClass="formLabel" autoHideSource="toAccount"/>
             <comboBox gridPos="(1,4,2,1)" ref="toAccount" marginTop="4"/>
-            <label gridPos="(1,5,2,1)" ref="savingsMessage" fill="horizontal" marginTop="4"/>
+            <label gridPos="(1,5,2,1)" ref="savingsMessage" fill="horizontal" marginTop="4" styleClass="errorMessage"/>
           </grid>
 
           <column weightY="10" marginTop="20">

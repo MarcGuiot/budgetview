@@ -1,9 +1,13 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.*;
+import org.uispec4j.ComboBox;
+import org.uispec4j.TextBox;
+import org.uispec4j.Trigger;
+import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
@@ -86,6 +90,19 @@ public class AccountEditionChecker extends GuiChecker {
 
   public AccountEditionChecker setAsSavings() {
     getTypeCombo().select("Savings");
+    return this;
+  }
+
+  public AccountEditionChecker checkSavingsWarning() {
+    TextBox label = dialog.getTextBox("savingsMessageWarning");
+    assertThat(label.isVisible());
+    assertThat(label.foregroundNear("red"));
+    return this;
+  }
+
+  public AccountEditionChecker checkNoSavingsWarning() {
+    TextBox label = dialog.getTextBox("savingsMessageWarning");
+    assertFalse(label.isVisible());
     return this;
   }
 

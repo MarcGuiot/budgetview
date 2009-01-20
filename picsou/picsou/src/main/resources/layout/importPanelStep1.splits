@@ -32,7 +32,7 @@
                       styleClass="multiLineLabel" font="-,plain,11" hyperlinkListener="hyperlinkHandler"/>
 
       <panel minimumSize="(200,20)" opaque="false" margin="5">
-        <label ref="message" styleClass="errorMessage"/>
+        <label ref="importMessage" styleClass="errorMessage"/>
       </panel>
 
       <filler fill="vertical"/>

@@ -133,7 +133,7 @@ public class ImportPanel {
     initFileField();
 
     GlobsPanelBuilder builder1 = new GlobsPanelBuilder(getClass(), "/layout/importPanelStep1.splits", localRepository, localDirectory);
-    builder1.add("message", messageLabel);
+    builder1.add("importMessage", messageLabel);
     builder1.add("filePanel", filePanel);
     builder1.add("fileField", fileField);
     builder1.add("fileButton", fileButton);

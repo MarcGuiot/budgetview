@@ -3,6 +3,8 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
+import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.TransactionType;
 
 public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
@@ -116,5 +118,36 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     mainAccounts
       .checkEstimatedPosition(-100)
       .checkEstimatedPositionColor("darkRed");
-  }  
+  }
+
+
+  public void testChangeAccountTypeUncategorizeTransactionIfAssociatedSeriesIsNotSavings() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "000123", 100, "2008/08/26")
+      .addTransaction("2008/07/26", 1000, "WorldCo")
+      .addTransaction("2008/08/26", 1000, "WorldCo")
+      .addTransaction("2008/08/26", -800, "Epargne")
+      .load();
+
+    views.selectCategorization();
+    timeline.selectAll();
+    categorization.setIncome("WorldCo", "income", true);
+    categorization.setSpecial("Epargne", "Epargne", MasterCategory.SAVINGS, true);
+    views.selectHome();
+    mainAccounts.edit("Account n. 000123")
+      .setAsSavings()
+      .checkSavingsWarning()
+      .setAsCard()
+      .checkNoSavingsWarning()
+      .setAsSavings()
+      .checkSavingsWarning()
+      .validate();
+    views.selectData();
+    transactions.initContent()
+      .add("26/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", -800.00, "Epargne", MasterCategory.SAVINGS)
+      .add("26/08/2008", TransactionType.PRELEVEMENT, "Epargne", "", -800.00)
+      .add("26/08/2008", TransactionType.VIREMENT, "WorldCo", "", 1000.00)
+      .add("26/07/2008", TransactionType.VIREMENT, "WorldCo", "", 1000.00)
+      .check();
+  }
 }
