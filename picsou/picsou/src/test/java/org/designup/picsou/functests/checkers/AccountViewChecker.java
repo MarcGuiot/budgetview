@@ -4,10 +4,7 @@ import junit.framework.Assert;
 import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
-import org.uispec4j.Button;
-import org.uispec4j.Panel;
-import org.uispec4j.UIComponent;
-import org.uispec4j.Window;
+import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.finder.ComponentMatcher;
@@ -65,10 +62,11 @@ public class AccountViewChecker extends GuiChecker {
     UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textIsEmpty());
   }
 
-  public void checkSummary(double amount, String updateDate) {
-    assertThat(panel.getPanel("mainAccount").getTextBox("referencePosition").textEquals(toString(amount)));
-    assertThat(panel.getPanel("mainAccount").getTextBox("referencePositionDate")
+  public AccountViewChecker checkSummary(double amount, String updateDate) {
+    assertThat(panel.getTextBox("referencePosition").textEquals(toString(amount)));
+    assertThat(panel.getTextBox("referencePositionDate")
       .textEquals("on " + updateDate));
+    return this;
   }
 
   public ImportChecker openImportForAccount(String accountName) {

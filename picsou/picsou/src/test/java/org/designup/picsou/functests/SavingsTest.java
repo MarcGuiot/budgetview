@@ -304,10 +304,21 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setDay("5")
       .validate();
     views.selectHome();
+
+    timeline.selectMonth("2008/06");
+    savingsAccounts.checkPosition("Epargne", 400);
+    savingsAccounts.checkEstimatedPosition(400, "30/06/2008");
+    savingsAccounts.checkSummary(1000, "05/08/2008");
+
     timeline.selectMonth("2008/08");
     savingsAccounts.checkPosition("Epargne", 1000);
+    savingsAccounts.checkEstimatedPosition(1000, "31/08/2008");
+    savingsAccounts.checkSummary(1000, "05/08/2008");
+
     timeline.selectMonth("2008/09");
     savingsAccounts.checkPosition("Epargne", 1300);
+    savingsAccounts.checkEstimatedPosition(1300, "30/09/2008");
+
     views.selectData();
     timeline.selectAll();
     transactions.initContent()
@@ -562,16 +573,117 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(-100);
   }
 
+  public void testMixeTypeOfSavingsSeriesShouldUpdateCorrectlyTheBudgetView() throws Exception {
+    // Un compte courant, un compte d'épargne importé, un compte d'épargne non importé
+
+    OfxBuilder.init(this)
+      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111222", 3000., "2008/08/10")
+      .addTransaction("2008/06/06", 100.00, "Virement Epargne")
+      .addTransaction("2008/07/06", 100.00, "Virement Epargne")
+      .addTransaction("2008/08/06", 100.00, "Virement Epargne")
+      .load();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/06", -100.00, "Virement vers Epargne")
+      .addTransaction("2008/07/06", -100.00, "Virement vers Epargne")
+      .addTransaction("2008/08/06", -100.00, "Virement vers Epargne")
+      .load();
+
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    views.selectHome();
+    mainAccounts.edit("Account n. 111222")
+      .setAsSavings()
+      .validate();
+
+    savingsAccounts.createSavingsAccount("Epargne", 1000);
+    views.selectBudget();
+    budgetView.savings.createSeries()
+      .setName("Virement CAF")
+      .setCategory(MasterCategory.SAVINGS)
+      .setToAccount("Epargne")
+      .setFromAccount("External account")
+      .selectAllMonths()
+      .setAmount("300")
+      .setDay("5")
+      .validate();
+
+    budgetView.savings.createSeries()
+      .setName("Placement")
+      .setCategory(MasterCategory.SAVINGS)
+      .setFromAccount("Main Account")
+      .setToAccount("Account n. 111222")
+      .validate();
+
+    views.selectCategorization();
+    categorization
+      .selectTableRows("Virement Epargne")
+      .selectSavings()
+      .selectSavingsSeries("Placement");
+
+    categorization.selectSavings()
+      .selectTableRows("Virement vers Epargne")
+      .selectSavings()
+      .selectSavingsSeries("Placement");
+
+    timeline.selectAll();
+    views.selectData();
+    transactions.initContent()
+      .add("05/10/2008", TransactionType.PLANNED, "Planned: Virement CAF", "", 300.00, "Virement CAF", MasterCategory.SAVINGS)
+      .add("01/10/2008", TransactionType.PLANNED, "Planned: Placement", "", -100.00, "Placement", MasterCategory.SAVINGS)
+      .add("01/10/2008", TransactionType.PLANNED, "Planned: Placement", "", 100.00, "Placement", MasterCategory.SAVINGS)
+      .add("05/09/2008", TransactionType.PLANNED, "Planned: Virement CAF", "", 300.00, "Virement CAF", MasterCategory.SAVINGS)
+      .add("01/09/2008", TransactionType.PLANNED, "Planned: Placement", "", -100.00, "Placement", MasterCategory.SAVINGS)
+      .add("01/09/2008", TransactionType.PLANNED, "Planned: Placement", "", 100.00, "Placement", MasterCategory.SAVINGS)
+      .add("06/08/2008", TransactionType.PRELEVEMENT, "Virement vers Epargne", "", -100.00, "Placement", MasterCategory.SAVINGS)
+      .add("06/08/2008", TransactionType.VIREMENT, "Virement Epargne", "", 100.00, "Placement", MasterCategory.SAVINGS)
+      .add("05/08/2008", TransactionType.VIREMENT, "Virement CAF", "", 300.00, "Virement CAF", MasterCategory.SAVINGS)
+      .add("06/07/2008", TransactionType.PRELEVEMENT, "Virement vers Epargne", "", -100.00, "Placement", MasterCategory.SAVINGS)
+      .add("06/07/2008", TransactionType.VIREMENT, "Virement Epargne", "", 100.00, "Placement", MasterCategory.SAVINGS)
+      .add("05/07/2008", TransactionType.VIREMENT, "Virement CAF", "", 300.00, "Virement CAF", MasterCategory.SAVINGS)
+      .add("06/06/2008", TransactionType.PRELEVEMENT, "Virement vers Epargne", "", -100.00, "Placement", MasterCategory.SAVINGS)
+      .add("06/06/2008", TransactionType.VIREMENT, "Virement Epargne", "", 100.00, "Placement", MasterCategory.SAVINGS)
+      .add("05/06/2008", TransactionType.VIREMENT, "Virement CAF", "", 300.00, "Virement CAF", MasterCategory.SAVINGS)
+      .check();
+
+    views.selectHome();
+    timeline.selectMonth("2008/06");
+    savingsAccounts.checkPosition("Epargne", 400);
+    savingsAccounts.checkPosition("Account n. 111222", 2800);
+    savingsAccounts.checkEstimatedPosition(3200, "30/06/2008");
+    savingsAccounts.checkSummary(4000, "06/08/2008");
+
+    timeline.selectMonth("2008/08");
+    savingsAccounts.checkPosition("Epargne", 1000);
+    savingsAccounts.checkPosition("Account n. 111222", 3000);
+    savingsAccounts.checkEstimatedPosition(4000, "31/08/2008");
+    savingsAccounts.checkSummary(4000, "06/08/2008");
+
+    timeline.selectMonth("2008/09");
+    savingsAccounts.checkPosition("Epargne", 1300);
+    savingsAccounts.checkPosition("Account n. 111222", 3100);
+    savingsAccounts.checkEstimatedPosition(4400, "30/09/2008");
+  }
+
+  public void testHideAccountIfNoSeries() throws Exception {
+    savingsAccounts.createSavingsAccount("Epargne", 1000);
+
+    views.selectBudget();
+    budgetView.savings.checkNoAccountsDisplayed();
+    views.selectBudget();
+    budgetView.savings.createSeries()
+      .setName("Virement CAF")
+      .setCategory(MasterCategory.SAVINGS)
+      .setToAccount("Epargne")
+      .setFromAccount("External account")
+      .selectAllMonths()
+      .setAmount("300")
+      .setDay("5")
+      .validate();
+    budgetView.savings.checkSeriesPresent("Virement CAF");
+  }
+
 //  public void testSavingWithNoTransactionShouldNotBeIgnored() throws Exception {
 //    fail("Comme il n'y a pas de transaction sur ce compte il n'est pas vu pour le calcul du solde total");
 //  }
 //
-//  public void testSavingEstimated() throws Exception {
-//    fail("On devrait pouvoir afficher une position estimé de la somme des comptes d'epargne");
-//  }
-//
-//  public void testMixeTypeOfSavingsSeriesShouldUpdateCorrectlyTheBudgetView() throws Exception {
-//    fail("Sur les series externe vers comptes d'épargne non importé ont doit inversé les signes dans le calcul des stats");
-//
-//  }
 }

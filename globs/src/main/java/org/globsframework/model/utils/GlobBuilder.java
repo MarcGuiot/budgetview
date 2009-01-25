@@ -9,7 +9,7 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Date;
 
-public class GlobBuilder implements FieldValues.Functor, FieldSetter {
+public class GlobBuilder implements FieldValues.Functor, FieldSetter, FieldValues {
   private FieldValuesBuilder fieldValuesBuilder = new FieldValuesBuilder();
   private GlobType globType;
 
@@ -109,5 +109,69 @@ public class GlobBuilder implements FieldValues.Functor, FieldSetter {
 
   public void process(Field field, Object value) throws Exception {
     setObject(field, value);
+  }
+
+  public Object getValue(Field field) throws ItemNotFound {
+    return fieldValuesBuilder.get().getValue(field);
+  }
+
+  public Double get(DoubleField field) throws ItemNotFound {
+    return fieldValuesBuilder.get().get(field);
+  }
+
+  public Date get(DateField field) throws ItemNotFound {
+    return fieldValuesBuilder.get().get(field);
+  }
+
+  public Date get(TimeStampField field) throws ItemNotFound {
+    return fieldValuesBuilder.get().get(field);
+  }
+
+  public Integer get(IntegerField field) throws ItemNotFound {
+    return fieldValuesBuilder.get().get(field);
+  }
+
+  public Integer get(LinkField field) throws ItemNotFound {
+    return fieldValuesBuilder.get().get(field);
+  }
+
+  public String get(StringField field) throws ItemNotFound {
+    return fieldValuesBuilder.get().get(field);
+  }
+
+  public Boolean get(BooleanField field) throws ItemNotFound {
+    return fieldValuesBuilder.get().get(field);
+  }
+
+  public Boolean get(BooleanField field, boolean defaultIfNull) {
+    return fieldValuesBuilder.get().get(field);
+  }
+
+  public Long get(LongField field) throws ItemNotFound {
+    return fieldValuesBuilder.get().get(field);
+  }
+
+  public byte[] get(BlobField field) throws ItemNotFound {
+    return fieldValuesBuilder.get().get(field);
+  }
+
+  public boolean contains(Field field) {
+    return fieldValuesBuilder.get().contains(field);
+  }
+
+  public int size() {
+    return fieldValuesBuilder.get().size();
+  }
+
+  public void apply(Functor functor) throws Exception {
+    fieldValuesBuilder.get().apply(functor);
+  }
+
+  public void safeApply(Functor functor) {
+    fieldValuesBuilder.get().safeApply(functor);
+  }
+
+  public FieldValue[] toArray() {
+    return fieldValuesBuilder.get().toArray();
   }
 }

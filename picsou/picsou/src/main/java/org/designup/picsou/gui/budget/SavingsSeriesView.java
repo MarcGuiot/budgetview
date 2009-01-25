@@ -49,6 +49,7 @@ public class SavingsSeriesView {
   private GlobsPanelBuilder builder;
   private GlobSelectionListener selectionListener;
   private GlobStringifier seriesStringifier;
+  private JLabel accountName;
 
   protected SavingsSeriesView(Glob account, final GlobRepository repository,
                               Directory directory, final SeriesEditionDialog seriesEditionDialog) {
@@ -95,6 +96,7 @@ public class SavingsSeriesView {
       }
     });
     currentSeries = newSeries;
+    accountName.setVisible(!currentSeries.isEmpty());
   }
 
   public void registerComponents() {
@@ -103,7 +105,8 @@ public class SavingsSeriesView {
 
     String accountName = Lang.get("budgetView.savings.accountName.from",
                                   accountStringifier.toString(account, repository));
-    builder.add("accountName", new JLabel(accountName));
+    this.accountName = new JLabel(accountName);
+    builder.add("accountName", this.accountName);
     seriesRepeat =
       builder.addRepeat("seriesRepeat",
                         new GlobList(),
