@@ -3,6 +3,7 @@ package org.designup.picsou.license.mail;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.LicenseTestCase;
 import org.designup.picsou.license.model.License;
 import org.designup.picsou.license.model.MailError;
@@ -27,36 +28,29 @@ public class AskMailTest extends LicenseTestCase {
   }
 
   public void testSendMail() throws Exception {
+    addUser("monPremierClient@pirate.du");
     PostMethod postMethod = sendRequest();
-    Header header = postMethod.getResponseHeader("status");
-    assertEquals("mailSent", header.getValue());
+    Header header = postMethod.getResponseHeader(ConfigService.HEADER_STATUS);
+    assertEquals(ConfigService.HEADER_MAIL_SENT, header.getValue());
     checkReceive("monPremierClient@pirate.du");
-    checkInBase("monPremierClient@pirate.du");
   }
 
   private PostMethod sendRequest() throws IOException {
     PostMethod postMethod = new PostMethod("http://localhost/mailTo");
-    postMethod.setRequestHeader("mailto", "monPremierClient@pirate.du");
-    postMethod.setRequestHeader("lang", "en");
+    postMethod.setRequestHeader(ConfigService.HEADER_MAIL, "monPremierClient@pirate.du");
+    postMethod.setRequestHeader(ConfigService.HEADER_LANG, "en");
     client.executeMethod(postMethod);
     return postMethod;
-  }
-
-  public void testResendIfAdresseAlreadyRegistered() throws Exception {
-    sendRequest();
-    PostMethod postMethod = sendRequest();
-    Header header = postMethod.getResponseHeader("status");
-    assertEquals("mailSent", header.getValue());
   }
 
   public void testAddInDbIfBadAdress() throws Exception {
     PostMethod postMethod = new PostMethod("http://localhost/mailTo");
     String badMail = "monPremierClient@pirate";
-    postMethod.setRequestHeader("mailto", badMail);
-    postMethod.setRequestHeader("lang", "en");
+    postMethod.setRequestHeader(ConfigService.HEADER_MAIL, badMail);
+    postMethod.setRequestHeader(ConfigService.HEADER_LANG, "en");
     client.executeMethod(postMethod);
-    Header header = postMethod.getResponseHeader("status");
-    assertEquals("badAdress", header.getValue());
+    Header header = postMethod.getResponseHeader(ConfigService.HEADER_STATUS);
+    assertEquals(ConfigService.HEADER_BAD_ADRESS, header.getValue());
     SqlConnection connection = getSqlConnection();
     connection.getQueryBuilder(MailError.TYPE, Constraints.equal(MailError.MAIL, badMail))
       .getQuery().executeUnique();
@@ -68,5 +62,17 @@ public class AskMailTest extends LicenseTestCase {
     connection.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, mailTo))
       .getQuery().executeUnique();
     connection.commitAndClose();
+  }
+
+  private void addUser(String mail) {
+    SqlConnection db = getSqlConnection();
+    try {
+      db.getCreateBuilder(License.TYPE)
+        .set(License.MAIL, mail)
+        .getRequest().run();
+    }
+    finally {
+      db.commitAndClose();
+    }
   }
 }

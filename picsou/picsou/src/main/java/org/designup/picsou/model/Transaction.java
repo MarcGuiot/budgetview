@@ -197,6 +197,15 @@ public class Transaction {
     return transaction.get(CREATED_BY_SERIES);
   }
 
+  public static String getLabel(boolean planned, Glob series) {
+    if (planned) {
+      return Series.getPlannedTransactionLabel(series.get(Series.ID), series);
+    }
+    else {
+      return series.get(Series.LABEL);
+    }
+  }
+
 
   public static class Serializer implements PicsouGlobSerializer {
 

@@ -193,7 +193,8 @@ public class Series {
       output.writeBoolean(fieldValues.get(Series.DECEMBER));
       output.writeInteger(fieldValues.get(Series.TO_ACCOUNT));
       output.writeInteger(fieldValues.get(Series.FROM_ACCOUNT));
-//      output.writeBoolean(fieldValues.get(Series.TO_SAVINGS));
+      output.writeBoolean(fieldValues.get(Series.IS_MIROR));
+      output.writeInteger(fieldValues.get(Series.MIROR_SERIES));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -209,6 +210,9 @@ public class Series {
       }
       if (version == 4) {
         deserializeDataV4(fieldSetter, data);
+      }
+      if (version == 5) {
+        deserializeDataV5(fieldSetter, data);
       }
     }
 
@@ -347,11 +351,50 @@ public class Series {
       fieldSetter.set(Series.DECEMBER, input.readBoolean());
       fieldSetter.set(Series.TO_ACCOUNT, input.readInteger());
       fieldSetter.set(Series.FROM_ACCOUNT, input.readInteger());
-//      fieldSetter.set(Series.TO_SAVINGS, input.readBoolean());
+    }
+
+    private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Series.LABEL, input.readUtf8String());
+      fieldSetter.set(Series.NAME, input.readUtf8String());
+      fieldSetter.set(Series.BUDGET_AREA, input.readInteger());
+      fieldSetter.set(Series.DEFAULT_CATEGORY, input.readInteger());
+      Integer profileType = input.readInteger();
+      if (profileType == null) {
+        profileType = ProfileType.CUSTOM.getId();
+      }
+      fieldSetter.set(Series.PROFILE_TYPE, profileType);
+      fieldSetter.set(Series.FIRST_MONTH, input.readInteger());
+      fieldSetter.set(Series.LAST_MONTH, input.readInteger());
+      fieldSetter.set(Series.OCCURENCES_COUNT, input.readInteger());
+      fieldSetter.set(Series.DAY, input.readInteger());
+      fieldSetter.set(Series.INITIAL_AMOUNT, input.readDouble());
+      Boolean isAutomatic = input.readBoolean();
+      if (isAutomatic == null) {
+        isAutomatic = false;
+      }
+      fieldSetter.set(Series.IS_AUTOMATIC, isAutomatic);
+      fieldSetter.set(Series.JANUARY, input.readBoolean());
+      fieldSetter.set(Series.FEBRUARY, input.readBoolean());
+      fieldSetter.set(Series.MARCH, input.readBoolean());
+      fieldSetter.set(Series.APRIL, input.readBoolean());
+      fieldSetter.set(Series.MAY, input.readBoolean());
+      fieldSetter.set(Series.JUNE, input.readBoolean());
+      fieldSetter.set(Series.JULY, input.readBoolean());
+      fieldSetter.set(Series.AUGUST, input.readBoolean());
+      fieldSetter.set(Series.SEPTEMBER, input.readBoolean());
+      fieldSetter.set(Series.OCTOBER, input.readBoolean());
+      fieldSetter.set(Series.NOVEMBER, input.readBoolean());
+      fieldSetter.set(Series.DECEMBER, input.readBoolean());
+      fieldSetter.set(Series.TO_ACCOUNT, input.readInteger());
+      fieldSetter.set(Series.FROM_ACCOUNT, input.readInteger());
+      fieldSetter.set(Series.IS_MIROR, input.readBoolean());
+      fieldSetter.set(Series.MIROR_SERIES, input.readInteger());
+
     }
 
     public int getWriteVersion() {
-      return 4;
+      return 5;
     }
   }
 }

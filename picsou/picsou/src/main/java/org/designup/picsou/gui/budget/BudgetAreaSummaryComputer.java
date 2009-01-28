@@ -20,6 +20,7 @@ import java.awt.*;
 
 public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
   protected final GlobRepository repository;
+  private boolean savingsShowOpposite;
 
   protected double overrun;
   protected double observed;
@@ -39,8 +40,9 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
   private String positiveOverrunAmountColorKey = "block.inner.amount.overrun.positive";
   private ColorService colorService;
 
-  public BudgetAreaSummaryComputer(GlobRepository repository, Directory directory) {
+  public BudgetAreaSummaryComputer(GlobRepository repository, Directory directory, boolean savingsShowOpposite) {
     this.repository = repository;
+    this.savingsShowOpposite = savingsShowOpposite;
     this.colorService = directory.get(ColorService.class);
     this.colorService.addListener(this);
   }
@@ -211,17 +213,17 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
   }
 
   public String getObservedLabel(BudgetArea budgetArea) {
-    return format(observed, budgetArea);
+    return format(observed, budgetArea, savingsShowOpposite);
   }
 
   public String getPlannedLabel(BudgetArea budgetArea) {
-    return format(adjustedPlanned, budgetArea);
+    return format(adjustedPlanned, budgetArea, savingsShowOpposite);
   }
 
   public String getPlannedTooltip(BudgetArea budgetArea) {
     if (Amounts.isNotZero(overrun)) {
       return Lang.get("monthsummary.planned.tooltip.overrun",
-                      format(initiallyPlanned, budgetArea),
+                      format(initiallyPlanned, budgetArea, savingsShowOpposite),
                       Formatting.toString(Math.abs(overrun)));
     }
     else {
@@ -245,8 +247,8 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
     return Amounts.isNotZero(overrun) && overrun < 0;
   }
 
-  private String format(Double value, final BudgetArea budgetArea) {
-    return Formatting.toString(value, budgetArea);
+  private String format(Double value, final BudgetArea budgetArea, final boolean savingsShowpposite) {
+    return Formatting.toString(value, budgetArea, savingsShowpposite);
   }
 
   protected abstract void clearComponents();

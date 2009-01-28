@@ -10,7 +10,9 @@ import org.uispec4j.assertion.UISpecAssert;
 public class LicenseTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
-    super.setNotRegistered();
+    setNotRegistered();
+    setInMemory(false);
+    setDeleteLocalPrevayler(false);
     super.setUp();
   }
 
@@ -30,8 +32,7 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
   public void testOneDayLeft() throws Exception {
     TimeService.setCurrentDate(Dates.parse("2008/09/30"));
 
-    // force call to update
-    operations.openPreferences().setFutureMonthsCount(3).validate();
+    restartApplication();
     TextBox box = mainWindow.getTextBox("licenseMessage");
     UISpecAssert.assertTrue(box.isVisible());
     UISpecAssert.assertTrue(box.textEquals("This is your last day with cashpilot."));
@@ -40,8 +41,7 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
   public void testLicenseExpired() throws Exception {
     TimeService.setCurrentDate(Dates.parse("2008/10/01"));
 
-    // force call to update
-    operations.openPreferences().setFutureMonthsCount(3).validate();
+    restartApplication();
     TextBox box = mainWindow.getTextBox("licenseMessage");
     UISpecAssert.assertTrue(box.isVisible());
     UISpecAssert.assertTrue(box.textEquals("<html>Your free trial period is over. You can buy...</html>"));

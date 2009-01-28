@@ -1056,6 +1056,54 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkSeries("Courant", 0, -10);
   }
 
+  public void testAutomaticShouldNotTakeInAccountPreviousEmptyMonthWhenPositifBudget() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    views.selectBudget();
+    budgetView.income.createSeries().setName("Revenue")
+      .setCategory(MasterCategory.INCOME)
+      .validate();
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/05/10", 10, "revenue 2")
+      .addTransaction("2008/06/20", 20, "revenue 1")
+      .load();
+    views.selectCategorization();
+    categorization.setIncome("revenue 1", "Revenue", false);
+    views.selectData();
+    timeline.selectAll();
+    transactions
+      .initContent()
+      .add("01/08/2008", TransactionType.PLANNED, "Planned: Revenue", "", 20.00, "Revenue", MasterCategory.INCOME)
+      .add("01/07/2008", TransactionType.PLANNED, "Planned: Revenue", "", 20.00, "Revenue", MasterCategory.INCOME)
+      .add("20/06/2008", TransactionType.VIREMENT, "revenue 1", "", 20.00, "Revenue", MasterCategory.INCOME)
+      .add("10/05/2008", TransactionType.VIREMENT, "revenue 2", "", 10.00)
+      .check();
+  }
+
+  public void testAutomaticShouldNotTakeInAccountPreviousEmptyMonth() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    views.selectBudget();
+    budgetView.envelopes.createSeries().setName("Courant")
+      .setCategory(MasterCategory.FOOD)
+      .validate();
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/05/10", -10, "Auchan")
+      .addTransaction("2008/06/20", -20, "ED")
+      .load();
+    views.selectCategorization();
+    categorization.setEnvelope("ED", "Courant", MasterCategory.FOOD, false);
+    views.selectData();
+    timeline.selectAll();
+    transactions
+      .initContent()
+      .add("01/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant", MasterCategory.FOOD)
+      .add("01/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant", MasterCategory.FOOD)
+      .add("20/06/2008", TransactionType.PRELEVEMENT, "ED", "", -20.00, "Courant", MasterCategory.FOOD)
+      .add("10/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -10.00)
+      .check();
+  }
+
   public void testInAutomaticNewMonthUpdateFuture() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectBudget();

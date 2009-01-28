@@ -2,6 +2,7 @@ package org.designup.picsou.gui.license;
 
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -10,50 +11,64 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.Millis;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.util.Set;
 
 public class LicenseInfoView extends View {
   private JLabel licenseInfo;
+  private JButton askForKey;
 
-  public LicenseInfoView(GlobRepository repository, Directory directory) {
+  public LicenseInfoView(final GlobRepository repository, final Directory directory) {
     super(repository, directory);
     this.repository = repository;
     this.directory = directory;
     licenseInfo = new JLabel();
 
+    askForKey = new JButton(new AbstractAction(Lang.get("license.ask.for.code")) {
+      public void actionPerformed(ActionEvent e) {
+        LicenseExpirationDialog dialog = new LicenseExpirationDialog(directory.get(JFrame.class), repository, directory);
+        dialog.showNewLicense();
+      }
+    });
+    askForKey.setVisible(false);
+
+    Glob user = repository.get(User.KEY);
     Glob userPreferences = repository.get(UserPreferences.KEY);
-    update(userPreferences);
+    update(user, userPreferences);
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(UserPreferences.KEY)) {
+        if (changeSet.containsChanges(User.KEY)) {
+          Glob user = repository.get(User.KEY);
           Glob userPreferences = repository.get(UserPreferences.KEY);
-          update(userPreferences);
+          update(user, userPreferences);
         }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        Glob user = repository.get(User.KEY);
         Glob userPreferences = repository.get(UserPreferences.KEY);
-        update(userPreferences);
+        update(user, userPreferences);
       }
     });
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
     builder.add("licenseMessage", licenseInfo);
+    builder.add("askForKey", askForKey);
   }
 
-  private void update(Glob preferences) {
-    if (preferences.get(UserPreferences.REGISTERED_USER)) {
+  private void update(Glob user, Glob userPreferences) {
+    if (user.get(User.IS_REGISTERED_USER)) {
       licenseInfo.setVisible(false);
     }
     else {
       licenseInfo.setVisible(true);
       long days =
-        (preferences.get(UserPreferences.LAST_VALID_DAY).getTime() - TimeService.getToday().getTime()) / Millis.ONE_DAY;
+        (userPreferences.get(UserPreferences.LAST_VALID_DAY).getTime() - TimeService.getToday().getTime()) / Millis.ONE_DAY;
       if (days >= 1) {
         licenseInfo.setText(Lang.get("license.info.message", days));
       }
@@ -61,7 +76,17 @@ public class LicenseInfoView extends View {
         licenseInfo.setText(Lang.get("license.info.last.message"));
       }
       else {
-        licenseInfo.setText(Lang.get("license.expiration.message"));
+        Integer state = user.get(User.ACTIVATION_STATE);
+        if (state != null && state == User.ACTIVATION_FAIL_MAIL_SEND) {
+          licenseInfo.setText(Lang.get("license.activation.fail.mailSent", user.get(User.MAIL)));
+        }
+        else if (user.get(User.MAIL) == null) {
+          licenseInfo.setText(Lang.get("license.expiration.message"));
+        }
+        else {
+          licenseInfo.setText(Lang.get("license.registered.user.killed"));
+          askForKey.setVisible(true);
+        }
       }
     }
   }

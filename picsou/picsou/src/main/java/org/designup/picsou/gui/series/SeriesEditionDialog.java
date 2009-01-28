@@ -697,10 +697,10 @@ public class SeriesEditionDialog {
         Glob fromAccount = localRepository.findLinkTarget(series, Series.FROM_ACCOUNT);
         Glob toAccount = localRepository.findLinkTarget(series, Series.TO_ACCOUNT);
         if (Account.areBothImported(fromAccount, toAccount)) {
-          Integer mirorSeries = series.get(Series.MIROR_SERIES);
           if (series.get(Series.IS_MIROR)) {
             return;
           }
+          Integer mirorSeries = series.get(Series.MIROR_SERIES);
           final Glob mirorBudget = localRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirorSeries)
             .findByIndex(SeriesBudget.MONTH, budget.get(SeriesBudget.MONTH)).getGlobs().getFirst();
           values.safeApply(new FieldValues.Functor() {
@@ -890,6 +890,8 @@ public class SeriesEditionDialog {
       SeriesDeleteDialog seriesDeleteDialog = new SeriesDeleteDialog(localRepository, localDirectory, dialog);
       if (transactionsForSeries.isEmpty()) {
         localRepository.delete(seriesToDelete);
+        GlobList seriesToCategory = localRepository.getAll(SeriesToCategory.TYPE, fieldIn(SeriesToCategory.SERIES, series));
+        localRepository.delete(seriesToCategory);
         deleted = true;
       }
       else if (seriesDeleteDialog.show()) {

@@ -4,6 +4,7 @@ import org.designup.picsou.model.PicsouModel;
 import org.designup.picsou.server.persistence.direct.DirectAccountDataManager;
 import org.designup.picsou.server.persistence.direct.InMemoryAccountDataManager;
 import org.designup.picsou.server.persistence.dummy.DummyRootDataManager;
+import org.designup.picsou.server.persistence.prevayler.AccountDataManager;
 import org.designup.picsou.server.persistence.prevayler.PrevaylerPersistence;
 import org.designup.picsou.server.persistence.prevayler.users.PRootDataManager;
 import org.designup.picsou.server.session.Persistence;
@@ -20,8 +21,15 @@ public class ServerDirectory {
 
   public ServerDirectory(String prevaylerPath, boolean inMemory) {
     serviceDirectory.add(GlobModel.class, PicsouModel.get());
+    AccountDataManager directAccountDataManager;
+    if (inMemory) {
+      directAccountDataManager = new InMemoryAccountDataManager(null);
+    }
+    else {
+      directAccountDataManager = new DirectAccountDataManager(prevaylerPath, inMemory);
+    }
     serviceDirectory.add(Persistence.class,
-                         new PrevaylerPersistence(new DirectAccountDataManager(prevaylerPath, inMemory),
+                         new PrevaylerPersistence(directAccountDataManager,
                                                   new PRootDataManager(prevaylerPath, serviceDirectory, inMemory),
                                                   serviceDirectory));
     serviceDirectory.add(SessionService.class, new DefaultSessionService(serviceDirectory));

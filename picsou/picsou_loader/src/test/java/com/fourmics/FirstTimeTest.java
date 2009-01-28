@@ -69,7 +69,7 @@ public class FirstTimeTest extends UISpecTestCase {
         Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot1.jar");
         System.setProperty("cashpilot.exe.dir", jarDir.getAbsolutePath());
         System.setProperty("cashpilot.prevayler.path", prevaylerDir.getAbsolutePath());
-        Main.main(new String[0]);
+        com.cashpilot.Main.main(new String[0]);
       }
     });
     LoginChecker login = new LoginChecker(window);

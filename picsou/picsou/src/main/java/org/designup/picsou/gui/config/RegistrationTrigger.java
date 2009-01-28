@@ -3,8 +3,8 @@ package org.designup.picsou.gui.config;
 import org.designup.picsou.model.User;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
@@ -29,11 +29,7 @@ public class RegistrationTrigger implements ChangeSetListener {
           final String mail = user.get(User.MAIL);
           final String code = user.get(User.ACTIVATION_CODE);
           if (Strings.isNotEmpty(mail) && Strings.isNotEmpty(code)) {
-            Thread thread = new Thread() {
-              public void run() {
-                directory.get(ConfigService.class).sendRegister(mail, code, repository);
-              }
-            };
+            Thread thread = new RegistrationThread(mail, code, repository);
             thread.setDaemon(true);
             thread.start();
           }
@@ -49,5 +45,21 @@ public class RegistrationTrigger implements ChangeSetListener {
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+  }
+
+  private class RegistrationThread extends Thread {
+    private final String mail;
+    private final String code;
+    private final GlobRepository repository;
+
+    public RegistrationThread(String mail, String code, GlobRepository repository) {
+      this.mail = mail;
+      this.code = code;
+      this.repository = repository;
+    }
+
+    public void run() {
+      directory.get(ConfigService.class).sendRegister(mail, code, repository);
+    }
   }
 }

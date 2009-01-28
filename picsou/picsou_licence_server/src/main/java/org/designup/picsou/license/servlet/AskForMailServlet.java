@@ -1,18 +1,17 @@
 package org.designup.picsou.license.servlet;
 
 import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.license.generator.LicenseGenerator;
 import org.designup.picsou.license.mail.Mailer;
 import org.designup.picsou.license.model.License;
 import org.designup.picsou.license.model.MailError;
-import org.designup.picsou.license.generator.LicenseGenerator;
 import org.globsframework.model.GlobList;
-import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
-import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,38 +32,28 @@ public class AskForMailServlet extends HttpServlet {
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    String mailTo = req.getHeader("mailTo").trim();
+    String mailTo = req.getHeader(ConfigService.HEADER_MAIL);
+    if (Strings.isNullOrEmpty(mailTo)) {
+      logger.info("Bad ask for code from " + (mailTo == null ? "<no mail>" : mailTo));
+      resp.addHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_BAD_ADRESS);
+      return;
+    }
     String lang = req.getHeader(ConfigService.HEADER_LANG);
-    logger.info("mail : " + mailTo + " in " + lang);
+    mailTo = mailTo.trim();
+    logger.info("code requested for '" + mailTo + "' in " + lang);
     try {
       if (checkIsAMailAdress(mailTo)) {
-        SqlConnection db = sqlService.getDb();
         GlobList registeredMail;
-        try {
-          String activationCode = LicenseGenerator.generateActivationCode();
-          registeredMail = db.getQueryBuilder(License.TYPE,
-                                              Constraints.equal(License.MAIL, mailTo))
-            .select(License.MAIL)
-            .getQuery().executeAsGlobs();
-          if (registeredMail.isEmpty()) {
-            GlobBuilder.init(License.TYPE)
-              .set(License.MAIL, mailTo)
-              .set(License.ACTIVATION_CODE, activationCode);
-            db.getCreateBuilder(License.TYPE)
-
-              .set(License.MAIL, mailTo).getRequest().run();
-          }
-        }
-        finally {
-          db.commitAndClose();
+        String activationCode = LicenseGenerator.generateActivationCode();
+        registeredMail = request(mailTo);
+        if (registeredMail.isEmpty()) {
+          resp.addHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_UNKNOWN);
+          logger.info("unknown user " + mailTo);
+          return;
         }
         if (registeredMail.size() >= 1) {
-          mailer.sendExistingLicense(registeredMail.get(0), lang);
-          replyOk(resp);
-        }
-        else {
-          mailer.sendRequestLicence(mailTo, lang);
-          replyOk(resp);
+          mailer.sendExistingLicense(registeredMail.get(0), lang, activationCode);
+          resp.addHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_SENT);
         }
         if (registeredMail.size() > 1) {
           logger.severe("mail registered multiple time '" + mailTo + "'");
@@ -83,22 +72,40 @@ public class AskForMailServlet extends HttpServlet {
         replyBadAdress(resp);
       }
     }
-    catch (MessagingException e) {
+    catch (Exception e) {
       logger.throwing("AskForMailServlet", "doPost", e);
       replyFailed(resp);
     }
   }
 
+  private GlobList request(String mailTo) {
+    try {
+      return requestDb(mailTo);
+    }
+    catch (Exception e) {
+      return requestDb(mailTo);
+    }
+  }
+
+  private GlobList requestDb(String mailTo) {
+    SqlConnection db = sqlService.getDb();
+    try {
+      return db.getQueryBuilder(License.TYPE,
+                                Constraints.equal(License.MAIL, mailTo))
+        .select(License.MAIL)
+        .getQuery().executeAsGlobs();
+    }
+    finally {
+      db.commitAndClose();
+    }
+  }
+
   private void replyBadAdress(HttpServletResponse resp) {
-    resp.addHeader("status", "badAdress");
+    resp.addHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_BAD_ADRESS);
   }
 
   private void replyFailed(HttpServletResponse resp) {
-    resp.addHeader("status", "mailError");
-  }
-
-  private void replyOk(HttpServletResponse resp) {
-    resp.addHeader("status", "mailSent");
+    resp.addHeader(ConfigService.HEADER_STATUS, "fail");
   }
 
   private boolean checkIsAMailAdress(String to) {

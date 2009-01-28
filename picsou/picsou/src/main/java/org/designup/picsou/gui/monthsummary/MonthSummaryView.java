@@ -2,8 +2,8 @@ package org.designup.picsou.gui.monthsummary;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.actions.ImportFileAction;
-import org.designup.picsou.gui.budget.BudgetAreaSummaryComputer;
 import org.designup.picsou.gui.budget.BudgetAreaHeaderUpdater;
+import org.designup.picsou.gui.budget.BudgetAreaSummaryComputer;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.BalanceGraph;
 import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
@@ -34,7 +34,8 @@ import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.ChangeSetMatchers;
 import org.globsframework.model.utils.GlobMatcher;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -199,7 +200,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
       this.summaryComputer =
         new BudgetAreaHeaderUpdater(
           TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
-                                     repository, directory);
+          repository, directory, true);
       update();
     }
 

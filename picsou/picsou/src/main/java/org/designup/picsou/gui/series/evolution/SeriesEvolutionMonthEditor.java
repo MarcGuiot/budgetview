@@ -179,7 +179,7 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
       return "";
     }
     if (budgetArea != null) {
-      return Formatting.toString(value, budgetArea);
+      return Formatting.toString(value, budgetArea, false);
     }
     return Formatting.toString(value);
   }

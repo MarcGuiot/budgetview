@@ -81,7 +81,7 @@ public class SavingsView extends View {
 
     this.headerUpdater =
       new BudgetAreaHeaderUpdater(TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
-                                  repository, directory);
+                                  repository, directory, false);
     this.headerUpdater.setColors("block.total",
                                  "block.total.overrun.error",
                                  "block.total.overrun.positive");

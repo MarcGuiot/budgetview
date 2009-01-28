@@ -14,6 +14,7 @@ import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.utils.Dates;
+import org.uispec4j.TextBox;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
@@ -67,8 +68,7 @@ public class LicenseTest extends LicenseTestCase {
 
     Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 2L);
     assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
-    TimeViewChecker timeView = new TimeViewChecker(window);
-    timeView.checkSpanEquals("2008/07", "2010/07");
+    checkValidLicense(false);
   }
 
   private void register(SqlConnection connection, String mail) throws InterruptedException {
@@ -87,8 +87,7 @@ public class LicenseTest extends LicenseTestCase {
     Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 1L);
     assertEquals(1L, license.get(License.ACCESS_COUNT).longValue());
     assertTrue(license.get(License.SIGNATURE).length > 1);
-    TimeViewChecker timeView = new TimeViewChecker(window);
-    timeView.checkSpanEquals("2008/07", "2010/07");
+    checkValidLicense(false);
   }
 
   public void testMultipleAnonymousConnect() throws Exception {
@@ -109,7 +108,7 @@ public class LicenseTest extends LicenseTestCase {
   }
 
   public void testResendsActivationKeyIfCountDecreases() throws Exception {
-    String repoId = startFirstPicsou();
+    String repoId = startRegisteredFirstPicsou();
     window.dispose();
     restartPicsouToIncrementCount();
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
@@ -119,8 +118,10 @@ public class LicenseTest extends LicenseTestCase {
     LoginChecker login = new LoginChecker(window);
     login.logNewUser("user", "passw@rd");
     checkRepoIdIsUpdated(getSqlConnection(), 1L, Constraints.notEqual(RepoInfo.REPO_ID, repoId));
+    checkStillDayWithPicsouMessage();
 
     LicenseChecker.enterBadLicense(window, MAIL, "1234");
+    checkStillDayWithPicsouMessage();
     String mailcontent = checkReceive(MAIL);
     assertTrue(mailcontent, mailcontent.contains("Your new activation code"));
 
@@ -128,9 +129,24 @@ public class LicenseTest extends LicenseTestCase {
     String newActivationCode = mailcontent.substring(startCode, startCode + 4);
     window.dispose();
 
-    checkPreviousVersionValidity("2010/07");
+    checkVersionValidity(false, PATH_TO_DATA);
     activateNewLicenseInNewVersion(newActivationCode);
-    checkPreviousVersionValidity("2010/07");
+    checkVersionValidity(false, SECOND_PATH);
+    TimeService.setCurrentDate(Dates.parse("2008/12/10"));
+    checkVersionValidity(false, SECOND_PATH);
+    TimeService.setCurrentDate(Dates.parse("2009/05/10"));
+    checkVersionValidity(false, SECOND_PATH);
+    checkKilledVersion(PATH_TO_DATA);
+  }
+
+  private void checkKilledVersion(String pathToData) {
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, pathToData);
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
+    startPicsou();
+    LoginChecker loginChecker = new LoginChecker(window);
+    loginChecker.logExistingUser("user", "passw@rd");
+    checkMessageOver();
+    window.dispose();
   }
 
   public void testRegisterAndBadlyReRegister() throws Exception {
@@ -148,11 +164,7 @@ public class LicenseTest extends LicenseTestCase {
 
     Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 2L);
     assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
-    TimeViewChecker timeView = new TimeViewChecker(window);
-    timeView.checkSpanEquals("2008/07", "2010/07");
-    OperationChecker operation = new OperationChecker(window);
-    operation.openImportDialog()
-      .close();
+    checkValidLicense(false);
   }
 
   public void testRegistrationWithBadKey() throws Exception {
@@ -170,6 +182,31 @@ public class LicenseTest extends LicenseTestCase {
     OperationChecker operation = new OperationChecker(window);
     LicenseExpirationChecker licenseExpiration = new LicenseExpirationChecker(operation.getImportTrigger());
     licenseExpiration.close();
+  }
+
+  private void checkValidLicense(final boolean anonymous) {
+    OperationChecker operation = new OperationChecker(window);
+    Window dialog = WindowInterceptor.getModalDialog(operation.getImportTrigger());
+    ImportChecker importChecker = new ImportChecker(dialog);
+    importChecker.close();
+    if (!anonymous) {
+      assertFalse(window.getTextBox("licenseMessage").isVisible());
+    }
+    else {
+      assertTrue(window.getTextBox("licenseMessage").isVisible());
+    }
+  }
+
+  private void checkStillDayWithPicsouMessage() {
+    TextBox message = window.getTextBox("licenseMessage");
+    assertThat(message.isVisible());
+    assertTrue(message.textContains("Still "));
+  }
+
+  private void checkMessageOver() {
+    TextBox message = window.getTextBox("licenseMessage");
+    assertThat(message.isVisible());
+    assertTrue(message.textContains("Your free trial period is over"));
   }
 
   public void testStartRegistrationAndStopServer() throws Exception {
@@ -217,34 +254,23 @@ public class LicenseTest extends LicenseTestCase {
     startPicsou();
     LoginChecker login = new LoginChecker(window);
     login.logExistingUser("user", "passw@rd");
-    TimeViewChecker timeView = new TimeViewChecker(window);
-    timeView.checkSpanEquals("2008/07", "2010/07");
-    LicenseChecker license = new LicenseChecker(window);
-    license.enterLicense(window, MAIL, code);
-    OperationChecker operation = new OperationChecker(window);
-    operation.openPreferences().setFutureMonthsCount(24).validate();
-
-    timeView.checkSpanEquals("2008/07", "2010/07");
+    checkValidLicense(true);
+    LicenseChecker.enterLicense(window, MAIL, code);
+    checkValidLicense(false);
     window.dispose();
   }
 
-  private void checkPreviousVersionValidity(String lastMonth) {
-    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, PATH_TO_DATA);
+  private void checkVersionValidity(final boolean anonymous, final String pathToData) {
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, pathToData);
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startPicsou();
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logExistingUser("user", "passw@rd");
-    TimeViewChecker timeView = new TimeViewChecker(window);
-    if (lastMonth.equals("2008/07")) {
-      timeView.checkDisplays("2008/07");
-    }
-    else {
-      timeView.checkSpanEquals("2008/07", lastMonth);
-    }
+    checkValidLicense(anonymous);
     window.dispose();
   }
 
-  private String startFirstPicsou() throws InterruptedException {
+  private String startRegisteredFirstPicsou() throws InterruptedException {
     SqlConnection connection = getSqlConnection();
     String repoId = checkRepoIdIsUpdated(connection, 1L, null);
     LoginChecker loginChecker = new LoginChecker(window);
@@ -255,8 +281,7 @@ public class LicenseTest extends LicenseTestCase {
       .getRequest()
       .run();
     connection.commit();
-    LicenseChecker checker = new LicenseChecker(window);
-    checker.enterLicense(window, MAIL, "1234");
+    LicenseChecker.enterLicense(window, MAIL, "1234");
     OperationChecker operation = new OperationChecker(window);
     operation.openPreferences().setFutureMonthsCount(24).validate();
 
@@ -269,7 +294,7 @@ public class LicenseTest extends LicenseTestCase {
   private String checkRepoIdIsUpdated(SqlConnection connection, long repoCount, Constraint constraint) throws InterruptedException {
     Glob repoInfo = getGlob(connection, RepoInfo.COUNT, repoCount, constraint);
     Date target = repoInfo.get(RepoInfo.LAST_ACCESS_DATE);
-    assertTrue(Dates.isNear(new Date(), target, 2000));
+    assertTrue(Dates.isNear(new Date(), target, 10000));
     assertEquals(repoCount, repoInfo.get(RepoInfo.COUNT).longValue());
     return repoInfo.get(RepoInfo.REPO_ID);
   }

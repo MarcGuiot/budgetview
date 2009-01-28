@@ -1,10 +1,10 @@
 package org.designup.picsou.license.servlet;
 
 import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.license.generator.LicenseGenerator;
 import org.designup.picsou.license.mail.Mailer;
 import org.designup.picsou.license.model.License;
 import org.designup.picsou.license.model.RepoInfo;
-import org.designup.picsou.license.generator.LicenseGenerator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SelectQuery;
@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 public class RegisterServlet extends HttpServlet {
-  static Logger logger = Logger.getLogger(ConfigService.REGISTER_SERVLET);
+  static Logger logger = Logger.getLogger("RegisterServlet");
   private SqlService sqlService;
   private Mailer mailer;
 

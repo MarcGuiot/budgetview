@@ -1,10 +1,10 @@
 package org.designup.picsou.license.servlet;
 
 import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.license.generator.LicenseGenerator;
 import org.designup.picsou.license.mail.Mailer;
 import org.designup.picsou.license.model.License;
 import org.designup.picsou.license.model.RepoInfo;
-import org.designup.picsou.license.generator.LicenseGenerator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SelectQuery;
@@ -257,8 +257,9 @@ public class RequestForConfigServlet extends HttpServlet {
           db.commit();
           resp.addHeader(ConfigService.HEADER_MAIL_SENT, "true");
           mailer.sendNewLicense(mail, code, lang);
-          logger.info("send new license to " + mail);
+          logger.info("Run count decrease send new license to " + mail);
         }
+        logger.info("Run count decrease with different activation code for " + mail);
       }
       else {
         if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {

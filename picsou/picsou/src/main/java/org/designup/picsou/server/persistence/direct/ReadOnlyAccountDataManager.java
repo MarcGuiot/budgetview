@@ -2,12 +2,17 @@ package org.designup.picsou.server.persistence.direct;
 
 import org.designup.picsou.client.SerializableGlobSerializer;
 import org.designup.picsou.server.model.SerializableGlobType;
+import org.designup.picsou.server.model.ServerDelta;
+import org.designup.picsou.server.model.ServerState;
 import org.globsframework.utils.MapOfMaps;
+import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.io.*;
+import java.util.List;
+import java.util.Map;
 
 public class ReadOnlyAccountDataManager {
 
@@ -43,5 +48,19 @@ public class ReadOnlyAccountDataManager {
     serializedOutput.writeString("2");
     SerializableGlobSerializer.serialize(serializedOutput, data);
     outputStream.close();
+  }
+
+  protected static void apply(MapOfMaps<String, Integer, SerializableGlobType> globs, MultiMap<String, ServerDelta> map) {
+    for (Map.Entry<String, List<ServerDelta>> stringListEntry : map.entries()) {
+      Map<Integer, SerializableGlobType> globToMerge = globs.get(stringListEntry.getKey());
+      for (ServerDelta deltaGlob : stringListEntry.getValue()) {
+        if (deltaGlob.getState() == ServerState.DELETED) {
+          globToMerge.remove(deltaGlob.getId());
+        }
+        else {
+          globToMerge.put(deltaGlob.getId(), new SerializableGlobType(stringListEntry.getKey(), deltaGlob));
+        }
+      }
+    }
   }
 }

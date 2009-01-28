@@ -4,9 +4,30 @@
 
   <panel styleClass="dialog" minimumSize="(470,180)" preferredSize="(540,220)" opaque="true">
     <column styleClass="innerDialog">
-      <label text="$license.expiration.title" styleClass="title"/>
-      <htmlEditorPane name="expirationMessage" text="$license.expiration.message"/>
-      <filler fill="vertical" weightY="20"/>
+      <cards ref="type">
+        <card name="expiration">
+          <column>
+            <label text="$license.expiration.title" styleClass="title"/>
+            <htmlEditorPane name="expirationMessage" text="$license.expiration.message"/>
+            <filler fill="vertical" weightY="20"/>
+          </column>
+        </card>
+        <card name="newLicense">
+          <column>
+            <label text="$license.ask.for.code" styleClass="title"/>
+            <htmlEditorPane name="askMailMessage" text="$license.ask.message.mail"/>
+            <row>
+              <textField ref="mailAdress"/>
+              <button action="sendMail"/>
+              <filler fill="horizontal"/>
+            </row>
+            <label ref="mailResponse" styleClass="errorMessage"/>
+            <!--<htmlEditorPane name="askSmsMessage" text="$license.ask.message.sms"/>-->
+            <!--<textArea ref="phoneNumber"/>-->
+            <!--<button action="sendSMS"/>-->
+          </column>
+        </card>
+      </cards>
     </column>
   </panel>
 

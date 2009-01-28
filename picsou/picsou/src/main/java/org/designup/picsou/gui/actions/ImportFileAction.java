@@ -4,6 +4,7 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.license.LicenseExpirationDialog;
 import org.designup.picsou.gui.startup.ImportPanel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
+import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
@@ -78,8 +79,9 @@ public class ImportFileAction extends AbstractAction {
       this.repository = repository;
       JFrame frame = directory.get(JFrame.class);
       Glob preference = repository.get(UserPreferences.KEY);
+      Glob user = repository.get(User.KEY);
       Date lastValidDay = preference.get(UserPreferences.LAST_VALID_DAY);
-      if (preference.get(UserPreferences.REGISTERED_USER) ||
+      if (user.get(User.IS_REGISTERED_USER) ||
           TimeService.getToday().before(lastValidDay)) {
         panel = new ImportPanel(Lang.get("import.step1.close"), files, defaultAccount,
                                 frame, repository, directory, usePreference);
@@ -93,7 +95,7 @@ public class ImportFileAction extends AbstractAction {
       else {
         JFrame frame = directory.get(JFrame.class);
         LicenseExpirationDialog dialog = new LicenseExpirationDialog(frame, repository, directory);
-        dialog.show();
+        dialog.showExpiration();
       }
     }
   }

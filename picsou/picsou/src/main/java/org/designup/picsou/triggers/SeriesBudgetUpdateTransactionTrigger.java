@@ -19,6 +19,11 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
     changeSet.safeVisit(SeriesBudget.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         Glob series = repository.get(Key.create(Series.TYPE, values.get(SeriesBudget.SERIES)));
+        if (Account.areNoneImported(repository.findLinkTarget(series, Series.FROM_ACCOUNT),
+                                    repository.findLinkTarget(series, Series.TO_ACCOUNT))) {
+          return;
+        }
+
         if (generatesPlannedTransactions(values, series,
                                          repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH))) {
           Integer monthId = values.get(SeriesBudget.MONTH);
@@ -34,6 +39,10 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
           return;
         }
         Glob series = repository.get(Key.create(Series.TYPE, seriesBudget.get(SeriesBudget.SERIES)));
+        if (Account.areNoneImported(repository.findLinkTarget(series, Series.FROM_ACCOUNT),
+                                    repository.findLinkTarget(series, Series.TO_ACCOUNT))) {
+          return;
+        }
         if (values.contains(SeriesBudget.ACTIVE)) {
           if (values.get(SeriesBudget.ACTIVE)) {
             Integer monthId = seriesBudget.get(SeriesBudget.MONTH);
@@ -79,7 +88,6 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
       .findByIndex(Transaction.MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs()
       .filterSelf(GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.PLANNED, true),
                                    GlobMatchers.ALL
-//                                   GlobMatchers.fieldEquals(Transaction.MIRROR, false)
       ),
                   repository)
       .sort(Transaction.DAY);

@@ -144,6 +144,12 @@ public class Account {
   }
 
   public static double getMultiplierWithMainAsPointOfView(Glob fromAccount, Glob toAccount, GlobRepository repository) {
+    SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
+    return getMultiplierWithMainAsPointOfView(fromAccount, toAccount, repository, mainAccountChecker);
+  }
+
+  private static double getMultiplierWithMainAsPointOfView(Glob fromAccount, Glob toAccount,
+                                                           GlobRepository repository, SameAccountChecker mainAccountChecker) {
     double multiplier;
     Integer fromAccountIdPointOfView = toAccount == null ?
                                        (fromAccount == null ? null : fromAccount.get(ID))
@@ -152,7 +158,6 @@ public class Account {
       multiplier = 0;
     }
     else {
-      SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
       if (fromAccount != null && mainAccountChecker.isSame(fromAccount.get(ID))) {
         fromAccountIdPointOfView = fromAccount.get(ID);
       }
@@ -163,6 +168,11 @@ public class Account {
                                                           repository.get(org.globsframework.model.Key.create(TYPE, fromAccountIdPointOfView)));
     }
     return multiplier;
+  }
+
+  public static boolean onlyOneIsImported(Glob account1, Glob account2) {
+    return account1 != null && account2 != null &&
+           account1.get(Account.IS_IMPORTED_ACCOUNT) != account2.get(Account.IS_IMPORTED_ACCOUNT);
   }
 
   public static class Serializer implements PicsouGlobSerializer {

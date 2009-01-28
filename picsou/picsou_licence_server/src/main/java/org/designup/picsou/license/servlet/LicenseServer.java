@@ -1,5 +1,6 @@
 package org.designup.picsou.license.servlet;
 
+import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.mail.Mailer;
 import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
@@ -115,9 +116,9 @@ public class LicenseServer {
 
     Context context = new Context(jetty, "/", Context.SESSIONS);
     context.setResourceBase("classes");
-    context.addServlet(new ServletHolder(new AskForMailServlet(directory)), "/mailTo");
-    context.addServlet(new ServletHolder(new RequestForConfigServlet(directory)), "/requestForConfig");
-    context.addServlet(new ServletHolder(new RegisterServlet(directory)), "/register");
+    context.addServlet(new ServletHolder(new AskForMailServlet(directory)), ConfigService.REQUEST_FOR_MAIL);
+    context.addServlet(new ServletHolder(new RequestForConfigServlet(directory)), ConfigService.REQUEST_FOR_CONFIG);
+    context.addServlet(new ServletHolder(new RegisterServlet(directory)), ConfigService.REQUEST_FOR_REGISTER);
   }
 
   private Directory createDirectory() {

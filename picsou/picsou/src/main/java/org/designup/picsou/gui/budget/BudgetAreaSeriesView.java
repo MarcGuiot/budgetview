@@ -9,7 +9,6 @@ import org.designup.picsou.gui.components.TextDisplay;
 import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.model.SavingsBalanceStat;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.PicsouMatchers;
@@ -60,7 +59,7 @@ public class BudgetAreaSeriesView extends View {
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
-        seriesDateFilter.filterDates(selectedMonthIds, Collections.<Integer>emptySet());
+        seriesDateFilter.filterDates(selectedMonthIds);
         updateRepeat(repository);
         update();
       }
@@ -124,7 +123,7 @@ public class BudgetAreaSeriesView extends View {
 
     this.headerUpdater =
       new BudgetAreaHeaderUpdater(TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
-                                  repository, directory);
+                                  repository, directory, false);
     this.headerUpdater.setColors("block.total",
                                  "block.total.overrun.error",
                                  "block.total.overrun.positive");

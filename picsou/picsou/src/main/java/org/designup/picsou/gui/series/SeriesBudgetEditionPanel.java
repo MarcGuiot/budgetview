@@ -10,7 +10,6 @@ import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.Amounts;
-import org.designup.picsou.triggers.SameAccountChecker;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -180,27 +179,20 @@ public class SeriesBudgetEditionPanel {
   private void updatePositiveOrNegativeRadio() {
     Glob fromAccount = localRepository.findLinkTarget(currentSeries, Series.FROM_ACCOUNT);
     Glob toAccount = localRepository.findLinkTarget(currentSeries, Series.TO_ACCOUNT);
-//    boolean isFromToSeries = Account.shoudCreateMirror(fromAccount, toAccount) ||
-//                             Account.areNoneImported(fromAccount, toAccount);
-
-    SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(localRepository);
-
-    Integer forAccountId = currentSeries.get(Series.TO_ACCOUNT) == null ?
-                           currentSeries.get(Series.FROM_ACCOUNT) : currentSeries.get(Series.TO_ACCOUNT);
-    if (mainAccountChecker.isSame(currentSeries.get(Series.FROM_ACCOUNT))) {
-      forAccountId = currentSeries.get(Series.FROM_ACCOUNT);
+    int multiplier = 1;
+    if (Account.onlyOneIsImported(fromAccount, toAccount)) {
+      if (fromAccount.get(Account.IS_IMPORTED_ACCOUNT)) {
+        multiplier = -1;
+      }
+      else {
+        multiplier = 1;
+      }
     }
-    if (mainAccountChecker.isSame(currentSeries.get(Series.TO_ACCOUNT))) {
-      forAccountId = currentSeries.get(Series.TO_ACCOUNT);
+    else if ((fromAccount == null || toAccount == null) && toAccount != fromAccount) {
+      if (fromAccount != null) {
+        multiplier = -1;
+      }
     }
-
-    double multiplier = 1;
-    if (forAccountId != null) {
-      multiplier = Account.getMultiplierForInOrOutputOfTheAccount(fromAccount, toAccount,
-                                                                  localRepository.get(Key.create(Account.TYPE,
-                                                                                                 forAccountId)));
-    }
-
     isNormalyPositive = budgetArea.isIncome() ||
                         (budgetArea == BudgetArea.SAVINGS && multiplier > 0);
     amountEditor.update(isNormalyPositive, budgetArea == BudgetArea.SAVINGS);
@@ -371,11 +363,15 @@ public class SeriesBudgetEditionPanel {
       Glob seriesStat = this.repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
       if (seriesStat != null) {
         Double amount = seriesStat.get(SeriesStat.AMOUNT);
-        if (!BudgetArea.get(currentSeries.get(Series.BUDGET_AREA)).isIncome() && !Amounts.isNullOrZero(amount)) {
+        Integer budgetArea = currentSeries.get(Series.BUDGET_AREA);
+        if (!BudgetArea.get(budgetArea).isIncome() && !Amounts.isNullOrZero(amount)) {
           amount = -amount;
         }
+        if (BudgetArea.SAVINGS.getId().equals(budgetArea)) {
+          amount = Math.abs(amount);
+        }
         String str = format.format(amount);
-        if (!BudgetArea.get(currentSeries.get(Series.BUDGET_AREA)).isIncome()) {
+        if (!BudgetArea.get(budgetArea).isIncome()) {
           if (amount < 0) {
             return str.replace("-", "+");
           }

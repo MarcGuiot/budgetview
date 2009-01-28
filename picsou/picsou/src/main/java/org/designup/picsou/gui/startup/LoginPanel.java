@@ -50,6 +50,7 @@ public class LoginPanel {
   private ServerDirectory serverDirectory;
   private SplitsBuilder builder;
   private JPanel panel;
+  private boolean validUser;
 
   public LoginPanel(String remoteAdress, String prevaylerPath, boolean dataInMemory,
                     MainWindow mainWindow, Directory directory) {
@@ -170,7 +171,7 @@ public class LoginPanel {
             serverAccess.initConnection(user, password, false);
           }
         }
-        PicsouInit init = PicsouInit.init(serverAccess, user, creationCheckBox.isSelected(), directory);
+        PicsouInit init = PicsouInit.init(serverAccess, user, validUser, creationCheckBox.isSelected(), directory);
         final MainPanel mainPanel =
           MainPanel.init(init.getRepository(), init.getDirectory(),
                          mainWindow,
@@ -350,7 +351,7 @@ public class LoginPanel {
       serverAccess = new ConnectionRetryServerAccess(
         new EncrypterToTransportServerAccess(new HttpsClientTransport(remoteAdress), directory));
     }
-    serverAccess.connect();
+    validUser = serverAccess.connect();
   }
 
   private void initDemoServerAccess() {
@@ -360,6 +361,7 @@ public class LoginPanel {
                                                         directory);
 
     serverAccess.connect();
+    validUser = false;
   }
 
   private class LoginAction extends AbstractAction {

@@ -8,10 +8,7 @@ import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class PicsouMatchers {
   private PicsouMatchers() {
@@ -133,8 +130,8 @@ public class PicsouMatchers {
     };
   }
 
-  public static SeriesFirstEndDateFilter seriesDateSavingsAndAccountFilter(final Integer accountId, boolean isExclusive) {
-    return new SeriesFirstEndDateFilter(isExclusive) {
+  public static SeriesFirstEndDateFilter seriesDateSavingsAndAccountFilter(final Integer accountId) {
+    return new SeriesFirstEndDateFilter(false) {
 
       protected boolean isEligible(Glob series) {
         return series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId()) &&
@@ -145,50 +142,138 @@ public class PicsouMatchers {
     };
   }
 
+  public static CategorizationFilter seriesFilter(final Integer budgetAreaId) {
+    return new CategorizationFilter(budgetAreaId);
+  }
+
+  public static class CategorizationFilter implements GlobMatcher {
+    private List<Glob> transactions;
+    private SeriesFirstEndDateFilter filter;
+
+    public CategorizationFilter(final Integer budgetAreaId) {
+      filter = seriesDateFilter(budgetAreaId, true);
+    }
+
+    public boolean matches(Glob series, GlobRepository repository) {
+      if (filter.matches(series, repository)) {
+        Integer toAccountId = series.get(Series.TO_ACCOUNT);
+        Integer fromAccountId = series.get(Series.FROM_ACCOUNT);
+        Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
+        Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
+        if (Account.onlyOneIsImported(toAccount, fromAccount)) {
+          for (Glob transaction : transactions) {
+            if (transaction.get(Transaction.AMOUNT) > 0) {
+              if (!toAccount.get(Account.IS_IMPORTED_ACCOUNT)) {
+                return false;
+              }
+            }
+            else {
+              if (!fromAccount.get(Account.IS_IMPORTED_ACCOUNT)) {
+                return false;
+              }
+            }
+          }
+        }
+        else if (toAccountId != null && fromAccountId != null) {
+          SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
+          for (Glob transaction : transactions) {
+            if (transaction.get(Transaction.AMOUNT) > 0) {
+              if (series.get(Series.IS_MIROR)) {
+                return false;
+              }
+              if (!toAccountId.equals(transaction.get(Transaction.ACCOUNT))) {
+                if (toAccountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
+                  if (!mainAccountChecker.isSame(transaction.get(Transaction.ACCOUNT))) {
+                    return false;
+                  }
+                }
+                else {
+                  return false;
+                }
+              }
+            }
+            else {
+              if (!series.get(Series.IS_MIROR)) {
+                return false;
+              }
+              if (!fromAccountId.equals(transaction.get(Transaction.ACCOUNT))) {
+                if (fromAccountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
+                  if (!mainAccountChecker.isSame(transaction.get(Transaction.ACCOUNT))) {
+                    return false;
+                  }
+                }
+                else {
+                  return false;
+                }
+              }
+            }
+          }
+        }
+        else if (toAccountId != null || fromAccountId != null) {
+          SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
+          for (Glob transaction : transactions) {
+            if (transaction.get(Transaction.AMOUNT) < 0) {
+              if (fromAccountId != null) {
+                if (!fromAccountId.equals(transaction.get(Transaction.ACCOUNT))) {
+                  if (fromAccountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
+                    if (!mainAccountChecker.isSame(transaction.get(Transaction.ACCOUNT))) {
+                      return false;
+                    }
+                  }
+                  else {
+                    return false;
+                  }
+                }
+              }
+              else {
+                return false;
+              }
+            }
+            else {
+              if (toAccountId != null) {
+                if (!toAccountId.equals(transaction.get(Transaction.ACCOUNT))) {
+                  if (toAccountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
+                    if (!mainAccountChecker.isSame(transaction.get(Transaction.ACCOUNT))) {
+                      return false;
+                    }
+                  }
+                  else {
+                    return false;
+                  }
+                }
+              }
+              else {
+                return false;
+              }
+            }
+          }
+        }
+        return true;
+      }
+      return false;
+    }
+
+    public void filterDates(Set<Integer> monthIds, List<Glob> transactions) {
+      filter.filterDates(monthIds);
+      this.transactions = transactions;
+    }
+  }
+
+
   static public abstract class SeriesFirstEndDateFilter implements GlobMatcher {
     private boolean exclusive;
     private Set<Integer> monthIds = Collections.emptySet();
-    private Set<Integer> accounts = Collections.emptySet();
 
     private SeriesFirstEndDateFilter(boolean isExclusive) {
       exclusive = isExclusive;
     }
 
-    public void filterDates(Set<Integer> monthIds, Set<Integer> accounts) {
+    public void filterDates(Set<Integer> monthIds) {
       this.monthIds = monthIds;
-      this.accounts = accounts;
     }
 
     public boolean matches(Glob series, GlobRepository repository) {
       if (isEligible(series)) {
-        Integer toAccount = series.get(Series.TO_ACCOUNT);
-        Integer fromAccount = series.get(Series.FROM_ACCOUNT);
-        if (exclusive) {
-          if (toAccount == null && fromAccount == null) {
-            SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
-            for (Integer account : accounts) {
-              if (!mainAccountChecker.isSame(account)) {
-                return false;
-              }
-            }
-          }
-          else {
-            if (series.get(Series.IS_MIROR)) {
-              return false;
-            }
-            SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
-            for (Integer account : accounts) {
-              if (toAccount != null && (account.equals(toAccount) || (toAccount == Account.MAIN_SUMMARY_ACCOUNT_ID && mainAccountChecker.isSame(account)))) {
-                continue;
-              }
-              if (fromAccount != null && (account.equals(fromAccount) || (fromAccount == Account.MAIN_SUMMARY_ACCOUNT_ID && mainAccountChecker.isSame(account)))) {
-                continue;
-              }
-              return false;
-            }
-          }
-        }
-
         Integer firstMonth = series.get(Series.FIRST_MONTH);
         Integer lastMonth = series.get(Series.LAST_MONTH);
         if (firstMonth == null && lastMonth == null) {
@@ -205,7 +290,7 @@ public class PicsouMatchers {
             return !exclusive;
           }
         }
-        return exclusive;
+        return exclusive;  // return true?
       }
       return false;
     }

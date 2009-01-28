@@ -66,7 +66,7 @@ public class ImportPanel {
   private DefaultDirectory sessionDirectory;
   private ImportSession importSession;
   private final List<File> files = new ArrayList<File>();
-  private Glob currentlySelectedAccount;
+  private Key currentlySelectedAccount;
 
   private AccountEditionPanel accountEditionPanel;
   private BankEntityEditionPanel bankEntityEditionPanel;
@@ -173,7 +173,7 @@ public class ImportPanel {
     sessionDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         currentlySelectedAccount = selection.getAll(Account.TYPE).isEmpty() ? null :
-                                   selection.getAll(Account.TYPE).get(0);
+                                   selection.getAll(Account.TYPE).get(0).getKey();
       }
     }, Account.TYPE);
 

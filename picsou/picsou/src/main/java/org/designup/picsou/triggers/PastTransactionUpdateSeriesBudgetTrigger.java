@@ -4,6 +4,7 @@ import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.model.util.Amounts;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 
@@ -120,15 +121,12 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
       if (previousMonth != null) {
         Glob previousStat = repository.findOrCreate(Key.create(SeriesStat.SERIES, seriesId,
                                                                SeriesStat.MONTH, previousMonth));
-        Glob seriesBudget =
-          budgetIndex.findByIndex(SeriesBudget.MONTH, previousMonth).getGlobs().getFirst();
-        int multi = -1;
-        if (seriesBudget.get(SeriesBudget.AMOUNT) > 0) {
-          multi = 1;
-        }
-
+        // Si on a un changement de signe : ex on passe de -10 a 5 on propage le changement vers 5
         Double futureAmount;
-        if (multi * amount > multi * previousStat.get(SeriesStat.AMOUNT)) {
+        if (Amounts.isNearZero(previousStat.get(SeriesStat.AMOUNT))
+            || (!Amounts.sameSign(previousStat.get(SeriesStat.AMOUNT), amount) &&
+                !Amounts.isNearZero(amount))
+            || Math.abs(amount) > Math.abs(previousStat.get(SeriesStat.AMOUNT))) {
           futureAmount = amount;
         }
         else {
@@ -174,11 +172,10 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
           Glob currentSeriesStat =
             repository.findOrCreate(Key.create(SeriesStat.SERIES, seriesId,
                                                SeriesStat.MONTH, currentMonthId));
-          int multi = -1;
-          if (budget.get(SeriesBudget.AMOUNT) > 0) {
-            multi = 1;
-          }
-          if (multi * currentSeriesStat.get(SeriesStat.AMOUNT) > multi * amount) {
+          if (Amounts.isNearZero(amount)
+              || (!Amounts.sameSign(currentSeriesStat.get(SeriesStat.AMOUNT), amount) &&
+                  !Amounts.isNearZero(currentSeriesStat.get(SeriesStat.AMOUNT)))
+              || Math.abs(currentSeriesStat.get(SeriesStat.AMOUNT)) > Math.abs(amount)) {
             futureAmount = currentSeriesStat.get(SeriesStat.AMOUNT);
           }
         }

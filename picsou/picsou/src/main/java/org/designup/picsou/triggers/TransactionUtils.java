@@ -41,7 +41,7 @@ public class TransactionUtils {
     boolean isPlanned = (seriesBudget.get(SeriesBudget.MONTH) >= currentMonthId) &&
                         ((seriesBudget.get(SeriesBudget.MONTH) > currentMonthId)
                          || (seriesBudget.get(SeriesBudget.DAY) > currentDay));
-    if (Math.abs(amount) > 0.0001 && !isPlanned) {
+    if (Math.abs(amount) > 0.0001) {
       Glob transaction =
         repository.create(Transaction.TYPE,
                           FieldValue.value(Transaction.AMOUNT, amount),
@@ -54,7 +54,7 @@ public class TransactionUtils {
                                            amount > 0 ? TransactionType.VIREMENT.getId() : TransactionType.PRELEVEMENT.getId()),
                           FieldValue.value(Transaction.CATEGORY,
                                            series.get(Series.DEFAULT_CATEGORY)),
-                          FieldValue.value(Transaction.LABEL, series.get(Series.LABEL)),
+                          FieldValue.value(Transaction.LABEL, Transaction.getLabel(isPlanned, series)),
                           FieldValue.value(Transaction.SERIES, series.get(Series.ID)),
                           FieldValue.value(Transaction.CREATED_BY_SERIES, true),
                           FieldValue.value(Transaction.PLANNED, isPlanned));

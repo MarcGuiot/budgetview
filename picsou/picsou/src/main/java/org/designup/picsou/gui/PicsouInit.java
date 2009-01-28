@@ -43,11 +43,13 @@ public class PicsouInit {
   private Directory directory;
   private DefaultGlobIdGenerator idGenerator;
 
-  public static PicsouInit init(ServerAccess serverAccess, String user, boolean newUser, Directory directory) throws IOException {
-    return new PicsouInit(serverAccess, user, newUser, directory);
+  public static PicsouInit init(ServerAccess serverAccess, String user, boolean validUser,
+                                boolean newUser, Directory directory) throws IOException {
+    return new PicsouInit(serverAccess, user, validUser, newUser, directory);
   }
 
-  private PicsouInit(ServerAccess serverAccess, String user, boolean newUser, final Directory directory) throws IOException {
+  private PicsouInit(ServerAccess serverAccess, String user, boolean validUser,
+                     boolean newUser, final Directory directory) throws IOException {
     this.serverAccess = serverAccess;
     this.directory = directory;
 
@@ -86,7 +88,8 @@ public class PicsouInit {
     repository.addTrigger(new SavingsBalanceStatTrigger());
 
     if (!newUser) {
-      repository.create(User.KEY, value(User.NAME, user));
+      repository.create(User.KEY, value(User.NAME, user),
+                        value(User.IS_REGISTERED_USER, validUser));
     }
     MutableChangeSet changeSet = new DefaultChangeSet();
     try {
@@ -107,7 +110,7 @@ public class PicsouInit {
     try {
       repository.startChangeSet();
       versionInfo = repository.find(VersionInformation.KEY);
-      createDataForNewUser(user, repository);
+      createDataForNewUser(user, repository, validUser);
     }
     finally {
       repository.completeChangeSet();
@@ -157,9 +160,10 @@ public class PicsouInit {
     }
   }
 
-  public static void createDataForNewUser(String user, GlobRepository repository) {
+  public static void createDataForNewUser(String user, GlobRepository repository, boolean validUser) {
     repository.findOrCreate(User.KEY,
-                            value(User.NAME, user));
+                            value(User.NAME, user),
+                            value(User.IS_REGISTERED_USER, validUser));
     repository.findOrCreate(VersionInformation.KEY,
                             value(VersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION),
                             value(VersionInformation.CURRENT_BANK_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION),

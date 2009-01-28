@@ -13,10 +13,10 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
@@ -61,7 +61,7 @@ public class SavingsSeriesView {
     selectionListener = new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
-        seriesDateFilter.filterDates(selectedMonthIds, Collections.<Integer>emptySet());
+        seriesDateFilter.filterDates(selectedMonthIds);
         updateRepeat(repository);
       }
     };
@@ -112,7 +112,7 @@ public class SavingsSeriesView {
                         new GlobList(),
                         new SeriesRepeatComponentFactory(accountName));
 
-    seriesDateFilter = PicsouMatchers.seriesDateSavingsAndAccountFilter(account.get(Account.ID), false);
+    seriesDateFilter = PicsouMatchers.seriesDateSavingsAndAccountFilter(account.get(Account.ID));
     seriesFilter = new GlobMatcher() {
       public boolean matches(Glob periodSeriesStat, GlobRepository repository) {
         Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);

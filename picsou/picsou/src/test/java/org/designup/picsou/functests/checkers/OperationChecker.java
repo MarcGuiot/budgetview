@@ -46,22 +46,26 @@ public class OperationChecker {
   }
 
   public void importOfxFile(String name) {
-    importFile(new String[]{name}, null, null);
+    importFile(new String[]{name}, null, null, null);
   }
 
   public void importQifFile(String file, String bank) {
-    importFile(new String[]{file}, bank, null);
+    importFile(new String[]{file}, bank, null, null);
   }
 
   public void importQifFile(String file, String bank, Double amount) {
-    importFile(new String[]{file}, bank, amount);
+    importFile(new String[]{file}, bank, amount, null);
+  }
+
+  public void importQifFile(String file, String bank, String targetAccount) {
+    importFile(new String[]{file}, bank, null, targetAccount);
   }
 
   public void importQifFiles(String bank, String... files) {
-    importFile(files, bank, null);
+    importFile(files, bank, null, null);
   }
 
-  private void importFile(final String[] fileNames, final String bank, final Double amount) {
+  private void importFile(final String[] fileNames, final String bank, final Double amount, final String targetAccount) {
     WindowInterceptor
       .init(importMenu.triggerClick())
       .process(new WindowHandler() {
@@ -75,6 +79,9 @@ public class OperationChecker {
           if (importDialog.getInputTextBox("number").isEditable().isTrue()) {
             importDialog.getInputTextBox("number").setText(DEFAULT_ACCOUNT_NUMBER);
             importDialog.getComboBox("accountBank").select(bank);
+          }
+          if (targetAccount != null) {
+            importDialog.getComboBox("accountCombo").select(targetAccount);
           }
           Button okButton = importDialog.getButton(Lang.get("import.ok"));
           for (int i = 0; i < fileNames.length - 1; i++) {
@@ -99,11 +106,11 @@ public class OperationChecker {
       .run();
   }
 
-  public String backup(String name) {
+  public String backup(String dirName) {
     final String[] fileName = new String[1];
     WindowInterceptor
       .init(backupMenu.triggerClick())
-      .process(FileChooserHandler.init().select(name))
+      .process(FileChooserHandler.init().select(dirName))
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           UISpecAssert.assertTrue(window.getTextBox("message").textContains("Backup done in file"));

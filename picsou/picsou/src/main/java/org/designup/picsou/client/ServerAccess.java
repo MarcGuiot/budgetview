@@ -27,7 +27,7 @@ public interface ServerAccess {
 
   void takeSnapshot();
 
-  void connect();
+  boolean connect();
 
   MapOfMaps<String, Integer, SerializableGlobType> getServerData();
 
@@ -59,7 +59,8 @@ public interface ServerAccess {
     public void takeSnapshot() {
     }
 
-    public void connect() {
+    public boolean connect() {
+      return false;
     }
 
     public MapOfMaps<String, Integer, SerializableGlobType> getServerData() {

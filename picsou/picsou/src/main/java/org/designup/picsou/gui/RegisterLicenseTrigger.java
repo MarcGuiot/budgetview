@@ -3,7 +3,6 @@ package org.designup.picsou.gui;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.utils.KeyService;
 import org.designup.picsou.model.User;
-import org.designup.picsou.model.UserPreferences;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 
@@ -45,7 +44,7 @@ public class RegisterLicenseTrigger implements ChangeSetListener {
               if (KeyService.checkSignature(mailAsByte, signature)) {
                 serverAccess.localRegister(mailAsByte, signature, activationCode);
                 repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_OK);
-                repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, true);
+                repository.update(User.KEY, User.IS_REGISTERED_USER, true);
               }
               else {
                 repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAIL_BAD_SIGNATURE);
@@ -58,14 +57,13 @@ public class RegisterLicenseTrigger implements ChangeSetListener {
         }
       });
     }
-    if (changeSet.containsChanges(UserPreferences.KEY)) {
-      changeSet.safeVisit(UserPreferences.KEY, new ChangeSetVisitor() {
+    if (changeSet.containsChanges(User.KEY)) {
+      changeSet.safeVisit(User.KEY, new ChangeSetVisitor() {
         public void visitCreation(Key key, FieldValues values) throws Exception {
         }
 
         public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-          if (values.contains(UserPreferences.REGISTERED_USER) &&
-              !values.get(UserPreferences.REGISTERED_USER)) {
+          if (values.contains(User.IS_REGISTERED_USER) && !values.get(User.IS_REGISTERED_USER)) {
             serverAccess.localRegister(null, null, null);
           }
         }

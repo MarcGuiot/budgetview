@@ -10,6 +10,7 @@ import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.server.ServerDirectory;
 import org.globsframework.utils.directory.Directory;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -28,21 +29,28 @@ public class MainWindowLauncher {
     arguments.addAll(Arrays.asList(args));
     String user = parseArguments(arguments, "-u", "user");
     String password = parseArguments(arguments, "-p", "pwd");
-    run(user, password);
+    String snapshot = parseArguments(arguments, "-s", null);
+    run(user, password, snapshot);
   }
 
-  public static Directory run(String user, String password) throws Exception {
+  public static Directory run(String user, String password, String snapshot) throws Exception {
     PicsouApplication.clearRepositoryIfNeeded();
+    PicsouApplication.changeDate();
 
-    ServerDirectory serverDirectory =
-      new ServerDirectory(PicsouApplication.getLocalPrevaylerPath(), PicsouApplication.isDataInMemory());
+    ServerDirectory serverDirectory;
+    if (snapshot != null) {
+      serverDirectory = new ServerDirectory(new FileInputStream(snapshot));
+    }
+    else {
+      serverDirectory = new ServerDirectory(PicsouApplication.getLocalPrevaylerPath(), PicsouApplication.isDataInMemory());
+    }
     Directory directory = PicsouApplication.createDirectory(new OpenRequestManager());
     ServerAccess serverAccess =
       new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
                                            directory);
     boolean newUser;
+    boolean validUser = serverAccess.connect();
     try {
-      serverAccess.connect();
       serverAccess.createUser(user, password.toCharArray());
       newUser = true;
     }
@@ -50,7 +58,7 @@ public class MainWindowLauncher {
       serverAccess.initConnection(user, password.toCharArray(), false);
       newUser = false;
     }
-    PicsouInit init = PicsouInit.init(serverAccess, user, newUser, directory);
+    PicsouInit init = PicsouInit.init(serverAccess, user, validUser, newUser, directory);
 
     MainWindow window = new MainWindow();
     MainPanel.init(init.getRepository(), init.getDirectory(), window,

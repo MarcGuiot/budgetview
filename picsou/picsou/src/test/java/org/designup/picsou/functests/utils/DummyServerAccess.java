@@ -30,7 +30,8 @@ public class DummyServerAccess implements ServerAccess {
   public void takeSnapshot() {
   }
 
-  public void connect() {
+  public boolean connect() {
+    return false;
   }
 
   public MapOfMaps<String, Integer, SerializableGlobType> getServerData() {

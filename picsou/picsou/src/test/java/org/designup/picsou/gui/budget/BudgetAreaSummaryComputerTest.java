@@ -214,7 +214,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
       this.computer =
         new BudgetAreaHeaderUpdater(
           TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
-                                     repository, directory);
+          repository, directory, false);
 
       this.computer.update(new GlobList(balanceStat), budgetArea);
     }

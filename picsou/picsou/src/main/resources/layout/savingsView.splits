@@ -17,9 +17,12 @@
         </grid>
         <panel preferredSize="(300,400)">
           <scrollPane marginBottom="0" verticalUnitIncrement="10">
-            <repeat ref="accounts">
-              <panel ref="account"/>
-            </repeat>
+            <column>
+              <repeat ref="accounts">
+                <panel ref="account"/>
+              </repeat>
+              <filler fill="vertical"/>
+            </column>
           </scrollPane>
         </panel>
         <row styleClass="iconButtonGroup">

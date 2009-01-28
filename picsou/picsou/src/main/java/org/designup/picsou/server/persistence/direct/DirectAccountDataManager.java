@@ -4,7 +4,6 @@ import org.designup.picsou.client.SerializableDeltaGlobSerializer;
 import org.designup.picsou.client.SerializableGlobSerializer;
 import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.server.model.ServerDelta;
-import org.designup.picsou.server.model.ServerState;
 import org.designup.picsou.server.persistence.prevayler.AccountDataManager;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.MapOfMaps;
@@ -19,7 +18,6 @@ import org.prevayler.implementation.PrevaylerDirectory;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DirectAccountDataManager implements AccountDataManager {
@@ -90,7 +88,7 @@ public class DirectAccountDataManager implements AccountDataManager {
         SerializableDeltaGlobSerializer serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
         MultiMap<String, ServerDelta> map = serializableDeltaGlobSerializer.deserialize(serializedInput);
         if (version >= snapshotVersion) {
-          apply(globs, map);
+          ReadOnlyAccountDataManager.apply(globs, map);
         }
         version++;
       }
@@ -117,20 +115,6 @@ public class DirectAccountDataManager implements AccountDataManager {
     catch (Exception e) {
     }
     return version;
-  }
-
-  private void apply(MapOfMaps<String, Integer, SerializableGlobType> globs, MultiMap<String, ServerDelta> map) {
-    for (Map.Entry<String, List<ServerDelta>> stringListEntry : map.entries()) {
-      Map<Integer, SerializableGlobType> globToMerge = globs.get(stringListEntry.getKey());
-      for (ServerDelta deltaGlob : stringListEntry.getValue()) {
-        if (deltaGlob.getState() == ServerState.DELETED) {
-          globToMerge.remove(deltaGlob.getId());
-        }
-        else {
-          globToMerge.put(deltaGlob.getId(), new SerializableGlobType(stringListEntry.getKey(), deltaGlob));
-        }
-      }
-    }
   }
 
   private long readJournalVersion(SerializedInput serializedInput) {

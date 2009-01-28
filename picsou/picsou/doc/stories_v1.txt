@@ -1,3 +1,4 @@
+- Pouvoir supprimer son compte local
 
 - Marc : Revoir l'affectation automatique par comptes (pour affecter a des series du bon comptes)
 

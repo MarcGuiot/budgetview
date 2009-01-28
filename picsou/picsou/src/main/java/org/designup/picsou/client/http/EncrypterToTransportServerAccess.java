@@ -47,18 +47,20 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     configService = directory.get(ConfigService.class);
   }
 
-  public void connect() {
+  public boolean connect() {
     SerializedInput response = clientTransport.connect();
+    boolean isValidUser = false;
     if (response.readBoolean()) {
       byte[] repoId = response.readBytes();
       byte[] mail = response.readBytes();
       byte[] signature = response.readBytes();
       String activationCode = response.readString();
       long count = response.readNotNullLong();
-      configService.update(repoId, count, mail, signature, activationCode);
+      isValidUser = configService.update(repoId, count, mail, signature, activationCode);
     }
     sessionId = response.readLong();
     privateId = response.readBytes();
+    return isValidUser;
   }
 
   public boolean createUser(String name, char[] password) throws UserAlreadyExists {

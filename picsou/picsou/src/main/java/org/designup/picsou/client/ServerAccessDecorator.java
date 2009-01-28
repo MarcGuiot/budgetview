@@ -36,8 +36,8 @@ public class ServerAccessDecorator implements ServerAccess {
     serverAccess.takeSnapshot();
   }
 
-  public void connect() {
-    serverAccess.connect();
+  public boolean connect() {
+    return serverAccess.connect();
   }
 
   public MapOfMaps<String, Integer, SerializableGlobType> getServerData() {

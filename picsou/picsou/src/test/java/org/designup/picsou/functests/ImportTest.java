@@ -443,4 +443,57 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .add("Menu K", -1.00, 105.00, 105.00)
       .check();
   }
+
+
+  public void testImportFromDiferentAccountWithSameTransactionsInOfx() throws Exception {
+    String fileName1 = OfxBuilder.init(this)
+      .addBankAccount(666, 1024, "12345678a", 12.0, "2008/06/11")
+      .addTransaction("2008/06/10", 1.0, "V'lib")
+      .save();
+
+    operations.importOfxFile(fileName1);
+
+    String fileName2 = OfxBuilder.init(this)
+      .addBankAccount(666, 1024, "12345678b", 12.0, "2008/06/11")
+      .addTransaction("2008/06/10", 1.0, "V'lib")
+      .save();
+    operations.importOfxFile(fileName2);
+    views.selectData();
+    transactions
+      .initContent()
+      .add("10/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
+      .add("10/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
+      .check();
+  }
+
+  public void testImportFromDiferentAccountWithSameTransactionsInQif() throws Exception {
+    String file1 = QifBuilder
+      .init(this)
+      .addTransaction("2006/01/09", -1, "Menu K")
+      .save();
+
+    operations.importQifFile(file1, SOCIETE_GENERALE, 100.);
+
+    mainAccounts.createNewAccount()
+      .setAccountName("other")
+      .setBalance(100)
+      .setAccountNumber("1213")
+      .selectBank(SOCIETE_GENERALE)
+      .validate();
+
+    String file2 = QifBuilder
+      .init(this)
+      .addTransaction("2006/01/09", -1, "Menu K")
+      .save();
+
+    operations.importQifFile(file2, SOCIETE_GENERALE, "other");
+
+    views.selectData();
+    transactions
+      .initContent()
+      .add("09/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.00)
+      .add("09/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.00)
+      .check();
+
+  }
 }

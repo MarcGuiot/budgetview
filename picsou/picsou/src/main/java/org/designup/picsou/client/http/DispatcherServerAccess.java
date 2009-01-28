@@ -79,15 +79,19 @@ public class DispatcherServerAccess implements ServerAccess {
     return isRegistered;
   }
 
-  public void connect() {
-    localServerAccess.connect();
+  public boolean connect() {
+    boolean validUser = localServerAccess.connect();
     if (remoteServerAccess != null) {
       try {
-        remoteServerAccess.connect();
+        boolean remoteValidity = remoteServerAccess.connect();
+        if (remoteValidity) {
+          return true;
+        }
       }
       catch (Exception e) {
       }
     }
+    return validUser;
   }
 
   public MapOfMaps<String, Integer, SerializableGlobType> getServerData() {

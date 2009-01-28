@@ -78,7 +78,7 @@ public class LicenseDialog {
           }
           connectMessageLabel.setVisible(!isConnected);
           if (isConnected) {
-            localRepository.update(UserPreferences.KEY, UserPreferences.FUTURE_MONTH_COUNT, 24);
+//            localRepository.update(UserPreferences.KEY, UserPreferences.FUTURE_MONTH_COUNT, 24);
             selectionService.select(localRepository.get(User.KEY));
             selectionService.select(localRepository.get(UserPreferences.KEY));
           }
@@ -89,12 +89,11 @@ public class LicenseDialog {
               repository.removeChangeListener(changeSetListener);
               localRepository.dispose();
             }
+            else if (activationState == User.ACTIVATION_FAIL_MAIL_SEND) {
+              updateDialogState("license.activation.fail.mailSent", localRepository.get(User.KEY).get(User.MAIL));
+            }
             else if (activationState != User.ACTIVATION_IN_PROCESS) {
-              localRepository.rollback();
-              connectMessageLabel.setText(Lang.get("license.activation.fail"));
-              connectMessageLabel.setVisible(true);
-              progressBar.setVisible(false);
-              validateAction.setEnabled(true);
+              updateDialogState("license.activation.fail");
             }
           }
         }
@@ -105,10 +104,18 @@ public class LicenseDialog {
     };
   }
 
+  private void updateDialogState(String message, String... args) {
+    localRepository.rollback();
+    connectMessageLabel.setText(Lang.get(message, args));
+    connectMessageLabel.setVisible(true);
+    progressBar.setVisible(false);
+    validateAction.setEnabled(true);
+  }
+
   public void show() {
     localRepository.rollback();
     if (repository.get(User.KEY).get(User.CONNECTED)) {
-      localRepository.update(UserPreferences.KEY, UserPreferences.FUTURE_MONTH_COUNT, 24);
+//      localRepository.update(UserPreferences.KEY, UserPreferences.FUTURE_MONTH_COUNT, 24);
       selectionService.select(localRepository.get(User.KEY));
       selectionService.select(localRepository.get(UserPreferences.KEY));
     }
@@ -127,7 +134,7 @@ public class LicenseDialog {
       Utils.beginRemove();
       Glob user = localRepository.get(User.KEY);
       if (user.get(User.MAIL).equals("admin")) {
-        localRepository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, true);
+        localRepository.update(User.KEY, User.IS_REGISTERED_USER, true);
         localRepository.commitChanges(false);
         localDirectory.get(UndoRedoService.class).cleanUndo();
         dialog.setVisible(false);

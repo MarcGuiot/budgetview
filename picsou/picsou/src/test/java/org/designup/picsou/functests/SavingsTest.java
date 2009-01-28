@@ -134,8 +134,20 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setAmount("400")
       .validate();
 
-    views.selectHome();
+    timeline.selectAll();
+    views.selectData();
+    transactions
+      .initContent()
+      .add("01/10/2008", TransactionType.PLANNED, "Planned: Travaux", "", -400.00, "Travaux", MasterCategory.HOUSE)
+      .add("01/10/2008", TransactionType.PLANNED, "Planned: Epargne", "", 200.00, "Epargne", MasterCategory.SAVINGS)
+      .add("01/09/2008", TransactionType.PLANNED, "Planned: Epargne", "", 200.00, "Epargne", MasterCategory.SAVINGS)
+      .add("01/08/2008", TransactionType.VIREMENT, "Epargne", "", 200.00, "Epargne", MasterCategory.SAVINGS)
+      .check();
+
     timeline.selectMonth("2008/10");
+    views.selectBudget();
+    budgetView.savings.checkTotalAmounts(0, -200);
+    views.selectHome();
     savingsAccounts.checkPosition("Epargne LCL", 1000);
   }
 
@@ -494,13 +506,14 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testImportedSavingAccountWithMainAccount() throws Exception {
+  public void testSimpleCase() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/10")
+      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/10")  //compte d'épargne
       .addTransaction("2008/08/10", 100.00, "Virement")
       .load();
     OfxBuilder.init(this)
-      .addTransaction("2008/08/10", -100.00, "Virement")
+      .addTransaction("2008/08/10", -100.00, "Prelevement")
+      .addTransaction("2008/07/05", 12.00, "McDo")
       .load();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectHome();
@@ -515,21 +528,113 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setToAccount("Account n. 111")
       .validate();
     views.selectCategorization();
+    categorization.showSelectedMonthsOnly();
+
+    timeline.selectMonth("2008/08");
+    categorization.setSavings("Prelevement", "CA");
     categorization.setSavings("Virement", "CA");
+
     timeline.selectAll();
     views.selectData();
     transactions.initContent()
-      .add("01/10/2008", TransactionType.PLANNED, "Planned: CA", "", -100.00, "CA", MasterCategory.SAVINGS)
       .add("01/10/2008", TransactionType.PLANNED, "Planned: CA", "", 100.00, "CA", MasterCategory.SAVINGS)
-      .add("01/09/2008", TransactionType.PLANNED, "Planned: CA", "", -100.00, "CA", MasterCategory.SAVINGS)
+      .add("01/10/2008", TransactionType.PLANNED, "Planned: CA", "", -100.00, "CA", MasterCategory.SAVINGS)
       .add("01/09/2008", TransactionType.PLANNED, "Planned: CA", "", 100.00, "CA", MasterCategory.SAVINGS)
-      .add("10/08/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "CA", MasterCategory.SAVINGS)
+      .add("01/09/2008", TransactionType.PLANNED, "Planned: CA", "", -100.00, "CA", MasterCategory.SAVINGS)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "Prelevement", "", -100.00, "CA", MasterCategory.SAVINGS)
       .add("10/08/2008", TransactionType.VIREMENT, "Virement", "", 100.00, "CA", MasterCategory.SAVINGS)
+      .add("05/07/2008", TransactionType.VIREMENT, "McDo", "", 12.00)
       .check();
     views.selectHome();
     timeline.selectMonth("2008/10");
     savingsAccounts.checkPosition("Account n. 111", 1200);
     mainAccounts.checkEstimatedPosition(-200);
+  }
+
+  public void testImportedSavingAccountWithMainAccount() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/10")  //compte d'épargne
+      .addTransaction("2008/08/10", 100.00, "Virement")
+      .addTransaction("2008/07/10", -200.00, "Prelevement")
+      .load();
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/10", -100.00, "Prelevement")
+      .addTransaction("2008/07/10", 200.00, "Virement")
+      .load();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    views.selectHome();
+    this.mainAccounts.edit("Account n. 111")
+      .setAsSavings()
+      .validate();
+    views.selectBudget();
+    budgetView.savings.createSeries()
+      .setName("CA")
+      .setCategory(MasterCategory.SAVINGS)
+      .setFromAccount("Main account")
+      .setToAccount("Account n. 111")
+      .validate();
+    budgetView.savings.createSeries()
+      .setName("Project")
+      .setCategory(MasterCategory.SAVINGS)
+      .setFromAccount("Account n. 111")
+      .setToAccount("Main account")
+      .setOnceAYear()
+      .toggleMonth(7)
+      .validate();
+    views.selectCategorization();
+    categorization.showSelectedMonthsOnly();
+
+    timeline.selectMonth("2008/07");
+    categorization.setSavings("Prelevement", "Project");
+    categorization.setSavings("Virement", "Project");
+    timeline.selectMonth("2008/08");
+    categorization.setSavings("Prelevement", "CA");
+    categorization.setSavings("Virement", "CA");
+    timeline.selectAll();
+    views.selectData();
+    transactions.initContent()
+      .add("01/10/2008", TransactionType.PLANNED, "Planned: CA", "", 100.00, "CA", MasterCategory.SAVINGS)
+      .add("01/10/2008", TransactionType.PLANNED, "Planned: CA", "", -100.00, "CA", MasterCategory.SAVINGS)
+      .add("01/09/2008", TransactionType.PLANNED, "Planned: CA", "", 100.00, "CA", MasterCategory.SAVINGS)
+      .add("01/09/2008", TransactionType.PLANNED, "Planned: CA", "", -100.00, "CA", MasterCategory.SAVINGS)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "Prelevement", "", -100.00, "CA", MasterCategory.SAVINGS)
+      .add("10/08/2008", TransactionType.VIREMENT, "Virement", "", 100.00, "CA", MasterCategory.SAVINGS)
+      .add("10/07/2008", TransactionType.VIREMENT, "Virement", "", 200.00, "Project", MasterCategory.SAVINGS)
+      .add("10/07/2008", TransactionType.PRELEVEMENT, "Prelevement", "", -200.00, "Project", MasterCategory.SAVINGS)
+      .check();
+    views.selectHome();
+    timeline.selectMonth("2008/10");
+    savingsAccounts.checkPosition("Account n. 111", 1200);
+    mainAccounts.checkEstimatedPosition(-200);
+//    monthSummary.checkSavings(0, 100);
+
+    timeline.selectMonth("2008/08");
+    views.selectHome();
+//    monthSummary.checkSavings(0, 100);
+
+    views.selectBudget();
+    budgetView.savings.checkSeries("Main accounts.CA", -100, 0);
+    budgetView.savings.checkSeries("Account n. 111.CA", 100, 0);
+    budgetView.savings.checkTotalAmounts(100, 100);
+
+    budgetView.savings.editSeries("Main accounts.CA").switchToManual()
+      .selectAllMonths()
+      .setAmount(200)
+      .validate();
+    budgetView.savings.editSeries("Account n. 111.CA").checkInManual()
+      .selectAllMonths()
+      .checkAmount("200.00")
+      .checkTable(new Object[][]{
+        {"2008", "October", "0.00", "200.00"},
+        {"2008", "September", "0.00", "200.00"},
+        {"2008", "August", "100.00", "200.00"},
+        {"2008", "July", "0.00", "200.00"},
+      }
+      )
+      .validate();
+
+    views.selectHome();
+//    monthSummary.checkSavings(100, 200);
   }
 
   public void testImportedSavingAccountWithMainAccountInManual() throws Exception {
@@ -560,8 +665,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     views.selectData();
     transactions.initContent()
-      .add("01/10/2008", TransactionType.PLANNED, "Planned: CA", "", 50.00, "CA", MasterCategory.SAVINGS)
       .add("01/10/2008", TransactionType.PLANNED, "Planned: CA", "", -50.00, "CA", MasterCategory.SAVINGS)
+      .add("01/10/2008", TransactionType.PLANNED, "Planned: CA", "", 50.00, "CA", MasterCategory.SAVINGS)
       .add("01/09/2008", TransactionType.PLANNED, "Planned: CA", "", 50.00, "CA", MasterCategory.SAVINGS)
       .add("01/09/2008", TransactionType.PLANNED, "Planned: CA", "", -50.00, "CA", MasterCategory.SAVINGS)
       .add("10/08/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "CA", MasterCategory.SAVINGS)
@@ -662,6 +767,23 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkPosition("Epargne", 1300);
     savingsAccounts.checkPosition("Account n. 111222", 3100);
     savingsAccounts.checkEstimatedPosition(4400, "30/09/2008");
+
+    views.selectBudget();
+    timeline.selectMonth("2008/06");
+    budgetView.savings.checkTotalGauge(400, 400);
+    timeline.selectMonth("2008/08");
+    budgetView.savings.checkTotalGauge(400, 400);
+    timeline.selectMonth("2008/09");
+    budgetView.savings.checkTotalGauge(0, 400);
+
+    timeline.selectMonth("2008/06");
+    budgetView.savings.checkSeries("Main Accounts.Placement", -100, -100);
+    budgetView.savings.checkSeries("Account n. 111222", 100, 100);
+
+    timeline.selectMonth("2008/09");
+    budgetView.savings.checkSeries("Main Accounts.Placement", 0, -100);
+    budgetView.savings.checkSeries("Account n. 111222", 0, 100);
+
   }
 
   public void testHideAccountIfNoSeries() throws Exception {

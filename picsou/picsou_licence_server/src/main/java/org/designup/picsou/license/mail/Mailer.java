@@ -1,6 +1,6 @@
 package org.designup.picsou.license.mail;
 
-import org.designup.picsou.licence.Lang;
+import org.designup.picsou.license.Lang;
 import org.designup.picsou.license.model.License;
 import org.globsframework.model.Glob;
 
@@ -12,8 +12,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 public class Mailer {
+  static Logger logger = Logger.getLogger("mailer");
   private int port = 25;
   private String host = "localhost";
   private String fromAdress = "picsou@noreply.com";
@@ -36,17 +38,17 @@ public class Mailer {
                Lang.get("request.license.message", lang));
     }
     catch (Exception e) {
-      e.printStackTrace();
+      logger.throwing("Mailer", "sendRequestLicence to=" + to + " lang=" + lang, e);
     }
   }
 
-  public void sendExistingLicense(Glob licence, String lang) {
+  public void sendExistingLicense(Glob licence, String lang, String activationCode) {
     try {
-      sendMail(licence.get(License.MAIL), fromAdress, Lang.get("resend.license.subject", lang),
-               Lang.get("resend.license.message", lang));
+      sendMail(licence.get(License.MAIL), fromAdress, Lang.get("new.license.subject", lang),
+               Lang.get("new.license.message", lang, activationCode));
     }
     catch (Exception e) {
-      e.printStackTrace();
+      logger.throwing("Mailer", "sendExistingLicence", e);
     }
   }
 
@@ -57,7 +59,7 @@ public class Mailer {
       return true;
     }
     catch (Exception e) {
-      e.printStackTrace();
+      logger.throwing("Mailer", "sendNewLicence", e);
       return false;
     }
 

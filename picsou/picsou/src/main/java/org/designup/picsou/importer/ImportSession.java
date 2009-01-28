@@ -73,14 +73,16 @@ public class ImportSession {
     return dateFormatAnalyzer.parse(valueSet);
   }
 
-  public Key importTransactions(Glob currentlySelectedAccount, String selectedDateFormat) {
+  public Key importTransactions(Key currentlySelectedAccount, String selectedDateFormat) {
     if (!load) {
       return null;
     }
     load = false;
     TransactionFilter transactionFilter = new TransactionFilter();
     GlobList newTransactions = transactionFilter.loadTransactions(referenceRepository, localRepository,
-                                                                  convertImportedTransaction(selectedDateFormat));
+                                                                  convertImportedTransaction(selectedDateFormat),
+                                                                  currentlySelectedAccount != null ?
+                                                                  currentlySelectedAccount.get(Account.ID) : null);
 
     Key importKey = createImport(typedStream, newTransactions, localRepository);
     localRepository.deleteAll(ImportedTransaction.TYPE);

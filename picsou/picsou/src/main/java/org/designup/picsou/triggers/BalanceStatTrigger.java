@@ -88,9 +88,10 @@ public class BalanceStatTrigger implements ChangeSetListener {
 
       mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
       for (Glob series : repository.getAll(Series.TYPE)) {
+        Integer seriesId = series.get(Series.ID);
         if (BudgetArea.INCOME.getId().equals(series.get(Series.BUDGET_AREA))) {
-          incomeSeries.add(series.get(Series.ID));
-          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
+          incomeSeries.add(seriesId);
+          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
             .getGlobs();
           for (Glob budget : budgets) {
             SeriesAmounts amounts = getOrCreate(budget.get(SeriesBudget.MONTH));
@@ -98,8 +99,8 @@ public class BalanceStatTrigger implements ChangeSetListener {
           }
         }
         else if (BudgetArea.RECURRING.getId().equals(series.get(Series.BUDGET_AREA))) {
-          fixedSeries.add(series.get(Series.ID));
-          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
+          fixedSeries.add(seriesId);
+          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
             .getGlobs();
           for (Glob budget : budgets) {
             SeriesAmounts amounts = getOrCreate(budget.get(SeriesBudget.MONTH));
@@ -108,8 +109,8 @@ public class BalanceStatTrigger implements ChangeSetListener {
           }
         }
         else if (BudgetArea.ENVELOPES.getId().equals(series.get(Series.BUDGET_AREA))) {
-          envelopeSeries.add(series.get(Series.ID));
-          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
+          envelopeSeries.add(seriesId);
+          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
             .getGlobs();
           for (Glob budget : budgets) {
             SeriesAmounts amounts = getOrCreate(budget.get(SeriesBudget.MONTH));
@@ -118,8 +119,21 @@ public class BalanceStatTrigger implements ChangeSetListener {
           }
         }
         else if (BudgetArea.SAVINGS.getId().equals(series.get(Series.BUDGET_AREA))) {
-          savingsSeries.add(series.get(Series.ID));
-          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
+          if (!(mainAccountChecker.isSame(series.get(Series.FROM_ACCOUNT))
+                || mainAccountChecker.isSame(series.get(Series.TO_ACCOUNT)))) {
+            break;
+          }
+          if (series.get(Series.MIROR_SERIES) != null) {
+            if (mainAccountChecker.isSame(series.get(Series.FROM_ACCOUNT)) && !series.get(Series.IS_MIROR)) {
+              break;
+            }
+            if (mainAccountChecker.isSame(series.get(Series.TO_ACCOUNT)) && series.get(Series.IS_MIROR)) {
+              break;
+            }
+          }
+
+          savingsSeries.add(seriesId);
+          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
             .getGlobs();
           for (Glob budget : budgets) {
             SeriesAmounts amounts = getOrCreate(budget.get(SeriesBudget.MONTH));
@@ -128,8 +142,8 @@ public class BalanceStatTrigger implements ChangeSetListener {
           }
         }
         else if (BudgetArea.SPECIAL.getId().equals(series.get(Series.BUDGET_AREA))) {
-          specialSeries.add(series.get(Series.ID));
-          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
+          specialSeries.add(seriesId);
+          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
             .getGlobs();
           for (Glob budget : budgets) {
             SeriesAmounts amounts = getOrCreate(budget.get(SeriesBudget.MONTH));
@@ -138,7 +152,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
           }
         }
         else if (BudgetArea.OCCASIONAL.getId().equals(series.get(Series.BUDGET_AREA))) {
-          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
+          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
             .getGlobs();
           for (Glob budget : budgets) {
             SeriesAmounts amounts = getOrCreate(budget.get(SeriesBudget.MONTH));

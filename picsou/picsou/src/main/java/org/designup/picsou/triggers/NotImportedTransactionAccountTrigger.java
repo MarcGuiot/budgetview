@@ -105,19 +105,10 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
           if (transaction.get(Transaction.PLANNED) != isPlanned) {
             repository.update(transaction.getKey(),
                               FieldValue.value(Transaction.PLANNED, isPlanned),
-                              FieldValue.value(Transaction.LABEL, getLabel(isPlanned, oneSeries)));
+                              FieldValue.value(Transaction.LABEL, Transaction.getLabel(isPlanned, oneSeries)));
           }
         }
       }
-    }
-  }
-
-  private String getLabel(boolean planned, Glob series) {
-    if (planned) {
-      return Series.getPlannedTransactionLabel(series.get(Series.ID), series);
-    }
-    else {
-      return series.get(Series.LABEL);
     }
   }
 
@@ -225,7 +216,8 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
     });
   }
 
-  private void createTransactionFromSeriesBudget(FieldValues seriesBudget, GlobRepository repository, Map<Integer, List<Integer>> seriesToIsImportedAccount) {
+  private void createTransactionFromSeriesBudget(FieldValues seriesBudget, GlobRepository repository, Map<Integer,
+    List<Integer>> seriesToIsImportedAccount) {
     Integer seriesId = seriesBudget.get(SeriesBudget.SERIES);
     Glob series = repository.get(Key.create(Series.TYPE, seriesId));
     if (!Account.areNoneImported(repository.findLinkTarget(series, Series.FROM_ACCOUNT),

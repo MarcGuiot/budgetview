@@ -58,8 +58,8 @@ public class CategorizationView extends View implements TableView, Filterable {
   private GlobList currentTransactions = GlobList.EMPTY;
   private GlobTableView transactionTable;
   private JComboBox filteringModeCombo;
-  private java.util.List<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>> seriesRepeat =
-    new ArrayList<Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>>();
+  private java.util.List<Pair<PicsouMatchers.CategorizationFilter, GlobRepeat>> seriesRepeat =
+    new ArrayList<Pair<PicsouMatchers.CategorizationFilter, GlobRepeat>>();
 
   private Directory parentDirectory;
 
@@ -204,13 +204,11 @@ public class CategorizationView extends View implements TableView, Filterable {
       public void selectionUpdated(GlobSelection selection) {
         currentTransactions = selection.getAll(Transaction.TYPE);
         Set<Integer> months = new HashSet<Integer>();
-        Set<Integer> accounts = new HashSet<Integer>();
         for (Glob transaction : currentTransactions) {
           months.add(transaction.get(Transaction.MONTH));
-          accounts.add(transaction.get(Transaction.ACCOUNT));
         }
-        for (Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat> filter : seriesRepeat) {
-          filter.getFirst().filterDates(months, accounts);
+        for (Pair<PicsouMatchers.CategorizationFilter, GlobRepeat> filter : seriesRepeat) {
+          filter.getFirst().filterDates(months, currentTransactions);
           filter.getSecond().setFilter(filter.getFirst());
         }
         colors.setSplitGroupSourceId(getSplitGroupSourceId());
@@ -253,8 +251,8 @@ public class CategorizationView extends View implements TableView, Filterable {
                                                                                         repository,
                                                                                         directory));
     seriesRepeat.add(
-      new Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>(
-        PicsouMatchers.seriesDateFilter(budgetArea.getId(), true), repeat));
+      new Pair<PicsouMatchers.CategorizationFilter, GlobRepeat>(
+        PicsouMatchers.seriesFilter(budgetArea.getId()), repeat));
     panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
     panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
 
@@ -279,8 +277,8 @@ public class CategorizationView extends View implements TableView, Filterable {
                                                new MultiCategoriesSeriesComponentFactory(budgetArea, invisibleRadio,
                                                                                          seriesEditionDialog,
                                                                                          repository, directory));
-    seriesRepeat.add(new Pair<PicsouMatchers.SeriesFirstEndDateFilter, GlobRepeat>(
-      PicsouMatchers.seriesDateFilter(budgetArea.getId(), true), repeat));
+    seriesRepeat.add(new Pair<PicsouMatchers.CategorizationFilter, GlobRepeat>(
+      PicsouMatchers.seriesFilter(budgetArea.getId()), repeat));
     panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
     panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
 

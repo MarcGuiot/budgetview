@@ -28,7 +28,7 @@ public class DialogDemo {
     PicsouDialog.FORCE_NONMODAL = true;
     PicsouApplication.parseLanguage("-l", "fr");
     Directory directory = PicsouApplication.createDirectory();
-    GlobRepository repository = PicsouInit.init(ServerAccess.NULL, "user", true, directory).getRepository();
+    GlobRepository repository = PicsouInit.init(ServerAccess.NULL, "user", true, true, directory).getRepository();
     repository.startChangeSet();
     for (int monthId = 200701; monthId < 200812; monthId = Month.next(monthId)) {
       repository.findOrCreate(Key.create(Month.TYPE, monthId));
@@ -62,7 +62,7 @@ public class DialogDemo {
 
   private static void showLicenseExpirationDialog(GlobRepository repository, Directory directory, JFrame frame) {
     LicenseExpirationDialog dialog = new LicenseExpirationDialog(frame, repository, directory);
-    dialog.show();
+    dialog.showExpiration();
   }
 
   private static void showSeriesEditionDialog(GlobRepository repository, Directory directory, JFrame frame) {

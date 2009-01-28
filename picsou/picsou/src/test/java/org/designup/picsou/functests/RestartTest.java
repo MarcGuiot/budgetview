@@ -299,6 +299,10 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testBackupAndRestoreWithOtherPasswd() throws Exception {
+    fail("Demander le mots de passe pour lire un backup si on ne reussi pas a decrypter le snaphot");
+  }
+
   public void testSavingsSeries() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectHome();
@@ -335,7 +339,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     restartApplication();
 
     views.selectBudget();
-    
+
     budgetView.savings.checkSeries("Epargne.CAF", 0, 300);
     timeline.selectMonth("2008/08");
     budgetView.savings.checkTotalAmounts(0, 300);
@@ -354,10 +358,4 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  protected void restartApplication() {
-    mainWindow.dispose();
-    mainWindow = null;
-    mainWindow = getMainWindow();
-    initCheckers();
-  }
 }

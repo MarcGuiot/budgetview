@@ -98,25 +98,12 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
   protected JRadioButton createSeriesSelector(final String label,
                                               final Key seriesKey,
                                               final Key categoryKey) {
-    final JRadioButton selector = new JRadioButton(new AbstractAction(label) {
+    return new JRadioButton(new AbstractAction(label) {
       public void actionPerformed(ActionEvent e) {
         try {
           repository.startChangeSet();
           for (Glob transaction : currentTransactions) {
-            Glob series = repository.get(seriesKey);
-            Glob mirorSeries = repository.findLinkTarget(series, Series.MIROR_SERIES);
-            if (mirorSeries != null) {
-              Integer account = transaction.get(Transaction.ACCOUNT);
-              if (account.equals(series.get(Series.TO_ACCOUNT))) {
-                repository.setTarget(transaction.getKey(), Transaction.SERIES, seriesKey);
-              }
-              else {
-                repository.setTarget(transaction.getKey(), Transaction.SERIES, mirorSeries.getKey());
-              }
-            }
-            else {
-              repository.setTarget(transaction.getKey(), Transaction.SERIES, seriesKey);
-            }
+            repository.setTarget(transaction.getKey(), Transaction.SERIES, seriesKey);
             repository.setTarget(transaction.getKey(), Transaction.CATEGORY, categoryKey);
           }
         }
@@ -125,7 +112,6 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
         }
       }
     });
-    return selector;
   }
 
   protected class EditSeriesAction extends AbstractAction {

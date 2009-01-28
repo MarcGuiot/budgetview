@@ -3,6 +3,7 @@ package org.designup.picsou.importer;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.MultiMap;
 import static org.globsframework.utils.Utils.equal;
 
@@ -14,34 +15,51 @@ public class TransactionFilter {
 
   public GlobList loadTransactions(ReadOnlyGlobRepository referenceRepository,
                                    GlobRepository targetRepository,
-                                   GlobList transactionToFilter) {
+                                   GlobList transactionToFilter,
+                                   Integer accountId) {
 
-    return loadTransactionsToCreate(targetRepository, referenceRepository, transactionToFilter);
+    return loadTransactionsToCreate(targetRepository, referenceRepository, transactionToFilter, accountId);
   }
 
   private GlobList loadTransactionsToCreate(GlobRepository targetRepository,
-                                            ReadOnlyGlobRepository referenceRepository, GlobList transactionToFilter) {
+                                            ReadOnlyGlobRepository referenceRepository,
+                                            GlobList transactionToFilter,
+                                            Integer accountId) {
     GlobList importedTransactions = transactionToFilter.sort(TransactionComparator.ASCENDING_BANK_SPLIT_AFTER);
     if (importedTransactions.isEmpty()) {
       return GlobList.EMPTY;
     }
-    GlobList actualTransactions = referenceRepository.getAll(Transaction.TYPE).sort(TransactionComparator.ASCENDING_BANK_SPLIT_AFTER);
-    if (actualTransactions.isEmpty()) {
-      return importedTransactions;
+    MultiMap<Integer, Glob> accountsByTransaction = new MultiMap<Integer, Glob>();
+    for (Glob transaction : importedTransactions) {
+      if (transaction.get(Transaction.ACCOUNT) == null) {
+        accountsByTransaction.put(accountId, transaction);
+      }
+      else {
+        accountsByTransaction.put(transaction.get(Transaction.ACCOUNT), transaction);
+      }
     }
-    if (firstIsAfterLast(importedTransactions, actualTransactions) ||
-        firstIsAfterLast(actualTransactions, importedTransactions)) {
-      return importedTransactions;
-    }
-    GlobList newTransactions = new TransactionChecker(importedTransactions.toArray(), actualTransactions.toArray())
-      .getNewTransactions();
-    Map<Key, Glob> transactions = new HashMap<Key, Glob>();
-    for (Glob newTransaction : newTransactions) {
-      transactions.put(newTransaction.getKey(), newTransaction);
-    }
-    for (Glob importedTransaction : importedTransactions) {
-      if (!transactions.containsKey(importedTransaction.getKey())) {
-        targetRepository.delete(importedTransaction.getKey());
+    GlobList newTransactions = new GlobList(importedTransactions.size());
+    for (Integer transactionAccountId : accountsByTransaction.keySet()) {
+      GlobList actualTransactions = referenceRepository
+        .getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.ACCOUNT, transactionAccountId))
+        .sort(TransactionComparator.ASCENDING_BANK_SPLIT_AFTER);
+      if (actualTransactions.isEmpty()) {
+        return importedTransactions;
+      }
+      if (firstIsAfterLast(importedTransactions, actualTransactions) ||
+          firstIsAfterLast(actualTransactions, importedTransactions)) {
+        return importedTransactions;
+      }
+      newTransactions.addAll(
+        new TransactionChecker(importedTransactions.toArray(), actualTransactions.toArray()).getNewTransactions());
+      Map<Key, Glob> transactions = new HashMap<Key, Glob>();
+      for (Glob newTransaction : newTransactions) {
+        transactions.put(newTransaction.getKey(), newTransaction);
+      }
+      for (Glob importedTransaction : importedTransactions) {
+        if (!transactions.containsKey(importedTransaction.getKey())) {
+          targetRepository.delete(importedTransaction.getKey());
+        }
       }
     }
     return newTransactions;

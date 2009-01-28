@@ -9,7 +9,6 @@ import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.utils.KeyService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.User;
-import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.model.VersionInformation;
 import org.designup.picsou.utils.Inline;
 import org.designup.picsou.utils.Lang;
@@ -17,7 +16,6 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.serialization.Encoder;
 
 import javax.swing.*;
@@ -31,7 +29,6 @@ import java.util.zip.ZipEntry;
 public class ConfigService {
   private static final Pattern FILTER = Pattern.compile(PicsouApplication.APPNAME + "[0-9][0-9]*" + "\\.jar");
 
-
   public static final String COM_PICSOU_LICENSE_URL = "com.picsou.license.url";
   public static final String COM_PICSOU_LICENSE_FTP_URL = "com.picsou.license.ftp.url";
   public static final String HEADER_MAIL = "mail";
@@ -40,6 +37,7 @@ public class ConfigService {
   public static final String HEADER_CODE = "code";
   public static final String HEADER_COUNT = "count";
   public static final String HEADER_MAIL_SENT = "mailSent";
+  public static final String HEADER_STATUS = "status";
   public static final String HEADER_MAIL_UNKNOWN = "mailUnknown";
   public static final String HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT = "activationCodeNotValideMailNotSent";
   public static final String HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT = "activationCodeNotValideMailSent";
@@ -50,9 +48,9 @@ public class ConfigService {
   public static final String HEADER_NEW_JAR_VERSION = "newJarVersion";
   public static final String HEADER_REPO_ID = "repoId";
   public static final String HEADER_LANG = "lang";
-  public static final String REGISTER_SERVLET = "register";
-  private static final String REGISTER = "/" + REGISTER_SERVLET;
-  private static final String REQUEST_FOR_CONFIG = "/requestForConfig";
+  public static final String REQUEST_FOR_REGISTER = "/register";
+  public static final String REQUEST_FOR_CONFIG = "/requestForConfig";
+  public static final String REQUEST_FOR_MAIL = "/mailTo";
 
   private String URL = PicsouApplication.REGISTER_URL;
   private String FTP_URL = PicsouApplication.FTP_URL;
@@ -69,6 +67,7 @@ public class ConfigService {
   private File currentConfigFile;
   private byte[] repoId;
   public static int RETRY_PERIOD = 10000;
+  public static final String HEADER_BAD_ADRESS = "badAdress";
 
   public ConfigService(String applicationVersion, Long jarVersion, Long localConfigVersion, File currentConfigFile) {
     this.currentConfigFile = currentConfigFile;
@@ -87,6 +86,39 @@ public class ConfigService {
   public boolean loadConfigFileFromLastestJar(Directory directory, GlobRepository repository) {
     return loadConfig(directory, repository);
   }
+
+
+  // return a translated message
+  public String askForNewCodeByMail(String mail) {
+    try {
+      String url = URL + REQUEST_FOR_MAIL;
+      final PostMethod postMethod = new PostMethod(url);
+      postMethod.setRequestHeader(HEADER_MAIL, mail);
+      postMethod.setRequestHeader(HEADER_LANG, Lang.get("lang"));
+      httpClient.executeMethod(postMethod);
+      int statusCode = postMethod.getStatusCode();
+      if (statusCode == 200) {
+        Header status = postMethod.getResponseHeader(HEADER_STATUS);
+        if (status != null) {
+          if (status.getValue().equalsIgnoreCase(HEADER_MAIL_SENT)) {
+            return Lang.get("license.mail.sended");
+          }
+          if (status.getValue().equalsIgnoreCase(HEADER_MAIL_UNKNOWN)) {
+            return Lang.get("license.mail.unknown");
+          }
+          return Lang.get("license.mail.error");
+        }
+        return Lang.get("license.mail.send.error");
+      }
+      else {
+        return Lang.get("license.mail.send.error");
+      }
+    }
+    catch (IOException e) {
+      return Lang.get("license.mail.send.error");
+    }
+  }
+
 
   private boolean sendRequestForNewConfig(byte[] repoId, String mail, String signature,
                                           long launchCount, String activationCode) throws IOException {
@@ -164,7 +196,7 @@ public class ConfigService {
     }
     Utils.endRemove();
     try {
-      String url = URL + REGISTER;
+      String url = URL + REQUEST_FOR_REGISTER;
       final PostMethod postMethod = new PostMethod(url);
       postMethod.setRequestHeader(HEADER_MAIL, mail);
       postMethod.setRequestHeader(HEADER_CODE, code);
@@ -224,7 +256,7 @@ public class ConfigService {
         Header signature = postMethod.getResponseHeader(HEADER_SIGNATURE);
         if (signature != null) {
           String value = signature.getValue();
-          repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, true);
+          repository.update(User.KEY, User.IS_REGISTERED_USER, true);
           repository.update(User.KEY, User.SIGNATURE, Encoder.stringToByte(value));
         }
         else {
@@ -237,18 +269,22 @@ public class ConfigService {
     }
   }
 
-  public void update(final byte[] repoId, final long launchCount, byte[] mailInBytes,
-                     byte[] signatureInByte, final String activationCode) {
+  public boolean update(final byte[] repoId, final long launchCount, byte[] mailInBytes,
+                        byte[] signatureInByte, final String activationCode) {
+    boolean isValideUser;
     if (signatureInByte != null && activationCode != null) {
       if (KeyService.checkSignature(mailInBytes, signatureInByte)) {
         userState = UserStateFactory.localValidSignature();
+        isValideUser = true;
       }
       else {
         userState = UserStateFactory.localInvalidSignature();
+        isValideUser = false;
       }
     }
     else {
       userState = UserStateFactory.noSignature();
+      isValideUser = false;
     }
     final String mail = mailInBytes == null ? null : new String(mailInBytes);
     final String signature = signatureInByte == null ? null : Encoder.byteToString(signatureInByte);
@@ -287,25 +323,17 @@ public class ConfigService {
       };
       request.start();
     }
+    return isValideUser;
   }
 
   @Inline
   public static void check(Directory directory, GlobRepository repository) {
     ConfigService configService = directory.get(ConfigService.class);
-    if (repository.get(UserPreferences.KEY).get(UserPreferences.REGISTERED_USER)) {
-      configService.updateRegisteredUserValidity(directory, repository);
-    }
-    else {
-      configService.updateNotRegisteredUser(directory, repository);
-    }
+    configService.updateUserValidity(directory, repository);
   }
 
-  private void updateNotRegisteredUser(Directory directory, GlobRepository repository) {
-    userState = userState.updateNotRegisteredUser(directory, repository);
-  }
-
-  private void updateRegisteredUserValidity(Directory directory, GlobRepository repository) {
-    userState = userState.updateRegisteredUserValidity(directory, repository);
+  private void updateUserValidity(Directory directory, GlobRepository repository) {
+    userState = userState.updateUserValidity(directory, repository);
   }
 
   public boolean loadConfig(Directory directory, GlobRepository repository) {
@@ -337,7 +365,7 @@ public class ConfigService {
     synchronized (configService) {
       while (!configService.isVerifiedServerValidity()) {
         try {
-          configService.wait(2000);
+          configService.wait(200);
         }
         catch (InterruptedException e) {
           return;
@@ -408,208 +436,6 @@ public class ConfigService {
 
     static UserState noSignature() {
       return new AnonymousUser();
-    }
-  }
-
-  interface UserState {
-
-    Boolean isVerifiedServerValidity();
-
-    UserState fireKillUser(boolean mailSent);
-
-    UserState fireValidUser();
-
-    UserState updateRegisteredUserValidity(Directory directory, GlobRepository repository);
-
-    UserState updateNotRegisteredUser(Directory directory, GlobRepository repository);
-
-  }
-
-  private static class AnonymousUser implements UserState {
-    boolean verifiedServerValidity = false;
-
-    private AnonymousUser() {
-    }
-
-    private AnonymousUser(boolean verifiedServerValidity) {
-      this.verifiedServerValidity = verifiedServerValidity;
-    }
-
-    synchronized public Boolean isVerifiedServerValidity() {
-      return verifiedServerValidity;
-    }
-
-    synchronized public UserState fireKillUser(boolean mailSent) {
-      verifiedServerValidity = true;
-      return this;
-    }
-
-    synchronized public UserState fireValidUser() {
-      verifiedServerValidity = true;
-      return this;
-    }
-
-    public UserState updateRegisteredUserValidity(Directory directory, GlobRepository repository) {
-      repository.startChangeSet();
-      try {
-        repository.update(User.KEY, User.ACTIVATION_STATE,
-                          User.ACTIVATED_AS_ANONYMOUS_BUT_REGISTERED_USER);
-        repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, false);
-      }
-      finally {
-        repository.completeChangeSet();
-      }
-      return this;
-    }
-
-    public UserState updateNotRegisteredUser(Directory directory, GlobRepository repository) {
-      repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, false);
-      return this;
-    }
-  }
-
-  private static class LocallyInvalidUser implements UserState {
-    boolean verifiedServerValidity = false;
-
-    synchronized public Boolean isVerifiedServerValidity() {
-      return false;
-    }
-
-    public UserState fireKillUser(boolean mailSent) {
-      return new AnonymousUser(true);
-    }
-
-    public UserState fireValidUser() {
-      return new AnonymousUser(true);
-    }
-
-    public UserState updateRegisteredUserValidity(Directory directory, GlobRepository repository) {
-      throw new InvalidState(getClass().toString());
-    }
-
-    public UserState updateNotRegisteredUser(Directory directory, GlobRepository repository) {
-      throw new InvalidState(getClass().toString());
-    }
-  }
-
-  private static class LocallyValidUser implements UserState {
-
-    synchronized public Boolean isVerifiedServerValidity() {
-      return false;
-    }
-
-    public UserState fireKillUser(boolean mailSent) {
-      return new KilledUser(mailSent);
-    }
-
-    public UserState fireValidUser() {
-      return new ValidUser();
-    }
-
-    public UserState updateRegisteredUserValidity(Directory directory, GlobRepository repository) {
-      throw new InvalidState(getClass().toString());
-    }
-
-    public UserState updateNotRegisteredUser(Directory directory, GlobRepository repository) {
-      throw new InvalidState(getClass().toString());
-    }
-
-  }
-
-  static private class KilledUser implements UserState {
-    private boolean mailSent;
-
-    public KilledUser(boolean mailSent) {
-      this.mailSent = mailSent;
-    }
-
-    public Boolean isVerifiedServerValidity() {
-      return true;
-    }
-
-    public UserState fireKillUser(boolean mailSent) {
-      throw new InvalidState(getClass().toString());
-    }
-
-    public UserState fireValidUser() {
-      throw new InvalidState(getClass().toString());
-    }
-
-    public UserState updateRegisteredUserValidity(Directory directory, GlobRepository repository) {
-      repository.startChangeSet();
-      try {
-        repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, false);
-        if (mailSent) {
-          repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAIL_MAIL_SEND);
-        }
-      }
-      finally {
-        repository.completeChangeSet();
-      }
-      return new CompletedUserState();
-    }
-
-    public UserState updateNotRegisteredUser(Directory directory, GlobRepository repository) {
-      repository.startChangeSet();
-      try {
-        repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, false);
-        if (mailSent) {
-          repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAIL_MAIL_SEND);
-        }
-      }
-      finally {
-        repository.completeChangeSet();
-      }
-      return new CompletedUserState();
-    }
-  }
-
-  private static class ValidUser implements UserState {
-
-    public Boolean isVerifiedServerValidity() {
-      return true;
-    }
-
-    public UserState fireKillUser(boolean mailSent) {
-      throw new InvalidState(getClass().toString());
-    }
-
-    public UserState fireValidUser() {
-      throw new InvalidState(getClass().toString());
-    }
-
-    public UserState updateRegisteredUserValidity(Directory directory, GlobRepository repository) {
-      return new CompletedUserState();
-    }
-
-    public UserState updateNotRegisteredUser(Directory directory, GlobRepository repository) {
-      repository.update(User.KEY, User.ACTIVATION_STATE,
-                        User.ACTIVATED_AS_ANONYMOUS_BUT_REGISTERED_USER);
-      repository.update(UserPreferences.KEY, UserPreferences.REGISTERED_USER, false);
-      return new CompletedUserState();
-    }
-  }
-
-  static private class CompletedUserState implements UserState {
-
-    public Boolean isVerifiedServerValidity() {
-      return true;
-    }
-
-    public UserState fireKillUser(boolean mailSent) {
-      return this;
-    }
-
-    public UserState fireValidUser() {
-      return this;
-    }
-
-    public UserState updateRegisteredUserValidity(Directory directory, GlobRepository repository) {
-      return this;
-    }
-
-    public UserState updateNotRegisteredUser(Directory directory, GlobRepository repository) {
-      return this;
     }
   }
 }

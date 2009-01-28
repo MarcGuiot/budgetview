@@ -1,4 +1,4 @@
-package org.designup.picsou.licence;
+package org.designup.picsou.license;
 
 import java.text.MessageFormat;
 import java.util.Locale;
@@ -10,6 +10,9 @@ public class Lang {
 
   public static String get(String key, String lang, String... arg) {
     String message = bundle.getString(key + "." + lang);
+    if (message == null) {
+      message = bundle.getString(key + "." + "en");
+    }
     if (arg.length != 0) {
       MessageFormat formatter = new MessageFormat(message);
       formatter.setLocale(Locale.FRENCH);
