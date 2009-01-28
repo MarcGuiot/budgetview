@@ -37,14 +37,14 @@
           <label text="$navigationView.actions" styleClass="sectionTitle"/>
           <grid>
             <button action="importFileAction" styleClass="icon"
-                    icon="card_folder_large.png" rolloverIcon="card_folder_large_rollover.png"/>
+                    icon="home/folder.png" rolloverIcon="home/folder_rollover.png"/>
             <button action="importFileAction" styleClass="rowTitle"/>
             <textArea text="$navigationView.import.text" styleClass="text"/>
           </grid>
 
           <grid>
             <button action="openHelpAction" styleClass="icon"
-                    icon="card_help_large.png" rolloverIcon="card_help_large_rollover.png"/>
+                    icon="home/help.png" rolloverIcon="home/help_rollover.png"/>
             <button action="openHelpAction" styleClass="rowTitle"/>
             <textArea text="$navigationView.help.text" styleClass="text"/>
           </grid>
