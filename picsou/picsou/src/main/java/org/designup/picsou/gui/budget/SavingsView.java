@@ -64,7 +64,9 @@ public class SavingsView extends View {
 
   private void update() {
     GlobList balanceStat = repository.getAll(SavingsBalanceStat.TYPE,
-                                             GlobMatchers.fieldIn(SavingsBalanceStat.MONTH, selectedMonthIds));
+                                             GlobMatchers.and(
+                                               GlobMatchers.fieldEquals(SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID),
+                                               GlobMatchers.fieldIn(SavingsBalanceStat.MONTH, selectedMonthIds)));
     headerUpdater.update(balanceStat, BudgetArea.SAVINGS);
   }
 
@@ -76,12 +78,24 @@ public class SavingsView extends View {
     JLabel amountLabel = builder.add("totalObservedAmount", new JLabel());
     JLabel plannedLabel = builder.add("totalPlannedAmount", new JLabel());
 
-    Gauge gauge = BudgetAreaGaugeFactory.createSavingsGauge();
+    Gauge gauge = new Gauge(false, true);//BudgetAreaGaugeFactory.createGauge(BudgetArea.SAVINGS);
     builder.add("totalGauge", gauge);
 
     this.headerUpdater =
       new BudgetAreaHeaderUpdater(TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
-                                  repository, directory, false);
+                                  repository, directory, false) {
+        Double getObserved(Glob stat, BudgetArea budgetArea) {
+          return - super.getObserved(stat, budgetArea);
+        }
+
+        Double getPlanned(Glob stat, BudgetArea budgetArea) {
+          return - super.getPlanned(stat, budgetArea);
+        }
+
+        Double getRemaining(Glob stat, BudgetArea budgetArea) {
+          return - super.getRemaining(stat, budgetArea);
+        }
+      };
     this.headerUpdater.setColors("block.total",
                                  "block.total.overrun.error",
                                  "block.total.overrun.positive");

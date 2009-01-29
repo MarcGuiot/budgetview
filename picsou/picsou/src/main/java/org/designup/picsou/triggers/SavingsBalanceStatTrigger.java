@@ -35,8 +35,6 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
       final Map<Integer, GlobBuilder> balanceSummaries = new HashMap<Integer, GlobBuilder>();
       repository.safeApply(SavingsBalanceStat.TYPE, GlobMatchers.ALL, new GlobFunctor() {
         public void run(Glob glob, GlobRepository repository) throws Exception {
-          Key key = Key.create(SavingsBalanceStat.MONTH, glob.get(SavingsBalanceStat.MONTH),
-                               SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID);
           GlobBuilder balance = balanceSummaries.get(glob.get(SavingsBalanceStat.MONTH));
           if (balance == null) {
             balance = GlobBuilder.init(SavingsBalanceStat.TYPE);
@@ -46,6 +44,9 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
           update(glob, balance, SavingsBalanceStat.END_OF_MONTH_POSITION);
           update(glob, balance, SavingsBalanceStat.BALANCE);
           update(glob, balance, SavingsBalanceStat.LAST_KNOWN_ACCOUNT_POSITION);
+          update(glob, balance, SavingsBalanceStat.SAVINGS);
+          update(glob, balance, SavingsBalanceStat.SAVINGS_PLANNED);
+          update(glob, balance, SavingsBalanceStat.SAVINGS_REMAINING);
           Integer day = glob.get(SavingsBalanceStat.LAST_KNOWN_POSITION_DAY);
           if (day != null){
             Integer summaryDay = balance.get(SavingsBalanceStat.LAST_KNOWN_POSITION_DAY);

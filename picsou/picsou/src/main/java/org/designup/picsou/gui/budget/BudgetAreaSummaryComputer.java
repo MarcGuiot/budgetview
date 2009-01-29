@@ -213,17 +213,17 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
   }
 
   public String getObservedLabel(BudgetArea budgetArea) {
-    return format(observed, budgetArea, savingsShowOpposite);
+    return format(observed, budgetArea);
   }
 
   public String getPlannedLabel(BudgetArea budgetArea) {
-    return format(adjustedPlanned, budgetArea, savingsShowOpposite);
+    return format(adjustedPlanned, budgetArea);
   }
 
   public String getPlannedTooltip(BudgetArea budgetArea) {
     if (Amounts.isNotZero(overrun)) {
       return Lang.get("monthsummary.planned.tooltip.overrun",
-                      format(initiallyPlanned, budgetArea, savingsShowOpposite),
+                      format(initiallyPlanned, budgetArea),
                       Formatting.toString(Math.abs(overrun)));
     }
     else {
@@ -247,8 +247,8 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
     return Amounts.isNotZero(overrun) && overrun < 0;
   }
 
-  private String format(Double value, final BudgetArea budgetArea, final boolean savingsShowpposite) {
-    return Formatting.toString(value, budgetArea, savingsShowpposite);
+  private String format(Double value, final BudgetArea budgetArea) {
+    return Formatting.toString(value, budgetArea);
   }
 
   protected abstract void clearComponents();

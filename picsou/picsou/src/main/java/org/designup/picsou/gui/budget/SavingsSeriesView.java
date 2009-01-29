@@ -1,12 +1,17 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.card.NavigationService;
+import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
+import org.designup.picsou.gui.components.Gauge;
 import org.designup.picsou.gui.components.GlobGaugeView;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.PicsouMatchers;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -154,7 +159,6 @@ public class SavingsSeriesView {
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob periodSeriesStat) {
 
       final Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
-
       final GlobButtonView seriesNameButton =
         GlobButtonView.init(Series.TYPE, repository, directory, new EditSeriesFunctor())
           .setName(accountName + "." + seriesStringifier.toString(series, repository))
@@ -172,9 +176,21 @@ public class SavingsSeriesView {
           showSeriesEdition(series);
         }
       });
-
+      Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
+      Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
+      Gauge gauge;
+      boolean mainAccount = account.get(Account.ID).equals(Account.MAIN_SUMMARY_ACCOUNT_ID);
+      if (fromAccount != null && fromAccount.equals(account)) {
+        gauge = BudgetAreaGaugeFactory.createSavingsGauge(!mainAccount);
+      }
+      else {
+        if (toAccount == null || !toAccount.equals(account)) {
+          throw new RuntimeException("BUG");
+        }
+        gauge = BudgetAreaGaugeFactory.createSavingsGauge(mainAccount);
+      }
       final GlobGaugeView gaugeView =
-        new GlobGaugeView(PeriodSeriesStat.TYPE, BudgetArea.SAVINGS, PeriodSeriesStat.AMOUNT,
+        new GlobGaugeView(PeriodSeriesStat.TYPE, gauge, PeriodSeriesStat.AMOUNT,
                           PeriodSeriesStat.PLANNED_AMOUNT,
                           GlobMatchers.fieldEquals(PeriodSeriesStat.SERIES, series.get(Series.ID)),
                           repository, directory);

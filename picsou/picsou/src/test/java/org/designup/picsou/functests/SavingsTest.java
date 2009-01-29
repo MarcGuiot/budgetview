@@ -602,15 +602,16 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("10/07/2008", TransactionType.VIREMENT, "Virement", "", 200.00, "Project", MasterCategory.SAVINGS)
       .add("10/07/2008", TransactionType.PRELEVEMENT, "Prelevement", "", -200.00, "Project", MasterCategory.SAVINGS)
       .check();
-    views.selectHome();
     timeline.selectMonth("2008/10");
+    views.selectHome();
     savingsAccounts.checkPosition("Account n. 111", 1200);
     mainAccounts.checkEstimatedPosition(-200);
-//    monthSummary.checkSavings(0, 100);
+
+    monthSummary.checkSavings(0, 100);
 
     timeline.selectMonth("2008/08");
     views.selectHome();
-//    monthSummary.checkSavings(0, 100);
+    monthSummary.checkSavings(0, 100);
 
     views.selectBudget();
     budgetView.savings.checkSeries("Main accounts.CA", -100, 0);
@@ -634,7 +635,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectHome();
-//    monthSummary.checkSavings(100, 200);
+    monthSummary.checkSavings(100, 200);
   }
 
   public void testImportedSavingAccountWithMainAccountInManual() throws Exception {
@@ -802,6 +803,79 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setDay("5")
       .validate();
     budgetView.savings.checkSeriesPresent("Virement CAF");
+  }
+
+
+  public void testSavingsGauge() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/10")  //compte d'épargne
+      .addTransaction("2008/08/12", -100.00, "P3 CE")
+      .addTransaction("2008/08/11", -100.00, "P2 CE")
+      .addTransaction("2008/08/10", -100.00, "P1 CE")
+      .addTransaction("2008/08/12", 20.00, "V3 CE")
+      .addTransaction("2008/08/11", 50.00, "V2 CE")
+      .addTransaction("2008/08/10", 50.00, "V1 CE")
+      .addTransaction("2008/07/10", 100.00, "Virement CE")
+      .addTransaction("2008/07/10", -200.00, "Prelevement CE")
+      .load();
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/12", 100.00, "V3 CC")
+      .addTransaction("2008/08/11", 100.00, "V2 CC")
+      .addTransaction("2008/08/10", 100.00, "V1 CC")
+      .addTransaction("2008/08/12", -20.00, "P3 CC")
+      .addTransaction("2008/08/11", -50.00, "P2 CC")
+      .addTransaction("2008/08/10", -50.00, "P1 CC")
+      .addTransaction("2008/07/10", -100.00, "Prelevement CC")
+      .addTransaction("2008/07/10", 200.00, "Virement CC")
+      .load();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    views.selectHome();
+    this.mainAccounts.edit("Account n. 111")
+      .setAsSavings()
+      .validate();
+    views.selectBudget();
+    budgetView.savings.createSeries()
+      .setName("CA")
+      .setCategory(MasterCategory.SAVINGS)
+      .setFromAccount("Main account")
+      .setToAccount("Account n. 111")
+      .validate();
+    budgetView.savings.createSeries()
+      .setName("Project")
+      .setCategory(MasterCategory.SAVINGS)
+      .setFromAccount("Account n. 111")
+      .setToAccount("Main account")
+      .setCustom()
+      .setStartDate(200807)
+      .setEndDate(200808)
+      .validate();
+    views.selectCategorization();
+    categorization.showSelectedMonthsOnly();
+
+    timeline.selectMonth("2008/07");
+    categorization.setSavings("Prelevement CE", "Project");
+    categorization.setSavings("Virement CE", "CA");
+    categorization.setSavings("Virement CC", "Project");
+    categorization.setSavings("Prelevement CC", "CA");
+
+    timeline.selectMonth("2008/08");
+    categorization.setSavings("P1 CC", "CA");
+    categorization.setSavings("P2 CC", "CA");
+    categorization.setSavings("P3 CC", "CA");
+    categorization.setSavings("P1 CE", "Project");
+    categorization.setSavings("P2 CE", "Project");
+    categorization.setSavings("P3 CE", "Project");
+    categorization.setSavings("V1 CC", "Project");
+    categorization.setSavings("V2 CC", "Project");
+    categorization.setSavings("V3 CC", "Project");
+    categorization.setSavings("V1 CE", "CA");
+    categorization.setSavings("V2 CE", "CA");
+    categorization.setSavings("V3 CE", "CA");
+
+//    openPicsou();
+
+    views.selectBudget();
+    budgetView.savings.checkSeries("Main Accounts.CA", -120, -100);
   }
 
 //  public void testSavingWithNoTransactionShouldNotBeIgnored() throws Exception {

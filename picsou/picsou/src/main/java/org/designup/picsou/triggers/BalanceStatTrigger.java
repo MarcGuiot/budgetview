@@ -121,14 +121,14 @@ public class BalanceStatTrigger implements ChangeSetListener {
         else if (BudgetArea.SAVINGS.getId().equals(series.get(Series.BUDGET_AREA))) {
           if (!(mainAccountChecker.isSame(series.get(Series.FROM_ACCOUNT))
                 || mainAccountChecker.isSame(series.get(Series.TO_ACCOUNT)))) {
-            break;
+            continue;
           }
           if (series.get(Series.MIROR_SERIES) != null) {
             if (mainAccountChecker.isSame(series.get(Series.FROM_ACCOUNT)) && !series.get(Series.IS_MIROR)) {
-              break;
+              continue;
             }
             if (mainAccountChecker.isSame(series.get(Series.TO_ACCOUNT)) && series.get(Series.IS_MIROR)) {
-              break;
+              continue;
             }
           }
 

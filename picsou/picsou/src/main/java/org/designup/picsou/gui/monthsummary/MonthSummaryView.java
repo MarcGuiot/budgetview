@@ -200,7 +200,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
       this.summaryComputer =
         new BudgetAreaHeaderUpdater(
           TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
-          repository, directory, true);
+          repository, directory, false);
       update();
     }
 

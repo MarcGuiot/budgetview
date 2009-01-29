@@ -39,6 +39,20 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
     update();
   }
 
+  public GlobGaugeView(GlobType type, Gauge gauge,
+                       DoubleField actualField, DoubleField targetField, GlobMatcher matcher,
+                       GlobRepository repository, Directory directory) {
+    super(type, repository, directory);
+    this.gauge = gauge;
+    this.actualField = actualField;
+    this.targetField = targetField;
+    this.matcher = matcher;
+    repository.addChangeListener(this);
+    selectionService.addListener(this, type);
+    currentSelection = selectionService.getSelection(type).filterSelf(matcher, repository).toKeyList();
+    update();
+  }
+
   public Gauge getComponent() {
     return gauge;
   }

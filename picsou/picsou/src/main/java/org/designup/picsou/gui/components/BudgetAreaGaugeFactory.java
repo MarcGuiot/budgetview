@@ -7,7 +7,7 @@ public class BudgetAreaGaugeFactory {
     return new Gauge(!budgetArea.isOverrunAllowed(), budgetArea.isIncome());
   }
 
-  public static Gauge createSavingsGauge() {
-    return new Gauge(false, false);
+  public static Gauge createSavingsGauge(boolean overrunIsAnError) {
+    return new Gauge(overrunIsAnError, false);
   }
 }

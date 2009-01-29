@@ -124,7 +124,7 @@ public class PicsouMatchers {
   public static SeriesFirstEndDateFilter seriesDateFilter(final Integer budgetAreaId, boolean isExclusive) {
     return new SeriesFirstEndDateFilter(isExclusive) {
 
-      protected boolean isEligible(Glob series) {
+      protected boolean isEligible(Glob series, GlobRepository repository) {
         return budgetAreaId.equals(series.get(Series.BUDGET_AREA));
       }
     };
@@ -133,11 +133,21 @@ public class PicsouMatchers {
   public static SeriesFirstEndDateFilter seriesDateSavingsAndAccountFilter(final Integer accountId) {
     return new SeriesFirstEndDateFilter(false) {
 
-      protected boolean isEligible(Glob series) {
-        return series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId()) &&
-               !series.get(Series.IS_MIROR) &&
-               (accountId.equals(series.get(Series.FROM_ACCOUNT))
-                || accountId.equals(series.get(Series.TO_ACCOUNT)));
+      protected boolean isEligible(Glob series, GlobRepository repository) {
+        if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())){
+          return false;
+        }
+        Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
+        Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
+        if (Account.areBothImported(toAccount, fromAccount)){
+          if (accountId.equals(fromAccount.get(Account.ID))){
+            return series.get(Series.IS_MIROR);
+          }
+          if (accountId.equals(toAccount.get(Account.ID))){
+            return !series.get(Series.IS_MIROR);
+          }
+        }
+        return (accountId.equals(series.get(Series.FROM_ACCOUNT)) || accountId.equals(series.get(Series.TO_ACCOUNT)));
       }
     };
   }
@@ -273,7 +283,7 @@ public class PicsouMatchers {
     }
 
     public boolean matches(Glob series, GlobRepository repository) {
-      if (isEligible(series)) {
+      if (isEligible(series, repository)) {
         Integer firstMonth = series.get(Series.FIRST_MONTH);
         Integer lastMonth = series.get(Series.LAST_MONTH);
         if (firstMonth == null && lastMonth == null) {
@@ -295,6 +305,6 @@ public class PicsouMatchers {
       return false;
     }
 
-    protected abstract boolean isEligible(Glob series);
+    protected abstract boolean isEligible(Glob series, GlobRepository repository);
   }
 }

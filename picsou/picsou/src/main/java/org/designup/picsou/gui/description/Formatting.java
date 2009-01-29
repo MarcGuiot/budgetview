@@ -47,9 +47,8 @@ public class Formatting {
     return Strings.capitalize(YEAR_MONTH_FORMAT.format(calendar.getTime()));
   }
 
-  public static String toString(Double value, BudgetArea area, final boolean showOpposite) {
-    if (area.isIncome() || area == BudgetArea.UNCATEGORIZED ||
-        (area == BudgetArea.SAVINGS && !showOpposite)) {
+  public static String toString(Double value, BudgetArea area) {
+    if (area.isIncome() || area == BudgetArea.UNCATEGORIZED) {
       return toString(value);
     }
     else if (Amounts.isNearZero(value)) {

@@ -9,7 +9,7 @@ import org.globsframework.utils.directory.Directory;
 public class BudgetAreaHeaderUpdater extends BudgetAreaSummaryComputer {
   private TextDisplay amountLabel;
   private TextDisplay plannedLabel;
-  private Gauge gauge;
+  protected Gauge gauge;
 
   public BudgetAreaHeaderUpdater(TextDisplay amountLabel, TextDisplay plannedLabel, Gauge gauge,
                                  GlobRepository repository, Directory directory, boolean savingsShowOpposite) {
