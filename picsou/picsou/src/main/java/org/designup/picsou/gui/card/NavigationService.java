@@ -124,4 +124,8 @@ public class NavigationService implements GlobSelectionListener {
     currentCard = card;
     selectionService.select(repository.get(card.getKey()));
   }
+
+  public void gotoDataForAccount(Integer accountId, boolean in) {
+    throw new RuntimeException("TODO");
+  }
 }

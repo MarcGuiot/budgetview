@@ -30,8 +30,12 @@ public class EstimatedPositionDetailsChecker extends GuiChecker {
     return check(amount, "remainingEnvelope");
   }
 
-  public EstimatedPositionDetailsChecker checkSavings(double amount) {
-    return check(amount, "remainingSavings");
+  public EstimatedPositionDetailsChecker checkSavingsIn(double amount) {
+    return check(amount, "remainingInSavings");
+  }
+
+  public EstimatedPositionDetailsChecker checkSavingsOut(double amount) {
+    return check(amount, "remainingOutSavings");
   }
 
   public EstimatedPositionDetailsChecker checkOccasional(double amount) {

@@ -55,7 +55,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.income.checkTitle("Income");
     budgetView.income
-      .checkTotalAmounts(3740.0, 3740.00)
+      .checkTotalAmounts(3740.0, 3540.00)
       .checkTotalGauge(3740.0, 3540.00)
       .checkTotalPositiveOverrun();
 

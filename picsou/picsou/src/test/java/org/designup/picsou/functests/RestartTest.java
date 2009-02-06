@@ -332,8 +332,11 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/08");
-    budgetView.savings.checkTotalAmounts(0, 300);
+    budgetView.savings.checkTotalAmounts(0, 0);
+    views.selectHome();
+    monthSummary.checkSavingsBalance(300);
 
+    views.selectBudget();
     budgetView.savings.checkSeriesPresent("Epargne.CAF");
 
     restartApplication();
@@ -342,9 +345,9 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     budgetView.savings.checkSeries("Epargne.CAF", 0, 300);
     timeline.selectMonth("2008/08");
-    budgetView.savings.checkTotalAmounts(0, 300);
 
     views.selectHome();
+    monthSummary.checkSavingsBalance(300);
     timeline.selectMonth("2008/08");
     savingsAccounts.checkPosition("Epargne", 1300);
     timeline.selectMonth("2008/09");

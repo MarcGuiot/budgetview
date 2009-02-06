@@ -32,20 +32,20 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   public void testIncomeOverrun() throws Exception {
     init(BudgetArea.INCOME, 1000, 1200, 300)
       .checkObserved("1000.00")
-      .checkPlanned("1300.00")
-      .checkOverrunTooltip("1200.00", "100.00")
+      .checkPlanned("1200.00")
+      .checkOverrunTooltip("1300.00", "100.00")
       .checkPositiveOverrun()
-      .checkGaugeWithPartialOverrun(1000, 1300, 100);
+      .checkGaugeWithPartialOverrun(1000, 1200, 100);
   }
 
   public void testIncomeWithNegativeObserved() throws Exception {
     init(BudgetArea.INCOME, -200, 1200, 1000)
       .checkObserved("-200.00")
-      .checkPlanned("800.00")
+      .checkPlanned("1200.00")
       .checkNoLabelOverrun()
       .checkGaugeErrorOverrun()
       .checkNormalTooltip()
-      .checkGauge(-200, 800);
+      .checkGauge(-200, 1200);
   }
 
   public void testIncomeWithNegativePlanned() throws Exception {
@@ -67,18 +67,18 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   public void testIncomeWithNoPlannedAndPositiveObserved() throws Exception {
     init(BudgetArea.INCOME, 200, 0, 0)
       .checkObserved("200.00")
-      .checkPlanned("200.00")
+      .checkPlanned("0.00")
       .checkPositiveOverrun()
-      .checkOverrunTooltip("0.00", "200.00")
+      .checkOverrunTooltip("200.00", "200.00")
       .checkGauge(200, 0);
   }
 
   public void testIncomeWithNoPlannedAndNegativeObserved() throws Exception {
     init(BudgetArea.INCOME, -200, 0, 0)
       .checkObserved("-200.00")
-      .checkPlanned("-200.00")
+      .checkPlanned("0.00")
       .checkErrorOverrun()
-      .checkOverrunTooltip("0.00", "200.00")
+      .checkOverrunTooltip("-200.00", "200.00")
       .checkGauge(-200, 0);
   }
 
@@ -103,10 +103,10 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   public void testExpensesWithNegativeOverrun() throws Exception {
     init(BudgetArea.ENVELOPES, -1000, -1200, -300)
       .checkObserved("1000.00")
-      .checkPlanned("1300.00")
+      .checkPlanned("1200.00")
       .checkErrorOverrun()
-      .checkOverrunTooltip("1200.00", "100.00")
-      .checkGaugeWithPartialOverrun(-1000, -1300, -100);
+      .checkOverrunTooltip("1300.00", "100.00")
+      .checkGaugeWithPartialOverrun(-1000, -1200, -100);
   }
 
   public void testExpensesWithPositivePlanned() throws Exception {
@@ -121,20 +121,20 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   public void testExpensesWithPositivePlannedAndOverrun() throws Exception {
     init(BudgetArea.SPECIAL, 1000, 1200, 300)
       .checkObserved("+1000.00")
-      .checkPlanned("+1300.00")
+      .checkPlanned("+1200.00")
       .checkPositiveOverrun()
-      .checkOverrunTooltip("+1200.00", "100.00")
-      .checkGaugeWithPartialOverrun(1000, 1300, 100);
+      .checkOverrunTooltip("+1300.00", "100.00")
+      .checkGaugeWithPartialOverrun(1000, 1200, 100);
   }
 
   public void testExpensesWithPositiveObserved() throws Exception {
     init(BudgetArea.SPECIAL, 100, -1200, -1000)
       .checkObserved("+100.00")
-      .checkPlanned("900.00")
+      .checkPlanned("1200.00")
       .checkNormalTooltip()
       .checkNoLabelOverrun()
       .checkGaugePositiveOverrun()
-      .checkGauge(100, -900);
+      .checkGauge(100, -1200);
   }
 
   public void testEmptyExpenses() throws Exception {
@@ -148,27 +148,27 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   public void testExpensesWithNoPlannedAndNegativeObserved() throws Exception {
     init(BudgetArea.SPECIAL, -200, 0, 0)
       .checkObserved("200.00")
-      .checkPlanned("200.00")
+      .checkPlanned("0.00")
       .checkErrorOverrun()
-      .checkOverrunTooltip("0.00", "200.00")
+      .checkOverrunTooltip("200.00", "200.00")
       .checkGauge(-200, 0);
   }
 
   public void testExpensesWithNoPlannedAndPositiveObserved() throws Exception {
     init(BudgetArea.SPECIAL, 200, 0, 0)
       .checkObserved("+200.00")
-      .checkPlanned("+200.00")
+      .checkPlanned("0.00")
       .checkPositiveOverrun()
-      .checkOverrunTooltip("0.00", "200.00")
+      .checkOverrunTooltip("+200.00", "200.00")
       .checkGauge(200, 0);
   }
 
   public void testPastExpensesWithOverrun() throws Exception {
     init(BudgetArea.SPECIAL, 200809, -110, -100, 0)
       .checkObserved("110.00")
-      .checkPlanned("110.00")
+      .checkPlanned("100.00")
       .checkErrorOverrun()
-      .checkOverrunTooltip("100.00", "10.00")
+      .checkOverrunTooltip("110.00", "10.00")
       .checkGauge(-110, -100);
   }
 
@@ -214,7 +214,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
       this.computer =
         new BudgetAreaHeaderUpdater(
           TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
-          repository, directory, false);
+          repository, directory);
 
       this.computer.update(new GlobList(balanceStat), budgetArea);
     }
@@ -229,9 +229,9 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
       return this;
     }
 
-    public Checker checkOverrunTooltip(String planned, String overrunPart) {
+    public Checker checkOverrunTooltip(String total, String overrunPart) {
       assertEquals("Overrun tooltip",
-                   Lang.get("monthsummary.planned.tooltip.overrun", planned, overrunPart),
+                   Lang.get("monthsummary.planned.tooltip.overrun", total, overrunPart),
                    plannedLabel.getToolTipText());
       return this;
     }

@@ -39,7 +39,7 @@ public class Lang {
 
   public static MessageFormat getFormat(String key) {
     String message = getMessage(key);
-    MessageFormat formatter = new MessageFormat(message);
+    MessageFormat formatter = new MessageFormat(message.replace("'", "''"));
     formatter.setLocale(LOCALE);
     return formatter;
   }

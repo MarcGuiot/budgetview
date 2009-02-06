@@ -58,7 +58,8 @@ public class EstimatedPositionDetailsDialog {
     addLabel(builder, "remainingIncome", BalanceStat.INCOME_REMAINING);
     addLabel(builder, "remainingFixed", BalanceStat.RECURRING_REMAINING);
     addLabel(builder, "remainingEnvelope", BalanceStat.ENVELOPES_REMAINING);
-    addLabel(builder, "remainingSavings", BalanceStat.SAVINGS_REMAINING);
+    addLabel(builder, "remainingInSavings", BalanceStat.SAVINGS_REMAINING_IN);
+    addLabel(builder, "remainingOutSavings", BalanceStat.SAVINGS_REMAINING_OUT);
     addLabel(builder, "remainingSpecial", BalanceStat.SPECIAL_REMAINING);
     addLabel(builder, "remainingOccasional", BalanceStat.OCCASIONAL_REMAINING);
 

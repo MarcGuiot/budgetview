@@ -123,7 +123,7 @@ public class BudgetAreaSeriesView extends View {
 
     this.headerUpdater =
       new BudgetAreaHeaderUpdater(TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
-                                  repository, directory, false);
+                                  repository, directory);
     this.headerUpdater.setColors("block.total",
                                  "block.total.overrun.error",
                                  "block.total.overrun.positive");

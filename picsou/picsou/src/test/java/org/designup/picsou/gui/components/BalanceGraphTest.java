@@ -22,29 +22,30 @@ public class BalanceGraphTest extends TestCase {
     directory.add(selectionService);
 
     GlobRepository repository = new DefaultGlobRepository(new DefaultGlobIdGenerator());
-    Glob month10 = repository.create(Month.TYPE, value(Month.ID, 200810));
-    Glob month11 = repository.create(Month.TYPE, value(Month.ID, 200811));
-    repository.create(BalanceStat.TYPE,
+    Glob month10 = repository.create(BalanceStat.TYPE,
                       value(BalanceStat.MONTH, 200810),
                       value(BalanceStat.INCOME, 2.0),
                       value(BalanceStat.EXPENSE, 4.0));
 
-    repository.create(BalanceStat.TYPE,
+    Glob month11 = repository.create(BalanceStat.TYPE,
                       value(BalanceStat.MONTH, 200811),
                       value(BalanceStat.INCOME, 4.0),
                       value(BalanceStat.EXPENSE, 2.0));
 
-    BalanceGraphChecker graph = new BalanceGraphChecker(new BalanceGraph(repository, directory));
+    BalanceGraphChecker graph =
+      new BalanceGraphChecker(new BalanceGraph(repository, directory, BalanceStat.TYPE, BalanceStat.MONTH,
+                                               BalanceStat.INCOME, BalanceStat.INCOME_REMAINING,
+                                               BalanceStat.EXPENSE, BalanceStat.EXPENSE_REMAINING));
 
     graph.checkBalance(0.0, 0.0);
 
     selectionService.select(month10);
     graph.checkBalance(0.5, 1.0);
 
-    selectionService.select(new GlobList(month10, month11), Month.TYPE);
+    selectionService.select(new GlobList(month10, month11), BalanceStat.TYPE);
     graph.checkBalance(1.0, 1.0);
 
-    selectionService.clear(Month.TYPE);
+    selectionService.clear(BalanceStat.TYPE);
     graph.checkBalance(0.0, 0.0);
   }
 }

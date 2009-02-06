@@ -1,10 +1,11 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.components.Gauge;
 import org.designup.picsou.gui.components.TextDisplay;
+import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.model.SavingsBalanceStat;
+import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.Account;
@@ -63,10 +64,8 @@ public class SavingsView extends View {
   }
 
   private void update() {
-    GlobList balanceStat = repository.getAll(SavingsBalanceStat.TYPE,
-                                             GlobMatchers.and(
-                                               GlobMatchers.fieldEquals(SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID),
-                                               GlobMatchers.fieldIn(SavingsBalanceStat.MONTH, selectedMonthIds)));
+    GlobList balanceStat = repository.getAll(BalanceStat.TYPE,
+                                         GlobMatchers.fieldIn(BalanceStat.MONTH, selectedMonthIds));
     headerUpdater.update(balanceStat, BudgetArea.SAVINGS);
   }
 
@@ -78,22 +77,22 @@ public class SavingsView extends View {
     JLabel amountLabel = builder.add("totalObservedAmount", new JLabel());
     JLabel plannedLabel = builder.add("totalPlannedAmount", new JLabel());
 
-    Gauge gauge = new Gauge(false, true);//BudgetAreaGaugeFactory.createGauge(BudgetArea.SAVINGS);
+    Gauge gauge = BudgetAreaGaugeFactory.createSavingsGauge(false);
     builder.add("totalGauge", gauge);
 
     this.headerUpdater =
       new BudgetAreaHeaderUpdater(TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
-                                  repository, directory, false) {
-        Double getObserved(Glob stat, BudgetArea budgetArea) {
-          return - super.getObserved(stat, budgetArea);
+                                  repository, directory){
+        protected Double getRemaining(Glob stat, BudgetArea budgetArea) {
+          return - super.getRemaining(stat, budgetArea);
         }
 
-        Double getPlanned(Glob stat, BudgetArea budgetArea) {
+        protected Double getPlanned(Glob stat, BudgetArea budgetArea) {
           return - super.getPlanned(stat, budgetArea);
         }
 
-        Double getRemaining(Glob stat, BudgetArea budgetArea) {
-          return - super.getRemaining(stat, budgetArea);
+        protected Double getObserved(Glob stat, BudgetArea budgetArea) {
+          return - super.getObserved(stat, budgetArea);
         }
       };
     this.headerUpdater.setColors("block.total",

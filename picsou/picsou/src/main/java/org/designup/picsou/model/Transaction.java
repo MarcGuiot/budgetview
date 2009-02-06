@@ -233,6 +233,7 @@ public class Transaction {
       output.writeBoolean(fieldValues.get(Transaction.PLANNED));
       output.writeBoolean(fieldValues.get(Transaction.MIRROR));
       output.writeBoolean(fieldValues.get(Transaction.CREATED_BY_SERIES));
+      output.writeInteger(fieldValues.get(Transaction.NOT_IMPORTED_TRANSACTION));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -245,6 +246,9 @@ public class Transaction {
       }
       else if (version == 3) {
         deserializeDataV3(fieldSetter, data);
+      }
+      else if (version == 4) {
+        deserializeDataV4(fieldSetter, data);
       }
     }
 
@@ -345,8 +349,34 @@ public class Transaction {
       fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
     }
 
+    private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readUtf8String());
+      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readUtf8String());
+      fieldSetter.set(Transaction.NOTE, input.readUtf8String());
+      fieldSetter.set(Transaction.MONTH, input.readInteger());
+      fieldSetter.set(Transaction.DAY, input.readInteger());
+      fieldSetter.set(Transaction.BANK_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.BANK_DAY, input.readInteger());
+      fieldSetter.set(Transaction.AMOUNT, input.readDouble());
+      fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
+      fieldSetter.set(Transaction.CATEGORY, input.readInteger());
+      fieldSetter.set(Transaction.SPLIT, input.readBoolean());
+      fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
+      fieldSetter.set(Transaction.SERIES, input.readInteger());
+      fieldSetter.set(Transaction.PLANNED, input.readBoolean());
+      fieldSetter.set(Transaction.MIRROR, input.readBoolean());
+      fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
+      fieldSetter.set(Transaction.NOT_IMPORTED_TRANSACTION, input.readInteger());
+    }
+
     public int getWriteVersion() {
-      return 3;
+      return 4;
     }
   }
 }

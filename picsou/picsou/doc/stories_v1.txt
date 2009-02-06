@@ -1,3 +1,7 @@
+- Marc : Revoir Gauge summary budgetView ==> montant initialement plannifier
+- Marc : splitter l'pargne en in et out ==> probleme dans la budgetView : spliter le summary?
+- Marc : Ajouter les comptes d'epargne dans la vue monthsummary avec le in/out
+
 - Pouvoir supprimer son compte local
 
 - Marc : Revoir l'affectation automatique par comptes (pour affecter a des series du bon comptes)

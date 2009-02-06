@@ -55,7 +55,10 @@ public class BudgetLabel implements GlobSelectionListener, ChangeSetListener {
 
     StringBuilder builder = new StringBuilder();
     builder.append("<html>");
-
+    Double balance = balanceStats.getSum(BalanceStat.MONTH_BALANCE);
+    if (balance == null) {
+      return;
+    }
     if (selectedMonthIds.size() > 1) {
       builder
         .append("<b>")
@@ -64,7 +67,6 @@ public class BudgetLabel implements GlobSelectionListener, ChangeSetListener {
         .append(SEPARATOR);
     }
 
-    double balance = balanceStats.getSum(BalanceStat.MONTH_BALANCE);
     builder
       .append(Lang.get("budgetLabel.monthBalance")).append(" <b>")
       .append(balance > 0 ? "+" : "")
@@ -80,8 +82,8 @@ public class BudgetLabel implements GlobSelectionListener, ChangeSetListener {
         .append("</b>");
     }
 
-    double uncategorizedTotal = balanceStats.getSum(BalanceStat.UNCATEGORIZED);
-    if (uncategorizedTotal != 0) {
+    Double uncategorizedTotal = balanceStats.getSum(BalanceStat.UNCATEGORIZED);
+    if (uncategorizedTotal != null && uncategorizedTotal != 0) {
       String uncategorized = format.format(uncategorizedTotal);
       builder
         .append(SEPARATOR)

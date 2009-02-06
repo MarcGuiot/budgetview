@@ -57,26 +57,47 @@
             <row weightY="0">
               <filler fill="horizontal"/>
               <grid weightY="0">
-                <component ref="totalBalance" gridPos="(0,0,1,2)"
+                <component ref="mainAccountsTotalBalance" gridPos="(0,0,1,2)"
                            receivedColorTop="balancegraph.received.top"
                            receivedColorBottom="balancegraph.received.bottom"
                            spentColorTop="balancegraph.spent.top"
                            spentColorBottom="balancegraph.spent.bottom"
                            borderColor="balancegraph.border"
-                           preferredSize="(70,35)"
-                           minimumSize="(70,35)"
-                           weightX="0.1" weightY="1.0"
+                           preferredSize="(70,10)"
+                           minimumSize="(70,10)"
+                           weightX="0.001" weightY="1.0"
                            marginLeft="10" marginRight="10" marginBottom="5"
                            fill="vertical"/>
-                <label text="$monthsummary.balance" styleClass="totalAmountTitle" gridPos="(1,0)"
-                       autoHideSource="balanceAmount" tooltipText="$monthsummary.balance.tooltip"/>
-                <label ref="balanceAmount" styleClass="totalAmount" tooltipText="$monthsummary.balance.tooltip"
-                       gridPos="(1,1)"/>
+                <label text="$monthsummary.balance" styleClass="totalAmountTitle" gridPos="(1,0,2,1)"
+                       autoHideSource="mainAccountsBalanceAmount" tooltipText="$monthsummary.balance.tooltip"
+                       weightY="100"/>
+                <label ref="mainAccountsBalanceAmount" styleClass="totalAmount"
+                       tooltipText="$monthsummary.balance.tooltip"
+                       gridPos="(1,1,2,1)" weightY="100"/>
+
+                <label text="$monthsummary.savings.balance" styleClass="totalAmountTitle" gridPos="(3,0,2,1)"
+                       autoHideSource="savingsBalanceAmount" tooltipText="$monthsummary.savings.balance.tooltip"
+                       weightY="100"/>
+                <label ref="savingsBalanceAmount" styleClass="totalAmount"
+                       tooltipText="$monthsummary.savings.balance.tooltip"
+                       gridPos="(3,1,2,1)" weightY="100"/>
+                <component ref="savingsTotalBalance" gridPos="(5,0,1,2)"
+                           messagePrefix="savingsBalanceGraph.tooltip"
+                           receivedColorTop="balancegraph.received.top"
+                           receivedColorBottom="balancegraph.received.bottom"
+                           spentColorTop="balancegraph.spent.top"
+                           spentColorBottom="balancegraph.spent.bottom"
+                           borderColor="balancegraph.border"
+                           preferredSize="(70,10)"
+                           minimumSize="(70,10)"
+                           weightX="0.001" weightY="1.0"
+                           marginLeft="10" marginRight="10" marginBottom="5"
+                           fill="vertical"/>
               </grid>
               <filler fill="horizontal"/>
             </row>
 
-            <scrollPane weightY="100">
+            <scrollPane weightY="200">
               <column border="empty(10)">
                 <repeat ref="budgetAreaRepeat" layout="verticalGrid">
                   <button ref="budgetAreaName" styleClass="itemLink" tooltipText="$monthsummary.series.tooltip"/>
@@ -84,13 +105,30 @@
                   <component ref="budgetAreaGauge" styleClass="detailGauge"/>
                   <label ref="budgetAreaPlannedAmount" styleClass="plannedAmount" anchor="right"/>
                 </repeat>
-                <filler fill="vertical"/>
                 <row margin="10" autoHideSource="uncategorizedAmountLabel">
                   <filler fill="horizontal"/>
                   <button action="categorize" autoHideSource="uncategorizedAmountLabel" anchor="left"
                           styleClass="hyperlink" font="-,bold,12" tooltipText="$monthsummary.categorize.tooltip"/>
                   <label ref="uncategorizedAmountLabel" styleClass="amount" anchor="left"/>
                 </row>
+                <filler fill="vertical"/>
+                <repeat ref="savingsAccountRepeat">
+                  <column>
+                    <label ref="accountName" fill="horizontal" horizontalAlignment="center" anchor="center"
+                           foreground="#555555" marginTop="2" font="-,bold,13" weightY="0"/>
+                    <grid>
+                      <label text="$monthsummary.savings.in" gridPos="(0,0)" marginRight="5"/>
+                      <button ref="savingsInAmount" styleClass="itemLink" gridPos="(1,0)"/>
+                      <component ref="savingsInGauge" styleClass="detailGauge" gridPos="(2,0)"/>
+                      <label ref="savingsPlannedInAmount" gridPos="(3,0)"/>
+                      
+                      <label text="$monthsummary.savings.out" gridPos="(0,1)"  marginRight="5"/>
+                      <button ref="savingsOutAmount" styleClass="itemLink"  gridPos="(1,1)"/>
+                      <component ref="savingsOutGauge" styleClass="detailGauge" gridPos="(2,1)"/>
+                      <label ref="savingsPlannedOutAmount" gridPos="(3,1)"/>
+                    </grid>
+                  </column>
+                </repeat>
               </column>
             </scrollPane>
           </column>

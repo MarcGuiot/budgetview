@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class BalanceStatTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsChanges(Transaction.TYPE)) {
+    if (changeSet.containsChanges(Transaction.TYPE) || changeSet.containsChanges(SeriesBudget.TYPE)) {
       computeStat(repository);
     }
   }
@@ -42,26 +42,32 @@ public class BalanceStatTrigger implements ChangeSetListener {
 
   private static class SeriesAmounts {
     double income = 0;
-    double stillPlannedIncome = 0;
+    double remainingIncome = 0;
     double plannedIncome = 0;
     double expenses = 0;
-    double stillPlannedExpenses = 0;
+    double remaningExpenses = 0;
     double plannedExpenses = 0;
     double recurring = 0;
-    double stillPlannedRecurring = 0;
+    double remaningRecurring = 0;
     double plannedRecurring = 0;
     double envelopes = 0;
-    double stillPlannedEnvelopes = 0;
+    double remaningEnvelopes = 0;
     double plannedEnvelopes = 0;
     double occasional = 0;
-    double stillPlannedOccasional = 0;
+    double remaningOccasional = 0;
     double plannedOccasional = 0;
     double special = 0;
-    double stillPlannedSpecial = 0;
+    double remaningSpecial = 0;
     double plannedSpecial = 0;
     double savings = 0;
-    double stillPlannedSavings = 0;
+    double remaningSavings = 0;
     double plannedSavings = 0;
+    double savings_in = 0;
+    double remaningSavings_in = 0;
+    double plannedSavings_in = 0;
+    double savings_out = 0;
+    double remaningSavings_out = 0;
+    double plannedSavings_out = 0;
     double uncategorized = 0;
     double beginOfMonth = 0;
     double endOfMonth = 0;
@@ -137,8 +143,14 @@ public class BalanceStatTrigger implements ChangeSetListener {
             .getGlobs();
           for (Glob budget : budgets) {
             SeriesAmounts amounts = getOrCreate(budget.get(SeriesBudget.MONTH));
-            amounts.plannedSavings += budget.get(SeriesBudget.AMOUNT);
-            amounts.plannedExpenses += budget.get(SeriesBudget.AMOUNT);
+            Double amount = budget.get(SeriesBudget.AMOUNT);
+            amounts.plannedSavings += amount;
+            if (amount < 0){
+              amounts.plannedSavings_in += amount;
+            }else{
+              amounts.plannedSavings_out += amount;
+            }
+            amounts.plannedExpenses += amount;
           }
         }
         else if (BudgetArea.SPECIAL.getId().equals(series.get(Series.BUDGET_AREA))) {
@@ -192,7 +204,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
 
       if (incomeSeries.contains(transactionSeries)) {
         if (transaction.get(Transaction.PLANNED)) {
-          amounts.stillPlannedIncome += amount;
+          amounts.remainingIncome += amount;
         }
         else {
           amounts.income += amount;
@@ -201,7 +213,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
       else {
         if (fixedSeries.contains(transactionSeries)) {
           if (transaction.get(Transaction.PLANNED)) {
-            amounts.stillPlannedRecurring += amount;
+            amounts.remaningRecurring += amount;
           }
           else {
             amounts.recurring += amount;
@@ -209,7 +221,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
         }
         else if (envelopeSeries.contains(transactionSeries)) {
           if (transaction.get(Transaction.PLANNED)) {
-            amounts.stillPlannedEnvelopes += amount;
+            amounts.remaningEnvelopes += amount;
           }
           else {
             amounts.envelopes += amount;
@@ -217,7 +229,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
         }
         else if (specialSeries.contains(transactionSeries)) {
           if (transaction.get(Transaction.PLANNED)) {
-            amounts.stillPlannedSpecial += amount;
+            amounts.remaningSpecial += amount;
           }
           else {
             amounts.special += amount;
@@ -225,15 +237,25 @@ public class BalanceStatTrigger implements ChangeSetListener {
         }
         else if (savingsSeries.contains(transactionSeries)) {
           if (transaction.get(Transaction.PLANNED)) {
-            amounts.stillPlannedSavings += amount;
+            amounts.remaningSavings += amount;
+            if (amount < 0){
+              amounts.remaningSavings_in += amount;
+            }else{
+              amounts.remaningSavings_out += amount;
+            }
           }
           else {
             amounts.savings += amount;
+            if (amount < 0){
+              amounts.savings_in += amount;
+            }else{
+              amounts.savings_out += amount;
+            }
           }
         }
         else if (Series.OCCASIONAL_SERIES_ID.equals(transactionSeries)) {
           if (transaction.get(Transaction.PLANNED)) {
-            amounts.stillPlannedOccasional += amount;
+            amounts.remaningOccasional += amount;
           }
           else {
             amounts.occasional += amount;
@@ -244,7 +266,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
         }
 
         if (transaction.get(Transaction.PLANNED)) {
-          amounts.stillPlannedExpenses += amount;
+          amounts.remaningExpenses += amount;
         }
         else {
           amounts.expenses += amount;
@@ -294,31 +316,39 @@ public class BalanceStatTrigger implements ChangeSetListener {
                           value(BalanceStat.MONTH_BALANCE, balance),
 
                           value(BalanceStat.INCOME, seriesAmounts.income),
-                          value(BalanceStat.INCOME_REMAINING, seriesAmounts.stillPlannedIncome),
+                          value(BalanceStat.INCOME_REMAINING, seriesAmounts.remainingIncome),
                           value(BalanceStat.INCOME_PLANNED, seriesAmounts.plannedIncome),
 
                           value(BalanceStat.EXPENSE, seriesAmounts.expenses),
-                          value(BalanceStat.EXPENSE_REMAINING, seriesAmounts.stillPlannedExpenses),
+                          value(BalanceStat.EXPENSE_REMAINING, seriesAmounts.remaningExpenses),
                           value(BalanceStat.EXPENSE_PLANNED, seriesAmounts.plannedExpenses),
 
                           value(BalanceStat.OCCASIONAL, seriesAmounts.occasional),
-                          value(BalanceStat.OCCASIONAL_REMAINING, seriesAmounts.stillPlannedOccasional),
+                          value(BalanceStat.OCCASIONAL_REMAINING, seriesAmounts.remaningOccasional),
                           value(BalanceStat.OCCASIONAL_PLANNED, seriesAmounts.plannedOccasional),
 
                           value(BalanceStat.RECURRING, seriesAmounts.recurring),
-                          value(BalanceStat.RECURRING_REMAINING, seriesAmounts.stillPlannedRecurring),
+                          value(BalanceStat.RECURRING_REMAINING, seriesAmounts.remaningRecurring),
                           value(BalanceStat.RECURRING_PLANNED, seriesAmounts.plannedRecurring),
 
                           value(BalanceStat.ENVELOPES, seriesAmounts.envelopes),
-                          value(BalanceStat.ENVELOPES_REMAINING, seriesAmounts.stillPlannedEnvelopes),
+                          value(BalanceStat.ENVELOPES_REMAINING, seriesAmounts.remaningEnvelopes),
                           value(BalanceStat.ENVELOPES_PLANNED, seriesAmounts.plannedEnvelopes),
 
                           value(BalanceStat.SAVINGS, seriesAmounts.savings),
-                          value(BalanceStat.SAVINGS_REMAINING, seriesAmounts.stillPlannedSavings),
+                          value(BalanceStat.SAVINGS_REMAINING, seriesAmounts.remaningSavings),
                           value(BalanceStat.SAVINGS_PLANNED, seriesAmounts.plannedSavings),
 
+                          value(BalanceStat.SAVINGS_IN, seriesAmounts.savings_in),
+                          value(BalanceStat.SAVINGS_REMAINING_IN, seriesAmounts.remaningSavings_in),
+                          value(BalanceStat.SAVINGS_PLANNED_IN, seriesAmounts.plannedSavings_in),
+
+                          value(BalanceStat.SAVINGS_OUT, seriesAmounts.savings_out),
+                          value(BalanceStat.SAVINGS_REMAINING_OUT, seriesAmounts.remaningSavings_out),
+                          value(BalanceStat.SAVINGS_PLANNED_OUT, seriesAmounts.plannedSavings_out),
+
                           value(BalanceStat.SPECIAL, seriesAmounts.special),
-                          value(BalanceStat.SPECIAL_REMAINING, seriesAmounts.stillPlannedSpecial),
+                          value(BalanceStat.SPECIAL_REMAINING, seriesAmounts.remaningSpecial),
                           value(BalanceStat.SPECIAL_PLANNED, seriesAmounts.plannedSpecial),
 
                           value(BalanceStat.UNCATEGORIZED, seriesAmounts.uncategorized),

@@ -96,6 +96,24 @@ public class BalanceStat {
   public static DoubleField SAVINGS_PLANNED;
 
   @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_IN;
+
+  @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_REMAINING_IN;
+
+  @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_PLANNED_IN;
+
+  @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_OUT;
+
+  @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_REMAINING_OUT;
+
+  @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_PLANNED_OUT;
+
+  @DefaultDouble(0.0)
   public static DoubleField UNCATEGORIZED;
 
   public static DoubleField[] INCOME_FIELDS = {INCOME, INCOME_REMAINING};

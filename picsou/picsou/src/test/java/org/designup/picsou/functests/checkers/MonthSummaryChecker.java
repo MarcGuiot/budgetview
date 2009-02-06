@@ -18,7 +18,8 @@ import java.awt.*;
 
 public class MonthSummaryChecker extends GuiChecker {
   private Window window;
-  public final BalanceGraphChecker balanceGraph;
+  public final BalanceGraphChecker mainBalanceGraph;
+  public final BalanceGraphChecker savingsBalanceGraph;
 
   public final BudgetAreaChecker income = new BudgetAreaChecker(BudgetArea.INCOME);
   public final BudgetAreaChecker recurring = new BudgetAreaChecker(BudgetArea.RECURRING);
@@ -29,7 +30,22 @@ public class MonthSummaryChecker extends GuiChecker {
 
   public MonthSummaryChecker(Window window) {
     this.window = window;
-    this.balanceGraph = new BalanceGraphChecker(window);
+    this.mainBalanceGraph = new BalanceGraphChecker("mainAccountsTotalBalance", window);
+    this.savingsBalanceGraph = new BalanceGraphChecker("savingsTotalBalance", window);
+  }
+
+  public void checkSavingsIn(String accoutName, double observedAmount, double plannedAmount) {
+    assertThat(window.getButton(accoutName + ":savingsInAmount").textEquals(toString(observedAmount)));
+    assertThat(window.getTextBox(accoutName + ":savingsPlannedInAmount").textEquals(toString(plannedAmount)));
+  }
+
+  public void checkSavingsOut(String accoutName, double observedAmount, double plannedAmount) {
+    assertThat(window.getButton(accoutName + ":savingsOutAmount").textEquals(toString(observedAmount)));
+    assertThat(window.getTextBox(accoutName + ":savingsPlannedOutAmount").textEquals(toString(plannedAmount)));
+  }
+
+  public void checkSavingsBalance(double balance) {
+    assertThat(getPanel().getTextBox("savingsBalanceAmount").textEquals(toString(balance, true)));
   }
 
   public class BudgetAreaChecker {
@@ -124,8 +140,23 @@ public class MonthSummaryChecker extends GuiChecker {
     return this;
   }
 
-  public MonthSummaryChecker checkSavings(double amount, double planned) {
-    checkBudgetArea(BudgetArea.SAVINGS, amount, planned);
+  public MonthSummaryChecker checkSavingsIn(double observedAmount, double plannedAmount) {
+    assertThat(window.getButton(BudgetArea.SAVINGS.getName() + ":in:budgetAreaAmount")
+      .textEquals(toString(observedAmount)));
+    assertThat(window.getTextBox(BudgetArea.SAVINGS.getName() + ":in:budgetAreaPlannedAmount")
+      .textEquals(toString(plannedAmount)));
+    GaugeChecker gauge = new GaugeChecker(getPanel(), BudgetArea.SAVINGS.getName() + ":in:budgetAreaGauge");
+    gauge.checkActualValue(observedAmount);
+    gauge.checkTargetValue(plannedAmount);
+    return this;
+  }
+
+  public MonthSummaryChecker checkSavingsOut(double observedAmount, double plannedAmount) {
+    assertThat(window.getButton(BudgetArea.SAVINGS.getName() + ":out:budgetAreaAmount").textEquals(toString(observedAmount)));
+    assertThat(window.getTextBox(BudgetArea.SAVINGS.getName() + ":out:budgetAreaPlannedAmount").textEquals(toString(plannedAmount)));
+    GaugeChecker gauge = new GaugeChecker(getPanel(), BudgetArea.SAVINGS.getName() + ":out:budgetAreaGauge");
+    gauge.checkActualValue(observedAmount);
+    gauge.checkTargetValue(plannedAmount);
     return this;
   }
 
@@ -236,16 +267,23 @@ public class MonthSummaryChecker extends GuiChecker {
     spent = Math.abs(spent);
     received = Math.abs(received);
     if (received > spent) {
-      checkBalanceGraph(1., spent / received);
+      return checkBalanceGraph("mainAccountsTotalBalance", 1., spent / received);
     }
     else {
-      checkBalanceGraph(received / spent, 1.);
+      return checkBalanceGraph("mainAccountsTotalBalance", received / spent, 1.);
     }
-    return this;
   }
 
-  public MonthSummaryChecker checkBalanceGraph(double incomePercent, double expensesPercent) {
-    BalanceGraph graph = getPanel().findSwingComponent(BalanceGraph.class);
+  public MonthSummaryChecker checkMainBalanceGraph(double incomePercent, double expensesPercent) {
+    return checkBalanceGraph("mainAccountsTotalBalance", incomePercent, expensesPercent);
+  }
+
+  public MonthSummaryChecker checkSavingsBalanceGraph(double incomePercent, double expensesPercent) {
+    return checkBalanceGraph("savingsTotalBalance", incomePercent, expensesPercent);
+  }
+
+  public MonthSummaryChecker checkBalanceGraph(String name, double incomePercent, double expensesPercent) {
+    BalanceGraph graph = getPanel().findSwingComponent(BalanceGraph.class, name);
     String actual = "Actual: " + graph.getIncomePercent() + " / " + graph.getExpensesPercent();
     Assert.assertEquals(actual, incomePercent, graph.getIncomePercent(), 0.01);
     Assert.assertEquals(actual, expensesPercent, graph.getExpensesPercent(), 0.01);
@@ -253,12 +291,17 @@ public class MonthSummaryChecker extends GuiChecker {
   }
 
   public MonthSummaryChecker checkBalance(double balance) {
-    assertThat(getPanel().getTextBox("balanceAmount").textEquals(toString(balance, true)));
+    assertThat(getPanel().getTextBox("mainAccountsBalanceAmount").textEquals(toString(balance, true)));
     return this;
   }
 
   public MonthSummaryChecker checkEmptyBalance() {
-    UISpecAssert.assertThat(getPanel().getTextBox("balanceAmount").textEquals(""));
+    UISpecAssert.assertThat(getPanel().getTextBox("mainAccountsBalanceAmount").textEquals(""));
+    return this;
+  }
+
+  public MonthSummaryChecker checkEmptySavingsBalance() {
+    UISpecAssert.assertThat(getPanel().getTextBox("savingsBalanceAmount").textEquals(""));
     return this;
   }
 

@@ -21,7 +21,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkNoDataMessage();
     monthSummary.openImportHelp().checkContains("import").close();
     mainAccounts.checkNoEstimatedPosition();
-    monthSummary.balanceGraph.checkHidden();
+    monthSummary.mainBalanceGraph.checkHidden();
     timeline.checkMonthTooltip("2008/08", "August 2008");
 
     String file = OfxBuilder.init(this)
@@ -72,7 +72,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     monthSummary
       .checkNoHelpMessageDisplayed();
     monthSummary.income
-      .checkValues(1000.0, 1000.0)
+      .checkValues(1000.0, 0.0)
       .checkGauge(1000.0, 0.0)
       .checkPositiveOverrun();
   }
@@ -87,6 +87,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/12", 1500, "Salaire")
       .addTransaction("2008/07/13", -23, "cheque")
       .addTransaction("2008/07/13", -200, "Air France")
+      .addTransaction("2008/07/15", -100, "epargne")
       .load();
 
     views.selectCategorization();
@@ -97,9 +98,10 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     categorization.setOccasional("fnac", MasterCategory.EQUIPMENT);
     categorization.setIncome("Salaire", "Salaire", true);
     categorization.setSpecial("Air France", "voyage", MasterCategory.LEISURES, true);
+    categorization.createAndSetSavings("epargne", "Epargne", "Main accounts", "External account");
 
     double incomeFor200807 = 1500;
-    double expensesFor200807 = 29.9 + 1500 + 60 + 20 + 10 + 23 + 200;
+    double expensesFor200807 = 29.9 + 1500 + 60 + 20 + 10 + 23 + 200 + 100;
     double balance = incomeFor200807 - expensesFor200807;
 
     timeline.selectMonth("2008/07");
@@ -107,27 +109,30 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     monthSummary
       .total(incomeFor200807, expensesFor200807)
       .checkBalance(balance)
-      .checkBalanceGraph(0.81, 1)
+      .checkMainBalanceGraph(0.77, 1)
+      .checkEmptySavingsBalance()
+      .checkSavingsBalanceGraph(0, 0)
       .checkIncome(1500, 1500)
       .checkRecurring(1500 + 29.90)
       .checkEnvelope(80)
       .checkOccasional(10)
       .checkProjects(200)
       .checkUncategorized("-23.00");
-    monthSummary.balanceGraph.checkTooltip(incomeFor200807, expensesFor200807);
+    monthSummary.mainBalanceGraph.checkTooltip(incomeFor200807, expensesFor200807);
 
-    mainAccounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000, "Air France");
+    mainAccounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000, "epargne");
     timeline.checkMonthTooltip("2008/07", balance, 1000.00);
 
     timeline.selectAll();
     mainAccounts
-      .checkEstimatedPosition(880.10);
+      .checkEstimatedPosition(780.10);
     mainAccounts.openEstimatedPositionDetails()
       .checkInitialPosition(1000.00)
       .checkIncome(1500.00)
       .checkFixed(-1529.90)
       .checkEnvelope(-80)
-      .checkSavings(0.00)
+      .checkSavingsOut(0.00)
+      .checkSavingsIn(-100.00)
       .checkOccasional(-10.00)
       .checkProjects(0.00)
       .close();
@@ -162,7 +167,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     monthSummary
       .total(1500, (29.9 + 1500 + 60 + 20 + 10))
       .checkBalance(balanceFor200807)
-      .checkBalanceGraph(0.92, 1)
+      .checkMainBalanceGraph(0.92, 1)
       .checkIncome(1500, 1500)
       .checkRecurring(1500 + 29.90)
       .checkEnvelope(80)
@@ -299,11 +304,11 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     views.selectHome();
     monthSummary.income
-      .checkValues(1200, 1200)
+      .checkValues(1200, 1000)
       .checkGauge(1200, 1000)
       .checkPositiveOverrun();
     monthSummary.envelopes
-      .checkValues(150, 150)
+      .checkValues(150, 100)
       .checkGauge(-150, -100)
       .checkErrorOverrun();
   }

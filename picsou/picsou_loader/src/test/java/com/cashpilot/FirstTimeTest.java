@@ -211,7 +211,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkRecurring(1413.90, 1413.90)
       .checkIncome(2000., 2000.)
       .checkOccasional(55, 55) //126.1)
-      .checkSavings(100, 100);
+      .checkSavingsIn(100, 100);
 
     MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
     EstimatedPositionDetailsChecker balance = mainAccounts.openEstimatedPositionDetails();
@@ -269,7 +269,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkInitialPosition(1900)
       .checkEnvelope(-380)
       .checkFixed(-1013.9)
-      .checkSavings(-100)
+      .checkSavingsIn(-100)
       .checkIncome(2000)
       .checkOccasional(-55.0);
 
@@ -295,7 +295,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(-184)
-      .checkSavings(0)
+      .checkSavingsIn(0)
       .checkEnvelope(-230)
       .checkOccasional(-55);
 
@@ -355,7 +355,7 @@ public class FirstTimeTest extends UISpecTestCase {
         Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot1.jar");
         System.setProperty("cashpilot.exe.dir", jarDir.getAbsolutePath());
         System.setProperty("cashpilot.prevayler.path", prevaylerDir.getAbsolutePath());
-        Main.main(new String[0]);
+        com.cashpilot.Main.main(new String[0]);
       }
     });
     LoginChecker login = new LoginChecker(window);
@@ -368,7 +368,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(-184)
-      .checkSavings(0)
+      .checkSavingsIn(0)
       .checkEnvelope(-230);
 
     views.selectData();
@@ -446,7 +446,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(-184)
-      .checkSavings(0)
+      .checkSavingsIn(0)
       .checkEnvelope(-230);
 
     views.selectData();
@@ -525,7 +525,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(-184)
-      .checkSavings(0)
+      .checkSavingsIn(0)
       .checkEnvelope(-230);
 
     views.selectData();

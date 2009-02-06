@@ -227,7 +227,7 @@ public class SeriesEvolutionColors implements ColorChangeListener {
     private Color foreground;
 
     public BudgetAreaColorUpdater(GlobRepository repository, Directory directory) {
-      super(repository, directory, false);
+      super(repository, directory);
     }
 
     protected void clearComponents() {

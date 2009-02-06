@@ -12,8 +12,8 @@ public class BudgetAreaHeaderUpdater extends BudgetAreaSummaryComputer {
   protected Gauge gauge;
 
   public BudgetAreaHeaderUpdater(TextDisplay amountLabel, TextDisplay plannedLabel, Gauge gauge,
-                                 GlobRepository repository, Directory directory, boolean savingsShowOpposite) {
-    super(repository, directory, savingsShowOpposite);
+                                 GlobRepository repository, Directory directory) {
+    super(repository, directory);
 
     this.amountLabel = amountLabel;
     this.plannedLabel = plannedLabel;

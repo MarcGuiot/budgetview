@@ -1,18 +1,14 @@
 package org.designup.picsou.gui.components;
 
-import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetListener;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.metamodel.fields.DoubleField;
+import org.globsframework.metamodel.fields.LinkField;
+import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -28,41 +24,56 @@ public class BalanceGraph extends JPanel implements GlobSelectionListener {
   private double incomePercent = 0.0;
   private double expensesPercent = 0.0;
   private GlobRepository repository;
+  private String messagePrefix = "balanceGraph.tooltip";
+  private GlobType statType;
+  private LinkField monthField;
+  private DoubleField inRemainingField;
+  private DoubleField inField;
+  private DoubleField outField;
+  private DoubleField outRemainingField;
 
-  public BalanceGraph(GlobRepository repository, Directory directory) {
+  public BalanceGraph(GlobRepository repository, Directory directory, final GlobType statType, final LinkField monthField,
+                      final DoubleField inField, final DoubleField inRemainingField,
+                      final DoubleField outField, final DoubleField outRemainingField) {
     this.repository = repository;
+    this.statType = statType;
+    this.monthField = monthField;
+    this.inField = inField;
+    this.inRemainingField = inRemainingField;
+    this.outField = outField;
+    this.outRemainingField = outRemainingField;
     setOpaque(false);
     final SelectionService selectionService = directory.get(SelectionService.class);
-    selectionService.addListener(this, Month.TYPE);
+    selectionService.addListener(this, statType);
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(BalanceStat.TYPE)) {
-          update(selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID));
+        if (changeSet.containsChanges(BalanceGraph.this.statType)) {
+          update(selectionService.getSelection(statType));
         }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        update(selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID));
+        update(selectionService.getSelection(statType));
       }
     });
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    update(selection.getAll(Month.TYPE).getValueSet(Month.ID));
+    update(selection.getAll(statType));
   }
 
-  private void update(Set<Integer> monthIds) {
+  private void update(GlobList stats) {
     double income = 0;
     double expenses = 0;
-    for (Glob stat : repository.getAll(BalanceStat.TYPE, GlobMatchers.fieldIn(BalanceStat.MONTH, monthIds))) {
-      income += stat.get(BalanceStat.INCOME) + stat.get(BalanceStat.INCOME_REMAINING);
-      expenses += stat.get(BalanceStat.EXPENSE) + stat.get(BalanceStat.EXPENSE_REMAINING);
+    for (Glob stat : stats) {
+      income += stat.get(inField) + stat.get(inRemainingField);
+      expenses += stat.get(outField) + stat.get(outRemainingField);
     }
 
-    setToolTipText(Lang.get("balanceGraph.tooltip",
+    setToolTipText(Lang.get(messagePrefix,
                             Formatting.toString(income),
                             Formatting.toString(-expenses)));
-    
+
     income = Math.abs(income);
     expenses = Math.abs(expenses);
 
@@ -106,6 +117,10 @@ public class BalanceGraph extends JPanel implements GlobSelectionListener {
     g2.fillRect(middle, h - spentHeight, middle, spentHeight);
     g2.setColor(borderColor);
     g2.drawRect(middle, h - spentHeight, middle, spentHeight);
+  }
+
+  public void setMessagePrefix(String messagePrefix) {
+    this.messagePrefix = messagePrefix;
   }
 
   public void setSpentColorTop(Color spentColorTop) {

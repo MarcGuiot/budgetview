@@ -20,7 +20,6 @@ import java.awt.*;
 
 public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
   protected final GlobRepository repository;
-  private boolean savingsShowOpposite;
 
   protected double overrun;
   protected double observed;
@@ -40,9 +39,8 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
   private String positiveOverrunAmountColorKey = "block.inner.amount.overrun.positive";
   private ColorService colorService;
 
-  public BudgetAreaSummaryComputer(GlobRepository repository, Directory directory, boolean savingsShowOpposite) {
+  public BudgetAreaSummaryComputer(GlobRepository repository, Directory directory) {
     this.repository = repository;
-    this.savingsShowOpposite = savingsShowOpposite;
     this.colorService = directory.get(ColorService.class);
     this.colorService.addListener(this);
   }
@@ -89,27 +87,27 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
         isPartialOverrun = true;
         overrun = observed;
         gaugeActual = observed;
-        gaugeTarget = adjustedPlanned;
+        gaugeTarget = initiallyPlanned;
       }
       else if (Amounts.sameSign(adjustedPlanned, initiallyPlanned)) {
         if (Math.abs(adjustedPlanned) > Math.abs(initiallyPlanned)) {
           isPartialOverrun = true;
           overrun = Amounts.normalize(adjustedPlanned - initiallyPlanned);
           gaugeActual = observed;
-          gaugeTarget = adjustedPlanned;
+          gaugeTarget = initiallyPlanned;
         }
         else {
           isPartialOverrun = false;
           overrun = 0;
           gaugeActual = observed;
-          gaugeTarget = adjustedPlanned;
+          gaugeTarget = initiallyPlanned;
         }
       }
       else {
         isPartialOverrun = false;
         overrun = adjustedPlanned;
         gaugeActual = observed;
-        gaugeTarget = adjustedPlanned;
+        gaugeTarget = initiallyPlanned;
       }
     }
     else if (isPastMonths(balanceStats)) {
@@ -165,7 +163,7 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
     updateComponents(budgetArea);
   }
 
-  Double getObserved(Glob stat, BudgetArea budgetArea) {
+  protected Double getObserved(Glob stat, BudgetArea budgetArea) {
     if (stat.getType() == BalanceStat.TYPE) {
       return stat.get(BalanceStat.getObserved(budgetArea));
     }
@@ -175,17 +173,17 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
     throw new UnexpectedApplicationState(stat.getType().getName());
   }
 
-  Double getPlanned(Glob stat, BudgetArea budgetArea) {
+  protected Double getPlanned(Glob stat, BudgetArea budgetArea) {
     if (stat.getType() == BalanceStat.TYPE) {
       return stat.get(BalanceStat.getPlanned(budgetArea));
     }
     if (stat.getType() == SavingsBalanceStat.TYPE) {
-      return stat.get(SavingsBalanceStat.getObserved(budgetArea));
+      return stat.get(SavingsBalanceStat.getPlanned(budgetArea));
     }
     throw new UnexpectedApplicationState(stat.getType().getName());
   }
 
-  Double getRemaining(Glob stat, BudgetArea budgetArea) {
+  protected Double getRemaining(Glob stat, BudgetArea budgetArea) {
     if (stat.getType() == BalanceStat.TYPE) {
       return stat.get(BalanceStat.getRemaining(budgetArea));
     }
@@ -217,13 +215,13 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
   }
 
   public String getPlannedLabel(BudgetArea budgetArea) {
-    return format(adjustedPlanned, budgetArea);
+    return format(initiallyPlanned, budgetArea);
   }
 
   public String getPlannedTooltip(BudgetArea budgetArea) {
     if (Amounts.isNotZero(overrun)) {
       return Lang.get("monthsummary.planned.tooltip.overrun",
-                      format(initiallyPlanned, budgetArea),
+                      format(adjustedPlanned, budgetArea),
                       Formatting.toString(Math.abs(overrun)));
     }
     else {

@@ -108,12 +108,12 @@ public class StatTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     monthSummary.envelopes
-      .checkValues(110, 110 + 80)
-      .checkGaugeOverrun(-110, -110 - 80, -110 + 90)
+      .checkValues(110, 90 + 80)
+      .checkGaugeOverrun(-110, -90 - 80, -110 + 90)
       .checkErrorOverrun();
 
     views.selectBudget();
-    budgetView.envelopes.checkTotalAmounts(-110, -190);
+    budgetView.envelopes.checkTotalAmounts(-110, -170);
 
     views.selectData();
     transactions.initContent()

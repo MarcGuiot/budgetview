@@ -1,7 +1,10 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.model.SavingsBalanceStat;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
@@ -18,7 +21,9 @@ import java.util.Set;
 
 public class SavingsBalanceStatTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    computeStat(repository);
+    if (changeSet.containsChanges(SeriesBudget.TYPE) || changeSet.containsChanges(Transaction.TYPE)) {
+      computeStat(repository);
+    }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
@@ -48,13 +53,13 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
           update(glob, balance, SavingsBalanceStat.SAVINGS_PLANNED);
           update(glob, balance, SavingsBalanceStat.SAVINGS_REMAINING);
           Integer day = glob.get(SavingsBalanceStat.LAST_KNOWN_POSITION_DAY);
-          if (day != null){
+          if (day != null) {
             Integer summaryDay = balance.get(SavingsBalanceStat.LAST_KNOWN_POSITION_DAY);
-            if (summaryDay == null){
+            if (summaryDay == null) {
               balance.set(SavingsBalanceStat.LAST_KNOWN_POSITION_DAY, day);
             }
             else {
-              if (summaryDay < day){
+              if (summaryDay < day) {
                 balance.set(SavingsBalanceStat.LAST_KNOWN_POSITION_DAY, day);
               }
             }
@@ -75,7 +80,7 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
   private void update(Glob glob, GlobBuilder balance, DoubleField field) {
     Double summaryAmount = balance.get().get(field);
     Double amount = glob.get(field);
-    if (summaryAmount == null && amount == null){
+    if (summaryAmount == null && amount == null) {
       return;
     }
     balance.set(field, (summaryAmount == null ? 0. : summaryAmount) + (amount == null ? 0. : amount));
@@ -130,29 +135,26 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
                            SavingsBalanceStat.ACCOUNT, accountId);
       SavingsData data = getOrCreateStat(key);
 
-      Integer seriesId = transaction.get(Transaction.SERIES);
       acountBySeries.put(transaction.get(Transaction.SERIES), accountId);
-      Boolean isSavingsSeries = this.isSavingsSeries.get(seriesId);
-      if (isSavingsSeries == null) {
-        Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-        isSavingsSeries = series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId());
-        this.isSavingsSeries.put(seriesId, isSavingsSeries);
-      }
       Double amount = transaction.get(Transaction.AMOUNT);
       if (!transaction.get(Transaction.PLANNED)) {
-        if (isSavingsSeries) {
+        if (amount > 0) {
           data.savings += amount;
+          isSavingsSeries.put(transaction.get(Transaction.SERIES), true);
         }
         else {
-          data.out += amount;
+          data.out += -amount;
+          isSavingsSeries.put(transaction.get(Transaction.SERIES), false);
         }
       }
       else {
-        if (isSavingsSeries) {
+        if (amount > 0) {
           data.savingsRemaining += amount;
+          isSavingsSeries.put(transaction.get(Transaction.SERIES), true);
         }
         else {
-          data.outRemaining += amount;
+          data.outRemaining += -amount;
+          isSavingsSeries.put(transaction.get(Transaction.SERIES), false);
         }
       }
       if (!transaction.get(Transaction.PLANNED) &&
@@ -176,16 +178,17 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
         GlobList months = repository.getAll(Month.TYPE);
         ReadOnlyGlobRepository.MultiFieldIndexed index =
           repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, entry.getKey());
+        Boolean isSavings = isSavingsSeries.get(entry.getKey());
         for (Glob month : months) {
           Glob seriesBudget = index.findByIndex(SeriesBudget.MONTH, month.get(Month.ID)).getGlobs().getFirst();
           SavingsData data = getOrCreateStat(Key.create(SavingsBalanceStat.MONTH, month.get(Month.ID),
                                                         SavingsBalanceStat.ACCOUNT, entry.getValue()));
           if (seriesBudget != null) {
-            if (isSavingsSeries.get(entry.getKey())) {
-              data.savingsPlanned += seriesBudget.get(SeriesBudget.AMOUNT);
+            if (isSavings) {
+              data.savingsPlanned += Math.abs(seriesBudget.get(SeriesBudget.AMOUNT));
             }
             else {
-              data.outPlanned += seriesBudget.get(SeriesBudget.AMOUNT);
+              data.outPlanned += Math.abs(seriesBudget.get(SeriesBudget.AMOUNT));
             }
           }
         }

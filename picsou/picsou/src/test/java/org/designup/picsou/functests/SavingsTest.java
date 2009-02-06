@@ -146,9 +146,12 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/10");
     views.selectBudget();
-    budgetView.savings.checkTotalAmounts(0, -200);
+    budgetView.savings.checkTotalAmounts(0, 0);
     views.selectHome();
     savingsAccounts.checkPosition("Epargne LCL", 1000);
+    monthSummary.checkSavingsBalance(-200);
+    monthSummary.checkSavingsIn("Epargne LCL", 0, 200);
+    monthSummary.checkSavingsOut("Epargne LCL", 0, 400);
   }
 
   public void testCreateSavingsSeriesAndAssociateLaterToAccount() throws Exception {
@@ -344,12 +347,25 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.savings.checkTotalAmounts(300, 300);
-    timeline.selectMonth("2008/08");
-    budgetView.savings.checkTotalAmounts(300, 300);
+    budgetView.savings.checkTotalAmounts(0, 0);
+    views.selectHome();
+    timeline.selectMonth("2008/10");
+    monthSummary.checkSavingsIn("Epargne", 0, 300);
+    timeline.selectMonth("2008/06");
+    monthSummary.checkSavingsIn("Epargne", 300, 300);
+
+    views.selectBudget();
+    budgetView.savings.editSeries("CAF")
+      .selectMonth(200806)
+      .setAmount(0)
+      .validate();
+    budgetView.savings.checkSeries("CAF", 0, 0);
+    views.selectHome();
+    monthSummary.checkSavingsIn("Epargne", 0, 0);
+
 
     // back to normal to see if dateChooser is hidden
-
+    views.selectBudget();
     budgetView.savings.editSeries("CAF")
       .setFromAccount("Main account")
       .checkDateChooserIsHidden()
@@ -607,16 +623,17 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkPosition("Account n. 111", 1200);
     mainAccounts.checkEstimatedPosition(-200);
 
-    monthSummary.checkSavings(0, 100);
+    monthSummary.checkSavingsIn(0, 100);
+    monthSummary.checkSavingsOut(0, 0);
 
     timeline.selectMonth("2008/08");
     views.selectHome();
-    monthSummary.checkSavings(0, 100);
+    monthSummary.checkSavingsIn(100, 0);
 
     views.selectBudget();
     budgetView.savings.checkSeries("Main accounts.CA", -100, 0);
     budgetView.savings.checkSeries("Account n. 111.CA", 100, 0);
-    budgetView.savings.checkTotalAmounts(100, 100);
+    budgetView.savings.checkTotalAmounts(100, 0);
 
     budgetView.savings.editSeries("Main accounts.CA").switchToManual()
       .selectAllMonths()
@@ -635,7 +652,11 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectHome();
-    monthSummary.checkSavings(100, 200);
+    monthSummary.checkSavingsIn(100, 200);
+
+    views.selectBudget();
+    budgetView.savings.checkTotalAmounts(100, 200);
+
   }
 
   public void testImportedSavingAccountWithMainAccountInManual() throws Exception {
@@ -677,6 +698,15 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/10");
     savingsAccounts.checkPosition("Account n. 111", 1100);
     mainAccounts.checkEstimatedPosition(-100);
+
+    views.selectBudget();
+    
+    timeline.selectMonth("2008/08");
+    budgetView.savings.editSeries("Account n. 111.CA")
+     .selectMonth(200808)
+      .setAmount(0).validate();
+
+    budgetView.savings.checkTotalAmounts(100, 0);
   }
 
   public void testMixeTypeOfSavingsSeriesShouldUpdateCorrectlyTheBudgetView() throws Exception {
@@ -763,19 +793,23 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkPosition("Account n. 111222", 3000);
     savingsAccounts.checkEstimatedPosition(4000, "31/08/2008");
     savingsAccounts.checkSummary(4000, "06/08/2008");
+    monthSummary.checkSavingsIn("Epargne", 300, 300);
+    monthSummary.checkSavingsIn("Account n. 111222", 100, 100);
 
     timeline.selectMonth("2008/09");
     savingsAccounts.checkPosition("Epargne", 1300);
     savingsAccounts.checkPosition("Account n. 111222", 3100);
     savingsAccounts.checkEstimatedPosition(4400, "30/09/2008");
+    monthSummary.checkSavingsIn("Epargne", 0, 300);
+    monthSummary.checkSavingsIn("Account n. 111222", 0, 100);
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.savings.checkTotalGauge(400, 400);
+    budgetView.savings.checkTotalGauge(100, 100);
     timeline.selectMonth("2008/08");
-    budgetView.savings.checkTotalGauge(400, 400);
+    budgetView.savings.checkTotalGauge(100, 100);
     timeline.selectMonth("2008/09");
-    budgetView.savings.checkTotalGauge(0, 400);
+    budgetView.savings.checkTotalGauge(0, 100);
 
     timeline.selectMonth("2008/06");
     budgetView.savings.checkSeries("Main Accounts.Placement", -100, -100);
@@ -804,7 +838,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
     budgetView.savings.checkSeriesPresent("Virement CAF");
   }
-
 
   public void testSavingsGauge() throws Exception {
     OfxBuilder.init(this)
@@ -872,11 +905,10 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     categorization.setSavings("V2 CE", "CA");
     categorization.setSavings("V3 CE", "CA");
 
-//    openPicsou();
-
     views.selectBudget();
     budgetView.savings.checkSeries("Main Accounts.CA", -120, -100);
   }
+
 
 //  public void testSavingWithNoTransactionShouldNotBeIgnored() throws Exception {
 //    fail("Comme il n'y a pas de transaction sur ce compte il n'est pas vu pour le calcul du solde total");

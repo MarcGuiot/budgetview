@@ -195,7 +195,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     notRegistered = true;
   }
 
-  public void openPicsou() throws IOException, InterruptedException {
+  public void openCashPilot() throws IOException, InterruptedException {
     String s = operations.backup("/tmp/");
     System.out.println("LoggedInFunctionalTestCase.openPicsou " + s);
     String javaHome = System.getProperty("java.home");
@@ -206,11 +206,11 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     args.add("-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005");
     args.add("-cp");
     args.add(classPath);
-    args.add("org.designup.picsou.gui.MainWindowLauncher");
     args.add("-Dsplits.editor.enabled=false");
     args.add("-D" + PicsouApplication.APPNAME + "splits.debug.enabled=false");
     args.add("-D" + PicsouApplication.APPNAME + ".log.sout=true");
     args.add("-D" + PicsouApplication.APPNAME + ".today=" + Dates.toMonth(currentDate));
+    args.add("org.designup.picsou.gui.MainWindowLauncher");
     args.add("-u");
     args.add("anonymous");
     args.add("-p");

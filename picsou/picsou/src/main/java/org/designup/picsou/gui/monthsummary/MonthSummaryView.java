@@ -12,12 +12,10 @@ import org.designup.picsou.gui.components.TextDisplay;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.model.BalanceStat;
+import org.designup.picsou.gui.model.SavingsBalanceStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.wizard.SeriesWizardDialog;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -27,17 +25,22 @@ import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
+import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
+import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.ChangeSetMatchers;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -56,6 +59,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
   private GlobStringifier budgetAreaStringifier;
   private ImportFileAction importFileAction;
   private Directory parentDirectory;
+  private GlobStringifier accountStringifier;
 
   public MonthSummaryView(ImportFileAction importFileAction, GlobRepository repository, Directory parentDirectory) {
     super(repository, createDirectory(parentDirectory));
@@ -65,6 +69,112 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     parentSelectionService.addListener(this, Month.TYPE);
     budgetAreaStringifier = descriptionService.getStringifier(BudgetArea.TYPE);
   }
+
+  private interface BudgetElement {
+
+    String getLabel();
+
+    String getName();
+
+    BudgetArea getBudgetArea();
+
+    Gauge createGauge();
+
+    Double getObserved(Glob stat, BudgetArea budgetArea);
+
+    Double getPlanned(Glob stat, BudgetArea budgetArea);
+
+    Double getRemaining(Glob stat, BudgetArea budgetArea);
+  }
+
+  private class DefaultBudgetArea implements BudgetElement {
+    private BudgetArea budgetArea;
+
+    private DefaultBudgetArea(BudgetArea budgetArea) {
+      this.budgetArea = budgetArea;
+    }
+
+    public String getLabel() {
+      return budgetAreaStringifier.toString(budgetArea.getGlob(), repository);
+    }
+
+    public String getName() {
+      return budgetArea.getGlob().get(BudgetArea.NAME);
+    }
+
+    public BudgetArea getBudgetArea() {
+      return budgetArea;
+    }
+
+    public Gauge createGauge() {
+      return BudgetAreaGaugeFactory.createGauge(budgetArea);
+    }
+
+    public Double getObserved(Glob stat, BudgetArea budgetArea) {
+      return stat.get(BalanceStat.getObserved(budgetArea));
+    }
+
+    public Double getPlanned(Glob stat, BudgetArea budgetArea) {
+      return stat.get(BalanceStat.getPlanned(budgetArea));
+    }
+
+    public Double getRemaining(Glob stat, BudgetArea budgetArea) {
+      return stat.get(BalanceStat.getRemaining(budgetArea));
+    }
+  }
+
+  private class SavingsBudgetArea implements BudgetElement {
+    private BudgetArea budgetArea = BudgetArea.SAVINGS;
+    private String label;
+    private boolean in;
+    private DoubleField observedField;
+    private DoubleField plannedField;
+    private DoubleField remainingField;
+
+    private SavingsBudgetArea(boolean in) {
+      this.in = in;
+      label = Lang.get("monthsummary.savings." + (in ? "in" : "out"));
+      if (in) {
+        remainingField = BalanceStat.SAVINGS_REMAINING_IN;
+        observedField = BalanceStat.SAVINGS_IN;
+        plannedField = BalanceStat.SAVINGS_PLANNED_IN;
+      }
+      else {
+        remainingField = BalanceStat.SAVINGS_REMAINING_OUT;
+        observedField = BalanceStat.SAVINGS_OUT;
+        plannedField = BalanceStat.SAVINGS_PLANNED_OUT;
+      }
+    }
+
+    public String getLabel() {
+      return label;
+    }
+
+    public String getName() {
+      return budgetArea.getGlob().get(BudgetArea.NAME) + (in ? ":in" : ":out");
+    }
+
+    public BudgetArea getBudgetArea() {
+      return budgetArea;
+    }
+
+    public Gauge createGauge() {
+      return new Gauge(!in, in);
+    }
+
+    public Double getObserved(Glob stat, BudgetArea budgetArea) {
+      return Math.abs(stat.get(observedField));
+    }
+
+    public Double getPlanned(Glob stat, BudgetArea budgetArea) {
+      return Math.abs(stat.get(plannedField));
+    }
+
+    public Double getRemaining(Glob stat, BudgetArea budgetArea) {
+      return Math.abs(stat.get(remainingField));
+    }
+  }
+
 
   private static Directory createDirectory(Directory parentDirectory) {
     Directory directory = new DefaultDirectory(parentDirectory);
@@ -76,20 +186,41 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/monthSummaryView.splits", repository, directory);
 
-    final GlobListStringifier globListStringifier = GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT,
-                                                                             BalanceStat.MONTH_BALANCE);
+    final GlobListStringifier balanceStatStringifier = GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT,
+                                                                                BalanceStat.MONTH_BALANCE);
 
-    builder.addLabel("balanceAmount", BalanceStat.TYPE,
+    builder.addLabel("mainAccountsBalanceAmount", BalanceStat.TYPE,
                      new GlobListStringifier() {
                        public String toString(GlobList list, GlobRepository repository) {
-                         String balance = globListStringifier.toString(list, repository);
+                         String balance = balanceStatStringifier.toString(list, repository);
                          if (balance.startsWith("-") || "0.00".equals(balance)) {
                            return balance;
                          }
                          return "+" + balance;
                        }
                      });
-    builder.add("totalBalance", new BalanceGraph(repository, directory));
+    builder.add("mainAccountsTotalBalance",
+                new BalanceGraph(repository, directory, BalanceStat.TYPE, BalanceStat.MONTH,
+                                 BalanceStat.INCOME, BalanceStat.INCOME_REMAINING,
+                                 BalanceStat.EXPENSE, BalanceStat.EXPENSE_REMAINING));
+
+    final GlobListStringifier savingsStatStringifier = GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT,
+                                                                                SavingsBalanceStat.BALANCE);
+
+    builder.addLabel("savingsBalanceAmount", SavingsBalanceStat.TYPE,
+                     new GlobListStringifier() {
+                       public String toString(GlobList list, GlobRepository repository) {
+                         String balance = savingsStatStringifier.toString(list, repository);
+                         if (balance.startsWith("-") || "0.00".equals(balance) || Strings.isNullOrEmpty(balance)) {
+                           return balance;
+                         }
+                         return "+" + balance;
+                       }
+                     });
+    builder.add("savingsTotalBalance",
+                new BalanceGraph(repository, directory, SavingsBalanceStat.TYPE, SavingsBalanceStat.MONTH,
+                                 SavingsBalanceStat.SAVINGS, SavingsBalanceStat.SAVINGS_REMAINING,
+                                 SavingsBalanceStat.OUT, SavingsBalanceStat.OUT_REMAINING));
 
     cards = builder.addCardHandler("cards");
 
@@ -97,34 +228,36 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
     builder.addRepeat("budgetAreaRepeat",
                       getBudgetAreas(),
-                      new RepeatComponentFactory<BudgetArea>() {
-                        public void registerComponents(RepeatCellBuilder cellBuilder, final BudgetArea budgetArea) {
+                      new RepeatComponentFactory<BudgetElement>() {
+                        public void registerComponents(RepeatCellBuilder cellBuilder, final BudgetElement budgetElement) {
 
-                          String label = budgetAreaStringifier.toString(budgetArea.getGlob(), repository);
+                          String label = budgetElement.getLabel();
                           JButton nameButton = new JButton(new AbstractAction(label) {
                             public void actionPerformed(ActionEvent e) {
                               directory.get(NavigationService.class).gotoBudget();
                             }
                           });
                           cellBuilder.add("budgetAreaName", nameButton);
-                          nameButton.setName(budgetArea.getGlob().get(BudgetArea.NAME));
+                          String name = budgetElement.getName();
+                          nameButton.setName(name);
 
                           JButton amountButton =
                             cellBuilder.add("budgetAreaAmount", new JButton(new AbstractAction() {
                               public void actionPerformed(ActionEvent e) {
-                                directory.get(NavigationService.class).gotoData(budgetArea);
+                                directory.get(NavigationService.class).gotoData(budgetElement.getBudgetArea());
                               }
                             }));
-                          amountButton.setName(budgetArea.getName() + ":budgetAreaAmount");
+                          amountButton.setName(name + ":budgetAreaAmount");
 
                           JLabel plannedLabel = cellBuilder.add("budgetAreaPlannedAmount", new JLabel());
-                          plannedLabel.setName(budgetArea.getName() + ":budgetAreaPlannedAmount");
+                          plannedLabel.setName(name + ":budgetAreaPlannedAmount");
 
                           Gauge gauge = cellBuilder.add("budgetAreaGauge",
-                                                        BudgetAreaGaugeFactory.createGauge(budgetArea));
-                          gauge.setName(budgetArea.getName() + ":budgetAreaGauge");
+                                                        budgetElement.createGauge());
 
-                          new BudgetAreaUpdater(budgetArea, amountButton, plannedLabel, gauge);
+                          gauge.setName(name + ":budgetAreaGauge");
+
+                          new BudgetAreaUpdater(budgetElement, amountButton, plannedLabel, gauge);
                         }
                       });
 
@@ -138,9 +271,48 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(parentDirectory));
 
+    accountStringifier = directory.get(DescriptionService.class).getStringifier(Account.TYPE);
+
+    builder.addRepeat("savingsAccountRepeat", Account.TYPE,
+                      GlobMatchers.and(GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()),
+                                       GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID))),
+                      new RepeatComponentFactory<Glob>() {
+                        public void registerComponents(RepeatCellBuilder cellBuilder, final Glob account) {
+
+                          GlobLabelView accountNameView =
+                            GlobLabelView.init(Account.TYPE, repository, directory)
+                            .forceSelection(account);
+                          cellBuilder.add("accountName", accountNameView.getComponent());
+
+                          registerComponent(cellBuilder, account, new Gauge(false, false), true);
+                          registerComponent(cellBuilder, account, new Gauge(true, true), false);
+                        }
+                      });
+
     parentBuilder.add("monthSummaryView", builder);
 
     registerCardUpdater();
+  }
+
+  private void registerComponent(RepeatCellBuilder cellBuilder, final Glob account, Gauge inGauge, final boolean in) {
+    String accountName = accountStringifier.toString(account, repository);
+    String sens = in ? "In" : "Out";
+    JButton amountButton =
+      cellBuilder.add("savings" + sens + "Amount", new JButton(new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          directory.get(NavigationService.class).gotoDataForAccount(account.get(Account.ID), in);
+        }
+      }));
+    amountButton.setName(accountName + ":savings" + sens + "Amount");
+
+    JLabel plannedLabel = cellBuilder.add("savingsPlanned" + sens + "Amount", new JLabel());
+    plannedLabel.setName(accountName + ":savingsPlanned" + sens + "Amount");
+
+    Gauge gauge = cellBuilder.add("savings" + sens + "Gauge", inGauge);
+
+    gauge.setName(accountName + ":" + sens + "Gauge");
+
+    new SavingsAccountsUpdater(amountButton, plannedLabel, inGauge, in, account.get(Account.ID));
   }
 
   private void registerCardUpdater() {
@@ -179,28 +351,112 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     }
   }
 
-  private List<BudgetArea> getBudgetAreas() {
-    return Arrays.asList(BudgetArea.INCOME,
-                         BudgetArea.SAVINGS,
-                         BudgetArea.RECURRING,
-                         BudgetArea.ENVELOPES,
-                         BudgetArea.OCCASIONAL,
-                         BudgetArea.SPECIAL);
+  private List<BudgetElement> getBudgetAreas() {
+    return Arrays.asList(new DefaultBudgetArea(BudgetArea.INCOME),
+                         new SavingsBudgetArea(true),
+                         new SavingsBudgetArea(false),
+                         new DefaultBudgetArea(BudgetArea.RECURRING),
+                         new DefaultBudgetArea(BudgetArea.ENVELOPES),
+                         new DefaultBudgetArea(BudgetArea.OCCASIONAL),
+                         new DefaultBudgetArea(BudgetArea.SPECIAL));
   }
 
-  private class BudgetAreaUpdater implements ChangeSetListener, GlobSelectionListener {
+  private class SavingsAccountsUpdater implements ChangeSetListener, GlobSelectionListener {
     private SortedSet<Integer> selectedMonths = new TreeSet<Integer>();
     private BudgetAreaSummaryComputer summaryComputer;
-    private BudgetArea budgetArea;
+    private Integer accountId;
 
-    public BudgetAreaUpdater(BudgetArea budgetArea, JButton amountLabel, JLabel plannedLabel, Gauge gauge) {
-      this.budgetArea = budgetArea;
+    public SavingsAccountsUpdater(JButton amountLabel, JLabel plannedLabel, Gauge gauge,
+                                  final boolean in, Integer accountId) {
+      this.accountId = accountId;
       directory.get(SelectionService.class).addListener(this, Month.TYPE);
       repository.addChangeListener(this);
       this.summaryComputer =
         new BudgetAreaHeaderUpdater(
           TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
-          repository, directory, false);
+          repository, directory) {
+          protected Double getObserved(Glob stat, BudgetArea budgetArea) {
+            if (in) {
+              return stat.get(SavingsBalanceStat.SAVINGS);
+            }
+            else {
+              return stat.get(SavingsBalanceStat.OUT);
+            }
+          }
+
+          protected Double getPlanned(Glob stat, BudgetArea budgetArea) {
+            if (in) {
+              return stat.get(SavingsBalanceStat.SAVINGS_PLANNED);
+            }
+            else {
+              return stat.get(SavingsBalanceStat.OUT_PLANNED);
+            }
+          }
+
+          protected Double getRemaining(Glob stat, BudgetArea budgetArea) {
+            if (in) {
+              return stat.get(SavingsBalanceStat.SAVINGS_REMAINING);
+            }
+            else {
+              return stat.get(SavingsBalanceStat.OUT_REMAINING);
+            }
+          }
+        };
+      update();
+    }
+
+    public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+      if (changeSet.containsChanges(SavingsBalanceStat.TYPE)) {
+        update();
+      }
+    }
+
+    public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+      if (changedTypes.contains(SavingsBalanceStat.TYPE)) {
+        update();
+      }
+    }
+
+    public void selectionUpdated(GlobSelection selection) {
+      if (selection.isRelevantForType(Month.TYPE)) {
+        selectedMonths = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
+        update();
+      }
+    }
+
+    public void update() {
+      GlobList balanceStats = repository.getAll(SavingsBalanceStat.TYPE,
+                                                GlobMatchers.and(fieldIn(SavingsBalanceStat.MONTH, selectedMonths),
+                                                                 fieldEquals(SavingsBalanceStat.ACCOUNT, accountId)));
+      summaryComputer.update(balanceStats, BudgetArea.SAVINGS);
+    }
+  }
+
+  private class BudgetAreaUpdater implements ChangeSetListener, GlobSelectionListener {
+    private SortedSet<Integer> selectedMonths = new TreeSet<Integer>();
+    private BudgetAreaSummaryComputer summaryComputer;
+    private BudgetElement budgetElement;
+
+    public BudgetAreaUpdater(final BudgetElement budgetElement, JButton amountLabel, JLabel plannedLabel, Gauge gauge) {
+      this.budgetElement = budgetElement;
+      directory.get(SelectionService.class).addListener(this, Month.TYPE);
+      repository.addChangeListener(this);
+      this.summaryComputer =
+        new BudgetAreaHeaderUpdater(
+          TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
+          repository, directory) {
+          protected Double getObserved(Glob stat, BudgetArea budgetArea) {
+            return budgetElement.getObserved(stat, budgetArea);
+          }
+
+          protected Double getPlanned(Glob stat, BudgetArea budgetArea) {
+            return budgetElement.getPlanned(stat, budgetArea);
+          }
+
+          protected Double getRemaining(Glob stat, BudgetArea budgetArea) {
+            return budgetElement.getRemaining(stat, budgetArea);
+          }
+        };
       update();
     }
 
@@ -227,7 +483,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
     public void update() {
       GlobList balanceStats = repository.getAll(BalanceStat.TYPE, fieldIn(BalanceStat.MONTH, selectedMonths));
-      summaryComputer.update(balanceStats, budgetArea);
+      summaryComputer.update(balanceStats, budgetElement.getBudgetArea());
     }
   }
 
@@ -238,10 +494,15 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
   private void selectStatAndMonth(GlobList months) {
     GlobList selectedMonthStats = new GlobList();
+    GlobList selectedMonthSavingsStats = new GlobList();
     GlobList selectedSeriesStats = new GlobList();
     for (Glob month : months) {
       Integer monthId = month.get(Month.ID);
       selectedMonthStats.addAll(repository.getAll(BalanceStat.TYPE, fieldEquals(BalanceStat.MONTH, monthId)));
+      selectedMonthSavingsStats.addAll(repository.getAll(SavingsBalanceStat.TYPE,
+                                                         GlobMatchers.and(fieldEquals(SavingsBalanceStat.MONTH, monthId),
+                                                                          GlobMatchers.not(fieldEquals(SavingsBalanceStat.ACCOUNT,
+                                                                                                       Account.SAVINGS_SUMMARY_ACCOUNT_ID)))));
       selectedSeriesStats.addAll(repository.getAll(SeriesStat.TYPE, fieldEquals(SeriesStat.MONTH, monthId)));
     }
 
@@ -249,6 +510,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     localSelectionService.select(
       GlobSelectionBuilder.init()
         .add(selectedMonthStats, BalanceStat.TYPE)
+        .add(selectedMonthSavingsStats, SavingsBalanceStat.TYPE)
         .add(months, Month.TYPE)
         .add(selectedSeriesStats, SeriesStat.TYPE)
         .get());

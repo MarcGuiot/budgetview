@@ -8,18 +8,20 @@ import junit.framework.Assert;
 
 public class BalanceGraphChecker extends GuiChecker {
   private BalanceGraph graph;
+  private String name;
   private Window window;
 
   public BalanceGraphChecker(BalanceGraph graph) {
     this.graph = graph;
   }
 
-  public BalanceGraphChecker(Window window) {
+  public BalanceGraphChecker(String name, Window window) {
+    this.name = name;
     this.window = window;
   }
 
   public void checkHidden() {
-    checkComponentVisible(window, BalanceGraph.class, "totalBalance", false);
+    checkComponentVisible(window, BalanceGraph.class, name, false);
   }
 
   public void checkBalance(double receivedPercent, double spentPercent) {
@@ -39,8 +41,8 @@ public class BalanceGraphChecker extends GuiChecker {
 
   private void initGraph() {
     if (graph == null) {
-      checkComponentVisible(window, BalanceGraph.class, "totalBalance", true);
-      graph = window.findSwingComponent(BalanceGraph.class);
+      checkComponentVisible(window, BalanceGraph.class, name, true);
+      graph = window.findSwingComponent(BalanceGraph.class, name);
       if (graph == null) {
         throw new ItemNotFound("Unable to find balanceGraph component");
       }

@@ -14,7 +14,7 @@ public class Lang {
       message = bundle.getString(key + "." + "en");
     }
     if (arg.length != 0) {
-      MessageFormat formatter = new MessageFormat(message);
+      MessageFormat formatter = new MessageFormat(message.replace("'", "''"));
       formatter.setLocale(Locale.FRENCH);
       return formatter.format(arg);
     }

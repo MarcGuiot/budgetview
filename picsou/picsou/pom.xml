@@ -58,7 +58,7 @@
             <include>**/*Test.java</include>
             <include>**/*Tests.java</include>
           </includes>
-          <excludes>pom
+          <excludes>
             <exclude>**/*TestCase.java</exclude>
           </excludes>
         </configuration>
