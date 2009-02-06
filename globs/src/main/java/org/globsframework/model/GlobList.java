@@ -252,11 +252,14 @@ public class GlobList extends ArrayList<Glob> {
     return map;
   }
 
-  public double getSum(DoubleField field) {
-    double result = 0;
+  public Double getSum(DoubleField field) {
+    Double result = null;
     for (Glob glob : this) {
       Double value = glob.get(field);
-      if (value != null) {
+      if (result == null) {
+        result = value;
+      }
+      else if (value != null) {
         result += value;
       }
     }
