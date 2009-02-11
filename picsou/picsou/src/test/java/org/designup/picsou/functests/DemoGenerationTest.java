@@ -207,7 +207,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     timeline.selectMonth("2008/12");
     budgetView.savings.createSeries()
-      .setName("Provisions vacances aout")
+      .setName("Prov. vacances aout")
       .setCategory(MasterCategory.SAVINGS)
       .setStartDate(200811)
       .setEndDate(200907)

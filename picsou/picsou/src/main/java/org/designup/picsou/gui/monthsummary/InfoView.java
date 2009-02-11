@@ -12,34 +12,26 @@ import javax.swing.*;
 import java.util.Set;
 
 public class InfoView extends View {
-  private JEditorPane versionInfo;
-  private JPanel informationPanel;
+  private JLabel versionInfo;
 
   public InfoView(GlobRepository repository, Directory directory) {
     super(repository, directory);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/infoView.splits",
-                                                      repository, directory);
-
-    informationPanel = new JPanel();
-    builder.add("informationPanel", informationPanel);
-    versionInfo = new JEditorPane();
-    versionInfo.setContentType("text/html");
-    builder.add("versionInfo", versionInfo);
+    versionInfo = new JLabel();
+    parentBuilder.add("newVersionMessage", versionInfo);
     Glob version = repository.get(VersionInformation.KEY);
     Long currentVersion = version.get(VersionInformation.CURRENT_JAR_VERSION);
     Long latestVersion = version.get(VersionInformation.LATEST_AVALAIBLE_JAR_VERSION);
     if (currentVersion != null && latestVersion != null && currentVersion < latestVersion) {
       versionInfo.setText(Lang.get("infoView.new.version"));
-      informationPanel.setVisible(true);
+      versionInfo.setVisible(true);
     }
     else {
-      informationPanel.setVisible(false);
+      versionInfo.setVisible(false);
     }
     repository.addChangeListener(new VersionChangeSetListener());
-    parentBuilder.add("infoView", builder);
   }
 
   private class VersionChangeSetListener implements ChangeSetListener {
@@ -50,7 +42,7 @@ public class InfoView extends View {
           if (!value.get(VersionInformation.LATEST_AVALAIBLE_JAR_VERSION).equals(
             repository.get(VersionInformation.KEY).get(VersionInformation.CURRENT_JAR_VERSION))) {
             versionInfo.setText(Lang.get("infoView.new.version"));
-            informationPanel.setVisible(true);
+            versionInfo.setVisible(true);
           }
         }
       }

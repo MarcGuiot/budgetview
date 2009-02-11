@@ -14,13 +14,13 @@ public class InfoChecker extends GuiChecker {
   }
 
   public InfoChecker checkNewVersion() {
-    UISpecAssert.assertThat(mainWindow.containsUIComponent(TextBox.class, "versionInfo"));
-    UISpecAssert.assertThat(mainWindow.getTextBox("versionInfo").textContains("new version"));
+    UISpecAssert.assertThat(mainWindow.containsUIComponent(TextBox.class, "newVersionMessage"));
+    UISpecAssert.assertThat(mainWindow.getTextBox("newVersionMessage").textContains("new version"));
     return this;
   }
 
   public InfoChecker checkNoNewVersion() {
-    checkComponentVisible(mainWindow, JPanel.class, "informationPanel", false);
+    UISpecAssert.assertFalse(mainWindow.getTextBox("newVersionMessage").isVisible());
     return this;
   }
 }

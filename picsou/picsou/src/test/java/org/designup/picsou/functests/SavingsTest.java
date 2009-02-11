@@ -819,6 +819,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkSeries("Main Accounts.Placement", 0, -100);
     budgetView.savings.checkSeries("Account n. 111222", 0, 100);
 
+
   }
 
   public void testHideAccountIfNoSeries() throws Exception {

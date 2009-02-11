@@ -15,11 +15,21 @@
           <label ref="totalPlannedAmount" styleClass="totalAmount" gridPos="(2,1)" foreground=""
                  tooltipText="$budgetview.tooltip.total.planned"/>
         </grid>
-        <panel preferredSize="(300,400)">
+        <panel preferredSize="(300,150)">
           <scrollPane marginBottom="0" verticalUnitIncrement="10">
             <column>
-              <repeat ref="accounts">
-                <panel ref="account"/>
+              <repeat ref="mainAccounts">
+                <panel ref="mainAccount"/>
+              </repeat>
+              <filler fill="vertical"/>
+            </column>
+          </scrollPane>
+        </panel>
+        <panel preferredSize="(300,200)" marginTop="10">
+          <scrollPane marginBottom="0" verticalUnitIncrement="10">
+            <column>
+              <repeat ref="savingsAccounts">
+                <panel ref="savingsAccount"/>
               </repeat>
               <filler fill="vertical"/>
             </column>

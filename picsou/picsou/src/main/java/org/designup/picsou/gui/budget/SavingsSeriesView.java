@@ -101,7 +101,7 @@ public class SavingsSeriesView {
       }
     });
     currentSeries = newSeries;
-    accountName.setVisible(!currentSeries.isEmpty());
+    accountName.setVisible(!currentSeries.isEmpty() && account.get(Account.ID) != Account.MAIN_SUMMARY_ACCOUNT_ID);
   }
 
   public void registerComponents() {
@@ -111,6 +111,9 @@ public class SavingsSeriesView {
     String accountName = Lang.get("budgetView.savings.accountName.from",
                                   accountStringifier.toString(account, repository));
     this.accountName = new JLabel(accountName);
+    if (account.get(Account.ID) == Account.MAIN_SUMMARY_ACCOUNT_ID){
+      this.accountName.setVisible(false);
+    }
     builder.add("accountName", this.accountName);
     seriesRepeat =
       builder.addRepeat("seriesRepeat",
