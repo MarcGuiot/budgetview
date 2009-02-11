@@ -201,6 +201,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount()
       .setAccountName("Compte provisions")
       .selectBank("CIC")
+      .setBalance(1000)
       .validate();
 
     views.selectBudget();

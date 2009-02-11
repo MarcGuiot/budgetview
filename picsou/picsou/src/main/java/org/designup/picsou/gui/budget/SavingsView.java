@@ -3,7 +3,6 @@ package org.designup.picsou.gui.budget;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.Gauge;
 import org.designup.picsou.gui.components.TextDisplay;
-import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.model.SavingsBalanceStat;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.series.EditSeriesAction;
@@ -77,7 +76,7 @@ public class SavingsView extends View {
     JLabel amountLabel = builder.add("totalObservedAmount", new JLabel());
     JLabel plannedLabel = builder.add("totalPlannedAmount", new JLabel());
 
-    Gauge gauge = BudgetAreaGaugeFactory.createSavingsGauge(false);
+    Gauge gauge = new Gauge(true, true);
     builder.add("totalGauge", gauge);
 
     this.headerUpdater =
@@ -93,6 +92,10 @@ public class SavingsView extends View {
 
         protected Double getObserved(Glob stat, BudgetArea budgetArea) {
           return - super.getObserved(stat, budgetArea);
+        }
+
+        protected void changeGaugeSettings() {
+          gauge.setInvertedSignIsAnError(initiallyPlanned > 0);
         }
       };
     this.headerUpdater.setColors("block.total",

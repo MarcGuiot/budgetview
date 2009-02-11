@@ -103,7 +103,7 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
     gauge.setValues(actual, target);
   }
 
-  private double getValue(Glob glob, DoubleField field) {
+  protected double getValue(Glob glob, DoubleField field) {
     Double globActual = glob.get(field);
     if (globActual == null) {
       return 0;

@@ -909,6 +909,57 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkSeries("Main Accounts.CA", -120, -100);
   }
 
+  public void testChangeAccountDirectionDoNotChangeBudgetSign() throws Exception {
+    savingsAccounts.createSavingsAccount("Epargne", 1000);
+
+    views.selectBudget();
+    budgetView.savings.createSeries()
+      .setName("Test")
+      .setFromAccount("Main accounts")
+      .setToAccount("External")
+      .setCategory(MasterCategory.SAVINGS)
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount("300")
+      .checkTable(new Object[][]{
+        {"2008", "August", "", "300.00"}
+      })
+      .setFromAccount("External")
+      .setToAccount("Main accounts")
+      .checkTable(new Object[][]{
+        {"2008", "August", "", "300.00"}
+      })
+      .validate();
+  }
+
+  public void testBothNotImportedAccount() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/10", -100.00, "Virement")
+      .load();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+
+    views.selectHome();
+    savingsAccounts.createSavingsAccount("Savings 1", 1000);
+    savingsAccounts.createSavingsAccount("Savings 2", 1000);
+    views.selectBudget();
+    budgetView.savings.createSeries()
+      .setName("Test")
+      .setFromAccount("Savings 1")
+      .setToAccount("Savings 2")
+      .setCategory(MasterCategory.SAVINGS)
+      .selectAllMonths()
+      .setAmount("300")
+      .validate();
+    timeline.selectMonth("2008/06");
+
+    budgetView.savings.checkSeries("Savings 1.Test", -300, -300);
+    budgetView.savings.checkSeriesGaugeRemaining("Savings 1.Test", 0);
+    budgetView.savings.checkSeries("Savings 2.Test", 300, 300);
+
+    views.selectHome();
+    monthSummary.checkSavingsOut("Savings 1", 300, 300);
+    monthSummary.checkSavingsIn("Savings 2", 300, 300);
+  }
 
 //  public void testSavingWithNoTransactionShouldNotBeIgnored() throws Exception {
 //    fail("Comme il n'y a pas de transaction sur ce compte il n'est pas vu pour le calcul du solde total");

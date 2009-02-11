@@ -137,6 +137,9 @@ public class LicenseTest extends LicenseTestCase {
     TimeService.setCurrentDate(Dates.parse("2009/05/10"));
     checkVersionValidity(false, SECOND_PATH);
     checkKilledVersion(PATH_TO_DATA);
+    stop();
+    TimeService.setCurrentDate(Dates.parse("2009/07/10"));
+    checkVersionValidity(false, SECOND_PATH);
   }
 
   private void checkKilledVersion(String pathToData) {

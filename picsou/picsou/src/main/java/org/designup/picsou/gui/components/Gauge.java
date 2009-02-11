@@ -281,4 +281,8 @@ public class Gauge extends JPanel {
   public void setOverrunErrorColorBottom(Color overrunErrorColorBottom) {
     this.overrunErrorColorBottom = overrunErrorColorBottom;
   }
+
+  public void setInvertedSignIsAnError(boolean invertedSignIsAnError) {
+    this.invertedSignIsAnError = invertedSignIsAnError;
+  }
 }

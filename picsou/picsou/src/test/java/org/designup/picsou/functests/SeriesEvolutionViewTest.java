@@ -53,7 +53,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .switchToManual()
       .setAmount(20)
       .validate();
-openCashPilot();
+
     timeline.selectMonth("2008/07");
     views.selectEvolution();
     seriesEvolution.checkColumnNames(

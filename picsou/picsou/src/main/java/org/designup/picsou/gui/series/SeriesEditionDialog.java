@@ -1286,10 +1286,33 @@ public class SeriesEditionDialog {
             Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
             double multiplier = Account.getMultiplierWithMainAsPointOfView(fromAccount, toAccount, repository);
             if (multiplier == 0) {
-              return;
+              if (fromAccount == null && toAccount == null) {
+                multiplier = 1;
+              }
+              else {
+                if (Account.onlyOneIsImported(fromAccount, toAccount)) {
+                  if (fromAccount.get(Account.IS_IMPORTED_ACCOUNT)) {
+                    multiplier = -1;
+                  }
+                  else {
+                    multiplier = 1;
+                  }
+                }
+                else if (Account.areBothImported(fromAccount, toAccount)){
+                  multiplier = 1;
+                }
+                else if (fromAccount == null) {
+                  multiplier = 1;
+                }
+                else {
+                  multiplier = -1;
+                }
+              }
             }
-            if (Account.shoudCreateMirror(fromAccount, toAccount) ||
-                Account.areNoneImported(fromAccount, toAccount)) {
+            System.out.println("SeriesEditionDialog$UpdateBudgetOnSeriesAccountsChange.visitUpdate " + multiplier);
+//            if (Account.shoudCreateMirror(fromAccount, toAccount) ||
+//                Account.areNoneImported(fromAccount, toAccount)) {
+            if (!series.get(Series.IS_MIROR)) {
               GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE,
                                                          fieldEquals(SeriesBudget.SERIES, key.get(Series.ID)));
               for (Glob budget : seriesBudgets) {
@@ -1297,16 +1320,16 @@ public class SeriesEditionDialog {
                                   multiplier * Math.abs(budget.get(SeriesBudget.AMOUNT)));
               }
             }
-            else if (Account.areBothImported(fromAccount, toAccount)) {
-              if (!series.get(Series.IS_MIROR)) {
-                GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE,
-                                                           fieldEquals(SeriesBudget.SERIES, key.get(Series.ID)));
-                for (Glob budget : seriesBudgets) {
-                  repository.update(budget.getKey(), SeriesBudget.AMOUNT,
-                                    Math.abs(budget.get(SeriesBudget.AMOUNT)));
-                }
-              }
-            }
+//            else if (Account.areBothImported(fromAccount, toAccount)) {
+//              if (!series.get(Series.IS_MIROR)) {
+//                GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE,
+//                                                           fieldEquals(SeriesBudget.SERIES, key.get(Series.ID)));
+//                for (Glob budget : seriesBudgets) {
+//                  repository.update(budget.getKey(), SeriesBudget.AMOUNT,
+//                                    Math.abs(budget.get(SeriesBudget.AMOUNT)));
+//                }
+//              }
+//            }
           }
         }
       });

@@ -5,19 +5,22 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
-    HashMap<Integer, List<Integer>> seriesToNotImportedAccount = new HashMap<Integer, List<Integer>>();
 
-    deleteAndReCreateTransactionOnTargetOrSourceAccountChange(changeSet, repository, seriesToNotImportedAccount);
-    updateFromCurrentMonthChange(changeSet, repository, seriesToNotImportedAccount);
-    updateFromSeriesBudgetChange(changeSet, repository, seriesToNotImportedAccount);
+    if (changeSet.containsChanges(Series.TYPE)
+        || changeSet.containsChanges(SeriesBudget.TYPE)
+        || changeSet.containsChanges(CurrentMonth.TYPE)) {
+      deleteAndReCreateTransactionOnTargetOrSourceAccountChange(changeSet, repository);
+      updateFromCurrentMonthChange(changeSet, repository);
+      updateFromSeriesBudgetChange(changeSet, repository);
+    }
   }
 
-  private void deleteAndReCreateTransactionOnTargetOrSourceAccountChange(final ChangeSet changeSet, final GlobRepository repository,
-                                                                         final Map<Integer, List<Integer>> seriesToNotImportedAccount) {
+  private void deleteAndReCreateTransactionOnTargetOrSourceAccountChange(final ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
       }
@@ -55,7 +58,7 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
           GlobList seriesBudgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, key.get(Series.ID)).getGlobs();
           for (Glob seriesBudget : seriesBudgets) {
             if (!changeSet.isCreated(seriesBudget.getKey())) {
-              createTransactionFromSeriesBudget(seriesBudget, repository, seriesToNotImportedAccount);
+              createTransactionFromSeriesBudget(seriesBudget, repository);
             }
           }
         }
@@ -78,18 +81,14 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
     }
   }
 
-  private void updateFromCurrentMonthChange(ChangeSet changeSet, GlobRepository repository,
-                                            HashMap<Integer, List<Integer>> seriesToNotImportedAccount) {
+  private void updateFromCurrentMonthChange(ChangeSet changeSet, GlobRepository repository) {
     if (changeSet.containsChanges(CurrentMonth.KEY, CurrentMonth.CURRENT_MONTH)
         || changeSet.containsChanges(CurrentMonth.KEY, CurrentMonth.CURRENT_DAY)) {
       GlobList series = repository.getAll(Series.TYPE);
       for (Glob oneSeries : series) {
         Integer seriesId = oneSeries.get(Series.ID);
-        if (!seriesToNotImportedAccount.containsKey(seriesId)) {
-          updateCache(seriesId, repository, seriesToNotImportedAccount, oneSeries);
-        }
-        List<Integer> accountIds = seriesToNotImportedAccount.get(seriesId);
-        if (accountIds.isEmpty()) {
+        if (!Account.areNoneImported(repository.findLinkTarget(oneSeries, Series.FROM_ACCOUNT),
+                                     repository.findLinkTarget(oneSeries, Series.TO_ACCOUNT))) {
           continue;
         }
         GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
@@ -113,50 +112,47 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
   }
 
 
-  private void updateFromSeriesBudgetChange(final ChangeSet changeSet, final GlobRepository repository,
-                                            final Map<Integer, List<Integer>> seriesToNotImportedAccount) {
+  private void updateFromSeriesBudgetChange(final ChangeSet changeSet, final GlobRepository repository) {
 
     changeSet.safeVisit(SeriesBudget.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues seriesBudget) throws Exception {
-        createTransactionFromSeriesBudget(seriesBudget, repository, seriesToNotImportedAccount);
+        createTransactionFromSeriesBudget(seriesBudget, repository);
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         Glob seriesBudget = repository.get(key);
         Integer seriesId = seriesBudget.get(SeriesBudget.SERIES);
         Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-        if (!seriesToNotImportedAccount.containsKey(seriesId)) {
-          updateCache(seriesId, repository, seriesToNotImportedAccount, series);
-        }
-        List<Integer> accountIds = seriesToNotImportedAccount.get(seriesId);
-        if (accountIds.isEmpty()) {
+        if (!Account.areNoneImported(repository.findLinkTarget(series, Series.FROM_ACCOUNT),
+                                     repository.findLinkTarget(series, Series.TO_ACCOUNT))) {
           return;
         }
         Glob currentMonth = repository.get(CurrentMonth.KEY);
-        for (Integer accountId : accountIds) {
+        {
           Integer currentDay = currentMonth.get(CurrentMonth.CURRENT_DAY);
           if (values.contains(SeriesBudget.ACTIVE)) {
             if (values.get(SeriesBudget.ACTIVE)) {
-              TransactionUtils.createTransactionForNotImportedAccount(seriesBudget, series, accountId,
-                                                                      currentMonth.get(CurrentMonth.CURRENT_MONTH),
-                                                                      currentDay,
-                                                                      repository);
-
+              createTransactionFromSeriesBudget(seriesBudget, repository);
             }
             else {
-              GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
-                .findByIndex(Transaction.MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs();
-              repository.delete(transactions.filter(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId),
-                                                    repository));
+              deleteTransaction(seriesBudget, seriesId, series, repository);
             }
+          }
+          Set<Integer> accounts = new HashSet<Integer>();
+          if (series.get(Series.FROM_ACCOUNT) != null) {
+            accounts.add(series.get(Series.FROM_ACCOUNT));
+          }
+          if (series.get(Series.TO_ACCOUNT) != null) {
+            accounts.add(series.get(Series.TO_ACCOUNT));
           }
           if (values.contains(SeriesBudget.DAY)) {
             if (seriesBudget.get(SeriesBudget.MONTH).equals(currentMonth.get(CurrentMonth.CURRENT_MONTH))) {
               int newDay = values.get(SeriesBudget.DAY);
               int previousDay = values.getPrevious(SeriesBudget.DAY);
+
               GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
                 .findByIndex(Transaction.MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs()
-                .filterSelf(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId), repository);
+                .filterSelf(GlobMatchers.fieldIn(Transaction.ACCOUNT, accounts), repository);
 
               Boolean isPlanned = null;
               if (newDay > currentDay && previousDay < currentDay) {
@@ -174,7 +170,7 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
             else {
               GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
                 .findByIndex(Transaction.MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs()
-                .filter(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId), repository);
+                .filter(GlobMatchers.fieldIn(Transaction.ACCOUNT, accounts), repository);
               for (Glob transaction : transactions) {
                 repository.update(transaction.getKey(), Transaction.DAY, seriesBudget.get(SeriesBudget.DAY));
               }
@@ -183,9 +179,14 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
           if (values.contains(SeriesBudget.AMOUNT)) {
             GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
               .findByIndex(Transaction.MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs()
-              .filterSelf(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId), repository);
+              .filterSelf(GlobMatchers.fieldIn(Transaction.ACCOUNT, accounts), repository);
             for (Glob transaction : transactions) {
-              repository.update(transaction.getKey(), Transaction.AMOUNT, values.get(SeriesBudget.AMOUNT));
+              if (transaction.get(Transaction.MIRROR)) {
+                repository.update(transaction.getKey(), Transaction.AMOUNT, -values.get(SeriesBudget.AMOUNT));
+              }
+              else {
+                repository.update(transaction.getKey(), Transaction.AMOUNT, values.get(SeriesBudget.AMOUNT));
+              }
             }
           }
         }
@@ -198,88 +199,91 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
         if (series == null) {
           return;
         }
-        if (!seriesToNotImportedAccount.containsKey(seriesId)) {
-          updateCache(seriesId, repository, seriesToNotImportedAccount,
-                      series);
+        Set<Integer> accounts = new HashSet<Integer>();
+        if (series.get(Series.FROM_ACCOUNT) != null) {
+          accounts.add(series.get(Series.FROM_ACCOUNT));
         }
-        List<Integer> accountIds = seriesToNotImportedAccount.get(seriesId);
-        if (accountIds.isEmpty()) {
-          return;
+        if (series.get(Series.TO_ACCOUNT) != null) {
+          accounts.add(series.get(Series.TO_ACCOUNT));
         }
-        for (Integer accountId : accountIds) {
-          GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
-            .findByIndex(Transaction.MONTH, previousValues.get(SeriesBudget.MONTH)).getGlobs()
-            .filterSelf(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId), repository);
-          repository.delete(transactions);
-        }
+        GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
+          .findByIndex(Transaction.MONTH, previousValues.get(SeriesBudget.MONTH)).getGlobs()
+          .filterSelf(GlobMatchers.fieldIn(Transaction.ACCOUNT, accounts), repository);
+        repository.delete(transactions);
       }
     });
   }
 
-  private void createTransactionFromSeriesBudget(FieldValues seriesBudget, GlobRepository repository, Map<Integer,
-    List<Integer>> seriesToIsImportedAccount) {
+  private void deleteTransaction(Glob seriesBudget, Integer seriesId, Glob series, GlobRepository repository) {
+    GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
+      .findByIndex(Transaction.MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs();
+    Integer fromAccount = series.get(Series.FROM_ACCOUNT);
+    Integer toAccount = series.get(Series.TO_ACCOUNT);
+    if (fromAccount != null) {
+      repository.delete(transactions.filter(GlobMatchers.fieldEquals(Transaction.ACCOUNT, fromAccount), repository));
+    }
+    if (toAccount != null) {
+      repository.delete(transactions.filter(GlobMatchers.fieldEquals(Transaction.ACCOUNT, toAccount), repository));
+    }
+  }
+
+  private void createTransactionFromSeriesBudget(FieldValues seriesBudget, GlobRepository repository) {
     Integer seriesId = seriesBudget.get(SeriesBudget.SERIES);
     Glob series = repository.get(Key.create(Series.TYPE, seriesId));
     if (!Account.areNoneImported(repository.findLinkTarget(series, Series.FROM_ACCOUNT),
                                  repository.findLinkTarget(series, Series.TO_ACCOUNT))) {
       return;
     }
-    if (!seriesToIsImportedAccount.containsKey(seriesId)) {
-      updateCache(seriesId, repository, seriesToIsImportedAccount, series);
-    }
-    List<Integer> accountIds = seriesToIsImportedAccount.get(seriesId);
-    if (accountIds.isEmpty()) {
-      return;
-    }
+    Integer fromAccountId = series.get(Series.FROM_ACCOUNT);
+    Integer toAccountId = series.get(Series.TO_ACCOUNT);
+
     Glob currentMonth = repository.get(CurrentMonth.KEY);
     GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
       .findByIndex(Transaction.MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs();
-    for (Integer accountId : accountIds) {
+
+    Glob transaction = null;
+    if (fromAccountId != null) {
       GlobList transactionForAccount =
-        transactions.filter(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId), repository);
-      if (transactionForAccount.isEmpty()) {
+        transactions.filter(GlobMatchers.fieldEquals(Transaction.ACCOUNT, fromAccountId), repository);
+      repository.delete(transactionForAccount);
+      transaction = TransactionUtils.createTransactionForNotImportedAccount(
+        seriesBudget, series, fromAccountId, currentMonth.get(CurrentMonth.CURRENT_MONTH),
+        currentMonth.get(CurrentMonth.CURRENT_DAY),
+        repository);
+      if (transaction != null && transaction.get(Transaction.AMOUNT) > 0) {
+        throw new RuntimeException("Bug");
+      }
+    }
+    if (toAccountId != null) {
+      GlobList transactionForAccount =
+        transactions.filter(GlobMatchers.fieldEquals(Transaction.ACCOUNT, toAccountId), repository);
+      repository.delete(transactionForAccount);
+      if (fromAccountId != null) {
+        // si le budget n'est pas actif ou si le montant est a 0 on n'a pas de transaction
+        if (transaction != null) {
+          TransactionUtils.createMirrorTransaction(transaction.getKey(), transaction,
+                                                   toAccountId, repository);
+        }
+      }
+      else {
         TransactionUtils.createTransactionForNotImportedAccount(
-          seriesBudget, series, accountId, currentMonth.get(CurrentMonth.CURRENT_MONTH),
+          seriesBudget, series, toAccountId, currentMonth.get(CurrentMonth.CURRENT_MONTH),
           currentMonth.get(CurrentMonth.CURRENT_DAY),
           repository);
       }
-      transactions.filterSelf(GlobMatchers.not(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId)), repository);
-    }
-    transactions.filterSelf(GlobMatchers.or(GlobMatchers.fieldEquals(Transaction.CREATED_BY_SERIES, true),
-                                            GlobMatchers.fieldEquals(Transaction.MIRROR, true)), repository);
-    for (Glob transaction : transactions) {
-      repository.delete(transaction.getKey());
     }
   }
 
-  private void updateCache(Integer seriesId, GlobRepository repository,
-                           Map<Integer, List<Integer>> seriesToCreateTransaction, final Glob series) {
-    List<Integer> accountIds = seriesToCreateTransaction.get(seriesId);
-    if (accountIds == null) {
-      accountIds = new ArrayList<Integer>();
-      seriesToCreateTransaction.put(seriesId, accountIds);
-    }
+  private Integer updateCache(final Glob series) {
     Integer fromAccountId = series.get(Series.FROM_ACCOUNT);
     Integer toAccountId = series.get(Series.TO_ACCOUNT);
-    if (fromAccountId == null && toAccountId == null) {
-      return;
+    if (fromAccountId != null && toAccountId != null) {
+      return toAccountId;
     }
-    if (fromAccountId == null || toAccountId == null) {
-      addIsNotImported(repository, accountIds, fromAccountId);
-      addIsNotImported(repository, accountIds, toAccountId);
+    if (fromAccountId == null) {
+      return toAccountId;
     }
-    else {
-//      throw new RuntimeException("movement between two not imported account to be tested");
-    }
-  }
-
-  private void addIsNotImported(GlobRepository repository, List<Integer> accountIds, Integer fromAccountId) {
-    if (fromAccountId != null) {
-      Glob account = repository.find(Key.create(Account.TYPE, fromAccountId));
-      if (!account.get(Account.IS_IMPORTED_ACCOUNT)) { // checker si c'est un vrai comptes?
-        accountIds.add(fromAccountId);
-      }
-    }
+    return fromAccountId;
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {

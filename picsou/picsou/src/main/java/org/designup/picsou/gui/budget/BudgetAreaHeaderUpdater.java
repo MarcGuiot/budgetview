@@ -42,13 +42,17 @@ public class BudgetAreaHeaderUpdater extends BudgetAreaSummaryComputer {
       plannedLabel.setForeground(normalAmountColor);
     }
 
-    gauge.setOverrunIsAnError(observed < 0);
+    changeGaugeSettings();
     if (isPartialOverrun) {
       gauge.setValues(gaugeActual, gaugeTarget, overrun);
     }
     else {
       gauge.setValues(gaugeActual, gaugeTarget);
     }
+  }
+
+  protected void changeGaugeSettings() {
+    gauge.setOverrunIsAnError(observed < 0);
   }
 }
 

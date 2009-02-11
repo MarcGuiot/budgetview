@@ -189,11 +189,19 @@ public class SavingsSeriesView {
         }
         gauge = BudgetAreaGaugeFactory.createSavingsGauge(mainAccount);
       }
+      final double multiplier = Account.getMultiplierForInOrOutputOfTheAccount(repository.findLinkTarget(series, Series.FROM_ACCOUNT),
+                                                                               repository.findLinkTarget(series, Series.TO_ACCOUNT),
+                                                                               account);
+
       final GlobGaugeView gaugeView =
         new GlobGaugeView(PeriodSeriesStat.TYPE, gauge, PeriodSeriesStat.AMOUNT,
                           PeriodSeriesStat.PLANNED_AMOUNT,
                           GlobMatchers.fieldEquals(PeriodSeriesStat.SERIES, series.get(Series.ID)),
-                          repository, directory);
+                          repository, directory){
+          protected double getValue(Glob glob, DoubleField field) {
+            return multiplier * Math.abs(super.getValue(glob, field));
+          }
+        };
       cellBuilder.add("gauge", gaugeView.getComponent());
 
       cellBuilder.addDisposeListener(gaugeView);

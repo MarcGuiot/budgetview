@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.gui.components.Gauge;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.*;
@@ -68,6 +69,7 @@ public class BudgetViewChecker extends GuiChecker {
     private BudgetArea budgetArea;
 
     private static final int OBSERVED_LABEL_OFFSET = 1;
+    private static final int GAUGE_OFFSET = 2;
     private static final int PLANNED_LABEL_OFFSET = 3;
 
     public BudgetAreaChecker(String panelName, boolean singleCategorySeries, BudgetArea budgetArea) {
@@ -122,6 +124,18 @@ public class BudgetViewChecker extends GuiChecker {
 
       checkAmount("observed", OBSERVED_LABEL_OFFSET, seriesName, observedAmount, panel, nameIndex);
       checkAmount("planned", PLANNED_LABEL_OFFSET, seriesName, plannedAmount, panel, nameIndex);
+      return this;
+    }
+
+    public BudgetAreaChecker checkSeriesGaugeRemaining(String seriesName, double remaining){
+      Panel budgetPanel = getPanel();
+      Button nameButton = budgetPanel.getButton(seriesName);
+
+      JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
+      int nameIndex = getIndex(panel, nameButton.getAwtComponent());
+
+      GaugeChecker gauge = new GaugeChecker((Gauge)panel.getComponent(nameIndex + GAUGE_OFFSET));
+      gauge.checkOverrunPart(remaining);
       return this;
     }
 

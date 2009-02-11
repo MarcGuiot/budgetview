@@ -14,8 +14,10 @@ import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.MapOfMaps;
+import org.globsframework.utils.MultiMap;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -98,8 +100,8 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
 
   private static class SavingsFunctor implements GlobFunctor {
     private Map<Key, SavingsData> computedData = new HashMap<Key, SavingsData>();
-    Map<Integer, Boolean> isSavingsSeries = new HashMap<Integer, Boolean>();
-    Map<Integer, Integer> acountBySeries = new HashMap<Integer, Integer>();
+    MapOfMaps<Integer, Integer, Boolean> isSavingsSeriesAndAccount = new MapOfMaps<Integer, Integer, Boolean>();
+    MultiMap<Integer, Integer> accountBySeries = new MultiMap<Integer, Integer>();
     MapOfMaps<Integer, Integer, Glob> firstTransactionForMonth = new MapOfMaps<Integer, Integer, Glob>();
     MapOfMaps<Integer, Integer, Glob> lastTransactionForMonth = new MapOfMaps<Integer, Integer, Glob>();
     Map<Integer, Glob> lastRealKnownTransaction = new HashMap<Integer, Glob>();
@@ -135,26 +137,26 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
                            SavingsBalanceStat.ACCOUNT, accountId);
       SavingsData data = getOrCreateStat(key);
 
-      acountBySeries.put(transaction.get(Transaction.SERIES), accountId);
+      accountBySeries.putUnique(transaction.get(Transaction.SERIES), accountId);
       Double amount = transaction.get(Transaction.AMOUNT);
       if (!transaction.get(Transaction.PLANNED)) {
         if (amount > 0) {
           data.savings += amount;
-          isSavingsSeries.put(transaction.get(Transaction.SERIES), true);
+          isSavingsSeriesAndAccount.put(transaction.get(Transaction.SERIES), accountId, true);
         }
         else {
           data.out += -amount;
-          isSavingsSeries.put(transaction.get(Transaction.SERIES), false);
+          isSavingsSeriesAndAccount.put(transaction.get(Transaction.SERIES), accountId, false);
         }
       }
       else {
         if (amount > 0) {
           data.savingsRemaining += amount;
-          isSavingsSeries.put(transaction.get(Transaction.SERIES), true);
+          isSavingsSeriesAndAccount.put(transaction.get(Transaction.SERIES), accountId,  true);
         }
         else {
           data.outRemaining += -amount;
-          isSavingsSeries.put(transaction.get(Transaction.SERIES), false);
+          isSavingsSeriesAndAccount.put(transaction.get(Transaction.SERIES), accountId,  false);
         }
       }
       if (!transaction.get(Transaction.PLANNED) &&
@@ -174,21 +176,23 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
     }
 
     void complete() {
-      for (Map.Entry<Integer, Integer> entry : acountBySeries.entrySet()) {
+      for (Map.Entry<Integer, List<Integer>> seriesToAccounts : accountBySeries.entries()) {
         GlobList months = repository.getAll(Month.TYPE);
         ReadOnlyGlobRepository.MultiFieldIndexed index =
-          repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, entry.getKey());
-        Boolean isSavings = isSavingsSeries.get(entry.getKey());
+          repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesToAccounts.getKey());
         for (Glob month : months) {
           Glob seriesBudget = index.findByIndex(SeriesBudget.MONTH, month.get(Month.ID)).getGlobs().getFirst();
-          SavingsData data = getOrCreateStat(Key.create(SavingsBalanceStat.MONTH, month.get(Month.ID),
-                                                        SavingsBalanceStat.ACCOUNT, entry.getValue()));
-          if (seriesBudget != null) {
-            if (isSavings) {
-              data.savingsPlanned += Math.abs(seriesBudget.get(SeriesBudget.AMOUNT));
-            }
-            else {
-              data.outPlanned += Math.abs(seriesBudget.get(SeriesBudget.AMOUNT));
+          for (Integer accountId : seriesToAccounts.getValue()) {
+            Boolean isSavings = isSavingsSeriesAndAccount.get(seriesToAccounts.getKey(), accountId);
+            SavingsData data = getOrCreateStat(Key.create(SavingsBalanceStat.MONTH, month.get(Month.ID),
+                                                          SavingsBalanceStat.ACCOUNT, accountId));
+            if (seriesBudget != null) {
+              if (isSavings) {
+                data.savingsPlanned += Math.abs(seriesBudget.get(SeriesBudget.AMOUNT));
+              }
+              else {
+                data.outPlanned += Math.abs(seriesBudget.get(SeriesBudget.AMOUNT));
+              }
             }
           }
         }

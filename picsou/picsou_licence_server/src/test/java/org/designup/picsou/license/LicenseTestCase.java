@@ -76,6 +76,7 @@ public abstract class LicenseTestCase extends UISpecTestCase {
     sqlService = null;
     ftpServer = null;
     server = null;
+    System.setProperty(ConfigService.COM_PICSOU_LICENSE_URL, "");
   }
 
   protected void start() throws Exception {
@@ -115,7 +116,6 @@ public abstract class LicenseTestCase extends UISpecTestCase {
       ftpServer = null;
     }
     sqlService = null;
-    System.setProperty("com.picsou.license.url", "");
     started = false;
   }
 

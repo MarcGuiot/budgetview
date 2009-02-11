@@ -140,7 +140,7 @@ public class Account {
     if (forAccount.getKey().equals(fromAccount.getKey())) {
       return -1;
     }
-    throw new RuntimeException("Call with bad for account");
+    throw new RuntimeException("Call with bad account");
   }
 
   public static double getMultiplierWithMainAsPointOfView(Glob fromAccount, Glob toAccount, GlobRepository repository) {
