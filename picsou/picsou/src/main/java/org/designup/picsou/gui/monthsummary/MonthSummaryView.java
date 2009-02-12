@@ -38,9 +38,9 @@ import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -281,7 +281,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
                           GlobLabelView accountNameView =
                             GlobLabelView.init(Account.TYPE, repository, directory)
-                            .forceSelection(account);
+                              .forceSelection(account);
                           cellBuilder.add("accountName", accountNameView.getComponent());
 
                           registerComponent(cellBuilder, account, new Gauge(false, false), true);
@@ -300,7 +300,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     JButton amountButton =
       cellBuilder.add("savings" + sens + "Amount", new JButton(new AbstractAction() {
         public void actionPerformed(ActionEvent e) {
-          directory.get(NavigationService.class).gotoDataForAccount(account.get(Account.ID), in);
+          directory.get(NavigationService.class).gotoDataForSavingsAccount(account.get(Account.ID));
         }
       }));
     amountButton.setName(accountName + ":savings" + sens + "Amount");

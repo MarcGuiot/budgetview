@@ -363,7 +363,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     monthSummary.checkSavingsIn("Epargne", 0, 0);
 
-
     // back to normal to see if dateChooser is hidden
     views.selectBudget();
     budgetView.savings.editSeries("CAF")
@@ -565,6 +564,10 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/10");
     savingsAccounts.checkPosition("Account n. 111", 1200);
     mainAccounts.checkEstimatedPosition(-200);
+
+    monthSummary.gotoTransactions("Account n. 111");
+    views.checkDataSelected();
+
   }
 
   public void testImportedSavingAccountWithMainAccount() throws Exception {
@@ -700,10 +703,10 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(-100);
 
     views.selectBudget();
-    
+
     timeline.selectMonth("2008/08");
     budgetView.savings.editSeries("Account n. 111.CA")
-     .selectMonth(200808)
+      .selectMonth(200808)
       .setAmount(0).validate();
 
     budgetView.savings.checkTotalAmounts(100, 0);

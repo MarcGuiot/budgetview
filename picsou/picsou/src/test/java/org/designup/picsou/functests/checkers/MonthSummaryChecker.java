@@ -10,7 +10,8 @@ import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.*;
+import static org.uispec4j.assertion.UISpecAssert.and;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.finder.ComponentMatchers;
 
 import javax.swing.*;
@@ -222,6 +223,11 @@ public class MonthSummaryChecker extends GuiChecker {
 
   public void gotoTransactions(BudgetArea budgetArea) {
     Button button = getPanel().getButton(budgetArea.getName() + ":budgetAreaAmount");
+    button.click();
+  }
+
+  public void gotoTransactions(String accoutName) {
+    Button button = getPanel().getButton(accoutName + ":savingsInAmount");
     button.click();
   }
 

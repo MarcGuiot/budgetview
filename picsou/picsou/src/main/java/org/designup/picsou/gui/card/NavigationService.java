@@ -4,6 +4,7 @@ import org.designup.picsou.gui.categories.CategoryView;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.series.view.SeriesView;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
 import org.globsframework.gui.GlobSelection;
@@ -12,6 +13,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.Stack;
@@ -82,6 +84,11 @@ public class NavigationService implements GlobSelectionListener {
     select(Card.DATA, false);
   }
 
+  public void gotoDataForSavingsAccount(Integer accountId) {
+    selectionService.select(repository.get(Key.create(Account.TYPE, accountId)));
+    select(Card.DATA, false);
+  }
+
   public boolean backEnabled() {
     return !backStack.isEmpty();
   }
@@ -123,9 +130,5 @@ public class NavigationService implements GlobSelectionListener {
     }
     currentCard = card;
     selectionService.select(repository.get(card.getKey()));
-  }
-
-  public void gotoDataForAccount(Integer accountId, boolean in) {
-    throw new RuntimeException("TODO");
   }
 }

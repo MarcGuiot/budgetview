@@ -1298,7 +1298,7 @@ public class SeriesEditionDialog {
                     multiplier = 1;
                   }
                 }
-                else if (Account.areBothImported(fromAccount, toAccount)){
+                else if (Account.areBothImported(fromAccount, toAccount)) {
                   multiplier = 1;
                 }
                 else if (fromAccount == null) {
@@ -1309,7 +1309,6 @@ public class SeriesEditionDialog {
                 }
               }
             }
-            System.out.println("SeriesEditionDialog$UpdateBudgetOnSeriesAccountsChange.visitUpdate " + multiplier);
 //            if (Account.shoudCreateMirror(fromAccount, toAccount) ||
 //                Account.areNoneImported(fromAccount, toAccount)) {
             if (!series.get(Series.IS_MIROR)) {
