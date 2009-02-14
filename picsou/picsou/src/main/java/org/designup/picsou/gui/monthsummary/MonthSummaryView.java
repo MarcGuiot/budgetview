@@ -60,6 +60,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
   private ImportFileAction importFileAction;
   private Directory parentDirectory;
   private GlobStringifier accountStringifier;
+  private JPanel savingsPanel;
 
   public MonthSummaryView(ImportFileAction importFileAction, GlobRepository repository, Directory parentDirectory) {
     super(repository, createDirectory(parentDirectory));
@@ -273,6 +274,9 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
     accountStringifier = directory.get(DescriptionService.class).getStringifier(Account.TYPE);
 
+    savingsPanel = new JPanel();
+    builder.add("savingsPanel", savingsPanel);
+
     builder.addRepeat("savingsAccountRepeat", Account.TYPE,
                       GlobMatchers.and(GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()),
                                        GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID))),
@@ -342,12 +346,15 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
   private void updateCard() {
     if (!repository.contains(Transaction.TYPE)) {
       cards.show("noData");
+      savingsPanel.setVisible(false);
     }
     else if (!repository.contains(Series.TYPE, USER_SERIES_MATCHER)) {
       cards.show("noSeries");
+      savingsPanel.setVisible(false);
     }
     else {
       cards.show("standard");
+      savingsPanel.setVisible(true);
     }
   }
 

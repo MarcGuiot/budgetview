@@ -423,12 +423,13 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     categories.select(MasterCategory.FOOD);
-
+    transactions.selectAccount("Savings accounts");
     views.selectHome();
     monthSummary.gotoTransactions(BudgetArea.INCOME);
     views.checkDataSelected();
     series.checkSelection("Income");
     categories.checkSelection(MasterCategory.ALL);
+    transactions.checkSelectedAccount("All accounts");
     transactions.initContent()
       .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00, "Salary", MasterCategory.INCOME)
       .check();

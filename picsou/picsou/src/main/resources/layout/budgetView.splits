@@ -38,7 +38,7 @@
 
     <row>
       <filler fill="horizontal"/>
-      <row styleClass="budgetLabelBlock">
+      <row styleClass="budgetLabelBlock" marginBottom="0">
         <label ref="budgetLabel"/>
       </row>
     </row>

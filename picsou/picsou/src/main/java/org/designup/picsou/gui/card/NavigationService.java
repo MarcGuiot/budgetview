@@ -67,18 +67,21 @@ public class NavigationService implements GlobSelectionListener {
   }
 
   public void gotoDataForSeries(Glob series) {
+    selectionService.select(repository.get(Account.ALL_SUMMARY_KEY));
     seriesView.selectSeries(series);
     categoryView.select(MasterCategory.ALL.getId());
     select(Card.DATA, false);
   }
 
   public void gotoData(BudgetArea budgetArea) {
+    selectionService.select(repository.get(Account.ALL_SUMMARY_KEY));
     seriesView.selectBudgetArea(budgetArea);
     categoryView.select(MasterCategory.ALL.getId());
     select(Card.DATA, false);
   }
 
   public void gotoData(BudgetArea budgetArea, Glob category) {
+    selectionService.select(repository.get(Account.ALL_SUMMARY_KEY));
     seriesView.selectBudgetArea(budgetArea);
     categoryView.select(category);
     select(Card.DATA, false);
