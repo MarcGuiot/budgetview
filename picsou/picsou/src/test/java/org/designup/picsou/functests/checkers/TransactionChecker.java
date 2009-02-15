@@ -118,6 +118,15 @@ public class TransactionChecker extends ViewChecker {
     assertTrue(table.rowIsSelected(row));
   }
 
+  public void selectAccount(String accountName) {
+    mainWindow.getComboBox("accountFilterCombo").select(accountName);
+  }
+
+  public TransactionChecker checkSelectedAccount(String accountName) {
+    UISpecAssert.assertThat(mainWindow.getComboBox("accountFilterCombo").selectionEquals(accountName));
+    return this;
+  }
+
   public class TransactionAmountChecker {
     java.util.List<Object[]> expected = new ArrayList<Object[]>();
 
