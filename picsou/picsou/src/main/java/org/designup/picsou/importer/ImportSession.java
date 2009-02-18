@@ -79,6 +79,21 @@ public class ImportSession {
     }
     load = false;
     TransactionFilter transactionFilter = new TransactionFilter();
+
+    if (fileType.equals(BankFileType.QIF)) {
+      GlobList transactions = localRepository.getAll(ImportedTransaction.TYPE);
+      for (Glob transaction : transactions) {
+        localRepository.update(transaction.getKey(), ImportedTransaction.ACCOUNT, currentlySelectedAccount.get(Account.ID));
+      }
+    }
+
+    TransactionAnalyzer transactionAnalyzer = directory.get(TransactionAnalyzerFactory.class).getAnalyzer();
+
+    {
+      GlobList importedTransactions = localRepository.getAll(ImportedTransaction.TYPE);
+      transactionAnalyzer.processImportedTransactions(localRepository, importedTransactions);
+    }
+
     GlobList newTransactions = transactionFilter.loadTransactions(referenceRepository, localRepository,
                                                                   convertImportedTransaction(selectedDateFormat),
                                                                   currentlySelectedAccount != null ?
@@ -93,13 +108,12 @@ public class ImportSession {
       ChangeSetAggregator updateImportAggregator = new ChangeSetAggregator(localRepository, updateImportChangeSet);
       localRepository.startChangeSet();
 // TODO:     importChangeSet.getCreated(BankEntity.TYPE);
-      if (fileType.equals(BankFileType.QIF)) {
-        for (Key key : importChangeSet.getCreated(Transaction.TYPE)) {
-          localRepository.update(key, Transaction.ACCOUNT, currentlySelectedAccount.get(Account.ID));
-        }
-      }
+//      if (fileType.equals(BankFileType.QIF)) {
+//        for (Key key : importChangeSet.getCreated(Transaction.TYPE)) {
+//          localRepository.update(key, Transaction.ACCOUNT, currentlySelectedAccount.get(Account.ID));
+//        }
+//      }
 
-      TransactionAnalyzer transactionAnalyzer = directory.get(TransactionAnalyzerFactory.class).getAnalyzer();
       MultiMap<Integer, Glob> transactionByAccountId = new MultiMap<Integer, Glob>();
       for (Key key : importChangeSet.getCreated(Transaction.TYPE)) {
         Glob transaction = localRepository.get(key);
@@ -133,9 +147,7 @@ public class ImportSession {
 
   private GlobList convertImportedTransaction(String selectedDateFormat) {
     DateFormat dateFormat = new SimpleDateFormat(selectedDateFormat);
-    GlobList importedTransactions =
-      localRepository.getAll(ImportedTransaction.TYPE)
-        .sort(ImportedTransaction.ID);
+    GlobList importedTransactions = localRepository.getAll(ImportedTransaction.TYPE).sort(ImportedTransaction.ID);
     if (importedTransactions.isEmpty()) {
       return GlobList.EMPTY;
     }
@@ -167,11 +179,11 @@ public class ImportSession {
         value(Transaction.BANK_DAY, Month.getDay(bankDate)),
         value(Transaction.MONTH, userDate == null ? null : Month.getMonthId(userDate)),
         value(Transaction.DAY, userDate == null ? null : Month.getDay(userDate)),
-        value(Transaction.LABEL, importedTransaction.get(ImportedTransaction.LABEL)),
         value(Transaction.ACCOUNT, importedTransaction.get(ImportedTransaction.ACCOUNT)),
         value(Transaction.AMOUNT, importedTransaction.get(ImportedTransaction.AMOUNT)),
         value(Transaction.CATEGORY, importedTransaction.get(ImportedTransaction.CATEGORY)),
         value(Transaction.NOTE, importedTransaction.get(ImportedTransaction.NOTE)),
+        value(Transaction.LABEL, importedTransaction.get(ImportedTransaction.LABEL)),
         value(Transaction.ORIGINAL_LABEL, importedTransaction.get(ImportedTransaction.ORIGINAL_LABEL)),
         value(Transaction.BANK_TRANSACTION_TYPE, importedTransaction.get(ImportedTransaction.BANK_TRANSACTION_TYPE)),
         value(Transaction.SPLIT, importedTransaction.get(ImportedTransaction.SPLIT)),

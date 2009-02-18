@@ -4,14 +4,13 @@ import org.designup.picsou.importer.AccountFileImporter;
 import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.*;
 import static org.designup.picsou.model.Category.*;
-import org.designup.picsou.utils.PicsouUtils;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.utils.PicsouUtils;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobIdGenerator;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.TruncatedFile;
 
@@ -106,7 +105,9 @@ public class OfxImporter implements AccountFileImporter {
         Glob transaction =
           repository.create(ImportedTransaction.TYPE,
                             value(ImportedTransaction.ACCOUNT, currentAccount.get(Account.ID)),
-                            value(ImportedTransaction.ID, generator.getNextId(ImportedTransaction.ID, 1)));
+                            value(ImportedTransaction.ID, generator.getNextId(ImportedTransaction.ID, 1)),
+                            value(ImportedTransaction.IS_OFX, true)
+          );
         createdTransactions.add(transaction);
         transactionsForAccount.add(transaction);
         currentTransactionKey = transaction.getKey();
@@ -319,18 +320,9 @@ public class OfxImporter implements AccountFileImporter {
     }
 
     private void updateTransactionLabel() {
-      String content;
-      if (name == null && checkNum != null) {
-        name = checkNum;
-      }
-      if (Utils.equal(name, memo)) {
-        content = name;
-      }
-      else {
-        content = Strings.join(name, memo);
-      }
-      repository.update(currentTransactionKey, ImportedTransaction.ORIGINAL_LABEL, content);
-      repository.update(currentTransactionKey, ImportedTransaction.LABEL, content);
+      repository.update(currentTransactionKey, ImportedTransaction.OFX_NAME, name);
+      repository.update(currentTransactionKey, ImportedTransaction.OFX_MEMO, memo);
+      repository.update(currentTransactionKey, ImportedTransaction.OFX_CHECK_NUM, checkNum);
       repository.update(currentTransactionKey, ImportedTransaction.BANK_TRANSACTION_TYPE, transactionType);
       name = null;
       memo = null;

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<globs>
+  <bank name="Banque Populaire" id='11'>
+    <bankEntity id="10807"/>
+
+    <preTransactionTypeMatcher ofxName="CHEQUE" ofxMemo=".*" ofxCheckNum="(.*)" label="CHEQUE {CHECK_NUM.1}"/>
+
+    <preTransactionTypeMatcher ofxName="CHEQUE" ofxMemo=".*" ofxCheckNum="(.*)" originalLabel="CHEQUE {CHECK_NUM.1}"/>
+
+    <transactionTypeMatcher regexp="CHEQUE[ ]+(.*)"
+                            transactionTypeName="check" label="CHEQUE N.$1"/>
+
+    <transactionTypeMatcher regexp="DE[\s]+1[\s]+CHEQUE\(S\)"
+                            transactionTypeName="deposit" label="REMISE DE 1 CHEQUE"/>
+
+    <transactionTypeMatcher regexp="DE[\s]+([0-9]+)[\s]+CHEQUE\(S\)"
+                            transactionTypeName="deposit" label="REMISE DE $1 CHEQUES"/>
+
+    <transactionTypeMatcher regexp="RET DAB (.*)"
+                            transactionTypeName="withdrawal" label="RETRAIT $1"/>
+
+    <transactionTypeMatcher regexp="PRLV.[\s]*(.*)"
+                            transactionTypeName="prelevement" label="$1"/>
+
+
+  </bank>
+</globs>

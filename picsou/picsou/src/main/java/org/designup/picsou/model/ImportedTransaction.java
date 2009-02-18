@@ -18,9 +18,21 @@ public class ImportedTransaction {
   public static StringField BANK_DATE;
 
   public static DoubleField AMOUNT;
-  public static StringField BANK_MEMO;
-  public static StringField LABEL;
+
   public static StringField NOTE;
+
+  public static StringField OFX_CHECK_NUM;
+
+  public static StringField OFX_NAME;
+
+  public static StringField OFX_MEMO;
+
+  public static StringField QIF_M;
+
+  public static StringField QIF_P;
+
+  public static StringField LABEL;
+
   public static StringField ORIGINAL_LABEL;
 
   @Target(Category.class)
@@ -28,7 +40,10 @@ public class ImportedTransaction {
   public static LinkField CATEGORY;
 
   public static StringField BANK_TRANSACTION_TYPE;
+
   public static BooleanField IS_CARD;
+
+  public static BooleanField IS_OFX;
 
   @Target(Account.class)
   public static LinkField ACCOUNT;

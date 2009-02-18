@@ -76,23 +76,23 @@ public class QifParser {
             break;
           case '^':
             String value = null;
-            if (!Strings.isNullOrEmpty(mValue)) {
-              value = mValue;
+            if (Strings.isNotEmpty(mValue)) {
+              values.set(ImportedTransaction.QIF_M, mValue);
             }
-            else if (!Strings.isNullOrEmpty(pValue)) {
-              value = pValue;
+            if (Strings.isNotEmpty(pValue)) {
+              values.set(ImportedTransaction.QIF_P, pValue);
             }
-            if (!Strings.isNullOrEmpty(mValue) && !Strings.isNullOrEmpty(pValue)) {
-              if (mValue.startsWith(pValue.substring(0, pValue.length() > 10 ? 10 : pValue.length()))) {
-                value = mValue;
-              }
-              else {
-                value = Strings.join(pValue, mValue);
-              }
-            }
+//            if (!Strings.isNullOrEmpty(mValue) && !Strings.isNullOrEmpty(pValue)) {
+//              if (mValue.startsWith(pValue.substring(0, pValue.length() > 10 ? 10 : pValue.length()))) {
+//                value = mValue;
+//              }
+//              else {
+//                value = Strings.join(pValue, mValue);
+//              }
+//            }
             values.set(ImportedTransaction.BANK_TRANSACTION_TYPE, nValue != null ? nValue.trim() : null);
-            values.set(ImportedTransaction.ORIGINAL_LABEL, value != null ? value.trim() : null);
-            values.set(ImportedTransaction.LABEL, value != null ? value.trim() : null);
+//            values.set(ImportedTransaction.ORIGINAL_LABEL, value != null ? value.trim() : null);
+            values.set(ImportedTransaction.IS_OFX, false);
             return createTransaction(values);
         }
       }

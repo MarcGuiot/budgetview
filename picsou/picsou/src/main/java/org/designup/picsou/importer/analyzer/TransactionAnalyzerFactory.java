@@ -1,5 +1,6 @@
 package org.designup.picsou.importer.analyzer;
 
+import org.designup.picsou.model.PreTransactionTypeMatcher;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.model.TransactionTypeMatcher;
 import static org.designup.picsou.model.TransactionTypeMatcher.*;
@@ -121,6 +122,33 @@ public class TransactionAnalyzerFactory {
       }
       else {
         analyzer.addExclusive(regexp, type, regexpForType, bank);
+      }
+    }
+    for (Glob matcher : globRepository.getAll(PreTransactionTypeMatcher.TYPE)) {
+      String label = matcher.get(PreTransactionTypeMatcher.LABEL);
+      Glob bank = globRepository.findLinkTarget(matcher, PreTransactionTypeMatcher.BANK);
+
+      String name = matcher.get(PreTransactionTypeMatcher.OFX_NAME);
+      String memo = matcher.get(PreTransactionTypeMatcher.OFX_MEMO);
+      String checkNum = matcher.get(PreTransactionTypeMatcher.OFX_CHECK_NUM);
+      if (name != null || memo != null || checkNum != null) {
+        if (label == null) {
+          String originalLabel = matcher.get(PreTransactionTypeMatcher.ORIGINAL_LABEL);
+          analyzer.addOriginalOfx(name, memo, checkNum, originalLabel, bank);
+        }
+        else {
+          analyzer.addOfx(name, memo, checkNum, label, bank);
+        }
+      }
+      else {
+        String qifM = matcher.get(PreTransactionTypeMatcher.QIF_M);
+        String qifP = matcher.get(PreTransactionTypeMatcher.QIF_P);
+        if (label != null) {
+          analyzer.addQif(qifM, qifP, label, bank);
+        }
+        else {
+          analyzer.addQif(qifM, qifP, label, bank);
+        }
       }
     }
   }
