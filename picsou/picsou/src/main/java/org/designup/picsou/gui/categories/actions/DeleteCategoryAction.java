@@ -164,6 +164,10 @@ public abstract class DeleteCategoryAction extends AbstractCategoryAction {
       }
       return Collections.emptySet();
     }
+
+    public Set<Integer> getUnUncheckable() {
+      return Collections.emptySet();
+    }
   }
 
   static class CategoryChooserAction extends AbstractAction {

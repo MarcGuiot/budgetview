@@ -1,6 +1,7 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.CategorizationChecker;
+import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
@@ -1194,8 +1195,21 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
   }
 
-//  public void testChangeCategoryChangeAlreadyAssociatedTransaction() throws Exception {
-//    fail("Lorsqu'on deselectionne la categorie il faut changer les transactions vers quoi?");
-//  }
+  public void testCanNotChangeCategoryAlreadyAssociatedToTransaction() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/25", -59.90, "Auchan")
+      .addTransaction("2008/06/15", -40, "Auchan")
+      .load();
 
+    views.selectCategorization();
+    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+    categorization.selectTableRows("Auchan");
+    SeriesEditionDialogChecker seriesChecker = categorization.editSeries(false);
+    seriesChecker
+      .openCategory()
+      .checkNotUncheckable(getCategoryName(MasterCategory.FOOD))
+      .cancel();
+    seriesChecker.validate();
+  }
 }

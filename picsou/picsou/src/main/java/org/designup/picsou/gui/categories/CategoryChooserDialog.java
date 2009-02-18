@@ -170,11 +170,16 @@ public class CategoryChooserDialog implements ChangeSetListener {
 
   private void setSelectedCategories() {
     Set<Integer> preselectedCategoryIds = callback.getPreselectedCategoryIds();
+    Set<Integer> unUncheckableCategoryIds = callback.getUnUncheckable();
 
     unselectAllCategories();
     for (Integer categoryId : preselectedCategoryIds) {
       JToggleButton toggle = categoryToButton.get(Key.create(Category.TYPE, categoryId));
       toggle.setSelected(true);
+      if (unUncheckableCategoryIds.contains(categoryId)) {
+        toggle.setEnabled(false);
+        toggle.setToolTipText(Lang.get("categorization.categories.unUnckable.tooltip"));
+      }
     }
   }
 

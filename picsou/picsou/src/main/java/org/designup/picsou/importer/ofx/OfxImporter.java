@@ -74,7 +74,7 @@ public class OfxImporter implements AccountFileImporter {
 
     public void processHeader(String key, String value) {
       if (ofxTagFound) {
-        throw new InvalidFormat("Found header properties after <OFX> tag");
+        throw new InvalidFormat("Found header properties after <OFX> tag (" + key + "=" + value + ")");
       }
     }
 

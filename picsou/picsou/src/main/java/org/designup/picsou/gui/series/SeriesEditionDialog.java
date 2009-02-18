@@ -647,6 +647,17 @@ public class SeriesEditionDialog {
         }
         return Collections.emptySet();
       }
+
+      public Set<Integer> getUnUncheckable() {
+        GlobList transactions =
+          localRepository.getAll(Transaction.TYPE,
+                                 fieldEquals(Transaction.SERIES, currentSeries.get(Series.ID)));
+        Set<Integer> categoryIds = new HashSet<Integer>();
+        for (Glob transaction : transactions) {
+          categoryIds.add(transaction.get(Transaction.CATEGORY));
+        }
+        return categoryIds;
+      }
     }
   }
 

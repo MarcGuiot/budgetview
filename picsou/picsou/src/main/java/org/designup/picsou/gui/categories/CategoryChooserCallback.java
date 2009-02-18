@@ -8,4 +8,6 @@ public interface CategoryChooserCallback {
   void processSelection(GlobList categories);
 
   Set<Integer> getPreselectedCategoryIds();
+
+  Set<Integer> getUnUncheckable();
 }
