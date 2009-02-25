@@ -59,7 +59,8 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
         Integer savingsTransaction = previousValues.get(Transaction.NOT_IMPORTED_TRANSACTION);
-        if (savingsTransaction != null) {
+        // la transaction peut avoir ete detruite par si la seriesbudget a été aussi detruite cf trigger SeriesBudgetUpdateTransactionTrigger
+        if (savingsTransaction != null && repository.find(Key.create(Transaction.TYPE, savingsTransaction)) != null) {
           repository.delete(Key.create(Transaction.TYPE, savingsTransaction));
         }
       }

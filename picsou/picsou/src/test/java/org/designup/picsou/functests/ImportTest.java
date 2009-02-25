@@ -130,7 +130,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-
   public void testImportQifFileWithNoExistingAccount() throws Exception {
     final String path1 = QifBuilder
       .init(this)

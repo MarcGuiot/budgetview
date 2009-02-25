@@ -35,9 +35,7 @@ import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.ChangeSetMatchers;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -278,27 +276,17 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     builder.add("savingsPanel", savingsPanel);
 
     builder.addRepeat("savingsAccountRepeat", Account.TYPE,
-                      GlobMatchers.and(GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()),
-                                       GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID))),
-                      new RepeatComponentFactory<Glob>() {
-                        public void registerComponents(RepeatCellBuilder cellBuilder, final Glob account) {
-
-                          GlobLabelView accountNameView =
-                            GlobLabelView.init(Account.TYPE, repository, directory)
-                              .forceSelection(account);
-                          cellBuilder.add("accountName", accountNameView.getComponent());
-
-                          registerComponent(cellBuilder, account, new Gauge(false, false), true);
-                          registerComponent(cellBuilder, account, new Gauge(true, true), false);
-                        }
-                      });
+                      and(fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()),
+                          not(fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID))),
+                      new SavingsRepeatComponentFactory());
 
     parentBuilder.add("monthSummaryView", builder);
 
     registerCardUpdater();
   }
 
-  private void registerComponent(RepeatCellBuilder cellBuilder, final Glob account, Gauge inGauge, final boolean in) {
+  private void registerComponent(RepeatCellBuilder cellBuilder, final Glob account, Gauge inGauge, final boolean in,
+                                 final InOrOutLine inOrOutLine) {
     String accountName = accountStringifier.toString(account, repository);
     String sens = in ? "In" : "Out";
     JButton amountButton =
@@ -316,7 +304,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
     gauge.setName(accountName + ":" + sens + "Gauge");
 
-    new SavingsAccountsUpdater(amountButton, plannedLabel, inGauge, in, account.get(Account.ID));
+    new SavingsAccountsUpdater(inOrOutLine, amountButton, plannedLabel, inGauge, in, account.get(Account.ID));
   }
 
   private void registerCardUpdater() {
@@ -371,42 +359,49 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
   private class SavingsAccountsUpdater implements ChangeSetListener, GlobSelectionListener {
     private SortedSet<Integer> selectedMonths = new TreeSet<Integer>();
     private BudgetAreaSummaryComputer summaryComputer;
+    private Gauge gauge;
     private Integer accountId;
+    DoubleField savings;
+    DoubleField planned;
+    DoubleField remaining;
+    private InOrOutLine inOrOutLine;
 
-    public SavingsAccountsUpdater(JButton amountLabel, JLabel plannedLabel, Gauge gauge,
+    public SavingsAccountsUpdater(InOrOutLine inOrOutLine,
+                                  JButton amountLabel, JLabel plannedLabel, Gauge gauge,
                                   final boolean in, Integer accountId) {
+      this.inOrOutLine = inOrOutLine;
+      if (in) {
+        savings = SavingsBalanceStat.SAVINGS;
+        planned = SavingsBalanceStat.SAVINGS_PLANNED;
+        remaining = SavingsBalanceStat.SAVINGS_REMAINING;
+      }
+      else {
+        savings = SavingsBalanceStat.OUT;
+        planned = SavingsBalanceStat.OUT_PLANNED;
+        remaining = SavingsBalanceStat.OUT_REMAINING;
+      }
+      this.gauge = gauge;
       this.accountId = accountId;
       directory.get(SelectionService.class).addListener(this, Month.TYPE);
       repository.addChangeListener(this);
       this.summaryComputer =
-        new BudgetAreaHeaderUpdater(
-          TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
-          repository, directory) {
+        new BudgetAreaHeaderUpdater(TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel),
+                                    gauge, repository, directory) {
           protected Double getObserved(Glob stat, BudgetArea budgetArea) {
-            if (in) {
-              return stat.get(SavingsBalanceStat.SAVINGS);
-            }
-            else {
-              return stat.get(SavingsBalanceStat.OUT);
-            }
+            return stat.get(savings);
           }
 
           protected Double getPlanned(Glob stat, BudgetArea budgetArea) {
-            if (in) {
-              return stat.get(SavingsBalanceStat.SAVINGS_PLANNED);
-            }
-            else {
-              return stat.get(SavingsBalanceStat.OUT_PLANNED);
-            }
+            return stat.get(planned);
           }
 
           protected Double getRemaining(Glob stat, BudgetArea budgetArea) {
-            if (in) {
-              return stat.get(SavingsBalanceStat.SAVINGS_REMAINING);
-            }
-            else {
-              return stat.get(SavingsBalanceStat.OUT_REMAINING);
-            }
+            return stat.get(remaining);
+          }
+
+          protected void clearComponents() {
+            super.clearComponents();
+            gauge.setVisible(false);
           }
         };
       update();
@@ -432,11 +427,28 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     }
 
     public void update() {
-      GlobList balanceStats = repository.getAll(SavingsBalanceStat.TYPE,
-                                                GlobMatchers.and(fieldIn(SavingsBalanceStat.MONTH, selectedMonths),
-                                                                 fieldEquals(SavingsBalanceStat.ACCOUNT, accountId)));
+      GlobList balanceStats =
+        repository.getAll(SavingsBalanceStat.TYPE,
+                          and(fieldIn(SavingsBalanceStat.MONTH, selectedMonths),
+                              fieldEquals(SavingsBalanceStat.ACCOUNT, accountId),
+                              and(not(and(fieldEquals(planned, 0.),
+                                          fieldEquals(remaining, 0.),
+                                          fieldEquals(savings, 0.))))));
+      if (balanceStats.isEmpty()) {
+        inOrOutLine.hidden();
+      }
+      else {
+        inOrOutLine.shown();
+      }
       summaryComputer.update(balanceStats, BudgetArea.SAVINGS);
     }
+
+  }
+
+  interface InOrOutLine {
+    public abstract void hidden();
+
+    public abstract void shown();
   }
 
   private class BudgetAreaUpdater implements ChangeSetListener, GlobSelectionListener {
@@ -507,9 +519,9 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
       Integer monthId = month.get(Month.ID);
       selectedMonthStats.addAll(repository.getAll(BalanceStat.TYPE, fieldEquals(BalanceStat.MONTH, monthId)));
       selectedMonthSavingsStats.addAll(repository.getAll(SavingsBalanceStat.TYPE,
-                                                         GlobMatchers.and(fieldEquals(SavingsBalanceStat.MONTH, monthId),
-                                                                          GlobMatchers.not(fieldEquals(SavingsBalanceStat.ACCOUNT,
-                                                                                                       Account.SAVINGS_SUMMARY_ACCOUNT_ID)))));
+                                                         and(fieldEquals(SavingsBalanceStat.MONTH, monthId),
+                                                             not(fieldEquals(SavingsBalanceStat.ACCOUNT,
+                                                                             Account.SAVINGS_SUMMARY_ACCOUNT_ID)))));
       selectedSeriesStats.addAll(repository.getAll(SeriesStat.TYPE, fieldEquals(SeriesStat.MONTH, monthId)));
     }
 
@@ -582,4 +594,47 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     }
   }
 
+  private class SavingsRepeatComponentFactory implements RepeatComponentFactory<Glob> {
+    int hiddenCount;
+
+    public void registerComponents(RepeatCellBuilder cellBuilder, final Glob account) {
+      String accountName = accountStringifier.toString(account, repository);
+      final JPanel accountGroup = new JPanel();
+      accountGroup.setName("accountGroup:" + accountName);
+      cellBuilder.add("accountGroup", accountGroup);
+      GlobLabelView accountNameView =
+        GlobLabelView.init(Account.TYPE, repository, directory)
+          .forceSelection(account);
+      cellBuilder.add("accountName", accountNameView.getComponent());
+
+      DefaultInOrOutLine outLine = new DefaultInOrOutLine(accountGroup);
+      registerComponent(cellBuilder, account, new Gauge(false, false), true, outLine);
+      registerComponent(cellBuilder, account, new Gauge(true, true), false, outLine);
+    }
+
+    private class DefaultInOrOutLine implements InOrOutLine {
+      boolean hidden;
+      private final JPanel accountGroup;
+
+      public DefaultInOrOutLine(JPanel accountGroup) {
+        this.accountGroup = accountGroup;
+      }
+
+      public void hidden() {
+        if (!hidden) {
+          hidden = true;
+          hiddenCount++;
+          accountGroup.setVisible(hiddenCount != 2);
+        }
+      }
+
+      public void shown() {
+        if (hidden) {
+          hidden = false;
+          hiddenCount--;
+          accountGroup.setVisible(hiddenCount != 2);
+        }
+      }
+    }
+  }
 }

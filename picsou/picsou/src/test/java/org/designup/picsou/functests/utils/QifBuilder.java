@@ -53,7 +53,13 @@ public class QifBuilder {
     return fileName;
   }
 
-  public void load(Double balance) {
+  public void load(Double balance) throws IOException {
+    save();
+    operations.importQifFile(fileName, "Société Générale", balance);
+  }
+
+  public void load() throws IOException {
+    save();
     operations.importQifFile(fileName, "Société Générale");
   }
 }

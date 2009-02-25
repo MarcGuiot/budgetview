@@ -4,6 +4,7 @@ import org.designup.picsou.importer.AccountFileImporter;
 import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.*;
 import static org.designup.picsou.model.Category.*;
+import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.PicsouUtils;
 import org.globsframework.model.*;
@@ -270,7 +271,7 @@ public class OfxImporter implements AccountFileImporter {
         return;
       }
       if (tag.equalsIgnoreCase("BALAMT")) {
-        balance = Double.parseDouble(content);
+        balance = Amounts.extractAmount(content);
         return;
       }
       if (tag.equalsIgnoreCase("DTASOF")) {
@@ -341,7 +342,7 @@ public class OfxImporter implements AccountFileImporter {
     }
 
     private void updateAmount(String content) {
-      repository.update(currentTransactionKey, ImportedTransaction.AMOUNT, Double.parseDouble(content));
+      repository.update(currentTransactionKey, ImportedTransaction.AMOUNT, Amounts.extractAmount(content));
     }
 
     private void updateAccount(String accountNumber) {

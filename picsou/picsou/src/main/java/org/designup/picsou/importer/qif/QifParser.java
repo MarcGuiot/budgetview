@@ -3,6 +3,7 @@ package org.designup.picsou.importer.qif;
 import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.ImportedTransaction;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.util.Amounts;
 import org.globsframework.model.FieldValuesBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -63,7 +64,7 @@ public class QifParser {
             break;
           case 'T':
             updated = true;
-            values.set(ImportedTransaction.AMOUNT, extractAmount(reader.readLine()));
+            values.set(ImportedTransaction.AMOUNT, Amounts.extractAmount(reader.readLine()));
             break;
           case 'P':
             pValue = reader.readLine();
@@ -100,14 +101,6 @@ public class QifParser {
     catch (IOException e) {
       return null;
     }
-  }
-
-  private double extractAmount(final String amount) throws IOException {
-    String tmp = amount.replaceAll(",", "").replaceAll("\\.", "");
-    if (Strings.isNullOrEmpty(tmp)) {
-      return 0.;
-    }
-    return Double.parseDouble(tmp) / 100.0;
   }
 
   private Glob createTransaction(FieldValuesBuilder values) {

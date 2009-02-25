@@ -2,6 +2,7 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.functests.utils.QifBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
@@ -97,8 +98,28 @@ public class LearningTest extends LoggedInFunctionalTestCase {
       .load();
     views.selectData();
     transactions.initContent()
-    .add("11/01/2006", TransactionType.CHECK, "CHEQUE N. 2", "", -1.10)
-    .add("10/01/2006", TransactionType.CHECK, "CHEQUE N. 1", "", -1.10, "dej", MasterCategory.FOOD)
-    .check();
+      .add("11/01/2006", TransactionType.CHECK, "CHEQUE N. 2", "", -1.10)
+      .add("10/01/2006", TransactionType.CHECK, "CHEQUE N. 1", "", -1.10, "dej", MasterCategory.FOOD)
+      .check();
+  }
+
+  public void testLearningWithDot() throws Exception {
+    QifBuilder
+      .init(this)
+      .addTransaction("2006/01/15", -1.1, "PRELEVEMENT 3766941826  M.N.P.A.F. M.N.P.A.F. 8811941800")
+      .load(0.);
+
+    views.selectCategorization();
+    categorization.setEnvelope(0, "Mutuel", MasterCategory.FOOD, true);
+
+    QifBuilder
+      .init(this)
+      .addTransaction("2006/01/15", -1.3, "PRELEVEMENT 3766941834  M.N.P.A.F. M.N.P.A.F. 8811941800")
+      .load();
+
+    views.selectData();
+    transactions.checkSeries(0, "Mutuel");
+    transactions.checkSeries(1, "Mutuel");
+
   }
 }

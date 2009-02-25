@@ -10,8 +10,7 @@ import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.and;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
 
 import javax.swing.*;
@@ -35,18 +34,35 @@ public class MonthSummaryChecker extends GuiChecker {
     this.savingsBalanceGraph = new BalanceGraphChecker("savingsTotalBalance", window);
   }
 
-  public void checkSavingsIn(String accoutName, double observedAmount, double plannedAmount) {
-    assertThat(window.getButton(accoutName + ":savingsInAmount").textEquals(toString(observedAmount)));
-    assertThat(window.getTextBox(accoutName + ":savingsPlannedInAmount").textEquals(toString(plannedAmount)));
+  public void checkSavingsIn(String accountName, double observedAmount, double plannedAmount) {
+    assertThat(window.getButton(accountName + ":savingsInAmount").textEquals(toString(observedAmount)));
+    assertThat(window.getTextBox(accountName + ":savingsPlannedInAmount").textEquals(toString(plannedAmount)));
   }
+
+  public MonthSummaryChecker checkSavingsInNotVisible(String accountName) {
+    assertFalse(window.getButton(accountName + ":savingsInAmount").isVisible());
+    assertFalse(window.getTextBox(accountName + ":savingsPlannedInAmount").isVisible());
+    return this;
+  }
+
 
   public void checkSavingsOut(String accoutName, double observedAmount, double plannedAmount) {
     assertThat(window.getButton(accoutName + ":savingsOutAmount").textEquals(toString(observedAmount)));
     assertThat(window.getTextBox(accoutName + ":savingsPlannedOutAmount").textEquals(toString(plannedAmount)));
   }
 
+  public MonthSummaryChecker checkSavingsOutNotVisible(String accountName) {
+    assertFalse(window.getButton(accountName + ":savingsOutAmount").isVisible());
+    assertFalse(window.getTextBox(accountName + ":savingsPlannedOutAmount").isVisible());
+    return this;
+  }
+
   public void checkSavingsBalance(double balance) {
     assertThat(getPanel().getTextBox("savingsBalanceAmount").textEquals(toString(balance, true)));
+  }
+
+  public void checkSavingsNotVisible(String accountName) {
+    assertFalse(window.getPanel("accountGroup:" + accountName).isVisible());
   }
 
   public class BudgetAreaChecker {
@@ -107,8 +123,8 @@ public class MonthSummaryChecker extends GuiChecker {
   }
 
   public MonthSummaryChecker checkNoHelpMessageDisplayed() {
-    UISpecAssert.assertFalse(getPanel().containsComponent(ComponentMatchers.innerNameIdentity("noData")));
-    UISpecAssert.assertFalse(getPanel().containsComponent(ComponentMatchers.innerNameIdentity("noSeries")));
+    assertFalse(getPanel().containsComponent(ComponentMatchers.innerNameIdentity("noData")));
+    assertFalse(getPanel().containsComponent(ComponentMatchers.innerNameIdentity("noSeries")));
     return this;
   }
 
@@ -317,8 +333,8 @@ public class MonthSummaryChecker extends GuiChecker {
   }
 
   public MonthSummaryChecker checkNoUncategorized() {
-    UISpecAssert.assertFalse(getPanel().getTextBox("uncategorizedAmountLabel").isVisible());
-    UISpecAssert.assertFalse(getPanel().getButton("To Categorize").isVisible());
+    assertFalse(getPanel().getTextBox("uncategorizedAmountLabel").isVisible());
+    assertFalse(getPanel().getButton("To Categorize").isVisible());
     return this;
   }
 

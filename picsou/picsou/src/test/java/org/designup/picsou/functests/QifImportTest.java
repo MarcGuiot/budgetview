@@ -1,6 +1,7 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
+import org.designup.picsou.functests.utils.QifBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Files;
@@ -138,6 +139,41 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
 
   public void testBankDateWithEnglishFormatAndShortDate() throws Exception {
     checkBankDate("12/20/06", "20/12/2006");
+  }
+
+  public void testImportingTheSameFileTwiceOnSplittedDoesNotDuplicateTransactions() throws Exception {
+
+    QifBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "Tx 1")
+      .addTransaction("2006/01/11", -2.23, "Tx 2")
+      .load();
+    views.selectCategorization();
+    categorization.selectTableRows("Tx 2");
+    transactionDetails.split("-1.19", "info 1");
+    categorization.selectOccasional()
+      .selectOccasionalSeries(MasterCategory.BEAUTY);
+    transactionDetails.split("-0.69", "info 2");
+    categorization.selectOccasional()
+      .selectOccasionalSeries(MasterCategory.BANK);
+    transactionDetails.split("-0.01", "info 3");
+
+    QifBuilder
+      .init(this)
+      .addTransaction("2006/01/11", -2.23, "Tx 2")
+      .addTransaction("2006/01/12", -2.2, "Tx 3")
+      .load();
+
+    views.selectData();
+    transactions
+      .initContent()
+      .add("12/01/2006", TransactionType.PRELEVEMENT, "Tx 3", "", -2.2, MasterCategory.NONE)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -0.34, MasterCategory.NONE)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info 3", -0.01, MasterCategory.NONE)
+      .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info 2", -0.69, MasterCategory.BANK)
+      .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info 1", -1.19, MasterCategory.BEAUTY)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, MasterCategory.NONE)
+      .check();
   }
 
   private void checkBankDate(String input, String expected) {

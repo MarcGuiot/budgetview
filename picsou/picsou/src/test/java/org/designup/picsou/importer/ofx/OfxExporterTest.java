@@ -67,7 +67,7 @@ public class OfxExporterTest extends PicsouTestCase {
       "            <TRNTYPE>DEBIT\n" +
       "            <DTPOSTED>20060124\n" +
       "            <DTUSER>20060121\n" +
-      "            <TRNAMT>-1.1\n" +
+      "            <TRNAMT>-1.10\n" +
       "            <FITID>PICSOU1\n" +
       "            <NAME>label1\n" +
       "          </STMTTRN>\n" +
@@ -75,7 +75,7 @@ public class OfxExporterTest extends PicsouTestCase {
       "            <TRNTYPE>DEBIT\n" +
       "            <DTPOSTED>20060222\n" +
       "            <DTUSER>20060222\n" +
-      "            <TRNAMT>-1.2\n" +
+      "            <TRNAMT>-1.20\n" +
       "            <FITID>PICSOU2\n" +
       "            <NAME>label2\n" +
       "            <CATEGORY>5\n" +
@@ -112,7 +112,7 @@ public class OfxExporterTest extends PicsouTestCase {
       "            <TRNTYPE>DEBIT\n" +
       "            <DTPOSTED>20060323\n" +
       "            <DTUSER>20060323\n" +
-      "            <TRNAMT>-1.3\n" +
+      "            <TRNAMT>-1.30\n" +
       "            <FITID>PICSOU3\n" +
       "            <NAME>card3\n" +
       "            <CATEGORY>5\n" +
@@ -122,7 +122,7 @@ public class OfxExporterTest extends PicsouTestCase {
       "            <TRNTYPE>DEBIT\n" +
       "            <DTPOSTED>20060419\n" +
       "            <DTUSER>20060419\n" +
-      "            <TRNAMT>-45.0\n" +
+      "            <TRNAMT>-45.00\n" +
       "            <FITID>PICSOU4\n" +
       "            <NAME>card4\n" +
       "          </STMTTRN>\n" +

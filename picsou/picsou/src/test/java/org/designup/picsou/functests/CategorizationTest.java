@@ -997,7 +997,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkSeries("Courant", 0, -10);
     timeline.selectMonth("2008/08");
     budgetView.envelopes.checkSeries("Courant", 0, -10);
-
   }
 
   public void testInAutomaticUpdateImmediatelyPreviousFromCurrentImpactFutur() throws Exception {
@@ -1192,7 +1191,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.initContent()
       .add("10/08/2008", "Epargne", "Virement", -100)
       .check();
-
   }
 
   public void testCanNotChangeCategoryAlreadyAssociatedToTransaction() throws Exception {

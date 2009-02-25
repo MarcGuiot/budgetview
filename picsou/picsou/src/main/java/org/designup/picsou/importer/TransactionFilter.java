@@ -1,6 +1,7 @@
 package org.designup.picsou.importer;
 
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
@@ -156,8 +157,8 @@ public class TransactionFilter {
     private boolean areEqual(Glob actualTransaction, Glob importedTransaction) {
       return equal(actualTransaction.get(Transaction.ORIGINAL_LABEL),
                    importedTransaction.get(Transaction.ORIGINAL_LABEL))
-             && equal(getAmount(actualTransaction, this.actualSplitedTransaction),
-                      getAmount(importedTransaction, this.importedSplitedTransaction));
+             && Amounts.equal(getAmount(actualTransaction, this.actualSplitedTransaction),
+                              getAmount(importedTransaction, this.importedSplitedTransaction));
     }
 
     private Double getAmount(Glob transaction, MultiMap<Integer, Glob> transactions) {

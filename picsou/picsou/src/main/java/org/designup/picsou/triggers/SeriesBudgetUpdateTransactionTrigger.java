@@ -83,6 +83,7 @@ public class SeriesBudgetUpdateTransactionTrigger implements ChangeSetListener {
             && !series.get(Series.ID).equals(Series.UNCATEGORIZED_SERIES_ID));
   }
 
+  //Recupere les planned de la serie et donc les transactions miroir
   private GlobList getPlanned(GlobRepository repository, FieldValues seriesBudget) {
     return repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesBudget.get(SeriesBudget.SERIES))
       .findByIndex(Transaction.MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs()
