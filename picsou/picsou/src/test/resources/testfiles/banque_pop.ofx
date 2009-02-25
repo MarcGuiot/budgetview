@@ -111,8 +111,7 @@ OFXHEADER:100
 
             <NAME>PRLV FT INTERNET ORANGE
 
-            <MEMO>
-            115102921 11378168690WFE N.EMETTEUR: 422262
+            <MEMO> 115102921 11378168690WFE N.EMETTEUR: 422262
 
           </STMTTRN>
 
@@ -148,8 +147,7 @@ OFXHEADER:100
 
             <CHECKNUM>9275893
 
-            <NAME>
-            DE 1 CHEQUE(S)
+            <NAME> DE 1 CHEQUE(S)
 
           </STMTTRN>
 
@@ -168,8 +166,7 @@ OFXHEADER:100
 
             <NAME>VIREMENT
 
-            <MEMO>
-            MME AZE AZE
+            <MEMO> MME AZE AZE
 
           </STMTTRN>
 
@@ -188,8 +185,7 @@ OFXHEADER:100
 
             <NAME>RET DAB GAB LONS SULLY 2
 
-            <MEMO>
-            CARTE *123123123 RETRAIT LE 10/02/2009 A 10:24
+            <MEMO> CARTE *123123123 RETRAIT LE 10/02/2009 A 10:24
 
           </STMTTRN>
 
@@ -208,8 +204,7 @@ OFXHEADER:100
 
             <NAME>PRLV SOCRAM BANQUE
 
-            <MEMO>
-            *PRLV 37589392 N.EMETTEUR: 003476
+            <MEMO> *PRLV 37589392 N.EMETTEUR: 003476
 
           </STMTTRN>
 
@@ -228,8 +223,7 @@ OFXHEADER:100
 
             <NAME>VIR RSI FRANCHE COMTE
 
-            <MEMO>
-            B0562572C340139XXX X 0109
+            <MEMO> B0562572C340139XXX X 0109
 
           </STMTTRN>
 
@@ -248,8 +242,7 @@ OFXHEADER:100
 
             <NAME>VIR XXXX XXXX XXXX
 
-            <MEMO>
-            01868546 XXXXX0109
+            <MEMO> 01868546 XXXXX0109
 
           </STMTTRN>
 
@@ -268,8 +261,7 @@ OFXHEADER:100
 
             <NAME>COTIS EQUIPAGE
 
-            <MEMO>
-            HT: 5,69/TVA19,60: 0,13 EQUIPAGE BPBFC N 5040064222
+            <MEMO> HT: 5,69/TVA19,60: 0,13 EQUIPAGE BPBFC N 5040064222
 
           </STMTTRN>
 
@@ -288,8 +280,7 @@ OFXHEADER:100
 
             <NAME>PRLV CREDIPAR CITROEN
 
-            <MEMO>
-            *100G0473733 32 050209 N.EMETTEUR: 126896
+            <MEMO> *100G0473733 32 050209 N.EMETTEUR: 126896
 
           </STMTTRN>
 
@@ -306,8 +297,7 @@ OFXHEADER:100
 
             <NAME>CARTE FACTURETTES CB
 
-            <MEMO>
-            VOTRE RELEVE ARRETE AU 30/01/09
+            <MEMO> VOTRE RELEVE ARRETE AU 30/01/09
 
           </STMTTRN>
 
@@ -326,8 +316,7 @@ OFXHEADER:100
 
             <NAME>DROITS DE GARDE
 
-            <MEMO>
-            2009 DU COMPTE 123123123123
+            <MEMO> 2009 DU COMPTE 123123123123
 
           </STMTTRN>
 
@@ -346,8 +335,7 @@ OFXHEADER:100
 
             <NAME>ECHEANCE PRET
 
-            <MEMO>
-            DONT CAP 67,52 ASS. 0,00E INT. 14,36 COM. 0,00E
+            <MEMO> DONT CAP 67,52 ASS. 0,00E INT. 14,36 COM. 0,00E
 
           </STMTTRN>
 
@@ -366,8 +354,7 @@ OFXHEADER:100
 
             <NAME>VIR C.P.A.M LONS
 
-            <MEMO>
-            090220000325 090220000325
+            <MEMO> 090220000325 090220000325
 
           </STMTTRN>
 
