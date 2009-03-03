@@ -80,7 +80,7 @@ public enum TransactionType implements GlobConstantContainer {
   }
 
   public static TransactionType get(Glob transactionTypeMatcher) throws ItemNotFound {
-    Integer transactionTypeId = transactionTypeMatcher.get(TransactionTypeMatcher.TRANSACTION_TYPE);
+    Integer transactionTypeId = transactionTypeMatcher.get(PreTransactionTypeMatcher.TRANSACTION_TYPE);
     for (TransactionType transactionType : values()) {
       if (Utils.equal(transactionType.id, transactionTypeId)) {
         return transactionType;

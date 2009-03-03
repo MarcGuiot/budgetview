@@ -31,6 +31,8 @@ public class ImportedTransaction {
 
   public static StringField QIF_P;
 
+  public static StringField BANK_TRANSACTION_TYPE;  // N for qif, TRNTYPE for ofx. 
+
   public static StringField LABEL;
 
   public static StringField ORIGINAL_LABEL;
@@ -38,8 +40,6 @@ public class ImportedTransaction {
   @Target(Category.class)
   @DefaultInteger(0)
   public static LinkField CATEGORY;
-
-  public static StringField BANK_TRANSACTION_TYPE;
 
   public static BooleanField IS_CARD;
 

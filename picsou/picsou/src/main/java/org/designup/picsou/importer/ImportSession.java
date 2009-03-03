@@ -26,8 +26,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class ImportSession {
+  Pattern BLANK = Pattern.compile("[\\s]+");
   private GlobRepository referenceRepository;
   private Directory directory;
   private ImportService importService;
@@ -87,12 +89,6 @@ public class ImportSession {
       }
     }
 
-    TransactionAnalyzer transactionAnalyzer = directory.get(TransactionAnalyzerFactory.class).getAnalyzer();
-
-    {
-      GlobList importedTransactions = localRepository.getAll(ImportedTransaction.TYPE);
-      transactionAnalyzer.processImportedTransactions(localRepository, importedTransactions);
-    }
 
     GlobList newTransactions = transactionFilter.loadTransactions(referenceRepository, localRepository,
                                                                   convertImportedTransaction(selectedDateFormat),
@@ -130,6 +126,7 @@ public class ImportSession {
         else {
           localRepository.update(bankEntity.getKey(), BankEntity.BANK, id);
         }
+        TransactionAnalyzer transactionAnalyzer = directory.get(TransactionAnalyzerFactory.class).getAnalyzer();
         transactionAnalyzer.processTransactions(id, accountIdAndTransactions.getValue(),
                                                 localRepository);
         localRepository.update(account.getKey(), Account.IS_IMPORTED_ACCOUNT, true);
@@ -185,9 +182,14 @@ public class ImportSession {
         value(Transaction.NOTE, importedTransaction.get(ImportedTransaction.NOTE)),
         value(Transaction.LABEL, importedTransaction.get(ImportedTransaction.LABEL)),
         value(Transaction.ORIGINAL_LABEL, importedTransaction.get(ImportedTransaction.ORIGINAL_LABEL)),
-        value(Transaction.BANK_TRANSACTION_TYPE, importedTransaction.get(ImportedTransaction.BANK_TRANSACTION_TYPE)),
+        value(Transaction.BANK_TRANSACTION_TYPE, removeBlank(importedTransaction.get(ImportedTransaction.BANK_TRANSACTION_TYPE))),
         value(Transaction.SPLIT, importedTransaction.get(ImportedTransaction.SPLIT)),
-        value(Transaction.SPLIT_SOURCE, importedTransaction.get(ImportedTransaction.SPLIT_SOURCE))
+        value(Transaction.SPLIT_SOURCE, importedTransaction.get(ImportedTransaction.SPLIT_SOURCE)),
+        value(Transaction.OFX_CHECK_NUM, removeBlank(importedTransaction.get(ImportedTransaction.OFX_CHECK_NUM))),
+        value(Transaction.OFX_MEMO, removeBlank(importedTransaction.get(ImportedTransaction.OFX_MEMO))),
+        value(Transaction.OFX_NAME, removeBlank(importedTransaction.get(ImportedTransaction.OFX_NAME))),
+        value(Transaction.QIF_M, removeBlank(importedTransaction.get(ImportedTransaction.QIF_M))),
+        value(Transaction.QIF_P, removeBlank(importedTransaction.get(ImportedTransaction.QIF_P)))
       );
       Integer seriesId = getSeriesId(importedTransaction);
       if (seriesId != null) {
@@ -197,6 +199,13 @@ public class ImportSession {
       nextId++;
     }
     return createdTransactions;
+  }
+
+  private String removeBlank(final String value) {
+    if (value == null){
+      return null;
+    }
+    return BLANK.matcher(value).replaceAll(" ").trim();
   }
 
   private Integer getSeriesId(Glob importedTransaction) {

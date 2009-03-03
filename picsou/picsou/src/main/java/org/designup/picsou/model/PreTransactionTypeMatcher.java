@@ -37,12 +37,24 @@ public class PreTransactionTypeMatcher {
   @NoObfuscation
   public static StringField ORIGINAL_LABEL;
 
+  @NoObfuscation
+  public static StringField BANK_TYPE;
+
+  @NoObfuscation
+  public static StringField GROUP_FOR_DATE;
+
+  @NoObfuscation
+  public static StringField DATE_FORMAT;
+
+  @Target(TransactionType.class) @NoObfuscation
+  public static LinkField TRANSACTION_TYPE;
+
   @Target(Bank.class)
   @NoObfuscation
   public static LinkField BANK;
 
 
   static {
-    GlobTypeLoader.init(PreTransactionTypeMatcher.class, "preTransactionTypeMatcher");
+    GlobTypeLoader.init(PreTransactionTypeMatcher.class, "transactionMatcher");
   }
 }
