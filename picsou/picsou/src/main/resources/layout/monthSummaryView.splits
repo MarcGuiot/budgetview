@@ -127,19 +127,22 @@
         <scrollPane weightY="200" minimumSize="(50, 150)">
           <column border="empty(10)">
             <repeat ref="savingsAccountRepeat">
-              <column>
+              <column ref="accountGroup">
                 <label ref="accountName" fill="horizontal" horizontalAlignment="center" anchor="center"
                        foreground="#555555" marginTop="2" font="-,bold,13" weightY="0"/>
                 <grid>
-                  <label text="$monthsummary.savings.in" gridPos="(0,0)" marginRight="5"/>
-                  <button ref="savingsInAmount" styleClass="itemLink" gridPos="(1,0)"/>
+                  <label text="$monthsummary.savings.in" gridPos="(0,0)" marginRight="5"
+                         autoHideSource="savingsInGauge"/>
+                  <button ref="savingsInAmount" styleClass="itemLink" gridPos="(1,0)" autoHideSource="savingsInGauge"/>
                   <component ref="savingsInGauge" styleClass="detailGauge" gridPos="(2,0)"/>
-                  <label ref="savingsPlannedInAmount" gridPos="(3,0)"/>
+                  <label ref="savingsPlannedInAmount" gridPos="(3,0)" autoHideSource="savingsInGauge"/>
 
-                  <label text="$monthsummary.savings.out" gridPos="(0,1)" marginRight="5"/>
-                  <button ref="savingsOutAmount" styleClass="itemLink" gridPos="(1,1)"/>
+                  <label text="$monthsummary.savings.out" gridPos="(0,1)" marginRight="5"
+                         autoHideSource="savingsOutGauge"/>
+                  <button ref="savingsOutAmount" styleClass="itemLink" gridPos="(1,1)"
+                          autoHideSource="savingsOutGauge"/>
                   <component ref="savingsOutGauge" styleClass="detailGauge" gridPos="(2,1)"/>
-                  <label ref="savingsPlannedOutAmount" gridPos="(3,1)"/>
+                  <label ref="savingsPlannedOutAmount" gridPos="(3,1)" autoHideSource="savingsOutGauge"/>
                 </grid>
               </column>
             </repeat>

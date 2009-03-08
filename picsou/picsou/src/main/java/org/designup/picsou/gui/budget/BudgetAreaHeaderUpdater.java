@@ -27,6 +27,7 @@ public class BudgetAreaHeaderUpdater extends BudgetAreaSummaryComputer {
   }
 
   protected void updateComponents(BudgetArea budgetArea) {
+    gauge.setVisible(true);
     amountLabel.setText(getObservedLabel(budgetArea));
     amountLabel.setVisible(true);
 

@@ -1,0 +1,386 @@
+OFXHEADER:100
+
+  DATA:OFXSGML
+
+  VERSION:102
+
+  SECURITY:NONE
+
+  ENCODING:USASCII
+
+  CHARSET:1252
+
+  COMPRESSION:NONE
+
+  OLDFILEUID:NONE
+
+  NEWFILEUID:NONE
+
+
+<OFX>
+
+  <SIGNONMSGSRSV1>
+
+    <SONRS>
+
+      <STATUS>
+
+        <CODE>0
+
+        <SEVERITY>INFO
+
+      </STATUS>
+
+      <DTSERVER>20090214102601
+
+      <LANGUAGE>FRA
+
+      <DTPROFUP>20090214102601
+
+      <DTACCTUP>20090214102601
+
+    </SONRS>
+
+  </SIGNONMSGSRSV1>
+
+  <BANKMSGSRSV1>
+
+    <STMTTRNRS>
+
+      <TRNUID>00
+
+      <STATUS>
+
+        <CODE>0
+
+        <SEVERITY>INFO
+
+      </STATUS>
+
+      <STMTRS>
+
+        <CURDEF>EUR
+
+        <BANKACCTFROM>
+
+          <BANKID>10807
+
+          <BRANCHID>00010
+
+          <ACCTID>123123123
+
+          <ACCTTYPE>CHECKING
+
+        </BANKACCTFROM>
+
+        <BANKTRANLIST>
+
+          <DTSTART>20081101
+
+          <DTEND>20090214
+
+
+          <STMTTRN>
+
+            <TRNTYPE>DEBIT
+
+            <DTPOSTED>20090213
+
+            <TRNAMT>-100.00
+
+            <FITID>200900200030BD27
+
+            <CHECKNUM>0295314
+
+            <NAME>VIR MR OU MME XYZ
+
+          </STMTTRN>
+
+
+          <STMTTRN>
+
+            <TRNTYPE>DEBIT
+
+            <DTPOSTED>20090213
+
+            <TRNAMT>-46.33
+
+            <FITID>200900200027BD27
+
+            <CHECKNUM>1U7ZCZF
+
+            <NAME>PRLV FT INTERNET ORANGE
+
+            <MEMO> 115102921 11378168690WFE N.EMETTEUR: 422262
+
+          </STMTTRN>
+
+
+          <STMTTRN>
+
+            <TRNTYPE>DEBIT
+
+            <DTPOSTED>20090211
+
+            <TRNAMT>-25.40
+
+            <FITID>200900200026BD27
+
+            <CHECKNUM>0004228
+
+            <NAME>CHEQUE
+
+            <MEMO>001019640927
+
+          </STMTTRN>
+
+
+          <STMTTRN>
+
+            <TRNTYPE>CREDIT
+
+            <DTPOSTED>20090210
+
+            <TRNAMT>+60.00
+
+            <FITID>200900200023BD27
+
+            <CHECKNUM>9275893
+
+            <NAME> DE 1 CHEQUE(S)
+
+          </STMTTRN>
+
+
+          <STMTTRN>
+
+            <TRNTYPE>CREDIT
+
+            <DTPOSTED>20090210
+
+            <TRNAMT>+1000.00
+
+            <FITID>200900200022BD27
+
+            <CHECKNUM>R219011
+
+            <NAME>VIREMENT
+
+            <MEMO> MME AZE AZE
+
+          </STMTTRN>
+
+
+          <STMTTRN>
+
+            <TRNTYPE>DEBIT
+
+            <DTPOSTED>20090210
+
+            <TRNAMT>-30.00
+
+            <FITID>200900200021BD27
+
+            <CHECKNUM>2LV9570
+
+            <NAME>RET DAB GAB LONS SULLY 2
+
+            <MEMO> CARTE *123123123 RETRAIT LE 09/02/2009 A 10:24
+
+          </STMTTRN>
+
+
+          <STMTTRN>
+
+            <TRNTYPE>DEBIT
+
+            <DTPOSTED>20090210
+
+            <TRNAMT>-301.10
+
+            <FITID>200900200020BD27
+
+            <CHECKNUM>1LY9TKZ
+
+            <NAME>PRLV SOCRAM BANQUE
+
+            <MEMO> *PRLV 37589392 N.EMETTEUR: 003476
+
+          </STMTTRN>
+
+
+          <STMTTRN>
+
+            <TRNTYPE>CREDIT
+
+            <DTPOSTED>20090209
+
+            <TRNAMT>+18.09
+
+            <FITID>200900200016BD27
+
+            <CHECKNUM>1U7XVU7
+
+            <NAME>VIR RSI FRANCHE COMTE
+
+            <MEMO> B0562572C340139XXX X 0109
+
+          </STMTTRN>
+
+
+          <STMTTRN>
+
+            <TRNTYPE>CREDIT
+
+            <DTPOSTED>20090209
+
+            <TRNAMT>+507.17
+
+            <FITID>200900200015BD27
+
+            <CHECKNUM>1U7WF9G
+
+            <NAME>VIR XXXX XXXX XXXX
+
+            <MEMO> 01868546 XXXXX0109
+
+          </STMTTRN>
+
+
+          <STMTTRN>
+
+            <TRNTYPE>DEBIT
+
+            <DTPOSTED>20090205
+
+            <TRNAMT>-5.82
+
+            <FITID>200900200009BD27
+
+            <CHECKNUM>0004281
+
+            <NAME>COTIS EQUIPAGE
+
+            <MEMO> HT: 5,69/TVA19,60: 0,13 EQUIPAGE BPBFC N 5040064222
+
+          </STMTTRN>
+
+
+          <STMTTRN>
+
+            <TRNTYPE>DEBIT
+
+            <DTPOSTED>20090205
+
+            <TRNAMT>-56.34
+
+            <FITID>200900200006BD27
+
+            <CHECKNUM>1DOL3J3
+
+            <NAME>PRLV CREDIPAR CITROEN
+
+            <MEMO> *100G0473733 32 050209 N.EMETTEUR: 126896
+
+          </STMTTRN>
+
+
+          <STMTTRN>
+
+            <TRNTYPE>DEBIT
+
+            <DTPOSTED>20090130
+
+            <TRNAMT>-200.10
+
+            <FITID>200900100049BD27
+
+            <NAME>CARTE FACTURETTES CB
+
+            <MEMO> VOTRE RELEVE ARRETE AU 30/01/09
+
+          </STMTTRN>
+
+
+          <STMTTRN>
+
+            <TRNTYPE>DEBIT
+
+            <DTPOSTED>20090129
+
+            <TRNAMT>-35.50
+
+            <FITID>200900100048BD27
+
+            <CHECKNUM>008096D
+
+            <NAME>DROITS DE GARDE
+
+            <MEMO> 2009 DU COMPTE 123123123123
+
+          </STMTTRN>
+
+
+          <STMTTRN>
+
+            <TRNTYPE>DEBIT
+
+            <DTPOSTED>20090126
+
+            <TRNAMT>-81.88
+
+            <FITID>200900100043BD27
+
+            <CHECKNUM>0897523
+
+            <NAME>ECHEANCE PRET
+
+            <MEMO> DONT CAP 67,52 ASS. 0,00E INT. 14,36 COM. 0,00E
+
+          </STMTTRN>
+
+
+          <STMTTRN>
+
+            <TRNTYPE>CREDIT
+
+            <DTPOSTED>20090126
+
+            <TRNAMT>+12.90
+
+            <FITID>200900100040BD27
+
+            <CHECKNUM>172D2AA
+
+            <NAME>VIR C.P.A.M LONS
+
+            <MEMO> 090220000325 090220000325
+
+          </STMTTRN>
+
+
+        </BANKTRANLIST>
+
+        <LEDGERBAL>
+
+          <BALAMT>2705.72
+
+          <DTASOF>20090214
+
+        </LEDGERBAL>
+
+        <AVAILBAL>
+
+          <BALAMT>2705.72
+
+          <DTASOF>20090214
+
+        </AVAILBAL>
+
+      </STMTRS>
+
+    </STMTTRNRS>
+
+  </BANKMSGSRSV1>
+
+</OFX>

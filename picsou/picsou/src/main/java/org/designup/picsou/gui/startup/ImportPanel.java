@@ -30,6 +30,7 @@ import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import static org.globsframework.gui.views.utils.LabelCustomizers.fontSize;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
@@ -184,7 +185,7 @@ public class ImportPanel {
                                                  dateRenderer.getComparator(), sessionDirectory)
       .addColumn(Lang.get("import.bankDate"), ImportedTransaction.BANK_DATE,
                  chain(fontSize(9), dateRenderer))
-      .addColumn(Lang.get("label"), ImportedTransaction.LABEL, LabelCustomizers.autoTooltip())
+      .addColumn(Lang.get("label"), new TransactionLabelGlobStringifier(), LabelCustomizers.autoTooltip())
       .addColumn(Lang.get("amount"), ImportedTransaction.AMOUNT);
 
     PicsouTableHeaderPainter.install(tableView, localDirectory);
@@ -766,6 +767,36 @@ public class ImportPanel {
 
     public void actionPerformed(ActionEvent e) {
       complete();
+    }
+  }
+
+  private static class TransactionLabelGlobStringifier extends AbstractGlobStringifier {
+
+    public String toString(Glob glob, GlobRepository repository) {
+      if (glob.get(ImportedTransaction.IS_OFX)) {
+        StringBuilder builder = new StringBuilder();
+        complete(builder, glob.get(ImportedTransaction.OFX_NAME));
+        complete(builder, glob.get(ImportedTransaction.OFX_CHECK_NUM));
+        complete(builder, glob.get(ImportedTransaction.OFX_MEMO));
+        return builder.toString();
+      }
+      else {
+        StringBuilder builder = new StringBuilder();
+        complete(builder, glob.get(ImportedTransaction.QIF_M));
+        complete(builder, glob.get(ImportedTransaction.QIF_P));
+        return builder.toString();
+      }
+
+    }
+
+    void complete(StringBuilder builder, String s) {
+      if (s == null) {
+        return;
+      }
+      if (builder.length() != 0) {
+        builder.append(":");
+      }
+      builder.append(s);
     }
   }
 }

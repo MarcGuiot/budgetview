@@ -9,3 +9,4 @@ creditMutuel.xml
 lcl.xml
 axa.xml
 ingdirect.xml
+banquepopulaire.xml

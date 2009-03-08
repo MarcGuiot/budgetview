@@ -1,5 +1,6 @@
 package org.designup.picsou.importer.analyzer;
 
+import org.designup.picsou.model.PreTransactionTypeMatcher;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.model.TransactionTypeMatcher;
 import static org.designup.picsou.model.TransactionTypeMatcher.*;
@@ -63,8 +64,7 @@ public class TransactionAnalyzerFactory {
     if (bankListStream == null) {
       throw new ResourceAccessFailed("missing bank file list'" + bankListFileName + "'");
     }
-    BufferedReader bankListReader =
-      null;
+    BufferedReader bankListReader;
     try {
       bankListReader = new BufferedReader(new InputStreamReader(bankListStream, "UTF-8"));
     }
@@ -101,26 +101,64 @@ public class TransactionAnalyzerFactory {
   }
 
   private void registerMatchers(GlobRepository globRepository) {
-    for (Glob matcher : globRepository.getAll(TransactionTypeMatcher.TYPE).sort(TransactionTypeMatcher.ID)) {
-      String regexp = matcher.get(REGEXP);
-      String regexpForType = matcher.get(BANK_TYPE);
+//    for (Glob matcher : globRepository.getAll(TransactionTypeMatcher.TYPE).sort(TransactionTypeMatcher.ID)) {
+//      String regexp = matcher.get(REGEXP);
+//      String regexpForType = matcher.get(BANK_TYPE);
+//      TransactionType type = TransactionType.get(matcher);
+//      String labelRegexp = matcher.get(LABEL);
+//      Integer groupForDate = matcher.get(GROUP_FOR_DATE);
+//      String dateFormat = matcher.get(DATE_FORMAT);
+//      if ((groupForDate != null) && (Strings.isNullOrEmpty(dateFormat))) {
+//        throw new RuntimeException("You must specify a date format");
+//      }
+//
+//      Glob bank = globRepository.findLinkTarget(matcher, BANK);
+//      if ((labelRegexp != null) && (groupForDate != null)) {
+//        analyzer.addExclusive(regexp, type, regexpForType, labelRegexp, groupForDate, dateFormat, bank);
+//      }
+//      else if (labelRegexp != null) {
+//        analyzer.addExclusive(regexp, type, regexpForType, labelRegexp, bank);
+//      }
+//      else {
+//        analyzer.addExclusive(regexp, type, regexpForType, bank);
+//      }
+//    }
+    for (Glob matcher : globRepository.getAll(PreTransactionTypeMatcher.TYPE)
+      .sort(PreTransactionTypeMatcher.ID)) {
+      String label = matcher.get(PreTransactionTypeMatcher.LABEL);
+      String originalLabel = matcher.get(PreTransactionTypeMatcher.ORIGINAL_LABEL);
+      Glob bank = globRepository.findLinkTarget(matcher, PreTransactionTypeMatcher.BANK);
       TransactionType type = TransactionType.get(matcher);
-      String labelRegexp = matcher.get(LABEL);
-      Integer groupForDate = matcher.get(GROUP_FOR_DATE);
-      String dateFormat = matcher.get(DATE_FORMAT);
-      if ((groupForDate != null) && (Strings.isNullOrEmpty(dateFormat))) {
-        throw new RuntimeException("You must specify a date format");
-      }
+      String bankType = matcher.get(PreTransactionTypeMatcher.BANK_TYPE);
+      String groupForDate = matcher.get(PreTransactionTypeMatcher.GROUP_FOR_DATE);
+      String dateFormat = matcher.get(PreTransactionTypeMatcher.DATE_FORMAT);
 
-      Glob bank = globRepository.findLinkTarget(matcher, BANK);
-      if ((labelRegexp != null) && (groupForDate != null)) {
-        analyzer.addExclusive(regexp, type, regexpForType, labelRegexp, groupForDate, dateFormat, bank);
-      }
-      else if (labelRegexp != null) {
-        analyzer.addExclusive(regexp, type, regexpForType, labelRegexp, bank);
+      String name = matcher.get(PreTransactionTypeMatcher.OFX_NAME);
+      String memo = matcher.get(PreTransactionTypeMatcher.OFX_MEMO);
+      String checkNum = matcher.get(PreTransactionTypeMatcher.OFX_CHECK_NUM);
+      if (name != null || memo != null || checkNum != null) {
+        if (label != null) {
+          analyzer.addOfx(name, memo, checkNum, label, bank, bankType, groupForDate, dateFormat, type);
+          groupForDate = null; //pour ne pas updater deux fois la date
+          dateFormat = null;
+        }
+        if (originalLabel != null) {
+          analyzer.addOriginalOfx(name, memo, checkNum, originalLabel, bank, bankType,
+                                  groupForDate, dateFormat, type);
+        }
       }
       else {
-        analyzer.addExclusive(regexp, type, regexpForType, bank);
+        String qifM = matcher.get(PreTransactionTypeMatcher.QIF_M);
+        String qifP = matcher.get(PreTransactionTypeMatcher.QIF_P);
+        if (label != null) {
+          analyzer.addQif(qifM, qifP, label, bank, bankType, groupForDate, dateFormat, type);
+          groupForDate = null; //pour ne pas updater deux fois la date
+          dateFormat = null;
+        }
+        if (originalLabel != null) {
+          analyzer.addOriginalQif(qifM, qifP, originalLabel, bank, bankType,
+                                  groupForDate, dateFormat, type);
+        }
       }
     }
   }

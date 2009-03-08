@@ -38,6 +38,9 @@ public class AutoCategorizationFunctor implements GlobFunctor {
     int count = 0;
     while (iterator.hasPrevious()) {
       Glob findTransaction = iterator.previous();
+      if (!findTransaction.get(Transaction.ACCOUNT).equals(transaction.get(Transaction.ACCOUNT))){
+        continue;
+      }
       Integer currentSeries = findTransaction.get(Transaction.SERIES);
       Integer currentCategory = findTransaction.get(Transaction.CATEGORY);
       if (lastSeries != null && !lastSeries.equals(currentSeries)

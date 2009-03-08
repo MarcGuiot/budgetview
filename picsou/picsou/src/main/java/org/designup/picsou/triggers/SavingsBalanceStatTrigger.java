@@ -152,11 +152,11 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
       else {
         if (amount > 0) {
           data.savingsRemaining += amount;
-          isSavingsSeriesAndAccount.put(transaction.get(Transaction.SERIES), accountId,  true);
+          isSavingsSeriesAndAccount.put(transaction.get(Transaction.SERIES), accountId, true);
         }
         else {
           data.outRemaining += -amount;
-          isSavingsSeriesAndAccount.put(transaction.get(Transaction.SERIES), accountId,  false);
+          isSavingsSeriesAndAccount.put(transaction.get(Transaction.SERIES), accountId, false);
         }
       }
       if (!transaction.get(Transaction.PLANNED) &&
@@ -209,7 +209,11 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
         Double endOfMonthPosition = null;
         if (beginOfMonthTransaction != null && endOfMonthTransaction != null) {
           endOfMonthPosition = endOfMonthTransaction.get(Transaction.ACCOUNT_POSITION);
-          beginOfMonthPosition = beginOfMonthTransaction.get(Transaction.ACCOUNT_POSITION) -
+          Double amount = beginOfMonthTransaction.get(Transaction.ACCOUNT_POSITION);
+          if (amount == null || endOfMonthPosition == null) {
+            continue;
+          }
+          beginOfMonthPosition = amount -
                                  beginOfMonthTransaction.get(Transaction.AMOUNT);
           balance = endOfMonthPosition - beginOfMonthPosition;
         }

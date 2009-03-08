@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<globs>
+  <bank name="Banque Populaire" id='11'>
+    <bankEntity id="10807"/>
+
+    <transactionMatcher ofxName="CHEQUE"
+                        label="CHEQUE N.{NUM.0}" originalLabel="CHEQUE N.{NUM.0}"
+                        transactionTypeName="check"/>
+
+    <transactionMatcher ofxName="DE 1 CHEQUE\(S\)" label="REMISE DE 1 CHEQUE"
+                        transactionTypeName="deposit" originalLabel="REMISE DE 1 CHEQUE"/>
+
+    <transactionMatcher ofxName="DE ([0-9]+) CHEQUE\(S\)" label="REMISE DE {NAME.1} CHEQUES"
+                        transactionTypeName="deposit" originalLabel="REMISE DE {NAME.1} CHEQUES"/>
+
+    <transactionMatcher bankType="CREDIT" ofxName="VIREMENT"
+                        label="VIREMENT DE {MEMO.0}" originalLabel="VIREMENT DE {MEMO.0}"
+                        transactionTypeName="virement"/>
+
+    <transactionMatcher bankType="CREDIT" ofxName="VIR (.*)"
+                        label="VIREMENT DE {NAME.1}" originalLabel="{NAME.0} {MEMO.0}"
+                        transactionTypeName="virement"/>
+
+    <transactionMatcher bankType="DEBIT" ofxName="VIR (.*)"
+                        label="PRELEVEMENT DE {NAME.1}" originalLabel="{NAME.0} {MEMO.0}"
+                        transactionTypeName="prelevement"/>
+
+    <transactionMatcher bankType="DEBIT" ofxName="RET DAB (.*)"
+                        ofxMemo="CARTE (.*) RETRAIT LE (\d{2}/\d{2}/\d{2,4}) A (.*)"
+                        label="RETRAIT {NAME.1} {MEMO.1} A {MEMO.3}" originalLabel="{NAME.0} {MEMO.0}"
+                        transactionTypeName="withdrawal" groupForDate="{MEMO.2}" dateFormat="dd/MM/yy"/>
+
+    <transactionMatcher bankType="DEBIT" ofxName="PRLV (.*)"
+                        label="{NAME.1} {MEMO.0}" originalLabel="{NAME.0} {MEMO.0}"
+                        transactionTypeName="prelevement"/>
+
+  </bank>
+</globs>

@@ -361,7 +361,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
     budgetView.savings.checkSeries("CAF", 0, 0);
     views.selectHome();
-    monthSummary.checkSavingsIn("Epargne", 0, 0);
+    monthSummary.checkSavingsInNotVisible("Epargne");
 
     // back to normal to see if dateChooser is hidden
     views.selectBudget();
@@ -965,8 +965,62 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     monthSummary.checkSavingsIn("Savings 2", 300, 300);
   }
 
-//  public void testSavingWithNoTransactionShouldNotBeIgnored() throws Exception {
-//    fail("Comme il n'y a pas de transaction sur ce compte il n'est pas vu pour le calcul du solde total");
-//  }
-//
+  public void testSavingAccountWithNoTransactionShouldNotBeIgnored() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/10", -100.00, "Virement")
+      .load();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    views.selectCategorization();
+    categorization.createAndSetSavings("Virement", "Epargne", "Main accounts", "External account");
+    views.selectHome();
+    savingsAccounts.createNewAccount()
+      .setAccountName("Livret")
+      .selectBank("ING Direct")
+      .setBalance(0)
+      .validate();
+    savingsAccounts.createNewAccount()
+      .setAccountName("Livret 2")
+      .selectBank("ING Direct")
+      .validate();
+    monthSummary.checkSavingsInNotVisible("Livret");
+    monthSummary.checkSavingsOutNotVisible("Livret");
+    views.selectCategorization();
+    categorization.selectTableRows("Virement")
+      .editSeries(false)
+      .setToAccount("Livret")
+      .validate();
+    categorization.selectSavings()
+      .selectSavingsSeries("Epargne");
+    views.selectHome();
+    monthSummary.checkSavingsIn("Livret", 100, 100);
+    monthSummary.checkSavingsOutNotVisible("Livret");
+    monthSummary.checkSavingsInNotVisible("Livret 2");
+    monthSummary.checkSavingsOutNotVisible("Livret 2");
+    monthSummary.checkSavingsNotVisible("Livret 2");
+
+//    openCashPilot();
+    // On check maintenant qu'il y a une balance bien que les compte n'est pas de balance.
+  }
+
+  public void testInverseAccountAfterCategorization() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/10", -100.00, "Virement")
+      .load();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    views.selectHome();
+    savingsAccounts.createNewAccount()
+      .setAccountName("Livret")
+      .selectBank("ING Direct")
+      .setBalance(100)
+      .validate();
+    views.selectCategorization();
+    categorization.createAndSetSavings("Virement", "Epargne", "Main accounts", "Livret");
+    views.selectBudget();
+    budgetView.savings.editSeries("Livret.Epargne")
+      .setToAccount("Main accounts")
+      .setFromAccount("Livret")
+      .validate();
+
+  }
+
 }

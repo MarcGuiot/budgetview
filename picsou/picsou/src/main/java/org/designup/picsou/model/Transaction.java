@@ -39,10 +39,26 @@ public class Transaction {
   @NamingField
   public static StringField LABEL;
 
-  public static StringField NOTE;
   public static StringField ORIGINAL_LABEL;
+
+  public static StringField NOTE;
+
+  public static StringField ADDITIONNAL_INFO;
+
+  public static StringField OFX_CHECK_NUM;
+
+  public static StringField OFX_NAME;
+
+  public static StringField OFX_MEMO;
+
+  public static StringField QIF_M;
+
+  public static StringField QIF_P;
+
+  public static StringField BANK_TRANSACTION_TYPE;  //QIF : N et ofx : TRNTYPE
+
+  //  public static StringField ORIGINAL_LABEL;
   public static StringField LABEL_FOR_CATEGORISATION;
-  public static StringField BANK_TRANSACTION_TYPE;
 
   @Target(Category.class)
   @DefaultInteger(0)
@@ -60,7 +76,7 @@ public class Transaction {
   public static BooleanField SPLIT;
 
   @Target(Transaction.class)
-  public static LinkField SPLIT_SOURCE; //TODO si mirror et split supprimer le liens vers NOT_IMPORTED_TRANSACTION
+  public static LinkField SPLIT_SOURCE;
 
   @Target(Series.class)
   @Required()

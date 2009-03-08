@@ -3,6 +3,7 @@ package org.designup.picsou.importer.qif;
 import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.ImportedTransaction;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.util.Amounts;
 import org.globsframework.model.FieldValuesBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -63,7 +64,7 @@ public class QifParser {
             break;
           case 'T':
             updated = true;
-            values.set(ImportedTransaction.AMOUNT, extractAmount(reader.readLine()));
+            values.set(ImportedTransaction.AMOUNT, Amounts.extractAmount(reader.readLine()));
             break;
           case 'P':
             pValue = reader.readLine();
@@ -76,23 +77,23 @@ public class QifParser {
             break;
           case '^':
             String value = null;
-            if (!Strings.isNullOrEmpty(mValue)) {
-              value = mValue;
+            if (Strings.isNotEmpty(mValue)) {
+              values.set(ImportedTransaction.QIF_M, mValue);
             }
-            else if (!Strings.isNullOrEmpty(pValue)) {
-              value = pValue;
+            if (Strings.isNotEmpty(pValue)) {
+              values.set(ImportedTransaction.QIF_P, pValue);
             }
-            if (!Strings.isNullOrEmpty(mValue) && !Strings.isNullOrEmpty(pValue)) {
-              if (mValue.startsWith(pValue.substring(0, pValue.length() > 10 ? 10 : pValue.length()))) {
-                value = mValue;
-              }
-              else {
-                value = Strings.join(pValue, mValue);
-              }
-            }
+//            if (!Strings.isNullOrEmpty(mValue) && !Strings.isNullOrEmpty(pValue)) {
+//              if (mValue.startsWith(pValue.substring(0, pValue.length() > 10 ? 10 : pValue.length()))) {
+//                value = mValue;
+//              }
+//              else {
+//                value = Strings.join(pValue, mValue);
+//              }
+//            }
             values.set(ImportedTransaction.BANK_TRANSACTION_TYPE, nValue != null ? nValue.trim() : null);
-            values.set(ImportedTransaction.ORIGINAL_LABEL, value != null ? value.trim() : null);
-            values.set(ImportedTransaction.LABEL, value != null ? value.trim() : null);
+//            values.set(ImportedTransaction.ORIGINAL_LABEL, value != null ? value.trim() : null);
+            values.set(ImportedTransaction.IS_OFX, false);
             return createTransaction(values);
         }
       }
@@ -100,14 +101,6 @@ public class QifParser {
     catch (IOException e) {
       return null;
     }
-  }
-
-  private double extractAmount(final String amount) throws IOException {
-    String tmp = amount.replaceAll(",", "").replaceAll("\\.", "");
-    if (Strings.isNullOrEmpty(tmp)) {
-      return 0.;
-    }
-    return Double.parseDouble(tmp) / 100.0;
   }
 
   private Glob createTransaction(FieldValuesBuilder values) {

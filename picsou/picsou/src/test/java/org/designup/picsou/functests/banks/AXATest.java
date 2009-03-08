@@ -30,7 +30,7 @@ public class AXATest extends SpecificBankTestCase {
       .add("03/09/2008", "05/09/2008", TransactionType.CREDIT_CARD, "MONOPRIX   1162", "", -31.67)
       .add("05/09/2008", TransactionType.VIREMENT, "C.A.F DE PARIS", "", 120.32)
       .add("05/09/2008", TransactionType.PRELEVEMENT, "PRLV NOOS S.A.", "", -31.90)
-      .add("04/09/2008", TransactionType.CHECK, "CHEQUE N. 5521077", "", -61.60)
+      .add("04/09/2008", TransactionType.CHECK, "CHEQUE N.5521077", "", -61.60)
       .add("03/09/2008", "04/09/2008", TransactionType.CREDIT_CARD, "CHAUSSURE ROGER", "", -35.00)
       .add("28/08/2008", "03/09/2008", TransactionType.CREDIT_CARD, "WORLD KETAI ETRANG", "", -78.01)
       .add("02/09/2008", TransactionType.WITHDRAWAL, "RETRAIT /08 LCL PARIS GD DAB 29", "", -80.00)

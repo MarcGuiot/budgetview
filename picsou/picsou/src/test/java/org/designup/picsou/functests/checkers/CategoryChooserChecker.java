@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.utils.Lang;
 import org.uispec4j.CheckBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
@@ -111,5 +112,13 @@ public class CategoryChooserChecker extends GuiChecker {
 
   public void checkClosed() {
     assertFalse(window.isVisible());
+  }
+
+  public CategoryChooserChecker checkNotUncheckable(String categoryName) {
+    CheckBox checkBox = window.getCheckBox(categoryName);
+    assertFalse(checkBox.isEnabled());
+    assertThat(checkBox.isSelected());
+    checkBox.tooltipEquals(Lang.get("categorization.categories.unUnckable.tooltip"));
+    return this;
   }
 }

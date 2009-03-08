@@ -3,88 +3,85 @@
   <bank name="BNP" downloadUrl="http://www.bnpparibas.net" id='5'>
     <bankEntity id="30004"/>
 
-    <transactionTypeMatcher bankType="COMMISS" regexp="(.*)"
-                            transactionTypeName="bank_fees" label="COMMISSIONS PERCUES $1"/>
+    <transactionMatcher bankType="COMMISS" qifM="(.*)"
+                        transactionTypeName="bank_fees" label="COMMISSIONS {M.1}"
+                        originalLabel="{M.0}"/>
 
-    <transactionTypeMatcher bankType="CHQ N.*" regexp="N. (.*)"
-                            transactionTypeName="check" label="CHEQUE N. $1"/>
+    <transactionMatcher qifM="COMMISSIONS PERCUES[\s]*(.*)"
+                        transactionTypeName="bank_fees" label="COMMISSIONS {M.1}"
+                        originalLabel="{M.0}"/>
 
-    <transactionTypeMatcher bankType="VI.RECU" regexp="(.*)"
-                            transactionTypeName="internal_transfer" label="VIR. $1"/>
+    <transactionMatcher bankType="CHQ N.*" qifM="N. (.*)"
+                        transactionTypeName="check" label="CHEQUE N.{M.1}"
+                        originalLabel="CHEQUE N.{M.1}"/>
 
-    <transactionTypeMatcher bankType="ECH.PR" regexp="(.*)"
-                            transactionTypeName="credit" label="PRET $1"/>
+    <transactionMatcher qifM="CHEQUE[\s]+N.[\s]+(.*)"
+                        transactionTypeName="check" label="CHEQUE N.{M.1}"
+                        originalLabel="CHEQUE N.{M.1}"/>
 
-    <transactionTypeMatcher bankType="VI.TIER" regexp="(.*)"
-                            transactionTypeName="virement" label="$1"/>
+    <transactionMatcher bankType="ECH.PR" qifM="(.*)"
+                        transactionTypeName="credit" label="PRET {M.1}"/>
 
-    <transactionTypeMatcher bankType="PRLV." regexp="(.*)"
-                            transactionTypeName="prelevement" label="$1"/>
+    <transactionMatcher qifM="ECHEANCE PRET[\s]*(.*)"
+                        transactionTypeName="credit" label="PRET {M.1}"/>
 
-    <transactionTypeMatcher bankType="VI.EMIS" regexp="(.*)"
-                            transactionTypeName="internal_transfer" label="VIR. $1"/>
+    <transactionMatcher qifM="RETRAIT DAB[\s]*(\d{2,4}/\d{2}/\d{2,4})[\s]*(.*)"
+                        transactionTypeName="withdrawal" label="RETRAIT {M.2}"
+                        groupForDate="{M.1}" dateFormat="dd/MM/yy"/>
 
-    <transactionTypeMatcher regexp="COMMISSIONS PERCUES[\s]*(.*)"
-                            transactionTypeName="bank_fees" label="COMMISSIONS PERCUES $1"/>
+    <transactionMatcher qifM="RETRAIT DAB[\s]*(.*)"
+                        transactionTypeName="withdrawal" originalLabel="RETRAIT {M.1}"/>
 
-    <transactionTypeMatcher regexp="COMMISS[\s]*(.*)"
-                            transactionTypeName="bank_fees" label="COMMISSIONS PERCUES $1"/>
+    <transactionMatcher bankType="RETRAIT" qifM="(\d{2,4}/\d{2}/\d{2,4})[\s]* (.*)"
+                        transactionTypeName="withdrawal" label="RETRAIT {M.2}"
+                        groupForDate="{M.1}" dateFormat="dd/MM/yy"
+                        originalLabel="{M.0}"/>
 
-    <transactionTypeMatcher regexp="RETRAIT DAB[\s]*(\d{2,4}/\d{2}/\d{2,4})[\s]*(.*)"
-                            transactionTypeName="withdrawal" label="RETRAIT $2"
-                            groupForDate="1" dateFormat="dd/MM/yy"/>
+    <transactionMatcher bankType="PRLV." qifM="(.*)"
+                        transactionTypeName="prelevement" label="{M.1}"
+                        originalLabel="{M.1}"/>
 
-    <transactionTypeMatcher regexp="RETRAIT[\s]*(\d{2,4}/\d{2}/\d{2,4})[\s]* (.*)"
-                            transactionTypeName="withdrawal" label="RETRAIT $2"
-                            groupForDate="1" dateFormat="dd/MM/yy"/>
+    <transactionMatcher qifM="PRELEVEMENT[\s]*(.*)"
+                        transactionTypeName="prelevement" label="{M.1}"
+                        originalLabel="{M.1}"/>
 
-    <transactionTypeMatcher regexp="ECHEANCE PRET[\s]*(.*)"
-                            transactionTypeName="credit" label="PRET $1"/>
+    <transactionMatcher qifM="FACTURE CARTE[\s]+DU[\s]+(\d{6})[\s]+(.*)"
+                        transactionTypeName="credit_card" label="{M.2}"
+                        groupForDate="{M.1}" dateFormat="ddMMyy"/>
 
-    <transactionTypeMatcher regexp="ECH.PR[\s]*(.*)"
-                            transactionTypeName="credit" label="PRET $1"/>
+    <transactionMatcher qifM="FACTURE CARTE[\s]*(.*)"
+                        transactionTypeName="credit_card" label="{M.1}"/>
 
-    <transactionTypeMatcher regexp="VIRT CPTE A CPTE RECU[\s]*(.*)"
-                            transactionTypeName="internal_transfer" label="VIR. $1"/>
+    <transactionMatcher qifM="FACTURE CARTE[\s]+(.*)"
+                        transactionTypeName="credit_card" originalLabel="{M.1}"/>
 
-    <transactionTypeMatcher regexp="VI.RECU[\s]*(.*)"
-                            transactionTypeName="internal_transfer" label="VIR. $1"/>
+    <transactionMatcher qifM="REGLEMENT TIP[\s]*(.*)"
+                        transactionTypeName="prelevement" label="{M.1}"
+                        originalLabel="{M.1}"/>
 
-    <transactionTypeMatcher regexp="VIRT CPTE A CPTE EMIS[\s]*(.*)"
-                            transactionTypeName="internal_transfer" label="VIR. $1"/>
+    <transactionMatcher qifM="VIREMENT RECU TIERS[\s]*(.*)"
+                        transactionTypeName="virement" label="VIREMENT DE {M.1}"
+                        originalLabel="VI.TIER {M.1}"/>
 
-    <transactionTypeMatcher regexp="VI.EMIS[\s]*(.*)"
-                            transactionTypeName="internal_transfer" label="VIR. $1"/>
+    <transactionMatcher bankType="VI.TIER" qifM="(.*)"
+                        transactionTypeName="virement" label="VIREMENT DE {M.0}"
+                        originalLabel="VI.TIER {M.0}"/>
 
-    <transactionTypeMatcher regexp="VIREMENT RECU TIERS[\s]*(.*)"
-                            transactionTypeName="virement" label="$1"/>
+    <transactionMatcher qifM="VIRT CPTE A CPTE RECU[\s]*(.*)"
+                        transactionTypeName="virement" label="VIREMENT DE {M.1}"
+                        originalLabel="VI.RECU {M.1}"/>
 
-    <transactionTypeMatcher regexp="VI.TIER[\s]*(.*)"
-                            transactionTypeName="virement" label="$1"/>
+    <transactionMatcher bankType="VI.RECU" qifM="(.*)"
+                        transactionTypeName="virement" label="VIREMENT DE {M.0}"
+                        originalLabel="VI.RECU {M.0}"/>
 
-    <transactionTypeMatcher regexp="PRELEVEMENT[\s]*(.*)"
-                            transactionTypeName="prelevement" label="$1"/>
+    <transactionMatcher qifM="VIRT CPTE A CPTE EMIS[\s]*(.*)"
+                        transactionTypeName="prelevement" label="VIREMENT {M.1}"
+                        originalLabel="VI.EMIS {M.1}"/>
 
-    <transactionTypeMatcher regexp="PRLV.[\s]*(.*)"
-                            transactionTypeName="prelevement" label="$1"/>
-
-    <transactionTypeMatcher regexp="CHEQUE[ ]+N.[ ]+(.*)"
-                            transactionTypeName="check" label="CHEQUE N. $1"/>
-
-    <transactionTypeMatcher regexp="CHEQUE[ ]+(.*)"
-                            transactionTypeName="check" label="CHEQUE N. $1"/>
-
-    <transactionTypeMatcher regexp="CHQ NO[\s]+N.[\s]+(.*)"
-                            transactionTypeName="check" label="CHEQUE N. $1"/>
-
-    <transactionTypeMatcher regexp="FACTURE CARTE[\s]+DU[\s]+(\d{6})[\s]+(.*)"
-                            transactionTypeName="credit_card" label="$2" groupForDate="1" dateFormat="ddMMyy"/>
-
-    <transactionTypeMatcher regexp="FACTURE CARTE[\s]*(.*)"
-                            transactionTypeName="credit_card" label="$1"/>
-
-    <transactionTypeMatcher regexp="REGLEMENT TIP[\s]*(.*)"
-                            transactionTypeName="prelevement" label="$1"/>
+    <transactionMatcher bankType="VI.EMIS" qifM="(.*)"
+                        transactionTypeName="prelevement" label="VIREMENT {M.0}"
+                        originalLabel="VI.EMIS {M.0}"/>
 
   </bank>
 </globs>

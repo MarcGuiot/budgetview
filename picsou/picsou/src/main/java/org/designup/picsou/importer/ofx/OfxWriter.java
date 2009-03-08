@@ -1,5 +1,6 @@
 package org.designup.picsou.importer.ofx;
 
+import org.globsframework.model.format.Formats;
 import org.globsframework.utils.Strings;
 
 import java.io.IOException;
@@ -52,7 +53,7 @@ public class OfxWriter {
     write(
       "        </BANKTRANLIST>\n" +
       "        <LEDGERBAL>\n" +
-      "          <BALAMT>" + (balance != null ? balance : "0.00") + "\n" +
+      "          <BALAMT>" + (balance != null ? Formats.DEFAULT_DECIMAL_FORMAT.format(balance) : "0.00") + "\n" +
       "          <DTASOF>" + date + "\n" +
       "        </LEDGERBAL>\n" +
       "        <AVAILBAL>\n" +
@@ -87,7 +88,7 @@ public class OfxWriter {
     write(
       "     </BANKTRANLIST>\n" +
       "     <LEDGERBAL>\n" +
-      "      <BALAMT>" + Strings.toString(accountBalance) + "\n" +
+      "      <BALAMT>" + Formats.DEFAULT_DECIMAL_FORMAT.format(accountBalance) + "\n" +
       "      <DTASOF>" + updateDate + "\n" +
       "     </LEDGERBAL>\n" +
       "     <AVAILBAL>\n" +
@@ -127,7 +128,7 @@ public class OfxWriter {
           "            <TRNTYPE>DEBIT\n" +
           "            <DTPOSTED>" + stringifiedBankDate + "\n" +
           "            <DTUSER>" + stringifiedUserDate + "\n" +
-          "            <TRNAMT>" + amount + "\n" +
+          "            <TRNAMT>" + Formats.DEFAULT_DECIMAL_FORMAT.format(amount) + "\n" +
           "            <FITID>PICSOU" + transactionId + "\n" +
           "            <NAME>" + label + "\n");
     return new OfxTransactionWriter();
