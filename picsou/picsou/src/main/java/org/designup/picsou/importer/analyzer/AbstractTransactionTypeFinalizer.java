@@ -17,17 +17,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class AbstractTransactionTypeFinalizer implements TransactionTypeFinalizer {
-
   static Pattern ALL = Pattern.compile(".*");
 
   String replace(Glob transaction, String newLabel, final StringField field,
                  Pattern sourcePattern, final Pattern targetPattern) {
-    String mValue = transaction.get(field);
-    if (mValue != null) {
+    String fileContentValue = transaction.get(field);
+    if (fileContentValue != null) {
       if (sourcePattern == null) {
         sourcePattern = ALL;
       }
-      return replace(newLabel, sourcePattern, targetPattern, mValue);
+      return replace(newLabel, sourcePattern, targetPattern, fileContentValue);
     }
     else if (sourcePattern != null) {
       return null;

@@ -21,11 +21,11 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .load();
 
     categorization.selectTableRow(2);
-    transactionDetails.checkLabel("McDo");
+    transactionDetails.checkLabel("MCDO");
     transactionDetails.checkLabelIsNotEditable();
 
     categorization.selectTableRows(0, 1);
-    transactionDetails.checkLabel("Burger King [2 operations]");
+    transactionDetails.checkLabel("BURGER KING [2 operations]");
     transactionDetails.checkLabelIsNotEditable();
 
     categorization.selectTableRows(0, 2);
@@ -46,7 +46,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkLabel("2 operations");
 
     categorization.selectTableRows(3, 4);
-    transactionDetails.checkLabel("McDo [2 operations]");
+    transactionDetails.checkLabel("MCDO [2 operations]");
   }
 
   public void testDisplayWithNoSelection() throws Exception {
@@ -137,7 +137,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .check();
 
     transactions.getTable().selectRow(0);
-    transactionDetails.checkOriginalLabel("PRELEVEMENT 123123 Auchan");
+    transactionDetails.checkOriginalLabel("PRELEVEMENT 123123 AUCHAN");
 
     categorization.selectTableRow(1);
     transactionDetails.checkOriginalLabelNotVisible();
@@ -153,7 +153,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
     categorization.initContent()
       .add("15/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -20.00)
-      .add("13/06/2008", TransactionType.CHECK, "CHEQUE N. 123123", "", -40.00)
+      .add("13/06/2008", TransactionType.CHECK, "CHEQUE N°123123", "", -40.00)
       .add("14/06/2008", TransactionType.PRELEVEMENT, "MONOP", "", -10.00)
       .check();
 

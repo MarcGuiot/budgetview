@@ -4,7 +4,7 @@
     <bankEntity id="12548"/>
 
     <transactionMatcher bankType="([0-9]+)" qifP="CHEQUE"
-                        transactionTypeName="check" label="CHEQUE N.{TYPE.1}"
+                        transactionTypeName="check" label="CHEQUE N°{TYPE.1}"
                         originalLabel="CHEQUE N.{TYPE.1}"/>
 
     <transactionMatcher qifP="CARTE[\s]+(\d{2}/\d{2})[\s]+(.*)"

@@ -112,9 +112,9 @@ public class DownloadTest extends LicenseTestCase {
     jarOutputStream.write(("<globs>\n" +
                            "  <bank name=\"picsouBank\" downloadUrl=\"\" id='-2'>\n" +
                            "    <bankEntity id=\"4321\"/> \n" +
-                           "    <transactionTypeMatcher regexp=\"STUPID HEADER .*\"\n" +
-                           "                            transactionTypeName=\"virement\" " +
-                           "                            label=\"GOOD HEADER\"/>" +
+                           "    <transactionMatcher ofxName=\"STUPID HEADER .*\"\n" +
+                           "                        transactionTypeName=\"virement\" " +
+                           "                        label=\"GOOD HEADER\"/>" +
                            "  </bank>\n" +
                            "</globs>\n").getBytes());
     jarOutputStream.close();

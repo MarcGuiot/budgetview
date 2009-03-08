@@ -3,50 +3,59 @@
   <bank name="Société Générale" id="4" downloadUrl="https://logitelnet.socgen.com/index.html">
     <bankEntity id="30003"/>
 
-    <transactionTypeMatcher regexp="VIR[\s]+RECU[\s]+[\d]+[\s]+DE[\s]*:[\s]*(.*)"
-                            transactionTypeName="virement" label="$1"/>
+    <transactionMatcher qifM="VIR RECU [\d]+ DE:[\s]*(.*)" transactionTypeName="virement"
+                        label="{M.1}" originalLabel="{M.0}"/>
 
-    <transactionTypeMatcher regexp="VIR.LOGITEL[ ]*"
-                            transactionTypeName="virement" label="VIREMENT LOGITEL"/>
+    <transactionMatcher qifM="VIR.LOGITEL" transactionTypeName="virement"
+                        label="VIREMENT LOGITEL" originalLabel="{M.0}"/>
 
-    <transactionTypeMatcher regexp="VIR.LOGITEL[ ]+(.*)"
-                            transactionTypeName="virement" label="$1"/>
+    <transactionMatcher qifM="VIR.LOGITEL (.*)" transactionTypeName="virement"
+                        label="{M.1}" originalLabel="{M.0}"/>
 
-    <transactionTypeMatcher regexp="PRELEVEMENT[\s]+[\d]+[\s]+(.*)"
-                            transactionTypeName="prelevement" label="$1"/>
+    <transactionMatcher qifM="PRELEVEMENT [\d]+ (.*)" transactionTypeName="prelevement"
+                        label="{M.1}" originalLabel="{M.0}"/>
 
-    <transactionTypeMatcher regexp="CARTE[ ]+[0-9]+[ ]+RETRAIT DAB[ ]*[\w]*[ ]+(\d{2,4}/\d{2}/\d{2,4})[ ]+(.*)"
-                            transactionTypeName="withdrawal" label="RETRAIT $2" groupForDate="1" dateFormat="dd/MM/yy"/>
+    <transactionMatcher qifM="CARTE [0-9]+ RETRAIT DAB [\w ]*(\d{2,4}/\d{2}/\d{2,4}) (.*)"
+                        transactionTypeName="withdrawal" label="RETRAIT {M.2}" originalLabel="{M.0}"
+                        groupForDate="{M.1}" dateFormat="dd/MM/yy"/>
 
-    <transactionTypeMatcher regexp="RET\. DAB[ ]+[\w]+[ ]+(\d{2,4}/\d{2}/\d{2,4})[ ]+(.*)"
-                            transactionTypeName="withdrawal" label="RETRAIT $2" groupForDate="1" dateFormat="dd/MM/yy"/>
+    <transactionMatcher qifM="RET\. DAB [\w]+ (\d{2,4}/\d{2}/\d{2,4}) (.*)" transactionTypeName="withdrawal"
+                        label="RETRAIT {M.2}" originalLabel="{M.0}"
+                        groupForDate="{M.1}" dateFormat="dd/MM/yy"/>
 
-    <transactionTypeMatcher regexp="RET ECLAIR[ ]+[\w]+[ ]+(\d{2,4}/\d{2}/\d{2,4})[ ]+(.*)"
-                            transactionTypeName="withdrawal" label="RETRAIT $2" groupForDate="1" dateFormat="dd/MM/yy"/>
+    <transactionMatcher qifM="RET ECLAIR [\w]+ (\d{2,4}/\d{2}/\d{2,4}) (.*)" transactionTypeName="withdrawal"
+                        label="RETRAIT {M.2}" originalLabel="{M.0}"
+                        groupForDate="{M.1}" dateFormat="dd/MM/yy"/>
 
-    <transactionTypeMatcher regexp="FAC\.FRANCE[ ]+[\w]+[ ]+(\d{2,4}/\d{2}/\d{2,4})[ ]+(.*)"
-                            transactionTypeName="credit_card" label="$2" groupForDate="1" dateFormat="dd/MM/yy"/>
+    <transactionMatcher qifM="FAC\.FRANCE [\w]+ (\d{2,4}/\d{2}/\d{2,4}) (.*)" transactionTypeName="credit_card"
+                        label="{M.2}" originalLabel="{M.0}"
+                        groupForDate="{M.1}" dateFormat="dd/MM/yy"/>
 
-    <transactionTypeMatcher regexp="CARTE[\s]+[0-9]+[\s]+(\d{2,4}/\d{2}/\d{2,4})[\s]+REL\.[\s]+(.*)"
-                            transactionTypeName="credit_card" label="$2" groupForDate="1" dateFormat="dd/MM/yy"/>
+    <transactionMatcher qifM="CARTE [0-9]+ (\d{2,4}/\d{2}/\d{2,4}) REL\. (.*)" transactionTypeName="credit_card"
+                        label="{M.2}" originalLabel="{M.0}"
+                        groupForDate="{M.1}" dateFormat="dd/MM/yy"/>
 
-    <transactionTypeMatcher regexp="CARTE[\s]+[0-9]+[\s]+(\d{2,4}/\d{2}/\d{2,4})[\s]+(.*)"
-                            transactionTypeName="credit_card" label="$2" groupForDate="1" dateFormat="dd/MM/yy"/>
+    <transactionMatcher qifM="CARTE [0-9]+ (\d{2,4}/\d{2}/\d{2,4}) (.*)" transactionTypeName="credit_card"
+                        label="{M.2}" originalLabel="{M.0}"
+                        groupForDate="{M.1}" dateFormat="dd/MM/yy"/>
 
-    <transactionTypeMatcher regexp="VIREMENT[\s]+[\w]+[\s]+(.*)"
-                            transactionTypeName="virement" label="$1"/>
+    <transactionMatcher qifM="VIREMENT [\w]+ (.*)" transactionTypeName="virement"
+                        label="{M.1}" originalLabel="{M.0}"/>
 
-    <transactionTypeMatcher regexp="CHEQUE[\s]+(.*)"
-                            transactionTypeName="check" label="CHEQUE N. $1"/>
+    <transactionMatcher qifM="CHEQUE (.*)" transactionTypeName="check"
+                        label="CHEQUE N°{M.1}" originalLabel="{M.0}"/>
 
-    <transactionTypeMatcher regexp="REMISE CHEQUE[\s]+[\d]+[\s]+[\d]+(.*)"
-                            transactionTypeName="deposit" label="REMISE CHEQUE $1"/>
+    <transactionMatcher qifM="REMISE CHEQUE.* DE 1 CHQ (.*)" transactionTypeName="deposit"
+                        label="REMISE DE 1 CHEQUE {M.1}" originalLabel="{M.0}"/>
 
-    <transactionTypeMatcher regexp="VIR PERM[\s]*(.*)"
-                            transactionTypeName="virement" label="$1"/>
+    <transactionMatcher qifM="REMISE CHEQUE.* DE ([\d]+) CHQ (.*)" transactionTypeName="deposit"
+                        label="REMISE DE {M.1} CHEQUES {M.2}" originalLabel="{M.0}"/>
 
-    <transactionTypeMatcher regexp="VIR[\s]*(.*)"
-                            transactionTypeName="virement" label="$1"/>
+    <transactionMatcher qifM="VIR PERM (.*)" transactionTypeName="virement"
+                        label="{M.1}" originalLabel="{M.0}"/>
+
+    <transactionMatcher qifM="VIR (.*)" transactionTypeName="virement"
+                        label="{M.1}" originalLabel="{M.0}"/>
 
   </bank>
 </globs>

@@ -120,9 +120,9 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     views.selectData();
     Table table = transactions.getTable();
     UISpecAssert.assertTrue(
-      table.rowEquals(table.getRowIndex(TransactionView.LABEL_COLUMN_INDEX, "essence"),
+      table.rowEquals(table.getRowIndex(TransactionView.LABEL_COLUMN_INDEX, "ESSENCE"),
                       new String[]{"01/05/2006", "01/05/2006", "(prelevement)Voiture", "Transports",
-                                   "essence", "-70.00", "frais pro", "330.00", "330.00"}));
+                                   "ESSENCE", "-70.00", "frais pro", "330.00", "330.00"}));
   }
 
   public void testNavigatingToCategorizationView() throws Exception {
@@ -181,9 +181,8 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     transactions.checkCategorizeIsDisable(0);
 
     views.selectBudget();
-    System.out.println("TransactionViewTest.testNavigatingInCategoriszationIsDisableForMirroirAndCreatedFromSeries");
     budgetView.savings.editSeries("Main accounts.Epargne")
-      .setName("new name for Epargne")
+      .setName("NEW NAME FOR EPARGNE")
       .setFromAccount("External account")
       .selectAllMonths()
       .setAmount("100")
@@ -192,7 +191,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initContent()
-      .add("11/01/2006", TransactionType.VIREMENT, "new name for Epargne", "", 100.00, "new name for Epargne", MasterCategory.SAVINGS)
+      .add("11/01/2006", TransactionType.VIREMENT, "NEW NAME FOR EPARGNE", "", 100.00, "NEW NAME FOR EPARGNE", MasterCategory.SAVINGS)
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Virement", "", -100.00)
       .check();
 

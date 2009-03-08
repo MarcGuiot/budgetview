@@ -12,27 +12,35 @@
     <bankEntity id="30087"/>
     <bankEntity id="30568"/>
 
-    <transactionTypeMatcher regexp="F COM INTERVENTION (.*)"
-                            transactionTypeName="bank_fees" label="COMMISSIONS $1"/>
+    <transactionMatcher ofxName="F COM INTERVENTION (.*)"
+                        transactionTypeName="bank_fees" label="COMMISSIONS {NAME.1}"
+                        originalLabel="{NAME.0}"/>
 
-    <transactionTypeMatcher regexp="ABON FBQ (.*)"
-                            transactionTypeName="bank_fees" label="FILBANQUE $1"/>
+    <transactionMatcher ofxName="ABON FBQ (.*)"
+                        transactionTypeName="bank_fees" label="FILBANQUE {NAME.1}"
+                        originalLabel="{NAME.0}"/>
 
-    <transactionTypeMatcher regexp="RETRAIT DAB [0-9]* (.*)"
-                            transactionTypeName="withdrawal" label="RETRAIT $1"/>
+    <transactionMatcher ofxName="RETRAIT DAB [0-9]* (.*)"
+                        transactionTypeName="withdrawal" label="RETRAIT {NAME.1}"
+                        originalLabel="{NAME.0}"/>
 
-    <transactionTypeMatcher regexp="RETRAIT (.*)"
-                            transactionTypeName="withdrawal" label="RETRAIT $1"/>
+    <transactionMatcher ofxName="RETRAIT (.*)"
+                        transactionTypeName="withdrawal" label="RETRAIT {NAME.1}"
+                        originalLabel="{NAME.0}"/>
 
-    <transactionTypeMatcher regexp="ECH PRET (.*)"
-                            transactionTypeName="credit" label="PRET $1"/>
+    <transactionMatcher ofxName="ECH PRET (.*)"
+                        transactionTypeName="credit" label="PRET {NAME.1}"
+                        originalLabel="{NAME.0}"/>
 
-    <transactionTypeMatcher regexp="VIR (.*)"
-                            transactionTypeName="virement" label="$1"/>
-    <transactionTypeMatcher regexp="REM CHQ (.*)"
-                            transactionTypeName="deposit" label="REMISE CHEQUES $1"/>
+    <transactionMatcher ofxName="VIR (.*)"
+                        transactionTypeName="virement" label="{NAME.1}" originalLabel="{NAME.0}"/>
 
-    <transactionTypeMatcher regexp="CHEQUE[ ]+(.*)"
-                            transactionTypeName="check" label="CHEQUE N. $1"/>
+    <transactionMatcher ofxName="REM CHQ (.*)"
+                        transactionTypeName="deposit" label="REMISE CHEQUES {NAME.1}"
+                        originalLabel="{NAME.0}"/>
+
+    <transactionMatcher ofxName="CHEQUE (.*)"
+                        transactionTypeName="check" label="CHEQUE N°{NAME.1}"
+                        originalLabel="{NAME.0}"/>
   </bank>
 </globs>

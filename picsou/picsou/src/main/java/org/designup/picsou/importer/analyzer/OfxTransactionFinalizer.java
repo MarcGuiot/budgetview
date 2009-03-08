@@ -1,5 +1,6 @@
 package org.designup.picsou.importer.analyzer;
 
+import org.designup.picsou.model.PreTransactionTypeMatcher;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.metamodel.fields.StringField;
@@ -39,9 +40,7 @@ public class OfxTransactionFinalizer extends AbstractTransactionTypeFinalizer {
   }
 
   public boolean processTransaction(Glob transaction, GlobRepository repository) {
-    if (transaction.get(Transaction.OFX_CHECK_NUM) == null &&
-        transaction.get(Transaction.OFX_MEMO) == null &&
-        transaction.get(Transaction.OFX_NAME) == null) {
+    if (!transaction.get(Transaction.IS_OFX)) {
       return false;
     }
 
@@ -75,5 +74,29 @@ public class OfxTransactionFinalizer extends AbstractTransactionTypeFinalizer {
 
     setTransactionType(transaction, repository, transactionType, replacedDate, format, field, newLabel.trim());
     return true;
+  }
+
+  public static boolean isOfType(Glob matcher) {
+    return matcher.get(PreTransactionTypeMatcher.OFX_CHECK_NUM) != null ||
+           matcher.get(PreTransactionTypeMatcher.OFX_MEMO) != null ||
+           matcher.get(PreTransactionTypeMatcher.OFX_NAME) != null ||
+           check(matcher, PreTransactionTypeMatcher.LABEL) ||
+           check(matcher, PreTransactionTypeMatcher.ORIGINAL_LABEL) ||
+           check(matcher, PreTransactionTypeMatcher.GROUP_FOR_DATE);
+  }
+
+  private static boolean check(Glob matcher, StringField labelField) {
+    if (matcher.get(labelField) != null) {
+      if (NAME_REGEXP.matcher(matcher.get(labelField)).find()) {
+        return true;
+      }
+      if (MEMO_REGEXP.matcher(matcher.get(labelField)).find()) {
+        return true;
+      }
+      if (CHECK_NUM_REGEXP.matcher(matcher.get(labelField)).find()) {
+        return true;
+      }
+    }
+    return false;
   }
 }

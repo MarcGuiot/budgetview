@@ -138,7 +138,7 @@ public class SplitDialogChecker {
       MasterCategory category = ((MasterCategory)objects[i][column++]);
       expected[i] = new Object[]{
         TransactionChecker.getCategoryName(category),
-        objects[i][column++],
+        ((String)objects[i][column++]).toUpperCase(),
         Formatting.DECIMAL_FORMAT.format(objects[i][column++]),
         objects[i][column],
         ""};

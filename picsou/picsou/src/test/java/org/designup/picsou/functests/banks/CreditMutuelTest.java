@@ -12,7 +12,7 @@ public class CreditMutuelTest extends SpecificBankTestCase {
       .add("15/07/2008", TransactionType.PRELEVEMENT, "EDF PR QE CLIO BRED 001007", "", -25.00)
       .add("15/07/2008", TransactionType.PRELEVEMENT, "MUTUELLE 403 111111", "", -68.25)
       .add("10/07/2008", TransactionType.PRELEVEMENT, "GROUPAMA 333333", "", -30.78)
-      .add("10/07/2008", TransactionType.CHECK, "CHEQUE N. 11111", "", -74.50)
+      .add("10/07/2008", TransactionType.CHECK, "CHEQUE N°11111", "", -74.50)
       .add("08/07/2008", TransactionType.CREDIT_CARD, "GARAGE YVES", "", -96.70)
       .add("05/07/2008", TransactionType.VIREMENT, "COUTURA", "", 300.00)
       .add("04/07/2008", TransactionType.VIREMENT, "COURAP330332102950TG033", "", 4.94)

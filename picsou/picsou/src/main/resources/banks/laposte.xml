@@ -3,28 +3,29 @@
   <bank name="La Poste" id='3'>
     <bankEntity id="20041"/>
 
-    <transactionTypeMatcher regexp="ACHAT CB (.*)[\s]+(\d{2,4}.\d{2}.\d{2,4})"
-                            transactionTypeName="credit_card" label="$1" groupForDate="2" dateFormat="dd.MM.yy"/>
+    <transactionMatcher ofxName="ACHAT CB (.*)[\s]+(\d{2,4}.\d{2}.\d{2,4})"
+                        transactionTypeName="credit_card" label="{NAME.1}"
+                        groupForDate="{NAME.2}" dateFormat="dd.MM.yy" originalLabel="{NAME.0}"/>
 
-    <transactionTypeMatcher regexp="REMISE DE CHEQUES DU (\d{2,4}/\d{2}/\d{2,4})"
-                            transactionTypeName="deposit" label="REMISE CHEQUES" groupForDate="1"
-                            dateFormat="dd/MM/yy"/>
+    <transactionMatcher ofxName="REMISE DE CHEQUES DU (\d{2,4}/\d{2}/\d{2,4})"
+                        transactionTypeName="deposit" label="REMISE CHEQUES" groupForDate="{NAME.1}"
+                        dateFormat="dd/MM/yy" originalLabel="{NAME.0}"/>
 
-    <transactionTypeMatcher regexp="CHEQUE N. *(.*)"
-                            transactionTypeName="check" label="CHEQUE N. $1"/>
+    <transactionMatcher ofxName="CHEQUE N. *(.*)"
+                        transactionTypeName="check" label="CHEQUE N°{NAME.1}" originalLabel="CHEQUE N.{NAME.1}"/>
 
-    <transactionTypeMatcher regexp="CARTE[\s]+([\w]+)[\s]+(\d{2,4}/\d{2}/\d{2,4}) A ([0-9H]+)"
-                            transactionTypeName="withdrawal" label="RETRAIT $1 $3" groupForDate="2"
-                            dateFormat="dd/MM/yy"/>
+    <transactionMatcher ofxName="CARTE ([\w]+) (\d{2,4}/\d{2}/\d{2,4}) A ([0-9H]+)"
+                        transactionTypeName="withdrawal" label="RETRAIT {NAME.1} {NAME.3}"
+                        originalLabel="{NAME.0}" groupForDate="{NAME.2}" dateFormat="dd/MM/yy"/>
 
-    <transactionTypeMatcher regexp="VIREMENT DE[\s]*(.*)"
-                            transactionTypeName="virement" label="$1"/>
+    <transactionMatcher ofxName="VIREMENT DE (.*)" transactionTypeName="virement"
+                        label="{NAME.1}" originalLabel="{NAME.0}"/>
 
-    <transactionTypeMatcher regexp="PRELEVEMENT DE [\s]*(.*)"
-                            transactionTypeName="prelevement" label="$1"/>
+    <transactionMatcher ofxName="PRELEVEMENT DE (.*)"
+                        transactionTypeName="prelevement" label="{NAME.1}" originalLabel="{NAME.0}"/>
 
-    <transactionTypeMatcher regexp="PRELEVEMENT DE"
-                            transactionTypeName="prelevement" label="???"/>
+    <transactionMatcher ofxName="PRELEVEMENT DE" transactionTypeName="prelevement"
+                        label="PRELEVEMENT DE ????" originalLabel="{NAME.0}"/>
 
   </bank>
 </globs>

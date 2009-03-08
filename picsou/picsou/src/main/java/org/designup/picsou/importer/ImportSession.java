@@ -90,12 +90,9 @@ public class ImportSession {
     }
 
 
-    GlobList newTransactions = transactionFilter.loadTransactions(referenceRepository, localRepository,
-                                                                  convertImportedTransaction(selectedDateFormat),
-                                                                  currentlySelectedAccount != null ?
-                                                                  currentlySelectedAccount.get(Account.ID) : null);
+    GlobList allNewTransactions = convertImportedTransaction(selectedDateFormat);
 
-    Key importKey = createImport(typedStream, newTransactions, localRepository);
+    Key importKey = createImport(typedStream, allNewTransactions, localRepository);
     localRepository.deleteAll(ImportedTransaction.TYPE);
     importChangeSetAggregator.dispose();
     try {
@@ -130,7 +127,13 @@ public class ImportSession {
         transactionAnalyzer.processTransactions(id, accountIdAndTransactions.getValue(),
                                                 localRepository);
         localRepository.update(account.getKey(), Account.IS_IMPORTED_ACCOUNT, true);
+
+        transactionFilter.loadTransactions(referenceRepository, localRepository,
+                                           new GlobList(accountIdAndTransactions.getValue()),
+                                           currentlySelectedAccount != null ?
+                                           currentlySelectedAccount.get(Account.ID) : null);
       }
+
       localRepository.completeChangeSet();
       updateImportAggregator.dispose();
       referenceRepository.apply(importChangeSet);
@@ -182,14 +185,15 @@ public class ImportSession {
         value(Transaction.NOTE, importedTransaction.get(ImportedTransaction.NOTE)),
         value(Transaction.LABEL, importedTransaction.get(ImportedTransaction.LABEL)),
         value(Transaction.ORIGINAL_LABEL, importedTransaction.get(ImportedTransaction.ORIGINAL_LABEL)),
-        value(Transaction.BANK_TRANSACTION_TYPE, removeBlank(importedTransaction.get(ImportedTransaction.BANK_TRANSACTION_TYPE))),
+        value(Transaction.BANK_TRANSACTION_TYPE, removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.BANK_TRANSACTION_TYPE))),
         value(Transaction.SPLIT, importedTransaction.get(ImportedTransaction.SPLIT)),
         value(Transaction.SPLIT_SOURCE, importedTransaction.get(ImportedTransaction.SPLIT_SOURCE)),
-        value(Transaction.OFX_CHECK_NUM, removeBlank(importedTransaction.get(ImportedTransaction.OFX_CHECK_NUM))),
-        value(Transaction.OFX_MEMO, removeBlank(importedTransaction.get(ImportedTransaction.OFX_MEMO))),
-        value(Transaction.OFX_NAME, removeBlank(importedTransaction.get(ImportedTransaction.OFX_NAME))),
-        value(Transaction.QIF_M, removeBlank(importedTransaction.get(ImportedTransaction.QIF_M))),
-        value(Transaction.QIF_P, removeBlank(importedTransaction.get(ImportedTransaction.QIF_P)))
+        value(Transaction.OFX_CHECK_NUM, removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.OFX_CHECK_NUM))),
+        value(Transaction.OFX_MEMO, removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.OFX_MEMO))),
+        value(Transaction.OFX_NAME, removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.OFX_NAME))),
+        value(Transaction.QIF_M, removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.QIF_M))),
+        value(Transaction.QIF_P, removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.QIF_P))),
+        value(Transaction.IS_OFX, importedTransaction.get(ImportedTransaction.IS_OFX))
       );
       Integer seriesId = getSeriesId(importedTransaction);
       if (seriesId != null) {
@@ -201,11 +205,11 @@ public class ImportSession {
     return createdTransactions;
   }
 
-  private String removeBlank(final String value) {
-    if (value == null){
+  private String removeBlankAndToUpercase(final String value) {
+    if (value == null) {
       return null;
     }
-    return BLANK.matcher(value).replaceAll(" ").trim();
+    return BLANK.matcher(value).replaceAll(" ").trim().toUpperCase();
   }
 
   private Integer getSeriesId(Glob importedTransaction) {

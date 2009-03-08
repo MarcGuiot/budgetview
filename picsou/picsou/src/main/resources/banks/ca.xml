@@ -42,25 +42,44 @@
     <bankEntity id="14006"/>
     <bankEntity id="19906"/>
 
-    <transactionTypeMatcher regexp="PAIEMENT CARTE[\s]+(\d{6})[\s]+(.*)"
-                            transactionTypeName="credit_card" label="$2" groupForDate="1" dateFormat="ddMMyy"/>    
+    <transactionMatcher bankType="PAYMENT" ofxName="PAIEMENT CARTE[\s]+(\d{6})[\s]+(.*)"
+                        transactionTypeName="credit_card" label="{NAME.2}"
+                        groupForDate="{NAME.1}" dateFormat="ddMMyy"
+                        originalLabel="{NAME.0}"/>
 
-    <transactionTypeMatcher regexp="REGLEM ECHEANCE PRET (.*)"
-                            transactionTypeName="credit" label="PRET $1"/>
+    <transactionMatcher ofxName="REGLEM ECHEANCE PRET (.*)"
+                        transactionTypeName="credit" label="PRET {NAME.1} {MEMO.0}"
+                        originalLabel="{NAME.0} {MEMO.0}"/>
 
-    <transactionTypeMatcher regexp="RETRAIT(.*)"
-                            transactionTypeName="withdrawal" label="RETRAIT $1"/>
+    <transactionMatcher bankType="ATM" ofxName="RETRAIT\s*(.*)"
+                        transactionTypeName="withdrawal" label="RETRAIT {NAME.1}"
+                        originalLabel="{NAME.0}"/>
 
-    <transactionTypeMatcher regexp="INTERETS DEBITEURS"
-                            transactionTypeName="bank_fees" label="$0"/>
+    <transactionMatcher bankType="ATM"
+                        transactionTypeName="withdrawal" label="{NAME.0}"
+                        originalLabel="{NAME.0}"/>
 
-    <transactionTypeMatcher regexp="REMISE(.*)"
-                            transactionTypeName="deposit" label="REMISE CHEQUES $1"/>
+    <transactionMatcher bankType="INT" ofxName="INTERETS DEBITEURS" transactionTypeName="bank_fees"
+                        label="INTERETS DEBITEURS {MEMO.0}" originalLabel="INTERETS DEBITEURS {NAME.0}"/>
 
-    <transactionTypeMatcher regexp="VIR. PERMANENT"
-                            transactionTypeName="virement" label="VIR. $1"/>
+    <transactionMatcher bankType="INT" transactionTypeName="bank_fees"
+                        label="{NAME.0} {MEMO.0}" originalLabel="{NAME.0} {MEMO.0}"/>
 
-    <transactionTypeMatcher regexp="CHEQUE[ ]+(.*)"
-                            transactionTypeName="check" label="CHEQUE N. $1"/>
+    <transactionMatcher bankType="DEP" ofxName="REMISE(.*)"
+                        transactionTypeName="deposit" label="REMISE CHEQUES {NAME.1}"
+                        originalLabel="{NAME.0}"/>
+
+    <transactionMatcher bankType="DEP"
+                        transactionTypeName="deposit" label="REMISE CHEQUES {NAME.0}"
+                        originalLabel="{NAME.0}"/>
+
+    <transactionMatcher ofxName="VIR. PERMANENT" transactionTypeName="virement"
+                        label="{MEMO.0}" originalLabel="{NAME.0}"/>
+
+    <transactionMatcher bankType="CHECK" ofxName="CHEQUE (.*)" transactionTypeName="check"
+                        label="CHEQUE N°{NAME.1}" originalLabel="CHEQUE N.{NAME.1}"/>
+
+    <transactionMatcher bankType="CHECK" transactionTypeName="check"
+                        label="CHEQUE N°{NUM.0}" originalLabel="CHEQUE N.{NUM.0}"/>
   </bank>
 </globs>

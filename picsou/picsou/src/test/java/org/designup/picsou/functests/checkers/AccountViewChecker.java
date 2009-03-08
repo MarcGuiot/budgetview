@@ -4,7 +4,10 @@ import junit.framework.Assert;
 import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
-import org.uispec4j.*;
+import org.uispec4j.Button;
+import org.uispec4j.Panel;
+import org.uispec4j.UIComponent;
+import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.finder.ComponentMatcher;
@@ -83,7 +86,7 @@ public class AccountViewChecker extends GuiChecker {
   public AccountViewChecker changeBalance(String accountName, final double balance, final String operationLabel) {
     BalanceEditionChecker balanceEditor = getBalance(accountName);
     balanceEditor
-      .checkOperationLabel(operationLabel)
+      .checkOperationLabel(operationLabel.toUpperCase())
       .setAmountWithoutEnter(balance)
       .validate();
     return this;

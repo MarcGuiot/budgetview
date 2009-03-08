@@ -76,7 +76,10 @@ public class SeriesEvolutionChecker extends GuiChecker {
 
   public SeriesEditionDialogChecker editSeries(String rowLabel, String columnLabel) {
     Table table = getTable();
-    int row = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, rowLabel);
+    int row = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, rowLabel.toUpperCase());
+    if (row == -1) {
+      row = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, rowLabel);
+    }
     int column = table.getHeader().findColumnIndex(columnLabel);
     table.selectRow(row);
     Window window = WindowInterceptor.getModalDialog(table.editCell(row, column).getButton().triggerClick());
@@ -99,7 +102,7 @@ public class SeriesEvolutionChecker extends GuiChecker {
 
   public SeriesEvolutionChecker checkValue(String rowLabel, String columnLabel, String displayedValue) {
     Table table = getTable();
-    int row = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, rowLabel);
+    int row = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, rowLabel.toUpperCase());
     int column = table.getHeader().findColumnIndex(columnLabel);
     assertThat(table.cellEquals(row, column, displayedValue));
     return this;

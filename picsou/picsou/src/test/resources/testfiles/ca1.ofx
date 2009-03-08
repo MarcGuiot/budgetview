@@ -81,7 +81,7 @@
             <DTPOSTED>20060801
             <TRNAMT>-100.00
             <FITID>2006080100264
-            <NAME>Retrait Nimes Coupole  31/07 162
+            <NAME>Retrait Nimes Coupole 31/07 162
             <MEMO>.
           </STMTTRN>
           <STMTTRN>
@@ -98,7 +98,7 @@
             <TRNAMT>-137.77
             <FITID>2006073100263
             <NAME>Reglem Echeance Pret 610458019pr
-            <MEMO>072006 Capital            120,
+            <MEMO>072006 Capital 120,
           </STMTTRN>
           <STMTTRN>
             <TRNTYPE>PAYMENT
@@ -122,15 +122,7 @@
             <TRNAMT>-137.77
             <FITID>2006063000247
             <NAME>Reglem Echeance Pret 610458019pr
-            <MEMO>062006 Capital            119,
-          </STMTTRN>
-          <STMTTRN>
-            <TRNTYPE>DEP
-            <DTPOSTED>20060809
-            <TRNAMT>-200.00
-            <FITID>2006080900269
-            <NAME>PAIEMENT CARTE 070806 FOUQUET'S
-            <MEMO>.
+            <MEMO>062006 Capital 119,
           </STMTTRN>
         </BANKTRANLIST>
         <LEDGERBAL>

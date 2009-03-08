@@ -158,9 +158,9 @@ public class Series {
 
   public static String getPlannedTransactionLabel(Integer seriesId, FieldValues series) {
     if (seriesId == 0) {
-      return Lang.get("transaction.planned", BudgetArea.OCCASIONAL.getLabel());
+      return Lang.get("transaction.planned", BudgetArea.OCCASIONAL.getLabel().toUpperCase());
     }
-    return Lang.get("transaction.planned", series.get(Series.LABEL));
+    return Lang.get("transaction.planned", series.get(Series.LABEL).toUpperCase());
   }
 
   public static class Serializer implements PicsouGlobSerializer {

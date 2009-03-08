@@ -39,10 +39,10 @@ public class QifBuilder {
     writer.write(Strings.LINE_SEPARATOR);
     writer.write("N");
     writer.write(Strings.LINE_SEPARATOR);
-    writer.write("P" + label);
-    writer.write(Strings.LINE_SEPARATOR);
-//    writer.write("M" + label);
+//    writer.write("P" + label);
 //    writer.write(Strings.LINE_SEPARATOR);
+    writer.write("M" + label);
+    writer.write(Strings.LINE_SEPARATOR);
     writer.write("^");
     writer.write(Strings.LINE_SEPARATOR);
     return this;
