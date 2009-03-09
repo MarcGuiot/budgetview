@@ -15,7 +15,6 @@ public class PicsouModel {
                           Transaction.TYPE,
                           TransactionType.TYPE,
                           PreTransactionTypeMatcher.TYPE,
-                          TransactionTypeMatcher.TYPE,
                           TransactionImport.TYPE,
                           UserPreferences.TYPE,
                           Series.TYPE,

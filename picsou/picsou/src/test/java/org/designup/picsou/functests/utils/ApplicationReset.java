@@ -28,7 +28,7 @@ public class ApplicationReset {
 
     GlobType[] typesToDelete = getTypesToDelete(
       User.TYPE, VersionInformation.TYPE, BudgetArea.TYPE,
-      TransactionType.TYPE, TransactionTypeMatcher.TYPE, Bank.TYPE, BankEntity.TYPE,
+      TransactionType.TYPE, PreTransactionTypeMatcher.TYPE, Bank.TYPE, BankEntity.TYPE,
       ProfileType.TYPE, Card.TYPE);
     repository.reset(temp.getAll(), typesToDelete);
   }
