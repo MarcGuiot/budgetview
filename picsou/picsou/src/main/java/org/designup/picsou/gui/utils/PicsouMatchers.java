@@ -141,10 +141,10 @@ public class PicsouMatchers {
         Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
         if (Account.areBothImported(toAccount, fromAccount)){
           if (accountId.equals(fromAccount.get(Account.ID))){
-            return series.get(Series.IS_MIROR);
+            return series.get(Series.IS_MIRROR);
           }
           if (accountId.equals(toAccount.get(Account.ID))){
-            return !series.get(Series.IS_MIROR);
+            return !series.get(Series.IS_MIRROR);
           }
         }
         return (accountId.equals(series.get(Series.FROM_ACCOUNT)) || accountId.equals(series.get(Series.TO_ACCOUNT)));
@@ -188,7 +188,7 @@ public class PicsouMatchers {
           SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
           for (Glob transaction : transactions) {
             if (transaction.get(Transaction.AMOUNT) > 0) {
-              if (series.get(Series.IS_MIROR)) {
+              if (series.get(Series.IS_MIRROR)) {
                 return false;
               }
               if (!toAccountId.equals(transaction.get(Transaction.ACCOUNT))) {
@@ -203,7 +203,7 @@ public class PicsouMatchers {
               }
             }
             else {
-              if (!series.get(Series.IS_MIROR)) {
+              if (!series.get(Series.IS_MIRROR)) {
                 return false;
               }
               if (!fromAccountId.equals(transaction.get(Transaction.ACCOUNT))) {

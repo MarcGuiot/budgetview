@@ -522,6 +522,9 @@ public class CategorizationChecker extends GuiChecker {
   }
 
   public CategorizationChecker checkTable(Object[][] content) {
+    for (Object[] objects : content) {
+      objects[2] = ((String)objects[2]).toUpperCase();
+    }
     assertTrue(getTable().contentEquals(content));
     return this;
   }
@@ -578,7 +581,7 @@ public class CategorizationChecker extends GuiChecker {
     int lenght = 0;
     List<int[]> indices = new ArrayList<int[]>();
     for (String label : labels) {
-      int[] ints = getRowIndices(label);
+      int[] ints = getRowIndices(label.toUpperCase());
       lenght += ints.length;
       indices.add(ints);
       if (ints.length == 0) {
@@ -661,7 +664,7 @@ public class CategorizationChecker extends GuiChecker {
   }
 
   private int[] getRowIndices(String label) {
-    int[] index = getTable().getRowIndices(LABEL_COLUMN_INDEX, label);
+    int[] index = getTable().getRowIndices(LABEL_COLUMN_INDEX, label.toUpperCase());
     if (index.length <= 0) {
       Assert.fail("Label '" + label + "' not found");
     }
@@ -880,26 +883,41 @@ public class CategorizationChecker extends GuiChecker {
     }
 
     public CategorizationTableChecker add(String date, TransactionType prelevement, String label, String note, double amount, String series) {
+      if (!label.startsWith("Planned")) {
+        label = label.toUpperCase();
+      }
       add(new Object[]{date, series, label, amount});
       return this;
     }
 
     public CategorizationTableChecker add(String date, TransactionType prelevement, String label, String note, double amount, MasterCategory category) {
+      if (!label.startsWith("Planned")) {
+        label = label.toUpperCase();
+      }
       add(new Object[]{date, getCategoryName(category), label, amount});
       return this;
     }
 
     public CategorizationTableChecker add(String date, TransactionType prelevement, String label, String note, double amount) {
+      if (!label.startsWith("Planned")) {
+        label = label.toUpperCase();
+      }
       add(new Object[]{date, "", label, amount});
       return this;
     }
 
     public CategorizationTableChecker add(String date, String label, double amount) {
+      if (!label.startsWith("Planned")) {
+        label = label.toUpperCase();
+      }
       add(new Object[]{date, "", label, amount});
       return this;
     }
 
     public CategorizationTableChecker add(String date, String series, String label, double amount) {
+      if (!label.startsWith("Planned")) {
+        label = label.toUpperCase();
+      }
       add(new Object[]{date, series, label, amount});
       return this;
     }

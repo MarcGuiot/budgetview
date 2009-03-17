@@ -2,12 +2,11 @@ package org.designup.picsou.importer.analyzer;
 
 import org.designup.picsou.model.PreTransactionTypeMatcher;
 import org.designup.picsou.model.TransactionType;
-import org.designup.picsou.model.TransactionTypeMatcher;
-import static org.designup.picsou.model.TransactionTypeMatcher.*;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.utils.Strings;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import org.globsframework.xml.XmlGlobParser;
@@ -85,7 +84,7 @@ public class TransactionAnalyzerFactory {
       String path = "banks/" + bankFileName;
       InputStream stream = loader.load(path);
       if (stream != null) {
-        InputStreamReader reader = null;
+        InputStreamReader reader;
         try {
           reader = new InputStreamReader(stream, "UTF-8");
         }
@@ -98,31 +97,24 @@ public class TransactionAnalyzerFactory {
         throw new ResourceAccessFailed("missing bank file '" + path + "'");
       }
     }
+    GlobList matchers = globRepository.getAll(PreTransactionTypeMatcher.TYPE);
+    for (Glob matcher : matchers) {
+      if (matcher.get(PreTransactionTypeMatcher.FOR_OFX) == null) {
+        if (OfxTransactionFinalizer.isOfType(matcher)) {
+          globRepository.update(matcher.getKey(), PreTransactionTypeMatcher.FOR_OFX, true);
+        }
+        else if (QifTransactionFinalizer.isOfType(matcher)) {
+          globRepository.update(matcher.getKey(), PreTransactionTypeMatcher.FOR_OFX, false);
+        }
+        else {
+          throw new RuntimeException("Unable to know if we should parse ofx tags or qif attributes for " +
+                                     GlobPrinter.toString(matcher));
+        }
+      }
+    }
   }
 
   private void registerMatchers(GlobRepository globRepository) {
-//    for (Glob matcher : globRepository.getAll(TransactionTypeMatcher.TYPE).sort(TransactionTypeMatcher.ID)) {
-//      String regexp = matcher.get(REGEXP);
-//      String regexpForType = matcher.get(BANK_TYPE);
-//      TransactionType type = TransactionType.get(matcher);
-//      String labelRegexp = matcher.get(LABEL);
-//      Integer groupForDate = matcher.get(GROUP_FOR_DATE);
-//      String dateFormat = matcher.get(DATE_FORMAT);
-//      if ((groupForDate != null) && (Strings.isNullOrEmpty(dateFormat))) {
-//        throw new RuntimeException("You must specify a date format");
-//      }
-//
-//      Glob bank = globRepository.findLinkTarget(matcher, BANK);
-//      if ((labelRegexp != null) && (groupForDate != null)) {
-//        analyzer.addExclusive(regexp, type, regexpForType, labelRegexp, groupForDate, dateFormat, bank);
-//      }
-//      else if (labelRegexp != null) {
-//        analyzer.addExclusive(regexp, type, regexpForType, labelRegexp, bank);
-//      }
-//      else {
-//        analyzer.addExclusive(regexp, type, regexpForType, bank);
-//      }
-//    }
     for (Glob matcher : globRepository.getAll(PreTransactionTypeMatcher.TYPE)
       .sort(PreTransactionTypeMatcher.ID)) {
       String label = matcher.get(PreTransactionTypeMatcher.LABEL);
@@ -133,13 +125,13 @@ public class TransactionAnalyzerFactory {
       String groupForDate = matcher.get(PreTransactionTypeMatcher.GROUP_FOR_DATE);
       String dateFormat = matcher.get(PreTransactionTypeMatcher.DATE_FORMAT);
 
-      String name = matcher.get(PreTransactionTypeMatcher.OFX_NAME);
-      String memo = matcher.get(PreTransactionTypeMatcher.OFX_MEMO);
-      String checkNum = matcher.get(PreTransactionTypeMatcher.OFX_CHECK_NUM);
-      if (name != null || memo != null || checkNum != null) {
+      if (matcher.get(PreTransactionTypeMatcher.FOR_OFX)) {
+        String name = matcher.get(PreTransactionTypeMatcher.OFX_NAME);
+        String memo = matcher.get(PreTransactionTypeMatcher.OFX_MEMO);
+        String checkNum = matcher.get(PreTransactionTypeMatcher.OFX_CHECK_NUM);
         if (label != null) {
           analyzer.addOfx(name, memo, checkNum, label, bank, bankType, groupForDate, dateFormat, type);
-          groupForDate = null; //pour ne pas updater deux fois la date
+          groupForDate = null; //pour ne pas updater deux fois la date si dans le meme group on a label et originallabel
           dateFormat = null;
         }
         if (originalLabel != null) {

@@ -283,7 +283,7 @@ public class ImportPanel {
 
   private void loadLocalRepository(GlobRepository repository) {
     GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Category.TYPE, Transaction.TYPE,
-                            TransactionTypeMatcher.TYPE, Month.TYPE, UserPreferences.TYPE};
+                            Month.TYPE, UserPreferences.TYPE};
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)
         .copy(globTypes).get();
@@ -656,12 +656,12 @@ public class ImportPanel {
     if (returnVal == JFileChooser.APPROVE_OPTION) {
       File[] selectedFiles = chooser.getSelectedFiles();
       if (selectedFiles == null || selectedFiles.length == 0) {
-        System.out.println("no file selected ");
+        Log.write("import : no file selected ");
       }
       else {
         for (File selectedFile : selectedFiles) {
           if (!selectedFile.exists()) {
-            System.out.println("Error: file " + selectedFile.getName() + " not found");
+            Log.write("import : Error: file " + selectedFile.getName() + " not found");
           }
         }
       }

@@ -712,7 +712,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkTotalAmounts(100, 0);
   }
 
-  public void testMixeTypeOfSavingsSeriesShouldUpdateCorrectlyTheBudgetView() throws Exception {
+  public void testMixedTypeOfSavingsSeriesShouldUpdateCorrectlyTheBudgetView() throws Exception {
     // Un compte courant, un compte d'épargne importé, un compte d'épargne non importé
 
     OfxBuilder.init(this)

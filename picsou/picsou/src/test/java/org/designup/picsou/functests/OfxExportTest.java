@@ -55,7 +55,7 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
       .add("28/03/2007", TransactionType.VIREMENT, "AVRIL", "", 12345.67)
       .add("27/03/2007", TransactionType.CREDIT_CARD,
            "MONOPRIX CARTE 24371925 PAIEMENT CB 2303 SCEAUX", "", -30.58)
-      .add("26/03/2007", TransactionType.CHECK, "CHEQUE N. 0416063", "", -45.0)
+      .add("26/03/2007", TransactionType.CHECK, "CHEQUE N°0416063", "", -45.0)
       .check();
 
     String ofxFileName = TestUtils.getFileName(this, ".ofx");
@@ -67,7 +67,7 @@ public class OfxExportTest extends LoggedInFunctionalTestCase {
       .add("28/03/2007", TransactionType.VIREMENT, "AVRIL", "", 12345.67)
       .add("27/03/2007", TransactionType.CREDIT_CARD,
            "MONOPRIX CARTE 24371925 PAIEMENT CB 2303 SCEAUX", "", -30.58)
-      .add("26/03/2007", TransactionType.CHECK, "CHEQUE N. 0416063", "", -45.0)
+      .add("26/03/2007", TransactionType.CHECK, "CHEQUE N°0416063", "", -45.0)
       .check();
   }
 }

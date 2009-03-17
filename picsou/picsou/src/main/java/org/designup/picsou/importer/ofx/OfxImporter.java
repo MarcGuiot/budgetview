@@ -327,6 +327,7 @@ public class OfxImporter implements AccountFileImporter {
       repository.update(currentTransactionKey, ImportedTransaction.BANK_TRANSACTION_TYPE, transactionType);
       name = null;
       memo = null;
+      checkNum = null;
       transactionType = null;
     }
 

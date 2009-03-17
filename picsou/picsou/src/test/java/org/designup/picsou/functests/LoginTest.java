@@ -72,7 +72,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     OperationChecker.init(window).importOfxFile(filePath);
     getTransactionView()
       .initContent()
-      .add("11/01/2006", TransactionType.CHECK, "CHEQUE N. 12345", "", -12.00, MasterCategory.NONE)
+      .add("11/01/2006", TransactionType.CHECK, "CHEQUE N°12345", "", -12.00, MasterCategory.NONE)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.NONE)
       .check();
 
@@ -80,7 +80,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     login.logExistingUser("toto", "p4ssw0rd");
     getTransactionView()
       .initContent()
-      .add("11/01/2006", TransactionType.CHECK, "CHEQUE N. 12345", "", -12.00, MasterCategory.NONE)
+      .add("11/01/2006", TransactionType.CHECK, "CHEQUE N°12345", "", -12.00, MasterCategory.NONE)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.NONE)
       .check();
   }

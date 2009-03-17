@@ -57,6 +57,8 @@ public class Transaction {
 
   public static StringField BANK_TRANSACTION_TYPE;  //QIF : N et ofx : TRNTYPE
 
+  public static BooleanField IS_OFX;
+
   //  public static StringField ORIGINAL_LABEL;
   public static StringField LABEL_FOR_CATEGORISATION;
 
@@ -218,7 +220,7 @@ public class Transaction {
       return Series.getPlannedTransactionLabel(series.get(Series.ID), series);
     }
     else {
-      return series.get(Series.LABEL);
+      return series.get(Series.LABEL).toUpperCase();
     }
   }
 

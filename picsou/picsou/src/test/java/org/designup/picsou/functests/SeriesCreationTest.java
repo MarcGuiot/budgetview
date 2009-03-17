@@ -20,7 +20,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTableRows(0);
-    categorization.checkLabel("WorldCo/june");
+    categorization.checkLabel("WORLDCO/JUNE");
     categorization.selectIncome();
 
     categorization.createIncomeSeries()
@@ -46,7 +46,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTableRows(0);
-    categorization.checkLabel("Telefoot+");
+    categorization.checkLabel("TELEFOOT+");
 
     categorization.selectRecurring();
     categorization.createRecurringSeries()
@@ -71,7 +71,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTableRows(0);
-    categorization.checkLabel("Forfait Kro");
+    categorization.checkLabel("FORFAIT KRO");
 
     categorization.selectEnvelopes();
 

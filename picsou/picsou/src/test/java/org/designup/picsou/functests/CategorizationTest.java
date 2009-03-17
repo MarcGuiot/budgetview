@@ -23,7 +23,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTableRow(0)
-      .checkLabel("WorldCo/june")
+      .checkLabel("WORLDCO/JUNE")
       .selectIncome()
       .checkNoSeriesMessage("You must create a series")
       .selectIncomeSeries("Salary", true)
@@ -56,7 +56,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization
       .selectTableRow(0)
-      .checkLabel("Free Telecom")
+      .checkLabel("FREE TELECOM")
       .selectRecurring()
       .checkContainsNoRecurringSeries()
       .checkNoSeriesMessage("You must create a series")
@@ -106,7 +106,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTableRows(0);
-    categorization.checkLabel("Fouquet's");
+    categorization.checkLabel("FOUQUET'S");
     categorization.selectOccasional();
     categorization.checkContainsOccasional(MasterCategory.EQUIPMENT,
                                            MasterCategory.CLOTHING,
@@ -148,7 +148,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"30/06/2008", "", "Free", -29.90},
     });
     categorization.selectTableRow(0);
-    categorization.checkLabel("Auchan");
+    categorization.checkLabel("AUCHAN");
     categorization.checkBudgetAreaSelectionPanelDisplayed();
     categorization.selectEnvelopes();
     categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
@@ -160,7 +160,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.selectTableRow(2);
-    categorization.checkLabel("Free");
+    categorization.checkLabel("FREE");
     categorization.checkBudgetAreaSelectionPanelDisplayed();
     categorization.selectRecurring();
     categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
@@ -172,7 +172,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.selectTableRow(1);
-    categorization.checkLabel("France Telecom");
+    categorization.checkLabel("FRANCE TELECOM");
     categorization.checkBudgetAreaSelectionPanelDisplayed();
     categorization.selectRecurring();
     categorization.checkNoRecurringSeriesSelected();
@@ -443,8 +443,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.checkTable(new Object[][]{
-      {"15/06/2008", "", "CHEQUE N. 1111", -90.00},
-      {"14/06/2008", "", "CHEQUE N. 2222", -80.00},
+      {"15/06/2008", "", "CHEQUE N°1111", -90.00},
+      {"14/06/2008", "", "CHEQUE N°2222", -80.00},
       {"24/06/2008", "", "Free Telecom 21/04", -29.90},
       {"25/06/2008", "", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "", "Free Telecom 26/06", -29.90}
@@ -477,7 +477,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.doubleClickTableRow(0);
-    categorization.checkLabel("Auchan [2 operations]");
+    categorization.checkLabel("AUCHAN [2 operations]");
 
     categorization.checkSelectedTableRows(0, 1);
     categorization.doubleClickTableRow(3);
@@ -519,7 +519,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.doubleClickTableRow(0);
-    transactionDetails.checkLabel("Free Telecom 26/06");
+    transactionDetails.checkLabel("FREE TELECOM 26/06");
     categorization.setRecurring(0, "Internet", MasterCategory.TELECOMS, true);
 
     timeline.selectAll();
@@ -1043,7 +1043,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     timeline.selectMonth("2008/05");
     categorization.selectTableRows(
-      categorization.getTable().getRowIndex(CategorizationChecker.LABEL_COLUMN_INDEX, "Auchan"));
+      categorization.getTable().getRowIndex(CategorizationChecker.LABEL_COLUMN_INDEX, "AUCHAN"));
     transactionDetails.openSplitDialog().deleteRow(1).ok();
     operations.checkOk();
 

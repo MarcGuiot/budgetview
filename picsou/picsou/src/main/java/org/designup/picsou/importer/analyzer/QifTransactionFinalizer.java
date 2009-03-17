@@ -1,5 +1,6 @@
 package org.designup.picsou.importer.analyzer;
 
+import org.designup.picsou.model.PreTransactionTypeMatcher;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.metamodel.fields.StringField;
@@ -35,8 +36,7 @@ public class QifTransactionFinalizer extends AbstractTransactionTypeFinalizer {
   }
 
   public boolean processTransaction(Glob transaction, GlobRepository repository) {
-    if ((transaction.get(Transaction.QIF_M) == null) &&
-        (transaction.get(Transaction.QIF_P) == null)) {
+    if (transaction.get(Transaction.IS_OFX)) {
       return false;
     }
 
@@ -66,4 +66,25 @@ public class QifTransactionFinalizer extends AbstractTransactionTypeFinalizer {
     setTransactionType(transaction, repository, transactionType, replacedDate, format, field, newLabel);
     return true;
   }
+
+  public static boolean isOfType(Glob matcher) {
+    return matcher.get(PreTransactionTypeMatcher.QIF_M) != null ||
+           matcher.get(PreTransactionTypeMatcher.QIF_P) != null ||
+           check(matcher, PreTransactionTypeMatcher.LABEL) ||
+           check(matcher, PreTransactionTypeMatcher.ORIGINAL_LABEL) ||
+           check(matcher, PreTransactionTypeMatcher.GROUP_FOR_DATE);
+  }
+
+  private static boolean check(Glob matcher, StringField labelField) {
+    if (matcher.get(labelField) != null) {
+      if (M_REGEXP.matcher(matcher.get(labelField)).find()) {
+        return true;
+      }
+      if (P_REGEXP.matcher(matcher.get(labelField)).find()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 }

@@ -17,10 +17,10 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "<create account='-1' amount='-29.9' bankDay='7' bankMonth='200809' mirror='false'" +
-      "        category='8' day='7' id='" + plannedTransaction[1] + "' label='Planned: free telecom' month='200809'" +
+      "        category='8' day='7' id='" + plannedTransaction[1] + "' label='Planned: FREE TELECOM' month='200809'" +
       "        planned='true' series='100' transactionType='5' type='transaction' createdBySeries='false'/>" +
       "<create account='-1' amount='-29.9' bankDay='7' bankMonth='200808' mirror='false'" +
-      "        category='8' day='7' id='" + plannedTransaction[0] + "' label='Planned: free telecom' month='200808'" +
+      "        category='8' day='7' id='" + plannedTransaction[0] + "' label='Planned: FREE TELECOM' month='200808'" +
       "        planned='true' series='100' transactionType='5' type='transaction'  createdBySeries='false'/>" +
       "");
     Integer[] budgetId = getBudgetId(FREE_SERIES_ID);
@@ -59,7 +59,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <delete _account='-1' _amount='-29.9' _bankDay='7' _bankMonth='200808' _mirror='false'" +
-      "          _category='8' _day='7' _label='Planned: free telecom' _month='200808' _planned='true'" +
+      "          _category='8' _day='7' _label='Planned: FREE TELECOM' _month='200808' _planned='true'" +
       "          _series='100' _transactionType='5' id='" + plannedTransaction[0] + "' type='transaction' _createdBySeries='false'/>" +
       "  <create amount='-40.0' bankMonth='200808' bankDay='1' day='1' id='10' category='0' mirror='false'" +
       "          label='free' month='200808' planned='false' series='100' type='transaction' createdBySeries='false'/>" +
@@ -74,11 +74,11 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <delete _account='-1' _amount='-29.9' _bankDay='7' _bankMonth='200809' _mirror='false'\n" +
-      "          _category='8' _day='7' _label='Planned: free telecom' _month='200809' _planned='true'\n" +
+      "          _category='8' _day='7' _label='Planned: FREE TELECOM' _month='200809' _planned='true'\n" +
       "          _series='100' _transactionType='5' id='" + plannedTransaction[0] + "' type='transaction' _createdBySeries='false'/>\n" +
       "  <update _month='200808' id='10' month='200809' type='transaction'/>" +
       "  <create account='-1' amount='-29.9' bankDay='7' bankMonth='200808' mirror='false'\n" +
-      "          category='8' day='7' id='" + newPlannedTransaction[0] + "' label='Planned: free telecom' month='200808'\n" +
+      "          category='8' day='7' id='" + newPlannedTransaction[0] + "' label='Planned: FREE TELECOM' month='200808'\n" +
       "          planned='true' series='100' transactionType='5' type='transaction' createdBySeries='false'/>" +
       "");
   }
@@ -94,16 +94,16 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <create account='-1' amount='2000.0' bankDay='4' bankMonth='200808' mirror='false'\n" +
-      "          category='19' day='4' id='" + incomePlannedTransaction[0] + "' label='Planned: salaire' month='200808'\n" +
+      "          category='19' day='4' id='" + incomePlannedTransaction[0] + "' label='Planned: SALAIRE' month='200808'\n" +
       "          planned='true' series='102' transactionType='1' type='transaction' createdBySeries='false'/>\n" +
       "  <create account='-1' amount='2000.0' bankDay='4' bankMonth='200809' mirror='false'\n" +
-      "          category='19' day='4' id='" + incomePlannedTransaction[1] + "' label='Planned: salaire' month='200809'\n" +
+      "          category='19' day='4' id='" + incomePlannedTransaction[1] + "' label='Planned: SALAIRE' month='200809'\n" +
       "          planned='true' series='102' transactionType='1' type='transaction' createdBySeries='false'/>\n" +
       "  <create account='-1' amount='-1000.0' bankDay='25' bankMonth='200808' mirror='false'\n" +
-      "          category='2' day='25' id='" + enveloppePlannedTransaction[0] + "' label='Planned: course' month='200808'\n" +
+      "          category='2' day='25' id='" + enveloppePlannedTransaction[0] + "' label='Planned: COURSE' month='200808'\n" +
       "          planned='true' series='101' transactionType='5' type='transaction' createdBySeries='false'/>" +
       "  <create account='-1' amount='-1000.0' bankDay='25' bankMonth='200809' mirror='false'\n" +
-      "          category='2' day='25' id='" + enveloppePlannedTransaction[1] + "' label='Planned: course' month='200809'\n" +
+      "          category='2' day='25' id='" + enveloppePlannedTransaction[1] + "' label='Planned: COURSE' month='200809'\n" +
       "          planned='true' series='101' transactionType='5' type='transaction' createdBySeries='false'/>\n" +
       "");
     Integer[] occasionalBudgetIds = getBudgetId(Series.OCCASIONAL_SERIES_ID);
@@ -222,7 +222,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       Transaction.TYPE,
       "  <update _amount='-600.0' amount='-30.0' id='103' type='transaction'/>" +
       "  <create account='-1' amount='-70.0' bankDay='25' bankMonth='200808' mirror='false'" +
-      "          category='2' day='25' id='2' label='Planned: course' month='200808'" +
+      "          category='2' day='25' id='2' label='Planned: COURSE' month='200808'" +
       "          planned='true' series='101' transactionType='5' type='transaction' createdBySeries='false'/>");
     repository.update(Key.create(Transaction.TYPE, 103), Transaction.AMOUNT, -200.);
     listener.assertLastChangesEqual(
@@ -231,7 +231,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <delete _account='-1' _amount='-70.0' _bankDay='25' _bankMonth='200808' _mirror='false'\n" +
-      "          _category='2' _day='25' _label='Planned: course' _month='200808' _planned='true'\n" +
+      "          _category='2' _day='25' _label='Planned: COURSE' _month='200808' _planned='true'\n" +
       "          _series='101' _transactionType='5' id='2' type='transaction' _createdBySeries='false'/>\n" +
       "  <update _amount='-30.0' amount='-200.0' id='103' type='transaction'/>");
   }
@@ -262,7 +262,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       Transaction.TYPE,
       "  <update _amount='2200.0' amount='1900.0' id='103' type='transaction'/>\n" +
       "  <create account='-1' amount='100.0' bankDay='4' bankMonth='200808'\n mirror='false'" +
-      "          category='19' day='4' id='" + transaction[0] + "' label='Planned: salaire' month='200808'\n" +
+      "          category='19' day='4' id='" + transaction[0] + "' label='Planned: SALAIRE' month='200808'\n" +
       "          planned='true' series='102' transactionType='1' type='transaction' createdBySeries='false'/>");
 
     transaction = getPlannedTransaction(INCOME_SERIES_ID);
@@ -274,7 +274,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       Transaction.TYPE,
       "  <update _amount='1900.0' amount='2300.0' id='103' type='transaction'/>\n" +
       "  <delete _account='-1' _amount='100.0' _bankDay='4' _bankMonth='200808' _mirror='false'\n" +
-      "          _category='19' _day='4' _label='Planned: salaire' _month='200808' _planned='true'\n" +
+      "          _category='19' _day='4' _label='Planned: SALAIRE' _month='200808' _planned='true'\n" +
       "          _series='102' _transactionType='1' id='" + transaction[0] + "' type='transaction' _createdBySeries='false'/>");
 
   }

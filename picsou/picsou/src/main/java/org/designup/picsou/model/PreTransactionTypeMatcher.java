@@ -4,6 +4,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
@@ -15,6 +16,9 @@ public class PreTransactionTypeMatcher {
   @Key
   @NoObfuscation
   public static IntegerField ID;
+
+  @NoObfuscation
+  public static BooleanField FOR_OFX;
 
   @NoObfuscation
   public static StringField QIF_M;
@@ -46,7 +50,8 @@ public class PreTransactionTypeMatcher {
   @NoObfuscation
   public static StringField DATE_FORMAT;
 
-  @Target(TransactionType.class) @NoObfuscation
+  @Target(TransactionType.class)
+  @NoObfuscation
   public static LinkField TRANSACTION_TYPE;
 
   @Target(Bank.class)

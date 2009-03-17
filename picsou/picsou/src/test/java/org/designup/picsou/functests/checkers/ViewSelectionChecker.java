@@ -28,6 +28,10 @@ public class ViewSelectionChecker extends GuiChecker {
     select("budget");
   }
 
+  public void selectSavings() {
+    select("savings");
+  }
+
   public void selectData() {
     select("data");
   }

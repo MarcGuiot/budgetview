@@ -4,7 +4,7 @@
     <bankEntity id="10807"/>
 
     <transactionMatcher ofxName="CHEQUE"
-                        label="CHEQUE N.{NUM.0}" originalLabel="CHEQUE N.{NUM.0}"
+                        label="CHEQUE N°{NUM.0}" originalLabel="CHEQUE N.{NUM.0}"
                         transactionTypeName="check"/>
 
     <transactionMatcher ofxName="DE 1 CHEQUE\(S\)" label="REMISE DE 1 CHEQUE"

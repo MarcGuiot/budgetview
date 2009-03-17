@@ -61,18 +61,18 @@ public class GlobStateChecker {
         .getGlobs();
       Double plannedAmount = 0.;
       Double amount = 0.;
-      Double mirorPlannedAmount = 0.;
-      Double mirorAmount = 0.;
-      boolean hasMiror = false;
+      Double mirrorPlannedAmount = 0.;
+      Double mirrorAmount = 0.;
+      boolean hasMirror = false;
       Integer forAccountId = null;
       for (Glob transaction : transactions) {
         if (transaction.get(Transaction.MIRROR)) {
-          hasMiror = true;
+          hasMirror = true;
           if (transaction.get(Transaction.PLANNED)) {
-            mirorPlannedAmount += transaction.get(Transaction.AMOUNT);
+            mirrorPlannedAmount += transaction.get(Transaction.AMOUNT);
           }
           else {
-            mirorAmount += transaction.get(Transaction.AMOUNT);
+            mirrorAmount += transaction.get(Transaction.AMOUNT);
           }
           forAccountId = transaction.get(Transaction.ACCOUNT);
         }
@@ -85,7 +85,7 @@ public class GlobStateChecker {
           }
         }
       }
-      if (hasMiror) {
+      if (hasMirror) {
         Glob series = repository.findLinkTarget(budget, SeriesBudget.SERIES);
         Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
         Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
@@ -93,18 +93,18 @@ public class GlobStateChecker {
         if (multiplier == 0) {
           return;
         }
-        if (!Amounts.isNearZero(budget.get(SeriesBudget.OVERRUN_AMOUNT)) && !Amounts.isNearZero(mirorPlannedAmount)) {
+        if (!Amounts.isNearZero(budget.get(SeriesBudget.OVERRUN_AMOUNT)) && !Amounts.isNearZero(mirrorPlannedAmount)) {
           transactionChecker.addError(budget.get(SeriesBudget.ID), budget.get(SeriesBudget.SERIES),
                                       budget.get(SeriesBudget.MONTH),
-                                      mirorAmount, mirorPlannedAmount, budget.get(SeriesBudget.AMOUNT),
+                                      mirrorAmount, mirrorPlannedAmount, budget.get(SeriesBudget.AMOUNT),
                                       budget.get(SeriesBudget.OVERRUN_AMOUNT));
 
         }
-        else if (Math.abs(multiplier * (mirorAmount + mirorPlannedAmount) -
+        else if (Math.abs(multiplier * (mirrorAmount + mirrorPlannedAmount) -
                           (budget.get(SeriesBudget.AMOUNT) + budget.get(SeriesBudget.OVERRUN_AMOUNT))) > 1) {
           transactionChecker.addError(budget.get(SeriesBudget.ID), budget.get(SeriesBudget.SERIES),
                                       budget.get(SeriesBudget.MONTH),
-                                      mirorAmount, mirorPlannedAmount, budget.get(SeriesBudget.AMOUNT),
+                                      mirrorAmount, mirrorPlannedAmount, budget.get(SeriesBudget.AMOUNT),
                                       budget.get(SeriesBudget.OVERRUN_AMOUNT));
         }
       }

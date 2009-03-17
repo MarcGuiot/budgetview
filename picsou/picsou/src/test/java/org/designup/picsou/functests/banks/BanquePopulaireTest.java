@@ -12,7 +12,7 @@ public class BanquePopulaireTest extends SpecificBankTestCase {
     transactions.initContent()
       .add("13/02/2009", TransactionType.PRELEVEMENT, "PRELEVEMENT DE MR OU MME XYZ", "", -100.00)
       .add("13/02/2009", TransactionType.PRELEVEMENT, "FT INTERNET ORANGE 115102921 11378168690WFE N.EMETTEUR: 422262", "", -46.33)
-      .add("11/02/2009", TransactionType.CHECK, "CHEQUE N.0004228", "", -25.40)
+      .add("11/02/2009", TransactionType.CHECK, "CHEQUE N°0004228", "", -25.40)
       .add("10/02/2009", TransactionType.DEPOSIT, "REMISE DE 1 CHEQUE", "", 60.00)
       .add("10/02/2009", TransactionType.VIREMENT, "VIREMENT DE MME AZE AZE", "", 1000.00)
       .add("09/02/2009", "10/02/2009", TransactionType.WITHDRAWAL, "RETRAIT GAB LONS SULLY 2 *123123123 A 10:24", "", -30.00)

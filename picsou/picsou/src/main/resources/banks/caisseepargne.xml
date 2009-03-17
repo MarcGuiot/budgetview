@@ -20,15 +20,24 @@
     <bankEntity id="13705"/>
     <bankEntity id="11425"/>
 
-    <transactionTypeMatcher regexp="CARTE[\s]+(.*)[\s]+(\d{6})"
-                            transactionTypeName="credit_card" label="$1" groupForDate="2" dateFormat="ddMMyy"/>
+    <transactionMatcher qifP="ECH PRET" transactionTypeName="credit"
+                        label="{P.0}" originalLabel="{P.0}"/>
 
-    <transactionTypeMatcher regexp="CHEQUE[\s]+N\?(.*)"
-                            transactionTypeName="check" label="CHEQUE N. $1"/>
+    <transactionMatcher qifP="RETRAIT DAB (.*)" transactionTypeName="withdrawal"
+                        label="RETRAIT {P.1}" originalLabel="{P.0}"/>
 
-    <transactionTypeMatcher regexp="RETRAIT DAB[\s]+(.*)"
-                            transactionTypeName="withdrawal" label="RETRAIT $1"/>
+    <transactionMatcher qifP="CARTE (.*) (\d{6})"
+                        transactionTypeName="credit_card" label="{P.1}" originalLabel="{P.0}"
+                        groupForDate="{P.2}" dateFormat="ddMMyy"/>
 
+    <transactionMatcher qifP="CHEQUE N.(.*)" transactionTypeName="check"
+                        label="CHEQUE N°{P.1}" originalLabel="CHEQUE N.{P.1}"/>
+
+    <transactionMatcher qifP="REMISE CHEQUE DIRECT" qifM="REMISE N.:(\d*)-(0*1) *CHEQUE"
+                        label="REMISE N°{M.1} DE 1 CHEQUE" originalLabel="{M.0}" transactionTypeName="deposit"/>
+
+    <transactionMatcher qifP="REMISE CHEQUE DIRECT" qifM="REMISE N.:(\d*)-(\d*) *CHEQUE"
+                        label="REMISE N°{M.1} DE {M.2} CHEQUES" originalLabel="{M.0}" transactionTypeName="deposit"/>
 
   </bank>
 </globs>

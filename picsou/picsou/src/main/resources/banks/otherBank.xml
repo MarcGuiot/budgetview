@@ -3,16 +3,28 @@
   <bank name="Autre" id="-123456">
     <bankEntity id="-1"/>
 
-    <transactionTypeMatcher regexp="CHEQUE[ ]+(.*)"
-                            transactionTypeName="check" label="CHEQUE N. $1"/>
+    <transactionMatcher ofxName="CHEQUE (.*)" transactionTypeName="check"
+                        label="CHEQUE N°{NAME.1}" originalLabel="{NAME.0}"/>
 
-    <transactionTypeMatcher regexp="VIR (.*)"
-                            transactionTypeName="virement" label="$1"/>
+    <transactionMatcher qifM="CHEQUE (.*)" transactionTypeName="check"
+                        label="CHEQUE N°{M.1}" originalLabel="{M.0}"/>
 
-    <transactionTypeMatcher regexp="REM CHQ (.*)"
-                            transactionTypeName="deposit" label="REMISE CHEQUES $1"/>
+    <transactionMatcher ofxName="VIR (.*)" transactionTypeName="virement"
+                        label="{NAME.1}" originalLabel="{NAME.0}"/>
 
-    <transactionTypeMatcher regexp="RETRAIT (.*)"
-                            transactionTypeName="withdrawal" label="RETRAIT $1"/>
+    <transactionMatcher qifM="VIR (.*)" transactionTypeName="virement"
+                        label="{M.1}" originalLabel="{M.0}"/>
+
+    <transactionMatcher ofxName="REM CHQ (.*)" transactionTypeName="deposit"
+                        label="REMISE CHEQUES {NAME.1}" originalLabel="{NAME.0}"/>
+
+    <transactionMatcher qifM="REM CHQ (.*)" transactionTypeName="deposit"
+                        label="REMISE CHEQUES {M.1}" originalLabel="{M.0}"/>
+
+    <transactionMatcher ofxName="RETRAIT (.*)" transactionTypeName="withdrawal"
+                        label="RETRAIT {NAME.1}" originalLabel="{NAME.0}"/>
+
+    <transactionMatcher qifM="RETRAIT (.*)" transactionTypeName="withdrawal"
+                        label="RETRAIT {M.1}" originalLabel="{M.0}"/>
   </bank>
 </globs>

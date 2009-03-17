@@ -82,7 +82,7 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public void checkSeries(String transactionLabel, String seriesName) {
-    checkSeries(getIndexOf(transactionLabel), seriesName);
+    checkSeries(getIndexOf(transactionLabel.toUpperCase()), seriesName);
   }
 
   public void checkSeries(int row, String seriesName) {
@@ -91,7 +91,7 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public void checkCategory(String label, MasterCategory category) {
-    checkCategory(getIndexOf(label), category);
+    checkCategory(getIndexOf(label.toUpperCase()), category);
   }
 
   public void checkCategory(int row, MasterCategory category) {
@@ -143,7 +143,7 @@ public class TransactionChecker extends ViewChecker {
     }
 
     public TransactionAmountChecker add(String label, double amount, double accountSolde, double solde) {
-      expected.add(new Object[]{label,
+      expected.add(new Object[]{label.toUpperCase(),
                                 TransactionChecker.this.toString(amount),
                                 TransactionChecker.this.toString(accountSolde),
                                 TransactionChecker.this.toString(solde)});
@@ -151,7 +151,7 @@ public class TransactionChecker extends ViewChecker {
     }
 
     public TransactionAmountChecker add(String label, double amount) {
-      expected.add(new Object[]{label,
+      expected.add(new Object[]{label.toUpperCase(),
                                 TransactionChecker.this.toString(amount),
                                 "",
                                 ""});
@@ -244,6 +244,12 @@ public class TransactionChecker extends ViewChecker {
         else {
           type = TransactionType.PRELEVEMENT;
         }
+      }
+      if (!label.startsWith("Planned")) {
+        label = label.toUpperCase();
+      }
+      else {
+        label = "Planned" + label.substring("Planned".length()).toUpperCase();
       }
       add(new Object[]{userDate, bankDate, "(" + type.getName() + ")" + series, category, label,
                        TransactionChecker.this.toString(amount),

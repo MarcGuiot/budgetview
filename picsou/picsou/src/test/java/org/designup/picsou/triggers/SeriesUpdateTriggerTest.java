@@ -31,10 +31,10 @@ public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <create account='-1' amount='-29.9' bankDay='7' bankMonth='200808' mirror='false'" +
-      "          category='8' day='7' id='" + ids[0] + "' label='Planned: free telecom' month='200808'" +
+      "          category='8' day='7' id='" + ids[0] + "' label='Planned: FREE TELECOM' month='200808'" +
       "          planned='true' series='100' transactionType='5' type='transaction' createdBySeries='false'/>" +
       "  <create account='-1' amount='-29.9' bankDay='7' bankMonth='200809' mirror='false'" +
-      "          category='8' day='7' id='" + ids[1] + "' label='Planned: free telecom' month='200809'" +
+      "          category='8' day='7' id='" + ids[1] + "' label='Planned: FREE TELECOM' month='200809'" +
       "          planned='true' series='100' transactionType='5' type='transaction' createdBySeries='false'/>" +
       "");
 
@@ -64,7 +64,7 @@ public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <delete _account='-1' _amount='-29.9' _bankDay='7' _bankMonth='200809' _mirror='false'\n" +
-      "          _category='8' _day='7' _label='Planned: free telecom' _month='200809' _planned='true'\n" +
+      "          _category='8' _day='7' _label='Planned: FREE TELECOM' _month='200809' _planned='true'\n" +
       "          _series='100' _transactionType='5' id='" + ids[0] + "' type='transaction' _createdBySeries='false'/>");
   }
 }

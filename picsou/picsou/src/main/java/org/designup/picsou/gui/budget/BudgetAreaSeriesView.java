@@ -64,7 +64,7 @@ public class BudgetAreaSeriesView extends View {
       public void selectionUpdated(GlobSelection selection) {
         selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
         seriesDateFilter.filterDates(selectedMonthIds);
-        updateRepeat(repository);
+        updateRepeat();
         update();
       }
     }, Month.TYPE);
@@ -82,9 +82,23 @@ public class BudgetAreaSeriesView extends View {
         }
       }
     });
+
+    repository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(PeriodSeriesStat.TYPE)) {
+          updateRepeat();
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        if (changedTypes.contains(PeriodSeriesStat.TYPE)) {
+          updateRepeat();
+        }
+      }
+    });
   }
 
-  private void updateRepeat(final GlobRepository repository) {
+  private void updateRepeat() {
     Comparator<Glob> comparator = new GlobFieldComparator(PeriodSeriesStat.ABS_SUM_AMOUNT);
     if (!budgetArea.isIncome()) {
       comparator = Collections.reverseOrder(comparator);

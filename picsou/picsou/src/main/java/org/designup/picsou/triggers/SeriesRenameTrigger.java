@@ -21,9 +21,9 @@ public class SeriesRenameTrigger implements ChangeSetListener {
         public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
           Integer seriesId = key.get(Series.ID);
           if (values.contains(Series.LABEL)) {
-            GlobList globs = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES,
-                                                    seriesId).getGlobs()
-              .filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, true), repository);
+            GlobList globs =
+              repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId).getGlobs()
+                .filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, true), repository);
             for (Glob transaction : globs) {
               repository.update(transaction.getKey(), Transaction.LABEL,
                                 Series.getPlannedTransactionLabel(seriesId, values));

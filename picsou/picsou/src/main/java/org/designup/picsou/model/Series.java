@@ -67,10 +67,10 @@ public class Series {
   public static LinkField TO_ACCOUNT;
 
   @Target(Series.class)
-  public static LinkField MIROR_SERIES; // si les deux comptes sont importés.
+  public static LinkField MIRROR_SERIES; // si les deux comptes sont importés.
 
   @DefaultBoolean(false)
-  public static BooleanField IS_MIROR;
+  public static BooleanField IS_MIRROR;
 
   @DefaultBoolean(true)
   public static BooleanField JANUARY;
@@ -155,9 +155,9 @@ public class Series {
 
   public static String getPlannedTransactionLabel(Integer seriesId, FieldValues series) {
     if (seriesId == 0) {
-      return Lang.get("transaction.planned", BudgetArea.OCCASIONAL.getLabel());
+      return Lang.get("transaction.planned", BudgetArea.OCCASIONAL.getLabel().toUpperCase());
     }
-    return Lang.get("transaction.planned", series.get(Series.LABEL));
+    return Lang.get("transaction.planned", series.get(Series.LABEL).toUpperCase());
   }
 
   public static class Serializer implements PicsouGlobSerializer {
@@ -190,8 +190,8 @@ public class Series {
       output.writeBoolean(fieldValues.get(Series.DECEMBER));
       output.writeInteger(fieldValues.get(Series.TO_ACCOUNT));
       output.writeInteger(fieldValues.get(Series.FROM_ACCOUNT));
-      output.writeBoolean(fieldValues.get(Series.IS_MIROR));
-      output.writeInteger(fieldValues.get(Series.MIROR_SERIES));
+      output.writeBoolean(fieldValues.get(Series.IS_MIRROR));
+      output.writeInteger(fieldValues.get(Series.MIRROR_SERIES));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -385,8 +385,8 @@ public class Series {
       fieldSetter.set(Series.DECEMBER, input.readBoolean());
       fieldSetter.set(Series.TO_ACCOUNT, input.readInteger());
       fieldSetter.set(Series.FROM_ACCOUNT, input.readInteger());
-      fieldSetter.set(Series.IS_MIROR, input.readBoolean());
-      fieldSetter.set(Series.MIROR_SERIES, input.readInteger());
+      fieldSetter.set(Series.IS_MIRROR, input.readBoolean());
+      fieldSetter.set(Series.MIRROR_SERIES, input.readInteger());
 
     }
 

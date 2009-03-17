@@ -38,6 +38,17 @@ public class LCLTest extends SpecificBankTestCase {
     checkContent();
   }
 
+  public void testImportAll() throws Exception {
+    operations.importQifFile(getFile("lcl_tout_compte_fait_date_fr.qif"), "LCL");
+    operations.importQifFile(getFile("lcl_quicken_date_us.qif"), "LCL");
+    operations.importQifFile(getFile("lcl_quicken_date_fr.qif"), "LCL");
+    operations.importQifFile(getFile("lcl_money_date_us.qif"), "LCL");
+    operations.importQifFile(getFile("lcl_money_date_fr.qif"), "LCL");
+//    operations.importOfxFile(getFile("lcl_money_ofx.ofc"));
+//    operations.importOfxFile(getFile("lcl_money.ofc"));
+    checkContent();
+  }
+
   private void checkContent() {
     timeline.selectAll();
     transactions.getTable().getHeader().click(1);
@@ -51,19 +62,19 @@ public class LCLTest extends SpecificBankTestCase {
       .add("24/06/2008", TransactionType.WITHDRAWAL, "RETRAIT", "", -60.00)
       .add("21/06/2008", "23/06/2008", TransactionType.CREDIT_CARD, "SM CASINO CS494", "", -218.50)
       .add("20/06/2008", TransactionType.VIREMENT, "GESTION BCAC", "", 14.60)
-      .add("20/06/2008", TransactionType.CHECK, "CHEQUE N. 364966", "", -35.00)
+      .add("20/06/2008", TransactionType.CHECK, "CHEQUE N°364966", "", -35.00)
       .add("18/06/2008", "19/06/2008", TransactionType.CREDIT_CARD, "CANTINE LOISIRS", "", -124.80)
       .add("18/06/2008", TransactionType.VIREMENT, "CPAM DES YVELINES", "", 15.40)
-      .add("18/06/2008", TransactionType.CHECK, "CHEQUE N. 364965", "", -30.00)
+      .add("18/06/2008", TransactionType.CHECK, "CHEQUE N°364965", "", -30.00)
       .add("18/06/2008", TransactionType.WITHDRAWAL, "RETRAIT", "", -60.00)
-      .add("17/06/2008", TransactionType.CHECK, "CHEQUE N. 364964", "", -29.00)
-      .add("14/06/2008", "16/06/2008", TransactionType.CREDIT_CARD, "PICARD SA   268", "", -6.10)
+      .add("17/06/2008", TransactionType.CHECK, "CHEQUE N°364964", "", -29.00)
+      .add("14/06/2008", "16/06/2008", TransactionType.CREDIT_CARD, "PICARD SA 268", "", -6.10)
       .add("13/06/2008", "16/06/2008", TransactionType.CREDIT_CARD, "SYMPA CLUB II", "", -153.00)
       .add("12/06/2008", "13/06/2008", TransactionType.CREDIT_CARD, "PHARM.DE LA GARE", "", -13.00)
       .add("12/06/2008", "13/06/2008", TransactionType.WITHDRAWAL, "RETRAIT", "", -60.00)
       .add("11/06/2008", "12/06/2008", TransactionType.CREDIT_CARD, "SM CASINO CS494", "", -29.30)
       .add("11/06/2008", "12/06/2008", TransactionType.CREDIT_CARD, "SACCOMANO", "", -65.00)
-      .add("11/06/2008", TransactionType.CHECK, "CHEQUE N. 364963", "", -40.00)
+      .add("11/06/2008", TransactionType.CHECK, "CHEQUE N°364963", "", -40.00)
       .add("08/06/2008", "09/06/2008", TransactionType.CREDIT_CARD, "FRANPRIX", "", -20.31)
       .add("05/06/2008", TransactionType.VIREMENT, "CAF ST QUENTIN EN YVELIN", "", 308.31)
       .add("04/06/2008", "05/06/2008", TransactionType.CREDIT_CARD, "DIONISI FLEURIST", "", -18.00)

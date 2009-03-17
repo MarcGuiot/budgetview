@@ -17,25 +17,27 @@
     <bankEntity id="15999"/>
     <bankEntity id="16159"/>
 
-    <transactionTypeMatcher regexp="CARTE[\s]+(\d{2}/\d{2})[\s]+(.*)"
-                            transactionTypeName="credit_card" label="$2" groupForDate="1" dateFormat="dd/MM"/>
+    <transactionMatcher qifP="CARTE[\s]+(\d{2}/\d{2})[\s]+(.*)"
+                        transactionTypeName="credit_card" label="{P.2}" originalLabel="{P.0}"
+                        groupForDate="{P.1}" dateFormat="dd/MM"/>
 
-    <transactionTypeMatcher regexp="RETRAIT DAB [0-9]* (.*)"
-                            transactionTypeName="withdrawal" label="RETRAIT $1"/>
+    <transactionMatcher qifP="RETRAIT DAB [0-9]* (.*)"
+                        transactionTypeName="withdrawal" label="RETRAIT {P.1}"
+                        originalLabel="{P.0}"/>
 
-    <transactionTypeMatcher regexp="RETRAIT (.*)"
-                            transactionTypeName="withdrawal" label="RETRAIT $1"/>
+    <transactionMatcher qifP="RETRAIT (.*)"
+                        transactionTypeName="withdrawal" label="RETRAIT {P.1}" originalLabel="{P.0}"/>
 
-    <transactionTypeMatcher regexp="VIR (.*)"
-                            transactionTypeName="virement" label="$1"/>
+    <transactionMatcher qifP="VIR (.*)"
+                        transactionTypeName="virement" label="{P.1}" originalLabel="{P.0}"/>
 
-    <transactionTypeMatcher regexp="PRLV (.*)"
-                            transactionTypeName="prelevement" label="$1"/>
+    <transactionMatcher qifP="PRLV (.*)"
+                        transactionTypeName="prelevement" label="{P.1}" originalLabel="{P.0}"/>
 
-    <transactionTypeMatcher regexp="REM CHQ (.*)"
-                            transactionTypeName="deposit" label="REMISE CHEQUE $1"/>
+    <transactionMatcher qifP="REM CHQ (.*)" transactionTypeName="deposit"
+                        label="REMISE CHEQUE {P.1}" originalLabel="{P.0}"/>
 
-    <transactionTypeMatcher regexp="CHQ[ ]+(.*)"
-                            transactionTypeName="check" label="CHEQUE N. $1"/>
+    <transactionMatcher qifP="CHQ (.*)" transactionTypeName="check"
+                        label="CHEQUE N°{P.1}" originalLabel="{P.0}"/>
   </bank>
 </globs>

@@ -12,11 +12,11 @@
                         originalLabel="{M.0}"/>
 
     <transactionMatcher bankType="CHQ N.*" qifM="N. (.*)"
-                        transactionTypeName="check" label="CHEQUE N.{M.1}"
+                        transactionTypeName="check" label="CHEQUE N°{M.1}"
                         originalLabel="CHEQUE N.{M.1}"/>
 
     <transactionMatcher qifM="CHEQUE[\s]+N.[\s]+(.*)"
-                        transactionTypeName="check" label="CHEQUE N.{M.1}"
+                        transactionTypeName="check" label="CHEQUE N°{M.1}"
                         originalLabel="CHEQUE N.{M.1}"/>
 
     <transactionMatcher bankType="ECH.PR" qifM="(.*)"
