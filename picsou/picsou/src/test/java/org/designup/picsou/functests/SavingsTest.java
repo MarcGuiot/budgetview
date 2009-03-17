@@ -821,26 +821,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/09");
     budgetView.savings.checkSeries("Main Accounts.Placement", 0, -100);
     budgetView.savings.checkSeries("Account n. 111222", 0, 100);
-
-
-  }
-
-  public void testHideAccountIfNoSeries() throws Exception {
-    savingsAccounts.createSavingsAccount("Epargne", 1000);
-
-    views.selectBudget();
-    budgetView.savings.checkNoAccountsDisplayed();
-    views.selectBudget();
-    budgetView.savings.createSeries()
-      .setName("Virement CAF")
-      .setCategory(MasterCategory.SAVINGS)
-      .setToAccount("Epargne")
-      .setFromAccount("External account")
-      .selectAllMonths()
-      .setAmount("300")
-      .setDay("5")
-      .validate();
-    budgetView.savings.checkSeriesPresent("Virement CAF");
   }
 
   public void testSavingsGauge() throws Exception {

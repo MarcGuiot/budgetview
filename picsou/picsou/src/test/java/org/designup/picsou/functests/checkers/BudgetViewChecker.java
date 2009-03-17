@@ -23,7 +23,7 @@ public class BudgetViewChecker extends GuiChecker {
   public final BudgetAreaChecker envelopes;
   public final OccasionalAreaChecker occasional;
   public final BudgetAreaChecker specials;
-  public final SavingsAreaChecker savings;
+  public final BudgetAreaChecker savings;
 
   private Window window;
 
@@ -34,7 +34,7 @@ public class BudgetViewChecker extends GuiChecker {
     this.envelopes = new BudgetAreaChecker("envelopeBudgetView", false, BudgetArea.ENVELOPES);
     this.occasional = new OccasionalAreaChecker();
     this.specials = new BudgetAreaChecker("projectsBudgetView", false, BudgetArea.SPECIAL);
-    this.savings = new SavingsAreaChecker("savingsBudgetView", true, BudgetArea.SAVINGS);
+    this.savings = new BudgetAreaChecker("savingsBudgetView", true, BudgetArea.SAVINGS);
   }
 
   private int getIndex(JPanel panel, Component component) {
