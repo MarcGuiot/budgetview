@@ -9,7 +9,6 @@ import org.designup.picsou.gui.components.TextDisplay;
 import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.model.BudgetArea;
@@ -32,7 +31,6 @@ import org.globsframework.model.utils.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -41,7 +39,6 @@ import java.util.Set;
 public class BudgetAreaSeriesView extends View {
   private String name;
   private BudgetArea budgetArea;
-  private GlobMatcher totalMatcher;
   private SeriesEditionDialog seriesEditionDialog;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
   private PicsouMatchers.SeriesFirstEndDateFilter seriesDateFilter;
@@ -49,13 +46,20 @@ public class BudgetAreaSeriesView extends View {
   private Repeat<Glob> seriesRepeat;
   private List<Key> currentSeries = Collections.emptyList();
   private BudgetAreaHeaderUpdater headerUpdater;
+  private SeriesEditionButtons seriesButtons;
 
-  protected BudgetAreaSeriesView(String name, final BudgetArea budgetArea, final GlobRepository repository, Directory directory, final SeriesEditionDialog seriesEditionDialog) {
+  public BudgetAreaSeriesView(String name,
+                              final BudgetArea budgetArea,
+                              final GlobRepository repository,
+                              Directory directory,
+                              final SeriesEditionDialog seriesEditionDialog) {
     super(repository, directory);
     this.name = name;
     this.budgetArea = budgetArea;
-    this.totalMatcher = GlobMatchers.linkTargetFieldEquals(PeriodSeriesStat.SERIES, Series.BUDGET_AREA, budgetArea.getId());
     this.seriesEditionDialog = seriesEditionDialog;
+
+    seriesButtons = new SeriesEditionButtons(budgetArea, repository, directory, seriesEditionDialog);
+
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
@@ -64,6 +68,7 @@ public class BudgetAreaSeriesView extends View {
         update();
       }
     }, Month.TYPE);
+
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(BalanceStat.TYPE)) {
@@ -131,10 +136,7 @@ public class BudgetAreaSeriesView extends View {
     seriesRepeat =
       builder.addRepeat("seriesRepeat", new GlobList(), new SeriesRepeatComponentFactory());
 
-    builder.add("createSeries", new CreateSeriesAction());
-
-    builder.add("editAllSeries",
-                new EditSeriesAction(repository, directory, seriesEditionDialog, budgetArea));
+    seriesButtons.registerButtons(builder);
 
     parentBuilder.add(name, builder);
     seriesDateFilter = PicsouMatchers.seriesDateFilter(budgetArea.getId(), false);
@@ -156,29 +158,13 @@ public class BudgetAreaSeriesView extends View {
     };
   }
 
-  private class CreateSeriesAction extends AbstractAction {
-    public void actionPerformed(ActionEvent e) {
-      seriesEditionDialog.showNewSeries(GlobList.EMPTY,
-                                        selectionService.getSelection(Month.TYPE),
-                                        budgetArea);
-    }
-  }
-
   private class SeriesRepeatComponentFactory implements RepeatComponentFactory<Glob> {
-
-    private class EditSeriesFunctor implements GlobListFunctor {
-      public void run(GlobList list, GlobRepository repository) {
-        showSeriesEdition(list.getFirst());
-      }
-    }
 
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob periodSeriesStat) {
 
       final Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
 
-      final GlobButtonView seriesNameButton =
-        GlobButtonView.init(Series.TYPE, repository, directory, new EditSeriesFunctor())
-          .forceSelection(series);
+      GlobButtonView seriesNameButton = seriesButtons.createSeriesButton(series);
       cellBuilder.add("seriesName", seriesNameButton.getComponent());
 
       addAmountButton("observedSeriesAmount", PeriodSeriesStat.AMOUNT, series, cellBuilder, new GlobListFunctor() {
@@ -189,7 +175,7 @@ public class BudgetAreaSeriesView extends View {
 
       addAmountButton("plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder, new GlobListFunctor() {
         public void run(GlobList list, GlobRepository repository) {
-          showSeriesEdition(series);
+          seriesEditionDialog.show(series, selectedMonthIds);
         }
       });
 
@@ -221,8 +207,5 @@ public class BudgetAreaSeriesView extends View {
                                                GlobListStringifiers.sum(field, decimalFormat, !budgetArea.isIncome()));
     }
 
-    private void showSeriesEdition(Glob series) {
-      seriesEditionDialog.show(series, selectedMonthIds);
-    }
   }
 }

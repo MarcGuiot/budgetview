@@ -1020,7 +1020,5 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setToAccount("Main accounts")
       .setFromAccount("Livret")
       .validate();
-
   }
-
 }

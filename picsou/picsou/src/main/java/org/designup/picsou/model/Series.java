@@ -25,9 +25,6 @@ public class Series {
    */
   public static StringField LABEL;
 
-  /**
-   * @deprecated TODO: migrer LABEL dans NAME, et garder NAME
-   */
   @NamingField
   public static StringField NAME;
 

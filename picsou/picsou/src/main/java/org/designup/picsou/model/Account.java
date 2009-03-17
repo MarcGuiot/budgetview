@@ -123,6 +123,12 @@ public class Account {
            && fromAccount.get(Account.IS_IMPORTED_ACCOUNT);
   }
 
+  public static boolean isUserCreatedSavingsAccount(Glob account) {
+    return (account != null) &&
+           AccountType.SAVINGS.getId().equals(account.get(Account.ACCOUNT_TYPE)) &&
+           !SAVINGS_SUMMARY_KEY.equals(account.getKey());
+  }
+
   public static double getMultiplierForInOrOutputOfTheAccount(Glob fromAccount, Glob toAccount, Glob forAccount) {
 
     if (fromAccount == null && toAccount == null) {
@@ -153,7 +159,7 @@ public class Account {
     double multiplier;
     Integer fromAccountIdPointOfView = toAccount == null ?
                                        (fromAccount == null ? null : fromAccount.get(ID))
-                                       : toAccount.get(ID);
+                                                         : toAccount.get(ID);
     if (fromAccountIdPointOfView == null) {
       multiplier = 0;
     }

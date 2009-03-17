@@ -47,6 +47,12 @@ public class SavingsAccountViewPanel extends AccountViewPanel {
   }
 
   protected JLabel getEstimatedAccountPositionLabel(final Key accountKey) {
+    return getEstimatedAccountPositionLabel(accountKey, repository, directory);
+  }
+
+  public static JLabel getEstimatedAccountPositionLabel(final Key accountKey,
+                                                        GlobRepository repository,
+                                                        Directory directory) {
     GlobLabelView accountPosition =
       GlobLabelView.init(Month.TYPE, repository, directory,
                          new GlobListStringifier() {
@@ -75,6 +81,12 @@ public class SavingsAccountViewPanel extends AccountViewPanel {
   }
 
   protected JLabel getEstimatedAccountPositionDateLabel(final Key accountKey) {
+    return getEstimatedAccountPositionDateLabel(accountKey, repository, directory);
+  }
+
+  public static JLabel getEstimatedAccountPositionDateLabel(Key accountKey,
+                                                            GlobRepository repository,
+                                                            Directory directory) {
     GlobLabelView accountPosition =
       GlobLabelView.init(Month.TYPE, repository, directory,
                          new GlobListStringifier() {

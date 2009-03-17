@@ -143,7 +143,7 @@ public abstract class AccountViewPanel {
   private class AccountRepeatFactory implements RepeatComponentFactory<Glob> {
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob account) {
       add("accountName",
-          GlobButtonView.init(Account.NAME, repository, directory, new EditAccountFunctor()),
+          createAccountNameButton(account, repository, directory),
           account, cellBuilder);
 
       add("accountNumber",
@@ -202,12 +202,21 @@ public abstract class AccountViewPanel {
         directory.get(BrowsingService.class).launchBrowser(url);
       }
     }
+  }
 
-    private class EditAccountFunctor implements GlobListFunctor {
-      public void run(GlobList list, GlobRepository repository) {
-        AccountEditionDialog dialog = new AccountEditionDialog(directory.get(JFrame.class), repository, directory);
-        dialog.show(list.get(0));
-      }
+  private static class EditAccountFunctor implements GlobListFunctor {
+
+    private GlobRepository repository;
+    private Directory directory;
+
+    private EditAccountFunctor(GlobRepository repository, Directory directory) {
+      this.repository = repository;
+      this.directory = directory;
+    }
+
+    public void run(GlobList list, GlobRepository repository) {
+      AccountEditionDialog dialog = new AccountEditionDialog(directory.get(JFrame.class), repository, directory);
+      dialog.show(list.get(0));
     }
   }
 
@@ -219,5 +228,9 @@ public abstract class AccountViewPanel {
       }
       return Lang.get("accountView.total.date", Formatting.toString(list.get(0).get(Account.BALANCE_DATE)));
     }
+  }
+
+  public static GlobButtonView createAccountNameButton(Glob account, final GlobRepository repository, final Directory directory) {
+    return GlobButtonView.init(Account.NAME, repository, directory, new EditAccountFunctor(repository, directory)).forceSelection(account);
   }
 }

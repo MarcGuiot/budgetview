@@ -86,6 +86,7 @@
                   <component ref="budgetAreaGauge" styleClass="detailGauge"/>
                   <label ref="budgetAreaPlannedAmount" styleClass="plannedAmount" anchor="right"/>
                 </repeat>
+                <filler fill="vertical"/>                
                 <row margin="0" autoHideSource="uncategorizedAmountLabel">
                   <filler fill="horizontal"/>
                   <button action="categorize" autoHideSource="uncategorizedAmountLabel" anchor="left"
@@ -97,58 +98,6 @@
           </column>
         </card>
       </cards>
-    </panel>
-    <panel ref="savingsPanel" styleClass="block">
-      <column styleClass="innerBlock">
-        <row weightY="0">
-          <filler fill="horizontal"/>
-          <grid>
-            <component ref="savingsTotalBalance" gridPos="(0,0,1,2)"
-                       messagePrefix="savingsBalanceGraph.tooltip"
-                       receivedColorTop="balancegraph.received.top"
-                       receivedColorBottom="balancegraph.received.bottom"
-                       spentColorTop="balancegraph.spent.top"
-                       spentColorBottom="balancegraph.spent.bottom"
-                       borderColor="balancegraph.border"
-                       preferredSize="(70,10)"
-                       minimumSize="(70,10)"
-                       weightX="0.001" weightY="1.0"
-                       marginLeft="10" marginRight="10" marginBottom="5"
-                       fill="vertical"/>
-            <label text="$monthsummary.savings.balance" styleClass="totalAmountTitle" gridPos="(1,0,2,1)"
-                   autoHideSource="savingsBalanceAmount" tooltipText="$monthsummary.savings.balance.tooltip"
-                   weightY="100" marginTop="0" marginBottom="0"/>
-            <label ref="savingsBalanceAmount" styleClass="totalAmount"
-                   tooltipText="$monthsummary.savings.balance.tooltip"
-                   gridPos="(1,1,2,1)" weightY="100" marginTop="0" marginBottom="0"/>
-          </grid>
-          <filler fill="horizontal"/>
-        </row>
-        <scrollPane weightY="200" minimumSize="(50, 150)">
-          <column border="empty(10)">
-            <repeat ref="savingsAccountRepeat">
-              <column ref="accountGroup">
-                <label ref="accountName" fill="horizontal" horizontalAlignment="center" anchor="center"
-                       foreground="#555555" marginTop="2" font="-,bold,13" weightY="0"/>
-                <grid>
-                  <label text="$monthsummary.savings.in" gridPos="(0,0)" marginRight="5"
-                         autoHideSource="savingsInGauge"/>
-                  <button ref="savingsInAmount" styleClass="itemLink" gridPos="(1,0)" autoHideSource="savingsInGauge"/>
-                  <component ref="savingsInGauge" styleClass="detailGauge" gridPos="(2,0)"/>
-                  <label ref="savingsPlannedInAmount" gridPos="(3,0)" autoHideSource="savingsInGauge"/>
-
-                  <label text="$monthsummary.savings.out" gridPos="(0,1)" marginRight="5"
-                         autoHideSource="savingsOutGauge"/>
-                  <button ref="savingsOutAmount" styleClass="itemLink" gridPos="(1,1)"
-                          autoHideSource="savingsOutGauge"/>
-                  <component ref="savingsOutGauge" styleClass="detailGauge" gridPos="(2,1)"/>
-                  <label ref="savingsPlannedOutAmount" gridPos="(3,1)" autoHideSource="savingsOutGauge"/>
-                </grid>
-              </column>
-            </repeat>
-          </column>
-        </scrollPane>
-      </column>
     </panel>
   </column>
 </splits>

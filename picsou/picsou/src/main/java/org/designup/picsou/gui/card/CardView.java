@@ -27,7 +27,7 @@ public class CardView extends View implements GlobSelectionListener {
 
   private Card lastSelectedCard = NavigationService.INITIAL_CARD;
   private JToggleButton[] toggles = new JToggleButton[Card.values().length];
-  private static final Card[] CARDS = {Card.HOME, Card.BUDGET, Card.EVOLUTION, Card.DATA, Card.CATEGORIZATION};
+  private static final Card[] CARDS = {Card.HOME, Card.BUDGET, Card.EVOLUTION, Card.SAVINGS, Card.DATA, Card.CATEGORIZATION};
 
   public CardView(GlobRepository repository, Directory directory) {
     super(repository, directory);
