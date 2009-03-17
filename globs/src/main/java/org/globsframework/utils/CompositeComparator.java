@@ -5,7 +5,7 @@ import java.util.Comparator;
 public class CompositeComparator<T> implements Comparator<T> {
   Comparator[] comparators;
 
-  public CompositeComparator(Comparator... comparators) {
+  public CompositeComparator(Comparator<T>... comparators) {
     this.comparators = comparators;
   }
 

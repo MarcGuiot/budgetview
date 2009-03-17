@@ -300,7 +300,7 @@ public class GlobMatchers {
     };
   }
 
-  public static GlobMatcher fieldStricklyGreater(final IntegerField field, final int value) {
+  public static GlobMatcher fieldStrictlyGreaterThan(final IntegerField field, final int value) {
     return new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {
         return item.get(field) > value;
@@ -308,7 +308,7 @@ public class GlobMatchers {
     };
   }
 
-  public static GlobMatcher fieldStrickyLesser(final IntegerField field, final int value) {
+  public static GlobMatcher fieldStrictlyLessThan(final IntegerField field, final int value) {
     return new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {
         return item.get(field) < value;

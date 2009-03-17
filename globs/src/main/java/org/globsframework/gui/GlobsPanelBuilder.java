@@ -150,13 +150,13 @@ public class GlobsPanelBuilder extends SplitsBuilder {
   }
 
   public GlobRepeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
-                              Comparator<Glob> comparator, RepeatComponentFactory factory) {
+                              Comparator<Glob> comparator, RepeatComponentFactory<Glob> factory) {
     return addRepeat(name, type, matcher, comparator, repository, this, factory);
   }
 
   public static GlobRepeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
                                      Comparator<Glob> comparator, GlobRepository repository, SplitsBuilder builder,
-                                     RepeatComponentFactory factory) {
+                                     RepeatComponentFactory<Glob> factory) {
     GlobRepeatListener listener = new GlobRepeatListener();
     GlobViewModel model = new GlobViewModel(type, repository, comparator, listener);
     model.setFilter(matcher, true);
