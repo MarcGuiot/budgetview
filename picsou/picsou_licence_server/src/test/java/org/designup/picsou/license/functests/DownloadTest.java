@@ -60,7 +60,7 @@ public class DownloadTest extends LicenseTestCase {
       .set(SoftwareInfo.LATEST_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION + 1L)
       .getRequest().run();
     connection.commitAndClose();
-    start();
+    startServers();
     final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
     final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);
     byte[] content = generateConfigContent();

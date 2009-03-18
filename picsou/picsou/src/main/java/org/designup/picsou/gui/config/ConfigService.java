@@ -29,14 +29,15 @@ import java.util.zip.ZipEntry;
 public class ConfigService {
   private static final Pattern FILTER = Pattern.compile(PicsouApplication.APPNAME + "[0-9][0-9]*" + "\\.jar");
 
-  public static final String COM_PICSOU_LICENSE_URL = "com.picsou.license.url";
-  public static final String COM_PICSOU_LICENSE_FTP_URL = "com.picsou.license.ftp.url";
+  public static final String COM_APP_LICENSE_URL = PicsouApplication.APPNAME + ".license.url";
+  public static final String COM_APP_LICENSE_FTP_URL = PicsouApplication.APPNAME + ".license.ftp.url";
   public static final String HEADER_MAIL = "mail";
   public static final String HEADER_SIGNATURE = "signature";
   public static final String HEADER_IS_VALIDE = "isValide";
   public static final String HEADER_CODE = "code";
   public static final String HEADER_COUNT = "count";
   public static final String HEADER_MAIL_SENT = "mailSent";
+  public static final String HEADER_MAIL_SENT_FAILED = "mailSentFailed";
   public static final String HEADER_STATUS = "status";
   public static final String HEADER_MAIL_UNKNOWN = "mailUnknown";
   public static final String HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT = "activationCodeNotValideMailNotSent";
@@ -72,8 +73,8 @@ public class ConfigService {
   public ConfigService(String applicationVersion, Long jarVersion, Long localConfigVersion, File currentConfigFile) {
     this.currentConfigFile = currentConfigFile;
     Utils.beginRemove();
-    URL = System.getProperty(COM_PICSOU_LICENSE_URL);
-    FTP_URL = System.getProperty(COM_PICSOU_LICENSE_FTP_URL);
+    URL = System.getProperty(COM_APP_LICENSE_URL);
+    FTP_URL = System.getProperty(COM_APP_LICENSE_FTP_URL);
     Utils.endRemove();
     this.applicationVersion = applicationVersion;
     localJarVersion = jarVersion;
@@ -102,6 +103,9 @@ public class ConfigService {
         if (status != null) {
           if (status.getValue().equalsIgnoreCase(HEADER_MAIL_SENT)) {
             return Lang.get("license.mail.sended");
+          }
+          if (status.getValue().equalsIgnoreCase(HEADER_MAIL_SENT_FAILED)) {
+            return Lang.get("license.mail.sended.failed");
           }
           if (status.getValue().equalsIgnoreCase(HEADER_MAIL_UNKNOWN)) {
             return Lang.get("license.mail.unknown");
@@ -185,7 +189,7 @@ public class ConfigService {
   }
 
   private boolean checkMailSent(PostMethod postMethod) {
-    Header header = postMethod.getResponseHeader(HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT);
+    Header header = postMethod.getResponseHeader(HEADER_MAIL_SENT);
     return header != null && header.getValue().equals("true");
   }
 
@@ -233,7 +237,7 @@ public class ConfigService {
         }
       };
       thread.setDaemon(true);
-      thread.run();
+      thread.start();
     }
   }
 
@@ -260,7 +264,13 @@ public class ConfigService {
           repository.update(User.KEY, User.SIGNATURE, Encoder.stringToByte(value));
         }
         else {
-          repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAIL_BAD_SIGNATURE);
+          Header isMailSentHeader = postMethod.getResponseHeader(HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT);
+          if (isMailSentHeader != null && "true".equalsIgnoreCase(isMailSentHeader.getValue())) {
+            repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAIL_MAIL_SEND);
+          }
+          else {
+            repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAIL_BAD_SIGNATURE);
+          }
         }
       }
     }
@@ -352,10 +362,12 @@ public class ConfigService {
 
 
   public Boolean isVerifiedServerValidity() {
+    Utils.beginRemove();
     if (URL == null || URL.length() == 0) {
       userState = new CompletedUserState();
       return true;
     }
+    Utils.endRemove();
     return userState.isVerifiedServerValidity();
   }
 

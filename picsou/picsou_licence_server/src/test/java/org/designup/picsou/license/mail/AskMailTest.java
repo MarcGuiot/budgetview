@@ -17,7 +17,7 @@ public class AskMailTest extends LicenseTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
-    start();
+    startServers();
     client = new HttpClient();
   }
 
@@ -32,7 +32,7 @@ public class AskMailTest extends LicenseTestCase {
     PostMethod postMethod = sendRequest();
     Header header = postMethod.getResponseHeader(ConfigService.HEADER_STATUS);
     assertEquals(ConfigService.HEADER_MAIL_SENT, header.getValue());
-    checkReceive("monPremierClient@pirate.du");
+    checkMailReceive("monPremierClient@pirate.du");
   }
 
   private PostMethod sendRequest() throws IOException {

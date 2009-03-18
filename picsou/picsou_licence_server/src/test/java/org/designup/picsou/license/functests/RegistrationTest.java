@@ -35,7 +35,7 @@ public class RegistrationTest extends LicenseTestCase {
     loginChecker.logNewUser("user", "passw@rd");
     LicenseChecker license = LicenseChecker.open(window);
     license.checkConnectionNotAvailable();
-    start();
+    startServers();
     Thread.sleep(2000);
     license.checkConnectionIsAvailable();
   }

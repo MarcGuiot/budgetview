@@ -18,8 +18,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Timer;
 import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 public class LicenseServer {
+  static Logger logger = Logger.getLogger("LicenseServer");
   public static final String USE_SSHL = "picsou.server.useSsl";
   public static final String KEYSTORE = "picsou.server.keystore";
   public static final String HOST_PROPERTY = "picsou.server.host";
@@ -35,6 +37,7 @@ public class LicenseServer {
   private String databasePassword = "";
   private QueryVersionTask queryVersionTask;
   private Timer timer;
+  private Directory directory;
 
   public LicenseServer() throws IOException {
     jetty = new Server();
@@ -106,7 +109,7 @@ public class LicenseServer {
     if (database != null) {
       databaseUrl = database;
     }
-    Directory directory = createDirectory();
+    directory = createDirectory();
 
     timer = new Timer(true);
     queryVersionTask = new QueryVersionTask(directory.get(SqlService.class),
@@ -138,8 +141,10 @@ public class LicenseServer {
   }
 
   public void stop() throws Exception {
+    directory.get(Mailer.class).stop();
     jetty.stop();
     jetty.join();
     timer.cancel();
+    logger.info("end server");
   }
 }

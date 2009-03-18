@@ -1,5 +1,7 @@
 package org.designup.picsou.license.functests;
 
+import com.dumbster.smtp.SimpleSmtpServer;
+import junit.framework.AssertionFailedError;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
@@ -27,12 +29,14 @@ public class LicenseTest extends LicenseTestCase {
   private static final String MAIL = "alfred@free.fr";
   private static final String SECOND_PATH = "tmp/otherprevayler";
 
+
   protected void setUp() throws Exception {
     super.setUp();
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
     TimeService.setCurrentDate(Dates.parseMonth("2008/07"));
-    start();
-    startPicsou();
+    startServers();
+    startApp();
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
   }
 
   protected void tearDown() throws Exception {
@@ -47,7 +51,7 @@ public class LicenseTest extends LicenseTestCase {
     picsouApplication = null;
   }
 
-  private void startPicsou() {
+  private void startApp() {
     window = WindowInterceptor.run(new Trigger() {
       public void run() throws Exception {
         picsouApplication = new PicsouApplication();
@@ -62,31 +66,12 @@ public class LicenseTest extends LicenseTestCase {
     register(connection, mail);
     window.dispose();
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
-    startPicsou();
+    startApp();
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logExistingUser("user", "passw@rd");
 
     Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 2L);
     assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
-    checkValidLicense(false);
-  }
-
-  private void register(SqlConnection connection, String mail) throws InterruptedException {
-    checkRepoIdIsUpdated(connection, 1L, null);
-    LoginChecker loginChecker = new LoginChecker(window);
-    loginChecker.logNewUser("user", "passw@rd");
-    connection.getCreateBuilder(License.TYPE)
-      .set(License.MAIL, mail)
-      .set(License.ACTIVATION_CODE, "1234")
-      .getRequest()
-      .run();
-    connection.commit();
-    LicenseChecker.enterLicense(window, mail, "1234");
-    OperationChecker operation = new OperationChecker(window);
-    operation.openPreferences().setFutureMonthsCount(24).validate();
-    Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 1L);
-    assertEquals(1L, license.get(License.ACCESS_COUNT).longValue());
-    assertTrue(license.get(License.SIGNATURE).length > 1);
     checkValidLicense(false);
   }
 
@@ -96,8 +81,7 @@ public class LicenseTest extends LicenseTestCase {
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
     window.dispose();
-    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
-    startPicsou();
+    startApp();
     checkRepoIdIsUpdated(connection, 2L, null);
     loginChecker = new LoginChecker(window);
     loginChecker.logExistingUser("user", "passw@rd");
@@ -108,21 +92,22 @@ public class LicenseTest extends LicenseTestCase {
   }
 
   public void testResendsActivationKeyIfCountDecreases() throws Exception {
-    String repoId = startRegisteredFirstPicsou();
+    String repoId = loggingAndRegisterFirstPicsou();
     window.dispose();
-    restartPicsouToIncrementCount();
+    restartPicsouAndLogAndDispose();
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
-    startPicsou();
+    startApp();
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
 
     LoginChecker login = new LoginChecker(window);
     login.logNewUser("user", "passw@rd");
     checkRepoIdIsUpdated(getSqlConnection(), 1L, Constraints.notEqual(RepoInfo.REPO_ID, repoId));
-    checkStillDayWithPicsouMessage();
+    checkStillDayWithAppMessage();
 
-    LicenseChecker.enterBadLicense(window, MAIL, "1234");
-    checkStillDayWithPicsouMessage();
-    String mailcontent = checkReceive(MAIL);
+    LicenseChecker.enterBadLicense(window, MAIL, "1234", "Activation failed a mail was sent at alfred@free.fr");
+    checkStillDayWithAppMessage();
+    String mailcontent = checkMailReceive(MAIL);
     assertTrue(mailcontent, mailcontent.contains("Your new activation code"));
 
     int startCode = mailcontent.indexOf("is ") + 3;
@@ -144,8 +129,7 @@ public class LicenseTest extends LicenseTestCase {
 
   private void checkKilledVersion(String pathToData) {
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, pathToData);
-    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
-    startPicsou();
+    startApp();
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logExistingUser("user", "passw@rd");
     checkMessageOver();
@@ -158,12 +142,11 @@ public class LicenseTest extends LicenseTestCase {
     register(connection, mail);
 
     window.dispose();
-    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
-    startPicsou();
+    startApp();
 
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logExistingUser("user", "passw@rd");
-    LicenseChecker.enterBadLicense(window, "titi@foo.org", "4321");
+    LicenseChecker.enterBadLicense(window, "titi@foo.org", "4321", "Activation failed");
 
     Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 2L);
     assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
@@ -179,37 +162,6 @@ public class LicenseTest extends LicenseTestCase {
       .cancel();
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     checkLicenseExpiration();
-  }
-
-  private void checkLicenseExpiration() {
-    OperationChecker operation = new OperationChecker(window);
-    LicenseExpirationChecker licenseExpiration = new LicenseExpirationChecker(operation.getImportTrigger());
-    licenseExpiration.close();
-  }
-
-  private void checkValidLicense(final boolean anonymous) {
-    OperationChecker operation = new OperationChecker(window);
-    Window dialog = WindowInterceptor.getModalDialog(operation.getImportTrigger());
-    ImportChecker importChecker = new ImportChecker(dialog);
-    importChecker.close();
-    if (!anonymous) {
-      assertFalse(window.getTextBox("licenseMessage").isVisible());
-    }
-    else {
-      assertTrue(window.getTextBox("licenseMessage").isVisible());
-    }
-  }
-
-  private void checkStillDayWithPicsouMessage() {
-    TextBox message = window.getTextBox("licenseMessage");
-    assertThat(message.isVisible());
-    assertTrue(message.textContains("Still "));
-  }
-
-  private void checkMessageOver() {
-    TextBox message = window.getTextBox("licenseMessage");
-    assertThat(message.isVisible());
-    assertTrue(message.textContains("Your free trial period is over"));
   }
 
   public void testStartRegistrationAndStopServer() throws Exception {
@@ -241,20 +193,94 @@ public class LicenseTest extends LicenseTestCase {
     checkLicenseExpiration();
   }
 
-  private void restartPicsouToIncrementCount() {
+  public void testRegisterAndReRegisterToOtherFailedAndSendAMail() throws Exception {
+    SqlConnection connection = getSqlConnection();
+    String mail = "alfred@free.fr";
+    register(connection, mail);
+    window.dispose();
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
-    startPicsou();
+    TimeService.setCurrentDate(Dates.parse("2008/10/10"));
+    restartPicsouAndLogAndDispose();
+
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
+    TimeService.setCurrentDate(Dates.parse("2008/07/10"));
+    startApp();
+    LoginChecker login = new LoginChecker(window);
+    login.logNewUser("user", "passw@rd");
+    window.dispose();
+    TimeService.setCurrentDate(Dates.parse("2008/10/10"));
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
+    startApp();
+    login = new LoginChecker(window);
+    login.logExistingUser("user", "passw@rd");
+    LicenseChecker.enterBadLicense(window, mail, "1234", "Activation failed a mail was sent at alfred@free.fr");
+    checkLicenseExpiration();
+    checkMailReceive(mail);
+    checkKilled();
+  }
+
+  public void testMailSentLater() throws Exception {
+    loggingAndRegisterFirstPicsou();
+    window.dispose();
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
+    startApp();
+
+    LoginChecker login = new LoginChecker(window);
+    login.logNewUser("user", "passw@rd");
+
+    mailServer.stop();
+    mailThread.join();
+    LicenseChecker.enterBadLicense(window, MAIL, "1234", "Activation failed a mail was sent at alfred@free.fr");
+    boolean received = false;
+    try {
+      checkMailReceive(MAIL);
+      received = true;
+    }
+    catch (AssertionFailedError e) {
+    }
+    assertFalse(received);
+    mailServer = new SimpleSmtpServer(2500);
+    mailThread = new Thread() {
+      public void run() {
+        mailServer.run();
+      }
+    };
+    mailThread.setDaemon(true);
+    mailThread.start();
+    checkMailReceive(MAIL);
+  }
+
+  private void checkLicenseExpiration() {
+    OperationChecker operation = new OperationChecker(window);
+    LicenseExpirationChecker licenseExpiration = new LicenseExpirationChecker(operation.getImportTrigger());
+    licenseExpiration.close();
+  }
+
+  private void checkValidLicense(final boolean anonymous) {
+    OperationChecker operation = new OperationChecker(window);
+    Window dialog = WindowInterceptor.getModalDialog(operation.getImportTrigger());
+    ImportChecker importChecker = new ImportChecker(dialog);
+    importChecker.close();
+    if (!anonymous) {
+      assertFalse(window.getTextBox("licenseMessage").isVisible());
+    }
+    else {
+      assertTrue(window.getTextBox("licenseMessage").isVisible());
+    }
+  }
+
+  private void restartPicsouAndLogAndDispose() {
+    startApp();
     LoginChecker login = new LoginChecker(window);
     login.logExistingUser("user", "passw@rd");
-    TimeViewChecker timeView = new TimeViewChecker(window);
-    timeView.checkSpanEquals("2008/07", "2010/07");
     window.dispose();
   }
 
   private void activateNewLicenseInNewVersion(String code) {
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
-    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
-    startPicsou();
+    startApp();
     LoginChecker login = new LoginChecker(window);
     login.logExistingUser("user", "passw@rd");
     checkValidLicense(true);
@@ -265,15 +291,14 @@ public class LicenseTest extends LicenseTestCase {
 
   private void checkVersionValidity(final boolean anonymous, final String pathToData) {
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, pathToData);
-    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
-    startPicsou();
+    startApp();
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logExistingUser("user", "passw@rd");
     checkValidLicense(anonymous);
     window.dispose();
   }
 
-  private String startRegisteredFirstPicsou() throws InterruptedException {
+  private String loggingAndRegisterFirstPicsou() throws InterruptedException {
     SqlConnection connection = getSqlConnection();
     String repoId = checkRepoIdIsUpdated(connection, 1L, null);
     LoginChecker loginChecker = new LoginChecker(window);
@@ -302,6 +327,25 @@ public class LicenseTest extends LicenseTestCase {
     return repoInfo.get(RepoInfo.REPO_ID);
   }
 
+  private void checkStillDayWithAppMessage() {
+    TextBox message = window.getTextBox("licenseMessage");
+    assertThat(message.isVisible());
+    assertTrue(message.textContains("Still "));
+  }
+
+  private void checkMessageOver() {
+    TextBox message = window.getTextBox("licenseMessage");
+    assertThat(message.isVisible());
+    assertTrue(message.textContains("Your free trial period is over"));
+  }
+
+  private void checkKilled() {
+    TextBox message = window.getTextBox("licenseMessage");
+    assertThat(message.isVisible());
+    assertTrue(message.textContains("Activation failed a mail was sent at alfred@free.fr"));
+  }
+
+
   private Glob getLicense(SqlConnection connection, String mail, Field field, Object expected) throws InterruptedException {
     return getGlob(connection, field, expected, Constraints.equal(License.MAIL, mail));
   }
@@ -326,4 +370,24 @@ public class LicenseTest extends LicenseTestCase {
     assertEquals(1, glob.size());
     return glob.get(0);
   }
+
+  private void register(SqlConnection connection, String mail) throws InterruptedException {
+    checkRepoIdIsUpdated(connection, 1L, null);
+    LoginChecker loginChecker = new LoginChecker(window);
+    loginChecker.logNewUser("user", "passw@rd");
+    connection.getCreateBuilder(License.TYPE)
+      .set(License.MAIL, mail)
+      .set(License.ACTIVATION_CODE, "1234")
+      .getRequest()
+      .run();
+    connection.commit();
+    LicenseChecker.enterLicense(window, mail, "1234");
+    OperationChecker operation = new OperationChecker(window);
+    operation.openPreferences().setFutureMonthsCount(24).validate();
+    Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 1L);
+    assertEquals(1L, license.get(License.ACCESS_COUNT).longValue());
+    assertTrue(license.get(License.SIGNATURE).length > 1);
+    checkValidLicense(false);
+  }
+
 }

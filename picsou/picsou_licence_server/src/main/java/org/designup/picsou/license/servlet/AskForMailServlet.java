@@ -52,8 +52,12 @@ public class AskForMailServlet extends HttpServlet {
           return;
         }
         if (registeredMail.size() >= 1) {
-          mailer.sendExistingLicense(registeredMail.get(0), lang, activationCode);
-          resp.addHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_SENT);
+          if (mailer.sendExistingLicense(registeredMail.get(0), lang, activationCode)) {
+            resp.addHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_SENT);
+          }
+          else {
+            resp.addHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_SENT_FAILED);
+          }
         }
         if (registeredMail.size() > 1) {
           logger.severe("mail registered multiple time '" + mailTo + "'");

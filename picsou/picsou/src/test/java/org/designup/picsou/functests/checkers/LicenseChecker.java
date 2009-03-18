@@ -25,12 +25,13 @@ public class LicenseChecker {
     });
   }
 
-  static public void enterBadLicense(Window window, final String mail, final String code) {
+  static public void enterBadLicense(Window window, final String mail, final String code, final String message) {
     enterLicense(window, new WindowHandler() {
       public Trigger process(Window window) throws Exception {
         window.getInputTextBox("mail").setText(mail);
         window.getInputTextBox("code").setText(code);
         window.getButton("ok").click();
+        assertTrue(window.getTextBox("connectionMessage").textEquals(message));
         return window.getButton("cancel").triggerClick();
       }
     });

@@ -28,7 +28,7 @@ import java.util.Locale;
 public abstract class LicenseTestCase extends UISpecTestCase {
   protected SimpleSmtpServer mailServer;
   private LicenseServer server;
-  private Thread mailThread;
+  protected Thread mailThread;
   private static final String databaseUrl = "jdbc:hsqldb:.";
   private SqlService sqlService = null;
   protected static final String PATH_TO_DATA = "tmp/localprevayler";
@@ -40,8 +40,8 @@ public abstract class LicenseTestCase extends UISpecTestCase {
     super.setUp();
     Locale.setDefault(Locale.ENGLISH);
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
-    System.setProperty(ConfigService.COM_PICSOU_LICENSE_URL, "http://localhost:5000");
-    System.setProperty(ConfigService.COM_PICSOU_LICENSE_FTP_URL, "ftp://localhost:12000");
+    System.setProperty(ConfigService.COM_APP_LICENSE_URL, "http://localhost:5000");
+    System.setProperty(ConfigService.COM_APP_LICENSE_FTP_URL, "ftp://localhost:12000");
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, PATH_TO_DATA);
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
     mailServer = new SimpleSmtpServer(2500);
@@ -76,10 +76,10 @@ public abstract class LicenseTestCase extends UISpecTestCase {
     sqlService = null;
     ftpServer = null;
     server = null;
-    System.setProperty(ConfigService.COM_PICSOU_LICENSE_URL, "");
+    System.setProperty(ConfigService.COM_APP_LICENSE_URL, "");
   }
 
-  protected void start() throws Exception {
+  protected void startServers() throws Exception {
     mailThread = new Thread() {
       public void run() {
         mailServer.run();
@@ -136,8 +136,8 @@ public abstract class LicenseTestCase extends UISpecTestCase {
     };
   }
 
-  protected String checkReceive(String mailTo) throws InterruptedException {
-    long end = System.currentTimeMillis() + 1000;
+  protected String checkMailReceive(String mailTo) throws InterruptedException {
+    long end = System.currentTimeMillis() + 2000;
     synchronized (mailServer) {
       Iterator receivedEmail = mailServer.getReceivedEmail();
       while (!receivedEmail.hasNext()) {

@@ -61,12 +61,12 @@ public class LicenseExpirationDialog {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(User.KEY)) {
           response.setVisible(false);
-          sendAction.setEnabled(!Strings.isNullOrEmpty(repository.get(User.KEY).get(User.MAIL)));
+          sendAction.setEnabled(Strings.isNotEmpty(repository.get(User.KEY).get(User.MAIL)));
         }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        sendAction.setEnabled(!Strings.isNullOrEmpty(repository.get(User.KEY).get(User.MAIL)));
+        sendAction.setEnabled(Strings.isNotEmpty(repository.get(User.KEY).get(User.MAIL)));
       }
     });
     dialog = PicsouDialog.createWithButton(parent, builder.<JPanel>load(), new ValidateAction(), directory);

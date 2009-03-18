@@ -5,7 +5,6 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
 
 class LocallyInvalidUser implements UserState {
-  boolean verifiedServerValidity = false;
 
   synchronized public Boolean isVerifiedServerValidity() {
     return false;

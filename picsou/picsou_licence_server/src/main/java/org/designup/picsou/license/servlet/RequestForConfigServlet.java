@@ -256,8 +256,9 @@ public class RequestForConfigServlet extends HttpServlet {
           updateNewActivationCodeRequest.execute(mail, code);
           db.commit();
           resp.addHeader(ConfigService.HEADER_MAIL_SENT, "true");
-          mailer.sendNewLicense(mail, code, lang);
-          logger.info("Run count decrease send new license to " + mail);
+          if (mailer.sendNewLicense(mail, code, lang)) {
+            logger.info("Run count decrease send new license to " + mail);
+          }
         }
         else {
           logger.info("Run count decrease with different activation code for " + mail);
