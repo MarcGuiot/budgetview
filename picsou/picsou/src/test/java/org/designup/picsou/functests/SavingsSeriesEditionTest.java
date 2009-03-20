@@ -36,7 +36,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.savings
-      .editSeries("Main accounts.Epargne")
+      .editSeries("Epargne")
       .checkToAccount("Epargne LCL")
       .switchToManual()
       .setToAccount("Main accounts")
@@ -147,7 +147,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
 
   }
 
-  public void testMirorSeriesAreNotVisibleInSeriesList() throws Exception {
+  public void testMirrorSeriesAreNotVisibleInSeriesList() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/10")
       .addTransaction("2008/08/10", 100.00, "Virement")
@@ -205,7 +205,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
-  public void testEditingMirorSerieRedirectToMainEdit() throws Exception {
+  public void testEditingMirrorSerieRedirectToMainEdit() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/10")
       .addTransaction("2008/08/10", 100.00, "Virement")

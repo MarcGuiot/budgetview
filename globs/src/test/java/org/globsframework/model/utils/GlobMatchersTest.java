@@ -86,7 +86,7 @@ public class GlobMatchersTest extends TestCase {
   }
 
   public void testStricklyLesser() throws Exception {
-    check(GlobMatchers.fieldStrickyLesser(DummyObject.ID, 2), a, b);
+    check(GlobMatchers.fieldStrictlyLessThan(DummyObject.ID, 2), a, b);
   }
 
   public void testLink() throws Exception {

@@ -99,7 +99,8 @@
               </column>
 
               <column weightX="1">
-                <panel ref="monthSummaryView" minimumSize="(300,500)" preferredSize="(350,700)"/>
+                <panel ref="monthSummaryView" minimumSize="(300,400)" preferredSize="(350,400)"/>
+                <filler fill="vertical"/>
               </column>
 
               <column weightX="1">
@@ -131,6 +132,10 @@
 
         <card name="evolution">
           <panel ref="seriesEvolutionView"/>
+        </card>
+
+        <card name="savings">
+          <panel ref="savingsView"/>
         </card>
 
         <card name="data">

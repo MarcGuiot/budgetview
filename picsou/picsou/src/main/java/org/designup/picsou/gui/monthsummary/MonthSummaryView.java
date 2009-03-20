@@ -25,18 +25,15 @@ import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
-import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
-import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.ChangeSetMatchers;
 import org.globsframework.model.utils.GlobMatcher;
 import static org.globsframework.model.utils.GlobMatchers.*;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -57,8 +54,6 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
   private GlobStringifier budgetAreaStringifier;
   private ImportFileAction importFileAction;
   private Directory parentDirectory;
-  private GlobStringifier accountStringifier;
-  private JPanel savingsPanel;
 
   public MonthSummaryView(ImportFileAction importFileAction, GlobRepository repository, Directory parentDirectory) {
     super(repository, createDirectory(parentDirectory));
@@ -174,7 +169,6 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     }
   }
 
-
   private static Directory createDirectory(Directory parentDirectory) {
     Directory directory = new DefaultDirectory(parentDirectory);
     directory.add(new SelectionService());
@@ -205,21 +199,6 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
     final GlobListStringifier savingsStatStringifier = GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT,
                                                                                 SavingsBalanceStat.BALANCE);
-
-    builder.addLabel("savingsBalanceAmount", SavingsBalanceStat.TYPE,
-                     new GlobListStringifier() {
-                       public String toString(GlobList list, GlobRepository repository) {
-                         String balance = savingsStatStringifier.toString(list, repository);
-                         if (balance.startsWith("-") || "0.00".equals(balance) || Strings.isNullOrEmpty(balance)) {
-                           return balance;
-                         }
-                         return "+" + balance;
-                       }
-                     });
-    builder.add("savingsTotalBalance",
-                new BalanceGraph(repository, directory, SavingsBalanceStat.TYPE, SavingsBalanceStat.MONTH,
-                                 SavingsBalanceStat.SAVINGS, SavingsBalanceStat.SAVINGS_REMAINING,
-                                 SavingsBalanceStat.OUT, SavingsBalanceStat.OUT_REMAINING));
 
     cards = builder.addCardHandler("cards");
 
@@ -270,41 +249,9 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(parentDirectory));
 
-    accountStringifier = directory.get(DescriptionService.class).getStringifier(Account.TYPE);
-
-    savingsPanel = new JPanel();
-    builder.add("savingsPanel", savingsPanel);
-
-    builder.addRepeat("savingsAccountRepeat", Account.TYPE,
-                      and(fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()),
-                          not(fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID))),
-                      new SavingsRepeatComponentFactory());
-
     parentBuilder.add("monthSummaryView", builder);
 
     registerCardUpdater();
-  }
-
-  private void registerComponent(RepeatCellBuilder cellBuilder, final Glob account, Gauge inGauge, final boolean in,
-                                 final InOrOutLine inOrOutLine) {
-    String accountName = accountStringifier.toString(account, repository);
-    String sens = in ? "In" : "Out";
-    JButton amountButton =
-      cellBuilder.add("savings" + sens + "Amount", new JButton(new AbstractAction() {
-        public void actionPerformed(ActionEvent e) {
-          directory.get(NavigationService.class).gotoDataForSavingsAccount(account.get(Account.ID));
-        }
-      }));
-    amountButton.setName(accountName + ":savings" + sens + "Amount");
-
-    JLabel plannedLabel = cellBuilder.add("savingsPlanned" + sens + "Amount", new JLabel());
-    plannedLabel.setName(accountName + ":savingsPlanned" + sens + "Amount");
-
-    Gauge gauge = cellBuilder.add("savings" + sens + "Gauge", inGauge);
-
-    gauge.setName(accountName + ":" + sens + "Gauge");
-
-    new SavingsAccountsUpdater(inOrOutLine, amountButton, plannedLabel, inGauge, in, account.get(Account.ID));
   }
 
   private void registerCardUpdater() {
@@ -334,15 +281,12 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
   private void updateCard() {
     if (!repository.contains(Transaction.TYPE)) {
       cards.show("noData");
-      savingsPanel.setVisible(false);
     }
     else if (!repository.contains(Series.TYPE, USER_SERIES_MATCHER)) {
       cards.show("noSeries");
-      savingsPanel.setVisible(false);
     }
     else {
       cards.show("standard");
-      savingsPanel.setVisible(true);
     }
   }
 
@@ -591,50 +535,6 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     public void actionPerformed(ActionEvent e) {
       SeriesWizardDialog dialog = new SeriesWizardDialog(repository, parentDirectory);
       dialog.show();
-    }
-  }
-
-  private class SavingsRepeatComponentFactory implements RepeatComponentFactory<Glob> {
-    int hiddenCount;
-
-    public void registerComponents(RepeatCellBuilder cellBuilder, final Glob account) {
-      String accountName = accountStringifier.toString(account, repository);
-      final JPanel accountGroup = new JPanel();
-      accountGroup.setName("accountGroup:" + accountName);
-      cellBuilder.add("accountGroup", accountGroup);
-      GlobLabelView accountNameView =
-        GlobLabelView.init(Account.TYPE, repository, directory)
-          .forceSelection(account);
-      cellBuilder.add("accountName", accountNameView.getComponent());
-
-      DefaultInOrOutLine outLine = new DefaultInOrOutLine(accountGroup);
-      registerComponent(cellBuilder, account, new Gauge(false, false), true, outLine);
-      registerComponent(cellBuilder, account, new Gauge(true, true), false, outLine);
-    }
-
-    private class DefaultInOrOutLine implements InOrOutLine {
-      boolean hidden;
-      private final JPanel accountGroup;
-
-      public DefaultInOrOutLine(JPanel accountGroup) {
-        this.accountGroup = accountGroup;
-      }
-
-      public void hidden() {
-        if (!hidden) {
-          hidden = true;
-          hiddenCount++;
-          accountGroup.setVisible(hiddenCount != 2);
-        }
-      }
-
-      public void shown() {
-        if (hidden) {
-          hidden = false;
-          hiddenCount--;
-          accountGroup.setVisible(hiddenCount != 2);
-        }
-      }
     }
   }
 }

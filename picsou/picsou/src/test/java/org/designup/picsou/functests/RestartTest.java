@@ -299,7 +299,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testBackupAndRestoreWithOtherPasswd() throws Exception {
+  public void testBackupAndRestoreWithOtherPassword() throws Exception {
     fail("Demander le mots de passe pour lire un backup si on ne reussi pas a decrypter le snaphot");
   }
 

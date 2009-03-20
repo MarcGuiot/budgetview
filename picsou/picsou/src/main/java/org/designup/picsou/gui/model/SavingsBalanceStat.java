@@ -16,12 +16,10 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 public class SavingsBalanceStat {
   public static GlobType TYPE;
 
-  @Key
-  @Target(Month.class)
+  @Key @Target(Month.class)
   public static LinkField MONTH;
 
-  @Key
-  @Target(Account.class)
+  @Key @Target(Account.class)
   public static LinkField ACCOUNT;
 
   @DefaultDouble(0.0)

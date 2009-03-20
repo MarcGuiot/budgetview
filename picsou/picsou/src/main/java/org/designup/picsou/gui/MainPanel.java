@@ -27,6 +27,7 @@ import org.designup.picsou.gui.monthsummary.MonthSummaryView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.series.evolution.SeriesEvolutionView;
 import org.designup.picsou.gui.series.view.SeriesView;
+import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
@@ -34,6 +35,7 @@ import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.triggers.GlobStateChecker;
@@ -146,6 +148,8 @@ public class MainPanel {
 
     LicenseInfoView licenseInfoView = new LicenseInfoView(repository, directory);
 
+    PeriodSeriesStatUpdater.init(repository, directory);
+
     createPanel(
       titleView,
       transactionView,
@@ -160,6 +164,7 @@ public class MainPanel {
       new BudgetView(repository, directory),
       seriesView,
       new SeriesEvolutionView(repository, directory),
+      new SavingsView(repository, directory),
       licenseInfoView);
 
     createMenuBar(parent, directory);

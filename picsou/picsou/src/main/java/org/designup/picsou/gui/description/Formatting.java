@@ -48,7 +48,7 @@ public class Formatting {
   }
 
   public static String toString(Double value, BudgetArea area) {
-    if (area.isIncome() || area == BudgetArea.UNCATEGORIZED || area == BudgetArea.SAVINGS) {
+    if (area.isIncome() || area == BudgetArea.UNCATEGORIZED) {
       return toString(value);
     }
     else if (Amounts.isNearZero(value)) {

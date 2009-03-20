@@ -152,7 +152,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     views.checkCategorizationSelected();
   }
 
-  public void testNavigatingInCategoriszationIsDisableForMirroirAndCreatedFromSeries() throws Exception {
+  public void testNavigatingInCategorizationIsDisabledForMirrorAndCreatedFromSeries() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/11", -100.0, "Virement")

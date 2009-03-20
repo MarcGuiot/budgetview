@@ -11,6 +11,8 @@ import org.globsframework.utils.Strings;
 import java.util.Comparator;
 
 public class SeriesStringifier implements GlobStringifier {
+  public static final GlobFieldsComparator COMPARATOR = new GlobFieldsComparator(Series.LABEL, true, Series.ID, true);
+
   public String toString(Glob series, GlobRepository repository) {
     if (series == null || series.get(Series.ID).equals(Series.UNCATEGORIZED_SERIES_ID)) {
       return "";
@@ -26,6 +28,6 @@ public class SeriesStringifier implements GlobStringifier {
   }
 
   public Comparator<Glob> getComparator(GlobRepository repository) {
-    return new GlobFieldsComparator(Series.LABEL, true, Series.ID, true);
+    return COMPARATOR;
   }
 }

@@ -40,6 +40,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected LicenseChecker license;
   protected MonthSummaryChecker monthSummary;
   protected BudgetViewChecker budgetView;
+  protected SavingsViewChecker savingsView;
   protected CategorizationChecker categorization;
   protected SeriesViewChecker series;
   protected SeriesEvolutionChecker seriesEvolution;
@@ -127,6 +128,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     title = new TitleChecker(mainWindow);
     monthSummary = new MonthSummaryChecker(mainWindow);
     budgetView = new BudgetViewChecker(mainWindow);
+    savingsView = new SavingsViewChecker(mainWindow);
     categorization = new CategorizationChecker(mainWindow);
     series = new SeriesViewChecker(mainWindow);
     seriesEvolution = new SeriesEvolutionChecker(mainWindow);
@@ -154,6 +156,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     infochecker = null;
     monthSummary = null;
     budgetView = null;
+    savingsView = null;
     categorization = null;
     series = null;
     seriesEvolution = null;

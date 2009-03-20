@@ -181,8 +181,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.savings.checkTitle("Savings");
     budgetView.savings.checkTotalAmounts(25.0, 25.0);
-    budgetView.savings.checkSeries("Livret.Epargne", 25.0, 25.0);
-    budgetView.savings.checkSeries("Main Accounts.Epargne", -25.0, -25.0);
+    budgetView.savings.checkSeries("Epargne", 25.0, 25.0);
 
     views.selectCategorization();
     categorization.checkSavingsSeriesIsSelected("Epargne", MasterCategory.SAVINGS);
