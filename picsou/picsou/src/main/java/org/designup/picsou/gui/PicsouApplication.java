@@ -117,7 +117,7 @@ public class PicsouApplication {
   static void changeDate() {
     String date = System.getProperty(FORCE_DATE);
     if (date != null) {
-      TimeService.setCurrentDate(Dates.parseMonth(date));
+      TimeService.setCurrentDate(Dates.parse(date));
     }
   }
 

@@ -349,6 +349,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("05/06/2008", TransactionType.VIREMENT, "CAF", "", 300.00, "CAF", MasterCategory.INCOME)
       .check();
 
+//    openCashPilot();
+
     views.selectBudget();
     timeline.selectMonth("2008/06");
     budgetView.savings.checkTotalAmounts(0, 0);
@@ -372,7 +374,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     // back to normal to see if dateChooser is hidden
 //    views.selectBudget();
-    openCashPilot();
+//    openCashPilot();
 
     savingsView.editSeries("Epargne", "CAF")
       .setFromAccount("Main account")
