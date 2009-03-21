@@ -59,7 +59,7 @@ public class SeriesRepeatComponentFactory implements RepeatComponentFactory<Glob
     String name = accountName + "." + seriesStringifier.toString(series, repository);
     final GlobButtonView seriesNameButton =
       GlobButtonView.init(Series.TYPE, repository, directory, new EditSeriesFunctor())
-        .setName(name)
+        .setName(name + ".edit")
         .forceSelection(series);
     cellBuilder.add("seriesName", seriesNameButton.getComponent());
 

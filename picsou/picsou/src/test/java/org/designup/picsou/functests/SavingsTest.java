@@ -30,7 +30,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectBudget();
     budgetView.savings
-      .checkSeries("Epargne", -300, -500);
+      .checkSeries("Epargne", 300, 500);
     views.selectData();
     transactions.initContent()
       .add("10/10/2008", TransactionType.PLANNED, "Planned: Epargne", "", 100.00, "Epargne", MasterCategory.SAVINGS)
@@ -361,24 +361,27 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsView.checkAmount("Epargne", "CAF", 300, 300);
     savingsView.checkSavingsIn("Epargne", 300, 300);
 
-    views.selectBudget();
-    budgetView.savings.editSeries("CAF")
+    savingsView.editSeries("Epargne", "CAF")
       .selectMonth(200806)
       .setAmount(0)
       .validate();
-    budgetView.savings.checkSeries("CAF", 0, 0);
+//    savingsView.savings.checkSeries("CAF", 0, 0);
     views.selectSavings();
 
-    savingsView.checkSavingsInNotVisible("Epargne", "CAF");
+//    savingsView.checkSavingsInNotVisible("Epargne", "CAF");
 
     // back to normal to see if dateChooser is hidden
-    views.selectBudget();
-    budgetView.savings.editSeries("CAF")
+//    views.selectBudget();
+    openCashPilot();
+    
+    savingsView.editSeries("Epargne", "CAF")
       .setFromAccount("Main account")
       .checkDateChooserIsHidden()
       .validate();
 
-    budgetView.savings.editSeries("Epargne.CAF")
+
+    views.selectBudget();
+    budgetView.savings.editSeries("CAF")
       .checkDateChooserIsHidden()
       .cancel();
   }
@@ -804,31 +807,43 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkPosition("Account n. 111222", 3000);
     savingsAccounts.checkEstimatedPosition(4000, "31/08/2008");
     savingsAccounts.checkSummary(4000, "06/08/2008");
-    monthSummary.checkSavingsIn("Epargne", 300, 300);
-    monthSummary.checkSavingsIn("Account n. 111222", 100, 100);
+    views.selectSavings();
+//    monthSummary.checkSavingsIn("Epargne", 300, 300);
+    savingsView.checkAmount("Epargne", "Virement CAF", 300, 300);
+//    monthSummary.checkSavingsIn("Account n. 111222", 100, 100);
+    savingsView.checkAmount("Account n. 111222", "Placement", 100, 100);
 
+    views.selectHome();
     timeline.selectMonth("2008/09");
     savingsAccounts.checkPosition("Epargne", 1300);
     savingsAccounts.checkPosition("Account n. 111222", 3100);
     savingsAccounts.checkEstimatedPosition(4400, "30/09/2008");
-    monthSummary.checkSavingsIn("Epargne", 0, 300);
-    monthSummary.checkSavingsIn("Account n. 111222", 0, 100);
+    views.selectSavings();
+    savingsView.checkAmount("Epargne", "Virement CAF", 0, 300);
+//    monthSummary.checkSavingsIn("Epargne", 0, 300);
+    savingsView.checkAmount("Account n. 111222", "Placement", 0, 100);
+//    monthSummary.checkSavingsIn("Account n. 111222", 0, 100);
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.savings.checkTotalGauge(100, 100);
+    budgetView.savings.checkTotalGauge(-100, -100);
     timeline.selectMonth("2008/08");
-    budgetView.savings.checkTotalGauge(100, 100);
+    budgetView.savings.checkTotalGauge(-100, -100);
     timeline.selectMonth("2008/09");
-    budgetView.savings.checkTotalGauge(0, 100);
+    budgetView.savings.checkTotalGauge(0, -100);
 
     timeline.selectMonth("2008/06");
-    budgetView.savings.checkSeries("Main Accounts.Placement", -100, -100);
-    budgetView.savings.checkSeries("Account n. 111222", 100, 100);
+    budgetView.savings.checkSeries("Placement", 100, 100);
+    budgetView.savings.checkSeriesNotPresent("Account n. 111222");
+    views.selectSavings();
+    savingsView.checkAmount("Account n. 111222", "Placement", 100, 100);
 
     timeline.selectMonth("2008/09");
-    budgetView.savings.checkSeries("Main Accounts.Placement", 0, -100);
-    budgetView.savings.checkSeries("Account n. 111222", 0, 100);
+    views.selectBudget();
+    budgetView.savings.checkSeries("Placement", 0, 100);
+    budgetView.savings.checkSeriesNotPresent("Account n. 111222");
+    views.selectSavings();
+    savingsView.checkAmount("Account n. 111222", "Placement", 0, 100);
   }
 
   public void testSavingsGauge() throws Exception {

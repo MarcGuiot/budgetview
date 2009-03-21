@@ -11,10 +11,7 @@ import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.PicsouMatchers;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -153,7 +150,13 @@ public class BudgetAreaSeriesView extends View {
     seriesButtons.registerButtons(builder);
 
     parentBuilder.add(name, builder);
-    seriesDateFilter = PicsouMatchers.seriesDateFilter(budgetArea.getId(), false);
+    if (budgetArea == BudgetArea.SAVINGS) {
+      seriesDateFilter =
+        PicsouMatchers.seriesDateSavingsAndAccountFilter(Account.MAIN_SUMMARY_ACCOUNT_ID);
+    }
+    else {
+      seriesDateFilter = PicsouMatchers.seriesDateFilter(budgetArea.getId(), false);
+    }
     seriesFilter = new GlobMatcher() {
       public boolean matches(Glob periodSeriesStat, GlobRepository repository) {
         Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);

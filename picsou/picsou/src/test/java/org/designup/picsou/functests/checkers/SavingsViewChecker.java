@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Window;
+import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
@@ -33,4 +34,15 @@ public class SavingsViewChecker extends GuiChecker {
   public void checkSavingsInNotVisible(String accountName, String seriesName) {
     UISpecAssert.assertFalse(window.getPanel(accountName + "." + seriesName + ".gauge").isVisible());
   }
+
+  public SeriesEditionDialogChecker editSeries(String accountName, String seriesName) {
+    return openSeriesEditionDialog(accountName, seriesName);
+  }
+
+  private SeriesEditionDialogChecker openSeriesEditionDialog(String accountName, String seriesName) {
+    String buttonName = accountName +"." + seriesName + ".edit";
+    Window dialog = WindowInterceptor.getModalDialog(window.getButton(buttonName).triggerClick());
+    return new SeriesEditionDialogChecker(dialog, false);
+  }
+
 }

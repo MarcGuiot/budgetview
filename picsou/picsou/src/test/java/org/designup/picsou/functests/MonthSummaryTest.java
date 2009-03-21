@@ -110,8 +110,6 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .total(incomeFor200807, expensesFor200807)
       .checkBalance(balance)
       .checkMainBalanceGraph(0.77, 1)
-      .checkEmptySavingsBalance()
-      .checkSavingsBalanceGraph(0, 0)
       .checkIncome(1500, 1500)
       .checkRecurring(1500 + 29.90)
       .checkEnvelope(80)
