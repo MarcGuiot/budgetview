@@ -159,7 +159,7 @@ public class Account {
     double multiplier;
     Integer fromAccountIdPointOfView = toAccount == null ?
                                        (fromAccount == null ? null : fromAccount.get(ID))
-                                                         : toAccount.get(ID);
+                                       : toAccount.get(ID);
     if (fromAccountIdPointOfView == null) {
       multiplier = 0;
     }
@@ -196,6 +196,7 @@ public class Account {
       outputStream.writeBoolean(values.get(IS_CARD_ACCOUNT));
       outputStream.writeInteger(values.get(ACCOUNT_TYPE));
       outputStream.writeBoolean(values.get(IS_IMPORTED_ACCOUNT));
+      outputStream.writeDate(values.get(CLOSED_DATE));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -208,6 +209,9 @@ public class Account {
       }
       else if (version == 3) {
         deserializeDataV3(fieldSetter, data);
+      }
+      else if (version == 4) {
+        deserializeDataV4(fieldSetter, data);
       }
     }
 
@@ -253,8 +257,23 @@ public class Account {
       fieldSetter.set(IS_IMPORTED_ACCOUNT, input.readBoolean());
     }
 
+    private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(NUMBER, input.readUtf8String());
+      fieldSetter.set(BANK_ENTITY, input.readInteger());
+      fieldSetter.set(BRANCH_ID, input.readInteger());
+      fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(BALANCE, input.readDouble());
+      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(BALANCE_DATE, input.readDate());
+      fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
+      fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
+      fieldSetter.set(IS_IMPORTED_ACCOUNT, input.readBoolean());
+      fieldSetter.set(CLOSED_DATE, input.readDate());
+    }
+
     public int getWriteVersion() {
-      return 3;
+      return 4;
     }
   }
 

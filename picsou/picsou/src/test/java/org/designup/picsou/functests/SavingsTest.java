@@ -373,7 +373,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     // back to normal to see if dateChooser is hidden
 //    views.selectBudget();
     openCashPilot();
-    
+
     savingsView.editSeries("Epargne", "CAF")
       .setFromAccount("Main account")
       .checkDateChooserIsHidden()
