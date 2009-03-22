@@ -43,8 +43,6 @@ public class Transaction {
 
   public static StringField NOTE;
 
-  public static StringField ADDITIONNAL_INFO;
-
   public static StringField OFX_CHECK_NUM;
 
   public static StringField OFX_NAME;
@@ -59,7 +57,6 @@ public class Transaction {
 
   public static BooleanField IS_OFX;
 
-  //  public static StringField ORIGINAL_LABEL;
   public static StringField LABEL_FOR_CATEGORISATION;
 
   @Target(Category.class)
@@ -252,6 +249,13 @@ public class Transaction {
       output.writeBoolean(fieldValues.get(Transaction.MIRROR));
       output.writeBoolean(fieldValues.get(Transaction.CREATED_BY_SERIES));
       output.writeInteger(fieldValues.get(Transaction.NOT_IMPORTED_TRANSACTION));
+      output.writeUtf8String(fieldValues.get(Transaction.OFX_CHECK_NUM));
+      output.writeUtf8String(fieldValues.get(Transaction.OFX_MEMO));
+      output.writeUtf8String(fieldValues.get(Transaction.OFX_NAME));
+      output.writeUtf8String(fieldValues.get(Transaction.QIF_M));
+      output.writeUtf8String(fieldValues.get(Transaction.QIF_P));
+      output.writeBoolean(fieldValues.get(Transaction.IS_OFX));
+      output.writeInteger(fieldValues.get(Transaction.IMPORT));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -267,6 +271,9 @@ public class Transaction {
       }
       else if (version == 4) {
         deserializeDataV4(fieldSetter, data);
+      }
+      else if (version == 5) {
+        deserializeDataV5(fieldSetter, data);
       }
     }
 
@@ -393,8 +400,42 @@ public class Transaction {
       fieldSetter.set(Transaction.NOT_IMPORTED_TRANSACTION, input.readInteger());
     }
 
+    private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readUtf8String());
+      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readUtf8String());
+      fieldSetter.set(Transaction.NOTE, input.readUtf8String());
+      fieldSetter.set(Transaction.MONTH, input.readInteger());
+      fieldSetter.set(Transaction.DAY, input.readInteger());
+      fieldSetter.set(Transaction.BANK_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.BANK_DAY, input.readInteger());
+      fieldSetter.set(Transaction.AMOUNT, input.readDouble());
+      fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
+      fieldSetter.set(Transaction.CATEGORY, input.readInteger());
+      fieldSetter.set(Transaction.SPLIT, input.readBoolean());
+      fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
+      fieldSetter.set(Transaction.SERIES, input.readInteger());
+      fieldSetter.set(Transaction.PLANNED, input.readBoolean());
+      fieldSetter.set(Transaction.MIRROR, input.readBoolean());
+      fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
+      fieldSetter.set(Transaction.NOT_IMPORTED_TRANSACTION, input.readInteger());
+      fieldSetter.set(Transaction.OFX_CHECK_NUM, input.readUtf8String());
+      fieldSetter.set(Transaction.OFX_MEMO, input.readUtf8String());
+      fieldSetter.set(Transaction.OFX_NAME, input.readUtf8String());
+      fieldSetter.set(Transaction.QIF_M, input.readUtf8String());
+      fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
+      fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
+      fieldSetter.set(Transaction.IMPORT, input.readInteger());
+    }
+
+
     public int getWriteVersion() {
-      return 4;
+      return 5;
     }
   }
 }

@@ -2,7 +2,6 @@ package org.designup.picsou.gui.budget;
 
 import com.jidesoft.swing.JideSplitPane;
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.savings.SavingsSeriesView;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.PicsouColors;
@@ -17,7 +16,8 @@ import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.DefaultChangeSetListener;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+import static org.globsframework.model.utils.GlobMatchers.not;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -106,9 +106,9 @@ public class BudgetView extends View {
     if (prefs != null) {
       helpMessage.setVisible(Boolean.TRUE.equals(prefs.get(UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE)) &&
                              repository.contains(Series.TYPE,
-                                                       not(fieldIn(Series.ID,
-                                                                   Series.OCCASIONAL_SERIES_ID,
-                                                                   Series.UNCATEGORIZED_SERIES_ID))));
+                                                 not(fieldIn(Series.ID,
+                                                             Series.OCCASIONAL_SERIES_ID,
+                                                             Series.UNCATEGORIZED_SERIES_ID))));
     }
   }
 }

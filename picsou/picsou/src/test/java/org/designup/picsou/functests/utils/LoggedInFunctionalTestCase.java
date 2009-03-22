@@ -209,13 +209,13 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     List<String> args = new ArrayList<String>();
     args.add(javaHome + System.getProperty("file.separator") + "bin" + System.getProperty("file.separator") + "java");
 //    args.add("-Xdebug");
-//    args.add("-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005");
+//    args.add("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005");
     args.add("-cp");
     args.add(classPath);
     args.add("-Dsplits.editor.enabled=false");
     args.add("-Dsplits.debug.enabled=false");
     args.add("-D" + PicsouApplication.APPNAME + ".log.sout=true");
-    args.add("-D" + PicsouApplication.APPNAME + ".today=" + Dates.toMonth(currentDate));
+    args.add("-D" + PicsouApplication.APPNAME + ".today=" + Dates.toString(currentDate));
     args.add("org.designup.picsou.gui.MainWindowLauncher");
     args.add("-u");
     args.add("anonymous");

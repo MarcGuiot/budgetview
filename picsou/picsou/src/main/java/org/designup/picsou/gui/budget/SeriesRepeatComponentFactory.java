@@ -1,30 +1,30 @@
 package org.designup.picsou.gui.budget;
 
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.utils.GlobListFunctor;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.format.GlobStringifier;
-import org.globsframework.model.format.DescriptionService;
-import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
-import org.globsframework.gui.views.GlobButtonView;
-import org.globsframework.gui.SelectionService;
-import org.globsframework.utils.directory.Directory;
-import org.globsframework.metamodel.fields.DoubleField;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
-import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.components.Gauge;
 import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
+import org.designup.picsou.gui.components.Gauge;
 import org.designup.picsou.gui.components.GlobGaugeView;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.model.Series;
+import org.designup.picsou.gui.model.PeriodSeriesStat;
+import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.model.util.Amounts;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.views.GlobButtonView;
+import org.globsframework.metamodel.fields.DoubleField;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.utils.GlobListFunctor;
+import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.directory.Directory;
 
 public class SeriesRepeatComponentFactory implements RepeatComponentFactory<Glob> {
   private Glob account;

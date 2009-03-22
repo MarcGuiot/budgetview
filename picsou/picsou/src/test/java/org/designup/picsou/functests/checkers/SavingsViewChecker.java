@@ -1,7 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Window;
-import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
@@ -40,7 +39,7 @@ public class SavingsViewChecker extends GuiChecker {
   }
 
   private SeriesEditionDialogChecker openSavingsSeriesDialog(String accountName, String seriesName) {
-    String buttonName = accountName +"." + seriesName + ".edit";
+    String buttonName = accountName + "." + seriesName + ".edit";
     return SeriesEditionDialogChecker.open(window.getButton(buttonName), false);
   }
 }

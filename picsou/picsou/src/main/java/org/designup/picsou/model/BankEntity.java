@@ -5,10 +5,8 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.annotations.Target;
-import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
-import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
@@ -23,13 +21,13 @@ import org.globsframework.utils.serialization.SerializedOutput;
 public class BankEntity {
   public static GlobType TYPE;
 
-  @Key @NoObfuscation
+  @Key
+  @NoObfuscation
   public static IntegerField ID;
 
-  @Target(Bank.class) @NoObfuscation
+  @Target(Bank.class)
+  @NoObfuscation
   public static LinkField BANK;
-
-  public static NotUniqueIndex BANK_INDEX;
 
   public static Glob getBank(Glob bankEntity, GlobRepository repository) {
     Glob bank = repository.findLinkTarget(bankEntity, BANK);
@@ -40,8 +38,7 @@ public class BankEntity {
   }
 
   static {
-    GlobTypeLoader.init(BankEntity.class, "bankEntity")
-      .defineNonUniqueIndex(BANK_INDEX, BANK);
+    GlobTypeLoader.init(BankEntity.class, "bankEntity");
   }
 
   public static class Serializer implements PicsouGlobSerializer {
