@@ -224,7 +224,7 @@ public class SeriesEditionDialogChecker extends GuiChecker {
         return this;
       }
     }
-    assertThat(fail(monthId + " not found "));
+    fail(monthId + " not found ");
     return null;
   }
 

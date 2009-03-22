@@ -119,7 +119,7 @@ public class AccountViewChecker extends GuiChecker {
     return AccountEditionChecker.open(panel.getButton("createAccount").triggerClick());
   }
 
-  public void createSavingsAccount(final String name, final int balance) {
+  public void createSavingsAccount(String name, double balance) {
     createNewAccount()
       .setAccountName(name)
       .setAccountNumber("1234")

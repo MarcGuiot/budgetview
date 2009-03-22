@@ -305,7 +305,7 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
     }
 
     public Assertion isEditable() {
-      return UISpecAssert.fail("Buttons are not editable");
+      return UISpecAssert.failure("Buttons are not editable");
     }
   }
 }

@@ -40,14 +40,14 @@
 
             <grid ref="header" marginLeft="10" marginRight="10" marginBottom="5">
               <label text="$accountView.reference.title" gridPos="(0,0)"
-                     styleClass="totalAmountTitle" autoHideSource="savingsPosition"
+                     styleClass="totalAmountTitle" autoHideSource="totalSavingsPositionAmount"
                      marginTop="0" marginBottom="0" weightY="0"/>
-              <label ref="savingsPosition" gridPos="(1,0)"
+              <label ref="totalSavingsPositionAmount" gridPos="(1,0)"
                      styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"
                      marginTop="0" marginBottom="0"
                      anchor="north"/>
-              <label ref="referencePositionDate" gridPos="(2,0)"
-                     styleClass="totalAmountTitle" autoHideSource="savingsPosition"
+              <label ref="totalSavingsPositionDate" gridPos="(2,0)"
+                     styleClass="totalAmountTitle" autoHideSource="totalSavingsPositionAmount"
                      marginTop="0" marginBottom="0" weightY="0"/>
 
             </grid>
@@ -55,7 +55,7 @@
             <scrollPane marginTop="0" marginBottom="0">
               <column marginTop="5">
                 <repeat ref="savingsAccounts" marginTop="5" marginBottom="15">
-                  <column>
+                  <column name="savingsAccountPanel">
                     <grid styleClass="accountLine">
                       <label ref="accountName" gridPos="(0,0)" anchor="west" styleClass="accountName"/>
                       <label ref="estimatedAccountPosition" gridPos="(1,0)" anchor="east" styleClass="accountPosition"/>

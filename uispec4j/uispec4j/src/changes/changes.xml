@@ -4,15 +4,26 @@
   </properties>
 
   <body>
+
+    <release version="???" date="2009-01-18">
+      <action dev="rmedina" type="update">
+        Made UISpecAssert.fail() fail immediately instead of returning an Assertion, and introduced UISpecAssert.failure
+        to return an Assertion that always fails.
+      </action>
+
+    </release>
+
     <release version="2.0-RC2" date="2009-01-18">
       <action dev="mguiot" type="fix">
-        In class WindowInterceptor, revert call to TriggerRunner.runInSwingThread in call to TriggerRunner.runInCurrentThread
+        In class WindowInterceptor, revert call to TriggerRunner.runInSwingThread in call to
+        TriggerRunner.runInCurrentThread
       </action>
       <action dev="mguiot" type="fix">
         In ComboBox.selectionEquals : use the rendered value in assert if selection is null
       </action>
       <action dev="pratmarty" type="fix">
-        Fixed TestNG library adapter:  reversed expected and actual parameters in 'assertEquals(String expected, String actual)'
+        Fixed TestNG library adapter: reversed expected and actual parameters in 'assertEquals(String expected, String
+        actual)'
       </action>
       <action dev="rmedina" type="add">
         Added ComponentMatchers.toolTipEquals(String)
@@ -22,7 +33,7 @@
         approximative comparisons.
       </action>
       <action dev="mguiot" type="fix">
-       Improved the handling of multi-threading conditions in the window interception mechanism.
+        Improved the handling of multi-threading conditions in the window interception mechanism.
       </action>
     </release>
     <release version="2.0-RC1" date="2008-12-25">

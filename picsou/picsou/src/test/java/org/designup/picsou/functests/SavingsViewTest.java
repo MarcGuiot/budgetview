@@ -5,20 +5,17 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 
 public class SavingsViewTest extends LoggedInFunctionalTestCase {
-  public void test() throws Exception {
-    fail("TBD");
-    // filtrage des comptes et series d'epargne
-    // affichage des projets futurs seulement
-    // projets sur plusieurs mois
-    // creation/edition de projets
-    // creation/edition de series savings
-  }
 
-  public void testNextProjectWithNoAccounts() throws Exception {
+  public void testNextProjectsWithNoAccounts() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(12).validate();
+    
     views.selectSavings();
     nextProjects.checkEmpty();
 
-    nextProjects.createProject().setName("Bahamas")
+    timeline.selectMonth("2008/08");
+    nextProjects.createProject()
+      .setName("Bahamas")
       .setCategory(MasterCategory.LEISURES)
       .validate();
 
@@ -34,6 +31,30 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
 
     nextProjects.initContent()
       .add("Aug 2008", "Bahamas", -1000.00, -1000.00, null, -1000.00)
+      .check();
+
+    timeline.selectMonth("2008/12");
+    nextProjects.createProject()
+      .setName("Ski")
+      .setCategory(MasterCategory.LEISURES)
+      .setAmount(1500.00)
+      .validate();
+    nextProjects.createProject()
+      .setName("Noel")
+      .setCategory(MasterCategory.GIFTS)
+      .setAmount(500.00)
+      .validate();
+
+    nextProjects.initContent()
+      .add("Dec 2008", "Noel", -500.00, -3000.00, null, -3000.00)
+      .add("Dec 2008", "Ski", -1500.00, -3000.00, null, -3000.00)
+      .check();
+
+    timeline.selectMonth("2008/08");
+    nextProjects.initContent()
+      .add("Aug 2008", "Bahamas", -1000.00, -1000.00, null, -1000.00)
+      .add("Dec 2008", "Noel", -500.00, -3000.00, null, -3000.00)
+      .add("Dec 2008", "Ski", -1500.00, -3000.00, null, -3000.00)
       .check();
   }
 
@@ -92,21 +113,33 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testHideAccountIfNoSeries() throws Exception {
+  public void testSavingsAccounts() throws Exception {
+
+    views.selectSavings();
+    savingsView.checkNoAccounts();
+    savingsView.checkTotalPositionHidden();
+
+    views.selectHome();
     savingsAccounts.createSavingsAccount("Epargne", 1000);
 
-    views.selectBudget();
-    budgetView.savings.createSeries()
+    views.selectSavings();
+    savingsView.checkTotalPositionHidden();
+    savingsView.checkAccountWithNoPosition("Epargne");
+
+    savingsView.createSavingsSeries()
       .setName("Virement CAF")
       .setCategory(MasterCategory.SAVINGS)
       .setToAccount("Epargne")
       .setFromAccount("Main accounts")
+      .switchToManual()
       .selectAllMonths()
       .setAmount("300")
       .setDay("5")
       .validate();
-    budgetView.savings.checkSeriesPresent("Virement CAF");
+
+    savingsView.checkAccount("Epargne", 1300.00, "31/08/2008");
+
+    savingsView.checkTotalPosition(1300.00, "31/08/2008");
+
   }
-
-
 }

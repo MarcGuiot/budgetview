@@ -58,9 +58,11 @@ public class SavingsView extends View {
   }
 
   private void createSavingsBlock(GlobsPanelBuilder builder) {
-
-    builder.add("savingsPosition", new JLabel("1234"));
-    builder.add("referencePositionDate", new JLabel("24/05/1971"));
+    Key accountKey = Key.create(Account.TYPE, Account.SAVINGS_SUMMARY_ACCOUNT_ID);
+    builder.add("totalSavingsPositionAmount",
+                SavingsAccountViewPanel.getEstimatedAccountPositionLabel(accountKey, repository, directory));
+    builder.add("totalSavingsPositionDate",
+                SavingsAccountViewPanel.getEstimatedAccountPositionDateLabel(accountKey, repository, directory));
 
     builder.addRepeat("savingsAccounts", Account.TYPE,
                       GlobMatchers.and(new AccountMatcher(),

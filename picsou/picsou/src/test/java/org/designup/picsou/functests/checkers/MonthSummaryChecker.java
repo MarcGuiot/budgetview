@@ -35,20 +35,20 @@ public class MonthSummaryChecker extends GuiChecker {
   }
 
   public void checkSavingsIn(String accountName, double observedAmount, double plannedAmount) {
-    assertThat(fail("transfert"));
+    fail("transfert");
     assertThat(window.getButton(accountName + ":savingsInAmount").textEquals(toString(observedAmount)));
     assertThat(window.getTextBox(accountName + ":savingsPlannedInAmount").textEquals(toString(plannedAmount)));
   }
 
   public MonthSummaryChecker checkSavingsInNotVisible(String accountName) {
-    assertThat(fail("transfert"));
+    fail("transfert");
     assertFalse(window.getButton(accountName + ":savingsInAmount").isVisible());
     assertFalse(window.getTextBox(accountName + ":savingsPlannedInAmount").isVisible());
     return this;
   }
 
   public void checkSavingsOut(String accoutName, double observedAmount, double plannedAmount) {
-    assertThat(fail("transfert"));
+    fail("transfert");
     assertThat(window.getButton(accoutName + ":savingsOutAmount").textEquals(toString(observedAmount)));
     assertThat(window.getTextBox(accoutName + ":savingsPlannedOutAmount").textEquals(toString(plannedAmount)));
   }
@@ -60,7 +60,7 @@ public class MonthSummaryChecker extends GuiChecker {
   }
 
   public void checkSavingsBalance(double balance) {
-    assertThat(fail("transfert"));
+    fail("transfert");
     assertThat(getPanel().getTextBox("savingsBalanceAmount").textEquals(toString(balance, true)));
   }
 
