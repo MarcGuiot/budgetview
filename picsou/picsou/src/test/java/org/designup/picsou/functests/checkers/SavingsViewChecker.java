@@ -35,14 +35,12 @@ public class SavingsViewChecker extends GuiChecker {
     UISpecAssert.assertFalse(window.getPanel(accountName + "." + seriesName + ".gauge").isVisible());
   }
 
-  public SeriesEditionDialogChecker editSeries(String accountName, String seriesName) {
-    return openSeriesEditionDialog(accountName, seriesName);
+  public SeriesEditionDialogChecker editSavingsSeries(String accountName, String seriesName) {
+    return openSavingsSeriesDialog(accountName, seriesName);
   }
 
-  private SeriesEditionDialogChecker openSeriesEditionDialog(String accountName, String seriesName) {
+  private SeriesEditionDialogChecker openSavingsSeriesDialog(String accountName, String seriesName) {
     String buttonName = accountName +"." + seriesName + ".edit";
-    Window dialog = WindowInterceptor.getModalDialog(window.getButton(buttonName).triggerClick());
-    return new SeriesEditionDialogChecker(dialog, false);
+    return SeriesEditionDialogChecker.open(window.getButton(buttonName), false);
   }
-
 }

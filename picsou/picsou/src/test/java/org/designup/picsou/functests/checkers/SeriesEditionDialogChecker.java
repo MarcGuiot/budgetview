@@ -32,6 +32,11 @@ public class SeriesEditionDialogChecker extends GuiChecker {
   public static final String NOV = "Nov";
   public static final String DEC = "Dec";
 
+  public static SeriesEditionDialogChecker open(Button button, boolean singleCategorySeries) {
+    Window dialog = WindowInterceptor.getModalDialog(button.triggerClick());
+    return new SeriesEditionDialogChecker(dialog, singleCategorySeries);
+  }
+
   public SeriesEditionDialogChecker(Window dialog, boolean singleCategorySeries) {
     this.dialog = dialog;
     this.singleCategorySeries = singleCategorySeries;

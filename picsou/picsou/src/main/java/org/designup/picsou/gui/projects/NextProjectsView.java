@@ -24,6 +24,7 @@ import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.CompositeComparator;
 import org.globsframework.utils.directory.Directory;
 
@@ -104,8 +105,11 @@ public class NextProjectsView extends View implements GlobSelectionListener {
   private class SavingsAccountsPositionStringifier extends AbstractGlobStringifier {
     public String toString(Glob seriesBudget, GlobRepository repository) {
       Integer monthId = seriesBudget.get(SeriesBudget.MONTH);
-      Glob balanceStat = repository.get(Key.create(SavingsBalanceStat.MONTH, monthId,
-                                                   SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID));
+      Glob balanceStat = repository.find(Key.create(SavingsBalanceStat.MONTH, monthId,
+                                                    SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID));
+      if (balanceStat == null) {
+        return "";
+      }
       return savingsBalanceStatStringifier.toString(balanceStat, repository);
     }
   }
@@ -114,10 +118,21 @@ public class NextProjectsView extends View implements GlobSelectionListener {
     public String toString(Glob seriesBudget, GlobRepository repository) {
       Integer monthId = seriesBudget.get(SeriesBudget.MONTH);
       Glob balanceStat = repository.get(Key.create(BalanceStat.TYPE, monthId));
-      Glob savingsBalanceStat = repository.get(Key.create(SavingsBalanceStat.MONTH, monthId,
-                                                   SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID));
-      return Formatting.toString(balanceStat.get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION) +
-                                 savingsBalanceStat.get(SavingsBalanceStat.END_OF_MONTH_POSITION));
+      Glob savingsBalanceStat = repository.find(Key.create(SavingsBalanceStat.MONTH, monthId,
+                                                           SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID));
+      Double mainPosition = GlobUtils.safeGet(balanceStat, BalanceStat.END_OF_MONTH_ACCOUNT_POSITION);
+      Double savingsPosition = GlobUtils.safeGet(savingsBalanceStat, SavingsBalanceStat.END_OF_MONTH_POSITION);
+      if (mainPosition == null && savingsPosition == null) {
+        return "";
+      }
+      double total = 0;
+      if (mainPosition != null) {
+        total += mainPosition;
+      }
+      if (savingsPosition != null) {
+        total += savingsPosition;
+      }
+      return Formatting.toString(total);
     }
   }
 }

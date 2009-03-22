@@ -19,6 +19,13 @@ import java.util.Locale;
 public abstract class GuiChecker {
   private static DecimalFormat format = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.US));
 
+  protected String toString(Double value) {
+    if (value == null) {
+      return "";
+    }
+    return format.format(value);
+  }
+
   protected String toString(double value) {
     return format.format(value);
   }

@@ -12,6 +12,8 @@ import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 
+import junit.framework.Assert;
+
 public class AccountEditionChecker extends GuiChecker {
   private Window dialog;
 
@@ -141,7 +143,10 @@ public class AccountEditionChecker extends GuiChecker {
 
   public void validate() {
     dialog.getButton("OK").click();
-    assertFalse(dialog.isVisible());
+    if (dialog.isVisible().isTrue()) {
+      final String message = dialog.getTextBox("message").getText();
+      Assert.fail("Validation failed. Error message: " + message);
+    }
   }
 
   public void cancel() {

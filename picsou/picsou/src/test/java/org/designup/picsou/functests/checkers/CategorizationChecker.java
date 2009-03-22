@@ -501,8 +501,7 @@ public class CategorizationChecker extends GuiChecker {
 
   private SeriesEditionDialogChecker createSeries(String type, boolean oneSelection) {
     Button button = getPanel().getPanel(type + "SeriesChooser").getButton("createSeries");
-    final Window creationDialog = WindowInterceptor.getModalDialog(button.triggerClick());
-    return new SeriesEditionDialogChecker(creationDialog, oneSelection);
+    return SeriesEditionDialogChecker.open(button, oneSelection);
   }
 
   public CategorizationChecker checkEditIncomeSeriesDisabled() {
@@ -512,13 +511,11 @@ public class CategorizationChecker extends GuiChecker {
 
   public SeriesEditionDialogChecker editSeries(String seriesLabel, final boolean singleCategorySeries) {
     Button button = getPanel().getPanel("seriesCard").getButton("editSeries:" + seriesLabel);
-    final Window creationDialog = WindowInterceptor.getModalDialog(button.triggerClick());
-    return new SeriesEditionDialogChecker(creationDialog, singleCategorySeries);
+    return SeriesEditionDialogChecker.open(button, singleCategorySeries);
   }
 
   public SeriesEditionDialogChecker editSeries(boolean isSingleSelection) {
-    final Window creationDialog = WindowInterceptor.getModalDialog(getPanel().getButton("editSeries").triggerClick());
-    return new SeriesEditionDialogChecker(creationDialog, isSingleSelection);
+    return SeriesEditionDialogChecker.open(getPanel().getButton("editSeries"), isSingleSelection);
   }
 
   public CategorizationChecker checkTable(Object[][] content) {

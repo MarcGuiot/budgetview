@@ -361,7 +361,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsView.checkAmount("Epargne", "CAF", 300, 300);
     savingsView.checkSavingsIn("Epargne", 300, 300);
 
-    savingsView.editSeries("Epargne", "CAF")
+    savingsView.editSavingsSeries("Epargne", "CAF")
       .selectMonth(200806)
       .setAmount(0)
       .validate();
@@ -374,7 +374,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 //    views.selectBudget();
     openCashPilot();
     
-    savingsView.editSeries("Epargne", "CAF")
+    savingsView.editSavingsSeries("Epargne", "CAF")
       .setFromAccount("Main account")
       .checkDateChooserIsHidden()
       .validate();

@@ -199,8 +199,7 @@ public class BudgetViewChecker extends GuiChecker {
 
       Button button = new Button((JButton)panel.getComponent(nameIndex + PLANNED_LABEL_OFFSET));
 
-      Window dialog = WindowInterceptor.getModalDialog(button.triggerClick());
-      return new SeriesEditionDialogChecker(dialog, singleCategorySeries);
+      return SeriesEditionDialogChecker.open(button, singleCategorySeries);
     }
 
     public void checkEditAllSeriesIsEnabled(boolean enabled) {
@@ -212,8 +211,7 @@ public class BudgetViewChecker extends GuiChecker {
     }
 
     private SeriesEditionDialogChecker openSeriesEditionDialog(String seriesName) {
-      Window dialog = WindowInterceptor.getModalDialog(getPanel().getButton(seriesName).triggerClick());
-      return new SeriesEditionDialogChecker(dialog, singleCategorySeries);
+      return SeriesEditionDialogChecker.open(getPanel().getButton(seriesName), singleCategorySeries);
     }
 
     public void gotoData(String seriesName) {

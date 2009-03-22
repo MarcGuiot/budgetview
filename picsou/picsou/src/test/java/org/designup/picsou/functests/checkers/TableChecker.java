@@ -11,7 +11,7 @@ public abstract class TableChecker {
 
   protected abstract Table getTable();
 
-  protected void add(Object[] row) {
+  protected void add(Object... row) {
     content.add(row);
   }
 

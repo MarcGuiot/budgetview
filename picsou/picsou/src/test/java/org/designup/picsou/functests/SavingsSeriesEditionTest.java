@@ -6,9 +6,11 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.MasterCategory;
 import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Button;
 
 public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
 
@@ -236,13 +238,13 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     Component[] seriesButtons = budgetView.savings.getPanel().getSwingComponents(JButton.class, "Autre");
     assertEquals(2, seriesButtons.length);
 
-    SeriesEditionDialogChecker firstSeriesChecker = getSerieChecker(seriesButtons[0]);
+    SeriesEditionDialogChecker firstSeriesChecker = getSeriesChecker(seriesButtons[0]);
     firstSeriesChecker.switchToManual().selectAllMonths().setAmount(50).validate();
-    SeriesEditionDialogChecker secondSeriesChecker = getSerieChecker(seriesButtons[1]);
+    SeriesEditionDialogChecker secondSeriesChecker = getSeriesChecker(seriesButtons[1]);
     secondSeriesChecker.checkInManual()
       .switchToAutomatic()
       .validate();
-    firstSeriesChecker = getSerieChecker(seriesButtons[0]);
+    firstSeriesChecker = getSeriesChecker(seriesButtons[0]);
     firstSeriesChecker.checkInAutomatic().validate();
   }
 
@@ -275,9 +277,9 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
   }
 
 
-  private SeriesEditionDialogChecker getSerieChecker(Component component) {
-    org.uispec4j.Window firstSeries = WindowInterceptor.getModalDialog(new org.uispec4j.Button((JButton)component).triggerClick());
-    return new SeriesEditionDialogChecker(firstSeries, true);
+  private SeriesEditionDialogChecker getSeriesChecker(Component component) {
+    final org.uispec4j.Button button = new org.uispec4j.Button((JButton)component);
+    return SeriesEditionDialogChecker.open(button, true);
   }
 
 }

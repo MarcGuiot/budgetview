@@ -18,7 +18,7 @@
       <column weightX="6">
 
         <label text="$savingsView.projects.next" styleClass="blockTitle" marginTop="5"/>
-        <panel styleClass="block" preferredSize="(300,400)">
+        <panel styleClass="block" preferredSize="(300,400)" name="nextProjectsPanel">
           <column border="empty(10)">
             <scrollPane marginBottom="0" verticalUnitIncrement="10">
               <table ref="nextProjects" rowHeight="20"/>

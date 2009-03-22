@@ -10,7 +10,6 @@ import org.uispec4j.TableCellValueConverter;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.ColorUtils;
 
 import javax.swing.*;
@@ -82,8 +81,7 @@ public class SeriesEvolutionChecker extends GuiChecker {
     }
     int column = table.getHeader().findColumnIndex(columnLabel);
     table.selectRow(row);
-    Window window = WindowInterceptor.getModalDialog(table.editCell(row, column).getButton().triggerClick());
-    return new SeriesEditionDialogChecker(window, false);
+    return SeriesEditionDialogChecker.open(table.editCell(row, column).getButton(), false);
   }
 
   public void checkTableIsEmpty(String... labels) {
