@@ -10,6 +10,13 @@ import java.util.*;
 
 public class GlobUtils {
 
+  public static Double safeGet(Glob glob, DoubleField field) {
+    if (glob == null) {
+      return null;
+    }
+    return glob.get(field);
+  }
+
   public static SortedSet<Integer> getSortedValues(FieldValues[] valuesList, IntegerField field) {
     SortedSet<Integer> result = new TreeSet<Integer>();
     for (FieldValues values : valuesList) {
