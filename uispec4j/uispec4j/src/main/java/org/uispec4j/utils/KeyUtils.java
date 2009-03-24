@@ -1,6 +1,7 @@
 package org.uispec4j.utils;
 
 import org.uispec4j.Key;
+import org.uispec4j.UIComponent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,6 +11,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class KeyUtils {
+
+
+  public static void pressKey(UIComponent component, Key key) {
+    pressKey(component.getAwtComponent(), key);
+  }
+
   public static void pressKey(Component component, Key key) {
     int keyCode = key.getCode();
     int modifier = key.getModifier().getCode();

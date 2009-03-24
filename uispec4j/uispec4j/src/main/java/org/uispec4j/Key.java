@@ -1,7 +1,10 @@
 package org.uispec4j;
 
+import sun.security.action.GetPropertyAction;
+
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.security.AccessController;
 
 /**
  * Contants class defining keyboard keys.
@@ -82,12 +85,25 @@ public class Key {
     return new Key(key.getCode(), Modifier.CONTROL, false);
   }
 
+  public static Key meta(Key key) {
+    return new Key(key.getCode(), Modifier.META, false);
+  }
+
   public static Key alt(Key key) {
     return new Key(key.getCode(), Modifier.ALT, false);
   }
 
   public static Key shift(Key key) {
     return new Key(key.getCode(), Modifier.SHIFT, false);
+  }
+
+  /**
+   * Returns META-Key on MacOS X, and CTRL-Key on other platforms.
+   */
+  public static Key plaformSpecificCtrl(Key key) {
+    String os = (String)AccessController.doPrivileged(new GetPropertyAction("os.name"));
+    boolean isMacOSX = os.contains("Mac OS X");
+    return isMacOSX ? meta(key) : control(key);
   }
 
   public int getCode() {
