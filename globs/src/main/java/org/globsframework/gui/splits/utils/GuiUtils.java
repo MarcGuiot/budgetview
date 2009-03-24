@@ -1,5 +1,7 @@
 package org.globsframework.gui.splits.utils;
 
+import sun.security.action.GetPropertyAction;
+
 import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
@@ -8,10 +10,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.security.AccessController;
+
+import org.uispec4j.Key;
 
 public class GuiUtils {
 
   private static boolean debugModeEnabled;
+  public static final boolean IS_MACOSX;
+  public static final boolean IS_LINUX;
+  public static final boolean IS_WINDOWS;
+
+  private static final String MAC_PLATFORM_ID = "Mac OS X";
+  private static final String LINUX_PLATFORM_ID = "Linux";
+  private static final String WINDOWS_PLATFORM_ID = "Windows";
+  
+  static {
+    String os = (String)AccessController.doPrivileged(new GetPropertyAction("os.name"));
+    IS_MACOSX = os.contains(MAC_PLATFORM_ID);
+    IS_LINUX = os.contains(LINUX_PLATFORM_ID);
+    IS_WINDOWS = os.contains(WINDOWS_PLATFORM_ID);
+  }
 
   public static void addShortcut(JRootPane rootPane, String command, Action action) {
     KeyStroke stroke = KeyStroke.getKeyStroke(command);
@@ -40,6 +59,26 @@ public class GuiUtils {
       int underlineRectHeight = 1;
       g.fillRect(underlineRectX, underlineRectY + 1, underlineRectWidth, underlineRectHeight);
     }
+  }
+
+  public static boolean isMacOSX() {
+    return IS_MACOSX;
+  }
+
+  public static boolean isLinux() {
+    return IS_LINUX;
+  }
+
+  public static boolean isWindows() {
+    return IS_WINDOWS;
+  }
+
+  public static int getCtrlModifier() {
+    return isMacOSX() ? KeyEvent.META_DOWN_MASK : KeyEvent.CTRL_DOWN_MASK;
+  }
+
+  public static KeyStroke ctrl(int key) {
+    return KeyStroke.getKeyStroke(key, GuiUtils.getCtrlModifier());
   }
 
   static {

@@ -10,7 +10,6 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.format.*;
 import org.globsframework.utils.Ref;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 
 import java.util.Date;
@@ -94,19 +93,11 @@ public class DefaultDescriptionService implements DescriptionService {
     final Ref<GlobStringifier> result = new Ref<GlobStringifier>();
     targetField.safeVisit(new FieldVisitor() {
       public void visitLong(LongField field) throws Exception {
-        result.set(new AbstractGlobFieldStringifier<LongField, Long>(field) {
-          protected String valueToString(Long value) {
-            return value.toString();
-          }
-        });
+        result.set(GlobStringifiers.get(field));
       }
 
       public void visitInteger(final IntegerField field) throws Exception {
-        result.set(new AbstractGlobFieldStringifier<IntegerField, Integer>(field) {
-          protected String valueToString(Integer value) {
-            return value.toString();
-          }
-        });
+        result.set(GlobStringifiers.get(field));
       }
 
       public void visitLink(final LinkField field) throws Exception {
@@ -122,11 +113,7 @@ public class DefaultDescriptionService implements DescriptionService {
       }
 
       public void visitString(final StringField field) throws Exception {
-        result.set(new AbstractGlobFieldStringifier<StringField, String>(field) {
-          protected String valueToString(String value) {
-            return value;
-          }
-        });
+        result.set(GlobStringifiers.get(field));
       }
 
       public void visitDate(final DateField field) throws Exception {

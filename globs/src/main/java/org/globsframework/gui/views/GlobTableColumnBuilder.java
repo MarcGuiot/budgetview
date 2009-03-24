@@ -46,9 +46,9 @@ public class GlobTableColumnBuilder {
       column.name = descriptionService.getLabel(field);
     }
 
-    GlobStringifier stringifier = descriptionService.getStringifier(field);
-    column.labelCustomizers.add(GlobLabelCustomizerFactory.create(field, stringifier, repository));
-    column.comparator = stringifier.getComparator(repository);
+    column.stringifier = descriptionService.getStringifier(field);
+    column.labelCustomizers.add(GlobLabelCustomizerFactory.create(field, column.stringifier, repository));
+    column.comparator = column.stringifier.getComparator(repository);
     return this;
   }
 
@@ -86,8 +86,14 @@ public class GlobTableColumnBuilder {
     return this;
   }
 
+  public GlobTableColumnBuilder setStringifier(GlobStringifier stringifier) {
+    column.stringifier = stringifier;
+    return this;
+  }
+
   private static class DefaultGlobTableColumn implements GlobTableColumn {
     private String name;
+    private GlobStringifier stringifier;
     private Comparator<Glob> comparator;
     private TableCellRenderer renderer;
     private List<LabelCustomizer> labelCustomizers = new ArrayList<LabelCustomizer>();
@@ -111,6 +117,10 @@ public class GlobTableColumnBuilder {
       return editor;
     }
 
+    public GlobStringifier getStringifier() {
+      return stringifier;
+    }
+
     public Comparator<Glob> getComparator() {
       return comparator;
     }
@@ -118,5 +128,7 @@ public class GlobTableColumnBuilder {
     public boolean isEditable(int row, Glob glob) {
       return editor != null;
     }
+
+
   }
 }

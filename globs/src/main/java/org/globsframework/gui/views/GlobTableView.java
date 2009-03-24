@@ -2,6 +2,7 @@ package org.globsframework.gui.views;
 
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
 import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.utils.TableUtils;
@@ -30,6 +31,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.*;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
@@ -126,7 +131,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     return addColumn(descriptionService.getLabel(link),
                      new LabelTableCellRenderer(LabelCustomizers.stringifier(stringifier, repository),
                                                 defaultBackgroundPainter),
-                     stringifier.getComparator(repository));
+                     stringifier);
   }
 
   public GlobTableView addColumn(String name, GlobStringifier stringifier) {
@@ -138,40 +143,33 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   }
 
   public GlobTableView addColumn(String name, GlobStringifier stringifier, LabelCustomizer customizer, CellPainter backgroundPainter) {
-    return addColumn(name,
-                     chain(LabelCustomizers.stringifier(stringifier, repository), customizer),
-                     backgroundPainter,
-                     stringifier.getComparator(repository));
-  }
-
-  public GlobTableView addColumn(String name,
-                                 LabelCustomizer customizer,
-                                 CellPainter backgroundPainter,
-                                 Comparator<Glob> comparator) {
     startColumn()
       .setName(name)
+      .setStringifier(stringifier)
       .setBackgroundPainter(backgroundPainter)
-      .addLabelCustomizer(customizer)
-      .setComparator(new CompositeComparator<Glob>(comparator, initialComparator));
+      .addLabelCustomizer(chain(LabelCustomizers.stringifier(stringifier, repository), customizer))
+      .setComparator(new CompositeComparator<Glob>(stringifier.getComparator(repository), initialComparator));
     return this;
   }
 
-  public GlobTableView addColumn(String name, TableCellRenderer renderer, Comparator<Glob> comparator) {
+  public GlobTableView addColumn(String name, TableCellRenderer renderer, GlobStringifier stringifier) {
     startColumn()
       .setName(name)
       .setRenderer(renderer)
       .setBackgroundPainter(defaultBackgroundPainter)
-      .setComparator(new CompositeComparator<Glob>(comparator, initialComparator));
+      .setStringifier(stringifier)
+      .setComparator(new CompositeComparator<Glob>(stringifier.getComparator(repository), initialComparator));
     return this;
   }
 
-  public GlobTableView addColumn(String name, TableCellRenderer renderer, TableCellEditor editor, Comparator<Glob> comparator) {
+  public GlobTableView addColumn(String name, TableCellRenderer renderer, TableCellEditor editor, GlobStringifier stringifier) {
     startColumn()
       .setName(name)
       .setBackgroundPainter(defaultBackgroundPainter)
       .setRenderer(renderer)
       .setEditor(editor)
-      .setComparator(new CompositeComparator<Glob>(comparator, initialComparator));
+      .setStringifier(stringifier)
+      .setComparator(new CompositeComparator<Glob>(stringifier.getComparator(repository), initialComparator));
     return this;
   }
 
@@ -292,6 +290,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       registerSelectionListener();
       initHeader();
       initPopupFactory();
+      initClipboardHandler();
       registerEditors();
       if (initialFilter != null) {
         setFilter(initialFilter);
@@ -625,7 +624,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
 
     public void reset() {
       model.globsReset(repository, Collections.singleton(type));
-      refreshColumnNames();      
+      refreshColumnNames();
     }
 
     public int getRowCount() {
@@ -702,6 +701,36 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     public void dispose() {
       repository.removeChangeListener(model);
     }
+  }
 
+  private void initClipboardHandler() {
+    KeyStroke copy = GuiUtils.ctrl(KeyEvent.VK_C);
+    table.registerKeyboardAction(new CopySelectionToClipboardAction(), "Copy", copy, JComponent.WHEN_FOCUSED);
+  }
+
+  private class CopySelectionToClipboardAction extends AbstractAction {
+    public void actionPerformed(ActionEvent e) {
+      StringBuffer buffer = new StringBuffer();
+      for (int i = 0; i < tableModel.getRowCount(); i++) {
+
+      }
+
+      for (Glob glob : getCurrentSelection()) {
+        boolean firstColumn = true;
+        for (GlobTableColumn column : columns) {
+          if (!firstColumn) {
+            buffer.append("\t");
+          }
+          firstColumn = false;
+          GlobStringifier stringifier = column.getStringifier();
+          buffer.append(stringifier.toString(glob, repository));
+        }
+        buffer.append("\n");
+      }
+
+      StringSelection selection = new StringSelection(buffer.toString());
+      Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+      clipboard.setContents(selection, selection);
+    }
   }
 }

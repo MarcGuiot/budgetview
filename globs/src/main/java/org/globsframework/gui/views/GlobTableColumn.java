@@ -1,6 +1,7 @@
 package org.globsframework.gui.views;
 
 import org.globsframework.model.Glob;
+import org.globsframework.model.format.GlobStringifier;
 
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -13,6 +14,8 @@ public interface GlobTableColumn {
   TableCellRenderer getRenderer();
 
   TableCellEditor getEditor();
+
+  GlobStringifier getStringifier();
 
   Comparator<Glob> getComparator();
 

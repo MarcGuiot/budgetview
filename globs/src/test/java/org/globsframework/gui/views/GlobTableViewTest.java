@@ -16,21 +16,25 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import static org.globsframework.model.KeyBuilder.newKey;
+import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.format.GlobStringifiers;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.uispec4j.Clipboard;
 import org.uispec4j.Table;
 import org.uispec4j.Trigger;
 import org.uispec4j.interception.PopupMenuInterceptor;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.utils.KeyUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
@@ -217,7 +221,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
             String value = "[" + glob.get(ID) + "] " + glob.get(NAME);
             return super.getTableCellRendererComponent(table, value, b, b1, i, i1);
           }
-        }, new GlobFieldComparator(NAME)));
+        }, GlobStringifiers.get(NAME)));
 
     assertTrue(table.getHeader().contentEquals("colName"));
     assertTrue(table.contentEquals(new String[][]{
@@ -795,6 +799,10 @@ public class GlobTableViewTest extends GuiComponentTestCase {
       return null;
     }
 
+    public GlobStringifier getStringifier() {
+      return null;
+    }
+
     public Comparator<Glob> getComparator() {
       return null;
     }
@@ -922,7 +930,6 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     }));
   }
 
-
   public void testUpdatesCanInsertOrRemoveRow() throws Exception {
     repository =
       checker.parse("<dummyObject id='1' name='name1' value='1.1'/>" +
@@ -970,6 +977,27 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     repository.completeChangeSet();
   }
 
+  public void testCopySelectionToClipboard() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' value='1.1'/>" +
+                    "<dummyObject id='2' name='name2' value='2.2'/>" +
+                    "<dummyObject id='3' name='name3' value='3.3'/>" +
+                    "<dummyObject id='4' name='name4' value='4.4'/>" +
+                    "");
+    view = GlobTableView.init(DummyObject.TYPE, repository, new GlobFieldComparator(ID), directory)
+      .addColumn(DummyObject.ID)
+      .addColumn("Custom", new DummyStringifier("a"))
+      .addColumn("Other", new DefaultTableCellRenderer(), new DummyStringifier("b"));
+    JTable jTable = view.getComponent();
+    Table table = new Table(jTable);
+
+    table.selectRows(1, 3);
+    KeyUtils.pressKey(jTable, org.uispec4j.Key.plaformSpecificCtrl(org.uispec4j.Key.C));
+    assertEquals("2\ta2\tb2\n" +
+                 "4\ta4\tb4\n",
+                 Clipboard.getContentAsText());
+  }
+
   private void checkColumnIsNotRightAligned(Table table, int column) {
     JLabel label = (JLabel)TableUtils.getRenderedComponentAt(table.getJTable(), 0, column);
     assertFalse(label.getHorizontalAlignment() == JLabel.RIGHT);
@@ -1010,6 +1038,14 @@ public class GlobTableViewTest extends GuiComponentTestCase {
 
   private class DummyStringifier extends AbstractGlobStringifier {
     private boolean reversed;
+    private String prefix = "a";
+
+    private DummyStringifier() {
+    }
+
+    private DummyStringifier(String prefix) {
+      this.prefix = prefix;
+    }
 
     public void setReversed(boolean reversed) {
       this.reversed = reversed;
@@ -1017,7 +1053,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
 
     public String toString(Glob glob, GlobRepository repository) {
       int id = glob.get(DummyObject.ID);
-      return "a" + String.valueOf(reversed ? 4 - id : id);
+      return prefix + String.valueOf(reversed ? 4 - id : id);
     }
   }
 }
