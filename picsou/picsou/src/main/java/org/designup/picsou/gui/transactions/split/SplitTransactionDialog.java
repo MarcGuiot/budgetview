@@ -10,16 +10,15 @@ import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.Icons;
 import org.designup.picsou.model.*;
-import static org.designup.picsou.model.Transaction.LABEL;
-import static org.designup.picsou.model.Transaction.NOTE;
+import static org.designup.picsou.model.Transaction.*;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.utils.AbstractDocumentListener;
+import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
@@ -28,6 +27,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobStringifiers;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -161,7 +161,7 @@ public class SplitTransactionDialog {
                  chain(defaultCustomizer, LabelCustomizers.BOLD))
       .addColumn(Lang.get("amount"), Transaction.AMOUNT, LabelCustomizers.ALIGN_RIGHT)
       .addColumn(Lang.get("note"), NOTE, new TransactionNoteEditor(localRepository, localDirectory))
-      .addColumn(" ", deleteSplitColumn, deleteSplitColumn, transactionComparator);
+      .addColumn(" ", deleteSplitColumn, deleteSplitColumn, GlobStringifiers.empty(transactionComparator));
 
     JTable table = tableView.getComponent();
 

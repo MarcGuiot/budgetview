@@ -8,6 +8,7 @@ import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.table.TableCellEditor;
@@ -49,6 +50,10 @@ public class SeriesEvolutionMonthColumn implements GlobTableColumn {
 
   public TableCellEditor getEditor() {
     return editor;
+  }
+
+  public GlobStringifier getStringifier() {
+    return editor.getStringifier();
   }
 
   public Comparator<Glob> getComparator() {

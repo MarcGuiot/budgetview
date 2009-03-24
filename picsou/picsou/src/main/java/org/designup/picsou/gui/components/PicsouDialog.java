@@ -26,7 +26,7 @@ public class PicsouDialog extends JDialog {
   public static boolean FORCE_NONMODAL = false;
   private static final Insets BUTTON_INSETS = new Insets(0, 10, 10, 10);
   private ColorService colorService;
-  private static final int HORIZONTAL_BUTTON_MARGIN = Gui.isMacOSX() ? 20 : 0;
+  private static final int HORIZONTAL_BUTTON_MARGIN = GuiUtils.isMacOSX() ? 20 : 0;
   private Action closeAction;
   private Directory directory;
   private boolean openRequestIsManaged = false;
@@ -110,7 +110,7 @@ public class PicsouDialog extends JDialog {
     }
 
     Insets buttonInsets = new Insets(0, 10, 10, 10);
-    if (Gui.isMacOSX()) {
+    if (GuiUtils.isMacOSX()) {
       if (cancelButton != null) {
         builder.add(cancelButton, 2, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS);
       }

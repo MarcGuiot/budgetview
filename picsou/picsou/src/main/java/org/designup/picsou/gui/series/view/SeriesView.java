@@ -20,6 +20,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.model.Key;
+import org.globsframework.model.format.GlobStringifiers;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -82,7 +83,8 @@ public class SeriesView extends View {
 
     globTable
       .setDefaultBackgroundPainter(backgroundPainter)
-      .addColumn(" ", expandColumn, expandColumn, stringifier.getComparator(repository))
+      .addColumn(" ", expandColumn, expandColumn,
+                 GlobStringifiers.empty(stringifier.getComparator(repository)))
       .addColumn(Lang.get("series"), stringifier, customizer)
       .setHeaderHidden()
       .setDefaultFont(Gui.DEFAULT_TABLE_FONT);

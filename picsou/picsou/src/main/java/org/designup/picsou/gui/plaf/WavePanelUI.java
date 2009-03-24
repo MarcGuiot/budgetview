@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.plaf;
 
-import org.designup.picsou.gui.utils.Gui;
+import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicPanelUI;
@@ -60,7 +60,7 @@ public class WavePanelUI extends BasicPanelUI {
 
     Graphics2D g2;
     try {
-      if (!Gui.isWindows()) {
+      if (!GuiUtils.isWindows()) {
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         g2 = image.createGraphics();
       }

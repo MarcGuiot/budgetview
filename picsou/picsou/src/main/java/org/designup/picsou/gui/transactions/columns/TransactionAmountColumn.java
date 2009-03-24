@@ -40,4 +40,7 @@ public class TransactionAmountColumn implements TableCellRenderer {
     return label;
   }
 
+  public GlobStringifier getStringifier() {
+    return amountStringifier;
+  }
 }

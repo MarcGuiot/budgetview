@@ -20,6 +20,7 @@ import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobStringifiers;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Utils;
@@ -105,7 +106,7 @@ public class SeriesEvolutionView extends View {
       .setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 
     globTable
-      .addColumn("", expandColumn, expandColumn, stringifier.getComparator(repository))
+      .addColumn("", expandColumn, expandColumn, GlobStringifiers.empty(stringifier.getComparator(repository)))
       .addColumn("", stringifier, customizer);
 
     for (int offset = -1; offset < -1 + MONTH_COLUMNS_COUNT; offset++) {
@@ -121,7 +122,6 @@ public class SeriesEvolutionView extends View {
 
     Gui.installRolloverOnButtons(table, Utils.intRange(2, 10));
     table.setDragEnabled(false);
-    table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     ToolTipManager.sharedInstance().unregisterComponent(table.getTableHeader());
 
     tableAdapter.setFilter(expansionModel);

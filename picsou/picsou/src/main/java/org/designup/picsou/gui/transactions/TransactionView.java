@@ -152,21 +152,24 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
                  new TransactionDateStringifier(TransactionComparator.DESCENDING_BANK_SPLIT_AFTER,
                                                 Transaction.BANK_MONTH,
                                                 Transaction.BANK_DAY), LabelCustomizers.font(dateFont))
-      .addColumn(Lang.get("series"), seriesColumn, seriesColumn,
-                 seriesColumn.getComparator())
+      .addColumn(Lang.get("series"), seriesColumn, seriesColumn, seriesColumn.getStringifier())
       .addColumn(Lang.get("category"), new CategoryStringifier(descriptionService), LabelCustomizers.font(categoryFont))
       .addColumn(Lang.get("label"),
                  descriptionService.getStringifier(Transaction.LABEL),
                  LabelCustomizers.chain(LabelCustomizers.BOLD, LabelCustomizers.autoTooltip()))
-      .addColumn(Lang.get("amount"), amountColumn, amountStringifier.getComparator(repository));
+      .addColumn(Lang.get("amount"),
+                 amountColumn,
+                 amountStringifier);
 
     view.startColumn()
       .setName(Lang.get("note"))
       .setField(Transaction.NOTE)
       .setEditor(new TransactionNoteEditor(repository, directory));
     view
-      .addColumn(Lang.get("transactionView.account.balance"), accountBalanceColumn, amountStringifier.getComparator(repository))
-      .addColumn(Lang.get("transactionView.balance"), balanceColumn, amountStringifier.getComparator(repository));
+      .addColumn(Lang.get("transactionView.account.balance"),
+                 accountBalanceColumn, accountBalanceColumn.getStringifier())
+      .addColumn(Lang.get("transactionView.balance"), 
+                 balanceColumn, balanceColumn.getStringifier());
 
     return view;
   }

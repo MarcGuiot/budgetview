@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.components;
 
-import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.utils.Java2DUtils;
 
@@ -60,7 +59,7 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
 
     int width = size.width;
     int height = size.height;
-    if (Gui.isMacOSX()) {
+    if (GuiUtils.isMacOSX()) {
       height -= 2;
     }
 

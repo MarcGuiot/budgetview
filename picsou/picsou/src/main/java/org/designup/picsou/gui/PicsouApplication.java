@@ -21,6 +21,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.TextLocator;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
 import org.globsframework.gui.splits.components.ShadowedLabelUI;
@@ -232,10 +233,10 @@ public class PicsouApplication {
   }
 
   public static String getDataPath() {
-    if (Gui.isMacOSX() && System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
+    if (GuiUtils.isMacOSX() && System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
       return System.getProperty("user.home") + "/Library/Application Support/CashPilot";
     }
-    if (Gui.isWindows() && System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
+    if (GuiUtils.isWindows() && System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
       return System.getProperty("user.home") + "/Application Data/CashPilot";
     }
     return getSystemValue(LOCAL_PREVAYLER_PATH_PROPERTY, System.getProperty("user.home") + "/.cashpilot");

@@ -77,7 +77,7 @@ public class CategoryView extends View implements ExpandableTable {
 
     globTable
       .setDefaultBackgroundPainter(backgroundPainter)
-      .addColumn(" ", expandColumn, expandColumn, categoryStringifier.getComparator(repository))
+      .addColumn(" ", expandColumn, expandColumn, categoryStringifier)
       .addColumn(Lang.get("category"), categoryStringifier, customizer)
       .addColumn(Lang.get("amount"), amountStringifier, ALIGN_RIGHT)
       .setHeaderHidden()

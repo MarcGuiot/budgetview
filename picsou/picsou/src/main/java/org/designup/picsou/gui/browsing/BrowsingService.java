@@ -1,15 +1,15 @@
 package org.designup.picsou.gui.browsing;
 
-import org.designup.picsou.gui.utils.Gui;
+import org.globsframework.gui.splits.utils.GuiUtils;
 
 public abstract class BrowsingService {
 
   static public BrowsingService createService() {
 
-    if (Gui.isMacOSX()) {
+    if (GuiUtils.isMacOSX()) {
       return new MacBrowsingService();
     }
-    if (Gui.isWindows()) {
+    if (GuiUtils.isWindows()) {
       return new WindowsBrowsingService();
     }
     return new UnixBrowsingService();

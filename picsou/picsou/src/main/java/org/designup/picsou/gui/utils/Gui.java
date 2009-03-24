@@ -8,7 +8,6 @@ import org.globsframework.gui.splits.font.FontService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.utils.JarImageLocator;
 import org.globsframework.gui.utils.TableUtils;
-import sun.security.action.GetPropertyAction;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -16,16 +15,12 @@ import javax.swing.border.MatteBorder;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.security.AccessController;
 
 public class Gui {
   private static final int TITLE_BAR_HEIGHT = 19;
 
   public static final Font DEFAULT_TABLE_FONT;
   public static final Font DEFAULT_TABLE_FONT_BOLD;
-  private static final String MAC_PLATFORM_ID = "Mac OS X";
-  private static final String LINUX_PLATFORM_ID = "Linux";
-  private static final String WINDOWS_PLATFORM_ID = "Windows";
 
   public static char EURO = '\u20ac';
 
@@ -36,19 +31,16 @@ public class Gui {
   public static final int DEFAULT_COLUMN_CHAR_WIDTH = 7;
 
   private static Color selectionBackground;
-  private static final boolean IS_MACOSX;
-  private static final boolean IS_LINUX;
-  private static final boolean IS_WINDOWS;
   public static final Insets NO_INSETS = new Insets(0, 0, 0, 0);
 
   static {
 
     Font labelFont = new JLabel().getFont();
 
-    if (isMacOSX()) {
+    if (GuiUtils.isMacOSX()) {
       DEFAULT_TABLE_FONT = labelFont.deriveFont(Font.PLAIN, ((float)labelFont.getSize() - 2));
     }
-    else if (isLinux()) {
+    else if (GuiUtils.isLinux()) {
       DEFAULT_TABLE_FONT = labelFont.deriveFont(Font.PLAIN);
     }
     else {
@@ -59,25 +51,9 @@ public class Gui {
 
     JTable table = new JTable();
     selectionBackground = table.getSelectionBackground();
-    String os = (String)AccessController.doPrivileged(new GetPropertyAction("os.name"));
-    IS_MACOSX = os.contains(MAC_PLATFORM_ID);
-    IS_LINUX = os.contains(LINUX_PLATFORM_ID);
-    IS_WINDOWS = os.contains(WINDOWS_PLATFORM_ID);
   }
 
   private Gui() {
-  }
-
-  public static boolean isMacOSX() {
-    return IS_MACOSX;
-  }
-
-  public static boolean isLinux() {
-    return IS_LINUX;
-  }
-
-  public static boolean isWindows() {
-    return IS_WINDOWS;
   }
 
   public static Font getDefaultFont() {
@@ -214,10 +190,6 @@ public class Gui {
       final int width = columnSizes[column] * DEFAULT_COLUMN_CHAR_WIDTH;
       TableUtils.setSize(targetTable, column, width);
     }
-  }
-
-  public static int getCtrlModifier() {
-    return isMacOSX() ? KeyEvent.META_DOWN_MASK : KeyEvent.CTRL_DOWN_MASK;
   }
 
   public static JEditorPane createHtmlEditor(String text) {

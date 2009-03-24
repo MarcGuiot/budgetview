@@ -1,16 +1,17 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.AssertionFailedError;
+import junit.framework.Assert;
 import org.designup.picsou.gui.series.evolution.SeriesEvolutionView;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
+import org.uispec4j.*;
 import org.uispec4j.Panel;
-import org.uispec4j.Table;
-import org.uispec4j.TableCellValueConverter;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.utils.ColorUtils;
+import org.uispec4j.utils.KeyUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -130,6 +131,13 @@ public class SeriesEvolutionChecker extends GuiChecker {
     }
 
     throw new AssertionFailedError("unexpected component: " + panel.getDescription());
+  }
+
+  public void checkClipboardExport(String expectedClipboardContent) throws Exception {
+    Table table = getTable();
+    table.selectAllRows();
+    KeyUtils.pressKey(table, org.uispec4j.Key.plaformSpecificCtrl(org.uispec4j.Key.C));
+    Assert.assertEquals(expectedClipboardContent, Clipboard.getContentAsText());
   }
 
   public class SeriesTableChecker extends TableChecker {

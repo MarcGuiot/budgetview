@@ -22,6 +22,8 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.KeyBuilder;
 import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
@@ -82,21 +84,40 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
 
     switch (SeriesWrapperType.get(seriesWrapper)) {
       case BUDGET_AREA:
-        label.setText(getBudgetAreaLabelText(BudgetArea.get(itemId)));
+        label.setText(stringify(seriesWrapper));
         colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, label, labelPanel);
         return labelPanel;
 
       case SERIES:
         JButton button = render ? rendererButton : editorButton;
-        button.setText(getSeriesButtonText(itemId));
+        button.setText(stringify(seriesWrapper));
         PaintablePanel panel = render ? rendererPanel : editorPanel;
         colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, button, panel);
         return panel;
 
       case SUMMARY:
-        label.setText(getSummaryLabelText(seriesWrapper));
+        label.setText(stringify(seriesWrapper));
         colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, label, labelPanel);
         return labelPanel;
+
+      default:
+        throw new InvalidParameter("Unexpected type: " + SeriesWrapperType.get(seriesWrapper));
+    }
+  }
+
+  private String stringify(Glob seriesWrapper) {
+
+    Integer itemId = seriesWrapper.get(SeriesWrapper.ITEM_ID);
+
+    switch (SeriesWrapperType.get(seriesWrapper)) {
+      case BUDGET_AREA:
+        return getBudgetAreaLabelText(BudgetArea.get(itemId));
+
+      case SERIES:
+        return getSeriesButtonText(itemId);
+
+      case SUMMARY:
+        return getSummaryLabelText(seriesWrapper);
 
       default:
         throw new InvalidParameter("Unexpected type: " + SeriesWrapperType.get(seriesWrapper));
@@ -189,6 +210,14 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
     final Font font = button.getFont().deriveFont(Font.PLAIN, 10);
     button.setFont(font);
     return button;
+  }
+
+  public GlobStringifier getStringifier() {
+    return new AbstractGlobStringifier() {
+      public String toString(Glob seriesWrapper, GlobRepository repository) {
+        return stringify(seriesWrapper);
+      }
+    };
   }
 
   private class OpenSeriesEditionDialogAction extends AbstractAction {

@@ -119,6 +119,10 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
     return panel;
   }
 
+  public GlobStringifier getStringifier() {
+    return seriesStringifier;
+  }
+
   private class GotoCategorizationAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
       if (Transaction.isPlanned(transaction)) {

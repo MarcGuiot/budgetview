@@ -25,17 +25,16 @@ import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.monthsummary.InfoView;
 import org.designup.picsou.gui.monthsummary.MonthSummaryView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
+import org.designup.picsou.gui.savings.SavingsView;
+import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.series.evolution.SeriesEvolutionView;
 import org.designup.picsou.gui.series.view.SeriesView;
-import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
-import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.triggers.GlobStateChecker;
@@ -52,8 +51,7 @@ import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.fieldContainsIgnoreCase;
-import static org.globsframework.model.utils.GlobMatchers.or;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
@@ -254,10 +252,8 @@ public class MainPanel {
     editMenu.add(redoAction);
 
     JRootPane rootPane = frame.getRootPane();
-    GuiUtils.addShortcut(rootPane, "UNDO", undoAction,
-                         KeyStroke.getKeyStroke(KeyEvent.VK_Z, Gui.getCtrlModifier()));
-    GuiUtils.addShortcut(rootPane, "REDO", redoAction,
-                         KeyStroke.getKeyStroke(KeyEvent.VK_Y, Gui.getCtrlModifier()));
+    GuiUtils.addShortcut(rootPane, "UNDO", undoAction, GuiUtils.ctrl(KeyEvent.VK_Z));
+    GuiUtils.addShortcut(rootPane, "REDO", redoAction, GuiUtils.ctrl(KeyEvent.VK_Y));
 
     Utils.beginRemove();
     editMenu.add(check);
@@ -286,7 +282,7 @@ public class MainPanel {
   }
 
   private boolean useMacOSMenu() {
-    boolean result = Gui.isMacOSX();
+    boolean result = GuiUtils.isMacOSX();
     Utils.beginRemove();
     result = false;
     Utils.endRemove();

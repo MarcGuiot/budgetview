@@ -3,8 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
-import org.designup.picsou.gui.model.BalanceStat;
-import org.globsframework.model.format.GlobPrinter;
 
 public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
@@ -82,7 +80,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     seriesEvolution.checkForeground("Main account", "Jul 08", "darkRed");
     seriesEvolution.checkForeground("Main account", "Aug 08", "darkGrey");
-    
+
     seriesEvolution.checkForeground("Groceries", "Jul 08", "red");
     seriesEvolution.checkForeground("Groceries", "Aug 08", "0022BB");
 
@@ -282,6 +280,39 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     seriesEvolution.checkRow(
       "Taxes", "200.00", "200.00", "", "", "", "", "", ""
+    );
+  }
+
+  public void testClipboardExport() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.00, "Auchan")
+      .addTransaction("2008/07/05", -29.00, "Free Telecom")
+      .addTransaction("2008/07/02", 200.00, "GlobalCorp")
+      .addTransaction("2008/07/01", 3540.00, "WorldCo")
+      .load();
+
+    views.selectBudget();
+    budgetView.recurring.createSeries()
+      .setName("Taxes")
+      .setCategory(MasterCategory.TAXES)
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount(200)
+      .validate();
+
+    views.selectEvolution();
+    seriesEvolution.checkClipboardExport(
+      "\tBalance\t\t3416.00\t-200.00\t-200.00\t-200.00\t-200.00\t-200.00\t-200.00\n" +
+      "\tMain account\t\t-200.00\t-400.00\t-600.00\t-800.00\t-1000.00\t-1200.00\t-1400.00\n" +
+      "\tSavings account\t\t\t\t\t\t\t\t\n" +
+      "\tTo categorize\t\t3864.00\t\t\t\t\t\t\n" +
+      "\tIncome\t\t\t\t\t\t\t\t\n" +
+      "\tRecurring\t\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\n" +
+      "\tTaxes\t\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\n" +
+      "\tEnvelopes\t\t\t\t\t\t\t\t\n" +
+      "\tOccasional\t\t\t\t\t\t\t\t\n" +
+      "\tSpecial\t\t\t\t\t\t\t\t\n" +
+      "\tSavings\t\t\t\t\t\t\t\t\n"
     );
   }
 }

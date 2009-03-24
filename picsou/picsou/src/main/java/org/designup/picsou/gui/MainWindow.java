@@ -15,7 +15,7 @@ public class MainWindow {
 
   static {
     try {
-      if (Gui.isMacOSX()) {
+      if (GuiUtils.isMacOSX()) {
         UIManager.setLookAndFeel(new PicsouMacLookAndFeel());
       }
       else {
