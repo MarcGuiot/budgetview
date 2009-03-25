@@ -302,6 +302,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     views.selectEvolution();
     seriesEvolution.checkClipboardExport(
+      "\t\tJune 08\tJul 08\tAug 08\tSep 08\tOct 08\tNov 08\tDec 08\tJan 09\n" +
       "\tBalance\t\t3416.00\t-200.00\t-200.00\t-200.00\t-200.00\t-200.00\t-200.00\n" +
       "\tMain account\t\t-200.00\t-400.00\t-600.00\t-800.00\t-1000.00\t-1200.00\t-1400.00\n" +
       "\tSavings account\t\t\t\t\t\t\t\t\n" +

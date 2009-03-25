@@ -711,12 +711,19 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   private class CopySelectionToClipboardAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
       StringBuffer buffer = new StringBuffer();
-      for (int i = 0; i < tableModel.getRowCount(); i++) {
 
+      boolean firstColumn = true;
+      for (GlobTableColumn column : columns) {
+        if (!firstColumn) {
+          buffer.append("\t");
+        }
+        firstColumn = false;
+        buffer.append(column.getName());
       }
+      buffer.append("\n");
 
       for (Glob glob : getCurrentSelection()) {
-        boolean firstColumn = true;
+        firstColumn = true;
         for (GlobTableColumn column : columns) {
           if (!firstColumn) {
             buffer.append("\t");

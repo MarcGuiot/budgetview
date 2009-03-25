@@ -993,7 +993,8 @@ public class GlobTableViewTest extends GuiComponentTestCase {
 
     table.selectRows(1, 3);
     KeyUtils.pressKey(jTable, org.uispec4j.Key.plaformSpecificCtrl(org.uispec4j.Key.C));
-    assertEquals("2\ta2\tb2\n" +
+    assertEquals("id\tCustom\tOther\n" +
+                 "2\ta2\tb2\n" +
                  "4\ta4\tb4\n",
                  Clipboard.getContentAsText());
   }
