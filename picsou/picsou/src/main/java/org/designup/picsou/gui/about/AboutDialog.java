@@ -3,6 +3,7 @@ package org.designup.picsou.gui.about;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.CloseAction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -10,7 +11,6 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 
 public class AboutDialog {
 
@@ -39,12 +39,8 @@ public class AboutDialog {
 
     builder.add("configurationArea", Gui.createHtmlEditor(getConfiguration()));
 
-    dialog = PicsouDialog.createWithButton(directory.get(JFrame.class), builder.<JPanel>load(),
-                                           new AbstractAction(Lang.get("close")) {
-                                             public void actionPerformed(ActionEvent e) {
-                                               dialog.setVisible(false);
-                                             }
-                                           }, directory);
+    dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+    dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction(dialog));
     dialog.pack();
   }
 

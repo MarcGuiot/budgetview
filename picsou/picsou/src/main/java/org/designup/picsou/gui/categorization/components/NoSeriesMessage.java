@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class NoSeriesMessage {
 
-  private JEditorPane component;
+  private JEditorPane htmlEditor;
   private BudgetArea budgetArea;
   private GlobRepository repository;
 
@@ -23,10 +23,10 @@ public class NoSeriesMessage {
     this.budgetArea = budgetArea;
     this.repository = repository;
 
-    this.component = new JEditorPane();
-    GuiUtils.initReadOnlyHtmlComponent(component);
+    this.htmlEditor = new JEditorPane();
+    GuiUtils.initReadOnlyHtmlComponent(htmlEditor);
 
-    this.component.setText(Lang.get("categorization.noseries." + budgetArea.getName()));
+    this.htmlEditor.setText(Lang.get("categorization.noseries." + budgetArea.getName()));
 
     registerUpdateListener(repository);
     updateVisibility();
@@ -49,10 +49,10 @@ public class NoSeriesMessage {
   }
 
   private void updateVisibility() {
-    component.setVisible(!repository.contains(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, budgetArea.getId())));
+    htmlEditor.setVisible(!repository.contains(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, budgetArea.getId())));
   }
 
   public JEditorPane getComponent() {
-    return component;
+    return htmlEditor;
   }
 }

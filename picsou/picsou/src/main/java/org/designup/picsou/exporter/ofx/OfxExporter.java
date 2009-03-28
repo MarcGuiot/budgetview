@@ -1,29 +1,42 @@
-package org.designup.picsou.importer.ofx;
+package org.designup.picsou.exporter.ofx;
 
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
+import org.designup.picsou.importer.ofx.OfxWriter;
+import org.designup.picsou.importer.ofx.OfxImporter;
+import org.designup.picsou.exporter.Exporter;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 
 import java.io.Writer;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 
-public class OfxExporter {
+public class OfxExporter implements Exporter {
 
   private GlobRepository repository;
   private OfxWriter writer;
 
-  public static void write(GlobRepository globRepository, Writer writer) {
-    OfxExporter exporter = new OfxExporter(globRepository, writer);
-    exporter.write();
+  public static void write(GlobRepository repository, Writer writer) throws IOException {
+    OfxExporter exporter = new OfxExporter();
+    exporter.export(repository, writer);
   }
 
-  private OfxExporter(GlobRepository globRepository, Writer writer) {
-    this.repository = globRepository;
+  public String getType() {
+    return "ofx";
+  }
+
+  public String getExtension() {
+    return "ofx";
+  }
+
+  public void export(GlobRepository repository, Writer writer) throws IOException {
+    this.repository = repository;
     this.writer = new OfxWriter(writer);
+    write();
   }
 
   private void write() {

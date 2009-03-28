@@ -26,7 +26,7 @@ public class TransactionComparator implements Comparator<Glob> {
   private int splitAfter;
   protected IntegerField monthField;
   protected IntegerField dayField;
-
+    
   public TransactionComparator(boolean ascendingDates, IntegerField monthField,
                                IntegerField dayField, boolean splitAfter) {
     this.dateMultiplier = ascendingDates ? 1 : -1;

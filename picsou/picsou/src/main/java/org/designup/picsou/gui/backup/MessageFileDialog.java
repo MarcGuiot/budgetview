@@ -38,7 +38,7 @@ public class MessageFileDialog {
         dialog.setVisible(false);
       }
     };
-    dialog.addPanelWithButtons(builder.<JPanel>load(), action);
+    dialog.addPanelWithButton(builder.<JPanel>load(), action);
     dialog.pack();
     dialog.showCentered();
   }

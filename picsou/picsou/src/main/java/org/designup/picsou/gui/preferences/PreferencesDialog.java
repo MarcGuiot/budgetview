@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.preferences;
 
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
@@ -26,31 +27,27 @@ public class PreferencesDialog {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
                                                       "/layout/preferencesDialog.splits",
                                                       repository, directory);
-    Integer[] items;
-    items = new Integer[]{12, 18, 24, 36};
+    Integer[] items= new Integer[]{12, 18, 24, 36};
     Utils.beginRemove();
     items = new Integer[]{0, 1, 2, 3, 6, 12, 18, 24, 36};
     Utils.endRemove();
     futureMonth = new JComboBox(items);
     builder.add("futureMonth", futureMonth);
-    dialog = PicsouDialog.createWithButtons(parent, (JPanel)builder.load(),
-                                            new AbstractAction(Lang.get("ok")) {
-                                              public void actionPerformed(ActionEvent e) {
-                                                Integer futureMonth =
-                                                  (Integer)PreferencesDialog.this.futureMonth.getSelectedItem();
-                                                if (futureMonth != null) {
-                                                  repository.update(UserPreferences.KEY,
-                                                                    UserPreferences.FUTURE_MONTH_COUNT,
-                                                                    futureMonth);
-                                                }
-                                                dialog.setVisible(false);
-                                              }
-                                            },
-                                            new AbstractAction(Lang.get("cancel")) {
-                                              public void actionPerformed(ActionEvent e) {
-                                                dialog.setVisible(false);
-                                              }
-                                            }, directory);
+    dialog = PicsouDialog.create(parent, directory);
+    dialog.addPanelWithButtons((JPanel)builder.load(),
+                               new AbstractAction(Lang.get("ok")) {
+                                 public void actionPerformed(ActionEvent e) {
+                                   Integer futureMonth =
+                                     (Integer)PreferencesDialog.this.futureMonth.getSelectedItem();
+                                   if (futureMonth != null) {
+                                     repository.update(UserPreferences.KEY,
+                                                       UserPreferences.FUTURE_MONTH_COUNT,
+                                                       futureMonth);
+                                   }
+                                   dialog.setVisible(false);
+                                 }
+                               },
+                               new CancelAction(dialog));
   }
 
   public void show() {

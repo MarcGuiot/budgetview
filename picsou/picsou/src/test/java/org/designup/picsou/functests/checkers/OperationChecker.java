@@ -100,9 +100,10 @@ public class OperationChecker {
 
   }
 
-  public void exportFile(String name) {
+  public void exportOfxFile(String name) {
     WindowInterceptor
       .init(exportMenu.triggerClick())
+      .processWithButtonClick("OK")
       .process(FileChooserHandler.init().select(name))
       .run();
   }

@@ -1,6 +1,8 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.CloseAction;
+import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.description.AccountStringifier;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.Account;
@@ -70,8 +72,8 @@ public class AccountPositionEditionDialog {
       dialog.setPreferredSize(new Dimension(400, 350));
     }
     else {
-      dialog = PicsouDialog.createWithButtons(parent, builder.<JPanel>load(),
-                                              validateAction, new CancelAction(), directory);
+      dialog = PicsouDialog.create(parent, directory);
+      dialog.addPanelWithButtons(builder.<JPanel>load(), validateAction, new CancelAction(dialog));
       dialog.setPreferredSize(new Dimension(400, 300));
       initialMessage.setVisible(false);
     }
@@ -143,15 +145,4 @@ public class AccountPositionEditionDialog {
       dialog.setVisible(false);
     }
   }
-
-  private class CancelAction extends AbstractAction {
-    public CancelAction() {
-      super(Lang.get("cancel"));
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      dialog.setVisible(false);
-    }
-  }
-
 }

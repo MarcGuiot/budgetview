@@ -20,7 +20,7 @@ public class SeriesDeleteDialog {
                                                       "/layout/seriesDeletionDialog.splits",
                                                       repository, directory);
 
-    dialog = PicsouDialog.createWithButtons(parent, builder.<JPanel>load(),
+    dialog = PicsouDialog.createWithButtons(parent, directory, builder.<JPanel>load(),
                                             new AbstractAction(Lang.get("ok")) {
                                               public void actionPerformed(ActionEvent e) {
                                                 ok = true;
@@ -32,7 +32,7 @@ public class SeriesDeleteDialog {
                                                 ok = false;
                                                 dialog.setVisible(false);
                                               }
-                                            }, directory);
+                                            });
   }
 
   public boolean show() {

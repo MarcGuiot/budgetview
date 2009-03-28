@@ -3,7 +3,7 @@ package org.designup.picsou.functests.utils;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.designup.picsou.functests.checkers.OperationChecker;
-import org.designup.picsou.importer.ofx.OfxExporter;
+import org.designup.picsou.exporter.ofx.OfxExporter;
 import org.designup.picsou.model.*;
 import static org.designup.picsou.model.Transaction.*;
 import org.designup.picsou.model.initial.InitialCategories;
@@ -12,6 +12,7 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.ItemNotFound;
+import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -191,7 +192,7 @@ public class OfxBuilder {
       OfxExporter.write(repository, writer);
     }
     catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new ResourceAccessFailed(e);
     }
     finally {
       if (writer != null) {

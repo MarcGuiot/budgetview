@@ -1,0 +1,23 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="dialog" preferredSize="(450,220)" opaque="true">
+    <column styleClass="innerDialog">
+
+      <label text="$exportDialog.title" styleClass="title"/>
+
+      <label text="$exportDialog.intro" marginBottom="10"/>
+
+      <repeat ref="types">
+        <column>
+          <radioButton ref="radio"/>
+          <htmlEditorPane ref="description" styleClass="note"
+                          marginLeft="20" opaque="false" foreground="#222222"/>
+        </column>
+      </repeat>
+
+    </column>
+  </panel>
+
+</splits>

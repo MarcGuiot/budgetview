@@ -7,7 +7,7 @@
 
       <label ref="title" foreground="help.title" font="-,bold,24" icon="help_logo.png"
              fill="horizontal" horizontalAlignment="center" weightY="0" marginBottom="5"/>
-      
+
       <scrollPane weightY="100">
         <htmlEditorPane ref="editor" useImageLocator="true" opaque="false" foreground="#222222"/>
       </scrollPane>

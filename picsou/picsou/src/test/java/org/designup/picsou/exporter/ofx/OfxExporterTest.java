@@ -1,4 +1,4 @@
-package org.designup.picsou.importer.ofx;
+package org.designup.picsou.exporter.ofx;
 
 import org.designup.picsou.utils.PicsouTestCase;
 

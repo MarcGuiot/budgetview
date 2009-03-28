@@ -583,7 +583,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
   }
 
-  public void testImportedSavingAccountWithMainAccount() throws Exception {
+  public void testImportedSavingsAccountWithMainAccount() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/10")  //compte d'épargne
       .addTransaction("2008/08/10", 100.00, "Virement")
@@ -675,7 +675,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
   }
 
-  public void testImportedSavingAccountWithMainAccountInManual() throws Exception {
+  public void testImportedSavingsAccountWithMainAccountInManual() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/10")
       .addTransaction("2008/08/10", 100.00, "Virement")

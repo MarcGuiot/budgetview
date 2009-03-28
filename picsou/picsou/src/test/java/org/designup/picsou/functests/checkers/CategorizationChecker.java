@@ -555,6 +555,15 @@ public class CategorizationChecker extends GuiChecker {
     return doubleClickTableRow(getRowIndex(label));
   }
 
+  public CategorizationChecker selectTransaction(String label) {
+    final int index = getRowIndex(label);
+    if (index < 0) {
+      Assert.fail("Transaction " + label + "not found. Actual content:\n" + getTable().toString());
+    }
+    getTable().selectRow(index);
+    return this;
+  }
+
   private int getRowIndex(String label) {
     return getTable().getRowIndex(LABEL_COLUMN_INDEX, label);
   }

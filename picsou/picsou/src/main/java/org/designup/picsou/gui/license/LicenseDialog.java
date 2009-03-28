@@ -56,9 +56,8 @@ public class LicenseDialog {
     builder.add("connectionState", progressBar);
 
     validateAction = new ValidateAction();
-    dialog = PicsouDialog.createWithButtons(parent, builder.<JPanel>load(),
-                                            validateAction,
-                                            new CancelAction(), directory);
+    dialog = PicsouDialog.createWithButtons(parent, directory, builder.<JPanel>load(),
+                                            validateAction, new CancelAction());
     dialog.setTitle(Lang.get("license.title"));
     Boolean isConnected = localRepository.get(User.KEY).get(User.CONNECTED);
     connectMessageLabel.setVisible(!isConnected);

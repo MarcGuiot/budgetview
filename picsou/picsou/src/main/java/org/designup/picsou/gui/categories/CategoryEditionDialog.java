@@ -4,6 +4,7 @@ import org.designup.picsou.gui.categories.actions.CreateCategoryAction;
 import org.designup.picsou.gui.categories.actions.DeleteCategoryAction;
 import org.designup.picsou.gui.categories.actions.RenameCategoryAction;
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -30,7 +31,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class CategoryEditionDialog {
-  private JDialog dialog;
+  private PicsouDialog dialog;
   private GlobRepository repository;
   private Directory directory;
   private LocalGlobRepository localRepository;
@@ -93,9 +94,8 @@ public abstract class CategoryEditionDialog {
     masterList.setFilter(PicsouMatchers.masterUserCategories());
     initListener(subList);
 
-    dialog = PicsouDialog.createWithButtons(getParent(),
-                                            builder.<JPanel>load(),
-                                            new ValidateAction(), new CancelAction(), directory);
+    dialog = PicsouDialog.create(getParent(), directory);
+    dialog.addPanelWithButtons(builder.<JPanel>load(), new ValidateAction(), new CancelAction(dialog));
     //On ecoute les creation apres la mise a jour de la listView.
     initListenerForSelectionOnCreate();
   }
@@ -218,16 +218,6 @@ public abstract class CategoryEditionDialog {
         }
       }
       localRepository.commitChanges(true);
-      dialog.setVisible(false);
-    }
-  }
-
-  private class CancelAction extends AbstractAction {
-    public CancelAction() {
-      super(Lang.get("cancel"));
-    }
-
-    public void actionPerformed(ActionEvent e) {
       dialog.setVisible(false);
     }
   }

@@ -1,6 +1,6 @@
 package org.designup.picsou.utils.generator;
 
-import org.designup.picsou.importer.ofx.OfxExporter;
+import org.designup.picsou.exporter.ofx.OfxExporter;
 import org.designup.picsou.model.*;
 import static org.designup.picsou.utils.generator.AmountGenerator.*;
 import static org.designup.picsou.utils.generator.CountGenerator.*;

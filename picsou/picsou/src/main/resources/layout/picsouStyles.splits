@@ -22,6 +22,9 @@
            foreground="help.messages.text" opaque="false"/>
     <style selector="scrollPane htmlEditorPane" border="empty(10)"/>
 
+    <style selector="htmlEditorPane.note"  font="-,plain,11"
+           foreground="help.messages.text" opaque="false"/>
+
     <style selector="label.message"
            fill="horizontal" horizontalAlignment="left"
            anchor="center" weightX="10.0"/>

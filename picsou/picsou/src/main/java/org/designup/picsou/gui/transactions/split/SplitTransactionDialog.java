@@ -93,9 +93,9 @@ public class SplitTransactionDialog {
 
     okAction = new OkAction();
     dialog = PicsouDialog.createWithButtons(directory.get(JFrame.class),
-                                            builder.<JPanel>load(),
-                                            okAction, new CancelAction(),
-                                            directory);
+                                            directory, builder.<JPanel>load(),
+                                            okAction, new CancelAction()
+    );
     dialog.pack();
   }
 
