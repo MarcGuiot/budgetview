@@ -166,8 +166,8 @@ public class MonthSummaryChecker extends GuiChecker {
     assertThat(window.getTextBox(BudgetArea.SAVINGS.getName() + ":in:budgetAreaPlannedAmount")
       .textEquals(toString(plannedAmount)));
     GaugeChecker gauge = new GaugeChecker(getPanel(), BudgetArea.SAVINGS.getName() + ":in:budgetAreaGauge");
-    gauge.checkActualValue(observedAmount);
-    gauge.checkTargetValue(plannedAmount);
+    gauge.checkActualValue(-observedAmount);
+    gauge.checkTargetValue(-plannedAmount);
     return this;
   }
 

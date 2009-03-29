@@ -5,7 +5,7 @@ import org.globsframework.utils.Strings;
 public class Amounts {
 
   public static boolean sameSign(double value1, double value2) {
-    return Math.signum(value1) == Math.signum(value2);
+    return Math.signum(value1) == Math.signum(value2) || Amounts.isNearZero(value1) || Amounts.isNearZero(value2);
   }
 
   public static boolean isNullOrZero(Double value) {

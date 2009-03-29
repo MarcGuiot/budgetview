@@ -76,7 +76,7 @@ public class Gauge extends JPanel {
     this.actualValue = actualValue;
     this.targetValue = targetValue;
 
-    boolean sameSign = Math.signum(this.actualValue) * Math.signum(this.targetValue) >= 0;
+    boolean sameSign = Amounts.sameSign(this.actualValue, this.targetValue);
     double absActual = Math.abs(this.actualValue);
     double absTarget = Math.abs(this.targetValue);
 
@@ -87,7 +87,7 @@ public class Gauge extends JPanel {
       overrunError = false;
       setToolTip("gauge.unset");
     }
-    else if (absTarget == 0) {
+    else if (Amounts.isNearZero(absTarget)) {
       fillPercent = 0;
       overrunPercent = 1;
       emptyPercent = 0;

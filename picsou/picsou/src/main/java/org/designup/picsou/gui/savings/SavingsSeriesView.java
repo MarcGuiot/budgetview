@@ -47,6 +47,7 @@ public class SavingsSeriesView implements Disposable {
   private Component panel;
   private GlobsPanelBuilder builder;
   private GlobSelectionListener selectionListener;
+  private SavingsSeriesView.SeriesChangeSetListener seriesChangeSetListener;
 
   public SavingsSeriesView(Glob account,
                            final GlobRepository repository,
@@ -64,22 +65,8 @@ public class SavingsSeriesView implements Disposable {
         updateRepeat(repository);
       }
     };
-    repository.addChangeListener(new ChangeSetListener() {
-      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(PeriodSeriesStat.TYPE)
-            || changeSet.containsChanges(PeriodOccasionalSeriesStat.TYPE)
-            || changeSet.containsChanges(Series.TYPE)) {
-          updateRepeat(repository);  // on passe the repository et non l'autre a cause du
-//          updateRepeat(SavingsSeriesView.this.repository);  // on passe the repository et non l'autre a cause du
-          // ReplicationGlobRepository : les listener sont enregistre sur les deux repository (le Replication et
-          // l'original
-        }
-      }
-
-      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        updateRepeat(repository);
-      }
-    });
+    seriesChangeSetListener = new SeriesChangeSetListener();
+    repository.addChangeListener(seriesChangeSetListener);
     selectionService.addListener(selectionListener, Month.TYPE);
     accountStringifier = directory.get(DescriptionService.class).getStringifier(Account.TYPE);
     registerComponents();
@@ -145,6 +132,24 @@ public class SavingsSeriesView implements Disposable {
 
   public void dispose() {
     builder.dispose();
+    repository.removeChangeListener(seriesChangeSetListener);
     selectionService.removeListener(selectionListener);
+  }
+
+  private class SeriesChangeSetListener implements ChangeSetListener {
+    public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+      if (changeSet.containsChanges(PeriodSeriesStat.TYPE)
+          || changeSet.containsChanges(PeriodOccasionalSeriesStat.TYPE)
+          || changeSet.containsChanges(Series.TYPE)) {
+        updateRepeat(repository);  // on passe the repository et non l'autre a cause du
+//          updateRepeat(SavingsSeriesView.this.repository);  // on passe the repository et non l'autre a cause du
+        // ReplicationGlobRepository : les listener sont enregistre sur les deux repository (le Replication et
+        // l'original
+      }
+    }
+
+    public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+      updateRepeat(repository);
+    }
   }
 }

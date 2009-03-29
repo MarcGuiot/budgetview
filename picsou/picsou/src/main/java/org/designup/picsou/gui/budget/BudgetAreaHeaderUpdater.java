@@ -43,7 +43,7 @@ public class BudgetAreaHeaderUpdater extends BudgetAreaSummaryComputer {
       plannedLabel.setForeground(normalAmountColor);
     }
 
-    changeGaugeSettings();
+    changeGaugeSettings(budgetArea);
     if (isPartialOverrun) {
       gauge.setValues(gaugeActual, gaugeTarget, overrun);
     }
@@ -52,8 +52,13 @@ public class BudgetAreaHeaderUpdater extends BudgetAreaSummaryComputer {
     }
   }
 
-  protected void changeGaugeSettings() {
-    gauge.setOverrunIsAnError(observed < 0);
+  protected void changeGaugeSettings(BudgetArea budgetArea) {
+    if (budgetArea == BudgetArea.SAVINGS) {
+      gauge.setOverrunIsAnError(observed > 0);
+    }
+    else {
+      gauge.setOverrunIsAnError(observed < 0);
+    }
   }
 }
 

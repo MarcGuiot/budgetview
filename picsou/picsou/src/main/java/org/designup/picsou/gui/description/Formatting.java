@@ -58,7 +58,12 @@ public class Formatting {
       return toString(-value);
     }
     else {
-      return "+" + toString(value);
+      if (area == BudgetArea.SAVINGS) {
+        return toString(-value);
+      }
+      else {
+        return "+" + toString(value);
+      }
     }
   }
 }

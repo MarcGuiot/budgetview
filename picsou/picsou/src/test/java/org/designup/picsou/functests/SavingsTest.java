@@ -652,15 +652,18 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     monthSummary.checkSavingsIn(100, 0);
 
     views.selectBudget();
-    budgetView.savings.checkSeries("Main accounts.CA", -100, 0);
-    budgetView.savings.checkSeries("Account n. 111.CA", 100, 0);
+    budgetView.savings.checkSeries("CA", 100, 0);
+    views.selectSavings();
+    savingsView.checkAmount("Account n. 111", "CA", 100, 0);
+    views.selectBudget();
     budgetView.savings.checkTotalAmounts(100, 0);
 
-    budgetView.savings.editSeries("Main accounts.CA").switchToManual()
+    budgetView.savings.editSeries("CA").switchToManual()
       .selectAllMonths()
       .setAmount(200)
       .validate();
-    budgetView.savings.editSeries("Account n. 111.CA").checkInManual()
+    views.selectSavings();
+    savingsView.editSavingsSeries("Account n. 111", "CA").checkInManual()
       .selectAllMonths()
       .checkAmount("200.00")
       .checkTable(new Object[][]{
@@ -710,8 +713,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("01/10/2008", TransactionType.PLANNED, "Planned: CA", "", -50.00, "CA", MasterCategory.SAVINGS)
       .add("01/10/2008", TransactionType.PLANNED, "Planned: CA", "", 50.00, "CA", MasterCategory.SAVINGS)
-      .add("01/09/2008", TransactionType.PLANNED, "Planned: CA", "", 50.00, "CA", MasterCategory.SAVINGS)
       .add("01/09/2008", TransactionType.PLANNED, "Planned: CA", "", -50.00, "CA", MasterCategory.SAVINGS)
+      .add("01/09/2008", TransactionType.PLANNED, "Planned: CA", "", 50.00, "CA", MasterCategory.SAVINGS)
       .add("10/08/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "CA", MasterCategory.SAVINGS)
       .add("10/08/2008", TransactionType.VIREMENT, "Virement", "", 100.00, "CA", MasterCategory.SAVINGS)
       .check();
@@ -723,7 +726,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     timeline.selectMonth("2008/08");
-    budgetView.savings.editSeries("Account n. 111.CA")
+    budgetView.savings.editSeries("CA")
       .selectMonth(200808)
       .setAmount(0).validate();
 
@@ -920,7 +923,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     categorization.setSavings("V3 CE", "CA");
 
     views.selectBudget();
-    budgetView.savings.checkSeries("CA", -120, -100);
+    budgetView.savings.checkSeries("CA", 120, 100);
   }
 
   public void testChangeAccountDirectionDoNotChangeBudgetSign() throws Exception {
@@ -968,12 +971,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     views.selectSavings();
     savingsView.checkAmount("Savings 1", "Test", -300, -300);
-//    savingsView.checkSeriesGaugeRemaining("Savings 1.Test", 0);
     savingsView.checkAmount("Savings 2", "Test", 300, 300);
-
-    views.selectHome();
-    monthSummary.checkSavingsOut("Savings 1", 300, 300);
-    monthSummary.checkSavingsIn("Savings 2", 300, 300);
   }
 
   public void testSavingAccountWithNoTransactionShouldNotBeIgnored() throws Exception {
@@ -993,8 +991,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setAccountName("Livret 2")
       .selectBank("ING Direct")
       .validate();
-    monthSummary.checkSavingsInNotVisible("Livret");
-    monthSummary.checkSavingsOutNotVisible("Livret");
     views.selectCategorization();
     categorization.selectTableRows("Virement")
       .editSeries(false)
@@ -1003,11 +999,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     categorization.selectSavings()
       .selectSavingsSeries("Epargne");
     views.selectHome();
-    monthSummary.checkSavingsIn("Livret", 100, 100);
-    monthSummary.checkSavingsOutNotVisible("Livret");
-    monthSummary.checkSavingsInNotVisible("Livret 2");
-    monthSummary.checkSavingsOutNotVisible("Livret 2");
-    monthSummary.checkSavingsNotVisible("Livret 2");
 
 //    openCashPilot();
     // On check maintenant qu'il y a une balance bien que les compte n'est pas de balance.

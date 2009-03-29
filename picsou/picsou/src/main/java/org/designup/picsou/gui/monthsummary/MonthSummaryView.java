@@ -157,15 +157,15 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
     }
 
     public Double getObserved(Glob stat, BudgetArea budgetArea) {
-      return Math.abs(stat.get(observedField));
+      return -Math.abs(stat.get(observedField));
     }
 
     public Double getPlanned(Glob stat, BudgetArea budgetArea) {
-      return Math.abs(stat.get(plannedField));
+      return -Math.abs(stat.get(plannedField));
     }
 
     public Double getRemaining(Glob stat, BudgetArea budgetArea) {
-      return Math.abs(stat.get(remainingField));
+      return -Math.abs(stat.get(remainingField));
     }
   }
 
@@ -196,9 +196,6 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                 new BalanceGraph(repository, directory, BalanceStat.TYPE, BalanceStat.MONTH,
                                  BalanceStat.INCOME, BalanceStat.INCOME_REMAINING,
                                  BalanceStat.EXPENSE, BalanceStat.EXPENSE_REMAINING));
-
-    final GlobListStringifier savingsStatStringifier = GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT,
-                                                                                SavingsBalanceStat.BALANCE);
 
     cards = builder.addCardHandler("cards");
 
@@ -298,101 +295,6 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                          new DefaultBudgetArea(BudgetArea.ENVELOPES),
                          new DefaultBudgetArea(BudgetArea.OCCASIONAL),
                          new DefaultBudgetArea(BudgetArea.SPECIAL));
-  }
-
-  private class SavingsAccountsUpdater implements ChangeSetListener, GlobSelectionListener {
-    private SortedSet<Integer> selectedMonths = new TreeSet<Integer>();
-    private BudgetAreaSummaryComputer summaryComputer;
-    private Gauge gauge;
-    private Integer accountId;
-    DoubleField savings;
-    DoubleField planned;
-    DoubleField remaining;
-    private InOrOutLine inOrOutLine;
-
-    public SavingsAccountsUpdater(InOrOutLine inOrOutLine,
-                                  JButton amountLabel, JLabel plannedLabel, Gauge gauge,
-                                  final boolean in, Integer accountId) {
-      this.inOrOutLine = inOrOutLine;
-      if (in) {
-        savings = SavingsBalanceStat.SAVINGS;
-        planned = SavingsBalanceStat.SAVINGS_PLANNED;
-        remaining = SavingsBalanceStat.SAVINGS_REMAINING;
-      }
-      else {
-        savings = SavingsBalanceStat.OUT;
-        planned = SavingsBalanceStat.OUT_PLANNED;
-        remaining = SavingsBalanceStat.OUT_REMAINING;
-      }
-      this.gauge = gauge;
-      this.accountId = accountId;
-      directory.get(SelectionService.class).addListener(this, Month.TYPE);
-      repository.addChangeListener(this);
-      this.summaryComputer =
-        new BudgetAreaHeaderUpdater(TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel),
-                                    gauge, repository, directory) {
-          protected Double getObserved(Glob stat, BudgetArea budgetArea) {
-            return stat.get(savings);
-          }
-
-          protected Double getPlanned(Glob stat, BudgetArea budgetArea) {
-            return stat.get(planned);
-          }
-
-          protected Double getRemaining(Glob stat, BudgetArea budgetArea) {
-            return stat.get(remaining);
-          }
-
-          protected void clearComponents() {
-            super.clearComponents();
-            gauge.setVisible(false);
-          }
-        };
-      update();
-    }
-
-    public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-      if (changeSet.containsChanges(SavingsBalanceStat.TYPE)) {
-        update();
-      }
-    }
-
-    public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-      if (changedTypes.contains(SavingsBalanceStat.TYPE)) {
-        update();
-      }
-    }
-
-    public void selectionUpdated(GlobSelection selection) {
-      if (selection.isRelevantForType(Month.TYPE)) {
-        selectedMonths = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
-        update();
-      }
-    }
-
-    public void update() {
-      GlobList balanceStats =
-        repository.getAll(SavingsBalanceStat.TYPE,
-                          and(fieldIn(SavingsBalanceStat.MONTH, selectedMonths),
-                              fieldEquals(SavingsBalanceStat.ACCOUNT, accountId),
-                              and(not(and(fieldEquals(planned, 0.),
-                                          fieldEquals(remaining, 0.),
-                                          fieldEquals(savings, 0.))))));
-      if (balanceStats.isEmpty()) {
-        inOrOutLine.hidden();
-      }
-      else {
-        inOrOutLine.shown();
-      }
-      summaryComputer.update(balanceStats, BudgetArea.SAVINGS);
-    }
-
-  }
-
-  interface InOrOutLine {
-    public abstract void hidden();
-
-    public abstract void shown();
   }
 
   private class BudgetAreaUpdater implements ChangeSetListener, GlobSelectionListener {
