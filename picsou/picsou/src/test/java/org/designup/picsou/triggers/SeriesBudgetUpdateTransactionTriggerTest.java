@@ -61,13 +61,13 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
     listener.assertLastChangesEqual(Transaction.TYPE, "");
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<update _amount='-1000.0' _overrunAmount='0.0' overrunAmount='-100.0'  amount='-900.0' id='" + enveloppeBudgetIds[1] + "' type='seriesBudget'/>");
+      "<update _amount='-1000.0'   amount='-900.0' id='" + enveloppeBudgetIds[1] + "' type='seriesBudget'/>");
     repository.update(Key.create(SeriesBudget.TYPE, budgetId[1]), SeriesBudget.AMOUNT, -1000.);
     listener.assertLastChangesEqual(Transaction.TYPE, "");
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "  <update _amount='-900.0' _overrunAmount='-100.0' amount='-1000.0' id='" + enveloppeBudgetIds[1] + "'" +
-      "          overrunAmount='0.0' type='seriesBudget'/>");
+      "  <update _amount='-900.0'  amount='-1000.0' id='" + enveloppeBudgetIds[1] + "'" +
+      "          type='seriesBudget'/>");
     repository.update(Key.create(SeriesBudget.TYPE, budgetId[1]), SeriesBudget.AMOUNT, -1100.);
     Integer[] enveloppeTransactions = getPlannedTransaction(ENVELOPPE_SERIES_ID);
     listener.assertLastChangesEqual(
@@ -125,7 +125,7 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
       "");
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<update _amount='1500.0' amount='1400.0' id='" + incomeBudget[1] + "' _overrunAmount='0.0'" +
-      "        overrunAmount='100.0' type='seriesBudget'/>");
+      "<update _amount='1500.0' amount='1400.0' id='" + incomeBudget[1] + "' " +
+      "        type='seriesBudget'/>");
   }
 }

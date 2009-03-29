@@ -15,7 +15,6 @@ import org.designup.picsou.gui.card.NavigationView;
 import org.designup.picsou.gui.categories.CategoryView;
 import org.designup.picsou.gui.categories.actions.EditCategoriesAction;
 import org.designup.picsou.gui.categorization.CategorizationView;
-import org.designup.picsou.gui.components.ConfirmationDialog;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.filtering.TextFilterPanel;
 import org.designup.picsou.gui.description.Formatting;
@@ -35,9 +34,10 @@ import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
+import org.designup.picsou.gui.model.PeriodSeriesStat;
+import org.designup.picsou.gui.model.PeriodOccasionalSeriesStat;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.triggers.GlobStateChecker;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -51,6 +51,7 @@ import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.ReplicationGlobRepository;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
@@ -59,7 +60,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.io.StringWriter;
 
 public class MainPanel {
   private PicsouFrame parent;
@@ -74,7 +74,6 @@ public class MainPanel {
   private Directory directory;
   private MainWindow mainWindow;
   private RegisterLicenseAction registerAction;
-  private CheckRepositoryAction check;
   private Action dumpRepository;
   private MonthSummaryView monthSummary;
   private CategoryView categoryView;
@@ -117,7 +116,6 @@ public class MainPanel {
     restoreAction = new RestoreAction(repository, directory, generator);
     preferencesAction = new PreferencesAction(repository, directory);
     registerAction = new RegisterLicenseAction(parent, repository, directory);
-    check = new CheckRepositoryAction(directory, repository);
     dumpRepository = new AbstractAction("Dump") {
       public void actionPerformed(ActionEvent e) {
         GlobPrinter.print(repository);
@@ -146,7 +144,10 @@ public class MainPanel {
 
     LicenseInfoView licenseInfoView = new LicenseInfoView(repository, directory);
 
-    PeriodSeriesStatUpdater.init(repository, directory);
+    ReplicationGlobRepository replicationGlobRepository =
+      new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodOccasionalSeriesStat.TYPE);
+
+    PeriodSeriesStatUpdater.init(replicationGlobRepository, directory);
 
     createPanel(
       titleView,
@@ -159,10 +160,10 @@ public class MainPanel {
       categorizationView,
       new CardView(repository, directory),
       new NavigationView(repository, directory),
-      new BudgetView(repository, directory),
+      new BudgetView(replicationGlobRepository, directory),
       seriesView,
       new SeriesEvolutionView(repository, directory),
-      new SavingsView(repository, directory),
+      new SavingsView(replicationGlobRepository, directory),
       licenseInfoView);
 
     createMenuBar(parent, directory);
@@ -256,7 +257,6 @@ public class MainPanel {
     GuiUtils.addShortcut(rootPane, "REDO", redoAction, GuiUtils.ctrl(KeyEvent.VK_Y));
 
     Utils.beginRemove();
-    editMenu.add(check);
     editMenu.add(dumpRepository);
     Utils.endRemove();
     return editMenu;
@@ -307,32 +307,4 @@ public class MainPanel {
     }
   }
 
-  private static class CheckRepositoryAction extends AbstractAction {
-    private Directory directory;
-    private GlobRepository repository;
-
-    public CheckRepositoryAction(Directory directory, GlobRepository repository) {
-      super("check");
-      this.directory = directory;
-      this.repository = repository;
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      GlobStateChecker globStateChecker = new GlobStateChecker(repository);
-      boolean hasError = !globStateChecker.check();
-      StringWriter stringWriter = new StringWriter();
-      if (hasError) {
-        java.util.List<GlobStateChecker.Correction> corrections = globStateChecker.getCorrections();
-        for (GlobStateChecker.Correction correction : corrections) {
-          stringWriter.append(correction.info(repository, directory))
-            .append("\n-----------------------------------------\n");
-        }
-      }
-      ConfirmationDialog confirm = new ConfirmationDialog("check.title",
-                                                          hasError ? "check.with.error" : "check.ok",
-                                                          directory.get(JFrame.class), directory, stringWriter.toString()) {
-      };
-      confirm.show();
-    }
-  }
 }

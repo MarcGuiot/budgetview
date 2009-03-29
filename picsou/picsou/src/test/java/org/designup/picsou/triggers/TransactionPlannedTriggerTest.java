@@ -29,23 +29,23 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
       "<create active='true' amount='-29.9' day='7' id='" + budgetId[2] + "'" +
-      "        month='200809' series='100' type='seriesBudget' overrunAmount='0.0'/>" +
+      "        month='200809' series='100' type='seriesBudget' observedAmount='0.0'/>" +
       "<create active='true' amount='-29.9' day='7' id='" + budgetId[1] + "'" +
-      "        month='200808' series='100' type='seriesBudget' overrunAmount='0.0'/>" +
+      "        month='200808' series='100' type='seriesBudget' observedAmount='0.0'/>" +
       "<create active='true' amount='-29.9' day='7' id='" + budgetId[0] + "'" +
-      "        month='200807' series='100' type='seriesBudget' overrunAmount='0.0'/>" +
+      "        month='200807' series='100' type='seriesBudget' observedAmount='0.0'/>" +
       "<create active='true' amount='0.0' id='" + occasionalBudget[2] + "' month='200809'" +
-      "        series='0' day='1' type='seriesBudget' overrunAmount='0.0'/>" +
+      "        series='0' day='1' type='seriesBudget' observedAmount='0.0'/>" +
       "<create active='true' amount='0.0' id='" + occasionalBudget[1] + "' month='200808'" +
-      "        series='0' day='1' type='seriesBudget' overrunAmount='0.0'/>" +
+      "        series='0' day='1' type='seriesBudget' observedAmount='0.0'/>" +
       "<create active='true' amount='0.0' id='" + occasionalBudget[0] + "' month='200807'" +
-      "        series='0' day='1' type='seriesBudget' overrunAmount='0.0'/>" +
+      "        series='0' day='1' type='seriesBudget' observedAmount='0.0'/>" +
       "<create active='true' amount='0.0' id='" + unknownBudget[2] + "' month='200809'" +
-      "        overrunAmount='0.0' series='1' day='1' type='seriesBudget'/>" +
+      "        observedAmount='0.0' series='1' day='1' type='seriesBudget'/>" +
       "<create active='true' amount='0.0' id='" + unknownBudget[1] + "' month='200808'" +
-      "        overrunAmount='0.0' series='1' day='1' type='seriesBudget'/>" +
+      "        observedAmount='0.0' series='1' day='1' type='seriesBudget'/>" +
       "<create active='true' amount='0.0' id='" + unknownBudget[0] + "' month='200807'" +
-      "        overrunAmount='0.0' series='1' day='1' type='seriesBudget'/>");
+      "        observedAmount='0.0' series='1' day='1' type='seriesBudget'/>");
     Key transactionKey = Key.create(Transaction.TYPE, 10);
     repository.create(transactionKey,
                       value(Transaction.SERIES, FREE_SERIES_ID),
@@ -65,8 +65,8 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "          label='free' month='200808' planned='false' series='100' type='transaction' createdBySeries='false'/>" +
       "");
     listener.assertLastChangesEqual(SeriesBudget.TYPE,
-                                    "<update _overrunAmount='0.0' id='" + budgetId[1] + "'" +
-                                    "        overrunAmount='-10.1' type='seriesBudget'/>");
+                                    "<update _observedAmount='0.0' id='" + budgetId[1] + "'" +
+                                    "        observedAmount='-40.0' type='seriesBudget'/>");
     plannedTransaction = getPlannedTransaction();
 
     repository.update(transactionKey, value(Transaction.MONTH, 200809));
@@ -113,29 +113,29 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
       "<create active='true' amount='2000.0' day='4' id='" + incomBudgetIds[0] + "'" +
-      "        month='200807' series='102' type='seriesBudget' overrunAmount='0.0'/>" +
+      "        month='200807' series='102' type='seriesBudget' observedAmount='0.0'/>" +
       "<create active='true' amount='2000.0' day='4' id='" + incomBudgetIds[1] + "'" +
-      "        month='200808' series='102' type='seriesBudget' overrunAmount='0.0'/>" +
+      "        month='200808' series='102' type='seriesBudget' observedAmount='0.0'/>" +
       "<create active='true' amount='2000.0' day='4' id='" + incomBudgetIds[2] + "'" +
-      "        month='200809' series='102' type='seriesBudget' overrunAmount='0.0'/>" +
+      "        month='200809' series='102' type='seriesBudget' observedAmount='0.0'/>" +
       "<create active='true' amount='0.0' id='" + occasionalBudgetIds[0] + "' day='1' month='200807'" +
-      "        series='0' type='seriesBudget' overrunAmount='0.0'/>" +
+      "        series='0' type='seriesBudget' observedAmount='0.0'/>" +
       "<create active='true' amount='0.0' id='" + occasionalBudgetIds[1] + "' day='1' month='200808'" +
-      "        series='0' type='seriesBudget' overrunAmount='0.0'/>" +
+      "        series='0' type='seriesBudget' observedAmount='0.0'/>" +
       "<create active='true' amount='0.0' id='" + occasionalBudgetIds[2] + "' day='1' month='200809'" +
-      "        series='0' type='seriesBudget' overrunAmount='0.0'/>" +
+      "        series='0' type='seriesBudget' observedAmount='0.0'/>" +
       "<create active='true' amount='-1000.0' day='25' id='" + enveloppeBudgetIds[0] + "'" +
-      "        month='200807' series='101' type='seriesBudget' overrunAmount='0.0'/>" +
+      "        month='200807' series='101' type='seriesBudget' observedAmount='0.0'/>" +
       "<create active='true' amount='-1000.0' day='25' id='" + enveloppeBudgetIds[1] + "'" +
-      "        month='200808' series='101' type='seriesBudget' overrunAmount='0.0'/>" +
+      "        month='200808' series='101' type='seriesBudget' observedAmount='0.0'/>" +
       "<create active='true' amount='-1000.0' day='25' id='" + enveloppeBudgetIds[2] + "'" +
-      "        month='200809' series='101' type='seriesBudget' overrunAmount='0.0'/>" +
+      "        month='200809' series='101' type='seriesBudget' observedAmount='0.0'/>" +
       "<create active='true' amount='0.0' id='" + unknownBudgetIds[2] + "' day='1' month='200809'" +
-      "        overrunAmount='0.0' series='1' type='seriesBudget'/>" +
+      "        observedAmount='0.0' series='1' type='seriesBudget'/>" +
       "<create active='true' amount='0.0' id='" + unknownBudgetIds[1] + "' day='1' month='200808'" +
-      "        overrunAmount='0.0' series='1' type='seriesBudget'/>" +
+      "        observedAmount='0.0' series='1' type='seriesBudget'/>" +
       "<create active='true' amount='0.0' id='" + unknownBudgetIds[0] + "' day='1' month='200807'" +
-      "        overrunAmount='0.0' series='1' type='seriesBudget'/>");
+      "        observedAmount='0.0' series='1' type='seriesBudget'/>");
     repository.startChangeSet();
     repository.create(Transaction.TYPE,
                       value(Transaction.ID, 100),
@@ -213,11 +213,11 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     Integer[] budget = getBudgetId(ENVELOPPE_SERIES_ID);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<update _overrunAmount='0.0' id='" + budget[1] + "' overrunAmount='-500.0' type='seriesBudget'/>");
+      "<update _observedAmount='-900.0' id='" + budget[1] + "' observedAmount='-1500.0' type='seriesBudget'/>");
     repository.update(Key.create(Transaction.TYPE, 103), Transaction.AMOUNT, -30.);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<update _overrunAmount='-500.0' id='" + budget[1] + "' overrunAmount='0.0' type='seriesBudget'/>");
+      "<update _observedAmount='-1500.0' id='" + budget[1] + "' observedAmount='-930.0' type='seriesBudget'/>");
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <update _amount='-600.0' amount='-30.0' id='103' type='transaction'/>" +
@@ -227,7 +227,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     repository.update(Key.create(Transaction.TYPE, 103), Transaction.AMOUNT, -200.);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<update _overrunAmount='0.0' id='" + budget[1] + "' overrunAmount='-100.0' type='seriesBudget'/>");
+      "<update _observedAmount='-930.0' id='" + budget[1] + "' observedAmount='-1100.0' type='seriesBudget'/>");
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <delete _account='-1' _amount='-70.0' _bankDay='25' _bankMonth='200808' _mirror='false'\n" +
@@ -251,12 +251,12 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     Integer[] budget = getBudgetId(INCOME_SERIES_ID);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<update _overrunAmount='0.0' id='" + budget[1] + "' overrunAmount='200.0' type='seriesBudget'/>");
+      "<update _observedAmount='0.0' id='" + budget[1] + "' observedAmount='2200.0' type='seriesBudget'/>");
 
     repository.update(Key.create(Transaction.TYPE, 103), Transaction.AMOUNT, 1900.);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<update _overrunAmount='200.0' id='" + budget[1] + "' overrunAmount='0.0' type='seriesBudget'/>");
+      "<update _observedAmount='2200.0' id='" + budget[1] + "' observedAmount='1900.0' type='seriesBudget'/>");
     Integer[] transaction = getPlannedTransaction(INCOME_SERIES_ID);
     listener.assertLastChangesEqual(
       Transaction.TYPE,
@@ -269,7 +269,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     repository.update(Key.create(Transaction.TYPE, 103), Transaction.AMOUNT, 2300.);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<update overrunAmount='300.0' id='" + budget[1] + "' _overrunAmount='0.0' type='seriesBudget'/>");
+      "<update observedAmount='2300.0' id='" + budget[1] + "' _observedAmount='1900.0' type='seriesBudget'/>");
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <update _amount='1900.0' amount='2300.0' id='103' type='transaction'/>\n" +

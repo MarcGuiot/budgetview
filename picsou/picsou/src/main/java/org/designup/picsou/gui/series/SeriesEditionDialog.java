@@ -1120,7 +1120,7 @@ public class SeriesEditionDialog {
               if (budget.get(SeriesBudget.MONTH) > currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
                 repository.update(budget.getKey(),
                                   FieldValue.value(SeriesBudget.AMOUNT, 0.0),
-                                  FieldValue.value(SeriesBudget.OVERRUN_AMOUNT, 0.0));
+                                  FieldValue.value(SeriesBudget.OBSERVED_AMOUNT, 0.0));
               }
             }
           }

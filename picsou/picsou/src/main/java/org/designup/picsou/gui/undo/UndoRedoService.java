@@ -12,6 +12,7 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.directory.Directory;
 
@@ -41,6 +42,7 @@ public class UndoRedoService {
     this.repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (!undoRedoInProgress) {
+//          System.out.println("UndoRedoService.globsChanged " + changeSet);
           changesToUndo.push(createChange(changeSet));
           notifyListeners();
         }
@@ -85,6 +87,7 @@ public class UndoRedoService {
     undoRedoInProgress = true;
     try {
       Change change = changesToUndo.pop();
+//      System.out.println("UndoRedoService.undo " + change.changeSet);
       change.revert();
       changesToRedo.push(change);
       notifyListeners();

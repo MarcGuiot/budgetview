@@ -35,7 +35,7 @@ public class SeriesBudget {
   public static DoubleField AMOUNT;
 
   @DefaultDouble(0.0)
-  public static DoubleField OVERRUN_AMOUNT;
+  public static DoubleField OBSERVED_AMOUNT;
 
   @DefaultInteger(1)
   public static IntegerField DAY;
@@ -60,7 +60,7 @@ public class SeriesBudget {
       output.writeDouble(fieldValues.get(SeriesBudget.AMOUNT));
       output.writeInteger(fieldValues.get(SeriesBudget.DAY));
       output.writeBoolean(fieldValues.get(SeriesBudget.ACTIVE));
-      output.writeDouble(fieldValues.get(SeriesBudget.OVERRUN_AMOUNT));
+      output.writeDouble(fieldValues.get(SeriesBudget.OBSERVED_AMOUNT));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -80,7 +80,7 @@ public class SeriesBudget {
       fieldSetter.set(SeriesBudget.AMOUNT, input.readDouble());
       fieldSetter.set(SeriesBudget.DAY, input.readInteger());
       fieldSetter.set(SeriesBudget.ACTIVE, input.readBoolean());
-      fieldSetter.set(SeriesBudget.OVERRUN_AMOUNT, 0.);
+      fieldSetter.set(SeriesBudget.OBSERVED_AMOUNT, 0.);
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
@@ -90,7 +90,7 @@ public class SeriesBudget {
       fieldSetter.set(SeriesBudget.AMOUNT, input.readDouble());
       fieldSetter.set(SeriesBudget.DAY, input.readInteger());
       fieldSetter.set(SeriesBudget.ACTIVE, input.readBoolean());
-      fieldSetter.set(SeriesBudget.OVERRUN_AMOUNT, input.readDouble());
+      fieldSetter.set(SeriesBudget.OBSERVED_AMOUNT, input.readDouble());
     }
 
 

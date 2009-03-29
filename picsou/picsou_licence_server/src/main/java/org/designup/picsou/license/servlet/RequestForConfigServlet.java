@@ -220,7 +220,8 @@ public class RequestForConfigServlet extends HttpServlet {
 
   private void computeLicense(HttpServletResponse resp, String mail, String activationCode,
                               Long count, String repoId, String lang) {
-    logger.info("compute license : mail : '" + mail + "' count :'" + count + "' " + "repoId :'" + repoId + "'");
+    logger.info("compute license : mail : '" + mail + "' count :'" + count + "' " +
+                "repoId :'" + repoId + "' code :'" + activationCode + "'");
     try {
       computeLicense(resp, mail, activationCode, count, lang);
     }

@@ -56,7 +56,7 @@ public class SeriesRepeatComponentFactory implements RepeatComponentFactory<Glob
   public void registerComponents(RepeatCellBuilder cellBuilder, final Glob periodSeriesStat) {
 
     final Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
-    String name = accountName + "." + seriesStringifier.toString(series, repository);
+    String name = account.get(Account.NAME) + "." + seriesStringifier.toString(series, repository);
     final GlobButtonView seriesNameButton =
       GlobButtonView.init(Series.TYPE, repository, directory, new EditSeriesFunctor())
         .setName(name + ".edit")

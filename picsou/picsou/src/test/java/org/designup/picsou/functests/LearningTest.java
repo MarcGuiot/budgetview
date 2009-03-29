@@ -46,11 +46,12 @@ public class LearningTest extends LoggedInFunctionalTestCase {
     categorization.setEnvelope("Menu K", "dej", MasterCategory.FOOD, true);
     OfxBuilder
       .init(this)
+      .addCardAccount("000111", -1.3, "2006/01/12")
       .addTransaction("2006/01/12", -1.3, "Menu K")
       .load();
     views.selectData();
     transactions.initContent()
-      .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.30, "dej", MasterCategory.FOOD)
+      .add("12/01/2006", TransactionType.CREDIT_CARD, "Menu K", "", -1.30, "dej", MasterCategory.FOOD)
       .add("11/01/2006", TransactionType.CREDIT_CARD, "Fouquet's", "", -1.10)
       .add("10/01/2006", TransactionType.CREDIT_CARD, "Menu K", "", -1.10, "dej", MasterCategory.FOOD)
       .check();

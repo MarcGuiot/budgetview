@@ -24,7 +24,6 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
     repository.addTrigger(new SeriesBudgetTrigger());
     repository.addTrigger(new ObservedSeriesStatTrigger());
     repository.addTrigger(new PastTransactionUpdateSeriesBudgetTrigger());
-    repository.addTrigger(new SeriesBudgetUpdateTransactionTrigger());
     repository.addTrigger(new TransactionPlannedTrigger());
     repository.addTrigger(new MonthStatTrigger());
     repository.addTrigger(new PlannedSeriesStatTrigger());
@@ -48,6 +47,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
                       value(Series.INITIAL_AMOUNT, amount),
                       value(Series.PROFILE_TYPE, ProfileType.CUSTOM.getId()),
                       value(Series.IS_AUTOMATIC, false),
+                      value(Series.LABEL, "aSeries"),
                       value(Series.BUDGET_AREA, BudgetArea.RECURRING.getId()));
   }
 

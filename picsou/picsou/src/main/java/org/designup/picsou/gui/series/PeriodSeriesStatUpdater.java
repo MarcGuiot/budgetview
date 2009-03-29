@@ -30,7 +30,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     this.repository = repository;
     this.directory = directory;
     directory.get(SelectionService.class).addListener(this, Month.TYPE);
-    repository.addChangeListener(this);
+    repository.addTrigger(this);
   }
 
   public void selectionUpdated(GlobSelection selection) {

@@ -57,7 +57,7 @@ public class SeriesRenameTrigger implements ChangeSetListener {
       return;
     }
     updatedSeries.add(seriesId);
-    Integer categoryId = SeriesBudgetUpdateTransactionTrigger
+    Integer categoryId = TransactionPlannedTrigger
       .getCategory(repository.get(Key.create(Series.TYPE, seriesId)), repository);
     GlobList globs = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES,
                                             seriesId).getGlobs()

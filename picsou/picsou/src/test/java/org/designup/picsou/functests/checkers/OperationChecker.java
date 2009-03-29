@@ -16,7 +16,6 @@ public class OperationChecker {
   private MenuItem undoMenu;
   private MenuItem redoMenu;
   private MenuItem dumpMenu;
-  private MenuItem checkMenu;
   public static final String DEFAULT_ACCOUNT_NUMBER = "11111";
   public static final String DEFAULT_ACCOUNT_NAME = "Account n. 11111";
   private Window window;
@@ -38,7 +37,6 @@ public class OperationChecker {
     undoMenu = editMenu.getSubMenu("Undo");
     redoMenu = editMenu.getSubMenu("Redo");
     dumpMenu = editMenu.getSubMenu("Dump");
-    checkMenu = editMenu.getSubMenu("check");
   }
 
   public ImportChecker openImportDialog() {
@@ -188,11 +186,5 @@ public class OperationChecker {
 
   public void dump() {
     dumpMenu.click();
-  }
-
-  public void checkOk() {
-    Window dialog = WindowInterceptor.getModalDialog(checkMenu.triggerClick());
-    UISpecAssert.assertTrue(dialog.getTextBox("message").textContains("No Error"));
-    dialog.getButton("ok").click();
   }
 }

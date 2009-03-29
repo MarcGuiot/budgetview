@@ -153,9 +153,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectSavings();
     savingsView.checkAmount("Epargne LCL", "Epargne", 0, 200);
     savingsView.checkAmount("Epargne LCL", "Travaux", 0, -400);
-    savingsView.checkSavingsBalance(-200);
-    savingsView.checkSavingsIn("Epargne LCL", 0, 200);
-    savingsView.checkSavingsOut("Epargne LCL", 0, 400);
   }
 
   public void testCreateSavingsSeriesAndAssociateLaterToAccount() throws Exception {
@@ -357,30 +354,37 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     timeline.selectMonth("2008/10");
     views.selectSavings();
-    savingsView.checkSavingsIn("Epargne", 0, 300);
     savingsView.checkAmount("Epargne", "CAF", 0, 300);
     timeline.selectMonth("2008/06");
     savingsView.checkAmount("Epargne", "CAF", 300, 300);
-    savingsView.checkSavingsIn("Epargne", 300, 300);
 
     savingsView.editSavingsSeries("Epargne", "CAF")
       .selectMonth(200806)
       .setAmount(0)
       .validate();
-//    savingsView.savings.checkSeries("CAF", 0, 0);
     views.selectSavings();
 
-//    savingsView.checkSavingsInNotVisible("Epargne", "CAF");
 
     // back to normal to see if dateChooser is hidden
-//    views.selectBudget();
-//    openCashPilot();
 
     savingsView.editSavingsSeries("Epargne", "CAF")
       .setFromAccount("Main account")
       .checkDateChooserIsHidden()
       .validate();
 
+    views.selectData();
+    timeline.selectAll();
+    transactions.initContent()
+      .add("05/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF", MasterCategory.INCOME)
+      .add("05/10/2008", TransactionType.PLANNED, "Planned: CAF", "", -300.00, "CAF", MasterCategory.INCOME)
+      .add("05/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF", MasterCategory.INCOME)
+      .add("05/09/2008", TransactionType.PLANNED, "Planned: CAF", "", -300.00, "CAF", MasterCategory.INCOME)
+      .add("05/08/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF", MasterCategory.INCOME)
+      .add("05/08/2008", TransactionType.PLANNED, "Planned: CAF", "", -300.00, "CAF", MasterCategory.INCOME)
+      .add("05/07/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF", MasterCategory.INCOME)
+      .add("05/07/2008", TransactionType.PLANNED, "Planned: CAF", "", -300.00, "CAF", MasterCategory.INCOME)
+      .add("10/06/2008", TransactionType.PRELEVEMENT, "FNAC", "", -100.00)
+      .check();
 
     views.selectBudget();
     budgetView.savings.editSeries("CAF")
@@ -578,8 +582,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkPosition("Account n. 111", 1200);
     mainAccounts.checkEstimatedPosition(-200);
 
-    monthSummary.gotoTransactions("Account n. 111");
-    views.checkDataSelected();
+    views.selectSavings();
+//    savingsView.gotoTransactions("Account n. 111");
+//    views.checkDataSelected();
 
   }
 
@@ -915,7 +920,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     categorization.setSavings("V3 CE", "CA");
 
     views.selectBudget();
-    budgetView.savings.checkSeries("Main Accounts.CA", -120, -100);
+    budgetView.savings.checkSeries("CA", -120, -100);
   }
 
   public void testChangeAccountDirectionDoNotChangeBudgetSign() throws Exception {
@@ -961,9 +966,10 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
     timeline.selectMonth("2008/06");
 
-    budgetView.savings.checkSeries("Savings 1.Test", -300, -300);
-    budgetView.savings.checkSeriesGaugeRemaining("Savings 1.Test", 0);
-    budgetView.savings.checkSeries("Savings 2.Test", 300, 300);
+    views.selectSavings();
+    savingsView.checkAmount("Savings 1", "Test", -300, -300);
+//    savingsView.checkSeriesGaugeRemaining("Savings 1.Test", 0);
+    savingsView.checkAmount("Savings 2", "Test", 300, 300);
 
     views.selectHome();
     monthSummary.checkSavingsOut("Savings 1", 300, 300);
@@ -1020,8 +1026,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectCategorization();
     categorization.createAndSetSavings("Virement", "Epargne", "Main accounts", "Livret");
-    views.selectBudget();
-    budgetView.savings.editSeries("Livret.Epargne")
+    views.selectSavings();
+    savingsView.editSavingsSeries("Livret" , "Epargne")
       .setToAccount("Main accounts")
       .setFromAccount("Livret")
       .validate();

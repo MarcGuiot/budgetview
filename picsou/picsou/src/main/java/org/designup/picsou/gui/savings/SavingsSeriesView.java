@@ -1,9 +1,10 @@
 package org.designup.picsou.gui.savings;
 
+import org.designup.picsou.gui.budget.SeriesRepeatComponentFactory;
+import org.designup.picsou.gui.model.PeriodOccasionalSeriesStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.PicsouMatchers;
-import org.designup.picsou.gui.budget.SeriesRepeatComponentFactory;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
@@ -16,6 +17,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
@@ -62,6 +64,22 @@ public class SavingsSeriesView implements Disposable {
         updateRepeat(repository);
       }
     };
+    repository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(PeriodSeriesStat.TYPE)
+            || changeSet.containsChanges(PeriodOccasionalSeriesStat.TYPE)
+            || changeSet.containsChanges(Series.TYPE)) {
+          updateRepeat(repository);  // on passe the repository et non l'autre a cause du
+//          updateRepeat(SavingsSeriesView.this.repository);  // on passe the repository et non l'autre a cause du
+          // ReplicationGlobRepository : les listener sont enregistre sur les deux repository (le Replication et
+          // l'original
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        updateRepeat(repository);
+      }
+    });
     selectionService.addListener(selectionListener, Month.TYPE);
     accountStringifier = directory.get(DescriptionService.class).getStringifier(Account.TYPE);
     registerComponents();

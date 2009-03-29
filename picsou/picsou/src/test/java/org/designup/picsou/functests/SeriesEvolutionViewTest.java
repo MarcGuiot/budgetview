@@ -67,7 +67,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Recurring", "", "80.00", "30.00", "80.00", "30.00", "80.00", "30.00", "80.00")
       .add("Energy", "", "50.00", "", "50.00", "", "50.00", "", "50.00")
       .add("Internet", "", "30.00", "30.00", "30.00", "30.00", "30.00", "30.00", "30.00")
-      .add("Envelopes", "", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00")
+      .add("Envelopes", "", "20.00", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00")
       .add("Groceries", "", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00")
       .add("Occasional", "", "", "", "", "", "", "", "")
       .add("Special", "", "", "", "", "", "+100.00", "300.00", "")
@@ -84,7 +84,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesEvolution.checkForeground("Groceries", "Jul 08", "red");
     seriesEvolution.checkForeground("Groceries", "Aug 08", "0022BB");
 
-    seriesEvolution.checkForeground("Envelopes", "Jul 08", "darkGrey"); // should be darkRed
+    seriesEvolution.checkForeground("Envelopes", "Jul 08", "AA0000"); // should be darkRed
     seriesEvolution.checkForeground("Envelopes", "Aug 08", "darkGrey");
 
     seriesEvolution.checkForeground("Recurring", "Jul 08", "darkGrey");

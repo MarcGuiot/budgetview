@@ -107,8 +107,8 @@ public class RegisterServlet extends HttpServlet {
         resp.addHeader(ConfigService.HEADER_SIGNATURE, Encoder.byteToString(signature));
       }
       else if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
-        logger.info("Mail sent with new code");
         String newCode = LicenseGenerator.generateActivationCode();
+        logger.info("Mail sent with new code " + newCode);
         db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
           .update(License.ACTIVATION_CODE, newCode)
           .getRequest()
@@ -117,7 +117,6 @@ public class RegisterServlet extends HttpServlet {
         resp.addHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "true");
         if (!mailer.sendNewLicense(mail, newCode, lang)) {
           logger.finest("Fail to send mail retrying.");
-
         }
       }
       else {

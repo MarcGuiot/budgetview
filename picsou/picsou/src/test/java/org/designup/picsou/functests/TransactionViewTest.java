@@ -180,8 +180,8 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
     transactions.checkCategorizeIsDisable(0);
 
-    views.selectBudget();
-    budgetView.savings.editSeries("Epargne")
+    views.selectSavings();
+    savingsView.editSavingsSeries("Epargne", "Epargne")
       .setName("NEW NAME FOR EPARGNE")
       .setFromAccount("External account")
       .selectAllMonths()

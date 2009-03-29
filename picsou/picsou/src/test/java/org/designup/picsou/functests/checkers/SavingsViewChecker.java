@@ -98,11 +98,11 @@ public class SavingsViewChecker extends GuiChecker {
   }
 
   public SeriesEditionDialogChecker createSavingsSeries() {
-    return SeriesEditionDialogChecker.open(mainWindow.getButton("createSavingsSeries"), true);
+    return SeriesEditionDialogChecker.open(getPanel().getButton("createSavingsSeries"), true);
   }
 
   public SeriesEditionDialogChecker editSavingsSeries(String accountName, String seriesName) {
     String buttonName = accountName + "." + seriesName + ".edit";
-    return SeriesEditionDialogChecker.open(mainWindow.getButton(buttonName), true);
+    return SeriesEditionDialogChecker.open(getPanel().getButton(buttonName), true);
   }
 }

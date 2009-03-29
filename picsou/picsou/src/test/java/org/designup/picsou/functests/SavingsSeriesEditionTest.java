@@ -228,23 +228,30 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setToAccount("Account n. 111")
       .validate();
     views.selectCategorization();
-    categorization.selectTableRow(1)
+    categorization.selectTableRow(0)
       .selectSavings()
+//      .selectSavingsSeries("CA")
       .editSeries("CA", true)
       .setName("Autre")
       .validate();
 
-    views.selectBudget();
-    Component[] seriesButtons = budgetView.savings.getPanel().getSwingComponents(JButton.class, "Autre");
-    assertEquals(2, seriesButtons.length);
+//    views.selectSavings();
+//    savingsView.checkAmount("Account n. 111", "Autre", 0, 0);
 
-    SeriesEditionDialogChecker firstSeriesChecker = getSeriesChecker(seriesButtons[0]);
+    views.selectBudget();
+    budgetView.savings.checkSeriesPresent("Autre");
+
+    SeriesEditionDialogChecker firstSeriesChecker =
+      budgetView.savings.editSeries("Autre");
     firstSeriesChecker.switchToManual().selectAllMonths().setAmount(50).validate();
-    SeriesEditionDialogChecker secondSeriesChecker = getSeriesChecker(seriesButtons[1]);
+    views.selectSavings();
+    SeriesEditionDialogChecker secondSeriesChecker = savingsView.editSavingsSeries("Account n. 111", "CA");
     secondSeriesChecker.checkInManual()
+      .checkName("Autre")
       .switchToAutomatic()
       .validate();
-    firstSeriesChecker = getSeriesChecker(seriesButtons[0]);
+    views.selectBudget();
+    firstSeriesChecker = budgetView.savings.editSeries("Autre");
     firstSeriesChecker.checkInAutomatic().validate();
   }
 

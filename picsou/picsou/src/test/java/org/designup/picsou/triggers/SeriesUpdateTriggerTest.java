@@ -21,11 +21,11 @@ public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
       "  <create active='true' amount='-29.9' day='7' id='" + free[2] + "'" +
-      "          month='200809' series='100' type='seriesBudget' overrunAmount='0.0'/>" +
+      "          month='200809' series='100' type='seriesBudget' observedAmount='0.0'/>" +
       "  <create active='true' amount='-29.9' day='7' id='" + free[1] + "'" +
-      "          month='200808' series='100' type='seriesBudget' overrunAmount='0.0'/>" +
+      "          month='200808' series='100' type='seriesBudget' observedAmount='0.0'/>" +
       "  <create active='true' amount='-29.9' day='7' id='" + free[0] + "'" +
-      "          month='200807' series='100' type='seriesBudget' overrunAmount='0.0'/>");
+      "          month='200807' series='100' type='seriesBudget' observedAmount='0.0'/>");
     Integer[] ids = repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, true))
       .sort(Transaction.MONTH).getValues(Transaction.ID);
     listener.assertLastChangesEqual(
@@ -55,11 +55,11 @@ public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
       "  <delete _active='true' _amount='-29.9' _day='7' _month='200809'" +
-      "          _series='100' id='" + free[2] + "' type='seriesBudget' _overrunAmount='0.0'/>" +
+      "          _series='100' id='" + free[2] + "' type='seriesBudget' _observedAmount='0.0'/>" +
       "  <delete _active='true' _amount='-29.9' _day='7' _month='200808'" +
-      "          _series='100' id='" + free[1] + "' _overrunAmount='-10.1' type='seriesBudget'/>" +
+      "          _series='100' id='" + free[1] + "' _observedAmount='-40.0' type='seriesBudget'/>" +
       "  <delete _active='true' _amount='-29.9' _day='7' _month='200807'" +
-      "          _series='100' id='" + free[0] + "' type='seriesBudget' _overrunAmount='0.0'/>");
+      "          _series='100' id='" + free[0] + "' type='seriesBudget' _observedAmount='0.0'/>");
 
     listener.assertLastChangesEqual(
       Transaction.TYPE,
