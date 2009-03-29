@@ -4,6 +4,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobFunctor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,14 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
       globs.addAll(glob);
     }
     return globs;
+  }
+
+  public void callOnGlobs(GlobFunctor functor, GlobRepository repository) throws Exception {
+    for (GlobList globList : indexedGlob.values()) {
+      for (Glob glob : globList) {
+        functor.run(glob, repository);
+      }
+    }
   }
 
   public GlobList findByIndex(Object value) {
@@ -54,6 +63,16 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
     return new GlobRepository.MultiFieldIndexed() {
       public GlobList getGlobs() {
         return NotUniqueLeafLevelIndex.this.findByIndex(value);
+      }
+
+      public void callOnGlobs(GlobFunctor functor, GlobRepository repository) throws Exception {
+        GlobList globs = indexedGlob.get(value);
+        if (globs == null){
+          return;
+        }
+        for (Glob glob : globs) {
+          functor.run(glob, repository);
+        }
       }
 
       public GlobList findByIndex(Object value) {

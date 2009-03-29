@@ -10,89 +10,101 @@ import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.impl.DefaultGlobRepository;
 import org.globsframework.remote.SerializedRemoteAccess;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.*;
 
 import java.util.*;
 
-public class ReplicationGlobRepository extends GlobRepositoryDecorator implements GlobRepository {
-  private DefaultGlobRepository localRepository = new DefaultGlobRepository();
+public class ReplicationGlobRepository extends DefaultGlobRepository implements GlobRepository {
   private Set<GlobType> managedTypes = new HashSet<GlobType>();
+  private GlobRepository orgRepository;
+  private List<ChangeSetListener> triggers = new ArrayList<ChangeSetListener>();
+  private List<ChangeSetListener> listeners = new ArrayList<ChangeSetListener>();
+  private ChangeSetListener forwardChangeSetListener;
 
   public ReplicationGlobRepository(GlobRepository repository, GlobType... managedTypes) {
-    super(repository);
+    super(repository.getIdGenerator());
+    orgRepository = repository;
     this.managedTypes.addAll(Arrays.asList(managedTypes));
+    forwardChangeSetListener = new ForwardChangeSetListener(this);
+    repository.addChangeListener(forwardChangeSetListener);
+  }
+
+  protected void finalize() throws Throwable {
+    super.finalize();
+    orgRepository.removeChangeListener(forwardChangeSetListener);
   }
 
   public Glob find(Key key) {
     if (managedTypes.contains(key.getGlobType())) {
-      return localRepository.find(key);
+      return super.find(key);
     }
     else {
-      return super.find(key);
+      return orgRepository.find(key);
     }
   }
 
   public Glob get(Key key) throws ItemNotFound {
     if (managedTypes.contains(key.getGlobType())) {
-      return localRepository.get(key);
+      return super.get(key);
     }
     else {
-      return super.get(key);
+      return orgRepository.get(key);
     }
   }
 
   public Glob findUnique(GlobType type, FieldValue... values) throws ItemAmbiguity {
     if (managedTypes.contains(type)) {
-      return localRepository.findUnique(type, values);
+      return super.findUnique(type, values);
     }
     else {
-      return super.findUnique(type, values);
+      return orgRepository.findUnique(type, values);
     }
   }
 
   public GlobList getAll(GlobType... type) {
-    GlobList globs = localRepository.getAll(type);
-    globs.addAll(super.getAll(type));
+    GlobList globs = super.getAll(type);
+    globs.addAll(orgRepository.getAll(type));
     return globs;
   }
 
   public GlobList getAll(GlobType type, final GlobMatcher matcher) {
     GlobMatcher globMatcher = new DecoratedGlobMatcher(matcher);
     if (managedTypes.contains(type)) {
-      return localRepository.getAll(type, globMatcher);
+      return super.getAll(type, globMatcher);
     }
     else {
-      return super.getAll(type, globMatcher);
+      return orgRepository.getAll(type, globMatcher);
     }
   }
 
   public void apply(GlobType type, GlobMatcher matcher, GlobFunctor callback) throws Exception {
     GlobMatcher globMatcher = new DecoratedGlobMatcher(matcher);
     if (managedTypes.contains(type)) {
-      localRepository.apply(type, globMatcher, callback);
+      super.apply(type, globMatcher, callback);
     }
     else {
-      super.apply(type, globMatcher, callback);
+      orgRepository.apply(type, globMatcher, callback);
     }
   }
 
   public void safeApply(GlobType type, GlobMatcher matcher, GlobFunctor callback) {
     GlobMatcher globMatcher = new DecoratedGlobMatcher(matcher);
     if (managedTypes.contains(type)) {
-      localRepository.safeApply(type, globMatcher, callback);
+      super.safeApply(type, globMatcher, callback);
     }
     else {
-      super.safeApply(type, globMatcher, callback);
+      orgRepository.safeApply(type, globMatcher, callback);
     }
   }
 
   public Glob findUnique(GlobType type, GlobMatcher matcher) throws ItemAmbiguity {
     GlobMatcher globMatcher = new DecoratedGlobMatcher(matcher);
     if (managedTypes.contains(type)) {
-      return localRepository.findUnique(type, globMatcher);
+      return super.findUnique(type, globMatcher);
     }
     else {
-      return super.findUnique(type, globMatcher);
+      return orgRepository.findUnique(type, globMatcher);
     }
   }
 
@@ -100,135 +112,135 @@ public class ReplicationGlobRepository extends GlobRepositoryDecorator implement
     GlobMatcher globMatcher = new DecoratedGlobMatcher(matcher);
 
     if (managedTypes.contains(globType)) {
-      return localRepository.getSorted(globType, comparator, globMatcher);
+      return super.getSorted(globType, comparator, globMatcher);
     }
     else {
-      return super.getSorted(globType, comparator, globMatcher);
+      return orgRepository.getSorted(globType, comparator, globMatcher);
     }
   }
 
   public GlobList findByIndex(Index index, Object value) {
     if (managedTypes.contains(index.getField().getGlobType())) {
-      return localRepository.findByIndex(index, value);
+      return super.findByIndex(index, value);
     }
     else {
-      return super.findByIndex(index, value);
+      return orgRepository.findByIndex(index, value);
     }
   }
 
   public MultiFieldIndexed findByIndex(MultiFieldIndex multiFieldIndex, Field field, Object value) {
     if (managedTypes.contains(field.getGlobType())) {
-      return localRepository.findByIndex(multiFieldIndex, field, value);
+      return super.findByIndex(multiFieldIndex, field, value);
     }
     else {
-      return super.findByIndex(multiFieldIndex, field, value);
+      return orgRepository.findByIndex(multiFieldIndex, field, value);
     }
   }
 
   public Set<GlobType> getTypes() {
     HashSet<GlobType> types = new HashSet<GlobType>();
     types.addAll(this.managedTypes);
-    types.addAll(super.getTypes());
+    types.addAll(orgRepository.getTypes());
     return types;
   }
 
   public Glob findLinkTarget(Glob source, Link link) {
     if (managedTypes.contains(link.getTargetType())) {
-      return localRepository.findLinkTarget(source, link);
+      return super.findLinkTarget(source, link);
     }
     else {
-      return super.findLinkTarget(source, link);
+      return orgRepository.findLinkTarget(source, link);
     }
   }
 
   public GlobList findLinkedTo(Glob target, Link link) {
     if (managedTypes.contains(link.getSourceType())) {
-      return localRepository.findLinkedTo(target, link);
+      return super.findLinkedTo(target, link);
     }
     else {
-      return super.findLinkedTo(target, link);
+      return orgRepository.findLinkedTo(target, link);
     }
   }
 
   public Integer getNextId(IntegerField field, int count) {
     if (managedTypes.contains(field.getGlobType())) {
-      return localRepository.getNextId(field, count);
+      return super.getNextId(field, count);
     }
     else {
-      return super.getNextId(field, count);
+      return orgRepository.getNextId(field, count);
     }
   }
 
   public Glob create(GlobType type, FieldValue... values) throws MissingInfo, ItemAlreadyExists {
     if (managedTypes.contains(type)) {
-      return localRepository.create(type, values);
+      return super.create(type, values);
     }
     else {
-      return super.create(type, values);
+      return orgRepository.create(type, values);
     }
   }
 
   public Glob create(Key key, FieldValue... values) throws ItemAlreadyExists {
     if (managedTypes.contains(key.getGlobType())) {
-      return localRepository.create(key, values);
+      return super.create(key, values);
     }
     else {
-      return super.create(key, values);
+      return orgRepository.create(key, values);
     }
   }
 
   public Glob findOrCreate(Key key, FieldValue... defaultValues) throws MissingInfo {
     if (managedTypes.contains(key.getGlobType())) {
-      return localRepository.findOrCreate(key, defaultValues);
+      return super.findOrCreate(key, defaultValues);
     }
     else {
-      return super.findOrCreate(key, defaultValues);
+      return orgRepository.findOrCreate(key, defaultValues);
     }
   }
 
   public boolean contains(GlobType type) {
-    return localRepository.contains(type) || super.contains(type);
+    return super.contains(type) || orgRepository.contains(type);
   }
 
   public boolean contains(GlobType type, GlobMatcher matcher) {
     GlobMatcher globMatcher = new DecoratedGlobMatcher(matcher);
 
-    return localRepository.contains(type, globMatcher) || super.contains(type, globMatcher);
+    return super.contains(type, globMatcher) || orgRepository.contains(type, globMatcher);
   }
 
   public void update(Key key, Field field, Object newValue) throws ItemNotFound {
     if (managedTypes.contains(key.getGlobType())) {
-      localRepository.update(key, field, newValue);
+      super.update(key, field, newValue);
     }
     else {
-      super.update(key, field, newValue);
+      orgRepository.update(key, field, newValue);
     }
   }
 
   public void update(Key key, FieldValue... values) {
     if (managedTypes.contains(key.getGlobType())) {
-      localRepository.update(key, values);
+      super.update(key, values);
     }
     else {
-      super.update(key, values);
+      orgRepository.update(key, values);
     }
   }
 
   public void setTarget(Key source, Link link, Key target) throws ItemNotFound {
     if (managedTypes.contains(source.getGlobType())) {
-      localRepository.setTarget(source, link, target);
+      super.setTarget(source, link, target);
     }
     else {
-      super.setTarget(source, link, target);
+      orgRepository.setTarget(source, link, target);
     }
   }
 
   public void delete(Key key) throws ItemNotFound, OperationDenied {
     if (managedTypes.contains(key.getGlobType())) {
-      localRepository.delete(key);
+      super.delete(key);
     }
     else {
-      super.delete(key);
+      orgRepository.delete(key);
     }
   }
 
@@ -237,24 +249,24 @@ public class ReplicationGlobRepository extends GlobRepositoryDecorator implement
       public boolean matches(Glob item, GlobRepository repository) {
         return managedTypes.contains(item.getType());
       }
-    }, localRepository);
-    localRepository.delete(localDelete);
+    }, this);
+    super.delete(localDelete);
     GlobList remoteDelete = list.filter(new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {
         return !managedTypes.contains(item.getType());
       }
-    }, localRepository);
+    }, orgRepository);
 
-    super.delete(remoteDelete);
+    orgRepository.delete(remoteDelete);
   }
 
   public void deleteAll(GlobType... types) throws OperationDenied {
     for (GlobType type : types) {
       if (this.managedTypes.contains(type)) {
-        localRepository.deleteAll(type);
+        super.deleteAll(type);
       }
       else {
-        super.deleteAll(types);
+        orgRepository.deleteAll(types);
       }
     }
   }
@@ -293,40 +305,37 @@ public class ReplicationGlobRepository extends GlobRepositoryDecorator implement
         }
       }
     });
-    localRepository.apply(localChangeSet);
-    super.apply(remoteChangeSet);
+    super.apply(localChangeSet);
+    orgRepository.apply(remoteChangeSet);
   }
 
   public void addTrigger(ChangeSetListener listener) {
-    localRepository.addTrigger(listener);
+    triggers.add(listener);
     super.addTrigger(listener);
   }
 
   public void removeTrigger(ChangeSetListener listener) {
-    localRepository.removeTrigger(listener);
+    triggers.remove(listener);
     super.removeTrigger(listener);
   }
 
   public void addChangeListener(ChangeSetListener listener) {
-    localRepository.addChangeListener(listener);
+    listeners = new ArrayList<ChangeSetListener>(listeners);
+    listeners.add(listener);
     super.addChangeListener(listener);
+//    orgRepository.addChangeListener(listener);
   }
 
   public void removeChangeListener(ChangeSetListener listener) {
-    localRepository.removeChangeListener(listener);
     super.removeChangeListener(listener);
-  }
-
-  public void startChangeSet() {
-    localRepository.startChangeSet();
-  }
-
-  public void completeChangeSet() {
-    localRepository.completeChangeSet();
-  }
-
-  public void completeChangeSetWithoutTriggers() {
-    localRepository.completeChangeSetWithoutTriggers();
+    listeners = new ArrayList<ChangeSetListener>(listeners);
+    boolean isRemoved = listeners.remove(listener);
+    Utils.beginRemove();
+    if (!isRemoved) {
+      throw new RuntimeException("BUG");
+    }
+    Utils.endRemove();
+//    orgRepository.removeChangeListener(listener);
   }
 
   public void reset(GlobList newGlobs, GlobType... changedTypes) {
@@ -350,8 +359,8 @@ public class ReplicationGlobRepository extends GlobRepositoryDecorator implement
         remoteTypes.add(type);
       }
     }
-    localRepository.reset(localList, localTypes.toArray(new GlobType[localTypes.size()]));
-    super.reset(remoteList, remoteTypes.toArray(new GlobType[remoteTypes.size()]));
+    super.reset(localList, localTypes.toArray(new GlobType[localTypes.size()]));
+    orgRepository.reset(remoteList, remoteTypes.toArray(new GlobType[remoteTypes.size()]));
   }
 
   public GlobIdGenerator getIdGenerator() {
@@ -367,6 +376,41 @@ public class ReplicationGlobRepository extends GlobRepositoryDecorator implement
 
     public boolean matches(Glob item, GlobRepository repository) {
       return matcher.matches(item, ReplicationGlobRepository.this);
+    }
+  }
+
+  private static class ForwardChangeSetListener implements ChangeSetListener {
+    private ReplicationGlobRepository repository;
+
+    public ForwardChangeSetListener(ReplicationGlobRepository repository) {
+      this.repository = repository;
+    }
+
+    public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+      this.repository.startChangeSet();
+      for (ChangeSetListener trigger : this.repository.triggers) {
+        trigger.globsChanged(changeSet, repository);
+      }
+      try {
+        for (ChangeSetListener listener : this.repository.listeners) {
+          listener.globsChanged(changeSet, this.repository);
+        }
+      }
+      finally {
+        this.repository.completeChangeSet();
+      }
+    }
+
+    public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+      this.repository.startChangeSet();
+      try {
+        for (ChangeSetListener listener : this.repository.listeners) {
+          listener.globsReset(this.repository, changedTypes);
+        }
+      }
+      finally {
+        this.repository.completeChangeSet();
+      }
     }
   }
 }

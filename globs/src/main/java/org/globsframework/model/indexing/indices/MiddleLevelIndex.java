@@ -4,6 +4,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.indexing.NullIndex;
 import org.globsframework.model.indexing.builders.MultiFieldIndexBuilder;
 
@@ -71,6 +72,12 @@ public class MiddleLevelIndex implements UpdatableMultiFieldIndex, GlobRepositor
       globs.addAll(multiFieldIndexed.getGlobs());
     }
     return globs;
+  }
+
+  public void callOnGlobs(GlobFunctor functor, GlobRepository repository) throws Exception {
+    for (GlobRepository.MultiFieldIndexed multiFieldIndexed : downLevels.values()) {
+      multiFieldIndexed.callOnGlobs(functor, repository);
+    }
   }
 
   public GlobList findByIndex(Object value) {

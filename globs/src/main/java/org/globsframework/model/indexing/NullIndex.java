@@ -3,6 +3,7 @@ package org.globsframework.model.indexing;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobFunctor;
 
 public class NullIndex implements GlobRepository.MultiFieldIndexed {
   public static GlobRepository.MultiFieldIndexed INSTANCE = new NullIndex();
@@ -17,5 +18,8 @@ public class NullIndex implements GlobRepository.MultiFieldIndexed {
 
   public GlobRepository.MultiFieldIndexed findByIndex(Field field, Object value) {
     return this;
+  }
+
+  public void callOnGlobs(GlobFunctor functor, GlobRepository repository) throws Exception {
   }
 }

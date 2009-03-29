@@ -9,6 +9,7 @@ import org.globsframework.metamodel.index.Index;
 import org.globsframework.metamodel.index.MultiFieldIndex;
 import org.globsframework.metamodel.links.FieldMappingFunctor;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.indexing.IndexManager;
@@ -466,7 +467,9 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     changeSet.safeVisit(new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) {
         if (find(key) != null) {
-          throw new InvalidParameter("Object " + key + " already exists");
+          throw new InvalidParameter("Object " + key + " already exists : " + 
+                                     GlobPrinter.toString(find(key)) +  " can not create : " +
+                                     GlobPrinter.toString(values));
         }
       }
 

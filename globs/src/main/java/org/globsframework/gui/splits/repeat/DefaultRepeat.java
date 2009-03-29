@@ -30,7 +30,7 @@ public class DefaultRepeat<T> implements Repeat<T>, RepeatHandler<T> {
     if (repeatPanel != null) {
       repeatPanel.insert(item, index);
     }
-    else {
+    else if (initialItems != null){
       initialItems.add(index, item);
     }
   }
@@ -39,7 +39,7 @@ public class DefaultRepeat<T> implements Repeat<T>, RepeatHandler<T> {
     if (repeatPanel != null) {
       repeatPanel.remove(index);
     }
-    else {
+    else if (initialItems != null){
       initialItems.remove(index);
     }
   }
@@ -48,7 +48,7 @@ public class DefaultRepeat<T> implements Repeat<T>, RepeatHandler<T> {
     if (repeatPanel != null) {
       repeatPanel.move(index1, index2);
     }
-    else {
+    else if (initialItems != null) {
       T value = initialItems.remove(index1);
       initialItems.add(index2, value);
     }
@@ -63,6 +63,7 @@ public class DefaultRepeat<T> implements Repeat<T>, RepeatHandler<T> {
       repeatPanel.dispose();
     }
     repeatPanel = null;
+    initialItems = null;
   }
 
   public List<T> getInitialItems() {

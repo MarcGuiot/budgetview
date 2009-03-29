@@ -5,6 +5,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.model.utils.GlobFunctor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +27,12 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
       globs.add(glob);
     }
     return globs;
+  }
+
+  public void callOnGlobs(GlobFunctor functor, GlobRepository repository) throws Exception {
+    for (Glob glob : indexedGlob.values()) {
+      functor.run(glob, repository);
+    }
   }
 
   public GlobList findByIndex(Object value) {
@@ -63,6 +70,13 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
 
       public GlobRepository.MultiFieldIndexed findByIndex(Field field, Object value) {
         return null;
+      }
+
+      public void callOnGlobs(GlobFunctor functor, GlobRepository repository) throws Exception {
+        Glob glob = indexedGlob.get(value);
+        if (glob != null) {
+          functor.run(glob, repository);
+        }
       }
     };
   }
