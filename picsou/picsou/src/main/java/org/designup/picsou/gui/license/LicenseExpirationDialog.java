@@ -33,8 +33,9 @@ public class LicenseExpirationDialog {
   public LicenseExpirationDialog(Window parent, final GlobRepository repository, final Directory directory) {
     localGlobRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(User.TYPE).get();
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/licenseExpirationDialog.splits",
-                                                      localGlobRepository, directory);
+    GlobsPanelBuilder builder =
+      new GlobsPanelBuilder(getClass(), "/layout/licenseExpirationDialog.splits",
+                            localGlobRepository, directory);
     cardType = builder.addCardHandler("type");
     response = new JLabel();
     builder.add("mailResponse", response);
@@ -50,13 +51,8 @@ public class LicenseExpirationDialog {
       }
     };
     builder.add("sendMail", sendAction);
-    builder.add("mailAdress", GlobTextEditor.init(User.MAIL, localGlobRepository, directory)
-      .forceSelection(user));
-//    builder.add("sendSms", new AbstractAction(Lang.get("")){
-//      public void actionPerformed(ActionEvent e) {
-//      }
-//    });
-//    builder.add("phoneNumber", new JTextArea());
+    builder.add("mailAdress",
+                GlobTextEditor.init(User.MAIL, localGlobRepository, directory).forceSelection(user));
     localGlobRepository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(User.KEY)) {

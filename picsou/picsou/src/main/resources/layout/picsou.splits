@@ -55,8 +55,7 @@
 
     <style selector="#licenseMessage"
            opaque="false" foreground="license.message" font="-,plain,14"
-           fill="horizontal" horizontalAlignment="left"
-           marginBottom="20"/>
+           fill="horizontal" marginBottom="20"/>
 
   </styles>
 
@@ -110,15 +109,8 @@
             </horizontalSplit>
 
             <label ref="newVersionMessage" border="empty(10,0,0,0)"/>
-            <row border="empty(0,0,0,0)">
-              <label ref="licenseMessage" border="empty(10,0,0,0)" marginBottom="0"/>
-              <panel opaque="false" border="empty(0,0,0,0)">
-                <row border="empty(0,0,0,0)" marginBottom="0">
-                  <button ref="askForKey" border="empty(10,0,0,0)"/>
-                  <filler fill="horizontal"/>
-                </row>
-              </panel>
-            </row>
+            <htmlEditorPane ref="licenseMessage"
+                            border="empty(10,0,0,0)" marginBottom="0"/>
           </column>
         </card>
 

@@ -29,17 +29,23 @@ public class HyperlinkHandler implements HyperlinkListener {
     if (!HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
       return;
     }
-    String description = e.getDescription().trim();
-    if (description.startsWith("help:")) {
-      helpService.show(description.substring(5), owner);
+    String href = e.getDescription().trim();
+    if (href.startsWith("help:")) {
+      helpService.show(href.substring(5), owner);
     }
-    else if (description.startsWith("card:")) {
+    else if (href.startsWith("card:")) {
       NavigationService navigationService = directory.get(NavigationService.class);
-      navigationService.gotoCard(Card.get(description.substring(5)));
+      navigationService.gotoCard(Card.get(href.substring(5)));
     }
-    else if (description.startsWith("url:")) {
+    else if (href.startsWith("url:")) {
       BrowsingService browser = directory.get(BrowsingService.class);
-      browser.launchBrowser(description.substring(4));
+      browser.launchBrowser(href.substring(4));
     }
+    else {
+      processLink(href);
+    }
+  }
+
+  protected void processLink(String href) {
   }
 }

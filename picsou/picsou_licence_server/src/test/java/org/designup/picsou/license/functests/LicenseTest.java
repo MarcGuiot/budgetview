@@ -105,7 +105,7 @@ public class LicenseTest extends LicenseTestCase {
     checkRepoIdIsUpdated(getSqlConnection(), 1L, Constraints.notEqual(RepoInfo.REPO_ID, repoId));
     checkStillDayWithAppMessage();
 
-    LicenseChecker.enterBadLicense(window, MAIL, "1234", "Activation failed a mail was sent at alfred@free.fr");
+    LicenseChecker.enterBadLicense(window, MAIL, "1234", "Activation failed a mail was sent at " + MAIL);
     checkStillDayWithAppMessage();
     String mailcontent = checkMailReceive(MAIL);
     assertTrue(mailcontent, mailcontent.contains("Your new activation code"));

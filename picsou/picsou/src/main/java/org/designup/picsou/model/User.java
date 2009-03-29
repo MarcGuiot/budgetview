@@ -31,17 +31,17 @@ public class User {
   @DefaultBoolean(true)
   public static BooleanField IS_REGISTERED_USER;
 
-  public static final int ACTIVATION_IN_PROCESS = 1;
+  public static final int ACTIVATION_IN_PROGRESS = 1;
   public static final int ACTIVATION_OK = 2;
-  public static final int ACTIVATION_FAIL_BAD_SIGNATURE = 3;
-  public static final int ACTIVATION_FAIL_CAN_NOT_CONNECT = 4;
-  public static final int ACTIVATION_FAIL_HTTP_REQUEST = 5;
-  public static final int ACTIVATION_FAIL_MAIL_UNKNOWN = 6;
+  public static final int ACTIVATION_FAILED_BAD_SIGNATURE = 3;
+  public static final int ACTIVATION_FAILED_CAN_NOT_CONNECT = 4;
+  public static final int ACTIVATION_FAILED_HTTP_REQUEST = 5;
+  public static final int ACTIVATION_FAILED_MAIL_UNKNOWN = 6;
   // On n'a pas envoyé au serveur les mail, signature et code d'activation alors que c'est un utilisateur
   // enregistré (donc le a priori le repo a ete modifié manuellement)
-  public static final int ACTIVATION_FAIL_MAIL_SEND = 8;
-  public static final int ACTIVATION_FAIL_BAD_ACTIVATION_CODE = 9;
-  public static final int ACTIVATION_FAIL = 10;
+  public static final int ACTIVATION_FAILED_MAIL_SENT = 8;
+  public static final int ACTIVATION_FAILED_BAD_ACTIVATION_CODE = 9;
+  public static final int ACTIVATION_FAILED = 10;
 
 
   static {

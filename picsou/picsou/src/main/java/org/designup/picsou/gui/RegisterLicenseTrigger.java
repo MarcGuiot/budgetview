@@ -47,7 +47,7 @@ public class RegisterLicenseTrigger implements ChangeSetListener {
                 repository.update(User.KEY, User.IS_REGISTERED_USER, true);
               }
               else {
-                repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAIL_BAD_SIGNATURE);
+                repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAILED_BAD_SIGNATURE);
               }
             }
           }

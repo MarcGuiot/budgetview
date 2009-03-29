@@ -5,8 +5,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class Lang {
-  static ResourceBundle bundle = ResourceBundle.getBundle("i18n/mail", Locale.FRENCH);
-
+  private static ResourceBundle bundle = ResourceBundle.getBundle("i18n/mail", Locale.FRENCH);
 
   public static String get(String key, String lang, String... arg) {
     String message = bundle.getString(key + "." + lang);

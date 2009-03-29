@@ -29,10 +29,10 @@ class KilledUser implements UserState {
     try {
       repository.update(User.KEY, User.IS_REGISTERED_USER, false);
       if (mailSent) {
-        repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAIL_MAIL_SEND);
+        repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAILED_MAIL_SENT);
       }
       else {
-        repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAIL);
+        repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAILED);
       }
     }
     finally {

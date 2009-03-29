@@ -19,8 +19,8 @@ import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.filtering.TextFilterPanel;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HelpService;
-import org.designup.picsou.gui.license.LicenseDialog;
 import org.designup.picsou.gui.license.LicenseInfoView;
+import org.designup.picsou.gui.license.RegisterLicenseAction;
 import org.designup.picsou.gui.monthsummary.InfoView;
 import org.designup.picsou.gui.monthsummary.MonthSummaryView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
@@ -69,7 +69,7 @@ public class MainPanel {
   private RestoreAction restoreAction;
   private PreferencesAction preferencesAction;
   private ExitAction exitAction;
-  protected GlobsPanelBuilder builder;
+  private GlobsPanelBuilder builder;
   private GlobRepository repository;
   private Directory directory;
   private MainWindow mainWindow;
@@ -115,7 +115,7 @@ public class MainPanel {
     backupAction = new BackupAction(repository, directory, generator);
     restoreAction = new RestoreAction(repository, directory, generator);
     preferencesAction = new PreferencesAction(repository, directory);
-    registerAction = new RegisterLicenseAction(parent, repository, directory);
+    registerAction = new RegisterLicenseAction(repository, directory);
     dumpRepository = new AbstractAction("Dump") {
       public void actionPerformed(ActionEvent e) {
         GlobPrinter.print(repository);
@@ -287,24 +287,6 @@ public class MainPanel {
     result = false;
     Utils.endRemove();
     return result;
-  }
-
-  private static class RegisterLicenseAction extends AbstractAction {
-    private Frame parent;
-    private GlobRepository repository;
-    private Directory directory;
-
-    public RegisterLicenseAction(Frame parent, GlobRepository repository, Directory directory) {
-      super(Lang.get("license.register"));
-      this.parent = parent;
-      this.repository = repository;
-      this.directory = directory;
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      LicenseDialog dialog = new LicenseDialog(parent, repository, directory);
-      dialog.show();
-    }
   }
 
 }

@@ -1,40 +1,51 @@
 package org.designup.picsou.gui.license;
 
-import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.utils.Millis;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Millis;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.util.Set;
 
 public class LicenseInfoView extends View {
-  private JLabel licenseInfo;
+  private JEditorPane licenseMessage;
   private JButton askForKey;
 
   public LicenseInfoView(final GlobRepository repository, final Directory directory) {
     super(repository, directory);
     this.repository = repository;
     this.directory = directory;
-    licenseInfo = new JLabel();
-
-    askForKey = new JButton(new AbstractAction(Lang.get("license.ask.for.code")) {
-      public void actionPerformed(ActionEvent e) {
-        LicenseExpirationDialog dialog = new LicenseExpirationDialog(directory.get(JFrame.class), repository, directory);
-        dialog.showNewLicense();
+    
+    licenseMessage = new JEditorPane();
+    GuiUtils.initReadOnlyHtmlComponent(licenseMessage);
+    final JFrame parent = directory.get(JFrame.class);
+    licenseMessage.addHyperlinkListener(new HyperlinkHandler(directory) {
+      protected void processLink(String href) {
+        if (href.equals("newLicense")) {
+          LicenseExpirationDialog dialog =
+            new LicenseExpirationDialog(parent, repository, directory);
+          dialog.showNewLicense();
+        }
+        else if (href.equals("activateKey")) {
+          LicenseDialog dialog = new LicenseDialog(parent, repository, directory);
+          dialog.show();
+        }
       }
     });
-    askForKey.setVisible(false);
+    PicsouColors.installLinkColor(licenseMessage, "license.message.link", directory);
 
     Glob user = repository.get(User.KEY);
     Glob userPreferences = repository.get(UserPreferences.KEY);
@@ -57,35 +68,33 @@ public class LicenseInfoView extends View {
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
-    builder.add("licenseMessage", licenseInfo);
-    builder.add("askForKey", askForKey);
+    builder.add("licenseMessage", licenseMessage);
   }
 
   private void update(Glob user, Glob userPreferences) {
     if (user.get(User.IS_REGISTERED_USER)) {
-      licenseInfo.setVisible(false);
+      licenseMessage.setVisible(false);
     }
     else {
-      licenseInfo.setVisible(true);
+      licenseMessage.setVisible(true);
       long days =
         (userPreferences.get(UserPreferences.LAST_VALID_DAY).getTime() - TimeService.getToday().getTime()) / Millis.ONE_DAY;
       if (days >= 1) {
-        licenseInfo.setText(Lang.get("license.info.message", days));
+        licenseMessage.setText(Lang.get("license.info.message", days));
       }
       else if (days == 0) {
-        licenseInfo.setText(Lang.get("license.info.last.message"));
+        licenseMessage.setText(Lang.get("license.info.last.message"));
       }
       else {
         Integer state = user.get(User.ACTIVATION_STATE);
-        if (state != null && state == User.ACTIVATION_FAIL_MAIL_SEND) {
-          licenseInfo.setText(Lang.get("license.activation.fail.mailSent", user.get(User.MAIL)));
+        if (state != null && state == User.ACTIVATION_FAILED_MAIL_SENT) {
+          licenseMessage.setText(Lang.get("license.activation.fail.mailSent", user.get(User.MAIL)));
         }
         else if (user.get(User.MAIL) == null) {
-          licenseInfo.setText(Lang.get("license.expiration.message"));
+          licenseMessage.setText(Lang.get("license.expiration.message"));
         }
         else {
-          licenseInfo.setText(Lang.get("license.registered.user.killed"));
-          askForKey.setVisible(true);
+          licenseMessage.setText(Lang.get("license.registered.user.killed"));
         }
       }
     }

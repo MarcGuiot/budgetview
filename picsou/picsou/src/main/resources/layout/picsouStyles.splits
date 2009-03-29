@@ -60,6 +60,8 @@
 
     <style selector="cards" opaque="false"/>
 
+    <style selector="radioButton" opaque="false"/> 
+
     <!-- Main panel -->
 
     <style selector="panel.main" opaque="false"/>

@@ -102,10 +102,10 @@ public class ConfigService {
         Header status = postMethod.getResponseHeader(HEADER_STATUS);
         if (status != null) {
           if (status.getValue().equalsIgnoreCase(HEADER_MAIL_SENT)) {
-            return Lang.get("license.mail.sended");
+            return Lang.get("license.mail.sent");
           }
           if (status.getValue().equalsIgnoreCase(HEADER_MAIL_SENT_FAILED)) {
-            return Lang.get("license.mail.sended.failed");
+            return Lang.get("license.mail.sent.failed");
           }
           if (status.getValue().equalsIgnoreCase(HEADER_MAIL_UNKNOWN)) {
             return Lang.get("license.mail.unknown");
@@ -216,11 +216,11 @@ public class ConfigService {
         });
       }
       else {
-        updateRepository(repository, User.ACTIVATION_FAIL_HTTP_REQUEST);
+        updateRepository(repository, User.ACTIVATION_FAILED_HTTP_REQUEST);
       }
     }
     catch (final Exception e) {
-      updateRepository(repository, User.ACTIVATION_FAIL_CAN_NOT_CONNECT);
+      updateRepository(repository, User.ACTIVATION_FAILED_CAN_NOT_CONNECT);
       // pas de stack (juste les message) risque de faciliter le piratage
       Thread thread = new Thread() {
         public void run() {
@@ -254,7 +254,7 @@ public class ConfigService {
     try {
       Header header = postMethod.getRequestHeader(HEADER_MAIL_UNKNOWN);
       if (header != null && "true".equalsIgnoreCase(header.getValue())) {
-        repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAIL_MAIL_UNKNOWN);
+        repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAILED_MAIL_UNKNOWN);
       }
       else {
         Header signature = postMethod.getResponseHeader(HEADER_SIGNATURE);
@@ -266,10 +266,10 @@ public class ConfigService {
         else {
           Header isMailSentHeader = postMethod.getResponseHeader(HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT);
           if (isMailSentHeader != null && "true".equalsIgnoreCase(isMailSentHeader.getValue())) {
-            repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAIL_MAIL_SEND);
+            repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAILED_MAIL_SENT);
           }
           else {
-            repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAIL_BAD_SIGNATURE);
+            repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAILED_BAD_SIGNATURE);
           }
         }
       }

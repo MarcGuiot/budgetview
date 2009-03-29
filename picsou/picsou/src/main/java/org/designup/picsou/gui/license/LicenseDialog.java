@@ -88,10 +88,10 @@ public class LicenseDialog {
               repository.removeChangeListener(changeSetListener);
               localRepository.dispose();
             }
-            else if (activationState == User.ACTIVATION_FAIL_MAIL_SEND) {
+            else if (activationState == User.ACTIVATION_FAILED_MAIL_SENT) {
               updateDialogState("license.activation.fail.mailSent", localRepository.get(User.KEY).get(User.MAIL));
             }
-            else if (activationState != User.ACTIVATION_IN_PROCESS) {
+            else if (activationState != User.ACTIVATION_IN_PROGRESS) {
               updateDialogState("license.activation.fail");
             }
           }
@@ -140,7 +140,7 @@ public class LicenseDialog {
         return;
       }
       Utils.endRemove();
-      localRepository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_IN_PROCESS);
+      localRepository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_IN_PROGRESS);
       if (checkContainsValidChange()) {
         progressBar.setIndeterminate(true);
         progressBar.setVisible(true);

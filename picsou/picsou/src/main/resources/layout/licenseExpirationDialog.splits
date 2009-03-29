@@ -16,15 +16,12 @@
           <column>
             <label text="$license.ask.for.code" styleClass="title"/>
             <htmlEditorPane name="askMailMessage" text="$license.ask.message.mail"/>
-            <row>
+            <row>#
               <textField ref="mailAdress"/>
               <button action="sendMail"/>
               <filler fill="horizontal"/>
             </row>
             <label ref="mailResponse" styleClass="errorMessage"/>
-            <!--<htmlEditorPane name="askSmsMessage" text="$license.ask.message.sms"/>-->
-            <!--<textArea ref="phoneNumber"/>-->
-            <!--<button action="sendSMS"/>-->
           </column>
         </card>
       </cards>

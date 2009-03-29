@@ -44,6 +44,6 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
     restartApplication();
     TextBox box = mainWindow.getTextBox("licenseMessage");
     UISpecAssert.assertTrue(box.isVisible());
-    UISpecAssert.assertTrue(box.textEquals("<html>Your free trial period is over. You can buy...</html>"));
+    UISpecAssert.assertTrue(box.textContains("Your free trial period is over."));
   }
 }

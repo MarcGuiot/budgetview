@@ -181,6 +181,19 @@ public enum PicsouColors {
     table.setSelectionForeground(colors.get("transaction.selected.text"));
   }
 
+  public static void installLinkColor(final JEditorPane editor, final String colorKey, Directory directory) {
+    directory.get(ColorService.class).addListener(new ColorChangeListener() {
+      public void colorsChanged(ColorLocator colorLocator) {
+
+        Color color = colorLocator.get(colorKey);
+
+        HTMLEditorKit kit = (HTMLEditorKit)editor.getEditorKit();
+        StyleSheet css = kit.getStyleSheet();
+        css.addRule("a { color: #" + Colors.toString(color) + "; }");
+      }
+    });
+  }
+
   public static void installLinkColor(final JEditorPane editor, final String cssClass, final String colorKey, Directory directory) {
     directory.get(ColorService.class).addListener(new ColorChangeListener() {
       public void colorsChanged(ColorLocator colorLocator) {
@@ -198,6 +211,6 @@ public enum PicsouColors {
     return new GradientPainter(CATEGORIES_SELECTED_BG_TOP,
                                CATEGORIES_SELECTED_BG_BOTTOM,
                                CATEGORIES_SELECTED_BORDER,
-                                           colorService);
+                               colorService);
   }
 }
