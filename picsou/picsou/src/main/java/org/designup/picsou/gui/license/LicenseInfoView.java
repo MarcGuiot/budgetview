@@ -45,7 +45,7 @@ public class LicenseInfoView extends View {
         }
       }
     });
-    PicsouColors.installLinkColor(licenseMessage, "license.message.link", directory);
+    PicsouColors.installLinkColor(licenseMessage, "licenseMessage", "license.message.link", directory);
 
     Glob user = repository.get(User.KEY);
     Glob userPreferences = repository.get(UserPreferences.KEY);
