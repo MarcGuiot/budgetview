@@ -65,7 +65,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.FOOD)
       .validate();
 
-    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, false);
 
     views.selectBudget();
     budgetView.envelopes.checkSeries("Groceries", -(double)29, -(double)29);

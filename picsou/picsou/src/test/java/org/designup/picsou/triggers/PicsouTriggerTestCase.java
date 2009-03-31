@@ -47,7 +47,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
                       value(Series.INITIAL_AMOUNT, amount),
                       value(Series.PROFILE_TYPE, ProfileType.CUSTOM.getId()),
                       value(Series.IS_AUTOMATIC, false),
-                      value(Series.LABEL, "aSeries"),
+                      value(Series.NAME, "aSeries"),
                       value(Series.BUDGET_AREA, BudgetArea.RECURRING.getId()));
   }
 
@@ -77,7 +77,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
                       value(Series.INITIAL_AMOUNT, 2000.),
                       value(Series.DAY, 4),
                       value(Series.BUDGET_AREA, BudgetArea.INCOME.getId()),
-                      value(Series.LABEL, "salaire"),
+                      value(Series.NAME, "salaire"),
                       value(Series.PROFILE_TYPE, ProfileType.CUSTOM.getId()),
                       value(Series.IS_AUTOMATIC, false),
                       value(Series.DEFAULT_CATEGORY, MasterCategory.INCOME.getId()));
@@ -89,7 +89,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
                       value(Series.INITIAL_AMOUNT, -1000.),
                       value(Series.BUDGET_AREA, BudgetArea.ENVELOPES.getId()),
                       value(Series.DAY, 25),
-                      value(Series.LABEL, "course"),
+                      value(Series.NAME, "course"),
                       value(Series.PROFILE_TYPE, ProfileType.CUSTOM.getId()),
                       value(Series.IS_AUTOMATIC, false),
                       value(Series.DEFAULT_CATEGORY, MasterCategory.FOOD.getId()));
@@ -101,7 +101,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
                       value(Series.INITIAL_AMOUNT, -29.90),
                       value(Series.DAY, 7),
                       value(Series.BUDGET_AREA, BudgetArea.RECURRING.getId()),
-                      value(Series.LABEL, "free telecom"),
+                      value(Series.NAME, "free telecom"),
                       value(Series.PROFILE_TYPE, ProfileType.CUSTOM.getId()),
                       value(Series.IS_AUTOMATIC, false),
                       value(Series.DEFAULT_CATEGORY, MasterCategory.TELECOMS.getId()));

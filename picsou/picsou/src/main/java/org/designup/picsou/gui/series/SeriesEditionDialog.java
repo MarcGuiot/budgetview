@@ -140,7 +140,7 @@ public class SeriesEditionDialog {
     builder.add("create", new CreateSeriesAction());
     builder.add("delete", new DeleteSeriesAction(false));
 
-    nameEditor = builder.addEditor("nameField", Series.LABEL).setNotifyOnKeyPressed(true);
+    nameEditor = builder.addEditor("nameField", Series.NAME).setNotifyOnKeyPressed(true);
 
     registerCategoryComponents(descriptionService, builder);
 
@@ -456,7 +456,7 @@ public class SeriesEditionDialog {
     java.util.List<FieldValue> values =
       new ArrayList<FieldValue>(Arrays.asList(value(Series.BUDGET_AREA, budgetArea.getId()),
                                               value(Series.INITIAL_AMOUNT, 0.),
-                                              value(Series.LABEL, label),
+                                              value(Series.NAME, label),
                                               value(Series.DAY, day),
                                               value(Series.JANUARY, true),
                                               value(Series.FEBRUARY, true),

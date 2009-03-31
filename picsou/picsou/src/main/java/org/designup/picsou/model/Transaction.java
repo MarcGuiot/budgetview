@@ -217,10 +217,9 @@ public class Transaction {
       return Series.getPlannedTransactionLabel(series.get(Series.ID), series);
     }
     else {
-      return series.get(Series.LABEL).toUpperCase();
+      return series.get(Series.NAME).toUpperCase();
     }
   }
-
 
   public static class Serializer implements PicsouGlobSerializer {
 

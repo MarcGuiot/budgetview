@@ -48,8 +48,9 @@ public class SeriesWizardEntry {
       return;
     }
 
-    FieldValuesBuilder builder = FieldValuesBuilder.init().set(Series.LABEL, name).
-      set(Series.NAME, name).set(Series.BUDGET_AREA, budgetArea.getId())
+    FieldValuesBuilder builder = FieldValuesBuilder.init()
+      .set(Series.NAME, name)
+      .set(Series.BUDGET_AREA, budgetArea.getId())
       .set(Series.PROFILE_TYPE, profileType.getId())
       .set(Series.DEFAULT_CATEGORY, categoryId);
 

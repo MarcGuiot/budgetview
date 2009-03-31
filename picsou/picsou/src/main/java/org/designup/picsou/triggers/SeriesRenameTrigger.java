@@ -20,7 +20,7 @@ public class SeriesRenameTrigger implements ChangeSetListener {
       changeSet.safeVisit(Series.TYPE, new DefaultChangeSetVisitor() {
         public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
           Integer seriesId = key.get(Series.ID);
-          if (values.contains(Series.LABEL)) {
+          if (values.contains(Series.NAME)) {
             GlobList globs =
               repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId).getGlobs()
                 .filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, true), repository);
