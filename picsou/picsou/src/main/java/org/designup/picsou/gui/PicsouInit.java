@@ -6,6 +6,7 @@ import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.config.RegistrationTrigger;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.upgrade.UpgradeService;
+import org.designup.picsou.gui.upgrade.UpgradeTrigger;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
@@ -25,6 +26,7 @@ import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.model.utils.CachedGlobIdGenerator;
 import org.globsframework.model.utils.DefaultChangeSetListener;
+import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.MapOfMaps;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
@@ -54,101 +56,84 @@ public class PicsouInit {
     this.directory = directory;
 
     idGenerator = new DefaultGlobIdGenerator();
-    repository =
+    this.repository =
       GlobRepositoryBuilder.init(new CachedGlobIdGenerator(idGenerator))
         .add(directory.get(GlobModel.class).getConstants())
         .get();
 
-    idGenerator.setRepository(repository);
+    idGenerator.setRepository(this.repository);
 
-    repository.addChangeListener(new ServerChangeSetListener(serverAccess));
+    this.repository.addChangeListener(new ServerChangeSetListener(serverAccess));
 
-    repository.addTrigger(new UncategorizeOnAccountChangeTrigger());
-    repository.addTrigger(new CurrentMonthTrigger());
-    repository.addTrigger(new SeriesRenameTrigger());
-    repository.addTrigger(new SeriesDeletionTrigger());
-    repository.addTrigger(new RegistrationTrigger(directory));
-    repository.addTrigger(new RegisterLicenseTrigger(serverAccess));
-    repository.addTrigger(new FutureMonthTrigger(directory));
-    repository.addTrigger(new MonthsToSeriesBudgetTrigger(directory));
-    repository.addTrigger(new IrregularSeriesBudgetCreationTrigger());
-    repository.addTrigger(new NotImportedTransactionAccountTrigger());
-    repository.addTrigger(new ObservedSeriesStatTrigger());
-    repository.addTrigger(new PastTransactionUpdateSeriesBudgetTrigger());
-    repository.addTrigger(new TransactionPlannedTrigger());
-    repository.addTrigger(new ImportedToNotImportedAccountTransactionTrigger());
-    repository.addTrigger(new UpdateAccountOnTransactionDelete());
-    repository.addTrigger(new BalanceTrigger());
-    repository.addTrigger(new MonthStatTrigger());
-    repository.addTrigger(new PlannedSeriesStatTrigger());
-    repository.addTrigger(new OccasionalSeriesStatTrigger());
-    repository.addTrigger(new BalanceStatTrigger());
-    repository.addTrigger(new SavingsBalanceStatTrigger());
+    UpgradeTrigger upgradeTrigger = new UpgradeTrigger();
+    this.repository.addTrigger(upgradeTrigger);
+    this.repository.addTrigger(new UncategorizeOnAccountChangeTrigger());
+    this.repository.addTrigger(new CurrentMonthTrigger());
+    this.repository.addTrigger(new SeriesRenameTrigger());
+    this.repository.addTrigger(new SeriesDeletionTrigger());
+    this.repository.addTrigger(new RegistrationTrigger(directory));
+    this.repository.addTrigger(new RegisterLicenseTrigger(serverAccess));
+    this.repository.addTrigger(new FutureMonthTrigger(directory));
+    this.repository.addTrigger(new MonthsToSeriesBudgetTrigger(directory));
+    this.repository.addTrigger(new IrregularSeriesBudgetCreationTrigger());
+    this.repository.addTrigger(new NotImportedTransactionAccountTrigger());
+    this.repository.addTrigger(new ObservedSeriesStatTrigger());
+    this.repository.addTrigger(new PastTransactionUpdateSeriesBudgetTrigger());
+    this.repository.addTrigger(new TransactionPlannedTrigger());
+    this.repository.addTrigger(new ImportedToNotImportedAccountTransactionTrigger());
+    this.repository.addTrigger(new UpdateAccountOnTransactionDelete());
+    this.repository.addTrigger(new BalanceTrigger());
+    this.repository.addTrigger(new MonthStatTrigger());
+    this.repository.addTrigger(new PlannedSeriesStatTrigger());
+    this.repository.addTrigger(new OccasionalSeriesStatTrigger());
+    this.repository.addTrigger(new BalanceStatTrigger());
+    this.repository.addTrigger(new SavingsBalanceStatTrigger());
 
     if (!newUser) {
-      repository.create(User.KEY, value(User.NAME, user),
-                        value(User.IS_REGISTERED_USER, validUser));
+      this.repository.create(User.KEY,
+                             value(User.NAME, user),
+                             value(User.IS_REGISTERED_USER, validUser));
     }
+
     MutableChangeSet changeSet = new DefaultChangeSet();
     try {
-      GlobList userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdate() {
-
+      GlobList userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdater() {
         public void update(IntegerField field, Integer lastAllocatedId) {
           idGenerator.update(field, lastAllocatedId);
         }
       });
-      Collection<GlobType> serverTypes = userData.getTypes();
-      repository.reset(userData, serverTypes.toArray(new GlobType[serverTypes.size()]));
+      this.repository.reset(userData, GlobUtils.toArray(userData.getTypes()));
     }
     catch (Exception e) {
       throw new InvalidData(Lang.get("login.data.load.fail"), e);
     }
-    serverAccess.applyChanges(changeSet, repository);
+    repository.removeTrigger(upgradeTrigger);
+
+    serverAccess.applyChanges(changeSet, this.repository);
+
     Glob versionInfo;
     try {
-      repository.startChangeSet();
-      versionInfo = repository.find(VersionInformation.KEY);
-      createDataForNewUser(user, repository, validUser);
+      this.repository.startChangeSet();
+      versionInfo = this.repository.find(VersionInformation.KEY);
+      createDataForNewUser(user, this.repository, validUser);
     }
     finally {
-      repository.completeChangeSet();
+      this.repository.completeChangeSet();
     }
 
-    initDirectory(repository);
-    if (!directory.get(ConfigService.class).loadConfigFileFromLastestJar(directory, repository)) {
+    initDirectory(this.repository);
+    if (!directory.get(ConfigService.class).loadConfigFileFromLastestJar(directory, this.repository)) {
       directory.get(TransactionAnalyzerFactory.class)
         .load(this.getClass().getClassLoader(), PicsouApplication.BANK_CONFIG_VERSION);
     }
 
-    checkForUpgrade(repository, versionInfo == null && !newUser);
+    boolean forceUpgrade = versionInfo == null && !newUser;
 
-    try {
-      repository.startChangeSet();
-      repository.update(CurrentMonth.KEY,
-                        value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
-                        value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
-    }
-    finally {
-      repository.completeChangeSet();
-    }
+    final UpgradeService upgradeService = directory.get(UpgradeService.class);
 
-
-    LicenseCheckerThread licenseCheckerThread = new LicenseCheckerThread(directory, repository);
-    licenseCheckerThread.setDaemon(true);
-    licenseCheckerThread.start();
-  }
-
-  private void checkForUpgrade(GlobRepository repository, boolean forceUpgrade) {
     Glob version = repository.get(VersionInformation.KEY);
-    if (!version.get(VersionInformation.CURRENT_JAR_VERSION).equals(PicsouApplication.JAR_VERSION)
-        || forceUpgrade) {
-      directory.get(UpgradeService.class).upgrade(repository, version);
-    }
-
-    if (!version.get(VersionInformation.CURRENT_BANK_CONFIG_VERSION)
-      .equals(version.get(VersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION))
-        || forceUpgrade) {
-      directory.get(UpgradeService.class).applyFilter(repository, version);
+    if (forceUpgrade || !version.get(VersionInformation.CURRENT_BANK_CONFIG_VERSION).equals(version.get(VersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION))) {
+      upgradeService.upgradeBankData(repository, version);
     }
 
     Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
@@ -156,6 +141,18 @@ public class PicsouInit {
       repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
                         Month.addOneMonth(TimeService.getToday()));
     }
+
+    try {
+      this.repository.startChangeSet();
+      this.repository.update(CurrentMonth.KEY,
+                             value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
+                             value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
+    }
+    finally {
+      this.repository.completeChangeSet();
+    }
+
+    LicenseCheckerThread.launch(directory, this.repository);
   }
 
   public static void createDataForNewUser(String user, GlobRepository repository, boolean validUser) {
@@ -206,7 +203,7 @@ public class PicsouInit {
     serverAccess.replaceData(serverData);
 
     MutableChangeSet changeSet = new DefaultChangeSet();
-    GlobList userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdate() {
+    GlobList userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdater() {
 
       public void update(IntegerField field, Integer lastAllocatedId) {
         idGenerator.update(field, lastAllocatedId);
@@ -259,6 +256,12 @@ public class PicsouInit {
   private static class LicenseCheckerThread extends Thread {
     private Directory directory;
     private GlobRepository repository;
+
+    public static void launch(Directory directory, GlobRepository repository) {
+      LicenseCheckerThread thread = new LicenseCheckerThread(directory, repository);
+      thread.setDaemon(true);
+      thread.start();
+    }
 
     private LicenseCheckerThread(Directory directory, GlobRepository repository) {
       this.directory = directory;

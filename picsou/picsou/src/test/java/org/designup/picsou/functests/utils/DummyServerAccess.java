@@ -44,7 +44,7 @@ public class DummyServerAccess implements ServerAccess {
   public void addTransaction(GlobList transactions) {
   }
 
-  public GlobList getUserData(MutableChangeSet changeSet, IdUpdate idUpdate) {
+  public GlobList getUserData(MutableChangeSet changeSet, IdUpdater idUpdater) {
     return GlobList.EMPTY;
   }
 

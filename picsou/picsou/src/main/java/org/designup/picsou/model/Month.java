@@ -200,6 +200,11 @@ public class Month {
     return monthIds;
   }
 
+  public static int getLastDayNumber(int monthId) {
+    CALENDAR.setTime(toDate(monthId, 1));
+    return CALENDAR.getActualMaximum(Calendar.DAY_OF_MONTH);
+  }
+
   public static Date getLastDay(int monthId) {
     CALENDAR.setTime(toDate(monthId, 1));
     CALENDAR.set(Calendar.DAY_OF_MONTH, CALENDAR.getActualMaximum(Calendar.DAY_OF_MONTH));

@@ -36,6 +36,7 @@ import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.PeriodOccasionalSeriesStat;
+import org.designup.picsou.gui.utils.DumpDataAction;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -48,7 +49,6 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobListStringifiers;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.ReplicationGlobRepository;
@@ -116,11 +116,7 @@ public class MainPanel {
     restoreAction = new RestoreAction(repository, directory, generator);
     preferencesAction = new PreferencesAction(repository, directory);
     registerAction = new RegisterLicenseAction(repository, directory);
-    dumpRepository = new AbstractAction("Dump") {
-      public void actionPerformed(ActionEvent e) {
-        GlobPrinter.print(repository);
-      }
-    };
+    dumpRepository = new DumpDataAction(repository);
     exitAction = new ExitAction(directory);
 
     builder.add("editCategories", new EditCategoriesAction(repository, directory) {

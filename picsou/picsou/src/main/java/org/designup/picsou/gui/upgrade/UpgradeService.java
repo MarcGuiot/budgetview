@@ -1,11 +1,11 @@
 package org.designup.picsou.gui.upgrade;
 
-import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
-import org.designup.picsou.model.*;
-import org.designup.picsou.utils.Lang;
-import org.globsframework.model.FieldValue;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.model.Bank;
+import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.VersionInformation;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -19,24 +19,7 @@ public class UpgradeService {
     this.directory = directory;
   }
 
-  public void upgrade(GlobRepository repository, Glob version) {
-    repository.startChangeSet();
-    try {
-      if (version.get(VersionInformation.CURRENT_JAR_VERSION) <= 4) {
-        repository.update(Series.OCCASIONAL_SERIES,
-                          FieldValue.value(Series.PROFILE_TYPE, ProfileType.EVERY_MONTH.getId()),
-                          FieldValue.value(Series.DEFAULT_CATEGORY, Category.NONE),
-                          FieldValue.value(Series.DAY, 1),
-                          FieldValue.value(Series.NAME, Lang.get("series.occasional")));
-      }
-      repository.update(VersionInformation.KEY, VersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
-    }
-    finally {
-      repository.completeChangeSet();
-    }
-  }
-
-  public void applyFilter(GlobRepository repository, Glob version) {
+  public void upgradeBankData(GlobRepository repository, Glob version) {
     repository.startChangeSet();
     try {
       TransactionAnalyzerFactory analyzerFactory = directory.get(TransactionAnalyzerFactory.class);

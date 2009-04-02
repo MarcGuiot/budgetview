@@ -69,14 +69,14 @@ public class ConnectionRetryServerAccess extends ServerAccessDecorator {
     }
   }
 
-  public GlobList getUserData(MutableChangeSet changeSet, IdUpdate idUpdate) {
+  public GlobList getUserData(MutableChangeSet changeSet, IdUpdater idUpdater) {
     try {
-      return super.getUserData(changeSet, idUpdate);
+      return super.getUserData(changeSet, idUpdater);
     }
     catch (GlobsException e) {
       super.connect();
       super.initConnection(name, password, privateComputer);
-      return super.getUserData(changeSet, idUpdate);
+      return super.getUserData(changeSet, idUpdater);
     }
   }
 

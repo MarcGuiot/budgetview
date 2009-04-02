@@ -43,7 +43,7 @@ public class TsvExporter implements Exporter {
     GlobList transactions =
       repository
         .getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, Boolean.FALSE))
-        .sort(new TransactionComparator(false, Transaction.MONTH, Transaction.DAY, true));
+        .sort(TransactionComparator.DESCENDING_SPLIT_AFTER);
 
     List<GlobStringifier> stringifiers = Arrays.asList(
       new TransactionDateStringifier(TransactionComparator.DESCENDING_SPLIT_AFTER,

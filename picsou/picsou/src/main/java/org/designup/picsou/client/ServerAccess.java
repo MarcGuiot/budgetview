@@ -33,11 +33,11 @@ public interface ServerAccess {
 
   void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data);
 
-  interface IdUpdate {
+  interface IdUpdater {
     void update(IntegerField field, Integer lastAllocatedId);
   }
 
-  GlobList getUserData(MutableChangeSet upgradeChangeSetToApply, IdUpdate idUpdate);
+  GlobList getUserData(MutableChangeSet upgradeChangeSetToApply, IdUpdater idUpdater);
 
   void disconnect();
 
@@ -70,7 +70,7 @@ public interface ServerAccess {
     public void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data) {
     }
 
-    public GlobList getUserData(MutableChangeSet upgradeChangeSetToApply, IdUpdate idUpdate) {
+    public GlobList getUserData(MutableChangeSet upgradeChangeSetToApply, IdUpdater idUpdater) {
       return GlobList.EMPTY;
     }
 

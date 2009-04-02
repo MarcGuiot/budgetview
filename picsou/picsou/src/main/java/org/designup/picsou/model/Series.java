@@ -108,10 +108,12 @@ public class Series {
   public static final Integer UNCATEGORIZED_SERIES_ID = 1;
 
   public static org.globsframework.model.Key OCCASIONAL_SERIES;
+  public static org.globsframework.model.Key UNCATEGORIZED_SERIES;
 
   static {
     GlobTypeLoader.init(Series.class, "series");
     OCCASIONAL_SERIES = org.globsframework.model.Key.create(TYPE, OCCASIONAL_SERIES_ID);
+    UNCATEGORIZED_SERIES = org.globsframework.model.Key.create(TYPE, UNCATEGORIZED_SERIES_ID);
   }
 
   public static BooleanField getMonthField(int monthId) {
@@ -155,6 +157,14 @@ public class Series {
     }
 
     return Lang.get("transaction.planned", series.get(Series.NAME).toUpperCase());
+  }
+
+  public static String getOccasionalName() {
+    return Lang.get("series.occasional");
+  }
+
+  public static String getUncategorizedName() {
+    return Lang.get("series.uncategorized");
   }
 
   public static class Serializer implements PicsouGlobSerializer {

@@ -3,6 +3,8 @@ package org.designup.picsou.utils;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.format.GlobPrinter;
 
 import java.util.Comparator;
 
@@ -22,14 +24,14 @@ public class TransactionComparator implements Comparator<Glob> {
   public static final TransactionComparator DESCENDING_BANK_SPLIT_AFTER =
     new TransactionComparator(false, Transaction.BANK_MONTH, Transaction.BANK_DAY, true);
 
-  private int dateMultiplier;
+  private int comparisonMultiplier;
   private int splitAfter;
   protected IntegerField monthField;
   protected IntegerField dayField;
-    
-  public TransactionComparator(boolean ascendingDates, IntegerField monthField,
+
+  private TransactionComparator(boolean ascendingDates, IntegerField monthField,
                                IntegerField dayField, boolean splitAfter) {
-    this.dateMultiplier = ascendingDates ? 1 : -1;
+    this.comparisonMultiplier = ascendingDates ? 1 : -1;
     if (ascendingDates) {
       this.splitAfter = splitAfter ? -1 : 1;
     }
@@ -40,48 +42,53 @@ public class TransactionComparator implements Comparator<Glob> {
     this.dayField = dayField;
   }
 
-  public int compare(Glob o1, Glob o2) {
+  public int compare(Glob transaction1, Glob transaction2) {
     int tmp;
-    tmp = o1.get(monthField).compareTo(o2.get(monthField));
+    tmp = transaction1.get(monthField).compareTo(transaction2.get(monthField));
     if (tmp != 0) {
-      return dateMultiplier * tmp;
+      return comparisonMultiplier * tmp;
     }
-    tmp = o1.get(dayField).compareTo(o2.get(dayField));
+    final Integer day1 = transaction1.get(dayField);
+    final Integer day2 = transaction2.get(dayField);
+    if (day1 == null || day2 == null) {
+      GlobPrinter.print(new GlobList(transaction1, transaction2));
+    }
+    tmp = day1.compareTo(day2);
     if (tmp != 0) {
-      return dateMultiplier * tmp;
+      return comparisonMultiplier * tmp;
     }
-    Integer source1 = o1.get(Transaction.SPLIT_SOURCE);
-    Integer source2 = o2.get(Transaction.SPLIT_SOURCE);
+    Integer source1 = transaction1.get(Transaction.SPLIT_SOURCE);
+    Integer source2 = transaction2.get(Transaction.SPLIT_SOURCE);
     if (source1 != null) {
       if (source2 != null) {
         if (source1.equals(source2)) {
-          return dateMultiplier * o1.get(Transaction.ID).compareTo(o2.get(Transaction.ID));
+          return comparisonMultiplier * transaction1.get(Transaction.ID).compareTo(transaction2.get(Transaction.ID));
         }
         else {
-          return dateMultiplier * source1.compareTo(source2);
+          return comparisonMultiplier * source1.compareTo(source2);
         }
       }
       else {
-        if (source1.equals(o2.get(Transaction.ID))) {
-          return -dateMultiplier * splitAfter;
+        if (source1.equals(transaction2.get(Transaction.ID))) {
+          return -comparisonMultiplier * splitAfter;
         }
-        return dateMultiplier * source1.compareTo(o2.get(Transaction.ID));
+        return comparisonMultiplier * source1.compareTo(transaction2.get(Transaction.ID));
       }
     }
     else if (source2 != null) {
-      if (source2.equals(o1.get(Transaction.ID))) {
-        return dateMultiplier * splitAfter;
+      if (source2.equals(transaction1.get(Transaction.ID))) {
+        return comparisonMultiplier * splitAfter;
       }
-      return dateMultiplier * o1.get(Transaction.ID).compareTo(source2);
+      return comparisonMultiplier * transaction1.get(Transaction.ID).compareTo(source2);
     }
-    if (!o1.get(Transaction.PLANNED).equals(o2.get(Transaction.PLANNED))) {
-      if (o1.get(Transaction.PLANNED)) {
-        return dateMultiplier;
+    if (!transaction1.get(Transaction.PLANNED).equals(transaction2.get(Transaction.PLANNED))) {
+      if (transaction1.get(Transaction.PLANNED)) {
+        return comparisonMultiplier;
       }
       else {
-        return -dateMultiplier;
+        return -comparisonMultiplier;
       }
     }
-    return dateMultiplier * o1.get(Transaction.ID).compareTo(o2.get(Transaction.ID));
+    return comparisonMultiplier * transaction1.get(Transaction.ID).compareTo(transaction2.get(Transaction.ID));
   }
 }

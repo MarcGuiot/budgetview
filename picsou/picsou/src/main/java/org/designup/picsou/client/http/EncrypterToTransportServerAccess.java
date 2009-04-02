@@ -202,15 +202,15 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     clientTransport.restore(sessionId, outputStream.toByteArray());
   }
 
-  public GlobList getUserData(MutableChangeSet changeSet, IdUpdate idUpdate) {
+  public GlobList getUserData(MutableChangeSet changeSet, IdUpdater idUpdater) {
     checkConnected();
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
     SerializedInput input = clientTransport.getUserData(sessionId, outputStream.toByteArray());
-    return deserialize(idUpdate, input);
+    return deserialize(idUpdater, input);
   }
 
-  private GlobList deserialize(IdUpdate idUpdate, SerializedInput input) {
+  private GlobList deserialize(IdUpdater idUpdater, SerializedInput input) {
     SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
     MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
     serializableGlobSerializer.deserialize(input, data);
@@ -240,7 +240,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
         result.add(builder.get());
         maxId = Math.max(maxId, id);
       }
-      idUpdate.update(field, maxId);
+      idUpdater.update(field, maxId);
     }
     return result;
   }

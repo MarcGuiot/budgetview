@@ -114,8 +114,8 @@ public class DispatcherServerAccess implements ServerAccess {
     localServerAccess.takeSnapshot();
   }
 
-  public GlobList getUserData(MutableChangeSet changeSet, IdUpdate idUpdate) {
-    return localServerAccess.getUserData(changeSet, idUpdate);
+  public GlobList getUserData(MutableChangeSet changeSet, IdUpdater idUpdater) {
+    return localServerAccess.getUserData(changeSet, idUpdater);
   }
 
   public void disconnect() {

@@ -17,12 +17,13 @@ public class InitialSeries {
                             value(Series.DEFAULT_CATEGORY, MasterCategory.NONE.getId()),
                             value(Series.IS_AUTOMATIC, true),
                             value(Series.DAY, 1),
-                            value(Series.NAME, Lang.get("series.occasional")));
+                            value(Series.NAME, Series.getOccasionalName()));
 
     repository.findOrCreate(Key.create(Series.TYPE, Series.UNCATEGORIZED_SERIES_ID),
                             value(Series.BUDGET_AREA, BudgetArea.UNCATEGORIZED.getId()),
                             value(Series.PROFILE_TYPE, ProfileType.IRREGULAR.getId()),
                             value(Series.IS_AUTOMATIC, false),
-                            value(Series.NAME, Lang.get("series.uncategorized")));
+                            value(Series.DAY, 1),
+                            value(Series.NAME, Series.getUncategorizedName()));
   }
 }

@@ -4,6 +4,7 @@ import org.designup.picsou.model.Transaction;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
 
 public class TransactionDateUpdater implements TransactionTypeFinalizer {
   public boolean processTransaction(Glob transaction, GlobRepository repository) {

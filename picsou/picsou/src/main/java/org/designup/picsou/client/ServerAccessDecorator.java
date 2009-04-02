@@ -48,8 +48,8 @@ public class ServerAccessDecorator implements ServerAccess {
     serverAccess.replaceData(data);
   }
 
-  public GlobList getUserData(MutableChangeSet changeSet, IdUpdate idUpdate) {
-    return serverAccess.getUserData(changeSet, idUpdate);
+  public GlobList getUserData(MutableChangeSet changeSet, IdUpdater idUpdater) {
+    return serverAccess.getUserData(changeSet, idUpdater);
   }
 
   public void disconnect() {
