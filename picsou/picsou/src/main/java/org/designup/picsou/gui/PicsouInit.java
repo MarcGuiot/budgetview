@@ -127,13 +127,10 @@ public class PicsouInit {
         .load(this.getClass().getClassLoader(), PicsouApplication.BANK_CONFIG_VERSION);
     }
 
-    boolean forceUpgrade = versionInfo == null && !newUser;
-
-    final UpgradeService upgradeService = directory.get(UpgradeService.class);
-
     Glob version = repository.get(VersionInformation.KEY);
+    boolean forceUpgrade = versionInfo == null && !newUser;
     if (forceUpgrade || !version.get(VersionInformation.CURRENT_BANK_CONFIG_VERSION).equals(version.get(VersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION))) {
-      upgradeService.upgradeBankData(repository, version);
+      directory.get(UpgradeService.class).upgradeBankData(repository, version);
     }
 
     Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);

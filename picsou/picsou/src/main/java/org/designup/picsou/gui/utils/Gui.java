@@ -186,7 +186,8 @@ public class Gui {
   }
 
   public static void setColumnSizes(JTable targetTable, int[] columnSizes) {
-    for (int column = 0; column < targetTable.getColumnCount() - 1; column++) {
+    int columns = Math.min(columnSizes.length, targetTable.getColumnCount() - 1);
+    for (int column = 0; column < columns; column++) {
       final int width = columnSizes[column] * DEFAULT_COLUMN_CHAR_WIDTH;
       TableUtils.setSize(targetTable, column, width);
     }

@@ -8,6 +8,7 @@ import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.model.SavingsBalanceStat;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
+import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -35,6 +36,7 @@ public class NextProjectsView extends View implements GlobSelectionListener {
   private Integer currentMonthId;
   private GlobStringifier balanceStatStringifier;
   private GlobStringifier savingsBalanceStatStringifier;
+  private static final int[] COLUMN_SIZES = {9, 25};
 
   public NextProjectsView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -71,6 +73,8 @@ public class NextProjectsView extends View implements GlobSelectionListener {
     tableView.addColumn(Lang.get("nextprojects.total.position"), new TotalAccountsPositionStringifier(),
                         positionCustomizer);
 
+    Gui.setColumnSizes(tableView.getComponent(), COLUMN_SIZES);
+    
     builder.add("nextProjects", tableView);
   }
 
@@ -85,7 +89,8 @@ public class NextProjectsView extends View implements GlobSelectionListener {
     currentMonthId = monthIds.first();
     tableView.setFilter(new GlobMatcher() {
       public boolean matches(Glob seriesBudget, GlobRepository repository) {
-        if (seriesBudget.get(SeriesBudget.MONTH) < currentMonthId) {
+        if ((seriesBudget.get(SeriesBudget.MONTH) < currentMonthId) ||
+            Amounts.isNearZero(seriesBudget.get(SeriesBudget.AMOUNT))) {
           return false;
         }
         Glob series = repository.get(Key.create(Series.TYPE, seriesBudget.get(SeriesBudget.SERIES)));

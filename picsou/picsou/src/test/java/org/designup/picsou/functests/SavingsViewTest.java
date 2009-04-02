@@ -20,7 +20,6 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     nextProjects.initContent()
-      .add("Aug 2008", "Bahamas", 0.00)
       .check();
 
     nextProjects.editProjects()
@@ -110,6 +109,37 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     nextProjects.initContent()
       .add("Nov 2008", "Ski", -500.00, 8300.00, 6200.00, 14500.00)
       .add("Dec 2008", "Ski", -500.00, 7500.00, 6500.00, 14000.00)
+      .check();
+  }
+
+  public void testOnlyProjectsWithNonEmptyAmountsAreShown() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(12).validate();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount(30003, 12345, "10101010", 10000, "2008/08/15")
+      .addTransaction("2008/08/10", -100.00, "FNAC")
+      .load();
+
+    views.selectSavings();
+
+    nextProjects.createProject()
+      .setName("Plasma TV")
+      .setCategory(MasterCategory.LEISURES)
+      .setEveryMonth()
+      .setEndDate(200903)
+      .setStartDate(200811)
+      .selectAllMonths()
+      .setAmount(500.00)
+      .selectMonth(200901)
+      .setAmount(0.00)
+      .validate();
+
+    nextProjects.initContent()
+      .add("Nov 2008", "Plasma TV", -500.00, 9500.00, null, 9500.00)
+      .add("Dec 2008", "Plasma TV", -500.00, 9000.00, null, 9000.00)
+      .add("Feb 2009", "Plasma TV", -500.00, 8500.00, null, 8500.00)
+      .add("Mar 2009", "Plasma TV", -500.00, 8000.00, null, 8000.00)
       .check();
   }
 
