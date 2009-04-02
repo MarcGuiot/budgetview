@@ -467,9 +467,10 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     changeSet.safeVisit(new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) {
         if (find(key) != null) {
-          throw new InvalidParameter("Object " + key + " already exists : " + 
-                                     GlobPrinter.toString(find(key)) +  " can not create : " +
-                                     GlobPrinter.toString(values));
+          throw new InvalidParameter("Object " + key + " already exists\n" +
+                                     "-- New object values:\n" + GlobPrinter.toString(values) +
+                                     "-- Existing object:\n" + GlobPrinter.toString(find(key))
+                                     );
         }
       }
 

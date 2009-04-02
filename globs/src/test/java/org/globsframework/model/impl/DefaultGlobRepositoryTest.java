@@ -980,7 +980,19 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
                                 .set(DummyObject.ID, 1)
                                 .set(DummyObject.NAME, "obj3")
                                 .get());
-    checkApplyChangeSetError(changeSet, "Object dummyObject[id=1] already exists");
+    checkApplyChangeSetError(changeSet,
+                             "Object dummyObject[id=1] already exists\n" +
+                             "-- New object values:\n" +
+                             "name=obj3\n" +
+                             "-- Existing object:\n" +
+                             "id=1\n" +
+                             "name=obj1\n" +
+                             "value=null\n" +
+                             "present=null\n" +
+                             "date=null\n" +
+                             "timestamp=null\n" +
+                             "password=null\n" +
+                             "link=null\n");
   }
 
   public void testApplyChangeSetErrorOnUpdate() throws Exception {

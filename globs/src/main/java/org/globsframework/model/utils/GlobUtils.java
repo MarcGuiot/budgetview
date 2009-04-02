@@ -1,14 +1,21 @@
 package org.globsframework.model.utils;
 
 import org.globsframework.metamodel.Link;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.*;
 import org.globsframework.utils.Utils;
 
 import java.util.*;
 
 public class GlobUtils {
+
+  public static GlobType[] toArray(Collection<GlobType> types) {
+    return types.toArray(new GlobType[types.size()]);
+  }
 
   public static Double safeGet(Glob glob, DoubleField field) {
     if (glob == null) {
@@ -72,6 +79,13 @@ public class GlobUtils {
       }
     }
     return result;
+  }
+
+  public static void updateIfExists(GlobRepository repository, Key key, Field field, Object value) {
+    final Glob glob = repository.find(key);
+    if (glob != null) {
+      repository.update(key, field, value);
+    }
   }
 
   public interface DiffFunctor<T> {

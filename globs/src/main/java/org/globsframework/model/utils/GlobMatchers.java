@@ -185,6 +185,16 @@ public class GlobMatchers {
     };
   }
 
+  public static GlobMatcher linkedTo(final Link link, final GlobMatcher linkedObjectMatcher) {
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        Glob target = repository.findLinkTarget(item, link);
+        return (target != null) && linkedObjectMatcher.matches(target, repository);
+      }
+    };
+  }
+
+
   public static GlobMatcher isNull(final Field field) {
     return new GlobMatcher() {
       public boolean matches(Glob glob, GlobRepository repository) {
