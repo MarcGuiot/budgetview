@@ -5,6 +5,11 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
 
 class ValidUser implements UserState {
+  private String mail;
+
+  public ValidUser(String mail) {
+    this.mail = mail;
+  }
 
   public Boolean isVerifiedServerValidity() {
     return true;
@@ -19,7 +24,7 @@ class ValidUser implements UserState {
   }
 
   public UserState updateUserValidity(Directory directory, GlobRepository repository) {
-    return new CompletedUserState();
+    return new CompletedUserState(mail);
   }
 
 }

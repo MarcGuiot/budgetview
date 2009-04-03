@@ -132,7 +132,7 @@ public class LicenseTest extends LicenseTestCase {
     startApp();
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logExistingUser("user", "passw@rd");
-    checkMessageOver();
+    checkKilled();
     window.dispose();
   }
 
@@ -217,7 +217,7 @@ public class LicenseTest extends LicenseTestCase {
     LicenseChecker.enterBadLicense(window, mail, "1234", "Activation failed a mail was sent at alfred@free.fr");
     checkLicenseExpiration();
     checkMailReceive(mail);
-    checkKilled();
+    checkWithMailKilled();
   }
 
   public void testMailSentLater() throws Exception {
@@ -250,6 +250,47 @@ public class LicenseTest extends LicenseTestCase {
     mailThread.setDaemon(true);
     mailThread.start();
     checkMailReceive(MAIL);
+  }
+
+  public void testLicenseActivateKey() throws Exception {
+    loggingAndRegisterFirstPicsou();
+    window.dispose();
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
+    startApp();
+
+    LoginChecker login = new LoginChecker(window);
+    login.logNewUser("user", "passw@rd");
+
+    window.dispose();
+
+    TimeService.setCurrentDate(Dates.parseMonth("2008/10"));
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
+    startApp();
+    login = new LoginChecker(window);
+    login.logExistingUser("user", "passw@rd");
+
+    LicenseChecker.enterBadLicense(window, MAIL, "1234", "Activation failed a mail was sent at alfred@free.fr");
+    String messageCode = checkMailReceive("alfred@free.fr");
+    String newCode = messageCode.substring(messageCode.length() - 5, messageCode.length() - 1).trim();
+    System.out.println("LicenseTest.testLicenseActivateKey " + newCode);
+    LicenseChecker.enterLicense(window, "alfred@free.fr", newCode);
+    window.dispose();
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, PATH_TO_DATA);
+    startApp();
+
+    login = new LoginChecker(window);
+    login.logExistingUser("user", "passw@rd");
+
+    LicenseMessageChecker licenseMessageChecker = new LicenseMessageChecker(window);
+    LicenseExpirationChecker expirationChecker = licenseMessageChecker.clickNewLicense();
+    expirationChecker
+      .checkMail("alfred@free.fr")
+      .sendKey()
+      .close();
+
+    checkMailReceive(MAIL);
+    window.dispose();
   }
 
   private void checkLicenseExpiration() {
@@ -339,10 +380,16 @@ public class LicenseTest extends LicenseTestCase {
     assertTrue(message.textContains("Your free trial period is over"));
   }
 
-  private void checkKilled() {
+  private void checkWithMailKilled() {
     TextBox message = window.getTextBox("licenseMessage");
     assertThat(message.isVisible());
     assertTrue(message.textContains("Activation failed a mail was sent at alfred@free.fr"));
+  }
+
+  private void checkKilled() {
+    TextBox message = window.getTextBox("licenseMessage");
+    assertThat(message.isVisible());
+    assertTrue(message.textContains("You are not allowed to import data anymore"));
   }
 
 

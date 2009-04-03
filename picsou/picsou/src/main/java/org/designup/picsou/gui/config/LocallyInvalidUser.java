@@ -5,6 +5,11 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
 
 class LocallyInvalidUser implements UserState {
+  private String mail;
+
+  public LocallyInvalidUser(String mail) {
+    this.mail = mail;
+  }
 
   synchronized public Boolean isVerifiedServerValidity() {
     return false;

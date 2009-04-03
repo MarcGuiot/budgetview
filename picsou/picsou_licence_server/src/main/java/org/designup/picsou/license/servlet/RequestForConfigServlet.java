@@ -275,7 +275,7 @@ public class RequestForConfigServlet extends HttpServlet {
         else {
           resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
           resp.addHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
-          logger.info("Bad activation code for " + mail);
+          logger.info("Different code with different repoId for " + mail);
         }
       }
     }

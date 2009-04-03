@@ -53,6 +53,7 @@ public class AskForMailServlet extends HttpServlet {
         }
         if (registeredMail.size() >= 1) {
           if (mailer.sendExistingLicense(registeredMail.get(0), lang, activationCode)) {
+            logger.info("Send new activation code " + activationCode + " to " + mailTo);
             resp.addHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_SENT);
           }
           else {

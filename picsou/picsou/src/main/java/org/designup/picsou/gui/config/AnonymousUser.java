@@ -7,8 +7,10 @@ import org.globsframework.utils.directory.Directory;
 
 public class AnonymousUser implements UserState {
   boolean verifiedServerValidity = false;
+  private String mail;
 
-  public AnonymousUser() {
+  public AnonymousUser(String mail) {
+    this.mail = mail;
   }
 
   public AnonymousUser(boolean verifiedServerValidity) {

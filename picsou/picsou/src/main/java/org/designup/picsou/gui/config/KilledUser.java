@@ -6,9 +6,11 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
 
 class KilledUser implements UserState {
+  private String mail;
   private boolean mailSent;
 
-  public KilledUser(boolean mailSent) {
+  public KilledUser(String mail, boolean mailSent) {
+    this.mail = mail;
     this.mailSent = mailSent;
   }
 
@@ -28,6 +30,7 @@ class KilledUser implements UserState {
     repository.startChangeSet();
     try {
       repository.update(User.KEY, User.IS_REGISTERED_USER, false);
+      repository.update(User.KEY, User.MAIL, mail);
       if (mailSent) {
         repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAILED_MAIL_SENT);
       }
@@ -38,7 +41,7 @@ class KilledUser implements UserState {
     finally {
       repository.completeChangeSet();
     }
-    return new CompletedUserState();
+    return new CompletedUserState(mail);
   }
 
 }

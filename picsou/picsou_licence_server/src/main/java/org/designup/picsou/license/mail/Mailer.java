@@ -15,6 +15,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Mailer {
@@ -47,7 +48,7 @@ public class Mailer {
                Lang.get("request.license.message", lang));
     }
     catch (Exception e) {
-      logger.throwing("Mailer", "sendRequestLicence to=" + to + " lang=" + lang, e);
+      logger.log(Level.INFO, "Mailer sendRequestLicence to=" + to + " lang=" + lang, e);
     }
   }
 
@@ -89,13 +90,13 @@ public class Mailer {
   private void add(MailToSent sent) {
     long current = count.incrementAndGet();
     sent.set(current);
-    logger.finest("Mail to send : " + sent);
+    logger.log(Level.INFO, "Mail to send : " + sent);
     try {
-      this.pendingsMail.put(sent);
       currentIdForMail.put(sent.getMail(), sent.current);
+      this.pendingsMail.put(sent);
     }
     catch (InterruptedException e) {
-      logger.throwing("Mailer", "add", e);
+      logger.log(Level.INFO, "Mailer add", e);
     }
   }
 
@@ -209,7 +210,7 @@ public class Mailer {
             if (lastId != null && mailToSent.current >= lastId) {    // si le mail qu'on veux envoyer est plus vieux qu'un autre on ne l'envoie pas.
               if (!mailToSent.sent()) {
                 if (mailToSent.retryCount > 10) {
-                  logger.finest("Message " + mailToSent + " will never been sent.");
+                  logger.log(Level.SEVERE, "Message " + mailToSent + " will never been sent.");
                 }
                 else {
                   mail.put(mailToSent);
@@ -229,8 +230,7 @@ public class Mailer {
         }
       }
       catch (InterruptedException e) {
-        System.out.println("Mailer$ReSendMailThread.run --------------------------------------");
-        logger.throwing("ReSendMailThread", "run", e);
+        logger.log(Level.INFO, "ReSendMailThread run", e);
       }
     }
   }

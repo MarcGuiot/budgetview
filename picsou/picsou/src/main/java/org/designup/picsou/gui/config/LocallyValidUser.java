@@ -5,8 +5,10 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
 
 class LocallyValidUser implements UserState {
+  private String mail;
 
-  LocallyValidUser() {
+  LocallyValidUser(String mail) {
+    this.mail = mail;
   }
 
   synchronized public Boolean isVerifiedServerValidity() {
@@ -14,11 +16,11 @@ class LocallyValidUser implements UserState {
   }
 
   public UserState fireKillUser(boolean mailSent) {
-    return new KilledUser(mailSent);
+    return new KilledUser(mail, mailSent);
   }
 
   public UserState fireValidUser() {
-    return new ValidUser();
+    return new ValidUser(mail);
   }
 
   public UserState updateUserValidity(Directory directory, GlobRepository repository) {

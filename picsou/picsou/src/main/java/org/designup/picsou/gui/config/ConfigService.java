@@ -282,21 +282,21 @@ public class ConfigService {
   public boolean update(final byte[] repoId, final long launchCount, byte[] mailInBytes,
                         byte[] signatureInByte, final String activationCode) {
     boolean isValideUser;
+    final String mail = mailInBytes == null ? null : new String(mailInBytes);
     if (signatureInByte != null && activationCode != null) {
       if (KeyService.checkSignature(mailInBytes, signatureInByte)) {
-        userState = UserStateFactory.localValidSignature();
+        userState = UserStateFactory.localValidSignature(mail);
         isValideUser = true;
       }
       else {
-        userState = UserStateFactory.localInvalidSignature();
+        userState = UserStateFactory.localInvalidSignature(mail);
         isValideUser = false;
       }
     }
     else {
-      userState = UserStateFactory.noSignature();
+      userState = UserStateFactory.noSignature(mail);
       isValideUser = false;
     }
-    final String mail = mailInBytes == null ? null : new String(mailInBytes);
     final String signature = signatureInByte == null ? null : Encoder.byteToString(signatureInByte);
     if (URL != null && URL.length() != 0) {
       // le thread est inliné pour eviter de copier (donc de rendre visible) les variables (repoId, ...)
@@ -364,7 +364,7 @@ public class ConfigService {
   public Boolean isVerifiedServerValidity() {
     Utils.beginRemove();
     if (URL == null || URL.length() == 0) {
-      userState = new CompletedUserState();
+      userState = new CompletedUserState("local");
       return true;
     }
     Utils.endRemove();
@@ -438,16 +438,16 @@ public class ConfigService {
   }
 
   static class UserStateFactory {
-    static UserState localValidSignature() {
-      return new LocallyValidUser();
+    static UserState localValidSignature(String mail) {
+      return new LocallyValidUser(mail);
     }
 
-    static UserState localInvalidSignature() {
-      return new LocallyInvalidUser();
+    static UserState localInvalidSignature(String mail) {
+      return new LocallyInvalidUser(mail);
     }
 
-    static UserState noSignature() {
-      return new AnonymousUser();
+    static UserState noSignature(String mail) {
+      return new AnonymousUser(mail);
     }
   }
 }

@@ -4,6 +4,11 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 class CompletedUserState implements UserState {
+  private String mail;
+
+  public CompletedUserState(String mail) {
+    this.mail = mail;
+  }
 
   public Boolean isVerifiedServerValidity() {
     return true;

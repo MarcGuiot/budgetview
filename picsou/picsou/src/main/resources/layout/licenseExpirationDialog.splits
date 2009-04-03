@@ -16,7 +16,7 @@
           <column>
             <label text="$license.ask.for.code" styleClass="title"/>
             <htmlEditorPane name="askMailMessage" text="$license.ask.message.mail"/>
-            <row>#
+            <row>
               <textField ref="mailAdress"/>
               <button action="sendMail"/>
               <filler fill="horizontal"/>
