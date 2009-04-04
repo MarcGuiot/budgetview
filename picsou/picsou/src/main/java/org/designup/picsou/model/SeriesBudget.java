@@ -34,7 +34,6 @@ public class SeriesBudget {
   @DefaultDouble(0.0)
   public static DoubleField AMOUNT;
 
-  @DefaultDouble(0.0)
   public static DoubleField OBSERVED_AMOUNT;
 
   @DefaultInteger(1)
@@ -80,7 +79,7 @@ public class SeriesBudget {
       fieldSetter.set(SeriesBudget.AMOUNT, input.readDouble());
       fieldSetter.set(SeriesBudget.DAY, input.readInteger());
       fieldSetter.set(SeriesBudget.ACTIVE, input.readBoolean());
-      fieldSetter.set(SeriesBudget.OBSERVED_AMOUNT, 0.);
+      fieldSetter.set(SeriesBudget.OBSERVED_AMOUNT, null);
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {

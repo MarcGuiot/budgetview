@@ -82,13 +82,16 @@ public class BudgetAreaSeriesView extends View {
 
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(PeriodSeriesStat.TYPE)) {
+        if (changeSet.containsChanges(PeriodSeriesStat.TYPE) ||
+            changeSet.containsChanges(SeriesBudget.TYPE)
+            || changeSet.containsChanges(Series.TYPE)) {
           updateRepeat();
         }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        if (changedTypes.contains(PeriodSeriesStat.TYPE)) {
+        if (changedTypes.contains(PeriodSeriesStat.TYPE) || changedTypes.contains(Series.TYPE)
+            || changedTypes.contains(SeriesBudget.TYPE)) {
           updateRepeat();
         }
       }
@@ -166,7 +169,7 @@ public class BudgetAreaSeriesView extends View {
         for (Integer monthId : selectedMonthIds) {
           GlobList seriesBudget =
             seriesBudgetIndex.findByIndex(SeriesBudget.MONTH, monthId).getGlobs();
-          if (seriesBudget.size() == 0 || !seriesBudget.get(0).get(SeriesBudget.ACTIVE)) {
+          if (seriesBudget.size() == 0 || !seriesBudget.getFirst().get(SeriesBudget.ACTIVE)) {
             notActive++;
           }
         }

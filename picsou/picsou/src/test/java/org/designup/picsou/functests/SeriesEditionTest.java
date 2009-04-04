@@ -202,12 +202,13 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       })
       .toggleMonth("Aug")
       .checkTable(new Object[][]{
+        {"2008", "August", "29.00", "29.00"},
         {"2008", "July", "29.00", "29.00"},
         {"2008", "June", "29.00", "0"},
       })
       .toggleMonth("Aug")
       .checkTable(new Object[][]{
-        {"2008", "August", "29.00", "0"},
+        {"2008", "August", "29.00", "29.00"},
         {"2008", "July", "29.00", "29.00"},
         {"2008", "June", "29.00", "0"},
       })
@@ -215,7 +216,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.recurring.editSeries("Internet")
       .checkTable(new Object[][]{
-        {"2008", "August", "29.00", "0"},
+        {"2008", "August", "29.00", "29.00"},
         {"2008", "July", "29.00", "29.00"},
         {"2008", "June", "29.00", "0"},
       })
@@ -404,23 +405,26 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectBudget();
-    budgetView.recurring
-      .createSeries()
+    SeriesEditionDialogChecker seriesEdition = budgetView.recurring
+      .createSeries();
+    seriesEdition
       .setCustom()
       .switchToManual()
       .createSeries()
       .setCustom()
       .switchToManual()
-      .checkSeriesListEquals("New series", "New series")
-
+      .checkSeriesListEquals("New series", "New series");
+    
+    seriesEdition
       .selectSeries(0)
       .selectAllMonths()
       .setAmount("70")
       .toggleMonth("Aug")
       .checkTable(new Object[][]{
         {"2008", "July", "", "70.00"},
-      })
+      });
 
+    seriesEdition
       .selectSeries(1)
       .checkMonthIsChecked("Aug")
       .toggleMonth("Jul")
@@ -755,8 +759,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     edition.selectAllMonths().setAmount("30")
       .toggleMonth("Dec", "Feb").toggleMonth("Dec", "Feb")
       .checkTable(new Object[][]{
-        {"2008", "February", "", "0"},
-        {"2007", "December", "", "0"},
+        {"2008", "February", "", "30.00"},
+        {"2007", "December", "", "30.00"},
       });
   }
 

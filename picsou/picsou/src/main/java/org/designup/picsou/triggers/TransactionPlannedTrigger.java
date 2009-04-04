@@ -11,7 +11,6 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Pair;
 import org.globsframework.utils.Utils;
 
-import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -129,7 +128,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       }
       else if (monthId >= currentMonthId) {
         Double wantedAmount = seriesBudget.get(SeriesBudget.AMOUNT);
-        double diff = wantedAmount - observedAmount;
+        double diff = wantedAmount - (observedAmount == null ? 0.0 : observedAmount);
         if (wantedAmount > 0 && diff > 0 || wantedAmount < 0 && diff < 0 && !Amounts.isNearZero(diff)) {
           Glob transaction = transactions.getFirst();
           if (transaction == null) {
@@ -263,11 +262,16 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
   }
 
   private static class ComputeObservedFunctor implements GlobFunctor {
-    public double amount = 0;
+    public Double amount = null;
 
     public void run(Glob glob, GlobRepository repository) throws Exception {
       if (!glob.get(Transaction.PLANNED) && !glob.get(Transaction.MIRROR)) {
-        amount += glob.get(Transaction.AMOUNT);
+        if (amount == null) {
+          amount = glob.get(Transaction.AMOUNT);
+        }
+        else {
+          amount += glob.get(Transaction.AMOUNT);
+        }
       }
     }
   }

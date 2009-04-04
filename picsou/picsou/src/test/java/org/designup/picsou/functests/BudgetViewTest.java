@@ -559,6 +559,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("01/08/2008", TransactionType.PLANNED, "Planned: salaire", "", 1000, "salaire", MasterCategory.INCOME)
       .check();
+
     views.selectBudget();
     budgetView.income.editSeriesList().setName("salaire").setCustom().toggleMonth("Aug").validate();
     budgetView.income.checkSeriesNotPresent("salaire");
