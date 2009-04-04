@@ -304,6 +304,10 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     return this;
   }
 
+  public CellPainter getDefaultBackgroundPainter() {
+    return defaultBackgroundPainter;
+  }
+
   public GlobTableView setDefaultLabelCustomizer(LabelCustomizer labelCustomizer) {
     this.defaultLabelCustomizer = labelCustomizer;
     return this;

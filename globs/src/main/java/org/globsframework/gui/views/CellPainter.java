@@ -6,7 +6,8 @@ import java.awt.*;
 
 public interface CellPainter {
 
-  void paint(Graphics g, Glob glob,
+  void paint(Graphics g,
+             Glob glob,
              int row, int column,
              boolean isSelected, boolean hasFocus,
              int width, int height);
