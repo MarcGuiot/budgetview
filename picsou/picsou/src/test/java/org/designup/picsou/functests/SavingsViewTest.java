@@ -143,6 +143,56 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testClickingOnAProjectNameOpensTheSeriesEditionDialog() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(12).validate();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount(30003, 12345, "10101010", 10000, "2008/08/15")
+      .addTransaction("2008/08/10", -100.00, "FNAC")
+      .load();
+
+    views.selectSavings();
+
+    nextProjects.createProject()
+      .setName("Plasma TV")
+      .setCategory(MasterCategory.LEISURES)
+      .setEveryMonth()
+      .setEndDate(200812)
+      .setStartDate(200811)
+      .selectAllMonths()
+      .setAmount(500.00)
+      .validate();
+
+    timeline.selectMonth("2008/12");
+
+    nextProjects.createProject()
+      .setName("Noël")
+      .setCategory(MasterCategory.GIFTS)
+      .setAmount(300.00)
+      .validate();
+    
+    timeline.selectMonth("2008/11");
+
+    nextProjects.initContent()
+      .add("Nov 2008", "Plasma TV", -500.00, 9500.00, null, 9500.00)
+      .add("Dec 2008", "Noël", -300.00, 8700.00, null, 8700.00)
+      .add("Dec 2008", "Plasma TV", -500.00, 8700.00, null, 8700.00)
+      .check();
+
+    nextProjects.editRow(1)
+      .checkSeriesSelected("Noël")
+      .setAmount(500)
+      .validate();
+    
+    nextProjects.initContent()
+      .add("Nov 2008", "Plasma TV", -500.00, 9500.00, null, 9500.00)
+      .add("Dec 2008", "Noël", -500.00, 8500.00, null, 8500.00)
+      .add("Dec 2008", "Plasma TV", -500.00, 8500.00, null, 8500.00)
+      .check();
+  }
+
   public void testSavingsAccounts() throws Exception {
 
     views.selectSavings();

@@ -77,7 +77,7 @@ public class SeriesEvolutionColors implements ColorChangeListener {
     seriesOddBg = new FillPainter("seriesEvolution.series.bg.odd", colorService);
     seriesCurrentEvenBg = new FillPainter("seriesEvolution.series.bg.current.even", colorService);
     seriesCurrentOddBg = new FillPainter("seriesEvolution.series.bg.current.odd", colorService);
-    plainSelectionBackground = new FillPainter(PicsouColors.TRANSACTION_SELECTED_BG, colorService);
+    plainSelectionBackground = new FillPainter(PicsouColors.TABLE_SELECTED_BG, colorService);
   }
 
   public void colorsChanged(ColorLocator colors) {

@@ -2,6 +2,7 @@ package org.designup.picsou.gui.projects;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
+import org.designup.picsou.gui.components.DefaultTableCellPainter;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.MonthYearStringifier;
 import org.designup.picsou.gui.model.BalanceStat;
@@ -15,7 +16,6 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
-import org.globsframework.gui.views.utils.LabelCustomizers;
 import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -29,6 +29,7 @@ import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.CompositeComparator;
 import org.globsframework.utils.directory.Directory;
 
+import javax.swing.*;
 import java.util.SortedSet;
 
 public class NextProjectsView extends View implements GlobSelectionListener {
@@ -37,6 +38,7 @@ public class NextProjectsView extends View implements GlobSelectionListener {
   private GlobStringifier balanceStatStringifier;
   private GlobStringifier savingsBalanceStatStringifier;
   private static final int[] COLUMN_SIZES = {9, 25};
+  public static final int NAME_COLUMN_INDEX = 1;
 
   public NextProjectsView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -54,15 +56,14 @@ public class NextProjectsView extends View implements GlobSelectionListener {
                                      descriptionService.getStringifier(SeriesBudget.SERIES).getComparator(repository)),
                                    directory);
     tableView.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
+    tableView.setDefaultBackgroundPainter(new DefaultTableCellPainter(directory));
     tableView.setFilter(GlobMatchers.NONE);
 
     PicsouTableHeaderPainter.install(tableView, directory);
 
     tableView.addColumn(Lang.get("month"), new MonthYearStringifier(SeriesBudget.MONTH),
                         fontSize(9));
-    tableView.addColumn(Lang.get("nextprojects.series"),
-                        descriptionService.getStringifier(SeriesBudget.SERIES),
-                        LabelCustomizers.BOLD);
+    tableView.addColumn(new ProjectNameColumn(tableView, descriptionService, repository, directory));
     tableView.addColumn(Lang.get("amount"), SeriesBudget.AMOUNT);
 
     LabelCustomizer positionCustomizer = chain(fontSize(9), ALIGN_RIGHT);
@@ -73,8 +74,10 @@ public class NextProjectsView extends View implements GlobSelectionListener {
     tableView.addColumn(Lang.get("nextprojects.total.position"), new TotalAccountsPositionStringifier(),
                         positionCustomizer);
 
-    Gui.setColumnSizes(tableView.getComponent(), COLUMN_SIZES);
-    
+    final JTable table = tableView.getComponent();
+    Gui.setColumnSizes(table, COLUMN_SIZES);
+    Gui.installRolloverOnButtons(table, NAME_COLUMN_INDEX);
+
     builder.add("nextProjects", tableView);
   }
 
@@ -140,4 +143,5 @@ public class NextProjectsView extends View implements GlobSelectionListener {
       return Formatting.toString(total);
     }
   }
+
 }

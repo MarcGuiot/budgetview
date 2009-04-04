@@ -1,12 +1,12 @@
 package org.designup.picsou.gui.transactions.columns;
 
 import org.designup.picsou.gui.card.NavigationService;
+import org.designup.picsou.gui.components.HyperlinkTableColumn;
 import org.designup.picsou.gui.description.TransactionSeriesStringifier;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.components.HyperlinkButton;
@@ -21,18 +21,16 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.util.Comparator;
 
-public class TransactionSeriesColumn extends AbstractTransactionEditor implements ColorChangeListener {
+public class TransactionSeriesColumn extends HyperlinkTableColumn {
+
+  protected TransactionRendererColors rendererColors;
+  private GlobRepository repository;
 
   private GlobStringifier seriesStringifier;
   private Glob transaction;
 
-  private HyperlinkButton rendererButton;
-  private JPanel rendererPanel;
-  private HyperlinkButton editorButton;
-  private JPanel editorPanel;
   private GlobTableView tableView;
 
   private ColorService colorService;
@@ -47,8 +45,10 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
                                  DescriptionService descriptionService,
                                  GlobRepository repository,
                                  Directory directory) {
-    super(view, transactionRendererColors, descriptionService, repository, directory);
+    super(view, descriptionService, repository, directory);
     this.tableView = view;
+    this.rendererColors = transactionRendererColors;
+    this.repository = repository;
 
     seriesStringifier = new TransactionSeriesStringifier();
 
@@ -56,16 +56,11 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
     normalFont = fontLocator.get("transactionView.category");
     toCategorizeFont = fontLocator.get("transactionView.category.error");
 
-    GotoCategorizationAction gotoCategorizationAction = new GotoCategorizationAction();
-
-    rendererButton = createHyperlinkButton(gotoCategorizationAction);
-    rendererPanel = createCellPanel(rendererButton, true);
-
-    editorButton = createHyperlinkButton(gotoCategorizationAction);
-    editorPanel = createCellPanel(editorButton, true);
-
     colorService = directory.get(ColorService.class);
-    colorService.addListener(this);
+  }
+
+  public String getName() {
+    return Lang.get("series");
   }
 
   public Comparator<Glob> getComparator() {
@@ -73,23 +68,18 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
+    super.colorsChanged(colorLocator);
     selectedColor = colorLocator.get(PicsouColors.TRANSACTION_SELECTED_TEXT);
     toCategorizeColor = colorLocator.get(PicsouColors.TRANSACTION_ERROR_TEXT);
   }
 
-  protected Component getComponent(final Glob transaction, boolean render) {
-    HyperlinkButton button;
-    JPanel panel;
-    if (render) {
-      button = this.rendererButton;
-      panel = this.rendererPanel;
-    }
-    else {
+  protected void updateComponent(HyperlinkButton button, JPanel panel, Glob transaction, boolean render) {
+    if (!render) {
       this.transaction = transaction;
-      button = this.editorButton;
-      panel = this.editorPanel;
     }
-    if (Transaction.isPlanned(transaction) || Transaction.isMirrorTransaction(transaction)
+
+    if (Transaction.isPlanned(transaction)
+        || Transaction.isMirrorTransaction(transaction)
         || Transaction.isCreatedBySeries(transaction)) {
       button.setEnabled(false);
       rendererColors.setForeground(button, isSelected, transaction, true);
@@ -115,35 +105,33 @@ public class TransactionSeriesColumn extends AbstractTransactionEditor implement
       button.setText(Lang.get("category.assignement.required"));
       button.setToolTipText(Lang.get("transaction.categorizationLink.tooltip"));
     }
+
     rendererColors.setBackground(panel, transaction, isSelected, row);
-    return panel;
   }
 
   public GlobStringifier getStringifier() {
     return seriesStringifier;
   }
 
-  private class GotoCategorizationAction extends AbstractAction {
-    public void actionPerformed(ActionEvent e) {
-      if (Transaction.isPlanned(transaction)) {
-        return;
-      }
-
-      tableView.getComponent().requestFocus();
-      selectTransactionIfNeeded(transaction);
-
-      GlobList list = tableView.getCurrentSelection();
-      if (list.isEmpty()) {
-        return;
-      }
-      directory.get(NavigationService.class).gotoCategorization(list);
+  protected void processClick() {
+    if (Transaction.isPlanned(transaction)) {
+      return;
     }
 
-    private void selectTransactionIfNeeded(Glob transaction) {
-      GlobList selection = tableView.getCurrentSelection();
-      if (!selection.contains(transaction)) {
-        tableView.select(transaction);
-      }
+    tableView.getComponent().requestFocus();
+    selectTransactionIfNeeded(transaction);
+
+    GlobList list = tableView.getCurrentSelection();
+    if (list.isEmpty()) {
+      return;
+    }
+    directory.get(NavigationService.class).gotoCategorization(list);
+  }
+
+  private void selectTransactionIfNeeded(Glob transaction) {
+    GlobList selection = tableView.getCurrentSelection();
+    if (!selection.contains(transaction)) {
+      tableView.select(transaction);
     }
   }
 

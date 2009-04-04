@@ -25,6 +25,7 @@ public abstract class AbstractGraphicRenderer extends JPanel implements ColorCha
   protected Color errorTitleColor;
   protected Font titleFont;
   protected Font valueFont;
+  
   private PicsouColors selectionBackgroundBottomColorId;
   private PicsouColors selectionBackgroundTopColorId;
   private PicsouColors backgroundBottomColorId;

@@ -2,7 +2,6 @@ package org.designup.picsou.gui.components;
 
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.ImageLocator;
-import org.globsframework.gui.splits.painters.PaintablePanel;
 import org.globsframework.gui.splits.components.HyperlinkButton;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
@@ -93,11 +92,11 @@ public abstract class AbstractRolloverEditor extends AbstractCellEditor implemen
     tableView.getComponent().getSelectionModel().addListSelectionListener(selectionUpdater);
   }
 
-  private Component getComponentToRender(boolean isSelected, Object value, int row, int column, boolean isRender) {
+  private Component getComponentToRender(boolean isSelected, Object value, int row, int column, boolean isRendering) {
     this.isSelected = isSelected;
     this.row = row;
     this.column = column;
-    return getComponent((Glob)value, isRender);
+    return getComponent((Glob)value, isRendering);
   }
 
   protected JLabel createLabel(String text, Color selectionForeground, Color foreground) {
@@ -107,8 +106,7 @@ public abstract class AbstractRolloverEditor extends AbstractCellEditor implemen
     return label;
   }
 
-  protected PaintablePanel createCellPanel(JComponent component, boolean leftAlign) {
-    PaintablePanel panel = new PaintablePanel();
+  protected <T extends JPanel> T initCellPanel(JComponent component, boolean leftAlign, T panel) {
     panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
     if (leftAlign) {
       panel.add(component);

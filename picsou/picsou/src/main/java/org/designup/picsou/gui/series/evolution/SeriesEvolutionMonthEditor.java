@@ -58,13 +58,13 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
     OpenSeriesEditionDialogAction action = new OpenSeriesEditionDialogAction(seriesEditionDialog);
 
     LabelCustomizers.BOLD.process(label);
-    labelPanel = createCellPanel(label, false);
+    labelPanel = initCellPanel(label, false, new PaintablePanel());
 
     rendererButton = createHyperlinkButton(action);
-    rendererPanel = createCellPanel(rendererButton, false);
+    rendererPanel = initCellPanel(rendererButton, false, new PaintablePanel());
 
     editorButton = createHyperlinkButton(action);
-    editorPanel = createCellPanel(editorButton, false);
+    editorPanel = initCellPanel(editorButton, false, new PaintablePanel());
   }
 
   public void setReferenceMonth(Integer monthId) {

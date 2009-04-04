@@ -4,6 +4,7 @@ import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.AccountFilteringCombo;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
+import org.designup.picsou.gui.components.DefaultTableCellPainter;
 import org.designup.picsou.gui.components.filtering.FilterSet;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
@@ -131,8 +132,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
 
     GlobTableView view = GlobTableView.init(TYPE, repository, comparator, directory);
 
-    TransactionSeriesColumn seriesColumn =
-      new TransactionSeriesColumn(view, rendererColors, descriptionService, repository, directory);
+    view.setDefaultBackgroundPainter(new DefaultTableCellPainter(directory));
 
     TransactionAmountColumn amountColumn =
       new TransactionAmountColumn(view, Transaction.AMOUNT, rendererColors, descriptionService, repository, directory);
@@ -152,7 +152,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
                  new TransactionDateStringifier(TransactionComparator.DESCENDING_BANK_SPLIT_AFTER,
                                                 Transaction.BANK_MONTH,
                                                 Transaction.BANK_DAY), LabelCustomizers.font(dateFont))
-      .addColumn(Lang.get("series"), seriesColumn, seriesColumn, seriesColumn.getStringifier())
+      .addColumn(new TransactionSeriesColumn(view, rendererColors, descriptionService, repository, directory))
       .addColumn(Lang.get("category"), new CategoryStringifier(descriptionService), LabelCustomizers.font(categoryFont))
       .addColumn(Lang.get("label"),
                  descriptionService.getStringifier(Transaction.LABEL),
