@@ -236,6 +236,9 @@ public class PicsouApplication {
     if (GuiUtils.isMacOSX() && System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
       return System.getProperty("user.home") + "/Library/Application Support/CashPilot";
     }
+    if (GuiUtils.isVista() && System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
+      return System.getProperty("user.home") + "/AppData/Local/CashPilot";
+    }
     if (GuiUtils.isWindows() && System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
       return System.getProperty("user.home") + "/Application Data/CashPilot";
     }
