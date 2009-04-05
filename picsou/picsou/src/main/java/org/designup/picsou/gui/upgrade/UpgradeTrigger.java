@@ -79,6 +79,14 @@ public class UpgradeTrigger implements ChangeSetListener {
               }
             }, repository);
         }
+
+        repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, true))
+          .safeApply(new GlobFunctor() {
+            public void run(Glob transaction, GlobRepository repository) throws Exception {
+              Glob series = repository.findLinkTarget(transaction, Transaction.SERIES);
+              repository.update(transaction.getKey(), Transaction.LABEL, Transaction.getLabel(true, series));
+            }
+          }, repository);
       }
       
       repository.update(VersionInformation.KEY, VersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
