@@ -41,49 +41,49 @@ public class BalanceStatTrigger implements ChangeSetListener {
   }
 
   private static class SeriesAmounts {
-    double income = 0;
-    double remainingIncome = 0;
-    double plannedIncome = 0;
-    double expenses = 0;
-    double remaningExpenses = 0;
-    double plannedExpenses = 0;
-    double recurring = 0;
-    double remaningRecurring = 0;
-    double plannedRecurring = 0;
-    double envelopes = 0;
-    double remaningEnvelopes = 0;
-    double plannedEnvelopes = 0;
-    double occasional = 0;
-    double remaningOccasional = 0;
-    double plannedOccasional = 0;
-    double special = 0;
-    double remaningSpecial = 0;
-    double plannedSpecial = 0;
-    double savings = 0;
-    double remaningSavings = 0;
-    double plannedSavings = 0;
-    double savings_in = 0;
-    double remaningSavings_in = 0;
-    double plannedSavings_in = 0;
-    double savings_out = 0;
-    double remaningSavings_out = 0;
-    double plannedSavings_out = 0;
-    double uncategorized = 0;
-    double beginOfMonth = 0;
-    double endOfMonth = 0;
+    private double income = 0;
+    private double remainingIncome = 0;
+    private double plannedIncome = 0;
+    private double expenses = 0;
+    private double remaningExpenses = 0;
+    private double plannedExpenses = 0;
+    private double recurring = 0;
+    private double remaningRecurring = 0;
+    private double plannedRecurring = 0;
+    private double envelopes = 0;
+    private double remaningEnvelopes = 0;
+    private double plannedEnvelopes = 0;
+    private double occasional = 0;
+    private double remaningOccasional = 0;
+    private double plannedOccasional = 0;
+    private double special = 0;
+    private double remaningSpecial = 0;
+    private double plannedSpecial = 0;
+    private double savings = 0;
+    private double remaningSavings = 0;
+    private double plannedSavings = 0;
+    private double savings_in = 0;
+    private double remaningSavings_in = 0;
+    private double plannedSavings_in = 0;
+    private double savings_out = 0;
+    private double remaningSavings_out = 0;
+    private double plannedSavings_out = 0;
+    private double uncategorized = 0;
+    private double beginOfMonth = 0;
+    private double endOfMonth = 0;
   }
 
   private static class BalanceStatCalculator implements GlobFunctor {
-    Map<Integer, Glob> firstTransactionForMonth = new HashMap<Integer, Glob>();
-    Map<Integer, Glob> lastTransactionForMonth = new HashMap<Integer, Glob>();
-    Map<Integer, SeriesAmounts> monthSeriesAmounts = new HashMap<Integer, SeriesAmounts>();
-    Glob lastRealKnownTransaction;
+    private Map<Integer, Glob> firstTransactionForMonth = new HashMap<Integer, Glob>();
+    private Map<Integer, Glob> lastTransactionForMonth = new HashMap<Integer, Glob>();
+    private Map<Integer, SeriesAmounts> monthSeriesAmounts = new HashMap<Integer, SeriesAmounts>();
+    private Glob lastRealKnownTransaction;
 
-    Set<Integer> incomeSeries = new HashSet<Integer>();
-    Set<Integer> fixedSeries = new HashSet<Integer>();
-    Set<Integer> savingsSeries = new HashSet<Integer>();
-    Set<Integer> specialSeries = new HashSet<Integer>();
-    Set<Integer> envelopeSeries = new HashSet<Integer>();
+    private Set<Integer> incomeSeries = new HashSet<Integer>();
+    private Set<Integer> fixedSeries = new HashSet<Integer>();
+    private Set<Integer> savingsSeries = new HashSet<Integer>();
+    private Set<Integer> specialSeries = new HashSet<Integer>();
+    private Set<Integer> envelopeSeries = new HashSet<Integer>();
 
     private GlobRepository repository;
     private boolean nullBalance = false;

@@ -175,7 +175,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     try {
       ComputeObservedFunctor computeObservedFunctor = new ComputeObservedFunctor();
       repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
-        .findByIndex(Transaction.MONTH, monthId).callOnGlobs(computeObservedFunctor, repository);
+        .findByIndex(Transaction.MONTH, monthId).apply(computeObservedFunctor, repository);
       return computeObservedFunctor.amount;
     }
     catch (Exception e) {

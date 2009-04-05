@@ -90,7 +90,7 @@ class MonthStatChecker {
       rows.add(row);
     }
 
-    return TablePrinter.print(getHeaderRow(), rows);
+    return TablePrinter.toString(getHeaderRow(), rows);
   }
 
   private String getActualDescription() {
@@ -106,7 +106,7 @@ class MonthStatChecker {
       }
       rows.add(row);
     }
-    return TablePrinter.print(getHeaderRow(), rows);
+    return TablePrinter.toString(getHeaderRow(), rows);
   }
 
   private Object[] getHeaderRow() {

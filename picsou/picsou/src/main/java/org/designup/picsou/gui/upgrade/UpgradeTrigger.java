@@ -3,12 +3,10 @@ package org.designup.picsou.gui.upgrade;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetListener;
+import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobFunctor;
+import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.fieldIsNull;
 import org.globsframework.model.utils.GlobUtils;
 
@@ -24,8 +22,9 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (version == null) {
       return;
     }
-    final Long currentJarVersion = (version != null) ? version.get(VersionInformation.CURRENT_JAR_VERSION) : 0;
-    if ((version != null) && currentJarVersion.equals(PicsouApplication.JAR_VERSION)) {
+
+    final Long currentJarVersion = version.get(VersionInformation.CURRENT_JAR_VERSION);
+    if (currentJarVersion.equals(PicsouApplication.JAR_VERSION)) {
       return;
     }
 
@@ -41,7 +40,8 @@ public class UpgradeTrigger implements ChangeSetListener {
         }
       }
 
-      if (currentJarVersion <= 12) {
+      if (currentJarVersion <= 9) {
+
         repository
           .getAll(SeriesBudget.TYPE, fieldIsNull(SeriesBudget.DAY))
           .safeApply(new GlobFunctor() {
@@ -59,7 +59,28 @@ public class UpgradeTrigger implements ChangeSetListener {
                                  Series.UNCATEGORIZED_SERIES,
                                  Series.NAME,
                                  Series.getUncategorizedName());
+
+        repository.update(Series.UNCATEGORIZED_SERIES, Series.IS_AUTOMATIC, false);
+
+        GlobList uncategorizedTransactions =
+          repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID)
+            .getGlobs();
+
+        if (!uncategorizedTransactions.isEmpty()) {
+          final Integer lastMonthId = uncategorizedTransactions.getSortedSet(Transaction.MONTH).last();
+          repository
+            .getAll(SeriesBudget.TYPE,
+                    GlobMatchers.and(
+                      GlobMatchers.fieldEquals(SeriesBudget.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+                      GlobMatchers.fieldStrictlyGreaterThan(SeriesBudget.MONTH, lastMonthId)))
+            .safeApply(new GlobFunctor() {
+              public void run(Glob seriesBudget, GlobRepository repository) throws Exception {
+                repository.update(seriesBudget.getKey(), value(SeriesBudget.AMOUNT, 0.00));
+              }
+            }, repository);
+        }
       }
+      
       repository.update(VersionInformation.KEY, VersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
     }
     finally {
