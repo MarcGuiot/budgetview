@@ -20,6 +20,7 @@ public class GuiUtils {
   public static final boolean IS_MACOSX;
   public static final boolean IS_LINUX;
   public static final boolean IS_WINDOWS;
+  public static final boolean IS_VISTA;
 
   private static final String MAC_PLATFORM_ID = "Mac OS X";
   private static final String LINUX_PLATFORM_ID = "Linux";
@@ -30,6 +31,7 @@ public class GuiUtils {
     IS_MACOSX = os.contains(MAC_PLATFORM_ID);
     IS_LINUX = os.contains(LINUX_PLATFORM_ID);
     IS_WINDOWS = os.contains(WINDOWS_PLATFORM_ID);
+    IS_VISTA = IS_WINDOWS && os.toLowerCase().contains("vista");
   }
 
   public static void addShortcut(JRootPane rootPane, String command, Action action) {
@@ -71,6 +73,10 @@ public class GuiUtils {
 
   public static boolean isWindows() {
     return IS_WINDOWS;
+  }
+
+  public static boolean isVista() {
+    return IS_VISTA;
   }
 
   public static int getCtrlModifier() {
