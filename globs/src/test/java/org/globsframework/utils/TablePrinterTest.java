@@ -10,7 +10,26 @@ import java.util.Arrays;
 public class TablePrinterTest extends TestCase {
   private StringWriter writer = new StringWriter();
 
-  public void test() throws Exception {
+  public void testStandardUsage() throws Exception {
+    TablePrinter table = new TablePrinter();
+    table.setHeader("t1", "t2", "t3");
+    table.addRow("Value 1", 22.0, "Item 3");
+    table.addRow(1.1111, "v2", "33");
+    assertEquals("| t1      | t2    | t3     |\n" +
+                 "| 1.11    | v2    | 33     |\n" +
+                 "| Value 1 | 22.00 | Item 3 |\n",
+                 table.toString());
+  }
+
+  public void testNoHeader() throws Exception {
+    TablePrinter table = new TablePrinter();
+    table.addRow("Value 1", 22.0, "Item 3");
+    assertEquals("|         |       |        |\n" +
+                 "| Value 1 | 22.00 | Item 3 |\n",
+                 table.toString());
+  }
+
+  public void testStaticPrint() throws Exception {
     TablePrinter.print(new Object[]{"Title 1", "Title 2"},
                        Arrays.asList(
                          new Object[]{"first value", "second value"},

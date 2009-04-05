@@ -29,7 +29,7 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
     return globs;
   }
 
-  public void callOnGlobs(GlobFunctor functor, GlobRepository repository) throws Exception {
+  public void apply(GlobFunctor functor, GlobRepository repository) throws Exception {
     for (Glob glob : indexedGlob.values()) {
       functor.run(glob, repository);
     }
@@ -72,7 +72,7 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
         return null;
       }
 
-      public void callOnGlobs(GlobFunctor functor, GlobRepository repository) throws Exception {
+      public void apply(GlobFunctor functor, GlobRepository repository) throws Exception {
         Glob glob = indexedGlob.get(value);
         if (glob != null) {
           functor.run(glob, repository);

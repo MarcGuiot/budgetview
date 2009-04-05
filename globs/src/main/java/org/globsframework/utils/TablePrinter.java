@@ -13,10 +13,42 @@ import java.util.Locale;
 
 public class TablePrinter {
 
-  private TablePrinter() {
+  private Object[] header;
+  private List<Object[]> rows = new ArrayList<Object[]>();
+
+  public TablePrinter() {
   }
 
-  public static String print(Object[] headerRow, List<Object[]> rows) {
+  public void setHeader(Object... titles) {
+    header = titles;
+  }
+
+  public void addRow(Object... items) {
+    rows.add(items);
+  }
+
+  public void print(PrintWriter printer) {
+    if (header == null) {
+      if (rows.isEmpty()) {
+        return;
+      }
+      header = new Object[rows.get(0).length];
+      Arrays.fill(header, "");
+    }
+    print(header, rows, printer);
+  }
+
+  public void print() {
+    print(new PrintWriter(System.out));
+  }
+
+  public String toString() {
+    StringWriter writer = new StringWriter();
+    print(new PrintWriter(writer));
+    return writer.toString();
+  }
+
+  public static String toString(Object[] headerRow, List<Object[]> rows) {
     StringWriter writer = new StringWriter();
     print(headerRow, rows, new PrintWriter(writer));
     return writer.toString();
@@ -46,6 +78,8 @@ public class TablePrinter {
     for (String string : Utils.sort(strings)) {
       printer.println(string);
     }
+
+    printer.flush();
   }
 
   private static void updateSizes(Object[] row, int[] sizes) {

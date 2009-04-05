@@ -25,7 +25,7 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
     return globs;
   }
 
-  public void callOnGlobs(GlobFunctor functor, GlobRepository repository) throws Exception {
+  public void apply(GlobFunctor functor, GlobRepository repository) throws Exception {
     for (GlobList globList : indexedGlob.values()) {
       for (Glob glob : globList) {
         functor.run(glob, repository);
@@ -65,7 +65,7 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
         return NotUniqueLeafLevelIndex.this.findByIndex(value);
       }
 
-      public void callOnGlobs(GlobFunctor functor, GlobRepository repository) throws Exception {
+      public void apply(GlobFunctor functor, GlobRepository repository) throws Exception {
         GlobList globs = indexedGlob.get(value);
         if (globs == null){
           return;

@@ -20,6 +20,6 @@ public class NullIndex implements GlobRepository.MultiFieldIndexed {
     return this;
   }
 
-  public void callOnGlobs(GlobFunctor functor, GlobRepository repository) throws Exception {
+  public void apply(GlobFunctor functor, GlobRepository repository) throws Exception {
   }
 }

@@ -53,6 +53,6 @@ public interface ReadOnlyGlobRepository {
 
     MultiFieldIndexed findByIndex(Field field, Object value);
 
-    void callOnGlobs(GlobFunctor functor, GlobRepository repository) throws Exception;
+    void apply(GlobFunctor functor, GlobRepository repository) throws Exception;
   }
 }
