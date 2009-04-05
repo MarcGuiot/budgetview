@@ -126,7 +126,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     timeline.selectMonths("2005/12", "2006/01");
     transactions
       .initAmountContent()
-      .add("Planned: OCCASIONAL", -8.9, -8.90)
+      .add("Planned: Occasional", -8.9, -8.90)
       .add("Tx 2", -2.2, 0, 0)
       .add("Tx 1", -1.1, 2.2, 2.2)
       .add("Tx 0", -10.0, 3.3, 3.3)

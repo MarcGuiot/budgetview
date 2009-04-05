@@ -153,10 +153,10 @@ public class Series {
 
   public static String getPlannedTransactionLabel(Integer seriesId, FieldValues series) {
     if (seriesId == 0) {
-      return Lang.get("transaction.planned", BudgetArea.OCCASIONAL.getLabel().toUpperCase());
+      return Lang.get("transaction.planned", BudgetArea.OCCASIONAL.getLabel());
     }
 
-    return Lang.get("transaction.planned", series.get(Series.NAME).toUpperCase());
+    return Lang.get("transaction.planned", series.get(Series.NAME));
   }
 
   public static String getOccasionalName() {

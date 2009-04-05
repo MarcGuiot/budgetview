@@ -3,6 +3,7 @@ package org.designup.picsou.triggers;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.HashSet;
@@ -103,8 +104,8 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
 
           if (transaction.get(Transaction.PLANNED) != isPlanned) {
             repository.update(transaction.getKey(),
-                              FieldValue.value(Transaction.PLANNED, isPlanned),
-                              FieldValue.value(Transaction.LABEL, Transaction.getLabel(isPlanned, oneSeries)));
+                              value(Transaction.PLANNED, isPlanned),
+                              value(Transaction.LABEL, Transaction.getLabel(isPlanned, oneSeries)));
           }
         }
       }
@@ -162,8 +163,8 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
                 isPlanned = false;
               }
               for (Glob transaction : transactions) {
-                repository.update(transaction.getKey(), FieldValue.value(Transaction.DAY, newDay),
-                                  FieldValue.value(Transaction.PLANNED,
+                repository.update(transaction.getKey(), value(Transaction.DAY, newDay),
+                                  value(Transaction.PLANNED,
                                                    isPlanned != null ? false : transaction.get(Transaction.PLANNED)));
               }
             }

@@ -249,7 +249,7 @@ public class TransactionChecker extends ViewChecker {
         label = label.toUpperCase();
       }
       else {
-        label = "Planned" + label.substring("Planned".length()).toUpperCase();
+        label = "Planned" + label.substring("Planned".length());
       }
       add(new Object[]{userDate, bankDate, "(" + type.getName() + ")" + series, category, label,
                        TransactionChecker.this.toString(amount),
@@ -385,7 +385,8 @@ public class TransactionChecker extends ViewChecker {
                                     Lang.get("category"),
                                     Lang.get("label"),
                                     Lang.get("amount"),
-                                    Lang.get("note")}, expectedContent));
+                                    Lang.get("note")},
+                       expectedContent));
     }
 
   }

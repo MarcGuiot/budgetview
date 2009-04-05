@@ -89,7 +89,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
                       value(Series.INITIAL_AMOUNT, -1000.),
                       value(Series.BUDGET_AREA, BudgetArea.ENVELOPES.getId()),
                       value(Series.DAY, 25),
-                      value(Series.NAME, "course"),
+                      value(Series.NAME, "courses"),
                       value(Series.PROFILE_TYPE, ProfileType.CUSTOM.getId()),
                       value(Series.IS_AUTOMATIC, false),
                       value(Series.DEFAULT_CATEGORY, MasterCategory.FOOD.getId()));
