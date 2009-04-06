@@ -72,42 +72,42 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
   public void testImportingTheSameFileTwiceDoesNotDuplicateTransactions() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/10", -1.1, "Tx 1", MasterCategory.TRANSPORTS)
-      .addTransaction("2006/01/11", -2.2, "Tx 2")
+      .addTransaction("2006/01/10", -1.1, "TX 1", MasterCategory.TRANSPORTS)
+      .addTransaction("2006/01/11", -2.2, "TX 2")
       .load();
 
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/10", -1.1, "Tx 1", MasterCategory.TRANSPORTS)
-      .addTransaction("2006/01/11", -2.2, "Tx 2")
+      .addTransaction("2006/01/10", -1.1, "TX 1", MasterCategory.TRANSPORTS)
+      .addTransaction("2006/01/11", -2.2, "TX 2")
       .load();
 
     transactions
       .initAmountContent()
-      .add("Tx 2", -2.2, 0, 0)
-      .add("Tx 1", -1.1, 2.2, 2.2)
+      .add("TX 2", -2.2, 0, 0)
+      .add("TX 1", -1.1, 2.2, 2.2)
       .check();
   }
 
   public void testImportingASecondFileWithNewerTransactions() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/11", -1.1, "Tx 1")
-      .addTransaction("2006/01/12", -2.2, "Tx 2")
+      .addTransaction("2006/01/11", -1.1, "TX 1")
+      .addTransaction("2006/01/12", -2.2, "TX 2")
       .load();
 
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/13", -3.3, "Tx 3")
-      .addTransaction("2006/01/14", -4.4, "Tx 4")
+      .addTransaction("2006/01/13", -3.3, "TX 3")
+      .addTransaction("2006/01/14", -4.4, "TX 4")
       .load();
 
     transactions
       .initAmountContent()
-      .add("Tx 4", -4.4, 0, 0)
-      .add("Tx 3", -3.3, 4.4, 4.4)
-      .add("Tx 2", -2.2, 7.7, 7.7)
-      .add("Tx 1", -1.1, 9.9, 9.9)
+      .add("TX 4", -4.4, 0, 0)
+      .add("TX 3", -3.3, 4.4, 4.4)
+      .add("TX 2", -2.2, 7.7, 7.7)
+      .add("TX 1", -1.1, 9.9, 9.9)
       .check();
   }
 
@@ -127,56 +127,56 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     transactions
       .initAmountContent()
       .add("Planned: Occasional", -8.9, -8.90)
-      .add("Tx 2", -2.2, 0, 0)
-      .add("Tx 1", -1.1, 2.2, 2.2)
-      .add("Tx 0", -10.0, 3.3, 3.3)
+      .add("TX 2", -2.2, 0, 0)
+      .add("TX 1", -1.1, 2.2, 2.2)
+      .add("TX 0", -10.0, 3.3, 3.3)
       .check();
   }
 
   public void testImportingOverlappingFilesDoesNotDuplicateTransactions() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/10", -1.1, "Tx 1")
-      .addTransaction("2006/01/11", -2.2, "Tx 2")
+      .addTransaction("2006/01/10", -1.1, "TX 1")
+      .addTransaction("2006/01/11", -2.2, "TX 2")
       .load();
 
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/11", -2.2, "Tx 2")
-      .addTransaction("2006/01/12", -3.3, "Tx 3")
+      .addTransaction("2006/01/11", -2.2, "TX 2")
+      .addTransaction("2006/01/12", -3.3, "TX 3")
       .load();
 
     transactions
       .initAmountContent()
-      .add("Tx 3", -3.3, 0., 0.)
-      .add("Tx 2", -2.2, 3.3, 3.3)
-      .add("Tx 1", -1.1, 5.5, 5.5)
+      .add("TX 3", -3.3, 0., 0.)
+      .add("TX 2", -2.2, 3.3, 3.3)
+      .add("TX 1", -1.1, 5.5, 5.5)
       .check();
   }
 
   public void testImportingFilesWithDuplicatesBeforeAndAfter() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/13", -3.3, "Tx 3")
-      .addTransaction("2006/01/14", -4.4, "Tx 4")
-      .addTransaction("2006/01/15", -5.5, "Tx 5")
+      .addTransaction("2006/01/13", -3.3, "TX 3")
+      .addTransaction("2006/01/14", -4.4, "TX 4")
+      .addTransaction("2006/01/15", -5.5, "TX 5")
       .load();
 
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/16", -6.6, "Tx 6")
-      .addTransaction("2006/01/15", -5.5, "Tx 5")
-      .addTransaction("2006/01/13", -3.3, "Tx 3")
-      .addTransaction("2006/01/12", -2.2, "Tx 2")
+      .addTransaction("2006/01/16", -6.6, "TX 6")
+      .addTransaction("2006/01/15", -5.5, "TX 5")
+      .addTransaction("2006/01/13", -3.3, "TX 3")
+      .addTransaction("2006/01/12", -2.2, "TX 2")
       .load();
 
     transactions
       .initAmountContent()
-      .add("Tx 6", -6.6, 0, 0)
-      .add("Tx 5", -5.5, 6.60, 6.60)
-      .add("Tx 4", -4.4, 12.10, 12.10)
-      .add("Tx 3", -3.3, 16.50, 16.50)
-      .add("Tx 2", -2.2, 19.80, 19.80)
+      .add("TX 6", -6.6, 0, 0)
+      .add("TX 5", -5.5, 6.60, 6.60)
+      .add("TX 4", -4.4, 12.10, 12.10)
+      .add("TX 3", -3.3, 16.50, 16.50)
+      .add("TX 2", -2.2, 19.80, 19.80)
       .check();
   }
 

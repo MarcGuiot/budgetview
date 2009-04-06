@@ -6,6 +6,7 @@ import org.designup.picsou.functests.utils.QifBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.gui.time.TimeView;
 import org.globsframework.utils.Files;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecTestCase;
@@ -115,9 +116,9 @@ public class FirstTimeTest extends UISpecTestCase {
       .add("06/09/2008", TransactionType.PRELEVEMENT, "Institut pasteur", "", -40.00)
       .add("05/09/2008", TransactionType.PRELEVEMENT, "Credit", "", -700.00)
       .add("05/09/2008", TransactionType.PRELEVEMENT, "ED", "", -60.00)
-      .add("05/09/2008", TransactionType.CHECK, "CHEQUE N. 32", "", -50.00)
+      .add("05/09/2008", TransactionType.CHECK, "CHEQUE N°32", "", -50.00)
       .add("03/09/2008", TransactionType.PRELEVEMENT, "Habille moi", "", -30.00)
-      .add("03/09/2008", TransactionType.VIREMENT, "EPARGNE", "", -100.00)
+      .add("03/09/2008", TransactionType.PRELEVEMENT, "EPARGNE", "", -100.00)
       .add("02/09/2008", TransactionType.VIREMENT, "MUTUELLE", "", 30.00)
       .check();
 
@@ -131,7 +132,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .selectEnvelopes()
       .createEnvelopeSeries().setName("Fringue").setCategory(MasterCategory.CLOTHING)
       .validate();
-    categorization.setEnvelope("CHEQUE N. 32", "Health", MasterCategory.HEALTH, false);
+    categorization.setEnvelope("CHEQUE N°32", "Health", MasterCategory.HEALTH, false);
 
     categorization.selectTableRows("ED", "Auchan", "Intermarché")
       .selectEnvelopes().selectEnvelopeSeries("Groceries", MasterCategory.FOOD, false)
@@ -179,28 +180,28 @@ public class FirstTimeTest extends UISpecTestCase {
 
     categorization.initContent()
       .add("11/09/2008", "Groceries", "Auchan", -40.0)
-      .add("05/09/2008", "Health", "CHEQUE N. 32", -50.0)
-      .add("07/09/2008", "Health", "CPAM", 40.0)
       .add("07/09/2008", "Leisures", "Centre nautique", -10.0)
       .add("10/09/2008", "Fringue", "Chausse moi", -50.0)
+      .add("05/09/2008", "Health", "CHEQUE N°32", -50.0)
       .add("23/09/2008", "Frais banque", "Cotisation carte bleue", -4.0)
       .add("22/09/2008", "Beauty", "Coup'coup", -30.0)
+      .add("07/09/2008", "Health", "CPAM", 40.0)
       .add("05/09/2008", "Mortgage", "Credit", -700.0)
+      .add("28/09/2008", "Ecole", "Ecole", -40.0)
       .add("05/09/2008", "Groceries", "ED", -60.0)
       .add("03/09/2008", "Regular savings", "EPARGNE", -100.0)
-      .add("28/09/2008", "Ecole", "Ecole", -40.0)
       .add("06/09/2008", "Internet", "Free telecom", -29.9)
-      .add("22/09/2008", "Assurance", "GMF", -100.0)
       .add("19/09/2008", "Gas", "Gaz de France", -60.0)
+      .add("22/09/2008", "Assurance", "GMF", -100.0)
       .add("03/09/2008", "Fringue", "Habille moi", -30.0)
       .add("09/09/2008", "impots", "Impots", -400.0)
       .add("06/09/2008", "Don", "Institut pasteur", -40.0)
       .add("22/09/2008", "Groceries", "Intermarché", -150.0)
+      .add("25/09/2008", "Gifts", "jeux pour tous", -25.0)
       .add("02/09/2008", "Health", "MUTUELLE", 30.0)
       .add("20/09/2008", "Cash", "Retrait", -40.0)
-      .add("21/09/2008", "Cell phone 1", "SFR", -40.0)
       .add("27/09/2008", "Income 1", "Salaire", 2000.0)
-      .add("25/09/2008", "Gifts", "jeux pour tous", -25.0)
+      .add("21/09/2008", "Cell phone 1", "SFR", -40.0)
       .check();
     CategorizationGaugeChecker categorizationGauge = categorization.getGauge();
     categorizationGauge.checkHidden();
@@ -215,30 +216,58 @@ public class FirstTimeTest extends UISpecTestCase {
 
     MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
     EstimatedPositionDetailsChecker balance = mainAccounts.openEstimatedPositionDetails();
-    balance.checkTotal(1900.);
+    balance.checkTotal(1900.)
+      .close();
+
+    transaction.initContent()
+      .add("28/09/2008", TransactionType.PRELEVEMENT, "ECOLE", "", -40.00, "Ecole", MasterCategory.EDUCATION)
+      .add("27/09/2008", TransactionType.VIREMENT, "SALAIRE", "", 2000.00, "Income 1", MasterCategory.INCOME)
+      .add("25/09/2008", TransactionType.PRELEVEMENT, "JEUX POUR TOUS", "", -25.00, "Occasional", MasterCategory.GIFTS)
+      .add("23/09/2008", TransactionType.PRELEVEMENT, "COTISATION CARTE BLEUE", "", -4.00, "Frais banque", MasterCategory.BANK)
+      .add("22/09/2008", TransactionType.PRELEVEMENT, "COUP'COUP", "", -30.00, "Occasional", MasterCategory.BEAUTY)
+      .add("22/09/2008", TransactionType.PRELEVEMENT, "GMF", "", -100.00, "Assurance", "Assurance all-in-one")
+      .add("22/09/2008", TransactionType.PRELEVEMENT, "INTERMARCHÉ", "", -150.00, "Groceries", MasterCategory.FOOD)
+      .add("21/09/2008", TransactionType.PRELEVEMENT, "SFR", "", -40.00, "Cell phone 1", MasterCategory.TELECOMS)
+      .add("20/09/2008", TransactionType.PRELEVEMENT, "RETRAIT", "", -40.00, "Cash", MasterCategory.CASH)
+      .add("19/09/2008", TransactionType.PRELEVEMENT, "GAZ DE FRANCE", "", -60.00, "Gas", "Energy")
+      .add("11/09/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -40.00, "Groceries", MasterCategory.FOOD)
+      .add("10/09/2008", TransactionType.PRELEVEMENT, "CHAUSSE MOI", "", -50.00, "Fringue", MasterCategory.CLOTHING)
+      .add("09/09/2008", TransactionType.PRELEVEMENT, "IMPOTS", "", -400.00, "impots", MasterCategory.TAXES)
+      .add("07/09/2008", TransactionType.VIREMENT, "CPAM", "", 40.00, "Health", MasterCategory.HEALTH)
+      .add("07/09/2008", TransactionType.PRELEVEMENT, "CENTRE NAUTIQUE", "", -10.00, "Leisures", MasterCategory.LEISURES)
+      .add("06/09/2008", TransactionType.PRELEVEMENT, "FREE TELECOM", "", -29.90, "Internet", MasterCategory.TELECOMS)
+      .add("06/09/2008", TransactionType.PRELEVEMENT, "INSTITUT PASTEUR", "", -40.00, "Don", MasterCategory.GIFTS)
+      .add("05/09/2008", TransactionType.PRELEVEMENT, "CREDIT", "", -700.00, "Mortgage", "Mortgage")
+      .add("05/09/2008", TransactionType.PRELEVEMENT, "ED", "", -60.00, "Groceries", MasterCategory.FOOD)
+      .add("05/09/2008", TransactionType.CHECK, "CHEQUE N°32", "", -50.00, "Health", MasterCategory.HEALTH)
+      .add("03/09/2008", TransactionType.PRELEVEMENT, "HABILLE MOI", "", -30.00, "Fringue", MasterCategory.CLOTHING)
+      .add("03/09/2008", TransactionType.PRELEVEMENT, "EPARGNE", "", -100.00, "Regular savings", MasterCategory.SAVINGS)
+      .add("02/09/2008", TransactionType.VIREMENT, "MUTUELLE", "", 30.00, "Health", MasterCategory.HEALTH)
+      .check();
+
 
     transaction.initAmountContent()
-      .add("Ecole", -40.00, 1900.00, 1900.00)
-      .add("Salaire", 2000.00, 1940.00, 1940.00)
-      .add("jeux pour tous", -25.00, -60.00, -60.00)
-      .add("Cotisation carte bleue", -4.00, -35.00, -35.00)
-      .add("Coup'coup", -30.00, -31.00, -31.00)
+      .add("ECOLE", -40.00, 1900.00, 1900.00)
+      .add("SALAIRE", 2000.00, 1940.00, 1940.00)
+      .add("JEUX POUR TOUS", -25.00, -60.00, -60.00)
+      .add("COTISATION CARTE BLEUE", -4.00, -35.00, -35.00)
+      .add("COUP'COUP", -30.00, -31.00, -31.00)
       .add("GMF", -100.00, -1.00, -1.00)
-      .add("Intermarché", -150.00, 99.00, 99.00)
+      .add("INTERMARCHÉ", -150.00, 99.00, 99.00)
       .add("SFR", -40.00, 249.00, 249.00)
-      .add("Retrait", -40.00, 289.00, 289.00)
-      .add("Gaz de France", -60.00, 329.00, 329.00)
-      .add("Auchan", -40.00, 389.00, 389.00)
-      .add("Chausse moi", -50.00, 429.00, 429.00)
-      .add("Impots", -400.00, 479.00, 479.00)
+      .add("RETRAIT", -40.00, 289.00, 289.00)
+      .add("GAZ DE FRANCE", -60.00, 329.00, 329.00)
+      .add("AUCHAN", -40.00, 389.00, 389.00)
+      .add("CHAUSSE MOI", -50.00, 429.00, 429.00)
+      .add("IMPOTS", -400.00, 479.00, 479.00)
       .add("CPAM", 40.00, 879.00, 879.00)
-      .add("Centre nautique", -10.00, 839.00, 839.00)
-      .add("Free telecom", -29.90, 849.00, 849.00)
-      .add("Institut pasteur", -40.00, 878.90, 878.90)
-      .add("Credit", -700.00, 918.90, 918.90)
+      .add("CENTRE NAUTIQUE", -10.00, 839.00, 839.00)
+      .add("FREE TELECOM", -29.90, 849.00, 849.00)
+      .add("INSTITUT PASTEUR", -40.00, 878.90, 878.90)
+      .add("CREDIT", -700.00, 918.90, 918.90)
       .add("ED", -60.00, 1618.90, 1618.90)
-      .add("CHEQUE N. 32", -50.00, 1678.90, 1678.90)
-      .add("Habille moi", -30.00, 1728.90, 1728.90)
+      .add("CHEQUE N°32", -50.00, 1678.90, 1678.90)
+      .add("HABILLE MOI", -30.00, 1728.90, 1728.90)
       .add("EPARGNE", -100.00, 1758.90, 1758.90)
       .add("MUTUELLE", 30.00, 1858.90, 1858.90)
       .check();
@@ -248,30 +277,34 @@ public class FirstTimeTest extends UISpecTestCase {
     times.selectMonth("2008/10");
 
     transaction.initAmountContent()
-      .add("Planned: Ecole", -40.00, 2351.10)
-      .add("Planned: Frais banque", -4.00, 2391.10)
-      .add("Planned: Fringue", -80.00, 2395.10)
-      .add("Planned: Don", -40.00, 2475.10)
-      .add("Planned: Income 1", 2000.00, 2515.10)
-      .add("Planned: Occasional", -55.00, 515.10)
-      .add("Planned: Assurance", -100.00, 570.10)
-      .add("Planned: Cell phone 1", -40.00, 670.1)
-      .add("Planned: Cash", -40.00, 710.10)
-      .add("Planned: Gas", -60.00, 750.10)
-      .add("Planned: Leisures", -10.00, 810.1)
-      .add("Planned: Internet", -29.90, 820.10)
-      .add("Planned: Mortgage", -700.00, 850.00)
-      .add("Planned: Groceries", -250.00, 1550.00)
-      .add("Planned: Regular savings", -100.00, 1800.00)
+      .add("Planned: Ecole", -40.00, 1971.10)
+      .add("Planned: Frais banque", -4.00, 2011.10)
+      .add("Planned: Fringue", -80.00, 2015.10)
+      .add("Planned: impots", -400.00, 2095.10)
+      .add("Planned: Don", -40.00, 2495.10)
+      .add("Planned: Income 1", 2000.00, 2535.10)
+      .add("Planned: Occasional", -55.00, 535.10)
+      .add("Planned: Assurance", -100.00, 590.10)
+      .add("Planned: Cell phone 1", -40.00, 690.10)
+      .add("Planned: Cash", -40.00, 730.10)
+      .add("Planned: Gas", -60.00, 770.10)
+      .add("Planned: Leisures", -10.00, 830.10)
+      .add("Planned: Internet", -29.90, 840.10)
+      .add("Planned: Mortgage", -700.00, 870.00)
+      .add("Planned: Groceries", -250.00, 1570.00)
+      .add("Planned: Regular savings", -100.00, 1820.00)
+      .add("Planned: Health", 20.00, 1920.00)
       .check();
 
-    balance.checkTotal(2351.1)
+    balance = mainAccounts.openEstimatedPositionDetails();
+    balance.checkTotal(1971.10)
       .checkInitialPosition(1900)
-      .checkEnvelope(-380)
-      .checkFixed(-1013.9)
+      .checkEnvelope(-360)
+      .checkFixed(-1413.9)
       .checkSavingsIn(-100)
       .checkIncome(2000)
-      .checkOccasional(-55.0);
+      .checkOccasional(-55.0)
+      .close();
 
     String file2 = QifBuilder.init(this)
       .addTransaction("2008/10/03", -100, "VIR epargne")
@@ -291,35 +324,38 @@ public class FirstTimeTest extends UISpecTestCase {
     operation.importQifFile(file2, "CIC");
 
     views.selectHome();
-    balance.checkTotal(2311.1)
+    balance.checkTotal(1831.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
-      .checkFixed(-184)
-      .checkSavingsIn(0)
-      .checkEnvelope(-230)
+      .checkFixed(-584)
+      .checkSavingsIn(-100)
+      .checkEnvelope(-210)
       .checkOccasional(-55);
 
     views.selectData();
     transaction.initAmountContent()
-      .add("Planned: Ecole", -40.00, 2311.10)
-      .add("Planned: Frais banque", -4.00, 2351.10)
-      .add("Planned: Income 1", 2000.00, 2355.10)
-      .add("Planned: Occasional", -55.00, 355.10)
-      .add("Planned: Assurance", -100.00, 410.10)
-      .add("Planned: Cell phone 1", -40.00, 510.10)
-      .add("Planned: Cash", -40.00, 550.10)
-      .add("Planned: Leisures", -10.00, 590.10)
-      .add("Planned: Groceries", -180.00, 600.10)
-      .add("Gaz de France", -60.00, 780.10, 780.10)
-      .add("Auchan", -30.00, 840.10, 840.10)
-      .add("Chausse moi", -60.00, 870.10, 870.10)
-      .add("Free telecom", -29.90, 930.10, 930.10)
-      .add("Institut pasteur", -40.00, 960.00, 960.00)
-      .add("Credit", -700.00, 1000.00, 1000.00)
+      .add("Planned: Ecole", -40.00, 1831.10)
+      .add("Planned: Frais banque", -4.00, 1871.10)
+      .add("Planned: Income 1", 2000.00, 1875.10)
+      .add("Planned: Occasional", -55.00, -124.90)
+      .add("Planned: Assurance", -100.00, -69.90)
+      .add("Planned: Cell phone 1", -40.00, 30.10)
+      .add("Planned: Cash", -40.00, 70.10)
+      .add("Planned: impots", -400.00, 110.10)
+      .add("Planned: Leisures", -10.00, 510.10)
+      .add("Planned: Groceries", -180.00, 520.10)
+      .add("Planned: Regular savings", -100.00, 700.10)
+      .add("Planned: Health", 20.00, 800.10)
+      .add("GAZ DE FRANCE", -60.00, 780.10, 780.10)
+      .add("AUCHAN", -30.00, 840.10, 840.10)
+      .add("CHAUSSE MOI", -60.00, 870.10, 870.10)
+      .add("FREE TELECOM", -29.90, 930.10, 930.10)
+      .add("INSTITUT PASTEUR", -40.00, 960.00, 960.00)
+      .add("CREDIT", -700.00, 1000.00, 1000.00)
       .add("ED", -40.00, 1700.00, 1700.00)
-      .add("CHEQUE N. 34", -30.00, 1740.00, 1740.00)
-      .add("Habille moi", -30.00, 1770.00, 1770.00)
-      .add("EPARGNE", -100.00, 1800.00, 1800.00)
+      .add("CHEQUE 34", -30.00, 1740.00, 1740.00)
+      .add("HABILLE MOI", -30.00, 1770.00, 1770.00)
+      .add("VIR EPARGNE", -100.00, 1800.00, 1800.00)
       .check();
 
     window.dispose();
@@ -361,20 +397,28 @@ public class FirstTimeTest extends UISpecTestCase {
     LoginChecker login = new LoginChecker(window);
     login.logExistingUser("toto", "toto");
 
+    MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
+
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectHome();
-    EstimatedPositionDetailsChecker balance = new EstimatedPositionDetailsChecker(window);
-    balance.checkTotal(2366.1)
-      .checkInitialPosition(780.1)
+    TimeViewChecker timeView = new TimeViewChecker(window);
+    timeView.selectMonth("2008/10");
+
+    EstimatedPositionDetailsChecker balance = mainAccounts.openEstimatedPositionDetails();
+    balance.checkTotal(1860.00)
+      .checkInitialPosition(780.10)
       .checkIncome(2000)
       .checkFixed(-184)
       .checkSavingsIn(0)
-      .checkEnvelope(-230);
+      .checkEnvelope(-210)
+      .close();
 
     views.selectData();
 
     TransactionChecker transaction = new TransactionChecker(window);
     transaction.initAmountContent()
+      .add("Planned: Occasional", -526.10, 1860.00)
+      .add("Planned: Health", 20.00, 2386.10)
       .add("Planned: Income 1", 2000.00, 2366.10)
       .add("Planned: Cell phone 1", -40.00, 366.10)
       .add("Planned: Cash", -40.00, 406.10)
@@ -438,23 +482,27 @@ public class FirstTimeTest extends UISpecTestCase {
     LoginChecker login = new LoginChecker(window);
     login.logExistingUser("toto", "toto");
 
+    MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectHome();
-    EstimatedPositionDetailsChecker balance = new EstimatedPositionDetailsChecker(window);
-    balance.checkTotal(2311.10) //  2366.1)
+
+    EstimatedPositionDetailsChecker balance = mainAccounts.openEstimatedPositionDetails();
+    balance.checkTotal(2331.10) //  2366.1)
       .checkOccasional(-55)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(-184)
       .checkSavingsIn(0)
-      .checkEnvelope(-230);
+      .checkEnvelope(-210)
+      .close();
 
     views.selectData();
 
     TransactionChecker transaction = new TransactionChecker(window);
     transaction.initAmountContent()
-      .add("Planned: Ecole", -40.00, 2311.10)
-      .add("Planned: Frais banque", -4.00, 2351.10)
+      .add("Planned: Ecole", -40.00, 2331.10)
+      .add("Planned: Frais banque", -4.00, 2371.10)
+      .add("Planned: Health", 20.00, 2375.10)
       .add("Planned: Income 1", 2000.00, 2355.10)
       .add("Planned: Occasional", -55.00, 355.10)
       .add("Planned: Assurance", -100.00, 410.10)
@@ -516,24 +564,28 @@ public class FirstTimeTest extends UISpecTestCase {
     });
     LoginChecker login = new LoginChecker(window);
     login.logExistingUser("toto", "toto");
+    MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectHome();
-    EstimatedPositionDetailsChecker balance = new EstimatedPositionDetailsChecker(window);
-    balance.checkTotal(2311.10) //  2366.1)
+
+    EstimatedPositionDetailsChecker balance = mainAccounts.openEstimatedPositionDetails();
+    balance.checkTotal(2331.10) //  2366.1)
       .checkOccasional(-55)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(-184)
       .checkSavingsIn(0)
-      .checkEnvelope(-230);
+      .checkEnvelope(-210)
+      .close();
 
     views.selectData();
 
     TransactionChecker transaction = new TransactionChecker(window);
     transaction.initAmountContent()
-      .add("Planned: Ecole", -40.00, 2311.10)
-      .add("Planned: Frais banque", -4.00, 2351.10)
+      .add("Planned: Ecole", -40.00, 2331.10)
+      .add("Planned: Frais banque", -4.00, 2371.10)
+      .add("Planned: Health", 20.00, 2375.10)
       .add("Planned: Income 1", 2000.00, 2355.10)
       .add("Planned: Occasional", -55.00, 355.10)
       .add("Planned: Assurance", -100.00, 410.10)

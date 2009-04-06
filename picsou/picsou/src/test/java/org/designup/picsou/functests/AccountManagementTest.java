@@ -20,7 +20,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkSummary(1.23, "10/01/2006");
     views.selectData();
     transactions.initAmountContent()
-      .add("Blah", -1, 1.23, 1.23)
+      .add("BLAH", -1, 1.23, 1.23)
       .check();
   }
 
@@ -47,8 +47,8 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkAccount("Card n. 1000-2000-3000-4000", 10, "2006/01/20");
     views.selectData();
     transactions.initAmountContent()
-      .add("Bar", -6.00, 10.00, 20.00)
-      .add("Foo", -3.00, 16.00, 26.00)
+      .add("BAR", -6.00, 10.00, 20.00)
+      .add("FOO", -3.00, 16.00, 26.00)
       .add("GDF", -10.00, 10.00, 10.00)
       .add("EDF", -1.00, 20.00, 20.00)
       .check();

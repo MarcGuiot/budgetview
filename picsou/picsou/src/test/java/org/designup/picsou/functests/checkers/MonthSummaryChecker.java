@@ -237,7 +237,12 @@ public class MonthSummaryChecker extends GuiChecker {
   private void checkBudgetArea(BudgetArea budgetArea, double amount, double planned) {
     checkObserved(budgetArea, amount);
     checkPlanned(budgetArea, planned);
-    checkGauge(budgetArea, amount, planned);
+    if (budgetArea == BudgetArea.INCOME) {
+      checkGauge(budgetArea, amount, planned);
+    }
+    else {
+      checkGauge(budgetArea, -amount, -planned);
+    }
   }
 
   public void gotoTransactions(BudgetArea budgetArea) {

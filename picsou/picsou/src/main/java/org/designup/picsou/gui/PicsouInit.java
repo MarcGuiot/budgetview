@@ -42,8 +42,11 @@ public class PicsouInit {
 
   private GlobRepository repository;
   private ServerAccess serverAccess;
+  private String user;
+  private boolean validUser;
   private Directory directory;
   private DefaultGlobIdGenerator idGenerator;
+  private UpgradeTrigger upgradeTrigger;
 
   public static PicsouInit init(ServerAccess serverAccess, String user, boolean validUser,
                                 boolean newUser, Directory directory) throws IOException {
@@ -53,6 +56,8 @@ public class PicsouInit {
   private PicsouInit(ServerAccess serverAccess, String user, boolean validUser,
                      boolean newUser, final Directory directory) throws IOException {
     this.serverAccess = serverAccess;
+    this.user = user;
+    this.validUser = validUser;
     this.directory = directory;
 
     idGenerator = new DefaultGlobIdGenerator();
@@ -65,9 +70,8 @@ public class PicsouInit {
 
     this.repository.addChangeListener(new ServerChangeSetListener(serverAccess));
 
-    UpgradeTrigger upgradeTrigger = new UpgradeTrigger();
+    upgradeTrigger = new UpgradeTrigger(directory, user, validUser);
     this.repository.addTrigger(upgradeTrigger);
-    this.repository.addTrigger(new UncategorizeOnAccountChangeTrigger());
     this.repository.addTrigger(new CurrentMonthTrigger());
     this.repository.addTrigger(new SeriesRenameTrigger());
     this.repository.addTrigger(new SeriesDeletionTrigger());
@@ -89,99 +93,39 @@ public class PicsouInit {
     this.repository.addTrigger(new BalanceStatTrigger());
     this.repository.addTrigger(new SavingsBalanceStatTrigger());
 
+    initDirectory(this.repository);
+
     if (!newUser) {
       this.repository.create(User.KEY,
                              value(User.NAME, user),
                              value(User.IS_REGISTERED_USER, validUser));
     }
 
-    MutableChangeSet changeSet = new DefaultChangeSet();
     try {
+      this.repository.startChangeSet();
+      MutableChangeSet changeSet = new DefaultChangeSet();
       GlobList userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdater() {
         public void update(IntegerField field, Integer lastAllocatedId) {
           idGenerator.update(field, lastAllocatedId);
         }
       });
       this.repository.reset(userData, GlobUtils.toArray(userData.getTypes()));
+
+      serverAccess.applyChanges(changeSet, this.repository);
+
+      this.repository.completeChangeSet();
     }
     catch (Exception e) {
       throw new InvalidData(Lang.get("login.data.load.fail"), e);
     }
     repository.removeTrigger(upgradeTrigger);
 
-    serverAccess.applyChanges(changeSet, this.repository);
-
-    Glob versionInfo;
-    try {
-      this.repository.startChangeSet();
-      versionInfo = this.repository.find(VersionInformation.KEY);
-      createDataForNewUser(user, this.repository, validUser);
-    }
-    finally {
-      this.repository.completeChangeSet();
-    }
-
-    initDirectory(this.repository);
     if (!directory.get(ConfigService.class).loadConfigFileFromLastestJar(directory, this.repository)) {
       directory.get(TransactionAnalyzerFactory.class)
         .load(this.getClass().getClassLoader(), PicsouApplication.BANK_CONFIG_VERSION);
     }
 
-    Glob version = repository.get(VersionInformation.KEY);
-    boolean forceUpgrade = versionInfo == null && !newUser;
-    if (forceUpgrade || !version.get(VersionInformation.CURRENT_BANK_CONFIG_VERSION).equals(version.get(VersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION))) {
-      directory.get(UpgradeService.class).upgradeBankData(repository, version);
-    }
-
-    Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
-    if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
-      repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
-                        Month.addOneMonth(TimeService.getToday()));
-    }
-
-    try {
-      this.repository.startChangeSet();
-      this.repository.update(CurrentMonth.KEY,
-                             value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
-                             value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
-    }
-    finally {
-      this.repository.completeChangeSet();
-    }
-
     LicenseCheckerThread.launch(directory, this.repository);
-  }
-
-  public static void createDataForNewUser(String user, GlobRepository repository, boolean validUser) {
-    repository.findOrCreate(User.KEY,
-                            value(User.NAME, user),
-                            value(User.IS_REGISTERED_USER, validUser));
-    repository.findOrCreate(VersionInformation.KEY,
-                            value(VersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION),
-                            value(VersionInformation.CURRENT_BANK_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
-                            value(VersionInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION),
-                            value(VersionInformation.LATEST_AVALAIBLE_JAR_VERSION, PicsouApplication.JAR_VERSION),
-                            value(VersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
-                            value(VersionInformation.LATEST_AVALAIBLE_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION));
-    Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
-    if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
-      repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
-                        Month.addOneMonth(TimeService.getToday()));
-    }
-
-    repository.findOrCreate(CurrentMonth.KEY,
-                            value(CurrentMonth.LAST_TRANSACTION_MONTH, 0),
-                            value(CurrentMonth.LAST_TRANSACTION_DAY, 0),
-                            value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
-                            value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
-    repository.findOrCreate(Account.MAIN_SUMMARY_KEY,
-                            value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()),
-                            value(Account.IS_IMPORTED_ACCOUNT, true));
-    repository.findOrCreate(Account.SAVINGS_SUMMARY_KEY,
-                            FieldValue.value(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()));
-    repository.findOrCreate(Account.ALL_SUMMARY_KEY);
-    InitialCategories.run(repository);
-    InitialSeries.run(repository);
   }
 
   private void initDirectory(GlobRepository repository) {
@@ -206,8 +150,16 @@ public class PicsouInit {
         idGenerator.update(field, lastAllocatedId);
       }
     });
-    Collection<GlobType> serverTypes = userData.getTypes();
-    repository.reset(userData, serverTypes.toArray(new GlobType[serverTypes.size()]));
+    try {
+      repository.startChangeSet();
+      Collection<GlobType> serverTypes = userData.getTypes();
+      repository.addTriggerAtFirst(upgradeTrigger);
+      repository.reset(userData, serverTypes.toArray(new GlobType[serverTypes.size()]));
+    }
+    finally {
+      repository.completeChangeSet();
+    }
+    repository.removeTrigger(upgradeTrigger);
   }
 
   public void generateBackupIn(String file) throws IOException {

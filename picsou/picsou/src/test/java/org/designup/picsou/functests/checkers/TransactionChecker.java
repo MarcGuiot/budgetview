@@ -143,7 +143,7 @@ public class TransactionChecker extends ViewChecker {
     }
 
     public TransactionAmountChecker add(String label, double amount, double accountSolde, double solde) {
-      expected.add(new Object[]{label.toUpperCase(),
+      expected.add(new Object[]{label,
                                 TransactionChecker.this.toString(amount),
                                 TransactionChecker.this.toString(accountSolde),
                                 TransactionChecker.this.toString(solde)});
@@ -284,7 +284,7 @@ public class TransactionChecker extends ViewChecker {
       Table table = getTable();
       for (int row = 0; row < table.getRowCount(); row++) {
         String type = table.getContentAt(row, 0, transactionTypeDumper).toString();
-        String category = table.getContentAt(row, 0, categoryDumper).toString();
+        String category = table.getContentAt(row, TransactionView.CATEGORY_COLUMN_INDEX, categoryDumper).toString();
         String date = table.getContentAt(row, TransactionView.DATE_COLUMN_INDEX).toString();
         String bankDate = table.getContentAt(row, TransactionView.BANK_DATE_COLUMN_INDEX).toString();
         String series = table.getContentAt(row, TransactionView.SERIES_COLUMN_INDEX, new TableCellValueConverter() {

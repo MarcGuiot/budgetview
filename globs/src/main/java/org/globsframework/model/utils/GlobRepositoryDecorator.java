@@ -132,6 +132,10 @@ public class GlobRepositoryDecorator implements GlobRepository {
     getRepository().addTrigger(listener);
   }
 
+  public void addTriggerAtFirst(ChangeSetListener trigger) {
+    getRepository().addTriggerAtFirst(trigger);
+  }
+
   public void removeTrigger(ChangeSetListener listener) {
     getRepository().removeTrigger(listener);
   }

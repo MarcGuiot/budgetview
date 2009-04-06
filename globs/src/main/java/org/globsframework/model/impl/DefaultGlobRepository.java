@@ -641,6 +641,10 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     triggers.add(trigger);
   }
 
+  public void addTriggerAtFirst(ChangeSetListener trigger) {
+    triggers.add(0, trigger);
+  }
+
   public void removeTrigger(ChangeSetListener trigger) {
     triggers.remove(trigger);
   }

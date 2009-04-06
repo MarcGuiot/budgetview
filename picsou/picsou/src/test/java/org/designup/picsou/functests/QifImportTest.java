@@ -56,7 +56,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
                     "^");
     operations.importQifFile(file, SOCIETE_GENERALE);
     transactions.initAmountContent()
-      .add("Auchan", -20, 80, 80)
+      .add("AUCHAN", -20, 80, 80)
       .add("SACLAY", -55.49, 100, 100)
       .add("STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", -17.65, 155.49, 155.49)
       .add("BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", -49.00, 173.14, 173.14)

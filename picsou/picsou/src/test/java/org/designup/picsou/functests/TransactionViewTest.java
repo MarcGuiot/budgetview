@@ -251,10 +251,10 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .add("Planned: Nounou", -100.00, 100.0)
       .add("Planned: Voiture", -70.00, 200.0)
       .add("Planned: Occasional", -230.00, 270.0)
-      .add("nounou", -100.00, 500.00, 500.00)
-      .add("peage", -30.00, 600.00, 600.00)
-      .add("sg", -200.00, 630.00, 630.00)
-      .add("essence", -70.00, 830.00, 830.00)
+      .add("NOUNOU", -100.00, 500.00, 500.00)
+      .add("PEAGE", -30.00, 600.00, 600.00)
+      .add("SG", -200.00, 630.00, 630.00)
+      .add("ESSENCE", -70.00, 830.00, 830.00)
       .check();
   }
 

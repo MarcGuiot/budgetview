@@ -50,6 +50,8 @@ public interface GlobRepository extends ReadOnlyGlobRepository {
 
   void apply(ChangeSet changeSet) throws InvalidParameter;
 
+  void addTriggerAtFirst(ChangeSetListener listener);
+
   void addTrigger(ChangeSetListener listener);
 
   void removeTrigger(ChangeSetListener listener);

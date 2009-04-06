@@ -12,8 +12,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.security.AccessController;
 
-import org.uispec4j.Key;
-
 public class GuiUtils {
 
   private static boolean debugModeEnabled;
@@ -25,7 +23,7 @@ public class GuiUtils {
   private static final String MAC_PLATFORM_ID = "Mac OS X";
   private static final String LINUX_PLATFORM_ID = "Linux";
   private static final String WINDOWS_PLATFORM_ID = "Windows";
-  
+
   static {
     String os = (String)AccessController.doPrivileged(new GetPropertyAction("os.name"));
     IS_MACOSX = os.contains(MAC_PLATFORM_ID);

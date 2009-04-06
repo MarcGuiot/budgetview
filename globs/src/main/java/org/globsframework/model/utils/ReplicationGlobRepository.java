@@ -314,6 +314,11 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     super.addTrigger(listener);
   }
 
+  public void addTriggerAtFirst(ChangeSetListener trigger) {
+    triggers.add(0, trigger);
+    super.addTriggerAtFirst(trigger);
+  }
+
   public void removeTrigger(ChangeSetListener listener) {
     triggers.remove(listener);
     super.removeTrigger(listener);

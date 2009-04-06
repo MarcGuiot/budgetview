@@ -434,12 +434,12 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initAmountContent()
-      .add("Menu K", -6.00, 85.00, 85.00)
-      .add("Menu K", -5.00, 91.00, 91.00)
-      .add("Menu K", -4.00, 96.00, 96.00)
-      .add("Menu K", -3.00, 100.00, 100.00)
-      .add("Menu K", -2.00, 103.00, 103.00)
-      .add("Menu K", -1.00, 105.00, 105.00)
+      .add("MENU K", -6.00, 85.00, 85.00)
+      .add("MENU K", -5.00, 91.00, 91.00)
+      .add("MENU K", -4.00, 96.00, 96.00)
+      .add("MENU K", -3.00, 100.00, 100.00)
+      .add("MENU K", -2.00, 103.00, 103.00)
+      .add("MENU K", -1.00, 105.00, 105.00)
       .check();
   }
 

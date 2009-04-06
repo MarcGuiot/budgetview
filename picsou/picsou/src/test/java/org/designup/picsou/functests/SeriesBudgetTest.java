@@ -39,4 +39,5 @@ public class SeriesBudgetTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2009/04");
     budgetView.recurring.checkSeries("Free", -29, -29);
   }
+
 }
