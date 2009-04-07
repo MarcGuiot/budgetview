@@ -4,6 +4,7 @@ import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.utils.Utils;
 
@@ -67,21 +68,16 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
     if (monthIds.length == 0) {
       return;
     }
-    int fromIndex = 0;
+    int fromIndex;
     Integer firstMonth = series.get(Series.FIRST_MONTH);
     Integer fromDate = firstMonth == null ? monthIds[0] : Math.max(firstMonth, monthIds[0]);
-    if (fromDate != null) {
-      fromIndex = Arrays.binarySearch(monthIds, fromDate);
-    }
-    int toIndex = monthIds.length - 1;
+    fromIndex = Arrays.binarySearch(monthIds, fromDate);
+    int toIndex;
     Integer lastMonth = series.get(Series.LAST_MONTH);
     Integer toDate = lastMonth == null ?
                      monthIds[monthIds.length - 1] :
                      Math.min(lastMonth, monthIds[monthIds.length - 1]);
-    if (toDate != null) {
-      toIndex = Arrays.binarySearch(monthIds, toDate);
-    }
-
+    toIndex = Arrays.binarySearch(monthIds, toDate);
     Glob currentMonth = repository.get(CurrentMonth.KEY);
     if (fromIndex >= 0 && toIndex >= 0) {
       Calendar calendar = Calendar.getInstance();

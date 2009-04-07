@@ -4,10 +4,7 @@ import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.description.AccountComparator;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.monthsummary.AccountPositionThresholdAction;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.AccountType;
-import org.designup.picsou.model.Bank;
-import org.designup.picsou.model.Month;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -38,6 +35,7 @@ public abstract class AccountViewPanel {
   private Integer summaryId;
   private JPanel panel;
   private JPanel header;
+  private JLabel labelTypeName;
 
   public AccountViewPanel(final GlobRepository repository, final Directory directory,
                           GlobMatcher accountMatcher, Integer summaryId) {
@@ -65,6 +63,9 @@ public abstract class AccountViewPanel {
     builder.addLabel("referencePositionDate", Account.TYPE, new ReferenceAmountStringifier())
       .setAutoHideIfEmpty(true)
       .forceSelection(summaryAccount);
+
+    labelTypeName = new JLabel();
+    builder.add("labelTypeName", labelTypeName);
 
     builder.add("estimatedPosition", getEstimatedPositionComponent());
     builder.add("estimatedPositionDate", getEstimatedPositionDateComponent());
@@ -127,7 +128,16 @@ public abstract class AccountViewPanel {
     String dateLabel = Lang.get("accountView.total.date", lastDay);
 
     Double amount = getEndOfMonthPosition(balanceStat);
+    Integer lastImportDate = repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH);
     setEstimatedPositionLabels(amount, dateLabel);
+    if (lastSelectedMonthId >= lastImportDate) {
+      labelTypeName.setText(Lang.get("accountView.estimated.title"));
+      getEstimatedPositionComponent().setToolTipText(Lang.get("accountView.estimated.tooltip"));
+    }
+    else {
+      labelTypeName.setText(Lang.get("accountView.real.title"));
+      getEstimatedPositionComponent().setToolTipText(null);
+    }
   }
 
   protected abstract Double getEndOfMonthPosition(Glob balanceStat);

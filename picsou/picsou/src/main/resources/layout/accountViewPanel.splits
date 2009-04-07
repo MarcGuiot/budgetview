@@ -21,10 +21,10 @@
         <filler fill="horizontal" gridPos="(1,0,1,3)"/>
 
         <component ref="estimatedPosition" gridPos="(2,0)"
-                   styleClass="totalAmount" foreground="" tooltipText="$accountView.estimated.tooltip"
+                   styleClass="totalAmount" foreground=""
                    marginTop="0" marginBottom="0"
                    anchor="north"/>
-        <label text="$accountView.estimated.title" gridPos="(2,1)"
+        <label ref="labelTypeName" gridPos="(2,1)"
                styleClass="totalAmountTitle" autoHideSource="estimatedPosition"
                marginTop="0" marginBottom="0" weightY="0"/>
         <label ref="estimatedPositionDate" gridPos="(2,2)"
