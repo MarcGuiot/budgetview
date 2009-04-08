@@ -73,6 +73,7 @@
             <phase>install</phase>
             <configuration>
               <tasks>
+                <mkdir dir="src/main/resources/demo"/>
                 <java fork="yes" classname="org.designup.picsou.functests.DemoGenerationTest" failonerror="true">
                   <jvmarg line="-Doutfile=src/main/resources/demo/demo.snapshot"/>
                   <classpath>

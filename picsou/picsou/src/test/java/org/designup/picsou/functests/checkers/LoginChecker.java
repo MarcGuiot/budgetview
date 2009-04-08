@@ -73,6 +73,11 @@ public class LoginChecker extends GuiChecker {
     waitForApplicationToLoad();
   }
 
+  public void clickDemoLink() {
+    window.getButton("demoMode").click();
+    waitForApplicationToLoad();
+  }
+  
   public void waitForApplicationToLoad() {
     UISpecAssert.waitUntil(window.containsSwingComponent(TimeViewPanel.class), 20000);
   }

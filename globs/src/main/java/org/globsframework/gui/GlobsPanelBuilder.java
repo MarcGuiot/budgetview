@@ -144,7 +144,7 @@ public class GlobsPanelBuilder extends SplitsBuilder {
   }
 
   public GlobRepeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
-                              RepeatComponentFactory factory) {
+                              RepeatComponentFactory<Glob> factory) {
     final GlobStringifier stringifier = directory.get(DescriptionService.class).getStringifier(type);
     return addRepeat(name, type, matcher, stringifier.getComparator(repository), factory);
   }
@@ -168,7 +168,7 @@ public class GlobsPanelBuilder extends SplitsBuilder {
 
   public static GlobRepeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
                                      Comparator<Glob> comparator, GlobRepository repository, RepeatCellBuilder builder,
-                                     RepeatComponentFactory factory) {
+                                     RepeatComponentFactory<Glob> factory) {
     GlobRepeatListener listener = new GlobRepeatListener();
     final GlobViewModel model = new GlobViewModel(type, repository, comparator, listener);
     model.setFilter(matcher, true);

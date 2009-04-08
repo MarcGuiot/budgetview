@@ -56,6 +56,11 @@
 
           <filler fill="vertical"/>
 
+          <row margin="5" fill="horizontal">
+            <filler fill="horizontal"/>
+            <button action="demoMode" styleClass="hyperlink"/>
+          </row>
+
         </column>
 
       </panel>

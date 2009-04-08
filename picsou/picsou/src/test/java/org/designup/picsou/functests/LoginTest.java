@@ -226,6 +226,23 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .check();
   }
 
+  public void testLoginInDemoMode() throws Exception {
+    login.clickDemoLink();
+    checkDemoMode();
+  }
+
+  public void testActivatingTheDemoModeSkipsAccountCreation() throws Exception {
+    login.enterUserAndPassword("username", "pwd")
+      .setCreation()
+      .clickDemoLink();
+    checkDemoMode();
+  }
+
+  private void checkDemoMode() {
+    assertThat(window.containsMenuBar());
+    getTransactionView().checkNotEmpty();
+  }
+
   private TransactionChecker getTransactionView() {
     UISpecAssert.waitUntil(window.containsUIComponent(ToggleButton.class, "dataCardToggle"), 10000);
     ViewSelectionChecker views = new ViewSelectionChecker(window);

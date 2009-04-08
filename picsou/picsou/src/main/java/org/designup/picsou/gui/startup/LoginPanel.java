@@ -25,6 +25,7 @@ import org.globsframework.utils.exceptions.InvalidData;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
+import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.InputStream;
@@ -99,6 +100,7 @@ public class LoginPanel {
     builder.add("message", messageLabel);
     builder.add("progressPanel", progressPanel);
     GuiUtils.initHtmlComponent(messageLabel);
+    builder.add("demoMode", new DemoModeAction());
     builder.add("login", loginButton);
     builder.addLoader(new SplitsLoader() {
       public void load(Component component) {
@@ -404,6 +406,22 @@ public class LoginPanel {
       catch (Exception ex) {
         ex.printStackTrace();
       }
+    }
+  }
+
+  private class DemoModeAction extends AbstractAction {
+
+    private DemoModeAction() {
+      super(Lang.get("login.demo"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      userField.setText("demo");
+      passwordField.setText("");
+      if (creationCheckBox.isSelected()) {
+        creationCheckBox.doClick(); 
+      }
+      loginButton.getAction().actionPerformed(null);
     }
   }
 }

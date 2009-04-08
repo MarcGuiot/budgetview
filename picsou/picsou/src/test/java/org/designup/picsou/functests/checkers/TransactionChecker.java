@@ -76,7 +76,7 @@ public class TransactionChecker extends ViewChecker {
     return this;
   }
 
-  public TransactionChecker checkCategorizeIsDisable(int row) {
+  public TransactionChecker checkCategorizeIsDisabled(int row) {
     UISpecAssert.assertFalse(getTable().editCell(row, TransactionView.SERIES_COLUMN_INDEX).getButton().isEnabled());
     return this;
   }
@@ -125,6 +125,10 @@ public class TransactionChecker extends ViewChecker {
   public TransactionChecker checkSelectedAccount(String accountName) {
     UISpecAssert.assertThat(mainWindow.getComboBox("accountFilterCombo").selectionEquals(accountName));
     return this;
+  }
+
+  public void checkNotEmpty() {
+    UISpecAssert.assertFalse(getTable().isEmpty());
   }
 
   public class TransactionAmountChecker {

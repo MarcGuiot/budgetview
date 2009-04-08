@@ -178,7 +178,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "Epargne", MasterCategory.SAVINGS)
       .check();
 
-    transactions.checkCategorizeIsDisable(0);
+    transactions.checkCategorizeIsDisabled(0);
 
     views.selectSavings();
     savingsView.editSavingsSeries("Epargne", "Epargne")
@@ -195,7 +195,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Virement", "", -100.00)
       .check();
 
-    transactions.checkCategorizeIsDisable(0);
+    transactions.checkCategorizeIsDisabled(0);
   }
 
   public void testMultiCategorization() throws Exception {
