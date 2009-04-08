@@ -38,11 +38,11 @@ public class TransactionRendererColors implements ColorChangeListener {
     oddRowsBgColor = colorLocator.get(PicsouColors.TABLE_ODD_ROWS_BG);
     rolloverCategoryColor = colorLocator.get(PicsouColors.CATEGORY_ROLLOVER_LABEL);
     categoryColor = colorLocator.get(PicsouColors.CATEGORY_LABEL);
-    transactionTextColor = colorLocator.get(PicsouColors.TRANSACTION_TEXT);
+    transactionTextColor = colorLocator.get(PicsouColors.TABLE_TEXT);
     transactionSelectedTextColor = colorLocator.get(PicsouColors.TRANSACTION_SELECTED_TEXT);
     transactionPlannedTextColor = colorLocator.get(PicsouColors.TRANSACTION_TEXT_PLANNED);
     transactionLinkTextColor = colorLocator.get(PicsouColors.TRANSACTION_TEXT_LINK);
-    transactionErrorTextColor = colorLocator.get(PicsouColors.TRANSACTION_TEXT_ERROR);
+    transactionErrorTextColor = colorLocator.get(PicsouColors.TABLE_TEXT_ERROR);
     splitSourceColor = colorLocator.get(PicsouColors.TRANSACTION_SPLIT_SOURCE_BG);
     splitChildColor = colorLocator.get(PicsouColors.TRANSACTION_SPLIT_BG);
   }

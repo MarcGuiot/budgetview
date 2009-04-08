@@ -4,7 +4,7 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 
-public class SavingsViewTest extends LoggedInFunctionalTestCase {
+public class NextProjectsViewTest extends LoggedInFunctionalTestCase {
 
   public void testNextProjectsWithNoAccounts() throws Exception {
 
@@ -193,33 +193,73 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testSavingsAccounts() throws Exception {
+  public void testPositionsAreDisplayedInRedWhenTooLow() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(12).validate();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount(30003, 12345, "10101010", 750, "2008/10/15")
+      .addTransaction("2008/10/10", -100.00, "Monoprix")
+      .load();
 
     views.selectSavings();
-    savingsView.checkNoAccounts();
-    savingsView.checkTotalPositionHidden();
 
-    views.selectHome();
-    savingsAccounts.createSavingsAccount("Epargne", 1000);
-
-    views.selectSavings();
-    savingsView.checkTotalPositionHidden();
-    savingsView.checkAccountWithNoPosition("Epargne");
-
-    savingsView.createSavingsSeries()
-      .setName("Virement CAF")
-      .setCategory(MasterCategory.SAVINGS)
-      .setToAccount("Epargne")
-      .setFromAccount("Main accounts")
-      .switchToManual()
+    nextProjects.createProject()
+      .setName("Ski")
+      .setCategory(MasterCategory.LEISURES)
+      .setEveryMonth()
+      .setEndDate(200812)
+      .setStartDate(200811)
       .selectAllMonths()
-      .setAmount("300")
-      .setDay("5")
+      .setAmount(500.00)
       .validate();
 
-    savingsView.checkAccount("Epargne", 1300.00, "31/08/2008");
+    nextProjects.initContent()
+      .add("Nov 2008", "Ski", -500.00, 250.00, null, 250.00)
+      .add("Dec 2008", "Ski", -500.00, -250.00, null, -250.00)
+      .check();
 
-    savingsView.checkTotalPosition(1300.00, "31/08/2008");
+    nextProjects.checkCellTextColorIsNormal(0, 3);
+    nextProjects.checkCellTextColorIsError(1, 3);
 
+    views.selectHome();
+    mainAccounts.setThreshold(500);
+
+    views.selectSavings();
+    nextProjects.checkCellTextColorIsError(0, 3);
+    nextProjects.checkCellTextColorIsError(1, 3);
+
+    views.selectHome();
+    OfxBuilder
+      .init(this)
+      .addBankAccount(14559, 12345, "0001111", -1500, "2008/10/17")
+      .addTransaction("2008/10/15", 200.00, "Epargne")
+      .load();
+    mainAccounts.edit("Account n. 0001111")
+      .setAccountName("ING")
+      .setAsSavings()
+      .validate();
+
+    views.selectBudget();
+    budgetView.savings.createSeries()
+      .setName("Monthly payments")
+      .setCategory(MasterCategory.SAVINGS)
+      .switchToManual()
+      .setToAccount("ING")
+      .selectAllMonths()
+      .setAmount(1000.00)
+      .validate();
+
+    views.selectSavings();
+    nextProjects.initContent()
+      .add("Nov 2008", "Ski", -500.00, -750.00, -500.00, -1250.00)
+      .add("Dec 2008", "Ski", -500.00, -2250.00, 500.00, -1750.00)
+      .check();
+
+    nextProjects.checkCellTextColorIsError(0, 3);
+    nextProjects.checkCellTextColorIsError(1, 3);
+
+    nextProjects.checkCellTextColorIsError(0, 4);
+    nextProjects.checkCellTextColorIsNormal(1, 4);
   }
 }

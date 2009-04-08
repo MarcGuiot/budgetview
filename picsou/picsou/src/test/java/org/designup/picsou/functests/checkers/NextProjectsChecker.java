@@ -5,6 +5,7 @@ import org.designup.picsou.gui.projects.NextProjectsView;
 import org.uispec4j.Panel;
 import org.uispec4j.Table;
 import org.uispec4j.Window;
+import org.uispec4j.assertion.UISpecAssert;
 
 public class NextProjectsChecker extends GuiChecker {
   private Window mainWindow;
@@ -30,6 +31,16 @@ public class NextProjectsChecker extends GuiChecker {
     table.click(row, 0);
     org.uispec4j.Button projectNameButton = table.editCell(row, NextProjectsView.NAME_COLUMN_INDEX).getButton();
     return SeriesEditionDialogChecker.open(projectNameButton, false);
+  }
+
+  public NextProjectsChecker checkCellTextColorIsNormal(int row, int column) {
+    UISpecAssert.assertThat(getTable().foregroundNear(row, column, "black"));
+    return this;
+  }
+
+  public NextProjectsChecker checkCellTextColorIsError(int row, int column) {
+    UISpecAssert.assertThat(getTable().foregroundNear(row, column, "red"));
+    return this;
   }
 
   private Table getTable() {

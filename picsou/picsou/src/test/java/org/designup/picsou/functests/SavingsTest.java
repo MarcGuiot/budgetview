@@ -1023,4 +1023,34 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setFromAccount("Livret")
       .validate();
   }
+
+  public void testSavingsAccounts() throws Exception {
+
+    views.selectSavings();
+    savingsView.checkNoAccounts();
+    savingsView.checkTotalPositionHidden();
+
+    views.selectHome();
+    savingsAccounts.createSavingsAccount("Epargne", 1000);
+
+    views.selectSavings();
+    savingsView.checkTotalPositionHidden();
+    savingsView.checkAccountWithNoPosition("Epargne");
+
+    savingsView.createSavingsSeries()
+      .setName("Virement CAF")
+      .setCategory(MasterCategory.SAVINGS)
+      .setToAccount("Epargne")
+      .setFromAccount("Main accounts")
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount("300")
+      .setDay("5")
+      .validate();
+
+    savingsView.checkAccount("Epargne", 1300.00, "31/08/2008");
+
+    savingsView.checkTotalPosition(1300.00, "31/08/2008");
+
+  }  
 }

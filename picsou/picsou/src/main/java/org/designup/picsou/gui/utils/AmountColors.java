@@ -75,25 +75,25 @@ public class AmountColors implements ColorChangeListener {
     return color;
   }
 
-  public Color getTextColor(double value) {
-    return getTextColor(value, normalText);
+  public Color getTextColor(double diff) {
+    return getTextColor(diff, normalText);
   }
 
-  public Color getTextColor(double value, Color normalColor) {
+  public Color getTextColor(double diff, Color normalColor) {
     Color color = normalColor;
-    if (value < -400) {
+    if (diff < -400) {
       color = balanceMinus4;
     }
-    else if (value < -200) {
+    else if (diff < -200) {
       color = balanceMinus3;
     }
-    else if (value < -100) {
+    else if (diff < -100) {
       color = balanceMinus2;
     }
-    else if (value < -50) {
+    else if (diff < -50) {
       color = balanceMinus1;
     }
-    else if (value < 0) {
+    else if (diff < 0) {
       color = balanceMinus05;
     }
     return color;
