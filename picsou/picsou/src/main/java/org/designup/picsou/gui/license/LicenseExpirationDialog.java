@@ -42,11 +42,21 @@ public class LicenseExpirationDialog {
     final Glob user = repository.get(User.KEY);
     sendAction = new AbstractAction(Lang.get("license.mail.request.send")) {
       public void actionPerformed(ActionEvent e) {
-        String mail = user.get(User.MAIL);
+        final String mail = user.get(User.MAIL);
         if (mail != null) {
-          String response = directory.get(ConfigService.class).askForNewCodeByMail(mail);
-          LicenseExpirationDialog.this.response.setText(response);
-          LicenseExpirationDialog.this.response.setVisible(true);
+          Thread thread = new Thread() {
+            public void run() {
+              final String response = directory.get(ConfigService.class).askForNewCodeByMail(mail);
+              SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                  LicenseExpirationDialog.this.response.setText(response);
+                  LicenseExpirationDialog.this.response.setVisible(true);
+                }
+              });
+            }
+          };
+          thread.setDaemon(true);
+          thread.start();
         }
       }
     };

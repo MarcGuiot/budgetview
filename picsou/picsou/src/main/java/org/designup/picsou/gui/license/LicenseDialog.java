@@ -63,7 +63,6 @@ public class LicenseDialog {
     connectMessageLabel.setVisible(!isConnected);
 
     initRegisterChangeListener();
-    repository.addChangeListener(changeSetListener);
     dialog.pack();
   }
 
@@ -77,7 +76,6 @@ public class LicenseDialog {
           }
           connectMessageLabel.setVisible(!isConnected);
           if (isConnected) {
-//            localRepository.update(UserPreferences.KEY, UserPreferences.FUTURE_MONTH_COUNT, 24);
             selectionService.select(localRepository.get(User.KEY));
             selectionService.select(localRepository.get(UserPreferences.KEY));
           }
@@ -101,6 +99,7 @@ public class LicenseDialog {
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
       }
     };
+    repository.addChangeListener(changeSetListener);
   }
 
   private void updateDialogState(String message, String... args) {

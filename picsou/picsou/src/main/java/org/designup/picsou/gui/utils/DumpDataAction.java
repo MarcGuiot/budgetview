@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.PrintWriter;
+import java.io.FileWriter;
+import java.io.File;
+import java.io.IOException;
 
 public class DumpDataAction extends AbstractAction {
   private final GlobRepository repository;
@@ -33,7 +36,13 @@ public class DumpDataAction extends AbstractAction {
 
 //    printEnvelopeSeriesBudgetForMonth(200905);
 
-    GlobPrinter.print(repository);
+    try {
+      File file = File.createTempFile("dump", ".txt");
+      GlobPrinter.init(repository).run(new FileWriter(file));
+      System.out.println("Dump in : " + file.getAbsolutePath());
+    }
+    catch (IOException e1) {
+    }
   }
 
   private void printEnvelopeSeriesBudgetForMonth(final int monthId) {

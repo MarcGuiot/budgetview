@@ -2,12 +2,12 @@ package org.designup.picsou.gui.upgrade;
 
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.initial.InitialCategories;
 import org.designup.picsou.model.initial.InitialSeries;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
@@ -64,7 +64,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       }
     }
 
-      if (currentJarVersion <= 9) {
+    if (currentJarVersion <= 9) {
 
       repository
         .getAll(SeriesBudget.TYPE, fieldIsNull(SeriesBudget.DAY))
@@ -84,41 +84,57 @@ public class UpgradeTrigger implements ChangeSetListener {
                                Series.NAME,
                                Series.getUncategorizedName());
 
-    repository.update(Series.UNCATEGORIZED_SERIES, Series.IS_AUTOMATIC, false);
+      repository.update(Series.UNCATEGORIZED_SERIES, Series.IS_AUTOMATIC, false);
 
-    GlobList uncategorizedTransactions =
-      repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID)
-        .getGlobs();
+      GlobList uncategorizedTransactions =
+        repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID)
+          .getGlobs();
 
-    if (!uncategorizedTransactions.isEmpty()) {
-      final Integer lastMonthId = uncategorizedTransactions.getSortedSet(Transaction.MONTH).last();
-      repository
-        .getAll(SeriesBudget.TYPE,
-                GlobMatchers.and(
-                  GlobMatchers.fieldEquals(SeriesBudget.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                  GlobMatchers.fieldStrictlyGreaterThan(SeriesBudget.MONTH, lastMonthId)))
-        .safeApply(new GlobFunctor() {
-          public void run(Glob seriesBudget, GlobRepository repository) throws Exception {
-            repository.update(seriesBudget.getKey(), value(SeriesBudget.AMOUNT, 0.00));
-          }
-        }, repository);
-    }
+      if (!uncategorizedTransactions.isEmpty()) {
+        final Integer lastMonthId = uncategorizedTransactions.getSortedSet(Transaction.MONTH).last();
+        repository
+          .getAll(SeriesBudget.TYPE,
+                  GlobMatchers.and(
+                    GlobMatchers.fieldEquals(SeriesBudget.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+                    GlobMatchers.fieldStrictlyGreaterThan(SeriesBudget.MONTH, lastMonthId)))
+          .safeApply(new GlobFunctor() {
+            public void run(Glob seriesBudget, GlobRepository repository) throws Exception {
+              repository.update(seriesBudget.getKey(), value(SeriesBudget.AMOUNT, 0.00));
+            }
+          }, repository);
+      }
 
-    repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, true))
-      .safeApply(new GlobFunctor() {
-        public void run(Glob transaction, GlobRepository repository) throws Exception {
-          Glob series = repository.findLinkTarget(transaction, Transaction.SERIES);
-          repository.update(transaction.getKey(), Transaction.LABEL, Transaction.getLabel(true, series));
-        }
-      }, repository);
+      repository.safeApply(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, true),
+                           new GlobFunctor() {
+                             public void run(Glob transaction, GlobRepository repository) throws Exception {
+                               Glob series = repository.findLinkTarget(transaction, Transaction.SERIES);
+                               repository.update(transaction.getKey(), Transaction.LABEL, Transaction.getLabel(true, series));
+                             }
+                           });
 
-        GlobList globList = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
-        for (Glob glob : globList) {
-          if (glob.get(Series.TO_ACCOUNT) == null && glob.get(Series.FROM_ACCOUNT) == null){
-            repository.update(glob.getKey(), Series.FROM_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID);
-          }
+      GlobList globList = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
+      for (Glob glob : globList) {
+        if (glob.get(Series.TO_ACCOUNT) == null && glob.get(Series.FROM_ACCOUNT) == null) {
+          repository.update(glob.getKey(), Series.FROM_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID);
         }
       }
+    }
+
+    if (currentJarVersion < 10) {
+      repository.safeApply(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, false),
+                           new GlobFunctor() {
+                             public void run(Glob transaction, GlobRepository repository) throws Exception {
+                               String originalLabel = transaction.get(Transaction.ORIGINAL_LABEL);
+                               String newLabel = TransactionAnalyzerFactory.removeBlankAndToUpercase(originalLabel);
+                               repository.update(transaction.getKey(), Transaction.ORIGINAL_LABEL, newLabel);
+
+                               String label = transaction.get(Transaction.LABEL);
+                               String newVisibleLabel = TransactionAnalyzerFactory.removeBlankAndToUpercase(label);
+                               repository.update(transaction.getKey(), Transaction.LABEL, newVisibleLabel);
+
+                             }
+                           });
+    }
 
     repository.update(VersionInformation.KEY, VersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
   }
