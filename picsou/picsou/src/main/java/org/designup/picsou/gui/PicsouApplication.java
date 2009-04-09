@@ -48,8 +48,8 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "0.17";
-  public static final Long JAR_VERSION = 9L;
+  public static final String APPLICATION_VERSION = "0.18";
+  public static final Long JAR_VERSION = 10L;
   public static final Long BANK_CONFIG_VERSION = 5L;
   private static final String JAR_DIRECTORY = "jars";
   private static final String BANK_CONFIG_DIRECTORY = "configs";
@@ -196,7 +196,6 @@ public class PicsouApplication {
     mainWindow.getFrame().addWindowListener(windowOpenListener);
     mainWindow.getFrame().addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
-        System.out.println("PicsouApplication.windowClosing");
         shutdown();
       }
     });

@@ -12,6 +12,7 @@ import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import org.globsframework.xml.XmlGlobParser;
 
 import java.io.*;
+import java.util.regex.Pattern;
 
 public class TransactionAnalyzerFactory {
 
@@ -19,10 +20,18 @@ public class TransactionAnalyzerFactory {
   private GlobRepository globRepository;
   private DefaultTransactionAnalyzer analyzer;
   private Long version = 0L;
+  public static Pattern BLANK = Pattern.compile("[\\s]+");
 
   public TransactionAnalyzerFactory(GlobModel modelRepository, GlobRepository globRepository) {
     this.modelRepository = modelRepository;
     this.globRepository = globRepository;
+  }
+
+  public static String removeBlankAndToUpercase(final String value) {
+    if (value == null) {
+      return null;
+    }
+    return BLANK.matcher(value).replaceAll(" ").trim().toUpperCase();
   }
 
   public interface Loader {

@@ -26,10 +26,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Pattern;
 
 public class ImportSession {
-  Pattern BLANK = Pattern.compile("[\\s]+");
   private GlobRepository referenceRepository;
   private Directory directory;
   private ImportService importService;
@@ -185,14 +183,14 @@ public class ImportSession {
         value(Transaction.NOTE, importedTransaction.get(ImportedTransaction.NOTE)),
         value(Transaction.LABEL, importedTransaction.get(ImportedTransaction.LABEL)),
         value(Transaction.ORIGINAL_LABEL, importedTransaction.get(ImportedTransaction.ORIGINAL_LABEL)),
-        value(Transaction.BANK_TRANSACTION_TYPE, removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.BANK_TRANSACTION_TYPE))),
+        value(Transaction.BANK_TRANSACTION_TYPE, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.BANK_TRANSACTION_TYPE))),
         value(Transaction.SPLIT, importedTransaction.get(ImportedTransaction.SPLIT)),
         value(Transaction.SPLIT_SOURCE, importedTransaction.get(ImportedTransaction.SPLIT_SOURCE)),
-        value(Transaction.OFX_CHECK_NUM, removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.OFX_CHECK_NUM))),
-        value(Transaction.OFX_MEMO, removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.OFX_MEMO))),
-        value(Transaction.OFX_NAME, removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.OFX_NAME))),
-        value(Transaction.QIF_M, removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.QIF_M))),
-        value(Transaction.QIF_P, removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.QIF_P))),
+        value(Transaction.OFX_CHECK_NUM, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.OFX_CHECK_NUM))),
+        value(Transaction.OFX_MEMO, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.OFX_MEMO))),
+        value(Transaction.OFX_NAME, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.OFX_NAME))),
+        value(Transaction.QIF_M, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.QIF_M))),
+        value(Transaction.QIF_P, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.QIF_P))),
         value(Transaction.IS_OFX, importedTransaction.get(ImportedTransaction.IS_OFX))
       );
       Integer seriesId = getSeriesId(importedTransaction);
@@ -203,13 +201,6 @@ public class ImportSession {
       nextId++;
     }
     return createdTransactions;
-  }
-
-  private String removeBlankAndToUpercase(final String value) {
-    if (value == null) {
-      return null;
-    }
-    return BLANK.matcher(value).replaceAll(" ").trim().toUpperCase();
   }
 
   private Integer getSeriesId(Glob importedTransaction) {
