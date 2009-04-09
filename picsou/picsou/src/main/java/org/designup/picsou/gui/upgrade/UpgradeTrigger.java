@@ -127,6 +127,11 @@ public class UpgradeTrigger implements ChangeSetListener {
                                String originalLabel = transaction.get(Transaction.ORIGINAL_LABEL);
                                String newLabel = TransactionAnalyzerFactory.removeBlankAndToUpercase(originalLabel);
                                repository.update(transaction.getKey(), Transaction.ORIGINAL_LABEL, newLabel);
+
+                               String label = transaction.get(Transaction.LABEL);
+                               String newVisibleLabel = TransactionAnalyzerFactory.removeBlankAndToUpercase(label);
+                               repository.update(transaction.getKey(), Transaction.LABEL, newVisibleLabel);
+
                              }
                            });
     }

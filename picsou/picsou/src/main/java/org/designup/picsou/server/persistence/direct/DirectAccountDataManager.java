@@ -25,7 +25,7 @@ public class DirectAccountDataManager implements AccountDataManager {
   private Map<Integer, DurableOutputStream> outputStreamMap = new HashMap<Integer, DurableOutputStream>();
   private String prevaylerPath;
   private boolean inMemory;
-  private int countFileNotToDelete = 2;
+  private int countFileNotToDelete = 6;
 
   public DirectAccountDataManager(String prevaylerPath, boolean inMemory) {
     this.prevaylerPath = prevaylerPath;
@@ -56,7 +56,7 @@ public class DirectAccountDataManager implements AccountDataManager {
       snapshotVersion = PrevaylerDirectory.snapshotVersion(file);
       readSnapshot(globs, file);
     }
-    long nextTransactionVersion = 1;
+    long nextTransactionVersion = snapshotVersion;
     File journalFile = prevaylerDirectory.findInitialJournalFile(snapshotVersion);
     if (journalFile != null) {
       try {
