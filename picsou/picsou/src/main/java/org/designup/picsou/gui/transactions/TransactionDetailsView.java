@@ -4,6 +4,7 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.split.SplitTransactionAction;
+import org.designup.picsou.gui.transactions.shift.ShiftTransactionAction;
 import org.designup.picsou.gui.utils.TableView;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -86,6 +87,8 @@ public class TransactionDetailsView extends View {
     builder.add("splitPanel",
                 new AutoHideOnSelectionPanel(Transaction.TYPE, GlobListMatchers.AT_LEAST_ONE,
                                              repository, directory));
+
+    builder.add("shift", new ShiftTransactionAction(repository, directory));
 
     builder.add("split", new SplitTransactionAction(repository, directory));
 

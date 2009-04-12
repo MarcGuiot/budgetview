@@ -573,6 +573,16 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
+  public CategorizationChecker selectNoTableRow() {
+    getTable().clearSelection();
+    return this;
+  }
+
+  public CategorizationChecker selectAllTableRows() {
+    getTable().selectAllRows();
+    return this;
+  }
+
   public CategorizationChecker selectTableRow(int row) {
     selectTableRows(row);
     return this;
@@ -581,6 +591,10 @@ public class CategorizationChecker extends GuiChecker {
   public CategorizationChecker selectTableRows(int... rows) {
     getTable().selectRows(rows);
     return this;
+  }
+
+  public CategorizationChecker selectTableRow(String label) {
+    return selectTableRows(label);
   }
 
   public CategorizationChecker selectTableRows(String... labels) {

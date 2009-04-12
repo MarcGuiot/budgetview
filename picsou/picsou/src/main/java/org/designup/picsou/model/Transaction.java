@@ -77,6 +77,8 @@ public class Transaction {
   @Target(Transaction.class)
   public static LinkField SPLIT_SOURCE;
 
+  public static IntegerField DAY_BEFORE_SHIFT;
+
   @Target(Series.class)
   @Required()
   @DefaultInteger(1)
@@ -223,6 +225,10 @@ public class Transaction {
 
   public static class Serializer implements PicsouGlobSerializer {
 
+    public int getWriteVersion() {
+      return 6;
+    }
+
     public byte[] serializeData(FieldValues fieldValues) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput output = serializedByteArrayOutput.getOutput();
@@ -243,6 +249,7 @@ public class Transaction {
       output.writeInteger(fieldValues.get(Transaction.CATEGORY));
       output.writeBoolean(fieldValues.get(Transaction.SPLIT));
       output.writeInteger(fieldValues.get(Transaction.SPLIT_SOURCE));
+      output.writeInteger(fieldValues.get(Transaction.DAY_BEFORE_SHIFT));
       output.writeInteger(fieldValues.get(Transaction.SERIES));
       output.writeBoolean(fieldValues.get(Transaction.PLANNED));
       output.writeBoolean(fieldValues.get(Transaction.MIRROR));
@@ -274,42 +281,127 @@ public class Transaction {
       else if (version == 5) {
         deserializeDataV5(fieldSetter, data);
       }
+      else if (version == 6) {
+        deserializeDataV6(fieldSetter, data);
+      }
     }
 
-    private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
+    private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readString());
-      fieldSetter.set(Transaction.LABEL, input.readString());
-      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readString());
-      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readString());
-      fieldSetter.set(Transaction.NOTE, input.readString());
+      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readUtf8String());
+      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readUtf8String());
+      fieldSetter.set(Transaction.NOTE, input.readUtf8String());
       fieldSetter.set(Transaction.MONTH, input.readInteger());
       fieldSetter.set(Transaction.DAY, input.readInteger());
       fieldSetter.set(Transaction.BANK_MONTH, input.readInteger());
       fieldSetter.set(Transaction.BANK_DAY, input.readInteger());
-      Double amount = input.readDouble();
-      fieldSetter.set(Transaction.AMOUNT, amount);
+      fieldSetter.set(Transaction.AMOUNT, input.readDouble());
       fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
       fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
       fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
-      Integer transactionType = input.readInteger();
-      if (transactionType == TransactionType.PLANNED.getId()) {
-        if (amount > 0) {
-          fieldSetter.set(Transaction.TRANSACTION_TYPE, TransactionType.VIREMENT.getId());
-        }
-        else {
-          fieldSetter.set(Transaction.TRANSACTION_TYPE, TransactionType.PRELEVEMENT.getId());
-        }
-      }
-      else {
-        fieldSetter.set(Transaction.TRANSACTION_TYPE, transactionType);
-      }
+      fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
+      fieldSetter.set(Transaction.CATEGORY, input.readInteger());
+      fieldSetter.set(Transaction.SPLIT, input.readBoolean());
+      fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
+      fieldSetter.set(Transaction.DAY_BEFORE_SHIFT, input.readInteger());
+      fieldSetter.set(Transaction.SERIES, input.readInteger());
+      fieldSetter.set(Transaction.PLANNED, input.readBoolean());
+      fieldSetter.set(Transaction.MIRROR, input.readBoolean());
+      fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
+      fieldSetter.set(Transaction.NOT_IMPORTED_TRANSACTION, input.readInteger());
+      fieldSetter.set(Transaction.OFX_CHECK_NUM, input.readUtf8String());
+      fieldSetter.set(Transaction.OFX_MEMO, input.readUtf8String());
+      fieldSetter.set(Transaction.OFX_NAME, input.readUtf8String());
+      fieldSetter.set(Transaction.QIF_M, input.readUtf8String());
+      fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
+      fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
+      fieldSetter.set(Transaction.IMPORT, input.readInteger());
+    }
+
+    private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readUtf8String());
+      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readUtf8String());
+      fieldSetter.set(Transaction.NOTE, input.readUtf8String());
+      fieldSetter.set(Transaction.MONTH, input.readInteger());
+      fieldSetter.set(Transaction.DAY, input.readInteger());
+      fieldSetter.set(Transaction.BANK_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.BANK_DAY, input.readInteger());
+      fieldSetter.set(Transaction.AMOUNT, input.readDouble());
+      fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
       fieldSetter.set(Transaction.CATEGORY, input.readInteger());
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
       fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
       fieldSetter.set(Transaction.SERIES, input.readInteger());
       fieldSetter.set(Transaction.PLANNED, input.readBoolean());
-      fieldSetter.set(Transaction.CREATED_BY_SERIES, false);
+      fieldSetter.set(Transaction.MIRROR, input.readBoolean());
+      fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
+      fieldSetter.set(Transaction.NOT_IMPORTED_TRANSACTION, input.readInteger());
+      fieldSetter.set(Transaction.OFX_CHECK_NUM, input.readUtf8String());
+      fieldSetter.set(Transaction.OFX_MEMO, input.readUtf8String());
+      fieldSetter.set(Transaction.OFX_NAME, input.readUtf8String());
+      fieldSetter.set(Transaction.QIF_M, input.readUtf8String());
+      fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
+      fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
+      fieldSetter.set(Transaction.IMPORT, input.readInteger());
+    }
+
+    private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readUtf8String());
+      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readUtf8String());
+      fieldSetter.set(Transaction.NOTE, input.readUtf8String());
+      fieldSetter.set(Transaction.MONTH, input.readInteger());
+      fieldSetter.set(Transaction.DAY, input.readInteger());
+      fieldSetter.set(Transaction.BANK_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.BANK_DAY, input.readInteger());
+      fieldSetter.set(Transaction.AMOUNT, input.readDouble());
+      fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
+      fieldSetter.set(Transaction.CATEGORY, input.readInteger());
+      fieldSetter.set(Transaction.SPLIT, input.readBoolean());
+      fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
+      fieldSetter.set(Transaction.SERIES, input.readInteger());
+      fieldSetter.set(Transaction.PLANNED, input.readBoolean());
+      fieldSetter.set(Transaction.MIRROR, input.readBoolean());
+      fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
+      fieldSetter.set(Transaction.NOT_IMPORTED_TRANSACTION, input.readInteger());
+    }
+
+    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readUtf8String());
+      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readUtf8String());
+      fieldSetter.set(Transaction.NOTE, input.readUtf8String());
+      fieldSetter.set(Transaction.MONTH, input.readInteger());
+      fieldSetter.set(Transaction.DAY, input.readInteger());
+      fieldSetter.set(Transaction.BANK_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.BANK_DAY, input.readInteger());
+      fieldSetter.set(Transaction.AMOUNT, input.readDouble());
+      fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
+      fieldSetter.set(Transaction.CATEGORY, input.readInteger());
+      fieldSetter.set(Transaction.SPLIT, input.readBoolean());
+      fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
+      fieldSetter.set(Transaction.SERIES, input.readInteger());
+      fieldSetter.set(Transaction.PLANNED, input.readBoolean());
+      fieldSetter.set(Transaction.MIRROR, input.readBoolean());
+      fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
@@ -348,93 +440,40 @@ public class Transaction {
       fieldSetter.set(Transaction.CREATED_BY_SERIES, false);
     }
 
-    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
+    private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readUtf8String());
-      fieldSetter.set(Transaction.LABEL, input.readUtf8String());
-      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readUtf8String());
-      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readUtf8String());
-      fieldSetter.set(Transaction.NOTE, input.readUtf8String());
+      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readString());
+      fieldSetter.set(Transaction.LABEL, input.readString());
+      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readString());
+      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readString());
+      fieldSetter.set(Transaction.NOTE, input.readString());
       fieldSetter.set(Transaction.MONTH, input.readInteger());
       fieldSetter.set(Transaction.DAY, input.readInteger());
       fieldSetter.set(Transaction.BANK_MONTH, input.readInteger());
       fieldSetter.set(Transaction.BANK_DAY, input.readInteger());
-      fieldSetter.set(Transaction.AMOUNT, input.readDouble());
+      Double amount = input.readDouble();
+      fieldSetter.set(Transaction.AMOUNT, amount);
       fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
       fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
       fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
-      fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
+      Integer transactionType = input.readInteger();
+      if (transactionType == TransactionType.PLANNED.getId()) {
+        if (amount > 0) {
+          fieldSetter.set(Transaction.TRANSACTION_TYPE, TransactionType.VIREMENT.getId());
+        }
+        else {
+          fieldSetter.set(Transaction.TRANSACTION_TYPE, TransactionType.PRELEVEMENT.getId());
+        }
+      }
+      else {
+        fieldSetter.set(Transaction.TRANSACTION_TYPE, transactionType);
+      }
       fieldSetter.set(Transaction.CATEGORY, input.readInteger());
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
       fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
       fieldSetter.set(Transaction.SERIES, input.readInteger());
       fieldSetter.set(Transaction.PLANNED, input.readBoolean());
-      fieldSetter.set(Transaction.MIRROR, input.readBoolean());
-      fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
-    }
-
-    private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
-      SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readUtf8String());
-      fieldSetter.set(Transaction.LABEL, input.readUtf8String());
-      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readUtf8String());
-      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readUtf8String());
-      fieldSetter.set(Transaction.NOTE, input.readUtf8String());
-      fieldSetter.set(Transaction.MONTH, input.readInteger());
-      fieldSetter.set(Transaction.DAY, input.readInteger());
-      fieldSetter.set(Transaction.BANK_MONTH, input.readInteger());
-      fieldSetter.set(Transaction.BANK_DAY, input.readInteger());
-      fieldSetter.set(Transaction.AMOUNT, input.readDouble());
-      fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
-      fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
-      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
-      fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
-      fieldSetter.set(Transaction.CATEGORY, input.readInteger());
-      fieldSetter.set(Transaction.SPLIT, input.readBoolean());
-      fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
-      fieldSetter.set(Transaction.SERIES, input.readInteger());
-      fieldSetter.set(Transaction.PLANNED, input.readBoolean());
-      fieldSetter.set(Transaction.MIRROR, input.readBoolean());
-      fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
-      fieldSetter.set(Transaction.NOT_IMPORTED_TRANSACTION, input.readInteger());
-    }
-
-    private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
-      SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readUtf8String());
-      fieldSetter.set(Transaction.LABEL, input.readUtf8String());
-      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readUtf8String());
-      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readUtf8String());
-      fieldSetter.set(Transaction.NOTE, input.readUtf8String());
-      fieldSetter.set(Transaction.MONTH, input.readInteger());
-      fieldSetter.set(Transaction.DAY, input.readInteger());
-      fieldSetter.set(Transaction.BANK_MONTH, input.readInteger());
-      fieldSetter.set(Transaction.BANK_DAY, input.readInteger());
-      fieldSetter.set(Transaction.AMOUNT, input.readDouble());
-      fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
-      fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
-      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
-      fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
-      fieldSetter.set(Transaction.CATEGORY, input.readInteger());
-      fieldSetter.set(Transaction.SPLIT, input.readBoolean());
-      fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
-      fieldSetter.set(Transaction.SERIES, input.readInteger());
-      fieldSetter.set(Transaction.PLANNED, input.readBoolean());
-      fieldSetter.set(Transaction.MIRROR, input.readBoolean());
-      fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
-      fieldSetter.set(Transaction.NOT_IMPORTED_TRANSACTION, input.readInteger());
-      fieldSetter.set(Transaction.OFX_CHECK_NUM, input.readUtf8String());
-      fieldSetter.set(Transaction.OFX_MEMO, input.readUtf8String());
-      fieldSetter.set(Transaction.OFX_NAME, input.readUtf8String());
-      fieldSetter.set(Transaction.QIF_M, input.readUtf8String());
-      fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
-      fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
-      fieldSetter.set(Transaction.IMPORT, input.readInteger());
-    }
-
-
-    public int getWriteVersion() {
-      return 5;
+      fieldSetter.set(Transaction.CREATED_BY_SERIES, false);
     }
   }
 }

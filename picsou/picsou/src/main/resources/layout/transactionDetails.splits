@@ -75,6 +75,8 @@
           <row border="empty(10,0,0,0)">
             <label text="$categorization.series.title" styleClass="header"/>
             <filler fill="horizontal"/>
+            <button name="shift" action="shift" autoHideIfDisabled="true"
+                    tooltipText="$shift.transaction.tooltip" marginBottom="3"/>
             <button name="splitLink" action="split" autoHideIfDisabled="true"
                     tooltipText="$split.transaction.tooltip" marginBottom="3"/>
           </row>

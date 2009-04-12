@@ -117,4 +117,37 @@ public class TransactionDetailsChecker extends GuiChecker {
   public void checkMessage(String message) {
     UISpecAssert.assertThat(getPanel().getTextBox().textContains(message));
   }
+
+  public void shift() {
+    openShiftDialog().validate();
+  }
+
+  public ConfirmationDialogChecker openShiftDialog() {
+    Button button = getPanel().getButton("shift");
+    assertThat(button.textEquals("Shift..."));
+    return ConfirmationDialogChecker.init(button.triggerClick());
+  }
+
+  public void checkShiftEnabled() {
+    Button button = getPanel().getButton("shift");
+    assertThat(button.isVisible());
+    assertThat(button.textEquals("Shift..."));
+  }
+
+  public void checkShiftInverted() {
+    Button button = getPanel().getButton("shift");
+    assertThat(button.isVisible());
+    assertThat(button.textEquals("Cancel shift"));
+  }
+
+  public void checkShiftDisabled() {
+    checkComponentVisible(getPanel(), JButton.class, "shift", false);
+  }
+
+  public void unshift() {
+    Button button = getPanel().getButton("shift");
+    assertThat(button.textEquals("Cancel shift"));
+    button.click();
+  }
+
 }
