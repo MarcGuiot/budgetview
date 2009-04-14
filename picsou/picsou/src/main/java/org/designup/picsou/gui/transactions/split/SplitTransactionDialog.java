@@ -64,7 +64,6 @@ public class SplitTransactionDialog {
   private SplitTransactionDialog.OkAction okAction;
   private GlobRepository parentRepository;
   private GlobTableView tableView;
-  private SelectionService selectionService;
 
   public SplitTransactionDialog(GlobRepository repository, Directory directory) {
     this.parentRepository = repository;
@@ -75,7 +74,7 @@ public class SplitTransactionDialog {
         .get();
 
     localDirectory = new DefaultDirectory(directory);
-    selectionService = new SelectionService();
+    SelectionService selectionService = new SelectionService();
     localDirectory.add(selectionService);
     descriptionService = localDirectory.get(DescriptionService.class);
     rendererColors = new TransactionRendererColors(localDirectory);

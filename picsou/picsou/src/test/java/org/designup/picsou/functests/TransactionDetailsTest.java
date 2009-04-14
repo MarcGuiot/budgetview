@@ -90,7 +90,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
     transactionDetails.openSplitDialog()
       .enterAmount("5")
-      .ok();
+      .validate();
     transactionDetails.checkSplitButtonLabel("View split...");
   }
 

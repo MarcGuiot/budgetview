@@ -7,6 +7,8 @@ import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.assertTrue;
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import org.uispec4j.interception.WindowInterceptor;
 
 import java.awt.*;
@@ -38,7 +40,7 @@ public class SplitDialogChecker {
   }
 
   public SplitDialogChecker checkNote(String text) {
-    org.uispec4j.assertion.UISpecAssert.assertTrue(window.getInputTextBox("note").textEquals(text));
+    assertTrue(window.getInputTextBox("note").textEquals(text));
     return this;
   }
 
@@ -98,37 +100,37 @@ public class SplitDialogChecker {
   }
 
   public SplitDialogChecker assertOkDisabled() {
-    org.uispec4j.assertion.UISpecAssert.assertFalse(getOkButton().isEnabled());
+    assertFalse(getOkButton().isEnabled());
     return this;
   }
 
   public SplitDialogChecker checkOkFailure(String expectedMessage) {
     getOkButton().click();
 
-    UISpecAssert.assertTrue(window.isVisible());
+    assertTrue(window.isVisible());
 
     TextBox message = window.getTextBox("message");
-    UISpecAssert.assertTrue(message.isVisible());
-    UISpecAssert.assertTrue(message.textEquals(expectedMessage));
+    assertTrue(message.isVisible());
+    assertTrue(message.textEquals(expectedMessage));
     return this;
   }
 
   public SplitDialogChecker checkAmount(String displayedValue) {
-    UISpecAssert.assertTrue(window.getInputTextBox("amount").textEquals(displayedValue));
+    assertTrue(window.getInputTextBox("amount").textEquals(displayedValue));
     return this;
   }
 
-  public SplitDialogChecker ok() {
+  public SplitDialogChecker validate() {
     Button addButton = getOkButton();
     addButton.click();
-    UISpecAssert.assertTrue(window.getTextBox("message").textIsEmpty());
-    UISpecAssert.assertFalse(window.isVisible());
+    assertTrue(window.getTextBox("message").textIsEmpty());
+    assertFalse(window.isVisible());
     return this;
   }
 
   public void close() {
     closeButton.click();
-    UISpecAssert.assertFalse(window.isVisible());
+    assertFalse(window.isVisible());
   }
 
   public SplitDialogChecker checkTable(Object[][] objects) {
@@ -143,7 +145,7 @@ public class SplitDialogChecker {
         objects[i][column],
         ""};
     }
-    UISpecAssert.assertTrue(table.contentEquals(expected));
+    assertTrue(table.contentEquals(expected));
     return this;
   }
 
@@ -164,7 +166,7 @@ public class SplitDialogChecker {
     enterAmount(amount);
     selectEnvelope(category, true);
     enterNote(note);
-    ok();
+    validate();
     return this;
   }
 
@@ -175,7 +177,7 @@ public class SplitDialogChecker {
     enterAmount(amount);
     selectOccasional(category);
     enterNote(note);
-    ok();
+    validate();
     return this;
   }
 
@@ -186,7 +188,13 @@ public class SplitDialogChecker {
     enterAmount(amount);
     selectRecurring(name, category, showSeriesInitialization);
     enterNote(note);
-    ok();
+    validate();
+    return this;
+  }
+
+  public SplitDialogChecker enterNoteInTable(int row, String note) {
+    Table.Cell cell = table.editCell(row, SplitTransactionDialog.NOTE_COLUMN_INDEX);
+    cell.getInputTextBox().setText(note);
     return this;
   }
 

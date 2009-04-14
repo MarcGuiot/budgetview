@@ -57,7 +57,7 @@ public class TransactionDetailsChecker extends GuiChecker {
       new SplitDialogChecker(WindowInterceptor.getModalDialog(splitLink.triggerClick()));
     splitDialogChecker.enterAmount(amount);
     splitDialogChecker.enterNote(note);
-    splitDialogChecker.ok();
+    splitDialogChecker.validate();
   }
 
   public void checkOriginalLabelNotVisible() {
