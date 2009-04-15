@@ -1,6 +1,5 @@
 package org.globsframework.utils;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -8,11 +7,11 @@ import java.util.Date;
 
 public class Dates {
   public static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
-  private static final DateFormat dateFormat = DEFAULT_DATE_FORMAT;
+  private static final SimpleDateFormat dateFormat = DEFAULT_DATE_FORMAT;
   public static final SimpleDateFormat DEFAULT_TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-  private static final DateFormat timestampFormat = DEFAULT_TIMESTAMP_FORMAT;
+  private static final SimpleDateFormat timestampFormat = DEFAULT_TIMESTAMP_FORMAT;
   public static final SimpleDateFormat DEFAULT_MONTH_FORMAT = new SimpleDateFormat("yyyy/MM");
-  private static final DateFormat monthFormat = DEFAULT_MONTH_FORMAT;
+  private static final SimpleDateFormat monthFormat = DEFAULT_MONTH_FORMAT;
 
   private Dates() {
   }
@@ -23,7 +22,7 @@ public class Dates {
         return dateFormat.parse(yyyyMMdd);
       }
       catch (ParseException e) {
-        throw new RuntimeException(e);
+        throw new RuntimeException("Format should be: " + dateFormat.toPattern(), e);
       }
     }
   }
@@ -46,7 +45,7 @@ public class Dates {
         return timestampFormat.parse(yyyyMMdd_hhmmss);
       }
       catch (ParseException e) {
-        throw new RuntimeException(e);
+        throw new RuntimeException("Format should be: " + timestampFormat.toPattern(), e);
       }
     }
   }
@@ -69,7 +68,7 @@ public class Dates {
         return monthFormat.parse(yyyymm);
       }
       catch (ParseException e) {
-        throw new RuntimeException(e);
+        throw new RuntimeException("Format should be: " + monthFormat.toPattern(), e);
       }
     }
   }
