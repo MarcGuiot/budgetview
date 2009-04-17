@@ -1,6 +1,6 @@
 package org.designup.picsou.license.functests;
 
-import org.designup.picsou.functests.checkers.LicenseChecker;
+import org.designup.picsou.functests.checkers.LicenseActivationChecker;
 import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
@@ -34,7 +34,7 @@ public class RegistrationTest extends LicenseTestCase {
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
 
-    LicenseChecker license = LicenseChecker.open(window);
+    LicenseActivationChecker license = LicenseActivationChecker.open(window);
     license.checkConnectionNotAvailable();
     startServers();
     Thread.sleep(2000);

@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.actions;
 
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.license.LicenseExpirationDialog;
+import org.designup.picsou.gui.license.LicenseActivationDialog;
 import org.designup.picsou.gui.startup.ImportPanel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.model.User;
@@ -94,7 +94,7 @@ public class ImportFileAction extends AbstractAction {
       }
       else {
         JFrame frame = directory.get(JFrame.class);
-        LicenseExpirationDialog dialog = new LicenseExpirationDialog(frame, repository, directory);
+        LicenseActivationDialog dialog = new LicenseActivationDialog(frame, repository, directory);
         dialog.showExpiration();
       }
     }

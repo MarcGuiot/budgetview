@@ -2,17 +2,19 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" minimumSize="(470,180)" preferredSize="(470,180)" opaque="true">
+  <panel styleClass="dialog" minimumSize="(470,180)" preferredSize="(470,250)" opaque="true">
     <column styleClass="innerDialog">
       <label text="$license.title" styleClass="title"/>
+      <label ref="expirationLabel" text="$license.trial.completed" marginBottom="5"/>
+      <htmlEditorPane text="$license.acquisition" hyperlinkListener="hyperlinkHandler" marginBottom="5"/>
       <grid>
         <label gridPos="(0,0)" text="$license.mail" styleClass="formLabel"/>
         <textField gridPos="(1,0)" ref="mail" marginBottom="10"/>
         <label gridPos="(0,1)" text="$license.code" styleClass="formLabel"/>
-        <textField gridPos="(1,1)" ref="code" columns="20"/>
+        <textField gridPos="(1,1)" ref="code"/>
       </grid>
       <progressBar ref="connectionState" visible="false"/>
-      <label ref="connectionMessage" styleClass="errorMessage"/>
+      <htmlEditorPane ref="connectionMessage" styleClass="errorMessage"/>
       <filler fill="vertical" weightY="20"/>
     </column>
   </panel>

@@ -6,7 +6,6 @@ import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobTextEditor;
-import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
@@ -25,8 +24,7 @@ import java.util.Set;
 
 public class LicenseExpirationDialog {
   private PicsouDialog dialog;
-  private CardHandler cardType;
-  private JLabel response;
+  private JLabel response = new JLabel();
   private LocalGlobRepository localGlobRepository;
   private AbstractAction sendAction;
 
@@ -36,8 +34,7 @@ public class LicenseExpirationDialog {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/licenseExpirationDialog.splits",
                             localGlobRepository, directory);
-    cardType = builder.addCardHandler("type");
-    response = new JLabel();
+
     builder.add("mailResponse", response);
     final Glob user = repository.get(User.KEY);
     sendAction = new AbstractAction(Lang.get("license.mail.request.send")) {
@@ -79,15 +76,8 @@ public class LicenseExpirationDialog {
     dialog.pack();
   }
 
-  public void showExpiration() {
+  public void show() {
     GuiUtils.center(dialog);
-    cardType.show("expiration");
-    dialog.setVisible(true);
-  }
-
-  public void showNewLicense() {
-    GuiUtils.center(dialog);
-    cardType.show("newLicense");
     dialog.setVisible(true);
   }
 

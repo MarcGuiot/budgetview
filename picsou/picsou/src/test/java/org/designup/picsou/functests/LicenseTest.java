@@ -1,11 +1,12 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.LicenseChecker;
+import org.designup.picsou.functests.checkers.LicenseActivationChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.gui.TimeService;
 import org.globsframework.utils.Dates;
 import org.uispec4j.TextBox;
 import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class LicenseTest extends LoggedInFunctionalTestCase {
 
@@ -22,10 +23,10 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
 
   public void testMessage() throws Exception {
     TextBox box = mainWindow.getTextBox("licenseMessage");
-    UISpecAssert.assertTrue(box.isVisible());
-    UISpecAssert.assertTrue(box.textEquals("Still 30 days."));
+    assertThat(box.isVisible());
+    assertThat(box.textEquals("Still 30 days."));
 
-    LicenseChecker.enterLicense(mainWindow, "admin", "zz");
+    LicenseActivationChecker.enterLicense(mainWindow, "admin", "zz");
     UISpecAssert.assertFalse(box.isVisible());
   }
 
@@ -34,8 +35,8 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
 
     restartApplication();
     TextBox box = mainWindow.getTextBox("licenseMessage");
-    UISpecAssert.assertTrue(box.isVisible());
-    UISpecAssert.assertTrue(box.textEquals("This is your last day with cashpilot."));
+    assertThat(box.isVisible());
+    assertThat(box.textEquals("This is your last day with cashpilot."));
   }
 
   public void testLicenseExpired() throws Exception {
@@ -43,7 +44,7 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
 
     restartApplication();
     TextBox box = mainWindow.getTextBox("licenseMessage");
-    UISpecAssert.assertTrue(box.isVisible());
-    UISpecAssert.assertTrue(box.textContains("Your free trial period is over."));
+    assertThat(box.isVisible());
+    assertThat(box.textContains("Your free trial period is over."));
   }
 }

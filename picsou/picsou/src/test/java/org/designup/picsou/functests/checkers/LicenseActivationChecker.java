@@ -2,16 +2,18 @@ package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
+import org.uispec4j.MenuItem;
+import org.uispec4j.TextBox;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
-public class LicenseChecker {
+public class LicenseActivationChecker {
   private Window dialog;
 
-  public LicenseChecker(Window dialog) {
+  public LicenseActivationChecker(Window dialog) {
     this.dialog = dialog;
   }
 
@@ -19,7 +21,9 @@ public class LicenseChecker {
     enterLicense(window, new WindowHandler() {
       public Trigger process(Window window) throws Exception {
         window.getInputTextBox("mail").setText(mail);
-        window.getInputTextBox("code").setText(code);
+        TextBox codeField = window.getInputTextBox("code");
+        codeField.clear();
+        codeField.appendText(code);
         return window.getButton("OK").triggerClick();
       }
     });
@@ -30,7 +34,6 @@ public class LicenseChecker {
       public Trigger process(Window window) throws Exception {
         window.getInputTextBox("mail").setText(mail);
         window.getInputTextBox("code").setText(code);
-        window.getButton("ok").click();
         assertTrue(window.getTextBox("connectionMessage").textEquals(message));
         return window.getButton("cancel").triggerClick();
       }
@@ -39,25 +42,27 @@ public class LicenseChecker {
 
   private static void enterLicense(Window window, WindowHandler windowHandler) {
     UISpecAssert.waitUntil(window.containsMenuBar(), 10000);
-    WindowInterceptor.init(window.getMenuBar().getMenu("File").getSubMenu("Register").triggerClick())
-      .process(windowHandler).run();
+    MenuItem registerMenu = window.getMenuBar().getMenu("File").getSubMenu("Register");
+    WindowInterceptor.init(registerMenu.triggerClick())
+      .process(windowHandler)
+      .run();
   }
 
-  public static LicenseChecker open(Window window) {
+  public static LicenseActivationChecker open(Window window) {
     UISpecAssert.waitUntil(window.containsMenuBar(), 10000);
-    return new LicenseChecker(WindowInterceptor.getModalDialog(window.getMenuBar().getMenu("File")
+    return new LicenseActivationChecker(WindowInterceptor.getModalDialog(window.getMenuBar().getMenu("File")
       .getSubMenu("Register").triggerClick()));
   }
 
-  public LicenseChecker enterLicenseAndValidate(final String mail, final String code) {
+  public LicenseActivationChecker enterLicenseAndValidate(final String mail, final String code) {
     enterLicense(mail, code);
     dialog.getButton("ok").click();
     return this;
   }
 
-  public LicenseChecker enterLicense(String mail, String code) {
+  public LicenseActivationChecker enterLicense(String mail, String code) {
     dialog.getInputTextBox("mail").setText(mail);
-    dialog.getInputTextBox("code").setText(code);
+    dialog.getInputTextBox("code").appendText(code);
     return this;
   }
 
@@ -73,7 +78,7 @@ public class LicenseChecker {
     assertFalse(dialog.getTextBox("connectionMessage").isVisible());
   }
 
-  public LicenseChecker checkErrorMessage(String message) {
+  public LicenseActivationChecker checkErrorMessage(String message) {
     assertFalse(dialog.getProgressBar().isVisible());
     assertTrue(dialog.getTextBox("connectionMessage").textEquals(message));
     return this;
@@ -84,7 +89,7 @@ public class LicenseChecker {
     assertFalse(dialog.isVisible());
   }
 
-  public LicenseChecker validate() {
+  public LicenseActivationChecker validate() {
     dialog.getButton("ok").click();
     return this;
   }

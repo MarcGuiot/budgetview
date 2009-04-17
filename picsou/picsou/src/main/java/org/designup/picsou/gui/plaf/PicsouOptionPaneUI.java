@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.plaf;
 
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.components.PicsouDialogPainter;
+import org.designup.picsou.gui.components.MovingDialog;
 import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
@@ -26,7 +26,7 @@ public class PicsouOptionPaneUI extends BasicOptionPaneUI {
     if (painter == null) {
       painter = new PicsouDialogPainter();
     }
-    Gui.installWindowTitle(c, painter, "", 10);
+    MovingDialog.installWindowTitle(c, painter, "", 10);
   }
 
   protected Container createMessageArea() {
@@ -62,6 +62,6 @@ public class PicsouOptionPaneUI extends BasicOptionPaneUI {
       }
     });
 
-    Gui.installMovingWindowTitle(dialog);
+    MovingDialog.installMovingWindowTitle(dialog);
   }
 }

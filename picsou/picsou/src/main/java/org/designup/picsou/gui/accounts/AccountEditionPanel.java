@@ -1,6 +1,9 @@
 package org.designup.picsou.gui.accounts;
 
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.model.AccountType;
+import org.designup.picsou.model.Bank;
+import org.designup.picsou.model.BankEntity;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -11,7 +14,6 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.DefaultChangeSetListener;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;

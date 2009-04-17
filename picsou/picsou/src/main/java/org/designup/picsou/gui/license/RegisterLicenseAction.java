@@ -21,7 +21,7 @@ public class RegisterLicenseAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent e) {
-    LicenseDialog dialog = new LicenseDialog(parent, repository, directory);
-    dialog.show();
+    LicenseActivationDialog dialog = new LicenseActivationDialog(parent, repository, directory);
+    dialog.show(false);
   }
 }

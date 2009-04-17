@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.plaf;
 
 import apple.laf.AquaFileChooserUI;
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.components.PicsouDialogPainter;
+import org.designup.picsou.gui.components.MovingDialog;
 import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
@@ -28,7 +28,7 @@ public class PicsouMacFileChooserUI extends AquaFileChooserUI {
     if (painter == null) {
       painter = new PicsouDialogPainter();
     }
-    Gui.installWindowTitle(c, painter, getDialogTitle((JFileChooser)c), 10);
+    MovingDialog.installWindowTitle(c, painter, getDialogTitle((JFileChooser)c), 10);
   }
 
   public void paint(Graphics g, JComponent c) {
@@ -47,6 +47,6 @@ public class PicsouMacFileChooserUI extends AquaFileChooserUI {
       }
     });
 
-    Gui.installMovingWindowTitle(dialog);
+    MovingDialog.installMovingWindowTitle(dialog);
   }
 }

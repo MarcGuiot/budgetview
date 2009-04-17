@@ -2,6 +2,7 @@ package org.designup.picsou.gui.license;
 
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.undo.UndoRedoService;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
@@ -25,42 +26,50 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 
-public class LicenseDialog {
+public class LicenseActivationDialog {
   private PicsouDialog dialog;
-  private LocalGlobRepository localRepository;
-  private SelectionService selectionService;
-  private JLabel connectMessageLabel;
-  private ChangeSetListener changeSetListener;
   private GlobRepository repository;
+  private LocalGlobRepository localRepository;
   private Directory localDirectory;
-  private Integer activationState;
-  private JProgressBar progressBar;
-  private ValidateAction validateAction;
+  private ChangeSetListener changeSetListener;
+  private SelectionService selectionService;
 
-  public LicenseDialog(Window parent, GlobRepository repository, Directory directory) {
+  private JEditorPane connectionMessage = new JEditorPane();
+  private JLabel expirationLabel = new JLabel();
+  private JProgressBar connectionState = new JProgressBar();
+  private ValidateAction validateAction = new ValidateAction();
+  private Integer activationState;
+
+  public LicenseActivationDialog(Window parent, GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.localDirectory = new DefaultDirectory(directory);
-    selectionService = new SelectionService();
+    this.selectionService = new SelectionService();
     this.localDirectory.add(selectionService);
-    LocalGlobRepositoryBuilder localGlobRepositoryBuilder = LocalGlobRepositoryBuilder.init(repository)
-      .copy(User.TYPE, UserPreferences.TYPE);
-    this.localRepository = localGlobRepositoryBuilder.get();
+    this.localRepository =
+      LocalGlobRepositoryBuilder.init(repository)
+        .copy(User.TYPE, UserPreferences.TYPE)
+        .get();
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/LicenseDialog.splits",
+    dialog = PicsouDialog.create(parent, directory);
+
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/licenseActivationDialog.splits",
                                                       localRepository, this.localDirectory);
+    builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
     builder.addEditor("mail", User.MAIL).setNotifyOnKeyPressed(true);
-    builder.addEditor("code", User.ACTIVATION_CODE).setNotifyOnKeyPressed(true);
-    connectMessageLabel = new JLabel(Lang.get("license.connect"));
-    builder.add("connectionMessage", connectMessageLabel);
-    progressBar = new JProgressBar();
-    builder.add("connectionState", progressBar);
+    builder.addEditor("code", User.ACTIVATION_CODE)
+      .setValidationAction(validateAction)
+      .setNotifyOnKeyPressed(true);
+    GuiUtils.initHtmlComponent(connectionMessage);
+    connectionMessage.setText(Lang.get("license.connect"));
+    builder.add("connectionMessage", connectionMessage);
+    builder.add("connectionState", connectionState);
 
-    validateAction = new ValidateAction();
-    dialog = PicsouDialog.createWithButtons(parent, directory, builder.<JPanel>load(),
-                                            validateAction, new CancelAction());
-    dialog.setTitle(Lang.get("license.title"));
+    builder.add("expirationLabel", expirationLabel);
+
+    dialog.addPanelWithButtons(builder.<JPanel>load(), validateAction, new CancelAction());
+
     Boolean isConnected = localRepository.get(User.KEY).get(User.CONNECTED);
-    connectMessageLabel.setVisible(!isConnected);
+    connectionMessage.setVisible(!isConnected);
 
     initRegisterChangeListener();
     dialog.pack();
@@ -72,9 +81,9 @@ public class LicenseDialog {
         if (changeSet.containsChanges(User.KEY)) {
           Boolean isConnected = repository.get(User.KEY).get(User.CONNECTED);
           if (!isConnected) {
-            connectMessageLabel.setText(Lang.get("license.connect"));
+            connectionMessage.setText(Lang.get("license.connect"));
           }
-          connectMessageLabel.setVisible(!isConnected);
+          connectionMessage.setVisible(!isConnected);
           if (isConnected) {
             selectionService.select(localRepository.get(User.KEY));
             selectionService.select(localRepository.get(UserPreferences.KEY));
@@ -87,10 +96,10 @@ public class LicenseDialog {
               localRepository.dispose();
             }
             else if (activationState == User.ACTIVATION_FAILED_MAIL_SENT) {
-              updateDialogState("license.activation.fail.mailSent", localRepository.get(User.KEY).get(User.MAIL));
+              updateDialogState("license.activation.faileded.mailSent", localRepository.get(User.KEY).get(User.MAIL));
             }
             else if (activationState != User.ACTIVATION_IN_PROGRESS) {
-              updateDialogState("license.activation.fail");
+              updateDialogState("license.activation.faileded");
             }
           }
         }
@@ -104,13 +113,14 @@ public class LicenseDialog {
 
   private void updateDialogState(String message, String... args) {
     localRepository.rollback();
-    connectMessageLabel.setText(Lang.get(message, args));
-    connectMessageLabel.setVisible(true);
-    progressBar.setVisible(false);
+    connectionMessage.setText(Lang.get(message, args));
+    connectionMessage.setVisible(true);
+    connectionState.setVisible(false);
     validateAction.setEnabled(true);
   }
 
-  public void show() {
+  public void show(boolean expiration) {
+    expirationLabel.setVisible(expiration);
     localRepository.rollback();
     if (repository.get(User.KEY).get(User.CONNECTED)) {
 //      localRepository.update(UserPreferences.KEY, UserPreferences.FUTURE_MONTH_COUNT, 24);
@@ -121,6 +131,9 @@ public class LicenseDialog {
     dialog.setVisible(true);
   }
 
+  public void showExpiration() {
+    show(true);
+  }
 
   private class ValidateAction extends AbstractAction {
     public ValidateAction() {
@@ -141,8 +154,8 @@ public class LicenseDialog {
       Utils.endRemove();
       localRepository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_IN_PROGRESS);
       if (checkContainsValidChange()) {
-        progressBar.setIndeterminate(true);
-        progressBar.setVisible(true);
+        connectionState.setIndeterminate(true);
+        connectionState.setVisible(true);
         localRepository.commitChanges(false);
         localDirectory.get(UndoRedoService.class).cleanUndo();
       }

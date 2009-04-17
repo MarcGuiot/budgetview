@@ -32,7 +32,7 @@ public class AskMailTest extends LicenseTestCase {
     PostMethod postMethod = sendRequest();
     Header header = postMethod.getResponseHeader(ConfigService.HEADER_STATUS);
     assertEquals(ConfigService.HEADER_MAIL_SENT, header.getValue());
-    checkMailReceive("monPremierClient@pirate.du");
+    checkReceivedMail("monPremierClient@pirate.du");
   }
 
   private PostMethod sendRequest() throws IOException {

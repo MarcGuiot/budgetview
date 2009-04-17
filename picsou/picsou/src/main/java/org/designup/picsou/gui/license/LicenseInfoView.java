@@ -37,11 +37,11 @@ public class LicenseInfoView extends View {
         if (href.equals("newLicense")) {
           LicenseExpirationDialog dialog =
             new LicenseExpirationDialog(parent, repository, directory);
-          dialog.showNewLicense();
+          dialog.show();
         }
         else if (href.equals("activateKey")) {
-          LicenseDialog dialog = new LicenseDialog(parent, repository, directory);
-          dialog.show();
+          LicenseActivationDialog dialog = new LicenseActivationDialog(parent, repository, directory);
+          dialog.show(false);
         }
       }
     });
@@ -88,7 +88,7 @@ public class LicenseInfoView extends View {
       else {
         Integer state = user.get(User.ACTIVATION_STATE);
         if (state != null && state == User.ACTIVATION_FAILED_MAIL_SENT) {
-          licenseMessage.setText(Lang.get("license.activation.fail.mailSent", user.get(User.MAIL)));
+          licenseMessage.setText(Lang.get("license.activation.faileded.mailSent", user.get(User.MAIL)));
         }
         else if (user.get(User.MAIL) == null) {
           licenseMessage.setText(Lang.get("license.expiration.message"));

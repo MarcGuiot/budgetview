@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.experiment;
 
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.components.PicsouDialogPainter;
+import org.designup.picsou.gui.components.MovingDialog;
 import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
@@ -54,8 +54,8 @@ public class JModalWindow extends JDialog {
     if (visible) {
       JPanel container = (JPanel)getContentPane();
       if (getTitle() != null) {
-        Gui.installWindowTitle(container, painter, getTitle(), 0);
-        Gui.installMovingWindowTitle(this);
+        MovingDialog.installWindowTitle(container, painter, getTitle(), 0);
+        MovingDialog.installMovingWindowTitle(this);
         pack();
       }
 

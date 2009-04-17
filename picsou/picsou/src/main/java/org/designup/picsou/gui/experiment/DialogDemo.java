@@ -62,7 +62,7 @@ public class DialogDemo {
 
   private static void showLicenseExpirationDialog(GlobRepository repository, Directory directory, JFrame frame) {
     LicenseExpirationDialog dialog = new LicenseExpirationDialog(frame, repository, directory);
-    dialog.showExpiration();
+    dialog.show();
   }
 
   private static void showSeriesEditionDialog(GlobRepository repository, Directory directory, JFrame frame) {

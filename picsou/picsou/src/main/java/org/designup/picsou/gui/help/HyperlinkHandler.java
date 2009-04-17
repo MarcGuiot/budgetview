@@ -29,6 +29,7 @@ public class HyperlinkHandler implements HyperlinkListener {
     if (!HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
       return;
     }
+
     String href = e.getDescription().trim();
     if (href.startsWith("help:")) {
       helpService.show(href.substring(5), owner);

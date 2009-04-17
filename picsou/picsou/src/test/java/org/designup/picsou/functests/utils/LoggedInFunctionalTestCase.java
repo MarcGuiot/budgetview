@@ -37,7 +37,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected TransactionDetailsChecker transactionDetails;
   protected OperationChecker operations;
   protected TitleChecker title;
-  protected LicenseChecker license;
+  protected LicenseActivationChecker license;
   protected MonthSummaryChecker monthSummary;
   protected BudgetViewChecker budgetView;
   protected SavingsViewChecker savingsView;
@@ -91,7 +91,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     initCheckers();
     if (!notRegistered) {
-      LicenseChecker.enterLicense(mainWindow, "admin", "zz");
+      LicenseActivationChecker.enterLicense(mainWindow, "admin", "zz");
       operations.openPreferences().setFutureMonthsCount(0).validate();
     }
     selectInitialView();
@@ -134,7 +134,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     categorization = new CategorizationChecker(mainWindow);
     series = new SeriesViewChecker(mainWindow);
     seriesEvolution = new SeriesEvolutionChecker(mainWindow);
-    license = new LicenseChecker(mainWindow);
+    license = new LicenseActivationChecker(mainWindow);
     infochecker = new InfoChecker(mainWindow);
     navigation = new NavigationViewChecker(mainWindow);
   }
