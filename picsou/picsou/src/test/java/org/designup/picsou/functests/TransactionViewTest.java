@@ -39,42 +39,6 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testPopupIsShownIfAMatchingNoteAlreadyExists() throws Exception {
-    PopupMenuInterceptor
-      .run(new Trigger() {
-        public void run() throws Exception {
-          table.editCell(2, TransactionView.NOTE_COLUMN_INDEX, "o", false);
-        }
-      })
-      .contentEquals("frais pro", "nourrice")
-      .check();
-  }
-
-  public void testEditingANoteBySelectingAValueInThePopup() throws Exception {
-    transactions.initContent()
-      .addOccasional("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
-      .addOccasional("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.TRANSPORTS)
-      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "sg", "", -200.00, MasterCategory.BANK)
-      .addOccasional("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
-      .check();
-
-    PopupMenuInterceptor
-      .run(new Trigger() {
-        public void run() throws Exception {
-          table.editCell(2, TransactionView.NOTE_COLUMN_INDEX, "o", false);
-        }
-      })
-      .getSubMenu("frais pro")
-      .click();
-
-    transactions.initContent()
-      .addOccasional("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
-      .addOccasional("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.TRANSPORTS)
-      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "sg", "frais pro", -200.00, MasterCategory.BANK)
-      .addOccasional("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
-      .check();
-  }
-
   public void testEditingWhileAColumnIsSorted() throws Exception {
     table.getHeader().click(1);
 
