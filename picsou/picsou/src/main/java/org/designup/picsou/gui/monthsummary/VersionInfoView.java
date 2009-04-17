@@ -11,10 +11,10 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.util.Set;
 
-public class InfoView extends View {
+public class VersionInfoView extends View {
   private JLabel versionInfo;
 
-  public InfoView(GlobRepository repository, Directory directory) {
+  public VersionInfoView(GlobRepository repository, Directory directory) {
     super(repository, directory);
   }
 

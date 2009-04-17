@@ -21,7 +21,7 @@ import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
-import org.designup.picsou.gui.monthsummary.InfoView;
+import org.designup.picsou.gui.monthsummary.VersionInfoView;
 import org.designup.picsou.gui.monthsummary.MonthSummaryView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.savings.SavingsView;
@@ -150,7 +150,7 @@ public class MainPanel {
       transactionView,
       timeView,
       categoryView,
-      new InfoView(repository, directory),
+      new VersionInfoView(repository, directory),
       new AccountView(repository, directory),
       monthSummary,
       categorizationView,

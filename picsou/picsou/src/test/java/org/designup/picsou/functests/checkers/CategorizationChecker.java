@@ -115,7 +115,7 @@ public class CategorizationChecker extends GuiChecker {
       createIncomeSeries()
         .setName(name)
         .setCategory(MasterCategory.INCOME)
-        .setUnknown()
+        .setIrregular()
         .validate();
     }
     else {

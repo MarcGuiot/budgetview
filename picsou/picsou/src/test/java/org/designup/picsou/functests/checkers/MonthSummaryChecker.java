@@ -214,7 +214,7 @@ public class MonthSummaryChecker extends GuiChecker {
     return this;
   }
 
-  public MonthSummaryChecker checkProjects(double amount) {
+  public MonthSummaryChecker checkSpecial(double amount) {
     checkObserved(BudgetArea.SPECIAL, amount);
     return this;
   }
@@ -224,12 +224,12 @@ public class MonthSummaryChecker extends GuiChecker {
     return this;
   }
 
-  public MonthSummaryChecker checkProjectsPlanned(String amount) {
+  public MonthSummaryChecker checkPlannedSpecial(String amount) {
     checkPlanned(BudgetArea.SPECIAL, amount);
     return this;
   }
 
-  public MonthSummaryChecker checkProjects(double amount, double planned) {
+  public MonthSummaryChecker checkSpecial(double amount, double planned) {
     checkBudgetArea(BudgetArea.SPECIAL, amount, planned);
     return this;
   }
@@ -292,7 +292,7 @@ public class MonthSummaryChecker extends GuiChecker {
     gauge.checkOverrunPart(overrun);
   }
 
-  public MonthSummaryChecker total(double received, double spent) {
+  public MonthSummaryChecker checkTotal(double received, double spent) {
     checkBalance(received - spent);
     spent = Math.abs(spent);
     received = Math.abs(received);

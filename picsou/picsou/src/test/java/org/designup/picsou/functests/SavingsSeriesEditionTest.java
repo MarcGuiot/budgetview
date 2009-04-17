@@ -5,12 +5,9 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.MasterCategory;
-import org.uispec4j.interception.WindowInterceptor;
-import org.uispec4j.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Button;
 
 public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
 
@@ -106,7 +103,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectSeries("Epargne")
       .checkFromAccount("Main accounts")
       .checkToAccount("Epargne LCL")
-      .checkInAutomatic()
+      .checkAutomaticModeSelected()
       .cancel();
 
     views.selectCategorization();
@@ -246,13 +243,13 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     firstSeriesChecker.switchToManual().selectAllMonths().setAmount(50).validate();
     views.selectSavings();
     SeriesEditionDialogChecker secondSeriesChecker = savingsView.editSavingsSeries("Account n. 111", "CA");
-    secondSeriesChecker.checkInManual()
+    secondSeriesChecker.checkManualModeSelected()
       .checkName("Autre")
       .switchToAutomatic()
       .validate();
     views.selectBudget();
     firstSeriesChecker = budgetView.savings.editSeries("Autre");
-    firstSeriesChecker.checkInAutomatic().validate();
+    firstSeriesChecker.checkAutomaticModeSelected().validate();
   }
 
   public void testToAndFromInExternalIsNotPossible() throws Exception {

@@ -69,8 +69,8 @@ public class DownloadTest extends LicenseTestCase {
     retr.assertOk();
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
-    InfoChecker checker = new InfoChecker(window);
-    checker.checkNewVersion();
+    VersionInfoChecker versionInfo = new VersionInfoChecker(window);
+    versionInfo.checkNewVersion();
 
     OfxBuilder builder = OfxBuilder.init(this);
     builder.addBankAccount(4321, -2, "1111", 123.3, "10/09/2008");

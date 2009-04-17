@@ -663,7 +663,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setAmount(200)
       .validate();
     views.selectSavings();
-    savingsView.editSavingsSeries("Account n. 111", "CA").checkInManual()
+    savingsView.editSavingsSeries("Account n. 111", "CA").checkManualModeSelected()
       .selectAllMonths()
       .checkAmount("200.00")
       .checkTable(new Object[][]{

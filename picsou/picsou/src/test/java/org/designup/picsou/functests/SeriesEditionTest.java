@@ -1023,14 +1023,14 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
   public void testMonthsAreShownOrNotDependingOnThePeriodicity() throws Exception {
     views.selectBudget();
     SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
-    edition.setUnknown()
-      .monthsAreHidden()
+    edition.setIrregular()
+      .checkMonthsAreHidden()
       .setSixMonths()
-      .monthsAreVisible()
+      .checkMonthsAreVisible()
       .setCustom()
-      .monthsAreVisible()
-      .setUnknown()
-      .monthsAreHidden();
+      .checkMonthsAreVisible()
+      .setIrregular()
+      .checkMonthsAreHidden();
   }
 
   public void testChangeMonthChangeOtherMonth() throws Exception {
@@ -1070,11 +1070,11 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthIsChecked(2, 6, 10);
 
     edition.selectSeries("S1")
-      .monthsAreVisible()
+      .checkMonthsAreVisible()
       .checkMonthIsChecked(3, 9);
     edition
       .selectSeries("S2")
-      .monthsAreVisible()
+      .checkMonthsAreVisible()
       .checkMonthIsChecked(2, 6, 10)
       .cancel();
   }
@@ -1413,7 +1413,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .check();
     views.selectCategorization();
     categorization.selectSavings().editSeries("epargne", true)
-      .setUnknown()
+      .setIrregular()
       .checkTable(new Object[][]{
         {"2008", "August", "0.00", "0"},
         {"2008", "July", "0.00", "0"},
@@ -1438,28 +1438,28 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     SeriesEditionDialogChecker edition = categorization.selectSavings()
       .editSeries("epargne", true)
-      .checkInAutomatic()
+      .checkAutomaticModeSelected()
       .setTwoMonths();
 
     edition
-      .checkInAutomatic()
+      .checkAutomaticModeSelected()
       .switchToManual()
-      .checkInManual()
-      .setUnknown()
+      .checkManualModeSelected()
+      .setIrregular()
       .setTwoMonths()
-      .checkInManual()
+      .checkManualModeSelected()
       .validate();
 
     categorization.selectSavings().editSeries("epargne", true)
-      .checkInManual()
-      .setUnknown()
+      .checkManualModeSelected()
+      .setIrregular()
       .validate();
 
     categorization.selectSavings().editSeries("epargne", true)
-      .checkInManual()
-      .setUnknown()
+      .checkManualModeSelected()
+      .setIrregular()
       .setTwoMonths()
-      .checkInManual()
+      .checkManualModeSelected()
       .validate();
   }
 
@@ -1472,8 +1472,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectSavings()
       .selectAndCreateSavingsSeries("epargne", "Main account");
     categorization.selectSavings().editSeries("epargne", true)
-      .checkInAutomatic()
-      .setUnknown()
+      .checkAutomaticModeSelected()
+      .setIrregular()
       .setEndDate(200807)
       .validate();
     operations.openPreferences().setFutureMonthsCount(2).validate();
@@ -1588,7 +1588,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setCategory(MasterCategory.LEISURES)
       .checkSingleMonthSelected()
       .checkSingleMonthDate("June 2007")
-      .checkInManual()
+      .checkManualModeSelected()
       .validate();
   }
 
@@ -1609,7 +1609,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkEveryMonthSelected()
       .checkStartDate("June 2007")
       .checkEndDate("Mar 2008")
-      .checkInManual()
+      .checkManualModeSelected()
       .validate();
   }
 

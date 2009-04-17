@@ -107,13 +107,13 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     views.selectHome();
     monthSummary
-      .total(incomeFor200807, expensesFor200807)
+      .checkTotal(incomeFor200807, expensesFor200807)
       .checkBalance(balance)
       .checkIncome(1500, 1500)
       .checkRecurring(1500 + 29.90)
       .checkEnvelope(80)
       .checkOccasional(10)
-      .checkProjects(200)
+      .checkSpecial(200)
       .checkUncategorized("-23.00");
     monthSummary.mainBalanceGraph.checkTooltip(incomeFor200807, expensesFor200807);
 
@@ -166,7 +166,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     double balanceFor200807 = 1500 - (29.9 + 1500 + 60 + 20 + 10);
     monthSummary
-      .total(1500, (29.9 + 1500 + 60 + 20 + 10))
+      .checkTotal(1500, (29.9 + 1500 + 60 + 20 + 10))
       .checkBalance(balanceFor200807)
       .checkMainBalanceGraph(0.92, 1)
       .checkIncome(1500, 1500)
@@ -192,7 +192,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     double balanceFor200808 = 1500 - (29.9 + 1500 + 60 + 20 + 10);
     monthSummary
-      .total(1500, (29.9 + 1500 + 60 + 20 + 10))
+      .checkTotal(1500, (29.9 + 1500 + 60 + 20 + 10))
       .checkBalance(balanceFor200808)
       .checkIncome(0)
       .checkRecurring(1500 + 29.90)
@@ -211,7 +211,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/07", "2008/08");
     monthSummary
-      .total(1500 + 1500, (29.9 + 1500 + 60 + 20 + 10) + (29.9 + 1500 + 60 + 20 + 10))
+      .checkTotal(1500 + 1500, (29.9 + 1500 + 60 + 20 + 10) + (29.9 + 1500 + 60 + 20 + 10))
       .checkIncome(1500)
       .checkRecurring(1500 + 29.90 + 1500 + 29.90)
       .checkEnvelope(80)
@@ -252,7 +252,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     monthSummary.checkProjects("0.00");
-    monthSummary.checkProjectsPlanned("+2000.00");
+    monthSummary.checkPlannedSpecial("+2000.00");
   }
 
   public void testOccasionalIsTakenIntoAccountWhenComputingFuturePosition() throws Exception {
@@ -271,15 +271,14 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     timeline.selectMonth("2008/07");
-    monthSummary.total(1000, 100);
+    monthSummary.checkTotal(1000, 100);
     monthSummary.occasional
       .checkValues(100, 100)
       .checkGauge(-100, -100);
     mainAccounts.checkEstimatedPosition((500 - 75) - (1000 - 100));
-//    mainAccounts.checkNoEstimatedPositionDetails();
 
     timeline.selectMonth("2008/08");
-    monthSummary.total(1000, 100);
+    monthSummary.checkTotal(1000, 100);
     monthSummary.occasional
       .checkValues(25, 100)
       .checkGauge(-25, -100);

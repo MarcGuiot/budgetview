@@ -45,7 +45,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected CategorizationChecker categorization;
   protected SeriesViewChecker series;
   protected SeriesEvolutionChecker seriesEvolution;
-  protected InfoChecker infochecker;
+  protected VersionInfoChecker infochecker;
   protected NavigationViewChecker navigation;
 
   protected GlobRepository repository;
@@ -135,7 +135,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     series = new SeriesViewChecker(mainWindow);
     seriesEvolution = new SeriesEvolutionChecker(mainWindow);
     license = new LicenseActivationChecker(mainWindow);
-    infochecker = new InfoChecker(mainWindow);
+    infochecker = new VersionInfoChecker(mainWindow);
     navigation = new NavigationViewChecker(mainWindow);
   }
 

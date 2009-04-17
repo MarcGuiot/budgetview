@@ -671,12 +671,12 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker checkInManual() {
+  public SeriesEditionDialogChecker checkManualModeSelected() {
     UISpecAssert.assertTrue(dialog.getButton("automatic").isVisible());
     return this;
   }
 
-  public SeriesEditionDialogChecker checkInAutomatic() {
+  public SeriesEditionDialogChecker checkAutomaticModeSelected() {
     UISpecAssert.assertTrue(dialog.getButton("manual").isVisible());
     return this;
   }
@@ -685,17 +685,17 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     return dialog.getComboBox("profileCombo");
   }
 
-  public SeriesEditionDialogChecker monthsAreHidden() {
+  public SeriesEditionDialogChecker checkMonthsAreHidden() {
     assertFalse(dialog.getPanel("monthSelectionPanel").isVisible());
     return this;
   }
 
-  public SeriesEditionDialogChecker monthsAreVisible() {
+  public SeriesEditionDialogChecker checkMonthsAreVisible() {
     assertTrue(dialog.getPanel("monthSelectionPanel").isVisible());
     return this;
   }
 
-  public SeriesEditionDialogChecker setUnknown() {
+  public SeriesEditionDialogChecker setIrregular() {
     getProfileCombo().select(ProfileType.IRREGULAR.getLabel());
     return this;
   }
