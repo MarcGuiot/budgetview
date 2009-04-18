@@ -18,6 +18,8 @@ import org.globsframework.utils.Strings;
 import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Window;
+import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.utils.KeyUtils;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.finder.ComponentMatchers;
@@ -129,6 +131,25 @@ public class TransactionChecker extends ViewChecker {
 
   public void checkNotEmpty() {
     UISpecAssert.assertFalse(getTable().isEmpty());
+  }
+
+  public ConfirmationDialogChecker delete(String label) {
+    int row = getIndexOf(label.toUpperCase());
+    if (row < 0){
+      row = getTable().getRowIndex(TransactionView.NOTE_COLUMN_INDEX, label);
+    }
+    Assert.assertTrue(label + " not found", row >= 0);
+    return delete(row);
+  }
+
+  public ConfirmationDialogChecker delete(int row) {
+    getTable().selectRow(row);
+    Window deleteDialog = WindowInterceptor.getModalDialog(new Trigger() {
+      public void run() throws Exception {
+        KeyUtils.pressKey(getTable(), Key.DELETE);
+      }
+    });
+    return new ConfirmationDialogChecker(deleteDialog);
   }
 
   public class TransactionAmountChecker {

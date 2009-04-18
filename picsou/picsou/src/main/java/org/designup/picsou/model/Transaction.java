@@ -140,7 +140,8 @@ public class Transaction {
   }
 
   public static boolean isSplitSource(Glob transaction) {
-    return Boolean.TRUE.equals(transaction.get(SPLIT));
+    Boolean isSplit = transaction.get(SPLIT);
+    return isSplit != null && Boolean.TRUE.equals(isSplit);
   }
 
   public static boolean isSplit(Glob transaction) {

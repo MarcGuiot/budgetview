@@ -222,6 +222,77 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testDeleteATransactionASplitedTransationAndALastImportedTransaction() throws Exception {
+    views.selectData();
+    transactions.initContent()
+      .addOccasional("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
+      .addOccasional("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, MasterCategory.TRANSPORTS)
+      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "sg", "", -200.00, MasterCategory.BANK)
+      .addOccasional("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
+      .check();
+    transactions.delete("peage")
+      .validate();
+    transactions.initContent()
+      .addOccasional("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00, MasterCategory.EDUCATION)
+      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "sg", "", -200.00, MasterCategory.BANK)
+      .addOccasional("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
+      .check();
+    transactions.delete("nounou")
+      .validate();
+    views.selectCategorization();
+    categorization.selectTableRows("sg");
+    transactionDetails.split("100", "sg2");
+    transactions.initContent()
+      .addOccasional("02/05/2006", TransactionType.PRELEVEMENT, "sg", "", -100.00, MasterCategory.BANK)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "sg", "sg2", -100.00, MasterCategory.NONE)
+      .addOccasional("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, MasterCategory.TRANSPORTS)
+      .check();
+    views.selectData();
+    transactions.delete("sg").validate();
+    views.selectCategorization();
+    categorization.selectTableRows("essence");
+    transactionDetails.split("30", "essence2");
+    views.selectData();
+    transactions.delete("essence2").validate();
+    transactions.initContent()
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -40.00, "Occasional", MasterCategory.TRANSPORTS)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "essence2", -30.00)
+      .check();
+  }
+
+  public void testDeleteATransactionWithMirrorSavings() throws Exception {
+    views.selectHome();
+    savingsAccounts.createSavingsAccount("Epargne LCL", 1000);
+    views.selectCategorization();
+    categorization
+      .selectTableRows("sg")
+      .selectSavings()
+      .createSavingsSeries()
+      .setName("Epargne")
+      .setCategories(MasterCategory.SAVINGS)
+      .setFromAccount("Main accounts")
+      .setToAccount("Epargne LCL")
+      .validate();
+    views.selectData();
+    transactions.initContent()
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00, "Occasional", MasterCategory.EDUCATION)
+      .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00, "Occasional", MasterCategory.TRANSPORTS)
+      .add("02/05/2006", TransactionType.VIREMENT, "SG", "", 200.00, "Epargne", MasterCategory.SAVINGS)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "SG", "", -200.00, "Epargne", MasterCategory.SAVINGS)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00, "Occasional", MasterCategory.TRANSPORTS)
+      .check();
+    transactions.delete(2)
+      .checkContainsText("Operation created by a series can not be removed").validate();
+
+    transactions.delete(3).validate();
+    transactions.initContent()
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00, "Occasional", MasterCategory.EDUCATION)
+      .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00, "Occasional", MasterCategory.TRANSPORTS)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00, "Occasional", MasterCategory.TRANSPORTS)
+      .check();
+  }
+
+
   private void enterNote(int row, String note) {
     table.editCell(row, TransactionView.NOTE_COLUMN_INDEX, note, true);
   }
