@@ -20,7 +20,12 @@
       <action dev="rmedina" type="add">
         Added Table.selectAllRows().
       </action>
-
+      <action dev="rmedina" type="add">
+        Added TextBox.setText(String, boolean) to select whether Enter is simulated or not.
+      </action>
+      <action dev="rmedina" type="add">
+        Added TextBox.focusLost().
+      </action>
     </release>
 
     <release version="2.0-RC2" date="2009-01-18">
