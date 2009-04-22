@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.backup;
+package org.designup.picsou.gui.components.dialogs;
 
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.utils.Lang;
@@ -18,18 +18,19 @@ public class MessageFileDialog {
     this.directory = directory;
   }
 
-  void show(String messageKey, String file) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/messageDialog.splits", repository, directory);
+  public void show(String messageKey, String file) {
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/messageFileDialog.splits", repository, directory);
 
     builder.add("message", new JLabel(Lang.get(messageKey)));
-    JTextArea jTextArea = new JTextArea();
-    jTextArea.setEditable(false);
-    builder.add("file", jTextArea);
+    
+    JTextArea fileArea = new JTextArea();
+    fileArea.setEditable(false);
+    builder.add("file", fileArea);
     if (file == null) {
-      jTextArea.setVisible(false);
+      fileArea.setVisible(false);
     }
     else {
-      jTextArea.setText(file);
+      fileArea.setText(file);
     }
 
     final PicsouDialog dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
@@ -38,6 +39,7 @@ public class MessageFileDialog {
         dialog.setVisible(false);
       }
     };
+
     dialog.addPanelWithButton(builder.<JPanel>load(), action);
     dialog.pack();
     dialog.showCentered();

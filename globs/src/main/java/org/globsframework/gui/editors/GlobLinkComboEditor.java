@@ -24,6 +24,7 @@ public class GlobLinkComboEditor
   private GlobComboView globComboView;
   private Key currentKey;
   private boolean updateInProgress = false;
+  private boolean forcedSelection;
 
   public GlobLinkComboEditor(final Link link, final GlobRepository repository, Directory directory) {
     super(link.getTargetType(), repository, directory);
@@ -146,6 +147,13 @@ public class GlobLinkComboEditor
     setTarget(glob == null ? null : repository.findLinkTarget(glob, link));
   }
 
+  public GlobLinkComboEditor forceSelection(Glob glob) {
+    this.forcedSelection = true;
+    selectionService.removeListener(this);
+    setSelectedGlob(glob);
+    return this;
+  }
+
   public GlobLinkComboEditor setName(String name) {
     super.setName(name);
     return this;
@@ -153,15 +161,11 @@ public class GlobLinkComboEditor
 
   public JComboBox getComponent() {
     JComboBox jComboBox = globComboView.getComponent();
-    GlobList selection = selectionService.getSelection(type);
-    select(selection);
+    if (!forcedSelection) {
+      GlobList selection = selectionService.getSelection(type);
+      select(selection);
+    }
     return jComboBox;
-  }
-
-  public void dispose() {
-    repository.removeChangeListener(this);
-    selectionService.removeListener(this);
-    globComboView.dispose();
   }
 
   public void setEnabled(boolean enable) {
@@ -170,5 +174,11 @@ public class GlobLinkComboEditor
 
   public void setVisible(boolean visible) {
     globComboView.setVisible(visible);
+  }
+
+  public void dispose() {
+    repository.removeChangeListener(this);
+    selectionService.removeListener(this);
+    globComboView.dispose();
   }
 }

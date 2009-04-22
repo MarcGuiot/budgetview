@@ -50,8 +50,7 @@ public class TransactionDetailsView extends View {
 
   private GlobsPanelBuilder createPanelBuilder() {
     GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(TransactionDetailsView.class, "/layout/transactionDetails.splits",
-                            repository, directory);
+      new GlobsPanelBuilder(getClass(), "/layout/transactionDetails.splits", repository, directory);
 
     cards = builder.addCardHandler("cards");
 

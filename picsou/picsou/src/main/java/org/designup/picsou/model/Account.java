@@ -62,6 +62,10 @@ public class Account {
   @DefaultInteger(1)
   public static LinkField ACCOUNT_TYPE;
 
+  @Target(AccountUpdateMode.class)
+  @DefaultInteger(1)
+  public static LinkField UPDATE_MODE;
+
   @DefaultBoolean(false)
   public static BooleanField IS_IMPORTED_ACCOUNT;
 
@@ -159,7 +163,7 @@ public class Account {
     double multiplier;
     Integer fromAccountIdPointOfView = toAccount == null ?
                                        (fromAccount == null ? null : fromAccount.get(ID))
-                                       : toAccount.get(ID);
+                                                         : toAccount.get(ID);
     if (fromAccountIdPointOfView == null) {
       multiplier = 0;
     }
@@ -183,6 +187,10 @@ public class Account {
 
   public static class Serializer implements PicsouGlobSerializer {
 
+    public int getWriteVersion() {
+      return 5;
+    }
+
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
@@ -195,55 +203,31 @@ public class Account {
       outputStream.writeDate(values.get(BALANCE_DATE));
       outputStream.writeBoolean(values.get(IS_CARD_ACCOUNT));
       outputStream.writeInteger(values.get(ACCOUNT_TYPE));
+      outputStream.writeInteger(values.get(UPDATE_MODE));
       outputStream.writeBoolean(values.get(IS_IMPORTED_ACCOUNT));
       outputStream.writeDate(values.get(CLOSED_DATE));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
-      if (version == 1) {
-        deserializeDataV1(fieldSetter, data);
-      }
-      else if (version == 2) {
-        deserializeDataV2(fieldSetter, data);
-      }
-      else if (version == 3) {
-        deserializeDataV3(fieldSetter, data);
+      if (version == 5) {
+        deserializeDataV5(fieldSetter, data);
       }
       else if (version == 4) {
         deserializeDataV4(fieldSetter, data);
       }
+      else if (version == 3) {
+        deserializeDataV3(fieldSetter, data);
+      }
+      else if (version == 2) {
+        deserializeDataV2(fieldSetter, data);
+      }
+      else if (version == 1) {
+        deserializeDataV1(fieldSetter, data);
+      }
     }
 
-    private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
-      SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(NUMBER, input.readString());
-      fieldSetter.set(BANK_ENTITY, input.readInteger());
-      fieldSetter.set(BRANCH_ID, input.readInteger());
-      fieldSetter.set(NAME, input.readString());
-      fieldSetter.set(BALANCE, input.readDouble());
-      fieldSetter.set(TRANSACTION_ID, input.readInteger());
-      fieldSetter.set(BALANCE_DATE, input.readDate());
-      fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
-      fieldSetter.set(ACCOUNT_TYPE, AccountType.MAIN.getId());
-      fieldSetter.set(IS_IMPORTED_ACCOUNT, true);
-    }
-
-    private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
-      SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(NUMBER, input.readUtf8String());
-      fieldSetter.set(BANK_ENTITY, input.readInteger());
-      fieldSetter.set(BRANCH_ID, input.readInteger());
-      fieldSetter.set(NAME, input.readUtf8String());
-      fieldSetter.set(BALANCE, input.readDouble());
-      fieldSetter.set(TRANSACTION_ID, input.readInteger());
-      fieldSetter.set(BALANCE_DATE, input.readDate());
-      fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
-      fieldSetter.set(ACCOUNT_TYPE, AccountType.MAIN.getId());
-      fieldSetter.set(IS_IMPORTED_ACCOUNT, true);
-    }
-
-    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
+    private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(NUMBER, input.readUtf8String());
       fieldSetter.set(BANK_ENTITY, input.readInteger());
@@ -254,7 +238,9 @@ public class Account {
       fieldSetter.set(BALANCE_DATE, input.readDate());
       fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
+      fieldSetter.set(UPDATE_MODE, input.readInteger());
       fieldSetter.set(IS_IMPORTED_ACCOUNT, input.readBoolean());
+      fieldSetter.set(CLOSED_DATE, input.readDate());
     }
 
     private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
@@ -268,13 +254,54 @@ public class Account {
       fieldSetter.set(BALANCE_DATE, input.readDate());
       fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
+      fieldSetter.set(UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());
       fieldSetter.set(IS_IMPORTED_ACCOUNT, input.readBoolean());
       fieldSetter.set(CLOSED_DATE, input.readDate());
     }
 
-    public int getWriteVersion() {
-      return 4;
+    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(NUMBER, input.readUtf8String());
+      fieldSetter.set(BANK_ENTITY, input.readInteger());
+      fieldSetter.set(BRANCH_ID, input.readInteger());
+      fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(BALANCE, input.readDouble());
+      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(BALANCE_DATE, input.readDate());
+      fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
+      fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
+      fieldSetter.set(UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());
+      fieldSetter.set(IS_IMPORTED_ACCOUNT, input.readBoolean());
+    }
+
+    private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(NUMBER, input.readUtf8String());
+      fieldSetter.set(BANK_ENTITY, input.readInteger());
+      fieldSetter.set(BRANCH_ID, input.readInteger());
+      fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(BALANCE, input.readDouble());
+      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(BALANCE_DATE, input.readDate());
+      fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
+      fieldSetter.set(ACCOUNT_TYPE, AccountType.MAIN.getId());
+      fieldSetter.set(UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());
+      fieldSetter.set(IS_IMPORTED_ACCOUNT, true);
+    }
+
+    private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(NUMBER, input.readString());
+      fieldSetter.set(BANK_ENTITY, input.readInteger());
+      fieldSetter.set(BRANCH_ID, input.readInteger());
+      fieldSetter.set(NAME, input.readString());
+      fieldSetter.set(BALANCE, input.readDouble());
+      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(BALANCE_DATE, input.readDate());
+      fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
+      fieldSetter.set(ACCOUNT_TYPE, AccountType.MAIN.getId());
+      fieldSetter.set(UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());
+      fieldSetter.set(IS_IMPORTED_ACCOUNT, true);
     }
   }
-
 }

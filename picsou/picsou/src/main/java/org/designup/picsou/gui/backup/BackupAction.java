@@ -2,6 +2,7 @@ package org.designup.picsou.gui.backup;
 
 import org.designup.picsou.gui.BackupGenerator;
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.components.dialogs.MessageFileDialog;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;

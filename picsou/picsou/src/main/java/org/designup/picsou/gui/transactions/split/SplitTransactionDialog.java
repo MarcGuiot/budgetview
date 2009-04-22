@@ -85,7 +85,7 @@ public class SplitTransactionDialog {
   }
 
   private void createDialog(Directory directory) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/splitTransaction.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/splitTransactionDialog.splits",
                                                       localRepository, localDirectory);
     addAmountPanel(builder);
     addTable(builder);

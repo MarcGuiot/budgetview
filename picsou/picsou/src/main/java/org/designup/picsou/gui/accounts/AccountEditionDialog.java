@@ -32,7 +32,7 @@ public class AccountEditionDialog {
     this.directory = directory;
 
     this.localRepository = LocalGlobRepositoryBuilder.init(parentRepository)
-      .copy(Bank.TYPE, BankEntity.TYPE)
+      .copy(Bank.TYPE, BankEntity.TYPE, AccountUpdateMode.TYPE)
       .get();
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountEditionDialog.splits",
@@ -78,10 +78,12 @@ public class AccountEditionDialog {
   public void show(Glob account) {
     localRepository.reset(new GlobList(account), Account.TYPE);
     accountEditionPanel.setBalanceEditorVisible(false);
+    accountEditionPanel.setUpdateModeEditable(false);
     doShow(localRepository.get(account.getKey()));
   }
 
   public void showWithNewAccount(AccountType type) {
+    accountEditionPanel.setUpdateModeEditable(true);
     doShow(localRepository.create(Account.TYPE, value(Account.ACCOUNT_TYPE, type.getId())));
   }
 

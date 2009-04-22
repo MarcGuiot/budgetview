@@ -5,8 +5,10 @@ import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.utils.GlobModelBuilder;
 
 public class PicsouModel {
-  private static GlobModel model =
+  private static GlobModel MODEL =
     GlobModelBuilder.init(Account.TYPE,
+                          AccountType.TYPE,
+                          AccountUpdateMode.TYPE,
                           Bank.TYPE,
                           BankEntity.TYPE,
                           Category.TYPE,
@@ -27,10 +29,10 @@ public class PicsouModel {
       .get();
 
   static {
-    SerializationManager.init(model);
+    SerializationManager.init(MODEL);
   }
 
   public static GlobModel get() {
-    return model;
+    return MODEL;
   }
 }

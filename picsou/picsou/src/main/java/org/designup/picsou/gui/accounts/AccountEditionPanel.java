@@ -7,6 +7,7 @@ import org.designup.picsou.model.BankEntity;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.model.ChangeSet;
@@ -34,6 +35,7 @@ public class AccountEditionPanel {
   private JComboBox accountTypeCombo;
   private AccountTypeSelector[] accountTypeSelectors = createAccountTypeSelectors();
   private JLabel messageSavingsWarning;
+  private GlobLinkComboEditor updateModeCombo;
 
   public AccountEditionPanel(final GlobRepository repository, Directory directory, JLabel messageLabel) {
     this.repository = repository;
@@ -78,6 +80,7 @@ public class AccountEditionPanel {
     builder.add("type", createAccountTypeCombo());
     messageSavingsWarning = new JLabel(Lang.get("account.savings.warning"));
     builder.add("savingsMessageWarning", messageSavingsWarning);
+    updateModeCombo = builder.addComboEditor("updateMode", Account.UPDATE_MODE);
     messageSavingsWarning.setVisible(false);
 
     balanceEditor = builder.addEditor("balance", Account.BALANCE).setNotifyOnKeyPressed(true).getComponent();
@@ -158,6 +161,10 @@ public class AccountEditionPanel {
 
   public void setBalanceEditorVisible(boolean visible) {
     balanceEditor.setVisible(visible);
+  }
+
+  public void setUpdateModeEditable(boolean enabled) {
+    updateModeCombo.setEnabled(enabled);
   }
 
   public void setMessageSavingsWarning(boolean visible) {
