@@ -17,6 +17,7 @@ import org.globsframework.utils.serialization.SerializedOutput;
 import org.prevayler.implementation.PrevaylerDirectory;
 
 import java.io.*;
+import java.nio.channels.FileLock;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,10 +27,24 @@ public class DirectAccountDataManager implements AccountDataManager {
   private String prevaylerPath;
   private boolean inMemory;
   private int countFileNotToDelete = 6;
+  private RandomAccessFile stream;
+  private FileLock lock;
 
   public DirectAccountDataManager(String prevaylerPath, boolean inMemory) {
     this.prevaylerPath = prevaylerPath;
     this.inMemory = inMemory;
+    File file = new File(prevaylerPath, "app.lock");
+    file.getParentFile().mkdirs();
+    try {
+      stream = new RandomAccessFile(file, "rw");
+      lock = stream.getChannel().tryLock();
+    }
+    catch (IOException e) {
+      throw new InvalidState(prevaylerPath);
+    }
+    if (lock == null) {
+      throw new InvalidState(prevaylerPath);
+    }
   }
 
   void setCountFileNotToDelete(int countFileNotToDelete) {
@@ -39,7 +54,7 @@ public class DirectAccountDataManager implements AccountDataManager {
   public void getUserData(SerializedOutput output, Integer userId) {
     MapOfMaps<String, Integer, SerializableGlobType> globs = new MapOfMaps<String, Integer, SerializableGlobType>();
     long transactionId = readData(userId, globs);
-    outputStreamMap.put(userId, new DurableOutputStream(transactionId, userId));
+    outputStreamMap.put(userId, new DurableOutputStream(this, transactionId, userId));
     SerializableGlobSerializer.serialize(output, globs);
   }
 
@@ -68,7 +83,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     return nextTransactionVersion;
   }
 
-  private String getPath(Integer userId) {
+  String getPath(Integer userId) {
     return prevaylerPath + "/" + userId.toString();
   }
 
@@ -154,13 +169,29 @@ public class DirectAccountDataManager implements AccountDataManager {
     for (DurableOutputStream durableOutputStream : outputStreamMap.values()) {
       durableOutputStream.close();
     }
+    try {
+      if (stream != null) {
+        stream.close();
+      }
+    }
+    catch (IOException e) {
+      Log.write("stream close error", e);
+    }
   }
 
   public void close(Integer userId) {
-    DirectAccountDataManager.DurableOutputStream durableOutputStream = outputStreamMap.get(userId);
+    DurableOutputStream durableOutputStream = outputStreamMap.get(userId);
     if (durableOutputStream != null) {
       outputStreamMap.remove(userId);
       durableOutputStream.close();
+    }
+    try {
+      if (stream != null) {
+        stream.close();
+      }
+    }
+    catch (IOException e) {
+      Log.write("stream close error", e);
     }
   }
 
@@ -182,11 +213,12 @@ public class DirectAccountDataManager implements AccountDataManager {
   }
 
   public boolean restore(SerializedInput input, Integer userId) {
-    DirectAccountDataManager.DurableOutputStream durableOutputStream = outputStreamMap.get(userId);
+    DurableOutputStream durableOutputStream = outputStreamMap.get(userId);
     MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
     SerializableGlobSerializer.deserialize(input, data);
     try {
-      writeSnapshot(durableOutputStream.nextTransactionVersion, data, durableOutputStream.prevaylerDirectory);
+      writeSnapshot(durableOutputStream.getNextTransactionVersion(), data,
+                    durableOutputStream.getPrevaylerDirectory());
     }
     catch (IOException e) {
       return false;
@@ -208,51 +240,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     }
   }
 
-  private class DurableOutputStream {
-    private long nextTransactionVersion;
-    private OutputStream outputStream;
-    private PrevaylerDirectory prevaylerDirectory;
-    private FileDescriptor fd;
-
-    public DurableOutputStream(long nextTransactionVersion, Integer userId) {
-      this.nextTransactionVersion = nextTransactionVersion;
-      prevaylerDirectory = new PrevaylerDirectory(getPath(userId));
-    }
-
-    public void write(MultiMap<String, ServerDelta> data) {
-      if (inMemory) {
-        return;
-      }
-      try {
-        if (outputStream == null) {
-          File file = prevaylerDirectory.journalFile(nextTransactionVersion, "journal");
-          FileOutputStream stream = new FileOutputStream(file);
-          fd = stream.getFD();
-          outputStream = new BufferedOutputStream(stream);
-        }
-        SerializableDeltaGlobSerializer serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
-        SerializedOutput serializedOutput = SerializedInputOutputFactory.init(outputStream);
-        serializedOutput.writeString("Tr");
-        serializedOutput.write(nextTransactionVersion);
-        serializableDeltaGlobSerializer.serialize(serializedOutput, data);
-        outputStream.flush();
-        fd.sync();
-        nextTransactionVersion++;
-      }
-      catch (IOException e) {
-        throw new IOFailure(e);
-      }
-    }
-
-    public void close() {
-      if (outputStream != null) {
-        try {
-          outputStream.close();
-        }
-        catch (IOException e) {
-          Log.write("stream close error", e);
-        }
-      }
-    }
+  public boolean isInMemory() {
+    return inMemory;
   }
 }

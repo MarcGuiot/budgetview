@@ -55,8 +55,4 @@ public class ServerDirectory {
   public Directory getServiceDirectory() {
     return serviceDirectory;
   }
-
-  static public Directory getNewDirectory(String prevaylerUrlPath) {
-    return new ServerDirectory(prevaylerUrlPath, false).serviceDirectory;
-  }
 }

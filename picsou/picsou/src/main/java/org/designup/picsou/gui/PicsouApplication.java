@@ -4,6 +4,8 @@ import net.roydesign.event.ApplicationEvent;
 import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.gui.components.ArrowButtonUI;
 import org.designup.picsou.gui.components.SelectionToggleUI;
+import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.ConfirmationDialog;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
@@ -18,9 +20,11 @@ import org.designup.picsou.gui.upgrade.UpgradeService;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.server.ServerDirectory;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.TextLocator;
+import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
@@ -35,6 +39,7 @@ import org.globsframework.utils.Dates;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -182,24 +187,47 @@ public class PicsouApplication {
 
     directory = createDirectory(openRequestManager);
 
-    final MainWindow mainWindow = new MainWindow();
-    final LoginPanel loginPanel = new LoginPanel(getServerAddress(), getLocalPrevaylerPath(), isDataInMemory(),
-                                                 mainWindow, directory);
-    windowOpenListener = new WindowAdapter() {
-      public void windowOpened(WindowEvent e) {
-        loginPanel.initFocus();
-        // pour que loginPanel passe au GC
-        mainWindow.getFrame().removeWindowListener(windowOpenListener);
-        windowOpenListener = null;
+    try {
+      final MainWindow mainWindow = new MainWindow();
+      final LoginPanel loginPanel = new LoginPanel(getServerAddress(), getLocalPrevaylerPath(), isDataInMemory(),
+                                                   mainWindow, directory);
+      windowOpenListener = new WindowAdapter() {
+        public void windowOpened(WindowEvent e) {
+          loginPanel.initFocus();
+          // pour que loginPanel passe au GC
+          mainWindow.getFrame().removeWindowListener(windowOpenListener);
+          windowOpenListener = null;
+        }
+      };
+      mainWindow.getFrame().addWindowListener(windowOpenListener);
+      mainWindow.getFrame().addWindowListener(new WindowAdapter() {
+        public void windowClosing(WindowEvent e) {
+          shutdown();
+        }
+      });
+      mainWindow.show();
+    }
+    catch (InvalidState e) {
+      showMultipleInstanceError(e.getMessage());
+    }
+  }
+
+  void showMultipleInstanceError(String message){
+    SplitsBuilder builder = SplitsBuilder.init(directory)
+      .setSource(getClass(), "/layout/confirmationDialog.splits");
+
+    builder.add("title", new JLabel(Lang.get("init.dialog.lock.title")));
+    JEditorPane editorPane = new JEditorPane("text/html", Lang.get("init.dialog.lock.content", message));
+    builder.add("message", editorPane);
+
+    PicsouDialog dialog = PicsouDialog.create((JFrame)null, directory);
+    dialog.addPanelWithButtons(builder.<JPanel>load(), new AbstractAction(Lang.get("close")) {
+      public void actionPerformed(ActionEvent e) {
+        System.exit(1);
       }
-    };
-    mainWindow.getFrame().addWindowListener(windowOpenListener);
-    mainWindow.getFrame().addWindowListener(new WindowAdapter() {
-      public void windowClosing(WindowEvent e) {
-        shutdown();
-      }
-    });
-    mainWindow.show();
+    }, null);
+    dialog.pack();
+    dialog.showCentered();
   }
 
   public static String[] parseLanguage(String... args) {

@@ -13,6 +13,7 @@ public abstract class ConfirmationDialog {
   private PicsouDialog dialog;
   protected JEditorPane editorPane;
   protected AbstractAction cancel;
+  protected AbstractAction ok;
 
   public ConfirmationDialog(String titleKey, String contentKey, Window owner, Directory directory, String... args) {
     SplitsBuilder builder = SplitsBuilder.init(directory)
@@ -40,16 +41,17 @@ public abstract class ConfirmationDialog {
   }
 
   private AbstractAction createOkAction() {
-    return new AbstractAction(Lang.get("ok")) {
+    ok = new AbstractAction(Lang.get("ok")) {
       public void actionPerformed(ActionEvent e) {
         preValidate();
         dialog.setVisible(false);
         postValidate();
       }
     };
+    return ok;
   }
 
-  private AbstractAction createCancelAction() {
+  protected AbstractAction createCancelAction() {
     cancel = new AbstractAction(Lang.get("cancel")) {
       public void actionPerformed(ActionEvent e) {
         dialog.setVisible(false);
