@@ -11,13 +11,16 @@ import java.awt.event.ActionEvent;
 
 public abstract class ConfirmationDialog {
   private PicsouDialog dialog;
+  protected JEditorPane editorPane;
+  protected AbstractAction cancel;
 
   public ConfirmationDialog(String titleKey, String contentKey, Window owner, Directory directory, String... args) {
     SplitsBuilder builder = SplitsBuilder.init(directory)
       .setSource(getClass(), "/layout/confirmationDialog.splits");
 
     builder.add("title", new JLabel(Lang.get(titleKey)));
-    builder.add("message", new JEditorPane("text/html", Lang.get(contentKey, args)));
+    editorPane = new JEditorPane("text/html", Lang.get(contentKey, args));
+    builder.add("message", editorPane);
 
     dialog = PicsouDialog.create(owner, directory);
     dialog.addPanelWithButtons(builder.<JPanel>load(), createOkAction(), createCancelAction());
@@ -47,10 +50,11 @@ public abstract class ConfirmationDialog {
   }
 
   private AbstractAction createCancelAction() {
-    return new AbstractAction(Lang.get("cancel")) {
+    cancel = new AbstractAction(Lang.get("cancel")) {
       public void actionPerformed(ActionEvent e) {
         dialog.setVisible(false);
       }
     };
+    return cancel;
   }
 }

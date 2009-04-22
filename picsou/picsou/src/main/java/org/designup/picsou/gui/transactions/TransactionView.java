@@ -113,7 +113,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
                                                           rendererColors,
                                                           SERIES_COLUMN_INDEX));
 
-    TransactionKeyListener.install(table, NOTE_COLUMN_INDEX);
+    TransactionKeyListener.install(table, NOTE_COLUMN_INDEX, directory, repository, true);
     Gui.installRolloverOnButtons(table, SERIES_COLUMN_INDEX, AMOUNT_COLUMN_INDEX);
     table.setDragEnabled(false);
     table.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);

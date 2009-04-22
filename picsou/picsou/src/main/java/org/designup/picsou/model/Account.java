@@ -49,7 +49,8 @@ public class Account {
 
   public static DoubleField BALANCE;
 
-  public static IntegerField TRANSACTION_ID;
+  @Target(Transaction.class)
+  public static LinkField TRANSACTION_ID;
 
   public static DateField BALANCE_DATE;
 

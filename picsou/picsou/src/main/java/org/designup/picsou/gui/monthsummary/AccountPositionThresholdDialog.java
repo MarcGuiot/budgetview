@@ -39,6 +39,7 @@ public class AccountPositionThresholdDialog {
 
     editor = builder.addEditor("editor", AccountPositionThreshold.THRESHOLD)
       .setValidationAction(okAction)
+      .setValueForNull(0.)
       .forceSelection(localRepository.findOrCreate(AccountPositionThreshold.KEY));
 
     dialog = PicsouDialog.create(directory.get(JFrame.class), directory);

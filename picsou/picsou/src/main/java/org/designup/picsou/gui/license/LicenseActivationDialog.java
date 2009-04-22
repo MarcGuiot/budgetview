@@ -144,7 +144,7 @@ public class LicenseActivationDialog {
       setEnabled(false);
       Utils.beginRemove();
       Glob user = localRepository.get(User.KEY);
-      if (user.get(User.MAIL).equals("admin")) {
+      if ("admin".equals(user.get(User.MAIL))) {
         localRepository.update(User.KEY, User.IS_REGISTERED_USER, true);
         localRepository.commitChanges(false);
         localDirectory.get(UndoRedoService.class).cleanUndo();
