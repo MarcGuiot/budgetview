@@ -1,9 +1,9 @@
 package org.globsframework.gui.views;
 
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.*;
-import org.globsframework.gui.splits.utils.Disposable;
 
 import java.util.Comparator;
 import java.util.HashSet;
@@ -54,6 +54,14 @@ public class GlobViewModel implements ChangeSetListener, Disposable {
     if (notify) {
       listener.globListReset();
     }
+  }
+
+  public void setShowNullElement(boolean shown) {
+    if (showNullElement == shown) {
+      return;
+    }
+    this.showNullElement = shown;
+    reloadGlobList();
   }
 
   private void reloadGlobList() {

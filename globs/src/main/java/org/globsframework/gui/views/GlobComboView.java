@@ -75,6 +75,9 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
 
   public GlobComboView setShowEmptyOption(boolean showEmptyOption) {
     this.showEmptyOption = showEmptyOption;
+    if (model != null) {
+      model.setShowEmptyOption(showEmptyOption);
+    }
     return this;
   }
 
@@ -118,11 +121,11 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
   }
 
   public void setEnabled(boolean enable) {
-    jComboBox.setEnabled(enable);
+    getComponent().setEnabled(enable);
   }
 
   public void setVisible(boolean visible) {
-    jComboBox.setVisible(visible);
+    getComponent().setVisible(visible);
   }
 
   public interface GlobSelectionHandler {
@@ -222,6 +225,10 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
       if (model.size() > 0) {
         selected = model.get(0);
       }
+    }
+
+    public void setShowEmptyOption(boolean shown) {
+      model.setShowNullElement(shown);
     }
 
     public void dispose() {

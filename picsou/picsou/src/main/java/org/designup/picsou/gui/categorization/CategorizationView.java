@@ -13,6 +13,7 @@ import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
+import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
@@ -153,6 +154,9 @@ public class CategorizationView extends View implements TableView, Filterable {
         return list.get(0).get(Transaction.LABEL);
       }
     }).setAutoHideIfEmpty(true);
+
+    TransactionCreationPanel transactionCreation = new TransactionCreationPanel(repository, directory);
+    transactionCreation.registerComponents(builder);
 
     BudgetAreaSelector selector = new BudgetAreaSelector(repository, directory);
     selector.registerComponents(builder);

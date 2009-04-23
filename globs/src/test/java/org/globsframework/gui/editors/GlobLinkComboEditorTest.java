@@ -94,7 +94,7 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
                                           "          parentId='2' _parentId='1'/>");
   }
 
-  public void testChangeSelectionDoNotCallUpdate() throws Exception {
+  public void testChangeSelectionDoesNotCallUpdate() throws Exception {
     repository =
       checker.parse("<dummyObject id='1' name='name1'/>" +
                     "<dummyObject id='2' name='name2'/>" +
@@ -194,5 +194,69 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
     assertFalse(combo.isEnabled());
     assertThat(combo.selectionEquals(null));
     selectionListener.assertEmpty();
+  }
+
+  public void testForbiddingEmptyValues() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' link='2'/>" +
+                    "<dummyObject id='2' name='name2' link='1'/>" +
+                    "<dummyObject id='3' name='name3'/>");
+    repository.addChangeListener(changeListener);
+    Glob glob1 = repository.get(key1);
+    Glob glob2 = repository.get(key2);
+
+    GlobLinkComboEditor editor = new GlobLinkComboEditor(DummyObject.LINK, repository, directory)
+      .setShowEmptyOption(false);
+    ComboBox combo = new ComboBox(editor.getComponent());
+
+    selectionService.select(glob1);
+    assertThat(combo.contentEquals("name1", "name2", "name3"));
+    
+    editor.setShowEmptyOption(true);
+    assertThat(combo.contentEquals("", "name1", "name2", "name3"));
+
+    editor.setShowEmptyOption(false);
+    assertThat(combo.contentEquals("name1", "name2", "name3"));
+  }
+
+  public void testForcedSelection() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' link='2'/>" +
+                    "<dummyObject id='2' name='name2' link='1'/>" +
+                    "<dummyObject id='3' name='name3'/>");
+    repository.addChangeListener(changeListener);
+    Glob glob1 = repository.get(key1);
+    Glob glob2 = repository.get(key2);
+
+    GlobLinkComboEditor editor = new GlobLinkComboEditor(DummyObject.LINK, repository, directory).forceSelection(glob2);
+    ComboBox combo = new ComboBox(editor.getComponent());
+
+    selectionService.select(glob1);
+    assertTrue(combo.contentEquals("", "name1", "name2", "name3"));
+    assertTrue(combo.selectionEquals("name1"));
+
+    combo.select("name3");
+    assertEquals(2, glob1.get(DummyObject.LINK).intValue());
+    assertEquals(3, glob2.get(DummyObject.LINK).intValue());
+
+    selectionService.select(glob1);
+    assertTrue(combo.contentEquals("", "name1", "name2", "name3"));
+    assertTrue(combo.selectionEquals("name3"));
+
+    editor.forceSelection(glob1);
+    assertTrue(combo.contentEquals("", "name1", "name2", "name3"));
+    assertTrue(combo.selectionEquals("name2"));
+    combo.select("name1");
+
+    selectionService.select(glob2);
+    assertTrue(combo.selectionEquals("name1"));
+
+    editor.forceSelection(glob2);
+    assertTrue(combo.contentEquals("", "name1", "name2", "name3"));
+    assertTrue(combo.selectionEquals("name3"));
+
+    editor.forceSelection(glob1);
+    assertTrue(combo.contentEquals("", "name1", "name2", "name3"));
+    assertTrue(combo.selectionEquals("name1"));
   }
 }

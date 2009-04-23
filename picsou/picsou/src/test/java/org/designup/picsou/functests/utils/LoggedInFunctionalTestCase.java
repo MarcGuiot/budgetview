@@ -36,6 +36,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected TimeViewChecker timeline;
   protected TransactionChecker transactions;
   protected TransactionDetailsChecker transactionDetails;
+  protected TransactionCreationChecker transactionCreation;
   protected OperationChecker operations;
   protected TitleChecker title;
   protected LicenseActivationChecker license;
@@ -127,6 +128,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     timeline = new TimeViewChecker(mainWindow);
     transactions = new TransactionChecker(mainWindow);
     transactionDetails = new TransactionDetailsChecker(mainWindow);
+    transactionCreation = new TransactionCreationChecker(mainWindow);
     title = new TitleChecker(mainWindow);
     monthSummary = new MonthSummaryChecker(mainWindow);
     budgetView = new BudgetViewChecker(mainWindow);
@@ -154,6 +156,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     timeline = null;
     transactions = null;
     transactionDetails = null;
+    transactionCreation = null;
     operations = null;
     title = null;
     infochecker = null;

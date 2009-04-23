@@ -1,18 +1,15 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.Assert;
 import org.uispec4j.ComboBox;
 import org.uispec4j.TextBox;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import org.uispec4j.interception.WindowHandler;
+import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
-
-import junit.framework.Assert;
 
 public class AccountEditionChecker extends GuiChecker {
   private Window dialog;
@@ -127,6 +124,35 @@ public class AccountEditionChecker extends GuiChecker {
     return dialog.getComboBox("type");
   }
 
+  public AccountEditionChecker setUpdateMode(String mode) {
+    getUpdateModeCombo().select(mode);
+    return this;
+  }
+
+  public AccountEditionChecker checkUpdateModes(String... modes) {
+    assertThat(getUpdateModeCombo().contentEquals(modes));
+    return this;
+  }
+
+  public AccountEditionChecker checkUpdateMode(String mode) {
+    assertThat(getUpdateModeCombo().selectionEquals(mode));
+    return this;
+  }
+
+  public AccountEditionChecker checkUpdateModeIsEnabled() {
+    assertThat(getUpdateModeCombo().isEnabled());
+    return this;
+  }
+
+  public AccountEditionChecker checkUpdateModeIsDisabled() {
+    assertFalse(getUpdateModeCombo().isEnabled());
+    return this;
+  }
+
+  public ComboBox getUpdateModeCombo() {
+    return dialog.getComboBox("updateMode");
+  }
+
   public AccountEditionChecker checkValidationError(String message) {
     dialog.getButton("OK").click();
     UISpecAssert.assertTrue(dialog.isVisible());
@@ -139,6 +165,10 @@ public class AccountEditionChecker extends GuiChecker {
 
   public ConfirmationDialogChecker delete() {
     return ConfirmationDialogChecker.init(dialog.getButton("Delete...").triggerClick());
+  }
+
+  public void doDelete() {
+    delete().validate();
   }
 
   public void validate() {

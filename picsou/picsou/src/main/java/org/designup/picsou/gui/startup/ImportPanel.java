@@ -218,6 +218,7 @@ public class ImportPanel {
 
     accountEditionPanel = new AccountEditionPanel(sessionRepository, sessionDirectory, importMessageLabel);
     accountEditionPanel.setBalanceEditorVisible(false);
+    accountEditionPanel.setUpdateModeEditable(false);
     builder2.add("accountEditionPanel", accountEditionPanel.getBuilder());
 
     builder2.add("importMessage", importMessageLabel);

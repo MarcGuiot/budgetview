@@ -13,6 +13,7 @@ import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.gui.MainPanel;
 import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.gui.components.CustomFocusTraversalPolicy;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
@@ -25,7 +26,6 @@ import org.globsframework.utils.exceptions.InvalidData;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
-import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.InputStream;
@@ -106,7 +106,7 @@ public class LoginPanel {
       public void load(Component component) {
         panel = (JPanel)component;
         mainWindow.getFrame().setFocusTraversalPolicy(
-          new MyOwnFocusTraversalPolicy(userField, passwordField, confirmPasswordField,
+          new CustomFocusTraversalPolicy(userField, passwordField, confirmPasswordField,
                                         loginButton, creationCheckBox));
         mainWindow.setPanel(panel);
       }
@@ -294,53 +294,6 @@ public class LoginPanel {
 
   private void displayBadPasswordMessage(String key, String complement) {
     messageLabel.setText("<html><font color=red>" + Lang.get(key) + (complement == null ? "" : complement) + "</font></html>");
-  }
-
-  public static class MyOwnFocusTraversalPolicy extends FocusTraversalPolicy {
-    private java.util.List<Component> order;
-
-    public MyOwnFocusTraversalPolicy(Component... order) {
-      this.order = Arrays.asList(order);
-    }
-
-    public Component getComponentAfter(Container focusCycleRoot,
-                                       Component aComponent) {
-      int idx = (order.indexOf(aComponent) + 1) % order.size();
-      Component component = order.get(idx);
-      if (component.isVisible()) {
-        return component;
-      }
-      else {
-        return getComponentAfter(focusCycleRoot, component);
-      }
-    }
-
-    public Component getComponentBefore(Container focusCycleRoot,
-                                        Component aComponent) {
-      int idx = order.indexOf(aComponent) - 1;
-      if (idx < 0) {
-        idx = order.size() - 1;
-      }
-      Component component = order.get(idx);
-      if (component.isVisible()) {
-        return component;
-      }
-      else {
-        return getComponentBefore(focusCycleRoot, component);
-      }
-    }
-
-    public Component getDefaultComponent(Container focusCycleRoot) {
-      return order.get(0);
-    }
-
-    public Component getLastComponent(Container focusCycleRoot) {
-      return order.get(order.size() - 1);
-    }
-
-    public Component getFirstComponent(Container focusCycleRoot) {
-      return order.get(0);
-    }
   }
 
   private void initServerAccess(String remoteAdress, String prevaylerPath, boolean dataInMemory) {

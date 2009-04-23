@@ -536,6 +536,11 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
+  public CategorizationChecker checkSelectedTableRow(String label) {
+    checkSelectedTableRows(getTable().getRowIndex(2, label));
+    return this;
+  }
+
   public CategorizationChecker checkSelectedTableRow(int row) {
     checkSelectedTableRows(row);
     return this;

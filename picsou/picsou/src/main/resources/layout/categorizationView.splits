@@ -38,7 +38,7 @@
 
     <horizontalSplit opaque="false">
 
-      <column weightX="45">
+      <column weightX="45" name="categorizationSelection">
         <label text="$categorization.list.title" styleClass="blockTitle"/>
         <panel styleClass="block">
           <column styleClass="innerBlock">
@@ -48,7 +48,7 @@
                      foreground="gauge.categorization.label" marginRight="5"/>
               <comboBox ref="transactionFilterCombo"/>
             </row>
-            <scrollPane viewportBackground="#FFFFFF" marginBottom="0">
+            <scrollPane viewportBackground="#FFFFFF" marginBottom="0" weightY="100">
               <table ref="transactionTable" rowHeight="20"/>
             </scrollPane>
             <row autoHideSource="customFilterMessage">
@@ -56,6 +56,13 @@
               <component ref="customFilterMessage"/>
               <filler fill="horizontal"/>
             </row>
+            <row>
+              <label text="$transactionCreation.title" styleClass="separatorTitle" marginTop="15"
+                     autoHideSource="transactionCreation"/>
+              <filler fill="horizontal"/>
+              <button action="showHideTransactionCreation" styleClass="hyperlink"/>
+            </row>
+            <panel ref="transactionCreation"/>
           </column>
         </panel>
       </column>

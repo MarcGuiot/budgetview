@@ -18,6 +18,8 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkAccountName("Account n. 0000123")
       .checkAccountNumber("0000123")
       .checkBalanceDisplayed(false)
+      .checkUpdateMode("File import")
+      .checkUpdateModeIsDisabled()
       .setAccountName("My account")
       .setAccountNumber("12345")
       .validate();
@@ -35,6 +37,9 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .setAccountName("Main CIC account")
       .checkTypes("Main", "Card", "Savings")
       .selectBank("CIC")
+      .checkUpdateMode("File import")
+      .checkUpdateModeIsEnabled()
+      .checkUpdateModes("File import", "Manual input")
       .checkIsMain()
       .validate();
 
@@ -46,6 +51,9 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount()
       .setAccountName("Savings")
       .setAccountNumber("123")
+      .checkUpdateMode("File import")
+      .checkUpdateModeIsEnabled()
+      .checkUpdateModes("File import", "Manual input")
       .checkIsSavings()
       .selectBank("cic")
       .validate();
@@ -55,7 +63,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
-  public void testABankMustBeSelected() throws Exception {
+  public void testABankMustBeSelectedWhenCreatingAnAccount() throws Exception {
     views.selectHome();
 
     mainAccounts.createNewAccount()
@@ -238,7 +246,8 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectHome();
-    savingsAccounts.edit("Livret").delete()
+    savingsAccounts.edit("Livret")
+      .delete()
       .checkContainsText("All the operations and series associated to this account will be deleted")
       .validate();
     savingsAccounts.checkNotPresent("Livret");

@@ -35,6 +35,8 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
   public void test() throws Exception {
 
+    Locale.setDefault(Locale.FRENCH);
+
     operations.openPreferences().setFutureMonthsCount(12).validate();
 
     OfxBuilder.init(OFX_PATH)

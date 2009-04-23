@@ -59,6 +59,11 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     return addCombo(type).setName(name);
   }
 
+
+  public GlobLinkComboEditor addComboEditor(String name, Link field) {
+    return store(new GlobLinkComboEditor(field, repository, directory).setName(name));
+  }
+
   public GlobLinkComboEditor addComboEditor(Link field) {
     return store(new GlobLinkComboEditor(field, repository, directory));
   }

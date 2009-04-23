@@ -10,12 +10,11 @@ import org.globsframework.metamodel.utils.GlobTypeLoader;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
-public enum AccountType implements GlobConstantContainer {
-  MAIN("MAIN", 1),
-  SAVINGS("SAVINGS", 2);
+public enum AccountUpdateMode implements GlobConstantContainer {
+  AUTOMATIC("AUTOMATIC", 1),
+  MANUAL("MANUAL", 2);
 
   public static GlobType TYPE;
 
@@ -28,33 +27,33 @@ public enum AccountType implements GlobConstantContainer {
   private String name;
   private int id;
 
-  AccountType(String name, int id) {
+  AccountUpdateMode(String name, int id) {
     this.name = name;
     this.id = id;
   }
 
   static {
-    GlobTypeLoader.init(AccountType.class, "accountType");
+    GlobTypeLoader.init(AccountUpdateMode.class, "accountType");
   }
 
   public ReadOnlyGlob getGlob() {
-    return new ReadOnlyGlob(AccountType.TYPE,
-                            value(AccountType.ID, id),
-                            value(AccountType.NAME, getName()));
+    return new ReadOnlyGlob(AccountUpdateMode.TYPE,
+                            value(AccountUpdateMode.ID, id),
+                            value(AccountUpdateMode.NAME, getName()));
   }
 
   public String getName() {
-    return Strings.toNiceLowerCase(name);
+    return Lang.get("account.updateMode." + name.toLowerCase());
   }
 
-  public static AccountType get(int id) {
+  public static AccountUpdateMode get(int id) {
     switch (id) {
       case 1:
-        return MAIN;
+        return AUTOMATIC;
       case 2:
-        return SAVINGS;
+        return MANUAL;
     }
-    throw new ItemNotFound(id + " not associated to any AccountType enum value");
+    throw new ItemNotFound(id + " not associated to any AccountUpdateMode enum value");
   }
 
   public Integer getId() {
@@ -62,6 +61,6 @@ public enum AccountType implements GlobConstantContainer {
   }
 
   public org.globsframework.model.Key getKey() {
-    return org.globsframework.model.Key.create(AccountType.TYPE, id);
+    return org.globsframework.model.Key.create(AccountUpdateMode.TYPE, id);
   }
 }
