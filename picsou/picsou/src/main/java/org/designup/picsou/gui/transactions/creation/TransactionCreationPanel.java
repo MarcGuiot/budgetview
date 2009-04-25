@@ -29,7 +29,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
   private Glob prototypeTransaction;
 
   private JPanel panel = new JPanel();
-  private JTextField monthField;
+  private JLabel monthLabel;
   private JLabel errorMessageLabel;
   private JTextField amountField;
   private JTextField dayField;
@@ -73,8 +73,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     dayField = builder.addEditor("day", Transaction.DAY).forceSelection(prototypeTransaction).getComponent();
     labelField = builder.addEditor("label", Transaction.LABEL).forceSelection(prototypeTransaction).getComponent();
 
-    monthField = builder.add("month", new JTextField());
-    monthField.setEditable(false);
+    monthLabel = builder.add("month", new JLabel());
 
     errorMessageLabel = builder.add("errorMessage", new JLabel());
     errorMessageLabel.setVisible(false);
@@ -105,6 +104,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     repository.update(PROTOTYPE_TRANSACTION_KEY,
                       value(Transaction.MONTH, currentMonth),
                       value(Transaction.BANK_MONTH, currentMonth));
+    monthLabel.setText(Month.getFullLabel(currentMonth));
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {

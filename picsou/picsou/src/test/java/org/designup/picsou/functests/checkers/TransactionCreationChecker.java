@@ -7,6 +7,7 @@ import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 import javax.swing.*;
+import java.awt.peer.ButtonPeer;
 
 public class TransactionCreationChecker extends GuiChecker {
   private Window window;
@@ -36,6 +37,11 @@ public class TransactionCreationChecker extends GuiChecker {
 
   public TransactionCreationChecker checkDay(int day) {
     assertThat(getPanel().getInputTextBox("day").textEquals(Integer.toString(day)));
+    return this;
+  }
+
+  public TransactionCreationChecker checkMonth(String text) {
+    assertThat(getPanel().getTextBox("month").textEquals(text));
     return this;
   }
 

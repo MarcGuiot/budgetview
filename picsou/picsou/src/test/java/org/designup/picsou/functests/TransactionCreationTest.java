@@ -1,6 +1,7 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
+import org.designup.picsou.model.TransactionType;
 
 public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
@@ -31,6 +32,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .checkAccount("Cash")
       .setAmount(12.50)
       .setDay(15)
+      .checkMonth("August 2008")
       .setLabel("Transaction 1")
       .create()
       .checkFieldsAreEmpty();
@@ -59,6 +61,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .selectAccount("Misc")
       .setAmount(20.00)
       .setDay(3)
+      .checkMonth("September 2008")
       .setLabel("Transaction 2")
       .create()
       .checkFieldsAreEmpty();
@@ -69,6 +72,22 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.checkSelectedTableRow("TRANSACTION 2");
+
+    views.selectData();
+    transactions.initContent()
+      .add("03/09/2008", TransactionType.MANUAL, "TRANSACTION 2", "", 20.00)
+      .add("15/08/2008", TransactionType.MANUAL, "TRANSACTION 1", "", 12.50)
+      .check();
+
+    transactions.selectAccount("Cash");
+    transactions.initContent()
+      .add("15/08/2008", TransactionType.MANUAL, "TRANSACTION 1", "", 12.50)
+      .check();
+
+    transactions.selectAccount("Misc");
+    transactions.initContent()
+      .add("03/09/2008", TransactionType.MANUAL, "TRANSACTION 2", "", 20.00)
+      .check();
   }
 
   public void testCreationPanelIsAvailableOnlyWhenManualInputAccountsExist() throws Exception {
