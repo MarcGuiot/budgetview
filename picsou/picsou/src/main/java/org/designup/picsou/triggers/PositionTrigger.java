@@ -12,21 +12,20 @@ import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.*;
 
-public class BalanceTrigger implements ChangeSetListener {
+public class PositionTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
 
     if (changeSet.containsCreationsOrDeletions(Transaction.TYPE) ||
         changeSet.containsUpdates(Transaction.AMOUNT) || changeSet.containsChanges(Account.TYPE)) {
       GlobList account = repository.getAll(Account.TYPE);
-      updateTransactionBalance(repository, account);
+      updateTransactionPosition(repository, account);
     }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 
-
-  private void updateTransactionBalance(GlobRepository repository, GlobList updatedAccount) {
+  private void updateTransactionPosition(GlobRepository repository, GlobList updatedAccount) {
     TransactionComparator comparator = TransactionComparator.ASCENDING_BANK;
     GlobMatcher globMatcher = GlobMatchers.ALL;
     SortedSet<Glob> trs = repository.getSorted(Transaction.TYPE, comparator, globMatcher);
@@ -36,28 +35,28 @@ public class BalanceTrigger implements ChangeSetListener {
       updatedAccount.remove(repository.get(Key.create(Account.TYPE, accountId)));
     }
     SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
-    boolean mainBalanceComputed = true;
-    boolean savingsBalanceComputed = true;
+    boolean mainPositionComputed = true;
+    boolean savingsPositionComputed = true;
     for (Glob account : updatedAccount) {
       if (mainAccountChecker.isSame(account.get(Account.ID))) {
-        mainBalanceComputed &= computeAccountBalance(repository, comparator, transactions, account);
+        mainPositionComputed &= computeAccountPosition(repository, comparator, transactions, account);
       }
       else {
-        savingsBalanceComputed &= computeAccountBalance(repository, comparator, transactions, account);
+        savingsPositionComputed &= computeAccountPosition(repository, comparator, transactions, account);
       }
     }
 
-    if (mainBalanceComputed) {
-      computeTotalBalance(repository, transactions,
-                          new SameAccountChecker(AccountType.MAIN.getId(), repository));
+    if (mainPositionComputed) {
+      computeTotalPosition(repository, transactions,
+                           new SameAccountChecker(AccountType.MAIN.getId(), repository));
     }
-    if (savingsBalanceComputed) {
-      computeTotalBalance(repository, transactions,
-                          new SameAccountChecker(AccountType.SAVINGS.getId(), repository));
+    if (savingsPositionComputed) {
+      computeTotalPosition(repository, transactions,
+                           new SameAccountChecker(AccountType.SAVINGS.getId(), repository));
     }
   }
 
-  private boolean computeAccountBalance(GlobRepository repository, TransactionComparator comparator,
+  private boolean computeAccountPosition(GlobRepository repository, TransactionComparator comparator,
                                         Glob[] transactions, Glob account) {
     Integer transactionId = account.get(Account.TRANSACTION_ID);
     int pivot;
@@ -66,18 +65,18 @@ public class BalanceTrigger implements ChangeSetListener {
     double positionAfter;
     if (transactionId == null) {
       pivot = transactions.length - 1;
-      Double balance = account.get(Account.BALANCE);
-      Date balanceDate = account.get(Account.BALANCE_DATE);
-      if (balance == null) {
+      Double position = account.get(Account.POSITION);
+      Date positionDate = account.get(Account.POSITION_DATE);
+      if (position == null) {
         return false;
       }
-      positionAfter = balance;
+      positionAfter = position;
       for (; pivot >= 0; pivot--) {
         Glob transaction = transactions[pivot];
         Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
         if (checkSameAccount(account, transactionAccount) && !transaction.get(Transaction.PLANNED)
-            && (balanceDate == null || !Month.toDate(transaction.get(Transaction.BANK_MONTH),
-                                                     transaction.get(Transaction.BANK_DAY)).after(balanceDate))) {
+            && (positionDate == null || !Month.toDate(transaction.get(Transaction.BANK_MONTH),
+                                                      transaction.get(Transaction.BANK_DAY)).after(positionDate))) {
           positionBefore = positionAfter - transaction.get(Transaction.AMOUNT);
           repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, positionAfter);
           lastUpdateTransactionId = transaction.get(Transaction.ID);
@@ -115,10 +114,10 @@ public class BalanceTrigger implements ChangeSetListener {
     if (lastUpdateTransactionId != null) {
       Glob lastTransaction = repository.get(Key.create(Transaction.TYPE, lastUpdateTransactionId));
       repository.update(account.getKey(),
-                        FieldValue.value(Account.BALANCE_DATE,
+                        FieldValue.value(Account.POSITION_DATE,
                                          Month.toDate(lastTransaction.get(Transaction.BANK_MONTH),
                                                       lastTransaction.get(Transaction.BANK_DAY))),
-                        FieldValue.value(Account.BALANCE, lastTransaction.get(Transaction.ACCOUNT_POSITION))
+                        FieldValue.value(Account.POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION))
       );
     }
     return true;
@@ -128,10 +127,10 @@ public class BalanceTrigger implements ChangeSetListener {
     return transactionAccount != null && transactionAccount.equals(account.get(Account.ID));
   }
 
-  private void computeTotalBalance(GlobRepository repository, Glob[] transactions,
-                                   SameAccountChecker sameCheckerAccount) {
+  private void computeTotalPosition(GlobRepository repository, Glob[] transactions,
+                                    SameAccountChecker sameCheckerAccount) {
     GlobList accounts = repository.getAll(Account.TYPE);
-    Map<Integer, Double> balances = new HashMap<Integer, Double>();
+    Map<Integer, Double> positions = new HashMap<Integer, Double>();
     GlobList closedAccount = new GlobList();
     for (Glob account : accounts) {
       if (account.get(Account.CLOSED_DATE) != null && sameCheckerAccount.isSame(account.get(Account.ACCOUNT_TYPE))) {
@@ -149,11 +148,11 @@ public class BalanceTrigger implements ChangeSetListener {
       closeId[i] = account.get(Account.ID);
       i++;
     }
-    double balance = 0;
+    double position = 0;
 
     int lastCloseIndex = 0;
-    Double realBalance = null;
-    Date balanceDate = null;
+    Double realPosition = null;
+    Date positionDate = null;
     for (Glob transaction : transactions) {
       if (!sameCheckerAccount.isSame(transaction.get(Transaction.ACCOUNT))) {
         continue;
@@ -161,31 +160,31 @@ public class BalanceTrigger implements ChangeSetListener {
       if (!transaction.get(Transaction.PLANNED)) {
         Integer accountId = transaction.get(Transaction.ACCOUNT);
         if (accountId != null) {
-          balances.put(accountId, transaction.get(Transaction.ACCOUNT_POSITION));
+          positions.put(accountId, transaction.get(Transaction.ACCOUNT_POSITION));
         }
         while (lastCloseIndex < closeMonth.length &&
                closeMonth[lastCloseIndex] <= transaction.get(Transaction.BANK_MONTH) &&
                closeDay[lastCloseIndex] < transaction.get(Transaction.BANK_DAY)) {
-          balances.remove(closeId[lastCloseIndex]);
+          positions.remove(closeId[lastCloseIndex]);
           lastCloseIndex++;
         }
-        balance = 0;
-        for (Double accountBalance : balances.values()) {
-          balance += accountBalance;
+        position = 0;
+        for (Double accountPosition : positions.values()) {
+          position += accountPosition;
         }
-        realBalance = balance;
-        balanceDate = Month.toDate(transaction.get(Transaction.BANK_MONTH),
-                                   transaction.get(Transaction.BANK_DAY));
-        repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, balance);
+        realPosition = position;
+        positionDate = Month.toDate(transaction.get(Transaction.BANK_MONTH),
+                                    transaction.get(Transaction.BANK_DAY));
+        repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, position);
       }
       else {
-        balance += transaction.get(Transaction.AMOUNT);
-        repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, balance);
+        position += transaction.get(Transaction.AMOUNT);
+        repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, position);
       }
     }
     repository.update(sameCheckerAccount.getSummary(),
-                      FieldValue.value(Account.BALANCE, realBalance),
-                      FieldValue.value(Account.BALANCE_DATE, balanceDate));
+                      FieldValue.value(Account.POSITION, realPosition),
+                      FieldValue.value(Account.POSITION_DATE, positionDate));
   }
 
 }

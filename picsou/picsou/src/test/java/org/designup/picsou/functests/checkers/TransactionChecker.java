@@ -187,8 +187,8 @@ public class TransactionChecker extends ViewChecker {
       UISpecAssert.assertThat(getTable().contentEquals(
         new String[]{Lang.get("label"),
                      Lang.get("amount"),
-                     Lang.get("transactionView.account.balance"),
-                     Lang.get("transactionView.balance")},
+                     Lang.get("transactionView.account.position"),
+                     Lang.get("transactionView.position")},
         expected.toArray(new Object[expected.size()][])));
     }
 
@@ -197,8 +197,8 @@ public class TransactionChecker extends ViewChecker {
       java.util.List list = Arrays.asList(columnNames);
       int label = list.indexOf(Lang.get("label"));
       int amount = list.indexOf(Lang.get("amount"));
-      int accountBalance = list.indexOf(Lang.get("transactionView.account.balance"));
-      int balance = list.indexOf(Lang.get("transactionView.balance"));
+      int accountBalance = list.indexOf(Lang.get("transactionView.account.position"));
+      int balance = list.indexOf(Lang.get("transactionView.position"));
       int rowCount = getTable().getRowCount();
       StringBuffer buffer = new StringBuffer();
       for (int i = 0; i < rowCount; i++) {

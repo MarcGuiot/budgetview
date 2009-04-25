@@ -31,7 +31,7 @@ public class AccountEditionPanel {
   private GlobRepository repository;
   private JLabel messageLabel;
   private GlobsPanelBuilder builder;
-  private JTextField balanceEditor;
+  private JTextField positionEditor;
   private JComboBox accountTypeCombo;
   private AccountTypeSelector[] accountTypeSelectors = createAccountTypeSelectors();
   private JLabel messageSavingsWarning;
@@ -83,7 +83,7 @@ public class AccountEditionPanel {
     updateModeCombo = builder.addComboEditor("updateMode", Account.UPDATE_MODE).setShowEmptyOption(false);
     messageSavingsWarning.setVisible(false);
 
-    balanceEditor = builder.addEditor("balance", Account.BALANCE).setNotifyOnKeyPressed(true).getComponent();
+    positionEditor = builder.addEditor("position", Account.POSITION).setNotifyOnKeyPressed(true).getComponent();
 
     builder.addLoader(new SplitsLoader() {
       public void load(Component component) {
@@ -160,7 +160,7 @@ public class AccountEditionPanel {
   }
 
   public void setBalanceEditorVisible(boolean visible) {
-    balanceEditor.setVisible(visible);
+    positionEditor.setVisible(visible);
   }
 
   public void setUpdateModeEditable(boolean enabled) {

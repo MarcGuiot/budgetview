@@ -55,7 +55,7 @@ public class OfxImporter implements AccountFileImporter {
     private boolean isCreditCard = false;
     private boolean isInLedgerBal = false;
     private Integer bankEntityId;
-    private Double balance;
+    private Double position;
     private Date updateDate;
     private String fitid;
     private boolean ofxTagFound = false;
@@ -271,7 +271,7 @@ public class OfxImporter implements AccountFileImporter {
         return;
       }
       if (tag.equalsIgnoreCase("BALAMT")) {
-        balance = Amounts.extractAmount(content);
+        position = Amounts.extractAmount(content);
         return;
       }
       if (tag.equalsIgnoreCase("DTASOF")) {
@@ -366,16 +366,16 @@ public class OfxImporter implements AccountFileImporter {
       if (!isInLedgerBal || (currentAccount == null)) {
         return;
       }
-      Date previousDate = currentAccount.get(Account.BALANCE_DATE);
+      Date previousDate = currentAccount.get(Account.POSITION_DATE);
       if ((updateDate != null) && ((previousDate == null) || updateDate.equals(previousDate) || updateDate.after(previousDate))) {
         repository.update(currentAccount.getKey(),
-                          value(Account.BALANCE_DATE, updateDate),
-                          value(Account.BALANCE, balance),
+                          value(Account.POSITION_DATE, updateDate),
+                          value(Account.POSITION, position),
                           value(Account.TRANSACTION_ID, null));
       }
 
       updateDate = null;
-      balance = null;
+      position = null;
     }
 
     private void updateNote(String content) {

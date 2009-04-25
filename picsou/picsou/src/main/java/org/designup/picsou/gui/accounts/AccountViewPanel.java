@@ -57,7 +57,7 @@ public abstract class AccountViewPanel {
     header = builder.add("header", new JPanel());
 
     Glob summaryAccount = repository.get(Key.create(Account.TYPE, summaryId));
-    builder.addLabel("referencePosition", Account.BALANCE)
+    builder.addLabel("referencePosition", Account.POSITION)
       .setAutoHideIfEmpty(true)
       .forceSelection(summaryAccount);
     builder.addLabel("referencePositionDate", Account.TYPE, new ReferenceAmountStringifier())
@@ -161,7 +161,7 @@ public abstract class AccountViewPanel {
           account, cellBuilder);
 
       add("accountUpdateDate",
-          GlobLabelView.init(Account.BALANCE_DATE, repository, directory),
+          GlobLabelView.init(Account.POSITION_DATE, repository, directory),
           account, cellBuilder);
 
       final GlobButtonView balance =
@@ -171,11 +171,11 @@ public abstract class AccountViewPanel {
                                 if (list.isEmpty()) {
                                   return "";
                                 }
-                                Double balance = list.get(0).get(Account.BALANCE);
-                                if (balance == null) {
+                                Double position = list.get(0).get(Account.POSITION);
+                                if (position == null) {
                                   return "0.0";
                                 }
-                                return Formatting.DECIMAL_FORMAT.format(balance);
+                                return Formatting.DECIMAL_FORMAT.format(position);
                               }
                             },
                             new GlobListFunctor() {
@@ -233,10 +233,10 @@ public abstract class AccountViewPanel {
   private static class ReferenceAmountStringifier implements GlobListStringifier {
 
     public String toString(GlobList list, GlobRepository repository) {
-      if (list.isEmpty() || list.get(0).get(Account.BALANCE_DATE) == null) {
+      if (list.isEmpty() || list.get(0).get(Account.POSITION_DATE) == null) {
         return "";
       }
-      return Lang.get("accountView.total.date", Formatting.toString(list.get(0).get(Account.BALANCE_DATE)));
+      return Lang.get("accountView.total.date", Formatting.toString(list.get(0).get(Account.POSITION_DATE)));
     }
   }
 

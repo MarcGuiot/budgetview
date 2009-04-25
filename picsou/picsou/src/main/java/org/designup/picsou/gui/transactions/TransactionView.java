@@ -166,9 +166,9 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
       .setField(Transaction.NOTE)
       .setEditor(new TransactionNoteEditor(repository, directory));
     view
-      .addColumn(Lang.get("transactionView.account.balance"),
+      .addColumn(Lang.get("transactionView.account.position"),
                  accountBalanceColumn, accountBalanceColumn.getStringifier())
-      .addColumn(Lang.get("transactionView.balance"), 
+      .addColumn(Lang.get("transactionView.position"), 
                  balanceColumn, balanceColumn.getStringifier());
 
     return view;

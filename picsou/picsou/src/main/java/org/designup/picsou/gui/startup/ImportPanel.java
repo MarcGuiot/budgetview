@@ -455,7 +455,7 @@ public class ImportPanel {
         completed = true;
         Set<Integer> month = createMonth();
         learn();
-        showBalanceDialog();
+        showPositionDialog();
         openRequestManager.popCallback();
         localRepository.commitChanges(true);
         selectLastImportedMonth(month);
@@ -488,7 +488,7 @@ public class ImportPanel {
     }
   }
 
-  private void showBalanceDialog() {
+  private void showPositionDialog() {
     Set<Key> transactions = localRepository.getCurrentChanges().getCreated(Transaction.TYPE);
     Set<Integer> accounts = new HashSet<Integer>();
     for (Key transaction : transactions) {
@@ -496,7 +496,7 @@ public class ImportPanel {
     }
     for (Integer accountId : accounts) {
       Glob account = localRepository.get(Key.create(Account.TYPE, accountId));
-      if (account.get(Account.BALANCE) == null) {
+      if (account.get(Account.POSITION) == null) {
         AccountPositionEditionDialog dialog =
           new AccountPositionEditionDialog(account, true, localRepository, localDirectory, this.dialog);
         dialog.show();

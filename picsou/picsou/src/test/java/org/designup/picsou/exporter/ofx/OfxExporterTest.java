@@ -8,14 +8,14 @@ public class OfxExporterTest extends PicsouTestCase {
   public void test() throws Exception {
     checker.parse(
       repository,
-      "<account id='-1' balance='12345' balanceDate='2006/07/02'/>" +
+      "<account id='-1' position='12345' positionDate='2006/07/02'/>" +
       "<category name='Dentifrice' innerName='Dentifrice' masterName='health'/>" +
       "" +
       "<bankEntity id='30066'>" +
       "  <account number='00012312345' id='2' branchId='10674'" +
-      "           balance='1789.75' balanceDate='2006/07/03'/>" +
+      "           position='1789.75' positionDate='2006/07/03'/>" +
       "  <account number='4976005004123456' id='3'" +
-      "           balance='-683.25' balanceDate='2006/07/04' isCardAccount='true'/>" +
+      "           position='-683.25' positionDate='2006/07/04' isCardAccount='true'/>" +
       "</bankEntity>" +
       "" +
       "<transaction id='1' month='200601' day='21'  bankMonth='200601' bankDay='24' amount='-1.1' " +

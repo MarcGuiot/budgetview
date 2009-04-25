@@ -50,11 +50,11 @@ public class OfxExporter implements Exporter {
       if (!Boolean.TRUE.equals(account.get(Account.IS_CARD_ACCOUNT))) {
         writer.writeBankMsgHeader(account.get(Account.BANK_ENTITY), account.get(Account.BRANCH_ID), account.get(Account.NUMBER));
         Date date = writeTransactions(account);
-        Date balanceDate = account.get(Account.BALANCE_DATE);
+        Date balanceDate = account.get(Account.POSITION_DATE);
         if (balanceDate == null) {
           balanceDate = date;
         }
-        writer.writeBankMsgFooter(account.get(Account.BALANCE), toString(balanceDate));
+        writer.writeBankMsgFooter(account.get(Account.POSITION), toString(balanceDate));
       }
     }
 
@@ -65,11 +65,11 @@ public class OfxExporter implements Exporter {
       if (Boolean.TRUE.equals(account.get(Account.IS_CARD_ACCOUNT))) {
         writer.writeCardMsgHeader(account.get(Account.NUMBER));
         Date date = writeTransactions(account);
-        Date balanceDate = account.get(Account.BALANCE_DATE);
+        Date balanceDate = account.get(Account.POSITION_DATE);
         if (balanceDate == null) {
           balanceDate = date;
         }
-        writer.writeCardMsgFooter(account.get(Account.BALANCE), toString(balanceDate));
+        writer.writeCardMsgFooter(account.get(Account.POSITION), toString(balanceDate));
       }
     }
     writer.writeFooter();

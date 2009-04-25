@@ -47,12 +47,12 @@ public class Account {
 
   public static StringField NAME;
 
-  public static DoubleField BALANCE;
+  public static DoubleField POSITION;
 
   @Target(Transaction.class)
   public static LinkField TRANSACTION_ID;
 
-  public static DateField BALANCE_DATE;
+  public static DateField POSITION_DATE;
 
   public static DateField CLOSED_DATE;
 
@@ -199,9 +199,9 @@ public class Account {
       outputStream.writeInteger(values.get(BANK_ENTITY));
       outputStream.writeInteger(values.get(BRANCH_ID));
       outputStream.writeUtf8String(values.get(NAME));
-      outputStream.writeDouble(values.get(BALANCE));
+      outputStream.writeDouble(values.get(POSITION));
       outputStream.writeInteger(values.get(TRANSACTION_ID));
-      outputStream.writeDate(values.get(BALANCE_DATE));
+      outputStream.writeDate(values.get(POSITION_DATE));
       outputStream.writeBoolean(values.get(IS_CARD_ACCOUNT));
       outputStream.writeInteger(values.get(ACCOUNT_TYPE));
       outputStream.writeInteger(values.get(UPDATE_MODE));
@@ -234,9 +234,9 @@ public class Account {
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
-      fieldSetter.set(BALANCE, input.readDouble());
+      fieldSetter.set(POSITION, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
-      fieldSetter.set(BALANCE_DATE, input.readDate());
+      fieldSetter.set(POSITION_DATE, input.readDate());
       fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
       fieldSetter.set(UPDATE_MODE, input.readInteger());
@@ -250,9 +250,9 @@ public class Account {
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
-      fieldSetter.set(BALANCE, input.readDouble());
+      fieldSetter.set(POSITION, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
-      fieldSetter.set(BALANCE_DATE, input.readDate());
+      fieldSetter.set(POSITION_DATE, input.readDate());
       fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
       fieldSetter.set(UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());
@@ -266,9 +266,9 @@ public class Account {
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
-      fieldSetter.set(BALANCE, input.readDouble());
+      fieldSetter.set(POSITION, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
-      fieldSetter.set(BALANCE_DATE, input.readDate());
+      fieldSetter.set(POSITION_DATE, input.readDate());
       fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
       fieldSetter.set(UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());
@@ -281,9 +281,9 @@ public class Account {
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
-      fieldSetter.set(BALANCE, input.readDouble());
+      fieldSetter.set(POSITION, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
-      fieldSetter.set(BALANCE_DATE, input.readDate());
+      fieldSetter.set(POSITION_DATE, input.readDate());
       fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
       fieldSetter.set(ACCOUNT_TYPE, AccountType.MAIN.getId());
       fieldSetter.set(UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());
@@ -296,9 +296,9 @@ public class Account {
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readString());
-      fieldSetter.set(BALANCE, input.readDouble());
+      fieldSetter.set(POSITION, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
-      fieldSetter.set(BALANCE_DATE, input.readDate());
+      fieldSetter.set(POSITION_DATE, input.readDate());
       fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
       fieldSetter.set(ACCOUNT_TYPE, AccountType.MAIN.getId());
       fieldSetter.set(UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());

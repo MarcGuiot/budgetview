@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.components.CloseAction;
 import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.description.AccountStringifier;
 import org.designup.picsou.gui.description.Formatting;
@@ -46,7 +45,7 @@ public class AccountPositionEditionDialog {
 
     ValidateAction validateAction = new ValidateAction();
 
-    JTextField editor = builder.addEditor("amountField", Account.BALANCE)
+    JTextField editor = builder.addEditor("amountField", Account.POSITION)
       .setValidationAction(validateAction)
       .setNotifyOnKeyPressed(true)
       .forceSelection(account)
@@ -138,7 +137,7 @@ public class AccountPositionEditionDialog {
 
     public void actionPerformed(ActionEvent e) {
       if (balanceDate != null) {
-        localRepository.update(account.getKey(), Account.BALANCE_DATE, balanceDate);
+        localRepository.update(account.getKey(), Account.POSITION_DATE, balanceDate);
       }
       localRepository.update(account.getKey(), Account.TRANSACTION_ID, null);
       localRepository.commitChanges(true);

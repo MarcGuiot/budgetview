@@ -8,6 +8,7 @@ import org.designup.picsou.model.*;
 import static org.designup.picsou.model.Transaction.*;
 import org.designup.picsou.model.initial.InitialCategories;
 import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
@@ -58,29 +59,29 @@ public class OfxBuilder {
 
   public OfxBuilder addCategory(MasterCategory master, String categoryName) {
     repository.create(Category.TYPE,
-                      FieldValue.value(Category.NAME, categoryName),
-                      FieldValue.value(Category.MASTER, master.getId()));
+                      value(Category.NAME, categoryName),
+                      value(Category.MASTER, master.getId()));
     return this;
   }
 
-  public OfxBuilder addBankAccount(int bankEntityId, int branchId, String accountNumber, double balance, String updateDate) {
+  public OfxBuilder addBankAccount(int bankEntityId, int branchId, String accountNumber, double position, String updateDate) {
     currentAccount =
       repository.create(Key.create(Account.TYPE, repository.getIdGenerator().getNextId(Account.ID, 1)),
-                        FieldValue.value(Account.BANK_ENTITY, bankEntityId),
-                        FieldValue.value(Account.BRANCH_ID, branchId),
-                        FieldValue.value(Account.NUMBER, accountNumber),
-                        FieldValue.value(Account.BALANCE, balance),
-                        FieldValue.value(Account.BALANCE_DATE, updateDate != null ? Dates.parse(updateDate) : null));
+                        value(Account.BANK_ENTITY, bankEntityId),
+                        value(Account.BRANCH_ID, branchId),
+                        value(Account.NUMBER, accountNumber),
+                        value(Account.POSITION, position),
+                        value(Account.POSITION_DATE, updateDate != null ? Dates.parse(updateDate) : null));
     return this;
   }
 
-  public OfxBuilder addCardAccount(String cardId, double balance, String updateDate) {
+  public OfxBuilder addCardAccount(String cardId, double position, String updateDate) {
     currentAccount =
       repository.create(Key.create(Account.TYPE, repository.getIdGenerator().getNextId(Account.ID, 1)),
-                        FieldValue.value(Account.NUMBER, cardId),
-                        FieldValue.value(Account.BALANCE, balance),
-                        FieldValue.value(Account.BALANCE_DATE, updateDate != null ? Dates.parse(updateDate) : null),
-                        FieldValue.value(Account.IS_CARD_ACCOUNT, true));
+                        value(Account.NUMBER, cardId),
+                        value(Account.POSITION, position),
+                        value(Account.POSITION_DATE, updateDate != null ? Dates.parse(updateDate) : null),
+                        value(Account.IS_CARD_ACCOUNT, true));
     return this;
   }
 
@@ -156,16 +157,16 @@ public class OfxBuilder {
     Date parsedBankDate = Dates.parse(bankDate);
     Glob transaction =
       repository.create(TYPE,
-                        FieldValue.value(AMOUNT, amount),
-                        FieldValue.value(MONTH, Month.getMonthId(parsedUserDate)),
-                        FieldValue.value(DAY, Month.getDay(parsedUserDate)),
-                        FieldValue.value(BANK_MONTH, Month.getMonthId(parsedBankDate)),
-                        FieldValue.value(BANK_DAY, Month.getDay(parsedBankDate)),
-                        FieldValue.value(LABEL, label),
-                        FieldValue.value(ORIGINAL_LABEL, label),
-                        FieldValue.value(CATEGORY, categoryId),
-                        FieldValue.value(ACCOUNT, currentAccount.get(Account.ID)),
-                        FieldValue.value(NOTE, note));
+                        value(AMOUNT, amount),
+                        value(MONTH, Month.getMonthId(parsedUserDate)),
+                        value(DAY, Month.getDay(parsedUserDate)),
+                        value(BANK_MONTH, Month.getMonthId(parsedBankDate)),
+                        value(BANK_DAY, Month.getDay(parsedBankDate)),
+                        value(LABEL, label),
+                        value(ORIGINAL_LABEL, label),
+                        value(CATEGORY, categoryId),
+                        value(ACCOUNT, currentAccount.get(Account.ID)),
+                        value(NOTE, note));
     if (parentId != null) {
       repository.update(transaction.getKey(), Transaction.SPLIT_SOURCE, parentId);
     }

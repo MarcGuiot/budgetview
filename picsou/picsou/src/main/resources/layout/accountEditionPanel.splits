@@ -19,8 +19,8 @@
     <label text="$account.updateMode" gridPos="(0,5)" styleClass="formLabel"/>
     <comboBox ref="updateMode" gridPos="(1,5)"/>
 
-    <label text="$account.balance" gridPos="(0,6)" styleClass="formLabel" autoHideSource="balance"/>
-    <textField ref="balance" gridPos="(1,6)"/>
+    <label text="$account.position" gridPos="(0,6)" styleClass="formLabel" autoHideSource="position"/>
+    <textField ref="position" gridPos="(1,6)"/>
   </grid>
   
 </splits>

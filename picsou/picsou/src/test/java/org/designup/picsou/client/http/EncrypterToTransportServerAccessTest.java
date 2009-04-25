@@ -13,6 +13,7 @@ import org.designup.picsou.server.model.User;
 import org.designup.picsou.server.session.Persistence;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.impl.DefaultGlobRepository;
 import org.globsframework.model.utils.DefaultChangeSetListener;
@@ -96,21 +97,21 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
     GlobRepository repository = init(serverAccess);
 
     Glob expected = repository.create(Key.create(Account.TYPE, 123),
-                                      FieldValue.value(Account.BANK_ENTITY, 1),
-                                      FieldValue.value(Account.NUMBER, "main account"),
-                                      FieldValue.value(Account.BALANCE, 100.),
-                                      FieldValue.value(Account.BRANCH_ID, 2));
+                                      value(Account.BANK_ENTITY, 1),
+                                      value(Account.NUMBER, "main account"),
+                                      value(Account.POSITION, 100.),
+                                      value(Account.BRANCH_ID, 2));
     {
       Glob actualAccount = serverAccess.getUserData(new DefaultChangeSet(), new DummyIdUpdater()).get(0);
       assertEquals(1, actualAccount.get(Account.BANK_ENTITY).intValue());
       assertEquals(123, actualAccount.get(Account.ID).intValue());
       assertEquals(2, actualAccount.get(Account.BRANCH_ID).intValue());
-      assertEquals(100.0, actualAccount.get(Account.BALANCE), 0.1);
+      assertEquals(100.0, actualAccount.get(Account.POSITION), 0.1);
     }
     {
-      repository.update(expected.getKey(), Account.BALANCE, -122.);
+      repository.update(expected.getKey(), Account.POSITION, -122.);
       Glob actualAccount = serverAccess.getUserData(new DefaultChangeSet(), new DummyIdUpdater()).get(0);
-      assertEquals(-122.0, actualAccount.get(Account.BALANCE), 0.1);
+      assertEquals(-122.0, actualAccount.get(Account.POSITION), 0.1);
     }
   }
 

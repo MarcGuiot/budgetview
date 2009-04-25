@@ -63,7 +63,7 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker setBalance(double initialBalance) {
-    dialog.getInputTextBox("balance").setText(Double.toString(initialBalance));
+    dialog.getInputTextBox("position").setText(Double.toString(initialBalance));
     return this;
   }
 
