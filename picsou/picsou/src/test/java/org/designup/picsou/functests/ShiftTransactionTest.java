@@ -150,11 +150,81 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkTotalAmounts(-22.00, -15.00);
   }
 
-  public void testShiftingATransactionWithAMirror() throws Exception {
-    fail("tbd");
+  public void testShiftingASplittedTransaction() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 12345, "00001234", 100.00, "2008/07/15")
+      .addTransaction("2008/06/25", -25.00, "Monoprix / June ")
+      .addTransaction("2008/07/15", -12.00, "Monoprix / July")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectAllTableRows();
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+
+    views.selectHome();
+    mainAccounts.checkAccount("Account n. 00001234", 100.00, "2008/07/15");
+    timeline.selectMonth("2008/06");
+    mainAccounts.checkEstimatedPosition(112.00);
+    timeline.selectMonth("2008/07");
+    mainAccounts.checkEstimatedPosition(87.00);
+
+    views.selectBudget();
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkTotalAmounts(-25.00, -25.00);
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.checkTotalAmounts(-12.00, -25.00);
+
+    views.selectCategorization();
+    categorization.selectTableRow("Monoprix / June");
+    transactionDetails.split("10.00", "dvd");
+    categorization.checkTable(new Object[][]{
+      {"15/07/2008",	"Groceries",	"MONOPRIX / JULY",	-12.0},
+      {"25/06/2008",	"Groceries",	"MONOPRIX / JUNE",	-15.0},
+      {"25/06/2008",	"",	"MONOPRIX / JUNE",	-10.0},
+    });
+
+    categorization.selectTableRow(2);
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Leisures", MasterCategory.LEISURES, true);
+    transactionDetails.shift();
+    categorization.checkTable(new Object[][]{
+      {"15/07/2008",	"Groceries",	"MONOPRIX / JULY",	-12.0},
+      {"25/06/2008",	"Groceries",	"MONOPRIX / JUNE",	-15.0},
+      {"01/07/2008",	"Leisures",	"MONOPRIX / JUNE",	-10.0},
+    });
+
+    // Account positions are unchanged
+    views.selectHome();
+    timeline.selectMonth("2008/06");
+    mainAccounts.checkEstimatedPosition(112.00);
+    timeline.selectMonth("2008/07");
+    mainAccounts.checkEstimatedPosition(97.00);
+
+    // Series are updated
+    views.selectBudget();
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkTotalAmounts(-15.00, -15.00);
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.checkTotalAmounts(-22.00, -15.00);
+
+    views.selectCategorization();
+    transactionDetails.openSplitDialog()
+      .deleteRow(1)
+      .validate();
+    categorization.checkTable(new Object[][]{
+      {"15/07/2008",	"Groceries",	"MONOPRIX / JULY",	-12.0},
+      {"25/06/2008",	"Groceries",	"MONOPRIX / JUNE",	-25.0},
+    });
+
+    views.selectBudget();
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkTotalAmounts(-25.00, -25.00);
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.checkTotalAmounts(-12.00, -25.00);
   }
 
-  public void testShiftingASplittedTransaction() throws Exception {
+  public void testShiftingAMirroredTransaction() throws Exception {
     fail("tbd");
   }
 }
