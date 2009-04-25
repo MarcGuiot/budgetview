@@ -4,6 +4,8 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.AccountEditionDialog;
 import org.designup.picsou.gui.components.ConfirmationDialog;
 import org.designup.picsou.gui.components.CustomFocusTraversalPolicy;
+import org.designup.picsou.gui.license.LicenseActivationDialog;
+import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -178,8 +180,6 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
                         value(Transaction.BANK_DAY, null),
                         value(Transaction.LABEL, ""));
 
-      GlobPrinter.print(new GlobList(createdTransaction));
-
       amountField.setText("");
       dayField.setText("");
       labelField.setText("");
@@ -207,6 +207,14 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
   }
 
   private void show() {
+
+    if (LicenseService.trialExpired(parentRepository)) {
+      LicenseActivationDialog dialog = new LicenseActivationDialog(directory.get(JFrame.class),
+                                                                   repository, directory);
+      dialog.showExpiration();
+      return;
+    }
+
     if (accountCombo.getItemCount() == 0) {
       final JFrame frame = directory.get(JFrame.class);
       ConfirmationDialog dialog = new ConfirmationDialog("transactionCreation.noAccounts.title",

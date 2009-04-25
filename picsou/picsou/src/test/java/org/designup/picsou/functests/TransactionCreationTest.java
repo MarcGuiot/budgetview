@@ -151,10 +151,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     categorization.checkSelectedTableRow("A TRANSACTION");
   }
 
-  public void testInputDisabledIfTrialExpired() throws Exception {
-    fail("tbd");
-  }
-
   public void testInputDisabledInDemoMode() throws Exception {
     fail("tbd");
   }

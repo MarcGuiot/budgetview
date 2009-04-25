@@ -6,7 +6,6 @@ import org.designup.picsou.gui.TimeService;
 import org.globsframework.utils.Dates;
 import org.uispec4j.TextBox;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class LicenseTest extends LoggedInFunctionalTestCase {
 
@@ -24,7 +23,7 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
   public void testMessage() throws Exception {
     TextBox box = mainWindow.getTextBox("licenseMessage");
     assertThat(box.isVisible());
-    assertThat(box.textEquals("Still 30 days."));
+    assertThat(box.textEquals("30 days left for trying CashPilot."));
 
     LicenseActivationChecker.enterLicense(mainWindow, "admin", "zz");
     UISpecAssert.assertFalse(box.isVisible());
@@ -36,15 +35,23 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
     restartApplication();
     TextBox box = mainWindow.getTextBox("licenseMessage");
     assertThat(box.isVisible());
-    assertThat(box.textEquals("This is your last day with cashpilot."));
+    assertThat(box.textEquals("This is your last day for trying CashPilot."));
   }
 
-  public void testLicenseExpired() throws Exception {
+  public void testTrialOver() throws Exception {
     TimeService.setCurrentDate(Dates.parse("2008/10/01"));
 
     restartApplication();
     TextBox box = mainWindow.getTextBox("licenseMessage");
     assertThat(box.isVisible());
     assertThat(box.textContains("Your free trial period is over."));
+  }
+
+  public void testCannotCreateTransactionsWhenTrialIsOver() throws Exception {
+    TimeService.setCurrentDate(Dates.parse("2008/10/01"));
+
+    restartApplication();
+    views.selectCategorization();
+    transactionCreation.checkTrialExpiredMessage();
   }
 }

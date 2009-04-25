@@ -1,11 +1,9 @@
 package org.designup.picsou.gui.actions;
 
-import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.license.LicenseActivationDialog;
+import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.startup.ImportPanel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
-import org.designup.picsou.model.User;
-import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -15,7 +13,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class ImportFileAction extends AbstractAction {
@@ -73,18 +70,16 @@ public class ImportFileAction extends AbstractAction {
     private Directory directory;
     private GlobRepository repository;
 
-    public OpenRunnable(List<File> files, Directory directory, GlobRepository repository, Glob defaultAccount,
-                        boolean usePreference) {
+    public OpenRunnable(List<File> files,
+                        Directory directory, GlobRepository repository,
+                        Glob defaultAccount, boolean usePreferedPath) {
       this.directory = directory;
       this.repository = repository;
-      JFrame frame = directory.get(JFrame.class);
-      Glob preference = repository.get(UserPreferences.KEY);
-      Glob user = repository.get(User.KEY);
-      Date lastValidDay = preference.get(UserPreferences.LAST_VALID_DAY);
-      if (user.get(User.IS_REGISTERED_USER) ||
-          TimeService.getToday().before(lastValidDay)) {
+      if (!LicenseService.trialExpired(repository)) {
         panel = new ImportPanel(Lang.get("import.step1.close"), files, defaultAccount,
-                                frame, repository, directory, usePreference);
+                                directory.get(JFrame.class),
+                                repository, directory,
+                                usePreferedPath);
       }
     }
 
@@ -93,8 +88,8 @@ public class ImportFileAction extends AbstractAction {
         panel.show();
       }
       else {
-        JFrame frame = directory.get(JFrame.class);
-        LicenseActivationDialog dialog = new LicenseActivationDialog(frame, repository, directory);
+        LicenseActivationDialog dialog = new LicenseActivationDialog(directory.get(JFrame.class),
+                                                                     repository, directory);
         dialog.showExpiration();
       }
     }

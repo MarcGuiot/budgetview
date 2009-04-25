@@ -17,6 +17,15 @@ public class LicenseActivationChecker {
     this.dialog = dialog;
   }
 
+  public static LicenseActivationChecker open(Window window) {
+    UISpecAssert.waitUntil(window.containsMenuBar(), 10000);
+    return open(window.getMenuBar().getMenu("File").getSubMenu("Register").triggerClick());
+  }
+
+  public static LicenseActivationChecker open(Trigger trigger) {
+    return new LicenseActivationChecker(WindowInterceptor.getModalDialog(trigger));
+  }
+
   static public void enterLicense(Window window, final String mail, final String code) {
     enterLicense(window, new WindowHandler() {
       public Trigger process(Window window) throws Exception {
@@ -48,10 +57,10 @@ public class LicenseActivationChecker {
       .run();
   }
 
-  public static LicenseActivationChecker open(Window window) {
-    UISpecAssert.waitUntil(window.containsMenuBar(), 10000);
-    return new LicenseActivationChecker(WindowInterceptor.getModalDialog(window.getMenuBar().getMenu("File")
-      .getSubMenu("Register").triggerClick()));
+  public LicenseActivationChecker checkFieldsAreEmpty() {
+    UISpecAssert.assertThat(dialog.getInputTextBox("mail").textIsEmpty());
+    UISpecAssert.assertThat(dialog.getInputTextBox("code").textIsEmpty());
+    return this;
   }
 
   public LicenseActivationChecker enterLicenseAndValidate(final String mail, final String code) {

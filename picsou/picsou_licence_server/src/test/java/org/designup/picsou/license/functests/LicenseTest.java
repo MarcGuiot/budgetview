@@ -287,8 +287,8 @@ public class LicenseTest extends LicenseTestCase {
   private void checkLicenseExpired() {
     OperationChecker operations = new OperationChecker(window);
     Window dialog = WindowInterceptor.getModalDialog(operations.getImportTrigger());
-    LicenseActivationChecker licenseExpiration = new LicenseActivationChecker(dialog);
-    licenseExpiration.cancel();
+    LicenseActivationChecker licenseActivation = new LicenseActivationChecker(dialog);
+    licenseActivation.cancel();
   }
 
   private void checkValidLicense(final boolean anonymous) {
@@ -360,7 +360,7 @@ public class LicenseTest extends LicenseTestCase {
   private void checkDaysLeftMessage() {
     TextBox message = window.getTextBox("licenseMessage");
     assertThat(message.isVisible());
-    assertTrue(message.textContains("Still "));
+    assertTrue(message.textContains("days left"));
   }
 
   private void checkMessageOver() {

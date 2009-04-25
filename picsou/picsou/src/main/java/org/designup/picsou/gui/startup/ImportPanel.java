@@ -92,7 +92,8 @@ public class ImportPanel {
   private PicsouDialog dialog;
 
   public ImportPanel(String textForCloseButton, List<File> files, Glob defaultAccount,
-                     final Window owner, final GlobRepository repository, Directory directory, boolean usePreferedPath) {
+                     final Window owner, final GlobRepository repository, Directory directory,
+                     boolean usePreferedPath) {
 
     this.defaultAccount = defaultAccount;
     this.repository = repository;

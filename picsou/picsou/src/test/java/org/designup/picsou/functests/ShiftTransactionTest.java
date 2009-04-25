@@ -150,7 +150,11 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkTotalAmounts(-22.00, -15.00);
   }
 
-  public void testShiftingASavingsTransaction() throws Exception {
+  public void testShiftingATransactionWithAMirror() throws Exception {
+    fail("tbd");
+  }
+
+  public void testShiftingASplittedTransaction() throws Exception {
     fail("tbd");
   }
 }

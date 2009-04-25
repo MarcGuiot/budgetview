@@ -1,9 +1,9 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.Panel;
-import org.uispec4j.Window;
 import org.uispec4j.Button;
+import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
+import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 import javax.swing.*;
@@ -134,6 +134,12 @@ public class TransactionCreationChecker extends GuiChecker {
   public TransactionCreationChecker checkNoErrorMessage() {
     checkComponentVisible(getPanel(), JLabel.class, "errorMessage", false);
     return this;
+  }
+
+  public void checkTrialExpiredMessage() {
+    LicenseActivationChecker.open(getShowHideButton().triggerClick())
+      .checkFieldsAreEmpty()
+      .cancel();
   }
 
   private Panel getPanel() {

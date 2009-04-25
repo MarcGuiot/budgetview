@@ -50,9 +50,6 @@ public class TransactionComparator implements Comparator<Glob> {
     }
     final Integer day1 = transaction1.get(dayField);
     final Integer day2 = transaction2.get(dayField);
-    if (day1 == null || day2 == null) {
-      GlobPrinter.print(new GlobList(transaction1, transaction2));
-    }
     tmp = day1.compareTo(day2);
     if (tmp != 0) {
       return comparisonMultiplier * tmp;

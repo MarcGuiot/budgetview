@@ -6,8 +6,6 @@ import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
 
-import java.io.Closeable;
-
 public class LicenseExpirationChecker extends GuiChecker {
   private Window window;
 
@@ -26,7 +24,7 @@ public class LicenseExpirationChecker extends GuiChecker {
     UISpecAssert.assertFalse(window.isVisible());
   }
 
-  public LicenseExpirationChecker checkMail(String mail){
+  public LicenseExpirationChecker checkMail(String mail) {
     window.getInputTextBox("mailAdress").textEquals(mail);
     return this;
   }
@@ -37,7 +35,7 @@ public class LicenseExpirationChecker extends GuiChecker {
   }
 
   public LicenseExpirationChecker checkMessageMailSent() {
-    window.getTextBox("mailResponse").textEquals("A mail was send to you");
+    window.getTextBox("mailResponse").textEquals("A mail was sent to you");
     return this;
   }
 }
