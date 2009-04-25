@@ -18,7 +18,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkAccountName("Account n. 0000123")
       .checkAccountNumber("0000123")
       .checkBalanceDisplayed(false)
-      .checkUpdateMode("File import")
+      .checkUpdateModeIsFileImport()
       .checkUpdateModeIsDisabled()
       .setAccountName("My account")
       .setAccountNumber("12345")
@@ -37,9 +37,9 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .setAccountName("Main CIC account")
       .checkTypes("Main", "Card", "Savings")
       .selectBank("CIC")
-      .checkUpdateMode("File import")
+      .checkUpdateModeIsFileImport()
       .checkUpdateModeIsEnabled()
-      .checkUpdateModes("File import", "Manual input")
+      .checkUpdateModes()
       .checkIsMain()
       .validate();
 
@@ -51,9 +51,9 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount()
       .setAccountName("Savings")
       .setAccountNumber("123")
-      .checkUpdateMode("File import")
+      .checkUpdateModeIsFileImport()
       .checkUpdateModeIsEnabled()
-      .checkUpdateModes("File import", "Manual input")
+      .checkUpdateModes()
       .checkIsSavings()
       .selectBank("cic")
       .validate();
@@ -146,7 +146,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     mainAccounts.edit("Main").delete()
-      .checkContainsText("No operations are related to this account")
+      .checkMessageContains("No operations are related to this account")
       .validate();
 
     mainAccounts.checkNotPresent("Main");
@@ -183,7 +183,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     mainAccounts.edit("Account n. 0000123").delete()
-      .checkContainsText("All the operations associated to this account will be deleted")
+      .checkMessageContains("All the operations associated to this account will be deleted")
       .validate();
     mainAccounts.checkNotPresent("Account n. 0000123");
 
@@ -248,7 +248,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     savingsAccounts.edit("Livret")
       .delete()
-      .checkContainsText("All the operations and series associated to this account will be deleted")
+      .checkMessageContains("All the operations and series associated to this account will be deleted")
       .validate();
     savingsAccounts.checkNotPresent("Livret");
 
@@ -263,7 +263,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     savingsAccounts.edit("Codevi").delete()
-      .checkContainsText("All the series associated to this account will be deleted")
+      .checkMessageContains("All the series associated to this account will be deleted")
       .validate();
     savingsAccounts.checkNotPresent("Codevi");
   }

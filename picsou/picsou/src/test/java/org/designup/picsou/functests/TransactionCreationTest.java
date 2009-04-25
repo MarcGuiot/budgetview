@@ -1,6 +1,7 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
+import org.designup.picsou.functests.utils.QifBuilder;
 
 public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
@@ -69,7 +70,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.checkSelectedTableRow("TRANSACTION 2");
-
   }
 
   public void testCreationPanelIsAvailableOnlyWhenManualInputAccountsExist() throws Exception {
@@ -88,20 +88,15 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     transactionCreation
-      .checkHidden();
-
-    views.selectHome();
-    mainAccounts.createNewAccount()
+      .checkHidden()
+      .checkNoAccountMessageAndOpenCreationDialog()
+      .checkUpdateModeIsManualInput()
       .setAccountName("Cash")
       .setAccountNumber("012345")
-      .setUpdateMode("Manual input")
       .selectBank("CIC")
       .validate();
 
-    views.selectCategorization();
     transactionCreation
-      .checkHidden()
-      .show()
       .checkShowing()
       .hide()
       .checkHidden()
@@ -157,11 +152,15 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     categorization.checkSelectedTableRow("A TRANSACTION");
   }
 
-  public void testManualInputAccountsNotShownInQifImport() throws Exception {
+  public void testManualInputAccountsWithOfxImport() throws Exception {
     fail("tbd");
   }
 
-  public void testManualInputAccountsWithOfxImport() throws Exception {
+  public void testInputDisabledIfTrialExpired() throws Exception {
     fail("tbd");
+  }
+
+  public void testInputDisabledInDemoMode() throws Exception {
+    fail("");
   }
 }

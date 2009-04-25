@@ -155,6 +155,45 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testManualInputAccountsNotShownInQifImport() throws Exception {
+
+    mainAccounts.createNewAccount()
+      .setAccountName("Main")
+      .setAccountNumber("012345")
+      .setUpdateMode("File import")
+      .selectBank("CIC")
+      .validate();
+
+    mainAccounts.createNewAccount()
+      .setAccountName("Cash")
+      .setUpdateMode("Manual input")
+      .selectBank("Autre")
+      .validate();
+
+    String firstQif = QifBuilder.init(this)
+      .addTransaction("2006/01/01", 10, "monop")
+      .save();
+
+    operations.openImportDialog()
+      .setFilePath(firstQif)
+      .acceptFile()
+      .checkAvailableAccounts("Main")
+      .createNewAccount(SOCIETE_GENERALE, "SG", "12345", 100.0)
+      .completeImport();
+
+    views.selectHome();
+    mainAccounts.checkAccountNames("Main", "Cash", "SG");
+    mainAccounts.edit("Main")
+      .checkUpdateModeIsFileImport()
+      .cancel();
+    mainAccounts.edit("Cash")
+      .checkUpdateModeIsManualInput()
+      .cancel();
+    mainAccounts.edit("SG")
+      .checkUpdateModeIsFileImport()
+      .cancel();
+  }
+
   public void testSettingInitialBalanceForQifFiles() throws Exception {
     final String path = QifBuilder
       .init(this)

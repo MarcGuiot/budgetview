@@ -80,7 +80,7 @@ public class AccountEditionPanel {
     builder.add("type", createAccountTypeCombo());
     messageSavingsWarning = new JLabel(Lang.get("account.savings.warning"));
     builder.add("savingsMessageWarning", messageSavingsWarning);
-    updateModeCombo = builder.addComboEditor("updateMode", Account.UPDATE_MODE);
+    updateModeCombo = builder.addComboEditor("updateMode", Account.UPDATE_MODE).setShowEmptyOption(false);
     messageSavingsWarning.setVisible(false);
 
     balanceEditor = builder.addEditor("balance", Account.BALANCE).setNotifyOnKeyPressed(true).getComponent();

@@ -31,10 +31,6 @@ public abstract class ConfirmationDialog {
     GuiUtils.showCentered(dialog);
   }
 
-  protected void preValidate() {
-    // override this
-  }
-
   protected void postValidate() {
     // override this
   }
@@ -42,7 +38,6 @@ public abstract class ConfirmationDialog {
   private AbstractAction createOkAction() {
     return new AbstractAction(Lang.get("ok")) {
       public void actionPerformed(ActionEvent e) {
-        preValidate();
         dialog.setVisible(false);
         postValidate();
       }

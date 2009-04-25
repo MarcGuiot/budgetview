@@ -28,7 +28,7 @@ public class Account {
   public static final int MAIN_SUMMARY_ACCOUNT_ID = -1;
   public static final int SAVINGS_SUMMARY_ACCOUNT_ID = -2;
   public static final int ALL_SUMMARY_ACCOUNT_ID = -3;
-  public static final Set<Integer> SUMMARY_ACCOUNT = new HashSet<Integer>();
+  public static final Set<Integer> SUMMARY_ACCOUNT_IDS = new HashSet<Integer>();
   public static org.globsframework.model.Key MAIN_SUMMARY_KEY;
   public static org.globsframework.model.Key SAVINGS_SUMMARY_KEY;
   public static org.globsframework.model.Key ALL_SUMMARY_KEY;
@@ -75,9 +75,9 @@ public class Account {
     MAIN_SUMMARY_KEY = org.globsframework.model.Key.create(TYPE, MAIN_SUMMARY_ACCOUNT_ID);
     SAVINGS_SUMMARY_KEY = org.globsframework.model.Key.create(TYPE, SAVINGS_SUMMARY_ACCOUNT_ID);
     ALL_SUMMARY_KEY = org.globsframework.model.Key.create(TYPE, ALL_SUMMARY_ACCOUNT_ID);
-    SUMMARY_ACCOUNT.add(MAIN_SUMMARY_ACCOUNT_ID);
-    SUMMARY_ACCOUNT.add(SAVINGS_SUMMARY_ACCOUNT_ID);
-    SUMMARY_ACCOUNT.add(ALL_SUMMARY_ACCOUNT_ID);
+    SUMMARY_ACCOUNT_IDS.add(MAIN_SUMMARY_ACCOUNT_ID);
+    SUMMARY_ACCOUNT_IDS.add(SAVINGS_SUMMARY_ACCOUNT_ID);
+    SUMMARY_ACCOUNT_IDS.add(ALL_SUMMARY_ACCOUNT_ID);
   }
 
   public static void createSummary(GlobRepository repository) {

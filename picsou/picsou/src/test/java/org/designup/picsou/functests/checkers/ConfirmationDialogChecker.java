@@ -21,7 +21,7 @@ public class ConfirmationDialogChecker extends GuiChecker {
     return this;
   }
 
-  public ConfirmationDialogChecker checkContainsText(String message) {
+  public ConfirmationDialogChecker checkMessageContains(String message) {
     assertThat(dialog.getTextBox("message").textContains(message));
     return this;
   }
@@ -29,6 +29,10 @@ public class ConfirmationDialogChecker extends GuiChecker {
   public void validate() {
     dialog.getButton("OK").click();
     assertFalse(dialog.isVisible());
+  }
+
+  public Trigger getOkTrigger() {
+    return dialog.getButton("OK").triggerClick();
   }
 
   public void cancel() {

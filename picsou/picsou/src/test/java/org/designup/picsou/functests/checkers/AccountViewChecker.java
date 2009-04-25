@@ -26,8 +26,7 @@ public class AccountViewChecker extends GuiChecker {
   }
 
   public void checkAccountNames(String... expectedNames) {
-    Set<String> existingNames = getDisplayedAccounts();
-    org.globsframework.utils.TestUtils.assertSetEquals(existingNames, expectedNames);
+    org.globsframework.utils.TestUtils.assertSetEquals(getDisplayedAccounts(), expectedNames);
   }
 
   private Set<String> getDisplayedAccounts() {

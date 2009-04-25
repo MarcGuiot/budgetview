@@ -26,8 +26,7 @@ import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
-import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
-import static org.globsframework.gui.views.utils.LabelCustomizers.fontSize;
+import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
@@ -199,15 +198,18 @@ public class ImportPanel {
     builder2.add("fileName", fileNameLabel);
 
     NewAccountAction newAccountAction =
-      new NewAccountAction(AccountType.MAIN, sessionRepository, sessionDirectory, dialog);
+      new NewAccountAction(AccountType.MAIN, sessionRepository, sessionDirectory, dialog)
+        .setUpdateModeEditable(false);
     newAccountButton = builder2.add("newAccount", new JButton(newAccountAction));
 
     GlobComboView comboView = GlobComboView.init(Account.TYPE, sessionRepository, sessionDirectory);
     accountComboBox = comboView.getComponent();
     builder2.add("accountCombo", accountComboBox);
     comboView.setFilter(new GlobMatcher() {
-      public boolean matches(Glob item, GlobRepository repository) {
-        return item != null && !Account.SUMMARY_ACCOUNT.contains(item.get(Account.ID));
+      public boolean matches(Glob account, GlobRepository repository) {
+        return account != null &&
+               !Account.SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID)) &&
+               AccountUpdateMode.AUTOMATIC.getId().equals(account.get(Account.UPDATE_MODE));
       }
     });
 
@@ -283,8 +285,11 @@ public class ImportPanel {
   }
 
   private void loadLocalRepository(GlobRepository repository) {
-    GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Category.TYPE, Transaction.TYPE,
+    GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE,
+                            Account.TYPE, AccountUpdateMode.TYPE,
+                            Category.TYPE, Transaction.TYPE,
                             Month.TYPE, UserPreferences.TYPE};
+
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)
         .copy(globTypes).get();
@@ -555,7 +560,7 @@ public class ImportPanel {
   private void initCreationAccountFields(File file) {
     if (BankFileType.getTypeFromName(file.getAbsolutePath()).equals(BankFileType.QIF)) {
       GlobList accounts = sessionRepository.getAll(Account.TYPE);
-      for (Integer accountId : Account.SUMMARY_ACCOUNT) {
+      for (Integer accountId : Account.SUMMARY_ACCOUNT_IDS) {
         accounts.remove(sessionRepository.get(Key.create(Account.TYPE, accountId)));
       }
       if (accounts.size() == 0) {

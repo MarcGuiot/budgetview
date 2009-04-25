@@ -212,6 +212,9 @@ public class ImportChecker {
   public ImportChecker createNewAccount(String bank, String accountName, String number, double initialBalance) {
     AccountEditionChecker.open(dialog.getButton("newAccount").triggerClick())
       .selectBank(bank)
+      .checkUpdateModeIsDisabled()
+      .checkUpdateModeIsFileImport()
+      .checkUpdateModes()
       .setAccountName(accountName)
       .setAccountNumber(number)
       .setBalance(initialBalance)

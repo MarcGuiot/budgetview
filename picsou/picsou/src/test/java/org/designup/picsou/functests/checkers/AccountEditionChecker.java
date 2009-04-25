@@ -129,12 +129,21 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  public AccountEditionChecker checkUpdateModes(String... modes) {
-    assertThat(getUpdateModeCombo().contentEquals(modes));
+  public AccountEditionChecker checkUpdateModes() {
+    assertThat(getUpdateModeCombo().contentEquals("File import", "Manual input"));
     return this;
   }
 
-  public AccountEditionChecker checkUpdateMode(String mode) {
+  public AccountEditionChecker checkUpdateModeIsFileImport() {
+    assertThat(getUpdateModeCombo().selectionEquals("File import"));
+    return this;
+  }
+  public AccountEditionChecker checkUpdateModeIsManualInput() {
+    assertThat(getUpdateModeCombo().selectionEquals("Manual input"));
+    return this;
+  }
+
+  private AccountEditionChecker checkUpdateMode(String mode) {
     assertThat(getUpdateModeCombo().selectionEquals(mode));
     return this;
   }

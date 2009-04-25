@@ -44,7 +44,7 @@ public class OfxExporter implements Exporter {
 
     GlobList accounts = repository.getAll(Account.TYPE).sort(Account.ID);
     for (Glob account : accounts) {
-      if (Account.SUMMARY_ACCOUNT.contains(account.get(Account.ID))) {
+      if (Account.SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID))) {
         continue;
       }
       if (!Boolean.TRUE.equals(account.get(Account.IS_CARD_ACCOUNT))) {
@@ -59,7 +59,7 @@ public class OfxExporter implements Exporter {
     }
 
     for (Glob account : accounts) {
-      if (Account.SUMMARY_ACCOUNT.contains(account.get(Account.ID))) {
+      if (Account.SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID))) {
         continue;
       }
       if (Boolean.TRUE.equals(account.get(Account.IS_CARD_ACCOUNT))) {

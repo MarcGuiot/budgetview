@@ -30,13 +30,10 @@ public class MainAccountViewPanel extends AccountViewPanel {
     super(repository, directory, createMatcher(), Account.MAIN_SUMMARY_ACCOUNT_ID);
 
     this.estimatedPositionButton.setAction(new OpenDetailsAction(directory));
-    HyperlinkButtonUI hyperlinkButtonUI = new HyperlinkButtonUI();
-    hyperlinkButtonUI.setAutoHideIfDisabled(false);
-    hyperlinkButtonUI.setUseNormalColorWhenDisabled(true);
-    this.estimatedPositionButton.setUI(hyperlinkButtonUI);
+    this.estimatedPositionButton.setUI(createHyperlinkButtonUI());
+
     this.amountColors = new AmountColors(directory);
-    this.estimatedPositionDetailsDialog =
-      new EstimatedPositionDetailsDialog(repository, directory);
+    this.estimatedPositionDetailsDialog = new EstimatedPositionDetailsDialog(repository, directory);
 
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -53,6 +50,13 @@ public class MainAccountViewPanel extends AccountViewPanel {
         }
       }
     });
+  }
+
+  private HyperlinkButtonUI createHyperlinkButtonUI() {
+    HyperlinkButtonUI hyperlinkButtonUI = new HyperlinkButtonUI();
+    hyperlinkButtonUI.setAutoHideIfDisabled(false);
+    hyperlinkButtonUI.setUseNormalColorWhenDisabled(true);
+    return hyperlinkButtonUI;
   }
 
   private static GlobMatcher createMatcher() {

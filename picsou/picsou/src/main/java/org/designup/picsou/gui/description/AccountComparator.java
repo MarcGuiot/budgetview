@@ -18,14 +18,14 @@ public class AccountComparator implements Comparator<Glob> {
     if (account2 == null){
       return 1;
     }
-    if (SUMMARY_ACCOUNT.contains(account1.get(ID)) &&
-        SUMMARY_ACCOUNT.contains(account2.get(ID))) {
+    if (SUMMARY_ACCOUNT_IDS.contains(account1.get(ID)) &&
+        SUMMARY_ACCOUNT_IDS.contains(account2.get(ID))) {
       return account1.get(ID) - account2.get(ID);
     }
-    if (SUMMARY_ACCOUNT.contains(account1.get(ID))) {
+    if (SUMMARY_ACCOUNT_IDS.contains(account1.get(ID))) {
       return -1;
     }
-    if (SUMMARY_ACCOUNT.contains(account2.get(ID))) {
+    if (SUMMARY_ACCOUNT_IDS.contains(account2.get(ID))) {
       return 1;
     }
     if ((account1.get(IS_CARD_ACCOUNT) == Boolean.TRUE)

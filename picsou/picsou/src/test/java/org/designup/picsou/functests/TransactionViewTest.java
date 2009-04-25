@@ -6,9 +6,7 @@ import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.uispec4j.Table;
-import org.uispec4j.Trigger;
 import org.uispec4j.assertion.UISpecAssert;
-import org.uispec4j.interception.PopupMenuInterceptor;
 
 public class TransactionViewTest extends LoggedInFunctionalTestCase {
   private Table table;
@@ -282,7 +280,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00, "Occasional", MasterCategory.TRANSPORTS)
       .check();
     transactions.delete(2)
-      .checkContainsText("Operation created by a series can not be removed").validate();
+      .checkMessageContains("Operation created by a series can not be removed").validate();
 
     transactions.delete(3).validate();
     transactions.initContent()

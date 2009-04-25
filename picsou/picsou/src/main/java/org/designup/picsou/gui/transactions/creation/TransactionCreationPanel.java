@@ -1,8 +1,9 @@
 package org.designup.picsou.gui.transactions.creation;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.accounts.AccountEditionDialog;
+import org.designup.picsou.gui.components.ConfirmationDialog;
 import org.designup.picsou.gui.components.CustomFocusTraversalPolicy;
-import org.designup.picsou.gui.components.MessageDialog;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -99,7 +100,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     if (months.isEmpty()) {
       return;
     }
-    
+
     Integer currentMonth = months.getSortedSet(Month.ID).last();
     repository.update(PROTOTYPE_TRANSACTION_KEY,
                       value(Transaction.MONTH, currentMonth),
@@ -208,11 +209,19 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
 
   private void show() {
     if (accountCombo.getItemCount() == 0) {
-      MessageDialog dialog = new MessageDialog("transactionCreation.noAccounts.title",
-                                               "transactionCreation.noAccounts.message",
-                                               directory.get(JFrame.class), directory);
+      final JFrame frame = directory.get(JFrame.class);
+      ConfirmationDialog dialog = new ConfirmationDialog("transactionCreation.noAccounts.title",
+                                                         "transactionCreation.noAccounts.message",
+                                                         frame, directory) {
+        protected void postValidate() {
+          AccountEditionDialog accountEdition = new AccountEditionDialog(frame, parentRepository, directory);
+          accountEdition.showWithNewAccount(AccountType.MAIN, AccountUpdateMode.MANUAL, true);
+        }
+      };
       dialog.show();
-      return;
+      if (accountCombo.getItemCount() == 0) {
+        return;
+      }
     }
 
     setVisible(true, "transactionCreation.hide");

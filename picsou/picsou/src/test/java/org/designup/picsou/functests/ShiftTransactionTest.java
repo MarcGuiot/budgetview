@@ -59,13 +59,13 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTableRow("SHIFTABLE TO NEXT");
     transactionDetails.openShiftDialog()
-      .checkContainsText("next month")
+      .checkMessageContains("next month")
       .validate();
     transactionDetails.checkShiftInverted();
 
     categorization.selectTableRow("SHIFTABLE TO PREVIOUS");
     transactionDetails.openShiftDialog()
-      .checkContainsText("previous month")
+      .checkMessageContains("previous month")
       .validate();
     transactionDetails.checkShiftInverted();
 

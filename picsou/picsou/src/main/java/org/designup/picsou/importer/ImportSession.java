@@ -42,7 +42,10 @@ public class ImportSession {
     this.referenceRepository = referenceRepository;
     this.directory = directory;
     this.importService = directory.get(ImportService.class);
-    this.localRepository = GlobRepositoryBuilder.init(referenceRepository.getIdGenerator()).get();
+    this.localRepository =
+      GlobRepositoryBuilder.init(referenceRepository.getIdGenerator())
+        .add(referenceRepository.getAll(AccountUpdateMode.TYPE))
+        .get();
   }
 
   public GlobRepository getTempRepository() {
@@ -86,7 +89,6 @@ public class ImportSession {
         localRepository.update(transaction.getKey(), ImportedTransaction.ACCOUNT, currentlySelectedAccount.get(Account.ID));
       }
     }
-
 
     GlobList allNewTransactions = convertImportedTransaction(selectedDateFormat);
 

@@ -32,7 +32,7 @@ public class BalanceTrigger implements ChangeSetListener {
     SortedSet<Glob> trs = repository.getSorted(Transaction.TYPE, comparator, globMatcher);
 
     Glob[] transactions = trs.toArray(new Glob[trs.size()]);
-    for (Integer accountId : Account.SUMMARY_ACCOUNT) {
+    for (Integer accountId : Account.SUMMARY_ACCOUNT_IDS) {
       updatedAccount.remove(repository.get(Key.create(Account.TYPE, accountId)));
     }
     SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);

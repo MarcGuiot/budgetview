@@ -82,9 +82,11 @@ public class AccountEditionDialog {
     doShow(localRepository.get(account.getKey()));
   }
 
-  public void showWithNewAccount(AccountType type) {
-    accountEditionPanel.setUpdateModeEditable(true);
-    doShow(localRepository.create(Account.TYPE, value(Account.ACCOUNT_TYPE, type.getId())));
+  public void showWithNewAccount(AccountType type, AccountUpdateMode updateMode, boolean updateModeEditable) {
+    accountEditionPanel.setUpdateModeEditable(updateModeEditable);
+    doShow(localRepository.create(Account.TYPE,
+                                  value(Account.ACCOUNT_TYPE, type.getId()),
+                                  value(Account.UPDATE_MODE, updateMode.getId())));
   }
 
   private void doShow(Glob localAccount) {
