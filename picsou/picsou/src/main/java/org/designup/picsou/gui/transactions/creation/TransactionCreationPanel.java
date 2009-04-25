@@ -14,7 +14,6 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.ReplicationGlobRepository;
 import org.globsframework.utils.Strings;
@@ -152,6 +151,13 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
         return;
       }
 
+      int maxDay = Month.getLastDayNumber(prototypeTransaction.get(Transaction.MONTH));
+      if ((day < 1) || (day > maxDay)) {
+        dayField.requestFocus();
+        showErrorMessage("transactionCreation.error.day.range", Integer.toString(maxDay));
+        return;
+      }
+
       String label = prototypeTransaction.get(Transaction.LABEL);
       if (Strings.isNullOrEmpty(label)) {
         labelField.requestFocus();
@@ -188,8 +194,8 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
       selectionService.select(createdTransaction);
     }
 
-    private void showErrorMessage(String messageKey) {
-      errorMessageLabel.setText(Lang.get(messageKey));
+    private void showErrorMessage(String messageKey, String... args) {
+      errorMessageLabel.setText(Lang.get(messageKey, args));
       errorMessageLabel.setVisible(true);
     }
   }

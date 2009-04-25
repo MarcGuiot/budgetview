@@ -112,6 +112,8 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
   public void testCreationErrors() throws Exception {
 
+    operations.openPreferences().setFutureMonthsCount(3).validate();
+
     views.selectHome();
     mainAccounts.createNewAccount()
       .setAccountName("Cash")
@@ -132,6 +134,21 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     transactionCreation
       .checkAmount(10.00)
+      .setDay(0)
+      .create()
+      .checkErrorMessage("The day must be between 1 and 31");
+    categorization.checkTableIsEmpty();
+
+    timeline.selectMonth("2008/09");
+    transactionCreation
+      .checkAmount(10.00)
+      .setDay(31)
+      .create()
+      .checkErrorMessage("The day must be between 1 and 30");
+    categorization.checkTableIsEmpty();
+
+    transactionCreation
+      .checkAmount(10.00)
       .setDay(3)
       .create()
       .checkErrorMessage("You must enter a label");
@@ -145,7 +162,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .checkNoErrorMessage();
 
     categorization.checkTable(new Object[][]{
-      {"03/08/2008", "", "A TRANSACTION", 10.00},
+      {"03/09/2008", "", "A TRANSACTION", 10.00},
     });
 
     categorization.checkSelectedTableRow("A TRANSACTION");
