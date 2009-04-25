@@ -196,6 +196,49 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
     selectionListener.assertEmpty();
   }
 
+  public void testSetEnabled() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' link='2'/>" +
+                    "<dummyObject id='2' name='name2' link='1'/>" +
+                    "<dummyObject id='3' name='name3'/>");
+    repository.addChangeListener(changeListener);
+    Glob glob1 = repository.get(key1);
+    Glob glob2 = repository.get(key2);
+
+    GlobLinkComboEditor editor = new GlobLinkComboEditor(DummyObject.LINK, repository, directory);
+    ComboBox combo = new ComboBox(editor.getComponent());
+    editor.setEnabled(false);
+
+    selectionService.select(glob1);
+    assertTrue(combo.selectionEquals("name2"));
+
+    repository.update(key1, DummyObject.LINK, 3);
+    assertTrue(combo.selectionEquals("name3"));
+    assertFalse(combo.isEnabled());
+
+    editor.setEnabled(true);
+    assertThat(combo.isEnabled());
+
+    editor.setEnabled(false);
+    repository.update(key1, DummyObject.LINK, null);
+    assertTrue(combo.selectionEquals(null));
+    assertFalse(combo.isEnabled());
+
+    repository.update(key1, DummyObject.LINK, 3);
+    assertTrue(combo.selectionEquals("name3"));
+    assertFalse(combo.isEnabled());
+
+    repository.delete(key1);
+    assertTrue(combo.selectionEquals(null));
+    assertFalse(combo.isEnabled());
+
+    editor.setEnabled(true);
+    assertFalse(combo.isEnabled());
+    
+    selectionService.select(glob2);
+    assertThat(combo.isEnabled());
+  }
+
   public void testForbiddingEmptyValues() throws Exception {
     repository =
       checker.parse("<dummyObject id='1' name='name1' link='2'/>" +

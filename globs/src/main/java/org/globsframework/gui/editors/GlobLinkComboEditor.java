@@ -25,6 +25,7 @@ public class GlobLinkComboEditor
   private Key currentKey;
   private boolean updateInProgress = false;
   private boolean forcedSelection;
+  private boolean forcedEnabled = true;
 
   public GlobLinkComboEditor(final Link link, final GlobRepository repository, Directory directory) {
     super(link.getTargetType(), repository, directory);
@@ -61,13 +62,13 @@ public class GlobLinkComboEditor
     Glob source = repository.find(currentKey);
     if (source == null) {
       setTarget(null);
-      setEnabled(false);
+      globComboView.setEnabled(false);
       return;
     }
 
     Glob target = repository.findLinkTarget(source, link);
     setTarget(target);
-    setEnabled(true);
+    globComboView.setEnabled(forcedEnabled);
   }
 
   private void setTarget(Glob target) {
@@ -143,7 +144,7 @@ public class GlobLinkComboEditor
 
   private void setSelectedGlob(Glob glob) {
     this.currentKey = glob == null ? null : glob.getKey();
-    setEnabled(currentKey != null);
+    globComboView.setEnabled(forcedEnabled && (currentKey != null));
     setTarget(glob == null ? null : repository.findLinkTarget(glob, link));
   }
 
@@ -168,8 +169,9 @@ public class GlobLinkComboEditor
     return jComboBox;
   }
 
-  public void setEnabled(boolean enable) {
-    globComboView.setEnabled(enable);
+  public void setEnabled(boolean enabled) {
+    this.forcedEnabled = enabled;
+    globComboView.setEnabled(forcedEnabled && (currentKey != null));
   }
 
   public void setVisible(boolean visible) {
