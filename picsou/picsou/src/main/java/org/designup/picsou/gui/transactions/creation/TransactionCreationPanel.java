@@ -41,8 +41,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     super(createLocalRepository(repository), directory);
     this.parentRepository = repository;
     this.directory = directory;
-    this.prototypeTransaction =
-      this.repository.create(PROTOTYPE_TRANSACTION_KEY);
+    this.prototypeTransaction = this.repository.create(PROTOTYPE_TRANSACTION_KEY);
     this.selectionService.addListener(this, Month.TYPE);
     this.parentRepository.addChangeListener(this);
   }

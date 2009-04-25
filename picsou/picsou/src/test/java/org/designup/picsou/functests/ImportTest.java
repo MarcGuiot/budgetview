@@ -160,13 +160,13 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setAccountName("Main")
       .setAccountNumber("012345")
-      .setUpdateMode("File import")
+      .setUpdateModeToFileImport()
       .selectBank("CIC")
       .validate();
 
     mainAccounts.createNewAccount()
       .setAccountName("Cash")
-      .setUpdateMode("Manual input")
+      .setUpdateModeToManualInput()
       .selectBank("Autre")
       .validate();
 
@@ -375,6 +375,26 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addOccasional("10/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00, MasterCategory.TRANSPORTS)
       .check();
   }
+
+  public void testUsingAnOfxImportForAManualAccountTurnsItIntoFileImportMode() throws Exception {
+    views.selectHome();
+    mainAccounts.createNewAccount()
+      .setAccountName("Cash")
+      .setAccountNumber("012345")
+      .setUpdateModeToManualInput()
+      .selectBank("CIC")
+      .validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount(666, 1024, "012345", 12.0, "2008/06/11")
+      .addTransaction("2008/06/10", 1.0, "V'lib", MasterCategory.TRANSPORTS)
+      .load();
+
+    mainAccounts.edit("Cash")
+      .checkUpdateModeIsFileImport()
+      .cancel();
+  }
+
 
   public void testSelectDateFormat() throws Exception {
     final String path1 = QifBuilder

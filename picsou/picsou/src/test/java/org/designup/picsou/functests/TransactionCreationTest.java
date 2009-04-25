@@ -1,26 +1,25 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
-import org.designup.picsou.functests.utils.QifBuilder;
 
 public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
   public void testStandardCreation() throws Exception {
 
     operations.openPreferences().setFutureMonthsCount(2).validate();
-    
+
     timeline.checkSelection("2008/08");
 
     views.selectHome();
     mainAccounts.createNewAccount()
       .setAccountName("Main")
-      .setUpdateMode("File import")
+      .setUpdateModeToFileImport()
       .selectBank("CIC")
       .validate();
     mainAccounts.createNewAccount()
       .setAccountName("Cash")
       .setAccountNumber("012345")
-      .setUpdateMode("Manual input")
+      .setUpdateModeToManualInput()
       .selectBank("CIC")
       .validate();
 
@@ -39,14 +38,14 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     categorization.checkTable(new Object[][]{
       {"15/08/2008", "", "TRANSACTION 1", 12.50},
     });
-    
+
     categorization.checkSelectedTableRow("TRANSACTION 1");
 
     views.selectHome();
     mainAccounts.createNewAccount()
       .setAccountName("Misc")
       .setAccountNumber("012345")
-      .setUpdateMode("Manual input")
+      .setUpdateModeToManualInput()
       .selectBank("CIC")
       .validate();
 
@@ -82,7 +81,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     mainAccounts.createNewAccount()
       .setAccountName("Main")
-      .setUpdateMode("File import")
+      .setUpdateModeToFileImport()
       .selectBank("CIC")
       .validate();
 
@@ -104,7 +103,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     mainAccounts.edit("Cash").doDelete();
-    
+
     views.selectCategorization();
     transactionCreation
       .checkHidden()
@@ -117,7 +116,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setAccountName("Cash")
       .setAccountNumber("012345")
-      .setUpdateMode("Manual input")
+      .setUpdateModeToManualInput()
       .selectBank("CIC")
       .validate();
 
@@ -152,15 +151,11 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     categorization.checkSelectedTableRow("A TRANSACTION");
   }
 
-  public void testManualInputAccountsWithOfxImport() throws Exception {
-    fail("tbd");
-  }
-
   public void testInputDisabledIfTrialExpired() throws Exception {
     fail("tbd");
   }
 
   public void testInputDisabledInDemoMode() throws Exception {
-    fail("");
+    fail("tbd");
   }
 }

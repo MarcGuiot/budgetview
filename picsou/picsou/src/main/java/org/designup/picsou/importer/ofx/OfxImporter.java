@@ -354,7 +354,11 @@ public class OfxImporter implements AccountFileImporter {
                                            value(Account.ID, generator.getNextId(Account.ID, 1)),
                                            value(Account.NAME, getName(accountNumber, isCreditCard)),
                                            value(Account.BANK_ENTITY, bankEntityId),
-                                           value(Account.IS_CARD_ACCOUNT, isCreditCard));
+                                           value(Account.IS_CARD_ACCOUNT, isCreditCard),
+                                           value(Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId()));
+      }
+      else {
+        repository.update(currentAccount.getKey(), Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());
       }
     }
 
@@ -364,9 +368,10 @@ public class OfxImporter implements AccountFileImporter {
       }
       Date previousDate = currentAccount.get(Account.BALANCE_DATE);
       if ((updateDate != null) && ((previousDate == null) || updateDate.equals(previousDate) || updateDate.after(previousDate))) {
-        repository.update(currentAccount.getKey(), Account.BALANCE_DATE, updateDate);
-        repository.update(currentAccount.getKey(), Account.BALANCE, balance);
-        repository.update(currentAccount.getKey(), Account.TRANSACTION_ID, null);
+        repository.update(currentAccount.getKey(),
+                          value(Account.BALANCE_DATE, updateDate),
+                          value(Account.BALANCE, balance),
+                          value(Account.TRANSACTION_ID, null));
       }
 
       updateDate = null;

@@ -124,7 +124,15 @@ public class AccountEditionChecker extends GuiChecker {
     return dialog.getComboBox("type");
   }
 
-  public AccountEditionChecker setUpdateMode(String mode) {
+  public AccountEditionChecker setUpdateModeToManualInput() {
+    return setUpdateMode("Manual input");
+  }
+
+  public AccountEditionChecker setUpdateModeToFileImport() {
+    return setUpdateMode("File import");
+  }
+
+  private AccountEditionChecker setUpdateMode(String mode) {
     getUpdateModeCombo().select(mode);
     return this;
   }
