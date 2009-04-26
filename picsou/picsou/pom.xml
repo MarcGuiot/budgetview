@@ -8,10 +8,15 @@
   <url>http://www.design-up.com</url>
 
   <repositories>
-    <repository>
-      <id>jgoodies, prevayler</id>
-      <url>http://startupxp.dynalias.org/maven2/</url>
-    </repository>
+    <!--<repository>-->
+      <!--<id>jgoodies, prevayler</id>-->
+      <!--<url>http://startupxp.dynalias.org/maven2/</url>-->
+    <!--</repository>-->
+      <repository>
+        <id>jide </id>
+        <url>http://download.java.net/maven/2/</url>
+      </repository>
+
   </repositories>
 
   <build>

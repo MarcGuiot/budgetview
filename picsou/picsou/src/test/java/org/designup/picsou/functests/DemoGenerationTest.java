@@ -12,8 +12,9 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   private static final String OFX_PATH = "tmp/demo.ofx";
 
   protected void setUp() throws Exception {
-    super.setUp();
+    super.setCurrentMonth("2008/11");
     Locale.setDefault(Locale.FRENCH);
+    super.setUp();
   }
 
   public static void main(String[] args) throws Exception {
@@ -26,7 +27,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     test.setLocalPrevaylerPath(PREVAYLER_DIR);
     test.setInMemory(false);
     test.setDeleteLocalPrevayler(true);
-    test.setCurrentMonth("2008/11");
     test.setUp();
     test.test();
     test.tearDown();
@@ -50,8 +50,8 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/10/20", -289.75, "PRET CONSO N.6784562 F657")
       .addTransaction("2008/10/13", -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ")
       .addTransaction("2008/11/15", -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ")
-      .addTransaction("2008/10/05", -210.70, "TRESOR PUBLIC I.R. 23225252323")
-      .addTransaction("2008/11/05", -210.70, "TRESOR PUBLIC I.R. 23225252323")
+      .addTransaction("2008/10/05", -110.70, "TRESOR PUBLIC I.R. 23225252323")
+      .addTransaction("2008/11/05", -110.70, "TRESOR PUBLIC I.R. 23225252323")
       .addTransaction("2008/10/02", -70.30, "RATP NAVIGO 10/08")
       .addTransaction("2008/11/02", -70.30, "RATP NAVIGO 11/08")
       .addTransaction("2008/10/17", -67.00, "GROUPE SCOLAIRE R.L OCT. 2008")
@@ -64,11 +64,11 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/11/02", -29.90, "OPTIBOX")
       .addTransaction("2008/10/15", -65.89, "EDF")
         // Envelopes
-      .addTransaction("2008/10/02", -122.60, "HYPER M")
-      .addTransaction("2008/10/07", -260.30, "HYPER M")
-      .addTransaction("2008/10/15", -160.00, "HYPER M")
-      .addTransaction("2008/10/23", -220.30, "HYPER M")
-      .addTransaction("2008/11/05", -181.20, "HYPER M")
+      .addTransaction("2008/10/02", -100.60, "HYPER M")
+      .addTransaction("2008/10/07", -230.30, "HYPER M")
+      .addTransaction("2008/10/15", -130.00, "HYPER M")
+      .addTransaction("2008/10/23", -200.30, "HYPER M")
+      .addTransaction("2008/11/05", -121.20, "HYPER M")
       .addTransaction("2008/10/19", -35.50, "BIO PLUS")
       .addTransaction("2008/10/11", -41.15, "BIO PLUS")
       .addTransaction("2008/10/08", -20.00, "RETRAIT GAB 4463")
@@ -78,14 +78,14 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/11/01", -20.00, "RETRAIT GAB 1867")
       .addTransaction("2008/11/09", -20.00, "RETRAIT GAB 9011")
       .addTransaction("2008/11/02", -18.30, "GROUPE CINE SPECT.")
-      .addTransaction("2008/10/10", -65.30, "RESA CONCERTS. N151435")
+      .addTransaction("2008/10/10", -35.30, "RESA CONCERTS. N151435")
       .addTransaction("2008/10/08", -5.30, "JOURNAUX 2000")
       .addTransaction("2008/10/16", -3.70, "JOURNAUX 2000")
       .addTransaction("2008/10/24", -12.50, "JOURNAUX 2000")
-      .addTransaction("2008/10/11", -155.65, "CHAUSS'MODE")
+      .addTransaction("2008/10/11", -55.65, "CHAUSS'MODE")
       .addTransaction("2008/10/26", -69.90, "AU PIED AGILE")
       .addTransaction("2008/10/27", -50.00, "PARIS MODE CENTRE")
-      .addTransaction("2008/11/07", -358.00, "PARIS MODE CENTRE")
+      .addTransaction("2008/11/07", -75.00, "PARIS MODE CENTRE")
         // OCCASIONAL
       .addTransaction("2008/10/19", -13.50, "ZINGMAN")
       .addTransaction("2008/11/09", -6.50, "DAILY MAGS")
@@ -101,6 +101,13 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     mainAccounts.edit("Account n. 00000123456")
       .setAccountName("Compte courant")
+      .validate();
+
+    mainAccounts.createNewAccount()
+      .setAccountName("Liquide")
+      .selectBank("Autre")
+      .setUpdateModeToManualInput()
+      .setBalance(0.)
       .validate();
 
     //======== CATEGORIZATION ===========
@@ -124,7 +131,9 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     categorization.setEnvelope("HYPER M", "Courses", MasterCategory.FOOD, true);
     categorization.setEnvelope("BIO PLUS", "Courses", MasterCategory.FOOD, false);
-    categorization.setEnvelope("RETRAIT GAB 4463", "Liquide", MasterCategory.CASH, true);
+    categorization.selectTableRows("RETRAIT GAB 4463", "RETRAIT GAB 5234", "RETRAIT GAB 0301",
+                                   "RETRAIT GAB 5642", "RETRAIT GAB 1867", "RETRAIT GAB 9011")
+      .selectEnvelopes().selectEnvelopeSeries("Liquide", MasterCategory.CASH, true);
 
     categorization.setEnvelope("GROUPE CINE SPECT.", "Loisirs", MasterCategory.LEISURES, true);
     categorization.setEnvelope("RESA CONCERTS. N151435", "Loisirs", MasterCategory.LEISURES, false);
@@ -152,6 +161,29 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     categorization.getGauge().hideProgressMessage();
 
+    // Gestion du liquide
+    timeline.selectMonth("2008/10");
+    transactionCreation.show()
+      .setLabel("Retrait").setAmount(20).setDay(8).create()
+      .setLabel("Retrait").setAmount(40).setDay(12).create()
+      .setLabel("Retrait").setAmount(20).setDay(22).create()
+      .setLabel("Retrait").setAmount(20).setDay(30).create()
+      .setLabel("Boulangerie").setAmount(-20.).setDay(28).create()
+      .setLabel("Boucherie").setAmount(-40).setDay(28).create()
+      .setLabel("Primeur").setAmount(-40).setDay(28).create();
+
+    timeline.selectMonth("2008/11");
+    transactionCreation
+      .setLabel("Retrait").setAmount(20).setDay(1).create()
+      .setLabel("Retrait").setAmount(20).setDay(9).create()
+      .setLabel("Boulangerie").setAmount(-5).setDay(6).create()
+      .setLabel("Primeur").setAmount(-20).setDay(9).create();
+
+    categorization.setEnvelope("Boulangerie", "Tous les jours", MasterCategory.FOOD, true);
+    categorization.setEnvelope("Primeur", "Tous les jours", MasterCategory.FOOD, false);
+    categorization.setEnvelope("Boucherie", "Tous les jours", MasterCategory.FOOD, false);
+    categorization.setEnvelope("Retrait", "Liquide", MasterCategory.CASH, false);
+
     //======== SERIES TUNING ===========
 
     views.selectBudget();
@@ -162,13 +194,13 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.editSeries("Courses")
       .switchToManual()
       .selectAllMonths()
-      .setAmount(850.0)
+      .setAmount(750.0)
       .validate();
 
     budgetView.envelopes.editSeries("Habillement")
       .switchToManual()
       .selectAllMonths()
-      .setAmount(200.0)
+      .setAmount(50.0)
       .validate();
 
     timeline.selectMonth("2008/12");
@@ -190,7 +222,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     //======== POSITION LEVEL ===========
 
     views.selectHome();
-    mainAccounts.setThreshold(4100);
+    mainAccounts.setThreshold(3100);
 
     //======== SAVINGS ===========
 
@@ -221,14 +253,18 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     budgetView.savings.createSeries()
       .setName("Reglement vacances")
       .setCategory(MasterCategory.SAVINGS)
+      .setFromAccount("Compte provisions")
+      .setToAccount("Main accounts")
       .setStartDate(200908)
       .setEndDate(200908)
-      .switchToManual()
       .selectAllMonths()
-      .setAmount(2000)
+      .setAmount(2500)
       .validate();
 
     views.selectCategorization();
+
+
+
 
     String outputFile = System.getProperty("outfile");
     if (outputFile != null) {

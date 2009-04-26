@@ -14,6 +14,12 @@
       <name>Wicket Stuff Repository</name>
       <url>http://wicketstuff.org/maven/repository</url>
     </repository>
+    <repository>
+      <id>jide </id>
+      <url>http://download.java.net/maven/2/</url>
+
+
+    </repository>
   </repositories>
 
   <build>
@@ -66,15 +72,17 @@
         <directory>src/main/java</directory>
         <excludes>
           <exclude>**/*.java</exclude>
-          <include>**/*.html</include>
         </excludes>
+        <includes>
+          <include>**/*.html</include>
+        </includes>
       </resource>
       <resource>
         <directory>src/main/resources</directory>
-        <excludes>
+        <includes>
           <include>**/*.js</include>
           <include>**/*.css</include>
-        </excludes>
+        </includes>
       </resource>
     </resources>
     <testResources>
@@ -82,15 +90,19 @@
         <directory>src/test/java</directory>
         <excludes>
           <exclude>**/*.java</exclude>
-          <include>**/*.properties</include>
         </excludes>
+        <includes>
+          <include>**/*.properties</include>
+        </includes>
       </testResource>
       <testResource>
-        <directory>src/test/resources</directory>
+        <directory>src/test/resourcpoes</directory>
         <excludes>
           <exclude>**/*.java</exclude>
-          <include>**/*.properties</include>
         </excludes>
+        <includes>
+          <include>**/*.properties</include>
+        </includes>
       </testResource>
     </testResources>
   </build>

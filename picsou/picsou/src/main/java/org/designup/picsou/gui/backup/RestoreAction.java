@@ -24,7 +24,7 @@ public class RestoreAction extends AbstractBackupRestoreAction {
   public void actionPerformed(ActionEvent e) {
     JFileChooser chooser = getFileChooser();
     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    int returnVal = chooser.showSaveDialog(parent);
+    int returnVal = chooser.showOpenDialog(parent);
     if (returnVal == JFileChooser.APPROVE_OPTION) {
       File file = chooser.getSelectedFile();
       try {
