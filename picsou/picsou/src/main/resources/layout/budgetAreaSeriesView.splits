@@ -8,7 +8,7 @@
 
   <column name="budgetAreaSeriesView" styleClass="main">
 
-    <label ref="budgetAreaTitle" styleClass="blockTitle" marginTop="5"/>
+    <label ref="budgetAreaTitle" styleClass="blockTitle"/>
 
     <panel styleClass="block" preferredSize="(300,400)">
       <column border="empty(10)">

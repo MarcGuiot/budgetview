@@ -4,7 +4,7 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
 
-public class BudgetLabelTest extends LoggedInFunctionalTestCase {
+public class BudgetSumaryViewTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     setCurrentMonth("2008/06");
@@ -29,7 +29,7 @@ public class BudgetLabelTest extends LoggedInFunctionalTestCase {
     timeline.checkSelection("2008/07");
     timeline.selectAll();
     budgetView.getLabel()
-      .checkUncategorized(1000.00 + 200. + 50.);
+      .checkUncategorized(1000.00 + 200.00 + 50.00);
 
     timeline.selectMonth("2008/07");
 
@@ -40,23 +40,23 @@ public class BudgetLabelTest extends LoggedInFunctionalTestCase {
     timeline.checkSelection("2008/07");
     views.selectBudget();
     budgetView.getLabel()
-      .checkMultiNotShown()
+      .checkMultiSelectionNotShown()
       .checkMonthBalance(+750.00)
-      .checkEndBalance(2300.00)
+      .checkEndPosition(2300.00)
       .checkUncategorized(50.00);
 
     timeline.selectAll();
     budgetView.getLabel()
-      .checkMulti(2)
+      .checkMultiSelection(2)
       .checkMonthBalance(+1550.00)
-      .checkEndBalance(2300.00)
+      .checkEndPosition(2300.00)
       .checkUncategorized(50.00);
 
     timeline.selectMonth("2008/06");
     budgetView.getLabel()
-      .checkMultiNotShown()
+      .checkMultiSelectionNotShown()
       .checkMonthBalance(+800.00)
-      .checkEndBalance(1550.00)
+      .checkEndPosition(1550.00)
       .checkUncategorizedNotShown();
 
     views.selectCategorization();
@@ -65,9 +65,9 @@ public class BudgetLabelTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     views.selectBudget();
     budgetView.getLabel()
-      .checkMultiNotShown()
+      .checkMultiSelectionNotShown()
       .checkMonthBalance(+750.00)
-      .checkEndBalance(2300.00)
+      .checkEndPosition(2300.00)
       .checkUncategorizedNotShown();
 
   }

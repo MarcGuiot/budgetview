@@ -50,8 +50,8 @@ public class BudgetViewChecker extends GuiChecker {
     return this;
   }
 
-  public BudgetLabelChecker getLabel() {
-    return new BudgetLabelChecker(window);
+  public BudgetSummaryViewChecker getLabel() {
+    return new BudgetSummaryViewChecker(window);
   }
 
   public void checkHelpMessageDisplayed(boolean visible) {

@@ -187,6 +187,29 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     categorization.checkSelectedTableRow("A TRANSACTION");
   }
 
+  public void testCreateButtonValidatesAllFields() throws Exception {
+    views.selectHome();
+    mainAccounts.createNewAccount()
+      .setAccountName("Cash")
+      .setAccountNumber("012345")
+      .setUpdateModeToManualInput()
+      .selectBank("CIC")
+      .validate();
+
+    views.selectCategorization();
+    transactionCreation
+      .show()
+      .enterAmountWithoutValidating(10.00)
+      .enterDayWithoutValidating(3)
+      .enterLabelWithoutValidating("Transaction 1")
+      .create()
+      .checkNoErrorMessage();
+
+    categorization.checkTable(new Object[][]{
+      {"03/08/2008", "", "TRANSACTION 1", 10.00},
+    });
+  }
+
   public void testInputDisabledInDemoMode() throws Exception {
     fail("tbd");
   }

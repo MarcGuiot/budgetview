@@ -23,6 +23,12 @@ public class TransactionCreationChecker extends GuiChecker {
     return this;
   }
 
+  public TransactionCreationChecker enterAmountWithoutValidating(double amount) {
+    TextBox textBox = getPanel().getInputTextBox("amount");
+    textBox.setText(toString(amount), false);
+    return this;
+  }
+
   public TransactionCreationChecker checkAmount(double amount) {
     assertThat(getPanel().getInputTextBox("amount").textEquals(toString(amount)));
     return this;
@@ -32,6 +38,12 @@ public class TransactionCreationChecker extends GuiChecker {
     TextBox textBox = getPanel().getInputTextBox("day");
     textBox.setText(Integer.toString(day), false);
     textBox.focusLost();
+    return this;
+  }
+
+  public TransactionCreationChecker enterDayWithoutValidating(int day) {
+    TextBox textBox = getPanel().getInputTextBox("day");
+    textBox.setText(Integer.toString(day), false);
     return this;
   }
 
@@ -49,6 +61,12 @@ public class TransactionCreationChecker extends GuiChecker {
     TextBox textBox = getPanel().getInputTextBox("label");
     textBox.setText(label, false);
     textBox.focusLost();
+    return this;
+  }
+
+  public TransactionCreationChecker enterLabelWithoutValidating(String label) {
+    TextBox textBox = getPanel().getInputTextBox("label");
+    textBox.setText(label, false);
     return this;
   }
 

@@ -40,13 +40,12 @@ public class TimeViewTooltipHandler implements TimeViewMouseHandler {
     }
     Double balance = balanceStat.get(BalanceStat.MONTH_BALANCE);
     double positionLimit = panel.getPositionThreshold(monthId);
-    Color color = colors.getAmountColor(position - positionLimit);
     panel.setToolTipText(
       Lang.get("timeView.tooltip.month.standard",
                month,
                Formatting.toStringWithPlus(balance),
                Formatting.toString(position),
-               Colors.toString(color)));
+               Colors.toString(colors.getAmountTextColor(position - positionLimit, Color.BLACK))));
   }
 
   public void enterYear(int year) {

@@ -132,11 +132,26 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
 
   private class CreateTransactionAction extends AbstractAction {
 
+    private boolean updateInProgress = false;
+
     private CreateTransactionAction() {
       super(Lang.get("transactionCreation.create"));
     }
 
     public void actionPerformed(ActionEvent e) {
+      if (updateInProgress) {
+        return;
+      }
+      updateInProgress = true;
+      try {
+        amountField.postActionEvent();
+        dayField.postActionEvent();
+        labelField.postActionEvent();
+      }
+      finally {
+        updateInProgress = false;
+      }
+      
       Double amount = prototypeTransaction.get(Transaction.AMOUNT);
       if (amount == null) {
         amountField.requestFocus();

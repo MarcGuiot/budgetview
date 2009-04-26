@@ -60,7 +60,7 @@
   </styles>
 
   <panel styleClass="main" ui="wave">
-    <column marginTop="20" marginLeft="20" marginRight="20" marginBottom="10">
+    <column marginTop="15" marginLeft="20" marginRight="20" marginBottom="10">
 
       <row weightY="0.1" name="mainWindowHeader">
         <column>
@@ -76,7 +76,7 @@
         </repeat>
       </row>
 
-      <row weightY="0.1" name="time" marginTop="20" marginLeft="20" marginRight="20">
+      <row weightY="0.1" name="time" marginTop="15" marginLeft="20" marginRight="20">
         <button ref="firstPeriod" ui="doubleArrowLeft" styleClass="doublePeriodButton"
                 tooltipText="$timeView.tooltip.first"/>
         <button ref="prevPeriod" ui="arrowLeft" styleClass="periodButton" tooltipText="$timeView.tooltip.previous"/>

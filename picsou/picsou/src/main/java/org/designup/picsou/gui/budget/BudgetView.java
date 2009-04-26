@@ -43,8 +43,8 @@ public class BudgetView extends View {
 
     SeriesEditionDialog seriesEditionDialog = new SeriesEditionDialog(directory.get(JFrame.class), repository, directory);
 
-    BudgetLabel budgetLabel = new BudgetLabel(repository, directory);
-    builder.add("budgetLabel", budgetLabel.getLabel());
+    BudgetSummaryView budgetSummaryView = new BudgetSummaryView(repository, directory);
+    budgetSummaryView.registerComponents(builder);
 
     addBudgetAreaView("incomeBudgetView", BudgetArea.INCOME, builder, seriesEditionDialog);
     addBudgetAreaView("recurringBudgetView", BudgetArea.RECURRING, builder, seriesEditionDialog);
