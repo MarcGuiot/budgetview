@@ -128,13 +128,17 @@ public class PRootDataManager implements RootDataManager {
   public void close() {
     try {
       prevayler.takeSnapshot();
-      prevayler.close();
       PrevaylerDirectory directory = new PrevaylerDirectory(pathToPrevaylerDirectory);
       long lastTransactionId = directory.deletePreviousSnapshot(SNASPHOT_TO_PRESERVE);
       directory.deletePreviousJournal(lastTransactionId);
     }
     catch (IOException e) {
-      Log.write("prevayler close fail", e);
+    }
+    try {
+      prevayler.close();
+    }
+    catch (IOException e) {
+      e.printStackTrace();
     }
   }
 

@@ -45,6 +45,7 @@ public class MainWindowLauncher {
       serverDirectory = new ServerDirectory(PicsouApplication.getLocalPrevaylerPath(), PicsouApplication.isDataInMemory());
     }
     Directory directory = PicsouApplication.createDirectory(new OpenRequestManager());
+    directory.add(ServerDirectory.class, serverDirectory);
     ServerAccess serverAccess =
       new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
                                            directory);

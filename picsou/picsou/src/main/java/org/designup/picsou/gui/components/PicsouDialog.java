@@ -48,7 +48,9 @@ public class PicsouDialog extends JDialog {
     else if (parent instanceof JDialog) {
       return new PicsouDialog((JDialog)parent, modal, directory);
     }
-    throw new InvalidParameter("unknown type " + parent.getClass());
+    else {
+      return new PicsouDialog((JFrame)null, true,  directory);
+    }
   }
 
   public static PicsouDialog createWithButton(Window owner, JPanel panel, Action action, Directory directory) {

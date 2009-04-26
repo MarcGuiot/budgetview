@@ -9,6 +9,7 @@ import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.server.ServerDirectory;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Dates;
@@ -177,6 +178,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   private void clearDirectory() {
     if (directory != null) {
       directory.get(ColorService.class).removeAllListeners();
+      directory.get(ServerDirectory.class).close();
     }
   }
 
