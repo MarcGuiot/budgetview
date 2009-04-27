@@ -1,4 +1,5 @@
 open "cashpilot.jar"
+     -"cashpilot.jar!demo/demo.snapshot"
      -"cashpilot.jar!apple/laf/*.class"
      -"cashpilot.jar!net/roydesign/mac/*.class"
      -"cashpilot.jar!net/roydesign/event/*.class";
