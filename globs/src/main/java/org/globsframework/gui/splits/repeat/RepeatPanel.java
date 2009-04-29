@@ -60,6 +60,7 @@ public class RepeatPanel implements Repeat {
     RepeatContext context = repeatContexts.remove(index);
     context.dispose();
     panel.revalidate();
+    panel.repaint();
   }
 
   public void move(int previousIndex, int newIndex) {
