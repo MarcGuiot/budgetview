@@ -1207,4 +1207,56 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .cancel();
     seriesChecker.validate();
   }
+
+  public void testCreateSerieShouldNotCategorizeToTransactionIfNotValide() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/25", -50.0, "1_Auchan")
+      .addTransaction("2008/05/15", -40.0, "2_Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRows(0)
+      .selectEnvelopes()
+      .createEnvelopeSeries()
+      .setName("Courses")
+      .setEndDate(200805)
+      .setCategories(MasterCategory.FOOD)
+      .validate();
+
+    timeline.selectAll();
+    views.selectData();
+    transactions.initContent()
+      .add("25/06/2008", TransactionType.PRELEVEMENT, "1_AUCHAN", "", -50.00)
+      .add("15/05/2008", TransactionType.PRELEVEMENT, "2_AUCHAN", "", -40.00)
+      .check();
+  }
+
+  public void testEditSerieUpdateInCategorizationView() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/25", -50.0, "1_Auchan")
+      .addTransaction("2008/05/15", -40.0, "2_Auchan")
+      .load();
+
+    views.selectBudget();
+    budgetView.envelopes.createSeries()
+      .setName("Courses")
+      .setCategories(MasterCategory.FOOD)
+      .validate();
+
+    views.selectCategorization();
+
+    timeline.selectMonth("2008/06");
+
+    categorization
+      .showSelectedMonthsOnly()
+      .selectTableRow(0)
+      .selectEnvelopes()
+      .editSeries("Courses", false)
+      .setEndDate(200805)
+      .validate();
+    categorization.checkNotContainsEnvelope("Courses");
+
+  }
 }

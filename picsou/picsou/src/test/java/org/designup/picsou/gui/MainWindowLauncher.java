@@ -66,7 +66,6 @@ public class MainWindowLauncher {
                    new BackupGeneratorImpl(init)).show();
     window.show();
 
-    init.getRepository();
     return directory;
   }
 

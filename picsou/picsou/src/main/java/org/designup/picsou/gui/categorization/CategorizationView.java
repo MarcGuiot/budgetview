@@ -13,8 +13,8 @@ import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
-import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
+import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.gui.utils.PicsouMatchers;
@@ -358,6 +358,13 @@ public class CategorizationView extends View implements TableView, Filterable {
         }
         repository.startChangeSet();
         try {
+          boolean noneMatch = false;
+          for (Pair<PicsouMatchers.CategorizationFilter, GlobRepeat> filter : seriesRepeat) {
+            noneMatch |= filter.getFirst().matches(series, repository);
+          }
+          if (!noneMatch){
+            return;
+          }
           for (Glob transaction : currentTransactions) {
             repository.update(transaction.getKey(),
                               FieldValue.value(Transaction.SERIES, series.get(Series.ID)),
