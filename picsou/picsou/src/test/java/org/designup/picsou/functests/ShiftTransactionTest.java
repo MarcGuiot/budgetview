@@ -3,6 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.TransactionType;
 
 public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
@@ -130,9 +131,9 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRow("Monoprix / End of june");
     transactionDetails.shift();
     categorization.checkTable(new Object[][]{
-      {"01/07/2008",	"Groceries",	"MONOPRIX / END OF JUNE",	-10.0},
-      {"15/07/2008",	"Groceries",	"MONOPRIX / JULY",	-12.0},
-      {"15/06/2008",	"Groceries",	"MONOPRIX / JUNE",	-15.0},
+      {"01/07/2008", "Groceries", "MONOPRIX / END OF JUNE", -10.0},
+      {"15/07/2008", "Groceries", "MONOPRIX / JULY", -12.0},
+      {"15/06/2008", "Groceries", "MONOPRIX / JUNE", -15.0},
     });
 
     // Account positions are unchanged
@@ -179,9 +180,9 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRow("Monoprix / June");
     transactionDetails.split("10.00", "dvd");
     categorization.checkTable(new Object[][]{
-      {"15/07/2008",	"Groceries",	"MONOPRIX / JULY",	-12.0},
-      {"25/06/2008",	"Groceries",	"MONOPRIX / JUNE",	-15.0},
-      {"25/06/2008",	"",	"MONOPRIX / JUNE",	-10.0},
+      {"15/07/2008", "Groceries", "MONOPRIX / JULY", -12.0},
+      {"25/06/2008", "Groceries", "MONOPRIX / JUNE", -15.0},
+      {"25/06/2008", "", "MONOPRIX / JUNE", -10.0},
     });
 
     categorization.selectTableRow(2);
@@ -189,9 +190,9 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     categorization.selectEnvelopeSeries("Leisures", MasterCategory.LEISURES, true);
     transactionDetails.shift();
     categorization.checkTable(new Object[][]{
-      {"15/07/2008",	"Groceries",	"MONOPRIX / JULY",	-12.0},
-      {"25/06/2008",	"Groceries",	"MONOPRIX / JUNE",	-15.0},
-      {"01/07/2008",	"Leisures",	"MONOPRIX / JUNE",	-10.0},
+      {"15/07/2008", "Groceries", "MONOPRIX / JULY", -12.0},
+      {"25/06/2008", "Groceries", "MONOPRIX / JUNE", -15.0},
+      {"01/07/2008", "Leisures", "MONOPRIX / JUNE", -10.0},
     });
 
     // Account positions are unchanged
@@ -213,8 +214,8 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .deleteRow(1)
       .validate();
     categorization.checkTable(new Object[][]{
-      {"15/07/2008",	"Groceries",	"MONOPRIX / JULY",	-12.0},
-      {"25/06/2008",	"Groceries",	"MONOPRIX / JUNE",	-25.0},
+      {"15/07/2008", "Groceries", "MONOPRIX / JULY", -12.0},
+      {"25/06/2008", "Groceries", "MONOPRIX / JUNE", -25.0},
     });
 
     views.selectBudget();
@@ -224,7 +225,59 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkTotalAmounts(-12.00, -25.00);
   }
 
+  public void testShiftIsDesableIfSeriesIsNotValide() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/25", -25.00, "Epargne / June")
+      .addTransaction("2008/07/05", -30.00, "Epargne / July")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRow("Epargne / June");
+    categorization.selectEnvelopes();
+    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    transactionDetails.checkShiftEnabled();
+    categorization.editSeries("Groceries", true)
+      .setEndDate(200806)
+      .validate();
+    transactionDetails.checkShiftDisabled();
+  }
+
   public void testShiftingAMirroredTransaction() throws Exception {
-    fail("tbd");
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/25", -25.00, "Epargne / June ")
+      .addTransaction("2008/07/05", -30.00, "Epargne / July")
+      .load();
+
+    views.selectHome();
+    savingsAccounts.createSavingsAccount("Epargne", 0);
+
+    views.selectBudget();
+    budgetView.savings.createSeries()
+      .setName("Epargne")
+      .setFromAccount("Main accounts")
+      .setToAccount("Epargne")
+      .setCategory(MasterCategory.SAVINGS)
+      .validate();
+
+    views.selectCategorization();
+    categorization.selectAllTableRows()
+      .selectSavings()
+      .selectSavingsSeries("Epargne");
+
+    categorization.selectTableRow("Epargne / July");
+    transactionDetails.shift();
+    timeline.selectAll();
+    views.selectData();
+    transactions.initContent()
+      .add("01/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", 55.00, "Epargne", MasterCategory.SAVINGS)
+      .add("01/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", -55.00, "Epargne", MasterCategory.SAVINGS)
+      .add("05/07/2008", TransactionType.PLANNED, "Planned: Epargne", "", 55.00, "Epargne", MasterCategory.SAVINGS)
+      .add("05/07/2008", TransactionType.PLANNED, "Planned: Epargne", "", -55.00, "Epargne", MasterCategory.SAVINGS)
+      .add("30/06/2008", "05/07/2008", TransactionType.VIREMENT, "EPARGNE / JULY", "", 30.00, "Epargne", "Savings")
+      .add("30/06/2008", "05/07/2008", TransactionType.PRELEVEMENT, "EPARGNE / JULY", "", -30.00, "Epargne", "Savings")
+      .add("25/06/2008", TransactionType.VIREMENT, "EPARGNE / JUNE", "", 25.00, "Epargne", MasterCategory.SAVINGS)
+      .add("25/06/2008", TransactionType.PRELEVEMENT, "EPARGNE / JUNE", "", -25.00, "Epargne", MasterCategory.SAVINGS)
+      .check();
+
   }
 }

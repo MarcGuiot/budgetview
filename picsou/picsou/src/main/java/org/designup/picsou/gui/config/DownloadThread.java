@@ -65,6 +65,7 @@ public class DownloadThread extends Thread {
       }
     }
     catch (Exception e) {
+      Log.write("in download", e);
       try {
         if (client.isConnected()) {
           client.disconnect();
