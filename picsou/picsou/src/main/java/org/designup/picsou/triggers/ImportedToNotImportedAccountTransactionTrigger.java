@@ -31,15 +31,11 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
         if (transaction == null || transaction.get(Transaction.MIRROR)) {
           return;
         }
-        Integer createdTransactionId = transaction.get(Transaction.NOT_IMPORTED_TRANSACTION);
+        Integer mirrorTransactionId = transaction.get(Transaction.NOT_IMPORTED_TRANSACTION);
         if (values.contains(Transaction.SERIES)) {
-          Glob previousSeries = repository.find(Key.create(Series.TYPE,
-                                                           values.getPrevious(Transaction.SERIES)));
-//          if (previousSeries != null) {
-          if (createdTransactionId != null) {
-            repository.delete(Key.create(Transaction.TYPE, createdTransactionId));
+          if (mirrorTransactionId != null) {
+            repository.delete(Key.create(Transaction.TYPE, mirrorTransactionId));
           }
-//          }
           Integer newSeriesId = values.get(Transaction.SERIES);
           if (newSeriesId != null) {
             Glob series = repository.find(Key.create(Series.TYPE, newSeriesId));
@@ -51,9 +47,26 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
             }
           }
         }
-        if (values.contains(Transaction.AMOUNT) && createdTransactionId != null) {
-          repository.update(Key.create(Transaction.TYPE, createdTransactionId),
-                            Transaction.AMOUNT, -values.get(Transaction.AMOUNT));
+        else {
+          if (mirrorTransactionId != null) {
+            Key mirorKey = Key.create(Transaction.TYPE, mirrorTransactionId);
+            if (values.contains(Transaction.AMOUNT) && mirrorTransactionId != null) {
+              repository.update(mirorKey,
+                                Transaction.AMOUNT, -values.get(Transaction.AMOUNT));
+            }
+            if (values.contains(Transaction.DAY)) {
+              repository.update(mirorKey, Transaction.DAY, values.get(Transaction.DAY));
+            }
+            if (values.contains(Transaction.MONTH)) {
+              repository.update(mirorKey, Transaction.MONTH, values.get(Transaction.MONTH));
+            }
+            if (values.contains(Transaction.LABEL)) {
+              repository.update(mirorKey, Transaction.LABEL, values.get(Transaction.LABEL));
+            }
+            if (values.contains(Transaction.CATEGORY)) {
+              repository.update(mirorKey, Transaction.CATEGORY, values.get(Transaction.CATEGORY));
+            }
+          }
         }
       }
 

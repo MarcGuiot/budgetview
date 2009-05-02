@@ -8,6 +8,7 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.Glob;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -165,6 +166,18 @@ public class Series {
 
   public static String getUncategorizedName() {
     return Lang.get("series.uncategorized");
+  }
+
+  public static boolean checkIsValidMonth(int monthToCheck, Glob series) {
+    Integer firstMonth = series.get(FIRST_MONTH);
+    firstMonth = firstMonth == null ? 0 : firstMonth;
+    Integer lastMonth = series.get(LAST_MONTH);
+    lastMonth  = lastMonth == null ? Integer.MAX_VALUE : lastMonth;
+    if (monthToCheck < firstMonth || monthToCheck > lastMonth ||
+        !series.get(getMonthField(monthToCheck))){
+      return false;
+    }
+    return true;
   }
 
   public static class Serializer implements PicsouGlobSerializer {

@@ -2,6 +2,7 @@ package org.designup.picsou.gui.transactions.shift;
 
 import org.designup.picsou.gui.components.ConfirmationDialog;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -10,7 +11,8 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -57,6 +59,14 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
     }
     if (changeSet.containsChanges(transaction.getKey())) {
       updateState();
+      return;
+    }
+    Integer seriesId = transaction.get(Transaction.SERIES);
+    if (seriesId != null){
+      if (changeSet.containsChanges(Key.create(Series.TYPE, seriesId))){
+        updateState();
+        return;
+      }
     }
   }
 
@@ -88,7 +98,10 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
     int month = transaction.get(Transaction.MONTH);
 
     if (day < DAY_LIMIT_FOR_PREVIOUS) {
-      if (repository.contains(Transaction.TYPE, fieldEquals(Transaction.MONTH, month - 1))) {
+      int monthToCheck = Month.previous(month);
+      Glob series = repository.findLinkTarget(transaction, Transaction.SERIES);
+      boolean isValidMonth = Series.checkIsValidMonth(monthToCheck, series);
+      if (isValidMonth && repository.contains(Transaction.TYPE, fieldEquals(Transaction.MONTH, monthToCheck))) {
         direction = ShiftDirection.PREVIOUS;
         setEnabled(true);
         return;
@@ -96,9 +109,12 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
     }
 
     if (day > DAY_LIMIT_FOR_NEXT) {
-      if (repository.contains(Transaction.TYPE,
-                              and(fieldEquals(Transaction.MONTH, month + 1),
-                                  fieldEquals(Transaction.PLANNED, false)))) {
+      int monthToCheck = Month.next(month);
+      Glob series = repository.findLinkTarget(transaction, Transaction.SERIES);
+      boolean isValidMonth = Series.checkIsValidMonth(monthToCheck, series);
+      if (isValidMonth && repository.contains(Transaction.TYPE,
+                                              and(fieldEquals(Transaction.MONTH, monthToCheck),
+                                                  fieldEquals(Transaction.PLANNED, false)))) {
         direction = ShiftDirection.NEXT;
         setEnabled(true);
         return;

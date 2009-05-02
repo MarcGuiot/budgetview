@@ -15,6 +15,8 @@ public class TransactionUtils {
       repository.create(Transaction.TYPE,
                         value(Transaction.AMOUNT, amount),
                         value(Transaction.ACCOUNT, accountId),
+                        value(Transaction.DAY_BEFORE_SHIFT, transaction.get(Transaction.DAY_BEFORE_SHIFT)),
+                        value(Transaction.BANK_MONTH, transaction.get(Transaction.BANK_MONTH)),
                         value(Transaction.BANK_DAY, transaction.get(Transaction.BANK_DAY)),
                         value(Transaction.BANK_MONTH, transaction.get(Transaction.BANK_MONTH)),
                         value(Transaction.DAY, transaction.get(Transaction.DAY)),

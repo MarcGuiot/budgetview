@@ -873,8 +873,9 @@ public class CategorizationChecker extends GuiChecker {
     selectTransactionFilterMode(TransactionFilteringMode.ALL);
   }
 
-  public void showSelectedMonthsOnly() {
+  public CategorizationChecker showSelectedMonthsOnly() {
     selectTransactionFilterMode(TransactionFilteringMode.SELECTED_MONTHS);
+    return this;
   }
 
   private void selectTransactionFilterMode(TransactionFilteringMode mode) {
