@@ -28,8 +28,6 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
     operations.checkUndoAvailable();
     operations.checkRedoNotAvailable();
 
-    System.out.println("UndoRedoTest.testUndoRedoSequence --------------------");
-
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", 15.00, "McDo", MasterCategory.FOOD)
       .load();
