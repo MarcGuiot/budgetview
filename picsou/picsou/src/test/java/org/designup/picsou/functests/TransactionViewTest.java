@@ -251,7 +251,9 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows("essence");
     transactionDetails.split("30", "essence2");
     views.selectData();
-    transactions.delete("essence2").validate();
+    transactions.delete("essence2")
+      .checkMessageContains("Use the split function")
+      .validate();
     transactions.initContent()
       .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -40.00, "Occasional", MasterCategory.TRANSPORTS)
       .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "essence2", -30.00)
