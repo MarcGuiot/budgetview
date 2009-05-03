@@ -24,12 +24,35 @@ public class Amounts {
     return isNearZero(value) ? 0 : value;
   }
 
-  static public double extractAmount(final String amount) {
-    String tmp = amount.replaceAll(",", "").replaceAll("\\.", "");
+  static public double extractAmount(String amount) {
+    double coef = 100.0;
+    amount = amount.trim();
+    int len = amount.length();
+    int commaSep = amount.lastIndexOf(",");
+    if (commaSep == len - 2) {
+      coef = 10.;
+    }
+    else if (commaSep == len - 3){
+      coef = 100.;
+    }
+    else {
+      int dotSep = amount.lastIndexOf(".");
+      if (dotSep == len - 2) {
+        coef = 10.;
+      }
+      else if (dotSep == len - 3){
+        coef = 100.;
+      }
+      else {
+        coef = 1.;
+      }
+    }
+
+    String tmp = amount.replaceAll(",", "").replaceAll("\\.", "").replaceAll(" ", "");
     if (Strings.isNullOrEmpty(tmp)) {
       return 0.;
     }
-    return Double.parseDouble(tmp) / 100.0;
+    return Double.parseDouble(tmp) / coef;
   }
 
   public static boolean equal(Double val1, Double val2) {

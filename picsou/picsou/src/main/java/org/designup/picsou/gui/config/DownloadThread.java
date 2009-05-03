@@ -44,7 +44,9 @@ public class DownloadThread extends Thread {
         client.setFileType(FTPClient.BINARY_FILE_TYPE);
         String fileSuffix = "picsouJar";
         tempFile = File.createTempFile(fileSuffix, ".tmp", pathToConfig);
-        if (client.retrieveFile(fileName, new FileOutputStream(tempFile))) {
+        FileOutputStream fileOutputStream = new FileOutputStream(tempFile);
+        if (client.retrieveFile(fileName, fileOutputStream)) {
+          fileOutputStream.close();
           File targetFile = new File(pathToConfig, fileName);
           if (tempFile.renameTo(targetFile)) {
             tempFile = null;

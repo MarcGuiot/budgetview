@@ -3,9 +3,8 @@ package org.designup.picsou.gui;
 import net.roydesign.event.ApplicationEvent;
 import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.gui.components.ArrowButtonUI;
-import org.designup.picsou.gui.components.SelectionToggleUI;
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.components.ConfirmationDialog;
+import org.designup.picsou.gui.components.SelectionToggleUI;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
@@ -20,12 +19,10 @@ import org.designup.picsou.gui.upgrade.UpgradeService;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.server.ServerDirectory;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.ImageLocator;
-import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
 import org.globsframework.gui.splits.components.ShadowedLabelUI;
@@ -33,15 +30,16 @@ import org.globsframework.gui.splits.components.StyledPanelUI;
 import org.globsframework.gui.splits.components.StyledToggleButtonUI;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.ui.UIService;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
-import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidState;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -212,7 +210,7 @@ public class PicsouApplication {
     }
   }
 
-  void showMultipleInstanceError(String message){
+  void showMultipleInstanceError(String message) {
     SplitsBuilder builder = SplitsBuilder.init(directory)
       .setSource(getClass(), "/layout/messageDialog.splits");
 
