@@ -31,6 +31,10 @@ public class HyperlinkHandler implements HyperlinkListener {
     }
 
     String href = e.getDescription().trim();
+    processLink(href);
+  }
+
+  public void processLink(String href) {
     if (href.startsWith("help:")) {
       helpService.show(href.substring(5), owner);
     }
@@ -43,10 +47,10 @@ public class HyperlinkHandler implements HyperlinkListener {
       browser.launchBrowser(href.substring(4));
     }
     else {
-      processLink(href);
+      processCustomLink(href);
     }
   }
 
-  protected void processLink(String href) {
+  protected void processCustomLink(String href) {
   }
 }

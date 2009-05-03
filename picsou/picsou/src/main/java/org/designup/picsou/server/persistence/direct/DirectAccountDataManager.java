@@ -43,7 +43,7 @@ public class DirectAccountDataManager implements AccountDataManager {
       throw new InvalidState(prevaylerPath);
     }
     if (lock == null) {
-      throw new InvalidState(prevaylerPath);
+      throw new InvalidState("Repository already in use: " + prevaylerPath);
     }
   }
 

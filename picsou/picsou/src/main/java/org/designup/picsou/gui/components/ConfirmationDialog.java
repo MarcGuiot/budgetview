@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.components;
 
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
@@ -19,11 +20,13 @@ public abstract class ConfirmationDialog {
     SplitsBuilder builder = SplitsBuilder.init(directory)
       .setSource(getClass(), "/layout/confirmationDialog.splits");
 
+    dialog = PicsouDialog.create(owner, directory);
+
     builder.add("title", new JLabel(Lang.get(titleKey)));
     editorPane = new JEditorPane("text/html", Lang.get(contentKey, args));
+    builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
     builder.add("message", editorPane);
 
-    dialog = PicsouDialog.create(owner, directory);
     dialog.addPanelWithButtons(builder.<JPanel>load(), createOkAction(), createCancelAction());
     dialog.pack();
   }

@@ -33,7 +33,7 @@ public class LicenseInfoView extends View {
     GuiUtils.initReadOnlyHtmlComponent(licenseMessage);
     final JFrame parent = directory.get(JFrame.class);
     licenseMessage.addHyperlinkListener(new HyperlinkHandler(directory) {
-      protected void processLink(String href) {
+      protected void processCustomLink(String href) {
         if (href.equals("newLicense")) {
           LicenseExpirationDialog dialog =
             new LicenseExpirationDialog(parent, repository, directory);
