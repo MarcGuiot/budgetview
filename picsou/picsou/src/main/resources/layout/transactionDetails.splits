@@ -51,9 +51,9 @@
 
       <card name="selection">
         <verticalBoxes>
-          <textArea ref="userLabel" styleClass="multiLineLabel"/>
+          <htmlEditorPane ref="userLabel"/>
 
-          <textArea ref="originalLabel" styleClass="multiLineLabel"
+          <htmlEditorPane ref="originalLabel"
                     foreground="transaction.detail.formLabel" font="-,plain,10"/>
 
           <row marginTop="2">
@@ -70,7 +70,7 @@
             <textField ref="noteField"/>
           </row>
 
-          <filler fill="vertical" weightY="0.1"/>
+          <filler fill="vertical" weightY="10.0"/>
 
           <row border="empty(10,0,0,0)">
             <label text="$categorization.series.title" styleClass="header"/>
