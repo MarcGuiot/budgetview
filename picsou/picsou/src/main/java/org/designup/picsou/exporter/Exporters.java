@@ -13,7 +13,7 @@ public class Exporters {
   private List<Exporter> list;
 
   public Exporters(Directory directory) {
-    this.list = Arrays.asList(new OfxExporter(), new TsvExporter(directory));
+    this.list = Arrays.asList(new OfxExporter(false), new TsvExporter(directory));
   }
 
   public List<Exporter> getAll() {

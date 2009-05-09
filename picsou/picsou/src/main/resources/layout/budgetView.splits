@@ -34,8 +34,8 @@
       </verticalSplit>
 
       <verticalSplit ref="thirdVerticalSplitPane">
-        <panel ref="envelopeBudgetView" weightY="5"/>
-        <panel ref="projectsBudgetView" weightY="5"/>
+        <panel ref="envelopeBudgetView" weightY="55"/>
+        <panel ref="projectsBudgetView" weightY="45"/>
       </verticalSplit>
     </horizontalSplit>
 

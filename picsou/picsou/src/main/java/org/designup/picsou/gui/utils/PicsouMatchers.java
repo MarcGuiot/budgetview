@@ -7,6 +7,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 import java.util.*;
 
@@ -22,13 +23,13 @@ public class PicsouMatchers {
     if (accountIds.contains(Account.MAIN_SUMMARY_ACCOUNT_ID)) {
       accountIds.addAll(
         repository.getAll(Account.TYPE).filterSelf(
-          GlobMatchers.not(GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId())), repository)
+          not(fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId())), repository)
           .getValueSet(Account.ID));
     }
     if (accountIds.contains(Account.SAVINGS_SUMMARY_ACCOUNT_ID)) {
       accountIds.addAll(
         repository.getAll(Account.TYPE)
-          .filterSelf(GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()), repository)
+          .filterSelf(fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()), repository)
           .getValueSet(Account.ID));
     }
     return GlobMatchers.contained(Transaction.ACCOUNT, accountIds);
@@ -75,7 +76,7 @@ public class PicsouMatchers {
       Glob category = repository.get(Key.create(Category.TYPE, categoryId));
       if (Category.isMaster(category)) {
         Set<Integer> subcategoryIds =
-          repository.getAll(Category.TYPE, GlobMatchers.fieldEquals(Category.MASTER, categoryId)).getValueSet(Category.ID);
+          repository.getAll(Category.TYPE, fieldEquals(Category.MASTER, categoryId)).getValueSet(Category.ID);
         extendedIdSet.addAll(subcategoryIds);
       }
     }
@@ -87,13 +88,13 @@ public class PicsouMatchers {
   }
 
   public static GlobMatcher masterUserCategories() {
-    return GlobMatchers.and(GlobMatchers.isNull(Category.MASTER),
-                            GlobMatchers.not(
-                              GlobMatchers.fieldContained(Category.ID, MasterCategory.RESERVED_CATEGORY_IDS)));
+    return and(GlobMatchers.isNull(Category.MASTER),
+               not(
+                 GlobMatchers.fieldContained(Category.ID, MasterCategory.RESERVED_CATEGORY_IDS)));
   }
 
   public static GlobMatcher subCategories(Integer masterCategoryId) {
-    return GlobMatchers.fieldEquals(Category.MASTER, masterCategoryId);
+    return fieldEquals(Category.MASTER, masterCategoryId);
   }
 
   public static GlobMatcher transactionsForSeries(final Set<Integer> targetBudgetAreas,
@@ -121,6 +122,13 @@ public class PicsouMatchers {
     };
   }
 
+  public static GlobMatcher exportableTransactions() {
+    return and(
+      not(fieldEquals(Transaction.PLANNED, Boolean.TRUE)),
+      not(fieldEquals(Transaction.MIRROR, Boolean.TRUE))
+    );
+  }
+
   public static SeriesFirstEndDateFilter seriesDateFilter(final Integer budgetAreaId, boolean isExclusive) {
     return new SeriesFirstEndDateFilter(isExclusive) {
 
@@ -134,16 +142,16 @@ public class PicsouMatchers {
     return new SeriesFirstEndDateFilter(false) {
 
       protected boolean isEligible(Glob series, GlobRepository repository) {
-        if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())){
+        if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
           return false;
         }
         Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
         Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
-        if (Account.areBothImported(toAccount, fromAccount)){
-          if (accountId.equals(fromAccount.get(Account.ID))){
+        if (Account.areBothImported(toAccount, fromAccount)) {
+          if (accountId.equals(fromAccount.get(Account.ID))) {
             return series.get(Series.IS_MIRROR);
           }
-          if (accountId.equals(toAccount.get(Account.ID))){
+          if (accountId.equals(toAccount.get(Account.ID))) {
             return !series.get(Series.IS_MIRROR);
           }
         }
@@ -268,7 +276,6 @@ public class PicsouMatchers {
       this.transactions = transactions;
     }
   }
-
 
   static public abstract class SeriesFirstEndDateFilter implements GlobMatcher {
     private boolean exclusive;

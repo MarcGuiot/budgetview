@@ -152,7 +152,7 @@ public class OfxImporter implements AccountFileImporter {
     private void checkTransaction() {
       Glob glob = repository.get(currentTransactionKey);
       if (glob.get(ImportedTransaction.AMOUNT) == null) {
-        repository.update(currentTransactionKey, ImportedTransaction.AMOUNT, (double)0);
+        repository.update(currentTransactionKey, ImportedTransaction.AMOUNT, 0.0);
       }
     }
 

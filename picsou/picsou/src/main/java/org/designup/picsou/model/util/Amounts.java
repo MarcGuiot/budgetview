@@ -27,7 +27,7 @@ public class Amounts {
   static public double extractAmount(final String amount) {
     String tmp = amount.replaceAll(",", "").replaceAll("\\.", "");
     if (Strings.isNullOrEmpty(tmp)) {
-      return 0.;
+      return 0.0;
     }
     return Double.parseDouble(tmp) / 100.0;
   }
