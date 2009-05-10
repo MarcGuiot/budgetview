@@ -1180,6 +1180,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectTableRows("Virement")
       .selectSavings()
       .createSavingsSeries()
+      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Epargne")
       .setName("Epargne")
       .setCategories(MasterCategory.SAVINGS)

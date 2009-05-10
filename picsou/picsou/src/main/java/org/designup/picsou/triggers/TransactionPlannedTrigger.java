@@ -96,6 +96,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
         repository.delete(transactions);
       }
     });
+
     updatePlannedTransactions(repository, listOfSeriesAndMonth);
   }
 
@@ -205,10 +206,10 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       account = Account.MAIN_SUMMARY_ACCOUNT_ID;
     }
     else {
-      if (fromAccount != null && Account.MAIN_SUMMARY_ACCOUNT_ID == fromAccount.get(Account.ID)) {
+      if (fromAccount != null && fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
         account = fromAccount.get(Account.ID);
       }
-      else if (toAccount != null && Account.MAIN_SUMMARY_ACCOUNT_ID == toAccount.get(Account.ID)) {
+      else if (toAccount != null && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
         account = toAccount.get(Account.ID);
       }
       else {

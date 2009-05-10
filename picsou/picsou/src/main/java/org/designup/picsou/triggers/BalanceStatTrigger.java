@@ -87,12 +87,10 @@ public class BalanceStatTrigger implements ChangeSetListener {
 
     private GlobRepository repository;
     private boolean nullBalance = false;
-    private SameAccountChecker mainAccountChecker;
 
     private BalanceStatCalculator(GlobRepository repository) {
       this.repository = repository;
 
-      mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
       for (Glob series : repository.getAll(Series.TYPE)) {
         Integer seriesId = series.get(Series.ID);
         if (BudgetArea.INCOME.getId().equals(series.get(Series.BUDGET_AREA))) {
@@ -125,15 +123,17 @@ public class BalanceStatTrigger implements ChangeSetListener {
           }
         }
         else if (BudgetArea.SAVINGS.getId().equals(series.get(Series.BUDGET_AREA))) {
-          if (!(mainAccountChecker.isSame(series.get(Series.FROM_ACCOUNT))
-                || mainAccountChecker.isSame(series.get(Series.TO_ACCOUNT)))) {
+          Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
+          Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
+          if (!(fromAccount != null && fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())
+                || (toAccount != null && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())))) {
             continue;
           }
           if (series.get(Series.MIRROR_SERIES) != null) {
-            if (mainAccountChecker.isSame(series.get(Series.FROM_ACCOUNT)) && !series.get(Series.IS_MIRROR)) {
+            if (fromAccount != null && fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId()) && !series.get(Series.IS_MIRROR)) {
               continue;
             }
-            if (mainAccountChecker.isSame(series.get(Series.TO_ACCOUNT)) && series.get(Series.IS_MIRROR)) {
+            if (toAccount != null && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId()) && series.get(Series.IS_MIRROR)) {
               continue;
             }
           }
@@ -180,7 +180,8 @@ public class BalanceStatTrigger implements ChangeSetListener {
         nullBalance = true;
       }
 
-      if (!mainAccountChecker.isSame(transaction.get(Transaction.ACCOUNT))) {
+      Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
+      if (!account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
         return;
       }
 

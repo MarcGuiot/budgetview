@@ -129,7 +129,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .createSavingsSeries()
       .setName("Epargne")
       .setCategories(MasterCategory.SAVINGS)
-      .setFromAccount("Main accounts")
+      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Epargne")
       .validate();
 
@@ -270,7 +270,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .createSavingsSeries()
       .setName("Epargne")
       .setCategories(MasterCategory.SAVINGS)
-      .setFromAccount("Main accounts")
+      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Epargne LCL")
       .validate();
     views.selectData();

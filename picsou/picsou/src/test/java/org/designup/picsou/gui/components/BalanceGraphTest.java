@@ -3,14 +3,14 @@ package org.designup.picsou.gui.components;
 import junit.framework.TestCase;
 import org.designup.picsou.functests.checkers.BalanceGraphChecker;
 import org.designup.picsou.gui.model.BalanceStat;
-import org.designup.picsou.model.Month;
 import org.globsframework.gui.SelectionService;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.impl.DefaultGlobIdGenerator;
+import org.globsframework.model.impl.DefaultCheckedGlobIdGenerator;
 import org.globsframework.model.impl.DefaultGlobRepository;
+import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 

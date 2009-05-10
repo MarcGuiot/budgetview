@@ -11,6 +11,7 @@ import org.uispec4j.Key;
 import org.uispec4j.TextBox;
 
 import javax.swing.*;
+import java.io.File;
 
 public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
@@ -955,6 +956,48 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
   }
 
+  public void testSavingsDeleteInManual() throws Exception {
+    mainAccounts.createNewAccount().setAccountName("Main")
+      .setAsMain()
+      .setBalance(1000)
+      .selectBank(SOCIETE_GENERALE)
+      .setUpdateModeToManualInput()
+      .validate();
+
+    savingsAccounts.createNewAccount().setAccountName("Savings")
+      .selectBank(SOCIETE_GENERALE)
+      .setAsSavings()
+      .setBalance(1000)
+      .setUpdateModeToManualInput()
+      .validate();
+
+    views.selectCategorization();
+    transactionCreation.selectAccount("Savings")
+      .setAmount(-100)
+      .setLabel("Financement")
+      .setDay(2)
+      .create();
+
+    categorization.selectTableRows("Financement")
+      .selectSavings()
+      .createSavingsSeries()
+      .setName("Savings Series")
+      .setFromAccount("Savings")
+      .setToAccount("Main")
+      .setCategories(MasterCategory.SAVINGS)
+      .validate();
+
+    categorization.selectTableRows("Financement")
+      .selectSavings()
+      .editSeries("Savings Series", true)
+      .deleteCurrentSeries();
+    // il reste des SeriesBudget miroir sans la serie principale
+    // NPE sur recalcul de PeriodStat.
+    String name = operations.backup(System.getProperty("java.io.tmpdir"));
+    operations.restore(name);
+    timeline.selectAll();
+  }
+
   public void testFillNameAndAmountWithKeyPressed() throws Exception {
     OfxBuilder
       .init(this)
@@ -1404,7 +1447,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRow(0);
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("epargne", "Main account");
+      .selectAndCreateSavingsSeries("epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME);
     views.selectData();
     timeline.selectMonths("2008/06", "2008/07");
     transactions.initContent()
@@ -1434,7 +1477,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRow(0);
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("epargne", "Main account");
+      .selectAndCreateSavingsSeries("epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME);
 
     SeriesEditionDialogChecker edition = categorization.selectSavings()
       .editSeries("epargne", true)
@@ -1470,7 +1513,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRow(0);
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("epargne", "Main account");
+      .selectAndCreateSavingsSeries("epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME);
     categorization.selectSavings().editSeries("epargne", true)
       .checkAutomaticModeSelected()
       .setIrregular()
@@ -1496,7 +1539,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRows("Virement");
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("epargne", "Main account");
+      .selectAndCreateSavingsSeries("epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME);
     categorization.selectSavings().editSeries("epargne", true)
       .setTwoMonths()
       .validate();
@@ -1526,7 +1569,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRows("Virement");
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("epargne", "Main account");
+      .selectAndCreateSavingsSeries("epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME);
     operations.openPreferences().setFutureMonthsCount(1).validate();
     categorization.selectSavings().editSeries("epargne", true)
       .switchToManual()

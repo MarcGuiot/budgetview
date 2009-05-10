@@ -102,7 +102,6 @@ public class Account {
   }
 
   public static boolean shoudCreateMirror(Glob fromAccount, Glob toAccount) {
-
     return (fromAccount != null) && (toAccount != null) &&
            ((fromAccount.get(Account.IS_IMPORTED_ACCOUNT) && !toAccount.get(Account.IS_IMPORTED_ACCOUNT))
             ||
@@ -154,29 +153,25 @@ public class Account {
     throw new RuntimeException("Call with bad account");
   }
 
-  public static double getMultiplierWithMainAsPointOfView(Glob fromAccount, Glob toAccount, GlobRepository repository) {
-    SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
-    return getMultiplierWithMainAsPointOfView(fromAccount, toAccount, repository, mainAccountChecker);
-  }
-
-  private static double getMultiplierWithMainAsPointOfView(Glob fromAccount, Glob toAccount,
-                                                           GlobRepository repository, SameAccountChecker mainAccountChecker) {
+  public static double getMultiplierWithMainAsPointOfView(Glob fromAccount, Glob toAccount,
+                                                           GlobRepository repository) {
     double multiplier;
-    Integer fromAccountIdPointOfView = toAccount == null ?
-                                       (fromAccount == null ? null : fromAccount.get(ID))
-                                                         : toAccount.get(ID);
-    if (fromAccountIdPointOfView == null) {
+    Integer forAccountIdPointOfView = toAccount == null ?
+                                      (fromAccount == null ? null : fromAccount.get(ID))
+                                      : toAccount.get(ID);
+    if (forAccountIdPointOfView == null) {
       multiplier = 0;
     }
     else {
-      if (fromAccount != null && mainAccountChecker.isSame(fromAccount.get(ID))) {
-        fromAccountIdPointOfView = fromAccount.get(ID);
+      if (fromAccount != null && fromAccount.get(ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+        forAccountIdPointOfView = fromAccount.get(ID);
       }
-      if (toAccount != null && mainAccountChecker.isSame(toAccount.get(ID))) {
-        fromAccountIdPointOfView = toAccount.get(ID);
+      // si les deux comptes sont des main comptes on prends le toAccount
+      if (toAccount != null && toAccount.get(ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+        forAccountIdPointOfView = toAccount.get(ID);
       }
       multiplier = getMultiplierForInOrOutputOfTheAccount(fromAccount, toAccount,
-                                                          repository.get(org.globsframework.model.Key.create(TYPE, fromAccountIdPointOfView)));
+                                                          repository.get(org.globsframework.model.Key.create(TYPE, forAccountIdPointOfView)));
     }
     return multiplier;
   }

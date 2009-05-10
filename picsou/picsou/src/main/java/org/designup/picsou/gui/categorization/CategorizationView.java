@@ -362,7 +362,7 @@ public class CategorizationView extends View implements TableView, Filterable {
           for (Pair<PicsouMatchers.CategorizationFilter, GlobRepeat> filter : seriesRepeat) {
             noneMatch |= filter.getFirst().matches(series, repository);
           }
-          if (!noneMatch){
+          if (!noneMatch) {
             return;
           }
           for (Glob transaction : currentTransactions) {

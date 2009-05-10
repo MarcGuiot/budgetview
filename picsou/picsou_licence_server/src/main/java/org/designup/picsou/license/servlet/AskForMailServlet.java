@@ -52,6 +52,15 @@ public class AskForMailServlet extends HttpServlet {
           return;
         }
         if (registeredMail.size() >= 1) {
+          SqlConnection db = sqlService.getDb();
+          try {
+            db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mailTo))
+              .update(License.ACTIVATION_CODE, activationCode)
+              .getRequest().run();
+          }
+          finally {
+            db.commitAndClose();
+          }
           if (mailer.sendExistingLicense(registeredMail.get(0), lang, activationCode)) {
             logger.info("Send new activation code " + activationCode + " to " + mailTo);
             resp.addHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_SENT);

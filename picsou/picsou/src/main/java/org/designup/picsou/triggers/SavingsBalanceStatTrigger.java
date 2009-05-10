@@ -1,10 +1,7 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.model.SavingsBalanceStat;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.SeriesBudget;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
@@ -105,19 +102,18 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
     MapOfMaps<Integer, Integer, Glob> firstTransactionForMonth = new MapOfMaps<Integer, Integer, Glob>();
     MapOfMaps<Integer, Integer, Glob> lastTransactionForMonth = new MapOfMaps<Integer, Integer, Glob>();
     Map<Integer, Glob> lastRealKnownTransaction = new HashMap<Integer, Glob>();
-    private SameAccountChecker savingsAccountChecker;
     private GlobRepository repository;
 
     public SavingsFunctor(GlobRepository repository) {
       this.repository = repository;
-      savingsAccountChecker = SameAccountChecker.getSameAsSavings(repository);
     }
 
     public void run(Glob transaction, GlobRepository repository) throws Exception {
-      Integer accountId = transaction.get(Transaction.ACCOUNT);
-      if (!savingsAccountChecker.isSame(accountId)) {
+      Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
+      if (account == null || !account.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
         return;
       }
+      Integer accountId = account.get(Account.ID);
 
       Integer monthId = transaction.get(Transaction.BANK_MONTH);
       Glob firstTransactionInBankMonth = firstTransactionForMonth.get(accountId, monthId);

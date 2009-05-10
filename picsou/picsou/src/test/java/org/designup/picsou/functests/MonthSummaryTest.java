@@ -98,7 +98,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     categorization.setOccasional("fnac", MasterCategory.EQUIPMENT);
     categorization.setIncome("Salaire", "Salaire", true);
     categorization.setSpecial("Air France", "voyage", MasterCategory.LEISURES, true);
-    categorization.createAndSetSavings("epargne", "Epargne", "Main accounts", "External account");
+    categorization.createAndSetSavings("epargne", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "External account");
 
     double incomeFor200807 = 1500;
     double expensesFor200807 = 29.9 + 1500 + 60 + 20 + 10 + 23 + 200 + 100;

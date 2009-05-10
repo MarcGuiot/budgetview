@@ -6,6 +6,7 @@ import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.model.impl.DefaultCheckedGlobIdGenerator;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.model.utils.CachedGlobIdGenerator;
 
@@ -21,7 +22,6 @@ public class ApplicationReset {
       GlobRepositoryBuilder.init(new CachedGlobIdGenerator(generator))
         .add(PicsouGuiModel.get().getConstants())
         .get();
-    generator.setRepository(temp);
 
 //    PicsouInit.createDataForNewUser(temp);
     temp.getAll();

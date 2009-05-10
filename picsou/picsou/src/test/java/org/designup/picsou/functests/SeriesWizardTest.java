@@ -24,8 +24,6 @@ public class SeriesWizardTest extends LoggedInFunctionalTestCase {
       .select("Cell phone 1")
       .checkSelected("Groceries")
       .checkSelected("Health")
-      .select("Regular savings")
-      .select("Irregular savings")
       .validate();
 
     views.checkCategorizationSelected();
@@ -66,35 +64,23 @@ public class SeriesWizardTest extends LoggedInFunctionalTestCase {
       .checkCategory("Doctor", "Health", "Mutuelle", "Pharmacy", "Reimboursements")
       .cancel();
 
-    budgetView.savings.editSeriesList()
-      .checkSeriesListEquals("Irregular savings", "Regular savings")
-      .selectSeries("Regular savings")
-      .checkSelectedProfile("Every month")
-      .checkCategory(MasterCategory.SAVINGS)
-      .selectSeries("Irregular savings")
-      .checkSelectedProfile("Irregular")
-      .checkCategory(MasterCategory.SAVINGS)
-      .cancel();
-
     views.selectCategorization();
 
     categorization.setIncome("WorldCo", "Income 1", false);
     categorization.setRecurring("Rent for june", "Rent", MasterCategory.HOUSE, false);
     categorization.setRecurring("SFR", "Cell phone 1", MasterCategory.TELECOMS, false);
     categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, false);
-    categorization.setSavings("ING", "Regular savings");
 
     views.selectData();
     timeline.selectMonths("2008/06", "2008/07", "2008/08");
     transactions.initContent()
-      .add("01/08/2008", TransactionType.PLANNED, "Planned: Regular savings", "", -200.00, "Regular savings", MasterCategory.SAVINGS)
       .add("01/08/2008", TransactionType.PLANNED, "Planned: Groceries", "", -40.00, "Groceries", MasterCategory.FOOD)
       .add("01/08/2008", TransactionType.PLANNED, "Planned: Cell phone 1", "", -50.00, "Cell phone 1", MasterCategory.TELECOMS)
       .add("01/08/2008", TransactionType.PLANNED, "Planned: Rent", "", -1000.00, "Rent", "Rent")
       .add("01/08/2008", TransactionType.PLANNED, "Planned: Income 1", "", 3000.00, "Income 1", MasterCategory.INCOME)
       .add("20/07/2008", TransactionType.PLANNED, "Planned: Rent", "", -1000.00, "Rent", "Rent")
       .add("20/07/2008", TransactionType.PLANNED, "Planned: Income 1", "", 3000.00, "Income 1", MasterCategory.INCOME)
-      .add("20/07/2008", TransactionType.PRELEVEMENT, "ING", "", -200.00, "Regular savings", MasterCategory.SAVINGS)
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "ING", "", -200.00)
       .add("15/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -40.00, "Groceries", MasterCategory.FOOD)
       .add("10/07/2008", TransactionType.PRELEVEMENT, "SFR", "", -50.00, "Cell phone 1", MasterCategory.TELECOMS)
       .add("05/06/2008", TransactionType.PRELEVEMENT, "Rent for june", "", -1000.00, "Rent", "Rent")

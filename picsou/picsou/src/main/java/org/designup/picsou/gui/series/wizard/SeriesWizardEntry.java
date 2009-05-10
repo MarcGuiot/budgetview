@@ -54,10 +54,6 @@ public class SeriesWizardEntry {
       .set(Series.PROFILE_TYPE, profileType.getId())
       .set(Series.DEFAULT_CATEGORY, categoryId);
 
-    if (budgetArea == BudgetArea.SAVINGS) {
-      builder.set(Series.FROM_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID);
-    }
-
     Glob series = repository.create(Series.TYPE, builder.toArray());
 
     if (budgetArea.isMultiCategories()) {

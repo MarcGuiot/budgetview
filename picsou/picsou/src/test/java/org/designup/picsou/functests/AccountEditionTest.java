@@ -229,19 +229,19 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings.createSeries()
       .setName("Series 1 for Livret")
       .setCategory(MasterCategory.SAVINGS)
-      .setFromAccount("Main accounts")
+      .setFromAccount("Account n. 0000100")
       .setToAccount("Livret")
       .validate();
     budgetView.savings.createSeries()
       .setName("Series 2 for Livret")
       .setCategory(MasterCategory.SAVINGS)
       .setFromAccount("Livret")
-      .setToAccount("Main accounts")
+      .setToAccount("Account n. 0000100")
       .validate();
     budgetView.savings.createSeries()
       .setName("Series 3 for Codevi")
       .setCategory(MasterCategory.SAVINGS)
-      .setFromAccount("Main accounts")
+      .setFromAccount("Account n. 0000100")
       .setToAccount("Codevi")
       .validate();
 

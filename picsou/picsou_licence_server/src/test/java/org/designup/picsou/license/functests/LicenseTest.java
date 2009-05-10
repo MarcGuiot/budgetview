@@ -95,7 +95,7 @@ public class LicenseTest extends LicenseTestCase {
   public void testResendsActivationKeyIfCountDecreases() throws Exception {
     String repoId = loggingAndRegisterFirstPicsou();
     window.dispose();
-    restartPicsouAndLogAndDispose();
+    restartAppAndLogAndDispose();
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
     startApplication();
@@ -198,7 +198,7 @@ public class LicenseTest extends LicenseTestCase {
 
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
-    restartPicsouAndLogAndDispose();
+    restartAppAndLogAndDispose();
 
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
@@ -264,7 +264,7 @@ public class LicenseTest extends LicenseTestCase {
     login.logExistingUser("user", "passw@rd");
 
     LicenseActivationChecker.enterBadLicense(window, MAIL, "1234", "Activation failed a mail was sent at alfred@free.fr");
-    String messageCode = checkReceivedMail("alfred@free.fr");
+    String messageCode = checkReceivedMail(MAIL);
     String newCode = messageCode.substring(messageCode.length() - 5, messageCode.length() - 1).trim();
     LicenseActivationChecker.enterLicense(window, "alfred@free.fr", newCode);
     window.dispose();
@@ -280,8 +280,14 @@ public class LicenseTest extends LicenseTestCase {
       .sendKey()
       .close();
 
-    checkReceivedMail(MAIL);
+    messageCode = checkReceivedMail(MAIL);
+    newCode = messageCode.substring(messageCode.length() - 5, messageCode.length() - 1).trim();
     window.dispose();
+    SqlConnection connection = getSqlConnection();
+    Glob glob = connection.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, MAIL))
+      .selectAll()
+      .getQuery().executeUnique();
+    assertEquals(newCode, glob.get(License.ACTIVATION_CODE));
   }
 
   private void checkLicenseExpired() {
@@ -304,7 +310,7 @@ public class LicenseTest extends LicenseTestCase {
     }
   }
 
-  private void restartPicsouAndLogAndDispose() {
+  private void restartAppAndLogAndDispose() {
     startApplication();
     login.logExistingUser("user", "passw@rd");
     window.dispose();

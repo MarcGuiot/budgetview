@@ -150,6 +150,7 @@ public abstract class LicenseTestCase extends UISpecTestCase {
       if (receivedEmail.hasNext()) {
         SmtpMessage message = (SmtpMessage)receivedEmail.next();
         assertEquals(mailTo, message.getHeaderValue("To"));
+        receivedEmail.remove();
         return message.getBody();
       }
       else {

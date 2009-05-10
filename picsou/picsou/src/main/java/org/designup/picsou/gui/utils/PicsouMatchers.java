@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.utils;
 
 import org.designup.picsou.model.*;
-import org.designup.picsou.triggers.SameAccountChecker;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -134,19 +133,54 @@ public class PicsouMatchers {
     return new SeriesFirstEndDateFilter(false) {
 
       protected boolean isEligible(Glob series, GlobRepository repository) {
-        if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())){
+        if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
           return false;
         }
         Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
         Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
-        if (Account.areBothImported(toAccount, fromAccount)){
-          if (accountId.equals(fromAccount.get(Account.ID))){
+        if (Account.areBothImported(toAccount, fromAccount)) {
+          if (accountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
+            if (fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+              return series.get(Series.IS_MIRROR);
+            }
+            if (toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+              return !series.get(Series.IS_MIRROR);
+            }
+            return false;
+          }
+          if (accountId == Account.SAVINGS_SUMMARY_ACCOUNT_ID) {
+            if (fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
+              return series.get(Series.IS_MIRROR);
+            }
+            if (toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
+              return !series.get(Series.IS_MIRROR);
+            }
+            return false;
+          }
+          if (accountId.equals(fromAccount.get(Account.ID))) {
             return series.get(Series.IS_MIRROR);
           }
-          if (accountId.equals(toAccount.get(Account.ID))){
+          if (accountId.equals(toAccount.get(Account.ID))) {
             return !series.get(Series.IS_MIRROR);
           }
         }
+        if (accountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
+          if (toAccount != null && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+            return true;
+          }
+          if (fromAccount != null && fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+            return true;
+          }
+        }
+        if (accountId == Account.SAVINGS_SUMMARY_ACCOUNT_ID) {
+          if (toAccount != null && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
+            return true;
+          }
+          if (fromAccount != null && fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
+            return true;
+          }
+        }
+        
         return (accountId.equals(series.get(Series.FROM_ACCOUNT)) || accountId.equals(series.get(Series.TO_ACCOUNT)));
       }
     };
@@ -185,21 +219,13 @@ public class PicsouMatchers {
           }
         }
         else if (toAccountId != null && fromAccountId != null) {
-          SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
           for (Glob transaction : transactions) {
             if (transaction.get(Transaction.AMOUNT) > 0) {
               if (series.get(Series.IS_MIRROR)) {
                 return false;
               }
               if (!toAccountId.equals(transaction.get(Transaction.ACCOUNT))) {
-                if (toAccountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
-                  if (!mainAccountChecker.isSame(transaction.get(Transaction.ACCOUNT))) {
-                    return false;
-                  }
-                }
-                else {
-                  return false;
-                }
+                return false;
               }
             }
             else {
@@ -207,32 +233,17 @@ public class PicsouMatchers {
                 return false;
               }
               if (!fromAccountId.equals(transaction.get(Transaction.ACCOUNT))) {
-                if (fromAccountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
-                  if (!mainAccountChecker.isSame(transaction.get(Transaction.ACCOUNT))) {
-                    return false;
-                  }
-                }
-                else {
-                  return false;
-                }
+                return false;
               }
             }
           }
         }
         else if (toAccountId != null || fromAccountId != null) {
-          SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
           for (Glob transaction : transactions) {
             if (transaction.get(Transaction.AMOUNT) < 0) {
               if (fromAccountId != null) {
                 if (!fromAccountId.equals(transaction.get(Transaction.ACCOUNT))) {
-                  if (fromAccountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
-                    if (!mainAccountChecker.isSame(transaction.get(Transaction.ACCOUNT))) {
-                      return false;
-                    }
-                  }
-                  else {
-                    return false;
-                  }
+                  return false;
                 }
               }
               else {
@@ -242,14 +253,7 @@ public class PicsouMatchers {
             else {
               if (toAccountId != null) {
                 if (!toAccountId.equals(transaction.get(Transaction.ACCOUNT))) {
-                  if (toAccountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
-                    if (!mainAccountChecker.isSame(transaction.get(Transaction.ACCOUNT))) {
-                      return false;
-                    }
-                  }
-                  else {
-                    return false;
-                  }
+                  return false;
                 }
               }
               else {

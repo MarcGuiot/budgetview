@@ -138,7 +138,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "        series='1' type='seriesBudget'/>");
     repository.startChangeSet();
     repository.create(Transaction.TYPE,
-                      value(Transaction.ID, 100),
+                      value(Transaction.ID, 0),
                       value(Transaction.SERIES, INCOME_SERIES_ID),
                       value(Transaction.AMOUNT, 1900.),
                       value(Transaction.MONTH, 200808),
@@ -147,7 +147,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
                       value(Transaction.BANK_DAY, 1),
                       value(Transaction.LABEL, "picsou"));
     repository.create(Transaction.TYPE,
-                      value(Transaction.ID, 101),
+                      value(Transaction.ID, 1),
                       value(Transaction.SERIES, ENVELOPPE_SERIES_ID),
                       value(Transaction.AMOUNT, -300.),
                       value(Transaction.MONTH, 200808),
@@ -159,13 +159,13 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "<update _amount='2000.0' amount='100.0' id='" + incomePlannedTransaction[0] + "' type='transaction'/>" +
-      "<create amount='-300.0' bankMonth='200808' bankDay='1' day='1' id='101' label='Auchan' category='0'" +
+      "<create amount='-300.0' bankMonth='200808' bankDay='1' day='1' id='1' label='Auchan' category='0'" +
       "        month='200808' planned='false' series='101' type='transaction' mirror='false'  createdBySeries='false'/>" +
-      "<create amount='1900.0' bankMonth='200808' bankDay='1' day='1' id='100' label='picsou' category='0'" +
+      "<create amount='1900.0' bankMonth='200808' bankDay='1' day='1' id='0' label='picsou' category='0'" +
       "        month='200808' planned='false' series='102' type='transaction' mirror='false'  createdBySeries='false'/>" +
       "<update _amount='-1000.0' amount='-700.0' id='" + enveloppePlannedTransaction[0] + "' type='transaction'/>");
     repository.startChangeSet();
-    repository.update(Key.create(Transaction.TYPE, 101),
+    repository.update(Key.create(Transaction.TYPE, 1),
                       value(Transaction.SERIES, ENVELOPPE_SERIES_ID),
                       value(Transaction.AMOUNT, -200.),
                       value(Transaction.MONTH, 200808),
@@ -173,7 +173,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
                       value(Transaction.DAY, 1),
                       value(Transaction.BANK_DAY, 1),
                       value(Transaction.LABEL, "Auchan"));
-    repository.create(Key.create(Transaction.TYPE, 102),
+    repository.create(Key.create(Transaction.TYPE, 2),
                       value(Transaction.AMOUNT, -100.),
                       value(Transaction.MONTH, 200808),
                       value(Transaction.BANK_MONTH, 200808),
@@ -183,9 +183,9 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     repository.completeChangeSet();
     listener.assertLastChangesEqual(
       Transaction.TYPE,
-      "<update _amount='-300.0' amount='-200.0' id='101' type='transaction'/>\n" +
+      "<update _amount='-300.0' amount='-200.0' id='1' type='transaction'/>\n" +
       "<update _amount='-700.0' amount='-800.0' id='" + enveloppePlannedTransaction[0] + "' type='transaction'/>\n" +
-      "<create amount='-100.0' bankMonth='200808' bankDay='1' day='1'  id='102' month='200808'\n" +
+      "<create amount='-100.0' bankMonth='200808' bankDay='1' day='1'  id='2' month='200808'\n" +
       "        planned='false' series='0' type='transaction' category='0' mirror='false' createdBySeries='false'/>");
   }
 
@@ -193,7 +193,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     createEnveloppeSeries();
     createMonth(200807, 200808, 200809);
     repository.create(Transaction.TYPE,
-                      value(Transaction.ID, 102),
+                      value(Transaction.ID, 2),
                       value(Transaction.SERIES, ENVELOPPE_SERIES_ID),
                       value(Transaction.AMOUNT, -900.),
                       value(Transaction.MONTH, 200808),
@@ -202,7 +202,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
                       value(Transaction.BANK_DAY, 1),
                       value(Transaction.LABEL, "Auchan"));
     repository.create(Transaction.TYPE,
-                      value(Transaction.ID, 103),
+                      value(Transaction.ID, 3),
                       value(Transaction.SERIES, ENVELOPPE_SERIES_ID),
                       value(Transaction.AMOUNT, -600.),
                       value(Transaction.MONTH, 200808),
@@ -214,17 +214,17 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
       "<update _observedAmount='-900.0' id='" + budget[1] + "' observedAmount='-1500.0' type='seriesBudget'/>");
-    repository.update(Key.create(Transaction.TYPE, 103), Transaction.AMOUNT, -30.);
+    repository.update(Key.create(Transaction.TYPE, 3), Transaction.AMOUNT, -30.);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
       "<update _observedAmount='-1500.0' id='" + budget[1] + "' observedAmount='-930.0' type='seriesBudget'/>");
     listener.assertLastChangesEqual(
       Transaction.TYPE,
-      "  <update _amount='-600.0' amount='-30.0' id='103' type='transaction'/>" +
+      "  <update _amount='-600.0' amount='-30.0' id='3' type='transaction'/>" +
       "  <create account='-1' amount='-70.0' bankDay='25' bankMonth='200808' mirror='false'" +
-      "          category='2' day='25' id='2' label='Planned: courses' month='200808'" +
+      "          category='2' day='25' id='102' label='Planned: courses' month='200808'" +
       "          planned='true' series='101' transactionType='5' type='transaction' createdBySeries='false'/>");
-    repository.update(Key.create(Transaction.TYPE, 103), Transaction.AMOUNT, -200.);
+    repository.update(Key.create(Transaction.TYPE, 3), Transaction.AMOUNT, -200.);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
       "<update _observedAmount='-930.0' id='" + budget[1] + "' observedAmount='-1100.0' type='seriesBudget'/>");
@@ -232,8 +232,8 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       Transaction.TYPE,
       "  <delete _account='-1' _amount='-70.0' _bankDay='25' _bankMonth='200808' _mirror='false'\n" +
       "          _category='2' _day='25' _label='Planned: courses' _month='200808' _planned='true'\n" +
-      "          _series='101' _transactionType='5' id='2' type='transaction' _createdBySeries='false'/>\n" +
-      "  <update _amount='-30.0' amount='-200.0' id='103' type='transaction'/>");
+      "          _series='101' _transactionType='5' id='102' type='transaction' _createdBySeries='false'/>\n" +
+      "  <update _amount='-30.0' amount='-200.0' id='3' type='transaction'/>");
   }
 
   public void testOverrunIncom() throws Exception {

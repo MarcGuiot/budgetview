@@ -37,14 +37,6 @@ public class SameAccountChecker {
     }
   }
 
-  public static SameAccountChecker getSameAsSavings(GlobRepository repository) {
-    return new SameAccountChecker(AccountType.SAVINGS.getId(), repository);
-  }
-
-  public static SameAccountChecker getSameAsMain(GlobRepository repository) {
-    return new SameAccountChecker(AccountType.MAIN.getId(), repository);
-  }
-
   public boolean isSame(Integer accountId) {
     return accounts.contains(accountId);
   }

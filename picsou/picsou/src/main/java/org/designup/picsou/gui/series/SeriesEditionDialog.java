@@ -97,6 +97,7 @@ public class SeriesEditionDialog {
             ProfileType.TYPE, Account.TYPE)
       .get();
 
+    localRepository.addTrigger(new UpdateDeleteMirror());
     localRepository.addTrigger(new SingleMonthProfileTypeUpdater());
     localRepository.addTrigger(new ResetAllBudgetIfInAutomaticAndNoneAccountAreImported());
     addSeriesCreationTriggers(localRepository, new ProfileTypeSeriesTrigger.UserMonth() {
@@ -104,7 +105,7 @@ public class SeriesEditionDialog {
         return selectedTransactions.getSortedSet(Transaction.MONTH);
       }
     });
-    localRepository.addTrigger(new UpdateMirror());
+    localRepository.addTrigger(new UpdateUpdateMirror());
     localRepository.addTrigger(new UpdateBudgetOnSeriesAccountsChange());
     localRepository.addChangeListener(new ProfileTypeChangeListener());
     selectionService = new SelectionService();
@@ -146,8 +147,7 @@ public class SeriesEditionDialog {
 
     GlobMatcher accountFilter = GlobMatchers.and(
       GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)),
-      GlobMatchers.or(GlobMatchers.not(GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.MAIN.getId())),
-                      GlobMatchers.fieldEquals(Account.ID, Account.MAIN_SUMMARY_ACCOUNT_ID)),
+      GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, Account.MAIN_SUMMARY_ACCOUNT_ID)),
       GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID)));
 
     fromAccountsCombo = new GlobLinkComboEditor(Series.FROM_ACCOUNT, localRepository, localDirectory)
@@ -501,9 +501,6 @@ public class SeriesEditionDialog {
     if (budgetArea == BudgetArea.INCOME) {
       values.add(value(Series.DEFAULT_CATEGORY, MasterCategory.INCOME.getId()));
     }
-    if (budgetArea == BudgetArea.SAVINGS) {
-      values.add(value(Series.FROM_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID));
-    }
     return localRepository.create(Series.TYPE, values.toArray(new FieldValue[values.size()]));
   }
 
@@ -540,7 +537,7 @@ public class SeriesEditionDialog {
 
   private void doShow(Set<Integer> monthIds, Glob series, final Boolean selectName) {
     if (series != null && series.get(Series.IS_MIRROR)) {
-      series = repository.findLinkTarget(series, Series.MIRROR_SERIES);
+      series = localRepository.findLinkTarget(series, Series.MIRROR_SERIES);
     }
     this.currentSeries = series;
     this.currentMonthIds = new TreeSet<Integer>(monthIds);
@@ -588,6 +585,35 @@ public class SeriesEditionDialog {
 
   public Integer getCurrentCategory() {
     return currentlySelectedCategory;
+  }
+
+  public static double computeMultiplier(Glob fromAccount, Glob toAccount, GlobRepository repository) {
+    if (Account.areBothImported(fromAccount, toAccount)) {
+      return 1;
+    }
+    double multiplier = Account.getMultiplierWithMainAsPointOfView(fromAccount, toAccount, repository);
+    if (multiplier == 0) {
+      if (fromAccount == null && toAccount == null) {
+        multiplier = 1;
+      }
+      else {
+        if (Account.onlyOneIsImported(fromAccount, toAccount)) {
+          if (fromAccount.get(Account.IS_IMPORTED_ACCOUNT)) {
+            multiplier = -1;
+          }
+          else {
+            multiplier = 1;
+          }
+        }
+        else if (fromAccount == null) {
+          multiplier = 1;
+        }
+        else {
+          multiplier = -1;
+        }
+      }
+    }
+    return multiplier;
   }
 
   private class AssignCategoryAction extends AbstractAction {
@@ -714,7 +740,7 @@ public class SeriesEditionDialog {
           Integer mirrorSeries = series.get(Series.MIRROR_SERIES);
           final Glob mirrorBudget =
             localRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirrorSeries)
-            .findByIndex(SeriesBudget.MONTH, budget.get(SeriesBudget.MONTH)).getGlobs().getFirst();
+              .findByIndex(SeriesBudget.MONTH, budget.get(SeriesBudget.MONTH)).getGlobs().getFirst();
           values.safeApply(new FieldValues.Functor() {
             public void process(Field field, Object value) throws Exception {
               if (field.equals(SeriesBudget.AMOUNT)) {
@@ -1194,7 +1220,28 @@ public class SeriesEditionDialog {
     }
   }
 
-  private static class UpdateMirror extends DefaultChangeSetListener {
+  private static class UpdateDeleteMirror extends DefaultChangeSetListener {
+
+    public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
+
+      changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
+        public void visitCreation(Key key, FieldValues values) throws Exception {
+        }
+
+        public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+        }
+
+        public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+          Integer mirror = previousValues.get(Series.MIRROR_SERIES);
+          if (mirror != null && !previousValues.get(Series.IS_MIRROR)) {
+            repository.delete(Key.create(Series.TYPE, mirror));
+          }
+        }
+      });
+    }
+  }
+
+  private static class UpdateUpdateMirror extends DefaultChangeSetListener {
 
     public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
 
@@ -1218,10 +1265,6 @@ public class SeriesEditionDialog {
         }
 
         public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-          Integer mirror = previousValues.get(Series.MIRROR_SERIES);
-          if (mirror != null && !previousValues.get(Series.IS_MIRROR)) {
-            repository.delete(Key.create(Series.TYPE, mirror));
-          }
         }
       });
 
@@ -1277,7 +1320,9 @@ public class SeriesEditionDialog {
           if (mirrorSeriesId != null && !series.get(Series.IS_MIRROR)) {
             Glob budget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirrorSeriesId)
               .findByIndex(SeriesBudget.MONTH, previousValues.get(SeriesBudget.MONTH)).getGlobs().getFirst();
-            repository.delete(budget.getKey());
+            if (budget != null) {
+              repository.delete(budget.getKey());
+            }
           }
         }
       });
@@ -1295,31 +1340,7 @@ public class SeriesEditionDialog {
             }
             Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
             Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-            double multiplier = Account.getMultiplierWithMainAsPointOfView(fromAccount, toAccount, repository);
-            if (multiplier == 0) {
-              if (fromAccount == null && toAccount == null) {
-                multiplier = 1;
-              }
-              else {
-                if (Account.onlyOneIsImported(fromAccount, toAccount)) {
-                  if (fromAccount.get(Account.IS_IMPORTED_ACCOUNT)) {
-                    multiplier = -1;
-                  }
-                  else {
-                    multiplier = 1;
-                  }
-                }
-                else if (Account.areBothImported(fromAccount, toAccount)) {
-                  multiplier = 1;
-                }
-                else if (fromAccount == null) {
-                  multiplier = 1;
-                }
-                else {
-                  multiplier = -1;
-                }
-              }
-            }
+            double multiplier = computeMultiplier(fromAccount, toAccount, repository);
             if (!series.get(Series.IS_MIRROR)) {
               GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE,
                                                          fieldEquals(SeriesBudget.SERIES, key.get(Series.ID)));

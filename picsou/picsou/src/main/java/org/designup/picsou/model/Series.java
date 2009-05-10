@@ -64,7 +64,9 @@ public class Series {
   public static LinkField TO_ACCOUNT;
 
   @Target(Series.class)
-  public static LinkField MIRROR_SERIES; // si les deux comptes sont importés.
+  public static LinkField MIRROR_SERIES; // si les deux comptes sont importés. reference la series miroir
+
+  // la series miroir a les montant de budget negatif elle est donc pour le compte "from"
 
   @DefaultBoolean(false)
   public static BooleanField IS_MIRROR;
@@ -183,7 +185,7 @@ public class Series {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 6;
+      return 7;
     }
 
     public byte[] serializeData(FieldValues fieldValues) {

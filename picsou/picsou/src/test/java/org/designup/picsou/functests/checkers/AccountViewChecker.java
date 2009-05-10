@@ -129,4 +129,15 @@ public class AccountViewChecker extends GuiChecker {
       .validate();
   }
 
+  public void createMainAccount(String name, double balance){
+    createNewAccount()
+      .setAccountName(name)
+      .setAccountNumber("4321")
+      .selectBank("CIC")
+      .setAsMain()
+      .checkIsMain()
+      .setBalance(balance)
+      .validate();
+  }
+
 }

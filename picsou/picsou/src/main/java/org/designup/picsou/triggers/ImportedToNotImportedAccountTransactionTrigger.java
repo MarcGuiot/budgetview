@@ -20,7 +20,7 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
           Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
           Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
           if (Account.shoudCreateMirror(fromAccount, toAccount)) {
-            Integer accountID = getAccount(values, fromAccount, toAccount);
+            Integer accountID = getAccount(fromAccount, toAccount);
             TransactionUtils.createMirrorTransaction(key, values, accountID, repository);
           }
         }
@@ -34,7 +34,12 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
         Integer mirrorTransactionId = transaction.get(Transaction.NOT_IMPORTED_TRANSACTION);
         if (values.contains(Transaction.SERIES)) {
           if (mirrorTransactionId != null) {
-            repository.delete(Key.create(Transaction.TYPE, mirrorTransactionId));
+            Key mirrorKey = Key.create(Transaction.TYPE, mirrorTransactionId);
+            //destruction de series
+            Glob glob = repository.find(key);
+            if (glob != null){
+              repository.delete(mirrorKey);
+            }
           }
           Integer newSeriesId = values.get(Transaction.SERIES);
           if (newSeriesId != null) {
@@ -42,7 +47,7 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
             Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
             Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
             if (Account.shoudCreateMirror(fromAccount, toAccount)) {
-              Integer accountID = getAccount(transaction, fromAccount, toAccount);
+              Integer accountID = getAccount(fromAccount, toAccount);
               TransactionUtils.createMirrorTransaction(key, transaction, accountID, repository);
             }
           }
@@ -80,21 +85,11 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
     });
   }
 
-  private Integer getAccount(FieldValues values, Glob fromAccount, Glob toAccount) {
-    Integer accountID;
-    if (fromAccount.get(Account.ID) == Account.MAIN_SUMMARY_ACCOUNT_ID) {
+  private Integer getAccount(Glob fromAccount, Glob toAccount) {
+    if (fromAccount.get(Account.IS_IMPORTED_ACCOUNT)){
       return toAccount.get(Account.ID);
     }
-    if (toAccount.get(Account.ID) == Account.MAIN_SUMMARY_ACCOUNT_ID) {
-      return fromAccount.get(Account.ID);
-    }
-    if (values.get(Transaction.ACCOUNT).equals(fromAccount.get(Series.FROM_ACCOUNT))) {
-      accountID = fromAccount.get(Series.TO_ACCOUNT);
-    }
-    else {
-      accountID = fromAccount.get(Series.FROM_ACCOUNT);
-    }
-    return accountID;
+    return fromAccount.get(Account.ID);
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {

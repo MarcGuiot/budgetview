@@ -68,8 +68,6 @@ public class SeriesWizardModel {
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "fuel", MasterCategory.TRANSPORTS, "essence");
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "cash", MasterCategory.CASH, false);
 
-    createEntry(BudgetArea.SAVINGS, ProfileType.EVERY_MONTH, "regular", MasterCategory.SAVINGS, false);
-    createEntry(BudgetArea.SAVINGS, ProfileType.IRREGULAR, "irregular", MasterCategory.SAVINGS, false);
   }
 
   private void createEntry(BudgetArea budgetArea,

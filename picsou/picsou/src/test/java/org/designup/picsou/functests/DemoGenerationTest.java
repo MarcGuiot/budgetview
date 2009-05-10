@@ -157,7 +157,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     
-    categorization.createAndSetSavings("VIRT MENS. LIVRET", "Virt. auto livret", "Main account", "Livret");
+    categorization.createAndSetSavings("VIRT MENS. LIVRET", "Virt. auto livret", "Compte courant", "Livret");
 
     categorization.getGauge().hideProgressMessage();
 
@@ -243,18 +243,20 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     budgetView.savings.createSeries()
       .setName("Prov. vacances aout")
       .setCategory(MasterCategory.SAVINGS)
+      .setFromAccount("Compte courant")
+      .setToAccount("Compte provisions")
       .setStartDate(200811)
       .setEndDate(200907)
       .switchToManual()
       .selectAllMonths()
-      .setAmount(-150)
+      .setAmount(150)
       .validate();
 
     budgetView.savings.createSeries()
       .setName("Reglement vacances")
       .setCategory(MasterCategory.SAVINGS)
       .setFromAccount("Compte provisions")
-      .setToAccount("Main accounts")
+      .setToAccount("Compte courant")
       .setStartDate(200908)
       .setEndDate(200908)
       .selectAllMonths()

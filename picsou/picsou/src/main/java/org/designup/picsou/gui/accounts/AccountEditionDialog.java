@@ -6,6 +6,7 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.*;
@@ -16,6 +17,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Set;
 
 public class AccountEditionDialog {
   private PicsouDialog dialog;
@@ -66,6 +68,26 @@ public class AccountEditionDialog {
           });
           accountEditionPanel.setMessageSavingsWarning(!transactions.isEmpty());
         }
+      }
+    });
+
+    localRepository.addTrigger(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(Account.TYPE)) {
+          Set<Key> keySet = changeSet.getUpdated(Account.UPDATE_MODE);
+          keySet.addAll(changeSet.getCreated(Account.TYPE));
+          for (Key key : keySet) {
+            if (repository.get(key).get(Account.UPDATE_MODE).equals(AccountUpdateMode.MANUAL.getId())) {
+              localRepository.update(key, Account.IS_IMPORTED_ACCOUNT, true);
+            }
+            else {
+              localRepository.update(key, Account.IS_IMPORTED_ACCOUNT, false);
+            }
+          }
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
       }
     });
 

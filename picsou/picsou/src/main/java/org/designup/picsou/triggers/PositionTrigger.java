@@ -34,11 +34,10 @@ public class PositionTrigger implements ChangeSetListener {
     for (Integer accountId : Account.SUMMARY_ACCOUNT_IDS) {
       updatedAccount.remove(repository.get(Key.create(Account.TYPE, accountId)));
     }
-    SameAccountChecker mainAccountChecker = SameAccountChecker.getSameAsMain(repository);
     boolean mainPositionComputed = true;
     boolean savingsPositionComputed = true;
     for (Glob account : updatedAccount) {
-      if (mainAccountChecker.isSame(account.get(Account.ID))) {
+      if (account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
         mainPositionComputed &= computeAccountPosition(repository, comparator, transactions, account);
       }
       else {

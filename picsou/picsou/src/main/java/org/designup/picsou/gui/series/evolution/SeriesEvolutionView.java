@@ -59,7 +59,7 @@ public class SeriesEvolutionView extends View {
   }
 
   private static GlobRepository createLocalRepository(GlobRepository parentRepository) {
-    GlobRepository localRepository = GlobRepositoryBuilder.createEmpty();
+    GlobRepository localRepository = GlobRepositoryBuilder.init(parentRepository.getIdGenerator()).get();
 
     SeriesWrapperUpdater updater = new SeriesWrapperUpdater(localRepository);
     updater.setExcludeBudgetAreaAll(true);

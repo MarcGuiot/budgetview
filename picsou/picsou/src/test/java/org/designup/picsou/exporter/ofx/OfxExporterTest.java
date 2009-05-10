@@ -116,7 +116,7 @@ public class OfxExporterTest extends PicsouTestCase {
       "            <FITID>PICSOU3\n" +
       "            <NAME>card3\n" +
       "            <CATEGORY>5\n" +
-      "            <SUBCATEGORY>21\n" +
+      "            <SUBCATEGORY>100\n" +
       "          </STMTTRN>\n" +
       "          <STMTTRN>\n" +
       "            <TRNTYPE>DEBIT\n" +

@@ -20,10 +20,11 @@ import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
+import org.globsframework.model.impl.DefaultCheckedGlobIdGenerator;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
-import org.globsframework.model.utils.CachedGlobIdGenerator;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobUtils;
+import org.globsframework.model.utils.CachedGlobIdGenerator;
 import org.globsframework.utils.MapOfMaps;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
@@ -62,8 +63,6 @@ public class PicsouInit {
       GlobRepositoryBuilder.init(new CachedGlobIdGenerator(idGenerator))
         .add(directory.get(GlobModel.class).getConstants())
         .get();
-
-    idGenerator.setRepository(this.repository);
 
     this.repository.addChangeListener(new ServerChangeSetListener(serverAccess));
 

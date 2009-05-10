@@ -177,22 +177,10 @@ public class SeriesBudgetEditionPanel {
   }
 
   private void updatePositiveOrNegativeRadio() {
-    Glob fromAccount = localRepository.findLinkTarget(currentSeries, Series.FROM_ACCOUNT);
-    Glob toAccount = localRepository.findLinkTarget(currentSeries, Series.TO_ACCOUNT);
-    int multiplier = 1;
-    if (Account.onlyOneIsImported(fromAccount, toAccount)) {
-      if (fromAccount.get(Account.IS_IMPORTED_ACCOUNT)) {
-        multiplier = -1;
-      }
-      else {
-        multiplier = 1;
-      }
-    }
-    else if ((fromAccount == null || toAccount == null) && toAccount != fromAccount) {
-      if (fromAccount != null) {
-        multiplier = -1;
-      }
-    }
+    double multiplier =
+      SeriesEditionDialog.computeMultiplier(localRepository.findLinkTarget(currentSeries, Series.FROM_ACCOUNT),
+                                            localRepository.findLinkTarget(currentSeries, Series.TO_ACCOUNT),
+                                            localRepository);
     isNormalyPositive = budgetArea.isIncome() ||
                         (budgetArea == BudgetArea.SAVINGS && multiplier > 0);
     amountEditor.update(isNormalyPositive, budgetArea == BudgetArea.SAVINGS);

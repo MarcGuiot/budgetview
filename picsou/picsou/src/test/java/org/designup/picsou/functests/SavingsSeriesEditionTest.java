@@ -27,7 +27,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings
       .createSeries()
-      .setFromAccount("Main accounts")
+      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Epargne LCL")
       .setName("Epargne")
       .setCategory(MasterCategory.SAVINGS)
@@ -38,13 +38,13 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .editSeries("Epargne")
       .checkToAccount("Epargne LCL")
       .switchToManual()
-      .setToAccount("Main accounts")
+      .setToAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setFromAccount("Epargne LCL")
       .checkAmountsRadioAreNotVisible()
       .selectMonth(200808)
       .setAmount("100")
       .checkAmount("100")
-      .setFromAccount("Main accounts")
+      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Epargne LCL")
       .checkAmount("100")
       .validate();
@@ -74,7 +74,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings
       .createSeries()
       .setName("Epargne")
-      .setFromAccount("Main accounts")
+      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Epargne LCL")
       .setCategory(MasterCategory.SAVINGS)
       .checkOkEnabled(true)
@@ -83,7 +83,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings
       .createSeries()
       .setName("Veranda")
-      .setToAccount("Main accounts")
+      .setToAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setFromAccount("Epargne CA")
       .setCategory(MasterCategory.HOUSE)
       .switchToManual()
@@ -98,10 +98,10 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkSingleMonthSelected()
       .checkSingleMonthDate("Oct 2008")
       .checkFromAccount("Epargne CA")
-      .checkToAccount("Main accounts")
+      .checkToAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .checkSingleMonthSelected()
       .selectSeries("Epargne")
-      .checkFromAccount("Main accounts")
+      .checkFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .checkToAccount("Epargne LCL")
       .checkAutomaticModeSelected()
       .cancel();
@@ -128,7 +128,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings
       .createSeries()
       .setName("Epargne")
-      .setFromAccount("Main accounts")
+      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Epargne LCL")
       .setCategory(MasterCategory.SAVINGS)
       .checkOkEnabled(true)
@@ -164,7 +164,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings.createSeries()
       .setName("CA")
       .setCategory(MasterCategory.SAVINGS)
-      .setFromAccount("Main account")
+      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Account n. 111")
       .validate();
 
@@ -191,7 +191,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.savings
       .createSeries()
-      .setFromAccount("Main accounts")
+      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Epargne LCL")
       .setName("Epargne")
       .setCategory(MasterCategory.SAVINGS)
@@ -221,7 +221,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings.createSeries()
       .setName("CA")
       .setCategory(MasterCategory.SAVINGS)
-      .setFromAccount("Main account")
+      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Account n. 111")
       .validate();
     views.selectCategorization();
@@ -270,12 +270,11 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .createSeries()
       .setName("Epargne")
       .setCategory(MasterCategory.SAVINGS)
-      .checkFromAccount("Main accounts")
+      .checkFromAccount("External account")
       .checkToAccount("External account")
-      .setFromAccount("External account")
       .checkSavingsMessageVisibility(true)
       .checkOkEnabled(false)
-      .setFromAccount("Main accounts")
+      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .checkOkEnabled(true)
       .validate();
   }
