@@ -1,7 +1,8 @@
 package org.globsframework.model;
 
-import org.globsframework.model.impl.DefaultGlobIdGenerator;
+import org.globsframework.model.impl.DefaultCheckedGlobIdGenerator;
 import org.globsframework.model.impl.DefaultGlobRepository;
+import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.model.utils.GlobIdGenerator;
 
@@ -45,8 +46,8 @@ public class GlobRepositoryBuilder {
   public GlobRepository get() {
     DefaultGlobRepository repository = new DefaultGlobRepository(idGenerator);
     repository.add(globList);
-    if (idGenerator instanceof DefaultGlobIdGenerator) {
-      ((DefaultGlobIdGenerator)idGenerator).setRepository(repository);
+    if (idGenerator instanceof DefaultCheckedGlobIdGenerator) {
+      ((DefaultCheckedGlobIdGenerator)idGenerator).setRepository(repository);
     }
     return repository;
   }

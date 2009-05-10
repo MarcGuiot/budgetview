@@ -9,7 +9,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobBuilder;
 
-public class DefaultGlobIdGeneratorTest extends TestCase {
+public class DefaultCheckedGlobIdGeneratorTest extends TestCase {
   private GlobChecker checker = new GlobChecker();
   private GlobRepository repository;
 
@@ -79,7 +79,7 @@ public class DefaultGlobIdGeneratorTest extends TestCase {
   }
 
   public void testChecksForAllSteps() throws Exception {
-    DefaultGlobIdGenerator generator = new DefaultGlobIdGenerator();
+    DefaultCheckedGlobIdGenerator generator = new DefaultCheckedGlobIdGenerator();
     repository = GlobRepositoryBuilder.init().get();
     generator.setRepository(repository);
 

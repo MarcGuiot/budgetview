@@ -877,8 +877,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
       "<dummyObject2 id='1'/>"
     );
     final List<String> log = new ArrayList<String>();
-    final DefaultGlobIdGenerator idGenerator = new DefaultGlobIdGenerator();
-    idGenerator.setRepository(repository);
+    final GlobIdGenerator idGenerator = repository.getIdGenerator();
     repository.addTrigger(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         long nextId = idGenerator.getNextId(DummyObject.ID, 1);

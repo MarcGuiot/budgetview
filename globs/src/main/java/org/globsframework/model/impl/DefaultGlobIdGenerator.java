@@ -1,29 +1,19 @@
 package org.globsframework.model.impl;
 
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.KeyBuilder;
 import org.globsframework.model.utils.GlobIdGenerator;
+import org.globsframework.metamodel.fields.IntegerField;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
 
 public class DefaultGlobIdGenerator implements GlobIdGenerator {
   private Map<IntegerField, Integer> fieldToCurrentId = new HashMap<IntegerField, Integer>();
-  private GlobRepository repository;
 
   public DefaultGlobIdGenerator() {
   }
 
-  public void setRepository(GlobRepository repository) {
-    this.repository = repository;
-  }
-
   public int getNextId(IntegerField keyField, int idCount) {
-    Integer currentId = getNextCurrentId(keyField, idCount);
+    Integer currentId = getNextCurrentId(keyField);
     try {
       return currentId;
     }
@@ -32,48 +22,12 @@ public class DefaultGlobIdGenerator implements GlobIdGenerator {
     }
   }
 
-  private Integer getNextCurrentId(IntegerField keyField, int idCount) {
+  private Integer getNextCurrentId(IntegerField keyField) {
     Integer currentId = fieldToCurrentId.get(keyField);
     if (currentId == null) {
-      return maxId(keyField) + 1;
+      return 100;
     }
-    return getNextCurrentId(keyField, currentId, idCount);
-  }
-
-  private Integer getNextCurrentId(IntegerField keyField, Integer currentId, int idCount) {
-    int next = currentId;
-
-    if (repository == null) {
-      return next;
-    }
-
-    for (; ;) {
-      boolean ok = true;
-      for (int i = 0; i < idCount; i++) {
-        Glob alreadyExistingGlob = repository.find(KeyBuilder.init(keyField, next + i).get());
-        if (alreadyExistingGlob != null) {
-          next = next + i + 1;
-          ok = false;
-          break;
-        }
-      }
-
-      if (ok) {
-        return next;
-      }
-    }
-  }
-
-  private Integer maxId(IntegerField keyField) {
-    if (repository == null) {
-      return 0;
-    }
-
-    GlobList globs = repository.getAll(keyField.getGlobType());
-    if (globs.isEmpty()) {
-      return -1;
-    }
-    return Collections.max(globs.getValueSet(keyField));
+    return currentId;
   }
 
   public void update(IntegerField field, Integer lastAllocatedId) {
