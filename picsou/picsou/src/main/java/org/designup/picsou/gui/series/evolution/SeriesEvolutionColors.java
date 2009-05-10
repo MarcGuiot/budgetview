@@ -136,7 +136,7 @@ public class SeriesEvolutionColors implements ColorChangeListener {
         Double threshold = AccountPositionThreshold.getValue(parentRepository);
         Double amount = balanceStat.get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION);
         if (amount == null) {
-          return amountColors.getTextColor(0., summaryText);
+          return amountColors.getTextColor(0.0, summaryText);
         }
         final double diff = amount - threshold;
         return amountColors.getTextColor(diff, summaryText);

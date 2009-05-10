@@ -122,7 +122,7 @@ public class PicsouSampleGenerator {
     System.out.println("Output: " + file.getAbsolutePath());
 
     FileWriter writer = new FileWriter(file);
-    OfxExporter.write(repository, writer);
+    OfxExporter.write(repository, writer, true);
     writer.close();
   }
 

@@ -5,7 +5,7 @@
   <panel styleClass="dialog" preferredSize="(400,200)" opaque="true">
     <column styleClass="innerDialog">
       <label ref="title" styleClass="title"/>
-      <htmlEditorPane ref="message" marginBottom="10"/>
+      <htmlEditorPane ref="message" marginBottom="10" hyperlinkListener="hyperlinkHandler"/>
       <filler fill="vertical"/>
     </column>
   </panel>

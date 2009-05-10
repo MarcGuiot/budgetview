@@ -190,7 +190,7 @@ public class OfxBuilder {
       File file = new File(name);
       file.getParentFile().mkdirs();
       writer = new FileWriter(file);
-      OfxExporter.write(repository, writer);
+      OfxExporter.write(repository, writer, true);
     }
     catch (IOException e) {
       throw new ResourceAccessFailed(e);

@@ -225,7 +225,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkTotalAmounts(-12.00, -25.00);
   }
 
-  public void testShiftIsDesableIfSeriesIsNotValide() throws Exception {
+  public void testShiftIsDisabledIfSeriesIsNotValid() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/06/25", -25.00, "Epargne / June")
       .addTransaction("2008/07/05", -30.00, "Epargne / July")
@@ -278,6 +278,5 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .add("25/06/2008", TransactionType.VIREMENT, "EPARGNE / JUNE", "", 25.00, "Epargne", MasterCategory.SAVINGS)
       .add("25/06/2008", TransactionType.PRELEVEMENT, "EPARGNE / JUNE", "", -25.00, "Epargne", MasterCategory.SAVINGS)
       .check();
-
   }
 }

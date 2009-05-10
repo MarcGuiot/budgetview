@@ -1,10 +1,10 @@
 package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
-import org.designup.picsou.gui.transactions.split.SplitTransactionAction;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.transactions.shift.ShiftTransactionAction;
+import org.designup.picsou.gui.transactions.split.SplitTransactionAction;
 import org.designup.picsou.gui.utils.TableView;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -15,8 +15,8 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.utils.AutoHideOnSelectionPanel;
+import org.globsframework.gui.views.GlobHtmlView;
 import org.globsframework.gui.views.GlobLabelView;
-import org.globsframework.gui.views.GlobMultiLineTextView;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -74,7 +74,7 @@ public class TransactionDetailsView extends View {
                 }, true));
 
     builder.add("userLabel",
-                GlobMultiLineTextView.init(Transaction.TYPE, repository, directory, new UserLabelStringifier())
+                GlobHtmlView.init(Transaction.TYPE, repository, directory, new UserLabelStringifier())
                   .setAutoHideIfEmpty(true));
 
     builder.add("bankDate",
@@ -92,8 +92,8 @@ public class TransactionDetailsView extends View {
     builder.add("split", new SplitTransactionAction(repository, directory));
 
     builder.add("originalLabel",
-                GlobMultiLineTextView.init(Transaction.TYPE, repository, directory,
-                                           new GlobListStringFieldStringifier(Transaction.ORIGINAL_LABEL, "..."))
+                GlobHtmlView.init(Transaction.TYPE, repository, directory,
+                                  new GlobListStringFieldStringifier(Transaction.ORIGINAL_LABEL, "..."))
                   .setAutoHideMatcher(new OriginalLabelVisibilityMatcher()));
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory));

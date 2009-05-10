@@ -9,6 +9,7 @@ import org.designup.picsou.gui.transactions.columns.TransactionNoteEditor;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.Icons;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.model.*;
 import static org.designup.picsou.model.Transaction.*;
 import org.designup.picsou.utils.Lang;
@@ -87,6 +88,8 @@ public class SplitTransactionDialog {
   private void createDialog(Directory directory) {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/splitTransactionDialog.splits",
                                                       localRepository, localDirectory);
+
+    builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
     addAmountPanel(builder);
     addTable(builder);
 
