@@ -5,6 +5,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.utils.Utils;
 
 import java.util.Comparator;
 
@@ -59,7 +60,13 @@ public class TransactionComparator implements Comparator<Glob> {
     if (source1 != null) {
       if (source2 != null) {
         if (source1.equals(source2)) {
-          return comparisonMultiplier * transaction1.get(Transaction.ID).compareTo(transaction2.get(Transaction.ID));
+          int accountCompare = Utils.compare(transaction1.get(Transaction.ACCOUNT), transaction2.get(Transaction.ACCOUNT));
+          if (accountCompare == 0){
+            return comparisonMultiplier * transaction1.get(Transaction.ID).compareTo(transaction2.get(Transaction.ID));
+          }
+          else {
+            return comparisonMultiplier * accountCompare;
+          }
         }
         else {
           return comparisonMultiplier * source1.compareTo(source2);
@@ -86,6 +93,10 @@ public class TransactionComparator implements Comparator<Glob> {
         return -comparisonMultiplier;
       }
     }
-    return comparisonMultiplier * transaction1.get(Transaction.ID).compareTo(transaction2.get(Transaction.ID));
+    int accountCompare = Utils.compare(transaction1.get(Transaction.ACCOUNT), transaction2.get(Transaction.ACCOUNT));
+    if (accountCompare == 0){
+      return comparisonMultiplier * transaction1.get(Transaction.ID).compareTo(transaction2.get(Transaction.ID));
+    }
+    return comparisonMultiplier * accountCompare;
   }
 }

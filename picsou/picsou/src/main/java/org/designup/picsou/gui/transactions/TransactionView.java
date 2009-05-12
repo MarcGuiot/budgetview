@@ -47,8 +47,9 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
   public static final int NOTE_COLUMN_INDEX = 6;
   public static final int ACCOUNT_BALANCE_INDEX = 7;
   public static final int BALANCE_INDEX = 8;
+  public static final int ACCOUNT_NAME_INDEX = 9;
 
-  private static final int[] COLUMN_SIZES = {10, 10, 10, 10, 30, 9, 15, 10, 10};
+  private static final int[] COLUMN_SIZES = {10, 10, 10, 10, 30, 9, 15, 10, 10, 15};
 
   private GlobTableView view;
   private AccountFilteringCombo accountFilteringCombo;
@@ -168,8 +169,10 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
     view
       .addColumn(Lang.get("transactionView.account.position"),
                  accountBalanceColumn, accountBalanceColumn.getStringifier())
-      .addColumn(Lang.get("transactionView.position"), 
-                 balanceColumn, balanceColumn.getStringifier());
+      .addColumn(Lang.get("transactionView.position"),
+                 balanceColumn, balanceColumn.getStringifier())
+      .addColumn(Lang.get("transactionView.account.name"),
+                 descriptionService.getStringifier(Transaction.ACCOUNT));
 
     return view;
   }

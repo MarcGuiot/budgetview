@@ -18,11 +18,11 @@ import org.globsframework.utils.Strings;
 import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Window;
-import org.uispec4j.interception.WindowInterceptor;
-import org.uispec4j.utils.KeyUtils;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.finder.ComponentMatchers;
+import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.utils.KeyUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,7 +53,7 @@ public class TransactionChecker extends ViewChecker {
       table = window.getTable(Transaction.TYPE.getName());
       table.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter());
       table.setCellValueConverter(TransactionView.CATEGORY_COLUMN_INDEX, new CategoryCellValueConverter(window));
-      table.setCellValueConverter(TransactionView.SERIES_COLUMN_INDEX, new SeriesCellConverter());
+      table.setCellValueConverter(TransactionView.SERIES_COLUMN_INDEX, new SeriesCellConverter(true));
     }
     return table;
   }
@@ -113,7 +113,11 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public TransactionAmountChecker initAmountContent() {
-    return new TransactionAmountChecker();
+    Table table = window.getTable(Transaction.TYPE.getName());
+    table.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter());
+    table.setCellValueConverter(TransactionView.CATEGORY_COLUMN_INDEX, new CategoryCellValueConverter(window));
+    table.setCellValueConverter(TransactionView.SERIES_COLUMN_INDEX, new SeriesCellConverter(false));
+    return new TransactionAmountChecker(table);
   }
 
   public void checkSelectedRow(int row) {
@@ -135,7 +139,7 @@ public class TransactionChecker extends ViewChecker {
 
   public ConfirmationDialogChecker delete(String label) {
     int row = getIndexOf(label.toUpperCase());
-    if (row < 0){
+    if (row < 0) {
       row = getTable().getRowIndex(TransactionView.NOTE_COLUMN_INDEX, label);
     }
     Assert.assertTrue(label + " not found", row >= 0);
@@ -154,75 +158,85 @@ public class TransactionChecker extends ViewChecker {
 
   public class TransactionAmountChecker {
     java.util.List<Object[]> expected = new ArrayList<Object[]>();
+    private Table table;
+
+    public TransactionAmountChecker(Table table) {
+      this.table = table;
+    }
 
     protected Table getTable() {
-      return TransactionChecker.this.getTable();
+      return table;
     }
 
-    public TransactionAmountChecker add(String label, double amount, double solde) {
-      expected.add(new Object[]{label,
-                                TransactionChecker.this.toString(amount),
-                                "",
-                                TransactionChecker.this.toString(solde)});
-      return this;
-    }
-
-    public TransactionAmountChecker add(String label, double amount, double accountSolde, double solde) {
-      expected.add(new Object[]{label,
-                                TransactionChecker.this.toString(amount),
-                                TransactionChecker.this.toString(accountSolde),
-                                TransactionChecker.this.toString(solde)});
-      return this;
-    }
-
-    public TransactionAmountChecker add(String label, double amount) {
-      expected.add(new Object[]{label.toUpperCase(),
-                                TransactionChecker.this.toString(amount),
-                                "",
-                                ""});
-      return this;
+    public TransactionAmountChecker add(String date, String label, double amount, String seriesName,
+                                        double totalBalance, String accountName) {
+      return add(date, label, amount, seriesName, null, totalBalance, accountName);
     }
 
     public void check() {
       UISpecAssert.assertThat(getTable().contentEquals(
-        new String[]{Lang.get("label"),
+        new String[]{Lang.get("transactionView.date.user"),
+                     Lang.get("label"),
                      Lang.get("amount"),
+                     Lang.get("series"),
                      Lang.get("transactionView.account.position"),
-                     Lang.get("transactionView.position")},
+                     Lang.get("transactionView.position"),
+                     Lang.get("transactionView.account.name")
+        },
         expected.toArray(new Object[expected.size()][])));
     }
 
     public void dump() {
       String[] columnNames = getTable().getHeader().getColumnNames();
       java.util.List list = Arrays.asList(columnNames);
+      int dateIndex = list.indexOf(Lang.get("transactionView.date.user"));
       int label = list.indexOf(Lang.get("label"));
       int amount = list.indexOf(Lang.get("amount"));
       int accountBalance = list.indexOf(Lang.get("transactionView.account.position"));
       int balance = list.indexOf(Lang.get("transactionView.position"));
+      int accountNameIndex = list.indexOf(Lang.get("transactionView.account.name"));
+      int seriesIndex = list.indexOf(Lang.get("series"));
       int rowCount = getTable().getRowCount();
       StringBuffer buffer = new StringBuffer();
       for (int i = 0; i < rowCount; i++) {
         buffer.append(".add(\"")
+          .append(getTable().getContentAt(i, dateIndex)).append("\", \"")
           .append(getTable().getContentAt(i, label)).append("\", ")
-          .append(getTable().getContentAt(i, amount));
-        if (!getTable().getContentAt(i, accountBalance).equals("") &&
-            !getTable().getContentAt(i, balance).equals("")) {
-          buffer
-            .append(", ")
-            .append(getTable().getContentAt(i, accountBalance)).append(", ")
-            .append(getTable().getContentAt(i, balance));
+          .append(getTable().getContentAt(i, amount)).append(", ");
+        String series = table.getContentAt(i, seriesIndex, new TableCellValueConverter() {
+          public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
+            return SeriesCellConverter.extractSeries(renderedComponent);
+          }
+        }).toString();
+        buffer.append("\"").append(series).append("\"");
+        Object accountBalanceStr = getTable().getContentAt(i, accountBalance);
+        if (!accountBalanceStr.equals("")){
+        buffer
+          .append(", ")
+          .append(accountBalanceStr);
         }
-        if (getTable().getContentAt(i, accountBalance).equals("") &&
-            !getTable().getContentAt(i, balance).equals("")) {
-          buffer
-            .append(", ")
-            .append(getTable().getContentAt(i, balance));
-        }
+        buffer.append(", ")
+          .append(getTable().getContentAt(i, balance));
+        buffer.append(", \"")
+          .append(getTable().getContentAt(i, accountNameIndex))
+          .append("\"");
 
         buffer.append(")\n");
       }
       buffer.append(".check();\n");
       Assert.fail("Use this code:\n" + buffer.toString());
+    }
+
+    public TransactionAmountChecker add(String date, String label, double amount, String seriesName,
+                                        Double accountBalance, double totalBalance, String accountName) {
+      expected.add(new Object[]{date, label,
+                                TransactionChecker.this.toString(amount),
+                                seriesName,
+                                TransactionChecker.this.toString(accountBalance),
+                                TransactionChecker.this.toString(totalBalance),
+                                accountName});
+
+      return this;
     }
   }
 

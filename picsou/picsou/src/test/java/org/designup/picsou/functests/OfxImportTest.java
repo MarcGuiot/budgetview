@@ -84,8 +84,8 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initAmountContent()
-      .add("TX 2", -2.2, 0, 0)
-      .add("TX 1", -1.1, 2.2, 2.2)
+      .add("11/01/2006", "TX 2", -2.20, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("10/01/2006", "TX 1", -1.10, "Occasional", 2.20, 2.20, "Account n. 00001123")
       .check();
   }
 
@@ -104,10 +104,10 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initAmountContent()
-      .add("TX 4", -4.4, 0, 0)
-      .add("TX 3", -3.3, 4.4, 4.4)
-      .add("TX 2", -2.2, 7.7, 7.7)
-      .add("TX 1", -1.1, 9.9, 9.9)
+      .add("14/01/2006", "TX 4", -4.40, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("13/01/2006", "TX 3", -3.30, "To categorize", 4.40, 4.40, "Account n. 00001123")
+      .add("12/01/2006", "TX 2", -2.20, "To categorize", 7.70, 7.70, "Account n. 00001123")
+      .add("11/01/2006", "TX 1", -1.10, "To categorize", 9.90, 9.90, "Account n. 00001123")
       .check();
   }
 
@@ -126,10 +126,10 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     timeline.selectMonths("2005/12", "2006/01");
     transactions
       .initAmountContent()
-      .add("Planned: Occasional", -8.9, -8.90)
-      .add("TX 2", -2.2, 0, 0)
-      .add("TX 1", -1.1, 2.2, 2.2)
-      .add("TX 0", -10.0, 3.3, 3.3)
+      .add("11/01/2006", "Planned: Occasional", -8.90, "Occasional", -8.90, "Main accounts")
+      .add("11/01/2006", "TX 2", -2.20, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("10/01/2006", "TX 1", -1.10, "Occasional", 2.20, 2.20, "Account n. 00001123")
+      .add("25/12/2005", "TX 0", -10.00, "Occasional", 3.30, 3.30, "Account n. 00001123")
       .check();
   }
 
@@ -148,9 +148,9 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initAmountContent()
-      .add("TX 3", -3.3, 0., 0.)
-      .add("TX 2", -2.2, 3.3, 3.3)
-      .add("TX 1", -1.1, 5.5, 5.5)
+      .add("12/01/2006", "TX 3", -3.30, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("11/01/2006", "TX 2", -2.20, "To categorize", 3.30, 3.30, "Account n. 00001123")
+      .add("10/01/2006", "TX 1", -1.10, "To categorize", 5.50, 5.50, "Account n. 00001123")
       .check();
   }
 
@@ -172,11 +172,11 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initAmountContent()
-      .add("TX 6", -6.6, 0, 0)
-      .add("TX 5", -5.5, 6.60, 6.60)
-      .add("TX 4", -4.4, 12.10, 12.10)
-      .add("TX 3", -3.3, 16.50, 16.50)
-      .add("TX 2", -2.2, 19.80, 19.80)
+      .add("16/01/2006", "TX 6", -6.60, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("15/01/2006", "TX 5", -5.50, "To categorize", 6.60, 6.60, "Account n. 00001123")
+      .add("14/01/2006", "TX 4", -4.40, "To categorize", 12.10, 12.10, "Account n. 00001123")
+      .add("13/01/2006", "TX 3", -3.30, "To categorize", 16.50, 16.50, "Account n. 00001123")
+      .add("12/01/2006", "TX 2", -2.20, "To categorize", 19.80, 19.80, "Account n. 00001123")
       .check();
   }
 

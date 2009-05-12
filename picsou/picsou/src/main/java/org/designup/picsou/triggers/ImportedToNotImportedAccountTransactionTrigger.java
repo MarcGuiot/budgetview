@@ -36,7 +36,7 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
           if (mirrorTransactionId != null) {
             Key mirrorKey = Key.create(Transaction.TYPE, mirrorTransactionId);
             //destruction de series
-            Glob glob = repository.find(key);
+            Glob glob = repository.find(mirrorKey);
             if (glob != null){
               repository.delete(mirrorKey);
             }

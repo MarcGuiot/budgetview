@@ -10,8 +10,8 @@ public class CATest extends SpecificBankTestCase {
 
     transactions.initContent()
       .add("14/08/2006", TransactionType.PRELEVEMENT, "Prel 459654 Free Telecom Free Hautdebit 44804529", "", -45.78)
-      .add("11/08/2006", TransactionType.BANK_FEES, "Interets Debiteurs De Juillet 2006", "", -1.23)
       .add("11/08/2006", TransactionType.CREDIT_CARD, "Websncf Lille", "", -162.80)
+      .add("11/08/2006", TransactionType.BANK_FEES, "Interets Debiteurs De Juillet 2006", "", -1.23)
       .add("09/08/2006", TransactionType.DEPOSIT, "REMISE CHEQUES  6125145", "", 6828.50)
       .add("07/08/2006", TransactionType.CHECK, "CHEQUE N°0000119", "", -600.00)
       .add("06/08/2006", TransactionType.CREDIT_CARD, "Grosbill Paris", "", -420.90)

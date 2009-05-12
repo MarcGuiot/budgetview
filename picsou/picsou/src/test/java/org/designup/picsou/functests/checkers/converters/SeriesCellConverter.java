@@ -11,15 +11,22 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SeriesCellConverter implements TableCellValueConverter {
+  private boolean withTransactionType;
+
+  public SeriesCellConverter(boolean withTransactionType) {
+    this.withTransactionType = withTransactionType;
+  }
 
   public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
 
     StringBuilder builder = new StringBuilder();
-    Glob transaction = (Glob)modelObject;
-    Integer transactionType = transaction.get(Transaction.TRANSACTION_TYPE);
-    builder.append("(");
-    builder.append(TransactionType.getType(transactionType).getName());
-    builder.append(")");
+    if (withTransactionType) {
+      Glob transaction = (Glob)modelObject;
+      Integer transactionType = transaction.get(Transaction.TRANSACTION_TYPE);
+      builder.append("(");
+      builder.append(TransactionType.getType(transactionType).getName());
+      builder.append(")");
+    }
 
     builder.append(extractSeries(renderedComponent));
     return builder.toString().trim();

@@ -767,39 +767,11 @@ public class SeriesEditionDialog {
         if (values.contains(Series.TO_ACCOUNT) || values.contains(Series.FROM_ACCOUNT)) {
           Glob series = localRepository.get(key);
 
-//          final LocalGlobRepository tmpRepo =
-//            LocalGlobRepositoryBuilder.init(localRepository).copy(Month.TYPE, CurrentMonth.TYPE).get();
-//          tmpRepo.addTrigger(new SeriesBudgetTrigger());
-//          int seriesId = tmpRepo.getIdGenerator().getNextId(Series.ID, 1);
-//          Glob newSeries = tmpRepo.create(Key.create(Series.TYPE, seriesId), series.toArray());
-//          GlobList targetBudget =
-//            tmpRepo.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId).getGlobs();
-//
-//          ReadOnlyGlobRepository.MultiFieldIndexed sourceBudget =
-//            localRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, key.get(Series.ID));
-//          for (Glob budget : targetBudget) {
-//            tmpRepo.update(budget.getKey(), SeriesBudget.AMOUNT,
-//                           sourceBudget.findByIndex(SeriesBudget.MONTH, budget.get(SeriesBudget.MONTH))
-//                             .getGlobs().getFirst().get(SeriesBudget.AMOUNT));
-//          }
-
           uncategorize(series.get(Series.ID));
-//          createMirrorSeries(newSeries.getKey(), newSeries, tmpRepo);
           if (series.get(Series.MIRROR_SERIES) != null && !series.get(Series.IS_MIRROR)) {
             Integer seriesToDelete = series.get(Series.MIRROR_SERIES);
-//            localRepository.delete(Key.create(Series.TYPE, seriesToDelete));
             uncategorize(seriesToDelete);
           }
-//          localRepository.delete(key);
-//          localRepository.commitChanges(false);
-//          tmpRepo.commitChanges(true);
-//          localRepository.commitChanges(false);
-//          for (Glob transaction : transactions) {
-//            localRepository.update(transaction.getKey(), FieldValue.value(Transaction.SERIES, seriesId));
-//          }
-//          for (Glob transaction : mirrorTransactions) {
-//            localRepository.update(transaction.getKey(), FieldValue.value(Transaction.SERIES, mirrorId));
-//          }
         }
         else {
           Glob series = localRepository.get(key);

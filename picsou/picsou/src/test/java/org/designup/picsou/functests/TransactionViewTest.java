@@ -84,7 +84,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     UISpecAssert.assertTrue(
       table.rowEquals(table.getRowIndex(TransactionView.LABEL_COLUMN_INDEX, "ESSENCE"),
                       new String[]{"01/05/2006", "01/05/2006", "(prelevement)Voiture", "Transports",
-                                   "ESSENCE", "-70.00", "frais pro", "330.00", "330.00"}));
+                                   "ESSENCE", "-70.00", "frais pro", "330.00", "330.00", "Account n. 00001123"}));
   }
 
   public void testNavigatingToCategorizationView() throws Exception {
@@ -207,16 +207,16 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     views.selectData();
     timeline.selectAll();
     transactions.initAmountContent()
-      .add("Planned: Nounou", -100.00, -300.0)
-      .add("Planned: Voiture", -70.00, -200.0)
-      .add("Planned: Occasional", -230.00, -130.0)
-      .add("Planned: Nounou", -100.00, 100.0)
-      .add("Planned: Voiture", -70.00, 200.0)
-      .add("Planned: Occasional", -230.00, 270.0)
-      .add("NOUNOU", -100.00, 500.00, 500.00)
-      .add("PEAGE", -30.00, 600.00, 600.00)
-      .add("SG", -200.00, 630.00, 630.00)
-      .add("ESSENCE", -70.00, 830.00, 830.00)
+      .add("06/07/2006", "Planned: Nounou", -100.00, "Nounou", -300.00, "Main accounts")
+      .add("01/07/2006", "Planned: Voiture", -70.00, "Voiture", -200.00, "Main accounts")
+      .add("01/07/2006", "Planned: Occasional", -230.00, "Occasional", -130.00, "Main accounts")
+      .add("06/06/2006", "Planned: Nounou", -100.00, "Nounou", 100.00, "Main accounts")
+      .add("01/06/2006", "Planned: Voiture", -70.00, "Voiture", 200.00, "Main accounts")
+      .add("01/06/2006", "Planned: Occasional", -230.00, "Occasional", 270.00, "Main accounts")
+      .add("06/05/2006", "NOUNOU", -100.00, "Nounou", 500.00, 500.00, "Account n. 00001123")
+      .add("03/05/2006", "PEAGE", -30.00, "Occasional", 600.00, 600.00, "Account n. 00001123")
+      .add("02/05/2006", "SG", -200.00, "Occasional", 630.00, 630.00, "Account n. 00001123")
+      .add("01/05/2006", "ESSENCE", -70.00, "Voiture", 830.00, 830.00, "Account n. 00001123")
       .check();
   }
 

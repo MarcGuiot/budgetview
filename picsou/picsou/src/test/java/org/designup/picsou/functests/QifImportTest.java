@@ -28,22 +28,22 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
     categories.checkSelection(MasterCategory.ALL);
 
     transactions.initAmountContent()
-      .add("SACLAY", -55.49, 0, 0)
-      .add("STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", -17.65, 55.49, 55.49)
-      .add("BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", -49.00, 73.14, 73.14)
-      .add("SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", -14.50, 122.14, 122.14)
-      .add("STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", -18.70, 136.64, 136.64)
+      .add("22/04/2006", "SACLAY", -55.49, "To categorize", 0.00, 0.00, "Main account")
+      .add("20/04/2006", "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", -17.65, "To categorize", 55.49, 55.49, "Main account")
+      .add("20/04/2006", "BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", -49.00, "To categorize", 73.14, 73.14, "Main account")
+      .add("19/04/2006", "SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", -14.50, "To categorize", 122.14, 122.14, "Main account")
+      .add("13/04/2006", "STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", -18.70, "To categorize", 136.64, 136.64, "Main account")
       .check();
     views.selectHome();
 
     mainAccounts.changeBalance("Main account", 100, "SACLAY");
     views.selectData();
     transactions.initAmountContent()
-      .add("SACLAY", -55.49, 100, 100)
-      .add("STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", -17.65, 155.49, 155.49)
-      .add("BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", -49.00, 173.14, 173.14)
-      .add("SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", -14.50, 222.14, 222.14)
-      .add("STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", -18.70, 236.64, 236.64)
+      .add("22/04/2006", "SACLAY", -55.49, "To categorize", 100.00, 100.00, "Main account")
+      .add("20/04/2006", "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", -17.65, "To categorize", 155.49, 155.49, "Main account")
+      .add("20/04/2006", "BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", -49.00, "To categorize", 173.14, 173.14, "Main account")
+      .add("19/04/2006", "SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", -14.50, "To categorize", 222.14, 222.14, "Main account")
+      .add("13/04/2006", "STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", -18.70, "To categorize", 236.64, 236.64, "Main account")
       .check();
 
     String file =
@@ -56,12 +56,12 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
                     "^");
     operations.importQifFile(file, SOCIETE_GENERALE);
     transactions.initAmountContent()
-      .add("AUCHAN", -20, 80, 80)
-      .add("SACLAY", -55.49, 100, 100)
-      .add("STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", -17.65, 155.49, 155.49)
-      .add("BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", -49.00, 173.14, 173.14)
-      .add("SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", -14.50, 222.14, 222.14)
-      .add("STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", -18.70, 236.64, 236.64)
+      .add("30/04/2006", "AUCHAN", -20.00, "To categorize", 80.00, 80.00, "Main account")
+      .add("22/04/2006", "SACLAY", -55.49, "To categorize", 100.00, 100.00, "Main account")
+      .add("20/04/2006", "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", -17.65, "To categorize", 155.49, 155.49, "Main account")
+      .add("20/04/2006", "BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", -49.00, "To categorize", 173.14, 173.14, "Main account")
+      .add("19/04/2006", "SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", -14.50, "To categorize", 222.14, 222.14, "Main account")
+      .add("13/04/2006", "STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", -18.70, "To categorize", 236.64, 236.64, "Main account")
       .check();
     views.selectHome();
     mainAccounts.changeBalance("Main account", 80, "Auchan");
