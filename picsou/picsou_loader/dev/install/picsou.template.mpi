@@ -57,7 +57,7 @@ ExtractSolidArchivesOnStartup
 No
 
 Icon
-../images/cashpilot_icon_48.png
+../images/cashpilot_icon_128.png
 
 Image
 ../images/cashpilot_icon_128.png
@@ -138,7 +138,7 @@ ProjectID
 949F3A01-5E23-44CB-ACF9-7AA8A633DFD8
 
 ProjectVersion
-1.2.9.0
+1.2.12.0
 
 SaveOnlyToplevelDirs
 No
@@ -219,9 +219,9 @@ FileGroup ::89CD3510-FDE9-0208-D7B5-DE37109ECD51 -setup Install -active Yes -pla
 File ::2FB1AD48-CACB-8786-FF0B-91202764BB49 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/dev/images/cashpilot_icon_32.png -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
 File ::4C60DC39-5780-FE0B-6BF3-22B7D15526FC -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/dev/install/cashpilot.sh -permissions 00555 -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
 File ::49DA2101-38B8-6939-FCAE-79D836889D7C -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/striped_picsou.jar -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
-Component ::89CFA7AC-2A3E-4B5F-AFAA-A115D2FE6F92 -setup Install -active Yes -platforms {Solaris-sparc Windows} -name {Default Component} -parent Components
+Component ::89CFA7AC-2A3E-4B5F-AFAA-A115D2FE6F92 -setup Install -active Yes -platforms Windows -name {Default Component} -parent Components
 Component ::BEF85513-C17E-C854-1584-C6A50E5E906C -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-x86 HPUX-hppa Linux-x86 MacOS-X Solaris-sparc} -name {unix component} -parent Components
-SetupType ::C40711B9-D384-4BA7-BD59-C41C7FDE9BA0 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-x86 HPUX-hppa Linux-x86 Solaris-sparc Windows MacOS-X} -name Typical -parent SetupTypes
+SetupType ::C40711B9-D384-4BA7-BD59-C41C7FDE9BA0 -setup Install -active Yes -platforms {Windows} -name Typical -parent SetupTypes
 
 InstallComponent 0223D8D5-A58F-4DB2-9C6D-014A51BDC1E4 -setup Install -type pane -title {Welcome Screen} -component Welcome -active No -parent StandardInstall
 InstallComponent 7752DDF1-A6AB-4D98-8DD3-D123F0C232E5 -setup Install -type pane -conditions {68D5E6ED-3DD3-4C93-AB89-AEAD65984FB3 6C0DDACC-8EE0-47C8-9EBC-6735732D37F3} -title {Select Destination} -component SelectDestination -command insert -active Yes -parent StandardInstall
@@ -302,6 +302,9 @@ InstallComponent FF3EF8C5-8C31-4041-86ED-9FF2438E09ED -setup Install -type actio
 InstallComponent 518566B8-E4AF-6C59-4C80-8E4545D21CA6 -setup Install -type action -title {Add Windows File Command} -component AddWindowsFileCommand -active Yes -parent 7223AE1F-1BA9-4B16-9CA3-95A43115B2B6
 InstallComponent 49F72F92-F53E-BAA2-EEA1-FE7B07C3983E -setup Install -type action -title {Add Windows File Extension} -component AddWindowsFileExtension -active Yes -parent 7223AE1F-1BA9-4B16-9CA3-95A43115B2B6
 InstallComponent 7CF1E2B3-AFC2-9E68-1E2B-50FE90B9420C -setup Install -type action -title {Add Windows File Type} -component AddWindowsFileType -active Yes -parent 7223AE1F-1BA9-4B16-9CA3-95A43115B2B6
+InstallComponent 94226BE0-5EE9-D581-C902-ED3283812C25 -setup Install -type action -title {Add Windows File Extension} -component AddWindowsFileExtension -active Yes -parent 7223AE1F-1BA9-4B16-9CA3-95A43115B2B6
+InstallComponent A885B9C6-B280-06FC-EBA7-09F0E2F969B8 -setup Install -type action -title {Add Windows File Type} -component AddWindowsFileType -active Yes -parent 7223AE1F-1BA9-4B16-9CA3-95A43115B2B6
+InstallComponent 6675DC28-02ED-FB0F-408A-825F4402B665 -setup Install -type action -title {Add Windows File Command} -component AddWindowsFileCommand -active Yes -parent 7223AE1F-1BA9-4B16-9CA3-95A43115B2B6
 InstallComponent 5C84A8D4-43AB-41B6-9CDC-9781830C8A2F -setup Install -type actiongroup -title {Finish Actions} -active Yes -parent ActionGroupsInstall
 InstallComponent 0BC06F61-0237-40A3-B3CB-99DB85BEAEA5 -setup Install -type action -conditions {9E4980CE-B568-4899-8C00-F0CC4FB23064 A7803762-CFE9-4AF2-A2A0-27178E998501} -title {Install Desktop Shortcut} -component InstallDesktopShortcut -command insert -active Yes -parent 5C84A8D4-43AB-41B6-9CDC-9781830C8A2F
 Condition 9E4980CE-B568-4899-8C00-F0CC4FB23064 -active Yes -parent 0BC06F61-0237-40A3-B3CB-99DB85BEAEA5 -title {String Is Condition} -component StringIsCondition -TreeObject::id 9E4980CE-B568-4899-8C00-F0CC4FB23064
@@ -555,6 +558,9 @@ false
 28DD8CB0-BA16-4867-B00C-AC4A3A72EA41,Caption,subst
 1
 
+28DD8CB0-BA16-4867-B00C-AC4A3A72EA41,Conditions
+{0 conditions}
+
 28DD8CB0-BA16-4867-B00C-AC4A3A72EA41,Message,subst
 1
 
@@ -659,6 +665,9 @@ No
 
 454395D8-6972-4DC6-A5ED-1D61E6D7A091,Action
 {Uninstall Actions}
+
+454395D8-6972-4DC6-A5ED-1D61E6D7A091,Conditions
+{0 conditions}
 
 485A88CC-1484-45AD-BF6D-6E714752AAEE,Comment
 {Only display this pane if we have more than one Setup Type}
@@ -818,6 +827,24 @@ ViewReadme
 
 652ED26D-26E3-48E6-87E7-339AD1E38A67,Filename
 <%ProgramExecutable%>
+
+6675DC28-02ED-FB0F-408A-825F4402B665,Command
+{<%InstallDir%>\cashpilot.exe -l <%Language%> "%1"}
+
+6675DC28-02ED-FB0F-408A-825F4402B665,CommandName
+open
+
+6675DC28-02ED-FB0F-408A-825F4402B665,Conditions
+{0 conditions}
+
+6675DC28-02ED-FB0F-408A-825F4402B665,FileType
+text/ofc
+
+6675DC28-02ED-FB0F-408A-825F4402B665,MenuName
+CashPilot
+
+66A7BFAC-4AF5-482B-849D-28B2920AC872,Conditions
+{0 conditions}
 
 677EC0D7-B8A6-4434-B14B-779DE65ACE8A,Background
 white
@@ -981,6 +1008,9 @@ text/ofx
 7E3CB86B-F5F0-40DE-9528-3A7956E7D313,Alias
 {Finish Actions}
 
+7E3CB86B-F5F0-40DE-9528-3A7956E7D313,Conditions
+{0 conditions}
+
 7E6D56FF-3E4A-42A3-B4D4-17AC3655D8CE,Conditions
 {0 conditions}
 
@@ -1065,11 +1095,23 @@ No
 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42,Name
 {Program Files}
 
+8FCCF693-DC41-47CE-BC0B-0BF22E8B5C75,Conditions
+{0 conditions}
+
 8FCCF693-DC41-47CE-BC0B-0BF22E8B5C75,State
 disabled
 
 8FCCF693-DC41-47CE-BC0B-0BF22E8B5C75,Widget
 {NextButton; CancelButton}
+
+94226BE0-5EE9-D581-C902-ED3283812C25,Conditions
+{0 conditions}
+
+94226BE0-5EE9-D581-C902-ED3283812C25,FileExtension
+.ofc
+
+94226BE0-5EE9-D581-C902-ED3283812C25,FileType
+text/ofc
 
 9527AB4F-0100-4683-A57C-C21F62D5AF50,CheckCondition
 {Before Action is Executed}
@@ -1134,6 +1176,18 @@ A7803762-CFE9-4AF2-A2A0-27178E998501,CheckCondition
 A7803762-CFE9-4AF2-A2A0-27178E998501,Filename
 <%ProgramExecutable%>
 
+A885B9C6-B280-06FC-EBA7-09F0E2F969B8,Conditions
+{0 conditions}
+
+A885B9C6-B280-06FC-EBA7-09F0E2F969B8,FileType
+text/ofc
+
+A885B9C6-B280-06FC-EBA7-09F0E2F969B8,IconPath
+{<%InstallDir%>\cashpilot_icon_32.ico}
+
+A885B9C6-B280-06FC-EBA7-09F0E2F969B8,Title
+{ofc file}
+
 AAC67454-7CA0-4693-8FE6-13CB3599AAD8,CheckCondition
 {Before Action is Executed}
 
@@ -1171,6 +1225,9 @@ ACF9E5F8-0149-48A4-9649-9E350CCF4225,String
 <%ViewReadme%>
 
 AIX-ppc,Active
+No
+
+AIX-ppc,BuildSeparateArchives
 No
 
 AIX-ppc,DefaultDirectoryPermission
@@ -1263,6 +1320,9 @@ BAF00C7E-4561-471F-BDC9-29B784047AF3,CancelButton,subst
 BAF00C7E-4561-471F-BDC9-29B784047AF3,Caption,subst
 1
 
+BAF00C7E-4561-471F-BDC9-29B784047AF3,Conditions
+{1 condition}
+
 BAF00C7E-4561-471F-BDC9-29B784047AF3,Message,subst
 1
 
@@ -1289,9 +1349,6 @@ BEF85513-C17E-C854-1584-C6A50E5E906C,Description,subst
 
 BEF85513-C17E-C854-1584-C6A50E5E906C,DisplayName,subst
 1
-
-BEF85513-C17E-C854-1584-C6A50E5E906C,FileGroups
-89CD3510-FDE9-0208-D7B5-DE37109ECD51
 
 BEF85513-C17E-C854-1584-C6A50E5E906C,Name
 {unix component}
@@ -1374,6 +1431,9 @@ Typical
 C8E1D450-273D-4718-9CD1-0AF91FCC6C2B,Comment
 {Ask the user if they want to proceed with the uninstall.}
 
+C8E1D450-273D-4718-9CD1-0AF91FCC6C2B,Conditions
+{2 conditions}
+
 C9B5E344-5EF7-4F96-B036-50184203A807,Active
 No
 
@@ -1410,6 +1470,9 @@ D2437E74-510A-45FF-883F-4CC7D9440DD3,Action
 D2437E74-510A-45FF-883F-4CC7D9440DD3,Conditions
 {0 conditions}
 
+D2EEC0F6-C477-4C0F-BDBF-B7AA560E3E92,Conditions
+{0 conditions}
+
 D59A211D-EB76-4B36-B7A3-8D1BA277B24C,CheckCondition
 {Before Action is Executed}
 
@@ -1418,6 +1481,9 @@ D59A211D-EB76-4B36-B7A3-8D1BA277B24C,Filename
 
 D759B3A1-BE3E-4284-84B5-40BE669A0625,Alias
 {Cancel Actions}
+
+D759B3A1-BE3E-4284-84B5-40BE669A0625,Conditions
+{0 conditions}
 
 DBF779D3-366A-429D-AAC8-82A4B083B2F1,ExitType
 Finish
@@ -1433,6 +1499,9 @@ DF19D798-C4E5-4582-97BD-1A0EA5E4C479,CancelButton,subst
 
 DF19D798-C4E5-4582-97BD-1A0EA5E4C479,Caption,subst
 1
+
+DF19D798-C4E5-4582-97BD-1A0EA5E4C479,Conditions
+{0 conditions}
 
 DF19D798-C4E5-4582-97BD-1A0EA5E4C479,FileValue,subst
 1
@@ -1602,6 +1671,9 @@ text/qif
 FreeBSD-4-x86,Active
 No
 
+FreeBSD-4-x86,BuildSeparateArchives
+No
+
 FreeBSD-4-x86,DefaultDirectoryPermission
 0755
 
@@ -1651,6 +1723,9 @@ FreeBSD-4-x86,RootInstallDir
 /usr/local/<%ShortAppName%>
 
 FreeBSD-x86,Active
+No
+
+FreeBSD-x86,BuildSeparateArchives
 No
 
 FreeBSD-x86,DefaultDirectoryPermission
@@ -1704,6 +1779,9 @@ FreeBSD-x86,RootInstallDir
 HPUX-hppa,Active
 No
 
+HPUX-hppa,BuildSeparateArchives
+No
+
 HPUX-hppa,DefaultDirectoryPermission
 0755
 
@@ -1753,7 +1831,10 @@ HPUX-hppa,RootInstallDir
 /usr/local/<%ShortAppName%>
 
 Linux-x86,Active
-Yes
+No
+
+Linux-x86,BuildSeparateArchives
+No
 
 Linux-x86,DefaultDirectoryPermission
 0755
@@ -1806,6 +1887,9 @@ Linux-x86,RootInstallDir
 Solaris-sparc,Active
 No
 
+Solaris-sparc,BuildSeparateArchives
+No
+
 Solaris-sparc,DefaultDirectoryPermission
 0755
 
@@ -1855,6 +1939,9 @@ Solaris-sparc,RootInstallDir
 /usr/local/<%ShortAppName%>
 
 TarArchive,Active
+No
+
+TarArchive,BuildSeparateArchives
 No
 
 TarArchive,CompressionLevel
@@ -1917,8 +2004,14 @@ TarArchive,VirtualTextMap
 Windows,Active
 Yes
 
+Windows,BuildSeparateArchives
+No
+
 Windows,Executable
 <%AppName%>-<%Version%>-Setup<%Ext%>
+
+Windows,FileDescription
+{<%AppName%> <%Version%> Setup}
 
 Windows,IncludeTWAPI
 No
@@ -1954,6 +2047,9 @@ Windows,WindowsIcon
 /home/guiot/dev/java/lesueur/ref/picsou/picsou_loader/dev/images/cashpilot_icon_32.ico
 
 ZipArchive,Active
+No
+
+ZipArchive,BuildSeparateArchives
 No
 
 ZipArchive,CompressionLevel
@@ -2030,6 +2126,9 @@ C3370D3D-2F47-44F1-900B-89CF5199FD74,Message
 
 }
 ::msgcat::mcmset en {
+0223D8D5-A58F-4DB2-9C6D-014A51BDC1E4,Caption
+{Welcome to the Wizard for <%AppName%>}
+
 03667DC8-9AD5-434C-9436-1E0B37D60360,Text
 <%LaunchApplicationText%>
 
@@ -2041,6 +2140,12 @@ C3370D3D-2F47-44F1-900B-89CF5199FD74,Message
 
 18C7FD0F-F306-4126-BDC3-7FA5CAEC5B06,Title
 <%InstallApplicationText%>
+
+2B7DEEEB-552B-4ED4-979D-443457D417CE,Caption
+{Wizard Complete}
+
+2B7DEEEB-552B-4ED4-979D-443457D417CE,Message
+{The Wizard has successfully installed <%AppName%>.   Click Finish to exit the wizard.}
 
 30B98385-70E7-475F-BC18-9C2105218C07,Text
 <%CreateQuickLaunchShortcutText%>
@@ -2096,6 +2201,9 @@ DFA04950-0DF6-4396-90C1-C931C242445A,Text
 E689421D-9EA4-434B-B9D5-98479BADB35C,Description
 <%CustomInstallDescription%>
 
+SeparatorText
+CashPilot
+
 }
 ::msgcat::mcmset es {
 817036E5-8469-474B-9E30-947AB5C8272F,Message
@@ -2123,6 +2231,9 @@ A38124DE-323A-418D-B9D8-93002602275E,Message
 
 C3370D3D-2F47-44F1-900B-89CF5199FD74,Message
 <%InstallingApplicationText%>
+
+SeparatorText
+CashPilot
 
 }
 ::msgcat::mcmset pl {

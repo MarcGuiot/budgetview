@@ -11,9 +11,9 @@ import java.text.SimpleDateFormat;
 import java.util.regex.Pattern;
 
 public class QifTransactionFinalizer extends AbstractTransactionTypeFinalizer {
-  private static final Pattern M_REGEXP = Pattern.compile("\\{M.([0-9]+)\\}");
-  private static final Pattern P_REGEXP = Pattern.compile("\\{P.([0-9]+)\\}");
-  private static final Pattern TYPE_REGEXP = Pattern.compile("\\{TYPE.([0-9]+)\\}");
+  private static final Pattern M_REGEXP = Pattern.compile("\\{M\\.([0-9]+)\\}");
+  private static final Pattern P_REGEXP = Pattern.compile("\\{P\\.([0-9]+)\\}");
+  private static final Pattern TYPE_REGEXP = Pattern.compile("\\{TYPE\\.([0-9]+)\\}");
   private Pattern mRegexp;
   private Pattern pRegexp;
   private Pattern typeRegexp;

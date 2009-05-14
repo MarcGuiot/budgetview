@@ -10,7 +10,7 @@
   <currentDirectory>${EXECUTABLEPATH}</currentDirectory>
   <embeddedJar>true</embeddedJar>
   <executableName>cashpilot.exe</executableName>
-  <iconLocation>../images/cashpilot_icon_32.png</iconLocation>
+  <iconLocation>../images/cashpilot_icon_128.png</iconLocation>
   <initialMemoryHeap>-1</initialMemoryHeap>
   <jarLocation>../../target/cashpilotloader-1.0.jar</jarLocation>
   <javaProperties>

@@ -8,6 +8,7 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.utils.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,33 +21,48 @@ public abstract class AbstractTransactionTypeFinalizer implements TransactionTyp
   static Pattern ALL = Pattern.compile(".*");
 
   String replace(Glob transaction, String newLabel, final StringField field,
-                 Pattern sourcePattern, final Pattern targetPattern) {
+                 Pattern labelRegexp, final Pattern placementRegexp) {
     String fileContentValue = transaction.get(field);
     if (fileContentValue != null) {
-      if (sourcePattern == null) {
-        sourcePattern = ALL;
+      if (labelRegexp == null) {
+        labelRegexp = ALL;
       }
-      return replace(newLabel, sourcePattern, targetPattern, fileContentValue);
+      return replace(newLabel, labelRegexp, placementRegexp, fileContentValue);
     }
-    else if (sourcePattern != null) {
+    else if (labelRegexp != null) {
       return null;
     }
     return newLabel;
   }
 
-  protected String replace(String newLabel, Pattern sourcePattern, Pattern targetPattern, String mValue) {
+  private String replace(String newLabel, Pattern sourcePattern, Pattern placementRegexp, String mValue) {
     Matcher matcher = sourcePattern.matcher(mValue);
     if (!matcher.matches()) {
       return null;
     }
-    return replace(matcher, targetPattern, newLabel);
+    return replace(matcher, placementRegexp, newLabel);
   }
 
-  protected String replace(Matcher groupMatcher, final Pattern regexp, final String label) {
+  protected String replace(Matcher groupMatcher, final Pattern placementRegexp, final String label) {
     StringBuffer buffer = new StringBuffer();
-    Matcher matcher = regexp.matcher(label);
+    Matcher matcher = placementRegexp.matcher(label);
     while (matcher.find()) {
-      matcher.appendReplacement(buffer, groupMatcher.group(Integer.parseInt(matcher.group(1))));
+      int group;
+      try {
+        group = Integer.parseInt(matcher.group(1));
+        try {
+          matcher.appendReplacement(buffer, groupMatcher.group(group));
+        }
+        catch (IndexOutOfBoundsException e) {
+          Log.write("Missing group '" + group + "' on " + label + " for patern " +
+                    placementRegexp.toString() + " and " + groupMatcher.pattern().toString());
+          return null;
+        }
+      }
+      catch (IndexOutOfBoundsException e) {
+        Log.write("Pattern error : " + matcher.pattern().toString() + " on " + label);
+        return null;
+      }
     }
     matcher.appendTail(buffer);
     return buffer.toString();

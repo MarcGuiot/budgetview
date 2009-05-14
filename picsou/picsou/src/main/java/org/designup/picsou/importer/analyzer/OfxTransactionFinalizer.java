@@ -11,10 +11,10 @@ import java.text.SimpleDateFormat;
 import java.util.regex.Pattern;
 
 public class OfxTransactionFinalizer extends AbstractTransactionTypeFinalizer {
-  private static final Pattern NAME_REGEXP = Pattern.compile("\\{NAME.([0-9]+)\\}");
-  private static final Pattern MEMO_REGEXP = Pattern.compile("\\{MEMO.([0-9]+)\\}");
-  private static final Pattern CHECK_NUM_REGEXP = Pattern.compile("\\{NUM.([0-9]+)\\}");
-  private static final Pattern TYPE_REGEXP = Pattern.compile("\\{TYPE.([0-9]+)\\}");
+  private static final Pattern NAME_REGEXP = Pattern.compile("\\{NAME\\.([0-9]+)\\}");
+  private static final Pattern MEMO_REGEXP = Pattern.compile("\\{MEMO\\.([0-9]+)\\}");
+  private static final Pattern CHECK_NUM_REGEXP = Pattern.compile("\\{NUM\\.([0-9]+)\\}");
+  private static final Pattern TYPE_REGEXP = Pattern.compile("\\{TYPE\\.([0-9]+)\\}");
   private Pattern nameRegexp;
   private Pattern checkNumRegexp;
   private Pattern memoRegexp;

@@ -53,7 +53,7 @@
                         originalLabel="{NAME.0}"/>
 
     <transactionMatcher qifP="REM CHQ (.*)"
-                        transactionTypeName="deposit" label="REMISE CHEQUES {NAME.1}" originalLabel="{NAME.0}"/>
+                        transactionTypeName="deposit" label="REMISE CHEQUES {P.1}" originalLabel="{P.0}"/>
 
     <transactionMatcher qifP="(.*)" bankType="VIREMENT"
                         transactionTypeName="virement" label="{P.0}" originalLabel="{P.0}"/>

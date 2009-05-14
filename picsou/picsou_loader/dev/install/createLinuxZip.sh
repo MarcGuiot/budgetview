@@ -22,9 +22,11 @@ cp dev/install/cashpilot.sh cashpilot/
 cp dev/install/license.txt cashpilot/
 cp target/cashpilotloader-1.0.jar cashpilot/
 cp ../picsou/obfuscated/cashpilot${JAR_VERSION}.jar cashpilot/
-zip cashpilot.zip cashpilot/cashpilot.sh cashpilot/license.txt cashpilot/cashpilot${JAR_VERSION}.jar \
+tar cvf cashpilot.tar cashpilot/cashpilot.sh cashpilot/license.txt cashpilot/cashpilot${JAR_VERSION}.jar \
     cashpilot/cashpilotloader-1.0.jar cashpilot/cashpilot_icon_16.png cashpilot/cashpilot_icon_32.png \
     cashpilot/cashpilot_icon_48.png cashpilot/cashpilot_icon_128.png cashpilot/version.txt
 
-mv cashpilot.zip cashpilot-${SOFT_VERSION}.zip
+gzip cashpilot.tar 
+
+mv cashpilot.tar.gz cashpilot-${SOFT_VERSION}.tar.gz
 rm -rf cashpilot
