@@ -26,6 +26,12 @@
       <documenttype name="OFX Document"
                     extensions="ofx"
                     role="Viewer"/>
+      <documenttype name="QIF Document"
+                    extensions="qif"
+                    role="Viewer"/>
+      <documenttype name="OFC Document"
+                    extensions="ofc"
+                    role="Viewer"/>
     </jarbundler>
 
     <exec executable="hdiutil">
