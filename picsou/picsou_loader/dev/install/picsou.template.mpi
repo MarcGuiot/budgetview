@@ -221,7 +221,7 @@ File ::4C60DC39-5780-FE0B-6BF3-22B7D15526FC -name /home/guiot/dev/java/lesueur/r
 File ::49DA2101-38B8-6939-FCAE-79D836889D7C -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/striped_picsou.jar -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
 Component ::89CFA7AC-2A3E-4B5F-AFAA-A115D2FE6F92 -setup Install -active Yes -platforms Windows -name {Default Component} -parent Components
 Component ::BEF85513-C17E-C854-1584-C6A50E5E906C -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-x86 HPUX-hppa Linux-x86 MacOS-X Solaris-sparc} -name {unix component} -parent Components
-SetupType ::C40711B9-D384-4BA7-BD59-C41C7FDE9BA0 -setup Install -active Yes -platforms {Windows} -name Typical -parent SetupTypes
+SetupType ::C40711B9-D384-4BA7-BD59-C41C7FDE9BA0 -setup Install -active Yes -platforms Windows -name Typical -parent SetupTypes
 
 InstallComponent 0223D8D5-A58F-4DB2-9C6D-014A51BDC1E4 -setup Install -type pane -title {Welcome Screen} -component Welcome -active No -parent StandardInstall
 InstallComponent 7752DDF1-A6AB-4D98-8DD3-D123F0C232E5 -setup Install -type pane -conditions {68D5E6ED-3DD3-4C93-AB89-AEAD65984FB3 6C0DDACC-8EE0-47C8-9EBC-6735732D37F3} -title {Select Destination} -component SelectDestination -command insert -active Yes -parent StandardInstall

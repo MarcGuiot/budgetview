@@ -7,15 +7,18 @@ import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.gui.time.TimeView;
+import org.designup.picsou.gui.PicsouApplication;
 import org.globsframework.utils.Files;
+import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Locale;
+import java.util.List;
+import java.util.ArrayList;
 
 public class FirstTimeTest extends UISpecTestCase {
 
@@ -125,7 +128,7 @@ public class FirstTimeTest extends UISpecTestCase {
     CategorizationChecker categorization = new CategorizationChecker(window);
     categorization
       .setEnvelope("MUTUELLE", "Health", MasterCategory.HEALTH, false)
-      .createAndSetSavings("EPARGNE", "Regular savings", OfxBuilder.DEFAULT_ACCOUNT_NAME, "External account");
+      .createAndSetSavings("EPARGNE", "Regular savings", "Account n. 00001123", "External account");
     categorization.selectTableRows("Habille moi", "Chausse moi");
     categorization
       .selectEnvelopes()
@@ -325,6 +328,7 @@ public class FirstTimeTest extends UISpecTestCase {
 
     operation.importQifFile(file2, "CIC");
 
+    views.selectBudget();
     views.selectHome();
     balance.checkTotal(1831.10)
       .checkInitialPosition(780.1)
@@ -338,15 +342,15 @@ public class FirstTimeTest extends UISpecTestCase {
     transaction.initAmountContent()
       .add("28/10/2008", "Planned: Ecole", -40.00, "Ecole", 1831.10, "Main accounts")
       .add("23/10/2008", "Planned: Frais banque", -4.00, "Frais banque", 1871.10, "Main accounts")
-      .add("19/10/2008", "Planned: Income 1", 2000.00, "Income 1", 1875.10, "Main accounts")
-      .add("19/10/2008", "Planned: Occasional", -55.00, "Occasional", -124.90, "Main accounts")
-      .add("19/10/2008", "Planned: Assurance", -100.00, "Assurance", -69.90, "Main accounts")
-      .add("19/10/2008", "Planned: Cell phone 1", -40.00, "Cell phone 1", 30.10, "Main accounts")
-      .add("19/10/2008", "Planned: Cash", -40.00, "Cash", 70.10, "Main accounts")
-      .add("19/10/2008", "Planned: impots", -400.00, "impots", 110.10, "Main accounts")
-      .add("19/10/2008", "Planned: Leisures", -10.00, "Leisures", 510.10, "Main accounts")
-      .add("19/10/2008", "Planned: Groceries", -180.00, "Groceries", 520.10, "Main accounts")
-      .add("19/10/2008", "Planned: Regular savings", -100.00, "Regular savings", 680.10, 700.10, "Account n. 00001123")
+      .add("19/10/2008", "Planned: Regular savings", -100.00, "Regular savings", 680.10, 1875.10, "Account n. 00001123")
+      .add("19/10/2008", "Planned: Income 1", 2000.00, "Income 1", 1975.10, "Main accounts")
+      .add("19/10/2008", "Planned: Occasional", -55.00, "Occasional", -24.90, "Main accounts")
+      .add("19/10/2008", "Planned: Assurance", -100.00, "Assurance", 30.10, "Main accounts")
+      .add("19/10/2008", "Planned: Cell phone 1", -40.00, "Cell phone 1", 130.10, "Main accounts")
+      .add("19/10/2008", "Planned: Cash", -40.00, "Cash", 170.10, "Main accounts")
+      .add("19/10/2008", "Planned: impots", -400.00, "impots", 210.10, "Main accounts")
+      .add("19/10/2008", "Planned: Leisures", -10.00, "Leisures", 610.10, "Main accounts")
+      .add("19/10/2008", "Planned: Groceries", -180.00, "Groceries", 620.10, "Main accounts")
       .add("19/10/2008", "Planned: Health", 20.00, "Health", 800.10, "Main accounts")
       .add("19/10/2008", "GAZ DE FRANCE", -60.00, "Gas", 780.10, 780.10, "Account n. 00001123")
       .add("11/10/2008", "AUCHAN", -30.00, "Groceries", 840.10, 840.10, "Account n. 00001123")
@@ -361,6 +365,54 @@ public class FirstTimeTest extends UISpecTestCase {
       .check();
 
     window.dispose();
+  }
+
+  void open(OperationChecker operations) throws IOException, InterruptedException {
+    String s = operations.backup("/tmp/");
+    System.out.println("LoggedInFunctionalTestCase.openPicsou " + s);
+    String javaHome = System.getProperty("java.home");
+    String classPath = System.getProperty("java.class.path");
+    List<String> args = new ArrayList<String>();
+    args.add(javaHome + System.getProperty("file.separator") + "bin" + System.getProperty("file.separator") + "java");
+//    args.add("-Xdebug");
+//    args.add("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005");
+    args.add("-cp");
+    args.add(classPath);
+    args.add("-Dsplits.editor.enabled=false");
+    args.add("-Dsplits.debug.enabled=false");
+    args.add("-D" + PicsouApplication.APPNAME + ".log.sout=true");
+//    args.add("-D" + PicsouApplication.APPNAME + ".today=" + Dates.toString(currentDate));
+    args.add("org.designup.picsou.gui.MainWindowLauncher");
+    args.add("-u");
+    args.add("toto");
+    args.add("-p");
+    args.add("toto");
+    args.add("-s");
+    args.add(s);
+    Process process = Runtime.getRuntime().exec(args.toArray(new String[args.size()]));
+    BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+    BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+    while (true) {
+      Thread.sleep(10);
+      try {
+        while (inputReader.ready()) {
+          String line = inputReader.readLine();
+          System.out.println(line);
+        }
+      }
+      catch (IOException e) {
+      }
+      while (errorReader.ready()) {
+        String line = errorReader.readLine();
+        System.err.println(line);
+      }
+      try {
+        process.exitValue();
+        return;
+      }
+      catch (IllegalThreadStateException e) {
+      }
+    }
   }
 
   public void testReloadSnapshotV3() throws Exception {
@@ -612,7 +664,181 @@ public class FirstTimeTest extends UISpecTestCase {
     BudgetViewChecker budgetView = new BudgetViewChecker(window);
     budgetView.income.editSeries("Income 1").setName("Revenu").validate();
 
+    budgetView.savings.editSeries("Regular savings")
+      .setFromAccount("Account n. 00001123")
+      .validate();
+
+    views.selectCategorization();
+    CategorizationChecker categorization = new CategorizationChecker(window);
+    categorization.setSavings("EPARGNE", "Regular savings");
+
+    TimeViewChecker checker = new TimeViewChecker(window);
+    checker.selectMonths("2008/09", "2008/10", "2008/11");
+    views.selectData();
+    transaction.initAmountContent()
+      .add("28/11/2008", "Planned: Ecole", -40.00, "Ecole", 2792.20, "Main accounts")
+      .add("23/11/2008", "Planned: Frais banque", -4.00, "Frais banque", 2832.20, "Main accounts")
+      .add("10/11/2008", "Planned: Fringue", -90.00, "Fringue", 2836.20, "Main accounts")
+      .add("06/11/2008", "Planned: Don", -40.00, "Don", 2926.20, "Main accounts")
+      .add("01/11/2008", "Planned: Regular savings", -100.00, "Regular savings", 680.10, 2966.20, "Account n. 00001123")
+      .add("01/11/2008", "Planned: Health", 20.00, "Health", 3066.20, "Main accounts")
+      .add("01/11/2008", "Planned: Revenu", 2000.00, "Revenu", 3046.20, "Main accounts")
+      .add("01/11/2008", "Planned: Occasional", -55.00, "Occasional", 1046.20, "Main accounts")
+      .add("01/11/2008", "Planned: Assurance", -100.00, "Assurance", 1101.20, "Main accounts")
+      .add("01/11/2008", "Planned: Cell phone 1", -40.00, "Cell phone 1", 1201.20, "Main accounts")
+      .add("01/11/2008", "Planned: Cash", -40.00, "Cash", 1241.20, "Main accounts")
+      .add("01/11/2008", "Planned: Gas", -60.00, "Gas", 1281.20, "Main accounts")
+      .add("01/11/2008", "Planned: Leisures", -10.00, "Leisures", 1341.20, "Main accounts")
+      .add("01/11/2008", "Planned: Internet", -29.90, "Internet", 1351.20, "Main accounts")
+      .add("01/11/2008", "Planned: Mortgage", -700.00, "Mortgage", 1381.10, "Main accounts")
+      .add("01/11/2008", "Planned: Groceries", -250.00, "Groceries", 2081.10, "Main accounts")
+      .add("28/10/2008", "Planned: Ecole", -40.00, "Ecole", 2331.10, "Main accounts")
+      .add("23/10/2008", "Planned: Frais banque", -4.00, "Frais banque", 2371.10, "Main accounts")
+      .add("19/10/2008", "Planned: Health", 20.00, "Health", 2375.10, "Main accounts")
+      .add("19/10/2008", "Planned: Revenu", 2000.00, "Revenu", 2355.10, "Main accounts")
+      .add("19/10/2008", "Planned: Occasional", -55.00, "Occasional", 355.10, "Main accounts")
+      .add("19/10/2008", "Planned: Assurance", -100.00, "Assurance", 410.10, "Main accounts")
+      .add("19/10/2008", "Planned: Cell phone 1", -40.00, "Cell phone 1", 510.10, "Main accounts")
+      .add("19/10/2008", "Planned: Cash", -40.00, "Cash", 550.10, "Main accounts")
+      .add("19/10/2008", "Planned: Leisures", -10.00, "Leisures", 590.10, "Main accounts")
+      .add("19/10/2008", "Planned: Groceries", -180.00, "Groceries", 600.10, "Main accounts")
+      .add("19/10/2008", "GAZ DE FRANCE", -60.00, "Gas", 780.10, 780.10, "Account n. 00001123")
+      .add("11/10/2008", "AUCHAN", -30.00, "Groceries", 840.10, 840.10, "Account n. 00001123")
+      .add("10/10/2008", "CHAUSSE MOI", -60.00, "Fringue", 870.10, 870.10, "Account n. 00001123")
+      .add("06/10/2008", "FREE TELECOM", -29.90, "Internet", 930.10, 930.10, "Account n. 00001123")
+      .add("06/10/2008", "INSTITUT PASTEUR", -40.00, "Don", 960.00, 960.00, "Account n. 00001123")
+      .add("05/10/2008", "CREDIT", -700.00, "Mortgage", 1000.00, 1000.00, "Account n. 00001123")
+      .add("05/10/2008", "ED", -40.00, "Groceries", 1700.00, 1700.00, "Account n. 00001123")
+      .add("05/10/2008", "CHEQUE N. 34", -30.00, "To categorize", 1740.00, 1740.00, "Account n. 00001123")
+      .add("03/10/2008", "HABILLE MOI", -30.00, "Fringue", 1770.00, 1770.00, "Account n. 00001123")
+      .add("03/10/2008", "EPARGNE", -100.00, "Regular savings", 1800.00, 1800.00, "Account n. 00001123")
+      .add("28/09/2008", "ECOLE", -40.00, "Ecole", 1900.00, 1900.00, "Account n. 00001123")
+      .add("27/09/2008", "SALAIRE", 2000.00, "Revenu", 1940.00, 1940.00, "Account n. 00001123")
+      .add("25/09/2008", "JEUX POUR TOUS", -25.00, "Occasional", -60.00, -60.00, "Account n. 00001123")
+      .add("23/09/2008", "COTISATION CARTE BLEUE", -4.00, "Frais banque", -35.00, -35.00, "Account n. 00001123")
+      .add("22/09/2008", "COUP'COUP", -30.00, "Occasional", -31.00, -31.00, "Account n. 00001123")
+      .add("22/09/2008", "GMF", -100.00, "Assurance", -1.00, -1.00, "Account n. 00001123")
+      .add("22/09/2008", "INTERMARCHÉ", -150.00, "Groceries", 99.00, 99.00, "Account n. 00001123")
+      .add("21/09/2008", "SFR", -40.00, "Cell phone 1", 249.00, 249.00, "Account n. 00001123")
+      .add("20/09/2008", "RETRAIT", -40.00, "Cash", 289.00, 289.00, "Account n. 00001123")
+      .add("19/09/2008", "GAZ DE FRANCE", -60.00, "Gas", 329.00, 329.00, "Account n. 00001123")
+      .add("11/09/2008", "AUCHAN", -40.00, "Groceries", 389.00, 389.00, "Account n. 00001123")
+      .add("10/09/2008", "CHAUSSE MOI", -50.00, "Fringue", 429.00, 429.00, "Account n. 00001123")
+      .add("09/09/2008", "IMPOTS", -400.00, "impots", 479.00, 479.00, "Account n. 00001123")
+      .add("07/09/2008", "CPAM", 40.00, "Health", 879.00, 879.00, "Account n. 00001123")
+      .add("07/09/2008", "CENTRE NAUTIQUE", -10.00, "Leisures", 839.00, 839.00, "Account n. 00001123")
+      .add("06/09/2008", "FREE TELECOM", -29.90, "Internet", 849.00, 849.00, "Account n. 00001123")
+      .add("06/09/2008", "INSTITUT PASTEUR", -40.00, "Don", 878.90, 878.90, "Account n. 00001123")
+      .add("05/09/2008", "CREDIT", -700.00, "Mortgage", 918.90, 918.90, "Account n. 00001123")
+      .add("05/09/2008", "ED", -60.00, "Groceries", 1618.90, 1618.90, "Account n. 00001123")
+      .add("05/09/2008", "CHEQUE N. 32", -50.00, "Health", 1678.90, 1678.90, "Account n. 00001123")
+      .add("03/09/2008", "HABILLE MOI", -30.00, "Fringue", 1728.90, 1728.90, "Account n. 00001123")
+      .add("03/09/2008", "EPARGNE", -100.00, "Regular savings", 1758.90, 1758.90, "Account n. 00001123")
+      .add("02/09/2008", "MUTUELLE", 30.00, "Health", 1858.90, 1858.90, "Account n. 00001123")
+      .check();
+
+
     window.dispose();
   }
+
+  public void testReloadSnapshotV20() throws Exception {
+    Window window = WindowInterceptor.run(new Trigger() {
+      public void run() throws Exception {
+        String userId = "2109354532";
+        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "cashpilot";
+        String tmpJarDir = tmpDir + File.separator + "jars";
+        File jarDir = new File(tmpJarDir);
+        File prevaylerDir = new File(tmpDir + File.separator + "data");
+        Files.deleteSubtree(prevaylerDir);
+        Files.deleteSubtree(jarDir);
+        jarDir.mkdirs();
+        prevaylerDir.mkdirs();
+        File userDir = new File(prevaylerDir + File.separator + "data" + File.separator + "users");
+        userDir.mkdirs();
+        File dataDir = new File(prevaylerDir + File.separator + "data" + File.separator + userId);
+        dataDir.mkdirs();
+
+        InputStream dataStream =
+          getClass().getResourceAsStream("/files/v6/data/" + userId + "/0000000000000000045.snapshot");
+        Files.copyStreamTofile(dataStream, dataDir.getAbsolutePath() + "/0000000000000000045.snapshot");
+
+        InputStream usersDataStream =
+          getClass().getResourceAsStream("/files/v6/data/users/0000000000000000003.snapshot");
+        Files.copyStreamTofile(usersDataStream, userDir.getAbsolutePath() + "/0000000000000000003.snapshot");
+
+        InputStream stream =
+          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "cashpilot.jar");
+        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot1.jar");
+        System.setProperty("cashpilot.exe.dir", jarDir.getAbsolutePath());
+        System.setProperty("cashpilot.prevayler.path", prevaylerDir.getAbsolutePath());
+        Main.main(new String[0]);
+      }
+    });
+    LoginChecker login = new LoginChecker(window);
+    login.logExistingUser("toto", "toto");
+    MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
+
+    ViewSelectionChecker views = new ViewSelectionChecker(window);
+    views.selectHome();
+
+    TimeViewChecker checker = new TimeViewChecker(window);
+    checker.selectMonths("2008/10");
+    EstimatedPositionDetailsChecker balance = mainAccounts.openEstimatedPositionDetails();
+    balance.checkTotal(1831.10)
+      .checkInitialPosition(780.1)
+      .checkIncome(2000)
+      .checkFixed(-584)
+      .checkSavingsIn(-100)
+      .checkEnvelope(-210)
+      .checkOccasional(-55);
+
+    checker.selectMonths("2008/10", "2008/11");
+    views.selectData();
+    TransactionChecker transaction = new TransactionChecker(window);
+    transaction.initAmountContent()
+      .add("28/11/2008", "Planned: Ecole", -40.00, "Ecole", 1892.20, "Main accounts")
+      .add("23/11/2008", "Planned: Frais banque", -4.00, "Frais banque", 1932.20, "Main accounts")
+      .add("10/11/2008", "Planned: Fringue", -90.00, "Fringue", 1936.20, "Main accounts")
+      .add("09/11/2008", "Planned: impots", -400.00, "impots", 2026.20, "Main accounts")
+      .add("06/11/2008", "Planned: Don", -40.00, "Don", 2426.20, "Main accounts")
+      .add("03/11/2008", "Planned: Regular savings", -100.00, "Regular savings", 580.10, 2466.20, "Account n. 00001123")
+      .add("01/11/2008", "Planned: Income 1", 2000.00, "Income 1", 2566.20, "Main accounts")
+      .add("01/11/2008", "Planned: Occasional", -55.00, "Occasional", 566.20, "Main accounts")
+      .add("01/11/2008", "Planned: Assurance", -100.00, "Assurance", 621.20, "Main accounts")
+      .add("01/11/2008", "Planned: Cell phone 1", -40.00, "Cell phone 1", 721.20, "Main accounts")
+      .add("01/11/2008", "Planned: Cash", -40.00, "Cash", 761.20, "Main accounts")
+      .add("01/11/2008", "Planned: Gas", -60.00, "Gas", 801.20, "Main accounts")
+      .add("01/11/2008", "Planned: Leisures", -10.00, "Leisures", 861.20, "Main accounts")
+      .add("01/11/2008", "Planned: Internet", -29.90, "Internet", 871.20, "Main accounts")
+      .add("01/11/2008", "Planned: Mortgage", -700.00, "Mortgage", 901.10, "Main accounts")
+      .add("01/11/2008", "Planned: Groceries", -250.00, "Groceries", 1601.10, "Main accounts")
+      .add("01/11/2008", "Planned: Health", 20.00, "Health", 1851.10, "Main accounts")
+      .add("28/10/2008", "Planned: Ecole", -40.00, "Ecole", 1831.10, "Main accounts")
+      .add("23/10/2008", "Planned: Frais banque", -4.00, "Frais banque", 1871.10, "Main accounts")
+      .add("19/10/2008", "Planned: Regular savings", -100.00, "Regular savings", 680.10, 1875.10, "Account n. 00001123")
+      .add("19/10/2008", "Planned: Income 1", 2000.00, "Income 1", 1975.10, "Main accounts")
+      .add("19/10/2008", "Planned: Occasional", -55.00, "Occasional", -24.90, "Main accounts")
+      .add("19/10/2008", "Planned: Assurance", -100.00, "Assurance", 30.10, "Main accounts")
+      .add("19/10/2008", "Planned: Cell phone 1", -40.00, "Cell phone 1", 130.10, "Main accounts")
+      .add("19/10/2008", "Planned: Cash", -40.00, "Cash", 170.10, "Main accounts")
+      .add("19/10/2008", "Planned: impots", -400.00, "impots", 210.10, "Main accounts")
+      .add("19/10/2008", "Planned: Leisures", -10.00, "Leisures", 610.10, "Main accounts")
+      .add("19/10/2008", "Planned: Groceries", -180.00, "Groceries", 620.10, "Main accounts")
+      .add("19/10/2008", "Planned: Health", 20.00, "Health", 800.10, "Main accounts")
+      .add("19/10/2008", "GAZ DE FRANCE", -60.00, "Gas", 780.10, 780.10, "Account n. 00001123")
+      .add("11/10/2008", "AUCHAN", -30.00, "Groceries", 840.10, 840.10, "Account n. 00001123")
+      .add("10/10/2008", "CHAUSSE MOI", -60.00, "Fringue", 870.10, 870.10, "Account n. 00001123")
+      .add("06/10/2008", "FREE TELECOM", -29.90, "Internet", 930.10, 930.10, "Account n. 00001123")
+      .add("06/10/2008", "INSTITUT PASTEUR", -40.00, "Don", 960.00, 960.00, "Account n. 00001123")
+      .add("05/10/2008", "CREDIT", -700.00, "Mortgage", 1000.00, 1000.00, "Account n. 00001123")
+      .add("05/10/2008", "ED", -40.00, "Groceries", 1700.00, 1700.00, "Account n. 00001123")
+      .add("05/10/2008", "CHEQUE 34", -30.00, "To categorize", 1740.00, 1740.00, "Account n. 00001123")
+      .add("03/10/2008", "HABILLE MOI", -30.00, "Fringue", 1770.00, 1770.00, "Account n. 00001123")
+      .add("03/10/2008", "VIR EPARGNE", -100.00, "To categorize", 1800.00, 1800.00, "Account n. 00001123")
+      .check();
+
+    window.dispose();
+  }
+
 
 }

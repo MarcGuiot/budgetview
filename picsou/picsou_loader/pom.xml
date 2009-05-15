@@ -68,11 +68,11 @@
                   <!--<resourcefilelist dir="../picsou/obfuscated" files="cashpilot.jar"/>-->
 
                   <documenttype name="Financial information"
-                                extensions="ofx qif"
+                                extensions="ofx qif ofc"
                                 iconFile="dev/images/cashpilot_icon.icns"
                                 role="Editor"/>
                   <documenttype name="Financial information"
-                                mimetypes="text/ofx text/qif"
+                                mimetypes="text/ofx text/qif text/ofc"
                                 iconFile="dev/images/cashpilot_icon.icns"
                                 role="Editor"/>
                 </jarbundler>
