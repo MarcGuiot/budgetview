@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.utils;
 
 import org.designup.picsou.model.*;
+import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -188,7 +189,7 @@ public class PicsouMatchers {
             return true;
           }
         }
-        
+
         return (accountId.equals(series.get(Series.FROM_ACCOUNT)) || accountId.equals(series.get(Series.TO_ACCOUNT)));
       }
     };
@@ -298,6 +299,12 @@ public class PicsouMatchers {
         Integer firstMonth = series.get(Series.FIRST_MONTH);
         Integer lastMonth = series.get(Series.LAST_MONTH);
         if (firstMonth == null && lastMonth == null) {
+          for (Integer id : monthIds) {
+            BooleanField monthField = Series.getMonthField(id);
+            if (series.get(monthField) != exclusive) {
+              return !exclusive;
+            }
+          }
           return true;
         }
         if (firstMonth == null) {
@@ -309,6 +316,14 @@ public class PicsouMatchers {
         for (Integer id : monthIds) {
           if ((id < firstMonth || id > lastMonth) == exclusive) {
             return !exclusive;
+          }
+          BooleanField monthField = Series.getMonthField(id);
+          if (!series.get(monthField)){
+            Glob seriesBudget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
+              .findByIndex(SeriesBudget.MONTH, id).getGlobs().getFirst();
+            if (seriesBudget != null && !seriesBudget.get(SeriesBudget.ACTIVE)){
+              return false;
+            }
           }
         }
         return exclusive;  // return true?

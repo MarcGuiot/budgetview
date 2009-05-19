@@ -9,6 +9,7 @@ import org.designup.picsou.gui.components.filtering.FilterSet;
 import org.designup.picsou.gui.components.filtering.FilterSetListener;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
+import org.designup.picsou.gui.description.CategoryComparator;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
@@ -54,6 +55,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.jidesoft.comparator.FastComparableComparator;
 
 public class CategorizationView extends View implements TableView, Filterable {
   private GlobList currentTransactions = GlobList.EMPTY;
@@ -250,6 +253,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     GlobRepeat repeat = panelBuilder.addRepeat("seriesRepeat",
                                                Series.TYPE,
                                                linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
+                                               SeriesNameComparator.INSTANCE,
                                                new SingleCategorySeriesComponentFactory(invisibleRadio,
                                                                                         seriesEditionDialog,
                                                                                         repository,
@@ -278,6 +282,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     GlobRepeat repeat = panelBuilder.addRepeat("seriesRepeat",
                                                Series.TYPE,
                                                linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
+                                               SeriesNameComparator.INSTANCE,
                                                new MultiCategoriesSeriesComponentFactory(budgetArea, invisibleRadio,
                                                                                          seriesEditionDialog,
                                                                                          repository, directory));
@@ -299,6 +304,7 @@ public class CategorizationView extends View implements TableView, Filterable {
                           return Category.isMaster(category) && !Category.isAll(category) && !Category.isNone(category);
                         }
                       },
+                      new CategoryComparator(repository, directory),
                       new OccasionalCategoriesComponentFactory("occasionalSeries", "occasionalCategoryToggle",
                                                                BudgetArea.OCCASIONAL,
                                                                invisibleOccasionalRadio,
@@ -488,5 +494,12 @@ public class CategorizationView extends View implements TableView, Filterable {
 
   public GlobList getDisplayedGlobs() {
     return transactionTable.getGlobs();
+  }
+
+  private static class SeriesNameComparator implements Comparator<Glob> {
+    static Comparator<Glob> INSTANCE = new SeriesNameComparator();
+    public int compare(Glob o1, Glob o2) {
+      return Utils.compareIgnoreCase(o1.get(Series.NAME), o2.get(Series.NAME));
+    }
   }
 }

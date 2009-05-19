@@ -186,7 +186,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonths("2008/08", "2008/06");
-    budgetView.recurring.editSeries("Internet")
+    SeriesEditionDialogChecker editionDialogChecker = budgetView.recurring.editSeries("Internet");
+    editionDialogChecker
       .setCustom()
       .switchToManual()
       .checkTable(new Object[][]{
@@ -194,19 +195,22 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         {"2008", "July", "29.00", "29.00"},
         {"2008", "June", "29.00", "0"},
         {"2008", "May", "0.00", "0"},
-      })
+      });
+      editionDialogChecker
       .toggleMonth("May")
       .checkTable(new Object[][]{
         {"2008", "August", "29.00", "29.00"},
         {"2008", "July", "29.00", "29.00"},
         {"2008", "June", "29.00", "0"},
-      })
+      });
+      editionDialogChecker
       .toggleMonth("Aug")
       .checkTable(new Object[][]{
         {"2008", "August", "29.00", "29.00"},
         {"2008", "July", "29.00", "29.00"},
         {"2008", "June", "29.00", "0"},
-      })
+      });
+    editionDialogChecker
       .toggleMonth("Aug")
       .checkTable(new Object[][]{
         {"2008", "August", "29.00", "29.00"},
@@ -1688,9 +1692,5 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthIsChecked(11)
       .cancel();
   }
-
-//  public void testDefaultSavingSeriesShouldBeFromMainAccount() throws Exception {
-//    fail("Mettre les bonne valeur par defaut");
-//  }
 
 }

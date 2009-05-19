@@ -7,6 +7,7 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.utils.Lang;
 
 public class CategorizationTest extends LoggedInFunctionalTestCase {
 
@@ -318,7 +319,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRows(0);
     categorization.selectRecurring();
-    categorization.selectRecurringSeries("Internet", MasterCategory.TELECOMS, true);
+    categorization.createRecurringSeries()
+      .checkName("FREE TELECOM")
+      .setName("Internet")
+      .setCategories(MasterCategory.TELECOMS)
+      .validate();
     categorization.checkBudgetAreaIsSelected(BudgetArea.RECURRING);
   }
 
@@ -688,6 +693,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectEnvelopes();
     categorization
       .createEnvelopeSeries()
+      .checkName(Lang.get("seriesEdition.newSeries"))
       .setName("Music")
       .setCategory(MasterCategory.LEISURES)
       .validate();
@@ -1259,5 +1265,75 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .validate();
     categorization.checkNotContainsEnvelope("Courses");
 
+  }
+
+  public void testFilteringSerieByValidMonth() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/25", -50.0, "1_Auchan")
+      .addTransaction("2008/05/15", -40.0, "2_Auchan")
+      .load();
+
+    views.selectBudget();
+    budgetView.envelopes.createSeries()
+      .setName("Courses 2")
+      .setCategories(MasterCategory.FOOD)
+      .setCustom()
+      .toggleMonth(6)
+      .setStartDate(200805)
+      .validate();
+
+    budgetView.envelopes.createSeries()
+      .setName("Courses 1")
+      .setCategories(MasterCategory.FOOD)
+      .setCustom()
+      .toggleMonth(5)
+      .validate();
+
+    views.selectCategorization();
+    
+    categorization
+      .selectTableRows("1_Auchan")
+      .selectEnvelopes()
+      .checkNotContainsEnvelope("Courses 2")
+      .selectEnvelopeSeries("Courses 1", MasterCategory.FOOD, false);
+
+    categorization
+      .selectTableRows("2_Auchan")
+      .selectEnvelopes()
+      .checkNotContainsEnvelope("Courses 1")
+      .selectEnvelopeSeries("Courses 2", MasterCategory.FOOD, false);
+  }
+
+  public void testDoNotFilterValidMonthIfMonthIsUncheckedButWithAlreadyCategorizedOperations() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/25", -50.0, "1_Auchan")
+      .addTransaction("2008/06/15", -40.0, "2_Auchan")
+      .load();
+
+    views.selectBudget();
+    budgetView.envelopes.createSeries()
+      .setName("Courses")
+      .setCategories(MasterCategory.FOOD)
+      .setCustom()
+      .setStartDate(200804)
+      .validate();
+
+    views.selectCategorization();
+
+    categorization
+      .selectTableRows("1_Auchan")
+      .selectEnvelopes()
+      .selectEnvelopeSeries("Courses", MasterCategory.FOOD, false);
+
+    categorization.editSeries("Courses", false)
+      .toggleMonth(6)
+      .validate();
+
+    categorization
+      .selectTableRows("2_Auchan")
+      .selectEnvelopes()
+      .selectEnvelopeSeries("Courses", MasterCategory.FOOD, false);
   }
 }
