@@ -101,6 +101,38 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     });
   }
 
+  public void testShiftingToNextOrPreviousYear() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/12/15", -10.00, "Non shiftable 1")
+      .addTransaction("2008/12/25", -77.50, "Shiftable to next")
+      .addTransaction("2009/01/01", -13.00, "Shiftable to previous")
+      .addTransaction("2008/01/15", -15.10, "Non shiftable 2")
+      .load();
+
+    views.selectCategorization();
+
+    transactionDetails.checkShiftDisabled();
+
+    categorization.selectTableRow("SHIFTABLE TO NEXT");
+    transactionDetails.openShiftDialog()
+      .checkMessageContains("next month")
+      .validate();
+    transactionDetails.checkShiftInverted();
+
+    categorization.selectTableRow("SHIFTABLE TO PREVIOUS");
+    transactionDetails.openShiftDialog()
+      .checkMessageContains("previous month")
+      .validate();
+    transactionDetails.checkShiftInverted();
+
+    categorization.checkTable(new Object[][]{
+      {"15/12/2008", "", "NON SHIFTABLE 1", -10.0},
+      {"15/01/2008", "", "NON SHIFTABLE 2", -15.1},
+      {"01/01/2009", "", "SHIFTABLE TO NEXT", -77.5},
+      {"31/12/2008", "", "SHIFTABLE TO PREVIOUS", -13.0}
+    });
+  }
+
   public void testAmountsAreProperlyUpdatedDuringAShiftAndAnUnshift() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(30006, 12345, "00001234", 100.00, "2008/07/15")

@@ -149,11 +149,11 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
     int newMonth = month;
     switch (direction) {
       case PREVIOUS:
-        newMonth = month - 1;
+        newMonth = Month.previous(month);
         newDay = Month.getLastDayNumber(newMonth);
         break;
       case NEXT:
-        newMonth = month + 1;
+        newMonth = Month.next(month);
         newDay = 1;
         break;
     }
