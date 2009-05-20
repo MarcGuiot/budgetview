@@ -424,7 +424,7 @@ public class SeriesEditionDialog {
       initBudgetAreaSeries(budgetArea);
 
       String label;
-      if (!transactions.isEmpty()) {
+      if (!transactions.isEmpty() && budgetArea == BudgetArea.RECURRING) {
         Glob firstTransaction = transactions.get(0);
         label = Transaction.anonymise(firstTransaction.get(Transaction.LABEL));
       }

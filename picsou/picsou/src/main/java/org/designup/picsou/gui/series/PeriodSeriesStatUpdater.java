@@ -88,7 +88,8 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
       repository.update(stat.getKey(),
                         FieldValue.value(PeriodSeriesStat.AMOUNT, amount),
                         FieldValue.value(PeriodSeriesStat.PLANNED_AMOUNT, plannedAmount),
-                        FieldValue.value(PeriodSeriesStat.ABS_SUM_AMOUNT, Math.abs(plannedAmount) + Math.abs(amount)));
+                        FieldValue.value(PeriodSeriesStat.ABS_SUM_AMOUNT, 
+                                         Math.abs(plannedAmount) > Math.abs(amount) ? Math.abs(plannedAmount) : Math.abs(amount)));
       stats.add(stat);
     }
 
