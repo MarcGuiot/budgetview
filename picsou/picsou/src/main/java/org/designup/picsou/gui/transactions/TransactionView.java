@@ -41,7 +41,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
   public static final int DATE_COLUMN_INDEX = 0;
   public static final int BANK_DATE_COLUMN_INDEX = 1;
   public static final int SERIES_COLUMN_INDEX = 2;
-  public static final int CATEGORY_COLUMN_INDEX = 3;
+  public static final int SUBSERIES_COLUMN_INDEX = 3;
   public static final int LABEL_COLUMN_INDEX = 4;
   public static final int AMOUNT_COLUMN_INDEX = 5;
   public static final int NOTE_COLUMN_INDEX = 6;
@@ -144,7 +144,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
 
     FontLocator fontLocator = directory.get(FontLocator.class);
     Font dateFont = fontLocator.get("transactionView.date");
-    Font categoryFont = fontLocator.get("transactionView.category");
+    Font subSeriesFont = fontLocator.get("transactionView.category");
 
     view
       .addColumn(Lang.get("transactionView.date.user"),
@@ -154,7 +154,9 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
                                                 Transaction.BANK_MONTH,
                                                 Transaction.BANK_DAY), LabelCustomizers.font(dateFont))
       .addColumn(new TransactionSeriesColumn(view, rendererColors, descriptionService, repository, directory))
-      .addColumn(Lang.get("category"), new CategoryStringifier(descriptionService), LabelCustomizers.font(categoryFont))
+      .addColumn(Lang.get("subSeries"),
+                 descriptionService.getStringifier(Transaction.SUB_SERIES),
+                 LabelCustomizers.font(subSeriesFont))
       .addColumn(Lang.get("label"),
                  descriptionService.getStringifier(Transaction.LABEL),
                  LabelCustomizers.chain(LabelCustomizers.BOLD, LabelCustomizers.autoTooltip()))
@@ -183,25 +185,5 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
 
   public FilterSet getFilterSet() {
     return filterSet;
-  }
-
-  private static class CategoryStringifier implements GlobStringifier {
-    private GlobStringifier stringifier;
-
-    public CategoryStringifier(DescriptionService descriptionService) {
-      stringifier = descriptionService.getStringifier(Category.TYPE);
-    }
-
-    public String toString(Glob glob, GlobRepository repository) {
-      Integer category = glob.get(Transaction.CATEGORY);
-      if (category == null || category.equals(Category.NONE)) {
-        return "";
-      }
-      return stringifier.toString(repository.findLinkTarget(glob, Transaction.CATEGORY), repository);
-    }
-
-    public Comparator<Glob> getComparator(GlobRepository repository) {
-      return new GlobLinkComparator(Transaction.CATEGORY, repository, stringifier.getComparator(repository));
-    }
   }
 }

@@ -166,7 +166,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setIncome("WorldCo", "Salaire", true);
+    categorization.setNewIncome("WorldCo", "Salaire");
     categorization.setEnvelope("MacDo", "Gastronomie", MasterCategory.FOOD, true);
     categorization.setEnvelope("Quick", "Sante", MasterCategory.FOOD, true);
 
@@ -176,9 +176,9 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.initContent()
-      .add("10/10/2008", TransactionType.PRELEVEMENT, "Quick", "", -15.00, "Sante", MasterCategory.FOOD)
-      .add("05/10/2008", TransactionType.PRELEVEMENT, "MacDo", "", -15.00, "Gastronomie", MasterCategory.FOOD)
-      .add("01/10/2008", TransactionType.VIREMENT, "WorldCo", "", 1000.00, "Salaire", MasterCategory.INCOME)
+      .add("10/10/2008", TransactionType.PRELEVEMENT, "Quick", "", -15.00, "Sante")
+      .add("05/10/2008", TransactionType.PRELEVEMENT, "MacDo", "", -15.00, "Gastronomie")
+      .add("01/10/2008", TransactionType.VIREMENT, "WorldCo", "", 1000.00, "Salaire")
       .check();
 
     views.selectHome();
@@ -189,7 +189,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.initContent()
-      .add("10/10/2008", TransactionType.PRELEVEMENT, "Quick", "", -15.00, "Sante", MasterCategory.FOOD)
+      .add("10/10/2008", TransactionType.PRELEVEMENT, "Quick", "", -15.00, "Sante")
       .check();
 
     views.selectHome();
@@ -210,7 +210,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setIncome("Salaire/oct", "Salaire", true);
+    categorization.setNewIncome("Salaire/oct", "Salaire");
     categorization.setEnvelope("Virement octobre", "Savings", MasterCategory.SAVINGS, true);
 
     views.selectHome();
@@ -258,7 +258,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     
     views.selectData();
     transactions.initContent()
-      .add("01/10/2008", TransactionType.VIREMENT, "Salaire/oct", "", 1000.00, "Salaire", MasterCategory.INCOME)
+      .add("01/10/2008", TransactionType.VIREMENT, "Salaire/oct", "", 1000.00, "Salaire")
       .check();
 
     views.selectHome();

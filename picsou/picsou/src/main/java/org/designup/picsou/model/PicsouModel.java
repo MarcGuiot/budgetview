@@ -20,6 +20,7 @@ public class PicsouModel {
                           TransactionImport.TYPE,
                           UserPreferences.TYPE,
                           Series.TYPE,
+                          SubSeries.TYPE,
                           SeriesToCategory.TYPE,
                           SeriesBudget.TYPE,
                           BudgetArea.TYPE,

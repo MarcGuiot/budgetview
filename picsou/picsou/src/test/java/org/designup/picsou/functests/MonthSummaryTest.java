@@ -66,7 +66,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
         {"15/06/2008", "", "Company", 1000.0},
         {"15/05/2008", "", "FNAC", -100.0},
       })
-      .setIncome("Company", "Salary", true);
+      .setNewIncome("Company", "Salary");
 
     views.selectHome();
     monthSummary
@@ -91,13 +91,13 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setRecurring("free telecom", "internet", MasterCategory.TELECOMS, true);
-    categorization.setRecurring("Loyer", "rental", MasterCategory.HOUSE, true);
-    categorization.setEnvelope("Auchan", "groceries", MasterCategory.FOOD, true);
-    categorization.setEnvelope("ED", "groceries", MasterCategory.FOOD, false);
-    categorization.setOccasional("fnac", MasterCategory.EQUIPMENT);
-    categorization.setIncome("Salaire", "Salaire", true);
-    categorization.setSpecial("Air France", "voyage", MasterCategory.LEISURES, true);
+    categorization.setNewRecurring("free telecom", "Internet");
+    categorization.setNewRecurring("Loyer", "Rental");
+    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setEnvelope("ED", "Groceries");
+    categorization.setNewEnvelope("fnac", "Equipment");
+    categorization.setNewIncome("Salaire", "Salaire");
+    categorization.setNewSpecial("Air France", "Trips");
     categorization.createAndSetSavings("epargne", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "External account");
 
     double incomeFor200807 = 1500;
@@ -111,15 +111,10 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkBalance(balance)
       .checkIncome(1500, 1500)
       .checkRecurring(1500 + 29.90)
-      .checkEnvelope(80)
-      .checkOccasional(10)
+      .checkEnvelope(90)
       .checkSpecial(200)
       .checkUncategorized("-23.00");
     monthSummary.mainBalanceGraph.checkTooltip(incomeFor200807, expensesFor200807);
-
-//    views.selectSavings();
-//    savingsView.checkMainBalanceGraph(0.77, 1);
-//    views.selectHome();
 
     mainAccounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000, "epargne");
     timeline.checkMonthTooltip("2008/07", balance, 1000.00);
@@ -131,10 +126,9 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkInitialPosition(1000.00)
       .checkIncome(1500.00)
       .checkFixed(-1529.90)
-      .checkEnvelope(-80)
+      .checkEnvelope(-90.00)
       .checkSavingsOut(0.00)
       .checkSavingsIn(-100.00)
-      .checkOccasional(-10.00)
       .checkProjects(0.00)
       .close();
   }
@@ -155,12 +149,12 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
 
     views.selectCategorization();
-    categorization.setRecurring("free telecom", "internet", MasterCategory.TELECOMS, true);
-    categorization.setRecurring("Loyer", "rental", MasterCategory.HOUSE, true);
-    categorization.setEnvelope("Auchan", "groceries", MasterCategory.FOOD, true);
-    categorization.setEnvelope("ED", "groceries", MasterCategory.FOOD, false);
-    categorization.setOccasional("fnac", MasterCategory.EQUIPMENT);
-    categorization.setIncome("Salaire", "Salaire", true);
+    categorization.setNewRecurring("free telecom", "internet");
+    categorization.setNewRecurring("Loyer", "rental");
+    categorization.setNewEnvelope("Auchan", "groceries");
+    categorization.setEnvelope("ED", "groceries");
+    categorization.setNewEnvelope("fnac", "Equipment");
+    categorization.setNewIncome("Salaire", "Salaire");
 
     views.selectHome();
 
@@ -171,14 +165,12 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkMainBalanceGraph(0.92, 1)
       .checkIncome(1500, 1500)
       .checkRecurring(1500 + 29.90)
-      .checkEnvelope(80)
-      .checkOccasional(10)
+      .checkEnvelope(90)
       .checkNoUncategorized();
 
     mainAccounts
       .checkEstimatedPosition(1529.90)
       .checkEstimatedPositionDate("31/07/2008");
-//      .checkNoEstimatedPositionDetails();
 
     timeline.checkMonthTooltip("2008/07", balanceFor200807, 1529.90);
 
@@ -186,8 +178,8 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization
-      .setRecurring("free telecom", "internet", MasterCategory.TELECOMS, false)
-      .setRecurring("Loyer", "rental", MasterCategory.HOUSE, false);
+      .setRecurring("free telecom", "internet")
+      .setRecurring("Loyer", "rental");
 
     views.selectHome();
     double balanceFor200808 = 1500 - (29.9 + 1500 + 60 + 20 + 10);
@@ -196,15 +188,12 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkBalance(balanceFor200808)
       .checkIncome(0)
       .checkRecurring(1500 + 29.90)
-      .checkEnvelope(0)
-      .checkOccasional(0);
+      .checkEnvelope(0);
     mainAccounts.checkEstimatedPosition(1410.00);
     mainAccounts.openEstimatedPositionDetails()
-      .checkEnvelope(-80)
       .checkInitialPosition(0.0)
       .checkFixed(0)
-      .checkEnvelope(-80)
-      .checkOccasional(-10)
+      .checkEnvelope(-90)
       .checkIncome(1500)
       .close();
     timeline.checkMonthTooltip("2008/08", balanceFor200808, 1410.00);
@@ -214,8 +203,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkTotal(1500 + 1500, (29.9 + 1500 + 60 + 20 + 10) + (29.9 + 1500 + 60 + 20 + 10))
       .checkIncome(1500)
       .checkRecurring(1500 + 29.90 + 1500 + 29.90)
-      .checkEnvelope(80)
-      .checkOccasional(10);
+      .checkEnvelope(90);
     mainAccounts
       .checkEstimatedPosition(1410)
       .checkEstimatedPositionDate("31/08/2008");
@@ -224,8 +212,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkInitialPosition(0)
       .checkIncome(1500)
       .checkFixed(0)
-      .checkEnvelope(-80)
-      .checkOccasional(-10)
+      .checkEnvelope(-90)
       .close();
 
     timeline.selectMonth("2008/09");
@@ -236,8 +223,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkInitialPosition(1410)
       .checkIncome(1500)
       .checkFixed(-1529.90)
-      .checkEnvelope(-80)
-      .checkOccasional(-10)
+      .checkEnvelope(-90)
       .close();
   }
 
@@ -245,7 +231,6 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.specials.createSeries()
       .setName("Reimbursement")
-      .setCategory(MasterCategory.GIFTS)
       .selectPositiveAmounts()
       .setAmount(2000)
       .validate();
@@ -253,39 +238,6 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     monthSummary.checkProjects("0.00");
     monthSummary.checkPlannedSpecial("+2000.00");
-  }
-
-  public void testOccasionalIsTakenIntoAccountWhenComputingFuturePosition() throws Exception {
-    OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0001234", 500, "2008/08/15")
-      .addTransaction("2008/07/05", 1000, "WorldCo")
-      .addTransaction("2008/07/15", -100, "SAPN")
-      .addTransaction("2008/08/05", 1000, "WorldCo")
-      .addTransaction("2008/08/15", -25, "FNAC")
-      .load();
-
-    views.selectCategorization();
-    categorization.setIncome("WorldCo", "Salary", true);
-    categorization.setOccasional("SAPN", MasterCategory.EQUIPMENT);
-    categorization.setOccasional("FNAC", MasterCategory.EQUIPMENT);
-
-    views.selectHome();
-    timeline.selectMonth("2008/07");
-    monthSummary.checkTotal(1000, 100);
-    monthSummary.occasional
-      .checkValues(100, 100)
-      .checkGauge(-100, -100);
-    mainAccounts.checkEstimatedPosition((500 - 75) - (1000 - 100));
-
-    timeline.selectMonth("2008/08");
-    monthSummary.checkTotal(1000, 100);
-    monthSummary.occasional
-      .checkValues(25, 100)
-      .checkGauge(-25, -100);
-    mainAccounts.checkEstimatedPosition(500 - 75);
-    mainAccounts.openEstimatedPositionDetails()
-      .checkOccasional(-75)
-      .close();
   }
 
   public void testAdjustedValueShownAfterOverrun() throws Exception {
@@ -298,7 +250,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setIncome("WorldCo", "Salary", true);
+    categorization.setNewIncome("WorldCo", "Salary");
     categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
 
     timeline.selectMonth("2008/08");
@@ -323,7 +275,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
 
     views.selectBudget();
-    budgetView.envelopes.createSeries().setName("Groceries").setCategory(MasterCategory.FOOD).validate();
+    budgetView.envelopes.createSeries().setName("Groceries").validate();
 
     views.selectHome();
     monthSummary
@@ -331,7 +283,6 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkIncome(0, 0)
       .checkRecurring(0)
       .checkEnvelope(0)
-      .checkOccasional(0)
       .checkUncategorized("1000.00 / -10.00");
 
     monthSummary.categorize();
@@ -341,16 +292,13 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       {"26/08/2008", "", "FNAC", -10.0},
       {"26/08/2008", "", "MyCompany", 1000.0},
     });
-    categorization.selectTableRow(0);
-    categorization.selectOccasional();
-    categorization.selectOccasionalSeries(MasterCategory.LEISURES);
+    categorization.setNewEnvelope(0, "Leisures");
 
     views.selectHome();
     monthSummary
       .checkIncome(0)
       .checkRecurring(0)
-      .checkEnvelope(0)
-      .checkOccasional(10)
+      .checkEnvelope(10)
       .checkUncategorized("1000.00");
 
     monthSummary.categorize();
@@ -359,16 +307,13 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       {"26/08/2008", "Leisures", "FNAC", -10.0},
       {"26/08/2008", "", "MyCompany", 1000.0},
     });
-    categorization.selectTableRow(1);
-    categorization.selectIncome();
-    categorization.selectIncomeSeries("Salary", true);
+    categorization.setNewIncome(1, "Salary");
 
     views.selectHome();
     monthSummary
       .checkIncome(1000)
       .checkRecurring(0)
-      .checkEnvelope(0)
-      .checkOccasional(10)
+      .checkEnvelope(10)
       .checkNoUncategorized();
   }
 
@@ -386,12 +331,12 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
         {"26/08/2008", "", "FNAC", -10.0},
         {"26/08/2008", "", "Virgin", -15.0},
       });
-    categorization.setIncome("Company", "Salary", true);
-    categorization.setOccasional("FNAC", MasterCategory.LEISURES);
+    categorization.setNewIncome("Company", "Salary");
+    categorization.setNewEnvelope("FNAC", "Leisures");
 
     views.selectHome();
     monthSummary.checkIncome(1000, 1000);
-    monthSummary.occasional
+    monthSummary.envelopes
       .checkValues(10, 10)
       .checkGauge(-10, -10);
   }
@@ -404,7 +349,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setIncome("Company", "Salary", true);
+    categorization.setNewIncome("Company", "Salary");
 
     views.selectHome();
     monthSummary.gotoBudget(BudgetArea.INCOME);
@@ -419,19 +364,17 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setIncome("Company", "Salary", true);
+    categorization.setNewIncome("Company", "Salary");
 
     views.selectData();
-    categories.select(MasterCategory.FOOD);
     transactions.selectAccount("Savings accounts");
     views.selectHome();
     monthSummary.gotoTransactions(BudgetArea.INCOME);
     views.checkDataSelected();
     series.checkSelection("Income");
-    categories.checkSelection(MasterCategory.ALL);
     transactions.checkSelectedAccount("All accounts");
     transactions.initContent()
-      .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00, "Salary", MasterCategory.INCOME)
+      .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00, "Salary")
       .check();
   }
 

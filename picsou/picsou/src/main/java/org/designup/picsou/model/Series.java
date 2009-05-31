@@ -28,6 +28,7 @@ public class Series {
   @Target(BudgetArea.class)
   public static LinkField BUDGET_AREA;
 
+  /** @deprecated */
   @Target(Category.class)
   public static LinkField DEFAULT_CATEGORY;
 
@@ -107,15 +108,16 @@ public class Series {
   @DefaultBoolean(true)
   public static BooleanField DECEMBER;
 
+  /**
+   * @deprecated
+   */
   public static final Integer OCCASIONAL_SERIES_ID = 0;
   public static final Integer UNCATEGORIZED_SERIES_ID = 1;
 
-  public static org.globsframework.model.Key OCCASIONAL_SERIES;
   public static org.globsframework.model.Key UNCATEGORIZED_SERIES;
 
   static {
     GlobTypeLoader.init(Series.class, "series");
-    OCCASIONAL_SERIES = org.globsframework.model.Key.create(TYPE, OCCASIONAL_SERIES_ID);
     UNCATEGORIZED_SERIES = org.globsframework.model.Key.create(TYPE, UNCATEGORIZED_SERIES_ID);
   }
 
@@ -155,10 +157,6 @@ public class Series {
   }
 
   public static String getPlannedTransactionLabel(Integer seriesId, FieldValues series) {
-    if (seriesId == 0) {
-      return Lang.get("transaction.planned", BudgetArea.OCCASIONAL.getLabel());
-    }
-
     return Lang.get("transaction.planned", series.get(Series.NAME));
   }
 
@@ -174,9 +172,9 @@ public class Series {
     Integer firstMonth = series.get(FIRST_MONTH);
     firstMonth = firstMonth == null ? 0 : firstMonth;
     Integer lastMonth = series.get(LAST_MONTH);
-    lastMonth  = lastMonth == null ? Integer.MAX_VALUE : lastMonth;
+    lastMonth = lastMonth == null ? Integer.MAX_VALUE : lastMonth;
     if (monthToCheck < firstMonth || monthToCheck > lastMonth ||
-        !series.get(getMonthField(monthToCheck))){
+        !series.get(getMonthField(monthToCheck))) {
       return false;
     }
     return true;
@@ -466,7 +464,6 @@ public class Series {
       fieldSetter.set(Series.IS_MIRROR, input.readBoolean());
       fieldSetter.set(Series.MIRROR_SERIES, input.readInteger());
     }
-
 
     private void deserializeDataV7(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);

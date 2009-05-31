@@ -61,7 +61,6 @@ public class EstimatedPositionDetailsDialog {
     addLabel(builder, "remainingInSavings", BalanceStat.SAVINGS_REMAINING_IN);
     addLabel(builder, "remainingOutSavings", BalanceStat.SAVINGS_REMAINING_OUT);
     addLabel(builder, "remainingSpecial", BalanceStat.SPECIAL_REMAINING);
-    addLabel(builder, "remainingOccasional", BalanceStat.OCCASIONAL_REMAINING);
 
     JPanel panel = builder.load();
 

@@ -7,6 +7,7 @@ import org.uispec4j.Button;
 import org.uispec4j.Table;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import org.uispec4j.assertion.UISpecAssert;
 
 import javax.swing.*;
 
@@ -78,5 +79,9 @@ public class SeriesViewChecker extends GuiChecker {
       selectedRaw += "]";
       Assert.fail(label + " not selected but " + selectedRaw + " are selected");
     }
+  }
+
+  public void checkVisible(boolean visible) {
+    UISpecAssert.assertEquals(visible, getTable().isVisible());
   }
 }

@@ -12,8 +12,6 @@ import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.card.NavigationView;
-import org.designup.picsou.gui.categories.CategoryView;
-import org.designup.picsou.gui.categories.actions.EditCategoriesAction;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.filtering.TextFilterPanel;
@@ -35,7 +33,6 @@ import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.model.PeriodOccasionalSeriesStat;
 import org.designup.picsou.gui.utils.DumpDataAction;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -76,7 +73,6 @@ public class MainPanel {
   private RegisterLicenseAction registerAction;
   private Action dumpRepository;
   private MonthSummaryView monthSummary;
-  private CategoryView categoryView;
   private SeriesView seriesView;
 
   public static MainPanel init(GlobRepository repository, Directory directory,
@@ -103,12 +99,10 @@ public class MainPanel {
 
     TransactionView transactionView = new TransactionView(repository, directory, transactionSelection);
     CategorizationView categorizationView = new CategorizationView(repository, directory);
-    categoryView = new CategoryView(repository, directory);
     seriesView = new SeriesView(repository, directory);
     TimeView timeView = new TimeView(repository, directory);
 
-    directory.add(new NavigationService(categorizationView, categoryView, seriesView,
-                                        repository, directory));
+    directory.add(new NavigationService(categorizationView, seriesView, repository, directory));
 
     importFileAction = ImportFileAction.initAndRegisterToOpenRequestManager(Lang.get("import"), repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
@@ -118,12 +112,6 @@ public class MainPanel {
     registerAction = new RegisterLicenseAction(repository, directory);
     dumpRepository = new DumpDataAction(repository);
     exitAction = new ExitAction(directory);
-
-    builder.add("editCategories", new EditCategoriesAction(repository, directory) {
-      public Window getParent() {
-        return parent;
-      }
-    });
 
     TextFilterPanel search = new TextFilterPanel(transactionView.getFilterSet(), repository, directory) {
       protected GlobMatcher createMatcher(String searchFilter) {
@@ -141,7 +129,7 @@ public class MainPanel {
     LicenseInfoView licenseInfoView = new LicenseInfoView(repository, directory);
 
     ReplicationGlobRepository replicationGlobRepository =
-      new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodOccasionalSeriesStat.TYPE);
+      new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE);
 
     PeriodSeriesStatUpdater.init(replicationGlobRepository, directory);
 
@@ -149,7 +137,6 @@ public class MainPanel {
       titleView,
       transactionView,
       timeView,
-      categoryView,
       new VersionInfoView(repository, directory),
       new AccountView(repository, directory),
       monthSummary,
@@ -196,7 +183,6 @@ public class MainPanel {
     monthSummary.init();
 
     selectLastMonthWithATransaction(repository, directory);
-    categoryView.selectAll();
     seriesView.selectAll();
 
     SplitsEditor.show(builder, parent);

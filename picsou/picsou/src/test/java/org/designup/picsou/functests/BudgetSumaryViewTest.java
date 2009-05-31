@@ -34,7 +34,7 @@ public class BudgetSumaryViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
 
     views.selectCategorization();
-    categorization.setIncome("WorldCo", "Salary", true);
+    categorization.setNewIncome("WorldCo", "Salary");
     categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
 
     timeline.checkSelection("2008/07");
@@ -60,7 +60,7 @@ public class BudgetSumaryViewTest extends LoggedInFunctionalTestCase {
       .checkUncategorizedNotShown();
 
     views.selectCategorization();
-    categorization.setOccasional("FNAC", MasterCategory.LEISURES);
+    categorization.setNewEnvelope("FNAC", "Occasional");
 
     timeline.selectMonth("2008/07");
     views.selectBudget();

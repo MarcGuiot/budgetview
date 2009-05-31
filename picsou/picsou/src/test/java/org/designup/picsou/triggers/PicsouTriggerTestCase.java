@@ -25,21 +25,15 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
     repository.addTrigger(new ObservedSeriesStatTrigger());
     repository.addTrigger(new PastTransactionUpdateSeriesBudgetTrigger());
     repository.addTrigger(new TransactionPlannedTrigger());
-    repository.addTrigger(new MonthStatTrigger());
     repository.addTrigger(new PlannedSeriesStatTrigger());
-    repository.addTrigger(new OccasionalSeriesStatTrigger());
     repository.create(CurrentMonth.KEY,
                       FieldValue.value(CurrentMonth.LAST_TRANSACTION_MONTH, 200808),
                       FieldValue.value(CurrentMonth.LAST_TRANSACTION_DAY, 1)
     );
-    repository.create(Key.create(Series.TYPE, Series.OCCASIONAL_SERIES_ID),
-                      value(Series.PROFILE_TYPE, ProfileType.IRREGULAR.getId()),
-                      value(Series.IS_AUTOMATIC, false),
-                      value(Series.BUDGET_AREA, BudgetArea.OCCASIONAL.getId()));
     repository.create(Key.create(Series.TYPE, Series.UNCATEGORIZED_SERIES_ID),
                       value(Series.PROFILE_TYPE, ProfileType.IRREGULAR.getId()),
                       value(Series.IS_AUTOMATIC, false),
-                      value(Series.BUDGET_AREA, BudgetArea.OCCASIONAL.getId()));
+                      value(Series.BUDGET_AREA, BudgetArea.ENVELOPES.getId()));
   }
 
   protected void createSeries(int seriesId, double amount) {
@@ -79,8 +73,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
                       value(Series.BUDGET_AREA, BudgetArea.INCOME.getId()),
                       value(Series.NAME, "salaire"),
                       value(Series.PROFILE_TYPE, ProfileType.CUSTOM.getId()),
-                      value(Series.IS_AUTOMATIC, false),
-                      value(Series.DEFAULT_CATEGORY, MasterCategory.INCOME.getId()));
+                      value(Series.IS_AUTOMATIC, false));
   }
 
   protected void createEnveloppeSeries() {
@@ -91,8 +84,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
                       value(Series.DAY, 25),
                       value(Series.NAME, "courses"),
                       value(Series.PROFILE_TYPE, ProfileType.CUSTOM.getId()),
-                      value(Series.IS_AUTOMATIC, false),
-                      value(Series.DEFAULT_CATEGORY, MasterCategory.FOOD.getId()));
+                      value(Series.IS_AUTOMATIC, false));
   }
 
   protected void createFreeSeries() {
@@ -103,7 +95,6 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
                       value(Series.BUDGET_AREA, BudgetArea.RECURRING.getId()),
                       value(Series.NAME, "free telecom"),
                       value(Series.PROFILE_TYPE, ProfileType.CUSTOM.getId()),
-                      value(Series.IS_AUTOMATIC, false),
-                      value(Series.DEFAULT_CATEGORY, MasterCategory.TELECOMS.getId()));
+                      value(Series.IS_AUTOMATIC, false));
   }
 }

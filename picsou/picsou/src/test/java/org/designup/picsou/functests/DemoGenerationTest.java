@@ -86,7 +86,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/10/26", -69.90, "AU PIED AGILE")
       .addTransaction("2008/10/27", -50.00, "PARIS MODE CENTRE")
       .addTransaction("2008/11/07", -75.00, "PARIS MODE CENTRE")
-        // OCCASIONAL
       .addTransaction("2008/10/19", -13.50, "ZINGMAN")
       .addTransaction("2008/11/09", -6.50, "DAILY MAGS")
         // SPECIAL
@@ -114,8 +113,8 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
 
-    categorization.setIncome("WORLDCO", "Salaire Marie", true);
-    categorization.setIncome("BIGCORP", "Salaire Eric", true);
+    categorization.setNewIncome("WORLDCO", "Salaire Marie");
+    categorization.setNewIncome("BIGCORP", "Salaire Eric");
 
     categorization.setRecurring("PRET IMMO N.3325566", "Credit immo", MasterCategory.HOUSE, true);
     categorization.setRecurring("PRET CONSO N.6784562 F657", "Credit auto", MasterCategory.TRANSPORTS, true);
@@ -131,9 +130,9 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     categorization.setEnvelope("HYPER M", "Courses", MasterCategory.FOOD, true);
     categorization.setEnvelope("BIO PLUS", "Courses", MasterCategory.FOOD, false);
-    categorization.selectTableRows("RETRAIT GAB 4463", "RETRAIT GAB 5234", "RETRAIT GAB 0301",
+    categorization.selectTransactions("RETRAIT GAB 4463", "RETRAIT GAB 5234", "RETRAIT GAB 0301",
                                    "RETRAIT GAB 5642", "RETRAIT GAB 1867", "RETRAIT GAB 9011")
-      .selectEnvelopes().selectEnvelopeSeries("Liquide", MasterCategory.CASH, true);
+      .selectEnvelopes().selectNewSeries("Liquide");
 
     categorization.setEnvelope("GROUPE CINE SPECT.", "Loisirs", MasterCategory.LEISURES, true);
     categorization.setEnvelope("RESA CONCERTS. N151435", "Loisirs", MasterCategory.LEISURES, false);
@@ -143,9 +142,9 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     categorization.setEnvelope("AU PIED AGILE", "Habillement", MasterCategory.CLOTHING, false);
     categorization.setEnvelope("PARIS MODE CENTRE", "Habillement", MasterCategory.CLOTHING, false);
 
-    categorization.setOccasional("ZINGMAN", MasterCategory.HOUSE);
+    categorization.setEnvelope("ZINGMAN", "Divers", MasterCategory.HOUSE, true);
 
-    categorization.setSpecial("PLOMBERIE 24/7", "Plombier", MasterCategory.HOUSE, true);
+    categorization.setNewSpecial("PLOMBERIE 24/7", "Plombier");
 
     //  ================ SAVINGS   ================
     views.selectHome();
@@ -159,7 +158,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     
     categorization.createAndSetSavings("VIRT MENS. LIVRET", "Virt. auto livret", "Compte courant", "Livret");
 
-    categorization.getGauge().hideProgressMessage();
+    categorization.getCompletionGauge().hideProgressMessage();
 
     // Gestion du liquide
     timeline.selectMonth("2008/10");
@@ -273,19 +272,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       File out = new File(outputFile);
       String file = operations.backup(out.getAbsoluteFile().getParent());
       assertTrue(new File(file).renameTo(out));
-    }
-  }
-
-  // affectations en boucle pour identifier les memory leaks
-  private void runCategorizationPerfLoop() {
-    for (; ;) {
-      categorization.setEnvelope("PRET CONSO N.6784562 F657", "Loisirs", MasterCategory.LEISURES, false);
-      categorization.setRecurring("GROUPE CINE SPECT.", "Credit auto", MasterCategory.TRANSPORTS, false);
-      categorization.setRecurring("PRET CONSO N.6784562 F657", "Credit auto", MasterCategory.TRANSPORTS, false);
-      categorization.setEnvelope("GROUPE CINE SPECT.", "Loisirs", MasterCategory.LEISURES, false);
-
-      categorization.setOccasional("PRET CONSO N.6784562 F657", MasterCategory.GIFTS);
-      categorization.setRecurring("PRET CONSO N.6784562 F657", "Credit auto", MasterCategory.TRANSPORTS, false);
     }
   }
 }

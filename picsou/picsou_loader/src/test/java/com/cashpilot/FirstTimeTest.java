@@ -6,10 +6,8 @@ import org.designup.picsou.functests.utils.QifBuilder;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.PicsouApplication;
 import org.globsframework.utils.Files;
-import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.Window;
@@ -127,58 +125,47 @@ public class FirstTimeTest extends UISpecTestCase {
     views.selectCategorization();
     CategorizationChecker categorization = new CategorizationChecker(window);
     categorization
-      .setEnvelope("MUTUELLE", "Health", MasterCategory.HEALTH, false)
+      .setEnvelope("MUTUELLE", "Health")
       .createAndSetSavings("EPARGNE", "Regular savings", "Account n. 00001123", "External account");
-    categorization.selectTableRows("Habille moi", "Chausse moi");
+    categorization.selectTransactions("Habille moi", "Chausse moi");
     categorization
-      .selectEnvelopes()
-      .createEnvelopeSeries().setName("Fringue").setCategory(MasterCategory.CLOTHING)
+      .selectEnvelopes().createSeries().setName("Fringue").setCategory(MasterCategory.CLOTHING)
       .validate();
     categorization.setEnvelope("CHEQUE N°32", "Health", MasterCategory.HEALTH, false);
 
-    categorization.selectTableRows("ED", "Auchan", "Intermarché")
-      .selectEnvelopes().selectEnvelopeSeries("Groceries", MasterCategory.FOOD, false)
-      .setRecurring("Credit", "Mortgage", MasterCategory.HOUSE, false)
-      .setRecurring("Institut pasteur", "Don", MasterCategory.GIFTS, true)
-      .setRecurring("Free telecom", "Internet", MasterCategory.TELECOMS, false)
-      .setEnvelope("Centre nautique", "Leisures", MasterCategory.LEISURES, false)
-      .setEnvelope("CPAM", "Health", MasterCategory.HEALTH, false)
-      .selectTableRows("Impots")
-      .selectRecurring();
-    SeriesEditionDialogChecker series = categorization
-      .createRecurringSeries();
-    series
+    categorization.selectTransactions("ED", "Auchan", "Intermarché")
+      .selectEnvelopes().selectSeries("Groceries");
+    categorization
+      .setRecurring("Credit", "Mortgage")
+      .setNewRecurring("Institut pasteur", "Don")
+      .setRecurring("Free telecom", "Internet")
+      .setEnvelope("Centre nautique", "Leisures")
+      .setEnvelope("CPAM", "Health")
+      .selectTransactions("Impots");
+
+    categorization.selectRecurring().createSeries()
       .setName("impots")
       .setCustom().toggleMonth(1, 3, 4, 5, 7, 8, 10, 11, 12)
-      .openCategory().selectCategory(GuiChecker.getCategoryName(MasterCategory.TAXES), true);
-    series.validate();
-    categorization
-      .setRecurring("Gaz de France", "Gas", MasterCategory.HOUSE, false)
-      .setEnvelope("Retrait", "cash", MasterCategory.CASH, false)
-      .setRecurring("SFR", "Cell phone 1", MasterCategory.TELECOMS, false)
-      .selectRecurring();
-    SeriesEditionDialogChecker seriesEdition = categorization.editSeries(true)
-      .checkSeriesListContains("Gas", "Cell phone 1")
-      .createSeries();
-    CategoryChooserChecker categoryChooser = seriesEdition.setName("Assurance")
-      .openCategory();
-    categoryChooser.openCategoryEdition()
-      .createMasterCategory("Assurance all-in-one")
       .validate();
-    categoryChooser.selectCategory("Assurance all-in-one", true);
-    categoryChooser.checkClosed();
-    seriesEdition.checkCategory("Assurance all-in-one");
-    seriesEdition.validate();
 
     categorization
-      .selectTableRows("GMF")
-      .selectRecurring()
-      .selectRecurringSeries("Assurance")
-      .setRecurring("Cotisation carte bleue", "Frais banque", MasterCategory.BANK, true)
-      .setOccasional("Coup'coup", MasterCategory.BEAUTY)
-      .setOccasional("jeux pour tous", MasterCategory.GIFTS)
-      .setIncome("Salaire", "Income 1", false)
-      .setRecurring("Ecole", "Ecole", MasterCategory.EDUCATION, true);
+      .setRecurring("Gaz de France", "Gas")
+      .setEnvelope("Retrait", "cash")
+      .setRecurring("SFR", "Cell phone 1")
+      .selectRecurring();
+    categorization.editSeries(true)
+      .checkSeriesListContains("Gas", "Cell phone 1")
+      .createSeries()
+      .setName("Assurance")
+      .validate();
+
+    categorization
+      .setRecurring("GMF", "Assurance")
+      .setNewRecurring("Cotisation carte bleue", "Frais banque")
+      .setNewEnvelope("Coup'coup", "Occasionel")
+      .setEnvelope("jeux pour tous", "Occasionel")
+      .setIncome("Salaire", "Income 1")
+      .setNewRecurring("Ecole", "Ecole");
 
     categorization.initContent()
       .add("11/09/2008", "Groceries", "Auchan", -40.0)
@@ -205,7 +192,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .add("27/09/2008", "Income 1", "Salaire", 2000.0)
       .add("21/09/2008", "Cell phone 1", "SFR", -40.0)
       .check();
-    CategorizationGaugeChecker categorizationGauge = categorization.getGauge();
+    CategorizationGaugeChecker categorizationGauge = categorization.getCompletionGauge();
     categorizationGauge.checkHidden();
 
     views.selectHome();
@@ -223,29 +210,29 @@ public class FirstTimeTest extends UISpecTestCase {
 
     views.selectData();
     transaction.initContent()
-      .add("28/09/2008", TransactionType.PRELEVEMENT, "ECOLE", "", -40.00, "Ecole", MasterCategory.EDUCATION)
-      .add("27/09/2008", TransactionType.VIREMENT, "SALAIRE", "", 2000.00, "Income 1", MasterCategory.INCOME)
-      .add("25/09/2008", TransactionType.PRELEVEMENT, "JEUX POUR TOUS", "", -25.00, "Occasional", MasterCategory.GIFTS)
-      .add("23/09/2008", TransactionType.PRELEVEMENT, "COTISATION CARTE BLEUE", "", -4.00, "Frais banque", MasterCategory.BANK)
-      .add("22/09/2008", TransactionType.PRELEVEMENT, "COUP'COUP", "", -30.00, "Occasional", MasterCategory.BEAUTY)
+      .add("28/09/2008", TransactionType.PRELEVEMENT, "ECOLE", "", -40.00, "Ecole")
+      .add("27/09/2008", TransactionType.VIREMENT, "SALAIRE", "", 2000.00, "Income 1")
+      .add("25/09/2008", TransactionType.PRELEVEMENT, "JEUX POUR TOUS", "", -25.00, "Occasional")
+      .add("23/09/2008", TransactionType.PRELEVEMENT, "COTISATION CARTE BLEUE", "", -4.00, "Frais banque")
+      .add("22/09/2008", TransactionType.PRELEVEMENT, "COUP'COUP", "", -30.00, "Occasional")
       .add("22/09/2008", TransactionType.PRELEVEMENT, "GMF", "", -100.00, "Assurance", "Assurance all-in-one")
-      .add("22/09/2008", TransactionType.PRELEVEMENT, "INTERMARCHÉ", "", -150.00, "Groceries", MasterCategory.FOOD)
-      .add("21/09/2008", TransactionType.PRELEVEMENT, "SFR", "", -40.00, "Cell phone 1", MasterCategory.TELECOMS)
-      .add("20/09/2008", TransactionType.PRELEVEMENT, "RETRAIT", "", -40.00, "Cash", MasterCategory.CASH)
+      .add("22/09/2008", TransactionType.PRELEVEMENT, "INTERMARCHÉ", "", -150.00, "Groceries")
+      .add("21/09/2008", TransactionType.PRELEVEMENT, "SFR", "", -40.00, "Cell phone 1")
+      .add("20/09/2008", TransactionType.PRELEVEMENT, "RETRAIT", "", -40.00, "Cash")
       .add("19/09/2008", TransactionType.PRELEVEMENT, "GAZ DE FRANCE", "", -60.00, "Gas", "Energy")
-      .add("11/09/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -40.00, "Groceries", MasterCategory.FOOD)
-      .add("10/09/2008", TransactionType.PRELEVEMENT, "CHAUSSE MOI", "", -50.00, "Fringue", MasterCategory.CLOTHING)
-      .add("09/09/2008", TransactionType.PRELEVEMENT, "IMPOTS", "", -400.00, "impots", MasterCategory.TAXES)
-      .add("07/09/2008", TransactionType.VIREMENT, "CPAM", "", 40.00, "Health", MasterCategory.HEALTH)
-      .add("07/09/2008", TransactionType.PRELEVEMENT, "CENTRE NAUTIQUE", "", -10.00, "Leisures", MasterCategory.LEISURES)
-      .add("06/09/2008", TransactionType.PRELEVEMENT, "FREE TELECOM", "", -29.90, "Internet", MasterCategory.TELECOMS)
-      .add("06/09/2008", TransactionType.PRELEVEMENT, "INSTITUT PASTEUR", "", -40.00, "Don", MasterCategory.GIFTS)
+      .add("11/09/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -40.00, "Groceries")
+      .add("10/09/2008", TransactionType.PRELEVEMENT, "CHAUSSE MOI", "", -50.00, "Fringue")
+      .add("09/09/2008", TransactionType.PRELEVEMENT, "IMPOTS", "", -400.00, "impots")
+      .add("07/09/2008", TransactionType.VIREMENT, "CPAM", "", 40.00, "Health")
+      .add("07/09/2008", TransactionType.PRELEVEMENT, "CENTRE NAUTIQUE", "", -10.00, "Leisures")
+      .add("06/09/2008", TransactionType.PRELEVEMENT, "FREE TELECOM", "", -29.90, "Internet")
+      .add("06/09/2008", TransactionType.PRELEVEMENT, "INSTITUT PASTEUR", "", -40.00, "Don")
       .add("05/09/2008", TransactionType.PRELEVEMENT, "CREDIT", "", -700.00, "Mortgage", "Mortgage")
-      .add("05/09/2008", TransactionType.PRELEVEMENT, "ED", "", -60.00, "Groceries", MasterCategory.FOOD)
-      .add("05/09/2008", TransactionType.CHECK, "CHEQUE N°32", "", -50.00, "Health", MasterCategory.HEALTH)
-      .add("03/09/2008", TransactionType.PRELEVEMENT, "HABILLE MOI", "", -30.00, "Fringue", MasterCategory.CLOTHING)
-      .add("03/09/2008", TransactionType.PRELEVEMENT, "EPARGNE", "", -100.00, "Regular savings", MasterCategory.SAVINGS)
-      .add("02/09/2008", TransactionType.VIREMENT, "MUTUELLE", "", 30.00, "Health", MasterCategory.HEALTH)
+      .add("05/09/2008", TransactionType.PRELEVEMENT, "ED", "", -60.00, "Groceries")
+      .add("05/09/2008", TransactionType.CHECK, "CHEQUE N°32", "", -50.00, "Health")
+      .add("03/09/2008", TransactionType.PRELEVEMENT, "HABILLE MOI", "", -30.00, "Fringue")
+      .add("03/09/2008", TransactionType.PRELEVEMENT, "EPARGNE", "", -100.00, "Regular savings")
+      .add("02/09/2008", TransactionType.VIREMENT, "MUTUELLE", "", 30.00, "Health")
       .check();
 
 

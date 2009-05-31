@@ -208,7 +208,7 @@ public class AccountEditionDialog {
     for (Glob transaction : transactions) {
       repository.update(transaction.getKey(),
                         FieldValue.value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                        FieldValue.value(Transaction.CATEGORY, Category.NONE));
+                        FieldValue.value(Transaction.SUB_SERIES, null));
     }
 
   }

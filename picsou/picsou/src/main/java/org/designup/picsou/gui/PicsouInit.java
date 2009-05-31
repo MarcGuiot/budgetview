@@ -83,9 +83,7 @@ public class PicsouInit {
     this.repository.addTrigger(new ImportedToNotImportedAccountTransactionTrigger());
     this.repository.addTrigger(new UpdateAccountOnTransactionDelete());
     this.repository.addTrigger(new PositionTrigger());
-    this.repository.addTrigger(new MonthStatTrigger());
     this.repository.addTrigger(new PlannedSeriesStatTrigger());
-    this.repository.addTrigger(new OccasionalSeriesStatTrigger());
     this.repository.addTrigger(new BalanceStatTrigger());
     this.repository.addTrigger(new SavingsBalanceStatTrigger());
 

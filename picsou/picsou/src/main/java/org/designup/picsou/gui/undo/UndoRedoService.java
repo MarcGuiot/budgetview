@@ -24,7 +24,7 @@ public class UndoRedoService {
   private List<Listener> listeners = new ArrayList<Listener>();
   private boolean undoRedoInProgress = false;
 
-  private final GlobType[] selectionTypes = {Card.TYPE, Month.TYPE, Category.TYPE, Transaction.TYPE};
+  private final GlobType[] selectionTypes = {Card.TYPE, Month.TYPE, Transaction.TYPE};
   private final MultiMap<GlobType, Key> currentSelections = new MultiMap<GlobType, Key>();
 
   public interface Listener {

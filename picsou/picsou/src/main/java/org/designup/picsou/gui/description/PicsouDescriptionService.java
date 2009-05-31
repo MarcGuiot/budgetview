@@ -44,9 +44,6 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
   }
 
   public GlobStringifier getStringifier(GlobType globType) {
-    if (globType.equals(Category.TYPE)) {
-      return new CategoryStringifier();
-    }
     if (globType.equals(TransactionType.TYPE)) {
       return new BundleBasedStringifier(TransactionType.NAME, TransactionType.TYPE.getName() + ".");
     }

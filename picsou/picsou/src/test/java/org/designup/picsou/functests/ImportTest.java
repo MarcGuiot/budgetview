@@ -333,9 +333,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   public void testOfxWithUnknownBankEntities() throws Exception {
     String fileName = OfxBuilder.init(this)
       .addBankAccount(666, 1024, "12345678a", 12.0, "2008/06/11")
-      .addTransaction("2008/06/10", 1.0, "V'lib", MasterCategory.TRANSPORTS)
+      .addTransaction("2008/06/10", 1.0, "V'lib")
       .addBankAccount(666, 1024, "12345678b", 12.0, "2008/06/11")
-      .addTransaction("2008/06/21", 1.0, "V'lib", MasterCategory.TRANSPORTS)
+      .addTransaction("2008/06/21", 1.0, "V'lib")
       .addBankAccount(777, 1027, "87654321", 21.0, "2008/06/21")
       .addTransaction("2008/06/10", 10.0, "McDo")
       .addCardAccount("1111222233334444", 7.5, "2008/06/21")
@@ -358,7 +358,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     String secondFileName = OfxBuilder.init(this)
       .addBankAccount(666, 2048, "77777777", 77.0, "2008/06/11")
-      .addTransaction("2008/06/14", 1.0, "V'lib", MasterCategory.TRANSPORTS)
+      .addTransaction("2008/06/14", 1.0, "V'lib")
       .save();
 
     operations.openImportDialog()
@@ -368,11 +368,11 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
-      .addOccasional("21/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00, MasterCategory.TRANSPORTS)
-      .addOccasional("14/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00, MasterCategory.TRANSPORTS)
+      .add("21/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
+      .add("14/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
       .add("10/06/2008", TransactionType.CREDIT_CARD, "Metro", "", 71.00)
       .add("10/06/2008", TransactionType.VIREMENT, "McDo", "", 10.00)
-      .addOccasional("10/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00, MasterCategory.TRANSPORTS)
+      .add("10/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
       .check();
   }
 
@@ -387,7 +387,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     OfxBuilder.init(this)
       .addBankAccount(666, 1024, "012345", 12.0, "2008/06/11")
-      .addTransaction("2008/06/10", 1.0, "V'lib", MasterCategory.TRANSPORTS)
+      .addTransaction("2008/06/10", 1.0, "V'lib")
       .load();
 
     mainAccounts.edit("Cash")

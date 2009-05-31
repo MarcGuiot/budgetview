@@ -20,7 +20,6 @@ public enum BudgetArea implements GlobConstantContainer {
   INCOME("INCOME", 0, true, false, true),
   RECURRING("RECURRING", 1, false, false, false),
   ENVELOPES("ENVELOPES", 2, false, true, false),
-  OCCASIONAL("OCCASIONAL", 3, false, true, false),
   SPECIAL("SPECIAL", 4, false, true, false),
   SAVINGS("SAVINGS", 5, false, false, true),
   UNCATEGORIZED("UNCATEGORIZED", 6, false, true, false);
@@ -87,8 +86,6 @@ public enum BudgetArea implements GlobConstantContainer {
         return RECURRING;
       case 2:
         return ENVELOPES;
-      case 3:
-        return OCCASIONAL;
       case 4:
         return SPECIAL;
       case 5:
@@ -97,43 +94,6 @@ public enum BudgetArea implements GlobConstantContainer {
         return UNCATEGORIZED;
     }
     throw new ItemNotFound(id + " not associated to any BugdetArea enum value");
-  }
-
-  public interface BudgetAreaVisitor {
-
-    void visitIncome();
-
-    void visitRecurring();
-
-    void visitEnvelopes();
-
-    void visitOccasional();
-
-    void visitSpecial();
-
-    void visitSavings();
-  }
-
-  public void visit(BudgetArea budgetArea, BudgetAreaVisitor visitor) {
-    switch (budgetArea) {
-      case INCOME:
-        visitor.visitIncome();
-        return;
-      case RECURRING:
-        visitor.visitRecurring();
-        return;
-      case ENVELOPES:
-        visitor.visitEnvelopes();
-        return;
-      case OCCASIONAL:
-        visitor.visitOccasional();
-        return;
-      case SPECIAL:
-        visitor.visitSpecial();
-        return;
-      case SAVINGS:
-        visitor.visitSavings();
-    }
   }
 
   public Integer getId() {

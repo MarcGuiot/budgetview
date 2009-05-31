@@ -26,7 +26,6 @@ public class MonthSummaryChecker extends GuiChecker {
   public final BudgetAreaChecker envelopes = new BudgetAreaChecker(BudgetArea.ENVELOPES);
   public final BudgetAreaChecker savings = new BudgetAreaChecker(BudgetArea.SAVINGS);
   public final BudgetAreaChecker special = new BudgetAreaChecker(BudgetArea.SPECIAL);
-  public final BudgetAreaChecker occasional = new BudgetAreaChecker(BudgetArea.OCCASIONAL);
 
   public MonthSummaryChecker(Window window) {
     this.window = window;
@@ -194,13 +193,15 @@ public class MonthSummaryChecker extends GuiChecker {
     return this;
   }
 
+  /** @deprecated */
   public MonthSummaryChecker checkOccasional(double amount, double planned) {
-    checkBudgetArea(BudgetArea.OCCASIONAL, amount, planned);
+    Assert.fail("plus d'occasional");
     return this;
   }
 
+  /** @deprecated */
   public MonthSummaryChecker checkOccasional(double amount) {
-    checkObserved(BudgetArea.OCCASIONAL, amount);
+    Assert.fail("plus d'occasional");
     return this;
   }
 

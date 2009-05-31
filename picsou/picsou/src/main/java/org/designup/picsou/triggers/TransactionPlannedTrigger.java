@@ -221,7 +221,6 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
         }
       }
     }
-    Integer categoryId = getCategory(series, repository);
     Integer seriesId = series.get(Series.ID);
     repository.create(Transaction.TYPE,
                       value(Transaction.ACCOUNT, account),
@@ -234,32 +233,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
                       value(Transaction.LABEL, Series.getPlannedTransactionLabel(series.get(Series.ID), series)),
                       value(Transaction.PLANNED, true),
                       value(Transaction.TRANSACTION_TYPE,
-                            amount > 0 ? TransactionType.VIREMENT.getId() : TransactionType.PRELEVEMENT.getId()),
-                      value(Transaction.CATEGORY, categoryId));
-  }
-
-  public static Integer getCategory(Glob series, GlobRepository repository) {
-    Integer seriesId = series.get(Series.ID);
-    Integer categoryId = series.get(Series.DEFAULT_CATEGORY);
-    GlobList seriesToCategory = repository.getAll(SeriesToCategory.TYPE, fieldEquals(SeriesToCategory.SERIES, seriesId));
-    if (seriesToCategory.size() == 1) {
-      categoryId = seriesToCategory.get(0).get(SeriesToCategory.CATEGORY);
-    }
-    else if (seriesToCategory.size() != 0) {
-      Set<Integer> categories = new HashSet<Integer>();
-      for (Glob glob : seriesToCategory) {
-        Glob category = repository.findLinkTarget(glob, SeriesToCategory.CATEGORY);
-        categories.add(category.get(Category.MASTER) == null ?
-                       category.get(Category.ID) : category.get(Category.MASTER));
-      }
-      if (categories.size() == 1) {
-        categoryId = categories.iterator().next();
-      }
-      else if (categories.size() > 1) {
-        categoryId = MasterCategory.NONE.getId();
-      }
-    }
-    return categoryId;
+                            amount > 0 ? TransactionType.VIREMENT.getId() : TransactionType.PRELEVEMENT.getId()));
   }
 
   private static class ComputeObservedFunctor implements GlobFunctor {

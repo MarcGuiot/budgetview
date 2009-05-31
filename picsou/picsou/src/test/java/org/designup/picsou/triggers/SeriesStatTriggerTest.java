@@ -11,6 +11,9 @@ import org.globsframework.model.Key;
 public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
   public void testStandardCreation() throws Exception {
+
+    fail("Marc ?");
+
     createSeries(10, 150.0);
     listener.assertNoChanges(SeriesStat.TYPE);
 
@@ -34,6 +37,9 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
   }
 
   public void testUnassignedTransactionSeriesAndDeleteSeries() throws Exception {
+
+    fail("Marc ?");
+
     checker.parse(repository,
                   "<series id='10' initialAmount='-100.0' budgetAreaName='recurring' " +
                   "        profileTypeName='custom' isAutomatic='false' name='10'/>" +
@@ -125,7 +131,10 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     listener.assertNoChanges(SeriesBudget.TYPE);
   }
 
-  public void testWithIncomeAndReccuring() throws Exception {
+  public void testWithIncomeAndRecurring() throws Exception {
+
+    fail("Marc ?");
+
     checker.parse(repository,
                   "<series id='10' initialAmount='-100.0' budgetAreaName='recurring' name='10'" +
                   "        profileTypeName='custom' defaultCategoryName='none' isAutomatic='false' />" +

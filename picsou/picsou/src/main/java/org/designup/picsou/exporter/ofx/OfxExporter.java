@@ -9,7 +9,6 @@ import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -110,17 +109,6 @@ public class OfxExporter implements Exporter {
                                    transaction.get(Transaction.ORIGINAL_LABEL));
 
     if (exportCustomFields) {
-      Glob category = repository.findLinkTarget(transaction, Transaction.CATEGORY);
-      if (category != null && !category.get(Category.ID).equals(MasterCategory.NONE.getId())) {
-        if (Category.isMaster(category)) {
-          writeCategory("", writer, category);
-        }
-        else {
-          writeCategory("", writer, repository.get(Key.create(Category.TYPE, category.get(Category.MASTER))));
-          writeCategory("sub", writer, category);
-        }
-      }
-
       writer.add("note", transaction.get(Transaction.NOTE));
       if (transaction.get(Transaction.SPLIT_SOURCE) != null) {
         writer.add("PARENT", "PICSOU" + transaction.get(Transaction.SPLIT_SOURCE));
@@ -128,15 +116,6 @@ public class OfxExporter implements Exporter {
     }
 
     writer.end();
-  }
-
-  private void writeCategory(String prefix, OfxWriter.OfxTransactionWriter writer, Glob category) {
-    if (category.get(Category.INNER_NAME) == null) {
-      writer.add(prefix + "category", category.get(Category.NAME));
-    }
-    else {
-      writer.add(prefix + "category", Integer.toString(category.get(Category.ID)));
-    }
   }
 
   private String toString(Date updateDate) {

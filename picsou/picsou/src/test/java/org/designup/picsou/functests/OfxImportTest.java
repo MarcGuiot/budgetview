@@ -18,74 +18,23 @@ import java.io.FileWriter;
 
 public class OfxImportTest extends LoggedInFunctionalTestCase {
 
-  public void testManagesCategoriesInOfxFiles() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/10", -1.1, "Dr Lecter", MasterCategory.HEALTH)
-      .addTransaction("2006/01/11", -2.2, "MiamMiam")
-      .load();
-    transactions
-      .initContent()
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "MiamMiam", "", -2.2, MasterCategory.NONE)
-      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Dr Lecter", "", -1.1, MasterCategory.HEALTH)
-      .check();
-  }
-
-  public void testManagesSubcategoriesInOfxFiles() throws Exception {
-    categories.createSubCategory(MasterCategory.FOOD, "Apero");
-    OfxBuilder
-      .init(this)
-      .addCategory(MasterCategory.FOOD, "apero")
-      .addTransaction("2006/01/10", -1.1, "Dr Lecter", MasterCategory.HEALTH)
-      .addTransaction("2006/01/11", -2.2, "MiamMiam", "apero")
-      .load();
-
-    categories.select(MasterCategory.ALL);
-
-    transactions
-      .initContent()
-      .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "MiamMiam", "", -2.2, "Apero")
-      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Dr Lecter", "", -1.1, MasterCategory.HEALTH)
-      .check();
-  }
-
-  public void testCreatesSubcategoriesFromOfxFiles() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addCategory(MasterCategory.FOOD, "Apero")
-      .addCategory(MasterCategory.TRANSPORTS, "Oil")
-      .addTransaction("2006/01/10", -15.0, "Chez Lulu", "Oil")
-      .addTransaction("2006/01/05", -19.0, "Chez Marcel", "Apero")
-      .load();
-
-    categories.checkCategoryExists("Apero");
-    categories.checkCategoryExists("Oil");
-
-    categories.select(MasterCategory.ALL);
-    transactions
-      .initContent()
-      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Chez Lulu", "", -15.0, "Oil")
-      .addOccasional("05/01/2006", TransactionType.PRELEVEMENT, "Chez Marcel", "", -19.0, "Apero")
-      .check();
-  }
-
   public void testImportingTheSameFileTwiceDoesNotDuplicateTransactions() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/10", -1.1, "TX 1", MasterCategory.TRANSPORTS)
+      .addTransaction("2006/01/10", -1.1, "TX 1")
       .addTransaction("2006/01/11", -2.2, "TX 2")
       .load();
 
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/10", -1.1, "TX 1", MasterCategory.TRANSPORTS)
+      .addTransaction("2006/01/10", -1.1, "TX 1")
       .addTransaction("2006/01/11", -2.2, "TX 2")
       .load();
 
     transactions
       .initAmountContent()
       .add("11/01/2006", "TX 2", -2.20, "To categorize", 0.00, 0.00, "Account n. 00001123")
-      .add("10/01/2006", "TX 1", -1.10, "Occasional", 2.20, 2.20, "Account n. 00001123")
+      .add("10/01/2006", "TX 1", -1.10, "To categorize", 2.20, 2.20, "Account n. 00001123")
       .check();
   }
 
@@ -114,22 +63,21 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
   public void testImportingASecondFileWithOlderTransactions() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/10", -1.1, "Tx 1", MasterCategory.TRANSPORTS)
+      .addTransaction("2006/01/10", -1.1, "Tx 1")
       .addTransaction("2006/01/11", -2.2, "Tx 2")
       .load();
 
     OfxBuilder
       .init(this)
-      .addTransaction("2005/12/25", -10.0, "Tx 0", MasterCategory.HOUSE)
+      .addTransaction("2005/12/25", -10.0, "Tx 0")
       .load();
 
     timeline.selectMonths("2005/12", "2006/01");
     transactions
       .initAmountContent()
-      .add("11/01/2006", "Planned: Occasional", -8.90, "Occasional", -8.90, "Main accounts")
       .add("11/01/2006", "TX 2", -2.20, "To categorize", 0.00, 0.00, "Account n. 00001123")
-      .add("10/01/2006", "TX 1", -1.10, "Occasional", 2.20, 2.20, "Account n. 00001123")
-      .add("25/12/2005", "TX 0", -10.00, "Occasional", 3.30, 3.30, "Account n. 00001123")
+      .add("10/01/2006", "TX 1", -1.10, "To categorize", 2.20, 2.20, "Account n. 00001123")
+      .add("25/12/2005", "TX 0", -10.00, "To categorize", 3.30, 3.30, "Account n. 00001123")
       .check();
   }
 
@@ -196,48 +144,30 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testUsingMasterCategoryNames() throws Exception {
-    String fileName = TestUtils.getFileName(this, "_setup.ofx");
-    OfxWriter writer = new OfxWriter(new FileWriter(fileName));
-    writer.writeHeader();
-    writer.writeBankMsgHeader(30066, 12345, "1111");
-    writer.startTransaction("20060524", "20060524", -99.0, 1, "blah")
-      .add("category", MasterCategory.FOOD.getId().toString())
-      .end();
-    writer.writeBankMsgFooter(123.56, "20060525000000");
-    writer.writeFooter();
-    operations.importOfxFile(fileName);
-
-    transactions
-      .initContent()
-      .addOccasional("24/05/2006", TransactionType.PRELEVEMENT, "blah", "", -99.00, MasterCategory.FOOD)
-      .check();
-  }
-
   public void testImportingTheSameFileTwiceOnSplittedDoesNotDuplicateTransactions() throws Exception {
 
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/10", -1.1, "Tx 1", MasterCategory.TRANSPORTS)
+      .addTransaction("2006/01/10", -1.1, "Tx 1")
       .addTransaction("2006/01/11", -2.2, "Tx 2")
       .load();
     views.selectCategorization();
-    categorization.selectTableRows("Tx 2");
+    categorization.selectTransactions("Tx 2");
     transactionDetails.split("-1", "info");
-    categorization.selectOccasional().selectOccasionalSeries(MasterCategory.BEAUTY);
+    categorization.selectEnvelopes().selectNewSeries("Series 1");
 
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/10", -1.1, "Tx 1", MasterCategory.TRANSPORTS)
+      .addTransaction("2006/01/10", -1.1, "Tx 1")
       .addTransaction("2006/01/11", -2.2, "Tx 2")
       .load();
 
     views.selectData();
     transactions
       .initContent()
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -1.2, MasterCategory.NONE)
-      .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info", -1.0, MasterCategory.BEAUTY)
-      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, MasterCategory.TRANSPORTS)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -1.2)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info", -1.0, "Series 1")
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1)
       .check();
   }
 
@@ -245,32 +175,33 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/10", -1.1, "Tx 1", MasterCategory.TRANSPORTS)
+      .addTransaction("2006/01/10", -1.1, "Tx 1")
       .addTransaction("2006/01/11", -4.2, "Tx 2")
       .load();
 
     views.selectCategorization();
-    categorization.selectTableRows("Tx 2");
+    categorization.selectTransactions("Tx 2");
     transactionDetails.split("-1.5", "info");
-    categorization.selectOccasional().selectOccasionalSeries(MasterCategory.BEAUTY);
+    categorization.selectEnvelopes().selectNewSeries("Series 1");
+
     categorization.selectTableRow(categorization.getTable()
       .getRowIndex(CategorizationChecker.AMOUNT_COLUMN_INDEX, -4.2 + 1.5));
     transactionDetails.split("-1.5", "info2");
-    categorization.selectOccasional().selectOccasionalSeries(MasterCategory.CLOTHING);
+    categorization.selectEnvelopes().selectNewSeries("Series 2");
 
     OfxBuilder
       .init(this)
-      .addTransaction("2006/01/10", -1.1, "Tx 1", MasterCategory.TRANSPORTS)
+      .addTransaction("2006/01/10", -1.1, "Tx 1")
       .addTransaction("2006/01/11", -4.2, "Tx 2")
       .load();
 
     views.selectData();
     transactions
       .initContent()
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -1.2, MasterCategory.NONE)
-      .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info2", -1.5, MasterCategory.CLOTHING)
-      .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info", -1.5, MasterCategory.BEAUTY)
-      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, MasterCategory.TRANSPORTS)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -1.2)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info2", -1.5, "Series 2")
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info", -1.5, "Series 1")
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1)
       .check();
   }
 

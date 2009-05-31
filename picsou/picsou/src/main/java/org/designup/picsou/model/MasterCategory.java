@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+/** @deprecated */
 public enum MasterCategory {
   NONE("NONE", 0),
   ALL("ALL", 1),

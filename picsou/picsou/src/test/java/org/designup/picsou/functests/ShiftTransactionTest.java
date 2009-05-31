@@ -37,34 +37,34 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     transactionDetails.checkShiftDisabled();
 
-    categorization.selectTableRow("SHIFTABLE TO NEXT");
+    categorization.selectTransaction("SHIFTABLE TO NEXT");
     transactionDetails.checkShiftEnabled();
 
     categorization.selectNoTableRow();
     transactionDetails.checkShiftDisabled();
 
-    categorization.selectTableRow("NON SHIFTABLE - MIDDLE OF MONTH 1");
+    categorization.selectTransaction("NON SHIFTABLE - MIDDLE OF MONTH 1");
     transactionDetails.checkShiftDisabled();
 
-    categorization.selectTableRow("NON SHIFTABLE - MIDDLE OF MONTH 2");
+    categorization.selectTransaction("NON SHIFTABLE - MIDDLE OF MONTH 2");
     transactionDetails.checkShiftDisabled();
 
-    categorization.selectTableRow("NON SHIFTABLE - MIDDLE OF MONTH 3");
+    categorization.selectTransaction("NON SHIFTABLE - MIDDLE OF MONTH 3");
     transactionDetails.checkShiftDisabled();
 
-    categorization.selectTableRow("NON SHIFTABLE - LAST MONTH");
+    categorization.selectTransaction("NON SHIFTABLE - LAST MONTH");
     transactionDetails.checkShiftDisabled();
 
-    categorization.selectTableRow("NON SHIFTABLE - FIRST MONTH");
+    categorization.selectTransaction("NON SHIFTABLE - FIRST MONTH");
     transactionDetails.checkShiftDisabled();
 
-    categorization.selectTableRow("SHIFTABLE TO NEXT");
+    categorization.selectTransaction("SHIFTABLE TO NEXT");
     transactionDetails.openShiftDialog()
       .checkMessageContains("next month")
       .validate();
     transactionDetails.checkShiftInverted();
 
-    categorization.selectTableRow("SHIFTABLE TO PREVIOUS");
+    categorization.selectTransaction("SHIFTABLE TO PREVIOUS");
     transactionDetails.openShiftDialog()
       .checkMessageContains("previous month")
       .validate();
@@ -80,12 +80,12 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       {"31/05/2008", "An enveloppe", "SHIFTABLE TO PREVIOUS", -13.00}
     });
 
-    categorization.selectTableRow("SHIFTABLE TO NEXT");
+    categorization.selectTransaction("SHIFTABLE TO NEXT");
     transactionDetails.checkShiftInverted();
     transactionDetails.unshift();
     transactionDetails.checkShiftEnabled();
 
-    categorization.selectTableRow("SHIFTABLE TO PREVIOUS");
+    categorization.selectTransaction("SHIFTABLE TO PREVIOUS");
     transactionDetails.checkShiftInverted();
     transactionDetails.unshift();
     transactionDetails.checkShiftEnabled();
@@ -113,13 +113,13 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     transactionDetails.checkShiftDisabled();
 
-    categorization.selectTableRow("SHIFTABLE TO NEXT");
+    categorization.selectTransaction("SHIFTABLE TO NEXT");
     transactionDetails.openShiftDialog()
       .checkMessageContains("next month")
       .validate();
     transactionDetails.checkShiftInverted();
 
-    categorization.selectTableRow("SHIFTABLE TO PREVIOUS");
+    categorization.selectTransaction("SHIFTABLE TO PREVIOUS");
     transactionDetails.openShiftDialog()
       .checkMessageContains("previous month")
       .validate();
@@ -160,7 +160,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkTotalAmounts(-12.00, -25.00);
 
     views.selectCategorization();
-    categorization.selectTableRow("Monoprix / End of june");
+    categorization.selectTransaction("Monoprix / End of june");
     transactionDetails.shift();
     categorization.checkTable(new Object[][]{
       {"01/07/2008", "Groceries", "MONOPRIX / END OF JUNE", -10.0},
@@ -209,7 +209,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkTotalAmounts(-12.00, -25.00);
 
     views.selectCategorization();
-    categorization.selectTableRow("Monoprix / June");
+    categorization.selectTransaction("Monoprix / June");
     transactionDetails.split("10.00", "dvd");
     categorization.checkTable(new Object[][]{
       {"15/07/2008", "Groceries", "MONOPRIX / JULY", -12.0},
@@ -264,7 +264,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.selectTableRow("Epargne / June");
+    categorization.selectTransaction("Epargne / June");
     categorization.selectEnvelopes();
     categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
     transactionDetails.checkShiftEnabled();
@@ -288,27 +288,24 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .setName("Epargne")
       .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Epargne")
-      .setCategory(MasterCategory.SAVINGS)
       .validate();
 
     views.selectCategorization();
-    categorization.selectAllTableRows()
-      .selectSavings()
-      .selectSavingsSeries("Epargne");
+    categorization.selectAllTableRows().selectSavings().selectSeries("Epargne");
 
-    categorization.selectTableRow("Epargne / July");
+    categorization.selectTransaction("Epargne / July");
     transactionDetails.shift();
     timeline.selectAll();
     views.selectData();
     transactions.initContent()
-      .add("01/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", 55.00, "Epargne", MasterCategory.SAVINGS)
-      .add("01/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", -55.00, "Epargne", MasterCategory.SAVINGS)
-      .add("05/07/2008", TransactionType.PLANNED, "Planned: Epargne", "", 55.00, "Epargne", MasterCategory.SAVINGS)
-      .add("05/07/2008", TransactionType.PLANNED, "Planned: Epargne", "", -55.00, "Epargne", MasterCategory.SAVINGS)
-      .add("30/06/2008", "05/07/2008", TransactionType.VIREMENT, "EPARGNE / JULY", "", 30.00, "Epargne", "Savings")
-      .add("30/06/2008", "05/07/2008", TransactionType.PRELEVEMENT, "EPARGNE / JULY", "", -30.00, "Epargne", "Savings")
-      .add("25/06/2008", TransactionType.VIREMENT, "EPARGNE / JUNE", "", 25.00, "Epargne", MasterCategory.SAVINGS)
-      .add("25/06/2008", TransactionType.PRELEVEMENT, "EPARGNE / JUNE", "", -25.00, "Epargne", MasterCategory.SAVINGS)
+      .add("01/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", 55.00, "Epargne")
+      .add("01/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", -55.00, "Epargne")
+      .add("05/07/2008", TransactionType.PLANNED, "Planned: Epargne", "", 55.00, "Epargne")
+      .add("05/07/2008", TransactionType.PLANNED, "Planned: Epargne", "", -55.00, "Epargne")
+      .add("30/06/2008", "05/07/2008", TransactionType.VIREMENT, "EPARGNE / JULY", "", 30.00, "Epargne")
+      .add("30/06/2008", "05/07/2008", TransactionType.PRELEVEMENT, "EPARGNE / JULY", "", -30.00, "Epargne")
+      .add("25/06/2008", TransactionType.VIREMENT, "EPARGNE / JUNE", "", 25.00, "Epargne")
+      .add("25/06/2008", TransactionType.PRELEVEMENT, "EPARGNE / JUNE", "", -25.00, "Epargne")
       .check();
   }
 }

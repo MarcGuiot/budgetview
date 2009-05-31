@@ -19,18 +19,18 @@ public class NextProjectsChecker extends GuiChecker {
   }
 
   public SeriesEditionDialogChecker createProject() {
-    return SeriesEditionDialogChecker.open(getPanel().getButton("createProject"), false);
+    return SeriesEditionDialogChecker.open(getPanel().getButton("createProject"));
   }
 
   public SeriesEditionDialogChecker editProjects() {
-    return SeriesEditionDialogChecker.open(getPanel().getButton("editAllProjects"), false);
+    return SeriesEditionDialogChecker.open(getPanel().getButton("editAllProjects"));
   }
 
   public SeriesEditionDialogChecker editRow(int row) {
     Table table = getTable();
     table.click(row, 0);
     org.uispec4j.Button projectNameButton = table.editCell(row, NextProjectsView.NAME_COLUMN_INDEX).getButton();
-    return SeriesEditionDialogChecker.open(projectNameButton, false);
+    return SeriesEditionDialogChecker.open(projectNameButton);
   }
 
   public NextProjectsChecker checkCellTextColorIsNormal(int row, int column) {

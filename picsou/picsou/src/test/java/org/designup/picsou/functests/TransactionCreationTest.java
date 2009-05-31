@@ -211,6 +211,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testInputDisabledInDemoMode() throws Exception {
-    fail("tbd");
+    fail("a reprendre quand on saura determiner si on est en mode demo");
   }
 }

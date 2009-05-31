@@ -16,8 +16,7 @@ import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.DefaultChangeSetListener;
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
-import static org.globsframework.model.utils.GlobMatchers.not;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -49,7 +48,6 @@ public class BudgetView extends View {
     addBudgetAreaView("incomeBudgetView", BudgetArea.INCOME, builder, seriesEditionDialog);
     addBudgetAreaView("recurringBudgetView", BudgetArea.RECURRING, builder, seriesEditionDialog);
     addBudgetAreaView("envelopeBudgetView", BudgetArea.ENVELOPES, builder, seriesEditionDialog);
-    addBudgetAreaView("occasionalBudgetView", BudgetArea.OCCASIONAL, builder, seriesEditionDialog);
     addBudgetAreaView("projectsBudgetView", BudgetArea.SPECIAL, builder, seriesEditionDialog);
     addBudgetAreaView("savingsBudgetView", BudgetArea.SAVINGS, builder, seriesEditionDialog);
 
@@ -71,14 +69,7 @@ public class BudgetView extends View {
   }
 
   private void addBudgetAreaView(String name, BudgetArea budgetArea, GlobsPanelBuilder builder, final SeriesEditionDialog seriesEditionDialog) {
-    View view;
-    if (budgetArea == BudgetArea.OCCASIONAL) {
-      view = new OccasionalSeriesView(name, repository, directory);
-    }
-    else {
-      view = new BudgetAreaSeriesView(name, budgetArea, repository, directory,
-                                      seriesEditionDialog);
-    }
+    View view = new BudgetAreaSeriesView(name, budgetArea, repository, directory, seriesEditionDialog);
     view.registerComponents(builder);
   }
 
@@ -106,9 +97,8 @@ public class BudgetView extends View {
     if (prefs != null) {
       helpMessage.setVisible(Boolean.TRUE.equals(prefs.get(UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE)) &&
                              repository.contains(Series.TYPE,
-                                                 not(fieldIn(Series.ID,
-                                                             Series.OCCASIONAL_SERIES_ID,
-                                                             Series.UNCATEGORIZED_SERIES_ID))));
+                                                 not(fieldEquals(Series.ID,
+                                                                 Series.UNCATEGORIZED_SERIES_ID))));
     }
   }
 }

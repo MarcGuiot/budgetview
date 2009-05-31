@@ -71,7 +71,7 @@ public class SplitTransactionDialog {
 
     localRepository =
       LocalGlobRepositoryBuilder.init(repository)
-        .copy(Month.TYPE, Category.TYPE, Series.TYPE, SeriesToCategory.TYPE)
+        .copy(Month.TYPE, Series.TYPE, SubSeries.TYPE)
         .get();
 
     localDirectory = new DefaultDirectory(directory);

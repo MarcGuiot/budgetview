@@ -22,13 +22,13 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     timeline.checkSpanEquals("2008/07", "2010/07");
 
     views.selectCategorization();
-    categorization.setRecurring(0, "Internet", MasterCategory.TELECOMS, true);
+    categorization.setNewRecurring(0, "Internet");
 
     timeline.selectMonth("2008/07");
 
     views.selectData();
     transactions.initContent()
-      .add("08/07/2008", TransactionType.PRELEVEMENT, "free telecom", "", -29.90, "Internet", "Telecommunications")
+      .add("08/07/2008", TransactionType.PRELEVEMENT, "free telecom", "", -29.90, "Internet", "")
       .check();
 
     views.selectHome();
@@ -41,7 +41,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     views.selectData();
     transactions.initContent()
-      .add("08/08/2008", TransactionType.PLANNED, "Planned: Internet", "", -29.90, "Internet", MasterCategory.TELECOMS)
+      .add("08/08/2008", TransactionType.PLANNED, "Planned: Internet", "", -29.90, "Internet")
       .check();
 
     views.selectHome();
@@ -72,9 +72,9 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initContent()
-      .add("30/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant", MasterCategory.FOOD)
-      .add("30/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant", MasterCategory.FOOD)
-      .add("30/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant", MasterCategory.FOOD)
+      .add("30/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant")
+      .add("30/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant")
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")
       .check();
 
     TimeService.setCurrentDate(Dates.parse("2008/08/10"));
@@ -88,9 +88,9 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     transactions
       .initContent()
-      .add("30/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -50.00, "Courant", MasterCategory.FOOD)
-      .add("04/08/2008", TransactionType.PRELEVEMENT, "ED", "", -50.00, "Courant", MasterCategory.FOOD)
-      .add("30/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant", MasterCategory.FOOD)
+      .add("30/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -50.00, "Courant")
+      .add("04/08/2008", TransactionType.PRELEVEMENT, "ED", "", -50.00, "Courant")
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")
       .check();
   }
 
@@ -113,10 +113,10 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initContent()
-      .add("20/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant", MasterCategory.FOOD)
-      .add("20/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant", MasterCategory.FOOD)
-      .add("20/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant", MasterCategory.FOOD)
-      .add("20/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant", MasterCategory.FOOD)
+      .add("20/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
+      .add("20/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
+      .add("20/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant")
+      .add("20/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")
       .check();
 
     OfxBuilder
@@ -126,11 +126,11 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     transactions
       .initContent()
-      .add("20/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant", MasterCategory.FOOD)
-      .add("20/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant", MasterCategory.FOOD)
-      .add("30/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant", MasterCategory.FOOD)
+      .add("20/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
+      .add("20/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
+      .add("30/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant")
       .add("30/06/2008", TransactionType.PRELEVEMENT, "ED", "", -80.00)
-      .add("20/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant", MasterCategory.FOOD)
+      .add("20/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")
       .check();
 
     views.selectCategorization();
@@ -138,11 +138,11 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initContent()
-      .add("20/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant", MasterCategory.FOOD)
-      .add("20/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant", MasterCategory.FOOD)
-      .add("30/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant", MasterCategory.FOOD)
-      .add("30/06/2008", TransactionType.PRELEVEMENT, "ED", "", -80.00, "Courant", MasterCategory.FOOD)
-      .add("20/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant", MasterCategory.FOOD)
+      .add("20/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
+      .add("20/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
+      .add("30/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant")
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "ED", "", -80.00, "Courant")
+      .add("20/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")
       .check();
   }
 
@@ -180,10 +180,10 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.initContent()
-      .add("20/06/2008", TransactionType.PLANNED, "Planned: EDF", "", -50.00, "EDF", MasterCategory.EQUIPMENT)
-      .add("20/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant", MasterCategory.FOOD)
-      .add("20/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant", MasterCategory.FOOD)
-      .add("10/06/2008", TransactionType.PRELEVEMENT, "EDF", "", -100.00, "EDF", MasterCategory.EQUIPMENT)
+      .add("20/06/2008", TransactionType.PLANNED, "Planned: EDF", "", -50.00, "EDF")
+      .add("20/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant")
+      .add("20/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")
+      .add("10/06/2008", TransactionType.PRELEVEMENT, "EDF", "", -100.00, "EDF")
       .check();
   }
 
@@ -201,7 +201,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     views.selectData();
     transactions.initContent()
-      .add("01/09/2008", TransactionType.PLANNED, "Planned: Miami trip", "", -2000.00, "Miami trip", MasterCategory.LEISURES)
+      .add("01/09/2008", TransactionType.PLANNED, "Planned: Miami trip", "", -2000.00, "Miami trip")
       .check();
   }
 }

@@ -26,7 +26,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
     categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
     categorization.setRecurring("EDF", "Energy", MasterCategory.HOUSE, true);
-    categorization.setIncome("WorldCo", "Salary", true);
+    categorization.setNewIncome("WorldCo", "Salary");
 
     views.selectBudget();
     budgetView.recurring.editSeries("Energy").setTwoMonths().validate();
@@ -69,7 +69,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Internet", "", "30.00", "30.00", "30.00", "30.00", "30.00", "30.00", "30.00")
       .add("Envelopes", "", "20.00", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00")
       .add("Groceries", "", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00")
-      .add("Occasional", "", "", "", "", "", "", "", "")
       .add("Special", "", "", "", "", "", "+100.00", "300.00", "")
       .add("Christmas", "", "", "", "", "", "", "300.00", "")
       .add("Lottery", "", "", "", "", "", "+100.00", "", "")
@@ -102,7 +101,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     );
     seriesEvolution.checkTableIsEmpty(
       "Balance", "Main account", "Savings account", "To categorize",
-      "Income", "Recurring", "Envelopes", "Occasional", "Special", "Savings");
+      "Income", "Recurring", "Envelopes", "Special", "Savings");
   }
 
   public void testColumnNamesAreUpdatedOnMonthSelection() throws Exception {
@@ -176,22 +175,20 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
-    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
-    categorization.setIncome("WorldCo", "Salary", true);
-    categorization.setIncome("GlobalCorp", "Salary 2", true);
+    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewRecurring("Free Telecom", "Internet");
+    categorization.setNewIncome("WorldCo", "Salary");
+    categorization.setNewIncome("GlobalCorp", "Salary 2");
 
     views.selectEvolution();
     String[] expanded = {"Balance", "Main account", "Savings account", "To categorize",
                          "Income", "Salary", "Salary 2",
                          "Recurring", "Internet",
                          "Envelopes", "Groceries",
-                         "Occasional",
-                         "Special",
-                         "Savings"};
+                         "Special", "Savings"};
 
     String[] collapsed = {"Balance", "Main account", "Savings account", "To categorize",
-                          "Income", "Recurring", "Envelopes", "Occasional", "Special", "Savings"};
+                          "Income", "Recurring", "Envelopes", "Special", "Savings"};
 
     seriesEvolution.checkRowLabels(expanded);
 
@@ -206,7 +203,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
                                    "Income",
                                    "Recurring", "Internet",
                                    "Envelopes", "Groceries",
-                                   "Occasional",
                                    "Special",
                                    "Savings");
 
@@ -311,7 +307,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       "\tRecurring\t\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\n" +
       "\tTaxes\t\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\n" +
       "\tEnvelopes\t\t\t\t\t\t\t\t\n" +
-      "\tOccasional\t\t\t\t\t\t\t\t\n" +
       "\tSpecial\t\t\t\t\t\t\t\t\n" +
       "\tSavings\t\t\t\t\t\t\t\t\n"
     );

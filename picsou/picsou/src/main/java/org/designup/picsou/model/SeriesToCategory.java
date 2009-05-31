@@ -15,6 +15,7 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 
+/** @deprecated */
 public class SeriesToCategory {
   public static GlobType TYPE;
 

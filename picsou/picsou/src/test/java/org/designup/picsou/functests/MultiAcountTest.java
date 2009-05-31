@@ -25,7 +25,7 @@ public class MultiAcountTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectData();
     transactions.initContent()
-      .add("10/08/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne", MasterCategory.SAVINGS)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne")
       .add("10/08/2008", TransactionType.VIREMENT, "Virement", "", 100.00)
       .check();
   }

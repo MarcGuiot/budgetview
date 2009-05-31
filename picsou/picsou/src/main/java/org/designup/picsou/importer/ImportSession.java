@@ -54,7 +54,7 @@ public class ImportSession {
 
   public List<String> loadFile(File file) throws IOException, TruncatedFile {
     localRepository.reset(GlobList.EMPTY, Transaction.TYPE, ImportedTransaction.TYPE);
-    GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Category.TYPE};
+    GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE};
     localRepository.reset(referenceRepository.getAll(types), types);
 
     importChangeSet = new DefaultChangeSet();
@@ -181,7 +181,6 @@ public class ImportSession {
         value(Transaction.DAY, userDate == null ? null : Month.getDay(userDate)),
         value(Transaction.ACCOUNT, importedTransaction.get(ImportedTransaction.ACCOUNT)),
         value(Transaction.AMOUNT, importedTransaction.get(ImportedTransaction.AMOUNT)),
-        value(Transaction.CATEGORY, importedTransaction.get(ImportedTransaction.CATEGORY)),
         value(Transaction.NOTE, importedTransaction.get(ImportedTransaction.NOTE)),
         value(Transaction.LABEL, importedTransaction.get(ImportedTransaction.LABEL)),
         value(Transaction.ORIGINAL_LABEL, importedTransaction.get(ImportedTransaction.ORIGINAL_LABEL)),
@@ -195,19 +194,10 @@ public class ImportSession {
         value(Transaction.QIF_P, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.QIF_P))),
         value(Transaction.IS_OFX, importedTransaction.get(ImportedTransaction.IS_OFX))
       );
-      Integer seriesId = getSeriesId(importedTransaction);
-      if (seriesId != null) {
-        localRepository.update(transaction.getKey(), Transaction.SERIES, seriesId);
-      }
       createdTransactions.add(transaction);
       nextId++;
     }
     return createdTransactions;
-  }
-
-  private Integer getSeriesId(Glob importedTransaction) {
-    Integer categoryId = importedTransaction.get(ImportedTransaction.CATEGORY);
-    return categoryId != 0 ? Series.OCCASIONAL_SERIES_ID : null;
   }
 
   private Date parseDate(DateFormat dateFormat, Glob glob, StringField dateField) {

@@ -32,7 +32,7 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "<delete _account='-1' _amount='-1000.0' _bankDay='25' _bankMonth='200808'\n" +
-      "        _category='2' _day='25' _label='Planned: courses' _month='200808' _planned='true' _mirror='false'" +
+      "        _category='0' _day='25' _label='Planned: courses' _month='200808' _planned='true' _mirror='false'" +
       "        _series='101' _transactionType='5' id='100' type='transaction' _createdBySeries='false'/>\n" +
       "<create amount='-1000.0' bankMonth='200808' id='0' month='200808' bankDay='1' \n" +
       "        planned='false' series='101' type='transaction' category='0' mirror='false' createdBySeries='false'/>");
@@ -40,7 +40,7 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <create account='-1' amount='-200.0' bankDay='25' bankMonth='200808' mirror='false'\n" +
-      "          category='2' day='25' id='102' label='Planned: courses' month='200808'\n" +
+      "          category='0' day='25' id='102' label='Planned: courses' month='200808'\n" +
       "          planned='true' series='101' transactionType='5' type='transaction' createdBySeries='false'/>");
   }
 
@@ -73,7 +73,7 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "<create account='-1' amount='-100.0' bankDay='25' bankMonth='200808'\n" +
-      "        category='2' day='25' id='" + enveloppeTransactions[0] + "' label='Planned: courses' month='200808'\n" +
+      "        category='0' day='25' id='" + enveloppeTransactions[0] + "' label='Planned: courses' month='200808'\n" +
       "        planned='true' series='101' transactionType='5' type='transaction' mirror='false' createdBySeries='false'/>");
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
@@ -112,7 +112,7 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "<delete _account='-1' _amount='300.0' _bankDay='4' _bankMonth='200808'\n" +
-      "      _category='19' _day='4' _label='Planned: salaire' _month='200808' _planned='true'\n" +
+      "      _category='0' _day='4' _label='Planned: salaire' _month='200808' _planned='true'\n" +
       "      _series='102' _transactionType='1' id='100' type='transaction' _mirror='false' _createdBySeries='false'/>" +
       "");
     listener.assertLastChangesEqual(

@@ -39,7 +39,7 @@ public class SeriesWizardDialog {
 
     this.localRepository =
       LocalGlobRepositoryBuilder.init(parentRepository)
-        .copy(Category.TYPE, Series.TYPE, SeriesToCategory.TYPE, Month.TYPE,
+        .copy(Series.TYPE, SubSeries.TYPE, Month.TYPE,
               CurrentMonth.TYPE,
               SeriesStat.TYPE, SeriesBudget.TYPE)
         .get();

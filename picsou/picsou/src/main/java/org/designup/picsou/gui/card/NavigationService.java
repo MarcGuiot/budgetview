@@ -1,12 +1,10 @@
 package org.designup.picsou.gui.card;
 
-import org.designup.picsou.gui.categories.CategoryView;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.series.view.SeriesView;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.MasterCategory;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -24,7 +22,6 @@ public class NavigationService implements GlobSelectionListener {
 
   private SelectionService selectionService;
   private CategorizationView categorizationView;
-  private CategoryView categoryView;
   private SeriesView seriesView;
   private GlobRepository repository;
 
@@ -33,12 +30,10 @@ public class NavigationService implements GlobSelectionListener {
   private Stack<Card> forwardStack = new Stack<Card>();
 
   public NavigationService(CategorizationView categorizationView,
-                           CategoryView categoryView,
                            SeriesView seriesView,
                            GlobRepository repository,
                            Directory directory) {
     this.categorizationView = categorizationView;
-    this.categoryView = categoryView;
     this.seriesView = seriesView;
     this.repository = repository;
     this.selectionService = directory.get(SelectionService.class);
@@ -69,21 +64,12 @@ public class NavigationService implements GlobSelectionListener {
   public void gotoDataForSeries(Glob series) {
     selectionService.select(repository.get(Account.ALL_SUMMARY_KEY));
     seriesView.selectSeries(series);
-    categoryView.select(MasterCategory.ALL.getId());
     select(Card.DATA, false);
   }
 
   public void gotoData(BudgetArea budgetArea) {
     selectionService.select(repository.get(Account.ALL_SUMMARY_KEY));
     seriesView.selectBudgetArea(budgetArea);
-    categoryView.select(MasterCategory.ALL.getId());
-    select(Card.DATA, false);
-  }
-
-  public void gotoData(BudgetArea budgetArea, Glob category) {
-    selectionService.select(repository.get(Account.ALL_SUMMARY_KEY));
-    seriesView.selectBudgetArea(budgetArea);
-    categoryView.select(category);
     select(Card.DATA, false);
   }
 

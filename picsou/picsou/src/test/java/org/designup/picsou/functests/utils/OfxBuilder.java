@@ -6,13 +6,11 @@ import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.exporter.ofx.OfxExporter;
 import org.designup.picsou.model.*;
 import static org.designup.picsou.model.Transaction.*;
-import org.designup.picsou.model.initial.InitialCategories;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
-import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import java.io.File;
@@ -53,15 +51,7 @@ public class OfxBuilder {
       GlobRepositoryBuilder.init()
         .add(TransactionType.values())
         .get();
-    InitialCategories.run(repository);
     repository.create(Key.create(Bank.TYPE, Bank.GENERIC_BANK_ID));
-  }
-
-  public OfxBuilder addCategory(MasterCategory master, String categoryName) {
-    repository.create(Category.TYPE,
-                      value(Category.NAME, categoryName),
-                      value(Category.MASTER, master.getId()));
-    return this;
   }
 
   public OfxBuilder addBankAccount(int bankEntityId, int branchId, String accountNumber, double position, String updateDate) {
@@ -89,32 +79,34 @@ public class OfxBuilder {
     return addTransactionWithNote(yyyyMMdd, amount, label, null, (MasterCategory)null);
   }
 
+  /** @deprecated plus de categories */
   public OfxBuilder addTransaction(String yyyyMMdd, double amount, String label, MasterCategory category) {
     return addTransactionWithNote(yyyyMMdd, amount, label, null, category);
   }
 
   public OfxBuilder addTransaction(String userDate, String bankDate, double amount, String label) {
-    return doAddTransaction(userDate, bankDate, amount, label, null, null, null, null);
+    return doAddTransaction(userDate, bankDate, amount, label, null, null, null);
   }
 
   public OfxBuilder addTransaction(String yyyyMMdd, double amount, String label, String category) {
-    return doAddTransaction(yyyyMMdd, null, amount, label, null, getId(category), null, null);
+    return doAddTransaction(yyyyMMdd, null, amount, label, null, null, null);
   }
 
   public OfxBuilder addTransactionWithNote(String yyyyMMdd, double amount, String label, String note) {
-    return doAddTransaction(yyyyMMdd, null, amount, label, note, null, null, null);
+    return doAddTransaction(yyyyMMdd, null, amount, label, note, null, null);
   }
 
   public OfxBuilder addTransactionWithNote(String yyyyMMdd, double amount, String label, String category, String note) {
-    return doAddTransaction(yyyyMMdd, null, amount, label, note, Category.findId(category, repository), null, null);
+    return doAddTransaction(yyyyMMdd, null, amount, label, note, null, null);
   }
 
+  /** @deprecated plus de categories */
   public OfxBuilder addTransactionWithNote(String yyyyMMdd, double amount, String label, String note, MasterCategory category) {
-    return doAddTransaction(yyyyMMdd, null, amount, label, note, category == null ? null : category.getId(), null, null);
+    return doAddTransaction(yyyyMMdd, null, amount, label, note, null, null);
   }
 
   public OfxBuilder addDispensableTransaction(String date, double amount, String label) {
-    return doAddTransaction(date, null, amount, label, null, null, null, true);
+    return doAddTransaction(date, null, amount, label, null, null, true);
   }
 
   public OfxBuilder splitTransaction(String date, String label, double amount, String note, String category) {
@@ -127,26 +119,15 @@ public class OfxBuilder {
                                          isNull(Transaction.SPLIT_SOURCE)));
     Assert.assertEquals("transaction not found", 1, all.size());
     Glob parent = all.get(0);
-    doAddTransaction(date, null, amount, label, note, Category.findId(category, repository),
+    doAddTransaction(date, null, amount, label, note,
                      parent.get(Transaction.ID), null);
 
     repository.update(parent.getKey(), Transaction.SPLIT, Boolean.TRUE);
     return this;
   }
 
-  private Integer getId(String category) {
-    if (category == null) {
-      return null;
-    }
-    Integer result = Category.findId(category, repository);
-    if (result == null) {
-      throw new ItemNotFound(category);
-    }
-    return result;
-  }
-
   private OfxBuilder doAddTransaction(String userDate, String bankDate, double amount, String label, String note,
-                                      Integer categoryId, Integer parentId, Boolean dispensable) {
+                                      Integer parentId, Boolean dispensable) {
     if (currentAccount == null) {
       addBankAccount(30066, 1234, DEFAULT_ACCOUNT_ID, 0.0, null);
     }
@@ -164,7 +145,6 @@ public class OfxBuilder {
                         value(BANK_DAY, Month.getDay(parsedBankDate)),
                         value(LABEL, label),
                         value(ORIGINAL_LABEL, label),
-                        value(CATEGORY, categoryId),
                         value(ACCOUNT, currentAccount.get(Account.ID)),
                         value(NOTE, note));
     if (parentId != null) {

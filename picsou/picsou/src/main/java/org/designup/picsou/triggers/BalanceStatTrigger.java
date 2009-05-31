@@ -54,8 +54,6 @@ public class BalanceStatTrigger implements ChangeSetListener {
     private double remaningEnvelopes = 0;
     private double plannedEnvelopes = 0;
     private double occasional = 0;
-    private double remaningOccasional = 0;
-    private double plannedOccasional = 0;
     private double special = 0;
     private double remaningSpecial = 0;
     private double plannedSpecial = 0;
@@ -163,15 +161,6 @@ public class BalanceStatTrigger implements ChangeSetListener {
             amounts.plannedExpenses += budget.get(SeriesBudget.AMOUNT);
           }
         }
-        else if (BudgetArea.OCCASIONAL.getId().equals(series.get(Series.BUDGET_AREA))) {
-          GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
-            .getGlobs();
-          for (Glob budget : budgets) {
-            SeriesAmounts amounts = getOrCreate(budget.get(SeriesBudget.MONTH));
-            amounts.plannedOccasional += budget.get(SeriesBudget.AMOUNT);
-            amounts.plannedExpenses += budget.get(SeriesBudget.AMOUNT);
-          }
-        }
       }
     }
 
@@ -254,14 +243,6 @@ public class BalanceStatTrigger implements ChangeSetListener {
             }
           }
         }
-        else if (Series.OCCASIONAL_SERIES_ID.equals(transactionSeries)) {
-          if (transaction.get(Transaction.PLANNED)) {
-            amounts.remaningOccasional += amount;
-          }
-          else {
-            amounts.occasional += amount;
-          }
-        }
         else {
           amounts.uncategorized += Math.abs(amount);
         }
@@ -323,10 +304,6 @@ public class BalanceStatTrigger implements ChangeSetListener {
                           value(BalanceStat.EXPENSE, seriesAmounts.expenses),
                           value(BalanceStat.EXPENSE_REMAINING, seriesAmounts.remaningExpenses),
                           value(BalanceStat.EXPENSE_PLANNED, seriesAmounts.plannedExpenses),
-
-                          value(BalanceStat.OCCASIONAL, seriesAmounts.occasional),
-                          value(BalanceStat.OCCASIONAL_REMAINING, seriesAmounts.remaningOccasional),
-                          value(BalanceStat.OCCASIONAL_PLANNED, seriesAmounts.plannedOccasional),
 
                           value(BalanceStat.RECURRING, seriesAmounts.recurring),
                           value(BalanceStat.RECURRING_REMAINING, seriesAmounts.remaningRecurring),

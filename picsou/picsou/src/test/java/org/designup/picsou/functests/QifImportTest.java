@@ -25,8 +25,6 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .add("13/04/2006", TransactionType.CREDIT_CARD, "STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", "", -18.70)
       .check();
 
-    categories.checkSelection(MasterCategory.ALL);
-
     transactions.initAmountContent()
       .add("22/04/2006", "SACLAY", -55.49, "To categorize", 0.00, 0.00, "Main account")
       .add("20/04/2006", "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", -17.65, "To categorize", 55.49, 55.49, "Main account")
@@ -149,13 +147,12 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/11", -2.23, "Tx 2")
       .load();
     views.selectCategorization();
-    categorization.selectTableRows("Tx 2");
+    categorization.selectTransactions("Tx 2");
     transactionDetails.split("-1.19", "info 1");
-    categorization.selectOccasional()
-      .selectOccasionalSeries(MasterCategory.BEAUTY);
+    categorization.selectEnvelopes().selectNewSeries("Income");
+
     transactionDetails.split("-0.69", "info 2");
-    categorization.selectOccasional()
-      .selectOccasionalSeries(MasterCategory.BANK);
+    categorization.selectEnvelopes().selectSeries("Income");
     transactionDetails.split("-0.01", "info 3");
 
     QifBuilder
@@ -167,12 +164,12 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initContent()
-      .add("12/01/2006", TransactionType.PRELEVEMENT, "Tx 3", "", -2.2, MasterCategory.NONE)
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -0.34, MasterCategory.NONE)
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info 3", -0.01, MasterCategory.NONE)
-      .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info 2", -0.69, MasterCategory.BANK)
-      .addOccasional("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info 1", -1.19, MasterCategory.BEAUTY)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1, MasterCategory.NONE)
+      .add("12/01/2006", TransactionType.PRELEVEMENT, "Tx 3", "", -2.2)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "", -0.34)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info 3", -0.01)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info 2", -0.69, "Income")
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info 1", -1.19, "Income")
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1)
       .check();
   }
 

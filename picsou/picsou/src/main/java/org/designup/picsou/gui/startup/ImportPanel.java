@@ -288,8 +288,7 @@ public class ImportPanel {
   private void loadLocalRepository(GlobRepository repository) {
     GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE,
                             Account.TYPE, AccountUpdateMode.TYPE,
-                            Category.TYPE, Transaction.TYPE,
-                            Month.TYPE, UserPreferences.TYPE};
+                            Transaction.TYPE, Month.TYPE, UserPreferences.TYPE};
 
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)

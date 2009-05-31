@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.categorization.components.*;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.CustomFilterMessagePanel;
@@ -9,7 +8,6 @@ import org.designup.picsou.gui.components.filtering.FilterSet;
 import org.designup.picsou.gui.components.filtering.FilterSetListener;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
-import org.designup.picsou.gui.description.CategoryComparator;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
@@ -31,8 +29,7 @@ import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
-import static org.globsframework.gui.views.utils.LabelCustomizers.autoTooltip;
-import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
+import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
@@ -55,8 +52,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.jidesoft.comparator.FastComparableComparator;
 
 public class CategorizationView extends View implements TableView, Filterable {
   private GlobList currentTransactions = GlobList.EMPTY;
@@ -166,12 +161,9 @@ public class CategorizationView extends View implements TableView, Filterable {
 
     addSingleCategorySeriesChooser("incomeSeriesChooser", BudgetArea.INCOME, builder);
     addSingleCategorySeriesChooser("recurringSeriesChooser", BudgetArea.RECURRING, builder);
-
-    addMultiCategoriesSeriesChooser("envelopeSeriesChooser", BudgetArea.ENVELOPES, builder);
-    addMultiCategoriesSeriesChooser("specialSeriesChooser", BudgetArea.SPECIAL, builder);
+    addSingleCategorySeriesChooser("envelopesSeriesChooser", BudgetArea.ENVELOPES, builder);
+    addSingleCategorySeriesChooser("specialSeriesChooser", BudgetArea.SPECIAL, builder);
     addSingleCategorySeriesChooser("savingsSeriesChooser", BudgetArea.SAVINGS, builder);
-
-    addOccasionalSeriesChooser(builder);
 
     TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory, this);
     transactionDetailsView.registerComponents(builder);
@@ -254,7 +246,7 @@ public class CategorizationView extends View implements TableView, Filterable {
                                                Series.TYPE,
                                                linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
                                                SeriesNameComparator.INSTANCE,
-                                               new SingleCategorySeriesComponentFactory(invisibleRadio,
+                                               new SeriesComponentFactory(budgetArea, invisibleRadio,
                                                                                         seriesEditionDialog,
                                                                                         repository,
                                                                                         directory));
@@ -265,51 +257,6 @@ public class CategorizationView extends View implements TableView, Filterable {
     panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
 
     builder.add(name, panelBuilder);
-  }
-
-  private void addMultiCategoriesSeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder builder) {
-    GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationView.class,
-                                                           "/layout/multiCategoriesSeriesChooserPanel.splits",
-                                                           repository, directory);
-
-    panelBuilder.add("hyperlinkHandler", new HyperlinkHandler(directory));
-
-    NoSeriesMessage noSeriesMessage = new NoSeriesMessage(budgetArea, repository);
-    panelBuilder.add("noSeriesMessage", noSeriesMessage.getComponent());
-
-    final JRadioButton invisibleRadio = new JRadioButton("name");
-    panelBuilder.add("invisibleSelector", invisibleRadio);
-    GlobRepeat repeat = panelBuilder.addRepeat("seriesRepeat",
-                                               Series.TYPE,
-                                               linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
-                                               SeriesNameComparator.INSTANCE,
-                                               new MultiCategoriesSeriesComponentFactory(budgetArea, invisibleRadio,
-                                                                                         seriesEditionDialog,
-                                                                                         repository, directory));
-    seriesRepeat.add(new Pair<PicsouMatchers.CategorizationFilter, GlobRepeat>(
-      PicsouMatchers.seriesFilter(budgetArea.getId()), repeat));
-    panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
-    panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
-
-    builder.add(name, panelBuilder);
-  }
-
-  private void addOccasionalSeriesChooser(GlobsPanelBuilder builder) {
-    JRadioButton invisibleOccasionalRadio = new JRadioButton("occasional");
-    builder.add("invisibleOccasionalToggle", invisibleOccasionalRadio);
-    builder.addRepeat("occasionalSeriesRepeat",
-                      Category.TYPE,
-                      new GlobMatcher() {
-                        public boolean matches(Glob category, GlobRepository repository) {
-                          return Category.isMaster(category) && !Category.isAll(category) && !Category.isNone(category);
-                        }
-                      },
-                      new CategoryComparator(repository, directory),
-                      new OccasionalCategoriesComponentFactory("occasionalSeries", "occasionalCategoryToggle",
-                                                               BudgetArea.OCCASIONAL,
-                                                               invisibleOccasionalRadio,
-                                                               repository, directory));
-    builder.add("editCategories", new EditCategoriesAction());
   }
 
   private Comparator<Glob> getTransactionComparator() {
@@ -358,10 +305,6 @@ public class CategorizationView extends View implements TableView, Filterable {
                                                   budgetArea);
       Glob series = repository.find(key);
       if (key != null && series != null) {
-        Integer category = seriesEditionDialog.getCurrentCategory();
-        if (category == null) {
-          category = series.get(Series.DEFAULT_CATEGORY);
-        }
         repository.startChangeSet();
         try {
           boolean noneMatch = false;
@@ -374,7 +317,7 @@ public class CategorizationView extends View implements TableView, Filterable {
           for (Glob transaction : currentTransactions) {
             repository.update(transaction.getKey(),
                               FieldValue.value(Transaction.SERIES, series.get(Series.ID)),
-                              FieldValue.value(Transaction.CATEGORY, category));
+                              FieldValue.value(Transaction.SUB_SERIES, null));
           }
         }
         finally {
@@ -458,21 +401,6 @@ public class CategorizationView extends View implements TableView, Filterable {
     return mode.getMatcher(repository, selectionService);
   }
 
-  private class EditCategoriesAction extends AbstractAction {
-    private EditCategoriesAction() {
-      super(Lang.get("categorization.categories.edit"));
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      CategoryEditionDialog dialog = new CategoryEditionDialog(repository, directory) {
-        public Window getParent() {
-          return directory.get(JFrame.class);
-        }
-      };
-      dialog.show(GlobList.EMPTY);
-    }
-  }
-
   private class TransactionLabelCustomizer implements LabelCustomizer {
     public void process(JLabel label, Glob transaction, boolean isSelected, boolean hasFocus, int row, int column) {
       if (isSelected) {
@@ -498,6 +426,7 @@ public class CategorizationView extends View implements TableView, Filterable {
 
   private static class SeriesNameComparator implements Comparator<Glob> {
     static Comparator<Glob> INSTANCE = new SeriesNameComparator();
+
     public int compare(Glob o1, Glob o2) {
       return Utils.compareIgnoreCase(o1.get(Series.NAME), o2.get(Series.NAME));
     }

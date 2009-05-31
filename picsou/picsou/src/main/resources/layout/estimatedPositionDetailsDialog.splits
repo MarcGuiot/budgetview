@@ -67,11 +67,8 @@
               <label gridPos="(0,8)" text="$estimatedPositionDetails.amount.envelope" styleClass="amountLabel"/>
               <label gridPos="(1,8)" ref="remainingEnvelope" styleClass="amount"/>
 
-              <label gridPos="(0,9)" text="$estimatedPositionDetails.amount.occasional" styleClass="amountLabel"/>
-              <label gridPos="(1,9)" ref="remainingOccasional" styleClass="amount"/>
-
-              <label gridPos="(0,10)" text="$estimatedPositionDetails.amount.special" styleClass="amountLabel"/>
-              <label gridPos="(1,10)" ref="remainingSpecial" styleClass="amount"/>
+              <label gridPos="(0,9)" text="$estimatedPositionDetails.amount.special" styleClass="amountLabel"/>
+              <label gridPos="(1,9)" ref="remainingSpecial" styleClass="amount"/>
             </grid>
             <filler fill="horizontal"/>
           </row>

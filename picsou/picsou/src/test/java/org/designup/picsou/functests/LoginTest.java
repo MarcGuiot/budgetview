@@ -4,7 +4,6 @@ import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.uispec4j.ToggleButton;
 import org.uispec4j.Trigger;
@@ -72,16 +71,16 @@ public class LoginTest extends StartUpFunctionalTestCase {
     OperationChecker.init(window).importOfxFile(filePath);
     getTransactionView()
       .initContent()
-      .add("11/01/2006", TransactionType.CHECK, "CHEQUE N°12345", "", -12.00, MasterCategory.NONE)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.NONE)
+      .add("11/01/2006", TransactionType.CHECK, "CHEQUE N°12345", "", -12.00)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
 
     openNewLoginWindow();
     login.logExistingUser("toto", "p4ssw0rd");
     getTransactionView()
       .initContent()
-      .add("11/01/2006", TransactionType.CHECK, "CHEQUE N°12345", "", -12.00, MasterCategory.NONE)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.NONE)
+      .add("11/01/2006", TransactionType.CHECK, "CHEQUE N°12345", "", -12.00)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
   }
 
@@ -202,7 +201,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
 
-    getCategorizationView().setOccasional("Menu K", MasterCategory.FOOD);
+    getCategorizationView().setNewEnvelope("Menu K", "Food");
 
     openNewLoginWindow();
     login.logExistingUser("toto", "p4ssw0rd");
@@ -214,15 +213,15 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .load();
 
     getTransactionView().initContent()
-      .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu A", "", -2, MasterCategory.NONE)
-      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.FOOD)
+      .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu A", "", -2)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, "Food")
       .check();
 
-    getCategorizationView().setOccasional("Menu A", MasterCategory.FOOD);
+    getCategorizationView().setEnvelope("Menu A", "Food");
 
     getTransactionView().initContent()
-      .addOccasional("12/01/2006", TransactionType.PRELEVEMENT, "Menu A", "", -2, MasterCategory.FOOD)
-      .addOccasional("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, MasterCategory.FOOD)
+      .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu A", "", -2, "Food")
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, "Food")
       .check();
   }
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel name="subSeriesEditionPanel" opaque="false">
+    <column>
+      <row>
+        <textField ref="subSeriesNameField"/>
+        <button action="add" fill="none"/>
+      </row>
+      <list ref="list"/>
+    </column>
+  </panel>
+
+</splits>

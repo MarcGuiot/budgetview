@@ -24,17 +24,16 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Income",
                          "Recurring",
                          "Envelopes",
-                         "Occasional",
                          "Special",
                          "Savings");
 
     views.selectCategorization();
-    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
-    categorization.setEnvelope("Monoprix", "Groceries", MasterCategory.FOOD, false);
-    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
-    categorization.setRecurring("EDF", "Electricity", MasterCategory.HOUSE, true);
+    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setEnvelope("Monoprix", "Groceries");
+    categorization.setNewRecurring("Free Telecom", "Internet");
+    categorization.setNewRecurring("EDF", "Electricity");
     categorization.setExceptionalIncome("WorldCo - Bonus", "Exceptional Income", true);
-    categorization.setIncome("WorldCo", "Salary", true);
+    categorization.setNewIncome("WorldCo", "Salary");
 
     views.selectData();
     series.checkContains("All",
@@ -42,36 +41,35 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Income", "Exceptional Income", "Salary",
                          "Recurring", "Electricity", "Internet",
                          "Envelopes", "Groceries",
-                         "Occasional",
                          "Special",
                          "Savings");
 
     series.select("Income");
     transactions.initContent()
-      .add("02/07/2008", TransactionType.VIREMENT, "WorldCo - Bonus", "", 200.00, "Exceptional Income", MasterCategory.INCOME)
-      .add("01/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00, "Salary", MasterCategory.INCOME)
+      .add("02/07/2008", TransactionType.VIREMENT, "WorldCo - Bonus", "", 200.00, "Exceptional Income")
+      .add("01/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00, "Salary")
       .check();
 
     series.select("Salary");
     transactions.initContent()
-      .add("01/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00, "Salary", MasterCategory.INCOME)
+      .add("01/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00, "Salary")
       .check();
 
     series.select("All");
     transactions.initContent()
-      .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00, "Groceries", MasterCategory.FOOD)
-      .add("10/07/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00, "Groceries", MasterCategory.FOOD)
-      .add("05/07/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00, "Internet", MasterCategory.TELECOMS)
-      .add("04/07/2008", TransactionType.PRELEVEMENT, "EDF", "", -55.00, "Electricity", MasterCategory.HOUSE)
+      .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00, "Groceries")
+      .add("10/07/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00, "Groceries")
+      .add("05/07/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00, "Internet")
+      .add("04/07/2008", TransactionType.PRELEVEMENT, "EDF", "", -55.00, "Electricity")
       .add("03/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -15.00, "To categorize")
-      .add("02/07/2008", TransactionType.VIREMENT, "WorldCo - Bonus", "", 200.00, "Exceptional Income", MasterCategory.INCOME)
-      .add("01/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00, "Salary", MasterCategory.INCOME)
+      .add("02/07/2008", TransactionType.VIREMENT, "WorldCo - Bonus", "", 200.00, "Exceptional Income")
+      .add("01/07/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00, "Salary")
       .check();
 
     series.select("Groceries");
     transactions.initContent()
-      .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00, "Groceries", MasterCategory.FOOD)
-      .add("10/07/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00, "Groceries", MasterCategory.FOOD)
+      .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00, "Groceries")
+      .add("10/07/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00, "Groceries")
       .check();
 
     series.select("To categorize");
@@ -97,7 +95,6 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Income",
                          "Recurring",
                          "Envelopes", "New envelope",
-                         "Occasional",
                          "Special",
                          "Savings");
 
@@ -113,7 +110,6 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Income",
                          "Recurring",
                          "Envelopes",
-                         "Occasional",
                          "Special",
                          "Savings");
   }
@@ -129,7 +125,6 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Income",
                          "Recurring",
                          "Envelopes",
-                         "Occasional",
                          "Special",
                          "Savings");
 
@@ -150,7 +145,6 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Income",
                          "Recurring",
                          "Envelopes", "envelope1", "envelope2",
-                         "Occasional",
                          "Special",
                          "Savings");
 
@@ -166,10 +160,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Income",
                          "Recurring",
                          "Envelopes",
-                         "Occasional",
                          "Special",
                          "Savings");
-
-
   }
 }
