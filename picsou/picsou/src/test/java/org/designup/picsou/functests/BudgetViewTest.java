@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
 public class BudgetViewTest extends LoggedInFunctionalTestCase {
@@ -35,10 +34,10 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectCategorization();
-    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
-    categorization.setEnvelope("Monoprix", "Groceries", MasterCategory.FOOD, false);
-    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
-    categorization.setRecurring("EDF", "Electricity", MasterCategory.HOUSE, true);
+    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setEnvelope("Monoprix", "Groceries");
+    categorization.setNewRecurring("Free Telecom", "Internet");
+    categorization.setNewRecurring("EDF", "Electricity");
     categorization.setExceptionalIncome("WorldCo - Bonus", "Exceptional Income", true);
     categorization.setNewIncome("WorldCo", "Salary");
 
@@ -161,9 +160,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectCategorization();
-    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
-    categorization.setEnvelope("Monoprix", "Groceries", MasterCategory.FOOD, false);
-    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
+    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setEnvelope("Monoprix", "Groceries");
+    categorization.setNewRecurring("Free Telecom", "Internet");
     categorization.setNewIncome("WorldCo", "Salary");
     timeline.selectMonth("2008/07");
     views.selectBudget();
@@ -195,7 +194,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectCategorization();
-    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
+    categorization.setNewRecurring("Free Telecom", "Internet");
 
     views.selectBudget();
 
@@ -655,10 +654,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .selectAllMonths()
       .setAmount("0")
       .selectPositiveAmounts()
-      .setCategory(MasterCategory.CLOTHING)
       .validate();
     views.selectCategorization();
-    categorization.setEnvelope("Loto", "ZeroSeries", MasterCategory.CLOTHING, false);
+    categorization.setEnvelope("Loto", "ZeroSeries");
     views.selectData();
     transactions.initContent()
       .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00, "ZeroSeries")
@@ -669,7 +667,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     categorization
       .selectTransactions("Loto")
       .setUncategorized();
-    categorization.setEnvelope("Auchan", "ZeroSeries", MasterCategory.CLOTHING, false);
+    categorization.setEnvelope("Auchan", "ZeroSeries");
     views.selectData();
     transactions.initContent()
       .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00)
@@ -708,14 +706,12 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .selectAllMonths()
       .setAmount("100")
       .selectPositiveAmounts()
-      .setCategory(MasterCategory.GIFTS)
       .createSeries()
       .setName("Auchan")
       .switchToManual()
       .selectAllMonths()
       .setAmount("100")
       .selectNegativeAmounts()
-      .setCategory(MasterCategory.GIFTS)
       .validate();
     views.selectBudget();
     budgetView.envelopes.checkTotalAmounts(0, 0);

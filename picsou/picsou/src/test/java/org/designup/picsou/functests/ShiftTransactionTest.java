@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
 public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
@@ -24,7 +23,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectAllTableRows();
     categorization.selectEnvelopes();
-    categorization.selectEnvelopeSeries("An enveloppe", MasterCategory.MISC_SPENDINGS, true);
+    categorization.selectEnvelopes().selectNewSeries("An enveloppe");
     categorization.checkTable(new Object[][]{
       {"01/05/2008", "An enveloppe", "NON SHIFTABLE - FIRST MONTH", -10.00},
       {"25/07/2008", "An enveloppe", "NON SHIFTABLE - LAST MONTH", -27.50},
@@ -143,8 +142,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectAllTableRows();
-    categorization.selectEnvelopes();
-    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    categorization.selectEnvelopes().selectNewSeries("Groceries");
 
     views.selectHome();
     mainAccounts.checkAccount("Account n. 00001234", 100.00, "2008/07/15");
@@ -192,8 +190,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectAllTableRows();
-    categorization.selectEnvelopes();
-    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    categorization.selectEnvelopes().selectNewSeries("Groceries");
 
     views.selectHome();
     mainAccounts.checkAccount("Account n. 00001234", 100.00, "2008/07/15");
@@ -218,8 +215,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.selectTableRow(2);
-    categorization.selectEnvelopes();
-    categorization.selectEnvelopeSeries("Leisures", MasterCategory.LEISURES, true);
+    categorization.selectEnvelopes().selectNewSeries("Leisures");
     transactionDetails.shift();
     categorization.checkTable(new Object[][]{
       {"15/07/2008", "Groceries", "MONOPRIX / JULY", -12.0},
@@ -265,8 +261,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTransaction("Epargne / June");
-    categorization.selectEnvelopes();
-    categorization.selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    categorization.selectEnvelopes().selectNewSeries("Groceries");
     transactionDetails.checkShiftEnabled();
     categorization.editSeries("Groceries", true)
       .setEndDate(200806)

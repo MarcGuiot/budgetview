@@ -33,7 +33,7 @@
             <label gridPos="(1,5,2,1)" ref="savingsMessage" fill="horizontal" marginTop="4" styleClass="errorMessage"/>
           </grid>
 
-          <tabs>
+          <tabs marginTop="10">
             <tab title="Echéances">
               <row margin="5">
                 <column marginTop="5" weightX="0" preferredSize="(200,400)">

@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.MasterCategory;
 
 import java.io.File;
 import java.util.Locale;
@@ -116,33 +115,33 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("WORLDCO", "Salaire Marie");
     categorization.setNewIncome("BIGCORP", "Salaire Eric");
 
-    categorization.setRecurring("PRET IMMO N.3325566", "Credit immo", MasterCategory.HOUSE, true);
-    categorization.setRecurring("PRET CONSO N.6784562 F657", "Credit auto", MasterCategory.TRANSPORTS, true);
-    categorization.setRecurring("VROUMBOUM ASSUR. CONTRAT 5G7878HJ", "Assurance auto", MasterCategory.TRANSPORTS, true);
-    categorization.setRecurring("TRESOR PUBLIC I.R. 23225252323", "Impots revenu", MasterCategory.TAXES, true);
-    categorization.setRecurring("RATP NAVIGO 10/08", "Navigo", MasterCategory.TRANSPORTS, true);
-    categorization.setRecurring("GROUPE SCOLAIRE R.L OCT. 2008", "Ecole", MasterCategory.EDUCATION, true);
-    categorization.setRecurring("GROUPE SCOLAIRE R.L NOV. 2008", "Ecole", MasterCategory.EDUCATION, false);
-    categorization.setRecurring("TVSAT", "TV Sat", MasterCategory.LEISURES, true);
-    categorization.setRecurring("RED TELECOMS", "Tel. mobile", MasterCategory.TELECOMS, true);
-    categorization.setRecurring("OPTIBOX", "Internet", MasterCategory.TELECOMS, true);
-    categorization.setRecurring("EDF", "EDF", MasterCategory.HOUSE, true);
+    categorization.setNewRecurring("PRET IMMO N.3325566", "Credit immo");
+    categorization.setNewRecurring("PRET CONSO N.6784562 F657", "Credit auto");
+    categorization.setNewRecurring("VROUMBOUM ASSUR. CONTRAT 5G7878HJ", "Assurance auto");
+    categorization.setNewRecurring("TRESOR PUBLIC I.R. 23225252323", "Impots revenu");
+    categorization.setNewRecurring("RATP NAVIGO 10/08", "Navigo");
+    categorization.setNewRecurring("GROUPE SCOLAIRE R.L OCT. 2008", "Ecole");
+    categorization.setRecurring("GROUPE SCOLAIRE R.L NOV. 2008", "Ecole");
+    categorization.setNewRecurring("TVSAT", "TV Sat");
+    categorization.setNewRecurring("RED TELECOMS", "Tel. mobile");
+    categorization.setNewRecurring("OPTIBOX", "Internet");
+    categorization.setNewRecurring("EDF", "EDF");
 
-    categorization.setEnvelope("HYPER M", "Courses", MasterCategory.FOOD, true);
-    categorization.setEnvelope("BIO PLUS", "Courses", MasterCategory.FOOD, false);
+    categorization.setNewEnvelope("HYPER M", "Courses");
+    categorization.setEnvelope("BIO PLUS", "Courses");
     categorization.selectTransactions("RETRAIT GAB 4463", "RETRAIT GAB 5234", "RETRAIT GAB 0301",
                                    "RETRAIT GAB 5642", "RETRAIT GAB 1867", "RETRAIT GAB 9011")
       .selectEnvelopes().selectNewSeries("Liquide");
 
-    categorization.setEnvelope("GROUPE CINE SPECT.", "Loisirs", MasterCategory.LEISURES, true);
-    categorization.setEnvelope("RESA CONCERTS. N151435", "Loisirs", MasterCategory.LEISURES, false);
-    categorization.setEnvelope("JOURNAUX 2000", "Loisirs", MasterCategory.LEISURES, false);
+    categorization.setNewEnvelope("GROUPE CINE SPECT.", "Loisirs");
+    categorization.setEnvelope("RESA CONCERTS. N151435", "Loisirs");
+    categorization.setEnvelope("JOURNAUX 2000", "Loisirs");
 
-    categorization.setEnvelope("CHAUSS'MODE", "Habillement", MasterCategory.CLOTHING, true);
-    categorization.setEnvelope("AU PIED AGILE", "Habillement", MasterCategory.CLOTHING, false);
-    categorization.setEnvelope("PARIS MODE CENTRE", "Habillement", MasterCategory.CLOTHING, false);
+    categorization.setNewEnvelope("CHAUSS'MODE", "Habillement");
+    categorization.setEnvelope("AU PIED AGILE", "Habillement");
+    categorization.setEnvelope("PARIS MODE CENTRE", "Habillement");
 
-    categorization.setEnvelope("ZINGMAN", "Divers", MasterCategory.HOUSE, true);
+    categorization.setNewEnvelope("ZINGMAN", "Divers");
 
     categorization.setNewSpecial("PLOMBERIE 24/7", "Plombier");
 
@@ -178,10 +177,10 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .setLabel("Boulangerie").setAmount(-5).setDay(6).create()
       .setLabel("Primeur").setAmount(-20).setDay(9).create();
 
-    categorization.setEnvelope("Boulangerie", "Tous les jours", MasterCategory.FOOD, true);
-    categorization.setEnvelope("Primeur", "Tous les jours", MasterCategory.FOOD, false);
-    categorization.setEnvelope("Boucherie", "Tous les jours", MasterCategory.FOOD, false);
-    categorization.setEnvelope("Retrait", "Liquide", MasterCategory.CASH, false);
+    categorization.setNewEnvelope("Boulangerie", "Tous les jours");
+    categorization.setEnvelope("Primeur", "Tous les jours");
+    categorization.setEnvelope("Boucherie", "Tous les jours");
+    categorization.setEnvelope("Retrait", "Liquide");
 
     //======== SERIES TUNING ===========
 
@@ -205,7 +204,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/12");
     budgetView.specials.createSeries()
       .setName("Noël")
-      .setCategory(MasterCategory.GIFTS)
       .selectAllMonths()
       .setAmount(400)
       .validate();
@@ -213,7 +211,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2009/08");
     budgetView.specials.createSeries()
       .setName("Vacances")
-      .setCategory(MasterCategory.LEISURES)
       .selectAllMonths()
       .setAmount(2250)
       .validate();
@@ -241,7 +238,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/12");
     budgetView.savings.createSeries()
       .setName("Prov. vacances aout")
-      .setCategory(MasterCategory.SAVINGS)
       .setFromAccount("Compte courant")
       .setToAccount("Compte provisions")
       .setStartDate(200811)
@@ -253,7 +249,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     budgetView.savings.createSeries()
       .setName("Reglement vacances")
-      .setCategory(MasterCategory.SAVINGS)
       .setFromAccount("Compte provisions")
       .setToAccount("Compte courant")
       .setStartDate(200908)

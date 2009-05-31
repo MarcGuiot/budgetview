@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.MasterCategory;
 
 public class BudgetSumaryViewTest extends LoggedInFunctionalTestCase {
 
@@ -35,7 +34,7 @@ public class BudgetSumaryViewTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewIncome("WorldCo", "Salary");
-    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+    categorization.setNewEnvelope("Auchan", "Groceries");
 
     timeline.checkSelection("2008/07");
     views.selectBudget();

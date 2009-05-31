@@ -4,7 +4,6 @@ import org.designup.picsou.functests.checkers.SeriesDeleteDialogChecker;
 import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.uispec4j.Key;
 import org.uispec4j.TextBox;
@@ -28,7 +27,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.checkTable(new Object[][]{
       {"29/07/2008", "", "Free Telecom", -29.00}
     });
-    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
+    categorization.setNewRecurring("Free Telecom", "Internet");
 
     views.selectBudget();
 
@@ -738,9 +737,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectEnvelopes();
     categorization.selectEnvelopes().createSeries()
       .setName("AA")
-      .setCategory(MasterCategory.FOOD)
       .validate();
-    categorization.setEnvelope("Forfait Kro", "AA", MasterCategory.FOOD, false);
+    categorization.setEnvelope("Forfait Kro", "AA");
 
     views.selectBudget();
     SeriesEditionDialogChecker edition = budgetView.envelopes.editSeriesList();
@@ -765,7 +763,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setEnvelope("Forfait Kro", "Drinks", MasterCategory.FOOD, true);
+    categorization.setNewEnvelope("Forfait Kro", "Drinks");
     categorization.checkTable(new Object[][]{
       {"30/06/2008", "Drinks", "Forfait Kro", -60.0}
     });
@@ -784,12 +782,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.envelopes.createSeries()
       .setName("Empty")
-      .setCategory(MasterCategory.FOOD)
       .validate();
 
     budgetView.envelopes.editSeries("Empty").deleteCurrentSeries();
     budgetView.envelopes.checkSeriesNotPresent("Empty");
-
   }
 
   public void testSavingsDeleteInManual() throws Exception {
@@ -969,7 +965,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.createSeries()
       .checkSeriesListIsHidden()
       .setName("")
-      .setCategory(MasterCategory.FOOD)
       .validate();
 
     budgetView.envelopes.editSeriesList()
@@ -988,11 +983,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTransactions("PointP");
-
     categorization.selectEnvelopes().createSeries()
       .setName("Maison")
-      .setCategories("Entretien")
       .validate();
+
     views.selectData();
     timeline.selectMonth("2008/07");
     transactions
@@ -1002,7 +996,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.envelopes.editSeries("Maison")
-      .addCategory("Furniture")
       .validate();
 
     views.selectData();
@@ -1013,7 +1006,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.envelopes.editSeries("Maison")
-      .addCategory(getCategoryName(MasterCategory.LEISURES))
+//      .addCategory(getCategoryName(MasterCategory.LEISURES))
       .validate();
 
     views.selectData();
@@ -1034,7 +1027,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     SeriesEditionDialogChecker edition = categorization.selectEnvelopes().createSeries();
 
     edition.setName("Diet Food")
-      .setCategory(MasterCategory.FOOD)
       .switchToManual()
       .checkTable(new Object[][]{
         {"2008", "August", "", "0"},
@@ -1195,7 +1187,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("S1")
       .setSixMonths()
       .switchToManual()
-      .setCategory(MasterCategory.FOOD)
       .checkMonthSelectorsVisible(true)
       .toggleMonth(3)
       .checkMonthIsChecked(3, 9)
@@ -1214,11 +1205,11 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     timeline.selectMonth("2008/06");
-    categorization.setEnvelope("EAU", "EAU", MasterCategory.HOUSE, true);
+    categorization.setNewEnvelope("EAU", "EAU");
 
     views.selectCategorization();
     timeline.selectMonth("2008/08");
-    categorization.setEnvelope("EAU", "EAU", MasterCategory.HOUSE, false);
+    categorization.setEnvelope("EAU", "EAU");
     categorization.selectEnvelopes()
       .editSeries()
       .selectSeries("EAU")
@@ -1248,7 +1239,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthSelectorsVisible(true)
       .checkMonthIsChecked(2, 4, 6, 8, 10, 12)
       .checkMonthIsNotChecked(1, 3, 5, 7, 9, 11)
-      .setCategory(MasterCategory.HOUSE)
       .validate();
   }
 
@@ -1269,7 +1259,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthIsChecked(1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12)
       .setCustom()
       .checkMonthIsChecked(6, 8)
-      .setCategory(MasterCategory.HOUSE)
       .validate();
   }
 
@@ -1460,7 +1449,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTransactions("CENTER PARC");
     categorization.selectSpecial().createSeries()
       .setName("Center Parc")
-      .setCategory(MasterCategory.LEISURES)
       .checkSingleMonthSelected()
       .checkSingleMonthDate("June 2007")
       .checkManualModeSelected()
@@ -1479,7 +1467,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTransactions("CENTER PARC");
     categorization.selectSpecial().createSeries()
       .setName("Center Parc")
-      .setCategory(MasterCategory.LEISURES)
       .checkEveryMonthSelected()
       .checkStartDate("June 2007")
       .checkEndDate("Mar 2008")
@@ -1496,7 +1483,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.specials.createSeries()
       .setName("Center Parc")
-      .setCategory(MasterCategory.LEISURES)
       .checkSingleMonthSelected()
       .checkSingleMonthDate("June 2008")
       .validate();
@@ -1512,7 +1498,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTransactions("PointP");
     categorization.selectEnvelopes().createSeries()
       .setName("Brico")
-      .setCategory(MasterCategory.HOUSE)
       .setOnceAYear()
       .toggleMonth(11)
       .checkMonthIsChecked(11)

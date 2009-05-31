@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
 public class SeriesViewTest extends LoggedInFunctionalTestCase {
@@ -86,7 +85,6 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.envelopes.createSeries()
       .setName("New envelope")
-      .setCategory(MasterCategory.FOOD)
       .validate();
 
     views.selectData();
@@ -131,12 +129,10 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.envelopes.createSeries()
       .setName("envelope1")
-      .setCategory(MasterCategory.FOOD)
       .validate();
 
     budgetView.envelopes.createSeries()
       .setName("envelope2")
-      .setCategory(MasterCategory.LEISURES)
       .validate();
 
     views.selectData();

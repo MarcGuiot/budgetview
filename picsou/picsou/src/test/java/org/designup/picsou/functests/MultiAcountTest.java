@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.Bank;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
 public class MultiAcountTest extends LoggedInFunctionalTestCase {
@@ -18,7 +17,7 @@ public class MultiAcountTest extends LoggedInFunctionalTestCase {
       .load();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectCategorization();
-    categorization.setEnvelope("Virement", "epargne", MasterCategory.SAVINGS, true);
+    categorization.setNewEnvelope("Virement", "epargne");
     views.selectHome();
     this.mainAccounts.edit("Account n. 111")
       .setAsSavings()

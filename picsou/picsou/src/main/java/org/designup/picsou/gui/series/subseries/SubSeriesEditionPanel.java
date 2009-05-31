@@ -46,6 +46,8 @@ public class SubSeriesEditionPanel {
       }
     });
 
+    nameField.requestFocus();
+
     panel = builder.load();
   }
 

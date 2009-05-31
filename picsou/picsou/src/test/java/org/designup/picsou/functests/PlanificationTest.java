@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Dates;
 
@@ -56,7 +55,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/30", -100., "Auchan")
       .load();
     views.selectCategorization();
-    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, true);
+    categorization.setNewEnvelope("Auchan", "Courant");
     operations.openPreferences().setFutureMonthsCount(1).validate();
     timeline.checkSpanEquals("2008/06", "2008/08");
     timeline.selectAll();
@@ -84,7 +83,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setEnvelope("ED", "Courant", MasterCategory.FOOD, false);
+    categorization.setEnvelope("ED", "Courant");
     timeline.selectAll();
     transactions
       .initContent()
@@ -101,7 +100,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .load();
     operations.openPreferences().setFutureMonthsCount(1).validate();
     views.selectCategorization();
-    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, true);
+    categorization.setNewEnvelope("Auchan", "Courant");
     timeline.selectAll();
     views.selectBudget();
     budgetView.envelopes.editSeriesList()
@@ -134,7 +133,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectCategorization();
-    categorization.setEnvelope("ED", "Courant", MasterCategory.FOOD, false);
+    categorization.setEnvelope("ED", "Courant");
     views.selectData();
     transactions
       .initContent()
@@ -154,7 +153,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(1);
     views.selectCategorization();
-    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, true);
+    categorization.setNewEnvelope("Auchan", "Courant");
     timeline.selectAll();
     views.selectBudget();
     budgetView.envelopes.editSeriesList()
@@ -169,7 +168,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/10", -100., "EDF")
       .load();
     views.selectCategorization();
-    categorization.setRecurring("EDF", "EDF", MasterCategory.EQUIPMENT, true);
+    categorization.setNewRecurring("EDF", "EDF");
     views.selectBudget();
     budgetView.recurring.editSeriesList()
       .selectSeries("EDF")
@@ -194,7 +193,6 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.specials.createSeries()
       .setName("Miami trip")
-      .setCategory(MasterCategory.LEISURES)
       .setAmount(2000.00)
       .validate();
 

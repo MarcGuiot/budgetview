@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
 public class PreferencesTest extends LoggedInFunctionalTestCase {
@@ -21,8 +20,8 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, true);
-    categorization.setRecurring("EDF", "EDF", MasterCategory.HOUSE, true);
+    categorization.setNewEnvelope("Auchan", "Courant");
+    categorization.setNewRecurring("EDF", "EDF");
     categorization.setNewIncome("Salaire Aout", "Salaire");
 
     operations.openPreferences().setFutureMonthsCount(24).validate();

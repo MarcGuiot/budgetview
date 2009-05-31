@@ -4,7 +4,6 @@ import org.designup.picsou.functests.checkers.CategorizationGaugeChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Dates;
 
@@ -307,7 +306,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("CAF")
-      .setCategory(MasterCategory.INCOME)
       .setFromAccount("External account")
       .setToAccount("Epargne")
       .selectAllMonths()
@@ -334,13 +332,13 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkTotalAmounts(0, 0);
 
     views.selectSavings();
-    savingsView.checkAmount("Epargne" ,"CAF", 0, 300);
+    savingsView.checkAmount("Epargne", "CAF", 0, 300);
 
     restartApplication();
 
     views.selectSavings();
 
-    savingsView.checkAmount("Epargne" ,"CAF", 0, 300);
+    savingsView.checkAmount("Epargne", "CAF", 0, 300);
     timeline.selectMonth("2008/08");
 
     views.selectHome();

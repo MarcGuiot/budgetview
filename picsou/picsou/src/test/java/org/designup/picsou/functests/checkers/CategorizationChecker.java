@@ -4,7 +4,6 @@ import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.gui.categorization.components.TransactionFilteringMode;
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.model.Glob;
@@ -12,7 +11,6 @@ import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.*;
 import org.uispec4j.Window;
-import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
 
@@ -148,76 +146,24 @@ public class CategorizationChecker extends GuiChecker {
     return new BudgetAreaCategorizationChecker(this, budgetArea);
   }
 
-  /**
-   * @deprecated use BudgetAreaCategorizationChecker
-   */
-  private Panel getIncomeSeriesPanel() {
-    Panel panel = this.getPanel().getPanel("incomeSeriesChooser");
-    assertTrue(panel.isVisible());
-    return panel;
-  }
-
-  /**
-   * @deprecated use BudgetAreaCategorizationChecker
-   */
-  private Panel getRecurringSeriesPanel() {
-    Panel panel = getPanel();
-    assertTrue(panel.containsUIComponent(Panel.class, "recurringSeriesChooser"));
-    Panel recurringSeriesPanel = panel.getPanel("recurringSeriesChooser");
-    assertTrue(recurringSeriesPanel.isVisible());
-    return recurringSeriesPanel;
-  }
-
   public CategorizationChecker checkRecurringSeriesIsSelected(String seriesName) {
     assertTrue(getPanel().getToggleButton("Recurring").isSelected());
-    Panel panel = getRecurringSeriesPanel();
-    assertTrue(panel.getRadioButton(seriesName).isSelected());
-    return this;
-  }
+    Panel panel = getPanel();
+    assertTrue(panel.containsUIComponent(Panel.class, "recurringSeriesChooser"));
 
-  /**
-   * @deprecated use BudgetAreaCategorizationChecker
-   */
-  public CategorizationChecker checkRecurringSeriesIsNotSelected(String seriesName) {
-    UISpecAssert.assertFalse(getPanel().getPanel("recurringSeriesChooser").getRadioButton(seriesName).isSelected());
+    Panel recurringSeriesPanel = panel.getPanel("recurringSeriesChooser");
+    assertTrue(recurringSeriesPanel.isVisible());
+    assertTrue(recurringSeriesPanel.getRadioButton(seriesName).isSelected());
     return this;
   }
 
   public CategorizationChecker checkIncomeSeriesIsSelected(String seriesName) {
     assertTrue(getPanel().getToggleButton("Income").isSelected());
 
-    Panel panel = getIncomeSeriesPanel();
+    Panel panel = this.getPanel().getPanel("incomeSeriesChooser");
+    assertTrue(panel.isVisible());
     assertTrue(panel.getRadioButton(seriesName).isSelected());
     return this;
-  }
-
-  /**
-   * @deprecated use BudgetAreaCategorizationChecker
-   */
-  public CategorizationChecker selectEnvelopeSeries(String envelopeName, MasterCategory category, boolean createSeries) {
-    Panel panel = getEnvelopeSeriesPanel();
-    if (createSeries) {
-      selectEnvelopes().createSeries()
-        .setName(envelopeName)
-        .setCategory(category)
-        .validate();
-    }
-    else {
-      String selectorName = envelopeName + ":" + category.getName();
-      panel.getRadioButton(selectorName).click();
-    }
-    return this;
-  }
-
-  /**
-   * @deprecated use BudgetAreaCategorizationChecker
-   */
-  private Panel getEnvelopeSeriesPanel() {
-    Panel panel = getPanel();
-    assertTrue(panel.containsUIComponent(Panel.class, "envelopesSeriesChooser"));
-    Panel envelopeSeriesPanel = this.getPanel().getPanel("envelopesSeriesChooser");
-    assertTrue(envelopeSeriesPanel.isVisible());
-    return envelopeSeriesPanel;
   }
 
   public SeriesEditionDialogChecker editSeries(String seriesLabel, final boolean singleCategorySeries) {
@@ -448,20 +394,6 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
-  /**
-   * @deprecated plus de categories
-   */
-  public CategorizationChecker setRecurring(String label, String seriesName, MasterCategory category, boolean createSeries) {
-    int[] rows = getRowIndices(label);
-    boolean first = createSeries;
-    for (int row : rows) {
-      selectTableRow(row);
-      selectRecurring().selectSeries(seriesName, first);
-      first = false;
-    }
-    return this;
-  }
-
   public CategorizationChecker setNewEnvelope(String label, String seriesName) {
     int[] indices = getRowIndices(label);
     boolean first = true;
@@ -476,18 +408,6 @@ public class CategorizationChecker extends GuiChecker {
       else {
         selectEnvelopes().selectSeries(seriesName);
       }
-    }
-    return this;
-  }
-
-  /** @deprecated */
-  public CategorizationChecker setEnvelope(String label, String seriesName, MasterCategory master, boolean createSeries) {
-    int[] indices = getRowIndices(label);
-    boolean first = createSeries;
-    for (int index : indices) {
-      selectTableRows(index);
-      selectEnvelopes().selectSeries(seriesName, first);
-      first = false;
     }
     return this;
   }
@@ -556,20 +476,6 @@ public class CategorizationChecker extends GuiChecker {
     int[] rows = getRowIndices(label);
     selectTableRows(rows);
     selectSpecial().selectSeries(seriesName, createSeries);
-    return this;
-  }
-
-  /**
-   * @deprecated plus de categories
-   */
-  public CategorizationChecker setSpecial(int rowIndex, String seriesName, MasterCategory master, boolean createSeries) {
-    selectTableRows(rowIndex);
-    selectSpecial().selectSeries(seriesName, createSeries);
-    return this;
-  }
-
-  public CategorizationChecker checkSpecialSeriesIsSelected(String seriesName, MasterCategory category) {
-    selectSpecial().checkSeriesIsSelected(seriesName);
     return this;
   }
 
@@ -708,14 +614,6 @@ public class CategorizationChecker extends GuiChecker {
         label = label.toUpperCase();
       }
       add(new Object[]{date, series, label, amount});
-      return this;
-    }
-
-    public CategorizationTableChecker add(String date, TransactionType prelevement, String label, String note, double amount, MasterCategory category) {
-      if (!label.startsWith("Planned")) {
-        label = label.toUpperCase();
-      }
-      add(new Object[]{date, getCategoryName(category), label, amount});
       return this;
     }
 

@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.MasterCategory;
 
 public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
@@ -23,9 +22,9 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
-    categorization.setRecurring("Free Telecom", "Internet", MasterCategory.TELECOMS, true);
-    categorization.setRecurring("EDF", "Energy", MasterCategory.HOUSE, true);
+    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewRecurring("Free Telecom", "Internet");
+    categorization.setNewRecurring("EDF", "Energy");
     categorization.setNewIncome("WorldCo", "Salary");
 
     views.selectBudget();
@@ -34,7 +33,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/11");
     budgetView.specials.createSeries()
       .setName("Lottery")
-      .setCategory(MasterCategory.GIFTS)
       .selectPositiveAmounts()
       .setAmount(100.00)
       .validate();
@@ -42,7 +40,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/12");
     budgetView.specials.createSeries()
       .setName("Christmas")
-      .setCategory(MasterCategory.GIFTS)
       .setAmount(300.00)
       .validate();
 
@@ -113,7 +110,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/12");
     budgetView.specials.createSeries()
       .setName("Christmas")
-      .setCategory(MasterCategory.GIFTS)
       .setAmount(200.00)
       .validate();
 
@@ -153,7 +149,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+    categorization.setNewEnvelope("Auchan", "Groceries");
 
     views.selectEvolution();
     timeline.selectMonths("2008/08");
@@ -216,7 +212,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+    categorization.setNewEnvelope("Auchan", "Groceries");
 
     views.selectEvolution();
     timeline.selectMonth("2008/07");
@@ -246,7 +242,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.recurring.createSeries()
       .setName("Taxes")
-      .setCategory(MasterCategory.TAXES)
       .validate();
 
     views.selectEvolution();
@@ -290,7 +285,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.recurring.createSeries()
       .setName("Taxes")
-      .setCategory(MasterCategory.TAXES)
       .switchToManual()
       .selectAllMonths()
       .setAmount(200)

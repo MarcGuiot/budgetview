@@ -20,7 +20,7 @@
 
     <horizontalSplit ref="horizontalSplitPane">
 
-      <column>
+      <column weightX="3">
         <panel ref="budgetSummaryView" weightY="0.1" marginBottom="10"/>
         <verticalSplit ref="firstVerticalSplitPane">
           <panel ref="incomeBudgetView" weightY="5"/>
@@ -28,13 +28,13 @@
         </verticalSplit>
       </column>
 
-      <verticalSplit ref="secondVerticalSplitPane">
+      <verticalSplit ref="secondVerticalSplitPane" weightX="3">
         <panel ref="recurringBudgetView" weightY="6"/>
         <panel ref="projectsBudgetView" weightY="4"/>
       </verticalSplit>
 
-      <verticalSplit ref="thirdVerticalSplitPane">
-        <panel ref="envelopeBudgetView" weightY="55"/>
+      <verticalSplit ref="thirdVerticalSplitPane" weightX="3">
+        <panel ref="envelopeBudgetView"/>
       </verticalSplit>
     </horizontalSplit>
 

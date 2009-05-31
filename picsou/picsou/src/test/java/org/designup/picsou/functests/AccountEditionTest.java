@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
-import org.designup.picsou.model.MasterCategory;
 
 public class AccountEditionTest extends LoggedInFunctionalTestCase {
   public void testEditingAnExistingAccount() throws Exception {
@@ -167,8 +166,8 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewIncome("WorldCo", "Salaire");
-    categorization.setEnvelope("MacDo", "Gastronomie", MasterCategory.FOOD, true);
-    categorization.setEnvelope("Quick", "Sante", MasterCategory.FOOD, true);
+    categorization.setNewEnvelope("MacDo", "Gastronomie");
+    categorization.setNewEnvelope("Quick", "Sante");
 
     views.selectHome();
     monthSummary.checkIncome(1000);
@@ -211,7 +210,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewIncome("Salaire/oct", "Salaire");
-    categorization.setEnvelope("Virement octobre", "Savings", MasterCategory.SAVINGS, true);
+    categorization.setNewEnvelope("Virement octobre", "Savings");
 
     views.selectHome();
     monthSummary.checkIncome(1000.0);
@@ -228,19 +227,16 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("Series 1 for Livret")
-      .setCategory(MasterCategory.SAVINGS)
       .setFromAccount("Account n. 0000100")
       .setToAccount("Livret")
       .validate();
     budgetView.savings.createSeries()
       .setName("Series 2 for Livret")
-      .setCategory(MasterCategory.SAVINGS)
       .setFromAccount("Livret")
       .setToAccount("Account n. 0000100")
       .validate();
     budgetView.savings.createSeries()
       .setName("Series 3 for Codevi")
-      .setCategory(MasterCategory.SAVINGS)
       .setFromAccount("Account n. 0000100")
       .setToAccount("Codevi")
       .validate();

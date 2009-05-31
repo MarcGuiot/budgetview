@@ -202,6 +202,11 @@ public class BudgetViewChecker extends GuiChecker {
       UISpecAssert.assertEquals(enabled, getPanel().getButton("editAllSeries").isEnabled());
     }
 
+    public BudgetAreaChecker createSeries(String name) {
+      createSeries().setName(name).validate();
+      return this;
+    }
+
     public SeriesEditionDialogChecker createSeries() {
       return openSeriesEditionDialog("createSeries");
     }

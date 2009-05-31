@@ -129,9 +129,9 @@ public class FirstTimeTest extends UISpecTestCase {
       .createAndSetSavings("EPARGNE", "Regular savings", "Account n. 00001123", "External account");
     categorization.selectTransactions("Habille moi", "Chausse moi");
     categorization
-      .selectEnvelopes().createSeries().setName("Fringue").setCategory(MasterCategory.CLOTHING)
+      .selectEnvelopes().createSeries().setName("Fringue")
       .validate();
-    categorization.setEnvelope("CHEQUE N°32", "Health", MasterCategory.HEALTH, false);
+    categorization.setEnvelope("CHEQUE N°32", "Health");
 
     categorization.selectTransactions("ED", "Auchan", "Intermarché")
       .selectEnvelopes().selectSeries("Groceries");

@@ -4,7 +4,6 @@ import org.designup.picsou.functests.checkers.CategorizationChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
 public class CategorizationTest extends LoggedInFunctionalTestCase {
@@ -30,7 +29,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.checkSeries("WorldCo/june", "Salary");
-    transactions.checkCategory("WorldCo/june", MasterCategory.INCOME);
 
     views.selectCategorization();
     categorization.checkSelectedTableRows(0);
@@ -202,7 +200,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization.setNewEnvelope("France Telecom", "Phone");
 
-    categorization.checkRecurringSeriesIsNotSelected("Telephone");
+    categorization.getRecurring().checkSeriesNotSelected("Telephone");
     categorization.setRecurring("France Telecom", "Telephone");
 
     categorization.selectEnvelopes();
@@ -665,9 +663,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAutomaticBudget() throws Exception {
-
-
-
     operations.openPreferences().setFutureMonthsCount(2).validate();
     OfxBuilder
       .init(this)
@@ -737,7 +732,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   public void testAutomaticInCurrentMonth() throws Exception {
     views.selectBudget();
     budgetView.envelopes.createSeries().setName("Courant")
-      .setCategory(MasterCategory.FOOD)
       .validate();
     OfxBuilder
       .init(this)
@@ -745,8 +739,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/20", -20, "ED")
       .load();
     views.selectCategorization();
-    categorization.setEnvelope("ED", "Courant", MasterCategory.FOOD, false);
-    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, false);
+    categorization.setEnvelope("ED", "Courant");
+    categorization.setEnvelope("Auchan", "Courant");
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
@@ -757,7 +751,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/10", -10, "ATAC")
       .load();
     views.selectCategorization();
-    categorization.setEnvelope("ATAC", "Courant", MasterCategory.FOOD, false);
+    categorization.setEnvelope("ATAC", "Courant");
     views.selectBudget();
     timeline.selectMonth("2008/05");
     budgetView.envelopes.checkSeries("Courant", -10, -10);
@@ -770,14 +764,13 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.createSeries().setName("Tel")
       .setCustom()
       .toggleMonth(1, 3, 5, 7, 9, 11)
-      .setCategory(MasterCategory.TELECOMS)
       .validate();
     OfxBuilder
       .init(this)
       .addTransaction("2008/04/20", -10, "FT")
       .load();
     views.selectCategorization();
-    categorization.setRecurring("FT", "Tel", MasterCategory.TELECOMS, false);
+    categorization.setRecurring("FT", "Tel");
     views.selectBudget();
     timeline.selectMonth("2008/05");
     budgetView.recurring.checkSeriesNotPresent("Tel");
@@ -907,18 +900,20 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAutomaticShouldNotTakeInAccountPreviousEmptyMonthWhenPositiveBudget() throws Exception {
+
+    fail("Marc, est-il normal que le jour passe à 20 ?");
+
     operations.openPreferences().setFutureMonthsCount(2).validate();
-    views.selectBudget();
-    budgetView.income.createSeries().setName("Revenue")
-      .setCategory(MasterCategory.INCOME)
-      .validate();
+
     OfxBuilder
       .init(this)
       .addTransaction("2008/05/10", 10, "revenue 2")
       .addTransaction("2008/06/20", 20, "revenue 1")
       .load();
+
     views.selectCategorization();
-    categorization.setIncome("revenue 1", "Revenue");
+    categorization.setNewIncome("revenue 1", "Revenue");
+
     views.selectData();
     timeline.selectAll();
     transactions
@@ -931,18 +926,20 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAutomaticShouldNotTakeInAccountPreviousEmptyMonth() throws Exception {
+
+    fail("Marc, est-il normal que le jour passe à 20 ?");
+
     operations.openPreferences().setFutureMonthsCount(2).validate();
-    views.selectBudget();
-    budgetView.envelopes.createSeries().setName("Courant")
-      .setCategory(MasterCategory.FOOD)
-      .validate();
+
     OfxBuilder
       .init(this)
       .addTransaction("2008/05/10", -10, "Auchan")
       .addTransaction("2008/06/20", -20, "ED")
       .load();
+
     views.selectCategorization();
-    categorization.setEnvelope("ED", "Courant", MasterCategory.FOOD, false);
+    categorization.setNewEnvelope("ED", "Courant");
+
     views.selectData();
     timeline.selectAll();
     transactions
@@ -956,18 +953,17 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
   public void testInAutomaticNewMonthUpdateFuture() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
-    views.selectBudget();
-    budgetView.envelopes.createSeries().setName("Courant")
-      .setCategory(MasterCategory.FOOD)
-      .validate();
+
     OfxBuilder
       .init(this)
       .addTransaction("2008/04/10", -10, "Auchan")
       .addTransaction("2008/05/10", -5, "ATAC")
       .load();
+
     views.selectCategorization();
-    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, false);
-    categorization.setEnvelope("ATAC", "Courant", MasterCategory.FOOD, false);
+    categorization.setNewEnvelope("Auchan", "Courant");
+    categorization.setEnvelope("ATAC", "Courant");
+
     views.selectBudget();
     timeline.selectMonth("2008/04");
     budgetView.envelopes.checkSeries("Courant", -10, -10);
@@ -975,10 +971,12 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkSeries("Courant", -5, -10);
     timeline.selectMonth("2008/06");
     budgetView.envelopes.checkSeries("Courant", 0, -10);
+
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/20", -20, "Auchan")
       .load();
+
     timeline.selectMonth("2008/05");
     budgetView.envelopes.checkSeries("Courant", -5, -10);
     timeline.selectMonth("2008/06");
@@ -999,15 +997,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.selectTableRow(0)
-      .selectEnvelopes().createSeries()
-      .setName("Divers")
-      .setCategories(MasterCategory.EDUCATION, MasterCategory.EQUIPMENT)
-      .validate();
+    categorization.selectTableRow(0).selectEnvelopes().createSeries("Divers");
 
     views.selectData();
     transactions.checkSeries("Auchan", "Divers");
-    transactions.checkCategory("Auchan", MasterCategory.EDUCATION);
   }
 
   public void testHelpForUncategorizedBudgetArea() throws Exception {
@@ -1087,7 +1080,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testEditSerieUpdateInCategorizationView() throws Exception {
+  public void testEditingSeriesUpdatesCategorizationView() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/25", -50.0, "1_Auchan")
@@ -1095,10 +1088,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectBudget();
-    budgetView.envelopes.createSeries()
-      .setName("Courses")
-      .setCategories(MasterCategory.FOOD)
-      .validate();
+    budgetView.envelopes.createSeries("Courses");
 
     views.selectCategorization();
 
@@ -1112,7 +1102,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .setEndDate(200805)
       .validate();
     categorization.getEnvelopes().checkDoesNotContainSeries("Courses");
-
   }
 
   public void testFilteringSerieByValidMonth() throws Exception {

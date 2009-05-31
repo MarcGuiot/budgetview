@@ -2,7 +2,6 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.ProfileType;
 import org.uispec4j.*;
@@ -17,7 +16,6 @@ import java.lang.reflect.InvocationTargetException;
 
 public class SeriesEditionDialogChecker extends GuiChecker {
   private Window dialog;
-  private boolean singleCategorySeries;
   private Table table;
   public static final String JAN = "Jan";
   public static final String FEB = "Feb";
@@ -94,65 +92,6 @@ public class SeriesEditionDialogChecker extends GuiChecker {
 
   public SeriesEditionDialogChecker setAmount(String value) {
     getAmountTextBox().setText(value);
-    return this;
-  }
-
-  /** @deprecated plus de categories */
-  public SeriesEditionDialogChecker unselectCategory(MasterCategory... category) {
-    System.out.println("plus de categories");
-    return this;
-  }
-
-  /** @deprecated plus de categories */
-  public SeriesEditionDialogChecker setCategory(MasterCategory master) {
-    System.out.println("plus de categories - on ignore " + master);
-    return this;
-  }
-
-  /** @deprecated plus de categories */
-  public SeriesEditionDialogChecker setCategories(MasterCategory... masters) {
-    System.out.println("plus de categories");
-    return this;
-  }
-
-  /** @deprecated plus de categories */
-  public SeriesEditionDialogChecker addCategory(String... categories) {
-    System.out.println("plus de categories");
-    return this;
-  }
-
-  /** @deprecated plus de categories */
-  public SeriesEditionDialogChecker setCategories(String... categories) {
-    System.out.println("plus de categories");
-    return this;
-  }
-
-  /** @deprecated plus de categories */
-  public SeriesEditionDialogChecker checkCategory(MasterCategory master) {
-    return checkCategories(master);
-  }
-
-  /**
-   * @deprecated plus de categories
-   */
-  public SeriesEditionDialogChecker checkCategories(MasterCategory... masters) {
-    System.out.println("plus de categories");
-    return null;
-  }
-
-  /**
-   * @deprecated plus de categories
-   */
-  public SeriesEditionDialogChecker checkNoCategory() {
-    System.out.println("plus de categories");
-    return this;
-  }
-
-  /**
-   * @deprecated plus de categories
-   */
-  public SeriesEditionDialogChecker checkCategory(String... categories) {
-    System.out.println("plus de categories");
     return this;
   }
 
@@ -547,11 +486,6 @@ public class SeriesEditionDialogChecker extends GuiChecker {
 
   public SeriesEditionDialogChecker checkNegativeAmountsSelected() {
     assertThat(dialog.getRadioButton("negativeAmounts").isSelected());
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkPositiveAmountsNotSelected() {
-    assertFalse(dialog.getRadioButton("positiveAmounts").isSelected());
     return this;
   }
 

@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
 public class MonthSummaryTest extends LoggedInFunctionalTestCase {
@@ -251,7 +250,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewIncome("WorldCo", "Salary");
-    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+    categorization.setNewEnvelope("Auchan", "Groceries");
 
     timeline.selectMonth("2008/08");
     views.selectHome();

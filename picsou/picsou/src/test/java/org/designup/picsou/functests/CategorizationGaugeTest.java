@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.checkers.CategorizationGaugeChecker;
-import org.designup.picsou.model.MasterCategory;
 
 public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
@@ -83,7 +82,7 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/10", 1000.0, "WorldCo")
       .load();
 
-    categorization.setEnvelope("WorldCo", "Income", MasterCategory.INCOME, true);
+    categorization.setNewEnvelope("WorldCo", "Income");
 
     categorization.getCompletionGauge().checkHidden();
     categorization.getCompletionGauge().checkCompleteProgressMessageShown();
@@ -95,7 +94,7 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/10", 1000.0, "WorldCo")
       .load();
 
-    categorization.setEnvelope("WorldCo", "Income", MasterCategory.INCOME, true);
+    categorization.setNewEnvelope("WorldCo", "Income");
 
     categorization.getCompletionGauge().checkCompleteProgressMessageShown();
     categorization.getCompletionGauge().hideProgressMessage();
@@ -118,7 +117,7 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
     views.checkBudgetSelected();
 
     views.back();
-    categorization.setEnvelope("McDo", "Food", MasterCategory.FOOD, true);
+    categorization.setNewEnvelope("McDo", "Food");
     gauge.checkCompleteProgressMessageShown();
 
     gauge.clickOnProgressMessageLink();

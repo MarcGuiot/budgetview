@@ -61,16 +61,6 @@ public class TransactionChecker extends ViewChecker {
     return window.findUIComponent(ComponentMatchers.innerNameIdentity(Transaction.TYPE.getName()));
   }
 
-  /**
-   * @deprecated plus de categories
-   */
-  public static String getCategoryName(MasterCategory category) {
-//    if (category == MasterCategory.NONE) {
-    return "";
-//    }
-//    return GuiChecker.getCategoryName(category);
-  }
-
   public TransactionChecker categorize(final int... rows) {
     Assert.assertTrue("You must specify at least one row index", rows.length > 0);
     if (rows.length > 1) {
@@ -92,18 +82,6 @@ public class TransactionChecker extends ViewChecker {
   public void checkSeries(int row, String seriesName) {
     Button seriesButton = getTable().editCell(row, TransactionView.SERIES_COLUMN_INDEX).getButton();
     UISpecAssert.assertThat(seriesButton.textEquals(seriesName));
-  }
-
-  public void checkCategory(String label, MasterCategory category) {
-    checkCategory(getIndexOf(label.toUpperCase()), category);
-  }
-
-  public void checkCategory(int row, MasterCategory category) {
-    UISpecAssert.assertThat(getTable().cellEquals(row, TransactionView.SUBSERIES_COLUMN_INDEX, getCategoryName(category)));
-  }
-
-  public void checkCategory(int row, String categoryName) {
-    UISpecAssert.assertThat(getTable().cellEquals(row, TransactionView.SUBSERIES_COLUMN_INDEX, categoryName));
   }
 
   private int getIndexOf(String transactionLabel) {

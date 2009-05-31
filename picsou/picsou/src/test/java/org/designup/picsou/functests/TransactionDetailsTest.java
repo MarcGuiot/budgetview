@@ -75,7 +75,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
   public void testSplitButtonInitiallyVisibleWithOneTransaction() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/06/15", -20.00, "McDo", MasterCategory.FOOD)
+      .addTransaction("2008/06/15", -20.00, "McDo")
       .load();
     categorization.selectTableRow(0);
     transactionDetails.checkSplitVisible();

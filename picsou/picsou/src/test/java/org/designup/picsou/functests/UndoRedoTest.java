@@ -75,20 +75,17 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
       .load();
     views.selectCategorization();
     categorization.selectTransactions("Auchan");
-    categorization.selectEnvelopes();
-    categorization.selectEnvelopeSeries("Courant", MasterCategory.FOOD, true);
+    categorization.selectEnvelopes().selectNewSeries("Courant");
     categorization.getEnvelopes().checkSeriesIsSelected("Courant");
     views.selectData();
     transactions.checkSeries("Auchan", "Courant");
     operations.undo();
-    transactions.checkCategory("Auchan", MasterCategory.NONE);
     transactions.checkSeries("Auchan", "To categorize");
     operations.redo();
     transactions.checkSeries("Auchan", "Courant");
     views.selectCategorization();
     categorization.getEnvelopes().checkSeriesIsSelected("Courant");
     operations.undo();
-    transactions.checkCategory("Auchan", MasterCategory.NONE);
     transactions.checkSeries("Auchan", "To categorize");
   }
 
