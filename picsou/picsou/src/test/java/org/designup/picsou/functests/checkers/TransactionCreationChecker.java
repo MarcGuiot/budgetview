@@ -7,7 +7,6 @@ import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 import javax.swing.*;
-import java.awt.peer.ButtonPeer;
 
 public class TransactionCreationChecker extends GuiChecker {
   private Window window;

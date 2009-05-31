@@ -135,10 +135,9 @@
           <row opaque="false">
 
             <column preferredSize="(180,800)" minimumSize="(180,800)" weightX="0.1" marginRight="20">
-              <label text="$transactionView.filtering.title" styleClass="blockTitle"/>
+              <label text="$seriesView.title" styleClass="blockTitle"/>
               <panel styleClass="block">
                 <column margin="10">
-                    <label text="$seriesView.title" styleClass="formLabelTop"/>
                     <scrollPane border="line(category.border)" viewportBackground="categories.bg"
                                 background="categories.bg"
                                 minimumSize="(200,40)" marginBottom="5">
