@@ -4,7 +4,6 @@ import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
-import org.designup.picsou.model.initial.InitialCategories;
 import org.designup.picsou.model.initial.InitialSeries;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -48,24 +47,12 @@ public class UpgradeTrigger implements ChangeSetListener {
                       value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
                       value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
 
-
     final Long currentJarVersion = version.get(VersionInformation.CURRENT_JAR_VERSION);
     if (currentJarVersion.equals(PicsouApplication.JAR_VERSION)) {
       return;
     }
 
-    if (currentJarVersion <= 4) {
-      if (repository.find(Series.OCCASIONAL_SERIES) != null) {
-        repository.update(Series.OCCASIONAL_SERIES,
-                          value(Series.PROFILE_TYPE, ProfileType.EVERY_MONTH.getId()),
-                          value(Series.DEFAULT_CATEGORY, Category.NONE),
-                          value(Series.DAY, 1),
-                          value(Series.NAME, Series.getOccasionalName()));
-      }
-    }
-
     if (currentJarVersion <= 9) {
-
       repository
         .getAll(SeriesBudget.TYPE, fieldIsNull(SeriesBudget.DAY))
         .safeApply(new GlobFunctor() {
@@ -75,10 +62,6 @@ public class UpgradeTrigger implements ChangeSetListener {
           }
         }, repository);
 
-      GlobUtils.updateIfExists(repository,
-                               Series.OCCASIONAL_SERIES,
-                               Series.NAME,
-                               Series.getOccasionalName());
       GlobUtils.updateIfExists(repository,
                                Series.UNCATEGORIZED_SERIES,
                                Series.NAME,
@@ -136,6 +119,36 @@ public class UpgradeTrigger implements ChangeSetListener {
                            });
     }
 
+    // BudgetArea.OCCASIONAL removed
+    if (currentJarVersion < 13) {
+      System.out.println("UpgradeTrigger.globsReset: ");
+
+      repository.safeApply(Transaction.TYPE,
+                           GlobMatchers.ALL,
+                           new GlobFunctor() {
+                             public void run(Glob transaction, GlobRepository repository) throws Exception {
+                               if (Series.OCCASIONAL_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
+                                 repository.update(transaction.getKey(),
+                                                   Transaction.SERIES,
+                                                   Series.UNCATEGORIZED_SERIES_ID);
+                               }
+                             }
+                           }
+      );
+
+      GlobList budgets = repository.getAll(SeriesBudget.TYPE,
+                                           GlobMatchers.fieldEquals(SeriesBudget.SERIES,
+                                                                    Series.OCCASIONAL_SERIES_ID));
+      System.out.println("UpgradeTrigger.globsReset: " + budgets.size());
+      repository.delete(budgets);
+
+      Key occasionalSeriesKey = Key.create(Series.TYPE, Series.OCCASIONAL_SERIES_ID);
+      if (repository.find(occasionalSeriesKey) != null) {
+        repository.delete(occasionalSeriesKey);
+      }
+
+    }
+
     repository.update(VersionInformation.KEY, VersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
   }
 
@@ -167,7 +180,6 @@ public class UpgradeTrigger implements ChangeSetListener {
     repository.findOrCreate(Account.SAVINGS_SUMMARY_KEY,
                             FieldValue.value(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()));
     repository.findOrCreate(Account.ALL_SUMMARY_KEY);
-    InitialCategories.run(repository);
     InitialSeries.run(repository);
   }
 }

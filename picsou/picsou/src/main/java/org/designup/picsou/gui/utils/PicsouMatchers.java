@@ -87,12 +87,6 @@ public class PicsouMatchers {
     return GlobMatchers.isNull(Category.MASTER);
   }
 
-  public static GlobMatcher masterUserCategories() {
-    return and(GlobMatchers.isNull(Category.MASTER),
-               not(
-                 GlobMatchers.fieldContained(Category.ID, MasterCategory.RESERVED_CATEGORY_IDS)));
-  }
-
   public static GlobMatcher subCategories(Integer masterCategoryId) {
     return fieldEquals(Category.MASTER, masterCategoryId);
   }

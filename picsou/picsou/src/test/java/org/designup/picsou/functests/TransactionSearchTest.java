@@ -64,41 +64,46 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
   public void testSearchIsPreservedDuringOtherSelectionChanges() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2008/07/20", -5, "Vinci", MasterCategory.TRANSPORTS)
-      .addTransaction("2008/07/15", -50, "Virgin", MasterCategory.LEISURES)
-      .addTransaction("2008/07/15", -500, "FNAC", MasterCategory.LEISURES)
-      .addTransaction("2008/06/20", -5, "Vinci", MasterCategory.TRANSPORTS)
-      .addTransaction("2008/06/15", -50, "Virgin", MasterCategory.LEISURES)
-      .addTransaction("2008/06/15", -500, "FNAC", MasterCategory.LEISURES)
+      .addTransaction("2008/07/20", -5, "Vinci")
+      .addTransaction("2008/07/15", -50, "Virgin")
+      .addTransaction("2008/07/15", -500, "FNAC")
+      .addTransaction("2008/06/20", -5, "Vinci")
+      .addTransaction("2008/06/15", -50, "Virgin")
+      .addTransaction("2008/06/15", -500, "FNAC")
       .load();
 
-    timeline.selectAll();
+    views.selectCategorization();
+    categorization.setNewEnvelope("Vinci", "Transports");
+    categorization.setNewEnvelope("Virgin", "Leisures");
+    categorization.setEnvelope("FNAC", "Leisures");
 
+    views.selectData();
+    timeline.selectAll();
     TextBox searchField = transactions.getSearchField();
     searchField.setText("vi");
 
     transactions.initContent()
-      .addOccasional("20/07/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, MasterCategory.TRANSPORTS)
-      .addOccasional("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
-      .addOccasional("20/06/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, MasterCategory.TRANSPORTS)
-      .addOccasional("15/06/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, "Transports")
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, "Leisures")
+      .add("20/06/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, "Transports")
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, "Leisures")
       .check();
 
     timeline.selectMonth("2008/07");
     transactions.initContent()
-      .addOccasional("20/07/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, MasterCategory.TRANSPORTS)
-      .addOccasional("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, "Transports")
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, "Leisures")
       .check();
 
-    categories.select(MasterCategory.LEISURES);
+    series.select("Leisures");
     transactions.initContent()
-      .addOccasional("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, "Leisures")
       .check();
 
     searchField.clear();
     transactions.initContent()
-      .addOccasional("15/07/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, MasterCategory.LEISURES)
-      .addOccasional("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, MasterCategory.LEISURES)
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, "Leisures")
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, "Leisures")
       .check();
   }
 }

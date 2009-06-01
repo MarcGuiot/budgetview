@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
 public class PreferencesTest extends LoggedInFunctionalTestCase {
@@ -21,27 +20,27 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setEnvelope("Auchan", "Courant", MasterCategory.FOOD, true);
-    categorization.setRecurring("EDF", "EDF", MasterCategory.HOUSE, true);
-    categorization.setIncome("Salaire Aout", "Salaire", true);
+    categorization.setNewEnvelope("Auchan", "Courant");
+    categorization.setNewRecurring("EDF", "EDF");
+    categorization.setNewIncome("Salaire Aout", "Salaire");
 
     operations.openPreferences().setFutureMonthsCount(24).validate();
 
     timeline.selectLast();
     views.selectData();
     transactions.initContent()
-      .add("12/08/2010", TransactionType.PLANNED, "Planned: Courant", "", -95.00, "Courant", MasterCategory.FOOD)
-      .add("04/08/2010", TransactionType.PLANNED, "Planned: EDF", "", -55.00, "EDF", MasterCategory.HOUSE)
-      .add("01/08/2010", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire", MasterCategory.INCOME)
+      .add("12/08/2010", TransactionType.PLANNED, "Planned: Courant", "", -95.00, "Courant")
+      .add("04/08/2010", TransactionType.PLANNED, "Planned: EDF", "", -55.00, "EDF")
+      .add("01/08/2010", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire")
       .check();
 
     operations.openPreferences().setFutureMonthsCount(12).validate();
     timeline.checkSpanEquals("2008/08", "2009/08");
     timeline.selectLast();
     transactions.initContent()
-      .add("12/08/2009", TransactionType.PLANNED, "Planned: Courant", "", -95.00, "Courant", MasterCategory.FOOD)
-      .add("04/08/2009", TransactionType.PLANNED, "Planned: EDF", "", -55.00, "EDF", MasterCategory.HOUSE)
-      .add("01/08/2009", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire", MasterCategory.INCOME)
+      .add("12/08/2009", TransactionType.PLANNED, "Planned: Courant", "", -95.00, "Courant")
+      .add("04/08/2009", TransactionType.PLANNED, "Planned: EDF", "", -55.00, "EDF")
+      .add("01/08/2009", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire")
       .check();
 
     operations.openPreferences().setFutureMonthsCount(36).validate();
@@ -49,9 +48,9 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
     timeline.selectLast();
     views.selectData();
     transactions.initContent()
-      .add("12/08/2011", TransactionType.PLANNED, "Planned: Courant", "", -95.00, "Courant", MasterCategory.FOOD)
-      .add("04/08/2011", TransactionType.PLANNED, "Planned: EDF", "", -55.00, "EDF", MasterCategory.HOUSE)
-      .add("01/08/2011", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire", MasterCategory.INCOME)
+      .add("12/08/2011", TransactionType.PLANNED, "Planned: Courant", "", -95.00, "Courant")
+      .add("04/08/2011", TransactionType.PLANNED, "Planned: EDF", "", -55.00, "EDF")
+      .add("01/08/2011", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire")
       .check();
 
     operations.openPreferences().setFutureMonthsCount(12).validate();

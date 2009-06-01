@@ -92,7 +92,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setIncome("WorldCo", "Salary", true);
+    categorization.setNewIncome("WorldCo", "Salary");
 
     views.selectHome();
     timeline.selectMonth("2008/08");
@@ -133,8 +133,8 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     timeline.selectAll();
-    categorization.setIncome("WorldCo", "income", true);
-    categorization.setSpecial("Epargne", "Epargne", MasterCategory.SAVINGS, true);
+    categorization.setNewIncome("WorldCo", "income");
+    categorization.setNewSpecial("Epargne", "Epargne");
     views.selectHome();
     mainAccounts.edit("Account n. 000123")
       .setAsSavings()
@@ -146,7 +146,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectData();
     transactions.initContent()
-      .add("26/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", -800.00, "Epargne", MasterCategory.SAVINGS)
+      .add("26/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", -800.00, "Epargne")
       .add("26/08/2008", TransactionType.PRELEVEMENT, "Epargne", "", -800.00)
       .add("26/08/2008", TransactionType.VIREMENT, "WorldCo", "", 1000.00)
       .add("26/07/2008", TransactionType.VIREMENT, "WorldCo", "", 1000.00)

@@ -11,14 +11,6 @@ import org.globsframework.model.Key;
 
 public class InitialSeries {
   public static void run(GlobRepository repository) {
-    repository.findOrCreate(Series.OCCASIONAL_SERIES,
-                            value(Series.BUDGET_AREA, BudgetArea.OCCASIONAL.getId()),
-                            value(Series.PROFILE_TYPE, ProfileType.EVERY_MONTH.getId()),
-                            value(Series.DEFAULT_CATEGORY, MasterCategory.NONE.getId()),
-                            value(Series.IS_AUTOMATIC, true),
-                            value(Series.DAY, 1),
-                            value(Series.NAME, Series.getOccasionalName()));
-
     repository.findOrCreate(Key.create(Series.TYPE, Series.UNCATEGORIZED_SERIES_ID),
                             value(Series.BUDGET_AREA, BudgetArea.UNCATEGORIZED.getId()),
                             value(Series.PROFILE_TYPE, ProfileType.IRREGULAR.getId()),

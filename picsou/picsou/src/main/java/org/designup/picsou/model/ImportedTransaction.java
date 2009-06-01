@@ -37,10 +37,6 @@ public class ImportedTransaction {
 
   public static StringField ORIGINAL_LABEL;
 
-  @Target(Category.class)
-  @DefaultInteger(0)
-  public static LinkField CATEGORY;
-
   public static BooleanField IS_CARD;
 
   public static BooleanField IS_OFX;

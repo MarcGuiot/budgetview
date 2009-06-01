@@ -5,6 +5,7 @@ import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.ComponentStretch;
+import org.globsframework.utils.Strings;
 
 public class TabSplitter extends AbstractSplitter {
   private String title;

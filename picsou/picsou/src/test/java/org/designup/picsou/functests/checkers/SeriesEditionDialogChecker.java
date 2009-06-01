@@ -2,7 +2,6 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.ProfileType;
 import org.uispec4j.*;
@@ -17,7 +16,6 @@ import java.lang.reflect.InvocationTargetException;
 
 public class SeriesEditionDialogChecker extends GuiChecker {
   private Window dialog;
-  private boolean singleCategorySeries;
   private Table table;
   public static final String JAN = "Jan";
   public static final String FEB = "Feb";
@@ -32,14 +30,13 @@ public class SeriesEditionDialogChecker extends GuiChecker {
   public static final String NOV = "Nov";
   public static final String DEC = "Dec";
 
-  public static SeriesEditionDialogChecker open(Button button, boolean singleCategorySeries) {
+  public static SeriesEditionDialogChecker open(Button button) {
     Window dialog = WindowInterceptor.getModalDialog(button.triggerClick());
-    return new SeriesEditionDialogChecker(dialog, singleCategorySeries);
+    return new SeriesEditionDialogChecker(dialog);
   }
 
-  public SeriesEditionDialogChecker(Window dialog, boolean singleCategorySeries) {
+  public SeriesEditionDialogChecker(Window dialog) {
     this.dialog = dialog;
-    this.singleCategorySeries = singleCategorySeries;
   }
 
   public SeriesEditionDialogChecker checkTitle(String text) {
@@ -98,119 +95,6 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker unselectCategory(MasterCategory... category) {
-    Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
-    CategoryChooserChecker categoryChooser = new CategoryChooserChecker(chooser);
-    for (MasterCategory masterCategory : category) {
-      categoryChooser.unselectCategory(getCategoryName(masterCategory));
-    }
-    categoryChooser.checkUnselected(category);
-    categoryChooser.validate();
-    return this;
-  }
-
-  public SeriesEditionDialogChecker setCategory(MasterCategory master) {
-    return setCategories(master);
-  }
-
-  public SeriesEditionDialogChecker setCategories(MasterCategory... masters) {
-    String categories[] = new String[masters.length];
-    int i = 0;
-    for (MasterCategory category : masters) {
-      categories[i] = getCategoryName(category);
-      i++;
-    }
-    return setCategories(categories);
-  }
-
-  public SeriesEditionDialogChecker addCategory(String... categories) {
-    Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
-    CategoryChooserChecker categoryChooser = new CategoryChooserChecker(chooser);
-    if (singleCategorySeries) {
-      Assert.fail("only one category can be selected");
-    }
-    else {
-      categoryChooser.checkTitle("Select categories");
-      for (String category : categories) {
-        categoryChooser.selectCategory(category);
-      }
-      categoryChooser.validate();
-    }
-    return this;
-  }
-
-  public SeriesEditionDialogChecker setCategories(String... categories) {
-    Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
-    CategoryChooserChecker categoryChooser = new CategoryChooserChecker(chooser);
-    if (singleCategorySeries) {
-      Assert.assertEquals(1, categories.length);
-      categoryChooser.checkTitle("Select a category");
-      categoryChooser.selectCategory(categories[0], singleCategorySeries);
-    }
-    else {
-      categoryChooser.checkTitle("Select categories");
-      for (String category : categories) {
-        categoryChooser.selectCategory(category);
-      }
-      categoryChooser.validate();
-    }
-    return checkCategory(categories);
-  }
-
-  public SeriesEditionDialogChecker checkCategory(MasterCategory master) {
-    return checkCategories(master);
-  }
-
-  public SeriesEditionDialogChecker checkCategories(MasterCategory... masters) {
-    String categories[] = new String[masters.length];
-    int i = 0;
-    for (MasterCategory category : masters) {
-      categories[i] = getCategoryName(category);
-      i++;
-    }
-    return checkCategory(categories);
-  }
-
-  public SeriesEditionDialogChecker checkNoCategory() {
-    if (singleCategorySeries) {
-      assertThat(dialog.getTextBox("singleCategoryField").textIsEmpty());
-      assertThat(dialog.getTextBox("missingCategoryLabel").textContains("You must select a category"));
-    }
-    else {
-      UISpecAssert.assertThat(dialog.getListBox("multipleCategoryList").isEmpty());
-      assertThat(dialog.getTextBox("missingCategoryLabel").textContains("You must select at least one category"));
-    }
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkCategory(String... categories) {
-    if (categories.length == 0) {
-      return checkNoCategory();
-    }
-
-    if (singleCategorySeries) {
-      if (categories.length > 1) {
-        fail("Only one category should be expected for single category series");
-      }
-      assertThat(dialog.getTextBox("singleCategoryField").textEquals(categories[0]));
-    }
-    else {
-      String[] categoryName = new String[categories.length];
-      int i = 0;
-      for (String category : categories) {
-        categoryName[i] = category;
-        i++;
-      }
-      UISpecAssert.assertThat(dialog.getListBox("multipleCategoryList").contentEquals(categoryName));
-    }
-    return this;
-  }
-
-  public CategoryChooserChecker openCategory() {
-    Window chooser = WindowInterceptor.getModalDialog(dialog.getButton("Select").triggerClick());
-    return new CategoryChooserChecker(chooser);
-  }
-
   public SeriesEditionDialogChecker selectAllMonths() {
     getTable().selectRowSpan(0, getTable().getRowCount() - 1);
     return this;
@@ -218,9 +102,9 @@ public class SeriesEditionDialogChecker extends GuiChecker {
 
   public SeriesEditionDialogChecker selectMonth(Integer monthId) {
     int[] indices = getTable().getRowIndices(0, Integer.toString(Month.toYear(monthId)));
-    for (int indice : indices) {
-      if (getTable().getContentAt(indice, 1).equals(Month.getFullMonthLabel(Month.toMonth(monthId)))) {
-        getTable().selectRow(indice);
+    for (int index : indices) {
+      if (getTable().getContentAt(index, 1).equals(Month.getFullMonthLabel(Month.toMonth(monthId)))) {
+        getTable().selectRow(index);
         return this;
       }
     }
@@ -392,7 +276,6 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     return this;
   }
 
-
   public SeriesEditionDialogChecker checkSeriesListIsEmpty() {
     return checkSeriesListEquals();
   }
@@ -546,52 +429,8 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     assertFalse(dialog.isVisible());
   }
 
-  public SeriesEditionDialogChecker checkCategorizeEnabled(boolean enable) {
-    Button categorizeButton = getCategorizeButton();
-    if (enable) {
-      assertThat(categorizeButton.isEnabled());
-    }
-    else {
-      assertFalse(categorizeButton.isEnabled());
-    }
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkSingleCategorizeIsVisible(boolean visible) {
-    TextBox textField = dialog.getTextBox("singleCategoryField");
-    UISpecAssert.assertEquals(visible, textField.isVisible());
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkCategorizeLabelIsEmpty() {
-    TextBox label = dialog.getTextBox("singleCategoryField");
-    UISpecAssert.assertThat(label.textIsEmpty());
-    return this;
-  }
-
-  private Button getCategorizeButton() {
-    return dialog.getButton("assignCategory");
-  }
-
-  public SeriesEditionDialogChecker checkCategoryListEnable(boolean enable) {
-    checkMultiCategorizeIsVisible(true);
-    ListBox multiCategoryList = getMultiCategoryList();
-    UISpecAssert.assertEquals(enable, multiCategoryList.isEnabled());
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkMultiCategorizeIsVisible(boolean visible) {
-    ListBox multiCategoryList = getMultiCategoryList();
-    UISpecAssert.assertEquals(visible, multiCategoryList.isVisible());
-    return this;
-  }
-
-  private ListBox getMultiCategoryList() {
-    return dialog.getListBox("multipleCategoryList");
-  }
-
   public SeriesEditionDialogChecker checkOkEnabled(boolean isEnabled) {
-    UISpecAssert.assertEquals(isEnabled ? "ok is disable" : "ok is enable",
+    UISpecAssert.assertEquals(isEnabled ? "ok is disabled" : "ok is enabled",
                               isEnabled, dialog.getButton("ok").isEnabled());
     return this;
 
@@ -647,11 +486,6 @@ public class SeriesEditionDialogChecker extends GuiChecker {
 
   public SeriesEditionDialogChecker checkNegativeAmountsSelected() {
     assertThat(dialog.getRadioButton("negativeAmounts").isSelected());
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkPositiveAmountsNotSelected() {
-    assertFalse(dialog.getRadioButton("positiveAmounts").isSelected());
     return this;
   }
 
@@ -804,9 +638,27 @@ public class SeriesEditionDialogChecker extends GuiChecker {
 
   public SeriesEditionDialogChecker checkSavingsMessageVisibility(boolean isVisible) {
     if (isVisible) {
-      assertTrue(dialog.getTextBox("savingsMessage").textEquals("At least one of the account may be an existing account"));
+      assertTrue(dialog.getTextBox("savingsMessage").textEquals("At least one of the accounts must be an existing account"));
     }
     assertEquals(isVisible, dialog.getTextBox("savingsMessage").isVisible());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker selectTermsTab() {
+    dialog.getTabGroup().selectTab("Echéances");
+    return this;
+  }
+
+  public SeriesEditionDialogChecker selectSubSeriesTab() {
+    dialog.getTabGroup().selectTab("Sous-séries");
+    return this;
+  }
+
+  public SeriesEditionDialogChecker addSubSeries(String name) {
+    Panel tab = dialog.getTabGroup().getSelectedTab();
+    tab.getInputTextBox().setText(name, false);
+    tab.getButton("Add").click();
+    assertThat(tab.getListBox().contains(name));
     return this;
   }
 }

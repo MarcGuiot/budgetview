@@ -34,7 +34,7 @@ public class GlobGaugeViewTest extends GuiTestCase {
     obj3 = create(3, 10.0, 10.0);
     obj4 = create(4, null, null);
 
-    GlobGaugeView view = new GlobGaugeView(MyObject.TYPE, BudgetArea.OCCASIONAL,
+    GlobGaugeView view = new GlobGaugeView(MyObject.TYPE, BudgetArea.ENVELOPES,
                                            MyObject.ACTUAL, MyObject.TARGET,
                                            GlobMatchers.not(fieldEquals(MyObject.ID, 3)),
                                            repository, directory);

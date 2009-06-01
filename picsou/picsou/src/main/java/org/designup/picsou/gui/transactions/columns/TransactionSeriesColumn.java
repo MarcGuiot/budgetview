@@ -102,7 +102,7 @@ public class TransactionSeriesColumn extends HyperlinkTableColumn {
       button.setForeground(isSelected ? selectedColor : toCategorizeColor);
       button.setFont(toCategorizeFont);
       button.setUnderline(true);
-      button.setText(Lang.get("category.assignement.required"));
+      button.setText(Lang.get("categorization.required"));
       button.setToolTipText(Lang.get("transaction.categorizationLink.tooltip"));
     }
 

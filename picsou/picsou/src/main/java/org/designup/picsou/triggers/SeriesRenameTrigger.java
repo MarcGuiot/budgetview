@@ -29,41 +29,8 @@ public class SeriesRenameTrigger implements ChangeSetListener {
                                 Series.getPlannedTransactionLabel(seriesId, values));
             }
           }
-          if (values.contains(Series.DEFAULT_CATEGORY)) {
-            updateTransactions(seriesId, updatedSeries, repository);
-          }
         }
       });
-    }
-    changeSet.safeVisit(SeriesToCategory.TYPE, new ChangeSetVisitor() {
-      public void visitCreation(Key key, FieldValues values) throws Exception {
-        Integer seriesId = values.get(SeriesToCategory.SERIES);
-        updateTransactions(seriesId, updatedSeries, repository);
-      }
-
-      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        Glob seriesToCategory = repository.get(key);
-        Integer seriesId = seriesToCategory.get(SeriesToCategory.SERIES);
-        updateTransactions(seriesId, updatedSeries, repository);
-      }
-
-      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-      }
-    });
-  }
-
-  private void updateTransactions(Integer seriesId, Set<Integer> updatedSeries, GlobRepository repository) {
-    if (updatedSeries.contains(seriesId)) {
-      return;
-    }
-    updatedSeries.add(seriesId);
-    Integer categoryId = TransactionPlannedTrigger
-      .getCategory(repository.get(Key.create(Series.TYPE, seriesId)), repository);
-    GlobList globs = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES,
-                                            seriesId).getGlobs()
-      .filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, true), repository);
-    for (Glob transaction : globs) {
-      repository.update(transaction.getKey(), Transaction.CATEGORY, categoryId);
     }
   }
 

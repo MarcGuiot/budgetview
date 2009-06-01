@@ -69,15 +69,6 @@ public class BalanceStat {
   public static DoubleField ENVELOPES_PLANNED;
 
   @DefaultDouble(0.0)
-  public static DoubleField OCCASIONAL;
-
-  @DefaultDouble(0.0)
-  public static DoubleField OCCASIONAL_REMAINING;
-
-  @DefaultDouble(0.0)
-  public static DoubleField OCCASIONAL_PLANNED;
-
-  @DefaultDouble(0.0)
   public static DoubleField SPECIAL;
 
   @DefaultDouble(0.0)
@@ -118,7 +109,7 @@ public class BalanceStat {
 
   public static DoubleField[] INCOME_FIELDS = {INCOME, INCOME_REMAINING};
 
-  public static DoubleField[] EXPENSE_FIELDS = {ENVELOPES, ENVELOPES_REMAINING, OCCASIONAL, OCCASIONAL_REMAINING,
+  public static DoubleField[] EXPENSE_FIELDS = {ENVELOPES, ENVELOPES_REMAINING,
                                                 SPECIAL, SPECIAL_REMAINING, SAVINGS, SAVINGS_REMAINING, UNCATEGORIZED};
 
   static {
@@ -131,8 +122,6 @@ public class BalanceStat {
         return ENVELOPES_REMAINING;
       case INCOME:
         return INCOME_REMAINING;
-      case OCCASIONAL:
-        return OCCASIONAL_REMAINING;
       case SAVINGS:
         return SAVINGS_REMAINING;
       case RECURRING:
@@ -149,8 +138,6 @@ public class BalanceStat {
         return ENVELOPES;
       case INCOME:
         return INCOME;
-      case OCCASIONAL:
-        return OCCASIONAL;
       case SAVINGS:
         return SAVINGS;
       case RECURRING:
@@ -167,8 +154,6 @@ public class BalanceStat {
         return ENVELOPES_PLANNED;
       case INCOME:
         return INCOME_PLANNED;
-      case OCCASIONAL:
-        return OCCASIONAL_PLANNED;
       case SAVINGS:
         return SAVINGS_PLANNED;
       case RECURRING:

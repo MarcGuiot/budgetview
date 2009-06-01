@@ -13,7 +13,7 @@ public abstract class ViewChecker extends GuiChecker {
     this.window = window;
   }
 
-  public void assertVisible(boolean visible) {
+  public void checkVisible(boolean visible) {
     UIComponent component = findMainComponent(window);
     Assert.assertEquals(visible, component != null);
     if (component != null) {

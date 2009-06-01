@@ -25,10 +25,6 @@ public class CompactSeriesStringifier extends AbstractGlobStringifier {
       return "";
     }
 
-    if (Series.OCCASIONAL_SERIES_ID.equals(seriesId)) {
-      return categoryStringifier.toString(transaction, repository);
-    }
-
     return seriesStringifier.toString(transaction, repository);
   }
 }

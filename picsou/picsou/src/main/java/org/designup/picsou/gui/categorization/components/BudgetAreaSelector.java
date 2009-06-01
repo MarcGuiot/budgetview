@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.categorization.components;
 
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -30,7 +29,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
   private BudgetArea[] budgetAreas =
     {BudgetArea.UNCATEGORIZED,
      BudgetArea.INCOME, BudgetArea.RECURRING, BudgetArea.ENVELOPES,
-     BudgetArea.OCCASIONAL, BudgetArea.SAVINGS, BudgetArea.SPECIAL};
+     BudgetArea.SAVINGS, BudgetArea.SPECIAL};
 
   private GlobRepository repository;
   private CardHandler budgetAreaCard;
@@ -92,7 +91,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
             uncategorizedMessage.setText(Lang.get("categorization.uncategorized.single"));
           }
           else {
-            uncategorizedMessage.setText(Lang.get("categorization.uncategorized.multiple"));            
+            uncategorizedMessage.setText(Lang.get("categorization.uncategorized.multiple"));
           }
           seriesCard.show(budgetArea.getName());
         }
@@ -192,7 +191,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
         for (Glob transaction : selectedTransactions) {
           repository.update(transaction.getKey(),
                             value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                            value(Transaction.CATEGORY, MasterCategory.NONE.getId()));
+                            value(Transaction.SUB_SERIES, null));
         }
       }
       finally {

@@ -4,7 +4,6 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -99,7 +98,7 @@ public class CardView extends View implements GlobSelectionListener {
         showCard(Card.get(cards.get(0).get(Card.ID)));
       }
     }
-    if (selection.isRelevantForType(Month.TYPE) || selection.isRelevantForType(Category.TYPE)) {
+    if (selection.isRelevantForType(Month.TYPE)) {
       showCard(lastSelectedCard);
     }
   }

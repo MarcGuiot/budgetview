@@ -82,7 +82,7 @@ public class SeriesEvolutionChecker extends GuiChecker {
     }
     int column = table.getHeader().findColumnIndex(columnLabel);
     table.selectRow(row);
-    return SeriesEditionDialogChecker.open(table.editCell(row, column).getButton(), false);
+    return SeriesEditionDialogChecker.open(table.editCell(row, column).getButton());
   }
 
   public void checkTableIsEmpty(String... labels) {

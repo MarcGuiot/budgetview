@@ -34,7 +34,6 @@ public class LoginFuncTest extends ServerFuncTestCase {
       .loginAndSkipSla()
       .waitForApplicationToLoad();
 
-
     OperationChecker.init(window)
       .openImportDialog()
       .selectFiles(fileName)
@@ -44,6 +43,7 @@ public class LoginFuncTest extends ServerFuncTestCase {
       .doImportWithBalance()
       .validate();
 
+    fail("Marc: tester dans la vue home que le compte existe ?");
     assertTrue(getCategoryTable().cellEquals(0, 2, "-155"));
   }
 }

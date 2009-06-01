@@ -2,14 +2,12 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.gui.components.Gauge;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +19,6 @@ public class BudgetViewChecker extends GuiChecker {
   public final BudgetAreaChecker income;
   public final BudgetAreaChecker recurring;
   public final BudgetAreaChecker envelopes;
-  public final OccasionalAreaChecker occasional;
   public final BudgetAreaChecker specials;
   public final BudgetAreaChecker savings;
 
@@ -32,7 +29,6 @@ public class BudgetViewChecker extends GuiChecker {
     this.income = new BudgetAreaChecker("incomeBudgetView", true, BudgetArea.INCOME);
     this.recurring = new BudgetAreaChecker("recurringBudgetView", true, BudgetArea.RECURRING);
     this.envelopes = new BudgetAreaChecker("envelopeBudgetView", false, BudgetArea.ENVELOPES);
-    this.occasional = new OccasionalAreaChecker();
     this.specials = new BudgetAreaChecker("projectsBudgetView", false, BudgetArea.SPECIAL);
     this.savings = new BudgetAreaChecker("savingsBudgetView", true, BudgetArea.SAVINGS);
   }
@@ -199,11 +195,16 @@ public class BudgetViewChecker extends GuiChecker {
 
       Button button = new Button((JButton)panel.getComponent(nameIndex + PLANNED_LABEL_OFFSET));
 
-      return SeriesEditionDialogChecker.open(button, singleCategorySeries);
+      return SeriesEditionDialogChecker.open(button);
     }
 
     public void checkEditAllSeriesIsEnabled(boolean enabled) {
       UISpecAssert.assertEquals(enabled, getPanel().getButton("editAllSeries").isEnabled());
+    }
+
+    public BudgetAreaChecker createSeries(String name) {
+      createSeries().setName(name).validate();
+      return this;
     }
 
     public SeriesEditionDialogChecker createSeries() {
@@ -211,7 +212,7 @@ public class BudgetViewChecker extends GuiChecker {
     }
 
     private SeriesEditionDialogChecker openSeriesEditionDialog(String seriesName) {
-      return SeriesEditionDialogChecker.open(getPanel().getButton(seriesName), singleCategorySeries);
+      return SeriesEditionDialogChecker.open(getPanel().getButton(seriesName));
     }
 
     public void gotoData(String seriesName) {
@@ -254,76 +255,6 @@ public class BudgetViewChecker extends GuiChecker {
     public BudgetAreaChecker checkNoAccountsDisplayed() {
       org.globsframework.utils.TestUtils.assertEmpty(getDisplayedAccounts());
       return this;
-    }
-  }
-
-  public class OccasionalAreaChecker {
-
-    public void checkTitle(String title) {
-      Panel budgetPanel = getPanel();
-      TextBox label = budgetPanel.getTextBox("budgetAreaTitle");
-      UISpecAssert.assertThat(label.textEquals(title));
-    }
-
-    public void checkTotalAmount(double spent, double free) {
-      Panel budgetPanel = getPanel();
-      TextBox totalObserved = budgetPanel.getTextBox("totalObservedAmount");
-      String observedAmount = BudgetViewChecker.this.toString(spent);
-      if (spent < 0.0) {
-        observedAmount = observedAmount.replace("-", "+");
-      }
-      UISpecAssert.assertTrue(totalObserved.textEquals(observedAmount));
-
-      TextBox totalPlanned = budgetPanel.getTextBox("totalPlannedAmount");
-      String amount = BudgetViewChecker.this.toString(free);
-      if (free < 0.0) {
-        amount = amount.replace("-", "+");
-      }
-      UISpecAssert.assertTrue(totalPlanned.textEquals(amount));
-    }
-
-    public OccasionalAreaChecker check(MasterCategory category, Double amount) {
-      Panel budgetPanel = getPanel();
-      UISpecAssert.assertTrue(budgetPanel.containsUIComponent(TextBox.class, "categoryName." + getCategoryName(category)));
-      UISpecAssert.assertTrue(budgetPanel.getButton("amount." + getCategoryName(category))
-        .textEquals(BudgetViewChecker.this.toString(amount)));
-      return this;
-    }
-
-    public OccasionalAreaChecker checkNotDisplayed(MasterCategory master) {
-      return checkNotDisplayed(getCategoryName(master));
-    }
-
-    public OccasionalAreaChecker checkNotDisplayed(String categoryName) {
-      Panel budgetPanel = getPanel();
-      UISpecAssert.assertFalse(budgetPanel.containsUIComponent(TextBox.class, "categoryName." + categoryName));
-      return this;
-    }
-
-    public void gotoData(MasterCategory master) {
-      Panel budgetPanel = getPanel();
-      UISpecAssert.assertTrue(budgetPanel.containsUIComponent(TextBox.class, "categoryName." + getCategoryName(master)));
-      budgetPanel.getButton("amount." + getCategoryName(master)).click();
-    }
-
-    public OccasionalAreaChecker checkOrder(MasterCategory... categories) {
-      Panel budgetPanel = getPanel();
-      UIComponent[] uiComponents = budgetPanel.getUIComponents(TextBox.class, "categoryName");
-      Assert.assertEquals(uiComponents.length, categories.length);
-      for (int i = 0; i < uiComponents.length; i++) {
-        UIComponent component = uiComponents[i];
-        UISpecAssert.assertThat(((TextBox)component).textEquals(getCategoryName(categories[i])));
-      }
-      return this;
-    }
-
-    private Panel getPanel() {
-      return window.getPanel("occasionalBudgetView");
-    }
-
-    public OccasionalSerieEditionChecker edit() {
-      return new OccasionalSerieEditionChecker(
-        WindowInterceptor.getModalDialog(getPanel().getButton("editOccasionalSeries").triggerClick()));
     }
   }
 }

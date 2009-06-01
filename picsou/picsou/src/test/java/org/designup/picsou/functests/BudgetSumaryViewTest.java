@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.MasterCategory;
 
 public class BudgetSumaryViewTest extends LoggedInFunctionalTestCase {
 
@@ -34,8 +33,8 @@ public class BudgetSumaryViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
 
     views.selectCategorization();
-    categorization.setIncome("WorldCo", "Salary", true);
-    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
+    categorization.setNewIncome("WorldCo", "Salary");
+    categorization.setNewEnvelope("Auchan", "Groceries");
 
     timeline.checkSelection("2008/07");
     views.selectBudget();
@@ -60,7 +59,7 @@ public class BudgetSumaryViewTest extends LoggedInFunctionalTestCase {
       .checkUncategorizedNotShown();
 
     views.selectCategorization();
-    categorization.setOccasional("FNAC", MasterCategory.LEISURES);
+    categorization.setNewEnvelope("FNAC", "Occasional");
 
     timeline.selectMonth("2008/07");
     views.selectBudget();

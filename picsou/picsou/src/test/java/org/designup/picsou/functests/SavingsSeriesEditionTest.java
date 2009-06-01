@@ -4,7 +4,6 @@ import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.Bank;
-import org.designup.picsou.model.MasterCategory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,8 +29,6 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Epargne LCL")
       .setName("Epargne")
-      .setCategory(MasterCategory.SAVINGS)
-      .checkOkEnabled(true)
       .validate();
 
     budgetView.savings
@@ -76,7 +73,6 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("Epargne")
       .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Epargne LCL")
-      .setCategory(MasterCategory.SAVINGS)
       .checkOkEnabled(true)
       .validate();
 
@@ -85,7 +81,6 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("Veranda")
       .setToAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setFromAccount("Epargne CA")
-      .setCategory(MasterCategory.HOUSE)
       .switchToManual()
       .setSingleMonth()
       .setSingleMonthDate(200810)
@@ -130,13 +125,11 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("Epargne")
       .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Epargne LCL")
-      .setCategory(MasterCategory.SAVINGS)
-      .checkOkEnabled(true)
       .validate();
 
     views.selectCategorization();
 
-    categorization.selectTableRows("McDo")
+    categorization.selectTransactions("McDo")
       .selectSavings()
       .editSeries("Epargne", true)
       .setToAccount("External account")
@@ -163,7 +156,6 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("CA")
-      .setCategory(MasterCategory.SAVINGS)
       .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Account n. 111")
       .validate();
@@ -194,7 +186,6 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Epargne LCL")
       .setName("Epargne")
-      .setCategory(MasterCategory.SAVINGS)
       .setSixMonths()
       .setSingleMonth()
       .setSingleMonthDate(200810)
@@ -220,7 +211,6 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("CA")
-      .setCategory(MasterCategory.SAVINGS)
       .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Account n. 111")
       .validate();
@@ -269,7 +259,6 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings
       .createSeries()
       .setName("Epargne")
-      .setCategory(MasterCategory.SAVINGS)
       .checkFromAccount("External account")
       .checkToAccount("External account")
       .checkSavingsMessageVisibility(true)
@@ -282,7 +271,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
 
   private SeriesEditionDialogChecker getSeriesChecker(Component component) {
     final org.uispec4j.Button button = new org.uispec4j.Button((JButton)component);
-    return SeriesEditionDialogChecker.open(button, true);
+    return SeriesEditionDialogChecker.open(button);
   }
 
 }

@@ -57,8 +57,6 @@ public class TransactionUtils {
                                value(Transaction.MONTH, seriesBudget.get(SeriesBudget.MONTH)),
                                value(Transaction.TRANSACTION_TYPE,
                                      amount > 0 ? TransactionType.VIREMENT.getId() : TransactionType.PRELEVEMENT.getId()),
-                               value(Transaction.CATEGORY,
-                                     series.get(Series.DEFAULT_CATEGORY)),
                                value(Transaction.LABEL, Transaction.getLabel(isPlanned, series)),
                                value(Transaction.SERIES, series.get(Series.ID)),
                                value(Transaction.CREATED_BY_SERIES, true),

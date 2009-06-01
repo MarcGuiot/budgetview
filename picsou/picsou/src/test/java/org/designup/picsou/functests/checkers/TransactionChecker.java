@@ -5,10 +5,9 @@ import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.functests.checkers.converters.SeriesCellConverter;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouFrame;
-import org.designup.picsou.gui.description.CategoryStringifier;
 import org.designup.picsou.gui.transactions.TransactionView;
-import org.designup.picsou.model.Category;
 import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.model.SubSeries;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
@@ -52,7 +51,7 @@ public class TransactionChecker extends ViewChecker {
     if (table == null) {
       table = window.getTable(Transaction.TYPE.getName());
       table.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter());
-      table.setCellValueConverter(TransactionView.CATEGORY_COLUMN_INDEX, new CategoryCellValueConverter(window));
+      table.setCellValueConverter(TransactionView.SUBSERIES_COLUMN_INDEX, new SubSeriesCellValueConverter(window));
       table.setCellValueConverter(TransactionView.SERIES_COLUMN_INDEX, new SeriesCellConverter(true));
     }
     return table;
@@ -60,13 +59,6 @@ public class TransactionChecker extends ViewChecker {
 
   protected UIComponent findMainComponent(Window window) {
     return window.findUIComponent(ComponentMatchers.innerNameIdentity(Transaction.TYPE.getName()));
-  }
-
-  public static String getCategoryName(MasterCategory category) {
-    if (category == MasterCategory.NONE) {
-      return "";
-    }
-    return GuiChecker.getCategoryName(category);
   }
 
   public TransactionChecker categorize(final int... rows) {
@@ -92,20 +84,8 @@ public class TransactionChecker extends ViewChecker {
     UISpecAssert.assertThat(seriesButton.textEquals(seriesName));
   }
 
-  public void checkCategory(String label, MasterCategory category) {
-    checkCategory(getIndexOf(label.toUpperCase()), category);
-  }
-
-  public void checkCategory(int row, MasterCategory category) {
-    UISpecAssert.assertThat(getTable().cellEquals(row, TransactionView.CATEGORY_COLUMN_INDEX, getCategoryName(category)));
-  }
-
-  public void checkCategory(int row, String categoryName) {
-    UISpecAssert.assertThat(getTable().cellEquals(row, TransactionView.CATEGORY_COLUMN_INDEX, categoryName));
-  }
-
   private int getIndexOf(String transactionLabel) {
-    return getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, transactionLabel);
+    return getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, transactionLabel.toUpperCase());
   }
 
   public TextBox getSearchField() {
@@ -115,7 +95,7 @@ public class TransactionChecker extends ViewChecker {
   public TransactionAmountChecker initAmountContent() {
     Table table = window.getTable(Transaction.TYPE.getName());
     table.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter());
-    table.setCellValueConverter(TransactionView.CATEGORY_COLUMN_INDEX, new CategoryCellValueConverter(window));
+    table.setCellValueConverter(TransactionView.SUBSERIES_COLUMN_INDEX, new SubSeriesCellValueConverter(window));
     table.setCellValueConverter(TransactionView.SERIES_COLUMN_INDEX, new SeriesCellConverter(false));
     return new TransactionAmountChecker(table);
   }
@@ -154,6 +134,14 @@ public class TransactionChecker extends ViewChecker {
       }
     });
     return new ConfirmationDialogChecker(deleteDialog);
+  }
+
+  public void editNote(int row, String note) {
+    table.editCell(row, TransactionView.NOTE_COLUMN_INDEX, note, true);
+  }
+
+  public void editNote(String transactionLabel, String note) {
+    editNote(getIndexOf(transactionLabel), note);
   }
 
   public class TransactionAmountChecker {
@@ -210,10 +198,10 @@ public class TransactionChecker extends ViewChecker {
         }).toString();
         buffer.append("\"").append(series).append("\"");
         Object accountBalanceStr = getTable().getContentAt(i, accountBalance);
-        if (!accountBalanceStr.equals("")){
-        buffer
-          .append(", ")
-          .append(accountBalanceStr);
+        if (!accountBalanceStr.equals("")) {
+          buffer
+            .append(", ")
+            .append(accountBalanceStr);
         }
         buffer.append(", ")
           .append(getTable().getContentAt(i, balance));
@@ -252,18 +240,8 @@ public class TransactionChecker extends ViewChecker {
     }
 
     public ContentChecker add(String date, TransactionType type, String label,
-                              String note, double amount, String series, MasterCategory category) {
-      return add(date, type, label, note, amount, series, getCategoryName(category));
-    }
-
-    public ContentChecker addOccasional(String date, TransactionType type, String label,
-                                        String note, double amount, MasterCategory category) {
-      return add(date, type, label, note, amount, "Occasional", getCategoryName(category));
-    }
-
-    public ContentChecker addOccasional(String date, TransactionType type, String label,
-                                        String note, double amount, String category) {
-      return add(date, type, label, note, amount, "Occasional", category);
+                              String note, double amount, String series) {
+      return add(date, type, label, note, amount, series, "");
     }
 
     public ContentChecker add(String userDate, String bankDate, TransactionType type, String label,
@@ -302,16 +280,9 @@ public class TransactionChecker extends ViewChecker {
     }
 
     public ContentChecker add(String date, TransactionType type, String label,
-                              String note, double amount, MasterCategory category) {
-      add(date, type, label, note, amount, stringifyCategory(category));
+                              String note, double amount) {
+      add(date, type, label, note, amount, "To categorize");
       return this;
-    }
-
-    private String stringifyCategory(MasterCategory category) {
-      if (MasterCategory.NONE.equals(category)) {
-        return TO_CATEGORIZE;
-      }
-      return getCategoryName(category);
     }
 
     public void dumpCode() {
@@ -323,7 +294,7 @@ public class TransactionChecker extends ViewChecker {
       Table table = getTable();
       for (int row = 0; row < table.getRowCount(); row++) {
         String type = table.getContentAt(row, 0, transactionTypeDumper).toString();
-        String category = table.getContentAt(row, TransactionView.CATEGORY_COLUMN_INDEX, categoryDumper).toString();
+        String category = table.getContentAt(row, TransactionView.SUBSERIES_COLUMN_INDEX, categoryDumper).toString();
         String date = table.getContentAt(row, TransactionView.DATE_COLUMN_INDEX).toString();
         String bankDate = table.getContentAt(row, TransactionView.BANK_DATE_COLUMN_INDEX).toString();
         String series = table.getContentAt(row, TransactionView.SERIES_COLUMN_INDEX, new TableCellValueConverter() {
@@ -421,7 +392,7 @@ public class TransactionChecker extends ViewChecker {
         .contentEquals(new String[]{Lang.get("transactionView.date.user"),
                                     Lang.get("transactionView.date.bank"),
                                     Lang.get("series"),
-                                    Lang.get("category"),
+                                    Lang.get("subSeries"),
                                     Lang.get("label"),
                                     Lang.get("amount"),
                                     Lang.get("note")},
@@ -430,11 +401,10 @@ public class TransactionChecker extends ViewChecker {
 
   }
 
-  private static class CategoryCellValueConverter implements TableCellValueConverter {
+  private static class SubSeriesCellValueConverter implements TableCellValueConverter {
     private GlobRepository repository;
-    private CategoryStringifier categoryStringifier;
 
-    private CategoryCellValueConverter(Window window) {
+    private SubSeriesCellValueConverter(Window window) {
       Container container = window.getAwtComponent();
       if (container instanceof PicsouFrame) {
         PicsouFrame frame = (PicsouFrame)container;
@@ -444,16 +414,15 @@ public class TransactionChecker extends ViewChecker {
         PicsouFrame frame = (PicsouFrame)container.getParent();
         this.repository = frame.getRepository();
       }
-      categoryStringifier = new CategoryStringifier();
     }
 
     public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
       Glob transaction = (Glob)modelObject;
-      Glob category = repository.findLinkTarget(transaction, Transaction.CATEGORY);
-      if (category == null || category.get(Category.ID).equals(Category.NONE)) {
+      Glob subSeries = repository.findLinkTarget(transaction, Transaction.SUB_SERIES);
+      if (subSeries == null) {
         return "";
       }
-      return categoryStringifier.toString(category, repository);
+      return subSeries.get(SubSeries.NAME);
     }
   }
 }

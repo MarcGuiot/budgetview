@@ -293,7 +293,6 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                          new SavingsBudgetArea(false),
                          new DefaultBudgetArea(BudgetArea.RECURRING),
                          new DefaultBudgetArea(BudgetArea.ENVELOPES),
-                         new DefaultBudgetArea(BudgetArea.OCCASIONAL),
                          new DefaultBudgetArea(BudgetArea.SPECIAL));
   }
 

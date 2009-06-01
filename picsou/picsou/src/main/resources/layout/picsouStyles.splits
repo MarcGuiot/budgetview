@@ -230,10 +230,7 @@
     <style selector="radioButton.selector" opaque="false"
            foreground="toggle.selector.normal" font="-,plain,12" cursor='hand'
            marginRight="2" fill="none" anchor="center" weightY="0"/>
-    <style selector=".masterCategorySelector" opaque="false"
-           foreground="toggle.selector.categories.master" cursor='hand'
-           fill="none" anchor="west" font="-,bold,13"/>
-    <style selector=".subCategorySelector" opaque="false"
+    <style selector=".subSeriesSelector" opaque="false"
            foreground="toggle.selector.categories.sub" cursor='hand'
            font="-,plain,10" fill="none" anchor="west"/>
 

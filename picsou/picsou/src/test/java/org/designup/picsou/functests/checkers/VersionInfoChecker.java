@@ -1,10 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.Window;
 import org.uispec4j.TextBox;
-import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import org.uispec4j.Window;
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class VersionInfoChecker extends GuiChecker {
   private Window mainWindow;

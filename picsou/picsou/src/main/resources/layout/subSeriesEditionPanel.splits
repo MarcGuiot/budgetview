@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel name="subSeriesEditionPanel" opaque="false" margin="10">
+    <grid>
+      <label gridPos="(0,0)" text="$subseries.create.inputlabel" styleClass="formLabel"/>
+      <textField gridPos="(1,0)" ref="subSeriesNameField"/>
+      <button gridPos="(2,0)" action="add" fill="none"/>
+
+      <label gridPos="(0,1)" text="$subseries.list" styleClass="formLabel" anchor="northeast" marginTop="2"/>
+      <scrollPane gridPos="(1,1,2,1)" margin="2">
+        <list ref="list"/>
+      </scrollPane>
+    </grid>
+  </panel>
+
+</splits>

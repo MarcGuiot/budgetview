@@ -11,6 +11,9 @@ import org.globsframework.model.Key;
 public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
   public void testStandardCreation() throws Exception {
+
+//    fail("Marc ?");
+
     createSeries(10, 150.0);
     listener.assertNoChanges(SeriesStat.TYPE);
 
@@ -18,8 +21,6 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     "<create type='seriesStat' series='10' month='200807'" +
                                     "        amount='0.0' plannedAmount='150.0'/>" +
-                                    "<create type='seriesStat' series='0' month='200807'" +
-                                    "        amount='0.0' plannedAmount='0.0'/>" +
                                     "<create amount='0.0' month='200807' plannedAmount='0.0' series='1'" +
                                     "        type='seriesStat'/>");
     repository.startChangeSet();
@@ -34,6 +35,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
   }
 
   public void testUnassignedTransactionSeriesAndDeleteSeries() throws Exception {
+
     checker.parse(repository,
                   "<series id='10' initialAmount='-100.0' budgetAreaName='recurring' " +
                   "        profileTypeName='custom' isAutomatic='false' name='10'/>" +
@@ -51,8 +53,6 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                                     "        amount='-10.0' plannedAmount='-100.0'/>" +
                                     "<create type='seriesStat' series='20' month='200807'" +
                                     "        amount='-20.0' plannedAmount='-100.0'/>" +
-                                    "<create type='seriesStat' series='0' month='200807'" +
-                                    "        amount='0.0' plannedAmount='0.0'/>" +
                                     "<create type='seriesStat' series='1' month='200807'" +
                                     "        amount='-50.0' plannedAmount='0.0'/>" +
                                     "");
@@ -125,7 +125,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     listener.assertNoChanges(SeriesBudget.TYPE);
   }
 
-  public void testWithIncomeAndReccuring() throws Exception {
+  public void testWithIncomeAndRecurring() throws Exception {
     checker.parse(repository,
                   "<series id='10' initialAmount='-100.0' budgetAreaName='recurring' name='10'" +
                   "        profileTypeName='custom' defaultCategoryName='none' isAutomatic='false' />" +
@@ -141,7 +141,6 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
       SeriesStat.TYPE,
       "<create amount='-90.0' month='200807' plannedAmount='-100.0' series='10' type='seriesStat'/>" +
       "<create amount='0.0' month='200807' plannedAmount='1000.0' series='20' type='seriesStat'/>" +
-      "<create amount='0.0' month='200807' plannedAmount='0.0' series='0' type='seriesStat'/>" +
       "<create amount='0.0' month='200807' plannedAmount='0.0' series='1' type='seriesStat'/>" +
       "<create amount='200.0' month='200807' plannedAmount='-500.0' series='30' type='seriesStat'/>");
     createTransaction(10, 20, 200807, 750.);

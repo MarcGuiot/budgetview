@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.savings;
 
 import org.designup.picsou.gui.budget.SeriesRepeatComponentFactory;
-import org.designup.picsou.gui.model.PeriodOccasionalSeriesStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.PicsouMatchers;
@@ -139,7 +138,6 @@ public class SavingsSeriesView implements Disposable {
   private class SeriesChangeSetListener implements ChangeSetListener {
     public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
       if (changeSet.containsChanges(PeriodSeriesStat.TYPE)
-          || changeSet.containsChanges(PeriodOccasionalSeriesStat.TYPE)
           || changeSet.containsChanges(Series.TYPE)) {
         updateRepeat(repository);  // on passe the repository et non l'autre a cause du
 //          updateRepeat(SavingsSeriesView.this.repository);  // on passe the repository et non l'autre a cause du

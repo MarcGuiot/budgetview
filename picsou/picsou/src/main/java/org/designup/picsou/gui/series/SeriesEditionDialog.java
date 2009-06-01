@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.categories.CategoryChooserCallback;
-import org.designup.picsou.gui.categories.CategoryChooserDialog;
+import org.designup.picsou.gui.series.subseries.SubSeriesEditionPanel;
+import org.designup.picsou.gui.series.edition.MonthCheckBoxUpdater;
 import org.designup.picsou.gui.components.MonthChooserDialog;
 import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.gui.components.PicsouDialog;
@@ -22,19 +22,14 @@ import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.gui.views.GlobListView;
-import org.globsframework.gui.views.impl.StringListCellRenderer;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.format.DescriptionService;
-import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
-import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -44,8 +39,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.*;
 
 public class SeriesEditionDialog {
@@ -62,9 +55,6 @@ public class SeriesEditionDialog {
 
   private JLabel titleLabel;
   private GlobListView seriesList;
-  private JTextField singleCategoryField;
-  private GlobListView multiCategoryList;
-  private SeriesEditionDialog.AssignCategoryAction assignCategoryAction;
   private SeriesEditionDialog.ValidateAction okAction;
   private AbstractAction deleteStartDateAction;
   private OpenMonthChooserAction startDateChooserAction;
@@ -72,11 +62,9 @@ public class SeriesEditionDialog {
   private OpenMonthChooserAction endDateChooserAction;
   private OpenMonthChooserAction singleMonthChooserAction;
   private GlobTextEditor nameEditor;
-  private JLabel categoryLabel;
   private JPanel monthSelectionPanel;
   private JPanel seriesPanel;
   private Key createdSeries;
-  Integer currentlySelectedCategory;
   private JPanel seriesListButtonPanel;
   private SeriesBudgetEditionPanel budgetEditionPanel;
   private GlobList selectedTransactions = new EmptyGlobList();
@@ -86,6 +74,7 @@ public class SeriesEditionDialog {
   private CardHandler monthSelectionCards;
   private JButton singleSeriesDeleteButton;
   private JLabel savingsMessage;
+  private SubSeriesEditionPanel subSeriesEditionPanel;
 
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -93,8 +82,8 @@ public class SeriesEditionDialog {
 
     DescriptionService descriptionService = directory.get(DescriptionService.class);
     localRepository = LocalGlobRepositoryBuilder.init(repository)
-      .copy(Category.TYPE, BudgetArea.TYPE, Month.TYPE, SeriesToCategory.TYPE, CurrentMonth.TYPE,
-            ProfileType.TYPE, Account.TYPE)
+      .copy(BudgetArea.TYPE, Month.TYPE, CurrentMonth.TYPE,
+            ProfileType.TYPE, Account.TYPE, SubSeries.TYPE)
       .get();
 
     localRepository.addTrigger(new UpdateDeleteMirror());
@@ -120,19 +109,8 @@ public class SeriesEditionDialog {
     titleLabel = builder.add("title", new JLabel());
 
     GlobStringifier seriesStringifier = descriptionService.getStringifier(Series.TYPE);
-    seriesList = GlobListView.init(Series.TYPE, localRepository, localDirectory)
-      .setRenderer(new StringListCellRenderer(seriesStringifier, localRepository) {
-        public Component getListCellRendererComponent(JList list, Object object, int index, boolean isSelected, boolean cellHasFocus) {
-          Component component = super.getListCellRendererComponent(list, object, index, isSelected, cellHasFocus);
-          Glob glob = (Glob)object;
-          if (glob != null && glob.get(Series.DEFAULT_CATEGORY) == null) {
-            component.setForeground(Color.RED);
-          }
-          return component;
-        }
-      }, seriesStringifier.getComparator(localRepository));
-    seriesPanel = new JPanel();
-    builder.add("seriesPanel", seriesPanel);
+    seriesList = GlobListView.init(Series.TYPE, localRepository, localDirectory);
+    seriesPanel = builder.add("seriesPanel", new JPanel());
 
     builder.add("seriesList", seriesList.getComponent());
 
@@ -143,12 +121,10 @@ public class SeriesEditionDialog {
 
     nameEditor = builder.addEditor("nameField", Series.NAME).setNotifyOnKeyPressed(true);
 
-    registerCategoryComponents(descriptionService, builder);
-
-    GlobMatcher accountFilter = GlobMatchers.and(
-      GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)),
-      GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, Account.MAIN_SUMMARY_ACCOUNT_ID)),
-      GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID)));
+    GlobMatcher accountFilter =
+      and(not(fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)),
+          not(fieldEquals(Account.ID, Account.MAIN_SUMMARY_ACCOUNT_ID)),
+          not(fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID)));
 
     fromAccountsCombo = new GlobLinkComboEditor(Series.FROM_ACCOUNT, localRepository, localDirectory)
       .setFilter(accountFilter)
@@ -204,10 +180,8 @@ public class SeriesEditionDialog {
 
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
-        currentSeries = selection.getAll(Series.TYPE).getFirst();
-        assignCategoryAction.setEnabled(currentSeries != null);
+        setCurrentSeries(selection.getAll(Series.TYPE).getFirst());
         if (currentSeries != null) {
-          multiCategoryList.setFilter(fieldEquals(SeriesToCategory.SERIES, currentSeries.get(Series.ID)));
           boolean isSavingsSeries = currentSeries.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId());
           fromAccountsCombo.setVisible(isSavingsSeries);
           toAccountsCombo.setVisible(isSavingsSeries);
@@ -221,9 +195,6 @@ public class SeriesEditionDialog {
           if (isSavingsSeries && savingsOnError) {
             okAction.setEnabled(false);
           }
-        }
-        else {
-          multiCategoryList.setFilter(GlobMatchers.NONE);
         }
         updateDateSelectors();
         updateMonthChooser();
@@ -242,11 +213,15 @@ public class SeriesEditionDialog {
                       new RepeatComponentFactory<Integer>() {
                         public void registerComponents(RepeatCellBuilder cellBuilder, final Integer monthIndex) {
                           cellBuilder.add("monthLabel", new JLabel(Month.getShortMonthLabel(monthIndex)));
-                          MonthCheckBoxUpdater updater = new MonthCheckBoxUpdater(monthIndex);
+                          MonthCheckBoxUpdater updater = new MonthCheckBoxUpdater(monthIndex, localRepository, selectionService);
                           cellBuilder.add("monthSelector", updater.getCheckBox());
                           localRepository.addChangeListener(updater);
                         }
                       });
+
+    subSeriesEditionPanel = new SubSeriesEditionPanel(localRepository, localDirectory);
+    builder.add("subSeriesEditionPanel",
+                subSeriesEditionPanel.getPanel());
 
     localRepository.addChangeListener(new OkButtonUpdater());
 
@@ -273,32 +248,6 @@ public class SeriesEditionDialog {
     else {
       monthSelectionPanel.setVisible(false);
     }
-  }
-
-  private void registerCategoryComponents(DescriptionService descriptionService, GlobsPanelBuilder builder) {
-    final GlobStringifier categoryStringifier = descriptionService.getStringifier(Category.TYPE);
-
-    categoryLabel = builder.add("categoryLabel", new JLabel());
-
-    builder.add("missingCategoryLabel",
-                GlobLabelView.init(Series.TYPE, localRepository, localDirectory, new MissingCategoryStringifier())
-                  .setAutoHideIfEmpty(true)
-                  .getComponent());
-
-    multiCategoryList = GlobListView.init(SeriesToCategory.TYPE, localRepository, localDirectory)
-      .setComparator(new GlobLinkComparator(SeriesToCategory.CATEGORY, localRepository,
-                                            categoryStringifier.getComparator(localRepository)))
-      .setSingleSelectionMode()
-      .setRenderer(new SeriesToCategoryStringifier(categoryStringifier));
-    builder.add("multipleCategoryList", multiCategoryList);
-
-    singleCategoryField =
-      ReadOnlyGlobTextFieldView.init(Series.DEFAULT_CATEGORY, localRepository, localDirectory)
-        .getComponent();
-    builder.add("singleCategoryField", singleCategoryField);
-
-    assignCategoryAction = new AssignCategoryAction();
-    builder.add("assignCategory", assignCategoryAction);
   }
 
   private void registerDateRangeComponents(GlobsPanelBuilder builder) {
@@ -441,7 +390,6 @@ public class SeriesEditionDialog {
     setSeriesListVisible(false);
 
     this.createdSeries = null;
-    this.currentlySelectedCategory = null;
     doShow(selectedMonths.getValueSet(Month.ID), createdSeries, true);
     return this.createdSeries;
   }
@@ -498,9 +446,6 @@ public class SeriesEditionDialog {
         }
       }
     }
-    if (budgetArea == BudgetArea.INCOME) {
-      values.add(value(Series.DEFAULT_CATEGORY, MasterCategory.INCOME.getId()));
-    }
     return localRepository.create(Series.TYPE, values.toArray(new FieldValue[values.size()]));
   }
 
@@ -509,7 +454,6 @@ public class SeriesEditionDialog {
 
     this.titleLabel.setText(Lang.get("seriesEdition.title." + budgetArea.getName()));
 
-    initCategorizeVisibility();
     GlobList seriesList =
       repository.getAll(Series.TYPE, not(fieldEquals(Series.BUDGET_AREA, BudgetArea.UNCATEGORIZED.getId())));
 
@@ -524,22 +468,15 @@ public class SeriesEditionDialog {
     }
     localRepository.reset(globsToLoad, SeriesBudget.TYPE, Series.TYPE, Transaction.TYPE);
 
-    this.seriesList.setFilter(GlobMatchers.and(fieldEquals(Series.BUDGET_AREA, budgetArea.getId()),
-                                               fieldEquals(Series.IS_MIRROR, false)));
-  }
-
-  private void initCategorizeVisibility() {
-    this.categoryLabel.setText(Lang.get("seriesEdition.category.label." +
-                                        (budgetArea.isMultiCategories() ? "multiple" : "single")));
-    this.singleCategoryField.setVisible(!budgetArea.isMultiCategories());
-    this.multiCategoryList.setVisible(budgetArea.isMultiCategories());
+    this.seriesList.setFilter(and(fieldEquals(Series.BUDGET_AREA, budgetArea.getId()),
+                                  fieldEquals(Series.IS_MIRROR, false)));
   }
 
   private void doShow(Set<Integer> monthIds, Glob series, final Boolean selectName) {
     if (series != null && series.get(Series.IS_MIRROR)) {
       series = localRepository.findLinkTarget(series, Series.MIRROR_SERIES);
     }
-    this.currentSeries = series;
+    setCurrentSeries(series);
     this.currentMonthIds = new TreeSet<Integer>(monthIds);
     if (currentSeries != null) {
       selectionService.select(currentSeries);
@@ -583,10 +520,6 @@ public class SeriesEditionDialog {
     return dialog;
   }
 
-  public Integer getCurrentCategory() {
-    return currentlySelectedCategory;
-  }
-
   public static double computeMultiplier(Glob fromAccount, Glob toAccount, GlobRepository repository) {
     if (Account.areBothImported(fromAccount, toAccount)) {
       return 1;
@@ -616,75 +549,9 @@ public class SeriesEditionDialog {
     return multiplier;
   }
 
-  private class AssignCategoryAction extends AbstractAction {
-    private AssignCategoryAction() {
-      super(Lang.get("seriesEdition.categorize"));
-    }
-
-    public void show() {
-      CategoryChooserDialog chooser =
-        new CategoryChooserDialog(new SeriesCategoryChooserCallback(), dialog,
-                                  !budgetArea.isMultiCategories(),
-                                  null, localRepository, localDirectory);
-
-      chooser.show();
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      show();
-    }
-
-    private class SeriesCategoryChooserCallback implements CategoryChooserCallback {
-      public void processSelection(GlobList categories) {
-        localRepository.startChangeSet();
-        try {
-          localRepository.delete(localRepository.getAll(SeriesToCategory.TYPE,
-                                                        GlobMatchers.linkedTo(currentSeries, SeriesToCategory.SERIES)));
-          localRepository.setTarget(currentSeries.getKey(), Series.DEFAULT_CATEGORY, null);
-          for (Glob category : categories) {
-            localRepository.setTarget(currentSeries.getKey(), Series.DEFAULT_CATEGORY, category.getKey());
-            if (budgetArea.isMultiCategories()) {
-              localRepository.create(SeriesToCategory.TYPE,
-                                     value(SeriesToCategory.SERIES, currentSeries.get(Series.ID)),
-                                     value(SeriesToCategory.CATEGORY, category.get(Category.ID)));
-            }
-          }
-        }
-        finally {
-          localRepository.completeChangeSet();
-        }
-
-        SeriesEditionDialog.this.multiCategoryList.selectFirst();
-      }
-
-      public Set<Integer> getPreselectedCategoryIds() {
-        Integer defaultCategory = currentSeries.get(Series.DEFAULT_CATEGORY);
-        if (budgetArea.isMultiCategories()) {
-          Set<Integer> valueSet = localRepository.getAll(SeriesToCategory.TYPE,
-                                                         fieldEquals(SeriesToCategory.SERIES, currentSeries.get(Series.ID)))
-            .getValueSet(SeriesToCategory.CATEGORY);
-          if (defaultCategory != null) {
-            valueSet.add(defaultCategory);
-          }
-          return valueSet;
-        }
-        if (defaultCategory != null) {
-          return Collections.singleton(currentSeries.get(Series.DEFAULT_CATEGORY));
-        }
-        return Collections.emptySet();
-      }
-
-      public Set<Integer> getUnUncheckable() {
-        GlobList transactions =
-          localRepository.getAll(Transaction.TYPE,
-                                 fieldEquals(Transaction.SERIES, currentSeries.get(Series.ID)));
-        Set<Integer> categoryIds = new HashSet<Integer>();
-        for (Glob transaction : transactions) {
-          categoryIds.add(transaction.get(Transaction.CATEGORY));
-        }
-        return categoryIds;
-      }
-    }
+  public void setCurrentSeries(Glob currentSeries) {
+    this.currentSeries = currentSeries;
+    this.subSeriesEditionPanel.setCurrentSeries(currentSeries);
   }
 
   private class ValidateAction extends AbstractAction {
@@ -696,13 +563,6 @@ public class SeriesEditionDialog {
       trimNames();
       if (currentSeries != null) {
         SeriesEditionDialog.this.createdSeries = currentSeries.getKey();
-        if (budgetArea.isMultiCategories()) {
-          GlobList globList = selectionService.getSelection(SeriesToCategory.TYPE);
-          if (globList.size() == 1) {
-            Glob series = globList.get(0);
-            currentlySelectedCategory = series.get(SeriesToCategory.CATEGORY);
-          }
-        }
       }
       checkSavingsAccountChange();
       localRepository.commitChanges(false);
@@ -794,13 +654,13 @@ public class SeriesEditionDialog {
   private GlobList uncategorize(final Integer seriesId) {
     GlobList transactions = localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES,
                                                         seriesId)
-      .getGlobs().filterSelf(GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.PLANNED, false),
-                                              GlobMatchers.fieldEquals(Transaction.CREATED_BY_SERIES, false)),
+      .getGlobs().filterSelf(and(fieldEquals(Transaction.PLANNED, false),
+                                 fieldEquals(Transaction.CREATED_BY_SERIES, false)),
                              localRepository);
     for (Glob transaction : transactions) {
       localRepository.update(transaction.getKey(),
                              FieldValue.value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                             FieldValue.value(Transaction.CATEGORY, Category.NONE));
+                             FieldValue.value(Transaction.SUB_SERIES, null));
     }
     return transactions;
   }
@@ -899,7 +759,7 @@ public class SeriesEditionDialog {
       SeriesDeleteDialog seriesDeleteDialog = new SeriesDeleteDialog(localRepository, localDirectory, dialog);
       if (transactionsForSeries.isEmpty()) {
         localRepository.delete(seriesToDelete);
-        GlobList seriesToCategory = localRepository.getAll(SeriesToCategory.TYPE, fieldIn(SeriesToCategory.SERIES, series));
+        GlobList seriesToCategory = localRepository.getAll(SubSeries.TYPE, fieldIn(SubSeries.SERIES, series));
         localRepository.delete(seriesToCategory);
         deleted = true;
       }
@@ -908,7 +768,7 @@ public class SeriesEditionDialog {
         for (Glob transaction : transactionsForSeries) {
           localRepository.update(transaction.getKey(), Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID);
         }
-        GlobList seriesToCategory = localRepository.getAll(SeriesToCategory.TYPE, fieldIn(SeriesToCategory.SERIES, series));
+        GlobList seriesToCategory = localRepository.getAll(SubSeries.TYPE, fieldIn(SubSeries.SERIES, series));
         localRepository.delete(seriesToCategory);
         deleted = true;
       }
@@ -918,93 +778,6 @@ public class SeriesEditionDialog {
         localRepository.rollback();
         dialog.setVisible(false);
       }
-    }
-  }
-
-  private class MonthCheckBoxUpdater implements GlobSelectionListener, ItemListener, ChangeSetListener {
-    private JCheckBox checkBox;
-    private Integer monthIndex;
-    private boolean updateInProgress;
-    private boolean forceDisable;
-    private Glob currentSeries;
-
-    private MonthCheckBoxUpdater(Integer monthIndex) {
-      this.checkBox = new JCheckBox();
-      this.monthIndex = monthIndex;
-      selectionService.addListener(this, Series.TYPE);
-      checkBox.addItemListener(this);
-    }
-
-    public JCheckBox getCheckBox() {
-      return checkBox;
-    }
-
-    public void selectionUpdated(GlobSelection selection) {
-      GlobList seriesList = selection.getAll(Series.TYPE);
-      currentSeries = seriesList.size() == 1 ? seriesList.get(0) : null;
-      try {
-        updateInProgress = true;
-        updateCheckBox();
-      }
-      finally {
-        updateInProgress = false;
-      }
-    }
-
-    public void itemStateChanged(ItemEvent e) {
-      if (updateInProgress) {
-        return;
-      }
-      localRepository.startChangeSet();
-      try {
-        if (currentSeries != null) {
-          BooleanField field = Series.getMonthField(monthIndex);
-          boolean newState = e.getStateChange() == ItemEvent.SELECTED;
-          localRepository.update(currentSeries.getKey(), field, newState);
-          ProfileType profileType = ProfileType.get(currentSeries.get(Series.PROFILE_TYPE));
-          if (newState &&
-              profileType.getMonthStep() != -1 && profileType != ProfileType.CUSTOM) {
-            BooleanField[] months = Series.getMonths();
-            for (BooleanField month : months) {
-              if (month != field) {
-                localRepository.update(currentSeries.getKey(), month, false);
-              }
-            }
-          }
-        }
-      }
-      finally {
-        localRepository.completeChangeSet();
-      }
-    }
-
-    public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-      updateCheckBox();
-    }
-
-    public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-      updateCheckBox();
-    }
-
-    private void updateCheckBox() {
-      if (currentSeries != null) {
-        Integer firstMonth = currentSeries.get(Series.FIRST_MONTH);
-        Integer lastMonth = currentSeries.get(Series.LAST_MONTH);
-        if (firstMonth == null || lastMonth == null) {
-          forceDisable = false;
-        }
-        else {
-          forceDisable = true;
-          for (int month = firstMonth; month <= lastMonth; month = Month.next(month)) {
-            if (Month.toMonth(month) == monthIndex) {
-              forceDisable = false;
-              break;
-            }
-          }
-        }
-      }
-      checkBox.setEnabled(!forceDisable && currentSeries != null);
-      checkBox.setSelected((currentSeries != null) && currentSeries.get(Series.getMonthField(monthIndex)));
     }
   }
 
@@ -1053,49 +826,13 @@ public class SeriesEditionDialog {
     private void update(GlobRepository repository) {
       GlobList series = repository.getAll(Series.TYPE);
       for (Glob glob : series) {
-        if ((!BudgetArea.UNCATEGORIZED.getId().equals(glob.get(Series.BUDGET_AREA))
-             && glob.get(Series.DEFAULT_CATEGORY) == null)
-            || ((BudgetArea.SAVINGS.getId().equals(glob.get(Series.BUDGET_AREA))) &&
-                (glob.get(Series.FROM_ACCOUNT) == null && glob.get(Series.TO_ACCOUNT) == null))) {
+        if (((BudgetArea.SAVINGS.getId().equals(glob.get(Series.BUDGET_AREA))) &&
+             (glob.get(Series.FROM_ACCOUNT) == null && glob.get(Series.TO_ACCOUNT) == null))) {
           okAction.setEnabled(false);
           return;
         }
       }
       okAction.setEnabled(true);
-    }
-  }
-
-  private static class SeriesToCategoryStringifier extends AbstractGlobStringifier {
-    private final GlobStringifier categoryStringifier;
-
-    public SeriesToCategoryStringifier(GlobStringifier categoryStringifier) {
-      this.categoryStringifier = categoryStringifier;
-    }
-
-    public String toString(Glob glob, GlobRepository repository) {
-      Glob category = repository.get(Key.create(Category.TYPE, glob.get(SeriesToCategory.CATEGORY)));
-      return categoryStringifier.toString(category, repository);
-    }
-  }
-
-  private class MissingCategoryStringifier implements GlobListStringifier {
-    public String toString(GlobList series, GlobRepository repository) {
-      if (budgetArea == null) {
-        return "";
-      }
-      if (series.size() != 1) {
-        return "";
-      }
-      Integer category = series.get(0).get(Series.DEFAULT_CATEGORY);
-      if (category != null) {
-        return "";
-      }
-      if (budgetArea.isMultiCategories()) {
-        return Lang.get("seriesEdition.missing.category.label.multiple");
-      }
-      else {
-        return Lang.get("seriesEdition.missing.category.label.single");
-      }
     }
   }
 

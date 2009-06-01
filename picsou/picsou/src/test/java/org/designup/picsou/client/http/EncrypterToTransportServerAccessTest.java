@@ -73,19 +73,21 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
   public void testAddAndModifyTransaction() throws Exception {
     EncrypterToTransportServerAccess serverAccess = createServerAccess();
 
-    Glob glob = createUser("name", "password", serverAccess);
-    assertEquals("name", glob.get(User.NAME));
-    Glob expected = getATransaction();
+    Glob user = createUser("name", "password", serverAccess);
+    assertEquals("name", user.get(User.NAME));
+
+    Glob expectedTransaction = getATransaction();
+
     serverAccess.getUserData(new DefaultChangeSet(), new DummyIdUpdater());
 
     GlobRepository repository = init(serverAccess);
-    repository.create(expected.getKey(), expected.toArray());
+    repository.create(expectedTransaction.getKey(), expectedTransaction.toArray());
 
     DummyIdUpdater update = new DummyIdUpdater();
     GlobList result = serverAccess.getUserData(new DefaultChangeSet(), update);
     assertEquals((int)update.ids.get(Transaction.ID), 1);
     assertEquals(1, result.size());
-    assertEquals(expected.get(Transaction.CATEGORY), result.get(0).get(Transaction.CATEGORY));
+    assertEquals(expectedTransaction.get(Transaction.AMOUNT), result.get(0).get(Transaction.AMOUNT));
   }
 
   public void testCreateAndModifyAccount() throws Exception {

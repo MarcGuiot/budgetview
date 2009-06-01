@@ -124,6 +124,7 @@ public class TransactionDetailsChecker extends GuiChecker {
 
   public ConfirmationDialogChecker openShiftDialog() {
     Button button = getPanel().getButton("shift");
+    assertThat(button.isVisible());
     assertThat(button.textEquals("Shift..."));
     return ConfirmationDialogChecker.init(button.triggerClick());
   }

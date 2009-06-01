@@ -227,7 +227,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     newApplication.clear();
   }
 
-  public void testImportWithCategorizationDialogOpen() throws Exception {
+  public void testImportWithSeriesEditionDialogOpen() throws Exception {
     final PicsouApplication picsouApplication = new PicsouApplication();
     final Window window = WindowInterceptor.run(new Trigger() {
       public void run() throws Exception {
@@ -242,10 +242,11 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .addTransaction("2000/01/03", 1.2, "menu K")
       .save();
     ViewSelectionChecker views = new ViewSelectionChecker(window);
-    views.selectData();
+    views.selectBudget();
 
-    CategoryChecker category = new CategoryChecker(window);
-    CategoryEditionChecker edition = category.openEditionDialog();
+    BudgetViewChecker budgetView = new BudgetViewChecker(window);
+    SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
+
     NewApplicationThread newApplication = new NewApplicationThread(initialFile);
     newApplication.start();
 

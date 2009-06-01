@@ -3,7 +3,6 @@ package org.designup.picsou.importer.ofx;
 import org.designup.picsou.importer.AccountFileImporter;
 import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.*;
-import static org.designup.picsou.model.Category.*;
 import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.PicsouUtils;
@@ -59,8 +58,6 @@ public class OfxImporter implements AccountFileImporter {
     private Date updateDate;
     private String fitid;
     private boolean ofxTagFound = false;
-    private String currentCategory;
-    private MultiMap<String, String> categoriesForTransaction = new MultiMap<String, String>();
     private GlobIdGenerator generator;
     private boolean fileCompleted;
     private String name;
@@ -112,8 +109,6 @@ public class OfxImporter implements AccountFileImporter {
         createdTransactions.add(transaction);
         transactionsForAccount.add(transaction);
         currentTransactionKey = transaction.getKey();
-        currentCategory = null;
-        categoriesForTransaction.clear();
       }
       else if (tag.equals("LEDGERBAL")) {
         isInLedgerBal = true;
@@ -136,10 +131,6 @@ public class OfxImporter implements AccountFileImporter {
       if (tag.equalsIgnoreCase("STMTTRN")) {
         updateTransactionLabel();
         processSplitTransactions();
-        if (currentCategory != null) {
-          categoriesForTransaction.put(currentCategory, null);
-        }
-        processCategories();
         checkTransaction();
       }
       if (tag.equals("OFX") || tag.equals("OFC")) {
@@ -163,56 +154,6 @@ public class OfxImporter implements AccountFileImporter {
         repository.update(splitTransactionKey, ImportedTransaction.SPLIT_SOURCE, currentTransactionKey.get(ImportedTransaction.ID));
       }
       splitRefToUpdate.remove(fitid);
-    }
-
-    private void processCategories() {
-      Set<Integer> categoryIds = new HashSet<Integer>();
-      for (Map.Entry<String, List<String>> entry : categoriesForTransaction.entries()) {
-        String masterName = entry.getKey();
-        if (Strings.isNullOrEmpty(masterName)) {
-          continue;
-        }
-        Integer masterId = null;
-        try {
-          masterId = Integer.parseInt(masterName);
-        }
-        catch (NumberFormatException e) {
-          Glob category = repository.findUnique(TYPE, FieldValue.value(Category.NAME, masterName));
-          if (category == null) {
-            category = repository.create(TYPE, FieldValue.value(Category.NAME, masterName));
-          }
-          masterId = category.get(Category.ID);
-        }
-        if (masterId.equals(MasterCategory.NONE.getId())) {
-          continue;
-        }
-        List<String> subcategoryNames = entry.getValue();
-        for (String subcategoryName : subcategoryNames) {
-          if (Strings.isNullOrEmpty(subcategoryName)) {
-            categoryIds.add(masterId);
-          }
-          else {
-            Integer subCategoryId;
-            try {
-              subCategoryId = Integer.parseInt(subcategoryName);
-            }
-            catch (NumberFormatException e) {
-              Glob subCategory = find(subcategoryName, repository);
-              if (subCategory == null) {
-                subCategory = repository.create(TYPE,
-                                                value(MASTER, masterId),
-                                                value(NAME, subcategoryName),
-                                                value(SYSTEM, false));
-              }
-              subCategoryId = subCategory.get(Category.ID);
-            }
-            categoryIds.add(subCategoryId);
-          }
-        }
-      }
-      if (categoryIds.size() == 1) {
-        repository.update(currentTransactionKey, ImportedTransaction.CATEGORY, categoryIds.iterator().next());
-      }
     }
 
     public void processTag(String tag, String content) {
@@ -254,20 +195,6 @@ public class OfxImporter implements AccountFileImporter {
       }
       if (tag.equalsIgnoreCase("NOTE")) {
         updateNote(content);
-        return;
-      }
-      if (tag.equalsIgnoreCase("CATEGORY")) {
-        if (currentCategory != null) {
-          categoriesForTransaction.put(currentCategory, null);
-        }
-        currentCategory = content;
-        return;
-      }
-      if (tag.equalsIgnoreCase("SUBCATEGORY")) {
-        if (currentCategory != null) {
-          categoriesForTransaction.put(currentCategory, content);
-        }
-        currentCategory = null;
         return;
       }
       if (tag.equalsIgnoreCase("BALAMT")) {

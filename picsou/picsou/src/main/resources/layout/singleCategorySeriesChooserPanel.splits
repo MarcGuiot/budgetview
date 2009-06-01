@@ -11,11 +11,16 @@
       <radioButton ref="invisibleToggle" visible="false"/>
       <scrollPane>
         <repeat ref="seriesRepeat" layout="wrappedColumn" margin="10">
-          <row>
-            <radioButton ref="seriesToggle" styleClass="selector"/>
-            <button ref="editSeries" styleClass="editIcon" tooltipText="$series.edit.tooltip"/>
-            <filler fill="horizontal"/>
-          </row>
+          <column name="seriesBlock">
+            <row>
+              <radioButton ref="seriesToggle" styleClass="selector"/>
+              <button ref="editSeries" styleClass="editIcon" tooltipText="$series.edit.tooltip"/>
+              <filler fill="horizontal"/>
+            </row>
+            <repeat ref="subSeriesRepeat" marginLeft="20">
+              <radioButton ref="subSeriesSelector" styleClass="selector" horizontalAlignment="left"/>
+            </repeat>
+          </column>
         </repeat>
       </scrollPane>
     </column>

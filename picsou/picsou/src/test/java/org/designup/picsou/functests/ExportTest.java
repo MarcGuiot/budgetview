@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
@@ -26,10 +25,7 @@ public class ExportTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization
-      .selectTransaction("MONOP'S")
-      .selectEnvelopes()
-      .selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    categorization.setNewEnvelope("MONOP'S", "Groceries");
 
     String fileName = TestUtils.getFileName(this, "ofx");
     operations.exportOfxFile(fileName);
@@ -187,10 +183,7 @@ public class ExportTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization
-      .selectTransaction("MONOP'S")
-      .selectEnvelopes()
-      .selectEnvelopeSeries("Groceries", MasterCategory.FOOD, true);
+    categorization.setNewEnvelope("MONOP'S", "Groceries");
 
     String fileName = TestUtils.getFileName(this, "txt");
     WindowInterceptor

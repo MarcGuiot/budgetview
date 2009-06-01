@@ -7,7 +7,7 @@ public class ViewsManagementTest extends LoggedInFunctionalTestCase {
   public void testHomePage() throws Exception {
     views.selectHome();
     views.checkHomeSelected();
-    transactions.assertVisible(false);
+    transactions.checkVisible(false);
   }
 
   protected void selectInitialView() {
@@ -19,8 +19,8 @@ public class ViewsManagementTest extends LoggedInFunctionalTestCase {
     views.checkHomeSelected();
 
     views.selectData();
-    transactions.assertVisible(true);
-    categories.assertVisible(true);
+    transactions.checkVisible(true);
+    series.checkVisible(true);
   }
 
   public void testBackForward() throws Exception {

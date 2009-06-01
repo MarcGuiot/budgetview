@@ -203,7 +203,7 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
     return new StringListCellRenderer(stringifier, repository).setUseWhiteSpaceForEmptyStrings(true);
   }
 
-  public void setFilter(GlobMatcher matcher) {
+  public GlobListView setFilter(GlobMatcher matcher) {
     complete();
 
     GlobList selection = getCurrentSelection();
@@ -216,6 +216,8 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
     if (!selectionChanged) {
       selectSilently(selection);
     }
+
+    return this;
   }
 
   public Glob getGlobAt(int index) {

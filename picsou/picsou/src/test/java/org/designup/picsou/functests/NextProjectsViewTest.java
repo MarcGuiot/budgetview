@@ -18,7 +18,6 @@ public class NextProjectsViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     nextProjects.createProject()
       .setName("Bahamas")
-      .setCategory(MasterCategory.LEISURES)
       .validate();
 
     nextProjects.initContent()
@@ -37,12 +36,10 @@ public class NextProjectsViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/12");
     nextProjects.createProject()
       .setName("Ski")
-      .setCategory(MasterCategory.LEISURES)
       .setAmount(1500.00)
       .validate();
     nextProjects.createProject()
       .setName("Noel")
-      .setCategory(MasterCategory.GIFTS)
       .setAmount(500.00)
       .validate();
 
@@ -73,7 +70,6 @@ public class NextProjectsViewTest extends LoggedInFunctionalTestCase {
 
     nextProjects.createProject()
       .setName("Ski")
-      .setCategory(MasterCategory.LEISURES)
       .setEveryMonth()
       .setEndDate(200812)
       .setStartDate(200811)
@@ -100,7 +96,6 @@ public class NextProjectsViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("Monthly payments")
-      .setCategory(MasterCategory.SAVINGS)
       .switchToManual()
       .setFromAccount("Account n. 10101010")
       .setToAccount("ING")
@@ -128,7 +123,6 @@ public class NextProjectsViewTest extends LoggedInFunctionalTestCase {
 
     nextProjects.createProject()
       .setName("Plasma TV")
-      .setCategory(MasterCategory.LEISURES)
       .setEveryMonth()
       .setEndDate(200903)
       .setStartDate(200811)
@@ -160,7 +154,6 @@ public class NextProjectsViewTest extends LoggedInFunctionalTestCase {
 
     nextProjects.createProject()
       .setName("Plasma TV")
-      .setCategory(MasterCategory.LEISURES)
       .setEveryMonth()
       .setEndDate(200812)
       .setStartDate(200811)
@@ -172,7 +165,6 @@ public class NextProjectsViewTest extends LoggedInFunctionalTestCase {
 
     nextProjects.createProject()
       .setName("Noël")
-      .setCategory(MasterCategory.GIFTS)
       .setAmount(300.00)
       .validate();
     
@@ -212,7 +204,6 @@ public class NextProjectsViewTest extends LoggedInFunctionalTestCase {
 
     nextProjects.createProject()
       .setName("Ski")
-      .setCategory(MasterCategory.LEISURES)
       .setEveryMonth()
       .setEndDate(200812)
       .setStartDate(200811)
@@ -249,7 +240,6 @@ public class NextProjectsViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("Monthly payments")
-      .setCategory(MasterCategory.SAVINGS)
       .switchToManual()
       .setFromAccount("Account n. 10101010")
       .setToAccount("ING")

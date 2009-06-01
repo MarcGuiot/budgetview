@@ -91,7 +91,7 @@
 
                 <column weightY="0.1">
                   <row name="budgetAreaSelectionPanel" border="matte(1,1,0,1,#999999)">
-                    <repeat ref="budgetAreaToggles" layout="horizontalGrid" gridWrapLimit="4" margin="5">
+                    <repeat ref="budgetAreaToggles" layout="horizontalGrid" gridWrapLimit="3" margin="5">
                       <toggleButton ref="budgetAreaToggle" styleClass="budgetAreaSelector" anchor="left"/>
                     </repeat>
                   </row>
@@ -132,32 +132,7 @@
                     </card>
 
                     <card name="envelopes">
-                      <panel ref="envelopeSeriesChooser"/>
-                    </card>
-
-                    <card name="occasional">
-                      <column name="occasionalSeriesChooser">
-                        <scrollPane marginBottom="0" border="etched" opaque="true" verticalUnitIncrement="20">
-                          <column margin="10">
-                            <toggleButton ref="invisibleOccasionalToggle" visible="false"/>
-                            <repeat ref="occasionalSeriesRepeat" layout="wrappedColumn" border="empty(5)"
-                                    opaque="true" background="block.inner.bg">
-                              <column marginBottom="5">
-                                <row>
-                                  <radioButton ref="occasionalCategoryToggle" styleClass="masterCategorySelector"/>
-                                </row>
-                                <repeat ref="occasionalSubcatRepeat" marginLeft="20" background="#FF0000">
-                                  <radioButton ref="occasionalSubcatToggle" styleClass="subCategorySelector"/>
-                                </repeat>
-                              </column>
-                            </repeat>
-                          </column>
-                        </scrollPane>
-                        <row styleClass="iconButtonGroup">
-                          <button action="editCategories" styleClass="list"/>
-                          <filler fill="horizontal"/>
-                        </row>
-                      </column>
+                      <panel ref="envelopesSeriesChooser"/>
                     </card>
 
                     <card name="special">

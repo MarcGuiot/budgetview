@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.components.expansion;
 
-import org.designup.picsou.gui.categories.columns.CategoryExpansionModel;
 import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.model.Glob;
 import org.globsframework.gui.utils.TableUtils;

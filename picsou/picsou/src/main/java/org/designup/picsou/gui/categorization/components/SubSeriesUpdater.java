@@ -1,9 +1,6 @@
 package org.designup.picsou.gui.categorization.components;
 
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Category;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -13,22 +10,22 @@ import org.globsframework.model.*;
 import javax.swing.*;
 import java.util.Set;
 
-public class CategoryUpdater implements GlobSelectionListener, ChangeSetListener {
+public class SubSeriesUpdater implements GlobSelectionListener, ChangeSetListener {
   private JToggleButton toggle;
   private JToggleButton invisibleButton;
   private Key seriesKey;
-  private Key categoryKey;
+  private Key subSeriesKey;
   private BudgetArea budgetArea;
   private GlobRepository repository;
   private SelectionService selectionService;
 
-  public CategoryUpdater(JToggleButton toggle, JToggleButton invisibleButton,
-                         Key seriesKey, Key categoryKey, BudgetArea budgetArea,
+  public SubSeriesUpdater(JToggleButton toggle, JToggleButton invisibleButton,
+                         Key seriesKey, Key subSeriesKey, BudgetArea budgetArea,
                          GlobRepository repository, SelectionService selectionService) {
     this.toggle = toggle;
     this.invisibleButton = invisibleButton;
     this.seriesKey = seriesKey;
-    this.categoryKey = categoryKey;
+    this.subSeriesKey = subSeriesKey;
     this.budgetArea = budgetArea;
     this.repository = repository;
     this.selectionService = selectionService;
@@ -46,21 +43,21 @@ public class CategoryUpdater implements GlobSelectionListener, ChangeSetListener
     Set<Integer> seriesIds = selectedTransactions.getValueSet(Transaction.SERIES);
     Integer seriesId = seriesIds.size() == 1 ? seriesIds.iterator().next() : Series.UNCATEGORIZED_SERIES_ID;
 
-    Set<Integer> categoryIds = selectedTransactions.getValueSet(Transaction.CATEGORY);
-    Integer categoryId = categoryIds.size() == 1 ? categoryIds.iterator().next() : null;
+    Set<Integer> subSeriesIds = selectedTransactions.getValueSet(Transaction.SUB_SERIES);
+    Integer subSeriesId = subSeriesIds.size() == 1 ? subSeriesIds.iterator().next() : null;
 
     Glob series = repository.get(KeyBuilder.newKey(Series.TYPE, seriesId));
     boolean isGoodBudgetArea = series.get(Series.BUDGET_AREA).equals(budgetArea.getId());
 
-    if (categoryId == null || !isGoodBudgetArea) {
+    if (subSeriesId == null || !isGoodBudgetArea) {
       invisibleButton.setSelected(true);
       return;
     }
 
-    Glob category = repository.find(KeyBuilder.newKey(Category.TYPE, categoryId));
+    Glob subSeries = repository.find(KeyBuilder.newKey(SubSeries.TYPE, subSeriesId));
     boolean isGoodSeries = series.getKey().equals(seriesKey);
-    boolean isGoodCategory = category.getKey().equals(categoryKey);
-    if (isGoodSeries && isGoodCategory) {
+    boolean isGoodSubSeries = subSeries.getKey().equals(subSeriesKey);
+    if (isGoodSeries && isGoodSubSeries) {
       toggle.setSelected(true);
     }
   }

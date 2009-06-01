@@ -4,7 +4,6 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
-import org.designup.picsou.gui.categories.CategoryEditionDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseExpirationDialog;
@@ -68,16 +67,6 @@ public class DialogDemo {
   private static void showSeriesEditionDialog(GlobRepository repository, Directory directory, JFrame frame) {
     SeriesEditionDialog dialog = new SeriesEditionDialog(frame, repository, directory);
 //    SplitsEditor.show(dialog.getDialog(), directory);
-    dialog.showNewSeries(GlobList.EMPTY, new GlobList(200808), BudgetArea.SAVINGS);
-  }
-
-  private static void showCategoriesEditionDialog(GlobRepository repository, Directory directory, final JFrame frame) {
-    CategoryEditionDialog dialog = new CategoryEditionDialog(repository, directory) {
-      public Window getParent() {
-        return frame;
-      }
-    };
-//    SplitsEditor.show(dialog.getDialog(), directory);
-    dialog.show(GlobList.EMPTY);
+    dialog.showNewSeries(GlobList.EMPTY, new GlobList(200808), BudgetArea.ENVELOPES);
   }
 }

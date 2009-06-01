@@ -24,9 +24,9 @@ public class OfxExporterTest extends PicsouTestCase {
       "             originalLabel='label1' account='2'/>" +
       "<transaction id='2' month='200602' day='22' bankMonth='200602' bankDay='22' amount='-1.2' " +
       "             originalLabel='label2' account='2'" +
-      "             note='my note' categoryName='health'/>" +
+      "             note='my note'/>" +
       "<transaction id='3' month='200603' day='23' bankMonth='200603' bankDay='23' amount='-1.3' " +
-      "             originalLabel='card3' transactionTypeName='credit_card' account='3' categoryName='Dentifrice'/>" +
+      "             originalLabel='card3' transactionTypeName='credit_card' account='3'/>" +
       "<transaction id='4' month='200604' day='19' bankMonth='200604' bankDay='19' amount='-45' " +
       "             originalLabel='card4' transactionTypeName='credit_card' account='3'/>" +
       "" +
@@ -82,7 +82,6 @@ public class OfxExporterTest extends PicsouTestCase {
                 "            <TRNAMT>-1.20\n" +
                 "            <FITID>PICSOU2\n" +
                 "            <NAME>label2\n" +
-                "            <CATEGORY>5\n" +
                 "            <NOTE>my note\n" +
                 "          </STMTTRN>\n" +
                 "        </BANKTRANLIST>\n" +
@@ -119,8 +118,6 @@ public class OfxExporterTest extends PicsouTestCase {
                 "            <TRNAMT>-1.30\n" +
                 "            <FITID>PICSOU3\n" +
                 "            <NAME>card3\n" +
-                "            <CATEGORY>5\n" +
-                "            <SUBCATEGORY>100\n" +
                 "          </STMTTRN>\n" +
                 "          <STMTTRN>\n" +
                 "            <TRNTYPE>DEBIT\n" +

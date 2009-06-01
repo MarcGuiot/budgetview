@@ -59,6 +59,7 @@ public class Transaction {
 
   public static StringField LABEL_FOR_CATEGORISATION;
 
+  /** @deprecated */
   @Target(Category.class)
   @DefaultInteger(0)
   public static LinkField CATEGORY;
@@ -83,6 +84,9 @@ public class Transaction {
   @Required()
   @DefaultInteger(1)
   public static LinkField SERIES;
+
+  @Target(SubSeries.class)
+  public static LinkField SUB_SERIES;
 
   @DefaultBoolean(false)
   public static BooleanField PLANNED;
@@ -232,7 +236,7 @@ public class Transaction {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 6;
+      return 7;
     }
 
     public byte[] serializeData(FieldValues fieldValues) {
@@ -252,11 +256,11 @@ public class Transaction {
       output.writeDouble(fieldValues.get(Transaction.ACCOUNT_POSITION));
       output.writeInteger(fieldValues.get(Transaction.ACCOUNT));
       output.writeInteger(fieldValues.get(Transaction.TRANSACTION_TYPE));
-      output.writeInteger(fieldValues.get(Transaction.CATEGORY));
       output.writeBoolean(fieldValues.get(Transaction.SPLIT));
       output.writeInteger(fieldValues.get(Transaction.SPLIT_SOURCE));
       output.writeInteger(fieldValues.get(Transaction.DAY_BEFORE_SHIFT));
       output.writeInteger(fieldValues.get(Transaction.SERIES));
+      output.writeInteger(fieldValues.get(Transaction.SUB_SERIES));
       output.writeBoolean(fieldValues.get(Transaction.PLANNED));
       output.writeBoolean(fieldValues.get(Transaction.MIRROR));
       output.writeBoolean(fieldValues.get(Transaction.CREATED_BY_SERIES));
@@ -290,6 +294,43 @@ public class Transaction {
       else if (version == 6) {
         deserializeDataV6(fieldSetter, data);
       }
+      else if (version == 7) {
+        deserializeDataV7(fieldSetter, data);
+      }
+    }
+
+    private void deserializeDataV7(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readUtf8String());
+      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readUtf8String());
+      fieldSetter.set(Transaction.NOTE, input.readUtf8String());
+      fieldSetter.set(Transaction.MONTH, input.readInteger());
+      fieldSetter.set(Transaction.DAY, input.readInteger());
+      fieldSetter.set(Transaction.BANK_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.BANK_DAY, input.readInteger());
+      fieldSetter.set(Transaction.AMOUNT, input.readDouble());
+      fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
+      fieldSetter.set(Transaction.SPLIT, input.readBoolean());
+      fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
+      fieldSetter.set(Transaction.DAY_BEFORE_SHIFT, input.readInteger());
+      fieldSetter.set(Transaction.SERIES, input.readInteger());
+      fieldSetter.set(Transaction.SUB_SERIES, input.readInteger());
+      fieldSetter.set(Transaction.PLANNED, input.readBoolean());
+      fieldSetter.set(Transaction.MIRROR, input.readBoolean());
+      fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
+      fieldSetter.set(Transaction.NOT_IMPORTED_TRANSACTION, input.readInteger());
+      fieldSetter.set(Transaction.OFX_CHECK_NUM, input.readUtf8String());
+      fieldSetter.set(Transaction.OFX_MEMO, input.readUtf8String());
+      fieldSetter.set(Transaction.OFX_NAME, input.readUtf8String());
+      fieldSetter.set(Transaction.QIF_M, input.readUtf8String());
+      fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
+      fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
+      fieldSetter.set(Transaction.IMPORT, input.readInteger());
     }
 
     private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {

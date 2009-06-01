@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.checkers.CategorizationGaugeChecker;
-import org.designup.picsou.model.MasterCategory;
 
 public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
@@ -17,7 +16,7 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
 
   public void test() throws Exception {
 
-    CategorizationGaugeChecker gauge = categorization.getGauge();
+    CategorizationGaugeChecker gauge = categorization.getCompletionGauge();
     gauge.checkHidden();
 
     OfxBuilder
@@ -34,11 +33,11 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
     gauge.checkLevel(1, "100%");
     gauge.checkProgressMessageHidden();
 
-    categorization.setOccasional("WorldCo", MasterCategory.INCOME);
+    categorization.setNewEnvelope("WorldCo", "Income");
     gauge.checkLevel(0.5, "50%");
     gauge.checkProgressMessageHidden();
 
-    categorization.setOccasional("Auchan", MasterCategory.FOOD);
+    categorization.setNewEnvelope("Auchan", "Food");
     gauge.checkLevel(0.05, "5%");
     gauge.checkQuasiCompleteProgressMessageShown();
 
@@ -50,11 +49,11 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
     gauge.checkLevel(0.05, "5%");
     gauge.checkQuasiCompleteProgressMessageShown();
 
-    categorization.setOccasional("FNAC", MasterCategory.INCOME);
+    categorization.setNewEnvelope("FNAC", "Leisures");
     gauge.checkLevel(0.001, "1%");
     gauge.checkQuasiCompleteProgressMessageShown();
 
-    categorization.setOccasional("SAPN", MasterCategory.TRANSPORTS);
+    categorization.setEnvelope("SAPN", "Leisures");
     gauge.checkHidden();
     gauge.checkCompleteProgressMessageShown();
   }
@@ -68,11 +67,11 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
 
     timeline.selectAll();
 
-    CategorizationGaugeChecker gauge = categorization.getGauge();
+    CategorizationGaugeChecker gauge = categorization.getCompletionGauge();
     gauge.checkLevel(1, "100%");
     gauge.checkProgressMessageHidden();
 
-    categorization.setIncome("WorldCo", "Salaire", true);
+    categorization.setNewIncome("WorldCo", "Salaire");
     gauge.checkLevel(0.5, "50%");
     gauge.checkProgressMessageHidden();
   }
@@ -83,10 +82,10 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/10", 1000.0, "WorldCo")
       .load();
 
-    categorization.setOccasional("WorldCo", MasterCategory.INCOME);
+    categorization.setNewEnvelope("WorldCo", "Income");
 
-    categorization.getGauge().checkHidden();
-    categorization.getGauge().checkCompleteProgressMessageShown();
+    categorization.getCompletionGauge().checkHidden();
+    categorization.getCompletionGauge().checkCompleteProgressMessageShown();
   }
 
   public void testHidingProgressMessage() throws Exception {
@@ -95,11 +94,11 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/10", 1000.0, "WorldCo")
       .load();
 
-    categorization.setOccasional("WorldCo", MasterCategory.INCOME);
+    categorization.setNewEnvelope("WorldCo", "Income");
 
-    categorization.getGauge().checkCompleteProgressMessageShown();
-    categorization.getGauge().hideProgressMessage();
-    categorization.getGauge().checkProgressMessageHidden();
+    categorization.getCompletionGauge().checkCompleteProgressMessageShown();
+    categorization.getCompletionGauge().hideProgressMessage();
+    categorization.getCompletionGauge().checkProgressMessageHidden();
   }
 
   public void testMessageNavigation() throws Exception {
@@ -108,17 +107,17 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/10", 1000.0, "WorldCo")
       .addTransaction("2008/05/10", 10.0, "McDo")
       .load();
-    CategorizationGaugeChecker gauge = categorization.getGauge();
+    CategorizationGaugeChecker gauge = categorization.getCompletionGauge();
 
     views.selectCategorization();
-    categorization.setIncome("WorldCo", "Salary", true);
+    categorization.setNewIncome("WorldCo", "Salary");
     gauge.checkQuasiCompleteProgressMessageShown();
 
     gauge.clickOnProgressMessageLink();
     views.checkBudgetSelected();
 
     views.back();
-    categorization.setOccasional("McDo", MasterCategory.FOOD);
+    categorization.setNewEnvelope("McDo", "Food");
     gauge.checkCompleteProgressMessageShown();
 
     gauge.clickOnProgressMessageLink();

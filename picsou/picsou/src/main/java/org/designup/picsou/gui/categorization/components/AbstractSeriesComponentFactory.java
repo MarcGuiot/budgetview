@@ -24,7 +24,7 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
   protected ButtonGroup buttonGroup = new ButtonGroup();
 
   protected GlobListStringifier seriesStringifier;
-  protected GlobStringifier categoryStringifier;
+  protected GlobStringifier subSeriesStringifier;
   protected GlobStringifier budgetAreaStringifier;
 
   protected SeriesEditionDialog seriesEditionDialog;
@@ -49,7 +49,7 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
 
     DescriptionService descriptionService = directory.get(DescriptionService.class);
     seriesStringifier = descriptionService.getListStringifier(Series.TYPE);
-    categoryStringifier = descriptionService.getStringifier(Category.TYPE);
+    subSeriesStringifier = descriptionService.getStringifier(SubSeries.TYPE);
     budgetAreaStringifier = descriptionService.getStringifier(BudgetArea.TYPE);
 
     this.selectionService = directory.get(SelectionService.class);
@@ -61,50 +61,16 @@ public abstract class AbstractSeriesComponentFactory implements RepeatComponentF
 
   }
 
-  protected void createUpdatableCategorySelector(final Glob category,
-                                                 final Key seriesKey,
-                                                 String repeatSelectorName,
-                                                 BudgetArea budgetArea,
-                                                 RepeatCellBuilder cellBuilder, String selectorName) {
-    String selectorLabel = categoryStringifier.toString(category, repository);
-    final JRadioButton selector = createSeriesSelector(selectorLabel, seriesKey, category.getKey());
-    final Key key = category.getKey();
-    final DefaultChangeSetListener categoryUpdateListener = new DefaultChangeSetListener() {
-      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(key)) {
-          Glob category = repository.find(key);
-          if (category != null) {
-            selector.setText(categoryStringifier.toString(category, repository));
-          }
-        }
-      }
-    };
-    repository.addChangeListener(categoryUpdateListener);
-    selector.setName(selectorName);
-    buttonGroup.add(selector);
-    cellBuilder.add(repeatSelectorName, selector);
-
-    final CategoryUpdater updater =
-      new CategoryUpdater(selector, invisibleSelector, seriesKey, category.getKey(), budgetArea, repository, selectionService);
-    cellBuilder.addDisposeListener(new Disposable() {
-      public void dispose() {
-        updater.dispose();
-        buttonGroup.remove(selector);
-        repository.removeChangeListener(categoryUpdateListener);
-      }
-    });
-  }
-
   protected JRadioButton createSeriesSelector(final String label,
                                               final Key seriesKey,
-                                              final Key categoryKey) {
+                                              final Key subSeriesKey) {
     return new JRadioButton(new AbstractAction(label) {
       public void actionPerformed(ActionEvent e) {
         try {
           repository.startChangeSet();
           for (Glob transaction : currentTransactions) {
             repository.setTarget(transaction.getKey(), Transaction.SERIES, seriesKey);
-            repository.setTarget(transaction.getKey(), Transaction.CATEGORY, categoryKey);
+            repository.setTarget(transaction.getKey(), Transaction.SUB_SERIES, subSeriesKey);
           }
         }
         finally {

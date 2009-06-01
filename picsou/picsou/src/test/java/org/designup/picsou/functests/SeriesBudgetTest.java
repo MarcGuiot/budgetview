@@ -2,8 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
-import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.model.MasterCategory;
 
 public class SeriesBudgetTest extends LoggedInFunctionalTestCase {
 
@@ -21,7 +19,7 @@ public class SeriesBudgetTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setRecurring("Free Telecom", "Free", MasterCategory.TELECOMS, true);
+    categorization.setNewRecurring("Free Telecom", "Free");
     views.selectBudget();
     budgetView.recurring.editSeries("Free")
       .setTwoMonths()

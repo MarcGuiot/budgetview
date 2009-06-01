@@ -86,6 +86,12 @@ public class TestUtils {
     }
   }
 
+  public static <T> void assertEmpty(Object[] array) {
+    if (array.length != 0) {
+      Assert.fail("Expected an empty array, but contains: " + Arrays.toString(array));
+    }
+  }
+
   public static void assertEquals(GlobType[] expected, GlobType[] actual) {
     assertEquals(Arrays.asList(expected), actual);
   }

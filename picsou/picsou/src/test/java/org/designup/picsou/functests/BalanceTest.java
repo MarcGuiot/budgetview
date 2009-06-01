@@ -29,7 +29,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase{
 
     views.selectCategorization();
     categorization
-      .setRecurring("Free Telecom", "Tel", MasterCategory.TELECOMS, true);
+      .setNewRecurring("Free Telecom", "Tel");
 
 
     timeline.selectMonth("2009/05");
@@ -46,7 +46,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase{
       .create();
 
     categorization
-      .setEnvelope("prov", "Courses", MasterCategory.FOOD, true);
+      .setNewEnvelope("prov", "Courses");
 
     timeline.selectAll();
     views.selectData();
@@ -83,8 +83,9 @@ public class BalanceTest extends LoggedInFunctionalTestCase{
       .load();
 
     views.selectBudget();
-    budgetView.recurring.createSeries().setName("NoName")
-      .setCategories(MasterCategory.FOOD).validate();
+    budgetView.recurring.createSeries()
+      .setName("NoName")
+      .validate();
     views.selectHome();
     timeline.selectMonth("2009/04");
     monthSummary.checkBalance(-29.90);

@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
-import org.designup.picsou.model.MasterCategory;
 
 public class AccountEditionTest extends LoggedInFunctionalTestCase {
   public void testEditingAnExistingAccount() throws Exception {
@@ -166,9 +165,9 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setIncome("WorldCo", "Salaire", true);
-    categorization.setEnvelope("MacDo", "Gastronomie", MasterCategory.FOOD, true);
-    categorization.setEnvelope("Quick", "Sante", MasterCategory.FOOD, true);
+    categorization.setNewIncome("WorldCo", "Salaire");
+    categorization.setNewEnvelope("MacDo", "Gastronomie");
+    categorization.setNewEnvelope("Quick", "Sante");
 
     views.selectHome();
     monthSummary.checkIncome(1000);
@@ -176,9 +175,9 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.initContent()
-      .add("10/10/2008", TransactionType.PRELEVEMENT, "Quick", "", -15.00, "Sante", MasterCategory.FOOD)
-      .add("05/10/2008", TransactionType.PRELEVEMENT, "MacDo", "", -15.00, "Gastronomie", MasterCategory.FOOD)
-      .add("01/10/2008", TransactionType.VIREMENT, "WorldCo", "", 1000.00, "Salaire", MasterCategory.INCOME)
+      .add("10/10/2008", TransactionType.PRELEVEMENT, "Quick", "", -15.00, "Sante")
+      .add("05/10/2008", TransactionType.PRELEVEMENT, "MacDo", "", -15.00, "Gastronomie")
+      .add("01/10/2008", TransactionType.VIREMENT, "WorldCo", "", 1000.00, "Salaire")
       .check();
 
     views.selectHome();
@@ -189,7 +188,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.initContent()
-      .add("10/10/2008", TransactionType.PRELEVEMENT, "Quick", "", -15.00, "Sante", MasterCategory.FOOD)
+      .add("10/10/2008", TransactionType.PRELEVEMENT, "Quick", "", -15.00, "Sante")
       .check();
 
     views.selectHome();
@@ -210,8 +209,8 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setIncome("Salaire/oct", "Salaire", true);
-    categorization.setEnvelope("Virement octobre", "Savings", MasterCategory.SAVINGS, true);
+    categorization.setNewIncome("Salaire/oct", "Salaire");
+    categorization.setNewEnvelope("Virement octobre", "Savings");
 
     views.selectHome();
     monthSummary.checkIncome(1000.0);
@@ -228,19 +227,16 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("Series 1 for Livret")
-      .setCategory(MasterCategory.SAVINGS)
       .setFromAccount("Account n. 0000100")
       .setToAccount("Livret")
       .validate();
     budgetView.savings.createSeries()
       .setName("Series 2 for Livret")
-      .setCategory(MasterCategory.SAVINGS)
       .setFromAccount("Livret")
       .setToAccount("Account n. 0000100")
       .validate();
     budgetView.savings.createSeries()
       .setName("Series 3 for Codevi")
-      .setCategory(MasterCategory.SAVINGS)
       .setFromAccount("Account n. 0000100")
       .setToAccount("Codevi")
       .validate();
@@ -258,7 +254,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     
     views.selectData();
     transactions.initContent()
-      .add("01/10/2008", TransactionType.VIREMENT, "Salaire/oct", "", 1000.00, "Salaire", MasterCategory.INCOME)
+      .add("01/10/2008", TransactionType.VIREMENT, "Salaire/oct", "", 1000.00, "Salaire")
       .check();
 
     views.selectHome();

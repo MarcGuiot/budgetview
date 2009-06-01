@@ -25,5 +25,6 @@ public class SerializationManager {
     UserPreferences.TYPE.updateProperty(SERIALIZATION_PROPERTY, new UserPreferences.Serializer());
     VersionInformation.TYPE.updateProperty(SERIALIZATION_PROPERTY, new VersionInformation.Serializer());
     AccountPositionThreshold.TYPE.updateProperty(SERIALIZATION_PROPERTY, new AccountPositionThreshold.Serializer());
+    SubSeries.TYPE.updateProperty(SERIALIZATION_PROPERTY, new SubSeries.Serializer());
   }
 }
