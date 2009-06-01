@@ -40,11 +40,11 @@ public class GlobSelectionBuilder {
   }
 
   private static class SingleListGlobSelection implements GlobSelection {
-    private final GlobList glob;
+    private final GlobList globs;
     private GlobType type;
 
     public SingleListGlobSelection(Collection<Glob> globs, GlobType type) {
-      this.glob = new GlobList(globs);
+      this.globs = new GlobList(globs);
       this.type = type;
     }
 
@@ -57,7 +57,11 @@ public class GlobSelectionBuilder {
     }
 
     public GlobList getAll(GlobType type) {
-      return glob;
+      return globs;
+    }
+
+    public String toString() {
+      return globs.toString();
     }
   }
 }

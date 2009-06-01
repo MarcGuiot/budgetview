@@ -31,7 +31,7 @@ public class SelectionService {
 
   public void select(Glob glob) {
     if (glob == null) {
-      throw new InvalidParameter("Glob must be non null");
+      throw new InvalidParameter("Glob must be non null. Use clear(GlobType) to clear the selection.");
     }
     select(Collections.singletonList(glob), glob.getType());
   }
