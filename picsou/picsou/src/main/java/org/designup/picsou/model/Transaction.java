@@ -118,27 +118,6 @@ public class Transaction {
     return transaction.get(BANK_MONTH) * 100 + transaction.get(BANK_DAY);
   }
 
-  public static boolean hasNoCategory(Glob transaction) {
-    Integer categoryId = transaction.get(CATEGORY);
-    return (categoryId == null) || Utils.equal(categoryId, Category.NONE);
-  }
-
-  public static void setCategory(Glob transaction, Integer categoryId, GlobRepository repository) {
-    repository.startChangeSet();
-
-    try {
-      repository.setTarget(transaction.getKey(), CATEGORY, create(Category.TYPE, categoryId));
-      repository.update(transaction.getKey(), Transaction.SERIES, Series.OCCASIONAL_SERIES_ID);
-    }
-    finally {
-      repository.completeChangeSet();
-    }
-  }
-
-  public static void setCategory(Glob transaction, Glob category, GlobRepository repository) {
-    setCategory(transaction, category.get(Category.ID), repository);
-  }
-
   public static boolean isSplitPart(Glob transaction) {
     return transaction.get(SPLIT_SOURCE) != null;
   }

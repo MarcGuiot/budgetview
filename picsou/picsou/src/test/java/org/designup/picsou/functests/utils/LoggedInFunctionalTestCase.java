@@ -8,7 +8,6 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.server.ServerDirectory;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.GlobRepository;
@@ -181,10 +180,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   public OperationChecker getOperations() {
     return operations;
-  }
-
-  protected String getCategoryName(MasterCategory master) {
-    return GuiChecker.getCategoryName(master);
   }
 
   public void setInMemory(boolean inMemory) {

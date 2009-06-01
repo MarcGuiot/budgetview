@@ -51,5 +51,6 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
 
   public void testCreationChecks() throws Exception {
     fail("Regis: tbd");
+    // nom vide, deja pris, cleanup apres add
   }
 }

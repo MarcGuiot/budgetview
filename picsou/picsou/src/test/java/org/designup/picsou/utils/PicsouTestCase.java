@@ -25,7 +25,6 @@ public abstract class PicsouTestCase extends ServicesTestCase {
     this.repository =
       GlobRepositoryBuilder.init()
         .add(TransactionType.values())
-        .add(MasterCategory.createGlobs())
         .add(BudgetArea.values())
         .add(ProfileType.values())
         .get();

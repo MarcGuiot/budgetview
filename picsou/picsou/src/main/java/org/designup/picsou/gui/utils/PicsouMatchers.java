@@ -39,58 +39,6 @@ public class PicsouMatchers {
     return GlobMatchers.contained(Transaction.MONTH, months);
   }
 
-  public static GlobMatcher transactionsForCategories(final Collection<Integer> categoryIds, final GlobRepository repository) {
-    if (categoryIds.isEmpty()) {
-      return GlobMatchers.NONE;
-    }
-    if (categoryIds.contains(Category.ALL)) {
-      return GlobMatchers.ALL;
-    }
-
-    final boolean includeNonAffectedTransactions = categoryIds.contains(Category.NONE);
-
-    final Set<Integer> extendedIdSet = extendToMasterIds(categoryIds, repository);
-
-    return new GlobMatcher() {
-      public boolean matches(Glob transaction, GlobRepository repository) {
-        Integer categoryId = transaction.get(Transaction.CATEGORY);
-        if (categoryId != null) {
-          return extendedIdSet.contains(categoryId);
-        }
-        return includeNonAffectedTransactions;
-      }
-
-      public String toString() {
-        return "transaction.category in " + categoryIds;
-      }
-    };
-  }
-
-  private static Set<Integer> extendToMasterIds(Collection<Integer> categoryIds, GlobRepository repository) {
-    final Set<Integer> extendedIdSet = new HashSet<Integer>();
-    extendedIdSet.addAll(categoryIds);
-    for (Integer categoryId : categoryIds) {
-      if (categoryId == null) {
-        continue;
-      }
-      Glob category = repository.get(Key.create(Category.TYPE, categoryId));
-      if (Category.isMaster(category)) {
-        Set<Integer> subcategoryIds =
-          repository.getAll(Category.TYPE, fieldEquals(Category.MASTER, categoryId)).getValueSet(Category.ID);
-        extendedIdSet.addAll(subcategoryIds);
-      }
-    }
-    return extendedIdSet;
-  }
-
-  public static GlobMatcher masterCategories() {
-    return GlobMatchers.isNull(Category.MASTER);
-  }
-
-  public static GlobMatcher subCategories(Integer masterCategoryId) {
-    return fieldEquals(Category.MASTER, masterCategoryId);
-  }
-
   public static GlobMatcher transactionsForSeries(final Set<Integer> targetBudgetAreas,
                                                   Set<Integer> targetSeries,
                                                   GlobRepository repository) {

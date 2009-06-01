@@ -37,10 +37,6 @@ public abstract class GuiChecker {
     return prefix + format.format(value);
   }
 
-  public static String getCategoryName(MasterCategory category) {
-    return Lang.get("category." + category.getName());
-  }
-
   protected <T extends JComponent> void checkComponentVisible(Panel panel,
                                                               Class<T> swingComponentClass,
                                                               String componentName,

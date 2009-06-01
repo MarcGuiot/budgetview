@@ -119,37 +119,56 @@ public class UpgradeTrigger implements ChangeSetListener {
                            });
     }
 
-    // BudgetArea.OCCASIONAL removed
     if (currentJarVersion < 13) {
-      System.out.println("UpgradeTrigger.globsReset: ");
-
-      repository.safeApply(Transaction.TYPE,
-                           GlobMatchers.ALL,
-                           new GlobFunctor() {
-                             public void run(Glob transaction, GlobRepository repository) throws Exception {
-                               if (Series.OCCASIONAL_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
-                                 repository.update(transaction.getKey(),
-                                                   Transaction.SERIES,
-                                                   Series.UNCATEGORIZED_SERIES_ID);
-                               }
-                             }
-                           }
-      );
-
-      GlobList budgets = repository.getAll(SeriesBudget.TYPE,
-                                           GlobMatchers.fieldEquals(SeriesBudget.SERIES,
-                                                                    Series.OCCASIONAL_SERIES_ID));
-      System.out.println("UpgradeTrigger.globsReset: " + budgets.size());
-      repository.delete(budgets);
-
-      Key occasionalSeriesKey = Key.create(Series.TYPE, Series.OCCASIONAL_SERIES_ID);
-      if (repository.find(occasionalSeriesKey) != null) {
-        repository.delete(occasionalSeriesKey);
-      }
-
+      removeOccasionalBudgetArea(repository);
+      migrateCategoriesToSubSeries(repository);
     }
 
+
     repository.update(VersionInformation.KEY, VersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
+  }
+
+  private void removeOccasionalBudgetArea(GlobRepository repository) {
+    repository.safeApply(Transaction.TYPE,
+                           GlobMatchers.ALL,
+                           new GlobFunctor() {
+                           public void run(Glob transaction, GlobRepository repository) throws Exception {
+                             if (Series.OCCASIONAL_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
+                               repository.update(transaction.getKey(),
+                                                 Transaction.SERIES,
+                                                 Series.UNCATEGORIZED_SERIES_ID);
+                             }
+                           }
+                         }
+    );
+
+    GlobList budgets = repository.getAll(SeriesBudget.TYPE,
+                                         GlobMatchers.fieldEquals(SeriesBudget.SERIES,
+                                                                  Series.OCCASIONAL_SERIES_ID));
+    repository.delete(budgets);
+
+    Key occasionalSeriesKey = Key.create(Series.TYPE, Series.OCCASIONAL_SERIES_ID);
+    if (repository.find(occasionalSeriesKey) != null) {
+      repository.delete(occasionalSeriesKey);
+    }
+  }
+
+  private void migrateCategoriesToSubSeries(GlobRepository repository) {
+    for (Glob series : repository.getAll(Series.TYPE)) {
+      GlobList seriesToCategoriesList =
+        repository.getAll(SeriesToCategory.TYPE, GlobMatchers.linkedTo(series, SeriesToCategory.SERIES));
+      if (seriesToCategoriesList.size() > 1) {
+        for (Glob seriesToCategory : seriesToCategoriesList) {
+          String categoryName = Category.getName(seriesToCategory.get(SeriesToCategory.CATEGORY), repository);
+          Glob category =
+          repository.create(SubSeries.TYPE,
+                            value(SubSeries.SERIES, series.get(Series.ID)),
+                            value(SubSeries.NAME, categoryName));
+        }
+      }
+      repository.deleteAll(SeriesToCategory.TYPE);
+      repository.deleteAll(Category.TYPE);
+    }
   }
 
   public void createDataForNewUser(GlobRepository repository) {
