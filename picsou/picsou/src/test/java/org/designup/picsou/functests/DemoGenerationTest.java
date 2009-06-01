@@ -155,7 +155,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     
-    categorization.createAndSetSavings("VIRT MENS. LIVRET", "Virt. auto livret", "Compte courant", "Livret");
+    categorization.setNewSavings("VIRT MENS. LIVRET", "Virt. auto livret", "Compte courant", "Livret");
 
     categorization.getCompletionGauge().hideProgressMessage();
 

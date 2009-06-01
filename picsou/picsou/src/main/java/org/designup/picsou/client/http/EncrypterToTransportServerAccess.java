@@ -29,6 +29,8 @@ import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.security.SecureRandom;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 public class EncrypterToTransportServerAccess implements ServerAccess {
   private ClientTransport clientTransport;
@@ -120,7 +122,21 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
   }
 
   public void localRegister(byte[] mail, byte[] signature, String activationCode) {
-    clientTransport.register(sessionId, privateId, mail, signature, activationCode);
+    clientTransport.localRegister(sessionId, privateId, mail, signature, activationCode);
+  }
+
+  public List<String> getLocalUsers() {
+    SerializedInput input = clientTransport.getLocalUsers();
+    int size = input.readNotNullInt();
+    List<String> users = new ArrayList<String>(size);
+    for (int i = 0; i < size ;  i++){
+      users.add(input.readString());
+    }
+    return users;
+  }
+
+  public void removeLocalUser(String user) {
+    clientTransport.removeLocalUser(user);
   }
 
   private byte[] generateLinkInfo() {
@@ -185,8 +201,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     checkConnected();
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
-    SerializedInput input = clientTransport.getUserData(sessionId,
-                                                        outputStream.toByteArray());
+    SerializedInput input = clientTransport.getUserData(sessionId, outputStream.toByteArray());
     SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
     MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
     serializableGlobSerializer.deserialize(input, data);

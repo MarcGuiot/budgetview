@@ -71,9 +71,6 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
   }
 
   public void testAddAndModifyTransaction() throws Exception {
-
-    fail("Marc ?");
-    
     EncrypterToTransportServerAccess serverAccess = createServerAccess();
 
     Glob user = createUser("name", "password", serverAccess);
@@ -90,7 +87,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
     GlobList result = serverAccess.getUserData(new DefaultChangeSet(), update);
     assertEquals((int)update.ids.get(Transaction.ID), 1);
     assertEquals(1, result.size());
-    assertEquals(expectedTransaction.get(Transaction.CATEGORY), result.get(0).get(Transaction.CATEGORY));
+    assertEquals(expectedTransaction.get(Transaction.AMOUNT), result.get(0).get(Transaction.AMOUNT));
   }
 
   public void testCreateAndModifyAccount() throws Exception {

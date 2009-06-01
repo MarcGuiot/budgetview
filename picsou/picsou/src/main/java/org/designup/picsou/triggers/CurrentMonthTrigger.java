@@ -65,7 +65,7 @@ public class CurrentMonthTrigger implements ChangeSetListener {
     }
 
     public int getLastMonthId() {
-      int currentMonthId = Month.getMonthId(TimeService.getToday());
+      int currentMonthId = TimeService.getCurrentMonth();
       if (lastMonthId > currentMonthId) {
         return currentMonthId;
       }
@@ -90,6 +90,10 @@ public class CurrentMonthTrigger implements ChangeSetListener {
     }
 
     public int getLastMonthDay() {
+      if (lastMonthDay > TimeService.getCurrentDay() &&
+          lastMonthId == TimeService.getCurrentMonth()){
+        return TimeService.getCurrentDay();
+      }
       return lastMonthDay;
     }
   }

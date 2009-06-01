@@ -55,11 +55,6 @@ public class Series {
   @Target(Account.class)
   public static LinkField FROM_ACCOUNT;
 
-  // gestion des comptes carte
-  // calculé le montant de la transaction de prelevement
-  // on impute sur le mois n+1 des que la transaction est passée
-  // offrir un filtrage par numero de carte (meme sur un meme compte)
-
   // cette series appartient au compte courant mais ses transactions impactent le compte courant pointé
   @Target(Account.class)
   public static LinkField TO_ACCOUNT;

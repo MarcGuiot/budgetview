@@ -13,6 +13,7 @@ import org.globsframework.utils.exceptions.InvalidState;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.List;
 
 public class DispatcherServerAccess implements ServerAccess {
   private ExecutorService pool = Executors.newCachedThreadPool();
@@ -116,6 +117,14 @@ public class DispatcherServerAccess implements ServerAccess {
 
   public GlobList getUserData(MutableChangeSet changeSet, IdUpdater idUpdater) {
     return localServerAccess.getUserData(changeSet, idUpdater);
+  }
+
+  public List<String> getLocalUsers() {
+    return localServerAccess.getLocalUsers();
+  }
+
+  public void removeLocalUser(String user) {
+    localServerAccess.removeLocalUser(user);
   }
 
   public void disconnect() {

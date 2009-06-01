@@ -35,7 +35,7 @@ public class AskForMailServlet extends HttpServlet {
     String mailTo = req.getHeader(ConfigService.HEADER_MAIL);
     if (Strings.isNullOrEmpty(mailTo)) {
       logger.info("Bad ask for code from " + (mailTo == null ? "<no mail>" : mailTo));
-      resp.addHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_BAD_ADRESS);
+      resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_BAD_ADRESS);
       return;
     }
     String lang = req.getHeader(ConfigService.HEADER_LANG);
@@ -47,7 +47,7 @@ public class AskForMailServlet extends HttpServlet {
         String activationCode = LicenseGenerator.generateActivationCode();
         registeredMail = request(mailTo);
         if (registeredMail.isEmpty()) {
-          resp.addHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_UNKNOWN);
+          resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_UNKNOWN);
           logger.info("unknown user " + mailTo);
           return;
         }
@@ -63,10 +63,10 @@ public class AskForMailServlet extends HttpServlet {
           }
           if (mailer.sendExistingLicense(registeredMail.get(0), lang, activationCode)) {
             logger.info("Send new activation code " + activationCode + " to " + mailTo);
-            resp.addHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_SENT);
+            resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_SENT);
           }
           else {
-            resp.addHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_SENT_FAILED);
+            resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_SENT_FAILED);
           }
         }
         if (registeredMail.size() > 1) {
@@ -115,11 +115,11 @@ public class AskForMailServlet extends HttpServlet {
   }
 
   private void replyBadAdress(HttpServletResponse resp) {
-    resp.addHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_BAD_ADRESS);
+    resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_BAD_ADRESS);
   }
 
   private void replyFailed(HttpServletResponse resp) {
-    resp.addHeader(ConfigService.HEADER_STATUS, "fail");
+    resp.setHeader(ConfigService.HEADER_STATUS, "fail");
   }
 
   private boolean checkIsAMailAdress(String to) {

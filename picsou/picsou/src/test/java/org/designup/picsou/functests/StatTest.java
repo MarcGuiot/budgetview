@@ -7,9 +7,6 @@ import org.designup.picsou.model.TransactionType;
 public class StatTest extends LoggedInFunctionalTestCase {
 
   public void testCategorisationWithPositiveTransaction() throws Exception {
-
-    fail("Marc: Ce test etait mis en disabled... qu'est-ce qu'on en fait ?");
-
     OfxBuilder
       .init(this)
       .addTransaction("2008/07/15", -90.00, "Auchan")
@@ -36,11 +33,10 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/13", 10.00, "Pharma")
       .load();
 
-    categorization.setNewEnvelope("Pharma", "Secu");
-    categorization.setNewEnvelope("ED", "Courant");
+    categorization.setEnvelope("Pharma", "Secu");
+    categorization.setEnvelope("ED", "Courant");
     views.selectData();
     transactions.initContent()
-      .add("26/08/2008", TransactionType.PLANNED, "Planned: Secu", "", -10, "Secu")
       .add("26/08/2008", TransactionType.PLANNED, "Planned: Courant", "", (-(80 + 90) - 60.90 + 49.9) /*181*/, "Courant")
       .add("26/08/2008", TransactionType.PRELEVEMENT, "ED", "", -49.90, "Courant")
       .add("25/08/2008", TransactionType.VIREMENT, "Auchan", "", 60.90, "Courant")
@@ -61,8 +57,6 @@ public class StatTest extends LoggedInFunctionalTestCase {
 
   public void testChangeSeriesBudgetCanCreatePlannedTransaction() throws Exception {
 
-    fail("Marc: Ce test etait mis en disabled... qu'est-ce qu'on en fait ?");
-
     views.selectBudget();
     budgetView.envelopes.createSeries().setName("Secu")
       .switchToManual()
@@ -76,16 +70,21 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/13", 10.00, "Pharma")
       .load();
 
-    categorization.setNewEnvelope("Pharma", "Secu");
+    categorization.setEnvelope("Pharma", "Secu");
     views.selectData();
     transactions.initContent()
       .add("13/08/2008", TransactionType.VIREMENT, "Pharma", "", 10.00, "Secu")
       .check();
 
     views.selectBudget();
-    budgetView.envelopes.editSeriesList().selectSeries("Secu").setAmount("0").validate();
+
+    // je ne comprends pas pourquoi il faut faire un selectPositiveAmounts
+    //alors que la series est deja en Positif.
+    // non reproductible en vrai.
+    budgetView.envelopes.editSeriesList().selectSeries("Secu").selectAllMonths()
+      .selectPositiveAmounts().setAmount("20").validate();
     transactions.initContent()
-      .add("13/08/2008", TransactionType.PLANNED, "Planned: Secu", "", -10.00, "Secu")
+      .add("13/08/2008", TransactionType.PLANNED, "Planned: Secu", "", 10.00, "Secu")
       .add("13/08/2008", TransactionType.VIREMENT, "Pharma", "", 10.00, "Secu")
       .check();
   }

@@ -51,7 +51,7 @@ public class HttpsClientTransport implements ClientTransport {
     return sendRequest(null, "/connect", serializedByteArrayOutput.toByteArray());
   }
 
-  public void register(Long sessionId, byte[] privateId, byte[] mail, byte[] signature, String activationCode) {
+  public void localRegister(Long sessionId, byte[] privateId, byte[] mail, byte[] signature, String activationCode) {
   }
 
   public SerializedInput createUser(Long sessionId, byte[] bytes) {
@@ -80,6 +80,13 @@ public class HttpsClientTransport implements ClientTransport {
 
   public void takeSnapshot(Long sessionId, byte[] data) {
     sendRequest(sessionId, "/takeSnapshot", data);
+  }
+
+  public SerializedInput getLocalUsers() {
+    return null; 
+  }
+
+  public void removeLocalUser(String user) {
   }
 
   public void confirmUser(Long sessionId, byte[] data) {

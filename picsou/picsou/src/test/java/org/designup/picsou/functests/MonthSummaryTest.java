@@ -97,7 +97,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     categorization.setNewEnvelope("fnac", "Equipment");
     categorization.setNewIncome("Salaire", "Salaire");
     categorization.setNewSpecial("Air France", "Trips");
-    categorization.createAndSetSavings("epargne", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "External account");
+    categorization.setNewSavings("epargne", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "External account");
 
     double incomeFor200807 = 1500;
     double expensesFor200807 = 29.9 + 1500 + 60 + 20 + 10 + 23 + 200 + 100;
@@ -379,13 +379,13 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
   public void testMonthTooltipWithNoPositionAvailable() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "000123", 100, "2008/08/26")
+      .addBankAccount(30006, 10674, "000123", 100, "2008/08/15")
       .addTransaction("2008/07/26", 1000, "WorldCo")
       .load();
 
     operations.openPreferences().setFutureMonthsCount(1).validate();
 
     timeline.checkMonthTooltip("2008/07", 1000, 100);
-    timeline.checkMonthTooltip("2008/08", "August 2008");
+    timeline.checkMonthTooltip("2008/08", 0, 100);
   }
 }

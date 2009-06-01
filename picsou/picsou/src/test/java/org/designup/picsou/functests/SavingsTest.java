@@ -985,7 +985,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .load();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectCategorization();
-    categorization.createAndSetSavings("Virement", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "External account");
+    categorization.setNewSavings("Virement", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "External account");
     views.selectHome();
     savingsAccounts.createNewAccount()
       .setAccountName("Livret")
@@ -1004,9 +1004,10 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     categorization.selectSavings().selectSeries("Epargne");
     views.selectHome();
 
-//    openCashPilot();
-    // On check maintenant qu'il y a une balance bien que les compte n'ait pas de balance.
-    fail("Marc, il faut faire ce qui est dans le commentaire ?");
+    timeline.selectMonth("2008/07");
+    savingsAccounts.checkEstimatedPosition(100, "31/07/2008");
+    timeline.selectMonth("2008/08");
+    savingsAccounts.checkEstimatedPosition(200, "31/08/2008");
   }
 
   public void testInverseAccountAfterCategorization() throws Exception {
@@ -1021,7 +1022,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setBalance(100)
       .validate();
     views.selectCategorization();
-    categorization.createAndSetSavings("Virement", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "Livret");
+    categorization.setNewSavings("Virement", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "Livret");
     views.selectSavings();
     savingsView.editSavingsSeries("Livret", "Epargne")
       .setToAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)

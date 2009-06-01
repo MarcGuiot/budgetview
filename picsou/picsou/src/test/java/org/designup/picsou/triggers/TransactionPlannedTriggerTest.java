@@ -9,9 +9,6 @@ import org.globsframework.model.Key;
 public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
 
   public void testMonthChange() throws Exception {
-
-    fail("Marc ?");
-
     repository.startChangeSet();
     createFreeSeries();
     createMonth(200807, 200808, 200809);
@@ -27,7 +24,6 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "        planned='true' series='100' transactionType='5' type='transaction'  createdBySeries='false'/>" +
       "");
     Integer[] budgetId = getBudgetId(FREE_SERIES_ID);
-    Integer[] occasionalBudget = getBudgetId(Series.OCCASIONAL_SERIES_ID);
     Integer[] unknownBudget = getBudgetId(Series.UNCATEGORIZED_SERIES_ID);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
@@ -37,12 +33,6 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "        month='200808' series='100' type='seriesBudget' />" +
       "<create active='true' amount='-29.9' day='7' id='" + budgetId[0] + "'" +
       "        month='200807' series='100' type='seriesBudget' />" +
-      "<create active='true' amount='0.0' id='" + occasionalBudget[2] + "' month='200809'" +
-      "        series='0' day='1' type='seriesBudget'/>" +
-      "<create active='true' amount='0.0' id='" + occasionalBudget[1] + "' month='200808'" +
-      "        series='0' day='1' type='seriesBudget' />" +
-      "<create active='true' amount='0.0' id='" + occasionalBudget[0] + "' month='200807'" +
-      "        series='0' day='1' type='seriesBudget' />" +
       "<create active='true' amount='0.0' id='" + unknownBudget[2] + "' month='200809'" +
       "        series='1' day='1' type='seriesBudget'/>" +
       "<create active='true' amount='0.0' id='" + unknownBudget[1] + "' month='200808'" +
@@ -87,9 +77,6 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
   }
 
   public void testEnvelopeSeriesChangeWithIncome() throws Exception {
-
-    fail("Marc ?");
-
     repository.startChangeSet();
     createEnveloppeSeries();
     createIncomeSeries();
@@ -100,10 +87,10 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <create account='-1' amount='2000.0' bankDay='4' bankMonth='200808' mirror='false'\n" +
-      "          category='19' day='4' id='" + incomePlannedTransaction[0] + "' label='Planned: salaire' month='200808'\n" +
+      "          category='0' day='4' id='" + incomePlannedTransaction[0] + "' label='Planned: salaire' month='200808'\n" +
       "          planned='true' series='102' transactionType='1' type='transaction' createdBySeries='false'/>\n" +
       "  <create account='-1' amount='2000.0' bankDay='4' bankMonth='200809' mirror='false'\n" +
-      "          category='19' day='4' id='" + incomePlannedTransaction[1] + "' label='Planned: salaire' month='200809'\n" +
+      "          category='0' day='4' id='" + incomePlannedTransaction[1] + "' label='Planned: salaire' month='200809'\n" +
       "          planned='true' series='102' transactionType='1' type='transaction' createdBySeries='false'/>\n" +
       "  <create account='-1' amount='-1000.0' bankDay='25' bankMonth='200808' mirror='false'\n" +
       "          category='0' day='25' id='" + enveloppePlannedTransaction[0] + "' label='Planned: courses' month='200808'\n" +
@@ -112,7 +99,6 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "          category='0' day='25' id='" + enveloppePlannedTransaction[1] + "' label='Planned: courses' month='200809'\n" +
       "          planned='true' series='101' transactionType='5' type='transaction' createdBySeries='false'/>\n" +
       "");
-    Integer[] occasionalBudgetIds = getBudgetId(Series.OCCASIONAL_SERIES_ID);
     Integer[] unknownBudgetIds = getBudgetId(Series.UNCATEGORIZED_SERIES_ID);
     Integer[] incomBudgetIds = getBudgetId(INCOME_SERIES_ID);
     Integer[] enveloppeBudgetIds = getBudgetId(ENVELOPPE_SERIES_ID);
@@ -124,12 +110,6 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "        month='200808' series='102' type='seriesBudget'/>" +
       "<create active='true' amount='2000.0' day='4' id='" + incomBudgetIds[2] + "'" +
       "        month='200809' series='102' type='seriesBudget'/>" +
-      "<create active='true' amount='0.0' id='" + occasionalBudgetIds[0] + "' day='1' month='200807'" +
-      "        series='0' type='seriesBudget'/>" +
-      "<create active='true' amount='0.0' id='" + occasionalBudgetIds[1] + "' day='1' month='200808'" +
-      "        series='0' type='seriesBudget'/>" +
-      "<create active='true' amount='0.0' id='" + occasionalBudgetIds[2] + "' day='1' month='200809'" +
-      "        series='0' type='seriesBudget'/>" +
       "<create active='true' amount='-1000.0' day='25' id='" + enveloppeBudgetIds[0] + "'" +
       "        month='200807' series='101' type='seriesBudget'/>" +
       "<create active='true' amount='-1000.0' day='25' id='" + enveloppeBudgetIds[1] + "'" +

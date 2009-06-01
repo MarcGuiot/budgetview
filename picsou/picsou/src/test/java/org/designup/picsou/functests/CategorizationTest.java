@@ -5,11 +5,12 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.model.MasterCategory;
 
 public class CategorizationTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
-    setCurrentMonth("2008/06");
+    setCurrentDate("2008/06/30");
     super.setUp();
   }
 
@@ -658,12 +659,16 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectSeries("series1")
       .deleteSelectedSeries()
       .validate();
-
-    fail("Marc: on ne verifie rien à la fin ?");
+    categorization.getEnvelopes()
+      .checkDoesNotContainSeries("series1");
   }
 
   public void testAutomaticBudget() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
+    views.selectBudget();
+    budgetView.envelopes.createSeries().setName("Courant")
+      .validate();
+
     OfxBuilder
       .init(this)
       .addTransaction("2008/05/20", -20, "Auchan")
@@ -671,7 +676,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "Courant");
+    categorization.setEnvelope("Auchan", "Courant");
 
     views.selectBudget();
     timeline.selectMonth("2008/05");
@@ -716,11 +721,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectData();
     timeline.selectAll();
     transactions.initContent()
-      .add("01/08/2008", TransactionType.PLANNED, "Planned: Occasional", "", -10.00, "Occasional")
       .add("01/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant")
-      .add("01/07/2008", TransactionType.PLANNED, "Planned: Occasional", "", -10.00, "Occasional")
       .add("01/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant")
-      .add("10/06/2008", TransactionType.PLANNED, "Planned: Occasional", "", -10.00, "Occasional")
       .add("10/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -10.00, "Courant")
       .add("10/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -10.00, "Courant")
       .add("20/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -20.00, "Courant")
@@ -900,11 +902,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAutomaticShouldNotTakeInAccountPreviousEmptyMonthWhenPositiveBudget() throws Exception {
-
-    fail("Marc, est-il normal que le jour passe à 20 ?");
-
     operations.openPreferences().setFutureMonthsCount(2).validate();
-
+    views.selectBudget();
+    budgetView.income.createSeries().setName("Revenue")
+      .validate();
     OfxBuilder
       .init(this)
       .addTransaction("2008/05/10", 10, "revenue 2")
@@ -912,7 +913,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewIncome("revenue 1", "Revenue");
+    categorization.setIncome("revenue 1", "Revenue");
 
     views.selectData();
     timeline.selectAll();
@@ -926,10 +927,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAutomaticShouldNotTakeInAccountPreviousEmptyMonth() throws Exception {
-
-    fail("Marc, est-il normal que le jour passe à 20 ?");
-
     operations.openPreferences().setFutureMonthsCount(2).validate();
+    views.selectBudget();
+    budgetView.envelopes.createSeries().setName("Courant")
+      .validate();
 
     OfxBuilder
       .init(this)
@@ -938,7 +939,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("ED", "Courant");
+    categorization.setEnvelope("ED", "Courant");
 
     views.selectData();
     timeline.selectAll();
@@ -1168,7 +1169,21 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectTransactions("2_Auchan")
       .selectEnvelopes()
       .selectSeries("Courses");
+    
+  }
 
-    fail("Marc: pas de check à la fin de ce test ?");
+  public void testDeleteTransaction() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/25", -50.0, "1_Auchan")
+      .addTransaction("2008/06/15", -40.0, "2_Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.delete("1_Auchan")
+      .validate();
+    categorization.initContent()
+      .add("15/06/2008", "2_Auchan", -40.0)
+      .check();
   }
 }

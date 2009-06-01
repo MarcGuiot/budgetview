@@ -78,7 +78,7 @@ public class RegisterServlet extends HttpServlet {
     GlobList globList = query.executeAsGlobs();
     db.commit();
     if (globList.isEmpty()) {
-      resp.addHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
+      resp.setHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
     }
     else {
       Glob license = globList.get(0);
@@ -104,7 +104,7 @@ public class RegisterServlet extends HttpServlet {
           .getRequest()
           .run();
         db.commit();
-        resp.addHeader(ConfigService.HEADER_SIGNATURE, Encoder.byteToString(signature));
+        resp.setHeader(ConfigService.HEADER_SIGNATURE, Encoder.byteToString(signature));
       }
       else if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
         String newCode = LicenseGenerator.generateActivationCode();
@@ -114,14 +114,14 @@ public class RegisterServlet extends HttpServlet {
           .getRequest()
           .run();
         db.commit();
-        resp.addHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "true");
+        resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "true");
         if (!mailer.sendNewLicense(mail, newCode, lang)) {
           logger.finest("Fail to send mail retrying.");
         }
       }
       else {
         logger.info("No mail sent");
-        resp.addHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
+        resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
       }
     }
   }

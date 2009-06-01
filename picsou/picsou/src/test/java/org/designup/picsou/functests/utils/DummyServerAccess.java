@@ -9,10 +9,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.utils.MapOfMaps;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 public class DummyServerAccess implements ServerAccess {
 
@@ -57,6 +54,13 @@ public class DummyServerAccess implements ServerAccess {
   }
 
   public void localRegister(byte[] mail, byte[] signature, String activationCode) {
+  }
+
+  public List<String> getLocalUsers() {
+    return null;
+  }
+
+  public void removeLocalUser(String user) {
   }
 
   public void disconnect() {

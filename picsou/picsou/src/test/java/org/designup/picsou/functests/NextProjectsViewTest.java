@@ -2,6 +2,9 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.MasterCategory;
+import org.designup.picsou.gui.TimeService;
+import org.globsframework.utils.Dates;
 
 public class NextProjectsViewTest extends LoggedInFunctionalTestCase {
 
@@ -188,6 +191,9 @@ public class NextProjectsViewTest extends LoggedInFunctionalTestCase {
   public void testPositionsAreDisplayedInRedWhenTooLow() throws Exception {
     operations.openPreferences().setFutureMonthsCount(12).validate();
 
+    TimeService.setCurrentDate(Dates.parse("2008/10/16"));
+    restartApplication();
+
     OfxBuilder
       .init(this)
       .addBankAccount(30003, 12345, "10101010", 750, "2008/10/15")
@@ -243,14 +249,14 @@ public class NextProjectsViewTest extends LoggedInFunctionalTestCase {
 
     views.selectSavings();
     nextProjects.initContent()
-      .add("Nov 2008", "Ski", -500.00, -750.00, -500.00, -1250.00)
-      .add("Dec 2008", "Ski", -500.00, -2250.00, 500.00, -1750.00)
+      .add("Nov 2008", "Ski", -500.00, -1750.00, 500.00, -1250.00)
+      .add("Dec 2008", "Ski", -500.00, -3250.00, 1500.00, -1750.00)
       .check();
 
     nextProjects.checkCellTextColorIsError(0, 3);
     nextProjects.checkCellTextColorIsError(1, 3);
 
-    nextProjects.checkCellTextColorIsError(0, 4);
+    nextProjects.checkCellTextColorIsNormal(0, 4);
     nextProjects.checkCellTextColorIsNormal(1, 4);
   }
 }

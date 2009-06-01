@@ -3,7 +3,6 @@ package com.cashpilot;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.gui.PicsouApplication;
@@ -126,7 +125,7 @@ public class FirstTimeTest extends UISpecTestCase {
     CategorizationChecker categorization = new CategorizationChecker(window);
     categorization
       .setEnvelope("MUTUELLE", "Health")
-      .createAndSetSavings("EPARGNE", "Regular savings", "Account n. 00001123", "External account");
+      .setNewSavings("EPARGNE", "Regular savings", "Account n. 00001123", "External account");
     categorization.selectTransactions("Habille moi", "Chausse moi");
     categorization
       .selectEnvelopes().createSeries().setName("Fringue")

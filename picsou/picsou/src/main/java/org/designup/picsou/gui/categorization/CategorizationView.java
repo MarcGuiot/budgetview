@@ -13,6 +13,7 @@ import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
+import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
 import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
@@ -126,6 +127,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     headerPainter = PicsouTableHeaderPainter.install(transactionTable, directory);
 
     JTable table = transactionTable.getComponent();
+    TransactionKeyListener.install(table, -1, directory, repository, true);
     PicsouColors.installSelectionColors(table, directory);
     Gui.setColumnSizes(table, COLUMN_SIZES);
     installDoubleClickHandler();

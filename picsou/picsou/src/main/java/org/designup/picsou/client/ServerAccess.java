@@ -13,6 +13,8 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.utils.MapOfMaps;
 
+import java.util.List;
+
 public interface ServerAccess {
 
   boolean createUser(String name, char[] password)
@@ -32,6 +34,10 @@ public interface ServerAccess {
   MapOfMaps<String, Integer, SerializableGlobType> getServerData();
 
   void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data);
+
+  List<String> getLocalUsers();
+
+  void removeLocalUser(String user);
 
   interface IdUpdater {
     void update(IntegerField field, Integer lastAllocatedId);
@@ -68,6 +74,13 @@ public interface ServerAccess {
     }
 
     public void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data) {
+    }
+
+    public List<String> getLocalUsers() {
+      return null;
+    }
+
+    public void removeLocalUser(String user) {
     }
 
     public GlobList getUserData(MutableChangeSet upgradeChangeSetToApply, IdUpdater idUpdater) {

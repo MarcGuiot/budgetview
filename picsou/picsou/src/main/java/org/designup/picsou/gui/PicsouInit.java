@@ -6,6 +6,7 @@ import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.config.RegistrationTrigger;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
+import org.designup.picsou.gui.utils.ExceptionHandler;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
@@ -63,6 +64,8 @@ public class PicsouInit {
       GlobRepositoryBuilder.init(new CachedGlobIdGenerator(idGenerator))
         .add(directory.get(GlobModel.class).getConstants())
         .get();
+
+    ExceptionHandler.setRepository(repository);
 
     this.repository.addChangeListener(new ServerChangeSetListener(serverAccess));
 

@@ -195,7 +195,9 @@ public class SeriesEvolutionView extends View {
         int monthId = Month.normalize(referenceMonthId + offset);
         Glob seriesStat = parentRepository.find(Key.create(SeriesStat.SERIES, wrapper.get(SeriesWrapper.ITEM_ID),
                                                            SeriesStat.MONTH, monthId));
-        if ((seriesStat != null) && Amounts.isNotZero(seriesStat.get(SeriesStat.PLANNED_AMOUNT))) {
+        if ((seriesStat != null) &&
+            (Amounts.isNotZero(seriesStat.get(SeriesStat.PLANNED_AMOUNT))
+             || Amounts.isNotZero(seriesStat.get(SeriesStat.AMOUNT)))) {
           return true;
         }
       }

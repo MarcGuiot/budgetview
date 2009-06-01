@@ -1,5 +1,6 @@
 package org.designup.picsou.triggers;
 
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Month;
@@ -9,6 +10,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Log;
 
 import java.util.*;
 
@@ -56,7 +58,7 @@ public class PositionTrigger implements ChangeSetListener {
   }
 
   private boolean computeAccountPosition(GlobRepository repository, TransactionComparator comparator,
-                                        Glob[] transactions, Glob account) {
+                                         Glob[] transactions, Glob account) {
     Integer transactionId = account.get(Account.TRANSACTION_ID);
     int pivot;
     Integer lastUpdateTransactionId = transactionId;
@@ -65,10 +67,11 @@ public class PositionTrigger implements ChangeSetListener {
     if (transactionId == null) {
       pivot = transactions.length - 1;
       Double position = account.get(Account.POSITION);
-      Date positionDate = account.get(Account.POSITION_DATE);
       if (position == null) {
+        Log.write("Missing balance for account " + account.get(Account.NAME));
         return false;
       }
+      Date positionDate = account.get(Account.POSITION_DATE);
       positionAfter = position;
       for (; pivot >= 0; pivot--) {
         Glob transaction = transactions[pivot];
@@ -98,13 +101,16 @@ public class PositionTrigger implements ChangeSetListener {
         positionBefore = positionBefore - transaction.get(Transaction.AMOUNT);
       }
     }
+    int month = TimeService.getCurrentMonth();
+    int day = TimeService.getCurrentDay();
     for (int i = pivot + 1; i < transactions.length; i++) {
       Glob transaction = transactions[i];
       Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
       if (checkSameAccount(account, transactionAccount)) {
         positionAfter = positionAfter + transaction.get(Transaction.AMOUNT);
         repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, positionAfter);
-        if (!transaction.get(Transaction.PLANNED)) {
+        if (!transaction.get(Transaction.PLANNED) &&
+            Transaction.isTransactionBeforeOrEqual(transaction, month, day)) {
           lastUpdateTransactionId = transaction.get(Transaction.ID);
         }
       }
@@ -152,11 +158,13 @@ public class PositionTrigger implements ChangeSetListener {
     int lastCloseIndex = 0;
     Double realPosition = null;
     Date positionDate = null;
+    int month = TimeService.getCurrentMonth();
+    int currentDay = TimeService.getCurrentDay();
     for (Glob transaction : transactions) {
       if (!sameCheckerAccount.isSame(transaction.get(Transaction.ACCOUNT))) {
         continue;
       }
-      if (!transaction.get(Transaction.PLANNED)) {
+      if (Transaction.isTransactionBeforeOrEqual(transaction, month, currentDay) && !transaction.get(Transaction.PLANNED)) {
         Integer accountId = transaction.get(Transaction.ACCOUNT);
         if (accountId != null) {
           positions.put(accountId, transaction.get(Transaction.ACCOUNT_POSITION));

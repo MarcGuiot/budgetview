@@ -201,8 +201,6 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
   public void testFutureBalance() throws Exception {
 
-    fail("Marc: je ne comprends pas pourquoi on a deux lignes en moins, normalement on n'a rien change dans ce test");
-
     views.selectCategorization();
     categorization.setNewEnvelope("essence", "Voiture");
     categorization.setNewRecurring("nounou", "Nounou");
@@ -213,15 +211,13 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     views.selectData();
     timeline.selectAll();
     transactions.initAmountContent()
-      .add("06/07/2006", "Planned: Nounou", -100.00, "Nounou", -300.00, "Main accounts")
-      .add("01/07/2006", "Planned: Voiture", -70.00, "Voiture", -200.00, "Main accounts")
-      .add("01/07/2006", "Planned: Occasional", -230.00, "Occasional", -130.00, "Main accounts")
-      .add("06/06/2006", "Planned: Nounou", -100.00, "Nounou", 100.00, "Main accounts")
-      .add("01/06/2006", "Planned: Voiture", -70.00, "Voiture", 200.00, "Main accounts")
-      .add("01/06/2006", "Planned: Occasional", -230.00, "Occasional", 270.00, "Main accounts")
+      .add("06/07/2006", "Planned: Nounou", -100.00, "Nounou", 160.00, "Main accounts")
+      .add("01/07/2006", "Planned: Voiture", -70.00, "Voiture", 260.00, "Main accounts")
+      .add("06/06/2006", "Planned: Nounou", -100.00, "Nounou", 330.00, "Main accounts")
+      .add("01/06/2006", "Planned: Voiture", -70.00, "Voiture", 430.00, "Main accounts")
       .add("06/05/2006", "NOUNOU", -100.00, "Nounou", 500.00, 500.00, "Account n. 00001123")
-      .add("03/05/2006", "PEAGE", -30.00, "Occasional", 600.00, 600.00, "Account n. 00001123")
-      .add("02/05/2006", "SG", -200.00, "Occasional", 630.00, 630.00, "Account n. 00001123")
+      .add("03/05/2006", "PEAGE", -30.00, "To categorize", 600.00, 600.00, "Account n. 00001123")
+      .add("02/05/2006", "SG", -200.00, "To categorize", 630.00, 630.00, "Account n. 00001123")
       .add("01/05/2006", "ESSENCE", -70.00, "Voiture", 830.00, 830.00, "Account n. 00001123")
       .check();
   }

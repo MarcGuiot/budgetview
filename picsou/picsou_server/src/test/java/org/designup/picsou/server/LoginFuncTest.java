@@ -34,7 +34,6 @@ public class LoginFuncTest extends ServerFuncTestCase {
       .loginAndSkipSla()
       .waitForApplicationToLoad();
 
-
     OperationChecker.init(window)
       .openImportDialog()
       .selectFiles(fileName)
