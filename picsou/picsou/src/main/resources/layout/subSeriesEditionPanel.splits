@@ -13,6 +13,12 @@
       <scrollPane gridPos="(1,1,2,1)" margin="2">
         <list ref="list"/>
       </scrollPane>
+
+      <row gridPos="(1,2)" styleClass="iconButtonGroup">
+        <button action="delete" name="deleteSubSeries" styleClass="delete"/>
+        <button action="rename" name="renameSubSeries" styleClass="rename"/>
+        <filler fill="horizontal"/>
+      </row>
     </grid>
   </panel>
 

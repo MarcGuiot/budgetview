@@ -861,50 +861,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
-  public void testChangeCategoriesOnEnvelopesChangesPlannedTransactions() throws Exception {
-
-    fail("Regis: a refaire avec les subseries");
-
-    OfxBuilder
-      .init(this)
-      .addTransaction("2008/06/30", -20., "PointP")
-      .load();
-
-    views.selectCategorization();
-    categorization.selectTransactions("PointP");
-    categorization.selectEnvelopes().createSeries()
-      .setName("Maison")
-      .validate();
-
-    views.selectData();
-    timeline.selectMonth("2008/07");
-    transactions
-      .initContent()
-      .add("30/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison", "Entretien")
-      .check();
-
-    views.selectBudget();
-    budgetView.envelopes.editSeries("Maison")
-      .validate();
-
-    views.selectData();
-    transactions
-      .initContent()
-      .add("30/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison")
-      .check();
-
-    views.selectBudget();
-    budgetView.envelopes.editSeries("Maison")
-//      .addCategory(getCategoryName(MasterCategory.LEISURES))
-      .validate();
-
-    views.selectData();
-    transactions
-      .initContent()
-      .add("30/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison")
-      .check();
-  }
-
   public void testEnteringPositiveOrNegativeValuesInAnExpensesBudgetArea() throws Exception {
     OfxBuilder
       .init(this)

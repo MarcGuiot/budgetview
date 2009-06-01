@@ -2,18 +2,17 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.TransactionType;
 
 public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
 
   public void testStandardUsage() throws Exception {
 
-    fail("Regis: voir probleme d'acces à Lang.get dans les splitters TabGroup");
-
     views.selectBudget();
 
     budgetView.envelopes.createSeries()
       .setName("Series")
-      .selectSubSeriesTab()
+      .gotoSubSeriesTab()
       .addSubSeries("SubSeries 1")
       .addSubSeries("SubSeries 2")
       .validate();
@@ -47,10 +46,93 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectEnvelopes()
       .checkSeriesNotSelected("SubSeries 1")
       .checkSeriesIsSelected("SubSeries 2");
+
+    views.selectCategorization();
+    categorization
+      .selectTransaction("Tx 1")
+      .selectEnvelopes()
+      .selectSeries("Series")
+      .checkSeriesIsSelected("Series");
   }
 
   public void testCreationChecks() throws Exception {
     fail("Regis: tbd");
     // nom vide, deja pris, cleanup apres add
+  }
+
+  public void testSelectedSubSeriesIsAssignedToCurrentTransaction() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -129.90, "PharmaPlus")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRows(0);
+    categorization.checkLabel("PHARMAPLUS");
+
+    categorization.selectEnvelopes().createSeries()
+      .setName("Health")
+      .gotoSubSeriesTab()
+      .addSubSeries("Pharmacy")
+      .validate();
+
+    categorization.selectTransaction("PHARMAPLUS");
+    categorization.getEnvelopes().checkSeriesIsSelectedWithSubSeries("Health", "Pharmacy");
+
+    views.selectCategorization();
+    categorization.checkTable(new Object[][]{
+      {"30/06/2008", "Health / Pharmacy", "PHARMAPLUS", -129.90},
+    });
+
+    views.selectData();
+    transactions.checkSeries(0, "Health", "Pharmacy");
+    transactions.initContent()
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "PHARMAPLUS", "", -129.90, "Health", "Pharmacy")
+      .check();
+  }
+
+  public void testChangeSubSeriesOnEnvelopesChangesPlannedTransactions() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -20., "PointP")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTransactions("PointP");
+    categorization.selectEnvelopes().createSeries()
+      .setName("Maison")
+      .gotoSubSeriesTab()
+      .addSubSeries("Entretien")
+      .validate();
+
+    views.selectData();
+    timeline.selectMonth("2008/07");
+    transactions
+      .initContent()
+      .add("30/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison", "Entretien")
+      .check();
+
+    views.selectBudget();
+    budgetView.envelopes.editSeries("Maison")
+      .gotoSubSeriesTab()
+      .renameSubSeries("Entretien", "Travaux")
+      .validate();
+
+    views.selectData();
+    transactions
+      .initContent()
+      .add("30/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison", "Travaux")
+      .check();
+
+    views.selectBudget();
+    budgetView.envelopes.editSeries("Maison")
+      .deleteSubSeriesWithConfirmation("Travaux")
+      .validate();
+
+    views.selectData();
+    transactions
+      .initContent()
+      .add("30/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison")
+      .check();
   }
 }

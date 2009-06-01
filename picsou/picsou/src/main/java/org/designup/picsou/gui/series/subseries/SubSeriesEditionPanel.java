@@ -1,10 +1,13 @@
 package org.designup.picsou.gui.series.subseries;
 
 import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.edition.RenameSubSeriesAction;
+import org.designup.picsou.gui.series.edition.DeleteSubSeriesAction;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SubSeries;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.views.GlobListView;
 import static org.globsframework.model.FieldValue.value;
@@ -22,15 +25,17 @@ import java.util.Set;
 public class SubSeriesEditionPanel {
 
   private GlobRepository repository;
-  private Glob currentSeries;
+  private SelectionService selectionService;
 
+  private Glob currentSeries;
   private JTextField nameField = new JTextField();
   private SubSeriesEditionPanel.AddAction addAction = new AddAction();
   private GlobListView list;
   private JPanel panel;
 
-  public SubSeriesEditionPanel(GlobRepository repository, Directory directory) {
+  public SubSeriesEditionPanel(GlobRepository repository, Directory directory, JDialog dialog) {
     this.repository = repository;
+    this.selectionService = directory.get(SelectionService.class);
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
                                                       "/layout/subSeriesEditionPanel.splits",
@@ -45,9 +50,11 @@ public class SubSeriesEditionPanel {
         processNameUpdate();
       }
     });
-
     nameField.requestFocus();
 
+    builder.add("rename", new RenameSubSeriesAction(repository, directory, dialog));
+    builder.add("delete", new DeleteSubSeriesAction(repository, directory, dialog));
+    
     panel = builder.load();
   }
 
@@ -58,6 +65,7 @@ public class SubSeriesEditionPanel {
   public void setCurrentSeries(Glob series) {
     this.currentSeries = series;
     list.setFilter(GlobMatchers.linkedTo(series, SubSeries.SERIES));
+    list.selectFirst();
   }
 
   private void processNameUpdate() {
@@ -88,10 +96,11 @@ public class SubSeriesEditionPanel {
 
     public void actionPerformed(ActionEvent e) {
       String name = nameField.getText();
-      repository.create(SubSeries.TYPE,
-                        value(SubSeries.NAME, name),
-                        value(SubSeries.SERIES, currentSeries.get(Series.ID)));
+      Glob subSeries = repository.create(SubSeries.TYPE,
+                                         value(SubSeries.NAME, name),
+                                         value(SubSeries.SERIES, currentSeries.get(Series.ID)));
       nameField.setText("");
+      selectionService.select(subSeries);
     }
   }
 }

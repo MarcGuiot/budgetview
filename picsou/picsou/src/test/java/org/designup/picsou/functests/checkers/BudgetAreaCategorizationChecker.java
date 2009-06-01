@@ -61,9 +61,17 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     return this;
   }
 
-  public BudgetAreaCategorizationChecker selectNewSeries(String seriesName) {
-    createSeries().setName(seriesName).validate();
-    return selectSeries(seriesName);
+  public BudgetAreaCategorizationChecker checkContainsNoSeries() {
+    UIComponent[] uiComponents = panel.getUIComponents(ToggleButton.class);
+    if (uiComponents.length > 1) {
+      List<String> names = new ArrayList<String>();
+      for (UIComponent uiComponent : uiComponents) {
+        ToggleButton toggle = (ToggleButton)uiComponent;
+        names.add(toggle.getLabel());
+      }
+      fail("Unexpect toggles found: " + names);
+    }
+    return this;
   }
 
   public SeriesEditionDialogChecker createSeries() {
@@ -76,6 +84,20 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
 
   public BudgetAreaCategorizationChecker createSeries(String seriesName) {
     createSeries().setName(seriesName).validate();
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker selectNewSeries(String seriesName) {
+    createSeries().setName(seriesName).validate();
+    return selectSeries(seriesName);
+  }
+
+  public BudgetAreaCategorizationChecker selectNewSeriesWithSubSeries(String series, String subSeries) {
+    createSeries()
+      .setName(series)
+      .gotoSubSeriesTab()
+      .addSubSeries(subSeries)
+      .validate();
     return this;
   }
 
@@ -104,6 +126,12 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     return this;
   }
 
+  public BudgetAreaCategorizationChecker checkSeriesIsSelectedWithSubSeries(String series, String subSeries) {
+    RadioButton toggle = panel.getRadioButton(series + ":" + subSeries);
+    assertThat(toggle.isSelected());
+    return this;
+  }
+
   public BudgetAreaCategorizationChecker checkNoSeriesMessage(String message) {
     TextBox textBox = categorizationChecker.getPanel().getTextBox("noSeriesMessage");
     assertTrue(textBox.isVisible());
@@ -113,19 +141,6 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
 
   public BudgetAreaCategorizationChecker checkNoSeriesMessageHidden() {
     assertFalse(categorizationChecker.getPanel().getTextBox("noSeriesMessage").isVisible());
-    return this;
-  }
-
-  public BudgetAreaCategorizationChecker checkContainsNoSeries() {
-    UIComponent[] uiComponents = panel.getUIComponents(ToggleButton.class);
-    if (uiComponents.length > 1) {
-      List<String> names = new ArrayList();
-      for (int i = 0; i < uiComponents.length; i++) {
-        ToggleButton toggle = (ToggleButton)uiComponents[i];
-        names.add(toggle.getLabel());
-      }
-      fail("Unexpect toggles found: " + names);
-    }
     return this;
   }
 

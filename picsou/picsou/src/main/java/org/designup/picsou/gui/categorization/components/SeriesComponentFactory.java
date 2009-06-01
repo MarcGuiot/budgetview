@@ -131,11 +131,11 @@ public class SeriesComponentFactory extends AbstractSeriesComponentFactory {
       final Key subSeriesKey = subSeries.getKey();
       final JRadioButton selector = createSeriesSelector(name, seriesKey, subSeriesKey);
       final DefaultChangeSetListener subSeriesUpdateListener = new DefaultChangeSetListener() {
-        public void globsChanged(ChangeSet changeSet, GlobRepository repository1) {
+        public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
           if (changeSet.containsChanges(subSeriesKey)) {
-            Glob subSeries = repository1.find(subSeriesKey);
+            Glob subSeries = repository.find(subSeriesKey);
             if (subSeries != null) {
-              selector.setText(subSeriesStringifier.toString(subSeries, repository1));
+              selector.setText(subSeriesStringifier.toString(subSeries, repository));
             }
           }
         }

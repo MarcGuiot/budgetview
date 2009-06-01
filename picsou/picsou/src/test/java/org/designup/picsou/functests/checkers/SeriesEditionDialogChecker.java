@@ -644,12 +644,12 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker selectTermsTab() {
+  public SeriesEditionDialogChecker gotoTermsTab() {
     dialog.getTabGroup().selectTab("Echéances");
     return this;
   }
 
-  public SeriesEditionDialogChecker selectSubSeriesTab() {
+  public SeriesEditionDialogChecker gotoSubSeriesTab() {
     dialog.getTabGroup().selectTab("Sous-séries");
     return this;
   }
@@ -659,6 +659,29 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     tab.getInputTextBox().setText(name, false);
     tab.getButton("Add").click();
     assertThat(tab.getListBox().contains(name));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker renameSubSeries(String previousName, final String newName) {
+    Panel tab = dialog.getTabGroup().getSelectedTab();
+    tab.getListBox().select(previousName);
+    WindowInterceptor.init(tab.getButton("renameSubSeries").triggerClick())
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          window.getInputTextBox().setText(newName);
+          return window.getButton("OK").triggerClick();
+        }
+      })
+      .run();
+    return this;    
+  }
+
+  public SeriesEditionDialogChecker deleteSubSeriesWithConfirmation(String name) {
+    Panel tab = dialog.getTabGroup().getSelectedTab();
+    tab.getListBox().select(name);
+    WindowInterceptor.init(tab.getButton("deleteSubSeries").triggerClick())
+      .processWithButtonClick("OK")
+      .run();
     return this;
   }
 }

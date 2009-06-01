@@ -1,13 +1,13 @@
 package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.series.subseries.SubSeriesEditionPanel;
-import org.designup.picsou.gui.series.edition.MonthCheckBoxUpdater;
 import org.designup.picsou.gui.components.MonthChooserDialog;
 import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
 import org.designup.picsou.gui.description.MonthYearStringifier;
+import org.designup.picsou.gui.series.edition.MonthCheckBoxUpdater;
+import org.designup.picsou.gui.series.subseries.SubSeriesEditionPanel;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AutomaticSeriesBudgetTrigger;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
@@ -51,6 +51,7 @@ public class SeriesEditionDialog {
   private PicsouDialog dialog;
 
   private Glob currentSeries;
+  private Integer lastSelectedSubSeriesId;
   private Set<Integer> currentMonthIds = Collections.emptySet();
 
   private JLabel titleLabel;
@@ -219,9 +220,8 @@ public class SeriesEditionDialog {
                         }
                       });
 
-    subSeriesEditionPanel = new SubSeriesEditionPanel(localRepository, localDirectory);
-    builder.add("subSeriesEditionPanel",
-                subSeriesEditionPanel.getPanel());
+    subSeriesEditionPanel = new SubSeriesEditionPanel(localRepository, localDirectory, dialog);
+    builder.add("subSeriesEditionPanel", subSeriesEditionPanel.getPanel());
 
     localRepository.addChangeListener(new OkButtonUpdater());
 
@@ -478,6 +478,7 @@ public class SeriesEditionDialog {
     }
     setCurrentSeries(series);
     this.currentMonthIds = new TreeSet<Integer>(monthIds);
+    this.lastSelectedSubSeriesId = null;
     if (currentSeries != null) {
       selectionService.select(currentSeries);
     }
@@ -554,7 +555,20 @@ public class SeriesEditionDialog {
     this.subSeriesEditionPanel.setCurrentSeries(currentSeries);
   }
 
+  private Integer getCurrentSubSeriesId() {
+    GlobList subSeriesList = selectionService.getSelection(SubSeries.TYPE);
+    if (subSeriesList.size() != 1) {
+      return null;
+    }
+    return subSeriesList.getFirst().get(SubSeries.ID);
+  }
+
+  public Integer getLastSelectedSubSeriesId() {
+    return lastSelectedSubSeriesId;
+  }
+
   private class ValidateAction extends AbstractAction {
+
     public ValidateAction() {
       super(Lang.get("ok"));
     }
@@ -562,7 +576,8 @@ public class SeriesEditionDialog {
     public void actionPerformed(ActionEvent e) {
       trimNames();
       if (currentSeries != null) {
-        SeriesEditionDialog.this.createdSeries = currentSeries.getKey();
+        createdSeries = currentSeries.getKey();
+        lastSelectedSubSeriesId = SeriesEditionDialog.this.getCurrentSubSeriesId();
       }
       checkSavingsAccountChange();
       localRepository.commitChanges(false);
