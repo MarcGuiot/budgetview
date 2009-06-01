@@ -103,7 +103,7 @@ public class RequestForConfigServlet extends HttpServlet {
         db.commit();
       }
     }
-    resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
+    resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
   }
 
   private void closeDb() {
@@ -235,7 +235,7 @@ public class RequestForConfigServlet extends HttpServlet {
       catch (Exception ex) {
         logger.throwing("RequestForConfigServlet", "computeLicense retry", e);
       }
-      resp.addHeader(ConfigService.HEADER_IS_VALIDE, "true");
+      resp.setHeader(ConfigService.HEADER_IS_VALIDE, "true");
     }
   }
 
@@ -244,19 +244,19 @@ public class RequestForConfigServlet extends HttpServlet {
     GlobList globList = licenseRequest.execute(mail);
     db.commit();
     if (globList.isEmpty()) {
-      resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
-      resp.addHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
+      resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
+      resp.setHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
       logger.info("unknown mail : " + mail);
     }
     else {
       Glob license = globList.get(0);
       if (count < license.get(License.ACCESS_COUNT)) {
-        resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
+        resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
         if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
           String code = LicenseGenerator.generateActivationCode();
           updateNewActivationCodeRequest.execute(mail, code);
           db.commit();
-          resp.addHeader(ConfigService.HEADER_MAIL_SENT, "true");
+          resp.setHeader(ConfigService.HEADER_MAIL_SENT, "true");
           if (mailer.sendNewLicense(mail, code, lang)) {
             logger.info("Run count decrease send new license to " + mail);
           }
@@ -269,12 +269,12 @@ public class RequestForConfigServlet extends HttpServlet {
         if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
           updateLastAccessRequest.execute(mail, count, new Date());
           db.commit();
-          resp.addHeader(ConfigService.HEADER_IS_VALIDE, "true");
+          resp.setHeader(ConfigService.HEADER_IS_VALIDE, "true");
           logger.info("ok for " + mail);
         }
         else {
-          resp.addHeader(ConfigService.HEADER_IS_VALIDE, "false");
-          resp.addHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
+          resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
+          resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
           logger.info("Different code with different repoId for " + mail);
         }
       }

@@ -283,6 +283,25 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     );
   }
 
+  public void testSeriesWithDataOnlyInObservedAreShown() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -100.00, "Impots")
+      .load();
+    views.selectBudget();
+    budgetView.recurring.createSeries()
+      .setName("Taxes")
+      .setCategory(MasterCategory.TAXES)
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount(0)
+      .validate();
+    views.selectCategorization();
+    categorization.setRecurring("Impots", "Taxes", MasterCategory.TAXES, false);
+
+    views.selectEvolution();
+    seriesEvolution.checkRow("Taxes", "", "100.00", "", "", "", "", "", "");
+  }
+
   public void testClipboardExport() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")

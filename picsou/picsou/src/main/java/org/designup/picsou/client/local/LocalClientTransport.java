@@ -23,7 +23,7 @@ public class LocalClientTransport implements ClientTransport {
     return byteOutput.getInput();
   }
 
-  public void register(Long sessionId, byte[] privateId, byte[] mail, byte[] signature, String activationCode) {
+  public void localRegister(Long sessionId, byte[] privateId, byte[] mail, byte[] signature, String activationCode) {
     SerializedByteArrayOutput byteOutput = new SerializedByteArrayOutput();
     SerializedOutput output = byteOutput.getOutput();
     output.writeBytes(privateId);
@@ -87,4 +87,13 @@ public class LocalClientTransport implements ClientTransport {
     serverRequestProcessingService.takeSnapshot(sessionId, SerializedInputOutputFactory.init(data));
   }
 
+  public SerializedInput getLocalUsers() {
+    SerializedByteArrayOutput output = new SerializedByteArrayOutput();
+    //serverRequestProcessingService.getLocalUsers();
+    return output.getInput();
+  }
+
+  public void removeLocalUser(String user) {
+
+  }
 }

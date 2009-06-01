@@ -224,6 +224,11 @@ public class Transaction {
     }
   }
 
+  static public boolean isTransactionBeforeOrEqual(Glob transaction, int month, int day) {
+    return (transaction.get(BANK_MONTH) < month || (transaction.get(BANK_MONTH) == month &&
+    transaction.get(BANK_DAY) <= day));
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {

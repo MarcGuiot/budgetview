@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.gui.categorization.components.TransactionFilteringMode;
+import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.Transaction;
@@ -12,6 +13,7 @@ import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.*;
 import org.uispec4j.Window;
+import org.uispec4j.utils.KeyUtils;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
@@ -901,6 +903,22 @@ public class CategorizationChecker extends GuiChecker {
     }
 
     assertThat(table.backgroundEquals(cellColors));
+  }
+
+  public ConfirmationDialogChecker delete(String label) {
+    int row = getRowIndex(label.toUpperCase());
+    Assert.assertTrue(label + " not found", row >= 0);
+    return delete(row);
+  }
+
+  public ConfirmationDialogChecker delete(int row) {
+    getTable().selectRow(row);
+    Window deleteDialog = WindowInterceptor.getModalDialog(new Trigger() {
+      public void run() throws Exception {
+        KeyUtils.pressKey(getTable(), Key.DELETE);
+      }
+    });
+    return new ConfirmationDialogChecker(deleteDialog);
   }
 
   public class CategorizationTableChecker extends TableChecker {

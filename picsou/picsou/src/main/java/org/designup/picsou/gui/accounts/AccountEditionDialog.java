@@ -2,6 +2,7 @@ package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.components.ConfirmationDialog;
 import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -128,13 +129,18 @@ public class AccountEditionDialog {
         return;
       }
       try {
-        localRepository.getCurrentChanges().safeVisit(Account.TYPE, new DefaultChangeSetVisitor() {
+        ChangeSet currentChanges = localRepository.getCurrentChanges();
+        currentChanges.safeVisit(Account.TYPE, new DefaultChangeSetVisitor() {
           public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
             if (values.contains(Account.ACCOUNT_TYPE)) {
               uncategorize(key, parentRepository);
             }
           }
         });
+        Set<Key> keySet = currentChanges.getCreated(Account.TYPE);
+        for (Key key : keySet) {
+          localRepository.update(key, Account.POSITION_DATE, TimeService.getToday());
+        }
         localRepository.commitChanges(true);
       }
       finally {

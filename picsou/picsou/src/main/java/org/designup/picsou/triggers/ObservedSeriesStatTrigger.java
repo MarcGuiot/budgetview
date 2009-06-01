@@ -8,6 +8,7 @@ import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.utils.Log;
 
 import java.util.Set;
 
@@ -77,11 +78,13 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
             .findByIndex(SeriesBudget.MONTH, currentMonthId).getGlobs();
           Glob series = repository.get(Key.create(Series.TYPE, currentSeriesId));
           String name = series.get(Series.NAME);
-          throw new RuntimeException("visitUpdate series : " + name + ", " + currentSeriesId +
-                                     " month = " + currentMonthId + " series Budget :" +
-                                     (seriesBudgets.isEmpty() ? " <none> " : seriesBudgets.get(0).get(SeriesBudget.AMOUNT)));
+          Log.write("visitUpdate series : " + name + ", " + currentSeriesId +
+                    " month = " + currentMonthId + " series Budget :" +
+                    (seriesBudgets.isEmpty() ? " <none> " : seriesBudgets.get(0).get(SeriesBudget.AMOUNT)));
         }
-        updateStat(currentStat, currentAmount, repository);
+        else {
+          updateStat(currentStat, currentAmount, repository);
+        }
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {

@@ -12,7 +12,7 @@ import org.designup.picsou.utils.Lang;
 public class CategorizationTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
-    setCurrentMonth("2008/06");
+    setCurrentDate("2008/06/30");
     super.setUp();
   }
 
@@ -1335,5 +1335,20 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectTableRows("2_Auchan")
       .selectEnvelopes()
       .selectEnvelopeSeries("Courses", MasterCategory.FOOD, false);
+  }
+
+  public void testDeleteTransaction() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/25", -50.0, "1_Auchan")
+      .addTransaction("2008/06/15", -40.0, "2_Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.delete("1_Auchan")
+      .validate();
+    categorization.initContent()
+      .add("15/06/2008", "2_Auchan", -40.0)
+      .check();
   }
 }

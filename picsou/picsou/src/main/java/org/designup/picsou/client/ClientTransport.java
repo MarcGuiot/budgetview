@@ -3,11 +3,13 @@ package org.designup.picsou.client;
 import org.designup.picsou.client.exceptions.*;
 import org.globsframework.utils.serialization.SerializedInput;
 
+import java.util.List;
+
 public interface ClientTransport {
 
   SerializedInput connect() throws BadConnection;
 
-  void register(Long sessionId, byte[] privateId, byte[] mail, byte[] signature, String activationCode);
+  void localRegister(Long sessionId, byte[] privateId, byte[] mail, byte[] signature, String activationCode);
 
   SerializedInput createUser(Long sessionId, byte[] bytes) throws UserAlreadyExists, IdentificationFailed, BadConnection;
 
@@ -25,4 +27,8 @@ public interface ClientTransport {
   void disconnect(Long sessionId, byte[] bytes);
 
   void takeSnapshot(Long sessionId, byte[] bytes);
+
+  SerializedInput getLocalUsers();
+
+  void removeLocalUser(String user);
 }

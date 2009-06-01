@@ -8,6 +8,7 @@ import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Log;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,9 +32,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
       repository.deleteAll(BalanceStat.TYPE);
       BalanceStatCalculator balanceStatCalculator = new BalanceStatCalculator(repository);
       repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, balanceStatCalculator);
-      if (!balanceStatCalculator.nullBalance) {
-        balanceStatCalculator.createStat();
-      }
+      balanceStatCalculator.createStat();
     }
     finally {
       repository.completeChangeSet();
@@ -78,6 +77,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
     private Map<Integer, Glob> lastTransactionForMonth = new HashMap<Integer, Glob>();
     private Map<Integer, SeriesAmounts> monthSeriesAmounts = new HashMap<Integer, SeriesAmounts>();
     private Glob lastRealKnownTransaction;
+    private Glob currentMonth;
 
     private Set<Integer> incomeSeries = new HashSet<Integer>();
     private Set<Integer> fixedSeries = new HashSet<Integer>();
@@ -86,11 +86,10 @@ public class BalanceStatTrigger implements ChangeSetListener {
     private Set<Integer> envelopeSeries = new HashSet<Integer>();
 
     private GlobRepository repository;
-    private boolean nullBalance = false;
 
     private BalanceStatCalculator(GlobRepository repository) {
       this.repository = repository;
-
+      currentMonth = repository.get(CurrentMonth.KEY);
       for (Glob series : repository.getAll(Series.TYPE)) {
         Integer seriesId = series.get(Series.ID);
         if (BudgetArea.INCOME.getId().equals(series.get(Series.BUDGET_AREA))) {
@@ -145,9 +144,10 @@ public class BalanceStatTrigger implements ChangeSetListener {
             SeriesAmounts amounts = getOrCreate(budget.get(SeriesBudget.MONTH));
             Double amount = budget.get(SeriesBudget.AMOUNT);
             amounts.plannedSavings += amount;
-            if (amount < 0){
+            if (amount < 0) {
               amounts.plannedSavings_in += amount;
-            }else{
+            }
+            else {
               amounts.plannedSavings_out += amount;
             }
             amounts.plannedExpenses += amount;
@@ -177,7 +177,8 @@ public class BalanceStatTrigger implements ChangeSetListener {
 
     public void run(Glob transaction, GlobRepository repository) throws Exception {
       if (transaction.get(Transaction.SUMMARY_POSITION) == null) {
-        nullBalance = true;
+        Log.write("Summary position is null for transaction : " + transaction.get(Transaction.ID) +
+                  " " + transaction.get(Transaction.LABEL));
       }
 
       Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
@@ -239,17 +240,19 @@ public class BalanceStatTrigger implements ChangeSetListener {
         else if (savingsSeries.contains(transactionSeries)) {
           if (transaction.get(Transaction.PLANNED)) {
             amounts.remaningSavings += amount;
-            if (amount < 0){
+            if (amount < 0) {
               amounts.remaningSavings_in += amount;
-            }else{
+            }
+            else {
               amounts.remaningSavings_out += amount;
             }
           }
           else {
             amounts.savings += amount;
-            if (amount < 0){
+            if (amount < 0) {
               amounts.savings_in += amount;
-            }else{
+            }
+            else {
               amounts.savings_out += amount;
             }
           }
@@ -275,7 +278,9 @@ public class BalanceStatTrigger implements ChangeSetListener {
       }
       if (!transaction.get(Transaction.PLANNED) &&
           (lastRealKnownTransaction == null ||
-           TransactionComparator.ASCENDING_BANK.compare(transaction, lastRealKnownTransaction) > 0)) {
+           TransactionComparator.ASCENDING_BANK.compare(transaction, lastRealKnownTransaction) > 0)
+          && transaction.get(Transaction.BANK_MONTH).equals(currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))
+          && transaction.get(Transaction.BANK_DAY) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY)) {
         lastRealKnownTransaction = transaction;
       }
     }
@@ -291,19 +296,34 @@ public class BalanceStatTrigger implements ChangeSetListener {
 
     void createStat() {
       GlobList months = repository.getAll(Month.TYPE).sort(Month.ID);
+      Glob endOfMonthTransaction = null;
       for (Glob month : months) {
         Integer monthId = month.get(Month.ID);
         Glob beginOfMonthTransaction = firstTransactionForMonth.get(monthId);
-        Glob endOfMonthTransaction = lastTransactionForMonth.get(monthId);
+        if (beginOfMonthTransaction == null) {
+          beginOfMonthTransaction = endOfMonthTransaction;
+        }
+        Glob nextLast = lastTransactionForMonth.get(monthId);
+        endOfMonthTransaction = nextLast == null ? beginOfMonthTransaction : nextLast;
 
         Double beginOfMonthPosition = null;
         Double balance = null;
         Double endOfMonthPosition = null;
         if (beginOfMonthTransaction != null && endOfMonthTransaction != null) {
           endOfMonthPosition = endOfMonthTransaction.get(Transaction.SUMMARY_POSITION);
-          beginOfMonthPosition = beginOfMonthTransaction.get(Transaction.SUMMARY_POSITION) -
-                                 beginOfMonthTransaction.get(Transaction.AMOUNT);
-          balance = endOfMonthPosition - beginOfMonthPosition;
+          Double summaryPosition = beginOfMonthTransaction.get(Transaction.SUMMARY_POSITION);
+          if (summaryPosition != null) {
+            if (beginOfMonthTransaction.get(Transaction.BANK_MONTH).equals(monthId)){
+            beginOfMonthPosition = summaryPosition -
+                                   beginOfMonthTransaction.get(Transaction.AMOUNT);
+            }
+            else {
+              beginOfMonthPosition = summaryPosition;
+            }
+            if (endOfMonthPosition != null && beginOfMonthPosition != null) {
+              balance = endOfMonthPosition - beginOfMonthPosition;
+            }
+          }
         }
 
 

@@ -23,14 +23,11 @@ public class ConnectionRetryServerAccess extends ServerAccessDecorator {
   public boolean createUser(String name, char[] password) throws UserAlreadyExists, IdentificationFailed {
     this.name = name;
     this.password = password;
-    this.anonymous = anonymous;
-    this.privateComputer = privateComputer;
     return super.createUser(name, password);
   }
 
   public boolean initConnection(String name, char[] password, boolean privateComputer) throws IdentificationFailed {
     this.privateComputer = privateComputer;
-    this.anonymous = anonymous;
     this.name = name;
     this.password = password;
     return super.initConnection(this.name, this.password, privateComputer);

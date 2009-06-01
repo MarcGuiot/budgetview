@@ -9,6 +9,8 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.utils.MapOfMaps;
 
+import java.util.List;
+
 public class ServerAccessDecorator implements ServerAccess {
   private ServerAccess serverAccess;
 
@@ -46,6 +48,14 @@ public class ServerAccessDecorator implements ServerAccess {
 
   public void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data) {
     serverAccess.replaceData(data);
+  }
+
+  public List<String> getLocalUsers() {
+    return serverAccess.getLocalUsers();
+  }
+
+  public void removeLocalUser(String user) {
+    serverAccess.removeLocalUser(user);
   }
 
   public GlobList getUserData(MutableChangeSet changeSet, IdUpdater idUpdater) {

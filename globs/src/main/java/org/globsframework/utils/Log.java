@@ -43,7 +43,7 @@ public class Log {
     doWrite(".. ", text, true);
   }
 
-  public static void write(String text, Exception e) {
+  public static void write(String text, Throwable e) {
     doWrite(".. ", text, true);
     e.printStackTrace(stream);
   }

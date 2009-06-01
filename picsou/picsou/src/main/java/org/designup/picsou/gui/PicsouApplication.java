@@ -18,6 +18,7 @@ import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.upgrade.UpgradeService;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ExceptionHandler;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.ImageLocator;
@@ -40,6 +41,8 @@ import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -47,12 +50,13 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
 import java.util.*;
+import java.util.logging.LogManager;
 import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "0.20";
-  public static final Long JAR_VERSION = 12L;
+  public static final String APPLICATION_VERSION = "0.21.rc3";
+  public static final Long JAR_VERSION = 15L;
   public static final Long BANK_CONFIG_VERSION = 5L;
   private static final String JAR_DIRECTORY = "jars";
   private static final String BANK_CONFIG_DIRECTORY = "configs";
@@ -127,7 +131,11 @@ public class PicsouApplication {
 
   private static void initLogger() {
     try {
+      System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.Jdk14Logger");
       String sout = System.getProperty(LOG_SOUT);
+      InputStream propertiesStream = PicsouApplication.class.getResourceAsStream("/logging.properties");
+      LogManager.getLogManager().readConfiguration(propertiesStream);
+
       if ("true".equalsIgnoreCase(sout)) {
         return;
       }
@@ -141,6 +149,7 @@ public class PicsouApplication {
         }
         logFile.renameTo(oldFile);
       }
+
       FileOutputStream stream = new FileOutputStream(logFile, true);
       PrintStream output = new PrintStream(stream);
       output.println("---------------------------");
@@ -182,6 +191,8 @@ public class PicsouApplication {
 
     initLogger();
     clearRepositoryIfNeeded();
+
+    ExceptionHandler.registerHandler();
 
     directory = createDirectory(openRequestManager);
 

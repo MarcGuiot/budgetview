@@ -995,7 +995,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectSavings()
       .editSeries("Savings Series", true)
       .deleteCurrentSeries();
-    // il reste des SeriesBudget miroir sans la serie principale
+    // il reste des SeriesBudget miroir dans la serie principale
     // NPE sur recalcul de PeriodStat.
     String name = operations.backup(System.getProperty("java.io.tmpdir"));
     operations.restore(name);

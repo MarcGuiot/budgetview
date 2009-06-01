@@ -45,19 +45,19 @@ public class DeleteTransactionDialog extends ConfirmationDialog {
         hasPlanned = true;
       }
     }
+    String text = "<html>";
+    if (hasSplit) {
+      text = Lang.get("transaction.delete.split");
+    }
+    if (hasAutoCreated) {
+      text = text + Lang.get("transaction.delete.savings");
+    }
+    if (hasPlanned) {
+      text = text + Lang.get("transaction.delete.planned");
+    }
+    text += "</html>";
+    editorPane.setText(text);
     if (transactions.isEmpty()) {
-      String text = "<html>";
-      if (hasSplit) {
-        text = Lang.get("transaction.delete.split");
-      }
-      if (hasAutoCreated) {
-        text = text + Lang.get("transaction.delete.savings");
-      }
-      if (hasPlanned) {
-        text = text + Lang.get("transaction.delete.planned");
-      }
-      text += "</html>";
-      editorPane.setText(text);
       cancel.setEnabled(false);
     }
   }

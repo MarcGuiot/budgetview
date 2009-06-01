@@ -9,12 +9,15 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Utils;
+import org.globsframework.utils.Log;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.SeriesStat;
 
 import java.util.Set;
 import java.util.HashSet;
+import java.awt.*;
 
 public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSetListener {
 
@@ -68,8 +71,20 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     }
 
     SelectionService localSelectionService = directory.get(SelectionService.class);
+    GlobList seriesStats = seriesStatFunctor.getStats();
     localSelectionService.select(GlobSelectionBuilder.init()
-      .add(seriesStatFunctor.getStats(), PeriodSeriesStat.TYPE).get());
+      .add(seriesStats, PeriodSeriesStat.TYPE).get());
+
+    Utils.releaseBeginRemove();
+    for (Glob seriesStat : seriesStats) {
+      if (repository.findLinkTarget(seriesStat, PeriodSeriesStat.SERIES) == null){
+        Log.write("Error : SeriesStat without series ");
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        toolkit.beep();
+        break;
+      }
+    }
+    Utils.releaseEndRemove();
   }
 
   private static class PeriodSeriesStatFunctor implements GlobFunctor {

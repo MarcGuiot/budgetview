@@ -1,7 +1,8 @@
 package org.designup.picsou.gui.accounts;
 
-import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.CancelAction;
+import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.description.AccountStringifier;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.Account;
@@ -32,7 +33,7 @@ public class AccountPositionEditionDialog {
   private Date balanceDate;
 
   public AccountPositionEditionDialog(Glob account, boolean accountInitialization,
-                              GlobRepository repository, Directory directory, Window parent) {
+                                      GlobRepository repository, Directory directory, Window parent) {
     this.account = account;
 
     this.localRepository =
@@ -84,18 +85,17 @@ public class AccountPositionEditionDialog {
 
   private void updateOperationInfo(Glob account, JLabel date, JLabel label, JLabel amount, GlobRepository repository) {
     Integer transactionId = account.get(Account.TRANSACTION_ID);
-    Glob transaction = null;
+    Glob transaction;
     if (transactionId == null) {
-      SortedSet<Glob> globSortedSet =
-        repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_BANK_SPLIT_AFTER,
-                             GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)),
-                                              GlobMatchers.fieldEquals(Transaction.PLANNED, false)));
-      if (!globSortedSet.isEmpty()) {
-        transaction = globSortedSet.last();
-      }
+      transaction = getLatestTransactions(account, repository);
     }
     else {
       transaction = repository.get(Key.create(Transaction.TYPE, transactionId));
+      if (transaction.get(Transaction.BANK_MONTH) > TimeService.getCurrentMonth() ||
+          (transaction.get(Transaction.BANK_MONTH) == TimeService.getCurrentMonth() &&
+           transaction.get(Transaction.BANK_DAY) == TimeService.getCurrentDay())) {
+        transaction = getLatestTransactions(account, repository);
+      }
     }
 
     String dateInfo = "";
@@ -113,6 +113,10 @@ public class AccountPositionEditionDialog {
       labelInfo = transaction.get(Transaction.LABEL);
       amountInfo = Formatting.DECIMAL_FORMAT.format(transaction.get(Transaction.AMOUNT));
     }
+    else {
+      balanceDate = Month.toDate(TimeService.getCurrentMonth(), TimeService.getCurrentDay());
+    }
+
 
     date.setText(dateInfo);
     label.setText(labelInfo);
@@ -125,10 +129,29 @@ public class AccountPositionEditionDialog {
     }
   }
 
+  private Glob getLatestTransactions(Glob account, GlobRepository repository) {
+    SortedSet<Glob> globSortedSet =
+      repository.getSorted(
+        Transaction.TYPE, TransactionComparator.ASCENDING_BANK_SPLIT_AFTER,
+        GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)),
+                         GlobMatchers.fieldEquals(Transaction.PLANNED, false),
+                         GlobMatchers.or(
+                           (GlobMatchers.fieldStrictlyLessThan(Transaction.BANK_MONTH, TimeService.getCurrentMonth())),
+                           GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.BANK_MONTH, TimeService.getCurrentMonth()),
+                                            GlobMatchers.fieldLesserOrEqual(Transaction.DAY, TimeService.getCurrentDay())))));
+    if (!globSortedSet.isEmpty()) {
+      return globSortedSet.last();
+    }
+    return null;
+  }
+
   public void show() {
     GuiUtils.center(dialog);
     dialog.setVisible(true);
   }
+
+  
+
 
   private class ValidateAction extends AbstractAction {
     public ValidateAction() {

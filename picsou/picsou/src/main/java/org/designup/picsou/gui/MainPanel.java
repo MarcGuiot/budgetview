@@ -37,6 +37,7 @@ import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.PeriodOccasionalSeriesStat;
 import org.designup.picsou.gui.utils.DumpDataAction;
+import org.designup.picsou.gui.utils.DataCheckerAction;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -78,6 +79,7 @@ public class MainPanel {
   private MonthSummaryView monthSummary;
   private CategoryView categoryView;
   private SeriesView seriesView;
+  private DataCheckerAction checkRepository;
 
   public static MainPanel init(GlobRepository repository, Directory directory,
                                MainWindow mainWindow, BackupGenerator backupGenerator) {
@@ -117,6 +119,7 @@ public class MainPanel {
     preferencesAction = new PreferencesAction(repository, directory);
     registerAction = new RegisterLicenseAction(repository, directory);
     dumpRepository = new DumpDataAction(repository);
+    checkRepository = new DataCheckerAction(repository);
     exitAction = new ExitAction(directory);
 
     builder.add("editCategories", new EditCategoriesAction(repository, directory) {
@@ -248,13 +251,15 @@ public class MainPanel {
     editMenu.add(undoAction);
     editMenu.add(redoAction);
 
+//    Utils.beginRemove();
+    editMenu.add(dumpRepository);
+    editMenu.add(checkRepository);
+//    Utils.endRemove();
+
     JRootPane rootPane = frame.getRootPane();
     GuiUtils.addShortcut(rootPane, "UNDO", undoAction, GuiUtils.ctrl(KeyEvent.VK_Z));
     GuiUtils.addShortcut(rootPane, "REDO", redoAction, GuiUtils.ctrl(KeyEvent.VK_Y));
 
-    Utils.beginRemove();
-    editMenu.add(dumpRepository);
-    Utils.endRemove();
     return editMenu;
   }
 

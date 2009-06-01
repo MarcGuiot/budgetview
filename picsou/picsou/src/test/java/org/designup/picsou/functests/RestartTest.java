@@ -11,7 +11,7 @@ import org.globsframework.utils.Dates;
 public class RestartTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
-    setCurrentMonth("2008/08");
+    setCurrentDate("2008/08/30");
     setInMemory(false);
     setDeleteLocalPrevayler(false);
     super.setUp();
@@ -319,15 +319,15 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectHome();
     timeline.selectMonth("2008/08");
-    savingsAccounts.checkPosition("Epargne", 1300);
+    savingsAccounts.checkPosition("Epargne", 1000);
     timeline.selectMonth("2008/09");
-    savingsAccounts.checkPosition("Epargne", 1600);
+    savingsAccounts.checkPosition("Epargne", 1300);
     views.selectData();
     timeline.selectAll();
     transactions.initContent()
       .add("25/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF", MasterCategory.INCOME)
       .add("25/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF", MasterCategory.INCOME)
-      .add("25/08/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF", MasterCategory.INCOME)
+      .add("25/08/2008", TransactionType.VIREMENT, "CAF", "", 300.00, "CAF", MasterCategory.INCOME)
       .check();
 
     views.selectBudget();
@@ -335,26 +335,26 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkTotalAmounts(0, 0);
 
     views.selectSavings();
-    savingsView.checkAmount("Epargne" ,"CAF", 0, 300);
+    savingsView.checkAmount("Epargne" ,"CAF", 300, 300);
 
     restartApplication();
 
     views.selectSavings();
 
-    savingsView.checkAmount("Epargne" ,"CAF", 0, 300);
+    savingsView.checkAmount("Epargne" ,"CAF", 300, 300);
     timeline.selectMonth("2008/08");
 
     views.selectHome();
     timeline.selectMonth("2008/08");
-    savingsAccounts.checkPosition("Epargne", 1300);
+    savingsAccounts.checkPosition("Epargne", 1000);
     timeline.selectMonth("2008/09");
-    savingsAccounts.checkPosition("Epargne", 1600);
+    savingsAccounts.checkPosition("Epargne", 1300);
     views.selectData();
     timeline.selectAll();
     transactions.initContent()
       .add("25/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF", MasterCategory.INCOME)
       .add("25/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF", MasterCategory.INCOME)
-      .add("25/08/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF", MasterCategory.INCOME)
+      .add("25/08/2008", TransactionType.VIREMENT, "CAF", "", 300.00, "CAF", MasterCategory.INCOME)
       .check();
   }
 

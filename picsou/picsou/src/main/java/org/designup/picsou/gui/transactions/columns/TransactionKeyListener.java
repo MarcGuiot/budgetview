@@ -49,7 +49,7 @@ public class TransactionKeyListener extends KeyAdapter {
       return;
     }
     int[] selectedRows = table.getSelectedRows();
-    if ((selectedRows.length == 1) &&
+    if (noteColumnIndex != -1 && (selectedRows.length == 1) &&
         (Character.isLetterOrDigit(event.getKeyCode())) &&
         (InputEvent.getModifiersExText(event.getModifiersEx()).length() == 0)) {
       table.editCellAt(selectedRows[0], noteColumnIndex);
