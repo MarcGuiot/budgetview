@@ -6,7 +6,6 @@ import org.designup.picsou.functests.checkers.converters.SeriesCellConverter;
 import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.transactions.TransactionView;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.SubSeries;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
@@ -23,7 +22,6 @@ import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.KeyUtils;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -287,14 +285,13 @@ public class TransactionChecker extends ViewChecker {
 
     public void dumpCode() {
       TransactionTypeDumper transactionTypeDumper = new TransactionTypeDumper();
-      CategoryDumper categoryDumper = new CategoryDumper();
 
       final StringBuilder builder = new StringBuilder();
       builder.append(".initContent()\n");
       Table table = getTable();
       for (int row = 0; row < table.getRowCount(); row++) {
         String type = table.getContentAt(row, 0, transactionTypeDumper).toString();
-        String category = table.getContentAt(row, TransactionView.SUBSERIES_COLUMN_INDEX, categoryDumper).toString();
+        String subSeries = table.getContentAt(row, TransactionView.SUBSERIES_COLUMN_INDEX).toString();
         String date = table.getContentAt(row, TransactionView.DATE_COLUMN_INDEX).toString();
         String bankDate = table.getContentAt(row, TransactionView.BANK_DATE_COLUMN_INDEX).toString();
         String series = table.getContentAt(row, TransactionView.SERIES_COLUMN_INDEX, new TableCellValueConverter() {
@@ -318,7 +315,7 @@ public class TransactionChecker extends ViewChecker {
           .append(amount);
 
         boolean hasSeries = !TO_CATEGORIZE.equals(series) && Strings.isNotEmpty(series);
-        boolean hasCategory = Strings.isNotEmpty(category);
+        boolean hasCategory = Strings.isNotEmpty(subSeries);
         if (hasSeries || hasCategory) {
           if (hasSeries) {
             builder
@@ -327,7 +324,7 @@ public class TransactionChecker extends ViewChecker {
               .append("\"");
           }
           if (hasCategory) {
-            builder.append(", ").append(category);
+            builder.append(", ").append(subSeries);
           }
         }
         builder.append(")\n");
@@ -347,38 +344,6 @@ public class TransactionChecker extends ViewChecker {
           type = TransactionType.PLANNED;
         }
         return "TransactionType." + type.getName().toUpperCase();
-      }
-    }
-
-    private class CategoryDumper implements TableCellValueConverter {
-      public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
-        Glob transaction = (Glob)modelObject;
-        Integer categoryId = transaction.get(Transaction.CATEGORY);
-        if (categoryId == null) {
-          return "";
-        }
-
-        MasterCategory master = MasterCategory.findMaster(categoryId);
-        if (master == MasterCategory.NONE) {
-          return "";
-        }
-        if (master != null) {
-          return "MasterCategory." + master.getName().toUpperCase();
-        }
-
-        TextBox label = null;
-        if (renderedComponent instanceof JLabel) {
-          label = new TextBox((JLabel)renderedComponent);
-        }
-        else if (renderedComponent instanceof JPanel) {
-          org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)renderedComponent);
-          UIComponent[] categoryLabels = panel.getUIComponents(TextBox.class);
-          if (categoryLabels.length != 1) {
-            return "???";
-          }
-          label = (TextBox)categoryLabels[0];
-        }
-        return "\"" + label.getText() + "\"";
       }
     }
 

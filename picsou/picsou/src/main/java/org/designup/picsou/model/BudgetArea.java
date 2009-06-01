@@ -16,13 +16,13 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 public enum BudgetArea implements GlobConstantContainer {
-  ALL("ALL", -1, false, false, false),
-  INCOME("INCOME", 0, true, false, true),
-  RECURRING("RECURRING", 1, false, false, false),
-  ENVELOPES("ENVELOPES", 2, false, true, false),
-  SPECIAL("SPECIAL", 4, false, true, false),
-  SAVINGS("SAVINGS", 5, false, false, true),
-  UNCATEGORIZED("UNCATEGORIZED", 6, false, true, false);
+  ALL("ALL", -1, false, false),
+  INCOME("INCOME", 0, true, true),
+  RECURRING("RECURRING", 1, false, false),
+  ENVELOPES("ENVELOPES", 2, false, false),
+  SPECIAL("SPECIAL", 4, false, false),
+  SAVINGS("SAVINGS", 5, false, true),
+  UNCATEGORIZED("UNCATEGORIZED", 6, false, false);
 
   public static GlobType TYPE;
 
@@ -35,23 +35,17 @@ public enum BudgetArea implements GlobConstantContainer {
   private String name;
   private int id;
   private boolean income;
-  private boolean multiCategories;
   private boolean overrunAllowed;
 
-  BudgetArea(String name, int id, boolean isIncome, boolean multiCategories, boolean overrunAllowed) {
+  BudgetArea(String name, int id, boolean isIncome, boolean overrunAllowed) {
     this.name = name;
     this.id = id;
     this.income = isIncome;
-    this.multiCategories = multiCategories;
     this.overrunAllowed = overrunAllowed;
   }
 
   public boolean isIncome() {
     return income;
-  }
-
-  public boolean isMultiCategories() {
-    return multiCategories;
   }
 
   public boolean isOverrunAllowed() {

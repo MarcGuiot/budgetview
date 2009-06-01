@@ -50,10 +50,4 @@ public abstract class PerfsTest extends LoggedInFunctionalTestCase {
     }
     System.out.println("==> " + chrono.getElapsedTime());
   }
-
-  private MasterCategory getRandomCategory() {
-    MasterCategory[] cats = MasterCategory.values();
-    int index = 2 + Utils.randomInt((cats.length - 3));
-    return cats[index];
-  }
 }

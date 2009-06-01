@@ -11,7 +11,6 @@ public class OfxExporterTest extends PicsouTestCase {
     checker.parse(
       repository,
       "<account id='-1' position='12345' positionDate='2006/07/02'/>" +
-      "<category name='Dentifrice' innerName='Dentifrice' masterName='health'/>" +
       "" +
       "<bankEntity id='30066'>" +
       "  <account number='00012312345' id='2' branchId='10674'" +
