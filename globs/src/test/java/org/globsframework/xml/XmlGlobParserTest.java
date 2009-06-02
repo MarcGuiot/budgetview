@@ -46,7 +46,7 @@ public class XmlGlobParserTest extends TestCase {
     GlobList objects = repository.getAll(DummyObject.TYPE);
     assertEquals(1, objects.size());
     Glob object = objects.get(0);
-    assertEquals(0, object.get(DummyObject.ID).intValue());
+    assertEquals(100, object.get(DummyObject.ID).intValue());
     assertEquals("foo", object.get(DummyObject.NAME));
   }
 

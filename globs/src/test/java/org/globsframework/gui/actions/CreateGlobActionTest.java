@@ -31,7 +31,7 @@ public class CreateGlobActionTest extends GuiComponentTestCase {
 
     action.actionPerformed(null);
 
-    changeListener.assertLastChangesEqual("<create type='type' id='0'/>");
+    changeListener.assertLastChangesEqual("<create type='type' id='100'/>");
   }
 
   public void testANameIsRequestedForTypesWithNamingField() throws Exception {
@@ -50,7 +50,7 @@ public class CreateGlobActionTest extends GuiComponentTestCase {
     });
 
     changeListener.assertLastChangesEqual(
-      "<create type='dummyObject' id='0' name='name1'/>");
+      "<create type='dummyObject' id='100' name='name1'/>");
   }
 
   public void testOkButtonIsEnabledOnlyWhenThereIsText() throws Exception {
@@ -77,7 +77,7 @@ public class CreateGlobActionTest extends GuiComponentTestCase {
     });
 
     changeListener.assertLastChangesEqual(
-      "<create type='dummyObject' id='0' name='name1'/>");
+      "<create type='dummyObject' id='100' name='name1'/>");
   }
 
   public void testCancel() throws Exception {
@@ -122,7 +122,7 @@ public class CreateGlobActionTest extends GuiComponentTestCase {
     });
 
     changeListener.assertLastChangesEqual(
-      "<create type='dummyObject' id='1' name='name1'/>");
+      "<create type='dummyObject' id='101' name='name1'/>");
   }
 
   private void initAction(GlobType type) {

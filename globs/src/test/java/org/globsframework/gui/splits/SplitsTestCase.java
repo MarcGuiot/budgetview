@@ -51,6 +51,7 @@ public abstract class SplitsTestCase extends UISpecTestCase {
   }
 
   protected <T extends Component> T parse(final String xml) throws Exception {
+    System.out.println("SplitsTestCase.parse " + xml);
     validateDocument(toStream(xml));
     return builder.setSource(complete(xml)).<T>load();
   }

@@ -908,11 +908,11 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     repository.reset(new GlobList(dummyObject3), DummyObject.TYPE);
 
     TestUtils.assertEquals(Arrays.asList(
-      "trigger.globsReset.begin 4",
-      "trigger.globsReset.end 4",
+      "trigger.globsReset.begin 100",
+      "trigger.globsReset.end 100",
       "listener.globsReset",
-      "trigger.globsChanged.begin 5",
-      "trigger.globsChanged.end 5",
+      "trigger.globsChanged.begin 101",
+      "trigger.globsChanged.end 101",
       "listener.globsChanged"
     ), log);
   }

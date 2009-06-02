@@ -441,8 +441,8 @@ public class GlobListViewTest extends GuiComponentTestCase {
     assertTrue(listBox.selectionEquals("name1", "name21"));
     listener.assertEquals("<log>" +
                           "  <selection types='dummyObject'>" +
-                          "    <item key='dummyObject[id=0]'/>" +
-                          "    <item key='dummyObject[id=2]'/>" +
+                          "    <item key='dummyObject[id=100]'/>" +
+                          "    <item key='dummyObject[id=102]'/>" +
                           "  </selection>" +
                           "</log>");
 
@@ -457,7 +457,7 @@ public class GlobListViewTest extends GuiComponentTestCase {
     assertTrue(listBox.selectionEquals("name21"));
     listener.assertEquals("<log>" +
                           "  <selection types='dummyObject'>" +
-                          "    <item key='dummyObject[id=2]'/>" +
+                          "    <item key='dummyObject[id=102]'/>" +
                           "  </selection>" +
                           "</log>");
 

@@ -14,9 +14,7 @@ public class DefaultCheckedGlobIdGeneratorTest extends TestCase {
   private GlobRepository repository;
 
   public void testStandardCase() throws Exception {
-    repository = GlobRepositoryBuilder.init().get();
-    assertEquals(DefaultGlobIdGenerator.class, repository.getIdGenerator().getClass());
-
+    initRepository();
     createWithNoId("obj0");
     createWithNoId("obj1");
 
@@ -29,12 +27,14 @@ public class DefaultCheckedGlobIdGeneratorTest extends TestCase {
   }
 
   public void testInitWithExistingGlobs() throws Exception {
-    repository = GlobRepositoryBuilder.init()
+    DefaultCheckedGlobIdGenerator generator = new DefaultCheckedGlobIdGenerator();
+    repository = GlobRepositoryBuilder.init(generator)
       .add(GlobBuilder.init(DummyObject.TYPE).set(DummyObject.ID, 12)
         .set(DummyObject.NAME, "obj12").get())
       .add(GlobBuilder.init(DummyObject.TYPE).set(DummyObject.ID, 14)
         .set(DummyObject.NAME, "obj14").get())
       .get();
+    generator.setRepository(repository);
 
     createWithNoId("obj15");
 
@@ -45,8 +45,7 @@ public class DefaultCheckedGlobIdGeneratorTest extends TestCase {
   }
 
   public void testMixingHardcodedAndGeneratedIds() throws Exception {
-    repository = GlobRepositoryBuilder.init().get();
-
+    initRepository();
     createWithNoId("obj0");
 
     create(1, "obj1");
@@ -62,7 +61,7 @@ public class DefaultCheckedGlobIdGeneratorTest extends TestCase {
   }
 
   public void testTakesTheFirstAvailableId() throws Exception {
-    repository = GlobRepositoryBuilder.init().get();
+    initRepository();
 
     createWithNoId("obj0");
 
@@ -79,14 +78,19 @@ public class DefaultCheckedGlobIdGeneratorTest extends TestCase {
   }
 
   public void testChecksForAllSteps() throws Exception {
-    DefaultCheckedGlobIdGenerator generator = new DefaultCheckedGlobIdGenerator();
-    repository = GlobRepositoryBuilder.init().get();
-    generator.setRepository(repository);
+    DefaultCheckedGlobIdGenerator generator = initRepository();
 
     create(0, "obj1");
     create(4, "obj4");
 
     assertEquals(5, generator.getNextId(DummyObject.ID, 10));
+  }
+
+  private DefaultCheckedGlobIdGenerator initRepository() {
+    DefaultCheckedGlobIdGenerator generator = new DefaultCheckedGlobIdGenerator();
+    repository = GlobRepositoryBuilder.init(generator).get();
+    generator.setRepository(repository);
+    return generator;
   }
 
   private void create(int id, String name) {

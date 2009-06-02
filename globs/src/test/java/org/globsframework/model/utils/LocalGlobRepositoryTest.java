@@ -82,9 +82,9 @@ public class LocalGlobRepositoryTest extends TestCase {
     local.commitChanges(true);
 
     checker.assertEquals(source,
-                         "<dummyObject id='0' name='name'/>" +
-                         "<dummyObject id='1' name='name' value='1.1'/>" +
-                         "<dummyObject id='2' name='new'/>" +
+                         "<dummyObject id='100' name='name'/>" +
+                         "<dummyObject id='101' name='name' value='1.1'/>" +
+                         "<dummyObject id='102' name='new'/>" +
                          "<dummyObject2 id='0'/>");
   }
 
