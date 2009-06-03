@@ -108,7 +108,6 @@ public class SeriesEditionDialog {
 
     titleLabel = builder.add("title", new JLabel());
 
-    GlobStringifier seriesStringifier = descriptionService.getStringifier(Series.TYPE);
     seriesList = GlobListView.init(Series.TYPE, localRepository, localDirectory);
     seriesPanel = builder.add("seriesPanel", new JPanel());
 
