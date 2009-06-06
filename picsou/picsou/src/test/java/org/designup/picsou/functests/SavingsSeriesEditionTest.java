@@ -163,7 +163,6 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings.editSeriesList()
       .checkSeriesListEquals("CA")
       .validate();
-
   }
 
   public void testUseSingleMonthCreateSeriesBudget() throws Exception {
@@ -203,6 +202,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2008/08/10", -100.00, "Virement")
       .load();
+
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectHome();
     this.mainAccounts.edit("Account n. 111")

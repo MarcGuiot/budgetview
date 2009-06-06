@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.series.subseries;
 
 import org.designup.picsou.gui.series.SeriesEditionDialog;
-import org.designup.picsou.gui.series.edition.RenameSubSeriesAction;
 import org.designup.picsou.gui.series.edition.DeleteSubSeriesAction;
+import org.designup.picsou.gui.series.edition.RenameSubSeriesAction;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SubSeries;
 import org.designup.picsou.utils.Lang;
@@ -20,7 +20,6 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.event.ActionEvent;
-import java.util.Set;
 
 public class SubSeriesEditionPanel {
 
@@ -29,6 +28,7 @@ public class SubSeriesEditionPanel {
 
   private Glob currentSeries;
   private JTextField nameField = new JTextField();
+  private JLabel errorMessage = new JLabel();
   private SubSeriesEditionPanel.AddAction addAction = new AddAction();
   private GlobListView list;
   private JPanel panel;
@@ -45,6 +45,9 @@ public class SubSeriesEditionPanel {
     builder.add("add", addAction);
     list = builder.addList("list", SubSeries.TYPE).setFilter(GlobMatchers.NONE);
 
+    builder.add("subSeriesErrorMessage", errorMessage);
+    errorMessage.setVisible(false);
+
     nameField.getDocument().addDocumentListener(new AbstractDocumentListener() {
       protected void documentChanged(DocumentEvent e) {
         processNameUpdate();
@@ -54,7 +57,7 @@ public class SubSeriesEditionPanel {
 
     builder.add("rename", new RenameSubSeriesAction(repository, directory, dialog));
     builder.add("delete", new DeleteSubSeriesAction(repository, directory, dialog));
-    
+
     panel = builder.load();
   }
 
@@ -69,22 +72,8 @@ public class SubSeriesEditionPanel {
   }
 
   private void processNameUpdate() {
-    if (currentSeries == null) {
-      return;
-    }
-
-    String enteredText = nameField.getText();
-    if (Strings.isNullOrEmpty(enteredText)) {
-      addAction.setEnabled(false);
-      return;
-    }
-
-    Set<String> currentNames =
-      repository
-        .getAll(SubSeries.TYPE, GlobMatchers.linkedTo(currentSeries, SubSeries.SERIES))
-        .getValueSet(SubSeries.NAME);
-
-    addAction.setEnabled(!currentNames.contains(enteredText));
+    addAction.setEnabled(Strings.isNotEmpty(nameField.getText()));
+    errorMessage.setVisible(false);
   }
 
   private class AddAction extends AbstractAction {
@@ -96,6 +85,17 @@ public class SubSeriesEditionPanel {
 
     public void actionPerformed(ActionEvent e) {
       String name = nameField.getText();
+
+      boolean nameAlreadyUsed =
+        repository.findLinkedTo(currentSeries, SubSeries.SERIES)
+          .getValueSet(SubSeries.NAME)
+          .contains(name);
+      errorMessage.setVisible(nameAlreadyUsed);
+      if (nameAlreadyUsed) {
+        errorMessage.setText(Lang.get("subseries.name.already.used"));
+        return;
+      }
+
       Glob subSeries = repository.create(SubSeries.TYPE,
                                          value(SubSeries.NAME, name),
                                          value(SubSeries.SERIES, currentSeries.get(Series.ID)));

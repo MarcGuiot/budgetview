@@ -126,22 +126,22 @@ public class SeriesComponentFactory extends AbstractSeriesComponentFactory {
 
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob subSeries) {
       final Key seriesKey = subSeries.getTargetKey(SubSeries.SERIES);
-      String name = subSeries.get(SubSeries.NAME);
+      String subSeriesName = subSeries.get(SubSeries.NAME);
 
       final Key subSeriesKey = subSeries.getKey();
-      final JRadioButton selector = createSeriesSelector(name, seriesKey, subSeriesKey);
+      final JRadioButton selector = createSeriesSelector(subSeriesName, seriesKey, subSeriesKey);
       final DefaultChangeSetListener subSeriesUpdateListener = new DefaultChangeSetListener() {
         public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
           if (changeSet.containsChanges(subSeriesKey)) {
             Glob subSeries = repository.find(subSeriesKey);
             if (subSeries != null) {
-              selector.setText(subSeriesStringifier.toString(subSeries, repository));
+              setText(selector, seriesName, subSeriesStringifier.toString(subSeries, repository));
             }
           }
         }
       };
       repository.addChangeListener(subSeriesUpdateListener);
-      selector.setName(seriesName + ":" + name);
+      setText(selector, seriesName, subSeriesName);
       buttonGroup.add(selector);
       cellBuilder.add(this.name, selector);
 
@@ -155,6 +155,11 @@ public class SeriesComponentFactory extends AbstractSeriesComponentFactory {
           repository.removeChangeListener(subSeriesUpdateListener);
         }
       });
+    }
+
+    private void setText(JRadioButton selector, String seriesName, String subSeriesName) {
+      selector.setText(subSeriesName);
+      selector.setName(seriesName + ":" + subSeriesName);
     }
   }
 

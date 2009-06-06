@@ -460,8 +460,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setEndDate(200810)
       .checkStartDate("Sep 2008")
       .checkEndDate("Oct 2008")
-      .checkTable(new Object[][]{
-      })
+      .checkTableIsEmpty()
       .removeBeginDate()
       .removeEndDate()
       .checkNoStartDate()

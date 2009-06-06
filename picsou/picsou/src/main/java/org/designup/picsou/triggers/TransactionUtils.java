@@ -25,6 +25,8 @@ public class TransactionUtils {
                               amount > 0 ? TransactionType.VIREMENT.getId() : TransactionType.PRELEVEMENT.getId()),
                         value(Transaction.CATEGORY,
                               transaction.get(Transaction.CATEGORY)),
+                        value(Transaction.SUB_SERIES,
+                              transaction.get(Transaction.SUB_SERIES)),
                         value(Transaction.LABEL, transaction.get(Transaction.LABEL)),
                         value(Transaction.SERIES, transaction.get(Transaction.SERIES)),
                         value(Transaction.MIRROR, true),

@@ -2,6 +2,7 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.model.TransactionType;
 
 public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
@@ -56,8 +57,32 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCreationChecks() throws Exception {
-    fail("Regis: tbd");
-    // nom vide, deja pris, cleanup apres add
+
+    views.selectBudget();
+    SeriesEditionDialogChecker dialog = budgetView.envelopes.createSeries();
+    dialog
+      .setName("series1")
+      .gotoSubSeriesTab()
+      .checkNoSubSeriesMessage()
+      .checkAddSubSeriesEnabled(false);
+    dialog
+      .enterSubSeriesName("subSeries1")
+      .checkAddSubSeriesEnabled(true)
+      .addSubSeries()
+      .checkNoSubSeriesMessage()
+      .checkSubSeriesList("subSeries1")
+      .checkAddSubSeriesTextIsEmpty()
+      .checkAddSubSeriesEnabled(false);
+    dialog
+      .enterSubSeriesName("subSeries1")
+      .addSubSeries()
+      .checkSubSeriesMessage("A sub-series with this name already exists")
+      .checkSubSeriesList("subSeries1")
+      .enterSubSeriesName("subSeries2")
+      .checkNoSubSeriesMessage()
+      .addSubSeries()
+      .checkSubSeriesList("subSeries1", "subSeries2")
+      .validate();
   }
 
   public void testSelectedSubSeriesIsAssignedToCurrentTransaction() throws Exception {
@@ -91,7 +116,49 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testChangeSubSeriesOnEnvelopesChangesPlannedTransactions() throws Exception {
+  public void testRename() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -129.90, "Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRows(0);
+    categorization.checkLabel("AUCHAN");
+
+    categorization.selectEnvelopes().createSeries()
+      .setName("Groceries")
+      .gotoSubSeriesTab()
+      .addSubSeries("Food")
+      .validate();
+
+    categorization.selectTransaction("AUCHAN");
+    categorization.getEnvelopes().checkSeriesIsSelectedWithSubSeries("Groceries", "Food");
+
+    views.selectCategorization();
+    categorization.checkTable(new Object[][]{
+      {"30/06/2008", "Groceries / Food", "AUCHAN", -129.90},
+    });
+
+    categorization.getEnvelopes().editSeries("Groceries", false)
+      .renameSubSeries("Food", "Misc")
+      .validate();
+
+    categorization.getEnvelopes()
+      .checkNotPresent("Food")
+      .checkSeriesIsSelectedWithSubSeries("Groceries", "Misc");
+    
+    views.selectData();
+    transactions.initContent()
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -129.90, "Groceries", "Misc")
+      .check();
+  }
+
+  public void testCannotUseExistingNameDuringRename() throws Exception {
+    fail("regis");
+  }
+
+  public void testSubSeriesAreNotUsedForPlannedTransactions() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/30", -20., "PointP")
@@ -109,7 +176,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     transactions
       .initContent()
-      .add("30/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison", "Entretien")
+      .add("30/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison", "")
       .check();
 
     views.selectBudget();
@@ -121,7 +188,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initContent()
-      .add("30/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison", "Travaux")
+      .add("30/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison", "")
       .check();
 
     views.selectBudget();
@@ -132,7 +199,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initContent()
-      .add("30/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison")
+      .add("30/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison", "")
       .check();
   }
 }

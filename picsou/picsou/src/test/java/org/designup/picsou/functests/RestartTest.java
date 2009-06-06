@@ -296,7 +296,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
   }
 
   public void testBackupAndRestoreWithOtherPassword() throws Exception {
-    fail("Demander le mots de passe pour lire un backup si on ne reussi pas a decrypter le snaphot");
+    fail("Marc: Demander le mots de passe pour lire un backup si on ne reussi pas a decrypter le snaphot");
   }
 
   public void testSavingsSeries() throws Exception {

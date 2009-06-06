@@ -41,6 +41,13 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     return this;
   }
 
+
+  public BudgetAreaCategorizationChecker checkNotPresent(String seriesName) {
+    assertFalse("Series " + seriesName + " unexpectedly found",
+                panel.containsUIComponent(RadioButton.class, seriesName));
+    return this;
+  }
+
   public BudgetAreaCategorizationChecker checkSeriesIsSelected(String seriesName) {
     assertThat(panel.getRadioButton(seriesName).isSelected());
     return this;

@@ -9,12 +9,15 @@
       <textField gridPos="(1,0)" ref="subSeriesNameField"/>
       <button gridPos="(2,0)" action="add" fill="none"/>
 
-      <label gridPos="(0,1)" text="$subseries.list" styleClass="formLabel" anchor="northeast" marginTop="2"/>
-      <scrollPane gridPos="(1,1,2,1)" margin="2">
+      <label gridPos="(1,1,2,1)" ref="subSeriesErrorMessage" styleClass="errorMessage"
+             anchor="northeast" border="empty(2,0,2,0)" horizontalAlignment="left"/>
+
+      <label gridPos="(0,2)" text="$subseries.list" styleClass="formLabel" anchor="northeast" marginTop="2"/>
+      <scrollPane gridPos="(1,2,2,1)" margin="2">
         <list ref="list"/>
       </scrollPane>
 
-      <row gridPos="(1,2)" styleClass="iconButtonGroup">
+      <row gridPos="(1,3)" styleClass="iconButtonGroup">
         <button action="delete" name="deleteSubSeries" styleClass="delete"/>
         <button action="rename" name="renameSubSeries" styleClass="rename"/>
         <filler fill="horizontal"/>
