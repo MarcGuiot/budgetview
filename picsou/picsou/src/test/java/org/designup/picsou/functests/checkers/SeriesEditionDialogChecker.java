@@ -691,6 +691,7 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     Panel tab = getSelectedTab();
     tab.getInputTextBox().setText(name, false);
     tab.getButton("Add").click();
+    assertFalse(tab.getTextBox("subSeriesErrorMessage").isVisible());
     assertThat(tab.getListBox().contains(name));
     return this;
   }
@@ -721,6 +722,28 @@ public class SeriesEditionDialogChecker extends GuiChecker {
       })
       .run();
     return this;    
+  }
+
+  public SeriesEditionDialogChecker checkRenameSubSeriesMessage(String subSeriesName,
+                                                                 final String newName,
+                                                                 final String errorMessage) {
+    Panel tab = getSelectedTab();
+    tab.getListBox().select(subSeriesName);
+    WindowInterceptor.init(tab.getButton("renameSubSeries").triggerClick())
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          window.getInputTextBox().setText(newName, false);
+          window.getButton("OK").click();
+          assertThat(window.isVisible());
+          TextBox messageLabel = window.getTextBox("messageLabel");
+          assertThat(messageLabel.isVisible());
+          assertThat(messageLabel.textEquals(errorMessage));
+          return window.getButton("Cancel").triggerClick();
+        }
+      })
+      .run();
+    return this;
+
   }
 
   public SeriesEditionDialogChecker deleteSubSeriesWithConfirmation(String name) {

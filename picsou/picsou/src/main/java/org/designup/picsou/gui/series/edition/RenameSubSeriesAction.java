@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.series.edition;
 
 import org.designup.picsou.gui.components.PicsouDialog;
-import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.model.SubSeries;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelectionListener;
@@ -11,11 +10,8 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
-import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -34,23 +30,22 @@ public class RenameSubSeriesAction extends RenameGlobAction implements GlobSelec
     return PicsouDialog.create(owner, directory);
   }
 
-
   protected String getText() {
     return getCurrentObject().get(SubSeries.NAME);
   }
 
   protected void validateName(GlobType type, StringField namingField, String name, GlobRepository repository) throws InvalidParameter {
 
-    if (Strings.isNullOrEmpty(name)) {
+    Glob series = repository.findLinkTarget(getCurrentObject(), SubSeries.SERIES);
 
+    boolean nameAlreadyUsed =
+      repository.findLinkedTo(series, SubSeries.SERIES)
+        .getValueSet(SubSeries.NAME)
+        .contains(name);
+
+    if (nameAlreadyUsed) {
+      throw new InvalidParameter(Lang.get("subseries.name.already.used"));
     }
-
-//    for (Glob category : repository.getAll(SubSeries.TYPE, GlobMatchers.linkedTo())) {
-//      if (name.equals(categoryStringifier.toString(category, repository)) &&
-//          !category.getKey().equals(getCurrentObject().getKey())) {
-//        throw new InvalidParameter(Lang.get("subseries.name.already.used"));
-//      }
-//    }
   }
 
   protected String getTitle() {

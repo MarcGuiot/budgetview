@@ -30,7 +30,7 @@ public abstract class StringInputDialog {
     SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.add("inputLabel", new JLabel(inputLabel));
     builder.add("input", textField);
-    builder.add("label", messageLabel);
+    builder.add("messageLabel", messageLabel);
     builder.add("ok", okAction);
     builder.add("cancel", new CancelAction(cancelLabel));
     builder.setSource(
@@ -41,7 +41,7 @@ public abstract class StringInputDialog {
       "        <label ref='inputLabel' marginRight='10'/>" +
       "        <textField ref='input' columns='15'/>" +
       "      </row>" +
-      "      <label ref='label' foreground='red' marginTop='5' marginBottom='5'/>" +
+      "      <label ref='messageLabel' foreground='red' marginTop='5' marginBottom='5'/>" +
       "      <row>" +
       "        <filler fill='horizontal'/>" +
       "        <button action='ok' opaque='false'/>" +

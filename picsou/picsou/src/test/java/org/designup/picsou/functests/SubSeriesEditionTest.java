@@ -155,7 +155,16 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCannotUseExistingNameDuringRename() throws Exception {
-    fail("regis");
+    views.selectBudget();
+    SeriesEditionDialogChecker dialog = budgetView.envelopes.createSeries();
+    dialog
+      .setName("series1")
+      .gotoSubSeriesTab()
+      .addSubSeries("subSeries1")
+      .addSubSeries("subSeries2")
+      .checkRenameSubSeriesMessage("subSeries2", "subSeries1", "A sub-series with this name already exists")
+      .checkSubSeriesList("subSeries1", "subSeries2")
+      .validate();
   }
 
   public void testSubSeriesAreNotUsedForPlannedTransactions() throws Exception {
