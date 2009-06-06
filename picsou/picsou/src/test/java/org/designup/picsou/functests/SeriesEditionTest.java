@@ -684,7 +684,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectCategorization();
-    categorization.editSeries(true)
+    categorization.editSeries()
       .selectSeries("Drinking")
       .setName("Leisures")
       .validate();
@@ -1121,7 +1121,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .add("29/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne")
       .check();
     views.selectCategorization();
-    categorization.selectSavings().editSeries("epargne", true)
+    categorization.selectSavings().editSeries("epargne")
       .setIrregular()
       .checkTable(new Object[][]{
         {"2008", "August", "0.00", "0"},
@@ -1146,7 +1146,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectAndCreateSavingsSeries("epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME);
 
     SeriesEditionDialogChecker edition = categorization.selectSavings()
-      .editSeries("epargne", true)
+      .editSeries("epargne")
       .checkAutomaticModeSelected()
       .setTwoMonths();
 
@@ -1159,12 +1159,12 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkManualModeSelected()
       .validate();
 
-    categorization.selectSavings().editSeries("epargne", true)
+    categorization.selectSavings().editSeries("epargne")
       .checkManualModeSelected()
       .setIrregular()
       .validate();
 
-    categorization.selectSavings().editSeries("epargne", true)
+    categorization.selectSavings().editSeries("epargne")
       .checkManualModeSelected()
       .setIrregular()
       .setTwoMonths()
@@ -1180,13 +1180,13 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRow(0);
     categorization.selectSavings()
       .selectAndCreateSavingsSeries("epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME);
-    categorization.selectSavings().editSeries("epargne", true)
+    categorization.selectSavings().editSeries("epargne")
       .checkAutomaticModeSelected()
       .setIrregular()
       .setEndDate(200807)
       .validate();
     operations.openPreferences().setFutureMonthsCount(2).validate();
-    categorization.selectSavings().editSeries("epargne", true)
+    categorization.selectSavings().editSeries("epargne")
       .setEndDate(200810)
       .validate();
     timeline.checkSpanEquals("2008/06", "2008/10");
@@ -1206,7 +1206,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTransactions("Virement");
     categorization.selectSavings()
       .selectAndCreateSavingsSeries("epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME);
-    categorization.selectSavings().editSeries("epargne", true)
+    categorization.selectSavings().editSeries("epargne")
       .setTwoMonths()
       .validate();
     timeline.selectAll();
@@ -1237,7 +1237,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectSavings()
       .selectAndCreateSavingsSeries("epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME);
     operations.openPreferences().setFutureMonthsCount(1).validate();
-    categorization.selectSavings().editSeries("epargne", true)
+    categorization.selectSavings().editSeries("epargne")
       .switchToManual()
       .selectMonth(200809)
       .setAmount("0")

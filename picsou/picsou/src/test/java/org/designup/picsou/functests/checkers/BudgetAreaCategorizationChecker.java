@@ -41,7 +41,6 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     return this;
   }
 
-
   public BudgetAreaCategorizationChecker checkNotPresent(String seriesName) {
     assertFalse("Series " + seriesName + " unexpectedly found",
                 panel.containsUIComponent(RadioButton.class, seriesName));
@@ -123,6 +122,11 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     return this;
   }
 
+  public BudgetAreaCategorizationChecker selectSubSeries(String series, String subSeries) {
+    panel.getRadioButton(series + ":" + subSeries).click();
+    return this;
+  }
+
   public BudgetAreaCategorizationChecker checkSeriesContainsSubSeries(String series, String... subSeries) {
     RadioButton seriesRadio = panel.getRadioButton(series);
     Panel seriesPanel = seriesRadio.getContainer("seriesBlock");
@@ -152,10 +156,10 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   }
 
   public SeriesEditionDialogChecker editSeries() {
-    return categorizationChecker.editSeries(false);
+    return categorizationChecker.editSeries();
   }
 
-  public SeriesEditionDialogChecker editSeries(String seriesName, boolean toBeRemoved) {
-    return categorizationChecker.editSeries(seriesName, false);
+  public SeriesEditionDialogChecker editSeries(String seriesName) {
+    return categorizationChecker.editSeries(seriesName);
   }
 }

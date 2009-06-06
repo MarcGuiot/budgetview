@@ -131,7 +131,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTransactions("McDo")
       .selectSavings()
-      .editSeries("Epargne", true)
+      .editSeries("Epargne")
       .setToAccount("External account")
       .switchToManual()
       .checkToAccount("External account")
@@ -218,7 +218,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRow(0)
       .selectSavings()
 //      .selectSavingsSeries("CA")
-      .editSeries("CA", true)
+      .editSeries("CA")
       .setName("Autre")
       .validate();
 

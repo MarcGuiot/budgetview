@@ -998,7 +998,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectCategorization();
     categorization.selectTransactions("Virement")
-      .editSeries(false)
+      .editSeries()
       .setToAccount("Livret")
       .validate();
     categorization.selectSavings().selectSeries("Epargne");

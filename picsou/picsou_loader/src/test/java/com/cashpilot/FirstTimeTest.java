@@ -152,7 +152,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .setEnvelope("Retrait", "cash")
       .setRecurring("SFR", "Cell phone 1")
       .selectRecurring();
-    categorization.editSeries(true)
+    categorization.editSeries()
       .checkSeriesListContains("Gas", "Cell phone 1")
       .createSeries()
       .setName("Assurance")

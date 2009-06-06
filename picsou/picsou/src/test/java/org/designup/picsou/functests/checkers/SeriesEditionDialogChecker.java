@@ -650,12 +650,12 @@ public class SeriesEditionDialogChecker extends GuiChecker {
   }
 
   public SeriesEditionDialogChecker gotoTermsTab() {
-    dialog.getTabGroup().selectTab("Echéances");
+    dialog.getTabGroup().selectTab("Echeances");
     return this;
   }
 
   public SeriesEditionDialogChecker gotoSubSeriesTab() {
-    dialog.getTabGroup().selectTab("Sous-séries");
+    dialog.getTabGroup().selectTab("Sous-series");
     return this;
   }
 
@@ -683,13 +683,13 @@ public class SeriesEditionDialogChecker extends GuiChecker {
   }
 
   public SeriesEditionDialogChecker enterSubSeriesName(String name) {
-    getSelectedTab().getInputTextBox().setText(name, false);
+    getSelectedTab().getInputTextBox("subSeriesNameField").setText(name, false);
     return this;
   }
 
   public SeriesEditionDialogChecker addSubSeries(String name) {
     Panel tab = getSelectedTab();
-    tab.getInputTextBox().setText(name, false);
+    tab.getInputTextBox("subSeriesNameField").setText(name, false);
     tab.getButton("Add").click();
     assertFalse(tab.getTextBox("subSeriesErrorMessage").isVisible());
     assertThat(tab.getListBox().contains(name));
@@ -703,6 +703,11 @@ public class SeriesEditionDialogChecker extends GuiChecker {
 
   public SeriesEditionDialogChecker checkSubSeriesList(String... names) {
     assertThat(getSelectedTab().getListBox().contentEquals(names));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkSubSeriesListIsEmpty() {
+    assertThat(getSelectedTab().getListBox().isEmpty());
     return this;
   }
 
@@ -743,15 +748,18 @@ public class SeriesEditionDialogChecker extends GuiChecker {
       })
       .run();
     return this;
-
   }
 
-  public SeriesEditionDialogChecker deleteSubSeriesWithConfirmation(String name) {
+  public SeriesEditionDialogChecker deleteSubSeries(String... names) {
     Panel tab = getSelectedTab();
-    tab.getListBox().select(name);
-    WindowInterceptor.init(tab.getButton("deleteSubSeries").triggerClick())
-      .processWithButtonClick("OK")
-      .run();
+    tab.getListBox().select(names);
+    tab.getButton("deleteSubSeries").click();
     return this;
+  }
+
+  public DeleteSubSeriesDialogChecker deleteSubSeriesWithConfirmation(String... names) {
+    Panel tab = getSelectedTab();
+    tab.getListBox().select(names);
+    return DeleteSubSeriesDialogChecker.open(tab.getButton("deleteSubSeries").triggerClick());
   }
 }

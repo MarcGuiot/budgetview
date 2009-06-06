@@ -6,6 +6,7 @@ import org.designup.picsou.model.Transaction;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
 
@@ -26,8 +27,11 @@ public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
       "          month='200808' series='100' type='seriesBudget' />" +
       "  <create active='true' amount='-29.9' day='7' id='" + free[0] + "'" +
       "          month='200807' series='100' type='seriesBudget' />");
-    Integer[] ids = repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, true))
-      .sort(Transaction.MONTH).getValues(Transaction.ID);
+
+    Integer[] ids =
+      repository.getAll(Transaction.TYPE, fieldEquals(Transaction.PLANNED, true))
+        .sort(Transaction.MONTH)
+        .getValues(Transaction.ID);
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <create account='-1' amount='-29.9' bankDay='7' bankMonth='200808' mirror='false'" +
@@ -46,10 +50,13 @@ public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
                       value(Transaction.BANK_MONTH, 200808),
                       value(Transaction.BANK_DAY, 1),
                       value(Transaction.AMOUNT, -40.));
-    Integer[] ids = repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, true))
-      .sort(Transaction.MONTH).getValues(Transaction.ID);
+    Integer[] ids =
+      repository.getAll(Transaction.TYPE, fieldEquals(Transaction.PLANNED, true))
+      .sort(Transaction.MONTH)
+        .getValues(Transaction.ID);
     Integer[] free = getBudgetId(FREE_SERIES_ID);
     repository.delete(Key.create(Series.TYPE, FREE_SERIES_ID));
+
     Integer[] occasional = getBudgetId(0);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,

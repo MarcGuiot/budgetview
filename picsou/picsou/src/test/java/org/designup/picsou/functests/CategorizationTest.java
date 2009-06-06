@@ -5,7 +5,6 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.TransactionType;
-import org.designup.picsou.model.MasterCategory;
 
 public class CategorizationTest extends LoggedInFunctionalTestCase {
 
@@ -1099,7 +1098,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .showSelectedMonthsOnly()
       .selectTableRow(0)
       .selectEnvelopes()
-      .editSeries("Courses", false)
+      .editSeries("Courses")
       .setEndDate(200805)
       .validate();
     categorization.getEnvelopes().checkDoesNotContainSeries("Courses");
@@ -1161,7 +1160,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectEnvelopes()
       .selectSeries("Courses");
 
-    categorization.editSeries("Courses", false)
+    categorization.editSeries("Courses")
       .toggleMonth(6)
       .validate();
 
