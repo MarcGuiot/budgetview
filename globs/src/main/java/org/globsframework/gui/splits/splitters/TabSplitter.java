@@ -5,14 +5,13 @@ import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.ComponentStretch;
-import org.globsframework.utils.Strings;
 
 public class TabSplitter extends AbstractSplitter {
   private String title;
 
-  public TabSplitter(SplitProperties properties, Splitter[] subSplitters) {
+  public TabSplitter(SplitProperties properties, Splitter[] subSplitters, SplitsContext context) {
     super(properties, subSplitters);
-    this.title = properties.get("title");
+    this.title = properties.getString("title", context);
     if (subSplitters.length != 1) {
       throw new SplitsException("Tab component '" + title + "' must have exactly one subcomponent");
     }

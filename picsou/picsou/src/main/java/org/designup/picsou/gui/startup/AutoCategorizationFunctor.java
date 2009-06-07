@@ -34,7 +34,7 @@ public class AutoCategorizationFunctor implements GlobFunctor {
       return;
     }
     Integer lastSeries = null;
-    Integer lastCategory = null;
+    Integer lastSubSeries = null;
     int count = 0;
     while (iterator.hasPrevious()) {
       Glob findTransaction = iterator.previous();
@@ -42,14 +42,14 @@ public class AutoCategorizationFunctor implements GlobFunctor {
         continue;
       }
       Integer currentSeries = findTransaction.get(Transaction.SERIES);
-      Integer currentCategory = findTransaction.get(Transaction.CATEGORY);
+      Integer currentSubSeries = findTransaction.get(Transaction.SUB_SERIES);
       if (lastSeries != null && !lastSeries.equals(currentSeries)
-          || lastCategory != null && !lastCategory.equals(currentCategory)) {
+          || lastSubSeries != null && !lastSubSeries.equals(currentSubSeries)) {
         return;
       }
       else {
         lastSeries = currentSeries;
-        lastCategory = currentCategory;
+        lastSubSeries = currentSubSeries;
         count++;
         if (count == 3) {
           break;
@@ -58,7 +58,7 @@ public class AutoCategorizationFunctor implements GlobFunctor {
     }
     if (lastSeries != null) {
       repository.update(transaction.getKey(), Transaction.SERIES, lastSeries);
-      repository.update(transaction.getKey(), Transaction.CATEGORY, lastCategory);
+      repository.update(transaction.getKey(), Transaction.SUB_SERIES, lastSubSeries);
     }
   }
 }

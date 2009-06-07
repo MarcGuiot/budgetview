@@ -131,7 +131,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTransactions("McDo")
       .selectSavings()
-      .editSeries("Epargne", true)
+      .editSeries("Epargne")
       .setToAccount("External account")
       .switchToManual()
       .checkToAccount("External account")
@@ -163,7 +163,6 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings.editSeriesList()
       .checkSeriesListEquals("CA")
       .validate();
-
   }
 
   public void testUseSingleMonthCreateSeriesBudget() throws Exception {
@@ -203,6 +202,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2008/08/10", -100.00, "Virement")
       .load();
+
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectHome();
     this.mainAccounts.edit("Account n. 111")
@@ -218,7 +218,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRow(0)
       .selectSavings()
 //      .selectSavingsSeries("CA")
-      .editSeries("CA", true)
+      .editSeries("CA")
       .setName("Autre")
       .validate();
 

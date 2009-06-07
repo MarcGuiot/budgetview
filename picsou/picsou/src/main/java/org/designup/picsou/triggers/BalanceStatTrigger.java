@@ -52,7 +52,6 @@ public class BalanceStatTrigger implements ChangeSetListener {
     private double envelopes = 0;
     private double remaningEnvelopes = 0;
     private double plannedEnvelopes = 0;
-    private double occasional = 0;
     private double special = 0;
     private double remaningSpecial = 0;
     private double plannedSpecial = 0;

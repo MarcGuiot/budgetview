@@ -11,9 +11,6 @@ import org.globsframework.model.Key;
 public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
   public void testStandardCreation() throws Exception {
-
-//    fail("Marc ?");
-
     createSeries(10, 150.0);
     listener.assertNoChanges(SeriesStat.TYPE);
 

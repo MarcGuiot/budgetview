@@ -3,6 +3,7 @@ package org.globsframework.gui.splits.splitters;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.SplitterFactory;
+import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 
 import javax.swing.*;
@@ -12,7 +13,7 @@ public class DefaultSplitterFactory implements SplitterFactory {
 
   public Splitter getSplitter(String name,
                               Splitter[] subSplitters,
-                              SplitProperties properties) {
+                              SplitProperties properties, SplitsContext context) {
 
     if (name.equals("row")) {
       return new GridBagSequence(subSplitters, Sequence.Direction.HORIZONTAL, properties);
@@ -105,7 +106,7 @@ public class DefaultSplitterFactory implements SplitterFactory {
       return new TabGroupSplitter(properties, subSplitters);
     }
     else if (name.equals("tab")) {
-      return new TabSplitter(properties, subSplitters);
+      return new TabSplitter(properties, subSplitters, context);
     }
     throw new SplitsException("Unknown splitter name: " + name);
   }

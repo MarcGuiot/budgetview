@@ -82,6 +82,11 @@ public class TransactionChecker extends ViewChecker {
     UISpecAssert.assertThat(seriesButton.textEquals(seriesName));
   }
 
+  public void checkSeries(int row, String seriesName, String subSeries) {
+    checkSeries(row, seriesName);
+    UISpecAssert.assertThat(getTable().cellEquals(row, TransactionView.SUBSERIES_COLUMN_INDEX, subSeries));
+  }
+
   private int getIndexOf(String transactionLabel) {
     return getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, transactionLabel.toUpperCase());
   }
@@ -243,15 +248,7 @@ public class TransactionChecker extends ViewChecker {
     }
 
     public ContentChecker add(String userDate, String bankDate, TransactionType type, String label,
-                              String note, double amount, String... seriesAndCategory) {
-      String category = "";
-      String series = TO_CATEGORIZE;
-      if (seriesAndCategory.length >= 1) {
-        series = seriesAndCategory[0];
-      }
-      if (seriesAndCategory.length > 1) {
-        category = seriesAndCategory[1];
-      }
+                              String note, double amount, String series, String subSeries) {
       if (type == TransactionType.PLANNED) {
         if (amount > 0) {
           type = TransactionType.VIREMENT;
@@ -266,20 +263,30 @@ public class TransactionChecker extends ViewChecker {
       else {
         label = "Planned" + label.substring("Planned".length());
       }
-      add(new Object[]{userDate, bankDate, "(" + type.getName() + ")" + series, category, label,
+      add(new Object[]{userDate, bankDate, "(" + type.getName() + ")" + series, subSeries, label,
                        TransactionChecker.this.toString(amount),
                        note});
       return this;
     }
 
+    public ContentChecker add(String date, String bankDate, TransactionType type, String label,
+                              String note, double amount) {
+      return add(date, bankDate, type, label, note, amount, TO_CATEGORIZE, "");
+    }
+
+    public ContentChecker add(String date, String bankDate, TransactionType type, String label,
+                              String note, double amount, String series) {
+      return add(date, bankDate, type, label, note, amount, series, "");
+    }
+
     public ContentChecker add(String date, TransactionType type, String label,
-                              String note, double amount, String... seriesAndCategory) {
-      return add(date, date, type, label, note, amount, seriesAndCategory);
+                              String note, double amount, String series, String subSeries) {
+      return add(date, date, type, label, note, amount, series, subSeries);
     }
 
     public ContentChecker add(String date, TransactionType type, String label,
                               String note, double amount) {
-      add(date, type, label, note, amount, "To categorize");
+      add(date, type, label, note, amount, TO_CATEGORIZE);
       return this;
     }
 

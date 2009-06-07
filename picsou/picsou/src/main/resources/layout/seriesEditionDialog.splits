@@ -34,7 +34,7 @@
           </grid>
 
           <tabs marginTop="10">
-            <tab title="Echéances">
+            <tab title="$seriesEdition.tabs.terms">
               <row margin="5">
                 <column marginTop="5" weightX="0" preferredSize="(200,400)">
 
@@ -112,7 +112,7 @@
                 <panel ref="seriesBudgetEditionPanel" weightX="1"/>
               </row>
             </tab>
-            <tab title="Sous-séries">
+            <tab title="$seriesEdition.tabs.subseries">
               <panel ref="subSeriesEditionPanel"/>
             </tab>
           </tabs>

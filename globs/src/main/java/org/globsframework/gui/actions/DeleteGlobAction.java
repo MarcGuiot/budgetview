@@ -16,6 +16,7 @@ public class DeleteGlobAction extends AbstractAction implements GlobSelectionLis
   private GlobList lastSelection = GlobList.EMPTY;
   private GlobType type;
   private GlobRepository repository;
+  protected Directory directory;
   private Condition condition = Condition.ALL;
 
   public interface Condition {
@@ -32,6 +33,7 @@ public class DeleteGlobAction extends AbstractAction implements GlobSelectionLis
     super(actionName);
     this.type = type;
     this.repository = repository;
+    this.directory = directory;
     setEnabled(false);
     directory.get(SelectionService.class).addListener(this, type);
   }

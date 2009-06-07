@@ -263,7 +263,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("Epargne / June");
     categorization.selectEnvelopes().selectNewSeries("Groceries");
     transactionDetails.checkShiftEnabled();
-    categorization.editSeries("Groceries", true)
+    categorization.editSeries("Groceries")
       .setEndDate(200806)
       .validate();
     transactionDetails.checkShiftDisabled();

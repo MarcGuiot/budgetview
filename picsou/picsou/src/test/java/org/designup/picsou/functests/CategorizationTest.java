@@ -5,7 +5,6 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.TransactionType;
-import org.designup.picsou.model.MasterCategory;
 
 public class CategorizationTest extends LoggedInFunctionalTestCase {
 
@@ -188,8 +187,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
   public void testSelectingASeriesInABudgetAreaUnselectsPreviousSeriesInOtherBudgetAreas() throws Exception {
 
-    fail("Regis");
-
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/25", -59.90, "France Telecom")
@@ -201,7 +198,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization.setNewEnvelope("France Telecom", "Phone");
 
-    categorization.getRecurring().checkSeriesNotSelected("Telephone");
+    categorization.selectRecurring().checkSeriesNotSelected("Telephone");
     categorization.setRecurring("France Telecom", "Telephone");
 
     categorization.selectEnvelopes();
@@ -975,7 +972,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     OfxBuilder
       .init(this)
-      .addTransaction("2008/06/20", -20, "Auchan")
+      .addTransaction("2008/06/20", -20.00, "Auchan")
       .load();
 
     timeline.selectMonth("2008/05");
@@ -988,26 +985,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkSeries("Courant", 0, -20);
   }
 
-  public void testAutoCategorizeWithFirstSelectedSubSeries() throws Exception {
-
-    fail("a Regis: remettre a jour avec les sous-series ?");
-
-    OfxBuilder
-      .init(this)
-      .addTransaction("2008/06/30", -20., "Auchan")
-      .load();
-
-    views.selectCategorization();
-    categorization.selectTableRow(0).selectEnvelopes().createSeries("Divers");
-
-    views.selectData();
-    transactions.checkSeries("Auchan", "Divers");
-  }
-
   public void testHelpForUncategorizedBudgetArea() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2008/06/30", -20., "Auchan")
+      .addTransaction("2008/06/30", -20.00, "Auchan")
       .load();
 
     views.selectCategorization();
@@ -1036,27 +1017,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.initContent()
       .add("10/08/2008", "Epargne", "Virement", -100)
       .check();
-  }
-
-  public void testCannotChangeCategoryAlreadyAssociatedToTransaction() throws Exception {
-
-    fail("Regis: à reprendre avec les subseries ?");
-
-//    OfxBuilder
-//      .init(this)
-//      .addTransaction("2008/06/25", -59.90, "Auchan")
-//      .addTransaction("2008/06/15", -40, "Auchan")
-//      .load();
-//
-//    views.selectCategorization();
-//    categorization.setEnvelope("Auchan", "Groceries", MasterCategory.FOOD, true);
-//    categorization.selectTransactions("Auchan");
-//    SeriesEditionDialogChecker seriesChecker = categorization.editSeries(false);
-//    seriesChecker
-//      .openCategory()
-//      .checkNotUncheckable(getCategoryName(MasterCategory.FOOD))
-//      .cancel();
-//    seriesChecker.validate();
   }
 
   public void testCreateSerieShouldNotCategorizeToTransactionIfNotValide() throws Exception {
@@ -1099,7 +1059,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .showSelectedMonthsOnly()
       .selectTableRow(0)
       .selectEnvelopes()
-      .editSeries("Courses", false)
+      .editSeries("Courses")
       .setEndDate(200805)
       .validate();
     categorization.getEnvelopes().checkDoesNotContainSeries("Courses");
@@ -1161,7 +1121,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectEnvelopes()
       .selectSeries("Courses");
 
-    categorization.editSeries("Courses", false)
+    categorization.editSeries("Courses")
       .toggleMonth(6)
       .validate();
 

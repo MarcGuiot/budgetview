@@ -461,6 +461,27 @@ public class SplitsComponentsTest extends SplitsTestCase {
     }
   }
 
+  public void testCanUseTextLocatorInTabNames() throws Exception {
+
+    textLocator.set("key1", "Tab 1");
+    textLocator.set("key2", "Tab 2");
+
+    JTabbedPane tabs = parse(
+      "<tabs>" +
+      "  <tab title='$key1'>" +
+      "    <label text='Blah'/>" +
+      "  </tab>" +
+      "  <tab title='$key2'>" +
+      "    <button text='OK'/>" +
+      "  </tab>" +
+      "</tabs>"
+    );
+    
+    assertEquals(2, tabs.getTabCount());
+    assertEquals("Tab 1", tabs.getTitleAt(0));
+    assertEquals("Tab 2", tabs.getTitleAt(1));
+  }
+
   public void testFiller() throws Exception {
     checkFiller("<column>" +
                 "  <filler/>" +

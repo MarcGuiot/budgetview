@@ -248,7 +248,7 @@ public class CategorizationView extends View implements TableView, Filterable {
                                                Series.TYPE,
                                                linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
                                                SeriesNameComparator.INSTANCE,
-                                               new SeriesComponentFactory(budgetArea, invisibleRadio,
+                                               new CategorizationSeriesComponentFactory(budgetArea, invisibleRadio,
                                                                                         seriesEditionDialog,
                                                                                         repository,
                                                                                         directory));
@@ -316,10 +316,11 @@ public class CategorizationView extends View implements TableView, Filterable {
           if (!noneMatch) {
             return;
           }
+          Integer subSeriesId = seriesEditionDialog.getLastSelectedSubSeriesId();
           for (Glob transaction : currentTransactions) {
             repository.update(transaction.getKey(),
                               FieldValue.value(Transaction.SERIES, series.get(Series.ID)),
-                              FieldValue.value(Transaction.SUB_SERIES, null));
+                              FieldValue.value(Transaction.SUB_SERIES, subSeriesId));
           }
         }
         finally {

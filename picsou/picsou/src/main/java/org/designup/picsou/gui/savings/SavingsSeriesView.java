@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.savings;
 
-import org.designup.picsou.gui.budget.SeriesRepeatComponentFactory;
+import org.designup.picsou.gui.budget.BudgetAreaSeriesComponentFactory;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.PicsouMatchers;
@@ -86,7 +86,7 @@ public class SavingsSeriesView implements Disposable {
     seriesRepeat =
       builder.addRepeat("seriesRepeat",
                         new GlobList(),
-                        new SeriesRepeatComponentFactory(account, accountName, repository, directory, seriesEditionDialog));
+                        new BudgetAreaSeriesComponentFactory(account, accountName, repository, directory, seriesEditionDialog));
 
     seriesDateFilter = PicsouMatchers.seriesDateSavingsAndAccountFilter(account.get(Account.ID));
     seriesFilter = new GlobMatcher() {

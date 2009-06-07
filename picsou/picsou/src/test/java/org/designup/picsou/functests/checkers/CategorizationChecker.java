@@ -3,7 +3,6 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.gui.categorization.components.TransactionFilteringMode;
-import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
@@ -168,12 +167,12 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker editSeries(String seriesLabel, final boolean singleCategorySeries) {
+  public SeriesEditionDialogChecker editSeries(String seriesLabel) {
     Button button = getPanel().getPanel("seriesCard").getButton("editSeries:" + seriesLabel);
     return SeriesEditionDialogChecker.open(button);
   }
 
-  public SeriesEditionDialogChecker editSeries(boolean isSingleSelection) {
+  public SeriesEditionDialogChecker editSeries() {
     return SeriesEditionDialogChecker.open(getPanel().getButton("editSeries"));
   }
 
@@ -435,6 +434,15 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
+  public CategorizationChecker setEnvelope(String label, String seriesName, String subSeriesName) {
+    int[] indices = getRowIndices(label);
+    for (int index : indices) {
+      selectTableRow(index);
+      selectEnvelopes().selectSubSeries(seriesName, subSeriesName);
+    }
+    return this;
+  }
+
   public CategorizationChecker setNewSpecial(String label, String seriesName) {
     int[] indices = getRowIndices(label);
     boolean first = true;
@@ -471,13 +479,6 @@ public class CategorizationChecker extends GuiChecker {
   public CategorizationChecker setSpecial(int row, String seriesName) {
     selectTableRow(row);
     selectSpecial().selectSeries(seriesName);
-    return this;
-  }
-
-  public CategorizationChecker setSpecial(String label, String seriesName, boolean createSeries) {
-    int[] rows = getRowIndices(label);
-    selectTableRows(rows);
-    selectSpecial().selectSeries(seriesName, createSeries);
     return this;
   }
 

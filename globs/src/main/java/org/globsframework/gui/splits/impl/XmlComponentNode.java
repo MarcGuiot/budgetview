@@ -61,7 +61,8 @@ public class XmlComponentNode extends DefaultXmlNode {
   public void complete() {
     splitter = factory.getSplitter(name,
                                    subSplitters.toArray(new Splitter[subSplitters.size()]),
-                                   properties);
+                                   properties,
+                                   context);
     if (parent != null) {
       parent.subSplitters.add(splitter);
     }

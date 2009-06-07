@@ -54,22 +54,25 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
         }
         else {
           if (mirrorTransactionId != null) {
-            Key mirorKey = Key.create(Transaction.TYPE, mirrorTransactionId);
+            Key mirrorKey = Key.create(Transaction.TYPE, mirrorTransactionId);
             if (values.contains(Transaction.AMOUNT) && mirrorTransactionId != null) {
-              repository.update(mirorKey,
+              repository.update(mirrorKey,
                                 Transaction.AMOUNT, -values.get(Transaction.AMOUNT));
             }
             if (values.contains(Transaction.DAY)) {
-              repository.update(mirorKey, Transaction.DAY, values.get(Transaction.DAY));
+              repository.update(mirrorKey, Transaction.DAY, values.get(Transaction.DAY));
             }
             if (values.contains(Transaction.MONTH)) {
-              repository.update(mirorKey, Transaction.MONTH, values.get(Transaction.MONTH));
+              repository.update(mirrorKey, Transaction.MONTH, values.get(Transaction.MONTH));
             }
             if (values.contains(Transaction.LABEL)) {
-              repository.update(mirorKey, Transaction.LABEL, values.get(Transaction.LABEL));
+              repository.update(mirrorKey, Transaction.LABEL, values.get(Transaction.LABEL));
             }
             if (values.contains(Transaction.CATEGORY)) {
-              repository.update(mirorKey, Transaction.CATEGORY, values.get(Transaction.CATEGORY));
+              repository.update(mirrorKey, Transaction.CATEGORY, values.get(Transaction.CATEGORY));
+            }
+            if (values.contains(Transaction.SUB_SERIES)) {
+              repository.update(mirrorKey, Transaction.SUB_SERIES, values.get(Transaction.SUB_SERIES));
             }
           }
         }

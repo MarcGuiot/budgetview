@@ -5,9 +5,9 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
 import org.designup.picsou.model.TransactionType;
 
-public class LearningTest extends LoggedInFunctionalTestCase {
+public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
 
-  public void testLearning() throws Exception {
+  public void testAutoCategorization() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K 1")
@@ -26,7 +26,87 @@ public class LearningTest extends LoggedInFunctionalTestCase {
     transactions.checkSeries(2, "dej");
   }
 
-  public void testLearningWithCardTransactions() throws Exception {
+  public void testAutoCategorizationWithSubSeries() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -15.00, "Menu K 1")
+      .addTransaction("2006/01/11", -100.00, "Fouquet's")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTransaction("MENU K 1");
+    categorization.selectEnvelopes()
+      .createSeries()
+      .setName("Restau")
+      .gotoSubSeriesTab()
+      .addSubSeries("Jap")
+      .addSubSeries("Grec")
+      .selectSubSeries("Jap")
+      .validate();
+
+    categorization.checkTable(new Object[][]{
+      {"11/01/2006", "", "FOUQUET'S", -100.00},
+      {"10/01/2006", "Restau / Jap", "MENU K 1", -15.00},
+    });
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/12", -15.00, "Menu K 2")
+      .addTransaction("2006/01/12", -100.00, "FOUQUET's II")
+      .load();
+
+    views.selectCategorization();
+    categorization.checkTable(new Object[][]{
+      {"11/01/2006", "", "FOUQUET'S", -100.00},
+      {"12/01/2006", "", "FOUQUET'S II", -100.00},
+      {"10/01/2006", "Restau / Jap", "MENU K 1", -15.00},
+      {"12/01/2006", "Restau / Jap", "MENU K 2", -15.00},
+    });
+  }
+
+  public void testNoAutoCategorizationIfAmbiguityOnSubSeries() throws Exception {
+
+    views.selectBudget();
+    budgetView.envelopes
+      .createSeries()
+      .setName("Restau")
+      .gotoSubSeriesTab()
+      .addSubSeries("Jap")
+      .addSubSeries("Grec")
+      .selectSubSeries("Jap")
+      .validate();
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -15.00, "Menu K 1")
+      .addTransaction("2006/01/10", -15.00, "Menu K 2")
+      .load();
+
+    views.selectCategorization();
+    categorization.setEnvelope("MENU K 1", "Restau", "Jap");
+    categorization.setEnvelope("MENU K 2", "Restau", "Grec");
+
+    categorization.checkTable(new Object[][]{
+      {"10/01/2006", "Restau / Jap", "MENU K 1", -15.00},
+      {"10/01/2006", "Restau / Grec", "MENU K 2", -15.00},
+    });
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/12", -15.00, "Menu K 3")
+      .addTransaction("2006/01/12", -100.00, "FOUQUET's")
+      .load();
+
+    views.selectCategorization();
+    categorization.checkTable(new Object[][]{
+      {"12/01/2006", "", "FOUQUET'S", -100.00},
+      {"10/01/2006", "Restau / Jap", "MENU K 1", -15.00},
+      {"10/01/2006", "Restau / Grec", "MENU K 2", -15.00},
+      {"12/01/2006", "", "MENU K 3", -15.00},
+    });
+  }
+
+  public void testAutoCategorizationWithCardTransactions() throws Exception {
     OfxBuilder
       .init(this)
       .addBankAccount(30066, 10674, "000123", 0, "2006/01/11")
@@ -102,7 +182,7 @@ public class LearningTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testLearningWithDots() throws Exception {
+  public void testAutoCategorizationWithDots() throws Exception {
     QifBuilder
       .init(this)
       .addTransaction("2006/01/15", -1.1, "PRELEVEMENT 3766941826  M.N.P.A.F. M.N.P.A.F. 8811941800")
@@ -119,6 +199,5 @@ public class LearningTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions.checkSeries(0, "Mutuelle");
     transactions.checkSeries(1, "Mutuelle");
-
   }
 }

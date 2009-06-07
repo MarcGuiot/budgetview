@@ -50,10 +50,12 @@ public class SeriesWizardTest extends LoggedInFunctionalTestCase {
       .cancel();
 
     budgetView.envelopes.editSeriesList()
-      .checkSeriesListContains("Groceries", "Health")
+      .checkSeriesListContains("Groceries", "Health", "Miscellaneous")
       .selectSeries("Groceries")
       .checkSelectedProfile("Every month")
       .selectSeries("Health")
+      .gotoSubSeriesTab()
+      .checkSubSeriesList("Drugstore", "Physician", "Reimbursements")
       .checkSelectedProfile("Every month")
       .cancel();
 

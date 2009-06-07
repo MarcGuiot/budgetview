@@ -211,6 +211,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testInputDisabledInDemoMode() throws Exception {
-    fail("a reprendre quand on saura determiner si on est en mode demo");
+    fail("Marc: A reprendre quand on saura determiner si on est en mode demo");
   }
 }

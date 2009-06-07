@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.*;
 import static org.uispec4j.assertion.UISpecAssert.*;
+import org.uispec4j.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +24,17 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   public BudgetAreaCategorizationChecker checkContainsSeries(String... seriesNames) {
     List<String> names = new ArrayList<String>();
     UIComponent[] radios = panel.getUIComponents(RadioButton.class);
-    for (UIComponent toggle : radios) {
-      names.add(toggle.getLabel());
+    for (UIComponent radio : radios) {
+      if (isSeriesRadio(radio)) {
+        names.add(radio.getLabel());
+      }
     }
-
     org.globsframework.utils.TestUtils.assertContains(names, seriesNames);
-
-    System.out.println("BudgetAreaCategorizationChecker.checkContainsSeries: exclure les subseries");
     return this;
+  }
+
+  private boolean isSeriesRadio(UIComponent radio) {
+    return Utils.equals(radio.getName(), radio.getLabel());
   }
 
   public BudgetAreaCategorizationChecker checkDoesNotContainSeries(String... seriesNames) {
@@ -38,6 +42,12 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
       assertFalse("Series " + seriesName + " unexpectedly found",
                   panel.containsUIComponent(RadioButton.class, seriesName));
     }
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker checkNotPresent(String seriesName) {
+    assertFalse("Series " + seriesName + " unexpectedly found",
+                panel.containsUIComponent(RadioButton.class, seriesName));
     return this;
   }
 
@@ -61,9 +71,17 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     return this;
   }
 
-  public BudgetAreaCategorizationChecker selectNewSeries(String seriesName) {
-    createSeries().setName(seriesName).validate();
-    return selectSeries(seriesName);
+  public BudgetAreaCategorizationChecker checkContainsNoSeries() {
+    UIComponent[] uiComponents = panel.getUIComponents(ToggleButton.class);
+    if (uiComponents.length > 1) {
+      List<String> names = new ArrayList<String>();
+      for (UIComponent uiComponent : uiComponents) {
+        ToggleButton toggle = (ToggleButton)uiComponent;
+        names.add(toggle.getLabel());
+      }
+      fail("Unexpect toggles found: " + names);
+    }
+    return this;
   }
 
   public SeriesEditionDialogChecker createSeries() {
@@ -76,6 +94,20 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
 
   public BudgetAreaCategorizationChecker createSeries(String seriesName) {
     createSeries().setName(seriesName).validate();
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker selectNewSeries(String seriesName) {
+    createSeries().setName(seriesName).validate();
+    return selectSeries(seriesName);
+  }
+
+  public BudgetAreaCategorizationChecker selectNewSeriesWithSubSeries(String series, String subSeries) {
+    createSeries()
+      .setName(series)
+      .gotoSubSeriesTab()
+      .addSubSeries(subSeries)
+      .validate();
     return this;
   }
 
@@ -94,6 +126,11 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     return this;
   }
 
+  public BudgetAreaCategorizationChecker selectSubSeries(String series, String subSeries) {
+    panel.getRadioButton(series + ":" + subSeries).click();
+    return this;
+  }
+
   public BudgetAreaCategorizationChecker checkSeriesContainsSubSeries(String series, String... subSeries) {
     RadioButton seriesRadio = panel.getRadioButton(series);
     Panel seriesPanel = seriesRadio.getContainer("seriesBlock");
@@ -101,6 +138,12 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
       assertTrue("No subSeries found with name: " + subName,
                  seriesPanel.containsUIComponent(RadioButton.class, subName));
     }
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker checkSeriesIsSelectedWithSubSeries(String series, String subSeries) {
+    RadioButton toggle = panel.getRadioButton(series + ":" + subSeries);
+    assertThat(toggle.isSelected());
     return this;
   }
 
@@ -116,24 +159,11 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     return this;
   }
 
-  public BudgetAreaCategorizationChecker checkContainsNoSeries() {
-    UIComponent[] uiComponents = panel.getUIComponents(ToggleButton.class);
-    if (uiComponents.length > 1) {
-      List<String> names = new ArrayList();
-      for (int i = 0; i < uiComponents.length; i++) {
-        ToggleButton toggle = (ToggleButton)uiComponents[i];
-        names.add(toggle.getLabel());
-      }
-      fail("Unexpect toggles found: " + names);
-    }
-    return this;
-  }
-
   public SeriesEditionDialogChecker editSeries() {
-    return categorizationChecker.editSeries(false);
+    return categorizationChecker.editSeries();
   }
 
-  public SeriesEditionDialogChecker editSeries(String seriesName, boolean toBeRemoved) {
-    return categorizationChecker.editSeries(seriesName, false);
+  public SeriesEditionDialogChecker editSeries(String seriesName) {
+    return categorizationChecker.editSeries(seriesName);
   }
 }

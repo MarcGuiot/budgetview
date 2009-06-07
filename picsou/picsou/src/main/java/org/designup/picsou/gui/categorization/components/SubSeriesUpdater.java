@@ -50,7 +50,6 @@ public class SubSeriesUpdater implements GlobSelectionListener, ChangeSetListene
     boolean isGoodBudgetArea = series.get(Series.BUDGET_AREA).equals(budgetArea.getId());
 
     if (subSeriesId == null || !isGoodBudgetArea) {
-      invisibleButton.setSelected(true);
       return;
     }
 

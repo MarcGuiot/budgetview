@@ -117,6 +117,11 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker checkTableIsEmpty() {
+    assertThat(getTable().isEmpty());
+    return this;
+  }
+
   public SeriesEditionDialogChecker checkTable(Object[][] content) {
     assertThat(getTable().contentEquals(content));
     return this;
@@ -644,21 +649,122 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker selectTermsTab() {
-    dialog.getTabGroup().selectTab("Echéances");
+  public SeriesEditionDialogChecker gotoTermsTab() {
+    dialog.getTabGroup().selectTab("Terms");
     return this;
   }
 
-  public SeriesEditionDialogChecker selectSubSeriesTab() {
-    dialog.getTabGroup().selectTab("Sous-séries");
+  public SeriesEditionDialogChecker gotoSubSeriesTab() {
+    dialog.getTabGroup().selectTab("Sub-series");
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkAddSubSeriesEnabled(boolean enabled) {
+    assertEquals(enabled, getSelectedTab().getButton("Add").isEnabled());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkAddSubSeriesTextIsEmpty() {
+    assertThat(getSelectedTab().getInputTextBox().textIsEmpty());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkSubSeriesMessage(String message) {
+    TextBox messageBox = getSelectedTab().getTextBox("subSeriesErrorMessage");
+    assertThat(messageBox.textEquals(message));
+    assertThat(messageBox.isVisible());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkNoSubSeriesMessage() {
+    TextBox messageBox = getSelectedTab().getTextBox("subSeriesErrorMessage");
+    assertFalse(messageBox.isVisible());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker enterSubSeriesName(String name) {
+    getSelectedTab().getInputTextBox("subSeriesNameField").setText(name, false);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker selectSubSeries(String name) {
+    getSelectedTab().getListBox().select(name);
     return this;
   }
 
   public SeriesEditionDialogChecker addSubSeries(String name) {
-    Panel tab = dialog.getTabGroup().getSelectedTab();
-    tab.getInputTextBox().setText(name, false);
+    Panel tab = getSelectedTab();
+    tab.getInputTextBox("subSeriesNameField").setText(name, false);
     tab.getButton("Add").click();
+    assertFalse(tab.getTextBox("subSeriesErrorMessage").isVisible());
     assertThat(tab.getListBox().contains(name));
     return this;
+  }
+
+  public SeriesEditionDialogChecker addSubSeries() {
+    getSelectedTab().getButton("Add").click();
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkSubSeriesList(String... names) {
+    assertThat(getSelectedTab().getListBox().contentEquals(names));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkSubSeriesListIsEmpty() {
+    assertThat(getSelectedTab().getListBox().isEmpty());
+    return this;
+  }
+
+  private Panel getSelectedTab() {
+    return dialog.getTabGroup().getSelectedTab();
+  }
+
+  public SeriesEditionDialogChecker renameSubSeries(String previousName, final String newName) {
+    Panel tab = getSelectedTab();
+    tab.getListBox().select(previousName);
+    WindowInterceptor.init(tab.getButton("renameSubSeries").triggerClick())
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          window.getInputTextBox().setText(newName);
+          return window.getButton("OK").triggerClick();
+        }
+      })
+      .run();
+    return this;    
+  }
+
+  public SeriesEditionDialogChecker checkRenameSubSeriesMessage(String subSeriesName,
+                                                                 final String newName,
+                                                                 final String errorMessage) {
+    Panel tab = getSelectedTab();
+    tab.getListBox().select(subSeriesName);
+    WindowInterceptor.init(tab.getButton("renameSubSeries").triggerClick())
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          window.getInputTextBox().setText(newName, false);
+          window.getButton("OK").click();
+          assertThat(window.isVisible());
+          TextBox messageLabel = window.getTextBox("messageLabel");
+          assertThat(messageLabel.isVisible());
+          assertThat(messageLabel.textEquals(errorMessage));
+          return window.getButton("Cancel").triggerClick();
+        }
+      })
+      .run();
+    return this;
+  }
+
+  public SeriesEditionDialogChecker deleteSubSeries(String... names) {
+    Panel tab = getSelectedTab();
+    tab.getListBox().select(names);
+    tab.getButton("deleteSubSeries").click();
+    return this;
+  }
+
+  public DeleteSubSeriesDialogChecker deleteSubSeriesWithConfirmation(String... names) {
+    Panel tab = getSelectedTab();
+    tab.getListBox().select(names);
+    return DeleteSubSeriesDialogChecker.open(tab.getButton("deleteSubSeries").triggerClick());
   }
 }

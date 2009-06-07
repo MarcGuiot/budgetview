@@ -10,7 +10,7 @@ import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.fieldIsNull;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.directory.Directory;
 
@@ -77,8 +77,8 @@ public class UpgradeTrigger implements ChangeSetListener {
         final Integer lastMonthId = uncategorizedTransactions.getSortedSet(Transaction.MONTH).last();
         repository
           .getAll(SeriesBudget.TYPE,
-                  GlobMatchers.and(
-                    GlobMatchers.fieldEquals(SeriesBudget.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+                  and(
+                    fieldEquals(SeriesBudget.SERIES, Series.UNCATEGORIZED_SERIES_ID),
                     GlobMatchers.fieldStrictlyGreaterThan(SeriesBudget.MONTH, lastMonthId)))
           .safeApply(new GlobFunctor() {
             public void run(Glob seriesBudget, GlobRepository repository) throws Exception {
@@ -87,7 +87,7 @@ public class UpgradeTrigger implements ChangeSetListener {
           }, repository);
       }
 
-      repository.safeApply(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, true),
+      repository.safeApply(Transaction.TYPE, fieldEquals(Transaction.PLANNED, true),
                            new GlobFunctor() {
                              public void run(Glob transaction, GlobRepository repository) throws Exception {
                                Glob series = repository.findLinkTarget(transaction, Transaction.SERIES);
@@ -95,7 +95,7 @@ public class UpgradeTrigger implements ChangeSetListener {
                              }
                            });
 
-      GlobList globList = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
+      GlobList globList = repository.getAll(Series.TYPE, fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
       for (Glob glob : globList) {
         if (glob.get(Series.TO_ACCOUNT) == null && glob.get(Series.FROM_ACCOUNT) == null) {
           repository.update(glob.getKey(), Series.FROM_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID);
@@ -104,7 +104,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
 
     if (currentJarVersion < 10) {
-      repository.safeApply(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, false),
+      repository.safeApply(Transaction.TYPE, fieldEquals(Transaction.PLANNED, false),
                            new GlobFunctor() {
                              public void run(Glob transaction, GlobRepository repository) throws Exception {
                                String originalLabel = transaction.get(Transaction.ORIGINAL_LABEL);
@@ -124,14 +124,13 @@ public class UpgradeTrigger implements ChangeSetListener {
       migrateCategoriesToSubSeries(repository);
     }
 
-
     repository.update(VersionInformation.KEY, VersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
   }
 
   private void removeOccasionalBudgetArea(GlobRepository repository) {
     repository.safeApply(Transaction.TYPE,
-                           GlobMatchers.ALL,
-                           new GlobFunctor() {
+                         GlobMatchers.ALL,
+                         new GlobFunctor() {
                            public void run(Glob transaction, GlobRepository repository) throws Exception {
                              if (Series.OCCASIONAL_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
                                repository.update(transaction.getKey(),
@@ -143,8 +142,8 @@ public class UpgradeTrigger implements ChangeSetListener {
     );
 
     GlobList budgets = repository.getAll(SeriesBudget.TYPE,
-                                         GlobMatchers.fieldEquals(SeriesBudget.SERIES,
-                                                                  Series.OCCASIONAL_SERIES_ID));
+                                         fieldEquals(SeriesBudget.SERIES,
+                                                     Series.OCCASIONAL_SERIES_ID));
     repository.delete(budgets);
 
     Key occasionalSeriesKey = Key.create(Series.TYPE, Series.OCCASIONAL_SERIES_ID);
@@ -155,15 +154,28 @@ public class UpgradeTrigger implements ChangeSetListener {
 
   private void migrateCategoriesToSubSeries(GlobRepository repository) {
     for (Glob series : repository.getAll(Series.TYPE)) {
+
+      Integer seriesId = series.get(Series.ID);
       GlobList seriesToCategoriesList =
         repository.getAll(SeriesToCategory.TYPE, GlobMatchers.linkedTo(series, SeriesToCategory.SERIES));
       if (seriesToCategoriesList.size() > 1) {
         for (Glob seriesToCategory : seriesToCategoriesList) {
-          String categoryName = Category.getName(seriesToCategory.get(SeriesToCategory.CATEGORY), repository);
-          Glob category =
-          repository.create(SubSeries.TYPE,
-                            value(SubSeries.SERIES, series.get(Series.ID)),
-                            value(SubSeries.NAME, categoryName));
+          Integer categoryId = seriesToCategory.get(SeriesToCategory.CATEGORY);
+          String categoryName = Category.getName(categoryId, repository);
+          Glob subSeries =
+            repository.create(SubSeries.TYPE,
+                              value(SubSeries.SERIES, seriesId),
+                              value(SubSeries.NAME, categoryName));
+
+          GlobList transactions =
+            repository.getAll(Transaction.TYPE,
+                              and(
+                                fieldEquals(Transaction.SERIES, seriesId),
+                                fieldEquals(Transaction.CATEGORY, categoryId)
+                              ));
+          for (Glob transaction : transactions) {
+            repository.setTarget(transaction.getKey(), Transaction.SUB_SERIES, subSeries.getKey());
+          }
         }
       }
       repository.deleteAll(SeriesToCategory.TYPE);
