@@ -14,6 +14,8 @@ public interface SplitProperties {
 
   String getString(String propertyName);
 
+  String getString(String propertyName, SplitsContext context);
+
   String getString(String propertyName, String parentPropertyName);
 
   Double getDouble(String propertyName);

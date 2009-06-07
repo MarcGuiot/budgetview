@@ -1,6 +1,9 @@
 package org.globsframework.gui.splits.impl;
 
 import org.globsframework.gui.splits.SplitProperties;
+import org.globsframework.gui.splits.SplitsContext;
+import org.globsframework.gui.splits.TextLocator;
+import org.globsframework.gui.splits.utils.SplitsUtils;
 
 public abstract class AbstractSplitProperties implements SplitProperties {
 
@@ -65,5 +68,10 @@ public abstract class AbstractSplitProperties implements SplitProperties {
 
   public String getString(String propertyName) {
     return get(propertyName);
+  }
+
+  public String getString(String propertyName, SplitsContext context) {
+    String text = getString(propertyName);
+    return SplitsUtils.convertString(text, context.getService(TextLocator.class));
   }
 }

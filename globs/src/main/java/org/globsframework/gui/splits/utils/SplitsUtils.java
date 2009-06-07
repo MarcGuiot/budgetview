@@ -145,7 +145,7 @@ public class SplitsUtils {
     }
   }
 
-  public static Object convertString(String value, TextLocator textLocator) {
+  public static String convertString(String value, TextLocator textLocator) {
     if (value.startsWith("$")) {
       return textLocator.get(value.substring(1));
     }
