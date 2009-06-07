@@ -650,12 +650,12 @@ public class SeriesEditionDialogChecker extends GuiChecker {
   }
 
   public SeriesEditionDialogChecker gotoTermsTab() {
-    dialog.getTabGroup().selectTab("Echeances");
+    dialog.getTabGroup().selectTab("Terms");
     return this;
   }
 
   public SeriesEditionDialogChecker gotoSubSeriesTab() {
-    dialog.getTabGroup().selectTab("Sous-series");
+    dialog.getTabGroup().selectTab("Sub-series");
     return this;
   }
 
