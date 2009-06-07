@@ -47,11 +47,11 @@ public class SeriesWizardModel {
     createEntry(BudgetArea.INCOME, ProfileType.EVERY_MONTH, "income2");
     createEntry(BudgetArea.INCOME, ProfileType.IRREGULAR, "exceptional");
 
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "rent", "loyer");
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "mortgage", "credit");
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "electricity", "energie");
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "gas", "energie");
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "water", "energie");
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "rent");
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "mortgage");
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "electricity");
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "gas");
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "water");
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "carCredit");
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "carInsurance");
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "incomeTaxes");
@@ -60,11 +60,12 @@ public class SeriesWizardModel {
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "internet");
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "fixedPhone");
 
+    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "misc");
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "groceries");
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "health");
+    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "health", "physician", "pharmacy", "reimbursements");
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "leisures");
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "clothing");
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "fuel", "essence");
+    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "fuel");
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "cash");
   }
 

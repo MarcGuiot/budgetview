@@ -14,16 +14,18 @@ public class SeriesWizardEntry {
   private BudgetArea budgetArea;
   private String name;
   private ProfileType profileType;
+  private String seriesKey;
   private String[] subSeries;
   private boolean selected;
 
-  public SeriesWizardEntry(BudgetArea budgetArea, ProfileType profileType, String key,
-                           String[] subSeries,
+  public SeriesWizardEntry(BudgetArea budgetArea, ProfileType profileType, String seriesKey,
+                           String[] subSeriesKeys,
                            GlobRepository repository) {
     this.budgetArea = budgetArea;
     this.profileType = profileType;
-    this.name = Lang.get("seriesWizard." + budgetArea.getName() + "." + key);
-    this.subSeries = subSeries;
+    this.seriesKey = seriesKey;
+    this.name = Lang.get("seriesWizard." + budgetArea.getName() + "." + seriesKey);
+    this.subSeries = subSeriesKeys;
     this.selected = budgetArea == BudgetArea.ENVELOPES;
   }
 
@@ -51,7 +53,8 @@ public class SeriesWizardEntry {
 
     Glob series = repository.create(Series.TYPE, builder.toArray());
 
-    for (String subSeriesName : subSeries) {
+    for (String subSeriesKey : subSeries) {
+      String subSeriesName = Lang.get("seriesWizard." + budgetArea.getName() + "." + seriesKey + "." + subSeriesKey);
       repository.create(SubSeries.TYPE,
                         value(SubSeries.NAME, subSeriesName),
                         value(SubSeries.SERIES, series.get(Series.ID)));

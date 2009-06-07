@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.*;
 import static org.uispec4j.assertion.UISpecAssert.*;
+import org.uispec4j.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +24,17 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   public BudgetAreaCategorizationChecker checkContainsSeries(String... seriesNames) {
     List<String> names = new ArrayList<String>();
     UIComponent[] radios = panel.getUIComponents(RadioButton.class);
-    for (UIComponent toggle : radios) {
-      names.add(toggle.getLabel());
+    for (UIComponent radio : radios) {
+      if (isSeriesRadio(radio)) {
+        names.add(radio.getLabel());
+      }
     }
-
     org.globsframework.utils.TestUtils.assertContains(names, seriesNames);
-
-    System.out.println("BudgetAreaCategorizationChecker.checkContainsSeries: exclure les subseries");
     return this;
+  }
+
+  private boolean isSeriesRadio(UIComponent radio) {
+    return Utils.equals(radio.getName(), radio.getLabel());
   }
 
   public BudgetAreaCategorizationChecker checkDoesNotContainSeries(String... seriesNames) {

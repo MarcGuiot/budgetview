@@ -248,7 +248,7 @@ public class CategorizationView extends View implements TableView, Filterable {
                                                Series.TYPE,
                                                linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
                                                SeriesNameComparator.INSTANCE,
-                                               new SeriesComponentFactory(budgetArea, invisibleRadio,
+                                               new CategorizationSeriesComponentFactory(budgetArea, invisibleRadio,
                                                                                         seriesEditionDialog,
                                                                                         repository,
                                                                                         directory));

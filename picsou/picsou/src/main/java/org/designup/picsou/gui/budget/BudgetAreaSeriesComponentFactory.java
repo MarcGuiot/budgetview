@@ -26,21 +26,19 @@ import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
-public class SeriesRepeatComponentFactory implements RepeatComponentFactory<Glob> {
+public class BudgetAreaSeriesComponentFactory implements RepeatComponentFactory<Glob> {
   private Glob account;
-  private String accountName;
   private GlobRepository repository;
   private Directory directory;
   private GlobStringifier seriesStringifier;
   private SeriesEditionDialog seriesEditionDialog;
 
-  public SeriesRepeatComponentFactory(Glob account,
-                                      String accountName,
-                                      GlobRepository repository,
-                                      Directory directory,
-                                      SeriesEditionDialog seriesEditionDialog) {
+  public BudgetAreaSeriesComponentFactory(Glob account,
+                                          String accountName,
+                                          GlobRepository repository,
+                                          Directory directory,
+                                          SeriesEditionDialog seriesEditionDialog) {
     this.account = account;
-    this.accountName = accountName;
     this.repository = repository;
     this.directory = directory;
     this.seriesEditionDialog = seriesEditionDialog;
