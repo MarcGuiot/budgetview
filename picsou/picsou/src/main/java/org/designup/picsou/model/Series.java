@@ -23,9 +23,11 @@ public class Series {
   public static IntegerField ID;
 
   @NamingField
+  @Required
   public static StringField NAME;
 
   @Target(BudgetArea.class)
+  @Required
   public static LinkField BUDGET_AREA;
 
   /** @deprecated */
@@ -34,6 +36,7 @@ public class Series {
 
   @Target(ProfileType.class)
   @DefaultInteger(2)
+  @Required
   public static LinkField PROFILE_TYPE;
 
   @Target(Month.class)
@@ -42,14 +45,14 @@ public class Series {
   @Target(Month.class)
   public static IntegerField LAST_MONTH;
 
-  public static IntegerField OCCURENCES_COUNT;
-
   @DefaultInteger(1)
+  @Required
   public static IntegerField DAY;
 
   public static DoubleField INITIAL_AMOUNT;
 
   @DefaultBoolean(true)
+  @Required
   public static BooleanField IS_AUTOMATIC;
 
   @Target(Account.class)
@@ -65,42 +68,55 @@ public class Series {
   // la series miroir a les montant de budget negatif elle est donc pour le compte "from"
 
   @DefaultBoolean(false)
+  @Required
   public static BooleanField IS_MIRROR;
 
   @DefaultBoolean(true)
+  @Required
   public static BooleanField JANUARY;
 
   @DefaultBoolean(true)
+  @Required
   public static BooleanField FEBRUARY;
 
   @DefaultBoolean(true)
+  @Required
   public static BooleanField MARCH;
 
   @DefaultBoolean(true)
+  @Required
   public static BooleanField APRIL;
 
   @DefaultBoolean(true)
+  @Required
   public static BooleanField MAY;
 
   @DefaultBoolean(true)
+  @Required
   public static BooleanField JUNE;
 
   @DefaultBoolean(true)
+  @Required
   public static BooleanField JULY;
 
   @DefaultBoolean(true)
+  @Required
   public static BooleanField AUGUST;
 
   @DefaultBoolean(true)
+  @Required
   public static BooleanField SEPTEMBER;
 
   @DefaultBoolean(true)
+  @Required
   public static BooleanField OCTOBER;
 
   @DefaultBoolean(true)
+  @Required
   public static BooleanField NOVEMBER;
 
   @DefaultBoolean(true)
+  @Required
   public static BooleanField DECEMBER;
 
   /**
@@ -178,7 +194,7 @@ public class Series {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 7;
+      return 8;
     }
 
     public byte[] serializeData(FieldValues fieldValues) {
@@ -190,7 +206,6 @@ public class Series {
       output.writeInteger(fieldValues.get(Series.PROFILE_TYPE));
       output.writeInteger(fieldValues.get(Series.FIRST_MONTH));
       output.writeInteger(fieldValues.get(Series.LAST_MONTH));
-      output.writeInteger(fieldValues.get(Series.OCCURENCES_COUNT));
       output.writeInteger(fieldValues.get(Series.DAY));
       output.writeDouble(fieldValues.get(Series.INITIAL_AMOUNT));
       output.writeBoolean(fieldValues.get(Series.IS_AUTOMATIC));
@@ -235,6 +250,9 @@ public class Series {
       else if (version == 7) {
         deserializeDataV7(fieldSetter, data);
       }
+      else if (version == 8) {
+        deserializeDataV8(fieldSetter, data);
+      }
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
@@ -249,7 +267,7 @@ public class Series {
       fieldSetter.set(Series.PROFILE_TYPE, profileType);
       fieldSetter.set(Series.FIRST_MONTH, input.readInteger());
       fieldSetter.set(Series.LAST_MONTH, input.readInteger());
-      fieldSetter.set(Series.OCCURENCES_COUNT, input.readInteger());
+      input.readInteger();
       fieldSetter.set(Series.DAY, input.readInteger());
       fieldSetter.set(Series.INITIAL_AMOUNT, input.readDouble());
       fieldSetter.set(Series.JANUARY, input.readBoolean());
@@ -278,7 +296,7 @@ public class Series {
       fieldSetter.set(Series.PROFILE_TYPE, profileType);
       fieldSetter.set(Series.FIRST_MONTH, input.readInteger());
       fieldSetter.set(Series.LAST_MONTH, input.readInteger());
-      fieldSetter.set(Series.OCCURENCES_COUNT, input.readInteger());
+      input.readInteger();
       fieldSetter.set(Series.DAY, input.readInteger());
       fieldSetter.set(Series.INITIAL_AMOUNT, input.readDouble());
       Boolean isAutomatic = input.readBoolean();
@@ -312,7 +330,7 @@ public class Series {
       fieldSetter.set(Series.PROFILE_TYPE, profileType);
       fieldSetter.set(Series.FIRST_MONTH, input.readInteger());
       fieldSetter.set(Series.LAST_MONTH, input.readInteger());
-      fieldSetter.set(Series.OCCURENCES_COUNT, input.readInteger());
+      input.readInteger();
       fieldSetter.set(Series.DAY, input.readInteger());
       fieldSetter.set(Series.INITIAL_AMOUNT, input.readDouble());
       Boolean isAutomatic = input.readBoolean();
@@ -346,7 +364,7 @@ public class Series {
       fieldSetter.set(Series.PROFILE_TYPE, profileType);
       fieldSetter.set(Series.FIRST_MONTH, input.readInteger());
       fieldSetter.set(Series.LAST_MONTH, input.readInteger());
-      fieldSetter.set(Series.OCCURENCES_COUNT, input.readInteger());
+      input.readInteger();
       fieldSetter.set(Series.DAY, input.readInteger());
       fieldSetter.set(Series.INITIAL_AMOUNT, input.readDouble());
       Boolean isAutomatic = input.readBoolean();
@@ -382,7 +400,7 @@ public class Series {
       fieldSetter.set(Series.PROFILE_TYPE, profileType);
       fieldSetter.set(Series.FIRST_MONTH, input.readInteger());
       fieldSetter.set(Series.LAST_MONTH, input.readInteger());
-      fieldSetter.set(Series.OCCURENCES_COUNT, input.readInteger());
+      input.readInteger();
       fieldSetter.set(Series.DAY, input.readInteger());
       fieldSetter.set(Series.INITIAL_AMOUNT, input.readDouble());
       Boolean isAutomatic = input.readBoolean();
@@ -434,7 +452,7 @@ public class Series {
       fieldSetter.set(Series.PROFILE_TYPE, profileType);
       fieldSetter.set(Series.FIRST_MONTH, input.readInteger());
       fieldSetter.set(Series.LAST_MONTH, input.readInteger());
-      fieldSetter.set(Series.OCCURENCES_COUNT, input.readInteger());
+      input.readInteger();
       fieldSetter.set(Series.DAY, input.readInteger());
       fieldSetter.set(Series.INITIAL_AMOUNT, input.readDouble());
       Boolean isAutomatic = input.readBoolean();
@@ -468,7 +486,36 @@ public class Series {
       fieldSetter.set(Series.PROFILE_TYPE, input.readInteger());
       fieldSetter.set(Series.FIRST_MONTH, input.readInteger());
       fieldSetter.set(Series.LAST_MONTH, input.readInteger());
-      fieldSetter.set(Series.OCCURENCES_COUNT, input.readInteger());
+      input.readInteger();
+      fieldSetter.set(Series.DAY, input.readInteger());
+      fieldSetter.set(Series.INITIAL_AMOUNT, input.readDouble());
+      fieldSetter.set(Series.IS_AUTOMATIC, input.readBoolean());
+      fieldSetter.set(Series.JANUARY, input.readBoolean());
+      fieldSetter.set(Series.FEBRUARY, input.readBoolean());
+      fieldSetter.set(Series.MARCH, input.readBoolean());
+      fieldSetter.set(Series.APRIL, input.readBoolean());
+      fieldSetter.set(Series.MAY, input.readBoolean());
+      fieldSetter.set(Series.JUNE, input.readBoolean());
+      fieldSetter.set(Series.JULY, input.readBoolean());
+      fieldSetter.set(Series.AUGUST, input.readBoolean());
+      fieldSetter.set(Series.SEPTEMBER, input.readBoolean());
+      fieldSetter.set(Series.OCTOBER, input.readBoolean());
+      fieldSetter.set(Series.NOVEMBER, input.readBoolean());
+      fieldSetter.set(Series.DECEMBER, input.readBoolean());
+      fieldSetter.set(Series.TO_ACCOUNT, input.readInteger());
+      fieldSetter.set(Series.FROM_ACCOUNT, input.readInteger());
+      fieldSetter.set(Series.IS_MIRROR, input.readBoolean());
+      fieldSetter.set(Series.MIRROR_SERIES, input.readInteger());
+    }
+
+    private void deserializeDataV8(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Series.NAME, input.readUtf8String());
+      fieldSetter.set(Series.BUDGET_AREA, input.readInteger());
+      fieldSetter.set(Series.DEFAULT_CATEGORY, input.readInteger());
+      fieldSetter.set(Series.PROFILE_TYPE, input.readInteger());
+      fieldSetter.set(Series.FIRST_MONTH, input.readInteger());
+      fieldSetter.set(Series.LAST_MONTH, input.readInteger());
       fieldSetter.set(Series.DAY, input.readInteger());
       fieldSetter.set(Series.INITIAL_AMOUNT, input.readDouble());
       fieldSetter.set(Series.IS_AUTOMATIC, input.readBoolean());

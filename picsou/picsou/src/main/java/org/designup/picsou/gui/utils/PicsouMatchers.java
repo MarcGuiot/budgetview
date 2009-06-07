@@ -5,6 +5,7 @@ import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -274,5 +275,47 @@ public class PicsouMatchers {
     }
 
     protected abstract boolean isEligible(Glob series, GlobRepository repository);
+  }
+
+  public static class AccountDateMatcher implements GlobMatcher {
+    private Set<Integer> months = new HashSet<Integer>();
+
+    public AccountDateMatcher(GlobList months) {
+      this.months.addAll(months.getValueSet(Month.ID));
+    }
+
+    public boolean matches(Glob item, GlobRepository repository) {
+      Date startDate = item.get(Account.OPEN_DATE);
+      Date endDate = item.get(Account.CLOSED_DATE);
+      if (startDate == null && endDate == null){
+        return true;
+      }
+      if (startDate != null && endDate != null){
+        int startMonthId = Month.getMonthId(startDate);
+        int endMonthId = Month.getMonthId(endDate);
+        for (Integer month : months) {
+          if (month >= startMonthId && month <= endMonthId){
+            return true;
+          }
+        }
+      }
+      if (startDate != null){
+        int startMonthId = Month.getMonthId(startDate);
+        for (Integer month : months) {
+          if (month >= startMonthId){
+            return true;
+          }
+        }
+      }
+      if (endDate != null){
+        int endMonthId = Month.getMonthId(endDate);
+        for (Integer month : months) {
+          if (month <= endMonthId){
+            return true;
+          }
+        }
+      }
+      return false;
+    }
   }
 }

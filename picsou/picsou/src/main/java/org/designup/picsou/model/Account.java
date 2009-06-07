@@ -1,12 +1,8 @@
 package org.designup.picsou.model;
 
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
-import org.designup.picsou.triggers.SameAccountChecker;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.DefaultBoolean;
-import org.globsframework.metamodel.annotations.DefaultInteger;
-import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
@@ -54,6 +50,10 @@ public class Account {
 
   public static DateField POSITION_DATE;
 
+  public static DoubleField FIRST_POSITION;
+
+  public static DateField OPEN_DATE;
+
   public static DateField CLOSED_DATE;
 
   @DefaultBoolean(false)
@@ -61,13 +61,16 @@ public class Account {
 
   @Target(AccountType.class)
   @DefaultInteger(1)
+  @Required
   public static LinkField ACCOUNT_TYPE;
 
   @Target(AccountUpdateMode.class)
   @DefaultInteger(1)
+  @Required
   public static LinkField UPDATE_MODE;
 
   @DefaultBoolean(false)
+  @Required
   public static BooleanField IS_IMPORTED_ACCOUNT;
 
   static {
@@ -154,7 +157,7 @@ public class Account {
   }
 
   public static double getMultiplierWithMainAsPointOfView(Glob fromAccount, Glob toAccount,
-                                                           GlobRepository repository) {
+                                                          GlobRepository repository) {
     double multiplier;
     Integer forAccountIdPointOfView = toAccount == null ?
                                       (fromAccount == null ? null : fromAccount.get(ID))
@@ -184,7 +187,7 @@ public class Account {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 5;
+      return 6;
     }
 
     public byte[] serializeData(FieldValues values) {
@@ -202,11 +205,17 @@ public class Account {
       outputStream.writeInteger(values.get(UPDATE_MODE));
       outputStream.writeBoolean(values.get(IS_IMPORTED_ACCOUNT));
       outputStream.writeDate(values.get(CLOSED_DATE));
+      outputStream.writeDate(values.get(OPEN_DATE));
+      outputStream.writeDate(values.get(CLOSED_DATE));
+      outputStream.writeDouble(values.get(FIRST_POSITION));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
-      if (version == 5) {
+      if (version == 6) {
+        deserializeDataV6(fieldSetter, data);
+      }
+      else if (version == 5) {
         deserializeDataV5(fieldSetter, data);
       }
       else if (version == 4) {
@@ -221,6 +230,24 @@ public class Account {
       else if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
+    }
+
+    private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(NUMBER, input.readUtf8String());
+      fieldSetter.set(BANK_ENTITY, input.readInteger());
+      fieldSetter.set(BRANCH_ID, input.readInteger());
+      fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(POSITION, input.readDouble());
+      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(POSITION_DATE, input.readDate());
+      fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
+      fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
+      fieldSetter.set(UPDATE_MODE, input.readInteger());
+      fieldSetter.set(IS_IMPORTED_ACCOUNT, input.readBoolean());
+      fieldSetter.set(CLOSED_DATE, input.readDate());
+      fieldSetter.set(OPEN_DATE, input.readDate());
+      fieldSetter.set(FIRST_POSITION, input.readDouble());
     }
 
     private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {

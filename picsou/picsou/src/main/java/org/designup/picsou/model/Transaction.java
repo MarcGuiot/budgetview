@@ -10,7 +10,6 @@ import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import static org.globsframework.model.Key.create;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -23,13 +22,18 @@ public class Transaction {
   public static IntegerField ID;
 
   @Target(Month.class)
+  @Required
   public static LinkField MONTH; // yyyymm format
+  @Required
   public static IntegerField DAY; // Starts at 1
 
   @Target(Month.class)
+  @Required
   public static LinkField BANK_MONTH; // yyyymm format
+  @Required
   public static IntegerField BANK_DAY; // Starts at 1
 
+  @Required
   public static DoubleField AMOUNT;
 
   public static DoubleField SUMMARY_POSITION;
@@ -65,6 +69,7 @@ public class Transaction {
   public static LinkField CATEGORY;
 
   @Target(TransactionType.class)
+  @Required
   public static LinkField TRANSACTION_TYPE;
 
   @Target(Account.class)

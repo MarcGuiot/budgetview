@@ -1,6 +1,7 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Month;
@@ -8,6 +9,7 @@ import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
@@ -48,17 +50,36 @@ public class PositionTrigger implements ChangeSetListener {
     }
 
     if (mainPositionComputed) {
+      GlobList accounts = repository.getAll(Account.TYPE);
+      GlobList tmp = new GlobList();
+      for (Glob account : accounts) {
+        if (account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())
+            && Account.MAIN_SUMMARY_ACCOUNT_ID != account.get(Account.ID)
+            && Account.ALL_SUMMARY_ACCOUNT_ID != account.get(Account.ID)) {
+          tmp.add(account);
+        }
+      }
       computeTotalPosition(repository, transactions,
-                           new SameAccountChecker(AccountType.MAIN.getId(), repository));
+                           new SameAccountChecker(AccountType.MAIN.getId(), repository), tmp);
     }
     if (savingsPositionComputed) {
+      GlobList accounts = repository.getAll(Account.TYPE);
+      GlobList tmp = new GlobList();
+      for (Glob account : accounts) {
+        if (account.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())
+            && Account.SAVINGS_SUMMARY_ACCOUNT_ID != account.get(Account.ID)
+            && Account.ALL_SUMMARY_ACCOUNT_ID != account.get(Account.ID)) {
+          tmp.add(account);
+        }
+      }
       computeTotalPosition(repository, transactions,
-                           new SameAccountChecker(AccountType.SAVINGS.getId(), repository));
+                           new SameAccountChecker(AccountType.SAVINGS.getId(), repository), tmp);
     }
   }
 
   private boolean computeAccountPosition(GlobRepository repository, TransactionComparator comparator,
                                          Glob[] transactions, Glob account) {
+    Glob firstTransaction = null;
     Integer transactionId = account.get(Account.TRANSACTION_ID);
     int pivot;
     Integer lastUpdateTransactionId = transactionId;
@@ -99,6 +120,7 @@ public class PositionTrigger implements ChangeSetListener {
       if (checkSameAccount(account, transactionAccount)) {
         repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, positionBefore);
         positionBefore = positionBefore - transaction.get(Transaction.AMOUNT);
+        firstTransaction = transaction;
       }
     }
     int month = TimeService.getCurrentMonth();
@@ -113,6 +135,9 @@ public class PositionTrigger implements ChangeSetListener {
             Transaction.isTransactionBeforeOrEqual(transaction, month, day)) {
           lastUpdateTransactionId = transaction.get(Transaction.ID);
         }
+        if (firstTransaction == null) {
+          firstTransaction = transaction;
+        }
       }
     }
     repository.update(account.getKey(), Account.TRANSACTION_ID, lastUpdateTransactionId);
@@ -125,6 +150,15 @@ public class PositionTrigger implements ChangeSetListener {
                         FieldValue.value(Account.POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION))
       );
     }
+    if (firstTransaction != null) {
+      repository.update(account.getKey(),
+                        FieldValue.value(Account.FIRST_POSITION,
+                                         firstTransaction.get(Transaction.ACCOUNT_POSITION) - firstTransaction.get(Transaction.AMOUNT)));
+    }
+    else {
+      repository.update(account.getKey(),
+                        FieldValue.value(Account.FIRST_POSITION, account.get(Account.POSITION)));
+    }
     return true;
   }
 
@@ -133,34 +167,34 @@ public class PositionTrigger implements ChangeSetListener {
   }
 
   private void computeTotalPosition(GlobRepository repository, Glob[] transactions,
-                                    SameAccountChecker sameCheckerAccount) {
-    GlobList accounts = repository.getAll(Account.TYPE);
+                                    SameAccountChecker sameCheckerAccount, final GlobList accounts) {
+
     Map<Integer, Double> positions = new HashMap<Integer, Double>();
-    GlobList closedAccount = new GlobList();
+
+    AccountManagement management = new AccountManagement(repository, accounts, sameCheckerAccount);
+    Glob firstMonth = repository.getSorted(Month.TYPE, new GlobFieldComparator(Month.ID), GlobMatchers.ALL).first();
+    if (firstMonth == null) {
+      return;
+    }
+
+    PicsouMatchers.AccountDateMatcher matcher =
+      new PicsouMatchers.AccountDateMatcher(new GlobList(firstMonth));
     for (Glob account : accounts) {
-      if (account.get(Account.CLOSED_DATE) != null && sameCheckerAccount.isSame(account.get(Account.ACCOUNT_TYPE))) {
-        closedAccount.add(account);
+      if (matcher.matches(account, repository) &&
+          sameCheckerAccount.isSame(account.get(Account.ID))) {
+        Double value = account.get(Account.FIRST_POSITION);
+        positions.put(account.get(Account.ID), value);
       }
     }
-    closedAccount.sort(Account.CLOSED_DATE);
-    int closeMonth[] = new int[closedAccount.size()];
-    int closeDay[] = new int[closedAccount.size()];
-    int closeId[] = new int[closedAccount.size()];
-    int i = 0;
-    for (Glob account : closedAccount) {
-      closeMonth[i] = Month.getMonthId(account.get(Account.CLOSED_DATE));
-      closeDay[i] = Month.getDay(account.get(Account.CLOSED_DATE));
-      closeId[i] = account.get(Account.ID);
-      i++;
-    }
-    double position = 0;
 
-    int lastCloseIndex = 0;
+
     Double realPosition = null;
     Date positionDate = null;
     int month = TimeService.getCurrentMonth();
     int currentDay = TimeService.getCurrentDay();
-    for (Glob transaction : transactions) {
+    int index = 0;
+    for (; index < transactions.length; index++) {
+      Glob transaction = transactions[index];
       if (!sameCheckerAccount.isSame(transaction.get(Transaction.ACCOUNT))) {
         continue;
       }
@@ -169,15 +203,14 @@ public class PositionTrigger implements ChangeSetListener {
         if (accountId != null) {
           positions.put(accountId, transaction.get(Transaction.ACCOUNT_POSITION));
         }
-        while (lastCloseIndex < closeMonth.length &&
-               closeMonth[lastCloseIndex] <= transaction.get(Transaction.BANK_MONTH) &&
-               closeDay[lastCloseIndex] < transaction.get(Transaction.BANK_DAY)) {
-          positions.remove(closeId[lastCloseIndex]);
-          lastCloseIndex++;
-        }
-        position = 0;
+
+        management.updatePosition(transaction, index, transactions, positions);
+
+        double position = 0.;
         for (Double accountPosition : positions.values()) {
-          position += accountPosition;
+          if (accountPosition != null) {
+            position += accountPosition;
+          }
         }
         realPosition = position;
         positionDate = Month.toDate(transaction.get(Transaction.BANK_MONTH),
@@ -185,13 +218,113 @@ public class PositionTrigger implements ChangeSetListener {
         repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, position);
       }
       else {
-        position += transaction.get(Transaction.AMOUNT);
-        repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, position);
+        break;
       }
+    }
+    double position = 0.;
+    for (; index < transactions.length; index++) {
+      Glob transaction = transactions[index];
+      if (!sameCheckerAccount.isSame(transaction.get(Transaction.ACCOUNT))) {
+        continue;
+      }
+      management.updatePosition(transaction, index, transactions, positions);
+      position += transaction.get(Transaction.AMOUNT);
+      double totalPosition = 0;
+      for (Double accountPosition : positions.values()) {
+        if (accountPosition != null) {
+          totalPosition += accountPosition;
+        }
+      }
+      totalPosition += position;
+      repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, totalPosition);
+    }
+
+    if (realPosition == null) {
+      realPosition = 0.;
+      for (Double accountPosition : positions.values()) {
+        realPosition += (accountPosition != null ? accountPosition : 0.);
+      }
+      positionDate = TimeService.getToday();
     }
     repository.update(sameCheckerAccount.getSummary(),
                       FieldValue.value(Account.POSITION, realPosition),
                       FieldValue.value(Account.POSITION_DATE, positionDate));
   }
 
+  static class AccountManagement {
+    private int lastCloseIndex = 0;
+    private int lastOpenIndex = 0;
+    private int[] closeMonth;
+    private int[] closeDay;
+    private int[] closeId;
+    private int[] openMonth;
+    private int[] openDay;
+    private int[] openId;
+    private GlobRepository repository;
+
+    AccountManagement(GlobRepository repository, GlobList accounts, SameAccountChecker sameCheckerAccount) {
+      this.repository = repository;
+      GlobList closedAccounts = new GlobList();
+      GlobList openAccounts = new GlobList();
+      for (Glob account : accounts) {
+        if (account.get(Account.CLOSED_DATE) != null && sameCheckerAccount.isSame(account.get(Account.ID))) {
+          closedAccounts.add(account);
+        }
+        if (account.get(Account.OPEN_DATE) != null && sameCheckerAccount.isSame(account.get(Account.ID))) {
+          openAccounts.add(account);
+        }
+      }
+      closedAccounts.sort(Account.CLOSED_DATE);
+      closeMonth = new int[closedAccounts.size()];
+      closeDay = new int[closedAccounts.size()];
+      closeId = new int[closedAccounts.size()];
+      int i = 0;
+      for (Glob account : closedAccounts) {
+        closeMonth[i] = Month.getMonthId(account.get(Account.CLOSED_DATE));
+        closeDay[i] = Month.getDay(account.get(Account.CLOSED_DATE));
+        closeId[i] = account.get(Account.ID);
+        i++;
+      }
+
+      openAccounts.sort(Account.OPEN_DATE);
+      openMonth = new int[openAccounts.size()];
+      openDay = new int[openAccounts.size()];
+      openId = new int[openAccounts.size()];
+      int j = 0;
+      for (Glob account : openAccounts) {
+        openMonth[j] = Month.getMonthId(account.get(Account.OPEN_DATE));
+        openDay[j] = Month.getDay(account.get(Account.OPEN_DATE));
+        openId[j] = account.get(Account.ID);
+        j++;
+      }
+    }
+
+    public void updatePosition(Glob transaction, int index, Glob transactions[], Map<Integer, Double> positions) {
+      while (lastCloseIndex < closeMonth.length &&
+             (closeMonth[lastCloseIndex] < transaction.get(Transaction.BANK_MONTH) ||
+              (closeMonth[lastCloseIndex] == transaction.get(Transaction.BANK_MONTH) &&
+               closeDay[lastCloseIndex] < transaction.get(Transaction.BANK_DAY)))) {
+        positions.remove(closeId[lastCloseIndex]);
+        lastCloseIndex++;
+      }
+
+      while (lastOpenIndex < openMonth.length &&
+             (openMonth[lastOpenIndex] < transaction.get(Transaction.BANK_MONTH) ||
+              (openMonth[lastOpenIndex] == transaction.get(Transaction.BANK_MONTH) &&
+               openDay[lastOpenIndex] <= transaction.get(Transaction.BANK_DAY)))) {
+        int tmpAccountId = openId[lastOpenIndex];
+        Glob account = repository.find(Key.create(Account.TYPE, tmpAccountId));
+        positions.put(tmpAccountId, account.get(Account.POSITION));
+        // on cherche si il y a une operation dans le futur pour ce comptes.
+        for (int k = index; k < transactions.length; k++) {
+          if (transactions[k].get(Transaction.ACCOUNT) == tmpAccountId) {
+            positions.put(tmpAccountId, transactions[k].get(Transaction.ACCOUNT_POSITION) - transactions[k].get(Transaction.AMOUNT));
+            break;
+          }
+        }
+        lastOpenIndex++;
+      }
+
+    }
+  }
 }

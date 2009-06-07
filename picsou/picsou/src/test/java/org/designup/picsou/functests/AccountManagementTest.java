@@ -17,7 +17,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     mainAccounts.checkAccount("Account n. 10101010", 1.23, "2006/01/10");
-    mainAccounts.checkSummary(1.23, "10/01/2006");
+    mainAccounts.checkSummary(1.23, "2006/01/10");
     views.selectData();
     transactions.initAmountContent()
       .add("10/01/2006", "BLAH", -1.00, "To categorize", 1.23, 1.23, "Account n. 10101010")
@@ -42,15 +42,15 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    mainAccounts.checkSummary(20.0, "20/01/2006");
+    mainAccounts.checkSummary(20.0, "2006/01/20");
     mainAccounts.checkAccount("Account n. 123123123", 10, "2006/01/15");
     mainAccounts.checkAccount("Card n. 1000-2000-3000-4000", 10, "2006/01/20");
     views.selectData();
     transactions.initAmountContent()
       .add("20/01/2006", "BAR", -6.00, "To categorize", 10.00, 20.00, "Card n. 1000-2000-3000-4000")
       .add("17/01/2006", "FOO", -3.00, "To categorize", 16.00, 26.00, "Card n. 1000-2000-3000-4000")
-      .add("15/01/2006", "GDF", -10.00, "To categorize", 10.00, 10.00, "Account n. 123123123")
-      .add("10/01/2006", "EDF", -1.00, "To categorize", 20.00, 20.00, "Account n. 123123123")
+      .add("15/01/2006", "GDF", -10.00, "To categorize", 10.00, 29.00, "Account n. 123123123")
+      .add("10/01/2006", "EDF", -1.00, "To categorize", 20.00, 39.00, "Account n. 123123123")
       .check();
   }
 
@@ -68,7 +68,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     mainAccounts.checkAccount("Account n. 10101010", 12345.60, "2006/05/01");
-    mainAccounts.checkSummary(12345.60, "01/05/2006");
+    mainAccounts.checkSummary(12345.60, "2006/05/01");
   }
 
   public void testNothingShownForQifFiles() throws Exception {

@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.accounts;
 
+import org.designup.picsou.gui.components.DatePicker;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Bank;
@@ -82,6 +83,29 @@ public class AccountEditionPanel {
     builder.add("savingsMessageWarning", messageSavingsWarning);
     updateModeCombo = builder.addComboEditor("updateMode", Account.UPDATE_MODE).setShowEmptyOption(false);
     messageSavingsWarning.setVisible(false);
+
+    DatePicker startDatePicker = new DatePicker(Account.OPEN_DATE, repository, localDirectory);
+    builder.add("startDatePicker", startDatePicker.getComponent());
+
+    builder.add("removeStartDate", new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        Glob account = AccountEditionPanel.this.account;
+        if (account != null) {
+          repository.update(account.getKey(), Account.OPEN_DATE, null);
+        }
+      }
+    });
+
+    DatePicker endDatePicker = new DatePicker(Account.CLOSED_DATE, repository, localDirectory);
+    builder.add("endDatePicker", endDatePicker.getComponent());
+    builder.add("removeEndDate", new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        Glob account = AccountEditionPanel.this.account;
+        if (account != null) {
+          repository.update(account.getKey(), Account.CLOSED_DATE, null);
+        }
+      }
+    });
 
     positionEditor = builder.addEditor("position", Account.POSITION).setNotifyOnKeyPressed(true).getComponent();
 

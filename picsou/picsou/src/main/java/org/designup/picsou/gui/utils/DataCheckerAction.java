@@ -4,6 +4,8 @@ import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.model.Transaction;
+import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.annotations.Required;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -51,6 +53,7 @@ public class DataCheckerAction extends AbstractAction {
       GlobList allSeries = repository.getAll(Series.TYPE);
 
       for (Glob series : allSeries) {
+        checkNotNullable(series);
         Integer firstMonthForSeries = series.get(Series.FIRST_MONTH);
         if (firstMonthForSeries == null) {
           firstMonthForSeries = firstMonth;
@@ -75,6 +78,8 @@ public class DataCheckerAction extends AbstractAction {
             break;
           }
           currentMonth = Month.next(currentMonth);
+
+          checkNotNullable(budget);
         }
         if (!seriesBudgets.getLast().get(SeriesBudget.MONTH).equals(lastMonthForSeries)) {
           Log.write("Bad end of series : " + series.get(Series.NAME) + " " +
@@ -93,6 +98,7 @@ public class DataCheckerAction extends AbstractAction {
                       + " " + transaction.get(Transaction.LABEL));
             hasError = true;
           }
+          checkNotNullable(transaction);
         }
       }
       return hasError;
@@ -103,6 +109,17 @@ public class DataCheckerAction extends AbstractAction {
         toolkit.beep();
       }
       Log.write("End checking");
+    }
+  }
+
+  private void checkNotNullable(Glob glob) {
+    Field[] fields = glob.getType().getFields();
+    for (Field field : fields) {
+      if (field.hasAnnotation(Required.class)) {
+        if (glob.getValue(field) == null) {
+          Log.write(field + " should not be null");
+        }
+      }
     }
   }
 }

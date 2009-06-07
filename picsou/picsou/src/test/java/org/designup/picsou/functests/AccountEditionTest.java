@@ -7,7 +7,7 @@ import org.designup.picsou.model.TransactionType;
 public class AccountEditionTest extends LoggedInFunctionalTestCase {
   public void testEditingAnExistingAccount() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0000123", 100.00, "15/10/2008")
+      .addBankAccount(30006, 10674, "0000123", 100.00, "2008/10/15")
       .addTransaction("2008/10/01", 15.00, "MacDo")
       .load();
 
@@ -79,7 +79,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
   public void testEmptyAccountNamesAreNotAllowed() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0000123", 100.00, "15/10/2008")
+      .addBankAccount(30006, 10674, "0000123", 100.00, "2008/10/15")
       .addTransaction("2008/10/01", 15.00, "MacDo")
       .load();
 
@@ -115,7 +115,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
   public void testMainAccountTypeIsTheDefault() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0000123", 100.00, "15/10/2008")
+      .addBankAccount(30006, 10674, "0000123", 100.00, "2008/10/15")
       .addTransaction("2008/10/01", 15.00, "MacDo")
       .load();
 
@@ -154,13 +154,13 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
   public void testDeletingAnAccountAndRelatedTransactions() throws Exception {
 
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0000123", 100.00, "15/10/2008")
+      .addBankAccount(30006, 10674, "0000123", 100.00, "2008/10/15")
       .addTransaction("2008/10/01", 1000.00, "WorldCo")
       .addTransaction("2008/10/05", -15.00, "MacDo")
       .load();
 
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0000666", 100.00, "15/10/2008")
+      .addBankAccount(30006, 10674, "0000666", 100.00, "2008/10/15")
       .addTransaction("2008/10/10", -15.00, "Quick")
       .load();
 
@@ -199,12 +199,12 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
   public void testDeletingASavingsAccountWithSeries() throws Exception {
 
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0000100", 900.00, "15/10/2008")
+      .addBankAccount(30006, 10674, "0000100", 900.00, "2008/10/15")
       .addTransaction("2008/10/01", 1000.00, "Salaire/oct")
       .load();
 
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0000123", 200000.00, "15/10/2008")
+      .addBankAccount(30006, 10674, "0000123", 200000.00, "2008/10/15")
       .addTransaction("2008/10/05", 200.00, "Virement octobre")
       .load();
 
@@ -262,5 +262,82 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkMessageContains("All the series associated to this account will be deleted")
       .validate();
     savingsAccounts.checkNotPresent("Codevi");
+  }
+
+  public void testCreateAccountWithStartDate() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "0000100", 900.00, "2008/10/15")
+      .addTransaction("2008/10/01", 1000.00, "Salaire/oct")
+      .addTransaction("2008/09/01", 1000.00, "Salaire/oct")
+      .load();
+    operations.openPreferences().setFutureMonthsCount(12).validate();
+
+    views.selectHome();
+    mainAccounts.createNewAccount()
+      .setAccountName("Main")
+      .selectBank("ING Direct")
+      .setBalance(1000)
+      .setStartDate("2008/10/01")
+      .setEndDate("2009/06/03")
+      .checkEndDate("2009/06/03")
+      .cancelEndDate()
+      .validate();
+
+    mainAccounts.edit("Account n. 0000100")
+      .setStartDate("2008/09/01")
+      .validate();
+
+    timeline.selectMonth("2008/10");
+    mainAccounts.edit("Main")
+      .checkStartDate("2008/10/01");
+
+    timeline.selectMonth("2008/09");
+    mainAccounts.checkAccountNames("Account n. 0000100");
+    mainAccounts.checkAccount("Account n. 0000100", 900, "2008/10/01");
+    mainAccounts.checkEstimatedPosition(-100);
+
+    timeline.selectMonth("2008/10");
+    mainAccounts.checkAccountNames("Main", "Account n. 0000100");
+    mainAccounts.checkAccount("Account n. 0000100", 900, "2008/10/01");
+    mainAccounts.checkAccount("Main", 1000, "2008/08/31");
+    mainAccounts.checkEstimatedPosition(1900);
+  }
+
+  public void testCreateAccountWithEndDate() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(12).validate();
+    views.selectHome();
+    mainAccounts.createNewAccount()
+      .setAccountName("Main")
+      .selectBank("ING Direct")
+      .setBalance(1000)
+      .validate();
+
+    mainAccounts.createNewAccount()
+      .setAccountName("Closed main")
+      .selectBank("ING Direct")
+      .setEndDate("2008/12/03")
+      .setBalance(1000)
+      .validate();
+
+    // creation d'un series pour avoir des transactions
+
+    views.selectBudget();
+    budgetView.recurring.createSeries()
+      .setName("edf")
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount(50)
+      .validate();
+
+    timeline.selectMonth("2008/10");
+    mainAccounts.edit("Closed main")
+      .checkEndDate("2008/12/03")
+      .validate();
+    mainAccounts.checkAccountNames("Main", "Closed main");
+    mainAccounts.checkEstimatedPosition(1850);
+
+    timeline.selectMonth("2009/01");
+    mainAccounts.checkAccountNames("Main");
+    mainAccounts.checkEstimatedPosition(700);
   }
 }

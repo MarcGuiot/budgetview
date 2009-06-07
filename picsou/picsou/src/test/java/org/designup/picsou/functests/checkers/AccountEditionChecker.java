@@ -1,15 +1,18 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.uispec4j.ComboBox;
-import org.uispec4j.TextBox;
-import org.uispec4j.Trigger;
+import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
+import org.uispec4j.assertion.Assertion;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
+import org.apache.wicket.markup.html.form.validation.IFormValidator;
+import org.jdesktop.swingx.JXDatePicker;
+import org.globsframework.utils.Dates;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class AccountEditionChecker extends GuiChecker {
   private Window dialog;
@@ -199,5 +202,57 @@ public class AccountEditionChecker extends GuiChecker {
   public void cancel() {
     dialog.getButton("Cancel").click();
     assertFalse(dialog.isVisible());
+  }
+
+  public AccountEditionChecker setStartDate(String date) {
+    Component[] swingComponents = dialog.getSwingComponents(JXDatePicker.class, "startDatePicker");
+    Assert.assertEquals(1, swingComponents.length);
+    ((JXDatePicker)swingComponents[0]).setDate(Dates.parse(date));
+    return this;
+  }
+
+  public AccountEditionChecker checkStartDate(String date) {
+    Component[] swingComponents = dialog.getSwingComponents(JXDatePicker.class, "startDatePicker");
+    Assert.assertEquals(1, swingComponents.length);
+    Assert.assertEquals(Dates.parse(date), ((JXDatePicker)swingComponents[0]).getDate());
+    return this;
+  }
+
+  public AccountEditionChecker setEndDate(String date) {
+    Component[] swingComponents = dialog.getSwingComponents(JXDatePicker.class, "endDatePicker");
+    Assert.assertEquals(1, swingComponents.length);
+    ((JXDatePicker)swingComponents[0]).setDate(Dates.parse(date));
+    return this;
+  }
+
+  public AccountEditionChecker checkEndDate(String date) {
+    Component[] swingComponents = dialog.getSwingComponents(JXDatePicker.class, "endDatePicker");
+    Assert.assertEquals(1, swingComponents.length);
+    Assert.assertEquals(Dates.parse(date), ((JXDatePicker)swingComponents[0]).getDate());
+    return this;
+  }
+
+  public AccountEditionChecker cancelStartDate(){
+    dialog.getButton("removeStartDate").click();
+    assertThat(new Assertion() {
+      public void check() throws Exception {
+        Component[] swingComponents = dialog.getSwingComponents(JXDatePicker.class, "startDatePicker");
+        Assert.assertEquals(1, swingComponents.length);
+        Assert.assertNull(((JXDatePicker)swingComponents[0]).getDate());
+      }
+    });
+    return this;
+  }
+
+  public AccountEditionChecker cancelEndDate(){
+    dialog.getButton("removeEndDate").click();
+    assertThat(new Assertion() {
+      public void check() throws Exception {
+        Component[] swingComponents = dialog.getSwingComponents(JXDatePicker.class, "endDatePicker");
+        Assert.assertEquals(1, swingComponents.length);
+        Assert.assertNull(((JXDatePicker)swingComponents[0]).getDate());
+      }
+    });
+    return this;
   }
 }

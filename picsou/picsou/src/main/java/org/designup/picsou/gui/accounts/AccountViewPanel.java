@@ -4,12 +4,14 @@ import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.description.AccountComparator;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.monthsummary.AccountPositionThresholdAction;
+import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.views.AbstractGlobTextView;
@@ -22,6 +24,7 @@ import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -31,21 +34,28 @@ import java.awt.event.ActionEvent;
 public abstract class AccountViewPanel {
   protected GlobRepository repository;
   protected Directory directory;
-  private GlobMatcher accountMatcher;
+  private GlobMatcher accountTypeMatcher;
+  private GlobMatcher filterMatcherWithDates;
   private Integer summaryId;
   private JPanel panel;
   private JPanel header;
   private JLabel labelTypeName;
+  private GlobRepeat accountRepeat;
 
   public AccountViewPanel(final GlobRepository repository, final Directory directory,
                           GlobMatcher accountMatcher, Integer summaryId) {
     this.repository = repository;
     this.directory = directory;
-    this.accountMatcher = accountMatcher;
+    this.accountTypeMatcher = accountMatcher;
     this.summaryId = summaryId;
     directory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
+        GlobList months = selection.getAll(Month.TYPE);
         updateEstimatedPosition();
+        filterMatcherWithDates =
+          GlobMatchers.and(accountTypeMatcher,
+                           new PicsouMatchers.AccountDateMatcher(months));
+        accountRepeat.setFilter(filterMatcherWithDates);
       }
     }, Month.TYPE);
   }
@@ -70,7 +80,7 @@ public abstract class AccountViewPanel {
     builder.add("estimatedPosition", getEstimatedPositionComponent());
     builder.add("estimatedPositionDate", getEstimatedPositionDateComponent());
 
-    builder.addRepeat("accountRepeat", Account.TYPE, accountMatcher,
+    accountRepeat = builder.addRepeat("accountRepeat", Account.TYPE, accountTypeMatcher,
                       new AccountComparator(),
                       new AccountRepeatFactory());
 
@@ -103,7 +113,7 @@ public abstract class AccountViewPanel {
 
   protected void updateEstimatedPosition() {
 
-    boolean hasAccounts = !repository.getAll(Account.TYPE, accountMatcher).isEmpty();
+    boolean hasAccounts = !repository.getAll(Account.TYPE, accountTypeMatcher).isEmpty();
     header.setVisible(hasAccounts);
     getEstimatedPositionComponent().setVisible(hasAccounts);
     if (!hasAccounts) {

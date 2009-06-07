@@ -270,15 +270,15 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectSeries("Epargne");
     views.selectData();
     transactions.initAmountContent()
-      .add("10/10/2008", "Planned: Epargne", 100.00, "Epargne", 300.00, 300.00, "Epargne CIC")
+      .add("10/10/2008", "Planned: Epargne", 100.00, "Epargne", 300.00, 1300.00, "Epargne CIC")
       .add("10/10/2008", "Planned: Epargne", -100.00, "Epargne", -200.00, -200.00, "Account n. 00001123")
-      .add("10/09/2008", "Planned: Epargne", 100.00, "Epargne", 200.00, 200.00, "Epargne CIC")
+      .add("10/09/2008", "Planned: Epargne", 100.00, "Epargne", 200.00, 1200.00, "Epargne CIC")
       .add("10/09/2008", "Planned: Epargne", -100.00, "Epargne", -100.00, -100.00, "Account n. 00001123")
-      .add("10/08/2008", "VIREMENT", 100.00, "Epargne", 100.00, 100.00, "Epargne CIC")
+      .add("10/08/2008", "VIREMENT", 100.00, "Epargne", 100.00, 1100.00, "Epargne CIC")
       .add("10/08/2008", "VIREMENT", -100.00, "Epargne", 0.00, 0.00, "Account n. 00001123")
-      .add("10/07/2008", "VIREMENT", 100.00, "Epargne", 0.00, 0.00, "Epargne CIC")
+      .add("10/07/2008", "VIREMENT", 100.00, "Epargne", 0.00, 1000.00, "Epargne CIC")
       .add("10/07/2008", "VIREMENT", -100.00, "Epargne", 100.00, 100.00, "Account n. 00001123")
-      .add("10/06/2008", "VIREMENT", 100.00, "Epargne", -100.00, -100.00, "Epargne CIC")
+      .add("10/06/2008", "VIREMENT", 100.00, "Epargne", -100.00, 900.00, "Epargne CIC")
       .add("10/06/2008", "VIREMENT", -100.00, "Epargne", 200.00, 200.00, "Account n. 00001123")
       .check();
   }
@@ -339,12 +339,12 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/06");
     savingsAccounts.checkPosition("Epargne", 400);
     savingsAccounts.checkEstimatedPosition(400, "30/06/2008");
-    savingsAccounts.checkSummary(1000, "05/08/2008");
+    savingsAccounts.checkSummary(1000, "2008/08/05");
 
     timeline.selectMonth("2008/08");
     savingsAccounts.checkPosition("Epargne", 1000);
     savingsAccounts.checkEstimatedPosition(1000, "31/08/2008");
-    savingsAccounts.checkSummary(1000, "05/08/2008");
+    savingsAccounts.checkSummary(1000, "2008/08/05");
 
     timeline.selectMonth("2008/09");
     savingsAccounts.checkPosition("Epargne", 1300);
@@ -387,13 +387,13 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectData();
     timeline.selectAll();
     transactions.initAmountContent()
-      .add("05/10/2008", "Planned: CAF", 300.00, "CAF", 2200.00, 1200.00, "Epargne")
+      .add("05/10/2008", "Planned: CAF", 300.00, "CAF", 2200.00, 2200.00, "Epargne")
       .add("05/10/2008", "Planned: CAF", -300.00, "CAF", -1200.00, -1200.00, "Account n. 00001123")
-      .add("05/09/2008", "Planned: CAF", 300.00, "CAF", 1900.00, 900.00, "Epargne")
+      .add("05/09/2008", "Planned: CAF", 300.00, "CAF", 1900.00, 1900.00, "Epargne")
       .add("05/09/2008", "Planned: CAF", -300.00, "CAF", -900.00, -900.00, "Account n. 00001123")
-      .add("05/08/2008", "Planned: CAF", 300.00, "CAF", 1600.00, 600.00, "Epargne")
+      .add("05/08/2008", "Planned: CAF", 300.00, "CAF", 1600.00, 1600.00, "Epargne")
       .add("05/08/2008", "Planned: CAF", -300.00, "CAF", -600.00, -600.00, "Account n. 00001123")
-      .add("05/07/2008", "Planned: CAF", 300.00, "CAF", 1300.00, 300.00, "Epargne")
+      .add("05/07/2008", "Planned: CAF", 300.00, "CAF", 1300.00, 1300.00, "Epargne")
       .add("05/07/2008", "Planned: CAF", -300.00, "CAF", -300.00, -300.00, "Account n. 00001123")
       .add("10/06/2008", "FNAC", -100.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
       .check();
@@ -796,7 +796,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("05/07/2008", "VIREMENT CAF", 300.00, "Virement CAF", 700.00, 3500.00, "Epargne")
       .add("06/06/2008", "VIREMENT VERS EPARGNE", -100.00, "Placement", 200.00, 200.00, "Account n. 00001123")
       .add("06/06/2008", "VIREMENT EPARGNE", 100.00, "Placement", 2800.00, 3200.00, "Account n. 111222")
-      .add("05/06/2008", "VIREMENT CAF", 300.00, "Virement CAF", 400.00, 400.00, "Epargne")
+      .add("05/06/2008", "VIREMENT CAF", 300.00, "Virement CAF", 400.00, 3100.00, "Epargne")
       .check();
 
     views.selectHome();
@@ -804,13 +804,13 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkPosition("Epargne", 400);
     savingsAccounts.checkPosition("Account n. 111222", 2800);
     savingsAccounts.checkEstimatedPosition(3200, "30/06/2008");
-    savingsAccounts.checkSummary(4000, "06/08/2008");
+    savingsAccounts.checkSummary(4000, "2008/08/06");
 
     timeline.selectMonth("2008/08");
     savingsAccounts.checkPosition("Epargne", 1000);
     savingsAccounts.checkPosition("Account n. 111222", 3000);
     savingsAccounts.checkEstimatedPosition(4000, "31/08/2008");
-    savingsAccounts.checkSummary(4000, "06/08/2008");
+    savingsAccounts.checkSummary(4000, "2008/08/06");
     views.selectSavings();
 //    monthSummary.checkSavingsIn("Epargne", 300, 300);
     savingsView.checkAmount("Epargne", "Virement CAF", 300, 300);
@@ -1102,4 +1102,46 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("02/08/2008", "FINANCEMENT", -100.00, "Savings Series", 1000.00, 1000.00, "Savings")
       .check();
   }
+
+  public void testTakeAccountPositionDateIfNoOperationsInPast() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+
+    mainAccounts.createNewAccount().setAccountName("Main")
+      .setAsMain()
+      .setBalance(1000)
+      .selectBank(SOCIETE_GENERALE)
+      .setUpdateModeToManualInput()
+      .validate();
+
+    savingsAccounts.createNewAccount().setAccountName("Savings")
+      .selectBank(SOCIETE_GENERALE)
+      .setAsSavings()
+      .setBalance(1000)
+      .setUpdateModeToManualInput()
+      .validate();
+
+    views.selectHome();
+    mainAccounts
+      .checkSummary(1000, "2008/08/31");
+
+    savingsAccounts
+      .checkSummary(1000, "2008/08/31");
+
+    views.selectBudget();
+    budgetView.recurring.createSeries()
+      .setName("EDF")
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount("50")
+      .validate();
+
+    timeline.selectMonth("2008/09");
+
+    views.selectHome();
+    monthSummary
+      .checkBalance(-50);
+
+  }
+
 }

@@ -65,9 +65,10 @@ public class AccountViewChecker extends GuiChecker {
   }
 
   public AccountViewChecker checkSummary(double amount, String updateDate) {
+    Date date = Dates.parse(updateDate);
     assertThat(panel.getTextBox("referencePosition").textEquals(toString(amount)));
     assertThat(panel.getTextBox("referencePositionDate")
-      .textEquals("on " + updateDate));
+      .textEquals("on " + Formatting.toString(date)));
     return this;
   }
 
