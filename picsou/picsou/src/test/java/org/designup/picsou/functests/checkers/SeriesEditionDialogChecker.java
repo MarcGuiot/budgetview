@@ -687,6 +687,11 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker selectSubSeries(String name) {
+    getSelectedTab().getListBox().select(name);
+    return this;
+  }
+
   public SeriesEditionDialogChecker addSubSeries(String name) {
     Panel tab = getSelectedTab();
     tab.getInputTextBox("subSeriesNameField").setText(name, false);
