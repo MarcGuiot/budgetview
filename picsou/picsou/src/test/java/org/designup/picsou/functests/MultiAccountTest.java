@@ -28,12 +28,4 @@ public class MultiAccountTest extends LoggedInFunctionalTestCase {
       .add("10/08/2008", TransactionType.VIREMENT, "Virement", "", 100.00)
       .check();
   }
-
-  public void testChangeSeriesBudgetPeriodicity() throws Exception {
-    fail("Marc, y a-t-il quelque chose à faire dans ce test vide ?");
-  }
-
-  public void testChangeSeriesBudgetAmount() throws Exception {
-    fail("Marc, y a-t-il quelque chose à faire dans ce test vide ?");
-  }
 }

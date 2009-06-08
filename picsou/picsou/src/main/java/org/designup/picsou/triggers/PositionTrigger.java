@@ -171,7 +171,7 @@ public class PositionTrigger implements ChangeSetListener {
 
     Map<Integer, Double> positions = new HashMap<Integer, Double>();
 
-    AccountManagement management = new AccountManagement(repository, accounts, sameCheckerAccount);
+    AccountManagement accountManagement = new AccountManagement(repository, accounts, sameCheckerAccount);
     Glob firstMonth = repository.getSorted(Month.TYPE, new GlobFieldComparator(Month.ID), GlobMatchers.ALL).first();
     if (firstMonth == null) {
       return;
@@ -199,12 +199,15 @@ public class PositionTrigger implements ChangeSetListener {
         continue;
       }
       if (Transaction.isTransactionBeforeOrEqual(transaction, month, currentDay) && !transaction.get(Transaction.PLANNED)) {
+
+        accountManagement.updateOpenPosition(transaction, index, transactions, positions);
+        accountManagement.updateClosePosition(transaction, positions);
+
         Integer accountId = transaction.get(Transaction.ACCOUNT);
         if (accountId != null) {
           positions.put(accountId, transaction.get(Transaction.ACCOUNT_POSITION));
         }
 
-        management.updatePosition(transaction, index, transactions, positions);
 
         double position = 0.;
         for (Double accountPosition : positions.values()) {
@@ -212,6 +215,7 @@ public class PositionTrigger implements ChangeSetListener {
             position += accountPosition;
           }
         }
+
         realPosition = position;
         positionDate = Month.toDate(transaction.get(Transaction.BANK_MONTH),
                                     transaction.get(Transaction.BANK_DAY));
@@ -227,7 +231,9 @@ public class PositionTrigger implements ChangeSetListener {
       if (!sameCheckerAccount.isSame(transaction.get(Transaction.ACCOUNT))) {
         continue;
       }
-      management.updatePosition(transaction, index, transactions, positions);
+      accountManagement.updateOpenPosition(transaction, index, transactions, positions);
+      accountManagement.updateClosePosition(transaction, positions);
+
       position += transaction.get(Transaction.AMOUNT);
       double totalPosition = 0;
       for (Double accountPosition : positions.values()) {
@@ -299,7 +305,7 @@ public class PositionTrigger implements ChangeSetListener {
       }
     }
 
-    public void updatePosition(Glob transaction, int index, Glob transactions[], Map<Integer, Double> positions) {
+    private void updateClosePosition(Glob transaction, Map<Integer, Double> positions) {
       while (lastCloseIndex < closeMonth.length &&
              (closeMonth[lastCloseIndex] < transaction.get(Transaction.BANK_MONTH) ||
               (closeMonth[lastCloseIndex] == transaction.get(Transaction.BANK_MONTH) &&
@@ -307,7 +313,9 @@ public class PositionTrigger implements ChangeSetListener {
         positions.remove(closeId[lastCloseIndex]);
         lastCloseIndex++;
       }
+    }
 
+    private void updateOpenPosition(Glob transaction, int index, Glob[] transactions, Map<Integer, Double> positions) {
       while (lastOpenIndex < openMonth.length &&
              (openMonth[lastOpenIndex] < transaction.get(Transaction.BANK_MONTH) ||
               (openMonth[lastOpenIndex] == transaction.get(Transaction.BANK_MONTH) &&
@@ -324,7 +332,8 @@ public class PositionTrigger implements ChangeSetListener {
         }
         lastOpenIndex++;
       }
-
     }
+
+
   }
 }

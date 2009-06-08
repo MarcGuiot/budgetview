@@ -340,4 +340,46 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkAccountNames("Main");
     mainAccounts.checkEstimatedPosition(700);
   }
+
+  public void testBeginEndInThePastWithTransactions() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/04/30", -100, "Free")
+      .addTransaction("2008/05/25", -100, "France Telecom")
+      .addTransaction("2008/06/15", -100, "Auchan")
+      .addTransaction("2008/07/15", -100, "Auchan")
+      .addTransaction("2008/08/15", -100, "Auchan")
+      .load();
+
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "0000100", 100.0, "2008/07/15")
+      .addTransaction("2008/07/01", 1000.00, "Salaire/oct")
+      .addTransaction("2008/06/01", 1000.00, "Salaire/oct")
+      .load();
+
+    mainAccounts.edit("Account n. 0000100")
+      .setStartDate("2008/06/01")
+      .setEndDate("2008/07/01")
+      .validate();
+
+    timeline.selectMonth("2008/04");
+    mainAccounts.checkAccountNames(OfxBuilder.DEFAULT_ACCOUNT_NAME);
+    mainAccounts.checkEstimatedPosition(400);
+
+    timeline.selectMonth("2008/05");
+    mainAccounts.checkAccountNames(OfxBuilder.DEFAULT_ACCOUNT_NAME);
+    mainAccounts.checkEstimatedPosition(300);
+
+    timeline.selectMonth("2008/06");
+    mainAccounts.checkAccountNames(OfxBuilder.DEFAULT_ACCOUNT_NAME, "Account n. 0000100");
+    mainAccounts.checkEstimatedPosition(-700);
+
+    timeline.selectMonth("2008/07");
+    mainAccounts.checkAccountNames(OfxBuilder.DEFAULT_ACCOUNT_NAME, "Account n. 0000100");
+    mainAccounts.checkEstimatedPosition(100);
+
+    timeline.selectMonth("2008/08");
+    mainAccounts.checkAccountNames(OfxBuilder.DEFAULT_ACCOUNT_NAME);
+    mainAccounts.checkEstimatedPosition(0);
+  }
 }

@@ -3,9 +3,9 @@ package org.designup.picsou.gui.utils;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -261,10 +261,10 @@ public class PicsouMatchers {
             return !exclusive;
           }
           BooleanField monthField = Series.getMonthField(id);
-          if (!series.get(monthField)){
+          if (!series.get(monthField)) {
             Glob seriesBudget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
               .findByIndex(SeriesBudget.MONTH, id).getGlobs().getFirst();
-            if (seriesBudget != null && !seriesBudget.get(SeriesBudget.ACTIVE)){
+            if (seriesBudget != null && !seriesBudget.get(SeriesBudget.ACTIVE)) {
               return false;
             }
           }
@@ -287,32 +287,33 @@ public class PicsouMatchers {
     public boolean matches(Glob item, GlobRepository repository) {
       Date startDate = item.get(Account.OPEN_DATE);
       Date endDate = item.get(Account.CLOSED_DATE);
-      if (startDate == null && endDate == null){
+      if (startDate == null && endDate == null) {
         return true;
       }
-      if (startDate != null && endDate != null){
+      if (startDate != null && endDate != null) {
         int startMonthId = Month.getMonthId(startDate);
         int endMonthId = Month.getMonthId(endDate);
         for (Integer month : months) {
-          if (month >= startMonthId && month <= endMonthId){
+          if (month >= startMonthId && month <= endMonthId) {
             return true;
           }
         }
+        return false;
       }
-      if (startDate != null){
+      if (startDate != null) {
         int startMonthId = Month.getMonthId(startDate);
         for (Integer month : months) {
-          if (month >= startMonthId){
+          if (month >= startMonthId) {
             return true;
           }
         }
+        return false;
       }
-      if (endDate != null){
-        int endMonthId = Month.getMonthId(endDate);
-        for (Integer month : months) {
-          if (month <= endMonthId){
-            return true;
-          }
+      // endDate != null
+      int endMonthId = Month.getMonthId(endDate);
+      for (Integer month : months) {
+        if (month <= endMonthId) {
+          return true;
         }
       }
       return false;
