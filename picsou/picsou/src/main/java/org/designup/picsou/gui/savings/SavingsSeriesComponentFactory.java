@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.budget;
+package org.designup.picsou.gui.savings;
 
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
@@ -7,6 +7,7 @@ import org.designup.picsou.gui.components.GlobGaugeView;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.budget.SeriesEditionButtons;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
@@ -25,23 +26,27 @@ import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
-public class BudgetAreaSeriesComponentFactory implements RepeatComponentFactory<Glob> {
+public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glob> {
   private Glob account;
   private GlobRepository repository;
   private Directory directory;
   private GlobStringifier seriesStringifier;
   private SeriesEditionDialog seriesEditionDialog;
+  private SeriesEditionButtons seriesButtons;
 
-  public BudgetAreaSeriesComponentFactory(Glob account,
-                                          String accountName,
-                                          GlobRepository repository,
-                                          Directory directory,
-                                          SeriesEditionDialog seriesEditionDialog) {
+  public SavingsSeriesComponentFactory(Glob account,
+                                       String accountName,
+                                       GlobRepository repository,
+                                       Directory directory,
+                                       SeriesEditionDialog seriesEditionDialog,
+                                       SeriesEditionButtons seriesButtons) {
     this.account = account;
     this.repository = repository;
     this.directory = directory;
     this.seriesEditionDialog = seriesEditionDialog;
+    this.seriesButtons = seriesButtons;
     this.seriesStringifier = directory.get(DescriptionService.class).getStringifier(Series.TYPE);
   }
 
@@ -55,10 +60,11 @@ public class BudgetAreaSeriesComponentFactory implements RepeatComponentFactory<
 
     final Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
     String name = account.get(Account.NAME) + "." + seriesStringifier.toString(series, repository);
+
     final GlobButtonView seriesNameButton =
-      GlobButtonView.init(Series.TYPE, repository, directory, new EditSeriesFunctor())
-        .setName(name + ".edit")
-        .forceSelection(series);
+      seriesButtons.createSeriesButton(series)
+        .setName(name + ".edit");
+
     cellBuilder.add("seriesName", seriesNameButton.getComponent());
 
     addAmountButton(name + ".", "observedSeriesAmount", PeriodSeriesStat.AMOUNT, series, cellBuilder, new GlobListFunctor() {
@@ -72,16 +78,17 @@ public class BudgetAreaSeriesComponentFactory implements RepeatComponentFactory<
         showSeriesEdition(series);
       }
     });
+
     Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
     Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-    Gauge gauge;
     boolean mainAccount = account.get(Account.ID).equals(Account.MAIN_SUMMARY_ACCOUNT_ID);
+    Gauge gauge;
     if (fromAccount != null && fromAccount.equals(account)) {
       gauge = BudgetAreaGaugeFactory.createSavingsGauge(!mainAccount);
     }
     else {
       if (toAccount == null || !toAccount.equals(account)) {
-        throw new RuntimeException("BUG");
+        throw new UnexpectedApplicationState("");
       }
       gauge = BudgetAreaGaugeFactory.createSavingsGauge(mainAccount);
     }

@@ -124,6 +124,8 @@ public class SeriesEditionDialog {
 
     nameEditor = builder.addEditor("nameField", Series.NAME).setNotifyOnKeyPressed(true);
 
+    builder.addMultiLineEditor("descriptionField", Series.DESCRIPTION).setNotifyOnKeyPressed(true);
+
     GlobMatcher accountFilter =
       and(not(fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)),
           not(fieldEquals(Account.ID, Account.MAIN_SUMMARY_ACCOUNT_ID)),

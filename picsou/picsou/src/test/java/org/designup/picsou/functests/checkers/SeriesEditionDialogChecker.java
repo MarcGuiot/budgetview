@@ -63,6 +63,16 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker setDescription(String text) {
+    dialog.getInputTextBox("descriptionField").setText(text);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkDescription(String text) {
+    assertThat(dialog.getInputTextBox("descriptionField").textEquals(text));
+    return this;
+  }
+
   public SeriesEditionDialogChecker unselect() {
     dialog.getListBox("seriesList").clearSelection();
     return this;

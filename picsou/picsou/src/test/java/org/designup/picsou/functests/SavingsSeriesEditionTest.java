@@ -5,9 +5,6 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.Bank;
 
-import javax.swing.*;
-import java.awt.*;
-
 public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
 
   public void testSavings() throws Exception {
@@ -103,7 +100,6 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
   }
-
 
   public void testSwitchBetweenManualAndAutomatic() throws Exception {
     OfxBuilder.init(this)
@@ -217,7 +213,6 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRow(0)
       .selectSavings()
-//      .selectSavingsSeries("CA")
       .editSeries("CA")
       .setName("Autre")
       .validate();
@@ -232,7 +227,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       budgetView.savings.editSeries("Autre");
     firstSeriesChecker.switchToManual().selectAllMonths().setAmount(50).validate();
     views.selectSavings();
-    SeriesEditionDialogChecker secondSeriesChecker = savingsView.editSavingsSeries("Account n. 111", "CA");
+    SeriesEditionDialogChecker secondSeriesChecker = savingsView.editSeries("Account n. 111", "CA");
     secondSeriesChecker.checkManualModeSelected()
       .checkName("Autre")
       .switchToAutomatic()
@@ -268,10 +263,32 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
+  public void testSavingsSeriesDescriptionsAreShownInTooltips() throws Exception {
 
-  private SeriesEditionDialogChecker getSeriesChecker(Component component) {
-    final org.uispec4j.Button button = new org.uispec4j.Button((JButton)component);
-    return SeriesEditionDialogChecker.open(button);
+    views.selectHome();
+    savingsAccounts.createNewAccount().setAsSavings()
+      .setAccountName("Epargne LCL")
+      .selectBank("LCL")
+      .setBalance(1000)
+      .validate();
+
+    views.selectSavings();
+    savingsView.createSeries()
+      .setName("Savings Plan")
+      .setFromAccount("Epargne LCL")
+      .setDescription("Savings for the kids")
+      .validate();
+    savingsView.checkSeriesTooltip("Epargne LCL", "Savings Plan", "Savings for the kids");
+
+    savingsView.editSeries("Epargne LCL", "Savings Plan")
+      .checkDescription("Savings for the kids")
+      .setDescription("Savings for the Porsche")
+      .validate();
+    savingsView.checkSeriesTooltip("Epargne LCL", "Savings Plan", "Savings for the Porsche");
+
+    savingsView.editSeries("Epargne LCL", "Savings Plan")
+      .setDescription("")
+      .validate();
+    savingsView.checkSeriesTooltip("Epargne LCL", "Savings Plan", "");
   }
-
 }

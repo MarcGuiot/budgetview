@@ -8,6 +8,7 @@ import org.uispec4j.Panel;
 import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 import javax.swing.*;
 import java.awt.*;
@@ -77,7 +78,7 @@ public class BudgetViewChecker extends GuiChecker {
     public void checkTitle(String title) {
       Panel budgetPanel = getPanel();
       TextBox label = budgetPanel.getTextBox("budgetAreaTitle");
-      UISpecAssert.assertThat(label.textEquals(title));
+      assertThat(label.textEquals(title));
     }
 
     public Panel getPanel() {
@@ -102,12 +103,12 @@ public class BudgetViewChecker extends GuiChecker {
     }
 
     public BudgetAreaChecker checkTotalPositiveOverrun() {
-      UISpecAssert.assertThat(getPanel().getTextBox("totalPlannedAmount").foregroundNear("0033AA"));
+      assertThat(getPanel().getTextBox("totalPlannedAmount").foregroundNear("0033AA"));
       return this;
     }
 
     public BudgetAreaChecker checkTotalErrorOverrun() {
-      UISpecAssert.assertThat(getPanel().getTextBox("totalPlannedAmount").foregroundNear("darkRed"));
+      assertThat(getPanel().getTextBox("totalPlannedAmount").foregroundNear("darkRed"));
       return this;
     }
 
@@ -228,9 +229,13 @@ public class BudgetViewChecker extends GuiChecker {
       Assert.assertEquals(uiComponents.length, seriesNames.length);
       for (int i = 0; i < uiComponents.length; i++) {
         UIComponent component = uiComponents[i];
-        UISpecAssert.assertThat(((Button)component).textEquals(seriesNames[i]));
+        assertThat(((Button)component).textEquals(seriesNames[i]));
       }
       return this;
+    }
+
+    public void checkSeriesTooltip(String seriesName, String tooltipText) {
+     assertThat(getPanel().getButton(seriesName).tooltipEquals(tooltipText));
     }
   }
 

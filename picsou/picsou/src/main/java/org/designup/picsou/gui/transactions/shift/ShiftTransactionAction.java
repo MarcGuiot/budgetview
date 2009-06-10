@@ -57,7 +57,7 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
     if (transaction == null) {
       return;
     }
-    if (repository.find(transaction.getKey()) == null) {
+    if (!repository.contains(transaction.getKey())) {
       transaction = null;
       updateState();
       return;

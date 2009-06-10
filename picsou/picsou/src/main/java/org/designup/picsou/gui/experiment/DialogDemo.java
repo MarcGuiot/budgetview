@@ -67,6 +67,6 @@ public class DialogDemo {
   private static void showSeriesEditionDialog(GlobRepository repository, Directory directory, JFrame frame) {
     SeriesEditionDialog dialog = new SeriesEditionDialog(frame, repository, directory);
 //    SplitsEditor.show(dialog.getDialog(), directory);
-    dialog.showNewSeries(GlobList.EMPTY, new GlobList(200808), BudgetArea.ENVELOPES);
+    dialog.showNewSeries(GlobList.EMPTY, new GlobList(200808), BudgetArea.SAVINGS);
   }
 }

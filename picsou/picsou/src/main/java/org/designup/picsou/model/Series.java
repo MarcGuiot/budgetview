@@ -30,9 +30,7 @@ public class Series {
   @Required
   public static LinkField BUDGET_AREA;
 
-  /** @deprecated */
-  @Target(Category.class)
-  public static LinkField DEFAULT_CATEGORY;
+  public static StringField DESCRIPTION;
 
   @Target(ProfileType.class)
   @DefaultInteger(2)
@@ -66,7 +64,6 @@ public class Series {
   public static LinkField MIRROR_SERIES; // si les deux comptes sont importés. reference la series miroir
 
   // la series miroir a les montant de budget negatif elle est donc pour le compte "from"
-
   @DefaultBoolean(false)
   @Required
   public static BooleanField IS_MIRROR;
@@ -192,7 +189,7 @@ public class Series {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 8;
+      return 9;
     }
 
     public byte[] serializeData(FieldValues fieldValues) {
@@ -200,7 +197,7 @@ public class Series {
       SerializedOutput output = serializedByteArrayOutput.getOutput();
       output.writeUtf8String(fieldValues.get(Series.NAME));
       output.writeInteger(fieldValues.get(Series.BUDGET_AREA));
-      output.writeInteger(fieldValues.get(Series.DEFAULT_CATEGORY));
+      output.writeUtf8String(fieldValues.get(Series.DESCRIPTION));
       output.writeInteger(fieldValues.get(Series.PROFILE_TYPE));
       output.writeInteger(fieldValues.get(Series.FIRST_MONTH));
       output.writeInteger(fieldValues.get(Series.LAST_MONTH));
@@ -251,13 +248,16 @@ public class Series {
       else if (version == 8) {
         deserializeDataV8(fieldSetter, data);
       }
+      else if (version == 9) {
+        deserializeDataV9(fieldSetter, data);
+      }
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       processLabelAndName(fieldSetter, input);
       fieldSetter.set(Series.BUDGET_AREA, input.readInteger());
-      fieldSetter.set(Series.DEFAULT_CATEGORY, input.readInteger());
+      input.readInteger(); // DEFAULT_CATEGORY removed
       Integer profileType = input.readInteger();
       if (profileType == null) {
         profileType = ProfileType.CUSTOM.getId();
@@ -286,7 +286,7 @@ public class Series {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       processLabelAndName(fieldSetter, input);
       fieldSetter.set(Series.BUDGET_AREA, input.readInteger());
-      fieldSetter.set(Series.DEFAULT_CATEGORY, input.readInteger());
+      input.readInteger(); // DEFAULT_CATEGORY removed
       Integer profileType = input.readInteger();
       if (profileType == null) {
         profileType = ProfileType.CUSTOM.getId();
@@ -320,7 +320,7 @@ public class Series {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       processLabelAndName(fieldSetter, input);
       fieldSetter.set(Series.BUDGET_AREA, input.readInteger());
-      fieldSetter.set(Series.DEFAULT_CATEGORY, input.readInteger());
+      input.readInteger(); // DEFAULT_CATEGORY removed
       Integer profileType = input.readInteger();
       if (profileType == null) {
         profileType = ProfileType.CUSTOM.getId();
@@ -354,7 +354,7 @@ public class Series {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       processLabelAndName(fieldSetter, input);
       fieldSetter.set(Series.BUDGET_AREA, input.readInteger());
-      fieldSetter.set(Series.DEFAULT_CATEGORY, input.readInteger());
+      input.readInteger(); // DEFAULT_CATEGORY removed
       Integer profileType = input.readInteger();
       if (profileType == null) {
         profileType = ProfileType.CUSTOM.getId();
@@ -390,7 +390,7 @@ public class Series {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       processLabelAndName(fieldSetter, input);
       fieldSetter.set(Series.BUDGET_AREA, input.readInteger());
-      fieldSetter.set(Series.DEFAULT_CATEGORY, input.readInteger());
+      input.readInteger(); // DEFAULT_CATEGORY removed
       Integer profileType = input.readInteger();
       if (profileType == null) {
         profileType = ProfileType.CUSTOM.getId();
@@ -442,7 +442,7 @@ public class Series {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(Series.NAME, input.readString());
       fieldSetter.set(Series.BUDGET_AREA, input.readInteger());
-      fieldSetter.set(Series.DEFAULT_CATEGORY, input.readInteger());
+      input.readInteger(); // DEFAULT_CATEGORY removed
       Integer profileType = input.readInteger();
       if (profileType == null) {
         profileType = ProfileType.CUSTOM.getId();
@@ -480,7 +480,7 @@ public class Series {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(Series.NAME, input.readUtf8String());
       fieldSetter.set(Series.BUDGET_AREA, input.readInteger());
-      fieldSetter.set(Series.DEFAULT_CATEGORY, input.readInteger());
+      input.readInteger(); // DEFAULT_CATEGORY removed
       fieldSetter.set(Series.PROFILE_TYPE, input.readInteger());
       fieldSetter.set(Series.FIRST_MONTH, input.readInteger());
       fieldSetter.set(Series.LAST_MONTH, input.readInteger());
@@ -510,7 +510,7 @@ public class Series {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(Series.NAME, input.readUtf8String());
       fieldSetter.set(Series.BUDGET_AREA, input.readInteger());
-      fieldSetter.set(Series.DEFAULT_CATEGORY, input.readInteger());
+      input.readInteger(); // DEFAULT_CATEGORY removed
       fieldSetter.set(Series.PROFILE_TYPE, input.readInteger());
       fieldSetter.set(Series.FIRST_MONTH, input.readInteger());
       fieldSetter.set(Series.LAST_MONTH, input.readInteger());
@@ -534,5 +534,35 @@ public class Series {
       fieldSetter.set(Series.IS_MIRROR, input.readBoolean());
       fieldSetter.set(Series.MIRROR_SERIES, input.readInteger());
     }
+
+    private void deserializeDataV9(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Series.NAME, input.readUtf8String());
+      fieldSetter.set(Series.BUDGET_AREA, input.readInteger());
+      fieldSetter.set(Series.DESCRIPTION, input.readUtf8String());
+      fieldSetter.set(Series.PROFILE_TYPE, input.readInteger());
+      fieldSetter.set(Series.FIRST_MONTH, input.readInteger());
+      fieldSetter.set(Series.LAST_MONTH, input.readInteger());
+      fieldSetter.set(Series.DAY, input.readInteger());
+      fieldSetter.set(Series.INITIAL_AMOUNT, input.readDouble());
+      fieldSetter.set(Series.IS_AUTOMATIC, input.readBoolean());
+      fieldSetter.set(Series.JANUARY, input.readBoolean());
+      fieldSetter.set(Series.FEBRUARY, input.readBoolean());
+      fieldSetter.set(Series.MARCH, input.readBoolean());
+      fieldSetter.set(Series.APRIL, input.readBoolean());
+      fieldSetter.set(Series.MAY, input.readBoolean());
+      fieldSetter.set(Series.JUNE, input.readBoolean());
+      fieldSetter.set(Series.JULY, input.readBoolean());
+      fieldSetter.set(Series.AUGUST, input.readBoolean());
+      fieldSetter.set(Series.SEPTEMBER, input.readBoolean());
+      fieldSetter.set(Series.OCTOBER, input.readBoolean());
+      fieldSetter.set(Series.NOVEMBER, input.readBoolean());
+      fieldSetter.set(Series.DECEMBER, input.readBoolean());
+      fieldSetter.set(Series.TO_ACCOUNT, input.readInteger());
+      fieldSetter.set(Series.FROM_ACCOUNT, input.readInteger());
+      fieldSetter.set(Series.IS_MIRROR, input.readBoolean());
+      fieldSetter.set(Series.MIRROR_SERIES, input.readInteger());
+    }
+
   }
 }

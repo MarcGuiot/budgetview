@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.savings;
 
-import org.designup.picsou.gui.budget.BudgetAreaSeriesComponentFactory;
+import org.designup.picsou.gui.budget.SeriesEditionButtons;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.PicsouMatchers;
@@ -36,9 +36,10 @@ public class SavingsSeriesView implements Disposable {
   private GlobRepository repository;
   private Directory directory;
   private SeriesEditionDialog seriesEditionDialog;
+  private SeriesEditionButtons seriesButtons;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
   private PicsouMatchers.SeriesFirstEndDateFilter seriesDateFilter;
-  private GlobMatcher seriesFilter;
+  private GlobMatcher seriesFilter = new SavingsSeriesFilter();
   private Repeat<Glob> seriesRepeat;
   private List<Key> currentSeries = Collections.emptyList();
   private GlobStringifier accountStringifier;
@@ -51,11 +52,13 @@ public class SavingsSeriesView implements Disposable {
   public SavingsSeriesView(Glob account,
                            final GlobRepository repository,
                            Directory directory,
-                           final SeriesEditionDialog seriesEditionDialog) {
+                           final SeriesEditionDialog seriesEditionDialog,
+                           SeriesEditionButtons seriesButtons) {
     this.account = account;
     this.repository = repository;
     this.directory = directory;
     this.seriesEditionDialog = seriesEditionDialog;
+    this.seriesButtons = seriesButtons;
     this.selectionService = directory.get(SelectionService.class);
     this.selectionListener = new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
@@ -65,10 +68,12 @@ public class SavingsSeriesView implements Disposable {
       }
     };
     seriesChangeSetListener = new SeriesChangeSetListener();
+
     repository.addChangeListener(seriesChangeSetListener);
     selectionService.addListener(selectionListener, Month.TYPE);
     accountStringifier = directory.get(DescriptionService.class).getStringifier(Account.TYPE);
     registerComponents();
+
     selectionListener
       .selectionUpdated(GlobSelectionBuilder.create(selectionService.getSelection(Month.TYPE), Month.TYPE));
   }
@@ -78,7 +83,7 @@ public class SavingsSeriesView implements Disposable {
   }
 
   public void registerComponents() {
-    builder = new GlobsPanelBuilder(getClass(), "/layout/budgetAreaAccountSeriesView.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/savingsSeriesView.splits",
                                     repository, directory);
 
     String accountName = Lang.get("budgetView.savings.accountName.from",
@@ -86,25 +91,12 @@ public class SavingsSeriesView implements Disposable {
     seriesRepeat =
       builder.addRepeat("seriesRepeat",
                         new GlobList(),
-                        new BudgetAreaSeriesComponentFactory(account, accountName, repository, directory, seriesEditionDialog));
+                        new SavingsSeriesComponentFactory(account, accountName, 
+                                                          repository, directory,
+                                                          seriesEditionDialog, seriesButtons));
 
     seriesDateFilter = PicsouMatchers.seriesDateSavingsAndAccountFilter(account.get(Account.ID));
-    seriesFilter = new GlobMatcher() {
-      public boolean matches(Glob periodSeriesStat, GlobRepository repository) {
-        Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
-        ReadOnlyGlobRepository.MultiFieldIndexed seriesBudgetIndex =
-          repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID));
-        int notActive = 0;
-        for (Integer monthId : selectedMonthIds) {
-          GlobList seriesBudget =
-            seriesBudgetIndex.findByIndex(SeriesBudget.MONTH, monthId).getGlobs();
-          if (seriesBudget.size() == 0 || !seriesBudget.get(0).get(SeriesBudget.ACTIVE)) {
-            notActive++;
-          }
-        }
-        return !(selectedMonthIds.size() == notActive) && seriesDateFilter.matches(series, repository);
-      }
-    };
+
     panel = builder.load();
   }
 
@@ -140,7 +132,6 @@ public class SavingsSeriesView implements Disposable {
       if (changeSet.containsChanges(PeriodSeriesStat.TYPE)
           || changeSet.containsChanges(Series.TYPE)) {
         updateRepeat(repository);  // on passe the repository et non l'autre a cause du
-//          updateRepeat(SavingsSeriesView.this.repository);  // on passe the repository et non l'autre a cause du
         // ReplicationGlobRepository : les listener sont enregistre sur les deux repository (le Replication et
         // l'original
       }
@@ -148,6 +139,23 @@ public class SavingsSeriesView implements Disposable {
 
     public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
       updateRepeat(repository);
+    }
+  }
+
+  private class SavingsSeriesFilter implements GlobMatcher {
+    public boolean matches(Glob periodSeriesStat, GlobRepository repository) {
+      Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
+      ReadOnlyGlobRepository.MultiFieldIndexed seriesBudgetIndex =
+        repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID));
+      int notActive = 0;
+      for (Integer monthId : selectedMonthIds) {
+        GlobList seriesBudget =
+          seriesBudgetIndex.findByIndex(SeriesBudget.MONTH, monthId).getGlobs();
+        if (seriesBudget.size() == 0 || !seriesBudget.get(0).get(SeriesBudget.ACTIVE)) {
+          notActive++;
+        }
+      }
+      return !(selectedMonthIds.size() == notActive) && seriesDateFilter.matches(series, repository);
     }
   }
 }

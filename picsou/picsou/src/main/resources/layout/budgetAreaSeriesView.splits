@@ -25,8 +25,7 @@
         <scrollPane marginBottom="0" verticalUnitIncrement="10">
           <column>
             <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid" margin="10">
-              <button ref="seriesName" styleClass="itemLink"
-                      tooltipText="$budgetview.tooltip.detail.series"/>
+              <button ref="seriesName" styleClass="itemLink"/>
               <button ref="observedSeriesAmount" styleClass="amountLink" marginRight="6"
                       tooltipText="$budgetview.tooltip.detail.observed"/>
               <component ref="gauge" styleClass="detailGauge"/>

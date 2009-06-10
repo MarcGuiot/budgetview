@@ -147,7 +147,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     repository.delete(budgets);
 
     Key occasionalSeriesKey = Key.create(Series.TYPE, Series.OCCASIONAL_SERIES_ID);
-    if (repository.find(occasionalSeriesKey) != null) {
+    if (repository.contains(occasionalSeriesKey)) {
       repository.delete(occasionalSeriesKey);
     }
   }

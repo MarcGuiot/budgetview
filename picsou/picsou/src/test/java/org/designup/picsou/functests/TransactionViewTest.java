@@ -145,7 +145,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     transactions.checkCategorizeIsDisabled(0);
 
     views.selectSavings();
-    savingsView.editSavingsSeries("Epargne", "Epargne")
+    savingsView.editSeries("Epargne", "Epargne")
       .setName("NEW NAME FOR EPARGNE")
       .setFromAccount("External account")
       .selectAllMonths()

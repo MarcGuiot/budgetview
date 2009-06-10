@@ -31,7 +31,7 @@ public class SeriesEvolutionMonthColumn implements GlobTableColumn {
   }
 
   public void setReferenceMonthId(Integer monthId) {
-    if ((monthId == null) || (repository.find(Key.create(Month.TYPE, monthId)) == null)) {
+    if ((monthId == null) || !repository.contains(Key.create(Month.TYPE, monthId))) {
       referenceMonthId = null;
     }
     else {
