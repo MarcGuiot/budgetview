@@ -77,7 +77,7 @@ public class SeriesEvolutionView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/seriesEvolutionView.splits",
                                                       repository, directory);
 
-    SeriesEditionDialog seriesEditionDialog = new SeriesEditionDialog(directory.get(JFrame.class), parentRepository, directory);
+    SeriesEditionDialog seriesEditionDialog = new SeriesEditionDialog(parentRepository, directory);
 
     ExpandableTableAdapter tableAdapter = new ExpandableTableAdapter();
 

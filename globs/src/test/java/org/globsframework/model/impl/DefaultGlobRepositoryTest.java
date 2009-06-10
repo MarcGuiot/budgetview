@@ -13,6 +13,7 @@ import org.globsframework.utils.exceptions.*;
 import java.util.*;
 
 public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
+
   public void testFindUnique() throws Exception {
     init("<dummyObject id='0' name='name'/>" +
          "<dummyObject id='1' name='name' value='1.1'/>" +
@@ -59,6 +60,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
   public void testFindWithNullKeyReturnsNull() throws Exception {
     initRepository();
     assertNull(repository.find(null));
+    assertFalse(repository.contains((Key)null));
   }
 
   public void testGetAll() throws Exception {
@@ -68,7 +70,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     GlobTestUtils.assertEquals(repository, xmlDescription);
   }
 
-  public void testgetSorted() throws Exception {
+  public void testGetSorted() throws Exception {
     init("<dummyObject id='1' name='name'/>" +
          "<dummyObject2 id='4' label='name2'/>" +
          "<dummyObject2 id='2' label='other'/>" +
@@ -86,6 +88,10 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
   public void testContains() throws Exception {
     String xmlDescription = "<dummyObject id='1' name='name' value='1.1'/>";
     GlobRepository repository = checker.parse(xmlDescription);
+
+    assertTrue(repository.contains(Key.create(DummyObject.TYPE, 1)));
+    assertFalse(repository.contains(Key.create(DummyObject.TYPE, 2)));
+
     assertTrue(repository.contains(DummyObject.TYPE, GlobMatchers.fieldEquals(DummyObject.NAME, "name")));
     assertFalse(repository.contains(DummyObject.TYPE, GlobMatchers.fieldEquals(DummyObject.NAME, "other")));
 

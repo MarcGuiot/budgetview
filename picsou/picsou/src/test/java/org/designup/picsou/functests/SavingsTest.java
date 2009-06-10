@@ -14,9 +14,11 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/10", -100.00, "Virement")
       .addTransaction("2008/08/10", -100.00, "Virement")
       .load();
+
     timeline.selectAll();
     views.selectHome();
     savingsAccounts.createSavingsAccount("Epargne LCL", 1000);
+
     views.selectCategorization();
     categorization
       .selectTransactions("Virement")
@@ -25,9 +27,11 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Epargne LCL")
       .validate();
+
     views.selectBudget();
     budgetView.savings
       .checkSeries("Epargne", 300, 500);
+
     views.selectData();
     transactions.initAmountContent()
       .add("10/10/2008", "Planned: Epargne", 100.00, "Epargne", 1200.00, 1200.00, "Epargne LCL")
@@ -41,6 +45,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("10/06/2008", "VIREMENT", 100.00, "Epargne", 800.00, 800.00, "Epargne LCL")
       .add("10/06/2008", "VIREMENT", -100.00, "Epargne", 200.00, 200.00, "Account n. 00001123")
       .check();
+    
     views.selectHome();
     timeline.selectMonth("2008/08");
     savingsAccounts.checkPosition("Epargne", 1000);
@@ -371,7 +376,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/06");
     savingsView.checkAmount("Epargne", "CAF", 300, 300);
 
-    savingsView.editSavingsSeries("Epargne", "CAF")
+    savingsView.editSeries("Epargne", "CAF")
       .selectMonth(200806)
       .setAmount(0)
       .validate();
@@ -379,7 +384,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     // back to normal to see if dateChooser is hidden
 
-    savingsView.editSavingsSeries("Epargne", "CAF")
+    savingsView.editSeries("Epargne", "CAF")
       .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .checkDateChooserIsHidden()
       .validate();
@@ -666,7 +671,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setAmount(200)
       .validate();
     views.selectSavings();
-    savingsView.editSavingsSeries("Account n. 111", "CA").checkManualModeSelected()
+    savingsView.editSeries("Account n. 111", "CA").checkManualModeSelected()
       .selectAllMonths()
       .checkAmount("200.00")
       .checkTable(new Object[][]{
@@ -1024,7 +1029,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.setNewSavings("Virement", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "Livret");
     views.selectSavings();
-    savingsView.editSavingsSeries("Livret", "Epargne")
+    savingsView.editSeries("Livret", "Epargne")
       .setToAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setFromAccount("Livret")
       .validate();
@@ -1051,7 +1056,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsView.checkTotalPositionHidden();
     savingsView.checkAccountWithNoPosition("Epargne");
 
-    savingsView.createSavingsSeries()
+    savingsView.createSeries()
       .setName("Virement CAF")
       .setToAccount("Epargne")
       .setFromAccount("Main")

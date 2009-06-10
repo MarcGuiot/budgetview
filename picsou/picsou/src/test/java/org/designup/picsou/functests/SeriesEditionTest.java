@@ -438,6 +438,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
     views.selectBudget();
     budgetView.envelopes.createSeries()
+      .setName("A series")
       .cancel();
     budgetView.envelopes.createSeries()
       .checkSeriesListEquals("New series")
@@ -461,7 +462,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkStartDate("Sep 2008")
       .checkEndDate("Oct 2008")
       .checkTableIsEmpty()
-      .removeBeginDate()
+      .removeStartDate()
       .removeEndDate()
       .checkNoStartDate()
       .checkNoEndDate()
@@ -496,7 +497,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkIsEnabled(200809, 200901)
       .cancel();
 
-    edition.removeBeginDate();
+    edition.removeStartDate();
     edition.editEndDate()
       .checkIsEnabled(200701, 200901)
       .cancel();

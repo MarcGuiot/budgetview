@@ -41,7 +41,7 @@ public class GlobLinkComboEditor
             if (currentKey == null) {
               return;
             }
-            if (repository.find(currentKey) == null) {
+            if (!repository.contains(currentKey)) {
               currentKey = null;
               return;
             }

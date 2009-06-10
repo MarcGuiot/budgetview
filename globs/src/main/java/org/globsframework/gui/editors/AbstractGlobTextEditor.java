@@ -52,6 +52,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
 
   public PARENT setName(String name) {
     this.name = name;
+    this.textComponent.setName(name);
     return (PARENT)this;
   }
 

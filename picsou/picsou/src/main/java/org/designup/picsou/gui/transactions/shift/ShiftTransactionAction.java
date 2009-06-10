@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.transactions.shift;
 
 import org.designup.picsou.gui.components.ConfirmationDialog;
+import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
@@ -11,12 +12,12 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.and;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
 import java.util.Set;
 
 public class ShiftTransactionAction extends AbstractAction implements GlobSelectionListener, ChangeSetListener {
@@ -27,6 +28,10 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
   protected final Directory directory;
   private Glob transaction;
   private ShiftDirection direction;
+  private Glob series;
+  private boolean validMonthForSeries;
+  private SeriesEditionDialog seriesEditionDialog;
+  private int targetMonth;
 
   public ShiftTransactionAction(GlobRepository repository, Directory directory) {
     super(Lang.get("shift.transaction.button"));
@@ -52,7 +57,7 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
     if (transaction == null) {
       return;
     }
-    if (repository.find(transaction.getKey()) == null) {
+    if (!repository.contains(transaction.getKey())) {
       transaction = null;
       updateState();
       return;
@@ -61,12 +66,9 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
       updateState();
       return;
     }
-    Integer seriesId = transaction.get(Transaction.SERIES);
-    if (seriesId != null){
-      if (changeSet.containsChanges(Key.create(Series.TYPE, seriesId))){
-        updateState();
-        return;
-      }
+    Glob series = repository.findLinkTarget(transaction, Transaction.SERIES);
+    if ((series != null) && changeSet.containsChanges(series.getKey())) {
+      updateState();
     }
   }
 
@@ -79,6 +81,8 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
   }
 
   protected void updateState() {
+    validMonthForSeries = true;
+
     if (transaction == null) {
       setEnabled(false);
       return;
@@ -98,10 +102,10 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
     int month = transaction.get(Transaction.MONTH);
 
     if (day < DAY_LIMIT_FOR_PREVIOUS) {
-      int monthToCheck = Month.previous(month);
-      Glob series = repository.findLinkTarget(transaction, Transaction.SERIES);
-      boolean isValidMonth = Series.checkIsValidMonth(monthToCheck, series);
-      if (isValidMonth && repository.contains(Transaction.TYPE, fieldEquals(Transaction.MONTH, monthToCheck))) {
+      targetMonth = Month.previous(month);
+      series = repository.findLinkTarget(transaction, Transaction.SERIES);
+      validMonthForSeries = Series.checkIsValidMonth(targetMonth, series);
+      if (containsTransactions(targetMonth)) {
         direction = ShiftDirection.PREVIOUS;
         setEnabled(true);
         return;
@@ -109,12 +113,10 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
     }
 
     if (day > DAY_LIMIT_FOR_NEXT) {
-      int monthToCheck = Month.next(month);
-      Glob series = repository.findLinkTarget(transaction, Transaction.SERIES);
-      boolean isValidMonth = Series.checkIsValidMonth(monthToCheck, series);
-      if (isValidMonth && repository.contains(Transaction.TYPE,
-                                              and(fieldEquals(Transaction.MONTH, monthToCheck),
-                                                  fieldEquals(Transaction.PLANNED, false)))) {
+      targetMonth = Month.next(month);
+      series = repository.findLinkTarget(transaction, Transaction.SERIES);
+      validMonthForSeries = Series.checkIsValidMonth(targetMonth, series);
+      if (containsTransactions(targetMonth)) {
         direction = ShiftDirection.NEXT;
         setEnabled(true);
         return;
@@ -125,20 +127,51 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
   }
 
   public void actionPerformed(ActionEvent e) {
-    if (transaction.get(Transaction.DAY_BEFORE_SHIFT) == null) {
-      ConfirmationDialog dialog = new ConfirmationDialog("shift.transaction.title",
-                                                         getMessageKey(direction),
-                                                         directory.get(JFrame.class),
-                                                         directory) {
+    if (transaction.get(Transaction.DAY_BEFORE_SHIFT) != null) {
+      unshift();
+      return;
+    }
+
+    if (!validMonthForSeries) {
+      openSeriesErrorDialog();
+      return;
+    }
+
+    openShiftDialog();
+  }
+
+  private void openSeriesErrorDialog() {
+    ConfirmationDialog dialog =
+      new ConfirmationDialog("shift.transaction.seriesError.title",
+                             "shift.transaction.seriesError.message",
+                             directory.get(JFrame.class),
+                             directory,
+                             Month.getFullLabel(targetMonth)) {
+        protected void postValidate() {
+          getSeriesEditionDialog().show(series, Collections.singleton(transaction.get(Transaction.MONTH)));
+        }
+      };
+    dialog.show();
+  }
+
+  private SeriesEditionDialog getSeriesEditionDialog() {
+    if (seriesEditionDialog == null) {
+      seriesEditionDialog = new SeriesEditionDialog(repository, directory);
+    }
+    return seriesEditionDialog;
+  }
+
+  private void openShiftDialog() {
+    ConfirmationDialog dialog =
+      new ConfirmationDialog("shift.transaction.title",
+                             getMessageKey(direction),
+                             directory.get(JFrame.class),
+                             directory) {
         protected void postValidate() {
           doShift(transaction);
         }
       };
-      dialog.show();
-    }
-    else {
-      unshift();
-    }
+    dialog.show();
   }
 
   private void doShift(Glob transaction) {
@@ -179,6 +212,12 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
                       value(Transaction.DAY, dayBeforeShift),
                       value(Transaction.MONTH, monthBeforeShift),
                       value(Transaction.DAY_BEFORE_SHIFT, null));
+  }
+
+  private boolean containsTransactions(int monthToCheck) {
+    return repository.contains(Transaction.TYPE,
+                               and(fieldEquals(Transaction.MONTH, monthToCheck),
+                                   fieldEquals(Transaction.PLANNED, false)));
   }
 
   private String getMessageKey(ShiftDirection direction) {

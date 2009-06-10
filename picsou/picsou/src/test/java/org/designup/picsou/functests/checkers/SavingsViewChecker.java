@@ -1,9 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.Panel;
-import org.uispec4j.UIComponent;
-import org.uispec4j.Window;
-import org.uispec4j.TextBox;
+import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import static org.uispec4j.finder.ComponentMatchers.*;
@@ -33,23 +30,10 @@ public class SavingsViewChecker extends GuiChecker {
   }
 
   /** @deprecated ??? */
-  public SavingsViewChecker checkSavingsBalance(double balance) {
-    UISpecAssert.fail("not implemented");
-    return this;
-  }
-
-  /** @deprecated ??? */
   public void checkSavingsIn(String accountName, double observedAmount, double plannedAmount) {
     UISpecAssert.fail("not implemented - toujours d'actualite ?");
 //    assertThat(window.getButton(accountName + ":savingsInAmount").textEquals(toString(observedAmount)));
 //    assertThat(window.getTextBox(accountName + ":savingsPlannedInAmount").textEquals(toString(plannedAmount)));
-  }
-
-  /** @deprecated ??? */
-  public void checkSavingsOut(String accoutName, double observedAmount, double plannedAmount) {
-    UISpecAssert.fail("not implemented - toujours d'actualite ?");
-//    assertThat(window.getButton(accoutName + ":savingsOutAmount").textEquals(toString(observedAmount)));
-//    assertThat(window.getTextBox(accoutName + ":savingsPlannedOutAmount").textEquals(toString(plannedAmount)));
   }
 
   public void checkAmount(String accountName, String seriesName, double observedAmount, double plannedAmount) {
@@ -96,12 +80,22 @@ public class SavingsViewChecker extends GuiChecker {
     return mainWindow.getPanel("savingsView");
   }
 
-  public SeriesEditionDialogChecker createSavingsSeries() {
+  public SeriesEditionDialogChecker createSeries() {
     return SeriesEditionDialogChecker.open(getPanel().getButton("createSavingsSeries"));
   }
 
-  public SeriesEditionDialogChecker editSavingsSeries(String accountName, String seriesName) {
+  public SeriesEditionDialogChecker editSeries(String accountName, String seriesName) {
+    Button button = getSeriesButton(accountName, seriesName);
+    return SeriesEditionDialogChecker.open(button);
+  }
+
+  public SavingsViewChecker checkSeriesTooltip(String accountName, String seriesName, String tooltipText) {
+    assertThat(getSeriesButton(accountName, seriesName).tooltipEquals(tooltipText));
+    return this;
+  }
+
+  private Button getSeriesButton(String accountName, String seriesName) {
     String buttonName = accountName + "." + seriesName + ".edit";
-    return SeriesEditionDialogChecker.open(getPanel().getButton(buttonName));
+    return getPanel().getButton(buttonName);
   }
 }

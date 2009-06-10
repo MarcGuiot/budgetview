@@ -122,7 +122,7 @@ public class BudgetAreaSeriesView extends View {
     currentSeries = newSeries;
   }
 
-  void update() {
+  private void update() {
     GlobList balanceStat = new GlobList();
     balanceStat.addAll(repository.getAll(BalanceStat.TYPE,
                                          GlobMatchers.fieldIn(BalanceStat.MONTH, selectedMonthIds)));
@@ -215,11 +215,11 @@ public class BudgetAreaSeriesView extends View {
                                  final Glob series,
                                  RepeatCellBuilder cellBuilder,
                                  final GlobListFunctor callback) {
-      final GlobButtonView globButtonView =
+      final GlobButtonView amountButtonView =
         GlobButtonView.init(PeriodSeriesStat.TYPE, repository, directory, getStringifier(field), callback)
           .setFilter(GlobMatchers.linkedTo(series, PeriodSeriesStat.SERIES));
-      cellBuilder.add(name, globButtonView.getComponent());
-      cellBuilder.addDisposeListener(globButtonView);
+      cellBuilder.add(name, amountButtonView.getComponent());
+      cellBuilder.addDisposeListener(amountButtonView);
     }
 
     private GlobListStringifier getStringifier(final DoubleField field) {

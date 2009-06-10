@@ -717,4 +717,25 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkTotalAmounts(0, 0);
     views.selectCategorization();
   }
+
+  public void testDescriptionsAreUsedAsTooltips() throws Exception {
+
+    views.selectBudget();
+    budgetView.envelopes.createSeries()
+      .setName("Groceries")
+      .setDescription("Everything about food")
+      .validate();
+    budgetView.envelopes.checkSeriesTooltip("Groceries", "Everything about food");
+
+    budgetView.envelopes.editSeries("Groceries")
+      .checkDescription("Everything about food")
+      .setDescription("Lunch")
+      .validate();
+    budgetView.envelopes.checkSeriesTooltip("Groceries", "Lunch");
+
+    budgetView.envelopes.editSeries("Groceries")
+      .setDescription("")
+      .validate();
+    budgetView.envelopes.checkSeriesTooltip("Groceries", "");
+  }
 }

@@ -31,7 +31,11 @@ public class SeriesEditionDialogChecker extends GuiChecker {
   public static final String DEC = "Dec";
 
   public static SeriesEditionDialogChecker open(Button button) {
-    Window dialog = WindowInterceptor.getModalDialog(button.triggerClick());
+    return open(button.triggerClick());
+  }
+
+  public static SeriesEditionDialogChecker open(Trigger trigger) {
+    Window dialog = WindowInterceptor.getModalDialog(trigger);
     return new SeriesEditionDialogChecker(dialog);
   }
 
@@ -56,6 +60,16 @@ public class SeriesEditionDialogChecker extends GuiChecker {
 
   public SeriesEditionDialogChecker setName(String seriesName) {
     dialog.getInputTextBox("nameField").setText(seriesName);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker setDescription(String text) {
+    dialog.getInputTextBox("descriptionField").setText(text);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkDescription(String text) {
+    assertThat(dialog.getInputTextBox("descriptionField").textEquals(text));
     return this;
   }
 
@@ -441,7 +455,7 @@ public class SeriesEditionDialogChecker extends GuiChecker {
 
   }
 
-  public SeriesEditionDialogChecker removeBeginDate() {
+  public SeriesEditionDialogChecker removeStartDate() {
     dialog.getButton("deleteSeriesStartDate").click();
     return this;
   }

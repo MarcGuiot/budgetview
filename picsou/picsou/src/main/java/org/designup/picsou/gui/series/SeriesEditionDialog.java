@@ -29,7 +29,6 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.format.DescriptionService;
-import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -77,6 +76,10 @@ public class SeriesEditionDialog {
   private JLabel savingsMessage;
   private SubSeriesEditionPanel subSeriesEditionPanel;
 
+  public SeriesEditionDialog(final GlobRepository repository, Directory directory) {
+    this(directory.get(JFrame.class), repository, directory);
+  }
+
   public SeriesEditionDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
@@ -120,6 +123,8 @@ public class SeriesEditionDialog {
     builder.add("delete", new DeleteSeriesAction(false));
 
     nameEditor = builder.addEditor("nameField", Series.NAME).setNotifyOnKeyPressed(true);
+
+    builder.addMultiLineEditor("descriptionField", Series.DESCRIPTION).setNotifyOnKeyPressed(true);
 
     GlobMatcher accountFilter =
       and(not(fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)),
