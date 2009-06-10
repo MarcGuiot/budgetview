@@ -25,7 +25,7 @@ public class ProjectNameColumn extends HyperlinkTableColumn {
   public ProjectNameColumn(GlobTableView view, DescriptionService descriptionService, GlobRepository repository, Directory directory) {
     super(view, descriptionService, repository, directory);
     stringifier = descriptionService.getStringifier(SeriesBudget.SERIES);
-    seriesEditionDialog = new SeriesEditionDialog(directory.get(JFrame.class), repository, directory);
+    seriesEditionDialog = new SeriesEditionDialog(repository, directory);
   }
 
   public String getName() {

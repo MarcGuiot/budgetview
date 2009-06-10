@@ -40,7 +40,7 @@ public class BudgetView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budgetView.splits",
                                                       repository, directory);
 
-    SeriesEditionDialog seriesEditionDialog = new SeriesEditionDialog(directory.get(JFrame.class), repository, directory);
+    SeriesEditionDialog seriesEditionDialog = new SeriesEditionDialog(repository, directory);
 
     BudgetSummaryView budgetSummaryView = new BudgetSummaryView(repository, directory);
     budgetSummaryView.registerComponents(builder);

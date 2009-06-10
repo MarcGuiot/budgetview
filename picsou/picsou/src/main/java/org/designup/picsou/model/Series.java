@@ -184,11 +184,9 @@ public class Series {
     firstMonth = firstMonth == null ? 0 : firstMonth;
     Integer lastMonth = series.get(LAST_MONTH);
     lastMonth = lastMonth == null ? Integer.MAX_VALUE : lastMonth;
-    if (monthToCheck < firstMonth || monthToCheck > lastMonth ||
-        !series.get(getMonthField(monthToCheck))) {
-      return false;
-    }
-    return true;
+    return monthToCheck >= firstMonth &&
+           monthToCheck <= lastMonth &&
+           Boolean.TRUE.equals(series.get(getMonthField(monthToCheck)));
   }
 
   public static class Serializer implements PicsouGlobSerializer {

@@ -264,7 +264,7 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
-  public CategorizationChecker selectAllTableRows() {
+  public CategorizationChecker selectAllTransactions() {
     getTable().selectAllRows();
     return this;
   }

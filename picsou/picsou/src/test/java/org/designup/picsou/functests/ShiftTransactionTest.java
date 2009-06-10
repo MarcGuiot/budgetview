@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
@@ -21,7 +22,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     transactionDetails.checkShiftDisabled();
 
-    categorization.selectAllTableRows();
+    categorization.selectAllTransactions();
     categorization.selectEnvelopes();
     categorization.selectEnvelopes().selectNewSeries("An enveloppe");
     categorization.checkTable(new Object[][]{
@@ -141,7 +142,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.selectAllTableRows();
+    categorization.selectAllTransactions();
     categorization.selectEnvelopes().selectNewSeries("Groceries");
 
     views.selectHome();
@@ -189,7 +190,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.selectAllTableRows();
+    categorization.selectAllTransactions();
     categorization.selectEnvelopes().selectNewSeries("Groceries");
 
     views.selectHome();
@@ -253,20 +254,60 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkTotalAmounts(-12.00, -25.00);
   }
 
-  public void testShiftIsDisabledIfSeriesIsNotValid() throws Exception {
+  public void testSeriesNotValid() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/06/25", -25.00, "Epargne / June")
-      .addTransaction("2008/07/05", -30.00, "Epargne / July")
+      .addTransaction("2008/06/25", -25.00, "Monoprix / June")
+      .addTransaction("2008/07/05", -30.00, "Monoprix / July")
       .load();
 
     views.selectCategorization();
-    categorization.selectTransaction("Epargne / June");
-    categorization.selectEnvelopes().selectNewSeries("Groceries");
+    categorization.selectTransaction("Monoprix / June");
+    categorization.selectEnvelopes().createSeries("Groceries");
+
     transactionDetails.checkShiftEnabled();
     categorization.editSeries("Groceries")
       .setEndDate(200806)
       .validate();
-    transactionDetails.checkShiftDisabled();
+    transactionDetails.checkShiftEnabled();
+    SeriesEditionDialogChecker.open(
+      transactionDetails.openShiftDialog()
+        .checkTitle("Shift impossible")
+        .checkMessageContains("The operation is assigned to a series which is not active for July 2008. " +
+                              "Do you want to edit the series?")
+        .getOkTrigger())
+      .checkName("Groceries")
+      .removeEndDate()
+      .validate();
+    transactionDetails.checkShiftEnabled();
+    transactionDetails.shift();
+    categorization.checkTable(new Object[][]{
+      {"05/07/2008", "", "MONOPRIX / JULY", -30.0},
+      {"01/07/2008", "Groceries", "MONOPRIX / JUNE", -25.0},
+    });
+    categorization.setUncategorized();
+    transactionDetails.unshift();
+
+    categorization.setEnvelope("Monoprix / July", "Groceries");
+    transactionDetails.checkShiftEnabled();
+    categorization.editSeries("Groceries")
+      .setStartDate(200807)
+      .validate();
+    transactionDetails.checkShiftEnabled();
+    SeriesEditionDialogChecker.open(
+      transactionDetails.openShiftDialog()
+        .checkTitle("Shift impossible")
+        .checkMessageContains("The operation is assigned to a series which is not active for June 2008. " +
+                              "Do you want to edit the series?")
+        .getOkTrigger())
+      .checkName("Groceries")
+      .removeStartDate()
+      .validate();
+    transactionDetails.shift();
+
+    categorization.checkTable(new Object[][]{
+      {"30/06/2008", "Groceries", "MONOPRIX / JULY", -30.0},
+      {"25/06/2008", "", "MONOPRIX / JUNE", -25.0},
+    });
   }
 
   public void testShiftingAMirroredTransaction() throws Exception {
@@ -286,7 +327,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectCategorization();
-    categorization.selectAllTableRows().selectSavings().selectSeries("Epargne");
+    categorization.selectAllTransactions().selectSavings().selectSeries("Epargne");
 
     categorization.selectTransaction("Epargne / July");
     transactionDetails.shift();
