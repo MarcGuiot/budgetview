@@ -72,8 +72,9 @@ public class DataCheckerAction extends AbstractAction {
 
         for (Glob budget : seriesBudgets) {
           if (budget.get(SeriesBudget.MONTH) != currentMonth) {
-            Log.write("Missing SeriesBudget for series : " + series.get(Series.NAME) + " " +
-                      series.get(Series.BUDGET_AREA));
+            Log.write("Missing SeriesBudget for series : " + series.get(Series.NAME) + " budgetArea : " +
+                      series.get(Series.BUDGET_AREA) + " got " + budget.get(SeriesBudget.MONTH) +
+                      " but expect " + currentMonth);
             hasError = true;
             break;
           }
@@ -82,8 +83,9 @@ public class DataCheckerAction extends AbstractAction {
           checkNotNullable(budget);
         }
         if (!seriesBudgets.getLast().get(SeriesBudget.MONTH).equals(lastMonthForSeries)) {
-          Log.write("Bad end of series : " + series.get(Series.NAME) + " " +
-                    series.get(Series.BUDGET_AREA));
+          Log.write("Bad end of series : " + series.get(Series.NAME) + " budgetArea : " +
+                    series.get(Series.BUDGET_AREA) + " got " + seriesBudgets.getLast().get(SeriesBudget.MONTH) +
+                    " but expect " + currentMonth);
           hasError = true;
         }
         GlobList transactions =
