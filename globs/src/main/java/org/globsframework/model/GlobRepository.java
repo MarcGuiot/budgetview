@@ -19,10 +19,6 @@ public interface GlobRepository extends ReadOnlyGlobRepository {
   Glob findOrCreate(Key key, FieldValue... defaultValues)
     throws MissingInfo;
 
-  boolean contains(GlobType type);
-
-  boolean contains(GlobType type, GlobMatcher matcher);
-
   void update(Key key, Field field, Object newValue)
     throws ItemNotFound;
 

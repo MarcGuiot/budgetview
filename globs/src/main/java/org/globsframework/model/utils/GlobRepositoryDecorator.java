@@ -92,6 +92,10 @@ public class GlobRepositoryDecorator implements GlobRepository {
     return getRepository().findOrCreate(key, defaultValues);
   }
 
+  public boolean contains(Key key) {
+    return getRepository().contains(key);
+  }
+
   public boolean contains(GlobType type) {
     return getRepository().contains(type);
   }

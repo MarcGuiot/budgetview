@@ -2,10 +2,7 @@ package org.globsframework.gui;
 
 import org.globsframework.gui.actions.CreateGlobAction;
 import org.globsframework.gui.actions.DeleteGlobAction;
-import org.globsframework.gui.editors.GlobLinkComboEditor;
-import org.globsframework.gui.editors.GlobNumericEditor;
-import org.globsframework.gui.editors.GlobPasswordEditor;
-import org.globsframework.gui.editors.GlobTextEditor;
+import org.globsframework.gui.editors.*;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
@@ -82,6 +79,10 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     GlobNumericEditor numericEditor = store(GlobNumericEditor.init(field, repository, directory));
     numericEditor.setName(name);
     return numericEditor;
+  }
+
+  public GlobMultiLineTextEditor addMultiLineEditor(String name, StringField field) {
+    return store(GlobMultiLineTextEditor.init(field, repository, directory).setName(name));
   }
 
   public GlobNumericEditor addEditor(DoubleField field) {

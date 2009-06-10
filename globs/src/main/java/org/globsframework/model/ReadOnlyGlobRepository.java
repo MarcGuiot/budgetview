@@ -15,6 +15,13 @@ import java.util.Set;
 import java.util.SortedSet;
 
 public interface ReadOnlyGlobRepository {
+
+  boolean contains(Key key);
+
+  boolean contains(GlobType type);
+
+  boolean contains(GlobType type, GlobMatcher matcher);
+  
   Glob find(Key key);
 
   Glob get(Key key)

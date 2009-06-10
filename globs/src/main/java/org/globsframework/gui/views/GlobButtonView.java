@@ -71,4 +71,11 @@ public class GlobButtonView extends AbstractGlobTextView<GlobButtonView> {
   protected String getText() {
     return button.getText();
   }
+
+  public GlobButtonView setName(String name) {
+    if (button != null) {
+      button.setName(name);
+    }
+    return super.setName(name);
+  }
 }

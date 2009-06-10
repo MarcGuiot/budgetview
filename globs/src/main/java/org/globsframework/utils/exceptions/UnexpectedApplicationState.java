@@ -1,6 +1,7 @@
 package org.globsframework.utils.exceptions;
 
 public class UnexpectedApplicationState extends GlobsException {
+
   public UnexpectedApplicationState(Exception e) {
     super(e);
   }

@@ -89,6 +89,10 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     return result;
   }
 
+  public boolean contains(Key key) {
+    return find(key) != null;
+  }
+
   public Glob find(Key key) {
     if (key == null) {
       return null;
@@ -466,7 +470,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
   public void apply(ChangeSet changeSet) throws InvalidParameter {
     changeSet.safeVisit(new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) {
-        if (find(key) != null) {
+        if (contains(key)) {
           throw new InvalidParameter("Object " + key + " already exists\n" +
                                      "-- New object values:\n" + GlobPrinter.toString(values) +
                                      "-- Existing object:\n" + GlobPrinter.toString(find(key))
@@ -475,13 +479,13 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) {
-        if (find(key) == null) {
+        if (!contains(key)) {
           throw new InvalidParameter("Object " + key + " not found - cannot apply update");
         }
       }
 
       public void visitDeletion(Key key, FieldValues values) {
-        if (find(key) == null) {
+        if (!contains(key)) {
           throw new InvalidParameter("Object " + key + " not found - cannot apply deletion");
         }
       }
