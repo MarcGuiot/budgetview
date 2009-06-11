@@ -13,8 +13,6 @@ public class BudgetSumaryViewTest extends LoggedInFunctionalTestCase {
   public void test() throws Exception {
 
     views.selectBudget();
-    budgetView.getLabel()
-      .checkEmpty();
 
     OfxBuilder
       .init(this)

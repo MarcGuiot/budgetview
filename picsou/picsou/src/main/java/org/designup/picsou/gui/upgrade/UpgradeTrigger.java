@@ -120,7 +120,7 @@ public class UpgradeTrigger implements ChangeSetListener {
                            });
     }
 
-    if (currentJarVersion < 13) {
+    if (currentJarVersion < 16) {
       removeOccasionalBudgetArea(repository);
       migrateCategoriesToSubSeries(repository);
     }

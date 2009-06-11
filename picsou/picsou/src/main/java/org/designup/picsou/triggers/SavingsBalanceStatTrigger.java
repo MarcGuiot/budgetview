@@ -96,16 +96,19 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
   }
 
   private static class SavingsFunctor implements GlobFunctor {
-    private Map<Key, SavingsData> computedData = new HashMap<Key, SavingsData>();
-    MapOfMaps<Integer, Integer, Boolean> isSavingsSeriesAndAccount = new MapOfMaps<Integer, Integer, Boolean>();
-    MultiMap<Integer, Integer> accountBySeries = new MultiMap<Integer, Integer>();
-    MapOfMaps<Integer, Integer, Glob> firstTransactionForMonth = new MapOfMaps<Integer, Integer, Glob>();
-    MapOfMaps<Integer, Integer, Glob> lastTransactionForMonth = new MapOfMaps<Integer, Integer, Glob>();
-    Map<Integer, Glob> lastRealKnownTransaction = new HashMap<Integer, Glob>();
+    private MapOfMaps<Integer, Integer, SavingsData> computedData = new MapOfMaps<Integer, Integer, SavingsData>();
+    private MapOfMaps<Integer, Integer, Boolean> isSavingsSeriesAndAccount = new MapOfMaps<Integer, Integer, Boolean>();
+    private MultiMap<Integer, Integer> accountBySeries = new MultiMap<Integer, Integer>();
+    private MapOfMaps<Integer, Integer, Glob> firstTransactionForMonth = new MapOfMaps<Integer, Integer, Glob>();
+    private MapOfMaps<Integer, Integer, Glob> lastTransactionForMonth = new MapOfMaps<Integer, Integer, Glob>();
+    private Map<Integer, Glob> absoluteFirstTransactionForMonth = new HashMap<Integer, Glob>();
+    private Map<Integer, Glob> lastRealKnownTransaction = new HashMap<Integer, Glob>();
     private GlobRepository repository;
+    private Glob currentMonth;
 
     public SavingsFunctor(GlobRepository repository) {
       this.repository = repository;
+      currentMonth = repository.get(CurrentMonth.KEY);
     }
 
     public void run(Glob transaction, GlobRepository repository) throws Exception {
@@ -127,11 +130,13 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
           || (TransactionComparator.ASCENDING_BANK.compare(transaction, lastTransactionInBankMonth) > 0)) {
         lastTransactionForMonth.put(accountId, monthId, transaction);
       }
+      Glob absolutFirstTransaction = absoluteFirstTransactionForMonth.get(accountId);
+      if (absolutFirstTransaction == null ||
+          (TransactionComparator.ASCENDING_BANK.compare(transaction, absolutFirstTransaction) < 0)){
+        absoluteFirstTransactionForMonth.put(accountId, transaction);
+      }
 
-
-      Key key = Key.create(SavingsBalanceStat.MONTH, transaction.get(Transaction.MONTH),
-                           SavingsBalanceStat.ACCOUNT, accountId);
-      SavingsData data = getOrCreateStat(key);
+      SavingsData data = getOrCreateStat(transaction.get(Transaction.MONTH), accountId);
 
       accountBySeries.putUnique(transaction.get(Transaction.SERIES), accountId);
       Double amount = transaction.get(Transaction.AMOUNT);
@@ -155,33 +160,34 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
           isSavingsSeriesAndAccount.put(transaction.get(Transaction.SERIES), accountId, false);
         }
       }
-      if (!transaction.get(Transaction.PLANNED) &&
-          (lastRealKnownTransaction.get(accountId) == null ||
-           TransactionComparator.ASCENDING_BANK.compare(transaction, lastRealKnownTransaction.get(accountId)) > 0)) {
+      if (!transaction.get(Transaction.PLANNED)
+          && transaction.get(Transaction.BANK_MONTH).equals(currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))
+          && transaction.get(Transaction.BANK_DAY) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY)
+          && (lastRealKnownTransaction.get(accountId) == null ||
+              TransactionComparator.ASCENDING_BANK.compare(transaction, lastRealKnownTransaction.get(accountId)) > 0)) {
         lastRealKnownTransaction.put(accountId, transaction);
       }
     }
 
-    private SavingsData getOrCreateStat(Key key) {
-      SavingsData data = this.computedData.get(key);
+    private SavingsData getOrCreateStat(Integer monthId, Integer accountId) {
+      SavingsData data = this.computedData.get(monthId, accountId);
       if (data == null) {
         data = new SavingsData();
-        this.computedData.put(key, data);
+        this.computedData.put(monthId, accountId, data);
       }
       return data;
     }
 
     void complete() {
+      GlobList months = repository.getAll(Month.TYPE).sort(Month.ID);
       for (Map.Entry<Integer, List<Integer>> seriesToAccounts : accountBySeries.entries()) {
-        GlobList months = repository.getAll(Month.TYPE);
         ReadOnlyGlobRepository.MultiFieldIndexed index =
           repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesToAccounts.getKey());
         for (Glob month : months) {
           Glob seriesBudget = index.findByIndex(SeriesBudget.MONTH, month.get(Month.ID)).getGlobs().getFirst();
           for (Integer accountId : seriesToAccounts.getValue()) {
             Boolean isSavings = isSavingsSeriesAndAccount.get(seriesToAccounts.getKey(), accountId);
-            SavingsData data = getOrCreateStat(Key.create(SavingsBalanceStat.MONTH, month.get(Month.ID),
-                                                          SavingsBalanceStat.ACCOUNT, accountId));
+            SavingsData data = getOrCreateStat(month.get(Month.ID), accountId);
             if (seriesBudget != null) {
               if (isSavings) {
                 data.savingsPlanned += Math.abs(seriesBudget.get(SeriesBudget.AMOUNT));
@@ -193,45 +199,73 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
           }
         }
       }
-      for (Map.Entry<Key, SavingsData> entry : computedData.entrySet()) {
-        Integer monthId = entry.getKey().get(SavingsBalanceStat.MONTH);
-        Integer accountId = entry.getKey().get(SavingsBalanceStat.ACCOUNT);
+      Map<Integer, Glob> lastTransaction = new HashMap<Integer, Glob>();
+      for (Glob month : months) {
+        Integer monthId = month.get(Month.ID);
+        for (Map.Entry<Integer, SavingsData> entry : computedData.get(monthId).entrySet()) {
+          Integer accountId = entry.getKey();
 
-        Glob beginOfMonthTransaction = firstTransactionForMonth.get(accountId, monthId);
-        Glob endOfMonthTransaction = lastTransactionForMonth.get(accountId, monthId);
+          Glob beginOfMonthTransaction = firstTransactionForMonth.get(accountId, monthId);
+          Glob endOfMonthTransaction = lastTransactionForMonth.get(accountId, monthId);
+          Double beginOfMonthPosition = null;
+          Double endOfMonthPosition = null;
 
-        Double beginOfMonthPosition = null;
-        Double balance = null;
-        Double endOfMonthPosition = null;
-        if (beginOfMonthTransaction != null && endOfMonthTransaction != null) {
-          endOfMonthPosition = endOfMonthTransaction.get(Transaction.ACCOUNT_POSITION);
-          Double amount = beginOfMonthTransaction.get(Transaction.ACCOUNT_POSITION);
-          if (amount == null || endOfMonthPosition == null) {
-            continue;
+          if (beginOfMonthTransaction == null) { // donc endOfMonthTransaction == null
+            beginOfMonthTransaction = lastTransaction.get(accountId);
+            endOfMonthTransaction = beginOfMonthTransaction;
+            if (beginOfMonthTransaction == null) {
+              beginOfMonthTransaction = absoluteFirstTransactionForMonth.get(accountId);
+              endOfMonthTransaction = beginOfMonthTransaction;
+              if (beginOfMonthTransaction == null) {
+                beginOfMonthPosition = repository.get(Key.create(Account.TYPE, accountId)).get(Account.FIRST_POSITION);
+                endOfMonthPosition = beginOfMonthPosition;
+              }
+            }
           }
-          beginOfMonthPosition = amount -
-                                 beginOfMonthTransaction.get(Transaction.AMOUNT);
-          balance = endOfMonthPosition - beginOfMonthPosition;
-        }
 
-        repository.create(entry.getKey(),
-                          FieldValue.value(SavingsBalanceStat.BALANCE, balance),
-                          FieldValue.value(SavingsBalanceStat.OUT, entry.getValue().out),
-                          FieldValue.value(SavingsBalanceStat.OUT_PLANNED, entry.getValue().outPlanned),
-                          FieldValue.value(SavingsBalanceStat.OUT_REMAINING, entry.getValue().outRemaining),
-                          FieldValue.value(SavingsBalanceStat.SAVINGS, entry.getValue().savings),
-                          FieldValue.value(SavingsBalanceStat.SAVINGS_PLANNED, entry.getValue().savingsPlanned),
-                          FieldValue.value(SavingsBalanceStat.SAVINGS_REMAINING, entry.getValue().savingsRemaining),
-                          value(SavingsBalanceStat.BEGIN_OF_MONTH_POSITION, beginOfMonthPosition),
-                          value(SavingsBalanceStat.END_OF_MONTH_POSITION, endOfMonthPosition));
-        if (lastRealKnownTransaction.get(accountId) != null) {
-          Integer currentMonthId = lastRealKnownTransaction.get(accountId).get(Transaction.BANK_MONTH);
-          if (currentMonthId.equals(monthId)) {
-            repository.update(entry.getKey(),
-                              value(SavingsBalanceStat.LAST_KNOWN_ACCOUNT_POSITION,
-                                    lastRealKnownTransaction.get(accountId).get(Transaction.ACCOUNT_POSITION)),
-                              value(SavingsBalanceStat.LAST_KNOWN_POSITION_DAY,
-                                    lastRealKnownTransaction.get(accountId).get(Transaction.BANK_DAY)));
+          if (endOfMonthTransaction != null){
+            lastTransaction.put(accountId, endOfMonthTransaction);
+          }
+
+          Double balance = null;
+          if (beginOfMonthPosition != null) {
+            balance = null;
+          }
+          else if (beginOfMonthTransaction != null && endOfMonthTransaction != null) {
+            endOfMonthPosition = endOfMonthTransaction.get(Transaction.ACCOUNT_POSITION);
+            beginOfMonthPosition = beginOfMonthTransaction.get(Transaction.ACCOUNT_POSITION);
+            if (beginOfMonthPosition == null || endOfMonthPosition == null) {
+              continue;
+            }
+            if (beginOfMonthTransaction.get(Transaction.BANK_MONTH) >= monthId) {
+              beginOfMonthPosition = beginOfMonthPosition - beginOfMonthTransaction.get(Transaction.AMOUNT);
+            }
+            if (endOfMonthTransaction.get(Transaction.BANK_MONTH) > monthId) {
+              endOfMonthPosition = endOfMonthPosition - endOfMonthTransaction.get(Transaction.AMOUNT);
+            }
+            balance = endOfMonthPosition - beginOfMonthPosition;
+          }
+
+          Key key = Key.create(SavingsBalanceStat.MONTH, monthId, SavingsBalanceStat.ACCOUNT, accountId);
+          repository.create(key,
+                            FieldValue.value(SavingsBalanceStat.BALANCE, balance),
+                            FieldValue.value(SavingsBalanceStat.OUT, entry.getValue().out),
+                            FieldValue.value(SavingsBalanceStat.OUT_PLANNED, entry.getValue().outPlanned),
+                            FieldValue.value(SavingsBalanceStat.OUT_REMAINING, entry.getValue().outRemaining),
+                            FieldValue.value(SavingsBalanceStat.SAVINGS, entry.getValue().savings),
+                            FieldValue.value(SavingsBalanceStat.SAVINGS_PLANNED, entry.getValue().savingsPlanned),
+                            FieldValue.value(SavingsBalanceStat.SAVINGS_REMAINING, entry.getValue().savingsRemaining),
+                            value(SavingsBalanceStat.BEGIN_OF_MONTH_POSITION, beginOfMonthPosition),
+                            value(SavingsBalanceStat.END_OF_MONTH_POSITION, endOfMonthPosition));
+          if (lastRealKnownTransaction.get(accountId) != null) {
+            Integer currentMonthId = lastRealKnownTransaction.get(accountId).get(Transaction.BANK_MONTH);
+            if (currentMonthId.equals(monthId)) {
+              repository.update(key,
+                                value(SavingsBalanceStat.LAST_KNOWN_ACCOUNT_POSITION,
+                                      lastRealKnownTransaction.get(accountId).get(Transaction.ACCOUNT_POSITION)),
+                                value(SavingsBalanceStat.LAST_KNOWN_POSITION_DAY,
+                                      lastRealKnownTransaction.get(accountId).get(Transaction.BANK_DAY)));
+            }
           }
         }
       }

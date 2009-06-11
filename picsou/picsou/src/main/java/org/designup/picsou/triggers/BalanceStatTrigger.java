@@ -75,6 +75,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
     private Map<Integer, SeriesAmounts> monthSeriesAmounts = new HashMap<Integer, SeriesAmounts>();
     private Glob lastRealKnownTransaction;
     private Glob currentMonth;
+    private Glob absolutFirstTransaction;
 
     private Set<Integer> incomeSeries = new HashSet<Integer>();
     private Set<Integer> fixedSeries = new HashSet<Integer>();
@@ -187,6 +188,11 @@ public class BalanceStatTrigger implements ChangeSetListener {
         lastTransactionForMonth.put(monthId, transaction);
       }
 
+      if (absolutFirstTransaction == null ||
+          (TransactionComparator.ASCENDING_BANK.compare(transaction, absolutFirstTransaction) < 0)) {
+        absolutFirstTransaction = transaction;
+
+      }
       Integer transactionSeries = transaction.get(Transaction.SERIES);
       SeriesAmounts amounts = getOrCreate(transaction.get(Transaction.MONTH));
 
@@ -279,29 +285,53 @@ public class BalanceStatTrigger implements ChangeSetListener {
       Glob endOfMonthTransaction = null;
       for (Glob month : months) {
         Integer monthId = month.get(Month.ID);
+
+        Double beginOfMonthPosition = null;
+        Double endOfMonthPosition = null;
+
         Glob beginOfMonthTransaction = firstTransactionForMonth.get(monthId);
         if (beginOfMonthTransaction == null) {
           beginOfMonthTransaction = endOfMonthTransaction;
         }
         Glob nextLast = lastTransactionForMonth.get(monthId);
         endOfMonthTransaction = nextLast == null ? beginOfMonthTransaction : nextLast;
+        if (endOfMonthTransaction == null) {
+          endOfMonthTransaction = absolutFirstTransaction;
+          beginOfMonthTransaction = absolutFirstTransaction;
+          if (endOfMonthTransaction == null) {
+            GlobList globList = repository.getAll(Account.TYPE,
+                                                  GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()));
+            beginOfMonthPosition = 0.;
+            for (Glob glob : globList) {
+              Double value = glob.get(Account.FIRST_POSITION);
+              if (value != null) {
+                beginOfMonthPosition += value;
+              }
+            }
+            endOfMonthPosition = beginOfMonthPosition;
+          }
+        }
 
-        Double beginOfMonthPosition = null;
         Double balance = null;
-        Double endOfMonthPosition = null;
-        if (beginOfMonthTransaction != null && endOfMonthTransaction != null) {
+        if (beginOfMonthPosition != null) {
+          balance = 0.;
+        }
+        else if (beginOfMonthTransaction != null && endOfMonthTransaction != null) {
           endOfMonthPosition = endOfMonthTransaction.get(Transaction.SUMMARY_POSITION);
-          Double summaryPosition = beginOfMonthTransaction.get(Transaction.SUMMARY_POSITION);
-          if (summaryPosition != null) {
-            if (beginOfMonthTransaction.get(Transaction.BANK_MONTH).equals(monthId)){
-            beginOfMonthPosition = summaryPosition -
-                                   beginOfMonthTransaction.get(Transaction.AMOUNT);
+          beginOfMonthPosition = beginOfMonthTransaction.get(Transaction.SUMMARY_POSITION);
+          if (beginOfMonthPosition != null) {
+            if (beginOfMonthTransaction.get(Transaction.BANK_MONTH) >= monthId) {
+              beginOfMonthPosition = beginOfMonthPosition -
+                                     beginOfMonthTransaction.get(Transaction.AMOUNT);
             }
-            else {
-              beginOfMonthPosition = summaryPosition;
-            }
-            if (endOfMonthPosition != null && beginOfMonthPosition != null) {
-              balance = endOfMonthPosition - beginOfMonthPosition;
+            if (endOfMonthPosition != null) {
+              if (endOfMonthTransaction.get(Transaction.BANK_MONTH) > monthId) {
+                endOfMonthPosition = endOfMonthPosition -
+                                     endOfMonthTransaction.get(Transaction.AMOUNT);
+              }
+              if (endOfMonthPosition != null && beginOfMonthPosition != null) {
+                balance = endOfMonthPosition - beginOfMonthPosition;
+              }
             }
           }
         }
