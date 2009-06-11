@@ -1,6 +1,7 @@
 package org.designup.picsou.model;
 
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NamingField;
@@ -18,7 +19,9 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
-/** @deprecated */
+/**
+ * @deprecated
+ */
 public class Category {
 
   public static GlobType TYPE;
@@ -85,7 +88,17 @@ public class Category {
   public static String getName(Integer categoryId, GlobRepository repository) {
     Glob category = repository.get(org.globsframework.model.Key.create(TYPE, categoryId));
     String name = category.get(NAME);
-    return name == null ? category.get(Category.INNER_NAME) : name;
+    if (name != null) {
+      return name;
+    }
+
+    String innerName = category.get(Category.INNER_NAME);
+    String translation = Lang.find("category." + innerName);
+    if (translation != null) {
+      return translation;
+    }
+
+    return innerName;
   }
 
   public static boolean hasChildren(Integer categoryId, GlobRepository repository) {

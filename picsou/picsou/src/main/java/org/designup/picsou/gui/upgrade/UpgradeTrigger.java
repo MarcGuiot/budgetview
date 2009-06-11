@@ -12,6 +12,7 @@ import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.GlobUtils;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
@@ -159,28 +160,32 @@ public class UpgradeTrigger implements ChangeSetListener {
       GlobList seriesToCategoriesList =
         repository.getAll(SeriesToCategory.TYPE, GlobMatchers.linkedTo(series, SeriesToCategory.SERIES));
       if (seriesToCategoriesList.size() > 1) {
+
         for (Glob seriesToCategory : seriesToCategoriesList) {
           Integer categoryId = seriesToCategory.get(SeriesToCategory.CATEGORY);
           String categoryName = Category.getName(categoryId, repository);
-          Glob subSeries =
-            repository.create(SubSeries.TYPE,
-                              value(SubSeries.SERIES, seriesId),
-                              value(SubSeries.NAME, categoryName));
+          if (!Utils.equalIgnoreCase(categoryName, series.get(Series.NAME))) {
+            Glob subSeries =
+              repository.create(SubSeries.TYPE,
+                                value(SubSeries.SERIES, seriesId),
+                                value(SubSeries.NAME, categoryName));
 
-          GlobList transactions =
-            repository.getAll(Transaction.TYPE,
-                              and(
-                                fieldEquals(Transaction.SERIES, seriesId),
-                                fieldEquals(Transaction.CATEGORY, categoryId)
-                              ));
-          for (Glob transaction : transactions) {
-            repository.setTarget(transaction.getKey(), Transaction.SUB_SERIES, subSeries.getKey());
+            GlobList transactions =
+              repository.getAll(Transaction.TYPE,
+                                and(
+                                  fieldEquals(Transaction.SERIES, seriesId),
+                                  fieldEquals(Transaction.CATEGORY, categoryId)
+                                ));
+            for (Glob transaction : transactions) {
+              repository.setTarget(transaction.getKey(), Transaction.SUB_SERIES, subSeries.getKey());
+            }
           }
         }
       }
-      repository.deleteAll(SeriesToCategory.TYPE);
-      repository.deleteAll(Category.TYPE);
     }
+
+    repository.deleteAll(SeriesToCategory.TYPE);
+    repository.deleteAll(Category.TYPE);
   }
 
   public void createDataForNewUser(GlobRepository repository) {
