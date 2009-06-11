@@ -9,11 +9,14 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import java.security.spec.InvalidKeySpecException;
+import java.security.NoSuchAlgorithmException;
 
 public class PasswordBasedEncryptor {
   private SecretKey secretKey;
   private Cipher cipher;
   private PBEParameterSpec spec;
+  private static SecretKeyFactory factory;
+
 
   public static class EncryptFail extends GlobsException {
 
@@ -24,10 +27,10 @@ public class PasswordBasedEncryptor {
 
   public PasswordBasedEncryptor(byte[] salt, char[] password, int count) throws EncryptFail {
     try {
+      init();
       spec = new PBEParameterSpec(salt, count);
       PBEKeySpec keySpec = new PBEKeySpec(password);
-      SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
-      secretKey = secretKeyFactory.generateSecret(keySpec);
+      secretKey = factory.generateSecret(keySpec);
       cipher = Cipher.getInstance("PBEWithMD5AndDES");
     }
     catch (InvalidKeySpecException e) {
@@ -35,6 +38,12 @@ public class PasswordBasedEncryptor {
     }
     catch (Exception e) {
       throw new UnexpectedApplicationState(e);
+    }
+  }
+
+  public synchronized static void init() throws NoSuchAlgorithmException {
+    if (factory == null){
+      factory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
     }
   }
 

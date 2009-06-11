@@ -20,6 +20,7 @@ import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.gui.utils.ExceptionHandler;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.client.http.PasswordBasedEncryptor;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
@@ -52,10 +53,11 @@ import java.io.*;
 import java.util.*;
 import java.util.logging.LogManager;
 import java.util.regex.Pattern;
+import java.security.NoSuchAlgorithmException;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "0.21.rc3";
+  public static final String APPLICATION_VERSION = "0.22";
   public static final Long JAR_VERSION = 16L;
   public static final Long BANK_CONFIG_VERSION = 5L;
   private static final String JAR_DIRECTORY = "jars";
@@ -189,6 +191,7 @@ public class PicsouApplication {
       return;
     }
 
+    initCrypterFactory();
     initLogger();
     clearRepositoryIfNeeded();
 
@@ -219,6 +222,20 @@ public class PicsouApplication {
     catch (InvalidState e) {
       showMultipleInstanceError(e.getMessage());
     }
+  }
+
+  private void initCrypterFactory() {
+    Thread thread = new Thread() {
+      public void run() {
+        try {
+          PasswordBasedEncryptor.init();
+        }
+        catch (NoSuchAlgorithmException e) {
+        }
+      }
+    };
+    thread.setDaemon(true);
+    thread.start();
   }
 
   void showMultipleInstanceError(String message) {
