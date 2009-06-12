@@ -21,6 +21,7 @@ C org.globsframework.gui.splits.components.StyledToggleButtonUI
 C org.globsframework.gui.splits.components.ShadowedLabelUI
 C org.globsframework.gui.splits.components.HyperlinkButtonUI
 C com.jidesoft.plaf.aqua.AquaJideUtils
+C org.apache.commons.logging.impl.Jdk14Logger
 P com/jgoodies/looks true
 R layout/
 R banks/
