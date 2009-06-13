@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.components.MonthChooserDialog;
+import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.components.MonthRangeBound;
-import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
 import org.designup.picsou.gui.description.MonthYearStringifier;
 import org.designup.picsou.gui.series.edition.MonthCheckBoxUpdater;

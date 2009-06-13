@@ -6,7 +6,7 @@ import org.designup.picsou.model.TransactionType;
 
 public class StatTest extends LoggedInFunctionalTestCase {
 
-  public void testCategorisationWithPositiveTransaction() throws Exception {
+  public void testCategorizationWithPositiveTransaction() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/07/15", -90.00, "Auchan")
@@ -55,7 +55,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkTotalAmounts(10 + 60.90 - 49.9, -90 - 80);
   }
 
-  public void testChangeSeriesBudgetCanCreatePlannedTransaction() throws Exception {
+  public void testChangingSeriesBudgetCanCreatePlannedTransaction() throws Exception {
 
     views.selectBudget();
     budgetView.envelopes.createSeries().setName("Secu")
@@ -89,7 +89,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testOverrunIsTakenInAccountInMonthSummaryView() throws Exception {
+  public void testOverrunIsTakenIntoAccountInMonthSummaryView() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/07/15", -90.00, "Auchan")
@@ -127,7 +127,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testBalanceDoNotTakeInAcountOperationForNextMont() throws Exception {
+  public void testBalanceDoesNotTakeInAcountOperationsForNextMonth() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/01", 200.00, "Salaire")
@@ -149,7 +149,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     monthSummary.checkBalance(200 - 80 - 170);  //-50 ==> prends en comptes les 80
   }
 
-  public void testWithIncomReimbursement() throws Exception {
+  public void testWithIncomeReimbursement() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/01", 200.00, "Salaire")

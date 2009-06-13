@@ -2,7 +2,7 @@ package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.AmountEditor;
-import org.designup.picsou.gui.components.ConfirmationDialog;
+import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.MonthListStringifier;

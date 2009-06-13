@@ -6,7 +6,7 @@ import org.uispec4j.Button;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
-import org.designup.picsou.gui.components.Gauge;
+import org.designup.picsou.gui.components.charts.Gauge;
 
 public class CategorizationGaugeChecker extends GuiChecker {
   private Panel panel;

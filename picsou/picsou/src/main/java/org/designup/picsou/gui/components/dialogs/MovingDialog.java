@@ -1,6 +1,7 @@
-package org.designup.picsou.gui.components;
+package org.designup.picsou.gui.components.dialogs;
 
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.designup.picsou.gui.components.DialogMovingListener;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;

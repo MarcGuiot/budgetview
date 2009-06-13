@@ -2,7 +2,7 @@ package org.designup.picsou.gui.about;
 
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.CloseAction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;

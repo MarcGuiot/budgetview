@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.accounts;
 
-import org.designup.picsou.gui.components.ConfirmationDialog;
-import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;

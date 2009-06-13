@@ -176,8 +176,8 @@ public class LoginPanel {
         PicsouInit init = PicsouInit.init(serverAccess, user, validUser, creationCheckBox.isSelected(), directory);
         final MainPanel mainPanel =
           MainPanel.init(init.getRepository(), init.getDirectory(),
-                         mainWindow,
-                         new BackupGeneratorImpl(init));
+                         mainWindow
+          );
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
             mainPanel.show();

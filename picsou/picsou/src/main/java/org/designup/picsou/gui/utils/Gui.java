@@ -1,7 +1,5 @@
 package org.designup.picsou.gui.utils;
 
-import org.designup.picsou.gui.components.DialogMovingListener;
-import org.designup.picsou.gui.components.MovingDialog;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.font.FontService;

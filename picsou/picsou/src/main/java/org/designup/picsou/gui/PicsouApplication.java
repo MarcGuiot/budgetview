@@ -3,8 +3,8 @@ package org.designup.picsou.gui;
 import net.roydesign.event.ApplicationEvent;
 import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.gui.components.ArrowButtonUI;
-import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.gui.components.SelectionToggleUI;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
@@ -16,9 +16,9 @@ import org.designup.picsou.gui.startup.LoginPanel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.upgrade.UpgradeService;
+import org.designup.picsou.gui.utils.ExceptionHandler;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
-import org.designup.picsou.gui.utils.ExceptionHandler;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.ImageLocator;
@@ -41,8 +41,6 @@ import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -269,14 +267,16 @@ public class PicsouApplication {
   }
 
   public static String getDataPath() {
-    if (GuiUtils.isMacOSX() && System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
-      return System.getProperty("user.home") + "/Library/Application Support/CashPilot";
-    }
-    if (GuiUtils.isVista() && System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
-      return System.getProperty("user.home") + "/AppData/Local/CashPilot";
-    }
-    if (GuiUtils.isWindows() && System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
-      return System.getProperty("user.home") + "/Application Data/CashPilot";
+    if (System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
+      if (GuiUtils.isMacOSX()) {
+        return System.getProperty("user.home") + "/Library/Application Support/CashPilot";
+      }
+      if (GuiUtils.isVista()) {
+        return System.getProperty("user.home") + "/AppData/Local/CashPilot";
+      }
+      if (GuiUtils.isWindows()) {
+        return System.getProperty("user.home") + "/Application Data/CashPilot";
+      }
     }
     return getSystemValue(LOCAL_PREVAYLER_PATH_PROPERTY, System.getProperty("user.home") + "/.cashpilot");
   }

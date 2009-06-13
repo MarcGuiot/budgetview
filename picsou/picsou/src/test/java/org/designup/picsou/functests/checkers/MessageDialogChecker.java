@@ -6,7 +6,7 @@ import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
 
 public class MessageDialogChecker extends GuiChecker {
-  private Window dialog;
+  protected Window dialog;
 
   public static MessageDialogChecker init(Trigger trigger) {
     return new MessageDialogChecker(WindowInterceptor.getModalDialog(trigger));

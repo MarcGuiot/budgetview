@@ -2,7 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.gui.components.Gauge;
+import org.designup.picsou.gui.components.charts.Gauge;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.*;

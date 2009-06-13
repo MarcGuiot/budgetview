@@ -2,7 +2,7 @@ package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.CancelAction;
-import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.AccountStringifier;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.Account;

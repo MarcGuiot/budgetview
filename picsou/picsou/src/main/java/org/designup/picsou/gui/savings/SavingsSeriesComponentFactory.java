@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.savings;
 
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
-import org.designup.picsou.gui.components.Gauge;
-import org.designup.picsou.gui.components.GlobGaugeView;
+import org.designup.picsou.gui.components.charts.BudgetAreaGaugeFactory;
+import org.designup.picsou.gui.components.charts.Gauge;
+import org.designup.picsou.gui.components.charts.GlobGaugeView;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;

@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.plaf;
 
-import org.designup.picsou.gui.components.PicsouDialogPainter;
-import org.designup.picsou.gui.components.MovingDialog;
+import org.designup.picsou.gui.components.dialogs.PicsouDialogPainter;
+import org.designup.picsou.gui.components.dialogs.MovingDialog;
 import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;

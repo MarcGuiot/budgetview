@@ -4,7 +4,7 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
-import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseExpirationDialog;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
@@ -18,7 +18,6 @@ import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class DialogDemo {
   public static void main(String[] args) throws Exception {
