@@ -4,7 +4,7 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.accounts.AccountEditionPanel;
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
 import org.designup.picsou.gui.accounts.NewAccountAction;
-import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.Formatting;

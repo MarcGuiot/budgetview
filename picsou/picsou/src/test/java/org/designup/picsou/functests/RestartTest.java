@@ -263,42 +263,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testBackupAndRestore() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/08/26", 1000, "Company")
-      .addTransaction("2008/08/10", -400.0, "Auchan")
-      .load();
-
-    views.selectCategorization();
-    categorization.setNewIncome("Company", "Salaire");
-    categorization.setNewEnvelope("Auchan", "Course");
-
-    views.selectData();
-    transactions
-      .initContent()
-      .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00, "Salaire")
-      .add("10/08/2008", TransactionType.PRELEVEMENT, "Auchan", "", -400.00, "Course")
-      .check();
-
-    String result = operations.backup(System.getProperty("java.io.tmpdir"));
-    views.selectCategorization();
-    categorization.getTable().selectRows(0, 1);
-    categorization.setUncategorized();
-
-    operations.restore(result);
-    views.selectData();
-    timeline.selectAll();
-    transactions
-      .initContent()
-      .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00, "Salaire")
-      .add("10/08/2008", TransactionType.PRELEVEMENT, "Auchan", "", -400.00, "Course")
-      .check();
-  }
-
-  public void testBackupAndRestoreWithOtherPassword() throws Exception {
-    fail("Marc: Demander le mots de passe pour lire un backup si on ne reussi pas a decrypter le snaphot");
-  }
-
   public void testSavingsSeries() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectHome();

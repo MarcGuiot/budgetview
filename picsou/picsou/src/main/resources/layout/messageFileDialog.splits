@@ -2,11 +2,13 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(250,200)">
+  <panel styleClass="dialog" preferredSize="(450,200)">
     <column styleClass="innerDialog">
 
-      <label ref="message"/>
-      <textArea ref="file"/>
+      <label ref="title"  styleClass="title"/>
+      <htmlEditorPane ref="message" marginBottom="10"/>
+      <textArea ref="filePath" styleClass="multiLineLabel" marginLeft="20"/>
+      <filler fill="vertical"/>
 
     </column>
   </panel>

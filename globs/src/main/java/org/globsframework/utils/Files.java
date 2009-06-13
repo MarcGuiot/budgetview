@@ -129,4 +129,15 @@ public class Files {
     }
     return stream;
   }
+
+  public static void createParentDirs(File file) {
+    if (file == null) {
+      return;
+    }
+    File parent = file.getParentFile();
+    if (parent == null) {
+      return;
+    }
+    parent.mkdirs();
+  }
 }

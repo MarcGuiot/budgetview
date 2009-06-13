@@ -3,6 +3,8 @@ package org.designup.picsou.gui.components;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.Month;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;

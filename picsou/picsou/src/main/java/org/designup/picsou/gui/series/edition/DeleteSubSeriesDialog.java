@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.series.edition;
 
 import org.designup.picsou.gui.components.CloseAction;
-import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.SubSeries;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;

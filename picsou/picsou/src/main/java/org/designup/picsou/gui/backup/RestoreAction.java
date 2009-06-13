@@ -1,10 +1,11 @@
 package org.designup.picsou.gui.backup;
 
-import org.designup.picsou.gui.BackupGenerator;
 import org.designup.picsou.gui.components.dialogs.MessageFileDialog;
+import org.designup.picsou.gui.startup.BackupService;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Log;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,11 +14,11 @@ import java.io.FileInputStream;
 
 public class RestoreAction extends AbstractBackupRestoreAction {
   private JFrame parent;
-  private BackupGenerator generator;
+  private BackupService backupService;
 
-  public RestoreAction(GlobRepository repository, Directory directory, BackupGenerator generator) {
+  public RestoreAction(GlobRepository repository, Directory directory) {
     super(Lang.get("restore"), repository, directory);
-    this.generator = generator;
+    this.backupService = directory.get(BackupService.class);
     this.parent = directory.get(JFrame.class);
   }
 
@@ -28,14 +29,14 @@ public class RestoreAction extends AbstractBackupRestoreAction {
     if (returnVal == JFileChooser.APPROVE_OPTION) {
       File file = chooser.getSelectedFile();
       try {
-        generator.restore(new FileInputStream(file));
+        backupService.restore(new FileInputStream(file));
         MessageFileDialog dialog = new MessageFileDialog(repository, directory);
-        dialog.show("restore.ok", null);
+        dialog.show("restore.ok.title", "restore.ok.message", file);
       }
       catch (Exception ex) {
-        ex.printStackTrace();
+        Log.write("Restore failed", ex);
         MessageFileDialog dialog = new MessageFileDialog(repository, directory);
-        dialog.show("restore.error", null);
+        dialog.show("restore.error.title", "restore.error.message", file);
       }
     }
   }

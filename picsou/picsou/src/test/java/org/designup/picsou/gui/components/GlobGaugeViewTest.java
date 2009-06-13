@@ -15,6 +15,8 @@ import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.gui.components.charts.GlobGaugeView;
+import org.designup.picsou.gui.components.charts.Gauge;
 
 import java.util.Arrays;
 

@@ -111,7 +111,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .deleteCurrentSeries();
     // il reste des SeriesBudget miroir sans la serie principale
     // NPE sur recalcul de PeriodStat.
-    String name = operations.backup(System.getProperty("java.io.tmpdir"));
+    String name = operations.backup(this);
     operations.restore(name);
     timeline.selectAll();
   }

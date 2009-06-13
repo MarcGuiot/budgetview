@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.experiment;
 
-import org.designup.picsou.gui.components.Gauge;
+import org.designup.picsou.gui.components.charts.Gauge;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;

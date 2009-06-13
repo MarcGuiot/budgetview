@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.components.dialogs;
 
-import org.designup.picsou.gui.components.PicsouDialog;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
@@ -8,6 +7,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 public class MessageFileDialog {
   private GlobRepository repository;
@@ -18,19 +18,21 @@ public class MessageFileDialog {
     this.directory = directory;
   }
 
-  public void show(String messageKey, String file) {
+  public void show(String titleKey, String messageKey, File file) {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/messageFileDialog.splits", repository, directory);
 
-    builder.add("message", new JLabel(Lang.get(messageKey)));
-    
+    builder.add("title", new JLabel(Lang.get(titleKey)));
+
+    builder.add("message", new JEditorPane("text/html", Lang.get(messageKey)));
+
     JTextArea fileArea = new JTextArea();
     fileArea.setEditable(false);
-    builder.add("file", fileArea);
+    builder.add("filePath", fileArea);
     if (file == null) {
       fileArea.setVisible(false);
     }
     else {
-      fileArea.setText(file);
+      fileArea.setText(file.getAbsolutePath());
     }
 
     final PicsouDialog dialog = PicsouDialog.create(directory.get(JFrame.class), directory);

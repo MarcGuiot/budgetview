@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.series.wizard;
 
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.components.ConfirmationDialog;
-import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.ProfileTypeSeriesTrigger;

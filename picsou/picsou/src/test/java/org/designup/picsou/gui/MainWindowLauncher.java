@@ -5,7 +5,6 @@ import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
 import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
-import org.designup.picsou.gui.startup.BackupGeneratorImpl;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.server.ServerDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -62,8 +61,7 @@ public class MainWindowLauncher {
     PicsouInit init = PicsouInit.init(serverAccess, user, validUser, newUser, directory);
 
     MainWindow window = new MainWindow();
-    MainPanel.init(init.getRepository(), init.getDirectory(), window,
-                   new BackupGeneratorImpl(init)).show();
+    MainPanel.init(init.getRepository(), init.getDirectory(), window).show();
     window.show();
 
     return directory;

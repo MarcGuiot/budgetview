@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.components;
+package org.designup.picsou.gui.components.charts;
 
 import org.designup.picsou.model.BudgetArea;
 

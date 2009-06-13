@@ -1,7 +1,8 @@
-package org.designup.picsou.gui.components;
+package org.designup.picsou.gui.components.dialogs;
 
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.components.DisposeCallback;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorUpdater;
@@ -11,7 +12,6 @@ import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
 import java.awt.*;

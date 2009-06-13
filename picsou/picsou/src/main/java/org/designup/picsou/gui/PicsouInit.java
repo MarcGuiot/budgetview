@@ -5,28 +5,28 @@ import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.config.RegistrationTrigger;
 import org.designup.picsou.gui.model.PicsouGuiModel;
+import org.designup.picsou.gui.startup.BackupService;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
 import org.designup.picsou.gui.utils.ExceptionHandler;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
-import org.designup.picsou.model.*;
-import org.designup.picsou.server.model.SerializableGlobType;
-import org.designup.picsou.server.persistence.direct.ReadOnlyAccountDataManager;
+import org.designup.picsou.model.PicsouModel;
+import org.designup.picsou.model.User;
 import org.designup.picsou.triggers.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobModel;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.model.*;
+import org.globsframework.model.ChangeSet;
 import static org.globsframework.model.FieldValue.value;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
-import org.globsframework.model.impl.DefaultCheckedGlobIdGenerator;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
+import org.globsframework.model.utils.CachedGlobIdGenerator;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobUtils;
-import org.globsframework.model.utils.CachedGlobIdGenerator;
-import org.globsframework.utils.MapOfMaps;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
@@ -35,14 +35,11 @@ import org.globsframework.xml.XmlGlobParser;
 
 import javax.swing.*;
 import java.io.*;
-import java.util.Collection;
 
 public class PicsouInit {
 
   private GlobRepository repository;
   private ServerAccess serverAccess;
-  private String user;
-  private boolean validUser;
   private Directory directory;
   private DefaultGlobIdGenerator idGenerator;
   private UpgradeTrigger upgradeTrigger;
@@ -55,8 +52,6 @@ public class PicsouInit {
   private PicsouInit(ServerAccess serverAccess, String user, boolean validUser,
                      boolean newUser, final Directory directory) throws IOException {
     this.serverAccess = serverAccess;
-    this.user = user;
-    this.validUser = validUser;
     this.directory = directory;
 
     idGenerator = new DefaultGlobIdGenerator();
@@ -132,36 +127,8 @@ public class PicsouInit {
     directory.add(TransactionAnalyzerFactory.class, factory);
     ImportService importService = new ImportService();
     directory.add(ImportService.class, importService);
-  }
 
-  public void restore(InputStream stream) {
-    MapOfMaps<String, Integer, SerializableGlobType> serverData =
-      new MapOfMaps<String, Integer, SerializableGlobType>();
-    ReadOnlyAccountDataManager.readSnapshot(serverData, stream);
-    serverAccess.replaceData(serverData);
-
-    MutableChangeSet changeSet = new DefaultChangeSet();
-    GlobList userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdater() {
-
-      public void update(IntegerField field, Integer lastAllocatedId) {
-        idGenerator.update(field, lastAllocatedId);
-      }
-    });
-    try {
-      repository.startChangeSet();
-      Collection<GlobType> serverTypes = userData.getTypes();
-      repository.addTriggerAtFirst(upgradeTrigger);
-      repository.reset(userData, serverTypes.toArray(new GlobType[serverTypes.size()]));
-    }
-    finally {
-      repository.completeChangeSet();
-    }
-    repository.removeTrigger(upgradeTrigger);
-  }
-
-  public void generateBackupIn(String file) throws IOException {
-    MapOfMaps<String, Integer, SerializableGlobType> serverData = serverAccess.getServerData();
-    ReadOnlyAccountDataManager.writeSnapshot_V2(serverData, new File(file));
+    directory.add(new BackupService(serverAccess, repository, idGenerator, upgradeTrigger));
   }
 
   private static class ServerChangeSetListener extends DefaultChangeSetListener {

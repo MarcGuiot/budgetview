@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.categorization.components;
 
-import org.designup.picsou.gui.components.Gauge;
+import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.gui.utils.SetFieldValueAction;
 import org.designup.picsou.model.Series;

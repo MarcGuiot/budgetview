@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.transactions.shift;
 
-import org.designup.picsou.gui.components.ConfirmationDialog;
+import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
