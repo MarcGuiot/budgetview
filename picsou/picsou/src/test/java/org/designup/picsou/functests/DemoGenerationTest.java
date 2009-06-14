@@ -260,13 +260,11 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
 
 
-
-
     String outputFile = System.getProperty("outfile");
     if (outputFile != null) {
+      new File(outputFile).delete();
       File out = new File(outputFile);
-      String file = operations.backup(out.getAbsoluteFile().getParent());
-      assertTrue(new File(file).renameTo(out));
+      operations.backup(out.getAbsoluteFile().getAbsolutePath());
     }
   }
 }
