@@ -4,6 +4,11 @@ import com.jgoodies.looks.LookUtils;
 import org.designup.picsou.gui.plaf.LafUtils;
 import org.designup.picsou.gui.plaf.PicsouButtonUI;
 import org.designup.picsou.gui.plaf.PicsouWindowsLabelUI;
+import org.jdesktop.swingx.JXDatePicker;
+import org.jdesktop.swingx.JXMonthView;
+import org.jdesktop.swingx.JXHyperlink;
+import org.jdesktop.swingx.plaf.basic.BasicMonthViewUI;
+import org.jdesktop.swingx.plaf.basic.BasicHyperlinkUI;
 
 import javax.swing.*;
 import javax.swing.plaf.InsetsUIResource;
@@ -36,6 +41,14 @@ public class PicsouWindowsLookAndFeel extends Plastic3DLookAndFeel {
       LafUtils.initUI(defaults, com.jgoodies.looks.plastic.PlasticSeparatorUI.class, "SeparatorUI");
       LafUtils.initUI(defaults, com.jgoodies.looks.plastic.PlasticToolBarSeparatorUI.class, "ToolBarSeparatorUI");
       LafUtils.initUI(defaults, com.jgoodies.looks.plastic.PlasticFileChooserUI.class, "FileChooserUI");
+      LafUtils.initUI(defaults, org.jdesktop.swingx.plaf.basic.BasicDatePickerUI.class,
+                      JXDatePicker.uiClassID);
+      LafUtils.initUI(defaults, BasicMonthViewUI.class,
+                      JXMonthView.uiClassID);
+      LafUtils.initUI(defaults, BasicHyperlinkUI.class,
+                      JXHyperlink.uiClassID);
+      
+      
       boolean useMetalTabs = LookUtils.getSystemProperty(TAB_STYLE_KEY, "").
         equalsIgnoreCase(TAB_STYLE_METAL_VALUE);
       if (!useMetalTabs) {

@@ -22,7 +22,12 @@ C org.globsframework.gui.splits.components.ShadowedLabelUI
 C org.globsframework.gui.splits.components.HyperlinkButtonUI
 C com.jidesoft.plaf.aqua.AquaJideUtils
 C org.apache.commons.logging.impl.Jdk14Logger
+C org.jdesktop.swingx.plaf.LookAndFeelAddons
 P com/jgoodies/looks true
+R org/jdesktop/swingx/plaf/basic/resources/
+R org/jdesktop/swingx/plaf/linux/resources/
+R org/jdesktop/swingx/plaf/macosx/resources/
+R org/jdesktop/swingx/plaf/windows/resources/
 R layout/
 R banks/
 R logging/
