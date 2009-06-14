@@ -1,17 +1,30 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.TestCase;
+import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.utils.Lang;
-import org.uispec4j.*;
+import org.globsframework.utils.Dates;
+import org.globsframework.utils.Ref;
+import org.globsframework.utils.TestUtils;
+import org.uispec4j.Button;
+import org.uispec4j.MenuItem;
+import org.uispec4j.Trigger;
+import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class OperationChecker {
   private MenuItem importMenu;
   private MenuItem exportMenu;
-  private MenuItem backupMenu;
-  private MenuItem restoreMenu;
   private MenuItem preferencesMenu;
   private MenuItem undoMenu;
   private MenuItem redoMenu;
@@ -29,8 +42,6 @@ public class OperationChecker {
     MenuItem fileMenu = window.getMenuBar().getMenu("File");
     importMenu = fileMenu.getSubMenu("Import");
     exportMenu = fileMenu.getSubMenu("Export");
-    backupMenu = fileMenu.getSubMenu("Backup");
-    restoreMenu = fileMenu.getSubMenu("Restore");
     preferencesMenu = fileMenu.getSubMenu("Preferences");
 
     MenuItem editMenu = window.getMenuBar().getMenu("Edit");
@@ -106,34 +117,49 @@ public class OperationChecker {
       .run();
   }
 
-  public String backup(String dirName) {
-    final String[] fileName = new String[1];
-    WindowInterceptor
-      .init(backupMenu.triggerClick())
-      .process(FileChooserHandler.init().select(dirName))
-      .process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          UISpecAssert.assertTrue(window.getTextBox("message").textContains("Backup done in file"));
-          TextBox box = window.getInputTextBox("file");
-          fileName[0] = box.getText();
-          return window.getButton().triggerClick();
-        }
-      })
-      .run();
-    return fileName[0];
+  public Trigger getBackupTrigger() {
+    MenuItem fileMenu = window.getMenuBar().getMenu("File");
+    return fileMenu.getSubMenu("Backup").triggerClick();
   }
 
-  public void restore(String name) {
+  public String backup(TestCase test) {
+    return backup(TestUtils.getFileName(test));
+  }
+
+  public String backup(String filePath) {
+    final Ref<String> selectedFile = new Ref<String>();
     WindowInterceptor
-      .init(restoreMenu.triggerClick())
-      .process(FileChooserHandler.init().select(name))
+      .init(getBackupTrigger())
+      .process(FileChooserHandler.init().select(filePath))
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          UISpecAssert.assertTrue(window.getTextBox("message").textContains("Restore done"));
-          return window.getButton().triggerClick();
+          MessageFileDialogChecker dialog = new MessageFileDialogChecker(window);
+          dialog.checkMessageContains("Backup done in file");
+          selectedFile.set(dialog.getFilePath());
+          return dialog.getOkTrigger();
         }
       })
       .run();
+    return selectedFile.get();
+  }
+
+  public void restore(String filePath) {
+    WindowInterceptor
+      .init(getRestoreTrigger())
+      .process(FileChooserHandler.init().select(filePath))
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          MessageFileDialogChecker dialog = new MessageFileDialogChecker(window);
+          dialog.checkMessageContains("Restore done");
+          return dialog.getOkTrigger();
+        }
+      })
+      .run();
+  }
+
+  public Trigger getRestoreTrigger() {
+    MenuItem fileMenu = window.getMenuBar().getMenu("File");
+    return fileMenu.getSubMenu("Restore").triggerClick();
   }
 
   public Trigger getImportTrigger() {
@@ -182,6 +208,55 @@ public class OperationChecker {
 
   public AboutChecker openAbout() {
     return AboutChecker.open(window.getMenuBar().getMenu("Help").getSubMenu("About").triggerClick());
+  }
+
+  public void backupAndLaunchApplication(String user, String password, Date currentDate) throws Exception {
+    String backupFile = backup("/tmp/");
+    String javaHome = System.getProperty("java.home");
+    String classPath = System.getProperty("java.class.path");
+    List<String> args = new ArrayList<String>();
+    args.add(javaHome + System.getProperty("file.separator") + "bin" + System.getProperty("file.separator") + "java");
+//    args.add("-Xdebug");
+//    args.add("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005");
+    args.add("-cp");
+    args.add(classPath);
+    args.add("-Dsplits.editor.enabled=false");
+    args.add("-Dsplits.debug.enabled=false");
+    args.add("-D" + PicsouApplication.APPNAME + ".log.sout=true");
+    if (currentDate != null) {
+      args.add("-D" + PicsouApplication.APPNAME + ".today=" + Dates.toString(currentDate));
+    }
+    args.add("org.designup.picsou.gui.MainWindowLauncher");
+    args.add("-u");
+    args.add(user);
+    args.add("-p");
+    args.add(password);
+    args.add("-s");
+    args.add(backupFile);
+    Process process = Runtime.getRuntime().exec(args.toArray(new String[args.size()]));
+    BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+    BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+    while (true) {
+      Thread.sleep(10);
+      try {
+        while (inputReader.ready()) {
+          String line = inputReader.readLine();
+          System.out.println(line);
+        }
+      }
+      catch (IOException e) {
+      }
+      while (errorReader.ready()) {
+        String line = errorReader.readLine();
+        System.err.println(line);
+      }
+      try {
+        process.exitValue();
+        return;
+      }
+      catch (IllegalThreadStateException e) {
+      }
+    }
   }
 
   public void dump() {

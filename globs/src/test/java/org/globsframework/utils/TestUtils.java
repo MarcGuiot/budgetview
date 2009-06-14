@@ -189,9 +189,13 @@ public class TestUtils {
       String fileName = test.getClass().getSimpleName() + "_" + test.getName().replace(".", "_") + "_" + index;
       File file = new File(TMP_DIR + "/" + fileName + extension);
       if (!file.exists()) {
-        return file.getPath();
+        return file.getAbsolutePath();
       }
       index++;
     }
+  }
+
+  public static String getDirName(TestCase test) {
+    return getFileName(test, "");
   }
 }

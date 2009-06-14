@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.budget;
 
 import junit.framework.TestCase;
-import org.designup.picsou.gui.components.Gauge;
+import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.components.TextDisplay;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.model.BudgetArea;

@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.experiment;
 
-import org.designup.picsou.gui.components.LineChart;
+import org.designup.picsou.gui.components.charts.LineChart;
 import org.globsframework.gui.splits.layout.SingleComponentPanels;
 
 import javax.swing.*;

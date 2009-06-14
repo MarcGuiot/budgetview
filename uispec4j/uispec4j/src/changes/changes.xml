@@ -6,6 +6,12 @@
   <body>
 
     <release version="???" date="???">
+      <action dev="rmedina" type="add">
+        Added FileChooserHandler.assertCurrentDirEquals()
+      </action>
+    </release>
+
+    <release version="???" date="???">
       <action dev="rmedina" type="update">
         Made UISpecAssert.fail() fail immediately instead of returning an Assertion, and introduced UISpecAssert.failure
         to return an Assertion that always fails.

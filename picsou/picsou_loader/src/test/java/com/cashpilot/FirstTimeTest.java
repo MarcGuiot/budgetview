@@ -350,54 +350,6 @@ public class FirstTimeTest extends UISpecTestCase {
     window.dispose();
   }
 
-  void open(OperationChecker operations) throws IOException, InterruptedException {
-    String s = operations.backup("/tmp/");
-    System.out.println("LoggedInFunctionalTestCase.openPicsou " + s);
-    String javaHome = System.getProperty("java.home");
-    String classPath = System.getProperty("java.class.path");
-    List<String> args = new ArrayList<String>();
-    args.add(javaHome + System.getProperty("file.separator") + "bin" + System.getProperty("file.separator") + "java");
-//    args.add("-Xdebug");
-//    args.add("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005");
-    args.add("-cp");
-    args.add(classPath);
-    args.add("-Dsplits.editor.enabled=false");
-    args.add("-Dsplits.debug.enabled=false");
-    args.add("-D" + PicsouApplication.APPNAME + ".log.sout=true");
-//    args.add("-D" + PicsouApplication.APPNAME + ".today=" + Dates.toString(currentDate));
-    args.add("org.designup.picsou.gui.MainWindowLauncher");
-    args.add("-u");
-    args.add("toto");
-    args.add("-p");
-    args.add("toto");
-    args.add("-s");
-    args.add(s);
-    Process process = Runtime.getRuntime().exec(args.toArray(new String[args.size()]));
-    BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-    BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-    while (true) {
-      Thread.sleep(10);
-      try {
-        while (inputReader.ready()) {
-          String line = inputReader.readLine();
-          System.out.println(line);
-        }
-      }
-      catch (IOException e) {
-      }
-      while (errorReader.ready()) {
-        String line = errorReader.readLine();
-        System.err.println(line);
-      }
-      try {
-        process.exitValue();
-        return;
-      }
-      catch (IllegalThreadStateException e) {
-      }
-    }
-  }
-
   public void testReloadSnapshotV3() throws Exception {
     Window window = WindowInterceptor.run(new Trigger() {
       public void run() throws Exception {

@@ -78,13 +78,13 @@ public class MainPanel {
   private DataCheckerAction checkRepository;
 
   public static MainPanel init(GlobRepository repository, Directory directory,
-                               MainWindow mainWindow, BackupGenerator backupGenerator) {
-    MainPanel panel = new MainPanel(repository, directory, mainWindow, backupGenerator);
+                               MainWindow mainWindow) {
+    MainPanel panel = new MainPanel(repository, directory, mainWindow);
     mainWindow.getFrame().setRepository(repository);
     return panel;
   }
 
-  private MainPanel(final GlobRepository repository, Directory directory, MainWindow mainWindow, BackupGenerator generator) {
+  private MainPanel(final GlobRepository repository, Directory directory, MainWindow mainWindow) {
     this.repository = repository;
     this.directory = directory;
     this.mainWindow = mainWindow;
@@ -108,8 +108,8 @@ public class MainPanel {
 
     importFileAction = ImportFileAction.initAndRegisterToOpenRequestManager(Lang.get("import"), repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
-    backupAction = new BackupAction(repository, directory, generator);
-    restoreAction = new RestoreAction(repository, directory, generator);
+    backupAction = new BackupAction(repository, directory);
+    restoreAction = new RestoreAction(repository, directory);
     preferencesAction = new PreferencesAction(repository, directory);
     registerAction = new RegisterLicenseAction(repository, directory);
     dumpRepository = new DumpDataAction(repository);

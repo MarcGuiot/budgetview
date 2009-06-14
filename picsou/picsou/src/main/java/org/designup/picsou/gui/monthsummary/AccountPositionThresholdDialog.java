@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.monthsummary;
 
 import org.designup.picsou.gui.components.CloseAction;
-import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.model.AccountPositionThreshold;
 import org.designup.picsou.utils.Lang;

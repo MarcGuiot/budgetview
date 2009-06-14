@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.preferences;
 
-import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.UserPreferences;

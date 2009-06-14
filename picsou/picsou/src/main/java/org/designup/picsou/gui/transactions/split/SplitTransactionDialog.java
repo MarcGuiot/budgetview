@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.transactions.split;
 
 import org.designup.picsou.gui.categorization.components.CompactSeriesStringifier;
-import org.designup.picsou.gui.components.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.transactions.columns.AbstractTransactionEditor;
 import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;

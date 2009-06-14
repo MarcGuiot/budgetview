@@ -1,4 +1,6 @@
-package org.designup.picsou.gui.components;
+package org.designup.picsou.gui.components.charts;
+
+import org.designup.picsou.gui.components.charts.StackChartElement;
 
 import javax.swing.*;
 import java.awt.*;

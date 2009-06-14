@@ -1,7 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Window;
-import org.designup.picsou.gui.components.BalanceGraph;
+import org.designup.picsou.gui.components.charts.BalanceGraph;
 import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import junit.framework.Assert;

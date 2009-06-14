@@ -2,10 +2,10 @@ package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.components.BudgetAreaGaugeFactory;
-import org.designup.picsou.gui.components.Gauge;
-import org.designup.picsou.gui.components.GlobGaugeView;
+import org.designup.picsou.gui.components.charts.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.components.TextDisplay;
+import org.designup.picsou.gui.components.charts.GlobGaugeView;
+import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;

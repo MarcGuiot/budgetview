@@ -2,6 +2,7 @@ package org.designup.picsou.gui.components;
 
 import junit.framework.TestCase;
 import org.designup.picsou.functests.checkers.GaugeChecker;
+import org.designup.picsou.gui.components.charts.Gauge;
 
 public class GaugeTest extends TestCase {
 

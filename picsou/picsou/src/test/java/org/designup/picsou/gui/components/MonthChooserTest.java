@@ -2,6 +2,7 @@ package org.designup.picsou.gui.components;
 
 import org.designup.picsou.functests.checkers.MonthChooserChecker;
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.globsframework.gui.GuiTestCase;
 import org.globsframework.utils.Dates;

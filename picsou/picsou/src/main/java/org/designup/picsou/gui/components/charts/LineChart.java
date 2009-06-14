@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.components;
+package org.designup.picsou.gui.components.charts;
 
 import javax.swing.*;
 import java.awt.*;
