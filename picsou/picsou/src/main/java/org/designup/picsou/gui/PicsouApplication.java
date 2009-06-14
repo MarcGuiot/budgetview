@@ -55,8 +55,8 @@ import java.security.NoSuchAlgorithmException;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "0.22";
-  public static final Long JAR_VERSION = 16L;
+  public static final String APPLICATION_VERSION = "0.23";
+  public static final Long JAR_VERSION = 17L;
   public static final Long BANK_CONFIG_VERSION = 5L;
   private static final String JAR_DIRECTORY = "jars";
   private static final String BANK_CONFIG_DIRECTORY = "configs";
