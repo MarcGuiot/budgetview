@@ -13,7 +13,9 @@ exclude   picsou.^Main and
           *.*UI get*(*) and
           com.jidesoft.swing.* set*(*) and
           org.designup.picsou.gui.components.* set*(*) and
-          org.designup.picsou.gui.components.* get*(*)
+          org.designup.picsou.gui.components.* get*(*) and
+          org.designup.picsou.gui.components.charts.* set*(*) and
+          org.designup.picsou.gui.components.charts.* get*(*)
           ;
 
 /*
