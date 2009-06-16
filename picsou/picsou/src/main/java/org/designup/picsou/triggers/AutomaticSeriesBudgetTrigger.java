@@ -3,13 +3,9 @@ package org.designup.picsou.triggers;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
-import org.designup.picsou.model.Transaction;
-import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.utils.GlobMatchers;
 
-import java.util.Iterator;
 import java.util.Set;
 
 public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
@@ -38,13 +34,7 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
     GlobList seriesBudgets =
       repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
         .getGlobs().sort(SeriesBudget.MONTH);
-    Iterator<Glob> transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
-      .getGlobs().filterSelf(GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.MIRROR, false),
-                                              GlobMatchers.fieldEquals(Transaction.CREATED_BY_SERIES, false)),
-                             repository)
-      .sort(TransactionComparator.ASCENDING).iterator();
-    Glob currentTransaction = transactions.hasNext() ? transactions.next() : null;
-    Double amount = 0.;
+    Double previousAmount = 0.;
     boolean firstUpdate = false;
     for (Glob seriesBudget : seriesBudgets) {
       if (!seriesBudget.get(SeriesBudget.ACTIVE)) {
@@ -53,28 +43,29 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
       }
       else {
         repository.update(seriesBudget.getKey(),
-                          FieldValue.value(SeriesBudget.AMOUNT, amount));
-        Double previousAmount = amount;
+                          FieldValue.value(SeriesBudget.AMOUNT, previousAmount));
+        Double currentAmount = previousAmount;
         if (seriesBudget.get(SeriesBudget.MONTH) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
-          amount = 0.;
-          while (currentTransaction != null &&
-                 currentTransaction.get(Transaction.MONTH).equals(seriesBudget.get(SeriesBudget.MONTH))) {
-            amount += currentTransaction.get(Transaction.AMOUNT);
-            currentTransaction = transactions.hasNext() ? transactions.next() : null;
+          previousAmount = seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT);
+          if (previousAmount == null) {
+            previousAmount = 0.;
           }
         }
         if (seriesBudget.get(SeriesBudget.MONTH).equals(currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))) {
-          int multi = -1;
-          if (seriesBudget.get(SeriesBudget.AMOUNT) > 0) {
-            multi = 1;
+          if (currentAmount > 0) {
+            if (currentAmount > previousAmount) {
+              previousAmount = currentAmount;
+            }
           }
-          if (multi * amount < multi * previousAmount) {
-            amount = previousAmount;
+          else if (currentAmount < 0){
+            if (currentAmount < previousAmount) {
+              previousAmount = currentAmount;
+            }
           }
         }
         if (!firstUpdate) {
           repository.update(seriesBudget.getKey(),
-                            FieldValue.value(SeriesBudget.AMOUNT, amount));
+                            FieldValue.value(SeriesBudget.AMOUNT, previousAmount));
           firstUpdate = true;
         }
       }

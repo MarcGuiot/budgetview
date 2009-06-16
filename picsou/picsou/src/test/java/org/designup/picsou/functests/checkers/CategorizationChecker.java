@@ -116,6 +116,15 @@ public class CategorizationChecker extends GuiChecker {
         .validate();
       return this;
     }
+
+    public SavingsCategorizationChecker selectAndCreateSavingsSeries(String savingsName, String fromAccount, String toAccount) {
+      selectSavings().createSeries()
+        .setName(savingsName)
+        .setFromAccount(fromAccount)
+        .setToAccount(toAccount)
+        .validate();
+      return this;
+    }
   }
 
   private BudgetAreaCategorizationChecker selectAndReturn(BudgetArea budgetArea) {

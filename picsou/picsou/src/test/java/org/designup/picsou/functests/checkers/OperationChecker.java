@@ -18,6 +18,7 @@ import org.uispec4j.interception.WindowInterceptor;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -211,7 +212,11 @@ public class OperationChecker {
   }
 
   public void backupAndLaunchApplication(String user, String password, Date currentDate) throws Exception {
-    String backupFile = backup("/tmp/");
+    File file = File.createTempFile("cashpilot", ".snapshot");
+    String backupFile = file.getAbsoluteFile().getAbsolutePath();
+    file.delete();
+    
+    backup(backupFile);
     String javaHome = System.getProperty("java.home");
     String classPath = System.getProperty("java.class.path");
     List<String> args = new ArrayList<String>();

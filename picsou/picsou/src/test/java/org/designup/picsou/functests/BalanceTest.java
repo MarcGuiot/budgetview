@@ -173,4 +173,88 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
 
   }
 
+
+  public void testBalanceWithMissingOperationInFuture() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/15")  //compte d'épargne
+      .addTransaction("2008/08/12", 100.00, "P3 CE")
+      .addTransaction("2008/06/11", 100.00, "P2 CE")
+      .load();
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/12", -100.00, "V3 CC")
+      .addTransaction("2008/08/10", -100.00, "Auchan")
+      .addTransaction("2008/06/11", -100.00, "V2 CC")
+      .load();
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+    views.selectHome();
+    this.mainAccounts.edit("Account n. 111")
+      .setAsSavings()
+      .validate();
+
+
+    views.selectCategorization();
+    categorization.setNewRecurring("Auchan", "courses");
+    categorization.selectTransactions("P3 CE", "P2 CE");
+    
+    categorization.selectSavings()
+      .selectAndCreateSavingsSeries("epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "Account n. 111");
+
+    categorization.selectTransactions("V3 CC", "V2 CC")
+      .selectSavings().selectSeries("epargne");
+    
+    views.selectBudget();
+
+    budgetView.recurring.editSeries("courses")
+      .setFourMonths()
+      .validate();
+
+    budgetView.savings.editSeries("epargne")
+      .setCustom()
+      .toggleMonth(1, 3, 6)
+      .validate();
+
+    //sur compte courant
+    timeline.selectMonth("2009/06");
+    mainAccounts.checkEstimatedPosition(-1000);
+    savingsAccounts.checkEstimatedPosition(1700, "30/06/2009");
+
+    timeline.selectMonth("2009/05");
+    mainAccounts.checkEstimatedPosition(-1000);
+    savingsAccounts.checkEstimatedPosition(1700, "31/05/2009");
+
+    timeline.selectMonth("2009/04");
+    mainAccounts.checkEstimatedPosition(-800);
+    savingsAccounts.checkEstimatedPosition(1600, "30/04/2009");
+
+    timeline.selectMonth("2009/03");
+    mainAccounts.checkEstimatedPosition(-700);
+    savingsAccounts.checkEstimatedPosition(1500, "31/03/2009");
+
+    timeline.selectMonth("2009/02");
+    mainAccounts.checkEstimatedPosition(-700);
+    savingsAccounts.checkEstimatedPosition(1500, "28/02/2009");
+
+    timeline.selectMonth("2009/01");
+    mainAccounts.checkEstimatedPosition(-600);
+    savingsAccounts.checkEstimatedPosition(1400, "31/01/2009");
+
+    timeline.selectMonth("2008/12");
+    mainAccounts.checkEstimatedPosition(-500);
+    savingsAccounts.checkEstimatedPosition(1400, "31/12/2008");
+
+    timeline.selectMonth("2008/08");
+    mainAccounts.checkEstimatedPosition(0);
+    savingsAccounts.checkEstimatedPosition(1000, "31/08/2008");
+
+    timeline.selectMonth("2008/07");
+    mainAccounts.checkEstimatedPosition(200);
+    savingsAccounts.checkEstimatedPosition(900, "31/07/2008");
+
+    timeline.selectMonth("2008/06");
+    mainAccounts.checkEstimatedPosition(200);
+    savingsAccounts.checkEstimatedPosition(900, "30/06/2008");
+
+
+  }
+
 }

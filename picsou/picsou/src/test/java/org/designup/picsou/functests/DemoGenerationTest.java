@@ -262,8 +262,8 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     String outputFile = System.getProperty("outfile");
     if (outputFile != null) {
-      new File(outputFile).delete();
       File out = new File(outputFile);
+      out.delete();
       operations.backup(out.getAbsoluteFile().getAbsolutePath());
     }
   }
