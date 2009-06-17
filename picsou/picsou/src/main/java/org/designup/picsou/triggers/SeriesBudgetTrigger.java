@@ -4,7 +4,6 @@ import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.utils.Utils;
 
@@ -30,6 +29,8 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
     });
 
     changeSet.safeVisit(SeriesBudget.TYPE, new ChangeSetVisitor() {
+      Set<Key> updatedSeries = new HashSet<Key>();
+
       public void visitCreation(Key key, FieldValues values) throws Exception {
       }
 
@@ -45,7 +46,10 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
           return;
         }
         if (series.get(Series.IS_AUTOMATIC) && !series.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
-          AutomaticSeriesBudgetTrigger.updateSeriesBudget(series.getKey(), repository);
+          if (!updatedSeries.contains(series.getKey())) {
+            AutomaticSeriesBudgetTrigger.updateSeriesBudget(series.getKey(), repository);
+            updatedSeries.add(series.getKey());
+          }
         }
       }
 
@@ -96,7 +100,7 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
         else {
           if (!active) {
             if (seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT) != null
-              && seriesBudget.get(SeriesBudget.MONTH) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
+                && seriesBudget.get(SeriesBudget.MONTH) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
               active = true;
             }
           }

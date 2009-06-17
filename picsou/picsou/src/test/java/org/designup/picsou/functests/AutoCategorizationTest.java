@@ -200,4 +200,52 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
     transactions.checkSeries(0, "Mutuelle");
     transactions.checkSeries(1, "Mutuelle");
   }
+
+  public void testNoAutomaticCategorisationIfSeriesIsDisable() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/05/25", -50.0, "Auchan")
+      .addTransaction("2008/05/25", -50.0, "Auchan")
+      .load();
+
+    views.selectBudget();
+    budgetView.envelopes.createSeries()
+      .setName("Courses")
+      .setCustom()
+      .setStartDate(200804)
+      .setEndDate(200805)
+      .validate();
+
+    budgetView.envelopes.createSeries()
+      .setName("Courses_2")
+      .setCustom()
+      .validate();
+
+    views.selectCategorization();
+
+    categorization
+      .selectTransactions("Auchan")
+      .selectEnvelopes()
+      .selectSeries("Courses");
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/11", -50.0, "2_Auchan")
+      .load();
+    categorization
+      .selectTransaction("2_Auchan")
+      .checkToCategorize()
+      .selectEnvelopes()
+      .selectSeries("Courses_2");
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/12", -50.0, "3_Auchan")
+      .load();
+
+    categorization
+      .selectTransaction("3_Auchan")
+      .getEnvelopes().checkSeriesIsSelected("Courses_2");
+  }
+
 }

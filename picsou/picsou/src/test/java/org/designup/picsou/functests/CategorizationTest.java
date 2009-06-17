@@ -1147,7 +1147,4 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-
-  public void testSavingCategorizationShouldHideFromOrToAccount() throws Exception {
-  }
 }

@@ -151,6 +151,11 @@ public class CategorizationChecker extends GuiChecker {
     return checkSelectedAndReturn(BudgetArea.SAVINGS);
   }
 
+  public CategorizationChecker checkToCategorize() {
+    assertThat(getPanel().getToggleButton(BudgetArea.UNCATEGORIZED.getName()).isSelected());
+    return this;
+  }
+
   private BudgetAreaCategorizationChecker checkSelectedAndReturn(BudgetArea budgetArea) {
     assertTrue(getPanel().getToggleButton(budgetArea.getName()).isSelected());
     return new BudgetAreaCategorizationChecker(this, budgetArea);

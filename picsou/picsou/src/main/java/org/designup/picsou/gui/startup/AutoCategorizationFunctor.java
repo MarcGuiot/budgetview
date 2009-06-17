@@ -33,22 +33,29 @@ public class AutoCategorizationFunctor implements GlobFunctor {
         !transaction.get(Transaction.SERIES).equals(Series.UNCATEGORIZED_SERIES_ID)) {
       return;
     }
-    Integer lastSeries = null;
+    Integer lastSeriesId = null;
     Integer lastSubSeries = null;
     int count = 0;
     while (iterator.hasPrevious()) {
       Glob findTransaction = iterator.previous();
-      if (!findTransaction.get(Transaction.ACCOUNT).equals(transaction.get(Transaction.ACCOUNT))){
+      if (!findTransaction.get(Transaction.ACCOUNT).equals(transaction.get(Transaction.ACCOUNT))) {
         continue;
       }
-      Integer currentSeries = findTransaction.get(Transaction.SERIES);
+      Glob currentSeries = referenceRepository.findLinkTarget(findTransaction, Transaction.SERIES);
+      if (currentSeries == null){
+        continue;
+      }
+      if (!Series.checkIsValidMonth(transaction.get(Transaction.MONTH), currentSeries)) {
+        continue;
+      }
       Integer currentSubSeries = findTransaction.get(Transaction.SUB_SERIES);
-      if (lastSeries != null && !lastSeries.equals(currentSeries)
+
+      if (lastSeriesId != null && !lastSeriesId.equals(currentSeries.get(Series.ID))
           || lastSubSeries != null && !lastSubSeries.equals(currentSubSeries)) {
         return;
       }
       else {
-        lastSeries = currentSeries;
+        lastSeriesId = currentSeries.get(Series.ID);
         lastSubSeries = currentSubSeries;
         count++;
         if (count == 3) {
@@ -56,8 +63,8 @@ public class AutoCategorizationFunctor implements GlobFunctor {
         }
       }
     }
-    if (lastSeries != null) {
-      repository.update(transaction.getKey(), Transaction.SERIES, lastSeries);
+    if (lastSeriesId != null) {
+      repository.update(transaction.getKey(), Transaction.SERIES, lastSeriesId);
       repository.update(transaction.getKey(), Transaction.SUB_SERIES, lastSubSeries);
     }
   }

@@ -2,6 +2,7 @@ package org.designup.picsou.server;
 
 import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.functests.checkers.LoginChecker;
+import org.designup.picsou.functests.checkers.MainAccountViewChecker;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Button;
@@ -41,9 +42,12 @@ public class LoginFuncTest extends ServerFuncTestCase {
       .selectBank("Société Générale")
       .enterAccountNumber("1111")
       .doImportWithBalance()
+      .setAmountWithoutEnter(10.)
       .validate();
 
-    fail("Marc: tester dans la vue home que le compte existe ?");
-    assertTrue(getCategoryTable().cellEquals(0, 2, "-155"));
+    fail("Marc : en cours");
+    MainAccountViewChecker mainAccountViewChecker = new MainAccountViewChecker(window);
+    mainAccountViewChecker.checkAccountNames("Account N.1111");
+
   }
 }
