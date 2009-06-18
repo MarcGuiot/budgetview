@@ -61,7 +61,7 @@ public class GlobViewModel implements ChangeSetListener, Disposable {
       return;
     }
     this.showNullElement = shown;
-    reloadGlobList();
+    reLoadAndCallListener(matcher);
   }
 
   private void reloadGlobList() {
@@ -110,24 +110,28 @@ public class GlobViewModel implements ChangeSetListener, Disposable {
       initList(true);
     }
     else {
-      GlobList from = getAll();
-      this.matcher = matcher;
-      reloadGlobList();
-      GlobList to = getAll();
-      GlobUtils.diff(from, to, new GlobUtils.DiffFunctor<Glob>() {
-        public void add(Glob glob, int index) {
-          listener.globInserted(index);
-        }
-
-        public void remove(int index) {
-          listener.globRemoved(index);
-        }
-
-        public void move(int previousIndex, int newIndex) {
-          listener.globMoved(previousIndex, newIndex);
-        }
-      });
+      reLoadAndCallListener(matcher);
     }
+  }
+
+  private void reLoadAndCallListener(GlobMatcher matcher) {
+    GlobList from = getAll();
+    this.matcher = matcher;
+    reloadGlobList();
+    GlobList to = getAll();
+    GlobUtils.diff(from, to, new GlobUtils.DiffFunctor<Glob>() {
+      public void add(Glob glob, int index) {
+        listener.globInserted(index);
+      }
+
+      public void remove(int index) {
+        listener.globRemoved(index);
+      }
+
+      public void move(int previousIndex, int newIndex) {
+        listener.globMoved(previousIndex, newIndex);
+      }
+    });
   }
 
   public void sort(Comparator<Glob> comparator) {

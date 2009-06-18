@@ -1,11 +1,10 @@
 package org.globsframework.model.utils;
 
-import org.globsframework.metamodel.Link;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.*;
 import org.globsframework.utils.Utils;
 
@@ -96,17 +95,22 @@ public class GlobUtils {
     void move(int previousIndex, int newIndex);
   }
 
+  static Object NULL = new Object();
+
   public static <T> void diff(List<T> from, List<T> to, DiffFunctor<T> functor) {
-    T[] fromArray = (T[])from.toArray(new Object[from.size() + to.size()]);
+    Object[] fromArray = from.toArray(new Object[from.size() + to.size()]);
+    for (int i1 = from.size(); i1 < fromArray.length; i1++) {
+      fromArray[i1] = NULL;
+    }
     int toPos = 0;
 
-    T fromT = fromArray.length == 0 ? null : fromArray[0];
+    Object fromT = fromArray.length == 0 ? null : fromArray[0];
     for (T element : to) {
       if (!Utils.equal(element, fromT)) {
         boolean moved = false;
         for (int i = toPos + 1; i < fromArray.length; i++) {
-          T t = fromArray[i];
-          if (t != null && t.equals(element)) {
+          Object t = fromArray[i];
+          if (t != NULL && t != null && t.equals(element)) {
             functor.move(i, toPos);
             System.arraycopy(fromArray, toPos, fromArray, toPos + 1, i - toPos);
             fromArray[toPos] = t;
@@ -130,7 +134,7 @@ public class GlobUtils {
       }
     }
     for (int index = fromArray.length; index > to.size(); index--) {
-      if (fromArray[index - 1] != null) {
+      if (fromArray[index - 1] != NULL) {
         functor.remove(index - 1);
       }
     }

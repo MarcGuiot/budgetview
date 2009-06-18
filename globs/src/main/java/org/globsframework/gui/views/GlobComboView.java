@@ -77,6 +77,9 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
     this.showEmptyOption = showEmptyOption;
     if (model != null) {
       model.setShowEmptyOption(showEmptyOption);
+      if (model.model.size() != 0) {
+        jComboBox.setSelectedIndex(0);
+      }
     }
     return this;
   }

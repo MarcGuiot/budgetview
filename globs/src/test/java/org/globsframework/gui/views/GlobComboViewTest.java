@@ -342,6 +342,14 @@ public class GlobComboViewTest extends GuiComponentTestCase {
 
     combo.select("empty");
     assertThat(combo.selectionEquals(null));
+
+    view.setShowEmptyOption(false);
+    assertThat(combo.contentEquals("name1", "name2"));
+    assertThat(combo.selectionEquals("name1"));
+
+    view.setShowEmptyOption(true);
+    assertThat(combo.contentEquals("empty", "name1", "name2"));
+    assertThat(combo.selectionEquals("empty"));
   }
 
   public void testReset() throws Exception {

@@ -33,6 +33,19 @@ public class GlobUtilsTest extends TestCase {
     checkTwoWay(new GlobList(g1, g2), new GlobList(g3, g4));
   }
 
+  public void testDiffWithNull() throws Exception {
+    Key k1 = Key.create(DummyObject.TYPE, 1);
+    Key k2 = Key.create(DummyObject.TYPE, 2);
+    Key k3 = Key.create(DummyObject.TYPE, 3);
+
+    DefaultGlobRepository repository = new DefaultGlobRepository();
+    Glob g1 = repository.create(k1);
+    Glob g2 = repository.create(k2);
+    Glob g3 = repository.create(k3);
+    checkTwoWay(new GlobList(g1, g2, g3), new GlobList(null, g2, g3));
+    checkTwoWay(new GlobList(g1, g2), new GlobList(g2, null, g3));
+  }
+
   private void checkTwoWay(GlobList from, GlobList to) {
     check(from, to);
     check(to, from);

@@ -43,8 +43,12 @@ public class GlobList extends ArrayList<Glob> {
   }
 
   public String toString() {
-    List strings = new ArrayList();
+    List<String> strings = new ArrayList<String>();
     for (Glob glob : this) {
+      if (glob == null){
+        strings.add("null");
+      }
+      else
       strings.add(glob.toString());
     }
     Collections.sort(strings);
