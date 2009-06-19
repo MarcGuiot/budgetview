@@ -37,6 +37,11 @@ public class Month {
     return toYearString(yyyymm) + "/" + MONTH_FORMAT.format(Month.toMonth(yyyymm));
   }
 
+  public static String toString(int yyyymm, int day) {
+    return toYearString(yyyymm) + "/" + MONTH_FORMAT.format(Month.toMonth(yyyymm)) + "/" + MONTH_FORMAT.format(day);
+  }
+
+
   public static String toYearString(int yyyymm) {
     return Integer.toString(Month.toYear(yyyymm));
   }

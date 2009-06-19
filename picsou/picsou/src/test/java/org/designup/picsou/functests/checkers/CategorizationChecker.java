@@ -172,6 +172,17 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
+  public CategorizationChecker checkSavingsSeriesIsSelected(String seriesName) {
+    assertTrue(getPanel().getToggleButton(BudgetArea.SAVINGS.getName()).isSelected());
+    Panel panel = getPanel();
+    assertTrue(panel.containsUIComponent(Panel.class, "savingsSeriesChooser"));
+
+    Panel savingsSeriesPanel = panel.getPanel("savingsSeriesChooser");
+    assertTrue(savingsSeriesPanel.isVisible());
+    assertTrue(savingsSeriesPanel.getRadioButton(seriesName).isSelected());
+    return this;
+  }
+
   public CategorizationChecker checkIncomeSeriesIsSelected(String seriesName) {
     assertTrue(getPanel().getToggleButton("Income").isSelected());
 

@@ -1,10 +1,10 @@
 package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.components.MonthRangeBound;
-import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
+import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.MonthYearStringifier;
 import org.designup.picsou.gui.series.edition.MonthCheckBoxUpdater;
 import org.designup.picsou.gui.series.subseries.SubSeriesEditionPanel;
@@ -33,6 +33,7 @@ import org.globsframework.model.utils.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Ref;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,6 +76,7 @@ public class SeriesEditionDialog {
   private JButton singleSeriesDeleteButton;
   private JLabel savingsMessage;
   private SubSeriesEditionPanel subSeriesEditionPanel;
+  private GlobMatcher accountFilter;
 
   public SeriesEditionDialog(final GlobRepository repository, Directory directory) {
     this(directory.get(JFrame.class), repository, directory);
@@ -126,10 +128,9 @@ public class SeriesEditionDialog {
 
     builder.addMultiLineEditor("descriptionField", Series.DESCRIPTION).setNotifyOnKeyPressed(true);
 
-    GlobMatcher accountFilter =
-      and(not(fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)),
-          not(fieldEquals(Account.ID, Account.MAIN_SUMMARY_ACCOUNT_ID)),
-          not(fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID)));
+    accountFilter = and(not(fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)),
+                        not(fieldEquals(Account.ID, Account.MAIN_SUMMARY_ACCOUNT_ID)),
+                        not(fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID)));
 
     fromAccountsCombo = new GlobLinkComboEditor(Series.FROM_ACCOUNT, localRepository, localDirectory)
       .setFilter(accountFilter)
@@ -339,7 +340,7 @@ public class SeriesEditionDialog {
     try {
       localRepository.startChangeSet();
       localRepository.rollback();
-      initBudgetAreaSeries(budgetArea);
+      initBudgetAreaSeries(budgetArea, new Ref<Integer>(), new Ref<Integer>());
     }
     finally {
       localRepository.completeChangeSet();
@@ -356,7 +357,7 @@ public class SeriesEditionDialog {
     try {
       localRepository.startChangeSet();
       localRepository.rollback();
-      initBudgetAreaSeries(BudgetArea.get(series.get(Series.BUDGET_AREA)));
+      initBudgetAreaSeries(BudgetArea.get(series.get(Series.BUDGET_AREA)), new Ref<Integer>(), new Ref<Integer>());
     }
     finally {
       localRepository.completeChangeSet();
@@ -374,7 +375,9 @@ public class SeriesEditionDialog {
     try {
       localRepository.startChangeSet();
       localRepository.rollback();
-      initBudgetAreaSeries(budgetArea);
+      Ref<Integer> fromAccount = new Ref<Integer>();
+      Ref<Integer> toAccount = new Ref<Integer>();
+      initBudgetAreaSeries(budgetArea, fromAccount,  toAccount);
 
       String label;
       if (!transactions.isEmpty() && budgetArea == BudgetArea.RECURRING) {
@@ -386,7 +389,7 @@ public class SeriesEditionDialog {
       }
       SortedSet<Integer> days = transactions.getSortedSet(Transaction.DAY);
       Integer day = days.isEmpty() ? 1 : days.last();
-      createdSeries = createSeries(label, day);
+      createdSeries = createSeries(label, day, fromAccount.get(), toAccount.get());
     }
     finally {
       localRepository.completeChangeSet();
@@ -404,7 +407,7 @@ public class SeriesEditionDialog {
     singleSeriesDeleteButton.setVisible(!visible);
   }
 
-  private Glob createSeries(String label, Integer day) {
+  private Glob createSeries(String label, Integer day, Integer fromAccountId, Integer toAccountId) {
     java.util.List<FieldValue> values =
       new ArrayList<FieldValue>(Arrays.asList(value(Series.BUDGET_AREA, budgetArea.getId()),
                                               value(Series.INITIAL_AMOUNT, 0.),
@@ -422,6 +425,12 @@ public class SeriesEditionDialog {
                                               value(Series.OCTOBER, true),
                                               value(Series.NOVEMBER, true),
                                               value(Series.DECEMBER, true)));
+    if (fromAccountId != null){
+      values.add(value(Series.FROM_ACCOUNT, fromAccountId));
+    }
+    if (toAccountId != null){
+      values.add(value(Series.TO_ACCOUNT, toAccountId));
+    }
     if (budgetArea == BudgetArea.SPECIAL) {
       values.add(value(Series.IS_AUTOMATIC, false));
       SelectionService selectionService = directory.get(SelectionService.class);
@@ -453,7 +462,7 @@ public class SeriesEditionDialog {
     return localRepository.create(Series.TYPE, values.toArray(new FieldValue[values.size()]));
   }
 
-  private void initBudgetAreaSeries(BudgetArea budgetArea) {
+  private void initBudgetAreaSeries(BudgetArea budgetArea, Ref<Integer> fromAccount, Ref<Integer> toAccount) {
     this.budgetArea = budgetArea;
 
     this.titleLabel.setText(Lang.get("seriesEdition.title." + budgetArea.getName()));
@@ -474,6 +483,55 @@ public class SeriesEditionDialog {
 
     this.seriesList.setFilter(and(fieldEquals(Series.BUDGET_AREA, budgetArea.getId()),
                                   fieldEquals(Series.IS_MIRROR, false)));
+
+    if (budgetArea == BudgetArea.SAVINGS) {
+      Set<Integer> positiveAccount = new HashSet<Integer>();
+      Set<Integer> negativeAccount = new HashSet<Integer>();
+      for (Glob transaction : selectedTransactions) {
+        if (transaction.get(Transaction.AMOUNT) >= 0) {
+          positiveAccount.add(transaction.get(Transaction.ACCOUNT));
+        }
+        else {
+          negativeAccount.add(transaction.get(Transaction.ACCOUNT));
+        }
+      }
+      if (positiveAccount.size() == 1) {
+        toAccountsCombo
+          .setFilter(GlobMatchers.fieldEquals(Account.ID, positiveAccount.iterator().next()))
+          .setShowEmptyOption(false);
+        toAccount.set(positiveAccount.iterator().next());
+      }
+      else {
+        if (negativeAccount.size() == 1) {
+          toAccountsCombo.setFilter(
+            GlobMatchers.and(accountFilter,
+                             GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, negativeAccount.iterator().next()))))
+            .setShowEmptyOption(true);
+        }
+        else {
+          toAccountsCombo.setFilter(accountFilter)
+            .setShowEmptyOption(true);
+        }
+      }
+      if (negativeAccount.size() == 1) {
+        fromAccountsCombo
+          .setFilter(GlobMatchers.fieldEquals(Account.ID, negativeAccount.iterator().next()))
+          .setShowEmptyOption(false);
+        fromAccount.set(negativeAccount.iterator().next());
+      }
+      else {
+        if (positiveAccount.size() == 1) {
+          fromAccountsCombo.setFilter(
+            GlobMatchers.and(accountFilter,
+                             GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, positiveAccount.iterator().next()))))
+            .setShowEmptyOption(true);
+        }
+        else {
+          fromAccountsCombo.setFilter(accountFilter)
+            .setShowEmptyOption(true);
+        }
+      }
+    }
   }
 
   private void doShow(Set<Integer> monthIds, Glob series, final Boolean selectName) {
@@ -741,7 +799,7 @@ public class SeriesEditionDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
-      Glob newSeries = createSeries(Lang.get("seriesEdition.newSeries"), 1);
+      Glob newSeries = createSeries(Lang.get("seriesEdition.newSeries"), 1, null, null);
       selectionService.select(newSeries);
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {

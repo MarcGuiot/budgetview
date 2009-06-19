@@ -1,9 +1,6 @@
 package org.designup.picsou.gui.utils;
 
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesBudget;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.annotations.Required;
 import org.globsframework.model.Glob;
@@ -95,12 +92,30 @@ public class DataCheckerAction extends AbstractAction {
           Integer month = transaction.get(Transaction.MONTH);
           if (month < firstMonthForSeries || month > lastMonthForSeries) {
             Log.write("Transaction is not in Series dates " +
-                      Month.toDate(transaction.get(Transaction.BANK_MONTH),
-                                   transaction.get(Transaction.BANK_DAY))
+                      Month.toString(transaction.get(Transaction.BANK_MONTH),
+                                     transaction.get(Transaction.BANK_DAY))
                       + " " + transaction.get(Transaction.LABEL));
             hasError = true;
           }
           checkNotNullable(transaction);
+
+          Glob target = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
+          if (target.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
+            Glob savingsSeries = repository.findLinkTarget(transaction, Transaction.SERIES);
+            if (transaction.get(Transaction.AMOUNT) >= 0) {
+              Integer toAccount = savingsSeries.get(Series.TO_ACCOUNT);
+              if (toAccount != null && !transaction.get(Transaction.ACCOUNT).equals(toAccount)) {
+                Log.write("savings transaction badly categorized " + transaction.get(Transaction.LABEL)
+                + " " + Month.toString(transaction.get(Transaction.BANK_MONTH), transaction.get(Transaction.DAY)));
+              }
+            }
+            else {
+              Integer fromAccount = savingsSeries.get(Series.FROM_ACCOUNT);
+              if (fromAccount != null && !transaction.get(Transaction.ACCOUNT).equals(fromAccount)) {
+                Log.write("savings transaction badly categorized " + transaction.get(Transaction.LABEL));
+              }
+            }
+          }
         }
       }
       return hasError;

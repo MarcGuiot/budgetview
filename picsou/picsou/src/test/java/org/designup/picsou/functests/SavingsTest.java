@@ -25,7 +25,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectSavings().createSeries()
       .setName("Epargne")
       .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .checkFromContentEquals(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Epargne LCL")
+      .checkToContentEquals("External account", "Epargne LCL")
       .validate();
 
     views.selectBudget();
@@ -1149,4 +1151,77 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
   }
 
+  public void testCheckComboAccountContents() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111222", 3000., "2008/08/10")
+      .addTransaction("2008/06/06", 100.00, "Virement Epargne")
+      .load();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/06", -100.00, "Virement vers Epargne")
+      .load();
+
+    views.selectHome();
+    mainAccounts.edit("Account n. 111222")
+      .setAsSavings()
+      .validate();
+
+    views.selectCategorization();
+    categorization.selectAllTransactions()
+      .selectSavings()
+      .createSeries()
+      .setName("Epargne")
+      .checkToContentEquals("Account n. 111222")
+      .checkToAccount("Account n. 111222")
+      .checkFromContentEquals(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .checkFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .validate();
+
+    categorization.selectTransaction("Virement vers Epargne")
+      .checkToCategorize()
+      .selectTransaction("Virement Epargne")
+      .checkToCategorize();
+  }
+
+  public void testCreatingSavingsFromCategorisationDoNotAssign() throws Exception {
+
+    OfxBuilder.init(this)
+      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111222", 3000., "2008/08/10")
+      .addTransaction("2008/06/06", -100.00, "Virement Epargne")
+      .load();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/06", -100.00, "Virement vers Epargne")
+      .load();
+
+    views.selectHome();
+    mainAccounts.edit("Account n. 111222")
+      .setAsSavings()
+      .validate();
+
+    mainAccounts.edit(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .setAsSavings()
+      .validate();
+
+    views.selectCategorization();
+    categorization.selectAllTransactions()
+      .selectSavings()
+      .createSeries()
+      .setName("Epargne")
+      .checkToContentEquals("External account", OfxBuilder.DEFAULT_ACCOUNT_NAME, "Account n. 111222")
+      .setToAccount("Account n. 111222")
+      .checkFromContentEquals("External account", OfxBuilder.DEFAULT_ACCOUNT_NAME, "Account n. 111222")
+      .setFromAccount("External account")
+      .validate();
+
+    categorization.selectTransaction("Virement vers Epargne")
+      .checkToCategorize()
+      .selectSavings()
+      .checkContainsNoSeries();
+
+    categorization.selectTransaction("Virement Epargne")
+      .checkToCategorize()
+      .selectSavings()
+      .checkContainsNoSeries();
+  }
 }

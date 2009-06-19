@@ -640,8 +640,19 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     return this;
   }
 
+  public SeriesEditionDialogChecker checkToContentEquals(String ...name) {
+    assertTrue(dialog.getComboBox("toAccount").contentEquals(name));
+    return this;
+  }
+
+
   public SeriesEditionDialogChecker setFromAccount(String account) {
     dialog.getComboBox("fromAccount").select(account);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkFromContentEquals(String ...name) {
+    assertTrue(dialog.getComboBox("fromAccount").contentEquals(name));
     return this;
   }
 
@@ -781,4 +792,5 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     tab.getListBox().select(names);
     return DeleteSubSeriesDialogChecker.open(tab.getButton("deleteSubSeries").triggerClick());
   }
+
 }
