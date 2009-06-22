@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.Bank;
@@ -47,7 +48,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("10/06/2008", "VIREMENT", 100.00, "Epargne", 800.00, 800.00, "Epargne LCL")
       .add("10/06/2008", "VIREMENT", -100.00, "Epargne", 200.00, 200.00, "Account n. 00001123")
       .check();
-    
+
     views.selectHome();
     timeline.selectMonth("2008/08");
     savingsAccounts.checkPosition("Epargne", 1000);
@@ -1223,5 +1224,143 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .checkToCategorize()
       .selectSavings()
       .checkContainsNoSeries();
+  }
+
+  public void testDeleteSavingSeriesAskForConfirmation() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/06", -100.00, "Virement vers Epargne")
+      .load();
+
+    views.selectHome();
+
+    mainAccounts.edit(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .setAsSavings()
+      .validate();
+
+    views.selectCategorization();
+    categorization.selectAllTransactions()
+      .selectSavings()
+      .createSeries()
+      .setName("Epargne")
+      .setToAccount("External account")
+      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .validate();
+
+    categorization.selectTransaction("Virement vers Epargne")
+      .checkSavingsSeriesIsSelected("Epargne");
+
+    categorization.editSeries()
+      .selectSeries("Epargne")
+      .deleteSelectedSeriesWithConfirmation();
+  }
+
+  public void testCategorisationOnSavingCreation() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111222", 3000., "2008/08/10")
+      .addTransaction("2008/06/06", -100.00, "Virement Epargne")
+      .load();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/06", -100.00, "Virement vers Epargne")
+      .load();
+
+    views.selectHome();
+    mainAccounts.edit("Account n. 111222")
+      .setAsSavings()
+      .validate();
+
+    mainAccounts.edit(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .setAsSavings()
+      .validate();
+
+    views.selectCategorization();
+    categorization.selectTransaction("Virement Epargne")
+      .selectSavings()
+      .createSeries()
+      .setName("Epargne")
+      .checkFromContentEquals("Account n. 111222")
+      .checkToContentEquals("External account", OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .setToAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .validate();
+
+    categorization.selectTransaction("Virement Epargne")
+      .checkSavingsSeriesIsSelected("Epargne");
+  }
+
+  public void testCanNotChoiceTheSameAccount() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111222", 3000., "2008/08/10")
+      .addTransaction("2008/06/06", -100.00, "Virement Epargne")
+      .load();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/06", -100.00, "Virement vers Epargne")
+      .load();
+
+    views.selectHome();
+    mainAccounts.edit("Account n. 111222")
+      .setAsSavings()
+      .validate();
+
+    mainAccounts.edit(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .setAsSavings()
+      .validate();
+
+    views.selectCategorization();
+    SeriesEditionDialogChecker editionDialogChecker = categorization.selectAllTransactions()
+      .selectSavings()
+      .createSeries();
+    editionDialogChecker
+      .setName("Epargne")
+      .setToAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .checkSavingsMessageVisibility(true)
+      .checkOkEnabled(false);
+    editionDialogChecker
+      .setFromAccount("Account n. 111222")
+      .checkSavingsMessageVisibility(false)
+      .checkOkEnabled(true);
+    editionDialogChecker
+      .setToAccount("Account n. 111222")
+      .checkSavingsMessageVisibility(true)
+      .checkOkEnabled(false);
+  }
+
+  public void testDeleteSeriesForBothImportedAccountWithTransactionInFrom() throws Exception {
+
+    OfxBuilder.init(this)
+      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111222", 3000., "2008/08/10")
+      .addTransaction("2008/06/06", -100.00, "Virement Epargne")
+      .load();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/06", -100.00, "Virement vers Epargne")
+      .load();
+
+    views.selectHome();
+    mainAccounts.edit("Account n. 111222")
+      .setAsSavings()
+      .validate();
+
+
+    mainAccounts.edit(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .setAsSavings()
+      .validate();
+
+    views.selectCategorization();
+    categorization.selectTransaction("Virement vers Epargne")
+      .selectSavings()
+      .createSeries()
+      .setName("Epargne")
+      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .setToAccount("Account n. 111222")
+      .validate();
+
+    categorization
+      .selectTransaction("Virement vers Epargne")
+      .editSeries("Epargne")
+      .deleteCurrentSeriesWithConfirmation();
+
+    categorization.checkBudgetAreaSelectionPanelDisplayed();
   }
 }

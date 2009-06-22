@@ -12,8 +12,8 @@ import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
-import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
+import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
@@ -30,7 +30,8 @@ import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
-import static org.globsframework.gui.views.utils.LabelCustomizers.*;
+import static org.globsframework.gui.views.utils.LabelCustomizers.autoTooltip;
+import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
@@ -309,24 +310,35 @@ public class CategorizationView extends View implements TableView, Filterable {
       if (key != null && series != null) {
         repository.startChangeSet();
         try {
-          boolean noneMatch = false;
-          for (Pair<PicsouMatchers.CategorizationFilter, GlobRepeat> filter : seriesRepeat) {
-            noneMatch |= filter.getFirst().matches(series, repository);
-          }
-          if (!noneMatch) {
+          if (categorize(series)) {
             return;
           }
-          Integer subSeriesId = seriesEditionDialog.getLastSelectedSubSeriesId();
-          for (Glob transaction : currentTransactions) {
-            repository.update(transaction.getKey(),
-                              FieldValue.value(Transaction.SERIES, series.get(Series.ID)),
-                              FieldValue.value(Transaction.SUB_SERIES, subSeriesId));
+          Glob mirrorSeries = repository.findLinkTarget(series, Series.MIRROR_SERIES);
+          if (mirrorSeries != null) {
+            categorize(mirrorSeries);
           }
         }
         finally {
           repository.completeChangeSet();
         }
       }
+    }
+
+    private boolean categorize(Glob series) {
+      boolean noneMatch = false;
+      for (Pair<PicsouMatchers.CategorizationFilter, GlobRepeat> filter : seriesRepeat) {
+        noneMatch |= filter.getFirst().matches(series, repository);
+      }
+      if (!noneMatch) {
+        return false;
+      }
+      Integer subSeriesId = seriesEditionDialog.getLastSelectedSubSeriesId();
+      for (Glob transaction : currentTransactions) {
+        repository.update(transaction.getKey(),
+                          FieldValue.value(Transaction.SERIES, series.get(Series.ID)),
+                          FieldValue.value(Transaction.SUB_SERIES, subSeriesId));
+      }
+      return true;
     }
   }
 

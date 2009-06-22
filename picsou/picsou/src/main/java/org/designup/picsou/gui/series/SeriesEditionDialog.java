@@ -92,7 +92,6 @@ public class SeriesEditionDialog {
             ProfileType.TYPE, Account.TYPE, SubSeries.TYPE)
       .get();
 
-    localRepository.addTrigger(new UpdateDeleteMirror());
     localRepository.addTrigger(new SingleMonthProfileTypeUpdater());
     localRepository.addTrigger(new ResetAllBudgetIfInAutomaticAndNoneAccountAreImported());
     addSeriesCreationTriggers(localRepository, new ProfileTypeSeriesTrigger.UserMonth() {
@@ -196,9 +195,8 @@ public class SeriesEditionDialog {
           Glob toAccount = repository.findLinkTarget(currentSeries, Series.TO_ACCOUNT);
           boolean noneImported = Account.areNoneImported(fromAccount, toAccount);
           dayChooser.setVisible(noneImported);
-          boolean savingsOnError = fromAccount == null && toAccount == null;
-          savingsMessage.setVisible(isSavingsSeries && savingsOnError);
-          if (isSavingsSeries && savingsOnError) {
+          savingsMessage.setVisible(isSavingsSeries && fromAccount == toAccount);
+          if (isSavingsSeries && fromAccount == toAccount) {
             okAction.setEnabled(false);
           }
         }
@@ -819,7 +817,15 @@ public class SeriesEditionDialog {
       this.closeOnDelete = closeOnDelete;
       selectionService.addListener(new GlobSelectionListener() {
         public void selectionUpdated(GlobSelection selection) {
-          seriesToDelete = selection.getAll(Series.TYPE);
+          seriesToDelete = new GlobList();
+          GlobList currentSeries = selection.getAll(Series.TYPE);
+          for (Glob series : currentSeries) {
+            Glob mirrorSeries = repository.findLinkTarget(series, Series.MIRROR_SERIES);
+            if (mirrorSeries != null){
+              seriesToDelete.add(mirrorSeries);
+            }
+            seriesToDelete.add(series);
+          }
           setEnabled(!seriesToDelete.isEmpty());
         }
       }, Series.TYPE);
@@ -904,7 +910,8 @@ public class SeriesEditionDialog {
       GlobList series = repository.getAll(Series.TYPE);
       for (Glob glob : series) {
         if (((BudgetArea.SAVINGS.getId().equals(glob.get(Series.BUDGET_AREA))) &&
-             (glob.get(Series.FROM_ACCOUNT) == null && glob.get(Series.TO_ACCOUNT) == null))) {
+             (repository.findLinkTarget(glob, Series.FROM_ACCOUNT) ==
+              repository.findLinkTarget(glob, Series.TO_ACCOUNT)))) {
           okAction.setEnabled(false);
           return;
         }
@@ -993,7 +1000,8 @@ public class SeriesEditionDialog {
               }
             }
             SeriesEditionDialog.this.dayChooser.setVisible(noneImported);
-            SeriesEditionDialog.this.savingsMessage.setVisible(fromAccount == null && toAccount == null);
+            SeriesEditionDialog.this.savingsMessage.setVisible(fromAccount == toAccount);
+            SeriesEditionDialog.this.okAction.setEnabled(fromAccount != toAccount);
           }
         }
 
@@ -1003,27 +1011,6 @@ public class SeriesEditionDialog {
     }
 
     public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    }
-  }
-
-  private static class UpdateDeleteMirror extends DefaultChangeSetListener {
-
-    public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
-
-      changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
-        public void visitCreation(Key key, FieldValues values) throws Exception {
-        }
-
-        public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        }
-
-        public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-          Integer mirror = previousValues.get(Series.MIRROR_SERIES);
-          if (mirror != null && !previousValues.get(Series.IS_MIRROR)) {
-            repository.delete(Key.create(Series.TYPE, mirror));
-          }
-        }
-      });
     }
   }
 

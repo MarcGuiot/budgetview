@@ -1146,5 +1146,4 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .add("15/06/2008", "2_Auchan", -40.0)
       .check();
   }
-
 }

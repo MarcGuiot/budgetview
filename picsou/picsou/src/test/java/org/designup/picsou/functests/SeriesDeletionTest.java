@@ -108,7 +108,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     categorization.selectTransactions("Financement")
       .selectSavings()
       .editSeries("Savings Series")
-      .deleteCurrentSeries();
+      .deleteCurrentSeriesWithConfirmation();
     // il reste des SeriesBudget miroir sans la serie principale
     // NPE sur recalcul de PeriodStat.
     String name = operations.backup(this);

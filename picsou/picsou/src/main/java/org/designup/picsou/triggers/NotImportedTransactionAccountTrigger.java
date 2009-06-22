@@ -275,18 +275,6 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
     }
   }
 
-  private Integer updateCache(final Glob series) {
-    Integer fromAccountId = series.get(Series.FROM_ACCOUNT);
-    Integer toAccountId = series.get(Series.TO_ACCOUNT);
-    if (fromAccountId != null && toAccountId != null) {
-      return toAccountId;
-    }
-    if (fromAccountId == null) {
-      return toAccountId;
-    }
-    return fromAccountId;
-  }
-
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }
