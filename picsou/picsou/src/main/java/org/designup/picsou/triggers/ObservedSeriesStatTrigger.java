@@ -78,7 +78,7 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
             .findByIndex(SeriesBudget.MONTH, currentMonthId).getGlobs();
           Glob series = repository.get(Key.create(Series.TYPE, currentSeriesId));
           String name = series.get(Series.NAME);
-          Log.write("visitUpdate series : " + name + ", " + currentSeriesId +
+          Log.write("Observed stat : visitUpdate series : " + name + ", " + currentSeriesId +
                     " month = " + currentMonthId + " series Budget :" +
                     (seriesBudgets.isEmpty() ? " <none> " : seriesBudgets.get(0).get(SeriesBudget.AMOUNT)));
         }

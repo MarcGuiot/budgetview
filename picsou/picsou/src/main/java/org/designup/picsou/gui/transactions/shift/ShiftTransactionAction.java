@@ -202,10 +202,10 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
     int month = transaction.get(Transaction.MONTH);
     int monthBeforeShift = month;
     if (dayBeforeShift > DAY_LIMIT_FOR_NEXT) {
-      monthBeforeShift = month - 1;
+      monthBeforeShift = Month.previous(month);
     }
     else if (dayBeforeShift < DAY_LIMIT_FOR_PREVIOUS) {
-      monthBeforeShift = month + 1;
+      monthBeforeShift = Month.next(month);
     }
 
     repository.update(transaction.getKey(),
