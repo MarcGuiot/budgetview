@@ -37,6 +37,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
     super.setUp();
     url = initServerEnvironment(inMemory);
     directory.add(new ConfigService("1", 1L, 1L, null));
+    directory.add(PasswordBasedEncryptor.class, new RedirectPasswordBasedEncryptor());
   }
 
   protected void tearDown() throws Exception {
@@ -212,7 +213,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
 
   private Glob getHiddenUser(Glob glob) {
     PasswordBasedEncryptor passwordBasedEncryptor =
-      new PasswordBasedEncryptor(EncrypterToTransportServerAccess.salt, "password".toCharArray(), 20);
+      new MD5PasswordBasedEncryptor(EncrypterToTransportServerAccess.salt, "password".toCharArray(), 20);
     byte[] cryptedLinkInfo = passwordBasedEncryptor.encrypt(glob.get(User.LINK_INFO));
     Persistence persistence = directory.get(Persistence.class);
     return persistence.getHiddenUser(cryptedLinkInfo);

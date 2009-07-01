@@ -2,6 +2,9 @@ package org.designup.picsou.gui;
 
 import net.roydesign.event.ApplicationEvent;
 import net.roydesign.mac.MRJAdapter;
+import org.designup.picsou.client.http.MD5PasswordBasedEncryptor;
+import org.designup.picsou.client.http.RedirectPasswordBasedEncryptor;
+import org.designup.picsou.client.http.PasswordBasedEncryptor;
 import org.designup.picsou.gui.components.ArrowButtonUI;
 import org.designup.picsou.gui.components.SelectionToggleUI;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
@@ -20,7 +23,6 @@ import org.designup.picsou.gui.utils.ExceptionHandler;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.client.http.PasswordBasedEncryptor;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
@@ -48,10 +50,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.logging.LogManager;
 import java.util.regex.Pattern;
-import java.security.NoSuchAlgorithmException;
 
 public class PicsouApplication {
 
@@ -226,7 +228,7 @@ public class PicsouApplication {
     Thread thread = new Thread() {
       public void run() {
         try {
-          PasswordBasedEncryptor.init();
+          MD5PasswordBasedEncryptor.init();
         }
         catch (NoSuchAlgorithmException e) {
         }
@@ -359,6 +361,7 @@ public class PicsouApplication {
     directory.add(ImageLocator.class, Gui.IMAGE_LOCATOR);
     directory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     directory.add(FontLocator.class, Gui.FONT_LOCATOR);
+    directory.add(PasswordBasedEncryptor.class, new RedirectPasswordBasedEncryptor());
 
     Long localConfigVersion;
     String configPath = getBankConfigPath();

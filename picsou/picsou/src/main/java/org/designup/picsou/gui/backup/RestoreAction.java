@@ -4,8 +4,8 @@ import org.designup.picsou.gui.components.dialogs.MessageFileDialog;
 import org.designup.picsou.gui.startup.BackupService;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.Log;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -29,9 +29,21 @@ public class RestoreAction extends AbstractBackupRestoreAction {
     if (returnVal == JFileChooser.APPROVE_OPTION) {
       File file = chooser.getSelectedFile();
       try {
-        backupService.restore(new FileInputStream(file));
-        MessageFileDialog dialog = new MessageFileDialog(repository, directory);
-        dialog.show("restore.ok.title", "restore.ok.message", file);
+        char[] password = null;
+        while (true) {
+          if (backupService.restore(new FileInputStream(file), password)) {
+            MessageFileDialog dialog = new MessageFileDialog(repository, directory);
+            dialog.show("restore.ok.title", "restore.ok.message", file);
+            return;
+          }
+          else {
+            RestoreChangePasswordDialog dialog = new RestoreChangePasswordDialog(repository, directory);
+            password = dialog.show();
+            if (password == null || password.length == 0){
+              return;
+            }
+          }
+        }
       }
       catch (Exception ex) {
         Log.write("Restore failed", ex);

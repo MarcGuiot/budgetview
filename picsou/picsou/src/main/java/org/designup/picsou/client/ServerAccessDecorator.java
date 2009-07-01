@@ -38,6 +38,10 @@ public class ServerAccessDecorator implements ServerAccess {
     serverAccess.takeSnapshot();
   }
 
+  public boolean canRead(MapOfMaps<String, Integer, SerializableGlobType> data) {
+    return serverAccess.canRead(data);
+  }
+
   public boolean connect() {
     return serverAccess.connect();
   }

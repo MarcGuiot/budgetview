@@ -19,7 +19,7 @@ public class SerializableDeltaGlobSerializer {
   //    SerializableGlobType.VERSION (for create and update)
   //    SerializableGlobType.DATA (for create and update)
 
-  public void serialize(SerializedOutput output, MultiMap<String, ServerDelta> deltaGlobMap) {
+  public static void serialize(SerializedOutput output, MultiMap<String, ServerDelta> deltaGlobMap) {
     int globTypeCount = deltaGlobMap.keySet().size();
     output.write(globTypeCount);
     for (Map.Entry<String, List<ServerDelta>> stringListEntry : deltaGlobMap.entries()) {

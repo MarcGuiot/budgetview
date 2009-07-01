@@ -40,7 +40,7 @@ class DurableOutputStream {
       SerializedOutput serializedOutput = SerializedInputOutputFactory.init(outputStream);
       serializedOutput.writeString("Tr");
       serializedOutput.write(nextTransactionVersion);
-      serializableDeltaGlobSerializer.serialize(serializedOutput, data);
+      SerializableDeltaGlobSerializer.serialize(serializedOutput, data);
       outputStream.flush();
       fd.sync();
       nextTransactionVersion++;

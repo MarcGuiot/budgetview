@@ -127,6 +127,10 @@ public class DispatcherServerAccess implements ServerAccess {
     localServerAccess.removeLocalUser(user);
   }
 
+  public boolean canRead(MapOfMaps<String, Integer, SerializableGlobType> data) {
+    return localServerAccess.canRead(data);
+  }
+
   public void disconnect() {
     if (remoteServerAccess != null) {
       remoteServerAccess.disconnect();

@@ -4,11 +4,13 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.ServerAccessDecorator;
 import org.designup.picsou.client.exceptions.IdentificationFailed;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
+import org.designup.picsou.server.model.SerializableGlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.utils.exceptions.GlobsException;
+import org.globsframework.utils.MapOfMaps;
 
 public class ConnectionRetryServerAccess extends ServerAccessDecorator {
   private String name;

@@ -39,6 +39,8 @@ public interface ServerAccess {
 
   void removeLocalUser(String user);
 
+  boolean canRead(MapOfMaps<String, Integer, SerializableGlobType> data);
+
   interface IdUpdater {
     void update(IntegerField field, Integer lastAllocatedId);
   }
@@ -81,6 +83,10 @@ public interface ServerAccess {
     }
 
     public void removeLocalUser(String user) {
+    }
+
+    public boolean canRead(MapOfMaps<String, Integer, SerializableGlobType> data) {
+      return false;
     }
 
     public GlobList getUserData(MutableChangeSet upgradeChangeSetToApply, IdUpdater idUpdater) {

@@ -28,23 +28,25 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.security.SecureRandom;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class EncrypterToTransportServerAccess implements ServerAccess {
   private ClientTransport clientTransport;
+  private Directory directory;
   private String name;
   private Long sessionId;
   private byte[] privateId;
-  private PasswordBasedEncryptor passwordBasedEncryptor;
   private boolean notConnected = true;
-  static final byte[] salt = {0x54, 0x12, 0x43, 0x65, 0x77, 0x2, 0x79, 0x72};
+  static public final byte[] salt = {0x54, 0x12, 0x43, 0x65, 0x77, 0x2, 0x79, 0x72};
   private GlobModel globModel;
   private ConfigService configService;
+  public static int count = 20;
 
   public EncrypterToTransportServerAccess(ClientTransport transport, Directory directory) {
     this.clientTransport = transport;
+    this.directory = directory;
     globModel = directory.get(GlobModel.class);
     configService = directory.get(ConfigService.class);
   }
@@ -68,7 +70,10 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
   public boolean createUser(String name, char[] password) throws UserAlreadyExists {
     try {
       this.name = name;
-      this.passwordBasedEncryptor = new PasswordBasedEncryptor(salt, password, 20);
+
+      PasswordBasedEncryptor passwordBasedEncryptor = new MD5PasswordBasedEncryptor(salt, password, count);
+      RedirectPasswordBasedEncryptor encryptor = (RedirectPasswordBasedEncryptor)directory.get(PasswordBasedEncryptor.class);
+      encryptor.setPasswordBasedEncryptor(passwordBasedEncryptor);
 
       SerializedByteArrayOutput request = new SerializedByteArrayOutput();
       SerializedOutput output = request.getOutput();
@@ -102,7 +107,10 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
 
   public boolean initConnection(String name, char[] password, boolean privateComputer) {
     this.name = name;
-    this.passwordBasedEncryptor = new PasswordBasedEncryptor(salt, password, 20);
+
+    PasswordBasedEncryptor passwordBasedEncryptor = new MD5PasswordBasedEncryptor(salt, password, count);
+    RedirectPasswordBasedEncryptor encryptor = (RedirectPasswordBasedEncryptor)directory.get(PasswordBasedEncryptor.class);
+    encryptor.setPasswordBasedEncryptor(passwordBasedEncryptor);
 
     SerializedByteArrayOutput request = new SerializedByteArrayOutput();
     SerializedOutput output = request.getOutput();
@@ -129,7 +137,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     SerializedInput input = clientTransport.getLocalUsers();
     int size = input.readNotNullInt();
     List<String> users = new ArrayList<String>(size);
-    for (int i = 0; i < size ;  i++){
+    for (int i = 0; i < size; i++) {
       users.add(input.readString());
     }
     return users;
@@ -137,6 +145,10 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
 
   public void removeLocalUser(String user) {
     clientTransport.removeLocalUser(user);
+  }
+
+  public boolean canRead(MapOfMaps<String, Integer, SerializableGlobType> data) {
+    return false;
   }
 
   private byte[] generateLinkInfo() {
@@ -170,13 +182,13 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
   }
 
   public void applyChanges(ChangeSet changeSet, final GlobRepository repository) {
+    PasswordBasedEncryptor passwordBasedEncryptor = directory.get(PasswordBasedEncryptor.class);
     ChangeSetSerializerVisitor serializerVisitor = new ChangeSetSerializerVisitor(passwordBasedEncryptor, repository);
     changeSet.safeVisit(serializerVisitor);
-    SerializableDeltaGlobSerializer deltaGlobSerializer = new SerializableDeltaGlobSerializer();
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
     MultiMap<String, ServerDelta> stringDeltaGlobMultiMap = serializerVisitor.getSerializableGlob();
-    deltaGlobSerializer.serialize(outputStream.getOutput(), stringDeltaGlobMultiMap);
+    SerializableDeltaGlobSerializer.serialize(outputStream.getOutput(), stringDeltaGlobMultiMap);
     if (stringDeltaGlobMultiMap.size() != 0) {
       updateUserData(outputStream.toByteArray());
     }
@@ -202,9 +214,8 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
     SerializedInput input = clientTransport.getUserData(sessionId, outputStream.toByteArray());
-    SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
     MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
-    serializableGlobSerializer.deserialize(input, data);
+    SerializableGlobSerializer.deserialize(input, data);
     return data;
   }
 
@@ -222,14 +233,15 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
     SerializedInput input = clientTransport.getUserData(sessionId, outputStream.toByteArray());
-    return deserialize(idUpdater, input);
+    MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
+    SerializableGlobSerializer.deserialize(input, data);
+    return decrypt(idUpdater, data, directory.get(PasswordBasedEncryptor.class), globModel);
   }
 
-  private GlobList deserialize(IdUpdater idUpdater, SerializedInput input) {
-    SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
-    MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
-    serializableGlobSerializer.deserialize(input, data);
+  public static GlobList decrypt(IdUpdater idUpdater, MapOfMaps<String, Integer, SerializableGlobType> data,
+                                 final PasswordBasedEncryptor passwordBasedEncryptor, final GlobModel globModel) {
     GlobList result = new GlobList(data.size());
+
     for (String globTypeName : data.keys()) {
       GlobType globType;
       if (globTypeName.equals("currenMonth")) {

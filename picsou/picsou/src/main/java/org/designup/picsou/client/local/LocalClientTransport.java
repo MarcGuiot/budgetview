@@ -89,7 +89,7 @@ public class LocalClientTransport implements ClientTransport {
 
   public SerializedInput getLocalUsers() {
     SerializedByteArrayOutput output = new SerializedByteArrayOutput();
-    //serverRequestProcessingService.getLocalUsers();
+//    serverRequestProcessingService.getLocalUsers(output.getOutput());
     return output.getInput();
   }
 
