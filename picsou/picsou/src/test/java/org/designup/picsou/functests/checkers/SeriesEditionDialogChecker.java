@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 public class SeriesEditionDialogChecker extends GuiChecker {
   private Window dialog;
   private Table table;
+
   public static final String JAN = "Jan";
   public static final String FEB = "Feb";
   public static final String MAR = "Mar";

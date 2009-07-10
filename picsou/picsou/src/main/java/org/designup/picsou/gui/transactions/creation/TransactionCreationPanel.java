@@ -2,8 +2,9 @@ package org.designup.picsou.gui.transactions.creation;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.AccountEditionDialog;
-import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
+import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.CustomFocusTraversalPolicy;
+import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.license.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.model.*;
@@ -69,7 +70,14 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
       .forceSelection(prototypeTransaction)
       .getComponent();
 
-    amountField = builder.addEditor("amount", Transaction.AMOUNT).forceSelection(prototypeTransaction).getComponent();
+    AmountEditor amountEditor = new AmountEditor(Transaction.AMOUNT, repository, directory, false, null)
+      .forceSelection(prototypeTransaction)
+      .update(false, false);
+    amountField = amountEditor.getNumericEditor().getComponent();
+    builder.add("amount", amountField);
+    builder.add("positiveAmounts", amountEditor.getPositiveRadio());
+    builder.add("negativeAmounts", amountEditor.getNegativeRadio());
+
     dayField = builder.addEditor("day", Transaction.DAY).forceSelection(prototypeTransaction).getComponent();
     labelField = builder.addEditor("label", Transaction.LABEL).forceSelection(prototypeTransaction).getComponent();
 
@@ -151,7 +159,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
       finally {
         updateInProgress = false;
       }
-      
+
       Double amount = prototypeTransaction.get(Transaction.AMOUNT);
       if (amount == null) {
         amountField.requestFocus();
@@ -195,15 +203,16 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
 
       Glob createdTransaction = parentRepository.create(Transaction.TYPE, values.toArray());
 
+      amountField.setText("");
+      dayField.setText("");
+      labelField.setText("");
+
       repository.update(PROTOTYPE_TRANSACTION_KEY,
                         value(Transaction.AMOUNT, null),
                         value(Transaction.DAY, null),
                         value(Transaction.BANK_DAY, null),
                         value(Transaction.LABEL, ""));
 
-      amountField.setText("");
-      dayField.setText("");
-      labelField.setText("");
       amountField.requestFocus();
 
       selectionService.select(createdTransaction);

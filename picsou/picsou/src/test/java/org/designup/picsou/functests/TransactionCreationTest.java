@@ -30,15 +30,17 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .show()
       .checkAccounts("Cash")
       .checkAccount("Cash")
-      .setAmount(12.50)
+      .checkNegativeAmountsSelected()
+      .setAmount(-12.50)
       .setDay(15)
       .checkMonth("August 2008")
       .setLabel("Transaction 1")
       .create()
-      .checkFieldsAreEmpty();
+      .checkFieldsAreEmpty()
+      .checkNegativeAmountsSelected();
 
     categorization.checkTable(new Object[][]{
-      {"15/08/2008", "", "TRANSACTION 1", 12.50},
+      {"15/08/2008", "", "TRANSACTION 1", -12.50},
     });
 
     categorization.checkSelectedTableRow("TRANSACTION 1");
@@ -59,15 +61,18 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .checkAccounts("Cash", "Misc")
       .checkAccount("Cash")
       .selectAccount("Misc")
+      .checkNegativeAmountsSelected()
       .setAmount(20.00)
+      .checkPositiveAmountsSelected()
       .setDay(3)
       .checkMonth("September 2008")
       .setLabel("Transaction 2")
       .create()
-      .checkFieldsAreEmpty();
+      .checkFieldsAreEmpty()
+      .checkPositiveAmountsSelected();
 
     categorization.checkTable(new Object[][]{
-      {"15/08/2008", "", "TRANSACTION 1", 12.50},
+      {"15/08/2008", "", "TRANSACTION 1", -12.50},
       {"03/09/2008", "", "TRANSACTION 2", 20.00},
     });
 
@@ -76,12 +81,12 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions.initContent()
       .add("03/09/2008", TransactionType.MANUAL, "TRANSACTION 2", "", 20.00)
-      .add("15/08/2008", TransactionType.MANUAL, "TRANSACTION 1", "", 12.50)
+      .add("15/08/2008", TransactionType.MANUAL, "TRANSACTION 1", "", -12.50)
       .check();
 
     transactions.selectAccount("Cash");
     transactions.initContent()
-      .add("15/08/2008", TransactionType.MANUAL, "TRANSACTION 1", "", 12.50)
+      .add("15/08/2008", TransactionType.MANUAL, "TRANSACTION 1", "", -12.50)
       .check();
 
     transactions.selectAccount("Misc");
@@ -146,6 +151,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .checkNoErrorMessage()
       .create()
       .checkErrorMessage("You must enter an amount")
+      .checkNegativeAmountsSelected()
       .setAmount(10.00)
       .create()
       .checkErrorMessage("You must enter a day");
@@ -206,7 +212,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .checkNoErrorMessage();
 
     categorization.checkTable(new Object[][]{
-      {"03/08/2008", "", "TRANSACTION 1", 10.00},
+      {"03/08/2008", "", "TRANSACTION 1", -10.00},
     });
   }
 

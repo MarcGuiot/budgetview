@@ -5,6 +5,7 @@ import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -20,29 +21,31 @@ public class AmountEditor {
   private boolean updateInProgress = false;
   private boolean preferedPositive;
 
-  public AmountEditor(DoubleField field, GlobRepository repository, Directory directory) {
+  public AmountEditor(DoubleField field, GlobRepository repository, Directory directory,
+                      boolean notifyOnKeyPressed, Double valueForNull) {
     numericEditor = new NumericEditor(field, repository, directory);
     numericEditor
       .setAbsoluteValue(true)
-      .setValueForNull(0.0)
-      .setNotifyOnKeyPressed(true);
+      .setValueForNull(valueForNull)
+      .setNotifyOnKeyPressed(notifyOnKeyPressed);
 
     ButtonGroup group = new ButtonGroup();
     group.add(positiveRadio);
     group.add(negativeRadio);
   }
 
-  public void update(boolean preferedPositive, boolean hideRadio) {
+  public AmountEditor update(boolean preferredPositive, boolean hideRadio) {
     try {
       updateInProgress = true;
-      this.preferedPositive = preferedPositive;
-      updateRadios(preferedPositive);
+      this.preferedPositive = preferredPositive;
+      updateRadios(preferredPositive);
       positiveRadio.setVisible(!hideRadio);
       negativeRadio.setVisible(!hideRadio);
     }
     finally {
       updateInProgress = false;
     }
+    return this;
   }
 
   private void updateRadios(boolean positive) {
@@ -73,6 +76,11 @@ public class AmountEditor {
 
   public GlobNumericEditor getNumericEditor() {
     return numericEditor;
+  }
+
+  public AmountEditor forceSelection(Glob prototypeTransaction) {
+    numericEditor.forceSelection(prototypeTransaction);
+    return this;
   }
 
   private class NumericEditor extends GlobNumericEditor {

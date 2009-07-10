@@ -4,7 +4,7 @@ import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 import javax.swing.*;
 
@@ -17,7 +17,13 @@ public class TransactionCreationChecker extends GuiChecker {
 
   public TransactionCreationChecker setAmount(double amount) {
     TextBox textBox = getPanel().getInputTextBox("amount");
-    textBox.setText(toString(amount), false);
+    if (amount < 0) {
+      getPanel().getRadioButton("negativeAmount").click();
+    }
+    else {
+      getPanel().getRadioButton("positiveAmount").click();
+    }
+    textBox.setText(toString(Math.abs(amount)), false);
     textBox.focusLost();
     return this;
   }
@@ -30,6 +36,18 @@ public class TransactionCreationChecker extends GuiChecker {
 
   public TransactionCreationChecker checkAmount(double amount) {
     assertThat(getPanel().getInputTextBox("amount").textEquals(toString(amount)));
+    return this;
+  }
+
+  public TransactionCreationChecker checkPositiveAmountsSelected() {
+    assertThat(getPanel().getRadioButton("positiveAmount").isSelected());
+    assertFalse(getPanel().getRadioButton("negativeAmount").isSelected());
+    return this;
+  }
+
+  public TransactionCreationChecker checkNegativeAmountsSelected() {
+    assertThat(getPanel().getRadioButton("negativeAmount").isSelected());
+    assertFalse(getPanel().getRadioButton("positiveAmount").isSelected());
     return this;
   }
 

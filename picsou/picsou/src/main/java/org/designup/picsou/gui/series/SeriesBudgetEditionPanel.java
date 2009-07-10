@@ -75,7 +75,7 @@ public class SeriesBudgetEditionPanel {
     builder.add("manual", switchToManualAction);
     builder.add("automatic", switchToAutomaticAction);
 
-    amountEditor = new AmountEditor(SeriesBudget.AMOUNT, localRepository, directory);
+    amountEditor = new AmountEditor(SeriesBudget.AMOUNT, localRepository, directory, true, 0.0);
     builder.add("amountEditor", amountEditor.getNumericEditor());
     builder.add("positiveAmounts", amountEditor.getPositiveRadio());
     builder.add("negativeAmounts", amountEditor.getNegativeRadio());
