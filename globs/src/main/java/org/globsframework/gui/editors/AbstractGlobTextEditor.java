@@ -29,7 +29,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   private boolean forceNotEditable;
   private GlobList forcedSelection;
   private boolean isInitialized = false;
-  private boolean notifyAtKeyPressed;
+  private boolean notifyOnKeyPressed;
   private DocumentListener keyPressedListener;
   private boolean isAdjusting = false;
   private String name;
@@ -71,7 +71,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   }
 
   private void registerKeyPressedListener() {
-    if (isNotifyAtKeyPressed()) {
+    if (isNotifiedOnKeyPressed()) {
       if (keyPressedListener == null) {
         keyPressedListener = new AbstractDocumentListener() {
           protected void documentChanged(DocumentEvent e) {
@@ -95,7 +95,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
       }
 
       public void focusLost(FocusEvent e) {
-        if (!notifyAtKeyPressed) {
+        if (!notifyOnKeyPressed) {
           apply();
         }
       }
@@ -180,9 +180,13 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
   }
 
   public PARENT setNotifyOnKeyPressed(boolean notifyOnKeyPressed) {
-    this.notifyAtKeyPressed = notifyOnKeyPressed;
+    this.notifyOnKeyPressed = notifyOnKeyPressed;
     registerKeyPressedListener();
     return (PARENT)this;
+  }
+
+  public boolean isNotifiedOnKeyPressed() {
+    return notifyOnKeyPressed;
   }
 
   protected Object getConvertedDisplayedValue() throws InvalidFormat {
@@ -204,10 +208,6 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     for (FocusListener listener : textComponent.getFocusListeners()) {
       textComponent.removeFocusListener(listener);
     }
-  }
-
-  public boolean isNotifyAtKeyPressed() {
-    return notifyAtKeyPressed;
   }
 
   public boolean isAdjusting() {
