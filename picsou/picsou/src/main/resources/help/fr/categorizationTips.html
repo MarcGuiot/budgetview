@@ -7,7 +7,7 @@
 <h2>Revenus exceptionnels</h2>
 
 <p>Si vous percevez des revenus à titre exceptionnel (dons de proches, primes, treizièmes mois...),
-  nous vous recommandons de créer une série "Revenus exceptionnels" dans le poste budgétaires "Revenus". Vous
+  nous vous recommandons de créer une série "Revenus exceptionnels" dans le poste budgétaire "Revenus". Vous
   pourrez passer cette opération en périodicité "Irréguliere" plutôt que "Tous les mois", pour éviter que
   les montants ne soient propagés aux mois suivants. Vous pourrez également la passer en mode "budget manuel" pour
   pouvoir saisir vous-mêmes les montants attendus dans les mois à venir.</p>
@@ -26,7 +26,22 @@
 </p>
 <p>Pour les retraits d'argent liquide, vous pouvez <a href="help:split">répartir</a> les montants pour faire apparaître
   des achats particuliers. Si vous ne souhaitez pas rentrer trop dans le détail de ces dépenses,
-  vous pouvez créer une série de type "Enveloppe" pour y placer toutes ces opérations.</p>
+  vous pouvez créer une série "Dépenses en liquide" de type "Enveloppe" pour y placer toutes ces opérations.</p>
+
+<h2>Virements internes entre des comptes courants</h2>
+
+<p>Si vous effectuez des virements entre des comptes courants, vous pouvez créer une série de type "Enveloppe",
+  dont les montants prévus sont toujours égaux à zéro. Lors d'un virement d'un compte courant A à un compte courant B,
+  vous affecterez à cette série à la fois l'opération de A vers B et celle de B vers A, de sorte que les deux montants
+  s'annulent.</p>
+
+<h2>Achats à crédit</h2>
+
+<p>Pour le cas d'un achat à crédit, l'approche habituelle consiste à créer une série unique représentant
+  les remboursements. Le mois de l'achat, vous pouvez affecter à cette série à la fois le versement (positif)
+  de l'organisme de crédit, et le paiement (négatif) correspondant à l'achat proprement dit. Ces deux mouvements
+  pourront alors s'équilibrer, et il ne restera au final que la suite de paiements mensuels.</p>
+
 
 </body>
 </html>
