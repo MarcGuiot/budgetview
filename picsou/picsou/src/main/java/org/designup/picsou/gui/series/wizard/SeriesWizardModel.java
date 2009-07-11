@@ -62,11 +62,13 @@ public class SeriesWizardModel {
 
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "misc");
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "groceries");
+    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "fuel");
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "health", "physician", "pharmacy", "reimbursements");
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "leisures");
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "clothing");
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "fuel");
+    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "beauty");
     createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "cash");
+    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "bankFees");
   }
 
   private void createEntry(BudgetArea budgetArea,
