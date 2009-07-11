@@ -216,11 +216,11 @@ public class GuiUtils {
 
     HTMLEditorKit kit = (HTMLEditorKit)editorPane.getEditorKit();
     StyleSheet css = kit.getStyleSheet();
-    css.addRule("H1 { font-size:16; }");
-    css.addRule("H1 { font-weight:bold; }");
-    css.addRule("H2 { font-size:14; }");
-    css.addRule("H2 { font-weight:bold; }");
+    css.addRule("h1 { font-size:16;font-weight:bold; }");
+    css.addRule("h2 { font-size:14;font-weight:bold; }");
     css.addRule("p  { margin-top:4px; margin-bottom:4px;margin-left:0;margin-right:0;}");
+    css.addRule("table { border:none; }");
+    css.addRule("td { vertical-align:top;}");
   }
 
   public static void runInSwingThread(Runnable runnable) {
