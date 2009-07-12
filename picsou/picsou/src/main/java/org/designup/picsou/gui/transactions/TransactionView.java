@@ -3,14 +3,14 @@ package org.designup.picsou.gui.transactions;
 import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.AccountFilteringCombo;
-import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.DefaultTableCellPainter;
+import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.FilterSet;
 import org.designup.picsou.gui.components.filtering.Filterable;
+import org.designup.picsou.gui.description.TransactionBudgetAreaStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Transaction;
 import static org.designup.picsou.model.Transaction.TYPE;
 import org.designup.picsou.utils.Lang;
@@ -26,7 +26,6 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
-import org.globsframework.model.utils.GlobLinkComparator;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.and;
@@ -35,21 +34,21 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import javax.swing.event.TableModelListener;
 import java.awt.*;
-import java.util.Comparator;
 
 public class TransactionView extends View implements Filterable, GlobSelectionListener {
   public static final int DATE_COLUMN_INDEX = 0;
   public static final int BANK_DATE_COLUMN_INDEX = 1;
-  public static final int SERIES_COLUMN_INDEX = 2;
-  public static final int SUBSERIES_COLUMN_INDEX = 3;
-  public static final int LABEL_COLUMN_INDEX = 4;
-  public static final int AMOUNT_COLUMN_INDEX = 5;
-  public static final int NOTE_COLUMN_INDEX = 6;
-  public static final int ACCOUNT_BALANCE_INDEX = 7;
-  public static final int BALANCE_INDEX = 8;
-  public static final int ACCOUNT_NAME_INDEX = 9;
+  public static final int BUDGET_AREA_COLUMN_INDEX = 2;
+  public static final int SERIES_COLUMN_INDEX = 3;
+  public static final int SUBSERIES_COLUMN_INDEX = 4;
+  public static final int LABEL_COLUMN_INDEX = 5;
+  public static final int AMOUNT_COLUMN_INDEX = 6;
+  public static final int NOTE_COLUMN_INDEX = 7;
+  public static final int ACCOUNT_BALANCE_INDEX = 8;
+  public static final int BALANCE_INDEX = 9;
+  public static final int ACCOUNT_NAME_INDEX = 10;
 
-  private static final int[] COLUMN_SIZES = {10, 10, 10, 10, 30, 9, 15, 10, 10, 15};
+  private static final int[] COLUMN_SIZES = {10, 10, 10, 15, 10, 30, 9, 15, 10, 10, 30};
 
   private GlobTableView view;
   private AccountFilteringCombo accountFilteringCombo;
@@ -153,6 +152,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
                  new TransactionDateStringifier(TransactionComparator.DESCENDING_BANK_SPLIT_AFTER,
                                                 Transaction.BANK_MONTH,
                                                 Transaction.BANK_DAY), LabelCustomizers.font(dateFont))
+      .addColumn(Lang.get("transactionView.budgetArea"), new TransactionBudgetAreaStringifier())
       .addColumn(new TransactionSeriesColumn(view, rendererColors, descriptionService, repository, directory))
       .addColumn(Lang.get("subSeries"),
                  descriptionService.getStringifier(Transaction.SUB_SERIES),

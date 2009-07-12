@@ -87,7 +87,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     Table table = transactions.getTable();
     UISpecAssert.assertTrue(
       table.rowEquals(table.getRowIndex(TransactionView.LABEL_COLUMN_INDEX, "ESSENCE"),
-                      new String[]{"01/05/2006", "01/05/2006", "(prelevement)Voiture", "Carburant",
+                      new String[]{"01/05/2006", "01/05/2006", "Envelopes", "(prelevement)Voiture", "Carburant",
                                    "ESSENCE", "-70.00", "frais pro", "330.00", "330.00", "Account n. 00001123"}));
   }
 
