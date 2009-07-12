@@ -21,12 +21,10 @@ import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.ChangeSet;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
-import org.globsframework.model.utils.GlobFieldComparator;
-import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.utils.GlobUtils;
+import org.globsframework.model.utils.*;
 import org.globsframework.utils.CompositeComparator;
 import org.globsframework.utils.directory.Directory;
 
@@ -62,6 +60,13 @@ public class NextProjectsView extends View implements GlobSelectionListener {
     tableView.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
     tableView.setDefaultBackgroundPainter(new DefaultTableCellPainter(directory));
     tableView.setFilter(GlobMatchers.NONE);
+    repository.addChangeListener(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(Series.TYPE)) {
+          tableView.refresh();
+        }
+      }
+    });
 
     PicsouTableHeaderPainter.install(tableView, directory);
 

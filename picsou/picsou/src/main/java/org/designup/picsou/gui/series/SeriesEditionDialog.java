@@ -56,7 +56,7 @@ public class SeriesEditionDialog {
 
   private JLabel titleLabel;
   private GlobListView seriesList;
-  private SeriesEditionDialog.ValidateAction okAction;
+  private SeriesEditionDialog.ValidateAction okAction = new ValidateAction();
   private AbstractAction deleteStartDateAction;
   private OpenMonthChooserAction startDateChooserAction;
   private AbstractAction deleteEndDateAction;
@@ -229,7 +229,6 @@ public class SeriesEditionDialog {
     localRepository.addChangeListener(new OkButtonUpdater());
 
     JPanel panel = builder.load();
-    okAction = new ValidateAction();
     singleSeriesDeleteButton = new JButton(new DeleteSeriesAction(true));
     singleSeriesDeleteButton.setOpaque(false);
     singleSeriesDeleteButton.setName("deleteSingleSeries");

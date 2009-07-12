@@ -84,12 +84,12 @@ public abstract class AbstractRolloverEditor extends AbstractCellEditor implemen
     return super.stopCellEditing();
   }
 
-  protected void removeSelectionUpdater() {
-    tableView.getComponent().getSelectionModel().removeListSelectionListener(selectionUpdater);
-  }
-
   protected void addSelectionUpdater() {
     tableView.getComponent().getSelectionModel().addListSelectionListener(selectionUpdater);
+  }
+
+  protected void removeSelectionUpdater() {
+    tableView.getComponent().getSelectionModel().removeListSelectionListener(selectionUpdater);
   }
 
   private Component getComponentToRender(boolean isSelected, Object value, int row, int column, boolean isRendering) {

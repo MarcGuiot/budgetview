@@ -19,6 +19,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public abstract class HyperlinkTableColumn extends AbstractRolloverEditor implements GlobTableColumn, ColorChangeListener {
 
@@ -42,6 +43,11 @@ public abstract class HyperlinkTableColumn extends AbstractRolloverEditor implem
     rendererPanel.setPainter(backgroundPainter);
 
     editorButton = createHyperlinkButton(action);
+    editorButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        fireEditingStopped();
+      }
+    });
     editorPanel = initCellPanel(editorButton, true, new CellPainterPanel());
     editorPanel.setPainter(backgroundPainter);
   }

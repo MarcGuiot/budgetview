@@ -6,7 +6,6 @@ import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.components.HyperlinkButton;
 import org.globsframework.gui.views.GlobTableView;
-import org.globsframework.gui.views.CellPainter;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;

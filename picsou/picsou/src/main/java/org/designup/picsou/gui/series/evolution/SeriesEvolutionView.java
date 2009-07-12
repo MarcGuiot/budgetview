@@ -40,7 +40,7 @@ public class SeriesEvolutionView extends View {
   private GlobRepository parentRepository;
 
   private SelectionService parentSelectionService;
-  private GlobTableView globTable;
+  private GlobTableView tableView;
   private JTable table;
   private List<SeriesEvolutionMonthColumn> monthColumns = new ArrayList<SeriesEvolutionMonthColumn>();
   private Integer referenceMonthId;
@@ -88,7 +88,14 @@ public class SeriesEvolutionView extends View {
     SeriesWrapperStringifier stringifier = new SeriesWrapperStringifier(parentRepository, directory);
 
     SeriesWrapperComparator comparator = new SeriesWrapperComparator(parentRepository, repository, stringifier);
-    globTable = GlobTableView.init(SeriesWrapper.TYPE, repository, comparator, directory);
+    tableView = GlobTableView.init(SeriesWrapper.TYPE, repository, comparator, directory);
+    parentRepository.addChangeListener(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(Series.TYPE)) {
+          tableView.refresh();
+        }
+      }
+    });
 
     CustomBoldLabelCustomizer customizer = new CustomBoldLabelCustomizer(directory) {
       protected boolean isBold(Glob glob) {
@@ -100,25 +107,25 @@ public class SeriesEvolutionView extends View {
     CellPainter backgroundPainter = new SeriesEvolutionBackgroundPainter(colors);
     TableExpansionColumn expandColumn = new TableExpansionColumn(backgroundPainter);
 
-    globTable
+    tableView
       .setDefaultBackgroundPainter(backgroundPainter)
       .setHeaderActionsDisabled()
       .setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 
-    globTable
+    tableView
       .addColumn("", expandColumn, expandColumn, GlobStringifiers.empty(stringifier.getComparator(repository)))
       .addColumn("", stringifier, customizer);
 
     for (int offset = -1; offset < -1 + MONTH_COLUMNS_COUNT; offset++) {
       SeriesEvolutionMonthColumn monthColumn =
-        new SeriesEvolutionMonthColumn(offset, globTable, parentRepository, directory, colors, seriesEditionDialog);
+        new SeriesEvolutionMonthColumn(offset, tableView, parentRepository, directory, colors, seriesEditionDialog);
       monthColumns.add(monthColumn);
-      globTable.addColumn(monthColumn);
+      tableView.addColumn(monthColumn);
     }
 
-    PicsouTableHeaderPainter.install(globTable, directory);
+    PicsouTableHeaderPainter.install(tableView, directory);
 
-    table = globTable.getComponent();
+    table = tableView.getComponent();
 
     Gui.installRolloverOnButtons(table, Utils.intRange(2, 10));
     table.setDragEnabled(false);
@@ -143,7 +150,7 @@ public class SeriesEvolutionView extends View {
           for (SeriesEvolutionMonthColumn column : monthColumns) {
             column.setReferenceMonthId(referenceMonthId);
           }
-          globTable.reset();
+          tableView.reset();
         }
       }
     }, Month.TYPE);
@@ -152,7 +159,7 @@ public class SeriesEvolutionView extends View {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (!changeSet.containsCreationsOrDeletions(SeriesWrapper.TYPE) &&
             changeSet.containsChanges(SeriesStat.TYPE)) {
-          globTable.reset();
+          tableView.reset();
         }
       }
     });
@@ -169,15 +176,15 @@ public class SeriesEvolutionView extends View {
       if (index < 0) {
         return null;
       }
-      return globTable.getGlobAt(index);
+      return tableView.getGlobAt(index);
     }
 
     public void select(Glob seriesWrapper) {
-      globTable.select(seriesWrapper);
+      tableView.select(seriesWrapper);
     }
 
     public void setFilter(GlobMatcher matcher) {
-      globTable.setFilter(matcher);
+      tableView.setFilter(matcher);
     }
   }
 
