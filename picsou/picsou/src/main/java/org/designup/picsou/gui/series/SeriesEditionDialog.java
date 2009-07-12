@@ -124,6 +124,7 @@ public class SeriesEditionDialog {
     builder.add("delete", new DeleteSeriesAction(false));
 
     nameEditor = builder.addEditor("nameField", Series.NAME).setNotifyOnKeyPressed(true);
+    nameEditor.getComponent().addActionListener(okAction);
 
     builder.addMultiLineEditor("descriptionField", Series.DESCRIPTION).setNotifyOnKeyPressed(true);
 

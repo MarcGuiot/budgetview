@@ -57,8 +57,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRow(0);
     categorization.selectEnvelopes().createSeries()
-      .setName("    Groceries   ")
-      .validate();
+      .setNameAndValidate("    Groceries   ");
 
     categorization.selectEnvelopes().selectSeries("Groceries");
 

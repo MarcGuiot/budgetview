@@ -60,8 +60,13 @@ public class SeriesEditionDialogChecker extends GuiChecker {
   }
 
   public SeriesEditionDialogChecker setName(String seriesName) {
-    dialog.getInputTextBox("nameField").setText(seriesName);
+    dialog.getInputTextBox("nameField").setText(seriesName, false);
     return this;
+  }
+
+  public void setNameAndValidate(String seriesName) {
+    dialog.getInputTextBox("nameField").setText(seriesName, true);
+    assertFalse(dialog.isVisible());
   }
 
   public SeriesEditionDialogChecker setDescription(String text) {
