@@ -174,7 +174,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .cancel();
 
     login.checkComponentsVisible();
-    assertFalse(window.containsMenuBar());
+    login.checkNotLoggedIn();
 
     login.clickEnterAndGetSlaDialog()
       .checkTitle("End-User License Agreement")
@@ -185,7 +185,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .checkNoErrorMessage()
       .validate();
 
-    assertTrue(window.containsMenuBar());
+    login.checkLoggedIn();
   }
 
   public void testTransactionAndCategorisationWorkAfterReload() throws Exception {
@@ -206,7 +206,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     openNewLoginWindow();
     login.logExistingUser("toto", "p4ssw0rd");
 
-    assertThat(window.containsMenuBar());
+    login.checkLoggedIn();
     OfxBuilder
       .init(this, new OperationChecker(window))
       .addTransaction("2006/01/12", -2, "Menu A")
@@ -238,7 +238,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
   }
 
   private void checkDemoMode() {
-    assertThat(window.containsMenuBar());
+    login.checkLoggedIn();
     getTransactionView().checkNotEmpty();
   }
 

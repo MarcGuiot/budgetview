@@ -5,6 +5,7 @@ import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 
 import javax.swing.*;
 
@@ -109,5 +110,13 @@ public class LoginChecker extends GuiChecker {
     assertThat(userField.isVisible());
     assertThat(passwordField.isVisible());
     assertThat(loginButton.isVisible());
+  }
+
+  public void checkLoggedIn() {
+    assertThat(window.containsMenuBar());
+  }
+
+  public void checkNotLoggedIn() {
+    assertFalse(window.containsMenuBar());
   }
 }

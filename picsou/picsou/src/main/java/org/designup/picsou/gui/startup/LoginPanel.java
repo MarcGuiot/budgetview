@@ -52,6 +52,7 @@ public class LoginPanel {
   private SplitsBuilder builder;
   private JPanel panel;
   private boolean validUser;
+  private boolean useDemoAccount = false;
 
   public LoginPanel(String remoteAdress, String prevaylerPath, boolean dataInMemory,
                     MainWindow mainWindow, Directory directory) {
@@ -107,7 +108,7 @@ public class LoginPanel {
         panel = (JPanel)component;
         mainWindow.getFrame().setFocusTraversalPolicy(
           new CustomFocusTraversalPolicy(userField, passwordField, confirmPasswordField,
-                                        loginButton, creationCheckBox));
+                                         loginButton, creationCheckBox));
         mainWindow.setPanel(panel);
       }
     })
@@ -161,7 +162,7 @@ public class LoginPanel {
 
     public void run() {
       try {
-        if (user.equals("demo")) {
+        if (useDemoAccount) {
           initDemoServerAccess();
           serverAccess.createUser("anonymous", "password".toCharArray());
         }
@@ -188,23 +189,23 @@ public class LoginPanel {
         });
       }
       catch (UserAlreadyExists e) {
-        displayErrorMessageFromKey("login.user.exists");
+        displayErrorMessage("login.user.exists");
       }
       catch (BadPassword e) {
-        displayErrorMessageFromKey("login.invalid.credentials");
+        displayErrorMessage("login.invalid.credentials");
       }
       catch (UserNotRegistered e) {
-        displayErrorMessageFromKey("login.invalid.credentials");
+        displayErrorMessage("login.invalid.credentials");
       }
       catch (PasswordBasedEncryptor.EncryptFail e) {
         displayBadPasswordMessage("login.password.error", e.getMessage());
       }
       catch (InvalidData e) {
-        displayMessage(e.getMessage());
+        displayErrorText(e.getMessage());
         e.printStackTrace();
       }
       catch (Exception e) {
-        displayErrorMessageFromKey("login.server.connection.failure");
+        displayErrorMessage("login.server.connection.failure");
         final StringWriter stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
         e.printStackTrace(writer);
@@ -238,11 +239,11 @@ public class LoginPanel {
   private boolean userIdAccepted() {
     String id = userField.getText();
     if (Strings.isNullOrEmpty(id)) {
-      displayErrorMessageFromKey("login.user.required");
+      displayErrorMessage("login.user.required");
       return false;
     }
     if (id.length() < 4) {
-      displayErrorMessageFromKey("login.user.too.short");
+      displayErrorMessage("login.user.too.short");
       return false;
     }
     return true;
@@ -251,20 +252,20 @@ public class LoginPanel {
   private boolean passwordAccepted() {
     char[] pwd = passwordField.getPassword();
     if (pwd.length == 0) {
-      displayErrorMessageFromKey("login.password.required");
+      displayErrorMessage("login.password.required");
       return false;
     }
     if (pwd.length < 4) {
-      displayErrorMessageFromKey("login.password.too.short");
+      displayErrorMessage("login.password.too.short");
       return false;
     }
     char[] confirm = confirmPasswordField.getPassword();
     if (confirm.length == 0) {
-      displayErrorMessageFromKey("login.confirm.required");
+      displayErrorMessage("login.confirm.required");
       return false;
     }
     if (!Arrays.equals(pwd, confirm)) {
-      displayErrorMessageFromKey("login.confirm.error");
+      displayErrorMessage("login.confirm.error");
       return false;
     }
     clearMessage();
@@ -284,12 +285,12 @@ public class LoginPanel {
     return false;
   }
 
-  private void displayMessage(String mesage) {
-    messageLabel.setText("<html><font color=red>" + mesage + "</font></html>");
+  private void displayErrorText(String message) {
+    messageLabel.setText("<html><font color=red>" + message + "</font></html>");
   }
 
-  private void displayErrorMessageFromKey(String key) {
-    messageLabel.setText("<html><font color=red>" + Lang.get(key) + "</font></html>");
+  private void displayErrorMessage(String key) {
+    displayErrorText(Lang.get(key));
   }
 
   private void displayBadPasswordMessage(String key, String complement) {
@@ -369,10 +370,11 @@ public class LoginPanel {
     }
 
     public void actionPerformed(ActionEvent e) {
-      userField.setText("demo");
+      useDemoAccount = true;
+      userField.setText("");
       passwordField.setText("");
       if (creationCheckBox.isSelected()) {
-        creationCheckBox.doClick(); 
+        creationCheckBox.doClick();
       }
       loginButton.getAction().actionPerformed(null);
     }
