@@ -125,12 +125,31 @@ public class UpgradeTrigger implements ChangeSetListener {
       migrateCategoriesToSubSeries(repository);
     }
 
+    if (currentJarVersion < 19) {
+      migrateProfileTypes(repository);
+    }
+
     repository.update(VersionInformation.KEY, VersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
   }
 
+  private void migrateProfileTypes(GlobRepository repository) {
+    repository.safeApply(Series.TYPE, GlobMatchers.ALL,
+                         new GlobFunctor() {
+                           public void run(Glob series, GlobRepository repository) throws Exception {
+                             Integer profileType = series.get(Series.PROFILE_TYPE);
+                             if ((profileType == null) ||
+                                 profileType.equals(4) || // THREE_MONTHS
+                                 profileType.equals(5)) { // FOUR_MONTHS
+                               repository.update(series.getKey(),
+                                                 Series.PROFILE_TYPE,
+                                                 ProfileType.CUSTOM.getId());
+                             }
+                           }
+                         });
+  }
+
   private void removeOccasionalBudgetArea(GlobRepository repository) {
-    repository.safeApply(Transaction.TYPE,
-                         GlobMatchers.ALL,
+    repository.safeApply(Transaction.TYPE, GlobMatchers.ALL,
                          new GlobFunctor() {
                            public void run(Glob transaction, GlobRepository repository) throws Exception {
                              if (Series.OCCASIONAL_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {

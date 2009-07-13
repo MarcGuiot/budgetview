@@ -5,7 +5,6 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.gui.PicsouApplication;
 import org.globsframework.utils.Files;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecTestCase;
@@ -14,8 +13,6 @@ import org.uispec4j.interception.WindowInterceptor;
 
 import java.io.*;
 import java.util.Locale;
-import java.util.List;
-import java.util.ArrayList;
 
 public class FirstTimeTest extends UISpecTestCase {
 

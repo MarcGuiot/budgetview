@@ -13,6 +13,8 @@ import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Arrays;
 
 public class SeriesEditionDialogChecker extends GuiChecker {
   private Window dialog;
@@ -188,12 +190,27 @@ public class SeriesEditionDialogChecker extends GuiChecker {
   public SeriesEditionDialogChecker toggleMonth(int... months) {
     String labels[] = new String[months.length];
     for (int i = 0; i < months.length; i++) {
-      labels[i] = transposeMonthId(months[i]);
+      labels[i] = getMonthLabel(months[i]);
     }
     return toggleMonth(labels);
   }
 
-  private String transposeMonthId(int month) {
+  public SeriesEditionDialogChecker setPeriodMonths(Integer... months) {
+    List selected = Arrays.asList(months);
+    for (int month = 1; month < 13; month++) {
+      CheckBox checkBox = getPeriodMonthCheckBox(getMonthLabel(month));
+      if (selected.contains(month)) {
+        checkBox.select();
+      }
+      else {
+        checkBox.unselect();
+      }
+    }
+    return this;
+  }
+
+
+  private String getMonthLabel(int month) {
     switch (month) {
       case 1:
         return JAN;
@@ -227,7 +244,7 @@ public class SeriesEditionDialogChecker extends GuiChecker {
   public SeriesEditionDialogChecker toggleMonth(String... monthsLabel) {
     for (String monthLabel : monthsLabel) {
       try {
-        getMonthCheckBox(monthLabel).click();
+        getPeriodMonthCheckBox(monthLabel).click();
       }
       catch (ItemNotFoundException e) {
         throw new RuntimeException("No component found for: " + monthLabel, e);
@@ -238,48 +255,67 @@ public class SeriesEditionDialogChecker extends GuiChecker {
 
   public SeriesEditionDialogChecker checkMonthIsChecked(int... months) {
     for (int month : months) {
-      assertThat(transposeMonthId(month) + " is not checked", getMonthCheckBox(transposeMonthId(month)).isSelected());
+      assertThat(getMonthLabel(month) + " is not checked - " + getPeriodMonthStatuses(),
+                 getPeriodMonthCheckBox(getMonthLabel(month)).isSelected());
     }
     return this;
   }
 
   public SeriesEditionDialogChecker checkMonthIsChecked(String... monthsLabel) {
     for (String monthLabel : monthsLabel) {
-      assertThat(monthLabel + " is not checked", getMonthCheckBox(monthLabel).isSelected());
+      assertThat(monthLabel + " is not checked - " + getPeriodMonthStatuses(),
+                 getPeriodMonthCheckBox(monthLabel).isSelected());
     }
     return this;
   }
 
   public SeriesEditionDialogChecker checkMonthIsNotChecked(String... monthsLabel) {
     for (String monthLabel : monthsLabel) {
-      assertFalse(monthLabel + " is checked", getMonthCheckBox(monthLabel).isSelected());
+      assertFalse(monthLabel + " is checked - " + getPeriodMonthStatuses(),
+                  getPeriodMonthCheckBox(monthLabel).isSelected());
     }
     return this;
   }
 
   public SeriesEditionDialogChecker checkMonthIsNotChecked(int... months) {
     for (int month : months) {
-      assertFalse(transposeMonthId(month) + " is checked", getMonthCheckBox(transposeMonthId(month)).isSelected());
+      assertFalse(getMonthLabel(month) + " is checked - " + getPeriodMonthStatuses(),
+                  getPeriodMonthCheckBox(getMonthLabel(month)).isSelected());
     }
     return this;
   }
 
   public SeriesEditionDialogChecker checkMonthsEnabled(String... monthsLabel) {
     for (String monthLabel : monthsLabel) {
-      assertThat(monthLabel + " is disabled", getMonthCheckBox(monthLabel).isEnabled());
+      assertThat(monthLabel + " is disabled - " + getPeriodMonthStatuses(),
+                 getPeriodMonthCheckBox(monthLabel).isEnabled());
     }
     return this;
   }
 
   public SeriesEditionDialogChecker checkMonthsDisabled(String... monthsLabel) {
     for (String monthLabel : monthsLabel) {
-      assertFalse(monthLabel + " is enabled", getMonthCheckBox(monthLabel).isEnabled());
+      assertFalse(monthLabel + " is enabled - " + getPeriodMonthStatuses(),
+                  getPeriodMonthCheckBox(monthLabel).isEnabled());
     }
     return this;
   }
 
-  private CheckBox getMonthCheckBox(String monthLabel) {
+  private CheckBox getPeriodMonthCheckBox(String monthLabel) {
     return dialog.getCheckBox(ComponentMatchers.componentLabelFor(monthLabel));
+  }
+
+  private String getPeriodMonthStatuses() {
+    StringBuffer buffer = new StringBuffer();
+    buffer.append("Selection: ");
+    for (int month = 1; month < 13; month++) {
+      String label = getMonthLabel(month);
+      CheckBox checkBox = getPeriodMonthCheckBox(label);
+      if (checkBox.isSelected().isTrue()) {
+        buffer.append(label).append(" ");
+      }
+    }
+    return buffer.toString();
   }
 
   public void validate() {
@@ -569,11 +605,6 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker setFourMonths() {
-    getProfileCombo().select(ProfileType.FOUR_MONTHS.getLabel());
-    return this;
-  }
-
   public SeriesEditionDialogChecker setCustom() {
     getProfileCombo().select(ProfileType.CUSTOM.getLabel());
     return this;
@@ -646,18 +677,17 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker checkToContentEquals(String ...name) {
+  public SeriesEditionDialogChecker checkToContentEquals(String... name) {
     assertTrue(dialog.getComboBox("toAccount").contentEquals(name));
     return this;
   }
-
 
   public SeriesEditionDialogChecker setFromAccount(String account) {
     dialog.getComboBox("fromAccount").select(account);
     return this;
   }
 
-  public SeriesEditionDialogChecker checkFromContentEquals(String ...name) {
+  public SeriesEditionDialogChecker checkFromContentEquals(String... name) {
     assertTrue(dialog.getComboBox("fromAccount").contentEquals(name));
     return this;
   }
@@ -678,7 +708,7 @@ public class SeriesEditionDialogChecker extends GuiChecker {
       assertTrue(dialog.getTextBox("savingsMessage").isVisible());
     }
     else {
-    assertFalse(dialog.getTextBox("savingsMessage").isVisible());
+      assertFalse(dialog.getTextBox("savingsMessage").isVisible());
     }
     return this;
   }
@@ -765,12 +795,12 @@ public class SeriesEditionDialogChecker extends GuiChecker {
         }
       })
       .run();
-    return this;    
+    return this;
   }
 
   public SeriesEditionDialogChecker checkRenameSubSeriesMessage(String subSeriesName,
-                                                                 final String newName,
-                                                                 final String errorMessage) {
+                                                                final String newName,
+                                                                final String errorMessage) {
     Panel tab = getSelectedTab();
     tab.getListBox().select(subSeriesName);
     WindowInterceptor.init(tab.getButton("renameSubSeries").triggerClick())

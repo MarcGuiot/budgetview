@@ -205,7 +205,8 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     budgetView.recurring.editSeries("courses")
-      .setFourMonths()
+      .setCustom()
+      .setPeriodMonths(1, 5, 9)
       .validate();
 
     budgetView.savings.editSeries("epargne")

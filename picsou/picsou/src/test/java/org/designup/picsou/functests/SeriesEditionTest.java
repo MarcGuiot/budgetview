@@ -799,6 +799,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     edition.setName("S1");
     edition.setSixMonths()
       .checkMonthIsChecked(1, 7);
+
     edition.toggleMonth(1)
       .checkMonthIsChecked(1, 7)
       .checkMonthIsNotChecked(2, 5);
@@ -807,12 +808,12 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthIsChecked(2, 8)
       .checkMonthIsNotChecked(1, 5, 7);
 
-    edition.setFourMonths()
-      .checkMonthIsChecked(2, 6, 10)
-      .toggleMonth(10)
-      .checkMonthIsChecked(10, 2, 6)
+    edition.setTwoMonths()
+      .checkMonthIsChecked(2, 4, 6, 8, 10)
       .toggleMonth(3)
-      .checkMonthIsChecked(3, 7, 11);
+      .checkMonthIsChecked(1,3,5,7,9,11)
+      .toggleMonth(4)
+      .checkMonthIsChecked(2, 4, 6, 8, 10);
   }
 
   public void testSwitchBetweenSeries() throws Exception {
@@ -824,10 +825,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthIsChecked(3, 9);
 
     edition.createSeries().setName("S2")
-      .setFourMonths()
-      .checkMonthIsChecked(1, 5, 9)
+      .setTwoMonths()
+      .checkMonthIsChecked(1, 3, 5, 7, 9, 11)
       .toggleMonth(2)
-      .checkMonthIsChecked(2, 6, 10);
+      .checkMonthIsChecked(2, 4, 6, 8, 10);
 
     edition.selectSeries("S1")
       .checkMonthsAreVisible()
@@ -844,7 +845,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     SeriesEditionDialogChecker edition =
       budgetView.envelopes.createSeries()
         .setName("S1")
-        .checkProfiles("Every month", "Every two months", "Every three months", "Every four months", "Every six months",
+        .checkProfiles("Every month", "Every two months", "Every six months",
                        "Once a year", "Single month", "Custom", "Irregular");
   }
 
