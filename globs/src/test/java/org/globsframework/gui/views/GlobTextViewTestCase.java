@@ -194,11 +194,16 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
   }
 
   public void testForceSelection() throws Exception {
-    textBox = init(repository, glob1);
+    AbstractGlobTextView view = initView(repository, stringifier).forceSelection(glob1);
+    textBox = createComponent(view);
+
     assertTrue(textBox.textEquals("[dummyObject[id=1]]"));
 
     selectionService.select(glob2);
     assertTrue(textBox.textEquals("[dummyObject[id=1]]"));
+    
+    view.forceSelection(glob2);
+    assertTrue(textBox.textEquals("[dummyObject[id=2]]"));
   }
 
   public void testRemainsUnchangedWhenSelectionIsDeleted() throws Exception {

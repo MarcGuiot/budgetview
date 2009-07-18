@@ -71,6 +71,9 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
 
   public T forceSelection(Glob glob) {
     this.forcedSelection = new GlobList(glob);
+    if (initCompleted) {
+      forceSelection();
+    }
     return (T)this;
   }
 
@@ -162,8 +165,12 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
       update();
     }
     else {
-      selectionUpdated(GlobSelectionBuilder.init().add(forcedSelection, type).get());
+      forceSelection();
     }
     getComponent().setName(name);
+  }
+
+  private void forceSelection() {
+    selectionUpdated(GlobSelectionBuilder.init().add(forcedSelection, type).get());
   }
 }
