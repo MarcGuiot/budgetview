@@ -93,6 +93,17 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testNotes() throws Exception {
+
+    views.selectHome();
+    notes.setText("A little note");
+
+    restartApplication();
+
+    views.selectHome();
+    notes.checkText("A little note");
+  }
+
   public void testBudgetView() throws Exception {
 
     views.selectBudget();

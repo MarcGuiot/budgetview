@@ -1,0 +1,24 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <column>
+
+    <label text="$notesView.title" styleClass="blockTitle"/>
+
+    <panel styleClass="block">
+
+      <column styleClass="innerBlock">
+
+        <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true">
+
+          <textArea ref="notesEditor" lineWrap="true" wrapStyleWord="true" margin="5"/>
+
+        </scrollPane>
+
+      </column>
+
+    </panel>
+
+  </column>
+</splits>

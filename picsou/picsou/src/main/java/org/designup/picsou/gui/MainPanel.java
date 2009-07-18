@@ -35,6 +35,7 @@ import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.utils.DumpDataAction;
 import org.designup.picsou.gui.utils.DataCheckerAction;
+import org.designup.picsou.gui.notes.NotesView;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -150,7 +151,8 @@ public class MainPanel {
       seriesView,
       new SeriesEvolutionView(repository, directory),
       new SavingsView(replicationGlobRepository, directory),
-      licenseInfoView);
+      licenseInfoView,
+      new NotesView(repository, directory));
 
     createMenuBar(parent, directory);
     timeView.selectCurrentMonth();

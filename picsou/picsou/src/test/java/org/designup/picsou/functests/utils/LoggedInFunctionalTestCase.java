@@ -42,6 +42,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected SeriesEvolutionChecker seriesEvolution;
   protected VersionInfoChecker infochecker;
   protected NavigationViewChecker navigation;
+  protected NotesChecker notes;
 
   protected GlobRepository repository;
   private Directory directory;
@@ -132,6 +133,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     license = new LicenseActivationChecker(mainWindow);
     infochecker = new VersionInfoChecker(mainWindow);
     navigation = new NavigationViewChecker(mainWindow);
+    notes = new NotesChecker(mainWindow);
   }
 
   protected void tearDown() throws Exception {
@@ -160,6 +162,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     seriesEvolution = null;
     license = null;
     navigation = null;
+    notes = null;
 
     repository = null;
     clearDirectory();

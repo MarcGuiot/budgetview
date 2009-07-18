@@ -26,7 +26,8 @@ public class PicsouModel {
                           BudgetArea.TYPE,
                           ProfileType.TYPE,
                           VersionInformation.TYPE,
-                          AccountPositionThreshold.TYPE)
+                          AccountPositionThreshold.TYPE,
+                          Notes.TYPE)
       .get();
 
   static {

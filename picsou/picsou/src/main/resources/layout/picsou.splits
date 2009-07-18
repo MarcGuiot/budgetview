@@ -97,10 +97,10 @@
                 <panel ref="accountView" minimumSize="(250,200)" preferredSize="(300,700)"/>
               </column>
 
-              <column weightX="1">
-                <panel ref="monthSummaryView" minimumSize="(300,400)" preferredSize="(350,400)"/>
-                <filler fill="vertical"/>
-              </column>
+              <verticalSplit weightX="1" >
+                <panel ref="monthSummaryView" minimumSize="(300,350)" preferredSize="(350,350)" weightY="7"/>
+                <panel ref="notesView" minimumSize="(300,100)" preferredSize="(350,100)" weightY="3"/>
+              </verticalSplit>
 
               <column weightX="1">
                 <panel ref="navigationView" minimumSize="(150,360)" preferredSize="(200,700)"/>
@@ -138,11 +138,11 @@
               <label text="$seriesView.title" styleClass="blockTitle"/>
               <panel styleClass="block">
                 <column margin="10">
-                    <scrollPane border="line(category.border)" viewportBackground="categories.bg"
-                                background="categories.bg"
-                                minimumSize="(200,40)" marginBottom="5">
-                      <table ref="seriesView" opaque="false" margin="10"/>
-                    </scrollPane>
+                  <scrollPane border="line(category.border)" viewportBackground="categories.bg"
+                              background="categories.bg"
+                              minimumSize="(200,40)" marginBottom="5">
+                    <table ref="seriesView" opaque="false" margin="10"/>
+                  </scrollPane>
                 </column>
               </panel>
             </column>
