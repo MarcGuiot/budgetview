@@ -54,6 +54,9 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   static public String SOCIETE_GENERALE = "Société Générale";
   private boolean notRegistered = false;
+  private String password = "password";
+  private String user = "anonymous";
+
 
   protected void setUp() throws Exception {
 
@@ -75,7 +78,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
           mainWindow = WindowInterceptor.run(new Trigger() {
             public void run() throws Exception {
               clearDirectory();
-              directory = MainWindowLauncher.run("anonymous", "password", null);
+              directory = MainWindowLauncher.run(user, password, null);
             }
           });
         }
@@ -198,6 +201,15 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   public void openApplication() throws Exception {
     operations.backupAndLaunchApplication("anonymous", "password", currentDate);
+  }
+
+  protected void restartApplication(String user, String passwd) {
+    mainWindow.dispose();
+    mainWindow = null;
+    this.user = user;
+    this.password = passwd;
+    mainWindow = getMainWindow();
+    initCheckers();
   }
 
   protected void restartApplication() {

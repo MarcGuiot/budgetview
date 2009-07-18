@@ -344,4 +344,68 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .add("25/06/2008", TransactionType.PRELEVEMENT, "EPARGNE / JUNE", "", -25.00, "Epargne")
       .check();
   }
+
+  public void testMonthUnShiftInDecember() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2007/12/25", -50.00, "Orange")
+      .addTransaction("2008/01/3", 15.00, "McDo")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTransaction("Orange");
+
+    transactionDetails.shift();
+
+    views.selectData();
+    transactions
+      .initContent()
+      .add("03/01/2008", TransactionType.VIREMENT, "MCDO", "", 15.00)
+      .add("01/01/2008", "25/12/2007", TransactionType.PRELEVEMENT, "ORANGE", "", -50.00)
+      .check();
+
+    views.selectCategorization();
+    categorization.selectTransaction("Orange");
+    transactionDetails.unshift();
+    timeline.selectAll();
+    views.selectData();
+    transactions
+      .initContent()
+      .add("03/01/2008", TransactionType.VIREMENT, "MCDO", "", 15.00)
+      .add("25/12/2007", TransactionType.PRELEVEMENT, "ORANGE", "", -50.00)
+      .check();
+  }
+
+  public void testMonthUndoRedo() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2007/12/25", -50.00, "Orange")
+      .addTransaction("2008/01/3", 15.00, "McDo")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTransaction("Orange");
+
+    transactionDetails.shift();
+
+    timeline.selectAll();
+
+    views.selectData();
+    transactions
+      .initContent()
+      .add("03/01/2008", TransactionType.VIREMENT, "MCDO", "", 15.00)
+      .add("01/01/2008", "25/12/2007", TransactionType.PRELEVEMENT, "ORANGE", "", -50.00)
+      .check();
+
+    operations.undo();
+    transactions
+      .initContent()
+      .add("03/01/2008", TransactionType.VIREMENT, "MCDO", "", 15.00)
+      .add("25/12/2007", TransactionType.PRELEVEMENT, "ORANGE", "", -50.00)
+      .check();
+    operations.redo();
+    transactions
+      .initContent()
+      .add("03/01/2008", TransactionType.VIREMENT, "MCDO", "", 15.00)
+      .add("01/01/2008", "25/12/2007", TransactionType.PRELEVEMENT, "ORANGE", "", -50.00)
+      .check();
+  }
 }

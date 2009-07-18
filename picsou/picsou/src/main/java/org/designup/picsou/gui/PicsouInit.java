@@ -56,7 +56,7 @@ public class PicsouInit {
 
     idGenerator = new DefaultGlobIdGenerator();
     this.repository =
-      GlobRepositoryBuilder.init(new CachedGlobIdGenerator(idGenerator))
+      GlobRepositoryBuilder.init(idGenerator)
         .add(directory.get(GlobModel.class).getConstants())
         .get();
 
@@ -128,7 +128,7 @@ public class PicsouInit {
     ImportService importService = new ImportService();
     directory.add(ImportService.class, importService);
 
-    directory.add(new BackupService(serverAccess, repository, idGenerator, upgradeTrigger));
+    directory.add(new BackupService(serverAccess, directory, repository, idGenerator, upgradeTrigger));
   }
 
   private static class ServerChangeSetListener extends DefaultChangeSetListener {

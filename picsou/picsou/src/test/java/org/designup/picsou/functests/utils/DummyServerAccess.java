@@ -63,6 +63,10 @@ public class DummyServerAccess implements ServerAccess {
   public void removeLocalUser(String user) {
   }
 
+  public boolean canRead(MapOfMaps<String, Integer, SerializableGlobType> data) {
+    return false;
+  }
+
   public void disconnect() {
   }
 

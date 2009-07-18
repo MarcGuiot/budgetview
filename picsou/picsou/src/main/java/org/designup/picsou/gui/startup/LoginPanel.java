@@ -59,8 +59,8 @@ public class LoginPanel {
     this.mainWindow = mainWindow;
     this.directory = directory;
     initServerAccess(remoteAdress, prevaylerPath, dataInMemory);
-
     Runtime.getRuntime().addShutdownHook(new ShutDownThread(serverAccess, serverDirectory));
+
     this.loginButton.setOpaque(false);
     initPanel();
   }

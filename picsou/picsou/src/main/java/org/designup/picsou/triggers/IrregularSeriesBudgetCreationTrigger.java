@@ -1,7 +1,6 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.model.Month;
-import org.designup.picsou.model.ProfileType;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.globsframework.metamodel.GlobType;
@@ -14,13 +13,14 @@ public class IrregularSeriesBudgetCreationTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        if (ProfileType.IRREGULAR.getId().equals(values.get(Series.PROFILE_TYPE))) {
-          ReadOnlyGlobRepository.MultiFieldIndexed index =
-            repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, values.get(Series.ID));
-          GlobList months = repository.getAll(Month.TYPE);
-          for (Glob month : months) {
-            createSeriesBudget(values, repository, month.get(Month.ID), index);
-          }
+        if (!key.get(Series.ID).equals(Series.UNCATEGORIZED_SERIES_ID)) {
+          return;
+        }
+        ReadOnlyGlobRepository.MultiFieldIndexed index =
+          repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, values.get(Series.ID));
+        GlobList months = repository.getAll(Month.TYPE);
+        for (Glob month : months) {
+          createSeriesBudget(values, repository, month.get(Month.ID), index);
         }
       }
 
@@ -28,12 +28,6 @@ public class IrregularSeriesBudgetCreationTrigger implements ChangeSetListener {
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        if (ProfileType.IRREGULAR.getId().equals(previousValues.get(Series.PROFILE_TYPE))) {
-          GlobList seriesBudget =
-            repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, previousValues.get(Series.ID))
-              .getGlobs();
-          repository.delete(seriesBudget);
-        }
       }
     });
 
