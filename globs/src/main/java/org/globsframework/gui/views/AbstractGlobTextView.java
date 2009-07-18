@@ -131,6 +131,14 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
 
   public void globsReset(GlobRepository globRepository, Set<GlobType> changedTypes) {
     currentSelection = new GlobList();
+    if (forcedSelection != null) {
+      for (Key key : forcedSelection.getKeys()) {
+        Glob glob = globRepository.find(key);
+        if (glob != null) {
+          currentSelection.add(glob);
+        }
+      }
+    }
     update();
   }
 

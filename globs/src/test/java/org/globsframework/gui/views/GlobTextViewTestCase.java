@@ -21,6 +21,7 @@ import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
   protected Glob glob1;
@@ -106,6 +107,21 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
     assertTrue(textBox.textEquals("[dummyObject[id=1]]"));
 
     repository.reset(new GlobList(glob1), DummyObject.TYPE);
+    assertTrue(textBox.textIsEmpty());
+  }
+
+  public void testManagesResetWithForcedSelection() throws Exception {
+    AbstractGlobTextView view = initView(repository, stringifier).forceSelection(glob1);
+
+    textBox = createComponent(view);
+
+    selectionService.select(Arrays.asList(glob1, glob2), DummyObject.TYPE);
+    assertTrue(textBox.textEquals("[dummyObject[id=1]]"));
+
+    repository.reset(new GlobList(glob1), DummyObject.TYPE);
+    assertTrue(textBox.textEquals("[dummyObject[id=1]]"));
+
+    repository.reset(new GlobList(glob2), DummyObject.TYPE);
     assertTrue(textBox.textIsEmpty());
   }
 
