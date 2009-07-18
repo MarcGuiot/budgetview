@@ -45,7 +45,7 @@ public class CardView extends View implements GlobSelectionListener {
       toggle.setIcon(NavigationIcons.get(images, card));
       toggle.setRolloverEnabled(true);
       toggle.setRolloverIcon(NavigationIcons.getRollover(images, card));
-      toggle.setToolTipText("<html>Vue <b>" + card.getLabel() + "</b></html>");
+      toggle.setToolTipText(getTooltip(card));
       String name = card.getName() + "CardToggle";
       Gui.configureIconButton(toggle, name, NavigationIcons.DIMENSION);
       masterGroup.add(toggle);
@@ -63,6 +63,10 @@ public class CardView extends View implements GlobSelectionListener {
     builder.add("help", new ViewHelpAction());
 
     showCard(NavigationService.INITIAL_CARD);
+  }
+
+  private String getTooltip(Card card) {
+    return "<html>Vue <b>" + card.getLabel() + "</b><br><hr><p>" + card.getDescription() + "</p></html>";
   }
 
   private void addBackForwardActions(GlobsPanelBuilder builder) {

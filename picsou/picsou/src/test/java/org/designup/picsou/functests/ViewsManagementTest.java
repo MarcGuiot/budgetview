@@ -64,4 +64,8 @@ public class ViewsManagementTest extends LoggedInFunctionalTestCase {
     views.checkHomeSelected();
     views.checkBackForward(false, true);
   }
+
+  public void testTooltips() throws Exception {
+    views.checkAllTooltipsPresent();
+  }
 }

@@ -4,6 +4,7 @@ import org.uispec4j.ToggleButton;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.assertion.UISpecAssert;
+import org.designup.picsou.gui.model.Card;
 
 public class ViewSelectionChecker extends GuiChecker {
   private Window window;
@@ -79,5 +80,12 @@ public class ViewSelectionChecker extends GuiChecker {
 
   public HelpChecker openHelp() {
     return HelpChecker.open(window.getPanel("mainWindowHeader").getButton("Help").triggerClick());
+  }
+
+  public void checkAllTooltipsPresent() {
+    for (Card card : Card.values()) {
+      ToggleButton button = getToggle(card.getName());
+      UISpecAssert.assertThat(button.tooltipContains(card.getLabel()));
+    }
   }
 }
