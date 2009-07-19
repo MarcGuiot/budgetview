@@ -17,7 +17,7 @@ public interface SerializedInput {
 
   double readNotNullDouble();
 
-  String readString();
+  String readJavaString();
 
   String readUtf8String();
 

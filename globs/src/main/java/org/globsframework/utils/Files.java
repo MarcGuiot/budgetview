@@ -2,6 +2,7 @@ package org.globsframework.utils;
 
 import org.globsframework.utils.exceptions.IOFailure;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.io.*;
 import java.util.Properties;
@@ -44,9 +45,31 @@ public class Files {
     }
   }
 
+  public static String loadFileToString(String fileName, final String charsetName) throws IOFailure, ItemNotFound {
+    try {
+      return loadStreamToString(new InputStreamReader(new FileInputStream(fileName), charsetName));
+    }
+    catch (UnsupportedEncodingException e) {
+      throw new IOFailure(e);
+    }
+    catch (FileNotFoundException e) {
+      throw new ItemNotFound(e);
+    }
+  }
+
+
   public static String loadStreamToString(InputStream stream, final String charsetName) throws IOFailure {
     try {
-      Reader reader = new BufferedReader(new InputStreamReader(stream, charsetName));
+      return loadStreamToString(new InputStreamReader(stream, charsetName));
+    }
+    catch (UnsupportedEncodingException e) {
+      throw new IOFailure(e);
+    }
+  }
+
+  public static String loadStreamToString(Reader input) throws IOFailure {
+    try {
+      Reader reader = new BufferedReader(input);
       StringBuilder result = new StringBuilder();
       char[] buffer = new char[1024];
       int count = reader.read(buffer);

@@ -21,7 +21,7 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
   }
 
   public void writeGlob(Glob glob) {
-    writeString(glob.getType().getName());
+    writeJavaString(glob.getType().getName());
     for (Field field : glob.getType().getFields()) {
       field.safeVisit(new OutputStreamFieldVisitor(glob));
     }
@@ -128,7 +128,7 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
     }
   }
 
-  public void writeString(String value) {
+  public void writeJavaString(String value) {
     if (value == null) {
       writeBytes(null);
     }
@@ -198,21 +198,21 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
   }
 
   public void visitCreation(Key key, FieldValues values) throws Exception {
-    writeString(key.getGlobType().getName());
+    writeJavaString(key.getGlobType().getName());
     writeValues(key);
     writeByte(1);
     writeValues(values);
   }
 
   public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-    writeString(key.getGlobType().getName());
+    writeJavaString(key.getGlobType().getName());
     writeValues(key);
     writeByte(2);
     writeValues(values);
   }
 
   public void visitDeletion(Key key, FieldValues values) throws Exception {
-    writeString(key.getGlobType().getName());
+    writeJavaString(key.getGlobType().getName());
     writeValues(key);
     writeByte(3);
     writeValues(values);
@@ -238,7 +238,7 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
     }
 
     public void visitString(StringField field, String value) throws Exception {
-      writeString(value);
+      writeJavaString(value);
     }
 
     public void visitDate(DateField field, Date value) throws Exception {
@@ -288,7 +288,7 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
     }
 
     public void visitString(StringField field, String value) throws Exception {
-      writeString(value);
+      writeJavaString(value);
     }
 
     public void visitDate(DateField field, Date value) throws Exception {
@@ -333,7 +333,7 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
     }
 
     public void visitString(StringField field) throws Exception {
-      writeString(glob.get(field));
+      writeJavaString(glob.get(field));
     }
 
     public void visitDate(DateField field) throws Exception {

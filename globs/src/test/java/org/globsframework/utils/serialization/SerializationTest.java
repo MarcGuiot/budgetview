@@ -13,7 +13,6 @@ import org.globsframework.utils.TestUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Date;
 
 public class SerializationTest extends TestCase {
@@ -55,7 +54,7 @@ public class SerializationTest extends TestCase {
 
   public void testObjects() throws Exception {
 
-    output.writeString("blah");
+    output.writeJavaString("blah");
     output.writeBoolean(Boolean.TRUE);
     output.writeDouble(6.33);
     output.writeDate(currentDate);
@@ -63,7 +62,7 @@ public class SerializationTest extends TestCase {
     output.writeLong(666L);
     outputStream.close();
 
-    assertEquals("blah", input.readString());
+    assertEquals("blah", input.readJavaString());
     assertEquals(Boolean.TRUE, input.readBoolean());
     assertEquals(6.33, input.readDouble().doubleValue());
     assertEquals(currentDate, input.readDate());
@@ -76,7 +75,7 @@ public class SerializationTest extends TestCase {
     Glob glob = GlobBuilder.init(DummyObject.TYPE, createSampleValues()).get();
 
     output.writeGlob(glob);
-    output.writeString("end");
+    output.writeJavaString("end");
     outputStream.close();
 
     Glob newGlob = input.readGlob(DummyModel.get());
@@ -84,7 +83,7 @@ public class SerializationTest extends TestCase {
 
     assertEquals(glob.getValues(), newGlob.getValues());
     assertEquals(glob.getKey(), newGlob.getKey());
-    assertEquals("end", input.readString());
+    assertEquals("end", input.readJavaString());
     inputStream.close();
   }
 

@@ -30,7 +30,7 @@ public interface SerializedOutput {
 
   void writeBytes(byte[] value);
 
-  void writeString(String value);
+  void writeJavaString(String value);
 
   void writeUtf8String(String value);
 

@@ -112,7 +112,7 @@ public class ConstraintSerializer {
     }
 
     private void writeField(Field field) {
-      output.writeString(field.getGlobType().getName());
+      output.writeJavaString(field.getGlobType().getName());
       output.write(field.getIndex());
     }
 
@@ -135,7 +135,7 @@ public class ConstraintSerializer {
     }
 
     public void visitString(StringField field) throws Exception {
-      output.writeString((String)value);
+      output.writeJavaString((String)value);
     }
 
     public void visitDate(DateField field) throws Exception {

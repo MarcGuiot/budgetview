@@ -36,7 +36,7 @@ public class SerializedRemoteAccess {
 
     public void visitCreation(Key key, FieldValues values) throws Exception {
       output.writeByte(RemoteExecutor.TAG.CREATE.getId());
-      output.writeString(key.getGlobType().getName());
+      output.writeJavaString(key.getGlobType().getName());
       writeKey(key);
       for (Field field : key.getGlobType().getFields()) {
         value = null;
@@ -51,7 +51,7 @@ public class SerializedRemoteAccess {
 
     public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
       output.writeByte(RemoteExecutor.TAG.UPDATE.getId());
-      output.writeString(key.getGlobType().getName());
+      output.writeJavaString(key.getGlobType().getName());
       writeKey(key);
       output.write(values.size());
       values.apply(new FieldValues.Functor() {
@@ -65,7 +65,7 @@ public class SerializedRemoteAccess {
 
     public void visitDeletion(Key key, FieldValues values) throws Exception {
       output.writeByte(RemoteExecutor.TAG.DELETE.getId());
-      output.writeString(key.getGlobType().getName());
+      output.writeJavaString(key.getGlobType().getName());
       writeKey(key);
     }
 
@@ -88,7 +88,7 @@ public class SerializedRemoteAccess {
     }
 
     public void visitString(StringField field) throws Exception {
-      output.writeString((String)value);
+      output.writeJavaString((String)value);
     }
 
     public void visitDate(DateField field) throws Exception {

@@ -1,6 +1,8 @@
 package org.globsframework.model.format;
 
 import org.globsframework.metamodel.Link;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.utils.GlobTypeUtils;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LongField;
 import org.globsframework.metamodel.fields.StringField;
@@ -11,6 +13,7 @@ import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.format.utils.EmptyGlobStringifier;
 
 import java.util.Comparator;
+import java.security.InvalidParameterException;
 
 public class GlobStringifiers {
   public static final GlobStringifier EMPTY = new EmptyGlobStringifier();
@@ -57,4 +60,25 @@ public class GlobStringifiers {
       }
     };
   }
+
+  public static GlobStringifier target(final Link link) {
+    GlobType targetType = link.getTargetType();
+    final StringField targetNamingField = GlobTypeUtils.findNamingField(targetType);
+    if (targetNamingField == null) {
+      throw new InvalidParameterException("Target type " + targetType.getName() + " has no naming field");
+    }
+    return new AbstractGlobStringifier() {
+      public String toString(Glob glob, GlobRepository repository) {
+        if (glob == null) {
+          return "";
+        }
+        Glob target = repository.findLinkTarget(glob, link);
+        if (target == null) {
+          return "";
+        }
+        return target.get(targetNamingField);
+      }
+    };
+  }
+
 }

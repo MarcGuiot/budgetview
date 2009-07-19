@@ -27,7 +27,7 @@ public class DefaultSerializationInput implements SerializedInput {
   }
 
   public Glob readGlob(GlobModel model) {
-    GlobType globType = model.getType(readString());
+    GlobType globType = model.getType(readJavaString());
     GlobBuilder builder = GlobBuilder.init(globType);
     InputStreamFieldVisitor fieldVisitorInput = new InputStreamFieldVisitor(builder);
     for (Field field : globType.getFields()) {
@@ -40,7 +40,7 @@ public class DefaultSerializationInput implements SerializedInput {
     MutableChangeSet changeSet = new DefaultChangeSet();
     int count = readInteger();
     for (int i = 0; i < count; i++) {
-      GlobType type = model.getType(readString());
+      GlobType type = model.getType(readJavaString());
       Key key = KeyBuilder.createFromValues(type, readValues(type));
       int state = readByte();
       switch (state) {
@@ -129,7 +129,7 @@ public class DefaultSerializationInput implements SerializedInput {
     }
 
     public void visitString(StringField field) throws Exception {
-      builder.set(field, input.readString());
+      builder.set(field, input.readJavaString());
     }
 
     public void visitDate(DateField field) throws Exception {
@@ -175,7 +175,7 @@ public class DefaultSerializationInput implements SerializedInput {
     }
 
     public void visitString(StringField field) throws Exception {
-      builder.set(field, input.readString(), input.readString());
+      builder.set(field, input.readJavaString(), input.readJavaString());
     }
 
     public void visitDate(DateField field) throws Exception {
@@ -252,7 +252,7 @@ public class DefaultSerializationInput implements SerializedInput {
     return Double.longBitsToDouble(readNotNullLong());
   }
 
-  public String readString() {
+  public String readJavaString() {
     byte[] bytes = readBytes();
     if (bytes == null) {
       return null;
@@ -376,7 +376,7 @@ public class DefaultSerializationInput implements SerializedInput {
     }
 
     public void visitString(StringField field) throws Exception {
-      builder.set(field, readString());
+      builder.set(field, readJavaString());
     }
 
     public void visitDate(DateField field) throws Exception {

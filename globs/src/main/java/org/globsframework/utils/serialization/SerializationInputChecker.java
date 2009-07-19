@@ -15,7 +15,7 @@ public class SerializationInputChecker implements SerializedInput {
   }
 
   public Glob readGlob(GlobModel model) {
-    String value = serializedInput.readString();
+    String value = serializedInput.readJavaString();
     if ("Glob".equals(value)) {
       return serializedInput.readGlob(model);
     }
@@ -25,7 +25,7 @@ public class SerializationInputChecker implements SerializedInput {
   }
 
   public ChangeSet readChangeSet(GlobModel model) {
-    String value = serializedInput.readString();
+    String value = serializedInput.readJavaString();
     if ("ChangeSet".equals(value)) {
       return serializedInput.readChangeSet(model);
     }
@@ -35,7 +35,7 @@ public class SerializationInputChecker implements SerializedInput {
   }
 
   public int[] readIntArray() {
-    String value = serializedInput.readString();
+    String value = serializedInput.readJavaString();
     if ("int array".equals(value)) {
       return serializedInput.readIntArray();
     }
@@ -45,7 +45,7 @@ public class SerializationInputChecker implements SerializedInput {
   }
 
   public long[] readLongArray() {
-    String value = serializedInput.readString();
+    String value = serializedInput.readJavaString();
     if ("long array".equals(value)) {
       return serializedInput.readLongArray();
     }
@@ -56,7 +56,7 @@ public class SerializationInputChecker implements SerializedInput {
   }
 
   public Date readDate() {
-    String value = serializedInput.readString();
+    String value = serializedInput.readJavaString();
     if ("Date".equals(value)) {
       return serializedInput.readDate();
     }
@@ -66,7 +66,7 @@ public class SerializationInputChecker implements SerializedInput {
   }
 
   public Integer readInteger() {
-    String value = serializedInput.readString();
+    String value = serializedInput.readJavaString();
     if ("Integer".equals(value)) {
       return serializedInput.readInteger();
     }
@@ -76,7 +76,7 @@ public class SerializationInputChecker implements SerializedInput {
   }
 
   public int readNotNullInt() {
-    String value = serializedInput.readString();
+    String value = serializedInput.readJavaString();
     if ("int".equals(value)) {
       return serializedInput.readNotNullInt();
     }
@@ -86,7 +86,7 @@ public class SerializationInputChecker implements SerializedInput {
   }
 
   public Double readDouble() {
-    String value = serializedInput.readString();
+    String value = serializedInput.readJavaString();
     if ("Double".equals(value)) {
       return serializedInput.readDouble();
     }
@@ -96,7 +96,7 @@ public class SerializationInputChecker implements SerializedInput {
   }
 
   public double readNotNullDouble() {
-    String value = serializedInput.readString();
+    String value = serializedInput.readJavaString();
     if ("double".equals(value)) {
       return serializedInput.readNotNullDouble();
     }
@@ -105,10 +105,10 @@ public class SerializationInputChecker implements SerializedInput {
     }
   }
 
-  public String readString() {
-    String value = serializedInput.readString();
+  public String readJavaString() {
+    String value = serializedInput.readJavaString();
     if ("String".equals(value)) {
-      return serializedInput.readString();
+      return serializedInput.readJavaString();
     }
     else {
       throw new UnexpectedApplicationState("String expected but got " + value);
@@ -116,9 +116,9 @@ public class SerializationInputChecker implements SerializedInput {
   }
 
   public String readUtf8String() {
-    String value = serializedInput.readString();
+    String value = serializedInput.readJavaString();
     if ("StringUtf8".equals(value)) {
-      return serializedInput.readString();
+      return serializedInput.readJavaString();
     }
     else {
       throw new UnexpectedApplicationState("String expected but got " + value);
@@ -126,7 +126,7 @@ public class SerializationInputChecker implements SerializedInput {
   }
 
   public Boolean readBoolean() {
-    String value = serializedInput.readString();
+    String value = serializedInput.readJavaString();
     if ("Boolean".equals(value)) {
       return serializedInput.readBoolean();
     }
@@ -136,7 +136,7 @@ public class SerializationInputChecker implements SerializedInput {
   }
 
   public Long readLong() {
-    String value = serializedInput.readString();
+    String value = serializedInput.readJavaString();
     if ("Long".equals(value)) {
       return serializedInput.readLong();
     }
@@ -146,7 +146,7 @@ public class SerializationInputChecker implements SerializedInput {
   }
 
   public long readNotNullLong() {
-    String value = serializedInput.readString();
+    String value = serializedInput.readJavaString();
     if ("long".equals(value)) {
       return serializedInput.readNotNullLong();
     }
@@ -156,7 +156,7 @@ public class SerializationInputChecker implements SerializedInput {
   }
 
   public byte readByte() {
-    String value = serializedInput.readString();
+    String value = serializedInput.readJavaString();
     if ("byte".equals(value)) {
       return serializedInput.readByte();
     }
@@ -166,7 +166,7 @@ public class SerializationInputChecker implements SerializedInput {
   }
 
   public byte[] readBytes() {
-    String value = serializedInput.readString();
+    String value = serializedInput.readJavaString();
     if ("Bytes".equals(value)) {
       return serializedInput.readBytes();
     }
