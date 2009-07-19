@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.accounts.NewAccountAction;
 import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
 import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
@@ -89,7 +90,8 @@ public class SeriesEditionDialog {
     DescriptionService descriptionService = directory.get(DescriptionService.class);
     localRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(BudgetArea.TYPE, Month.TYPE, CurrentMonth.TYPE,
-            ProfileType.TYPE, Account.TYPE, SubSeries.TYPE)
+            ProfileType.TYPE, Account.TYPE, SubSeries.TYPE,
+            Bank.TYPE, BankEntity.TYPE)
       .get();
 
     localRepository.addTrigger(new SingleMonthProfileTypeUpdater());
@@ -143,6 +145,8 @@ public class SeriesEditionDialog {
       .setShowEmptyOption(true)
       .setEmptyOptionLabel(Lang.get("seriesEdition.account.external"));
     builder.add("toAccount", toAccountsCombo);
+
+    builder.add("createAccount", new NewAccountAction(AccountType.SAVINGS, localRepository, directory, dialog));
 
     savingsMessage = new JLabel(Lang.get("seriesEdition.savingsMessagesError"));
     builder.add("savingsMessage", savingsMessage);

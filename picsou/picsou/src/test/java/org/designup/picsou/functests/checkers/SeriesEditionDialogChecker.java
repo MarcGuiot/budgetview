@@ -656,6 +656,12 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     return this;
   }
 
+  public AccountEditionChecker createAccount() {
+    Button button = dialog.getButton("createAccount");
+    assertThat(button.isVisible());
+    return AccountEditionChecker.open(button.triggerClick());
+  }
+
   public SeriesEditionDialogChecker checkFromAccount(String account) {
     assertThat(dialog.getComboBox("fromAccount").selectionEquals(account));
     return this;

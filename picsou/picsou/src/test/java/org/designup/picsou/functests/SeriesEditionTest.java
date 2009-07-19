@@ -1349,4 +1349,37 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
+  public void testCreatingAnAccountFromTheSeriesDialog() throws Exception {
+
+    views.selectHome();
+    mainAccounts.createMainAccount("Main", 0.0);
+
+    views.selectBudget();
+    SeriesEditionDialogChecker dialog = budgetView.savings.createSeries().setName("ING");
+
+    dialog.createAccount()
+      .setAccountName("Virt ING")
+      .setAccountNumber("1234")
+      .selectBank("ING Direct")
+      .checkIsSavings()
+      .validate();
+    
+    dialog
+      .setFromAccount("Main")
+      .setToAccount("Virt ING")
+      .validate();
+
+    views.selectHome();
+    savingsAccounts.edit("Virt ING")
+      .checkAccountName("Virt ING")
+      .checkAccountNumber("1234")
+      .checkSelectedBank("ING Direct")
+      .checkIsSavings()
+      .cancel();
+
+    views.selectBudget();
+    budgetView.savings.editSeries("ING")
+      .checkToAccount("Virt ING")
+      .validate();
+  }
 }

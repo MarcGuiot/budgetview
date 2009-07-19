@@ -19,7 +19,7 @@ public class NewAccountAction extends AbstractAction {
   private boolean updateModeEditable = true;
 
   public NewAccountAction(AccountType accountType, GlobRepository repository, Directory directory, Window owner) {
-    super(Lang.get("new.account"));
+    super(Lang.get("account.create"));
     this.accountType = accountType;
     this.repository = repository;
     this.directory = directory;
