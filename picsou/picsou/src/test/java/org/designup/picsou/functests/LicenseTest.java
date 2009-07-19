@@ -30,6 +30,15 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
   }
 
   public void testOneDayLeft() throws Exception {
+    TimeService.setCurrentDate(Dates.parse("2008/09/29"));
+
+    restartApplication();
+    TextBox box = mainWindow.getTextBox("licenseMessage");
+    assertThat(box.isVisible());
+    assertThat(box.textEquals("You have one day left for trying CashPilot."));
+  }
+
+  public void testLastDay() throws Exception {
     TimeService.setCurrentDate(Dates.parse("2008/09/30"));
 
     restartApplication();

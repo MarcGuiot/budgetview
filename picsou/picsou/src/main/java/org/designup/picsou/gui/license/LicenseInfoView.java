@@ -79,11 +79,14 @@ public class LicenseInfoView extends View {
       licenseMessage.setVisible(true);
       long days =
         (userPreferences.get(UserPreferences.LAST_VALID_DAY).getTime() - TimeService.getToday().getTime()) / Millis.ONE_DAY;
-      if (days >= 1) {
-        licenseMessage.setText(Lang.get("license.info.message", days));
+      if (days > 1) {
+        licenseMessage.setText(Lang.get("license.info.day.count", days));
+      }
+      else if (days == 1) {
+        licenseMessage.setText(Lang.get("license.info.one.day"));
       }
       else if (days == 0) {
-        licenseMessage.setText(Lang.get("license.info.last.message"));
+        licenseMessage.setText(Lang.get("license.info.last.day"));
       }
       else {
         Integer state = user.get(User.ACTIVATION_STATE);
