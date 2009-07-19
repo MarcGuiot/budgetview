@@ -10,7 +10,6 @@ import org.globsframework.utils.serialization.SerializedOutput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 
 import java.io.*;
-import java.nio.channels.FileLock;
 
 class DurableOutputStream {
   private long nextTransactionVersion;
@@ -38,7 +37,7 @@ class DurableOutputStream {
       }
       SerializableDeltaGlobSerializer serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
       SerializedOutput serializedOutput = SerializedInputOutputFactory.init(outputStream);
-      serializedOutput.writeString("Tr");
+      serializedOutput.writeJavaString("Tr");
       serializedOutput.write(nextTransactionVersion);
       SerializableDeltaGlobSerializer.serialize(serializedOutput, data);
       outputStream.flush();

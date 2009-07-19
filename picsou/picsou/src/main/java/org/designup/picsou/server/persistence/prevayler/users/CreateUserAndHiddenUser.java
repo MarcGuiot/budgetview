@@ -84,10 +84,10 @@ public class CreateUserAndHiddenUser implements TransactionWithQuery, CustomSeri
   }
 
   private void readV1(SerializedInput input) {
-    name = input.readString();
+    name = input.readJavaString();
     encryptedPassword = input.readBytes();
     linkInfo = input.readBytes();
-    encryptedLinkInfo = input.readString();
+    encryptedLinkInfo = input.readJavaString();
     isRegisteredUser = input.readBoolean();
   }
 
@@ -95,7 +95,7 @@ public class CreateUserAndHiddenUser implements TransactionWithQuery, CustomSeri
     name = input.readUtf8String();
     encryptedPassword = input.readBytes();
     linkInfo = input.readBytes();
-    encryptedLinkInfo = input.readString();
+    encryptedLinkInfo = input.readJavaString();
     isRegisteredUser = input.readBoolean();
   }
 
@@ -104,7 +104,7 @@ public class CreateUserAndHiddenUser implements TransactionWithQuery, CustomSeri
     output.writeUtf8String(name);
     output.writeBytes(encryptedPassword);
     output.writeBytes(linkInfo);
-    output.writeString(encryptedLinkInfo);
+    output.writeJavaString(encryptedLinkInfo);
     output.writeBoolean(isRegisteredUser);
   }
 

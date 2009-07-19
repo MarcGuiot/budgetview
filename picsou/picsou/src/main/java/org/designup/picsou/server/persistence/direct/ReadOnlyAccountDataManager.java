@@ -21,7 +21,7 @@ public class ReadOnlyAccountDataManager {
     try {
       inputStream = new BufferedInputStream(fileStream);
       SerializedInput serializedInput = SerializedInputOutputFactory.init(inputStream);
-      String version = serializedInput.readString();
+      String version = serializedInput.readJavaString();
       if ("2".equals(version)) {
         readVersion2(serializedInput, globs);
       }
@@ -45,7 +45,7 @@ public class ReadOnlyAccountDataManager {
   public static void writeSnapshot_V2(MapOfMaps<String, Integer, SerializableGlobType> data, File file) throws IOException {
     FileOutputStream outputStream = new FileOutputStream(file);
     SerializedOutput serializedOutput = SerializedInputOutputFactory.init(outputStream);
-    serializedOutput.writeString("2");
+    serializedOutput.writeJavaString("2");
     SerializableGlobSerializer.serialize(serializedOutput, data);
     outputStream.close();
   }

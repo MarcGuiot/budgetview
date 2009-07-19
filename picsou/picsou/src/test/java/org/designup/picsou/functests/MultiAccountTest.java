@@ -4,12 +4,13 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.model.BankEntity;
 
 public class MultiAccountTest extends LoggedInFunctionalTestCase {
 
   public void testChangeAccountTypeUncategorizeOperations() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/10")
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000., "2008/08/10")
       .addTransaction("2008/08/10", 100.00, "Virement")
       .load();
     OfxBuilder.init(this)
@@ -28,4 +29,12 @@ public class MultiAccountTest extends LoggedInFunctionalTestCase {
       .add("10/08/2008", TransactionType.VIREMENT, "Virement", "", 100.00)
       .check();
   }
+
+  public void testChangeSeriesBudgetPeriodicity() throws Exception {
+    fail("Marc: on garde ce test vide ?");
+  }
+
+  public void testChangeSeriesBudgetAmount() throws Exception {
+    fail("Marc: on garde ce test vide ?");
+  }  
 }

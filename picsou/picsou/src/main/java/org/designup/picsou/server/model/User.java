@@ -58,7 +58,7 @@ public class User {
 
   private static Glob readV1(SerializedInput input) {
     GlobBuilder builder = GlobBuilder.init(TYPE);
-    builder.set(NAME, input.readString());
+    builder.set(NAME, input.readJavaString());
     builder.set(ENCRYPTED_PASSWORD, input.readBytes());
     builder.set(LINK_INFO, input.readBytes());
     builder.set(IS_REGISTERED_USER, input.readBoolean());
@@ -67,7 +67,7 @@ public class User {
 
   private static void writeV1(SerializedOutput output, Glob glob) {
     output.writeByte(V1);
-    output.writeString(glob.get(NAME));
+    output.writeJavaString(glob.get(NAME));
     output.writeBytes(glob.get(ENCRYPTED_PASSWORD));
     output.writeBytes(glob.get(LINK_INFO));
     output.writeBoolean(glob.get(IS_REGISTERED_USER));

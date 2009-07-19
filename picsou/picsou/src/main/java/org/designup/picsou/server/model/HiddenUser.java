@@ -52,13 +52,13 @@ public class HiddenUser {
   private static Glob readV1(SerializedInput input) {
     GlobBuilder builder = GlobBuilder.init(TYPE);
     builder.set(USER_ID, input.readInteger());
-    builder.set(ENCRYPTED_LINK_INFO, input.readString());
+    builder.set(ENCRYPTED_LINK_INFO, input.readJavaString());
     return builder.get();
   }
 
   private static void writeV1(SerializedOutput output, Glob glob) {
     output.writeByte(V1);
     output.writeInteger(glob.get(USER_ID));
-    output.writeString(glob.get(ENCRYPTED_LINK_INFO));
+    output.writeJavaString(glob.get(ENCRYPTED_LINK_INFO));
   }
 }

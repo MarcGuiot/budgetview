@@ -133,7 +133,7 @@ public class DirectAccountDataManager implements AccountDataManager {
   }
 
   private long readJournalVersion(SerializedInput serializedInput) {
-    String s = serializedInput.readString();
+    String s = serializedInput.readJavaString();
     if (!s.equals("Tr")) {
       return -1;
     }

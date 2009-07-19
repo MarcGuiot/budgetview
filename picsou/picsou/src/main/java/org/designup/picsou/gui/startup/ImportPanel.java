@@ -216,7 +216,7 @@ public class ImportPanel {
 
     registerAccountCreationListener(sessionRepository, sessionDirectory);
 
-    bankEntityEditionPanel = new BankEntityEditionPanel(sessionRepository, sessionDirectory, importMessageLabel);
+    bankEntityEditionPanel = new BankEntityEditionPanel(sessionRepository, sessionDirectory);
     builder2.add("bankEntityEditionPanel", bankEntityEditionPanel.getPanel());
 
     accountEditionPanel = new AccountEditionPanel(sessionRepository, sessionDirectory, importMessageLabel);

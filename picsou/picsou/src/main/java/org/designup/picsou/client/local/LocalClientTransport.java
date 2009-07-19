@@ -29,7 +29,7 @@ public class LocalClientTransport implements ClientTransport {
     output.writeBytes(privateId);
     output.writeBytes(mail);
     output.writeBytes(signature);
-    output.writeString(activationCode);
+    output.writeJavaString(activationCode);
     serverRequestProcessingService.register(sessionId, byteOutput.getInput());
   }
 

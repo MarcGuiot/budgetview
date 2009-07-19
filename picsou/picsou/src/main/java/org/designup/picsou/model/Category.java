@@ -148,7 +148,7 @@ public class Category {
       return serializedByteArrayOutput.toByteArray();
     }
 
-    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
+    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
@@ -159,8 +159,8 @@ public class Category {
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(NAME, input.readString());
-      fieldSetter.set(INNER_NAME, input.readString());
+      fieldSetter.set(NAME, input.readJavaString());
+      fieldSetter.set(INNER_NAME, input.readJavaString());
       fieldSetter.set(MASTER, input.readInteger());
       fieldSetter.set(SYSTEM, input.readBoolean());
     }

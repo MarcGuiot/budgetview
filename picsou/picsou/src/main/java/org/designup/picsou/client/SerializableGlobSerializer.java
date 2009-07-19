@@ -14,7 +14,7 @@ public class SerializableGlobSerializer {
     output.write(globTypeCount);
     for (String globTypeName : dataByGlobTypeAndId.keys()) {
       Map<Integer, SerializableGlobType> dataById = dataByGlobTypeAndId.get(globTypeName);
-      output.writeString(globTypeName);
+      output.writeJavaString(globTypeName);
       output.write(dataById.size());
       for (SerializableGlobType data : dataById.values()) {
         output.write(data.getId());
@@ -28,7 +28,7 @@ public class SerializableGlobSerializer {
                                  MapOfMaps<String, Integer, SerializableGlobType> data) {
     int globTypeCount = serializedInput.readNotNullInt();
     while (globTypeCount > 0) {
-      String globTypeName = serializedInput.readString();
+      String globTypeName = serializedInput.readJavaString();
       int deltaGlobCount = serializedInput.readNotNullInt();
       while (deltaGlobCount > 0) {
         SerializableGlobType defaultGlob = new SerializableGlobType();

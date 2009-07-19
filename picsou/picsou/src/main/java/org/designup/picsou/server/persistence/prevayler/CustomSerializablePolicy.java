@@ -21,7 +21,7 @@ public class CustomSerializablePolicy implements CustomSerializationPolicy {
   }
 
   public CustomSerializable read(SerializedInput input) throws IOException, ClassNotFoundException {
-    String serializationName = input.readString();
+    String serializationName = input.readJavaString();
     CustomSerializable object = create(serializationName);
     object.read(input, directory);
     return object;
@@ -36,7 +36,7 @@ public class CustomSerializablePolicy implements CustomSerializationPolicy {
   }
 
   public void write(SerializedOutput output, CustomSerializable object) throws IOException {
-    output.writeString(object.getSerializationName());
+    output.writeJavaString(object.getSerializationName());
     object.write(output, directory);
   }
 

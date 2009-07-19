@@ -3,6 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.Bank;
+import org.designup.picsou.model.BankEntity;
 
 public class BalanceTest extends LoggedInFunctionalTestCase {
 
@@ -101,7 +102,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
 
   public void testSavingWithMonthWithoutTransaction() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/12")
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000., "2008/08/12")
       .addTransaction("2008/08/12", 100.00, "P3 CE")
       .addTransaction("2008/06/11", 100.00, "P2 CE")
       .load();
@@ -138,7 +139,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
 
   public void testMissingBalanceAtBeginIfNoOperation() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/15")  //compte d'épargne
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000., "2008/08/15")  //compte d'épargne
       .addTransaction("2008/08/12", 100.00, "P3 CE")
       .addTransaction("2008/06/11", 100.00, "P2 CE")
       .load();
@@ -176,7 +177,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
 
   public void testBalanceWithMissingOperationInFuture() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/15")  //compte d'épargne
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000., "2008/08/15")  //compte d'épargne
       .addTransaction("2008/08/12", 100.00, "P3 CE")
       .addTransaction("2008/06/11", 100.00, "P2 CE")
       .load();

@@ -4,6 +4,7 @@ import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.Bank;
+import org.designup.picsou.model.BankEntity;
 
 public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
 
@@ -137,7 +138,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
 
   public void testMirrorSeriesAreNotVisibleInSeriesList() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/10")
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000., "2008/08/10")
       .addTransaction("2008/08/10", 100.00, "Virement")
       .load();
     OfxBuilder.init(this)
@@ -192,7 +193,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
 
   public void testEditingMirrorSeriesRedirectToMainEdit() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(Bank.GENERIC_BANK_ID, 111, "111", 1000., "2008/08/10")
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000., "2008/08/10")
       .addTransaction("2008/08/10", 100.00, "Virement")
       .load();
     OfxBuilder.init(this)

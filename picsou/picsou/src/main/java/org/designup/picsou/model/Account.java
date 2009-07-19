@@ -211,7 +211,7 @@ public class Account {
       return serializedByteArrayOutput.toByteArray();
     }
 
-    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
+    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
       if (version == 6) {
         deserializeDataV6(fieldSetter, data);
       }
@@ -314,10 +314,10 @@ public class Account {
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(NUMBER, input.readString());
+      fieldSetter.set(NUMBER, input.readJavaString());
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BRANCH_ID, input.readInteger());
-      fieldSetter.set(NAME, input.readString());
+      fieldSetter.set(NAME, input.readJavaString());
       fieldSetter.set(POSITION, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());

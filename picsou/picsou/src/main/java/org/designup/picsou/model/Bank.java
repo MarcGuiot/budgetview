@@ -21,16 +21,13 @@ public class Bank {
 
   public static GlobType TYPE;
 
-  @Key
-  @NoObfuscation
+  @Key @NoObfuscation
   public static IntegerField ID;
 
-  @NamingField
-  @NoObfuscation
+  @NamingField @NoObfuscation
   public static StringField NAME;
 
-  @DefaultString("")
-  @NoObfuscation
+  @DefaultString("") @NoObfuscation
   public static StringField DOWNLOAD_URL;
 
   static {
@@ -47,7 +44,7 @@ public class Bank {
       return serializedByteArrayOutput.toByteArray();
     }
 
-    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
+    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
@@ -58,8 +55,8 @@ public class Bank {
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(NAME, input.readString());
-      fieldSetter.set(DOWNLOAD_URL, input.readString());
+      fieldSetter.set(NAME, input.readJavaString());
+      fieldSetter.set(DOWNLOAD_URL, input.readJavaString());
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {

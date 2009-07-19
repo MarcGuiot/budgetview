@@ -52,12 +52,17 @@ public class OfxBuilder {
         .add(TransactionType.values())
         .get();
     repository.create(Key.create(Bank.TYPE, Bank.GENERIC_BANK_ID));
+    repository.create(Key.create(BankEntity.TYPE, BankEntity.GENERIC_BANK_ENTITY_ID));
   }
 
   public OfxBuilder addBankAccount(int bankEntityId, int branchId, String accountNumber, double position, String updateDate) {
+    return addBankAccount(Integer.toString(bankEntityId), branchId, accountNumber,position, updateDate);
+  }
+
+  public OfxBuilder addBankAccount(String bankEntityId, int branchId, String accountNumber, double position, String updateDate) {
     currentAccount =
       repository.create(Key.create(Account.TYPE, repository.getIdGenerator().getNextId(Account.ID, 1)),
-                        value(Account.BANK_ENTITY, bankEntityId),
+                        value(Account.BANK_ENTITY, BankEntity.findOrCreate(bankEntityId, repository)),
                         value(Account.BRANCH_ID, branchId),
                         value(Account.NUMBER, accountNumber),
                         value(Account.POSITION, position),

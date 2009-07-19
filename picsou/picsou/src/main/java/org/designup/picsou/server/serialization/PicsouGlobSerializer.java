@@ -7,7 +7,7 @@ public interface PicsouGlobSerializer {
 
   byte[] serializeData(FieldValues fieldValues);
 
-  void deserializeData(int version, FieldSetter fieldSetter, byte[] data);
+  void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id);
 
   int getWriteVersion();
 }

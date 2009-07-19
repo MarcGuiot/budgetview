@@ -58,7 +58,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
       byte[] repoId = response.readBytes();
       byte[] mail = response.readBytes();
       byte[] signature = response.readBytes();
-      String activationCode = response.readString();
+      String activationCode = response.readJavaString();
       long count = response.readNotNullLong();
       isValidUser = configService.update(repoId, count, mail, signature, activationCode);
     }
@@ -138,7 +138,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     int size = input.readNotNullInt();
     List<String> users = new ArrayList<String>(size);
     for (int i = 0; i < size; i++) {
-      users.add(input.readString());
+      users.add(input.readJavaString());
     }
     return users;
   }
@@ -262,8 +262,10 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
         id = globEntry.getKey();
         GlobBuilder builder = GlobBuilder.init(globType).setValue(field, id);
         SerializableGlobType glob = globEntry.getValue();
-        globSerializer.deserializeData(glob.getVersion(), builder,
-                                       passwordBasedEncryptor.decrypt(glob.getData()));
+        globSerializer.deserializeData(glob.getVersion(),
+                                       builder,
+                                       passwordBasedEncryptor.decrypt(glob.getData()),
+                                       id);
         result.add(builder.get());
         maxId = Math.max(maxId, id);
       }

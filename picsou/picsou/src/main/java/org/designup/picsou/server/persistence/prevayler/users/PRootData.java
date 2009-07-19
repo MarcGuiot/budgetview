@@ -81,20 +81,20 @@ public class PRootData implements CustomSerializable {
       output.write(hidenUsers.size());
       Set<Map.Entry<String, Glob>> entries = hidenUsers.entrySet();
       for (Map.Entry<String, Glob> entry : entries) {
-        output.writeString(entry.getKey());
+        output.writeJavaString(entry.getKey());
         HiddenUser.write(output, entry.getValue());
       }
     }
     output.writeBytes(id);
     output.writeBytes(mail);
     output.write(count);
-    output.writeString(activationCode);
+    output.writeJavaString(activationCode);
     output.writeBytes(signature);
     {
       output.write(users.size());
       Set<Map.Entry<String, Glob>> entries = users.entrySet();
       for (Map.Entry<String, Glob> entry : entries) {
-        output.writeString(entry.getKey());
+        output.writeJavaString(entry.getKey());
         User.write(output, entry.getValue());
       }
     }
@@ -104,19 +104,19 @@ public class PRootData implements CustomSerializable {
     {
       int size = input.readNotNullInt();
       while (size != 0) {
-        addHiddenUser(input.readString(), HiddenUser.read(input));
+        addHiddenUser(input.readJavaString(), HiddenUser.read(input));
         size--;
       }
     }
     id = input.readBytes();
     mail = input.readBytes();
     count = input.readNotNullLong();
-    activationCode = input.readString();
+    activationCode = input.readJavaString();
     signature = input.readBytes();
     {
       int size = input.readNotNullInt();
       while (size != 0) {
-        addUser(input.readString(), User.read(input));
+        addUser(input.readJavaString(), User.read(input));
         size--;
       }
     }

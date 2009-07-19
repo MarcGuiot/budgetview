@@ -223,7 +223,7 @@ public class Series {
       return serializedByteArrayOutput.toByteArray();
     }
 
-    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
+    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
@@ -425,8 +425,8 @@ public class Series {
     }
 
     private void processLabelAndName(FieldSetter fieldSetter, SerializedInput input) {
-      String label = input.readString();
-      String name = input.readString();
+      String label = input.readJavaString();
+      String name = input.readJavaString();
       if (Strings.isNotEmpty(name)) {
         fieldSetter.set(Series.NAME, name);
       }
@@ -440,7 +440,7 @@ public class Series {
 
     private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(Series.NAME, input.readString());
+      fieldSetter.set(Series.NAME, input.readJavaString());
       fieldSetter.set(Series.BUDGET_AREA, input.readInteger());
       input.readInteger(); // DEFAULT_CATEGORY removed
       Integer profileType = input.readInteger();

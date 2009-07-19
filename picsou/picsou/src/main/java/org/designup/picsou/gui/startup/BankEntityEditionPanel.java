@@ -20,18 +20,14 @@ import javax.swing.*;
 public class BankEntityEditionPanel {
   private GlobRepository repository;
   private Directory directory;
-  private JLabel messageLabel;
   private JPanel panel = new JPanel();
-  private GlobList bankEntities;
 
-  public BankEntityEditionPanel(GlobRepository repository, Directory directory, JLabel messageLabel) {
+  public BankEntityEditionPanel(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
-    this.messageLabel = messageLabel;
   }
 
   public void init(GlobList bankEntities) {
-    this.bankEntities = bankEntities.sort(BankEntity.ID);
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/bankEntityEditionPanel.splits",
                                                       repository, directory);
@@ -40,7 +36,7 @@ public class BankEntityEditionPanel {
     panel.setVisible(!bankEntities.isEmpty());
 
     builder.addRepeat("repeat",
-                      bankEntities,
+                      bankEntities.sort(BankEntity.ID),
                       new RepeatComponentFactory<Glob>() {
                         public void registerComponents(RepeatCellBuilder cellBuilder, Glob entity) {
                           GlobList accounts = repository.findLinkedTo(entity, Account.BANK_ENTITY);

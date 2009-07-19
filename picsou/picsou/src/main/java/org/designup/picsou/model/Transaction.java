@@ -259,7 +259,7 @@ public class Transaction {
       return serializedByteArrayOutput.toByteArray();
     }
 
-    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
+    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
@@ -473,11 +473,11 @@ public class Transaction {
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readString());
-      fieldSetter.set(Transaction.LABEL, input.readString());
-      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readString());
-      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readString());
-      fieldSetter.set(Transaction.NOTE, input.readString());
+      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readJavaString());
+      fieldSetter.set(Transaction.LABEL, input.readJavaString());
+      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readJavaString());
+      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readJavaString());
+      fieldSetter.set(Transaction.NOTE, input.readJavaString());
       fieldSetter.set(Transaction.MONTH, input.readInteger());
       fieldSetter.set(Transaction.DAY, input.readInteger());
       fieldSetter.set(Transaction.BANK_MONTH, input.readInteger());

@@ -158,8 +158,7 @@ public class OfxImporter implements AccountFileImporter {
 
     public void processTag(String tag, String content) {
       if (tag.equalsIgnoreCase("BANKID")) {
-        bankEntityId = Integer.valueOf(content);
-        repository.findOrCreate(Key.create(BankEntity.TYPE, bankEntityId));
+        bankEntityId = BankEntity.findOrCreate(content, repository);
       }
       if (tag.equalsIgnoreCase("DTPOSTED")) {
         repository.update(currentTransactionKey, ImportedTransaction.BANK_DATE, content);

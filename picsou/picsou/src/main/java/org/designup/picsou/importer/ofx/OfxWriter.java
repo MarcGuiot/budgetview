@@ -27,7 +27,7 @@ public class OfxWriter {
     }
   }
 
-  public void writeBankMsgHeader(Integer bank, Integer branchId, String accountNumber) {
+  public void writeBankMsgHeader(String bankId, Integer branchId, String accountNumber) {
     write(
       "  <BANKMSGSRSV1>\n" +
       "    <STMTTRNRS>\n" +
@@ -39,7 +39,7 @@ public class OfxWriter {
       "      <STMTRS>\n" +
       "        <CURDEF>EUR\n" +
       "        <BANKACCTFROM>\n" +
-      "          <BANKID>" + Strings.toString(bank) + "\n" +
+      "          <BANKID>" + bankId + "\n" +
       "          <BRANCHID>" + Strings.toString(branchId) + "\n" +
       "          <ACCTID>" + Strings.toString(accountNumber) + "\n" +
       "          <ACCTTYPE>CHECKING\n" +

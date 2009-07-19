@@ -74,7 +74,7 @@ public class UserPreferences {
       return 4;
     }
 
-    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
+    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
@@ -91,7 +91,7 @@ public class UserPreferences {
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readString());
+      fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readJavaString());
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(LAST_VALID_DAY, Month.addOneMonth(TimeService.getToday()));
@@ -101,7 +101,7 @@ public class UserPreferences {
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readString());
+      fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readJavaString());
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());

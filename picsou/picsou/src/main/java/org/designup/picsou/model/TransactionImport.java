@@ -36,7 +36,7 @@ public class TransactionImport {
       return serializedByteArrayOutput.toByteArray();
     }
 
-    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data) {
+    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
@@ -47,7 +47,7 @@ public class TransactionImport {
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(TransactionImport.SOURCE, input.readString());
+      fieldSetter.set(TransactionImport.SOURCE, input.readJavaString());
       fieldSetter.set(TransactionImport.IMPORT_DATE, input.readDate());
     }
 

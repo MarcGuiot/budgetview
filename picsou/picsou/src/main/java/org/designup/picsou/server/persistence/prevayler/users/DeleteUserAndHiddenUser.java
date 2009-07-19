@@ -51,19 +51,19 @@ public class DeleteUserAndHiddenUser implements Transaction, CustomSerializable 
   }
 
   private void readV1(SerializedInput input) {
-    name = input.readString();
-    cryptedLinkInfo = input.readString();
+    name = input.readJavaString();
+    cryptedLinkInfo = input.readJavaString();
   }
 
   private void readV2(SerializedInput input) {
     name = input.readUtf8String();
-    cryptedLinkInfo = input.readString();
+    cryptedLinkInfo = input.readJavaString();
   }
 
   public void write(SerializedOutput output, Directory directory) {
     output.writeByte(V2);
     output.writeUtf8String(name);
-    output.writeString(cryptedLinkInfo);
+    output.writeJavaString(cryptedLinkInfo);
   }
 
   public static CustomSerializableFactory getFactory() {

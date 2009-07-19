@@ -23,7 +23,7 @@ public class SerializableDeltaGlobSerializer {
     int globTypeCount = deltaGlobMap.keySet().size();
     output.write(globTypeCount);
     for (Map.Entry<String, List<ServerDelta>> stringListEntry : deltaGlobMap.entries()) {
-      output.writeString(stringListEntry.getKey());
+      output.writeJavaString(stringListEntry.getKey());
       output.write(stringListEntry.getValue().size());
       for (ServerDelta deltaGlob : stringListEntry.getValue()) {
         output.write(deltaGlob.getState().getId());
@@ -40,7 +40,7 @@ public class SerializableDeltaGlobSerializer {
     MultiMap<String, ServerDelta> multiMap = new MultiMap<String, ServerDelta>();
     int globTypeCount = serializedInput.readNotNullInt();
     while (globTypeCount > 0) {
-      String globTypeName = serializedInput.readString();
+      String globTypeName = serializedInput.readJavaString();
       int deltaGlobCount = serializedInput.readNotNullInt();
       while (deltaGlobCount > 0) {
         int state = serializedInput.readNotNullInt();

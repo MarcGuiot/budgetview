@@ -99,7 +99,7 @@ public class PrevaylerPersistence implements Persistence {
     output.writeBytes(accountInfo.getId());
     output.writeBytes(accountInfo.getMail());
     output.writeBytes(accountInfo.getSignature());
-    output.writeString(accountInfo.getActivationCode());
+    output.writeJavaString(accountInfo.getActivationCode());
     output.write(accountInfo.getCount());
   }
 

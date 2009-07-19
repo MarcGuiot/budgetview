@@ -38,7 +38,7 @@ class Register implements Transaction, CustomSerializable {
     if (version == V1) {
       mail = input.readBytes();
       signature = input.readBytes();
-      activationCode = input.readString();
+      activationCode = input.readJavaString();
     }
   }
 
@@ -46,7 +46,7 @@ class Register implements Transaction, CustomSerializable {
     output.write(V1);
     output.writeBytes(mail);
     output.writeBytes(signature);
-    output.writeString(activationCode);
+    output.writeJavaString(activationCode);
   }
 
   public static CustomSerializableFactory getFactory() {

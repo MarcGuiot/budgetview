@@ -2,29 +2,35 @@ package org.designup.picsou.importer.analyzer;
 
 import org.designup.picsou.model.PreTransactionTypeMatcher;
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.model.BankEntity;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobFunctor;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.utils.exceptions.InvalidFormat;
+import org.globsframework.utils.Files;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import org.globsframework.xml.XmlGlobParser;
 
-import java.io.*;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.regex.Pattern;
 
 public class TransactionAnalyzerFactory {
 
-  private GlobModel modelRepository;
-  private GlobRepository globRepository;
+  private GlobModel model;
+  private GlobRepository repository;
   private DefaultTransactionAnalyzer analyzer;
   private Long version = 0L;
   public static Pattern BLANK = Pattern.compile("[\\s]+");
+  private static final String BANK_LIST_FILE_NAME = "banks/bankList.txt";
 
-  public TransactionAnalyzerFactory(GlobModel modelRepository, GlobRepository globRepository) {
-    this.modelRepository = modelRepository;
-    this.globRepository = globRepository;
+  public TransactionAnalyzerFactory(GlobModel model, GlobRepository repository) {
+    this.model = model;
+    this.repository = repository;
   }
 
   public static String removeBlankAndToUpercase(final String value) {
@@ -61,59 +67,48 @@ public class TransactionAnalyzerFactory {
   }
 
   private void loadMatchers(Loader loader) {
-    parseDefinitionFile(globRepository, loader);
-    registerMatchers(globRepository);
+    parseDefinitionFile(loader);
+    registerMatchers();
   }
 
-  private void parseDefinitionFile(GlobRepository globRepository, Loader loader) {
-    String bankListFileName = "banks/bankList.txt";
-    InputStream bankListStream = loader.load(bankListFileName);
-
+  private void parseDefinitionFile(Loader loader) {
+    InputStream bankListStream = loader.load(BANK_LIST_FILE_NAME);
     if (bankListStream == null) {
-      throw new ResourceAccessFailed("missing bank file list'" + bankListFileName + "'");
+      throw new ResourceAccessFailed("Missing bank file list: " + BANK_LIST_FILE_NAME);
     }
-    BufferedReader bankListReader;
-    try {
-      bankListReader = new BufferedReader(new InputStreamReader(bankListStream, "UTF-8"));
-    }
-    catch (UnsupportedEncodingException e) {
-      throw new InvalidFormat(e);
-    }
-    while (true) {
-      String bankFileName;
-      try {
-        bankFileName = bankListReader.readLine();
-      }
-      catch (IOException e) {
-        throw new ResourceAccessFailed(e);
-      }
-      if (bankFileName == null) {
-        break;
-      }
+
+    String bankList = Files.loadStreamToString(bankListStream, "UTF-8");
+    for (String bankFileName : bankList.split("\\s")) {
       String path = "banks/" + bankFileName;
       InputStream stream = loader.load(path);
-      if (stream != null) {
-        InputStreamReader reader;
-        try {
-          reader = new InputStreamReader(stream, "UTF-8");
-        }
-        catch (UnsupportedEncodingException e) {
-          throw new ResourceAccessFailed(e);
-        }
-        XmlGlobParser.parse(modelRepository, globRepository, reader, "globs");
-      }
-      else {
+      if (stream == null) {
         throw new ResourceAccessFailed("missing bank file '" + path + "'");
       }
+
+      InputStreamReader reader;
+      try {
+        reader = new InputStreamReader(stream, "UTF-8");
+      }
+      catch (UnsupportedEncodingException e) {
+        throw new ResourceAccessFailed(e);
+      }
+      XmlGlobParser.parse(model, repository, reader, "globs");
     }
-    GlobList matchers = globRepository.getAll(PreTransactionTypeMatcher.TYPE);
+
+    repository.safeApply(BankEntity.TYPE, GlobMatchers.ALL, new GlobFunctor() {
+      public void run(Glob bankEntity, GlobRepository repository) throws Exception {
+        BankEntity.setLabelIfNeeded(bankEntity, repository);
+      }
+    });
+
+    GlobList matchers = repository.getAll(PreTransactionTypeMatcher.TYPE);
     for (Glob matcher : matchers) {
       if (matcher.get(PreTransactionTypeMatcher.FOR_OFX) == null) {
         if (OfxTransactionFinalizer.isOfType(matcher)) {
-          globRepository.update(matcher.getKey(), PreTransactionTypeMatcher.FOR_OFX, true);
+          repository.update(matcher.getKey(), PreTransactionTypeMatcher.FOR_OFX, true);
         }
         else if (QifTransactionFinalizer.isOfType(matcher)) {
-          globRepository.update(matcher.getKey(), PreTransactionTypeMatcher.FOR_OFX, false);
+          repository.update(matcher.getKey(), PreTransactionTypeMatcher.FOR_OFX, false);
         }
         else {
           throw new RuntimeException("Unable to know if we should parse ofx tags or qif attributes for " +
@@ -123,12 +118,13 @@ public class TransactionAnalyzerFactory {
     }
   }
 
-  private void registerMatchers(GlobRepository globRepository) {
-    for (Glob matcher : globRepository.getAll(PreTransactionTypeMatcher.TYPE)
-      .sort(PreTransactionTypeMatcher.ID)) {
+  private void registerMatchers() {
+    for (Glob matcher : repository.getAll(PreTransactionTypeMatcher.TYPE).sort(PreTransactionTypeMatcher.ID)) {
+
       String label = matcher.get(PreTransactionTypeMatcher.LABEL);
       String originalLabel = matcher.get(PreTransactionTypeMatcher.ORIGINAL_LABEL);
-      Glob bank = globRepository.findLinkTarget(matcher, PreTransactionTypeMatcher.BANK);
+
+      Glob bank = repository.findLinkTarget(matcher, PreTransactionTypeMatcher.BANK);
       TransactionType type = TransactionType.get(matcher);
       String bankType = matcher.get(PreTransactionTypeMatcher.BANK_TYPE);
       String groupForDate = matcher.get(PreTransactionTypeMatcher.GROUP_FOR_DATE);

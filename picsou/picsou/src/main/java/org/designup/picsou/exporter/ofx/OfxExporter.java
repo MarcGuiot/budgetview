@@ -9,6 +9,9 @@ import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.format.GlobStringifiers;
+import org.globsframework.model.format.GlobPrinter;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -20,6 +23,7 @@ public class OfxExporter implements Exporter {
   private GlobRepository repository;
   private OfxWriter writer;
   private boolean exportCustomFields;
+  private GlobStringifier accountBankEntityStringifier = GlobStringifiers.target(Account.BANK_ENTITY);
 
   public static void write(GlobRepository repository, Writer writer, boolean exportCustomFields) throws IOException {
     OfxExporter exporter = new OfxExporter(exportCustomFields);
@@ -48,12 +52,15 @@ public class OfxExporter implements Exporter {
     writer.writeHeader();
 
     GlobList accounts = repository.getAll(Account.TYPE).sort(Account.ID);
+
     for (Glob account : accounts) {
       if (Account.SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID))) {
         continue;
       }
       if (!Boolean.TRUE.equals(account.get(Account.IS_CARD_ACCOUNT))) {
-        writer.writeBankMsgHeader(account.get(Account.BANK_ENTITY), account.get(Account.BRANCH_ID), account.get(Account.NUMBER));
+        writer.writeBankMsgHeader(accountBankEntityStringifier.toString(account, repository),
+                                  account.get(Account.BRANCH_ID),
+                                  account.get(Account.NUMBER));
         Date date = writeTransactions(account);
         Date balanceDate = account.get(Account.POSITION_DATE);
         if (balanceDate == null) {
