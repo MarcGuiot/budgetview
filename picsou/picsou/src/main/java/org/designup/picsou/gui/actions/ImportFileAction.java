@@ -4,7 +4,9 @@ import org.designup.picsou.gui.license.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.startup.ImportPanel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.model.User;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -75,7 +77,7 @@ public class ImportFileAction extends AbstractAction {
                         Glob defaultAccount, boolean usePreferedPath) {
       this.directory = directory;
       this.repository = repository;
-      if (!LicenseService.trialExpired(repository)) {
+      if (!LicenseService.trialExpired(repository) && !User.isDemoUser(repository.get(User.KEY))) {
         panel = new ImportPanel(Lang.get("import.step1.close"), files, defaultAccount,
                                 directory.get(JFrame.class),
                                 repository, directory,
@@ -88,9 +90,15 @@ public class ImportFileAction extends AbstractAction {
         panel.show();
       }
       else {
-        LicenseActivationDialog dialog = new LicenseActivationDialog(directory.get(JFrame.class),
-                                                                     repository, directory);
-        dialog.showExpiration();
+        if (User.isDemoUser(repository.get(User.KEY))){
+          MessageDialog dialog = new MessageDialog("demo.import.title", "demo.import.content", directory.get(JFrame.class),
+                                                   directory);
+          dialog.show();
+        }else {
+          LicenseActivationDialog dialog = new LicenseActivationDialog(directory.get(JFrame.class),
+                                                                       repository, directory);
+          dialog.showExpiration();
+        }
       }
     }
   }

@@ -58,7 +58,7 @@ public class MainWindowLauncher {
       serverAccess.initConnection(user, password.toCharArray(), false);
       newUser = false;
     }
-    PicsouInit init = PicsouInit.init(serverAccess, user, validUser, newUser, directory);
+    PicsouInit init = PicsouInit.init(serverAccess, user, validUser, newUser, directory, false);
 
     MainWindow window = new MainWindow();
     MainPanel.init(init.getRepository(), init.getDirectory(), window).show();

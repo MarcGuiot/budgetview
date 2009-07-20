@@ -5,6 +5,7 @@ import org.globsframework.model.Glob;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.PicsouApplication;
 
 import java.util.Date;
 

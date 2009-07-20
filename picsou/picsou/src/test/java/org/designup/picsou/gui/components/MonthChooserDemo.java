@@ -16,7 +16,7 @@ public class MonthChooserDemo {
   public static void main(String[] args) throws Exception {
 
     Directory directory = PicsouApplication.createDirectory();
-    GlobRepository repository = PicsouInit.init(ServerAccess.NULL, "user", true, true, directory).getRepository();
+    GlobRepository repository = PicsouInit.init(ServerAccess.NULL, "user", true, true, directory, false).getRepository();
     for (int monthId = 200701; monthId < 200809; monthId = Month.next(monthId)) {
       repository.findOrCreate(Key.create(Month.TYPE, monthId));
     }

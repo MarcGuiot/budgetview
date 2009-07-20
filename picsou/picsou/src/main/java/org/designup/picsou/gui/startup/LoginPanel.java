@@ -13,6 +13,7 @@ import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.gui.MainPanel;
 import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.components.CustomFocusTraversalPolicy;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
@@ -174,7 +175,8 @@ public class LoginPanel {
             serverAccess.initConnection(user, password, false);
           }
         }
-        PicsouInit init = PicsouInit.init(serverAccess, user, validUser, creationCheckBox.isSelected(), directory);
+        PicsouInit init = PicsouInit.init(serverAccess, user, validUser, creationCheckBox.isSelected(), 
+                                          directory, useDemoAccount);
         final MainPanel mainPanel =
           MainPanel.init(init.getRepository(), init.getDirectory(),
                          mainWindow

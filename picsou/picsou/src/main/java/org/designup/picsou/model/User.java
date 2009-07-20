@@ -8,6 +8,7 @@ import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.model.Glob;
 
 public class User {
 
@@ -31,6 +32,9 @@ public class User {
   @DefaultBoolean(true)
   public static BooleanField IS_REGISTERED_USER;
 
+  @DefaultBoolean(false)
+  public static BooleanField IS_DEMO_USER;
+
   public static final int ACTIVATION_IN_PROGRESS = 1;
   public static final int ACTIVATION_OK = 2;
   public static final int ACTIVATION_FAILED_BAD_SIGNATURE = 3;
@@ -47,5 +51,9 @@ public class User {
   static {
     GlobTypeLoader.init(User.class, "user");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
+  }
+
+  public static boolean isDemoUser(Glob user) {
+    return user.get(User.IS_DEMO_USER);
   }
 }

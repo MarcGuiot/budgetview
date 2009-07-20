@@ -215,8 +215,4 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       {"03/08/2008", "", "TRANSACTION 1", -10.00},
     });
   }
-
-  public void testInputDisabledInDemoMode() throws Exception {
-    fail("Marc: A reprendre quand on saura determiner si on est en mode demo");
-  }
 }

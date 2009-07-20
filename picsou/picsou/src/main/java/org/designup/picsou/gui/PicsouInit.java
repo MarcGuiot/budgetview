@@ -45,12 +45,12 @@ public class PicsouInit {
   private UpgradeTrigger upgradeTrigger;
 
   public static PicsouInit init(ServerAccess serverAccess, String user, boolean validUser,
-                                boolean newUser, Directory directory) throws IOException {
-    return new PicsouInit(serverAccess, user, validUser, newUser, directory);
+                                boolean newUser, Directory directory, boolean useDemoAccount) throws IOException {
+    return new PicsouInit(serverAccess, user, validUser, newUser, directory, useDemoAccount);
   }
 
   private PicsouInit(ServerAccess serverAccess, String user, boolean validUser,
-                     boolean newUser, final Directory directory) throws IOException {
+                     boolean newUser, final Directory directory, boolean useDemoAccount) throws IOException {
     this.serverAccess = serverAccess;
     this.directory = directory;
 
@@ -90,6 +90,7 @@ public class PicsouInit {
     if (!newUser) {
       this.repository.create(User.KEY,
                              value(User.NAME, user),
+                             value(User.IS_DEMO_USER, useDemoAccount),
                              value(User.IS_REGISTERED_USER, validUser));
     }
 
