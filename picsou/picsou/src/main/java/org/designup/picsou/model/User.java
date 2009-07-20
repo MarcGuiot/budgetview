@@ -8,6 +8,8 @@ import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.model.Glob;
+import org.designup.picsou.gui.PicsouApplication;
 
 public class User {
 
@@ -47,5 +49,9 @@ public class User {
   static {
     GlobTypeLoader.init(User.class, "user");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
+  }
+
+  public static boolean isDemoUser(Glob user) {
+    return PicsouApplication.DEMO_USER_NAME.equals(user.get(User.NAME));
   }
 }

@@ -154,6 +154,12 @@ public class TransactionCreationChecker extends GuiChecker {
     return this;
   }
 
+  public void checkDemoMessage(){
+    MessageDialogChecker.init(getShowHideButton().triggerClick())
+      .checkMessageContains("You cannot create operation in demo")
+      .close();
+  }
+
   public TransactionCreationChecker checkNoErrorMessage() {
     checkComponentVisible(getPanel(), JLabel.class, "errorMessage", false);
     return this;

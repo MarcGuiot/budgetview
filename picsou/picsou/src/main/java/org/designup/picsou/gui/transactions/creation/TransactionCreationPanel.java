@@ -3,6 +3,7 @@ package org.designup.picsou.gui.transactions.creation;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.AccountEditionDialog;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.CustomFocusTraversalPolicy;
 import org.designup.picsou.gui.license.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
@@ -229,6 +230,12 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
 
   private void show() {
 
+    if (User.isDemoUser(repository.get(User.KEY))){
+      MessageDialog dialog = new MessageDialog("demo.transaction.creation.title", "demo.transaction.creation.content", directory.get(JFrame.class),
+                                               directory);
+      dialog.show();
+      return;
+    }
     if (LicenseService.trialExpired(parentRepository)) {
       LicenseActivationDialog dialog = new LicenseActivationDialog(directory.get(JFrame.class),
                                                                    repository, directory);

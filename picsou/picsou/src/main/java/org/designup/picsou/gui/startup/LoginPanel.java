@@ -13,6 +13,7 @@ import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.gui.MainPanel;
 import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.components.CustomFocusTraversalPolicy;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
@@ -161,7 +162,7 @@ public class LoginPanel {
 
     public void run() {
       try {
-        if (user.equals("demo")) {
+        if (user.equals(PicsouApplication.DEMO_USER_NAME)) {
           initDemoServerAccess();
           serverAccess.createUser("anonymous", "password".toCharArray());
         }
@@ -369,7 +370,7 @@ public class LoginPanel {
     }
 
     public void actionPerformed(ActionEvent e) {
-      userField.setText("demo");
+      userField.setText(PicsouApplication.DEMO_USER_NAME);
       passwordField.setText("");
       if (creationCheckBox.isSelected()) {
         creationCheckBox.doClick(); 

@@ -237,6 +237,39 @@ public class LoginTest extends StartUpFunctionalTestCase {
     checkDemoMode();
   }
 
+  public void testCanNotImportInDemoMode() throws Exception {
+    login.clickDemoLink();
+    OperationChecker operations = new OperationChecker(window);
+    MessageDialogChecker dialogChecker = MessageDialogChecker.init(operations.getImportTrigger());
+    dialogChecker.checkMessageContains("You cannot import operations in demo");
+    dialogChecker.close();
+  }
+
+  public void testCanNotCreateOperationInDemoMode() throws Exception {
+    login.clickDemoLink();
+    MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
+    mainAccounts.createNewAccount()
+      .setAccountName("Cash")
+      .setAccountNumber("012345")
+      .setUpdateModeToManualInput()
+      .selectBank("CIC")
+      .validate();
+
+    ViewSelectionChecker views = new ViewSelectionChecker(window);
+
+    views.selectCategorization();
+    TransactionCreationChecker transactionCreation = new TransactionCreationChecker(window);
+    transactionCreation
+      .checkDemoMessage();
+  }
+
+  public void testLicenseInfoInDemoMode() throws Exception {
+    login.clickDemoLink();
+
+    LicenseMessageChecker messageChecker = new LicenseMessageChecker(window);
+    messageChecker.checkMessage("Demo account");
+  }
+
   private void checkDemoMode() {
     assertThat(window.containsMenuBar());
     getTransactionView().checkNotEmpty();

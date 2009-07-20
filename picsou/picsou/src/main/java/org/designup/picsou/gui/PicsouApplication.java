@@ -75,6 +75,7 @@ public class PicsouApplication {
   private static String DEFAULT_ADDRESS = "https://startupxp.dynalias.org";
   public static final String REGISTER_URL = "https://91.121.123.100:8443"; //startupxp.dynalias.org";
   public static final String FTP_URL = "ftp://91.121.123.100"; //startupxp.dynalias.org";
+  public static final String DEMO_USER_NAME = "demo";
 
   private OpenRequestManager openRequestManager = new OpenRequestManager();
   private SingleApplicationInstanceListener singleInstanceListener;

@@ -76,6 +76,11 @@ public class LicenseInfoView extends View {
       licenseMessage.setVisible(false);
     }
     else {
+      if (User.isDemoUser(user)){
+        licenseMessage.setText(Lang.get("demo.license.info.message"));
+        licenseMessage.setVisible(true);
+        return;
+      }
       licenseMessage.setVisible(true);
       long days =
         (userPreferences.get(UserPreferences.LAST_VALID_DAY).getTime() - TimeService.getToday().getTime()) / Millis.ONE_DAY;
