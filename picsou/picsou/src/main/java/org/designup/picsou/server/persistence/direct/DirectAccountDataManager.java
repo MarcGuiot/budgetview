@@ -51,7 +51,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     this.countFileNotToDelete = countFileNotToDelete;
   }
 
-  public void getUserData(SerializedOutput output, Integer userId) {
+  synchronized public void getUserData(SerializedOutput output, Integer userId) {
     MapOfMaps<String, Integer, SerializableGlobType> globs = new MapOfMaps<String, Integer, SerializableGlobType>();
     long transactionId = readData(userId, globs);
     outputStreamMap.put(userId, new DurableOutputStream(this, transactionId, userId));
@@ -148,7 +148,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     }
   }
 
-  public void updateUserData(SerializedInput input, Integer userId) {
+  synchronized public void updateUserData(SerializedInput input, Integer userId) {
     SerializableDeltaGlobSerializer serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
     MultiMap<String, ServerDelta> data = serializableDeltaGlobSerializer.deserialize(input);
     DurableOutputStream bufferedOutputStream = outputStreamMap.get(userId);
@@ -165,7 +165,7 @@ public class DirectAccountDataManager implements AccountDataManager {
   public void delete(Integer userId) {
   }
 
-  public void close() {
+  synchronized public void close() {
     for (DurableOutputStream durableOutputStream : outputStreamMap.values()) {
       durableOutputStream.close();
     }
@@ -179,7 +179,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     }
   }
 
-  public void close(Integer userId) {
+  synchronized public void close(Integer userId) {
     DurableOutputStream durableOutputStream = outputStreamMap.get(userId);
     if (durableOutputStream != null) {
       outputStreamMap.remove(userId);
@@ -195,7 +195,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     }
   }
 
-  public void takeSnapshot(Integer userId) {
+  synchronized public void takeSnapshot(Integer userId) {
     if (inMemory) {
       return;
     }
@@ -212,7 +212,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     }
   }
 
-  public boolean restore(SerializedInput input, Integer userId) {
+  synchronized public boolean restore(SerializedInput input, Integer userId) {
     DurableOutputStream durableOutputStream = outputStreamMap.get(userId);
     MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
     SerializableGlobSerializer.deserialize(input, data);
@@ -226,7 +226,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     return true;
   }
 
-  private void writeSnapshot(long transactionId, MapOfMaps<String, Integer, SerializableGlobType> data,
+  synchronized private void writeSnapshot(long transactionId, MapOfMaps<String, Integer, SerializableGlobType> data,
                              PrevaylerDirectory directory) throws IOException {
     File tempFile = directory.createTempFile("snapshot" + transactionId + "temp", "generatingSnapshot");
 

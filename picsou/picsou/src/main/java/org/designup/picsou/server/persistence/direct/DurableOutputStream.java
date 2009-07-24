@@ -35,7 +35,6 @@ class DurableOutputStream {
         fd = stream.getFD();
         outputStream = new BufferedOutputStream(stream);
       }
-      SerializableDeltaGlobSerializer serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
       SerializedOutput serializedOutput = SerializedInputOutputFactory.init(outputStream);
       serializedOutput.writeJavaString("Tr");
       serializedOutput.write(nextTransactionVersion);

@@ -21,6 +21,7 @@ import java.util.Date;
 
 public class DefaultSerializationInput implements SerializedInput {
   private InputStream inputStream;
+  public int count;
 
   DefaultSerializationInput(InputStream inputStream) {
     this.inputStream = inputStream;
@@ -312,6 +313,7 @@ public class DefaultSerializationInput implements SerializedInput {
       if (i == -1) {
         throw new EOFIOFailure("eof");
       }
+      count++;
       return i;
     }
     catch (EOFException e) {
@@ -349,6 +351,7 @@ public class DefaultSerializationInput implements SerializedInput {
         }
         readed += readSize;
       }
+      count+=readed;
       return bytes;
     }
     catch (IOException e) {
