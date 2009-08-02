@@ -169,9 +169,9 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     categorization.setNewEnvelope("MacDo", "Gastronomie");
     categorization.setNewEnvelope("Quick", "Sante");
 
-    views.selectHome();
-    monthSummary.checkIncome(1000);
-    monthSummary.checkEnvelope(30);
+    views.selectBudget();
+    budgetView.income.checkTotalObserved(1000);
+    budgetView.envelopes.checkTotalObserved(-30);
 
     views.selectData();
     transactions.initContent()
@@ -191,9 +191,9 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .add("10/10/2008", TransactionType.PRELEVEMENT, "Quick", "", -15.00, "Sante")
       .check();
 
-    views.selectHome();
-    monthSummary.checkIncome(0);
-    monthSummary.checkEnvelope(15);
+    views.selectBudget();
+    budgetView.income.checkTotalObserved(0);
+    budgetView.envelopes.checkTotalObserved(-15);
   }
 
   public void testDeletingASavingsAccountWithSeries() throws Exception {
@@ -212,8 +212,10 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("Salaire/oct", "Salaire");
     categorization.setNewEnvelope("Virement octobre", "Savings");
 
+    views.selectBudget();
+    budgetView.income.checkTotalObserved(1000);
+    
     views.selectHome();
-    monthSummary.checkIncome(1000.0);
     mainAccounts.edit("Account n. 0000123")
       .setAccountName("Livret")
       .selectBank("ING Direct")

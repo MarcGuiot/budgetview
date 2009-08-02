@@ -11,9 +11,7 @@ import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
-import org.uispec4j.finder.ComponentMatchers;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class MonthSummaryChecker extends GuiChecker {
@@ -31,40 +29,6 @@ public class MonthSummaryChecker extends GuiChecker {
     this.window = window;
     this.mainBalanceGraph = new BalanceGraphChecker("mainAccountsTotalBalance", window);
     this.savingsBalanceGraph = new BalanceGraphChecker("savingsTotalBalance", window);
-  }
-
-  public void checkSavingsIn(String accountName, double observedAmount, double plannedAmount) {
-    fail("transfert");
-    assertThat(window.getButton(accountName + ":savingsInAmount").textEquals(toString(observedAmount)));
-    assertThat(window.getTextBox(accountName + ":savingsPlannedInAmount").textEquals(toString(plannedAmount)));
-  }
-
-  public MonthSummaryChecker checkSavingsInNotVisible(String accountName) {
-    fail("transfert");
-    assertFalse(window.getButton(accountName + ":savingsInAmount").isVisible());
-    assertFalse(window.getTextBox(accountName + ":savingsPlannedInAmount").isVisible());
-    return this;
-  }
-
-  public void checkSavingsOut(String accoutName, double observedAmount, double plannedAmount) {
-    fail("transfert");
-    assertThat(window.getButton(accoutName + ":savingsOutAmount").textEquals(toString(observedAmount)));
-    assertThat(window.getTextBox(accoutName + ":savingsPlannedOutAmount").textEquals(toString(plannedAmount)));
-  }
-
-  public MonthSummaryChecker checkSavingsOutNotVisible(String accountName) {
-    assertFalse(window.getButton(accountName + ":savingsOutAmount").isVisible());
-    assertFalse(window.getTextBox(accountName + ":savingsPlannedOutAmount").isVisible());
-    return this;
-  }
-
-  public void checkSavingsBalance(double balance) {
-    fail("transfert");
-    assertThat(getPanel().getTextBox("savingsBalanceAmount").textEquals(toString(balance, true)));
-  }
-
-  public void checkSavingsNotVisible(String accountName) {
-    assertFalse(window.getPanel("accountGroup:" + accountName).isVisible());
   }
 
   public class BudgetAreaChecker {
@@ -113,7 +77,6 @@ public class MonthSummaryChecker extends GuiChecker {
     }
   }
 
-
   public void gotoBudget(BudgetArea budgetArea) {
     getPanel().getButton(budgetArea.getName()).click();
   }
@@ -121,26 +84,6 @@ public class MonthSummaryChecker extends GuiChecker {
   public MonthSummaryChecker checkNoBudgetAreasDisplayed() {
     Component[] components = getPanel().getSwingComponents(Gauge.class);
     Assert.assertTrue(components.length == 0);
-    return this;
-  }
-
-  public MonthSummaryChecker checkNoHelpMessageDisplayed() {
-    assertFalse(getPanel().containsComponent(ComponentMatchers.innerNameIdentity("noData")));
-    assertFalse(getPanel().containsComponent(ComponentMatchers.innerNameIdentity("noSeries")));
-    return this;
-  }
-
-  public MonthSummaryChecker checkNoDataMessage() {
-    return checkMessage("You must import your financial operations", "noDataMessage", "noData");
-  }
-
-  public MonthSummaryChecker checkNoSeriesMessage() {
-    return checkMessage("Use the series wizard:", "noSeriesMessage", "noSeries");
-  }
-
-  private MonthSummaryChecker checkMessage(String text, String textBoxName, final String panelName) {
-    TextBox textBox = window.getPanel(panelName).getTextBox(textBoxName);
-    UISpecAssert.assertThat(textBox.textEquals(text));
     return this;
   }
 
@@ -159,26 +102,6 @@ public class MonthSummaryChecker extends GuiChecker {
     return this;
   }
 
-  public MonthSummaryChecker checkSavingsIn(double observedAmount, double plannedAmount) {
-    assertThat(window.getButton(BudgetArea.SAVINGS.getName() + ":in:budgetAreaAmount")
-      .textEquals(toString(observedAmount)));
-    assertThat(window.getTextBox(BudgetArea.SAVINGS.getName() + ":in:budgetAreaPlannedAmount")
-      .textEquals(toString(plannedAmount)));
-    GaugeChecker gauge = new GaugeChecker(getPanel(), BudgetArea.SAVINGS.getName() + ":in:budgetAreaGauge");
-    gauge.checkActualValue(-observedAmount);
-    gauge.checkTargetValue(-plannedAmount);
-    return this;
-  }
-
-  public MonthSummaryChecker checkSavingsOut(double observedAmount, double plannedAmount) {
-    assertThat(window.getButton(BudgetArea.SAVINGS.getName() + ":out:budgetAreaAmount").textEquals(toString(observedAmount)));
-    assertThat(window.getTextBox(BudgetArea.SAVINGS.getName() + ":out:budgetAreaPlannedAmount").textEquals(toString(plannedAmount)));
-    GaugeChecker gauge = new GaugeChecker(getPanel(), BudgetArea.SAVINGS.getName() + ":out:budgetAreaGauge");
-    gauge.checkActualValue(observedAmount);
-    gauge.checkTargetValue(plannedAmount);
-    return this;
-  }
-
   public MonthSummaryChecker checkEnvelope(double amount) {
     checkObserved(BudgetArea.ENVELOPES, amount);
     return this;
@@ -193,13 +116,17 @@ public class MonthSummaryChecker extends GuiChecker {
     return this;
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   public MonthSummaryChecker checkOccasional(double amount, double planned) {
     Assert.fail("plus d'occasional");
     return this;
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   public MonthSummaryChecker checkOccasional(double amount) {
     Assert.fail("plus d'occasional");
     return this;
@@ -347,33 +274,7 @@ public class MonthSummaryChecker extends GuiChecker {
     return this;
   }
 
-  public void categorize() {
-    getPanel().getButton("categorize").click();
-  }
-
-  public ImportChecker openImport() {
-    return ImportChecker.open(getPanel().getButton("import").triggerClick());
-  }
-
   private Panel getPanel() {
     return window.getPanel("monthSummaryView");
-  }
-
-  public HelpChecker openImportHelp() {
-    return HelpChecker.open(window.getTextBox("noDataMessage").triggerClickOnHyperlink("import"));
-  }
-
-  public SeriesWizardChecker openSeriesWizard() {
-    return SeriesWizardChecker.open(getPanel().getButton("openSeriesWizard").triggerClick());
-  }
-
-  public void checkSeriesWizardButtonVisible(boolean visible) {
-    if (visible) {
-      Button button = getPanel().getButton("openSeriesWizard");
-      assertThat(and(button.isVisible(), button.isEnabled()));
-    }
-    else {
-      checkComponentVisible(getPanel(), JButton.class, "openSeriesWizard", false);
-    }
   }
 }

@@ -99,9 +99,9 @@ public class OperationChecker {
           }
           if (amount != null) {
             Window window = WindowInterceptor.getModalDialog(okButton.triggerClick());
-            BalanceEditionChecker balance = new BalanceEditionChecker(window);
-            balance.setAmountWithoutEnter(amount);
-            return balance.triggerValidate();
+            AccountPositionEditionChecker accountPosition = new AccountPositionEditionChecker(window);
+            accountPosition.setAmountWithoutEnter(amount);
+            return accountPosition.triggerValidate();
           }
           return okButton.triggerClick();
         }

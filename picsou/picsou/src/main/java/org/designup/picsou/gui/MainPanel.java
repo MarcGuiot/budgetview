@@ -74,9 +74,9 @@ public class MainPanel {
   private MainWindow mainWindow;
   private RegisterLicenseAction registerAction;
   private Action dumpRepository;
-  private MonthSummaryView monthSummary;
   private SeriesView seriesView;
   private DataCheckerAction checkRepository;
+  private NotesView notesView;
 
   public static MainPanel init(GlobRepository repository, Directory directory,
                                MainWindow mainWindow) {
@@ -128,8 +128,6 @@ public class MainPanel {
                      GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT, Transaction.AMOUNT))
       .setAutoHideIfEmpty(true);
 
-    monthSummary = new MonthSummaryView(importFileAction, repository, directory);
-
     LicenseInfoView licenseInfoView = new LicenseInfoView(repository, directory);
 
     ReplicationGlobRepository replicationGlobRepository =
@@ -137,13 +135,13 @@ public class MainPanel {
 
     PeriodSeriesStatUpdater.init(replicationGlobRepository, directory);
 
+    notesView = new NotesView(importFileAction, repository, directory);
     createPanel(
       titleView,
       transactionView,
       timeView,
       new VersionInfoView(repository, directory),
       new AccountView(repository, directory),
-      monthSummary,
       categorizationView,
       new CardView(repository, directory),
       new NavigationView(repository, directory),
@@ -152,7 +150,7 @@ public class MainPanel {
       new SeriesEvolutionView(repository, directory),
       new SavingsView(replicationGlobRepository, directory),
       licenseInfoView,
-      new NotesView(repository, directory));
+      notesView);
 
     createMenuBar(parent, directory);
     timeView.selectCurrentMonth();
@@ -185,7 +183,7 @@ public class MainPanel {
 
     builder.load();
 
-    monthSummary.init();
+    notesView.init();
 
     selectLastMonthWithATransaction(repository, directory);
     seriesView.selectAll();

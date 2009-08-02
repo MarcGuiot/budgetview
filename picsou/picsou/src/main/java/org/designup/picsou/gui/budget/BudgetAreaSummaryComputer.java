@@ -220,12 +220,12 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
 
   public String getPlannedTooltip(BudgetArea budgetArea) {
     if (Amounts.isNotZero(overrun)) {
-      return Lang.get("monthsummary.planned.tooltip.overrun",
+      return Lang.get("budgetSummary.planned.tooltip.overrun",
                       format(adjustedPlanned, budgetArea),
                       Formatting.toString(Math.abs(overrun)));
     }
     else {
-      return Lang.get("monthsummary.planned.tooltip.normal");
+      return Lang.get("budgetSummary.planned.tooltip.normal");
     }
   }
 

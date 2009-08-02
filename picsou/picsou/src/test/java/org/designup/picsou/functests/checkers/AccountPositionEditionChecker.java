@@ -9,31 +9,31 @@ import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 import javax.swing.*;
 
-public class BalanceEditionChecker extends GuiChecker {
+public class AccountPositionEditionChecker extends GuiChecker {
   private Window window;
 
-  public BalanceEditionChecker(Window window) {
+  public AccountPositionEditionChecker(Window window) {
     this.window = window;
   }
 
-  public BalanceEditionChecker setAmount(Double amount) {
+  public AccountPositionEditionChecker setAmount(Double amount) {
     window.getInputTextBox("amountField").setText(Double.toString(amount));
     return this;
   }
 
-  public BalanceEditionChecker setAmountWithoutEnter(Double amount) {
+  public AccountPositionEditionChecker setAmountWithoutEnter(Double amount) {
     TextBox textBox = window.getInputTextBox("amountField");
     textBox.clear();
     textBox.appendText(Double.toString(amount));
     return this;
   }
 
-  public BalanceEditionChecker checkOperationLabel(String label) {
+  public AccountPositionEditionChecker checkOperationLabel(String label) {
     assertThat(window.getTextBox("labelInfo").textEquals(label));
     return this;
   }
 
-  public BalanceEditionChecker checkInitialAmountSelected(String text) {
+  public AccountPositionEditionChecker checkInitialAmountSelected(String text) {
     TextBox textBox = window.getInputTextBox("amountField");
     assertThat(textBox.textEquals(text));
 
@@ -43,28 +43,28 @@ public class BalanceEditionChecker extends GuiChecker {
     return this;
   }
 
-  public BalanceEditionChecker checkAccountLabel(String accountName) {
+  public AccountPositionEditionChecker checkAccountLabel(String accountName) {
     assertThat(window.getTextBox("accountName").textEquals(accountName));
     return this;
   }
 
-  public BalanceEditionChecker checkCancelNotAvailable() {
+  public AccountPositionEditionChecker checkCancelNotAvailable() {
     checkComponentVisible(window, JButton.class, "cancel", false);
     return this;
   }
 
-  public BalanceEditionChecker checkEscNotAvailable() {
+  public AccountPositionEditionChecker checkEscNotAvailable() {
     pressEsc(window);
     UISpecAssert.assertTrue(window.isVisible());
     return this;
   }
 
-  public BalanceEditionChecker checkInitialMessageDisplayed() {
+  public AccountPositionEditionChecker checkInitialMessageDisplayed() {
     checkComponentVisible(window, JTextArea.class, "initialMessage", true);
     return this;
   }
 
-  public BalanceEditionChecker checkDialogClosed() {
+  public AccountPositionEditionChecker checkDialogClosed() {
     UISpecAssert.assertFalse(window.isVisible());
     return this;
   }

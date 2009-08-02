@@ -30,12 +30,9 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .add("08/07/2008", TransactionType.PRELEVEMENT, "free telecom", "", -29.90, "Internet", "")
       .check();
 
-    views.selectHome();
-
     timeline.selectMonth("2008/07");
-    monthSummary
-      .checkRecurring(29.9)
-      .checkPlannedRecurring(29.9);
+    views.selectBudget();
+    budgetView.recurring.checkTotalAmounts(-29.90, -29.90);
 
     timeline.selectMonth("2008/08");
     views.selectData();
@@ -43,10 +40,8 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .add("08/08/2008", TransactionType.PLANNED, "Planned: Internet", "", -29.90, "Internet")
       .check();
 
-    views.selectHome();
-    monthSummary
-      .checkRecurring(0)
-      .checkPlannedRecurring(29.9);
+    views.selectBudget();
+    budgetView.recurring.checkTotalAmounts(0, -29.90);
   }
 
   public void testCreationOfMonth() throws Exception {

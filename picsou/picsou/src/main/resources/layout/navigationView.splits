@@ -18,7 +18,7 @@
 
     <style selector="textArea.text"
            gridPos="(1,1)"
-           foreground="navigationView.text" opaque="false"
+           foreground="navigationView.text" opaque="false" font="-,plain,10"
            editable="false" lineWrap="true" wrapStyleWord="true"
            fill="both" margin="0" weightX="10"/>
   </styles>

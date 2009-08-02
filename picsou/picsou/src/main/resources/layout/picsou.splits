@@ -93,16 +93,15 @@
           <column>
             <horizontalSplit>
 
-              <column weightX="1">
-                <panel ref="accountView" minimumSize="(250,200)" preferredSize="(300,700)"/>
+              <column weightX="2">
+                <panel ref="notesView" minimumSize="(300,100)" preferredSize="(200,100)" weightY="3"/>
               </column>
 
-              <verticalSplit weightX="1" >
-                <panel ref="monthSummaryView" minimumSize="(300,350)" preferredSize="(350,350)" weightY="7"/>
-                <panel ref="notesView" minimumSize="(300,100)" preferredSize="(350,100)" weightY="3"/>
+              <verticalSplit weightX="3" >
+                <panel ref="accountView" minimumSize="(250,200)" preferredSize="(400,700)"/>
               </verticalSplit>
 
-              <column weightX="1">
+              <column weightX="2">
                 <panel ref="navigationView" minimumSize="(150,360)" preferredSize="(200,700)"/>
               </column>
 

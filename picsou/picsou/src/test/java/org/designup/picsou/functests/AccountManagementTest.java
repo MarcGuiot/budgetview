@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
 public class AccountManagementTest extends LoggedInFunctionalTestCase {
@@ -101,15 +100,15 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .checkEstimatedPosition(100)
       .checkEstimatedPositionColor("darkGray")
       .checkIsEstimatedPosition()
-      .checkLimit(0);
+      .checkThreshold(0);
 
     mainAccounts
       .setThreshold(1000, true)
-      .checkLimit(1000)
+      .checkThreshold(1000)
       .checkEstimatedPositionColor("red");
 
     mainAccounts.setThreshold(-2000, false)
-      .checkLimit(-2000)
+      .checkThreshold(-2000)
       .checkEstimatedPositionColor("darkGray");
 
     mainAccounts.setThreshold(0, false)

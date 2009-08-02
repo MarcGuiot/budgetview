@@ -2,16 +2,18 @@ package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.*;
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.finder.ComponentMatchers.*;
+import org.designup.picsou.model.BudgetArea;
 
 import javax.swing.*;
 
 public class SavingsViewChecker extends GuiChecker {
-  private Window mainWindow;
+  private Window window;
 
-  public SavingsViewChecker(Window mainWindow) {
-    this.mainWindow = mainWindow;
+  public SavingsViewChecker(Window window) {
+    this.window = window;
   }
 
   public void checkTotalPositionHidden() {
@@ -29,20 +31,67 @@ public class SavingsViewChecker extends GuiChecker {
     UISpecAssert.assertThat(date.textEquals(updateDate));
   }
 
-  /** @deprecated ??? */
+  public SavingsViewChecker checkSavingsIn(double observedAmount, double plannedAmount) {
+    assertThat(window.getButton(BudgetArea.SAVINGS.getName() + ":in:budgetAreaAmount")
+      .textEquals(toString(observedAmount)));
+    assertThat(window.getTextBox(BudgetArea.SAVINGS.getName() + ":in:budgetAreaPlannedAmount")
+      .textEquals(toString(plannedAmount)));
+    GaugeChecker gauge = new GaugeChecker(getPanel(), BudgetArea.SAVINGS.getName() + ":in:budgetAreaGauge");
+    gauge.checkActualValue(-observedAmount);
+    gauge.checkTargetValue(-plannedAmount);
+    return this;
+  }
+
+  public SavingsViewChecker checkSavingsOut(double observedAmount, double plannedAmount) {
+    assertThat(window.getButton(BudgetArea.SAVINGS.getName() + ":out:budgetAreaAmount").textEquals(toString(observedAmount)));
+    assertThat(window.getTextBox(BudgetArea.SAVINGS.getName() + ":out:budgetAreaPlannedAmount").textEquals(toString(plannedAmount)));
+    GaugeChecker gauge = new GaugeChecker(getPanel(), BudgetArea.SAVINGS.getName() + ":out:budgetAreaGauge");
+    gauge.checkActualValue(observedAmount);
+    gauge.checkTargetValue(plannedAmount);
+    return this;
+  }
+
   public void checkSavingsIn(String accountName, double observedAmount, double plannedAmount) {
-    UISpecAssert.fail("not implemented - toujours d'actualite ?");
-//    assertThat(window.getButton(accountName + ":savingsInAmount").textEquals(toString(observedAmount)));
-//    assertThat(window.getTextBox(accountName + ":savingsPlannedInAmount").textEquals(toString(plannedAmount)));
+    fail("transfert");
+    assertThat(window.getButton(accountName + ":savingsInAmount").textEquals(toString(observedAmount)));
+    assertThat(window.getTextBox(accountName + ":savingsPlannedInAmount").textEquals(toString(plannedAmount)));
+  }
+
+  public SavingsViewChecker checkSavingsInNotVisible(String accountName) {
+    fail("transfert");
+    assertFalse(window.getButton(accountName + ":savingsInAmount").isVisible());
+    assertFalse(window.getTextBox(accountName + ":savingsPlannedInAmount").isVisible());
+    return this;
+  }
+
+  public void checkSavingsOut(String accoutName, double observedAmount, double plannedAmount) {
+    fail("transfert");
+    assertThat(window.getButton(accoutName + ":savingsOutAmount").textEquals(toString(observedAmount)));
+    assertThat(window.getTextBox(accoutName + ":savingsPlannedOutAmount").textEquals(toString(plannedAmount)));
+  }
+
+  public SavingsViewChecker checkSavingsOutNotVisible(String accountName) {
+    assertFalse(window.getButton(accountName + ":savingsOutAmount").isVisible());
+    assertFalse(window.getTextBox(accountName + ":savingsPlannedOutAmount").isVisible());
+    return this;
+  }
+
+  public void checkSavingsBalance(double balance) {
+    fail("transfert");
+    assertThat(getPanel().getTextBox("savingsBalanceAmount").textEquals(toString(balance, true)));
+  }
+
+  public void checkSavingsNotVisible(String accountName) {
+    assertFalse(window.getPanel("accountGroup:" + accountName).isVisible());
   }
 
   public void checkAmount(String accountName, String seriesName, double observedAmount, double plannedAmount) {
-    assertThat(mainWindow.getButton(accountName + "." + seriesName + ".observedSeriesAmount").textEquals(toString(observedAmount)));
-    assertThat(mainWindow.getButton(accountName + "." + seriesName + ".plannedSeriesAmount").textEquals(toString(plannedAmount)));
+    assertThat(window.getButton(accountName + "." + seriesName + ".observedSeriesAmount").textEquals(toString(observedAmount)));
+    assertThat(window.getButton(accountName + "." + seriesName + ".plannedSeriesAmount").textEquals(toString(plannedAmount)));
   }
 
   public void checkSavingsInNotVisible(String accountName, String seriesName) {
-    UISpecAssert.assertFalse(mainWindow.getPanel(accountName + "." + seriesName + ".gauge").isVisible());
+    UISpecAssert.assertFalse(window.getPanel(accountName + "." + seriesName + ".gauge").isVisible());
   }
 
   public void checkNoAccounts() {
@@ -77,7 +126,7 @@ public class SavingsViewChecker extends GuiChecker {
   }
 
   private Panel getPanel() {
-    return mainWindow.getPanel("savingsView");
+    return window.getPanel("savingsView");
   }
 
   public SeriesEditionDialogChecker createSeries() {

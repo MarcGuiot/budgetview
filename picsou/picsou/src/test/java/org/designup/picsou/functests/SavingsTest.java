@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.model.BankEntity;
 
@@ -347,17 +346,17 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/06");
     savingsAccounts.checkPosition("Epargne", 400);
-    savingsAccounts.checkEstimatedPosition(400, "30/06/2008");
+    savingsAccounts.checkEstimatedPosition(400);
     savingsAccounts.checkSummary(1000, "2008/08/05");
 
     timeline.selectMonth("2008/08");
     savingsAccounts.checkPosition("Epargne", 1000);
-    savingsAccounts.checkEstimatedPosition(1000, "31/08/2008");
+    savingsAccounts.checkEstimatedPosition(1000);
     savingsAccounts.checkSummary(1000, "2008/08/05");
 
     timeline.selectMonth("2008/09");
     savingsAccounts.checkPosition("Epargne", 1300);
-    savingsAccounts.checkEstimatedPosition(1300, "30/09/2008");
+    savingsAccounts.checkEstimatedPosition(1300);
 
     views.selectData();
     timeline.selectAll();
@@ -604,6 +603,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   }
 
   public void testImportedSavingsAccountWithMainAccount() throws Exception {
+
+    fail("Regis : en cours");
+
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000., "2008/08/10")  //compte d'épargne
       .addTransaction("2008/08/10", 100.00, "Virement")
@@ -657,12 +659,12 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkPosition("Account n. 111", 1200);
     mainAccounts.checkEstimatedPosition(-200);
 
-    monthSummary.checkSavingsIn(0, 100);
-    monthSummary.checkSavingsOut(0, 0);
+    views.selectSavings();
+    savingsView.checkSavingsIn(0, 100);
+    savingsView.checkSavingsOut(0, 0);
 
     timeline.selectMonth("2008/08");
-    views.selectHome();
-    monthSummary.checkSavingsIn(100, 0);
+    savingsView.checkSavingsIn(100, 0);
 
     views.selectBudget();
     budgetView.savings.checkSeries("CA", 100, 0);
@@ -688,8 +690,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       )
       .validate();
 
-    views.selectHome();
-    monthSummary.checkSavingsIn(100, 200);
+    views.selectSavings();
+    savingsView.checkSavingsIn(100, 200);
 
     views.selectBudget();
     budgetView.savings.checkTotalAmounts(100, 200);
@@ -748,6 +750,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   public void testMixedTypeOfSavingsSeriesShouldUpdateCorrectlyTheBudgetView() throws Exception {
     // Un compte courant, un compte d'épargne importé, un compte d'épargne non importé
 
+    fail("Regis : en cours");
+        
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000., "2008/08/10")
       .addTransaction("2008/06/06", 100.00, "Virement Epargne")
@@ -813,14 +817,15 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/06");
     savingsAccounts.checkPosition("Epargne", 400);
     savingsAccounts.checkPosition("Account n. 111222", 2800);
-    savingsAccounts.checkEstimatedPosition(3200, "30/06/2008");
+    savingsAccounts.checkEstimatedPosition(3200);
     savingsAccounts.checkSummary(4000, "2008/08/06");
 
     timeline.selectMonth("2008/08");
     savingsAccounts.checkPosition("Epargne", 1000);
     savingsAccounts.checkPosition("Account n. 111222", 3000);
-    savingsAccounts.checkEstimatedPosition(4000, "31/08/2008");
+    savingsAccounts.checkEstimatedPosition(4000);
     savingsAccounts.checkSummary(4000, "2008/08/06");
+
     views.selectSavings();
 //    monthSummary.checkSavingsIn("Epargne", 300, 300);
     savingsView.checkAmount("Epargne", "Virement CAF", 300, 300);
@@ -831,7 +836,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/09");
     savingsAccounts.checkPosition("Epargne", 1300);
     savingsAccounts.checkPosition("Account n. 111222", 3100);
-    savingsAccounts.checkEstimatedPosition(4400, "30/09/2008");
+    savingsAccounts.checkEstimatedPosition(4400);
+
     views.selectSavings();
     savingsView.checkAmount("Epargne", "Virement CAF", 0, 300);
 //    monthSummary.checkSavingsIn("Epargne", 0, 300);
@@ -856,6 +862,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.checkSeries("Placement", 0, 100);
     budgetView.savings.checkSeriesNotPresent("Account n. 111222");
+    
     views.selectSavings();
     savingsView.checkAmount("Account n. 111222", "Placement", 0, 100);
   }
@@ -1015,9 +1022,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectHome();
 
     timeline.selectMonth("2008/07");
-    savingsAccounts.checkEstimatedPosition(100, "31/07/2008");
+    savingsAccounts.checkEstimatedPosition(100);
     timeline.selectMonth("2008/08");
-    savingsAccounts.checkEstimatedPosition(200, "31/08/2008");
+    savingsAccounts.checkEstimatedPosition(200);
   }
 
   public void testInverseAccountAfterCategorization() throws Exception {
@@ -1113,7 +1120,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testTakeAccountPositionDateIfNoOperationsInPast() throws Exception {
+  public void testTakePositionDateIntoAccountIfNoOperationsInThePast() throws Exception {
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
@@ -1148,10 +1155,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/09");
 
-    views.selectHome();
-    monthSummary
-      .checkBalance(-50);
-
+    views.selectBudget();
+    mainAccounts.checkBalance(-50);
   }
 
   public void testCheckComboAccountContents() throws Exception {

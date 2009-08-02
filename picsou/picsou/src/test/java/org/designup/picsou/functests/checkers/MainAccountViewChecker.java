@@ -1,58 +1,50 @@
 package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.*;
-import static org.uispec4j.assertion.UISpecAssert.*;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 public class MainAccountViewChecker extends AccountViewChecker {
-  public MainAccountViewChecker(Panel panel) {
-    super(panel, "mainAccountView");
+
+  private BudgetSummaryViewChecker budgetSummary;
+
+  public MainAccountViewChecker(Panel window) {
+    super(window, "mainAccountView");
+    budgetSummary = new BudgetSummaryViewChecker(this.panel);
   }
 
   public EstimatedPositionDetailsChecker openEstimatedPositionDetails() {
-    Window window = WindowInterceptor.getModalDialog(panel.getButton("estimatedPosition").triggerClick());
-    return new EstimatedPositionDetailsChecker(window);
+    return budgetSummary.openEstimatedPositionDetails();
   }
 
   public MainAccountViewChecker checkNoEstimatedPositionDetails() {
-    assertFalse(panel.getButton("estimatedPosition").isEnabled());
+    budgetSummary.checkNoEstimatedPositionDetails();
     return this;
   }
 
   public MainAccountViewChecker checkEstimatedPosition(double amount) {
-    Button totalButton = panel.getButton("estimatedPosition");
-    assertThat(totalButton.isVisible());
-    assertThat(totalButton.textEquals(toString(amount)));
-    return this;
-  }
-
-  public MainAccountViewChecker checkEstimatedPositionDate(String expected) {
-    TextBox textBox = panel.getTextBox("estimatedPositionDate");
-    assertThat(textBox.textEquals("on " + expected));
+    budgetSummary.checkEndPosition(amount);
     return this;
   }
 
   public MainAccountViewChecker checkNoEstimatedPosition() {
-    Button totalButton = panel.getButton("estimatedPosition");
-    assertFalse(totalButton.isVisible());
+    budgetSummary.checkNoEstimatedPosition();
     return this;
   }
 
   public MainAccountViewChecker checkEstimatedPositionColor(String color) {
-    Button button = panel.getButton("estimatedPosition");
-    assertThat(button.foregroundNear(color));
+    budgetSummary.checkEstimatedPositionColor(color);
     return this;
   }
 
   public MainAccountViewChecker checkIsEstimatedPosition() {
-    TextBox label = panel.getTextBox("labelTypeName");
-    assertThat(label.textEquals("Estimated position"));
+    budgetSummary.checkIsEstimatedPosition();
     return this;
   }
+
   public MainAccountViewChecker checkIsRealPosition() {
-    TextBox label = panel.getTextBox("labelTypeName");
-    assertThat(label.textEquals("Position"));
+    budgetSummary.checkIsRealPosition();
     return this;
   }
 
@@ -85,9 +77,13 @@ public class MainAccountViewChecker extends AccountViewChecker {
     return this;
   }
 
-  public MainAccountViewChecker checkLimit(double amount) {
+  public MainAccountViewChecker checkThreshold(double amount) {
     Button button = panel.getButton("accountPositionThreshold");
     assertThat(button.textEquals("Limit: " + toString(amount)));
     return this;
+  }
+
+  public void checkBalanceDetails(double incomeFor200807, double expensesFor200807) {
+    System.out.println("MainAccountViewChecker.checkBalanceDetails: ==> a faire");
   }
 }

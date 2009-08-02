@@ -77,15 +77,14 @@ public class AccountViewChecker extends GuiChecker {
     return ImportChecker.open(importButton.triggerClick());
   }
 
-  public BalanceEditionChecker getBalance(String accountName) {
+  public AccountPositionEditionChecker editPosition(String accountName) {
     Panel parentPanel = getAccountPanel(accountName);
     Window window = WindowInterceptor.getModalDialog(parentPanel.getButton("accountPosition").triggerClick());
-    return new BalanceEditionChecker(window);
+    return new AccountPositionEditionChecker(window);
   }
 
-  public AccountViewChecker changeBalance(String accountName, final double balance, final String operationLabel) {
-    BalanceEditionChecker balanceEditor = getBalance(accountName);
-    balanceEditor
+  public AccountViewChecker changePosition(String accountName, final double balance, final String operationLabel) {
+    editPosition(accountName)
       .checkOperationLabel(operationLabel.toUpperCase())
       .setAmountWithoutEnter(balance)
       .validate();
@@ -130,7 +129,7 @@ public class AccountViewChecker extends GuiChecker {
       .validate();
   }
 
-  public void createMainAccount(String name, double balance){
+  public void createMainAccount(String name, double balance) {
     createNewAccount()
       .setAccountName(name)
       .setAccountNumber("4321")
@@ -141,4 +140,7 @@ public class AccountViewChecker extends GuiChecker {
       .validate();
   }
 
+  public void checkBalance(double balance) {
+    assertThat(panel.getTextBox("balanceLabel").textEquals(toString(balance, true)));
+  }
 }

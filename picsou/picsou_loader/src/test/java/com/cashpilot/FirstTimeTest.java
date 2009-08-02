@@ -72,13 +72,13 @@ public class FirstTimeTest extends UISpecTestCase {
     });
     LoginChecker login = new LoginChecker(window);
     login.logNewUser("toto", "toto");
-    MonthSummaryChecker monhSummary = new MonthSummaryChecker(window);
-    ImportChecker ofxImport = monhSummary.openImport();
+    NotesChecker notes = new NotesChecker(window);
+    ImportChecker ofxImport = notes.openImport();
     ofxImport.browseAndSelect(file)
       .acceptFile()
       .completeImport();
 
-    monhSummary.openSeriesWizard()
+    notes.openSeriesWizard()
       .select("Income 1")
       .select("Mortgage")
       .select("Cell phone 1")
@@ -191,16 +191,20 @@ public class FirstTimeTest extends UISpecTestCase {
     CategorizationGaugeChecker categorizationGauge = categorization.getCompletionGauge();
     categorizationGauge.checkHidden();
 
-    views.selectHome();
-    monhSummary
-      .checkEnvelope(415., 415.)
-      .checkRecurring(1413.90, 1413.90)
-      .checkIncome(2000., 2000.)
-      .checkSavingsIn(100, 100);
+    views.selectBudget();
+    BudgetViewChecker budget = new BudgetViewChecker(window);
+    budget.income.checkTotalAmounts(2000.00, 2000.00);
+    budget.envelopes.checkTotalAmounts(-415.00, -415.00);
+    budget.recurring.checkTotalAmounts(-1413.90, -1413.90);
 
+    views.selectSavings();
+    SavingsViewChecker savings = new SavingsViewChecker(window);
+    savings.checkSavingsIn(100, 100);
+
+    views.selectHome();
     MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
-    EstimatedPositionDetailsChecker balance = mainAccounts.openEstimatedPositionDetails();
-    balance.checkTotal(1900.)
+    mainAccounts.openEstimatedPositionDetails()
+      .checkTotal(1900.00)
       .close();
 
     views.selectData();
@@ -283,8 +287,8 @@ public class FirstTimeTest extends UISpecTestCase {
       .check();
 
 
-    balance = mainAccounts.openEstimatedPositionDetails();
-    balance.checkTotal(1971.10)
+    mainAccounts.openEstimatedPositionDetails()
+      .checkTotal(1971.10)
       .checkInitialPosition(1900)
       .checkEnvelope(-415)
       .checkFixed(-1413.9)
@@ -311,12 +315,14 @@ public class FirstTimeTest extends UISpecTestCase {
 
     views.selectBudget();
     views.selectHome();
-    balance.checkTotal(1831.10)
+    mainAccounts.openEstimatedPositionDetails()
+      .checkTotal(1831.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(-584)
       .checkSavingsIn(-100)
-      .checkEnvelope(-265);
+      .checkEnvelope(-265)
+      .close();
 
     views.selectData();
     transaction.initAmountContent()
@@ -390,8 +396,8 @@ public class FirstTimeTest extends UISpecTestCase {
     TimeViewChecker timeView = new TimeViewChecker(window);
     timeView.selectMonth("2008/10");
 
-    EstimatedPositionDetailsChecker balance = mainAccounts.openEstimatedPositionDetails();
-    balance.checkTotal(2386.10)
+    mainAccounts.openEstimatedPositionDetails()
+      .checkTotal(2386.10)
       .checkInitialPosition(780.10)
       .checkIncome(2000)
       .checkFixed(-184)
@@ -471,8 +477,8 @@ public class FirstTimeTest extends UISpecTestCase {
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectHome();
 
-    EstimatedPositionDetailsChecker balance = mainAccounts.openEstimatedPositionDetails();
-    balance.checkTotal(2386.10)
+    mainAccounts.openEstimatedPositionDetails()
+      .checkTotal(2386.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(-184)
@@ -553,8 +559,8 @@ public class FirstTimeTest extends UISpecTestCase {
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectHome();
 
-    EstimatedPositionDetailsChecker balance = mainAccounts.openEstimatedPositionDetails();
-    balance.checkTotal(2386.10)
+    mainAccounts.openEstimatedPositionDetails()
+      .checkTotal(2386.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(-184)
@@ -708,8 +714,8 @@ public class FirstTimeTest extends UISpecTestCase {
 
     TimeViewChecker checker = new TimeViewChecker(window);
     checker.selectMonths("2008/10");
-    EstimatedPositionDetailsChecker balance = mainAccounts.openEstimatedPositionDetails();
-    balance.checkTotal(1886.10)
+    mainAccounts.openEstimatedPositionDetails()
+      .checkTotal(1886.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(-584)

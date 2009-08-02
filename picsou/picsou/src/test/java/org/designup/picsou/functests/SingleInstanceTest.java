@@ -210,7 +210,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
                     "^");
     OperationChecker operations = new OperationChecker(window);
     ImportChecker importer = ImportChecker.open(operations.getImportTrigger());
-    BalanceEditionChecker balance = importer.selectFiles(file)
+    AccountPositionEditionChecker accountPosition = importer.selectFiles(file)
       .acceptFile()
       .selectBank(LoggedInFunctionalTestCase.SOCIETE_GENERALE)
       .enterAccountNumber("11111")
@@ -219,7 +219,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     newApplication.start();
     Thread.sleep(1000);
     newApplication.checkNotOpen();
-    balance.setAmount(0.0);
+    accountPosition.setAmount(0.0);
     Window newImportDialog = newApplication.getImportDialog();
     assertNotNull(newImportDialog);
     new ImportChecker(newImportDialog).close();

@@ -21,7 +21,11 @@
     <horizontalSplit ref="horizontalSplitPane">
 
       <column weightX="3">
-        <panel ref="budgetSummaryView" weightY="0.1" marginBottom="10"/>
+        <label text="$budgetSummaryView.title" styleClass="blockTitle"/>
+        <column styleClass="block">
+          <panel ref="budgetSummaryView" weightY="0.1" marginBottom="10"/>
+        </column>
+        
         <verticalSplit ref="firstVerticalSplitPane">
           <panel ref="incomeBudgetView" weightY="5"/>
           <panel ref="savingsBudgetView" weightY="5"/>

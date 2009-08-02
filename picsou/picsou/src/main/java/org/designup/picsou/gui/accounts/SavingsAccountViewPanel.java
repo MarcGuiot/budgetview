@@ -2,10 +2,12 @@ package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.SavingsBalanceStat;
+import org.designup.picsou.gui.budget.SavingsBudgetSummaryView;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Month;
 import org.globsframework.gui.views.GlobLabelView;
+import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
@@ -18,9 +20,6 @@ import javax.swing.*;
 import java.util.Set;
 
 public class SavingsAccountViewPanel extends AccountViewPanel {
-
-  private JLabel estimatedPositionLabel = new JLabel();
-  private JLabel estimatedPositionDateLabel = new JLabel();
 
   public SavingsAccountViewPanel(final GlobRepository repository, final Directory directory) {
     super(repository, directory, createMatcher(), Account.SAVINGS_SUMMARY_ACCOUNT_ID);
@@ -44,6 +43,11 @@ public class SavingsAccountViewPanel extends AccountViewPanel {
     return and(fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()),
                not(fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID)),
                not(fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)));
+  }
+
+  protected void registerSummaryView(GlobsPanelBuilder builder) {
+    SavingsBudgetSummaryView summaryView = new SavingsBudgetSummaryView(repository, directory);
+    summaryView.registerComponents(builder);
   }
 
   protected JLabel getEstimatedAccountPositionLabel(final Key accountKey) {
@@ -107,38 +111,11 @@ public class SavingsAccountViewPanel extends AccountViewPanel {
     return accountPosition.getComponent();
   }
 
-  protected void setEstimatedPositionLabels(Double amount, String date) {
-
-    estimatedPositionLabel.setText(Formatting.toString(amount));
-    estimatedPositionDateLabel.setText(date);
-
-    boolean shown = amount != null;
-    estimatedPositionLabel.setVisible(shown);
-    estimatedPositionDateLabel.setVisible(shown);
-  }
-
-  protected JComponent getEstimatedPositionComponent() {
-    return estimatedPositionLabel;
-  }
-
-  protected JComponent getEstimatedPositionDateComponent() {
-    return estimatedPositionDateLabel;
+  protected AccountType getAccountType() {
+    return AccountType.SAVINGS;
   }
 
   protected boolean showPositionThreshold() {
     return false;
-  }
-
-  protected Glob getBalanceStat(Integer lastSelectedMonthId) {
-    return repository.find(Key.create(SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID,
-                                      SavingsBalanceStat.MONTH, lastSelectedMonthId));
-  }
-
-  protected Double getEndOfMonthPosition(Glob balanceStat) {
-    return balanceStat.get(SavingsBalanceStat.END_OF_MONTH_POSITION);
-  }
-
-  protected AccountType getAccountType() {
-    return AccountType.SAVINGS;
   }
 }

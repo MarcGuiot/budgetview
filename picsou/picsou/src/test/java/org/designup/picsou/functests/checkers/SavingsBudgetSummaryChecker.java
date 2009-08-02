@@ -10,47 +10,36 @@ import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 
 import javax.swing.*;
 
-public class BudgetSummaryViewChecker extends GuiChecker {
+public class SavingsBudgetSummaryChecker extends GuiChecker {
   private Panel mainWindow;
 
-  public BudgetSummaryViewChecker(Panel mainWindow) {
+  public SavingsBudgetSummaryChecker(Panel mainWindow) {
     this.mainWindow = mainWindow;
   }
 
-  public BudgetSummaryViewChecker checkMonthBalance(double amount) {
+  public SavingsBudgetSummaryChecker checkMonthBalance(double amount) {
     assertThat(getPanel().getTextBox("balanceLabel").textEquals(toString(amount, true)));
     return this;
   }
 
-  public BudgetSummaryViewChecker checkEndPosition(double amount) {
-    assertThat(getPanel().getButton("positionButton").textEquals(toString(amount, false)));
-    return this;
-  }
-
-  public BudgetSummaryViewChecker checkUncategorized(double amount) {
-    assertThat(getPanel().getTextBox("uncategorizedLabel").textEquals(toString(amount, false)));
-    return this;
-  }
-
-  public BudgetSummaryViewChecker checkUncategorizedNotShown() {
-    assertThat(getPanel().getTextBox("uncategorizedLabel").textEquals("-"));
+  public SavingsBudgetSummaryChecker checkEndPosition(double amount) {
+    assertThat(getPanel().getTextBox("positionLabel").textEquals(toString(amount, false)));
     return this;
   }
 
   public void checkEmpty() {
     assertThat(getPanel().getTextBox("balanceLabel").textEquals("-"));
-    assertThat(getPanel().getTextBox("positionButton").textEquals("-"));
-    assertThat(getPanel().getTextBox("uncategorizedLabel").textEquals("-"));
+    assertThat(getPanel().getTextBox("positionLabel").textEquals("-"));
   }
 
-  public BudgetSummaryViewChecker checkMultiSelection(int count) {
+  public SavingsBudgetSummaryChecker checkMultiSelection(int count) {
     TextBox label = getPanel().getTextBox("multiSelectionLabel");
     assertThat(label.isVisible());
     assertThat(label.textContains(count + " months total"));
     return this;
   }
 
-  public BudgetSummaryViewChecker checkMultiSelectionNotShown() {
+  public SavingsBudgetSummaryChecker checkMultiSelectionNotShown() {
     checkComponentVisible(getPanel(), JLabel.class, "multiSelectionLabel", false);
     return this;
   }
@@ -59,21 +48,13 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     return mainWindow.getPanel("budgetSummaryView");
   }
 
-  public EstimatedPositionDetailsChecker openEstimatedPositionDetails() {
-    Window window = WindowInterceptor.getModalDialog(getPanel().getButton("positionButton").triggerClick());
-    return new EstimatedPositionDetailsChecker(window);
-  }
-
-  public void checkNoEstimatedPositionDetails() {
-    assertFalse(getPanel().getButton("positionButton").isEnabled());
-  }
-
   public void checkNoEstimatedPosition() {
-    assertThat(getPanel().getButton("positionButton").textEquals("-"));
+    Button totalButton = getPanel().getButton("positionLabel");
+    assertFalse(totalButton.isVisible());
   }
 
   public void checkEstimatedPositionColor(String color) {
-    Button button = getPanel().getButton("positionButton");
+    Button button = getPanel().getButton("positionLabel");
     assertThat(button.foregroundNear(color));
   }
 

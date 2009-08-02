@@ -1,36 +1,16 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.referenceAmount" font="-,plain,12"/>
+  </styles>
 
   <panel styleClass="block">
     <column styleClass="innerBlock">
 
-      <grid ref="header" marginLeft="10" marginRight="10" marginBottom="5">
-
-        <label ref="referencePosition" gridPos="(0,0)"
-               styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"
-               marginTop="0" marginBottom="0"
-               anchor="north"/>
-        <label text="$accountView.reference.title" gridPos="(0,1)"
-               styleClass="totalAmountTitle" autoHideSource="referencePosition"
-               marginTop="0" marginBottom="0" weightY="0"/>
-        <label ref="referencePositionDate" gridPos="(0,2)"
-               styleClass="totalAmountTitle" autoHideSource="referencePosition"
-               marginTop="0" marginBottom="0" weightY="0"/>
-
-        <filler fill="horizontal" gridPos="(1,0,1,3)"/>
-
-        <component ref="estimatedPosition" gridPos="(2,0)"
-                   styleClass="totalAmount" foreground=""
-                   marginTop="0" marginBottom="0"
-                   anchor="north"/>
-        <label ref="labelTypeName" gridPos="(2,1)"
-               styleClass="totalAmountTitle" autoHideSource="estimatedPosition"
-               marginTop="0" marginBottom="0" weightY="0"/>
-        <label ref="estimatedPositionDate" gridPos="(2,2)"
-               styleClass="totalAmountTitle" autoHideSource="referencePosition"
-               marginTop="0" marginBottom="0" weightY="0"/>
-      </grid>
+      <panel ref="header" opaque="false" weightY="0.1">
+        <panel ref="budgetSummaryView"/>
+      </panel>
 
       <scrollPane marginTop="0" marginBottom="0">
         <column>
@@ -58,6 +38,15 @@
         <filler fill="horizontal"/>
         <button action="accountPositionThreshold" styleClass="hyperlink"
                 tooltipText="$accountPositionThresholdAction.tooltip"/>
+        <label text="$accountView.reference.title"
+               styleClass="totalAmountTitle" autoHideSource="referencePosition"
+               marginTop="0" marginBottom="0"/>
+        <label ref="referencePosition"
+               styleClass="referenceAmount" tooltipText="$accountView.reference.tooltip"
+               marginTop="0" marginBottom="0"/>
+        <label ref="referencePositionDate"
+               styleClass="totalAmountTitle" autoHideSource="referencePosition"
+               marginTop="0" marginBottom="0"/>
       </row>
     </column>
   </panel>

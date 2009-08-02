@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.BankEntity;
 
 public class BalanceTest extends LoggedInFunctionalTestCase {
@@ -31,7 +30,6 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization
       .setNewRecurring("Free Telecom", "Tel");
-
 
     timeline.selectMonth("2009/05");
     transactionCreation
@@ -87,17 +85,18 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.createSeries()
       .setName("NoName")
       .validate();
+
     views.selectHome();
     timeline.selectMonth("2009/04");
-    monthSummary.checkBalance(-29.90);
+    mainAccounts.checkBalance(-29.90);
     timeline.selectMonth("2009/05");
-    monthSummary.checkBalance(0);
+    mainAccounts.checkBalance(0);
     timeline.selectMonth("2009/06");
-    monthSummary.checkBalance(0);
-
+    mainAccounts.checkBalance(0);
   }
 
   public void testWithoutTransactionsInSavings() throws Exception {
+    fail("Marc, ce test vide te parle-t-il ?");
   }
 
   public void testSavingWithMonthWithoutTransaction() throws Exception {
@@ -128,13 +127,13 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
 
     // sur savings
     timeline.selectMonth("2008/06");
-    savingsAccounts.checkEstimatedPosition(300, "30/06/2008");
+    savingsAccounts.checkEstimatedPosition(300);
 
     timeline.selectMonth("2008/07");
-    savingsAccounts.checkEstimatedPosition(300, "31/07/2008");
+    savingsAccounts.checkEstimatedPosition(300);
 
     timeline.selectMonth("2008/08");
-    savingsAccounts.checkEstimatedPosition(0, "31/08/2008");
+    savingsAccounts.checkEstimatedPosition(0);
   }
 
   public void testMissingBalanceAtBeginIfNoOperation() throws Exception {
@@ -163,17 +162,14 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
 
     // sur savings
     timeline.selectMonth("2008/06");
-    savingsAccounts.checkEstimatedPosition(900, "30/06/2008");
+    savingsAccounts.checkEstimatedPosition(900);
 
     timeline.selectMonth("2008/07");
-    savingsAccounts.checkEstimatedPosition(900, "31/07/2008");
+    savingsAccounts.checkEstimatedPosition(900);
 
     timeline.selectMonth("2008/08");
-    savingsAccounts.checkEstimatedPosition(1000, "31/08/2008");
-
-
+    savingsAccounts.checkEstimatedPosition(1000);
   }
-
 
   public void testBalanceWithMissingOperationInFuture() throws Exception {
     OfxBuilder.init(this)
@@ -192,17 +188,16 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .setAsSavings()
       .validate();
 
-
     views.selectCategorization();
     categorization.setNewRecurring("Auchan", "courses");
     categorization.selectTransactions("P3 CE", "P2 CE");
-    
+
     categorization.selectSavings()
       .selectAndCreateSavingsSeries("epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "Account n. 111");
 
     categorization.selectTransactions("V3 CC", "V2 CC")
       .selectSavings().selectSeries("epargne");
-    
+
     views.selectBudget();
 
     budgetView.recurring.editSeries("courses")
@@ -218,43 +213,43 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     //sur compte courant
     timeline.selectMonth("2009/06");
     mainAccounts.checkEstimatedPosition(-1000);
-    savingsAccounts.checkEstimatedPosition(1700, "30/06/2009");
+    savingsAccounts.checkEstimatedPosition(1700);
 
     timeline.selectMonth("2009/05");
     mainAccounts.checkEstimatedPosition(-1000);
-    savingsAccounts.checkEstimatedPosition(1700, "31/05/2009");
+    savingsAccounts.checkEstimatedPosition(1700);
 
     timeline.selectMonth("2009/04");
     mainAccounts.checkEstimatedPosition(-800);
-    savingsAccounts.checkEstimatedPosition(1600, "30/04/2009");
+    savingsAccounts.checkEstimatedPosition(1600);
 
     timeline.selectMonth("2009/03");
     mainAccounts.checkEstimatedPosition(-700);
-    savingsAccounts.checkEstimatedPosition(1500, "31/03/2009");
+    savingsAccounts.checkEstimatedPosition(1500);
 
     timeline.selectMonth("2009/02");
     mainAccounts.checkEstimatedPosition(-700);
-    savingsAccounts.checkEstimatedPosition(1500, "28/02/2009");
+    savingsAccounts.checkEstimatedPosition(1500);
 
     timeline.selectMonth("2009/01");
     mainAccounts.checkEstimatedPosition(-600);
-    savingsAccounts.checkEstimatedPosition(1400, "31/01/2009");
+    savingsAccounts.checkEstimatedPosition(1400);
 
     timeline.selectMonth("2008/12");
     mainAccounts.checkEstimatedPosition(-500);
-    savingsAccounts.checkEstimatedPosition(1400, "31/12/2008");
+    savingsAccounts.checkEstimatedPosition(1400);
 
     timeline.selectMonth("2008/08");
     mainAccounts.checkEstimatedPosition(0);
-    savingsAccounts.checkEstimatedPosition(1000, "31/08/2008");
+    savingsAccounts.checkEstimatedPosition(1000);
 
     timeline.selectMonth("2008/07");
     mainAccounts.checkEstimatedPosition(200);
-    savingsAccounts.checkEstimatedPosition(900, "31/07/2008");
+    savingsAccounts.checkEstimatedPosition(900);
 
     timeline.selectMonth("2008/06");
     mainAccounts.checkEstimatedPosition(200);
-    savingsAccounts.checkEstimatedPosition(900, "30/06/2008");
+    savingsAccounts.checkEstimatedPosition(900);
 
 
   }

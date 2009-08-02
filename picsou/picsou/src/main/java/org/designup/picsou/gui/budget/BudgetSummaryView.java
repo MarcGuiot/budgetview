@@ -1,37 +1,46 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.accounts.EstimatedPositionDetailsDialog;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BalanceStat;
-import org.designup.picsou.model.Month;
+import org.designup.picsou.gui.utils.AmountColors;
 import org.designup.picsou.model.AccountPositionThreshold;
+import org.designup.picsou.model.CurrentMonth;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
+import org.globsframework.gui.splits.components.HyperlinkButtonUI;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetListener;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.text.DecimalFormat;
 import java.util.Set;
+import java.util.SortedSet;
 
 public class BudgetSummaryView extends View implements GlobSelectionListener, ChangeSetListener, ColorChangeListener {
 
   private JLabel balanceLabel = new JLabel();
-  private JLabel positionLabel = new JLabel();
+  private JButton estimatedPositionButton = new JButton();
+  private JLabel estimatedPositionTitle = new JLabel();
   private JLabel uncategorizedLabel = new JLabel();
   private JLabel multiSelectionLabel = new JLabel();
   private final DecimalFormat format = Formatting.DECIMAL_FORMAT;
 
+  private EstimatedPositionDetailsDialog estimatedPositionDetailsDialog;
+
+  private AmountColors amountColors;
   private Color normalColor;
   private Color errorColor;
 
@@ -40,6 +49,13 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     repository.addChangeListener(this);
     selectionService.addListener(this, Month.TYPE);
     colorService.addListener(this);
+
+    this.amountColors = new AmountColors(directory);
+
+    this.estimatedPositionButton.setAction(new OpenDetailsAction(directory));
+    this.estimatedPositionButton.setUI(createHyperlinkButtonUI());
+    this.estimatedPositionDetailsDialog = new EstimatedPositionDetailsDialog(repository, directory);
+
     update();
   }
 
@@ -52,31 +68,38 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budgetSummaryView.splits",
                                                       repository, directory);
     builder.add("balanceLabel", balanceLabel);
-    builder.add("positionLabel", positionLabel);
+    builder.add("positionButton", estimatedPositionButton);
+    builder.add("positionTitle", estimatedPositionTitle);
     builder.add("uncategorizedLabel", uncategorizedLabel);
     builder.add("multiSelectionLabel", multiSelectionLabel);
 
     parentBuilder.add("budgetSummaryView", builder);
   }
 
-  public void update() {
+  private HyperlinkButtonUI createHyperlinkButtonUI() {
+    HyperlinkButtonUI hyperlinkButtonUI = new HyperlinkButtonUI();
+    hyperlinkButtonUI.setAutoHideIfDisabled(false);
+    hyperlinkButtonUI.setUseNormalColorWhenDisabled(true);
+    return hyperlinkButtonUI;
+  }
 
-    Set<Integer> selectedMonthIds = selectionService.getSelection(Month.TYPE).getValueSet(Month.ID);
+  public void update() {
+    SortedSet<Integer> selectedMonthIds = selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID);
     if (selectedMonthIds.size() > 1) {
       multiSelectionLabel.setText(Lang.get("budgetSummaryView.multimonth", selectedMonthIds.size()));
       multiSelectionLabel.setVisible(true);
     }
     else {
-      multiSelectionLabel.setVisible(false);      
+      multiSelectionLabel.setVisible(false);
     }
 
     GlobList balanceStats =
       repository.getAll(BalanceStat.TYPE, GlobMatchers.fieldIn(BalanceStat.MONTH, selectedMonthIds))
         .sort(BalanceStat.MONTH);
 
-    if (balanceStats.size() == 0) {
+    if (!repository.contains(Transaction.TYPE) || balanceStats.isEmpty()) {
       clear(balanceLabel);
-      clear(positionLabel);
+      clear(estimatedPositionButton);
       clear(uncategorizedLabel);
       return;
     }
@@ -90,14 +113,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
       balanceLabel.setForeground(balance >= 0 ? normalColor : errorColor);
     }
 
-    Double position = balanceStats.getLast().get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION);
-    if (position == null) {
-      clear(positionLabel);
-    }
-    else {
-      positionLabel.setText(format.format(position));
-      positionLabel.setForeground(position > AccountPositionThreshold.getValue(repository) ? normalColor : errorColor);
-    }
+    updateEstimatedPosition(selectedMonthIds);
 
     Double uncategorized = balanceStats.getSum(BalanceStat.UNCATEGORIZED);
     if ((uncategorized != null) && (uncategorized != 0)) {
@@ -107,11 +123,68 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     else {
       clear(uncategorizedLabel);
     }
+
+  }
+
+  private void updateEstimatedPosition(SortedSet<Integer> selectedMonthIds) {
+    if (selectedMonthIds.isEmpty()) {
+      setEstimatedPositionButton(null);
+      return;
+    }
+    Integer lastSelectedMonthId = selectedMonthIds.last();
+
+    Glob balanceStat = getBalanceStat(lastSelectedMonthId);
+    if (balanceStat == null) {
+      setEstimatedPositionButton(null);
+      return;
+    }
+
+    String lastDay = Formatting.toString(Month.getLastDay(lastSelectedMonthId));
+    String dateLabel = Lang.get("accountView.total.date", lastDay);
+
+    Double amount = getEndOfMonthPosition(balanceStat);
+    setEstimatedPositionButton(amount);
+
+    Integer lastImportDate = repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH);
+    if (lastSelectedMonthId >= lastImportDate) {
+      estimatedPositionTitle.setText(Lang.get("accountView.estimated.title"));
+      estimatedPositionButton.setToolTipText(Lang.get("accountView.estimated.tooltip"));
+    }
+    else {
+      estimatedPositionTitle.setText(Lang.get("accountView.real.title"));
+      estimatedPositionButton.setToolTipText(null);
+    }
+  }
+
+  protected void setEstimatedPositionButton(Double amount) {
+    if (amount == null) {
+      clear(estimatedPositionButton);
+      return;
+    }
+
+    String text = Formatting.toString(amount);
+    estimatedPositionButton.setText(text);
+
+    double diff = amount - AccountPositionThreshold.getValue(repository);
+    estimatedPositionButton.setForeground(amountColors.getTextColor(diff));
+  }
+
+  protected Glob getBalanceStat(Integer lastSelectedMonthId) {
+    return repository.find(Key.create(BalanceStat.TYPE, lastSelectedMonthId));
+  }
+
+  protected Double getEndOfMonthPosition(Glob balanceStat) {
+    return balanceStat.get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION);
   }
 
   private void clear(JLabel label) {
     label.setText("-");
     label.setForeground(normalColor);
+  }
+
+  private void clear(JButton button) {
+    button.setText("-");
+    button.setForeground(normalColor);
   }
 
   public void selectionUpdated(GlobSelection selection) {
@@ -130,4 +203,34 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
       update();
     }
   }
+
+  private class OpenDetailsAction extends AbstractAction {
+
+    private GlobList selectedMonths;
+
+    private OpenDetailsAction(Directory directory) {
+      directory.get(SelectionService.class).addListener(new GlobSelectionListener() {
+        public void selectionUpdated(GlobSelection selection) {
+          selectedMonths = selection.getAll(Month.TYPE);
+          selectedMonths.sort(Month.ID);
+
+          if (selectedMonths.isEmpty()) {
+            setEnabled(false);
+            return;
+          }
+
+          Integer monthId = selectedMonths.getLast().get(Month.ID);
+          Integer currentMonthId = CurrentMonth.getLastTransactionMonth(repository);
+          boolean enabled = monthId >= currentMonthId;
+          setEnabled(enabled);
+        }
+      }, Month.TYPE);
+
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      estimatedPositionDetailsDialog.show(selectedMonths);
+    }
+  }
+
 }

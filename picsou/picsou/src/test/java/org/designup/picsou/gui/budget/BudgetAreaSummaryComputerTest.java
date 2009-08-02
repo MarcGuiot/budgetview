@@ -231,14 +231,14 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
 
     public Checker checkOverrunTooltip(String total, String overrunPart) {
       assertEquals("Overrun tooltip",
-                   Lang.get("monthsummary.planned.tooltip.overrun", total, overrunPart),
+                   Lang.get("budgetSummary.planned.tooltip.overrun", total, overrunPart),
                    plannedLabel.getToolTipText());
       return this;
     }
 
     public Checker checkNormalTooltip() {
       assertEquals("Normal tooltip",
-                   Lang.get("monthsummary.planned.tooltip.normal"),
+                   Lang.get("budgetSummary.planned.tooltip.normal"),
                    plannedLabel.getToolTipText());
       return this;
     }

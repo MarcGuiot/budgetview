@@ -1,26 +1,6 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
-  <styles>
-    <style selector="column.message" margin="10"
-           opaque="true" background="block.inner.bg" border="line(block.inner.border)"/>
-    <style selector=".message htmlEditorPane" margin="10" marginTop="5"/>
-    <style selector=".message button" fill="none" anchor="center"/>
-
-    <style selector="label.amount" font="-,plain,10"/>
-
-    <ui name="introMessagePanel" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        borderWidth="1" cornerRadius="6"
-        topColor="monthSummary.introMessage.top"
-        bottomColor="monthSummary.introMessage.bottom"
-        borderColor="monthSummary.introMessage.border"/>
-    <style selector=".introMessage" ui="introMessagePanel" opaque="false" marginTop="20" margin="10" weightY="0"/>
-    <style selector=".introMessage label" margin="2" fill="horizontal" horizontalAlignment="center"
-           foreground="monthSummary.introMessage.text" font="-,bold,14"/>
-
-    <style selector="label.plannedAmount" foreground="" font="-,bold,10"/>
-
-  </styles>
 
   <column name="monthSummary">
 

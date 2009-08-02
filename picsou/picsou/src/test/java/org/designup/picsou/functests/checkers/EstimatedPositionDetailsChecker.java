@@ -2,7 +2,8 @@ package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.Month;
-import org.uispec4j.*;
+import org.uispec4j.TextBox;
+import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class EstimatedPositionDetailsChecker extends GuiChecker {
@@ -47,19 +48,29 @@ public class EstimatedPositionDetailsChecker extends GuiChecker {
   }
 
   public EstimatedPositionDetailsChecker checkFutureTotalLabel(int monthId) {
-    TextBox textBox = window.getTextBox("amountSummary");
+    TextBox textBox = window.getTextBox("estimatedPositionDate");
     assertThat(textBox.textEquals("Estimated balance at " + Formatting.toString(Month.getLastDay(monthId))));
     return this;
   }
 
-  public EstimatedPositionDetailsChecker checkTotalLabel(int monthId) {
-    TextBox textBox = window.getTextBox("amountSummary");
-    assertThat(textBox.textEquals("Balance at " + Formatting.toString(Month.getLastDay(monthId))));
+  public EstimatedPositionDetailsChecker checkPositionDate(String date) {
+    return checkPositionDateText("on " + date);
+  }
+
+  public EstimatedPositionDetailsChecker checkPositionDate(int monthId) {
+    TextBox textBox = window.getTextBox("estimatedPositionDate");
+    assertThat(textBox.textEquals("on " + Formatting.toString(Month.getLastDay(monthId))));
+    return this;
+  }
+
+  public EstimatedPositionDetailsChecker checkPositionDateText(String expected) {
+    TextBox textBox = window.getTextBox("estimatedPositionDate");
+    assertThat(textBox.textEquals(expected));
     return this;
   }
 
   public EstimatedPositionDetailsChecker checkTotal(double amount) {
-    TextBox textBox = window.getTextBox("estimatedPosition");
+    TextBox textBox = window.getTextBox("estimatedPositionDate");
     assertThat(textBox.textEquals(toString(amount, false)));
     return this;
   }
