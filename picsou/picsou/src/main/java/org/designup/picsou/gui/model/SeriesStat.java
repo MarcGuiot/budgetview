@@ -15,7 +15,7 @@ public class SeriesStat {
 
   @Key @Target(Series.class)
   public static LinkField SERIES;
-
+  
   @Key @Target(Month.class)
   public static LinkField MONTH;
 

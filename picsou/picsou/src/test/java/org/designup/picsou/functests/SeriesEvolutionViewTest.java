@@ -90,6 +90,10 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesEvolution.checkForeground("Energy", "Aug 08", "0022BB");
   }
 
+  public void testShowsActualAmountsInThePast() throws Exception {
+    fail("tbd");
+  }
+
   public void testNoData() throws Exception {
     timeline.checkSelection("2008/07");
     views.selectEvolution();

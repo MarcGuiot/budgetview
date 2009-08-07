@@ -18,11 +18,15 @@ import java.awt.*;
 import java.util.Arrays;
 
 public class SeriesEvolutionChecker extends GuiChecker {
+
+  public HistoChecker histoChart;
+
   private Table table;
   private Window mainWindow;
 
   public SeriesEvolutionChecker(Window mainWindow) {
     this.mainWindow = mainWindow;
+    this.histoChart = new HistoChecker(mainWindow);
   }
 
   public SeriesTableChecker initContent() {
@@ -42,6 +46,12 @@ public class SeriesEvolutionChecker extends GuiChecker {
     Table table = getTable();
     int index = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, label);
     assertThat(table.rowEquals(index, Utils.join(new String[]{"", label}, values)));
+  }
+
+  public void select(String label) {
+    Table table = getTable();
+    int index = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, label);
+    table.selectRow(index);
   }
 
   public void doubleClickOnRow(String label) {

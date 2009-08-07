@@ -55,6 +55,12 @@ public class TestUtils {
     }
   }
 
+  public static void assertEquals(double[] actual, double... expected) {
+    if (!Arrays.equals(expected, actual)) {
+      Assert.fail("expected: " + Arrays.toString(expected) + " but was: " + Arrays.toString(actual));
+    }
+  }
+
   public static void assertEquals(int[] actual, int... expected) {
     if (!Arrays.equals(expected, actual)) {
       Assert.fail("expected: " + Arrays.toString(expected) + " but was: " + Arrays.toString(actual));
@@ -116,7 +122,7 @@ public class TestUtils {
   public static <T> void assertEquals(Collection<T> actual, T... expected) {
     assertEquals(Arrays.asList(expected), actual);
   }
-
+  
   public static <T> void assertSetEquals(T[] actual, T... expected) {
     assertSetEquals(Arrays.asList(actual), Arrays.asList(expected));
   }

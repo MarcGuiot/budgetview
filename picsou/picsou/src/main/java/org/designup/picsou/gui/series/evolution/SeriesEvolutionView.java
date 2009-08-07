@@ -42,6 +42,7 @@ public class SeriesEvolutionView extends View {
   private SelectionService parentSelectionService;
   private GlobTableView tableView;
   private JTable table;
+  private SeriesEvolutionChartPanel chartPanel;
   private List<SeriesEvolutionMonthColumn> monthColumns = new ArrayList<SeriesEvolutionMonthColumn>();
   private Integer referenceMonthId;
 
@@ -51,22 +52,20 @@ public class SeriesEvolutionView extends View {
     this.parentSelectionService = directory.get(SelectionService.class);
   }
 
-  private static Directory createLocalDirectory(Directory directory) {
-    Directory localDirectory = new DefaultDirectory(directory);
+  private static Directory createLocalDirectory(Directory parentDirectory) {
+    Directory localDirectory = new DefaultDirectory(parentDirectory);
     SelectionService localSelectionService = new SelectionService();
     localDirectory.add(localSelectionService);
     return localDirectory;
   }
 
   private static GlobRepository createLocalRepository(GlobRepository parentRepository) {
-    GlobRepository localRepository = GlobRepositoryBuilder.init(parentRepository.getIdGenerator()).get();
-
-    SeriesWrapperUpdater updater = new SeriesWrapperUpdater(localRepository);
+    SeriesWrapperUpdater updater = new SeriesWrapperUpdater(parentRepository);
     updater.setExcludeBudgetAreaAll(true);
     updater.setCreateSummaries(true);
     updater.globsReset(parentRepository, Utils.set(BudgetArea.TYPE, Series.TYPE));
     parentRepository.addChangeListener(updater);
-    return localRepository;
+    return parentRepository;
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -151,6 +150,7 @@ public class SeriesEvolutionView extends View {
             column.setReferenceMonthId(referenceMonthId);
           }
           tableView.reset();
+          chartPanel.monthSelected(referenceMonthId);
         }
       }
     }, Month.TYPE);
@@ -166,6 +166,9 @@ public class SeriesEvolutionView extends View {
 
     builder.add("expand", new ExpandTableAction(expansionModel));
     builder.add("collapse", new CollapseTableAction(expansionModel));
+
+    this.chartPanel = new SeriesEvolutionChartPanel(repository, directory);
+    builder.add("histoChart", chartPanel.getHistoChart());
 
     return builder;
   }

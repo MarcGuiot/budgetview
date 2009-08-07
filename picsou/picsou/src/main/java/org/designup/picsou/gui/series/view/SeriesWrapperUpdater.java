@@ -51,7 +51,9 @@ public class SeriesWrapperUpdater implements ChangeSetListener {
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
         Integer seriesId = key.get(Series.ID);
         Glob wrapper = SeriesWrapper.find(localRepository, SeriesWrapperType.SERIES, seriesId);
-        localRepository.delete(wrapper.getKey());
+        if (wrapper != null) {
+          localRepository.delete(wrapper.getKey());
+        }
       }
     });
   }

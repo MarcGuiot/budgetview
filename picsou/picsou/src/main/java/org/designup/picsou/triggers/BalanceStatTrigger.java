@@ -1,6 +1,7 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.model.BalanceStat;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
@@ -9,6 +10,7 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
+import org.globsframework.utils.directory.Directory;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,6 +18,12 @@ import java.util.Map;
 import java.util.Set;
 
 public class BalanceStatTrigger implements ChangeSetListener {
+  private TimeService timeService;
+
+  public BalanceStatTrigger(Directory directory) {
+    this.timeService = directory.get(TimeService.class);
+  }
+
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
     if (changeSet.containsChanges(Transaction.TYPE) || changeSet.containsChanges(SeriesBudget.TYPE)) {
       computeStat(repository);
@@ -69,7 +77,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
     private double endOfMonth = 0;
   }
 
-  private static class BalanceStatCalculator implements GlobFunctor {
+  private class BalanceStatCalculator implements GlobFunctor {
     private Map<Integer, Glob> firstTransactionForMonth = new HashMap<Integer, Glob>();
     private Map<Integer, Glob> lastTransactionForMonth = new HashMap<Integer, Glob>();
     private Map<Integer, SeriesAmounts> monthSeriesAmounts = new HashMap<Integer, SeriesAmounts>();
@@ -338,49 +346,63 @@ public class BalanceStatTrigger implements ChangeSetListener {
 
 
         SeriesAmounts seriesAmounts = monthSeriesAmounts.get(monthId);
-
         if (seriesAmounts == null) {
           seriesAmounts = new SeriesAmounts();
         }
 
         repository.create(Key.create(BalanceStat.TYPE, monthId),
                           value(BalanceStat.MONTH_BALANCE, balance),
+                          value(BalanceStat.BEGIN_OF_MONTH_ACCOUNT_POSITION, beginOfMonthPosition),
+                          value(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION, endOfMonthPosition),
+                          value(BalanceStat.UNCATEGORIZED, seriesAmounts.uncategorized),
 
                           value(BalanceStat.INCOME, seriesAmounts.income),
                           value(BalanceStat.INCOME_REMAINING, seriesAmounts.remainingIncome),
                           value(BalanceStat.INCOME_PLANNED, seriesAmounts.plannedIncome),
+                          value(BalanceStat.INCOME_SUMMARY,
+                                computeSummary(monthId, seriesAmounts.income,  seriesAmounts.plannedIncome)),
 
                           value(BalanceStat.EXPENSE, seriesAmounts.expenses),
                           value(BalanceStat.EXPENSE_REMAINING, seriesAmounts.remaningExpenses),
                           value(BalanceStat.EXPENSE_PLANNED, seriesAmounts.plannedExpenses),
+                          value(BalanceStat.EXPENSE_SUMMARY,
+                                computeSummary(monthId, seriesAmounts.expenses,  seriesAmounts.plannedExpenses)),
 
                           value(BalanceStat.RECURRING, seriesAmounts.recurring),
                           value(BalanceStat.RECURRING_REMAINING, seriesAmounts.remaningRecurring),
                           value(BalanceStat.RECURRING_PLANNED, seriesAmounts.plannedRecurring),
+                          value(BalanceStat.RECURRING_SUMMARY,
+                                computeSummary(monthId, seriesAmounts.recurring,  seriesAmounts.plannedRecurring)),
 
                           value(BalanceStat.ENVELOPES, seriesAmounts.envelopes),
                           value(BalanceStat.ENVELOPES_REMAINING, seriesAmounts.remaningEnvelopes),
                           value(BalanceStat.ENVELOPES_PLANNED, seriesAmounts.plannedEnvelopes),
+                          value(BalanceStat.ENVELOPES_SUMMARY,
+                                computeSummary(monthId, seriesAmounts.envelopes,  seriesAmounts.plannedEnvelopes)),
 
                           value(BalanceStat.SAVINGS, seriesAmounts.savings),
                           value(BalanceStat.SAVINGS_REMAINING, seriesAmounts.remaningSavings),
                           value(BalanceStat.SAVINGS_PLANNED, seriesAmounts.plannedSavings),
+                          value(BalanceStat.SAVINGS_SUMMARY,
+                                computeSummary(monthId, seriesAmounts.savings,  seriesAmounts.plannedSavings)),
 
                           value(BalanceStat.SAVINGS_IN, seriesAmounts.savings_in),
                           value(BalanceStat.SAVINGS_REMAINING_IN, seriesAmounts.remaningSavings_in),
                           value(BalanceStat.SAVINGS_PLANNED_IN, seriesAmounts.plannedSavings_in),
+                          value(BalanceStat.SAVINGS_SUMMARY_IN,
+                                computeSummary(monthId, seriesAmounts.savings_in,  seriesAmounts.plannedSavings_in)),
 
                           value(BalanceStat.SAVINGS_OUT, seriesAmounts.savings_out),
                           value(BalanceStat.SAVINGS_REMAINING_OUT, seriesAmounts.remaningSavings_out),
                           value(BalanceStat.SAVINGS_PLANNED_OUT, seriesAmounts.plannedSavings_out),
+                          value(BalanceStat.SAVINGS_SUMMARY_OUT,
+                                computeSummary(monthId, seriesAmounts.savings_out,  seriesAmounts.plannedSavings_out)),
 
                           value(BalanceStat.SPECIAL, seriesAmounts.special),
                           value(BalanceStat.SPECIAL_REMAINING, seriesAmounts.remaningSpecial),
                           value(BalanceStat.SPECIAL_PLANNED, seriesAmounts.plannedSpecial),
-
-                          value(BalanceStat.UNCATEGORIZED, seriesAmounts.uncategorized),
-                          value(BalanceStat.BEGIN_OF_MONTH_ACCOUNT_POSITION, beginOfMonthPosition),
-                          value(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION, endOfMonthPosition)
+                          value(BalanceStat.SPECIAL_SUMMARY,
+                                computeSummary(monthId, seriesAmounts.special,  seriesAmounts.plannedSpecial))
         );
         if (lastRealKnownTransaction != null) {
           Integer currentMonthId = lastRealKnownTransaction.get(Transaction.BANK_MONTH);
@@ -393,6 +415,13 @@ public class BalanceStatTrigger implements ChangeSetListener {
           }
         }
       }
+    }
+
+    private double computeSummary(Integer monthId, double actual, double planned) {
+      if (monthId >= timeService.getCurrentMonthId()) {
+        return planned;
+      }
+      return actual;
     }
   }
 }

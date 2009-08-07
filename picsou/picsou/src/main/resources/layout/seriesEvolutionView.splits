@@ -10,18 +10,34 @@
     <label text="$seriesEvolution.title" styleClass="blockTitle" marginTop="5"/>
 
     <panel styleClass="block">
-      <column margin="15" marginBottom="10">
-        <scrollPane marginBottom="0" verticalUnitIncrement="10" border="matte(1,1,1,1,seriesEvolution.border)">
-          <table ref="seriesEvolutionTable" rowHeight="20"/>
-        </scrollPane>
 
-        <row styleClass="iconButtonGroup">
-          <button action="expand" styleClass="expand" tooltipText="$seriesEvolution.expand.tooltip"/>
-          <button action="collapse" styleClass="collapse" tooltipText="$seriesEvolution.collapse.tooltip"/>
-          <filler fill="horizontal"/>
+      <verticalSplit styleClass="innerBlock">
+
+        <column weightY="5">
+
+          <scrollPane marginBottom="0" verticalUnitIncrement="10" border="matte(1,1,1,1,seriesEvolution.border)">
+            <table ref="seriesEvolutionTable" rowHeight="20"/>
+          </scrollPane>
+
+          <row styleClass="iconButtonGroup">
+            <button action="expand" styleClass="expand" tooltipText="$seriesEvolution.expand.tooltip"/>
+            <button action="collapse" styleClass="collapse" tooltipText="$seriesEvolution.collapse.tooltip"/>
+            <filler fill="horizontal"/>
+          </row>
+
+        </column>
+
+        <row weightY="5" opaque="true" background="block.inner.bg" border="line(block.inner.border)">
+          <panel weightX="1" opaque="false">
+            <filler fill="horizontal"/>
+          </panel>
+          <row weightX="1" opaque="false">
+            <panel ref="histoChart" margin="20" opaque="true" background="block.inner.bg"/>
+          </row>
         </row>
 
-      </column>
+      </verticalSplit>
+
     </panel>
 
   </column>

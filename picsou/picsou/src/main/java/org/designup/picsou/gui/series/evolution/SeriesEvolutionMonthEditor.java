@@ -130,7 +130,7 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
       return format(balanceStat, BalanceStat.UNCATEGORIZED, budgetArea);
     }
     else if (balanceStat != null) {
-      return format(balanceStat, BalanceStat.getPlanned(budgetArea), budgetArea);
+      return format(balanceStat, BalanceStat.getSummary(budgetArea), budgetArea);
     }
     return "";
   }

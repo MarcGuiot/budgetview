@@ -42,6 +42,9 @@ public class BalanceStat {
   public static DoubleField INCOME_PLANNED;
 
   @DefaultDouble(0.0)
+  public static DoubleField INCOME_SUMMARY;
+
+  @DefaultDouble(0.0)
   public static DoubleField EXPENSE;
 
   @DefaultDouble(0.0)
@@ -49,6 +52,9 @@ public class BalanceStat {
 
   @DefaultDouble(0.0)
   public static DoubleField EXPENSE_PLANNED;
+
+  @DefaultDouble(0.0)
+  public static DoubleField EXPENSE_SUMMARY;
 
   @DefaultDouble(0.0)
   public static DoubleField RECURRING;
@@ -60,6 +66,9 @@ public class BalanceStat {
   public static DoubleField RECURRING_PLANNED;
 
   @DefaultDouble(0.0)
+  public static DoubleField RECURRING_SUMMARY;
+
+  @DefaultDouble(0.0)
   public static DoubleField ENVELOPES;
 
   @DefaultDouble(0.0)
@@ -67,6 +76,9 @@ public class BalanceStat {
 
   @DefaultDouble(0.0)
   public static DoubleField ENVELOPES_PLANNED;
+
+  @DefaultDouble(0.0)
+  public static DoubleField ENVELOPES_SUMMARY;
 
   @DefaultDouble(0.0)
   public static DoubleField SPECIAL;
@@ -78,6 +90,9 @@ public class BalanceStat {
   public static DoubleField SPECIAL_PLANNED;
 
   @DefaultDouble(0.0)
+  public static DoubleField SPECIAL_SUMMARY;
+
+  @DefaultDouble(0.0)
   public static DoubleField SAVINGS;
 
   @DefaultDouble(0.0)
@@ -85,6 +100,9 @@ public class BalanceStat {
 
   @DefaultDouble(0.0)
   public static DoubleField SAVINGS_PLANNED;
+
+  @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_SUMMARY;
 
   @DefaultDouble(0.0)
   public static DoubleField SAVINGS_IN;
@@ -96,6 +114,9 @@ public class BalanceStat {
   public static DoubleField SAVINGS_PLANNED_IN;
 
   @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_SUMMARY_IN;
+
+  @DefaultDouble(0.0)
   public static DoubleField SAVINGS_OUT;
 
   @DefaultDouble(0.0)
@@ -103,6 +124,9 @@ public class BalanceStat {
 
   @DefaultDouble(0.0)
   public static DoubleField SAVINGS_PLANNED_OUT;
+
+  @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_SUMMARY_OUT;
 
   @DefaultDouble(0.0)
   public static DoubleField UNCATEGORIZED;
@@ -160,6 +184,22 @@ public class BalanceStat {
         return RECURRING_PLANNED;
       case SPECIAL:
         return SPECIAL_PLANNED;
+    }
+    throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
+  }
+
+  public static DoubleField getSummary(BudgetArea budgetArea) {
+    switch (budgetArea) {
+      case ENVELOPES:
+        return ENVELOPES_SUMMARY;
+      case INCOME:
+        return INCOME_SUMMARY;
+      case SAVINGS:
+        return SAVINGS_SUMMARY;
+      case RECURRING:
+        return RECURRING_SUMMARY;
+      case SPECIAL:
+        return SPECIAL_SUMMARY;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
   }

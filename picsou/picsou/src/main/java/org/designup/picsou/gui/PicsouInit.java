@@ -24,7 +24,6 @@ import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
-import org.globsframework.model.utils.CachedGlobIdGenerator;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.directory.Directory;
@@ -82,7 +81,7 @@ public class PicsouInit {
     this.repository.addTrigger(new UpdateAccountOnTransactionDelete());
     this.repository.addTrigger(new PositionTrigger());
     this.repository.addTrigger(new PlannedSeriesStatTrigger());
-    this.repository.addTrigger(new BalanceStatTrigger());
+    this.repository.addTrigger(new BalanceStatTrigger(directory));
     this.repository.addTrigger(new SavingsBalanceStatTrigger());
 
     initDirectory(this.repository);
