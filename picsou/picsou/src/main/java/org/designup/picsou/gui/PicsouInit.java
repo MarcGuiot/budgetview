@@ -8,6 +8,7 @@ import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.startup.BackupService;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
 import org.designup.picsou.gui.utils.ExceptionHandler;
+import org.designup.picsou.gui.series.view.SeriesWrapperUpdateTrigger;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.PicsouModel;
@@ -83,6 +84,7 @@ public class PicsouInit {
     this.repository.addTrigger(new PlannedSeriesStatTrigger());
     this.repository.addTrigger(new BalanceStatTrigger());
     this.repository.addTrigger(new SavingsBalanceStatTrigger());
+    this.repository.addTrigger(new SeriesWrapperUpdateTrigger());
 
     initDirectory(this.repository);
 

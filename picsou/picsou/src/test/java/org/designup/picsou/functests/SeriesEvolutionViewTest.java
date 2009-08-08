@@ -54,6 +54,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesEvolution.checkColumnNames(
       "", "June 08", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09"
     );
+
     seriesEvolution.initContent()
       .add("Balance", "", "80.00", "170.00", "120.00", "170.00", "220.00", "-130.00", "120.00")
       .add("Main account", "", "-125.00", "45.00", "165.00", "335.00", "555.00", "425.00", "545.00")

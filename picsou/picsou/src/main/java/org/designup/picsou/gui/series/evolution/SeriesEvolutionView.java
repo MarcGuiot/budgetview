@@ -8,7 +8,6 @@ import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.series.view.*;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.util.Amounts;
@@ -19,7 +18,10 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
-import org.globsframework.model.*;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobStringifiers;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
@@ -37,8 +39,6 @@ public class SeriesEvolutionView extends View {
   public static final int LABEL_COLUMN_INDEX = 1;
   public static final int MONTH_COLUMNS_COUNT = 8;
 
-  private GlobRepository parentRepository;
-
   private SelectionService parentSelectionService;
   private GlobTableView tableView;
   private JTable table;
@@ -47,8 +47,7 @@ public class SeriesEvolutionView extends View {
   private Integer referenceMonthId;
 
   public SeriesEvolutionView(GlobRepository repository, Directory directory) {
-    super(createLocalRepository(repository), createLocalDirectory(directory));
-    this.parentRepository = repository;
+    super(repository, createLocalDirectory(directory));
     this.parentSelectionService = directory.get(SelectionService.class);
   }
 
@@ -59,15 +58,6 @@ public class SeriesEvolutionView extends View {
     return localDirectory;
   }
 
-  private static GlobRepository createLocalRepository(GlobRepository parentRepository) {
-    SeriesWrapperUpdater updater = new SeriesWrapperUpdater(parentRepository);
-    updater.setExcludeBudgetAreaAll(true);
-    updater.setCreateSummaries(true);
-    updater.globsReset(parentRepository, Utils.set(BudgetArea.TYPE, Series.TYPE));
-    parentRepository.addChangeListener(updater);
-    return parentRepository;
-  }
-
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
     parentBuilder.add("seriesEvolutionView", createLocalPanel());
   }
@@ -76,19 +66,28 @@ public class SeriesEvolutionView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/seriesEvolutionView.splits",
                                                       repository, directory);
 
-    SeriesEditionDialog seriesEditionDialog = new SeriesEditionDialog(parentRepository, directory);
+    SeriesEditionDialog seriesEditionDialog = new SeriesEditionDialog(repository, directory);
 
-    ExpandableTableAdapter tableAdapter = new ExpandableTableAdapter();
+    ExpandableTable tableAdapter = new ExpandableTable(new SeriesWrapperMatcher()) {
+      public Glob getSelectedGlob() {
+        int index = table.getSelectedRow();
+        if (index < 0) {
+          return null;
+        }
+        return tableView.getGlobAt(index);
+      }
+    };
 
     // attention CategoryExpansionModel doit etre enregistré comme listener de changetSet avant la table.
     SeriesExpansionModel expansionModel = new SeriesExpansionModel(repository, tableAdapter, true);
     expansionModel.setBaseMatcher(new ActiveSeriesMatcher());
 
-    SeriesWrapperStringifier stringifier = new SeriesWrapperStringifier(parentRepository, directory);
+    SeriesWrapperStringifier stringifier = new SeriesWrapperStringifier(repository, directory);
 
-    SeriesWrapperComparator comparator = new SeriesWrapperComparator(parentRepository, repository, stringifier);
+    SeriesWrapperComparator comparator = new SeriesWrapperComparator(repository, repository, stringifier);
     tableView = GlobTableView.init(SeriesWrapper.TYPE, repository, comparator, directory);
-    parentRepository.addChangeListener(new DefaultChangeSetListener() {
+    tableAdapter.setTable(tableView);
+    repository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(Series.TYPE)) {
           tableView.refresh();
@@ -102,7 +101,7 @@ public class SeriesEvolutionView extends View {
       }
     };
 
-    SeriesEvolutionColors colors = new SeriesEvolutionColors(parentRepository, directory);
+    SeriesEvolutionColors colors = new SeriesEvolutionColors(repository, directory);
     CellPainter backgroundPainter = new SeriesEvolutionBackgroundPainter(colors);
     TableExpansionColumn expandColumn = new TableExpansionColumn(backgroundPainter);
 
@@ -117,7 +116,7 @@ public class SeriesEvolutionView extends View {
 
     for (int offset = -1; offset < -1 + MONTH_COLUMNS_COUNT; offset++) {
       SeriesEvolutionMonthColumn monthColumn =
-        new SeriesEvolutionMonthColumn(offset, tableView, parentRepository, directory, colors, seriesEditionDialog);
+        new SeriesEvolutionMonthColumn(offset, tableView, repository, directory, colors, seriesEditionDialog);
       monthColumns.add(monthColumn);
       tableView.addColumn(monthColumn);
     }
@@ -155,7 +154,7 @@ public class SeriesEvolutionView extends View {
       }
     }, Month.TYPE);
 
-    parentRepository.addChangeListener(new DefaultChangeSetListener() {
+    repository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (!changeSet.containsCreationsOrDeletions(SeriesWrapper.TYPE) &&
             changeSet.containsChanges(SeriesStat.TYPE)) {
@@ -173,24 +172,6 @@ public class SeriesEvolutionView extends View {
     return builder;
   }
 
-  private class ExpandableTableAdapter implements ExpandableTable {
-    public Glob getSelectedGlob() {
-      int index = table.getSelectedRow();
-      if (index < 0) {
-        return null;
-      }
-      return tableView.getGlobAt(index);
-    }
-
-    public void select(Glob seriesWrapper) {
-      tableView.select(seriesWrapper);
-    }
-
-    public void setFilter(GlobMatcher matcher) {
-      tableView.setFilter(matcher);
-    }
-  }
-
   private class ActiveSeriesMatcher implements GlobMatcher {
     public boolean matches(Glob wrapper, GlobRepository repository) {
       if (!SeriesWrapperType.SERIES.isOfType(wrapper)) {
@@ -203,7 +184,7 @@ public class SeriesEvolutionView extends View {
 
       for (int offset = -1; offset < -1 + MONTH_COLUMNS_COUNT; offset++) {
         int monthId = Month.normalize(referenceMonthId + offset);
-        Glob seriesStat = parentRepository.find(Key.create(SeriesStat.SERIES, wrapper.get(SeriesWrapper.ITEM_ID),
+        Glob seriesStat = SeriesEvolutionView.this.repository.find(Key.create(SeriesStat.SERIES, wrapper.get(SeriesWrapper.ITEM_ID),
                                                            SeriesStat.MONTH, monthId));
         if ((seriesStat != null) &&
             (Amounts.isNotZero(seriesStat.get(SeriesStat.PLANNED_AMOUNT))
@@ -213,6 +194,12 @@ public class SeriesEvolutionView extends View {
       }
 
       return false;
+    }
+  }
+
+  private class SeriesWrapperMatcher implements GlobMatcher {
+    public boolean matches(Glob wrapper, GlobRepository repository) {
+      return !SeriesWrapper.isAll(wrapper);
     }
   }
 
