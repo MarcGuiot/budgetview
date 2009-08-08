@@ -55,12 +55,12 @@ public class EstimatedPositionDetailsDialog {
     builder.addLabel("estimatedPosition", BalanceStat.TYPE, new EspectedPositionStringifier()).getComponent();
     builder.addLabel("estimatedPositionDate", BalanceStat.TYPE, new PositionDateStringifier()).getComponent();
     builder.addLabel("initialPosition", BalanceStat.TYPE, new InitialPositionStringifier()).getComponent();
-    addLabel(builder, "remainingIncome", BalanceStat.INCOME_REMAINING);
-    addLabel(builder, "remainingFixed", BalanceStat.RECURRING_REMAINING);
-    addLabel(builder, "remainingEnvelope", BalanceStat.ENVELOPES_REMAINING);
-    addLabel(builder, "remainingInSavings", BalanceStat.SAVINGS_REMAINING_IN);
-    addLabel(builder, "remainingOutSavings", BalanceStat.SAVINGS_REMAINING_OUT);
-    addLabel(builder, "remainingSpecial", BalanceStat.SPECIAL_REMAINING);
+    addLabel(builder, "remainingIncome", BalanceStat.INCOME_REMAINING, true);
+    addLabel(builder, "remainingFixed", BalanceStat.RECURRING_REMAINING, false);
+    addLabel(builder, "remainingEnvelope", BalanceStat.ENVELOPES_REMAINING, false);
+    addLabel(builder, "remainingInSavings", BalanceStat.SAVINGS_IN_REMAINING, false);
+    addLabel(builder, "remainingOutSavings", BalanceStat.SAVINGS_OUT_REMAINING, false);
+    addLabel(builder, "remainingSpecial", BalanceStat.SPECIAL_REMAINING, false);
 
     JPanel panel = builder.load();
 
@@ -69,8 +69,13 @@ public class EstimatedPositionDetailsDialog {
     dialog.pack();
   }
 
-  private void addLabel(GlobsPanelBuilder builder, String name, DoubleField field) {
-    builder.addLabel(name, BalanceStat.TYPE, GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT, field));
+  private void addLabel(GlobsPanelBuilder builder, String name, DoubleField field, boolean isIncome) {
+    builder.addLabel(name, BalanceStat.TYPE, GlobListStringifiers.sum(field, Formatting.DECIMAL_FORMAT, !isIncome));
+  }
+
+  private Glob getLastBalanceStat(GlobList list) {
+    list.sort(BalanceStat.MONTH);
+    return list.getLast();
   }
 
   private class EspectedPositionStringifier implements GlobListStringifier {
@@ -92,11 +97,6 @@ public class EstimatedPositionDetailsDialog {
       final String date = Formatting.toString(Month.getLastDay(balanceStat.get(BalanceStat.MONTH)));
       return Lang.get("estimatedPositionDetails.date", date);
     }
-  }
-
-  private Glob getLastBalanceStat(GlobList list) {
-    list.sort(BalanceStat.MONTH);
-    return list.getLast();
   }
 
   private class InitialPositionStringifier implements GlobListStringifier {

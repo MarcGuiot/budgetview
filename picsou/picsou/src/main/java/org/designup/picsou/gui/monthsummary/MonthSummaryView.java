@@ -117,14 +117,14 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
       this.in = in;
       label = Lang.get("monthsummary.savings." + (in ? "in" : "out"));
       if (in) {
-        remainingField = BalanceStat.SAVINGS_REMAINING_IN;
+        remainingField = BalanceStat.SAVINGS_IN_REMAINING;
         observedField = BalanceStat.SAVINGS_IN;
-        plannedField = BalanceStat.SAVINGS_PLANNED_IN;
+        plannedField = BalanceStat.SAVINGS_IN_PLANNED;
       }
       else {
-        remainingField = BalanceStat.SAVINGS_REMAINING_OUT;
+        remainingField = BalanceStat.SAVINGS_OUT_REMAINING;
         observedField = BalanceStat.SAVINGS_OUT;
-        plannedField = BalanceStat.SAVINGS_PLANNED_OUT;
+        plannedField = BalanceStat.SAVINGS_OUT_PLANNED;
       }
     }
 

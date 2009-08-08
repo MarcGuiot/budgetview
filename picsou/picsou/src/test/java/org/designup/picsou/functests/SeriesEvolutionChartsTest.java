@@ -84,6 +84,10 @@ public class SeriesEvolutionChartsTest extends LoggedInFunctionalTestCase {
       .checkDiffColumn(11, "J", 0.00, 150.00);
   }
 
+  public void testUncategorized() throws Exception {
+    fail("tbd");
+  }
+
   public void testUpdate() throws Exception {
     fail("tbd");
   }

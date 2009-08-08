@@ -4,6 +4,8 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.gui.model.BalanceStat;
+import org.globsframework.model.format.GlobPrinter;
 
 public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
@@ -14,49 +16,64 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
   public void testOneMonth() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/07/07", -29.90, "free telecom")
+      .addTransaction("2008/07/07", -30, "Free")
       .addTransaction("2008/07/08", -1500, "Loyer")
-      .addTransaction("2008/07/09", -60, "Auchan")
-      .addTransaction("2008/07/10", -20, "ED")
-      .addTransaction("2008/07/11", -10, "fnac")
+      .addTransaction("2008/07/09", -300, "Auchan")
+      .addTransaction("2008/07/11", -100, "FNAC")
       .addTransaction("2008/07/12", 1500, "Salaire")
-      .addTransaction("2008/07/13", -23, "cheque")
+      .addTransaction("2008/07/13", -20, "cheque")
       .addTransaction("2008/07/13", -200, "Air France")
-      .addTransaction("2008/07/15", -100, "epargne")
+      .addTransaction("2008/07/15", -100, "VIRT ING")
       .load();
 
     views.selectCategorization();
-    categorization.setNewRecurring("free telecom", "Internet");
+    categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("Loyer", "Rental");
     categorization.setNewEnvelope("Auchan", "Groceries");
-    categorization.setEnvelope("ED", "Groceries");
-    categorization.setNewEnvelope("fnac", "Equipment");
+    categorization.setNewEnvelope("FNAC", "Equipment");
     categorization.setNewIncome("Salaire", "Salaire");
     categorization.setNewSpecial("Air France", "Trips");
-    categorization.setNewSavings("epargne", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "External account");
+    categorization.setNewSavings("VIRT ING", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "External account");
 
     double incomeFor200807 = 1500;
-    double expensesFor200807 = 29.9 + 1500 + 60 + 20 + 10 + 23 + 200 + 100;
+    double expensesFor200807 = 30 + 1500 + 300 + 100 + 20 + 200 + 100;
     double balance = incomeFor200807 - expensesFor200807;
+
+    double incomeFor200808 = 1500;
+    double expensesFor200808 = 30 + 1500 + 300 + 100 + 100;
+
+    double fixed = 30 + 1500;
 
     timeline.selectMonth("2008/07");
     views.selectHome();
     mainAccounts.checkBalance(balance);
     mainAccounts.checkBalanceDetails(incomeFor200807, expensesFor200807);
 
-    mainAccounts.changePosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000, "epargne");
+    mainAccounts.changePosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000, "VIRT ING");
     timeline.checkMonthTooltip("2008/07", balance, 1000.00);
 
-    timeline.selectAll();
-    mainAccounts
-      .checkEstimatedPosition(780.10);
+    timeline.selectMonth("2008/08");
+    mainAccounts.checkEstimatedPosition(1000 + incomeFor200808 - expensesFor200808);
+
     mainAccounts.openEstimatedPositionDetails()
       .checkInitialPosition(1000.00)
       .checkIncome(1500.00)
-      .checkFixed(-1529.90)
-      .checkEnvelope(-90.00)
+      .checkFixed(30 + 1500)
+      .checkEnvelope(300 + 100)
       .checkSavingsOut(0.00)
-      .checkSavingsIn(-100.00)
+      .checkSavingsIn(100.00)
+      .checkProjects(0.00)
+      .close();
+
+    timeline.selectAll();
+    mainAccounts.checkEstimatedPosition(1000 + incomeFor200808 - expensesFor200808);
+    mainAccounts.openEstimatedPositionDetails()
+      .checkInitialPosition(1000.00)
+      .checkIncome(1500.00)
+      .checkFixed(30 + 1500)
+      .checkEnvelope(300 + 100)
+      .checkSavingsOut(0.00)
+      .checkSavingsIn(100.00)
       .checkProjects(0.00)
       .close();
   }
@@ -64,24 +81,24 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
   public void testTwoMonths() throws Exception {
     operations.openPreferences().setFutureMonthsCount(12).validate();
     OfxBuilder.init(this)
-      .addTransaction("2008/07/07", -29.90, "free telecom")
+      .addTransaction("2008/07/07", -29.90, "Free")
       .addTransaction("2008/07/08", -1500, "Loyer")
       .addTransaction("2008/07/09", -60, "Auchan")
       .addTransaction("2008/07/10", -20, "ED")
-      .addTransaction("2008/07/11", -10, "fnac")
+      .addTransaction("2008/07/11", -10, "FNAC")
       .addTransaction("2008/07/12", 1500, "Salaire")
-      .addTransaction("2008/08/07", -29.90, "free telecom")
+      .addTransaction("2008/08/07", -29.90, "Free")
       .addTransaction("2008/08/08", -1500, "Loyer")
       .load();
 
     timeline.selectMonth("2008/07");
 
     views.selectCategorization();
-    categorization.setNewRecurring("free telecom", "internet");
+    categorization.setNewRecurring("Free", "internet");
     categorization.setNewRecurring("Loyer", "rental");
     categorization.setNewEnvelope("Auchan", "groceries");
     categorization.setEnvelope("ED", "groceries");
-    categorization.setNewEnvelope("fnac", "Equipment");
+    categorization.setNewEnvelope("FNAC", "Equipment");
     categorization.setNewIncome("Salaire", "Salaire");
 
     views.selectHome();
@@ -97,7 +114,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization
-      .setRecurring("free telecom", "internet")
+      .setRecurring("Free", "internet")
       .setRecurring("Loyer", "rental");
 
     views.selectHome();
@@ -107,7 +124,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     mainAccounts.openEstimatedPositionDetails()
       .checkInitialPosition(0.0)
       .checkFixed(0)
-      .checkEnvelope(-90)
+      .checkEnvelope(90)
       .checkIncome(1500)
       .close();
     timeline.checkMonthTooltip("2008/08", balanceFor200808, 1410.00);
@@ -122,7 +139,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkInitialPosition(0)
       .checkIncome(1500)
       .checkFixed(0)
-      .checkEnvelope(-90)
+      .checkEnvelope(90)
       .close();
 
     timeline.selectMonth("2008/09");
@@ -132,8 +149,8 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkPositionDate("30/09/2008")
       .checkInitialPosition(1410)
       .checkIncome(1500)
-      .checkFixed(-1529.90)
-      .checkEnvelope(-90)
+      .checkFixed(1529.90)
+      .checkEnvelope(90)
       .close();
   }
 }

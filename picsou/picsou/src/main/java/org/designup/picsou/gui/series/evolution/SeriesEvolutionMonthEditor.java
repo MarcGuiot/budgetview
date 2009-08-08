@@ -8,6 +8,7 @@ import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
@@ -46,6 +47,7 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
   private PaintablePanel rendererPanel;
   private HyperlinkButton editorButton;
   private PaintablePanel editorPanel;
+  private TimeService timeService;
 
   protected SeriesEvolutionMonthEditor(int offset, GlobTableView view,
                                        GlobRepository repository, Directory directory,
@@ -65,6 +67,8 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
 
     editorButton = createHyperlinkButton(action);
     editorPanel = initCellPanel(editorButton, false, new PaintablePanel());
+
+    timeService = this.directory.get(TimeService.class);
   }
 
   public void setReferenceMonth(Integer monthId) {
@@ -144,27 +148,24 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
       return "";
     }
 
+    Glob series = repository.find(Key.create(Series.TYPE, itemId));
+    BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
+
     Double observed = seriesStat.get(SeriesStat.AMOUNT);
     Double planned = seriesStat.get(SeriesStat.PLANNED_AMOUNT);
     Double value;
-    if (!Amounts.isNullOrZero(observed) && !Amounts.isNullOrZero(planned)) {
-      if (observed < 0 && observed < planned) {
-        value = observed;
-      }
-      else {
-        value = planned;
-      }
-    }
-    else if (!Amounts.isNullOrZero(planned)) {
+    int currentMonthId = timeService.getCurrentMonthId();
+    if (referenceMonthId > currentMonthId) {
       value = planned;
+    }
+    else if (referenceMonthId == currentMonthId) {
+      value = Amounts.max(observed, planned, budgetArea.isIncome());
     }
     else {
       value = observed;
     }
 
-    Glob series = repository.find(Key.create(Series.TYPE, itemId));
-    BudgetArea budgeArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
-    return format(value, budgeArea);
+    return format(value, budgetArea);
   }
 
   private String getSummaryLabelText(Glob seriesWrapper) {

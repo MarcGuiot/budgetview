@@ -2,6 +2,19 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.model.BalanceStat;
+import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.model.Transaction;
+import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.model.ChangeSetListener;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.xml.XmlChangeSetWriter;
+
+import java.util.Set;
+import java.io.OutputStreamWriter;
+import java.io.IOException;
 
 public class BudgetSumaryViewTest extends LoggedInFunctionalTestCase {
 
@@ -17,16 +30,15 @@ public class BudgetSumaryViewTest extends LoggedInFunctionalTestCase {
     OfxBuilder
       .init(this)
       .addBankAccount(30006, 10674, "0001212", 1500.00, "2008/07/10")
-      .addTransaction("2008/06/5", 1000.0, "WorldCo")
+      .addTransaction("2008/06/05", 1000.0, "WorldCo")
       .addTransaction("2008/06/10", -200.0, "Auchan")
-      .addTransaction("2008/07/5", -50, "FNAC")
+      .addTransaction("2008/07/05", -50, "FNAC")
       .load();
 
     views.selectBudget();
     timeline.checkSelection("2008/07");
     timeline.selectAll();
-    budgetView.getLabel()
-      .checkUncategorized(1000.00 + 200.00 + 50.00);
+    budgetView.getLabel().checkUncategorized(1000.00 + 200.00 + 50.00);
 
     timeline.selectMonth("2008/07");
 
@@ -43,6 +55,7 @@ public class BudgetSumaryViewTest extends LoggedInFunctionalTestCase {
       .checkUncategorized(50.00);
 
     timeline.selectAll();
+
     budgetView.getLabel()
       .checkMultiSelection(2)
       .checkMonthBalance(+1550.00)

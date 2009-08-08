@@ -108,25 +108,25 @@ public class BalanceStat {
   public static DoubleField SAVINGS_IN;
 
   @DefaultDouble(0.0)
-  public static DoubleField SAVINGS_REMAINING_IN;
+  public static DoubleField SAVINGS_IN_REMAINING;
 
   @DefaultDouble(0.0)
-  public static DoubleField SAVINGS_PLANNED_IN;
+  public static DoubleField SAVINGS_IN_PLANNED;
 
   @DefaultDouble(0.0)
-  public static DoubleField SAVINGS_SUMMARY_IN;
+  public static DoubleField SAVINGS_IN_SUMMARY;
 
   @DefaultDouble(0.0)
   public static DoubleField SAVINGS_OUT;
 
   @DefaultDouble(0.0)
-  public static DoubleField SAVINGS_REMAINING_OUT;
+  public static DoubleField SAVINGS_OUT_REMAINING;
 
   @DefaultDouble(0.0)
-  public static DoubleField SAVINGS_PLANNED_OUT;
+  public static DoubleField SAVINGS_OUT_PLANNED;
 
   @DefaultDouble(0.0)
-  public static DoubleField SAVINGS_SUMMARY_OUT;
+  public static DoubleField SAVINGS_OUT_SUMMARY;
 
   @DefaultDouble(0.0)
   public static DoubleField UNCATEGORIZED;

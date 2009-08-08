@@ -32,7 +32,7 @@ public class Amounts {
     if (commaSep == len - 2) {
       coef = 10.;
     }
-    else if (commaSep == len - 3){
+    else if (commaSep == len - 3) {
       coef = 100.;
     }
     else {
@@ -40,7 +40,7 @@ public class Amounts {
       if (dotSep == len - 2) {
         coef = 10.;
       }
-      else if (dotSep == len - 3){
+      else if (dotSep == len - 3) {
         coef = 100.;
       }
       else {
@@ -57,5 +57,14 @@ public class Amounts {
 
   public static boolean equal(Double val1, Double val2) {
     return Math.abs(val1 - val2) < 0.0001;
+  }
+
+  public static double max(Double val1, Double val2, boolean isIncome) {
+    if (isIncome) {
+      return Math.max(val1, val2);
+    }
+    else {
+      return Math.min(val1, val2);
+    }
   }
 }

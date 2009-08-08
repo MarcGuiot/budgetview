@@ -64,7 +64,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Recurring", "", "80.00", "30.00", "80.00", "30.00", "80.00", "30.00", "80.00")
       .add("Energy", "", "50.00", "", "50.00", "", "50.00", "", "50.00")
       .add("Internet", "", "30.00", "30.00", "30.00", "30.00", "30.00", "30.00", "30.00")
-      .add("Envelopes", "", "20.00", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00")
+      .add("Envelopes", "", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00")
       .add("Groceries", "", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00")
       .add("Special", "", "", "", "", "", "+100.00", "300.00", "")
       .add("Christmas", "", "", "", "", "", "", "300.00", "")
@@ -91,7 +91,44 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testShowsActualAmountsInThePast() throws Exception {
-    fail("tbd");
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "00000123", 1000.0, "2008/07/30")
+      .addTransaction("2008/05/10", -250.00, "Auchan")
+      .addTransaction("2008/05/15", -200.00, "Auchan")
+      .addTransaction("2008/05/01", 300.00, "WorldCo")
+      .addTransaction("2008/05/15", 350.00, "Big Inc.")
+      .addTransaction("2008/06/10", -280.00, "Auchan")
+      .addTransaction("2008/06/15", -200.00, "Auchan")
+      .addTransaction("2008/06/01", 310.00, "WorldCo")
+      .addTransaction("2008/06/15", 360.00, "Big Inc.")
+      .addTransaction("2008/07/10", -200.00, "Auchan")
+      .addTransaction("2008/07/15", -140.00, "Auchan")
+      .addTransaction("2008/07/01", 320.00, "WorldCo")
+      .addTransaction("2008/07/15", 350.00, "Big Inc.")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewIncome("WorldCo", "John's");
+    categorization.setNewIncome("Big Inc.", "Mary's");
+
+    timeline.selectMonth("2008/06");
+
+    views.selectEvolution();
+    seriesEvolution.initContent()
+      .add("Balance", "200.00", "190.00", "200.00", "200.00", "200.00", "200.00", "200.00", "200.00")
+      .add("Main account", "480.00", "670.00", "870.00", "1070.00", "1270.00", "1470.00", "1670.00", "1870.00")
+      .add("Savings account", "", "", "", "", "", "", "", "")
+      .add("To categorize", "", "", "", "", "", "", "", "")
+      .add("Income", "650.00", "670.00", "680.00", "680.00", "680.00", "680.00", "680.00", "680.00")
+      .add("John's", "300.00", "310.00", "320.00", "320.00", "320.00", "320.00", "320.00", "320.00")
+      .add("Mary's", "350.00", "360.00", "360.00", "360.00", "360.00", "360.00", "360.00", "360.00")
+      .add("Recurring", "", "", "", "", "", "", "", "")
+      .add("Envelopes", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
+      .add("Groceries", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
+      .add("Special", "", "", "", "", "", "", "", "")
+      .add("Savings", "", "", "", "", "", "", "", "")
+      .check();
   }
 
   public void testNoData() throws Exception {

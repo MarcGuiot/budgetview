@@ -107,7 +107,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkPosition("Epargne", 900);
   }
 
-  public void testSavingsAccountFillFromExternalAccountBalance() throws Exception {
+  public void testSavingsAccountFilledFromExternalAccountBalance() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectHome();
     savingsAccounts.createNewAccount()
@@ -148,6 +148,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/10");
     views.selectBudget();
     budgetView.savings.checkTotalAmounts(0, 0);
+
     views.selectHome();
     savingsAccounts.checkPosition("Epargne LCL", 1000);
 
@@ -372,9 +373,10 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     timeline.selectMonth("2008/06");
     budgetView.savings.checkTotalAmounts(0, 0);
-    views.selectHome();
-    timeline.selectMonth("2008/10");
+
     views.selectSavings();
+
+    timeline.selectMonth("2008/10");
     savingsView.checkAmount("Epargne", "CAF", 0, 300);
     timeline.selectMonth("2008/06");
     savingsView.checkAmount("Epargne", "CAF", 300, 300);
