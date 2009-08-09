@@ -47,14 +47,13 @@ public class BalanceStatTrigger implements ChangeSetListener {
     private Map<BudgetArea, BudgetAreaAmounts> budgetAreaAmounts = new HashMap<BudgetArea, BudgetAreaAmounts>();
     private Glob lastRealKnownTransaction;
     private Glob currentMonth;
-    private Glob absolutFirstTransaction;
+    private Glob absoluteFirstTransaction;
 
     private GlobRepository repository;
 
     private BalanceStatCalculator(GlobRepository repository) {
       this.repository = repository;
       this.currentMonth = repository.get(CurrentMonth.KEY);
-
     }
 
     public void run(Glob transaction, GlobRepository repository) throws Exception {
@@ -81,10 +80,9 @@ public class BalanceStatTrigger implements ChangeSetListener {
         lastTransactionForMonth.put(monthId, transaction);
       }
 
-      if (absolutFirstTransaction == null ||
-          (TransactionComparator.ASCENDING_BANK.compare(transaction, absolutFirstTransaction) < 0)) {
-        absolutFirstTransaction = transaction;
-
+      if (absoluteFirstTransaction == null ||
+          (TransactionComparator.ASCENDING_BANK.compare(transaction, absoluteFirstTransaction) < 0)) {
+        absoluteFirstTransaction = transaction;
       }
 
       if (!transaction.get(Transaction.PLANNED) &&
@@ -112,8 +110,8 @@ public class BalanceStatTrigger implements ChangeSetListener {
         Glob nextLast = lastTransactionForMonth.get(monthId);
         endOfMonthTransaction = nextLast == null ? beginOfMonthTransaction : nextLast;
         if (endOfMonthTransaction == null) {
-          endOfMonthTransaction = absolutFirstTransaction;
-          beginOfMonthTransaction = absolutFirstTransaction;
+          endOfMonthTransaction = absoluteFirstTransaction;
+          beginOfMonthTransaction = absoluteFirstTransaction;
           if (endOfMonthTransaction == null) {
             GlobList globList = repository.getAll(Account.TYPE,
                                                   GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()));
@@ -178,7 +176,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
     private void getBudgetAreaValues(GlobRepository repository, Integer monthId, FieldValuesBuilder values) {
 
       budgetAreaAmounts.clear();
-      Integer currentMonthId = currentMonth.get(CurrentMonth.CURRENT_MONTH);
+      Integer lastTransactionMonthId = currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH);
       BudgetAreaAmounts savingsInAmounts = new BudgetAreaAmounts(BudgetArea.SAVINGS);
       BudgetAreaAmounts savingsOutAmounts = new BudgetAreaAmounts(BudgetArea.SAVINGS);
 
@@ -212,14 +210,14 @@ public class BalanceStatTrigger implements ChangeSetListener {
             }
           }
           if (stat.get(SeriesStat.AMOUNT) >= 0) {
-            savingsInAmounts.addValues(stat, currentMonthId);
+            savingsInAmounts.addValues(stat, lastTransactionMonthId);
           }
           else {
-            savingsOutAmounts.addValues(stat, currentMonthId);
+            savingsOutAmounts.addValues(stat, lastTransactionMonthId);
           }
         }
 
-        amounts.addValues(stat, currentMonthId);
+        amounts.addValues(stat, lastTransactionMonthId);
       }
 
       BudgetAreaAmounts uncategorizedAmounts = budgetAreaAmounts.remove(BudgetArea.UNCATEGORIZED);

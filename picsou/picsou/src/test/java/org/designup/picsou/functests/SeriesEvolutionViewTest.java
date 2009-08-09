@@ -132,6 +132,43 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testTakesLastMonthWithTransactionsAsCurrentMonth() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "00000123", 1000.0, "2008/07/30")
+      .addTransaction("2008/03/10", -250.00, "Auchan")
+      .addTransaction("2008/03/15", -200.00, "Auchan")
+      .addTransaction("2008/03/01", 300.00, "WorldCo")
+      .addTransaction("2008/03/15", 350.00, "Big Inc.")
+      .addTransaction("2008/04/10", -280.00, "Auchan")
+      .addTransaction("2008/04/15", -200.00, "Auchan")
+      .addTransaction("2008/04/01", 310.00, "WorldCo")
+      .addTransaction("2008/04/15", 360.00, "Big Inc.")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewIncome("WorldCo", "John's");
+    categorization.setNewIncome("Big Inc.", "Mary's");
+
+    timeline.selectMonth("2008/04");
+
+    views.selectEvolution();
+    seriesEvolution.initContent()
+      .add("Balance", "200.00", "190.00", "190.00", "190.00", "190.00", "190.00", "190.00", "190.00")
+      .add("Main accounts", "810.00", "1000.00", "1190.00", "1380.00", "1570.00", "1760.00", "1950.00", "2140.00")
+      .add("Savings accounts", "", "", "", "", "", "", "", "")
+      .add("To categorize", "", "", "", "", "", "", "", "")
+      .add("Income", "650.00", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00")
+      .add("John's", "300.00", "310.00", "310.00", "310.00", "310.00", "310.00", "310.00", "310.00")
+      .add("Mary's", "350.00", "360.00", "360.00", "360.00", "360.00", "360.00", "360.00", "360.00")
+      .add("Recurring", "", "", "", "", "", "", "", "")
+      .add("Envelopes", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
+      .add("Groceries", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
+      .add("Special", "", "", "", "", "", "", "", "")
+      .add("Savings", "", "", "", "", "", "", "", "")
+      .check();
+  }
+
   public void testNoData() throws Exception {
     timeline.checkSelection("2008/07");
     views.selectEvolution();

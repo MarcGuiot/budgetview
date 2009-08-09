@@ -8,9 +8,9 @@ import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
-import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.gui.splits.components.HyperlinkButton;
@@ -47,7 +47,7 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
   private PaintablePanel rendererPanel;
   private HyperlinkButton editorButton;
   private PaintablePanel editorPanel;
-  private TimeService timeService;
+  private Glob currentMonth;
 
   protected SeriesEvolutionMonthEditor(int offset, GlobTableView view,
                                        GlobRepository repository, Directory directory,
@@ -56,6 +56,7 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
     super(view, directory.get(DescriptionService.class), repository, directory);
     this.offset = offset;
     this.colors = colors;
+    this.currentMonth = repository.get(CurrentMonth.KEY);
 
     OpenSeriesEditionDialogAction action = new OpenSeriesEditionDialogAction(seriesEditionDialog);
 
@@ -67,8 +68,6 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
 
     editorButton = createHyperlinkButton(action);
     editorPanel = initCellPanel(editorButton, false, new PaintablePanel());
-
-    timeService = this.directory.get(TimeService.class);
   }
 
   public void setReferenceMonth(Integer monthId) {
@@ -150,20 +149,7 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
 
     Glob series = repository.find(Key.create(Series.TYPE, itemId));
     BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
-
-    Double observed = seriesStat.get(SeriesStat.AMOUNT);
-    Double planned = seriesStat.get(SeriesStat.PLANNED_AMOUNT);
-    Double value;
-    int currentMonthId = timeService.getCurrentMonthId();
-    if (referenceMonthId > currentMonthId) {
-      value = planned;
-    }
-    else if (referenceMonthId == currentMonthId) {
-      value = Amounts.max(observed, planned, budgetArea.isIncome());
-    }
-    else {
-      value = observed;
-    }
+    Double value = seriesStat.get(SeriesStat.SUMMARY_AMOUNT);
 
     return format(value, budgetArea);
   }
