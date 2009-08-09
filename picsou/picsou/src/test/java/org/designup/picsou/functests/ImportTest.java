@@ -215,7 +215,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkInitialAmountSelected("0.0")
       .checkInitialMessageDisplayed()
       .setAmount(12.33)
-      .checkDialogClosed();
+      .validate();
 
     importDialog.checkClosed();
 

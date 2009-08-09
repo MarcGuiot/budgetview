@@ -17,15 +17,15 @@ public class AccountPositionEditionChecker extends GuiChecker {
   }
 
   public AccountPositionEditionChecker setAmount(Double amount) {
-    window.getInputTextBox("amountField").setText(Double.toString(amount));
-    return this;
-  }
-
-  public AccountPositionEditionChecker setAmountWithoutEnter(Double amount) {
     TextBox textBox = window.getInputTextBox("amountField");
     textBox.clear();
     textBox.appendText(Double.toString(amount));
     return this;
+  }
+
+  public void setAmountAndEnter(Double amount) {
+    window.getInputTextBox("amountField").setText(Double.toString(amount));
+    UISpecAssert.assertFalse(window.isVisible());
   }
 
   public AccountPositionEditionChecker checkOperationLabel(String label) {
@@ -61,11 +61,6 @@ public class AccountPositionEditionChecker extends GuiChecker {
 
   public AccountPositionEditionChecker checkInitialMessageDisplayed() {
     checkComponentVisible(window, JTextArea.class, "initialMessage", true);
-    return this;
-  }
-
-  public AccountPositionEditionChecker checkDialogClosed() {
-    UISpecAssert.assertFalse(window.isVisible());
     return this;
   }
 

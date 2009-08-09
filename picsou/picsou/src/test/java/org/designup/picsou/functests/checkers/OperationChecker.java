@@ -100,7 +100,7 @@ public class OperationChecker {
           if (amount != null) {
             Window window = WindowInterceptor.getModalDialog(okButton.triggerClick());
             AccountPositionEditionChecker accountPosition = new AccountPositionEditionChecker(window);
-            accountPosition.setAmountWithoutEnter(amount);
+            accountPosition.setAmount(amount);
             return accountPosition.triggerValidate();
           }
           return okButton.triggerClick();

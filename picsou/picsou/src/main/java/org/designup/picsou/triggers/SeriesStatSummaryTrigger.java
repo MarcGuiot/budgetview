@@ -12,7 +12,6 @@ import java.util.Set;
 
 public class SeriesStatSummaryTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
-
     if (!changeSet.containsChanges(SeriesStat.TYPE)) {
       return;
     }

@@ -219,6 +219,51 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     );
   }
 
+  public void testDeletingTheShownSeries() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "00000123", 1000.0, "2008/07/30")
+      .addTransaction("2008/07/01", 320.00, "WorldCo")
+      .addTransaction("2008/07/15", 350.00, "Big Inc.")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewIncome("WorldCo", "John's");
+    categorization.setNewIncome("Big Inc.", "Mary's");
+
+    timeline.selectMonth("2008/07");
+
+    views.selectEvolution();
+    seriesEvolution.initContent()
+      .add("Balance", "", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00")
+      .add("Main accounts", "", "1000.00", "1670.00", "2340.00", "3010.00", "3680.00", "4350.00", "5020.00")
+      .add("Savings accounts", "", "", "", "", "", "", "", "")
+      .add("To categorize", "", "", "", "", "", "", "", "")
+      .add("Income", "", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00")
+      .add("John's", "", "320.00", "320.00", "320.00", "320.00", "320.00", "320.00", "320.00")
+      .add("Mary's", "", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
+      .add("Recurring", "", "", "", "", "", "", "", "")
+      .add("Envelopes", "", "", "", "", "", "", "", "")
+      .add("Special", "", "", "", "", "", "", "", "")
+      .add("Savings", "", "", "", "", "", "", "", "")
+      .check();
+
+    seriesEvolution.editSeries("John's", "Jul 08")
+      .deleteCurrentSeriesWithConfirmation();
+
+    seriesEvolution.initContent()
+      .add("Balance", "", "670.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
+      .add("Main accounts", "", "1000.00", "1350.00", "1700.00", "2050.00", "2400.00", "2750.00", "3100.00")
+      .add("Savings accounts", "", "", "", "", "", "", "", "")
+      .add("To categorize", "", "320.00", "", "", "", "", "", "")
+      .add("Income", "", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
+      .add("Mary's", "", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
+      .add("Recurring", "", "", "", "", "", "", "", "")
+      .add("Envelopes", "", "", "", "", "", "", "", "")
+      .add("Special", "", "", "", "", "", "", "", "")
+      .add("Savings", "", "", "", "", "", "", "", "")
+      .check();
+  }
+
   public void testNothingIsShownAfterTheLastMonth() throws Exception {
 
     operations.openPreferences().setFutureMonthsCount(3).validate();

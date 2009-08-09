@@ -3,7 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 
-public class SeriesEvolutionChartsTest extends LoggedInFunctionalTestCase {
+public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     setCurrentMonth("2009/07");
@@ -33,7 +33,14 @@ public class SeriesEvolutionChartsTest extends LoggedInFunctionalTestCase {
 
     views.selectEvolution();
 
+    timeline.selectMonth("2009/07");
+    seriesEvolution.select("To categorize");
+    seriesEvolution.histoChart
+      .checkLineColumn(0, "J", 50.00)
+      .checkLineColumn(1, "J", 20.00);
+
     timeline.selectMonth("2009/06");
+    seriesEvolution.select("Balance");
     seriesEvolution.histoChart
       .checkColumnCount(7)
       .checkDiffColumn(0, "J", 650.00, 450.00);
@@ -64,10 +71,14 @@ public class SeriesEvolutionChartsTest extends LoggedInFunctionalTestCase {
       .checkDiffColumn(0, "J", 300.00, 300.00)
       .checkDiffColumn(1, "J", 300.00, 320.00);
 
-    seriesEvolution.select("To categorize");
+    seriesEvolution.editSeries("John's", "Jul 09")
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount(500)
+      .validate();
     seriesEvolution.histoChart
-      .checkLineColumn(0, "J", 50.00)
-      .checkLineColumn(1, "J", 20.00);
+      .checkDiffColumn(0, "J", 500.00, 300.00)
+      .checkDiffColumn(1, "J", 500.00, 320.00);
   }
 
   public void testDisplaysUpToTwelveMonthsInThePast() throws Exception {
@@ -125,13 +136,41 @@ public class SeriesEvolutionChartsTest extends LoggedInFunctionalTestCase {
       .checkLineColumn(2, "S", 600.00)
       .checkLineColumn(3, "O", 800.00)
       .checkLineColumn(6, "J", 1400.00);
-  }
 
-  public void testUncategorized() throws Exception {
-    fail("tbd");
-  }
+    views.selectHome();
 
-  public void testUpdate() throws Exception {
-    fail("tbd");
+    savingsAccounts.editPosition("ING").setAmount(300.00).validate();
+
+    views.selectEvolution();
+    seriesEvolution.histoChart
+      .checkColumnCount(7)
+      .checkLineColumn(0, "J", 300.00)
+      .checkLineColumn(1, "A", 500.00)
+      .checkLineColumn(2, "S", 700.00)
+      .checkLineColumn(3, "O", 900.00)
+      .checkLineColumn(6, "J", 1500.00);
+
+    seriesEvolution.select("Main accounts");
+    seriesEvolution.histoChart
+      .checkColumnCount(7)
+      .checkLineColumn(0, "J", 1000.00)
+      .checkLineColumn(1, "A", 800.00)
+      .checkLineColumn(2, "S", 600.00)
+      .checkLineColumn(3, "O", 400.00)
+      .checkLineColumn(6, "J", -200.00);
+
+    views.selectHome();
+    mainAccounts.editPosition("Account n. 00000123")
+      .setAmount(500.00)
+      .validate();
+
+    views.selectEvolution();
+    seriesEvolution.histoChart
+      .checkColumnCount(7)
+      .checkLineColumn(0, "J", 500.00)
+      .checkLineColumn(1, "A", 300.00)
+      .checkLineColumn(2, "S", 100.00)
+      .checkLineColumn(3, "O", -100.00)
+      .checkLineColumn(6, "J", -700.00);
   }
 }

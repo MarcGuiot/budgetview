@@ -51,8 +51,8 @@ public class SeriesEvolutionChecker extends GuiChecker {
   public void select(String label) {
     Table table = getTable();
     int index = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, label);
-    if (index < 1) {
-      Assert.fail("No line found with label: " + label + " - available names: " + getLineLabels());
+    if (index < 0) {
+      Assert.fail("No line found with label '" + label + "' - available names: " + getLineLabels());
     }
     table.selectRow(index);
   }

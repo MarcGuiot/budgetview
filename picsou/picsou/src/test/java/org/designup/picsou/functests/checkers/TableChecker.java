@@ -5,6 +5,8 @@ import org.uispec4j.Table;
 import java.util.List;
 import java.util.ArrayList;
 
+import junit.framework.Assert;
+
 public abstract class TableChecker {
 
   private List<Object[]> content = new ArrayList<Object[]>();
@@ -39,7 +41,7 @@ public abstract class TableChecker {
     }
     builder.append("  .check();");
 
-    System.out.print(builder.toString());
+    Assert.fail("Use: \n" + builder.toString());
   }
 
 }

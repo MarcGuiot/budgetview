@@ -86,8 +86,7 @@ public class AccountViewChecker extends GuiChecker {
   public AccountViewChecker changePosition(String accountName, final double balance, final String operationLabel) {
     editPosition(accountName)
       .checkOperationLabel(operationLabel.toUpperCase())
-      .setAmountWithoutEnter(balance)
-      .validate();
+      .setAmountAndEnter(balance);
     return this;
   }
 

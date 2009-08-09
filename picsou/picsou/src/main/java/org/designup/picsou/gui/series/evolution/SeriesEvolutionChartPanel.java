@@ -15,16 +15,15 @@ import org.designup.picsou.model.Series;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
@@ -95,6 +94,20 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     );
 
     timeService = directory.get(TimeService.class);
+
+    repository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(BalanceStat.TYPE)
+            || changeSet.containsChanges(SavingsBalanceStat.TYPE)
+            || changeSet.containsChanges(SeriesStat.TYPE)) {
+          update();
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        update();
+      }
+    });
   }
 
   public HistoChart getHistoChart() {
@@ -128,6 +141,9 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
   }
 
   private void update() {
+    if ((currentWrapper != null) && !currentWrapper.exists()) {
+      currentWrapper = null;
+    }
     if ((currentMonthId == null) || (currentWrapper == null)) {
       histoChart.clear();
       return;
@@ -259,7 +275,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     for (int monthId : getMonthIds()) {
       String label = getMonthLabel(monthId);
       Glob stat = repository.find(Key.create(SavingsBalanceStat.MONTH, monthId,
-                                                    SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID));
+                                             SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID));
       Double value = stat != null ? stat.get(SavingsBalanceStat.END_OF_MONTH_POSITION) : 0.0;
       dataset.add(value, getMonthLabel(monthId));
     }
