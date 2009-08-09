@@ -57,8 +57,8 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     seriesEvolution.initContent()
       .add("Balance", "", "80.00", "170.00", "120.00", "170.00", "220.00", "-130.00", "120.00")
-      .add("Main account", "", "-125.00", "45.00", "165.00", "335.00", "555.00", "425.00", "545.00")
-      .add("Savings account", "", "", "", "", "", "", "", "")
+      .add("Main accounts", "", "-125.00", "45.00", "165.00", "335.00", "555.00", "425.00", "545.00")
+      .add("Savings accounts", "", "", "", "", "", "", "", "")
       .add("To categorize", "", "40.00", "", "", "", "", "", "")
       .add("Income", "", "300.00", "300.00", "300.00", "300.00", "300.00", "300.00", "300.00")
       .add("Salary", "", "300.00", "300.00", "300.00", "300.00", "300.00", "300.00", "300.00")
@@ -75,8 +75,8 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     seriesEvolution.checkForeground("To categorize", "Jul 08", "red");
 
-    seriesEvolution.checkForeground("Main account", "Jul 08", "darkRed");
-    seriesEvolution.checkForeground("Main account", "Aug 08", "darkGrey");
+    seriesEvolution.checkForeground("Main accounts", "Jul 08", "darkRed");
+    seriesEvolution.checkForeground("Main accounts", "Aug 08", "darkGrey");
 
     seriesEvolution.checkForeground("Groceries", "Jul 08", "red");
     seriesEvolution.checkForeground("Groceries", "Aug 08", "0022BB");
@@ -118,8 +118,8 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     views.selectEvolution();
     seriesEvolution.initContent()
       .add("Balance", "200.00", "190.00", "200.00", "200.00", "200.00", "200.00", "200.00", "200.00")
-      .add("Main account", "480.00", "670.00", "870.00", "1070.00", "1270.00", "1470.00", "1670.00", "1870.00")
-      .add("Savings account", "", "", "", "", "", "", "", "")
+      .add("Main accounts", "480.00", "670.00", "870.00", "1070.00", "1270.00", "1470.00", "1670.00", "1870.00")
+      .add("Savings accounts", "", "", "", "", "", "", "", "")
       .add("To categorize", "", "", "", "", "", "", "", "")
       .add("Income", "650.00", "670.00", "680.00", "680.00", "680.00", "680.00", "680.00", "680.00")
       .add("John's", "300.00", "310.00", "320.00", "320.00", "320.00", "320.00", "320.00", "320.00")
@@ -139,7 +139,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       "", "June 08", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09"
     );
     seriesEvolution.checkTableIsEmpty(
-      "Balance", "Main account", "Savings account", "To categorize",
+      "Balance", "Main accounts", "Savings accounts", "To categorize",
       "Income", "Recurring", "Envelopes", "Special", "Savings");
   }
 
@@ -219,13 +219,13 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("GlobalCorp", "Salary 2");
 
     views.selectEvolution();
-    String[] expanded = {"Balance", "Main account", "Savings account", "To categorize",
+    String[] expanded = {"Balance", "Main accounts", "Savings accounts", "To categorize",
                          "Income", "Salary", "Salary 2",
                          "Recurring", "Internet",
                          "Envelopes", "Groceries",
                          "Special", "Savings"};
 
-    String[] collapsed = {"Balance", "Main account", "Savings account", "To categorize",
+    String[] collapsed = {"Balance", "Main accounts", "Savings accounts", "To categorize",
                           "Income", "Recurring", "Envelopes", "Special", "Savings"};
 
     seriesEvolution.checkRowLabels(expanded);
@@ -237,7 +237,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesEvolution.checkRowLabels(expanded);
 
     seriesEvolution.doubleClickOnRow("Income");
-    seriesEvolution.checkRowLabels("Balance", "Main account", "Savings account", "To categorize",
+    seriesEvolution.checkRowLabels("Balance", "Main accounts", "Savings accounts", "To categorize",
                                    "Income",
                                    "Recurring", "Internet",
                                    "Envelopes", "Groceries",
@@ -354,8 +354,8 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesEvolution.checkClipboardExport(
       "\t\tJune 08\tJul 08\tAug 08\tSep 08\tOct 08\tNov 08\tDec 08\tJan 09\n" +
       "\tBalance\t\t3416.00\t-200.00\t-200.00\t-200.00\t-200.00\t-200.00\t-200.00\n" +
-      "\tMain account\t\t-200.00\t-400.00\t-600.00\t-800.00\t-1000.00\t-1200.00\t-1400.00\n" +
-      "\tSavings account\t\t\t\t\t\t\t\t\n" +
+      "\tMain accounts\t\t-200.00\t-400.00\t-600.00\t-800.00\t-1000.00\t-1200.00\t-1400.00\n" +
+      "\tSavings accounts\t\t\t\t\t\t\t\t\n" +
       "\tTo categorize\t\t3864.00\t\t\t\t\t\t\n" +
       "\tIncome\t\t\t\t\t\t\t\t\n" +
       "\tRecurring\t\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\n" +

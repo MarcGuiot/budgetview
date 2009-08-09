@@ -34,10 +34,10 @@ public class HistoChartDemo {
     directory.add(PicsouColors.createColorService());
 
     HistoDiffColors colors = new HistoDiffColors(
-      "histo.balance.income.line",
-      "histo.balance.income.overrun",
-      "histo.balance.expenses.line",
-      "histo.balance.expenses.overrun",
+      "histo.income.line",
+      "histo.income.overrun",
+      "histo.expenses.line",
+      "histo.expenses.overrun",
       "histo.balance.fill",
       "histo.balance.fill.selected",
       directory

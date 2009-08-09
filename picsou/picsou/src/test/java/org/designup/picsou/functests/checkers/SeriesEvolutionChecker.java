@@ -15,7 +15,7 @@ import org.uispec4j.utils.KeyUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
+import java.util.*;
 
 public class SeriesEvolutionChecker extends GuiChecker {
 
@@ -51,7 +51,18 @@ public class SeriesEvolutionChecker extends GuiChecker {
   public void select(String label) {
     Table table = getTable();
     int index = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, label);
+    if (index < 1) {
+      Assert.fail("No line found with label: " + label + " - available names: " + getLineLabels());
+    }
     table.selectRow(index);
+  }
+
+  private java.util.List<String> getLineLabels() {
+    java.util.List<String> labels = new ArrayList<String>();
+    for (int row = 0; row < table.getRowCount(); row++) {
+      labels.add(table.getContentAt(row, SeriesEvolutionView.LABEL_COLUMN_INDEX).toString());
+    }
+    return labels;
   }
 
   public void doubleClickOnRow(String label) {

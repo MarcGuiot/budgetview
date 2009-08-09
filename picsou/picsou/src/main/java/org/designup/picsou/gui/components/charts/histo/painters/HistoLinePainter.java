@@ -10,9 +10,11 @@ import java.awt.*;
 public class HistoLinePainter implements HistoPainter {
 
   private HistoLineDataset dataset;
+  private HistoLineColors colors;
 
-  public HistoLinePainter(HistoLineDataset dataset) {
+  public HistoLinePainter(HistoLineDataset dataset, HistoLineColors colors) {
     this.dataset = dataset;
+    this.colors = colors;
   }
 
   public HistoDataset getDataset() {
@@ -38,16 +40,17 @@ public class HistoLinePainter implements HistoPainter {
       int width = right - left;
 
       g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.6f));
-      g2.setColor(Colors.toColor("99FF99"));
       if (y < y0) {
+        g2.setColor(colors.getPositiveFillColor());
         g2.fillRect(left, y, width, y0 - y);
       }
       else {
+        g2.setColor(colors.getNegativeFillColor());
         g2.fillRect(left, y0, width, y - y0);
       }
 
       g2.setComposite(AlphaComposite.Src);
-      g2.setColor(Color.GREEN);
+      g2.setColor(colors.getLineColor());
       g2.setStroke(new BasicStroke(2));
       g2.drawLine(left, previousY, left, y);
       g2.drawLine(left, y, right, y);
