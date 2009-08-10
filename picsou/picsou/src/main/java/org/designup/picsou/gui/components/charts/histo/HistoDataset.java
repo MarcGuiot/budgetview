@@ -2,7 +2,7 @@ package org.designup.picsou.gui.components.charts.histo;
 
 public interface HistoDataset {
 
-  public int getSize();
+  public int size();
 
   public double getMaxPositiveValue();
 
@@ -13,7 +13,7 @@ public interface HistoDataset {
   boolean isSelected(int index);
 
   public static final HistoDataset NULL = new HistoDataset() {
-    public int getSize() {
+    public int size() {
       return 0;
     }
 

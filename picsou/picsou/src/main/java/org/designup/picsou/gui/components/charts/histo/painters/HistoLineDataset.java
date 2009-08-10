@@ -13,7 +13,7 @@ public class HistoLineDataset implements HistoDataset {
   private List<String> labels = new ArrayList<String>();
   private List<Double> values = new ArrayList<Double>();
 
-  public int getSize() {
+  public int size() {
     return labels.size();
   }
 

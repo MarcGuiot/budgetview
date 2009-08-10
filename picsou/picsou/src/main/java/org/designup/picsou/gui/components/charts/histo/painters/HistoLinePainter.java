@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.components.charts.histo.painters;
 
-import org.globsframework.gui.splits.color.Colors;
 import org.designup.picsou.gui.components.charts.histo.HistoPainter;
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.HistoChartMetrics;
@@ -23,14 +22,14 @@ public class HistoLinePainter implements HistoPainter {
 
   public void paint(Graphics2D g2, HistoChartMetrics metrics) {
 
-    if (dataset.getSize() == 0) {
+    if (dataset.size() == 0) {
       return;
     }
 
     int y0 = metrics.y(0);
     int previousY = metrics.y(dataset.getValue(0));
 
-    for (int i = 0; i < dataset.getSize(); i++) {
+    for (int i = 0; i < dataset.size(); i++) {
       int left = metrics.left(i);
       int right = metrics.right(i);
 

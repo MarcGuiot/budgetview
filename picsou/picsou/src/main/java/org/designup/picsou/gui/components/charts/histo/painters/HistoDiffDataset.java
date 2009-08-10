@@ -19,7 +19,7 @@ public class HistoDiffDataset implements HistoDataset {
   private List<Boolean> selected = new ArrayList<Boolean>();
   private List<Boolean> future = new ArrayList<Boolean>();
 
-  public int getSize() {
+  public int size() {
     return labels.size();
   }
 

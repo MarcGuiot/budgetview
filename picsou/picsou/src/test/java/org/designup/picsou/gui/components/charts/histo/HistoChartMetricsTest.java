@@ -3,12 +3,13 @@ package org.designup.picsou.gui.components.charts.histo;
 import junit.framework.TestCase;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.InvalidParameter;
+import org.designup.picsou.gui.components.ChartTestCase;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 
-public class HistoChartMetricsTest extends TestCase {
+public class HistoChartMetricsTest extends ChartTestCase {
 
   public void testColumns() throws Exception {
 
@@ -84,18 +85,5 @@ public class HistoChartMetricsTest extends TestCase {
     double[] actual = metrics.scaleValues();
     Arrays.sort(actual);
     TestUtils.assertEquals(actual, expected);
-  }
-
-  private FontMetrics getFontMetrics() {
-    JLabel label = new JLabel();
-    return new FontMetrics(label.getFont()) {
-      public int stringWidth(String str) {
-        return str.length() * 5;
-      }
-
-      public int getHeight() {
-        return 12;
-      }
-    };
   }
 }

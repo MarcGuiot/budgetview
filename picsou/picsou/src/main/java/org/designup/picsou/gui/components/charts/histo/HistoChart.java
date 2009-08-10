@@ -45,7 +45,7 @@ public class HistoChart<T extends HistoDataset> extends JPanel {
 
     HistoChartMetrics metrics =
       new HistoChartMetrics(chartWidth, chartHeight, getFontMetrics(getFont()),
-                            dataset.getSize(), dataset.getMaxNegativeValue(), dataset.getMaxPositiveValue());
+                            dataset.size(), dataset.getMaxNegativeValue(), dataset.getMaxPositiveValue());
 
     g2.setColor(colors.getChartBgColor());
     g2.fillRect(metrics.chartX(), 0, metrics.chartWidth(), metrics.chartHeight());
@@ -54,7 +54,7 @@ public class HistoChart<T extends HistoDataset> extends JPanel {
     g2.drawRect(metrics.chartX(), 0, metrics.chartWidth(), metrics.chartHeight());
 
     g2.setStroke(new BasicStroke(1));
-    for (int i = 0; i < dataset.getSize(); i++) {
+    for (int i = 0; i < dataset.size(); i++) {
       String label = dataset.getLabel(i);
       g2.setColor(dataset.isSelected(i) ? colors.getSelectedLabelColor() : colors.getLabelColor());
       g2.drawString(label, metrics.labelX(label, i), metrics.labelY());

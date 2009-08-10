@@ -1,29 +1,32 @@
 package org.designup.picsou.gui.experiment;
 
-import org.designup.picsou.gui.components.charts.StackChart;
-import org.designup.picsou.gui.components.charts.StackChartElement;
+import org.designup.picsou.gui.components.charts.stack.StackChart;
+import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
+import org.designup.picsou.gui.components.charts.stack.StackChartColors;
 import org.globsframework.gui.splits.layout.SingleComponentPanels;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 public class StackChartDemo {
   private static final double[] VALUES = {2, 0, 8, 5, -10, 10, 4};
 
   public static void main(String[] args) {
 
-    SortedSet<StackChartElement> elements = new TreeSet<StackChartElement>();
-    elements.add(new StackChartElement("label 1", 100.0, false));
-    elements.add(new StackChartElement("label 2", 600.0, false));
-    elements.add(new StackChartElement("label 3", 1.0, false));
-    elements.add(new StackChartElement("label 4", 1000.0, false));
-    elements.add(new StackChartElement("label 5", 300.0, false));
-    elements.add(new StackChartElement("label 6 is longer", 200.0, false));
+    StackChartDataset leftDataset = new StackChartDataset();
+    leftDataset.add("item 1", 1700.0);
+
+    StackChartDataset rightDataset = new StackChartDataset();
+    rightDataset.add("label 1", 100.0);
+    rightDataset.add("label 2", 600.0);
+    rightDataset.add("label 3", 1.0);
+    rightDataset.add("label 4", 1000.0);
+    rightDataset.add("label 5", 300.0);
+    rightDataset.add("label 6 is longer", 200.0);
 
     StackChart chart = new StackChart();
-    chart.setValues(elements);
+//    chart.update(leftDataset, new StackChartColors(), rightDataset, new StackChartColors());
+    chart.update(rightDataset, new StackChartColors());
 
     JFrame frame = new JFrame();
     frame.setContentPane(SingleComponentPanels.create(chart, new Insets(20, 20, 20, 20)));

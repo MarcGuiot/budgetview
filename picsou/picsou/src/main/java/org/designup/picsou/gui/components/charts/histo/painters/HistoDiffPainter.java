@@ -22,14 +22,14 @@ public class HistoDiffPainter implements HistoPainter {
 
   public void paint(Graphics2D g2, HistoChartMetrics metrics) {
 
-    if (dataset.getSize() == 0) {
+    if (dataset.size() == 0) {
       return;
     }
 
     int previousReferenceY = metrics.y(dataset.getReferenceValue(0));
     int previousActualY = metrics.y(dataset.getActualValue(0));
 
-    for (int i = 0; i < dataset.getSize(); i++) {
+    for (int i = 0; i < dataset.size(); i++) {
       int left = metrics.left(i);
       int right = metrics.right(i);
 

@@ -19,7 +19,7 @@ public class HistoChecker extends GuiChecker {
 
   public HistoChecker checkColumnCount(int count) {
     HistoDataset dataset = getDataset(HistoDataset.class);
-    Assert.assertEquals(count, dataset.getSize());
+    Assert.assertEquals(count, dataset.size());
     return this;
   }
 
