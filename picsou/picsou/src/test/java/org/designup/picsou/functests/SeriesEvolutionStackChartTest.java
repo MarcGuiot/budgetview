@@ -109,18 +109,60 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("Internet", 30.00);
 
     seriesEvolution.select("Income");
-    checkStandardCaseMainBalance();
+    seriesEvolution.balanceChart.getLeftDataset()
+      .checkSize(1)
+      .checkValue("Income", 670.00, true);
+    seriesEvolution.balanceChart.getRightDataset()
+      .checkSize(3)
+      .checkValue("Recurring", 90.00)
+      .checkValue("Envelopes", 450.00)
+      .checkValue("Savings", 100.00);
     seriesEvolution.seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Mary's", 350.00)
       .checkValue("John's", 320.00);
 
     seriesEvolution.select("Mary's");
-    checkStandardCaseMainBalance();
+    seriesEvolution.balanceChart.getLeftDataset()
+      .checkSize(1)
+      .checkValue("Income", 670.00, true);
+    seriesEvolution.balanceChart.getRightDataset()
+      .checkSize(3)
+      .checkValue("Recurring", 90.00)
+      .checkValue("Envelopes", 450.00)
+      .checkValue("Savings", 100.00);
     seriesEvolution.seriesChart.getSingleDataset()
       .checkSize(2)
-      .checkValue("Mary's", 350.00)
+      .checkValue("Mary's", 350.00, true)
       .checkValue("John's", 320.00);
+
+    seriesEvolution.select("Recurring");
+    seriesEvolution.balanceChart.getLeftDataset()
+      .checkSize(1)
+      .checkValue("Income", 670.00);
+    seriesEvolution.balanceChart.getRightDataset()
+      .checkSize(3)
+      .checkValue("Recurring", 90.00, true)
+      .checkValue("Envelopes", 450.00)
+      .checkValue("Savings", 100.00);
+    seriesEvolution.seriesChart.getSingleDataset()
+      .checkSize(2)
+      .checkValue("Mobile", 60.00)
+      .checkValue("Internet", 30.00);
+
+    seriesEvolution.select("Internet");
+    seriesEvolution.balanceChart.getLeftDataset()
+      .checkSize(1)
+      .checkValue("Income", 670.00);
+    seriesEvolution.balanceChart.getRightDataset()
+      .checkSize(3)
+      .checkValue("Recurring", 90.00, true)
+      .checkValue("Envelopes", 450.00)
+      .checkValue("Savings", 100.00);
+    seriesEvolution.seriesChart.getSingleDataset()
+      .checkSize(2)
+      .checkValue("Mobile", 60.00)
+      .checkValue("Internet", 30.00, true);
   }
 
   private void checkStandardCaseMainBalance() {
@@ -133,6 +175,10 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("Recurring", 90.00)
       .checkValue("Envelopes", 450.00)
       .checkValue("Savings", 100.00);
+  }
+
+  public void testSavings() throws Exception {
+    fail("tbd");
   }
 
   public void testDifferentSignsInBudgetAreaSeries() throws Exception {

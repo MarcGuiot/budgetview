@@ -6,12 +6,14 @@ import java.awt.*;
 public class StackChart extends JPanel {
 
   private StackChartDataset leftDataset;
-  private StackChartColors leftColors;
   private StackChartDataset rightDataset;
-  private StackChartColors rightColors;
+  private StackChartColors colors;
 
   private Font labelFont;
   private Font barTextFont;
+
+  private static final BasicStroke SELECTION_STROKE = new BasicStroke(2);
+  private static final BasicStroke BORDER_STROKE = new BasicStroke(1);
 
   public StackChart() {
     setMinimumSize(new Dimension(150, 40));
@@ -23,28 +25,22 @@ public class StackChart extends JPanel {
   public void update(StackChartDataset dataset,
                      StackChartColors colors) {
     this.leftDataset = dataset;
-    this.leftColors = colors;
     this.rightDataset = null;
-    this.rightColors = null;
+    this.colors = colors;
     repaint();
   }
 
   public void update(StackChartDataset leftDataset,
-                     StackChartColors leftColors,
                      StackChartDataset rightDataset,
-                     StackChartColors rightColors) {
+                     StackChartColors colors) {
     this.leftDataset = leftDataset;
-    this.leftColors = leftColors;
     this.rightDataset = rightDataset;
-    this.rightColors = rightColors;
+    this.colors = colors;
     repaint();
   }
 
   public void clear() {
-    this.leftDataset = null;
-    this.leftColors = null;
-    this.rightDataset = null;
-    this.rightColors = null;
+    update(null, null, null);
     repaint();
   }
 
@@ -73,15 +69,30 @@ public class StackChart extends JPanel {
         new StackChartMetrics(height, width,
                               g2.getFontMetrics(labelFont), g2.getFontMetrics(barTextFont),
                               Math.max(leftDataset.getTotal(), rightDataset.getTotal()));
-      paintBlocks(g2, metrics, metrics.computeBlocks(leftDataset), metrics.leftLayout(), leftColors);
-      paintBlocks(g2, metrics, metrics.computeBlocks(rightDataset), metrics.rightLayout(), rightColors);
+      paintBlocks(g2, metrics,
+                  metrics.computeBlocks(leftDataset),
+                  metrics.leftLayout(),
+                  colors, colors.getLeftBarColor());
+      paintBlocks(g2, metrics,
+                  metrics.computeBlocks(rightDataset),
+                  metrics.rightLayout(),
+                  colors, colors.getRightBarColor());
     }
     else if (leftDataset != null) {
       StackChartMetrics metrics =
         new StackChartMetrics(height, width,
                               g2.getFontMetrics(labelFont), g2.getFontMetrics(barTextFont),
                               leftDataset.getTotal());
-      paintBlocks(g2, metrics, metrics.computeBlocks(leftDataset), metrics.centerLayout(leftDataset.getLongestLabel()), leftColors);
+      paintBlocks(g2, metrics,
+                  metrics.computeBlocks(leftDataset),
+                  metrics.centerLayout(leftDataset.getLongestLabel()),
+                  colors, colors.getLeftBarColor());
+    }
+
+    if (colors != null) {
+      g2.setStroke(BORDER_STROKE);
+      g2.setColor(colors.getBorderColor());
+      g2.drawLine(0, height, width, height);
     }
   }
 
@@ -89,19 +100,28 @@ public class StackChart extends JPanel {
                            StackChartMetrics metrics,
                            StackChartBlock[] blocks,
                            StackChartLayout layout,
-                           StackChartColors colors) {
+                           StackChartColors colors,
+                           Color barColor) {
     float alpha = 1.0f;
     for (StackChartBlock block : blocks) {
       g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
-      g2.setColor(colors.getBarColor());
+      g2.setColor(barColor);
       g2.fillRect(layout.barX(), block.blockY, metrics.barWidth(), block.blockHeight);
 
       g2.setComposite(AlphaComposite.Src);
+
+      if (block.selected) {
+        g2.setColor(colors.getSelectionBorderColor());
+        g2.setStroke(SELECTION_STROKE);
+        g2.drawRect(layout.barX(), block.blockY, metrics.barWidth(), block.blockHeight);
+
+      }
+
       g2.setColor(colors.getBarTextColor());
       g2.setFont(barTextFont);
       g2.drawString(block.barText, layout.barTextX(block.barText), block.barTextY);
 
-      g2.setColor(colors.getLabelColor());
+      g2.setColor(block.selected ? colors.getSelectionTextColor() : colors.getLabelColor());
       g2.setFont(labelFont);
       g2.drawString(block.label, layout.labelTextX(block.label), block.labelTextY);
 

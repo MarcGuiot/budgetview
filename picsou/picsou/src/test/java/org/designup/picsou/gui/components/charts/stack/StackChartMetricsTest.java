@@ -17,9 +17,9 @@ public class StackChartMetricsTest extends ChartTestCase {
 
   public void testStandardBlocks() throws Exception {
 
-    dataset.add("item1", 300);
-    dataset.add("item2", 500);
-    dataset.add("item3", 200);
+    dataset.add("item1", 300.00);
+    dataset.add("item2", 500.00);
+    dataset.add("item3", 200.00);
 
     StackChartBlock[] blocks = metrics.computeBlocks(dataset);
     checkBlockLabels(blocks, "item2", "item1", "item3");
@@ -28,7 +28,7 @@ public class StackChartMetricsTest extends ChartTestCase {
 
   public void testOnlyOneItemPresentInDataset() throws Exception {
 
-    dataset.add("item1", 1000);
+    dataset.add("item1", 1000.00);
 
     StackChartBlock[] blocks = metrics.computeBlocks(dataset);
     checkBlockLabels(blocks, "item1");
@@ -38,12 +38,12 @@ public class StackChartMetricsTest extends ChartTestCase {
 
   public void testHiddenBlocks() throws Exception {
 
-    dataset.add("item1", 300);
-    dataset.add("item2", 500);
-    dataset.add("item3", 100);
-    dataset.add("item4", 5);
-    dataset.add("item5", 25);
-    dataset.add("item6", 80);
+    dataset.add("item1", 300.00);
+    dataset.add("item2", 500.00);
+    dataset.add("item3", 100.00);
+    dataset.add("item4", 5.00);
+    dataset.add("item5", 25.00);
+    dataset.add("item6", 80.00);
 
     StackChartBlock[] blocks = metrics.computeBlocks(dataset);
     checkBlockLabels(blocks, "item2", "item1", "item3", "Other");

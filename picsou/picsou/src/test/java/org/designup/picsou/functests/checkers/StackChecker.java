@@ -45,9 +45,15 @@ public class StackChecker extends GuiChecker {
       return this;
     }
 
-    public DatasetChecker checkValue(String label, double expected) {
+    public DatasetChecker checkValue(String label, double expected, boolean selected) {
       int index = getIndex(label);
       Assert.assertEquals(getErrorMessage(), expected, dataset.getValue(index), 0.01);
+      Assert.assertEquals(getErrorMessage(), selected, dataset.isSelected(index));
+      return this;
+    }
+
+    public DatasetChecker checkValue(String label, double expected) {
+      checkValue(label, expected, false);
       return this;
     }
 
