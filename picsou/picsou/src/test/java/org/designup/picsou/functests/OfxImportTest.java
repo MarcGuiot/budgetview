@@ -34,8 +34,8 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initAmountContent()
-      .add("11/01/2006", "TX 2", -2.20, "To categorize", 0.00, 0.00, "Account n. 00001123")
-      .add("10/01/2006", "TX 1", -1.10, "To categorize", 2.20, 2.20, "Account n. 00001123")
+      .add("11/01/2006", "TX 2", -2.20, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("10/01/2006", "TX 1", -1.10, "To categorize", 2.20, 2.20, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
   }
 
@@ -54,10 +54,10 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initAmountContent()
-      .add("14/01/2006", "TX 4", -4.40, "To categorize", 0.00, 0.00, "Account n. 00001123")
-      .add("13/01/2006", "TX 3", -3.30, "To categorize", 4.40, 4.40, "Account n. 00001123")
-      .add("12/01/2006", "TX 2", -2.20, "To categorize", 7.70, 7.70, "Account n. 00001123")
-      .add("11/01/2006", "TX 1", -1.10, "To categorize", 9.90, 9.90, "Account n. 00001123")
+      .add("14/01/2006", "TX 4", -4.40, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("13/01/2006", "TX 3", -3.30, "To categorize", 4.40, 4.40, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("12/01/2006", "TX 2", -2.20, "To categorize", 7.70, 7.70, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("11/01/2006", "TX 1", -1.10, "To categorize", 9.90, 9.90, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
   }
 
@@ -76,9 +76,9 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     timeline.selectMonths("2005/12", "2006/01");
     transactions
       .initAmountContent()
-      .add("11/01/2006", "TX 2", -2.20, "To categorize", 0.00, 0.00, "Account n. 00001123")
-      .add("10/01/2006", "TX 1", -1.10, "To categorize", 2.20, 2.20, "Account n. 00001123")
-      .add("25/12/2005", "TX 0", -10.00, "To categorize", 3.30, 3.30, "Account n. 00001123")
+      .add("11/01/2006", "TX 2", -2.20, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("10/01/2006", "TX 1", -1.10, "To categorize", 2.20, 2.20, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("25/12/2005", "TX 0", -10.00, "To categorize", 3.30, 3.30, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
   }
 
@@ -97,9 +97,9 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initAmountContent()
-      .add("12/01/2006", "TX 3", -3.30, "To categorize", 0.00, 0.00, "Account n. 00001123")
-      .add("11/01/2006", "TX 2", -2.20, "To categorize", 3.30, 3.30, "Account n. 00001123")
-      .add("10/01/2006", "TX 1", -1.10, "To categorize", 5.50, 5.50, "Account n. 00001123")
+      .add("12/01/2006", "TX 3", -3.30, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("11/01/2006", "TX 2", -2.20, "To categorize", 3.30, 3.30, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("10/01/2006", "TX 1", -1.10, "To categorize", 5.50, 5.50, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
   }
 
@@ -121,11 +121,11 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initAmountContent()
-      .add("16/01/2006", "TX 6", -6.60, "To categorize", 0.00, 0.00, "Account n. 00001123")
-      .add("15/01/2006", "TX 5", -5.50, "To categorize", 6.60, 6.60, "Account n. 00001123")
-      .add("14/01/2006", "TX 4", -4.40, "To categorize", 12.10, 12.10, "Account n. 00001123")
-      .add("13/01/2006", "TX 3", -3.30, "To categorize", 16.50, 16.50, "Account n. 00001123")
-      .add("12/01/2006", "TX 2", -2.20, "To categorize", 19.80, 19.80, "Account n. 00001123")
+      .add("16/01/2006", "TX 6", -6.60, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("15/01/2006", "TX 5", -5.50, "To categorize", 6.60, 6.60, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("14/01/2006", "TX 4", -4.40, "To categorize", 12.10, 12.10, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("13/01/2006", "TX 3", -3.30, "To categorize", 16.50, 16.50, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("12/01/2006", "TX 2", -2.20, "To categorize", 19.80, 19.80, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
   }
 

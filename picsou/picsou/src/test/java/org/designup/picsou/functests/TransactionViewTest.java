@@ -88,7 +88,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     UISpecAssert.assertTrue(
       table.rowEquals(table.getRowIndex(TransactionView.LABEL_COLUMN_INDEX, "ESSENCE"),
                       new String[]{"01/05/2006", "01/05/2006", "Envelopes", "(prelevement)Voiture", "Carburant",
-                                   "ESSENCE", "-70.00", "frais pro", "330.00", "330.00", "Account n. 00001123"}));
+                                   "ESSENCE", "-70.00", "frais pro", "330.00", "330.00", OfxBuilder.DEFAULT_ACCOUNT_NAME}));
   }
 
   public void testNavigatingToCategorizationView() throws Exception {
@@ -215,10 +215,10 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .add("01/07/2006", "Planned: Voiture", -70.00, "Voiture", 260.00, "Main accounts")
       .add("06/06/2006", "Planned: Nounou", -100.00, "Nounou", 330.00, "Main accounts")
       .add("01/06/2006", "Planned: Voiture", -70.00, "Voiture", 430.00, "Main accounts")
-      .add("06/05/2006", "NOUNOU", -100.00, "Nounou", 500.00, 500.00, "Account n. 00001123")
-      .add("03/05/2006", "PEAGE", -30.00, "To categorize", 600.00, 600.00, "Account n. 00001123")
-      .add("02/05/2006", "SG", -200.00, "To categorize", 630.00, 630.00, "Account n. 00001123")
-      .add("01/05/2006", "ESSENCE", -70.00, "Voiture", 830.00, 830.00, "Account n. 00001123")
+      .add("06/05/2006", "NOUNOU", -100.00, "Nounou", 500.00, 500.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("03/05/2006", "PEAGE", -30.00, "To categorize", 600.00, 600.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("02/05/2006", "SG", -200.00, "To categorize", 630.00, 630.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("01/05/2006", "ESSENCE", -70.00, "Voiture", 830.00, 830.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
   }
 

@@ -37,6 +37,9 @@ public enum BudgetArea implements GlobConstantContainer {
   private boolean income;
   private boolean overrunAllowed;
 
+  public static final BudgetArea[] INCOME_AREAS = {INCOME};
+  public static final BudgetArea[] EXPENSES_AREAS = {RECURRING, ENVELOPES, SPECIAL, SAVINGS};
+
   BudgetArea(String name, int id, boolean isIncome, boolean overrunAllowed) {
     this.name = name;
     this.id = id;
@@ -104,5 +107,9 @@ public enum BudgetArea implements GlobConstantContainer {
       result.add(repository.get(budgetArea.getKey()));
     }
     return result;
+  }
+
+  public double getMultiplier() {
+    return isIncome() ? 1 : -1;
   }
 }

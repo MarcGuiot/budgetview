@@ -167,8 +167,7 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
     }
 
     if (id.equals(SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID)) {
-      Glob balanceStat = repository.find(Key.create(SavingsBalanceStat.MONTH, referenceMonthId,
-                                                    SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID));
+      Glob balanceStat = SavingsBalanceStat.findSummary(referenceMonthId, repository);
       return format(balanceStat, SavingsBalanceStat.END_OF_MONTH_POSITION, null);
     }
 

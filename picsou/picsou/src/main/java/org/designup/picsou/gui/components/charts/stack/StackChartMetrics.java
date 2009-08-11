@@ -16,7 +16,6 @@ public class StackChartMetrics {
   private FontMetrics labelFontMetrics;
   private FontMetrics barTextFontMetrics;
   private double maxValue;
-  private int fontHeight;
   private int minTextHeight;
   private int barWidth;
 
@@ -30,7 +29,7 @@ public class StackChartMetrics {
     this.labelFontMetrics = labelFontMetrics;
     this.barTextFontMetrics = barTextFontMetrics;
     this.maxValue = maxValue;
-    this.fontHeight = labelFontMetrics.getMaxAscent() - labelFontMetrics.getMaxDescent();
+    int fontHeight = labelFontMetrics.getMaxAscent() - labelFontMetrics.getMaxDescent();
     this.minTextHeight = fontHeight + VERTICAL_TEXT_MARGIN;
     this.barWidth = Math.min(40, 10 + labelFontMetrics.stringWidth("100%"));
   }
@@ -52,7 +51,7 @@ public class StackChartMetrics {
 
       String label;
       int percentage;
-      if (remainingHeight > minTextHeight) {
+      if (height >= minTextHeight) {
         label = dataset.getLabel(i);
         percentage = (int)Math.round(value * 100 / dataset.getTotal());
         remainingPercentage -= percentage;

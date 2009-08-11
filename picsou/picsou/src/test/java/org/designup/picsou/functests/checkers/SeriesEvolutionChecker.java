@@ -20,13 +20,19 @@ import java.util.*;
 public class SeriesEvolutionChecker extends GuiChecker {
 
   public HistoChecker histoChart;
+  public StackChecker balanceChart;
+  public StackChecker seriesChart;
 
   private Table table;
   private Window mainWindow;
 
+  private static final String PANEL_NAME = "seriesEvolutionView";
+
   public SeriesEvolutionChecker(Window mainWindow) {
     this.mainWindow = mainWindow;
     this.histoChart = new HistoChecker(mainWindow);
+    this.balanceChart = new StackChecker(mainWindow, PANEL_NAME, "balanceChart");
+    this.seriesChart = new StackChecker(mainWindow, PANEL_NAME, "seriesChart");
   }
 
   public SeriesTableChecker initContent() {
@@ -92,7 +98,7 @@ public class SeriesEvolutionChecker extends GuiChecker {
   }
 
   private Panel getPanel() {
-    return mainWindow.getPanel("seriesEvolutionView");
+    return mainWindow.getPanel(PANEL_NAME);
   }
 
   public SeriesEditionDialogChecker editSeries(String rowLabel, String columnLabel) {

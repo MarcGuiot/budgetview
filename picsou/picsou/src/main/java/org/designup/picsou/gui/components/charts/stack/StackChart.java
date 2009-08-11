@@ -14,10 +14,10 @@ public class StackChart extends JPanel {
   private Font barTextFont;
 
   public StackChart() {
-    setMinimumSize(new Dimension(200, 40));
-    setPreferredSize(new Dimension(200, 1000));
-    labelFont = getFont();
-    barTextFont = getFont().deriveFont(9f);
+    setMinimumSize(new Dimension(150, 40));
+    setPreferredSize(new Dimension(150, 1000));
+    labelFont = getFont().deriveFont(9f);
+    barTextFont = labelFont;
   }
 
   public void update(StackChartDataset dataset,
@@ -26,6 +26,7 @@ public class StackChart extends JPanel {
     this.leftColors = colors;
     this.rightDataset = null;
     this.rightColors = null;
+    repaint();
   }
 
   public void update(StackChartDataset leftDataset,
@@ -36,6 +37,23 @@ public class StackChart extends JPanel {
     this.leftColors = leftColors;
     this.rightDataset = rightDataset;
     this.rightColors = rightColors;
+    repaint();
+  }
+
+  public void clear() {
+    this.leftDataset = null;
+    this.leftColors = null;
+    this.rightDataset = null;
+    this.rightColors = null;
+    repaint();
+  }
+
+  public StackChartDataset getLeftDataset() {
+    return leftDataset;
+  }
+
+  public StackChartDataset getRightDataset() {
+    return rightDataset;
   }
 
   public void paint(Graphics g) {

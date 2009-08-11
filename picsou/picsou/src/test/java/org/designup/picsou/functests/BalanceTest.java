@@ -58,7 +58,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .add("20/06/2009", "Planned: Tel", -29.90, "Tel", -69.80, "Main accounts")
       .add("22/05/2009", "PROV", -10.00, "Courses", -10.00, -39.90, "Manual")
       .add("20/05/2009", "Planned: Tel", -29.90, "Tel", -29.90, "Main accounts")
-      .add("20/04/2009", "FREE TELECOM", -29.90, "Tel", 0.00, 0.00, "Account n. 00001123")
+      .add("20/04/2009", "FREE TELECOM", -29.90, "Tel", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
     views.selectHome();
     timeline.selectMonth("2009/05");

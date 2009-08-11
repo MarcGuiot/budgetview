@@ -129,7 +129,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
 
     views.selectCategorization();
-    categorization.setNewSavings("Virt Compte Epargne", "Epargne", "Account n. 00001123", "Livret");
+    categorization.setNewSavings("Virt Compte Epargne", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "Livret");
 
     views.selectBudget();
 

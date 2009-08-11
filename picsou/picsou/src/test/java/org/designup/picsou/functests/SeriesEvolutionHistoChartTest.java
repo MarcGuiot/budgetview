@@ -49,7 +49,11 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     seriesEvolution.histoChart
       .checkColumnCount(8)
       .checkDiffColumn(0, "J", 650.00, 450.00)
-      .checkDiffColumn(1, "J", 670.00, 340.00);
+      .checkDiffColumn(1, "J", 670.00, 450.00)
+      .checkDiffColumn(2, "A", 670.00, 450.00)
+      .checkDiffColumn(3, "S", 670.00, 450.00)
+      .checkDiffColumn(4, "O", 670.00, 450.00)
+      .checkDiffColumn(5, "N", 670.00, 450.00);
 
     timeline.selectMonth("2009/06");
     seriesEvolution.select("Income");

@@ -38,15 +38,15 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions.initAmountContent()
       .add("10/10/2008", "Planned: Epargne", 100.00, "Epargne", 1200.00, 1200.00, "Epargne LCL")
-      .add("10/10/2008", "Planned: Epargne", -100.00, "Epargne", -200.00, -200.00, "Account n. 00001123")
+      .add("10/10/2008", "Planned: Epargne", -100.00, "Epargne", -200.00, -200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/09/2008", "Planned: Epargne", 100.00, "Epargne", 1100.00, 1100.00, "Epargne LCL")
-      .add("10/09/2008", "Planned: Epargne", -100.00, "Epargne", -100.00, -100.00, "Account n. 00001123")
+      .add("10/09/2008", "Planned: Epargne", -100.00, "Epargne", -100.00, -100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/08/2008", "VIREMENT", 100.00, "Epargne", 1000.00, 1000.00, "Epargne LCL")
-      .add("10/08/2008", "VIREMENT", -100.00, "Epargne", 0.00, 0.00, "Account n. 00001123")
+      .add("10/08/2008", "VIREMENT", -100.00, "Epargne", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/07/2008", "VIREMENT", 100.00, "Epargne", 900.00, 900.00, "Epargne LCL")
-      .add("10/07/2008", "VIREMENT", -100.00, "Epargne", 100.00, 100.00, "Account n. 00001123")
+      .add("10/07/2008", "VIREMENT", -100.00, "Epargne", 100.00, 100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/06/2008", "VIREMENT", 100.00, "Epargne", 800.00, 800.00, "Epargne LCL")
-      .add("10/06/2008", "VIREMENT", -100.00, "Epargne", 200.00, 200.00, "Account n. 00001123")
+      .add("10/06/2008", "VIREMENT", -100.00, "Epargne", 200.00, 200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
 
     views.selectHome();
@@ -89,17 +89,17 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     transactions.initAmountContent()
       .add("10/10/2008", "Planned: Epargne", 100.00, "Epargne", 900.00, 900.00, "Epargne LCL")
-      .add("10/10/2008", "Planned: Epargne", -100.00, "Epargne", 100.00, 100.00, "Account n. 00001123")
+      .add("10/10/2008", "Planned: Epargne", -100.00, "Epargne", 100.00, 100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("01/10/2008", "Planned: Achat Tele", -300.00, "Achat Tele", 800.00, 800.00, "Epargne LCL")
-      .add("01/10/2008", "Planned: Achat Tele", 300.00, "Achat Tele", 200.00, 200.00, "Account n. 00001123")
+      .add("01/10/2008", "Planned: Achat Tele", 300.00, "Achat Tele", 200.00, 200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/09/2008", "Planned: Epargne", 100.00, "Epargne", 1100.00, 1100.00, "Epargne LCL")
-      .add("10/09/2008", "Planned: Epargne", -100.00, "Epargne", -100.00, -100.00, "Account n. 00001123")
+      .add("10/09/2008", "Planned: Epargne", -100.00, "Epargne", -100.00, -100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/08/2008", "VIREMENT", 100.00, "Epargne", 1000.00, 1000.00, "Epargne LCL")
-      .add("10/08/2008", "VIREMENT", -100.00, "Epargne", 0.00, 0.00, "Account n. 00001123")
+      .add("10/08/2008", "VIREMENT", -100.00, "Epargne", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/07/2008", "VIREMENT", 100.00, "Epargne", 900.00, 900.00, "Epargne LCL")
-      .add("10/07/2008", "VIREMENT", -100.00, "Epargne", 100.00, 100.00, "Account n. 00001123")
+      .add("10/07/2008", "VIREMENT", -100.00, "Epargne", 100.00, 100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/06/2008", "VIREMENT", 100.00, "Epargne", 800.00, 800.00, "Epargne LCL")
-      .add("10/06/2008", "VIREMENT", -100.00, "Epargne", 200.00, 200.00, "Account n. 00001123")
+      .add("10/06/2008", "VIREMENT", -100.00, "Epargne", 200.00, 200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
 
     timeline.selectMonth("2008/10");
@@ -176,11 +176,11 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectData();
     transactions.initAmountContent()
-      .add("10/10/2008", "Planned: Epargne", -100.00, "Epargne", -200.00, -200.00, "Account n. 00001123")
-      .add("10/09/2008", "Planned: Epargne", -100.00, "Epargne", -100.00, -100.00, "Account n. 00001123")
-      .add("10/08/2008", "VIREMENT", -100.00, "Epargne", 0.00, 0.00, "Account n. 00001123")
-      .add("10/07/2008", "VIREMENT", -100.00, "Epargne", 100.00, 100.00, "Account n. 00001123")
-      .add("10/06/2008", "VIREMENT", -100.00, "Epargne", 200.00, 200.00, "Account n. 00001123")
+      .add("10/10/2008", "Planned: Epargne", -100.00, "Epargne", -200.00, -200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("10/09/2008", "Planned: Epargne", -100.00, "Epargne", -100.00, -100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("10/08/2008", "VIREMENT", -100.00, "Epargne", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("10/07/2008", "VIREMENT", -100.00, "Epargne", 100.00, 100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("10/06/2008", "VIREMENT", -100.00, "Epargne", 200.00, 200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
 
     views.selectHome();
@@ -203,15 +203,15 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions.initAmountContent()
       .add("10/10/2008", "Planned: Epargne", 100.00, "Epargne", 1200.00, 1200.00, "Epargne LCL")
-      .add("10/10/2008", "Planned: Epargne", -100.00, "Epargne", -200.00, -200.00, "Account n. 00001123")
+      .add("10/10/2008", "Planned: Epargne", -100.00, "Epargne", -200.00, -200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/09/2008", "Planned: Epargne", 100.00, "Epargne", 1100.00, 1100.00, "Epargne LCL")
-      .add("10/09/2008", "Planned: Epargne", -100.00, "Epargne", -100.00, -100.00, "Account n. 00001123")
+      .add("10/09/2008", "Planned: Epargne", -100.00, "Epargne", -100.00, -100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/08/2008", "VIREMENT", 100.00, "Epargne", 1000.00, 1000.00, "Epargne LCL")
-      .add("10/08/2008", "VIREMENT", -100.00, "Epargne", 0.00, 0.00, "Account n. 00001123")
+      .add("10/08/2008", "VIREMENT", -100.00, "Epargne", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/07/2008", "VIREMENT", 100.00, "Epargne", 900.00, 900.00, "Epargne LCL")
-      .add("10/07/2008", "VIREMENT", -100.00, "Epargne", 100.00, 100.00, "Account n. 00001123")
+      .add("10/07/2008", "VIREMENT", -100.00, "Epargne", 100.00, 100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/06/2008", "VIREMENT", 100.00, "Epargne", 800.00, 800.00, "Epargne LCL")
-      .add("10/06/2008", "VIREMENT", -100.00, "Epargne", 200.00, 200.00, "Account n. 00001123")
+      .add("10/06/2008", "VIREMENT", -100.00, "Epargne", 200.00, 200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
   }
 
@@ -244,15 +244,15 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions.initAmountContent()
       .add("10/10/2008", "Planned: Epargne", 100.00, "Epargne", 1200.00, 1200.00, "Epargne LCL")
-      .add("10/10/2008", "Planned: Epargne", -100.00, "Epargne", -200.00, -200.00, "Account n. 00001123")
+      .add("10/10/2008", "Planned: Epargne", -100.00, "Epargne", -200.00, -200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/09/2008", "Planned: Epargne", 100.00, "Epargne", 1100.00, 1100.00, "Epargne LCL")
-      .add("10/09/2008", "Planned: Epargne", -100.00, "Epargne", -100.00, -100.00, "Account n. 00001123")
+      .add("10/09/2008", "Planned: Epargne", -100.00, "Epargne", -100.00, -100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/08/2008", "VIREMENT", 100.00, "Epargne", 1000.00, 1000.00, "Epargne LCL")
-      .add("10/08/2008", "VIREMENT", -100.00, "Epargne", 0.00, 0.00, "Account n. 00001123")
+      .add("10/08/2008", "VIREMENT", -100.00, "Epargne", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/07/2008", "VIREMENT", 100.00, "Epargne", 900.00, 900.00, "Epargne LCL")
-      .add("10/07/2008", "VIREMENT", -100.00, "Epargne", 100.00, 100.00, "Account n. 00001123")
+      .add("10/07/2008", "VIREMENT", -100.00, "Epargne", 100.00, 100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/06/2008", "VIREMENT", 100.00, "Epargne", 800.00, 800.00, "Epargne LCL")
-      .add("10/06/2008", "VIREMENT", -100.00, "Epargne", 200.00, 200.00, "Account n. 00001123")
+      .add("10/06/2008", "VIREMENT", -100.00, "Epargne", 200.00, 200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
     views.selectHome();
     savingsAccounts.createNewAccount()
@@ -268,9 +268,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectData();
     transactions.initAmountContent()
-      .add("10/08/2008", "VIREMENT", -100.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
-      .add("10/07/2008", "VIREMENT", -100.00, "To categorize", 100.00, 100.00, "Account n. 00001123")
-      .add("10/06/2008", "VIREMENT", -100.00, "To categorize", 200.00, 200.00, "Account n. 00001123")
+      .add("10/08/2008", "VIREMENT", -100.00, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("10/07/2008", "VIREMENT", -100.00, "To categorize", 100.00, 100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("10/06/2008", "VIREMENT", -100.00, "To categorize", 200.00, 200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
     views.selectCategorization();
     categorization
@@ -280,15 +280,15 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions.initAmountContent()
       .add("10/10/2008", "Planned: Epargne", 100.00, "Epargne", 300.00, 1300.00, "Epargne CIC")
-      .add("10/10/2008", "Planned: Epargne", -100.00, "Epargne", -200.00, -200.00, "Account n. 00001123")
+      .add("10/10/2008", "Planned: Epargne", -100.00, "Epargne", -200.00, -200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/09/2008", "Planned: Epargne", 100.00, "Epargne", 200.00, 1200.00, "Epargne CIC")
-      .add("10/09/2008", "Planned: Epargne", -100.00, "Epargne", -100.00, -100.00, "Account n. 00001123")
+      .add("10/09/2008", "Planned: Epargne", -100.00, "Epargne", -100.00, -100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/08/2008", "VIREMENT", 100.00, "Epargne", 100.00, 1100.00, "Epargne CIC")
-      .add("10/08/2008", "VIREMENT", -100.00, "Epargne", 0.00, 0.00, "Account n. 00001123")
+      .add("10/08/2008", "VIREMENT", -100.00, "Epargne", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/07/2008", "VIREMENT", 100.00, "Epargne", 0.00, 1000.00, "Epargne CIC")
-      .add("10/07/2008", "VIREMENT", -100.00, "Epargne", 100.00, 100.00, "Account n. 00001123")
+      .add("10/07/2008", "VIREMENT", -100.00, "Epargne", 100.00, 100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/06/2008", "VIREMENT", 100.00, "Epargne", -100.00, 900.00, "Epargne CIC")
-      .add("10/06/2008", "VIREMENT", -100.00, "Epargne", 200.00, 200.00, "Account n. 00001123")
+      .add("10/06/2008", "VIREMENT", -100.00, "Epargne", 200.00, 200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
   }
 
@@ -311,7 +311,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions.initAmountContent()
       .add("10/08/2008", "VIREMENT", 100.00, "Epargne", 1000.00, 1000.00, "Epargne")
-      .add("10/08/2008", "VIREMENT", -100.00, "Epargne", 0.00, 0.00, "Account n. 00001123")
+      .add("10/08/2008", "VIREMENT", -100.00, "Epargne", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
 
     views.selectCategorization();
@@ -321,8 +321,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions.initAmountContent()
       .add("10/08/2008", "VIREMENT", 50.00, "Epargne", 1000.00, 1000.00, "Epargne")
-      .add("10/08/2008", "VIREMENT", -50.00, "Epargne", 0.00, 0.00, "Account n. 00001123")
-      .add("10/08/2008", "VIREMENT", -50.00, "Occasional", 50.00, 50.00, "Account n. 00001123")
+      .add("10/08/2008", "VIREMENT", -50.00, "Epargne", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("10/08/2008", "VIREMENT", -50.00, "Occasional", 50.00, 50.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
   }
 
@@ -366,7 +366,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("05/09/2008", "Planned: CAF", 300.00, "CAF", 1300.00, 1300.00, "Epargne")
       .add("05/08/2008", "CAF", 300.00, "CAF", 1000.00, 1000.00, "Epargne")
       .add("05/07/2008", "CAF", 300.00, "CAF", 700.00, 700.00, "Epargne")
-      .add("10/06/2008", "FNAC", -100.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("10/06/2008", "FNAC", -100.00, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("05/06/2008", "CAF", 300.00, "CAF", 400.00, 400.00, "Epargne")
       .check();
 
@@ -398,14 +398,14 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     transactions.initAmountContent()
       .add("05/10/2008", "Planned: CAF", 300.00, "CAF", 2200.00, 2200.00, "Epargne")
-      .add("05/10/2008", "Planned: CAF", -300.00, "CAF", -1200.00, -1200.00, "Account n. 00001123")
+      .add("05/10/2008", "Planned: CAF", -300.00, "CAF", -1200.00, -1200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("05/09/2008", "Planned: CAF", 300.00, "CAF", 1900.00, 1900.00, "Epargne")
-      .add("05/09/2008", "Planned: CAF", -300.00, "CAF", -900.00, -900.00, "Account n. 00001123")
+      .add("05/09/2008", "Planned: CAF", -300.00, "CAF", -900.00, -900.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("05/08/2008", "Planned: CAF", 300.00, "CAF", 1600.00, 1600.00, "Epargne")
-      .add("05/08/2008", "Planned: CAF", -300.00, "CAF", -600.00, -600.00, "Account n. 00001123")
+      .add("05/08/2008", "Planned: CAF", -300.00, "CAF", -600.00, -600.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("05/07/2008", "Planned: CAF", 300.00, "CAF", 1300.00, 1300.00, "Epargne")
-      .add("05/07/2008", "Planned: CAF", -300.00, "CAF", -300.00, -300.00, "Account n. 00001123")
-      .add("10/06/2008", "FNAC", -100.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("05/07/2008", "Planned: CAF", -300.00, "CAF", -300.00, -300.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("10/06/2008", "FNAC", -100.00, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
 
     views.selectBudget();
@@ -441,7 +441,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     transactions.initAmountContent()
       .add("05/10/2008", "Planned: CAF", 100.00, "CAF", 1200.00, 1200.00, "Epargne")
       .add("05/09/2008", "Planned: CAF", 100.00, "CAF", 1100.00, 1100.00, "Epargne")
-      .add("10/08/2008", "CAF", -100.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("10/08/2008", "CAF", -100.00, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("05/08/2008", "CAF", 100.00, "CAF", 1000.00, 1000.00, "Epargne")
       .check();
 
@@ -464,11 +464,11 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     transactions
       .initAmountContent()
       .add("05/10/2008", "Planned: CAF", 100.00, "CAF", 1300.00, 1300.00, "Epargne")
-      .add("05/10/2008", "Planned: CAF", -100.00, "CAF", -200.00, -200.00, "Account n. 00001123")
+      .add("05/10/2008", "Planned: CAF", -100.00, "CAF", -200.00, -200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("05/09/2008", "Planned: CAF", 100.00, "CAF", 1200.00, 1200.00, "Epargne")
-      .add("05/09/2008", "Planned: CAF", -100.00, "CAF", -100.00, -100.00, "Account n. 00001123")
+      .add("05/09/2008", "Planned: CAF", -100.00, "CAF", -100.00, -100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/08/2008", "CAF", 100.00, "CAF", 1100.00, 1100.00, "Epargne")
-      .add("10/08/2008", "CAF", -100.00, "CAF", 0.00, 0.00, "Account n. 00001123")
+      .add("10/08/2008", "CAF", -100.00, "CAF", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
 
     views.selectBudget();
@@ -497,11 +497,11 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions.initAmountContent()
       .add("01/10/2008", "Planned: CA", 100.00, "CA", 1200.00, 1200.00, "Epargne")
-      .add("01/10/2008", "Planned: CA", -100.00, "CA", -200.00, -200.00, "Account n. 00001123")
+      .add("01/10/2008", "Planned: CA", -100.00, "CA", -200.00, -200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("01/09/2008", "Planned: CA", 100.00, "CA", 1100.00, 1100.00, "Epargne")
-      .add("01/09/2008", "Planned: CA", -100.00, "CA", -100.00, -100.00, "Account n. 00001123")
+      .add("01/09/2008", "Planned: CA", -100.00, "CA", -100.00, -100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/08/2008", "VIREMENT", 100.00, "CA", 1000.00, 1000.00, "Epargne")
-      .add("10/08/2008", "VIREMENT", -100.00, "CA", 0.00, 0.00, "Account n. 00001123")
+      .add("10/08/2008", "VIREMENT", -100.00, "CA", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
 
     views.selectBudget();
@@ -514,11 +514,11 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     transactions.initAmountContent()
       .add("01/10/2008", "Planned: CA", 100.00, "CA", 1200.00, 1200.00, "Epargne")
-      .add("01/10/2008", "Planned: CA", -100.00, "CA", -200.00, -200.00, "Account n. 00001123")
+      .add("01/10/2008", "Planned: CA", -100.00, "CA", -200.00, -200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("01/09/2008", "Planned: CA", 100.00, "CA", 1100.00, 1100.00, "Epargne")
-      .add("01/09/2008", "Planned: CA", -100.00, "CA", -100.00, -100.00, "Account n. 00001123")
+      .add("01/09/2008", "Planned: CA", -100.00, "CA", -100.00, -100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/08/2008", "VIREMENT", 100.00, "CA", 1000.00, 1000.00, "Epargne")
-      .add("10/08/2008", "VIREMENT", -100.00, "CA", 0.00, 0.00, "Account n. 00001123")
+      .add("10/08/2008", "VIREMENT", -100.00, "CA", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
   }
 
@@ -584,13 +584,13 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     views.selectData();
     transactions.initAmountContent()
-      .add("01/10/2008", "Planned: CA", -100.00, "CA", -200.00, -200.00, "Account n. 00001123")
+      .add("01/10/2008", "Planned: CA", -100.00, "CA", -200.00, -200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("01/10/2008", "Planned: CA", 100.00, "CA", 1200.00, 1200.00, "Account n. 111")
-      .add("01/09/2008", "Planned: CA", -100.00, "CA", -100.00, -100.00, "Account n. 00001123")
+      .add("01/09/2008", "Planned: CA", -100.00, "CA", -100.00, -100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("01/09/2008", "Planned: CA", 100.00, "CA", 1100.00, 1100.00, "Account n. 111")
-      .add("10/08/2008", "PRELEVEMENT", -100.00, "CA", 0.00, 0.00, "Account n. 00001123")
+      .add("10/08/2008", "PRELEVEMENT", -100.00, "CA", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/08/2008", "VIREMENT", 100.00, "CA", 1000.00, 1000.00, "Account n. 111")
-      .add("05/07/2008", "MCDO", 12.00, "To categorize", 100.00, 100.00, "Account n. 00001123")
+      .add("05/07/2008", "MCDO", 12.00, "To categorize", 100.00, 100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
     views.selectHome();
     timeline.selectMonth("2008/10");
@@ -647,13 +647,13 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     views.selectData();
     transactions.initAmountContent()
-      .add("01/10/2008", "Planned: CA", -100.00, "CA", -200.00, -200.00, "Account n. 00001123")
+      .add("01/10/2008", "Planned: CA", -100.00, "CA", -200.00, -200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("01/10/2008", "Planned: CA", 100.00, "CA", 1200.00, 1200.00, "Account n. 111")
-      .add("01/09/2008", "Planned: CA", -100.00, "CA", -100.00, -100.00, "Account n. 00001123")
+      .add("01/09/2008", "Planned: CA", -100.00, "CA", -100.00, -100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("01/09/2008", "Planned: CA", 100.00, "CA", 1100.00, 1100.00, "Account n. 111")
-      .add("10/08/2008", "PRELEVEMENT", -100.00, "CA", 0.00, 0.00, "Account n. 00001123")
+      .add("10/08/2008", "PRELEVEMENT", -100.00, "CA", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/08/2008", "VIREMENT", 100.00, "CA", 1000.00, 1000.00, "Account n. 111")
-      .add("10/07/2008", "VIREMENT", 200.00, "Project", 100.00, 100.00, "Account n. 00001123")
+      .add("10/07/2008", "VIREMENT", 200.00, "Project", 100.00, 100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/07/2008", "PRELEVEMENT", -200.00, "Project", 900.00, 900.00, "Account n. 111")
       .check();
     timeline.selectMonth("2008/10");
@@ -727,11 +727,11 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     views.selectData();
     transactions.initAmountContent()
-      .add("01/10/2008", "Planned: CA", -50.00, "CA", -100.00, -100.00, "Account n. 00001123")
+      .add("01/10/2008", "Planned: CA", -50.00, "CA", -100.00, -100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("01/10/2008", "Planned: CA", 50.00, "CA", 1100.00, 1100.00, "Account n. 111")
-      .add("01/09/2008", "Planned: CA", -50.00, "CA", -50.00, -50.00, "Account n. 00001123")
+      .add("01/09/2008", "Planned: CA", -50.00, "CA", -50.00, -50.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("01/09/2008", "Planned: CA", 50.00, "CA", 1050.00, 1050.00, "Account n. 111")
-      .add("10/08/2008", "VIREMENT", -100.00, "CA", 0.00, 0.00, "Account n. 00001123")
+      .add("10/08/2008", "VIREMENT", -100.00, "CA", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/08/2008", "VIREMENT", 100.00, "CA", 1000.00, 1000.00, "Account n. 111")
       .check();
     views.selectHome();
@@ -799,18 +799,18 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions.initAmountContent()
       .add("05/10/2008", "Planned: Virement CAF", 300.00, "Virement CAF", 1600.00, 4800.00, "Epargne")
-      .add("01/10/2008", "Planned: Placement", -100.00, "Placement", -200.00, -200.00, "Account n. 00001123")
+      .add("01/10/2008", "Planned: Placement", -100.00, "Placement", -200.00, -200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("01/10/2008", "Planned: Placement", 100.00, "Placement", 3200.00, 4500.00, "Account n. 111222")
       .add("05/09/2008", "Planned: Virement CAF", 300.00, "Virement CAF", 1300.00, 4400.00, "Epargne")
-      .add("01/09/2008", "Planned: Placement", -100.00, "Placement", -100.00, -100.00, "Account n. 00001123")
+      .add("01/09/2008", "Planned: Placement", -100.00, "Placement", -100.00, -100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("01/09/2008", "Planned: Placement", 100.00, "Placement", 3100.00, 4100.00, "Account n. 111222")
-      .add("06/08/2008", "VIREMENT VERS EPARGNE", -100.00, "Placement", 0.00, 0.00, "Account n. 00001123")
+      .add("06/08/2008", "VIREMENT VERS EPARGNE", -100.00, "Placement", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("06/08/2008", "VIREMENT EPARGNE", 100.00, "Placement", 3000.00, 4000.00, "Account n. 111222")
       .add("05/08/2008", "VIREMENT CAF", 300.00, "Virement CAF", 1000.00, 3900.00, "Epargne")
-      .add("06/07/2008", "VIREMENT VERS EPARGNE", -100.00, "Placement", 100.00, 100.00, "Account n. 00001123")
+      .add("06/07/2008", "VIREMENT VERS EPARGNE", -100.00, "Placement", 100.00, 100.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("06/07/2008", "VIREMENT EPARGNE", 100.00, "Placement", 2900.00, 3600.00, "Account n. 111222")
       .add("05/07/2008", "VIREMENT CAF", 300.00, "Virement CAF", 700.00, 3500.00, "Epargne")
-      .add("06/06/2008", "VIREMENT VERS EPARGNE", -100.00, "Placement", 200.00, 200.00, "Account n. 00001123")
+      .add("06/06/2008", "VIREMENT VERS EPARGNE", -100.00, "Placement", 200.00, 200.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("06/06/2008", "VIREMENT EPARGNE", 100.00, "Placement", 2800.00, 3200.00, "Account n. 111222")
       .add("05/06/2008", "VIREMENT CAF", 300.00, "Virement CAF", 400.00, 3100.00, "Epargne")
       .check();
@@ -937,16 +937,16 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkSeries("CA", 120, 100);
     views.selectData();
     transactions.initAmountContent()
-      .add("12/08/2008", "P3 CC", -20.00, "CA", 0.00, 0.00, "Account n. 00001123")
-      .add("12/08/2008", "V3 CC", 100.00, "Project", 20.00, 20.00, "Account n. 00001123")
+      .add("12/08/2008", "P3 CC", -20.00, "CA", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("12/08/2008", "V3 CC", 100.00, "Project", 20.00, 20.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("12/08/2008", "V3 CE", 20.00, "CA", 870.00, 870.00, "Account n. 111")
       .add("12/08/2008", "P3 CE", -100.00, "Project", 850.00, 850.00, "Account n. 111")
-      .add("11/08/2008", "P2 CC", -50.00, "CA", -80.00, -80.00, "Account n. 00001123")
-      .add("11/08/2008", "V2 CC", 100.00, "Project", -30.00, -30.00, "Account n. 00001123")
+      .add("11/08/2008", "P2 CC", -50.00, "CA", -80.00, -80.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("11/08/2008", "V2 CC", 100.00, "Project", -30.00, -30.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("11/08/2008", "V2 CE", 50.00, "CA", 950.00, 950.00, "Account n. 111")
       .add("11/08/2008", "P2 CE", -100.00, "Project", 900.00, 900.00, "Account n. 111")
-      .add("10/08/2008", "P1 CC", -50.00, "CA", -130.00, -130.00, "Account n. 00001123")
-      .add("10/08/2008", "V1 CC", 100.00, "Project", -80.00, -80.00, "Account n. 00001123")
+      .add("10/08/2008", "P1 CC", -50.00, "CA", -130.00, -130.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("10/08/2008", "V1 CC", 100.00, "Project", -80.00, -80.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/08/2008", "V1 CE", 50.00, "CA", 1000.00, 1000.00, "Account n. 111")
       .add("10/08/2008", "P1 CE", -100.00, "Project", 950.00, 950.00, "Account n. 111")
       .check();

@@ -25,8 +25,7 @@ public class StackChartDemo {
     rightDataset.add("label 6 is longer", 200.0);
 
     StackChart chart = new StackChart();
-//    chart.update(leftDataset, new StackChartColors(), rightDataset, new StackChartColors());
-    chart.update(rightDataset, new StackChartColors());
+    chart.update(leftDataset, new StackChartColors(), rightDataset, new StackChartColors());
 
     JFrame frame = new JFrame();
     frame.setContentPane(SingleComponentPanels.create(chart, new Insets(20, 20, 20, 20)));

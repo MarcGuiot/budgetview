@@ -10,10 +10,17 @@ public class HistoDiffPainter implements HistoPainter {
 
   private HistoDiffDataset dataset;
   private HistoDiffColors colors;
+  private boolean showActualInTheFuture;
+  private static final BasicStroke LINE_STROKE = new BasicStroke(2);
 
   public HistoDiffPainter(HistoDiffDataset dataset, HistoDiffColors colors) {
+    this(dataset, colors, true);
+  }
+
+  public HistoDiffPainter(HistoDiffDataset dataset, HistoDiffColors colors, boolean showActualInTheFuture) {
     this.dataset = dataset;
     this.colors = colors;
+    this.showActualInTheFuture = showActualInTheFuture;
   }
 
   public HistoDataset getDataset() {
@@ -41,49 +48,47 @@ public class HistoDiffPainter implements HistoPainter {
 
       int width = right - left;
 
-      if (reference >= actual) {
+      if (showActual(i)) {
+        if (reference >= actual) {
 
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.6f));
-        g2.setColor(colors.getReferenceOverrunColor());
-        g2.fillRect(left, referenceY, width, actualY - referenceY);
+          g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.6f));
+          g2.setColor(colors.getReferenceOverrunColor());
+          g2.fillRect(left, referenceY, width, actualY - referenceY);
 
-        g2.setColor(colors.getFillColor(dataset.isSelected(i)));
-        g2.fillRect(left, actualY, width, metrics.y(0) - actualY);
-      }
-      else {
+          g2.setColor(colors.getFillColor(dataset.isSelected(i)));
+          g2.fillRect(left, actualY, width, metrics.y(0) - actualY);
+        }
+        else {
 
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.6f));
-        g2.setColor(colors.getActualOverrunColor());
-        g2.fillRect(left, actualY, width, referenceY - actualY);
+          g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.6f));
+          g2.setColor(colors.getActualOverrunColor());
+          g2.fillRect(left, actualY, width, referenceY - actualY);
 
-        g2.setColor(colors.getFillColor(dataset.isSelected(i)));
-        g2.fillRect(left, referenceY, width, metrics.y(0) - referenceY);
+          g2.setColor(colors.getFillColor(dataset.isSelected(i)));
+          g2.fillRect(left, referenceY, width, metrics.y(0) - referenceY);
+        }
       }
 
       g2.setComposite(AlphaComposite.Src);
       g2.setColor(colors.getReferenceLineColor());
-      g2.setStroke(getStroke(i));
+      g2.setStroke(LINE_STROKE);
       g2.drawLine(left, previousReferenceY, left, referenceY);
       g2.drawLine(left, referenceY, right, referenceY);
       previousReferenceY = referenceY;
 
-      g2.setColor(colors.getActualLineColor());
-      g2.setStroke(getStroke(i));
-      g2.drawLine(left, previousActualY, left, actualY);
-      g2.drawLine(left, actualY, right, actualY);
-      previousActualY = actualY;
-
+      if (showActual(i)) {
+        g2.setColor(colors.getActualLineColor());
+        g2.setStroke(LINE_STROKE);
+        if (previousActualY != actualY) {
+          g2.drawLine(left, previousActualY, left, actualY);
+        }
+        g2.drawLine(left, actualY, right, actualY);
+        previousActualY = actualY;
+      }
     }
   }
 
-  private BasicStroke getStroke(int index) {
-    if (dataset.isFuture(index)) {
-      return new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL,
-                             0.f, new float[]{4, 4}, 0.f);
-
-    }
-    else {
-      return new BasicStroke(2);
-    }
+  private boolean showActual(int i) {
+    return !dataset.isFuture(i) || showActualInTheFuture;
   }
 }

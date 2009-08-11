@@ -167,7 +167,7 @@ public class SeriesEvolutionView extends View {
     builder.add("collapse", new CollapseTableAction(expansionModel));
 
     this.chartPanel = new SeriesEvolutionChartPanel(repository, directory);
-    builder.add("histoChart", chartPanel.getHistoChart());
+    this.chartPanel.registerCharts(builder);
 
     return builder;
   }

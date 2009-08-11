@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-
+    <style selector="panel.chart" margin="20" opaque="true" background="block.inner.bg"/>
   </styles>
 
   <column styleClass="main">
@@ -28,12 +28,9 @@
         </column>
 
         <row weightY="5" opaque="true" background="block.inner.bg" border="line(block.inner.border)">
-          <panel weightX="1" opaque="false">
-            <filler fill="horizontal"/>
-          </panel>
-          <row weightX="1" opaque="false">
-            <panel ref="histoChart" margin="20" opaque="true" background="block.inner.bg"/>
-          </row>
+          <panel ref="balanceChart" weightX="1" styleClass="chart"/>
+          <panel ref="seriesChart" weightX="1" styleClass="chart"/>
+          <panel ref="histoChart" weightX="10" styleClass="chart"/>
         </row>
 
       </verticalSplit>
