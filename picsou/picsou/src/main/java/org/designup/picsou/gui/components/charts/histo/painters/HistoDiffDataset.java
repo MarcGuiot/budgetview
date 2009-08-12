@@ -5,22 +5,15 @@ import org.designup.picsou.gui.description.Formatting;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.text.NumberFormat;
-import java.text.DecimalFormat;
 
 public class HistoDiffDataset implements HistoDataset {
 
+  private List<Element> elements = new ArrayList<Element>();
   private double maxPositive = 0;
   private double maxNegative = 0;
 
-  private List<String> labels = new ArrayList<String>();
-  private List<Double> referenceValues = new ArrayList<Double>();
-  private List<Double> actualValues = new ArrayList<Double>();
-  private List<Boolean> selected = new ArrayList<Boolean>();
-  private List<Boolean> future = new ArrayList<Boolean>();
-
   public int size() {
-    return labels.size();
+    return elements.size();
   }
 
   public double getMaxPositiveValue() {
@@ -31,16 +24,16 @@ public class HistoDiffDataset implements HistoDataset {
     return maxNegative;
   }
 
-  public String getLabel(int index) {
-    return labels.get(index);
+  public int getId(int index) {
+    return elements.get(index).id;
   }
 
-  public void add(double reference, double actual, String label, boolean isSelected, boolean isFuture) {
-    this.referenceValues.add(reference);
-    this.actualValues.add(actual);
-    this.labels.add(label);
-    this.selected.add(isSelected);
-    this.future.add(isFuture);
+  public String getLabel(int index) {
+    return elements.get(index).label;
+  }
+
+  public void add(int id, double reference, double actual, String label, boolean isSelected, boolean isFuture) {
+    this.elements.add(new Element(id, label, reference, actual, isSelected, isFuture));
 
     updateMax(reference);
     updateMax(actual);
@@ -56,7 +49,7 @@ public class HistoDiffDataset implements HistoDataset {
   }
 
   public Double getReferenceValue(int index) {
-    Double result = referenceValues.get(index);
+    Double result = elements.get(index).referenceValue;
     if (result == null) {
       return 0.0;
     }
@@ -64,7 +57,7 @@ public class HistoDiffDataset implements HistoDataset {
   }
 
   public Double getActualValue(int index) {
-    Double result = actualValues.get(index);
+    Double result = elements.get(index).actualValue;
     if (result == null) {
       return 0.0;
     }
@@ -72,32 +65,51 @@ public class HistoDiffDataset implements HistoDataset {
   }
 
   public boolean isFuture(int index) {
-    return future.get(index);
+    return elements.get(index).future;
   }
 
   public boolean isSelected(int index) {
-    return selected.get(index);
+    return elements.get(index).selected;
   }
 
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    for (int i = 0; i < labels.size(); i++) {
+    for (int i = 0; i < elements.size(); i++) {
+      Element element = elements.get(i);
       builder
         .append(Formatting.TWO_DIGIT_INTEGER_FORMAT.format(i))
         .append(": ")
-        .append(labels.get(i))
+        .append(element.label)
         .append(" - ")
-        .append(referenceValues.get(i))
+        .append(element.referenceValue)
         .append(" / ")
-        .append(actualValues.get(i));
-      if (isSelected(i)) {
+        .append(element.actualValue);
+      if (element.selected) {
         builder.append(" - selected");
       }
-      if (isFuture(i)) {
+      if (element.future) {
         builder.append(" - future");
       }
       builder.append("\n");
     }
     return builder.toString();
+  }
+
+  private class Element {
+    private int id;
+    final String label;
+    final double referenceValue;
+    final double actualValue;
+    final boolean selected;
+    final boolean future;
+
+    private Element(int id, String label, double referenceValue, double actualValue, boolean selected, boolean future) {
+      this.id = id;
+      this.label = label;
+      this.referenceValue = referenceValue;
+      this.actualValue = actualValue;
+      this.selected = selected;
+      this.future = future;
+    }
   }
 }

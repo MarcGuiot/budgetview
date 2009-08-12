@@ -8,11 +8,18 @@ public interface HistoDataset {
 
   public double getMaxNegativeValue();
 
+  int getId(int index);
+
   public String getLabel(int index);
 
   boolean isSelected(int index);
 
   public static final HistoDataset NULL = new HistoDataset() {
+
+    public int getId(int index) {
+      return 0;
+    }
+
     public int size() {
       return 0;
     }

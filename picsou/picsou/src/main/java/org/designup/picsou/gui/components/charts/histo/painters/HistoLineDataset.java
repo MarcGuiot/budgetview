@@ -10,11 +10,10 @@ public class HistoLineDataset implements HistoDataset {
   private double maxPositive = 0;
   private double maxNegative = 0;
 
-  private List<String> labels = new ArrayList<String>();
-  private List<Double> values = new ArrayList<Double>();
+  private List<Element> elements = new ArrayList<Element>();
 
   public int size() {
-    return labels.size();
+    return elements.size();
   }
 
   public double getMaxPositiveValue() {
@@ -26,12 +25,11 @@ public class HistoLineDataset implements HistoDataset {
   }
 
   public String getLabel(int index) {
-    return labels.get(index);
+    return elements.get(index).label;
   }
 
-  public void add(double value, String label) {
-    this.values.add(value);
-    this.labels.add(label);
+  public void add(int id, double value, String label) {
+    this.elements.add(new Element(id, label, value));
 
     updateMax(value);
   }
@@ -45,8 +43,12 @@ public class HistoLineDataset implements HistoDataset {
     }
   }
 
+  public int getId(int index) {
+    return elements.get(index).id;
+  }
+
   public Double getValue(int index) {
-    Double result = values.get(index);
+    Double result = elements.get(index).value;
     if (result == null) {
       return 0.0;
     }
@@ -59,9 +61,28 @@ public class HistoLineDataset implements HistoDataset {
 
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    for (int i = 0; i < labels.size(); i++) {
-      builder.append(labels.get(i) + ": " + values.get(i) + "\n");
+    for (Element element : elements) {
+      builder
+        .append("[")
+        .append(element.id)
+        .append("] ")
+        .append(element.label)
+        .append(": ")
+        .append(element.value)
+        .append("\n");
     }
     return builder.toString();
+  }
+
+  private class Element {
+    final int id;
+    final String label;
+    final double value;
+
+    private Element(int id, String label, double value) {
+      this.id = id;
+      this.label = label;
+      this.value = value;
+    }
   }
 }

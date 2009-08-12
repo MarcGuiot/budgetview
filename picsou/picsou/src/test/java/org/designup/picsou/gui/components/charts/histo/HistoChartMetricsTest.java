@@ -1,12 +1,9 @@
 package org.designup.picsou.gui.components.charts.histo;
 
-import junit.framework.TestCase;
+import org.designup.picsou.gui.components.ChartTestCase;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.InvalidParameter;
-import org.designup.picsou.gui.components.ChartTestCase;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.Arrays;
 
 public class HistoChartMetricsTest extends ChartTestCase {
@@ -77,6 +74,16 @@ public class HistoChartMetricsTest extends ChartTestCase {
                      new double[]{-1000.0, -750.0, -500.0, -250.0,
                                   0.0, 250.0, 500.0, 750.0, 1000.0, 1250.0, 1500.0, 1750.0, 2000.0, 2250.0,
                                   2500.0, 2750.0, 3000.0});
+  }
+
+  public void testColumnAt() throws Exception {
+    HistoChartMetrics metrics =
+      new HistoChartMetrics(150, 150, getFontMetrics(), 10, 0, 100);
+    assertEquals(50, metrics.left(0));
+    assertEquals(0, metrics.getColumnAt(55));
+    assertEquals(1, metrics.getColumnAt(65));
+    assertEquals(2, metrics.getColumnAt(75));
+    assertEquals(9, metrics.getColumnAt(145));
   }
 
   private void checkScaleValues(int panelHeight, int maxNegative, int maxPositive, double[] expected) {

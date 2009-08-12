@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.series.evolution;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
+import org.designup.picsou.gui.components.charts.histo.HistoChartListener;
 import org.designup.picsou.gui.components.charts.histo.painters.*;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
 import org.designup.picsou.gui.components.charts.stack.StackChartColors;
@@ -53,7 +54,9 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
   private StackChartColors expensesStackColors;
   private SelectionService selectionService;
 
-  public SeriesEvolutionChartPanel(GlobRepository repository, Directory directory) {
+  public SeriesEvolutionChartPanel(final GlobRepository repository,
+                                   Directory directory,
+                                   final SelectionService parentSelectionService) {
     this.repository = repository;
     this.selectionService = directory.get(SelectionService.class);
     this.selectionService.addListener(this, SeriesWrapper.TYPE);
@@ -63,6 +66,13 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     histoChart = new HistoChart(directory);
     balanceChart = new StackChart();
     seriesChart = new StackChart();
+
+    histoChart.setListener(new HistoChartListener() {
+      public void columnClicked(int monthId) {
+        Glob month = repository.get(Key.create(Month.TYPE, monthId));
+        parentSelectionService.select(month);
+      }
+    });
 
     balanceColors = new HistoDiffColors(
       "histo.income.line",
@@ -328,7 +338,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     for (int monthId : getMonthIds()) {
       Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, monthId));
       double value = balanceStat != null ? balanceStat.get(BalanceStat.UNCATEGORIZED) : 0.0;
-      dataset.add(value, getMonthLabel(monthId));
+      dataset.add(monthId, value, getMonthLabel(monthId));
     }
 
     histoChart.update(new HistoLinePainter(dataset, uncategorizedColors));
@@ -364,7 +374,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       String label = getMonthLabel(monthId);
       Glob stat = repository.find(Key.create(BalanceStat.TYPE, monthId));
       Double value = stat != null ? stat.get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION) : 0.0;
-      dataset.add(value, getMonthLabel(monthId));
+      dataset.add(monthId, value, getMonthLabel(monthId));
     }
 
     histoChart.update(new HistoLinePainter(dataset, accountColors));
@@ -377,7 +387,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       String label = getMonthLabel(monthId);
       Glob stat = SavingsBalanceStat.findSummary(monthId, repository);
       Double value = stat != null ? stat.get(SavingsBalanceStat.END_OF_MONTH_POSITION) : 0.0;
-      dataset.add(value, getMonthLabel(monthId));
+      dataset.add(monthId, value, getMonthLabel(monthId));
     }
 
     histoChart.update(new HistoLinePainter(dataset, accountColors));
@@ -441,7 +451,8 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
     public void add(int monthId, Double reference, Double actual) {
       String label = getMonthLabel(monthId);
-      dataset.add(reference != null ? reference * multiplier : 0,
+      dataset.add(monthId,
+                  reference != null ? reference * multiplier : 0,
                   actual != null ? actual * multiplier : 0,
                   label,
                   monthId == currentMonthId,

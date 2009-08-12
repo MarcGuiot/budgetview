@@ -70,6 +70,10 @@ public class HistoChartMetrics {
     return scaleZoneWidth + columnIndex * columnWidth;
   }
 
+  public int getColumnAt(int x) {
+    return (x - scaleZoneWidth) / columnWidth;
+  }
+
   public int right(int columnIndex) {
     checkIndex(columnIndex);
     if (columnIndex == columnCount - 1) {
@@ -77,6 +81,10 @@ public class HistoChartMetrics {
     }
 
     return left(columnIndex) + columnWidth;
+  }
+
+  public int columnWidth() {
+    return columnWidth;
   }
 
   public int y(double value) {

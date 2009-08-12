@@ -6,8 +6,11 @@ import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
 import org.uispec4j.Window;
 import org.uispec4j.Panel;
+import org.uispec4j.interception.toolkit.Empty;
 import junit.framework.AssertionFailedError;
 import junit.framework.Assert;
+
+import java.awt.*;
 
 public class HistoChecker extends GuiChecker {
 
@@ -38,13 +41,20 @@ public class HistoChecker extends GuiChecker {
     return this;
   }
 
+  public void click(double xPercent) {
+    HistoChart chart = getChart();
+    chart.paint(Empty.NULL_GRAPHICS_2D);
+    Dimension size = chart.getSize();
+    chart.mouseMoved((int)((size.width - 50) * xPercent), size.height / 2);
+    chart.click();
+  }
+
   private String getErrorMessage(int index, HistoDataset dataset) {
     return "Error at index: " + index + " - dataset contents:\n" + dataset;
   }
 
   private <T extends HistoDataset> T getDataset(Class<T> datasetClass) {
-    Panel panel = window.getPanel("seriesEvolutionView").getPanel("histoChart");
-    HistoChart chart = (HistoChart)panel.getAwtComponent();
+    HistoChart chart = getChart();
     HistoDataset dataset = chart.getCurrentDataset();
     if (!datasetClass.isAssignableFrom(dataset.getClass())) {
       throw new AssertionFailedError("Unexpected dataset type: " + datasetClass.getSimpleName());
@@ -52,4 +62,9 @@ public class HistoChecker extends GuiChecker {
     return (T)dataset;
   }
 
+  private <T extends HistoDataset> HistoChart getChart() {
+    Panel panel = window.getPanel("seriesEvolutionView").getPanel("histoChart");
+    HistoChart chart = (HistoChart)panel.getAwtComponent();
+    return chart;
+  }
 }

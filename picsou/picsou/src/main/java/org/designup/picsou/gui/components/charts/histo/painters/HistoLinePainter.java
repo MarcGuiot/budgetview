@@ -20,7 +20,7 @@ public class HistoLinePainter implements HistoPainter {
     return dataset;
   }
 
-  public void paint(Graphics2D g2, HistoChartMetrics metrics) {
+  public void paint(Graphics2D g2, HistoChartMetrics metrics, Integer currentRollover) {
 
     if (dataset.size() == 0) {
       return;
@@ -38,7 +38,9 @@ public class HistoLinePainter implements HistoPainter {
 
       int width = right - left;
 
-      g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.6f));
+      boolean isRollover = (currentRollover != null) && (currentRollover == i);
+      
+      g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, isRollover ? 0.9f : 0.6f));
       if (y < y0) {
         g2.setColor(colors.getPositiveFillColor());
         g2.fillRect(left, y, width, y0 - y);

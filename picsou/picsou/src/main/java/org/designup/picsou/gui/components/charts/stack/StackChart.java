@@ -18,7 +18,7 @@ public class StackChart extends JPanel {
   private StackChartColors colors;
 
   private Map<Rectangle, StackChartSelection> selections = new HashMap<Rectangle, StackChartSelection>();
-  private StackChartSelection currentSelection;
+  private StackChartSelection currentRollover;
   private boolean rebuildSelection;
 
   private Font labelFont;
@@ -56,7 +56,7 @@ public class StackChart extends JPanel {
 
   private void clearSelection() {
     selections.clear();
-    currentSelection = null;
+    currentRollover = null;
     rebuildSelection = true;
   }
 
@@ -164,25 +164,25 @@ public class StackChart extends JPanel {
   }
 
   private boolean isRollover(StackChartBlock block) {
-    return (currentSelection != null)
-           && currentSelection.dataset.equals(block.dataset)
-           && (currentSelection.datasetIndex == block.datasetIndex);
+    return (currentRollover != null)
+           && currentRollover.dataset.equals(block.dataset)
+           && (currentRollover.datasetIndex == block.datasetIndex);
   }
 
   public void click() {
-    if (currentSelection != null) {
-      currentSelection.getAction().actionPerformed(new ActionEvent(this, 0, "click"));
+    if (currentRollover != null) {
+      currentRollover.getAction().actionPerformed(new ActionEvent(this, 0, "click"));
     }
   }
 
   public void mouseMoved(int x, int y) {
-    StackChartSelection selection = getSelection(x, y);
-    if (Utils.equal(selection, currentSelection)) {
+    StackChartSelection rollover = getSelection(x, y);
+    if (Utils.equal(rollover, currentRollover)) {
       return;
     }
 
-    currentSelection = selection;
-    setCursor(currentSelection != null ?
+    currentRollover = rollover;
+    setCursor(currentRollover != null ?
               Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     repaint();
   }
@@ -203,11 +203,11 @@ public class StackChart extends JPanel {
       }
 
       public void mouseEntered(MouseEvent e) {
-        currentSelection = null;
+        currentRollover = null;
       }
 
       public void mouseExited(MouseEvent e) {
-        currentSelection = null;
+        currentRollover = null;
         repaint();
       }
     });

@@ -27,7 +27,7 @@ public class HistoDiffPainter implements HistoPainter {
     return dataset;
   }
 
-  public void paint(Graphics2D g2, HistoChartMetrics metrics) {
+  public void paint(Graphics2D g2, HistoChartMetrics metrics, Integer currentRollover) {
 
     if (dataset.size() == 0) {
       return;
@@ -48,10 +48,12 @@ public class HistoDiffPainter implements HistoPainter {
 
       int width = right - left;
 
+      boolean isRollover = (currentRollover != null) && (currentRollover == i);
+
       if (showActual(i)) {
         if (reference >= actual) {
 
-          g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.6f));
+          g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, isRollover ? 0.9f : 0.6f));
           g2.setColor(colors.getReferenceOverrunColor());
           g2.fillRect(left, referenceY, width, actualY - referenceY);
 
@@ -60,7 +62,7 @@ public class HistoDiffPainter implements HistoPainter {
         }
         else {
 
-          g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.6f));
+          g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, isRollover ? 0.9f : 0.6f));
           g2.setColor(colors.getActualOverrunColor());
           g2.fillRect(left, actualY, width, referenceY - actualY);
 

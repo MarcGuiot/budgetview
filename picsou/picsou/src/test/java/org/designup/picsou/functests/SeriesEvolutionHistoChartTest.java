@@ -11,7 +11,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(12).validate();
   }
 
-  public void test() throws Exception {
+  public void testStandardCase() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(30006, 10674, "00000123", 1000.0, "2009/07/30")
       .addTransaction("2009/06/10", -250.00, "Auchan")
@@ -176,5 +176,39 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .checkLineColumn(2, "S", 100.00)
       .checkLineColumn(3, "O", -100.00)
       .checkLineColumn(6, "J", -700.00);
+  }
+
+  public void testClickingInColumnsNavigatesToCorrespondingMonth() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "00000123", 1000.0, "2009/07/30")
+      .addTransaction("2009/06/10", -200.00, "Auchan")
+      .addTransaction("2009/06/01", 320.00, "WorldCo")
+      .addTransaction("2009/07/10", -200.00, "Auchan")
+      .addTransaction("2009/07/01", 320.00, "WorldCo")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewIncome("WorldCo", "John's");
+
+    views.selectEvolution();
+
+    timeline.selectMonth("2009/07");
+    seriesEvolution.select("Income");
+    seriesEvolution.histoChart
+      .checkColumnCount(8)
+      .checkDiffColumn(0, "J", 320.00, 320.00)
+      .checkDiffColumn(1, "J", 320.00, 320.00);
+
+    seriesEvolution.histoChart.click(0.95);
+
+    timeline.checkSelection("2009/12");
+    seriesEvolution.checkSelected("Income");
+    seriesEvolution.expand();
+
+    seriesEvolution.select("John's");
+    seriesEvolution.histoChart.click(0.1);
+
+    timeline.checkSelection("2009/06");
   }
 }

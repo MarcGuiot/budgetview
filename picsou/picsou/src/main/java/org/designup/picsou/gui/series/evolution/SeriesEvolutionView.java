@@ -166,7 +166,7 @@ public class SeriesEvolutionView extends View {
     builder.add("expand", new ExpandTableAction(expansionModel));
     builder.add("collapse", new CollapseTableAction(expansionModel));
 
-    this.chartPanel = new SeriesEvolutionChartPanel(repository, directory);
+    this.chartPanel = new SeriesEvolutionChartPanel(repository, directory, parentSelectionService);
     this.chartPanel.registerCharts(builder);
 
     return builder;
