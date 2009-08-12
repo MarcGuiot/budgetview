@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.series.view;
 
+import org.designup.picsou.model.BudgetArea;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
@@ -7,6 +8,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldValue;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 
@@ -61,5 +63,17 @@ public class SeriesWrapper {
       }
     }
     return false;
+  }
+
+  public static Glob getWrapperForBudgetArea(BudgetArea budgetArea, GlobRepository repository) {
+    return repository.findUnique(SeriesWrapper.TYPE,
+                                 value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId()),
+                                 value(SeriesWrapper.ITEM_ID, budgetArea.getId()));
+  }
+
+  public static Glob getWrapperForSeries(Integer seriesId, GlobRepository repository) {
+    return repository.findUnique(SeriesWrapper.TYPE,
+                                 value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
+                                 value(SeriesWrapper.ITEM_ID, seriesId));
   }
 }

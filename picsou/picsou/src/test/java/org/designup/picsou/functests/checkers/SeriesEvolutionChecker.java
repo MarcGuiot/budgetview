@@ -50,17 +50,27 @@ public class SeriesEvolutionChecker extends GuiChecker {
 
   public void checkRow(String label, String... values) {
     Table table = getTable();
-    int index = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, label);
+    int index = getRow(label, table);
     assertThat(table.rowEquals(index, Utils.join(new String[]{"", label}, values)));
   }
 
   public void select(String label) {
     Table table = getTable();
-    int index = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, label);
+    int index = getRow(label, table);
     if (index < 0) {
       Assert.fail("No line found with label '" + label + "' - available names: " + getLineLabels());
     }
     table.selectRow(index);
+  }
+
+  public void checkSelected(String label) {
+    Table table = getTable();
+    int index = getRow(label, table);
+    assertThat(table.rowIsSelected(index));
+  }
+
+  private int getRow(String label, Table table) {
+    return table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, label);
   }
 
   private java.util.List<String> getLineLabels() {
@@ -73,7 +83,7 @@ public class SeriesEvolutionChecker extends GuiChecker {
 
   public void doubleClickOnRow(String label) {
     Table table = getTable();
-    int index = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, label);
+    int index = getRow(label, table);
     table.doubleClick(index, 1);
   }
 
@@ -103,7 +113,7 @@ public class SeriesEvolutionChecker extends GuiChecker {
 
   public SeriesEditionDialogChecker editSeries(String rowLabel, String columnLabel) {
     Table table = getTable();
-    int row = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, rowLabel.toUpperCase());
+    int row = getRow(rowLabel.toUpperCase(), table);
     if (row == -1) {
       row = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, rowLabel);
     }
@@ -128,7 +138,7 @@ public class SeriesEvolutionChecker extends GuiChecker {
 
   public SeriesEvolutionChecker checkValue(String rowLabel, String columnLabel, String displayedValue) {
     Table table = getTable();
-    int row = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, rowLabel.toUpperCase());
+    int row = getRow(rowLabel.toUpperCase(), table);
     int column = table.getHeader().findColumnIndex(columnLabel);
     assertThat(table.cellEquals(row, column, displayedValue));
     return this;
@@ -136,7 +146,7 @@ public class SeriesEvolutionChecker extends GuiChecker {
 
   public SeriesEvolutionChecker checkForeground(String rowLabel, String columnLabel, String expectedColor) {
     Table table = getTable();
-    int row = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, rowLabel);
+    int row = getRow(rowLabel, table);
     int column = table.getHeader().findColumnIndex(columnLabel);
     final JComponent component = getTextComponent(row, column);
     ColorUtils.assertSimilar("Error at (" + row + "," + column + ") - value=" + table.getContentAt(row, column),

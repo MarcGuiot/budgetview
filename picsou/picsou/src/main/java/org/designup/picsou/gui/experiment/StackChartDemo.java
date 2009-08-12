@@ -10,6 +10,7 @@ import org.globsframework.utils.directory.DefaultDirectory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class StackChartDemo {
   private static final double[] VALUES = {2, 0, 8, 5, -10, 10, 4};
@@ -17,15 +18,15 @@ public class StackChartDemo {
   public static void main(String[] args) {
 
     StackChartDataset leftDataset = new StackChartDataset();
-    leftDataset.add("item 1", 1700.0);
+    add(leftDataset, "item 1", 1700.0);
 
     StackChartDataset rightDataset = new StackChartDataset();
-    rightDataset.add("label 1", 100.0);
-    rightDataset.add("label 2", 600.0);
-    rightDataset.add("label 3", 1.0);
-    rightDataset.add("label 4", 1000.0, true);
-    rightDataset.add("label 5", 300.0);
-    rightDataset.add("label 6 is longer", 200.0);
+    add(rightDataset, "label 1", 100.0);
+    add(rightDataset, "label 2", 600.0);
+    add(rightDataset, "label 3", 1.0);
+    add(rightDataset, "label 4", 1000.0, true);
+    add(rightDataset, "label 5", 300.0);
+    add(rightDataset, "label 6 is longer", 200.0);
 
     Directory directory = new DefaultDirectory();
     directory.add(PicsouColors.createColorService());
@@ -38,7 +39,7 @@ public class StackChartDemo {
       "stack.label",
       "stack.border",
       "stack.selection.border",
-      "stack.selection.text",
+      "stack.rollover.text",
       directory
     ));
 
@@ -46,5 +47,17 @@ public class StackChartDemo {
     frame.setContentPane(SingleComponentPanels.create(chart, new Insets(20, 20, 20, 20)));
     frame.setSize(new Dimension(400, 500));
     frame.setVisible(true);
+  }
+
+  private static void add(StackChartDataset dataset, final String label, double value) {
+    add(dataset, label, value, false);
+  }
+
+  private static void add(StackChartDataset dataset, final String label, double value, boolean selected) {
+    dataset.add(label, value, new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("StackChartDemo.actionPerformed: " + label);
+      }
+    }, selected);
   }
 }

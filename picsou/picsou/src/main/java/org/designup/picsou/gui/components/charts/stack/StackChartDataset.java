@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.components.charts.stack;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,18 +13,18 @@ public class StackChartDataset {
   private int multiplier = 1;
   private boolean containsSelection = false;
 
-  public void add(String label, Double value) {
-    add(label, value, false);
+  public void add(String label, Double value, Action action) {
+    add(label, value, action, false);
   }
 
-  public void add(String label, Double value, boolean selected) {
+  public void add(String label, Double value, Action action, boolean selected) {
     if ((value == null) || Math.abs(value) < 0.01) {
       return;
     }
 
     double adjustedValue = value * multiplier;
 
-    Element element = new Element(label, adjustedValue, selected);
+    Element element = new Element(label, adjustedValue, action, selected);
     int index = Collections.binarySearch(elements, element);
     elements.add(index < 0 ? -index - 1 : index, element);
     total += adjustedValue;
@@ -97,14 +98,20 @@ public class StackChartDataset {
     return -1;
   }
 
+  public Action getAction(int index) {
+    return elements.get(index).action;
+  }
+
   private static class Element implements Comparable<Element> {
     String label;
     double value;
+    private Action action;
     boolean selected;
 
-    public Element(String label, double value, boolean selected) {
+    public Element(String label, double value, Action action, boolean selected) {
       this.label = label;
       this.value = value;
+      this.action = action;
       this.selected = selected;
     }
 

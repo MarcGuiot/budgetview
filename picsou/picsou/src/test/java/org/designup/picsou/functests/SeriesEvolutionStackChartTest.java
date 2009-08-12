@@ -177,6 +177,54 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("Savings", 100.00);
   }
 
+  public void testClickNavigation() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.0, "2009/07/30")
+      .addTransaction("2009/07/10", -400.00, "Auchan")
+      .addTransaction("2009/07/01", 100.00, "WorldCo")
+      .addTransaction("2009/07/15", 400.00, "Big Inc.")
+      .addTransaction("2009/07/20", -50.00, "Free")
+      .addTransaction("2009/07/20", -100.00, "Orange")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewIncome("WorldCo", "John's");
+    categorization.setNewIncome("Big Inc.", "Mary's");
+    categorization.setNewRecurring("Free", "Internet");
+    categorization.setNewRecurring("Orange", "Mobile");
+    categorization.setNewEnvelope("Auchan", "Groceries");
+
+    views.selectEvolution();
+
+    seriesEvolution.seriesChart.getSingleDataset()
+      .checkSize(3)
+      .checkValue("Groceries", 400.00)
+      .checkValue("Mobile", 100.00)
+      .checkValue("Internet", 50.00);
+
+    seriesEvolution.seriesChart.click(0.2, 0.9);
+    seriesEvolution.checkSelected("Groceries");
+
+    seriesEvolution.balanceChart.getLeftDataset()
+      .checkSize(1)
+      .checkValue("Income", 500.00);
+    seriesEvolution.balanceChart.getRightDataset()
+      .checkSize(2)
+      .checkValue("Envelopes", 400.00, true)
+      .checkValue("Recurring", 150.00);
+
+    seriesEvolution.balanceChart.click(0.8, 0.2);
+    seriesEvolution.checkSelected("Recurring");
+
+    seriesEvolution.seriesChart.getSingleDataset()
+      .checkSize(2)
+      .checkValue("Mobile", 100.00)
+      .checkValue("Internet", 50.00);
+
+    seriesEvolution.seriesChart.click(0.5, 0.5);
+    seriesEvolution.checkSelected("Mobile");
+  }
+
   public void testSavings() throws Exception {
     fail("tbd");
   }

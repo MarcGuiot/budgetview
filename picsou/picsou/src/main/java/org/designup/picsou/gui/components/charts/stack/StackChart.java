@@ -1,13 +1,25 @@
 package org.designup.picsou.gui.components.charts.stack;
 
+import org.globsframework.utils.Utils;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.util.HashMap;
+import java.util.Map;
 
 public class StackChart extends JPanel {
 
   private StackChartDataset leftDataset;
   private StackChartDataset rightDataset;
   private StackChartColors colors;
+
+  private Map<Rectangle, StackChartSelection> selections = new HashMap<Rectangle, StackChartSelection>();
+  private StackChartSelection currentSelection;
+  private boolean rebuildSelection;
 
   private Font labelFont;
   private Font barTextFont;
@@ -18,16 +30,9 @@ public class StackChart extends JPanel {
   public StackChart() {
     setMinimumSize(new Dimension(150, 40));
     setPreferredSize(new Dimension(150, 1000));
-    labelFont = getFont().deriveFont(9f);
-    barTextFont = labelFont;
-  }
-
-  public void update(StackChartDataset dataset,
-                     StackChartColors colors) {
-    this.leftDataset = dataset;
-    this.rightDataset = null;
-    this.colors = colors;
-    repaint();
+    labelFont = getFont().deriveFont(10f);
+    barTextFont = getFont().deriveFont(9f);
+    registerMouseActions();
   }
 
   public void update(StackChartDataset leftDataset,
@@ -36,12 +41,33 @@ public class StackChart extends JPanel {
     this.leftDataset = leftDataset;
     this.rightDataset = rightDataset;
     this.colors = colors;
+    clearSelection();
     repaint();
+  }
+
+  public void update(StackChartDataset dataset,
+                     StackChartColors colors) {
+    update(dataset, null, colors);
   }
 
   public void clear() {
     update(null, null, null);
-    repaint();
+  }
+
+  private void clearSelection() {
+    selections.clear();
+    currentSelection = null;
+    rebuildSelection = true;
+  }
+
+  public void setBounds(int x, int y, int width, int height) {
+    clearSelection();
+    super.setBounds(x, y, width, height);
+  }
+
+  public void setBounds(Rectangle r) {
+    clearSelection();
+    super.setBounds(r);
   }
 
   public StackChartDataset getLeftDataset() {
@@ -94,6 +120,8 @@ public class StackChart extends JPanel {
       g2.setColor(colors.getBorderColor());
       g2.drawLine(0, height, width, height);
     }
+
+    rebuildSelection = false;
   }
 
   private void paintBlocks(Graphics2D g2,
@@ -121,11 +149,79 @@ public class StackChart extends JPanel {
       g2.setFont(barTextFont);
       g2.drawString(block.barText, layout.barTextX(block.barText), block.barTextY);
 
-      g2.setColor(block.selected ? colors.getSelectionTextColor() : colors.getLabelColor());
+      g2.setColor(isRollover(block) ? colors.getRolloverTextColor() : colors.getLabelColor());
       g2.setFont(labelFont);
       g2.drawString(block.label, layout.labelTextX(block.label), block.labelTextY);
+
+      if (rebuildSelection) {
+        Rectangle rectangle = new Rectangle(layout.blockX(), block.blockY, layout.blockWidth(), block.blockHeight);
+        StackChartSelection selection = new StackChartSelection(block.dataset, block.datasetIndex);
+        selections.put(rectangle, selection);
+      }
 
       alpha *= 0.7f;
     }
   }
+
+  private boolean isRollover(StackChartBlock block) {
+    return (currentSelection != null)
+           && currentSelection.dataset.equals(block.dataset)
+           && (currentSelection.datasetIndex == block.datasetIndex);
+  }
+
+  public void click() {
+    if (currentSelection != null) {
+      currentSelection.getAction().actionPerformed(new ActionEvent(this, 0, "click"));
+    }
+  }
+
+  public void mouseMoved(int x, int y) {
+    StackChartSelection selection = getSelection(x, y);
+    if (Utils.equal(selection, currentSelection)) {
+      return;
+    }
+
+    currentSelection = selection;
+    setCursor(currentSelection != null ?
+              Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+    repaint();
+  }
+
+  private StackChartSelection getSelection(int x, int y) {
+    for (Map.Entry<Rectangle, StackChartSelection> entry : selections.entrySet()) {
+      if (entry.getKey().contains(x, y)) {
+        return entry.getValue();
+      }
+    }
+    return null;
+  }
+
+  private void registerMouseActions() {
+    addMouseListener(new MouseAdapter() {
+      public void mouseClicked(MouseEvent e) {
+        StackChart.this.click();
+      }
+
+      public void mouseEntered(MouseEvent e) {
+        currentSelection = null;
+      }
+
+      public void mouseExited(MouseEvent e) {
+        currentSelection = null;
+        repaint();
+      }
+    });
+
+    addMouseMotionListener(new MouseMotionListener() {
+      public void mouseDragged(MouseEvent e) {
+        StackChart.this.mouseMoved(e.getX(), e.getY());
+      }
+
+      public void mouseMoved(MouseEvent e) {
+        StackChart.this.mouseMoved(e.getX(), e.getY());
+      }
+    });
+  }
+
+
 }

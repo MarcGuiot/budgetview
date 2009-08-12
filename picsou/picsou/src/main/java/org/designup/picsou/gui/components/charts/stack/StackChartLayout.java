@@ -7,4 +7,8 @@ public interface StackChartLayout {
   int labelTextX(String text);
 
   int barX();
+
+  int blockWidth();
+
+  int blockX();
 }

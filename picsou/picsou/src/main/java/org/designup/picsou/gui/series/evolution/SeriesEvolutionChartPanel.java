@@ -25,9 +25,11 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.awt.event.ActionEvent;
 
 public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
@@ -49,10 +51,12 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
   private StackChartColors balanceStackColors;
   private StackChartColors incomeStackColors;
   private StackChartColors expensesStackColors;
+  private SelectionService selectionService;
 
   public SeriesEvolutionChartPanel(GlobRepository repository, Directory directory) {
     this.repository = repository;
-    directory.get(SelectionService.class).addListener(this, SeriesWrapper.TYPE);
+    this.selectionService = directory.get(SelectionService.class);
+    this.selectionService.addListener(this, SeriesWrapper.TYPE);
 
     this.currentWrapper = getMainSummaryWrapper();
 
@@ -131,7 +135,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       "stack.label",
       "stack.border",
       "stack.selection.border",
-      "stack.selection.text",
+      "stack.rollover.text",
       directory
     );
   }
@@ -266,10 +270,11 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     for (Glob stat : repository.getAll(SeriesStat.TYPE,
                                        and(fieldEquals(SeriesStat.MONTH, currentMonthId),
                                            not(fieldEquals(SeriesStat.SERIES, Series.UNCATEGORIZED_SERIES_ID))))) {
-      Glob series = repository.get(Key.create(Series.TYPE, stat.getKey().get(SeriesStat.SERIES)));
+      Integer seriesId = stat.getKey().get(SeriesStat.SERIES);
+      Glob series = repository.get(Key.create(Series.TYPE, seriesId));
       BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
       if (!budgetArea.isIncome()) {
-        dataset.add(series.get(Series.NAME), stat.get(SeriesStat.SUMMARY_AMOUNT));
+        dataset.add(series.get(Series.NAME), stat.get(SeriesStat.SUMMARY_AMOUNT), createSelectionAction(seriesId));
       }
     }
 
@@ -309,11 +314,12 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       if (budgetArea.getId().equals(series.get(Series.BUDGET_AREA))) {
         dataset.add(series.get(Series.NAME),
                     stat.get(SeriesStat.SUMMARY_AMOUNT),
+                    createSelectionAction(seriesId),
                     seriesId.equals(selectedSeriesId));
       }
     }
 
-    seriesChart.update(dataset, budgetArea.isIncome() ? balanceStackColors : expensesStackColors);
+    seriesChart.update(dataset, budgetArea.isIncome() ? incomeStackColors : expensesStackColors);
   }
 
   private void updateUncategorizedHisto() {
@@ -404,6 +410,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       dataset.setInverted(!budgetArea.isIncome());
       dataset.add(budgetArea.getLabel(),
                   balanceStat.get(BalanceStat.getSummary(budgetArea)),
+                  createSelectionAction(budgetArea),
                   budgetArea.equals(selectedBudgetArea));
     }
     return dataset;
@@ -458,5 +465,23 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       }
     }
     return result;
+  }
+
+  private Action createSelectionAction(final BudgetArea budgetArea) {
+    return new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        Glob wrapper = SeriesWrapper.getWrapperForBudgetArea(budgetArea, repository);
+        selectionService.select(wrapper);
+      }
+    };
+  }
+
+  private Action createSelectionAction(final Integer seriesId) {
+    return new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        Glob wrapper = SeriesWrapper.getWrapperForSeries(seriesId, repository);
+        selectionService.select(wrapper);
+      }
+    };
   }
 }

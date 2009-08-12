@@ -6,6 +6,9 @@ import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
 import org.designup.picsou.gui.description.Formatting;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
+import org.uispec4j.interception.toolkit.Empty;
+
+import java.awt.*;
 
 public class StackChecker extends GuiChecker {
 
@@ -31,6 +34,14 @@ public class StackChecker extends GuiChecker {
     StackChart chart = getChart();
     Assert.assertTrue("Chart is in double-stack configuration", chart.getRightDataset() == null);
     return new DatasetChecker(chart.getLeftDataset());
+  }
+
+  public void click(double xPercent, double yPercent) {
+    StackChart chart = getChart();
+    chart.paint(Empty.NULL_GRAPHICS_2D);
+    Dimension size = chart.getSize();
+    chart.mouseMoved((int)(size.width * xPercent), (int)(size.height * yPercent));
+    chart.click();
   }
 
   public class DatasetChecker {

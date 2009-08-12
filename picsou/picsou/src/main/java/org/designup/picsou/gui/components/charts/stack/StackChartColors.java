@@ -15,7 +15,7 @@ public class StackChartColors implements ColorChangeListener {
   private String labelKey;
   private String borderKey;
   private String selectionBorderKey;
-  private String selectionTextKey;
+  private String rolloverTextKey;
 
   private Color leftBarColor;
   private Color rightBarColor;
@@ -23,7 +23,7 @@ public class StackChartColors implements ColorChangeListener {
   private Color labelColor;
   private Color borderColor;
   private Color selectionBorderColor;
-  private Color selectionTextColor;
+  private Color rolloverTextColor;
 
   public StackChartColors(String leftBarKey,
                           String rightBarKey,
@@ -31,7 +31,7 @@ public class StackChartColors implements ColorChangeListener {
                           String labelKey,
                           String borderKey,
                           String selectionBorderKey,
-                          String selectionTextKey,
+                          String rolloverTextKey,
                           Directory directory) {
     this.leftBarKey = leftBarKey;
     this.rightBarKey = rightBarKey;
@@ -39,7 +39,7 @@ public class StackChartColors implements ColorChangeListener {
     this.labelKey = labelKey;
     this.borderKey = borderKey;
     this.selectionBorderKey = selectionBorderKey;
-    this.selectionTextKey = selectionTextKey;
+    this.rolloverTextKey = rolloverTextKey;
 
     directory.get(ColorService.class).addListener(this);
   }
@@ -51,7 +51,7 @@ public class StackChartColors implements ColorChangeListener {
     labelColor = colorLocator.get(labelKey);
     borderColor = colorLocator.get(borderKey);
     selectionBorderColor = colorLocator.get(selectionBorderKey);
-    selectionTextColor = colorLocator.get(selectionTextKey);
+    rolloverTextColor = colorLocator.get(rolloverTextKey);
   }
 
   public Color getLeftBarColor() {
@@ -78,7 +78,7 @@ public class StackChartColors implements ColorChangeListener {
     return selectionBorderColor;
   }
 
-  public Color getSelectionTextColor() {
-    return selectionTextColor;
+  public Color getRolloverTextColor() {
+    return rolloverTextColor;
   }
 }

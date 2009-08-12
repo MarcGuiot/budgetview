@@ -42,12 +42,12 @@ public class StackChartMetrics {
 
     java.util.List<StackChartBlock> blocks = new ArrayList<StackChartBlock>();
 
-    int remainingHeight = panelHeight;
+    int currentY = panelHeight;
     int remainingPercentage = 100;
     for (int i = 0; i < dataset.size(); i++) {
       double value = dataset.getValue(i);
       int height = (int)((value / maxValue) * panelHeight);
-      remainingHeight -= height;
+      currentY -= height;
 
       String label;
       int percentage;
@@ -65,16 +65,17 @@ public class StackChartMetrics {
         }
         percentage = remainingPercentage;
         remainingPercentage = 0;
-        height += remainingHeight;
-        remainingHeight = 0;
+        height += currentY;
+        currentY = 0;
       }
 
-      int labelTextY = remainingHeight + height / 2 + labelFontMetrics.getMaxAscent() / 2;
-      int barTextY = remainingHeight + height / 2 + barTextFontMetrics.getMaxAscent() / 2;
+      int labelTextY = currentY + height / 2 + labelFontMetrics.getMaxAscent() / 2;
+      int barTextY = currentY + height / 2 + barTextFontMetrics.getMaxAscent() / 2;
 
       String percentageText = dataset.size() > 1 ? Integer.toString(percentage) + "%" : "";
 
-      blocks.add(new StackChartBlock(remainingHeight,
+      blocks.add(new StackChartBlock(dataset, i,
+                                     currentY,
                                      height,
                                      label,
                                      percentageText,
@@ -107,6 +108,14 @@ public class StackChartMetrics {
       public int barX() {
         return panelWidth / 2 - barWidth;
       }
+
+      public int blockX() {
+        return 0;
+      }
+
+      public int blockWidth() {
+        return panelWidth / 2;
+      }
     };
   }
 
@@ -121,6 +130,14 @@ public class StackChartMetrics {
       }
 
       public int barX() {
+        return panelWidth / 2;
+      }
+
+      public int blockX() {
+        return panelWidth / 2;
+      }
+
+      public int blockWidth() {
         return panelWidth / 2;
       }
     };
@@ -143,6 +160,13 @@ public class StackChartMetrics {
         return panelWidth / 2 - (barWidth + TEXT_BAR_MARGIN + labelWidth) / 2;
       }
 
+      public int blockX() {
+        return 0;
+      }
+
+      public int blockWidth() {
+        return panelWidth;
+      }
     };
   }
 }
