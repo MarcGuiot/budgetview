@@ -95,6 +95,7 @@ public class StackChart extends JPanel {
         new StackChartMetrics(height, width,
                               g2.getFontMetrics(labelFont), g2.getFontMetrics(barTextFont),
                               Math.max(leftDataset.getTotal(), rightDataset.getTotal()));
+
       paintBlocks(g2, metrics,
                   metrics.computeBlocks(leftDataset),
                   metrics.leftLayout(),

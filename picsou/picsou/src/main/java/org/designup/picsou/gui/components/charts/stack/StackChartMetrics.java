@@ -59,14 +59,21 @@ public class StackChartMetrics {
       else {
         if (i < dataset.size() - 1) {
           label = Lang.get("stackChart.other");
+          double total = 0;
+          for (int j = i + 1;j < dataset.size(); j++) {
+            total += dataset.getValue(j);
+          }
+          int otherHeight = (int)((total / maxValue) * panelHeight);
+          height += otherHeight;
+          currentY -= otherHeight;
         }
         else {
           label = dataset.getLabel(i);
+          height += currentY;
+          currentY = 0;
         }
         percentage = remainingPercentage;
         remainingPercentage = 0;
-        height += currentY;
-        currentY = 0;
       }
 
       int labelTextY = currentY + height / 2 + labelFontMetrics.getMaxAscent() / 2;

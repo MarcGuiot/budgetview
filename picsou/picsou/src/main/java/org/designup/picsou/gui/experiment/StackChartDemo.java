@@ -18,12 +18,12 @@ public class StackChartDemo {
   public static void main(String[] args) {
 
     StackChartDataset leftDataset = new StackChartDataset();
-    add(leftDataset, "item 1", 1700.0);
+    add(leftDataset, "item 1", 3000.0);
 
     StackChartDataset rightDataset = new StackChartDataset();
     add(rightDataset, "label 1", 100.0);
     add(rightDataset, "label 2", 600.0);
-    add(rightDataset, "label 3", 1.0);
+    add(rightDataset, "label 3", 100.0);
     add(rightDataset, "label 4", 1000.0, true);
     add(rightDataset, "label 5", 300.0);
     add(rightDataset, "label 6 is longer", 200.0);

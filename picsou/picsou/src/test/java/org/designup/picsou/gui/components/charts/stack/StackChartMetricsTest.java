@@ -4,9 +4,9 @@ import org.designup.picsou.gui.components.ChartTestCase;
 import org.globsframework.utils.TestUtils;
 
 import javax.swing.*;
-import java.util.List;
-import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StackChartMetricsTest extends ChartTestCase {
   private StackChartMetrics metrics;
@@ -42,7 +42,7 @@ public class StackChartMetricsTest extends ChartTestCase {
     assertEquals("", blocks[0].barText);
   }
 
-  public void testHiddenBlocks() throws Exception {
+  public void testOtherBlockWithFullHeight() throws Exception {
 
     dataset.add("item1", 300.00, action);
     dataset.add("item2", 500.00, action);
@@ -54,7 +54,21 @@ public class StackChartMetricsTest extends ChartTestCase {
     StackChartBlock[] blocks = metrics.computeBlocks(dataset);
     checkBlockLabels(blocks, "item2", "item1", "item3", "Other");
     checkBlockPercentages(blocks, "50%", "30%", "10%", "10%");
-    checkBlockHeights(blocks, 100, 60, 20, 20);
+    checkBlockHeights(blocks, 100, 60, 20, 22);
+  }
+
+  public void testOtherBlockWithPartialHeight() throws Exception {
+    dataset.add("item1", 500.00, action);
+    dataset.add("item2", 5.00, action);
+    dataset.add("item3", 5.00, action);
+    dataset.add("item4", 5.00, action);
+    dataset.add("item5", 5.00, action);
+    dataset.add("item6", 5.00, action);
+
+    StackChartBlock[] blocks = metrics.computeBlocks(dataset);
+    checkBlockLabels(blocks, "item1", "Other");
+    checkBlockPercentages(blocks, "95%", "5%");
+    checkBlockHeights(blocks, 100, 5);
   }
 
   private void checkBlockLabels(StackChartBlock[] blocks, String... expected) {

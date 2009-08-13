@@ -12,6 +12,13 @@ public class HistoDiffDataset implements HistoDataset {
   private double maxPositive = 0;
   private double maxNegative = 0;
 
+  public void add(int id, double reference, double actual, String label, boolean isSelected, boolean isFuture) {
+    this.elements.add(new Element(id, label, reference, actual, isSelected, isFuture));
+
+    updateMax(reference);
+    updateMax(actual);
+  }
+
   public int size() {
     return elements.size();
   }
@@ -30,13 +37,6 @@ public class HistoDiffDataset implements HistoDataset {
 
   public String getLabel(int index) {
     return elements.get(index).label;
-  }
-
-  public void add(int id, double reference, double actual, String label, boolean isSelected, boolean isFuture) {
-    this.elements.add(new Element(id, label, reference, actual, isSelected, isFuture));
-
-    updateMax(reference);
-    updateMax(actual);
   }
 
   private void updateMax(double value) {
