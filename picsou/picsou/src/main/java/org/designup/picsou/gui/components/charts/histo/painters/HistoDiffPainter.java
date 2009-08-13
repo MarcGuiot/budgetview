@@ -49,24 +49,22 @@ public class HistoDiffPainter implements HistoPainter {
       int width = right - left;
 
       boolean isRollover = (currentRollover != null) && (currentRollover == i);
+      boolean isSelected = dataset.isSelected(i);
 
       if (showActual(i)) {
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, getFillAlpha(isSelected, isRollover)));
         if (reference >= actual) {
-
-          g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, isRollover ? 0.9f : 0.6f));
           g2.setColor(colors.getReferenceOverrunColor());
           g2.fillRect(left, referenceY, width, actualY - referenceY);
 
-          g2.setColor(colors.getFillColor(dataset.isSelected(i)));
+          g2.setColor(colors.getFillColor());
           g2.fillRect(left, actualY, width, metrics.y(0) - actualY);
         }
         else {
-
-          g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, isRollover ? 0.9f : 0.6f));
           g2.setColor(colors.getActualOverrunColor());
           g2.fillRect(left, actualY, width, referenceY - actualY);
 
-          g2.setColor(colors.getFillColor(dataset.isSelected(i)));
+          g2.setColor(colors.getFillColor());
           g2.fillRect(left, referenceY, width, metrics.y(0) - referenceY);
         }
       }
@@ -88,6 +86,16 @@ public class HistoDiffPainter implements HistoPainter {
         previousActualY = actualY;
       }
     }
+  }
+
+  private float getFillAlpha(boolean selected, boolean rollover) {
+    if (selected) {
+      return 0.9f;
+    }
+    if (rollover) {
+      return 0.75f;
+    }
+    return 0.5f;
   }
 
   private boolean showActual(int i) {

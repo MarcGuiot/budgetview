@@ -4,7 +4,6 @@ import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.utils.directory.Directory;
-import org.designup.picsou.gui.components.charts.histo.HistoChartColors;
 
 import java.awt.*;
 
@@ -15,7 +14,6 @@ public class HistoDiffColors implements ColorChangeListener {
   private String actualLineKey;
   private String actualOverrunKey;
   private String fillKey;
-  private String selectedFillKey;
 
   private Color referenceLineColor;
   private Color referenceOverrunColor;
@@ -23,21 +21,18 @@ public class HistoDiffColors implements ColorChangeListener {
   private Color actualOverrunColor;
 
   private Color fillColor;
-  private Color selectedFillColor;
 
   public HistoDiffColors(String referenceLineKey,
                          String referenceOverrunKey,
                          String actualLineKey,
                          String actualOverrunKey,
                          String fillKey,
-                         String selectedFillKey,
                          Directory directory) {
     this.referenceLineKey = referenceLineKey;
     this.referenceOverrunKey = referenceOverrunKey;
     this.actualLineKey = actualLineKey;
     this.actualOverrunKey = actualOverrunKey;
     this.fillKey = fillKey;
-    this.selectedFillKey = selectedFillKey;
 
     directory.get(ColorService.class).addListener(this);
   }
@@ -48,7 +43,6 @@ public class HistoDiffColors implements ColorChangeListener {
     actualLineColor = colorLocator.get(actualLineKey);
     actualOverrunColor = colorLocator.get(actualOverrunKey);
     fillColor = colorLocator.get(fillKey);
-    selectedFillColor = colorLocator.get(selectedFillKey);
   }
 
   public Color getReferenceLineColor() {
@@ -67,7 +61,7 @@ public class HistoDiffColors implements ColorChangeListener {
     return actualOverrunColor;
   }
 
-  public Color getFillColor(boolean isSelected) {
-    return isSelected ? selectedFillColor : fillColor;
+  public Color getFillColor() {
+    return fillColor;
   }
 }

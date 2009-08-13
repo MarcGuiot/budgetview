@@ -15,6 +15,7 @@ public class HistoChartColors implements ColorChangeListener {
   private Color labelColor;
   private Color selectedLabelColor;
   private Color rolloverLabelColor;
+  private Color sectionLineColor;
 
   public HistoChartColors(Directory directory) {
     directory.get(ColorService.class).addListener(this);
@@ -25,6 +26,7 @@ public class HistoChartColors implements ColorChangeListener {
     this.chartBorderColor = colorLocator.get("histo.chart.border");
     this.scaleLineColor = colorLocator.get("histo.scale.line");
     this.scaleTextColor = colorLocator.get("histo.scale.text");
+    this.sectionLineColor = colorLocator.get("histo.section.line");
     this.labelColor = colorLocator.get("histo.label");
     this.selectedLabelColor = colorLocator.get("histo.label.selected");
     this.rolloverLabelColor = colorLocator.get("histo.label.rollover");
@@ -56,5 +58,9 @@ public class HistoChartColors implements ColorChangeListener {
 
   public Color getRolloverLabelColor() {
     return rolloverLabelColor;
+  }
+
+  public Color getSectionLineColor() {
+    return sectionLineColor;
   }
 }

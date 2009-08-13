@@ -14,13 +14,14 @@ public class HistoChart<T extends HistoDataset> extends JPanel {
   private HistoChartColors colors;
   private HistoPainter painter = HistoPainter.NULL;
   private HistoChartListener listener;
-
   private HistoChartMetrics metrics;
   private Integer currentRollover;
+  private Font selectedLabelFont;
 
   public HistoChart(Directory directory) {
     this.colors = new HistoChartColors(directory);
     setFont(getFont().deriveFont(9f));
+    this.selectedLabelFont = getFont().deriveFont(Font.BOLD);
     registerMouseActions();
   }
 
@@ -71,22 +72,52 @@ public class HistoChart<T extends HistoDataset> extends JPanel {
       metrics = new HistoChartMetrics(panelWidth, panelHeight,
                                       getFontMetrics(getFont()),
                                       dataset.size(),
-                                      dataset.getMaxNegativeValue(), dataset.getMaxPositiveValue());
+                                      dataset.getMaxNegativeValue(), dataset.getMaxPositiveValue(),
+                                      dataset.containsSections());
     }
 
+    paintBg(g2);
+    paintLabels(g2, dataset);
+    paintScale(g2, panelWidth);
+    paintSections(g2, panelHeight, dataset);
+
+    painter.paint(g2, metrics, currentRollover);
+  }
+
+  private void paintBg(Graphics2D g2) {
     g2.setColor(colors.getChartBgColor());
     g2.fillRect(metrics.chartX(), 0, metrics.chartWidth(), metrics.chartHeight());
 
     g2.setColor(colors.getChartBorderColor());
     g2.drawRect(metrics.chartX(), 0, metrics.chartWidth(), metrics.chartHeight());
+  }
 
+  private void paintLabels(Graphics2D g2, HistoDataset dataset) {
     g2.setStroke(new BasicStroke(1));
     for (int i = 0; i < dataset.size(); i++) {
       String label = dataset.getLabel(i);
+      g2.setFont(getLabelFont(dataset, i));
       g2.setColor(getLabelColor(dataset, i));
       g2.drawString(label, metrics.labelX(label, i), metrics.labelY());
     }
+  }
+  private void paintSections(Graphics2D g2, int panelHeight, HistoDataset dataset) {
+    g2.setStroke(new BasicStroke(1));
+    boolean firstBlock = true;
+    for (HistoChartMetrics.Section section : metrics.getSections(dataset)) {
+      if (!firstBlock) {
+        g2.setColor(colors.getSectionLineColor());
+        g2.drawLine(section.blockX, 0, section.blockX, panelHeight);
+      }
 
+      g2.setColor(colors.getLabelColor());
+      g2.drawString(section.text, section.textX, section.textY);
+
+      firstBlock = false;
+    }
+  }
+
+  private void paintScale(Graphics2D g2, int panelWidth) {
     double[] scaleValues = metrics.scaleValues();
     for (double scaleValue : scaleValues) {
 
@@ -96,21 +127,6 @@ public class HistoChart<T extends HistoDataset> extends JPanel {
       g2.setColor(colors.getLabelColor());
       String label = Integer.toString((int)scaleValue);
       g2.drawString(label, metrics.scaleX(label), metrics.scaleY(scaleValue));
-    }
-
-    painter.paint(g2, metrics, currentRollover);
-  }
-
-  private Color getLabelColor(HistoDataset dataset, int columnIndex) {
-    boolean isRollover = (currentRollover != null) && (currentRollover == columnIndex);
-    if (isRollover) {
-      return colors.getRolloverLabelColor();
-    }
-    else if (dataset.isSelected(columnIndex)) {
-      return colors.getSelectedLabelColor();
-    }
-    else {
-      return colors.getLabelColor();
     }
   }
 
@@ -161,5 +177,24 @@ public class HistoChart<T extends HistoDataset> extends JPanel {
         HistoChart.this.mouseMoved(e.getX(), e.getY());
       }
     });
+  }
+
+  private Font getLabelFont(HistoDataset dataset, int columnIndex) {
+    if (dataset.isSelected(columnIndex)) {
+      return selectedLabelFont;
+    }
+    else {
+      return getFont();
+    }
+  }
+
+  private Color getLabelColor(HistoDataset dataset, int columnIndex) {
+    boolean isRollover = (currentRollover != null) && (currentRollover == columnIndex);
+    if (isRollover) {
+      return colors.getRolloverLabelColor();
+    }
+    else {
+      return colors.getLabelColor();
+    }
   }
 }

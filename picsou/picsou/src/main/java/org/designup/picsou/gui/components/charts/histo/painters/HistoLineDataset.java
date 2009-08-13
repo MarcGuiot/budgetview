@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.components.charts.histo.painters;
 
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
+import org.globsframework.utils.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,13 @@ public class HistoLineDataset implements HistoDataset {
   private double maxNegative = 0;
 
   private List<Element> elements = new ArrayList<Element>();
+  private boolean containsSections;
+
+  public void add(int id, double value, String label, String section) {
+    this.elements.add(new Element(id, label, section, value));
+    this.containsSections |= Strings.isNotEmpty(section);
+    updateMax(value);
+  }
 
   public int size() {
     return elements.size();
@@ -28,10 +36,8 @@ public class HistoLineDataset implements HistoDataset {
     return elements.get(index).label;
   }
 
-  public void add(int id, double value, String label) {
-    this.elements.add(new Element(id, label, value));
-
-    updateMax(value);
+  public String getSection(int index) {
+    return elements.get(index).section;
   }
 
   private void updateMax(double value) {
@@ -59,6 +65,10 @@ public class HistoLineDataset implements HistoDataset {
     return false;
   }
 
+  public boolean containsSections() {
+    return containsSections;
+  }
+
   public String toString() {
     StringBuilder builder = new StringBuilder();
     for (Element element : elements) {
@@ -77,11 +87,13 @@ public class HistoLineDataset implements HistoDataset {
   private class Element {
     final int id;
     final String label;
+    final String section;
     final double value;
 
-    private Element(int id, String label, double value) {
+    private Element(int id, String label, String section, double value) {
       this.id = id;
       this.label = label;
+      this.section = section;
       this.value = value;
     }
   }

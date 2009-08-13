@@ -12,7 +12,11 @@ public interface HistoDataset {
 
   public String getLabel(int index);
 
+  public String getSection(int index);
+
   boolean isSelected(int index);
+
+  boolean containsSections();
 
   public static final HistoDataset NULL = new HistoDataset() {
 
@@ -36,7 +40,15 @@ public interface HistoDataset {
       return "";
     }
 
+    public String getSection(int index) {
+      return "";
+    }
+
     public boolean isSelected(int index) {
+      return false;
+    }
+
+    public boolean containsSections() {
       return false;
     }
   };

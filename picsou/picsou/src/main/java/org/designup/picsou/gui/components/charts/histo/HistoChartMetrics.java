@@ -1,19 +1,22 @@
 package org.designup.picsou.gui.components.charts.histo;
 
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.awt.*;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public class HistoChartMetrics {
 
   private static final int VERTICAL_CHART_PADDING = 10;
-  private static final int LABEL_ZONE_HEIGHT = 20;
-  private static final int LABEL_BOTTOM_MARGIN = 4;
   private static final int MIN_SCALE_ZONE_WIDTH = 50;
   private static final int MIN_SCALE_ZONE_HEIGHT = 30;
   private static final int SCALE_ZONE_LABEL_MARGIN = 20;
   private static final int RIGHT_SCALE_MARGIN = 10;
+  private static final int LABEL_ZONE_HEIGHT = 15;
+  private static final int LABEL_BOTTOM_MARGIN = 2;
+  private static final int SECTION_ZONE_HEIGHT = 15;
+  private static final int SECTION_BOTTOM_MARGIN = 2;
 
   private final double[] SCALES = {0.25, 0.5, 1, 2, 2.5, 5};
 
@@ -30,13 +33,17 @@ public class HistoChartMetrics {
   private int scaleZoneWidth;
   private int chartWidth;
   private int chartHeight;
+  private int sectionZoneHeight;
+
+  private int sectionTextY;
 
   public HistoChartMetrics(int panelWidth,
                            int panelHeight,
                            FontMetrics fontMetrics,
                            int columnCount,
                            double maxNegativeValue,
-                           double maxPositiveValue) {
+                           double maxPositiveValue,
+                           boolean drawSections) {
     this.panelWidth = panelWidth;
     this.panelHeight = panelHeight;
     this.fontMetrics = fontMetrics;
@@ -45,12 +52,13 @@ public class HistoChartMetrics {
     this.maxNegativeValue = maxNegativeValue;
 
     this.scaleZoneWidth = scaleZoneWidth();
+    this.sectionZoneHeight = drawSections ? SECTION_ZONE_HEIGHT : 0;
     this.chartWidth = panelWidth - scaleZoneWidth;
-    this.chartHeight = panelHeight - LABEL_ZONE_HEIGHT;
+    this.chartHeight = panelHeight - LABEL_ZONE_HEIGHT - sectionZoneHeight;
     if (maxNegativeValue != 0.0) {
-    this.positiveHeight = (int)((chartHeight - 2 * VERTICAL_CHART_PADDING) * this.maxPositiveValue
-                                / (this.maxPositiveValue + this.maxNegativeValue));
-    this.negativeHeight = chartHeight - 2 * VERTICAL_CHART_PADDING - positiveHeight;
+      this.positiveHeight = (int)((chartHeight - 2 * VERTICAL_CHART_PADDING) * this.maxPositiveValue
+                                  / (this.maxPositiveValue + this.maxNegativeValue));
+      this.negativeHeight = chartHeight - 2 * VERTICAL_CHART_PADDING - positiveHeight;
     }
     else {
       this.positiveHeight = chartHeight - VERTICAL_CHART_PADDING;
@@ -109,7 +117,7 @@ public class HistoChartMetrics {
   }
 
   public int labelY() {
-    return panelHeight - LABEL_BOTTOM_MARGIN;
+    return panelHeight - sectionZoneHeight - LABEL_BOTTOM_MARGIN;
   }
 
   public int labelX(String label, int index) {
@@ -149,7 +157,7 @@ public class HistoChartMetrics {
       System.arraycopy(result, 0, trimmedResult, 0, index);
       result = trimmedResult;
     }
-    
+
     return result;
   }
 
@@ -165,5 +173,71 @@ public class HistoChartMetrics {
     if (index >= columnCount) {
       throw new InvalidParameter("Invalid index " + index + ", chart only contains " + columnCount + " columns");
     }
+  }
+
+  public static class Section {
+    public final String text;
+    public final int textX;
+    public final int textY;
+    public final int blockX;
+    public final int blockWidth;
+    public final int blockY;
+    public final int blockHeight;
+
+    public Section(String text,
+                   int textX, int textY,
+                   int blockX, int blockWidth, int blockY, int blockHeight) {
+      this.text = text;
+      this.textX = textX;
+      this.textY = textY;
+      this.blockX = blockX;
+      this.blockWidth = blockWidth;
+      this.blockY = blockY;
+      this.blockHeight = blockHeight;
+    }
+
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("Section");
+      builder.append("(text='").append(text).append('\'');
+      builder.append(", textX=").append(textX);
+      builder.append(", textY=").append(textY);
+      builder.append(", blockX=").append(blockX);
+      builder.append(", blockWidth=").append(blockWidth);
+      builder.append(", blockY=").append(blockY);
+      builder.append(", blockHeight=").append(blockHeight);
+      builder.append(')');
+      return builder.toString();
+    }
+  }
+
+  public java.util.List<Section> getSections(HistoDataset dataset) {
+    java.util.List<Section> sections = new ArrayList<Section>();
+
+    int blockLeft = left(0);
+    String previousName = dataset.getSection(0);
+    for (int i = 0; i < dataset.size(); i++) {
+      String sectionName = dataset.getSection(i);
+      if (!Utils.equal(sectionName, previousName)) {
+        int blockRight = left(i);
+        sections.add(createSection(previousName, blockLeft, blockRight));
+        previousName = sectionName;
+        blockLeft = blockRight;
+      }
+    }
+
+    sections.add(createSection(previousName, blockLeft, panelWidth));
+
+    return sections;
+  }
+
+  private Section createSection(String previousName, int blockLeft, int blockRight) {
+    int blockWidth = blockRight - blockLeft;
+    int blockHeight = SECTION_ZONE_HEIGHT;
+    int blockY = panelHeight - blockHeight;
+    int textX = blockLeft + blockWidth / 2 - fontMetrics.stringWidth(previousName) / 2;
+    int textY = panelHeight - SECTION_BOTTOM_MARGIN;
+    Section section = new Section(previousName, textX, textY, blockLeft, blockWidth, blockY, blockHeight);
+    return section;
   }
 }

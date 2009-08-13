@@ -80,7 +80,6 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       "histo.expenses.line",
       "histo.expenses.overrun",
       "histo.balance.fill",
-      "histo.balance.fill.selected",
       directory
     );
 
@@ -90,7 +89,6 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       "histo.income.line",
       "histo.income.overrun",
       "histo.balance.income.fill",
-      "histo.balance.income.fill.selected",
       directory
     );
 
@@ -100,7 +98,6 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       "histo.expenses.line",
       "histo.expenses.overrun",
       "histo.expenses.fill",
-      "histo.expenses.fill.selected",
       directory
     );
 
@@ -338,7 +335,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     for (int monthId : getMonthIds()) {
       Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, monthId));
       double value = balanceStat != null ? balanceStat.get(BalanceStat.UNCATEGORIZED) : 0.0;
-      dataset.add(monthId, value, getMonthLabel(monthId));
+      dataset.add(monthId, value, getLabel(monthId), getSection(monthId));
     }
 
     histoChart.update(new HistoLinePainter(dataset, uncategorizedColors));
@@ -371,10 +368,9 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     HistoLineDataset dataset = new HistoLineDataset();
 
     for (int monthId : getMonthIds()) {
-      String label = getMonthLabel(monthId);
       Glob stat = repository.find(Key.create(BalanceStat.TYPE, monthId));
       Double value = stat != null ? stat.get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION) : 0.0;
-      dataset.add(monthId, value, getMonthLabel(monthId));
+      dataset.add(monthId, value, getLabel(monthId), getSection(monthId));
     }
 
     histoChart.update(new HistoLinePainter(dataset, accountColors));
@@ -384,10 +380,9 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     HistoLineDataset dataset = new HistoLineDataset();
 
     for (int monthId : getMonthIds()) {
-      String label = getMonthLabel(monthId);
       Glob stat = SavingsBalanceStat.findSummary(monthId, repository);
       Double value = stat != null ? stat.get(SavingsBalanceStat.END_OF_MONTH_POSITION) : 0.0;
-      dataset.add(monthId, value, getMonthLabel(monthId));
+      dataset.add(monthId, value, getLabel(monthId), getSection(monthId));
     }
 
     histoChart.update(new HistoLinePainter(dataset, accountColors));
@@ -426,7 +421,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     return dataset;
   }
 
-  private String getMonthLabel(int monthId) {
+  private String getLabel(int monthId) {
     return Month.getOneLetterMonthLabel(monthId);
   }
 
@@ -450,11 +445,10 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     }
 
     public void add(int monthId, Double reference, Double actual) {
-      String label = getMonthLabel(monthId);
       dataset.add(monthId,
                   reference != null ? reference * multiplier : 0,
                   actual != null ? actual * multiplier : 0,
-                  label,
+                  getLabel(monthId), getSection(monthId),
                   monthId == currentMonthId,
                   monthId > lastMonthWithTransactions);
     }
@@ -494,5 +488,9 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
         selectionService.select(wrapper);
       }
     };
+  }
+
+  private String getSection(int monthId) {
+    return Integer.toString(Month.toYear(monthId));
   }
 }
