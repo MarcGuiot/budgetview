@@ -297,7 +297,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
           window.getInputTextBox("fileField").setText(path);
           window.getButton("Import").click();
           assertTrue(window.getComboBox("accountBank")
-            .contentEquals("(Select a bank)", "Autre", "AXA Banque", "Banque Populaire", "BNP",
+            .contentEquals("(Select a bank)", "Autre", "AXA Banque", "Banque Populaire", "BNP Paribas",
                            "Caisse d'épargne", "CIC",
                            "Crédit Agricole", "Crédit Mutuel", "ING Direct", "La Poste", "LCL",
                            "Société Générale"));

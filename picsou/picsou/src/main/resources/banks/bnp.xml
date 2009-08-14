@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="BNP" downloadUrl="http://www.bnpparibas.net" id='5'>
+  <bank name="BNP Paribas" downloadUrl="http://www.bnpparibas.net" id='5'>
     <bankEntity id="30004"/>
 
     <transactionMatcher bankType="COMMISS" qifM="(.*)"
