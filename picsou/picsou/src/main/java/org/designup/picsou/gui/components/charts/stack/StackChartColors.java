@@ -14,6 +14,7 @@ public class StackChartColors implements ColorChangeListener {
   private String barTextKey;
   private String labelKey;
   private String borderKey;
+  private String floorKey;
   private String selectionBorderKey;
   private String rolloverTextKey;
 
@@ -22,6 +23,7 @@ public class StackChartColors implements ColorChangeListener {
   private Color barTextColor;
   private Color labelColor;
   private Color borderColor;
+  private Color floorColor;
   private Color selectionBorderColor;
   private Color rolloverTextColor;
 
@@ -30,6 +32,7 @@ public class StackChartColors implements ColorChangeListener {
                           String barTextKey,
                           String labelKey,
                           String borderKey,
+                          String floorKey,
                           String selectionBorderKey,
                           String rolloverTextKey,
                           Directory directory) {
@@ -38,6 +41,7 @@ public class StackChartColors implements ColorChangeListener {
     this.barTextKey = barTextKey;
     this.labelKey = labelKey;
     this.borderKey = borderKey;
+    this.floorKey = floorKey;
     this.selectionBorderKey = selectionBorderKey;
     this.rolloverTextKey = rolloverTextKey;
 
@@ -49,6 +53,7 @@ public class StackChartColors implements ColorChangeListener {
     rightBarColor = colorLocator.get(rightBarKey);
     barTextColor = colorLocator.get(barTextKey);
     labelColor = colorLocator.get(labelKey);
+    floorColor = colorLocator.get(floorKey);
     borderColor = colorLocator.get(borderKey);
     selectionBorderColor = colorLocator.get(selectionBorderKey);
     rolloverTextColor = colorLocator.get(rolloverTextKey);
@@ -72,6 +77,10 @@ public class StackChartColors implements ColorChangeListener {
 
   public Color getBorderColor() {
     return borderColor;
+  }
+
+  public Color getFloorColor() {
+    return floorColor;
   }
 
   public Color getSelectionBorderColor() {

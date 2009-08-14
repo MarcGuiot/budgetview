@@ -18,7 +18,7 @@ public class StackChartDemo {
   public static void main(String[] args) {
 
     StackChartDataset leftDataset = new StackChartDataset();
-    add(leftDataset, "item 1", 3000.0);
+    add(leftDataset, "item 1", 2000.0);
 
     StackChartDataset rightDataset = new StackChartDataset();
     add(rightDataset, "label 1", 100.0);
@@ -38,7 +38,7 @@ public class StackChartDemo {
       "stack.barText",
       "stack.label",
       "stack.border",
-      "stack.selection.border",
+      "stack.floor", "stack.selection.border",
       "stack.rollover.text",
       directory
     ));

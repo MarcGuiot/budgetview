@@ -152,6 +152,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       "stack.barText",
       "stack.label",
       "stack.border",
+      "stack.floor",
       "stack.selection.border",
       "stack.rollover.text",
       directory

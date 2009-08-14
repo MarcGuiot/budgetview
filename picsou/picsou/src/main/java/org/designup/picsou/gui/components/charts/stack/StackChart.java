@@ -17,15 +17,16 @@ public class StackChart extends JPanel {
   private StackChartDataset rightDataset;
   private StackChartColors colors;
 
-  private Map<Rectangle, StackChartSelection> selections = new HashMap<Rectangle, StackChartSelection>();
+  private Map<Rectangle, StackChartSelection> clickAreas = new HashMap<Rectangle, StackChartSelection>();
   private StackChartSelection currentRollover;
-  private boolean rebuildSelection;
+  private boolean rebuildClickAreas;
 
   private Font labelFont;
   private Font barTextFont;
 
   private static final BasicStroke SELECTION_STROKE = new BasicStroke(2);
   private static final BasicStroke BORDER_STROKE = new BasicStroke(1);
+  private static final BasicStroke FLOOR_STROKE = new BasicStroke(1.5f);
 
   public StackChart() {
     setMinimumSize(new Dimension(150, 40));
@@ -41,7 +42,7 @@ public class StackChart extends JPanel {
     this.leftDataset = leftDataset;
     this.rightDataset = rightDataset;
     this.colors = colors;
-    clearSelection();
+    clearClickAreas();
     repaint();
   }
 
@@ -54,19 +55,19 @@ public class StackChart extends JPanel {
     update(null, null, null);
   }
 
-  private void clearSelection() {
-    selections.clear();
+  private void clearClickAreas() {
+    clickAreas.clear();
     currentRollover = null;
-    rebuildSelection = true;
+    rebuildClickAreas = true;
   }
 
   public void setBounds(int x, int y, int width, int height) {
-    clearSelection();
+    clearClickAreas();
     super.setBounds(x, y, width, height);
   }
 
   public void setBounds(Rectangle r) {
-    clearSelection();
+    clearClickAreas();
     super.setBounds(r);
   }
 
@@ -117,10 +118,14 @@ public class StackChart extends JPanel {
     if (colors != null) {
       g2.setStroke(BORDER_STROKE);
       g2.setColor(colors.getBorderColor());
+      g2.drawRect(0, 0, width, height);
+
+      g2.setStroke(FLOOR_STROKE);
+      g2.setColor(colors.getFloorColor());
       g2.drawLine(0, height, width, height);
     }
 
-    rebuildSelection = false;
+    rebuildClickAreas = false;
   }
 
   private void paintBlocks(Graphics2D g2,
@@ -128,8 +133,7 @@ public class StackChart extends JPanel {
                            StackChartDataset dataset,
                            StackChartLayout layout,
                            StackChartColors colors,
-                           Color barColor
-  ) {
+                           Color barColor) {
 
     float alpha = 1.0f;
     StackChartBlock[] blocks = metrics.computeBlocks(dataset);
@@ -144,7 +148,6 @@ public class StackChart extends JPanel {
         g2.setColor(colors.getSelectionBorderColor());
         g2.setStroke(SELECTION_STROKE);
         g2.drawRect(layout.barX(), block.blockY, metrics.barWidth(), block.blockHeight);
-
       }
 
       g2.setColor(colors.getBarTextColor());
@@ -155,10 +158,10 @@ public class StackChart extends JPanel {
       g2.setFont(labelFont);
       g2.drawString(block.label, layout.labelTextX(block.label), block.labelTextY);
 
-      if (rebuildSelection) {
+      if (rebuildClickAreas) {
         Rectangle rectangle = new Rectangle(layout.blockX(), block.blockY, layout.blockWidth(), block.blockHeight);
         StackChartSelection selection = new StackChartSelection(block.dataset, block.datasetIndex);
-        selections.put(rectangle, selection);
+        clickAreas.put(rectangle, selection);
       }
 
       alpha *= 0.7f;
@@ -192,7 +195,7 @@ public class StackChart extends JPanel {
   }
 
   private StackChartSelection getSelection(int x, int y) {
-    for (Map.Entry<Rectangle, StackChartSelection> entry : selections.entrySet()) {
+    for (Map.Entry<Rectangle, StackChartSelection> entry : clickAreas.entrySet()) {
       if (entry.getKey().contains(x, y)) {
         return entry.getValue();
       }

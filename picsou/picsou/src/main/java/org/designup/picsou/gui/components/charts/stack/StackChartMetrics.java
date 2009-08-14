@@ -7,12 +7,13 @@ import java.util.ArrayList;
 
 public class StackChartMetrics {
 
-  private static int OUTER_HORIZONTAL_MARGIN = 10;
-  private static int TEXT_BAR_MARGIN = 10;
+  private static final int TEXT_BAR_MARGIN = 10;
   private static final int VERTICAL_TEXT_MARGIN = 4;
+  private static final int TOP_MARGIN = 10;
 
   private int panelHeight;
   private int panelWidth;
+  private int drawingHeight;
   private FontMetrics labelFontMetrics;
   private FontMetrics barTextFontMetrics;
   private double maxValue;
@@ -25,6 +26,7 @@ public class StackChartMetrics {
                            FontMetrics barTextFontMetrics,
                            double maxValue) {
     this.panelHeight = panelHeight;
+    this.drawingHeight = panelHeight - TOP_MARGIN;
     this.panelWidth = panelWidth;
     this.labelFontMetrics = labelFontMetrics;
     this.barTextFontMetrics = barTextFontMetrics;
@@ -46,7 +48,7 @@ public class StackChartMetrics {
     int remainingPercentage = 100;
     for (int i = 0; i < dataset.size(); i++) {
       double value = dataset.getValue(i);
-      int height = (int)((value / maxValue) * panelHeight);
+      int height = (int)((value / maxValue) * drawingHeight);
       currentY -= height;
 
       String label;
@@ -63,14 +65,15 @@ public class StackChartMetrics {
           for (int j = i + 1;j < dataset.size(); j++) {
             total += dataset.getValue(j);
           }
-          int otherHeight = (int)((total / maxValue) * panelHeight);
+          int otherHeight = (int)((total / maxValue) * drawingHeight);
           height += otherHeight;
           currentY -= otherHeight;
         }
         else {
           label = dataset.getLabel(i);
-          height += currentY;
-          currentY = 0;
+          int topY = (int)(drawingHeight * (1 - dataset.getTotal() / maxValue));
+          height += currentY - topY;
+          currentY = topY;
         }
         percentage = remainingPercentage;
         remainingPercentage = 0;
