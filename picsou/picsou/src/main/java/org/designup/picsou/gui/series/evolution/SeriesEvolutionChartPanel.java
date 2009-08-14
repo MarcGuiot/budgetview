@@ -15,10 +15,12 @@ import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
@@ -27,10 +29,10 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.awt.event.ActionEvent;
 
 public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
@@ -42,6 +44,10 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
   private HistoChart histoChart;
   private StackChart balanceChart;
   private StackChart seriesChart;
+
+  private JLabel histoChartLabel;
+  private JLabel balanceChartLabel;
+  private JLabel seriesChartLabel;
 
   private HistoDiffColors balanceColors;
   private HistoDiffColors incomeColors;
@@ -115,9 +121,12 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       directory
     );
 
-    balanceStackColors = createStackColors("stack.income.bar", "stack.expenses.bar", directory);
-    incomeStackColors = createStackColors("stack.income.bar", "stack.income.bar", directory);
-    expensesStackColors = createStackColors("stack.expenses.bar", "stack.expenses.bar", directory);
+    balanceStackColors = createStackColors("stack.income.bar", "stack.income.border",
+                                           "stack.expenses.bar", "stack.expenses.border", directory);
+    incomeStackColors = createStackColors("stack.income.bar", "stack.income.border",
+                                          "stack.income.bar", "stack.income.border", directory);
+    expensesStackColors = createStackColors("stack.expenses.bar", "stack.expenses.bar",
+                                            "stack.expenses.bar", "stack.expenses.bar", directory);
 
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -134,7 +143,9 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     });
   }
 
-  private StackChartColors createStackColors(String leftBar, String rightBar, Directory directory) {
+  private StackChartColors createStackColors(String leftBar, String leftBorder,
+                                             String rightBar, String rightBorder,
+                                             Directory directory) {
     return new StackChartColors(
       leftBar,
       rightBar,
@@ -151,6 +162,10 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     builder.add("histoChart", histoChart);
     builder.add("balanceChart", balanceChart);
     builder.add("seriesChart", seriesChart);
+
+    histoChartLabel = builder.add("histoChartLabel", new JLabel());
+    balanceChartLabel = builder.add("balanceChartLabel", new JLabel());
+    seriesChartLabel = builder.add("seriesChartLabel", new JLabel());
   }
 
   public void monthSelected(Integer monthId) {
@@ -239,7 +254,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
   }
 
   private void updateMainBalanceHisto() {
-    DatasetBuilder dataset = new DatasetBuilder();
+    HistoDatasetBuilder dataset = new HistoDatasetBuilder();
 
     for (int monthId : getMonthIds()) {
       Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, monthId));
@@ -253,7 +268,10 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       }
     }
 
-    dataset.apply(balanceColors);
+    dataset.apply(balanceColors,
+                  "mainBalance",
+                  Colors.toString(balanceColors.getReferenceLineColor()),
+                  Colors.toString(balanceColors.getActualLineColor()));
   }
 
   private void updateMainBalanceStack(BudgetArea selectedBudgetArea) {
@@ -268,6 +286,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     StackChartDataset expensesDataset = createStackDataset(balanceStat, selectedBudgetArea, BudgetArea.EXPENSES_AREAS);
 
     balanceChart.update(incomeDataset, expensesDataset, balanceStackColors);
+    updateBalanceLabel("mainBalance");
   }
 
   private void updateMainAccountSeriesStack() {
@@ -286,10 +305,11 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     }
 
     seriesChart.update(dataset, expensesStackColors);
+    updateSeriesLabel("mainAccount");
   }
 
   private void updateBudgetAreaHisto(BudgetArea budgetArea) {
-    DatasetBuilder dataset = new DatasetBuilder();
+    HistoDatasetBuilder dataset = new HistoDatasetBuilder();
 
     DoubleField plannedField = BalanceStat.getPlanned(budgetArea);
     DoubleField actualField = BalanceStat.getObserved(budgetArea);
@@ -308,7 +328,12 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       }
     }
 
-    dataset.apply(budgetArea.isIncome() ? incomeColors : expensesColors);
+    HistoDiffColors colors = budgetArea.isIncome() ? incomeColors : expensesColors;
+    dataset.apply(colors,
+                  "budgetArea",
+                  budgetArea.getLabel(),
+                  Colors.toString(colors.getReferenceLineColor()),
+                  Colors.toString(colors.getActualLineColor()));
   }
 
   private void updateBudgetAreaSeriesStack(BudgetArea budgetArea, Integer selectedSeriesId) {
@@ -326,7 +351,9 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       }
     }
 
-    seriesChart.update(dataset, budgetArea.isIncome() ? incomeStackColors : expensesStackColors);
+    StackChartColors colors = budgetArea.isIncome() ? incomeStackColors : expensesStackColors;
+    seriesChart.update(dataset, colors);
+    updateSeriesLabel("budgetArea", budgetArea.getLabel().toLowerCase());
   }
 
   private void updateUncategorizedHisto() {
@@ -339,10 +366,11 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     }
 
     histoChart.update(new HistoLinePainter(dataset, uncategorizedColors));
+    updateHistoLabel("uncategorized");
   }
 
   private void updateSeriesHisto(Integer seriesId) {
-    DatasetBuilder dataset = new DatasetBuilder();
+    HistoDatasetBuilder dataset = new HistoDatasetBuilder();
 
     Glob series = repository.get(Key.create(Series.TYPE, seriesId));
     BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
@@ -361,7 +389,12 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       }
     }
 
-    dataset.apply(budgetArea.isIncome() ? incomeColors : expensesColors);
+    HistoDiffColors colors = budgetArea.isIncome() ? incomeColors : expensesColors;
+    dataset.apply(colors,
+                  "series",
+                  series.get(Series.NAME),
+                  Colors.toString(colors.getReferenceLineColor()),
+                  Colors.toString(colors.getActualLineColor()));
   }
 
   private void updateMainAccountsHisto() {
@@ -374,6 +407,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     }
 
     histoChart.update(new HistoLinePainter(dataset, accountColors));
+    updateHistoLabel("mainAccounts");
   }
 
   private void updateSavingsAccountsHisto() {
@@ -386,6 +420,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     }
 
     histoChart.update(new HistoLinePainter(dataset, accountColors));
+    updateHistoLabel("savingsAccounts");
   }
 
   private void updateSavingsBalanceStack() {
@@ -397,14 +432,17 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     StackChartDataset expensesDataset = new StackChartDataset();
 
     balanceChart.update(incomeDataset, expensesDataset, balanceStackColors);
+    updateBalanceLabel("savingsBalance");
   }
 
   private void clearBalanceStack() {
     balanceChart.clear();
+    balanceChartLabel.setText(null);
   }
 
   private void clearSeriesStack() {
     seriesChart.clear();
+    balanceChartLabel.setText(null);
   }
 
   private StackChartDataset createStackDataset(Glob balanceStat,
@@ -425,14 +463,14 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     return Month.getOneLetterMonthLabel(monthId);
   }
 
-  private class DatasetBuilder {
+  private class HistoDatasetBuilder {
 
     private HistoDiffDataset dataset = new HistoDiffDataset();
     private int multiplier = 1;
     private boolean showActualInTheFuture = true;
     private int lastMonthWithTransactions;
 
-    private DatasetBuilder() {
+    private HistoDatasetBuilder() {
       lastMonthWithTransactions = CurrentMonth.getLastTransactionMonth(repository);
     }
 
@@ -457,9 +495,26 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       add(monthId, 0.0, 0.0);
     }
 
-    public void apply(HistoDiffColors colors) {
+    public void apply(HistoDiffColors colors, String messageKey, String... args) {
       histoChart.update(new HistoDiffPainter(dataset, colors, showActualInTheFuture));
+      updateHistoLabel(messageKey, args);
     }
+  }
+
+  private void updateHistoLabel(String messageKey, String... args) {
+    updateLabel(histoChartLabel, "chart.histo." + messageKey, args);
+  }
+
+  private void updateBalanceLabel(String messageKey, String... args) {
+    updateLabel(balanceChartLabel, "chart.balance." + messageKey, args);
+  }
+
+  private void updateSeriesLabel(String messageKey, String... args) {
+    updateLabel(seriesChartLabel, "chart.series." + messageKey, args);
+  }
+
+  private void updateLabel(JLabel label, String messageKey, String... args) {
+    label.setText(Lang.get("seriesEvolution." + messageKey, args));
   }
 
   public List<Integer> getMonthIds() {

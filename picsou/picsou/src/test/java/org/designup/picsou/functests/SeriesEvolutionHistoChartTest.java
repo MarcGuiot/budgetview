@@ -38,12 +38,14 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     seriesEvolution.histoChart
       .checkLineColumn(0, "J", "2009", 50.00)
       .checkLineColumn(1, "J", "2009", 20.00);
+    seriesEvolution.checkHistoChartLabel("Operations to categorize");
 
     timeline.selectMonth("2009/06");
     seriesEvolution.select("Balance");
     seriesEvolution.histoChart
       .checkColumnCount(7)
       .checkDiffColumn(0, "J", "2009", 650.00, 450.00);
+    seriesEvolution.checkHistoChartLabel("Global balance evolution --- income --- expenses");
 
     timeline.selectMonth("2009/07");
     seriesEvolution.histoChart
@@ -54,16 +56,19 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .checkDiffColumn(3, "S", "2009", 670.00, 450.00)
       .checkDiffColumn(4, "O", "2009", 670.00, 450.00)
       .checkDiffColumn(5, "N", "2009", 670.00, 450.00);
+    seriesEvolution.checkHistoChartLabel("Global balance evolution --- income --- expenses");
 
     timeline.selectMonth("2009/06");
     seriesEvolution.select("Income");
     seriesEvolution.histoChart
       .checkDiffColumn(0, "J", "2009", 650.00, 650.00)
       .checkDiffColumn(1, "J", "2009", 650.00, 670.00);
+    seriesEvolution.checkHistoChartLabel("Budget area Income evolution --- planned --- actual");
     seriesEvolution.select("John's");
     seriesEvolution.histoChart
       .checkDiffColumn(0, "J", "2009", 300.00, 300.00)
       .checkDiffColumn(1, "J", "2009", 300.00, 320.00);
+    seriesEvolution.checkHistoChartLabel("Series 'John's' evolution --- planned --- actual");
 
     timeline.selectMonth("2009/07");
     seriesEvolution.select("Income");
@@ -74,6 +79,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     seriesEvolution.histoChart
       .checkDiffColumn(0, "J", "2009", 300.00, 300.00)
       .checkDiffColumn(1, "J", "2009", 300.00, 320.00);
+    seriesEvolution.checkHistoChartLabel("Series 'John's' evolution --- planned --- actual");
 
     seriesEvolution.editSeries("John's", "Jul 09")
       .switchToManual()
@@ -131,6 +137,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .checkLineColumn(2, "S", "2009", 600.00)
       .checkLineColumn(3, "O", "2009", 400.00)
       .checkLineColumn(6, "J", "2010", -200.00);
+    seriesEvolution.checkHistoChartLabel("End of month position evolution");
 
     seriesEvolution.select("Savings accounts");
     seriesEvolution.histoChart
@@ -140,6 +147,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .checkLineColumn(2, "S", "2009", 600.00)
       .checkLineColumn(3, "O", "2009", 800.00)
       .checkLineColumn(6, "J", "2010", 1400.00);
+    seriesEvolution.checkHistoChartLabel("End of month position evolution");
 
     views.selectHome();
 

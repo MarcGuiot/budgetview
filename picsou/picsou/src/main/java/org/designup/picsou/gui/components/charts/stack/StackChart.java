@@ -96,12 +96,10 @@ public class StackChart extends JPanel {
                               g2.getFontMetrics(labelFont), g2.getFontMetrics(barTextFont),
                               Math.max(leftDataset.getTotal(), rightDataset.getTotal()));
 
-      paintBlocks(g2, metrics,
-                  metrics.computeBlocks(leftDataset),
+      paintBlocks(g2, metrics, leftDataset,
                   metrics.leftLayout(),
                   colors, colors.getLeftBarColor());
-      paintBlocks(g2, metrics,
-                  metrics.computeBlocks(rightDataset),
+      paintBlocks(g2, metrics, rightDataset,
                   metrics.rightLayout(),
                   colors, colors.getRightBarColor());
     }
@@ -111,7 +109,7 @@ public class StackChart extends JPanel {
                               g2.getFontMetrics(labelFont), g2.getFontMetrics(barTextFont),
                               leftDataset.getTotal());
       paintBlocks(g2, metrics,
-                  metrics.computeBlocks(leftDataset),
+                  leftDataset,
                   metrics.centerLayout(leftDataset.getLongestLabel()),
                   colors, colors.getLeftBarColor());
     }
@@ -127,11 +125,14 @@ public class StackChart extends JPanel {
 
   private void paintBlocks(Graphics2D g2,
                            StackChartMetrics metrics,
-                           StackChartBlock[] blocks,
+                           StackChartDataset dataset,
                            StackChartLayout layout,
                            StackChartColors colors,
-                           Color barColor) {
+                           Color barColor
+  ) {
+
     float alpha = 1.0f;
+    StackChartBlock[] blocks = metrics.computeBlocks(dataset);
     for (StackChartBlock block : blocks) {
       g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
       g2.setColor(barColor);
@@ -162,6 +163,8 @@ public class StackChart extends JPanel {
 
       alpha *= 0.7f;
     }
+
+
   }
 
   private boolean isRollover(StackChartBlock block) {

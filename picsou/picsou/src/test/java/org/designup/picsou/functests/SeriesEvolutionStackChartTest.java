@@ -56,12 +56,14 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("Recurring", 80.00)
       .checkValue("Envelopes", 450.00)
       .checkValue("Savings", 100.00);
+    seriesEvolution.checkBalanceChartLabel("Main accounts balance");
     seriesEvolution.seriesChart.getSingleDataset()
       .checkSize(4)
       .checkValue("Groceries", 450.00)
       .checkValue("Virt Livret", 100.00)
       .checkValue("Mobile", 50.00)
       .checkValue("Internet", 30.00);
+    seriesEvolution.checkSeriesChartLabel("Main series");
 
     timeline.selectMonth("2009/07");
     checkStandardCaseMainBalance();
@@ -71,6 +73,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("Virt Livret", 100.00)
       .checkValue("Mobile", 60.00)
       .checkValue("Internet", 30.00);
+    seriesEvolution.checkSeriesChartLabel("Main series");
 
     seriesEvolution.select("Balance");
     checkStandardCaseMainBalance();
@@ -80,6 +83,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("Virt Livret", 100.00)
       .checkValue("Mobile", 60.00)
       .checkValue("Internet", 30.00);
+    seriesEvolution.checkSeriesChartLabel("Main series");
 
     seriesEvolution.select("Main accounts");
     checkStandardCaseMainBalance();
@@ -89,24 +93,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("Virt Livret", 100.00)
       .checkValue("Mobile", 60.00)
       .checkValue("Internet", 30.00);
-
-    seriesEvolution.select("Main accounts");
-    checkStandardCaseMainBalance();
-    seriesEvolution.seriesChart.getSingleDataset()
-      .checkSize(4)
-      .checkValue("Groceries", 450.00)
-      .checkValue("Virt Livret", 100.00)
-      .checkValue("Mobile", 60.00)
-      .checkValue("Internet", 30.00);
-
-    seriesEvolution.select("Main accounts");
-    checkStandardCaseMainBalance();
-    seriesEvolution.seriesChart.getSingleDataset()
-      .checkSize(4)
-      .checkValue("Groceries", 450.00)
-      .checkValue("Virt Livret", 100.00)
-      .checkValue("Mobile", 60.00)
-      .checkValue("Internet", 30.00);
+    seriesEvolution.checkSeriesChartLabel("Main series");
 
     seriesEvolution.select("Income");
     seriesEvolution.balanceChart.getLeftDataset()
@@ -121,6 +108,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkSize(2)
       .checkValue("Mary's", 350.00)
       .checkValue("John's", 320.00);
+    seriesEvolution.checkSeriesChartLabel("Main income series");
 
     seriesEvolution.select("Mary's");
     seriesEvolution.balanceChart.getLeftDataset()
@@ -131,10 +119,12 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("Recurring", 90.00)
       .checkValue("Envelopes", 450.00)
       .checkValue("Savings", 100.00);
+    seriesEvolution.checkBalanceChartLabel("Main accounts balance");
     seriesEvolution.seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Mary's", 350.00, true)
       .checkValue("John's", 320.00);
+    seriesEvolution.checkSeriesChartLabel("Main income series");
 
     seriesEvolution.select("Recurring");
     seriesEvolution.balanceChart.getLeftDataset()
@@ -145,10 +135,12 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("Recurring", 90.00, true)
       .checkValue("Envelopes", 450.00)
       .checkValue("Savings", 100.00);
+    seriesEvolution.checkBalanceChartLabel("Main accounts balance");
     seriesEvolution.seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Mobile", 60.00)
       .checkValue("Internet", 30.00);
+    seriesEvolution.checkSeriesChartLabel("Main recurring series");
 
     seriesEvolution.select("Internet");
     seriesEvolution.balanceChart.getLeftDataset()
@@ -159,10 +151,12 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("Recurring", 90.00, true)
       .checkValue("Envelopes", 450.00)
       .checkValue("Savings", 100.00);
+    seriesEvolution.checkBalanceChartLabel("Main accounts balance");
     seriesEvolution.seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Mobile", 60.00)
       .checkValue("Internet", 30.00, true);
+    seriesEvolution.checkSeriesChartLabel("Main recurring series");
   }
 
   private void checkStandardCaseMainBalance() {

@@ -177,6 +177,21 @@ public class SeriesEvolutionChecker extends GuiChecker {
     Assert.assertEquals(expectedClipboardContent, Clipboard.getContentAsText());
   }
 
+  public void checkHistoChartLabel(String text) {
+    TextBox textBox = getPanel().getTextBox("histoChartLabel");
+    Assert.assertEquals(text, org.uispec4j.utils.Utils.cleanupHtml(textBox.getText()));
+  }
+
+  public void checkBalanceChartLabel(String text) {
+    TextBox textBox = getPanel().getTextBox("balanceChartLabel");
+    Assert.assertEquals(text, org.uispec4j.utils.Utils.cleanupHtml(textBox.getText()));
+  }
+
+  public void checkSeriesChartLabel(String text) {
+    TextBox textBox = getPanel().getTextBox("seriesChartLabel");
+    Assert.assertEquals(text, org.uispec4j.utils.Utils.cleanupHtml(textBox.getText()));
+  }
+
   public class SeriesTableChecker extends TableChecker {
 
     public SeriesTableChecker add(String label, String... monthValues) {
