@@ -12,6 +12,8 @@ import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.ChangeSet;
+import org.globsframework.model.FieldValue;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobMatcher;
 import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.utils.directory.Directory;
@@ -48,7 +50,7 @@ public class NotesView extends View {
 
     builder.addMultiLineEditor("notesEditor", Notes.TEXT)
       .setNotifyOnKeyPressed(true)
-      .forceSelection(repository.findOrCreate(Notes.KEY));
+      .forceSelection(repository.findOrCreate(Notes.KEY, value(Notes.TEXT, Lang.get("notes.initial"))));
 
 
     builder.add("openSeriesWizard", new OpenSeriesWizardAction());

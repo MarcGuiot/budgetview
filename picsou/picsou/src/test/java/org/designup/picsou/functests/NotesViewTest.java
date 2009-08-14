@@ -76,7 +76,7 @@ public class NotesViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectHome();
-    notes.checkText("");
+    notes.checkText("Click here to enter your own notes");
 
     notes.setText("One note");
     notes.checkText("One note");
