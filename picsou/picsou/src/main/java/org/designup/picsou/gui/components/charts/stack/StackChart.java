@@ -29,8 +29,8 @@ public class StackChart extends JPanel {
   private static final BasicStroke FLOOR_STROKE = new BasicStroke(1.5f);
 
   public StackChart() {
-    setMinimumSize(new Dimension(150, 40));
-    setPreferredSize(new Dimension(150, 1000));
+    setMinimumSize(new Dimension(160, 40));
+    setPreferredSize(new Dimension(160, 1000));
     labelFont = getFont().deriveFont(10f);
     barTextFont = getFont().deriveFont(9f);
     registerMouseActions();

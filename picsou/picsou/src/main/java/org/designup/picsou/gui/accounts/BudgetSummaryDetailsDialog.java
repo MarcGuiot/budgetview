@@ -1,12 +1,18 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.components.CloseAction;
+import org.designup.picsou.gui.components.charts.stack.StackChart;
+import org.designup.picsou.gui.components.charts.stack.StackChartColors;
+import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BalanceStat;
+import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.fields.DoubleField;
@@ -23,6 +29,8 @@ import javax.swing.*;
 
 public class BudgetSummaryDetailsDialog {
   private JLabel amountSummaryLabel;
+  private StackChart balanceChart;
+  private StackChartColors balanceChartColors;
   private Directory directory;
   private GlobRepository repository;
   private PicsouDialog dialog;
@@ -30,7 +38,22 @@ public class BudgetSummaryDetailsDialog {
   public BudgetSummaryDetailsDialog(GlobRepository repository, Directory parentDirectory) {
     this.repository = repository;
     this.directory = createDirectory(parentDirectory);
+    this.balanceChart = new StackChart();
+
+    this.balanceChartColors = new StackChartColors(
+      "stack.income.bar",
+      "stack.expenses.bar",
+      "stack.barText",
+      "stack.label",
+      "block.inner.bg",
+      "stack.floor",
+      "stack.selection.border",
+      "stack.rollover.text",
+      directory
+    );
+
     createDialog();
+    registerBalanceChartUpdater();
   }
 
   public void show(GlobList selectedMonths) {
@@ -50,17 +73,20 @@ public class BudgetSummaryDetailsDialog {
 
   public void createDialog() {
     GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/estimatedPositionDetailsDialog.splits", repository, directory);
+      new GlobsPanelBuilder(getClass(), "/layout/budgetSummaryDetailsDialog.splits", repository, directory);
+
+    builder.add("balanceChart", balanceChart);
+    builder.addLabel("balanceLabel", BalanceStat.TYPE, new BalanceStringifier()).getComponent();
 
     builder.addLabel("estimatedPosition", BalanceStat.TYPE, new EspectedPositionStringifier()).getComponent();
     builder.addLabel("estimatedPositionDate", BalanceStat.TYPE, new PositionDateStringifier()).getComponent();
     builder.addLabel("initialPosition", BalanceStat.TYPE, new InitialPositionStringifier()).getComponent();
-    addLabel(builder, "remainingIncome", BalanceStat.INCOME_REMAINING, true);
-    addLabel(builder, "remainingFixed", BalanceStat.RECURRING_REMAINING, false);
-    addLabel(builder, "remainingEnvelope", BalanceStat.ENVELOPES_REMAINING, false);
-    addLabel(builder, "remainingInSavings", BalanceStat.SAVINGS_IN_REMAINING, false);
-    addLabel(builder, "remainingOutSavings", BalanceStat.SAVINGS_OUT_REMAINING, false);
-    addLabel(builder, "remainingSpecial", BalanceStat.SPECIAL_REMAINING, false);
+    addLabel(builder, "remainingIncome", BalanceStat.INCOME_REMAINING, false);
+    addLabel(builder, "remainingFixed", BalanceStat.RECURRING_REMAINING, true);
+    addLabel(builder, "remainingEnvelope", BalanceStat.ENVELOPES_REMAINING, true);
+    addLabel(builder, "remainingInSavings", BalanceStat.SAVINGS_IN_REMAINING, true);
+    addLabel(builder, "remainingOutSavings", BalanceStat.SAVINGS_OUT_REMAINING, true);
+    addLabel(builder, "remainingSpecial", BalanceStat.SPECIAL_REMAINING, true);
 
     JPanel panel = builder.load();
 
@@ -69,13 +95,50 @@ public class BudgetSummaryDetailsDialog {
     dialog.pack();
   }
 
-  private void addLabel(GlobsPanelBuilder builder, String name, DoubleField field, boolean isIncome) {
-    builder.addLabel(name, BalanceStat.TYPE, GlobListStringifiers.sum(field, Formatting.DECIMAL_FORMAT, !isIncome));
+  private void registerBalanceChartUpdater() {
+    directory.get(SelectionService.class).addListener(new GlobSelectionListener() {
+      public void selectionUpdated(GlobSelection selection) {
+        updateBalanceChart(selection.getAll(BalanceStat.TYPE));
+      }
+    }, BalanceStat.TYPE);
+  }
+
+  private void updateBalanceChart(GlobList balanceStats) {
+    StackChartDataset incomeDataset = createStackDataset(balanceStats, BudgetArea.INCOME_AREAS);
+    StackChartDataset expensesDataset = createStackDataset(balanceStats, BudgetArea.EXPENSES_AREAS);
+
+    balanceChart.update(incomeDataset, expensesDataset, balanceChartColors);
+  }
+
+  private StackChartDataset createStackDataset(GlobList balanceStats, BudgetArea... budgetAreas) {
+    StackChartDataset dataset = new StackChartDataset();
+    for (BudgetArea budgetArea : budgetAreas) {
+      dataset.setInverted(!budgetArea.isIncome());
+      dataset.add(budgetArea.getLabel(),
+                  balanceStats.getSum(BalanceStat.getSummary(budgetArea)),
+                  null,
+                  false);
+    }
+    return dataset;
+  }
+
+  private void addLabel(GlobsPanelBuilder builder, String name, DoubleField field, boolean invert) {
+    builder.addLabel(name, BalanceStat.TYPE, GlobListStringifiers.sum(field, Formatting.DECIMAL_FORMAT, invert));
   }
 
   private Glob getLastBalanceStat(GlobList list) {
     list.sort(BalanceStat.MONTH);
     return list.getLast();
+  }
+
+  private class BalanceStringifier implements GlobListStringifier {
+    public String toString(GlobList list, GlobRepository repository) {
+      if (list.isEmpty()) {
+        return "";
+      }
+      double total = list.getSum(BalanceStat.MONTH_BALANCE);
+      return Formatting.toStringWithPlus(total);
+    }
   }
 
   private class EspectedPositionStringifier implements GlobListStringifier {
@@ -95,7 +158,7 @@ public class BudgetSummaryDetailsDialog {
         return "";
       }
       final String date = Formatting.toString(Month.getLastDay(balanceStat.get(BalanceStat.MONTH)));
-      return Lang.get("estimatedPositionDetails.date", date);
+      return Lang.get("budgetSummaryDetails.position.date", date);
     }
   }
 

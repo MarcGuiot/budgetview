@@ -38,12 +38,13 @@
         <filler fill="horizontal"/>
         <button action="accountPositionThreshold" styleClass="hyperlink"
                 tooltipText="$accountPositionThresholdAction.tooltip"/>
+        <filler fill="horizontal"/>
         <label text="$accountView.reference.title"
                styleClass="totalAmountTitle" autoHideSource="referencePosition"
-               marginTop="0" marginBottom="0"/>
+               marginTop="0" marginBottom="0" marginRight="5"/>
         <label ref="referencePosition"
                styleClass="referenceAmount" tooltipText="$accountView.reference.tooltip"
-               marginTop="0" marginBottom="0"/>
+               marginTop="0" marginBottom="0" marginRight="5"/>
         <label ref="referencePositionDate"
                styleClass="totalAmountTitle" autoHideSource="referencePosition"
                marginTop="0" marginBottom="0"/>

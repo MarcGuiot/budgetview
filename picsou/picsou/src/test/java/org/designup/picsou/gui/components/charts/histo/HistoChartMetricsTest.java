@@ -13,24 +13,24 @@ public class HistoChartMetricsTest extends ChartTestCase {
   public void testColumns() throws Exception {
 
     HistoChartMetrics metrics =
-      new HistoChartMetrics(200, 135, getFontMetrics(), 10, 1000, 3000, false);
+      new HistoChartMetrics(180, 135, getFontMetrics(), 10, 1000, 3000, false);
 
-    assertEquals(50, metrics.left(0));
-    assertEquals(65, metrics.left(1));
-    assertEquals(80, metrics.left(2));
-    assertEquals(185, metrics.left(9));
+    assertEquals(30, metrics.left(0));
+    assertEquals(45, metrics.left(1));
+    assertEquals(60, metrics.left(2));
+    assertEquals(165, metrics.left(9));
 
     try {
-      assertEquals(200, metrics.left(10));
+      assertEquals(180, metrics.left(10));
     }
     catch (InvalidParameter e) {
       assertEquals("Invalid index 10, chart only contains 10 columns", e.getMessage());
     }
 
-    assertEquals(65, metrics.right(0));
-    assertEquals(80, metrics.right(1));
-    assertEquals(95, metrics.right(2));
-    assertEquals(200, metrics.right(9));
+    assertEquals(45, metrics.right(0));
+    assertEquals(60, metrics.right(1));
+    assertEquals(75, metrics.right(2));
+    assertEquals(180, metrics.right(9));
     try {
       assertEquals(200, metrics.right(10));
     }
@@ -42,7 +42,7 @@ public class HistoChartMetricsTest extends ChartTestCase {
   public void testVerticalPositions() throws Exception {
 
     HistoChartMetrics metrics =
-      new HistoChartMetrics(200, 140, getFontMetrics(), 10, 1000, 3000, false);
+      new HistoChartMetrics(180, 140, getFontMetrics(), 10, 1000, 3000, false);
 
     int margin = 10;
     assertEquals(margin + 78, metrics.y(0));
@@ -50,14 +50,14 @@ public class HistoChartMetricsTest extends ChartTestCase {
     assertEquals(margin + 105, metrics.y(-1000));
 
     assertEquals(138, metrics.labelY());
-    assertEquals(85, metrics.labelX("A", 2));
-    assertEquals(82, metrics.labelX("AA", 2));
-    assertEquals(100, metrics.labelX("A", 3));
+    assertEquals(65, metrics.labelX("A", 2));
+    assertEquals(62, metrics.labelX("AA", 2));
+    assertEquals(80, metrics.labelX("A", 3));
   }
 
   public void testVerticalPositionsWithNoNegativeValues() throws Exception {
     HistoChartMetrics metrics =
-      new HistoChartMetrics(200, 145, getFontMetrics(), 10, 0, 100, false);
+      new HistoChartMetrics(180, 145, getFontMetrics(), 10, 0, 100, false);
 
     assertEquals(130, metrics.y(0));
     assertEquals(10, metrics.y(100));
@@ -81,11 +81,11 @@ public class HistoChartMetricsTest extends ChartTestCase {
   public void testColumnAt() throws Exception {
     HistoChartMetrics metrics =
       new HistoChartMetrics(150, 145, getFontMetrics(), 10, 0, 100, false);
-    assertEquals(50, metrics.left(0));
-    assertEquals(0, metrics.getColumnAt(55));
-    assertEquals(1, metrics.getColumnAt(65));
-    assertEquals(2, metrics.getColumnAt(75));
-    assertEquals(9, metrics.getColumnAt(145));
+    assertEquals(25, metrics.left(0));
+    assertEquals(0, metrics.getColumnAt(35));
+    assertEquals(1, metrics.getColumnAt(45));
+    assertEquals(2, metrics.getColumnAt(55));
+    assertEquals(9, metrics.getColumnAt(135));
   }
 
   public void testSectionBlocks() throws Exception {
@@ -106,9 +106,9 @@ public class HistoChartMetricsTest extends ChartTestCase {
 
     List<HistoChartMetrics.Section> sections = metrics.getSections(dataset);
     assertEquals(3, sections.size());
-    checkSection(sections.get(0), "section A", 38, 128, 50, 20, 115, 15);
-    checkSection(sections.get(1), "section B", 83, 128, 70, 70, 115, 15);
-    checkSection(sections.get(2), "section C", 123, 128, 140, 10, 115, 15);
+    checkSection(sections.get(0), "section A", 15, 128, 25, 24, 115, 15);
+    checkSection(sections.get(1), "section B", 69, 128, 49, 84, 115, 15);
+    checkSection(sections.get(2), "section C", 119, 128, 133, 17, 115, 15);
   }
 
   private void checkSection(HistoChartMetrics.Section section,

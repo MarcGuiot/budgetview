@@ -9,9 +9,8 @@ import java.util.ArrayList;
 public class HistoChartMetrics {
 
   private static final int VERTICAL_CHART_PADDING = 10;
-  private static final int MIN_SCALE_ZONE_WIDTH = 50;
+  private static final int MIN_SCALE_ZONE_WIDTH = 25;
   private static final int MIN_SCALE_ZONE_HEIGHT = 30;
-  private static final int SCALE_ZONE_LABEL_MARGIN = 20;
   private static final int RIGHT_SCALE_MARGIN = 10;
   private static final int LABEL_ZONE_HEIGHT = 15;
   private static final int LABEL_BOTTOM_MARGIN = 2;
@@ -70,7 +69,7 @@ public class HistoChartMetrics {
   private int scaleZoneWidth() {
     double value = Math.max(maxPositiveValue, maxNegativeValue);
     int valueWidth = fontMetrics.stringWidth(Integer.toString((int)value));
-    return Math.max(MIN_SCALE_ZONE_WIDTH, valueWidth);
+    return Math.max(MIN_SCALE_ZONE_WIDTH, valueWidth + RIGHT_SCALE_MARGIN);
   }
 
   public int left(int columnIndex) {

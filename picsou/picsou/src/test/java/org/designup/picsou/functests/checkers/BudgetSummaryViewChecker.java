@@ -58,9 +58,9 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     return mainWindow.getPanel("budgetSummaryView");
   }
 
-  public EstimatedPositionDetailsChecker openEstimatedPositionDetails() {
+  public BudgetSummaryDetailsChecker openEstimatedPositionDetails() {
     Window window = WindowInterceptor.getModalDialog(getPanel().getButton().triggerClick());
-    return new EstimatedPositionDetailsChecker(window);
+    return new BudgetSummaryDetailsChecker(window);
   }
 
   public void checkNoEstimatedPositionDetails() {

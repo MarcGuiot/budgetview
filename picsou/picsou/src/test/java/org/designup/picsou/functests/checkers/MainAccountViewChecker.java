@@ -14,7 +14,7 @@ public class MainAccountViewChecker extends AccountViewChecker {
     budgetSummary = new BudgetSummaryViewChecker(this.panel);
   }
 
-  public EstimatedPositionDetailsChecker openEstimatedPositionDetails() {
+  public BudgetSummaryDetailsChecker openEstimatedPositionDetails() {
     return budgetSummary.openEstimatedPositionDetails();
   }
 
@@ -81,9 +81,5 @@ public class MainAccountViewChecker extends AccountViewChecker {
     Button button = panel.getButton("accountPositionThreshold");
     assertThat(button.textEquals("Limit: " + toString(amount)));
     return this;
-  }
-
-  public void checkBalanceDetails(double incomeFor200807, double expensesFor200807) {
-    System.out.println("MainAccountViewChecker.checkBalanceDetails: ==> a faire");
   }
 }

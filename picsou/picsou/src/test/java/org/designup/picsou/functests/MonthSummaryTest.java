@@ -2,10 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.TransactionType;
-import org.designup.picsou.gui.model.BalanceStat;
-import org.globsframework.model.format.GlobPrinter;
 
 public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
@@ -37,25 +33,31 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
 
     double incomeFor200807 = 1500;
     double expensesFor200807 = 30 + 1500 + 300 + 100 + 20 + 200 + 100;
-    double balance = incomeFor200807 - expensesFor200807;
+    double balanceFor200807 = incomeFor200807 - expensesFor200807;
 
     double incomeFor200808 = 1500;
     double expensesFor200808 = 30 + 1500 + 300 + 100 + 100;
+    double balanceFor200808 = incomeFor200808 - expensesFor200808;
 
     double fixed = 30 + 1500;
 
     timeline.selectMonth("2008/07");
     views.selectHome();
-    mainAccounts.checkBalance(balance);
-    mainAccounts.checkBalanceDetails(incomeFor200807, expensesFor200807);
+    mainAccounts.checkBalance(balanceFor200807);
+    mainAccounts.openEstimatedPositionDetails()
+      .checkBalance(balanceFor200807)
+      .checkBalanceDetails(incomeFor200807, 1530.00, 400.00, 100.00, 200.00)
+      .close();
 
     mainAccounts.changePosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000, "VIRT ING");
-    timeline.checkMonthTooltip("2008/07", balance, 1000.00);
+    timeline.checkMonthTooltip("2008/07", balanceFor200807, 1000.00);
 
     timeline.selectMonth("2008/08");
-    mainAccounts.checkEstimatedPosition(1000 + incomeFor200808 - expensesFor200808);
+    mainAccounts.checkEstimatedPosition(1000 + balanceFor200808);
 
     mainAccounts.openEstimatedPositionDetails()
+      .checkBalance(balanceFor200808)
+      .checkBalanceDetails(incomeFor200808, 1530.00, 400.00, 100.00, 0)
       .checkInitialPosition(1000.00)
       .checkIncome(1500.00)
       .checkFixed(30 + 1500)
@@ -68,6 +70,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     mainAccounts.checkEstimatedPosition(1000 + incomeFor200808 - expensesFor200808);
     mainAccounts.openEstimatedPositionDetails()
+      .checkBalance(balanceFor200807 + balanceFor200808)
       .checkInitialPosition(1000.00)
       .checkIncome(1500.00)
       .checkFixed(30 + 1500)
