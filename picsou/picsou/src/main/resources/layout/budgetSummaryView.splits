@@ -4,21 +4,28 @@
 
   <styles>
     <style selector="label.totalAmount" foreground=""/>
+    <style selector="button.roundedButton" fill="none" weightX="0"/>
   </styles>
 
   <column>
-    <grid marginLeft="5" marginRight="5" marginTop="5" marginBottom="5">
-      <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle" gridPos="(0,0)"/>
-      <label ref="balanceLabel" styleClass="totalAmount" gridPos="(0,1)"/>
+    <grid marginLeft="5" marginRight="10">
 
-      <label ref="positionTitle" styleClass="totalAmountTitle" gridPos="(1,0)"/>
-      <button ref="positionButton" styleClass="totalAmount" gridPos="(1,1)"/>
+      <button ref="openDetailsButton" styleClass="roundedButton" gridPos="(0,0,1,2)"/>
 
-      <label text="$budgetSummaryView.uncategorized" styleClass="totalAmountTitle" gridPos="(2,0)"/>
-      <label ref="uncategorizedLabel" styleClass="totalAmount" gridPos="(2,1)"/>
+      <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle" gridPos="(1,0)"/>
+      <label ref="balanceLabel" styleClass="totalAmount" gridPos="(1,1)"/>
+
+      <label ref="positionTitle" styleClass="totalAmountTitle" gridPos="(2,0)"/>
+      <label ref="positionLabel" styleClass="totalAmount" gridPos="(2,1)"/>
+
+      <label text="$budgetSummaryView.uncategorized" styleClass="totalAmountTitle" gridPos="(3,0)"/>
+      <label ref="uncategorizedLabel" styleClass="totalAmount" font="-,bold,12" gridPos="(3,1)"/>
+
     </grid>
-    <label ref="multiSelectionLabel" styleClass="totalAmountTitle"
-           horizontalAlignment="center" fill="horizontal" border="empty(0,0,5,0)"/>
+    <row>
+      <label ref="multiSelectionLabel" styleClass="totalAmountTitle"
+             horizontalAlignment="center" fill="horizontal" border="empty(0,0,5,0)"/>
+    </row>
   </column>
 
 </splits>

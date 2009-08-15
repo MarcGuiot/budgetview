@@ -21,13 +21,13 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
-public class EstimatedPositionDetailsDialog {
+public class BudgetSummaryDetailsDialog {
   private JLabel amountSummaryLabel;
   private Directory directory;
   private GlobRepository repository;
   private PicsouDialog dialog;
 
-  public EstimatedPositionDetailsDialog(GlobRepository repository, Directory parentDirectory) {
+  public BudgetSummaryDetailsDialog(GlobRepository repository, Directory parentDirectory) {
     this.repository = repository;
     this.directory = createDirectory(parentDirectory);
     createDialog();

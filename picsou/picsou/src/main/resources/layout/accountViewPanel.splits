@@ -9,10 +9,10 @@
     <column styleClass="innerBlock">
 
       <panel ref="header" opaque="false" weightY="0.1">
-        <panel ref="budgetSummaryView"/>
+        <panel ref="budgetSummaryView" marginTop="5"/>
       </panel>
 
-      <scrollPane marginTop="0" marginBottom="0">
+      <scrollPane marginTop="0" marginBottom="0" weightY="100">
         <column>
           <repeat ref="accountRepeat" marginTop="5" marginBottom="15">
             <column name="accountParent" margin="5" marginBottom="10">

@@ -1,7 +1,8 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.accounts.EstimatedPositionDetailsDialog;
+import org.designup.picsou.gui.components.JRoundedButton;
+import org.designup.picsou.gui.accounts.BudgetSummaryDetailsDialog;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.utils.AmountColors;
@@ -17,6 +18,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
+import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
@@ -32,13 +34,13 @@ import java.util.SortedSet;
 public class BudgetSummaryView extends View implements GlobSelectionListener, ChangeSetListener, ColorChangeListener {
 
   private JLabel balanceLabel = new JLabel();
-  private JButton estimatedPositionButton = new JButton();
+  private JLabel estimatedPositionLabel = new JLabel();
   private JLabel estimatedPositionTitle = new JLabel();
   private JLabel uncategorizedLabel = new JLabel();
   private JLabel multiSelectionLabel = new JLabel();
   private final DecimalFormat format = Formatting.DECIMAL_FORMAT;
 
-  private EstimatedPositionDetailsDialog estimatedPositionDetailsDialog;
+  private BudgetSummaryDetailsDialog budgetSummaryDetailsDialog;
 
   private AmountColors amountColors;
   private Color normalColor;
@@ -52,9 +54,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
     this.amountColors = new AmountColors(directory);
 
-    this.estimatedPositionButton.setAction(new OpenDetailsAction(directory));
-    this.estimatedPositionButton.setUI(createHyperlinkButtonUI());
-    this.estimatedPositionDetailsDialog = new EstimatedPositionDetailsDialog(repository, directory);
+    this.budgetSummaryDetailsDialog = new BudgetSummaryDetailsDialog(repository, directory);
 
     update();
   }
@@ -68,12 +68,22 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budgetSummaryView.splits",
                                                       repository, directory);
     builder.add("balanceLabel", balanceLabel);
-    builder.add("positionButton", estimatedPositionButton);
+    builder.add("positionLabel", estimatedPositionLabel);
     builder.add("positionTitle", estimatedPositionTitle);
     builder.add("uncategorizedLabel", uncategorizedLabel);
     builder.add("multiSelectionLabel", multiSelectionLabel);
+    builder.add("openDetailsButton", createOpenDetailsButton());
 
     parentBuilder.add("budgetSummaryView", builder);
+  }
+
+  private JButton createOpenDetailsButton() {
+    JRoundedButton button = JRoundedButton.createCircle(new OpenDetailsAction(directory), colorService);
+    ImageLocator imageLocator = directory.get(ImageLocator.class);
+    button.setIcon(imageLocator.get("button_magnifier.png"));
+    button.setPressedIcon(imageLocator.get("button_magnifier.png"));
+    button.setDisabledIcon(imageLocator.get("button_magnifier_disabled.png"));
+    return button;
   }
 
   private HyperlinkButtonUI createHyperlinkButtonUI() {
@@ -99,7 +109,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
     if (!repository.contains(Transaction.TYPE) || balanceStats.isEmpty()) {
       clear(balanceLabel);
-      clear(estimatedPositionButton);
+      clear(estimatedPositionLabel);
       clear(uncategorizedLabel);
       return;
     }
@@ -128,14 +138,14 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
   private void updateEstimatedPosition(SortedSet<Integer> selectedMonthIds) {
     if (selectedMonthIds.isEmpty()) {
-      setEstimatedPositionButton(null);
+      setEstimatedPosition(null);
       return;
     }
     Integer lastSelectedMonthId = selectedMonthIds.last();
 
     Glob balanceStat = getBalanceStat(lastSelectedMonthId);
     if (balanceStat == null) {
-      setEstimatedPositionButton(null);
+      setEstimatedPosition(null);
       return;
     }
 
@@ -143,37 +153,37 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     String dateLabel = Lang.get("accountView.total.date", lastDay);
 
     Double amount = getEndOfMonthPosition(balanceStat);
-    setEstimatedPositionButton(amount);
+    setEstimatedPosition(amount);
 
     Integer lastImportDate = repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH);
     if (lastSelectedMonthId >= lastImportDate) {
       estimatedPositionTitle.setText(Lang.get("accountView.estimated.title"));
-      estimatedPositionButton.setToolTipText(Lang.get("accountView.estimated.tooltip"));
+      estimatedPositionLabel.setToolTipText(Lang.get("accountView.estimated.tooltip"));
     }
     else {
       estimatedPositionTitle.setText(Lang.get("accountView.real.title"));
-      estimatedPositionButton.setToolTipText(null);
+      estimatedPositionLabel.setToolTipText(null);
     }
   }
 
-  protected void setEstimatedPositionButton(Double amount) {
+  private void setEstimatedPosition(Double amount) {
     if (amount == null) {
-      clear(estimatedPositionButton);
+      clear(estimatedPositionLabel);
       return;
     }
 
     String text = Formatting.toString(amount);
-    estimatedPositionButton.setText(text);
+    estimatedPositionLabel.setText(text);
 
     double diff = amount - AccountPositionThreshold.getValue(repository);
-    estimatedPositionButton.setForeground(amountColors.getTextColor(diff));
+    estimatedPositionLabel.setForeground(amountColors.getTextColor(diff));
   }
 
-  protected Glob getBalanceStat(Integer lastSelectedMonthId) {
+  private Glob getBalanceStat(Integer lastSelectedMonthId) {
     return repository.find(Key.create(BalanceStat.TYPE, lastSelectedMonthId));
   }
 
-  protected Double getEndOfMonthPosition(Glob balanceStat) {
+  private Double getEndOfMonthPosition(Glob balanceStat) {
     return balanceStat.get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION);
   }
 
@@ -225,11 +235,10 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
           setEnabled(enabled);
         }
       }, Month.TYPE);
-
     }
 
     public void actionPerformed(ActionEvent e) {
-      estimatedPositionDetailsDialog.show(selectedMonths);
+      budgetSummaryDetailsDialog.show(selectedMonths);
     }
   }
 

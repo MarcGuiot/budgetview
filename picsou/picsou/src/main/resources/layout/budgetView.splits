@@ -23,7 +23,7 @@
       <column weightX="3">
         <label text="$budgetSummaryView.title" styleClass="blockTitle"/>
         <column styleClass="block">
-          <panel ref="budgetSummaryView" weightY="0.1" marginBottom="10"/>
+          <panel ref="budgetSummaryView" weightY="0.1" marginTop="10" marginBottom="5" marginLeft="5"/>
         </column>
         
         <verticalSplit ref="firstVerticalSplitPane">

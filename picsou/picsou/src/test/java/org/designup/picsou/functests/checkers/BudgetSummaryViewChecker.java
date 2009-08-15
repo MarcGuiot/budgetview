@@ -3,7 +3,6 @@ package org.designup.picsou.functests.checkers;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
-import org.uispec4j.Button;
 import org.uispec4j.interception.WindowInterceptor;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
@@ -23,7 +22,7 @@ public class BudgetSummaryViewChecker extends GuiChecker {
   }
 
   public BudgetSummaryViewChecker checkEndPosition(double amount) {
-    assertThat(getPanel().getButton("positionButton").textEquals(toString(amount, false)));
+    assertThat(getPanel().getTextBox("positionLabel").textEquals(toString(amount, false)));
     return this;
   }
 
@@ -39,7 +38,7 @@ public class BudgetSummaryViewChecker extends GuiChecker {
 
   public void checkEmpty() {
     assertThat(getPanel().getTextBox("balanceLabel").textEquals("-"));
-    assertThat(getPanel().getTextBox("positionButton").textEquals("-"));
+    assertThat(getPanel().getTextBox("positionLabel").textEquals("-"));
     assertThat(getPanel().getTextBox("uncategorizedLabel").textEquals("-"));
   }
 
@@ -60,21 +59,21 @@ public class BudgetSummaryViewChecker extends GuiChecker {
   }
 
   public EstimatedPositionDetailsChecker openEstimatedPositionDetails() {
-    Window window = WindowInterceptor.getModalDialog(getPanel().getButton("positionButton").triggerClick());
+    Window window = WindowInterceptor.getModalDialog(getPanel().getButton().triggerClick());
     return new EstimatedPositionDetailsChecker(window);
   }
 
   public void checkNoEstimatedPositionDetails() {
-    assertFalse(getPanel().getButton("positionButton").isEnabled());
+    assertFalse(getPanel().getButton().isEnabled());
   }
 
   public void checkNoEstimatedPosition() {
-    assertThat(getPanel().getButton("positionButton").textEquals("-"));
+    assertThat(getPanel().getTextBox("positionLabel").textEquals("-"));
   }
 
   public void checkEstimatedPositionColor(String color) {
-    Button button = getPanel().getButton("positionButton");
-    assertThat(button.foregroundNear(color));
+    TextBox label = getPanel().getTextBox("positionLabel");
+    assertThat(label.foregroundNear(color));
   }
 
   public void checkIsEstimatedPosition() {
