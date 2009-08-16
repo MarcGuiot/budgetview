@@ -158,7 +158,7 @@ public class StackChart extends JPanel {
       g2.setFont(labelFont);
       g2.drawString(block.label, layout.labelTextX(block.label), block.labelTextY);
 
-      if (rebuildClickAreas) {
+      if (rebuildClickAreas && (block.datasetIndex >= 0)) {
         Rectangle rectangle = new Rectangle(layout.blockX(), block.blockY, layout.blockWidth(), block.blockHeight);
         StackChartSelection selection = new StackChartSelection(block.dataset, block.datasetIndex);
         clickAreas.put(rectangle, selection);
@@ -166,8 +166,6 @@ public class StackChart extends JPanel {
 
       alpha *= 0.7f;
     }
-
-
   }
 
   private boolean isRollover(StackChartBlock block) {

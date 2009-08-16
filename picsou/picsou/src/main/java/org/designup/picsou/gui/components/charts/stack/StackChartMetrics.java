@@ -50,6 +50,7 @@ public class StackChartMetrics {
       double value = dataset.getValue(i);
       int height = (int)((value / maxValue) * drawingHeight);
       currentY -= height;
+      int selectionIndex = i;
 
       String label;
       int percentage;
@@ -68,6 +69,7 @@ public class StackChartMetrics {
           int otherHeight = (int)((total / maxValue) * drawingHeight);
           height += otherHeight;
           currentY -= otherHeight;
+          selectionIndex = -1;
         }
         else {
           label = dataset.getLabel(i);
@@ -84,7 +86,7 @@ public class StackChartMetrics {
 
       String percentageText = dataset.size() > 1 ? Integer.toString(percentage) + "%" : "";
 
-      blocks.add(new StackChartBlock(dataset, i,
+      blocks.add(new StackChartBlock(dataset, selectionIndex,
                                      currentY,
                                      height,
                                      label,

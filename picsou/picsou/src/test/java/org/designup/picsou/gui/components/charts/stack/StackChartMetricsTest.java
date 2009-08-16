@@ -30,6 +30,7 @@ public class StackChartMetricsTest extends ChartTestCase {
     StackChartBlock[] blocks = metrics.computeBlocks(dataset);
     checkBlockLabels(blocks, "item2", "item1", "item3");
     checkBlockHeights(blocks, 100, 60, 40);
+    checkBlockSelectionIndexes(blocks, 0, 1, 2);
   }
 
   public void testOnlyOneItemPresentInDataset() throws Exception {
@@ -40,6 +41,7 @@ public class StackChartMetricsTest extends ChartTestCase {
     checkBlockLabels(blocks, "item1");
     checkBlockHeights(blocks, 200);
     assertEquals("", blocks[0].barText);
+    checkBlockSelectionIndexes(blocks, 0);
   }
 
   public void testOtherBlockWithFullHeight() throws Exception {
@@ -55,6 +57,7 @@ public class StackChartMetricsTest extends ChartTestCase {
     checkBlockLabels(blocks, "item2", "item1", "item3", "Other");
     checkBlockPercentages(blocks, "50%", "30%", "10%", "10%");
     checkBlockHeights(blocks, 100, 60, 20, 22);
+    checkBlockSelectionIndexes(blocks, 0, 1, 2, -1);
   }
 
   public void testOtherBlockWithPartialHeight() throws Exception {
@@ -69,6 +72,7 @@ public class StackChartMetricsTest extends ChartTestCase {
     checkBlockLabels(blocks, "item1", "Other");
     checkBlockPercentages(blocks, "95%", "5%");
     checkBlockHeights(blocks, 100, 5);
+    checkBlockSelectionIndexes(blocks, 0, -1);
   }
 
   private void checkBlockLabels(StackChartBlock[] blocks, String... expected) {
@@ -91,6 +95,14 @@ public class StackChartMetricsTest extends ChartTestCase {
     List<String> actual = new ArrayList<String>();
     for (StackChartBlock block : blocks) {
       actual.add(block.barText);
+    }
+    TestUtils.assertEquals(actual, expected);
+  }
+
+  private void checkBlockSelectionIndexes(StackChartBlock[] blocks, Integer... expected) {
+    List<Integer> actual = new ArrayList<Integer>();
+    for (StackChartBlock block : blocks) {
+      actual.add(block.datasetIndex);
     }
     TestUtils.assertEquals(actual, expected);
   }
