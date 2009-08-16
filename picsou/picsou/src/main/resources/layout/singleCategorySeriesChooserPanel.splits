@@ -24,10 +24,13 @@
         </repeat>
       </scrollPane>
     </column>
-    <row styleClass="iconButtonGroup">
-      <button action="createSeries" styleClass="create" tooltipText="$series.create.tooltip"/>
-      <button action="editSeries" styleClass="list" tooltipText="$series.list.tooltip"/>
+    <row>
+      <row styleClass="iconButtonGroup">
+        <button action="createSeries" styleClass="create" tooltipText="$series.create.tooltip"/>
+        <button action="editSeries" styleClass="list" tooltipText="$series.list.tooltip"/>
+      </row>
       <filler fill="horizontal"/>
+      <button action="openCategorizationTipsAction" styleClass="hyperlink"/>
     </row>
   </column>
 

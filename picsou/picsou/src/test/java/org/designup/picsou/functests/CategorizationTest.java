@@ -985,7 +985,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkSeries("Courant", 0, -20);
   }
 
-  public void testHelpForUncategorizedBudgetArea() throws Exception {
+  public void testCategorizationHelp() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/30", -20.00, "Auchan")
@@ -996,6 +996,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.clickHelpLink("categorization")
       .checkTitle("Categorization")
       .close();
+    
+    categorization.selectEnvelopes();
+    categorization.checkCategorizationTips();
   }
 
   public void testCreatedSavingTransactionAreNotVisibleInCategorization() throws Exception {

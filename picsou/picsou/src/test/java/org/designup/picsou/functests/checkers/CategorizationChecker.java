@@ -104,6 +104,12 @@ public class CategorizationChecker extends GuiChecker {
     return new SavingsCategorizationChecker(this, BudgetArea.SAVINGS);
   }
 
+  public CategorizationChecker checkCategorizationTips() {
+    HelpChecker help = new HelpChecker(getPanel().getButton("Categorization tips").triggerClick());
+    help.checkTitle("Categorization tips");
+    return this;
+  }
+
   public class SavingsCategorizationChecker extends BudgetAreaCategorizationChecker {
     private SavingsCategorizationChecker(CategorizationChecker categorizationChecker, BudgetArea budgetArea) {
       super(categorizationChecker, budgetArea);

@@ -9,6 +9,7 @@ import org.designup.picsou.gui.components.filtering.FilterSetListener;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.help.HelpAction;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
@@ -233,7 +234,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     return transaction.get(Transaction.SPLIT_SOURCE);
   }
 
-  private void addSingleCategorySeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder builder) {
+  private void addSingleCategorySeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder parentBuilder) {
     GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationView.class,
                                                            "/layout/singleCategorySeriesChooserPanel.splits",
                                                            repository, directory);
@@ -259,7 +260,10 @@ public class CategorizationView extends View implements TableView, Filterable {
     panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
     panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
 
-    builder.add(name, panelBuilder);
+    panelBuilder.add("openCategorizationTipsAction",
+                new HelpAction(Lang.get("categorization.openTips"), "categorizationTips", parentDirectory));
+
+    parentBuilder.add(name, panelBuilder);
   }
 
   private Comparator<Glob> getTransactionComparator() {
