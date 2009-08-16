@@ -224,6 +224,56 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDifferentSignsInBudgetAreaSeries() throws Exception {
-    fail("tbd");
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.0, "2009/07/30")
+      .addTransaction("2009/07/10", -400.00, "Auchan")
+      .addTransaction("2009/07/01", 100.00, "WorldCo")
+      .addTransaction("2009/07/15", 400.00, "Big Inc.")
+      .addTransaction("2009/07/20", 450.00, "Check n. 12345")
+      .addTransaction("2009/07/20", -200.00, "Fouquet's")
+      .addTransaction("2009/07/20", -50.00, "Free")
+      .addTransaction("2009/07/20", -100.00, "Orange")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewIncome("WorldCo", "John's");
+    categorization.setNewIncome("Big Inc.", "Mary's");
+    categorization.setNewRecurring("Free", "Internet");
+    categorization.setNewRecurring("Orange", "Mobile");
+    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewSpecial("Check n. 12345", "Gift");
+    categorization.setNewSpecial("Fouquet's", "Dining");
+
+    views.selectEvolution();
+
+    seriesEvolution.balanceChart.getLeftDataset()
+      .checkSize(2)
+      .checkValue("Income", 500.00)
+      .checkValue("Special", 250.00);
+    seriesEvolution.balanceChart.getRightDataset()
+      .checkSize(2)
+      .checkValue("Envelopes", 400.00)
+      .checkValue("Recurring", 150.00);
+
+    seriesEvolution.seriesChart.getSingleDataset()
+      .checkSize(4)
+      .checkValue("Groceries", 400.00)
+      .checkValue("Dining", 200.00)
+      .checkValue("Mobile", 100.00)
+      .checkValue("Internet", 50.00);
+
+    seriesEvolution.select("Special");
+    seriesEvolution.balanceChart.getLeftDataset()
+      .checkSize(2)
+      .checkValue("Income", 500.00)
+      .checkValue("Special", 250.00, true);
+    seriesEvolution.balanceChart.getRightDataset()
+      .checkSize(2)
+      .checkValue("Envelopes", 400.00)
+      .checkValue("Recurring", 150.00);
+    seriesEvolution.seriesChart.getSingleDataset()
+      .checkSize(2)
+      .checkValue("Gift", 450.00)
+      .checkValue("Dining", 200.00);
   }
 }

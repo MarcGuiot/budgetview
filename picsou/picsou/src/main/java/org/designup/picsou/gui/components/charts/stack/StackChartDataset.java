@@ -1,5 +1,7 @@
 package org.designup.picsou.gui.components.charts.stack;
 
+import org.globsframework.utils.exceptions.InvalidParameter;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,7 +12,6 @@ public class StackChartDataset {
   private List<Element> elements = new ArrayList<Element>();
   private double total = 0.0;
   private String longestLabel = "";
-  private int multiplier = 1;
   private boolean containsSelection = false;
 
   public void add(String label, Double value, Action action) {
@@ -21,13 +22,14 @@ public class StackChartDataset {
     if ((value == null) || Math.abs(value) < 0.01) {
       return;
     }
+    if (value < 0) {
+      throw new InvalidParameter("Invalid negative value " + value + " for " + label);
+    }
 
-    double adjustedValue = value * multiplier;
-
-    Element element = new Element(label, adjustedValue, action, selected);
+    Element element = new Element(label, value, action, selected);
     int index = Collections.binarySearch(elements, element);
     elements.add(index < 0 ? -index - 1 : index, element);
-    total += adjustedValue;
+    total += value;
     if (label.length() > longestLabel.length()) {
       longestLabel = label;
     }
@@ -65,10 +67,6 @@ public class StackChartDataset {
 
   public boolean containsSelection() {
     return containsSelection;
-  }
-
-  public void setInverted(boolean inverted) {
-    multiplier = inverted ? -1 : 1;
   }
 
   public String toString() {

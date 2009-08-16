@@ -234,12 +234,12 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
         if (id.equals(SeriesWrapper.BALANCE_SUMMARY_ID)) {
           updateMainBalanceHisto();
           updateMainBalanceStack(null);
-          updateMainAccountSeriesStack();
+          updateMainAccountExpensesSeriesStack();
         }
         else if (id.equals(SeriesWrapper.MAIN_POSITION_SUMMARY_ID)) {
           updateMainAccountsHisto();
           updateMainBalanceStack(null);
-          updateMainAccountSeriesStack();
+          updateMainAccountExpensesSeriesStack();
         }
         else if (id.equals(SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID)) {
           updateSavingsAccountsHisto();
@@ -283,25 +283,32 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       return;
     }
 
-    StackChartDataset incomeDataset = createStackDataset(balanceStat, selectedBudgetArea, BudgetArea.INCOME_AREAS);
-    StackChartDataset expensesDataset = createStackDataset(balanceStat, selectedBudgetArea, BudgetArea.EXPENSES_AREAS);
+    StackChartDataset incomeDataset = new StackChartDataset();
+    StackChartDataset expensesDataset = new StackChartDataset();
+    for (BudgetArea budgetArea : BudgetArea.INCOME_AND_EXPENSES_AREAS) {
+      Double amount = balanceStat.get(BalanceStat.getSummary(budgetArea));
+      StackChartDataset dataset = amount > 0 ? incomeDataset : expensesDataset;
+      dataset.add(budgetArea.getLabel(),
+                  Math.abs(amount),
+                  createSelectionAction(budgetArea),
+                  budgetArea.equals(selectedBudgetArea));
+    }
 
     balanceChart.update(incomeDataset, expensesDataset, balanceStackColors);
     updateBalanceLabel("mainBalance");
   }
 
-  private void updateMainAccountSeriesStack() {
+  private void updateMainAccountExpensesSeriesStack() {
     StackChartDataset dataset = new StackChartDataset();
-    dataset.setInverted(true);
 
     for (Glob stat : repository.getAll(SeriesStat.TYPE,
                                        and(fieldEquals(SeriesStat.MONTH, currentMonthId),
                                            not(fieldEquals(SeriesStat.SERIES, Series.UNCATEGORIZED_SERIES_ID))))) {
       Integer seriesId = stat.getKey().get(SeriesStat.SERIES);
       Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-      BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
-      if (!budgetArea.isIncome()) {
-        dataset.add(series.get(Series.NAME), stat.get(SeriesStat.SUMMARY_AMOUNT), createSelectionAction(seriesId));
+      Double amount = stat.get(SeriesStat.SUMMARY_AMOUNT);
+      if (amount < 0) {
+        dataset.add(series.get(Series.NAME), -amount, createSelectionAction(seriesId));
       }
     }
 
@@ -339,14 +346,14 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
   private void updateBudgetAreaSeriesStack(BudgetArea budgetArea, Integer selectedSeriesId) {
     StackChartDataset dataset = new StackChartDataset();
-    dataset.setInverted(!budgetArea.isIncome());
 
     for (Glob stat : repository.getAll(SeriesStat.TYPE, fieldEquals(SeriesStat.MONTH, currentMonthId))) {
       Integer seriesId = stat.getKey().get(SeriesStat.SERIES);
       Glob series = repository.get(Key.create(Series.TYPE, seriesId));
       if (budgetArea.getId().equals(series.get(Series.BUDGET_AREA))) {
+        Double amount = stat.get(SeriesStat.SUMMARY_AMOUNT);
         dataset.add(series.get(Series.NAME),
-                    stat.get(SeriesStat.SUMMARY_AMOUNT),
+                    Math.abs(amount != null ? amount : 0.0),
                     createSelectionAction(seriesId),
                     seriesId.equals(selectedSeriesId));
       }
@@ -444,20 +451,6 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
   private void clearSeriesStack() {
     seriesChart.clear();
     balanceChartLabel.setText(null);
-  }
-
-  private StackChartDataset createStackDataset(Glob balanceStat,
-                                               BudgetArea selectedBudgetArea,
-                                               BudgetArea... budgetAreas) {
-    StackChartDataset dataset = new StackChartDataset();
-    for (BudgetArea budgetArea : budgetAreas) {
-      dataset.setInverted(!budgetArea.isIncome());
-      dataset.add(budgetArea.getLabel(),
-                  balanceStat.get(BalanceStat.getSummary(budgetArea)),
-                  createSelectionAction(budgetArea),
-                  budgetArea.equals(selectedBudgetArea));
-    }
-    return dataset;
   }
 
   private String getLabel(int monthId) {

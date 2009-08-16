@@ -104,22 +104,15 @@ public class BudgetSummaryDetailsDialog {
   }
 
   private void updateBalanceChart(GlobList balanceStats) {
-    StackChartDataset incomeDataset = createStackDataset(balanceStats, BudgetArea.INCOME_AREAS);
-    StackChartDataset expensesDataset = createStackDataset(balanceStats, BudgetArea.EXPENSES_AREAS);
+    StackChartDataset incomeDataset = new StackChartDataset();
+    StackChartDataset expensesDataset = new StackChartDataset();
+    for (BudgetArea budgetArea : BudgetArea.INCOME_AND_EXPENSES_AREAS) {
+      Double amount = balanceStats.getSum(BalanceStat.getSummary(budgetArea));
+      StackChartDataset dataset = amount > 0 ? incomeDataset : expensesDataset;
+      dataset.add(budgetArea.getLabel(), Math.abs(amount), null, false);
+    }
 
     balanceChart.update(incomeDataset, expensesDataset, balanceChartColors);
-  }
-
-  private StackChartDataset createStackDataset(GlobList balanceStats, BudgetArea... budgetAreas) {
-    StackChartDataset dataset = new StackChartDataset();
-    for (BudgetArea budgetArea : budgetAreas) {
-      dataset.setInverted(!budgetArea.isIncome());
-      dataset.add(budgetArea.getLabel(),
-                  balanceStats.getSum(BalanceStat.getSummary(budgetArea)),
-                  null,
-                  false);
-    }
-    return dataset;
   }
 
   private void addLabel(GlobsPanelBuilder builder, String name, DoubleField field, boolean invert) {
