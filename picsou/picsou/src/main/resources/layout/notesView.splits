@@ -4,7 +4,7 @@
   <styles>
     <style selector=".message htmlEditorPane" margin="10" marginTop="5"/>
     <style selector=".message button" fill="none" anchor="center"/>
-    <style selector="scrollPane.guidance" opaque="true" viewportBackground="notesView.intro.bg"/>
+    <style selector="scrollPane.guidance" opaque="true" viewportBackground="notesView.introBlock.bg"/>
 
     <style selector="label.amount" font="-,plain,10"/>
 
@@ -21,53 +21,44 @@
 
   </styles>
 
-  <column>
+  <cards ref="cards" styleClass="innerBlock">
 
-    <label text="$notesView.title" styleClass="blockTitle"/>
+    <card name="noData">
+      <scrollPane styleClass="guidance" verticalUnitIncrement="10" forceVerticalScroll="true">
 
-    <panel styleClass="block">
+        <column styleClass="message">
+          <panel styleClass="introMessage">
+            <label text="$notesView.intro.title"/>
+          </panel>
+          <htmlEditorPane text="$notesView.noData.text" name="noDataMessage"
+                          hyperlinkListener="hyperlinkHandler"/>
+          <button action="import"/>
+          <filler fill="vertical"/>
+        </column>
+      </scrollPane>
+    </card>
 
-      <cards ref="cards" styleClass="innerBlock">
+    <card name="noSeries">
+      <scrollPane styleClass="guidance" verticalUnitIncrement="10" forceVerticalScroll="true">
 
-        <card name="noData">
-          <scrollPane styleClass="guidance" verticalUnitIncrement="10" forceVerticalScroll="true">
+        <column styleClass="message">
+          <panel styleClass="introMessage">
+            <label text="$notesView.intro.title"/>
+          </panel>
+          <htmlEditorPane text="$notesView.noSeries.text" name="noSeriesMessage"
+                          hyperlinkListener="hyperlinkHandler"/>
+          <button action="openSeriesWizard"/>
+          <filler fill="vertical"/>
+        </column>
+      </scrollPane>
+    </card>
 
-            <column styleClass="message">
-              <panel styleClass="introMessage">
-                <label text="$notesView.intro.title"/>
-              </panel>
-              <htmlEditorPane text="$notesView.noData.text" name="noDataMessage"
-                              hyperlinkListener="hyperlinkHandler"/>
-              <button action="import"/>
-              <filler fill="vertical"/>
-            </column>
-          </scrollPane>
-        </card>
+    <card name="standard">
+      <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true">
+        <textArea ref="notesEditor" lineWrap="true" wrapStyleWord="true" margin="5"/>
+      </scrollPane>
+    </card>
 
-        <card name="noSeries">
-          <scrollPane styleClass="guidance" verticalUnitIncrement="10" forceVerticalScroll="true">
+  </cards>
 
-            <column styleClass="message">
-              <panel styleClass="introMessage">
-                <label text="$notesView.intro.title"/>
-              </panel>
-              <htmlEditorPane text="$notesView.noSeries.text" name="noSeriesMessage"
-                              hyperlinkListener="hyperlinkHandler"/>
-              <button action="openSeriesWizard"/>
-              <filler fill="vertical"/>
-            </column>
-          </scrollPane>
-        </card>
-
-        <card name="standard">
-          <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true">
-            <textArea ref="notesEditor" lineWrap="true" wrapStyleWord="true" margin="5"/>
-          </scrollPane>
-        </card>
-
-      </cards>
-
-    </panel>
-
-  </column>
 </splits>

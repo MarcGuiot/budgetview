@@ -128,7 +128,7 @@
     <style selector=".innerBlockBackground"
            opaque="true" background="block.inner.bg" border="line(block.inner.border)"
            marginBottom="10" weightY="100"/>
-    <style selector=".block scrollPane" border="line(block.inner.border)"
+    <style selector=".innerBlock scrollPane" border="line(block.inner.border)"
            marginBottom="10" weightY="100"/>
 
     <style selector=".innerBlock label.item" foreground="block.inner.item" font="-,bold,13" anchor="top"/>
@@ -156,11 +156,11 @@
         topColor="mainpanel.message.top"
         bottomColor="mainpanel.message.bottom"
         borderColor="mainpanel.message.border"/>
-    <style selector="row.mainPanelMessage" ui="mainPanelMessage"
+    <style selector=".mainPanelMessage" ui="mainPanelMessage"
            fill="horizontal" anchor="center" weightY="0" marginLeft="100" marginRight="100" border="empty(0,0,10,0)"/>
-    <style selector="row.mainPanelMessage htmlEditorPane" fill="horizontal" anchor="center"
+    <style selector=".mainPanelMessage htmlEditorPane" fill="horizontal" anchor="center"
            foreground="mainpanel.message" weightY="0" border="empty(5,20,5,0)"/>
-    <style selector="row.mainPanelMessage button" weightX="0" border="empty(5,0,5,20)"/>
+    <style selector=".mainPanelMessage button" weightX="0" border="empty(5,0,5,20)"/>
 
     <!-- Icon buttons -->
     <style selector=".iconButtonGroup" opaque="false" marginTop="5" weightY="0"/>

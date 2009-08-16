@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.monthsummary;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.VersionInformation;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -12,14 +13,14 @@ import javax.swing.*;
 import java.util.Set;
 
 public class VersionInfoView extends View {
-  private JLabel versionInfo;
+  private JEditorPane versionInfo;
 
   public VersionInfoView(GlobRepository repository, Directory directory) {
     super(repository, directory);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
-    versionInfo = new JLabel();
+    versionInfo = Gui.createHtmlEditor("");
     parentBuilder.add("newVersionMessage", versionInfo);
     Glob version = repository.get(VersionInformation.KEY);
     Long currentVersion = version.get(VersionInformation.CURRENT_JAR_VERSION);
