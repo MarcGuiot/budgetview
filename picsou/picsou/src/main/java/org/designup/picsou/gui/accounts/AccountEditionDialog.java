@@ -9,6 +9,7 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.*;
 import static org.globsframework.model.utils.GlobMatchers.linkedTo;
@@ -101,8 +102,12 @@ public class AccountEditionDialog {
   public void show(Glob account) {
     localRepository.reset(new GlobList(account), Account.TYPE);
     accountEditionPanel.setBalanceEditorVisible(false);
-    accountEditionPanel.setUpdateModeEditable(false);
+    accountEditionPanel.setUpdateModeEditable(!accountHasTransactions(account));
     doShow(localRepository.get(account.getKey()));
+  }
+
+  private boolean accountHasTransactions(Glob account) {
+    return parentRepository.contains(Transaction.TYPE, GlobMatchers.linkedTo(account, Transaction.ACCOUNT));
   }
 
   public void showWithNewAccount(AccountType type, AccountUpdateMode updateMode, boolean updateModeEditable) {

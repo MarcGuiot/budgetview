@@ -104,7 +104,7 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
     if (day < DAY_LIMIT_FOR_PREVIOUS) {
       targetMonth = Month.previous(month);
       series = repository.findLinkTarget(transaction, Transaction.SERIES);
-      validMonthForSeries = Series.checkIsValidMonth(targetMonth, series);
+      validMonthForSeries = Series.isValidMonth(targetMonth, series);
       if (containsTransactions(targetMonth)) {
         direction = ShiftDirection.PREVIOUS;
         setEnabled(true);
@@ -115,7 +115,7 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
     if (day > DAY_LIMIT_FOR_NEXT) {
       targetMonth = Month.next(month);
       series = repository.findLinkTarget(transaction, Transaction.SERIES);
-      validMonthForSeries = Series.checkIsValidMonth(targetMonth, series);
+      validMonthForSeries = Series.isValidMonth(targetMonth, series);
       if (containsTransactions(targetMonth)) {
         direction = ShiftDirection.NEXT;
         setEnabled(true);

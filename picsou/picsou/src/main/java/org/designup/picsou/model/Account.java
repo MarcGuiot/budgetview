@@ -104,7 +104,7 @@ public class Account {
     return BankEntity.getBank(bankEntity, repository);
   }
 
-  public static boolean shoudCreateMirror(Glob fromAccount, Glob toAccount) {
+  public static boolean shouldCreateMirror(Glob fromAccount, Glob toAccount) {
     return (fromAccount != null) && (toAccount != null) &&
            ((fromAccount.get(Account.IS_IMPORTED_ACCOUNT) && !toAccount.get(Account.IS_IMPORTED_ACCOUNT))
             ||

@@ -137,6 +137,59 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
+  public void testUpdateModeCanBeChangedUntilTransactionsAreImportedIntoTheAccount() throws Exception {
+    views.selectHome();
+    mainAccounts.createNewAccount()
+      .setAccountName("Main")
+      .setAccountNumber("0000123")
+      .selectBank("CIC")
+      .validate();
+
+    mainAccounts.edit("Main")
+      .checkUpdateModeIsEnabled()
+      .setUpdateModeToManualInput()
+      .validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "0000123", 100.00, "2008/10/15")
+      .addTransaction("2008/10/01", 1000.00, "WorldCo")
+      .addTransaction("2008/10/05", -15.00, "MacDo")
+      .load();
+
+    mainAccounts.edit("Main")
+      .checkUpdateModeIsDisabled()
+      .checkUpdateModeIsFileImport()
+      .validate();
+  }
+
+  public void testUpdateModeCanBeChangedUntilTransactionsAreCreatedIntoTheAccount() throws Exception {
+    views.selectHome();
+    mainAccounts.createNewAccount()
+      .setAccountName("Main")
+      .setAccountNumber("0000123")
+      .selectBank("CIC")
+      .validate();
+
+    mainAccounts.edit("Main")
+      .checkUpdateModeIsEnabled()
+      .setUpdateModeToManualInput()
+      .validate();
+
+    views.selectCategorization();
+    transactionCreation.show()
+      .setLabel("Expense")
+      .setAmount(10)
+      .setDay(5)
+      .selectAccount("Main")
+      .create();
+
+    views.selectHome();
+    mainAccounts.edit("Main")
+      .checkUpdateModeIsDisabled()
+      .checkUpdateModeIsManualInput()
+      .validate();
+  }
+
   public void testDeletingAnEmptyAccount() throws Exception {
     views.selectHome();
     mainAccounts.createNewAccount()
@@ -214,7 +267,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.income.checkTotalObserved(1000);
-    
+
     views.selectHome();
     mainAccounts.edit("Account n. 0000123")
       .setAccountName("Livret")
@@ -253,7 +306,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.checkSeriesNotPresent("Series 1 for Livret", "Series 2 for Livret");
     budgetView.savings.checkSeriesPresent("Series 3 for Codevi");
-    
+
     views.selectData();
     transactions.initContent()
       .add("01/10/2008", TransactionType.VIREMENT, "Salaire/oct", "", 1000.00, "Salaire")

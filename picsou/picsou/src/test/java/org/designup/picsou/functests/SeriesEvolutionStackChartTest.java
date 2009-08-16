@@ -223,6 +223,10 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     fail("tbd");
   }
 
+  public void testUncategorized() throws Exception {
+    fail("tbd");
+  }
+
   public void testDifferentSignsInBudgetAreaSeries() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(30006, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.0, "2009/07/30")
