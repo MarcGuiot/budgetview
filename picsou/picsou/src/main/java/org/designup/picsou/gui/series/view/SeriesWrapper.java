@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.series.view;
 
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Series;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
@@ -63,6 +64,10 @@ public class SeriesWrapper {
       }
     }
     return false;
+  }
+
+  public static boolean isSeries(Glob wrapper) {
+    return SeriesWrapperType.SERIES.getId().equals(wrapper.get(SeriesWrapper.ITEM_TYPE));
   }
 
   public static Glob getWrapperForBudgetArea(BudgetArea budgetArea, GlobRepository repository) {

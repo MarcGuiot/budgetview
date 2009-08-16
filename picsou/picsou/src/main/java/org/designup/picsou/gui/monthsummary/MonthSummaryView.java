@@ -39,6 +39,9 @@ import java.awt.event.ActionEvent;
 import java.text.DecimalFormat;
 import java.util.*;
 
+/**
+ * @deprecated A SUPPRIMER APRES LA MIGRATION DE LA VUE D'ACCUEIL
+ */
 public class MonthSummaryView extends View implements GlobSelectionListener {
   private CardHandler cards;
   private GlobStringifier budgetAreaStringifier;

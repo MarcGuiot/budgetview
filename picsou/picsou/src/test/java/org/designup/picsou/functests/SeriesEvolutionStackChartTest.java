@@ -276,4 +276,39 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("Gift", 450.00)
       .checkValue("Dining", 200.00);
   }
+
+  public void testNavigatingToASeriesExpandsTheBudgetAreaInTheTable() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.0, "2009/07/30")
+      .addTransaction("2009/07/10", -250.00, "Auchan")
+      .addTransaction("2009/07/20", -200.00, "Auchan")
+      .addTransaction("2009/07/05", -50.00, "Elf")
+      .addTransaction("2009/07/25", -50.00, "Elf")
+      .addTransaction("2009/07/01", 300.00, "WorldCo")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewIncome("WorldCo", "John's");
+    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewEnvelope("Elf", "Fuel");
+
+    views.selectEvolution();
+
+    timeline.selectMonth("2009/07");
+    seriesEvolution.balanceChart.getLeftDataset()
+      .checkSize(1)
+      .checkValue("Income", 300.00);
+    seriesEvolution.balanceChart.getRightDataset()
+      .checkSize(1)
+      .checkValue("Envelopes", 550.00);
+    seriesEvolution.seriesChart.getSingleDataset()
+      .checkSize(2)
+      .checkValue("Groceries", 450.00)
+      .checkValue("Fuel", 100.00);
+
+    seriesEvolution.collapse();
+    seriesEvolution.seriesChart.click(0.5, 0.8);
+
+    seriesEvolution.checkSelected("Groceries");
+  }
 }

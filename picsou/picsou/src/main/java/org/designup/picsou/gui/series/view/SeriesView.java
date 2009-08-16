@@ -51,7 +51,7 @@ public class SeriesView extends View {
     ExpandableTable tableAdapter = new ExpandableTable(new SeriesWrapperMatcher());
 
     // attention CategoryExpansionModel doit etre enregistré comme listener de changetSet avant la table.
-    expansionModel = new SeriesExpansionModel(repository, tableAdapter, false);
+    expansionModel = new SeriesExpansionModel(repository, tableAdapter, false, directory);
 
     SeriesWrapperStringifier stringifier = new SeriesWrapperStringifier(repository, directory);
 

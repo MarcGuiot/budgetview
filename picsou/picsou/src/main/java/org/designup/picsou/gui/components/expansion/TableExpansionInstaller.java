@@ -12,7 +12,8 @@ public class TableExpansionInstaller {
   public static void setUp(final ExpandableTable tableView,
                            final TableExpansionModel expansionModel,
                            final JTable table,
-                           TableExpansionColumn expandColumn, final int labelColumnIndex) {
+                           final TableExpansionColumn expandColumn,
+                           final int labelColumnIndex) {
 
     TableUtils.setSize(table, 0, expandColumn.getPreferredWidth());
 

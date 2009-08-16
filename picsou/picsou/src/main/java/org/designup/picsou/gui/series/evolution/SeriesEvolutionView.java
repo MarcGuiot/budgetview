@@ -79,7 +79,7 @@ public class SeriesEvolutionView extends View {
     };
 
     // attention CategoryExpansionModel doit etre enregistré comme listener de changetSet avant la table.
-    SeriesExpansionModel expansionModel = new SeriesExpansionModel(repository, tableAdapter, true);
+    SeriesExpansionModel expansionModel = new SeriesExpansionModel(repository, tableAdapter, true, directory);
     expansionModel.setBaseMatcher(new ActiveSeriesMatcher());
 
     SeriesWrapperStringifier stringifier = new SeriesWrapperStringifier(repository, directory);
