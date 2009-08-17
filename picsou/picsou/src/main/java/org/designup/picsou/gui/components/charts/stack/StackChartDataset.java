@@ -12,7 +12,8 @@ public class StackChartDataset {
   private List<Element> elements = new ArrayList<Element>();
   private double total = 0.0;
   private String longestLabel = "";
-  private boolean containsSelection = false;
+  private boolean containsSelection;
+  private boolean hasActions;
 
   public void add(String label, Double value, Action action) {
     add(label, value, action, false);
@@ -35,6 +36,7 @@ public class StackChartDataset {
     }
 
     containsSelection |= selected;
+    hasActions |= action != null;
   }
 
   public String getLabel(int index) {
@@ -67,6 +69,10 @@ public class StackChartDataset {
 
   public boolean containsSelection() {
     return containsSelection;
+  }
+
+  public boolean hasActions() {
+    return hasActions;
   }
 
   public String toString() {

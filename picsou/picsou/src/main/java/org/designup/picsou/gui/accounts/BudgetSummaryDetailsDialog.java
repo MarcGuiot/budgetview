@@ -6,6 +6,7 @@ import org.designup.picsou.gui.components.charts.stack.StackChartColors;
 import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.gui.description.MonthListStringifier;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.CurrentMonth;
@@ -15,6 +16,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -29,11 +31,14 @@ import javax.swing.*;
 
 public class BudgetSummaryDetailsDialog {
   private JLabel amountSummaryLabel;
+  private JTextArea positionDescription;
   private StackChart balanceChart;
   private StackChartColors balanceChartColors;
   private Directory directory;
   private GlobRepository repository;
   private PicsouDialog dialog;
+  private CardHandler positionCard;
+  private JLabel title;
 
   public BudgetSummaryDetailsDialog(GlobRepository repository, Directory parentDirectory) {
     this.repository = repository;
@@ -57,12 +62,43 @@ public class BudgetSummaryDetailsDialog {
   }
 
   public void show(GlobList selectedMonths) {
+
+    Integer maxMonthId = selectedMonths.getLast().get(Month.ID);
+    if (maxMonthId >= CurrentMonth.getLastTransactionMonth(repository)) {
+      showEstimatedPositionDetails();
+    }
+    else {
+      showActualPositionDetails();
+    }
+
+    selectStats(selectedMonths);
+
+    updateTitle(selectedMonths);
+
+    dialog.showCentered();
+  }
+
+  private void updateTitle(GlobList months) {
+    title.setText(Lang.get("budgetSummaryDetails.title", 
+                           MonthListStringifier.toString(months.getValueSet(Month.ID)).toLowerCase()));
+  }
+
+  private void selectStats(GlobList selectedMonths) {
     GlobList stats = new GlobList();
     for (Glob month : selectedMonths) {
       stats.add(repository.find(Key.create(BalanceStat.TYPE, month.get(Month.ID))));
     }
     directory.get(SelectionService.class).select(stats, BalanceStat.TYPE);
-    dialog.showCentered();
+  }
+
+  private void showEstimatedPositionDetails() {
+    positionCard.show("estimated");
+    positionDescription.setText(Lang.get("budgetSummaryDetails.position.description.estimated"));
+  }
+
+  private void showActualPositionDetails() {
+    positionCard.show("actual");
+    positionDescription.setText(Lang.get("budgetSummaryDetails.position.description.actual"));
   }
 
   private static Directory createDirectory(Directory parentDirectory) {
@@ -75,8 +111,14 @@ public class BudgetSummaryDetailsDialog {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/budgetSummaryDetailsDialog.splits", repository, directory);
 
+    title = builder.add("title", new JLabel());
+
     builder.add("balanceChart", balanceChart);
     builder.addLabel("balanceLabel", BalanceStat.TYPE, new BalanceStringifier()).getComponent();
+
+    positionCard = builder.addCardHandler("cards");
+
+    positionDescription = builder.add("positionDescription", new JTextArea());
 
     builder.addLabel("estimatedPosition", BalanceStat.TYPE, new EspectedPositionStringifier()).getComponent();
     builder.addLabel("estimatedPositionDate", BalanceStat.TYPE, new PositionDateStringifier()).getComponent();

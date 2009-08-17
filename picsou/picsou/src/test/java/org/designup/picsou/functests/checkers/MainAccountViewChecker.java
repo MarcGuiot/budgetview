@@ -18,11 +18,6 @@ public class MainAccountViewChecker extends AccountViewChecker {
     return budgetSummary.openEstimatedPositionDetails();
   }
 
-  public MainAccountViewChecker checkNoEstimatedPositionDetails() {
-    budgetSummary.checkNoEstimatedPositionDetails();
-    return this;
-  }
-
   public MainAccountViewChecker checkEstimatedPosition(double amount) {
     budgetSummary.checkEndPosition(amount);
     return this;

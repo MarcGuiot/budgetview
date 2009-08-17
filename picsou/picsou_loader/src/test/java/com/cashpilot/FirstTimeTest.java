@@ -204,7 +204,7 @@ public class FirstTimeTest extends UISpecTestCase {
     views.selectHome();
     MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
     mainAccounts.openEstimatedPositionDetails()
-      .checkTotal(1900.00)
+      .checkPosition(1900.00)
       .close();
 
     views.selectData();
@@ -288,7 +288,7 @@ public class FirstTimeTest extends UISpecTestCase {
 
 
     mainAccounts.openEstimatedPositionDetails()
-      .checkTotal(1971.10)
+      .checkPosition(1971.10)
       .checkInitialPosition(1900)
       .checkEnvelope(-415)
       .checkFixed(-1413.9)
@@ -316,7 +316,7 @@ public class FirstTimeTest extends UISpecTestCase {
     views.selectBudget();
     views.selectHome();
     mainAccounts.openEstimatedPositionDetails()
-      .checkTotal(1831.10)
+      .checkPosition(1831.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(-584)
@@ -397,7 +397,7 @@ public class FirstTimeTest extends UISpecTestCase {
     timeView.selectMonth("2008/10");
 
     mainAccounts.openEstimatedPositionDetails()
-      .checkTotal(2386.10)
+      .checkPosition(2386.10)
       .checkInitialPosition(780.10)
       .checkIncome(2000)
       .checkFixed(-184)
@@ -478,7 +478,7 @@ public class FirstTimeTest extends UISpecTestCase {
     views.selectHome();
 
     mainAccounts.openEstimatedPositionDetails()
-      .checkTotal(2386.10)
+      .checkPosition(2386.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(-184)
@@ -560,7 +560,7 @@ public class FirstTimeTest extends UISpecTestCase {
     views.selectHome();
 
     mainAccounts.openEstimatedPositionDetails()
-      .checkTotal(2386.10)
+      .checkPosition(2386.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(-184)
@@ -715,7 +715,7 @@ public class FirstTimeTest extends UISpecTestCase {
     TimeViewChecker checker = new TimeViewChecker(window);
     checker.selectMonths("2008/10");
     mainAccounts.openEstimatedPositionDetails()
-      .checkTotal(1886.10)
+      .checkPosition(1886.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(-584)

@@ -46,7 +46,7 @@ public class Gauge extends JPanel {
     this.overrunIsAnError = overrunIsAnError;
     this.invertedSignIsAnError = invertedSignIsAnError;
 
-    setMinimumSize(new Dimension(60, 28));
+    setMinimumSize(new Dimension(20, 28));
     setPreferredSize(new Dimension(200, 28));
 
     setToolTip("gauge.unset");

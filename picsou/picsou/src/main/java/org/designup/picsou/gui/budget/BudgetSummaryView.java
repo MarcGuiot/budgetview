@@ -224,15 +224,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
           selectedMonths = selection.getAll(Month.TYPE);
           selectedMonths.sort(Month.ID);
 
-          if (selectedMonths.isEmpty()) {
-            setEnabled(false);
-            return;
-          }
-
-          Integer monthId = selectedMonths.getLast().get(Month.ID);
-          Integer currentMonthId = CurrentMonth.getLastTransactionMonth(repository);
-          boolean enabled = monthId >= currentMonthId;
-          setEnabled(enabled);
+          setEnabled(!selectedMonths.isEmpty());
         }
       }, Month.TYPE);
     }

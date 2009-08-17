@@ -56,8 +56,10 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(1000 + balanceFor200808);
 
     mainAccounts.openEstimatedPositionDetails()
+      .checkTitle("Budget summary for august 2008")
       .checkBalance(balanceFor200808)
       .checkBalanceDetails(incomeFor200808, 1530.00, 400.00, 100.00, 0)
+      .checkPositionDescriptionContains("Computation details")
       .checkInitialPosition(1000.00)
       .checkIncome(1500.00)
       .checkFixed(30 + 1500)
@@ -70,6 +72,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     mainAccounts.checkEstimatedPosition(1000 + incomeFor200808 - expensesFor200808);
     mainAccounts.openEstimatedPositionDetails()
+      .checkTitle("Budget summary for july - august 2008")
       .checkBalance(balanceFor200807 + balanceFor200808)
       .checkInitialPosition(1000.00)
       .checkIncome(1500.00)
@@ -154,6 +157,30 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
       .checkIncome(1500)
       .checkFixed(1529.90)
       .checkEnvelope(90)
+      .close();
+  }
+
+  public void testBudgetSummaryDetailsShowsActualPositionInThePast() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.00, "2008/08/05")
+      .addTransaction("2008/07/01", 1500, "WorldCo")
+      .addTransaction("2008/07/05", -500, "Auchan")
+      .addTransaction("2008/08/01", 1500, "WorldCo")
+      .addTransaction("2008/08/05", -1000, "Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewIncome("WorldCo", "Salary");
+
+    timeline.selectMonth("2008/07");
+    views.selectHome();
+    mainAccounts.openEstimatedPositionDetails()
+      .checkTitle("Budget summary for july 2008")
+      .checkBalance(1000.00)
+      .checkPosition(500)
+      .checkNoPositionDetails()
+      .checkPositionDescriptionContains("observed")
       .close();
   }
 }

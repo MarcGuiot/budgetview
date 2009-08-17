@@ -1,22 +1,61 @@
 package org.designup.picsou.functests.checkers;
 
-import org.designup.picsou.gui.description.Formatting;
+import junit.framework.Assert;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
 import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.Month;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import junit.framework.Assert;
 
-import java.util.Map;
+import javax.swing.*;
 import java.util.HashMap;
+import java.util.Map;
 
 public class BudgetSummaryDetailsChecker extends GuiChecker {
   private Window window;
 
   public BudgetSummaryDetailsChecker(Window window) {
     this.window = window;
+  }
+
+  public BudgetSummaryDetailsChecker checkTitle(String title) {
+    assertThat(window.getTextBox("title").textEquals(title));
+    return this;
+  }
+
+  public BudgetSummaryDetailsChecker checkPosition(double amount) {
+    TextBox textBox = window.getTextBox("estimatedPosition");
+    assertThat(textBox.textEquals(toString(amount, false)));
+    return this;
+  }
+
+  public BudgetSummaryDetailsChecker checkFuturePositionLabel(int monthId) {
+    TextBox textBox = window.getTextBox("estimatedPositionDate");
+    assertThat(textBox.textEquals("Estimated balance at " + Formatting.toString(Month.getLastDay(monthId))));
+    return this;
+  }
+
+  public BudgetSummaryDetailsChecker checkPositionDate(String date) {
+    return checkPositionDateText("on " + date);
+  }
+
+  public BudgetSummaryDetailsChecker checkPositionDate(int monthId) {
+    TextBox textBox = window.getTextBox("estimatedPositionDate");
+    assertThat(textBox.textEquals("on " + Formatting.toString(Month.getLastDay(monthId))));
+    return this;
+  }
+
+  public BudgetSummaryDetailsChecker checkPositionDateText(String expected) {
+    TextBox textBox = window.getTextBox("estimatedPositionDate");
+    assertThat(textBox.textEquals(expected));
+    return this;
+  }
+
+  public BudgetSummaryDetailsChecker checkPositionDescriptionContains(String text) {
+    assertThat(window.getTextBox("positionDescription").textContains(text));
+    return this;
   }
 
   public BudgetSummaryDetailsChecker checkInitialPosition(double amount) {
@@ -53,31 +92,11 @@ public class BudgetSummaryDetailsChecker extends GuiChecker {
     return check(amount, "remainingSpecial");
   }
 
-  public BudgetSummaryDetailsChecker checkFutureTotalLabel(int monthId) {
-    TextBox textBox = window.getTextBox("estimatedPositionDate");
-    assertThat(textBox.textEquals("Estimated balance at " + Formatting.toString(Month.getLastDay(monthId))));
-    return this;
-  }
-
-  public BudgetSummaryDetailsChecker checkPositionDate(String date) {
-    return checkPositionDateText("on " + date);
-  }
-
-  public BudgetSummaryDetailsChecker checkPositionDate(int monthId) {
-    TextBox textBox = window.getTextBox("estimatedPositionDate");
-    assertThat(textBox.textEquals("on " + Formatting.toString(Month.getLastDay(monthId))));
-    return this;
-  }
-
-  public BudgetSummaryDetailsChecker checkPositionDateText(String expected) {
-    TextBox textBox = window.getTextBox("estimatedPositionDate");
-    assertThat(textBox.textEquals(expected));
-    return this;
-  }
-
-  public BudgetSummaryDetailsChecker checkTotal(double amount) {
-    TextBox textBox = window.getTextBox("estimatedPositionDate");
-    assertThat(textBox.textEquals(toString(amount, false)));
+  public BudgetSummaryDetailsChecker checkNoPositionDetails() {
+    String[] names = {"initialPosition, remainingIncome", "remainingEnvelopes", "remaining"};
+    for (String name : names) {
+      checkComponentVisible(window, JLabel.class, name, false);
+    }
     return this;
   }
 

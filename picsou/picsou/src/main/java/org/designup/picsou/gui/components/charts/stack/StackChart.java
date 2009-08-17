@@ -20,6 +20,7 @@ public class StackChart extends JPanel {
   private Map<Rectangle, StackChartSelection> clickAreas = new HashMap<Rectangle, StackChartSelection>();
   private StackChartSelection currentRollover;
   private boolean rebuildClickAreas;
+  private boolean clickEnabled;
 
   private Font labelFont;
   private Font barTextFont;
@@ -42,6 +43,8 @@ public class StackChart extends JPanel {
     this.leftDataset = leftDataset;
     this.rightDataset = rightDataset;
     this.colors = colors;
+    this.clickEnabled = (leftDataset != null && leftDataset.hasActions())
+                        || (rightDataset != null && rightDataset.hasActions());
     clearClickAreas();
     repaint();
   }
@@ -158,7 +161,7 @@ public class StackChart extends JPanel {
       g2.setFont(labelFont);
       g2.drawString(block.label, layout.labelTextX(block.label), block.labelTextY);
 
-      if (rebuildClickAreas && (block.datasetIndex >= 0)) {
+      if (rebuildClickAreas && clickEnabled && (block.datasetIndex >= 0)) {
         Rectangle rectangle = new Rectangle(layout.blockX(), block.blockY, layout.blockWidth(), block.blockHeight);
         StackChartSelection selection = new StackChartSelection(block.dataset, block.datasetIndex);
         clickAreas.put(rectangle, selection);
