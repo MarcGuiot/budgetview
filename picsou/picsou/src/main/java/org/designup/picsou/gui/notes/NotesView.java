@@ -44,14 +44,11 @@ public class NotesView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/notesView.splits",
                                                       repository, directory);
 
-
     cards = builder.addCardHandler("cards");
-
 
     builder.addMultiLineEditor("notesEditor", Notes.TEXT)
       .setNotifyOnKeyPressed(true)
       .forceSelection(repository.findOrCreate(Notes.KEY, value(Notes.TEXT, Lang.get("notes.initial"))));
-
 
     builder.add("openSeriesWizard", new OpenSeriesWizardAction());
 

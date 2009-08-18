@@ -66,7 +66,7 @@ public class UndoRedoService {
     }, selectionTypes);
   }
 
-  private void reset() {
+  public void reset() {
     changesToUndo.clear();
     changesToRedo.clear();
     currentSelections.clear();

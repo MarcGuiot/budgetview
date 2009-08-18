@@ -55,7 +55,7 @@
 
     <card name="standard">
       <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true">
-        <textArea ref="notesEditor" lineWrap="true" wrapStyleWord="true" margin="5"/>
+        <textArea ref="notesEditor" lineWrap="true" wrapStyleWord="true" margin="5" fill="both"/>
       </scrollPane>
     </card>
 

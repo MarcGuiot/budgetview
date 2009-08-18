@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.backup;
 
 import org.designup.picsou.gui.components.dialogs.MessageFileDialog;
-import org.designup.picsou.gui.startup.BackupService;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
@@ -15,7 +15,6 @@ import org.globsframework.gui.SelectionService;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 
@@ -43,7 +42,9 @@ public class RestoreAction extends AbstractBackupRestoreAction {
             Gui.setDefaultCursor(frame);
           }
           if (completed) {
-            restoreCompleted(file);
+            resetUndoRedo();
+            selectCurrentMonth();
+            showConfirmationDialog(file);
             return;
           }
           else {
@@ -63,12 +64,17 @@ public class RestoreAction extends AbstractBackupRestoreAction {
     }
   }
 
-  private void restoreCompleted(File file) {
+  private void resetUndoRedo() {
+    directory.get(UndoRedoService.class).reset();
+  }
 
-    Glob month = repository.get(Key.create(Month.TYPE, CurrentMonth.getLastTransactionMonth(repository)));
-    directory.get(SelectionService.class).select(month);
-
+  private void showConfirmationDialog(File file) {
     MessageFileDialog dialog = new MessageFileDialog(repository, directory);
     dialog.show("restore.ok.title", "restore.ok.message", file);
+  }
+
+  private void selectCurrentMonth() {
+    Glob month = repository.get(Key.create(Month.TYPE, CurrentMonth.getLastTransactionMonth(repository)));
+    directory.get(SelectionService.class).select(month);
   }
 }
