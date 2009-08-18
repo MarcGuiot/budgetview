@@ -13,44 +13,51 @@ import java.awt.event.ActionListener;
 public class RestoreChangePasswordDialog {
   private GlobRepository repository;
   private Directory directory;
+  private JPasswordField passwordField;
+  private PicsouDialog dialog;
 
   public RestoreChangePasswordDialog(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
-
   }
 
   public char[] show() {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/restoreChangePassword.splits", repository, directory);
-    final JPasswordField passwordField = builder.add("password", new JPasswordField());
-    final PicsouDialog dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
-    final AbstractAction validate = new AbstractAction(Lang.get("ok")) {
-      public void actionPerformed(ActionEvent e) {
-        dialog.setVisible(false);
-      }
-    };
-    passwordField.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        if (passwordField.getPassword() == null || passwordField.getPassword().length == 0) {
-          validate.setEnabled(false);
-        }
-        else {
-          validate.setEnabled(true);
-        }
-      }
-    });
+    passwordField = builder.add("password", new JPasswordField());
+    dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
 
-    AbstractAction cancel = new AbstractAction(Lang.get("cancel")) {
-      public void actionPerformed(ActionEvent e) {
-        passwordField.setText(null);
-        dialog.setVisible(false);
-      }
-    };
+    final AbstractAction okAction = new OkAction();
+    passwordField.addActionListener(okAction);
 
-    dialog.addPanelWithButtons(builder.<JPanel>load(), validate, cancel);
+    dialog.addPanelWithButtons(builder.<JPanel>load(), okAction, new CancelAction(dialog));
     dialog.pack();
+    passwordField.requestFocusInWindow();
     dialog.showCentered();
 
     return passwordField.getPassword();
+  }
+
+  private class CancelAction extends AbstractAction {
+    private final PicsouDialog dialog;
+
+    public CancelAction(PicsouDialog dialog) {
+      super(Lang.get("cancel"));
+      this.dialog = dialog;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      passwordField.setText(null);
+      dialog.setVisible(false);
+    }
+  }
+
+  private class OkAction extends AbstractAction {
+    public OkAction() {
+      super(Lang.get("ok"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      dialog.setVisible(false);
+    }
   }
 }
