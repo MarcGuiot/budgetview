@@ -89,6 +89,9 @@ public class ColorService implements ColorLocator {
    * The <code>toString()</code> method of the given key is used as the actual key.
    */
   public Color get(Object key) throws ItemNotFound, InvalidParameter {
+    if (key == null) {
+      return null;
+    }
     String stringKey = getKeyString(key);
     if (!currentSet.contains(stringKey)) {
       currentSet.declareEmptyKey(stringKey);

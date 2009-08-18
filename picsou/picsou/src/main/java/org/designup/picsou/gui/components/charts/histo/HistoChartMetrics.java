@@ -94,6 +94,10 @@ public class HistoChartMetrics {
     return columnWidth;
   }
 
+  public int columnHeight() {
+    return chartHeight;
+  }
+
   public int y(double value) {
     if (value >= 0) {
       return VERTICAL_CHART_PADDING + (int)(positiveHeight * (1 - value / maxPositiveValue));

@@ -37,21 +37,21 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     seriesEvolution.select("To categorize");
     seriesEvolution.histoChart
       .checkLineColumn(0, "J", "2009", 50.00)
-      .checkLineColumn(1, "J", "2009", 20.00);
+      .checkLineColumn(1, "J", "2009", 20.00, true);
     seriesEvolution.checkHistoChartLabel("Operations to categorize");
 
     timeline.selectMonth("2009/06");
     seriesEvolution.select("Balance");
     seriesEvolution.histoChart
       .checkColumnCount(7)
-      .checkDiffColumn(0, "J", "2009", 650.00, 450.00);
+      .checkDiffColumn(0, "J", "2009", 650.00, 450.00, true);
     seriesEvolution.checkHistoChartLabel("Global balance evolution --- income --- expenses");
 
     timeline.selectMonth("2009/07");
     seriesEvolution.histoChart
       .checkColumnCount(8)
       .checkDiffColumn(0, "J", "2009", 650.00, 450.00)
-      .checkDiffColumn(1, "J", "2009", 670.00, 450.00)
+      .checkDiffColumn(1, "J", "2009", 670.00, 450.00, true)
       .checkDiffColumn(2, "A", "2009", 670.00, 450.00)
       .checkDiffColumn(3, "S", "2009", 670.00, 450.00)
       .checkDiffColumn(4, "O", "2009", 670.00, 450.00)
@@ -61,12 +61,12 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2009/06");
     seriesEvolution.select("Income");
     seriesEvolution.histoChart
-      .checkDiffColumn(0, "J", "2009", 650.00, 650.00)
+      .checkDiffColumn(0, "J", "2009", 650.00, 650.00, true)
       .checkDiffColumn(1, "J", "2009", 650.00, 670.00);
     seriesEvolution.checkHistoChartLabel("Budget area Income evolution --- planned --- actual");
     seriesEvolution.select("John's");
     seriesEvolution.histoChart
-      .checkDiffColumn(0, "J", "2009", 300.00, 300.00)
+      .checkDiffColumn(0, "J", "2009", 300.00, 300.00, true)
       .checkDiffColumn(1, "J", "2009", 300.00, 320.00);
     seriesEvolution.checkHistoChartLabel("Series 'John's' evolution --- planned --- actual");
 
@@ -74,11 +74,11 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     seriesEvolution.select("Income");
     seriesEvolution.histoChart
       .checkDiffColumn(0, "J", "2009", 650.00, 650.00)
-      .checkDiffColumn(1, "J", "2009", 650.00, 670.00);
+      .checkDiffColumn(1, "J", "2009", 650.00, 670.00, true);
     seriesEvolution.select("John's");
     seriesEvolution.histoChart
       .checkDiffColumn(0, "J", "2009", 300.00, 300.00)
-      .checkDiffColumn(1, "J", "2009", 300.00, 320.00);
+      .checkDiffColumn(1, "J", "2009", 300.00, 320.00, true);
     seriesEvolution.checkHistoChartLabel("Series 'John's' evolution --- planned --- actual");
 
     seriesEvolution.editSeries("John's", "Jul 09")
@@ -88,7 +88,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .validate();
     seriesEvolution.histoChart
       .checkDiffColumn(0, "J", "2009", 500.00, 300.00)
-      .checkDiffColumn(1, "J", "2009", 500.00, 320.00);
+      .checkDiffColumn(1, "J", "2009", 500.00, 320.00, true);
   }
 
   public void testDisplaysUpToTwelveMonthsInThePast() throws Exception {
@@ -132,7 +132,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     seriesEvolution.select("Main accounts");
     seriesEvolution.histoChart
       .checkColumnCount(7)
-      .checkLineColumn(0, "J", "2009", 1000.00)
+      .checkLineColumn(0, "J", "2009", 1000.00, true)
       .checkLineColumn(1, "A", "2009", 800.00)
       .checkLineColumn(2, "S", "2009", 600.00)
       .checkLineColumn(3, "O", "2009", 400.00)
@@ -142,7 +142,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     seriesEvolution.select("Savings accounts");
     seriesEvolution.histoChart
       .checkColumnCount(7)
-      .checkLineColumn(0, "J", "2009", 200.00)
+      .checkLineColumn(0, "J", "2009", 200.00, true)
       .checkLineColumn(1, "A", "2009", 400.00)
       .checkLineColumn(2, "S", "2009", 600.00)
       .checkLineColumn(3, "O", "2009", 800.00)
@@ -156,7 +156,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     views.selectEvolution();
     seriesEvolution.histoChart
       .checkColumnCount(7)
-      .checkLineColumn(0, "J", "2009", 300.00)
+      .checkLineColumn(0, "J", "2009", 300.00, true)
       .checkLineColumn(1, "A", "2009", 500.00)
       .checkLineColumn(2, "S", "2009", 700.00)
       .checkLineColumn(3, "O", "2009", 900.00)
@@ -165,7 +165,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     seriesEvolution.select("Main accounts");
     seriesEvolution.histoChart
       .checkColumnCount(7)
-      .checkLineColumn(0, "J", "2009", 1000.00)
+      .checkLineColumn(0, "J", "2009", 1000.00, true)
       .checkLineColumn(1, "A", "2009", 800.00)
       .checkLineColumn(2, "S", "2009", 600.00)
       .checkLineColumn(3, "O", "2009", 400.00)
@@ -179,7 +179,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     views.selectEvolution();
     seriesEvolution.histoChart
       .checkColumnCount(7)
-      .checkLineColumn(0, "J", "2009", 500.00)
+      .checkLineColumn(0, "J", "2009", 500.00, true)
       .checkLineColumn(1, "A", "2009", 300.00)
       .checkLineColumn(2, "S", "2009", 100.00)
       .checkLineColumn(3, "O", "2009", -100.00)
@@ -206,7 +206,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     seriesEvolution.histoChart
       .checkColumnCount(8)
       .checkDiffColumn(0, "J", "2009", 320.00, 320.00)
-      .checkDiffColumn(1, "J", "2009", 320.00, 320.00);
+      .checkDiffColumn(1, "J", "2009", 320.00, 320.00, true);
 
     seriesEvolution.histoChart.click(0.95);
 

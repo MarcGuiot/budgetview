@@ -54,15 +54,21 @@ public class HistoDiffPainter implements HistoPainter {
       if (showActual(i)) {
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, getFillAlpha(isSelected, isRollover)));
         if (reference >= actual) {
-          g2.setColor(colors.getReferenceOverrunColor());
-          g2.fillRect(left, referenceY, width, actualY - referenceY);
+          Color referenceOverrunColor = colors.getReferenceOverrunColor();
+          if (referenceOverrunColor != null) {
+            g2.setColor(referenceOverrunColor);
+            g2.fillRect(left, referenceY, width, actualY - referenceY);
+          }
 
           g2.setColor(colors.getFillColor());
           g2.fillRect(left, actualY, width, metrics.y(0) - actualY);
         }
         else {
-          g2.setColor(colors.getActualOverrunColor());
-          g2.fillRect(left, actualY, width, referenceY - actualY);
+          Color actualOverrunColor = colors.getActualOverrunColor();
+          if (actualOverrunColor != null) {
+            g2.setColor(actualOverrunColor);
+            g2.fillRect(left, actualY, width, referenceY - actualY);
+          }
 
           g2.setColor(colors.getFillColor());
           g2.fillRect(left, referenceY, width, metrics.y(0) - referenceY);

@@ -14,8 +14,8 @@ public class HistoLineDataset implements HistoDataset {
   private List<Element> elements = new ArrayList<Element>();
   private boolean containsSections;
 
-  public void add(int id, double value, String label, String section) {
-    this.elements.add(new Element(id, label, section, value));
+  public void add(int id, double value, String label, String section, boolean selected) {
+    this.elements.add(new Element(id, label, section, value, selected));
     this.containsSections |= Strings.isNotEmpty(section);
     updateMax(value);
   }
@@ -62,7 +62,7 @@ public class HistoLineDataset implements HistoDataset {
   }
 
   public boolean isSelected(int index) {
-    return false;
+    return elements.get(index).selected;
   }
 
   public boolean containsSections() {
@@ -78,8 +78,11 @@ public class HistoLineDataset implements HistoDataset {
         .append("] ")
         .append(element.label)
         .append(": ")
-        .append(element.value)
-        .append("\n");
+        .append(element.value);
+      if (element.selected) {
+        builder.append(" - selected");
+      }
+      builder.append("\n");
     }
     return builder.toString();
   }
@@ -89,12 +92,14 @@ public class HistoLineDataset implements HistoDataset {
     final String label;
     final String section;
     final double value;
+    private boolean selected;
 
-    private Element(int id, String label, String section, double value) {
+    private Element(int id, String label, String section, double value, boolean selected) {
       this.id = id;
       this.label = label;
       this.section = section;
       this.value = value;
+      this.selected = selected;
     }
   }
 }

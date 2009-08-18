@@ -80,6 +80,7 @@ public class HistoChart<T extends HistoDataset> extends JPanel {
     paintLabels(g2, dataset);
     paintScale(g2, panelWidth);
     paintSections(g2, panelHeight, dataset);
+    paintBorder(g2);
 
     painter.paint(g2, metrics, currentRollover);
   }
@@ -87,7 +88,9 @@ public class HistoChart<T extends HistoDataset> extends JPanel {
   private void paintBg(Graphics2D g2) {
     g2.setColor(colors.getChartBgColor());
     g2.fillRect(metrics.chartX(), 0, metrics.chartWidth(), metrics.chartHeight());
+  }
 
+  private void paintBorder(Graphics2D g2) {
     g2.setColor(colors.getChartBorderColor());
     g2.drawRect(metrics.chartX(), 0, metrics.chartWidth(), metrics.chartHeight());
   }
@@ -99,6 +102,11 @@ public class HistoChart<T extends HistoDataset> extends JPanel {
       g2.setFont(getLabelFont(dataset, i));
       g2.setColor(getLabelColor(dataset, i));
       g2.drawString(label, metrics.labelX(label, i), metrics.labelY());
+
+      if (dataset.isSelected(i)) {
+        g2.setColor(colors.getSelectedColumnColor());
+        g2.fillRect(metrics.left(i), 0, metrics.columnWidth(), metrics.columnHeight());
+      }
     }
   }
   private void paintSections(Graphics2D g2, int panelHeight, HistoDataset dataset) {

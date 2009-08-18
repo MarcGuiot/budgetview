@@ -93,16 +93,16 @@ public class HistoChartMetricsTest extends ChartTestCase {
       new HistoChartMetrics(150, 130, getFontMetrics(), 10, 0, 100, false);
 
     HistoLineDataset dataset = new HistoLineDataset();
-    dataset.add(1, 1.0, "item1", "section A");
-    dataset.add(2, 2.0, "item2", "section A");
-    dataset.add(3, 3.0, "item3", "section B");
-    dataset.add(4, 4.0, "item4", "section B");
-    dataset.add(5, 5.0, "item5", "section B");
-    dataset.add(6, 6.0, "item6", "section B");
-    dataset.add(7, 7.0, "item7", "section B");
-    dataset.add(8, 8.0, "item8", "section B");
-    dataset.add(9, 9.0, "item9", "section B");
-    dataset.add(10, 10.0, "item10", "section C");
+    dataset.add(1, 1.0, "item1", "section A", false);
+    dataset.add(2, 2.0, "item2", "section A", false);
+    dataset.add(3, 3.0, "item3", "section B", false);
+    dataset.add(4, 4.0, "item4", "section B", false);
+    dataset.add(5, 5.0, "item5", "section B", false);
+    dataset.add(6, 6.0, "item6", "section B", false);
+    dataset.add(7, 7.0, "item7", "section B", false);
+    dataset.add(8, 8.0, "item8", "section B", false);
+    dataset.add(9, 9.0, "item9", "section B", false);
+    dataset.add(10, 10.0, "item10", "section C", false);
 
     List<HistoChartMetrics.Section> sections = metrics.getSections(dataset);
     assertEquals(3, sections.size());

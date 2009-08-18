@@ -91,7 +91,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
     incomeColors = new HistoDiffColors(
       "histo.balance.income.line.planned",
-      "histo.chart.bg",
+      null,
       "histo.income.line",
       "histo.income.overrun",
       "histo.balance.income.fill",
@@ -100,7 +100,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
     expensesColors = new HistoDiffColors(
       "histo.balance.expenses.line.planned",
-      "histo.chart.bg",
+      null,
       "histo.expenses.line",
       "histo.expenses.overrun",
       "histo.expenses.fill",
@@ -370,7 +370,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     for (int monthId : getMonthIds()) {
       Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, monthId));
       double value = balanceStat != null ? balanceStat.get(BalanceStat.UNCATEGORIZED_ABS) : 0.0;
-      dataset.add(monthId, value, getLabel(monthId), getSection(monthId));
+      dataset.add(monthId, value, getLabel(monthId), getSection(monthId), isCurrentMonth(monthId));
     }
 
     histoChart.update(new HistoLinePainter(dataset, uncategorizedColors));
@@ -411,11 +411,15 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     for (int monthId : getMonthIds()) {
       Glob stat = repository.find(Key.create(BalanceStat.TYPE, monthId));
       Double value = stat != null ? stat.get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION) : 0.0;
-      dataset.add(monthId, value, getLabel(monthId), getSection(monthId));
+      dataset.add(monthId, value, getLabel(monthId), getSection(monthId), isCurrentMonth(monthId));
     }
 
     histoChart.update(new HistoLinePainter(dataset, accountColors));
     updateHistoLabel("mainAccounts");
+  }
+
+  private boolean isCurrentMonth(int monthId) {
+    return monthId == currentMonthId;
   }
 
   private void updateSavingsAccountsHisto() {
@@ -424,7 +428,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     for (int monthId : getMonthIds()) {
       Glob stat = SavingsBalanceStat.findSummary(monthId, repository);
       Double value = stat != null ? stat.get(SavingsBalanceStat.END_OF_MONTH_POSITION) : 0.0;
-      dataset.add(monthId, value, getLabel(monthId), getSection(monthId));
+      dataset.add(monthId, value, getLabel(monthId), getSection(monthId), isCurrentMonth(monthId));
     }
 
     histoChart.update(new HistoLinePainter(dataset, accountColors));
@@ -481,7 +485,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
                   reference != null ? reference * multiplier : 0,
                   actual != null ? actual * multiplier : 0,
                   getLabel(monthId), getSection(monthId),
-                  monthId == currentMonthId,
+                  isCurrentMonth(monthId),
                   monthId > lastMonthWithTransactions);
     }
 
