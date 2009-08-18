@@ -126,11 +126,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
           }
         }
 
-        Double balance = null;
-        if (beginOfMonthPosition != null) {
-          balance = 0.;
-        }
-        else if (beginOfMonthTransaction != null && endOfMonthTransaction != null) {
+        if (beginOfMonthTransaction != null && endOfMonthTransaction != null) {
           endOfMonthPosition = endOfMonthTransaction.get(Transaction.SUMMARY_POSITION);
           beginOfMonthPosition = beginOfMonthTransaction.get(Transaction.SUMMARY_POSITION);
           if (beginOfMonthPosition != null) {
@@ -143,9 +139,6 @@ public class BalanceStatTrigger implements ChangeSetListener {
                 endOfMonthPosition = endOfMonthPosition -
                                      endOfMonthTransaction.get(Transaction.AMOUNT);
               }
-              if (endOfMonthPosition != null && beginOfMonthPosition != null) {
-                balance = endOfMonthPosition - beginOfMonthPosition;
-              }
             }
           }
         }
@@ -153,12 +146,13 @@ public class BalanceStatTrigger implements ChangeSetListener {
         FieldValuesBuilder values =
           FieldValuesBuilder.init()
             .set(BalanceStat.MONTH, monthId)
-            .set(BalanceStat.MONTH_BALANCE, balance)
             .set(BalanceStat.BEGIN_OF_MONTH_ACCOUNT_POSITION, beginOfMonthPosition)
             .set(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION, endOfMonthPosition);
-        getBudgetAreaValues(repository, monthId, values);
 
-        repository.create(BalanceStat.TYPE, values.toArray());
+        FieldValues budgetAreaValues = getBudgetAreaValues(repository, monthId);
+        values.set(budgetAreaValues);
+        values.set(BalanceStat.MONTH_BALANCE, getBalance(budgetAreaValues, monthId));
+        Glob stat = repository.create(BalanceStat.TYPE, values.toArray());
 
         if (lastRealKnownTransaction != null) {
           Integer currentMonthId = lastRealKnownTransaction.get(Transaction.BANK_MONTH);
@@ -173,7 +167,22 @@ public class BalanceStatTrigger implements ChangeSetListener {
       }
     }
 
-    private void getBudgetAreaValues(GlobRepository repository, Integer monthId, FieldValuesBuilder values) {
+    private double getBalance(FieldValues values, Integer monthId) {
+      double balance = 0;
+      for (BudgetArea budgetArea : BudgetArea.INCOME_AND_EXPENSES_AREAS) {
+        Double amount = values.get(BalanceStat.getSummary(budgetArea));
+        if (amount != null) {
+          balance += amount;
+        }
+      }
+      Double uncategorized = values.get(BalanceStat.UNCATEGORIZED);
+      if (uncategorized != null) {
+        balance += uncategorized;
+      }
+      return balance;
+    }
+
+    private MutableFieldValues getBudgetAreaValues(GlobRepository repository, Integer monthId) {
 
       budgetAreaAmounts.clear();
       Integer lastTransactionMonthId = currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH);
@@ -220,6 +229,8 @@ public class BalanceStatTrigger implements ChangeSetListener {
         amounts.addValues(stat, lastTransactionMonthId);
       }
 
+      FieldValuesBuilder values = new FieldValuesBuilder();
+
       BudgetAreaAmounts uncategorizedAmounts = budgetAreaAmounts.remove(BudgetArea.UNCATEGORIZED);
       if (uncategorizedAmounts != null) {
         values.set(BalanceStat.UNCATEGORIZED, uncategorizedAmounts.getAmount());
@@ -255,6 +266,14 @@ public class BalanceStatTrigger implements ChangeSetListener {
       values.set(BalanceStat.SAVINGS_OUT_PLANNED, savingsOutAmounts.getPlannedAmount());
       values.set(BalanceStat.SAVINGS_OUT_REMAINING, savingsOutAmounts.getRemainingAmount());
       values.set(BalanceStat.SAVINGS_OUT_SUMMARY, savingsOutAmounts.getSummaryAmount());
+
+      double uncategorizedAbs = 0;
+      for (Glob transaction : Transaction.getUncategorizedTransactions(monthId, repository)) {
+        uncategorizedAbs += Math.abs(transaction.get(Transaction.AMOUNT));
+      }
+      values.set(BalanceStat.UNCATEGORIZED_ABS, uncategorizedAbs);
+
+      return values.get();
     }
   }
 

@@ -130,7 +130,7 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
   private String getBudgetAreaLabelText(BudgetArea budgetArea) {
     Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, referenceMonthId));
     if (budgetArea.equals(BudgetArea.UNCATEGORIZED)) {
-      return format(balanceStat, BalanceStat.UNCATEGORIZED, budgetArea);
+      return format(balanceStat, BalanceStat.UNCATEGORIZED_ABS, budgetArea);
     }
     else if (balanceStat != null) {
       return format(balanceStat, BalanceStat.getSummary(budgetArea), budgetArea);

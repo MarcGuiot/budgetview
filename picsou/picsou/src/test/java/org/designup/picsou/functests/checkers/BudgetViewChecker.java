@@ -47,7 +47,7 @@ public class BudgetViewChecker extends GuiChecker {
     return this;
   }
 
-  public BudgetSummaryViewChecker getLabel() {
+  public BudgetSummaryViewChecker getSummary() {
     return new BudgetSummaryViewChecker(window);
   }
 

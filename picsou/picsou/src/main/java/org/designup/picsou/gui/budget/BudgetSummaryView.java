@@ -125,8 +125,8 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
     updateEstimatedPosition(selectedMonthIds);
 
-    Double uncategorized = balanceStats.getSum(BalanceStat.UNCATEGORIZED);
-    if ((uncategorized != null) && (uncategorized != 0)) {
+    Double uncategorized = balanceStats.getSum(BalanceStat.UNCATEGORIZED_ABS);
+    if ((uncategorized != null) && (uncategorized > 0.01)) {
       uncategorizedLabel.setText(format.format(uncategorized));
       uncategorizedLabel.setForeground(errorColor);
     }

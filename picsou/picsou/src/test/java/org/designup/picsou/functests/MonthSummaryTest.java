@@ -32,7 +32,7 @@ public class MonthSummaryTest extends LoggedInFunctionalTestCase {
     categorization.setNewSavings("VIRT ING", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "External account");
 
     double incomeFor200807 = 1500;
-    double expensesFor200807 = 30 + 1500 + 300 + 100 + 20 + 200 + 100;
+    double expensesFor200807 = (30 + 1500) + (300 + 100) + 200 + 100 + 20;
     double balanceFor200807 = incomeFor200807 - expensesFor200807;
 
     double incomeFor200808 = 1500;

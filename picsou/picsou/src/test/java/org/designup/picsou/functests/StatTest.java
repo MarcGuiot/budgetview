@@ -121,7 +121,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testBalanceDoesNotTakeInAccountOperationsForNextMonth() throws Exception {
+  public void testBalanceIsBasedOnUserDates() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/01", 200.00, "Salaire")
@@ -133,14 +133,14 @@ public class StatTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("Salaire", "Salaire");
     categorization.setNewEnvelope("Auchan", "courses");
     categorization.setEnvelope("Carouf", "courses");
-    timeline.selectMonth("2008/06");
 
     views.selectHome();
-    mainAccounts.checkBalance(200 - 90);  //balance banque du mois : ne prends pas en compte les 80
+    timeline.selectMonth("2008/06");
+    mainAccounts.checkBalance(200 - 90 - 80);
     mainAccounts.checkEstimatedPosition(80);
 
     timeline.selectMonth("2008/07");
-    mainAccounts.checkBalance(200 - 80 - 170);  //-50 ==> prends en comptes les 80
+    mainAccounts.checkBalance(200 - 90 - 80);
     mainAccounts.checkEstimatedPosition(200 - 170);
   }
 

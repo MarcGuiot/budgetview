@@ -217,6 +217,17 @@ public class Transaction {
     transaction.get(BANK_DAY) <= day));
   }
 
+  public static GlobList getUncategorizedTransactions(Glob month, GlobRepository repository) {
+    Integer monthId = month.get(Month.ID);
+    return getUncategorizedTransactions(monthId, repository);
+  }
+
+  public static GlobList getUncategorizedTransactions(Integer monthId, GlobRepository repository) {
+    return repository.findByIndex(SERIES_INDEX, SERIES, Series.UNCATEGORIZED_SERIES_ID)
+      .findByIndex(MONTH, monthId).getGlobs()
+      .filterSelf(org.globsframework.model.utils.GlobMatchers.fieldEquals(PLANNED, false), repository);
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {

@@ -115,13 +115,7 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
   }
 
   private void updateStat(Glob stat, Double transactionAmount, int multiplier, GlobRepository repository) {
-    double newValue;
-    if (Series.UNCATEGORIZED_SERIES_ID.equals(stat.get(SeriesStat.SERIES))) {
-      newValue = stat.get(SeriesStat.AMOUNT) + multiplier * Math.abs(transactionAmount);
-    }
-    else {
-      newValue = stat.get(SeriesStat.AMOUNT) + multiplier * transactionAmount;
-    }
+    double newValue = stat.get(SeriesStat.AMOUNT) + multiplier * transactionAmount;
     repository.update(stat.getKey(), SeriesStat.AMOUNT, newValue);
   }
 

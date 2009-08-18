@@ -9,6 +9,7 @@ import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
+import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
@@ -130,6 +131,9 @@ public class BalanceStat {
 
   @DefaultDouble(0.0)
   public static DoubleField UNCATEGORIZED;
+
+  @DefaultDouble(0.0)
+  public static DoubleField UNCATEGORIZED_ABS;
 
   public static DoubleField[] INCOME_FIELDS = {INCOME, INCOME_REMAINING};
 

@@ -331,7 +331,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
       double spent = 0;
       double received = 0;
       for (Glob month : monthList) {
-        for (Glob transaction : getUncategorizedTransactions(month, repository)) {
+        for (Glob transaction : Transaction.getUncategorizedTransactions(month, repository)) {
           double amount = transaction.get(Transaction.AMOUNT);
           if (amount < 0) {
             spent -= amount;
@@ -367,11 +367,4 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
       directory.get(NavigationService.class).gotoCategorization();
     }
   }
-
-  private GlobList getUncategorizedTransactions(Glob month, GlobRepository repository) {
-    return repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID)
-      .findByIndex(Transaction.MONTH, month.get(Month.ID)).getGlobs()
-      .filterSelf(fieldEquals(Transaction.PLANNED, false), repository);
-  }
-
 }

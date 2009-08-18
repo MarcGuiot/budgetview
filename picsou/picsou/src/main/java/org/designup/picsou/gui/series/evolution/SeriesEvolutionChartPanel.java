@@ -369,7 +369,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
     for (int monthId : getMonthIds()) {
       Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, monthId));
-      double value = balanceStat != null ? balanceStat.get(BalanceStat.UNCATEGORIZED) : 0.0;
+      double value = balanceStat != null ? balanceStat.get(BalanceStat.UNCATEGORIZED_ABS) : 0.0;
       dataset.add(monthId, value, getLabel(monthId), getSection(monthId));
     }
 
