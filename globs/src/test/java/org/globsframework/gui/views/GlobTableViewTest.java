@@ -1,6 +1,7 @@
 package org.globsframework.gui.views;
 
 import org.globsframework.gui.DummySelectionListener;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.GuiComponentTestCase;
 import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.utils.TableUtils;
@@ -37,6 +38,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -997,6 +999,27 @@ public class GlobTableViewTest extends GuiComponentTestCase {
                  "2\ta2\tb2\n" +
                  "4\ta4\tb4\n",
                  Clipboard.getContentAsText());
+  }
+
+  public void testAddKeyBinding() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' value='1.1'/>" +
+                    "<dummyObject id='2' name='name2' value='2.2'/>" +
+                    "");
+    final StringBuilder logger = new StringBuilder();
+    view = GlobTableView.init(DummyObject.TYPE, repository, new GlobFieldComparator(ID), directory)
+      .addColumn(DummyObject.ID)
+      .addKeyBinding(GuiUtils.ctrl(KeyEvent.VK_K), "Test", new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          logger.append("ok");
+        }
+      });
+
+    JTable jTable = view.getComponent();
+    Table table = new Table(jTable);
+
+    KeyUtils.pressKey(jTable, org.uispec4j.Key.plaformSpecificCtrl(org.uispec4j.Key.K));
+    assertEquals("ok", logger.toString());
   }
 
   private void checkColumnIsNotRightAligned(Table table, int column) {

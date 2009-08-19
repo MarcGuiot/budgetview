@@ -277,6 +277,12 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     }
   }
 
+  public GlobTableView addKeyBinding(KeyStroke keyStroke, String commandName, Action action) {
+    getComponent().getInputMap().put(keyStroke, commandName);
+    getComponent().getActionMap().put(commandName, action);
+    return this;
+  }
+
   public JTable getComponent() {
     if (table == null) {
       table = new JTable();
@@ -708,8 +714,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   }
 
   private void initClipboardHandler() {
-    KeyStroke copy = GuiUtils.ctrl(KeyEvent.VK_C);
-    table.registerKeyboardAction(new CopySelectionToClipboardAction(), "Copy", copy, JComponent.WHEN_FOCUSED);
+    addKeyBinding(GuiUtils.ctrl(KeyEvent.VK_C), "Copy", new CopySelectionToClipboardAction());
   }
 
   private class CopySelectionToClipboardAction extends AbstractAction {
