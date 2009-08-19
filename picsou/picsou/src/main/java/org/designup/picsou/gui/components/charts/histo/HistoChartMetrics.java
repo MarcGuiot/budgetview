@@ -5,6 +5,7 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class HistoChartMetrics {
 
@@ -215,8 +216,11 @@ public class HistoChartMetrics {
   }
 
   public java.util.List<Section> getSections(HistoDataset dataset) {
-    java.util.List<Section> sections = new ArrayList<Section>();
+    if (dataset.isEmpty()) {
+      return Collections.emptyList();
+    }
 
+    java.util.List<Section> sections = new ArrayList<Section>();
     int blockLeft = left(0);
     String previousName = dataset.getSection(0);
     for (int i = 0; i < dataset.size(); i++) {
@@ -240,7 +244,6 @@ public class HistoChartMetrics {
     int blockY = panelHeight - blockHeight;
     int textX = blockLeft + blockWidth / 2 - fontMetrics.stringWidth(previousName) / 2;
     int textY = panelHeight - SECTION_BOTTOM_MARGIN;
-    Section section = new Section(previousName, textX, textY, blockLeft, blockWidth, blockY, blockHeight);
-    return section;
+    return new Section(previousName, textX, textY, blockLeft, blockWidth, blockY, blockHeight);
   }
 }

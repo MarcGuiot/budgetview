@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.series.evolution;
 
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoChartListener;
 import org.designup.picsou.gui.components.charts.histo.painters.*;
@@ -11,10 +12,7 @@ import org.designup.picsou.gui.model.SavingsBalanceStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.CurrentMonth;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -25,6 +23,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
@@ -37,6 +36,7 @@ import java.util.Set;
 public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
   private GlobRepository repository;
+  private Directory directory;
 
   private Integer currentMonthId;
   private Glob currentWrapper;
@@ -64,6 +64,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
                                    Directory directory,
                                    final SelectionService parentSelectionService) {
     this.repository = repository;
+    this.directory = directory;
     this.selectionService = directory.get(SelectionService.class);
     this.selectionService.addListener(this, SeriesWrapper.TYPE);
 
@@ -209,8 +210,8 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
         BudgetArea budgetArea = BudgetArea.get(currentWrapper.get(SeriesWrapper.ITEM_ID));
         if (budgetArea.equals(BudgetArea.UNCATEGORIZED)) {
           updateUncategorizedHisto();
-          updateMainBalanceStack(budgetArea);
-          clearSeriesStack();
+          updateUncategorizedBalanceStack();
+          updateUncategorizedSeriesStack();
         }
         else {
           updateBudgetAreaHisto(budgetArea);
@@ -375,6 +376,49 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
     histoChart.update(new HistoLinePainter(dataset, uncategorizedColors));
     updateHistoLabel("uncategorized");
+  }
+
+  private void updateUncategorizedBalanceStack() {
+
+    Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, currentMonthId));
+    double uncategorized = balanceStat != null ? balanceStat.get(BalanceStat.UNCATEGORIZED_ABS) : 0;
+
+    StackChartDataset dataset = new StackChartDataset();
+    if (uncategorized > 0.01) {
+      dataset.add(Lang.get("seriesEvolution.chart.balance.uncategorized.tocategorize"),
+                  uncategorized, null, false);
+    }
+
+    double categorized = 0.0;
+    for (Glob seriesStat : repository.getAll(SeriesStat.TYPE,
+                                             and(fieldEquals(SeriesStat.MONTH, currentMonthId),
+                                                 not(fieldEquals(SeriesStat.SERIES, Series.UNCATEGORIZED_SERIES_ID))))) {
+      categorized += Math.abs(seriesStat.get(SeriesStat.AMOUNT));
+    }
+    dataset.add(Lang.get("seriesEvolution.chart.balance.uncategorized.categorized"),
+                categorized, null, false);
+
+    balanceChart.update(dataset, expensesStackColors);
+    updateBalanceLabel("uncategorized");
+  }
+
+  private void updateUncategorizedSeriesStack() {
+
+    GlobList uncategorizedTransactions =
+      repository.getAll(Transaction.TYPE,
+                        and(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+                            fieldEquals(Transaction.MONTH, currentMonthId)));
+
+    StackChartDataset dataset = new StackChartDataset();
+    for (Glob transaction : uncategorizedTransactions) {
+      dataset.add(Strings.cut(transaction.get(Transaction.LABEL), 20),
+                  Math.abs(transaction.get(Transaction.AMOUNT)),
+                  new CategorizeTransactionAction(transaction.getKey()),
+                  false);
+    }
+
+    seriesChart.update(dataset, expensesStackColors);
+    updateSeriesLabel("uncategorized");
   }
 
   private void updateSeriesHisto(Integer seriesId) {
@@ -545,5 +589,20 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
   private String getSection(int monthId) {
     return Integer.toString(Month.toYear(monthId));
+  }
+
+  private class CategorizeTransactionAction extends AbstractAction {
+    private Key transactionKey;
+
+    public CategorizeTransactionAction(Key transactionKey) {
+      this.transactionKey = transactionKey;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      Glob transaction = repository.find(transactionKey);
+      if (transaction != null) {
+        directory.get(NavigationService.class).gotoCategorization(new GlobList(transaction), true);
+      }
+    }
   }
 }

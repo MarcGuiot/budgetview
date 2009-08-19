@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.card;
 
 import org.designup.picsou.gui.categorization.CategorizationView;
+import org.designup.picsou.gui.categorization.components.TransactionFilteringMode;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.series.view.SeriesView;
 import org.designup.picsou.model.Account;
@@ -56,7 +57,10 @@ public class NavigationService implements GlobSelectionListener {
     gotoCard(Card.CATEGORIZATION);
   }
 
-  public void gotoCategorization(GlobList transactions) {
+  public void gotoCategorization(GlobList transactions, boolean showAllUncategorized) {
+    if (showAllUncategorized) {
+      categorizationView.setFilteringMode(TransactionFilteringMode.UNCATEGORIZED);
+    }
     categorizationView.show(transactions);
     gotoCategorization();
   }

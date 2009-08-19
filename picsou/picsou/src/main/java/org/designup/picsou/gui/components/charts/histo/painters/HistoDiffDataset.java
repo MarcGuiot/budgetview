@@ -25,6 +25,10 @@ public class HistoDiffDataset implements HistoDataset {
     return elements.size();
   }
 
+  public boolean isEmpty() {
+    return elements.isEmpty();
+  }
+
   public double getMaxPositiveValue() {
     return maxPositive;
   }

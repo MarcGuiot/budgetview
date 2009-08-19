@@ -224,7 +224,71 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
   }
 
   public void testUncategorized() throws Exception {
-    fail("tbd");
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.0, "2009/07/30")
+      .addTransaction("2009/06/01", -200.00, "Auchan")
+      .addTransaction("2009/07/01", -400.00, "Auchan")
+      .addTransaction("2009/07/10", 500.00, "WorldCo")
+      .addTransaction("2009/07/15", 200.00, "Unknown 1")
+      .addTransaction("2009/07/20", -200.00, "Unknown 2 with a very long label")
+      .addTransaction("2009/08/10", -300.00, "Auchan")
+      .addTransaction("2009/08/15", 100.00, "Unknown 3")
+      .addTransaction("2009/08/20", -100.00, "Unknown 4")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewIncome("WorldCo", "John's");
+    categorization.setNewEnvelope("Auchan", "Groceries");
+
+    views.selectEvolution();
+    seriesEvolution.select("To categorize");
+
+    timeline.selectMonth("2009/06");
+    seriesEvolution.balanceChart.getSingleDataset()
+      .checkSize(1)
+      .checkValue("Categorized", 200.00);
+    seriesEvolution.checkBalanceChartLabel("Total amount of uncategorized operations");
+    seriesEvolution.seriesChart.getSingleDataset()
+      .checkSize(0);
+    seriesEvolution.checkSeriesChartLabel("Main operations to categorize");
+
+    timeline.selectMonth("2009/07");
+    seriesEvolution.balanceChart.getSingleDataset()
+      .checkSize(2)
+      .checkValue("Categorized", 400.00 + 500.00)
+      .checkValue("To categorize", 200.00 + 200.00);
+    seriesEvolution.seriesChart.getSingleDataset()
+      .checkSize(2)
+      .checkValue("UNKNOWN 1", 200.00)
+      .checkValue("UNKNOWN 2 WITH A ...", 200.00);
+
+    timeline.selectMonth("2009/08");
+    seriesEvolution.balanceChart.getSingleDataset()
+      .checkSize(2)
+      .checkValue("Categorized", 300.00)
+      .checkValue("To categorize", 100.00 + 100.00);
+    seriesEvolution.seriesChart.getSingleDataset()
+      .checkSize(2)
+      .checkValue("UNKNOWN 3", 100.00)
+      .checkValue("UNKNOWN 4", 100.00);
+
+    seriesEvolution.seriesChart.click(0.5, 0.2);
+    views.checkCategorizationSelected();
+    categorization.checkShowsUncategorizedTransactionsOnly();
+    categorization.checkSelectedTableRow("UNKNOWN 3");
+
+    categorization.setNewEnvelope("UNKNOWN 3", "Misc");
+    
+    views.selectEvolution();
+    seriesEvolution.checkSelected("To categorize");
+    timeline.selectMonth("2009/08");
+    seriesEvolution.balanceChart.getSingleDataset()
+      .checkSize(2)
+      .checkValue("Categorized", 300.00 + 100.00)
+      .checkValue("To categorize", 100.00);
+    seriesEvolution.seriesChart.getSingleDataset()
+      .checkSize(1)
+      .checkValue("UNKNOWN 4", 100.00);
   }
 
   public void testDifferentSignsInBudgetAreaSeries() throws Exception {

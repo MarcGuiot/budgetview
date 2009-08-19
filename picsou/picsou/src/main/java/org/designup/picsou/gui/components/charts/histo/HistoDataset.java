@@ -4,6 +4,8 @@ public interface HistoDataset {
 
   public int size();
 
+  public boolean isEmpty();
+
   public double getMaxPositiveValue();
 
   public double getMaxNegativeValue();
@@ -26,6 +28,10 @@ public interface HistoDataset {
 
     public int size() {
       return 0;
+    }
+
+    public boolean isEmpty() {
+      return true;
     }
 
     public double getMaxPositiveValue() {

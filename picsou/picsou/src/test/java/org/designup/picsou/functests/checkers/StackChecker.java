@@ -71,7 +71,7 @@ public class StackChecker extends GuiChecker {
     private int getIndex(String label) {
       int index = dataset.indexOf(label);
       if (index < 0) {
-        Assert.fail("'" + label + "' not found in dataset");
+        Assert.fail("'" + label + "' not found in dataset - actual contents:\n" + dataset);
       }
       return index;
     }

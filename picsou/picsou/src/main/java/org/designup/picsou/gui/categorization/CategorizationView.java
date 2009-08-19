@@ -39,6 +39,7 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.utils.Pair;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
@@ -293,7 +294,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     }
     else {
       filterSet.replaceAllWith(CustomFilterMessagePanel.CUSTOM,
-                               GlobMatchers.fieldIn(Transaction.ID, transactions.getValueSet(Transaction.ID)));
+                               fieldIn(Transaction.ID, transactions.getValueSet(Transaction.ID)));
       updateTableFilter();
     }
     transactionTable.select(transactions);
@@ -413,6 +414,10 @@ public class CategorizationView extends View implements TableView, Filterable {
       );
 
     transactionTable.setFilter(matcher);
+  }
+
+  public void setFilteringMode(TransactionFilteringMode mode) {
+    filteringModeCombo.setSelectedItem(mode);
   }
 
   private GlobMatcher getCurrentFilteringMode() {
