@@ -312,10 +312,10 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     seriesEvolution.checkRowLabels(expanded);
 
-    seriesEvolution.collapse();
+    seriesEvolution.collapseAll();
     seriesEvolution.checkRowLabels(collapsed);
 
-    seriesEvolution.expand();
+    seriesEvolution.expandAll();
     seriesEvolution.checkRowLabels(expanded);
 
     seriesEvolution.doubleClickOnRow("Income");
@@ -326,7 +326,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
                                    "Special",
                                    "Savings");
 
-    seriesEvolution.expand();
+    seriesEvolution.expandAll();
     seriesEvolution.checkRowLabels(expanded);
   }
 

@@ -514,7 +514,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     series.checkExpanded("Envelopes", true);
-    series.toggle("Envelopes");
+    series.toggleExpansion("Envelopes");
     series.checkExpanded("Envelopes", false);
 
     views.selectBudget();

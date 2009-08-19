@@ -212,7 +212,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
 
     timeline.checkSelection("2009/12");
     seriesEvolution.checkSelected("Income");
-    seriesEvolution.expand();
+    seriesEvolution.expandAll();
 
     seriesEvolution.select("John's");
     seriesEvolution.histoChart.click(0.1);

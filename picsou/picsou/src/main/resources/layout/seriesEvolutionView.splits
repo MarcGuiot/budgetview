@@ -22,8 +22,8 @@
           </scrollPane>
 
           <row styleClass="iconButtonGroup">
-            <button action="expand" styleClass="expand" tooltipText="$seriesEvolution.expand.tooltip"/>
-            <button action="collapse" styleClass="collapse" tooltipText="$seriesEvolution.collapse.tooltip"/>
+            <button action="expand" styleClass="expand" tooltipText="$series.expand.tooltip"/>
+            <button action="collapse" styleClass="collapse" tooltipText="$series.collapse.tooltip"/>
             <filler fill="horizontal"/>
           </row>
 

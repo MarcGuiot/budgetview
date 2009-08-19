@@ -3,9 +3,7 @@ package org.designup.picsou.gui.series.view;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.CustomBoldLabelCustomizer;
 import org.designup.picsou.gui.components.SelectorBackgroundPainter;
-import org.designup.picsou.gui.components.expansion.ExpandableTable;
-import org.designup.picsou.gui.components.expansion.TableExpansionColumn;
-import org.designup.picsou.gui.components.expansion.TableExpansionInstaller;
+import org.designup.picsou.gui.components.expansion.*;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
@@ -86,6 +84,9 @@ public class SeriesView extends View {
     expansionModel.completeInit();
 
     builder.add("seriesView", table);
+
+    builder.add("expand", new ExpandTableAction(expansionModel));
+    builder.add("collapse", new CollapseTableAction(expansionModel));
   }
 
   private void registerSelectionUpdater() {

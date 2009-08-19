@@ -17,19 +17,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 
-public class SeriesEvolutionChecker extends GuiChecker {
+public class SeriesEvolutionChecker extends ExpandableTableChecker {
 
   public HistoChecker histoChart;
   public StackChecker balanceChart;
   public StackChecker seriesChart;
 
   private Table table;
-  private Window mainWindow;
 
   private static final String PANEL_NAME = "seriesEvolutionView";
 
   public SeriesEvolutionChecker(Window mainWindow) {
-    this.mainWindow = mainWindow;
+    super(mainWindow);
     this.histoChart = new HistoChecker(mainWindow);
     this.balanceChart = new StackChecker(mainWindow, PANEL_NAME, "balanceChart");
     this.seriesChart = new StackChecker(mainWindow, PANEL_NAME, "seriesChart");
@@ -87,17 +86,9 @@ public class SeriesEvolutionChecker extends GuiChecker {
     table.doubleClick(index, 1);
   }
 
-  public void expand() {
-    getPanel().getButton("expand").click();
-  }
-
-  public void collapse() {
-    getPanel().getButton("collapse").click();
-  }
-
-  private Table getTable() {
+  protected Table getTable() {
     if (table == null) {
-      table = mainWindow.getTable("seriesEvolutionTable");
+      table = window.getTable("seriesEvolutionTable");
       table.setCellValueConverter(0, new BlankColumnConverter());
       MonthColumnConverter converter = new MonthColumnConverter();
       for (int i = 2; i < 2 + SeriesEvolutionView.MONTH_COLUMNS_COUNT; i++) {
@@ -107,8 +98,12 @@ public class SeriesEvolutionChecker extends GuiChecker {
     return table;
   }
 
-  private Panel getPanel() {
-    return mainWindow.getPanel(PANEL_NAME);
+  protected int getLabelColumnIndex() {
+    return 0;
+  }
+
+  protected Panel getPanel() {
+    return window.getPanel(PANEL_NAME);
   }
 
   public SeriesEditionDialogChecker editSeries(String rowLabel, String columnLabel) {

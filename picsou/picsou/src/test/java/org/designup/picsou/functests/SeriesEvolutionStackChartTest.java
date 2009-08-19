@@ -374,7 +374,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("Groceries", 450.00)
       .checkValue("Fuel", 100.00);
 
-    seriesEvolution.collapse();
+    seriesEvolution.collapseAll();
     seriesEvolution.seriesChart.click(0.5, 0.8);
 
     seriesEvolution.checkSelected("Groceries");

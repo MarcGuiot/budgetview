@@ -152,13 +152,18 @@
 
             <column preferredSize="(180,800)" minimumSize="(180,800)" weightX="0.1" marginRight="20">
               <label text="$seriesView.title" styleClass="blockTitle"/>
-              <panel styleClass="block">
+              <panel styleClass="block" name="seriesViewPanel">
                 <column margin="10">
                   <scrollPane border="line(category.border)" viewportBackground="categories.bg"
                               background="categories.bg"
                               minimumSize="(200,40)" marginBottom="5">
                     <table ref="seriesView" opaque="false" margin="10"/>
                   </scrollPane>
+                  <row styleClass="iconButtonGroup">
+                    <button action="expand" styleClass="expand" tooltipText="$series.expand.tooltip"/>
+                    <button action="collapse" styleClass="collapse" tooltipText="$series.collapse.tooltip"/>
+                    <filler fill="horizontal"/>
+                  </row>
                 </column>
               </panel>
             </column>
