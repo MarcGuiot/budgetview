@@ -12,6 +12,9 @@
       <action dev="rmedina" type="add">
         Added Table.getColumnIndex(String columnName).
       </action>
+      <action dev="rmedina" type="add">
+        Added Table.selectRowsWithText(int column, String... labels).
+      </action>
     </release>
 
     <release version="???" date="???">
