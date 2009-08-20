@@ -18,9 +18,7 @@ import static org.uispec4j.assertion.UISpecAssert.*;
 import javax.swing.AbstractButton;
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class CategorizationChecker extends GuiChecker {
   private Window mainWindow;
@@ -108,6 +106,11 @@ public class CategorizationChecker extends GuiChecker {
     HelpChecker help = new HelpChecker(getPanel().getButton("Categorization tips").triggerClick());
     help.checkTitle("Categorization tips");
     return this;
+  }
+
+  public void copyBankFormatToClipboard() {
+    JTable jTable = getTable().getAwtComponent();
+    KeyUtils.pressKey(jTable, org.uispec4j.Key.plaformSpecificCtrl(org.uispec4j.Key.B));
   }
 
   public class SavingsCategorizationChecker extends BudgetAreaCategorizationChecker {
@@ -259,25 +262,11 @@ public class CategorizationChecker extends GuiChecker {
   }
 
   public CategorizationChecker selectTransactions(String... labels) {
-    int lenght = 0;
-    List<int[]> indices = new ArrayList<int[]>();
-    for (String label : labels) {
-      int[] ints = getRowIndices(label.toUpperCase());
-      lenght += ints.length;
-      indices.add(ints);
-      if (ints.length == 0) {
-        Assert.fail("Operation '" + label + "' not found");
-      }
+    String[] upperCaseLabels = new String[labels.length];
+    for (int i = 0; i < upperCaseLabels.length; i++) {
+      upperCaseLabels[i] = labels[i].toUpperCase();
     }
-    int[] ind = new int[lenght];
-    int j = 0;
-    for (int[] index : indices) {
-      for (int i : index) {
-        ind[j] = i;
-        j++;
-      }
-    }
-    selectTableRows(ind);
+    getTable().selectRowsWithText(LABEL_COLUMN_INDEX, upperCaseLabels);
     return this;
   }
 

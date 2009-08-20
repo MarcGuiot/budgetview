@@ -55,6 +55,10 @@ public class TransactionChecker extends ViewChecker {
     return table;
   }
 
+  public void select(String... labels) {
+    getTable().selectRowsWithText(TransactionView.LABEL_COLUMN_INDEX, labels);
+  }
+
   protected UIComponent findMainComponent(Window window) {
     return window.findUIComponent(ComponentMatchers.innerNameIdentity(Transaction.TYPE.getName()));
   }
