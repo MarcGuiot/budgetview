@@ -1,19 +1,17 @@
 package org.designup.picsou.gui.accounts;
 
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.*;
-import static org.globsframework.model.utils.GlobMatchers.linkedTo;
-import static org.globsframework.model.utils.GlobMatchers.or;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -21,38 +19,29 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 
-public class AccountEditionDialog {
+public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobRepository> {
   private PicsouDialog dialog;
-  private AccountEditionPanel accountEditionPanel;
-  private LocalGlobRepository localRepository;
-  private Glob currentAccount;
   private Window owner;
   private GlobRepository parentRepository;
-  private Directory directory;
 
   public AccountEditionDialog(Window owner, final GlobRepository parentRepository, Directory directory) {
+    super(createLocalRepository(parentRepository), directory, new JLabel());
     this.owner = owner;
     this.parentRepository = parentRepository;
-    this.directory = directory;
-
-    this.localRepository = LocalGlobRepositoryBuilder.init(parentRepository)
-      .copy(Bank.TYPE, BankEntity.TYPE, AccountUpdateMode.TYPE)
-      .get();
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountEditionDialog.splits",
-                                                      localRepository, directory);
+                                                      localRepository, localDirectory);
 
-    JLabel messageLabel = builder.add("message", new JLabel());
+    builder.add("message", messageLabel);
 
-    accountEditionPanel = new AccountEditionPanel(localRepository, directory, messageLabel);
-    builder.add("panel", accountEditionPanel.getPanel());
+    createComponents(builder);
 
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsUpdates(Account.ACCOUNT_TYPE)) {
           Integer accountType = repository.get(currentAccount.getKey()).get(Account.ACCOUNT_TYPE);
           if (!accountType.equals(AccountType.SAVINGS.getId())) {
-            accountEditionPanel.setMessageSavingsWarning(false);
+            setMessageSavingsWarning(false);
             return;
           }
           GlobList transactions = parentRepository.getAll(Transaction.TYPE, new GlobMatcher() {
@@ -68,7 +57,7 @@ public class AccountEditionDialog {
                        || series.get(Series.TO_ACCOUNT).equals(currentAccount.get(Account.ID)));
             }
           });
-          accountEditionPanel.setMessageSavingsWarning(!transactions.isEmpty());
+          setMessageSavingsWarning(!transactions.isEmpty());
         }
       }
     });
@@ -93,16 +82,22 @@ public class AccountEditionDialog {
       }
     });
 
-    dialog = PicsouDialog.create(owner, directory);
+    dialog = PicsouDialog.create(owner, localDirectory);
     dialog.addPanelWithButtons(builder.<JPanel>load(),
                                new OkAction(), new CancelAction(),
                                new DeleteAction());
   }
 
+  private static LocalGlobRepository createLocalRepository(GlobRepository parentRepository) {
+    return LocalGlobRepositoryBuilder.init(parentRepository)
+      .copy(Bank.TYPE, BankEntity.TYPE, AccountUpdateMode.TYPE)
+      .get();
+  }
+
   public void show(Glob account) {
     localRepository.reset(new GlobList(account), Account.TYPE);
-    accountEditionPanel.setBalanceEditorVisible(false);
-    accountEditionPanel.setUpdateModeEditable(!accountHasTransactions(account));
+    setBalanceEditorVisible(false);
+    setUpdateModeEditable(!accountHasTransactions(account));
     doShow(localRepository.get(account.getKey()));
   }
 
@@ -111,15 +106,14 @@ public class AccountEditionDialog {
   }
 
   public void showWithNewAccount(AccountType type, AccountUpdateMode updateMode, boolean updateModeEditable) {
-    accountEditionPanel.setUpdateModeEditable(updateModeEditable);
+    setUpdateModeEditable(updateModeEditable);
     doShow(localRepository.create(Account.TYPE,
                                   value(Account.ACCOUNT_TYPE, type.getId()),
                                   value(Account.UPDATE_MODE, updateMode.getId())));
   }
 
   private void doShow(Glob localAccount) {
-    currentAccount = localAccount;
-    accountEditionPanel.setAccount(localAccount);
+    setAccount(localAccount);
     dialog.pack();
     GuiUtils.showCentered(dialog);
   }
@@ -130,7 +124,7 @@ public class AccountEditionDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
-      if (!accountEditionPanel.check()) {
+      if (!check()) {
         return;
       }
       try {
@@ -178,7 +172,7 @@ public class AccountEditionDialog {
                          linkedTo(currentAccount, Series.TO_ACCOUNT));
 
       ConfirmationDialog confirmDialog = new ConfirmationDialog("accountDeletion.confirm.title",
-                                                                getMessageKey(), owner, directory) {
+                                                                getMessageKey(), owner, localDirectory) {
         protected void postValidate() {
           try {
             parentRepository.startChangeSet();

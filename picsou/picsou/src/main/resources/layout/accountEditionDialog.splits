@@ -7,7 +7,37 @@
 
       <label text="$account.panel.title" styleClass="title"/>
 
-      <panel ref="panel"/>
+      <grid defaultMarginBottom="5">
+        <label text="$account.name" gridPos="(0,0)" styleClass="formLabel"/>
+        <textField ref="name" gridPos="(1,0)"/>
+
+        <label text="$account.type" gridPos="(0,1)" styleClass="formLabel"/>
+        <comboBox ref="type" gridPos="(1,1)"/>
+        <label ref="savingsMessageWarning" gridPos="(1,1,3,1)" styleClass="errorMessage"/>
+
+        <label text="$account.bank" gridPos="(0,3)" styleClass="formLabel"/>
+        <comboBox ref="accountBank" gridPos="(1,3)"/>
+
+        <label text="$account.number" gridPos="(0,4)" styleClass="formLabel"/>
+        <textField ref="number" gridPos="(1,4)"/>
+
+        <label text="$account.updateMode" gridPos="(0,5)" styleClass="formLabel"/>
+        <comboBox ref="updateMode" gridPos="(1,5)"/>
+
+        <label text="$account.position" gridPos="(0,6)" styleClass="formLabel" autoHideSource="position"/>
+        <textField ref="position" gridPos="(1,6)"/>
+
+        <label text="$account.date.start" gridPos="(0,7)" styleClass="formLabel"/>
+        <component ref="startDatePicker" gridPos="(1,7)"/>
+        <button action="removeStartDate" icon="button_delete.png" styleClass="icon"
+                pressedIcon="button_delete_pressed.png" fill="none" gridPos="(2, 7)"/>
+
+        <label text="$account.date.end" gridPos="(0,8)" styleClass="formLabel"/>
+        <component ref="endDatePicker" gridPos="(1,8)"/>
+        <button action="removeEndDate" icon="button_delete.png" styleClass="icon"
+                pressedIcon="button_delete_pressed.png" fill="none" gridPos="(2, 8)"/>
+
+      </grid>
 
       <label ref="message" foreground="#FF0000"/>
 
