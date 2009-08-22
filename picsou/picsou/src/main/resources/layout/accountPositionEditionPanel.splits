@@ -1,0 +1,33 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <column>
+
+    <textArea ref="initialMessage" text="$accountPositionEdition.initialMessage"
+              styleClass="multiLineLabel" anchor="left" border="empty(0,0,10,0)"
+              preferredSize="(250,50)"/>
+
+    <label ref="accountName" styleClass="formLabel" fill="horizontal" horizontalAlignment="center"
+           marginBottom="10"/>
+
+    <row marginBottom="10">
+      <label text="$accountPositionEdition.label" styleClass="formLabel"/>
+      <textField ref="amountField"/>
+    </row>
+
+    <label text="$accountPositionEdition.operation" styleClass="separatorTitle"/>
+    <row styleClass="separator">
+      <grid>
+        <label gridPos="(0,0)" text="$accountPositionEdition.transaction.date" styleClass="formLabel"/>
+        <label gridPos="(1,0)" ref="dateInfo" styleClass="formLabel" anchor="left"/>
+        <label gridPos="(0,1)" text="$accountPositionEdition.transaction.label" styleClass="formLabel"/>
+        <label gridPos="(1,1)" ref="labelInfo" styleClass="formLabel" anchor="left"/>
+        <label gridPos="(0,2)" text="$accountPositionEdition.transaction.amount" styleClass="formLabel"/>
+        <label gridPos="(1,2)" ref="amountInfo" styleClass="formLabel" anchor="left"/>
+      </grid>
+      <filler fill="horizontal"/>
+    </row>
+
+  </column>
+</splits>

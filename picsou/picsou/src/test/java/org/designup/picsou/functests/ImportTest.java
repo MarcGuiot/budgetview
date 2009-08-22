@@ -153,6 +153,11 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
+    
+    views.selectHome();
+    mainAccounts.edit("My SG account")
+      .checkUpdateModeIsFileImport()
+      .validate();
   }
 
   public void testManualInputAccountsNotShownInQifImport() throws Exception {

@@ -35,7 +35,6 @@ public class AbstractAccountPanel<T extends GlobRepository>  {
   protected JTextField positionEditor;
   protected JComboBox accountTypeCombo;
   protected JLabel messageSavingsWarning;
-  protected GlobLinkComboEditor updateModeCombo;
   protected Directory localDirectory;
   private AccountTypeSelector[] accountTypeSelectors;
 
@@ -83,31 +82,6 @@ public class AbstractAccountPanel<T extends GlobRepository>  {
     builder.add("savingsMessageWarning", messageSavingsWarning);
     messageSavingsWarning.setVisible(false);
 
-    updateModeCombo = builder.addComboEditor("updateMode", Account.UPDATE_MODE).setShowEmptyOption(false);
-
-    DatePicker startDatePicker = new DatePicker(Account.OPEN_DATE, localRepository, localDirectory);
-    builder.add("startDatePicker", startDatePicker.getComponent());
-
-    builder.add("removeStartDate", new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        Glob account = AbstractAccountPanel.this.currentAccount;
-        if (account != null) {
-          localRepository.update(account.getKey(), Account.OPEN_DATE, null);
-        }
-      }
-    });
-
-    DatePicker endDatePicker = new DatePicker(Account.CLOSED_DATE, localRepository, localDirectory);
-    builder.add("endDatePicker", endDatePicker.getComponent());
-    builder.add("removeEndDate", new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        Glob account = AbstractAccountPanel.this.currentAccount;
-        if (account != null) {
-          localRepository.update(account.getKey(), Account.CLOSED_DATE, null);
-        }
-      }
-    });
-
     positionEditor = builder.addEditor("position", Account.POSITION).setNotifyOnKeyPressed(true).getComponent();
 
     builder.addLoader(new SplitsLoader() {
@@ -147,10 +121,6 @@ public class AbstractAccountPanel<T extends GlobRepository>  {
 
   public void setBalanceEditorVisible(boolean visible) {
     positionEditor.setVisible(visible);
-  }
-
-  public void setUpdateModeEditable(boolean enabled) {
-    updateModeCombo.setEnabled(enabled);
   }
 
   public void setMessageSavingsWarning(boolean visible) {

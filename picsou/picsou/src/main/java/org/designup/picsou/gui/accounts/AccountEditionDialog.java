@@ -3,9 +3,11 @@ package org.designup.picsou.gui.accounts;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.components.DatePicker;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -23,6 +25,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
   private PicsouDialog dialog;
   private Window owner;
   private GlobRepository parentRepository;
+  private GlobLinkComboEditor updateModeCombo;
 
   public AccountEditionDialog(Window owner, final GlobRepository parentRepository, Directory directory) {
     super(createLocalRepository(parentRepository), directory, new JLabel());
@@ -34,7 +37,32 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
 
     builder.add("message", messageLabel);
 
-    createComponents(builder);
+    updateModeCombo = builder.addComboEditor("updateMode", Account.UPDATE_MODE).setShowEmptyOption(false);
+
+    DatePicker startDatePicker = new DatePicker(Account.OPEN_DATE, localRepository, localDirectory);
+    builder.add("startDatePicker", startDatePicker.getComponent());
+
+    builder.add("removeStartDate", new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        Glob account = currentAccount;
+        if (account != null) {
+          localRepository.update(account.getKey(), Account.OPEN_DATE, null);
+        }
+      }
+    });
+
+    DatePicker endDatePicker = new DatePicker(Account.CLOSED_DATE, localRepository, localDirectory);
+    builder.add("endDatePicker", endDatePicker.getComponent());
+    builder.add("removeEndDate", new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        Glob account = currentAccount;
+        if (account != null) {
+          localRepository.update(account.getKey(), Account.CLOSED_DATE, null);
+        }
+      }
+    });
+
+    super.createComponents(builder);
 
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -97,7 +125,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
   public void show(Glob account) {
     localRepository.reset(new GlobList(account), Account.TYPE);
     setBalanceEditorVisible(false);
-    setUpdateModeEditable(!accountHasTransactions(account));
+    updateModeCombo.setEnabled(!accountHasTransactions(account));
     doShow(localRepository.get(account.getKey()));
   }
 
@@ -106,7 +134,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
   }
 
   public void showWithNewAccount(AccountType type, AccountUpdateMode updateMode, boolean updateModeEditable) {
-    setUpdateModeEditable(updateModeEditable);
+    updateModeCombo.setEnabled(updateModeEditable);
     doShow(localRepository.create(Account.TYPE,
                                   value(Account.ACCOUNT_TYPE, type.getId()),
                                   value(Account.UPDATE_MODE, updateMode.getId())));

@@ -272,7 +272,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("UNKNOWN 3", 100.00)
       .checkValue("UNKNOWN 4", 100.00);
 
-    seriesEvolution.seriesChart.click(0.5, 0.2);
+    seriesEvolution.seriesChart.click(0.5, 0.1);
     views.checkCategorizationSelected();
     categorization.checkShowsUncategorizedTransactionsOnly();
     categorization.checkSelectedTableRow("UNKNOWN 3");
