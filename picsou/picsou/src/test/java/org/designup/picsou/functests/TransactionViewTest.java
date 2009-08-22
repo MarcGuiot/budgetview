@@ -100,7 +100,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2006/01");
 
-    transactions.categorize(0);
+    transactions.categorize("SOMETHING ELSE");
     views.checkCategorizationSelected();
     categorization.showSelectedMonthsOnly();
     categorization.checkTable(new Object[][]{
@@ -109,13 +109,18 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     });
     categorization.checkSelectedTableRows(1);
     categorization.checkCustomFilterVisible(false);
+    categorization.showUncategorizedTransactionsOnly();
+    categorization.setNewEnvelope("SOMETHING ELSE", "Clothes");
 
     views.back();
     views.checkDataSelected();
     transactions.checkSelectedRow(0);
+    transactions.checkSeries(0, "Clothes");
 
-    views.forward();
+    transactions.categorize("SOMETHING ELSE");
     views.checkCategorizationSelected();
+    categorization.checkShowsSelectedMonthsOnly();
+    categorization.checkSelectedTableRow("SOMETHING ELSE");
   }
 
   public void testNavigatingInCategorizationIsDisabledForMirrorAndCreatedFromSeries() throws Exception {

@@ -585,6 +585,10 @@ public class CategorizationChecker extends GuiChecker {
     checkTransctionFilterMode(TransactionFilteringMode.ALL);
   }
 
+  public void checkShowsSelectedMonthsOnly() {
+    checkTransctionFilterMode(TransactionFilteringMode.SELECTED_MONTHS);
+  }
+
   public void checkShowsUncategorizedTransactionsOnly() {
     checkTransctionFilterMode(TransactionFilteringMode.UNCATEGORIZED);
   }

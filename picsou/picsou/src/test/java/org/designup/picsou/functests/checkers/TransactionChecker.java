@@ -63,13 +63,23 @@ public class TransactionChecker extends ViewChecker {
     return window.findUIComponent(ComponentMatchers.innerNameIdentity(Transaction.TYPE.getName()));
   }
 
+  public TransactionChecker categorize(String... labels) {
+    getTable().selectRowsWithText(TransactionView.LABEL_COLUMN_INDEX, labels);
+    clickSeries(getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, labels[0]));
+    return this;
+  }
+
   public TransactionChecker categorize(final int... rows) {
     Assert.assertTrue("You must specify at least one row index", rows.length > 0);
     if (rows.length > 1) {
       getTable().selectRows(rows);
     }
-    getTable().editCell(rows[0], TransactionView.SERIES_COLUMN_INDEX).getButton().click();
+    clickSeries(rows[0]);
     return this;
+  }
+
+  private void clickSeries(int rowIndex) {
+    getTable().editCell(rowIndex, TransactionView.SERIES_COLUMN_INDEX).getButton().click();
   }
 
   public TransactionChecker checkCategorizeIsDisabled(int row) {

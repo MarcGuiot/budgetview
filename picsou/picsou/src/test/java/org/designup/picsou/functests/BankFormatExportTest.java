@@ -6,7 +6,7 @@ import org.uispec4j.Clipboard;
 
 public class BankFormatExportTest extends SpecificBankTestCase {
 
-  public void testQifFromSG() throws Exception {
+  public void testQif() throws Exception {
     operations.importQifFile(getFile("sg1.qif"), SOCIETE_GENERALE);
     timeline.selectAll();
 
@@ -31,7 +31,7 @@ public class BankFormatExportTest extends SpecificBankTestCase {
       Clipboard.getContentAsText());
   }
 
-  public void testOfxFromCIC() throws Exception {
+  public void testOfx() throws Exception {
     operations.importOfxFile(getFile("banque_pop.ofx"));
     timeline.selectAll();
 

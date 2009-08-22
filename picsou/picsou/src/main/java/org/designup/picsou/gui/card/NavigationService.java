@@ -6,6 +6,8 @@ import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.series.view.SeriesView;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.Series;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -16,6 +18,7 @@ import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.Stack;
+import java.util.Set;
 
 public class NavigationService implements GlobSelectionListener {
 
@@ -58,10 +61,7 @@ public class NavigationService implements GlobSelectionListener {
   }
 
   public void gotoCategorization(GlobList transactions, boolean showAllUncategorized) {
-    if (showAllUncategorized) {
-      categorizationView.setFilteringMode(TransactionFilteringMode.UNCATEGORIZED);
-    }
-    categorizationView.show(transactions);
+    categorizationView.show(transactions, showAllUncategorized);
     gotoCategorization();
   }
 
