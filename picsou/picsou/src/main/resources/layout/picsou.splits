@@ -174,9 +174,10 @@
                 <column>
                   <column styleClass="innerBlock" margin="10" marginLeft="15" marginRight="15">
                     <row marginBottom="5">
-                      <filler fill="horizontal"/>
                       <label text="$transactionView.filter.label" styleClass="formLabelTop" marginRight="5"/>
                       <comboBox ref="accountFilterCombo"/>
+                      <filler fill="horizontal"/>
+                      <checkBox ref="showPlannedTransactions" text="$transactionView.showPlannedTransactions"/>
                     </row>
                     <scrollPane borderPos="center" viewportBackground="transactions.bg"
                                 border="line(transaction.border)" opaque="false"

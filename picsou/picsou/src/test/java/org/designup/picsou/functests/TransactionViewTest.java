@@ -304,4 +304,45 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00)
       .check();
   }
+
+  public void testToggleShowPlannedTransactions() throws Exception {
+    views.selectCategorization();
+    categorization.setNewEnvelope("essence", "Voiture");
+    categorization.setNewRecurring("nounou", "Nounou");
+
+    views.selectData();
+    timeline.selectAll();
+
+    transactions.checkShowsPlannedTransaction(true);
+    transactions.initContent()
+      .add("06/07/2006", TransactionType.PLANNED, "Planned: Nounou", "", -100.00, "Nounou")
+      .add("01/07/2006", TransactionType.PLANNED, "Planned: Voiture", "", -70.00, "Voiture")
+      .add("06/06/2006", TransactionType.PLANNED, "Planned: Nounou", "", -100.00, "Nounou")
+      .add("01/06/2006", TransactionType.PLANNED, "Planned: Voiture", "", -70.00, "Voiture")
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00, "Nounou")
+      .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "SG", "", -200.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00, "Voiture")
+      .check();
+
+    transactions.hidePlannedTransactions();
+    transactions.initContent()
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00, "Nounou")
+      .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "SG", "", -200.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00, "Voiture")
+      .check();
+
+    transactions.showPlannedTransactions();
+    transactions.initContent()
+      .add("06/07/2006", TransactionType.PLANNED, "Planned: Nounou", "", -100.00, "Nounou")
+      .add("01/07/2006", TransactionType.PLANNED, "Planned: Voiture", "", -70.00, "Voiture")
+      .add("06/06/2006", TransactionType.PLANNED, "Planned: Nounou", "", -100.00, "Nounou")
+      .add("01/06/2006", TransactionType.PLANNED, "Planned: Voiture", "", -70.00, "Voiture")
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00, "Nounou")
+      .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "SG", "", -200.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00, "Voiture")
+      .check();
+  }
 }

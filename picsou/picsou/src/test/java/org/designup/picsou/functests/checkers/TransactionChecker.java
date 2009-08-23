@@ -105,6 +105,14 @@ public class TransactionChecker extends ViewChecker {
     return getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, transactionLabel.toUpperCase());
   }
 
+  public void setSearchText(String text) {
+    getSearchField().setText(text);
+  }
+
+  public void clearSearch() {
+    getSearchField().clear();
+  }
+
   public TextBox getSearchField() {
     return mainWindow.getInputTextBox("searchField");
   }
@@ -159,6 +167,18 @@ public class TransactionChecker extends ViewChecker {
 
   public void editNote(String transactionLabel, String note) {
     editNote(getIndexOf(transactionLabel), note);
+  }
+
+  public void showPlannedTransactions() {
+    mainWindow.getCheckBox("showPlannedTransactions").select();
+  }
+
+  public void hidePlannedTransactions() {
+    mainWindow.getCheckBox("showPlannedTransactions").unselect();
+  }
+
+  public void checkShowsPlannedTransaction(boolean show) {
+    UISpecAssert.assertEquals(show, mainWindow.getCheckBox("showPlannedTransactions").isSelected());
   }
 
   public class TransactionAmountChecker {

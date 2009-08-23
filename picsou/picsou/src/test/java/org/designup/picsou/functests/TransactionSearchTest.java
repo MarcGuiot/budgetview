@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.uispec4j.Key;
 import org.uispec4j.TextBox;
@@ -79,8 +78,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     timeline.selectAll();
-    TextBox searchField = transactions.getSearchField();
-    searchField.setText("vi");
+    transactions.setSearchText("vi");
 
     transactions.initContent()
       .add("20/07/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, "Transports")
@@ -100,10 +98,69 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, "Leisures")
       .check();
 
-    searchField.clear();
+    transactions.clearSearch();
     transactions.initContent()
       .add("15/07/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, "Leisures")
       .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, "Leisures")
+      .check();
+  }
+
+  public void testSearchTakesIntoAccountWhetherPlannedTransactionsAreShownOrNot() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/20", -5, "Vinci")
+      .addTransaction("2008/06/15", -50, "Virgin")
+      .addTransaction("2008/06/15", -500, "FNAC")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewEnvelope("Vinci", "Transports");
+    categorization.setNewEnvelope("Virgin", "Leisures");
+    categorization.setEnvelope("FNAC", "Leisures");
+
+    views.selectData();
+    timeline.selectAll();
+
+    transactions.initContent()
+      .add("20/08/2008", TransactionType.PLANNED, "Planned: Transports", "", -5.00, "Transports")
+      .add("15/08/2008", TransactionType.PLANNED, "Planned: Leisures", "", -550.00, "Leisures")
+      .add("20/07/2008", TransactionType.PLANNED, "Planned: Transports", "", -5.00, "Transports")
+      .add("15/07/2008", TransactionType.PLANNED, "Planned: Leisures", "", -550.00, "Leisures")
+      .add("20/06/2008", TransactionType.PRELEVEMENT, "VINCI", "", -5.00, "Transports")
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, "Leisures")
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "VIRGIN", "", -50.00, "Leisures")
+      .check();
+
+    transactions.setSearchText("i");
+    transactions.initContent()
+      .add("15/08/2008", TransactionType.PLANNED, "Planned: Leisures", "", -550.00, "Leisures")
+      .add("15/07/2008", TransactionType.PLANNED, "Planned: Leisures", "", -550.00, "Leisures")
+      .add("20/06/2008", TransactionType.PRELEVEMENT, "VINCI", "", -5.00, "Transports")
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "VIRGIN", "", -50.00, "Leisures")
+      .check();
+
+    transactions.hidePlannedTransactions();
+    transactions.initContent()
+      .add("20/06/2008", TransactionType.PRELEVEMENT, "VINCI", "", -5.00, "Transports")
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "VIRGIN", "", -50.00, "Leisures")
+      .check();
+
+    transactions.clearSearch();
+    transactions.initContent()
+      .add("20/06/2008", TransactionType.PRELEVEMENT, "VINCI", "", -5.00, "Transports")
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, "Leisures")
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "VIRGIN", "", -50.00, "Leisures")
+      .check();
+
+    transactions.showPlannedTransactions();
+    transactions.initContent()
+      .add("20/08/2008", TransactionType.PLANNED, "Planned: Transports", "", -5.00, "Transports")
+      .add("15/08/2008", TransactionType.PLANNED, "Planned: Leisures", "", -550.00, "Leisures")
+      .add("20/07/2008", TransactionType.PLANNED, "Planned: Transports", "", -5.00, "Transports")
+      .add("15/07/2008", TransactionType.PLANNED, "Planned: Leisures", "", -550.00, "Leisures")
+      .add("20/06/2008", TransactionType.PRELEVEMENT, "VINCI", "", -5.00, "Transports")
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, "Leisures")
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "VIRGIN", "", -50.00, "Leisures")
       .check();
   }
 }
