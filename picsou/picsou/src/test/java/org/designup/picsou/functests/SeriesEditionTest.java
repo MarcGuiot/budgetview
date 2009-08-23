@@ -1361,6 +1361,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setAccountName("Virt ING")
       .setAccountNumber("1234")
       .selectBank("ING Direct")
+      .checkUpdateModeIsFileImport()
       .checkIsSavings()
       .validate();
     
@@ -1374,6 +1375,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkAccountName("Virt ING")
       .checkAccountNumber("1234")
       .checkSelectedBank("ING Direct")
+      .checkUpdateModeIsFileImport()
       .checkIsSavings()
       .cancel();
 

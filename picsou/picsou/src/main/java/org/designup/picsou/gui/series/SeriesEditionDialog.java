@@ -91,7 +91,7 @@ public class SeriesEditionDialog {
     localRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(BudgetArea.TYPE, Month.TYPE, CurrentMonth.TYPE,
             ProfileType.TYPE, Account.TYPE, SubSeries.TYPE,
-            Bank.TYPE, BankEntity.TYPE)
+            Bank.TYPE, BankEntity.TYPE, AccountUpdateMode.TYPE)
       .get();
 
     localRepository.addTrigger(new SingleMonthProfileTypeUpdater());
