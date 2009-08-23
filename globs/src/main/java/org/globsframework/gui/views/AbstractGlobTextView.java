@@ -13,6 +13,8 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
@@ -28,7 +30,7 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
   private GlobListMatcher autoHideMatcher = null;
   private ChangeSetMatcher updateMatcher = ChangeSetMatchers.NONE;
   protected boolean initCompleted = false;
-  private GlobList forcedSelection;
+  private List<Key> forcedSelection;
   protected String name;
 
   public AbstractGlobTextView(GlobType type, GlobRepository repository, Directory directory,
@@ -69,8 +71,9 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
     return (T)this;
   }
 
-  public T forceSelection(Glob glob) {
-    this.forcedSelection = new GlobList(glob);
+  public T forceSelection(Key key) {
+    this.forcedSelection = new ArrayList<Key>();
+    this.forcedSelection.add(key);
     if (initCompleted) {
       forceSelection();
     }
@@ -121,9 +124,20 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
 
   public void globsChanged(ChangeSet changeSet, GlobRepository globRepository) {
     if (changeSet.containsChanges(type)) {
-      Set<Key> deleted = changeSet.getDeleted(type);
-      if (!deleted.isEmpty()) {
-        currentSelection.removeAll(deleted);
+      if (forcedSelection != null) {
+        currentSelection = new GlobList();
+        for (Key key : forcedSelection) {
+          Glob glob = globRepository.find(key);
+          if (glob != null) {
+            currentSelection.add(glob);
+          }
+        }
+      }
+      else {
+        Set<Key> deleted = changeSet.getDeleted(type);
+        if (!deleted.isEmpty()) {
+          currentSelection.removeAll(deleted);
+        }
       }
       update();
     }
@@ -135,7 +149,7 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
   public void globsReset(GlobRepository globRepository, Set<GlobType> changedTypes) {
     currentSelection = new GlobList();
     if (forcedSelection != null) {
-      for (Key key : forcedSelection.getKeys()) {
+      for (Key key : forcedSelection) {
         Glob glob = globRepository.find(key);
         if (glob != null) {
           currentSelection.add(glob);
@@ -171,6 +185,13 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
   }
 
   private void forceSelection() {
-    selectionUpdated(GlobSelectionBuilder.init().add(forcedSelection, type).get());
+    GlobList globList = new GlobList();
+    for (Key key : forcedSelection) {
+      Glob glob = repository.find(key);
+      if (glob != null) {
+        globList.add(glob);
+      }
+    }
+    selectionUpdated(GlobSelectionBuilder.init().add(globList, type).get());
   }
 }

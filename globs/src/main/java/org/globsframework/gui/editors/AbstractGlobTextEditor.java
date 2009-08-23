@@ -7,9 +7,8 @@ import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.Field;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidFormat;
 
@@ -18,16 +17,19 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextComponent, PARENT extends AbstractGlobTextEditor>
-  extends AbstractGlobComponentHolder implements GlobSelectionListener {
+  extends AbstractGlobComponentHolder implements GlobSelectionListener, ChangeSetListener {
 
   protected Field field;
   private GlobList currentGlobs = GlobList.EMPTY;
   protected COMPONENT_TYPE textComponent;
   private Object valueForMultiSelection;
   private boolean forceNotEditable;
-  private GlobList forcedSelection;
+  private List<Key> forcedSelection;
   private boolean isInitialized = false;
   private boolean notifyOnKeyPressed;
   private DocumentListener keyPressedListener;
@@ -111,8 +113,9 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     isInitialized = true;
     initTextComponent();
     if (forcedSelection != null) {
+      GlobList elements = getForceSelectedGlob();
       selectionUpdated(GlobSelectionBuilder.init()
-        .add(forcedSelection, type).get());
+        .add(elements, type).get());
     }
     else {
       SelectionService service = directory.get(SelectionService.class);
@@ -121,14 +124,28 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     return textComponent;
   }
 
-  public PARENT forceSelection(Glob glob) {
+  private GlobList getForceSelectedGlob() {
+    GlobList elements = new GlobList();
+    for (Key key : forcedSelection) {
+      Glob glob = repository.find(key);
+      if (glob != null) {
+        elements.add(glob);
+      }
+    }
+    return elements;
+  }
+
+  public PARENT forceSelection(Key key) {
     if (isInitialized && forcedSelection == null) {
       SelectionService service = directory.get(SelectionService.class);
       service.removeListener(this);
     }
-    this.forcedSelection = new GlobList(glob);
+    repository.addChangeListener(this);
+    this.forcedSelection = new ArrayList<Key>();
+    forcedSelection.add(key);
     if (isInitialized) {
-      selectionUpdated(GlobSelectionBuilder.init().add(forcedSelection, type).get());
+      GlobList elements = getForceSelectedGlob();
+      selectionUpdated(GlobSelectionBuilder.init().add(elements, type).get());
     }
     return (PARENT)this;
   }
@@ -205,6 +222,9 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
 
   public void dispose() {
     selectionService.removeListener(this);
+    if (forcedSelection == null) {
+      repository.removeChangeListener(this);
+    }
     for (FocusListener listener : textComponent.getFocusListeners()) {
       textComponent.removeFocusListener(listener);
     }
@@ -216,5 +236,23 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
 
   public void setAdjusting(boolean adjusting) {
     this.isAdjusting = adjusting;
+  }
+
+  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+    if (forcedSelection == null){
+      return;
+    }
+    if (!changeSet.containsCreationsOrDeletions(type)) {
+      return;
+    }
+    GlobList elements = getForceSelectedGlob();
+    selectionUpdated(GlobSelectionBuilder.init().add(elements, type).get());
+  }
+
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+    if (forcedSelection != null && changedTypes.contains(type)) {
+      GlobList elements = getForceSelectedGlob();
+      selectionUpdated(GlobSelectionBuilder.init().add(elements, type).get());
+    }
   }
 }

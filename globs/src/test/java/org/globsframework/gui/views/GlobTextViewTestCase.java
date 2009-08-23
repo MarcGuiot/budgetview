@@ -4,10 +4,7 @@ import org.globsframework.gui.utils.GuiComponentTestCase;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
 import org.globsframework.metamodel.Field;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.ChangeSetMatchers;
 import org.globsframework.model.utils.GlobListMatcher;
@@ -111,7 +108,7 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
   }
 
   public void testManagesResetWithForcedSelection() throws Exception {
-    AbstractGlobTextView view = initView(repository, stringifier).forceSelection(glob1);
+    AbstractGlobTextView view = initView(repository, stringifier).forceSelection(glob1.getKey());
 
     textBox = createComponent(view);
 
@@ -123,6 +120,16 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
 
     repository.reset(new GlobList(glob2), DummyObject.TYPE);
     assertTrue(textBox.textIsEmpty());
+  }
+
+  public void testCreationOfGlobAfterComponentWithSelection() throws Exception {
+    Key newKey = KeyBuilder.newKey(DummyObject.TYPE, 111);
+    AbstractGlobTextView view = initView(repository, stringifier)
+      .forceSelection(newKey);
+
+    textBox = createComponent(view);
+    repository.create(newKey);
+    assertTrue(textBox.textEquals("[dummyObject[id=111]]"));
   }
 
   public void testFilter() throws Exception {
@@ -194,7 +201,7 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
   }
 
   public void testForceSelection() throws Exception {
-    AbstractGlobTextView view = initView(repository, stringifier).forceSelection(glob1);
+    AbstractGlobTextView view = initView(repository, stringifier).forceSelection(glob1.getKey());
     textBox = createComponent(view);
 
     assertTrue(textBox.textEquals("[dummyObject[id=1]]"));
@@ -202,7 +209,7 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
     selectionService.select(glob2);
     assertTrue(textBox.textEquals("[dummyObject[id=1]]"));
     
-    view.forceSelection(glob2);
+    view.forceSelection(glob2.getKey());
     assertTrue(textBox.textEquals("[dummyObject[id=2]]"));
   }
 
@@ -244,7 +251,7 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
   }
 
   protected final TextComponent init(GlobRepository repository, Glob glob) {
-    return createComponent(initView(repository, stringifier).forceSelection(glob));
+    return createComponent(initView(repository, stringifier).forceSelection(glob.getKey()));
   }
 
   protected final TextComponent init(GlobRepository repository, boolean autoHide,

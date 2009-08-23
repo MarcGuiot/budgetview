@@ -271,7 +271,8 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
     Glob glob1 = repository.get(key1);
     Glob glob2 = repository.get(key2);
 
-    GlobLinkComboEditor editor = new GlobLinkComboEditor(DummyObject.LINK, repository, directory).forceSelection(glob2);
+    GlobLinkComboEditor editor = new GlobLinkComboEditor(DummyObject.LINK, repository, directory)
+      .forceSelection(glob2.getKey());
     ComboBox combo = new ComboBox(editor.getComponent());
 
     selectionService.select(glob1);
@@ -286,7 +287,7 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
     assertTrue(combo.contentEquals("", "name1", "name2", "name3"));
     assertTrue(combo.selectionEquals("name3"));
 
-    editor.forceSelection(glob1);
+    editor.forceSelection(glob1.getKey());
     assertTrue(combo.contentEquals("", "name1", "name2", "name3"));
     assertTrue(combo.selectionEquals("name2"));
     combo.select("name1");
@@ -294,11 +295,11 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
     selectionService.select(glob2);
     assertTrue(combo.selectionEquals("name1"));
 
-    editor.forceSelection(glob2);
+    editor.forceSelection(glob2.getKey());
     assertTrue(combo.contentEquals("", "name1", "name2", "name3"));
     assertTrue(combo.selectionEquals("name3"));
 
-    editor.forceSelection(glob1);
+    editor.forceSelection(glob1.getKey());
     assertTrue(combo.contentEquals("", "name1", "name2", "name3"));
     assertTrue(combo.selectionEquals("name1"));
   }

@@ -1,7 +1,7 @@
 package org.globsframework.gui.editors;
 
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.model.Glob;
+import org.globsframework.model.Key;
 import org.uispec4j.TextBox;
 
 import javax.swing.*;
@@ -19,7 +19,7 @@ public class GlobPasswordEditorTest extends AbstractGlobTextEditorTestCase {
     return new TextBox(textField);
   }
 
-  void forceEdition(Glob glob) {
+  void forceEdition(Key glob) {
     editor.forceSelection(glob);
   }
 }

@@ -24,8 +24,8 @@ public class GlobLinkComboEditor
   private GlobComboView globComboView;
   private Key currentKey;
   private boolean updateInProgress = false;
-  private boolean forcedSelection;
   private boolean forcedEnabled = true;
+  private Key forcedSelectionKey = null;
 
   public GlobLinkComboEditor(final Link link, final GlobRepository repository, Directory directory) {
     super(link.getTargetType(), repository, directory);
@@ -55,6 +55,14 @@ public class GlobLinkComboEditor
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+    if (forcedSelectionKey != null && currentKey == null &&
+        changeSet.containsChanges(link.getSourceType())) {
+      Glob glob = repository.find(forcedSelectionKey);
+      if (glob != null) {
+        select(new GlobList(glob));
+      }
+    }
+
     if (currentKey == null || !changeSet.containsChanges(currentKey)) {
       return;
     }
@@ -82,7 +90,16 @@ public class GlobLinkComboEditor
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(link.getSourceType())) {
+    if (!changedTypes.contains(link.getSourceType())) {
+      return;
+    }
+    if (forcedSelectionKey != null) {
+      Glob glob = repository.find(forcedSelectionKey);
+      if (glob != null) {
+        select(new GlobList(glob));
+      }
+    }
+    else {
       select(GlobList.EMPTY);
     }
   }
@@ -148,10 +165,13 @@ public class GlobLinkComboEditor
     setTarget(glob == null ? null : repository.findLinkTarget(glob, link));
   }
 
-  public GlobLinkComboEditor forceSelection(Glob glob) {
-    this.forcedSelection = true;
+  public GlobLinkComboEditor forceSelection(Key key) {
+    forcedSelectionKey = key;
     selectionService.removeListener(this);
-    setSelectedGlob(glob);
+    Glob glob = repository.find(key);
+    if (glob != null) {
+      setSelectedGlob(glob);
+    }
     return this;
   }
 
@@ -162,7 +182,7 @@ public class GlobLinkComboEditor
 
   public JComboBox getComponent() {
     JComboBox jComboBox = globComboView.getComponent();
-    if (!forcedSelection) {
+    if (forcedSelectionKey == null) {
       GlobList selection = selectionService.getSelection(type);
       select(selection);
     }

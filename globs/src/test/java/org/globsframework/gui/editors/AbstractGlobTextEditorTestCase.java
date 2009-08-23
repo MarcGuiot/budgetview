@@ -4,6 +4,9 @@ import org.globsframework.gui.utils.GuiComponentTestCase;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.Glob;
+import org.globsframework.model.FieldValue;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.utils.GlobBuilder;
 import org.uispec4j.Key;
 import org.uispec4j.TextBox;
 
@@ -100,7 +103,7 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
 
   public void testForceSelectionAfterInit() throws Exception {
     TextBox textBox = init(DummyObject.NAME, "...", false, false);
-    forceEdition(glob1);
+    forceEdition(glob1.getKey());
     selectionService.select(Arrays.asList(glob2), DummyObject.TYPE);
     assertTrue(textBox.textEquals("name1"));
   }
@@ -142,9 +145,28 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
     changeListener.assertNoChanges();
   }
 
+  public void testForceSelectionAndCreate() throws Exception {
+    TextBox textBox = init(DummyObject.NAME, "...", false, false);
+    org.globsframework.model.Key key = org.globsframework.model.Key.create(DummyObject.TYPE, 10);
+    forceEdition(key);
+    assertFalse(textBox.isEnabled());
+    repository.create(key, FieldValue.value(DummyObject.NAME, "name 100"));
+    assertTrue(textBox.textEquals("name 100"));
+  }
+
+  public void testForceSelectionAndRest() throws Exception {
+    TextBox textBox = init(DummyObject.NAME, "...", false, false);
+    org.globsframework.model.Key key = org.globsframework.model.Key.create(DummyObject.TYPE, 10);
+    forceEdition(key);
+    assertFalse(textBox.isEnabled());
+    Glob glob = GlobBuilder.init(key, FieldValue.value(DummyObject.NAME, "name 100")).get();
+    repository.reset(new GlobList(glob), DummyObject.TYPE);
+    assertTrue(textBox.textEquals("name 100"));
+  }
+
   protected abstract TextBox init(StringField field, String defaultValueForMultivalue, boolean isEditable, boolean sendAtKeyPressed);
 
-  abstract void forceEdition(Glob glob);
+  abstract void forceEdition(org.globsframework.model.Key key);
 
   protected void enterTextAndValidate(TextBox textBox, String text) {
     textBox.setText(text);

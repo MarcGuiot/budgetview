@@ -668,6 +668,42 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     }));
   }
 
+  public void testResetSort() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='thisIsAName' value='0.23' date='2006/08/14'/>" +
+                    "<dummyObject id='2' name='aName' value='0.1' date='2006/08/01'/>" +
+                    "<dummyObject id='3' name='yetAnotherName' value='2.2' date='2006/08/05'/>");
+
+    GlobTableView view =
+      GlobTableView.init(TYPE, repository, new GlobFieldComparator(ID), directory)
+        .addColumn(ID)
+        .addColumn(NAME)
+        .addColumn(VALUE)
+        .addColumn(DATE);
+
+    Table table = new Table(view.getComponent());
+    assertTrue(table.getHeader().contentEquals(
+      "id", "name", "value", "date"));
+    assertTrue(table.contentEquals(new String[][]{
+      {"1", "thisIsAName", "0.23", "2006/08/14"},
+      {"2", "aName", "0.1", "2006/08/01"},
+      {"3", "yetAnotherName", "2.2", "2006/08/05"},
+    }));
+
+    table.getHeader().click("name");
+    assertTrue(table.contentEquals(new String[][]{
+      {"2", "aName", "0.1", "2006/08/01"},
+      {"1", "thisIsAName", "0.23", "2006/08/14"},
+      {"3", "yetAnotherName", "2.2", "2006/08/05"},
+    }));
+    view.resetSort();
+    assertTrue(table.contentEquals(new String[][]{
+      {"1", "thisIsAName", "0.23", "2006/08/14"},
+      {"2", "aName", "0.1", "2006/08/01"},
+      {"3", "yetAnotherName", "2.2", "2006/08/05"},
+    }));
+  }
+
   public void testRefreshUpdatesTheSortingAndKeepsSelection() throws Exception {
     repository =
       checker.parse("<dummyObject id='1' name='thisIsAName' value='0.23' date='2006/08/14'/>" +

@@ -299,6 +299,10 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     return table;
   }
 
+  public void resetSort(){
+    tableModel.sortColumn(-1);
+  }
+
   public GlobTableView setDefaultBackgroundPainter(CellPainter painter) {
     this.defaultBackgroundPainter = painter;
     return this;

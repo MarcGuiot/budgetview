@@ -2,9 +2,12 @@ package org.globsframework.model.impl;
 
 import org.globsframework.model.utils.GlobIdGenerator;
 import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.GlobType;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Collection;
+import java.util.Iterator;
 
 public class DefaultGlobIdGenerator implements GlobIdGenerator {
   private Map<IntegerField, Integer> fieldToCurrentId = new HashMap<IntegerField, Integer>();
@@ -32,5 +35,14 @@ public class DefaultGlobIdGenerator implements GlobIdGenerator {
 
   public void update(IntegerField field, Integer lastAllocatedId) {
     fieldToCurrentId.put(field, lastAllocatedId + 1);
+  }
+
+  public void reset(Collection<GlobType> collection){
+    for (Iterator<IntegerField> it = fieldToCurrentId.keySet().iterator(); it.hasNext();) {
+      IntegerField field = it.next();
+      if (collection.contains(field.getGlobType())) {
+        it.remove();
+      }
+    }
   }
 }

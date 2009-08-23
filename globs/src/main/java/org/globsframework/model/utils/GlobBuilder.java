@@ -34,6 +34,14 @@ public class GlobBuilder implements FieldValues.Functor, FieldSetter, FieldValue
     return builder;
   }
 
+  public static GlobBuilder init(Key key, FieldValue... values) {
+    GlobBuilder builder = new GlobBuilder(key.getGlobType());
+    key.safeApply(builder);
+    FieldValues fieldValues = new ArrayFieldValues(values);
+    fieldValues.safeApply(builder);
+    return builder;
+  }
+
   public static GlobBuilder init(Key key, FieldValues values) {
     GlobBuilder builder = new GlobBuilder(key.getGlobType());
     key.safeApply(builder);

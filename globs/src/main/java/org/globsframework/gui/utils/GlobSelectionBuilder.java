@@ -57,7 +57,7 @@ public class GlobSelectionBuilder {
     }
 
     public GlobList getAll(GlobType type) {
-      return globs;
+      return new GlobList(globs);
     }
 
     public String toString() {

@@ -19,6 +19,7 @@ public class GuiUtils {
   public static final boolean IS_LINUX;
   public static final boolean IS_WINDOWS;
   public static final boolean IS_VISTA;
+  public static final boolean IS_OPEN_JDK;
 
   private static final String MAC_PLATFORM_ID = "Mac OS X";
   private static final String LINUX_PLATFORM_ID = "Linux";
@@ -30,6 +31,9 @@ public class GuiUtils {
     IS_LINUX = os.contains(LINUX_PLATFORM_ID);
     IS_WINDOWS = os.contains(WINDOWS_PLATFORM_ID);
     IS_VISTA = IS_WINDOWS && os.toLowerCase().contains("vista");
+
+    String vm = (String)AccessController.doPrivileged(new GetPropertyAction("java.vm.name"));
+    IS_OPEN_JDK = vm.contains("OpenJDK");
   }
 
   public static void addShortcut(JRootPane rootPane, String command, Action action) {
@@ -67,6 +71,10 @@ public class GuiUtils {
 
   public static boolean isLinux() {
     return IS_LINUX;
+  }
+
+  public static boolean isOpenJDK() {
+    return IS_OPEN_JDK;
   }
 
   public static boolean isWindows() {

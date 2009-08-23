@@ -2,6 +2,7 @@ package org.globsframework.gui.editors;
 
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.Glob;
+import org.globsframework.model.Key;
 import org.uispec4j.TextBox;
 
 import javax.swing.*;
@@ -18,8 +19,8 @@ public class GlobMultiLineTextEditorTest extends AbstractGlobTextEditorTestCase 
     return new TextBox(field);
   }
 
-  void forceEdition(Glob glob) {
-    editor.forceSelection(glob);
+  void forceEdition(Key key) {
+    editor.forceSelection(key);
   }
 
   protected void enterTextAndValidate(TextBox textBox, String text) {
