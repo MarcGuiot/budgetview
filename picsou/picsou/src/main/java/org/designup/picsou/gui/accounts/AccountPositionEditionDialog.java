@@ -49,7 +49,7 @@ public class AccountPositionEditionDialog {
     JTextField editor = builder.addEditor("amountField", Account.POSITION)
       .setValidationAction(validateAction)
       .setNotifyOnKeyPressed(true)
-      .forceSelection(account)
+      .forceSelection(account.getKey())
       .getComponent();
 
     JTextArea initialMessage = builder.add("initialMessage", new JTextArea());

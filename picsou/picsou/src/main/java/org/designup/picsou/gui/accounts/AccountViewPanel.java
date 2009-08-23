@@ -66,7 +66,7 @@ public abstract class AccountViewPanel {
 
     header = builder.add("header", new JPanel());
 
-    Glob summaryAccount = repository.get(Key.create(Account.TYPE, summaryId));
+    Key summaryAccount = Key.create(Account.TYPE, summaryId);
     builder.addLabel("referencePosition", Account.POSITION)
       .setAutoHideIfEmpty(true)
       .forceSelection(summaryAccount);
@@ -194,7 +194,7 @@ public abstract class AccountViewPanel {
                                   new AccountPositionEditionDialog(account, false, repository, directory, directory.get(JFrame.class));
                                 accountPositionEditor.show();
                               }
-                            }).forceSelection(account);
+                            }).forceSelection(account.getKey());
       cellBuilder.add("accountPosition", balance.getComponent());
 
       cellBuilder.add("estimatedAccountPosition", getEstimatedAccountPositionLabel(account.getKey()));
@@ -204,7 +204,7 @@ public abstract class AccountViewPanel {
     }
 
     private void add(String name, final AbstractGlobTextView labelView, Glob account, RepeatCellBuilder cellBuilder) {
-      labelView.forceSelection(account);
+      labelView.forceSelection(account.getKey());
       cellBuilder.add(name, labelView.getComponent());
       cellBuilder.addDisposeListener(labelView);
     }
@@ -251,6 +251,7 @@ public abstract class AccountViewPanel {
   }
 
   public static GlobButtonView createAccountNameButton(Glob account, final GlobRepository repository, final Directory directory) {
-    return GlobButtonView.init(Account.NAME, repository, directory, new EditAccountFunctor(repository, directory)).forceSelection(account);
+    return GlobButtonView.init(Account.NAME, repository, directory,
+                               new EditAccountFunctor(repository, directory)).forceSelection(account.getKey());
   }
 }

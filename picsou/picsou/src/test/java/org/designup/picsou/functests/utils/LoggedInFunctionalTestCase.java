@@ -2,17 +2,13 @@ package org.designup.picsou.functests.utils;
 
 import org.designup.picsou.functests.FunctionalTestCase;
 import org.designup.picsou.functests.checkers.*;
-import org.designup.picsou.gui.MainWindowLauncher;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
-import org.designup.picsou.server.ServerDirectory;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Dates;
-import org.globsframework.utils.directory.Directory;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
@@ -21,7 +17,7 @@ import org.uispec4j.interception.WindowInterceptor;
 import java.util.Date;
 
 public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
-  protected Window mainWindow;
+  static protected Window mainWindow;
 
   protected ViewSelectionChecker views;
   protected MainAccountViewChecker mainAccounts;
@@ -45,7 +41,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected NotesChecker notes;
 
   protected GlobRepository repository;
-  private Directory directory;
 
   private Date currentDate = Dates.parse("2008/08/31");
   private boolean isInMemory = true;
@@ -59,7 +54,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
 
   protected void setUp() throws Exception {
-
     super.setUp();
     TimeService.setCurrentDate(currentDate);
 
@@ -77,8 +71,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
         if (mainWindow == null) {
           mainWindow = WindowInterceptor.run(new Trigger() {
             public void run() throws Exception {
-              clearDirectory();
-              directory = MainWindowLauncher.run(user, password, null);
+              PicsouApplication.main();
             }
           });
         }
@@ -88,19 +81,13 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
     mainWindow = getMainWindow();
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
+    LoginChecker loginChecker = new LoginChecker(mainWindow);
+    loginChecker.logNewUser(user, password);
     initCheckers();
     if (!notRegistered) {
       LicenseActivationChecker.enterLicense(mainWindow, "admin", "zz");
       operations.openPreferences().setFutureMonthsCount(0).validate();
     }
-    selectInitialView();
-  }
-
-  private void reinitMainWindow() {
-    repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
-    ApplicationReset.run(repository);
-    initCheckers();
-    license.enterLicense("admin", "zz");
     selectInitialView();
   }
 
@@ -114,6 +101,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   protected void setCurrentDate(String date) {
     this.currentDate = Dates.parse(date);
+    TimeService.setCurrentDate(currentDate);
   }
 
   protected void initCheckers() {
@@ -141,11 +129,14 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   protected void tearDown() throws Exception {
 //    operations.checkOk();
-    super.tearDown();
-    if (mainWindow != null) {
-      mainWindow.dispose();
+    try {
+      operations.deleteUser(password);
     }
-    mainWindow = null;
+    catch (Throwable e) {
+      mainWindow.dispose();
+      mainWindow = null;
+    }
+    super.tearDown();
     views = null;
     mainAccounts = null;
     savingsAccounts = null;
@@ -166,17 +157,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     license = null;
     navigation = null;
     notes = null;
-
     repository = null;
-    clearDirectory();
-    directory = null;
-  }
-
-  private void clearDirectory() {
-    if (directory != null) {
-      directory.get(ColorService.class).removeAllListeners();
-      directory.get(ServerDirectory.class).close();
-    }
   }
 
   public OperationChecker getOperations() {
@@ -188,10 +169,12 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   public void setDeleteLocalPrevayler(boolean deleteLocalPrevayler) {
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, Boolean.toString(deleteLocalPrevayler));
     this.deleteLocalPrevayler = deleteLocalPrevayler;
   }
 
   public void setLocalPrevaylerPath(String localPrevaylerPath) {
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, localPrevaylerPath);
     this.localPrevaylerPath = localPrevaylerPath;
   }
 
@@ -209,13 +192,45 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     this.user = user;
     this.password = passwd;
     mainWindow = getMainWindow();
+    LoginChecker loginChecker = new LoginChecker(mainWindow);
+    loginChecker.logExistingUser(user, password);
+    repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     initCheckers();
   }
 
   protected void restartApplication() {
+    operations.loggout();
     mainWindow.dispose();
     mainWindow = null;
     mainWindow = getMainWindow();
+    LoginChecker loginChecker = new LoginChecker(mainWindow);
+    loginChecker.logExistingUser(user, password);
+    repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
+    initCheckers();
+  }
+
+  public static void resetWindow() {
+    if (mainWindow != null) {
+      mainWindow.dispose();
+      mainWindow = null;
+    }
+  }
+
+  public static void forceClose() {
+    if (mainWindow != null) {
+      mainWindow.dispose();
+      mainWindow = null;
+    }
+  }
+
+  protected void changeUser(String user, String password) {
+    operations.deleteUser(this.password);
+    this.user = user;
+    this.password = password;
+    mainWindow = null;
+    mainWindow = getMainWindow();
+    LoginChecker loginChecker = new LoginChecker(mainWindow);
+    loginChecker.logNewUser(user, password);
     initCheckers();
   }
 }

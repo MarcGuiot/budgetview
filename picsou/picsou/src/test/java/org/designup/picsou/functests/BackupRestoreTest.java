@@ -19,8 +19,9 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
     setCurrentDate("2008/08/30");
     setInMemory(false);
-    setDeleteLocalPrevayler(false);
+    setDeleteLocalPrevayler(true);
     super.setUp();
+    setDeleteLocalPrevayler(false);
   }
 
   public void testBackupAndRestore() throws Exception {
@@ -110,7 +111,9 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/10", -400.0, "Auchan")
       .load();
     String fileName = operations.backup(this);
-    restartApplication("user1", "other passwd");
+
+    changeUser("user1", "other passwd");
+
     WindowInterceptor.init(operations.getRestoreTrigger())
       .process(FileChooserHandler.init().select(fileName))
       .process(new WindowHandler() {
@@ -144,7 +147,8 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/10", -400.0, "Auchan")
       .load();
     String fileName = operations.backup(this);
-    restartApplication("user1", "other passwd");
+
+    changeUser("user1", "other passwd");
     WindowInterceptor.init(operations.getRestoreTrigger())
       .process(FileChooserHandler.init().select(fileName))
       .process(new WindowHandler() {

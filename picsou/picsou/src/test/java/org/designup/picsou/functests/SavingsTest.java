@@ -262,6 +262,10 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setBalance(100)
       .validate();
 
+    views.selectCategorization();
+    categorization.selectTransactions("VIREMENT")
+      .setUncategorized();
+
     views.selectBudget();
     budgetView.savings.editSeries("Epargne")
       .setToAccount("Epargne CIC")
@@ -1020,7 +1024,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkEstimatedPosition(200, "31/08/2008");
   }
 
-  public void testInverseAccountAfterCategorization() throws Exception {
+  public void testInverseAccountAfterCategorizationIsNotPossible() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/06/10", -100.00, "Virement")
       .load();
@@ -1035,8 +1039,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     categorization.setNewSavings("Virement", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "Livret");
     views.selectSavings();
     savingsView.editSeries("Livret", "Epargne")
-      .setToAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
-      .setFromAccount("Livret")
+      .checkFromContentEquals(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .checkToContentEquals("Livret")
       .validate();
   }
 
@@ -1251,9 +1255,12 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("Virement vers Epargne")
       .checkSavingsSeriesIsSelected("Epargne");
 
-    categorization.editSeries()
+    SeriesEditionDialogChecker seriesEditionDialogChecker = categorization.editSeries();
+    seriesEditionDialogChecker
       .selectSeries("Epargne")
-      .deleteSelectedSeriesWithConfirmation();
+      .deleteSelectedSeriesWithConfirmation()
+      .cancel();
+    seriesEditionDialogChecker.cancel();
   }
 
   public void testCategorisationOnSavingCreation() throws Exception {
@@ -1325,7 +1332,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     editionDialogChecker
       .setToAccount("Account n. 111222")
       .checkSavingsMessageVisibility(true)
-      .checkOkEnabled(false);
+      .checkOkEnabled(false)
+      .cancel();
   }
 
   public void testDeleteSeriesForBothImportedAccountWithTransactionInFrom() throws Exception {

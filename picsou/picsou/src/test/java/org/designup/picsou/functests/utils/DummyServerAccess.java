@@ -27,8 +27,8 @@ public class DummyServerAccess implements ServerAccess {
   public void takeSnapshot() {
   }
 
-  public boolean connect() {
-    return false;
+  public LocalInfo connect() {
+    return null;
   }
 
   public MapOfMaps<String, Integer, SerializableGlobType> getServerData() {
@@ -36,6 +36,9 @@ public class DummyServerAccess implements ServerAccess {
   }
 
   public void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data) {
+  }
+
+  public void deleteUser(String name, char[] password) {
   }
 
   public void addTransaction(GlobList transactions) {
@@ -56,7 +59,7 @@ public class DummyServerAccess implements ServerAccess {
   public void localRegister(byte[] mail, byte[] signature, String activationCode) {
   }
 
-  public List<String> getLocalUsers() {
+  public List<UserInfo> getLocalUsers() {
     return null;
   }
 

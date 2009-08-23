@@ -5,6 +5,7 @@ import org.designup.picsou.server.persistence.prevayler.DefaultSerializer;
 import org.designup.picsou.server.persistence.prevayler.RootDataManager;
 import org.designup.picsou.server.session.Persistence;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.GlobsException;
@@ -66,6 +67,19 @@ public class PRootDataManager implements RootDataManager {
     return serializablePolicy;
   }
 
+  public GlobList getLocalUsers() {
+    try {
+      return (GlobList)prevayler.execute(new Query() {
+        public Object query(Object prevalentSystem, Date executionTime) throws Exception {
+          return ((PRootData)prevalentSystem).getLocalUsers();
+        }
+      });
+    }
+    catch (Exception e) {
+      throw new UnexpectedApplicationState(e);
+    }
+  }
+
   public Glob getHiddenUser(final String linkInfo) {
     try {
       return (Glob)prevayler.execute(new Query() {
@@ -108,7 +122,7 @@ public class PRootDataManager implements RootDataManager {
       throw e;
     }
     catch (Exception e) {
-      throw new UnexpectedApplicationState(e);
+      throw new UnexpectedApplicationState(pathToPrevaylerDirectory, e);
     }
   }
 

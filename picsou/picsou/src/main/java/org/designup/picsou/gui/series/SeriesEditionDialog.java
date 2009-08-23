@@ -32,9 +32,9 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.utils.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
+import org.globsframework.utils.Ref;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.Ref;
 
 import javax.swing.*;
 import java.awt.*;
@@ -97,7 +97,7 @@ public class SeriesEditionDialog {
     localRepository.addTrigger(new SingleMonthProfileTypeUpdater());
     localRepository.addTrigger(new ResetAllBudgetIfInAutomaticAndNoneAccountAreImported());
     addSeriesCreationTriggers(localRepository, new ProfileTypeSeriesTrigger.UserMonth() {
-      public Set<Integer> getMonthWithTransction() {
+      public Set<Integer> getMonthWithTransaction() {
         return selectedTransactions.getSortedSet(Transaction.MONTH);
       }
     });
@@ -339,6 +339,7 @@ public class SeriesEditionDialog {
   }
 
   public void show(BudgetArea budgetArea, Set<Integer> monthIds, Integer seriesId) {
+    retreiveAssociatedTransactions(seriesId);
     try {
       localRepository.startChangeSet();
       localRepository.rollback();
@@ -356,6 +357,7 @@ public class SeriesEditionDialog {
   }
 
   public void show(Glob series, Set<Integer> monthIds) {
+    retreiveAssociatedTransactions(series.get(Series.ID));
     try {
       localRepository.startChangeSet();
       localRepository.rollback();
@@ -370,6 +372,14 @@ public class SeriesEditionDialog {
     doShow(monthIds, localRepository.get(series.getKey()), false);
   }
 
+  private void retreiveAssociatedTransactions(Integer seriesId) {
+    selectedTransactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES,
+                                                  seriesId).getGlobs();
+    selectedTransactions.removeAll(GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.PLANNED, true),
+                                                    GlobMatchers.fieldEquals(Transaction.CREATED_BY_SERIES, true)),
+                                   repository);
+  }
+
   public Key showNewSeries(GlobList transactions, GlobList selectedMonths, BudgetArea budgetArea) {
     selectedTransactions = transactions;
     this.budgetArea = BudgetArea.get(budgetArea.getId());
@@ -379,7 +389,7 @@ public class SeriesEditionDialog {
       localRepository.rollback();
       Ref<Integer> fromAccount = new Ref<Integer>();
       Ref<Integer> toAccount = new Ref<Integer>();
-      initBudgetAreaSeries(budgetArea, fromAccount,  toAccount);
+      initBudgetAreaSeries(budgetArea, fromAccount, toAccount);
 
       String label;
       if (!transactions.isEmpty() && budgetArea == BudgetArea.RECURRING) {
@@ -427,10 +437,10 @@ public class SeriesEditionDialog {
                                               value(Series.OCTOBER, true),
                                               value(Series.NOVEMBER, true),
                                               value(Series.DECEMBER, true)));
-    if (fromAccountId != null){
+    if (fromAccountId != null) {
       values.add(value(Series.FROM_ACCOUNT, fromAccountId));
     }
-    if (toAccountId != null){
+    if (toAccountId != null) {
       values.add(value(Series.TO_ACCOUNT, toAccountId));
     }
     if (budgetArea == BudgetArea.SPECIAL) {
@@ -825,7 +835,7 @@ public class SeriesEditionDialog {
           GlobList currentSeries = selection.getAll(Series.TYPE);
           for (Glob series : currentSeries) {
             Glob mirrorSeries = repository.findLinkTarget(series, Series.MIRROR_SERIES);
-            if (mirrorSeries != null){
+            if (mirrorSeries != null) {
               seriesToDelete.add(mirrorSeries);
             }
             seriesToDelete.add(series);

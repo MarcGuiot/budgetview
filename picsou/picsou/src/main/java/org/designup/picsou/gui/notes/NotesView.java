@@ -18,7 +18,7 @@ public class NotesView extends View {
 
     builder.addMultiLineEditor("notesEditor", Notes.TEXT)
       .setNotifyOnKeyPressed(true)
-      .forceSelection(repository.findOrCreate(Notes.KEY));
+      .forceSelection(Notes.KEY);
 
     parentBuilder.add("notesView", builder);
   }

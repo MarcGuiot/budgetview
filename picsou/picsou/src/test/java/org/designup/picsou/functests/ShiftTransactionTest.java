@@ -284,8 +284,8 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       {"05/07/2008", "", "MONOPRIX / JULY", -30.0},
       {"01/07/2008", "Groceries", "MONOPRIX / JUNE", -25.0},
     });
-    categorization.setUncategorized();
     transactionDetails.unshift();
+    categorization.setUncategorized();
 
     categorization.setEnvelope("Monoprix / July", "Groceries");
     transactionDetails.checkShiftEnabled();

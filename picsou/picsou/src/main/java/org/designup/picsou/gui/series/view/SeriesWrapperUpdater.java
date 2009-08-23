@@ -33,7 +33,9 @@ public class SeriesWrapperUpdater implements ChangeSetListener {
     changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         Integer seriesId = key.get(Series.ID);
-
+        if (BudgetArea.UNCATEGORIZED.getId().equals(values.get(Series.BUDGET_AREA))) {
+          return;
+        }
         Glob budgetAreaWrapper =
           localRepository.findUnique(SeriesWrapper.TYPE,
                                      value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId()),

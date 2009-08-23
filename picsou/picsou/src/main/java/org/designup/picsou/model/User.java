@@ -29,7 +29,6 @@ public class User {
   @DefaultBoolean(false)
   public static BooleanField CONNECTED;
 
-  @DefaultBoolean(true)
   public static BooleanField IS_REGISTERED_USER;
 
   @DefaultBoolean(false)

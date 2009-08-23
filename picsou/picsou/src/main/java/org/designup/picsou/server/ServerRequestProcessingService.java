@@ -17,6 +17,8 @@ public interface ServerRequestProcessingService {
 
   void createUser(Long sessionId, SerializedInput input, SerializedOutput output);
 
+  void deleteUser(Long sessionId, SerializedInput input, SerializedOutput output);
+
   void identify(Long sessionId, SerializedInput input, SerializedOutput output);
 
   void confirmUser(Long sessionId, SerializedInput input, SerializedOutput output) throws UnknownId, InvalidActionForState;
@@ -34,4 +36,6 @@ public interface ServerRequestProcessingService {
   void takeSnapshot(Long sessionId, SerializedInput serializedInput);
 
   void restore(Long sessionId, SerializedInput input, SerializedOutput output);
+
+  void getLocalUsers(SerializedOutput output);
 }

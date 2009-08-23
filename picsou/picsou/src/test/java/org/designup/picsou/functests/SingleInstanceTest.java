@@ -338,7 +338,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     public Window getImportDialog() throws InterruptedException {
       synchronized (this) {
         if (importDialog == null) {
-          wait(1000);
+          wait(4000);
         }
       }
       trigger.waitEnd();

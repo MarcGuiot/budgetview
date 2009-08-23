@@ -42,7 +42,11 @@ public class AccountPositionThresholdAction extends AbstractAction implements Ch
   }
 
   private void updateName() {
-    double limit = AccountPositionThreshold.getValue(repository);
-    this.putValue(NAME, Lang.get("accountPositionThresholdAction.label", Formatting.DECIMAL_FORMAT.format(limit)));
+    Double limit = AccountPositionThreshold.getValue(repository);
+    String displayLimit = "";
+    if (limit != null){
+      displayLimit = Formatting.DECIMAL_FORMAT.format(limit);
+    }
+    this.putValue(NAME, Lang.get("accountPositionThresholdAction.label", displayLimit));
   }
 }

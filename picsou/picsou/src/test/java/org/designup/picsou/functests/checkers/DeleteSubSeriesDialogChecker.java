@@ -28,9 +28,11 @@ public class DeleteSubSeriesDialogChecker extends GuiChecker {
 
   public void validate() {
     dialog.getButton("OK").click();
+    UISpecAssert.assertFalse(dialog.isVisible());
   }
 
   public void cancel() {
     dialog.getButton("Cancel").click();
+    UISpecAssert.assertFalse(dialog.isVisible());
   }
 }

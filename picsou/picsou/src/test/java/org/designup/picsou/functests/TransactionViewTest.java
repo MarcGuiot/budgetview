@@ -144,6 +144,10 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
     transactions.checkCategorizeIsDisabled(0);
 
+    views.selectCategorization();
+    categorization.selectTransaction("Virement")
+      .setUncategorized();
+    
     views.selectSavings();
     savingsView.editSeries("Epargne", "Epargne")
       .setName("NEW NAME FOR EPARGNE")

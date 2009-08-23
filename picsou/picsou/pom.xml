@@ -92,6 +92,18 @@
                     <path refid="maven.runtime.classpath"/>
                   </classpath>
                   <arg
+                    line="dump.jar ${project.build.directory}/../dev/ant/inputDump.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
+                </java>
+                <manifest file="target/classes/MANIFEST.MF">
+                  <attribute name="Main-Class" value="org.designup.picsou.server.persistence.direct.Dump"/>
+                </manifest>
+                <jar update="true" jarfile="dump.jar" manifest="target/classes/MANIFEST.MF"/>
+                <java fork="yes"
+                      classname="org.designup.shrinker.JarShrinker" failonerror="true">
+                  <classpath>
+                    <path refid="maven.runtime.classpath"/>
+                  </classpath>
+                  <arg
                     line="cashpilot.jar ${project.build.directory}/../dev/ant/inputClient.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
                 </java>
                 <manifest file="target/classes/MANIFEST.MF">

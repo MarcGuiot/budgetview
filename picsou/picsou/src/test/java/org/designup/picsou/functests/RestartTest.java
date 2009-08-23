@@ -10,10 +10,12 @@ import org.globsframework.utils.Dates;
 public class RestartTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
+    resetWindow();
     setCurrentDate("2008/08/30");
     setInMemory(false);
-    setDeleteLocalPrevayler(false);
+    setDeleteLocalPrevayler(true);
     super.setUp();
+    setDeleteLocalPrevayler(false);
   }
 
   public void testTransactionsOnly() throws Exception {
@@ -33,6 +35,8 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .check();
 
     restartApplication();
+    
+    operations.checkUndoNotAvailable();
 
     views.selectHome();
     monthSummary.checkNoSeriesMessage();
@@ -222,7 +226,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00, "Salaire")
       .add("10/08/2008", TransactionType.PRELEVEMENT, "Auchan", "", -400.00, "Course")
       .check();
-    TimeService.setCurrentDate(Dates.parse("2008/09/02"));
+    setCurrentDate("2008/09/02");
     restartApplication();
     timeline.selectAll();
     views.selectData();
@@ -258,12 +262,9 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .add("05/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF")
       .add("05/08/2008", TransactionType.VIREMENT, "CAF", "", 100.00, "CAF")
       .check();
-    mainWindow.dispose();
-    mainWindow = null;
     TimeService.setCurrentDate(Dates.parse("2008/09/06"));
+    restartApplication();
 
-    mainWindow = getMainWindow();
-    initCheckers();
     views.selectData();
     timeline.selectAll();
     transactions.initContent()

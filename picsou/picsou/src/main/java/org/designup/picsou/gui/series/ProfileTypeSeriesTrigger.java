@@ -13,11 +13,11 @@ public class ProfileTypeSeriesTrigger implements ChangeSetListener {
   private UserMonth userMonth;
 
   public interface UserMonth {
-    Set<Integer> getMonthWithTransction();
+    Set<Integer> getMonthWithTransaction();
   }
 
   public static UserMonth NULL = new UserMonth() {
-    public Set<Integer> getMonthWithTransction() {
+    public Set<Integer> getMonthWithTransaction() {
       return Collections.emptySet();
     }
   };
@@ -103,7 +103,7 @@ public class ProfileTypeSeriesTrigger implements ChangeSetListener {
   }
 
   private void tryUpdate(GlobRepository repository, Glob series) {
-    Set<Integer> months = userMonth.getMonthWithTransction();
+    Set<Integer> months = userMonth.getMonthWithTransaction();
     if (months.isEmpty()) {
       return;
     }

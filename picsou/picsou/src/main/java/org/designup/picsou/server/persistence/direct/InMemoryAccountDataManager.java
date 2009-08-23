@@ -9,6 +9,7 @@ import org.globsframework.utils.MapOfMaps;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
+import org.globsframework.model.GlobList;
 
 import java.io.InputStream;
 
@@ -37,6 +38,7 @@ public class InMemoryAccountDataManager implements AccountDataManager {
   }
 
   public void delete(Integer userId) {
+    globs = new MapOfMaps<String, Integer, SerializableGlobType>();
   }
 
   public void close() {
@@ -52,5 +54,9 @@ public class InMemoryAccountDataManager implements AccountDataManager {
     globs = new MapOfMaps<String, Integer, SerializableGlobType>();
     SerializableGlobSerializer.deserialize(input, globs);
     return true;
+  }
+
+  public GlobList getLocalUsers() {
+    return GlobList.EMPTY;
   }
 }

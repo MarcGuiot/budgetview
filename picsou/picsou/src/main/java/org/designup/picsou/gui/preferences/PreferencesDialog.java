@@ -29,7 +29,7 @@ public class PreferencesDialog {
                                                       repository, directory);
     Integer[] items= new Integer[]{12, 18, 24, 36};
     Utils.beginRemove();
-    items = new Integer[]{0, 1, 2, 3, 6, 12, 18, 24, 36};
+    items = new Integer[]{0, 1, 2, 3, 4, 6, 12, 18, 24, 36};
     Utils.endRemove();
     futureMonth = new JComboBox(items);
     builder.add("futureMonth", futureMonth);

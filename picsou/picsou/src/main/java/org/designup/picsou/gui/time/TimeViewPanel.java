@@ -18,6 +18,7 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -72,7 +73,15 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     Font monthFont = getFont();
     Font yearFont = monthFont.deriveFont((float)monthFont.getSize() - 2);
     colors = new TimeViewColors(directory, yearFont, monthFont);
-    timeGraph = new TimeGraph(repository.getAll(Month.TYPE).sort(Month.ID),
+    GlobList currentMonth;
+    currentMonth = repository.getAll(Month.TYPE).sort(Month.ID);
+    if (currentMonth.isEmpty()) {
+      currentMonth = new GlobList();
+      for (int i = 40001; i < 40013; i++) {
+        currentMonth.add(GlobBuilder.create(Month.TYPE, FieldValue.value(Month.ID, i)));
+      }
+    }
+    timeGraph = new TimeGraph(currentMonth,
                               colors, timeService,
                               getFontMetrics(yearFont), getFontMetrics(monthFont), this);
     selectionService = directory.get(SelectionService.class);

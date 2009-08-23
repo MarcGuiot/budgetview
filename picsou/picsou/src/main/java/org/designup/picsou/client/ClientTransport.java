@@ -31,4 +31,6 @@ public interface ClientTransport {
   SerializedInput getLocalUsers();
 
   void removeLocalUser(String user);
+
+  SerializedInput deleteUser(Long sessionId, byte[] bytes);
 }

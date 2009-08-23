@@ -2,6 +2,7 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.model.TransactionType;

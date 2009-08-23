@@ -2,10 +2,7 @@ package org.designup.picsou.gui.upgrade;
 
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.Bank;
-import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.VersionInformation;
+import org.designup.picsou.model.*;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -34,8 +31,8 @@ public class UpgradeService {
                                                   GlobMatchers.fieldEquals(Transaction.ACCOUNT, bank.get(Bank.ID)));
         transactionAnalyzer.processTransactions(bank.get(Bank.ID), transactions, repository);
       }
-      repository.update(VersionInformation.KEY, VersionInformation.CURRENT_BANK_CONFIG_VERSION,
-                        version.get(VersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION));
+      repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_BANK_CONFIG_VERSION,
+                        version.get(AppVersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION));
     }
     finally {
       repository.completeChangeSet();

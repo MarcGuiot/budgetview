@@ -120,4 +120,10 @@ public class NavigationService implements GlobSelectionListener {
     currentCard = card;
     selectionService.select(repository.get(card.getKey()));
   }
+
+  public void reset(){
+    backStack.clear();
+    forwardStack.clear();
+    select(Card.HOME, true);
+  }
 }

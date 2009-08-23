@@ -22,11 +22,11 @@ import javax.swing.*;
 public class DialogDemo {
   public static void main(String[] args) throws Exception {
 
-    MainWindow window = new MainWindow();
+    Directory directory = PicsouApplication.createDirectory();
+    MainWindow window = new MainWindow(null, "", "", false, directory);
     PicsouDialog.FORCE_NONMODAL = true;
     PicsouApplication.parseLanguage("-l", "fr");
-    Directory directory = PicsouApplication.createDirectory();
-    GlobRepository repository = PicsouInit.init(ServerAccess.NULL, "user", true, true, directory, false).getRepository();
+    GlobRepository repository = PicsouInit.init(ServerAccess.NULL, directory, true).getRepository();
     repository.startChangeSet();
     for (int monthId = 200701; monthId < 200812; monthId = Month.next(monthId)) {
       repository.findOrCreate(Key.create(Month.TYPE, monthId));

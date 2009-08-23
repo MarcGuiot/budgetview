@@ -6,6 +6,7 @@ import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.client.exceptions.UserNotRegistered;
 import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.functests.FunctionalTestCase;
+import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.server.ServerDirectory;
@@ -20,11 +21,13 @@ import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.utils.Functor;
 import org.globsframework.utils.TestUtils;
+import org.globsframework.utils.Files;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.io.File;
 
 public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
   protected Directory directory;
@@ -38,10 +41,12 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
     url = initServerEnvironment(inMemory);
     directory.add(new ConfigService("1", 1L, 1L, null));
     directory.add(PasswordBasedEncryptor.class, new RedirectPasswordBasedEncryptor());
+    LoggedInFunctionalTestCase.resetWindow();
   }
 
   protected void tearDown() throws Exception {
     super.tearDown();
+    Files.deleteSubtree(new File(getUrl()));
     serverDirectory = null;
     directory = null;
     url = null;
@@ -115,23 +120,6 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
       repository.update(expected.getKey(), Account.POSITION, -122.);
       Glob actualAccount = serverAccess.getUserData(new DefaultChangeSet(), new DummyIdUpdater()).get(0);
       assertEquals(-122.0, actualAccount.get(Account.POSITION), 0.1);
-    }
-  }
-
-  public void testAddBank() throws Exception {
-    EncrypterToTransportServerAccess serverAccess = createServerAccess();
-
-    Glob glob = createUser("name", "password", serverAccess);
-    serverAccess.getUserData(new DefaultChangeSet(), new DummyIdUpdater());
-    Glob expected = GlobBuilder.init(org.designup.picsou.model.Bank.TYPE)
-      .set(Bank.ID, 12).get();
-
-    GlobRepository repository = init(serverAccess);
-
-    {
-      repository.create(expected.getKey(), expected.toArray());
-      Glob actualBank = serverAccess.getUserData(new DefaultChangeSet(), new DummyIdUpdater()).get(0);
-      assertEquals(12, actualBank.get(Bank.ID).intValue());
     }
   }
 

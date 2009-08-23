@@ -46,7 +46,7 @@ public class SeriesEditionButtons {
   public GlobButtonView createSeriesButton(Glob series) {
     GlobButtonView buttonView =
       GlobButtonView.init(Series.TYPE, repository, directory, new EditSeriesFunctor())
-        .forceSelection(series);
+        .forceSelection(series.getKey());
     repository.addChangeListener(new TooltipUpdater(series.getKey(), buttonView));
     return buttonView;
   }

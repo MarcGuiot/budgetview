@@ -181,6 +181,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     SeriesEditionDialogChecker editionDialogChecker = budgetView.recurring.editSeries("Internet");
     editionDialogChecker
       .setCustom()
+      .toggleMonth("May")
       .switchToManual()
       .checkTable(new Object[][]{
         {"2008", "August", "29.00", "29.00"},
@@ -450,6 +451,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     edition.editStartDate().pressEscapeKey();
     Thread.sleep(50);
     edition.checkNoStartDate();
+    edition.cancel();
   }
 
   public void testEditDate() throws Exception {
@@ -500,6 +502,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     edition.editEndDate()
       .checkIsEnabled(200701, 200901)
       .cancel();
+    edition.cancel();
   }
 
   public void testStartEndDateWithTransaction() throws Exception {
@@ -520,6 +523,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkIsDisabled(200805, 200806)
       .checkIsEnabled(200807, 200808)
       .selectMonth(200808);
+    dialog.cancel();
   }
 
   public void testAStartAndEndDateIsAutomaticallySetWhenASingleMonthPeriodicityIsChosen() throws Exception {
@@ -649,6 +653,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         {"2008", "February", "", "30.00"},
         {"2007", "December", "", "30.00"},
       });
+    edition.cancel();
   }
 
   public void testMonthIsHiddenIfLessThanOneMonthInDateRange() throws Exception {
@@ -741,6 +746,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       {"2008", "July", "", "13.00"},
       {"2008", "June", "", "13.00"}
     });
+    edition.cancel();
   }
 
   public void testAutomaticBudget() throws Exception {
@@ -777,7 +783,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         {"2008", "August", "0.00", "30.00"},
         {"2008", "July", "30.00", "20.00"},
         {"2008", "June", "20.00", "20.00"}
-      });
+      })
+      .cancel();
   }
 
   public void testMonthsAreShownOrNotDependingOnThePeriodicity() throws Exception {
@@ -790,7 +797,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setCustom()
       .checkMonthsAreVisible()
       .setIrregular()
-      .checkMonthsAreHidden();
+      .checkMonthsAreHidden()
+      .cancel();
   }
 
   public void testChangeMonthChangeOtherMonth() throws Exception {
@@ -814,6 +822,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthIsChecked(1,3,5,7,9,11)
       .toggleMonth(4)
       .checkMonthIsChecked(2, 4, 6, 8, 10);
+    edition.cancel();
   }
 
   public void testSwitchBetweenSeries() throws Exception {
@@ -838,6 +847,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthsAreVisible()
       .checkMonthIsChecked(2, 6, 10)
       .cancel();
+    edition.cancel();
   }
 
   public void testPeriodOrder() throws Exception {
@@ -847,6 +857,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         .setName("S1")
         .checkProfiles("Every month", "Every two months", "Every six months",
                        "Once a year", "Single month", "Custom", "Irregular");
+    edition.cancel();
   }
 
   public void testSeriesListVisibility() throws Exception {
@@ -1038,7 +1049,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
     timeline.selectMonth("2008/08");
     budgetView.envelopes.editSeriesList().selectSeries("S1")
-      .checkAmountIsDisabled();
+      .checkAmountIsDisabled()
+      .cancel();
   }
 
   public void testAutomaticAndManualModes() throws Exception {

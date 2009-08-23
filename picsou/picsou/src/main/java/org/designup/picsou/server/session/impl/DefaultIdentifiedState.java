@@ -43,6 +43,13 @@ public class DefaultIdentifiedState extends AbstractSessionState implements Iden
 
   }
 
+  public void deleteUser(SerializedInput input) {
+    checkPrivateId(input);
+    byte[] cryptedLinkInfo = input.readBytes();
+    Integer userId = persistence.confirmUser(Encoder.byteToString(cryptedLinkInfo));
+    persistence.delete(user.get(User.NAME), cryptedLinkInfo, userId);
+  }
+
   public byte[] getLinkInfo() {
     return user.get(User.LINK_INFO);
   }

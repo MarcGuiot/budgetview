@@ -1,12 +1,12 @@
 package org.designup.picsou.gui.actions;
 
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.license.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.startup.ImportPanel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
-import org.designup.picsou.gui.components.dialogs.MessageDialog;
-import org.designup.picsou.utils.Lang;
 import org.designup.picsou.model.User;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -24,9 +24,12 @@ public class ImportFileAction extends AbstractAction {
   private boolean usePreference;
   private GlobRepository repository;
 
-  static public ImportFileAction initAndRegisterToOpenRequestManager(String text, final GlobRepository repository, final Directory directory) {
-    new ImportFileAction(text, repository, directory, false);
+  static public ImportFileAction initForMenu(String text, final GlobRepository repository, final Directory directory) {
     return new ImportFileAction(text, repository, directory, null, true);
+  }
+
+  static public void registerToOpenRequestManager(String text, final GlobRepository repository, final Directory directory){
+    new ImportFileAction(text, repository, directory, false);
   }
 
   static public ImportFileAction init(String text, final GlobRepository repository, final Directory directory, Glob defaulAccount) {
@@ -90,11 +93,12 @@ public class ImportFileAction extends AbstractAction {
         panel.show();
       }
       else {
-        if (User.isDemoUser(repository.get(User.KEY))){
+        if (User.isDemoUser(repository.get(User.KEY))) {
           MessageDialog dialog = new MessageDialog("demo.import.title", "demo.import.content", directory.get(JFrame.class),
                                                    directory);
           dialog.show();
-        }else {
+        }
+        else {
           LicenseActivationDialog dialog = new LicenseActivationDialog(directory.get(JFrame.class),
                                                                        repository, directory);
           dialog.showExpiration();

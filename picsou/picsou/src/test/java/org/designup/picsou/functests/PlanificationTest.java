@@ -151,7 +151,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/20", -100., "Auchan")
       .load();
 
-    operations.openPreferences().setFutureMonthsCount(1);
+//    operations.openPreferences().setFutureMonthsCount(1).validate();
     views.selectCategorization();
     categorization.setNewEnvelope("Auchan", "Courant");
     timeline.selectAll();
@@ -176,7 +176,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .selectAllMonths()
       .setAmount("150")
       .validate();
-
+    
     views.selectData();
     transactions.initContent()
       .add("20/06/2008", TransactionType.PLANNED, "Planned: EDF", "", -50.00, "EDF")

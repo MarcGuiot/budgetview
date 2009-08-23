@@ -12,6 +12,7 @@ import org.designup.picsou.license.model.MailError;
 import org.designup.picsou.license.model.RepoInfo;
 import org.designup.picsou.license.model.SoftwareInfo;
 import org.designup.picsou.license.servlet.LicenseServer;
+import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
@@ -38,6 +39,7 @@ public abstract class LicenseTestCase extends UISpecTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
+    LoggedInFunctionalTestCase.resetWindow();
     Locale.setDefault(Locale.ENGLISH);
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
     System.setProperty(ConfigService.COM_APP_LICENSE_URL, "http://localhost:5000");

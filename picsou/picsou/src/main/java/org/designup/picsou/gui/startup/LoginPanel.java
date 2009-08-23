@@ -1,21 +1,8 @@
 package org.designup.picsou.gui.startup;
 
 import com.jidesoft.swing.InfiniteProgressPanel;
-import org.designup.picsou.client.ServerAccess;
-import org.designup.picsou.client.exceptions.BadPassword;
-import org.designup.picsou.client.exceptions.UserAlreadyExists;
-import org.designup.picsou.client.exceptions.UserNotRegistered;
-import org.designup.picsou.client.http.ConnectionRetryServerAccess;
-import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
-import org.designup.picsou.client.http.HttpsClientTransport;
-import org.designup.picsou.client.http.PasswordBasedEncryptor;
-import org.designup.picsou.client.local.LocalClientTransport;
-import org.designup.picsou.gui.MainPanel;
 import org.designup.picsou.gui.MainWindow;
-import org.designup.picsou.gui.PicsouInit;
-import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.components.CustomFocusTraversalPolicy;
-import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
@@ -23,20 +10,14 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.InvalidData;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Arrays;
 
 public class LoginPanel {
-  private ServerAccess serverAccess;
-
   private JTextField userField = new JTextField(15);
   private JPasswordField passwordField = new JPasswordField(15);
   private JPasswordField confirmPasswordField = new JPasswordField(15);
@@ -49,18 +30,12 @@ public class LoginPanel {
   private JComponent[] creationComponents = {confirmPasswordLabel, confirmPasswordField};
   private MainWindow mainWindow;
   private Directory directory;
-  private ServerDirectory serverDirectory;
-  private SplitsBuilder builder;
   private JPanel panel;
-  private boolean validUser;
-  private boolean useDemoAccount = false;
+  private boolean useDemoAccount;
 
-  public LoginPanel(String remoteAdress, String prevaylerPath, boolean dataInMemory,
-                    MainWindow mainWindow, Directory directory) {
+  public LoginPanel(MainWindow mainWindow, Directory directory) {
     this.mainWindow = mainWindow;
     this.directory = directory;
-    initServerAccess(remoteAdress, prevaylerPath, dataInMemory);
-    Runtime.getRuntime().addShutdownHook(new ShutDownThread(serverAccess, serverDirectory));
 
     this.loginButton.setOpaque(false);
     initPanel();
@@ -93,7 +68,7 @@ public class LoginPanel {
 
     setVisible(creationComponents, false);
 
-    builder = SplitsBuilder.init(directory).setSource(getClass(), "/layout/loginPanel.splits");
+    SplitsBuilder builder = SplitsBuilder.init(directory).setSource(getClass(), "/layout/loginPanel.splits");
     builder.add("name", userField);
     builder.add("password", passwordField);
     builder.add("confirmPassword", confirmPasswordField);
@@ -107,10 +82,6 @@ public class LoginPanel {
     builder.addLoader(new SplitsLoader() {
       public void load(Component component) {
         panel = (JPanel)component;
-        mainWindow.getFrame().setFocusTraversalPolicy(
-          new CustomFocusTraversalPolicy(userField, passwordField, confirmPasswordField,
-                                         loginButton, creationCheckBox));
-        mainWindow.setPanel(panel);
       }
     })
       .load();
@@ -127,7 +98,6 @@ public class LoginPanel {
   }
 
   private void login() {
-
     String user = userField.getText();
     char[] password = passwordField.getPassword();
     boolean createUser = false;
@@ -145,92 +115,24 @@ public class LoginPanel {
     setComponentsEnabled(false);
     progressPanel.start();
 
-    Thread thread = new Thread(new LoginFunctor(user, password, createUser));
-    thread.setDaemon(true);
-    thread.start();
+    mainWindow.loggin(user, password, createUser, useDemoAccount);
+    useDemoAccount = false;
+
   }
 
-  private class LoginFunctor implements Runnable {
-    private String user;
-    private char[] password;
-    private boolean createUser;
-
-    public LoginFunctor(String user, char[] password, boolean createUser) {
-      this.user = user;
-      this.password = password;
-      this.createUser = createUser;
-    }
-
-    public void run() {
-      try {
-        if (useDemoAccount) {
-          initDemoServerAccess();
-          serverAccess.createUser("anonymous", "password".toCharArray());
-        }
-        else {
-          if (createUser) {
-            serverAccess.createUser(user, password);
-          }
-          else {
-            serverAccess.initConnection(user, password, false);
-          }
-        }
-        PicsouInit init = PicsouInit.init(serverAccess, user, validUser, creationCheckBox.isSelected(), 
-                                          directory, useDemoAccount);
-        final MainPanel mainPanel =
-          MainPanel.init(init.getRepository(), init.getDirectory(),
-                         mainWindow
-          );
-        SwingUtilities.invokeLater(new Runnable() {
-          public void run() {
-            mainPanel.show();
-            builder.dispose();
-            mainWindow.getFrame().setFocusTraversalPolicy(null);
-            panel = null;
-          }
-        });
-      }
-      catch (UserAlreadyExists e) {
-        displayErrorMessage("login.user.exists");
-      }
-      catch (BadPassword e) {
-        displayErrorMessage("login.invalid.credentials");
-      }
-      catch (UserNotRegistered e) {
-        displayErrorMessage("login.invalid.credentials");
-      }
-      catch (PasswordBasedEncryptor.EncryptFail e) {
-        displayBadPasswordMessage("login.password.error", e.getMessage());
-      }
-      catch (InvalidData e) {
-        displayErrorText(e.getMessage());
-        e.printStackTrace();
-      }
-      catch (Exception e) {
-        displayErrorMessage("login.server.connection.failure");
-        final StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        e.printStackTrace(writer);
-        e.printStackTrace();
-        SwingUtilities.invokeLater(new Runnable() {
-          public void run() {
-            JTextArea textArea = new JTextArea(stringWriter.toString());
-            GuiUtils.show(textArea);
-          }
-        });
-      }
-      finally {
-        SwingUtilities.invokeLater(new Runnable() {
-          public void run() {
-            setComponentsEnabled(true);
-            progressPanel.stop();
-          }
-        });
-      }
-    }
+  public JPanel preparePanelForShow() {
+    userField.setText(null);
+    passwordField.setText(null);
+    confirmPasswordField.setText(null);
+    setVisible(creationComponents, false);
+    creationCheckBox.setSelected(false);
+    mainWindow.getFrame().setFocusTraversalPolicy(
+      new CustomFocusTraversalPolicy(userField, passwordField, confirmPasswordField,
+                                     loginButton, creationCheckBox));
+    return panel;
   }
 
-  private void setComponentsEnabled(boolean enabled) {
+  public void setComponentsEnabled(boolean enabled) {
     this.userField.setEnabled(enabled);
     this.passwordField.setEnabled(enabled);
     this.creationCheckBox.setEnabled(enabled);
@@ -278,48 +180,20 @@ public class LoginPanel {
     messageLabel.setText("");
   }
 
-  private boolean containsSpecialChar(char[] pwd) {
-    for (char c : pwd) {
-      if (!Character.isLetter(c)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private void displayErrorText(String message) {
+  public void displayErrorText(String message) {
     messageLabel.setText("<html><font color=red>" + message + "</font></html>");
   }
 
-  private void displayErrorMessage(String key) {
+  public void displayErrorMessage(String key) {
     displayErrorText(Lang.get(key));
   }
 
-  private void displayBadPasswordMessage(String key, String complement) {
+  public void displayBadPasswordMessage(String key, String complement) {
     messageLabel.setText("<html><font color=red>" + Lang.get(key) + (complement == null ? "" : complement) + "</font></html>");
   }
 
-  private void initServerAccess(String remoteAdress, String prevaylerPath, boolean dataInMemory) {
-    if (!remoteAdress.startsWith("http")) {
-      serverDirectory = new ServerDirectory(prevaylerPath, dataInMemory);
-      serverAccess = new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
-                                                          directory);
-    }
-    else {
-      serverAccess = new ConnectionRetryServerAccess(
-        new EncrypterToTransportServerAccess(new HttpsClientTransport(remoteAdress), directory));
-    }
-    validUser = serverAccess.connect();
-  }
-
-  private void initDemoServerAccess() {
-    InputStream stream = this.getClass().getResourceAsStream("/demo/demo.snapshot");
-    serverDirectory = new ServerDirectory(stream);
-    serverAccess = new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
-                                                        directory);
-
-    serverAccess.connect();
-    validUser = false;
+  public void stopProgressBar() {
+    progressPanel.stop();
   }
 
   private class LoginAction extends AbstractAction {
@@ -335,33 +209,6 @@ public class LoginPanel {
   private void setVisible(Component[] components, boolean visible) {
     for (Component component : components) {
       component.setVisible(visible);
-    }
-  }
-
-  private static class ShutDownThread extends Thread {
-    private ServerAccess serverAccess;
-    private ServerDirectory serverDirectory;
-
-    public ShutDownThread(ServerAccess serverAccess, ServerDirectory serverDirectory) {
-      this.serverAccess = serverAccess;
-      this.serverDirectory = serverDirectory;
-    }
-
-    public void run() {
-      try {
-        if (serverAccess != null) {
-          serverAccess.takeSnapshot();
-          serverAccess.disconnect();
-          serverAccess = null;
-        }
-        if (serverDirectory != null) {
-          serverDirectory.close();
-          serverDirectory = null;
-        }
-      }
-      catch (Exception ex) {
-        ex.printStackTrace();
-      }
     }
   }
 

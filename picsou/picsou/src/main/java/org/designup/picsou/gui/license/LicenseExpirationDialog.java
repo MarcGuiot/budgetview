@@ -36,9 +36,9 @@ public class LicenseExpirationDialog {
                             localGlobRepository, directory);
 
     builder.add("mailResponse", response);
-    final Glob user = repository.get(User.KEY);
     sendAction = new AbstractAction(Lang.get("license.mail.request.send")) {
       public void actionPerformed(ActionEvent e) {
+        final Glob user = repository.get(User.KEY);
         final String mail = user.get(User.MAIL);
         if (mail != null) {
           Thread thread = new Thread() {
@@ -59,7 +59,8 @@ public class LicenseExpirationDialog {
     };
     builder.add("sendMail", sendAction);
     builder.add("mailAdress",
-                GlobTextEditor.init(User.MAIL, localGlobRepository, directory).forceSelection(user));
+                GlobTextEditor.init(User.MAIL, localGlobRepository, directory)
+                  .forceSelection(User.KEY));
     localGlobRepository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(User.KEY)) {

@@ -91,7 +91,8 @@ public class SavingsView extends View {
     public void registerComponents(RepeatCellBuilder cellBuilder, Glob account) {
 
       cellBuilder.add("accountName",
-                      GlobLabelView.init(Account.NAME, repository, directory).forceSelection(account).getComponent());
+                      GlobLabelView.init(Account.NAME, repository, directory)
+                        .forceSelection(account.getKey()).getComponent());
 
       Key accountKey = account.getKey();
       cellBuilder.add("estimatedAccountPosition",

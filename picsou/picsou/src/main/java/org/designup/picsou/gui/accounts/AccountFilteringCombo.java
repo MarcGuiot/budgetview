@@ -37,4 +37,8 @@ public class AccountFilteringCombo {
   public JComboBox getComponent() {
     return accountFilteringCombo.getComponent();
   }
+
+  public void reset(){
+    accountFilteringCombo.selectFirst();
+  }
 }

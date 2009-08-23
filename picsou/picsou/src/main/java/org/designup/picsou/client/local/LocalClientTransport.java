@@ -46,6 +46,12 @@ public class LocalClientTransport implements ClientTransport {
     return output.getInput();
   }
 
+  public SerializedInput deleteUser(Long sessionId, byte[] data) {
+    SerializedByteArrayOutput output = new SerializedByteArrayOutput();
+    serverRequestProcessingService.deleteUser(sessionId, SerializedInputOutputFactory.init(data), output.getOutput());
+    return output.getInput();
+  }
+
   public SerializedInput identifyUser(Long sessionId, byte[] data) {
     SerializedByteArrayOutput output = new SerializedByteArrayOutput();
     serverRequestProcessingService.identify(sessionId, SerializedInputOutputFactory.init(data), output.getOutput());
@@ -89,11 +95,10 @@ public class LocalClientTransport implements ClientTransport {
 
   public SerializedInput getLocalUsers() {
     SerializedByteArrayOutput output = new SerializedByteArrayOutput();
-//    serverRequestProcessingService.getLocalUsers(output.getOutput());
+    serverRequestProcessingService.getLocalUsers(output.getOutput());
     return output.getInput();
   }
 
   public void removeLocalUser(String user) {
-
   }
 }

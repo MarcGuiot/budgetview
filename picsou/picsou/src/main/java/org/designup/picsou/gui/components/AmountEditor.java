@@ -6,6 +6,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Glob;
+import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -78,8 +79,8 @@ public class AmountEditor {
     return numericEditor;
   }
 
-  public AmountEditor forceSelection(Glob prototypeTransaction) {
-    numericEditor.forceSelection(prototypeTransaction);
+  public AmountEditor forceSelection(Key key) {
+    numericEditor.forceSelection(key);
     return this;
   }
 

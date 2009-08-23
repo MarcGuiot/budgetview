@@ -84,4 +84,8 @@ public abstract class TextFilterPanel {
     super.finalize();
     colorService.removeListener(listener);
   }
+
+  public void reset() {
+    textField.setText("");
+  }
 }

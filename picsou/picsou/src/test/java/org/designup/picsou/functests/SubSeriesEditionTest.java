@@ -201,9 +201,11 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectBudget();
-    budgetView.envelopes.editSeries("Maison")
+    SeriesEditionDialogChecker editionDialogChecker = budgetView.envelopes.editSeries("Maison");
+    editionDialogChecker
       .deleteSubSeriesWithConfirmation("Travaux")
       .validate();
+    editionDialogChecker.validate();
 
     views.selectData();
     transactions

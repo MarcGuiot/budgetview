@@ -37,7 +37,8 @@ public class RestoreAction extends AbstractBackupRestoreAction {
             return;
           }
           else {
-            RestoreChangePasswordDialog dialog = new RestoreChangePasswordDialog(repository, directory);
+            AskPasswordDialog dialog = 
+              new AskPasswordDialog("restore.password.title", "restore.password", directory);
             password = dialog.show();
             if (password == null || password.length == 0){
               return;

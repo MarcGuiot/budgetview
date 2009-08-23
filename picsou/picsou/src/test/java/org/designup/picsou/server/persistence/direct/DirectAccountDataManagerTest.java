@@ -19,7 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 public class DirectAccountDataManagerTest extends TestCase {
-  private static final String PATH = "tmp/test_prevayler";
+  private static final String PATH = "tmp/test_prevayler_direct";
 
   protected void setUp() throws Exception {
     super.setUp();

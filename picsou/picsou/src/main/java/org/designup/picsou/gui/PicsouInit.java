@@ -10,11 +10,11 @@ import org.designup.picsou.gui.upgrade.UpgradeTrigger;
 import org.designup.picsou.gui.utils.ExceptionHandler;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
-import org.designup.picsou.model.PicsouModel;
-import org.designup.picsou.model.User;
+import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobModel;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.ChangeSet;
 import static org.globsframework.model.FieldValue.value;
@@ -24,17 +24,16 @@ import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
-import org.globsframework.model.utils.CachedGlobIdGenerator;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
-import org.globsframework.utils.exceptions.ResourceAccessFailed;
-import org.globsframework.utils.exceptions.UnexpectedApplicationState;
-import org.globsframework.xml.XmlGlobParser;
 
 import javax.swing.*;
-import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Set;
 
 public class PicsouInit {
 
@@ -44,13 +43,11 @@ public class PicsouInit {
   private DefaultGlobIdGenerator idGenerator;
   private UpgradeTrigger upgradeTrigger;
 
-  public static PicsouInit init(ServerAccess serverAccess, String user, boolean validUser,
-                                boolean newUser, Directory directory, boolean useDemoAccount) throws IOException {
-    return new PicsouInit(serverAccess, user, validUser, newUser, directory, useDemoAccount);
+  public static PicsouInit init(ServerAccess serverAccess, Directory directory, boolean registeredUser) {
+    return new PicsouInit(serverAccess, directory, registeredUser);
   }
 
-  private PicsouInit(ServerAccess serverAccess, String user, boolean validUser,
-                     boolean newUser, final Directory directory, boolean useDemoAccount) throws IOException {
+  private PicsouInit(ServerAccess serverAccess, final Directory directory, boolean registeredUser) {
     this.serverAccess = serverAccess;
     this.directory = directory;
 
@@ -60,12 +57,18 @@ public class PicsouInit {
         .add(directory.get(GlobModel.class).getConstants())
         .get();
 
+    repository.findOrCreate(User.KEY,
+                            value(User.IS_REGISTERED_USER, registeredUser));
+    repository.findOrCreate(AppVersionInformation.KEY,
+                            value(AppVersionInformation.LATEST_AVALAIBLE_JAR_VERSION, PicsouApplication.JAR_VERSION),
+                            value(AppVersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
+                            value(AppVersionInformation.LATEST_AVALAIBLE_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION));
+
     ExceptionHandler.setRepository(repository);
 
     this.repository.addChangeListener(new ServerChangeSetListener(serverAccess));
 
-    upgradeTrigger = new UpgradeTrigger(directory, user, validUser);
-    this.repository.addTrigger(upgradeTrigger);
+    upgradeTrigger = new UpgradeTrigger(directory);
     this.repository.addTrigger(new CurrentMonthTrigger());
     this.repository.addTrigger(new SeriesRenameTrigger());
     this.repository.addTrigger(new SeriesDeletionTrigger());
@@ -87,44 +90,77 @@ public class PicsouInit {
 
     initDirectory(this.repository);
 
-    if (!newUser) {
-      this.repository.create(User.KEY,
-                             value(User.NAME, user),
-                             value(User.IS_DEMO_USER, useDemoAccount),
-                             value(User.IS_REGISTERED_USER, validUser));
+    if (!directory.get(ConfigService.class).loadConfigFileFromLastestJar(directory, this.repository)) {
+      directory.get(TransactionAnalyzerFactory.class)
+        .load(this.getClass().getClassLoader(), PicsouApplication.BANK_CONFIG_VERSION, repository);
     }
+  }
 
-    try {
-      this.repository.startChangeSet();
-      MutableChangeSet changeSet = new DefaultChangeSet();
-      GlobList userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdater() {
+  public PreLoadData loadUserData(String user, boolean useDemoAccount, boolean registeredUser) {
+    return new PreLoadData(user, useDemoAccount, registeredUser);
+  }
+
+  class PreLoadData {
+    MutableChangeSet changeSet;
+    GlobList userData;
+    private String user;
+    private boolean useDemoAccount;
+    private boolean registeredUser;
+    private GlobType[] typesToReplace;
+
+    PreLoadData(String user, boolean useDemoAccount, boolean registeredUser) {
+      this.user = user;
+      this.useDemoAccount = useDemoAccount;
+      this.registeredUser = registeredUser;
+      changeSet = new DefaultChangeSet();
+      GlobModel model = directory.get(GlobModel.class);
+      Collection<GlobType> globTypeCollection = new ArrayList<GlobType>(model.getAll());
+      Set<GlobType> typeNotToRemove = model.getConstants().getTypes();
+      typeNotToRemove.addAll(Arrays.asList(PreTransactionTypeMatcher.TYPE, Bank.TYPE, BankEntity.TYPE,
+                                           User.TYPE, AppVersionInformation.TYPE));
+
+      globTypeCollection.removeAll(typeNotToRemove);
+      typesToReplace = globTypeCollection.toArray(new GlobType[globTypeCollection.size()]);
+      idGenerator.reset(globTypeCollection);
+
+      userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdater() {
         public void update(IntegerField field, Integer lastAllocatedId) {
           idGenerator.update(field, lastAllocatedId);
         }
       });
-      this.repository.reset(userData, GlobUtils.toArray(userData.getTypes()));
-
-      serverAccess.applyChanges(changeSet, this.repository);
-
-      this.repository.completeChangeSet();
-    }
-    catch (Exception e) {
-      throw new InvalidData(Lang.get("login.data.load.fail"), e);
-    }
-    repository.removeTrigger(upgradeTrigger);
-
-    if (!directory.get(ConfigService.class).loadConfigFileFromLastestJar(directory, this.repository)) {
-      directory.get(TransactionAnalyzerFactory.class)
-        .load(this.getClass().getClassLoader(), PicsouApplication.BANK_CONFIG_VERSION);
     }
 
-    LicenseCheckerThread.launch(directory, this.repository);
+    public void load() {
+      repository.reset(GlobList.EMPTY, typesToReplace);
+      repository.addTriggerAtFirst(upgradeTrigger);
+
+      try {
+        repository.startChangeSet();
+        repository.update(User.KEY,
+                          value(User.NAME, user),
+                          value(User.IS_DEMO_USER, useDemoAccount));
+        if (!userData.isEmpty()) {
+          repository.reset(userData, GlobUtils.toArray(userData.getTypes()));
+        }
+        else {
+          upgradeTrigger.createDataForNewUser(repository);
+        }
+        serverAccess.applyChanges(changeSet, repository);
+      }
+      catch (Exception e) {
+        throw new InvalidData(Lang.get("login.data.load.fail"), e);
+      }
+      finally {
+        repository.completeChangeSet();
+      }
+      repository.removeTrigger(upgradeTrigger);
+    }
   }
 
   private void initDirectory(GlobRepository repository) {
     directory.add(BrowsingService.class, BrowsingService.createService());
 
-    TransactionAnalyzerFactory factory = new TransactionAnalyzerFactory(PicsouGuiModel.get(), repository);
+    TransactionAnalyzerFactory factory = new TransactionAnalyzerFactory(PicsouGuiModel.get());
     directory.add(TransactionAnalyzerFactory.class, factory);
     ImportService importService = new ImportService();
     directory.add(ImportService.class, importService);
@@ -150,47 +186,6 @@ public class PicsouInit {
 
   public GlobRepository getRepository() {
     return repository;
-  }
-
-  private void loadGlobs(String fileName) {
-    Reader reader;
-    try {
-      InputStream stream = PicsouInit.class.getResourceAsStream(fileName);
-      if (stream == null) {
-        throw new ResourceAccessFailed("Resource file not found:" + fileName);
-      }
-      reader = new InputStreamReader(stream, "UTF-8");
-    }
-    catch (UnsupportedEncodingException e) {
-      throw new UnexpectedApplicationState(e);
-    }
-    XmlGlobParser.parse(PicsouModel.get(), repository, reader, "globs");
-  }
-
-  private static class LicenseCheckerThread extends Thread {
-    private Directory directory;
-    private GlobRepository repository;
-
-    public static void launch(Directory directory, GlobRepository repository) {
-      LicenseCheckerThread thread = new LicenseCheckerThread(directory, repository);
-      thread.setDaemon(true);
-      thread.start();
-    }
-
-    private LicenseCheckerThread(Directory directory, GlobRepository repository) {
-      this.directory = directory;
-      this.repository = repository;
-    }
-
-    public void run() {
-      ConfigService.waitEndOfConfigRequest(directory);
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          ConfigService.check(directory, repository);
-          repository.update(User.KEY, User.CONNECTED, true);
-        }
-      });
-    }
   }
 
 }

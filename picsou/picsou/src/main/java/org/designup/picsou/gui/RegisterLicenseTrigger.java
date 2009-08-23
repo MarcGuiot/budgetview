@@ -65,7 +65,6 @@ public class RegisterLicenseTrigger implements ChangeSetListener {
 
         public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
           if (values.contains(User.IS_REGISTERED_USER) && !values.get(User.IS_REGISTERED_USER)) {
-            Log.write("Registered user to false ");
             serverAccess.localRegister(null, null, null);
           }
         }

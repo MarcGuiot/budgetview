@@ -189,6 +189,7 @@ public class NextProjectsViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testPositionsAreDisplayedInRedWhenTooLow() throws Exception {
+    setDeleteLocalPrevayler(false);
     operations.openPreferences().setFutureMonthsCount(12).validate();
 
     TimeService.setCurrentDate(Dates.parse("2008/10/16"));

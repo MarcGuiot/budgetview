@@ -16,6 +16,8 @@ public interface SessionState {
 
   CreatingUserState createUser() throws InvalidActionForState;
 
+  void deleteUser(SerializedInput input);
+
   ConnectedState connected() throws InvalidActionForState;
 
   void disconnect(SerializedInput input);

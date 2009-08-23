@@ -50,6 +50,7 @@ public class LicenseTest extends LicenseTestCase {
     }
     picsouApplication.shutdown();
     picsouApplication = null;
+    login = null;
   }
 
   private void startApplication() {

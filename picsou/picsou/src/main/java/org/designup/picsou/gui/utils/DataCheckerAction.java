@@ -118,6 +118,17 @@ public class DataCheckerAction extends AbstractAction {
           }
         }
       }
+
+      GlobList transactions = repository.getAll(Transaction.TYPE,
+                                       GlobMatchers.not(GlobMatchers.fieldIsNull(Transaction.SPLIT_SOURCE)));
+      for (Glob transaction : transactions) {
+        if (repository.findLinkTarget(transaction, Transaction.SPLIT_SOURCE) == null) {
+          Log.write("Error : split source was deleted for " + transaction.get(Transaction.LABEL) + " : " +
+                    Month.toString(transaction.get(Transaction.MONTH), transaction.get(Transaction.DAY)));
+          hasError = true;
+        }
+      }
+
       return hasError;
     }
     finally {

@@ -547,6 +547,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.importQifFile(file2, SOCIETE_GENERALE, "other");
 
     views.selectData();
+    timeline.checkSelection("2006/01");
     transactions
       .initContent()
       .add("09/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.00)

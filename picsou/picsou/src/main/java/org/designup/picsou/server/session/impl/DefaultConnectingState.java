@@ -43,6 +43,12 @@ public class DefaultConnectingState extends AbstractSessionState implements Conn
     return new DefaultCreatingUserState(persistence, getDefaultSessionService(), getSessionId(), getPrivateId());
   }
 
+  public void register(SerializedInput input) {
+    lastAccess();
+    checkPrivateId(input);
+    persistence.register(input.readBytes(), input.readBytes(), input.readJavaString());
+  }
+
   public String getStateName() {
     return "Connecting";
   }

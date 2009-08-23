@@ -108,7 +108,7 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
 
     public SavingsFunctor(GlobRepository repository) {
       this.repository = repository;
-      currentMonth = repository.get(CurrentMonth.KEY);
+      currentMonth = repository.find(CurrentMonth.KEY);
     }
 
     public void run(Glob transaction, GlobRepository repository) throws Exception {

@@ -54,6 +54,10 @@ public abstract class AbstractSessionState implements SessionState {
     throw new InvalidActionForState("createUser", getStateName());
   }
 
+  public void deleteUser(SerializedInput input) {
+    throw new InvalidActionForState("deleteUser", getStateName());
+  }
+
   public abstract String getStateName();
 
   public ConnectingState connect(SerializedInput input, SerializedOutput output) throws InvalidActionForState {

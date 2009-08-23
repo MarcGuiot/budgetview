@@ -6,9 +6,13 @@ import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
 import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
+import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.server.ServerDirectory;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.gui.splits.utils.GuiUtils;
 
+import javax.swing.*;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,21 +52,39 @@ public class MainWindowLauncher {
     ServerAccess serverAccess =
       new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
                                            directory);
-    boolean newUser;
-    boolean validUser = serverAccess.connect();
+    serverAccess.connect();
+    boolean registered = false;
     try {
-      serverAccess.createUser(user, password.toCharArray());
-      newUser = true;
+      registered = serverAccess.createUser(user, password.toCharArray());
     }
     catch (UserAlreadyExists userAlreadyExists) {
-      serverAccess.initConnection(user, password.toCharArray(), false);
-      newUser = false;
+      registered = serverAccess.initConnection(user, password.toCharArray(), false);
     }
-    PicsouInit init = PicsouInit.init(serverAccess, user, validUser, newUser, directory, false);
+    PicsouInit init = PicsouInit.init(serverAccess, directory, registered);
+    PicsouInit.PreLoadData data = init.loadUserData(user, false, registered);
+    data.load();
 
-    MainWindow window = new MainWindow();
-    MainPanel.init(init.getRepository(), init.getDirectory(), window).show();
-    window.show();
+    final PicsouFrame frame = new PicsouFrame("test");
+    MainPanel.init(init.getRepository(), init.getDirectory(), new MainPanel.WindowManager() {
+      public PicsouFrame getFrame() {
+        return frame;
+      }
+
+      public void setPanel(JPanel panel) {
+        frame.setContentPane(panel);
+        frame.validate();
+      }
+
+      public void loggout() {
+        System.exit(1);
+      }
+
+      public void logOutAndDeleteUser(String name, char[] passwd) {
+      }
+    })
+      .show();
+    frame.setSize(Gui.getWindowSize(1100, 800));
+    GuiUtils.showCentered(frame);
 
     return directory;
   }

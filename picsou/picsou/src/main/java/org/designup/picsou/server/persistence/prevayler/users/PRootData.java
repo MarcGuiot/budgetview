@@ -6,6 +6,7 @@ import org.designup.picsou.server.persistence.prevayler.CustomSerializable;
 import org.designup.picsou.server.persistence.prevayler.CustomSerializableFactory;
 import org.designup.picsou.server.persistence.prevayler.RootDataManager;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.serialization.SerializedInput;
@@ -166,6 +167,10 @@ public class PRootData implements CustomSerializable {
     if (id == null) {
       id = repoId;
     }
+  }
+
+  public GlobList getLocalUsers() {
+    return new GlobList(users.values());
   }
 
   private static class Factory implements CustomSerializableFactory {

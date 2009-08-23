@@ -3,9 +3,7 @@ package org.designup.picsou.gui;
 import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.accounts.AccountView;
-import org.designup.picsou.gui.actions.ExitAction;
-import org.designup.picsou.gui.actions.ExportFileAction;
-import org.designup.picsou.gui.actions.ImportFileAction;
+import org.designup.picsou.gui.actions.*;
 import org.designup.picsou.gui.backup.BackupAction;
 import org.designup.picsou.gui.backup.RestoreAction;
 import org.designup.picsou.gui.budget.BudgetView;
@@ -36,6 +34,7 @@ import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.utils.DumpDataAction;
 import org.designup.picsou.gui.utils.DataCheckerAction;
 import org.designup.picsou.gui.notes.NotesView;
+import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -68,28 +67,47 @@ public class MainPanel {
   private RestoreAction restoreAction;
   private PreferencesAction preferencesAction;
   private ExitAction exitAction;
+  private GotoLoginAction gotoLoginAction;
+  private DeleteUserAction deleteUserAction;
   private GlobsPanelBuilder builder;
   private GlobRepository repository;
   private Directory directory;
-  private MainWindow mainWindow;
+  private WindowManager windowManager;
   private RegisterLicenseAction registerAction;
   private Action dumpRepository;
   private MonthSummaryView monthSummary;
   private SeriesView seriesView;
   private DataCheckerAction checkRepository;
+  private JMenuBar menuBar;
+  private JPanel panel;
+  private TimeView timeView;
+  private CardView cardView;
+  private TransactionView transactionView;
+  private TextFilterPanel search;
+  private CategorizationView categorizationView;
+
+  public interface WindowManager {
+    PicsouFrame getFrame();
+
+    void setPanel(JPanel panel);
+
+    void loggout();
+
+    void logOutAndDeleteUser(String name, char[] passwd);
+  }
 
   public static MainPanel init(GlobRepository repository, Directory directory,
-                               MainWindow mainWindow) {
+                               WindowManager mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
     mainWindow.getFrame().setRepository(repository);
     return panel;
   }
 
-  private MainPanel(final GlobRepository repository, Directory directory, MainWindow mainWindow) {
+  private MainPanel(final GlobRepository repository, Directory directory, WindowManager windowManager) {
     this.repository = repository;
     this.directory = directory;
-    this.mainWindow = mainWindow;
-    this.parent = mainWindow.getFrame();
+    this.windowManager = windowManager;
+    this.parent = windowManager.getFrame();
     directory.add(JFrame.class, parent);
     directory.add(new UndoRedoService(repository, directory));
     directory.add(new HelpService(repository, directory));
@@ -100,14 +118,14 @@ public class MainPanel {
 
     TransactionSelection transactionSelection = new TransactionSelection(repository, directory);
 
-    TransactionView transactionView = new TransactionView(repository, directory, transactionSelection);
-    CategorizationView categorizationView = new CategorizationView(repository, directory);
+    transactionView = new TransactionView(repository, directory, transactionSelection);
+    categorizationView = new CategorizationView(repository, directory);
     seriesView = new SeriesView(repository, directory);
-    TimeView timeView = new TimeView(repository, directory);
+    timeView = new TimeView(repository, directory);
 
     directory.add(new NavigationService(categorizationView, seriesView, repository, directory));
 
-    importFileAction = ImportFileAction.initAndRegisterToOpenRequestManager(Lang.get("import"), repository, directory);
+    importFileAction = ImportFileAction.initForMenu(Lang.get("import"), repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
     backupAction = new BackupAction(repository, directory);
     restoreAction = new RestoreAction(repository, directory);
@@ -116,8 +134,10 @@ public class MainPanel {
     dumpRepository = new DumpDataAction(repository);
     checkRepository = new DataCheckerAction(repository);
     exitAction = new ExitAction(directory);
+    gotoLoginAction = new GotoLoginAction(this);
+    deleteUserAction = new DeleteUserAction(this, repository, directory);
 
-    TextFilterPanel search = new TextFilterPanel(transactionView.getFilterSet(), repository, directory) {
+    search = new TextFilterPanel(transactionView.getFilterSet(), repository, directory) {
       protected GlobMatcher createMatcher(String searchFilter) {
         return or(fieldContainsIgnoreCase(Transaction.LABEL, searchFilter),
                   fieldContainsIgnoreCase(Transaction.NOTE, searchFilter));
@@ -137,6 +157,7 @@ public class MainPanel {
 
     PeriodSeriesStatUpdater.init(replicationGlobRepository, directory);
 
+    cardView = new CardView(repository, directory);
     createPanel(
       titleView,
       transactionView,
@@ -145,7 +166,7 @@ public class MainPanel {
       new AccountView(repository, directory),
       monthSummary,
       categorizationView,
-      new CardView(repository, directory),
+      cardView,
       new NavigationView(repository, directory),
       new BudgetView(replicationGlobRepository, directory),
       seriesView,
@@ -155,7 +176,7 @@ public class MainPanel {
       new NotesView(repository, directory));
 
     createMenuBar(parent, directory);
-    timeView.selectCurrentMonth();
+    builder.load();
   }
 
   private void selectLastMonthWithATransaction(GlobRepository repository, Directory directory) {
@@ -174,19 +195,22 @@ public class MainPanel {
     }
     builder.addLoader(new SplitsLoader() {
       public void load(Component component) {
-        JPanel panel = (JPanel)component;
-        mainWindow.setPanel(panel);
+        panel = (JPanel)component;
       }
     });
-
   }
 
   public void show() {
-
-    builder.load();
-
+    ImportFileAction.registerToOpenRequestManager(Lang.get("import"), repository, directory);
+    parent.setJMenuBar(menuBar);
+    cardView.showInitialCard();
+    search.reset();
+    transactionView.reset();
+    directory.get(NavigationService.class).reset();
+    directory.get(UndoRedoService.class).reset();
+    windowManager.setPanel(panel);
+    timeView.selectCurrentMonth();
     monthSummary.init();
-
     selectLastMonthWithATransaction(repository, directory);
     seriesView.selectAll();
 
@@ -194,11 +218,10 @@ public class MainPanel {
   }
 
   public void createMenuBar(final PicsouFrame frame, Directory directory) {
-    JMenuBar menuBar = new JMenuBar();
+    menuBar = new JMenuBar();
     menuBar.add(createFileMenu());
     menuBar.add(createEditMenu(frame, directory));
     menuBar.add(createHelpMenu(directory));
-    frame.setJMenuBar(menuBar);
   }
 
   private JMenu createFileMenu() {
@@ -220,6 +243,8 @@ public class MainPanel {
 
     menu.addSeparator();
     menu.add(registerAction);
+    menu.add(gotoLoginAction);
+    menu.add(deleteUserAction);
 
     if (useMacOSMenu()) {
       MRJAdapter.addQuitApplicationListener(exitAction);
@@ -278,4 +303,13 @@ public class MainPanel {
     return result;
   }
 
+  public void loggout() {
+    directory.get(OpenRequestManager.class).popCallback();
+    windowManager.loggout();
+  }
+
+  public void deleteUser(String userName, char[] chars) {
+    directory.get(OpenRequestManager.class).popCallback();
+    windowManager.logOutAndDeleteUser(userName, chars);
+  }
 }

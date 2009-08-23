@@ -15,10 +15,11 @@ import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
+import javax.swing.*;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -199,8 +200,21 @@ public class OperationChecker {
     UISpecAssert.assertFalse(redoMenu.isEnabled());
   }
 
+  public void loggout() {
+    window.getMenuBar().getMenu("File").getSubMenu("Logout").click();
+  }
+
   public void exit() {
     window.getMenuBar().getMenu("File").getSubMenu("Exit").click();
+  }
+
+  public void deleteUser(String password) {
+      MenuItem subMenu = window.getMenuBar().getMenu("File").getSubMenu("Delete");
+      PasswordDialogChecker dialogChecker =
+        new PasswordDialogChecker(WindowInterceptor.getModalDialog(subMenu.triggerClick()));
+      dialogChecker.setPassword(password);
+      dialogChecker.validate();
+      UISpecAssert.waitUntil(window.containsSwingComponent(JPasswordField.class, "password"), 2000);
   }
 
   public HelpChecker openHelp() {
@@ -215,7 +229,7 @@ public class OperationChecker {
     File file = File.createTempFile("cashpilot", ".snapshot");
     String backupFile = file.getAbsoluteFile().getAbsolutePath();
     file.delete();
-    
+
     backup(backupFile);
     String javaHome = System.getProperty("java.home");
     String classPath = System.getProperty("java.class.path");
@@ -227,6 +241,7 @@ public class OperationChecker {
     args.add(classPath);
     args.add("-Dsplits.editor.enabled=false");
     args.add("-Dsplits.debug.enabled=false");
+    args.add("-D" + PicsouApplication.IS_DATA_IN_MEMORY + "=true");
     args.add("-D" + PicsouApplication.APPNAME + ".log.sout=true");
     if (currentDate != null) {
       args.add("-D" + PicsouApplication.APPNAME + ".today=" + Dates.toString(currentDate));

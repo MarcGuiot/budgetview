@@ -47,24 +47,26 @@ public class LicenseInfoView extends View {
     });
     PicsouColors.installLinkColor(licenseMessage, "licenseMessage", "license.message.link", directory);
 
-    Glob user = repository.get(User.KEY);
-    Glob userPreferences = repository.get(UserPreferences.KEY);
-    update(user, userPreferences);
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(User.KEY)) {
-          Glob user = repository.get(User.KEY);
-          Glob userPreferences = repository.get(UserPreferences.KEY);
-          update(user, userPreferences);
+        if (changeSet.containsChanges(User.KEY) || changeSet.containsChanges(UserPreferences.KEY)) {
+          update(repository);
         }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        Glob user = repository.get(User.KEY);
-        Glob userPreferences = repository.get(UserPreferences.KEY);
-        update(user, userPreferences);
+        update(repository);
       }
     });
+  }
+
+  private void update(GlobRepository repository) {
+    Glob user = repository.find(User.KEY);
+    Glob userPreferences = repository.find(UserPreferences.KEY);
+    if (user == null || userPreferences == null){
+      return;
+    }
+    update(user, userPreferences);
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
@@ -72,15 +74,15 @@ public class LicenseInfoView extends View {
   }
 
   private void update(Glob user, Glob userPreferences) {
+    if (User.isDemoUser(user)){
+      licenseMessage.setText(Lang.get("demo.license.info.message"));
+      licenseMessage.setVisible(true);
+      return;
+    }
     if (user.get(User.IS_REGISTERED_USER)) {
       licenseMessage.setVisible(false);
     }
     else {
-      if (User.isDemoUser(user)){
-        licenseMessage.setText(Lang.get("demo.license.info.message"));
-        licenseMessage.setVisible(true);
-        return;
-      }
       licenseMessage.setVisible(true);
       long days =
         (userPreferences.get(UserPreferences.LAST_VALID_DAY).getTime() - TimeService.getToday().getTime()) / Millis.ONE_DAY;

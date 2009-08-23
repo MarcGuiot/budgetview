@@ -59,8 +59,10 @@ public class FutureMonthTrigger implements ChangeSetListener {
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(UserPreferences.TYPE)) {
-      Glob userPreferences = repository.get(Key.create(UserPreferences.TYPE, UserPreferences.SINGLETON_ID));
-      updateFuturMonth(repository, userPreferences.get(UserPreferences.FUTURE_MONTH_COUNT));
+      Glob userPreferences = repository.find(Key.create(UserPreferences.TYPE, UserPreferences.SINGLETON_ID));
+      if (userPreferences != null) {
+        updateFuturMonth(repository, userPreferences.get(UserPreferences.FUTURE_MONTH_COUNT));
+      }
     }
   }
 }

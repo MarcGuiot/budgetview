@@ -25,7 +25,8 @@ public class PicsouModel {
                           SeriesBudget.TYPE,
                           BudgetArea.TYPE,
                           ProfileType.TYPE,
-                          VersionInformation.TYPE,
+                          AppVersionInformation.TYPE,
+                          UserVersionInformation.TYPE,
                           AccountPositionThreshold.TYPE,
                           Notes.TYPE)
       .get();

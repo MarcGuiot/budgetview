@@ -14,7 +14,7 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
-public class VersionInformation {
+public class UserVersionInformation {
 
   public static final Integer SINGLETON_ID = 0;
   public static org.globsframework.model.Key KEY;
@@ -25,19 +25,13 @@ public class VersionInformation {
   public static IntegerField ID;
 
   public static StringField CURRENT_SOFTWARE_VERSION;
-  public static StringField LATEST_AVALAIBLE_SOFTWARE_VERSION;
-
   public static LongField CURRENT_JAR_VERSION;
-  public static LongField LATEST_AVALAIBLE_JAR_VERSION;
-
   public static LongField CURRENT_BANK_CONFIG_VERSION;
-  public static LongField LATEST_BANK_CONFIG_SOFTWARE_VERSION;
 
   static {
-    GlobTypeLoader.init(VersionInformation.class, "versionInformation");
+    GlobTypeLoader.init(UserVersionInformation.class, "versionInformation");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
-
   public static class Serializer implements PicsouGlobSerializer {
 
     public byte[] serializeData(FieldValues values) {
@@ -45,11 +39,8 @@ public class VersionInformation {
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
       outputStream.writeInteger(values.get(ID));
       outputStream.writeUtf8String(values.get(CURRENT_SOFTWARE_VERSION));
-      outputStream.writeUtf8String(values.get(LATEST_AVALAIBLE_SOFTWARE_VERSION));
       outputStream.writeLong(values.get(CURRENT_JAR_VERSION));
-      outputStream.writeLong(values.get(LATEST_AVALAIBLE_JAR_VERSION));
       outputStream.writeLong(values.get(CURRENT_BANK_CONFIG_VERSION));
-      outputStream.writeLong(values.get(LATEST_BANK_CONFIG_SOFTWARE_VERSION));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -60,32 +51,42 @@ public class VersionInformation {
       if (version == 2) {
         deserializeDataV2(fieldSetter, data);
       }
+      if (version == 3) {
+        deserializeDataV3(fieldSetter, data);
+      }
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(ID, input.readInteger());
       fieldSetter.set(CURRENT_SOFTWARE_VERSION, "0.9");
-      fieldSetter.set(LATEST_AVALAIBLE_SOFTWARE_VERSION, "0.9");
       fieldSetter.set(CURRENT_JAR_VERSION, input.readLong());
-      fieldSetter.set(LATEST_AVALAIBLE_JAR_VERSION, input.readLong());
+      long latestJar =  input.readLong();
       fieldSetter.set(CURRENT_BANK_CONFIG_VERSION, input.readLong());
-      fieldSetter.set(LATEST_BANK_CONFIG_SOFTWARE_VERSION, input.readLong());
+      long latestConfig = input.readLong();
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(ID, input.readInteger());
       fieldSetter.set(CURRENT_SOFTWARE_VERSION, input.readUtf8String());
-      fieldSetter.set(LATEST_AVALAIBLE_SOFTWARE_VERSION, input.readUtf8String());
+      String version =  input.readUtf8String();
       fieldSetter.set(CURRENT_JAR_VERSION, input.readLong());
-      fieldSetter.set(LATEST_AVALAIBLE_JAR_VERSION, input.readLong());
+      long latestJar =  input.readLong();
       fieldSetter.set(CURRENT_BANK_CONFIG_VERSION, input.readLong());
-      fieldSetter.set(LATEST_BANK_CONFIG_SOFTWARE_VERSION, input.readLong());
+      long latestConfig = input.readLong();
+    }
+
+    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(ID, input.readInteger());
+      fieldSetter.set(CURRENT_SOFTWARE_VERSION, input.readUtf8String());
+      fieldSetter.set(CURRENT_JAR_VERSION, input.readLong());
+      fieldSetter.set(CURRENT_BANK_CONFIG_VERSION, input.readLong());
     }
 
     public int getWriteVersion() {
-      return 2;
+      return 3;
     }
   }
 

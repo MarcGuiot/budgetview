@@ -186,4 +186,11 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
   public FilterSet getFilterSet() {
     return filterSet;
   }
+
+  public void reset() {
+    view.resetSort();
+    transactionSelection.init();
+    accountFilteringCombo.reset();
+    setFilter(GlobMatchers.ALL);
+  }
 }

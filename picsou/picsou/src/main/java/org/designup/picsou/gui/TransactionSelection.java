@@ -22,18 +22,27 @@ import java.util.Set;
 
 public class TransactionSelection implements GlobSelectionListener {
 
-  private Set<Integer> currentAccounts = Collections.singleton(Account.ALL_SUMMARY_ACCOUNT_ID);
-  private Set<Integer> currentMonths = Collections.emptySet();
-  private Set<Integer> currentBudgetAreas = Collections.singleton(BudgetArea.ALL.getId());
-  private Set<Integer> currentSeries = Collections.emptySet();
+  private Set<Integer> currentAccounts;
+  private Set<Integer> currentMonths;
+  private Set<Integer> currentBudgetAreas;
+  private Set<Integer> currentSeries;
   private List<GlobSelectionListener> listeners = new ArrayList<GlobSelectionListener>();
   private GlobRepository repository;
-  private GlobMatcher currentMatcher = GlobMatchers.NONE;
+  private GlobMatcher currentMatcher;
 
   public TransactionSelection(GlobRepository repository, Directory directory) {
+    init();
     this.repository = repository;
     directory.get(SelectionService.class).addListener(this, Account.TYPE, Month.TYPE,
                                                       BudgetArea.TYPE, Series.TYPE);
+  }
+
+  public void init(){
+    currentMatcher = GlobMatchers.NONE;
+    currentSeries = Collections.emptySet();
+    currentBudgetAreas = Collections.singleton(BudgetArea.ALL.getId());
+    currentMonths = Collections.emptySet();
+    currentAccounts = Collections.singleton(Account.ALL_SUMMARY_ACCOUNT_ID);
   }
 
   public void addListener(GlobSelectionListener listener) {

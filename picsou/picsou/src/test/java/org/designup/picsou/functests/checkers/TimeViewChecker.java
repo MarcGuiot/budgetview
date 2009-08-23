@@ -46,7 +46,7 @@ public class TimeViewChecker extends GuiChecker {
     TestUtils.assertSetEquals(ids, valueSet);
   }
 
-  public void checkSelection(final String... dates) {
+  public void checkSelection(final String... yyyymm) {
     UISpecAssert.assertThat(new Assertion() {
       public void check() throws Exception {
         Set<Selectable> list = timeViewPanel.getCurrentlySelectedToUpdate();
@@ -55,12 +55,12 @@ public class TimeViewChecker extends GuiChecker {
           selectable.getSelectedGlobs(selectedMonths);
         }
 
-        if (dates.length != selectedMonths.size()) {
-          Assert.assertEquals(Arrays.toString(dates), selectedMonths.getValueSet(Month.ID).toString());
+        if (yyyymm.length != selectedMonths.size()) {
+          Assert.assertEquals(Arrays.toString(yyyymm), selectedMonths.getValueSet(Month.ID).toString());
         }
 
-        for (int i = 0; i < dates.length; i++) {
-          Assert.assertEquals(dates[i], Month.toString(selectedMonths.get(i).get(Month.ID)));
+        for (int i = 0; i < yyyymm.length; i++) {
+          Assert.assertEquals(yyyymm[i], Month.toString(selectedMonths.get(i).get(Month.ID)));
         }
       }
     });

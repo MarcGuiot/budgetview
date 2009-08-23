@@ -9,7 +9,7 @@ import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.utils.KeyService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.User;
-import org.designup.picsou.model.VersionInformation;
+import org.designup.picsou.model.AppVersionInformation;
 import org.designup.picsou.utils.Inline;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
@@ -84,13 +84,13 @@ public class ConfigService {
     this.httpClient = new HttpClient();
   }
 
-  public boolean loadConfigFileFromLastestJar(Directory directory, GlobRepository repository) {
+  synchronized public boolean loadConfigFileFromLastestJar(Directory directory, GlobRepository repository) {
     return loadConfig(directory, repository);
   }
 
 
   // return a translated message
-  public String askForNewCodeByMail(String mail) {
+  synchronized public String askForNewCodeByMail(String mail) {
     try {
       String url = URL + REQUEST_FOR_MAIL;
       final PostMethod postMethod = new PostMethod(url);
@@ -124,7 +124,7 @@ public class ConfigService {
   }
 
 
-  private boolean sendRequestForNewConfig(byte[] repoId, String mail, String signature,
+  synchronized private boolean sendRequestForNewConfig(byte[] repoId, String mail, String signature,
                                           long launchCount, String activationCode) throws IOException {
     this.repoId = repoId;
     String url = URL + REQUEST_FOR_CONFIG;
@@ -193,7 +193,7 @@ public class ConfigService {
     return header != null && header.getValue().equals("true");
   }
 
-  public void sendRegister(String mail, String code, final GlobRepository repository) {
+  synchronized public void sendRegister(String mail, String code, final GlobRepository repository) {
     Utils.beginRemove();
     if (URL == null || URL.length() == 0) {
       return;
@@ -279,7 +279,7 @@ public class ConfigService {
     }
   }
 
-  public boolean update(final byte[] repoId, final long launchCount, byte[] mailInBytes,
+  synchronized public boolean update(final byte[] repoId, final long launchCount, byte[] mailInBytes,
                         byte[] signatureInByte, final String activationCode) {
     boolean isValideUser;
     final String mail = mailInBytes == null ? null : new String(mailInBytes);
@@ -342,11 +342,11 @@ public class ConfigService {
     configService.updateUserValidity(directory, repository);
   }
 
-  private void updateUserValidity(Directory directory, GlobRepository repository) {
+  synchronized private void updateUserValidity(Directory directory, GlobRepository repository) {
     userState = userState.updateUserValidity(directory, repository);
   }
 
-  public boolean loadConfig(Directory directory, GlobRepository repository) {
+  synchronized public boolean loadConfig(Directory directory, GlobRepository repository) {
     boolean configLoaded = false;
     if (configReceive != null) {
       configLoaded = configReceive.set(directory, repository);
@@ -421,8 +421,8 @@ public class ConfigService {
           }
         }
       };
-      directory.get(TransactionAnalyzerFactory.class).load(loader, version);
-      repository.update(VersionInformation.KEY, VersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION, version);
+      directory.get(TransactionAnalyzerFactory.class).load(loader, version, repository);
+      repository.update(AppVersionInformation.KEY, AppVersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION, version);
       return true;
     }
     catch (Exception e) {
@@ -433,7 +433,7 @@ public class ConfigService {
   private static class JarReceive extends AbstractJarReceived {
 
     protected void loadJar(File jarFile, long version) {
-      repository.update(VersionInformation.KEY, VersionInformation.LATEST_AVALAIBLE_JAR_VERSION, version);
+      repository.update(AppVersionInformation.KEY, AppVersionInformation.LATEST_AVALAIBLE_JAR_VERSION, version);
     }
   }
 

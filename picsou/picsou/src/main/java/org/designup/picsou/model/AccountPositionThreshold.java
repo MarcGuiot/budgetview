@@ -9,8 +9,8 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -34,7 +34,10 @@ public class AccountPositionThreshold {
   }
 
   public static Double getValue(GlobRepository repository) {
-    Glob limit = repository.findOrCreate(KEY);
+    Glob limit = repository.find(KEY);
+    if (limit == null) {
+      return null;
+    }
     return limit.get(THRESHOLD);
   }
 

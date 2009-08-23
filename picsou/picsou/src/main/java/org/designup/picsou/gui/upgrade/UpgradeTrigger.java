@@ -19,13 +19,9 @@ import java.util.Set;
 
 public class UpgradeTrigger implements ChangeSetListener {
   private Directory directory;
-  private String user;
-  private boolean validUser;
 
-  public UpgradeTrigger(Directory directory, String user, boolean validUser) {
+  public UpgradeTrigger(Directory directory) {
     this.directory = directory;
-    this.user = user;
-    this.validUser = validUser;
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -33,9 +29,11 @@ public class UpgradeTrigger implements ChangeSetListener {
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     createDataForNewUser(repository);
-    Glob version = repository.find(VersionInformation.KEY);
-    if (!version.get(VersionInformation.CURRENT_BANK_CONFIG_VERSION).equals(version.get(VersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION))) {
-      directory.get(UpgradeService.class).upgradeBankData(repository, version);
+    Glob appVersion = repository.get(AppVersionInformation.KEY);
+    Glob userVersion = repository.get(UserVersionInformation.KEY);
+    if (userVersion.get(UserVersionInformation.CURRENT_BANK_CONFIG_VERSION)
+        < (appVersion.get(AppVersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION))) {
+      directory.get(UpgradeService.class).upgradeBankData(repository, appVersion);
     }
 
     Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
@@ -48,7 +46,7 @@ public class UpgradeTrigger implements ChangeSetListener {
                       value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
                       value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
 
-    final Long currentJarVersion = version.get(VersionInformation.CURRENT_JAR_VERSION);
+    final Long currentJarVersion = userVersion.get(UserVersionInformation.CURRENT_JAR_VERSION);
     if (currentJarVersion.equals(PicsouApplication.JAR_VERSION)) {
       return;
     }
@@ -129,7 +127,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       migrateProfileTypes(repository);
     }
 
-    repository.update(VersionInformation.KEY, VersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
+    repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
   }
 
   private void migrateProfileTypes(GlobRepository repository) {
@@ -208,33 +206,38 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
 
   public void createDataForNewUser(GlobRepository repository) {
-    repository.findOrCreate(User.KEY,
-                            value(User.NAME, user),
-                            value(User.IS_REGISTERED_USER, validUser));
-    repository.findOrCreate(VersionInformation.KEY,
-                            value(VersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION),
-                            value(VersionInformation.CURRENT_BANK_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
-                            value(VersionInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION),
-                            value(VersionInformation.LATEST_AVALAIBLE_JAR_VERSION, PicsouApplication.JAR_VERSION),
-                            value(VersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
-                            value(VersionInformation.LATEST_AVALAIBLE_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION));
-    Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
-    if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
-      repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
-                        Month.addOneMonth(TimeService.getToday()));
-    }
+    repository.startChangeSet();
+    try {
+      repository.findOrCreate(Notes.KEY);
+      repository.findOrCreate(AccountPositionThreshold.KEY);
+      repository.findOrCreate(UserVersionInformation.KEY,
+                              value(UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION),
+                              value(UserVersionInformation.CURRENT_BANK_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
+                              value(UserVersionInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION));
+//                            value(AppVersionInformation.LATEST_AVALAIBLE_JAR_VERSION, PicsouApplication.JAR_VERSION),
+//                            value(AppVersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
+//                            value(AppVersionInformation.LATEST_AVALAIBLE_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION)
+      Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
+      if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
+        repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
+                          Month.addOneMonth(TimeService.getToday()));
+      }
 
-    repository.findOrCreate(CurrentMonth.KEY,
-                            value(CurrentMonth.LAST_TRANSACTION_MONTH, 0),
-                            value(CurrentMonth.LAST_TRANSACTION_DAY, 0),
-                            value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
-                            value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
-    repository.findOrCreate(Account.MAIN_SUMMARY_KEY,
-                            value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()),
-                            value(Account.IS_IMPORTED_ACCOUNT, true));
-    repository.findOrCreate(Account.SAVINGS_SUMMARY_KEY,
-                            FieldValue.value(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()));
-    repository.findOrCreate(Account.ALL_SUMMARY_KEY);
-    InitialSeries.run(repository);
+      repository.findOrCreate(CurrentMonth.KEY,
+                              value(CurrentMonth.LAST_TRANSACTION_MONTH, 0),
+                              value(CurrentMonth.LAST_TRANSACTION_DAY, 0),
+                              value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
+                              value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
+      repository.findOrCreate(Account.MAIN_SUMMARY_KEY,
+                              value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()),
+                              value(Account.IS_IMPORTED_ACCOUNT, true));
+      repository.findOrCreate(Account.SAVINGS_SUMMARY_KEY,
+                              FieldValue.value(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()));
+      repository.findOrCreate(Account.ALL_SUMMARY_KEY);
+      InitialSeries.run(repository);
+    }
+    finally {
+      repository.completeChangeSet();
+    }
   }
 }

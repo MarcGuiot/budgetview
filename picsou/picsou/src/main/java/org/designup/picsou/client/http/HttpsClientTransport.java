@@ -58,6 +58,10 @@ public class HttpsClientTransport implements ClientTransport {
     return sendRequest(sessionId, "/createUser", bytes);
   }
 
+  public SerializedInput deleteUser(Long sessionId, byte[] bytes) {
+    return null;
+  }
+
   public SerializedInput identifyUser(Long sessionId, byte[] data) {
     return sendRequest(sessionId, "/identifyUser", data);
   }
@@ -83,7 +87,7 @@ public class HttpsClientTransport implements ClientTransport {
   }
 
   public SerializedInput getLocalUsers() {
-    return null; 
+    return null;
   }
 
   public void removeLocalUser(String user) {

@@ -32,6 +32,7 @@ import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
 import static org.globsframework.gui.views.utils.LabelCustomizers.autoTooltip;
 import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
@@ -186,9 +187,28 @@ public class CategorizationView extends View implements TableView, Filterable {
         updateTableFilter();
       }
     });
-    Integer defaultFilteringModeId =
-      repository.get(UserPreferences.KEY).get(UserPreferences.CATEGORIZATION_FILTERING_MODE);
-    filteringModeCombo.setSelectedItem(TransactionFilteringMode.get(defaultFilteringModeId));
+    repository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(UserPreferences.KEY, UserPreferences.CATEGORIZATION_FILTERING_MODE)){
+          Glob preferences = repository.find(UserPreferences.KEY);
+          Integer defaultFilteringModeId =
+            preferences.get(UserPreferences.CATEGORIZATION_FILTERING_MODE);
+          Object o = TransactionFilteringMode.get(defaultFilteringModeId);
+          filteringModeCombo.setSelectedItem(o);
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        Glob preferences = repository.find(UserPreferences.KEY);
+        if (preferences == null) {
+          return;
+        }
+        Integer defaultFilteringModeId =
+          preferences.get(UserPreferences.CATEGORIZATION_FILTERING_MODE);
+        Object o = TransactionFilteringMode.get(defaultFilteringModeId);
+        filteringModeCombo.setSelectedItem(o);
+      }
+    });
   }
 
   private void installDoubleClickHandler() {

@@ -2,6 +2,7 @@ package org.designup.picsou.server.persistence.prevayler;
 
 import org.designup.picsou.server.session.Persistence;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 
 public interface RootDataManager {
 
@@ -17,6 +18,8 @@ public interface RootDataManager {
   void deleteUser(String name, byte[] cryptedLinkInfo);
 
   void close();
+
+  GlobList getLocalUsers();
 
   static class RepoInfo {
     private byte[] id;

@@ -34,6 +34,11 @@ public class DefaultServerRequestProcessingService implements ServerRequestProce
     output.writeBoolean(creatingUserState.getIsRegisteredUser());
   }
 
+  public void deleteUser(Long sessionId, SerializedInput input, SerializedOutput output) {
+    SessionState state = sessionService.getSessionState(sessionId);
+    state.deleteUser(input);
+  }
+
   public void confirmUser(Long sessionId, SerializedInput input, SerializedOutput output) throws InvalidActionForState {
     SessionState state = sessionService.getSessionState(sessionId);
     state.confirmUser(input);
@@ -74,5 +79,9 @@ public class DefaultServerRequestProcessingService implements ServerRequestProce
   public void restore(Long sessionId, SerializedInput input, SerializedOutput output) {
     SessionState state = sessionService.getSessionState(sessionId);
     state.connected().restore(input, output);
+  }
+
+  public void getLocalUsers(SerializedOutput output) {
+    sessionService.getLocalUsers(output);
   }
 }

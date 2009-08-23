@@ -289,7 +289,8 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/10");
     mainAccounts.edit("Main")
-      .checkStartDate("2008/10/01");
+      .checkStartDate("2008/10/01")
+      .cancel();
 
     timeline.selectMonth("2008/09");
     mainAccounts.checkAccountNames("Account n. 0000100");

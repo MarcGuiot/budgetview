@@ -18,8 +18,16 @@ public class ServerAccessDecorator implements ServerAccess {
     this.serverAccess = serverAccess;
   }
 
+  public void setServerAccess(ServerAccess serverAccess) {
+    this.serverAccess = serverAccess;
+  }
+
   public boolean createUser(String name, char[] password) throws UserAlreadyExists, IdentificationFailed {
     return serverAccess.createUser(name, password);
+  }
+
+  public void deleteUser(String name, char[] password) {
+    serverAccess.deleteUser(name, password);
   }
 
   public boolean initConnection(String name, char[] password, boolean privateComputer) throws IdentificationFailed {
@@ -42,7 +50,7 @@ public class ServerAccessDecorator implements ServerAccess {
     return serverAccess.canRead(data);
   }
 
-  public boolean connect() {
+  public LocalInfo connect() {
     return serverAccess.connect();
   }
 
@@ -54,7 +62,7 @@ public class ServerAccessDecorator implements ServerAccess {
     serverAccess.replaceData(data);
   }
 
-  public List<String> getLocalUsers() {
+  public List<UserInfo> getLocalUsers() {
     return serverAccess.getLocalUsers();
   }
 

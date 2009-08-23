@@ -65,6 +65,10 @@ public class CardView extends View implements GlobSelectionListener {
     showCard(NavigationService.INITIAL_CARD);
   }
 
+  public void showInitialCard(){
+    showCard(NavigationService.INITIAL_CARD);
+  }
+
   private String getTooltip(Card card) {
     return "<html>Vue <b>" + card.getLabel() + "</b><br><hr><p>" + card.getDescription() + "</p></html>";
   }

@@ -8,12 +8,14 @@ import org.designup.picsou.server.persistence.prevayler.AccountDataManager;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.MapOfMaps;
 import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.Files;
 import org.globsframework.utils.exceptions.EOFIOFailure;
 import org.globsframework.utils.exceptions.IOFailure;
 import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
+import org.globsframework.model.GlobList;
 import org.prevayler.implementation.PrevaylerDirectory;
 
 import java.io.*;
@@ -33,6 +35,9 @@ public class DirectAccountDataManager implements AccountDataManager {
   public DirectAccountDataManager(String prevaylerPath, boolean inMemory) {
     this.prevaylerPath = prevaylerPath;
     this.inMemory = inMemory;
+    if (inMemory){
+      return;
+    }
     File file = new File(prevaylerPath, "app.lock");
     file.getParentFile().mkdirs();
     try {
@@ -40,9 +45,11 @@ public class DirectAccountDataManager implements AccountDataManager {
       lock = stream.getChannel().tryLock();
     }
     catch (IOException e) {
+      stream = null;
       throw new InvalidState(prevaylerPath);
     }
     if (lock == null) {
+      stream = null;
       throw new InvalidState("Repository already in use: " + prevaylerPath);
     }
   }
@@ -162,7 +169,16 @@ public class DirectAccountDataManager implements AccountDataManager {
     return null;
   }
 
-  public void delete(Integer userId) {
+  synchronized public void delete(Integer userId) {
+    DurableOutputStream durableOutputStream = outputStreamMap.get(userId);
+    if (durableOutputStream != null){
+      durableOutputStream.close();
+    }
+    String path = getPath(userId);
+    File file = new File(path);
+    if (file.exists()) {
+      Files.deleteSubtree(file);
+    }
   }
 
   synchronized public void close() {

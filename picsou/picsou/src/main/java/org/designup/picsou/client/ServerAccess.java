@@ -29,13 +29,25 @@ public interface ServerAccess {
 
   void takeSnapshot();
 
-  boolean connect();
+  LocalInfo connect();
 
   MapOfMaps<String, Integer, SerializableGlobType> getServerData();
 
   void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data);
 
-  List<String> getLocalUsers();
+  void deleteUser(String name, char[] password);
+
+  class UserInfo{
+    final String name;
+    final boolean hasPassword;
+
+    public UserInfo(String name, Boolean hasPassword) {
+      this.name = name;
+      this.hasPassword = hasPassword;
+    }
+  }
+
+  List<UserInfo> getLocalUsers();
 
   void removeLocalUser(String user);
 
@@ -67,8 +79,8 @@ public interface ServerAccess {
     public void takeSnapshot() {
     }
 
-    public boolean connect() {
-      return false;
+    public LocalInfo connect() {
+      return null;
     }
 
     public MapOfMaps<String, Integer, SerializableGlobType> getServerData() {
@@ -78,7 +90,10 @@ public interface ServerAccess {
     public void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data) {
     }
 
-    public List<String> getLocalUsers() {
+    public void deleteUser(String name, char[] password) {
+    }
+
+    public List<UserInfo> getLocalUsers() {
       return null;
     }
 
@@ -96,4 +111,40 @@ public interface ServerAccess {
     public void disconnect() {
     }
   };
+
+  class LocalInfo{
+    private byte[] repoId;
+    private byte[] mail;
+    private byte[] signature;
+    private String activationCode;
+    private long count;
+
+    public LocalInfo(byte[] repoId, byte[] mail, byte[] signature, String activationCode, long count) {
+      this.repoId = repoId;
+      this.mail = mail;
+      this.signature = signature;
+      this.activationCode = activationCode;
+      this.count = count;
+    }
+
+    public byte[] getRepoId() {
+      return repoId;
+    }
+
+    public byte[] getMail() {
+      return mail;
+    }
+
+    public byte[] getSignature() {
+      return signature;
+    }
+
+    public String getActivationCode() {
+      return activationCode;
+    }
+
+    public long getCount() {
+      return count;
+    }
+  }
 }

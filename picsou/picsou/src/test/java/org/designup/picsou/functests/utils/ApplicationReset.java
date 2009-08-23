@@ -6,7 +6,6 @@ import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
-import org.globsframework.model.impl.DefaultCheckedGlobIdGenerator;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.model.utils.CachedGlobIdGenerator;
 
@@ -26,14 +25,14 @@ public class ApplicationReset {
 //    PicsouInit.createDataForNewUser(temp);
     temp.getAll();
 
-    GlobType[] typesToDelete = getTypesToDelete(
-      User.TYPE, VersionInformation.TYPE, BudgetArea.TYPE,
+    GlobType[] typesToDelete = getTypesToDeleteExpect(
+      User.TYPE, AppVersionInformation.TYPE, BudgetArea.TYPE,
       TransactionType.TYPE, PreTransactionTypeMatcher.TYPE, Bank.TYPE, BankEntity.TYPE,
       ProfileType.TYPE, Card.TYPE);
     repository.reset(temp.getAll(), typesToDelete);
   }
 
-  private static GlobType[] getTypesToDelete(GlobType... typesToKeep) {
+  private static GlobType[] getTypesToDeleteExpect(GlobType... typesToKeep) {
     List<GlobType> types = new ArrayList<GlobType>();
     types.addAll(PicsouGuiModel.get().getAll());
     for (GlobType type : typesToKeep) {

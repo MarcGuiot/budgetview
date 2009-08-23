@@ -2,6 +2,7 @@ package org.designup.picsou.server.session;
 
 import org.designup.picsou.client.exceptions.IdentificationFailed;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
 
@@ -19,9 +20,9 @@ public interface Persistence {
 
   Integer confirmUser(String b64LinkInfo) throws IdentificationFailed;
 
-  void register(Integer userId, byte[] mail, byte[] signature, String activationCode);
+  void register(byte[] mail, byte[] signature, String activationCode);
 
-  void delete(String name, byte[] encryptedPassword, byte[] linkInfo, byte[] encryptedLinkInfo, Integer userId);
+  void delete(String name, byte[] encryptedLinkInfo, Integer userId);
 
   Glob getUser(String name);
 
@@ -34,6 +35,8 @@ public interface Persistence {
   void takeSnapshot(Integer userId);
 
   boolean restore(SerializedInput input, Integer userId);
+
+  GlobList getLocalUsers();
 
   class UserInfo {
     final public Integer userId;

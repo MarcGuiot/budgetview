@@ -4,11 +4,13 @@ import com.jgoodies.looks.LookUtils;
 import org.designup.picsou.gui.plaf.LafUtils;
 import org.designup.picsou.gui.plaf.PicsouButtonUI;
 import org.designup.picsou.gui.plaf.PicsouWindowsLabelUI;
+import org.designup.picsou.gui.utils.Gui;
 import org.jdesktop.swingx.JXDatePicker;
 import org.jdesktop.swingx.JXMonthView;
 import org.jdesktop.swingx.JXHyperlink;
 import org.jdesktop.swingx.plaf.basic.BasicMonthViewUI;
 import org.jdesktop.swingx.plaf.basic.BasicHyperlinkUI;
+import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
 import javax.swing.plaf.InsetsUIResource;
@@ -67,11 +69,13 @@ public class PicsouWindowsLookAndFeel extends Plastic3DLookAndFeel {
   protected void initComponentDefaults(UIDefaults defaults) {
     super.initComponentDefaults(defaults);
 
-    Object[] properties = {
-      "Button.margin", new InsetsUIResource(2, 8, 2, 8),
-    };
+    if (!GuiUtils.isOpenJDK()){
+      Object[] properties = {
+        "Button.margin", new InsetsUIResource(2, 8, 2, 8),
+      };
 
-    defaults.putDefaults(properties);
+      defaults.putDefaults(properties);
+    }
   }
 
   public boolean getSupportsWindowDecorations() {

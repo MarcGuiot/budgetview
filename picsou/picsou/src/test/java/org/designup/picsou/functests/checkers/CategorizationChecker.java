@@ -220,7 +220,11 @@ public class CategorizationChecker extends GuiChecker {
   }
 
   public CategorizationChecker checkSelectedTableRow(String label) {
-    checkSelectedTableRows(getTable().getRowIndex(2, label));
+    int index = getTable().getRowIndex(2, label);
+    if (index < 0) {
+      Assert.fail("Transaction " + label + " not found. Actual content:\n" + getTable().toString());
+    }
+    checkSelectedTableRows(index);
     return this;
   }
 

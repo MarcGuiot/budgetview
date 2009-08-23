@@ -22,15 +22,13 @@ import java.util.regex.Pattern;
 public class TransactionAnalyzerFactory {
 
   private GlobModel model;
-  private GlobRepository repository;
   private DefaultTransactionAnalyzer analyzer;
   private Long version = 0L;
   public static Pattern BLANK = Pattern.compile("[\\s]+");
   private static final String BANK_LIST_FILE_NAME = "banks/bankList.txt";
 
-  public TransactionAnalyzerFactory(GlobModel model, GlobRepository repository) {
+  public TransactionAnalyzerFactory(GlobModel model) {
     this.model = model;
-    this.repository = repository;
   }
 
   public static String removeBlankAndToUpercase(final String value) {
@@ -44,19 +42,19 @@ public class TransactionAnalyzerFactory {
     InputStream load(String file);
   }
 
-  synchronized public void load(final ClassLoader loader, Long version) {
+  synchronized public void load(final ClassLoader loader, Long version, final GlobRepository repository) {
     load(new Loader() {
       public InputStream load(String file) {
         return loader.getResourceAsStream(file);
       }
-    }, version);
+    }, version, repository);
   }
 
-  synchronized public void load(Loader loader, Long version) {
+  synchronized public void load(Loader loader, Long version, final GlobRepository repository) {
     if (this.version < version) {
       this.version = version;
       this.analyzer = new DefaultTransactionAnalyzer();
-      loadMatchers(loader);
+      loadMatchers(loader, repository);
       analyzer.add(new LabelForCategorizationUpdater());
       analyzer.add(new TransactionDateUpdater());
     }
@@ -66,12 +64,12 @@ public class TransactionAnalyzerFactory {
     return analyzer;
   }
 
-  private void loadMatchers(Loader loader) {
-    parseDefinitionFile(loader);
-    registerMatchers();
+  private void loadMatchers(Loader loader, final GlobRepository repository) {
+    parseDefinitionFile(loader, repository);
+    registerMatchers(repository);
   }
 
-  private void parseDefinitionFile(Loader loader) {
+  private void parseDefinitionFile(Loader loader, final GlobRepository repository) {
     InputStream bankListStream = loader.load(BANK_LIST_FILE_NAME);
     if (bankListStream == null) {
       throw new ResourceAccessFailed("Missing bank file list: " + BANK_LIST_FILE_NAME);
@@ -118,7 +116,7 @@ public class TransactionAnalyzerFactory {
     }
   }
 
-  private void registerMatchers() {
+  private void registerMatchers(GlobRepository repository) {
     for (Glob matcher : repository.getAll(PreTransactionTypeMatcher.TYPE).sort(PreTransactionTypeMatcher.ID)) {
 
       String label = matcher.get(PreTransactionTypeMatcher.LABEL);

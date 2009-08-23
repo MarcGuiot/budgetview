@@ -28,7 +28,6 @@ import java.util.Set;
 public class TransactionCreationPanel extends View implements GlobSelectionListener, ChangeSetListener {
   private GlobRepository parentRepository;
   private static final Key PROTOTYPE_TRANSACTION_KEY = Key.create(Transaction.TYPE, 0);
-  private Glob prototypeTransaction;
 
   private JPanel panel = new JPanel();
   private JLabel monthLabel;
@@ -39,12 +38,12 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
   private JComboBox accountCombo;
   private AbstractAction showHideAction = new ShowHideAction();
   private boolean isShowing;
+  private AmountEditor amountEditor;
 
   public TransactionCreationPanel(GlobRepository repository, Directory directory) {
     super(createLocalRepository(repository), directory);
     this.parentRepository = repository;
     this.directory = directory;
-    this.prototypeTransaction = this.repository.create(PROTOTYPE_TRANSACTION_KEY);
     this.selectionService.addListener(this, Month.TYPE);
     this.parentRepository.addChangeListener(this);
   }
@@ -68,19 +67,19 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     accountCombo = builder.addComboEditor("account", Transaction.ACCOUNT)
       .setShowEmptyOption(false)
       .setFilter(GlobMatchers.fieldEquals(Account.UPDATE_MODE, AccountUpdateMode.MANUAL.getId()))
-      .forceSelection(prototypeTransaction)
+      .forceSelection(PROTOTYPE_TRANSACTION_KEY)
       .getComponent();
 
-    AmountEditor amountEditor = new AmountEditor(Transaction.AMOUNT, repository, directory, false, null)
-      .forceSelection(prototypeTransaction)
+    amountEditor = new AmountEditor(Transaction.AMOUNT, repository, directory, false, null)
+      .forceSelection(PROTOTYPE_TRANSACTION_KEY)
       .update(false, false);
     amountField = amountEditor.getNumericEditor().getComponent();
     builder.add("amount", amountField);
     builder.add("positiveAmounts", amountEditor.getPositiveRadio());
     builder.add("negativeAmounts", amountEditor.getNegativeRadio());
 
-    dayField = builder.addEditor("day", Transaction.DAY).forceSelection(prototypeTransaction).getComponent();
-    labelField = builder.addEditor("label", Transaction.LABEL).forceSelection(prototypeTransaction).getComponent();
+    dayField = builder.addEditor("day", Transaction.DAY).forceSelection(PROTOTYPE_TRANSACTION_KEY).getComponent();
+    labelField = builder.addEditor("label", Transaction.LABEL).forceSelection(PROTOTYPE_TRANSACTION_KEY).getComponent();
 
     monthLabel = builder.add("month", new JLabel());
 
@@ -110,6 +109,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     }
 
     Integer currentMonth = months.getSortedSet(Month.ID).last();
+    repository.findOrCreate(PROTOTYPE_TRANSACTION_KEY);
     repository.update(PROTOTYPE_TRANSACTION_KEY,
                       value(Transaction.MONTH, currentMonth),
                       value(Transaction.BANK_MONTH, currentMonth));
@@ -125,6 +125,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(Account.TYPE)) {
       updateAccount();
+      amountEditor.getNegativeRadio().doClick();
     }
   }
 
@@ -151,6 +152,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
       if (updateInProgress) {
         return;
       }
+      Glob prototypeTransaction = repository.find(PROTOTYPE_TRANSACTION_KEY);
       updateInProgress = true;
       try {
         amountField.postActionEvent();

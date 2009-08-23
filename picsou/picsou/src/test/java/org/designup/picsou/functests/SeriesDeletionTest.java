@@ -11,7 +11,8 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     budgetView.income.createSeries()
       .setName("AA")
       .deleteSelectedSeries()
-      .checkSeriesListIsEmpty();
+      .checkSeriesListIsEmpty()
+      .validate();
   }
 
   public void testDeleteUsedSeries() throws Exception {

@@ -31,6 +31,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Collections;
 
 public class EncrypterToTransportServerAccess implements ServerAccess {
   private ClientTransport clientTransport;
@@ -41,36 +42,34 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
   private boolean notConnected = true;
   static public final byte[] salt = {0x54, 0x12, 0x43, 0x65, 0x77, 0x2, 0x79, 0x72};
   private GlobModel globModel;
-  private ConfigService configService;
   public static int count = 20;
 
   public EncrypterToTransportServerAccess(ClientTransport transport, Directory directory) {
     this.clientTransport = transport;
     this.directory = directory;
     globModel = directory.get(GlobModel.class);
-    configService = directory.get(ConfigService.class);
   }
 
-  public boolean connect() {
+  public LocalInfo connect() {
     SerializedInput response = clientTransport.connect();
-    boolean isValidUser = false;
     if (response.readBoolean()) {
       byte[] repoId = response.readBytes();
       byte[] mail = response.readBytes();
       byte[] signature = response.readBytes();
       String activationCode = response.readJavaString();
       long count = response.readNotNullLong();
-      isValidUser = configService.update(repoId, count, mail, signature, activationCode);
+      sessionId = response.readLong();
+      privateId = response.readBytes();
+      return new LocalInfo(repoId, mail, signature, activationCode, count);
     }
     sessionId = response.readLong();
     privateId = response.readBytes();
-    return isValidUser;
+    return null;
   }
 
   public boolean createUser(String name, char[] password) throws UserAlreadyExists {
     try {
       this.name = name;
-
       PasswordBasedEncryptor passwordBasedEncryptor = new MD5PasswordBasedEncryptor(salt, password, count);
       RedirectPasswordBasedEncryptor encryptor = (RedirectPasswordBasedEncryptor)directory.get(PasswordBasedEncryptor.class);
       encryptor.setPasswordBasedEncryptor(passwordBasedEncryptor);
@@ -78,7 +77,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
       SerializedByteArrayOutput request = new SerializedByteArrayOutput();
       SerializedOutput output = request.getOutput();
       output.writeUtf8String(this.name);
-      output.writeBytes(generatePassword(password, passwordBasedEncryptor));
+      output.writeBytes(cryptPassword(password, passwordBasedEncryptor));
 
       byte[] linkInfo = generateLinkInfo();
       output.writeBytes(linkInfo);
@@ -105,6 +104,24 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     }
   }
 
+  public void deleteUser(String name, char[] password) {
+    PasswordBasedEncryptor passwordBasedEncryptor = new MD5PasswordBasedEncryptor(salt, password, count);
+    RedirectPasswordBasedEncryptor encryptor = (RedirectPasswordBasedEncryptor)directory.get(PasswordBasedEncryptor.class);
+    encryptor.setPasswordBasedEncryptor(passwordBasedEncryptor);
+
+    SerializedByteArrayOutput request = new SerializedByteArrayOutput();
+    SerializedOutput output = request.getOutput();
+    output.writeUtf8String(name);
+    output.writeBytes(cryptPassword(password, passwordBasedEncryptor));
+
+    SerializedInput response = clientTransport.identifyUser(sessionId, request.toByteArray());
+
+    SerializedByteArrayOutput confirmation = new SerializedByteArrayOutput();
+    confirmation.getOutput().writeBytes(privateId);
+    confirmation.getOutput().writeBytes(passwordBasedEncryptor.encrypt(response.readBytes()));
+    clientTransport.deleteUser(sessionId, confirmation.toByteArray());
+  }
+
   public boolean initConnection(String name, char[] password, boolean privateComputer) {
     this.name = name;
 
@@ -116,7 +133,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     SerializedOutput output = request.getOutput();
 
     output.writeUtf8String(this.name);
-    output.writeBytes(generatePassword(password, passwordBasedEncryptor));
+    output.writeBytes(cryptPassword(password, passwordBasedEncryptor));
 
     SerializedInput response = clientTransport.identifyUser(sessionId, request.toByteArray());
 
@@ -133,12 +150,17 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     clientTransport.localRegister(sessionId, privateId, mail, signature, activationCode);
   }
 
-  public List<String> getLocalUsers() {
+  public List<UserInfo> getLocalUsers() {
     SerializedInput input = clientTransport.getLocalUsers();
+    if (input == null){
+      return Collections.emptyList();
+    }
     int size = input.readNotNullInt();
-    List<String> users = new ArrayList<String>(size);
+    List<UserInfo> users = new ArrayList<UserInfo>(size);
     for (int i = 0; i < size; i++) {
-      users.add(input.readJavaString());
+      String userName = input.readUtf8String();
+      Boolean hasPassword = input.readBoolean();
+      users.add(new UserInfo(userName, hasPassword));
     }
     return users;
   }
@@ -158,7 +180,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     return linkInfo;
   }
 
-  private byte[] generatePassword(char[] name, PasswordBasedEncryptor passwordEncryptor) {
+  private byte[] cryptPassword(char[] name, PasswordBasedEncryptor passwordEncryptor) {
     byte[] tab = new byte[name.length];
     try {
       int i = 0;
@@ -251,9 +273,12 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
         globType = globModel.getType(globTypeName);
       }
       PicsouGlobSerializer globSerializer =
-        globType.getProperty(SerializationManager.SERIALIZATION_PROPERTY);
+        globType.getProperty(SerializationManager.SERIALIZATION_PROPERTY, null);
       if (globSerializer == null) {
-        throw new RuntimeException("missing serialializer for " + globTypeName);
+        if (!SerializationManager.REMOVED_GLOB.contains(globType)){
+          throw new RuntimeException("missing serialializer for " + globTypeName);
+        }
+        continue;
       }
       IntegerField field = (IntegerField)globType.getKeyFields()[0];
       Integer id;

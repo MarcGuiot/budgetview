@@ -90,6 +90,7 @@ public class PicsouApplication {
   private static final String BUTTON_PANEL_UI = "org" + dot() + "designup.picsou.gui.plaf.ButtonPanelItemUI";
   private static final String ARROW_BUTTON_UI = "org" + dot() + "designup.picsou.gui.components.ArrowButtonUI";
   private WindowAdapter windowOpenListener;
+  private AbstractAction mrjDocumentListener;
 
   static {
     PicsouMacLookAndFeel.initApplicationName();
@@ -164,12 +165,13 @@ public class PicsouApplication {
   }
 
   public void run(String... args) throws Exception {
-    MRJAdapter.addOpenDocumentListener(new AbstractAction() {
+    mrjDocumentListener = new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         ApplicationEvent event = (ApplicationEvent)e;
         openRequestManager.openFiles(Collections.singletonList(event.getFile()));
       }
-    });
+    };
+    MRJAdapter.addOpenDocumentListener(mrjDocumentListener);
     Locale.setDefault(Locale.ENGLISH);
     if (args.length > 1) {
       args = parseLanguage(args);
@@ -200,23 +202,7 @@ public class PicsouApplication {
     directory = createDirectory(openRequestManager);
 
     try {
-      final MainWindow mainWindow = new MainWindow();
-      final LoginPanel loginPanel = new LoginPanel(getServerAddress(), getLocalPrevaylerPath(), isDataInMemory(),
-                                                   mainWindow, directory);
-      windowOpenListener = new WindowAdapter() {
-        public void windowOpened(WindowEvent e) {
-          loginPanel.initFocus();
-          // pour que loginPanel passe au GC
-          mainWindow.getFrame().removeWindowListener(windowOpenListener);
-          windowOpenListener = null;
-        }
-      };
-      mainWindow.getFrame().addWindowListener(windowOpenListener);
-      mainWindow.getFrame().addWindowListener(new WindowAdapter() {
-        public void windowClosing(WindowEvent e) {
-          shutdown();
-        }
-      });
+      final MainWindow mainWindow = new MainWindow(this, getServerAddress(), getLocalPrevaylerPath(), isDataInMemory(), directory);
       mainWindow.show();
     }
     catch (InvalidState e) {
@@ -320,6 +306,7 @@ public class PicsouApplication {
 
   public void shutdown() {
     try {
+      MRJAdapter.removeOpenDocumentListener(mrjDocumentListener);
       singleInstanceListener.shutdown();
       if (directory != null) {
         directory.get(ColorService.class).removeAllListeners();

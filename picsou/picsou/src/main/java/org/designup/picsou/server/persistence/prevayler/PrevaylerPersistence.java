@@ -7,6 +7,7 @@ import org.designup.picsou.server.model.HiddenUser;
 import org.designup.picsou.server.model.User;
 import org.designup.picsou.server.session.Persistence;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
@@ -48,7 +49,7 @@ public class PrevaylerPersistence implements Persistence {
     return hiddenUser.get(HiddenUser.USER_ID);
   }
 
-  public void register(Integer userId, byte[] mail, byte[] signature, String activationCode) {
+  public void register(byte[] mail, byte[] signature, String activationCode) {
     rootDataManager.register(mail, signature, activationCode);
   }
 
@@ -56,7 +57,8 @@ public class PrevaylerPersistence implements Persistence {
     return rootDataManager.createUserAndHiddenUser(name, isRegisteredUser, cryptedPassword, linkInfo, cryptedLinkInfo);
   }
 
-  public void delete(String name, byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo, Integer userId) {
+  public void delete(String name, byte[] cryptedLinkInfo, Integer userId) {
+    rootDataManager.deleteUser(name, cryptedLinkInfo);
     accountDataManager.delete(userId);
   }
 
@@ -83,6 +85,10 @@ public class PrevaylerPersistence implements Persistence {
 
   public boolean restore(SerializedInput input, Integer userId) {
     return accountDataManager.restore(input, userId);
+  }
+
+  public GlobList getLocalUsers() {
+    return rootDataManager.getLocalUsers();
   }
 
   public void getData(SerializedOutput output, Integer userId) {

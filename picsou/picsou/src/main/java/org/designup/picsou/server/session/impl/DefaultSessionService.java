@@ -5,10 +5,13 @@ import org.designup.picsou.server.session.ConnectingState;
 import org.designup.picsou.server.session.Persistence;
 import org.designup.picsou.server.session.SessionService;
 import org.designup.picsou.server.session.SessionState;
+import org.designup.picsou.server.model.User;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.serialization.SerializedOutput;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.Glob;
 
-import java.security.SecureRandom;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,7 +20,7 @@ import java.util.concurrent.ConcurrentMap;
 public class DefaultSessionService implements SessionService {
   private Directory directory;
   private ConcurrentMap<Long, SessionState> sessions = new ConcurrentHashMap<Long, SessionState>();
-  private Random random = new SecureRandom();
+  private Random random = new Random();
 
   public DefaultSessionService(Directory directory) {
     this.directory = directory;
@@ -72,4 +75,13 @@ public class DefaultSessionService implements SessionService {
     }
   }
 
+  public void getLocalUsers(SerializedOutput output) {
+    Persistence persistence = directory.get(Persistence.class);
+    GlobList users = persistence.getLocalUsers();
+    output.write(users.size());
+    for (Glob user : users) {
+      output.writeUtf8String(user.get(User.NAME));
+      output.writeBoolean(user.get(User.HAS_PASSWORD));
+    }
+  }
 }

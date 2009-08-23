@@ -6,6 +6,7 @@ import org.designup.picsou.server.persistence.prevayler.RootDataManager;
 import org.designup.picsou.server.session.Persistence;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.utils.serialization.Encoder;
 
@@ -43,6 +44,10 @@ public class DummyRootDataManager implements RootDataManager {
   }
 
   public void close() {
+  }
+
+  public GlobList getLocalUsers() {
+    return GlobList.EMPTY;
   }
 
   public RepoInfo getAndUpdateAccountInfo() {

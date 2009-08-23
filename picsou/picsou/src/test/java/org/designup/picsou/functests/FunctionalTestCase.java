@@ -6,6 +6,7 @@ import org.globsframework.utils.TestUtils;
 import org.uispec4j.UISpec4J;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.utils.DummyRepaintManager;
+import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 
 import java.io.File;
 import java.util.Locale;
@@ -23,12 +24,6 @@ public abstract class FunctionalTestCase extends UISpecTestCase {
     super.setUp();
     Locale.setDefault(Locale.ENGLISH);
     Log.reset();
-    Files.deleteSubtree(new File(createPrevaylerRepository()));
-  }
-
-  protected void tearDown() throws Exception {
-    super.tearDown();
-    Files.deleteSubtree(new File(createPrevaylerRepository()));
   }
 
   protected static String createPrevaylerRepository() {

@@ -34,7 +34,7 @@ public class CategorizationGaugePanel implements ChangeSetListener {
     createPanel();
     createProgressMessage();
     repository.addChangeListener(this);
-    update();
+//    update();
   }
 
   public void createPanel() {
@@ -104,7 +104,11 @@ public class CategorizationGaugePanel implements ChangeSetListener {
   }
 
   private void updateProgressMessage(double total, double percentage) {
-    Boolean preference = repository.get(UserPreferences.KEY).get(UserPreferences.SHOW_CATEGORIZATION_HELP_MESSAGE);
+    Glob preferences = repository.find(UserPreferences.KEY);
+    if (preferences == null){
+      return;
+    }
+    Boolean preference = preferences.get(UserPreferences.SHOW_CATEGORIZATION_HELP_MESSAGE);
     if (!Boolean.TRUE.equals(preference)) {
       progressMessage.setVisible(false);
       return;

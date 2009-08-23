@@ -71,6 +71,7 @@ public class LoginChecker extends GuiChecker {
     enterUserName(user);
     enterPassword(password);
     loginButton.click();
+    checkNoErrorDisplayed();
     waitForApplicationToLoad();
   }
 
@@ -80,7 +81,7 @@ public class LoginChecker extends GuiChecker {
   }
   
   public void waitForApplicationToLoad() {
-    UISpecAssert.waitUntil(window.containsSwingComponent(TimeViewPanel.class), 20000);
+    UISpecAssert.waitUntil(window.containsSwingComponent(TimeViewPanel.class), 10000);
   }
 
   public void checkConfirmPasswordVisible(boolean visible) {
@@ -113,7 +114,7 @@ public class LoginChecker extends GuiChecker {
   }
 
   public void checkLoggedIn() {
-    assertThat(window.containsMenuBar());
+    UISpecAssert.waitUntil(window.containsMenuBar(), 2000);
   }
 
   public void checkNotLoggedIn() {

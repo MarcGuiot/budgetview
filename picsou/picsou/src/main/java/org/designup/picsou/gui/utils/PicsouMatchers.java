@@ -48,8 +48,8 @@ public class PicsouMatchers {
     }
     final Set<Integer> reducedSeriesSet = new HashSet<Integer>();
     for (Integer seriesId : targetSeries) {
-      Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-      if (!targetBudgetAreas.contains(series.get(Series.BUDGET_AREA))) {
+      Glob series = repository.find(Key.create(Series.TYPE, seriesId));
+      if (series != null && !targetBudgetAreas.contains(series.get(Series.BUDGET_AREA))) {
         reducedSeriesSet.add(seriesId);
       }
     }
@@ -241,15 +241,6 @@ public class PicsouMatchers {
       if (isEligible(series, repository)) {
         Integer firstMonth = series.get(Series.FIRST_MONTH);
         Integer lastMonth = series.get(Series.LAST_MONTH);
-        if (firstMonth == null && lastMonth == null) {
-          for (Integer id : monthIds) {
-            BooleanField monthField = Series.getMonthField(id);
-            if (series.get(monthField) != exclusive) {
-              return !exclusive;
-            }
-          }
-          return true;
-        }
         if (firstMonth == null) {
           firstMonth = 0;
         }
@@ -269,7 +260,7 @@ public class PicsouMatchers {
             }
           }
         }
-        return exclusive;  // return true?
+        return true;
       }
       return false;
     }
@@ -317,6 +308,14 @@ public class PicsouMatchers {
         }
       }
       return false;
+    }
+  }
+
+  public static void main(String[] args) {
+    int id = 6;
+    boolean ex = false;
+    if ((id < 5 || id > 10) == ex) {
+      System.out.println("PicsouMatchers.main " + !ex);
     }
   }
 }

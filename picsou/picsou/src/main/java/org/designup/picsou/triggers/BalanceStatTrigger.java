@@ -87,7 +87,10 @@ public class BalanceStatTrigger implements ChangeSetListener {
 
     private BalanceStatCalculator(GlobRepository repository) {
       this.repository = repository;
-      currentMonth = repository.get(CurrentMonth.KEY);
+      currentMonth = repository.find(CurrentMonth.KEY);
+      if (currentMonth == null){
+        return;
+      }
       for (Glob series : repository.getAll(Series.TYPE)) {
         Integer seriesId = series.get(Series.ID);
         if (BudgetArea.INCOME.getId().equals(series.get(Series.BUDGET_AREA))) {

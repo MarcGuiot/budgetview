@@ -46,7 +46,12 @@ public class SubSeriesUpdater implements GlobSelectionListener, ChangeSetListene
     Set<Integer> subSeriesIds = selectedTransactions.getValueSet(Transaction.SUB_SERIES);
     Integer subSeriesId = subSeriesIds.size() == 1 ? subSeriesIds.iterator().next() : null;
 
-    Glob series = repository.get(KeyBuilder.newKey(Series.TYPE, seriesId));
+    Glob series = repository.find(KeyBuilder.newKey(Series.TYPE, seriesId));
+    // Sur reset series peut etre null parceque le reset sur timeView declenche une selection avant que le reset ne soit
+    //arrivé ici.
+    if (series == null){
+      return;
+    }
     boolean isGoodBudgetArea = series.get(Series.BUDGET_AREA).equals(budgetArea.getId());
 
     if (subSeriesId == null || !isGoodBudgetArea) {

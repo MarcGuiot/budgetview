@@ -10,10 +10,12 @@ import org.uispec4j.assertion.UISpecAssert;
 public class LicenseTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
+    resetWindow();
     setNotRegistered();
     setInMemory(false);
-    setDeleteLocalPrevayler(false);
+    setDeleteLocalPrevayler(true);
     super.setUp();
+    setDeleteLocalPrevayler(false);
   }
 
   protected void selectInitialView() {
