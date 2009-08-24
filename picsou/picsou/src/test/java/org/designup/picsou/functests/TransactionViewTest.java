@@ -88,7 +88,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     UISpecAssert.assertTrue(
       table.rowEquals(table.getRowIndex(TransactionView.LABEL_COLUMN_INDEX, "ESSENCE"),
                       new String[]{"01/05/2006", "01/05/2006", "Envelopes", "(prelevement)Voiture", "Carburant",
-                                   "ESSENCE", "-70.00", "frais pro", "330.00", "330.00", "Account n. 00001123"}));
+                                   "ESSENCE", "-70.00", "frais pro", "330.00", "330.00", OfxBuilder.DEFAULT_ACCOUNT_NAME}));
   }
 
   public void testNavigatingToCategorizationView() throws Exception {
@@ -100,7 +100,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2006/01");
 
-    transactions.categorize(0);
+    transactions.categorize("SOMETHING ELSE");
     views.checkCategorizationSelected();
     categorization.showSelectedMonthsOnly();
     categorization.checkTable(new Object[][]{
@@ -109,13 +109,18 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     });
     categorization.checkSelectedTableRows(1);
     categorization.checkCustomFilterVisible(false);
+    categorization.showUncategorizedTransactionsOnly();
+    categorization.setNewEnvelope("SOMETHING ELSE", "Clothes");
 
     views.back();
     views.checkDataSelected();
     transactions.checkSelectedRow(0);
+    transactions.checkSeries(0, "Clothes");
 
-    views.forward();
+    transactions.categorize("SOMETHING ELSE");
     views.checkCategorizationSelected();
+    categorization.checkShowsSelectedMonthsOnly();
+    categorization.checkSelectedTableRow("SOMETHING ELSE");
   }
 
   public void testNavigatingInCategorizationIsDisabledForMirrorAndCreatedFromSeries() throws Exception {
@@ -210,7 +215,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("nounou", "Nounou");
 
     views.selectHome();
-    mainAccounts.changeBalance(OfxBuilder.DEFAULT_ACCOUNT_NAME, 500, "nounou");
+    mainAccounts.changePosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 500, "nounou");
 
     views.selectData();
     timeline.selectAll();
@@ -219,10 +224,10 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .add("01/07/2006", "Planned: Voiture", -70.00, "Voiture", 260.00, "Main accounts")
       .add("06/06/2006", "Planned: Nounou", -100.00, "Nounou", 330.00, "Main accounts")
       .add("01/06/2006", "Planned: Voiture", -70.00, "Voiture", 430.00, "Main accounts")
-      .add("06/05/2006", "NOUNOU", -100.00, "Nounou", 500.00, 500.00, "Account n. 00001123")
-      .add("03/05/2006", "PEAGE", -30.00, "To categorize", 600.00, 600.00, "Account n. 00001123")
-      .add("02/05/2006", "SG", -200.00, "To categorize", 630.00, 630.00, "Account n. 00001123")
-      .add("01/05/2006", "ESSENCE", -70.00, "Voiture", 830.00, 830.00, "Account n. 00001123")
+      .add("06/05/2006", "NOUNOU", -100.00, "Nounou", 500.00, 500.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("03/05/2006", "PEAGE", -30.00, "To categorize", 600.00, 600.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("02/05/2006", "SG", -200.00, "To categorize", 630.00, 630.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("01/05/2006", "ESSENCE", -70.00, "Voiture", 830.00, 830.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
   }
 
@@ -301,6 +306,47 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00)
       .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
       .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00)
+      .check();
+  }
+
+  public void testToggleShowPlannedTransactions() throws Exception {
+    views.selectCategorization();
+    categorization.setNewEnvelope("essence", "Voiture");
+    categorization.setNewRecurring("nounou", "Nounou");
+
+    views.selectData();
+    timeline.selectAll();
+
+    transactions.checkShowsPlannedTransaction(true);
+    transactions.initContent()
+      .add("06/07/2006", TransactionType.PLANNED, "Planned: Nounou", "", -100.00, "Nounou")
+      .add("01/07/2006", TransactionType.PLANNED, "Planned: Voiture", "", -70.00, "Voiture")
+      .add("06/06/2006", TransactionType.PLANNED, "Planned: Nounou", "", -100.00, "Nounou")
+      .add("01/06/2006", TransactionType.PLANNED, "Planned: Voiture", "", -70.00, "Voiture")
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00, "Nounou")
+      .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "SG", "", -200.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00, "Voiture")
+      .check();
+
+    transactions.hidePlannedTransactions();
+    transactions.initContent()
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00, "Nounou")
+      .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "SG", "", -200.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00, "Voiture")
+      .check();
+
+    transactions.showPlannedTransactions();
+    transactions.initContent()
+      .add("06/07/2006", TransactionType.PLANNED, "Planned: Nounou", "", -100.00, "Nounou")
+      .add("01/07/2006", TransactionType.PLANNED, "Planned: Voiture", "", -70.00, "Voiture")
+      .add("06/06/2006", TransactionType.PLANNED, "Planned: Nounou", "", -100.00, "Nounou")
+      .add("01/06/2006", TransactionType.PLANNED, "Planned: Voiture", "", -70.00, "Voiture")
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00, "Nounou")
+      .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "SG", "", -200.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00, "Voiture")
       .check();
   }
 }

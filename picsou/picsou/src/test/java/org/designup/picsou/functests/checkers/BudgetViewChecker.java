@@ -1,8 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.gui.components.charts.Gauge;
+import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.*;
@@ -47,7 +47,7 @@ public class BudgetViewChecker extends GuiChecker {
     return this;
   }
 
-  public BudgetSummaryViewChecker getLabel() {
+  public BudgetSummaryViewChecker getSummary() {
     return new BudgetSummaryViewChecker(window);
   }
 
@@ -86,11 +86,19 @@ public class BudgetViewChecker extends GuiChecker {
     }
 
     public BudgetAreaChecker checkTotalAmounts(double observed, double planned) {
-      Panel budgetPanel = getPanel();
-      TextBox totalObserved = budgetPanel.getTextBox("totalObservedAmount");
-      UISpecAssert.assertTrue(totalObserved.textEquals(convert(observed)));
+      checkTotalObserved(observed);
+      checkTotalPlanned(planned);
+      return this;
+    }
 
-      TextBox totalPlanned = budgetPanel.getTextBox("totalPlannedAmount");
+    public BudgetAreaChecker checkTotalObserved(double observed) {
+      TextBox totalObserved = getPanel().getTextBox("totalObservedAmount");
+      UISpecAssert.assertTrue(totalObserved.textEquals(convert(observed)));
+      return this;
+    }
+
+    public BudgetAreaChecker checkTotalPlanned(double planned) {
+      TextBox totalPlanned = getPanel().getTextBox("totalPlannedAmount");
       UISpecAssert.assertTrue(totalPlanned.textEquals(convert(planned)));
       return this;
     }
@@ -124,7 +132,7 @@ public class BudgetViewChecker extends GuiChecker {
       return this;
     }
 
-    public BudgetAreaChecker checkSeriesGaugeRemaining(String seriesName, double remaining){
+    public BudgetAreaChecker checkSeriesGaugeRemaining(String seriesName, double remaining) {
       Panel budgetPanel = getPanel();
       Button nameButton = budgetPanel.getButton(seriesName);
 
@@ -235,7 +243,7 @@ public class BudgetViewChecker extends GuiChecker {
     }
 
     public void checkSeriesTooltip(String seriesName, String tooltipText) {
-     assertThat(getPanel().getButton(seriesName).tooltipEquals(tooltipText));
+      assertThat(getPanel().getButton(seriesName).tooltipEquals(tooltipText));
     }
   }
 

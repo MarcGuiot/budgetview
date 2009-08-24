@@ -5,16 +5,14 @@ import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.budget.BudgetAreaHeaderUpdater;
 import org.designup.picsou.gui.budget.BudgetAreaSummaryComputer;
 import org.designup.picsou.gui.card.NavigationService;
+import org.designup.picsou.gui.components.TextDisplay;
 import org.designup.picsou.gui.components.charts.BalanceGraph;
 import org.designup.picsou.gui.components.charts.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.components.charts.Gauge;
-import org.designup.picsou.gui.components.TextDisplay;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.model.BalanceStat;
 import org.designup.picsou.gui.model.SavingsBalanceStat;
 import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.gui.series.wizard.SeriesWizardDialog;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -32,7 +30,6 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.ChangeSetMatchers;
-import org.globsframework.model.utils.GlobMatcher;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -42,22 +39,16 @@ import java.awt.event.ActionEvent;
 import java.text.DecimalFormat;
 import java.util.*;
 
+/**
+ * @deprecated A SUPPRIMER APRES LA MIGRATION DE LA VUE D'ACCUEIL
+ */
 public class MonthSummaryView extends View implements GlobSelectionListener {
-  private static final GlobMatcher USER_SERIES_MATCHER =
-    fieldIn(Series.BUDGET_AREA,
-            BudgetArea.INCOME.getId(),
-            BudgetArea.RECURRING.getId(),
-            BudgetArea.ENVELOPES.getId(),
-            BudgetArea.SPECIAL.getId(),
-            BudgetArea.SAVINGS.getId());
   private CardHandler cards;
   private GlobStringifier budgetAreaStringifier;
-  private ImportFileAction importFileAction;
   private Directory parentDirectory;
 
   public MonthSummaryView(ImportFileAction importFileAction, GlobRepository repository, Directory parentDirectory) {
     super(repository, createDirectory(parentDirectory));
-    this.importFileAction = importFileAction;
     this.parentDirectory = parentDirectory;
     SelectionService parentSelectionService = parentDirectory.get(SelectionService.class);
     parentSelectionService.addListener(this, Month.TYPE);
@@ -129,14 +120,14 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
       this.in = in;
       label = Lang.get("monthsummary.savings." + (in ? "in" : "out"));
       if (in) {
-        remainingField = BalanceStat.SAVINGS_REMAINING_IN;
+        remainingField = BalanceStat.SAVINGS_IN_REMAINING;
         observedField = BalanceStat.SAVINGS_IN;
-        plannedField = BalanceStat.SAVINGS_PLANNED_IN;
+        plannedField = BalanceStat.SAVINGS_IN_PLANNED;
       }
       else {
-        remainingField = BalanceStat.SAVINGS_REMAINING_OUT;
+        remainingField = BalanceStat.SAVINGS_OUT_REMAINING;
         observedField = BalanceStat.SAVINGS_OUT;
-        plannedField = BalanceStat.SAVINGS_PLANNED_OUT;
+        plannedField = BalanceStat.SAVINGS_OUT_PLANNED;
       }
     }
 
@@ -197,10 +188,6 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
                                  BalanceStat.INCOME, BalanceStat.INCOME_REMAINING,
                                  BalanceStat.EXPENSE, BalanceStat.EXPENSE_REMAINING));
 
-    cards = builder.addCardHandler("cards");
-
-    builder.add("import", importFileAction);
-
     builder.addRepeat("budgetAreaRepeat",
                       getBudgetAreas(),
                       new RepeatComponentFactory<BudgetElement>() {
@@ -242,49 +229,8 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
     builder.add("categorize", new CategorizationAction(Lang.get("budgetArea.uncategorized")));
 
-    builder.add("openSeriesWizard", new OpenSeriesWizardAction());
-
-    builder.add("hyperlinkHandler", new HyperlinkHandler(parentDirectory));
-
     parentBuilder.add("monthSummaryView", builder);
 
-    registerCardUpdater();
-  }
-
-  private void registerCardUpdater() {
-    repository.addChangeListener(new ChangeSetListener() {
-      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsCreationsOrDeletions(Transaction.TYPE) ||
-            changeSet.containsCreationsOrDeletions(Series.TYPE)) {
-          updateCard();
-        }
-        if (changeSet.containsChanges(BalanceStat.TYPE)) {
-          selectStatAndMonth(selectionService.getSelection(Month.TYPE));
-        }
-      }
-
-      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        if (changedTypes.contains(Transaction.TYPE) || changedTypes.contains(Series.TYPE)) {
-          updateCard();
-        }
-      }
-    });
-  }
-
-  public void init() {
-    updateCard();
-  }
-
-  private void updateCard() {
-    if (!repository.contains(Transaction.TYPE)) {
-      cards.show("noData");
-    }
-    else if (!repository.contains(Series.TYPE, USER_SERIES_MATCHER)) {
-      cards.show("noSeries");
-    }
-    else {
-      cards.show("standard");
-    }
   }
 
   private List<BudgetElement> getBudgetAreas() {
@@ -385,7 +331,7 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
       double spent = 0;
       double received = 0;
       for (Glob month : monthList) {
-        for (Glob transaction : getUncategorizedTransactions(month, repository)) {
+        for (Glob transaction : Transaction.getUncategorizedTransactions(month, repository)) {
           double amount = transaction.get(Transaction.AMOUNT);
           if (amount < 0) {
             spent -= amount;
@@ -419,23 +365,6 @@ public class MonthSummaryView extends View implements GlobSelectionListener {
 
     public void actionPerformed(ActionEvent e) {
       directory.get(NavigationService.class).gotoCategorization();
-    }
-  }
-
-  private GlobList getUncategorizedTransactions(Glob month, GlobRepository repository) {
-    return repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID)
-      .findByIndex(Transaction.MONTH, month.get(Month.ID)).getGlobs()
-      .filterSelf(fieldEquals(Transaction.PLANNED, false), repository);
-  }
-
-  private class OpenSeriesWizardAction extends AbstractAction {
-    public OpenSeriesWizardAction() {
-      super(Lang.get("monthsummary.openSeriesWizard"));
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      SeriesWizardDialog dialog = new SeriesWizardDialog(repository, parentDirectory);
-      dialog.show();
     }
   }
 }

@@ -8,6 +8,7 @@ import org.designup.picsou.gui.components.filtering.FilterSet;
 import org.designup.picsou.gui.components.filtering.FilterSetListener;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
+import org.designup.picsou.gui.help.HelpAction;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
@@ -19,6 +20,7 @@ import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.gui.utils.TableView;
+import org.designup.picsou.importer.utils.BankFormatExporter;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
@@ -26,6 +28,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
@@ -33,12 +36,14 @@ import org.globsframework.gui.views.utils.LabelCustomizers;
 import static org.globsframework.gui.views.utils.LabelCustomizers.autoTooltip;
 import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import org.globsframework.metamodel.GlobType;
+import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.*;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.Pair;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
@@ -49,8 +54,10 @@ import javax.swing.*;
 import javax.swing.event.TableModelListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -133,6 +140,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     PicsouColors.installSelectionColors(table, directory);
     Gui.setColumnSizes(table, COLUMN_SIZES);
     installDoubleClickHandler();
+    registerBankFormatExporter(transactionTable);
 
     this.filterSet = new FilterSet(this);
     CustomFilterMessagePanel filterMessagePanel = new CustomFilterMessagePanel(filterSet, repository, directory);
@@ -176,6 +184,20 @@ public class CategorizationView extends View implements TableView, Filterable {
     updateTableFilter();
 
     return builder;
+  }
+
+  private void registerBankFormatExporter(final GlobTableView transactionTable) {
+    transactionTable.addKeyBinding(GuiUtils.ctrl(KeyEvent.VK_B), "ExportBankFormat", new AbstractAction() {
+      public void actionPerformed(ActionEvent event) {
+        try {
+          String text = BankFormatExporter.export(transactionTable.getCurrentSelection());
+          GuiUtils.copyTextToClipboard(text);
+        }
+        catch (IOException e) {
+          Log.write("Bank format export failed", e);
+        }
+      }
+    });
   }
 
   private void addFilteringModeCombo(GlobsPanelBuilder builder) {
@@ -253,7 +275,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     return transaction.get(Transaction.SPLIT_SOURCE);
   }
 
-  private void addSingleCategorySeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder builder) {
+  private void addSingleCategorySeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder parentBuilder) {
     GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationView.class,
                                                            "/layout/singleCategorySeriesChooserPanel.splits",
                                                            repository, directory);
@@ -279,7 +301,10 @@ public class CategorizationView extends View implements TableView, Filterable {
     panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
     panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
 
-    builder.add(name, panelBuilder);
+    panelBuilder.add("openCategorizationTipsAction",
+                     new HelpAction(Lang.get("categorization.openTips"), "categorizationTips", parentDirectory));
+
+    parentBuilder.add(name, panelBuilder);
   }
 
   private Comparator<Glob> getTransactionComparator() {
@@ -302,14 +327,36 @@ public class CategorizationView extends View implements TableView, Filterable {
     return localDirectory;
   }
 
-  public void show(GlobList transactions) {
+  public void show(GlobList transactions, boolean forceShowUncategorized) {
+    updateFilteringMode(transactions, forceShowUncategorized);
+    doShow(transactions);
+  }
+
+  private void updateFilteringMode(GlobList transactions, boolean forceShowUncategorized) {
+    if (forceShowUncategorized) {
+      setFilteringMode(TransactionFilteringMode.UNCATEGORIZED);
+      return;
+    }
+    if (TransactionFilteringMode.UNCATEGORIZED.equals(getFilteringMode())
+        && containsCategorizedTransactions(transactions)) {
+      setFilteringMode(TransactionFilteringMode.SELECTED_MONTHS);
+    }
+  }
+
+  private boolean containsCategorizedTransactions(GlobList transactions) {
+    Set<Integer> seriesIds = transactions.getValueSet(Transaction.SERIES);
+    seriesIds.remove(Series.UNCATEGORIZED_SERIES_ID);
+    return !seriesIds.isEmpty();
+  }
+
+  private void doShow(GlobList transactions) {
     if (transactions.size() < 2) {
       filterSet.clear();
       updateTableFilter();
     }
     else {
       filterSet.replaceAllWith(CustomFilterMessagePanel.CUSTOM,
-                               GlobMatchers.fieldIn(Transaction.ID, transactions.getValueSet(Transaction.ID)));
+                               fieldIn(Transaction.ID, transactions.getValueSet(Transaction.ID)));
       updateTableFilter();
     }
     transactionTable.select(transactions);
@@ -425,13 +472,21 @@ public class CategorizationView extends View implements TableView, Filterable {
         fieldEquals(Transaction.PLANNED, false),
         fieldEquals(Transaction.MIRROR, false),
         fieldEquals(Transaction.CREATED_BY_SERIES, false),
-        getCurrentFilteringMode()
+        getCurrentFilteringModeMatcher()
       );
 
     transactionTable.setFilter(matcher);
   }
 
-  private GlobMatcher getCurrentFilteringMode() {
+  public void setFilteringMode(TransactionFilteringMode mode) {
+    filteringModeCombo.setSelectedItem(mode);
+  }
+
+  public TransactionFilteringMode getFilteringMode() {
+    return (TransactionFilteringMode)filteringModeCombo.getSelectedItem();
+  }
+
+  private GlobMatcher getCurrentFilteringModeMatcher() {
     TransactionFilteringMode mode = (TransactionFilteringMode)filteringModeCombo.getSelectedItem();
     return mode.getMatcher(repository, selectionService);
   }

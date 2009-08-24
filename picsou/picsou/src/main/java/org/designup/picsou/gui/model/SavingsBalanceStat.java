@@ -11,6 +11,8 @@ import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 public class SavingsBalanceStat {
@@ -79,5 +81,10 @@ public class SavingsBalanceStat {
         return SAVINGS_REMAINING;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
+  }
+
+  public static Glob findSummary(int monthId, GlobRepository repository) {
+    return repository.find(org.globsframework.model.Key.create(MONTH, monthId,
+                                                               ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID));
   }
 }

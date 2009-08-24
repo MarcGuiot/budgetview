@@ -15,14 +15,23 @@ import org.uispec4j.utils.KeyUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
+import java.util.*;
 
-public class SeriesEvolutionChecker extends GuiChecker {
+public class SeriesEvolutionChecker extends ExpandableTableChecker {
+
+  public HistoChecker histoChart;
+  public StackChecker balanceChart;
+  public StackChecker seriesChart;
+
   private Table table;
-  private Window mainWindow;
+
+  private static final String PANEL_NAME = "seriesEvolutionView";
 
   public SeriesEvolutionChecker(Window mainWindow) {
-    this.mainWindow = mainWindow;
+    super(mainWindow);
+    this.histoChart = new HistoChecker(mainWindow);
+    this.balanceChart = new StackChecker(mainWindow, PANEL_NAME, "balanceChart");
+    this.seriesChart = new StackChecker(mainWindow, PANEL_NAME, "seriesChart");
   }
 
   public SeriesTableChecker initContent() {
@@ -40,27 +49,46 @@ public class SeriesEvolutionChecker extends GuiChecker {
 
   public void checkRow(String label, String... values) {
     Table table = getTable();
-    int index = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, label);
+    int index = getRow(label, table);
     assertThat(table.rowEquals(index, Utils.join(new String[]{"", label}, values)));
+  }
+
+  public void select(String label) {
+    Table table = getTable();
+    int index = getRow(label, table);
+    if (index < 0) {
+      Assert.fail("No line found with label '" + label + "' - available names: " + getLineLabels());
+    }
+    table.selectRow(index);
+  }
+
+  public void checkSelected(String label) {
+    Table table = getTable();
+    int index = getRow(label, table);
+    assertThat(table.rowIsSelected(index));
+  }
+
+  private int getRow(String label, Table table) {
+    return table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, label);
+  }
+
+  private java.util.List<String> getLineLabels() {
+    java.util.List<String> labels = new ArrayList<String>();
+    for (int row = 0; row < table.getRowCount(); row++) {
+      labels.add(table.getContentAt(row, SeriesEvolutionView.LABEL_COLUMN_INDEX).toString());
+    }
+    return labels;
   }
 
   public void doubleClickOnRow(String label) {
     Table table = getTable();
-    int index = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, label);
+    int index = getRow(label, table);
     table.doubleClick(index, 1);
   }
 
-  public void expand() {
-    getPanel().getButton("expand").click();
-  }
-
-  public void collapse() {
-    getPanel().getButton("collapse").click();
-  }
-
-  private Table getTable() {
+  protected Table getTable() {
     if (table == null) {
-      table = mainWindow.getTable("seriesEvolutionTable");
+      table = window.getTable("seriesEvolutionTable");
       table.setCellValueConverter(0, new BlankColumnConverter());
       MonthColumnConverter converter = new MonthColumnConverter();
       for (int i = 2; i < 2 + SeriesEvolutionView.MONTH_COLUMNS_COUNT; i++) {
@@ -70,13 +98,17 @@ public class SeriesEvolutionChecker extends GuiChecker {
     return table;
   }
 
-  private Panel getPanel() {
-    return mainWindow.getPanel("seriesEvolutionView");
+  protected int getLabelColumnIndex() {
+    return 0;
+  }
+
+  protected Panel getPanel() {
+    return window.getPanel(PANEL_NAME);
   }
 
   public SeriesEditionDialogChecker editSeries(String rowLabel, String columnLabel) {
     Table table = getTable();
-    int row = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, rowLabel.toUpperCase());
+    int row = getRow(rowLabel.toUpperCase(), table);
     if (row == -1) {
       row = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, rowLabel);
     }
@@ -101,7 +133,7 @@ public class SeriesEvolutionChecker extends GuiChecker {
 
   public SeriesEvolutionChecker checkValue(String rowLabel, String columnLabel, String displayedValue) {
     Table table = getTable();
-    int row = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, rowLabel.toUpperCase());
+    int row = getRow(rowLabel.toUpperCase(), table);
     int column = table.getHeader().findColumnIndex(columnLabel);
     assertThat(table.cellEquals(row, column, displayedValue));
     return this;
@@ -109,7 +141,7 @@ public class SeriesEvolutionChecker extends GuiChecker {
 
   public SeriesEvolutionChecker checkForeground(String rowLabel, String columnLabel, String expectedColor) {
     Table table = getTable();
-    int row = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, rowLabel);
+    int row = getRow(rowLabel, table);
     int column = table.getHeader().findColumnIndex(columnLabel);
     final JComponent component = getTextComponent(row, column);
     ColorUtils.assertSimilar("Error at (" + row + "," + column + ") - value=" + table.getContentAt(row, column),
@@ -138,6 +170,21 @@ public class SeriesEvolutionChecker extends GuiChecker {
     table.selectAllRows();
     KeyUtils.pressKey(table, org.uispec4j.Key.plaformSpecificCtrl(org.uispec4j.Key.C));
     Assert.assertEquals(expectedClipboardContent, Clipboard.getContentAsText());
+  }
+
+  public void checkHistoChartLabel(String text) {
+    TextBox textBox = getPanel().getTextBox("histoChartLabel");
+    Assert.assertEquals(text, org.uispec4j.utils.Utils.cleanupHtml(textBox.getText()));
+  }
+
+  public void checkBalanceChartLabel(String text) {
+    TextBox textBox = getPanel().getTextBox("balanceChartLabel");
+    Assert.assertEquals(text, org.uispec4j.utils.Utils.cleanupHtml(textBox.getText()));
+  }
+
+  public void checkSeriesChartLabel(String text) {
+    TextBox textBox = getPanel().getTextBox("seriesChartLabel");
+    Assert.assertEquals(text, org.uispec4j.utils.Utils.cleanupHtml(textBox.getText()));
   }
 
   public class SeriesTableChecker extends TableChecker {

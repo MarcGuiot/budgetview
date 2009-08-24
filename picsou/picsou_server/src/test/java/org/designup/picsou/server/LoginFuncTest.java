@@ -1,13 +1,11 @@
 package org.designup.picsou.server;
 
-import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.checkers.MainAccountViewChecker;
+import org.designup.picsou.functests.checkers.OperationChecker;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Button;
-import org.uispec4j.CheckBox;
-import org.uispec4j.PasswordField;
 import org.uispec4j.TextBox;
 import org.uispec4j.assertion.UISpecAssert;
 
@@ -42,12 +40,11 @@ public class LoginFuncTest extends ServerFuncTestCase {
       .selectBank("Société Générale")
       .enterAccountNumber("1111")
       .doImportWithBalance()
-      .setAmountWithoutEnter(10.)
+      .setAmount(10.00)
       .validate();
 
     fail("Marc : en cours");
     MainAccountViewChecker mainAccountViewChecker = new MainAccountViewChecker(window);
     mainAccountViewChecker.checkAccountNames("Account N.1111");
-
   }
 }

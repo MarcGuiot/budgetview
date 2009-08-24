@@ -45,7 +45,7 @@ public class LicenseInfoView extends View {
         }
       }
     });
-    PicsouColors.installLinkColor(licenseMessage, "licenseMessage", "license.message.link", directory);
+    PicsouColors.installLinkColor(licenseMessage, "licenseMessage", "notesView.introBlock.link", directory);
 
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {

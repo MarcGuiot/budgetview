@@ -24,7 +24,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    monthSummary.checkNoSeriesMessage();
+    notes.checkNoSeriesMessage();
     mainAccounts
       .checkEstimatedPosition(0.00)
       .setThreshold(25.00);
@@ -39,10 +39,10 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     operations.checkUndoNotAvailable();
 
     views.selectHome();
-    monthSummary.checkNoSeriesMessage();
+    notes.checkNoSeriesMessage();
     mainAccounts
       .checkEstimatedPosition(0.00)
-      .checkLimit(25.00);
+      .checkThreshold(25.00);
 
     views.selectData();
     transactions.initContent()
@@ -69,8 +69,10 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     mainAccounts.openEstimatedPositionDetails().checkIncome(1000.0).close();
 
     timeline.selectMonth("2008/08");
+    views.selectBudget();
+    budgetView.income.checkTotalAmounts(1000.0, 1000.0);
+
     views.selectHome();
-    monthSummary.checkIncome(1000.0, 1000.0);
     mainAccounts.checkEstimatedPosition(0.0);
     mainAccounts.openEstimatedPositionDetails().checkIncome(0.0).close();
 
@@ -78,8 +80,10 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     timeline.checkSelection("2008/08");
 
+    views.selectBudget();
+    budgetView.income.checkTotalAmounts(1000.0, 1000.0);
+
     views.selectHome();
-    monthSummary.checkIncome(1000.0, 1000.0);
     mainAccounts.openEstimatedPositionDetails().checkIncome(0.0).close();
 
     views.selectBudget();
@@ -98,6 +102,17 @@ public class RestartTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNotes() throws Exception {
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/15", 1000, "Company")
+      .addTransaction("2008/05/15", -100, "FNAC")
+      .load();
+
+    views.selectHome();
+    notes
+      .checkNoSeriesMessage()
+      .openSeriesWizard()
+      .validate();
 
     views.selectHome();
     notes.setText("A little note");

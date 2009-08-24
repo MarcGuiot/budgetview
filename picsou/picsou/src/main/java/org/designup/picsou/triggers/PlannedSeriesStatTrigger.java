@@ -11,10 +11,6 @@ import java.util.Set;
 
 public class PlannedSeriesStatTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
-    processSeriesBudget(changeSet, repository);
-  }
-
-  private void processSeriesBudget(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(SeriesBudget.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         Key seriesStat = createKey(values.get(SeriesBudget.SERIES),
@@ -44,8 +40,7 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
     });
   }
 
-  public void init(GlobRepository repository) {
-
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     for (Glob month : repository.getAll(Month.TYPE)) {
       for (Glob series : repository.getAll(Series.TYPE)) {
         repository.findOrCreate(createKey(series.get(Series.ID), month.get(Month.ID)));
@@ -58,10 +53,6 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
       repository.findOrCreate(seriesStat);
       repository.update(seriesStat, SeriesStat.PLANNED_AMOUNT, seriesBudget.get(SeriesBudget.AMOUNT));
     }
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    init(repository);
   }
 
   private Key createKey(Integer seriesId, Integer monthId) {

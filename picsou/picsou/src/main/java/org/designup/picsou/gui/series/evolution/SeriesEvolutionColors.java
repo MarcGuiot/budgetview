@@ -144,9 +144,7 @@ public class SeriesEvolutionColors implements ColorChangeListener {
     }
 
     if (SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID.equals(wrapperId)) {
-      Glob balanceStat = parentRepository.find(
-        Key.create(SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID,
-                   SavingsBalanceStat.MONTH, referenceMonthId));
+      Glob balanceStat = SavingsBalanceStat.findSummary(referenceMonthId, parentRepository);
       if (balanceStat != null) {
         final Double position = balanceStat.get(SavingsBalanceStat.END_OF_MONTH_POSITION);
         if ((position != null) && (position < 0)) {

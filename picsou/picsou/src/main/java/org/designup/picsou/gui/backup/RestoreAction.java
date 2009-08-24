@@ -1,11 +1,17 @@
 package org.designup.picsou.gui.backup;
 
 import org.designup.picsou.gui.components.dialogs.MessageFileDialog;
-import org.designup.picsou.gui.startup.BackupService;
+import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.model.CurrentMonth;
+import org.designup.picsou.model.Month;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Glob;
+import org.globsframework.model.Key;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.gui.SelectionService;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,32 +19,37 @@ import java.io.File;
 import java.io.FileInputStream;
 
 public class RestoreAction extends AbstractBackupRestoreAction {
-  private JFrame parent;
-  private BackupService backupService;
 
   public RestoreAction(GlobRepository repository, Directory directory) {
     super(Lang.get("restore"), repository, directory);
-    this.backupService = directory.get(BackupService.class);
-    this.parent = directory.get(JFrame.class);
   }
 
   public void actionPerformed(ActionEvent e) {
     JFileChooser chooser = getFileChooser();
     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    int returnVal = chooser.showOpenDialog(parent);
+    int returnVal = chooser.showOpenDialog(frame);
     if (returnVal == JFileChooser.APPROVE_OPTION) {
       File file = chooser.getSelectedFile();
       try {
         char[] password = null;
         while (true) {
-          if (backupService.restore(new FileInputStream(file), password)) {
-            MessageFileDialog dialog = new MessageFileDialog(repository, directory);
-            dialog.show("restore.ok.title", "restore.ok.message", file);
+          Gui.setWaitCursor(frame);
+          boolean completed;
+          try {
+            completed = backupService.restore(new FileInputStream(file), password);
+          }
+          finally {
+            Gui.setDefaultCursor(frame);
+          }
+          if (completed) {
+            resetUndoRedo();
+            selectCurrentMonth();
+            showConfirmationDialog(file);
             return;
           }
           else {
             AskPasswordDialog dialog = 
-              new AskPasswordDialog("restore.password.title", "restore.password", directory);
+              new AskPasswordDialog("restore.password.title", "restore.password.label", "restore.password.message", directory);
             password = dialog.show();
             if (password == null || password.length == 0){
               return;
@@ -52,5 +63,19 @@ public class RestoreAction extends AbstractBackupRestoreAction {
         dialog.show("restore.error.title", "restore.error.message", file);
       }
     }
+  }
+
+  private void resetUndoRedo() {
+    directory.get(UndoRedoService.class).reset();
+  }
+
+  private void showConfirmationDialog(File file) {
+    MessageFileDialog dialog = new MessageFileDialog(repository, directory);
+    dialog.show("restore.ok.title", "restore.ok.message", file);
+  }
+
+  private void selectCurrentMonth() {
+    Glob month = repository.get(Key.create(Month.TYPE, CurrentMonth.getLastTransactionMonth(repository)));
+    directory.get(SelectionService.class).select(month);
   }
 }

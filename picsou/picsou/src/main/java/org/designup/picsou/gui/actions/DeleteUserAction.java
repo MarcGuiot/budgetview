@@ -34,7 +34,8 @@ public class DeleteUserAction extends AbstractAction implements ChangeSetListene
   public void actionPerformed(ActionEvent e) {
     Glob user = repository.get(User.KEY);
     AskPasswordDialog askPasswordDialog =
-      new AskPasswordDialog("delete.user.title", "delete.password", directory, user.get(User.NAME));
+      new AskPasswordDialog("delete.password.title", "delete.password.label", "delete.password.message",
+                            directory, user.get(User.NAME));
     char[] chars = askPasswordDialog.show();
     if (chars == null || chars.length == 0){
       return;

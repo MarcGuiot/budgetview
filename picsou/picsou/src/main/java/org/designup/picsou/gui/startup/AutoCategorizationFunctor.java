@@ -45,7 +45,7 @@ public class AutoCategorizationFunctor implements GlobFunctor {
       if (currentSeries == null){
         continue;
       }
-      if (!Series.checkIsValidMonth(transaction.get(Transaction.MONTH), currentSeries)) {
+      if (!Series.isValidMonth(transaction.get(Transaction.MONTH), currentSeries)) {
         continue;
       }
       Integer currentSubSeries = findTransaction.get(Transaction.SUB_SERIES);

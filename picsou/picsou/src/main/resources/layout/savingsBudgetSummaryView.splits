@@ -1,0 +1,22 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <styles>
+    <style selector="label.totalAmount" foreground=""/>
+  </styles>
+
+  <column>
+    <grid marginLeft="5" marginRight="5" marginTop="5" marginBottom="5">
+      <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle" gridPos="(0,0)"/>
+      <label ref="balanceLabel" styleClass="totalAmount" gridPos="(0,1)"/>
+
+      <label text="$budgetSummaryView.position" styleClass="totalAmountTitle" gridPos="(1,0)"/>
+      <label ref="positionLabel" styleClass="totalAmount" gridPos="(1,1)"/>
+
+    </grid>
+    <label ref="multiSelectionLabel" styleClass="totalAmountTitle"
+           horizontalAlignment="center" fill="horizontal" border="empty(0,0,5,0)"/>
+  </column>
+
+</splits>

@@ -157,9 +157,7 @@ public class NextProjectsView extends View implements GlobSelectionListener {
     }
 
     private Glob getBalanceStat(Glob seriesBudget, GlobRepository repository) {
-      Integer monthId = seriesBudget.get(SeriesBudget.MONTH);
-      return repository.find(Key.create(SavingsBalanceStat.MONTH, monthId,
-                                        SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID));
+      return SavingsBalanceStat.findSummary(seriesBudget.get(SeriesBudget.MONTH), repository);
     }
   }
 
@@ -167,8 +165,7 @@ public class NextProjectsView extends View implements GlobSelectionListener {
     public String toString(Glob seriesBudget, GlobRepository repository) {
       Integer monthId = seriesBudget.get(SeriesBudget.MONTH);
       Glob balanceStat = repository.get(Key.create(BalanceStat.TYPE, monthId));
-      Glob savingsBalanceStat = repository.find(Key.create(SavingsBalanceStat.MONTH, monthId,
-                                                           SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID));
+      Glob savingsBalanceStat = SavingsBalanceStat.findSummary(monthId, repository);
       Double mainPosition = GlobUtils.safeGet(balanceStat, BalanceStat.END_OF_MONTH_ACCOUNT_POSITION);
       Double savingsPosition = GlobUtils.safeGet(savingsBalanceStat, SavingsBalanceStat.END_OF_MONTH_POSITION);
       if (mainPosition == null && savingsPosition == null) {

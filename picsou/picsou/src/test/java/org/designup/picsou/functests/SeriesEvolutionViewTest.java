@@ -54,17 +54,18 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesEvolution.checkColumnNames(
       "", "June 08", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09"
     );
+
     seriesEvolution.initContent()
       .add("Balance", "", "80.00", "170.00", "120.00", "170.00", "220.00", "-130.00", "120.00")
-      .add("Main account", "", "-125.00", "45.00", "165.00", "335.00", "555.00", "425.00", "545.00")
-      .add("Savings account", "", "", "", "", "", "", "", "")
+      .add("Main accounts", "", "-125.00", "45.00", "165.00", "335.00", "555.00", "425.00", "545.00")
+      .add("Savings accounts", "", "", "", "", "", "", "", "")
       .add("To categorize", "", "40.00", "", "", "", "", "", "")
       .add("Income", "", "300.00", "300.00", "300.00", "300.00", "300.00", "300.00", "300.00")
       .add("Salary", "", "300.00", "300.00", "300.00", "300.00", "300.00", "300.00", "300.00")
       .add("Recurring", "", "80.00", "30.00", "80.00", "30.00", "80.00", "30.00", "80.00")
       .add("Energy", "", "50.00", "", "50.00", "", "50.00", "", "50.00")
       .add("Internet", "", "30.00", "30.00", "30.00", "30.00", "30.00", "30.00", "30.00")
-      .add("Envelopes", "", "20.00", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00")
+      .add("Envelopes", "", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00")
       .add("Groceries", "", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00")
       .add("Special", "", "", "", "", "", "+100.00", "300.00", "")
       .add("Christmas", "", "", "", "", "", "", "300.00", "")
@@ -74,8 +75,8 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     seriesEvolution.checkForeground("To categorize", "Jul 08", "red");
 
-    seriesEvolution.checkForeground("Main account", "Jul 08", "darkRed");
-    seriesEvolution.checkForeground("Main account", "Aug 08", "darkGrey");
+    seriesEvolution.checkForeground("Main accounts", "Jul 08", "darkRed");
+    seriesEvolution.checkForeground("Main accounts", "Aug 08", "darkGrey");
 
     seriesEvolution.checkForeground("Groceries", "Jul 08", "red");
     seriesEvolution.checkForeground("Groceries", "Aug 08", "0022BB");
@@ -90,6 +91,84 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesEvolution.checkForeground("Energy", "Aug 08", "0022BB");
   }
 
+  public void testShowsActualAmountsInThePast() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "00000123", 1000.0, "2008/07/30")
+      .addTransaction("2008/05/10", -250.00, "Auchan")
+      .addTransaction("2008/05/15", -200.00, "Auchan")
+      .addTransaction("2008/05/01", 300.00, "WorldCo")
+      .addTransaction("2008/05/15", 350.00, "Big Inc.")
+      .addTransaction("2008/06/10", -280.00, "Auchan")
+      .addTransaction("2008/06/15", -200.00, "Auchan")
+      .addTransaction("2008/06/01", 310.00, "WorldCo")
+      .addTransaction("2008/06/15", 360.00, "Big Inc.")
+      .addTransaction("2008/07/10", -200.00, "Auchan")
+      .addTransaction("2008/07/15", -140.00, "Auchan")
+      .addTransaction("2008/07/01", 320.00, "WorldCo")
+      .addTransaction("2008/07/15", 350.00, "Big Inc.")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewIncome("WorldCo", "John's");
+    categorization.setNewIncome("Big Inc.", "Mary's");
+
+    timeline.selectMonth("2008/06");
+
+    views.selectEvolution();
+    seriesEvolution.initContent()
+      .add("Balance", "200.00", "190.00", "200.00", "200.00", "200.00", "200.00", "200.00", "200.00")
+      .add("Main accounts", "480.00", "670.00", "870.00", "1070.00", "1270.00", "1470.00", "1670.00", "1870.00")
+      .add("Savings accounts", "", "", "", "", "", "", "", "")
+      .add("To categorize", "", "", "", "", "", "", "", "")
+      .add("Income", "650.00", "670.00", "680.00", "680.00", "680.00", "680.00", "680.00", "680.00")
+      .add("John's", "300.00", "310.00", "320.00", "320.00", "320.00", "320.00", "320.00", "320.00")
+      .add("Mary's", "350.00", "360.00", "360.00", "360.00", "360.00", "360.00", "360.00", "360.00")
+      .add("Recurring", "", "", "", "", "", "", "", "")
+      .add("Envelopes", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
+      .add("Groceries", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
+      .add("Special", "", "", "", "", "", "", "", "")
+      .add("Savings", "", "", "", "", "", "", "", "")
+      .check();
+  }
+
+  public void testTakesLastMonthWithTransactionsAsCurrentMonth() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "00000123", 1000.0, "2008/07/30")
+      .addTransaction("2008/03/10", -250.00, "Auchan")
+      .addTransaction("2008/03/15", -200.00, "Auchan")
+      .addTransaction("2008/03/01", 300.00, "WorldCo")
+      .addTransaction("2008/03/15", 350.00, "Big Inc.")
+      .addTransaction("2008/04/10", -280.00, "Auchan")
+      .addTransaction("2008/04/15", -200.00, "Auchan")
+      .addTransaction("2008/04/01", 310.00, "WorldCo")
+      .addTransaction("2008/04/15", 360.00, "Big Inc.")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewIncome("WorldCo", "John's");
+    categorization.setNewIncome("Big Inc.", "Mary's");
+
+    timeline.selectMonth("2008/04");
+
+    views.selectEvolution();
+    seriesEvolution.initContent()
+      .add("Balance", "200.00", "190.00", "190.00", "190.00", "190.00", "190.00", "190.00", "190.00")
+      .add("Main accounts", "810.00", "1000.00", "1190.00", "1380.00", "1570.00", "1760.00", "1950.00", "2140.00")
+      .add("Savings accounts", "", "", "", "", "", "", "", "")
+      .add("To categorize", "", "", "", "", "", "", "", "")
+      .add("Income", "650.00", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00")
+      .add("John's", "300.00", "310.00", "310.00", "310.00", "310.00", "310.00", "310.00", "310.00")
+      .add("Mary's", "350.00", "360.00", "360.00", "360.00", "360.00", "360.00", "360.00", "360.00")
+      .add("Recurring", "", "", "", "", "", "", "", "")
+      .add("Envelopes", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
+      .add("Groceries", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
+      .add("Special", "", "", "", "", "", "", "", "")
+      .add("Savings", "", "", "", "", "", "", "", "")
+      .check();
+  }
+
   public void testNoData() throws Exception {
     timeline.checkSelection("2008/07");
     views.selectEvolution();
@@ -97,7 +176,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       "", "June 08", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09"
     );
     seriesEvolution.checkTableIsEmpty(
-      "Balance", "Main account", "Savings account", "To categorize",
+      "Balance", "Main accounts", "Savings accounts", "To categorize",
       "Income", "Recurring", "Envelopes", "Special", "Savings");
   }
 
@@ -140,6 +219,51 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     );
   }
 
+  public void testDeletingTheShownSeries() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "00000123", 1000.0, "2008/07/30")
+      .addTransaction("2008/07/01", 320.00, "WorldCo")
+      .addTransaction("2008/07/15", 350.00, "Big Inc.")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewIncome("WorldCo", "John's");
+    categorization.setNewIncome("Big Inc.", "Mary's");
+
+    timeline.selectMonth("2008/07");
+
+    views.selectEvolution();
+    seriesEvolution.initContent()
+      .add("Balance", "", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00")
+      .add("Main accounts", "", "1000.00", "1670.00", "2340.00", "3010.00", "3680.00", "4350.00", "5020.00")
+      .add("Savings accounts", "", "", "", "", "", "", "", "")
+      .add("To categorize", "", "", "", "", "", "", "", "")
+      .add("Income", "", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00")
+      .add("John's", "", "320.00", "320.00", "320.00", "320.00", "320.00", "320.00", "320.00")
+      .add("Mary's", "", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
+      .add("Recurring", "", "", "", "", "", "", "", "")
+      .add("Envelopes", "", "", "", "", "", "", "", "")
+      .add("Special", "", "", "", "", "", "", "", "")
+      .add("Savings", "", "", "", "", "", "", "", "")
+      .check();
+
+    seriesEvolution.editSeries("John's", "Jul 08")
+      .deleteCurrentSeriesWithConfirmation();
+
+    seriesEvolution.initContent()
+      .add("Balance", "", "670.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
+      .add("Main accounts", "", "1000.00", "1350.00", "1700.00", "2050.00", "2400.00", "2750.00", "3100.00")
+      .add("Savings accounts", "", "", "", "", "", "", "", "")
+      .add("To categorize", "", "320.00", "", "", "", "", "", "")
+      .add("Income", "", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
+      .add("Mary's", "", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
+      .add("Recurring", "", "", "", "", "", "", "", "")
+      .add("Envelopes", "", "", "", "", "", "", "", "")
+      .add("Special", "", "", "", "", "", "", "", "")
+      .add("Savings", "", "", "", "", "", "", "", "")
+      .check();
+  }
+
   public void testNothingIsShownAfterTheLastMonth() throws Exception {
 
     operations.openPreferences().setFutureMonthsCount(3).validate();
@@ -177,32 +301,32 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("GlobalCorp", "Salary 2");
 
     views.selectEvolution();
-    String[] expanded = {"Balance", "Main account", "Savings account", "To categorize",
+    String[] expanded = {"Balance", "Main accounts", "Savings accounts", "To categorize",
                          "Income", "Salary", "Salary 2",
                          "Recurring", "Internet",
                          "Envelopes", "Groceries",
                          "Special", "Savings"};
 
-    String[] collapsed = {"Balance", "Main account", "Savings account", "To categorize",
+    String[] collapsed = {"Balance", "Main accounts", "Savings accounts", "To categorize",
                           "Income", "Recurring", "Envelopes", "Special", "Savings"};
 
     seriesEvolution.checkRowLabels(expanded);
 
-    seriesEvolution.collapse();
+    seriesEvolution.collapseAll();
     seriesEvolution.checkRowLabels(collapsed);
 
-    seriesEvolution.expand();
+    seriesEvolution.expandAll();
     seriesEvolution.checkRowLabels(expanded);
 
     seriesEvolution.doubleClickOnRow("Income");
-    seriesEvolution.checkRowLabels("Balance", "Main account", "Savings account", "To categorize",
+    seriesEvolution.checkRowLabels("Balance", "Main accounts", "Savings accounts", "To categorize",
                                    "Income",
                                    "Recurring", "Internet",
                                    "Envelopes", "Groceries",
                                    "Special",
                                    "Savings");
 
-    seriesEvolution.expand();
+    seriesEvolution.expandAll();
     seriesEvolution.checkRowLabels(expanded);
   }
 
@@ -312,8 +436,8 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesEvolution.checkClipboardExport(
       "\t\tJune 08\tJul 08\tAug 08\tSep 08\tOct 08\tNov 08\tDec 08\tJan 09\n" +
       "\tBalance\t\t3416.00\t-200.00\t-200.00\t-200.00\t-200.00\t-200.00\t-200.00\n" +
-      "\tMain account\t\t-200.00\t-400.00\t-600.00\t-800.00\t-1000.00\t-1200.00\t-1400.00\n" +
-      "\tSavings account\t\t\t\t\t\t\t\t\n" +
+      "\tMain accounts\t\t-200.00\t-400.00\t-600.00\t-800.00\t-1000.00\t-1200.00\t-1400.00\n" +
+      "\tSavings accounts\t\t\t\t\t\t\t\t\n" +
       "\tTo categorize\t\t3864.00\t\t\t\t\t\t\n" +
       "\tIncome\t\t\t\t\t\t\t\t\n" +
       "\tRecurring\t\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\n" +

@@ -28,12 +28,13 @@ import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import javax.swing.event.TableModelListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class TransactionView extends View implements Filterable, GlobSelectionListener {
   public static final int DATE_COLUMN_INDEX = 0;
@@ -54,6 +55,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
   private AccountFilteringCombo accountFilteringCombo;
   private TransactionRendererColors rendererColors;
   private TransactionSelection transactionSelection;
+  private GlobMatcher showPlannedTransactionsMatcher = GlobMatchers.ALL;
   private GlobMatcher filter = GlobMatchers.ALL;
   private FilterSet filterSet;
   private PicsouTableHeaderPainter headerPainter;
@@ -72,6 +74,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
 
   public void registerComponents(GlobsPanelBuilder builder) {
     addAccountCombo(builder);
+    addShowTransactionsCheckbox(builder);
     builder.add(view.getComponent());
   }
 
@@ -87,6 +90,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
   private void updateFilter() {
     view.setFilter(and(transactionSelection.getCurrentMatcher(),
                        accountFilteringCombo.getCurrentAccountFilter(),
+                       showPlannedTransactionsMatcher,
                        this.filter));
     headerPainter.setFiltered((this.filter != null) && (this.filter != GlobMatchers.ALL));
   }
@@ -98,6 +102,22 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
       }
     });
     builder.add("accountFilterCombo", accountFilteringCombo.getComponent());
+  }
+
+  private void addShowTransactionsCheckbox(GlobsPanelBuilder builder) {
+    final JCheckBox checkBox = builder.add("showPlannedTransactions", new JCheckBox());
+    checkBox.addActionListener(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        if (checkBox.isSelected()) {
+          showPlannedTransactionsMatcher = GlobMatchers.ALL;
+        }
+        else {
+          showPlannedTransactionsMatcher = not(fieldEquals(Transaction.PLANNED, Boolean.TRUE));
+        }
+        updateFilter();
+      }
+    });
+    checkBox.setSelected(true);
   }
 
   private JTable createTable() {
@@ -192,5 +212,20 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
     transactionSelection.init();
     accountFilteringCombo.reset();
     setFilter(GlobMatchers.ALL);
+  }
+
+  private static class ShowPlannedTransactionsAction extends AbstractAction {
+    private final JCheckBox checkBox;
+
+    public ShowPlannedTransactionsAction(JCheckBox checkBox) {
+      super(Lang.get("transactionView.showPlannedTransactions"));
+      this.checkBox = checkBox;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      if (checkBox.isSelected()) {
+
+      }
+    }
   }
 }

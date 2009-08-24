@@ -6,6 +6,8 @@ import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -91,6 +93,12 @@ public class GuiUtils {
 
   public static KeyStroke ctrl(int key) {
     return KeyStroke.getKeyStroke(key, GuiUtils.getCtrlModifier());
+  }
+
+  public static void copyTextToClipboard(String text) {
+    StringSelection selection = new StringSelection(text);
+    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    clipboard.setContents(selection, selection);
   }
 
   static {

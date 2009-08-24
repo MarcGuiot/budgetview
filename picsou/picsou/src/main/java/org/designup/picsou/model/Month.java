@@ -8,7 +8,6 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -40,7 +39,6 @@ public class Month {
   public static String toString(int yyyymm, int day) {
     return toYearString(yyyymm) + "/" + MONTH_FORMAT.format(Month.toMonth(yyyymm)) + "/" + MONTH_FORMAT.format(day);
   }
-
 
   public static String toYearString(int yyyymm) {
     return Integer.toString(Month.toYear(yyyymm));
@@ -112,14 +110,6 @@ public class Month {
         return new RangeIterator(minYyyyMm, maxYyyyMm);
       }
     };
-  }
-
-  public static int[] range(Integer startYyyyMm, Integer endYyyyMm) {
-    List<Integer> result = new ArrayList<Integer>();
-    for (int month = startYyyyMm; month <= endYyyyMm; month = next(month)) {
-      result.add(month);
-    }
-    return Utils.toArray(result);
   }
 
   public static int toInt(int yyyymm, int dd) {

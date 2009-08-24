@@ -55,8 +55,18 @@ public class TransactionChecker extends ViewChecker {
     return table;
   }
 
+  public void select(String... labels) {
+    getTable().selectRowsWithText(TransactionView.LABEL_COLUMN_INDEX, labels);
+  }
+
   protected UIComponent findMainComponent(Window window) {
     return window.findUIComponent(ComponentMatchers.innerNameIdentity(Transaction.TYPE.getName()));
+  }
+
+  public TransactionChecker categorize(String... labels) {
+    getTable().selectRowsWithText(TransactionView.LABEL_COLUMN_INDEX, labels);
+    clickSeries(getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, labels[0]));
+    return this;
   }
 
   public TransactionChecker categorize(final int... rows) {
@@ -64,8 +74,12 @@ public class TransactionChecker extends ViewChecker {
     if (rows.length > 1) {
       getTable().selectRows(rows);
     }
-    getTable().editCell(rows[0], TransactionView.SERIES_COLUMN_INDEX).getButton().click();
+    clickSeries(rows[0]);
     return this;
+  }
+
+  private void clickSeries(int rowIndex) {
+    getTable().editCell(rowIndex, TransactionView.SERIES_COLUMN_INDEX).getButton().click();
   }
 
   public TransactionChecker checkCategorizeIsDisabled(int row) {
@@ -89,6 +103,14 @@ public class TransactionChecker extends ViewChecker {
 
   private int getIndexOf(String transactionLabel) {
     return getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, transactionLabel.toUpperCase());
+  }
+
+  public void setSearchText(String text) {
+    getSearchField().setText(text);
+  }
+
+  public void clearSearch() {
+    getSearchField().clear();
   }
 
   public TextBox getSearchField() {
@@ -145,6 +167,18 @@ public class TransactionChecker extends ViewChecker {
 
   public void editNote(String transactionLabel, String note) {
     editNote(getIndexOf(transactionLabel), note);
+  }
+
+  public void showPlannedTransactions() {
+    mainWindow.getCheckBox("showPlannedTransactions").select();
+  }
+
+  public void hidePlannedTransactions() {
+    mainWindow.getCheckBox("showPlannedTransactions").unselect();
+  }
+
+  public void checkShowsPlannedTransaction(boolean show) {
+    UISpecAssert.assertEquals(show, mainWindow.getCheckBox("showPlannedTransactions").isSelected());
   }
 
   public class TransactionAmountChecker {

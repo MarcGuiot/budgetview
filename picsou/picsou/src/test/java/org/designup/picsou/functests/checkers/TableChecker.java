@@ -5,6 +5,8 @@ import org.uispec4j.Table;
 import java.util.List;
 import java.util.ArrayList;
 
+import junit.framework.Assert;
+
 public abstract class TableChecker {
 
   private List<Object[]> content = new ArrayList<Object[]>();
@@ -19,4 +21,27 @@ public abstract class TableChecker {
     Object[][] expectedContent = content.toArray(new Object[content.size()][]);
     org.uispec4j.assertion.UISpecAssert.assertTrue(getTable().contentEquals(expectedContent));
   }
+
+  public void dump() {
+    StringBuilder builder = new StringBuilder();
+
+    Table table = getTable();
+    for (int row = 0; row < table.getRowCount(); row++) {
+      builder.append("  .add(");
+      for (int column = 1; column < table.getColumnCount(); column++) {
+        builder
+          .append("\"")
+          .append(table.getContentAt(row, column))
+          .append("\"");
+        if (column < table.getColumnCount() - 1) {
+          builder.append(", ");
+        }
+      }
+      builder.append(")\n");
+    }
+    builder.append("  .check();");
+
+    Assert.fail("Use: \n" + builder.toString());
+  }
+
 }

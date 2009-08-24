@@ -18,8 +18,8 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     "<create type='seriesStat' series='10' month='200807'" +
                                     "        amount='0.0' plannedAmount='150.0'/>" +
-                                    "<create amount='0.0' month='200807' plannedAmount='0.0' series='1'" +
-                                    "        type='seriesStat'/>");
+                                    "<create type='seriesStat' series='1' month='200807' " +
+                                    "        amount='0.0' plannedAmount='0.0'/>");
     repository.startChangeSet();
     createTransaction(10, 10, 200807, 10.0);
     createTransaction(11, 1, 200807, -20.0);
@@ -27,8 +27,8 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     "<update type='seriesStat' series='10' month='200807'" +
                                     "        amount='10.0' _amount='0.0'/>" +
-                                    "<update _amount='0.0' amount='-20.0' month='200807' series='1'" +
-                                    "        type='seriesStat'/>");
+                                    "<update type='seriesStat' series='1' month='200807'" +
+                                    "        amount='-20.0' _amount='0.0'/>");
   }
 
   public void testUnassignedTransactionSeriesAndDeleteSeries() throws Exception {
@@ -51,8 +51,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                                     "<create type='seriesStat' series='20' month='200807'" +
                                     "        amount='-20.0' plannedAmount='-100.0'/>" +
                                     "<create type='seriesStat' series='1' month='200807'" +
-                                    "        amount='-50.0' plannedAmount='0.0'/>" +
-                                    "");
+                                    "        amount='-50.0' plannedAmount='0.0'/>");
 
     repository.startChangeSet();
     repository.update(Key.create(Transaction.TYPE, 2), value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID));
@@ -63,8 +62,8 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     "<delete type='seriesStat' series='20' month='200807'" +
                                     "        _amount='-20.0' _plannedAmount='-100.0'/>" +
-                                    "<update _amount='-50.0' amount='-60.0' month='200807' series='1'" +
-                                    "        type='seriesStat'/>");
+                                    "<update type='seriesStat' series='1' month='200807'" +
+                                    "        _amount='-50.0' amount='-60.0'/>");
   }
 
   public void testTransactionChangeAmount() throws Exception {

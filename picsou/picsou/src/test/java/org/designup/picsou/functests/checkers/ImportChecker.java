@@ -90,8 +90,8 @@ public class ImportChecker {
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
-  public BalanceEditionChecker doImportWithBalance() {
-    return new BalanceEditionChecker(WindowInterceptor.getModalDialog(dialog.getButton(Lang.get("import.ok")).triggerClick()));
+  public AccountPositionEditionChecker doImportWithBalance() {
+    return new AccountPositionEditionChecker(WindowInterceptor.getModalDialog(dialog.getButton(Lang.get("import.ok")).triggerClick()));
   }
 
   public void close() {

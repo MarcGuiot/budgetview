@@ -19,7 +19,7 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
           Glob series = repository.find(Key.create(Series.TYPE, seriesId));
           Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
           Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-          if (Account.shoudCreateMirror(fromAccount, toAccount)) {
+          if (Account.shouldCreateMirror(fromAccount, toAccount)) {
             Integer accountID = getAccount(fromAccount, toAccount);
             TransactionUtils.createMirrorTransaction(key, values, accountID, repository);
           }
@@ -46,7 +46,7 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
             Glob series = repository.find(Key.create(Series.TYPE, newSeriesId));
             Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
             Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-            if (Account.shoudCreateMirror(fromAccount, toAccount)) {
+            if (Account.shouldCreateMirror(fromAccount, toAccount)) {
               Integer accountID = getAccount(fromAccount, toAccount);
               TransactionUtils.createMirrorTransaction(key, transaction, accountID, repository);
             }

@@ -13,10 +13,9 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
+import junit.framework.AssertionFailedError;
 
 /**
  * Wrapper for JTable components.<p/>
@@ -323,7 +322,7 @@ public class Table extends AbstractSwingUIComponent {
           }
 
           for (int columnIndex = 0; columnIndex < columnNames.length; columnIndex++) {
-            int actualIndex = findColumnIndex(columnNames[columnIndex]);
+            int actualIndex = getColumnIndex(columnNames[columnIndex]);
             if (!Utils.equals(expected[rowIndex][columnIndex], getValueAt(rowIndex, actualIndex))) {
               throwError("Error at (" + rowIndex + ", " + columnIndex + ")", columnNames, expected);
             }
@@ -406,7 +405,7 @@ public class Table extends AbstractSwingUIComponent {
         }
         Object[] actual = new Object[expected.length];
         for (int columnIndex = 0; columnIndex < columnNames.length; columnIndex++) {
-          int actualIndex = findColumnIndex(columnNames[columnIndex]);
+          int actualIndex = getColumnIndex(columnNames[columnIndex]);
           actual[columnIndex] = getValueAt(rowIndex, actualIndex);
         }
         ArrayUtils.assertEquals("Unexpected content at row " + rowIndex, expected, actual);
@@ -521,13 +520,18 @@ public class Table extends AbstractSwingUIComponent {
     };
   }
 
-  private int findColumnIndex(String columnName) {
+  public int getColumnIndex(String columnName) {
     for (int columnIndex = 0; columnIndex < jTable.getColumnCount(); columnIndex++) {
       if (jTable.getColumnName(columnIndex).equalsIgnoreCase(columnName)) {
         return columnIndex;
       }
     }
-    AssertAdapter.fail("Column '" + columnName + "' not found");
+
+    java.util.List<String> names = new ArrayList<String>();
+    for (int columnIndex = 0; columnIndex < jTable.getColumnCount(); columnIndex++) {
+      names.add(jTable.getColumnName(columnIndex));
+    }
+    AssertAdapter.fail("Column '" + columnName + "' not found - actual names: " + names);
     return -1;
   }
 
@@ -572,7 +576,7 @@ public class Table extends AbstractSwingUIComponent {
   }
 
   public Assertion columnIsEditable(final String columnName, final boolean shouldBeEditable) {
-    return columnIsEditable(findColumnIndex(columnName), shouldBeEditable);
+    return columnIsEditable(getColumnIndex(columnName), shouldBeEditable);
   }
 
   private static interface ComponentColorAccessor {
@@ -663,7 +667,7 @@ public class Table extends AbstractSwingUIComponent {
       }
       buffer.append('[');
       for (int col = 0, colCount = columnNames.length; col < colCount; col++) {
-        buffer.append(getValueAt(row, findColumnIndex(columnNames[col])));
+        buffer.append(getValueAt(row, getColumnIndex(columnNames[col])));
         if (col < (colCount - 1)) {
           buffer.append(",\t");
         }
@@ -672,6 +676,19 @@ public class Table extends AbstractSwingUIComponent {
     }
     buffer.append(']');
     return buffer.toString();
+  }
+
+  private String getColumnContent(int column) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("[");
+    for (int row = 0; row < jTable.getRowCount(); row++) {
+      builder.append(getContentAt(row, column));
+      if (row < jTable.getRowCount() - 1) {
+        builder.append(", ");
+      }
+    }
+    builder.append("]");
+    return builder.toString();
   }
 
   public Component getSwingEditorComponentAt(int row, int column) {
@@ -759,6 +776,28 @@ public class Table extends AbstractSwingUIComponent {
     finally {
       jTable.getSelectionModel().setValueIsAdjusting(false);
     }
+  }
+
+  /**
+   * Selects all rows where the content of the given column is one of the given labels.
+   */
+  public void selectRowsWithText(int column, String... labels) {
+    Set<Integer> rows = new HashSet<Integer>();
+    for (String label : labels) {
+      int[] indices = getRowIndices(column, label);
+      if (indices.length == 0) {
+        throw new AssertionFailedError("Text '" + label + "' not found in column " + column + " - actual content: " + getColumnContent(column));
+      }
+      for (int index : indices) {
+        rows.add(index);
+      }
+    }
+    int[] selection = new int[rows.size()];
+    int i = 0;
+    for (Integer row : rows) {
+      selection[i++] = row;
+    }
+    selectRows(selection);
   }
 
   public void selectRowSpan(int start, int end) {
@@ -872,7 +911,7 @@ public class Table extends AbstractSwingUIComponent {
     }
 
     public int findColumnIndex(String columnName) {
-      return Table.this.findColumnIndex(columnName);
+      return Table.this.getColumnIndex(columnName);
     }
 
     /**
@@ -1008,7 +1047,7 @@ public class Table extends AbstractSwingUIComponent {
   }
 
   private TableColumn findColumn(String columnName) {
-    int columnIndex = findColumnIndex(columnName);
+    int columnIndex = getColumnIndex(columnName);
     if (columnIndex == -1) {
       throw new RuntimeException("Column '" + columnName + "' not found");
     }

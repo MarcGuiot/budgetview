@@ -10,6 +10,7 @@ import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.gui.splits.components.HyperlinkButton;
@@ -127,10 +128,10 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
   private String getBudgetAreaLabelText(BudgetArea budgetArea) {
     Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, referenceMonthId));
     if (budgetArea.equals(BudgetArea.UNCATEGORIZED)) {
-      return format(balanceStat, BalanceStat.UNCATEGORIZED, budgetArea);
+      return format(balanceStat, BalanceStat.UNCATEGORIZED_ABS, budgetArea);
     }
     else if (balanceStat != null) {
-      return format(balanceStat, BalanceStat.getPlanned(budgetArea), budgetArea);
+      return format(balanceStat, BalanceStat.getSummary(budgetArea), budgetArea);
     }
     return "";
   }
@@ -144,27 +145,11 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
       return "";
     }
 
-    Double observed = seriesStat.get(SeriesStat.AMOUNT);
-    Double planned = seriesStat.get(SeriesStat.PLANNED_AMOUNT);
-    Double value;
-    if (!Amounts.isNullOrZero(observed) && !Amounts.isNullOrZero(planned)) {
-      if (observed < 0 && observed < planned) {
-        value = observed;
-      }
-      else {
-        value = planned;
-      }
-    }
-    else if (!Amounts.isNullOrZero(planned)) {
-      value = planned;
-    }
-    else {
-      value = observed;
-    }
-
     Glob series = repository.find(Key.create(Series.TYPE, itemId));
-    BudgetArea budgeArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
-    return format(value, budgeArea);
+    BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
+    Double value = seriesStat.get(SeriesStat.SUMMARY_AMOUNT);
+
+    return format(value, budgetArea);
   }
 
   private String getSummaryLabelText(Glob seriesWrapper) {
@@ -180,8 +165,7 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
     }
 
     if (id.equals(SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID)) {
-      Glob balanceStat = repository.find(Key.create(SavingsBalanceStat.MONTH, referenceMonthId,
-                                                    SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID));
+      Glob balanceStat = SavingsBalanceStat.findSummary(referenceMonthId, repository);
       return format(balanceStat, SavingsBalanceStat.END_OF_MONTH_POSITION, null);
     }
 

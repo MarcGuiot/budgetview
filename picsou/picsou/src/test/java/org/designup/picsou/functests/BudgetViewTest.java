@@ -129,7 +129,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
 
     views.selectCategorization();
-    categorization.setNewSavings("Virt Compte Epargne", "Epargne", "Account n. 00001123", "Livret");
+    categorization.setNewSavings("Virt Compte Epargne", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "Livret");
 
     views.selectBudget();
 
@@ -262,14 +262,14 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.checkSelection("2008/06");
-    budgetView.recurring.checkTotalAmounts(0.0, -29.0);
+    budgetView.recurring.checkTotalAmounts(0.00, -29.00);
     budgetView.recurring.checkSeries("Internet", 0.0, -29.0);
 
-    budgetView.envelopes.checkTotalAmounts(-50.0, -95);
-    budgetView.envelopes.checkSeries("Groceries", -50.0, -95.0);
+    budgetView.envelopes.checkTotalAmounts(-50.00, -95.00);
+    budgetView.envelopes.checkSeries("Groceries", -50.00, -95.00);
 
-    budgetView.income.checkTotalAmounts(0.0, 3540.00);
-    budgetView.income.checkSeries("Salary", 0.0, 3540.0);
+    budgetView.income.checkTotalAmounts(0.00, 3540.00);
+    budgetView.income.checkSeries("Salary", 0.00, 3540.00);
 
     budgetView.checkBalance(3540 - 95 - 29);
   }
@@ -514,7 +514,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     series.checkExpanded("Envelopes", true);
-    series.toggle("Envelopes");
+    series.toggleExpansion("Envelopes");
     series.checkExpanded("Envelopes", false);
 
     views.selectBudget();

@@ -16,7 +16,7 @@ public class SeriesWizardTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    monthSummary.openSeriesWizard()
+    notes.openSeriesWizard()
       .select("Income 1")
       .select("Exceptional income")
       .select("Rent")
@@ -29,7 +29,7 @@ public class SeriesWizardTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
 
     views.selectHome();
-    monthSummary.checkSeriesWizardButtonVisible(false);
+    notes.checkSeriesWizardButtonVisible(false);
 
     views.selectBudget();
 
@@ -89,11 +89,11 @@ public class SeriesWizardTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    monthSummary.openSeriesWizard()
+    notes.openSeriesWizard()
       .select("Income 1")
       .cancel();
 
     views.checkHomeSelected();
-    monthSummary.checkSeriesWizardButtonVisible(true);
+    notes.checkSeriesWizardButtonVisible(true);
   }
 }

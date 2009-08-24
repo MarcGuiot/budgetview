@@ -75,7 +75,6 @@ public class MainPanel {
   private WindowManager windowManager;
   private RegisterLicenseAction registerAction;
   private Action dumpRepository;
-  private MonthSummaryView monthSummary;
   private SeriesView seriesView;
   private DataCheckerAction checkRepository;
   private JMenuBar menuBar;
@@ -85,6 +84,8 @@ public class MainPanel {
   private TransactionView transactionView;
   private TextFilterPanel search;
   private CategorizationView categorizationView;
+  private NotesView notesView;
+  private SeriesEvolutionView seriesEvolutionView;
 
   public interface WindowManager {
     PicsouFrame getFrame();
@@ -148,8 +149,6 @@ public class MainPanel {
                      GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT, Transaction.AMOUNT))
       .setAutoHideIfEmpty(true);
 
-    monthSummary = new MonthSummaryView(importFileAction, repository, directory);
-
     LicenseInfoView licenseInfoView = new LicenseInfoView(repository, directory);
 
     ReplicationGlobRepository replicationGlobRepository =
@@ -158,22 +157,23 @@ public class MainPanel {
     PeriodSeriesStatUpdater.init(replicationGlobRepository, directory);
 
     cardView = new CardView(repository, directory);
+    notesView = new NotesView(importFileAction, repository, directory);
+    seriesEvolutionView = new SeriesEvolutionView(repository, directory);
     createPanel(
       titleView,
       transactionView,
       timeView,
       new VersionInfoView(repository, directory),
       new AccountView(repository, directory),
-      monthSummary,
       categorizationView,
       cardView,
       new NavigationView(repository, directory),
       new BudgetView(replicationGlobRepository, directory),
       seriesView,
-      new SeriesEvolutionView(repository, directory),
+      seriesEvolutionView,
       new SavingsView(replicationGlobRepository, directory),
       licenseInfoView,
-      new NotesView(repository, directory));
+      notesView);
 
     createMenuBar(parent, directory);
     builder.load();
@@ -208,9 +208,11 @@ public class MainPanel {
     transactionView.reset();
     directory.get(NavigationService.class).reset();
     directory.get(UndoRedoService.class).reset();
+    directory.get(HelpService.class).reset();
     windowManager.setPanel(panel);
+    seriesEvolutionView.reset();
+    notesView.init();
     timeView.selectCurrentMonth();
-    monthSummary.init();
     selectLastMonthWithATransaction(repository, directory);
     seriesView.selectAll();
 

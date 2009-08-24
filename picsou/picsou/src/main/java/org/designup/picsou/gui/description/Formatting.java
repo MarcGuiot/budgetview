@@ -13,6 +13,7 @@ import java.util.Locale;
 
 public class Formatting {
   public static final DecimalFormat INTEGER_FORMAT = new DecimalFormat("0");
+  public static final DecimalFormat TWO_DIGIT_INTEGER_FORMAT = new DecimalFormat("00");
   public static final DecimalFormat DECIMAL_FORMAT =
     new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.US));
   public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");

@@ -125,7 +125,7 @@ public class TransactionSeriesColumn extends HyperlinkTableColumn {
     if (list.isEmpty()) {
       return;
     }
-    directory.get(NavigationService.class).gotoCategorization(list);
+    directory.get(NavigationService.class).gotoCategorization(list, false);
   }
 
   private void selectTransactionIfNeeded(Glob transaction) {

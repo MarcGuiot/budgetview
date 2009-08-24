@@ -110,12 +110,6 @@ public class StatTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     timeline.selectMonth("2008/08");
 
-    views.selectHome();
-    monthSummary.envelopes
-      .checkValues(110, 90 + 80)
-      .checkGaugeOverrun(-110, -90 - 80, -110 + 90)
-      .checkErrorOverrun();
-
     views.selectBudget();
     budgetView.envelopes.checkTotalAmounts(-110, -170);
 
@@ -127,7 +121,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testBalanceDoesNotTakeInAcountOperationsForNextMonth() throws Exception {
+  public void testBalanceIsBasedOnUserDates() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/01", 200.00, "Salaire")
@@ -139,14 +133,15 @@ public class StatTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("Salaire", "Salaire");
     categorization.setNewEnvelope("Auchan", "courses");
     categorization.setEnvelope("Carouf", "courses");
-    timeline.selectMonth("2008/06");
 
     views.selectHome();
-    monthSummary.checkBalance(200 - 90);  //balance banque du mois : ne prends pas en compte les 80
+    timeline.selectMonth("2008/06");
+    mainAccounts.checkBalance(200 - 90 - 80);
     mainAccounts.checkEstimatedPosition(80);
+
     timeline.selectMonth("2008/07");
+    mainAccounts.checkBalance(200 - 90 - 80);
     mainAccounts.checkEstimatedPosition(200 - 170);
-    monthSummary.checkBalance(200 - 80 - 170);  //-50 ==> prends en comptes les 80
   }
 
   public void testWithIncomeReimbursement() throws Exception {
@@ -160,8 +155,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     categorization.setNewEnvelope("Auchan", "courses");
 
     views.selectHome();
-    monthSummary
-      .checkBalance(110);
+    mainAccounts.checkBalance(110);
     mainAccounts.checkEstimatedPosition(0);
 
     OfxBuilder
@@ -178,13 +172,13 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .add("01/07/2008", TransactionType.PRELEVEMENT, "Salaire", "", -200.00, "Salaire")
       .check();
     views.selectHome();
-    monthSummary
-      .checkBalance(110);
-    mainAccounts
-      .checkEstimatedPosition(400);
+    mainAccounts.checkBalance(110);
+    mainAccounts.checkEstimatedPosition(400);
+
     mainAccounts.openEstimatedPositionDetails()
       .checkInitialPosition(0)
       .close();
+
     views.selectBudget();
     budgetView.income.editSeriesList()
       .switchToManual()
@@ -192,16 +186,16 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .selectNegativeAmounts()
       .setAmount("200")
       .validate();
+
     views.selectData();
     transactions.initContent()
       .add("15/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, "courses")
       .add("01/07/2008", TransactionType.PRELEVEMENT, "Salaire", "", -200.00, "Salaire")
       .check();
+
     views.selectHome();
-    monthSummary
-      .checkBalance(-290);
-    mainAccounts
-      .checkEstimatedPosition(0);
+    mainAccounts.checkBalance(-290);
+    mainAccounts.checkEstimatedPosition(0);
     mainAccounts.openEstimatedPositionDetails()
       .checkInitialPosition(0)
       .close();

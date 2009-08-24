@@ -2,7 +2,10 @@ package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
+import org.uispec4j.Window;
+import org.uispec4j.interception.WindowInterceptor;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 
 import javax.swing.*;
 
@@ -51,14 +54,35 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     return this;
   }
 
-  protected String toString(double value, boolean forcePlus) {
-    if (value == 0) {
-      return "0";
-    }
-    return super.toString(value, forcePlus);
-  }
-
   private Panel getPanel() {
     return mainWindow.getPanel("budgetSummaryView");
+  }
+
+  public BudgetSummaryDetailsChecker openEstimatedPositionDetails() {
+    Window window = WindowInterceptor.getModalDialog(getPanel().getButton().triggerClick());
+    return new BudgetSummaryDetailsChecker(window);
+  }
+
+  public void checkNoEstimatedPositionDetails() {
+    assertFalse(getPanel().getButton().isEnabled());
+  }
+
+  public void checkNoEstimatedPosition() {
+    assertThat(getPanel().getTextBox("positionLabel").textEquals("-"));
+  }
+
+  public void checkEstimatedPositionColor(String color) {
+    TextBox label = getPanel().getTextBox("positionLabel");
+    assertThat(label.foregroundNear(color));
+  }
+
+  public void checkIsEstimatedPosition() {
+    TextBox label = getPanel().getTextBox("positionTitle");
+    assertThat(label.textEquals("Estimated position"));
+  }
+
+  public void checkIsRealPosition() {
+    TextBox label = getPanel().getTextBox("positionTitle");
+    assertThat(label.textEquals("Position"));
   }
 }

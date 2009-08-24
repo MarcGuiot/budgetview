@@ -50,17 +50,17 @@ public class BackupService {
     ReadOnlyAccountDataManager.writeSnapshot_V2(serverData, file);
   }
 
-  public boolean restore(InputStream stream, char[] passwd) throws InvalidData {
+  public boolean restore(InputStream stream, char[] password) throws InvalidData {
     MapOfMaps<String, Integer, SerializableGlobType> serverData =
       new MapOfMaps<String, Integer, SerializableGlobType>();
     ReadOnlyAccountDataManager.readSnapshot(serverData, stream);
     PasswordBasedEncryptor passwordBasedEncryptor;
-    if (passwd == null) {
+    if (password == null) {
       passwordBasedEncryptor = directory.get(PasswordBasedEncryptor.class);
     }
     else {
       passwordBasedEncryptor = new MD5PasswordBasedEncryptor(EncrypterToTransportServerAccess.salt,
-                                                             passwd, EncrypterToTransportServerAccess.count);
+                                                             password, EncrypterToTransportServerAccess.count);
     }
     GlobModel globModel = directory.get(GlobModel.class);
     try {
@@ -74,7 +74,7 @@ public class BackupService {
       return false;
     }
 
-    if (passwd != null) {
+    if (password != null) {
       PasswordBasedEncryptor userPasswordBasedEncryptor = directory.get(PasswordBasedEncryptor.class);
 
       for (SerializableGlobType serializableGlobType : serverData.values()) {

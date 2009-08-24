@@ -1,23 +1,24 @@
 package org.designup.picsou.gui.series;
 
-import org.globsframework.model.*;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.gui.GlobSelectionListener;
+import org.designup.picsou.gui.model.PeriodSeriesStat;
+import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.model.Month;
 import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.Utils;
+import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
+import org.globsframework.model.utils.GlobFunctor;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.model.SeriesStat;
+import org.globsframework.utils.Utils;
+import org.globsframework.utils.directory.Directory;
 
-import java.util.Set;
-import java.util.HashSet;
 import java.awt.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSetListener {
 
@@ -77,7 +78,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
 
     Utils.releaseBeginRemove();
     for (Glob seriesStat : seriesStats) {
-      if (repository.findLinkTarget(seriesStat, PeriodSeriesStat.SERIES) == null){
+      if (repository.findLinkTarget(seriesStat, PeriodSeriesStat.SERIES) == null) {
         Log.write("Error : SeriesStat without series ");
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         toolkit.beep();
@@ -95,17 +96,17 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
       this.repository = repository;
     }
 
-    public void run(Glob glob, GlobRepository remote) throws Exception {
-      Glob stat =
-        repository.findOrCreate(Key.create(PeriodSeriesStat.TYPE, glob.get(SeriesStat.SERIES)));
-      double amount = stat.get(PeriodSeriesStat.AMOUNT) + glob.get(SeriesStat.AMOUNT);
-      double plannedAmount = stat.get(PeriodSeriesStat.PLANNED_AMOUNT) + glob.get(SeriesStat.PLANNED_AMOUNT);
-      repository.update(stat.getKey(),
-                        FieldValue.value(PeriodSeriesStat.AMOUNT, amount),
-                        FieldValue.value(PeriodSeriesStat.PLANNED_AMOUNT, plannedAmount),
-                        FieldValue.value(PeriodSeriesStat.ABS_SUM_AMOUNT, 
-                                         Math.abs(plannedAmount) > Math.abs(amount) ? Math.abs(plannedAmount) : Math.abs(amount)));
-      stats.add(stat);
+    public void run(Glob seriesStat, GlobRepository remote) throws Exception {
+      Glob periodStat =
+        repository.findOrCreate(Key.create(PeriodSeriesStat.TYPE, seriesStat.get(SeriesStat.SERIES)));
+      double amount = periodStat.get(PeriodSeriesStat.AMOUNT) + seriesStat.get(SeriesStat.AMOUNT);
+      double plannedAmount = periodStat.get(PeriodSeriesStat.PLANNED_AMOUNT) + seriesStat.get(SeriesStat.PLANNED_AMOUNT);
+      repository.update(periodStat.getKey(),
+                        value(PeriodSeriesStat.AMOUNT, amount),
+                        value(PeriodSeriesStat.PLANNED_AMOUNT, plannedAmount),
+                        value(PeriodSeriesStat.ABS_SUM_AMOUNT,
+                              Math.abs(plannedAmount) > Math.abs(amount) ? Math.abs(plannedAmount) : Math.abs(amount)));
+      stats.add(periodStat);
     }
 
     public GlobList getStats() {

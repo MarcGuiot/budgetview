@@ -31,8 +31,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.*;
 import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -275,6 +273,12 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     finally {
       enableSelectionNotification(sendPending);
     }
+  }
+
+  public GlobTableView addKeyBinding(KeyStroke keyStroke, String commandName, Action action) {
+    getComponent().getInputMap().put(keyStroke, commandName);
+    getComponent().getActionMap().put(commandName, action);
+    return this;
   }
 
   public JTable getComponent() {
@@ -712,8 +716,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   }
 
   private void initClipboardHandler() {
-    KeyStroke copy = GuiUtils.ctrl(KeyEvent.VK_C);
-    table.registerKeyboardAction(new CopySelectionToClipboardAction(), "Copy", copy, JComponent.WHEN_FOCUSED);
+    addKeyBinding(GuiUtils.ctrl(KeyEvent.VK_C), "Copy", new CopySelectionToClipboardAction());
   }
 
   private class CopySelectionToClipboardAction extends AbstractAction {
@@ -743,9 +746,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
         buffer.append("\n");
       }
 
-      StringSelection selection = new StringSelection(buffer.toString());
-      Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-      clipboard.setContents(selection, selection);
+      GuiUtils.copyTextToClipboard(buffer.toString());
     }
   }
 }

@@ -153,6 +153,14 @@ public class Gui {
     return editor;
   }
 
+  public static void setWaitCursor(JFrame frame) {
+    frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+  }
+
+  public static void setDefaultCursor(JFrame frame) {
+    frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+  }
+
   public static class RolloverColorListener extends MouseAdapter {
     private final JComponent component;
     private final Color rolloverColor;

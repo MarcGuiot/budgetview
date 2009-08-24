@@ -39,6 +39,10 @@ public class HelpService {
     dialog.show(helpRef);
   }
 
+  public void reset(){
+    dialog = null;
+  }
+
   private class I18NHelpSource implements HelpSource {
     public String getTitle(String ref) {
       return Lang.get("help." + ref);

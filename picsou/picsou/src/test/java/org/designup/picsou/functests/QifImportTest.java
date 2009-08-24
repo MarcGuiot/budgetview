@@ -33,7 +33,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .check();
     views.selectHome();
 
-    mainAccounts.changeBalance("Main account", 100, "SACLAY");
+    mainAccounts.changePosition("Main account", 100, "SACLAY");
     views.selectData();
     transactions.initAmountContent()
       .add("22/04/2006", "SACLAY", -55.49, "To categorize", 100.00, 100.00, "Main account")
@@ -61,8 +61,8 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .add("13/04/2006", "STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", -18.70, "To categorize", 236.64, 236.64, "Main account")
       .check();
     views.selectHome();
-    mainAccounts.changeBalance("Main account", 80, "Auchan");
-    mainAccounts.getBalance("Main account")
+    mainAccounts.changePosition("Main account", 80, "Auchan");
+    mainAccounts.editPosition("Main account")
       .checkAccountLabel("Account: Main account")
       .validate();
   }

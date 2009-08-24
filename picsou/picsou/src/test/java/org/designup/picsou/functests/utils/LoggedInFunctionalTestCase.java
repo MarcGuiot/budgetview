@@ -29,14 +29,13 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected OperationChecker operations;
   protected TitleChecker title;
   protected LicenseActivationChecker license;
-  protected MonthSummaryChecker monthSummary;
   protected BudgetViewChecker budgetView;
   protected SavingsViewChecker savingsView;
   protected NextProjectsChecker nextProjects;
   protected CategorizationChecker categorization;
   protected SeriesViewChecker series;
   protected SeriesEvolutionChecker seriesEvolution;
-  protected VersionInfoChecker infochecker;
+  protected VersionInfoChecker versionInfo;
   protected NavigationViewChecker navigation;
   protected NotesChecker notes;
 
@@ -51,7 +50,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   private boolean notRegistered = false;
   private String password = "password";
   private String user = "anonymous";
-
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -114,7 +112,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     transactionDetails = new TransactionDetailsChecker(mainWindow);
     transactionCreation = new TransactionCreationChecker(mainWindow);
     title = new TitleChecker(mainWindow);
-    monthSummary = new MonthSummaryChecker(mainWindow);
     budgetView = new BudgetViewChecker(mainWindow);
     savingsView = new SavingsViewChecker(mainWindow);
     nextProjects = new NextProjectsChecker(mainWindow);
@@ -122,7 +119,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     series = new SeriesViewChecker(mainWindow);
     seriesEvolution = new SeriesEvolutionChecker(mainWindow);
     license = new LicenseActivationChecker(mainWindow);
-    infochecker = new VersionInfoChecker(mainWindow);
+    versionInfo = new VersionInfoChecker(mainWindow);
     navigation = new NavigationViewChecker(mainWindow);
     notes = new NotesChecker(mainWindow);
   }
@@ -133,7 +130,12 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
       operations.deleteUser(password);
     }
     catch (Throwable e) {
-      mainWindow.dispose();
+      try {
+        mainWindow.dispose();
+      }
+      catch (Throwable e1) {
+        e1.printStackTrace();
+      }
       mainWindow = null;
     }
     super.tearDown();
@@ -146,8 +148,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     transactionCreation = null;
     operations = null;
     title = null;
-    infochecker = null;
-    monthSummary = null;
+    versionInfo = null;
     budgetView = null;
     savingsView = null;
     nextProjects = null;

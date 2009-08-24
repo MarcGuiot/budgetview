@@ -8,6 +8,8 @@ import static org.uispec4j.assertion.UISpecAssert.*;
 
 import javax.swing.*;
 
+import junit.framework.Assert;
+
 public class TransactionCreationChecker extends GuiChecker {
   private Window window;
 
@@ -93,7 +95,12 @@ public class TransactionCreationChecker extends GuiChecker {
   }
 
   public TransactionCreationChecker create() {
-    getPanel().getButton("Create").click();
+    Panel panel = getPanel();
+    panel.getButton("Create").click();
+    TextBox errorMessage = panel.getTextBox("errorMessage");
+    if (errorMessage.isVisible().isTrue()) {
+      Assert.fail("Creation error: " + errorMessage.getText());
+    }
     return this;
   }
 
@@ -121,7 +128,8 @@ public class TransactionCreationChecker extends GuiChecker {
 
   public TransactionCreationChecker show() {
     getShowHideButton().click();
-    return checkShowing();
+    checkShowing();
+    return this;
   }
 
   public TransactionCreationChecker checkShowing() {
@@ -165,7 +173,8 @@ public class TransactionCreationChecker extends GuiChecker {
     return AccountEditionChecker.open(dialog.getOkTrigger());
   }
 
-  public TransactionCreationChecker checkErrorMessage(String message) {
+  public TransactionCreationChecker createAndCheckErrorMessage(String message) {
+    getPanel().getButton("Create").click();
     TextBox textBox = getPanel().getTextBox("errorMessage");
     assertThat(textBox.isVisible());
     assertThat(textBox.textEquals(message));

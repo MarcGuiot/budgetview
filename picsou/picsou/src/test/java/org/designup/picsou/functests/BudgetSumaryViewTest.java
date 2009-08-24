@@ -6,7 +6,7 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 public class BudgetSumaryViewTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
-    setCurrentMonth("2008/06");
+    setCurrentMonth("2008/07");
     super.setUp();
   }
 
@@ -17,16 +17,15 @@ public class BudgetSumaryViewTest extends LoggedInFunctionalTestCase {
     OfxBuilder
       .init(this)
       .addBankAccount(30006, 10674, "0001212", 1500.00, "2008/07/10")
-      .addTransaction("2008/06/5", 1000.0, "WorldCo")
-      .addTransaction("2008/06/10", -200.0, "Auchan")
-      .addTransaction("2008/07/5", -50, "FNAC")
+      .addTransaction("2008/06/05", 1000.00, "WorldCo")
+      .addTransaction("2008/06/10", -200.00, "Auchan")
+      .addTransaction("2008/07/05", -50.00, "FNAC")
       .load();
 
     views.selectBudget();
     timeline.checkSelection("2008/07");
     timeline.selectAll();
-    budgetView.getLabel()
-      .checkUncategorized(1000.00 + 200.00 + 50.00);
+    budgetView.getSummary().checkUncategorized(1000.00 + 200.00 + 50.00);
 
     timeline.selectMonth("2008/07");
 
@@ -36,36 +35,36 @@ public class BudgetSumaryViewTest extends LoggedInFunctionalTestCase {
 
     timeline.checkSelection("2008/07");
     views.selectBudget();
-    budgetView.getLabel()
+    budgetView.getSummary()
       .checkMultiSelectionNotShown()
       .checkMonthBalance(+750.00)
       .checkEndPosition(2300.00)
       .checkUncategorized(50.00);
 
     timeline.selectAll();
-    budgetView.getLabel()
+
+    budgetView.getSummary()
       .checkMultiSelection(2)
       .checkMonthBalance(+1550.00)
       .checkEndPosition(2300.00)
       .checkUncategorized(50.00);
 
     timeline.selectMonth("2008/06");
-    budgetView.getLabel()
+    budgetView.getSummary()
       .checkMultiSelectionNotShown()
       .checkMonthBalance(+800.00)
       .checkEndPosition(1550.00)
       .checkUncategorizedNotShown();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("FNAC", "Occasional");
+    categorization.setNewEnvelope("FNAC", "Leisures");
 
     timeline.selectMonth("2008/07");
     views.selectBudget();
-    budgetView.getLabel()
+    budgetView.getSummary()
       .checkMultiSelectionNotShown()
       .checkMonthBalance(+750.00)
       .checkEndPosition(2300.00)
       .checkUncategorizedNotShown();
-
   }
 }

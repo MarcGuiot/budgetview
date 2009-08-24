@@ -25,6 +25,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
   }
 
   public void testBackupAndRestore() throws Exception {
+
     OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "Company")
       .addTransaction("2008/08/10", -400.0, "Auchan")
@@ -41,6 +42,9 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
       .add("10/08/2008", TransactionType.PRELEVEMENT, "Auchan", "", -400.00, "Course")
       .check();
 
+    views.selectHome();
+    notes.setText("Some notes...");
+
     String backupFile = operations.backup(this);
 
     views.selectCategorization();
@@ -49,8 +53,15 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
 
     operations.restore(backupFile);
 
+    timeline.checkSelection("2008/08");
+
+    operations.checkUndoNotAvailable();
+    operations.checkRedoNotAvailable();
+
+    views.selectHome();
+    notes.checkText("Some notes...");
+
     views.selectData();
-    timeline.selectAll();
     transactions
       .initContent()
       .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00, "Salaire")
@@ -71,7 +82,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
     WindowInterceptor
       .init(operations.getBackupTrigger())
       .process(FileChooserHandler.init()
-        .assertCurrentFileNameEquals("cashpilot-2008-08-30.backup")
+        .assertCurrentFileNameEquals("backup-2008-08-30.cashpilot")
         .select(filePath))
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
@@ -119,7 +130,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           PasswordDialogChecker dialog = new PasswordDialogChecker(window);
-          dialog.checkTitle("Password to read data");
+          dialog.checkTitle("Secure backup");
           dialog.setPassword("password");
           return dialog.getOkTrigger();
         }
@@ -154,12 +165,13 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           PasswordDialogChecker dialog = new PasswordDialogChecker(window);
-          dialog.checkTitle("Password to read data");
+          dialog.checkTitle("Secure backup");
           return dialog.getCancelTrigger();
         }
       })
       .run();
     views.selectData();
+    timeline.checkSelection("2008/08");
     timeline.selectAll();
     transactions
       .initContent()
@@ -194,6 +206,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
       .run();
 
     views.selectData();
+    timeline.checkSelection("2008/08");
     timeline.selectAll();
     transactions
       .initContent()

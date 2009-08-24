@@ -1,24 +1,64 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector=".message htmlEditorPane" margin="10" marginTop="5"/>
+    <style selector=".message button" fill="none" anchor="center"/>
+    <style selector="scrollPane.guidance" opaque="true" viewportBackground="notesView.introBlock.bg"/>
 
-  <column>
+    <style selector="label.amount" font="-,plain,10"/>
 
-    <label text="$notesView.title" styleClass="blockTitle"/>
+    <ui name="introMessagePanel" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        borderWidth="1" cornerRadius="6"
+        topColor="notesView.introMessage.top"
+        bottomColor="notesView.introMessage.bottom"
+        borderColor="notesView.introMessage.border"/>
+    <style selector=".introMessage" ui="introMessagePanel" opaque="false" marginTop="20" margin="10" weightY="0"/>
+    <style selector=".introMessage label" margin="2" fill="horizontal" horizontalAlignment="center"
+           foreground="notesView.introMessage.text" font="-,bold,16"/>
 
-    <panel styleClass="block">
+    <style selector="label.plannedAmount" foreground="" font="-,bold,10"/>
 
-      <column styleClass="innerBlock">
+  </styles>
 
-        <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true">
+  <cards ref="cards" styleClass="innerBlock">
 
-          <textArea ref="notesEditor" lineWrap="true" wrapStyleWord="true" margin="5"/>
+    <card name="noData">
+      <scrollPane styleClass="guidance" verticalUnitIncrement="10" forceVerticalScroll="true">
 
-        </scrollPane>
+        <column styleClass="message">
+          <panel styleClass="introMessage">
+            <label text="$notesView.intro.title"/>
+          </panel>
+          <htmlEditorPane text="$notesView.noData.text" name="noDataMessage"
+                          hyperlinkListener="hyperlinkHandler"/>
+          <button action="import"/>
+          <filler fill="vertical"/>
+        </column>
+      </scrollPane>
+    </card>
 
-      </column>
+    <card name="noSeries">
+      <scrollPane styleClass="guidance" verticalUnitIncrement="10" forceVerticalScroll="true">
 
-    </panel>
+        <column styleClass="message">
+          <panel styleClass="introMessage">
+            <label text="$notesView.intro.title"/>
+          </panel>
+          <htmlEditorPane text="$notesView.noSeries.text" name="noSeriesMessage"
+                          hyperlinkListener="hyperlinkHandler"/>
+          <button action="openSeriesWizard"/>
+          <filler fill="vertical"/>
+        </column>
+      </scrollPane>
+    </card>
 
-  </column>
+    <card name="standard">
+      <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true">
+        <textArea ref="notesEditor" lineWrap="true" wrapStyleWord="true" margin="5" fill="both"/>
+      </scrollPane>
+    </card>
+
+  </cards>
+
 </splits>

@@ -9,6 +9,7 @@ import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -176,7 +177,7 @@ public class Series {
     return Lang.get("series.uncategorized");
   }
 
-  public static boolean checkIsValidMonth(int monthToCheck, Glob series) {
+  public static boolean isValidMonth(int monthToCheck, Glob series) {
     Integer firstMonth = series.get(FIRST_MONTH);
     firstMonth = firstMonth == null ? 0 : firstMonth;
     Integer lastMonth = series.get(LAST_MONTH);
@@ -184,6 +185,11 @@ public class Series {
     return monthToCheck >= firstMonth &&
            monthToCheck <= lastMonth &&
            Boolean.TRUE.equals(series.get(getMonthField(monthToCheck)));
+  }
+
+  public static BudgetArea getBudgetArea(Integer seriesId, GlobRepository repository) {
+    Glob series = repository.get(org.globsframework.model.Key.create(Series.TYPE, seriesId));
+    return BudgetArea.get(series.get(Series.BUDGET_AREA));
   }
 
   public static class Serializer implements PicsouGlobSerializer {
@@ -563,6 +569,5 @@ public class Series {
       fieldSetter.set(Series.IS_MIRROR, input.readBoolean());
       fieldSetter.set(Series.MIRROR_SERIES, input.readInteger());
     }
-
   }
 }

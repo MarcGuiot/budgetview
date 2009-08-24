@@ -127,30 +127,65 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Savings");
 
     views.selectBudget();
-    budgetView.envelopes.createSeries()
-      .setName("envelope1")
-      .validate();
-
-    budgetView.envelopes.createSeries()
-      .setName("envelope2")
-      .validate();
+    budgetView.income.createSeries("salary");
+    budgetView.envelopes.createSeries("envelope1");
+    budgetView.envelopes.createSeries("envelope2");
+    budgetView.recurring.createSeries("mortgage");
 
     views.selectData();
     series.checkContains("All",
                          "To categorize",
-                         "Income",
-                         "Recurring",
+                         "Income", "salary",
+                         "Recurring", "mortgage",
                          "Envelopes", "envelope1", "envelope2",
                          "Special",
                          "Savings");
 
     series.checkExpansionEnabled("All", false);
     series.checkExpansionEnabled("To categorize", false);
-    series.checkExpansionEnabled("Income", false);
+    series.checkExpansionEnabled("Income", true);
+    series.checkExpansionEnabled("Special", false);
 
     series.checkExpansionEnabled("Envelopes", true);
-    series.toggle("Envelopes");
+    series.toggleExpansion("Envelopes");
 
+    series.checkContains("All",
+                         "To categorize",
+                         "Income", "salary",
+                         "Recurring", "mortgage",
+                         "Envelopes",
+                         "Special",
+                         "Savings");
+
+    series.expandAll();
+    series.checkContains("All",
+                         "To categorize",
+                         "Income", "salary",
+                         "Recurring", "mortgage",
+                         "Envelopes", "envelope1", "envelope2",
+                         "Special",
+                         "Savings");
+    
+    series.collapseAll();
+    series.checkContains("All",
+                         "To categorize",
+                         "Income",
+                         "Recurring",
+                         "Envelopes",
+                         "Special",
+                         "Savings");
+
+    series.toggleExpansion("Income");
+    series.expandAll();
+    series.checkContains("All",
+                         "To categorize",
+                         "Income", "salary",
+                         "Recurring", "mortgage",
+                         "Envelopes", "envelope1", "envelope2",
+                         "Special",
+                         "Savings");
+
+    series.collapseAll();
     series.checkContains("All",
                          "To categorize",
                          "Income",

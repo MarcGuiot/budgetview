@@ -51,7 +51,6 @@ public abstract class AccountViewPanel {
     directory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         GlobList months = selection.getAll(Month.TYPE);
-        updateEstimatedPosition();
         filterMatcherWithDates =
           GlobMatchers.and(accountTypeMatcher,
                            new PicsouMatchers.AccountDateMatcher(months));
@@ -67,6 +66,8 @@ public abstract class AccountViewPanel {
     header = builder.add("header", new JPanel());
 
     Key summaryAccount = Key.create(Account.TYPE, summaryId);
+    registerSummaryView(builder);
+
     builder.addLabel("referencePosition", Account.POSITION)
       .setAutoHideIfEmpty(true)
       .forceSelection(summaryAccount);
@@ -76,9 +77,6 @@ public abstract class AccountViewPanel {
 
     labelTypeName = new JLabel();
     builder.add("labelTypeName", labelTypeName);
-
-    builder.add("estimatedPosition", getEstimatedPositionComponent());
-    builder.add("estimatedPositionDate", getEstimatedPositionDateComponent());
 
     accountRepeat = builder.addRepeat("accountRepeat", Account.TYPE, accountTypeMatcher,
                       new AccountComparator(),
@@ -92,17 +90,13 @@ public abstract class AccountViewPanel {
     builder.add("accountPositionThreshold", action);
 
     panel = builder.load();
-
-    updateEstimatedPosition();
   }
+
+  protected abstract void registerSummaryView(GlobsPanelBuilder builder);
 
   protected abstract AccountType getAccountType();
 
   protected abstract boolean showPositionThreshold();
-
-  protected abstract JComponent getEstimatedPositionComponent();
-
-  protected abstract JComponent getEstimatedPositionDateComponent();
 
   public JPanel getPanel() {
     if (panel == null) {
@@ -115,46 +109,10 @@ public abstract class AccountViewPanel {
 
     boolean hasAccounts = !repository.getAll(Account.TYPE, accountTypeMatcher).isEmpty();
     header.setVisible(hasAccounts);
-    getEstimatedPositionComponent().setVisible(hasAccounts);
     if (!hasAccounts) {
       return;
     }
-
-    GlobList list = directory.get(SelectionService.class).getSelection(Month.TYPE);
-    if (list.isEmpty()) {
-      setEstimatedPositionLabels(null, "");
-      return;
-    }
-    list.sort(Month.ID);
-    Integer lastSelectedMonthId = list.getLast().get(Month.ID);
-
-    Glob balanceStat = getBalanceStat(lastSelectedMonthId);
-    if (balanceStat == null) {
-      setEstimatedPositionLabels(null, "");
-      return;
-    }
-
-    String lastDay = Formatting.toString(Month.getLastDay(lastSelectedMonthId));
-    String dateLabel = Lang.get("accountView.total.date", lastDay);
-
-    Double amount = getEndOfMonthPosition(balanceStat);
-    Integer lastImportDate = repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH);
-    setEstimatedPositionLabels(amount, dateLabel);
-    if (lastSelectedMonthId >= lastImportDate) {
-      labelTypeName.setText(Lang.get("accountView.estimated.title"));
-      getEstimatedPositionComponent().setToolTipText(Lang.get("accountView.estimated.tooltip"));
-    }
-    else {
-      labelTypeName.setText(Lang.get("accountView.real.title"));
-      getEstimatedPositionComponent().setToolTipText(null);
-    }
   }
-
-  protected abstract Double getEndOfMonthPosition(Glob balanceStat);
-
-  protected abstract Glob getBalanceStat(Integer lastSelectedMonthId);
-
-  protected abstract void setEstimatedPositionLabels(Double amount, String date);
 
   protected abstract JLabel getEstimatedAccountPositionLabel(Key accountKey);
 

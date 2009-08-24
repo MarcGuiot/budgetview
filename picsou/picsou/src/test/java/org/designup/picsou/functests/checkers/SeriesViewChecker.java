@@ -1,21 +1,17 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.designup.picsou.gui.components.expansion.TableExpansionColumn;
 import org.designup.picsou.gui.series.view.SeriesView;
-import org.uispec4j.Button;
 import org.uispec4j.Table;
 import org.uispec4j.Window;
+import org.uispec4j.Panel;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.assertion.UISpecAssert;
 
-import javax.swing.*;
-
-public class SeriesViewChecker extends GuiChecker {
-  private Window mainWindow;
+public class SeriesViewChecker extends ExpandableTableChecker {
 
   public SeriesViewChecker(Window mainWindow) {
-    this.mainWindow = mainWindow;
+    super(mainWindow);
   }
 
   public void checkContains(String... items) {
@@ -28,37 +24,12 @@ public class SeriesViewChecker extends GuiChecker {
     table.selectRow(row);
   }
 
-  public void checkExpansionEnabled(String label, boolean enabled) {
-    Table table = getTable();
-    int row = table.getRowIndex(SeriesView.LABEL_COLUMN_INDEX, label);
-    JButton button = (JButton)getTable().getSwingRendererComponentAt(row, 0);
-    Assert.assertEquals(enabled,
-                        (button.getIcon() != null) &&
-                        (button.getIcon() != TableExpansionColumn.DISABLED_ICON));
+  protected Table getTable() {
+    return window.getTable("seriesView");
   }
 
-  public void checkExpanded(String label, boolean expanded) {
-    Table table = getTable();
-    int row = table.getRowIndex(SeriesView.LABEL_COLUMN_INDEX, label);
-    JButton button = (JButton)table.getSwingRendererComponentAt(row, 0);
-    if (expanded) {
-      Assert.assertSame(TableExpansionColumn.EXPANDED_ICON, button.getIcon());
-    }
-    else {
-      Assert.assertSame(TableExpansionColumn.COLLAPSED_ICON, button.getIcon());
-    }
-  }
-
-  public void toggle(String label) {
-    Table table = getTable();
-    int row = table.getRowIndex(SeriesView.LABEL_COLUMN_INDEX, label);
-    table.selectRow(row);
-    JButton button = (JButton)getTable().getSwingEditorComponentAt(row, 0);
-    new Button(button).click();
-  }
-
-  private Table getTable() {
-    return mainWindow.getTable("seriesView");
+  protected Panel getPanel() {
+    return window.getPanel("seriesViewPanel");
   }
 
   public void checkSelection(String label) {
@@ -83,5 +54,9 @@ public class SeriesViewChecker extends GuiChecker {
 
   public void checkVisible(boolean visible) {
     UISpecAssert.assertEquals(visible, getTable().isVisible());
+  }
+
+  protected int getLabelColumnIndex() {
+    return SeriesView.LABEL_COLUMN_INDEX;
   }
 }

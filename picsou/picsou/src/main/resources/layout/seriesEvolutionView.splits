@@ -2,7 +2,9 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-
+    <style selector="panel.chart" margin="15" marginTop="10" opaque="true"/>
+    <style selector="label.chartLabel" fill="horizontal" horizontalAlignment="center" weightY="0" marginTop="10"
+           font="-,plain,12" foreground="seriesEvolution.chart.label" opaque="false"/>
   </styles>
 
   <column styleClass="main">
@@ -10,18 +12,34 @@
     <label text="$seriesEvolution.title" styleClass="blockTitle" marginTop="5"/>
 
     <panel styleClass="block">
-      <column margin="15" marginBottom="10">
-        <scrollPane marginBottom="0" verticalUnitIncrement="10" border="matte(1,1,1,1,seriesEvolution.border)">
-          <table ref="seriesEvolutionTable" rowHeight="20"/>
-        </scrollPane>
 
-        <row styleClass="iconButtonGroup">
-          <button action="expand" styleClass="expand" tooltipText="$seriesEvolution.expand.tooltip"/>
-          <button action="collapse" styleClass="collapse" tooltipText="$seriesEvolution.collapse.tooltip"/>
-          <filler fill="horizontal"/>
-        </row>
+      <verticalSplit styleClass="innerBlock">
 
-      </column>
+        <column weightY="5">
+
+          <scrollPane marginBottom="0" verticalUnitIncrement="10" border="matte(1,1,1,1,seriesEvolution.border)">
+            <table ref="seriesEvolutionTable" rowHeight="20"/>
+          </scrollPane>
+
+          <row styleClass="iconButtonGroup">
+            <button action="expand" styleClass="expand" tooltipText="$series.expand.tooltip"/>
+            <button action="collapse" styleClass="collapse" tooltipText="$series.collapse.tooltip"/>
+            <filler fill="horizontal"/>
+          </row>
+
+        </column>
+
+        <grid weightY="5" opaque="true" background="seriesEvolution.chart.bg" border="line(block.inner.border)">
+          <label gridPos="(0,0)" ref="balanceChartLabel" weightX="1" styleClass="chartLabel"/>
+          <label gridPos="(1,0)" ref="seriesChartLabel" weightX="1" styleClass="chartLabel"/>
+          <label gridPos="(2,0)" ref="histoChartLabel" weightX="10" styleClass="chartLabel"/>
+          <panel gridPos="(0,1)" ref="balanceChart" weightX="1" styleClass="chart" background="stack.bg"/>
+          <panel gridPos="(1,1)" ref="seriesChart" weightX="1" styleClass="chart" background="stack.bg"/>
+          <panel gridPos="(2,1)" ref="histoChart" weightX="10" styleClass="chart" background="seriesEvolution.chart.bg"/>
+        </grid>
+
+      </verticalSplit>
+
     </panel>
 
   </column>

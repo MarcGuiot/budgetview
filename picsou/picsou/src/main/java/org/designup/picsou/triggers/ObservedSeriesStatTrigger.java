@@ -69,7 +69,7 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
 
         Glob previousStat = repository.find(createKey(previousSeriesId, previousMonthId));
         if (previousStat != null) {
-          updateStat(previousStat, -1 * previousAmount, repository);
+          updateStat(previousStat, previousAmount, -1, repository);
         }
 
         Glob currentStat = repository.find(createKey(currentSeriesId, currentMonthId));
@@ -83,7 +83,7 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
                     (seriesBudgets.isEmpty() ? " <none> " : seriesBudgets.get(0).get(SeriesBudget.AMOUNT)));
         }
         else {
-          updateStat(currentStat, currentAmount, repository);
+          updateStat(currentStat, currentAmount, 1, repository);
         }
       }
 
@@ -104,7 +104,7 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
     Glob stat = repository.findOrCreate(createKey(seriesId, values.get(Transaction.MONTH)));
     if (stat != null) {
       final Double transactionAmount = values.get(Transaction.AMOUNT);
-      updateStat(stat, multiplier * transactionAmount, repository);
+      updateStat(stat, multiplier * transactionAmount, 1, repository);
     }
     else {
       if (throwIfNull) {
@@ -114,9 +114,13 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
     }
   }
 
-  private void updateStat(Glob stat, Double transactionAmount, GlobRepository repository) {
-    repository.update(stat.getKey(), SeriesStat.AMOUNT,
-                      stat.get(SeriesStat.AMOUNT) + transactionAmount);
+  private void updateStat(Glob stat, Double transactionAmount, int multiplier, GlobRepository repository) {
+    double newValue = stat.get(SeriesStat.AMOUNT) + multiplier * transactionAmount;
+    repository.update(stat.getKey(), SeriesStat.AMOUNT, newValue);
+  }
+
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+    init(repository);
   }
 
   public void init(GlobRepository repository) {
@@ -131,10 +135,6 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
     for (Glob transaction : repository.getAll(Transaction.TYPE)) {
       processTransaction(transaction, 1, repository, true);
     }
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    init(repository);
   }
 
   private Key createKey(Integer seriesId, Integer monthId) {

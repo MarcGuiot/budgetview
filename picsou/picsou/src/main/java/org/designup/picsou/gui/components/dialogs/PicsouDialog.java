@@ -31,6 +31,7 @@ public class PicsouDialog extends JDialog {
   private Directory directory;
   private boolean openRequestIsManaged = false;
   private ColorUpdater updater;
+  private Exception ex = new Exception();
 
   public static PicsouDialog create(Window owner, Directory directory) {
     return create(owner, true, directory);
@@ -133,7 +134,12 @@ public class PicsouDialog extends JDialog {
   }
 
   public void dispose() {
+    if (updater == null){
+      ex.printStackTrace();
+    }
+    else {
     updater.dispose();
+    }
     GuiUtils.removeShortcut(getRootPane(), "ESCAPE", KeyStroke.getKeyStroke("ESCAPE"));
     super.dispose();
   }
