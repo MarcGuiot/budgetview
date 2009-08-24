@@ -5,6 +5,7 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.initial.InitialSeries;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
@@ -208,8 +209,8 @@ public class UpgradeTrigger implements ChangeSetListener {
   public void createDataForNewUser(GlobRepository repository) {
     repository.startChangeSet();
     try {
-      repository.findOrCreate(Notes.KEY);
       repository.findOrCreate(AccountPositionThreshold.KEY);
+      repository.findOrCreate(Notes.KEY, value(Notes.TEXT, Lang.get("notes.initial")));
       repository.findOrCreate(UserVersionInformation.KEY,
                               value(UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION),
                               value(UserVersionInformation.CURRENT_BANK_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
