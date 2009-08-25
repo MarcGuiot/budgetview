@@ -103,7 +103,6 @@ public class StackChartDataset {
   }
 
   public Action getAction(int index) {
-    System.out.println("StackChartDataset.getAction " + elements.get(1).label);
     return elements.get(index).action;
   }
 

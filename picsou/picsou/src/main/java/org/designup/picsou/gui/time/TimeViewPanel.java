@@ -118,6 +118,9 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     if (getWidth() < previousWidth || previousWidth == -1) {
       if (getWidth() < timeGraph.getWidth()) {
         translation += (getWidth() - previousWidth) / 2.;
+        if (translation > 0) {
+          translation = 0;
+        }
       }
       scroll = true;
     }
@@ -141,7 +144,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       g2d.dispose();
     }
     if (scroll && scrollToLastVisible()) {
-      scrollToLastVisible();
       repaint();
     }
     synchronized (this) {
@@ -350,6 +352,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   public void selectionUpdated(GlobSelection selection) {
     clearSelection();
     timeGraph.selectMonth(selection.getAll(Month.TYPE), currentlySelected);
+    scrollToLastVisible();
     repaint();
   }
 
@@ -410,7 +413,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     }
     if (visibleOnRight) {
       Selectable left = lastSelected.getRight();
-      int count = 1;
+      int count = 3;
       while (left != null && left.getVisibility() == Selectable.Visibility.NOT_VISIBLE) {
         left = left.getRight();
         count++;
@@ -419,7 +422,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     }
     else {
       Selectable right = lastSelected.getLeft();
-      int count = 1;
+      int count = 3;
       while (right != null && right.getVisibility() == Selectable.Visibility.NOT_VISIBLE) {
         right = right.getLeft();
         count++;
