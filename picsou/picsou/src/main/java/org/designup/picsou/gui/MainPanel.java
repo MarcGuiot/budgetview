@@ -18,7 +18,6 @@ import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
 import org.designup.picsou.gui.monthsummary.VersionInfoView;
-import org.designup.picsou.gui.monthsummary.MonthSummaryView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
@@ -33,6 +32,7 @@ import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.utils.DumpDataAction;
 import org.designup.picsou.gui.utils.DataCheckerAction;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.notes.NotesView;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.model.Month;
@@ -51,7 +51,6 @@ import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.ReplicationGlobRepository;
 import static org.globsframework.model.utils.GlobMatchers.*;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -83,22 +82,10 @@ public class MainPanel {
   private CardView cardView;
   private TransactionView transactionView;
   private TextFilterPanel search;
-  private CategorizationView categorizationView;
   private NotesView notesView;
   private SeriesEvolutionView seriesEvolutionView;
 
-  public interface WindowManager {
-    PicsouFrame getFrame();
-
-    void setPanel(JPanel panel);
-
-    void loggout();
-
-    void logOutAndDeleteUser(String name, char[] passwd);
-  }
-
-  public static MainPanel init(GlobRepository repository, Directory directory,
-                               WindowManager mainWindow) {
+  public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
     mainWindow.getFrame().setRepository(repository);
     return panel;
@@ -120,7 +107,7 @@ public class MainPanel {
     TransactionSelection transactionSelection = new TransactionSelection(repository, directory);
 
     transactionView = new TransactionView(repository, directory, transactionSelection);
-    categorizationView = new CategorizationView(repository, directory);
+    CategorizationView categorizationView = new CategorizationView(repository, directory);
     seriesView = new SeriesView(repository, directory);
     timeView = new TimeView(repository, directory);
 
@@ -202,6 +189,7 @@ public class MainPanel {
 
   public void show() {
     ImportFileAction.registerToOpenRequestManager(Lang.get("import"), repository, directory);
+    
     parent.setJMenuBar(menuBar);
     cardView.showInitialCard();
     search.reset();
@@ -234,7 +222,7 @@ public class MainPanel {
     menu.add(backupAction);
     menu.add(restoreAction);
 
-    if (useMacOSMenu()) {
+    if (Gui.useMacOSMenu()) {
       MRJAdapter.setPreferencesEnabled(true);
       MRJAdapter.addPreferencesListener(preferencesAction);
     }
@@ -248,7 +236,7 @@ public class MainPanel {
     menu.add(gotoLoginAction);
     menu.add(deleteUserAction);
 
-    if (useMacOSMenu()) {
+    if (Gui.useMacOSMenu()) {
       MRJAdapter.addQuitApplicationListener(exitAction);
     }
     else {
@@ -286,28 +274,16 @@ public class MainPanel {
       }
     });
 
-    AboutAction aboutAction = new AboutAction(repository, directory);
-    if (useMacOSMenu()) {
-      MRJAdapter.addAboutListener(aboutAction);
-    }
-    else {
+    if (!Gui.useMacOSMenu()) {
       menu.addSeparator();
-      menu.add(aboutAction);
+      menu.add(new AboutAction(directory));
     }
     return menu;
   }
 
-  private boolean useMacOSMenu() {
-    boolean result = GuiUtils.isMacOSX();
-    Utils.beginRemove();
-    result = false;
-    Utils.endRemove();
-    return result;
-  }
-
   public void loggout() {
     directory.get(OpenRequestManager.class).popCallback();
-    windowManager.loggout();
+    windowManager.logout();
   }
 
   public void deleteUser(String userName, char[] chars) {

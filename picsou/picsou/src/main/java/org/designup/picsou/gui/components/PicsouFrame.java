@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.components;
 
+import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.model.GlobRepository;
 
 import javax.swing.*;
@@ -21,6 +22,8 @@ public class PicsouFrame extends JFrame {
         isIconified = false;
       }
     });
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setIconImage(Gui.IMAGE_LOCATOR.get("app_icon_128.png").getImage());
   }
 
   public boolean isIconified() {

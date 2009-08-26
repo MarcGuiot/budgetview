@@ -6,11 +6,16 @@ import org.globsframework.gui.splits.font.FontService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.utils.JarImageLocator;
 import org.globsframework.gui.utils.TableUtils;
+import org.globsframework.utils.Utils;
+import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.*;
+
+import com.jgoodies.looks.Options;
+import com.jgoodies.looks.plastic.PicsouWindowsLookAndFeel;
 
 public class Gui {
 
@@ -50,6 +55,33 @@ public class Gui {
 
   private Gui() {
   }
+
+  public static void init() {
+
+    try {
+      if (GuiUtils.isMacOSX()) {
+        UIManager.setLookAndFeel(new PicsouMacLookAndFeel());
+      }
+      else {
+        Options.setUseSystemFonts(true);
+        Options.setUseNarrowButtons(false);
+
+        PicsouWindowsLookAndFeel.set3DEnabled(true);
+        PicsouWindowsLookAndFeel.setHighContrastFocusColorsEnabled(false);
+        PicsouWindowsLookAndFeel.setSelectTextOnKeyboardFocusGained(false);
+
+        UIManager.put("FileChooser.useSystemIcons", Boolean.TRUE);
+        UIManager.setLookAndFeel(new PicsouWindowsLookAndFeel());
+      }
+      JDialog.setDefaultLookAndFeelDecorated(false);
+      ToolTipManager.sharedInstance().setInitialDelay(500);
+      ToolTipManager.sharedInstance().setDismissDelay(100000);
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
 
   public static Font getDefaultFont() {
     if (font == null) {
@@ -159,6 +191,14 @@ public class Gui {
 
   public static void setDefaultCursor(JFrame frame) {
     frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+  }
+
+  public static boolean useMacOSMenu() {
+    boolean result = GuiUtils.isMacOSX();
+    Utils.beginRemove();
+    result = false;
+    Utils.endRemove();
+    return result;
   }
 
   public static class RolloverColorListener extends MouseAdapter {

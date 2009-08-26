@@ -4,24 +4,29 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
 import org.designup.picsou.client.local.LocalClientTransport;
-import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
-import org.designup.picsou.gui.startup.OpenRequestManager;
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.components.PicsouFrame;
+import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
+import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.server.ServerDirectory;
-import org.globsframework.utils.directory.Directory;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import net.roydesign.mac.MRJAdapter;
+
 public class MainWindowLauncher {
+
   static {
     PicsouMacLookAndFeel.initApplicationName();
+    Gui.init();
   }
 
   public static void main(String... args) throws Exception {
@@ -40,32 +45,24 @@ public class MainWindowLauncher {
     PicsouApplication.clearRepositoryIfNeeded();
     PicsouApplication.changeDate();
 
-    ServerDirectory serverDirectory;
-    if (snapshot != null) {
-      serverDirectory = new ServerDirectory(new FileInputStream(snapshot));
-    }
-    else {
-      serverDirectory = new ServerDirectory(PicsouApplication.getLocalPrevaylerPath(), PicsouApplication.isDataInMemory());
-    }
-    Directory directory = PicsouApplication.createDirectory(new OpenRequestManager());
+    Directory directory = PicsouApplication.createDirectory();
+    MRJAdapter.addAboutListener(new AboutAction(directory));
+           
+    ServerDirectory serverDirectory = createServerDirectory(snapshot);
     directory.add(ServerDirectory.class, serverDirectory);
     ServerAccess serverAccess =
       new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
                                            directory);
     serverAccess.connect();
-    boolean registered = false;
-    try {
-      registered = serverAccess.createUser(user, password.toCharArray());
-    }
-    catch (UserAlreadyExists userAlreadyExists) {
-      registered = serverAccess.initConnection(user, password.toCharArray(), false);
-    }
-    PicsouInit init = PicsouInit.init(serverAccess, directory, registered);
-    PicsouInit.PreLoadData data = init.loadUserData(user, false, registered);
-    data.load();
 
+    boolean registered = isRegistered(user, password, serverAccess);
+
+    PicsouInit init = PicsouInit.init(serverAccess, directory, registered);
+    init.loadUserData(user, false, registered).load();
+
+    Directory initDirectory = init.getDirectory();
     final PicsouFrame frame = new PicsouFrame("test");
-    MainPanel.init(init.getRepository(), init.getDirectory(), new MainPanel.WindowManager() {
+    MainPanel.init(init.getRepository(), initDirectory, new WindowManager() {
       public PicsouFrame getFrame() {
         return frame;
       }
@@ -75,7 +72,7 @@ public class MainWindowLauncher {
         frame.validate();
       }
 
-      public void loggout() {
+      public void logout() {
         System.exit(1);
       }
 
@@ -83,10 +80,33 @@ public class MainWindowLauncher {
       }
     })
       .show();
+
     frame.setSize(Gui.getWindowSize(1100, 800));
     GuiUtils.showCentered(frame);
 
     return directory;
+  }
+
+  private static ServerDirectory createServerDirectory(String snapshot) throws FileNotFoundException {
+    ServerDirectory serverDirectory;
+    if (snapshot != null) {
+      serverDirectory = new ServerDirectory(new FileInputStream(snapshot));
+    }
+    else {
+      serverDirectory = new ServerDirectory(PicsouApplication.getLocalPrevaylerPath(), PicsouApplication.isDataInMemory());
+    }
+    return serverDirectory;
+  }
+
+  private static boolean isRegistered(String user, String password, ServerAccess serverAccess) {
+    boolean registered = false;
+    try {
+      registered = serverAccess.createUser(user, password.toCharArray());
+    }
+    catch (UserAlreadyExists e) {
+      registered = serverAccess.initConnection(user, password.toCharArray(), false);
+    }
+    return registered;
   }
 
   private static String parseArguments(List<String> args, String key, String defaultValue) {

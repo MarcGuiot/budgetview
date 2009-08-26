@@ -140,6 +140,7 @@ public enum PicsouColors {
   public static ColorService registerColorService(Directory directory) throws IOException {
     ColorService colorService = createColorService();
     directory.add(ColorService.class, colorService);
+    UIManager.put("ColorService", directory.get(ColorService.class));
     return colorService;
   }
 

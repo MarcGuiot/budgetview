@@ -25,6 +25,7 @@ public class VersionInfoView extends View {
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
     versionInfo = Gui.createHtmlEditor("");
+    versionInfo.setVisible(false);
     parentBuilder.add("newVersionMessage", versionInfo);
     repository.addChangeListener(new VersionChangeSetListener());
   }

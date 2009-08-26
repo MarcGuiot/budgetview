@@ -12,16 +12,16 @@ import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.plaf.ButtonPanelItemUI;
-import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.plaf.PicsouSplitPaneUI;
 import org.designup.picsou.gui.plaf.WavePanelUI;
-import org.designup.picsou.gui.startup.LoginPanel;
+import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.upgrade.UpgradeService;
 import org.designup.picsou.gui.utils.ExceptionHandler;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.ImageLocator;
@@ -48,7 +48,6 @@ import org.globsframework.utils.exceptions.InvalidState;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -94,6 +93,7 @@ public class PicsouApplication {
 
   static {
     PicsouMacLookAndFeel.initApplicationName();
+    Gui.init();
   }
 
   public static void main(String... args) throws Exception {
@@ -193,7 +193,7 @@ public class PicsouApplication {
       return;
     }
 
-    initCrypterFactory();
+    initEncryption();
     initLogger();
     clearRepositoryIfNeeded();
 
@@ -210,7 +210,7 @@ public class PicsouApplication {
     }
   }
 
-  private void initCrypterFactory() {
+  private void initEncryption() {
     Thread thread = new Thread() {
       public void run() {
         try {
@@ -335,7 +335,7 @@ public class PicsouApplication {
     return createDirectory(new OpenRequestManager());
   }
 
-  public static Directory createDirectory(OpenRequestManager openRequestManager) throws IOException {
+  private static Directory createDirectory(OpenRequestManager openRequestManager) throws IOException {
     Directory directory = new DefaultDirectory();
     directory.add(OpenRequestManager.class, openRequestManager);
     directory.add(initUiService());
@@ -349,7 +349,11 @@ public class PicsouApplication {
     directory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     directory.add(FontLocator.class, Gui.FONT_LOCATOR);
     directory.add(PasswordBasedEncryptor.class, new RedirectPasswordBasedEncryptor());
+    directory.add(createConfigService());
+    return directory;
+  }
 
+  private static ConfigService createConfigService() {
     Long localConfigVersion;
     String configPath = getBankConfigPath();
     File lastJar = findLastJar(configPath);
@@ -359,12 +363,7 @@ public class PicsouApplication {
     else {
       localConfigVersion = BANK_CONFIG_VERSION;
     }
-
-    directory.add(new ConfigService(APPLICATION_VERSION, JAR_VERSION, localConfigVersion, lastJar));
-
-    UIManager.put("ColorService", directory.get(ColorService.class));
-
-    return directory;
+    return new ConfigService(APPLICATION_VERSION, JAR_VERSION, localConfigVersion, lastJar);
   }
 
   private static UIService initUiService() {

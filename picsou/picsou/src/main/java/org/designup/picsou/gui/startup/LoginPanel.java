@@ -115,7 +115,7 @@ public class LoginPanel {
     setComponentsEnabled(false);
     progressPanel.start();
 
-    mainWindow.loggin(user, password, createUser, useDemoAccount);
+    mainWindow.login(user, password, createUser, useDemoAccount);
     useDemoAccount = false;
 
   }

@@ -31,6 +31,8 @@ public class LicenseInfoView extends View {
     
     licenseMessage = new JEditorPane();
     GuiUtils.initReadOnlyHtmlComponent(licenseMessage);
+    licenseMessage.setVisible(false);
+
     final JFrame parent = directory.get(JFrame.class);
     licenseMessage.addHyperlinkListener(new HyperlinkHandler(directory) {
       protected void processCustomLink(String href) {
