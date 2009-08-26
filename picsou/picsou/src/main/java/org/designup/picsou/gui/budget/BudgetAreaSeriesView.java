@@ -7,7 +7,7 @@ import org.designup.picsou.gui.components.TextDisplay;
 import org.designup.picsou.gui.components.charts.GlobGaugeView;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
-import org.designup.picsou.gui.model.BalanceStat;
+import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.PicsouMatchers;
@@ -68,13 +68,13 @@ public class BudgetAreaSeriesView extends View {
 
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(BalanceStat.TYPE)) {
+        if (changeSet.containsChanges(BudgetStat.TYPE)) {
           update();
         }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        if (changedTypes.contains(BalanceStat.TYPE)) {
+        if (changedTypes.contains(BudgetStat.TYPE)) {
           update();
         }
       }
@@ -123,10 +123,10 @@ public class BudgetAreaSeriesView extends View {
   }
 
   private void update() {
-    GlobList balanceStat = new GlobList();
-    balanceStat.addAll(repository.getAll(BalanceStat.TYPE,
-                                         GlobMatchers.fieldIn(BalanceStat.MONTH, selectedMonthIds)));
-    headerUpdater.update(balanceStat, budgetArea);
+    GlobList budgetStat = new GlobList();
+    budgetStat.addAll(repository.getAll(BudgetStat.TYPE,
+                                         GlobMatchers.fieldIn(BudgetStat.MONTH, selectedMonthIds)));
+    headerUpdater.update(budgetStat, budgetArea);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {

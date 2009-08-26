@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.time;
 
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.model.BalanceStat;
+import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.time.mousestates.MouseState;
 import org.designup.picsou.gui.time.mousestates.ReleasedMouseState;
 import org.designup.picsou.gui.time.selectable.Selectable;
@@ -158,11 +158,11 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public Double getPosition(int monthId) {
-    Glob balance = repository.find(Key.create(BalanceStat.TYPE, monthId));
+    Glob balance = repository.find(Key.create(BudgetStat.TYPE, monthId));
     if (balance == null) {
       return 0.0;
     }
-    return balance.get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION);
+    return balance.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
   }
 
   public double getPositionThreshold(int monthId) {
@@ -319,7 +319,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       repaint();
       return;
     }
-    if (changeSet.containsChanges(BalanceStat.TYPE) || changeSet.containsChanges(AccountPositionThreshold.TYPE)) {
+    if (changeSet.containsChanges(BudgetStat.TYPE) || changeSet.containsChanges(AccountPositionThreshold.TYPE)) {
       repaint();
     }
   }

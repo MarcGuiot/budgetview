@@ -86,8 +86,8 @@ public class PicsouInit {
     this.repository.addTrigger(new PositionTrigger());
     this.repository.addTrigger(new PlannedSeriesStatTrigger());
     this.repository.addTrigger(new SeriesStatSummaryTrigger());
-    this.repository.addTrigger(new BalanceStatTrigger());
-    this.repository.addTrigger(new SavingsBalanceStatTrigger());
+    this.repository.addTrigger(new BudgetStatTrigger());
+    this.repository.addTrigger(new SavingsBudgetStatTrigger());
     this.repository.addTrigger(new SeriesWrapperUpdateTrigger());
 
     initDirectory(this.repository);

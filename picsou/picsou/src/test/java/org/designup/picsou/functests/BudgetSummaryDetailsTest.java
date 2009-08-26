@@ -3,7 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 
-public class MonthSummaryTest extends LoggedInFunctionalTestCase {
+public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();

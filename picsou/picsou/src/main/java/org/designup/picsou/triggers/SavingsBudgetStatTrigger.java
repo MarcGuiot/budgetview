@@ -1,6 +1,6 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.gui.model.SavingsBalanceStat;
+import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class SavingsBalanceStatTrigger implements ChangeSetListener {
+public class SavingsBudgetStatTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
     if (changeSet.containsChanges(SeriesBudget.TYPE) || changeSet.containsChanges(Transaction.TYPE)) {
       computeStat(repository);
@@ -33,41 +33,41 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
     SavingsFunctor callback = new SavingsFunctor(repository);
     repository.startChangeSet();
     try {
-      repository.deleteAll(SavingsBalanceStat.TYPE);
+      repository.deleteAll(SavingsBudgetStat.TYPE);
       repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, callback);
       callback.complete();
       final Map<Integer, GlobBuilder> balanceSummaries = new HashMap<Integer, GlobBuilder>();
-      repository.safeApply(SavingsBalanceStat.TYPE, GlobMatchers.ALL, new GlobFunctor() {
+      repository.safeApply(SavingsBudgetStat.TYPE, GlobMatchers.ALL, new GlobFunctor() {
         public void run(Glob glob, GlobRepository repository) throws Exception {
-          GlobBuilder balance = balanceSummaries.get(glob.get(SavingsBalanceStat.MONTH));
+          GlobBuilder balance = balanceSummaries.get(glob.get(SavingsBudgetStat.MONTH));
           if (balance == null) {
-            balance = GlobBuilder.init(SavingsBalanceStat.TYPE);
-            balanceSummaries.put(glob.get(SavingsBalanceStat.MONTH), balance);
+            balance = GlobBuilder.init(SavingsBudgetStat.TYPE);
+            balanceSummaries.put(glob.get(SavingsBudgetStat.MONTH), balance);
           }
-          update(glob, balance, SavingsBalanceStat.BEGIN_OF_MONTH_POSITION);
-          update(glob, balance, SavingsBalanceStat.END_OF_MONTH_POSITION);
-          update(glob, balance, SavingsBalanceStat.BALANCE);
-          update(glob, balance, SavingsBalanceStat.LAST_KNOWN_ACCOUNT_POSITION);
-          update(glob, balance, SavingsBalanceStat.SAVINGS);
-          update(glob, balance, SavingsBalanceStat.SAVINGS_PLANNED);
-          update(glob, balance, SavingsBalanceStat.SAVINGS_REMAINING);
-          Integer day = glob.get(SavingsBalanceStat.LAST_KNOWN_POSITION_DAY);
+          update(glob, balance, SavingsBudgetStat.BEGIN_OF_MONTH_POSITION);
+          update(glob, balance, SavingsBudgetStat.END_OF_MONTH_POSITION);
+          update(glob, balance, SavingsBudgetStat.BALANCE);
+          update(glob, balance, SavingsBudgetStat.LAST_KNOWN_ACCOUNT_POSITION);
+          update(glob, balance, SavingsBudgetStat.SAVINGS);
+          update(glob, balance, SavingsBudgetStat.SAVINGS_PLANNED);
+          update(glob, balance, SavingsBudgetStat.SAVINGS_REMAINING);
+          Integer day = glob.get(SavingsBudgetStat.LAST_KNOWN_POSITION_DAY);
           if (day != null) {
-            Integer summaryDay = balance.get(SavingsBalanceStat.LAST_KNOWN_POSITION_DAY);
+            Integer summaryDay = balance.get(SavingsBudgetStat.LAST_KNOWN_POSITION_DAY);
             if (summaryDay == null) {
-              balance.set(SavingsBalanceStat.LAST_KNOWN_POSITION_DAY, day);
+              balance.set(SavingsBudgetStat.LAST_KNOWN_POSITION_DAY, day);
             }
             else {
               if (summaryDay < day) {
-                balance.set(SavingsBalanceStat.LAST_KNOWN_POSITION_DAY, day);
+                balance.set(SavingsBudgetStat.LAST_KNOWN_POSITION_DAY, day);
               }
             }
           }
         }
       });
       for (Map.Entry<Integer, GlobBuilder> entry : balanceSummaries.entrySet()) {
-        repository.create(Key.create(SavingsBalanceStat.MONTH, entry.getKey(),
-                                     SavingsBalanceStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID),
+        repository.create(Key.create(SavingsBudgetStat.MONTH, entry.getKey(),
+                                     SavingsBudgetStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID),
                           entry.getValue().toArray());
       }
     }
@@ -246,24 +246,24 @@ public class SavingsBalanceStatTrigger implements ChangeSetListener {
             balance = endOfMonthPosition - beginOfMonthPosition;
           }
 
-          Key key = Key.create(SavingsBalanceStat.MONTH, monthId, SavingsBalanceStat.ACCOUNT, accountId);
+          Key key = Key.create(SavingsBudgetStat.MONTH, monthId, SavingsBudgetStat.ACCOUNT, accountId);
           repository.create(key,
-                            FieldValue.value(SavingsBalanceStat.BALANCE, balance),
-                            FieldValue.value(SavingsBalanceStat.OUT, entry.getValue().out),
-                            FieldValue.value(SavingsBalanceStat.OUT_PLANNED, entry.getValue().outPlanned),
-                            FieldValue.value(SavingsBalanceStat.OUT_REMAINING, entry.getValue().outRemaining),
-                            FieldValue.value(SavingsBalanceStat.SAVINGS, entry.getValue().savings),
-                            FieldValue.value(SavingsBalanceStat.SAVINGS_PLANNED, entry.getValue().savingsPlanned),
-                            FieldValue.value(SavingsBalanceStat.SAVINGS_REMAINING, entry.getValue().savingsRemaining),
-                            value(SavingsBalanceStat.BEGIN_OF_MONTH_POSITION, beginOfMonthPosition),
-                            value(SavingsBalanceStat.END_OF_MONTH_POSITION, endOfMonthPosition));
+                            FieldValue.value(SavingsBudgetStat.BALANCE, balance),
+                            FieldValue.value(SavingsBudgetStat.OUT, entry.getValue().out),
+                            FieldValue.value(SavingsBudgetStat.OUT_PLANNED, entry.getValue().outPlanned),
+                            FieldValue.value(SavingsBudgetStat.OUT_REMAINING, entry.getValue().outRemaining),
+                            FieldValue.value(SavingsBudgetStat.SAVINGS, entry.getValue().savings),
+                            FieldValue.value(SavingsBudgetStat.SAVINGS_PLANNED, entry.getValue().savingsPlanned),
+                            FieldValue.value(SavingsBudgetStat.SAVINGS_REMAINING, entry.getValue().savingsRemaining),
+                            value(SavingsBudgetStat.BEGIN_OF_MONTH_POSITION, beginOfMonthPosition),
+                            value(SavingsBudgetStat.END_OF_MONTH_POSITION, endOfMonthPosition));
           if (lastRealKnownTransaction.get(accountId) != null) {
             Integer currentMonthId = lastRealKnownTransaction.get(accountId).get(Transaction.BANK_MONTH);
             if (currentMonthId.equals(monthId)) {
               repository.update(key,
-                                value(SavingsBalanceStat.LAST_KNOWN_ACCOUNT_POSITION,
+                                value(SavingsBudgetStat.LAST_KNOWN_ACCOUNT_POSITION,
                                       lastRealKnownTransaction.get(accountId).get(Transaction.ACCOUNT_POSITION)),
-                                value(SavingsBalanceStat.LAST_KNOWN_POSITION_DAY,
+                                value(SavingsBudgetStat.LAST_KNOWN_POSITION_DAY,
                                       lastRealKnownTransaction.get(accountId).get(Transaction.BANK_DAY)));
             }
           }

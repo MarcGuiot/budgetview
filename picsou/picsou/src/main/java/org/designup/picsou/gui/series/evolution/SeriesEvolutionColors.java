@@ -1,14 +1,13 @@
 package org.designup.picsou.gui.series.evolution;
 
 import org.designup.picsou.gui.budget.BudgetAreaSummaryComputer;
-import org.designup.picsou.gui.model.BalanceStat;
-import org.designup.picsou.gui.model.SavingsBalanceStat;
+import org.designup.picsou.gui.model.BudgetStat;
+import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.gui.utils.AmountColors;
 import org.designup.picsou.gui.utils.PicsouColors;
-import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountPositionThreshold;
 import org.designup.picsou.model.BudgetArea;
 import org.globsframework.gui.splits.color.ColorChangeListener;
@@ -131,10 +130,10 @@ public class SeriesEvolutionColors implements ColorChangeListener {
 
   private Color getSummaryForeground(Integer wrapperId, Integer referenceMonthId) {
     if (SeriesWrapper.MAIN_POSITION_SUMMARY_ID.equals(wrapperId)) {
-      Glob balanceStat = parentRepository.find(Key.create(BalanceStat.TYPE, referenceMonthId));
-      if (balanceStat != null) {
+      Glob budgetStat = parentRepository.find(Key.create(BudgetStat.TYPE, referenceMonthId));
+      if (budgetStat != null) {
         Double threshold = AccountPositionThreshold.getValue(parentRepository);
-        Double amount = balanceStat.get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION);
+        Double amount = budgetStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
         if (amount == null) {
           return amountColors.getTextColor(0.0, summaryText);
         }
@@ -144,9 +143,9 @@ public class SeriesEvolutionColors implements ColorChangeListener {
     }
 
     if (SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID.equals(wrapperId)) {
-      Glob balanceStat = SavingsBalanceStat.findSummary(referenceMonthId, parentRepository);
-      if (balanceStat != null) {
-        final Double position = balanceStat.get(SavingsBalanceStat.END_OF_MONTH_POSITION);
+      Glob budgetStat = SavingsBudgetStat.findSummary(referenceMonthId, parentRepository);
+      if (budgetStat != null) {
+        final Double position = budgetStat.get(SavingsBudgetStat.END_OF_MONTH_POSITION);
         if ((position != null) && (position < 0)) {
           return uncategorizedText;
         }
@@ -163,13 +162,13 @@ public class SeriesEvolutionColors implements ColorChangeListener {
   }
 
   private Color getBudgetAreaForeground(Glob wrapper, Integer referenceMonthId) {
-    Glob balanceStat = parentRepository.find(Key.create(BalanceStat.TYPE, referenceMonthId));
-    if (balanceStat == null) {
+    Glob budgetStat = parentRepository.find(Key.create(BudgetStat.TYPE, referenceMonthId));
+    if (budgetStat == null) {
       return budgetAreaText;
     }
 
     BudgetArea budgetArea = BudgetArea.get(wrapper.get(SeriesWrapper.ITEM_ID));
-    budgetAreaColorUpdater.update(new GlobList(balanceStat), budgetArea);
+    budgetAreaColorUpdater.update(new GlobList(budgetStat), budgetArea);
     return budgetAreaColorUpdater.getForeground();
   }
 

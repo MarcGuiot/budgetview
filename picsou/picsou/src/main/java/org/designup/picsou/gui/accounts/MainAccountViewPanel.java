@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.accounts;
 
-import org.designup.picsou.gui.model.BalanceStat;
+import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.budget.BudgetSummaryView;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
@@ -25,14 +25,14 @@ public class MainAccountViewPanel extends AccountViewPanel {
 
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(BalanceStat.TYPE) ||
+        if (changeSet.containsChanges(BudgetStat.TYPE) ||
             changeSet.containsUpdates(AccountPositionThreshold.THRESHOLD)) {
           updateEstimatedPosition();
         }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        if (changedTypes.contains(BalanceStat.TYPE) ||
+        if (changedTypes.contains(BudgetStat.TYPE) ||
             changedTypes.contains(AccountPositionThreshold.TYPE)) {
           updateEstimatedPosition();
         }

@@ -9,11 +9,10 @@ import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
-import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
-public class BalanceStat {
+public class BudgetStat {
   public static GlobType TYPE;
 
   @Key
@@ -141,7 +140,7 @@ public class BalanceStat {
                                                 SPECIAL, SPECIAL_REMAINING, SAVINGS, SAVINGS_REMAINING, UNCATEGORIZED};
 
   static {
-    GlobTypeLoader.init(BalanceStat.class);
+    GlobTypeLoader.init(BudgetStat.class);
   }
 
   public static DoubleField getRemaining(BudgetArea budgetArea) {

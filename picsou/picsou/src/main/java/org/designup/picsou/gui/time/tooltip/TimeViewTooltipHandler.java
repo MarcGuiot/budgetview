@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.time.tooltip;
 
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.gui.model.BalanceStat;
+import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.gui.time.utils.TimeViewColors;
 import org.designup.picsou.model.Month;
@@ -34,11 +34,11 @@ public class TimeViewTooltipHandler implements TimeViewMouseHandler {
       return;
     }
 
-    Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, monthId));
-    if (balanceStat == null) {
+    Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, monthId));
+    if (budgetStat == null) {
       return;
     }
-    Double balance = balanceStat.get(BalanceStat.MONTH_BALANCE);
+    Double balance = budgetStat.get(BudgetStat.MONTH_BALANCE);
     double positionLimit = panel.getPositionThreshold(monthId);
     panel.setToolTipText(
       Lang.get("timeView.tooltip.month.standard",

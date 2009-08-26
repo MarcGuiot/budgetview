@@ -1,6 +1,6 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.gui.model.BalanceStat;
+import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.Amounts;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class BalanceStatTrigger implements ChangeSetListener {
+public class BudgetStatTrigger implements ChangeSetListener {
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
     if (changeSet.containsChanges(Transaction.TYPE) || changeSet.containsChanges(SeriesBudget.TYPE)) {
@@ -31,20 +31,20 @@ public class BalanceStatTrigger implements ChangeSetListener {
   private void computeStat(GlobRepository repository) {
     repository.startChangeSet();
     try {
-      repository.deleteAll(BalanceStat.TYPE);
-      BalanceStatCalculator balanceStatCalculator = new BalanceStatCalculator(repository);
-      if (balanceStatCalculator.currentMonth == null){
+      repository.deleteAll(BudgetStat.TYPE);
+      BudgetStatComputer budgetStatComputer = new BudgetStatComputer(repository);
+      if (budgetStatComputer.currentMonth == null){
         return;
       }
-      repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, balanceStatCalculator);
-      balanceStatCalculator.complete();
+      repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, budgetStatComputer);
+      budgetStatComputer.complete();
     }
     finally {
       repository.completeChangeSet();
     }
   }
 
-  private class BalanceStatCalculator implements GlobFunctor {
+  private class BudgetStatComputer implements GlobFunctor {
     private Map<Integer, Glob> firstTransactionForMonth = new HashMap<Integer, Glob>();
     private Map<Integer, Glob> lastTransactionForMonth = new HashMap<Integer, Glob>();
     private Map<BudgetArea, BudgetAreaAmounts> budgetAreaAmounts = new HashMap<BudgetArea, BudgetAreaAmounts>();
@@ -54,7 +54,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
 
     private GlobRepository repository;
 
-    private BalanceStatCalculator(GlobRepository repository) {
+    private BudgetStatComputer(GlobRepository repository) {
       this.repository = repository;
       currentMonth = repository.find(CurrentMonth.KEY);
     }
@@ -148,22 +148,22 @@ public class BalanceStatTrigger implements ChangeSetListener {
 
         FieldValuesBuilder values =
           FieldValuesBuilder.init()
-            .set(BalanceStat.MONTH, monthId)
-            .set(BalanceStat.BEGIN_OF_MONTH_ACCOUNT_POSITION, beginOfMonthPosition)
-            .set(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION, endOfMonthPosition);
+            .set(BudgetStat.MONTH, monthId)
+            .set(BudgetStat.BEGIN_OF_MONTH_ACCOUNT_POSITION, beginOfMonthPosition)
+            .set(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION, endOfMonthPosition);
 
         FieldValues budgetAreaValues = getBudgetAreaValues(repository, monthId);
         values.set(budgetAreaValues);
-        values.set(BalanceStat.MONTH_BALANCE, getBalance(budgetAreaValues, monthId));
-        Glob stat = repository.create(BalanceStat.TYPE, values.toArray());
+        values.set(BudgetStat.MONTH_BALANCE, getBalance(budgetAreaValues, monthId));
+        Glob stat = repository.create(BudgetStat.TYPE, values.toArray());
 
         if (lastRealKnownTransaction != null) {
           Integer currentMonthId = lastRealKnownTransaction.get(Transaction.BANK_MONTH);
           if (currentMonthId.equals(monthId)) {
-            repository.update(Key.create(BalanceStat.TYPE, currentMonthId),
-                              value(BalanceStat.LAST_KNOWN_ACCOUNT_POSITION,
+            repository.update(Key.create(BudgetStat.TYPE, currentMonthId),
+                              value(BudgetStat.LAST_KNOWN_ACCOUNT_POSITION,
                                     lastRealKnownTransaction.get(Transaction.SUMMARY_POSITION)),
-                              value(BalanceStat.LAST_KNOWN_ACCOUNT_POSITION_DAY,
+                              value(BudgetStat.LAST_KNOWN_ACCOUNT_POSITION_DAY,
                                     lastRealKnownTransaction.get(Transaction.BANK_DAY)));
           }
         }
@@ -173,12 +173,12 @@ public class BalanceStatTrigger implements ChangeSetListener {
     private double getBalance(FieldValues values, Integer monthId) {
       double balance = 0;
       for (BudgetArea budgetArea : BudgetArea.INCOME_AND_EXPENSES_AREAS) {
-        Double amount = values.get(BalanceStat.getSummary(budgetArea));
+        Double amount = values.get(BudgetStat.getSummary(budgetArea));
         if (amount != null) {
           balance += amount;
         }
       }
-      Double uncategorized = values.get(BalanceStat.UNCATEGORIZED);
+      Double uncategorized = values.get(BudgetStat.UNCATEGORIZED);
       if (uncategorized != null) {
         balance += uncategorized;
       }
@@ -236,7 +236,7 @@ public class BalanceStatTrigger implements ChangeSetListener {
 
       BudgetAreaAmounts uncategorizedAmounts = budgetAreaAmounts.remove(BudgetArea.UNCATEGORIZED);
       if (uncategorizedAmounts != null) {
-        values.set(BalanceStat.UNCATEGORIZED, uncategorizedAmounts.getAmount());
+        values.set(BudgetStat.UNCATEGORIZED, uncategorizedAmounts.getAmount());
       }
 
       BudgetAreaAmounts expensesAmounts = new BudgetAreaAmounts(BudgetArea.ALL);
@@ -245,36 +245,36 @@ public class BalanceStatTrigger implements ChangeSetListener {
         BudgetArea budgetArea = entry.getKey();
         BudgetAreaAmounts amounts = entry.getValue();
 
-        values.set(BalanceStat.getObserved(budgetArea), amounts.getAmount());
-        values.set(BalanceStat.getPlanned(budgetArea), amounts.getPlannedAmount());
-        values.set(BalanceStat.getRemaining(budgetArea), amounts.getRemainingAmount());
-        values.set(BalanceStat.getSummary(budgetArea), amounts.getSummaryAmount());
+        values.set(BudgetStat.getObserved(budgetArea), amounts.getAmount());
+        values.set(BudgetStat.getPlanned(budgetArea), amounts.getPlannedAmount());
+        values.set(BudgetStat.getRemaining(budgetArea), amounts.getRemainingAmount());
+        values.set(BudgetStat.getSummary(budgetArea), amounts.getSummaryAmount());
 
         if (!budgetArea.isIncome()) {
           expensesAmounts.addValues(amounts);
         }
       }
 
-      values.set(BalanceStat.EXPENSE, expensesAmounts.getAmount());
-      values.set(BalanceStat.EXPENSE_PLANNED, expensesAmounts.getPlannedAmount());
-      values.set(BalanceStat.EXPENSE_REMAINING, expensesAmounts.getRemainingAmount());
-      values.set(BalanceStat.EXPENSE_SUMMARY, expensesAmounts.getSummaryAmount());
+      values.set(BudgetStat.EXPENSE, expensesAmounts.getAmount());
+      values.set(BudgetStat.EXPENSE_PLANNED, expensesAmounts.getPlannedAmount());
+      values.set(BudgetStat.EXPENSE_REMAINING, expensesAmounts.getRemainingAmount());
+      values.set(BudgetStat.EXPENSE_SUMMARY, expensesAmounts.getSummaryAmount());
 
-      values.set(BalanceStat.SAVINGS_IN, savingsInAmounts.getAmount());
-      values.set(BalanceStat.SAVINGS_IN_PLANNED, savingsInAmounts.getPlannedAmount());
-      values.set(BalanceStat.SAVINGS_IN_REMAINING, savingsInAmounts.getRemainingAmount());
-      values.set(BalanceStat.SAVINGS_IN_SUMMARY, savingsInAmounts.getSummaryAmount());
+      values.set(BudgetStat.SAVINGS_IN, savingsInAmounts.getAmount());
+      values.set(BudgetStat.SAVINGS_IN_PLANNED, savingsInAmounts.getPlannedAmount());
+      values.set(BudgetStat.SAVINGS_IN_REMAINING, savingsInAmounts.getRemainingAmount());
+      values.set(BudgetStat.SAVINGS_IN_SUMMARY, savingsInAmounts.getSummaryAmount());
 
-      values.set(BalanceStat.SAVINGS_IN, savingsOutAmounts.getAmount());
-      values.set(BalanceStat.SAVINGS_OUT_PLANNED, savingsOutAmounts.getPlannedAmount());
-      values.set(BalanceStat.SAVINGS_OUT_REMAINING, savingsOutAmounts.getRemainingAmount());
-      values.set(BalanceStat.SAVINGS_OUT_SUMMARY, savingsOutAmounts.getSummaryAmount());
+      values.set(BudgetStat.SAVINGS_IN, savingsOutAmounts.getAmount());
+      values.set(BudgetStat.SAVINGS_OUT_PLANNED, savingsOutAmounts.getPlannedAmount());
+      values.set(BudgetStat.SAVINGS_OUT_REMAINING, savingsOutAmounts.getRemainingAmount());
+      values.set(BudgetStat.SAVINGS_OUT_SUMMARY, savingsOutAmounts.getSummaryAmount());
 
       double uncategorizedAbs = 0;
       for (Glob transaction : Transaction.getUncategorizedTransactions(monthId, repository)) {
         uncategorizedAbs += Math.abs(transaction.get(Transaction.AMOUNT));
       }
-      values.set(BalanceStat.UNCATEGORIZED_ABS, uncategorizedAbs);
+      values.set(BudgetStat.UNCATEGORIZED_ABS, uncategorizedAbs);
 
       return values.get();
     }

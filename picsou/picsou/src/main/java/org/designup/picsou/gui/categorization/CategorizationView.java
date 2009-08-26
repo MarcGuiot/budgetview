@@ -36,7 +36,6 @@ import org.globsframework.gui.views.utils.LabelCustomizers;
 import static org.globsframework.gui.views.utils.LabelCustomizers.autoTooltip;
 import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import org.globsframework.metamodel.GlobType;
-import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
@@ -277,7 +276,7 @@ public class CategorizationView extends View implements TableView, Filterable {
 
   private void addSingleCategorySeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder parentBuilder) {
     GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationView.class,
-                                                           "/layout/singleCategorySeriesChooserPanel.splits",
+                                                           "/layout/singleChooserPanel.splits",
                                                            repository, directory);
 
     panelBuilder.add("hyperlinkHandler", new HyperlinkHandler(directory));

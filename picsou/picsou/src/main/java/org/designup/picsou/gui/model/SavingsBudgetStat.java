@@ -15,7 +15,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
-public class SavingsBalanceStat {
+public class SavingsBudgetStat {
   public static GlobType TYPE;
 
   @Key @Target(Month.class)
@@ -56,7 +56,7 @@ public class SavingsBalanceStat {
   public static DoubleField SAVINGS_PLANNED;
 
   static {
-    GlobTypeLoader.init(SavingsBalanceStat.class);
+    GlobTypeLoader.init(SavingsBudgetStat.class);
   }
 
   public static DoubleField getObserved(BudgetArea budgetArea) {

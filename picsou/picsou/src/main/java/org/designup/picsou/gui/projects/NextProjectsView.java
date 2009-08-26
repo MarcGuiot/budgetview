@@ -5,8 +5,8 @@ import org.designup.picsou.gui.components.DefaultTableCellPainter;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.MonthYearStringifier;
-import org.designup.picsou.gui.model.BalanceStat;
-import org.designup.picsou.gui.model.SavingsBalanceStat;
+import org.designup.picsou.gui.model.BudgetStat;
+import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.utils.AmountColors;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
@@ -34,8 +34,8 @@ import java.util.SortedSet;
 public class NextProjectsView extends View implements GlobSelectionListener {
   private GlobTableView tableView;
   private Integer currentMonthId;
-  private GlobStringifier balanceStatStringifier;
-  private GlobStringifier savingsBalanceStatStringifier;
+  private GlobStringifier budgetStatStringifier;
+  private GlobStringifier savingsBudgetStatStringifier;
   private AmountColors amountColors;
 
   public static final int NAME_COLUMN_INDEX = 1;
@@ -44,8 +44,8 @@ public class NextProjectsView extends View implements GlobSelectionListener {
   public NextProjectsView(GlobRepository repository, Directory directory) {
     super(repository, directory);
     selectionService.addListener(this, Month.TYPE);
-    balanceStatStringifier = descriptionService.getStringifier(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION);
-    savingsBalanceStatStringifier = descriptionService.getStringifier(SavingsBalanceStat.END_OF_MONTH_POSITION);
+    budgetStatStringifier = descriptionService.getStringifier(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
+    savingsBudgetStatStringifier = descriptionService.getStringifier(SavingsBudgetStat.END_OF_MONTH_POSITION);
     amountColors = new AmountColors(directory);
   }
 
@@ -115,13 +115,13 @@ public class NextProjectsView extends View implements GlobSelectionListener {
 
   private class MainAccountsPositionStringifier extends AbstractGlobStringifier implements LabelCustomizer {
     public String toString(Glob seriesBudget, GlobRepository repository) {
-      Glob balanceStat = getBalanceStat(seriesBudget, repository);
-      return balanceStatStringifier.toString(balanceStat, repository);
+      Glob budgetStat = getBudgetStat(seriesBudget, repository);
+      return budgetStatStringifier.toString(budgetStat, repository);
     }
 
     public void process(JLabel label, Glob seriesBudget, boolean isSelected, boolean hasFocus, int row, int column) {
-      Glob balanceStat = getBalanceStat(seriesBudget, repository);
-      final Double position = balanceStat.get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION);
+      Glob budgetStat = getBudgetStat(seriesBudget, repository);
+      final Double position = budgetStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
       final Double threshold = AccountPositionThreshold.getValue(repository);
       if ((position == null) || (threshold == null)) {
         return;
@@ -129,45 +129,45 @@ public class NextProjectsView extends View implements GlobSelectionListener {
       label.setForeground(amountColors.getTextColor(position - threshold));
     }
 
-    private Glob getBalanceStat(Glob seriesBudget, GlobRepository repository) {
+    private Glob getBudgetStat(Glob seriesBudget, GlobRepository repository) {
       Integer monthId = seriesBudget.get(SeriesBudget.MONTH);
-      return repository.get(Key.create(BalanceStat.TYPE, monthId));
+      return repository.get(Key.create(BudgetStat.TYPE, monthId));
     }
   }
 
   private class SavingsAccountsPositionStringifier extends AbstractGlobStringifier implements LabelCustomizer {
     public String toString(Glob seriesBudget, GlobRepository repository) {
-      Glob balanceStat = getBalanceStat(seriesBudget, repository);
-      if (balanceStat == null) {
+      Glob budgetStat = getBudgetStat(seriesBudget, repository);
+      if (budgetStat == null) {
         return "";
       }
-      return savingsBalanceStatStringifier.toString(balanceStat, repository);
+      return savingsBudgetStatStringifier.toString(budgetStat, repository);
     }
 
     public void process(JLabel label, Glob seriesBudget, boolean isSelected, boolean hasFocus, int row, int column) {
-      Glob balanceStat = getBalanceStat(seriesBudget, repository);
-      if (balanceStat == null) {
+      Glob budgetStat = getBudgetStat(seriesBudget, repository);
+      if (budgetStat == null) {
         return;
       }
-      Double position = balanceStat.get(SavingsBalanceStat.END_OF_MONTH_POSITION);
+      Double position = budgetStat.get(SavingsBudgetStat.END_OF_MONTH_POSITION);
       if (position == null) {
         return;
       }
       label.setForeground(amountColors.getTextColor(position));
     }
 
-    private Glob getBalanceStat(Glob seriesBudget, GlobRepository repository) {
-      return SavingsBalanceStat.findSummary(seriesBudget.get(SeriesBudget.MONTH), repository);
+    private Glob getBudgetStat(Glob seriesBudget, GlobRepository repository) {
+      return SavingsBudgetStat.findSummary(seriesBudget.get(SeriesBudget.MONTH), repository);
     }
   }
 
   private class TotalAccountsPositionStringifier extends AbstractGlobStringifier {
     public String toString(Glob seriesBudget, GlobRepository repository) {
       Integer monthId = seriesBudget.get(SeriesBudget.MONTH);
-      Glob balanceStat = repository.get(Key.create(BalanceStat.TYPE, monthId));
-      Glob savingsBalanceStat = SavingsBalanceStat.findSummary(monthId, repository);
-      Double mainPosition = GlobUtils.safeGet(balanceStat, BalanceStat.END_OF_MONTH_ACCOUNT_POSITION);
-      Double savingsPosition = GlobUtils.safeGet(savingsBalanceStat, SavingsBalanceStat.END_OF_MONTH_POSITION);
+      Glob budgetStat = repository.get(Key.create(BudgetStat.TYPE, monthId));
+      Glob savingsBudgetStat = SavingsBudgetStat.findSummary(monthId, repository);
+      Double mainPosition = GlobUtils.safeGet(budgetStat, BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
+      Double savingsPosition = GlobUtils.safeGet(savingsBudgetStat, SavingsBudgetStat.END_OF_MONTH_POSITION);
       if (mainPosition == null && savingsPosition == null) {
         return "";
       }

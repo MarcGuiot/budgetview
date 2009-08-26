@@ -7,7 +7,7 @@ import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.MonthListStringifier;
-import org.designup.picsou.gui.model.BalanceStat;
+import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
@@ -86,9 +86,9 @@ public class BudgetSummaryDetailsDialog {
   private void selectStats(GlobList selectedMonths) {
     GlobList stats = new GlobList();
     for (Glob month : selectedMonths) {
-      stats.add(repository.find(Key.create(BalanceStat.TYPE, month.get(Month.ID))));
+      stats.add(repository.find(Key.create(BudgetStat.TYPE, month.get(Month.ID))));
     }
-    directory.get(SelectionService.class).select(stats, BalanceStat.TYPE);
+    directory.get(SelectionService.class).select(stats, BudgetStat.TYPE);
   }
 
   private void showEstimatedPositionDetails() {
@@ -114,21 +114,21 @@ public class BudgetSummaryDetailsDialog {
     title = builder.add("title", new JLabel());
 
     builder.add("balanceChart", balanceChart);
-    builder.addLabel("balanceLabel", BalanceStat.TYPE, new BalanceStringifier()).getComponent();
+    builder.addLabel("balanceLabel", BudgetStat.TYPE, new BalanceStringifier()).getComponent();
 
     positionCard = builder.addCardHandler("cards");
 
     positionDescription = builder.add("positionDescription", new JTextArea());
 
-    builder.addLabel("estimatedPosition", BalanceStat.TYPE, new EspectedPositionStringifier()).getComponent();
-    builder.addLabel("estimatedPositionDate", BalanceStat.TYPE, new PositionDateStringifier()).getComponent();
-    builder.addLabel("initialPosition", BalanceStat.TYPE, new InitialPositionStringifier()).getComponent();
-    addLabel(builder, "remainingIncome", BalanceStat.INCOME_REMAINING, false);
-    addLabel(builder, "remainingFixed", BalanceStat.RECURRING_REMAINING, true);
-    addLabel(builder, "remainingEnvelope", BalanceStat.ENVELOPES_REMAINING, true);
-    addLabel(builder, "remainingInSavings", BalanceStat.SAVINGS_IN_REMAINING, true);
-    addLabel(builder, "remainingOutSavings", BalanceStat.SAVINGS_OUT_REMAINING, true);
-    addLabel(builder, "remainingSpecial", BalanceStat.SPECIAL_REMAINING, true);
+    builder.addLabel("estimatedPosition", BudgetStat.TYPE, new EspectedPositionStringifier()).getComponent();
+    builder.addLabel("estimatedPositionDate", BudgetStat.TYPE, new PositionDateStringifier()).getComponent();
+    builder.addLabel("initialPosition", BudgetStat.TYPE, new InitialPositionStringifier()).getComponent();
+    addLabel(builder, "remainingIncome", BudgetStat.INCOME_REMAINING, false);
+    addLabel(builder, "remainingFixed", BudgetStat.RECURRING_REMAINING, true);
+    addLabel(builder, "remainingEnvelope", BudgetStat.ENVELOPES_REMAINING, true);
+    addLabel(builder, "remainingInSavings", BudgetStat.SAVINGS_IN_REMAINING, true);
+    addLabel(builder, "remainingOutSavings", BudgetStat.SAVINGS_OUT_REMAINING, true);
+    addLabel(builder, "remainingSpecial", BudgetStat.SPECIAL_REMAINING, true);
 
     JPanel panel = builder.load();
 
@@ -140,16 +140,16 @@ public class BudgetSummaryDetailsDialog {
   private void registerBalanceChartUpdater() {
     directory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
-        updateBalanceChart(selection.getAll(BalanceStat.TYPE));
+        updateBalanceChart(selection.getAll(BudgetStat.TYPE));
       }
-    }, BalanceStat.TYPE);
+    }, BudgetStat.TYPE);
   }
 
-  private void updateBalanceChart(GlobList balanceStats) {
+  private void updateBalanceChart(GlobList budgetStats) {
     StackChartDataset incomeDataset = new StackChartDataset();
     StackChartDataset expensesDataset = new StackChartDataset();
     for (BudgetArea budgetArea : BudgetArea.INCOME_AND_EXPENSES_AREAS) {
-      Double amount = balanceStats.getSum(BalanceStat.getSummary(budgetArea));
+      Double amount = budgetStats.getSum(BudgetStat.getSummary(budgetArea));
       StackChartDataset dataset = amount > 0 ? incomeDataset : expensesDataset;
       dataset.add(budgetArea.getLabel(), Math.abs(amount), null, false);
     }
@@ -158,11 +158,11 @@ public class BudgetSummaryDetailsDialog {
   }
 
   private void addLabel(GlobsPanelBuilder builder, String name, DoubleField field, boolean invert) {
-    builder.addLabel(name, BalanceStat.TYPE, GlobListStringifiers.sum(field, Formatting.DECIMAL_FORMAT, invert));
+    builder.addLabel(name, BudgetStat.TYPE, GlobListStringifiers.sum(field, Formatting.DECIMAL_FORMAT, invert));
   }
 
-  private Glob getLastBalanceStat(GlobList list) {
-    list.sort(BalanceStat.MONTH);
+  private Glob getLastBudgetStat(GlobList list) {
+    list.sort(BudgetStat.MONTH);
     return list.getLast();
   }
 
@@ -171,54 +171,54 @@ public class BudgetSummaryDetailsDialog {
       if (list.isEmpty()) {
         return "";
       }
-      double total = list.getSum(BalanceStat.MONTH_BALANCE);
+      double total = list.getSum(BudgetStat.MONTH_BALANCE);
       return Formatting.toStringWithPlus(total);
     }
   }
 
   private class EspectedPositionStringifier implements GlobListStringifier {
     public String toString(GlobList list, GlobRepository repository) {
-      Glob balanceStat = getLastBalanceStat(list);
-      if (balanceStat == null) {
+      Glob budgetStat = getLastBudgetStat(list);
+      if (budgetStat == null) {
         return "";
       }
-      return Formatting.toString(balanceStat.get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION));
+      return Formatting.toString(budgetStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION));
     }
   }
 
   private class PositionDateStringifier implements GlobListStringifier {
     public String toString(GlobList list, GlobRepository repository) {
-      Glob balanceStat = getLastBalanceStat(list);
-      if (balanceStat == null) {
+      Glob budgetStat = getLastBudgetStat(list);
+      if (budgetStat == null) {
         return "";
       }
-      final String date = Formatting.toString(Month.getLastDay(balanceStat.get(BalanceStat.MONTH)));
+      final String date = Formatting.toString(Month.getLastDay(budgetStat.get(BudgetStat.MONTH)));
       return Lang.get("budgetSummaryDetails.position.date", date);
     }
   }
 
   private class InitialPositionStringifier implements GlobListStringifier {
-    public String toString(GlobList balanceStats, GlobRepository repository) {
-      balanceStats.sort(BalanceStat.MONTH);
-      if (balanceStats.isEmpty()) {
+    public String toString(GlobList budgetStats, GlobRepository repository) {
+      budgetStats.sort(BudgetStat.MONTH);
+      if (budgetStats.isEmpty()) {
         return "";
       }
 
       Integer currentMonthId = CurrentMonth.getLastTransactionMonth(repository);
-      Glob balanceStat = null;
-      for (Glob stat : balanceStats) {
-        balanceStat = stat;
-        if (balanceStat.get(BalanceStat.MONTH) >= currentMonthId) {
+      Glob budgetStat = null;
+      for (Glob stat : budgetStats) {
+        budgetStat = stat;
+        if (budgetStat.get(BudgetStat.MONTH) >= currentMonthId) {
           break;
         }
       }
-      if (balanceStat == null) {
+      if (budgetStat == null) {
         return "";
       }
 
-      Double amount = balanceStat.get(BalanceStat.LAST_KNOWN_ACCOUNT_POSITION);
+      Double amount = budgetStat.get(BudgetStat.LAST_KNOWN_ACCOUNT_POSITION);
       if (amount == null) {
-        amount = balanceStat.get(BalanceStat.BEGIN_OF_MONTH_ACCOUNT_POSITION);
+        amount = budgetStat.get(BudgetStat.BEGIN_OF_MONTH_ACCOUNT_POSITION);
       }
       return Formatting.toString(amount);
     }

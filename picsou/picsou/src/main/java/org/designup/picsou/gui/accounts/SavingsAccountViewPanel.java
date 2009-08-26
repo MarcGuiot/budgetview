@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.gui.model.SavingsBalanceStat;
+import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.budget.SavingsBudgetSummaryView;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
@@ -26,13 +26,13 @@ public class SavingsAccountViewPanel extends AccountViewPanel {
 
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(SavingsBalanceStat.TYPE)) {
+        if (changeSet.containsChanges(SavingsBudgetStat.TYPE)) {
           updateEstimatedPosition();
         }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        if (changedTypes.contains(SavingsBalanceStat.TYPE)) {
+        if (changedTypes.contains(SavingsBudgetStat.TYPE)) {
           updateEstimatedPosition();
         }
       }
@@ -67,15 +67,15 @@ public class SavingsAccountViewPanel extends AccountViewPanel {
                                return null;
                              }
                              Integer monthId = lastMonth.get(Month.ID);
-                             Glob stats = repository.find(Key.create(SavingsBalanceStat.ACCOUNT, accountKey.get(Account.ID),
-                                                                     SavingsBalanceStat.MONTH, monthId));
+                             Glob stats = repository.find(Key.create(SavingsBudgetStat.ACCOUNT, accountKey.get(Account.ID),
+                                                                     SavingsBudgetStat.MONTH, monthId));
                              if (stats == null) {
                                return "";
                              }
-                             return Formatting.toString(stats.get(SavingsBalanceStat.END_OF_MONTH_POSITION));
+                             return Formatting.toString(stats.get(SavingsBudgetStat.END_OF_MONTH_POSITION));
                            }
                          })
-        .setUpdateMatcher(ChangeSetMatchers.changesForType(SavingsBalanceStat.TYPE))
+        .setUpdateMatcher(ChangeSetMatchers.changesForType(SavingsBudgetStat.TYPE))
         .setAutoHideIfEmpty(true);
     Glob account = repository.find(accountKey);
     if (account != null) {

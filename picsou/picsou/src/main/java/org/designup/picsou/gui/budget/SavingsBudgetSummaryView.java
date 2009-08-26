@@ -2,7 +2,7 @@ package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.gui.model.SavingsBalanceStat;
+import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelectionListener;
@@ -66,17 +66,17 @@ public class SavingsBudgetSummaryView extends View implements GlobSelectionListe
       multiSelectionLabel.setVisible(false);
     }
 
-    GlobList balanceStats =
-      repository.getAll(SavingsBalanceStat.TYPE, GlobMatchers.fieldIn(SavingsBalanceStat.MONTH, selectedMonthIds))
-        .sort(SavingsBalanceStat.MONTH);
+    GlobList budgetStats =
+      repository.getAll(SavingsBudgetStat.TYPE, GlobMatchers.fieldIn(SavingsBudgetStat.MONTH, selectedMonthIds))
+        .sort(SavingsBudgetStat.MONTH);
 
-    if (balanceStats.size() == 0) {
+    if (budgetStats.size() == 0) {
       clear(balanceLabel);
       clear(positionLabel);
       return;
     }
 
-    Double balance = balanceStats.getSum(SavingsBalanceStat.BALANCE);
+    Double balance = budgetStats.getSum(SavingsBudgetStat.BALANCE);
     if (balance == null) {
       clear(balanceLabel);
     }
@@ -85,7 +85,7 @@ public class SavingsBudgetSummaryView extends View implements GlobSelectionListe
       balanceLabel.setForeground(balance >= 0 ? normalColor : errorColor);
     }
 
-    Double position = balanceStats.getLast().get(SavingsBalanceStat.END_OF_MONTH_POSITION);
+    Double position = budgetStats.getLast().get(SavingsBudgetStat.END_OF_MONTH_POSITION);
     if (position == null) {
       clear(positionLabel);
     }
@@ -105,13 +105,13 @@ public class SavingsBudgetSummaryView extends View implements GlobSelectionListe
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsChanges(SavingsBalanceStat.TYPE)) {
+    if (changeSet.containsChanges(SavingsBudgetStat.TYPE)) {
       update();
     }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(SavingsBalanceStat.TYPE)) {
+    if (changedTypes.contains(SavingsBudgetStat.TYPE)) {
       update();
     }
   }

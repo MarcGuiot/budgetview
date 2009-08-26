@@ -3,7 +3,7 @@ package org.designup.picsou.gui.budget;
 import junit.framework.TestCase;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.components.TextDisplay;
-import org.designup.picsou.gui.model.BalanceStat;
+import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.utils.Lang;
@@ -188,16 +188,16 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   private Checker init(BudgetArea budgetArea, int currentMonth, double observed, double planned, double remaining) {
     GlobRepository repository = new DefaultGlobRepository();
 
-    Glob balanceStat =
-      repository.create(BalanceStat.TYPE,
-                        value(BalanceStat.MONTH, 200808),
-                        value(BalanceStat.getObserved(budgetArea), observed),
-                        value(BalanceStat.getPlanned(budgetArea), planned),
-                        value(BalanceStat.getRemaining(budgetArea), remaining));
+    Glob budgetStat =
+      repository.create(BudgetStat.TYPE,
+                        value(BudgetStat.MONTH, 200808),
+                        value(BudgetStat.getObserved(budgetArea), observed),
+                        value(BudgetStat.getPlanned(budgetArea), planned),
+                        value(BudgetStat.getRemaining(budgetArea), remaining));
 
     repository.create(CurrentMonth.KEY, value(CurrentMonth.LAST_TRANSACTION_MONTH, currentMonth));
 
-    return new Checker(budgetArea, balanceStat, repository);
+    return new Checker(budgetArea, budgetStat, repository);
   }
 
   private class Checker {
@@ -206,7 +206,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
     private JLabel plannedLabel = new JLabel();
     private Gauge gauge = new Gauge();
 
-    private Checker(BudgetArea budgetArea, Glob balanceStat, GlobRepository repository) {
+    private Checker(BudgetArea budgetArea, Glob budgetStat, GlobRepository repository) {
 
       Directory directory = new DefaultDirectory();
       directory.add(new ColorService());
@@ -216,7 +216,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
           TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
           repository, directory);
 
-      this.computer.update(new GlobList(balanceStat), budgetArea);
+      this.computer.update(new GlobList(budgetStat), budgetArea);
     }
 
     public Checker checkObserved(String label) {

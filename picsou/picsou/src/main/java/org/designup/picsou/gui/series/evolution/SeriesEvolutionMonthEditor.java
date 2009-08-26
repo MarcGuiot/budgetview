@@ -2,15 +2,13 @@ package org.designup.picsou.gui.series.evolution;
 
 import org.designup.picsou.gui.components.AbstractRolloverEditor;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.gui.model.BalanceStat;
-import org.designup.picsou.gui.model.SavingsBalanceStat;
+import org.designup.picsou.gui.model.BudgetStat;
+import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
-import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.gui.splits.components.HyperlinkButton;
@@ -126,12 +124,12 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
   }
 
   private String getBudgetAreaLabelText(BudgetArea budgetArea) {
-    Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, referenceMonthId));
+    Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, referenceMonthId));
     if (budgetArea.equals(BudgetArea.UNCATEGORIZED)) {
-      return format(balanceStat, BalanceStat.UNCATEGORIZED_ABS, budgetArea);
+      return format(budgetStat, BudgetStat.UNCATEGORIZED_ABS, budgetArea);
     }
-    else if (balanceStat != null) {
-      return format(balanceStat, BalanceStat.getSummary(budgetArea), budgetArea);
+    else if (budgetStat != null) {
+      return format(budgetStat, BudgetStat.getSummary(budgetArea), budgetArea);
     }
     return "";
   }
@@ -155,18 +153,18 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
   private String getSummaryLabelText(Glob seriesWrapper) {
     Integer id = seriesWrapper.get(SeriesWrapper.ID);
     if (id.equals(SeriesWrapper.BALANCE_SUMMARY_ID)) {
-      Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, referenceMonthId));
-      return format(balanceStat, BalanceStat.MONTH_BALANCE, null);
+      Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, referenceMonthId));
+      return format(budgetStat, BudgetStat.MONTH_BALANCE, null);
     }
 
     if (id.equals(SeriesWrapper.MAIN_POSITION_SUMMARY_ID)) {
-      Glob balanceStat = repository.find(Key.create(BalanceStat.TYPE, referenceMonthId));
-      return format(balanceStat, BalanceStat.END_OF_MONTH_ACCOUNT_POSITION, null);
+      Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, referenceMonthId));
+      return format(budgetStat, BudgetStat.END_OF_MONTH_ACCOUNT_POSITION, null);
     }
 
     if (id.equals(SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID)) {
-      Glob balanceStat = SavingsBalanceStat.findSummary(referenceMonthId, repository);
-      return format(balanceStat, SavingsBalanceStat.END_OF_MONTH_POSITION, null);
+      Glob budgetStat = SavingsBudgetStat.findSummary(referenceMonthId, repository);
+      return format(budgetStat, SavingsBudgetStat.END_OF_MONTH_POSITION, null);
     }
 
     throw new InvalidParameter("Unexpected ID: " + id);

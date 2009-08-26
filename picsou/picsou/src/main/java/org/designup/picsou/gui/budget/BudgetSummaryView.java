@@ -4,7 +4,7 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.JRoundedButton;
 import org.designup.picsou.gui.accounts.BudgetSummaryDetailsDialog;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.gui.model.BalanceStat;
+import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.utils.AmountColors;
 import org.designup.picsou.model.AccountPositionThreshold;
 import org.designup.picsou.model.CurrentMonth;
@@ -103,18 +103,18 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
       multiSelectionLabel.setVisible(false);
     }
 
-    GlobList balanceStats =
-      repository.getAll(BalanceStat.TYPE, GlobMatchers.fieldIn(BalanceStat.MONTH, selectedMonthIds))
-        .sort(BalanceStat.MONTH);
+    GlobList budgetStats =
+      repository.getAll(BudgetStat.TYPE, GlobMatchers.fieldIn(BudgetStat.MONTH, selectedMonthIds))
+        .sort(BudgetStat.MONTH);
 
-    if (!repository.contains(Transaction.TYPE) || balanceStats.isEmpty()) {
+    if (!repository.contains(Transaction.TYPE) || budgetStats.isEmpty()) {
       clear(balanceLabel);
       clear(estimatedPositionLabel);
       clear(uncategorizedLabel);
       return;
     }
 
-    Double balance = balanceStats.getSum(BalanceStat.MONTH_BALANCE);
+    Double balance = budgetStats.getSum(BudgetStat.MONTH_BALANCE);
     if (balance == null) {
       clear(balanceLabel);
     }
@@ -125,7 +125,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
     updateEstimatedPosition(selectedMonthIds);
 
-    Double uncategorized = balanceStats.getSum(BalanceStat.UNCATEGORIZED_ABS);
+    Double uncategorized = budgetStats.getSum(BudgetStat.UNCATEGORIZED_ABS);
     if ((uncategorized != null) && (uncategorized > 0.01)) {
       uncategorizedLabel.setText(format.format(uncategorized));
       uncategorizedLabel.setForeground(errorColor);
@@ -143,8 +143,8 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     }
     Integer lastSelectedMonthId = selectedMonthIds.last();
 
-    Glob balanceStat = getBalanceStat(lastSelectedMonthId);
-    if (balanceStat == null) {
+    Glob budgetStat = getBudgetStat(lastSelectedMonthId);
+    if (budgetStat == null) {
       setEstimatedPosition(null);
       return;
     }
@@ -152,7 +152,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     String lastDay = Formatting.toString(Month.getLastDay(lastSelectedMonthId));
     String dateLabel = Lang.get("accountView.total.date", lastDay);
 
-    Double amount = getEndOfMonthPosition(balanceStat);
+    Double amount = getEndOfMonthPosition(budgetStat);
     setEstimatedPosition(amount);
 
     Integer lastImportDate = repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH);
@@ -179,12 +179,12 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     estimatedPositionLabel.setForeground(amountColors.getTextColor(diff));
   }
 
-  private Glob getBalanceStat(Integer lastSelectedMonthId) {
-    return repository.find(Key.create(BalanceStat.TYPE, lastSelectedMonthId));
+  private Glob getBudgetStat(Integer lastSelectedMonthId) {
+    return repository.find(Key.create(BudgetStat.TYPE, lastSelectedMonthId));
   }
 
-  private Double getEndOfMonthPosition(Glob balanceStat) {
-    return balanceStat.get(BalanceStat.END_OF_MONTH_ACCOUNT_POSITION);
+  private Double getEndOfMonthPosition(Glob budgetStat) {
+    return budgetStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
   }
 
   private void clear(JLabel label) {
@@ -202,14 +202,14 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsChanges(BalanceStat.TYPE) ||
+    if (changeSet.containsChanges(BudgetStat.TYPE) ||
         changeSet.containsChanges(AccountPositionThreshold.TYPE)) {
       update();
     }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(BalanceStat.TYPE)) {
+    if (changedTypes.contains(BudgetStat.TYPE)) {
       update();
     }
   }

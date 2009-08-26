@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.gui.model.BalanceStat;
-import org.designup.picsou.gui.model.SavingsBalanceStat;
+import org.designup.picsou.gui.model.BudgetStat;
+import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.util.Amounts;
@@ -60,8 +60,8 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
     this.positiveOverrunAmountColor = colorLocator.get(positiveOverrunAmountColorKey);
   }
 
-  public void update(GlobList balanceStats, BudgetArea budgetArea) {
-    if (balanceStats.isEmpty()) {
+  public void update(GlobList budgetStats, BudgetArea budgetArea) {
+    if (budgetStats.isEmpty()) {
       clearComponents();
       return;
     }
@@ -69,10 +69,10 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
     observed = 0.0;
     initiallyPlanned = 0.0;
     Double remaining = 0.0;
-    for (Glob balanceStat : balanceStats) {
-      observed += getObserved(balanceStat, budgetArea);
-      initiallyPlanned += getPlanned(balanceStat, budgetArea);
-      remaining += getRemaining(balanceStat, budgetArea);
+    for (Glob budgetStat : budgetStats) {
+      observed += getObserved(budgetStat, budgetArea);
+      initiallyPlanned += getPlanned(budgetStat, budgetArea);
+      remaining += getRemaining(budgetStat, budgetArea);
     }
 
     observed = Amounts.normalize(observed);
@@ -110,7 +110,7 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
         gaugeTarget = initiallyPlanned;
       }
     }
-    else if (isPastMonths(balanceStats)) {
+    else if (isPastMonths(budgetStats)) {
       isPartialOverrun = false;
       gaugeActual = observed;
       gaugeTarget = initiallyPlanned;
@@ -164,46 +164,46 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
   }
 
   protected Double getObserved(Glob stat, BudgetArea budgetArea) {
-    if (stat.getType() == BalanceStat.TYPE) {
-      return stat.get(BalanceStat.getObserved(budgetArea));
+    if (stat.getType() == BudgetStat.TYPE) {
+      return stat.get(BudgetStat.getObserved(budgetArea));
     }
-    if (stat.getType() == SavingsBalanceStat.TYPE) {
-      return stat.get(SavingsBalanceStat.getObserved(budgetArea));
+    if (stat.getType() == SavingsBudgetStat.TYPE) {
+      return stat.get(SavingsBudgetStat.getObserved(budgetArea));
     }
     throw new UnexpectedApplicationState(stat.getType().getName());
   }
 
   protected Double getPlanned(Glob stat, BudgetArea budgetArea) {
-    if (stat.getType() == BalanceStat.TYPE) {
-      return stat.get(BalanceStat.getPlanned(budgetArea));
+    if (stat.getType() == BudgetStat.TYPE) {
+      return stat.get(BudgetStat.getPlanned(budgetArea));
     }
-    if (stat.getType() == SavingsBalanceStat.TYPE) {
-      return stat.get(SavingsBalanceStat.getPlanned(budgetArea));
+    if (stat.getType() == SavingsBudgetStat.TYPE) {
+      return stat.get(SavingsBudgetStat.getPlanned(budgetArea));
     }
     throw new UnexpectedApplicationState(stat.getType().getName());
   }
 
   protected Double getRemaining(Glob stat, BudgetArea budgetArea) {
-    if (stat.getType() == BalanceStat.TYPE) {
-      return stat.get(BalanceStat.getRemaining(budgetArea));
+    if (stat.getType() == BudgetStat.TYPE) {
+      return stat.get(BudgetStat.getRemaining(budgetArea));
     }
-    if (stat.getType() == SavingsBalanceStat.TYPE) {
-      return stat.get(SavingsBalanceStat.getRemaining(budgetArea));
+    if (stat.getType() == SavingsBudgetStat.TYPE) {
+      return stat.get(SavingsBudgetStat.getRemaining(budgetArea));
     }
     throw new UnexpectedApplicationState(stat.getType().getName());
   }
 
-  private boolean isPastMonths(GlobList balanceStats) {
+  private boolean isPastMonths(GlobList budgetStats) {
     Integer currentMonthId = CurrentMonth.getLastTransactionMonth(repository);
     if (currentMonthId == null) {
       return false;
     }
 
     Integer lastMonth = -1;
-    for (Glob balanceStat : balanceStats) {
-      Integer monthId = balanceStat.getType() == BalanceStat.TYPE ?
-                        balanceStat.get(BalanceStat.MONTH) :
-                        balanceStat.get(SavingsBalanceStat.MONTH);
+    for (Glob budgetStat : budgetStats) {
+      Integer monthId = budgetStat.getType() == BudgetStat.TYPE ?
+                        budgetStat.get(BudgetStat.MONTH) :
+                        budgetStat.get(SavingsBudgetStat.MONTH);
       lastMonth = monthId > lastMonth ? monthId : lastMonth;
     }
 
