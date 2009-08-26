@@ -35,7 +35,6 @@ public class HyperlinkButtonUI extends BasicButtonUI {
     AbstractButton button = (AbstractButton)c;
     button.setRolloverEnabled(true);
     button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    button.setForeground(Color.BLUE);
     button.setOpaque(false);
     initFontMetrics(button);
     updateVisibility(button);
