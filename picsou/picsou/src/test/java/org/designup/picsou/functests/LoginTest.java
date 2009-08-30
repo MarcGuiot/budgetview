@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.model.TransactionType;
@@ -19,6 +18,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
   private Window window;
   private PicsouApplication picsouApplication;
   private LoginChecker login;
+  private OperationChecker operationChecker;
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -52,13 +52,17 @@ public class LoginTest extends StartUpFunctionalTestCase {
   }
 
   private void openNewLoginWindow() throws Exception {
+    closeWindow();
+    window = getMainWindow();
+    login = new LoginChecker(window);
+  }
+
+  private void closeWindow() {
     if (window != null) {
       window.getAwtComponent().setVisible(false);
       window.dispose();
       picsouApplication.shutdown();
     }
-    window = getMainWindow();
-    login = new LoginChecker(window);
   }
 
   public void testCreatingAUserAndLoggingInAgain() throws Exception {
@@ -270,6 +274,52 @@ public class LoginTest extends StartUpFunctionalTestCase {
     messageChecker.checkMessage("Demo account");
   }
 
+  public void testAutolog() throws Exception {
+    login.clickFirstAutologin();
+    String path = OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "Menu K")
+      .save();
+    operationChecker = new OperationChecker(window);
+    operationChecker.importOfxFile(path);
+    operationChecker.logout();
+    login.clickAutologgin();
+    operationChecker.logout();
+    closeWindow();
+    window = getMainWindow();
+    getTransactionView()
+      .initContent()
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
+      .check();
+  }
+
+  public void testAutoLogAndImportInNewUser() throws Exception {
+    login.clickFirstAutologin();
+
+    operationChecker = new OperationChecker(window);
+    String path = OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "Menu K")
+      .save();
+
+    operationChecker.importOfxFile(path);
+    String fileName = operationChecker.backup(this);
+    operationChecker.deleteAutologUser();
+    login.logNewUser("Alfred", "Alfred");
+    operationChecker.restore(fileName);
+    getTransactionView()
+      .initContent()
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
+      .check();
+    operationChecker.logout();
+    login.clickFirstAutologin();
+    TimeViewChecker timeViewChecker = new TimeViewChecker(window);
+    timeViewChecker.selectAll();
+    getTransactionView()
+      .initContent()
+      .check();
+  }
+
   private void checkDemoMode() {
     login.checkLoggedIn();
     getTransactionView().checkNotEmpty();
@@ -306,4 +356,5 @@ public class LoginTest extends StartUpFunctionalTestCase {
         }
       }).run();
   }
+
 }

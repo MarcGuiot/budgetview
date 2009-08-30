@@ -132,7 +132,7 @@ public class SavingsBudgetStatTrigger implements ChangeSetListener {
       }
       Glob absolutFirstTransaction = absoluteFirstTransactionForMonth.get(accountId);
       if (absolutFirstTransaction == null ||
-          (TransactionComparator.ASCENDING_BANK.compare(transaction, absolutFirstTransaction) < 0)){
+          (TransactionComparator.ASCENDING_BANK.compare(transaction, absolutFirstTransaction) < 0)) {
         absoluteFirstTransactionForMonth.put(accountId, transaction);
       }
 
@@ -223,7 +223,7 @@ public class SavingsBudgetStatTrigger implements ChangeSetListener {
             }
           }
 
-          if (endOfMonthTransaction != null){
+          if (endOfMonthTransaction != null) {
             lastTransaction.put(accountId, endOfMonthTransaction);
           }
 

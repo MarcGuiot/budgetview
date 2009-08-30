@@ -756,7 +756,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   public void testMixedTypeOfSavingsSeriesShouldUpdateCorrectlyTheBudgetView() throws Exception {
     // Un compte courant, un compte d'épargne importé, un compte d'épargne non importé
 
-    fail("Regis : en cours");
+//    fail("Regis : en cours");
         
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000., "2008/08/10")
@@ -819,6 +819,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("05/06/2008", "VIREMENT CAF", 300.00, "Virement CAF", 400.00, 3100.00, "Epargne")
       .check();
 
+//    openApplication();
     views.selectHome();
     timeline.selectMonth("2008/06");
     savingsAccounts.checkPosition("Epargne", 400);

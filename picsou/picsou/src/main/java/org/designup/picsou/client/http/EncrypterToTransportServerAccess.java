@@ -6,7 +6,6 @@ import org.designup.picsou.client.SerializableGlobSerializer;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.BadConnection;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
-import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.server.model.ServerDelta;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
@@ -67,7 +66,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     return null;
   }
 
-  public boolean createUser(String name, char[] password) throws UserAlreadyExists {
+  public boolean createUser(String name, char[] password, boolean autoLog) throws UserAlreadyExists {
     try {
       this.name = name;
       PasswordBasedEncryptor passwordBasedEncryptor = new MD5PasswordBasedEncryptor(salt, password, count);
@@ -77,6 +76,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
       SerializedByteArrayOutput request = new SerializedByteArrayOutput();
       SerializedOutput output = request.getOutput();
       output.writeUtf8String(this.name);
+      output.write(autoLog);
       output.writeBytes(cryptPassword(password, passwordBasedEncryptor));
 
       byte[] linkInfo = generateLinkInfo();
@@ -159,8 +159,8 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     List<UserInfo> users = new ArrayList<UserInfo>(size);
     for (int i = 0; i < size; i++) {
       String userName = input.readUtf8String();
-      Boolean hasPassword = input.readBoolean();
-      users.add(new UserInfo(userName, hasPassword));
+      Boolean autoLog = input.readBoolean();
+      users.add(new UserInfo(userName, autoLog));
     }
     return users;
   }

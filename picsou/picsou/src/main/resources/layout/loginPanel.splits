@@ -36,6 +36,8 @@
                     margin="5" marginBottom="10" opaque="false"
                     fill="none" anchor="east"/>
 
+          <button ref="autologin"/>
+
           <row>
             <label text="$login.confirmation" ref="confirmLabel" styleClass="formLabel" horizontalAlignment="left"/>
             <component ref="confirmPassword"/>
@@ -51,7 +53,7 @@
           </column>
 
           <row styleClass="buttons">
-            <button ref="login"/>
+            <button ref="userlogin"/>
           </row>
 
           <filler fill="vertical"/>

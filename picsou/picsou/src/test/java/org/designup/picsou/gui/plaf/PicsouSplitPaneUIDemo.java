@@ -20,9 +20,9 @@ public class PicsouSplitPaneUIDemo {
     SplitsBuilder builder = new SplitsBuilder(directory);
     builder.setSource("<splits>" +
                       "  <styles>" +
-//                      "    <ui name='ui' class='" + PicsouSplitPaneUI.class.getName() + "'" +
-//                      "        handleColor='#FF0000'/>" +
-//                      "    <style selector='horizontalSplit' ui='ui'/>" +
+                      "    <ui name='ui' class='" + PicsouSplitPaneUI.class.getName() + "'" +
+                      "        handleColor='#FF0000'/>" +
+                      "    <style selector='horizontalSplit' ui='ui'/>" +
 "  </styles>" +
 "<panel background='#1e64c2' opaque='true'>" +
 "  <row margin='15' preferredSize='(500,500)'>" +

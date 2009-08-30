@@ -47,7 +47,7 @@ public class DummyServerAccess implements ServerAccess {
     return GlobList.EMPTY;
   }
 
-  public boolean createUser(String name, char[] password) {
+  public boolean createUser(String name, char[] password, boolean autoLog) {
     return false;
   }
 

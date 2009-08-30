@@ -58,7 +58,7 @@ public class MainWindowLauncher {
     boolean registered = isRegistered(user, password, serverAccess);
 
     PicsouInit init = PicsouInit.init(serverAccess, directory, registered);
-    init.loadUserData(user, false, registered).load();
+    init.loadUserData(user, false, false).load();
 
     Directory initDirectory = init.getDirectory();
     final PicsouFrame frame = new PicsouFrame("test");
@@ -101,7 +101,7 @@ public class MainWindowLauncher {
   private static boolean isRegistered(String user, String password, ServerAccess serverAccess) {
     boolean registered = false;
     try {
-      registered = serverAccess.createUser(user, password.toCharArray());
+      registered = serverAccess.createUser(user, password.toCharArray(), false);
     }
     catch (UserAlreadyExists e) {
       registered = serverAccess.initConnection(user, password.toCharArray(), false);

@@ -98,8 +98,8 @@ public class PicsouInit {
     }
   }
 
-  public PreLoadData loadUserData(String user, boolean useDemoAccount, boolean registeredUser) {
-    return new PreLoadData(user, useDemoAccount, registeredUser);
+  public PreLoadData loadUserData(String user, boolean useDemoAccount, boolean autoLogin) {
+    return new PreLoadData(user, useDemoAccount, autoLogin);
   }
 
   class PreLoadData {
@@ -107,13 +107,13 @@ public class PicsouInit {
     GlobList userData;
     private String user;
     private boolean useDemoAccount;
-    private boolean registeredUser;
     private GlobType[] typesToReplace;
+    boolean autoLogin;
 
-    PreLoadData(String user, boolean useDemoAccount, boolean registeredUser) {
+    PreLoadData(String user, boolean useDemoAccount, boolean autoLogin) {
       this.user = user;
       this.useDemoAccount = useDemoAccount;
-      this.registeredUser = registeredUser;
+      this.autoLogin = autoLogin;
       changeSet = new DefaultChangeSet();
       GlobModel model = directory.get(GlobModel.class);
       Collection<GlobType> globTypeCollection = new ArrayList<GlobType>(model.getAll());
@@ -140,6 +140,7 @@ public class PicsouInit {
         repository.startChangeSet();
         repository.update(User.KEY,
                           value(User.NAME, user),
+                          value(User.AUTO_LOGIN, autoLogin),
                           value(User.IS_DEMO_USER, useDemoAccount));
         if (!userData.isEmpty()) {
           repository.reset(userData, GlobUtils.toArray(userData.getTypes()));

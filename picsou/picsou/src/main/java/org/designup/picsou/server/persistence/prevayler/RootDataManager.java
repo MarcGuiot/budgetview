@@ -12,7 +12,7 @@ public interface RootDataManager {
 
   void register(byte[] mail, byte[] signature, String activationCode);
 
-  Persistence.UserInfo createUserAndHiddenUser(String name, boolean isRegisteredUser, byte[] cryptedPassword,
+  Persistence.UserInfo createUserAndHiddenUser(String name, boolean autoLog, boolean isRegisteredUser, byte[] cryptedPassword,
                                                byte[] linkInfo, byte[] cryptedLinkInfo);
 
   void deleteUser(String name, byte[] cryptedLinkInfo);

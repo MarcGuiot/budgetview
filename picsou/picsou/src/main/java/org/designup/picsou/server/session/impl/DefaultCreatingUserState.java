@@ -21,10 +21,12 @@ public class DefaultCreatingUserState extends AbstractSessionState implements Cr
   public void createUser(SerializedInput input) {
     lastAccess();
     String name = input.readUtf8String();
+    boolean autoLog = input.readBoolean();
     byte[] encryptedPassword = input.readBytes();
     byte[] linkInfo = input.readBytes();
     byte[] encryptedLinkInfo = input.readBytes();
-    Persistence.UserInfo userInfo = persistence.createUser(name, false, encryptedPassword, linkInfo, encryptedLinkInfo);
+    Persistence.UserInfo userInfo =
+      persistence.createUser(name, autoLog, false, encryptedPassword, linkInfo, encryptedLinkInfo);
     new DefaultConnectedState(persistence, userInfo.userId, getDefaultSessionService(), getSessionId(), getPrivateId());
     registered = userInfo.isRegistered;
   }

@@ -4,6 +4,7 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -67,7 +68,9 @@ public class SavingsBudgetSummaryView extends View implements GlobSelectionListe
     }
 
     GlobList budgetStats =
-      repository.getAll(SavingsBudgetStat.TYPE, GlobMatchers.fieldIn(SavingsBudgetStat.MONTH, selectedMonthIds))
+      repository.getAll(SavingsBudgetStat.TYPE,
+                        GlobMatchers.and(GlobMatchers.fieldEquals(SavingsBudgetStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID),
+                        GlobMatchers.fieldIn(SavingsBudgetStat.MONTH, selectedMonthIds)))
         .sort(SavingsBudgetStat.MONTH);
 
     if (budgetStats.size() == 0) {

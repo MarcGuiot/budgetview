@@ -14,7 +14,7 @@ public class LoginFuncTest extends ServerFuncTestCase {
   public void testLoginWithoutPassword() throws Exception {
     TextBox textBox = window.getTextBox("name");
     textBox.setText("user2");
-    Button loginButton = window.getButton("login");
+    Button loginButton = window.getButton("userlogin");
     loginButton.click();
 
     TextBox label = window.findUIComponent(TextBox.class, "message");
