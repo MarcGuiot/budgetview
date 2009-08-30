@@ -136,13 +136,13 @@ public class LoginChecker extends GuiChecker {
 
   private void doLoggin(String message, boolean slaValidation) {
     Button button = window.getButton("autologin");
+    assertThat(button.textEquals(message));
     if (slaValidation) {
       SlaValidationDialogChecker.init(button.triggerClick()).acceptTerms().validate();
     }
     else {
       button.click();
     }
-    assertThat(button.textEquals(message));
     waitForApplicationToLoad();
   }
 }

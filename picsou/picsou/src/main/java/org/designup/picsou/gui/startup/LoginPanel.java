@@ -142,8 +142,12 @@ public class LoginPanel {
           Log.write("Multiple autologgin user " + autoLoginUser +  " " + user.name);
         }
         autoLoginUser = user.name;
-        autoLoginButton.setText(Lang.get("login.auto.login"));
       }
+    }
+    if (autoLoginUser != null) {
+      autoLoginButton.getAction().putValue(Action.NAME, Lang.get("login.auto.login"));
+    }else {
+      autoLoginButton.getAction().putValue(Action.NAME, Lang.get("login.auto.create.login"));
     }
     userField.setText(null);
     passwordField.setText(null);
@@ -162,6 +166,7 @@ public class LoginPanel {
     this.creationCheckBox.setEnabled(enabled);
     this.confirmPasswordField.setEnabled(enabled);
     this.loginButton.setEnabled(enabled);
+    this.autoLoginButton.setEnabled(enabled);
   }
 
   private boolean userIdAccepted() {

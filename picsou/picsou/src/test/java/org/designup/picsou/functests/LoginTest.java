@@ -304,7 +304,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
 
     operationChecker.importOfxFile(path);
     String fileName = operationChecker.backup(this);
-    operationChecker.deleteAutologUser();
+    operationChecker.deleteAutologinUser();
     login.logNewUser("Alfred", "Alfred");
     operationChecker.restore(fileName);
     getTransactionView()
@@ -318,6 +318,10 @@ public class LoginTest extends StartUpFunctionalTestCase {
     getTransactionView()
       .initContent()
       .check();
+    operationChecker.deleteAutologinUser();
+    login.clickFirstAutologin();
+    operationChecker.deleteAutologinUser();
+    login.checkFirstAutoLogin();
   }
 
   public void testLoginWithPwdAndAutolog() throws Exception {
