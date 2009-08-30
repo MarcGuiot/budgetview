@@ -114,7 +114,7 @@ public class MainWindow implements WindowManager {
         user = userInfo.name;
       }
     }
-    if (autoLogin) {
+    if (autoLogin && localUsers.size() == 1) {
       autoLoggin(user);
     }
     else {
@@ -210,7 +210,6 @@ public class MainWindow implements WindowManager {
     }
 
     public void complete() {
-      loginPanel.setComponentsEnabled(true);
       loginPanel.stopProgressBar();
     }
 

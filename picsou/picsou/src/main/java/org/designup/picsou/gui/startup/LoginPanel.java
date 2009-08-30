@@ -133,6 +133,7 @@ public class LoginPanel {
   }
 
   public JPanel preparePanelForShow(java.util.List<ServerAccess.UserInfo> users) {
+    setComponentsEnabled(true);
     this.users = users;
     autoLoginUser = null;
     for (ServerAccess.UserInfo user : users) {

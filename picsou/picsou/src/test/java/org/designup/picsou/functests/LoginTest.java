@@ -320,6 +320,16 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .check();
   }
 
+  public void testLoginWithPwdAndAutolog() throws Exception {
+    login.clickFirstAutologin();
+    operationChecker = new OperationChecker(window);
+    operationChecker.logout();
+    login.logNewUser("Alfred", "Alfred");
+    operationChecker.logout();
+    openNewLoginWindow();
+    login.clickAutologgin();
+  }
+
   private void checkDemoMode() {
     login.checkLoggedIn();
     getTransactionView().checkNotEmpty();
