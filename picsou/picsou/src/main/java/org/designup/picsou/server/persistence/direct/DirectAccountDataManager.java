@@ -5,6 +5,7 @@ import org.designup.picsou.client.SerializableGlobSerializer;
 import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.server.model.ServerDelta;
 import org.designup.picsou.server.persistence.prevayler.AccountDataManager;
+import org.designup.picsou.gui.PicsouApplication;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.MapOfMaps;
 import org.globsframework.utils.MultiMap;
@@ -246,7 +247,7 @@ public class DirectAccountDataManager implements AccountDataManager {
                              PrevaylerDirectory directory) throws IOException {
     File tempFile = directory.createTempFile("snapshot" + transactionId + "temp", "generatingSnapshot");
 
-    ReadOnlyAccountDataManager.writeSnapshot_V2(data, tempFile);
+    ReadOnlyAccountDataManager.writeSnapshot(data, tempFile, null, PicsouApplication.JAR_VERSION);
 
     File permanent = directory.snapshotFile(transactionId, "snapshot");
     permanent.delete();

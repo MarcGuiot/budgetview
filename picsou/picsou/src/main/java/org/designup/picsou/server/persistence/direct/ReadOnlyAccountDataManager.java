@@ -16,7 +16,17 @@ import java.util.Map;
 
 public class ReadOnlyAccountDataManager {
 
-  public static char[] readSnapshot(MapOfMaps<String, Integer, SerializableGlobType> globs, InputStream fileStream) {
+  public static class SnapshotInfo{
+    public final long version;
+    public final char[] password; //of autolog user
+
+    public SnapshotInfo(long version, char[] password) {
+      this.version = version;
+      this.password = password;
+    }
+  }
+
+  public static SnapshotInfo readSnapshot(MapOfMaps<String, Integer, SerializableGlobType> globs, InputStream fileStream) {
     BufferedInputStream inputStream = null;
     try {
       inputStream = new BufferedInputStream(fileStream);
@@ -24,7 +34,7 @@ public class ReadOnlyAccountDataManager {
       String version = serializedInput.readJavaString();
       if ("2".equals(version)) {
         readVersion2(serializedInput, globs);
-        return null;
+        return new SnapshotInfo(19, null);
       }
       if ("3".equals(version)) {
         return readVersion3(serializedInput, globs);
@@ -47,29 +57,31 @@ public class ReadOnlyAccountDataManager {
     SerializableGlobSerializer.deserialize(serializedInput, data);
   }
 
-  private static char[] readVersion3(SerializedInput serializedInput,
-                                   MapOfMaps<String, Integer, SerializableGlobType> data) {
+  private static SnapshotInfo readVersion3(SerializedInput serializedInput,
+                                     MapOfMaps<String, Integer, SerializableGlobType> data) {
     String password = serializedInput.readJavaString();
+    long version = serializedInput.readNotNullLong();
     SerializableGlobSerializer.deserialize(serializedInput, data);
-    return password == null ? null : password.toCharArray();
+    return new SnapshotInfo(version, password == null ? null : password.toCharArray());
   }
 
-  public static void writeSnapshot_V2(MapOfMaps<String, Integer, SerializableGlobType> data, File file) throws IOException {
-    FileOutputStream outputStream = new FileOutputStream(file);
-    SerializedOutput serializedOutput = SerializedInputOutputFactory.init(outputStream);
-    serializedOutput.writeJavaString("2");
-    SerializableGlobSerializer.serialize(serializedOutput, data);
-    outputStream.close();
+  public static void writeSnapshot(MapOfMaps<String, Integer, SerializableGlobType> data, File file,
+                                      char[] password, long version) throws IOException {
+    writeSnapshot_V3(data, file, password, version);
   }
 
-  public static void writeSnapshot_V3(MapOfMaps<String, Integer, SerializableGlobType> data, File file, char[] password) throws IOException {
+  public static void writeSnapshot_V3(MapOfMaps<String, Integer, SerializableGlobType> data, File file,
+                                      char[] password, long version) throws IOException {
     FileOutputStream outputStream = new FileOutputStream(file);
     SerializedOutput serializedOutput = SerializedInputOutputFactory.init(outputStream);
     serializedOutput.writeJavaString("3");
-    if (password != null)
-    serializedOutput.writeJavaString(new String(password));
-    else
+    if (password != null) {
+      serializedOutput.writeJavaString(new String(password));
+    }
+    else {
       serializedOutput.writeJavaString(null);
+    }
+    serializedOutput.write(version);
     SerializableGlobSerializer.serialize(serializedOutput, data);
     outputStream.close();
   }
