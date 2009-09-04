@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.BankEntity;
 
 public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
@@ -18,7 +17,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount().setAsSavings()
       .setAccountName("Epargne LCL")
       .selectBank("LCL")
-      .setBalance(1000)
+      .setPosition(1000)
       .validate();
 
     views.selectBudget();
@@ -56,13 +55,13 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount().setAsSavings()
       .setAccountName("Epargne LCL")
       .selectBank("LCL")
-      .setBalance(1000)
+      .setPosition(1000)
       .validate();
 
     savingsAccounts.createNewAccount().setAsSavings()
       .setAccountName("Epargne CA")
       .selectBank("CA")
-      .setBalance(1000)
+      .setPosition(1000)
       .validate();
 
     views.selectBudget();
@@ -113,7 +112,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount().setAsSavings()
       .setAccountName("Epargne LCL")
       .selectBank("LCL")
-      .setBalance(1000)
+      .setPosition(1000)
       .validate();
 
     views.selectBudget();
@@ -173,7 +172,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount().setAsSavings()
       .setAccountName("Epargne LCL")
       .selectBank("LCL")
-      .setBalance(1000)
+      .setPosition(1000)
       .validate();
     views.selectBudget();
 
@@ -248,7 +247,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount().setAsSavings()
       .setAccountName("Epargne LCL")
       .selectBank("LCL")
-      .setBalance(1000)
+      .setPosition(1000)
       .validate();
 
     views.selectBudget();
@@ -270,7 +269,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount().setAsSavings()
       .setAccountName("Epargne LCL")
       .selectBank("LCL")
-      .setBalance(1000)
+      .setPosition(1000)
       .validate();
 
     views.selectSavings();

@@ -122,7 +122,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .createNewAccount()
       .setAccountName("ING")
       .selectBank("ING Direct")
-      .setBalance(200)
+      .setPosition(200)
       .validate();
 
     views.selectCategorization();

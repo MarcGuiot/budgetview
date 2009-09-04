@@ -331,7 +331,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setAccountName("Main")
       .selectBank("ING Direct")
-      .setBalance(1000)
+      .setPosition(1000)
       .setStartDate("2008/10/01")
       .setEndDate("2009/06/03")
       .checkEndDate("2009/06/03")
@@ -365,14 +365,14 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setAccountName("Main")
       .selectBank("ING Direct")
-      .setBalance(1000)
+      .setPosition(1000)
       .validate();
 
     mainAccounts.createNewAccount()
       .setAccountName("Closed main")
       .selectBank("ING Direct")
       .setEndDate("2008/12/03")
-      .setBalance(1000)
+      .setPosition(1000)
       .validate();
 
     // creation d'un series pour avoir des transactions

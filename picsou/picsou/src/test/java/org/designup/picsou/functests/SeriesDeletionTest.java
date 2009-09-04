@@ -80,7 +80,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
   public void testSavingsDeleteInManual() throws Exception {
     mainAccounts.createNewAccount().setAccountName("Main")
       .setAsMain()
-      .setBalance(1000)
+      .setPosition(1000)
       .selectBank(SOCIETE_GENERALE)
       .setUpdateModeToManualInput()
       .validate();
@@ -88,7 +88,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount().setAccountName("Savings")
       .selectBank(SOCIETE_GENERALE)
       .setAsSavings()
-      .setBalance(1000)
+      .setPosition(1000)
       .setUpdateModeToManualInput()
       .validate();
 

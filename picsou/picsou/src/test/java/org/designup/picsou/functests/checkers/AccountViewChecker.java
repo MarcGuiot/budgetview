@@ -124,7 +124,7 @@ public class AccountViewChecker extends GuiChecker {
       .selectBank("LCL")
       .setAsSavings()
       .checkIsSavings()
-      .setBalance(balance)
+      .setPosition(balance)
       .validate();
   }
 
@@ -135,7 +135,7 @@ public class AccountViewChecker extends GuiChecker {
       .selectBank("CIC")
       .setAsMain()
       .checkIsMain()
-      .setBalance(balance)
+      .setPosition(balance)
       .validate();
   }
 

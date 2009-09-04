@@ -7,7 +7,6 @@ import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.assertion.Assertion;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
-import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.jdesktop.swingx.JXDatePicker;
 import org.globsframework.utils.Dates;
 
@@ -65,10 +64,10 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  public AccountEditionChecker setBalance(double initialBalance) {
+  public AccountEditionChecker setPosition(double amount) {
     TextBox textBox = dialog.getInputTextBox("position");
     assertThat(textBox.isVisible());
-    textBox.setText(Double.toString(initialBalance));
+    textBox.setText(Double.toString(amount));
     return this;
   }
 

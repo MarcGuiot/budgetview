@@ -115,7 +115,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount()
       .setAccountName("Livret")
       .selectBank("ING Direct")
-      .setBalance(1000)
+      .setPosition(1000)
       .validate();
 
     OfxBuilder.init(this)

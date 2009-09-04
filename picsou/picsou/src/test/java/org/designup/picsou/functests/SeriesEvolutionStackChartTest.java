@@ -34,7 +34,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount()
       .setAccountName("Livret")
       .selectBank("ING Direct")
-      .setBalance(0)
+      .setPosition(0)
       .validate();
 
     views.selectCategorization();
@@ -220,7 +220,58 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSavings() throws Exception {
-    fail("tbd");
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "0001", 100.0, "2009/07/30")
+      .addTransaction("2009/06/01", -1200.00, "Auchan")
+      .addTransaction("2009/06/02", -150.00, "ToImportedSavings")
+      .addTransaction("2009/06/03", -50.00, "ToNonImportedSavings")
+      .addTransaction("2009/06/04", 500.00, "WorldCo")
+      .addTransaction("2009/07/01", -100.00, "Auchan")
+      .addTransaction("2009/07/02", -200.00, "ToImportedSavings")
+      .addTransaction("2009/07/03", -50.00, "ToNonImportedSavings")
+      .addTransaction("2009/07/04", 500.00, "WorldCo")
+      .load();
+
+    OfxBuilder.init(this)
+      .addBankAccount(30006, 10674, "0002", 20000.0, "2009/07/30")
+      .addTransaction("2009/07/01", 200.00, "FromMainAccount")
+      .load();
+
+    views.selectHome();
+    mainAccounts.edit("Account n. 0002")
+      .setAccountName("Imported Savings Account")
+      .setAsSavings()
+      .validate();
+
+    fail("Regis : en cours");
+
+    views.selectCategorization();
+    categorization.selectTransactions("ToImportedSavings", "FromImportedSavings");
+    categorization.selectSavings().createSeries()
+      .setName("ToImported")
+      .setFromAccount("Account n. 0001")
+      .setToAccount("Imported Savings Account")
+      .validate();
+
+    views.selectHome();
+    savingsAccounts.createNewAccount()
+      .setAccountName("Non-imported Savings Account")
+      .selectBank("ING Direct")
+      .setPosition(5000.00)
+      .setAsSavings()
+      .validate();
+
+    views.selectSavings();
+    savingsView.createSeries()
+      .setName("ToNonImported")
+      .setFromAccount("External account")
+      .setToAccount("Non-imported Savings Account")
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount(300)
+      .validate();
+
+    openApplication();
   }
 
   public void testUncategorized() throws Exception {

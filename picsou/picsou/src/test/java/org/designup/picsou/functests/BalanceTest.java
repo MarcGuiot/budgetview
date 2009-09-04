@@ -24,7 +24,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .setAccountName("Manual")
       .selectBank("CIC")
       .setUpdateModeToManualInput()
-      .setBalance(0)
+      .setPosition(0)
       .validate();
 
     views.selectCategorization();

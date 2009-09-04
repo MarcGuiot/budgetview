@@ -47,6 +47,7 @@ public class HistoChartDemo {
     );
 
     HistoChart chart = new HistoChart(directory);
+
     chart.setListener(new HistoChartListener() {
       public void columnClicked(int id) {
         System.out.println("HistoChartDemo.columnClicked: " + id);

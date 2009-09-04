@@ -105,7 +105,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .setAccountName("Liquide")
       .selectBank("Autre")
       .setUpdateModeToManualInput()
-      .setBalance(0.)
+      .setPosition(0.)
       .validate();
 
     //======== CATEGORIZATION ===========
@@ -150,7 +150,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount()
       .setAccountName("Livret")
       .selectBank("ING Direct")
-      .setBalance(1000)
+      .setPosition(1000)
       .validate();
 
     views.selectCategorization();
@@ -231,7 +231,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount()
       .setAccountName("Compte provisions")
       .selectBank("CIC")
-      .setBalance(1000)
+      .setPosition(1000)
       .validate();
 
     views.selectBudget();

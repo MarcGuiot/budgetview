@@ -114,7 +114,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setAsSavings()
       .setAccountName("Epargne LCL")
       .selectBank("LCL")
-      .setBalance(1000)
+      .setPosition(1000)
       .validate();
 
     views.selectBudget();
@@ -188,7 +188,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setAsSavings()
       .setAccountName("Epargne LCL")
       .selectBank("LCL")
-      .setBalance(1000)
+      .setPosition(1000)
       .validate();
 
     views.selectBudget();
@@ -229,7 +229,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setAsSavings()
       .setAccountName("Epargne LCL")
       .selectBank("LCL")
-      .setBalance(1000)
+      .setPosition(1000)
       .validate();
 
     views.selectCategorization();
@@ -259,7 +259,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setAsSavings()
       .setAccountName("Epargne CIC")
       .selectBank("CIC")
-      .setBalance(100)
+      .setPosition(100)
       .validate();
 
     views.selectCategorization();
@@ -1013,7 +1013,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount()
       .setAccountName("Livret")
       .selectBank("ING Direct")
-      .setBalance(0)
+      .setPosition(0)
       .validate();
     savingsAccounts.createNewAccount()
       .setAccountName("Livret 2")
@@ -1042,7 +1042,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount()
       .setAccountName("Livret")
       .selectBank("ING Direct")
-      .setBalance(100)
+      .setPosition(100)
       .validate();
     views.selectCategorization();
     categorization.setNewSavings("Virement", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "Livret");
@@ -1066,7 +1066,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectBank("CIC")
       .setAsMain()
       .checkIsMain()
-      .setBalance(99.0)
+      .setPosition(99.0)
 //      .setUpdateModeToManualInput()
       .validate();
 
@@ -1091,7 +1091,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   public void testAllInManualTransactionModeFromSavingsToMainWithCreationOfTransactionInMain() throws Exception {
     mainAccounts.createNewAccount().setAccountName("Main")
       .setAsMain()
-      .setBalance(1000)
+      .setPosition(1000)
       .selectBank(SOCIETE_GENERALE)
       .setUpdateModeToManualInput()
       .validate();
@@ -1099,7 +1099,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount().setAccountName("Savings")
       .selectBank(SOCIETE_GENERALE)
       .setAsSavings()
-      .setBalance(1000)
+      .setPosition(1000)
       .setUpdateModeToManualInput()
       .validate();
 
@@ -1132,7 +1132,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.createNewAccount().setAccountName("Main")
       .setAsMain()
-      .setBalance(1000)
+      .setPosition(1000)
       .selectBank(SOCIETE_GENERALE)
       .setUpdateModeToManualInput()
       .validate();
@@ -1140,7 +1140,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createNewAccount().setAccountName("Savings")
       .selectBank(SOCIETE_GENERALE)
       .setAsSavings()
-      .setBalance(1000)
+      .setPosition(1000)
       .setUpdateModeToManualInput()
       .validate();
 

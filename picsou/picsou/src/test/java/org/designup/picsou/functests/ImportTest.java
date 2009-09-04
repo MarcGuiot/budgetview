@@ -4,7 +4,6 @@ import org.designup.picsou.functests.checkers.ImportChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Files;
@@ -539,7 +538,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.createNewAccount()
       .setAccountName("other")
-      .setBalance(100)
+      .setPosition(100)
       .setAccountNumber("1213")
       .selectBank(SOCIETE_GENERALE)
       .validate();

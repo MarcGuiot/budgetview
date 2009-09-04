@@ -217,7 +217,7 @@ public class ImportChecker {
       .checkUpdateModes()
       .setAccountName(accountName)
       .setAccountNumber(number)
-      .setBalance(initialBalance)
+      .setPosition(initialBalance)
       .validate();
     return this;
   }

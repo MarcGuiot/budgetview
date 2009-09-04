@@ -9,7 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
-public class HistoChart<T extends HistoDataset> extends JPanel {
+public class HistoChart extends JPanel {
 
   private HistoChartColors colors;
   private HistoPainter painter = HistoPainter.NULL;
