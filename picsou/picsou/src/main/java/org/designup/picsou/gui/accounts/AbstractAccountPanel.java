@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.accounts;
 
-import org.designup.picsou.gui.components.DatePicker;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Bank;
@@ -9,7 +8,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsLoader;
-import org.globsframework.gui.editors.GlobLinkComboEditor;
+import org.globsframework.gui.splits.SplitHandler;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
@@ -85,7 +84,7 @@ public class AbstractAccountPanel<T extends GlobRepository>  {
     positionEditor = builder.addEditor("position", Account.POSITION).setNotifyOnKeyPressed(true).getComponent();
 
     builder.addLoader(new SplitsLoader() {
-      public void load(Component component) {
+      public void load(Component component, SplitHandler splitHandler) {
         panel = (JPanel)component;
         panel.setVisible(false);
       }

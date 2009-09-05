@@ -81,9 +81,9 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     dayField = builder.addEditor("day", Transaction.DAY).forceSelection(PROTOTYPE_TRANSACTION_KEY).getComponent();
     labelField = builder.addEditor("label", Transaction.LABEL).forceSelection(PROTOTYPE_TRANSACTION_KEY).getComponent();
 
-    monthLabel = builder.add("month", new JLabel());
+    monthLabel = builder.add("month", new JLabel()).getComponent();
 
-    errorMessageLabel = builder.add("errorMessage", new JLabel());
+    errorMessageLabel = builder.add("errorMessage", new JLabel()).getComponent();
     errorMessageLabel.setVisible(false);
 
     CreateTransactionAction createAction = new CreateTransactionAction();

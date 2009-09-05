@@ -111,14 +111,14 @@ public class BudgetSummaryDetailsDialog {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/budgetSummaryDetailsDialog.splits", repository, directory);
 
-    title = builder.add("title", new JLabel());
+    title = builder.add("title", new JLabel()).getComponent();
 
     builder.add("balanceChart", balanceChart);
     builder.addLabel("balanceLabel", BudgetStat.TYPE, new BalanceStringifier()).getComponent();
 
     positionCard = builder.addCardHandler("cards");
 
-    positionDescription = builder.add("positionDescription", new JTextArea());
+    positionDescription = builder.add("positionDescription", new JTextArea()).getComponent();
 
     builder.addLabel("estimatedPosition", BudgetStat.TYPE, new EspectedPositionStringifier()).getComponent();
     builder.addLabel("estimatedPositionDate", BudgetStat.TYPE, new PositionDateStringifier()).getComponent();

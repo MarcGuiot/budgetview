@@ -105,7 +105,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
   }
 
   private void addShowTransactionsCheckbox(GlobsPanelBuilder builder) {
-    final JCheckBox checkBox = builder.add("showPlannedTransactions", new JCheckBox());
+    final JCheckBox checkBox = builder.add("showPlannedTransactions", new JCheckBox()).getComponent();
     checkBox.addActionListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         if (checkBox.isSelected()) {

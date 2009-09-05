@@ -201,7 +201,7 @@ public class ImportPanel {
     NewAccountAction newAccountAction =
       new NewAccountAction(AccountType.MAIN, sessionRepository, sessionDirectory, dialog)
         .setUpdateModeEditable(false);
-    newAccountButton = builder2.add("newAccount", new JButton(newAccountAction));
+    newAccountButton = builder2.add("newAccount", new JButton(newAccountAction)).getComponent();
 
     GlobComboView comboView = GlobComboView.init(Account.TYPE, sessionRepository, sessionDirectory);
     accountComboBox = comboView.getComponent();

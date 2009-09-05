@@ -42,6 +42,7 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.SplitsLoader;
+import org.globsframework.gui.splits.SplitHandler;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -181,7 +182,7 @@ public class MainPanel {
       view.registerComponents(builder);
     }
     builder.addLoader(new SplitsLoader() {
-      public void load(Component component) {
+      public void load(Component component, SplitHandler splitHandler) {
         panel = (JPanel)component;
       }
     });

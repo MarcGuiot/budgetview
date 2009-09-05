@@ -63,7 +63,7 @@ public abstract class AccountViewPanel {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/accountViewPanel.splits", repository, directory);
 
-    header = builder.add("header", new JPanel());
+    header = builder.add("header", new JPanel()).getComponent();
 
     Key summaryAccount = Key.create(Account.TYPE, summaryId);
     registerSummaryView(builder);

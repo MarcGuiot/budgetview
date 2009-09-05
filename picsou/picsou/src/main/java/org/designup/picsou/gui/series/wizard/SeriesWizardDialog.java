@@ -61,7 +61,7 @@ public class SeriesWizardDialog {
                       Arrays.asList(model.getBudgetAreas()),
                       new BudgetAreaRepeatFactory());
 
-    scrollPane = builder.add("scrollPane", new JScrollPane());
+    scrollPane = builder.add("scrollPane", new JScrollPane()).getComponent();
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
 

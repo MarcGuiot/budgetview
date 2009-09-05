@@ -41,9 +41,9 @@ public class CategorizationGaugePanel implements ChangeSetListener {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorizationGaugePanel.splits",
                                                       repository, directory);
 
-    gauge = builder.add("gauge", new Gauge());
-    levelLabel = builder.add("level", new JLabel());
-    panel = builder.add("panel", new JPanel());
+    gauge = builder.add("gauge", new Gauge()).getComponent();
+    levelLabel = builder.add("level", new JLabel()).getComponent();
+    panel = builder.add("panel", new JPanel()).getComponent();
     builder.load();
 
     panel.setVisible(false);

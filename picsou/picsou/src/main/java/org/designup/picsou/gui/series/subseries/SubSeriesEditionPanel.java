@@ -41,7 +41,7 @@ public class SubSeriesEditionPanel {
                                                       "/layout/subSeriesEditionPanel.splits",
                                                       repository, directory);
 
-    builder.add("subSeriesNameField", nameField).addActionListener(addAction);
+    builder.add("subSeriesNameField", nameField).getComponent().addActionListener(addAction);
     builder.add("add", addAction);
     list = builder.addList("list", SubSeries.TYPE).setFilter(GlobMatchers.NONE);
 
