@@ -38,7 +38,7 @@ public class GlobsPanelBuilderTest extends UISpecTestCase {
           cellBuilder.add("name", new JLabel(item.get(DummyObject.NAME)));
         }
       });
-    JPanel component = (JPanel)builder.doLoad();
+    JPanel component = (JPanel)builder.doLoad().getComponent();
     SplitsRepeatTest.checkPanel(component, "label:a\n" +
                                            "label:c\n");
     repository.create(Key.create(DummyObject.TYPE, 3), FieldValue.value(DummyObject.NAME, "b"));

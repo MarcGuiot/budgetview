@@ -4,7 +4,6 @@ import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.exceptions.SplitsException;
-import org.globsframework.gui.splits.layout.ComponentStretch;
 
 public class TabSplitter extends AbstractSplitter {
   private String title;
@@ -29,7 +28,7 @@ public class TabSplitter extends AbstractSplitter {
     return new String[]{"title"};
   }
 
-  protected ComponentStretch createRawStretch(SplitsContext context) {
+  protected SplitComponent createRawStretch(SplitsContext context) {
     return getSubSplitters()[0].createComponentStretch(context, true);
   }
 

@@ -61,6 +61,7 @@
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="id"/>
       <xs:attributeGroup ref="componentAttributes"/>
       <xs:attributeGroup ref="iconAttributes"/>
       <xs:attributeGroup ref="splitPaneAttributes"/>

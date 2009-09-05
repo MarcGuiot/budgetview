@@ -4,7 +4,6 @@ import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.exceptions.SplitsException;
-import org.globsframework.gui.splits.layout.ComponentStretch;
 import org.globsframework.gui.splits.layout.WrappedColumnLayout;
 import org.globsframework.gui.splits.repeat.*;
 import org.globsframework.utils.Strings;
@@ -31,13 +30,13 @@ public class RepeatSplitter extends AbstractSplitter {
     layout.check(subSplitters, ref);
   }
 
-  protected ComponentStretch createRawStretch(SplitsContext context) {
+  protected SplitComponent createRawStretch(SplitsContext context) {
     RepeatHandler repeatHandler = context.getRepeat(ref);
     if (repeatHandler == null) {
       throw new ItemNotFound("Repeat '" + ref + "' not declared");
     }
     RepeatPanel repeatPanel = new RepeatPanel(ref, repeatHandler, layout, splitterTemplates, context);
-    return repeatPanel.getStretch();
+    return repeatPanel.getSplitComponent();
   }
 
   private RepeatLayout getLayout(String layoutProperty, String ref) {

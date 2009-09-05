@@ -4,6 +4,7 @@ import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.impl.DefaultSplitsContext;
+import org.globsframework.gui.splits.impl.DefaultSplitHandler;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.DefaultCardHandler;
 import org.globsframework.gui.splits.repeat.DefaultRepeat;
@@ -58,10 +59,11 @@ public class SplitsBuilder {
     return new SplitsBuilder(directory);
   }
 
-  public <T extends Component> T add(String name, T component) {
+  public <T extends Component> SplitHandler<T> add(String name, T component) {
     component.setName(name);
-    context.addComponent(name, component);
-    return component;
+    DefaultSplitHandler<T> splitHandler = new DefaultSplitHandler<T>(component, context);
+    context.addComponent(name, (DefaultSplitHandler<Component>)splitHandler);
+    return splitHandler;
   }
 
   public SplitsBuilder add(Component... components) {
@@ -136,27 +138,36 @@ public class SplitsBuilder {
   }
 
   public Component getComponent(String id) {
-    return context.findComponent(id);
+    SplitHandler splitHandler = context.findComponent(id);
+    if (splitHandler == null){
+      return null;
+    }
+    return splitHandler.getComponent();
   }
 
   SplitsContext getContext() {
     return context;
   }
 
-  public <T extends Component> T load() {
+  public <T extends Component> T load(){
+    return (T)loadWithHandler().getComponent();
+  }
+
+
+  public <T extends Component> SplitHandler<T> loadWithHandler(){
     context.cleanUp();
     for (Map.Entry<String, SplitsBuilder> entry : children.entrySet()) {
       String name = entry.getKey();
       SplitsBuilder builder = entry.getValue();
-      Component component = builder.load();
-      component.setName(name);
-      context.addOrReplaceComponent(name, component);
+      SplitHandler<Component> splitHandler = builder.loadWithHandler();
+      splitHandler.getComponent().setName(name);
+      context.addOrReplaceComponent(name, splitHandler);
     }
     completeBeforeLoad();
-    Component component = doLoad();
+    SplitHandler splitComponent = doLoad();
     completeAfterLoad();
     try {
-      return (T)component;
+      return (SplitHandler<T>)splitComponent;
     }
     catch (ClassCastException e) {
       throw new InvalidData("Unexpected result type", e);
@@ -170,9 +181,9 @@ public class SplitsBuilder {
     context.complete();
   }
 
-  public Component doLoad() {
+  public SplitHandler doLoad() {
     Reader reader = source.getReader();
-    Component component;
+    Splitter.SplitComponent component;
     try {
       SplitsParser parser = new SplitsParser(context, new DefaultSplitterFactory());
       component = parser.parse(reader);
@@ -184,9 +195,9 @@ public class SplitsBuilder {
       throw new ResourceAccessFailed("Error parsing Splits descriptor: " + e.getMessage() + context.dump(), e);
     }
     for (SplitsLoader loader : loaders) {
-      loader.load(component);
+      loader.load(component.componentStretch.getComponent(), component.handler);
     }
-    return component;
+    return component.handler;
   }
 
   public Directory getDirectory() {

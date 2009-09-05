@@ -29,7 +29,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
 
   public void testMovableSplits() throws Exception {
     builder.add(aTable, aList, aButton);
-    JButton anotherButton = builder.add("anotherButton", new JButton());
+    JButton anotherButton = builder.add("anotherButton", new JButton()).getComponent();
     JideSplitPane hSplit =
       parse(
         "<horizontalSplit>" +

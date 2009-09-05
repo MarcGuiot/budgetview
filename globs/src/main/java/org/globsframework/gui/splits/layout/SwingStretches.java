@@ -1,5 +1,7 @@
 package org.globsframework.gui.splits.layout;
 
+import org.globsframework.gui.splits.SplitHandler;
+
 import javax.swing.*;
 import java.awt.*;
 

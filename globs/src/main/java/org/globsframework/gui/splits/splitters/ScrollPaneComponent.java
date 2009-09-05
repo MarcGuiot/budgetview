@@ -3,6 +3,7 @@ package org.globsframework.gui.splits.splitters;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
+import org.globsframework.gui.splits.SplitHandler;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorUpdater;
 import org.globsframework.gui.splits.color.Colors;
@@ -25,9 +26,10 @@ public class ScrollPaneComponent extends AbstractSplitter {
     }
   }
 
-  protected ComponentStretch createRawStretch(SplitsContext context) {
-    ComponentStretch subStretch = getSubSplitters()[0].createComponentStretch(context, true);
-    JScrollPane scrollPane = findOrCreateComponent(context);
+  protected SplitComponent createRawStretch(SplitsContext context) {
+    ComponentStretch subStretch = getSubSplitters()[0].createComponentStretch(context, true).componentStretch;
+    SplitHandler<JScrollPane> splitHandler = findOrCreateComponent(context);
+    JScrollPane scrollPane = splitHandler.getComponent();
     boolean forceVerticalScroll = Boolean.TRUE.equals(properties.getBoolean("forceVerticalScroll"));
     if (forceVerticalScroll) {
       VerticalScrollPanel panel = new VerticalScrollPanel(subStretch.getComponent());
@@ -37,7 +39,7 @@ public class ScrollPaneComponent extends AbstractSplitter {
       scrollPane.setViewportView(subStretch.getComponent());
     }
 
-    ComponentStretch stretch = new ComponentStretch(scrollPane,
+    ComponentStretch stretch = new ComponentStretch(splitHandler.getComponent(),
                                                     subStretch.getFill(),
                                                     subStretch.getAnchor(),
                                                     subStretch.getWeightX(),
@@ -88,10 +90,10 @@ public class ScrollPaneComponent extends AbstractSplitter {
       scrollPane.setVerticalScrollBarPolicy(getVerticalPolicy(verticalPolicy));
     }
 
-    return stretch;
+    return new SplitComponent(stretch, splitHandler);
   }
 
-  protected JScrollPane findOrCreateComponent(SplitsContext context) {
+  protected SplitHandler<JScrollPane> findOrCreateComponent(SplitsContext context) {
     String ref = properties.getString("ref");
     String componentName = properties.getString("name");
     return context.findOrCreateComponent(ref, componentName, JScrollPane.class, getName());

@@ -4,6 +4,7 @@ import com.jidesoft.swing.JideSplitPane;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
+import org.globsframework.gui.splits.SplitHandler;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.ComponentStretch;
 import org.globsframework.gui.splits.layout.Fill;
@@ -33,8 +34,9 @@ public class MovableSplit extends DefaultComponent<JideSplitPane> {
     return new String[]{"dividerSize"};
   }
 
-  public ComponentStretch createRawStretch(SplitsContext context) {
-    JideSplitPane splitPane = findOrCreateComponent(context);
+  public SplitComponent createRawStretch(SplitsContext context) {
+    SplitHandler<JideSplitPane> splitHandler = findOrCreateComponent(context);
+    JideSplitPane splitPane = splitHandler.getComponent();
     splitPane.setOrientation(direction.value);
     splitPane.setBorder(null);
 
@@ -44,7 +46,7 @@ public class MovableSplit extends DefaultComponent<JideSplitPane> {
     double[] weights = new double[subSplitters.length];
     int index = 0;
     for (Splitter splitter : subSplitters) {
-      ComponentStretch stretch = splitter.createComponentStretch(context, true);
+      ComponentStretch stretch = splitter.createComponentStretch(context, true).componentStretch;
       splitPane.addPane(stretch.getComponent());
       totalWeightX += stretch.getWeightX();
       totalWeightY += stretch.getWeightY();
@@ -78,7 +80,8 @@ public class MovableSplit extends DefaultComponent<JideSplitPane> {
     splitPane.setProportions(proportions);
 
     setDividerProperties(splitPane);
-    return new ComponentStretch(splitPane, Fill.BOTH, Anchor.CENTER, totalWeightX, totalWeightY);
+    return new SplitComponent(new ComponentStretch(splitPane, Fill.BOTH, Anchor.CENTER, totalWeightX, totalWeightY),
+                              splitHandler);
   }
 
   private void setDividerProperties(JideSplitPane splitPane) {

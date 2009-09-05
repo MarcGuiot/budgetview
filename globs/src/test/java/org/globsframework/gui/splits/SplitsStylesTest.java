@@ -109,10 +109,11 @@ public class SplitsStylesTest extends SplitsTestCase {
       "A style selector cannot be empty");
   }
 
-  private void checkButtonStyle(String xml) throws Exception {
+  private JButton checkButtonStyle(String xml) throws Exception {
     builder.add("btn", aButton);
     JButton button = (JButton)parse(xml);
     assertEquals(Color.RED, button.getForeground());
+    return button;
   }
 
 }

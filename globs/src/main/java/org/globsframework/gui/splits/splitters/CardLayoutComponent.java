@@ -3,6 +3,8 @@ package org.globsframework.gui.splits.splitters;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
+import org.globsframework.gui.splits.SplitHandler;
+import org.globsframework.gui.splits.impl.DefaultSplitHandler;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.ComponentStretch;
 import org.globsframework.gui.splits.layout.Fill;
@@ -18,12 +20,13 @@ public class CardLayoutComponent extends AbstractSplitter {
     super(properties, subSplitters);
   }
 
-  protected ComponentStretch createRawStretch(SplitsContext context) {
+  protected SplitComponent createRawStretch(SplitsContext context) {
     String ref = getProperties().getString("ref");
     if (ref == null) {
       throw new SplitsException("cards components must reference a registered panel (use ref='xxx')");
     }
-    JPanel panel = context.findOrCreateComponent(ref, null, JPanel.class, getName());
+    SplitHandler<JPanel> splitHandler = context.findOrCreateComponent(ref, null, JPanel.class, getName());
+    JPanel panel = splitHandler.getComponent();
     if (!CardLayout.class.isInstance(panel.getLayout())) {
       throw new SplitsException("Panel '" + ref + "' must use a CardLayout, preferably through a CardHandler");
     }
@@ -36,12 +39,12 @@ public class CardLayoutComponent extends AbstractSplitter {
       }
       CardSplitter card = (CardSplitter)splitter;
       String cardName = card.getCardName();
-      ComponentStretch stretch = card.createComponentStretch(context, false);
-      weightX = DoubleOperation.MAX.get(stretch.getWeightX(), weightX);
-      weightY = DoubleOperation.MAX.get(stretch.getWeightY(), weightY);
-      panel.add(stretch.getComponent(), cardName);
+      SplitComponent splitComponent = card.createComponentStretch(context, false);
+      weightX = DoubleOperation.MAX.get(splitComponent.componentStretch.getWeightX(), weightX);
+      weightY = DoubleOperation.MAX.get(splitComponent.componentStretch.getWeightY(), weightY);
+      panel.add(splitComponent.componentStretch.getComponent(), cardName);
     }
-    return new ComponentStretch(panel, Fill.BOTH, Anchor.CENTER, weightX, weightY);
+    return new SplitComponent(new ComponentStretch(panel, Fill.BOTH, Anchor.CENTER, weightX, weightY), splitHandler);
   }
 
   public String getName() {

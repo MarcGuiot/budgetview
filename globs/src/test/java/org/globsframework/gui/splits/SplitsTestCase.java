@@ -51,12 +51,16 @@ public abstract class SplitsTestCase extends UISpecTestCase {
   }
 
   protected <T extends Component> T parse(final String xml) throws Exception {
-    validateDocument(toStream(xml));
-    return builder.setSource(complete(xml)).<T>load();
+    return (T)parseWithHanler(xml).getComponent();
   }
 
-  protected Component parseWithoutSchemaValidation(String xml) throws Exception {
-    return builder.setSource(complete(xml)).load();
+  protected <T extends Component> SplitHandler<T> parseWithHanler(final String xml) throws Exception {
+    validateDocument(toStream(xml));
+    return builder.setSource(complete(xml)).<T>loadWithHandler();
+  }
+
+  protected void parseWithoutSchemaValidation(String xml) throws Exception {
+    builder.setSource(complete(xml)).load();
   }
 
   protected StringReader toStream(String xml) {

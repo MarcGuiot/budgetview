@@ -2,12 +2,14 @@ package org.globsframework.gui.splits.repeat;
 
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
+import org.globsframework.gui.splits.impl.DefaultSplitHandler;
 import org.globsframework.gui.splits.layout.ComponentStretch;
 import org.globsframework.gui.splits.layout.SwingStretches;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.*;
 
 public class RepeatPanel implements Repeat {
   private ComponentStretch stretch;
@@ -17,6 +19,7 @@ public class RepeatPanel implements Repeat {
   private SplitsContext context;
   private List<RepeatContext> repeatContexts = new ArrayList<RepeatContext>();
   private RepeatLayout layout;
+  private DefaultSplitHandler<Component> splitHandler;
 
   public RepeatPanel(String name, RepeatHandler repeatHandler, RepeatLayout layout,
                      Splitter[] splitterTemplates, SplitsContext context) {
@@ -28,7 +31,8 @@ public class RepeatPanel implements Repeat {
     this.layout.init(panel);
     this.panel.setName(name);
     this.panel.setOpaque(false);
-    this.context.addComponent(name, panel);
+    splitHandler = new DefaultSplitHandler<Component>(panel, context);
+    this.context.addComponent(name, splitHandler);
     set(repeatHandler.getInitialItems());
     this.stretch = SwingStretches.get(panel);
   }
@@ -77,7 +81,7 @@ public class RepeatPanel implements Repeat {
 
     ComponentStretch[] stretches = new ComponentStretch[splitterTemplates.length];
     for (int i = 0; i < splitterTemplates.length; i++) {
-      stretches[i] = splitterTemplates[i].createComponentStretch(repeatContext, !layout.managesInsets());
+      stretches[i] = splitterTemplates[i].createComponentStretch(repeatContext, !layout.managesInsets()).componentStretch;
     }
 
     repeatContext.complete();
@@ -85,8 +89,8 @@ public class RepeatPanel implements Repeat {
     return stretches;
   }
 
-  public ComponentStretch getStretch() {
-    return stretch;
+  public Splitter.SplitComponent getSplitComponent() {
+    return new Splitter.SplitComponent(stretch, splitHandler);
   }
 
   public void dispose() {

@@ -30,23 +30,23 @@ public abstract class AbstractSplitter implements Splitter {
     this.subSplitters = subSplitters;
   }
 
-  public final ComponentStretch createComponentStretch(SplitsContext context, boolean addMargin) {
-    ComponentStretch stretch = createRawStretch(context);
-    setGridPos(stretch);
-    overrideStretch(stretch);
-    Component component = stretch.getComponent();
+  public final SplitComponent createComponentStretch(SplitsContext context, boolean addMargin) {
+    SplitComponent splitComponent = createRawStretch(context);
+    setGridPos(splitComponent.componentStretch);
+    overrideStretch(splitComponent.componentStretch);
+    Component component = splitComponent.componentStretch.getComponent();
     setOpacity(component);
     if (addMargin) {
-      addMargin(stretch);
+      addMargin(splitComponent.componentStretch);
     }
     else {
-      stretch.setInsets(getMarginInsets());
+      splitComponent.componentStretch.setInsets(getMarginInsets());
     }
     complete(component);
     processAttributes(component, context);
     processAutoHide(component, context);
-    processDebug(stretch, context);
-    return stretch;
+    processDebug(splitComponent.componentStretch, context);
+    return splitComponent;
   }
 
   private void processAutoHide(Component component, SplitsContext context) {
@@ -103,7 +103,7 @@ public abstract class AbstractSplitter implements Splitter {
   protected void complete(Component component) {
   }
 
-  protected abstract ComponentStretch createRawStretch(SplitsContext context);
+  protected abstract SplitComponent createRawStretch(SplitsContext context);
 
   public Splitter[] getSubSplitters() {
     return subSplitters;

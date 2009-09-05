@@ -3,9 +3,12 @@ package org.globsframework.gui.splits.splitters;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
+import org.globsframework.gui.splits.impl.DefaultSplitHandler;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.*;
 import org.globsframework.gui.splits.utils.DoubleOperation;
+
+import javax.swing.*;
 
 public class Grid extends AbstractSplitter {
   static final String[] DEFAULT_GRIDBAG_PROPERTIES = {"defaultFill", "defaultAnchor", "defaultMargin",
@@ -16,12 +19,13 @@ public class Grid extends AbstractSplitter {
     super(properties, subSplitters);
   }
 
-  protected ComponentStretch createRawStretch(SplitsContext context) {
+  protected SplitComponent createRawStretch(SplitsContext context) {
     GridBagBuilder builder = GridBagBuilder.init().setOpaque(false);
     double weightX = 0;
     double weightY = 0;
     for (Splitter splitter : getSubSplitters()) {
-      ComponentStretch stretch = splitter.createComponentStretch(context, false);
+      SplitComponent splitComponent= splitter.createComponentStretch(context, false);
+      ComponentStretch stretch = splitComponent.componentStretch;
       GridPos gridPos = stretch.getGridPos();
       if (gridPos == null) {
         throw new SplitsException("Grid element '" + splitter.getName() + "' must have a GridPos attribute");
@@ -35,7 +39,9 @@ public class Grid extends AbstractSplitter {
       weightX = DoubleOperation.SUM.get(stretch.getWeightX(), weightX);
       weightY = DoubleOperation.SUM.get(stretch.getWeightY(), weightY);
     }
-    return new ComponentStretch(builder.getPanel(), Fill.BOTH, Anchor.CENTER, weightX, weightY);
+    JPanel panel = builder.getPanel();
+    return new SplitComponent(new ComponentStretch(panel, Fill.BOTH, Anchor.CENTER, weightX, weightY),
+                              new DefaultSplitHandler(panel, context));
   }
 
   protected String[] getExcludedParameters() {

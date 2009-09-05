@@ -29,7 +29,7 @@ public class GridBagSequence extends Sequence {
     throw new InvalidParameter("Invalid direction " +  direction);
   }
 
-  public static ComponentStretch createPanel(Splitter[] subSplitters, Direction direction, SplitsContext context, String ref) {
+  public static SplitComponent createPanel(Splitter[] subSplitters, Direction direction, SplitsContext context, String ref) {
     return createPanel(new GridBagSequenceBuilder(), subSplitters, direction, context, ref);
   }
 
