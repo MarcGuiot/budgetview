@@ -200,7 +200,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected void restartApplication() {
-    operations.loggout();
+    operations.logout();
     mainWindow.dispose();
     mainWindow = null;
     mainWindow = getMainWindow();

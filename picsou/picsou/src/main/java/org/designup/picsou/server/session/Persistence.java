@@ -7,7 +7,7 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
 
 public interface Persistence {
-  UserInfo createUser(String name, boolean isRegisteredUser,
+  UserInfo createUser(String name, boolean autoLog, boolean isRegisteredUser,
                       byte[] encryptedPassword, byte[] linkInfo, byte[] encryptedLinkInfo);
 
   void getData(SerializedOutput output, Integer userId);

@@ -1,8 +1,10 @@
 package org.designup.picsou.gui.backup;
 
 import org.designup.picsou.gui.components.dialogs.MessageFileDialog;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.undo.UndoRedoService;
+import org.designup.picsou.gui.startup.BackupService;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
@@ -34,14 +36,19 @@ public class RestoreAction extends AbstractBackupRestoreAction {
         char[] password = null;
         while (true) {
           Gui.setWaitCursor(frame);
-          boolean completed;
+          BackupService.Status completed;
           try {
             completed = backupService.restore(new FileInputStream(file), password);
           }
           finally {
             Gui.setDefaultCursor(frame);
           }
-          if (completed) {
+          if (completed == BackupService.Status.badBersion){
+            MessageDialog dialog = new MessageDialog("restore.error.title", "restore.bad.version", frame, directory);
+            dialog.show();
+            return;
+          }
+          if (completed == BackupService.Status.ok) {
             resetUndoRedo();
             selectCurrentMonth();
             showConfirmationDialog(file);

@@ -17,7 +17,7 @@ import java.util.List;
 
 public interface ServerAccess {
 
-  boolean createUser(String name, char[] password)
+  boolean createUser(String name, char[] password, boolean autoLog)
     throws UserAlreadyExists, IdentificationFailed, PasswordBasedEncryptor.EncryptFail;
 
   boolean initConnection(String name, char[] password, boolean privateComputer)
@@ -38,12 +38,12 @@ public interface ServerAccess {
   void deleteUser(String name, char[] password);
 
   class UserInfo{
-    final String name;
-    final boolean hasPassword;
+    public final String name;
+    public final boolean autologgin;
 
-    public UserInfo(String name, Boolean hasPassword) {
+    public UserInfo(String name, Boolean autologgin) {
       this.name = name;
-      this.hasPassword = hasPassword;
+      this.autologgin = autologgin;
     }
   }
 
@@ -62,7 +62,7 @@ public interface ServerAccess {
   void disconnect();
 
   static final ServerAccess NULL = new ServerAccess() {
-    public boolean createUser(String name, char[] password) throws UserAlreadyExists, IdentificationFailed, PasswordBasedEncryptor.EncryptFail {
+    public boolean createUser(String name, char[] password, boolean autoLog) throws UserAlreadyExists, IdentificationFailed, PasswordBasedEncryptor.EncryptFail {
       return true;
     }
 

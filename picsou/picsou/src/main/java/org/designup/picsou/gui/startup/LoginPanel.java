@@ -4,18 +4,20 @@ import com.jidesoft.swing.InfiniteProgressPanel;
 import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.components.CustomFocusTraversalPolicy;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.client.ServerAccess;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
+import java.util.*;
 
 public class LoginPanel {
   private JTextField userField = new JTextField(15);
@@ -23,6 +25,7 @@ public class LoginPanel {
   private JPasswordField confirmPasswordField = new JPasswordField(15);
   protected JLabel confirmPasswordLabel = new JLabel();
   private JButton loginButton = new JButton(new LoginAction());
+  private JButton autoLoginButton = new JButton(new AutoLogAction());
   private JCheckBox creationCheckBox = new JCheckBox();
   private JEditorPane messageLabel = new JEditorPane();
   private InfiniteProgressPanel progressPanel = new InfiniteProgressPanel();
@@ -32,6 +35,8 @@ public class LoginPanel {
   private Directory directory;
   private JPanel panel;
   private boolean useDemoAccount;
+  private java.util.List<ServerAccess.UserInfo> users;
+  private String autoLoginUser;
 
   public LoginPanel(MainWindow mainWindow, Directory directory) {
     this.mainWindow = mainWindow;
@@ -75,10 +80,11 @@ public class LoginPanel {
     builder.add("confirmLabel", confirmPasswordLabel);
     builder.add("createAccountCheckBox", creationCheckBox);
     builder.add("message", messageLabel);
+    builder.add("autologin", autoLoginButton);
     builder.add("progressPanel", progressPanel);
     GuiUtils.initHtmlComponent(messageLabel);
     builder.add("demoMode", new DemoModeAction());
-    builder.add("login", loginButton);
+    builder.add("userlogin", loginButton);
     builder.addLoader(new SplitsLoader() {
       public void load(Component component) {
         panel = (JPanel)component;
@@ -98,8 +104,6 @@ public class LoginPanel {
   }
 
   private void login() {
-    String user = userField.getText();
-    char[] password = passwordField.getPassword();
     boolean createUser = false;
     if (creationCheckBox.isSelected()) {
       if (!userIdAccepted() || !passwordAccepted()) {
@@ -107,7 +111,10 @@ public class LoginPanel {
       }
       createUser = true;
     }
+    logUser(userField.getText(), passwordField.getPassword(), createUser, false);
+  }
 
+  private void logUser(String user, char[] password, boolean createUser, boolean autoLog) {
     if (createUser && !SlaValidationDialog.termsAccepted(mainWindow.getFrame(), directory)) {
       return;
     }
@@ -115,12 +122,33 @@ public class LoginPanel {
     setComponentsEnabled(false);
     progressPanel.start();
 
-    mainWindow.login(user, password, createUser, useDemoAccount);
+    mainWindow.login(user, password, createUser, useDemoAccount, autoLog);
     useDemoAccount = false;
-
+    autoLoginUser = null;
   }
 
-  public JPanel preparePanelForShow() {
+  private void autoLogin(){
+    boolean createUser = autoLoginUser == null;
+    logUser("autologUser", "autologUser".toCharArray(), createUser, true);
+  }
+
+  public JPanel preparePanelForShow(java.util.List<ServerAccess.UserInfo> users) {
+    setComponentsEnabled(true);
+    this.users = users;
+    autoLoginUser = null;
+    for (ServerAccess.UserInfo user : users) {
+      if (user.autologgin){
+        if (autoLoginUser != null){
+          Log.write("Multiple autologgin user " + autoLoginUser +  " " + user.name);
+        }
+        autoLoginUser = user.name;
+      }
+    }
+    if (autoLoginUser != null) {
+      autoLoginButton.getAction().putValue(Action.NAME, Lang.get("login.auto.login"));
+    }else {
+      autoLoginButton.getAction().putValue(Action.NAME, Lang.get("login.auto.create.login"));
+    }
     userField.setText(null);
     passwordField.setText(null);
     confirmPasswordField.setText(null);
@@ -138,6 +166,7 @@ public class LoginPanel {
     this.creationCheckBox.setEnabled(enabled);
     this.confirmPasswordField.setEnabled(enabled);
     this.loginButton.setEnabled(enabled);
+    this.autoLoginButton.setEnabled(enabled);
   }
 
   private boolean userIdAccepted() {
@@ -203,6 +232,16 @@ public class LoginPanel {
 
     public void actionPerformed(ActionEvent event) {
       login();
+    }
+  }
+
+  private class AutoLogAction extends AbstractAction {
+    public AutoLogAction() {
+      super(Lang.get("login.auto.create.login"));
+    }
+
+    public void actionPerformed(ActionEvent event) {
+      autoLogin();
     }
   }
 

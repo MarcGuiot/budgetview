@@ -4,12 +4,15 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
 import org.designup.picsou.client.http.MD5PasswordBasedEncryptor;
 import org.designup.picsou.client.http.PasswordBasedEncryptor;
+import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
+import org.designup.picsou.model.User;
 import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.server.persistence.direct.ReadOnlyAccountDataManager;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.delta.DefaultChangeSet;
@@ -33,6 +36,12 @@ public class BackupService {
   private DefaultGlobIdGenerator idGenerator;
   private UpgradeTrigger upgradeTrigger;
 
+  public enum Status {
+      badBersion,
+    ok,
+    decryptFail
+  }
+
   public BackupService(ServerAccess serverAccess,
                        Directory directory, GlobRepository repository,
                        DefaultGlobIdGenerator idGenerator,
@@ -47,40 +56,52 @@ public class BackupService {
   public void generate(File file) throws IOException {
     MapOfMaps<String, Integer, SerializableGlobType> serverData = serverAccess.getServerData();
     Files.createParentDirs(file);
-    ReadOnlyAccountDataManager.writeSnapshot_V2(serverData, file);
+    Glob user = repository.find(User.KEY);
+    char[] password = null;
+    if (user.get(User.AUTO_LOGIN)) {
+      password = user.get(User.NAME).toCharArray();
+    }
+    ReadOnlyAccountDataManager.writeSnapshot(serverData, file, password, PicsouApplication.JAR_VERSION);
   }
 
-  public boolean restore(InputStream stream, char[] password) throws InvalidData {
+  public Status restore(InputStream stream, char[] password) throws InvalidData {
     MapOfMaps<String, Integer, SerializableGlobType> serverData =
       new MapOfMaps<String, Integer, SerializableGlobType>();
-    ReadOnlyAccountDataManager.readSnapshot(serverData, stream);
-    PasswordBasedEncryptor passwordBasedEncryptor;
-    if (password == null) {
-      passwordBasedEncryptor = directory.get(PasswordBasedEncryptor.class);
+    ReadOnlyAccountDataManager.SnapshotInfo snapshotInfo = ReadOnlyAccountDataManager.readSnapshot(serverData, stream);
+    if (snapshotInfo.version > PicsouApplication.JAR_VERSION){
+      return Status.badBersion;
+    }
+    PasswordBasedEncryptor readPasswordBasedEncryptor;
+    PasswordBasedEncryptor writeBasedEncryptor = directory.get(PasswordBasedEncryptor.class);
+    if (snapshotInfo.password != null) {
+      readPasswordBasedEncryptor = new MD5PasswordBasedEncryptor(EncrypterToTransportServerAccess.salt,
+                                                                 snapshotInfo.password, EncrypterToTransportServerAccess.count);
+    }
+    else if (password == null) {
+      readPasswordBasedEncryptor = writeBasedEncryptor;
     }
     else {
-      passwordBasedEncryptor = new MD5PasswordBasedEncryptor(EncrypterToTransportServerAccess.salt,
-                                                             password, EncrypterToTransportServerAccess.count);
+      readPasswordBasedEncryptor = new MD5PasswordBasedEncryptor(EncrypterToTransportServerAccess.salt,
+                                                                 password, EncrypterToTransportServerAccess.count);
     }
     GlobModel globModel = directory.get(GlobModel.class);
     try {
       EncrypterToTransportServerAccess.decrypt(new ServerAccess.IdUpdater() {
         public void update(IntegerField field, Integer lastAllocatedId) {
         }
-      }, serverData, passwordBasedEncryptor, globModel);
+      }, serverData, readPasswordBasedEncryptor, globModel);
     }
     catch (Exception e) {
       Log.write("decrypt failed : ", e);
-      return false;
+      return Status.decryptFail;
     }
 
-    if (password != null) {
-      PasswordBasedEncryptor userPasswordBasedEncryptor = directory.get(PasswordBasedEncryptor.class);
+    if (readPasswordBasedEncryptor != writeBasedEncryptor) {
 
       for (SerializableGlobType serializableGlobType : serverData.values()) {
         serializableGlobType.setData(
-          userPasswordBasedEncryptor.encrypt(
-            passwordBasedEncryptor.decrypt(serializableGlobType.getData())));
+          writeBasedEncryptor.encrypt(
+            readPasswordBasedEncryptor.decrypt(serializableGlobType.getData())));
       }
     }
 
@@ -103,6 +124,6 @@ public class BackupService {
       repository.completeChangeSet();
     }
     repository.removeTrigger(upgradeTrigger);
-    return true;
+    return Status.ok;
   }
 }

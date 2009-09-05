@@ -200,7 +200,7 @@ public class OperationChecker {
     UISpecAssert.assertFalse(redoMenu.isEnabled());
   }
 
-  public void loggout() {
+  public void logout() {
     window.getMenuBar().getMenu("File").getSubMenu("Logout").click();
   }
 
@@ -209,12 +209,20 @@ public class OperationChecker {
   }
 
   public void deleteUser(String password) {
-      MenuItem subMenu = window.getMenuBar().getMenu("File").getSubMenu("Delete");
-      PasswordDialogChecker dialogChecker =
-        new PasswordDialogChecker(WindowInterceptor.getModalDialog(subMenu.triggerClick()));
-      dialogChecker.setPassword(password);
-      dialogChecker.validate();
-      UISpecAssert.waitUntil(window.containsSwingComponent(JPasswordField.class, "password"), 2000);
+    MenuItem subMenu = window.getMenuBar().getMenu("File").getSubMenu("Delete");
+    PasswordDialogChecker dialogChecker =
+      new PasswordDialogChecker(WindowInterceptor.getModalDialog(subMenu.triggerClick()));
+    dialogChecker.setPassword(password);
+    dialogChecker.validate();
+    UISpecAssert.waitUntil(window.containsSwingComponent(JPasswordField.class, "password"), 2000);
+  }
+
+  public void deleteAutologinUser() {
+    MenuItem subMenu = window.getMenuBar().getMenu("File").getSubMenu("Delete");
+    ConfirmationDialogChecker confirmationDialogChecker =
+      new ConfirmationDialogChecker(WindowInterceptor.getModalDialog(subMenu.triggerClick()));
+    confirmationDialogChecker.checkMessageContains("Do you realy want do delete your data?");
+    confirmationDialogChecker.validate();
   }
 
   public HelpChecker openHelp() {

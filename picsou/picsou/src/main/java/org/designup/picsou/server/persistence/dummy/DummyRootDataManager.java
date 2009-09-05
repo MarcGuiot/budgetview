@@ -14,6 +14,7 @@ public class DummyRootDataManager implements RootDataManager {
   private byte[] cryptedPassword;
   private byte[] linkInfo;
   private byte[] cryptedLinkInfo;
+  private boolean autoLog;
   private static final int USER_ID = 1;
 
   public Glob getHiddenUser(String linkInfo) {
@@ -32,8 +33,9 @@ public class DummyRootDataManager implements RootDataManager {
   public void register(byte[] mail, byte[] signature, String activationCode) {
   }
 
-  public Persistence.UserInfo createUserAndHiddenUser(String name, boolean isRegisteredUser,
+  public Persistence.UserInfo createUserAndHiddenUser(String name, boolean autoLog, boolean isRegisteredUser,
                                                       byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo) {
+    this.autoLog = autoLog;
     this.cryptedPassword = cryptedPassword;
     this.linkInfo = linkInfo;
     this.cryptedLinkInfo = cryptedLinkInfo;

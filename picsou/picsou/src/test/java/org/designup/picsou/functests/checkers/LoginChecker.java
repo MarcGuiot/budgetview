@@ -4,8 +4,8 @@ import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 import javax.swing.*;
 
@@ -79,7 +79,7 @@ public class LoginChecker extends GuiChecker {
     window.getButton("demoMode").click();
     waitForApplicationToLoad();
   }
-  
+
   public void waitForApplicationToLoad() {
     UISpecAssert.waitUntil(window.containsSwingComponent(TimeViewPanel.class), 10000);
   }
@@ -119,5 +119,30 @@ public class LoginChecker extends GuiChecker {
 
   public void checkNotLoggedIn() {
     assertFalse(window.containsMenuBar());
+  }
+
+  public void checkFirstAutoLogin() {
+    Button button = window.getButton("autologin");
+    assertThat(button.textEquals("Create auto login user"));
+  }
+
+  public void clickFirstAutologin() {
+    doLoggin("Create auto login user", true);
+  }
+
+  public void clickAutologgin() {
+    doLoggin("Use auto login user", false);
+  }
+
+  private void doLoggin(String message, boolean slaValidation) {
+    Button button = window.getButton("autologin");
+    assertThat(button.textEquals(message));
+    if (slaValidation) {
+      SlaValidationDialogChecker.init(button.triggerClick()).acceptTerms().validate();
+    }
+    else {
+      button.click();
+    }
+    waitForApplicationToLoad();
   }
 }

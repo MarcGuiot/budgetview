@@ -6,7 +6,6 @@ import org.designup.picsou.server.persistence.prevayler.RootDataManager;
 import org.designup.picsou.server.session.Persistence;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.GlobsException;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
@@ -110,11 +109,12 @@ public class PRootDataManager implements RootDataManager {
     prevayler.execute(new Register(mail, signature, activationCode));
   }
 
-  public Persistence.UserInfo createUserAndHiddenUser(String name, boolean isRegisteredUser,
+  public Persistence.UserInfo createUserAndHiddenUser(String name, boolean autoLog, boolean isRegisteredUser,
                                                       byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo) {
     try {
-      Persistence.UserInfo userInfo = (Persistence.UserInfo)prevayler.execute(new CreateUserAndHiddenUser(name, isRegisteredUser, cryptedPassword,
-                                                                                                          linkInfo, cryptedLinkInfo));
+      Persistence.UserInfo userInfo =
+        (Persistence.UserInfo)prevayler.execute(new CreateUserAndHiddenUser(name, autoLog, isRegisteredUser, cryptedPassword,
+                                                                            linkInfo, cryptedLinkInfo));
       prevayler.takeSnapshot();
       return userInfo;
     }

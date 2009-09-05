@@ -6,13 +6,19 @@ import org.designup.picsou.functests.checkers.PasswordDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.server.persistence.direct.DirectAccountDataManager;
+import org.designup.picsou.server.persistence.direct.ReadOnlyAccountDataManager;
+import org.designup.picsou.server.model.SerializableGlobType;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
+import org.globsframework.utils.MapOfMaps;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
+
+import java.io.File;
 
 public class BackupRestoreTest extends LoggedInFunctionalTestCase {
 
@@ -283,6 +289,23 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("26/08/2008", TransactionType.VIREMENT, "COMPANY", "", 1000.00, "Other Salaire")
       .check();
+  }
 
+  public void testRestoreNewerVersion() throws Exception {
+    final String filePath = TestUtils.getFileName(this);
+
+    ReadOnlyAccountDataManager.writeSnapshot(new MapOfMaps<String, Integer, SerializableGlobType>(), new File(filePath), null, 99999);
+
+    WindowInterceptor
+      .init(operations.getRestoreTrigger())
+      .process(FileChooserHandler.init().select(filePath))
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          MessageFileDialogChecker dialog = new MessageFileDialogChecker(window);
+          dialog.checkMessageContains("The backup version is newer than the application version");
+          return dialog.getOkTrigger();
+        }
+      })
+      .run();
   }
 }

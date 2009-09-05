@@ -81,7 +81,7 @@ public class DefaultSessionService implements SessionService {
     output.write(users.size());
     for (Glob user : users) {
       output.writeUtf8String(user.get(User.NAME));
-      output.writeBoolean(user.get(User.HAS_PASSWORD));
+      output.writeBoolean(user.get(User.AUTO_LOG));
     }
   }
 }

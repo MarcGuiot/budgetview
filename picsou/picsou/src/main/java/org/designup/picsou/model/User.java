@@ -33,6 +33,9 @@ public class User {
 
   @DefaultBoolean(false)
   public static BooleanField IS_DEMO_USER;
+  
+  @DefaultBoolean(false)
+  public static BooleanField AUTO_LOGIN;
 
   public static final int ACTIVATION_IN_PROGRESS = 1;
   public static final int ACTIVATION_OK = 2;

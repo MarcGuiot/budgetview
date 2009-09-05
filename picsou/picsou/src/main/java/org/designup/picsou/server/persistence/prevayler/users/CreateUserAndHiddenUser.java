@@ -20,17 +20,18 @@ import java.util.Date;
 
 public class CreateUserAndHiddenUser implements TransactionWithQuery, CustomSerializable {
   private String name;
+  private boolean autoLog;
   private boolean isRegisteredUser;
   private byte[] encryptedPassword;
   private byte[] linkInfo;
   private String encryptedLinkInfo;
-  private static final byte V1 = 1;
-  private static final byte V2 = 2;
+  private static final byte LATEST = 3;
   private static final String TRANSACTION_NAME = "CreateUser";
 
-  public CreateUserAndHiddenUser(String name, boolean isRegisteredUser,
+  public CreateUserAndHiddenUser(String name, boolean autoLog, boolean isRegisteredUser,
                                  byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo) {
     this.name = name;
+    this.autoLog = autoLog;
     this.isRegisteredUser = isRegisteredUser;
     this.encryptedPassword = cryptedPassword;
     this.linkInfo = linkInfo;
@@ -51,6 +52,7 @@ public class CreateUserAndHiddenUser implements TransactionWithQuery, CustomSeri
     Glob user = GlobBuilder.init(User.TYPE)
       .set(User.ENCRYPTED_PASSWORD, encryptedPassword)
       .set(User.NAME, name)
+      .set(User.AUTO_LOG, autoLog)
       .set(User.LINK_INFO, linkInfo)
       .set(User.IS_REGISTERED_USER, isRegisteredUser)
       .get();
@@ -72,11 +74,14 @@ public class CreateUserAndHiddenUser implements TransactionWithQuery, CustomSeri
   public void read(SerializedInput input, Directory directory) {
     byte version = input.readByte();
     switch (version) {
-      case V1:
+      case 1:
         readV1(input);
         break;
-      case V2:
+      case 2:
         readV2(input);
+        break;
+      case 3:
+        readV3(input);
         break;
       default:
         throw new UnexpectedApplicationState("version " + version + " not managed");
@@ -99,9 +104,19 @@ public class CreateUserAndHiddenUser implements TransactionWithQuery, CustomSeri
     isRegisteredUser = input.readBoolean();
   }
 
+  private void readV3(SerializedInput input) {
+    name = input.readUtf8String();
+    autoLog = input.readBoolean();
+    encryptedPassword = input.readBytes();
+    linkInfo = input.readBytes();
+    encryptedLinkInfo = input.readJavaString();
+    isRegisteredUser = input.readBoolean();
+  }
+
   public void write(SerializedOutput output, Directory directory) {
-    output.writeByte(V2);
+    output.writeByte(3);
     output.writeUtf8String(name);
+    output.writeBoolean(autoLog);
     output.writeBytes(encryptedPassword);
     output.writeBytes(linkInfo);
     output.writeJavaString(encryptedLinkInfo);
