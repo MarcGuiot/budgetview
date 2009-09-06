@@ -66,7 +66,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     return null;
   }
 
-  public boolean createUser(String name, char[] password, boolean autoLog) throws UserAlreadyExists {
+  public boolean createUser(String name, char[] password, boolean autoLogin) throws UserAlreadyExists {
     try {
       this.name = name;
       PasswordBasedEncryptor passwordBasedEncryptor = new MD5PasswordBasedEncryptor(salt, password, count);
@@ -76,7 +76,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
       SerializedByteArrayOutput request = new SerializedByteArrayOutput();
       SerializedOutput output = request.getOutput();
       output.writeUtf8String(this.name);
-      output.write(autoLog);
+      output.write(autoLogin);
       output.writeBytes(cryptPassword(password, passwordBasedEncryptor));
 
       byte[] linkInfo = generateLinkInfo();
@@ -159,8 +159,8 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     List<UserInfo> users = new ArrayList<UserInfo>(size);
     for (int i = 0; i < size; i++) {
       String userName = input.readUtf8String();
-      Boolean autoLog = input.readBoolean();
-      users.add(new UserInfo(userName, autoLog));
+      Boolean autoLogin = input.readBoolean();
+      users.add(new UserInfo(userName, autoLogin));
     }
     return users;
   }

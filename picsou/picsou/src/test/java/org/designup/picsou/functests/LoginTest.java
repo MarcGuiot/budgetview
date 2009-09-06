@@ -110,6 +110,11 @@ public class LoginTest extends StartUpFunctionalTestCase {
     login.checkNoErrorDisplayed();
     login.clickEnter();
     login.checkErrorMessage("login.invalid.credentials");
+    
+    login.setCreation()
+      .confirmPassword("titi")
+      .checkNoErrorDisplayed()
+      .loginAndSkipSla();
   }
 
   public void testCannotUseTheSameLoginTwice() throws Exception {
@@ -274,8 +279,8 @@ public class LoginTest extends StartUpFunctionalTestCase {
     messageChecker.checkMessage("Demo account");
   }
 
-  public void testAutolog() throws Exception {
-    login.clickFirstAutologin();
+  public void testAutoLogin() throws Exception {
+    login.clickFirstAutoLogin();
     String path = OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K")
@@ -283,7 +288,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     operationChecker = new OperationChecker(window);
     operationChecker.importOfxFile(path);
     operationChecker.logout();
-    login.clickAutologgin();
+    login.clickAutoLogin();
     operationChecker.logout();
     closeWindow();
     window = getMainWindow();
@@ -293,8 +298,8 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .check();
   }
 
-  public void testAutoLogAndImportInNewUser() throws Exception {
-    login.clickFirstAutologin();
+  public void testAutoLoginAndImportInNewUser() throws Exception {
+    login.clickFirstAutoLogin();
 
     operationChecker = new OperationChecker(window);
     String path = OfxBuilder
@@ -304,7 +309,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
 
     operationChecker.importOfxFile(path);
     String fileName = operationChecker.backup(this);
-    operationChecker.deleteAutologinUser();
+    operationChecker.deleteAutoLoginUser();
     login.logNewUser("Alfred", "Alfred");
     operationChecker.restore(fileName);
     getTransactionView()
@@ -312,26 +317,26 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
     operationChecker.logout();
-    login.clickFirstAutologin();
+    login.clickFirstAutoLogin();
     TimeViewChecker timeViewChecker = new TimeViewChecker(window);
     timeViewChecker.selectAll();
     getTransactionView()
       .initContent()
       .check();
-    operationChecker.deleteAutologinUser();
-    login.clickFirstAutologin();
-    operationChecker.deleteAutologinUser();
+    operationChecker.deleteAutoLoginUser();
+    login.clickFirstAutoLogin();
+    operationChecker.deleteAutoLoginUser();
     login.checkFirstAutoLogin();
   }
 
-  public void testLoginWithPwdAndAutolog() throws Exception {
-    login.clickFirstAutologin();
+  public void testLoginWithPwdAndAutologin() throws Exception {
+    login.clickFirstAutoLogin();
     operationChecker = new OperationChecker(window);
     operationChecker.logout();
     login.logNewUser("Alfred", "Alfred");
     operationChecker.logout();
     openNewLoginWindow();
-    login.clickAutologgin();
+    login.clickAutoLogin();
   }
 
   private void checkDemoMode() {

@@ -39,11 +39,11 @@ public interface ServerAccess {
 
   class UserInfo{
     public final String name;
-    public final boolean autologgin;
+    public final boolean autologin;
 
-    public UserInfo(String name, Boolean autologgin) {
+    public UserInfo(String name, Boolean autologin) {
       this.name = name;
-      this.autologgin = autologgin;
+      this.autologin = autologin;
     }
   }
 
@@ -62,7 +62,7 @@ public interface ServerAccess {
   void disconnect();
 
   static final ServerAccess NULL = new ServerAccess() {
-    public boolean createUser(String name, char[] password, boolean autoLog) throws UserAlreadyExists, IdentificationFailed, PasswordBasedEncryptor.EncryptFail {
+    public boolean createUser(String name, char[] password, boolean autoLogin) throws UserAlreadyExists, IdentificationFailed, PasswordBasedEncryptor.EncryptFail {
       return true;
     }
 

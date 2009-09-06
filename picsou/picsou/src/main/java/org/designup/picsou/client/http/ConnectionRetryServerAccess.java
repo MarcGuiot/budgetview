@@ -20,10 +20,10 @@ public class ConnectionRetryServerAccess extends ServerAccessDecorator {
     super(serverAccess);
   }
 
-  public boolean createUser(String name, char[] password, boolean autoLog) throws UserAlreadyExists, IdentificationFailed {
+  public boolean createUser(String name, char[] password, boolean autoLogin) throws UserAlreadyExists, IdentificationFailed {
     this.name = name;
     this.password = password;
-    return super.createUser(name, password, autoLog);
+    return super.createUser(name, password, autoLogin);
   }
 
   public boolean initConnection(String name, char[] password, boolean privateComputer) throws IdentificationFailed {

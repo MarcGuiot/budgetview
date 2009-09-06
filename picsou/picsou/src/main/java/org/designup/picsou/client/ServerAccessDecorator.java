@@ -22,8 +22,8 @@ public class ServerAccessDecorator implements ServerAccess {
     this.serverAccess = serverAccess;
   }
 
-  public boolean createUser(String name, char[] password, boolean autoLog) throws UserAlreadyExists, IdentificationFailed {
-    return serverAccess.createUser(name, password, autoLog);
+  public boolean createUser(String name, char[] password, boolean autoLogin) throws UserAlreadyExists, IdentificationFailed {
+    return serverAccess.createUser(name, password, autoLogin);
   }
 
   public void deleteUser(String name, char[] password) {

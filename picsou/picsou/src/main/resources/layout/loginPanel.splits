@@ -15,7 +15,7 @@
       <filler fill="vertical" weightY="10"/>
 
       <panel ui="loginPanel" name="loginPanel" opaque="false" anchor="center" fill="none" weightY="20"
-             preferredSize="(350,530)">
+             preferredSize="(350,560)">
 
         <column margin="20" anchor="center" fill="none" marginBottom="20">
 
@@ -36,15 +36,17 @@
                     margin="5" marginBottom="10" opaque="false"
                     fill="none" anchor="east"/>
 
-          <button ref="autologin"/>
+          <column autoHideSource="confirmPassword">
 
-          <row>
-            <label text="$login.confirmation" ref="confirmLabel" styleClass="formLabel" horizontalAlignment="left"/>
-            <component ref="confirmPassword"/>
-          </row>
+            <row>
+              <label text="$login.confirmation" ref="confirmLabel" styleClass="formLabel" horizontalAlignment="left"/>
+              <component ref="confirmPassword"/>
+            </row>
 
-          <textArea styleClass="multiLineLabel" text="$login.password.warning" autoHideSource="confirmPassword"
-                    preferredSize="(200,30)"/>
+            <textArea styleClass="multiLineLabel" text="$login.password.warning" autoHideSource="confirmPassword"
+                      preferredSize="(200,30)"/>
+
+          </column>
 
           <column minimumSize="(200,30)" preferredSize="(200,30)" margin="5">
             <htmlEditorPane ref="message" preferredSize="(200,30)"/>
@@ -53,14 +55,22 @@
           </column>
 
           <row styleClass="buttons">
-            <button ref="userlogin"/>
+            <button ref="userLogin"/>
           </row>
 
           <filler fill="vertical"/>
 
+
+          <row margin="5" fill="horizontal">
+            <filler fill="horizontal"/>
+            <button ref="autoLogin" styleClass="hyperlink"/>
+            <filler fill="horizontal"/>
+          </row>
+
           <row margin="5" fill="horizontal">
             <filler fill="horizontal"/>
             <button action="demoMode" styleClass="hyperlink"/>
+            <filler fill="horizontal"/>
           </row>
 
         </column>

@@ -19,7 +19,7 @@ public class AskPasswordDialog {
   private JPasswordField passwordField;
   private PicsouDialog dialog;
 
-  public AskPasswordDialog(String title, String label, String message, Directory directory, String ...argsForMessage) {
+  public AskPasswordDialog(String title, String label, String message, Directory directory, String... argsForMessage) {
     this.title = title;
     this.label = label;
     this.message = message;
@@ -35,6 +35,7 @@ public class AskPasswordDialog {
     builder.add("message", Gui.createHtmlEditor(Lang.get(message, argsForMessage)));
     final JPasswordField passwordField = builder.add("password", new JPasswordField()).getComponent();
     final PicsouDialog dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+
     final AbstractAction validate = new AbstractAction(Lang.get("ok")) {
       public void actionPerformed(ActionEvent e) {
         dialog.setVisible(false);

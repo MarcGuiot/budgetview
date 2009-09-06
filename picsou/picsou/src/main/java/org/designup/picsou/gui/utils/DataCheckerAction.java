@@ -17,7 +17,7 @@ public class DataCheckerAction extends AbstractAction {
   private GlobRepository repository;
 
   public DataCheckerAction(GlobRepository repository) {
-    super("Check data (see logs)");
+    super("[Check data (see logs)]");
     this.repository = repository;
   }
 

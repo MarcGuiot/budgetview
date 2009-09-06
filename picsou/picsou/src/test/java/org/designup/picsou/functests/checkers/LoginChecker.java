@@ -122,20 +122,20 @@ public class LoginChecker extends GuiChecker {
   }
 
   public void checkFirstAutoLogin() {
-    Button button = window.getButton("autologin");
+    Button button = window.getButton("autoLogin");
     assertThat(button.textEquals("Create auto login user"));
   }
 
-  public void clickFirstAutologin() {
+  public void clickFirstAutoLogin() {
     doLoggin("Create auto login user", true);
   }
 
-  public void clickAutologgin() {
+  public void clickAutoLogin() {
     doLoggin("Use auto login user", false);
   }
 
   private void doLoggin(String message, boolean slaValidation) {
-    Button button = window.getButton("autologin");
+    Button button = window.getButton("autoLogin");
     assertThat(button.textEquals(message));
     if (slaValidation) {
       SlaValidationDialogChecker.init(button.triggerClick()).acceptTerms().validate();

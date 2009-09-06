@@ -48,15 +48,19 @@ public class LoginPanel {
   }
 
   public void initFocus() {
-    if (Strings.isNullOrEmpty(userField.getText())) {
-      userField.requestFocusInWindow();
-    }
-    else if (passwordField.getPassword().length == 0) {
-      passwordField.requestFocusInWindow();
-    }
-    else if (confirmPasswordField.isVisible() && confirmPasswordField.getPassword().length == 0) {
-      confirmPasswordField.requestFocusInWindow();
-    }
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        if (Strings.isNullOrEmpty(userField.getText())) {
+          userField.requestFocusInWindow();
+        }
+        else if (passwordField.getPassword().length == 0) {
+          passwordField.requestFocusInWindow();
+        }
+        else if (confirmPasswordField.isVisible() && confirmPasswordField.getPassword().length == 0) {
+          confirmPasswordField.requestFocusInWindow();
+        }
+      }
+    });
   }
 
   private void initPanel() {
@@ -81,11 +85,11 @@ public class LoginPanel {
     builder.add("confirmLabel", confirmPasswordLabel);
     builder.add("createAccountCheckBox", creationCheckBox);
     builder.add("message", messageLabel);
-    builder.add("autologin", autoLoginButton);
+    builder.add("autoLogin", autoLoginButton);
     builder.add("progressPanel", progressPanel);
     GuiUtils.initHtmlComponent(messageLabel);
     builder.add("demoMode", new DemoModeAction());
-    builder.add("userlogin", loginButton);
+    builder.add("userLogin", loginButton);
     builder.addLoader(new SplitsLoader() {
       public void load(Component component, SplitsNode node) {
         panel = (JPanel)component;
@@ -138,7 +142,7 @@ public class LoginPanel {
     this.users = users;
     autoLoginUser = null;
     for (ServerAccess.UserInfo user : users) {
-      if (user.autologgin) {
+      if (user.autologin) {
         if (autoLoginUser != null) {
           Log.write("Multiple autologgin user " + autoLoginUser + " " + user.name);
         }
@@ -213,6 +217,7 @@ public class LoginPanel {
 
   public void displayErrorText(String message) {
     messageLabel.setText("<html><font color=red>" + message + "</font></html>");
+    setComponentsEnabled(true);
   }
 
   public void displayErrorMessage(String key) {
@@ -220,7 +225,7 @@ public class LoginPanel {
   }
 
   public void displayBadPasswordMessage(String key, String complement) {
-    messageLabel.setText("<html><font color=red>" + Lang.get(key) + (complement == null ? "" : complement) + "</font></html>");
+    displayErrorText(Lang.get(key) + (complement == null ? "" : complement));
   }
 
   public void stopProgressBar() {

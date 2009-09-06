@@ -217,7 +217,7 @@ public class OperationChecker {
     UISpecAssert.waitUntil(window.containsSwingComponent(JPasswordField.class, "password"), 2000);
   }
 
-  public void deleteAutologinUser() {
+  public void deleteAutoLoginUser() {
     MenuItem subMenu = window.getMenuBar().getMenu("File").getSubMenu("Delete");
     ConfirmationDialogChecker confirmationDialogChecker =
       new ConfirmationDialogChecker(WindowInterceptor.getModalDialog(subMenu.triggerClick()));

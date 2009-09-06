@@ -109,7 +109,7 @@ public class MainWindow implements WindowManager {
     boolean autoLogin = false;
     String user = null;
     for (ServerAccess.UserInfo userInfo : localUsers) {
-      if (userInfo.autologgin) {
+      if (userInfo.autologin) {
         autoLogin = true;
         user = userInfo.name;
       }
