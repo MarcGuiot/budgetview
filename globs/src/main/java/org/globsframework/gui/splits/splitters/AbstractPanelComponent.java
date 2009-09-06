@@ -23,7 +23,7 @@ public abstract class AbstractPanelComponent<T extends JPanel> extends DefaultCo
 
   protected void postCreateComponent(T component, SplitsContext context) {
     if (getSubSplitters().length == 1) {
-      ComponentStretch stretch = getSubSplitters()[0].createComponentStretch(context, true);
+      ComponentStretch stretch = getSubSplitters()[0].createComponentStretch(context, true).componentStretch;
       Component subComponent = stretch.getComponent();
       if (subComponent instanceof JPanel) {
         ((JPanel)subComponent).setOpaque(false);

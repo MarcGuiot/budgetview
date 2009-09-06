@@ -3,7 +3,7 @@ package org.globsframework.gui.splits.splitters;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
-import org.globsframework.gui.splits.layout.ComponentStretch;
+import org.globsframework.gui.splits.SplitHandler;
 import org.globsframework.gui.splits.layout.SwingStretches;
 
 import java.awt.*;
@@ -29,13 +29,13 @@ public class DefaultComponent<T extends Component> extends AbstractSplitter {
     return name;
   }
 
-  public ComponentStretch createRawStretch(SplitsContext context) {
-    T component = findOrCreateComponent(context);
-    postCreateComponent(component, context);
-    return SwingStretches.get(component);
+  public SplitComponent createRawStretch(SplitsContext context) {
+    SplitHandler<T> component = findOrCreateComponent(context);
+    postCreateComponent(component.getComponent(), context);
+    return new SplitComponent(SwingStretches.get(component.getComponent()), component);
   }
 
-  protected T findOrCreateComponent(SplitsContext context) {
+  protected SplitHandler<T> findOrCreateComponent(SplitsContext context) {
     String ref = properties.getString("ref");
     String componentName = properties.getString("name");
     return context.findOrCreateComponent(ref, componentName, componentClass, getName());

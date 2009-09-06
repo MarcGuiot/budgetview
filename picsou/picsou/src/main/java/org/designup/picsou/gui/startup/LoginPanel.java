@@ -7,6 +7,7 @@ import org.designup.picsou.utils.Lang;
 import org.designup.picsou.client.ServerAccess;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
+import org.globsframework.gui.splits.SplitHandler;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.utils.Strings;
@@ -86,7 +87,7 @@ public class LoginPanel {
     builder.add("demoMode", new DemoModeAction());
     builder.add("userlogin", loginButton);
     builder.addLoader(new SplitsLoader() {
-      public void load(Component component) {
+      public void load(Component component, SplitHandler splitHandler) {
         panel = (JPanel)component;
       }
     })

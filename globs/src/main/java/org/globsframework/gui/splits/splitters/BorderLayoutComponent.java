@@ -3,6 +3,7 @@ package org.globsframework.gui.splits.splitters;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
+import org.globsframework.gui.splits.impl.DefaultSplitHandler;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.ComponentStretch;
 import org.globsframework.gui.splits.layout.Fill;
@@ -25,7 +26,7 @@ public class BorderLayoutComponent extends AbstractSplitter {
     super(properties, subSplitters);
   }
 
-  public ComponentStretch createRawStretch(SplitsContext context) {
+  public SplitComponent createRawStretch(SplitsContext context) {
     JPanel panel = new JPanel();
     panel.setOpaque(false);
     panel.setLayout(new BorderLayout());
@@ -38,12 +39,13 @@ public class BorderLayoutComponent extends AbstractSplitter {
       if ((pos == null) || (!BORDER_POS_VALUES.contains(pos))) {
         throw new SplitsException(getBorderPosErrorMessage(splitter));
       }
-      ComponentStretch stretch = splitter.createComponentStretch(context, false);
-      weightX = DoubleOperation.SUM.get(stretch.getWeightX(), weightX);
-      weightY = DoubleOperation.SUM.get(stretch.getWeightY(), weightY);
-      panel.add(stretch.getComponent(), SplitsUtils.capitalize(pos));
+      SplitComponent splitComponent = splitter.createComponentStretch(context, false);
+      weightX = DoubleOperation.SUM.get(splitComponent.componentStretch.getWeightX(), weightX);
+      weightY = DoubleOperation.SUM.get(splitComponent.componentStretch.getWeightY(), weightY);
+      panel.add(splitComponent.componentStretch.getComponent(), SplitsUtils.capitalize(pos));
     }
-    return new ComponentStretch(panel, Fill.BOTH, Anchor.CENTER, weightX, weightY);
+    return new SplitComponent(new ComponentStretch(panel, Fill.BOTH, Anchor.CENTER, weightX, weightY),
+                                 new DefaultSplitHandler(panel, context));
   }
 
   private String getBorderPosErrorMessage(Splitter splitter) {

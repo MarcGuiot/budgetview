@@ -1,8 +1,6 @@
 package org.globsframework.gui.splits.xml;
 
-import org.globsframework.gui.splits.SplitProperties;
-import org.globsframework.gui.splits.SplitsContext;
-import org.globsframework.gui.splits.SplitterFactory;
+import org.globsframework.gui.splits.*;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.impl.DefaultSplitProperties;
 import org.globsframework.gui.splits.impl.XmlComponentNode;
@@ -34,7 +32,7 @@ public class SplitsParser {
     this.factory = factory;
   }
 
-  public Component parse(Reader reader) {
+  public Splitter.SplitComponent parse(Reader reader) {
 
     SplitsBootstrapXmlNode bootstrap = new SplitsBootstrapXmlNode();
     try {
@@ -77,7 +75,7 @@ public class SplitsParser {
       return splitsNode;
     }
 
-    public Component getRootComponent() {
+    public Splitter.SplitComponent getRootComponent() {
       XmlComponentNode root = splitsNode.root;
       return root != null ? root.getComponent() : null;
     }

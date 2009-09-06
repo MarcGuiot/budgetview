@@ -134,8 +134,8 @@ public class BudgetAreaSeriesView extends View {
                                                       repository, directory);
 
     builder.add("budgetAreaTitle", new JLabel(budgetArea.getLabel()));
-    JLabel amountLabel = builder.add("totalObservedAmount", new JLabel());
-    JLabel plannedLabel = builder.add("totalPlannedAmount", new JLabel());
+    JLabel amountLabel = builder.add("totalObservedAmount", new JLabel()).getComponent();
+    JLabel plannedLabel = builder.add("totalPlannedAmount", new JLabel()).getComponent();
 
     Gauge gauge = BudgetAreaGaugeFactory.createGauge(budgetArea);
     builder.add("totalGauge", gauge);

@@ -245,8 +245,8 @@ public class SplitsLayoutTest extends SplitsTestCase {
   }
 
   public void testCanUseReferencedComponentsForColumnsAndRows() throws Exception {
-    JPanel panel1 = builder.add("panel1", new JPanel());
-    JPanel panel2 = builder.add("panel2", new JPanel());
+    JPanel panel1 = builder.add("panel1", new JPanel()).getComponent();
+    JPanel panel2 = builder.add("panel2", new JPanel()).getComponent();
     JFrame frame = parse("<frame>" +
                          "  <column ref='panel1' background='#00FF00'>" +
                          "    <row ref='panel2' background='#0000FF'>" +

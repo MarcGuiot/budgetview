@@ -4,6 +4,7 @@ import org.designup.picsou.importer.utils.DateFormatAnalyzer;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
+import org.globsframework.gui.splits.SplitHandler;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -37,7 +38,7 @@ public class DateFormatSelectionPanel {
                                     repository, directory);
     builder.add("dateFormatCombo", combo);
     builder.addLoader(new SplitsLoader() {
-      public void load(Component component) {
+      public void load(Component component, SplitHandler splitHandler) {
         panel = (JPanel)component;
       }
     });

@@ -15,8 +15,8 @@ public class FrameComponent extends DefaultComponent<JFrame> {
   }
 
   protected void postCreateComponent(JFrame component, SplitsContext context) {
-    ComponentStretch panelStretch = GridBagSequence.createPanel(getSubSplitters(), GridBagSequence.Direction.VERTICAL, context, null);
-    Component panel = panelStretch.getComponent();
+    SplitComponent panelStretch = GridBagSequence.createPanel(getSubSplitters(), GridBagSequence.Direction.VERTICAL, context, null);
+    Component panel = panelStretch.componentStretch.getComponent();
     component.setContentPane((Container)panel);
   }
 

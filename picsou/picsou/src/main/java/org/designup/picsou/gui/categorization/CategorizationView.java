@@ -200,7 +200,7 @@ public class CategorizationView extends View implements TableView, Filterable {
   }
 
   private void addFilteringModeCombo(GlobsPanelBuilder builder) {
-    filteringModeCombo = builder.add("transactionFilterCombo", new JComboBox(TransactionFilteringMode.values()));
+    filteringModeCombo = builder.add("transactionFilterCombo", new JComboBox(TransactionFilteringMode.values())).getComponent();
     filteringModeCombo.addActionListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         TransactionFilteringMode mode = (TransactionFilteringMode)filteringModeCombo.getSelectedItem();

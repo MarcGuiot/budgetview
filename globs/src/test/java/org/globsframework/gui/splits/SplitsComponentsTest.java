@@ -233,8 +233,8 @@ public class SplitsComponentsTest extends SplitsTestCase {
   }
 
   public void testLabelFor() throws Exception {
-    JLabel label = builder.add("label", new JLabel());
-    JTextField textField = builder.add("editor", new JTextField());
+    JLabel label = builder.add("label", new JLabel()).getComponent();
+    JTextField textField = builder.add("editor", new JTextField()).getComponent();
     JPanel jPanel = parse("<row>" +
                           "  <label ref='label' text='Title' labelFor='editor'/>" +
                           "  <textField ref='editor'/>" +

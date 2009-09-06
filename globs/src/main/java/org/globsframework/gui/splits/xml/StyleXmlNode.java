@@ -13,14 +13,15 @@ import org.xml.sax.Attributes;
 public class StyleXmlNode extends DefaultXmlNode {
 
   public StyleXmlNode(SplitsContext context, Attributes xmlAttrs) {
-    String selector = XmlUtils.getAttrValue("selector", xmlAttrs);
+    String id = XmlUtils.getAttrValue("id", xmlAttrs, null);
+    String selector = XmlUtils.getAttrValue("selector", xmlAttrs, null);
     if (Strings.isNullOrEmpty(selector)) {
       throw new InvalidFormat("A style selector cannot be empty");
     }
 
-    SplitProperties properties = SplitsParser.createProperties(xmlAttrs, "selector");
+    SplitProperties properties = SplitsParser.createProperties(xmlAttrs, "selector", "id");
 
     StyleContext styleContext = context.getStyles();
-    styleContext.createStyle(Selector.parseSequence(selector), properties);
+    styleContext.createStyle(id, Selector.parseSequence(selector), properties);
   }
 }

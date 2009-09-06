@@ -56,7 +56,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
     budgetAreaCard = builder.addCardHandler("budgetAreaCard");
     seriesCard = builder.addCardHandler("seriesCard");
 
-    title = builder.add("budgetAreaSelectorTitle", new JLabel());
+    title = builder.add("budgetAreaSelectorTitle", new JLabel()).getComponent();
 
     multiBudgetAreaToggle = new JToggleButton(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
@@ -64,7 +64,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
       }
     });
 
-    uncategorizedMessage = builder.add("uncategorizedMessage", new JEditorPane());
+    uncategorizedMessage = builder.add("uncategorizedMessage", new JEditorPane()).getComponent();
 
     builder.add("uncategorizeSelected", new UncategorizeTransactionsAction());
 

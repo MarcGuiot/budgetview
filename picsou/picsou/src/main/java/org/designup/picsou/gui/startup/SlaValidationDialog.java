@@ -28,10 +28,10 @@ public class SlaValidationDialog {
     SplitsBuilder builder =
       SplitsBuilder.init(directory).setSource(getClass(), "/layout/slaValidationDialog.splits");
 
-    errorMessage = builder.add("errorMessage", new JLabel());
+    errorMessage = builder.add("errorMessage", new JLabel()).getComponent();
     errorMessage.setVisible(false);
 
-    checkBox = builder.add("checkBox", new JCheckBox());
+    checkBox = builder.add("checkBox", new JCheckBox()).getComponent();
     checkBox.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         errorMessage.setVisible(false);

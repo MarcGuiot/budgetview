@@ -42,14 +42,14 @@ public class NavigationView extends View {
 
         Action action = new GotoCardAction(card);
 
-        JButton iconButton = cellBuilder.add("icon", new JButton(action));
+        JButton iconButton = cellBuilder.add("icon", new JButton(action)).getComponent();
         Gui.configureIconButton(iconButton, card.getName(), NavigationIcons.DIMENSION);
         iconButton.setIcon(NavigationIcons.getLarge(images, card));
         iconButton.setRolloverIcon(NavigationIcons.getLargeWithRollover(images, card));
 
         cellBuilder.add("gotoCardAction", action);
 
-        JTextArea textArea = cellBuilder.add("text", new JTextArea());
+        JTextArea textArea = cellBuilder.add("text", new JTextArea()).getComponent();
         textArea.setText(card.getDescription());
       }
     });

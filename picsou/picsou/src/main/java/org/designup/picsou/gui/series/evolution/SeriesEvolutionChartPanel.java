@@ -169,9 +169,9 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     builder.add("balanceChart", balanceChart);
     builder.add("seriesChart", seriesChart);
 
-    histoChartLabel = builder.add("histoChartLabel", new JLabel());
-    balanceChartLabel = builder.add("balanceChartLabel", new JLabel());
-    seriesChartLabel = builder.add("seriesChartLabel", new JLabel());
+    histoChartLabel = builder.add("histoChartLabel", new JLabel()).getComponent();
+    balanceChartLabel = builder.add("balanceChartLabel", new JLabel()).getComponent();
+    seriesChartLabel = builder.add("seriesChartLabel", new JLabel()).getComponent();
   }
 
   public void monthSelected(Integer monthId) {

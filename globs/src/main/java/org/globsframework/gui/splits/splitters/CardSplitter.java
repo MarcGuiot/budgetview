@@ -34,10 +34,10 @@ public class CardSplitter extends AbstractSplitter {
     return new String[]{"name"};
   }
 
-  protected ComponentStretch createRawStretch(SplitsContext context) {
+  protected SplitComponent createRawStretch(SplitsContext context) {
     Splitter splitter = getSubSplitters()[0];
-    ComponentStretch stretch = splitter.createComponentStretch(context, true);
-    Component component = stretch.getComponent();
+    SplitComponent stretch = splitter.createComponentStretch(context, true);
+    Component component = stretch.componentStretch.getComponent();
     if (component.getName() == null) {
       component.setName(cardName);
     }

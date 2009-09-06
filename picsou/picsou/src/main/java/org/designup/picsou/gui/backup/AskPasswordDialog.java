@@ -33,7 +33,7 @@ public class AskPasswordDialog {
     builder.add("title", new JLabel(Lang.get(title)));
     builder.add("passwordLabel", new JLabel(Lang.get(label)));
     builder.add("message", Gui.createHtmlEditor(Lang.get(message, argsForMessage)));
-    final JPasswordField passwordField = builder.add("password", new JPasswordField());
+    final JPasswordField passwordField = builder.add("password", new JPasswordField()).getComponent();
     final PicsouDialog dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
     final AbstractAction validate = new AbstractAction(Lang.get("ok")) {
       public void actionPerformed(ActionEvent e) {

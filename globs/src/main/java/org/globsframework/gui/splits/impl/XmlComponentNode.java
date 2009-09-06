@@ -1,9 +1,6 @@
 package org.globsframework.gui.splits.impl;
 
-import org.globsframework.gui.splits.SplitProperties;
-import org.globsframework.gui.splits.SplitsContext;
-import org.globsframework.gui.splits.Splitter;
-import org.globsframework.gui.splits.SplitterFactory;
+import org.globsframework.gui.splits.*;
 import org.globsframework.gui.splits.styles.SplitsPath;
 import org.globsframework.gui.splits.xml.SplitsParser;
 import org.saxstack.parser.DefaultXmlNode;
@@ -68,7 +65,7 @@ public class XmlComponentNode extends DefaultXmlNode {
     }
   }
 
-  public Component getComponent() {
-    return splitter.createComponentStretch(context, true).getComponent();
+  public Splitter.SplitComponent getComponent() {
+    return splitter.createComponentStretch(context, true);
   }
 }

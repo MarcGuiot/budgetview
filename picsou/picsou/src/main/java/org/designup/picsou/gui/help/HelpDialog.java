@@ -35,8 +35,8 @@ public class HelpDialog {
   private void createDialog(Window owner, GlobRepository repository, Directory directory) {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/helpDialog.splits",
                                                       repository, directory);
-    title = builder.add("title", new JLabel());
-    editor = builder.add("editor", new JEditorPane());
+    title = builder.add("title", new JLabel()).getComponent();
+    editor = builder.add("editor", new JEditorPane()).getComponent();
 
     editor.addHyperlinkListener(new HyperlinkHandler(directory, owner));
 

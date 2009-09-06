@@ -7,6 +7,7 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
+import org.globsframework.gui.splits.SplitHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -66,7 +67,7 @@ public class ExportDialog {
                       });
 
     builder.addLoader(new SplitsLoader() {
-      public void load(Component component) {
+      public void load(Component component, SplitHandler splitHandler) {
         radioGroup.getElements().nextElement().setSelected(true);
       }
     });

@@ -51,14 +51,14 @@ public class AccountPositionEditionPanel {
       .setValidationAction(validateAction)
       .setNotifyOnKeyPressed(true);
 
-    initialMessage = builder.add("initialMessage", new JTextArea());
+    initialMessage = builder.add("initialMessage", new JTextArea()).getComponent();
 
     accountStringifier = new AccountStringifier();
-    accountNameField = builder.add("accountName", new JLabel());
+    accountNameField = builder.add("accountName", new JLabel()).getComponent();
 
-    transactionDateField = builder.add("dateInfo", new JLabel());
-    transactionLabelField = builder.add("labelInfo", new JLabel());
-    transactionAmountField = builder.add("amountInfo", new JLabel());
+    transactionDateField = builder.add("dateInfo", new JLabel()).getComponent();
+    transactionLabelField = builder.add("labelInfo", new JLabel()).getComponent();
+    transactionAmountField = builder.add("amountInfo", new JLabel()).getComponent();
 
     panel = builder.load();
   }

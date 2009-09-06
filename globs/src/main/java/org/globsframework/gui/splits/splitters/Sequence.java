@@ -3,6 +3,8 @@ package org.globsframework.gui.splits.splitters;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
+import org.globsframework.gui.splits.SplitHandler;
+import org.globsframework.gui.splits.impl.DefaultSplitHandler;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.ComponentStretch;
@@ -28,13 +30,13 @@ public abstract class Sequence extends AbstractSplitter {
 
   protected abstract SequenceBuilder getSequenceBuilder();
 
-  public ComponentStretch createRawStretch(SplitsContext context) {
+  public SplitComponent createRawStretch(SplitsContext context) {
     return createPanel(getSequenceBuilder(), getSubSplitters(), direction, context, properties.get("ref"));
   }
 
-  protected static ComponentStretch createPanel(SequenceBuilder builder, Splitter[] subSplitters, Direction direction, SplitsContext context, String ref) {
-    JPanel panel = getPanel(ref, context);
-
+  protected static SplitComponent createPanel(SequenceBuilder builder, Splitter[] subSplitters, Direction direction, SplitsContext context, String ref) {
+    SplitHandler splitHandler = getPanel(ref, context);
+    JPanel panel = (JPanel)splitHandler.getComponent();
     builder.init(panel, direction);
 
     double weightX = 0.0;
@@ -42,26 +44,28 @@ public abstract class Sequence extends AbstractSplitter {
 
     int position = 0;
     for (Splitter splitter : subSplitters) {
-      ComponentStretch stretch = splitter.createComponentStretch(context, true);
+      SplitComponent splitComponent = splitter.createComponentStretch(context, true);
+      ComponentStretch stretch = splitComponent.componentStretch;
       builder.add(stretch, direction, position++);
       weightX = direction.weightXOperation.get(weightX, stretch.getWeightX());
       weightY = direction.weightYOperation.get(weightY, stretch.getWeightY());
     }
-    return new ComponentStretch(panel, Fill.BOTH, Anchor.CENTER, weightX, weightY);
+    return new SplitComponent(new ComponentStretch(panel, Fill.BOTH, Anchor.CENTER, weightX, weightY),
+                              splitHandler);
   }
 
-  private static JPanel getPanel(String ref, SplitsContext context) {
+  private static SplitHandler getPanel(String ref, SplitsContext context) {
     if (ref == null) {
-      return new JPanel();
+      return new DefaultSplitHandler(new JPanel(), context);
     }
-    Component component = context.findComponent(ref);
+    SplitHandler component = context.findComponent(ref);
     if (component == null) {
       throw new SplitsException("Referenced component '" + ref + "' not found");
     }
-    if (!(component instanceof JPanel)) {
+    if (!(component.getComponent() instanceof JPanel)) {
       throw new SplitsException("Referenced component '" + ref + "' must be a JPanel");
     }
-    return (JPanel)component;
+    return component;
   }
 
   protected String[] getExcludedParameters() {
