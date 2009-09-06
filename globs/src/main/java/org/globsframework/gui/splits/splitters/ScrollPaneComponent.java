@@ -3,13 +3,13 @@ package org.globsframework.gui.splits.splitters;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
-import org.globsframework.gui.splits.SplitHandler;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorUpdater;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.color.utils.BackgroundColorUpdater;
 import org.globsframework.gui.splits.exceptions.SplitsException;
-import org.globsframework.gui.splits.layout.ComponentStretch;
+import org.globsframework.gui.splits.layout.ComponentConstraints;
 import org.globsframework.gui.splits.layout.SingleComponentLayout;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -27,23 +27,23 @@ public class ScrollPaneComponent extends AbstractSplitter {
   }
 
   protected SplitComponent createRawStretch(SplitsContext context) {
-    ComponentStretch subStretch = getSubSplitters()[0].createComponentStretch(context, true).componentStretch;
-    SplitHandler<JScrollPane> splitHandler = findOrCreateComponent(context);
-    JScrollPane scrollPane = splitHandler.getComponent();
+    ComponentConstraints subConstraints = getSubSplitters()[0].createComponentStretch(context, true).componentConstraints;
+    SplitsNode<JScrollPane> splitsNode = findOrCreateComponent(context);
+    JScrollPane scrollPane = splitsNode.getComponent();
     boolean forceVerticalScroll = Boolean.TRUE.equals(properties.getBoolean("forceVerticalScroll"));
     if (forceVerticalScroll) {
-      VerticalScrollPanel panel = new VerticalScrollPanel(subStretch.getComponent());
+      VerticalScrollPanel panel = new VerticalScrollPanel(subConstraints.getComponent());
       scrollPane.setViewportView(panel);
     }
     else {
-      scrollPane.setViewportView(subStretch.getComponent());
+      scrollPane.setViewportView(subConstraints.getComponent());
     }
 
-    ComponentStretch stretch = new ComponentStretch(splitHandler.getComponent(),
-                                                    subStretch.getFill(),
-                                                    subStretch.getAnchor(),
-                                                    subStretch.getWeightX(),
-                                                    subStretch.getWeightY());
+    ComponentConstraints constraints = new ComponentConstraints(splitsNode.getComponent(),
+                                                    subConstraints.getFill(),
+                                                    subConstraints.getAnchor(),
+                                                    subConstraints.getWeightX(),
+                                                    subConstraints.getWeightY());
 
     String bg = properties.getString("viewportBackground");
     if (Strings.isNotEmpty(bg)) {
@@ -90,10 +90,10 @@ public class ScrollPaneComponent extends AbstractSplitter {
       scrollPane.setVerticalScrollBarPolicy(getVerticalPolicy(verticalPolicy));
     }
 
-    return new SplitComponent(stretch, splitHandler);
+    return new SplitComponent(constraints, splitsNode);
   }
 
-  protected SplitHandler<JScrollPane> findOrCreateComponent(SplitsContext context) {
+  protected SplitsNode<JScrollPane> findOrCreateComponent(SplitsContext context) {
     String ref = properties.getString("ref");
     String componentName = properties.getString("name");
     return context.findOrCreateComponent(ref, componentName, JScrollPane.class, getName());

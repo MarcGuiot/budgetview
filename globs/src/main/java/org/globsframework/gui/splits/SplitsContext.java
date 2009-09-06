@@ -3,7 +3,6 @@ package org.globsframework.gui.splits;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.repeat.RepeatHandler;
 import org.globsframework.gui.splits.styles.StyleContext;
-import org.globsframework.gui.splits.impl.DefaultSplitHandler;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -12,11 +11,11 @@ import java.awt.*;
 
 public interface SplitsContext {
 
-  void addComponent(String id, SplitHandler<Component> component);
+  void addComponent(String id, SplitsNode<Component> component);
 
-  SplitHandler findComponent(String id);
+  SplitsNode findComponent(String id);
 
-  <T extends Component> SplitHandler<T> findOrCreateComponent(String ref, String name, Class<T> componentClass, String splitterName);
+  <T extends Component> SplitsNode<T> findOrCreateComponent(String ref, String name, Class<T> componentClass, String splitterName);
 
   RepeatHandler getRepeat(String name);
 
@@ -32,7 +31,7 @@ public interface SplitsContext {
 
   Class getReferenceClass();
 
-  void addOrReplaceComponent(String id, SplitHandler<Component> component);
+  void addOrReplaceComponent(String id, SplitsNode<Component> component);
 
   void addAutoHide(Component targetComponent, String sourceComponentName);
 

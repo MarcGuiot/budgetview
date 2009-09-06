@@ -4,9 +4,9 @@ import com.jidesoft.swing.JideSplitPane;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
-import org.globsframework.gui.splits.SplitHandler;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.layout.Anchor;
-import org.globsframework.gui.splits.layout.ComponentStretch;
+import org.globsframework.gui.splits.layout.ComponentConstraints;
 import org.globsframework.gui.splits.layout.Fill;
 
 public class MovableSplit extends DefaultComponent<JideSplitPane> {
@@ -35,8 +35,8 @@ public class MovableSplit extends DefaultComponent<JideSplitPane> {
   }
 
   public SplitComponent createRawStretch(SplitsContext context) {
-    SplitHandler<JideSplitPane> splitHandler = findOrCreateComponent(context);
-    JideSplitPane splitPane = splitHandler.getComponent();
+    SplitsNode<JideSplitPane> splitsNode = findOrCreateComponent(context);
+    JideSplitPane splitPane = splitsNode.getComponent();
     splitPane.setOrientation(direction.value);
     splitPane.setBorder(null);
 
@@ -46,16 +46,16 @@ public class MovableSplit extends DefaultComponent<JideSplitPane> {
     double[] weights = new double[subSplitters.length];
     int index = 0;
     for (Splitter splitter : subSplitters) {
-      ComponentStretch stretch = splitter.createComponentStretch(context, true).componentStretch;
-      splitPane.addPane(stretch.getComponent());
-      totalWeightX += stretch.getWeightX();
-      totalWeightY += stretch.getWeightY();
+      ComponentConstraints constraints = splitter.createComponentStretch(context, true).componentConstraints;
+      splitPane.addPane(constraints.getComponent());
+      totalWeightX += constraints.getWeightX();
+      totalWeightY += constraints.getWeightY();
       switch (direction) {
         case HORIZONTAL:
-          weights[index++] = stretch.getWeightX();
+          weights[index++] = constraints.getWeightX();
           break;
         case VERTICAL:
-          weights[index++] = stretch.getWeightY();
+          weights[index++] = constraints.getWeightY();
           break;
       }
     }
@@ -80,8 +80,8 @@ public class MovableSplit extends DefaultComponent<JideSplitPane> {
     splitPane.setProportions(proportions);
 
     setDividerProperties(splitPane);
-    return new SplitComponent(new ComponentStretch(splitPane, Fill.BOTH, Anchor.CENTER, totalWeightX, totalWeightY),
-                              splitHandler);
+    return new SplitComponent(new ComponentConstraints(splitPane, Fill.BOTH, Anchor.CENTER, totalWeightX, totalWeightY),
+                              splitsNode);
   }
 
   private void setDividerProperties(JideSplitPane splitPane) {

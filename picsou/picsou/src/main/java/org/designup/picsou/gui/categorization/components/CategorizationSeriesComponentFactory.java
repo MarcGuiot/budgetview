@@ -9,7 +9,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
-import org.globsframework.gui.splits.SplitHandler;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
@@ -39,7 +39,7 @@ public class CategorizationSeriesComponentFactory implements RepeatComponentFact
   protected Directory directory;
   protected Window parent;
   protected SelectionService selectionService;
-  private Map<Key, SplitHandler<JRadioButton>> seriesToComponent = new HashMap<Key, SplitHandler<JRadioButton>>();
+  private Map<Key, SplitsNode<JRadioButton>> seriesToComponent = new HashMap<Key, SplitsNode<JRadioButton>>();
 
   protected GlobList currentTransactions = GlobList.EMPTY;
 
@@ -104,8 +104,8 @@ public class CategorizationSeriesComponentFactory implements RepeatComponentFact
     };
     selectionService.addListener(listener, Transaction.TYPE);
 
-    final SplitHandler<JRadioButton> splitHandler = cellBuilder.add("seriesToggle", selector);
-    seriesToComponent.put(series.getKey(), splitHandler);
+    final SplitsNode<JRadioButton> splitsNode = cellBuilder.add("seriesToggle", selector);
+    seriesToComponent.put(series.getKey(), splitsNode);
     JButton editSeriesButton = new JButton(new EditSeriesAction(seriesKey));
     editSeriesButton.setName("editSeries:" + seriesName);
     cellBuilder.add("editSeries", editSeriesButton);
@@ -115,8 +115,8 @@ public class CategorizationSeriesComponentFactory implements RepeatComponentFact
         repository.removeChangeListener(seriesUpdateListener);
         selectionService.removeListener(listener);
         buttonGroup.remove(selector);
-        SplitHandler<JRadioButton> radioButtonSplitHandler = seriesToComponent.get(series.getKey());
-        if (radioButtonSplitHandler == splitHandler){
+        SplitsNode<JRadioButton> radioButtonSplitsNode = seriesToComponent.get(series.getKey());
+        if (radioButtonSplitsNode == splitsNode){
           seriesToComponent.remove(seriesKey);
         }
       }

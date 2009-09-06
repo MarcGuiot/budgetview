@@ -1,7 +1,7 @@
 package org.globsframework.gui.splits;
 
 
-import org.globsframework.gui.splits.layout.ComponentStretch;
+import org.globsframework.gui.splits.layout.ComponentConstraints;
 
 import java.awt.*;
 
@@ -15,12 +15,12 @@ public interface Splitter {
   SplitProperties getProperties();
 
   static class SplitComponent {
-    final public ComponentStretch componentStretch;
-    final public SplitHandler handler;
+    final public ComponentConstraints componentConstraints;
+    final public SplitsNode node;
 
-    public SplitComponent(ComponentStretch componentStretch, SplitHandler handler) {
-      this.componentStretch = componentStretch;
-      this.handler = handler;
+    public SplitComponent(ComponentConstraints componentConstraints, SplitsNode node) {
+      this.componentConstraints = componentConstraints;
+      this.node = node;
     }
   }
 }

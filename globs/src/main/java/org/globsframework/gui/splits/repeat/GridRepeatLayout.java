@@ -1,7 +1,7 @@
 package org.globsframework.gui.splits.repeat;
 
 import org.globsframework.gui.splits.Splitter;
-import org.globsframework.gui.splits.layout.ComponentStretch;
+import org.globsframework.gui.splits.layout.ComponentConstraints;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 
 import javax.swing.*;
@@ -11,7 +11,7 @@ import java.util.List;
 public class GridRepeatLayout implements RepeatLayout {
 
   private Direction direction;
-  private List<ComponentStretch[]> lineStretches = new ArrayList<ComponentStretch[]>();
+  private List<ComponentConstraints[]> lineConstraints = new ArrayList<ComponentConstraints[]>();
   private GridBagBuilder builder;
   private Integer gridWrapLimit;
 
@@ -32,24 +32,24 @@ public class GridRepeatLayout implements RepeatLayout {
     builder = new GridBagBuilder(panel);
   }
 
-  public void set(JPanel panel, List<ComponentStretch[]> lineStretches) {
-    this.lineStretches = lineStretches;
+  public void set(JPanel panel, List<ComponentConstraints[]> lineConstraints) {
+    this.lineConstraints = lineConstraints;
     rebuild(panel);
   }
 
-  public void insert(JPanel panel, ComponentStretch[] stretches, int index) {
-    lineStretches.add(index, stretches);
+  public void insert(JPanel panel, ComponentConstraints[] constraints, int index) {
+    lineConstraints.add(index, constraints);
     rebuild(panel);
   }
 
   public void remove(JPanel panel, int index) {
-    lineStretches.remove(index);
+    lineConstraints.remove(index);
     rebuild(panel);
   }
 
   public void move(JPanel panel, int previousIndex, int newIndex) {
-    ComponentStretch[] stretches = lineStretches.remove(previousIndex);
-    lineStretches.add(newIndex, stretches);
+    ComponentConstraints[] constraints = lineConstraints.remove(previousIndex);
+    lineConstraints.add(newIndex, constraints);
     rebuild(panel);
   }
 
@@ -61,15 +61,15 @@ public class GridRepeatLayout implements RepeatLayout {
     panel.removeAll();
     int offset = 0;
     int group = 0;
-    for (ComponentStretch[] stretches : this.lineStretches) {
+    for (ComponentConstraints[] allConstraints : this.lineConstraints) {
       int item = 0;
-      for (ComponentStretch stretch : stretches) {
+      for (ComponentConstraints constraints : allConstraints) {
         switch (direction) {
           case HORIZONTAL:
-            builder.add(stretch, group, item + offset, 1, 1);
+            builder.add(constraints, group, item + offset, 1, 1);
             break;
           case VERTICAL:
-            builder.add(stretch, item + offset, group, 1, 1);
+            builder.add(constraints, item + offset, group, 1, 1);
             break;
         }
         item++;
@@ -77,7 +77,7 @@ public class GridRepeatLayout implements RepeatLayout {
       group++;
       if ((gridWrapLimit != null) && (group >= gridWrapLimit)) {
         group = 0;
-        offset += stretches.length;
+        offset += allConstraints.length;
       }
     }
     panel.validate();

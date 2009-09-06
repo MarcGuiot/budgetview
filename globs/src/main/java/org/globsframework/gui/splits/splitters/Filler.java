@@ -3,10 +3,10 @@ package org.globsframework.gui.splits.splitters;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
-import org.globsframework.gui.splits.impl.DefaultSplitHandler;
+import org.globsframework.gui.splits.impl.DefaultSplitsNode;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.Anchor;
-import org.globsframework.gui.splits.layout.ComponentStretch;
+import org.globsframework.gui.splits.layout.ComponentConstraints;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.SwingStretches;
 
@@ -66,8 +66,8 @@ public class Filler extends AbstractSplitter {
         throw new SplitsException("Unknown fill type: " + fill);
     }
 
-    return new SplitComponent(new ComponentStretch(component, fill, Anchor.CENTER, weightx, weighty),
-                                 new DefaultSplitHandler(component, context));
+    return new SplitComponent(new ComponentConstraints(component, fill, Anchor.CENTER, weightx, weighty),
+                                 new DefaultSplitsNode(component, context));
   }
 
   public String getName() {

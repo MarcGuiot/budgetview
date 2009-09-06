@@ -1,24 +1,24 @@
 package org.designup.picsou.gui.startup;
 
 import com.jidesoft.swing.InfiniteProgressPanel;
+import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.components.CustomFocusTraversalPolicy;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.client.ServerAccess;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
-import org.globsframework.gui.splits.SplitHandler;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.AbstractDocumentListener;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.Log;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.*;
+import java.util.Arrays;
 
 public class LoginPanel {
   private JTextField userField = new JTextField(15);
@@ -87,7 +87,7 @@ public class LoginPanel {
     builder.add("demoMode", new DemoModeAction());
     builder.add("userlogin", loginButton);
     builder.addLoader(new SplitsLoader() {
-      public void load(Component component, SplitHandler splitHandler) {
+      public void load(Component component, SplitsNode node) {
         panel = (JPanel)component;
       }
     })
@@ -128,7 +128,7 @@ public class LoginPanel {
     autoLoginUser = null;
   }
 
-  private void autoLogin(){
+  private void autoLogin() {
     boolean createUser = autoLoginUser == null;
     logUser("autologUser", "autologUser".toCharArray(), createUser, true);
   }
@@ -138,16 +138,17 @@ public class LoginPanel {
     this.users = users;
     autoLoginUser = null;
     for (ServerAccess.UserInfo user : users) {
-      if (user.autologgin){
-        if (autoLoginUser != null){
-          Log.write("Multiple autologgin user " + autoLoginUser +  " " + user.name);
+      if (user.autologgin) {
+        if (autoLoginUser != null) {
+          Log.write("Multiple autologgin user " + autoLoginUser + " " + user.name);
         }
         autoLoginUser = user.name;
       }
     }
     if (autoLoginUser != null) {
       autoLoginButton.getAction().putValue(Action.NAME, Lang.get("login.auto.login"));
-    }else {
+    }
+    else {
       autoLoginButton.getAction().putValue(Action.NAME, Lang.get("login.auto.create.login"));
     }
     userField.setText(null);

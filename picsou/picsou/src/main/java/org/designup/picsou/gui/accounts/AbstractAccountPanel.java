@@ -8,7 +8,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsLoader;
-import org.globsframework.gui.splits.SplitHandler;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
@@ -84,7 +84,7 @@ public class AbstractAccountPanel<T extends GlobRepository>  {
     positionEditor = builder.addEditor("position", Account.POSITION).setNotifyOnKeyPressed(true).getComponent();
 
     builder.addLoader(new SplitsLoader() {
-      public void load(Component component, SplitHandler splitHandler) {
+      public void load(Component component, SplitsNode node) {
         panel = (JPanel)component;
         panel.setVisible(false);
       }

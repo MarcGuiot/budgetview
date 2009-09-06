@@ -3,7 +3,6 @@ package org.globsframework.gui.splits.splitters;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
-import org.globsframework.gui.splits.layout.ComponentStretch;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +15,7 @@ public class FrameComponent extends DefaultComponent<JFrame> {
 
   protected void postCreateComponent(JFrame component, SplitsContext context) {
     SplitComponent panelStretch = GridBagSequence.createPanel(getSubSplitters(), GridBagSequence.Direction.VERTICAL, context, null);
-    Component panel = panelStretch.componentStretch.getComponent();
+    Component panel = panelStretch.componentConstraints.getComponent();
     component.setContentPane((Container)panel);
   }
 

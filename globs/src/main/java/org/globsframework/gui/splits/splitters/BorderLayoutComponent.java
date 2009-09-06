@@ -3,9 +3,9 @@ package org.globsframework.gui.splits.splitters;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
-import org.globsframework.gui.splits.impl.DefaultSplitHandler;
+import org.globsframework.gui.splits.impl.DefaultSplitsNode;
 import org.globsframework.gui.splits.exceptions.SplitsException;
-import org.globsframework.gui.splits.layout.ComponentStretch;
+import org.globsframework.gui.splits.layout.ComponentConstraints;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.utils.DoubleOperation;
@@ -40,12 +40,12 @@ public class BorderLayoutComponent extends AbstractSplitter {
         throw new SplitsException(getBorderPosErrorMessage(splitter));
       }
       SplitComponent splitComponent = splitter.createComponentStretch(context, false);
-      weightX = DoubleOperation.SUM.get(splitComponent.componentStretch.getWeightX(), weightX);
-      weightY = DoubleOperation.SUM.get(splitComponent.componentStretch.getWeightY(), weightY);
-      panel.add(splitComponent.componentStretch.getComponent(), SplitsUtils.capitalize(pos));
+      weightX = DoubleOperation.SUM.get(splitComponent.componentConstraints.getWeightX(), weightX);
+      weightY = DoubleOperation.SUM.get(splitComponent.componentConstraints.getWeightY(), weightY);
+      panel.add(splitComponent.componentConstraints.getComponent(), SplitsUtils.capitalize(pos));
     }
-    return new SplitComponent(new ComponentStretch(panel, Fill.BOTH, Anchor.CENTER, weightX, weightY),
-                                 new DefaultSplitHandler(panel, context));
+    return new SplitComponent(new ComponentConstraints(panel, Fill.BOTH, Anchor.CENTER, weightX, weightY),
+                                 new DefaultSplitsNode(panel, context));
   }
 
   private String getBorderPosErrorMessage(Splitter splitter) {

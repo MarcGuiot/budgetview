@@ -2,7 +2,7 @@ package org.globsframework.gui.splits.layout;
 
 import java.awt.*;
 
-public class ComponentStretch {
+public class ComponentConstraints {
   private Component component;
   private GridPos gridPos;
   private double weightX;
@@ -11,11 +11,11 @@ public class ComponentStretch {
   private Anchor anchor;
   private Insets insets;
 
-  public ComponentStretch(Component component, Fill fill, Anchor anchor, double weightX, double weightY) {
+  public ComponentConstraints(Component component, Fill fill, Anchor anchor, double weightX, double weightY) {
     this(component, fill, anchor, weightX, weightY, null);
   }
 
-  public ComponentStretch(Component component, Fill fill, Anchor anchor, double weightX, double weightY, Insets insets) {
+  public ComponentConstraints(Component component, Fill fill, Anchor anchor, double weightX, double weightY, Insets insets) {
     this.component = component;
     this.fill = fill;
     this.anchor = anchor;

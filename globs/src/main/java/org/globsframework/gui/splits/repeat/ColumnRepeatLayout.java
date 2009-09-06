@@ -2,7 +2,7 @@ package org.globsframework.gui.splits.repeat;
 
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.exceptions.SplitsException;
-import org.globsframework.gui.splits.layout.ComponentStretch;
+import org.globsframework.gui.splits.layout.ComponentConstraints;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,16 +22,16 @@ public abstract class ColumnRepeatLayout implements RepeatLayout {
 
   protected abstract LayoutManager getLayout(JPanel panel);
 
-  public void set(JPanel panel, List<ComponentStretch[]> stretches) {
+  public void set(JPanel panel, List<ComponentConstraints[]> constraints) {
     panel.removeAll();
-    for (ComponentStretch[] stretchArray : stretches) {
-      panel.add(stretchArray[0].getComponent());
+    for (ComponentConstraints[] constraintsArray : constraints) {
+      panel.add(constraintsArray[0].getComponent());
     }
     panel.validate();
   }
 
-  public void insert(JPanel panel, ComponentStretch[] stretches, int index) {
-    panel.add(stretches[0].getComponent(), index);
+  public void insert(JPanel panel, ComponentConstraints[] constraints, int index) {
+    panel.add(constraints[0].getComponent(), index);
     panel.validate();
   }
 

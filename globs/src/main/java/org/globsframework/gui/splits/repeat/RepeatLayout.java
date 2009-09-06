@@ -1,7 +1,7 @@
 package org.globsframework.gui.splits.repeat;
 
 import org.globsframework.gui.splits.Splitter;
-import org.globsframework.gui.splits.layout.ComponentStretch;
+import org.globsframework.gui.splits.layout.ComponentConstraints;
 
 import javax.swing.*;
 import java.util.List;
@@ -12,9 +12,9 @@ public interface RepeatLayout {
 
   void init(JPanel panel);
 
-  void set(JPanel panel, List<ComponentStretch[]> stretches);
+  void set(JPanel panel, List<ComponentConstraints[]> constraints);
 
-  void insert(JPanel panel, ComponentStretch[] stretches, int index);
+  void insert(JPanel panel, ComponentConstraints[] constraints, int index);
 
   void remove(JPanel panel, int index);
 

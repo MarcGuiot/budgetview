@@ -12,32 +12,32 @@ import java.util.Map;
 public class SplitsStylesDynamicTest extends SplitsTestCase {
 
   public void testChangeStyle() throws Exception {
-    SplitHandler<Component> splitHandler =
+    SplitsNode<Component> splitsNode =
       getButton(
         "<styles>" +
         "  <style id='red' selector=' ' background='#FF0000'/>" +
         "  <style id='blue' selector=' ' background='#0000FF'/>" +
         "</styles>" +
         "<button ref='btn'/>");
-    splitHandler.applyStyle("red");
-    assertEquals(Color.RED, splitHandler.getComponent().getBackground());
-    splitHandler.applyStyle("blue");
-    assertEquals(Color.BLUE, splitHandler.getComponent().getBackground());
+    splitsNode.applyStyle("red");
+    assertEquals(Color.RED, splitsNode.getComponent().getBackground());
+    splitsNode.applyStyle("blue");
+    assertEquals(Color.BLUE, splitsNode.getComponent().getBackground());
   }
 
   public void testDoNotUseSelector() throws Exception {
-    SplitHandler<Component> splitHandler =
+    SplitsNode<Component> splitsNode =
       getButton(
         "<styles>" +
         "  <style id='red' selector='#a' background='#FF0000'/>" +
         "</styles>" +
         "<button ref='btn' background='#000000'/>");
-    splitHandler.applyStyle("red");
-    assertEquals(Color.RED, splitHandler.getComponent().getBackground());
+    splitsNode.applyStyle("red");
+    assertEquals(Color.RED, splitsNode.getComponent().getBackground());
   }
 
   public void testOnRepeat() throws Exception {
-    final Map<String, SplitHandler<JLabel>> splitHandlerMap = new HashMap<String, SplitHandler<JLabel>>();
+    final Map<String, SplitsNode<JLabel>> splitsNodesMap = new HashMap<String, SplitsNode<JLabel>>();
     final Map<String, JLabel> labels = new HashMap<String, JLabel>();
 
     builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
@@ -45,8 +45,8 @@ public class SplitsStylesDynamicTest extends SplitsTestCase {
 
                         public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
                           JLabel jLabel = new JLabel(object);
-                          SplitHandler<JLabel> labelSplitHandler = cellBuilder.add("label", jLabel);
-                          splitHandlerMap.put(object, labelSplitHandler);
+                          SplitsNode<JLabel> labelSplitsNode = cellBuilder.add("label", jLabel);
+                          splitsNodesMap.put(object, labelSplitsNode);
                           labels.put(object, jLabel);
                         }
                       });
@@ -62,22 +62,22 @@ public class SplitsStylesDynamicTest extends SplitsTestCase {
       "  </row>" +
       "</repeat>");
 
-    checkColorApply(splitHandlerMap, labels, "aa", "blue", Color.BLUE);
-    checkColorApply(splitHandlerMap, labels, "bb", "red", Color.RED);
-    checkColorApply(splitHandlerMap, labels, "bb", "blue", Color.BLUE);
+    checkColorApply(splitsNodesMap, labels, "aa", "blue", Color.BLUE);
+    checkColorApply(splitsNodesMap, labels, "bb", "red", Color.RED);
+    checkColorApply(splitsNodesMap, labels, "bb", "blue", Color.BLUE);
   }
 
-  private void checkColorApply(Map<String, SplitHandler<JLabel>> splitHandlerMap, Map<String, JLabel> labels,
+  private void checkColorApply(Map<String, SplitsNode<JLabel>> splitHandlerMap, Map<String, JLabel> labels,
                                final String name, final String styleName, final Color color) {
-    SplitHandler<JLabel> labelSplitHandler = splitHandlerMap.get(name);
+    SplitsNode<JLabel> labelSplitsNode = splitHandlerMap.get(name);
     JLabel label = labels.get(name);
-    labelSplitHandler.applyStyle(styleName);
-    assertSame(label, labelSplitHandler.getComponent());
+    labelSplitsNode.applyStyle(styleName);
+    assertSame(label, labelSplitsNode.getComponent());
     assertEquals(color, label.getBackground());
   }
 
-  private SplitHandler<Component> getButton(String xml) throws Exception {
+  private SplitsNode<Component> getButton(String xml) throws Exception {
     builder.add("btn", aButton);
-    return parseWithHanler(xml);
+    return parseWithHandler(xml);
   }
 }

@@ -3,7 +3,7 @@ package org.globsframework.gui.splits.splitters;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
-import org.globsframework.gui.splits.impl.DefaultSplitHandler;
+import org.globsframework.gui.splits.impl.DefaultSplitsNode;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.SwingStretches;
 
@@ -29,8 +29,8 @@ public class TabGroupSplitter extends AbstractSplitter {
     JTabbedPane tabbedPane = new JTabbedPane();
     for (Splitter splitter : getSubSplitters()) {
       TabSplitter tab = (TabSplitter)splitter;
-      tabbedPane.add(tab.getTitle(), tab.createComponentStretch(context, true).componentStretch.getComponent());
+      tabbedPane.add(tab.getTitle(), tab.createComponentStretch(context, true).componentConstraints.getComponent());
     }
-    return new SplitComponent(SwingStretches.get(tabbedPane), new DefaultSplitHandler(tabbedPane, context));
+    return new SplitComponent(SwingStretches.get(tabbedPane), new DefaultSplitsNode(tabbedPane, context));
   }
 }

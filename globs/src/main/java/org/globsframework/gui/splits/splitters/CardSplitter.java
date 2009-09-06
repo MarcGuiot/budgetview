@@ -4,7 +4,6 @@ import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.exceptions.SplitsException;
-import org.globsframework.gui.splits.layout.ComponentStretch;
 
 import java.awt.*;
 
@@ -37,7 +36,7 @@ public class CardSplitter extends AbstractSplitter {
   protected SplitComponent createRawStretch(SplitsContext context) {
     Splitter splitter = getSubSplitters()[0];
     SplitComponent stretch = splitter.createComponentStretch(context, true);
-    Component component = stretch.componentStretch.getComponent();
+    Component component = stretch.componentConstraints.getComponent();
     if (component.getName() == null) {
       component.setName(cardName);
     }

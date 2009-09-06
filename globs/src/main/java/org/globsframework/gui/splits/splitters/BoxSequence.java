@@ -2,7 +2,7 @@ package org.globsframework.gui.splits.splitters;
 
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.Splitter;
-import org.globsframework.gui.splits.layout.ComponentStretch;
+import org.globsframework.gui.splits.layout.ComponentConstraints;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
@@ -36,8 +36,8 @@ public class BoxSequence extends Sequence {
       panel.setLayout(new BoxLayout(panel, getBoxDirection(direction)));
     }
 
-    public void add(ComponentStretch stretch, Direction direction, int position) {
-      panel.add(stretch.getComponent(), position);
+    public void add(ComponentConstraints constraints, Direction direction, int position) {
+      panel.add(constraints.getComponent(), position);
     }
 
     public int getBoxDirection(Direction direction) {

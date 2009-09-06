@@ -1,8 +1,8 @@
 package org.globsframework.gui.splits.repeat;
 
 import org.globsframework.gui.splits.utils.Disposable;
-import org.globsframework.gui.splits.SplitHandler;
-import org.globsframework.gui.splits.impl.DefaultSplitHandler;
+import org.globsframework.gui.splits.SplitsNode;
+import org.globsframework.gui.splits.impl.DefaultSplitsNode;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,10 +15,10 @@ public class ContextualRepeatCellBuilder implements RepeatCellBuilder {
     this.repeatContext = repeatContext;
   }
 
-  public <T extends Component> SplitHandler<T> add(String name, T component)  {
-    SplitHandler<T> splitHandler = new DefaultSplitHandler<T>(component, repeatContext);
-    repeatContext.addComponent(name, (SplitHandler<Component>)splitHandler);
-    return splitHandler;
+  public <T extends Component> SplitsNode<T> add(String name, T component)  {
+    SplitsNode<T> splitsNode = new DefaultSplitsNode<T>(component, repeatContext);
+    repeatContext.addComponent(name, (SplitsNode<Component>)splitsNode);
+    return splitsNode;
   }
 
   public <T extends Action> T add(String name, T action) {

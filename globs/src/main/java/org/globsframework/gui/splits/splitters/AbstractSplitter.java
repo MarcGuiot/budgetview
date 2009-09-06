@@ -32,20 +32,20 @@ public abstract class AbstractSplitter implements Splitter {
 
   public final SplitComponent createComponentStretch(SplitsContext context, boolean addMargin) {
     SplitComponent splitComponent = createRawStretch(context);
-    setGridPos(splitComponent.componentStretch);
-    overrideStretch(splitComponent.componentStretch);
-    Component component = splitComponent.componentStretch.getComponent();
+    setGridPos(splitComponent.componentConstraints);
+    overrideStretch(splitComponent.componentConstraints);
+    Component component = splitComponent.componentConstraints.getComponent();
     setOpacity(component);
     if (addMargin) {
-      addMargin(splitComponent.componentStretch);
+      addMargin(splitComponent.componentConstraints);
     }
     else {
-      splitComponent.componentStretch.setInsets(getMarginInsets());
+      splitComponent.componentConstraints.setInsets(getMarginInsets());
     }
     complete(component);
     processAttributes(component, context);
     processAutoHide(component, context);
-    processDebug(splitComponent.componentStretch, context);
+    processDebug(splitComponent.componentConstraints, context);
     return splitComponent;
   }
 
@@ -57,12 +57,12 @@ public abstract class AbstractSplitter implements Splitter {
     context.addAutoHide(component, source);
   }
 
-  private void processDebug(ComponentStretch stretch, SplitsContext context) {
+  private void processDebug(ComponentConstraints constraints, SplitsContext context) {
     if (!GuiUtils.isDebugModeEnabled()) {
       return;
     }
 
-    Component component = stretch.getComponent();
+    Component component = constraints.getComponent();
     if (!(component instanceof JComponent)) {
       return;
     }
@@ -113,32 +113,32 @@ public abstract class AbstractSplitter implements Splitter {
     return properties;
   }
 
-  private void setGridPos(ComponentStretch stretch) {
+  private void setGridPos(ComponentConstraints constraints) {
     String value = properties.getString("gridPos");
     if (value != null) {
-      stretch.setGridPos(SplitsUtils.parseGridPos(value));
+      constraints.setGridPos(SplitsUtils.parseGridPos(value));
     }
   }
 
-  private void overrideStretch(ComponentStretch stretch) {
+  private void overrideStretch(ComponentConstraints constraints) {
     String fill = properties.getString("fill", "defaultFill");
     if (fill != null) {
-      stretch.setFill(Utils.toEnum(Fill.class, fill));
+      constraints.setFill(Utils.toEnum(Fill.class, fill));
     }
 
     String anchor = properties.getString("anchor", "defaultAnchor");
     if (anchor != null) {
-      stretch.setAnchor(Anchor.get(anchor));
+      constraints.setAnchor(Anchor.get(anchor));
     }
 
     Double weightX = properties.getDouble("weightX");
     if (weightX != null) {
-      stretch.setWeightX(weightX);
+      constraints.setWeightX(weightX);
     }
 
     Double weightY = properties.getDouble("weightY");
     if (weightY != null) {
-      stretch.setWeightY(weightY);
+      constraints.setWeightY(weightY);
     }
   }
 
@@ -146,7 +146,7 @@ public abstract class AbstractSplitter implements Splitter {
     return new String[0];
   }
 
-  private void addMargin(ComponentStretch innerComponent) {
+  private void addMargin(ComponentConstraints innerComponent) {
     Insets insets = getMarginInsets();
     if (insets != null) {
       innerComponent.setComponent(SingleComponentPanels.create(innerComponent.getComponent(), insets));

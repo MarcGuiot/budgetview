@@ -3,7 +3,7 @@ package org.globsframework.gui.splits.splitters;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
-import org.globsframework.gui.splits.layout.ComponentStretch;
+import org.globsframework.gui.splits.layout.ComponentConstraints;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
@@ -40,13 +40,13 @@ public class GridBagSequence extends Sequence {
       builder = GridBagBuilder.init(panel).setOpaque(false);
     }
 
-    public void add(ComponentStretch stretch, Direction direction, int position) {
-      builder.add(stretch.getComponent(),
+    public void add(ComponentConstraints constraints, Direction direction, int position) {
+      builder.add(constraints.getComponent(),
                   direction == Direction.HORIZONTAL ? position : 0,
                   direction == Direction.VERTICAL ? position : 0,
                   1, 1,
-                  stretch.getWeightX(), stretch.getWeightY(),
-                  stretch.getFill(), stretch.getAnchor(),
+                  constraints.getWeightX(), constraints.getWeightY(),
+                  constraints.getFill(), constraints.getAnchor(),
                   null);
     }
   }

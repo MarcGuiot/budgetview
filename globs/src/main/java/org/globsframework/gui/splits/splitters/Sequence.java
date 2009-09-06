@@ -3,16 +3,15 @@ package org.globsframework.gui.splits.splitters;
 import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
-import org.globsframework.gui.splits.SplitHandler;
-import org.globsframework.gui.splits.impl.DefaultSplitHandler;
+import org.globsframework.gui.splits.SplitsNode;
+import org.globsframework.gui.splits.impl.DefaultSplitsNode;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.Anchor;
-import org.globsframework.gui.splits.layout.ComponentStretch;
+import org.globsframework.gui.splits.layout.ComponentConstraints;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.utils.DoubleOperation;
 
 import javax.swing.*;
-import java.awt.*;
 
 public abstract class Sequence extends AbstractSplitter {
   protected Direction direction;
@@ -25,7 +24,7 @@ public abstract class Sequence extends AbstractSplitter {
   public interface SequenceBuilder {
     void init(JPanel panel, Direction direction);
 
-    void add(ComponentStretch stretch, Direction direction, int position);
+    void add(ComponentConstraints constraints, Direction direction, int position);
   }
 
   protected abstract SequenceBuilder getSequenceBuilder();
@@ -35,8 +34,8 @@ public abstract class Sequence extends AbstractSplitter {
   }
 
   protected static SplitComponent createPanel(SequenceBuilder builder, Splitter[] subSplitters, Direction direction, SplitsContext context, String ref) {
-    SplitHandler splitHandler = getPanel(ref, context);
-    JPanel panel = (JPanel)splitHandler.getComponent();
+    SplitsNode splitsNode = getPanel(ref, context);
+    JPanel panel = (JPanel)splitsNode.getComponent();
     builder.init(panel, direction);
 
     double weightX = 0.0;
@@ -45,20 +44,20 @@ public abstract class Sequence extends AbstractSplitter {
     int position = 0;
     for (Splitter splitter : subSplitters) {
       SplitComponent splitComponent = splitter.createComponentStretch(context, true);
-      ComponentStretch stretch = splitComponent.componentStretch;
-      builder.add(stretch, direction, position++);
-      weightX = direction.weightXOperation.get(weightX, stretch.getWeightX());
-      weightY = direction.weightYOperation.get(weightY, stretch.getWeightY());
+      ComponentConstraints constraints = splitComponent.componentConstraints;
+      builder.add(constraints, direction, position++);
+      weightX = direction.weightXOperation.get(weightX, constraints.getWeightX());
+      weightY = direction.weightYOperation.get(weightY, constraints.getWeightY());
     }
-    return new SplitComponent(new ComponentStretch(panel, Fill.BOTH, Anchor.CENTER, weightX, weightY),
-                              splitHandler);
+    return new SplitComponent(new ComponentConstraints(panel, Fill.BOTH, Anchor.CENTER, weightX, weightY),
+                              splitsNode);
   }
 
-  private static SplitHandler getPanel(String ref, SplitsContext context) {
+  private static SplitsNode getPanel(String ref, SplitsContext context) {
     if (ref == null) {
-      return new DefaultSplitHandler(new JPanel(), context);
+      return new DefaultSplitsNode(new JPanel(), context);
     }
-    SplitHandler component = context.findComponent(ref);
+    SplitsNode component = context.findComponent(ref);
     if (component == null) {
       throw new SplitsException("Referenced component '" + ref + "' not found");
     }

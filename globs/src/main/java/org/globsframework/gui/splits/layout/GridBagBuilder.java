@@ -26,15 +26,15 @@ public class GridBagBuilder {
     return this;
   }
 
-  public GridBagBuilder add(ComponentStretch stretch,
+  public GridBagBuilder add(ComponentConstraints constraints,
                             int gridx, int gridy,
                             int gridwidth, int gridheight) {
-    add(stretch.getComponent(),
+    add(constraints.getComponent(),
         gridx, gridy,
         gridwidth, gridheight,
-        stretch.getWeightX(), stretch.getWeightY(),
-        stretch.getFill(), stretch.getAnchor(),
-        stretch.getInsets());
+        constraints.getWeightX(), constraints.getWeightY(),
+        constraints.getFill(), constraints.getAnchor(),
+        constraints.getInsets());
     return this;
   }
 
@@ -42,9 +42,9 @@ public class GridBagBuilder {
                             int gridx, int gridy,
                             int gridwidth, int gridheight,
                             Insets insets) {
-    ComponentStretch stretch = SwingStretches.get(component);
-    stretch.setInsets(insets);
-    return add(stretch, gridx, gridy, gridwidth, gridheight);
+    ComponentConstraints constraints = SwingStretches.get(component);
+    constraints.setInsets(insets);
+    return add(constraints, gridx, gridy, gridwidth, gridheight);
   }
 
   public GridBagBuilder add(Component component,

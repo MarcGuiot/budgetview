@@ -1,7 +1,7 @@
 package org.globsframework.gui.splits.impl;
 
 import org.globsframework.gui.splits.SplitsContext;
-import org.globsframework.gui.splits.SplitHandler;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.repeat.RepeatHandler;
 import org.globsframework.gui.splits.utils.Disposable;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractSplitsContext implements SplitsContext {
-  private Map<String, SplitHandler<Component> > componentsByName = new HashMap<String, SplitHandler<Component>>();
+  private Map<String, SplitsNode<Component>> componentsByName = new HashMap<String, SplitsNode<Component>>();
   private Map<String, Action> actionsByName = new HashMap<String, Action>();
   protected java.util.List<Component> createdComponents = new ArrayList<Component>();
   private String resourceFile;
@@ -27,7 +27,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
   private java.util.List<Disposable> disposables = new ArrayList<Disposable>();
   private Map<String, HyperlinkListener> hyperlinkListenersByName = new HashMap<String, HyperlinkListener>();
 
-  public void addComponent(String id, SplitHandler<Component> component) {
+  public void addComponent(String id, SplitsNode<Component> component) {
     if (componentsByName.containsKey(id)) {
       throw new SplitsException("Component '" + id + "' already declared in the context" +
                                 dump());
@@ -35,11 +35,11 @@ public abstract class AbstractSplitsContext implements SplitsContext {
     addOrReplaceComponent(id, component);
   }
 
-  public void addOrReplaceComponent(String id, SplitHandler<Component> component) {
+  public void addOrReplaceComponent(String id, SplitsNode<Component> component) {
     componentsByName.put(id, component);
   }
 
-  public <T extends Component> SplitHandler<T> findOrCreateComponent(String ref, String name, Class<T> componentClass, String splitterName)
+  public <T extends Component> SplitsNode<T> findOrCreateComponent(String ref, String name, Class<T> componentClass, String splitterName)
     throws SplitsException {
 
     if (ref != null) {
@@ -49,7 +49,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
                                   dump());
       }
 
-      SplitHandler<Component> component = componentsByName.get(ref);
+      SplitsNode<Component> component = componentsByName.get(ref);
       if (component == null) {
         throw new SplitsException("Error for tag: " + splitterName + " - no component registered with ref='" + ref +
                                   "' - available names: " + componentsByName.keySet() + dump());
@@ -64,18 +64,18 @@ public abstract class AbstractSplitsContext implements SplitsContext {
       if (component.getComponent().getName() == null) {
         component.getComponent().setName(ref);
       }
-      return (SplitHandler<T>)component;
+      return (SplitsNode<T>)component;
     }
 
     try {
       T newComponent = componentClass.newInstance();
-      DefaultSplitHandler<T> defaultSplitHandler = new DefaultSplitHandler<T>(newComponent, this);
+      DefaultSplitsNode<T> defaultNode = new DefaultSplitsNode<T>(newComponent, this);
       createdComponents.add(newComponent);
       if (name != null) {
         newComponent.setName(name);
-        componentsByName.put(name, (SplitHandler<Component>)defaultSplitHandler);
+        componentsByName.put(name, (SplitsNode<Component>)defaultNode);
       }
-      return defaultSplitHandler;
+      return defaultNode;
     }
     catch (Exception e) {
       throw new SplitsException("Could not invoke empty constructor of class " + componentClass.getName() +
@@ -83,7 +83,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
     }
   }
 
-  public SplitHandler findComponent(String id) {
+  public SplitsNode findComponent(String id) {
     return componentsByName.get(id);
   }
 
@@ -122,7 +122,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
       .append("\n");
 
     builder.append("  Components:").append("\n");
-    for (Map.Entry<String, SplitHandler<Component>> componentEntry : componentsByName.entrySet()) {
+    for (Map.Entry<String, SplitsNode<Component>> componentEntry : componentsByName.entrySet()) {
       builder.append("    ").append(componentEntry.getKey())
         .append(" => ").append(componentEntry.getValue().getComponent())
         .append("\n");
@@ -179,7 +179,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
     for (Map.Entry<JLabel, String> association : labelForAssociations.entrySet()) {
       JLabel label = association.getKey();
       String ref = association.getValue();
-      SplitHandler<Component> targetComponent = componentsByName.get(ref);
+      SplitsNode<Component> targetComponent = componentsByName.get(ref);
       if (targetComponent == null) {
         throw new SplitsException("Label '" + label.getText() + "' references an unknown component '" + ref + "'" +
                                   dump());
@@ -225,11 +225,11 @@ public abstract class AbstractSplitsContext implements SplitsContext {
     }
 
     private Component getSourceComponent(SplitsContext context) {
-      SplitHandler splitHandler = context.findComponent(sourceComponentName);
-      if (splitHandler == null) {
+      SplitsNode splitsNode = context.findComponent(sourceComponentName);
+      if (splitsNode == null) {
         throw new ItemNotFound("References autoHideSource component '" + sourceComponentName + "' does not exist");
       }
-      return splitHandler.getComponent();
+      return splitsNode.getComponent();
     }
 
     private ComponentAdapter createListener() {

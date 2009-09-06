@@ -2,8 +2,8 @@ package org.globsframework.gui.splits.repeat;
 
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
-import org.globsframework.gui.splits.impl.DefaultSplitHandler;
-import org.globsframework.gui.splits.layout.ComponentStretch;
+import org.globsframework.gui.splits.impl.DefaultSplitsNode;
+import org.globsframework.gui.splits.layout.ComponentConstraints;
 import org.globsframework.gui.splits.layout.SwingStretches;
 
 import javax.swing.*;
@@ -12,14 +12,14 @@ import java.util.List;
 import java.awt.*;
 
 public class RepeatPanel implements Repeat {
-  private ComponentStretch stretch;
+  private ComponentConstraints constraints;
   private JPanel panel = new JPanel();
   private RepeatHandler repeatHandler;
   private Splitter[] splitterTemplates;
   private SplitsContext context;
   private List<RepeatContext> repeatContexts = new ArrayList<RepeatContext>();
   private RepeatLayout layout;
-  private DefaultSplitHandler<Component> splitHandler;
+  private DefaultSplitsNode<Component> splitsNode;
 
   public RepeatPanel(String name, RepeatHandler repeatHandler, RepeatLayout layout,
                      Splitter[] splitterTemplates, SplitsContext context) {
@@ -31,10 +31,10 @@ public class RepeatPanel implements Repeat {
     this.layout.init(panel);
     this.panel.setName(name);
     this.panel.setOpaque(false);
-    splitHandler = new DefaultSplitHandler<Component>(panel, context);
-    this.context.addComponent(name, splitHandler);
+    this.splitsNode = new DefaultSplitsNode<Component>(panel, context);
+    this.context.addComponent(name, splitsNode);
     set(repeatHandler.getInitialItems());
-    this.stretch = SwingStretches.get(panel);
+    this.constraints = SwingStretches.get(panel);
   }
 
   public void set(List items) {
@@ -43,14 +43,14 @@ public class RepeatPanel implements Repeat {
     }
     repeatContexts.clear();
 
-    List<ComponentStretch[]> stretches = new ArrayList<ComponentStretch[]>();
+    List<ComponentConstraints[]> constraints = new ArrayList<ComponentConstraints[]>();
     int index = 0;
     for (Object item : items) {
-      stretches.add(createStretches(item, index));
+      constraints.add(createStretches(item, index));
       index++;
     }
 
-    layout.set(panel, stretches);
+    layout.set(panel, constraints);
     panel.revalidate();
   }
 
@@ -74,23 +74,23 @@ public class RepeatPanel implements Repeat {
     panel.revalidate();
   }
 
-  private ComponentStretch[] createStretches(Object item, int index) {
+  private ComponentConstraints[] createStretches(Object item, int index) {
     RepeatContext repeatContext = new RepeatContext(context);
     repeatContexts.add(index, repeatContext);
     repeatHandler.getFactory().registerComponents(new ContextualRepeatCellBuilder(repeatContext), item);
 
-    ComponentStretch[] stretches = new ComponentStretch[splitterTemplates.length];
+    ComponentConstraints[] constraints = new ComponentConstraints[splitterTemplates.length];
     for (int i = 0; i < splitterTemplates.length; i++) {
-      stretches[i] = splitterTemplates[i].createComponentStretch(repeatContext, !layout.managesInsets()).componentStretch;
+      constraints[i] = splitterTemplates[i].createComponentStretch(repeatContext, !layout.managesInsets()).componentConstraints;
     }
 
     repeatContext.complete();
 
-    return stretches;
+    return constraints;
   }
 
   public Splitter.SplitComponent getSplitComponent() {
-    return new Splitter.SplitComponent(stretch, splitHandler);
+    return new Splitter.SplitComponent(constraints, splitsNode);
   }
 
   public void dispose() {
