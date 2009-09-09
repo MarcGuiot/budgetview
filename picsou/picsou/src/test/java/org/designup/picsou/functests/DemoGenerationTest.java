@@ -20,7 +20,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     System.setProperty("uispec4j.test.library", "junit");
 
-    Locale.setDefault(Locale.FRENCH);
+    Locale.setDefault(Locale.ENGLISH);
 
     DemoGenerationTest test = new DemoGenerationTest();
     test.setLocalPrevaylerPath(PREVAYLER_DIR);
