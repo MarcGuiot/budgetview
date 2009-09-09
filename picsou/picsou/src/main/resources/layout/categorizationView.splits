@@ -27,7 +27,7 @@
 
   <column styleClass="main">
 
-    <row name="helpMessagePanel" autoHideSource="progressMessage">
+    <row name="helpMessagePanel" autoHideSource="progressMessage" weightY="0.1">
       <filler fill="horizontal"/>
       <row styleClass="mainPanelMessage">
         <htmlEditorPane ref="progressMessage" hyperlinkListener="hyperlinkHandler"/>
@@ -36,7 +36,7 @@
       <filler fill="horizontal"/>
     </row>
 
-    <horizontalSplit opaque="false">
+    <horizontalSplit opaque="false" weightY="10.0">
 
       <column weightX="50" name="categorizationSelection">
         <label text="$categorization.list.title" styleClass="blockTitle"/>

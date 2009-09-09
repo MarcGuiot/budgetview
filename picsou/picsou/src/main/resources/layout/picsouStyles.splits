@@ -158,9 +158,9 @@
         bottomColor="mainpanel.message.bottom"
         borderColor="mainpanel.message.border"/>
     <style selector=".mainPanelMessage" ui="mainPanelMessage"
-           fill="horizontal" anchor="center" weightY="0" marginLeft="100" marginRight="100" border="empty(0,0,10,0)"/>
+           fill="horizontal" anchor="center" weightX="100" weightY="0" marginLeft="100" marginRight="100" border="empty(0,0,10,0)"/>
     <style selector=".mainPanelMessage htmlEditorPane" fill="horizontal" anchor="center"
-           foreground="mainpanel.message" weightY="0" border="empty(5,20,5,0)"/>
+           foreground="mainpanel.message" weightX="10"  weightY="0" border="empty(5,20,5,0)"/>
     <style selector=".mainPanelMessage button" weightX="0" border="empty(5,0,5,20)"/>
 
     <!-- Icon buttons -->
