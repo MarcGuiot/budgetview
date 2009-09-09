@@ -1,11 +1,9 @@
 package org.globsframework.gui.splits.color;
 
-import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.gui.splits.color.utils.BackgroundColorUpdater;
 import org.globsframework.gui.splits.color.utils.ForegroundColorUpdater;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.uispec4j.UISpecTestCase;
-import org.uispec4j.utils.AssertionFailureNotDetectedError;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +29,7 @@ public class ColorServiceTest extends UISpecTestCase {
 
     try {
       service.set(null, Color.red);
-      throw new AssertionFailureNotDetectedError();
+      fail();
     }
     catch (SplitsException e) {
       assertEquals("null key not allowed", e.getMessage());
