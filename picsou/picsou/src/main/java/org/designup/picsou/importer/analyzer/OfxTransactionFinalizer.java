@@ -40,12 +40,11 @@ public class OfxTransactionFinalizer extends AbstractTransactionTypeFinalizer {
   }
 
   public boolean processTransaction(Glob transaction, GlobRepository repository) {
-    if (!transaction.get(Transaction.IS_OFX)) {
+    if (!Boolean.TRUE.equals(transaction.get(Transaction.IS_OFX))) {
       return false;
     }
 
     String newLabel = label;
-
     newLabel = replace(transaction, newLabel, Transaction.BANK_TRANSACTION_TYPE, typeRegexp, TYPE_REGEXP);
     if (newLabel == null) {
       return false;
