@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.components.charts.stack;
 
 import org.globsframework.utils.Utils;
+import org.globsframework.gui.splits.color.Colors;
 
 import javax.swing.*;
 import java.awt.*;
@@ -138,14 +139,11 @@ public class StackChart extends JPanel {
                            StackChartColors colors,
                            Color barColor) {
 
-    float alpha = 1.0f;
     StackChartBlock[] blocks = metrics.computeBlocks(dataset);
+    Color blockColor = barColor;
     for (StackChartBlock block : blocks) {
-      g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
-      g2.setColor(barColor);
+      g2.setColor(blockColor);
       g2.fillRect(layout.barX(), block.blockY, metrics.barWidth(), block.blockHeight);
-
-      g2.setComposite(AlphaComposite.Src);
 
       if (block.selected) {
         g2.setColor(colors.getSelectionBorderColor());
@@ -153,7 +151,7 @@ public class StackChart extends JPanel {
         g2.drawRect(layout.barX(), block.blockY, metrics.barWidth(), block.blockHeight);
       }
 
-      g2.setColor(colors.getBarTextColor());
+      g2.setColor(Colors.getLabelColor(blockColor, colors.getBarTextColor(), Color.DARK_GRAY));
       g2.setFont(barTextFont);
       g2.drawString(block.barText, layout.barTextX(block.barText), block.barTextY);
 
@@ -166,8 +164,7 @@ public class StackChart extends JPanel {
         StackChartSelection selection = new StackChartSelection(block.dataset, block.datasetIndex);
         clickAreas.put(rectangle, selection);
       }
-
-      alpha *= 0.7f;
+      blockColor = Colors.brighten(blockColor, 0.25f);      
     }
   }
 
