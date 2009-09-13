@@ -41,7 +41,7 @@ public class SplitTransactionAction extends AbstractAction implements GlobSelect
 
   private String getLabel(Glob transaction) {
     if (transaction != null &&
-        (Boolean.TRUE.equals(transaction.get(Transaction.SPLIT))
+        (transaction.isTrue(Transaction.SPLIT)
          || (transaction.get(Transaction.SPLIT_SOURCE) != null))) {
       return Lang.get("split.transaction.existing");
     }

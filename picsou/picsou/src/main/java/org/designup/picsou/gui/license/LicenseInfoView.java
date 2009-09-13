@@ -81,7 +81,7 @@ public class LicenseInfoView extends View {
       licenseMessage.setVisible(true);
       return;
     }
-    if (user.get(User.IS_REGISTERED_USER)) {
+    if (user.isTrue(User.IS_REGISTERED_USER)) {
       licenseMessage.setVisible(false);
     }
     else {

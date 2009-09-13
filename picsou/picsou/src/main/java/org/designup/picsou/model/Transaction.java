@@ -128,8 +128,7 @@ public class Transaction {
   }
 
   public static boolean isSplitSource(Glob transaction) {
-    Boolean isSplit = transaction.get(SPLIT);
-    return isSplit != null && Boolean.TRUE.equals(isSplit);
+    return transaction.isTrue(SPLIT);
   }
 
   public static boolean isSplit(Glob transaction) {
@@ -155,7 +154,7 @@ public class Transaction {
   }
 
   public static boolean isPlanned(Glob transaction) {
-    return transaction.get(Transaction.PLANNED);
+    return transaction.isTrue(Transaction.PLANNED);
   }
 
   public static String anonymise(String labelOrNote) {
@@ -196,11 +195,11 @@ public class Transaction {
   }
 
   public static boolean isMirrorTransaction(FieldValues values) {
-    return values.get(MIRROR);
+    return values.isTrue(MIRROR);
   }
 
   public static boolean isCreatedBySeries(Glob transaction) {
-    return transaction.get(CREATED_BY_SERIES);
+    return transaction.isTrue(CREATED_BY_SERIES);
   }
 
   public static String getLabel(boolean planned, Glob series) {

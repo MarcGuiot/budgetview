@@ -38,22 +38,22 @@ public class SavingsBudgetStat {
   public static IntegerField LAST_KNOWN_POSITION_DAY;
 
   @DefaultDouble(0.0)
-  public static DoubleField OUT;
+  public static DoubleField SAVINGS_IN;
 
   @DefaultDouble(0.0)
-  public static DoubleField OUT_REMAINING;
+  public static DoubleField SAVINGS_IN_REMAINING;
 
   @DefaultDouble(0.0)
-  public static DoubleField OUT_PLANNED;
+  public static DoubleField SAVINGS_IN_PLANNED;
 
   @DefaultDouble(0.0)
-  public static DoubleField SAVINGS;
+  public static DoubleField SAVINGS_OUT;
 
   @DefaultDouble(0.0)
-  public static DoubleField SAVINGS_REMAINING;
+  public static DoubleField SAVINGS_OUT_REMAINING;
 
   @DefaultDouble(0.0)
-  public static DoubleField SAVINGS_PLANNED;
+  public static DoubleField SAVINGS_OUT_PLANNED;
 
   static {
     GlobTypeLoader.init(SavingsBudgetStat.class);
@@ -62,7 +62,7 @@ public class SavingsBudgetStat {
   public static DoubleField getObserved(BudgetArea budgetArea) {
     switch (budgetArea) {
       case SAVINGS:
-        return SAVINGS;
+        return SAVINGS_IN;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
   }
@@ -70,7 +70,7 @@ public class SavingsBudgetStat {
   public static DoubleField getPlanned(BudgetArea budgetArea) {
     switch (budgetArea) {
       case SAVINGS:
-        return SAVINGS_PLANNED;
+        return SAVINGS_IN_PLANNED;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
   }
@@ -78,7 +78,7 @@ public class SavingsBudgetStat {
   public static DoubleField getRemaining(BudgetArea budgetArea) {
     switch (budgetArea) {
       case SAVINGS:
-        return SAVINGS_REMAINING;
+        return SAVINGS_IN_REMAINING;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
   }

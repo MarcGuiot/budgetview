@@ -5,7 +5,6 @@ import org.designup.picsou.gui.utils.KeyService;
 import org.designup.picsou.model.User;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.utils.Log;
 
 import java.util.Set;
 
@@ -64,7 +63,7 @@ public class RegisterLicenseTrigger implements ChangeSetListener {
         }
 
         public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-          if (values.contains(User.IS_REGISTERED_USER) && !values.get(User.IS_REGISTERED_USER)) {
+          if (values.contains(User.IS_REGISTERED_USER) && !values.isTrue(User.IS_REGISTERED_USER)) {
             serverAccess.localRegister(null, null, null);
           }
         }

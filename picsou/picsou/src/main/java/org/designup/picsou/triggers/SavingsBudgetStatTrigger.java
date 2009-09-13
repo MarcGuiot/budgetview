@@ -48,9 +48,9 @@ public class SavingsBudgetStatTrigger implements ChangeSetListener {
           update(glob, balance, SavingsBudgetStat.END_OF_MONTH_POSITION);
           update(glob, balance, SavingsBudgetStat.BALANCE);
           update(glob, balance, SavingsBudgetStat.LAST_KNOWN_ACCOUNT_POSITION);
-          update(glob, balance, SavingsBudgetStat.SAVINGS);
-          update(glob, balance, SavingsBudgetStat.SAVINGS_PLANNED);
-          update(glob, balance, SavingsBudgetStat.SAVINGS_REMAINING);
+          update(glob, balance, SavingsBudgetStat.SAVINGS_IN);
+          update(glob, balance, SavingsBudgetStat.SAVINGS_IN_PLANNED);
+          update(glob, balance, SavingsBudgetStat.SAVINGS_IN_REMAINING);
           Integer day = glob.get(SavingsBudgetStat.LAST_KNOWN_POSITION_DAY);
           if (day != null) {
             Integer summaryDay = balance.get(SavingsBudgetStat.LAST_KNOWN_POSITION_DAY);
@@ -140,7 +140,7 @@ public class SavingsBudgetStatTrigger implements ChangeSetListener {
 
       accountBySeries.putUnique(transaction.get(Transaction.SERIES), accountId);
       Double amount = transaction.get(Transaction.AMOUNT);
-      if (!transaction.get(Transaction.PLANNED)) {
+      if (!transaction.isTrue(Transaction.PLANNED)) {
         if (amount > 0) {
           data.savings += amount;
           isSavingsSeriesAndAccount.put(transaction.get(Transaction.SERIES), accountId, true);
@@ -160,7 +160,7 @@ public class SavingsBudgetStatTrigger implements ChangeSetListener {
           isSavingsSeriesAndAccount.put(transaction.get(Transaction.SERIES), accountId, false);
         }
       }
-      if (!transaction.get(Transaction.PLANNED)
+      if (!transaction.isTrue(Transaction.PLANNED)
           && transaction.get(Transaction.BANK_MONTH).equals(currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))
           && transaction.get(Transaction.BANK_DAY) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY)
           && (lastRealKnownTransaction.get(accountId) == null ||
@@ -249,12 +249,12 @@ public class SavingsBudgetStatTrigger implements ChangeSetListener {
           Key key = Key.create(SavingsBudgetStat.MONTH, monthId, SavingsBudgetStat.ACCOUNT, accountId);
           repository.create(key,
                             FieldValue.value(SavingsBudgetStat.BALANCE, balance),
-                            FieldValue.value(SavingsBudgetStat.OUT, entry.getValue().out),
-                            FieldValue.value(SavingsBudgetStat.OUT_PLANNED, entry.getValue().outPlanned),
-                            FieldValue.value(SavingsBudgetStat.OUT_REMAINING, entry.getValue().outRemaining),
-                            FieldValue.value(SavingsBudgetStat.SAVINGS, entry.getValue().savings),
-                            FieldValue.value(SavingsBudgetStat.SAVINGS_PLANNED, entry.getValue().savingsPlanned),
-                            FieldValue.value(SavingsBudgetStat.SAVINGS_REMAINING, entry.getValue().savingsRemaining),
+                            FieldValue.value(SavingsBudgetStat.SAVINGS_OUT, entry.getValue().out),
+                            FieldValue.value(SavingsBudgetStat.SAVINGS_OUT_PLANNED, entry.getValue().outPlanned),
+                            FieldValue.value(SavingsBudgetStat.SAVINGS_OUT_REMAINING, entry.getValue().outRemaining),
+                            FieldValue.value(SavingsBudgetStat.SAVINGS_IN, entry.getValue().savings),
+                            FieldValue.value(SavingsBudgetStat.SAVINGS_IN_PLANNED, entry.getValue().savingsPlanned),
+                            FieldValue.value(SavingsBudgetStat.SAVINGS_IN_REMAINING, entry.getValue().savingsRemaining),
                             value(SavingsBudgetStat.BEGIN_OF_MONTH_POSITION, beginOfMonthPosition),
                             value(SavingsBudgetStat.END_OF_MONTH_POSITION, endOfMonthPosition));
           if (lastRealKnownTransaction.get(accountId) != null) {

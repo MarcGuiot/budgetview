@@ -102,6 +102,6 @@ public class MonthCheckBoxUpdater implements GlobSelectionListener, ItemListener
       }
     }
     checkBox.setEnabled(!forceDisable && currentSeries != null);
-    checkBox.setSelected((currentSeries != null) && currentSeries.get(Series.getMonthField(monthIndex)));
+    checkBox.setSelected((currentSeries != null) && currentSeries.isTrue(Series.getMonthField(monthIndex)));
   }
 }

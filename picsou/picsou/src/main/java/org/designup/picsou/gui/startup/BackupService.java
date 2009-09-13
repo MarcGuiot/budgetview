@@ -58,7 +58,7 @@ public class BackupService {
     Files.createParentDirs(file);
     Glob user = repository.find(User.KEY);
     char[] password = null;
-    if (user.get(User.AUTO_LOGIN)) {
+    if (user.isTrue(User.AUTO_LOGIN)) {
       password = user.get(User.NAME).toCharArray();
     }
     ReadOnlyAccountDataManager.writeSnapshot(serverData, file, password, PicsouApplication.JAR_VERSION);

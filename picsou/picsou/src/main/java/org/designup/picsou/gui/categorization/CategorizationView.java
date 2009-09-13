@@ -268,7 +268,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     if (transaction == null) {
       return null;
     }
-    if (Boolean.TRUE.equals(transaction.get(Transaction.SPLIT))) {
+    if (transaction.isTrue(Transaction.SPLIT)) {
       return transaction.get(Transaction.ID);
     }
     return transaction.get(Transaction.SPLIT_SOURCE);

@@ -36,7 +36,7 @@ public class QifTransactionFinalizer extends AbstractTransactionTypeFinalizer {
   }
 
   public boolean processTransaction(Glob transaction, GlobRepository repository) {
-    if (transaction.get(Transaction.IS_OFX)) {
+    if (transaction.isTrue(Transaction.IS_OFX)) {
       return false;
     }
 

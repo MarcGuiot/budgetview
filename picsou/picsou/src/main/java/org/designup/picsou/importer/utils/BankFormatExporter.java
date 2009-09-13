@@ -15,7 +15,7 @@ public class BankFormatExporter {
     XmlTag root = XmlWriter.startTag(writer, "bankFormat");
 
     for (Glob transaction : transactions) {
-      if (Boolean.TRUE.equals(transaction.get(Transaction.IS_OFX))) {
+      if (transaction.isTrue(Transaction.IS_OFX)) {
         root.createChildTag("ofxEntry")
           .addAttribute("originalLabel", transaction.get(Transaction.ORIGINAL_LABEL))
           .addAttribute("date", Transaction.fullDate(transaction))

@@ -108,7 +108,7 @@ public class CategorizationGaugePanel implements ChangeSetListener {
     if (preferences == null){
       return;
     }
-    Boolean preference = preferences.get(UserPreferences.SHOW_CATEGORIZATION_HELP_MESSAGE);
+    Boolean preference = preferences.isTrue(UserPreferences.SHOW_CATEGORIZATION_HELP_MESSAGE);
     if (!Boolean.TRUE.equals(preference)) {
       progressMessage.setVisible(false);
       return;

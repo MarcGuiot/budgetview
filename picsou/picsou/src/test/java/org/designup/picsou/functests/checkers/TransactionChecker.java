@@ -381,7 +381,7 @@ public class TransactionChecker extends ViewChecker {
         if (type == null) {
           return "";
         }
-        if (transaction.get(Transaction.PLANNED)) {
+        if (transaction.isTrue(Transaction.PLANNED)) {
           type = TransactionType.PLANNED;
         }
         return "TransactionType." + type.getName().toUpperCase();

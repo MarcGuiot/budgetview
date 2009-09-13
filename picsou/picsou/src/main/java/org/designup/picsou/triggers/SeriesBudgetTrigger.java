@@ -36,7 +36,7 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         if (values.contains(SeriesBudget.ACTIVE)) {
-          if (!values.get(SeriesBudget.ACTIVE)) {
+          if (!values.isTrue(SeriesBudget.ACTIVE)) {
             repository.update(key, SeriesBudget.AMOUNT, 0.0);
           }
         }
@@ -45,7 +45,7 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
         if (series == null) {
           return;
         }
-        if (series.get(Series.IS_AUTOMATIC) && !series.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
+        if (series.isTrue(Series.IS_AUTOMATIC) && !series.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
           if (!updatedSeries.contains(series.getKey())) {
             AutomaticSeriesBudgetTrigger.updateSeriesBudget(series.getKey(), repository);
             updatedSeries.add(series.getKey());
@@ -87,7 +87,7 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
       Calendar calendar = Calendar.getInstance();
       for (int i = fromIndex; i <= toIndex; i++) {
         int monthId = monthIds[i];
-        Boolean active = series.get(Series.getMonthField(monthId));
+        boolean active = series.isTrue(Series.getMonthField(monthId));
         Glob seriesBudget = monthWithBudget.remove(monthId);
         if (seriesBudget == null) {
           repository.create(SeriesBudget.TYPE,
@@ -118,7 +118,7 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
       repository.delete(seriesBudget.getKey());
     }
 
-    if (series.get(Series.IS_AUTOMATIC)) {
+    if (series.isTrue(Series.IS_AUTOMATIC)) {
       AutomaticSeriesBudgetTrigger.updateSeriesBudget(series.getKey(), repository);
     }
   }

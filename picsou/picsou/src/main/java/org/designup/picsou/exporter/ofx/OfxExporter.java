@@ -4,14 +4,15 @@ import org.designup.picsou.exporter.Exporter;
 import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.importer.ofx.OfxImporter;
 import org.designup.picsou.importer.ofx.OfxWriter;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.GlobStringifiers;
-import org.globsframework.model.format.GlobPrinter;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -57,7 +58,7 @@ public class OfxExporter implements Exporter {
       if (Account.SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID))) {
         continue;
       }
-      if (!Boolean.TRUE.equals(account.get(Account.IS_CARD_ACCOUNT))) {
+      if (!account.isTrue(Account.IS_CARD_ACCOUNT)) {
         writer.writeBankMsgHeader(accountBankEntityStringifier.toString(account, repository),
                                   account.get(Account.BRANCH_ID),
                                   account.get(Account.NUMBER));
@@ -74,7 +75,7 @@ public class OfxExporter implements Exporter {
       if (Account.SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID))) {
         continue;
       }
-      if (Boolean.TRUE.equals(account.get(Account.IS_CARD_ACCOUNT))) {
+      if (account.isTrue(Account.IS_CARD_ACCOUNT)) {
         writer.writeCardMsgHeader(account.get(Account.NUMBER));
         Date date = writeTransactions(account);
         Date balanceDate = account.get(Account.POSITION_DATE);
@@ -93,7 +94,7 @@ public class OfxExporter implements Exporter {
     Collections.sort(transactionsToWrite, TransactionComparator.ASCENDING_SPLIT_AFTER);
     Date lastDate = new Date(0);
     for (Glob transaction : transactionsToWrite) {
-      if (Boolean.TRUE.equals(transaction.get(Transaction.PLANNED))) {
+      if (transaction.isTrue(Transaction.PLANNED)) {
         continue;
       }
       writeTransaction(transaction);

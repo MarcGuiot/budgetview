@@ -169,7 +169,7 @@ public class BudgetAreaSeriesView extends View {
         for (Integer monthId : selectedMonthIds) {
           GlobList seriesBudget =
             seriesBudgetIndex.findByIndex(SeriesBudget.MONTH, monthId).getGlobs();
-          if (seriesBudget.size() == 0 || !seriesBudget.getFirst().get(SeriesBudget.ACTIVE)) {
+          if (seriesBudget.size() == 0 || !seriesBudget.getFirst().isTrue(SeriesBudget.ACTIVE)) {
             notActive++;
           }
         }

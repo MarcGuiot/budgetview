@@ -128,7 +128,7 @@ public class TransactionAnalyzerFactory {
       String groupForDate = matcher.get(PreTransactionTypeMatcher.GROUP_FOR_DATE);
       String dateFormat = matcher.get(PreTransactionTypeMatcher.DATE_FORMAT);
 
-      if (matcher.get(PreTransactionTypeMatcher.FOR_OFX)) {
+      if (matcher.isTrue(PreTransactionTypeMatcher.FOR_OFX)) {
         String name = matcher.get(PreTransactionTypeMatcher.OFX_NAME);
         String memo = matcher.get(PreTransactionTypeMatcher.OFX_MEMO);
         String checkNum = matcher.get(PreTransactionTypeMatcher.OFX_CHECK_NUM);

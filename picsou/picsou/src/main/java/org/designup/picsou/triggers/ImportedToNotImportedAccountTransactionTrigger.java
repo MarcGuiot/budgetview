@@ -15,7 +15,7 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
 
         Integer oppositeTransaction = values.get(Transaction.NOT_IMPORTED_TRANSACTION);
         Integer seriesId = values.get(Transaction.SERIES);
-        if (seriesId != null && oppositeTransaction == null && !values.get(Transaction.MIRROR)) {
+        if (seriesId != null && oppositeTransaction == null && !values.isTrue(Transaction.MIRROR)) {
           Glob series = repository.find(Key.create(Series.TYPE, seriesId));
           Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
           Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
@@ -28,7 +28,7 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         Glob transaction = repository.find(key);
-        if (transaction == null || transaction.get(Transaction.MIRROR)) {
+        if (transaction == null || transaction.isTrue(Transaction.MIRROR)) {
           return;
         }
         Integer mirrorTransactionId = transaction.get(Transaction.NOT_IMPORTED_TRANSACTION);
@@ -89,7 +89,7 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
   }
 
   private Integer getAccount(Glob fromAccount, Glob toAccount) {
-    if (fromAccount.get(Account.IS_IMPORTED_ACCOUNT)){
+    if (fromAccount.isTrue(Account.IS_IMPORTED_ACCOUNT)){
       return toAccount.get(Account.ID);
     }
     return fromAccount.get(Account.ID);

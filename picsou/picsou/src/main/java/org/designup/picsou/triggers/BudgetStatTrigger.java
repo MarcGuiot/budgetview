@@ -88,7 +88,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
         absoluteFirstTransaction = transaction;
       }
 
-      if (!transaction.get(Transaction.PLANNED) &&
+      if (!transaction.isTrue(Transaction.PLANNED) &&
           (lastRealKnownTransaction == null ||
            TransactionComparator.ASCENDING_BANK.compare(transaction, lastRealKnownTransaction) > 0)
           && transaction.get(Transaction.BANK_MONTH).equals(currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))
@@ -212,12 +212,12 @@ public class BudgetStatTrigger implements ChangeSetListener {
           if (series.get(Series.MIRROR_SERIES) != null) {
             if (fromAccount != null
                 && fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())
-                && !series.get(Series.IS_MIRROR)) {
+                && !series.isTrue(Series.IS_MIRROR)) {
               continue;
             }
             if (toAccount != null
                 && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())
-                && series.get(Series.IS_MIRROR)) {
+                && series.isTrue(Series.IS_MIRROR)) {
               continue;
             }
           }

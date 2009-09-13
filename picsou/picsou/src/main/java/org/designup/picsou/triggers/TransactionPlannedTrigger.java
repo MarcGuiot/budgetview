@@ -124,7 +124,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       }
 
       repository.update(seriesBudget.getKey(), SeriesBudget.OBSERVED_AMOUNT, observedAmount);
-      if (Amounts.isNearZero(seriesBudget.get(SeriesBudget.AMOUNT)) || !seriesBudget.get(SeriesBudget.ACTIVE)) {
+      if (Amounts.isNearZero(seriesBudget.get(SeriesBudget.AMOUNT)) || !seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
         repository.delete(transactions);
       }
       else if (monthId >= currentMonthId) {
@@ -196,10 +196,10 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     int account;
     Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
     Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-    if (series.get(Series.MIRROR_SERIES) != null && !series.get(Series.IS_MIRROR)) {
+    if (series.get(Series.MIRROR_SERIES) != null && !series.isTrue(Series.IS_MIRROR)) {
       account = toAccount.get(Account.ID);
     }
-    else if (series.get(Series.IS_MIRROR)) {
+    else if (series.isTrue(Series.IS_MIRROR)) {
       account = fromAccount.get(Account.ID);
     }
     else if (fromAccount == null && toAccount == null) {
@@ -239,13 +239,13 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
   private static class ComputeObservedFunctor implements GlobFunctor {
     public Double amount = null;
 
-    public void run(Glob glob, GlobRepository repository) throws Exception {
-      if (!glob.get(Transaction.PLANNED) && !glob.get(Transaction.MIRROR)) {
+    public void run(Glob transaction, GlobRepository repository) throws Exception {
+      if (!transaction.isTrue(Transaction.PLANNED) && !transaction.isTrue(Transaction.MIRROR)) {
         if (amount == null) {
-          amount = glob.get(Transaction.AMOUNT);
+          amount = transaction.get(Transaction.AMOUNT);
         }
         else {
-          amount += glob.get(Transaction.AMOUNT);
+          amount += transaction.get(Transaction.AMOUNT);
         }
       }
     }

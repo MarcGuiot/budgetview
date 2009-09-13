@@ -547,7 +547,7 @@ public class SeriesEditionDialog {
   }
 
   private void doShow(Set<Integer> monthIds, Glob series, final Boolean selectName) {
-    if (series != null && series.get(Series.IS_MIRROR)) {
+    if (series != null && series.isTrue(Series.IS_MIRROR)) {
       series = localRepository.findLinkTarget(series, Series.MIRROR_SERIES);
     }
     setCurrentSeries(series);
@@ -606,7 +606,7 @@ public class SeriesEditionDialog {
       }
       else {
         if (Account.onlyOneIsImported(fromAccount, toAccount)) {
-          if (fromAccount.get(Account.IS_IMPORTED_ACCOUNT)) {
+          if (fromAccount.isTrue(Account.IS_IMPORTED_ACCOUNT)) {
             multiplier = -1;
           }
           else {
@@ -683,7 +683,7 @@ public class SeriesEditionDialog {
         Glob fromAccount = localRepository.findLinkTarget(series, Series.FROM_ACCOUNT);
         Glob toAccount = localRepository.findLinkTarget(series, Series.TO_ACCOUNT);
         if (Account.areBothImported(fromAccount, toAccount)) {
-          if (series.get(Series.IS_MIRROR)) {
+          if (series.isTrue(Series.IS_MIRROR)) {
             return;
           }
           Integer mirrorSeries = series.get(Series.MIRROR_SERIES);
@@ -717,7 +717,7 @@ public class SeriesEditionDialog {
           Glob series = localRepository.get(key);
 
           uncategorize(series.get(Series.ID));
-          if (series.get(Series.MIRROR_SERIES) != null && !series.get(Series.IS_MIRROR)) {
+          if (series.get(Series.MIRROR_SERIES) != null && !series.isTrue(Series.IS_MIRROR)) {
             Integer seriesToDelete = series.get(Series.MIRROR_SERIES);
             uncategorize(seriesToDelete);
           }
@@ -725,7 +725,7 @@ public class SeriesEditionDialog {
         else {
           Glob series = localRepository.get(key);
           final Glob mirror = localRepository.findLinkTarget(series, Series.MIRROR_SERIES);
-          if (mirror != null && !series.get((Series.IS_MIRROR))) {
+          if (mirror != null && !series.isTrue((Series.IS_MIRROR))) {
             values.safeApply(new FieldValues.Functor() {
               public void process(Field field, Object value) throws Exception {
                 localRepository.update(mirror.getKey(), field, value);
@@ -944,7 +944,7 @@ public class SeriesEditionDialog {
           }
 
           if (values.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())
-              && (values.contains(Series.IS_AUTOMATIC) || series.get(Series.IS_AUTOMATIC))) {
+              && (values.contains(Series.IS_AUTOMATIC) || series.isTrue(Series.IS_AUTOMATIC))) {
             // le trigger de passage en automatique peut ne pas etre encore appelle
             GlobList seriesBudgets =
               repository.getAll(SeriesBudget.TYPE, fieldEquals(SeriesBudget.SERIES, series.get(Series.ID)));
@@ -1005,7 +1005,7 @@ public class SeriesEditionDialog {
             Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
             Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
             boolean noneImported = Account.areNoneImported(fromAccount, toAccount);
-            if (noneImported && series.get(Series.IS_AUTOMATIC)) {
+            if (noneImported && series.isTrue(Series.IS_AUTOMATIC)) {
               repository.update(key, Series.IS_AUTOMATIC, false);
               GlobList seriesBudgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES,
                                                               key.get(Series.ID)).getGlobs();
@@ -1039,7 +1039,7 @@ public class SeriesEditionDialog {
         public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
           Glob series = repository.get(key);
           Integer mirror = series.get(Series.MIRROR_SERIES);
-          if (mirror != null && !series.get(Series.IS_MIRROR)) {
+          if (mirror != null && !series.isTrue(Series.IS_MIRROR)) {
             final Key mirrorKey = Key.create(Series.TYPE, mirror);
             values.safeApply(new FieldValues.Functor() {
               public void process(Field field, Object value) throws Exception {
@@ -1060,7 +1060,7 @@ public class SeriesEditionDialog {
           Integer seriesId = values.get(SeriesBudget.SERIES);
           Glob series = repository.get(Key.create(Series.TYPE, seriesId));
           Integer mirrorSeriesId = series.get(Series.MIRROR_SERIES);
-          if (mirrorSeriesId != null && !series.get(Series.IS_MIRROR)) {
+          if (mirrorSeriesId != null && !series.isTrue(Series.IS_MIRROR)) {
             FieldValue[] fieldValues = values.toArray();
             for (int i = 0; i < fieldValues.length; i++) {
               FieldValue value = fieldValues[i];
@@ -1081,7 +1081,7 @@ public class SeriesEditionDialog {
           Integer seriesId = budget.get(SeriesBudget.SERIES);
           Glob series = repository.get(Key.create(Series.TYPE, seriesId));
           Integer mirrorSeriesId = series.get(Series.MIRROR_SERIES);
-          if (mirrorSeriesId != null && !series.get(Series.IS_MIRROR)) {
+          if (mirrorSeriesId != null && !series.isTrue(Series.IS_MIRROR)) {
             final Glob mirrorBudget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirrorSeriesId)
               .findByIndex(SeriesBudget.MONTH, budget.get(SeriesBudget.MONTH)).getGlobs().getFirst();
             values.safeApply(new FieldValues.Functor() {
@@ -1104,7 +1104,7 @@ public class SeriesEditionDialog {
             return;
           }
           Integer mirrorSeriesId = series.get(Series.MIRROR_SERIES);
-          if (mirrorSeriesId != null && !series.get(Series.IS_MIRROR)) {
+          if (mirrorSeriesId != null && !series.isTrue(Series.IS_MIRROR)) {
             Glob budget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirrorSeriesId)
               .findByIndex(SeriesBudget.MONTH, previousValues.get(SeriesBudget.MONTH)).getGlobs().getFirst();
             if (budget != null) {
@@ -1122,13 +1122,13 @@ public class SeriesEditionDialog {
         public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
           if (values.contains(Series.TO_ACCOUNT) || values.contains(Series.FROM_ACCOUNT)) {
             Glob series = repository.get(key);
-            if (series.get(Series.IS_AUTOMATIC)) {
+            if (series.isTrue(Series.IS_AUTOMATIC)) {
               return;
             }
             Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
             Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
             double multiplier = computeMultiplier(fromAccount, toAccount, repository);
-            if (!series.get(Series.IS_MIRROR)) {
+            if (!series.isTrue(Series.IS_MIRROR)) {
               GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE,
                                                          fieldEquals(SeriesBudget.SERIES, key.get(Series.ID)));
               for (Glob budget : seriesBudgets) {

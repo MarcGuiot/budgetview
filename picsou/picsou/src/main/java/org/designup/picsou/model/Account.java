@@ -106,9 +106,9 @@ public class Account {
 
   public static boolean shouldCreateMirror(Glob fromAccount, Glob toAccount) {
     return (fromAccount != null) && (toAccount != null) &&
-           ((fromAccount.get(Account.IS_IMPORTED_ACCOUNT) && !toAccount.get(Account.IS_IMPORTED_ACCOUNT))
+           ((fromAccount.isTrue(Account.IS_IMPORTED_ACCOUNT) && !toAccount.isTrue(Account.IS_IMPORTED_ACCOUNT))
             ||
-            (!fromAccount.get(Account.IS_IMPORTED_ACCOUNT) && toAccount.get(Account.IS_IMPORTED_ACCOUNT)));
+            (!fromAccount.isTrue(Account.IS_IMPORTED_ACCOUNT) && toAccount.isTrue(Account.IS_IMPORTED_ACCOUNT)));
   }
 
   public static boolean areNoneImported(Glob fromAccount, Glob toAccount) {
@@ -116,18 +116,18 @@ public class Account {
       return false;
     }
     if (fromAccount != null && toAccount == null) {
-      return !fromAccount.get(Account.IS_IMPORTED_ACCOUNT);
+      return !fromAccount.isTrue(Account.IS_IMPORTED_ACCOUNT);
     }
     if (fromAccount == null) {
-      return !toAccount.get(Account.IS_IMPORTED_ACCOUNT);
+      return !toAccount.isTrue(Account.IS_IMPORTED_ACCOUNT);
     }
-    return !toAccount.get(Account.IS_IMPORTED_ACCOUNT) && !fromAccount.get(Account.IS_IMPORTED_ACCOUNT);
+    return !toAccount.isTrue(Account.IS_IMPORTED_ACCOUNT) && !fromAccount.isTrue(Account.IS_IMPORTED_ACCOUNT);
   }
 
   public static boolean areBothImported(Glob fromAccount, Glob toAccount) {
     return !(fromAccount == null || toAccount == null)
-           && toAccount.get(Account.IS_IMPORTED_ACCOUNT)
-           && fromAccount.get(Account.IS_IMPORTED_ACCOUNT);
+           && toAccount.isTrue(Account.IS_IMPORTED_ACCOUNT)
+           && fromAccount.isTrue(Account.IS_IMPORTED_ACCOUNT);
   }
 
   public static boolean isUserCreatedSavingsAccount(Glob account) {
@@ -181,7 +181,7 @@ public class Account {
 
   public static boolean onlyOneIsImported(Glob account1, Glob account2) {
     return account1 != null && account2 != null &&
-           account1.get(Account.IS_IMPORTED_ACCOUNT) != account2.get(Account.IS_IMPORTED_ACCOUNT);
+           account1.isTrue(Account.IS_IMPORTED_ACCOUNT) != account2.isTrue(Account.IS_IMPORTED_ACCOUNT);
   }
 
   public static class Serializer implements PicsouGlobSerializer {

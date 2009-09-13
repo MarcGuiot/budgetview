@@ -778,7 +778,7 @@ public class ImportPanel {
   private static class TransactionLabelGlobStringifier extends AbstractGlobStringifier {
 
     public String toString(Glob glob, GlobRepository repository) {
-      if (glob.get(ImportedTransaction.IS_OFX)) {
+      if (glob.isTrue(ImportedTransaction.IS_OFX)) {
         StringBuilder builder = new StringBuilder();
         complete(builder, glob.get(ImportedTransaction.OFX_NAME));
         complete(builder, glob.get(ImportedTransaction.OFX_CHECK_NUM));

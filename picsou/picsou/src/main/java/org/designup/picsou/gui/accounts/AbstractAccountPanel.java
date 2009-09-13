@@ -171,7 +171,7 @@ public class AbstractAccountPanel<T extends GlobRepository>  {
 
         protected boolean isApplied(Glob account) {
           return AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE)) &&
-                 !Boolean.TRUE.equals(account.get(Account.IS_CARD_ACCOUNT));
+                 !account.isTrue(Account.IS_CARD_ACCOUNT);
         }
       },
 
@@ -183,7 +183,7 @@ public class AbstractAccountPanel<T extends GlobRepository>  {
 
         protected boolean isApplied(Glob account) {
           return AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE)) &&
-                 Boolean.TRUE.equals(account.get(Account.IS_CARD_ACCOUNT));
+                 account.isTrue(Account.IS_CARD_ACCOUNT);
         }
       },
 

@@ -151,7 +151,7 @@ public class SavingsSeriesView implements Disposable {
       for (Integer monthId : selectedMonthIds) {
         GlobList seriesBudget =
           seriesBudgetIndex.findByIndex(SeriesBudget.MONTH, monthId).getGlobs();
-        if (seriesBudget.size() == 0 || !seriesBudget.get(0).get(SeriesBudget.ACTIVE)) {
+        if (seriesBudget.size() == 0 || !seriesBudget.get(0).isTrue(SeriesBudget.ACTIVE)) {
           notActive++;
         }
       }

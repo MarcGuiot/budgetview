@@ -17,7 +17,7 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         if (values.contains(Series.IS_AUTOMATIC)) {
-          if (values.get(Series.IS_AUTOMATIC)) {
+          if (values.isTrue(Series.IS_AUTOMATIC)) {
             updateSeriesBudget(key, repository);
           }
         }
@@ -37,7 +37,7 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
     Double previousAmount = 0.;
     boolean firstUpdate = false;
     for (Glob seriesBudget : seriesBudgets) {
-      if (!seriesBudget.get(SeriesBudget.ACTIVE)) {
+      if (!seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
         repository.update(seriesBudget.getKey(),
                           FieldValue.value(SeriesBudget.AMOUNT, 0.));
       }

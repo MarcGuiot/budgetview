@@ -97,7 +97,7 @@ public class PositionTrigger implements ChangeSetListener {
       for (; pivot >= 0; pivot--) {
         Glob transaction = transactions[pivot];
         Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
-        if (checkSameAccount(account, transactionAccount) && !transaction.get(Transaction.PLANNED)
+        if (checkSameAccount(account, transactionAccount) && !transaction.isTrue(Transaction.PLANNED)
             && (positionDate == null || !Month.toDate(transaction.get(Transaction.BANK_MONTH),
                                                       transaction.get(Transaction.BANK_DAY)).after(positionDate))) {
           positionBefore = positionAfter - transaction.get(Transaction.AMOUNT);
@@ -131,7 +131,7 @@ public class PositionTrigger implements ChangeSetListener {
       if (checkSameAccount(account, transactionAccount)) {
         positionAfter = positionAfter + transaction.get(Transaction.AMOUNT);
         repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, positionAfter);
-        if (!transaction.get(Transaction.PLANNED) &&
+        if (!transaction.isTrue(Transaction.PLANNED) &&
             Transaction.isTransactionBeforeOrEqual(transaction, month, day)) {
           lastUpdateTransactionId = transaction.get(Transaction.ID);
         }
@@ -198,7 +198,7 @@ public class PositionTrigger implements ChangeSetListener {
       if (!sameCheckerAccount.isSame(transaction.get(Transaction.ACCOUNT))) {
         continue;
       }
-      if (Transaction.isTransactionBeforeOrEqual(transaction, month, currentDay) && !transaction.get(Transaction.PLANNED)) {
+      if (Transaction.isTransactionBeforeOrEqual(transaction, month, currentDay) && !transaction.isTrue(Transaction.PLANNED)) {
 
         accountManagement.updateOpenPosition(transaction, index, transactions, positions);
         accountManagement.updateClosePosition(transaction, positions);

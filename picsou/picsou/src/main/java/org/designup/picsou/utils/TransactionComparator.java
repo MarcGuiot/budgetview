@@ -86,7 +86,7 @@ public class TransactionComparator implements Comparator<Glob> {
       return comparisonMultiplier * transaction1.get(Transaction.ID).compareTo(source2);
     }
     if (!transaction1.get(Transaction.PLANNED).equals(transaction2.get(Transaction.PLANNED))) {
-      if (transaction1.get(Transaction.PLANNED)) {
+      if (transaction1.isTrue(Transaction.PLANNED)) {
         return comparisonMultiplier;
       }
       else {

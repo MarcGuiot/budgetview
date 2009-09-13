@@ -2,7 +2,6 @@ package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.CurrentMonth;
-import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -59,7 +58,7 @@ public class CurrentMonthTrigger implements ChangeSetListener {
 
     public void run(Glob transaction, GlobRepository repository) {
       Integer monthId = transaction.get(Transaction.BANK_MONTH);
-      if (!transaction.get(Transaction.PLANNED) && monthId > lastMonthId) {
+      if (!transaction.isTrue(Transaction.PLANNED) && monthId > lastMonthId) {
         lastMonthId = monthId;
       }
     }
@@ -83,7 +82,7 @@ public class CurrentMonthTrigger implements ChangeSetListener {
     }
 
     public void run(Glob glob, GlobRepository repository) {
-      if (!glob.get(Transaction.PLANNED) && glob.get(Transaction.BANK_MONTH).equals(lastMonthId)
+      if (!glob.isTrue(Transaction.PLANNED) && glob.get(Transaction.BANK_MONTH).equals(lastMonthId)
           && glob.get(Transaction.BANK_DAY) > lastMonthDay) {
         lastMonthDay = glob.get(Transaction.BANK_DAY);
       }
@@ -107,11 +106,11 @@ public class CurrentMonthTrigger implements ChangeSetListener {
       this.lastDay = lastDay;
     }
 
-    public void run(Glob glob, GlobRepository repository) {
-      if (glob.get(Transaction.PLANNED) && glob.get(Transaction.BANK_MONTH).equals(lastMonth)
-          && glob.get(Transaction.BANK_DAY) < lastDay) {
-        repository.update(glob.getKey(), Transaction.BANK_DAY, lastDay);
-        repository.update(glob.getKey(), Transaction.DAY, lastDay);
+    public void run(Glob transaction, GlobRepository repository) {
+      if (transaction.isTrue(Transaction.PLANNED) && transaction.get(Transaction.BANK_MONTH).equals(lastMonth)
+          && transaction.get(Transaction.BANK_DAY) < lastDay) {
+        repository.update(transaction.getKey(), Transaction.BANK_DAY, lastDay);
+        repository.update(transaction.getKey(), Transaction.DAY, lastDay);
       }
     }
   }

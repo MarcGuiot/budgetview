@@ -28,12 +28,12 @@ public class AccountComparator implements Comparator<Glob> {
     if (SUMMARY_ACCOUNT_IDS.contains(account2.get(ID))) {
       return 1;
     }
-    if ((account1.get(IS_CARD_ACCOUNT) == Boolean.TRUE)
-        && (account2.get(IS_CARD_ACCOUNT) != Boolean.TRUE)) {
+    if ((account1.isTrue(IS_CARD_ACCOUNT))
+        && (!account2.isTrue(IS_CARD_ACCOUNT))) {
       return 1;
     }
-    if ((account1.get(IS_CARD_ACCOUNT) != Boolean.TRUE)
-        && (account2.get(IS_CARD_ACCOUNT) == Boolean.TRUE)) {
+    if ((!account1.isTrue(IS_CARD_ACCOUNT))
+        && (account2.isTrue(IS_CARD_ACCOUNT))) {
       return -1;
     }
     return Utils.compareIgnoreCase(account1.get(NAME), account2.get(NAME));

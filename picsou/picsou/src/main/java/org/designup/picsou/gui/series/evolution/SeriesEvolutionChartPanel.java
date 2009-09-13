@@ -144,7 +144,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     });
   }
 
-  public void reset(){
+  public void reset() {
     this.currentWrapperKey = getMainSummaryWrapper();
   }
 
@@ -248,8 +248,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
         }
         else if (id.equals(SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID)) {
           updateSavingsAccountsHisto();
-          updateSavingsBalanceStack();
-          clearSeriesStack();
+          updateSavingsStacks();
         }
       }
       break;
@@ -483,16 +482,77 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     updateHistoLabel("savingsAccounts");
   }
 
-  private void updateSavingsBalanceStack() {
+  private void updateSavingsStacks() {
 
+    double savingsIn = 0;
+    double savingsOut = 0;
+    StackChartDataset seriesInDataset = new StackChartDataset();
+    StackChartDataset seriesOutDataset = new StackChartDataset();
+
+    System.out.println("SeriesEvolutionChartPanel.updateSavingsStacks: ");
+
+    for (Glob seriesStat : repository.getAll(SeriesStat.TYPE, fieldEquals(SeriesStat.MONTH, currentMonthId))) {
+      Double amount = seriesStat.get(SeriesStat.SUMMARY_AMOUNT);
+      if (amount == null) {
+        continue;
+      }
+
+      Glob series = repository.findLinkTarget(seriesStat, SeriesStat.SERIES);
+      if ((series == null) || series.isTrue(Series.IS_MIRROR)) {
+        System.out.println("SeriesEvolutionChartPanel.updateSavingsStacks: NO SERIES");
+        continue;
+      }
+      
+      Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
+      Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
+
+      if (amount < 0) {
+        Glob temp = fromAccount;
+        fromAccount = toAccount;
+        toAccount = temp;
+        amount = Math.abs(amount);
+      }
+
+      System.out.println("   " + series.get(Series.NAME) + "\t\t"
+                         + (fromAccount == null ? "<null>" : fromAccount.get(Account.NAME)) + "\t\t"
+                         + (toAccount == null ? "<null>" : toAccount.get(Account.NAME)) + "\t\t"
+                         + amount);
+
+      
+      boolean isFromSavingsAccount = Account.isUserCreatedSavingsAccount(fromAccount);
+      boolean isToSavingsAccount = Account.isUserCreatedSavingsAccount(toAccount);
+      if (isToSavingsAccount && !isFromSavingsAccount) {
+        System.out.println("    => IN: " + amount);
+        savingsIn += amount;
+        seriesInDataset.add(series.get(Series.NAME), amount, createSelectionAction(series.get(Series.ID)));
+      }
+      else if (isFromSavingsAccount && !isToSavingsAccount) {
+        System.out.println("    => OUT: " + amount);
+        savingsOut += amount;
+        seriesOutDataset.add(series.get(Series.NAME), amount, createSelectionAction(series.get(Series.ID)));
+      }
+    }
+
+    updateSavingsBalanceStack(savingsIn, savingsOut);
+    updateSavingsSeriesStack(seriesInDataset, seriesOutDataset);
+  }
+
+  private void updateSavingsBalanceStack(double savingsIn, double savingsOut) {
     Glob budgetStat = SavingsBudgetStat.findSummary(currentMonthId, repository);
 
     StackChartDataset incomeDataset = new StackChartDataset();
+    incomeDataset.add(Lang.get("seriesEvolution.chart.balance.savingsIn"), savingsIn, null);
 
     StackChartDataset expensesDataset = new StackChartDataset();
+    expensesDataset.add(Lang.get("seriesEvolution.chart.balance.savingsOut"), savingsOut, null);
 
     balanceChart.update(incomeDataset, expensesDataset, balanceStackColors);
     updateBalanceLabel("savingsBalance");
+  }
+
+  private void updateSavingsSeriesStack(StackChartDataset seriesInDataset, StackChartDataset seriesOutDataset) {
+    seriesChart.update(seriesInDataset, seriesOutDataset, balanceStackColors);
+    updateSeriesLabel("savingsSeries");
   }
 
   private void clearBalanceStack() {

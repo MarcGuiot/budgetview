@@ -93,27 +93,27 @@ public class PicsouMatchers {
         if (Account.areBothImported(toAccount, fromAccount)) {
           if (accountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
             if (fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
-              return series.get(Series.IS_MIRROR);
+              return series.isTrue(Series.IS_MIRROR);
             }
             if (toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
-              return !series.get(Series.IS_MIRROR);
+              return !series.isTrue(Series.IS_MIRROR);
             }
             return false;
           }
           if (accountId == Account.SAVINGS_SUMMARY_ACCOUNT_ID) {
             if (fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
-              return series.get(Series.IS_MIRROR);
+              return series.isTrue(Series.IS_MIRROR);
             }
             if (toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
-              return !series.get(Series.IS_MIRROR);
+              return !series.isTrue(Series.IS_MIRROR);
             }
             return false;
           }
           if (accountId.equals(fromAccount.get(Account.ID))) {
-            return series.get(Series.IS_MIRROR);
+            return series.isTrue(Series.IS_MIRROR);
           }
           if (accountId.equals(toAccount.get(Account.ID))) {
-            return !series.get(Series.IS_MIRROR);
+            return !series.isTrue(Series.IS_MIRROR);
           }
         }
         if (accountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
@@ -159,12 +159,12 @@ public class PicsouMatchers {
         if (Account.onlyOneIsImported(toAccount, fromAccount)) {
           for (Glob transaction : transactions) {
             if (transaction.get(Transaction.AMOUNT) > 0) {
-              if (!toAccount.get(Account.IS_IMPORTED_ACCOUNT)) {
+              if (!toAccount.isTrue(Account.IS_IMPORTED_ACCOUNT)) {
                 return false;
               }
             }
             else {
-              if (!fromAccount.get(Account.IS_IMPORTED_ACCOUNT)) {
+              if (!fromAccount.isTrue(Account.IS_IMPORTED_ACCOUNT)) {
                 return false;
               }
             }
@@ -173,7 +173,7 @@ public class PicsouMatchers {
         else if (toAccountId != null && fromAccountId != null) {
           for (Glob transaction : transactions) {
             if (transaction.get(Transaction.AMOUNT) > 0) {
-              if (series.get(Series.IS_MIRROR)) {
+              if (series.isTrue(Series.IS_MIRROR)) {
                 return false;
               }
               if (!toAccountId.equals(transaction.get(Transaction.ACCOUNT))) {
@@ -181,7 +181,7 @@ public class PicsouMatchers {
               }
             }
             else {
-              if (!series.get(Series.IS_MIRROR)) {
+              if (!series.isTrue(Series.IS_MIRROR)) {
                 return false;
               }
               if (!fromAccountId.equals(transaction.get(Transaction.ACCOUNT))) {
@@ -252,10 +252,10 @@ public class PicsouMatchers {
             return !exclusive;
           }
           BooleanField monthField = Series.getMonthField(id);
-          if (!series.get(monthField)) {
+          if (!series.isTrue(monthField)) {
             Glob seriesBudget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
               .findByIndex(SeriesBudget.MONTH, id).getGlobs().getFirst();
-            if (seriesBudget != null && !seriesBudget.get(SeriesBudget.ACTIVE)) {
+            if (seriesBudget != null && !seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
               return false;
             }
           }

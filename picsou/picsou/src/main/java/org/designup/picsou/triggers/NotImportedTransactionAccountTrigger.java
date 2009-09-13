@@ -132,7 +132,7 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
         {
           Integer currentDay = currentMonth.get(CurrentMonth.CURRENT_DAY);
           if (values.contains(SeriesBudget.ACTIVE)) {
-            if (values.get(SeriesBudget.ACTIVE)) {
+            if (values.isTrue(SeriesBudget.ACTIVE)) {
               createTransactionFromSeriesBudget(seriesBudget, repository);
             }
             else {
@@ -165,7 +165,7 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
               for (Glob transaction : transactions) {
                 repository.update(transaction.getKey(), value(Transaction.DAY, newDay),
                                   value(Transaction.PLANNED,
-                                                   isPlanned != null ? false : transaction.get(Transaction.PLANNED)));
+                                                   isPlanned != null ? false : transaction.isTrue(Transaction.PLANNED)));
               }
             }
             else {
@@ -182,7 +182,7 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
               .findByIndex(Transaction.MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs()
               .filterSelf(GlobMatchers.fieldIn(Transaction.ACCOUNT, accounts), repository);
             for (Glob transaction : transactions) {
-              if (transaction.get(Transaction.MIRROR)) {
+              if (transaction.isTrue(Transaction.MIRROR)) {
                 repository.update(transaction.getKey(), Transaction.AMOUNT, -values.get(SeriesBudget.AMOUNT));
               }
               else {

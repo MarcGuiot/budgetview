@@ -54,7 +54,7 @@ public class DefaultIdentifiedState extends AbstractSessionState implements Iden
     return user.get(User.LINK_INFO);
   }
 
-  public boolean getIsRegistered() {
-    return user.get(User.IS_REGISTERED_USER);
+  public boolean isRegistered() {
+    return user.isTrue(User.IS_REGISTERED_USER);
   }
 }

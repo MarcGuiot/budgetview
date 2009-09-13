@@ -68,7 +68,7 @@ public class LicenseActivationDialog {
 
     dialog.addPanelWithButtons(builder.<JPanel>load(), validateAction, new CancelAction());
 
-    Boolean isConnected = localRepository.get(User.KEY).get(User.CONNECTED);
+    Boolean isConnected = localRepository.get(User.KEY).isTrue(User.CONNECTED);
     connectionMessage.setVisible(!isConnected);
 
     initRegisterChangeListener();
@@ -79,7 +79,7 @@ public class LicenseActivationDialog {
     changeSetListener = new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(User.KEY)) {
-          Boolean isConnected = repository.get(User.KEY).get(User.CONNECTED);
+          boolean isConnected = repository.get(User.KEY).isTrue(User.CONNECTED);
           if (!isConnected) {
             connectionMessage.setText(Lang.get("license.connect"));
           }
@@ -122,7 +122,7 @@ public class LicenseActivationDialog {
   public void show(boolean expiration) {
     expirationLabel.setVisible(expiration);
     localRepository.rollback();
-    if (repository.get(User.KEY).get(User.CONNECTED)) {
+    if (repository.get(User.KEY).isTrue(User.CONNECTED)) {
 //      localRepository.update(UserPreferences.KEY, UserPreferences.FUTURE_MONTH_COUNT, 24);
       selectionService.select(localRepository.get(User.KEY));
       selectionService.select(localRepository.get(UserPreferences.KEY));

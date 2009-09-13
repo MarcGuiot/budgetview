@@ -96,18 +96,18 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
 
         // attention les creation de mois arrive dans un ordre aleatoire
         // attention aussi a la creation de mois en debut de periode et non en fin
-        if (series.get(Series.IS_AUTOMATIC)) {
+        if (series.isTrue(Series.IS_AUTOMATIC)) {
           Double amount = 0.;
           int lastmonthId = 0;
           int nextMonth = Month.next(monthId);
-          for (Glob glob : existingSeriesBudget) {
-            if (glob.get(SeriesBudget.MONTH) < monthId
-                && glob.get(SeriesBudget.ACTIVE)
-                && glob.get(SeriesBudget.MONTH) > lastmonthId) {
-              amount = glob.get(SeriesBudget.AMOUNT);
-              lastmonthId = glob.get(SeriesBudget.MONTH);
+          for (Glob seriesBudget : existingSeriesBudget) {
+            if (seriesBudget.get(SeriesBudget.MONTH) < monthId
+                && seriesBudget.isTrue(SeriesBudget.ACTIVE)
+                && seriesBudget.get(SeriesBudget.MONTH) > lastmonthId) {
+              amount = seriesBudget.get(SeriesBudget.AMOUNT);
+              lastmonthId = seriesBudget.get(SeriesBudget.MONTH);
             }
-            if (glob.get(SeriesBudget.MONTH) == nextMonth) {
+            if (seriesBudget.get(SeriesBudget.MONTH) == nextMonth) {
 //              ???
 //              repository.update(glob.getKey(), SeriesBudget.AMOUNT, 0.);
               break;
@@ -129,7 +129,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
             }
             while (pos >= 0) {
               Glob budgets = existingSeriesBudget[pos];
-              if (budgets.get(SeriesBudget.ACTIVE) && !budgets.get(SeriesBudget.MONTH).equals(monthId)) {
+              if (budgets.isTrue(SeriesBudget.ACTIVE) && !budgets.get(SeriesBudget.MONTH).equals(monthId)) {
                 seriesAmount = budgets.get(SeriesBudget.AMOUNT);
                 break;
               }
@@ -138,7 +138,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
               pos = pos < 0 ? 0 : pos;
               while (pos < existingSeriesBudget.length - 1) {
                 Glob budgets = existingSeriesBudget[pos];
-                if (budgets.get(SeriesBudget.ACTIVE) && !budgets.get(SeriesBudget.MONTH).equals(monthId)) {
+                if (budgets.isTrue(SeriesBudget.ACTIVE) && !budgets.get(SeriesBudget.MONTH).equals(monthId)) {
                   seriesAmount = budgets.get(SeriesBudget.AMOUNT);
                   break;
                 }

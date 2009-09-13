@@ -13,6 +13,6 @@ public class LicenseService {
   public static boolean trialExpired(GlobRepository repository) {
     Glob user = repository.get(User.KEY);
     Date lastValidDay = repository.get(UserPreferences.KEY).get(UserPreferences.LAST_VALID_DAY);
-    return !user.get(User.IS_REGISTERED_USER) && !TimeService.getToday().before(lastValidDay);
+    return !user.isTrue(User.IS_REGISTERED_USER) && !TimeService.getToday().before(lastValidDay);
   }
 }

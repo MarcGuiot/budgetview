@@ -112,7 +112,7 @@ public class SeriesBudgetEditionPanel {
         if (changeSet.containsChanges(currentSeries.getKey())) {
           FieldValues previousValue = changeSet.getPreviousValue(currentSeries.getKey());
           if (previousValue.contains(Series.IS_AUTOMATIC)) {
-            isAutomatic = currentSeries.get(Series.IS_AUTOMATIC);
+            isAutomatic = currentSeries.isTrue(Series.IS_AUTOMATIC);
             if (isAutomatic) {
               modeCard.show("automatic");
             }
@@ -160,7 +160,7 @@ public class SeriesBudgetEditionPanel {
     updatePositiveOrNegativeRadio();
 
     switchToManualAction.setEnabled(true);
-    if (currentSeries.get(Series.IS_AUTOMATIC)) {
+    if (currentSeries.isTrue(Series.IS_AUTOMATIC)) {
       modeCard.show("automatic");
       isAutomatic = true;
       if (currentSeries.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {

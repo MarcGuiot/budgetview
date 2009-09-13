@@ -15,6 +15,10 @@ public class StackChartDataset {
   private boolean containsSelection;
   private boolean hasActions;
 
+  public void add(String label, Double value) {
+    add(label, value, null, false);
+  }
+
   public void add(String label, Double value, Action action) {
     add(label, value, action, false);
   }

@@ -95,7 +95,7 @@ public class BudgetView extends View {
   private void updateHelpMessage() {
     Glob prefs = repository.find(UserPreferences.KEY);
     if (prefs != null) {
-      helpMessage.setVisible(Boolean.TRUE.equals(prefs.get(UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE)) &&
+      helpMessage.setVisible(prefs.isTrue(UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE) &&
                              repository.contains(Series.TYPE,
                                                  not(fieldEquals(Series.ID,
                                                                  Series.UNCATEGORIZED_SERIES_ID))));

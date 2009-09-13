@@ -64,7 +64,7 @@ public class ProfileTypeSeriesTrigger implements ChangeSetListener {
         }
 
         for (BooleanField field : Series.getMonths()) {
-          if (series.get(field)) {
+          if (series.isTrue(field)) {
             atLeatOneIsSelected = true;
             break;
           }
@@ -89,7 +89,7 @@ public class ProfileTypeSeriesTrigger implements ChangeSetListener {
         BooleanField[] months = Series.getMonths();
         for (int month = 0; month < months.length; month++) {
           BooleanField field = months[month];
-          if (series.get(field)) {
+          if (series.isTrue(field)) {
             for (int i = 1; i < 12; i++) {
               int id = ((i + month) % 12) + 1;
               boolean value = (i % profileType.getMonthStep()) == 0;

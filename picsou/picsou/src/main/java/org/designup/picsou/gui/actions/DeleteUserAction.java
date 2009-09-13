@@ -32,7 +32,7 @@ public class DeleteUserAction extends AbstractAction implements ChangeSetListene
   public void actionPerformed(ActionEvent e) {
     final Glob user = repository.get(User.KEY);
 
-    if (user.get(User.AUTO_LOGIN)) {
+    if (user.isTrue(User.AUTO_LOGIN)) {
       ConfirmationDialog dialog = new ConfirmationDialog("delete.autologin.title", "delete.autologin.message", directory.get(JFrame.class), directory) {
         protected void postValidate() {
           mainPanel.deleteUser(user.get(User.NAME), user.get(User.NAME).toCharArray());
@@ -55,14 +55,14 @@ public class DeleteUserAction extends AbstractAction implements ChangeSetListene
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
     if (changeSet.containsChanges(User.KEY)) {
-      setEnabled(!repository.get(User.KEY).get(User.IS_DEMO_USER));
+      setEnabled(!repository.get(User.KEY).isTrue(User.IS_DEMO_USER));
     }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     Glob user = repository.find(User.KEY);
     if (user != null) {
-      setEnabled(!user.get(User.IS_DEMO_USER));
+      setEnabled(!user.isTrue(User.IS_DEMO_USER));
     }
   }
 }

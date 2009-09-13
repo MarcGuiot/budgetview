@@ -184,7 +184,7 @@ public class Series {
     lastMonth = lastMonth == null ? Integer.MAX_VALUE : lastMonth;
     return monthToCheck >= firstMonth &&
            monthToCheck <= lastMonth &&
-           Boolean.TRUE.equals(series.get(getMonthField(monthToCheck)));
+           series.isTrue(getMonthField(monthToCheck));
   }
 
   public static BudgetArea getBudgetArea(Integer seriesId, GlobRepository repository) {

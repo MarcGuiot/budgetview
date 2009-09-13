@@ -111,7 +111,7 @@ public class Category {
   }
 
   public static boolean isSystem(Glob category) {
-    return Boolean.TRUE.equals(category.get(Category.SYSTEM));
+    return category.isTrue(Category.SYSTEM);
   }
 
   public static boolean isReserved(Glob category) {

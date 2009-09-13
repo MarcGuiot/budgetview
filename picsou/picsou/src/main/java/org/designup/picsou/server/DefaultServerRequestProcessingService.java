@@ -24,7 +24,7 @@ public class DefaultServerRequestProcessingService implements ServerRequestProce
     SessionState connectingState = sessionService.getSessionState(sessionId);
     IdentifiedState identifiedState = connectingState.identify(input);
     output.writeBytes(identifiedState.getLinkInfo());
-    output.writeBoolean(identifiedState.getIsRegistered());
+    output.writeBoolean(identifiedState.isRegistered());
   }
 
   public void createUser(Long sessionId, SerializedInput input, SerializedOutput output) throws InvalidActionForState {

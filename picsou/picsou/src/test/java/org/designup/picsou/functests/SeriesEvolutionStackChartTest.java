@@ -221,57 +221,68 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
   public void testSavings() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0001", 100.0, "2009/07/30")
-      .addTransaction("2009/06/01", -1200.00, "Auchan")
-      .addTransaction("2009/06/02", -150.00, "ToImportedSavings")
-      .addTransaction("2009/06/03", -50.00, "ToNonImportedSavings")
-      .addTransaction("2009/06/04", 500.00, "WorldCo")
-      .addTransaction("2009/07/01", -100.00, "Auchan")
-      .addTransaction("2009/07/02", -200.00, "ToImportedSavings")
-      .addTransaction("2009/07/03", -50.00, "ToNonImportedSavings")
-      .addTransaction("2009/07/04", 500.00, "WorldCo")
+      .addBankAccount(30006, 10674, "0001", 1000.0, "2009/07/30")
+      .addTransaction("2009/06/01", -150.00, "MAIN TO IMPORTED")
+      .addTransaction("2009/06/01", -50.00, "MAIN TO NON IMPORTED")
+      .addTransaction("2009/06/01", 500.00, "WORLDCO")
+      .addTransaction("2009/07/01", -200.00, "MAIN TO IMPORTED")
+      .addTransaction("2009/07/01", -50.00, "MAIN TO NON IMPORTED")
+      .addTransaction("2009/07/01", 500.00, "WORLDCO")
       .load();
 
     OfxBuilder.init(this)
       .addBankAccount(30006, 10674, "0002", 20000.0, "2009/07/30")
-      .addTransaction("2009/07/01", 200.00, "FromMainAccount")
+      .addTransaction("2009/06/01", 150.00, "IMPORTED FROM MAIN")
+      .addTransaction("2009/06/01", 220.00, "IMPORTED FROM NON IMPORTED")
+      .addTransaction("2009/06/01", 200.00, "IMPORTED FROM EXTERNAL")
+      .addTransaction("2009/06/01", -300.00, "IMPORTED TO EXTERNAL ")
       .load();
+
+    timeline.selectMonth("2009/06");
 
     views.selectHome();
     mainAccounts.edit("Account n. 0002")
-      .setAccountName("Imported Savings Account")
+      .setAccountName("Imported Savings")
       .setAsSavings()
+      .selectBank("ING Direct")
       .validate();
-
-    fail("Regis : en cours");
-
-    views.selectCategorization();
-    categorization.selectTransactions("ToImportedSavings", "FromImportedSavings");
-    categorization.selectSavings().createSeries()
-      .setName("ToImported")
-      .setFromAccount("Account n. 0001")
-      .setToAccount("Imported Savings Account")
-      .validate();
-
-    views.selectHome();
     savingsAccounts.createNewAccount()
-      .setAccountName("Non-imported Savings Account")
+      .setAccountName("Non-imported Savings")
+      .setAsSavings()
       .selectBank("ING Direct")
       .setPosition(5000.00)
-      .setAsSavings()
       .validate();
 
-    views.selectSavings();
-    savingsView.createSeries()
-      .setName("ToNonImported")
-      .setFromAccount("External account")
-      .setToAccount("Non-imported Savings Account")
-      .switchToManual()
-      .selectAllMonths()
-      .setAmount(300)
-      .validate();
+    views.selectCategorization();
+    categorization.setNewSavings("MAIN TO IMPORTED", "MainToImported", "Account n. 0001", "Imported Savings");
+    categorization.setSavings("IMPORTED FROM MAIN", "MainToImported");
+    categorization.setNewSavings("MAIN TO NON IMPORTED", "MainToNonImported", "Account n. 0001", "Non-imported Savings");
+    categorization.setNewSavings("IMPORTED FROM NON IMPORTED", "ImportedFromNonImported", "Non-imported Savings", "Imported Savings");
+    categorization.setNewSavings("IMPORTED FROM EXTERNAL", "ImportedFromExternal", "External account", "Imported Savings");
+    categorization.setNewSavings("IMPORTED TO EXTERNAL", "ImportedToExternal", "Imported Savings", "External account");
 
-    openApplication();
+    views.selectEvolution();
+    seriesEvolution.select("Savings accounts");
+
+    fail("Regis: en cours");
+
+    seriesEvolution.checkBalanceChartLabel("Savings accounts balance");
+    seriesEvolution.balanceChart.getLeftDataset()
+      .checkSize(1)
+      .checkValue("Added to savings", 150 + 50 + 200);
+    seriesEvolution.balanceChart.getRightDataset()
+      .checkSize(2)
+      .checkValue("Substracted from savings", 300);
+
+    seriesEvolution.checkSeriesChartLabel("Main savings series");
+    seriesEvolution.seriesChart.getLeftDataset()
+      .checkSize(1)
+      .checkValue("MainToImported", 150)
+      .checkValue("MainToNonImported", 50)
+      .checkValue("ImportedFromExternal", 200);
+    seriesEvolution.seriesChart.getRightDataset()
+      .checkSize(2)
+      .checkValue("ImportedToExternal", 300);
   }
 
   public void testUncategorized() throws Exception {

@@ -56,6 +56,6 @@ public class User {
   }
 
   public static boolean isDemoUser(Glob user) {
-    return user.get(User.IS_DEMO_USER);
+    return user.isTrue(User.IS_DEMO_USER);
   }
 }

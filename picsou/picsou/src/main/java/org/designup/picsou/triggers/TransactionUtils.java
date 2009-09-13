@@ -23,15 +23,12 @@ public class TransactionUtils {
                         value(Transaction.MONTH, transaction.get(Transaction.MONTH)),
                         value(Transaction.TRANSACTION_TYPE,
                               amount > 0 ? TransactionType.VIREMENT.getId() : TransactionType.PRELEVEMENT.getId()),
-                        value(Transaction.CATEGORY,
-                              transaction.get(Transaction.CATEGORY)),
-                        value(Transaction.SUB_SERIES,
-                              transaction.get(Transaction.SUB_SERIES)),
+                        value(Transaction.CATEGORY, transaction.get(Transaction.CATEGORY)),
+                        value(Transaction.SUB_SERIES, transaction.get(Transaction.SUB_SERIES)),
                         value(Transaction.LABEL, transaction.get(Transaction.LABEL)),
                         value(Transaction.SERIES, transaction.get(Transaction.SERIES)),
                         value(Transaction.MIRROR, true),
-                        value(Transaction.PLANNED,
-                              transaction.get(Transaction.PLANNED)));
+                        value(Transaction.PLANNED, transaction.get(Transaction.PLANNED)));
     repository.update(source, Transaction.NOT_IMPORTED_TRANSACTION,
                       savingsTransaction.get(Transaction.ID));
     return savingsTransaction.get(Transaction.ID);
