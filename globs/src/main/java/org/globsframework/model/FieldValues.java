@@ -27,6 +27,8 @@ public interface FieldValues extends Serializable {
 
   Boolean get(BooleanField field, boolean defaultIfNull);
 
+  Boolean isTrue(BooleanField field) throws ItemNotFound;
+
   Long get(LongField field) throws ItemNotFound;
 
   byte[] get(BlobField field) throws ItemNotFound;
@@ -89,6 +91,10 @@ public interface FieldValues extends Serializable {
     }
 
     public Boolean get(BooleanField field, boolean defaultIfNull) {
+      throw new ItemNotFound(field.getName());
+    }
+
+    public Boolean isTrue(BooleanField field) throws ItemNotFound {
       throw new ItemNotFound(field.getName());
     }
 

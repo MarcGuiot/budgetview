@@ -90,6 +90,10 @@ public class SingleFieldKey extends Key {
     return (Boolean)value;
   }
 
+  public Boolean isTrue(BooleanField field) {
+    return Boolean.TRUE.equals(get(field));
+  }
+
   public Date get(DateField field) {
     checkIsKeyField(field);
     return (Date)value;

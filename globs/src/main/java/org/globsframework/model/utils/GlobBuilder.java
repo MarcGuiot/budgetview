@@ -155,6 +155,10 @@ public class GlobBuilder implements FieldValues.Functor, FieldSetter, FieldValue
     return fieldValuesBuilder.get().get(field);
   }
 
+  public Boolean isTrue(BooleanField field) throws ItemNotFound {
+    return fieldValuesBuilder.get().isTrue(field);
+  }
+
   public Long get(LongField field) throws ItemNotFound {
     return fieldValuesBuilder.get().get(field);
   }

@@ -5,12 +5,13 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.impl.AbstractFieldValues;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.Unset;
 
 import java.util.Date;
 
-class DeltaFieldValuesFromArray implements FieldValues {
+class DeltaFieldValuesFromArray extends AbstractFieldValues {
   private GlobType type;
   private Object[] values;
 
@@ -20,6 +21,10 @@ class DeltaFieldValuesFromArray implements FieldValues {
   }
 
   public Object getValue(Field field) throws ItemNotFound {
+    return doGet(field);
+  }
+
+  protected Object doGet(Field field) {
     Object value = values[field.getIndex()];
     if (value == Unset.VALUE) {
       throw new ItemNotFound(field.getName() + " not set.");
@@ -27,49 +32,6 @@ class DeltaFieldValuesFromArray implements FieldValues {
     return value;
   }
 
-  public Double get(DoubleField field) throws ItemNotFound {
-    return (Double)getValue(field);
-  }
-
-  public Date get(DateField field) throws ItemNotFound {
-    return (Date)getValue(field);
-  }
-
-  public Date get(TimeStampField field) throws ItemNotFound {
-    return (Date)getValue(field);
-  }
-
-  public Integer get(IntegerField field) throws ItemNotFound {
-    return (Integer)getValue(field);
-  }
-
-  public Integer get(LinkField field) throws ItemNotFound {
-    return (Integer)getValue(field);
-  }
-
-  public String get(StringField field) throws ItemNotFound {
-    return (String)getValue(field);
-  }
-
-  public Boolean get(BooleanField field) throws ItemNotFound {
-    return (Boolean)getValue(field);
-  }
-
-  public Boolean get(BooleanField field, boolean defaultIfNull) {
-    Boolean value = (Boolean)getValue(field);
-    if (value == null) {
-      return defaultIfNull;
-    }
-    return value;
-  }
-
-  public Long get(LongField field) throws ItemNotFound {
-    return (Long)getValue(field);
-  }
-
-  public byte[] get(BlobField field) throws ItemNotFound {
-    return (byte[])getValue(field);
-  }
 
   public boolean contains(Field field) {
     if (field.isKeyField()) {

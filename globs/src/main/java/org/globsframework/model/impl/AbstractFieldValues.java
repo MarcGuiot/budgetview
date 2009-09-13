@@ -35,6 +35,10 @@ public abstract class AbstractFieldValues implements FieldValues {
     return (Boolean)doGet(field);
   }
 
+  public Boolean isTrue(BooleanField field) {
+    return Boolean.TRUE.equals(doGet(field));
+  }
+
   public Object getValue(Field field) {
     return doGet(field);
   }

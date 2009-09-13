@@ -2,8 +2,10 @@ package org.globsframework.model;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.model.impl.ThreeFieldKey;
 import org.globsframework.model.impl.TwoFieldKey;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 public abstract class Key implements FieldValues {
   public abstract GlobType getGlobType();
@@ -23,5 +25,4 @@ public abstract class Key implements FieldValues {
   public static KeyBuilder create(GlobType type) {
     return KeyBuilder.init(type);
   }
-
 }

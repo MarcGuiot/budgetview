@@ -130,7 +130,7 @@ public class GlobTableTest extends WebTestCase {
     form.submit();
 
     Glob dummyObject1 = getDummyObject(1);
-    assertTrue(dummyObject1.get(DummyObject.PRESENT));
+    assertTrue(dummyObject1.isTrue(DummyObject.PRESENT));
     assertEquals("name1_true", dummyObject1.get(DummyObject.NAME));
   }
 
@@ -161,11 +161,11 @@ public class GlobTableTest extends WebTestCase {
     form.submit();
 
     Glob dummyObject1 = getDummyObject(1);
-    assertTrue(dummyObject1.get(DummyObject.PRESENT));
+    assertTrue(dummyObject1.isTrue(DummyObject.PRESENT));
     assertEquals("name1_true", dummyObject1.get(DummyObject.NAME));
 
     Glob dummyObject2 = getDummyObject(2);
-    assertTrue(dummyObject2.get(DummyObject.PRESENT));
+    assertTrue(dummyObject2.isTrue(DummyObject.PRESENT));
     assertEquals("name2_true", dummyObject2.get(DummyObject.NAME));
   }
 

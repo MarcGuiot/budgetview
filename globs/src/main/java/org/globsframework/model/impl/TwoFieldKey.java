@@ -101,6 +101,10 @@ public class TwoFieldKey extends Key {
     return null;
   }
 
+  public Boolean isTrue(BooleanField field) {
+    return Boolean.TRUE.equals(get(field));
+  }
+
   public Date get(DateField field) {
     checkIsKeyField(field);
     if (field == keyField1) {

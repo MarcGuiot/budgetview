@@ -49,6 +49,10 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
     return (Boolean)doGet(field);
   }
 
+  public Boolean isTrue(BooleanField field) {
+    return Boolean.TRUE.equals(get(field));
+  }
+
   public Long get(LongField field) throws ItemNotFound {
     return (Long)doGet(field);
   }
