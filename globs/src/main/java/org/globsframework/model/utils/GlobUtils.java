@@ -3,8 +3,10 @@ package org.globsframework.model.utils;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
+import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.*;
 import org.globsframework.utils.Utils;
 
@@ -14,6 +16,27 @@ public class GlobUtils {
 
   public static GlobType[] toArray(Collection<GlobType> types) {
     return types.toArray(new GlobType[types.size()]);
+  }
+
+  public static boolean safeIsTrue(Glob glob, BooleanField field) {
+    if (glob == null) {
+      return false;
+    }
+    return glob.isTrue(field);
+  }
+
+  public static Boolean safeGet(Glob glob, BooleanField field) {
+    if (glob == null) {
+      return null;
+    }
+    return glob.get(field);
+  }
+
+  public static String safeGet(Glob glob, StringField field) {
+    if (glob == null) {
+      return null;
+    }
+    return glob.get(field);
   }
 
   public static Double safeGet(Glob glob, DoubleField field) {
