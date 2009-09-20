@@ -57,14 +57,14 @@ public class Series {
   @Target(Account.class)
   public static LinkField FROM_ACCOUNT;
 
-  // cette series appartient au compte courant mais ses transactions impactent le compte courant pointé
+  // cette serie appartient au compte courant mais ses transactions impactent le compte courant pointé
   @Target(Account.class)
   public static LinkField TO_ACCOUNT;
 
   @Target(Series.class)
   public static LinkField MIRROR_SERIES; // si les deux comptes sont importés. reference la series miroir
 
-  // la series miroir a les montant de budget negatif elle est donc pour le compte "from"
+  // la serie miroir a les montant de budget negatif elle est donc pour le compte "from"
   @DefaultBoolean(false)
   @Required
   public static BooleanField IS_MIRROR;

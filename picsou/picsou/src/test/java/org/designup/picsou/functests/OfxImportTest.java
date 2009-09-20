@@ -3,19 +3,14 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.CategorizationChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.importer.ofx.OfxWriter;
-import org.designup.picsou.model.Bank;
-import org.designup.picsou.model.MasterCategory;
-import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.model.BankEntity;
+import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
-
-import java.io.FileWriter;
 
 public class OfxImportTest extends LoggedInFunctionalTestCase {
 
@@ -293,6 +288,17 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
         }
       })
       .run();
+  }
+
+  public void testImportWithUnknownBank() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(12345, 54321, "111", 1000.00, "2008/08/07")
+      .addTransaction("2008/08/10", -50.00, "Virement")
+      .load();
+    mainAccounts.checkAccount("Account n. 111", 950.00, "2008/08/10");
+    mainAccounts.edit("Account n. 111")
+      .checkSelectedBank("Autre")
+      .validate();
   }
 
   public void testImportOfxWithDateInThePast() throws Exception {

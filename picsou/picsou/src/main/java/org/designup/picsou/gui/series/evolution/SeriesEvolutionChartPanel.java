@@ -22,8 +22,11 @@ import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import static org.globsframework.model.utils.GlobMatchers.*;
+import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.TablePrinter;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
@@ -489,8 +492,6 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     StackChartDataset seriesInDataset = new StackChartDataset();
     StackChartDataset seriesOutDataset = new StackChartDataset();
 
-    System.out.println("SeriesEvolutionChartPanel.updateSavingsStacks: ");
-
     for (Glob seriesStat : repository.getAll(SeriesStat.TYPE, fieldEquals(SeriesStat.MONTH, currentMonthId))) {
       Double amount = seriesStat.get(SeriesStat.SUMMARY_AMOUNT);
       if (amount == null) {
@@ -499,37 +500,70 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
       Glob series = repository.findLinkTarget(seriesStat, SeriesStat.SERIES);
       if ((series == null) || series.isTrue(Series.IS_MIRROR)) {
-        System.out.println("SeriesEvolutionChartPanel.updateSavingsStacks: NO SERIES");
         continue;
       }
-      
+
       Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
       Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
 
-      if (amount < 0) {
-        Glob temp = fromAccount;
-        fromAccount = toAccount;
-        toAccount = temp;
-        amount = Math.abs(amount);
-      }
-
-      System.out.println("   " + series.get(Series.NAME) + "\t\t"
-                         + (fromAccount == null ? "<null>" : fromAccount.get(Account.NAME)) + "\t\t"
-                         + (toAccount == null ? "<null>" : toAccount.get(Account.NAME)) + "\t\t"
-                         + amount);
-
-      
       boolean isFromSavingsAccount = Account.isUserCreatedSavingsAccount(fromAccount);
       boolean isToSavingsAccount = Account.isUserCreatedSavingsAccount(toAccount);
-      if (isToSavingsAccount && !isFromSavingsAccount) {
-        System.out.println("    => IN: " + amount);
-        savingsIn += amount;
-        seriesInDataset.add(series.get(Series.NAME), amount, createSelectionAction(series.get(Series.ID)));
+
+      String in = "";
+      String out = "";
+      String branch = "";
+
+      boolean isFromImported = GlobUtils.safeIsTrue(fromAccount, Account.IS_IMPORTED_ACCOUNT);
+      boolean isToImported = GlobUtils.safeIsTrue(toAccount, Account.IS_IMPORTED_ACCOUNT);
+
+      if (isFromImported && isToImported) {
+
+        if (isFromSavingsAccount && !isToSavingsAccount) {
+          if (amount >= 0) {
+            savingsOut += amount;
+            seriesOutDataset.add(series.get(Series.NAME), amount, createSelectionAction(series.get(Series.ID)));
+          }
+          else {
+            double absAmount = -amount;
+            savingsOut += absAmount;
+            seriesOutDataset.add(series.get(Series.NAME), absAmount, createSelectionAction(series.get(Series.ID)));
+          }
+        }
+        else if (!isFromSavingsAccount && isToSavingsAccount) {
+          if (amount >= 0) {
+            savingsIn += amount;
+            seriesInDataset.add(series.get(Series.NAME), amount, createSelectionAction(series.get(Series.ID)));
+          }
+          else {
+            double absAmount = -amount;
+            savingsOut += absAmount;
+            seriesOutDataset.add(series.get(Series.NAME), absAmount, createSelectionAction(series.get(Series.ID)));
+          }
+        }
       }
-      else if (isFromSavingsAccount && !isToSavingsAccount) {
-        System.out.println("    => OUT: " + amount);
-        savingsOut += amount;
-        seriesOutDataset.add(series.get(Series.NAME), amount, createSelectionAction(series.get(Series.ID)));
+      else if (isFromImported && !isToImported) {
+        if (isFromSavingsAccount && !isToSavingsAccount) {
+          double absAmount = Math.abs(amount);
+          savingsOut += absAmount;
+          seriesOutDataset.add(series.get(Series.NAME), absAmount, createSelectionAction(series.get(Series.ID)));
+        }
+        else if (!isFromSavingsAccount && isToSavingsAccount) {
+          double absAmount = Math.abs(amount);
+          savingsIn += absAmount;
+          seriesInDataset.add(series.get(Series.NAME), absAmount, createSelectionAction(series.get(Series.ID)));
+        }
+      }
+      else if (!isFromImported && isToImported) {
+        if (isFromSavingsAccount && !isToSavingsAccount) {
+          double absAmount = Math.abs(amount);
+          savingsOut += absAmount;
+          seriesOutDataset.add(series.get(Series.NAME), absAmount, createSelectionAction(series.get(Series.ID)));
+        }
+        else if (!isFromSavingsAccount && isToSavingsAccount) {
+          double absAmount = Math.abs(amount);
+          savingsIn += absAmount;
+          seriesInDataset.add(series.get(Series.NAME), absAmount, createSelectionAction(series.get(Series.ID)));
+        }
       }
     }
 

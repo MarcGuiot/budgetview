@@ -139,7 +139,7 @@ public class Account {
   public static double getMultiplierForInOrOutputOfTheAccount(Glob fromAccount, Glob toAccount, Glob forAccount) {
 
     if (fromAccount == null && toAccount == null) {
-      throw new RuntimeException("Should not be call if both account are null");
+      throw new RuntimeException("Should not be called if both accounts are null");
     }
     if (fromAccount != null && toAccount == null) {
       return -1;
@@ -153,7 +153,7 @@ public class Account {
     if (forAccount.getKey().equals(fromAccount.getKey())) {
       return -1;
     }
-    throw new RuntimeException("Call with bad account");
+    throw new RuntimeException("Called with bad account");
   }
 
   public static double getMultiplierWithMainAsPointOfView(Glob fromAccount, Glob toAccount,
