@@ -1,7 +1,7 @@
 #!/bin/sh
 
-VERSION=`java -jar ../picsou/obfuscated/cashpilot.jar -v -jar`
-JAR_VERSION=`echo $VERSION | grep "Jar version:" | sed -e 's/Jar version://g' | sed -e 's/  *//g'`
+VERSION=`java -jar ../picsou/obfuscated/cashpilot.jar -v -jar | grep "Jar version"`
+JAR_VERSION=`echo $VERSION | sed -e 's/Jar version://g' | sed -e 's/  *//g'`
 
 SOFT_VERSION=`java -jar ../picsou/obfuscated/cashpilot.jar -v -soft | grep "Software version:" |
               sed -e 's/Software version://g' | sed -e 's/  *//g'`
