@@ -641,8 +641,8 @@ public class CategorizationChecker extends GuiChecker {
     return delete(row);
   }
 
-  public ConfirmationDialogChecker delete(int row) {
-    getTable().selectRow(row);
+  public ConfirmationDialogChecker delete(int ...row) {
+    getTable().selectRows(row);
     Window deleteDialog = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         KeyUtils.pressKey(getTable(), Key.DELETE);

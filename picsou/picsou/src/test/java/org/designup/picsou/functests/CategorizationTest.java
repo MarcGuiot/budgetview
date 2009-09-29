@@ -1143,7 +1143,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
+    categorization.delete(0, 1)
+      .checkMessageContains("Removing 2 operations")
+      .cancel();
     categorization.delete("1_Auchan")
+      .checkMessageContains("Removing one operation")
       .validate();
     categorization.initContent()
       .add("15/06/2008", "2_Auchan", -40.0)

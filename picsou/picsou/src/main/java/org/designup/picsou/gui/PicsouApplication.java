@@ -165,6 +165,7 @@ public class PicsouApplication {
   }
 
   public void run(String... args) throws Exception {
+    initEncryption();
     mrjDocumentListener = new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         ApplicationEvent event = (ApplicationEvent)e;
@@ -193,7 +194,6 @@ public class PicsouApplication {
       return;
     }
 
-    initEncryption();
     initLogger();
     clearRepositoryIfNeeded();
 
