@@ -64,7 +64,7 @@ public class PicsouInit {
                             value(AppVersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
                             value(AppVersionInformation.LATEST_AVALAIBLE_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION));
 
-    ExceptionHandler.setRepository(repository);
+    ExceptionHandler.setRepository(repository, directory);
 
     this.repository.addChangeListener(new ServerChangeSetListener(serverAccess));
 

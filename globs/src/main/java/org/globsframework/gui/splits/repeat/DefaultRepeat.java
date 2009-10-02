@@ -2,13 +2,14 @@ package org.globsframework.gui.splits.repeat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collection;
 
 public class DefaultRepeat<T> implements Repeat<T>, RepeatHandler<T> {
   private RepeatPanel repeatPanel;
   private RepeatComponentFactory factory;
   private List<T> initialItems;
 
-  public DefaultRepeat(RepeatComponentFactory factory, List<T> initialItems) {
+  public DefaultRepeat(RepeatComponentFactory factory, Collection<T> initialItems) {
     this.factory = factory;
     this.initialItems = new ArrayList<T>(initialItems);
   }

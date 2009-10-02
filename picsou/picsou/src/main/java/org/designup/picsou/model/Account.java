@@ -39,6 +39,11 @@ public class Account {
   @Target(BankEntity.class)
   public static LinkField BANK_ENTITY;
 
+  public static StringField BANK_ENTITY_LABEL;
+
+  @Target(Bank.class)
+  public static LinkField BANK;
+
   public static IntegerField BRANCH_ID;
 
   public static StringField NAME;
@@ -97,11 +102,18 @@ public class Account {
   }
 
   public static Glob getBank(Glob account, GlobRepository repository) {
-    Glob bankEntity = repository.findLinkTarget(account, Account.BANK_ENTITY);
-    if (bankEntity == null) {
-      throw new ItemNotFound("Account with no bank entity: " + account);
+    Glob bank;
+    if (account.get(Account.BANK) == null) { // l'upgrade n'est pas encore passé
+      Glob bankEntity = repository.findLinkTarget(account, Account.BANK_ENTITY);
+      bank = repository.findLinkTarget(bankEntity, BankEntity.BANK);
     }
-    return BankEntity.getBank(bankEntity, repository);
+    else {
+      bank = repository.findLinkTarget(account, Account.BANK);
+    }
+    if (bank == null) {
+      throw new ItemNotFound("Account with no bank : " + account);
+    }
+    return bank;
   }
 
   public static boolean shouldCreateMirror(Glob fromAccount, Glob toAccount) {
@@ -187,7 +199,7 @@ public class Account {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 6;
+      return 7;
     }
 
     public byte[] serializeData(FieldValues values) {
@@ -206,13 +218,17 @@ public class Account {
       outputStream.writeBoolean(values.get(IS_IMPORTED_ACCOUNT));
       outputStream.writeDate(values.get(CLOSED_DATE));
       outputStream.writeDate(values.get(OPEN_DATE));
-      outputStream.writeDate(values.get(CLOSED_DATE));
       outputStream.writeDouble(values.get(FIRST_POSITION));
+      outputStream.writeInteger(values.get(BANK));
+      outputStream.writeUtf8String(values.get(BANK_ENTITY_LABEL));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 6) {
+      if (version == 7) {
+        deserializeDataV7(fieldSetter, data);
+      }
+      else if (version == 6) {
         deserializeDataV6(fieldSetter, data);
       }
       else if (version == 5) {
@@ -232,6 +248,26 @@ public class Account {
       }
     }
 
+    private void deserializeDataV7(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(NUMBER, input.readUtf8String());
+      fieldSetter.set(BANK_ENTITY, input.readInteger());
+      fieldSetter.set(BRANCH_ID, input.readInteger());
+      fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(POSITION, input.readDouble());
+      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(POSITION_DATE, input.readDate());
+      fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
+      fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
+      fieldSetter.set(UPDATE_MODE, input.readInteger());
+      fieldSetter.set(IS_IMPORTED_ACCOUNT, input.readBoolean());
+      fieldSetter.set(CLOSED_DATE, input.readDate());
+      fieldSetter.set(OPEN_DATE, input.readDate());
+      fieldSetter.set(FIRST_POSITION, input.readDouble());
+      fieldSetter.set(BANK, input.readInteger());
+      fieldSetter.set(BANK_ENTITY_LABEL, input.readUtf8String());
+    }
+
     private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(NUMBER, input.readUtf8String());
@@ -247,6 +283,7 @@ public class Account {
       fieldSetter.set(IS_IMPORTED_ACCOUNT, input.readBoolean());
       fieldSetter.set(CLOSED_DATE, input.readDate());
       fieldSetter.set(OPEN_DATE, input.readDate());
+      fieldSetter.set(CLOSED_DATE, input.readDate()); // bug in previous serialize version : CLOSED_DATE twice
       fieldSetter.set(FIRST_POSITION, input.readDouble());
     }
 

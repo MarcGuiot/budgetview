@@ -169,6 +169,14 @@ public class GlobList extends ArrayList<Glob> {
     return result;
   }
 
+  public SortedSet<String> getSortedSet(StringField field) {
+    SortedSet<String> result = new TreeSet<String>();
+    for (FieldValues values : this) {
+      result.add(values.get(field));
+    }
+    return result;
+  }
+
   public Integer[] getSortedArray(IntegerField field) {
     SortedSet<Integer> result = getSortedSet(field);
     return result.toArray(new Integer[result.size()]);

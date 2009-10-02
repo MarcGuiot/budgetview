@@ -31,18 +31,17 @@ public class DirectAccountDataManagerTest extends TestCase {
     Integer userId = 123;
     SerializedOutput initialOutput = SerializedInputOutputFactory.init(new ByteArrayOutputStream());
     directAccountDataManager.getUserData(initialOutput, userId);
-    SerializableDeltaGlobSerializer serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
     SerializedByteArrayOutput output = new SerializedByteArrayOutput();
     MultiMap<String, ServerDelta> globMultiMap = new MultiMap<String, ServerDelta>();
     createDelta(globMultiMap, 1, "A", ServerState.CREATED);
-    serializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
+    SerializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
     directAccountDataManager.updateUserData(output.getInput(), userId);
 
     SerializedByteArrayOutput actualOutput = new SerializedByteArrayOutput();
     directAccountDataManager.getUserData(actualOutput.getOutput(), userId);
     SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
     MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
-    serializableGlobSerializer.deserialize(actualOutput.getInput(), data);
+    SerializableGlobSerializer.deserialize(actualOutput.getInput(), data);
     assertEquals(1, data.get("A").size());
     assertEquals(1, data.get("A").get(1).getVersion());
   }
@@ -53,12 +52,11 @@ public class DirectAccountDataManagerTest extends TestCase {
     Integer userId = 123;
     SerializedOutput initialOutput = SerializedInputOutputFactory.init(new ByteArrayOutputStream());
     directAccountDataManager.getUserData(initialOutput, userId);
-    SerializableDeltaGlobSerializer serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
     SerializedByteArrayOutput output = new SerializedByteArrayOutput();
     MultiMap<String, ServerDelta> globMultiMap = new MultiMap<String, ServerDelta>();
     createDelta(globMultiMap, 1, "A", ServerState.CREATED);
     createDelta(globMultiMap, 2, "A", ServerState.CREATED);
-    serializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
+    SerializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
     directAccountDataManager.updateUserData(output.getInput(), userId);
     directAccountDataManager.close();
 
@@ -67,7 +65,7 @@ public class DirectAccountDataManagerTest extends TestCase {
     initialOutput = SerializedInputOutputFactory.init(new ByteArrayOutputStream());
     directAccountDataManager.getUserData(initialOutput, userId);
     createDelta(globMultiMap, 3, "A", ServerState.UPDATED);
-    serializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
+    SerializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
     directAccountDataManager.updateUserData(output.getInput(), userId);
 
     String pathForUser = PATH + "/" + userId.toString();
@@ -79,7 +77,7 @@ public class DirectAccountDataManagerTest extends TestCase {
     globMultiMap.clear();
     createDelta(globMultiMap, 2, "A", ServerState.UPDATED);
     createDelta(globMultiMap, 3, "A", ServerState.DELETED);
-    serializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
+    SerializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
     directAccountDataManager.updateUserData(output.getInput(), userId);
 
     PrevaylerDirectory directory = new PrevaylerDirectory(pathForUser);
@@ -118,7 +116,7 @@ public class DirectAccountDataManagerTest extends TestCase {
     MultiMap<String, ServerDelta> globMultiMap = new MultiMap<String, ServerDelta>();
     createDelta(globMultiMap, 3, "A", ServerState.CREATED);
     createDelta(globMultiMap, 1, "B", ServerState.CREATED);
-    serializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
+    SerializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
     directAccountDataManager.updateUserData(output.getInput(), userId);
     TestUtils.assertSetEquals(new String[]{"0000000000000000004.snapshot", "0000000000000000003.snapshot",
                                            "0000000000000000002.journal", "0000000000000000004.journal"},
@@ -129,12 +127,11 @@ public class DirectAccountDataManagerTest extends TestCase {
                                            "0000000000000000004.journal"},
                               new File(pathForUser).list());
     directAccountDataManager.getUserData(initialOutput, userId);
-    serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
     output = new SerializedByteArrayOutput();
     globMultiMap = new MultiMap<String, ServerDelta>();
     createDelta(globMultiMap, 3, "A", ServerState.DELETED);
     createDelta(globMultiMap, 1, "B", ServerState.UPDATED);
-    serializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
+    SerializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
     directAccountDataManager.updateUserData(output.getInput(), userId);
     directAccountDataManager.close();
     directAccountDataManager = new DirectAccountDataManager(PATH, false);
@@ -143,7 +140,7 @@ public class DirectAccountDataManagerTest extends TestCase {
     directAccountDataManager.getUserData(actualOutput.getOutput(), userId);
     SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
     MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
-    serializableGlobSerializer.deserialize(actualOutput.getInput(), data);
+    SerializableGlobSerializer.deserialize(actualOutput.getInput(), data);
     assertEquals(1, data.get("B").size());
     assertEquals(1, data.get("B").get(1).getVersion());
   }

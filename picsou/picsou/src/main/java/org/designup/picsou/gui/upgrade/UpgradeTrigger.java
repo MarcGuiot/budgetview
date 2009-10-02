@@ -128,7 +128,25 @@ public class UpgradeTrigger implements ChangeSetListener {
       migrateProfileTypes(repository);
     }
 
+    if (currentJarVersion < 21){
+      migrateBankEntity(repository);
+    }
+
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
+  }
+
+  private void migrateBankEntity(GlobRepository repository) {
+    GlobList accounts = repository.getAll(Account.TYPE);
+    for (Glob account : accounts) {
+      Glob bankEntity = repository.findLinkTarget(account, Account.BANK_ENTITY);
+      if (bankEntity != null){
+        Glob bank = repository.findLinkTarget(bankEntity, BankEntity.BANK);
+        repository.update(account.getKey(),
+                          FieldValue.value(Account.BANK_ENTITY_LABEL, bankEntity.get(BankEntity.LABEL)),
+                          FieldValue.value(Account.BANK, bank.get(Bank.ID)));
+
+      }
+    }
   }
 
   private void migrateProfileTypes(GlobRepository repository) {

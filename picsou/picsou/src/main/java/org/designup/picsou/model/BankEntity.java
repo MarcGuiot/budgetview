@@ -11,7 +11,6 @@ import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.utils.exceptions.ItemAmbiguity;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -47,7 +46,7 @@ public class BankEntity {
     GlobTypeLoader.init(BankEntity.class, "bankEntity");
   }
 
-  public static Integer findOrCreate(String bankEntityLabel, GlobRepository repository) throws ItemAmbiguity {
+  public static Integer find(String bankEntityLabel, GlobRepository repository) throws ItemAmbiguity {
     GlobList entities = repository.getAll(BankEntity.TYPE, fieldEquals(BankEntity.LABEL, bankEntityLabel));
     if (entities.size() > 1) {
       throw new ItemAmbiguity("Several bank entities found with label " + bankEntityLabel);
@@ -55,17 +54,7 @@ public class BankEntity {
     if (entities.size() == 1) {
       return entities.getFirst().get(BankEntity.ID);
     }
-
-    try {
-      Integer id = Integer.parseInt(bankEntityLabel);
-      repository.create(org.globsframework.model.Key.create(TYPE, id),
-                        value(LABEL, bankEntityLabel));
-      return id;
-    }
-    catch (Exception e) {
-      Glob entity = repository.create(TYPE, value(LABEL, bankEntityLabel));
-      return entity.get(ID);
-    }
+    return null;
   }
 
   public static void setLabelIfNeeded(Glob bankEntity, GlobRepository repository) {

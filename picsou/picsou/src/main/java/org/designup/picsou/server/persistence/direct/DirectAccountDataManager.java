@@ -108,8 +108,7 @@ public class DirectAccountDataManager implements AccountDataManager {
         if (readVersion != version) {
           throw new InvalidState("error while reading journal file");
         }
-        SerializableDeltaGlobSerializer serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
-        MultiMap<String, ServerDelta> map = serializableDeltaGlobSerializer.deserialize(serializedInput);
+        MultiMap<String, ServerDelta> map = SerializableDeltaGlobSerializer.deserialize(serializedInput);
         if (version >= snapshotVersion) {
           ReadOnlyAccountDataManager.apply(globs, map);
         }
@@ -157,8 +156,7 @@ public class DirectAccountDataManager implements AccountDataManager {
   }
 
   synchronized public void updateUserData(SerializedInput input, Integer userId) {
-    SerializableDeltaGlobSerializer serializableDeltaGlobSerializer = new SerializableDeltaGlobSerializer();
-    MultiMap<String, ServerDelta> data = serializableDeltaGlobSerializer.deserialize(input);
+    MultiMap<String, ServerDelta> data = SerializableDeltaGlobSerializer.deserialize(input);
     DurableOutputStream bufferedOutputStream = outputStreamMap.get(userId);
     if (bufferedOutputStream == null) {
       throw new InvalidState("read should be call before write");

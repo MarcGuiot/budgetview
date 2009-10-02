@@ -105,16 +105,19 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
     GlobRepository repository = init(serverAccess);
 
     Glob expected = repository.create(Key.create(Account.TYPE, 123),
-                                      value(Account.BANK_ENTITY, 1),
+                                      value(Account.BANK, 1),
+                                      value(Account.BANK_ENTITY_LABEL, "1"),
                                       value(Account.NUMBER, "main account"),
                                       value(Account.POSITION, 100.),
                                       value(Account.BRANCH_ID, 2));
     {
       Glob actualAccount = serverAccess.getUserData(new DefaultChangeSet(), new DummyIdUpdater()).get(0);
-      assertEquals(1, actualAccount.get(Account.BANK_ENTITY).intValue());
+      assertEquals("main account", actualAccount.get(Account.NUMBER));
       assertEquals(123, actualAccount.get(Account.ID).intValue());
       assertEquals(2, actualAccount.get(Account.BRANCH_ID).intValue());
       assertEquals(100.0, actualAccount.get(Account.POSITION), 0.1);
+      assertEquals(1, actualAccount.get(Account.BANK).intValue());
+      assertEquals("1", actualAccount.get(Account.BANK_ENTITY_LABEL));
     }
     {
       repository.update(expected.getKey(), Account.POSITION, -122.);

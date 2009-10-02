@@ -552,8 +552,9 @@ public class ImportPanel {
   }
 
   private void initBankEntityEditionPanel() {
-    GlobList entities = sessionRepository.getAll(BankEntity.TYPE, GlobMatchers.isNull(BankEntity.BANK));
-    bankEntityEditionPanel.init(entities);
+    bankEntityEditionPanel.init(sessionRepository.getAll(Account.TYPE)
+      .filterSelf(GlobMatchers.and(GlobMatchers.fieldIsNull(Account.BANK),
+                                   GlobMatchers.not(GlobMatchers.fieldIsNull(Account.BANK_ENTITY_LABEL))) , sessionRepository));
   }
 
   private void initCreationAccountFields(File file) {

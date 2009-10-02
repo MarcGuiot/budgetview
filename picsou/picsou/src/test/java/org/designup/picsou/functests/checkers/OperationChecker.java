@@ -31,6 +31,7 @@ public class OperationChecker {
   private MenuItem undoMenu;
   private MenuItem redoMenu;
   private MenuItem dumpMenu;
+  private MenuItem throwExceptionMenu;
   public static final String DEFAULT_ACCOUNT_NUMBER = "11111";
   public static final String DEFAULT_ACCOUNT_NAME = "Account n. 11111";
   private Window window;
@@ -50,6 +51,7 @@ public class OperationChecker {
     undoMenu = editMenu.getSubMenu("Undo");
     redoMenu = editMenu.getSubMenu("Redo");
     dumpMenu = editMenu.getSubMenu("Dump");
+    throwExceptionMenu = editMenu.getSubMenu("throw");
   }
 
   public ImportChecker openImportDialog() {
@@ -289,5 +291,11 @@ public class OperationChecker {
 
   public void dump() {
     dumpMenu.click();
+  }
+
+  public MessageDialogChecker throwExecptionInApp(){
+    MessageDialogChecker dialogChecker =
+      new MessageDialogChecker(WindowInterceptor.getModalDialog(throwExceptionMenu.triggerClick()));
+    return dialogChecker;
   }
 }
