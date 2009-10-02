@@ -59,12 +59,18 @@ public class Amounts {
     return Math.abs(val1 - val2) < 0.0001;
   }
 
-  public static double max(Double val1, Double val2, boolean isIncome) {
+  public static double max(Double val1, Double planned, boolean isIncome) {
     if (isIncome) {
-      return Math.max(val1, val2);
+      return Math.max(val1, planned);
     }
     else {
-      return Math.min(val1, val2);
+      if (planned > 0) {
+        return Math.max(val1, planned);
+      }
+      if (planned < 0) {
+        return Math.min(val1, planned);
+      }
     }
+    return val1;
   }
 }

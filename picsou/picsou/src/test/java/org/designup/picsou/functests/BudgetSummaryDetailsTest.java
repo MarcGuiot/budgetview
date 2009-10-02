@@ -183,4 +183,40 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
       .checkPositionDescriptionContains("observed")
       .close();
   }
+
+  public void testWithPositiveEnvelope() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(4).validate();
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/07", -200, "ED")
+      .addTransaction("2008/07/09", 40, "remboursement")
+      .addTransaction("2008/07/12", 1500, "Salaire")
+      .addTransaction("2008/08/07", -100, "ED")
+//      .addTransaction("2008/07/09", 40, "remboursement")
+      .load();
+
+    timeline.selectMonth("2008/07");
+
+    views.selectCategorization();
+    categorization.setNewRecurring("ED", "courses");
+    categorization.setNewEnvelope("remboursement", "secu");
+    categorization.setNewIncome("Salaire", "Salaire");
+
+    views.selectHome();
+
+    double balanceFor200807 = 1500 - (200 - 40);
+    mainAccounts.checkBalance(balanceFor200807);
+
+    timeline.selectMonth("2008/08");
+    views.selectHome();
+    double balanceFor200808 = 1500 - (200 - 40);
+    mainAccounts.checkBalance(balanceFor200808);
+    mainAccounts.checkEstimatedPosition(1440.00);
+    mainAccounts.openEstimatedPositionDetails()
+      .checkInitialPosition(0.0)
+      .checkFixed(100)
+      .checkEnvelope(-40)
+      .checkIncome(1500)
+      .close();
+    timeline.checkMonthTooltip("2008/08", balanceFor200808, 1440.00);
+  }
 }
