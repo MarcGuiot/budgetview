@@ -8,7 +8,7 @@ public class ExceptionHandler {
 
 
   public void handle(Throwable exception) {
-    Log.write("exception catch : ", exception);
+    Log.write("Exception thrown: ", exception);
     if (repository != null) {
       DataCheckerAction action = new DataCheckerAction(repository);
       action.actionPerformed(null);

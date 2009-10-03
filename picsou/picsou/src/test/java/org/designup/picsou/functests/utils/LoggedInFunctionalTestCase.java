@@ -7,8 +7,14 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.model.AccountType;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.model.utils.GlobRepositoryValidator;
 import org.globsframework.utils.Dates;
+import org.globsframework.metamodel.GlobModel;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
@@ -125,6 +131,9 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected void tearDown() throws Exception {
+
+//    GlobRepositoryValidator.run(repository);
+
 //    operations.checkOk();
     try {
       operations.deleteUser(password);

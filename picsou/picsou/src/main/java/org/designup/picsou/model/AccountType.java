@@ -1,6 +1,5 @@
 package org.designup.picsou.model;
 
-import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NamingField;

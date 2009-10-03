@@ -65,7 +65,6 @@ public class Transaction {
 
   /** @deprecated */
   @Target(Category.class)
-  @DefaultInteger(0)
   public static LinkField CATEGORY;
 
   @Target(TransactionType.class)

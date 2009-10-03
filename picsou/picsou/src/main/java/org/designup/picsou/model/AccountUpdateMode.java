@@ -33,7 +33,7 @@ public enum AccountUpdateMode implements GlobConstantContainer {
   }
 
   static {
-    GlobTypeLoader.init(AccountUpdateMode.class, "accountType");
+    GlobTypeLoader.init(AccountUpdateMode.class, "accountUpdateMode");
   }
 
   public ReadOnlyGlob getGlob() {
