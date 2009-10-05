@@ -162,7 +162,7 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
 
   public void testBudgetSummaryDetailsShowsActualPositionInThePast() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.00, "2008/08/05")
+      .addBankAccount(-1, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.00, "2008/08/05")
       .addTransaction("2008/07/01", 1500, "WorldCo")
       .addTransaction("2008/07/05", -500, "Auchan")
       .addTransaction("2008/08/01", 1500, "WorldCo")

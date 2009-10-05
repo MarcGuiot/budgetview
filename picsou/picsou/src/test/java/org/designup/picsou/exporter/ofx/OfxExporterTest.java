@@ -13,9 +13,9 @@ public class OfxExporterTest extends PicsouTestCase {
       "<account id='-1' position='12345' positionDate='2006/07/02'/>" +
       "" +
       "<bankEntity id='30066' label='30066'>" +
-      "  <account number='00012312345' id='2' branchId='10674'" +
+      "  <account number='00012312345' id='2' branchId='10674' bankEntityLabel='30066'" +
       "           position='1789.75' positionDate='2006/07/03'/>" +
-      "  <account number='4976005004123456' id='3'" +
+      "  <account number='4976005004123456' id='3' bankEntityLabel='30066'" +
       "           position='-683.25' positionDate='2006/07/04' isCardAccount='true'/>" +
       "</bankEntity>" +
       "" +

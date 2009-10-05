@@ -58,6 +58,7 @@
         <pathelement location="${reflibdir}/lib/dev/jarshrinker-0.7.jar"/>
         <pathelement location="${reflibdir}/lib/dev/asm-3.0.jar"/>
       </classpath>
+      <sysproperty key="with.debug" value="true"/>
       <arg line="generated/picsou_server.jar dev/ant/inputServer.txt dev/ant/ignoreServer.txt"/>
     </java>
     <manifest file="../picsou_server/classes/MANIFEST.MF">

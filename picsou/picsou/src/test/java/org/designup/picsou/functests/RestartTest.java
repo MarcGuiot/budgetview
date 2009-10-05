@@ -358,12 +358,12 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/06", -30.00, "Virement")
       .addCardAccount("123", 1000.00, "2008/08/19")
       .addTransaction("2008/08/06", -30.00, "FNAC")
-      .load();
+      .loadUnknown("Autre");
 
     OfxBuilder.init(this)
       .addBankAccount("unknown 222", 222, "222", 1000.00, "2008/08/19")
       .addTransaction("2008/08/10", -50.00, "Virement")
-      .load();
+      .loadUnknown("Autre");
 
     restartApplication();
 

@@ -1,6 +1,7 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.CategorizationChecker;
+import org.designup.picsou.functests.checkers.ImportChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BankEntity;
@@ -291,10 +292,19 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
   }
 
   public void testImportWithUnknownBank() throws Exception {
-    OfxBuilder.init(this)
+    String path = OfxBuilder.init(this)
       .addBankAccount(12345, 54321, "111", 1000.00, "2008/08/07")
       .addTransaction("2008/08/10", -50.00, "Virement")
-      .load();
+      .save();
+    operations.openImportDialog()
+      .setFilePath(path)
+      .acceptFile()
+      .doImport()
+      .checkImportMessage("You must select a bank for this account")
+      .selectOfxAccountBank("Autre")
+      .checkNoErrorMessage()
+      .completeImport();
+
     mainAccounts.checkAccount("Account n. 111", 950.00, "2008/08/10");
     mainAccounts.edit("Account n. 111")
       .checkSelectedBank("Autre")
@@ -315,7 +325,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addBankAccount("unknown", 111, "111", 1000.00, "2008/08/07")
       .addTransaction("2008/08/10", -50.00, "Virement")
       .addTransaction("2008/08/06", -30.00, "Virement")
-      .load();
+      .loadUnknown("Autre");
     mainAccounts.checkAccount("Account n. 111", 950.00, "2008/08/10");
     mainAccounts.edit("Account n. 111")
       .checkSelectedBank("Autre")

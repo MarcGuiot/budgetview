@@ -4,9 +4,11 @@ import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.annotations.Required;
+import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
@@ -30,7 +32,7 @@ public class DataCheckerAction extends AbstractAction {
   }
 
   private boolean check() {
-    StringBuilder buf = new StringBuilder();
+    final StringBuilder buf = new StringBuilder();
     buf.append("Start checking");
     boolean hasError = false;
     try {
@@ -113,6 +115,10 @@ public class DataCheckerAction extends AbstractAction {
         }
       }
 
+      TransactionToSeriesChecker toSeriesChecker = new TransactionToSeriesChecker(buf);
+      repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, toSeriesChecker);
+      toSeriesChecker.deletePlanned(repository);
+      hasError |= toSeriesChecker.hasError();
       return hasError;
     }
     finally {
@@ -175,5 +181,44 @@ public class DataCheckerAction extends AbstractAction {
       }
     }
     return false;
+  }
+
+  private static class TransactionToSeriesChecker implements GlobFunctor {
+    private final StringBuilder buf;
+    private GlobList transactionsToDelete = new GlobList();
+    private boolean hasError = false;
+
+    public TransactionToSeriesChecker(StringBuilder buf) {
+      this.buf = buf;
+    }
+
+    public void run(Glob glob, GlobRepository repository) throws Exception {
+      Glob target = repository.findLinkTarget(glob, Transaction.SERIES);
+      if (target == null) {
+        hasError = true;
+        if (glob.get(Transaction.PLANNED)) {
+          buf.append("no series for planned transaction ");
+          transactionsToDelete.add(glob);
+        }
+        else {
+          buf.append("no series for operations : ");
+          repository.update(glob.getKey(), FieldValue.value(Transaction.SERIES, null),
+                            FieldValue.value(Transaction.SUB_SERIES, null));
+        }
+        buf.append(glob.get(Transaction.LABEL))
+          .append(" bank date : ")
+          .append(Month.toString(glob.get(Transaction.BANK_MONTH), glob.get(Transaction.BANK_DAY)))
+          .append(" user date : ")
+          .append(Month.toString(glob.get(Transaction.MONTH), glob.get(Transaction.DAY)));
+      }
+    }
+
+    public void deletePlanned(GlobRepository repository) {
+      repository.delete(transactionsToDelete);
+    }
+
+    public boolean hasError() {
+      return hasError;
+    }
   }
 }

@@ -22,7 +22,7 @@ public class ExportTest extends LoggedInFunctionalTestCase {
       .addBankAccount(30006, 1024, "12345678b", 12.0, "15/06/2008")
       .addTransaction("2008/06/05", -256.0, "Monop's")
       .addTransaction("2008/06/13", "2008/06/15", 1.0, "Carouf")
-      .load();
+      .loadUnknown("Autre");
 
     views.selectCategorization();
     categorization.setNewEnvelope("MONOP'S", "Groceries");
@@ -175,9 +175,9 @@ public class ExportTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "000123", -25.00, "15/06/2008")
+      .addBankAccount(-1, 10674, "000123", -25.00, "15/06/2008")
       .addTransaction("2008/06/10", -100.0, "FNAC")
-      .addBankAccount(30006, 1024, "12345678b", 12.0, "15/06/2008")
+      .addBankAccount(-1, 1024, "12345678b", 12.0, "15/06/2008")
       .addTransaction("2008/06/05", -256.0, "Monop's")
       .addTransaction("2008/06/13", "2008/06/15", 1.0, "Carouf")
       .load();

@@ -12,12 +12,14 @@ import java.util.Map;
 public class DirectoryClassRetriever implements DependExtractor.ClassRetreiver {
   private String root;
   private String target;
+  private boolean withDebug;
   private List<String> classToJar = new ArrayList<String>();
   private MultiMap<String, String> dependencies = new MultiMap<String, String>();
 
-  public DirectoryClassRetriever(String root, String target) {
+  public DirectoryClassRetriever(String root, String target, boolean withDebug) {
     this.root = root;
     this.target = target;
+    this.withDebug = withDebug;
   }
 
   public InputStream getCode(String className) {
@@ -59,7 +61,7 @@ public class DirectoryClassRetriever implements DependExtractor.ClassRetreiver {
           FileInputStream inputStream = new FileInputStream(sourceFile);
           ClassReader classReader = new ClassReader(inputStream);
           FilterWriter classWriter = new FilterWriter();
-          classReader.accept(classWriter, ClassReader.SKIP_DEBUG);
+          classReader.accept(classWriter, withDebug ? ClassReader.SKIP_DEBUG: 0);
           FileOutputStream outputStream = new FileOutputStream(output);
           outputStream.write(classWriter.toByteArray());
           outputStream.close();

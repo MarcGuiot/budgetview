@@ -95,10 +95,6 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkBalance(0);
   }
 
-  public void testWithoutTransactionsInSavings() throws Exception {
-    fail("Marc, ce test vide te parle-t-il ?");
-  }
-
   public void testSavingWithMonthWithoutTransaction() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000., "2008/08/12")

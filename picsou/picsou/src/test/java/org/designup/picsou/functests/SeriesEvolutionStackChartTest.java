@@ -12,7 +12,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
   public void testStandardCase() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.0, "2009/07/30")
+      .addBankAccount(-1, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.0, "2009/07/30")
       .addTransaction("2009/06/10", -250.00, "Auchan")
       .addTransaction("2009/06/15", -200.00, "Auchan")
       .addTransaction("2009/06/18", -100.00, "Virt Epargne")
@@ -173,7 +173,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
   public void testClickNavigation() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.0, "2009/07/30")
+      .addBankAccount(-1, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.0, "2009/07/30")
       .addTransaction("2009/07/10", -400.00, "Auchan")
       .addTransaction("2009/07/01", 100.00, "WorldCo")
       .addTransaction("2009/07/15", 400.00, "Big Inc.")
@@ -221,7 +221,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
   public void testSavings() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0001", 1000.0, "2009/07/30")
+      .addBankAccount(-1, 10674, "0001", 1000.0, "2009/07/30")
       .addTransaction("2009/06/01", -150.00, "MAIN TO IMPORTED")
       .addTransaction("2009/06/01", 70.00, "MAIN FROM IMPORTED")
       .addTransaction("2009/06/01", -50.00, "MAIN TO NON IMPORTED")
@@ -230,16 +230,16 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/07/01", -200.00, "MAIN TO IMPORTED")
       .addTransaction("2009/07/01", -50.00, "MAIN TO NON IMPORTED")
       .addTransaction("2009/07/01", 500.00, "WORLDCO")
-      .load();
+      .loadUnknown("Autre");
 
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0002", 20000.0, "2009/07/30")
+      .addBankAccount(-1, 10674, "0002", 20000.0, "2009/07/30")
       .addTransaction("2009/06/01", 150.00, "IMPORTED FROM MAIN")
       .addTransaction("2009/06/01", -70.00, "IMPORTED TO MAIN")
       .addTransaction("2009/06/01", 220.00, "IMPORTED FROM NON IMPORTED")
       .addTransaction("2009/06/01", 200.00, "IMPORTED FROM EXTERNAL")
       .addTransaction("2009/06/01", -300.00, "IMPORTED TO EXTERNAL ")
-      .load();
+      .loadUnknown("Autre");
 
     timeline.selectMonth("2009/06");
 
@@ -296,7 +296,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
   public void testUncategorized() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.0, "2009/07/30")
+      .addBankAccount(-1, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.0, "2009/07/30")
       .addTransaction("2009/06/01", -200.00, "Auchan")
       .addTransaction("2009/07/01", -400.00, "Auchan")
       .addTransaction("2009/07/10", 500.00, "WorldCo")
@@ -364,7 +364,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
   public void testDifferentSignsInBudgetAreaSeries() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.0, "2009/07/30")
+      .addBankAccount(-1, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.0, "2009/07/30")
       .addTransaction("2009/07/10", -400.00, "Auchan")
       .addTransaction("2009/07/01", 100.00, "WorldCo")
       .addTransaction("2009/07/15", 400.00, "Big Inc.")
@@ -418,7 +418,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
   public void testNavigatingToASeriesExpandsTheBudgetAreaInTheTable() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.0, "2009/07/30")
+      .addBankAccount(-1, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.0, "2009/07/30")
       .addTransaction("2009/07/10", -250.00, "Auchan")
       .addTransaction("2009/07/20", -200.00, "Auchan")
       .addTransaction("2009/07/05", -50.00, "Elf")

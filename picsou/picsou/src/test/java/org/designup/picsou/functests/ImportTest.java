@@ -355,9 +355,10 @@ public class ImportTest extends LoggedInFunctionalTestCase {
         {"10/06/2008", "McDo", "10.00"},
         {"10/06/2008", "V'lib", "1.00"},
       })
-      .checkAccountsForEntity("666", new String[]{"12345678a", "12345678b"})
+      .checkAccountsForEntity("666", new String[]{ "12345678a", "12345678b"})
       .checkAccountsForEntity("777", new String[]{"1111222233334444", "87654321"})
       .selectBankForEntity("777", SOCIETE_GENERALE)
+      .selectBankForEntity("666", SOCIETE_GENERALE)
       .completeImport();
 
     String secondFileName = OfxBuilder.init(this)
@@ -513,13 +514,13 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/10", 1.0, "V'lib")
       .save();
 
-    operations.importOfxFile(fileName1);
+    operations.importOfxFile(fileName1, "Autre");
 
     String fileName2 = OfxBuilder.init(this)
       .addBankAccount(666, 1024, "12345678b", 12.0, "2008/06/11")
       .addTransaction("2008/06/10", 1.0, "V'lib")
       .save();
-    operations.importOfxFile(fileName2);
+    operations.importOfxFile(fileName2, "Autre");
     views.selectData();
     transactions
       .initContent()

@@ -283,6 +283,14 @@ public class OfxImporter implements AccountFileImporter {
         if (bankEntityId != null) {
           bankId = BankEntity.getBank(repository.find(Key.create(BankEntity.TYPE, bankEntityId)), repository).get(Bank.ID);
         }
+        else {
+          for (Glob account : repository.getAll(Account.TYPE)) {
+            if (bankEntityLabel.equals(account.get(Account.BANK_ENTITY_LABEL))){
+              bankId = account.get(Account.BANK);
+              break;
+            }
+          }
+        }
         currentAccount = repository.create(Account.TYPE,
                                            value(Account.NUMBER, accountNumber),
                                            value(Account.ID, generator.getNextId(Account.ID, 1)),

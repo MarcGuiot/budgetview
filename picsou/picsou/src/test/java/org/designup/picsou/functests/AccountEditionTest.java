@@ -7,7 +7,7 @@ import org.designup.picsou.model.TransactionType;
 public class AccountEditionTest extends LoggedInFunctionalTestCase {
   public void testEditingAnExistingAccount() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0000123", 100.00, "2008/10/15")
+      .addBankAccount(-1, 10674, "0000123", 100.00, "2008/10/15")
       .addTransaction("2008/10/01", 15.00, "MacDo")
       .load();
 
@@ -79,7 +79,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
   public void testEmptyAccountNamesAreNotAllowed() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0000123", 100.00, "2008/10/15")
+      .addBankAccount(-1, 10674, "0000123", 100.00, "2008/10/15")
       .addTransaction("2008/10/01", 15.00, "MacDo")
       .load();
 
@@ -115,7 +115,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
   public void testMainAccountTypeIsTheDefault() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0000123", 100.00, "2008/10/15")
+      .addBankAccount(-1, 10674, "0000123", 100.00, "2008/10/15")
       .addTransaction("2008/10/01", 15.00, "MacDo")
       .load();
 
@@ -151,7 +151,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0000123", 100.00, "2008/10/15")
+      .addBankAccount(-1, 10674, "0000123", 100.00, "2008/10/15")
       .addTransaction("2008/10/01", 1000.00, "WorldCo")
       .addTransaction("2008/10/05", -15.00, "MacDo")
       .load();
@@ -207,13 +207,13 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
   public void testDeletingAnAccountAndRelatedTransactions() throws Exception {
 
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0000123", 100.00, "2008/10/15")
+      .addBankAccount(-1, 10674, "0000123", 100.00, "2008/10/15")
       .addTransaction("2008/10/01", 1000.00, "WorldCo")
       .addTransaction("2008/10/05", -15.00, "MacDo")
       .load();
 
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0000666", 100.00, "2008/10/15")
+      .addBankAccount(-1, 10674, "0000666", 100.00, "2008/10/15")
       .addTransaction("2008/10/10", -15.00, "Quick")
       .load();
 
@@ -252,12 +252,12 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
   public void testDeletingASavingsAccountWithSeries() throws Exception {
 
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0000100", 900.00, "2008/10/15")
+      .addBankAccount(-1, 10674, "0000100", 900.00, "2008/10/15")
       .addTransaction("2008/10/01", 1000.00, "Salaire/oct")
       .load();
 
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0000123", 200000.00, "2008/10/15")
+      .addBankAccount(-1, 10674, "0000123", 200000.00, "2008/10/15")
       .addTransaction("2008/10/05", 200.00, "Virement octobre")
       .load();
 
@@ -321,7 +321,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
   public void testCreateAccountWithStartDate() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0000100", 900.00, "2008/10/15")
+      .addBankAccount(-1, 10674, "0000100", 900.00, "2008/10/15")
       .addTransaction("2008/10/01", 1000.00, "Salaire/oct")
       .addTransaction("2008/09/01", 1000.00, "Salaire/oct")
       .load();
@@ -408,7 +408,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "0000100", 100.0, "2008/07/15")
+      .addBankAccount(-1, 10674, "0000100", 100.0, "2008/07/15")
       .addTransaction("2008/07/01", 1000.00, "Salaire/oct")
       .addTransaction("2008/06/01", 1000.00, "Salaire/oct")
       .load();

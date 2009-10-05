@@ -16,12 +16,12 @@ public class ClassPathDependExtractorBuilder {
   List<String> pathToIgnore = new ArrayList<String>();
   Set<String> jarToIgnore = new HashSet<String>();
 
-  public static ClassPathDependExtractorBuilder init() {
-    return new ClassPathDependExtractorBuilder();
+  public static ClassPathDependExtractorBuilder init(boolean withDebug) {
+    return new ClassPathDependExtractorBuilder(withDebug);
   }
 
-  public ClassPathDependExtractorBuilder() {
-    extractor = new DependExtractor();
+  private ClassPathDependExtractorBuilder(boolean withDebug) {
+    extractor = new DependExtractor(withDebug);
   }
 
   public void initStartPoint(Reader startPointRead) throws IOException {

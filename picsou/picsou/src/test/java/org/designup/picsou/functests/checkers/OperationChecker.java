@@ -1,15 +1,13 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.TestCase;
+import junit.framework.Assert;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.TestUtils;
-import org.uispec4j.Button;
-import org.uispec4j.MenuItem;
-import org.uispec4j.Trigger;
-import org.uispec4j.Window;
+import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
@@ -62,6 +60,10 @@ public class OperationChecker {
     importFile(new String[]{name}, null, null, null);
   }
 
+  public void importOfxFile(String name, String bank) {
+    importFile(new String[]{name}, bank, null, null);
+  }
+
   public void importQifFile(String file, String bank) {
     importFile(new String[]{file}, bank, null, null);
   }
@@ -92,6 +94,9 @@ public class OperationChecker {
           if (importDialog.getInputTextBox("number").isEditable().isTrue()) {
             importDialog.getInputTextBox("number").setText(DEFAULT_ACCOUNT_NUMBER);
             importDialog.getComboBox("accountBank").select(bank);
+          }
+          else if (bank != null && importDialog.findSwingComponent(JComboBox.class, "bankCombo") != null){ // OFX
+            importDialog.getComboBox("bankCombo").select(bank);
           }
           if (targetAccount != null) {
             importDialog.getComboBox("accountCombo").select(targetAccount);
@@ -293,9 +298,7 @@ public class OperationChecker {
     dumpMenu.click();
   }
 
-  public MessageDialogChecker throwExecptionInApp(){
-    MessageDialogChecker dialogChecker =
-      new MessageDialogChecker(WindowInterceptor.getModalDialog(throwExceptionMenu.triggerClick()));
-    return dialogChecker;
+  public MessageDialogChecker throwExceptionInApp(){
+    return new MessageDialogChecker(WindowInterceptor.getModalDialog(throwExceptionMenu.triggerClick()));
   }
 }

@@ -146,6 +146,12 @@ public class UpgradeTrigger implements ChangeSetListener {
                           FieldValue.value(Account.BANK, bank.get(Bank.ID)));
 
       }
+      else {
+        repository.update(account.getKey(),
+                          FieldValue.value(Account.BANK_ENTITY, -1),
+                          FieldValue.value(Account.BANK_ENTITY_LABEL, ""),
+                          FieldValue.value(Account.BANK, -123456));
+      }
     }
   }
 

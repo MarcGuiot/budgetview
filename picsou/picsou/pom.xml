@@ -92,6 +92,7 @@
                   <classpath>
                     <path refid="maven.runtime.classpath"/>
                   </classpath>
+                  <sysproperty key="with.debug" value="true"/>
                   <arg
                     line="dump.jar ${project.build.directory}/../dev/ant/inputDump.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
                 </java>
@@ -104,6 +105,7 @@
                   <classpath>
                     <path refid="maven.runtime.classpath"/>
                   </classpath>
+                  <sysproperty key="with.debug" value="true"/>
                   <arg
                     line="cashpilot.jar ${project.build.directory}/../dev/ant/inputClient.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
                 </java>

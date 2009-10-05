@@ -71,6 +71,9 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
   }
 
   public GlobList findLinkedTo(Glob target, Link link) {
+    if (target == null){
+      return GlobList.EMPTY;
+    }
     if (link instanceof LinkField) {
       LinkField linkField = (LinkField)link;
       IntegerField targetKeyField = linkField.getTargetKeyField();

@@ -149,6 +149,12 @@ public class ImportChecker {
     return this;
   }
 
+  public ImportChecker selectOfxAccountBank(String bankName) {
+    ComboBox accountBankCombo = dialog.getComboBox("bankCombo");
+    accountBankCombo.select(bankName);
+    return this;
+  }
+
   public ImportChecker skipFile() {
     dialog.getButton("Skip").click();
     return this;

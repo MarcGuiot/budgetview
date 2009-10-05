@@ -28,6 +28,7 @@ public class NotesViewTest extends LoggedInFunctionalTestCase {
       .openImport()
       .selectFiles(file)
       .acceptFile()
+      .selectOfxAccountBank("Autre")
       .doImport();
 
     timeline.checkSelection("2008/08");
@@ -85,7 +86,7 @@ public class NotesViewTest extends LoggedInFunctionalTestCase {
 
   public void testMonthTooltipWithNoPositionAvailable() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "000123", 100, "2008/08/15")
+      .addBankAccount(-1, 10674, "000123", 100, "2008/08/15")
       .addTransaction("2008/07/26", 1000, "WorldCo")
       .load();
 
