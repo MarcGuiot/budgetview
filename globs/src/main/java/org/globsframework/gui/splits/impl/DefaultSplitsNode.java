@@ -25,7 +25,7 @@ public class DefaultSplitsNode<T extends Component> implements SplitsNode<T> {
   public void applyStyle(String styleName) {
     Style style = context.getStyles().getStyle(styleName);
     if (style == null) {
-      throw new SplitsException("Style " + style + " not found");
+      throw new SplitsException("Style '" + styleName + "' not found");
     }
     SplitProperties properties = style.getProperties();
     PropertySetter.process(component, properties, context);

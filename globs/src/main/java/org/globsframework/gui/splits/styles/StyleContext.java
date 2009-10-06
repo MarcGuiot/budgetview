@@ -25,6 +25,7 @@ public class StyleContext {
 
   public void addAll(StyleContext other) {
     this.styles.addAll(other.styles);
+    this.styleByIds.putAll(other.styleByIds);
   }
 
   public Style getStyle(String id){
