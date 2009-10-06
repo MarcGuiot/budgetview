@@ -14,6 +14,8 @@ import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.MapOfMaps;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
+import org.uispec4j.Key;
+import org.uispec4j.utils.KeyUtils;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;

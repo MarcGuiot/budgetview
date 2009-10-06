@@ -16,6 +16,7 @@ import org.designup.picsou.gui.license.LicenseCheckerThread;
 import org.designup.picsou.gui.startup.LoginPanel;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.DataCheckerAction;
 import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
@@ -123,6 +124,7 @@ public class MainWindow implements WindowManager {
     frame.setSize(Gui.getWindowSize(1100, 800));
     GuiUtils.showCentered(frame);
     LicenseCheckerThread.launch(directory, picsouInit.getRepository());
+//    Runtime.getRuntime().addShutdownHook(new ShutDownThread(serverAccess, serverDirectory));
     synchronized (this) {
       initDone = true;
       notify();
@@ -162,12 +164,16 @@ public class MainWindow implements WindowManager {
         serverDirectory.close();
       }
       serverDirectory = new ServerDirectory(prevaylerPath, dataInMemory);
+      this.serverAccess.takeSnapshot();
+      this.serverAccess.disconnect();
       ServerAccess serverAccess =
         new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
                                              directory);
       this.serverAccess.setServerAccess(serverAccess);
     }
     else {
+      this.serverAccess.takeSnapshot();
+      this.serverAccess.disconnect();
       ServerAccess serverAccess = new ConnectionRetryServerAccess(
         new EncrypterToTransportServerAccess(new HttpsClientTransport(remoteAdress), directory));
       this.serverAccess.setServerAccess(serverAccess);
@@ -284,7 +290,13 @@ public class MainWindow implements WindowManager {
         }
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
-            preLoadData.load();
+            try {
+              preLoadData.load();
+            }
+            catch (Exception e) {
+              DataCheckerAction action = new DataCheckerAction(picsouInit.getRepository(), picsouInit.getDirectory());
+              action.actionPerformed(null);
+            }
             mainPanel.show();
             frame.setFocusTraversalPolicy(null);
           }

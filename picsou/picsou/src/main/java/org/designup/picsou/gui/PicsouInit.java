@@ -155,8 +155,8 @@ public class PicsouInit {
       }
       finally {
         repository.completeChangeSet();
+        repository.removeTrigger(upgradeTrigger);
       }
-      repository.removeTrigger(upgradeTrigger);
     }
   }
 

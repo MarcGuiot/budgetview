@@ -246,10 +246,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         currentTransactions = selection.getAll(Transaction.TYPE);
-        Set<Integer> months = new HashSet<Integer>();
-        for (Glob transaction : currentTransactions) {
-          months.add(transaction.get(Transaction.MONTH));
-        }
+        Set<Integer> months = currentTransactions.getValueSet(Transaction.MONTH);
         for (Pair<PicsouMatchers.CategorizationFilter, GlobRepeat> filter : seriesRepeat) {
           filter.getFirst().filterDates(months, currentTransactions);
           filter.getSecond().setFilter(filter.getFirst());

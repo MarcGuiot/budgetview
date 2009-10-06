@@ -16,6 +16,8 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Set;
+import java.util.HashSet;
 
 public class DataCheckerAction extends AbstractAction {
   private GlobRepository repository;
@@ -33,12 +35,12 @@ public class DataCheckerAction extends AbstractAction {
 
   private boolean check() {
     final StringBuilder buf = new StringBuilder();
-    buf.append("Start checking");
+    buf.append("Start checking\n");
     boolean hasError = false;
     try {
       GlobList months = repository.getAll(Month.TYPE).sort(Month.ID);
       if (months.size() == 0) {
-        buf.append("No month");
+        buf.append("No month\n");
         hasError = true;
         return false;
       }
@@ -48,7 +50,7 @@ public class DataCheckerAction extends AbstractAction {
       int currentMonth = firstMonth;
       for (Glob glob : months) {
         if (glob.get(Month.ID) != currentMonth) {
-          buf.append("Missing month ").append(currentMonth);
+          buf.append("Missing month ").append(currentMonth).append("\n");
           hasError = true;
         }
         currentMonth = Month.next(currentMonth);
@@ -79,7 +81,7 @@ public class DataCheckerAction extends AbstractAction {
             buf.append("Missing SeriesBudget for series : ")
               .append(series.get(Series.NAME)).append(" budgetArea : ")
               .append(series.get(Series.BUDGET_AREA)).append(" got ")
-              .append(budget.get(SeriesBudget.MONTH)).append(" but expect ").append(currentMonth);
+              .append(budget.get(SeriesBudget.MONTH)).append(" but expect ").append(currentMonth).append("\n");
             hasError = true;
             break;
           }
@@ -91,7 +93,7 @@ public class DataCheckerAction extends AbstractAction {
           buf.append("Bad end of series : ").append(series.get(Series.NAME))
             .append(" budgetArea : ").append(series.get(Series.BUDGET_AREA))
             .append(" got ").append(seriesBudgets.getLast().get(SeriesBudget.MONTH))
-            .append(" but expect ").append(currentMonth);
+            .append(" but expect ").append(currentMonth).append(("\n"));
           hasError = true;
         }
         GlobList transactions =
@@ -104,25 +106,19 @@ public class DataCheckerAction extends AbstractAction {
         }
       }
 
-      GlobList transactions = repository.getAll(Transaction.TYPE,
-                                                GlobMatchers.not(GlobMatchers.fieldIsNull(Transaction.SPLIT_SOURCE)));
-      for (Glob transaction : transactions) {
-        if (repository.findLinkTarget(transaction, Transaction.SPLIT_SOURCE) == null) {
-          buf.append("Error : split source was deleted for ")
-            .append(transaction.get(Transaction.LABEL)).append(" : ")
-            .append(Month.toString(transaction.get(Transaction.MONTH), transaction.get(Transaction.DAY)));
-          hasError = true;
-        }
-      }
+      hasError |= checkSplitedTransactions(buf);
+
+      hasError |= checkSeriesBudget(buf);
 
       TransactionToSeriesChecker toSeriesChecker = new TransactionToSeriesChecker(buf);
       repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, toSeriesChecker);
       toSeriesChecker.deletePlanned(repository);
       hasError |= toSeriesChecker.hasError();
+
       return hasError;
     }
     finally {
-      buf.append("End checking");
+      buf.append("End checking\n");
       if (hasError) {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         toolkit.beep();
@@ -131,6 +127,41 @@ public class DataCheckerAction extends AbstractAction {
       dialog.show();
       Log.write(buf.toString());
     }
+  }
+
+  private boolean checkSeriesBudget(StringBuilder buf) {
+    boolean hasError = false;
+    Set<Integer> seriesId = new HashSet<Integer>();
+    GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE);
+    for (Glob budget : seriesBudgets) {
+      Glob series = repository.findLinkTarget(budget, SeriesBudget.SERIES);
+      if (series == null){
+        if (seriesId.add(budget.get(SeriesBudget.SERIES))){
+          buf.append("SeriesBudget : Missing series ")
+            .append(budget.get(SeriesBudget.SERIES))
+            .append("\n");
+        }
+        repository.delete(budget.getKey());
+        hasError = true;
+      }
+    }
+    return hasError;
+  }
+
+  private boolean checkSplitedTransactions(StringBuilder buf) {
+    boolean hasError = false;
+    GlobList transactions = repository.getAll(Transaction.TYPE,
+                                              GlobMatchers.not(GlobMatchers.fieldIsNull(Transaction.SPLIT_SOURCE)));
+    for (Glob transaction : transactions) {
+      if (repository.findLinkTarget(transaction, Transaction.SPLIT_SOURCE) == null) {
+        buf.append("Error : split source was deleted for ")
+          .append(transaction.get(Transaction.LABEL)).append(" : ")
+          .append(Month.toString(transaction.get(Transaction.MONTH), transaction.get(Transaction.DAY)))
+          .append(("\n"));
+        hasError = true;
+      }
+    }
+    return hasError;
   }
 
   private boolean checkTransactionBetweenSeriesDate(Integer firstMonthForSeries, Integer lastMonthForSeries, Glob transaction, StringBuilder buf) {

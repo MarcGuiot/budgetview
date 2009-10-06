@@ -1094,13 +1094,22 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization
       .selectTransactions("1_Auchan")
       .selectEnvelopes()
-      .checkDoesNotContainSeries("Courses 2")
+      .checkNotActiveSeries("Courses 2")
+      .checkActiveSeries("Courses 1")
       .selectSeries("Courses 1");
 
     categorization
       .selectTransactions("2_Auchan")
       .selectEnvelopes()
-      .checkDoesNotContainSeries("Courses 1");
+      .checkNotActiveSeries("Courses 1")
+      .checkActiveSeries("Courses 2");
+
+    categorization
+      .selectTransactions("1_Auchan", "2_Auchan")
+      .checkSelectedTableRows(0, 1)
+      .selectEnvelopes()
+      .checkActiveSeries("Courses 1")
+      .checkActiveSeries("Courses 2");
   }
 
   public void testDoNotFilterValidMonthIfMonthIsUncheckedButWithAlreadyCategorizedOperations() throws Exception {

@@ -43,7 +43,9 @@ public class ServerAccessDecorator implements ServerAccess {
   }
 
   public void takeSnapshot() {
-    serverAccess.takeSnapshot();
+    if (serverAccess != null) {
+      serverAccess.takeSnapshot();
+    }
   }
 
   public boolean canRead(MapOfMaps<String, Integer, SerializableGlobType> data) {
@@ -75,6 +77,8 @@ public class ServerAccessDecorator implements ServerAccess {
   }
 
   public void disconnect() {
-    serverAccess.disconnect();
+    if (serverAccess != null) {
+      serverAccess.disconnect();
+    }
   }
 }

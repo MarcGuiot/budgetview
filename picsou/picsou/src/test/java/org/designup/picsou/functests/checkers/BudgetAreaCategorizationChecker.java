@@ -84,6 +84,16 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     return this;
   }
 
+  public BudgetAreaCategorizationChecker checkNotActiveSeries(String seriesName) {
+    assertThat(panel.getRadioButton(seriesName).foregroundEquals("777777"));
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker checkActiveSeries(String seriesName) {
+    assertThat(panel.getRadioButton(seriesName).foregroundEquals("000000"));
+    return this;
+  }
+
   public SeriesEditionDialogChecker createSeries() {
     Button button =
       categorizationChecker.getPanel()

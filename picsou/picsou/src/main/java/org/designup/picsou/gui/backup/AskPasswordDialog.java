@@ -16,8 +16,6 @@ public class AskPasswordDialog {
   private String message;
   private Directory directory;
   private String[] argsForMessage;
-  private JPasswordField passwordField;
-  private PicsouDialog dialog;
 
   public AskPasswordDialog(String title, String label, String message, Directory directory, String... argsForMessage) {
     this.title = title;
@@ -43,14 +41,10 @@ public class AskPasswordDialog {
     };
     passwordField.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        if (passwordField.getPassword() == null || passwordField.getPassword().length == 0) {
-          validate.setEnabled(false);
-        }
-        else {
-          validate.setEnabled(true);
-        }
+       dialog.setVisible(false);
       }
     });
+
 
     AbstractAction cancel = new AbstractAction(Lang.get("cancel")) {
       public void actionPerformed(ActionEvent e) {
@@ -67,27 +61,4 @@ public class AskPasswordDialog {
     return passwordField.getPassword();
   }
 
-  private class CancelAction extends AbstractAction {
-    private final PicsouDialog dialog;
-
-    public CancelAction(PicsouDialog dialog) {
-      super(Lang.get("cancel"));
-      this.dialog = dialog;
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      passwordField.setText(null);
-      dialog.setVisible(false);
-    }
-  }
-
-  private class OkAction extends AbstractAction {
-    public OkAction() {
-      super(Lang.get("ok"));
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      dialog.setVisible(false);
-    }
-  }
 }
