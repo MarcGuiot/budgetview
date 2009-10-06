@@ -257,7 +257,7 @@ public class UpgradeTrigger implements ChangeSetListener {
                               value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()),
                               value(Account.IS_IMPORTED_ACCOUNT, true));
       repository.findOrCreate(Account.SAVINGS_SUMMARY_KEY,
-                              FieldValue.value(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()));
+                              value(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()));
       repository.findOrCreate(Account.ALL_SUMMARY_KEY);
       InitialSeries.run(repository);
     }

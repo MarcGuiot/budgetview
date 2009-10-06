@@ -9,7 +9,7 @@ public class ExceptionHandler {
   private static Directory directory;
 
   public void handle(Throwable exception) {
-    Log.write("exception catch : ", exception);
+    Log.write("Exception thrown: ", exception);
     if (repository != null) {
       DataCheckerAction action = new DataCheckerAction(repository, directory);
       action.actionPerformed(null);

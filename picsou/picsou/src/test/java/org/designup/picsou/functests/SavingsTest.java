@@ -529,7 +529,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   public void testImportedSavingsAccountFromExternal() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     OfxBuilder.init(this)
-      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000., "2008/08/10")
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")
       .addTransaction("2008/08/10", 100.00, "CAF")
       .load();
     views.selectHome();
@@ -560,7 +560,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
   public void testSimpleCase() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000., "2008/08/10")  //compte d'épargne
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")  //compte d'épargne
       .addTransaction("2008/08/10", 100.00, "Virement")
       .load();
     OfxBuilder.init(this)
@@ -606,7 +606,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   public void testImportedSavingsAccountWithMainAccount() throws Exception {
 
     OfxBuilder.init(this)
-      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000., "2008/08/10")  //compte d'épargne
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")  //compte d'épargne
       .addTransaction("2008/08/10", 100.00, "Virement")
       .addTransaction("2008/07/10", -200.00, "Prelevement")
       .load();
@@ -699,7 +699,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
   public void testImportedSavingsAccountWithMainAccountInManual() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000., "2008/08/10")
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")
       .addTransaction("2008/08/10", 100.00, "Virement")
       .load();
     OfxBuilder.init(this)
@@ -750,7 +750,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     // Un compte courant, un compte d'épargne importé, un compte d'épargne non importé
 
     OfxBuilder.init(this)
-      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000., "2008/08/10")
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
       .addTransaction("2008/06/06", 100.00, "Virement Epargne")
       .addTransaction("2008/07/06", 100.00, "Virement Epargne")
       .addTransaction("2008/08/06", 100.00, "Virement Epargne")
@@ -866,7 +866,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
   public void testSavingsGauge() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000., "2008/08/10")  //compte d'épargne
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")  //compte d'épargne
       .addTransaction("2008/08/12", -100.00, "P3 CE")
       .addTransaction("2008/08/11", -100.00, "P2 CE")
       .addTransaction("2008/08/10", -100.00, "P1 CE")
@@ -1158,7 +1158,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
   public void testCheckComboAccountContents() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000., "2008/08/10")
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
       .addTransaction("2008/06/06", 100.00, "Virement Epargne")
       .load();
 
@@ -1191,7 +1191,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   public void testCreatingSavingsFromCategorisationDoNotAssign() throws Exception {
 
     OfxBuilder.init(this)
-      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000., "2008/08/10")
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
       .addTransaction("2008/06/06", -100.00, "Virement Epargne")
       .load();
 
@@ -1263,7 +1263,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
   public void testCategorisationOnSavingCreation() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000., "2008/08/10")
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
       .addTransaction("2008/06/06", -100.00, "Virement Epargne")
       .load();
 
@@ -1296,7 +1296,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
   public void testCanNotChoiceTheSameAccount() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000., "2008/08/10")
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
       .addTransaction("2008/06/06", -100.00, "Virement Epargne")
       .load();
 
@@ -1336,7 +1336,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
   public void testDeleteSeriesForBothImportedAccountWithTransactionInFrom() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000., "2008/08/10")
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
       .addTransaction("2008/06/06", -100.00, "Virement Epargne")
       .load();
 

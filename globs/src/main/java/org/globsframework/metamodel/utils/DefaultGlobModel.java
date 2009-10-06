@@ -13,7 +13,6 @@ public class DefaultGlobModel implements GlobModel {
   private Map<String, GlobType> typesByName = new HashMap<String, GlobType>();
   private int objectTypeSpecificCount;
   private int fieldSpecificCount;
-  private GlobList constants = new GlobList();
   private GlobModel innerModel;
   private GlobTypeDependencies dependencies;
 
@@ -39,7 +38,7 @@ public class DefaultGlobModel implements GlobModel {
   }
 
   public Collection<GlobType> getAll() {
-    Set result = new HashSet();
+    Set<GlobType> result = new HashSet<GlobType>();
     result.addAll(typesByName.values());
     if (innerModel != null) {
       result.addAll(innerModel.getAll());
@@ -53,7 +52,6 @@ public class DefaultGlobModel implements GlobModel {
 
   public GlobList getConstants() {
     GlobList result = new GlobList();
-    result.addAll(constants);
     for (GlobType type : typesByName.values()) {
       result.addAll(type.getConstants());
     }
@@ -87,9 +85,5 @@ public class DefaultGlobModel implements GlobModel {
     for (GlobType type : types) {
       typesByName.put(type.getName(), type);
     }
-  }
-
-  public void addConstants(GlobList constants) {
-    this.constants.addAll(constants);
   }
 }

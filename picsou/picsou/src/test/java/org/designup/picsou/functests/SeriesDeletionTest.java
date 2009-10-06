@@ -77,7 +77,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkSeriesNotPresent("Empty");
   }
 
-  public void testSavingsDeleteInManual() throws Exception {
+  public void testDeleteSavingsInManual() throws Exception {
     mainAccounts.createNewAccount().setAccountName("Main")
       .setAsMain()
       .setPosition(1000)
@@ -110,6 +110,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .selectSavings()
       .editSeries("Savings Series")
       .deleteCurrentSeriesWithConfirmation();
+
     // il reste des SeriesBudget miroir sans la serie principale
     // NPE sur recalcul de PeriodStat.
     String name = operations.backup(this);

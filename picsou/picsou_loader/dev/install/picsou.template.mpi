@@ -213,7 +213,7 @@ FileGroup ::8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42 -setup Install -active Yes -pla
 File ::2B46BFAC-3F00-4290-B80A-D790CCEB6778 -name msvcr71.dll -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::09B3F2A4-3934-FAA3-B4DF-514E8A7332E9 -name license.txt -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::2FD90047-B823-2003-90B2-D3469C68FBE9 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou_loader/dev/install/cashpilot.exe -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
-File ::7D0C4D57-E1C1-C244-4722-B0DDFF5C6150 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou_loader/dev/images/cashpilot_icon_32.ico -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
+File ::7D0C4D57-E1C1-C244-4722-B0DDFF5C6150 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou_loader/dev/images/cashpilot.ico -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::A427121E-CA00-2A1E-B0AF-61AAE6EB9666 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/obfuscated/JAR_FOURMICS.jar -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 FileGroup ::89CD3510-FDE9-0208-D7B5-DE37109ECD51 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-x86 HPUX-hppa Linux-x86 MacOS-X Solaris-sparc TarArchive} -name {linux program files} -parent FileGroups
 File ::2FB1AD48-CACB-8786-FF0B-91202764BB49 -name /home/guiot/dev/java/lesueur/ref/picsou/picsou/dev/images/cashpilot_icon_32.png -parent 89CD3510-FDE9-0208-D7B5-DE37109ECD51
@@ -691,7 +691,7 @@ text/ofx
 text/qif
 
 4A6ADC8C-83B7-433C-AE38-4A306C5E9671,IconPath
-{<%InstallDir%>\cashpilot_icon_32.ico}
+{<%InstallDir%>\cashpilot.ico}
 
 4A6ADC8C-83B7-433C-AE38-4A306C5E9671,Title
 {qif file}
@@ -1000,7 +1000,7 @@ CreateDesktopShortcut
 text/ofx
 
 7CF1E2B3-AFC2-9E68-1E2B-50FE90B9420C,IconPath
-{<%InstallDir%>\cashpilot_icon_32.ico}
+{<%InstallDir%>\cashpilot.ico}
 
 7CF1E2B3-AFC2-9E68-1E2B-50FE90B9420C,Title
 {ofx file}
@@ -1183,7 +1183,7 @@ A885B9C6-B280-06FC-EBA7-09F0E2F969B8,FileType
 text/ofc
 
 A885B9C6-B280-06FC-EBA7-09F0E2F969B8,IconPath
-{<%InstallDir%>\cashpilot_icon_32.ico}
+{<%InstallDir%>\cashpilot.ico}
 
 A885B9C6-B280-06FC-EBA7-09F0E2F969B8,Title
 {ofc file}
@@ -2044,7 +2044,7 @@ Windows,ProgramReadme
 <%InstallDir%>/README.txt
 
 Windows,WindowsIcon
-/home/guiot/dev/java/lesueur/ref/picsou/picsou_loader/dev/images/cashpilot_icon_32.ico
+/home/guiot/dev/java/lesueur/ref/picsou/picsou_loader/dev/images/cashpilot.ico
 
 ZipArchive,Active
 No
