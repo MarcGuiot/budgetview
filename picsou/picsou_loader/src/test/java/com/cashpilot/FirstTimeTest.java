@@ -290,9 +290,9 @@ public class FirstTimeTest extends UISpecTestCase {
     mainAccounts.openEstimatedPositionDetails()
       .checkPosition(1971.10)
       .checkInitialPosition(1900)
-      .checkEnvelope(-415)
-      .checkFixed(-1413.9)
-      .checkSavingsIn(-100)
+      .checkEnvelope(415)
+      .checkFixed(1413.9)
+      .checkSavingsIn(100)
       .checkIncome(2000)
       .close();
 
@@ -319,9 +319,9 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkPosition(1831.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
-      .checkFixed(-584)
-      .checkSavingsIn(-100)
-      .checkEnvelope(-265)
+      .checkFixed(584)
+      .checkSavingsIn(100)
+      .checkEnvelope(265)
       .close();
 
     views.selectData();

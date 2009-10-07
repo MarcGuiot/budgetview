@@ -862,6 +862,11 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     
     views.selectSavings();
     savingsView.checkAmount("Account n. 111222", "Placement", 0, 100);
+
+    savingsView.editSeries("Account n. 111222", "Placement").deleteCurrentSeriesWithConfirmation();
+    savingsView.editSeries("Epargne", "Virement CAF").deleteCurrentSeriesWithConfirmation();
+    String fileName = operations.backup(this);
+    operations.restore(fileName);
   }
 
   public void testSavingsGauge() throws Exception {
@@ -903,7 +908,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setToAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setCustom()
       .setStartDate(200807)
-      .setEndDate(200808)
+      .setEndDate(200809)
       .validate();
     views.selectCategorization();
     categorization.showSelectedMonthsOnly();
@@ -944,6 +949,48 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("10/08/2008", "V1 CC", 100.00, "Project", -80.00, -80.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("10/08/2008", "V1 CE", 50.00, "CA", 1000.00, 1000.00, "Account n. 111")
       .add("10/08/2008", "P1 CE", -100.00, "Project", 950.00, 950.00, "Account n. 111")
+      .check();
+    views.selectBudget();
+
+    String fileName = operations.backup(this);
+
+    budgetView.savings.editSeries("Project")
+      .deleteCurrentSeriesWithConfirmation();
+    budgetView.savings.editSeries("CA")
+      .deleteCurrentSeriesWithConfirmation();
+
+    checkDeleteSeries();
+
+    operations.restore(fileName);
+    views.selectSavings();
+    savingsView.editSeries("Account n. 111", "CA").deleteCurrentSeriesWithConfirmation();
+    savingsView.editSeries("Account n. 111", "Project").deleteCurrentSeriesWithConfirmation();
+
+    checkDeleteSeries();
+  }
+
+  private void checkDeleteSeries() {
+    String fileName = operations.backup(this);
+    operations.restore(fileName);
+    timeline.selectAll();
+    views.selectData();
+    transactions.initContent()
+      .add("12/08/2008", TransactionType.PRELEVEMENT, "P3 CC", "", -20.00)
+      .add("12/08/2008", TransactionType.VIREMENT, "V3 CC", "", 100.00)
+      .add("12/08/2008", TransactionType.VIREMENT, "V3 CE", "", 20.00)
+      .add("12/08/2008", TransactionType.PRELEVEMENT, "P3 CE", "", -100.00)
+      .add("11/08/2008", TransactionType.PRELEVEMENT, "P2 CC", "", -50.00)
+      .add("11/08/2008", TransactionType.VIREMENT, "V2 CC", "", 100.00)
+      .add("11/08/2008", TransactionType.VIREMENT, "V2 CE", "", 50.00)
+      .add("11/08/2008", TransactionType.PRELEVEMENT, "P2 CE", "", -100.00)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "P1 CC", "", -50.00)
+      .add("10/08/2008", TransactionType.VIREMENT, "V1 CC", "", 100.00)
+      .add("10/08/2008", TransactionType.VIREMENT, "V1 CE", "", 50.00)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "P1 CE", "", -100.00)
+      .add("10/07/2008", TransactionType.VIREMENT, "VIREMENT CC", "", 200.00)
+      .add("10/07/2008", TransactionType.PRELEVEMENT, "PRELEVEMENT CC", "", -100.00)
+      .add("10/07/2008", TransactionType.PRELEVEMENT, "PRELEVEMENT CE", "", -200.00)
+      .add("10/07/2008", TransactionType.VIREMENT, "VIREMENT CE", "", 100.00)
       .check();
   }
 
@@ -991,6 +1038,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectSavings();
     savingsView.checkAmount("Savings 1", "Test", -300, -300);
     savingsView.checkAmount("Savings 2", "Test", 300, 300);
+    savingsView.editSeries("Savings 1", "Test").deleteCurrentSeriesWithConfirmation();
+    String fileName = operations.backup(this);
+    operations.restore(fileName);
   }
 
   public void testSavingAccountWithNoTransactionShouldNotBeIgnored() throws Exception {
