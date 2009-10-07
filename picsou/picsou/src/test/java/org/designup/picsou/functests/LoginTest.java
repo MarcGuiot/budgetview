@@ -106,15 +106,16 @@ public class LoginTest extends StartUpFunctionalTestCase {
   }
 
   public void testLoginFailsIfUserNotRegistered() throws Exception {
-    login.enterUserAndPassword("toto", "titi");
-    login.checkNoErrorDisplayed();
-    login.clickEnter();
-    login.checkErrorMessage("login.invalid.credentials");
+    login.enterUserAndPassword("toto", "titi")
+      .checkNoErrorDisplayed()
+      .clickEnter()
+      .checkErrorMessage("login.invalid.credentials");
     
     login.setCreation()
       .confirmPassword("titi")
       .checkNoErrorDisplayed()
-      .loginAndSkipSla();
+      .loginAndSkipSla()
+      .waitForApplicationToLoad();
   }
 
   public void testCannotUseTheSameLoginTwice() throws Exception {

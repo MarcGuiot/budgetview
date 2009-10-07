@@ -22,6 +22,12 @@ class DurableOutputStream {
     this.manager = manager;
     this.nextTransactionVersion = nextTransactionVersion;
     prevaylerDirectory = new PrevaylerDirectory(manager.getPath(userId));
+    try {
+      prevaylerDirectory.produceDirectory();
+    }
+    catch (IOException e) {
+      throw new IOFailure(e);
+    }
   }
 
   public void write(MultiMap<String, ServerDelta> data) {

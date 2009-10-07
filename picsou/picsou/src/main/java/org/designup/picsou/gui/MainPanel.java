@@ -100,7 +100,7 @@ public class MainPanel {
     this.windowManager = windowManager;
     this.parent = windowManager.getFrame();
     directory.add(JFrame.class, parent);
-    directory.add(new UndoRedoService(repository, directory));
+    directory.add(new UndoRedoService(repository));
     directory.add(new HelpService(repository, directory));
 
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);

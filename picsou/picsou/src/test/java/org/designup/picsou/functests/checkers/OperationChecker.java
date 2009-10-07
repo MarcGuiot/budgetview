@@ -187,6 +187,10 @@ public class OperationChecker {
     undoMenu.click();
   }
 
+  public boolean isUndoAvailable(){
+    return undoMenu.getAwtComponent().isEnabled();
+  }
+
   public void checkUndoAvailable() {
     UISpecAssert.assertTrue(undoMenu.isEnabled());
   }

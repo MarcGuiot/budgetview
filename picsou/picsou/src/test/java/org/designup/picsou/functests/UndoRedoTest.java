@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
 public class UndoRedoTest extends LoggedInFunctionalTestCase {
@@ -87,6 +86,31 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
     categorization.getEnvelopes().checkSeriesIsSelected("Courant");
     operations.undo();
     transactions.checkSeries("Auchan", "To categorize");
+  }
+
+  public void testMaxUndo() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/11", 95.00, "Auchan")
+      .load();
+    views.selectCategorization();
+    categorization.selectTransactions("Auchan");
+    categorization.selectEnvelopes().selectNewSeries("Courant");
+    for (int i = 0; i < 30; i++) {
+      categorization
+        .selectUncategorized()
+        .setUncategorized()
+        .selectEnvelopes().selectSeries("Courant");
+    }
+    int i;
+    for (i = 0; i < 30; i++) {
+      if (operations.isUndoAvailable()) {
+        operations.undo();
+      }
+      else {
+        break;
+      }
+    }
+    assertTrue(i < 25);
   }
 
   public void DISABLED_testUndoRedoMaintainsSelection() throws Exception {

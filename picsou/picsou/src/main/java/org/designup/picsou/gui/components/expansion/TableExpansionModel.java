@@ -90,7 +90,7 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
   private void setExpanded(boolean expanded) {
     for (Map.Entry<Integer, Boolean> entry : expandedMap.entrySet()) {
       Boolean expandable = expandableMap.get(entry.getKey());
-      entry.setValue(expandable && expanded);
+      entry.setValue(expanded && (expandable != null && expandable));
     }
     table.setFilter(this);
   }

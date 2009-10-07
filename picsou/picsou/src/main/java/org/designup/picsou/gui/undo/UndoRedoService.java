@@ -1,47 +1,38 @@
 package org.designup.picsou.gui.undo;
 
-import org.designup.picsou.gui.model.Card;
-import org.designup.picsou.model.Category;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Transaction;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
-import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
-import org.globsframework.utils.MultiMap;
-import org.globsframework.utils.directory.Directory;
 
 import java.util.*;
 
 public class UndoRedoService {
   private GlobRepository repository;
-  private Stack<Change> changesToUndo = new Stack<Change>();
+  private LinkedList<Change> changesToUndo = new LinkedList<Change>();
   private Stack<Change> changesToRedo = new Stack<Change>();
   private List<Listener> listeners = new ArrayList<Listener>();
   private boolean undoRedoInProgress = false;
-
-  private final GlobType[] selectionTypes = {Card.TYPE, Month.TYPE, Transaction.TYPE};
-  private final MultiMap<GlobType, Key> currentSelections = new MultiMap<GlobType, Key>();
+  private static final int MAX_UNDO = 20;
 
   public interface Listener {
     void update();
   }
 
-  public UndoRedoService(GlobRepository repository, Directory directory) {
+  public UndoRedoService(GlobRepository repository) {
     this.repository = repository;
     installChangeListener();
-    installSelectionListener(directory.get(SelectionService.class));
   }
 
   private void installChangeListener() {
     this.repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (!undoRedoInProgress) {
-          changesToUndo.push(createChange(changeSet));
+          changesToUndo.addLast(createChange(changeSet));
+          if (changesToUndo.size() == MAX_UNDO) {
+            changesToUndo.removeFirst();
+          }
+          changesToRedo.clear();
           notifyListeners();
         }
       }
@@ -52,24 +43,9 @@ public class UndoRedoService {
     });
   }
 
-  private void installSelectionListener(SelectionService selectionService) {
-    selectionService.addListener(new GlobSelectionListener() {
-      public void selectionUpdated(GlobSelection selection) {
-        for (GlobType type : selectionTypes) {
-          if (selection.isRelevantForType(type)) {
-            currentSelections.remove(type);
-            final List<Key> keys = Arrays.asList(selection.getAll(type).getKeys());
-            currentSelections.putAll(type, keys);
-          }
-        }
-      }
-    }, selectionTypes);
-  }
-
   public void reset() {
     changesToUndo.clear();
     changesToRedo.clear();
-    currentSelections.clear();
     notifyListeners();
   }
 
@@ -84,7 +60,7 @@ public class UndoRedoService {
   public void undo() {
     undoRedoInProgress = true;
     try {
-      Change change = changesToUndo.pop();
+      Change change = changesToUndo.removeLast();
       change.revert();
       changesToRedo.push(change);
       notifyListeners();
@@ -99,7 +75,7 @@ public class UndoRedoService {
     try {
       Change change = changesToRedo.pop();
       change.apply();
-      changesToUndo.push(change);
+      changesToUndo.addLast(change);
       notifyListeners();
     }
     finally {
@@ -122,7 +98,7 @@ public class UndoRedoService {
   }
 
   private Change createChange(ChangeSet changeSet) {
-    return new Change(changeSet, currentSelections);
+    return new Change(changeSet);
   }
 
   public void cleanUndo() {
@@ -132,11 +108,9 @@ public class UndoRedoService {
 
   private class Change {
     private ChangeSet changeSet;
-    private final MultiMap<GlobType, Key> selections;
 
-    private Change(ChangeSet changeSet, MultiMap<GlobType, Key> selections) {
+    private Change(ChangeSet changeSet) {
       this.changeSet = changeSet;
-      this.selections = selections.duplicate();
     }
 
     public void apply() {
