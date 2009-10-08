@@ -85,7 +85,19 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.getEnvelopes().checkSeriesIsSelected("Courant");
     operations.undo();
+    views.selectCategorization();
+    categorization.selectAllTransactions();
+    categorization.selectEnvelopes().checkContainsSeries("Courant");
+    views.selectData();
     transactions.checkSeries("Auchan", "To categorize");
+    operations.undo();
+    views.selectCategorization();
+    categorization.selectAllTransactions();
+    categorization.selectEnvelopes().checkDoesNotContainSeries("Courant");
+    views.selectData();
+    transactions.checkSeries("Auchan", "To categorize");
+    operations.undo();
+    transactions.checkTableIsEmpty();
   }
 
   public void testMaxUndo() throws Exception {
