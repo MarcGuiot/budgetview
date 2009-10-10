@@ -55,6 +55,14 @@ public class DeleteTransactionDialog extends ConfirmationDialog {
     if (hasPlanned) {
       text = text + Lang.get("transaction.delete.planned");
     }
+    if (!transactions.isEmpty()){
+      if (transactions.size() == 1){
+      text = text + Lang.get("transaction.delete.default");
+      }
+      else {
+        text = text + Lang.get("transaction.delete.defaults", transactions.size());
+      }
+    }
     text += "</html>";
     editorPane.setText(text);
     if (transactions.isEmpty()) {

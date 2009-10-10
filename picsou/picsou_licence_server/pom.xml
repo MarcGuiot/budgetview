@@ -51,6 +51,7 @@
                   <classpath>
                     <path refid="maven.runtime.classpath"/>
                   </classpath>
+                  <sysproperty key="with.debug" value="true"/>
                   <arg
                     line="picsouLicenseServer.jar ${project.build.directory}/../dev/ant/input.txt ${project.build.directory}/../dev/ant/ignore.txt"/>
                 </java>

@@ -220,7 +220,6 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     if (notConnected) {
       return;
     }
-    checkConnected();
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
     clientTransport.takeSnapshot(sessionId, outputStream.toByteArray());

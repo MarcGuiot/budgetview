@@ -33,7 +33,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
     try {
       repository.deleteAll(BudgetStat.TYPE);
       BudgetStatComputer budgetStatComputer = new BudgetStatComputer(repository);
-      if (budgetStatComputer.currentMonth == null){
+      if (budgetStatComputer.currentMonth == null) {
         return;
       }
       repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, budgetStatComputer);
@@ -299,12 +299,13 @@ public class BudgetStatTrigger implements ChangeSetListener {
       plannedAmount += seriesPlannedAmount;
 
       if (budgetArea.isIncome()) {
-        if (amount < plannedAmount) {
+        if (seriesAmount < seriesPlannedAmount) {
           remainingAmount += seriesPlannedAmount - seriesAmount;
         }
       }
       else {
-        if (amount > plannedAmount) {
+        if ((seriesPlannedAmount < 0 && seriesAmount > seriesPlannedAmount) ||
+            (seriesPlannedAmount > 0 && seriesAmount < seriesPlannedAmount)) {
           remainingAmount += seriesPlannedAmount - seriesAmount;
         }
       }
@@ -313,7 +314,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
       if (monthId < currentMonthId) {
         summaryAmount += seriesAmount;
       }
-      else if (monthId == currentMonthId) {
+      else if (monthId == currentMonthId) { // ??? carte a debit differe
         summaryAmount += Amounts.max(seriesAmount, seriesPlannedAmount, budgetArea.isIncome());
       }
       else {

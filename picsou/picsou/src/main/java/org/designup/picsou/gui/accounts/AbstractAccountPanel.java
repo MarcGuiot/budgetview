@@ -58,10 +58,9 @@ public class AbstractAccountPanel<T extends GlobRepository>  {
           if (bank == null) {
             return;
           }
-          GlobList entities = localRepository.findLinkedTo(bank, BankEntity.BANK);
           Glob account = AbstractAccountPanel.this.currentAccount;
           if (account != null) {
-            localRepository.setTarget(account.getKey(), Account.BANK_ENTITY, entities.get(0).getKey());
+            localRepository.setTarget(account.getKey(), Account.BANK, bank.getKey());
           }
         }
       });
@@ -139,9 +138,9 @@ public class AbstractAccountPanel<T extends GlobRepository>  {
     else {
       selectionService.clear(Account.TYPE);
     }
-    Glob entity = localRepository.findLinkTarget(account, Account.BANK_ENTITY);
-    if (entity != null) {
-      selectionService.select(localRepository.findLinkTarget(entity, BankEntity.BANK));
+    Glob bank = localRepository.findLinkTarget(account, Account.BANK);
+    if (bank != null) {
+      selectionService.select(bank);
     }
     messageLabel.setText("");
     panel.setVisible(account != null);
@@ -149,7 +148,7 @@ public class AbstractAccountPanel<T extends GlobRepository>  {
 
   public boolean check() {
     if (panel.isVisible()) {
-      if (currentAccount.get(Account.BANK_ENTITY) == null) {
+      if (currentAccount.get(Account.BANK) == null) {
         setMessage("account.error.missing.bank");
         return false;
       }

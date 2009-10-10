@@ -56,8 +56,8 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "0.26";
-  public static final Long JAR_VERSION = 20L;
+  public static final String APPLICATION_VERSION = "0.27";
+  public static final Long JAR_VERSION = 21L;
   public static final Long BANK_CONFIG_VERSION = 5L;
   private static final String JAR_DIRECTORY = "jars";
   private static final String BANK_CONFIG_DIRECTORY = "configs";
@@ -165,6 +165,7 @@ public class PicsouApplication {
   }
 
   public void run(String... args) throws Exception {
+    initEncryption();
     mrjDocumentListener = new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         ApplicationEvent event = (ApplicationEvent)e;
@@ -193,7 +194,6 @@ public class PicsouApplication {
       return;
     }
 
-    initEncryption();
     initLogger();
     clearRepositoryIfNeeded();
 

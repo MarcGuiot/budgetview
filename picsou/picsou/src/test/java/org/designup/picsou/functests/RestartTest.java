@@ -350,4 +350,29 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .add("25/08/2008", TransactionType.PLANNED, "CAF", "", 300.00, "CAF")
       .check();
   }
+
+  public void testReloadBankEntity() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount("unknown", 111, "111", 1000.00, "2008/08/19")
+      .addTransaction("2008/08/10", -50.00, "Virement")
+      .addTransaction("2008/08/06", -30.00, "Virement")
+      .addCardAccount("123", 1000.00, "2008/08/19")
+      .addTransaction("2008/08/06", -30.00, "FNAC")
+      .loadUnknown("Autre");
+
+    OfxBuilder.init(this)
+      .addBankAccount("unknown 222", 222, "222", 1000.00, "2008/08/19")
+      .addTransaction("2008/08/10", -50.00, "Virement")
+      .loadUnknown("Autre");
+
+    restartApplication();
+
+    // On veux juste verifier que l'import marche toujours.
+    OfxBuilder.init(this)
+      .addBankAccount("unknown 222", 222, "222", 1000.00, "2008/08/19")
+      .addTransaction("2008/08/10", -50.00, "Virement")
+      .load();
+
+    mainAccounts.checkAccount("Account n. 222", 1000.00, "2008/08/10");
+  }
 }

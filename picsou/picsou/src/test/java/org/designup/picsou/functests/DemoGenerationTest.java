@@ -17,14 +17,14 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   private int firstMonth;
 
   protected void setUp() throws Exception {
+    Locale.setDefault(Locale.FRENCH);
 
     thirdMonth = Month.previous(TimeService.getCurrentMonth());
     secondMonth = Month.previous(thirdMonth);
     firstMonth = Month.previous(secondMonth);
 
-    setCurrentMonth(Month.toString(thirdMonth));
+    setCurrentMonth(Month.toString(thirdMonth) + "/20");
 
-    Locale.setDefault(Locale.FRENCH);
     super.setUp();
   }
 
@@ -51,7 +51,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(12).validate();
 
     OfxBuilder.init(OFX_PATH)
-      .addBankAccount(30066, 10678, "00000123456", 1410.20, third(15))
+      .addBankAccount(30066, 10678, "00000123456", 1410.20, third(20))
         // Income
       .addTransaction(first(28), 1760.50, "WORLDCO")
       .addTransaction(first(29), 1312.80, "BIGCORP")
@@ -128,7 +128,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
         // SAVINGS
       .addTransaction(first(5), -200.00, "VIRT MENS. LIVRET")
       .addTransaction(second(3), -200.00, "VIRT MENS. LIVRET")
-      .addTransaction(third(28), -200.00, "VIRT MENS. LIVRET")
+      .addTransaction(third(20), -200.00, "VIRT MENS. LIVRET")
       .save();
 
     operations.importOfxFile(OFX_PATH);

@@ -601,16 +601,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkPosition("Account n. 111", 1200);
     mainAccounts.checkEstimatedPosition(-200);
 
-    views.selectSavings();
-//    savingsView.gotoTransactions("Account n. 111");
-//    views.checkDataSelected();
-
-    fail("Marc: pourquoi on finit comme ça ? Je crois qu'on en avait parle, quel est le statut de ce test et des lignes commentees ?");
   }
 
   public void testImportedSavingsAccountWithMainAccount() throws Exception {
-
-    fail("Regis : en cours");
 
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")  //compte d'épargne
@@ -756,8 +749,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   public void testMixedTypeOfSavingsSeriesShouldUpdateCorrectlyTheBudgetView() throws Exception {
     // Un compte courant, un compte d'épargne importé, un compte d'épargne non importé
 
-//    fail("Regis : en cours");
-        
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
       .addTransaction("2008/06/06", 100.00, "Virement Epargne")
@@ -819,7 +810,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("05/06/2008", "VIREMENT CAF", 300.00, "Virement CAF", 400.00, 3100.00, "Epargne")
       .check();
 
-//    openApplication();
     views.selectHome();
     timeline.selectMonth("2008/06");
     savingsAccounts.checkPosition("Epargne", 400);
@@ -1345,7 +1335,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDeleteSeriesForBothImportedAccountWithTransactionInFrom() throws Exception {
-
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
       .addTransaction("2008/06/06", -100.00, "Virement Epargne")

@@ -33,6 +33,7 @@ import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.utils.DumpDataAction;
 import org.designup.picsou.gui.utils.DataCheckerAction;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.ThrowExceptionAction;
 import org.designup.picsou.gui.notes.NotesView;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.model.Month;
@@ -77,6 +78,7 @@ public class MainPanel {
   private Action dumpRepository;
   private SeriesView seriesView;
   private DataCheckerAction checkRepository;
+  private ThrowExceptionAction throwException;
   private JMenuBar menuBar;
   private JPanel panel;
   private TimeView timeView;
@@ -121,7 +123,8 @@ public class MainPanel {
     preferencesAction = new PreferencesAction(repository, directory);
     registerAction = new RegisterLicenseAction(repository, directory);
     dumpRepository = new DumpDataAction(repository);
-    checkRepository = new DataCheckerAction(repository);
+    checkRepository = new DataCheckerAction(repository, directory);
+    throwException = new ThrowExceptionAction();
     exitAction = new ExitAction(directory);
     gotoLoginAction = new GotoLoginAction(this);
     deleteUserAction = new DeleteUserAction(this, repository, directory);
@@ -258,6 +261,7 @@ public class MainPanel {
 //    Utils.beginRemove();
     editMenu.add(dumpRepository);
     editMenu.add(checkRepository);
+    editMenu.add(throwException);
 //    Utils.endRemove();
 
     JRootPane rootPane = frame.getRootPane();

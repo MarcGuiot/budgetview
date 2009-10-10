@@ -8,6 +8,7 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.*;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.Pair;
 import org.globsframework.utils.Utils;
 
@@ -130,14 +131,20 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       else if (monthId >= currentMonthId) {
         Double wantedAmount = seriesBudget.get(SeriesBudget.AMOUNT);
         double diff = wantedAmount - (observedAmount == null ? 0.0 : observedAmount);
-        if (wantedAmount > 0 && diff > 0 || wantedAmount < 0 && diff < 0 && !Amounts.isNearZero(diff)) {
+        if (((wantedAmount > 0 && diff > 0) || (wantedAmount < 0 && diff < 0)) && !Amounts.isNearZero(diff)) {
           Glob transaction = transactions.getFirst();
           if (transaction == null) {
             Glob series = repository.findLinkTarget(seriesBudget, SeriesBudget.SERIES);
-            createPlannedTransaction(series, repository,
-                                     monthId,
-                                     seriesBudget.get(SeriesBudget.DAY),
-                                     diff);
+            if (series == null) { // on a un bug : une series a disparu on continue
+              Log.write("Missing series " + seriesBudget.get(SeriesBudget.SERIES) + " for " +
+                        transaction.get(Transaction.LABEL));
+            }
+            else {
+              createPlannedTransaction(series, repository,
+                                       monthId,
+                                       seriesBudget.get(SeriesBudget.DAY),
+                                       diff);
+            }
           }
           else {
             repository.update(transaction.getKey(), Transaction.AMOUNT, diff);

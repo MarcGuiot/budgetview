@@ -59,10 +59,18 @@ public class OfxBuilder {
     return addBankAccount(Integer.toString(bankEntityId), branchId, accountNumber,position, updateDate);
   }
 
-  public OfxBuilder addBankAccount(String bankEntityId, int branchId, String accountNumber, double position, String updateDate) {
+  public OfxBuilder addBankAccount(String bankEntity, int branchId, String accountNumber, double position, String updateDate) {
+    Integer bankEntityId = BankEntity.find(bankEntity, repository);
+    Integer bankId = Bank.GENERIC_BANK_ID;
+    if (bankEntityId != null){
+      bankId = BankEntity.getBank(repository.find(Key.create(BankEntity.TYPE, bankEntityId)), repository)
+        .get(Bank.ID);
+    }
     currentAccount =
       repository.create(Key.create(Account.TYPE, repository.getIdGenerator().getNextId(Account.ID, 1)),
-                        value(Account.BANK_ENTITY, BankEntity.findOrCreate(bankEntityId, repository)),
+                        value(Account.BANK, bankId),
+                        value(Account.BANK_ENTITY, bankEntityId),
+                        value(Account.BANK_ENTITY_LABEL, bankEntity),
                         value(Account.BRANCH_ID, branchId),
                         value(Account.NUMBER, accountNumber),
                         value(Account.POSITION, position),
@@ -157,6 +165,11 @@ public class OfxBuilder {
   public void load() {
     save();
     operations.importOfxFile(fileName);
+  }
+
+  public void loadUnknown(String bank) {
+    save();
+    operations.importOfxFile(fileName, bank);
   }
 
   private void writeFile(String name) {

@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.utils;
 
 import org.designup.picsou.model.*;
-import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -251,16 +250,15 @@ public class PicsouMatchers {
           if ((id < firstMonth || id > lastMonth) == exclusive) {
             return !exclusive;
           }
-          BooleanField monthField = Series.getMonthField(id);
-          if (!series.isTrue(monthField)) {
+          if (!exclusive) {
             Glob seriesBudget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
               .findByIndex(SeriesBudget.MONTH, id).getGlobs().getFirst();
-            if (seriesBudget != null && !seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
-              return false;
+            if (seriesBudget != null && seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
+              return true;
             }
           }
         }
-        return true;
+        return exclusive;
       }
       return false;
     }

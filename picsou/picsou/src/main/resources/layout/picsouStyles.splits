@@ -11,6 +11,9 @@
     <style selector="checkBox" opaque="false"/>
     <style selector="comboBox" opaque="false"/>
 
+    <style selector=" no selection" id="SeriesActivated" foreground="#000000"/>
+    <style selector=" no selection" id="SeriesNotActivated" foreground="#777777"/>
+
     <style selector="textArea.multiLineLabel"
            foreground="help.messages.text" opaque="false"
            editable="false" lineWrap="true" wrapStyleWord="true"/>

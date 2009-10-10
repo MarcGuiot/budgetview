@@ -16,7 +16,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     OfxBuilder
       .init(this)
-      .addBankAccount(30006, 10674, "0001212", 1500.00, "2008/07/10")
+      .addBankAccount(-1, 10674, "0001212", 1500.00, "2008/07/10")
       .addTransaction("2008/06/05", 1000.00, "WorldCo")
       .addTransaction("2008/06/10", -200.00, "Auchan")
       .addTransaction("2008/07/05", -50.00, "FNAC")

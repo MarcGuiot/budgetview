@@ -36,7 +36,7 @@ public class SerializableDeltaGlobSerializer {
     }
   }
 
-  public MultiMap<String, ServerDelta> deserialize(SerializedInput serializedInput) {
+  public static MultiMap<String, ServerDelta> deserialize(SerializedInput serializedInput) {
     MultiMap<String, ServerDelta> multiMap = new MultiMap<String, ServerDelta>();
     int globTypeCount = serializedInput.readNotNullInt();
     while (globTypeCount > 0) {

@@ -18,7 +18,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class OfxImporter implements AccountFileImporter {
   public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
@@ -53,7 +56,7 @@ public class OfxImporter implements AccountFileImporter {
     private Glob currentAccount;
     private boolean isCreditCard = false;
     private boolean isInLedgerBal = false;
-    private Integer bankEntityId;
+    private String bankEntityLabel;
     private Double position;
     private Date updateDate;
     private String fitid;
@@ -158,7 +161,7 @@ public class OfxImporter implements AccountFileImporter {
 
     public void processTag(String tag, String content) {
       if (tag.equalsIgnoreCase("BANKID")) {
-        bankEntityId = BankEntity.findOrCreate(content, repository);
+        bankEntityLabel = content;
       }
       if (tag.equalsIgnoreCase("DTPOSTED")) {
         repository.update(currentTransactionKey, ImportedTransaction.BANK_DATE, content);
@@ -275,10 +278,25 @@ public class OfxImporter implements AccountFileImporter {
     private void updateAccount(String accountNumber) {
       currentAccount = repository.findUnique(Account.TYPE, value(Account.NUMBER, accountNumber));
       if (currentAccount == null) {
+        Integer bankId = null;
+        Integer bankEntityId = BankEntity.find(bankEntityLabel, repository);
+        if (bankEntityId != null) {
+          bankId = BankEntity.getBank(repository.find(Key.create(BankEntity.TYPE, bankEntityId)), repository).get(Bank.ID);
+        }
+        else {
+          for (Glob account : repository.getAll(Account.TYPE)) {
+            if (bankEntityLabel.equals(account.get(Account.BANK_ENTITY_LABEL))){
+              bankId = account.get(Account.BANK);
+              break;
+            }
+          }
+        }
         currentAccount = repository.create(Account.TYPE,
                                            value(Account.NUMBER, accountNumber),
                                            value(Account.ID, generator.getNextId(Account.ID, 1)),
                                            value(Account.NAME, getName(accountNumber, isCreditCard)),
+                                           value(Account.BANK, bankId),
+                                           value(Account.BANK_ENTITY_LABEL, bankEntityLabel),
                                            value(Account.BANK_ENTITY, bankEntityId),
                                            value(Account.IS_CARD_ACCOUNT, isCreditCard),
                                            value(Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId()));

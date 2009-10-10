@@ -18,12 +18,14 @@ import java.util.zip.ZipEntry;
 
 public class ClassPathClassRetriever implements DependExtractor.ClassRetreiver {
   private String target;
+  private boolean withDebug;
   private List<String> classToJar = new ArrayList<String>();
   private MultiMap<String, String> dependencies = new MultiMap<String, String>();
   private DirectoryNode entryNode = new RootDirectory();
 
-  public ClassPathClassRetriever(String target) {
+  public ClassPathClassRetriever(String target, boolean withDebug) {
     this.target = target;
+    this.withDebug = withDebug;
   }
 
   public InputStream getCode(String className) {
@@ -94,7 +96,7 @@ public class ClassPathClassRetriever implements DependExtractor.ClassRetreiver {
     markPathToIgnore(pathToIgnore);
     try {
       JarOutputStream jarOutputStream = new JarOutputStream(new FileOutputStream(target));
-      entryNode.call(new JarNodeFunctor(jarOutputStream));
+      entryNode.call(new JarNodeFunctor(jarOutputStream, withDebug));
       jarOutputStream.close();
     }
     catch (IOException e) {
@@ -446,9 +448,11 @@ public class ClassPathClassRetriever implements DependExtractor.ClassRetreiver {
     private Stack<String> path;
     private StringBuilder cachePath = new StringBuilder();
     private JarOutputStream jarOutputStream;
+    private boolean withDebug;
 
-    public JarNodeFunctor(JarOutputStream jarOutputStream) {
+    public JarNodeFunctor(JarOutputStream jarOutputStream, boolean withDebug) {
       this.jarOutputStream = jarOutputStream;
+      this.withDebug = withDebug;
       path = new Stack<String>();
       pathOfImportedState.push(Boolean.TRUE);
     }
@@ -486,7 +490,7 @@ public class ClassPathClassRetriever implements DependExtractor.ClassRetreiver {
           InputStream inputStream = node.getInputStream();
           ClassReader classReader = new ClassReader(inputStream);
           FilterWriter classWriter = new FilterWriter();
-          classReader.accept(classWriter, ClassReader.SKIP_DEBUG);
+          classReader.accept(classWriter, withDebug ? ClassReader.SKIP_DEBUG : 0);
           inputStream.close();
           jarOutputStream.putNextEntry(new ZipEntry(cachePath.toString() + node.getName()));
           jarOutputStream.write(classWriter.toByteArray());

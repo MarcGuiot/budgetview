@@ -1,10 +1,7 @@
 package org.globsframework.gui.splits;
 
 import com.jidesoft.swing.JideSplitPane;
-import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.CardHandler;
-import org.globsframework.gui.splits.layout.Fill;
-import org.globsframework.gui.splits.layout.SwingStretches;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;

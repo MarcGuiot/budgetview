@@ -6,10 +6,10 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
-import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
@@ -22,9 +22,9 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Set;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class CategorizationSeriesComponentFactory implements RepeatComponentFactory<Glob> {
   protected JRadioButton invisibleSelector;
@@ -85,6 +85,7 @@ public class CategorizationSeriesComponentFactory implements RepeatComponentFact
           if (series != null) {
             String label = seriesStringifier.toString(new GlobList(series), repository);
             setText(selector, label);
+            updateSeriesStyle(series);
           }
         }
         if (changeSet.containsChanges(Transaction.TYPE)) {
@@ -116,7 +117,7 @@ public class CategorizationSeriesComponentFactory implements RepeatComponentFact
         selectionService.removeListener(listener);
         buttonGroup.remove(selector);
         SplitsNode<JRadioButton> radioButtonSplitsNode = seriesToComponent.get(series.getKey());
-        if (radioButtonSplitsNode == splitsNode){
+        if (radioButtonSplitsNode == splitsNode) {
           seriesToComponent.remove(seriesKey);
         }
       }
@@ -128,6 +129,31 @@ public class CategorizationSeriesComponentFactory implements RepeatComponentFact
                                 new SubSeriesComponentFactory(seriesName, "subSeriesSelector", budgetArea));
 
     updateToggleSelection(selector, selectionService.getSelection(Transaction.TYPE), seriesKey);
+  }
+
+  private void updateSeriesStyle(Glob series) {
+    SplitsNode<JRadioButton> button = seriesToComponent.get(series.getKey());
+    if (button == null){
+      return;
+    }
+
+    boolean atLeastOneIsActivated = false;
+    ReadOnlyGlobRepository.MultiFieldIndexed seriesBudgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID));
+    Set<Integer> months = currentTransactions.getValueSet(Transaction.MONTH);
+    for (Integer month : months) {
+      Glob seriesBudget =
+        seriesBudgets.findByIndex(SeriesBudget.MONTH, month).getGlobs().getFirst();
+      if (seriesBudget != null && seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
+        atLeastOneIsActivated = true;
+        break;
+      }
+    }
+    if (atLeastOneIsActivated) {
+      button.applyStyle("SeriesActivated");
+    }
+    else {
+      button.applyStyle("SeriesNotActivated");
+    }
   }
 
   protected JRadioButton createSeriesSelector(final String label,
@@ -152,7 +178,6 @@ public class CategorizationSeriesComponentFactory implements RepeatComponentFact
   }
 
   protected class EditSeriesAction extends AbstractAction {
-
     private Key seriesKey;
 
     protected EditSeriesAction(Key seriesKey) {
@@ -166,6 +191,12 @@ public class CategorizationSeriesComponentFactory implements RepeatComponentFact
   }
 
   private void updateToggleSelection(JToggleButton selector, GlobList transactions, Key seriesKey) {
+    Glob selectorSeries = repository.find(seriesKey);
+    if (selectorSeries == null) {
+      return;
+    }
+    updateSeriesStyle(selectorSeries);
+
     Set<Integer> transactionSeriesKeys = transactions.getValueSet(Transaction.SERIES);
     Set<Integer> transactionSubSeriesKeys = transactions.getValueSet(Transaction.SUB_SERIES);
     if ((transactionSeriesKeys.size() != 1) || (transactionSubSeriesKeys.size() != 1)) {
@@ -174,11 +205,6 @@ public class CategorizationSeriesComponentFactory implements RepeatComponentFact
 
     Integer transactionSubSeriesKey = transactionSubSeriesKeys.iterator().next();
     if (transactionSubSeriesKey != null) {
-      return;
-    }
-
-    Glob selectorSeries = repository.find(seriesKey);
-    if (selectorSeries == null) {
       return;
     }
 

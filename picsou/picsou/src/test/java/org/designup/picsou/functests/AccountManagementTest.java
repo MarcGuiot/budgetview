@@ -84,7 +84,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
   public void testEditingTheAccountBalanceLimit() throws Exception {
 
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "000123", 100, "2008/08/26")
+      .addBankAccount(-1, 10674, "000123", 100, "2008/08/26")
       .addTransaction("2008/07/26", 1000, "WorldCo")
       .addTransaction("2008/08/26", 1000, "WorldCo")
       .addTransaction("2008/08/26", -800, "FNAC")
@@ -124,7 +124,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
   public void testChangeAccountTypeUncategorizeTransactionIfAssociatedSeriesIsNotSavings() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "000123", 100, "2008/08/26")
+      .addBankAccount(-1, 10674, "000123", 100, "2008/08/26")
       .addTransaction("2008/07/26", 1000, "WorldCo")
       .addTransaction("2008/08/26", 1000, "WorldCo")
       .addTransaction("2008/08/26", -800, "Epargne")

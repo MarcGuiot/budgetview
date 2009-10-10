@@ -57,6 +57,7 @@
                   <classpath>
                     <path refid="maven.runtime.classpath"/>
                   </classpath>
+                  <sysproperty key="with.debug" value="true"/>
                   <arg
                     line="morphograph-1.1.jar ${project.build.directory}/../dev/shrinkerInput.txt ${project.build.directory}/../dev/shrinkerIgnore.txt"/>
                 </java>

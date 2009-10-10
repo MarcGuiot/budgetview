@@ -1,24 +1,32 @@
 package org.designup.picsou.gui.utils;
 
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.annotations.Required;
+import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Set;
+import java.util.HashSet;
 
 public class DataCheckerAction extends AbstractAction {
   private GlobRepository repository;
+  private Directory directory;
 
-  public DataCheckerAction(GlobRepository repository) {
+  public DataCheckerAction(GlobRepository repository, Directory directory) {
     super("[Check data (see logs)]");
     this.repository = repository;
+    this.directory = directory;
   }
 
   public void actionPerformed(ActionEvent e) {
@@ -26,12 +34,13 @@ public class DataCheckerAction extends AbstractAction {
   }
 
   private boolean check() {
-    Log.write("Start checking");
+    final StringBuilder buf = new StringBuilder();
+    buf.append("Start checking\n");
     boolean hasError = false;
     try {
       GlobList months = repository.getAll(Month.TYPE).sort(Month.ID);
       if (months.size() == 0) {
-        Log.write("No month");
+        buf.append("No month\n");
         hasError = true;
         return false;
       }
@@ -41,7 +50,7 @@ public class DataCheckerAction extends AbstractAction {
       int currentMonth = firstMonth;
       for (Glob glob : months) {
         if (glob.get(Month.ID) != currentMonth) {
-          Log.write("Missing month " + currentMonth);
+          buf.append("Missing month ").append(currentMonth).append("\n");
           hasError = true;
         }
         currentMonth = Month.next(currentMonth);
@@ -50,7 +59,7 @@ public class DataCheckerAction extends AbstractAction {
       GlobList allSeries = repository.getAll(Series.TYPE);
 
       for (Glob series : allSeries) {
-        checkNotNullable(series);
+        checkNotNullable(series, buf);
         Integer firstMonthForSeries = series.get(Series.FIRST_MONTH);
         if (firstMonthForSeries == null) {
           firstMonthForSeries = firstMonth;
@@ -69,85 +78,178 @@ public class DataCheckerAction extends AbstractAction {
 
         for (Glob budget : seriesBudgets) {
           if (budget.get(SeriesBudget.MONTH) != currentMonth) {
-            Log.write("Missing SeriesBudget for series : " + series.get(Series.NAME) + " budgetArea : " +
-                      series.get(Series.BUDGET_AREA) + " got " + budget.get(SeriesBudget.MONTH) +
-                      " but expect " + currentMonth);
+            buf.append("Missing SeriesBudget for series : ")
+              .append(series.get(Series.NAME)).append(" budgetArea : ")
+              .append(series.get(Series.BUDGET_AREA)).append(" got ")
+              .append(budget.get(SeriesBudget.MONTH)).append(" but expect ").append(currentMonth).append("\n");
             hasError = true;
             break;
           }
           currentMonth = Month.next(currentMonth);
 
-          checkNotNullable(budget);
+          checkNotNullable(budget, buf);
         }
         if (!seriesBudgets.getLast().get(SeriesBudget.MONTH).equals(lastMonthForSeries)) {
-          Log.write("Bad end of series : " + series.get(Series.NAME) + " budgetArea : " +
-                    series.get(Series.BUDGET_AREA) + " got " + seriesBudgets.getLast().get(SeriesBudget.MONTH) +
-                    " but expect " + currentMonth);
+          buf.append("Bad end of series : ").append(series.get(Series.NAME))
+            .append(" budgetArea : ").append(series.get(Series.BUDGET_AREA))
+            .append(" got ").append(seriesBudgets.getLast().get(SeriesBudget.MONTH))
+            .append(" but expect ").append(currentMonth).append(("\n"));
           hasError = true;
         }
         GlobList transactions =
           repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.SERIES, series.get(Series.ID)));
 
         for (Glob transaction : transactions) {
-          Integer month = transaction.get(Transaction.MONTH);
-          if (month < firstMonthForSeries || month > lastMonthForSeries) {
-            Log.write("Transaction is not in Series dates " +
-                      Month.toString(transaction.get(Transaction.BANK_MONTH),
-                                     transaction.get(Transaction.BANK_DAY))
-                      + " " + transaction.get(Transaction.LABEL));
-            hasError = true;
-          }
-          checkNotNullable(transaction);
-
-          Glob target = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
-          if (target.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
-            Glob savingsSeries = repository.findLinkTarget(transaction, Transaction.SERIES);
-            if (transaction.get(Transaction.AMOUNT) >= 0) {
-              Integer toAccount = savingsSeries.get(Series.TO_ACCOUNT);
-              if (toAccount != null && !transaction.get(Transaction.ACCOUNT).equals(toAccount)) {
-                Log.write("savings transaction badly categorized " + transaction.get(Transaction.LABEL)
-                + " " + Month.toString(transaction.get(Transaction.BANK_MONTH), transaction.get(Transaction.DAY)));
-              }
-            }
-            else {
-              Integer fromAccount = savingsSeries.get(Series.FROM_ACCOUNT);
-              if (fromAccount != null && !transaction.get(Transaction.ACCOUNT).equals(fromAccount)) {
-                Log.write("savings transaction badly categorized " + transaction.get(Transaction.LABEL));
-              }
-            }
-          }
+          hasError |= checkTransactionBetweenSeriesDate(firstMonthForSeries, lastMonthForSeries, transaction, buf);
+          hasError |= checkNotNullable(transaction, buf);
+          hasError |= checkSavingsTransaction(transaction, buf);
         }
       }
 
-      GlobList transactions = repository.getAll(Transaction.TYPE,
-                                       GlobMatchers.not(GlobMatchers.fieldIsNull(Transaction.SPLIT_SOURCE)));
-      for (Glob transaction : transactions) {
-        if (repository.findLinkTarget(transaction, Transaction.SPLIT_SOURCE) == null) {
-          Log.write("Error : split source was deleted for " + transaction.get(Transaction.LABEL) + " : " +
-                    Month.toString(transaction.get(Transaction.MONTH), transaction.get(Transaction.DAY)));
-          hasError = true;
-        }
-      }
+      hasError |= checkSplitedTransactions(buf);
+
+      hasError |= checkSeriesBudget(buf);
+
+      TransactionToSeriesChecker toSeriesChecker = new TransactionToSeriesChecker(buf);
+      repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, toSeriesChecker);
+      toSeriesChecker.deletePlanned(repository);
+      hasError |= toSeriesChecker.hasError();
 
       return hasError;
     }
     finally {
+      buf.append("End checking\n");
       if (hasError) {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         toolkit.beep();
       }
-      Log.write("End checking");
+      MessageDialog dialog = new MessageDialog("data.checker.title", "data.checker.message", null, directory, buf.toString());
+      dialog.show();
+      Log.write(buf.toString());
     }
   }
 
-  private void checkNotNullable(Glob glob) {
+  private boolean checkSeriesBudget(StringBuilder buf) {
+    boolean hasError = false;
+    Set<Integer> seriesId = new HashSet<Integer>();
+    GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE);
+    for (Glob budget : seriesBudgets) {
+      Glob series = repository.findLinkTarget(budget, SeriesBudget.SERIES);
+      if (series == null){
+        if (seriesId.add(budget.get(SeriesBudget.SERIES))){
+          buf.append("SeriesBudget : Missing series ")
+            .append(budget.get(SeriesBudget.SERIES))
+            .append("\n");
+        }
+        repository.delete(budget.getKey());
+        hasError = true;
+      }
+    }
+    return hasError;
+  }
+
+  private boolean checkSplitedTransactions(StringBuilder buf) {
+    boolean hasError = false;
+    GlobList transactions = repository.getAll(Transaction.TYPE,
+                                              GlobMatchers.not(GlobMatchers.fieldIsNull(Transaction.SPLIT_SOURCE)));
+    for (Glob transaction : transactions) {
+      if (repository.findLinkTarget(transaction, Transaction.SPLIT_SOURCE) == null) {
+        buf.append("Error : split source was deleted for ")
+          .append(transaction.get(Transaction.LABEL)).append(" : ")
+          .append(Month.toString(transaction.get(Transaction.MONTH), transaction.get(Transaction.DAY)))
+          .append(("\n"));
+        hasError = true;
+      }
+    }
+    return hasError;
+  }
+
+  private boolean checkTransactionBetweenSeriesDate(Integer firstMonthForSeries, Integer lastMonthForSeries, Glob transaction, StringBuilder buf) {
+    Integer month = transaction.get(Transaction.MONTH);
+    if (month < firstMonthForSeries || month > lastMonthForSeries) {
+      buf.append("Transaction is not in Series dates ")
+        .append(Month.toString(transaction.get(Transaction.BANK_MONTH),
+                               transaction.get(Transaction.BANK_DAY)))
+        .append(" ").append(transaction.get(Transaction.LABEL));
+      return true;
+    }
+    return false;
+  }
+
+  private boolean checkSavingsTransaction(Glob transaction, StringBuilder buf) {
+    Glob target = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
+    if (target.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
+      Glob savingsSeries = repository.findLinkTarget(transaction, Transaction.SERIES);
+      if (transaction.get(Transaction.AMOUNT) >= 0) {
+        Integer toAccount = savingsSeries.get(Series.TO_ACCOUNT);
+        if (toAccount != null && !transaction.get(Transaction.ACCOUNT).equals(toAccount)) {
+          buf.append("savings transaction badly categorized ")
+            .append(transaction.get(Transaction.LABEL))
+            .append(" ").append(Month.toString(transaction.get(Transaction.BANK_MONTH), transaction.get(Transaction.DAY)));
+          return false;
+        }
+      }
+      else {
+        Integer fromAccount = savingsSeries.get(Series.FROM_ACCOUNT);
+        if (fromAccount != null && !transaction.get(Transaction.ACCOUNT).equals(fromAccount)) {
+          buf.append("savings transaction badly categorized ").append(transaction.get(Transaction.LABEL));
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
+  }
+
+  private boolean checkNotNullable(Glob glob, StringBuilder buf) {
     Field[] fields = glob.getType().getFields();
     for (Field field : fields) {
       if (field.hasAnnotation(Required.class)) {
         if (glob.getValue(field) == null) {
-          Log.write(field + " should not be null");
+          buf.append(field).append(" should not be null");
+          return true;
         }
       }
+    }
+    return false;
+  }
+
+  private static class TransactionToSeriesChecker implements GlobFunctor {
+    private final StringBuilder buf;
+    private GlobList transactionsToDelete = new GlobList();
+    private boolean hasError = false;
+
+    public TransactionToSeriesChecker(StringBuilder buf) {
+      this.buf = buf;
+    }
+
+    public void run(Glob glob, GlobRepository repository) throws Exception {
+      Glob target = repository.findLinkTarget(glob, Transaction.SERIES);
+      if (target == null) {
+        hasError = true;
+        if (glob.get(Transaction.PLANNED)) {
+          buf.append("no series for planned transaction ");
+          transactionsToDelete.add(glob);
+        }
+        else {
+          buf.append("no series for operations : ");
+          repository.update(glob.getKey(), FieldValue.value(Transaction.SERIES, null),
+                            FieldValue.value(Transaction.SUB_SERIES, null));
+        }
+        buf.append(glob.get(Transaction.LABEL))
+          .append(" bank date : ")
+          .append(Month.toString(glob.get(Transaction.BANK_MONTH), glob.get(Transaction.BANK_DAY)))
+          .append(" user date : ")
+          .append(Month.toString(glob.get(Transaction.MONTH), glob.get(Transaction.DAY)));
+      }
+    }
+
+    public void deletePlanned(GlobRepository repository) {
+      repository.delete(transactionsToDelete);
+    }
+
+    public boolean hasError() {
+      return hasError;
     }
   }
 }

@@ -135,7 +135,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
   public void testAmountsAreProperlyUpdatedDuringAShiftAndAnUnshift() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 12345, "00001234", 100.00, "2008/07/15")
+      .addBankAccount(-1, 12345, "00001234", 100.00, "2008/07/15")
       .addTransaction("2008/06/15", -15.00, "Monoprix / June ")
       .addTransaction("2008/06/25", -10.00, "Monoprix / End of june")
       .addTransaction("2008/07/15", -12.00, "Monoprix / July")
@@ -193,7 +193,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
   public void testShiftingASplittedTransaction() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 12345, "00001234", 100.00, "2008/07/15")
+      .addBankAccount(-1, 12345, "00001234", 100.00, "2008/07/15")
       .addTransaction("2008/06/25", -25.00, "Monoprix / June ")
       .addTransaction("2008/07/15", -12.00, "Monoprix / July")
       .load();

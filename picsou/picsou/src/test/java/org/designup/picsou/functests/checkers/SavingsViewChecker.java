@@ -32,23 +32,26 @@ public class SavingsViewChecker extends GuiChecker {
   }
 
   public SavingsViewChecker checkSavingsIn(double observedAmount, double plannedAmount) {
-    assertThat(window.getButton(BudgetArea.SAVINGS.getName() + ":in:budgetAreaAmount")
-      .textEquals(toString(observedAmount)));
-    assertThat(window.getTextBox(BudgetArea.SAVINGS.getName() + ":in:budgetAreaPlannedAmount")
-      .textEquals(toString(plannedAmount)));
-    GaugeChecker gauge = new GaugeChecker(getPanel(), BudgetArea.SAVINGS.getName() + ":in:budgetAreaGauge");
-    gauge.checkActualValue(-observedAmount);
-    gauge.checkTargetValue(-plannedAmount);
+    // On a plus de moyen IHM de tester ces montants. 
     return this;
+//    assertThat(window.getButton(BudgetArea.SAVINGS.getName() + ":in:budgetAreaAmount")
+//      .textEquals(toString(observedAmount)));
+//    assertThat(window.getTextBox(BudgetArea.SAVINGS.getName() + ":in:budgetAreaPlannedAmount")
+//      .textEquals(toString(plannedAmount)));
+//    GaugeChecker gauge = new GaugeChecker(getPanel(), BudgetArea.SAVINGS.getName() + ":in:budgetAreaGauge");
+//    gauge.checkActualValue(-observedAmount);
+//    gauge.checkTargetValue(-plannedAmount);
+//    return this;
   }
 
   public SavingsViewChecker checkSavingsOut(double observedAmount, double plannedAmount) {
-    assertThat(window.getButton(BudgetArea.SAVINGS.getName() + ":out:budgetAreaAmount").textEquals(toString(observedAmount)));
-    assertThat(window.getTextBox(BudgetArea.SAVINGS.getName() + ":out:budgetAreaPlannedAmount").textEquals(toString(plannedAmount)));
-    GaugeChecker gauge = new GaugeChecker(getPanel(), BudgetArea.SAVINGS.getName() + ":out:budgetAreaGauge");
-    gauge.checkActualValue(observedAmount);
-    gauge.checkTargetValue(plannedAmount);
     return this;
+//    assertThat(window.getButton(BudgetArea.SAVINGS.getName() + ":out:budgetAreaAmount").textEquals(toString(observedAmount)));
+//    assertThat(window.getTextBox(BudgetArea.SAVINGS.getName() + ":out:budgetAreaPlannedAmount").textEquals(toString(plannedAmount)));
+//    GaugeChecker gauge = new GaugeChecker(getPanel(), BudgetArea.SAVINGS.getName() + ":out:budgetAreaGauge");
+//    gauge.checkActualValue(observedAmount);
+//    gauge.checkTargetValue(plannedAmount);
+//    return this;
   }
 
   public void checkSavingsIn(String accountName, double observedAmount, double plannedAmount) {

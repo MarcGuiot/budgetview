@@ -13,7 +13,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
 
   public void testStandardCase() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "00000123", 1000.0, "2009/07/30")
+      .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/07/30")
       .addTransaction("2009/06/10", -250.00, "Auchan")
       .addTransaction("2009/06/15", -200.00, "Auchan")
       .addTransaction("2009/06/01", 300.00, "WorldCo")
@@ -93,7 +93,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
 
   public void testDisplaysUpToTwelveMonthsInThePast() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "00000123", 1000.0, "2009/07/30")
+      .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/07/30")
       .addTransaction("2007/06/10", -250.00, "Auchan")
       .addTransaction("2008/06/10", -200.00, "Auchan")
       .addTransaction("2009/06/10", -150.00, "Auchan")
@@ -114,7 +114,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
 
   public void testAccounts() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "00000123", 1000.0, "2009/07/30")
+      .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/07/30")
       .addTransaction("2009/07/10", -200.00, "Virt")
       .load();
 
@@ -188,7 +188,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
   
   public void testClickingInColumnsNavigatesToCorrespondingMonth() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "00000123", 1000.0, "2009/07/30")
+      .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/07/30")
       .addTransaction("2009/06/10", -200.00, "Auchan")
       .addTransaction("2009/06/01", 320.00, "WorldCo")
       .addTransaction("2009/07/10", -200.00, "Auchan")

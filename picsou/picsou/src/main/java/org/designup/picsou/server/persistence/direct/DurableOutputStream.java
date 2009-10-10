@@ -46,6 +46,10 @@ class DurableOutputStream {
     catch (IOException e) {
       throw new IOFailure(e);
     }
+    catch (RuntimeException ex){
+      Log.write("Erreur while writing data", ex);
+      throw ex;
+    }
   }
 
   public void close() {

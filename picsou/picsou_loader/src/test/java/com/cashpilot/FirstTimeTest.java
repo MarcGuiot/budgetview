@@ -400,9 +400,9 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkPosition(2386.10)
       .checkInitialPosition(780.10)
       .checkIncome(2000)
-      .checkFixed(-184)
+      .checkFixed(184)
       .checkSavingsIn(0)
-      .checkEnvelope(-210)
+      .checkEnvelope(210)
       .close();
 
     views.selectData();
@@ -481,9 +481,9 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkPosition(2386.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
-      .checkFixed(-184)
+      .checkFixed(184)
       .checkSavingsIn(0)
-      .checkEnvelope(-210)
+      .checkEnvelope(210)
       .close();
 
     views.selectData();
@@ -563,9 +563,9 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkPosition(2386.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
-      .checkFixed(-184)
+      .checkFixed(184)
       .checkSavingsIn(0)
-      .checkEnvelope(-210)
+      .checkEnvelope(210)
       .close();
 
     views.selectData();
@@ -718,9 +718,9 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkPosition(1886.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
-      .checkFixed(-584)
-      .checkSavingsIn(-100)
-      .checkEnvelope(-210);
+      .checkFixed(584)
+      .checkSavingsIn(100)
+      .checkEnvelope(210);
 
     checker.selectMonths("2008/10", "2008/11");
     views.selectData();
@@ -767,6 +767,5 @@ public class FirstTimeTest extends UISpecTestCase {
 
     window.dispose();
   }
-
 
 }

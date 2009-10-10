@@ -28,6 +28,7 @@
           <source>1.5</source>
           <target>1.5</target>
           <encoding>UTF-8</encoding>
+          <debug>true</debug>
         </configuration>
       </plugin>
       <plugin>
@@ -91,6 +92,7 @@
                   <classpath>
                     <path refid="maven.runtime.classpath"/>
                   </classpath>
+                  <sysproperty key="with.debug" value="true"/>
                   <arg
                     line="dump.jar ${project.build.directory}/../dev/ant/inputDump.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
                 </java>
@@ -103,6 +105,7 @@
                   <classpath>
                     <path refid="maven.runtime.classpath"/>
                   </classpath>
+                  <sysproperty key="with.debug" value="true"/>
                   <arg
                     line="cashpilot.jar ${project.build.directory}/../dev/ant/inputClient.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
                 </java>

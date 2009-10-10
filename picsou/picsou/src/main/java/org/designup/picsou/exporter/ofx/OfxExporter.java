@@ -5,14 +5,13 @@ import org.designup.picsou.gui.utils.PicsouMatchers;
 import org.designup.picsou.importer.ofx.OfxImporter;
 import org.designup.picsou.importer.ofx.OfxWriter;
 import org.designup.picsou.model.Account;
+import org.designup.picsou.model.BankEntity;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.GlobStringifier;
-import org.globsframework.model.format.GlobStringifiers;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -24,7 +23,6 @@ public class OfxExporter implements Exporter {
   private GlobRepository repository;
   private OfxWriter writer;
   private boolean exportCustomFields;
-  private GlobStringifier accountBankEntityStringifier = GlobStringifiers.target(Account.BANK_ENTITY);
 
   public static void write(GlobRepository repository, Writer writer, boolean exportCustomFields) throws IOException {
     OfxExporter exporter = new OfxExporter(exportCustomFields);
@@ -59,9 +57,18 @@ public class OfxExporter implements Exporter {
         continue;
       }
       if (!account.isTrue(Account.IS_CARD_ACCOUNT)) {
-        writer.writeBankMsgHeader(accountBankEntityStringifier.toString(account, repository),
-                                  account.get(Account.BRANCH_ID),
-                                  account.get(Account.NUMBER));
+        String bankEntity = account.get(Account.BANK_ENTITY_LABEL);
+        if (bankEntity == null) {
+          Glob bank = repository.findLinkTarget(account, Account.BANK);
+          GlobList bankEntities = repository.findLinkedTo(bank, BankEntity.BANK);
+          if (!bankEntities.isEmpty()) {
+            bankEntity = bankEntities.getFirst().get(BankEntity.LABEL);
+          }
+        }
+        if (bankEntity == null){
+          bankEntity="-1";
+        }
+        writer.writeBankMsgHeader(bankEntity, account.get(Account.BRANCH_ID), account.get(Account.NUMBER));
         Date date = writeTransactions(account);
         Date balanceDate = account.get(Account.POSITION_DATE);
         if (balanceDate == null) {

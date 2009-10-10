@@ -18,8 +18,10 @@ public class DependExtractor {
   private String currentClass;
   private ClassRetreiver classRetriever;
   private LinkedList<Pair<String, Boolean>> pathAndIsRecursive = new LinkedList<Pair<String, Boolean>>();
+  private boolean withDebug;
 
-  public DependExtractor() {
+  public DependExtractor(boolean withDebug) {
+    this.withDebug = withDebug;
   }
 
   interface ClassRetreiver {
@@ -73,7 +75,7 @@ public class DependExtractor {
       currentClass = classToParse.removeFirst();
       ClassReader reader = findClassReader(currentClass);
       if (reader != null) {
-        reader.accept(extractor, ClassReader.SKIP_DEBUG);
+        reader.accept(extractor, withDebug ? ClassReader.SKIP_DEBUG : 0);
       }
     }
   }

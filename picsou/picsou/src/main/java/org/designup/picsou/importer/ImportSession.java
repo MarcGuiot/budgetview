@@ -114,14 +114,10 @@ public class ImportSession {
       }
       for (Map.Entry<Integer, List<Glob>> accountIdAndTransactions : transactionByAccountId.entries()) {
         Glob account = localRepository.get(Key.create(Account.TYPE, accountIdAndTransactions.getKey()));
-        Glob bankEntity = localRepository.findLinkTarget(account, Account.BANK_ENTITY);
-        Glob bank = localRepository.findLinkTarget(bankEntity, BankEntity.BANK);
+        Glob bank = localRepository.findLinkTarget(account, Account.BANK);
         Integer bankId = Bank.GENERIC_BANK_ID;
         if (bank != null) {
           bankId = bank.get(Bank.ID);
-        }
-        else {
-          localRepository.update(bankEntity.getKey(), BankEntity.BANK, bankId);
         }
         TransactionAnalyzer transactionAnalyzer = directory.get(TransactionAnalyzerFactory.class).getAnalyzer();
         transactionAnalyzer.processTransactions(bankId, accountIdAndTransactions.getValue(),

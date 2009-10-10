@@ -129,7 +129,7 @@ public class PicsouSampleGenerator {
   private void setAccount(String accountNumber, boolean isCardAccount, final String updateDate) {
     accountId = repository.create(Account.TYPE,
                                   value(Account.NAME, accountNumber),
-                                  value(Account.BANK_ENTITY, BANK_ID),
+                                  value(Account.BANK, BANK_ID),
                                   value(Account.BRANCH_ID, BRANCH_ID),
                                   value(Account.NUMBER, accountNumber),
                                   value(Account.IS_CARD_ACCOUNT, isCardAccount),

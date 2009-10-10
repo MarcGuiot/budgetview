@@ -13,7 +13,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
   public void testStandardDisplay() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "00000123", -125.0, "2008/07/12")
+      .addBankAccount(-1, 10674, "00000123", -125.0, "2008/07/12")
       .addTransaction("2008/07/12", -100.00, "Auchan")
       .addTransaction("2008/07/05", -30.00, "Free Telecom")
       .addTransaction("2008/07/05", -50.00, "EDF")
@@ -93,7 +93,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
   public void testShowsActualAmountsInThePast() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "00000123", 1000.0, "2008/07/30")
+      .addBankAccount(-1, 10674, "00000123", 1000.0, "2008/07/30")
       .addTransaction("2008/05/10", -250.00, "Auchan")
       .addTransaction("2008/05/15", -200.00, "Auchan")
       .addTransaction("2008/05/01", 300.00, "WorldCo")
@@ -134,7 +134,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
   public void testTakesLastMonthWithTransactionsAsCurrentMonth() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "00000123", 1000.0, "2008/07/30")
+      .addBankAccount(-1, 10674, "00000123", 1000.0, "2008/07/30")
       .addTransaction("2008/03/10", -250.00, "Auchan")
       .addTransaction("2008/03/15", -200.00, "Auchan")
       .addTransaction("2008/03/01", 300.00, "WorldCo")
@@ -221,7 +221,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
   public void testDeletingTheShownSeries() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(30006, 10674, "00000123", 1000.0, "2008/07/30")
+      .addBankAccount(-1, 10674, "00000123", 1000.0, "2008/07/30")
       .addTransaction("2008/07/01", 320.00, "WorldCo")
       .addTransaction("2008/07/15", 350.00, "Big Inc.")
       .load();

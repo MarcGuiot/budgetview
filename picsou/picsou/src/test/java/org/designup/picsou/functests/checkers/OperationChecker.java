@@ -1,15 +1,13 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.TestCase;
+import junit.framework.Assert;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.TestUtils;
-import org.uispec4j.Button;
-import org.uispec4j.MenuItem;
-import org.uispec4j.Trigger;
-import org.uispec4j.Window;
+import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
@@ -31,6 +29,7 @@ public class OperationChecker {
   private MenuItem undoMenu;
   private MenuItem redoMenu;
   private MenuItem dumpMenu;
+  private MenuItem throwExceptionMenu;
   public static final String DEFAULT_ACCOUNT_NUMBER = "11111";
   public static final String DEFAULT_ACCOUNT_NAME = "Account n. 11111";
   private Window window;
@@ -50,6 +49,7 @@ public class OperationChecker {
     undoMenu = editMenu.getSubMenu("Undo");
     redoMenu = editMenu.getSubMenu("Redo");
     dumpMenu = editMenu.getSubMenu("Dump");
+    throwExceptionMenu = editMenu.getSubMenu("throw");
   }
 
   public ImportChecker openImportDialog() {
@@ -58,6 +58,10 @@ public class OperationChecker {
 
   public void importOfxFile(String name) {
     importFile(new String[]{name}, null, null, null);
+  }
+
+  public void importOfxFile(String name, String bank) {
+    importFile(new String[]{name}, bank, null, null);
   }
 
   public void importQifFile(String file, String bank) {
@@ -90,6 +94,9 @@ public class OperationChecker {
           if (importDialog.getInputTextBox("number").isEditable().isTrue()) {
             importDialog.getInputTextBox("number").setText(DEFAULT_ACCOUNT_NUMBER);
             importDialog.getComboBox("accountBank").select(bank);
+          }
+          else if (bank != null && importDialog.findSwingComponent(JComboBox.class, "bankCombo") != null){ // OFX
+            importDialog.getComboBox("bankCombo").select(bank);
           }
           if (targetAccount != null) {
             importDialog.getComboBox("accountCombo").select(targetAccount);
@@ -289,5 +296,9 @@ public class OperationChecker {
 
   public void dump() {
     dumpMenu.click();
+  }
+
+  public MessageDialogChecker throwExceptionInApp(){
+    return new MessageDialogChecker(WindowInterceptor.getModalDialog(throwExceptionMenu.triggerClick()));
   }
 }
