@@ -177,6 +177,16 @@ public class Gui {
     }
   }
 
+  public static JEditorPane createHtmlDisplay() {
+    return createHtmlDisplay("");
+  }
+
+  public static JEditorPane createHtmlDisplay(String text) {
+    JEditorPane editorPane = createHtmlEditor(text);
+    editorPane.setEditable(false);
+    return editorPane;
+  }
+
   public static JEditorPane createHtmlEditor(String text) {
     JEditorPane editor = new JEditorPane();
     editor.setContentType("text/html");

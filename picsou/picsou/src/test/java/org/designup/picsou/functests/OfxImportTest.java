@@ -264,7 +264,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
         public Trigger process(Window window) throws Exception {
           window.getInputTextBox("fileField").setText(fileName);
           window.getButton("Import").click();
-          assertTrue(window.containsLabel("Invalid content for file"));
+          assertTrue(window.containsLabel("Invalid file content"));
           return window.getButton("Close").triggerClick();
         }
       })

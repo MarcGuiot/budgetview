@@ -2,6 +2,8 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.gui.TimeService;
 
 import java.io.File;
 import java.util.Locale;
@@ -10,8 +12,18 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   private static final String PREVAYLER_DIR = "tmp/demo/";
   private static final String OFX_PATH = "tmp/demo.ofx";
 
+  private int thirdMonth;
+  private int secondMonth;
+  private int firstMonth;
+
   protected void setUp() throws Exception {
-    super.setCurrentMonth("2008/11");
+
+    thirdMonth = Month.previous(TimeService.getCurrentMonth());
+    secondMonth = Month.previous(thirdMonth);
+    firstMonth = Month.previous(secondMonth);
+
+    setCurrentMonth(Month.toString(thirdMonth));
+
     Locale.setDefault(Locale.FRENCH);
     super.setUp();
   }
@@ -39,59 +51,84 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(12).validate();
 
     OfxBuilder.init(OFX_PATH)
-      .addBankAccount(30066, 10678, "00000123456", 1410.20, "2008/11/15")
+      .addBankAccount(30066, 10678, "00000123456", 1410.20, third(15))
         // Income
-      .addTransaction("2008/10/28", 1760.50, "WORLDCO")
-      .addTransaction("2008/10/29", 1312.80, "BIGCORP")
+      .addTransaction(first(28), 1760.50, "WORLDCO")
+      .addTransaction(first(29), 1312.80, "BIGCORP")
+      .addTransaction(second(28), 1760.50, "WORLDCO")
+      .addTransaction(second(29), 1312.80, "BIGCORP")
         // Fixed
-      .addTransaction("2008/10/09", -1010.00, "PRET IMMO N.3325566")
-      .addTransaction("2008/11/09", -1010.00, "PRET IMMO N.3325566")
-      .addTransaction("2008/10/20", -289.75, "PRET CONSO N.6784562 F657")
-      .addTransaction("2008/10/13", -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ")
-      .addTransaction("2008/11/15", -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ")
-      .addTransaction("2008/10/05", -110.70, "TRESOR PUBLIC I.R. 23225252323")
-      .addTransaction("2008/11/05", -110.70, "TRESOR PUBLIC I.R. 23225252323")
-      .addTransaction("2008/10/02", -70.30, "RATP NAVIGO 10/08")
-      .addTransaction("2008/11/02", -70.30, "RATP NAVIGO 11/08")
-      .addTransaction("2008/10/17", -67.00, "GROUPE SCOLAIRE R.L OCT. 2008")
-      .addTransaction("2008/11/17", -67.00, "GROUPE SCOLAIRE R.L NOV. 2008")
-      .addTransaction("2008/10/11", -25.50, "TVSAT")
-      .addTransaction("2008/11/12", -25.50, "TVSAT")
-      .addTransaction("2008/10/08", -45.30, "RED TELECOMS")
-      .addTransaction("2008/11/10", -66.10, "RED TELECOMS")
-      .addTransaction("2008/10/02", -29.90, "OPTIBOX")
-      .addTransaction("2008/11/02", -29.90, "OPTIBOX")
-      .addTransaction("2008/10/15", -65.89, "EDF")
+      .addTransaction(first(9), -1010.00, "PRET IMMO N.3325566")
+      .addTransaction(second(9), -1010.00, "PRET IMMO N.3325566")
+      .addTransaction(third(9), -1010.00, "PRET IMMO N.3325566")
+      .addTransaction(first(20), -289.75, "PRET CONSO N.6784562 F657")
+      .addTransaction(second(20), -289.75, "PRET CONSO N.6784562 F657")
+      .addTransaction(first(14), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ")
+      .addTransaction(second(13), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ")
+      .addTransaction(third(15), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ")
+      .addTransaction(first(5), -110.70, "TRESOR PUBLIC I.R. 23225252323")
+      .addTransaction(second(5), -110.70, "TRESOR PUBLIC I.R. 23225252323")
+      .addTransaction(third(5), -110.70, "TRESOR PUBLIC I.R. 23225252323")
+      .addTransaction(first(1), -70.30, "RATP NAVIGO 10/08")
+      .addTransaction(second(2), -70.30, "RATP NAVIGO 10/08")
+      .addTransaction(third(2), -70.30, "RATP NAVIGO 11/08")
+      .addTransaction(first(17), -67.00, "GROUPE SCOLAIRE R.L OCT. 2008")
+      .addTransaction(second(17), -67.00, "GROUPE SCOLAIRE R.L OCT. 2008")
+      .addTransaction(third(17), -67.00, "GROUPE SCOLAIRE R.L NOV. 2008")
+      .addTransaction(first(11), -25.50, "TVSAT")
+      .addTransaction(second(11), -25.50, "TVSAT")
+      .addTransaction(third(12), -25.50, "TVSAT")
+      .addTransaction(first(8), -45.30, "RED TELECOMS")
+      .addTransaction(second(8), -45.30, "RED TELECOMS")
+      .addTransaction(third(10), -66.10, "RED TELECOMS")
+      .addTransaction(first(3), -29.90, "OPTIBOX")
+      .addTransaction(second(2), -29.90, "OPTIBOX")
+      .addTransaction(third(2), -29.90, "OPTIBOX")
+      .addTransaction(second(15), -65.89, "EDF")
         // Envelopes
-      .addTransaction("2008/10/02", -100.60, "HYPER M")
-      .addTransaction("2008/10/07", -230.30, "HYPER M")
-      .addTransaction("2008/10/15", -130.00, "HYPER M")
-      .addTransaction("2008/10/23", -200.30, "HYPER M")
-      .addTransaction("2008/11/05", -121.20, "HYPER M")
-      .addTransaction("2008/10/19", -35.50, "BIO PLUS")
-      .addTransaction("2008/10/11", -41.15, "BIO PLUS")
-      .addTransaction("2008/10/08", -20.00, "RETRAIT GAB 4463")
-      .addTransaction("2008/10/12", -40.00, "RETRAIT GAB 5234")
-      .addTransaction("2008/10/22", -20.00, "RETRAIT GAB 5642")
-      .addTransaction("2008/10/30", -20.00, "RETRAIT GAB 0301")
-      .addTransaction("2008/11/01", -20.00, "RETRAIT GAB 1867")
-      .addTransaction("2008/11/09", -20.00, "RETRAIT GAB 9011")
-      .addTransaction("2008/11/02", -18.30, "GROUPE CINE SPECT.")
-      .addTransaction("2008/10/10", -35.30, "RESA CONCERTS. N151435")
-      .addTransaction("2008/10/08", -5.30, "JOURNAUX 2000")
-      .addTransaction("2008/10/16", -3.70, "JOURNAUX 2000")
-      .addTransaction("2008/10/24", -12.50, "JOURNAUX 2000")
-      .addTransaction("2008/10/11", -55.65, "CHAUSS'MODE")
-      .addTransaction("2008/10/26", -69.90, "AU PIED AGILE")
-      .addTransaction("2008/10/27", -50.00, "PARIS MODE CENTRE")
-      .addTransaction("2008/11/07", -75.00, "PARIS MODE CENTRE")
-      .addTransaction("2008/10/19", -13.50, "ZINGMAN")
-      .addTransaction("2008/11/09", -6.50, "DAILY MAGS")
+      .addTransaction(first(2), -100.60, "HYPER M")
+      .addTransaction(first(7), -230.30, "HYPER M")
+      .addTransaction(first(15), -130.00, "HYPER M")
+      .addTransaction(first(23), -200.30, "HYPER M")
+      .addTransaction(second(2), -100.60, "HYPER M")
+      .addTransaction(second(7), -230.30, "HYPER M")
+      .addTransaction(second(15), -130.00, "HYPER M")
+      .addTransaction(second(23), -200.30, "HYPER M")
+      .addTransaction(third(5), -121.20, "HYPER M")
+      .addTransaction(first(17), -35.50, "BIO PLUS")
+      .addTransaction(first(9), -37.55, "BIO PLUS")
+      .addTransaction(second(19), -35.50, "BIO PLUS")
+      .addTransaction(second(11), -41.15, "BIO PLUS")
+      .addTransaction(first(7), -20.00, "RETRAIT GAB 4463")
+      .addTransaction(first(16), -40.00, "RETRAIT GAB 5234")
+      .addTransaction(first(20), -20.00, "RETRAIT GAB 5642")
+      .addTransaction(second(8), -20.00, "RETRAIT GAB 4463")
+      .addTransaction(second(12), -30.00, "RETRAIT GAB 5234")
+      .addTransaction(second(22), -20.00, "RETRAIT GAB 5642")
+      .addTransaction(second(30), -20.00, "RETRAIT GAB 0301")
+      .addTransaction(third(1), -20.00, "RETRAIT GAB 1867")
+      .addTransaction(third(9), -20.00, "RETRAIT GAB 9011")
+      .addTransaction(third(2), -18.30, "GROUPE CINE SPECT.")
+      .addTransaction(second(10), -35.30, "RESA CONCERTS. N151435")
+      .addTransaction(first(10), -19.30, "UGC")
+      .addTransaction(first(15), -9.70, "JOURNAUX 2000")
+      .addTransaction(second(8), -5.30, "JOURNAUX 2000")
+      .addTransaction(second(16), -3.70, "JOURNAUX 2000")
+      .addTransaction(second(24), -12.50, "JOURNAUX 2000")
+      .addTransaction(second(11), -55.65, "CHAUSS'MODE")
+      .addTransaction(second(26), -69.90, "AU PIED AGILE")
+      .addTransaction(first(27), -126.00, "PARIS MODE CENTRE")
+      .addTransaction(second(27), -50.00, "PARIS MODE CENTRE")
+      .addTransaction(third(7), -75.00, "PARIS MODE CENTRE")
+      .addTransaction(first(19), -13.50, "ZINGMAN")
+      .addTransaction(second(19), -11.50, "ZINGMAN")
+      .addTransaction(third(9), -6.50, "DAILY MAGS")
         // SPECIAL
-      .addTransaction("2008/10/28", -680.50, "PLOMBERIE 24/7")
+      .addTransaction(second(28), -680.50, "PLOMBERIE 24/7")
         // SAVINGS
-      .addTransaction("2008/10/03", -200.00, "VIRT MENS. LIVRET")
-      .addTransaction("2008/11/28", -200.00, "VIRT MENS. LIVRET")
+      .addTransaction(first(5), -200.00, "VIRT MENS. LIVRET")
+      .addTransaction(second(3), -200.00, "VIRT MENS. LIVRET")
+      .addTransaction(third(28), -200.00, "VIRT MENS. LIVRET")
       .save();
 
     operations.importOfxFile(OFX_PATH);
@@ -105,7 +142,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .setAccountName("Liquide")
       .selectBank("Autre")
       .setUpdateModeToManualInput()
-      .setPosition(0.)
+      .setPosition(0.00)
       .validate();
 
     //======== CATEGORIZATION ===========
@@ -130,12 +167,13 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     categorization.setNewEnvelope("HYPER M", "Courses");
     categorization.setEnvelope("BIO PLUS", "Courses");
     categorization.selectTransactions("RETRAIT GAB 4463", "RETRAIT GAB 5234", "RETRAIT GAB 0301",
-                                   "RETRAIT GAB 5642", "RETRAIT GAB 1867", "RETRAIT GAB 9011")
+                                      "RETRAIT GAB 5642", "RETRAIT GAB 1867", "RETRAIT GAB 9011")
       .selectEnvelopes().selectNewSeries("Liquide");
 
     categorization.setNewEnvelope("GROUPE CINE SPECT.", "Loisirs");
     categorization.setEnvelope("RESA CONCERTS. N151435", "Loisirs");
     categorization.setEnvelope("JOURNAUX 2000", "Loisirs");
+    categorization.setEnvelope("UGC", "Loisirs");
 
     categorization.setNewEnvelope("CHAUSS'MODE", "Habillement");
     categorization.setEnvelope("AU PIED AGILE", "Habillement");
@@ -154,13 +192,13 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectCategorization();
-    
+
     categorization.setNewSavings("VIRT MENS. LIVRET", "Virt. auto livret", "Compte courant", "Livret");
 
     categorization.getCompletionGauge().hideProgressMessage();
 
     // Gestion du liquide
-    timeline.selectMonth("2008/10");
+    timeline.selectMonth(Month.toString(secondMonth));
     transactionCreation.show()
       .setLabel("Retrait").setAmount(20).setDay(8).create()
       .setLabel("Retrait").setAmount(40).setDay(12).create()
@@ -170,7 +208,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .setLabel("Boucherie").setAmount(-40).setDay(28).create()
       .setLabel("Primeur").setAmount(-40).setDay(28).create();
 
-    timeline.selectMonth("2008/11");
+    timeline.selectMonth(Month.toString(thirdMonth));
     transactionCreation
       .setLabel("Retrait").setAmount(20).setDay(1).create()
       .setLabel("Retrait").setAmount(20).setDay(9).create()
@@ -185,10 +223,11 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     //======== SERIES TUNING ===========
 
     views.selectBudget();
-    timeline.selectMonth("2008/10");
+    timeline.selectMonth(Month.toString(secondMonth));
     budgetView.hideHelpMessage();
     budgetView.recurring.editSeries("EDF").setTwoMonths().validate();
 
+    timeline.selectMonth(Month.toString(secondMonth));
     budgetView.envelopes.editSeries("Courses")
       .switchToManual()
       .selectAllMonths()
@@ -201,14 +240,15 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .setAmount(50.0)
       .validate();
 
-    timeline.selectMonth("2008/12");
+    timeline.selectMonth(Month.toString(Month.normalize(thirdMonth + 2)));
     budgetView.specials.createSeries()
-      .setName("Noël")
+      .setName("Cadeaux")
       .selectAllMonths()
-      .setAmount(400)
+      .setAmount(150)
       .validate();
 
-    timeline.selectMonth("2009/08");
+    int holidaysMonth = Month.normalize(thirdMonth + 4);
+    timeline.selectMonth(Month.toString(holidaysMonth));
     budgetView.specials.createSeries()
       .setName("Vacances")
       .selectAllMonths()
@@ -222,7 +262,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     //======== SAVINGS ===========
 
-
     views.selectBudget();
 
     //======== PROVISIONS ===========
@@ -235,13 +274,12 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    timeline.selectMonth("2008/12");
+    timeline.selectMonth(Month.toString(Month.normalize(thirdMonth + 1)));
     budgetView.savings.createSeries()
-      .setName("Prov. vacances aout")
+      .setName("Prov. vacances")
       .setFromAccount("Compte courant")
       .setToAccount("Compte provisions")
-      .setStartDate(200811)
-      .setEndDate(200907)
+      .setStartDate(firstMonth)
       .switchToManual()
       .selectAllMonths()
       .setAmount(150)
@@ -251,20 +289,29 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .setName("Reglement vacances")
       .setFromAccount("Compte provisions")
       .setToAccount("Compte courant")
-      .setStartDate(200908)
-      .setEndDate(200908)
+      .setIrregular()
       .selectAllMonths()
-      .setAmount(2500)
+      .setStartDate(holidaysMonth)
+      .setEndDate(holidaysMonth)
+      .setAmount(1800)
       .validate();
 
     views.selectCategorization();
+    
+    File out = new File("tmp/demo/demo.cashpilot");
+    out.delete();
+    operations.backup(out.getAbsoluteFile().getAbsolutePath());
+  }
+  
+  private String first(int day) {
+    return Month.toString(firstMonth) + "/" + day;
+  }
 
+  private String second(int day) {
+    return Month.toString(secondMonth) + "/" + day;
+  }
 
-    String outputFile = System.getProperty("outfile");
-    if (outputFile != null) {
-      File out = new File(outputFile);
-      out.delete();
-      operations.backup(out.getAbsoluteFile().getAbsolutePath());
-    }
+  private String third(int day) {
+    return Month.toString(thirdMonth) + "/" + day;
   }
 }

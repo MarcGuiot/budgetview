@@ -437,7 +437,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .selectFiles(path)
       .acceptFile()
-      .checkErrorMessage("import.file.error", new File(path).getAbsolutePath())
+      .checkErrorMessage("import.file.error")
       .close();
   }
 
@@ -451,7 +451,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .selectFiles(path)
       .acceptFile()
-      .checkErrorMessage("import.file.error", new File(path).getAbsolutePath())
+      .checkErrorMessage("import.file.error")
       .close();
   }
 
