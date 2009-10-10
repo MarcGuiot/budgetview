@@ -16,7 +16,9 @@ public class SplitsBuilderTest extends SplitsTestCase {
 
   public void testTypeError() throws Exception {
     builder.add("label", aTable);
-    checkParsingError("<label ref='label'/>", "unexpected type");
+    checkParsingError("<label ref='label'/>",
+                      "Error for tag: label - unexpected type 'JTable' for referenced component 'label' " +
+                      "- expected type: javax.swing.JLabel");
   }
 
   public void testReferencingASubclass() throws Exception {

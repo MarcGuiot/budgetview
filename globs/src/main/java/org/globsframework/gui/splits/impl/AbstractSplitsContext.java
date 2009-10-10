@@ -57,7 +57,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
 
       if (!componentClass.isAssignableFrom(component.getComponent().getClass())) {
         throw new SplitsException("Error for tag: " + splitterName +
-                                  " - unexpected type '" + component.getClass().getSimpleName() +
+                                  " - unexpected type '" + component.getComponent().getClass().getSimpleName() +
                                   "' for referenced component '" + ref + "' - expected type: " + componentClass.getName()
                                   + dump());
       }
