@@ -479,7 +479,7 @@ public class ImportPanel {
       return true;
     }
     catch (Exception e) {
-      String message = Lang.get("import.file.error", file.getAbsolutePath());
+      String message = Lang.get("import.file.error");
       Log.write("", e);
       messageLabel.setText(message);
       return false;
