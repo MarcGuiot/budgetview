@@ -500,11 +500,15 @@ public class SeriesEditionDialog {
       Set<Integer> positiveAccount = new HashSet<Integer>();
       Set<Integer> negativeAccount = new HashSet<Integer>();
       for (Glob transaction : selectedTransactions) {
-        if (transaction.get(Transaction.AMOUNT) >= 0) {
-          positiveAccount.add(transaction.get(Transaction.ACCOUNT));
-        }
-        else {
-          negativeAccount.add(transaction.get(Transaction.ACCOUNT));
+        Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
+        if (account.isTrue(Account.IS_IMPORTED_ACCOUNT) &&
+            account.get(Account.UPDATE_MODE).equals(AccountUpdateMode.AUTOMATIC.getId())) {
+          if (transaction.get(Transaction.AMOUNT) >= 0) {
+            positiveAccount.add(transaction.get(Transaction.ACCOUNT));
+          }
+          else {
+            negativeAccount.add(transaction.get(Transaction.ACCOUNT));
+          }
         }
       }
       if (positiveAccount.size() == 1) {

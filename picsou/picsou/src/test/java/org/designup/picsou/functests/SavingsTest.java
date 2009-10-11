@@ -1090,7 +1090,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectSavings();
     savingsView.editSeries("Livret", "Epargne")
       .checkFromContentEquals(OfxBuilder.DEFAULT_ACCOUNT_NAME)
-      .checkToContentEquals("Livret")
+      .checkToContentEquals("External account", "Livret")
       .validate();
   }
 
@@ -1420,4 +1420,62 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     categorization.checkBudgetAreaSelectionPanelDisplayed();
   }
+
+  public void testCheckComboAccountContentsWithNotImportedAccount() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/06", 100.00, "Virement de l'Epargne")
+      .load();
+
+    views.selectCategorization();
+    SeriesEditionDialogChecker editionDialogChecker = categorization.selectAllTransactions()
+      .selectSavings()
+      .createSeries()
+      .setName("Financement");
+    editionDialogChecker.createAccount().setAccountName("CODEVI")
+      .selectBank("CIC")
+      .setPosition(0).validate();
+    editionDialogChecker
+      .checkToContentEquals(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .checkToAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .setFromAccount("CODEVI")
+      .checkFromContentEquals("External account", "CODEVI")
+      .validate();
+
+    SeriesEditionDialogChecker seriesEdition = categorization.selectTransaction("Virement de l'Epargne")
+      .editSeries("Financement");
+    seriesEdition
+      .createAccount()
+      .setAccountName("Livret A")
+      .selectBank("CIC")
+      .setPosition(0)
+      .validate();
+    seriesEdition.checkFromContentEquals("External account", "CODEVI", "Livret A")
+      .setFromAccount("Livret A")
+      .validate();
+
+    
+    categorization.selectAllTransactions()
+      .selectSavings()
+      .selectSeries("Financement");
+
+    views.selectData();
+    timeline.selectAll();
+    transactions
+      .initContent()
+      .add("06/10/2008", TransactionType.PLANNED, "Planned: Financement", "", -100.00, "Financement")
+      .add("06/10/2008", TransactionType.PLANNED, "Planned: Financement", "", 100.00, "Financement")
+      .add("06/09/2008", TransactionType.PLANNED, "Planned: Financement", "", -100.00, "Financement")
+      .add("06/09/2008", TransactionType.PLANNED, "Planned: Financement", "", 100.00, "Financement")
+      .add("06/08/2008", TransactionType.PLANNED, "Planned: Financement", "", -100.00, "Financement")
+      .add("06/08/2008", TransactionType.PLANNED, "Planned: Financement", "", 100.00, "Financement")
+      .add("06/07/2008", TransactionType.PLANNED, "Planned: Financement", "", -100.00, "Financement")
+      .add("06/07/2008", TransactionType.PLANNED, "Planned: Financement", "", 100.00, "Financement")
+      .add("06/06/2008", TransactionType.PRELEVEMENT, "VIREMENT DE L'EPARGNE", "", -100.00, "Financement")
+      .add("06/06/2008", TransactionType.VIREMENT, "VIREMENT DE L'EPARGNE", "", 100.00, "Financement")
+      .check();
+
+  }
+
 }
