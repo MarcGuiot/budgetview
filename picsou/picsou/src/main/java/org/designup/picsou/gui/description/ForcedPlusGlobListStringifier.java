@@ -23,7 +23,7 @@ public class ForcedPlusGlobListStringifier implements GlobListStringifier {
   }
 
   public static String toString(String amount, final BudgetArea budgetArea) {
-    if (!budgetArea.isIncome() && budgetArea != BudgetArea.SAVINGS) {
+    if (!budgetArea.isIncome()) {
       if (amount.startsWith("-")) {
         return amount.replace("-", "+");
       }

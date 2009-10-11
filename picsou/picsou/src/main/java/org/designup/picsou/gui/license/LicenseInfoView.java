@@ -100,7 +100,7 @@ public class LicenseInfoView extends View {
       else {
         Integer state = user.get(User.ACTIVATION_STATE);
         if (state != null && state == User.ACTIVATION_FAILED_MAIL_SENT) {
-          licenseMessage.setText(Lang.get("license.activation.faileded.mailSent", user.get(User.MAIL)));
+          licenseMessage.setText(Lang.get("license.activation.failed.mailSent", user.get(User.MAIL)));
         }
         else if (user.get(User.MAIL) == null) {
           licenseMessage.setText(Lang.get("license.expiration.message"));

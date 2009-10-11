@@ -96,10 +96,10 @@ public class LicenseActivationDialog {
               localRepository.dispose();
             }
             else if (activationState == User.ACTIVATION_FAILED_MAIL_SENT) {
-              updateDialogState("license.activation.faileded.mailSent", localRepository.get(User.KEY).get(User.MAIL));
+              updateDialogState("license.activation.failed.mailSent", localRepository.get(User.KEY).get(User.MAIL));
             }
             else if (activationState != User.ACTIVATION_IN_PROGRESS) {
-              updateDialogState("license.activation.faileded");
+              updateDialogState("license.activation.failed");
             }
           }
         }
@@ -123,7 +123,6 @@ public class LicenseActivationDialog {
     expirationLabel.setVisible(expiration);
     localRepository.rollback();
     if (repository.get(User.KEY).isTrue(User.CONNECTED)) {
-//      localRepository.update(UserPreferences.KEY, UserPreferences.FUTURE_MONTH_COUNT, 24);
       selectionService.select(localRepository.get(User.KEY));
       selectionService.select(localRepository.get(UserPreferences.KEY));
     }

@@ -105,6 +105,10 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/10");
     views.selectHome();
     savingsAccounts.checkPosition("Epargne", 900);
+
+    views.selectBudget();
+    budgetView.savings.checkSeries("Achat Tele", 0, -300);
+    budgetView.savings.checkTotalAmounts(0, -200);
   }
 
   public void testSavingsAccountFilledFromExternalAccountBalance() throws Exception {
