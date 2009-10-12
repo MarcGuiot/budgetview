@@ -221,15 +221,17 @@ public class BudgetStatTrigger implements ChangeSetListener {
               continue;
             }
           }
-          if (stat.get(SeriesStat.AMOUNT) >= 0) {
+          if (toAccount != null && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
             savingsInAmounts.addValues(stat, lastTransactionMonthId);
           }
           else {
             savingsOutAmounts.addValues(stat, lastTransactionMonthId);
           }
+          amounts.addValues(stat, lastTransactionMonthId);
         }
-
-        amounts.addValues(stat, lastTransactionMonthId);
+        else {
+          amounts.addValues(stat, lastTransactionMonthId);
+        }
       }
 
       FieldValuesBuilder values = new FieldValuesBuilder();

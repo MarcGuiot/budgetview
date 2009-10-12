@@ -64,8 +64,8 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
       .checkIncome(1500.00)
       .checkFixed(30 + 1500)
       .checkEnvelope(300 + 100)
-      .checkSavingsOut(0.00)
-      .checkSavingsIn(100.00)
+      .checkSavingsIn(0.00)
+      .checkSavingsOut(100.00)
       .checkProjects(0.00)
       .close();
 
@@ -78,8 +78,8 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
       .checkIncome(1500.00)
       .checkFixed(30 + 1500)
       .checkEnvelope(300 + 100)
-      .checkSavingsOut(0.00)
-      .checkSavingsIn(100.00)
+      .checkSavingsOut(100.00)
+      .checkSavingsIn(0.00)
       .checkProjects(0.00)
       .close();
   }
@@ -218,5 +218,52 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
       .checkIncome(1500)
       .close();
     timeline.checkMonthTooltip("2008/08", balanceFor200808, 1440.00);
+  }
+
+  public void testDetailForInAndOutOfSavings() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.00, "2008/08/05")
+      .addTransaction("2008/08/01", 1500, "WorldCo")
+      .addTransaction("2008/08/05", -20, "Virement vers Livret A")
+      .addTransaction("2008/08/05", 200, "Virement du Livret A")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewIncome("WorldCo", "Salary");
+    categorization.setNewSavings("Virement vers Livret A", "Epargne",
+                                 OfxBuilder.DEFAULT_ACCOUNT_NAME, "External account");
+    categorization.setNewSavings("Virement du Livret A", "Finanencement tele",
+                                 "External account", OfxBuilder.DEFAULT_ACCOUNT_NAME);
+
+    timeline.selectMonth("2008/08");
+    views.selectBudget();
+    budgetView.savings.editSeries("Epargne")
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount("50")
+      .validate();
+
+    budgetView.savings.editSeries("Finanencement tele")
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount("300")
+      .validate();
+
+    views.selectHome();
+    mainAccounts.openEstimatedPositionDetails()
+      .checkPositionDate("31/08/2008")
+      .checkInitialPosition(1000)
+      .checkSavingsOut(30)
+      .checkSavingsIn(100)
+      .close();
+
+    timeline.selectMonth("2008/09");
+    mainAccounts.openEstimatedPositionDetails()
+      .checkPositionDate("30/09/2008")
+      .checkInitialPosition(1070)
+      .checkSavingsOut(50)
+      .checkSavingsIn(300)
+      .close();
   }
 }

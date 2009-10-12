@@ -104,7 +104,7 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
     Glob stat = repository.findOrCreate(createKey(seriesId, values.get(Transaction.MONTH)));
     if (stat != null) {
       final Double transactionAmount = values.get(Transaction.AMOUNT);
-      updateStat(stat, multiplier * transactionAmount, 1, repository);
+      updateStat(stat, transactionAmount, multiplier, repository);
     }
     else {
       if (throwIfNull) {
