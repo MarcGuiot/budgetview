@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<globs>
+  <bank name="HSBC" id="11" >
+    <bankEntity id="30056"/>
+    <bankEntity id="30368"/>
+  </bank>
+</globs>

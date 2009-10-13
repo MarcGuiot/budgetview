@@ -16,6 +16,11 @@ public class PreferencesChecker extends GuiChecker {
     return this;
   }
 
+  public PreferencesChecker checkFutureMonthsCount(int month){
+    UISpecAssert.assertThat(window.getComboBox("futureMonth").selectionEquals(Integer.toString(month)));
+    return this;
+  }
+
   public void validate() {
     window.getButton("ok").click();
     UISpecAssert.assertFalse(window.isVisible());

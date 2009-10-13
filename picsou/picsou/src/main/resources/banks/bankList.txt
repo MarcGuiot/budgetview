@@ -10,3 +10,4 @@ lcl.xml
 axa.xml
 ingdirect.xml
 banquepopulaire.xml
+hsbc.xml

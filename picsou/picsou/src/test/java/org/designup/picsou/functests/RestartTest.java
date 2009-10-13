@@ -243,6 +243,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .check();
     setCurrentDate("2008/09/02");
     restartApplication();
+    operations.openPreferences().checkFutureMonthsCount(2).validate();
     timeline.selectAll();
     views.selectData();
     transactions.initContent()

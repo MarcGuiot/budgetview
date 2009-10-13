@@ -164,11 +164,11 @@ public class OfxImporter implements AccountFileImporter {
         bankEntityLabel = content;
       }
       if (tag.equalsIgnoreCase("DTPOSTED")) {
-        repository.update(currentTransactionKey, ImportedTransaction.BANK_DATE, content);
+        repository.update(currentTransactionKey, ImportedTransaction.BANK_DATE, content.subSequence(0, 8));
         return;
       }
       if (tag.equalsIgnoreCase("DTUSER")) {
-        repository.update(currentTransactionKey, ImportedTransaction.DATE, content);
+        repository.update(currentTransactionKey, ImportedTransaction.DATE, content.subSequence(0, 8));
         return;
       }
       if (tag.equalsIgnoreCase("TRNAMT")) {
