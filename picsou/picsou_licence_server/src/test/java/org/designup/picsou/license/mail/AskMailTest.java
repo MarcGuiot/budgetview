@@ -27,18 +27,28 @@ public class AskMailTest extends LicenseTestCase {
     client = null;
   }
 
-  public void testSendMail() throws Exception {
-    addUser("monPremierClient@pirate.du");
-    PostMethod postMethod = sendRequest();
-    Header header = postMethod.getResponseHeader(ConfigService.HEADER_STATUS);
-    assertEquals(ConfigService.HEADER_MAIL_SENT, header.getValue());
-    checkReceivedMail("monPremierClient@pirate.du");
+  public void testSendMailInEn() throws Exception {
+    checkMail("en", "Your new activation code is");
   }
 
-  private PostMethod sendRequest() throws IOException {
+  public void testSendMailInfr() throws Exception {
+    checkMail("fr", "Votre nouveau code d'activation est le ");
+  }
+
+  private void checkMail(String s, final String expected) throws IOException, InterruptedException {
+    addUser("monPremierClient@pirate.du");
+    PostMethod postMethod = sendRequest(s);
+    Header header = postMethod.getResponseHeader(ConfigService.HEADER_STATUS);
+    assertEquals(ConfigService.HEADER_MAIL_SENT, header.getValue());
+    String content = checkReceivedMail("monPremierClient@pirate.du");
+    assertTrue(content, content.contains(expected));
+  }
+
+
+  private PostMethod sendRequest(String lang) throws IOException {
     PostMethod postMethod = new PostMethod("http://localhost/mailTo");
     postMethod.setRequestHeader(ConfigService.HEADER_MAIL, "monPremierClient@pirate.du");
-    postMethod.setRequestHeader(ConfigService.HEADER_LANG, "en");
+    postMethod.setRequestHeader(ConfigService.HEADER_LANG, lang);
     client.executeMethod(postMethod);
     return postMethod;
   }
