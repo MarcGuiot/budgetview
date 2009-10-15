@@ -38,4 +38,22 @@ public class SeriesBudgetTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Free", -29, -29);
   }
 
+//  public void testSerieBudgetWithShift() throws Exception {
+//    OfxBuilder.init(this)
+//      .addTransaction("2009/01/01", 1000.00, "Salaire")
+//      .addTransaction("2009/01/01", -1000.00, "Loyer")
+//      .addTransaction("2009/02/02", 1000.00, "Salaire")
+//      .addTransaction("2009/02/02", -1000.00, "Loyer")
+//      .addTransaction("2009/03/01", 1000.00, "Salaire")
+//      .addTransaction("2009/03/01", -1000.00, "Loyer")
+//      .addTransaction("2009/04/06", 1000.00, "Salaire")
+//      .addTransaction("2009/04/06", -1000.00, "Loyer")
+//      .load();
+//    views.selectCategorization();
+//    categorization.setNewIncome("Salaire", "Salaire");
+//    categorization.setNewEnvelope("Loyer", "Loyer");
+//    String path = operations.backup(this);
+//    System.out.println("SeriesBudgetTest.testSerieBudgetWithShift " + path);
+//    openApplication();
+//  }
 }

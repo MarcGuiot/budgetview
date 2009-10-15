@@ -9,6 +9,7 @@ import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
@@ -31,8 +32,7 @@ public class PositionTrigger implements ChangeSetListener {
 
   private void updateTransactionPosition(GlobRepository repository, GlobList updatedAccount) {
     TransactionComparator comparator = TransactionComparator.ASCENDING_BANK;
-    GlobMatcher globMatcher = GlobMatchers.ALL;
-    SortedSet<Glob> trs = repository.getSorted(Transaction.TYPE, comparator, globMatcher);
+    SortedSet<Glob> trs = repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL);
 
     Glob[] transactions = trs.toArray(new Glob[trs.size()]);
     for (Integer accountId : Account.SUMMARY_ACCOUNT_IDS) {
@@ -110,6 +110,20 @@ public class PositionTrigger implements ChangeSetListener {
     else {
       Glob current = repository.get(Key.create(Transaction.TYPE, transactionId));
       pivot = Arrays.binarySearch(transactions, current, comparator);
+      if (pivot < 0){
+        Log.write("Bug : transaction not found but is present do linear search");
+        for (pivot = 0; pivot < transactions.length; pivot++) {
+          Glob transaction = transactions[pivot];
+          if (transaction == current) {
+            Log.write("Transaction found continuing " + GlobPrinter.toString(current));
+            break;
+          }
+        }
+        if (pivot == transactions.length){
+          Log.write("transaction not found : " + transactionId + " : " + GlobPrinter.toString(current));
+          return false;
+        }
+      }
       positionAfter = current.get(Transaction.ACCOUNT_POSITION);
       positionBefore = positionAfter - current.get(Transaction.AMOUNT);
     }

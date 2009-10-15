@@ -61,7 +61,7 @@ public class DirectoryClassRetriever implements DependExtractor.ClassRetreiver {
           FileInputStream inputStream = new FileInputStream(sourceFile);
           ClassReader classReader = new ClassReader(inputStream);
           FilterWriter classWriter = new FilterWriter();
-          classReader.accept(classWriter, withDebug ? ClassReader.SKIP_DEBUG: 0);
+          classReader.accept(classWriter, withDebug ? 0 : ClassReader.SKIP_DEBUG);
           FileOutputStream outputStream = new FileOutputStream(output);
           outputStream.write(classWriter.toByteArray());
           outputStream.close();

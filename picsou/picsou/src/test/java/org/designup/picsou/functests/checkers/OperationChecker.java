@@ -33,6 +33,7 @@ public class OperationChecker {
   public static final String DEFAULT_ACCOUNT_NUMBER = "11111";
   public static final String DEFAULT_ACCOUNT_NAME = "Account n. 11111";
   private Window window;
+  private MenuItem checkMenu;
 
   public static OperationChecker init(Window window) {
     return new OperationChecker(window);
@@ -49,6 +50,7 @@ public class OperationChecker {
     undoMenu = editMenu.getSubMenu("Undo");
     redoMenu = editMenu.getSubMenu("Redo");
     dumpMenu = editMenu.getSubMenu("Dump");
+    checkMenu = editMenu.getSubMenu("[Check data (see logs)]");
     throwExceptionMenu = editMenu.getSubMenu("throw");
   }
 
@@ -304,5 +306,10 @@ public class OperationChecker {
 
   public MessageDialogChecker throwExceptionInApp(){
     return new MessageDialogChecker(WindowInterceptor.getModalDialog(throwExceptionMenu.triggerClick()));
+  }
+
+  public void checkOk() {
+    new MessageDialogChecker(WindowInterceptor.getModalDialog(checkMenu.triggerClick()))
+      .checkMessageContains("Start checking End checking").close();
   }
 }

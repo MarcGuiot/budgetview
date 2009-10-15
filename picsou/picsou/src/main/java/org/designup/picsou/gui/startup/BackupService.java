@@ -37,7 +37,7 @@ public class BackupService {
   private UpgradeTrigger upgradeTrigger;
 
   public enum Status {
-      badBersion,
+    badBersion,
     ok,
     decryptFail
   }
@@ -68,7 +68,7 @@ public class BackupService {
     MapOfMaps<String, Integer, SerializableGlobType> serverData =
       new MapOfMaps<String, Integer, SerializableGlobType>();
     ReadOnlyAccountDataManager.SnapshotInfo snapshotInfo = ReadOnlyAccountDataManager.readSnapshot(serverData, stream);
-    if (snapshotInfo.version > PicsouApplication.JAR_VERSION){
+    if (snapshotInfo.version > PicsouApplication.JAR_VERSION) {
       return Status.badBersion;
     }
     PasswordBasedEncryptor readPasswordBasedEncryptor;

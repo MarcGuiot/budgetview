@@ -371,9 +371,15 @@ public class SplitTransactionDialog {
           tableView.getComponent().requestFocus();
           selectionService.select(transaction);
           Glob source = repository.findLinkTarget(transaction, Transaction.SPLIT_SOURCE);
-          repository.delete(transaction.getKey());
-          repository.update(source.getKey(), Transaction.SPLIT,
-                            repository.findLinkedTo(source, Transaction.SPLIT_SOURCE).isEmpty());
+          repository.startChangeSet();
+          try {
+            repository.delete(transaction.getKey());
+            repository.update(source.getKey(), Transaction.SPLIT,
+                              repository.findLinkedTo(source, Transaction.SPLIT_SOURCE).isEmpty());
+          }
+          finally {
+            repository.completeChangeSet();
+          }
         }
 
         public boolean isEnabled() {

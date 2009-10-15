@@ -35,7 +35,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .check();
 
     restartApplication();
-    
+
     operations.checkUndoNotAvailable();
 
     views.selectHome();
@@ -226,21 +226,40 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "Company")
       .addTransaction("2008/08/10", -400.0, "Auchan")
+      .addTransaction("2008/08/10", -300.0, "ED")
+      .addTransaction("2008/08/10", -200.0, "Monop")
+      .addTransaction("2008/08/10", -100.0, "Fnac")
       .load();
     views.selectCategorization();
-    categorization.setNewIncome("Company", "Salaire");
-    categorization.setNewEnvelope("Auchan", "Course");
+    categorization.setNewIncome("Company", "Salaire")
+      .setNewEnvelope("Auchan", "Course")
+      .setNewEnvelope("ED", "End date")
+      .setNewEnvelope("Monop", "Begin and end date")
+      .setNewEnvelope("Fnac", "Begin date");
+    views.selectBudget();
+    budgetView.envelopes.editSeries("End date").switchToManual().setEndDate(200812).validate();
+    budgetView.envelopes.editSeries("Begin and end date").switchToManual().setStartDate(200808).setEndDate(200901).validate();
+    budgetView.envelopes.editSeries("Begin date").switchToManual().setStartDate(200808).validate();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectData();
     timeline.selectAll();
     transactions.initContent()
       .add("26/10/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
       .add("10/10/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
       .add("26/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("10/09/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
-      .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00, "Salaire")
-      .add("10/08/2008", TransactionType.PRELEVEMENT, "Auchan", "", -400.00, "Course")
+      .add("26/08/2008", TransactionType.VIREMENT, "COMPANY", "", 1000.00, "Salaire")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "FNAC", "", -100.00, "Begin date")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "MONOP", "", -200.00, "Begin and end date")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "ED", "", -300.00, "End date")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -400.00, "Course")
       .check();
+    
+    operations.checkOk();
+
     setCurrentDate("2008/09/02");
     restartApplication();
     operations.openPreferences().checkFutureMonthsCount(2).validate();
@@ -248,14 +267,133 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions.initContent()
       .add("26/11/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/11/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
       .add("10/11/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("10/11/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
+      .add("10/11/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
       .add("26/10/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
       .add("10/10/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
       .add("26/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("10/09/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
-      .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00, "Salaire")
-      .add("10/08/2008", TransactionType.PRELEVEMENT, "Auchan", "", -400.00, "Course")
+      .add("26/08/2008", TransactionType.VIREMENT, "COMPANY", "", 1000.00, "Salaire")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "FNAC", "", -100.00, "Begin date")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "MONOP", "", -200.00, "Begin and end date")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "ED", "", -300.00, "End date")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -400.00, "Course")
       .check();
+    operations.checkOk();
+
+    setCurrentDate("2008/10/02");
+    restartApplication();
+    operations.openPreferences().checkFutureMonthsCount(2).validate();
+    timeline.selectAll();
+    views.selectData();
+    transactions.initContent()
+      .add("26/12/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/12/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
+      .add("10/12/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
+      .add("10/12/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
+      .add("10/12/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("26/11/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/11/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
+      .add("10/11/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("10/11/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
+      .add("10/11/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
+      .add("26/10/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
+      .add("26/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/09/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("26/08/2008", TransactionType.VIREMENT, "COMPANY", "", 1000.00, "Salaire")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "FNAC", "", -100.00, "Begin date")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "MONOP", "", -200.00, "Begin and end date")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "ED", "", -300.00, "End date")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -400.00, "Course")
+      .check();
+    operations.checkOk();
+
+
+    setCurrentDate("2009/01/02");
+    restartApplication();
+    operations.openPreferences().checkFutureMonthsCount(2).validate();
+    timeline.selectAll();
+    views.selectData();
+    transactions.initContent()
+      .add("26/03/2009", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/03/2009", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("10/03/2009", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
+      .add("26/02/2009", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/02/2009", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("10/02/2009", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
+      .add("26/01/2009", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/01/2009", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
+      .add("10/01/2009", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
+      .add("10/01/2009", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("26/12/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/12/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
+      .add("10/12/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
+      .add("10/12/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
+      .add("10/12/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("26/11/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/11/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
+      .add("10/11/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("10/11/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
+      .add("10/11/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
+      .add("26/10/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
+      .add("26/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/09/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("26/08/2008", TransactionType.VIREMENT, "COMPANY", "", 1000.00, "Salaire")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "FNAC", "", -100.00, "Begin date")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "MONOP", "", -200.00, "Begin and end date")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "ED", "", -300.00, "End date")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -400.00, "Course")
+      .check();
+    operations.checkOk();
+
+    operations.openPreferences().setFutureMonthsCount(1).validate();
+    timeline.selectAll();
+    views.selectData();
+    transactions.initContent()
+      .add("26/02/2009", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/02/2009", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("10/02/2009", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
+      .add("26/01/2009", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/01/2009", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
+      .add("10/01/2009", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
+      .add("10/01/2009", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("26/12/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/12/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
+      .add("10/12/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
+      .add("10/12/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
+      .add("10/12/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("26/11/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/11/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
+      .add("10/11/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("10/11/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
+      .add("10/11/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
+      .add("26/10/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
+      .add("26/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("10/09/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("26/08/2008", TransactionType.VIREMENT, "COMPANY", "", 1000.00, "Salaire")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "FNAC", "", -100.00, "Begin date")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "MONOP", "", -200.00, "Begin and end date")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "ED", "", -300.00, "End date")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -400.00, "Course")
+      .check();
+    operations.checkOk();
   }
 
   public void testChangeDayChangeTransactionFromPlannedToRealAndViceversaForNotImportedAccount() throws Exception {
@@ -326,13 +464,13 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkTotalAmounts(0, 0);
 
     views.selectSavings();
-    savingsView.checkAmount("Epargne" ,"CAF", 300, 300);
+    savingsView.checkAmount("Epargne", "CAF", 300, 300);
 
     restartApplication();
 
     views.selectSavings();
 
-    savingsView.checkAmount("Epargne" ,"CAF", 300, 300);
+    savingsView.checkAmount("Epargne", "CAF", 300, 300);
     timeline.selectMonth("2008/08");
 
     views.selectHome();

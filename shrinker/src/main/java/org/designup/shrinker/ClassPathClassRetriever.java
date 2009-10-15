@@ -490,7 +490,7 @@ public class ClassPathClassRetriever implements DependExtractor.ClassRetreiver {
           InputStream inputStream = node.getInputStream();
           ClassReader classReader = new ClassReader(inputStream);
           FilterWriter classWriter = new FilterWriter();
-          classReader.accept(classWriter, withDebug ? ClassReader.SKIP_DEBUG : 0);
+          classReader.accept(classWriter, withDebug ? 0 : ClassReader.SKIP_DEBUG);
           inputStream.close();
           jarOutputStream.putNextEntry(new ZipEntry(cachePath.toString() + node.getName()));
           jarOutputStream.write(classWriter.toByteArray());

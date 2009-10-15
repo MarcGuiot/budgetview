@@ -33,10 +33,14 @@ public class LocalGlobRepository extends GlobRepositoryDecorator {
   }
 
   public void commitChanges(boolean dispose) {
-    reference.apply(aggregator.getCurrentChanges());
-    aggregator.reset();
-    if (dispose) {
-      dispose();
+    try {
+      reference.apply(aggregator.getCurrentChanges());
+    }
+    finally {
+      aggregator.reset();
+      if (dispose) {
+        dispose();
+      }
     }
   }
 

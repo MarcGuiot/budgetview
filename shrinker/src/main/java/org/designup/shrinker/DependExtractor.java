@@ -75,7 +75,7 @@ public class DependExtractor {
       currentClass = classToParse.removeFirst();
       ClassReader reader = findClassReader(currentClass);
       if (reader != null) {
-        reader.accept(extractor, withDebug ? ClassReader.SKIP_DEBUG : 0);
+        reader.accept(extractor, withDebug ? 0 : ClassReader.SKIP_DEBUG);
       }
     }
   }

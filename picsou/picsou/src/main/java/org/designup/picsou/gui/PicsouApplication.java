@@ -18,10 +18,9 @@ import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.upgrade.UpgradeService;
-import org.designup.picsou.gui.utils.ExceptionHandler;
+import picsou.ExceptionHandler;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
-import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.ImageLocator;
@@ -56,8 +55,8 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "0.27";
-  public static final Long JAR_VERSION = 21L;
+  public static final String APPLICATION_VERSION = "0.28";
+  public static final Long JAR_VERSION = 22L;
   public static final Long BANK_CONFIG_VERSION = 5L;
   private static final String JAR_DIRECTORY = "jars";
   private static final String BANK_CONFIG_DIRECTORY = "configs";

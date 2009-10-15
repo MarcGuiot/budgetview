@@ -60,7 +60,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
     }
   }
 
-  private void addMonth(GlobRepository repository, final Integer monthId) {
+  public static void addMonth(GlobRepository repository, final Integer monthId) {
     GlobList seriesList = repository.getAll(Series.TYPE,
                                             GlobMatchers.and(
                                               GlobMatchers.or(

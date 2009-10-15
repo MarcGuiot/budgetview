@@ -1,12 +1,19 @@
-package org.designup.picsou.gui.utils;
+package picsou;
 
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
+import org.designup.picsou.gui.utils.DataCheckerAction;
+
+// attention cette classe est référencée dans picsou_exe_gen.jsmooth
+
 
 public class ExceptionHandler {
   private static GlobRepository repository;
   private static Directory directory;
+
+  public ExceptionHandler() {
+  }
 
   public void handle(Throwable exception) {
     Log.write("Exception thrown: ", exception);
