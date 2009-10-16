@@ -55,21 +55,30 @@ public class TransactionComparator implements Comparator<Glob> {
     if (tmp != 0) {
       return comparisonMultiplier * tmp;
     }
+
+    if (!transaction1.get(Transaction.PLANNED).equals(transaction2.get(Transaction.PLANNED))) {
+      if (transaction1.isTrue(Transaction.PLANNED)) {
+        return comparisonMultiplier;
+      }
+      else {
+        return -comparisonMultiplier;
+      }
+    }
+    
+    int accountCompare =
+      Utils.compare(transaction1.get(Transaction.ACCOUNT), transaction2.get(Transaction.ACCOUNT));
+    if (accountCompare != 0){
+      return comparisonMultiplier * accountCompare;
+    }
     Integer source1 = transaction1.get(Transaction.SPLIT_SOURCE);
     Integer source2 = transaction2.get(Transaction.SPLIT_SOURCE);
     if (source1 != null) {
       if (source2 != null) {
         if (source1.equals(source2)) {
-          int accountCompare = Utils.compare(transaction1.get(Transaction.ACCOUNT), transaction2.get(Transaction.ACCOUNT));
-          if (accountCompare == 0){
             return comparisonMultiplier * transaction1.get(Transaction.ID).compareTo(transaction2.get(Transaction.ID));
-          }
-          else {
-            return comparisonMultiplier * accountCompare;
-          }
         }
         else {
-          return comparisonMultiplier * source1.compareTo(source2);
+            return comparisonMultiplier * source1.compareTo(source2);
         }
       }
       else {
@@ -85,18 +94,6 @@ public class TransactionComparator implements Comparator<Glob> {
       }
       return comparisonMultiplier * transaction1.get(Transaction.ID).compareTo(source2);
     }
-    if (!transaction1.get(Transaction.PLANNED).equals(transaction2.get(Transaction.PLANNED))) {
-      if (transaction1.isTrue(Transaction.PLANNED)) {
-        return comparisonMultiplier;
-      }
-      else {
-        return -comparisonMultiplier;
-      }
-    }
-    int accountCompare = Utils.compare(transaction1.get(Transaction.ACCOUNT), transaction2.get(Transaction.ACCOUNT));
-    if (accountCompare == 0){
-      return comparisonMultiplier * transaction1.get(Transaction.ID).compareTo(transaction2.get(Transaction.ID));
-    }
-    return comparisonMultiplier * accountCompare;
+    return comparisonMultiplier * transaction1.get(Transaction.ID).compareTo(transaction2.get(Transaction.ID));
   }
 }
