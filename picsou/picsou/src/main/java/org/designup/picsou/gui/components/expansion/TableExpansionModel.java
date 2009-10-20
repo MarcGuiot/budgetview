@@ -29,7 +29,7 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
     for (Glob master : repository.getAll(type, getMasterMatcher())) {
       expandedMap.put(master.get(idField), isInitiallyExpanded);
     }
-    updateExpandabilities();
+    updateExpandabilities(false);
   }
 
   public void setBaseMatcher(GlobMatcher baseMatcher) {
@@ -56,14 +56,17 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
 
   public abstract boolean isExpansionDisabled(Glob glob);
 
-  private void updateExpandabilities() {
+  private void updateExpandabilities(boolean forceUpdateExpanded) {
     expandableMap.clear();
+    if (forceUpdateExpanded){
+      expandedMap.clear();
+    }
     for (Glob master : repository.getAll(type, getMasterMatcher())) {
       Integer id = master.get(idField);
       boolean expandable = hasChildren(id, repository);
       expandableMap.put(id, expandable);
-      if (!expandable) {
-        expandedMap.put(id, false);
+      if (!expandable || forceUpdateExpanded) {
+        expandedMap.put(id, expandable);
       }
     }
   }
@@ -129,7 +132,7 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
     if (!changeSet.containsCreationsOrDeletions(type)) {
       return;
     }
-    updateExpandabilities();
+    updateExpandabilities(false);
     Set<Key> createdList = changeSet.getCreated(type);
     for (Key key : createdList) {
       Glob created = repository.get(key);
@@ -146,7 +149,7 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(type)) {
-      updateExpandabilities();
+      updateExpandabilities(true);
     }
   }
 }

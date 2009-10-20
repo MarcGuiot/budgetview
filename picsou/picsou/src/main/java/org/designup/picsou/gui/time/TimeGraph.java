@@ -215,6 +215,9 @@ public class TimeGraph {
   }
 
   public Selectable getFirstSelectable() {
+    if (months.isEmpty()){
+      return null;
+    }
     return yearGraphs.get(0).getFirstMonth();
   }
 

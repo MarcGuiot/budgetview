@@ -2,7 +2,10 @@ package org.designup.picsou.model;
 
 import org.designup.picsou.server.serialization.SerializationManager;
 import org.globsframework.metamodel.GlobModel;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.utils.GlobModelBuilder;
+
+import java.util.*;
 
 public class PicsouModel {
   private static GlobModel MODEL =
@@ -37,5 +40,15 @@ public class PicsouModel {
 
   public static GlobModel get() {
     return MODEL;
+  }
+
+  public static Collection<GlobType> getUserSpecificType(){
+    Collection<GlobType> globTypeCollection = new ArrayList<GlobType>(MODEL.getAll());
+    Set<GlobType> typeNotToRemove = MODEL.getConstants().getTypes();
+    typeNotToRemove.addAll(Arrays.asList(PreTransactionTypeMatcher.TYPE, Bank.TYPE, BankEntity.TYPE,
+                                         User.TYPE, AppVersionInformation.TYPE));
+
+    globTypeCollection.removeAll(typeNotToRemove);
+    return  globTypeCollection;
   }
 }

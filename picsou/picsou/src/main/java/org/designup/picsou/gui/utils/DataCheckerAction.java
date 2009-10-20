@@ -1,14 +1,12 @@
 package org.designup.picsou.gui.utils;
 
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.MonthsToSeriesBudgetTrigger;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.annotations.Required;
-import org.globsframework.model.FieldValue;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
@@ -19,9 +17,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.List;
 
 public class DataCheckerAction extends AbstractAction {
   private GlobRepository repository;
@@ -42,76 +39,7 @@ public class DataCheckerAction extends AbstractAction {
     buf.append("Start checking\n");
     boolean hasError = false;
     try {
-      GlobList months = repository.getAll(Month.TYPE).sort(Month.ID);
-      if (months.size() == 0) {
-        buf.append("No month\n");
-        hasError = true;
-        return false;
-      }
-      int firstMonth = months.getFirst().get(Month.ID);
-      int lastMonth = months.getLast().get(Month.ID);
-
-      int currentMonth = firstMonth;
-      for (Glob glob : months) {
-        if (glob.get(Month.ID) != currentMonth) {
-          buf.append("Missing month ").append(currentMonth).append("\n");
-          hasError = true;
-        }
-        currentMonth = Month.next(currentMonth);
-      }
-
-      GlobList allSeries = repository.getAll(Series.TYPE);
-
-      for (Glob series : allSeries) {
-        try {
-          hasError |= checkNotNullable(series, buf);
-          Integer firstMonthForSeries = series.get(Series.FIRST_MONTH);
-          if (firstMonthForSeries == null) {
-            firstMonthForSeries = firstMonth;
-          }
-          Integer lastMonthForSeries = series.get(Series.LAST_MONTH);
-          if (lastMonthForSeries == null || lastMonthForSeries > lastMonth) {
-            if (firstMonthForSeries <= lastMonth) {
-              lastMonthForSeries = lastMonth;
-            }
-          }
-
-          if (firstMonthForSeries > lastMonth) {
-            continue;
-          }
-
-          hasError |= checkSeriesBudget(buf, series, firstMonthForSeries, lastMonthForSeries);
-          GlobList transactions =
-            repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.SERIES, series.get(Series.ID)));
-
-          for (Glob transaction : transactions) {
-            hasError |= checkTransactionBetweenSeriesDate(firstMonthForSeries, lastMonthForSeries, transaction, buf);
-            hasError |= checkNotNullable(transaction, buf);
-            hasError |= checkSavingsTransaction(transaction, buf);
-          }
-        }
-        catch (Throwable found) {
-          buf.append("For series ")
-            .append(series.get(Series.ID))
-            .append(series.get(Series.NAME))
-            .append("\n")
-            ;
-          StringWriter writer = new StringWriter();
-          found.printStackTrace(new PrintWriter(writer));
-          buf.append(writer.toString())
-            .append("\n");
-        }
-      }
-
-      hasError |= checkSplitedTransactions(buf);
-
-      hasError |= checkAllSeriesBudgetAreAssociated(buf);
-
-      TransactionToSeriesChecker toSeriesChecker = new TransactionToSeriesChecker(buf);
-      repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, toSeriesChecker);
-      toSeriesChecker.deletePlanned(repository);
-      hasError |= toSeriesChecker.hasError();
-
+      hasError = doCheck(buf);
       return hasError;
     }
     finally {
@@ -124,6 +52,108 @@ public class DataCheckerAction extends AbstractAction {
       dialog.show();
       Log.write(buf.toString());
     }
+  }
+
+  public boolean doCheck(StringBuilder buf) {
+    boolean hasError = false;
+    GlobList months = repository.getAll(Month.TYPE).sort(Month.ID);
+    if (months.size() == 0) {
+      buf.append("No month\n");
+      return true;
+    }
+    int firstMonth = months.getFirst().get(Month.ID);
+    int lastMonth = months.getLast().get(Month.ID);
+
+    List<Integer> monthToCreate = new ArrayList<Integer>();
+    int now = TimeService.getCurrentMonth();
+    if (firstMonth > now) {
+      firstMonth = now;
+    }
+    if (now > lastMonth){
+      lastMonth = now;
+    }
+    boolean nowFound = false;
+    int currentMonth = firstMonth;
+    Iterator<Glob> it = months.iterator();
+    Glob actual = null;
+    while (currentMonth <= lastMonth) {
+      if (actual == null && it.hasNext()) {
+        actual = it.next();
+        if (now == actual.get(Month.ID)) {
+          nowFound = true;
+        }
+      }
+      if (actual == null || actual.get(Month.ID) != currentMonth) {
+        buf.append("Missing month ").append(currentMonth).append("\n");
+        hasError = true;
+        monthToCreate.add(currentMonth);
+      }
+      else {
+        actual = null;
+      }
+      currentMonth = Month.next(currentMonth);
+    }
+
+    if (!nowFound) {
+      buf.append("Missing current month ").append(now).append("\n");
+    }
+    for (Integer monthId : monthToCreate) {
+      repository.create(Key.create(Month.TYPE, monthId));
+    }
+
+    GlobList allSeries = repository.getAll(Series.TYPE);
+
+    for (Glob series : allSeries) {
+      try {
+        hasError |= checkNotNullable(series, buf);
+        Integer firstMonthForSeries = series.get(Series.FIRST_MONTH);
+        if (firstMonthForSeries == null) {
+          firstMonthForSeries = firstMonth;
+        }
+        Integer lastMonthForSeries = series.get(Series.LAST_MONTH);
+        if (lastMonthForSeries == null || lastMonthForSeries > lastMonth) {
+          if (firstMonthForSeries <= lastMonth) {
+            lastMonthForSeries = lastMonth;
+          }
+        }
+
+        if (firstMonthForSeries > lastMonth) {
+          continue;
+        }
+
+        hasError |= checkSeriesBudget(buf, series, firstMonthForSeries, lastMonthForSeries);
+        GlobList transactions =
+          repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.SERIES, series.get(Series.ID)));
+
+        for (Glob transaction : transactions) {
+          hasError |= checkTransactionBetweenSeriesDate(firstMonthForSeries, lastMonthForSeries, transaction, buf);
+          hasError |= checkNotNullable(transaction, buf);
+          hasError |= checkSavingsTransaction(transaction, buf);
+        }
+      }
+      catch (Throwable found) {
+        buf.append("For series ")
+          .append(series.get(Series.ID))
+          .append(series.get(Series.NAME))
+          .append("\n")
+          ;
+        StringWriter writer = new StringWriter();
+        found.printStackTrace(new PrintWriter(writer));
+        buf.append(writer.toString())
+          .append("\n");
+      }
+    }
+
+    hasError |= checkSplitedTransactions(buf);
+
+    hasError |= checkAllSeriesBudgetAreAssociated(buf);
+
+    TransactionToSeriesChecker toSeriesChecker = new TransactionToSeriesChecker(buf);
+    repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, toSeriesChecker);
+    toSeriesChecker.deletePlanned(repository);
+    hasError |= toSeriesChecker.hasError();
+
+    return hasError;
   }
 
   private boolean checkSeriesBudget(StringBuilder buf, Glob series, Integer firstMonthForSeries, Integer lastMonthForSeries) {
@@ -158,18 +188,16 @@ public class DataCheckerAction extends AbstractAction {
     }
 
     for (; currentMonth <= lastMonthForSeries; currentMonth = Month.next(currentMonth)) {
-        buf.append("Missing SeriesBudget for series : ").append(series.get(Series.NAME))
-          .append(" budgetArea : ").append(series.get(Series.BUDGET_AREA))
-          .append(currentMonth).append(("\n"));
-        hasError = true;
+      buf.append("Missing SeriesBudget for series : ").append(series.get(Series.NAME))
+        .append(" budgetArea : ").append(series.get(Series.BUDGET_AREA))
+        .append(" at :").append(currentMonth).append(("\n"));
+      hasError = true;
       budgetToCreate.add(currentMonth);
     }
-    repository.startChangeSet();
     for (Integer month : budgetToCreate) {
       MonthsToSeriesBudgetTrigger.addMonth(repository, month);
     }
     repository.delete(budgetToDelete);
-    repository.completeChangeSet();
     return hasError;
   }
 

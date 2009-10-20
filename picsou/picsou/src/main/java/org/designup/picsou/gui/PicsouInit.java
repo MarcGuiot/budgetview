@@ -30,10 +30,7 @@ import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Set;
 
 public class PicsouInit {
 
@@ -74,7 +71,7 @@ public class PicsouInit {
     this.repository.addTrigger(new SeriesDeletionTrigger());
     this.repository.addTrigger(new RegistrationTrigger(directory));
     this.repository.addTrigger(new RegisterLicenseTrigger(serverAccess));
-    this.repository.addTrigger(new FutureMonthTrigger(directory));
+    this.repository.addTrigger(new MonthTrigger(directory));
     this.repository.addTrigger(new MonthsToSeriesBudgetTrigger(directory));
     this.repository.addTrigger(new IrregularSeriesBudgetCreationTrigger());
     this.repository.addTrigger(new NotImportedTransactionAccountTrigger());
@@ -115,13 +112,7 @@ public class PicsouInit {
       this.useDemoAccount = useDemoAccount;
       this.autoLogin = autoLogin;
       changeSet = new DefaultChangeSet();
-      GlobModel model = directory.get(GlobModel.class);
-      Collection<GlobType> globTypeCollection = new ArrayList<GlobType>(model.getAll());
-      Set<GlobType> typeNotToRemove = model.getConstants().getTypes();
-      typeNotToRemove.addAll(Arrays.asList(PreTransactionTypeMatcher.TYPE, Bank.TYPE, BankEntity.TYPE,
-                                           User.TYPE, AppVersionInformation.TYPE));
-
-      globTypeCollection.removeAll(typeNotToRemove);
+      Collection<GlobType> globTypeCollection = PicsouModel.getUserSpecificType();
       typesToReplace = globTypeCollection.toArray(new GlobType[globTypeCollection.size()]);
       idGenerator.reset(globTypeCollection);
 

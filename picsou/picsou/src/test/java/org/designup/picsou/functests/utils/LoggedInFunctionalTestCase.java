@@ -209,7 +209,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected void restartApplication() {
-    operations.logout();
+    operations.exit();
     mainWindow.dispose();
     mainWindow = null;
     mainWindow = getMainWindow();
@@ -234,7 +234,9 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected void changeUser(String user, String password) {
-    operations.deleteUser(this.password);
+    if (mainWindow != null){
+      operations.deleteUser(this.password);
+    }
     this.user = user;
     this.password = password;
     mainWindow = null;

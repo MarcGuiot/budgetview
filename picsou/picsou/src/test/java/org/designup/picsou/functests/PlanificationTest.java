@@ -82,6 +82,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     transactions
       .initContent()
+      .add("30/09/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant")
       .add("30/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -50.00, "Courant")
       .add("04/08/2008", TransactionType.PRELEVEMENT, "ED", "", -50.00, "Courant")
       .add("30/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")

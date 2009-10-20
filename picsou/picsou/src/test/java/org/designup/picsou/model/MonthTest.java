@@ -65,4 +65,11 @@ public class MonthTest extends TestCase {
   public void testCreateMonthWithFirst() throws Exception {
     TestUtils.assertEquals(Month.createCountMonthsWithFirst(200807, 3), 200807, 200808, 200809, 200810);
   }
+
+  public void testDistance() throws Exception {
+    assertEquals(4, Month.distance(200811, 200903));
+    assertEquals(13, Month.distance(200811, 200912));
+    assertEquals(-4, Month.distance(200903, 200811));
+    assertEquals(-13, Month.distance(200912, 200811));
+  }
 }

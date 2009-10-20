@@ -7,6 +7,7 @@ import org.designup.picsou.client.http.PasswordBasedEncryptor;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
 import org.designup.picsou.model.User;
+import org.designup.picsou.model.PicsouModel;
 import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.server.persistence.direct.ReadOnlyAccountDataManager;
 import org.globsframework.metamodel.GlobModel;
@@ -92,7 +93,6 @@ public class BackupService {
       }, serverData, readPasswordBasedEncryptor, globModel);
     }
     catch (Exception e) {
-      Log.write("decrypt failed : ", e);
       return Status.decryptFail;
     }
 
@@ -117,8 +117,9 @@ public class BackupService {
     try {
       repository.startChangeSet();
       repository.addTriggerAtFirst(upgradeTrigger);
-      Collection<GlobType> serverTypes = userData.getTypes();
-      repository.reset(userData, serverTypes.toArray(new GlobType[serverTypes.size()]));
+
+      Collection<GlobType> globTypeCollection = PicsouModel.getUserSpecificType();
+      repository.reset(userData, globTypeCollection.toArray(new GlobType[globTypeCollection.size()]));
     }
     finally {
       repository.completeChangeSet();

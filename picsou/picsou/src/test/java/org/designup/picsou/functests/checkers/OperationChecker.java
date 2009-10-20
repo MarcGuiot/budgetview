@@ -168,6 +168,27 @@ public class OperationChecker {
       .run();
   }
 
+  public void restoreWithNewPassword(String filePath, final String password){
+    WindowInterceptor.init(getRestoreTrigger())
+      .process(FileChooserHandler.init().select(filePath))
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          PasswordDialogChecker dialog = new PasswordDialogChecker(window);
+          dialog.checkTitle("Secure backup");
+          dialog.setPassword(password);
+          return dialog.getOkTrigger();
+        }
+      })
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          MessageFileDialogChecker dialog = new MessageFileDialogChecker(window);
+          dialog.checkMessageContains("Restore done");
+          return dialog.getOkTrigger();
+        }
+      })
+      .run();
+  }
+
   public Trigger getRestoreTrigger() {
     MenuItem fileMenu = window.getMenuBar().getMenu("File");
     return fileMenu.getSubMenu("Restore").triggerClick();

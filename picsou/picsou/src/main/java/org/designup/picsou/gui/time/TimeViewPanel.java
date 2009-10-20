@@ -335,7 +335,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
                               getFontMetrics(colors.getMonthFont()), this);
     timeGraph.init(getWidth());
     GlobList selectedMonth = selectionService.getSelection(Month.TYPE);
-    GlobList stillThere = new GlobList();
+    final GlobList stillThere = new GlobList();
     for (Glob glob : list) {
       if (selectedMonth.remove(glob)) {
         stillThere.add(glob);
@@ -345,7 +345,13 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       selectionService.clear(Month.TYPE);
     }
     else {
-      selectionService.select(stillThere, Month.TYPE);
+      if (!stillThere.equals(selectionService.getSelection(Month.TYPE))) {
+      repository.invokeAfterChangeSet(new GlobRepository.InvokeAction(){
+        public void run() {
+          selectionService.select(stillThere, Month.TYPE);
+        }
+      });
+      }
     }
   }
 

@@ -69,4 +69,10 @@ public interface GlobRepository extends ReadOnlyGlobRepository {
   Integer getNextId(IntegerField field, int count);
 
   GlobIdGenerator getIdGenerator();
+
+  interface InvokeAction{
+    void run();
+  }
+
+  void invokeAfterChangeSet(InvokeAction action);
 }

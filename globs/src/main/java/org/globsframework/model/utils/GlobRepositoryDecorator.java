@@ -179,4 +179,8 @@ public class GlobRepositoryDecorator implements GlobRepository {
   public GlobIdGenerator getIdGenerator() {
     return repository.getIdGenerator();
   }
+
+  public void invokeAfterChangeSet(InvokeAction action) {
+    getRepository().invokeAfterChangeSet(action);
+  }
 }

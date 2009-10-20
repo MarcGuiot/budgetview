@@ -151,8 +151,8 @@ public class LicenseActivationDialog {
         return;
       }
       Utils.endRemove();
-      localRepository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_IN_PROGRESS);
       if (checkContainsValidChange()) {
+        localRepository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_IN_PROGRESS);
         connectionState.setIndeterminate(true);
         connectionState.setVisible(true);
         localRepository.commitChanges(false);

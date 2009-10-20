@@ -91,6 +91,7 @@ public class PicsouApplication {
   private AbstractAction mrjDocumentListener;
 
   static {
+    ExceptionHandler.registerHandler();
     PicsouMacLookAndFeel.initApplicationName();
     Gui.init();
   }
@@ -195,8 +196,6 @@ public class PicsouApplication {
 
     initLogger();
     clearRepositoryIfNeeded();
-
-    ExceptionHandler.registerHandler();
 
     directory = createDirectory(openRequestManager);
 

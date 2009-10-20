@@ -6,16 +6,13 @@ import org.designup.picsou.functests.checkers.PasswordDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
-import org.designup.picsou.server.persistence.direct.DirectAccountDataManager;
-import org.designup.picsou.server.persistence.direct.ReadOnlyAccountDataManager;
 import org.designup.picsou.server.model.SerializableGlobType;
+import org.designup.picsou.server.persistence.direct.ReadOnlyAccountDataManager;
 import org.globsframework.utils.Files;
-import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.MapOfMaps;
+import org.globsframework.utils.TestUtils;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
-import org.uispec4j.Key;
-import org.uispec4j.utils.KeyUtils;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
@@ -310,4 +307,34 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
       })
       .run();
   }
+
+  public void testSeriesEvolutionAfterRestore() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    OfxBuilder.init(this)
+      .addTransaction("2008/05/01", 1000.00, "Salaire")
+      .addTransaction("2008/05/01", -1000.00, "Loyer")
+      .addTransaction("2008/06/02", 1000.00, "Salaire")
+      .addTransaction("2008/06/02", -1000.00, "Loyer")
+      .addTransaction("2008/07/01", 1000.00, "Salaire")
+      .addTransaction("2008/07/01", -1000.00, "Loyer")
+      .addTransaction("2008/08/06", 1000.00, "Salaire")
+      .addTransaction("2008/08/06", -1000.00, "Loyer")
+      .load();
+    views.selectCategorization();
+    categorization.setNewIncome("Salaire", "Salaire");
+    categorization.setNewEnvelope("Loyer", "Loyer");
+    String path = operations.backup(this);
+
+    operations.exit();
+    setCurrentDate("2009/02/03");
+    resetWindow();
+
+    changeUser("testSeriesEvolutionAfterRestore", "testSeriesEvolutionAfterRestore");
+    operations.restoreWithNewPassword(path, "password");
+
+    views.selectEvolution();
+    seriesEvolution.checkRow("Salaire", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00");
+    operations.checkOk();
+  }
+
 }

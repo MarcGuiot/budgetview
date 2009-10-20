@@ -232,6 +232,24 @@ public class Month {
     return true;
   }
 
+  public static int distance(int from, int to) {
+    int distance = 0;
+    if (from <= to){
+      while (from < to){
+        from = next(from);
+        distance++;
+      }
+      return distance;
+    }
+    else {
+      while (from > to){
+        from = previous(from);
+        distance--;
+      }
+      return distance;
+    }
+  }
+
   private static class RangeIterator implements Iterator<Integer> {
     private int current;
     private int max;

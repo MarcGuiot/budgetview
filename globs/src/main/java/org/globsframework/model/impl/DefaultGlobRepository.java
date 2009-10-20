@@ -38,6 +38,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
   private GlobIdGenerator idGenerator = GlobIdGenerator.NONE;
 
   private IndexManager indexManager;
+  private List<InvokeAction> actions = new ArrayList<InvokeAction>();
 
   public DefaultGlobRepository() {
     indexManager = new IndexManager(this);
@@ -573,6 +574,10 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     return idGenerator;
   }
 
+  public void invokeAfterChangeSet(InvokeAction action) {
+    actions.add(action);
+  }
+
   public void add(GlobList globs) {
     for (Glob glob : globs) {
       add(glob);
@@ -646,6 +651,10 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       listener.globsChanged(currentChangeSetToDispatch, this);
     }
     pendingDeletions.clear();
+    for (InvokeAction action : actions) {
+      action.run();
+    }
+    actions.clear();
   }
 
   public void addTrigger(ChangeSetListener trigger) {
