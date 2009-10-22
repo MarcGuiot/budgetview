@@ -23,6 +23,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
+import org.globsframework.utils.exceptions.InvalidState;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -224,7 +225,7 @@ public class MainWindow implements WindowManager {
     }
 
     public void displayErrorText(String message) {
-      loginPanel.displayErrorMessage(message);
+      loginPanel.displayErrorText(message);
     }
   }
 
@@ -330,7 +331,7 @@ public class MainWindow implements WindowManager {
           }
         });
       }
-      catch (final InvalidData e) {
+      catch (final InvalidState e) {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
             feedbackLoadingData.displayErrorText(e.getMessage());

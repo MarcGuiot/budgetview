@@ -17,6 +17,10 @@
     <name>cashpilot.exe.dir</name>
     <value>${EXECUTABLEPATH}</value>
   </javaProperties>
+  <javaProperties>
+    <name>sun.awt.exception.handler</name>
+    <value>picsou.AwtExceptionHandler</value>
+  </javaProperties>
   <mainClassName>com.cashpilot.Main</mainClassName>
   <maximumMemoryHeap>134217728</maximumMemoryHeap>
   <maximumVersion></maximumVersion>

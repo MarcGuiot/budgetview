@@ -30,10 +30,7 @@ import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.utils.DumpDataAction;
-import org.designup.picsou.gui.utils.DataCheckerAction;
-import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.ThrowExceptionAction;
+import org.designup.picsou.gui.utils.*;
 import org.designup.picsou.gui.notes.NotesView;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.model.Month;
@@ -79,6 +76,7 @@ public class MainPanel {
   private SeriesView seriesView;
   private DataCheckerAction checkRepository;
   private ThrowExceptionAction throwException;
+  private ThrowInRepoExceptionAction throwInRepoException;
   private JMenuBar menuBar;
   private JPanel panel;
   private TimeView timeView;
@@ -125,6 +123,7 @@ public class MainPanel {
     dumpRepository = new DumpDataAction(repository);
     checkRepository = new DataCheckerAction(repository, directory);
     throwException = new ThrowExceptionAction();
+    throwInRepoException = new ThrowInRepoExceptionAction(repository);
     exitAction = new ExitAction(directory);
     gotoLoginAction = new GotoLoginAction(this);
     deleteUserAction = new DeleteUserAction(this, repository, directory);
@@ -262,6 +261,7 @@ public class MainPanel {
     editMenu.add(dumpRepository);
     editMenu.add(checkRepository);
     editMenu.add(throwException);
+    editMenu.add(throwInRepoException);
 //    Utils.endRemove();
 
     JRootPane rootPane = frame.getRootPane();

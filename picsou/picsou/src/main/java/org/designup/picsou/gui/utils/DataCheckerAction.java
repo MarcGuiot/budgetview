@@ -56,22 +56,43 @@ public class DataCheckerAction extends AbstractAction {
 
   public boolean doCheck(StringBuilder buf) {
     boolean hasError = false;
+
+    ExtractMonthFromTransaction extractMonthFromTransaction = new ExtractMonthFromTransaction();
+    repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, extractMonthFromTransaction);
+
+
     GlobList months = repository.getAll(Month.TYPE).sort(Month.ID);
     if (months.size() == 0) {
       buf.append("No month\n");
       return true;
     }
+
+    // on recupere les premier et dernier mois par rapport au transaction.
     int firstMonth = months.getFirst().get(Month.ID);
     int lastMonth = months.getLast().get(Month.ID);
+    if (firstMonth > extractMonthFromTransaction.getFirstMonthForTransaction()) {
+      buf.append("Mising first month ").append(extractMonthFromTransaction.getFirstMonthForTransaction());
+      firstMonth = extractMonthFromTransaction.getFirstMonthForTransaction();
+      hasError = true;
+    }
+    if (lastMonth < extractMonthFromTransaction.getLastMonthForTransaction()) {
+      buf.append("Mising last month ").append(extractMonthFromTransaction.getLastMonthForTransaction());
+      lastMonth = extractMonthFromTransaction.getLastMonthForTransaction();
+      hasError = true;
+    }
 
     List<Integer> monthToCreate = new ArrayList<Integer>();
+
+    // Pour s'assurer que le mois courant est bien dans la liste des mois.
     int now = TimeService.getCurrentMonth();
     if (firstMonth > now) {
       firstMonth = now;
     }
-    if (now > lastMonth){
+    if (now > lastMonth) {
       lastMonth = now;
     }
+
+    // on parcourt les mois pour s'assurer de leur continuité.
     boolean nowFound = false;
     int currentMonth = firstMonth;
     Iterator<Glob> it = months.iterator();
@@ -101,13 +122,15 @@ public class DataCheckerAction extends AbstractAction {
       repository.create(Key.create(Month.TYPE, monthId));
     }
 
+    // pour chaque series
     GlobList allSeries = repository.getAll(Series.TYPE);
 
     for (Glob series : allSeries) {
       try {
         hasError |= checkNotNullable(series, buf);
+
         Integer firstMonthForSeries = series.get(Series.FIRST_MONTH);
-        if (firstMonthForSeries == null) {
+        if (firstMonthForSeries == null || firstMonthForSeries < firstMonth) {
           firstMonthForSeries = firstMonth;
         }
         Integer lastMonthForSeries = series.get(Series.LAST_MONTH);
@@ -117,13 +140,33 @@ public class DataCheckerAction extends AbstractAction {
           }
         }
 
+        // On verifie que les dates de debut/fin de series sont bien dans les bornes des transactions
+        // associé a la serie
+        ExtractMonthFromTransaction monthFromTransaction = new ExtractMonthFromTransaction();
+        repository.safeApply(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.SERIES, series.get(Series.ID)),
+                             monthFromTransaction);
+
+        if (monthFromTransaction.getFirstMonthForTransaction() < firstMonthForSeries) {
+          firstMonthForSeries = monthFromTransaction.getFirstMonthForTransaction();
+          repository.update(series.getKey(), Series.FIRST_MONTH, firstMonthForSeries);
+          Log.write("Bad begin of series, updated to " + firstMonthForSeries);
+          hasError = true;
+        }
+        if (monthFromTransaction.getLastMonthForTransaction() > lastMonthForSeries) {
+          lastMonthForSeries = monthFromTransaction.getLastMonthForTransaction();
+          repository.update(series.getKey(), Series.LAST_MONTH, lastMonthForSeries);
+          Log.write("Bad end of series, updated to " + lastMonthForSeries);
+          hasError = true;
+        }
+
         if (firstMonthForSeries > lastMonth) {
           continue;
         }
 
         hasError |= checkSeriesBudget(buf, series, firstMonthForSeries, lastMonthForSeries);
         GlobList transactions =
-          repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.SERIES, series.get(Series.ID)));
+          repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID))
+            .getGlobs();
 
         for (Glob transaction : transactions) {
           hasError |= checkTransactionBetweenSeriesDate(firstMonthForSeries, lastMonthForSeries, transaction, buf);
@@ -132,6 +175,7 @@ public class DataCheckerAction extends AbstractAction {
         }
       }
       catch (Throwable found) {
+        found.printStackTrace();
         buf.append("For series ")
           .append(series.get(Series.ID))
           .append(series.get(Series.NAME))
@@ -167,24 +211,38 @@ public class DataCheckerAction extends AbstractAction {
 
     GlobList budgetToDelete = new GlobList();
     java.util.List<Integer> budgetToCreate = new ArrayList<Integer>();
-    for (Glob budget : seriesBudgets) {
-      if (budget.get(SeriesBudget.MONTH) != currentMonth) {
-        buf.append("SeriesBudget error for series : ")
-          .append(series.get(Series.NAME)).append(" budgetArea : ")
-          .append(series.get(Series.BUDGET_AREA)).append(" got ")
-          .append(budget.get(SeriesBudget.MONTH)).append(" but expect ").append(currentMonth).append("\n");
+    Glob budget = null;
+    Iterator<Glob> iterator = seriesBudgets.iterator();
+
+    while (currentMonth <= lastMonthForSeries) {
+      if (budget == null && iterator.hasNext()) {
+        budget = iterator.next();
+        hasError |= checkNotNullable(budget, buf);
+      }
+      if (budget == null || budget.get(SeriesBudget.MONTH) != currentMonth) {
         hasError = true;
-        if (budget.get(SeriesBudget.MONTH) < currentMonth) {
+        if (budget != null && budget.get(SeriesBudget.MONTH) < currentMonth) {
           budgetToDelete.add(budget);
+          budget = null;
+          buf.append("Deleting SeriesBudget for series : ").append(series.get(Series.NAME))
+            .append(" at :").append(currentMonth).append(("\n"));
         }
         else {
           budgetToCreate.add(currentMonth);
+          buf.append("Adding SeriesBudget for series : ").append(series.get(Series.NAME))
+            .append(" at :").append(currentMonth).append(("\n"));
+          currentMonth = Month.next(currentMonth);
         }
-        continue;
       }
-      currentMonth = Month.next(currentMonth);
-
-      checkNotNullable(budget, buf);
+      else {
+        budget = null;
+        currentMonth = Month.next(currentMonth);
+      }
+    }
+    for (; iterator.hasNext(); budget = iterator.next()) {
+      if (budget != null) {
+        budgetToDelete.add(budget);
+      }
     }
 
     for (; currentMonth <= lastMonthForSeries; currentMonth = Month.next(currentMonth)) {
@@ -274,16 +332,17 @@ public class DataCheckerAction extends AbstractAction {
   }
 
   private boolean checkNotNullable(Glob glob, StringBuilder buf) {
+    boolean hasError = false;
     Field[] fields = glob.getType().getFields();
     for (Field field : fields) {
       if (field.hasAnnotation(Required.class)) {
         if (glob.getValue(field) == null) {
-          buf.append(field).append(" should not be null");
-          return true;
+          buf.append(field).append(" should not be null\n");
+          hasError = true;
         }
       }
     }
-    return false;
+    return hasError;
   }
 
   private static class TransactionToSeriesChecker implements GlobFunctor {
@@ -322,6 +381,33 @@ public class DataCheckerAction extends AbstractAction {
 
     public boolean hasError() {
       return hasError;
+    }
+  }
+
+  private static class ExtractMonthFromTransaction implements GlobFunctor {
+    int firstMonthForTransaction = Integer.MAX_VALUE;
+    int lastMonthForTransaction = Integer.MIN_VALUE;
+
+    public void run(Glob glob, GlobRepository repository) throws Exception {
+      addMonth(glob.get(Transaction.MONTH));
+      addMonth(glob.get(Transaction.BANK_MONTH));
+    }
+
+    void addMonth(Integer month) {
+      if (month > lastMonthForTransaction) {
+        lastMonthForTransaction = month;
+      }
+      if (month < firstMonthForTransaction) {
+        firstMonthForTransaction = month;
+      }
+    }
+
+    public int getFirstMonthForTransaction() {
+      return firstMonthForTransaction;
+    }
+
+    public int getLastMonthForTransaction() {
+      return lastMonthForTransaction;
     }
   }
 }

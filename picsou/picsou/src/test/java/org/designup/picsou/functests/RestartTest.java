@@ -1,11 +1,17 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.CategorizationGaugeChecker;
+import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Dates;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
+import java.nio.ByteBuffer;
 
 public class RestartTest extends LoggedInFunctionalTestCase {
 
@@ -514,4 +520,56 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkAccount("Account n. 222", 1000.00, "2008/08/10");
   }
+
+  public void testCorrupt() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    OfxBuilder.init(this)
+      .addTransaction("2008/05/01", 1000.00, "Salaire")
+      .addTransaction("2008/05/01", -1000.00, "Loyer")
+      .addTransaction("2008/06/02", 1000.00, "Salaire")
+      .addTransaction("2008/06/02", -1000.00, "Loyer")
+      .addTransaction("2008/07/01", 1000.00, "Salaire")
+      .addTransaction("2008/07/01", -1000.00, "Loyer")
+      .addTransaction("2008/08/06", 1000.00, "Salaire")
+      .addTransaction("2008/08/06", -1000.00, "Loyer")
+      .load();
+    views.selectCategorization();
+    categorization.setNewIncome("Salaire", "Salaire");
+    categorization.setNewEnvelope("Loyer", "Loyer");
+
+    operations.exit();
+    File file = new File(getLocalPrevaylerPath(), "data");
+    String[] subFiles = file.list();
+    for (String fileName : subFiles) {
+      if (fileName.matches("[0-9]+")){
+        File file1 = new File(file, fileName);
+        for (File journal : file1.listFiles()) {
+          long size = journal.length();
+          FileOutputStream fileOutputStream = new FileOutputStream(journal, true);
+          FileChannel channel = fileOutputStream.getChannel();
+          byte[] bytes = "Corruption".getBytes();
+          channel.write(ByteBuffer.wrap(bytes), size - 10);
+          channel.close();
+        }
+      }
+    }
+
+    mainWindow = null;
+    mainWindow = getMainWindow();
+    LoginChecker loginChecker = new LoginChecker(mainWindow);
+    loginChecker.enterUserAndPassword(user, password);
+    try {
+      loginChecker.clickEnter().checkErrorMessage("data.load.error.journal");
+    }
+    finally {
+      operations.exit();
+      operations = null;
+      mainWindow = null;
+    }
+
+//    views.selectEvolution();
+//    seriesEvolution.checkRow("Salaire", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00");
+//    operations.checkOk();
+  }
+
 }

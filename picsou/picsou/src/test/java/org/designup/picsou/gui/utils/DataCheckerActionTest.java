@@ -6,12 +6,11 @@ import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.model.Key;
 import org.globsframework.model.FieldValue;
 import org.globsframework.utils.directory.DefaultDirectory;
-import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.Dates;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.model.*;
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.client.ServerAccess;
 
 public class DataCheckerActionTest extends TestCase {
   private DefaultGlobRepository repository;
@@ -22,6 +21,14 @@ public class DataCheckerActionTest extends TestCase {
     TimeService.setCurrentDate(Dates.parse("2009/10/10"));
     repository = new DefaultGlobRepository(new DefaultGlobIdGenerator());
     directory = new DefaultDirectory();
+    TimeService timeService = new TimeService();
+    directory.add(TimeService.class, timeService);
+    repository.create(CurrentMonth.KEY,
+                      FieldValue.value(CurrentMonth.LAST_TRANSACTION_MONTH, timeService.getCurrentMonthId()),
+                      FieldValue.value(CurrentMonth.LAST_TRANSACTION_DAY, 1));
+    repository.create(Account.MAIN_SUMMARY_KEY);
+    repository.create(Account.ALL_SUMMARY_KEY);
+    repository.create(Account.SAVINGS_SUMMARY_KEY);
   }
 
   protected void tearDown() throws Exception {
@@ -64,7 +71,7 @@ public class DataCheckerActionTest extends TestCase {
                       FieldValue.value(Series.FIRST_MONTH, 200906),
                       FieldValue.value(Series.LAST_MONTH, 201001),
                       FieldValue.value(Series.DAY, 1));
-    doCheck("Missing SeriesBudget ");
+    doCheck("Adding SeriesBudget ");
   }
 
   public void testMissingSeries() throws Exception {
@@ -74,15 +81,78 @@ public class DataCheckerActionTest extends TestCase {
                       FieldValue.value(SeriesBudget.DAY, 1),
                       FieldValue.value(SeriesBudget.SERIES, 1233),
                       FieldValue.value(SeriesBudget.AMOUNT, 9.));
-    doCheck("Missing series 123");
+    doCheck("Missing series 1233");
   }
 
-  private void doCheck(final String expectedError) {
+  public void testBadEndOfSeries() throws Exception {
+    createMonth(200906, 200907, 200908, 200909, 200910);
+    repository.create(Series.TYPE, FieldValue.value(Series.ID, 123),
+                      FieldValue.value(Series.NAME, "telecom"),
+                      FieldValue.value(Series.BUDGET_AREA, BudgetArea.ENVELOPES.getId()),
+                      FieldValue.value(Series.FIRST_MONTH, 200905),
+                      FieldValue.value(Series.LAST_MONTH, 200908));
+
+    createTransaction(200909);
+
+    createSeriesBudget(200907);
+    doCheck("Adding SeriesBudget for");
+  }
+
+  public void testErrorOnSeriesBudgetBefore() throws Exception {
+    createMonth(200906, 200907, 200908, 200909, 200910);
+    repository.create(Series.TYPE, FieldValue.value(Series.ID, 123),
+                      FieldValue.value(Series.NAME, "telecom"),
+                      FieldValue.value(Series.BUDGET_AREA, BudgetArea.ENVELOPES.getId()),
+                      FieldValue.value(Series.FIRST_MONTH, 200905),
+                      FieldValue.value(Series.LAST_MONTH, 200908));
+
+    createSeriesBudget(200905);
+    createSeriesBudget(200911);
+    doCheck("Deleting SeriesBudget", "Adding SeriesBudget");
+  }
+
+  public void testMissingSeriesBudgetAndMonth() throws Exception {
+    createMonth(200906, 200907, 200908, 200910);
+    repository.create(Series.TYPE, FieldValue.value(Series.ID, 123),
+                      FieldValue.value(Series.NAME, "telecom"),
+                      FieldValue.value(Series.BUDGET_AREA, BudgetArea.ENVELOPES.getId()),
+                      FieldValue.value(Series.FIRST_MONTH, 200905),
+                      FieldValue.value(Series.LAST_MONTH, 2009010));
+
+    createSeriesBudget(200905);
+    createSeriesBudget(200911);
+    doCheck("Deleting SeriesBudget", "Adding SeriesBudget", "Missing month 200909");
+  }
+
+  private void createSeriesBudget(final int monthId) {
+    repository.create(SeriesBudget.TYPE,
+                      FieldValue.value(SeriesBudget.MONTH, monthId),
+                      FieldValue.value(SeriesBudget.DAY, 1),
+                      FieldValue.value(SeriesBudget.ACTIVE, true),
+                      FieldValue.value(SeriesBudget.SERIES, 123),
+                      FieldValue.value(SeriesBudget.AMOUNT, 9.));
+  }
+
+  private void createTransaction(final int monthId) {
+    repository.create(Transaction.TYPE, FieldValue.value(Transaction.SERIES, 123),
+                      FieldValue.value(Transaction.MONTH, monthId),
+                      FieldValue.value(Transaction.DAY, 1),
+                      FieldValue.value(Transaction.BANK_MONTH, monthId),
+                      FieldValue.value(Transaction.BANK_DAY, 1),
+                      FieldValue.value(Transaction.AMOUNT, 100.),
+                      FieldValue.value(Transaction.ACCOUNT, -1),
+                      FieldValue.value(Transaction.TRANSACTION_TYPE, TransactionType.DEPOSIT.getId()));
+  }
+
+  private void doCheck(final String ...expectedError) {
+    PicsouInit.initTriggerRepository(ServerAccess.NULL, directory, repository);
     DataCheckerAction checkerAction = new DataCheckerAction(repository, directory);
     StringBuilder builder = new StringBuilder();
     assertTrue(checkerAction.doCheck(builder));
     String s = builder.toString();
-    assertTrue(s, s.contains(expectedError));
+    for (String error : expectedError) {
+      assertTrue(s, s.contains(error));
+    }
     assertFalse(checkerAction.doCheck(new StringBuilder()));
   }
 }

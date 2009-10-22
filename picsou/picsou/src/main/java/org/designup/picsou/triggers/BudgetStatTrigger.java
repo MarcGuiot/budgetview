@@ -66,7 +66,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
       }
 
       Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
-      if (!account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+      if (account == null || !account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
         return;
       }
 

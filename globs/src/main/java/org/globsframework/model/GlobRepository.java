@@ -5,7 +5,6 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.utils.GlobIdGenerator;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.exceptions.*;
 
 public interface GlobRepository extends ReadOnlyGlobRepository {
@@ -70,7 +69,7 @@ public interface GlobRepository extends ReadOnlyGlobRepository {
 
   GlobIdGenerator getIdGenerator();
 
-  interface InvokeAction{
+  interface InvokeAction {
     void run();
   }
 

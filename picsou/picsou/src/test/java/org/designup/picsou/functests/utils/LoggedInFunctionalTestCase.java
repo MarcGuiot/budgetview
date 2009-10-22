@@ -7,14 +7,8 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.AccountType;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.model.utils.GlobRepositoryValidator;
 import org.globsframework.utils.Dates;
-import org.globsframework.metamodel.GlobModel;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
@@ -54,8 +48,8 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   static public String SOCIETE_GENERALE = "Société Générale";
   private boolean notRegistered = false;
-  private String password = "password";
-  private String user = "anonymous";
+  protected String user = "anonymous";
+  protected String password = "password";
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -136,7 +130,9 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
 //    operations.checkOk();
     try {
-      operations.deleteUser(password);
+      if (operations != null) {
+        operations.deleteUser(password);
+      }
     }
     catch (Throwable e) {
       try {
@@ -244,5 +240,9 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     LoginChecker loginChecker = new LoginChecker(mainWindow);
     loginChecker.logNewUser(user, password);
     initCheckers();
+  }
+
+  public String getLocalPrevaylerPath() {
+    return localPrevaylerPath;
   }
 }

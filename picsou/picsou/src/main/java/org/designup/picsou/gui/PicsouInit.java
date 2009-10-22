@@ -8,7 +8,8 @@ import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.series.view.SeriesWrapperUpdateTrigger;
 import org.designup.picsou.gui.startup.BackupService;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
-import picsou.ExceptionHandler;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import picsou.AwtExceptionHandler;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
@@ -17,11 +18,8 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.model.ChangeSet;
 import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
@@ -29,8 +27,12 @@ import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
+import org.globsframework.utils.Log;
 
+import javax.swing.*;
 import java.util.Collection;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class PicsouInit {
 
@@ -50,7 +52,7 @@ public class PicsouInit {
 
     idGenerator = new DefaultGlobIdGenerator();
     this.repository =
-      GlobRepositoryBuilder.init(idGenerator)
+      GlobRepositoryBuilder.init(idGenerator, new OnExceptionRunnable())
         .add(directory.get(GlobModel.class).getConstants())
         .get();
 
@@ -61,31 +63,13 @@ public class PicsouInit {
                             value(AppVersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
                             value(AppVersionInformation.LATEST_AVALAIBLE_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION));
 
-    ExceptionHandler.setRepository(repository, directory);
+    AwtExceptionHandler.setRepository(repository, directory);
 
     this.repository.addChangeListener(new ServerChangeSetListener(serverAccess));
 
     upgradeTrigger = new UpgradeTrigger(directory);
-    this.repository.addTrigger(new CurrentMonthTrigger());
-    this.repository.addTrigger(new SeriesRenameTrigger());
-    this.repository.addTrigger(new SeriesDeletionTrigger());
-    this.repository.addTrigger(new RegistrationTrigger(directory));
-    this.repository.addTrigger(new RegisterLicenseTrigger(serverAccess));
-    this.repository.addTrigger(new MonthTrigger(directory));
-    this.repository.addTrigger(new MonthsToSeriesBudgetTrigger(directory));
-    this.repository.addTrigger(new IrregularSeriesBudgetCreationTrigger());
-    this.repository.addTrigger(new NotImportedTransactionAccountTrigger());
-    this.repository.addTrigger(new ObservedSeriesStatTrigger());
-    this.repository.addTrigger(new PastTransactionUpdateSeriesBudgetTrigger());
-    this.repository.addTrigger(new TransactionPlannedTrigger());
-    this.repository.addTrigger(new ImportedToNotImportedAccountTransactionTrigger());
-    this.repository.addTrigger(new UpdateAccountOnTransactionDelete());
-    this.repository.addTrigger(new PositionTrigger());
-    this.repository.addTrigger(new PlannedSeriesStatTrigger());
-    this.repository.addTrigger(new SeriesStatSummaryTrigger());
-    this.repository.addTrigger(new BudgetStatTrigger());
-    this.repository.addTrigger(new SavingsBudgetStatTrigger());
-    this.repository.addTrigger(new SeriesWrapperUpdateTrigger());
+    initTriggerRepository(serverAccess, directory, this.repository);
+    repository.addTrigger(new SeriesWrapperUpdateTrigger());
 
     initDirectory(this.repository);
 
@@ -93,6 +77,28 @@ public class PicsouInit {
       directory.get(TransactionAnalyzerFactory.class)
         .load(this.getClass().getClassLoader(), PicsouApplication.BANK_CONFIG_VERSION, repository);
     }
+  }
+
+  public static void initTriggerRepository(ServerAccess serverAccess, Directory directory, final GlobRepository repository) {
+    repository.addTrigger(new CurrentMonthTrigger());
+    repository.addTrigger(new SeriesRenameTrigger());
+    repository.addTrigger(new SeriesDeletionTrigger());
+    repository.addTrigger(new RegistrationTrigger(directory));
+    repository.addTrigger(new RegisterLicenseTrigger(serverAccess));
+    repository.addTrigger(new MonthTrigger(directory));
+    repository.addTrigger(new MonthsToSeriesBudgetTrigger(directory));
+    repository.addTrigger(new IrregularSeriesBudgetCreationTrigger());
+    repository.addTrigger(new NotImportedTransactionAccountTrigger());
+    repository.addTrigger(new ObservedSeriesStatTrigger());
+    repository.addTrigger(new PastTransactionUpdateSeriesBudgetTrigger());
+    repository.addTrigger(new TransactionPlannedTrigger());
+    repository.addTrigger(new ImportedToNotImportedAccountTransactionTrigger());
+    repository.addTrigger(new UpdateAccountOnTransactionDelete());
+    repository.addTrigger(new PositionTrigger());
+    repository.addTrigger(new PlannedSeriesStatTrigger());
+    repository.addTrigger(new SeriesStatSummaryTrigger());
+    repository.addTrigger(new BudgetStatTrigger());
+    repository.addTrigger(new SavingsBudgetStatTrigger());
   }
 
   public PreLoadData loadUserData(String user, boolean useDemoAccount, boolean autoLogin) {
@@ -182,4 +188,19 @@ public class PicsouInit {
     return repository;
   }
 
+  private  class OnExceptionRunnable implements ExceptionHandler {
+
+    public void onException(Throwable ex) {
+      JFrame jFrame = directory.find(JFrame.class);
+      StringWriter writer = new StringWriter();
+      PrintWriter s = new PrintWriter(writer);
+      ex.printStackTrace(s);
+      s.flush();
+      Log.write(ex.getMessage(), ex);
+      MessageDialog dialog = new MessageDialog("exception.title", "exception.content", jFrame, directory, ex.getMessage(),
+                                               writer.toString());
+      dialog.show();
+      System.exit(10);
+    }
+  }
 }

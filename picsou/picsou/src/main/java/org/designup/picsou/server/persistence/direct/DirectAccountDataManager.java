@@ -6,6 +6,7 @@ import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.server.model.ServerDelta;
 import org.designup.picsou.server.persistence.prevayler.AccountDataManager;
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.MapOfMaps;
 import org.globsframework.utils.MultiMap;
@@ -13,6 +14,7 @@ import org.globsframework.utils.Files;
 import org.globsframework.utils.exceptions.EOFIOFailure;
 import org.globsframework.utils.exceptions.IOFailure;
 import org.globsframework.utils.exceptions.InvalidState;
+import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
@@ -106,13 +108,16 @@ public class DirectAccountDataManager implements AccountDataManager {
           SerializedInputOutputFactory.init(inputStream);
         long readVersion = readJournalVersion(serializedInput);
         if (readVersion != version) {
-          throw new InvalidState("error while reading journal file");
+          throw new InvalidState("Error while reading journal file. Latest version is " + version + ", read version is" + readVersion);
         }
         MultiMap<String, ServerDelta> map = SerializableDeltaGlobSerializer.deserialize(serializedInput);
         if (version >= snapshotVersion) {
           ReadOnlyAccountDataManager.apply(globs, map);
         }
         version++;
+      }
+      catch (InvalidData ex){
+        throw new InvalidState(Lang.get("data.load.error.journal", version), ex);
       }
       catch (EOFIOFailure e) {
         try {

@@ -8,11 +8,11 @@ import org.designup.picsou.gui.utils.DataCheckerAction;
 // attention cette classe est référencée dans picsou_exe_gen.jsmooth
 
 
-public class ExceptionHandler {
+public class AwtExceptionHandler {
   private static GlobRepository repository;
   private static Directory directory;
 
-  public ExceptionHandler() {
+  public AwtExceptionHandler() {
   }
 
   public void handle(Throwable exception) {
@@ -24,11 +24,11 @@ public class ExceptionHandler {
   }
 
   public static void setRepository(GlobRepository repository, Directory directory) {
-    ExceptionHandler.repository = repository;
-    ExceptionHandler.directory = directory;
+    AwtExceptionHandler.repository = repository;
+    AwtExceptionHandler.directory = directory;
   }
 
   public static void registerHandler() {
-    System.setProperty("sun.awt.exception.handler", ExceptionHandler.class.getName());
+    System.setProperty("sun.awt.exception.handler", AwtExceptionHandler.class.getName());
   }
 }

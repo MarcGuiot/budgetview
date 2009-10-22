@@ -324,8 +324,9 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("Salaire", "Salaire");
     categorization.setNewEnvelope("Loyer", "Loyer");
     String path = operations.backup(this);
-
-    operations.exit();
+    
+    operations.deleteUser(password);
+    mainWindow.dispose();
     setCurrentDate("2009/02/03");
     resetWindow();
 

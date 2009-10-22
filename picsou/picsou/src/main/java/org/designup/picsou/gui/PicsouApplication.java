@@ -18,7 +18,7 @@ import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.upgrade.UpgradeService;
-import picsou.ExceptionHandler;
+import picsou.AwtExceptionHandler;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.PicsouColors;
 import org.designup.picsou.utils.Lang;
@@ -55,8 +55,8 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "0.28";
-  public static final Long JAR_VERSION = 22L;
+  public static final String APPLICATION_VERSION = "0.29";
+  public static final Long JAR_VERSION = 23L;
   public static final Long BANK_CONFIG_VERSION = 5L;
   private static final String JAR_DIRECTORY = "jars";
   private static final String BANK_CONFIG_DIRECTORY = "configs";
@@ -91,7 +91,7 @@ public class PicsouApplication {
   private AbstractAction mrjDocumentListener;
 
   static {
-    ExceptionHandler.registerHandler();
+    AwtExceptionHandler.registerHandler();
     PicsouMacLookAndFeel.initApplicationName();
     Gui.init();
   }

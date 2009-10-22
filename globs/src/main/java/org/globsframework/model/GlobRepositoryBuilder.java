@@ -3,27 +3,34 @@ package org.globsframework.model;
 import org.globsframework.model.impl.DefaultCheckedGlobIdGenerator;
 import org.globsframework.model.impl.DefaultGlobRepository;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
+import org.globsframework.model.impl.StrictGlobRepository;
 import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.model.utils.GlobIdGenerator;
 
 public class GlobRepositoryBuilder {
   private GlobList globList = new GlobList();
   private final GlobIdGenerator idGenerator;
+  private ExceptionHandler exceptionHanlder;
 
   public static GlobRepository createEmpty() {
     return init().get();
   }
 
   public static GlobRepositoryBuilder init() {
-    return new GlobRepositoryBuilder(new DefaultGlobIdGenerator());
+    return new GlobRepositoryBuilder(new DefaultGlobIdGenerator(), null);
   }
 
   public static GlobRepositoryBuilder init(GlobIdGenerator idGenerator) {
-    return new GlobRepositoryBuilder(idGenerator);
+    return new GlobRepositoryBuilder(idGenerator, null);
   }
 
-  private GlobRepositoryBuilder(GlobIdGenerator idGenerator) {
+  public static GlobRepositoryBuilder init(GlobIdGenerator idGenerator, ExceptionHandler exceptionHanlder) {
+    return new GlobRepositoryBuilder(idGenerator, exceptionHanlder);
+  }
+
+  private GlobRepositoryBuilder(GlobIdGenerator idGenerator, ExceptionHandler exceptionHanlder) {
     this.idGenerator = idGenerator;
+    this.exceptionHanlder = exceptionHanlder;
   }
 
   public GlobRepositoryBuilder add(Glob... globs) {
@@ -48,6 +55,9 @@ public class GlobRepositoryBuilder {
     repository.add(globList);
     if (idGenerator instanceof DefaultCheckedGlobIdGenerator) {
       ((DefaultCheckedGlobIdGenerator)idGenerator).setRepository(repository);
+    }
+    if (exceptionHanlder != null){
+      return new StrictGlobRepository(repository, exceptionHanlder);
     }
     return repository;
   }

@@ -93,8 +93,8 @@ public class LoginChecker extends GuiChecker {
     return this;
   }
 
-  public LoginChecker checkErrorMessage(String message) {
-    assertThat(window.getTextBox("message").textContains(Lang.get(message)));
+  public LoginChecker checkErrorMessage(String key) {
+    assertThat(window.getTextBox("message").textContains(Lang.get(key, "")));
     return this;
   }
 
