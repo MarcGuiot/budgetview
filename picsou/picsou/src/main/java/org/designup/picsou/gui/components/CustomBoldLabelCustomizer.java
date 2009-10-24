@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.components;
 
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -22,7 +22,7 @@ public abstract class CustomBoldLabelCustomizer implements LabelCustomizer, Colo
   }
 
   public void colorsChanged(ColorLocator locator) {
-    color = locator.get(PicsouColors.CATEGORY_TITLE);
+    color = locator.get(ApplicationColors.CATEGORY_TITLE);
   }
 
   public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {

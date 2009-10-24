@@ -1,7 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.TestCase;
-import junit.framework.Assert;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Dates;
@@ -30,7 +29,7 @@ public class OperationChecker {
   private MenuItem redoMenu;
   private MenuItem dumpMenu;
   private MenuItem throwExceptionMenu;
-  private MenuItem throwExceptionInRepoMenu;
+  private MenuItem throwExceptionInRepositoryMenu;
   public static final String DEFAULT_ACCOUNT_NUMBER = "11111";
   public static final String DEFAULT_ACCOUNT_NAME = "Account n. 11111";
   private Window window;
@@ -53,7 +52,7 @@ public class OperationChecker {
     dumpMenu = editMenu.getSubMenu("Dump");
     checkMenu = editMenu.getSubMenu("[Check data (see logs)]");
     throwExceptionMenu = editMenu.getSubMenu("Throw exception");
-    throwExceptionInRepoMenu = editMenu.getSubMenu("Throw exception in repo");
+    throwExceptionInRepositoryMenu = editMenu.getSubMenu("Throw exception in repo");
   }
 
   public ImportChecker openImportDialog() {
@@ -327,16 +326,16 @@ public class OperationChecker {
     dumpMenu.click();
   }
 
-  public MessageDialogChecker throwExceptionInApp(){
-    return new MessageDialogChecker(WindowInterceptor.getModalDialog(throwExceptionMenu.triggerClick()));
+  public MessageAndDetailsDialogChecker throwExceptionInApplication(){
+    return MessageAndDetailsDialogChecker.init(throwExceptionMenu.triggerClick());
   }
 
-  public MessageDialogChecker throwExceptionInRepo(){
-    return new MessageDialogChecker(WindowInterceptor.getModalDialog(throwExceptionInRepoMenu.triggerClick()));
+  public MessageAndDetailsDialogChecker throwExceptionInRepository(){
+    return MessageAndDetailsDialogChecker.init(throwExceptionInRepositoryMenu.triggerClick());
   }
 
   public void checkOk() {
-    new MessageDialogChecker(WindowInterceptor.getModalDialog(checkMenu.triggerClick()))
-      .checkMessageContains("Start checking End checking").close();
+    MessageAndDetailsDialogChecker.init(checkMenu.triggerClick())
+      .checkDetailsContain("Start checking\nEnd checking").close();
   }
 }

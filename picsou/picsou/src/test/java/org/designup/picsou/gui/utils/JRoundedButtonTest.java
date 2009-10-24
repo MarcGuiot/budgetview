@@ -13,7 +13,7 @@ public class JRoundedButtonTest {
   public static void main(String[] args) throws IOException {
 
     Directory directory = new DefaultDirectory();
-    ColorService colorService = PicsouColors.registerColorService(directory);
+    ColorService colorService = ApplicationColors.registerColorService(directory);
     directory.add(Gui.IMAGE_LOCATOR);
 
     final JFrame frame = new JFrame();

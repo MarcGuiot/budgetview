@@ -1,7 +1,7 @@
 package org.designup.picsou.exporter.ofx;
 
 import org.designup.picsou.exporter.Exporter;
-import org.designup.picsou.gui.utils.PicsouMatchers;
+import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.importer.ofx.OfxImporter;
 import org.designup.picsou.importer.ofx.OfxWriter;
 import org.designup.picsou.model.Account;
@@ -97,7 +97,7 @@ public class OfxExporter implements Exporter {
 
   private Date writeTransactions(Glob account) {
     GlobList transactionsToWrite = new GlobList(repository.findLinkedTo(account, Transaction.ACCOUNT));
-    transactionsToWrite.filterSelf(PicsouMatchers.exportableTransactions(), repository);
+    transactionsToWrite.filterSelf(Matchers.exportableTransactions(), repository);
     Collections.sort(transactionsToWrite, TransactionComparator.ASCENDING_SPLIT_AFTER);
     Date lastDate = new Date(0);
     for (Glob transaction : transactionsToWrite) {

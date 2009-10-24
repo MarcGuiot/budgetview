@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components;
 
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -106,19 +106,19 @@ public abstract class JRoundedButton extends JButton implements ColorChangeListe
   }
 
   public void colorsChanged(ColorLocator colorSource) {
-    topColor = colorSource.get(PicsouColors.BUTTON_BG_TOP);
-    bottomColor = colorSource.get(PicsouColors.BUTTON_BG_BOTTOM);
-    innerBorderTopColor = colorSource.get(PicsouColors.BUTTON_INNER_BORDER_TOP);
-    innerBorderBottomColor = colorSource.get(PicsouColors.BUTTON_INNER_BORDER_BOTTOM);
-    outerBorderTopColor = colorSource.get(PicsouColors.BUTTON_OUTER_BORDER_TOP);
-    outerBorderBottomColor = colorSource.get(PicsouColors.BUTTON_OUTER_BORDER_BOTTOM);
+    topColor = colorSource.get(ApplicationColors.BUTTON_BG_TOP);
+    bottomColor = colorSource.get(ApplicationColors.BUTTON_BG_BOTTOM);
+    innerBorderTopColor = colorSource.get(ApplicationColors.BUTTON_INNER_BORDER_TOP);
+    innerBorderBottomColor = colorSource.get(ApplicationColors.BUTTON_INNER_BORDER_BOTTOM);
+    outerBorderTopColor = colorSource.get(ApplicationColors.BUTTON_OUTER_BORDER_TOP);
+    outerBorderBottomColor = colorSource.get(ApplicationColors.BUTTON_OUTER_BORDER_BOTTOM);
 
-    pressedTopColor = colorSource.get(PicsouColors.BUTTON_PRESSED_BG_TOP);
-    pressedBottomColor = colorSource.get(PicsouColors.BUTTON_PRESSED_BG_BOTTOM);
-    pressedInnerBorderTopColor = colorSource.get(PicsouColors.BUTTON_PRESSED_INNER_BORDER_TOP);
-    pressedInnerBorderBottomColor = colorSource.get(PicsouColors.BUTTON_PRESSED_INNER_BORDER_BOTTOM);
-    pressedOuterBorderTopColor = colorSource.get(PicsouColors.BUTTON_PRESSED_OUTER_BORDER_TOP);
-    pressedOuterBorderBottomColor = colorSource.get(PicsouColors.BUTTON_PRESSED_OUTER_BORDER_BOTTOM);
+    pressedTopColor = colorSource.get(ApplicationColors.BUTTON_PRESSED_BG_TOP);
+    pressedBottomColor = colorSource.get(ApplicationColors.BUTTON_PRESSED_BG_BOTTOM);
+    pressedInnerBorderTopColor = colorSource.get(ApplicationColors.BUTTON_PRESSED_INNER_BORDER_TOP);
+    pressedInnerBorderBottomColor = colorSource.get(ApplicationColors.BUTTON_PRESSED_INNER_BORDER_BOTTOM);
+    pressedOuterBorderTopColor = colorSource.get(ApplicationColors.BUTTON_PRESSED_OUTER_BORDER_TOP);
+    pressedOuterBorderBottomColor = colorSource.get(ApplicationColors.BUTTON_PRESSED_OUTER_BORDER_BOTTOM);
   }
 
   protected void paintComponent(Graphics graphics) {

@@ -22,11 +22,11 @@ public class PicsouMacLookAndFeel extends AquaLookAndFeel {
       System.setProperty("apple.laf.useScreenMenuBar", "true");
     }
     try {
-      LafUtils.initUI(defaults, org.jdesktop.swingx.plaf.basic.BasicDatePickerUI.class,
+      ApplicationLAF.initUI(defaults, org.jdesktop.swingx.plaf.basic.BasicDatePickerUI.class,
                       JXDatePicker.uiClassID);
-      LafUtils.initUI(defaults, BasicMonthViewUI.class,
+      ApplicationLAF.initUI(defaults, BasicMonthViewUI.class,
                       JXMonthView.uiClassID);
-      LafUtils.initUI(defaults, BasicHyperlinkUI.class,
+      ApplicationLAF.initUI(defaults, BasicHyperlinkUI.class,
                       JXHyperlink.uiClassID);
       
     }

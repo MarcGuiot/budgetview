@@ -2,7 +2,7 @@ package org.designup.picsou.gui.license;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
@@ -47,7 +47,7 @@ public class LicenseInfoView extends View {
         }
       }
     });
-    PicsouColors.installLinkColor(licenseMessage, "licenseMessage", "notesView.introBlock.link", directory);
+    ApplicationColors.installLinkColor(licenseMessage, "licenseMessage", "notesView.introBlock.link", directory);
 
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {

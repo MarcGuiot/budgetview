@@ -3,7 +3,7 @@ package org.designup.picsou.gui.experiment;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
 import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
 import org.designup.picsou.gui.components.charts.stack.StackChartColors;
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.globsframework.gui.splits.layout.SingleComponentPanels;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -29,7 +29,7 @@ public class StackChartDemo {
     add(rightDataset, "label 6 is longer", 200.0);
 
     Directory directory = new DefaultDirectory();
-    directory.add(PicsouColors.createColorService());
+    directory.add(ApplicationColors.createColorService());
     
     StackChart chart = new StackChart();
     chart.update(leftDataset, rightDataset, new StackChartColors(

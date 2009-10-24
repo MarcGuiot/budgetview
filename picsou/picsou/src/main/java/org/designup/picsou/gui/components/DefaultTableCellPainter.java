@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components;
 
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -20,9 +20,9 @@ public class DefaultTableCellPainter implements CellPainter, ColorChangeListener
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    evenRowsBg = colorLocator.get(PicsouColors.TABLE_EVEN_ROWS_BG);
-    oddRowsBg = colorLocator.get(PicsouColors.TABLE_ODD_ROWS_BG);
-    selectionBg = colorLocator.get(PicsouColors.TABLE_SELECTED_BG);
+    evenRowsBg = colorLocator.get(ApplicationColors.TABLE_EVEN_ROWS_BG);
+    oddRowsBg = colorLocator.get(ApplicationColors.TABLE_ODD_ROWS_BG);
+    selectionBg = colorLocator.get(ApplicationColors.TABLE_SELECTED_BG);
   }
   
   public void paint(Graphics g, Glob glob, int row, int column, boolean isSelected, boolean hasFocus, int width, int height) {

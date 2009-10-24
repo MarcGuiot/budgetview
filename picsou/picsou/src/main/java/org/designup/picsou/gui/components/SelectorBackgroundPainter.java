@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components;
 
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.painters.FillPainter;
 import org.globsframework.gui.splits.painters.Painter;
@@ -16,8 +16,8 @@ public class SelectorBackgroundPainter implements CellPainter {
 
   public SelectorBackgroundPainter(Directory directory) {
     ColorService colorService = directory.get(ColorService.class);
-    normalPainter = new FillPainter(PicsouColors.CATEGORIES_BG, colorService);
-    selectionPainter = PicsouColors.createTableSelectionBackgroundPainter(colorService);
+    normalPainter = new FillPainter(ApplicationColors.CATEGORIES_BG, colorService);
+    selectionPainter = ApplicationColors.createTableSelectionBackgroundPainter(colorService);
   }
 
   public void paint(Graphics g, Glob glob, int row, int column,

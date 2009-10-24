@@ -4,7 +4,7 @@ import com.jidesoft.swing.JideSplitPane;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.gui.utils.SetFieldValueAction;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
@@ -76,7 +76,7 @@ public class BudgetView extends View {
   private JEditorPane createHelpMessage() {
     helpMessage = new JEditorPane();
     helpMessage.setContentType("text/html");
-    PicsouColors.installLinkColor(helpMessage, "mainpanel", "mainpanel.message.link", directory);
+    ApplicationColors.installLinkColor(helpMessage, "mainpanel", "mainpanel.message.link", directory);
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(UserPreferences.KEY, UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE)) {

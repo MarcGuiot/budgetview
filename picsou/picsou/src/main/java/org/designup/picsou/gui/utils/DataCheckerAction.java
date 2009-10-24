@@ -2,6 +2,7 @@ package org.designup.picsou.gui.utils;
 
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.MonthsToSeriesBudgetTrigger;
 import org.globsframework.metamodel.Field;
@@ -35,22 +36,22 @@ public class DataCheckerAction extends AbstractAction {
   }
 
   private boolean check() {
-    final StringBuilder buf = new StringBuilder();
-    buf.append("Start checking\n");
+    final StringBuilder builder = new StringBuilder();
+    builder.append("Start checking\n");
     boolean hasError = false;
     try {
-      hasError = doCheck(buf);
+      hasError = doCheck(builder);
       return hasError;
     }
     finally {
-      buf.append("End checking\n");
+      builder.append("End checking\n");
       if (hasError) {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         toolkit.beep();
       }
-      MessageDialog dialog = new MessageDialog("data.checker.title", "data.checker.message", null, directory, buf.toString());
+      MessageAndDetailsDialog dialog = new MessageAndDetailsDialog("data.checker.title", "data.checker.message", builder.toString(), null, directory);
       dialog.show();
-      Log.write(buf.toString());
+      Log.write(builder.toString());
     }
   }
 

@@ -4,7 +4,7 @@ import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.description.AccountComparator;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.monthsummary.AccountPositionThresholdAction;
-import org.designup.picsou.gui.utils.PicsouMatchers;
+import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -53,7 +53,7 @@ public abstract class AccountViewPanel {
         GlobList months = selection.getAll(Month.TYPE);
         filterMatcherWithDates =
           GlobMatchers.and(accountTypeMatcher,
-                           new PicsouMatchers.AccountDateMatcher(months));
+                           new Matchers.AccountDateMatcher(months));
         accountRepeat.setFilter(filterMatcherWithDates);
       }
     }, Month.TYPE);

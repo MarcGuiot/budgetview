@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.plaf;
 
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.utils.Java2DUtils;
 
@@ -41,12 +41,12 @@ public class PicsouButtonUI extends BasicButtonUI implements MouseListener {
     c.addMouseListener(this);
 
     ColorService colorService = (ColorService)UIManager.get("ColorService");
-    noFocusColorBorder = colorService.get(PicsouColors.BUTTON_NO_FOCUS_COLOR_BORDER);
-    noFocusColorShadow = colorService.get(PicsouColors.BUTTON_NO_FOCUS_COLOR_SHADOW);
-    focusColorBorder = colorService.get(PicsouColors.BUTTON_FOCUS_COLOR_BORDER);
-    focusColorShadow = colorService.get(PicsouColors.BUTTON_FOCUS_COLOR_SHADOW);
-    topColor = colorService.get(PicsouColors.BUTTON_TOP_COLOR_GRADIENT);
-    bottomColor = colorService.get(PicsouColors.BUTTON_BOTTOM_COLOR_GRADIENT);
+    noFocusColorBorder = colorService.get(ApplicationColors.BUTTON_NO_FOCUS_COLOR_BORDER);
+    noFocusColorShadow = colorService.get(ApplicationColors.BUTTON_NO_FOCUS_COLOR_SHADOW);
+    focusColorBorder = colorService.get(ApplicationColors.BUTTON_FOCUS_COLOR_BORDER);
+    focusColorShadow = colorService.get(ApplicationColors.BUTTON_FOCUS_COLOR_SHADOW);
+    topColor = colorService.get(ApplicationColors.BUTTON_TOP_COLOR_GRADIENT);
+    bottomColor = colorService.get(ApplicationColors.BUTTON_BOTTOM_COLOR_GRADIENT);
   }
 
   public void uninstallUI(JComponent c) {

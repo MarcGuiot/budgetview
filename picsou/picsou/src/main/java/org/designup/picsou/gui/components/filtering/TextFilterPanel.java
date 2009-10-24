@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components.filtering;
 
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
@@ -31,7 +31,7 @@ public abstract class TextFilterPanel {
     this.colorService = directory.get(ColorService.class);
     this.listener = new ColorChangeListener() {
       public void colorsChanged(ColorLocator colorLocator) {
-        backgroundColor = colorLocator.get(PicsouColors.TRANSACTION_SEARCH_FIELD);
+        backgroundColor = colorLocator.get(ApplicationColors.TRANSACTION_SEARCH_FIELD);
         if (textField != null) {
           if (Strings.isNotEmpty(textField.getText())) {
             textField.setBackground(backgroundColor);

@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components;
 
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -53,8 +53,8 @@ public abstract class HyperlinkTableColumn extends AbstractRolloverEditor implem
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    normalLinkColor = colorLocator.get(PicsouColors.TABLE_LINK_NORMAL);
-    selectedLinkColor = colorLocator.get(PicsouColors.TABLE_LINK_SELECTED);
+    normalLinkColor = colorLocator.get(ApplicationColors.TABLE_LINK_NORMAL);
+    selectedLinkColor = colorLocator.get(ApplicationColors.TABLE_LINK_SELECTED);
   }
 
   protected Component getComponent(Glob glob, boolean render) {

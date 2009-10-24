@@ -2,7 +2,7 @@ package org.designup.picsou.gui.time;
 
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.time.selectable.Selectable;
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.UserPreferences;
 import org.globsframework.gui.GlobSelection;
@@ -187,7 +187,7 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
     final JFrame jFrame = new JFrame();
     jFrame.setBounds(0, 0, width, 70);
     directory.add(SelectionService.class, new SelectionService());
-    directory.add(ColorService.class, PicsouColors.createColorService());
+    directory.add(ColorService.class, ApplicationColors.createColorService());
     GlobList months = new GlobList();
     int monthId = Month.toYyyyMm(2007, 1);
     for (int i = 0; i < monthCount; i++) {

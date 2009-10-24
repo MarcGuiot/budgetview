@@ -3,36 +3,26 @@ package org.designup.picsou.gui;
 import net.roydesign.event.ApplicationEvent;
 import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.client.http.MD5PasswordBasedEncryptor;
-import org.designup.picsou.client.http.RedirectPasswordBasedEncryptor;
 import org.designup.picsou.client.http.PasswordBasedEncryptor;
-import org.designup.picsou.gui.components.ArrowButtonUI;
-import org.designup.picsou.gui.components.SelectionToggleUI;
+import org.designup.picsou.client.http.RedirectPasswordBasedEncryptor;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
-import org.designup.picsou.gui.plaf.ButtonPanelItemUI;
-import org.designup.picsou.gui.plaf.PicsouSplitPaneUI;
-import org.designup.picsou.gui.plaf.WavePanelUI;
+import org.designup.picsou.gui.plaf.ApplicationLAF;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.upgrade.UpgradeService;
-import picsou.AwtExceptionHandler;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.components.HyperlinkButtonUI;
-import org.globsframework.gui.splits.components.ShadowedLabelUI;
-import org.globsframework.gui.splits.components.StyledPanelUI;
-import org.globsframework.gui.splits.components.StyledToggleButtonUI;
 import org.globsframework.gui.splits.font.FontLocator;
-import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.format.DescriptionService;
@@ -43,6 +33,8 @@ import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
+import org.uispec4j.assertion.Assertion;
+import picsou.AwtExceptionHandler;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -78,17 +70,10 @@ public class PicsouApplication {
   private SingleApplicationInstanceListener singleInstanceListener;
   private Directory directory;
 
-  private static final String PANEL_UI = "org" + dot() + "designup.picsou.gui.plaf.WavePanelUI";
-  private static final String LINK_BUTTON_UI = "org" + dot() + "globsframework.gui.splits.components.HyperlinkButtonUI";
-  private static final String STYLED_TOGGLE_BUTTON_UI = "org" + dot() + "globsframework.gui.splits.components.StyledToggleButtonUI";
-  private static final String STYLED_PANEL_UI = "org" + dot() + "globsframework.gui.splits.components.StyledPanelUI";
-  private static final String SHADOWED_LABEL_UI = "org" + dot() + "globsframework.gui.splits.components.ShadowedLabelUI";
-  private static final String SPLITPANE_UI = "org" + dot() + "designup.picsou.gui.plaf.PicsouSplitPaneUI";
-  private static final String SERIES_TOGGLE_UI = "org" + dot() + "designup.picsou.gui.components.SelectionToggleUI";
-  private static final String BUTTON_PANEL_UI = "org" + dot() + "designup.picsou.gui.plaf.ButtonPanelItemUI";
-  private static final String ARROW_BUTTON_UI = "org" + dot() + "designup.picsou.gui.components.ArrowButtonUI";
   private WindowAdapter windowOpenListener;
   private AbstractAction mrjDocumentListener;
+
+  public static boolean EXIT_ON_DATA_ERROR = true;
 
   static {
     AwtExceptionHandler.registerHandler();
@@ -336,13 +321,13 @@ public class PicsouApplication {
   private static Directory createDirectory(OpenRequestManager openRequestManager) throws IOException {
     Directory directory = new DefaultDirectory();
     directory.add(OpenRequestManager.class, openRequestManager);
-    directory.add(initUiService());
+    directory.add(ApplicationLAF.initUiService());
     directory.add(new TimeService());
     directory.add(new UpgradeService(directory));
     directory.add(DescriptionService.class, new PicsouDescriptionService());
     directory.add(GlobModel.class, PicsouGuiModel.get());
     directory.add(SelectionService.class, new SelectionService());
-    PicsouColors.registerColorService(directory);
+    ApplicationColors.registerColorService(directory);
     directory.add(ImageLocator.class, Gui.IMAGE_LOCATOR);
     directory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     directory.add(FontLocator.class, Gui.FONT_LOCATOR);
@@ -362,24 +347,6 @@ public class PicsouApplication {
       localConfigVersion = BANK_CONFIG_VERSION;
     }
     return new ConfigService(APPLICATION_VERSION, JAR_VERSION, localConfigVersion, lastJar);
-  }
-
-  private static UIService initUiService() {
-    UIService uiService = new UIService();
-    uiService.registerClass(PANEL_UI, WavePanelUI.class);
-    uiService.registerClass(LINK_BUTTON_UI, HyperlinkButtonUI.class);
-    uiService.registerClass(STYLED_TOGGLE_BUTTON_UI, StyledToggleButtonUI.class);
-    uiService.registerClass(STYLED_PANEL_UI, StyledPanelUI.class);
-    uiService.registerClass(SHADOWED_LABEL_UI, ShadowedLabelUI.class);
-    uiService.registerClass(SPLITPANE_UI, PicsouSplitPaneUI.class);
-    uiService.registerClass(SERIES_TOGGLE_UI, SelectionToggleUI.class);
-    uiService.registerClass(BUTTON_PANEL_UI, ButtonPanelItemUI.class);
-    uiService.registerClass(ARROW_BUTTON_UI, ArrowButtonUI.class);
-    return uiService;
-  }
-
-  private static String dot() {
-    return ".";
   }
 
   static private File findLastJar(String path) {

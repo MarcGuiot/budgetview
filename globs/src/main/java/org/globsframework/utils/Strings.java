@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.io.StringWriter;
+import java.io.PrintWriter;
 
 public class Strings {
   public static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -21,6 +23,14 @@ public class Strings {
 
   public static boolean isNullOrEmpty(String text) {
     return (text == null) || (text.length() == 0);
+  }
+
+  private String toString(Throwable exception) {
+    StringWriter writer = new StringWriter();
+    PrintWriter printWriter = new PrintWriter(writer);
+    exception.printStackTrace(printWriter);
+    printWriter.flush();
+    return writer.toString();
   }
 
   public static String capitalize(String value) {

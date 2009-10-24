@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.description.AccountComparator;
-import org.designup.picsou.gui.utils.PicsouMatchers;
+import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.model.Glob;
@@ -31,7 +31,7 @@ public class AccountFilteringCombo {
       return GlobMatchers.ALL;
     }
     Integer accountId = currentSelection.get(Account.ID);
-    return PicsouMatchers.transactionsForAccounts(Collections.singleton(accountId), repository);
+    return Matchers.transactionsForAccounts(Collections.singleton(accountId), repository);
   }
 
   public JComboBox getComponent() {
