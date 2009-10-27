@@ -1,13 +1,19 @@
 package org.designup.picsou.gui.model;
 
-import org.designup.picsou.model.PicsouModel;
+import org.designup.picsou.model.*;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.globsframework.metamodel.GlobModel;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.utils.DefaultGlobModel;
 
+import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.Arrays;
+
 public class PicsouGuiModel {
-  private static GlobModel INSTANCE = new DefaultGlobModel(
+  private static GlobModel MODEL = new DefaultGlobModel(
     PicsouModel.get(),
     BudgetStat.TYPE,
     Card.TYPE,
@@ -19,6 +25,17 @@ public class PicsouGuiModel {
   );
 
   public static GlobModel get() {
-    return INSTANCE;
+    return MODEL;
   }
+
+  public static Collection<GlobType> getUserSpecificType(){
+    Collection<GlobType> globTypeCollection = new ArrayList<GlobType>(MODEL.getAll());
+    Set<GlobType> typeNotToRemove = MODEL.getConstants().getTypes();
+    typeNotToRemove.addAll(Arrays.asList(PreTransactionTypeMatcher.TYPE, Bank.TYPE, BankEntity.TYPE,
+                                         User.TYPE, AppVersionInformation.TYPE));
+
+    globTypeCollection.removeAll(typeNotToRemove);
+    return  globTypeCollection;
+  }
+
 }

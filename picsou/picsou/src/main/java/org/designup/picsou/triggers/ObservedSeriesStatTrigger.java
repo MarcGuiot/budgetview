@@ -126,8 +126,9 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
   public void init(GlobRepository repository) {
     repository.deleteAll(SeriesStat.TYPE);
 
+    GlobList allSeries = repository.getAll(Series.TYPE);
     for (Glob month : repository.getAll(Month.TYPE)) {
-      for (Glob series : repository.getAll(Series.TYPE)) {
+      for (Glob series : allSeries) {
         repository.create(createKey(series.get(Series.ID), month.get(Month.ID)));
       }
     }

@@ -41,14 +41,4 @@ public class PicsouModel {
   public static GlobModel get() {
     return MODEL;
   }
-
-  public static Collection<GlobType> getUserSpecificType(){
-    Collection<GlobType> globTypeCollection = new ArrayList<GlobType>(MODEL.getAll());
-    Set<GlobType> typeNotToRemove = MODEL.getConstants().getTypes();
-    typeNotToRemove.addAll(Arrays.asList(PreTransactionTypeMatcher.TYPE, Bank.TYPE, BankEntity.TYPE,
-                                         User.TYPE, AppVersionInformation.TYPE));
-
-    globTypeCollection.removeAll(typeNotToRemove);
-    return  globTypeCollection;
-  }
 }

@@ -286,13 +286,12 @@ public class FirstTimeTest extends UISpecTestCase {
       .add("01/10/2008", "Planned: Health", 20.00, "Health", 1920.00, "Main accounts")
       .check();
 
-
     mainAccounts.openEstimatedPositionDetails()
       .checkPosition(1971.10)
       .checkInitialPosition(1900)
       .checkEnvelope(415)
       .checkFixed(1413.9)
-      .checkSavingsIn(100)
+      .checkSavingsOut(100)
       .checkIncome(2000)
       .close();
 
@@ -320,7 +319,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(584)
-      .checkSavingsIn(100)
+      .checkSavingsOut(100)
       .checkEnvelope(265)
       .close();
 
@@ -483,6 +482,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkIncome(2000)
       .checkFixed(184)
       .checkSavingsIn(0)
+      .checkSavingsOut(0)
       .checkEnvelope(210)
       .close();
 
@@ -565,6 +565,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkIncome(2000)
       .checkFixed(184)
       .checkSavingsIn(0)
+      .checkSavingsOut(0)
       .checkEnvelope(210)
       .close();
 
@@ -719,7 +720,8 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkInitialPosition(780.1)
       .checkIncome(2000)
       .checkFixed(584)
-      .checkSavingsIn(100)
+      .checkSavingsIn(0)
+      .checkSavingsOut(100)
       .checkEnvelope(210);
 
     checker.selectMonths("2008/10", "2008/11");

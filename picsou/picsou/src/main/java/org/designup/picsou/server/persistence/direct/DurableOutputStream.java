@@ -30,7 +30,7 @@ class DurableOutputStream {
     }
   }
 
-  public void write(MultiMap<String, ServerDelta> data) {
+  public void write(MultiMap<String, ServerDelta> data, long timestamp) {
     if (manager.isInMemory()) {
       return;
     }
@@ -42,8 +42,9 @@ class DurableOutputStream {
         outputStream = new BufferedOutputStream(stream);
       }
       SerializedOutput serializedOutput = SerializedInputOutputFactory.init(outputStream);
-      serializedOutput.writeJavaString("Tr");
+      serializedOutput.writeJavaString(DirectAccountDataManager.LATEST_VERSION);
       serializedOutput.write(nextTransactionVersion);
+      serializedOutput.write(timestamp);
       SerializableDeltaGlobSerializer.serialize(serializedOutput, data);
       outputStream.flush();
       fd.sync();

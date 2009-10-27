@@ -118,7 +118,7 @@ public class PicsouInit {
       this.useDemoAccount = useDemoAccount;
       this.autoLogin = autoLogin;
       changeSet = new DefaultChangeSet();
-      Collection<GlobType> globTypeCollection = PicsouModel.getUserSpecificType();
+      Collection<GlobType> globTypeCollection = PicsouGuiModel.getUserSpecificType();
       typesToReplace = globTypeCollection.toArray(new GlobType[globTypeCollection.size()]);
       idGenerator.reset(globTypeCollection);
 

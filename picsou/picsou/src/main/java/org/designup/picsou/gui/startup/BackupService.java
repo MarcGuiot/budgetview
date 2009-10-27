@@ -5,6 +5,7 @@ import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
 import org.designup.picsou.client.http.MD5PasswordBasedEncryptor;
 import org.designup.picsou.client.http.PasswordBasedEncryptor;
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.PicsouModel;
@@ -62,7 +63,8 @@ public class BackupService {
     if (user.isTrue(User.AUTO_LOGIN)) {
       password = user.get(User.NAME).toCharArray();
     }
-    ReadOnlyAccountDataManager.writeSnapshot(serverData, file, password, PicsouApplication.JAR_VERSION);
+    long timestamp = System.currentTimeMillis();
+    ReadOnlyAccountDataManager.writeSnapshot(serverData, file, password, PicsouApplication.JAR_VERSION, timestamp);
   }
 
   public Status restore(InputStream stream, char[] password) throws InvalidData {
@@ -118,7 +120,7 @@ public class BackupService {
       repository.startChangeSet();
       repository.addTriggerAtFirst(upgradeTrigger);
 
-      Collection<GlobType> globTypeCollection = PicsouModel.getUserSpecificType();
+      Collection<GlobType> globTypeCollection = PicsouGuiModel.getUserSpecificType();
       repository.reset(userData, globTypeCollection.toArray(new GlobType[globTypeCollection.size()]));
     }
     finally {

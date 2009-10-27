@@ -22,6 +22,7 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
     }
     catch (Throwable e) {
       exceptionHandler.onException(e);
+      throw new RuntimeException(e);
     }
   }
 

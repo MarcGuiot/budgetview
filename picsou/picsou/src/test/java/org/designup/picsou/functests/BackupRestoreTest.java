@@ -293,7 +293,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
   public void testRestoreNewerVersion() throws Exception {
     final String filePath = TestUtils.getFileName(this);
 
-    ReadOnlyAccountDataManager.writeSnapshot(new MapOfMaps<String, Integer, SerializableGlobType>(), new File(filePath), null, 99999);
+    ReadOnlyAccountDataManager.writeSnapshot(new MapOfMaps<String, Integer, SerializableGlobType>(), new File(filePath), null, 99999, -1);
 
     WindowInterceptor
       .init(operations.getRestoreTrigger())

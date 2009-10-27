@@ -148,7 +148,7 @@ public class PrevaylerDirectory {
     }
   }
 
-  public static void renameUnusedFile(File journalFile) {
+  public static void renameEmptyFile(File journalFile) {
     journalFile.renameTo(new File(journalFile.getAbsolutePath() + ".unusedFile" + System.currentTimeMillis()));
   }
 

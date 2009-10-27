@@ -187,7 +187,7 @@ public class PersistentJournal implements Journal {
 		
 			} catch (EOFException eof) {
 				File nextFile = _directory.journalFile(recoveringTransaction, _journalSuffix);
-				if (journal.equals(nextFile)) PrevaylerDirectory.renameUnusedFile(journal);  //The first transaction in this log file is incomplete. We need to reuse this file name.
+				if (journal.equals(nextFile)) PrevaylerDirectory.renameEmptyFile(journal);  //The first transaction in this log file is incomplete. We need to reuse this file name.
 				journal = nextFile;
 				if (!journal.exists()) break;
 				input = new DurableInputStream(journal, _monitor);

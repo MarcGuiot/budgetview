@@ -406,6 +406,9 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     try {
       List<Pair<Key, FieldValues>> toBeRemoved = new ArrayList<Pair<Key, FieldValues>>();
       for (Glob glob : list) {
+        if (glob == null){
+          continue;
+        }
         if (!MutableGlob.class.isInstance(glob)) {
           throw new OperationDenied("Object '" + glob + "' cannot be modified");
         }
