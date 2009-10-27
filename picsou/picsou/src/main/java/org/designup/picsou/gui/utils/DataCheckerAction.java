@@ -11,6 +11,7 @@ import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +60,6 @@ public class DataCheckerAction extends AbstractAction {
 
     ExtractMonthFromTransaction extractMonthFromTransaction = new ExtractMonthFromTransaction();
     repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, extractMonthFromTransaction);
-
 
     GlobList months = repository.getAll(Month.TYPE).sort(Month.ID);
     if (months.size() == 0) {
@@ -127,6 +127,23 @@ public class DataCheckerAction extends AbstractAction {
 
     for (Glob series : allSeries) {
       try {
+
+        if (series.get(Series.MIRROR_SERIES) != null) {
+          if (series.get(Series.FROM_ACCOUNT) == null || series.get(Series.TO_ACCOUNT) == null) {
+            buf.append("Savings series with both imported account has null in it's account : ")
+              .append(series.get(Series.NAME))
+              .append("\n");
+            repository.delete(series.getKey());
+            try {
+              repository.delete(Key.create(Series.TYPE, series.get(Series.MIRROR_SERIES)));
+            }
+            catch (ItemNotFound found) {
+              buf.append("Missing miroir series (can not delete)\n");
+            }
+            continue;
+          }
+        }
+
         hasError |= checkNotNullable(series, buf);
 
         Integer firstMonthForSeries = series.get(Series.FIRST_MONTH);
@@ -149,13 +166,13 @@ public class DataCheckerAction extends AbstractAction {
         if (monthFromTransaction.getFirstMonthForTransaction() < firstMonthForSeries) {
           firstMonthForSeries = monthFromTransaction.getFirstMonthForTransaction();
           repository.update(series.getKey(), Series.FIRST_MONTH, firstMonthForSeries);
-          Log.write("Bad begin of series, updated to " + firstMonthForSeries);
+          buf.append("Bad begin of series, updated to ").append(firstMonthForSeries);
           hasError = true;
         }
         if (monthFromTransaction.getLastMonthForTransaction() > lastMonthForSeries) {
           lastMonthForSeries = monthFromTransaction.getLastMonthForTransaction();
           repository.update(series.getKey(), Series.LAST_MONTH, lastMonthForSeries);
-          Log.write("Bad end of series, updated to " + lastMonthForSeries);
+          buf.append("Bad end of series, updated to ").append(lastMonthForSeries);
           hasError = true;
         }
 
@@ -315,14 +332,35 @@ public class DataCheckerAction extends AbstractAction {
         if (toAccount != null && !transaction.get(Transaction.ACCOUNT).equals(toAccount)) {
           buf.append("savings transaction badly categorized ")
             .append(transaction.get(Transaction.LABEL))
-            .append(" ").append(Month.toString(transaction.get(Transaction.BANK_MONTH), transaction.get(Transaction.DAY)));
+            .append(" at : ")
+            .append(Month.toString(transaction.get(Transaction.BANK_MONTH), transaction.get(Transaction.DAY)))
+            .append(". Uncategorized : you must recategorize it");
+          try {
+            repository.startChangeSet();
+            repository.update(transaction.getKey(), Transaction.SERIES, null);
+            repository.update(transaction.getKey(), Transaction.SUB_SERIES, null);
+          }
+          finally {
+            repository.completeChangeSet();
+          }
           return false;
         }
       }
       else {
         Integer fromAccount = savingsSeries.get(Series.FROM_ACCOUNT);
         if (fromAccount != null && !transaction.get(Transaction.ACCOUNT).equals(fromAccount)) {
-          buf.append("savings transaction badly categorized ").append(transaction.get(Transaction.LABEL));
+          buf.append("savings transaction badly categorized ").append(transaction.get(Transaction.LABEL))
+            .append(" at : ")
+            .append(Month.toString(transaction.get(Transaction.BANK_MONTH), transaction.get(Transaction.DAY)))
+            .append(". Uncategorized : you must recategorize it");
+          try {
+            repository.startChangeSet();
+            repository.update(transaction.getKey(), Transaction.SERIES, null);
+            repository.update(transaction.getKey(), Transaction.SUB_SERIES, null);
+          }
+          finally {
+            repository.completeChangeSet();
+          }
           return false;
         }
       }

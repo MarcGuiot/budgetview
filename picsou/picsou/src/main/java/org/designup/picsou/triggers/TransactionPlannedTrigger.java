@@ -161,11 +161,11 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
   }
 
   private static GlobList getPlannedTransactions(GlobRepository repository, Integer series, Integer month) {
-    return repository.getAll(Transaction.TYPE,
-                             and(fieldEquals(Transaction.SERIES, series),
-                                 fieldEquals(Transaction.PLANNED, true),
-                                 not(fieldEquals(Transaction.MIRROR, true)),
-                                 fieldEquals(Transaction.MONTH, month)))
+    return repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series)
+      .findByIndex(Transaction.MONTH, month)
+      .getGlobs()
+      .filter(and(fieldEquals(Transaction.PLANNED, true),
+                  not(fieldEquals(Transaction.MIRROR, true))), repository)
       .sort(Transaction.DAY);
   }
 
@@ -192,7 +192,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
   }
 
   public static void createPlannedTransaction(Glob series, GlobRepository repository, int monthId,
-                                              Integer day, Double amount) {
+                                              Integer day, double amount) {
     Glob month = repository.get(CurrentMonth.KEY);
     if ((month.get(CurrentMonth.LAST_TRANSACTION_MONTH) == monthId)
         && ((day == null) ||
@@ -203,11 +203,18 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     int account;
     Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
     Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-    if (series.get(Series.MIRROR_SERIES) != null && !series.isTrue(Series.IS_MIRROR)) {
-      account = toAccount.get(Account.ID);
-    }
-    else if (series.isTrue(Series.IS_MIRROR)) {
-      account = fromAccount.get(Account.ID);
+    if (series.get(Series.MIRROR_SERIES) != null) {
+      if (fromAccount == null || toAccount == null){
+        Log.write("Series " + series.get(Series.NAME) + " is a saving series with both accounts imported" +
+                  " but one of the account is missing.");
+        return;
+      }
+      if (series.isTrue(Series.IS_MIRROR)) {
+        account = fromAccount.get(Account.ID);
+      }
+      else {
+        account = toAccount.get(Account.ID);
+      }
     }
     else if (fromAccount == null && toAccount == null) {
       account = Account.MAIN_SUMMARY_ACCOUNT_ID;
