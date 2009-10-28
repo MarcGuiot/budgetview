@@ -22,7 +22,7 @@ fi
 
 JAR_VERSION=$1
 
-scp build@91.121.123.100:version/cashpilot${JAR_VERSION}.jar ../picsou/obfuscated/cashpilot.jar
-scp build@91.121.123.100:version/ChangeLogOutput-${JAR_VERSION}.txt.bz2 ../picsou/
+scp build@91.121.123.100:versions/cashpilot${JAR_VERSION}.jar ../picsou/obfuscated/cashpilot.jar
+scp build@91.121.123.100:versions/ChangeLogOutput-${JAR_VERSION}.txt.bz2 ../picsou/
 
 
