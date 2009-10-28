@@ -14,8 +14,8 @@ import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.upgrade.UpgradeService;
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.ApplicationColors;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.ImageLocator;
@@ -33,7 +33,6 @@ import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
-import org.uispec4j.assertion.Assertion;
 import picsou.AwtExceptionHandler;
 
 import javax.swing.*;
