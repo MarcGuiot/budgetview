@@ -13,6 +13,7 @@ import org.globsframework.model.format.utils.DefaultDescriptionService;
 import org.globsframework.utils.Strings;
 
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 
 public class PicsouDescriptionService extends DefaultDescriptionService {
 
@@ -70,5 +71,33 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
       return new BundleBasedStringifier(ProfileType.NAME, ProfileType.TYPE.getName() + ".");
     }
     return super.getStringifier(globType);
+  }
+
+  public GlobStringifier getStringifier(Field targetField) {
+    if (targetField == Transaction.LABEL){
+      return new TransactionStringifier(super.getStringifier(targetField));
+    }
+    return super.getStringifier(targetField);
+  }
+
+  private static class TransactionStringifier implements GlobStringifier {
+    private GlobStringifier stringifier;
+    private String planned;
+
+    public TransactionStringifier(GlobStringifier stringifier) {
+      this.stringifier = stringifier;
+      planned = Lang.get("transaction.planned");
+    }
+
+    public String toString(Glob glob, GlobRepository repository) {
+      if (glob.isTrue(Transaction.PLANNED)){
+        return planned + stringifier.toString(glob, repository);
+      }
+      return stringifier.toString(glob, repository);
+    }
+
+    public Comparator<Glob> getComparator(GlobRepository repository) {
+      return stringifier.getComparator(repository);
+    }
   }
 }

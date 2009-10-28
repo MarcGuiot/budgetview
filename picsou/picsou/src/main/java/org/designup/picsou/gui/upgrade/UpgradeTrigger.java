@@ -53,70 +53,11 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
 
     if (currentJarVersion <= 9) {
-      repository
-        .getAll(SeriesBudget.TYPE, fieldIsNull(SeriesBudget.DAY))
-        .safeApply(new GlobFunctor() {
-          public void run(Glob seriesBudget, GlobRepository repository) throws Exception {
-            final int lastDay = Month.getLastDayNumber(seriesBudget.get(SeriesBudget.MONTH));
-            repository.update(seriesBudget.getKey(), value(SeriesBudget.DAY, lastDay));
-          }
-        }, repository);
-
-      GlobUtils.updateIfExists(repository,
-                               Series.UNCATEGORIZED_SERIES,
-                               Series.NAME,
-                               Series.getUncategorizedName());
-
-      repository.update(Series.UNCATEGORIZED_SERIES, Series.IS_AUTOMATIC, false);
-
-      GlobList uncategorizedTransactions =
-        repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID)
-          .getGlobs();
-
-      if (!uncategorizedTransactions.isEmpty()) {
-        final Integer lastMonthId = uncategorizedTransactions.getSortedSet(Transaction.MONTH).last();
-        repository
-          .getAll(SeriesBudget.TYPE,
-                  and(
-                    fieldEquals(SeriesBudget.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                    GlobMatchers.fieldStrictlyGreaterThan(SeriesBudget.MONTH, lastMonthId)))
-          .safeApply(new GlobFunctor() {
-            public void run(Glob seriesBudget, GlobRepository repository) throws Exception {
-              repository.update(seriesBudget.getKey(), value(SeriesBudget.AMOUNT, 0.00));
-            }
-          }, repository);
-      }
-
-      repository.safeApply(Transaction.TYPE, fieldEquals(Transaction.PLANNED, true),
-                           new GlobFunctor() {
-                             public void run(Glob transaction, GlobRepository repository) throws Exception {
-                               Glob series = repository.findLinkTarget(transaction, Transaction.SERIES);
-                               repository.update(transaction.getKey(), Transaction.LABEL, Transaction.getLabel(true, series));
-                             }
-                           });
-
-      GlobList globList = repository.getAll(Series.TYPE, fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
-      for (Glob glob : globList) {
-        if (glob.get(Series.TO_ACCOUNT) == null && glob.get(Series.FROM_ACCOUNT) == null) {
-          repository.update(glob.getKey(), Series.FROM_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID);
-        }
-      }
+      upgradeFromV9(repository);
     }
 
     if (currentJarVersion < 10) {
-      repository.safeApply(Transaction.TYPE, fieldEquals(Transaction.PLANNED, false),
-                           new GlobFunctor() {
-                             public void run(Glob transaction, GlobRepository repository) throws Exception {
-                               String originalLabel = transaction.get(Transaction.ORIGINAL_LABEL);
-                               String newLabel = TransactionAnalyzerFactory.removeBlankAndToUpercase(originalLabel);
-                               repository.update(transaction.getKey(), Transaction.ORIGINAL_LABEL, newLabel);
-
-                               String label = transaction.get(Transaction.LABEL);
-                               String newVisibleLabel = TransactionAnalyzerFactory.removeBlankAndToUpercase(label);
-                               repository.update(transaction.getKey(), Transaction.LABEL, newVisibleLabel);
-
-                             }
-                           });
+      upgradeFromV10(repository);
     }
 
     if (currentJarVersion < 16) {
@@ -128,18 +69,82 @@ public class UpgradeTrigger implements ChangeSetListener {
       migrateProfileTypes(repository);
     }
 
-    if (currentJarVersion < 21){
+    if (currentJarVersion < 21) {
       migrateBankEntity(repository);
     }
 
+    if (currentJarVersion < 24) {
+      repository.safeApply(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, true),
+                           new RemovePlanedPrefixFunctor());
+    }
+
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
+  }
+
+  private void upgradeFromV10(GlobRepository repository) {
+    repository.safeApply(Transaction.TYPE, fieldEquals(Transaction.PLANNED, false),
+                         new GlobFunctor() {
+                           public void run(Glob transaction, GlobRepository repository) throws Exception {
+                             String originalLabel = transaction.get(Transaction.ORIGINAL_LABEL);
+                             String newLabel = TransactionAnalyzerFactory.removeBlankAndToUpercase(originalLabel);
+                             repository.update(transaction.getKey(), Transaction.ORIGINAL_LABEL, newLabel);
+
+                             String label = transaction.get(Transaction.LABEL);
+                             String newVisibleLabel = TransactionAnalyzerFactory.removeBlankAndToUpercase(label);
+                             repository.update(transaction.getKey(), Transaction.LABEL, newVisibleLabel);
+
+                           }
+                         });
+  }
+
+  private void upgradeFromV9(GlobRepository repository) {
+    repository
+      .getAll(SeriesBudget.TYPE, fieldIsNull(SeriesBudget.DAY))
+      .safeApply(new GlobFunctor() {
+        public void run(Glob seriesBudget, GlobRepository repository) throws Exception {
+          final int lastDay = Month.getLastDayNumber(seriesBudget.get(SeriesBudget.MONTH));
+          repository.update(seriesBudget.getKey(), value(SeriesBudget.DAY, lastDay));
+        }
+      }, repository);
+
+    GlobUtils.updateIfExists(repository,
+                             Series.UNCATEGORIZED_SERIES,
+                             Series.NAME,
+                             Series.getUncategorizedName());
+
+    repository.update(Series.UNCATEGORIZED_SERIES, Series.IS_AUTOMATIC, false);
+
+    GlobList uncategorizedTransactions =
+      repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID)
+        .getGlobs();
+
+    if (!uncategorizedTransactions.isEmpty()) {
+      final Integer lastMonthId = uncategorizedTransactions.getSortedSet(Transaction.MONTH).last();
+      repository
+        .getAll(SeriesBudget.TYPE,
+                and(
+                  fieldEquals(SeriesBudget.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+                  GlobMatchers.fieldStrictlyGreaterThan(SeriesBudget.MONTH, lastMonthId)))
+        .safeApply(new GlobFunctor() {
+          public void run(Glob seriesBudget, GlobRepository repository) throws Exception {
+            repository.update(seriesBudget.getKey(), value(SeriesBudget.AMOUNT, 0.00));
+          }
+        }, repository);
+    }
+
+    GlobList globList = repository.getAll(Series.TYPE, fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
+    for (Glob glob : globList) {
+      if (glob.get(Series.TO_ACCOUNT) == null && glob.get(Series.FROM_ACCOUNT) == null) {
+        repository.update(glob.getKey(), Series.FROM_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID);
+      }
+    }
   }
 
   private void migrateBankEntity(GlobRepository repository) {
     GlobList accounts = repository.getAll(Account.TYPE);
     for (Glob account : accounts) {
       Glob bankEntity = repository.findLinkTarget(account, Account.BANK_ENTITY);
-      if (bankEntity != null){
+      if (bankEntity != null) {
         Glob bank = repository.findLinkTarget(bankEntity, BankEntity.BANK);
         repository.update(account.getKey(),
                           FieldValue.value(Account.BANK_ENTITY_LABEL, bankEntity.get(BankEntity.LABEL)),
@@ -263,6 +268,23 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
     finally {
       repository.completeChangeSet();
+    }
+  }
+
+  private static class RemovePlanedPrefixFunctor implements GlobFunctor {
+
+    public void run(Glob glob, GlobRepository repository) throws Exception {
+      String label = glob.get(Transaction.LABEL);
+      if (label.startsWith("Planned: ")){
+        label = label.substring(9);
+      }else if (label.startsWith("Prévu : ")){
+        label = label.substring(8);
+      }else if (label.startsWith("Planned:")){
+        label = label.substring(8);
+      }else if (label.startsWith("Prévu :")){
+        label = label.substring(7);
+      }
+      repository.update(glob.getKey(), Transaction.LABEL, label);
     }
   }
 }

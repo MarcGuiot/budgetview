@@ -31,17 +31,17 @@ fi
 
 if [ -a cashpilot-${SOFT_VERSION}.tar.gz ];
 then
-   echo scp cashpilot-${SOFT_VERSION}.tar.gz cashpilot@91.121.123.100:files/app
+   scp cashpilot-${SOFT_VERSION}.tar.gz cashpilot@91.121.123.100:files/app
 fi
 
 if [ -a dev/install/output/CashPilot-${SOFT_VERSION}-Setup.exe ];
 then
-   echo scp dev/install/output/CashPilot-${SOFT_VERSION}-Setup.exe  cashpilot@91.121.123.100:files/app
+   scp dev/install/output/CashPilot-${SOFT_VERSION}-Setup.exe  cashpilot@91.121.123.100:files/app
 fi
 
 if [ -a CashPilot-${SOFT_VERSION}.dmg ];
 then
-   echo scp CashPilot-${SOFT_VERSION}.dmg cashpilot@91.121.123.100:files/app
+   scp CashPilot-${SOFT_VERSION}.dmg cashpilot@91.121.123.100:files/app
 fi
 
-echo scp ../picsou/obfuscated/cashpilot${JAR_VERSION}.jar ../picsou/ChangeLogOutput-${JAR_VERSION}.txt.bz2 build@91.121.123.100:versions/
+scp ../picsou/obfuscated/cashpilot${JAR_VERSION}.jar ../picsou/ChangeLogOutput-${JAR_VERSION}.txt.bz2 build@91.121.123.100:versions/

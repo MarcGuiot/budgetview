@@ -166,7 +166,7 @@ public class Series {
   }
 
   public static String getPlannedTransactionLabel(Integer seriesId, FieldValues series) {
-    return Lang.get("transaction.planned", series.get(Series.NAME));
+    return series.get(Series.NAME); //Lang.get("transaction.planned", );
   }
 
   public static String getOccasionalName() {

@@ -379,7 +379,7 @@ public class FirstTimeTest extends UISpecTestCase {
 
         InputStream stream =
           getClass().getResourceAsStream(File.separator + "jars" + File.separator + "cashpilot.jar");
-        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot1.jar");
+        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot9999999.jar");
         System.setProperty("cashpilot.exe.dir", jarDir.getAbsolutePath());
         System.setProperty("cashpilot.prevayler.path", prevaylerDir.getAbsolutePath());
         com.cashpilot.Main.main(new String[0]);
