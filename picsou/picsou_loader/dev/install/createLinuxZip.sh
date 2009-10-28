@@ -6,14 +6,15 @@ JAR_VERSION=`echo $VERSION | sed -e 's/Jar version://g' | sed -e 's/  *//g'`
 SOFT_VERSION=`java -jar ../picsou/obfuscated/cashpilot.jar -v -soft | grep "Software version:" |
               sed -e 's/Software version://g' | sed -e 's/  *//g'`
 
-rm ../picsou/obfuscated/cashpilot${JAR_VERSION}.jar
+rm -f ../picsou/obfuscated/cashpilot${JAR_VERSION}.jar
 cp ../picsou/obfuscated/cashpilot.jar ../picsou/obfuscated/cashpilot${JAR_VERSION}.jar
+bzip2 -c ../picsou/ChangeLogOutput.txt > ../picsou/ChangeLogOutput-${JAR_VERSION}.txt.bz2
 mkdir -p src/test/resources/jars
 cp ../picsou/obfuscated/cashpilot.jar src/test/resources/jars/cashpilot.jar
 
 rm -rf cashpilot cashpilot.zip
 mkdir -p cashpilot
-java -jar ../picsou/obfuscated/cashpilot.jar -v  > cashpilot/version.txt
+java -jar ../picsou/obfuscated/cashpilot.jar -v  | grep version > cashpilot/version.txt
 cp dev/images/cashpilot_icon_16.png cashpilot/
 cp dev/images/cashpilot_icon_32.png cashpilot/
 cp dev/images/cashpilot_icon_48.png cashpilot/
