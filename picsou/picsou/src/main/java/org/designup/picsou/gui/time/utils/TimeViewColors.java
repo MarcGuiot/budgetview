@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.time.utils;
 
 import org.designup.picsou.gui.utils.AmountColors;
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -40,21 +40,21 @@ public class TimeViewColors implements ColorChangeListener {
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    monthTop = colorLocator.get(PicsouColors.TIMEVIEW_MONTH_TOP);
-    monthBottom = colorLocator.get(PicsouColors.TIMEVIEW_MONTH_BOTTOM);
-    currentBackgroundTop = colorLocator.get(PicsouColors.TIMEVIEW_CURRENT_MONTH_TOP);
-    currentBackgroundBottom = colorLocator.get(PicsouColors.TIMEVIEW_CURRENT_MONTH_BOTTOM);
-    selectedMonthBottom = colorLocator.get(PicsouColors.TIMEVIEW_SELECTED_MONTH_BOTTOM);
-    selectedMonthTop = colorLocator.get(PicsouColors.TIMEVIEW_SELECTED_MONTH_TOP);
+    monthTop = colorLocator.get(ApplicationColors.TIMEVIEW_MONTH_TOP);
+    monthBottom = colorLocator.get(ApplicationColors.TIMEVIEW_MONTH_BOTTOM);
+    currentBackgroundTop = colorLocator.get(ApplicationColors.TIMEVIEW_CURRENT_MONTH_TOP);
+    currentBackgroundBottom = colorLocator.get(ApplicationColors.TIMEVIEW_CURRENT_MONTH_BOTTOM);
+    selectedMonthBottom = colorLocator.get(ApplicationColors.TIMEVIEW_SELECTED_MONTH_BOTTOM);
+    selectedMonthTop = colorLocator.get(ApplicationColors.TIMEVIEW_SELECTED_MONTH_TOP);
 
     yearBackground = monthBottom;
-    yearSeparator = colorLocator.get(PicsouColors.TIMEVIEW_YEAR_SEPARATOR);
+    yearSeparator = colorLocator.get(ApplicationColors.TIMEVIEW_YEAR_SEPARATOR);
 
-    futureText = colorLocator.get(PicsouColors.TIMEVIEW_TEXT_FUTURE);
-    pastText = colorLocator.get(PicsouColors.TIMEVIEW_TEXT_PAST);
-    currentText = colorLocator.get(PicsouColors.TIMEVIEW_TEXT_CURRENT);
-    yearText = colorLocator.get(PicsouColors.TIMEVIEW_TEXT_YEAR);
-    textShadow = colorLocator.get(PicsouColors.TIMEVIEW_TEXT_SHADOW);
+    futureText = colorLocator.get(ApplicationColors.TIMEVIEW_TEXT_FUTURE);
+    pastText = colorLocator.get(ApplicationColors.TIMEVIEW_TEXT_PAST);
+    currentText = colorLocator.get(ApplicationColors.TIMEVIEW_TEXT_CURRENT);
+    yearText = colorLocator.get(ApplicationColors.TIMEVIEW_TEXT_YEAR);
+    textShadow = colorLocator.get(ApplicationColors.TIMEVIEW_TEXT_SHADOW);
   }
 
   public Font getYearFont() {

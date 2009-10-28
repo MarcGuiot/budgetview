@@ -2,37 +2,38 @@ package org.designup.picsou.gui;
 
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.browsing.BrowsingService;
+import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.config.RegistrationTrigger;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.series.view.SeriesWrapperUpdateTrigger;
 import org.designup.picsou.gui.startup.BackupService;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
-import org.designup.picsou.gui.components.dialogs.MessageDialog;
-import picsou.AwtExceptionHandler;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.AppVersionInformation;
+import org.designup.picsou.model.PicsouModel;
+import org.designup.picsou.model.User;
 import org.designup.picsou.triggers.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobUtils;
+import org.globsframework.utils.Log;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
-import org.globsframework.utils.Log;
+import picsou.AwtExceptionHandler;
 
 import javax.swing.*;
 import java.util.Collection;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 public class PicsouInit {
 
@@ -52,7 +53,7 @@ public class PicsouInit {
 
     idGenerator = new DefaultGlobIdGenerator();
     this.repository =
-      GlobRepositoryBuilder.init(idGenerator, new OnExceptionRunnable())
+      GlobRepositoryBuilder.init(idGenerator, new ShowDialogAndExitExceptionHandler())
         .add(directory.get(GlobModel.class).getConstants())
         .get();
 
@@ -188,19 +189,19 @@ public class PicsouInit {
     return repository;
   }
 
-  private  class OnExceptionRunnable implements ExceptionHandler {
+  private class ShowDialogAndExitExceptionHandler implements ExceptionHandler {
 
     public void onException(Throwable ex) {
-      JFrame jFrame = directory.find(JFrame.class);
-      StringWriter writer = new StringWriter();
-      PrintWriter s = new PrintWriter(writer);
-      ex.printStackTrace(s);
-      s.flush();
       Log.write(ex.getMessage(), ex);
-      MessageDialog dialog = new MessageDialog("exception.title", "exception.content", jFrame, directory, ex.getMessage(),
-                                               writer.toString());
+      MessageAndDetailsDialog dialog = new MessageAndDetailsDialog("exception.title",
+                                                                   "exception.content",
+                                                                   Strings.toString(ex),
+                                                                   directory.get(JFrame.class),
+                                                                   directory);
       dialog.show();
-      System.exit(10);
+      if (PicsouApplication.EXIT_ON_DATA_ERROR) {
+        System.exit(10);
+      }
     }
   }
 }

@@ -3,7 +3,7 @@ package org.designup.picsou.exporter.tsv;
 import org.designup.picsou.exporter.Exporter;
 import org.designup.picsou.gui.description.AmountStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
-import org.designup.picsou.gui.utils.PicsouMatchers;
+import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.TransactionComparator;
@@ -13,7 +13,6 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.GlobStringifiers;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import java.io.IOException;
@@ -43,7 +42,7 @@ public class TsvExporter implements Exporter {
 
     GlobList transactions =
       repository
-        .getAll(Transaction.TYPE, PicsouMatchers.exportableTransactions())
+        .getAll(Transaction.TYPE, Matchers.exportableTransactions())
         .sort(TransactionComparator.DESCENDING_SPLIT_AFTER);
 
     List<GlobStringifier> stringifiers = Arrays.asList(

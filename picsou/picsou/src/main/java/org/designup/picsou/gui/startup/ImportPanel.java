@@ -10,7 +10,7 @@ import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.importer.BankFileType;
 import org.designup.picsou.importer.ImportSession;
 import org.designup.picsou.model.*;
@@ -192,7 +192,7 @@ public class ImportPanel {
 
     JTable transactionTable = tableView.getComponent();
     dateRenderer.setTable(tableView);
-    PicsouColors.setSelectionColors(transactionTable, directory);
+    ApplicationColors.setSelectionColors(transactionTable, directory);
     Gui.setColumnSizes(transactionTable, COLUMN_SIZES);
 
     builder2.add("table", transactionTable);

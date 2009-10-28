@@ -1,0 +1,20 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="dialog" preferredSize="(600,600)" opaque="true">
+    <column styleClass="innerDialog">
+      <label ref="title" styleClass="title"/>
+      <htmlEditorPane ref="message" marginBottom="10" weightY="0"/>
+      <scrollPane>
+        <textArea ref="details"/>
+      </scrollPane>
+      <row marginTop="5" marginBottom="15" autoHideSource="copy">
+        <filler fill="horizontal"/>
+        <button ref="copy"/>
+        <filler fill="horizontal"/>
+      </row>
+    </column>
+  </panel>
+
+</splits>

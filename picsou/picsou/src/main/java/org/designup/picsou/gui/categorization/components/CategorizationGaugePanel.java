@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.categorization.components;
 
 import org.designup.picsou.gui.components.charts.Gauge;
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.gui.utils.SetFieldValueAction;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
@@ -52,7 +52,7 @@ public class CategorizationGaugePanel implements ChangeSetListener {
   private void createProgressMessage() {
     progressMessage = new JEditorPane();
     progressMessage.setContentType("text/html");
-    PicsouColors.installLinkColor(progressMessage, "mainpanel", "mainpanel.message.link", directory);
+    ApplicationColors.installLinkColor(progressMessage, "mainpanel", "mainpanel.message.link", directory);
     progressMessage.setVisible(false);
   }
 

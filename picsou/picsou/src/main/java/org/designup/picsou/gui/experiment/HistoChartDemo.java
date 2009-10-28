@@ -8,7 +8,7 @@ import org.designup.picsou.gui.components.charts.histo.HistoChartListener;
 import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffDataset;
 import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffPainter;
 import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffColors;
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +35,7 @@ public class HistoChartDemo {
     dataset.add(200901, 3400, 3000, "M", "2010", false, true);
 
     Directory directory = new DefaultDirectory();
-    directory.add(PicsouColors.createColorService());
+    directory.add(ApplicationColors.createColorService());
 
     HistoDiffColors colors = new HistoDiffColors(
       "histo.income.line",

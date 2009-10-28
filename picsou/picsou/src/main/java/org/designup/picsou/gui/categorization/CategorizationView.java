@@ -17,8 +17,8 @@ import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.PicsouColors;
-import org.designup.picsou.gui.utils.PicsouMatchers;
+import org.designup.picsou.gui.utils.ApplicationColors;
+import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.gui.utils.TableView;
 import org.designup.picsou.importer.utils.BankFormatExporter;
 import org.designup.picsou.model.*;
@@ -59,15 +59,14 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Set;
 
 public class CategorizationView extends View implements TableView, Filterable {
   private GlobList currentTransactions = GlobList.EMPTY;
   private GlobTableView transactionTable;
   private JComboBox filteringModeCombo;
-  private java.util.List<Pair<PicsouMatchers.CategorizationFilter, GlobRepeat>> seriesRepeat =
-    new ArrayList<Pair<PicsouMatchers.CategorizationFilter, GlobRepeat>>();
+  private java.util.List<Pair<Matchers.CategorizationFilter, GlobRepeat>> seriesRepeat =
+    new ArrayList<Pair<Matchers.CategorizationFilter, GlobRepeat>>();
 
   private Directory parentDirectory;
 
@@ -136,7 +135,7 @@ public class CategorizationView extends View implements TableView, Filterable {
 
     JTable table = transactionTable.getComponent();
     TransactionKeyListener.install(table, -1, directory, repository, true);
-    PicsouColors.installSelectionColors(table, directory);
+    ApplicationColors.installSelectionColors(table, directory);
     Gui.setColumnSizes(table, COLUMN_SIZES);
     installDoubleClickHandler();
     registerBankFormatExporter(transactionTable);
@@ -247,7 +246,7 @@ public class CategorizationView extends View implements TableView, Filterable {
       public void selectionUpdated(GlobSelection selection) {
         currentTransactions = selection.getAll(Transaction.TYPE);
         Set<Integer> months = currentTransactions.getValueSet(Transaction.MONTH);
-        for (Pair<PicsouMatchers.CategorizationFilter, GlobRepeat> filter : seriesRepeat) {
+        for (Pair<Matchers.CategorizationFilter, GlobRepeat> filter : seriesRepeat) {
           filter.getFirst().filterDates(months, currentTransactions);
           filter.getSecond().setFilter(filter.getFirst());
         }
@@ -292,8 +291,8 @@ public class CategorizationView extends View implements TableView, Filterable {
                                                                                         repository,
                                                                                         directory));
     seriesRepeat.add(
-      new Pair<PicsouMatchers.CategorizationFilter, GlobRepeat>(
-        PicsouMatchers.seriesFilter(budgetArea.getId()), repeat));
+      new Pair<Matchers.CategorizationFilter, GlobRepeat>(
+        Matchers.seriesFilter(budgetArea.getId()), repeat));
     panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
     panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
 
@@ -389,7 +388,7 @@ public class CategorizationView extends View implements TableView, Filterable {
 
     private boolean categorize(Glob series) {
       boolean noneMatch = false;
-      for (Pair<PicsouMatchers.CategorizationFilter, GlobRepeat> filter : seriesRepeat) {
+      for (Pair<Matchers.CategorizationFilter, GlobRepeat> filter : seriesRepeat) {
         noneMatch |= filter.getFirst().matches(series, repository);
       }
       if (!noneMatch) {

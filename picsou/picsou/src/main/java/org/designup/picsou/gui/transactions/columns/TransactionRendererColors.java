@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.transactions.columns;
 
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
@@ -33,18 +33,18 @@ public class TransactionRendererColors implements ColorChangeListener {
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    selectionBgColor = colorLocator.get(PicsouColors.TABLE_SELECTED_BG);
-    evenRowsBgColor = colorLocator.get(PicsouColors.TABLE_EVEN_ROWS_BG);
-    oddRowsBgColor = colorLocator.get(PicsouColors.TABLE_ODD_ROWS_BG);
-    rolloverCategoryColor = colorLocator.get(PicsouColors.CATEGORY_ROLLOVER_LABEL);
-    categoryColor = colorLocator.get(PicsouColors.CATEGORY_LABEL);
-    transactionTextColor = colorLocator.get(PicsouColors.TABLE_TEXT);
-    transactionSelectedTextColor = colorLocator.get(PicsouColors.TRANSACTION_SELECTED_TEXT);
-    transactionPlannedTextColor = colorLocator.get(PicsouColors.TRANSACTION_TEXT_PLANNED);
-    transactionLinkTextColor = colorLocator.get(PicsouColors.TRANSACTION_TEXT_LINK);
-    transactionErrorTextColor = colorLocator.get(PicsouColors.TABLE_TEXT_ERROR);
-    splitSourceColor = colorLocator.get(PicsouColors.TRANSACTION_SPLIT_SOURCE_BG);
-    splitChildColor = colorLocator.get(PicsouColors.TRANSACTION_SPLIT_BG);
+    selectionBgColor = colorLocator.get(ApplicationColors.TABLE_SELECTED_BG);
+    evenRowsBgColor = colorLocator.get(ApplicationColors.TABLE_EVEN_ROWS_BG);
+    oddRowsBgColor = colorLocator.get(ApplicationColors.TABLE_ODD_ROWS_BG);
+    rolloverCategoryColor = colorLocator.get(ApplicationColors.CATEGORY_ROLLOVER_LABEL);
+    categoryColor = colorLocator.get(ApplicationColors.CATEGORY_LABEL);
+    transactionTextColor = colorLocator.get(ApplicationColors.TABLE_TEXT);
+    transactionSelectedTextColor = colorLocator.get(ApplicationColors.TRANSACTION_SELECTED_TEXT);
+    transactionPlannedTextColor = colorLocator.get(ApplicationColors.TRANSACTION_TEXT_PLANNED);
+    transactionLinkTextColor = colorLocator.get(ApplicationColors.TRANSACTION_TEXT_LINK);
+    transactionErrorTextColor = colorLocator.get(ApplicationColors.TABLE_TEXT_ERROR);
+    splitSourceColor = colorLocator.get(ApplicationColors.TRANSACTION_SPLIT_SOURCE_BG);
+    splitChildColor = colorLocator.get(ApplicationColors.TRANSACTION_SPLIT_BG);
   }
 
   public Color getEvenRowsBgColor() {

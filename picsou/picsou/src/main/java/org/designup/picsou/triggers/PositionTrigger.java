@@ -1,7 +1,7 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.utils.PicsouMatchers;
+import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Month;
@@ -11,7 +11,6 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFieldComparator;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
 
@@ -191,8 +190,8 @@ public class PositionTrigger implements ChangeSetListener {
       return;
     }
 
-    PicsouMatchers.AccountDateMatcher matcher =
-      new PicsouMatchers.AccountDateMatcher(new GlobList(firstMonth));
+    Matchers.AccountDateMatcher matcher =
+      new Matchers.AccountDateMatcher(new GlobList(firstMonth));
     for (Glob account : accounts) {
       if (matcher.matches(account, repository) &&
           sameCheckerAccount.isSame(account.get(Account.ID))) {

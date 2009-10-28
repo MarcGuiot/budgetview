@@ -10,7 +10,7 @@ import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
-import org.designup.picsou.gui.utils.PicsouMatchers;
+import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -38,7 +38,7 @@ public class BudgetAreaSeriesView extends View {
   private BudgetArea budgetArea;
   private SeriesEditionDialog seriesEditionDialog;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
-  private PicsouMatchers.SeriesFirstEndDateFilter seriesDateFilter;
+  private Matchers.SeriesFirstEndDateFilter seriesDateFilter;
   private GlobMatcher seriesFilter;
   private Repeat<Glob> seriesRepeat;
   private List<Key> currentSeries = Collections.emptyList();
@@ -155,10 +155,10 @@ public class BudgetAreaSeriesView extends View {
     parentBuilder.add(name, builder);
     if (budgetArea == BudgetArea.SAVINGS) {
       seriesDateFilter =
-        PicsouMatchers.seriesDateSavingsAndAccountFilter(Account.MAIN_SUMMARY_ACCOUNT_ID);
+        Matchers.seriesDateSavingsAndAccountFilter(Account.MAIN_SUMMARY_ACCOUNT_ID);
     }
     else {
-      seriesDateFilter = PicsouMatchers.seriesDateFilter(budgetArea.getId(), false);
+      seriesDateFilter = Matchers.seriesDateFilter(budgetArea.getId(), false);
     }
     seriesFilter = new GlobMatcher() {
       public boolean matches(Glob periodSeriesStat, GlobRepository repository) {

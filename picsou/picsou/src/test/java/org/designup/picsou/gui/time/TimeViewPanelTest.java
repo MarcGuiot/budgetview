@@ -6,7 +6,7 @@ import org.designup.picsou.gui.time.mousestates.MouseState;
 import org.designup.picsou.gui.time.mousestates.ReleasedMouseState;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.gui.time.selectable.SelectableContainer;
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.model.Month;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.ColorService;
@@ -108,7 +108,7 @@ public class TimeViewPanelTest extends TestCase {
     jFrame.setBounds(0, 0, 270, 40);
     directory.add(SelectionService.class, new SelectionService());
     directory.add(TimeService.class, new TimeService());
-    directory.add(ColorService.class, PicsouColors.createColorService());
+    directory.add(ColorService.class, ApplicationColors.createColorService());
     GlobList months = new GlobList();
     for (int i = 10; i < 13; i++) {
       months.add(GlobBuilder.init(Month.TYPE).set(Month.ID, Month.toYyyyMm(2006, i)).get());

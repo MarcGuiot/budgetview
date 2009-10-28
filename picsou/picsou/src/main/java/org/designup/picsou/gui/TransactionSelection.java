@@ -1,7 +1,7 @@
 package org.designup.picsou.gui;
 
-import org.designup.picsou.gui.utils.PicsouMatchers;
-import static org.designup.picsou.gui.utils.PicsouMatchers.*;
+import org.designup.picsou.gui.utils.Matchers;
+import static org.designup.picsou.gui.utils.Matchers.*;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
@@ -63,7 +63,7 @@ public class TransactionSelection implements GlobSelectionListener {
 
     currentMatcher = and(transactionsForMonths(currentMonths),
                          transactionsForAccounts(currentAccounts, repository),
-                         PicsouMatchers.transactionsForSeries(currentBudgetAreas, currentSeries, repository));
+                         Matchers.transactionsForSeries(currentBudgetAreas, currentSeries, repository));
 
     for (GlobSelectionListener listener : listeners) {
       listener.selectionUpdated(selection);

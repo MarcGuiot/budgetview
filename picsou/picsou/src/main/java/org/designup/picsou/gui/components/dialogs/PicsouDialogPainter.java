@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components.dialogs;
 
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -19,9 +19,9 @@ public class PicsouDialogPainter implements ColorChangeListener {
   public PicsouDialogPainter() {
     colorService = (ColorService)UIManager.get("ColorService");
     colorService.addListener(this);
-    topColor = colorService.get(PicsouColors.DIALOG_BG_TOP);
-    bottomColor = colorService.get(PicsouColors.DIALOG_BG_BOTTOM);
-    borderColor = colorService.get(PicsouColors.DIALOG_BORDER);
+    topColor = colorService.get(ApplicationColors.DIALOG_BG_TOP);
+    bottomColor = colorService.get(ApplicationColors.DIALOG_BG_BOTTOM);
+    borderColor = colorService.get(ApplicationColors.DIALOG_BORDER);
   }
 
   public Color getBorderColor() {
@@ -49,9 +49,9 @@ public class PicsouDialogPainter implements ColorChangeListener {
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    topColor = colorLocator.get(PicsouColors.DIALOG_BG_TOP);
-    bottomColor = colorLocator.get(PicsouColors.DIALOG_BG_BOTTOM);
-    borderColor = colorLocator.get(PicsouColors.DIALOG_BORDER);
+    topColor = colorLocator.get(ApplicationColors.DIALOG_BG_TOP);
+    bottomColor = colorLocator.get(ApplicationColors.DIALOG_BG_BOTTOM);
+    borderColor = colorLocator.get(ApplicationColors.DIALOG_BORDER);
   }
 
   protected void finalize() throws Throwable {

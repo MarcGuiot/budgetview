@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components;
 
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -28,7 +28,7 @@ public class PicsouTableHeaderPainter implements CellPainter, ColorChangeListene
 
   public static PicsouTableHeaderPainter install(GlobTableView tableView, Directory directory) {
     PicsouTableHeaderPainter headerPainter = new PicsouTableHeaderPainter(tableView, directory);
-    tableView.setHeaderCustomizer(new PicsouTableHeaderCustomizer(directory, PicsouColors.TRANSACTION_TABLE_HEADER_TITLE),
+    tableView.setHeaderCustomizer(new PicsouTableHeaderCustomizer(directory, ApplicationColors.TRANSACTION_TABLE_HEADER_TITLE),
                                   headerPainter);
     return headerPainter;
   }
@@ -46,15 +46,15 @@ public class PicsouTableHeaderPainter implements CellPainter, ColorChangeListene
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    lightColor = colorLocator.get(PicsouColors.TRANSACTION_TABLE_HEADER_LIGHT);
-    mediumColor = colorLocator.get(PicsouColors.TRANSACTION_TABLE_HEADER_MEDIUM);
-    darkColor = colorLocator.get(PicsouColors.TRANSACTION_TABLE_HEADER_DARK);
-    borderColor = colorLocator.get(PicsouColors.TRANSACTION_TABLE_HEADER_BORDER);
+    lightColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_LIGHT);
+    mediumColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_MEDIUM);
+    darkColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_DARK);
+    borderColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_BORDER);
 
-    filteredLightColor = colorLocator.get(PicsouColors.TRANSACTION_TABLE_HEADER_FILTERED_LIGHT);
-    filteredMediumColor = colorLocator.get(PicsouColors.TRANSACTION_TABLE_HEADER_FILTERED_MEDIUM);
-    filteredDarkColor = colorLocator.get(PicsouColors.TRANSACTION_TABLE_HEADER_FILTERED_DARK);
-    filteredBorderColor = colorLocator.get(PicsouColors.TRANSACTION_TABLE_HEADER_FILTERED_BORDER);
+    filteredLightColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_FILTERED_LIGHT);
+    filteredMediumColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_FILTERED_MEDIUM);
+    filteredDarkColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_FILTERED_DARK);
+    filteredBorderColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_FILTERED_BORDER);
   }
 
   public void paint(Graphics g, Glob glob,

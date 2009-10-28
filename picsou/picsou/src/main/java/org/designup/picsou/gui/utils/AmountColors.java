@@ -26,17 +26,17 @@ public class AmountColors implements ColorChangeListener {
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    balanceZero = colorLocator.get(PicsouColors.PERIOD_BALANCE_ZERO);
-    balancePlus4 = colorLocator.get(PicsouColors.PERIOD_BALANCE_PLUS_4);
-    balancePlus3 = colorLocator.get(PicsouColors.PERIOD_BALANCE_PLUS_3);
-    balancePlus2 = colorLocator.get(PicsouColors.PERIOD_BALANCE_PLUS_2);
-    balancePlus1 = colorLocator.get(PicsouColors.PERIOD_BALANCE_PLUS_1);
-    balancePlus05 = colorLocator.get(PicsouColors.PERIOD_BALANCE_PLUS_05);
-    balanceMinus4 = colorLocator.get(PicsouColors.PERIOD_BALANCE_MINUS_4);
-    balanceMinus3 = colorLocator.get(PicsouColors.PERIOD_BALANCE_MINUS_3);
-    balanceMinus2 = colorLocator.get(PicsouColors.PERIOD_BALANCE_MINUS_2);
-    balanceMinus1 = colorLocator.get(PicsouColors.PERIOD_BALANCE_MINUS_1);
-    balanceMinus05 = colorLocator.get(PicsouColors.PERIOD_BALANCE_MINUS_05);
+    balanceZero = colorLocator.get(ApplicationColors.PERIOD_BALANCE_ZERO);
+    balancePlus4 = colorLocator.get(ApplicationColors.PERIOD_BALANCE_PLUS_4);
+    balancePlus3 = colorLocator.get(ApplicationColors.PERIOD_BALANCE_PLUS_3);
+    balancePlus2 = colorLocator.get(ApplicationColors.PERIOD_BALANCE_PLUS_2);
+    balancePlus1 = colorLocator.get(ApplicationColors.PERIOD_BALANCE_PLUS_1);
+    balancePlus05 = colorLocator.get(ApplicationColors.PERIOD_BALANCE_PLUS_05);
+    balanceMinus4 = colorLocator.get(ApplicationColors.PERIOD_BALANCE_MINUS_4);
+    balanceMinus3 = colorLocator.get(ApplicationColors.PERIOD_BALANCE_MINUS_3);
+    balanceMinus2 = colorLocator.get(ApplicationColors.PERIOD_BALANCE_MINUS_2);
+    balanceMinus1 = colorLocator.get(ApplicationColors.PERIOD_BALANCE_MINUS_1);
+    balanceMinus05 = colorLocator.get(ApplicationColors.PERIOD_BALANCE_MINUS_05);
     normalText = colorLocator.get("block.total");
   }
 

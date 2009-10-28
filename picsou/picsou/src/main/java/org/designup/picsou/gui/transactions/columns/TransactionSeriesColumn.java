@@ -3,7 +3,7 @@ package org.designup.picsou.gui.transactions.columns;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.HyperlinkTableColumn;
 import org.designup.picsou.gui.description.TransactionSeriesStringifier;
-import org.designup.picsou.gui.utils.PicsouColors;
+import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -69,8 +69,8 @@ public class TransactionSeriesColumn extends HyperlinkTableColumn {
 
   public void colorsChanged(ColorLocator colorLocator) {
     super.colorsChanged(colorLocator);
-    selectedColor = colorLocator.get(PicsouColors.TRANSACTION_SELECTED_TEXT);
-    toCategorizeColor = colorLocator.get(PicsouColors.TRANSACTION_ERROR_TEXT);
+    selectedColor = colorLocator.get(ApplicationColors.TRANSACTION_SELECTED_TEXT);
+    toCategorizeColor = colorLocator.get(ApplicationColors.TRANSACTION_ERROR_TEXT);
   }
 
   protected void updateComponent(HyperlinkButton button, JPanel panel, Glob transaction, boolean render) {

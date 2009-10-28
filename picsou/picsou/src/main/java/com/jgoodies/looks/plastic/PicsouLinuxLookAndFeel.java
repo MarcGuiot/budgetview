@@ -1,11 +1,7 @@
 package com.jgoodies.looks.plastic;
 
-import org.designup.picsou.gui.plaf.LafUtils;
-import org.designup.picsou.gui.plaf.PicsouButtonUI;
-import org.designup.picsou.gui.plaf.PicsouWindowsLabelUI;
-import org.designup.picsou.gui.plaf.PicsouOptionPaneUI;
-import org.designup.picsou.gui.plaf.PicsouRootPaneUI;
-import org.designup.picsou.gui.plaf.PicsouWindowsFileChooserUI;
+import org.designup.picsou.gui.plaf.ApplicationLAF;
+import org.designup.picsou.gui.plaf.*;
 import org.jdesktop.swingx.JXDatePicker;
 import org.jdesktop.swingx.JXMonthView;
 import org.jdesktop.swingx.JXHyperlink;
@@ -19,16 +15,16 @@ public class PicsouLinuxLookAndFeel extends PlasticXPLookAndFeel {
   protected void initClassDefaults(UIDefaults defaults) {
     super.initClassDefaults(defaults);
     try {
-      LafUtils.initUI(defaults, PicsouButtonUI.class, "ButtonUI");
-      LafUtils.initUI(defaults, PicsouWindowsLabelUI.class, "LabelUI");
-      LafUtils.initUI(defaults, PicsouOptionPaneUI.class, "OptionPaneUI");
-      LafUtils.initUI(defaults, PicsouWindowsFileChooserUI.class, "FileChooserUI");
-      LafUtils.initUI(defaults, PicsouRootPaneUI.class, "RootPaneUI");
-      LafUtils.initUI(defaults, org.jdesktop.swingx.plaf.basic.BasicDatePickerUI.class,
+      ApplicationLAF.initUI(defaults, PicsouButtonUI.class, "ButtonUI");
+      ApplicationLAF.initUI(defaults, PicsouWindowsLabelUI.class, "LabelUI");
+      ApplicationLAF.initUI(defaults, PicsouOptionPaneUI.class, "OptionPaneUI");
+      ApplicationLAF.initUI(defaults, PicsouWindowsFileChooserUI.class, "FileChooserUI");
+      ApplicationLAF.initUI(defaults, PicsouRootPaneUI.class, "RootPaneUI");
+      ApplicationLAF.initUI(defaults, org.jdesktop.swingx.plaf.basic.BasicDatePickerUI.class,
                       JXDatePicker.uiClassID);
-      LafUtils.initUI(defaults, BasicMonthViewUI.class,
+      ApplicationLAF.initUI(defaults, BasicMonthViewUI.class,
                       JXMonthView.uiClassID);
-      LafUtils.initUI(defaults, BasicHyperlinkUI.class,
+      ApplicationLAF.initUI(defaults, BasicHyperlinkUI.class,
                       JXHyperlink.uiClassID);
       
     }
