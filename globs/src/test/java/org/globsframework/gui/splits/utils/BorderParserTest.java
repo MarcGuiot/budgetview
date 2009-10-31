@@ -10,7 +10,7 @@ import org.uispec4j.UISpecTestCase;
 import javax.swing.border.*;
 import java.awt.*;
 
-public class BorderUtilsTest extends UISpecTestCase {
+public class BorderParserTest extends UISpecTestCase {
   private ColorService colorService = new ColorService();
   private SplitsContext context;
 
@@ -100,7 +100,7 @@ public class BorderUtilsTest extends UISpecTestCase {
   }
 
   private Border parse(String text) {
-    return BorderUtils.parse(text, colorService, context);
+    return BorderParser.parse(text, colorService, context);
   }
 
   private void checkInsets(Insets insets, int top, int left, int bottom, int right) {
