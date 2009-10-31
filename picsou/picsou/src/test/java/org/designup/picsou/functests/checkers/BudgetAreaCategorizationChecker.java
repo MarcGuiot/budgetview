@@ -176,4 +176,9 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   public SeriesEditionDialogChecker editSeries(String seriesName) {
     return categorizationChecker.editSeries(seriesName);
   }
+
+  public BudgetAreaCategorizationChecker checkDescriptionDisplayed() {
+    assertThat(panel.getTextBox("description").textContains(budgetArea.getDescription()));
+    return this;
+  }
 }

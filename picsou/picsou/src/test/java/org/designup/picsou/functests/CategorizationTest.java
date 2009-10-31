@@ -23,6 +23,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRow(0)
       .checkLabel("WORLDCO/JUNE")
       .selectIncome()
+      .checkDescriptionDisplayed()
       .checkNoSeriesMessage("You must create a series")
       .selectNewSeries("Salary")
       .checkNoSeriesMessageHidden();
@@ -55,6 +56,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectTableRow(0)
       .checkLabel("FREE TELECOM")
       .selectRecurring()
+      .checkDescriptionDisplayed()
       .checkContainsNoSeries()
       .checkNoSeriesMessage("You must create a series")
       .selectNewSeries("Internet")
@@ -81,6 +83,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows(0)
       .checkLabel("AUCHAN C'EST BON")
       .selectEnvelopes()
+      .checkDescriptionDisplayed()
       .checkNoSeriesMessage("You must create a series")
       .selectNewSeries("Courant")
       .checkSeriesIsSelected("Courant")

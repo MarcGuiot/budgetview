@@ -3,13 +3,22 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
     <style selector="scrollPane" opaque="false" border=""/>
+    <style selector="panel.descriptionPanel"
+           opaque="true" background="categorization.budgetArea.description.bg"
+           border="matte(0,0,1,0,categorization.budgetArea.description.border)"/>
+    <style selector="textArea#description"
+           foreground="categorization.budgetArea.description.text" opaque="false" font="-,plain,12"
+           editable="false" lineWrap="true" wrapStyleWord="true" fill="both" margin="5"/>
   </styles>
 
   <column>
     <column styleClass="budgetAreaSelection">
+      <panel styleClass="descriptionPanel" weightY="0">
+        <textArea ref="description"/>
+      </panel>
       <htmlEditorPane ref="noSeriesMessage" border="empty(10)" hyperlinkListener="hyperlinkHandler"/>
       <radioButton ref="invisibleToggle" visible="false"/>
-      <scrollPane>
+      <scrollPane weightY="100">
         <repeat ref="seriesRepeat" layout="wrappedColumn" margin="10">
           <column name="seriesBlock">
             <row>

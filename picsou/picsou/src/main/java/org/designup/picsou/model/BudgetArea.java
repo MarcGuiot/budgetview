@@ -74,6 +74,10 @@ public enum BudgetArea implements GlobConstantContainer {
     return Lang.get("budgetArea." + getName());
   }
 
+  public String getDescription() {
+    return Lang.get("budgetArea.description." + getName());
+  }
+
   public static BudgetArea get(int id) {
     switch (id) {
       case -1:

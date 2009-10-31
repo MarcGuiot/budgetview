@@ -169,11 +169,11 @@ public class CategorizationView extends View implements TableView, Filterable {
     BudgetAreaSelector selector = new BudgetAreaSelector(repository, directory);
     selector.registerComponents(builder);
 
-    addSingleCategorySeriesChooser("incomeSeriesChooser", BudgetArea.INCOME, builder);
-    addSingleCategorySeriesChooser("recurringSeriesChooser", BudgetArea.RECURRING, builder);
-    addSingleCategorySeriesChooser("envelopesSeriesChooser", BudgetArea.ENVELOPES, builder);
-    addSingleCategorySeriesChooser("specialSeriesChooser", BudgetArea.SPECIAL, builder);
-    addSingleCategorySeriesChooser("savingsSeriesChooser", BudgetArea.SAVINGS, builder);
+    addSeriesChooser("incomeSeriesChooser", BudgetArea.INCOME, builder);
+    addSeriesChooser("recurringSeriesChooser", BudgetArea.RECURRING, builder);
+    addSeriesChooser("envelopesSeriesChooser", BudgetArea.ENVELOPES, builder);
+    addSeriesChooser("specialSeriesChooser", BudgetArea.SPECIAL, builder);
+    addSeriesChooser("savingsSeriesChooser", BudgetArea.SAVINGS, builder);
 
     TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory, this);
     transactionDetailsView.registerComponents(builder);
@@ -270,12 +270,14 @@ public class CategorizationView extends View implements TableView, Filterable {
     return transaction.get(Transaction.SPLIT_SOURCE);
   }
 
-  private void addSingleCategorySeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder parentBuilder) {
+  private void addSeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder parentBuilder) {
     GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationView.class,
-                                                           "/layout/singleChooserPanel.splits",
+                                                           "/layout/seriesChooserPanel.splits",
                                                            repository, directory);
 
     panelBuilder.add("hyperlinkHandler", new HyperlinkHandler(directory));
+
+    panelBuilder.add("description", new JTextArea(budgetArea.getDescription()));
 
     NoSeriesMessage noSeriesMessage = new NoSeriesMessage(budgetArea, repository);
     panelBuilder.add("noSeriesMessage", noSeriesMessage.getComponent());

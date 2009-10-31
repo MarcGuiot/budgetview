@@ -43,8 +43,9 @@
               <component ref="confirmPassword"/>
             </row>
 
-            <textArea styleClass="multiLineLabel" text="$login.password.warning" autoHideSource="confirmPassword"
-                      preferredSize="(200,30)"/>
+            <textArea styleClass="multiLineLabel" text="$login.password.warning"
+                      autoHideSource="confirmPassword" preferredSize="(200,30)"
+                      font="-,bold,12"/>
 
           </column>
 
