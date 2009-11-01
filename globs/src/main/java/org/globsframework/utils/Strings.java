@@ -1,11 +1,14 @@
 package org.globsframework.utils;
 
+import org.globsframework.utils.exceptions.InvalidParameter;
+import org.apache.commons.lang.StringUtils;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.io.StringWriter;
-import java.io.PrintWriter;
 
 public class Strings {
   public static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -129,5 +132,37 @@ public class Strings {
       return text.substring(0, maxLength - 3) + "...";
     }
     return text.substring(0, maxLength);
+  }
+
+  public static String toSplittedHtml(String text, int maxLineLength) throws InvalidParameter {
+    if (maxLineLength < 1) {
+      throw new InvalidParameter("Line length parameter must be greater than 0");
+    }
+    if (text == null) {
+      return null;
+    }
+    if (text.length() == 0) {
+      return "";
+    }
+
+    String[] words = StringUtils.split(text);
+    StringBuilder result = new StringBuilder();
+    result.append("<html>");
+
+    int lineLength = 0;
+    for (String word : words) {
+      if ((lineLength > 0) && (lineLength + word.length() > maxLineLength)) {
+        result.append("<br>");
+        lineLength = 0;
+      }
+      if (lineLength > 0) {
+        result.append(" ");
+      }
+      result.append(word);
+      lineLength += word.length();
+    }
+
+    result.append("</html>");
+    return result.toString();
   }
 }

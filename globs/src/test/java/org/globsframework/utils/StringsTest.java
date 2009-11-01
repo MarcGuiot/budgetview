@@ -1,6 +1,7 @@
 package org.globsframework.utils;
 
 import junit.framework.TestCase;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,5 +59,26 @@ public class StringsTest extends TestCase {
     assertEquals("", Strings.cut("", 1));
     assertEquals("12", Strings.cut("12345", 2));
     assertEquals("1234567...", Strings.cut("12345678901234567890", 10));
+  }
+
+  public void testSplit() throws Exception {
+
+    assertEquals(null, Strings.toSplittedHtml(null, 10));
+    assertEquals("", Strings.toSplittedHtml("", 10));
+
+    assertEquals("<html>Two words</html>", Strings.toSplittedHtml("Two words", 10));
+    assertEquals("<html>Two words</html>", Strings.toSplittedHtml("Two \n \t words", 10));
+
+    assertEquals("<html>One Two<br>Three</html>", Strings.toSplittedHtml("One Two Three", 10));
+    assertEquals("<html>One Two<br>Three</html>", Strings.toSplittedHtml("One\nTwo\nThree", 10));
+
+    assertEquals("<html>One Two<br>Three Four<br>Five</html>", Strings.toSplittedHtml("One Two Three Four Five", 10));
+
+    try {
+      Strings.toSplittedHtml("One", -1);
+    }
+    catch (InvalidParameter e) {
+      assertEquals("Line length parameter must be greater than 0", e.getMessage());
+    }
   }
 }
