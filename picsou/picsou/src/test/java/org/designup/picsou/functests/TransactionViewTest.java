@@ -29,7 +29,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testEditingANoteByCellSelection() throws Exception {
-    transactions.editNote("sg", "interets");
+    transactions.editNote("SG", "interets");
     transactions.initContent()
       .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00)
       .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
@@ -208,6 +208,32 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testSeriesTooltip() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(2);
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/05/11", -1.0, "Something else")
+      .addTransaction("2006/05/10", -1.0, "Menu 14")
+      .load();
+
+    timeline.selectMonth("2006/05");
+    transactions.checkSeriesTooltipContains("SOMETHING ELSE", "Click to categorize this operation");
+    
+    transactions.categorize("SOMETHING ELSE");
+    categorization.setNewEnvelope("SOMETHING ELSE", "Clothes");
+    categorization.editSeries("Clothes").setDescription("Stuff to dress with").validate();
+
+    views.back();
+    views.checkDataSelected();
+    transactions.checkSeries("SOMETHING ELSE", "Clothes");
+    transactions.checkSeriesTooltipContains("SOMETHING ELSE", "Stuff to dress with");
+
+    timeline.selectMonth("2006/06");
+    transactions.checkSeriesTooltipContains("Planned: Clothes", "Stuff to dress with");
+  }
+
   public void testFutureBalance() throws Exception {
 
     views.selectCategorization();
@@ -268,7 +294,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     transactionDetails.split("30", "essence2");
 
     views.selectData();
-    transactions.delete("essence2")
+    transactions.deleteTransactionWithNote("essence2")
       .checkMessageContains("Use the split function")
       .validate();
     transactions.initContent()

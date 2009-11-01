@@ -4,6 +4,7 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.CustomBoldLabelCustomizer;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.expansion.*;
+import org.designup.picsou.gui.description.SeriesWrapperDescriptionStringifier;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.series.view.*;
@@ -18,6 +19,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
+import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -95,7 +97,7 @@ public class SeriesEvolutionView extends View {
       }
     });
 
-    CustomBoldLabelCustomizer customizer = new CustomBoldLabelCustomizer(directory) {
+    CustomBoldLabelCustomizer boldCustomizer = new CustomBoldLabelCustomizer(directory) {
       protected boolean isBold(Glob glob) {
         return glob.get(SeriesWrapper.MASTER) == null;
       }
@@ -112,7 +114,8 @@ public class SeriesEvolutionView extends View {
 
     tableView
       .addColumn("", expandColumn, expandColumn, GlobStringifiers.empty(stringifier.getComparator(repository)))
-      .addColumn("", stringifier, customizer);
+      .addColumn("", stringifier,
+                 chain(boldCustomizer, tooltip(new SeriesWrapperDescriptionStringifier(), repository)));
 
     for (int offset = -1; offset < -1 + MONTH_COLUMNS_COUNT; offset++) {
       SeriesEvolutionMonthColumn monthColumn =
@@ -172,7 +175,7 @@ public class SeriesEvolutionView extends View {
     return builder;
   }
 
-  public void reset(){
+  public void reset() {
     chartPanel.reset();
     referenceMonthId = null;
   }
@@ -190,7 +193,7 @@ public class SeriesEvolutionView extends View {
       for (int offset = -1; offset < -1 + MONTH_COLUMNS_COUNT; offset++) {
         int monthId = Month.normalize(referenceMonthId + offset);
         Glob seriesStat = SeriesEvolutionView.this.repository.find(Key.create(SeriesStat.SERIES, wrapper.get(SeriesWrapper.ITEM_ID),
-                                                           SeriesStat.MONTH, monthId));
+                                                                              SeriesStat.MONTH, monthId));
         if ((seriesStat != null) &&
             (Amounts.isNotZero(seriesStat.get(SeriesStat.PLANNED_AMOUNT))
              || Amounts.isNotZero(seriesStat.get(SeriesStat.AMOUNT)))) {

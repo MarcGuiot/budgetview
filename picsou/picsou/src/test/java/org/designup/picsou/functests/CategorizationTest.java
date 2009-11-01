@@ -25,7 +25,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectIncome()
       .checkDescriptionDisplayed()
       .checkNoSeriesMessage("You must create a series")
-      .selectNewSeries("Salary")
+      .selectNewSeries("Salary", "My income")
       .checkNoSeriesMessageHidden();
 
     views.selectData();
@@ -34,6 +34,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.checkSelectedTableRows(0);
     categorization.checkIncomeSeriesIsSelected("Salary");
+    categorization.getIncome().checkSeriesTooltip("Salary", "My income");
 
     categorization.selectIncome().createSeries()
       .setName("Exceptional Income")
@@ -59,7 +60,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .checkDescriptionDisplayed()
       .checkContainsNoSeries()
       .checkNoSeriesMessage("You must create a series")
-      .selectNewSeries("Internet")
+      .selectNewSeries("Internet", "WWW connection")
       .checkNoSeriesMessageHidden();
 
     views.selectData();
@@ -68,6 +69,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.checkSelectedTableRows(0);
     categorization.checkRecurringSeriesIsSelected("Internet");
+    categorization.getRecurring().checkSeriesTooltip("Internet", "WWW connection");
     categorization.selectRecurring()
       .selectNewSeries("Rental")
       .checkSeriesNotSelected("Internet");

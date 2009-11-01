@@ -12,6 +12,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -95,7 +96,7 @@ public class SeriesEditionButtons {
       Glob series = repository.find(seriesKey);
       if (series != null) {
         String description = series.get(Series.DESCRIPTION);
-        buttonView.getComponent().setToolTipText(description);
+        buttonView.getComponent().setToolTipText(Strings.toSplittedHtml(description, 50));
       }
       else {
         repository.removeChangeListener(this);

@@ -70,6 +70,32 @@ public class SeriesWrapper {
     return SeriesWrapperType.SERIES.getId().equals(wrapper.get(SeriesWrapper.ITEM_TYPE));
   }
 
+  public static boolean isBudgetArea(Glob wrapper) {
+    return SeriesWrapperType.BUDGET_AREA.getId().equals(wrapper.get(SeriesWrapper.ITEM_TYPE));
+  }
+
+  public static Glob getSeries(Glob wrapper, GlobRepository repository) {
+    Integer seriesId = wrapper.get(SeriesWrapper.ITEM_ID);
+    return repository.find(org.globsframework.model.Key.create(Series.TYPE, seriesId));
+  }
+
+  public static BudgetArea getBudgetArea(Glob wrapper) {
+    Integer budgetAreaId = wrapper.get(SeriesWrapper.ITEM_ID);
+    return BudgetArea.get(budgetAreaId);
+  }
+
+  public static String getDescription(Glob wrapper, GlobRepository repository) {
+    if (SeriesWrapper.isSeries(wrapper)) {
+      Glob series = SeriesWrapper.getSeries(wrapper, repository);
+      return series.get(Series.DESCRIPTION);
+    }
+    else if (SeriesWrapper.isBudgetArea(wrapper)) {
+      BudgetArea budgetArea = SeriesWrapper.getBudgetArea(wrapper);
+      return budgetArea.getDescription();
+    }
+    return null;
+  }
+
   public static Glob getWrapperForBudgetArea(BudgetArea budgetArea, GlobRepository repository) {
     return repository.findUnique(SeriesWrapper.TYPE,
                                  value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId()),

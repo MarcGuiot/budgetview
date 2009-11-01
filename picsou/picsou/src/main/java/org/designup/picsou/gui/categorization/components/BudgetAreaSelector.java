@@ -19,6 +19,7 @@ import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -121,7 +122,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
         }
       });
       toggle.setName(budgetArea.getName());
-      toggle.setToolTipText("<html>" + Lang.get("budgetArea.description." + budgetArea.getName()) + "</html>");
+      toggle.setToolTipText(Strings.toSplittedHtml(budgetArea.getDescription(), 50));
       cellBuilder.add("budgetAreaToggle", toggle);
       buttonGroup.add(toggle);
       toggles.put(budgetArea, toggle);

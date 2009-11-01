@@ -7,6 +7,7 @@ import org.designup.picsou.gui.components.filtering.CustomFilterMessagePanel;
 import org.designup.picsou.gui.components.filtering.FilterSet;
 import org.designup.picsou.gui.components.filtering.FilterSetListener;
 import org.designup.picsou.gui.components.filtering.Filterable;
+import org.designup.picsou.gui.description.SeriesDescriptionStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.help.HelpAction;
 import org.designup.picsou.gui.help.HyperlinkHandler;
@@ -16,8 +17,8 @@ import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.ApplicationColors;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.gui.utils.TableView;
 import org.designup.picsou.importer.utils.BankFormatExporter;
@@ -32,9 +33,7 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
-import org.globsframework.gui.views.utils.LabelCustomizers;
-import static org.globsframework.gui.views.utils.LabelCustomizers.autoTooltip;
-import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
+import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
@@ -124,12 +123,12 @@ public class CategorizationView extends View implements TableView, Filterable {
       builder.addTable("transactionTable", Transaction.TYPE, transactionComparator)
         .setDefaultLabelCustomizer(new TransactionLabelCustomizer())
         .addColumn(Lang.get("date"), new TransactionDateStringifier(TransactionComparator.DESCENDING_SPLIT_AFTER),
-                   LabelCustomizers.fontSize(9))
+                   fontSize(9))
         .addColumn(Lang.get("series"), new CompactSeriesStringifier(directory),
-                   LabelCustomizers.fontSize(9))
+                   chain(fontSize(9), tooltip(SeriesDescriptionStringifier.transactionSeries(), repository)))
         .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL),
-                   chain(LabelCustomizers.BOLD, autoTooltip()))
-        .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), LabelCustomizers.ALIGN_RIGHT);
+                   chain(BOLD, autoTooltip()))
+        .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), ALIGN_RIGHT);
 
     headerPainter = PicsouTableHeaderPainter.install(transactionTable, directory);
 
@@ -209,7 +208,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     });
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(UserPreferences.KEY, UserPreferences.CATEGORIZATION_FILTERING_MODE)){
+        if (changeSet.containsChanges(UserPreferences.KEY, UserPreferences.CATEGORIZATION_FILTERING_MODE)) {
           Glob preferences = repository.find(UserPreferences.KEY);
           Integer defaultFilteringModeId =
             preferences.get(UserPreferences.CATEGORIZATION_FILTERING_MODE);
@@ -288,10 +287,10 @@ public class CategorizationView extends View implements TableView, Filterable {
                                                Series.TYPE,
                                                linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
                                                SeriesNameComparator.INSTANCE,
-                                               new CategorizationSeriesComponentFactory(budgetArea, invisibleRadio,
-                                                                                        seriesEditionDialog,
-                                                                                        repository,
-                                                                                        directory));
+                                               new SeriesChooserComponentFactory(budgetArea, invisibleRadio,
+                                                                                 seriesEditionDialog,
+                                                                                 repository,
+                                                                                 directory));
     seriesRepeat.add(
       new Pair<Matchers.CategorizationFilter, GlobRepeat>(
         Matchers.seriesFilter(budgetArea.getId()), repeat));

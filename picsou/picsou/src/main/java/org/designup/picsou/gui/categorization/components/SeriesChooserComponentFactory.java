@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.categorization.components;
 
 import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.description.SeriesDescriptionStringifier;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -26,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class CategorizationSeriesComponentFactory implements RepeatComponentFactory<Glob> {
+public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glob> {
   protected JRadioButton invisibleSelector;
   protected ButtonGroup buttonGroup = new ButtonGroup();
 
@@ -45,7 +46,7 @@ public class CategorizationSeriesComponentFactory implements RepeatComponentFact
 
   private BudgetArea budgetArea;
 
-  public CategorizationSeriesComponentFactory(BudgetArea budgetArea,
+  public SeriesChooserComponentFactory(BudgetArea budgetArea,
                                               JRadioButton invisibleSelector,
                                               SeriesEditionDialog seriesEditionDialog,
                                               GlobRepository repository,
@@ -84,7 +85,7 @@ public class CategorizationSeriesComponentFactory implements RepeatComponentFact
           Glob series = repository.find(seriesKey);
           if (series != null) {
             String label = seriesStringifier.toString(new GlobList(series), repository);
-            setText(selector, label);
+            setText(selector, label, series);
             updateSeriesStyle(series);
           }
         }
@@ -94,7 +95,7 @@ public class CategorizationSeriesComponentFactory implements RepeatComponentFact
         }
       }
     };
-    setText(selector, seriesName);
+    setText(selector, seriesName, series);
     repository.addChangeListener(seriesUpdateListener);
 
     final GlobSelectionListener listener = new GlobSelectionListener() {
@@ -266,9 +267,10 @@ public class CategorizationSeriesComponentFactory implements RepeatComponentFact
     }
   }
 
-  private void setText(JRadioButton selector, String seriesName) {
+  private void setText(JRadioButton selector, String seriesName, Glob series) {
     selector.setText(seriesName);
     selector.setName(seriesName);
+    selector.setToolTipText(SeriesDescriptionStringifier.toString(series));
   }
 
   private void setText(JRadioButton selector, String seriesName, String subSeriesName) {

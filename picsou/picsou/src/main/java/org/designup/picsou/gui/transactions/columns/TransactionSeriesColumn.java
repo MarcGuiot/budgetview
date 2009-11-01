@@ -3,6 +3,7 @@ package org.designup.picsou.gui.transactions.columns;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.HyperlinkTableColumn;
 import org.designup.picsou.gui.description.TransactionSeriesStringifier;
+import org.designup.picsou.gui.description.SeriesDescriptionStringifier;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
@@ -82,20 +83,12 @@ public class TransactionSeriesColumn extends HyperlinkTableColumn {
         || Transaction.isMirrorTransaction(transaction)
         || Transaction.isCreatedBySeries(transaction)) {
       button.setEnabled(false);
-      rendererColors.setForeground(button, isSelected, transaction, true);
       button.setDisabledColor(isSelected ? rendererColors.getTransactionSelectedTextColor() : rendererColors.getTransactionPlannedTextColor());
-      button.setFont(normalFont);
-      button.setUnderline(false);
-      button.setText(seriesStringifier.toString(transaction, repository));
-      button.setToolTipText(null);
+      setSeriesText(button, transaction);
     }
     else if (!Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
       button.setEnabled(true);
-      rendererColors.setForeground(button, isSelected, transaction, true);
-      button.setFont(normalFont);
-      button.setUnderline(false);
-      button.setText(seriesStringifier.toString(transaction, repository));
-      button.setToolTipText(Lang.get("transaction.categorizationLink.tooltip"));
+      setSeriesText(button, transaction);
     }
     else {
       button.setEnabled(true);
@@ -107,6 +100,14 @@ public class TransactionSeriesColumn extends HyperlinkTableColumn {
     }
 
     rendererColors.setBackground(panel, transaction, isSelected, row);
+  }
+
+  private void setSeriesText(HyperlinkButton button, Glob transaction) {
+    rendererColors.setForeground(button, isSelected, transaction, true);
+    button.setFont(normalFont);
+    button.setUnderline(false);
+    button.setText(seriesStringifier.toString(transaction, repository));
+    button.setToolTipText(SeriesDescriptionStringifier.getTransactionText(transaction, repository));
   }
 
   public GlobStringifier getStringifier() {
