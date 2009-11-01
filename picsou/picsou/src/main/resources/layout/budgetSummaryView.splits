@@ -13,7 +13,8 @@
       <button ref="openDetailsButton" styleClass="roundedButton" gridPos="(0,0,1,2)"/>
 
       <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle" gridPos="(1,0)"/>
-      <label ref="balanceLabel" styleClass="totalAmount" gridPos="(1,1)"/>
+      <label ref="balanceLabel" styleClass="totalAmount" gridPos="(1,1)"
+        tooltipText="$budgetSummaryView.balance.tooltip"/>
 
       <label ref="positionTitle" styleClass="totalAmountTitle" gridPos="(2,0)"/>
       <label ref="positionLabel" styleClass="totalAmount" gridPos="(2,1)"/>

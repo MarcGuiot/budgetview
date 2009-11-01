@@ -243,7 +243,7 @@ public class BudgetViewChecker extends GuiChecker {
     }
 
     public void checkSeriesTooltip(String seriesName, String tooltipText) {
-      assertThat(getPanel().getButton(seriesName).tooltipEquals(tooltipText));
+      assertThat(getPanel().getButton(seriesName).tooltipContains(tooltipText));
     }
   }
 

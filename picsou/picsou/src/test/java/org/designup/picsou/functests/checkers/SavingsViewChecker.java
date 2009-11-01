@@ -142,7 +142,7 @@ public class SavingsViewChecker extends GuiChecker {
   }
 
   public SavingsViewChecker checkSeriesTooltip(String accountName, String seriesName, String tooltipText) {
-    assertThat(getSeriesButton(accountName, seriesName).tooltipEquals(tooltipText));
+    assertThat(getSeriesButton(accountName, seriesName).tooltipContains(tooltipText));
     return this;
   }
 

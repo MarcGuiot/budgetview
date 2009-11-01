@@ -210,7 +210,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
   public void testSeriesTooltip() throws Exception {
 
-    operations.openPreferences().setFutureMonthsCount(2);
+    operations.openPreferences().setFutureMonthsCount(2).validate();
 
     OfxBuilder
       .init(this)
