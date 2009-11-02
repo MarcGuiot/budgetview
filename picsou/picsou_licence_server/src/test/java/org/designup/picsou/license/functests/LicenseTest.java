@@ -291,6 +291,10 @@ public class LicenseTest extends LicenseTestCase {
     assertEquals(newCode, glob.get(License.ACTIVATION_CODE));
   }
 
+  public void test() throws Exception {
+
+  }
+
   private void checkLicenseExpired() {
     OperationChecker operations = new OperationChecker(window);
     Window dialog = WindowInterceptor.getModalDialog(operations.getImportTrigger());

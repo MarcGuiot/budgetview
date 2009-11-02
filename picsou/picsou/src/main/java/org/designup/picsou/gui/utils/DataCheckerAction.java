@@ -3,13 +3,13 @@ package org.designup.picsou.gui.utils;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
-import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.MonthsToSeriesBudgetTrigger;
+import org.designup.picsou.model.*;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.annotations.Required;
-import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.*;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -36,7 +36,7 @@ public class DataCheckerAction extends AbstractAction {
     check();
   }
 
-  private boolean check() {
+  public boolean check() {
     final StringBuilder builder = new StringBuilder();
     builder.append("Start checking\n");
     boolean hasError = false;
@@ -221,59 +221,36 @@ public class DataCheckerAction extends AbstractAction {
   private boolean checkSeriesBudget(StringBuilder buf, Glob series, Integer firstMonthForSeries, Integer lastMonthForSeries) {
     boolean hasError = false;
     int currentMonth;
-    GlobList seriesBudgets =
-      repository.getAll(SeriesBudget.TYPE, GlobMatchers.fieldEquals(SeriesBudget.SERIES, series.get(Series.ID)))
-        .sort(SeriesBudget.MONTH);
 
     currentMonth = firstMonthForSeries;
 
     GlobList budgetToDelete = new GlobList();
     java.util.List<Integer> budgetToCreate = new ArrayList<Integer>();
-    Glob budget = null;
-    Iterator<Glob> iterator = seriesBudgets.iterator();
 
+    Set<Integer> budgets =
+      repository.getAll(SeriesBudget.TYPE, GlobMatchers.fieldEquals(SeriesBudget.SERIES, series.get(Series.ID)))
+      .getValueSet(SeriesBudget.ID);
+    ReadOnlyGlobRepository.MultiFieldIndexed index =
+      repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID));
     while (currentMonth <= lastMonthForSeries) {
-      if (budget == null && iterator.hasNext()) {
-        budget = iterator.next();
-        hasError |= checkNotNullable(budget, buf);
-      }
-      if (budget == null || budget.get(SeriesBudget.MONTH) != currentMonth) {
-        hasError = true;
-        if (budget != null && budget.get(SeriesBudget.MONTH) < currentMonth) {
-          budgetToDelete.add(budget);
-          budget = null;
-          buf.append("Deleting SeriesBudget for series : ").append(series.get(Series.NAME))
-            .append(" at :").append(currentMonth).append(("\n"));
-        }
-        else {
+      Glob budget = index.findByIndex(SeriesBudget.MONTH, currentMonth).getGlobs().getFirst();
+      if (budget == null){
           budgetToCreate.add(currentMonth);
           buf.append("Adding SeriesBudget for series : ").append(series.get(Series.NAME))
             .append(" at :").append(currentMonth).append(("\n"));
-          currentMonth = Month.next(currentMonth);
-        }
       }
       else {
-        budget = null;
-        currentMonth = Month.next(currentMonth);
+        budgets.remove(budget.get(SeriesBudget.ID));
       }
-    }
-    for (; iterator.hasNext(); budget = iterator.next()) {
-      if (budget != null) {
-        budgetToDelete.add(budget);
-      }
+      currentMonth = Month.next(currentMonth);
     }
 
-    for (; currentMonth <= lastMonthForSeries; currentMonth = Month.next(currentMonth)) {
-      buf.append("Missing SeriesBudget for series : ").append(series.get(Series.NAME))
-        .append(" budgetArea : ").append(series.get(Series.BUDGET_AREA))
-        .append(" at :").append(currentMonth).append(("\n"));
-      hasError = true;
-      budgetToCreate.add(currentMonth);
+    for (Integer budgetId : budgets) {
+      repository.delete(Key.create(SeriesBudget.TYPE, budgetId));
     }
     for (Integer month : budgetToCreate) {
       MonthsToSeriesBudgetTrigger.addMonth(repository, month);
     }
-    repository.delete(budgetToDelete);
     return hasError;
   }
 

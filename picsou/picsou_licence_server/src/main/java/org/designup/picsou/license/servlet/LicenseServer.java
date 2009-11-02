@@ -40,6 +40,7 @@ public class LicenseServer {
   private Directory directory;
 
   public LicenseServer() throws IOException {
+    initLogger();
     jetty = new Server();
   }
 
@@ -62,7 +63,6 @@ public class LicenseServer {
   }
 
   public static void main(String[] args) throws Exception {
-    initLogger();
     LicenseServer server = new LicenseServer();
     server.getParams();
     server.start();

@@ -9,10 +9,10 @@ import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.series.view.SeriesWrapperUpdateTrigger;
 import org.designup.picsou.gui.startup.BackupService;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
+import org.designup.picsou.gui.utils.DataCheckerAction;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.AppVersionInformation;
-import org.designup.picsou.model.PicsouModel;
 import org.designup.picsou.model.User;
 import org.designup.picsou.triggers.*;
 import org.designup.picsou.utils.Lang;
@@ -25,7 +25,6 @@ import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.model.utils.DefaultChangeSetListener;
-import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -42,6 +41,8 @@ public class PicsouInit {
   private Directory directory;
   private DefaultGlobIdGenerator idGenerator;
   private UpgradeTrigger upgradeTrigger;
+  private boolean firstReset = true;
+  private ServerChangeSetListener changeSetListenerToDb;
 
   public static PicsouInit init(ServerAccess serverAccess, Directory directory, boolean registeredUser) {
     return new PicsouInit(serverAccess, directory, registeredUser);
@@ -66,7 +67,8 @@ public class PicsouInit {
 
     AwtExceptionHandler.setRepository(repository, directory);
 
-    this.repository.addChangeListener(new ServerChangeSetListener(serverAccess));
+    changeSetListenerToDb = new ServerChangeSetListener(serverAccess);
+    this.repository.addChangeListener(changeSetListenerToDb);
 
     upgradeTrigger = new UpgradeTrigger(directory);
     initTriggerRepository(serverAccess, directory, this.repository);
@@ -141,7 +143,35 @@ public class PicsouInit {
                           value(User.AUTO_LOGIN, autoLogin),
                           value(User.IS_DEMO_USER, useDemoAccount));
         if (!userData.isEmpty()) {
-          repository.reset(userData, GlobUtils.toArray(userData.getTypes()));
+          firstReset = true;
+          try {
+            repository.reset(userData, typesToReplace);
+          }
+          catch (Exception e) {
+            GlobRepository repository =
+              GlobRepositoryBuilder.init(idGenerator)
+                .add(directory.get(GlobModel.class).getConstants())
+                .get();
+            repository.addChangeListener(changeSetListenerToDb);
+            // reload data to lauch the check on saved data
+            userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdater() {
+              public void update(IntegerField field, Integer lastAllocatedId) {
+                idGenerator.update(field, lastAllocatedId);
+              }
+            });
+            repository.reset(userData, typesToReplace);
+            DataCheckerAction action = new DataCheckerAction(repository, directory);
+            action.check();
+            firstReset = false;
+
+            userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdater() {
+              public void update(IntegerField field, Integer lastAllocatedId) {
+                idGenerator.update(field, lastAllocatedId);
+              }
+            });
+            PicsouInit.this.repository.reset(GlobList.EMPTY, typesToReplace);
+            PicsouInit.this.repository.reset(userData, typesToReplace);
+          }
         }
         else {
           upgradeTrigger.createDataForNewUser(repository);
@@ -192,15 +222,17 @@ public class PicsouInit {
   private class ShowDialogAndExitExceptionHandler implements ExceptionHandler {
 
     public void onException(Throwable ex) {
-      Log.write(ex.getMessage(), ex);
-      MessageAndDetailsDialog dialog = new MessageAndDetailsDialog("exception.title",
-                                                                   "exception.content",
-                                                                   Strings.toString(ex),
-                                                                   directory.get(JFrame.class),
-                                                                   directory);
-      dialog.show();
-      if (PicsouApplication.EXIT_ON_DATA_ERROR) {
-        System.exit(10);
+      if (!firstReset) {
+        Log.write(ex.getMessage(), ex);
+        MessageAndDetailsDialog dialog = new MessageAndDetailsDialog("exception.title",
+                                                                     "exception.content",
+                                                                     Strings.toString(ex),
+                                                                     directory.get(JFrame.class),
+                                                                     directory);
+        dialog.show();
+        if (PicsouApplication.EXIT_ON_DATA_ERROR) {
+          System.exit(10);
+        }
       }
     }
   }

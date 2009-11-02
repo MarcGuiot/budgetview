@@ -136,8 +136,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
           if (transaction == null) {
             Glob series = repository.findLinkTarget(seriesBudget, SeriesBudget.SERIES);
             if (series == null) { // on a un bug : une series a disparu on continue
-              Log.write("Missing series " + seriesBudget.get(SeriesBudget.SERIES) + " for " +
-                        transaction.get(Transaction.LABEL));
+              Log.write("Missing series " + seriesBudget.get(SeriesBudget.SERIES));
             }
             else {
               createPlannedTransaction(series, repository,
