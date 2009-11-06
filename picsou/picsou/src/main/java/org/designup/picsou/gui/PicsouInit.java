@@ -222,7 +222,7 @@ public class PicsouInit {
   private class ShowDialogAndExitExceptionHandler implements ExceptionHandler {
 
     public void onException(Throwable ex) {
-      if (!firstReset) {
+      if (!firstReset || !PicsouApplication.EXIT_ON_DATA_ERROR) {
         Log.write(ex.getMessage(), ex);
         MessageAndDetailsDialog dialog = new MessageAndDetailsDialog("exception.title",
                                                                      "exception.content",

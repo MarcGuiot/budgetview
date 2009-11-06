@@ -30,4 +30,10 @@ public class MessageDialogChecker extends GuiChecker {
     dialog.getButton("Close").click();
     assertFalse(dialog.isVisible());
   }
+
+  public Trigger triggerClose() {
+    return dialog.getButton("Close").triggerClick();
+  }
+
+
 }

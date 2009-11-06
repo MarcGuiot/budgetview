@@ -23,18 +23,18 @@ public class AddUser {
     for (Iterator<String> iterator = arguments.iterator(); iterator.hasNext();) {
       String element = iterator.next();
       if (element.equals("-d") && iterator.hasNext()) {
-        databaseUrl = iterator.next();
         iterator.remove();
+        databaseUrl = iterator.next();
         iterator.remove();
       }
       if (element.equals("-u") && iterator.hasNext()) {
-        user = iterator.next();
         iterator.remove();
+        user = iterator.next();
         iterator.remove();
       }
       if (element.equals("-p") && iterator.hasNext()) {
-        passwd = iterator.next();
         iterator.remove();
+        passwd = iterator.next();
         iterator.remove();
       }
     }
@@ -53,7 +53,7 @@ public class AddUser {
     }
     SqlService sqlService = new JdbcSqlService(databaseUrl, user, passwd);
     SqlConnection db = sqlService.getDb();
-    for (String arg : args) {
+    for (String arg : arguments) {
       String code = LicenseGenerator.generateActivationCode();
       db.getCreateBuilder(License.TYPE)
         .set(License.MAIL, arg)

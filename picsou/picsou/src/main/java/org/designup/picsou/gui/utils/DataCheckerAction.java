@@ -224,7 +224,6 @@ public class DataCheckerAction extends AbstractAction {
 
     currentMonth = firstMonthForSeries;
 
-    GlobList budgetToDelete = new GlobList();
     java.util.List<Integer> budgetToCreate = new ArrayList<Integer>();
 
     Set<Integer> budgets =
@@ -238,6 +237,7 @@ public class DataCheckerAction extends AbstractAction {
           budgetToCreate.add(currentMonth);
           buf.append("Adding SeriesBudget for series : ").append(series.get(Series.NAME))
             .append(" at :").append(currentMonth).append(("\n"));
+        hasError = true;
       }
       else {
         budgets.remove(budget.get(SeriesBudget.ID));
@@ -246,7 +246,12 @@ public class DataCheckerAction extends AbstractAction {
     }
 
     for (Integer budgetId : budgets) {
-      repository.delete(Key.create(SeriesBudget.TYPE, budgetId));
+      Key seriesBudgetKey = Key.create(SeriesBudget.TYPE, budgetId);
+      Glob seriesBudget = repository.get(seriesBudgetKey);
+      buf.append("Deleting SeriesBudget for series : ").append(series.get(Series.NAME))
+        .append(" at :").append(seriesBudget.get(SeriesBudget.MONTH)).append(("\n"));
+      repository.delete(seriesBudgetKey);
+      hasError = true;
     }
     for (Integer month : budgetToCreate) {
       MonthsToSeriesBudgetTrigger.addMonth(repository, month);

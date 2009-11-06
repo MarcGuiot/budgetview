@@ -63,33 +63,38 @@ public class LicenseTest extends LicenseTestCase {
     login = new LoginChecker(window);
   }
 
+
   public void testConnectAtStartup() throws Exception {
-    SqlConnection connection = getSqlConnection();
+    DbChecker dbChecker = new DbChecker();
     String mail = "alfred@free.fr";
-    register(connection, mail);
+    dbChecker.registerMail(mail,  "1234");
+    register(dbChecker, mail, "1234");
+    checkValidLicense(false);
+
     window.dispose();
 
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startApplication();
     login.logExistingUser("user", "passw@rd");
 
-    Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 2L);
+    Glob license = dbChecker.getLicense(mail, License.ACCESS_COUNT, 2L);
     assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
     checkValidLicense(false);
   }
 
   public void testMultipleAnonymousConnect() throws Exception {
-    SqlConnection connection = getSqlConnection();
-    checkRepoIdIsUpdated(connection, 1L, null);
+    DbChecker dbChecker = new DbChecker();
+    dbChecker.checkRepoIdIsUpdated(1L, null);
     login.logNewUser("user", "passw@rd");
     window.dispose();
 
     startApplication();
-    checkRepoIdIsUpdated(connection, 2L, null);
+    dbChecker.checkRepoIdIsUpdated(2L, null);
     login.logExistingUser("user", "passw@rd");
+    window.dispose();
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
-    OperationChecker operations = new OperationChecker(window);
-    operations.openPreferences().setFutureMonthsCount(3);
+    startApplication();
+    login.logExistingUser("user", "passw@rd");
     checkLicenseExpired();
   }
 
@@ -104,7 +109,8 @@ public class LicenseTest extends LicenseTestCase {
 
     LoginChecker login = new LoginChecker(window);
     login.logNewUser("user", "passw@rd");
-    checkRepoIdIsUpdated(getSqlConnection(), 1L, Constraints.notEqual(RepoInfo.REPO_ID, repoId));
+    DbChecker dbChecker = new DbChecker();
+    dbChecker.checkRepoIdIsUpdated(1L, Constraints.notEqual(RepoInfo.REPO_ID, repoId));
     checkDaysLeftMessage();
 
     LicenseActivationChecker.enterBadLicense(window, MAIL, "1234", "Activation failed a mail was sent at " + MAIL);
@@ -137,29 +143,95 @@ public class LicenseTest extends LicenseTestCase {
     window.dispose();
   }
 
-  public void testRegisterAndBadlyReRegister() throws Exception {
-    SqlConnection connection = getSqlConnection();
+  public void testRegisterAndReRegisterWithBadMail() throws Exception {
+    DbChecker dbChecker = new DbChecker();
     String mail = "alfred@free.fr";
-    register(connection, mail);
+    dbChecker.registerMail(mail, "1234");
+    register(dbChecker, mail, "1234");
+    checkValidLicense(false);
 
     window.dispose();
     startApplication();
     login.logExistingUser("user", "passw@rd");
-    LicenseActivationChecker.enterBadLicense(window, "titi@foo.org", "4321", "Activation failed");
+    LicenseActivationChecker.enterBadLicense(window, "titi@foo.org", "4321", "Unknown mail adress");
 
-    Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 2L);
-    assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
+    dbChecker.checkLicenseCount(mail, 2);
+    checkValidLicense(false);
+    window.dispose();
+    startApplication();
+    login.logExistingUser("user", "passw@rd");
+    checkValidLicense(false);
+  }
+
+  public void testRegisterAndReRegisterWithBadActivationCode() throws Exception {
+    DbChecker dbChecker = new DbChecker();
+    String mail = "alfred@free.fr";
+    dbChecker.registerMail(mail, "1234");
+    register(dbChecker, mail, "1234");
+    checkValidLicense(false);
+
+    window.dispose();
+    startApplication();
+    login.logExistingUser("user", "passw@rd");
+    LicenseActivationChecker.enterBadLicense(window, "alfred@free.fr", "4321", "Activation failed");
+
+    dbChecker.checkLicenseCount(mail, 2);
+    checkValidLicense(false);
+    window.dispose();
+    startApplication();
+    login.logExistingUser("user", "passw@rd");
+    checkValidLicense(false);
+  }
+
+  public void testRegisterAndReRegisterWithBadActivationCodeWithoutRestart() throws Exception {
+    DbChecker dbChecker = new DbChecker();
+    String mail = "alfred@free.fr";
+    dbChecker.registerMail(mail, "1234");
+    register(dbChecker, mail, "1234");
+    checkValidLicense(false);
+    LicenseActivationChecker.enterBadLicense(window, "alfred@free.fr", "4321", "Activation failed");
+
+    checkValidLicense(false);
+    window.dispose();
+    startApplication();
+    login.logExistingUser("user", "passw@rd");
+    checkValidLicense(false);
+  }
+
+
+  public void testUnknownMail() throws Exception {
+    LoginChecker loginChecker = new LoginChecker(window);
+    loginChecker.logNewUser("user", "passw@rd");
+    LicenseActivationChecker activationChecker = LicenseActivationChecker.open(window);
+    activationChecker
+      .enterLicenseAndValidate("titi@foo.org", "az")
+      .checkErrorMessage("Unknown mail adress")
+      .checkActivationCodeIsEmptyAndMailIs("titi@foo.org");
+    checkMessage("Unknown mail adress");
+    DbChecker dbChecker = new DbChecker();
+    dbChecker.registerMail("toto@zer", "1234");
+    activationChecker
+      .enterLicense("toto@zer", "1234")
+      .validate()
+      .checkClosed();
     checkValidLicense(false);
   }
 
   public void testRegistrationWithBadKey() throws Exception {
+    DbChecker dbChecker = new DbChecker();
+    dbChecker.registerMail("titi@foo.org", "1234");
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
     LicenseActivationChecker.open(window)
       .enterLicenseAndValidate("titi@foo.org", "az")
       .checkErrorMessage("Activation failed")
       .cancel();
+    window.dispose();
+    checkMessage("31 days left for trying CashPilot");
+    checkMessage("Activation code not valid. You can ");
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
+    startApplication();
+    login.logExistingUser("user", "passw@rd");
     checkLicenseExpired();
   }
 
@@ -172,13 +244,22 @@ public class LicenseTest extends LicenseTestCase {
     license.validate();
     license.checkErrorMessage("Activation failed")
       .cancel();
+
+    checkMessage("31 days left for trying CashPilot");
+    checkMessage("Can not connect to remote server");
+
+    window.dispose();
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
+    startApplication();
+    login.logExistingUser("user", "passw@rd");
     checkLicenseExpired();
   }
 
   public void testEmptyActivationCode() throws Exception {
     login.logNewUser("user", "passw@rd");
 
+    DbChecker dbChecker = new DbChecker();
+    dbChecker.registerMail("titi@foo.org", "4321");
     LicenseActivationChecker license = LicenseActivationChecker.open(window);
     license.enterLicense("titi@foo.org", "az");
     license.validate();
@@ -187,14 +268,30 @@ public class LicenseTest extends LicenseTestCase {
     license.validate();
     license.checkErrorMessage("Activation failed");
     license.cancel();
+
+    checkMessage("31 days left for trying CashPilot");
+    checkMessage("Activation code not valid. You can ask for ");
+
+    window.dispose();
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
+    startApplication();
+    login.logExistingUser("user", "passw@rd");
     checkLicenseExpired();
   }
 
+  private void checkMessage(final String messageTxt) {
+    TextBox message = window.getTextBox("licenseMessage");
+    assertThat(message.isVisible());
+    assertTrue(message.textContains(messageTxt));
+  }
+
   public void testRegisterAndReRegisterToOtherFailedAndSendAMail() throws Exception {
-    SqlConnection connection = getSqlConnection();
+    DbChecker dbChecker = new DbChecker();
     String mail = "alfred@free.fr";
-    register(connection, mail);
+    dbChecker.registerMail(mail, "1234");
+    register(dbChecker, mail, "1234");
+    checkValidLicense(false);
+
     window.dispose();
 
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
@@ -213,7 +310,6 @@ public class LicenseTest extends LicenseTestCase {
     startApplication();
     login.logExistingUser("user", "passw@rd");
     LicenseActivationChecker.enterBadLicense(window, mail, "1234", "Activation failed a mail was sent at alfred@free.fr");
-    checkLicenseExpired();
     checkReceivedMail(mail);
     checkWithMailKilled();
   }
@@ -291,8 +387,25 @@ public class LicenseTest extends LicenseTestCase {
     assertEquals(newCode, glob.get(License.ACTIVATION_CODE));
   }
 
-  public void test() throws Exception {
+  public void testTrialVersionIsOver() throws Exception {
+    login.logNewUser("user", "passw@rd");
+    window.dispose();
+    TimeService.setCurrentDate(Dates.parse("2008/10/10"));
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
+    startApplication();
+    login.logExistingUser("user", "passw@rd");
+    LicenseMessageChecker messageChecker = new LicenseMessageChecker(window);
+    messageChecker.checkMessage("Your free trial period is over. You can buy");
+  }
 
+  public void testActivationFailDuringTrial() throws Exception {
+    DbChecker dbChecker = new DbChecker();
+    dbChecker.registerMail(MAIL, "4321");
+    LoginChecker loginChecker = new LoginChecker(window);
+    loginChecker.logNewUser("user", "passw@rd");
+    LicenseActivationChecker.enterBadLicense(window, MAIL, "1234", "Activation failed");
+    checkActivationFailed();
+    checkDaysLeftMessage();
   }
 
   private void checkLicenseExpired() {
@@ -300,6 +413,7 @@ public class LicenseTest extends LicenseTestCase {
     Window dialog = WindowInterceptor.getModalDialog(operations.getImportTrigger());
     LicenseActivationChecker licenseActivation = new LicenseActivationChecker(dialog);
     licenseActivation.cancel();
+    checkMessageOver();
   }
 
   private void checkValidLicense(final boolean anonymous) {
@@ -340,33 +454,19 @@ public class LicenseTest extends LicenseTestCase {
   }
 
   private String loggingAndRegisterFirstPicsou() throws InterruptedException {
-    SqlConnection connection = getSqlConnection();
-    String repoId = checkRepoIdIsUpdated(connection, 1L, null);
+    DbChecker dbChecker = new DbChecker();
+    String repoId = dbChecker.checkRepoIdIsUpdated(1L, null);
 
     login.logNewUser("user", "passw@rd");
-    connection.getCreateBuilder(License.TYPE)
-      .set(License.MAIL, MAIL)
-      .set(License.ACTIVATION_CODE, "1234")
-      .getRequest()
-      .run();
-    connection.commit();
+    dbChecker.registerMail(MAIL, "1234");
     LicenseActivationChecker.enterLicense(window, MAIL, "1234");
     OperationChecker operation = new OperationChecker(window);
     operation.openPreferences().setFutureMonthsCount(24).validate();
 
-    Glob license = getLicense(connection, MAIL, License.ACCESS_COUNT, 1L);
-    assertEquals(1L, license.get(License.ACCESS_COUNT).longValue());
-    connection.commitAndClose();
+    dbChecker.checkLicenseCount(MAIL, 1);
     return repoId;
   }
 
-  private String checkRepoIdIsUpdated(SqlConnection connection, long repoCount, Constraint constraint) throws InterruptedException {
-    Glob repoInfo = getGlob(connection, RepoInfo.COUNT, repoCount, constraint);
-    Date target = repoInfo.get(RepoInfo.LAST_ACCESS_DATE);
-    assertTrue(Dates.isNear(new Date(), target, 10000));
-    assertEquals(repoCount, repoInfo.get(RepoInfo.COUNT).longValue());
-    return repoInfo.get(RepoInfo.REPO_ID);
-  }
 
   private void checkDaysLeftMessage() {
     TextBox message = window.getTextBox("licenseMessage");
@@ -375,15 +475,20 @@ public class LicenseTest extends LicenseTestCase {
   }
 
   private void checkMessageOver() {
-    TextBox message = window.getTextBox("licenseMessage");
-    assertThat(message.isVisible());
-    assertTrue(message.textContains("Your free trial period is over"));
+    checkMessage("Your free trial period is over");
   }
 
   private void checkWithMailKilled() {
     TextBox message = window.getTextBox("licenseMessage");
     assertThat(message.isVisible());
     assertTrue(message.textContains("Activation failed a mail was sent at alfred@free.fr"));
+  }
+
+  private void checkActivationFailed() {
+    TextBox message = window.getTextBox("licenseMessage");
+    assertThat(message.isVisible());
+    assertTrue(message.textContains("Activation code not valid"));
+    assertTrue(message.textContains("You can ask"));
   }
 
   private void checkKilled() {
@@ -393,48 +498,70 @@ public class LicenseTest extends LicenseTestCase {
   }
 
 
-  private Glob getLicense(SqlConnection connection, String mail, Field field, Object expected) throws InterruptedException {
-    return getGlob(connection, field, expected, Constraints.equal(License.MAIL, mail));
-  }
-
-  private Glob getGlob(SqlConnection connection, Field field, Object expected,
-                       Constraint constraint) throws InterruptedException {
-    long end = System.currentTimeMillis() + 3000;
-    GlobList glob = new EmptyGlobList();
-    while (end > System.currentTimeMillis()) {
-      glob = connection.getQueryBuilder(field.getGlobType(), constraint)
-        .selectAll()
-        .getQuery().executeAsGlobs();
-      connection.commit();
-      if (glob.size() == 1) {
-        Object actual = glob.get(0).getValue(field);
-        if (actual != null && (expected == null || actual.equals(expected))) {
-          break;
-        }
-      }
-      Thread.sleep(50);
-    }
-    assertEquals(1, glob.size());
-    return glob.get(0);
-  }
-
-  private void register(SqlConnection connection, String mail) throws InterruptedException {
-    checkRepoIdIsUpdated(connection, 1L, null);
+  private void register(DbChecker dbChecker, String mail, final String code) throws InterruptedException {
+    dbChecker.checkRepoIdIsUpdated(1L, null);
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
-    connection.getCreateBuilder(License.TYPE)
-      .set(License.MAIL, mail)
-      .set(License.ACTIVATION_CODE, "1234")
-      .getRequest()
-      .run();
-    connection.commit();
-    LicenseActivationChecker.enterLicense(window, mail, "1234");
+    LicenseActivationChecker.enterLicense(window, mail, code);
     OperationChecker operation = new OperationChecker(window);
     operation.openPreferences().setFutureMonthsCount(24).validate();
-    Glob license = getLicense(connection, mail, License.ACCESS_COUNT, 1L);
-    assertEquals(1L, license.get(License.ACCESS_COUNT).longValue());
-    assertTrue(license.get(License.SIGNATURE).length > 1);
-    checkValidLicense(false);
+    dbChecker.checkLicenseCount(mail, 1);
   }
 
+  class DbChecker {
+    SqlConnection connection;
+
+    DbChecker() {
+      connection = getSqlConnection();
+    }
+
+    public void registerMail(String mail, String code){
+      connection.getCreateBuilder(License.TYPE)
+        .set(License.MAIL, mail)
+        .set(License.ACTIVATION_CODE, code)
+        .getRequest()
+        .run();
+      connection.commit();
+
+    }
+
+    private Glob getGlob(Field field, Object expected,
+                         Constraint constraint) throws InterruptedException {
+      long end = System.currentTimeMillis() + 3000;
+      GlobList glob = new EmptyGlobList();
+      while (end > System.currentTimeMillis()) {
+        glob = connection.getQueryBuilder(field.getGlobType(), constraint)
+          .selectAll()
+          .getQuery().executeAsGlobs();
+        connection.commit();
+        if (glob.size() == 1) {
+          Object actual = glob.get(0).getValue(field);
+          if (actual != null && (expected == null || actual.equals(expected))) {
+            break;
+          }
+        }
+        Thread.sleep(50);
+      }
+      assertEquals(1, glob.size());
+      return glob.get(0);
+    }
+
+    public Glob getLicense(String mail, Field field, Object expected) throws InterruptedException {
+      return getGlob(field, expected, Constraints.equal(License.MAIL, mail));
+    }
+
+    public String checkRepoIdIsUpdated(long repoCount, Constraint constraint) throws InterruptedException {
+      Glob repoInfo = getGlob(RepoInfo.COUNT, repoCount, constraint);
+      Date target = repoInfo.get(RepoInfo.LAST_ACCESS_DATE);
+      assertTrue(Dates.isNear(new Date(), target, 10000));
+      assertEquals(repoCount, repoInfo.get(RepoInfo.COUNT).longValue());
+      return repoInfo.get(RepoInfo.REPO_ID);
+    }
+
+    public void checkLicenseCount(String mail, long count) throws InterruptedException {
+      Glob license = getLicense(mail, License.ACCESS_COUNT, count);
+      assertEquals(count, license.get(License.ACCESS_COUNT).longValue());
+      assertTrue(license.get(License.SIGNATURE).length > 1);
+    }
+  }
 }

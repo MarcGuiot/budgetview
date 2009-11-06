@@ -4,8 +4,11 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.components.dialogs.MessageFileDialog;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.model.User;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Glob;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 
@@ -24,7 +27,14 @@ public class BackupAction extends AbstractBackupRestoreAction {
     super(Lang.get("backup"), repository, directory);
   }
 
-  public void actionPerformed(ActionEvent eventæ) {
+  public void actionPerformed(ActionEvent event) {
+
+    Glob glob = repository.get(User.KEY);
+    if (!glob.isTrue(User.IS_REGISTERED_USER)){
+      MessageDialog dialog = new MessageDialog("backup.trial.title", "backup.trial.content", frame, directory);
+      dialog.show();
+    }
+
     JFileChooser chooser = getFileChooser();
     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
     chooser.setSelectedFile(getSafeBackupFile());

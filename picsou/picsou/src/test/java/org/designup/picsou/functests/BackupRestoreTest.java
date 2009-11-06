@@ -3,6 +3,7 @@ package org.designup.picsou.functests;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.MessageFileDialogChecker;
 import org.designup.picsou.functests.checkers.PasswordDialogChecker;
+import org.designup.picsou.functests.checkers.BackupChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
@@ -27,6 +28,19 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
     setDeleteLocalPrevayler(true);
     super.setUp();
     setDeleteLocalPrevayler(false);
+  }
+
+  public void testRestoreIsNotPossibleAndBackupWarmThatRestoreIsNotPossibleDuringTheTrialPeriod() throws Exception {
+    setDeleteLocalPrevayler(true);
+    setNotRegistered();
+    restartApplication(true);
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/26", 1000, "Company")
+      .addTransaction("2008/08/10", -400.0, "Auchan")
+      .load();
+    operations.backup(this, true);
+
+    operations.restoreNotAvailable();
   }
 
   public void testBackupAndRestore() throws Exception {

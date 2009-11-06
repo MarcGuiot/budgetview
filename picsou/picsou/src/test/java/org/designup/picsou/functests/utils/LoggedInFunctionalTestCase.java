@@ -38,6 +38,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected VersionInfoChecker versionInfo;
   protected NavigationViewChecker navigation;
   protected NotesChecker notes;
+  protected BackupChecker backupChecker;
 
   protected GlobRepository repository;
 
@@ -107,6 +108,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     mainAccounts = new MainAccountViewChecker(mainWindow);
     savingsAccounts = new SavingsAccountViewChecker(mainWindow);
     operations = new OperationChecker(mainWindow);
+    backupChecker = new BackupChecker(operations);
     timeline = new TimeViewChecker(mainWindow);
     transactions = new TransactionChecker(mainWindow);
     transactionDetails = new TransactionDetailsChecker(mainWindow);
@@ -152,6 +154,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     transactionDetails = null;
     transactionCreation = null;
     operations = null;
+    backupChecker = null;
     title = null;
     versionInfo = null;
     budgetView = null;
@@ -205,14 +208,27 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected void restartApplication() {
+    restartApplication(false);
+  }
+
+
+  public void restartApplication(boolean createUser) {
     operations.exit();
     mainWindow.dispose();
     mainWindow = null;
     mainWindow = getMainWindow();
     LoginChecker loginChecker = new LoginChecker(mainWindow);
-    loginChecker.logExistingUser(user, password);
+    if (createUser) {
+      loginChecker.logNewUser(user, password);
+    }
+    else {
+      loginChecker.logExistingUser(user, password);
+    }
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     initCheckers();
+    if (!notRegistered) {
+      LicenseActivationChecker.enterLicense(mainWindow, "admin", "zz");
+    }
   }
 
   public static void resetWindow() {
@@ -230,7 +246,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected void changeUser(String user, String password) {
-    if (mainWindow != null){
+    if (mainWindow != null) {
       operations.deleteUser(this.password);
     }
     this.user = user;
@@ -240,6 +256,9 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     LoginChecker loginChecker = new LoginChecker(mainWindow);
     loginChecker.logNewUser(user, password);
     initCheckers();
+    if (!notRegistered) {
+      LicenseActivationChecker.enterLicense(mainWindow, "admin", "zz");
+    }
   }
 
   public String getLocalPrevaylerPath() {

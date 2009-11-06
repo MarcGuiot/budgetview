@@ -31,12 +31,6 @@ public class LicenseCheckerThread extends Thread {
         try {
           ConfigService.check(directory, repository);
           repository.update(User.KEY, User.CONNECTED, true);
-          try {
-            Thread.sleep(100);
-          }
-          catch (InterruptedException e) {
-            e.printStackTrace();
-          }
         }
         finally {
           repository.completeChangeSet();

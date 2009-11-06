@@ -1,10 +1,9 @@
 package org.designup.picsou.gui.license;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.model.User;
-import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -47,7 +46,7 @@ public class LicenseActivationDialog {
     this.localDirectory.add(selectionService);
     this.localRepository =
       LocalGlobRepositoryBuilder.init(repository)
-        .copy(User.TYPE, UserPreferences.TYPE)
+        .copy(User.TYPE)
         .get();
 
     dialog = PicsouDialog.create(parent, directory);
@@ -55,8 +54,8 @@ public class LicenseActivationDialog {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/licenseActivationDialog.splits",
                                                       localRepository, this.localDirectory);
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
-    builder.addEditor("mail", User.MAIL).setNotifyOnKeyPressed(true);
-    builder.addEditor("code", User.ACTIVATION_CODE)
+    builder.addEditor("ref-mail", User.MAIL).setNotifyOnKeyPressed(true);
+    builder.addEditor("ref-code", User.ACTIVATION_CODE)
       .setValidationAction(validateAction)
       .setNotifyOnKeyPressed(true);
     GuiUtils.initHtmlComponent(connectionMessage);
@@ -79,15 +78,16 @@ public class LicenseActivationDialog {
     changeSetListener = new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(User.KEY)) {
-          boolean isConnected = repository.get(User.KEY).isTrue(User.CONNECTED);
+          boolean isConnected = updateConnectionState(repository);
           if (!isConnected) {
-            connectionMessage.setText(Lang.get("license.connect"));
+            return;
           }
-          connectionMessage.setVisible(!isConnected);
-          if (isConnected) {
+          if (changeSet.containsChanges(User.KEY, User.CONNECTED)) {
             selectionService.select(localRepository.get(User.KEY));
-            selectionService.select(localRepository.get(UserPreferences.KEY));
+            validateAction.setEnabled(true);
           }
+          validateAction.setEnabled(true);
+          connectionMessage.setVisible(!isConnected);
           activationState = repository.get(User.KEY).get(User.ACTIVATION_STATE);
           if (activationState != null) {
             if (activationState == User.ACTIVATION_OK) {
@@ -97,6 +97,9 @@ public class LicenseActivationDialog {
             }
             else if (activationState == User.ACTIVATION_FAILED_MAIL_SENT) {
               updateDialogState("license.activation.failed.mailSent", localRepository.get(User.KEY).get(User.MAIL));
+            }
+            else if (activationState == User.ACTIVATION_FAILED_MAIL_UNKNOWN) {
+              updateDialogState("license.mail.unknown");
             }
             else if (activationState != User.ACTIVATION_IN_PROGRESS) {
               updateDialogState("license.activation.failed");
@@ -111,23 +114,33 @@ public class LicenseActivationDialog {
     repository.addChangeListener(changeSetListener);
   }
 
+  private boolean updateConnectionState(GlobRepository repository) {
+    boolean isConnected = repository.get(User.KEY).isTrue(User.CONNECTED);
+    if (!isConnected) {
+      connectionMessage.setText(Lang.get("license.connect"));
+      selectionService.clear(User.TYPE);
+      validateAction.setEnabled(false);
+    }
+    return isConnected;
+  }
+
   private void updateDialogState(String message, String... args) {
     localRepository.rollback();
+    localRepository.update(User.KEY, User.ACTIVATION_CODE, null);
+    selectionService.select(localRepository.get(User.KEY));
     connectionMessage.setText(Lang.get(message, args));
     connectionMessage.setVisible(true);
     connectionState.setVisible(false);
-    validateAction.setEnabled(true);
   }
 
   public void show(boolean expiration) {
     expirationLabel.setVisible(expiration);
     localRepository.rollback();
-    if (repository.get(User.KEY).isTrue(User.CONNECTED)) {
-      selectionService.select(localRepository.get(User.KEY));
-      selectionService.select(localRepository.get(UserPreferences.KEY));
-    }
-    GuiUtils.center(dialog);
-    dialog.setVisible(true);
+    localRepository.update(User.KEY, User.ACTIVATION_CODE, null);
+    localRepository.update(User.KEY, User.SIGNATURE, null);
+    selectionService.select(localRepository.get(User.KEY));
+    updateConnectionState(localRepository);
+    dialog.showCentered();
   }
 
   public void showExpiration() {
@@ -140,7 +153,6 @@ public class LicenseActivationDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
-      setEnabled(false);
       Utils.beginRemove();
       Glob user = localRepository.get(User.KEY);
       if ("admin".equals(user.get(User.MAIL))) {
