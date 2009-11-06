@@ -4,7 +4,7 @@
   <styles>
     <style selector=".message htmlEditorPane" margin="10" marginTop="5"/>
     <style selector=".message button" fill="none" anchor="center"/>
-    <style selector="scrollPane.guidance" opaque="true" viewportBackground="notesView.introBlock.bg"/>
+    <style selector="scrollPane.guidance" opaque="true" viewportBackground="guidingPanel.bg"/>
 
     <style selector="label.amount" font="-,plain,10"/>
 

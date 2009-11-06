@@ -56,7 +56,7 @@ public class TypeConverter {
       return context.getAction(value);
     }
     if (targetClass == Border.class) {
-      return BorderUtils.parse(value, context.getService(ColorService.class), context);
+      return BorderParser.parse(value, context.getService(ColorService.class), context);
     }
     if (targetClass == Cursor.class) {
       return Cursors.parse(value);

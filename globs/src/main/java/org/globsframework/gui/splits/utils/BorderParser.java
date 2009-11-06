@@ -15,7 +15,7 @@ import java.awt.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BorderUtils {
+public class BorderParser {
   private static Pattern EMPTY_SHORT_FORMAT = Pattern.compile("empty\\(" +
                                                               "[ ]*([0-9]+)[ ]*" +
                                                               "\\)");

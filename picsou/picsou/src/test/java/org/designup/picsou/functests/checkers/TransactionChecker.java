@@ -78,12 +78,20 @@ public class TransactionChecker extends ViewChecker {
     return this;
   }
 
+  public void checkSeriesTooltipContains(String transactionLabel, String text) {
+    UISpecAssert.assertThat(getSeriesButton(getIndexOf(transactionLabel)).tooltipContains(text));
+  }
+
   private void clickSeries(int rowIndex) {
-    getTable().editCell(rowIndex, TransactionView.SERIES_COLUMN_INDEX).getButton().click();
+    getSeriesButton(rowIndex).click();
+  }
+
+  private Button getSeriesButton(int rowIndex) {
+    return getTable().editCell(rowIndex, TransactionView.SERIES_COLUMN_INDEX).getButton();
   }
 
   public TransactionChecker checkCategorizeIsDisabled(int row) {
-    UISpecAssert.assertFalse(getTable().editCell(row, TransactionView.SERIES_COLUMN_INDEX).getButton().isEnabled());
+    UISpecAssert.assertFalse(getSeriesButton(row).isEnabled());
     return this;
   }
 
@@ -92,7 +100,7 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public void checkSeries(int row, String seriesName) {
-    Button seriesButton = getTable().editCell(row, TransactionView.SERIES_COLUMN_INDEX).getButton();
+    Button seriesButton = getSeriesButton(row);
     UISpecAssert.assertThat(seriesButton.textEquals(seriesName));
   }
 
@@ -102,7 +110,8 @@ public class TransactionChecker extends ViewChecker {
   }
 
   private int getIndexOf(String transactionLabel) {
-    return getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, transactionLabel.toUpperCase());
+    UISpecAssert.assertThat(getTable().containsRow(TransactionView.LABEL_COLUMN_INDEX, transactionLabel));
+    return getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, transactionLabel);
   }
 
   public void setSearchText(String text) {
@@ -143,11 +152,12 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public ConfirmationDialogChecker delete(String label) {
-    int row = getIndexOf(label.toUpperCase());
-    if (row < 0) {
-      row = getTable().getRowIndex(TransactionView.NOTE_COLUMN_INDEX, label);
-    }
-    Assert.assertTrue(label + " not found", row >= 0);
+    return delete(getIndexOf(label.toUpperCase()));
+  }
+
+  public ConfirmationDialogChecker deleteTransactionWithNote(String note) {
+    int row = getTable().getRowIndex(TransactionView.NOTE_COLUMN_INDEX, note);
+    Assert.assertTrue(note + " not found", row >= 0);
     return delete(row);
   }
 

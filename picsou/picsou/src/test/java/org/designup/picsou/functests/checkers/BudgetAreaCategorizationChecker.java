@@ -112,6 +112,11 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     return selectSeries(seriesName);
   }
 
+  public BudgetAreaCategorizationChecker selectNewSeries(String seriesName, String description) {
+    createSeries().setName(seriesName).setDescription(description).validate();
+    return selectSeries(seriesName);
+  }
+
   public BudgetAreaCategorizationChecker selectNewSeriesWithSubSeries(String series, String subSeries) {
     createSeries()
       .setName(series)
@@ -175,5 +180,15 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
 
   public SeriesEditionDialogChecker editSeries(String seriesName) {
     return categorizationChecker.editSeries(seriesName);
+  }
+
+  public BudgetAreaCategorizationChecker checkDescriptionDisplayed() {
+    assertThat(panel.getTextBox("description").textContains(budgetArea.getDescription()));
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker checkSeriesTooltip(String seriesName, String tooltip) {
+    assertThat(panel.getRadioButton(seriesName).tooltipContains(tooltip));
+    return this;
   }
 }

@@ -51,10 +51,10 @@
     <!-- Front page information messages -->
     <style selector=".infoMessage" opaque="false"/>
     <style selector=".infoMessageBorder" opaque="true" marginTop="10"
-           border="line(notesView.introMessage.border)" background="notesView.introBlock.bg"/>
+           border="line(notesView.introMessage.border)" background="guidingPanel.bg"/>
     <style selector=".infoMessageBorder htmlEditorPane"
-           margin="1" border="empty(10)" opaque="true" background="notesView.introBlock.bg"
-           font="-,plain,14" fill="both"/>
+           margin="1" border="empty(10)" opaque="true" background="guidingPanel.bg"
+           font="-,plain,12" fill="both"/>
 
     <!-- Help button -->
     <ui name="helpButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
