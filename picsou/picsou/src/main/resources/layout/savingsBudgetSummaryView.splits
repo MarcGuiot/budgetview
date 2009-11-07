@@ -11,7 +11,7 @@
       <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle" gridPos="(0,0)"/>
       <label ref="balanceLabel" styleClass="totalAmount" gridPos="(0,1)"/>
 
-      <label text="$budgetSummaryView.position" styleClass="totalAmountTitle" gridPos="(1,0)"/>
+      <label ref="positionTitle" styleClass="totalAmountTitle" gridPos="(1,0)"/>
       <label ref="positionLabel" styleClass="totalAmount" gridPos="(1,1)"/>
 
     </grid>

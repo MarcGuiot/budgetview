@@ -1,12 +1,9 @@
 package org.designup.picsou.functests.checkers;
 
+import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
-import org.uispec4j.Window;
-import org.uispec4j.Button;
-import org.uispec4j.interception.WindowInterceptor;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 import javax.swing.*;
 
@@ -46,6 +43,11 @@ public class SavingsBudgetSummaryChecker extends GuiChecker {
 
   private Panel getPanel() {
     return mainWindow.getPanel("budgetSummaryView");
+  }
+
+  public SavingsBudgetSummaryChecker checkEndPositionTitle(String title) {
+    assertThat(getPanel().getTextBox("positionTitle").textEquals(title));
+    return this;
   }
 
   public void checkNoEstimatedPosition() {

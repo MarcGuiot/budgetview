@@ -15,7 +15,7 @@ import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.ChangeSet;
-import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.metamodel.GlobType;
 
@@ -23,9 +23,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.Set;
+import java.util.SortedSet;
 
 public class SavingsBudgetSummaryView extends View implements GlobSelectionListener, ChangeSetListener, ColorChangeListener {
   private JLabel balanceLabel = new JLabel();
+  private JLabel positionTitle = new JLabel();
   private JLabel positionLabel = new JLabel();
   private JLabel multiSelectionLabel = new JLabel();
   private final DecimalFormat format = Formatting.DECIMAL_FORMAT;
@@ -50,6 +52,7 @@ public class SavingsBudgetSummaryView extends View implements GlobSelectionListe
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/savingsBudgetSummaryView.splits",
                                                       repository, directory);
     builder.add("balanceLabel", balanceLabel);
+    builder.add("positionTitle", positionTitle);
     builder.add("positionLabel", positionLabel);
     builder.add("multiSelectionLabel", multiSelectionLabel);
 
@@ -58,7 +61,7 @@ public class SavingsBudgetSummaryView extends View implements GlobSelectionListe
 
   public void update() {
 
-    Set<Integer> selectedMonthIds = selectionService.getSelection(Month.TYPE).getValueSet(Month.ID);
+    SortedSet<Integer> selectedMonthIds = selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID);
     if (selectedMonthIds.size() > 1) {
       multiSelectionLabel.setText(Lang.get("budgetSummaryView.multimonth", selectedMonthIds.size()));
       multiSelectionLabel.setVisible(true);
@@ -67,10 +70,18 @@ public class SavingsBudgetSummaryView extends View implements GlobSelectionListe
       multiSelectionLabel.setVisible(false);
     }
 
+    if (selectedMonthIds.isEmpty()) {
+      positionTitle.setText(Lang.get("budgetSummaryView.position"));
+    }
+    else {
+      Integer lastSelectedMonthId = selectedMonthIds.last();
+      positionTitle.setText(getShortDate(lastSelectedMonthId));
+    }
+    
     GlobList budgetStats =
       repository.getAll(SavingsBudgetStat.TYPE,
-                        GlobMatchers.and(GlobMatchers.fieldEquals(SavingsBudgetStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID),
-                        GlobMatchers.fieldIn(SavingsBudgetStat.MONTH, selectedMonthIds)))
+                        and(fieldEquals(SavingsBudgetStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID),
+                            fieldIn(SavingsBudgetStat.MONTH, selectedMonthIds)))
         .sort(SavingsBudgetStat.MONTH);
 
     if (budgetStats.size() == 0) {
@@ -96,6 +107,10 @@ public class SavingsBudgetSummaryView extends View implements GlobSelectionListe
       positionLabel.setText(format.format(position));
       positionLabel.setForeground(normalColor);
     }
+  }
+
+  private String getShortDate(Integer monthId) {
+    return BudgetSummaryView.getEstimatedPositionTitle(monthId);
   }
 
   private void clear(JLabel label) {

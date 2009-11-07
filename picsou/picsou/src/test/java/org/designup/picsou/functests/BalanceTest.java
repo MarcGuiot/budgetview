@@ -72,7 +72,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .checkAccount("Manual", 0, "2009/05/15");
   }
 
-  public void testBalanceWithNoTransactionOnAMonth() throws Exception {
+  public void testBalanceWithNoOperationsForAMonth() throws Exception {
     operations.openPreferences()
       .setFutureMonthsCount(3)
       .validate();
@@ -95,7 +95,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkBalance(0);
   }
 
-  public void testSavingWithMonthWithoutTransaction() throws Exception {
+  public void testSavingsWithMonthWithoutTransaction() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000., "2008/08/12")
       .addTransaction("2008/08/12", 100.00, "P3 CE")
@@ -108,10 +108,11 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .load();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectHome();
-    this.mainAccounts.edit(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+    mainAccounts.edit(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setAsSavings()
       .validate();
-    //sur compte courant
+    
+    // sur compte courant
     timeline.selectMonth("2008/08");
     mainAccounts.checkEstimatedPosition(1000);
 
@@ -123,16 +124,22 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
 
     // sur savings
     timeline.selectMonth("2008/06");
-    savingsAccounts.checkEstimatedPosition(300);
+    savingsAccounts
+      .checkEstimatedPositionTitle("End of june 08 position")
+      .checkEstimatedPosition(300);
 
     timeline.selectMonth("2008/07");
-    savingsAccounts.checkEstimatedPosition(300);
+    savingsAccounts
+      .checkEstimatedPositionTitle("End of jul 08 position")
+      .checkEstimatedPosition(300);
 
     timeline.selectMonth("2008/08");
-    savingsAccounts.checkEstimatedPosition(0);
+    savingsAccounts
+      .checkEstimatedPositionTitle("End of aug 08 position")
+      .checkEstimatedPosition(0);
   }
 
-  public void testMissingBalanceAtBeginIfNoOperation() throws Exception {
+  public void testMissingBalanceAtBeginningIfNoOperation() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000., "2008/08/15")  //compte d'épargne
       .addTransaction("2008/08/12", 100.00, "P3 CE")
@@ -145,11 +152,11 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .load();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectHome();
-    this.mainAccounts.edit("Account n. 111")
+    mainAccounts.edit("Account n. 111")
       .setAsSavings()
       .validate();
 
-    //sur compte courant
+    // sur compte courant
     timeline.selectMonth("2008/07");
     mainAccounts.checkEstimatedPosition(300);
 
@@ -180,7 +187,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .load();
     operations.openPreferences().setFutureMonthsCount(6).validate();
     views.selectHome();
-    this.mainAccounts.edit("Account n. 111")
+    mainAccounts.edit("Account n. 111")
       .setAsSavings()
       .validate();
 
@@ -206,7 +213,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .toggleMonth(1, 3, 6)
       .validate();
 
-    //sur compte courant
+    // sur compte courant
     timeline.selectMonth("2009/06");
     mainAccounts.checkEstimatedPosition(-1000);
     savingsAccounts.checkEstimatedPosition(1700);
@@ -246,8 +253,5 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/06");
     mainAccounts.checkEstimatedPosition(200);
     savingsAccounts.checkEstimatedPosition(900);
-
-
   }
-
 }

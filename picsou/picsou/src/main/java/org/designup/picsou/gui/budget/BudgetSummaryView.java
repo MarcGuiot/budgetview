@@ -157,17 +157,18 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
     Integer lastImportDate = repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH);
     if (lastSelectedMonthId >= lastImportDate) {
-      estimatedPositionTitle.setText(Lang.get("accountView.estimated.title", getShortDate(lastSelectedMonthId)));
-      estimatedPositionLabel.setToolTipText(Lang.get("accountView.estimated.tooltip"));
+      estimatedPositionTitle.setText(getEstimatedPositionTitle(lastSelectedMonthId));
+      estimatedPositionLabel.setToolTipText(Lang.get("budgetSummaryView.estimated.tooltip"));
     }
     else {
-      estimatedPositionTitle.setText(Lang.get("accountView.real.title"));
+      estimatedPositionTitle.setText(Lang.get("budgetSummaryView.real.title"));
       estimatedPositionLabel.setToolTipText(null);
     }
   }
 
-  private String getShortDate(Integer monthId) {
-    return Month.getShortMonthLabelWithYear(monthId).toLowerCase();
+  public static String getEstimatedPositionTitle(Integer monthId) {
+    return Lang.get("budgetSummaryView.estimated.title",
+                    Month.getShortMonthLabelWithYear(monthId).toLowerCase());
   }
 
   private void setEstimatedPosition(Double amount) {

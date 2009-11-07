@@ -18,7 +18,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
   private Window window;
   private PicsouApplication picsouApplication;
   private LoginChecker login;
-  private OperationChecker operationChecker;
+  private OperationChecker operations;
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -238,6 +238,10 @@ public class LoginTest extends StartUpFunctionalTestCase {
   public void testLoginInDemoMode() throws Exception {
     login.clickDemoLink();
     checkDemoMode();
+    LicenseMessageChecker licenseMessage = getLicenseMessageView();
+    licenseMessage.checkMessage("demo account");
+    licenseMessage.clickLink("logout");
+    login.checkComponentsVisible();
   }
 
   public void testActivatingTheDemoModeSkipsAccountCreation() throws Exception {
@@ -247,7 +251,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     checkDemoMode();
   }
 
-  public void testCanNotImportInDemoMode() throws Exception {
+  public void testCannotImportInDemoMode() throws Exception {
     login.clickDemoLink();
     OperationChecker operations = new OperationChecker(window);
     MessageDialogChecker dialogChecker = MessageDialogChecker.init(operations.getImportTrigger());
@@ -255,7 +259,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     dialogChecker.close();
   }
 
-  public void testCanNotCreateOperationInDemoMode() throws Exception {
+  public void testCannotCreateOperationsInDemoMode() throws Exception {
     login.clickDemoLink();
     MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
     mainAccounts.createNewAccount()
@@ -277,7 +281,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     login.clickDemoLink();
 
     LicenseMessageChecker messageChecker = new LicenseMessageChecker(window);
-    messageChecker.checkMessage("Demo account");
+    messageChecker.checkMessage("demo account");
   }
 
   public void testAutoLogin() throws Exception {
@@ -286,11 +290,11 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
-    operationChecker = new OperationChecker(window);
-    operationChecker.importOfxFile(path);
-    operationChecker.logout();
+    operations = new OperationChecker(window);
+    operations.importOfxFile(path);
+    operations.logout();
     login.clickAutoLogin();
-    operationChecker.logout();
+    operations.logout();
     closeWindow();
     window = getMainWindow();
     getTransactionView()
@@ -302,40 +306,40 @@ public class LoginTest extends StartUpFunctionalTestCase {
   public void testAutoLoginAndImportInNewUser() throws Exception {
     login.clickFirstAutoLogin();
 
-    operationChecker = new OperationChecker(window);
+    operations = new OperationChecker(window);
     String path = OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
 
-    operationChecker.importOfxFile(path);
-    String fileName = operationChecker.backup(this);
-    operationChecker.deleteAutoLoginUser();
+    operations.importOfxFile(path);
+    String fileName = operations.backup(this);
+    operations.deleteAutoLoginUser();
     login.logNewUser("Alfred", "Alfred");
-    operationChecker.restore(fileName);
+    operations.restore(fileName);
     getTransactionView()
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
-    operationChecker.logout();
+    operations.logout();
     login.clickFirstAutoLogin();
     TimeViewChecker timeViewChecker = new TimeViewChecker(window);
     timeViewChecker.selectAll();
     getTransactionView()
       .initContent()
       .check();
-    operationChecker.deleteAutoLoginUser();
+    operations.deleteAutoLoginUser();
     login.clickFirstAutoLogin();
-    operationChecker.deleteAutoLoginUser();
+    operations.deleteAutoLoginUser();
     login.checkFirstAutoLogin();
   }
 
   public void testLoginWithPwdAndAutologin() throws Exception {
     login.clickFirstAutoLogin();
-    operationChecker = new OperationChecker(window);
-    operationChecker.logout();
+    operations = new OperationChecker(window);
+    operations.logout();
     login.logNewUser("Alfred", "Alfred");
-    operationChecker.logout();
+    operations.logout();
     openNewLoginWindow();
     login.clickAutoLogin();
   }
@@ -356,6 +360,12 @@ public class LoginTest extends StartUpFunctionalTestCase {
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectCategorization();
     return new CategorizationChecker(window);
+  }
+
+  private LicenseMessageChecker getLicenseMessageView() {
+    ViewSelectionChecker views = new ViewSelectionChecker(window);
+    views.selectHome();
+    return new LicenseMessageChecker(window);
   }
 
   private void checkBankOnImport(final String path) {

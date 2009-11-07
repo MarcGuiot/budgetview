@@ -17,22 +17,23 @@ import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
+import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.monthsummary.VersionInfoView;
+import org.designup.picsou.gui.notes.NotesView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.series.evolution.SeriesEvolutionView;
 import org.designup.picsou.gui.series.view.SeriesView;
+import org.designup.picsou.gui.startup.LogoutService;
+import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
-import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.utils.*;
-import org.designup.picsou.gui.notes.NotesView;
-import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -48,8 +49,8 @@ import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.utils.ReplicationGlobRepository;
 import static org.globsframework.model.utils.GlobMatchers.*;
+import org.globsframework.model.utils.ReplicationGlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -65,7 +66,7 @@ public class MainPanel {
   private RestoreAction restoreAction;
   private PreferencesAction preferencesAction;
   private ExitAction exitAction;
-  private GotoLoginAction gotoLoginAction;
+  private LogoutAction logoutAction;
   private DeleteUserAction deleteUserAction;
   private GlobsPanelBuilder builder;
   private GlobRepository repository;
@@ -85,6 +86,7 @@ public class MainPanel {
   private TextFilterPanel search;
   private NotesView notesView;
   private SeriesEvolutionView seriesEvolutionView;
+  private LogoutService logoutService;
 
   public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
@@ -100,6 +102,12 @@ public class MainPanel {
     directory.add(JFrame.class, parent);
     directory.add(new UndoRedoService(repository));
     directory.add(new HelpService(repository, directory));
+    logoutService = new LogoutService() {
+      public void logout() {
+        MainPanel.this.logout();
+      }
+    };
+    directory.add(LogoutService.class, logoutService);
 
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
 
@@ -125,7 +133,7 @@ public class MainPanel {
     throwException = new ThrowExceptionAction();
     throwInRepoException = new ThrowInRepoExceptionAction(repository);
     exitAction = new ExitAction(directory);
-    gotoLoginAction = new GotoLoginAction(this);
+    logoutAction = new LogoutAction(logoutService);
     deleteUserAction = new DeleteUserAction(this, repository, directory);
 
     search = new TextFilterPanel(transactionView.getFilterSet(), repository, directory) {
@@ -192,7 +200,7 @@ public class MainPanel {
 
   public void show() {
     ImportFileAction.registerToOpenRequestManager(Lang.get("import"), repository, directory);
-    
+
     parent.setJMenuBar(menuBar);
     cardView.showInitialCard();
     search.reset();
@@ -236,7 +244,7 @@ public class MainPanel {
 
     menu.addSeparator();
     menu.add(registerAction);
-    menu.add(gotoLoginAction);
+    menu.add(logoutAction);
     menu.add(deleteUserAction);
 
     if (Gui.useMacOSMenu()) {
@@ -286,7 +294,7 @@ public class MainPanel {
     return menu;
   }
 
-  public void loggout() {
+  public void logout() {
     directory.get(OpenRequestManager.class).popCallback();
     windowManager.logout();
   }

@@ -2,6 +2,7 @@ package org.designup.picsou.gui.license;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.startup.LogoutService;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.model.User;
@@ -45,6 +46,10 @@ public class LicenseInfoView extends View {
           LicenseActivationDialog dialog = new LicenseActivationDialog(parent, repository, directory);
           dialog.show(false);
         }
+        else if (href.equals("logout")) {
+          directory.get(LogoutService.class).logout();
+        }
+
       }
     });
     ApplicationColors.installLinkColor(licenseMessage, "licenseMessage", "notesView.introBlock.link", directory);

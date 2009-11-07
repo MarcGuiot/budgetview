@@ -20,4 +20,9 @@ public class SavingsAccountViewChecker extends AccountViewChecker {
     return this;
   }
 
+  public SavingsAccountViewChecker checkEstimatedPositionTitle(String title) {
+    SavingsBudgetSummaryChecker summary = new SavingsBudgetSummaryChecker(panel);
+    summary.checkEndPositionTitle(title);
+    return this;
+  }
 }
