@@ -26,6 +26,11 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     return this;
   }
 
+  public BudgetSummaryViewChecker checkEndPosition(String title, double amount) {
+    assertThat(getPanel().getTextBox("positionTitle").textEquals(title));
+    return checkEndPosition(amount);
+  }
+
   public BudgetSummaryViewChecker checkUncategorized(double amount) {
     assertThat(getPanel().getTextBox("uncategorizedLabel").textEquals(toString(amount, false)));
     return this;
@@ -78,7 +83,7 @@ public class BudgetSummaryViewChecker extends GuiChecker {
 
   public void checkIsEstimatedPosition() {
     TextBox label = getPanel().getTextBox("positionTitle");
-    assertThat(label.textEquals("Estimated position"));
+    assertThat(label.textContains("End of"));
   }
 
   public void checkIsRealPosition() {

@@ -12,6 +12,8 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
   public void test() throws Exception {
 
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+
     views.selectBudget();
 
     OfxBuilder
@@ -38,22 +40,22 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary()
       .checkMultiSelectionNotShown()
       .checkMonthBalance(+750.00)
-      .checkEndPosition(2300.00)
+      .checkEndPosition("End of jul 08 position", 2300.00)
       .checkUncategorized(50.00);
 
     timeline.selectAll();
 
     budgetView.getSummary()
-      .checkMultiSelection(2)
-      .checkMonthBalance(+1550.00)
-      .checkEndPosition(2300.00)
+      .checkMultiSelection(4)
+      .checkMonthBalance(+3150.00)
+      .checkEndPosition("End of sep 08 position", 3900.00)
       .checkUncategorized(50.00);
 
     timeline.selectMonth("2008/06");
     budgetView.getSummary()
       .checkMultiSelectionNotShown()
       .checkMonthBalance(+800.00)
-      .checkEndPosition(1550.00)
+      .checkEndPosition("Position", 1550.00)
       .checkUncategorizedNotShown();
 
     views.selectCategorization();
@@ -64,7 +66,15 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary()
       .checkMultiSelectionNotShown()
       .checkMonthBalance(+750.00)
-      .checkEndPosition(2300.00)
+      .checkEndPosition("End of jul 08 position", 2300.00)
+      .checkUncategorizedNotShown();
+
+    timeline.selectMonth("2008/09");
+    views.selectBudget();
+    budgetView.getSummary()
+      .checkMultiSelectionNotShown()
+      .checkMonthBalance(+750.00)
+      .checkEndPosition("End of sep 08 position", 3800.00)
       .checkUncategorizedNotShown();
   }
 }
