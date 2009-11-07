@@ -194,7 +194,7 @@ public class TransactionCreationChecker extends GuiChecker {
 
   public void checkTrialExpiredMessage() {
     LicenseActivationChecker.open(getShowHideButton().triggerClick())
-      .checkFieldsAreEmpty()
+      .checkCodeIsEmpty()
       .cancel();
   }
 

@@ -9,9 +9,9 @@
       <htmlEditorPane text="$license.acquisition" hyperlinkListener="hyperlinkHandler" marginBottom="5"/>
       <grid>
         <label gridPos="(0,0)" text="$license.mail" styleClass="formLabel"/>
-        <textField gridPos="(1,0)" ref="mail" marginBottom="10"/>
+        <textField gridPos="(1,0)" ref="ref-mail"/>
         <label gridPos="(0,1)" text="$license.code" styleClass="formLabel"/>
-        <textField gridPos="(1,1)" ref="code"/>
+        <textField gridPos="(1,1)" ref="ref-code"/>
       </grid>
       <progressBar ref="connectionState" visible="false"/>
       <htmlEditorPane ref="connectionMessage" styleClass="errorMessage"/>

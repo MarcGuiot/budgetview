@@ -74,7 +74,14 @@ public class RequestForConfigServlet extends HttpServlet {
     String signature = req.getHeader(ConfigService.HEADER_SIGNATURE);
     String applicationVersion = req.getHeader(ConfigService.HEADER_CONFIG_VERSION);
     if (mail != null && activationCode != null) {
-      computeLicense(resp, mail, activationCode, Long.parseLong(count), id, lang);
+      if (count == null || id == null || lang == null) {
+        logger.info("For " + mail + ", one element is missing count : " + count + ", id :" + id + ", lang : " + lang);
+        resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
+        resp.setHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
+      }
+      else {
+        computeLicense(resp, mail, activationCode, Long.parseLong(count), id, lang);
+      }
     }
     else {
       computeAnonymous(id, resp);
@@ -275,7 +282,7 @@ public class RequestForConfigServlet extends HttpServlet {
         else {
           resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
           resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
-          logger.info("Different code with different repoId for " + mail);
+          logger.info("Different code for " + mail);
         }
       }
     }

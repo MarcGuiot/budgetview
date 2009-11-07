@@ -33,9 +33,6 @@ public class RegistrationTrigger implements ChangeSetListener {
             thread.setDaemon(true);
             thread.start();
           }
-          else {
-            repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAILED_BAD_ACTIVATION_CODE);
-          }
         }
       }
 

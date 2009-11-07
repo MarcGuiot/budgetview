@@ -27,6 +27,10 @@ public class RegistrationTest extends LicenseTestCase {
   protected void tearDown() throws Exception {
     super.tearDown();
     ConfigService.RETRY_PERIOD = previousRetry;
+    window.dispose();
+    picsouApplication.shutdown();
+    window = null;
+    picsouApplication = null;
   }
 
   public void testNoServerAccessForRegistration() throws Exception {

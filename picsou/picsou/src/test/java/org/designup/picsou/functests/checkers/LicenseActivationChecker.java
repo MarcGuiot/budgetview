@@ -9,12 +9,15 @@ import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
+import org.mortbay.thread.Timeout;
 
 public class LicenseActivationChecker {
   private Window dialog;
 
   public LicenseActivationChecker(Window dialog) {
     this.dialog = dialog;
+    //on le met comme champs sinon uispec trouve le mauvais composent
+    // lorsque q'un autre composant (message) contient 'mail'
   }
 
   public static LicenseActivationChecker open(Window window) {
@@ -29,8 +32,8 @@ public class LicenseActivationChecker {
   static public void enterLicense(Window window, final String mail, final String code) {
     enterLicense(window, new WindowHandler() {
       public Trigger process(Window window) throws Exception {
-        window.getInputTextBox("mail").setText(mail);
-        TextBox codeField = window.getInputTextBox("code");
+        window.getInputTextBox("ref-mail").setText(mail);
+        TextBox codeField = window.getInputTextBox("ref-code");
         codeField.clear();
         codeField.appendText(code);
         return window.getButton("OK").triggerClick();
@@ -41,9 +44,11 @@ public class LicenseActivationChecker {
   static public void enterBadLicense(Window window, final String mail, final String code, final String message) {
     enterLicense(window, new WindowHandler() {
       public Trigger process(Window window) throws Exception {
-        window.getInputTextBox("mail").setText(mail);
-        window.getInputTextBox("code").setText(code);
-        assertTrue(window.getTextBox("connectionMessage").textEquals(message));
+        window.getInputTextBox("ref-mail").setText(mail);
+        window.getInputTextBox("ref-code").setText(code);
+        TextBox box = window.getTextBox("connectionMessage");
+        assertTrue(box.isVisible());
+        assertTrue(box.textEquals(message));
         return window.getButton("cancel").triggerClick();
       }
     });
@@ -57,9 +62,15 @@ public class LicenseActivationChecker {
       .run();
   }
 
-  public LicenseActivationChecker checkFieldsAreEmpty() {
-    UISpecAssert.assertThat(dialog.getInputTextBox("mail").textIsEmpty());
-    UISpecAssert.assertThat(dialog.getInputTextBox("code").textIsEmpty());
+  public LicenseActivationChecker checkCodeIsEmpty() {
+    UISpecAssert.assertThat(dialog.getInputTextBox("ref-mail").textIsEmpty());
+    UISpecAssert.assertThat(dialog.getInputTextBox("ref-code").textIsEmpty());
+    return this;
+  }
+
+  public LicenseActivationChecker checkActivationCodeIsEmptyAndMailIs(String mail) {
+    UISpecAssert.assertThat(dialog.getInputTextBox("ref-mail").textEquals(mail));
+    UISpecAssert.assertThat(dialog.getInputTextBox("ref-code").textIsEmpty());
     return this;
   }
 
@@ -70,20 +81,20 @@ public class LicenseActivationChecker {
   }
 
   public LicenseActivationChecker enterLicense(String mail, String code) {
-    dialog.getInputTextBox("mail").setText(mail);
-    dialog.getInputTextBox("code").appendText(code);
+    dialog.getInputTextBox("ref-mail").setText(mail);
+    dialog.getInputTextBox("ref-code").appendText(code);
     return this;
   }
 
   public void checkConnectionNotAvailable() {
-    assertFalse(dialog.getInputTextBox("mail").isEnabled());
-    assertFalse(dialog.getInputTextBox("code").isEnabled());
+    assertFalse(dialog.getInputTextBox("ref-mail").isEnabled());
+    assertFalse(dialog.getInputTextBox("ref-code").isEnabled());
     assertTrue(dialog.getTextBox("connectionMessage").textEquals("You must be connected to Internet to register"));
   }
 
   public void checkConnectionIsAvailable() {
-    assertTrue(dialog.getInputTextBox("mail").isEnabled());
-    assertTrue(dialog.getInputTextBox("code").isEnabled());
+    assertTrue(dialog.getInputTextBox("ref-mail").isEnabled());
+    assertTrue(dialog.getInputTextBox("ref-code").isEnabled());
     assertFalse(dialog.getTextBox("connectionMessage").isVisible());
   }
 
@@ -101,5 +112,9 @@ public class LicenseActivationChecker {
   public LicenseActivationChecker validate() {
     dialog.getButton("ok").click();
     return this;
+  }
+
+  public void checkClosed() {
+    assertFalse(dialog.isVisible());
   }
 }

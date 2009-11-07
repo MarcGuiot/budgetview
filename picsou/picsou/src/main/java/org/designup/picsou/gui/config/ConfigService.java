@@ -252,7 +252,7 @@ public class ConfigService {
   private void computeResponse(GlobRepository repository, PostMethod postMethod) {
     repository.startChangeSet();
     try {
-      Header header = postMethod.getRequestHeader(HEADER_MAIL_UNKNOWN);
+      Header header = postMethod.getResponseHeader(HEADER_MAIL_UNKNOWN);
       if (header != null && "true".equalsIgnoreCase(header.getValue())) {
         repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAILED_MAIL_UNKNOWN);
       }
@@ -260,7 +260,6 @@ public class ConfigService {
         Header signature = postMethod.getResponseHeader(HEADER_SIGNATURE);
         if (signature != null) {
           String value = signature.getValue();
-          repository.update(User.KEY, User.IS_REGISTERED_USER, true);
           repository.update(User.KEY, User.SIGNATURE, Encoder.stringToByte(value));
         }
         else {
@@ -269,7 +268,7 @@ public class ConfigService {
             repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAILED_MAIL_SENT);
           }
           else {
-            repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAILED_BAD_SIGNATURE);
+            repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAILED_MAIL_NOT_SENT);
           }
         }
       }

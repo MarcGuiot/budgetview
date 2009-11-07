@@ -8,6 +8,7 @@ import org.designup.picsou.gui.startup.BackupService;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.User;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
@@ -27,6 +28,14 @@ public class RestoreAction extends AbstractBackupRestoreAction {
   }
 
   public void actionPerformed(ActionEvent e) {
+
+    Glob glob = repository.get(User.KEY);
+    if (!glob.isTrue(User.IS_REGISTERED_USER)){
+      MessageDialog dialog = new MessageDialog("restore.trial.title", "restore.trial.content", frame, directory);
+      dialog.show();
+      return;
+    }
+
     JFileChooser chooser = getFileChooser();
     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
     int returnVal = chooser.showOpenDialog(frame);
