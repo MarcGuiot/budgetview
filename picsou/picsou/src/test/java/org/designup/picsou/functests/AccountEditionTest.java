@@ -37,7 +37,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkTypes("Main", "Card", "Savings")
       .selectBank("CIC")
       .checkUpdateModeIsFileImport()
-      .checkUpdateModeIsEnabled()
+      .checkUpdateModeIsEditable()
       .checkUpdateModes()
       .checkIsMain()
       .validate();
@@ -51,7 +51,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .setAccountName("Savings")
       .setAccountNumber("123")
       .checkUpdateModeIsFileImport()
-      .checkUpdateModeIsEnabled()
+      .checkUpdateModeIsEditable()
       .checkUpdateModes()
       .checkIsSavings()
       .selectBank("cic")
@@ -146,7 +146,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     mainAccounts.edit("Main")
-      .checkUpdateModeIsEnabled()
+      .checkUpdateModeIsEditable()
       .setUpdateModeToManualInput()
       .validate();
 
@@ -171,7 +171,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     mainAccounts.edit("Main")
-      .checkUpdateModeIsEnabled()
+      .checkUpdateModeIsEditable()
       .setUpdateModeToManualInput()
       .validate();
 

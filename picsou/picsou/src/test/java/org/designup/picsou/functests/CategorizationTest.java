@@ -1027,7 +1027,62 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testCreateSerieShouldNotCategorizeToTransactionIfNotValide() throws Exception {
+  public void testSavingsHelpDisplayedWhenNoSavingsAccountAvailable() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/10", -100.00, "Virement")
+      .load();
+
+    views.selectCategorization();
+    categorization
+      .selectTransactions("Virement")
+      .selectSavings()
+      .checkNoSeriesMessage("No savings account is declared")
+      .clickSeriesMessageAccountCreationLink("create a savings account")
+      .checkIsSavings()
+      .checkUpdateModeIsEditable()
+      .setAccountName("Epargne")
+      .selectBank("CIC")
+      .setPosition(0.00)
+      .validate();
+
+    categorization
+      .selectTransactions("Virement")
+      .selectSavings()
+      .checkNoSeriesMessage("There are no savings series");
+
+    views.selectBudget();
+    budgetView.savings.createSeries()
+      .setName("My savings")
+      .setFromAccount("Account n. 00001123")
+      .setToAccount("Epargne")
+      .validate();
+
+    views.selectCategorization();
+    categorization
+      .selectSavings()
+      .checkNoSeriesMessageHidden();
+
+    views.selectBudget();
+    budgetView.savings.editSeries("My savings")
+      .deleteCurrentSeries();
+
+    views.selectCategorization();
+    categorization
+      .selectTransactions("Virement")
+      .selectSavings()
+      .checkNoSeriesMessage("There are no savings series");
+
+    views.selectHome();
+    savingsAccounts.edit("Epargne").delete().validate();
+    
+    views.selectCategorization();
+    categorization
+      .selectTransactions("Virement")
+      .selectSavings()
+      .checkNoSeriesMessage("No savings account is declared");
+  }
+
+  public void testCreateSeriesShouldNotCategorizeToTransactionIfNotValid() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/25", -50.0, "1_Auchan")
@@ -1073,7 +1128,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.getEnvelopes().checkDoesNotContainSeries("Courses");
   }
 
-  public void testFilteringSerieByValidMonth() throws Exception {
+  public void testFilteringSeriesByValidMonth() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/25", -50.0, "1_Auchan")
@@ -1099,14 +1154,14 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization
       .selectTransactions("1_Auchan")
       .selectEnvelopes()
-      .checkNotActiveSeries("Courses 2")
+      .checkNonActiveSeries("Courses 2")
       .checkActiveSeries("Courses 1")
       .selectSeries("Courses 1");
 
     categorization
       .selectTransactions("2_Auchan")
       .selectEnvelopes()
-      .checkNotActiveSeries("Courses 1")
+      .checkNonActiveSeries("Courses 1")
       .checkActiveSeries("Courses 2");
 
     categorization
