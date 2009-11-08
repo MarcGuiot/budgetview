@@ -278,7 +278,7 @@ public class CategorizationView extends View implements TableView, Filterable {
 
     panelBuilder.add("description", new JTextArea(budgetArea.getDescription()));
 
-    NoSeriesMessage noSeriesMessage = new NoSeriesMessage(budgetArea, repository);
+    NoSeriesMessage noSeriesMessage = NoSeriesMessageFactory.create(budgetArea, repository, directory);
     panelBuilder.add("noSeriesMessage", noSeriesMessage.getComponent());
 
     JRadioButton invisibleRadio = new JRadioButton(name);

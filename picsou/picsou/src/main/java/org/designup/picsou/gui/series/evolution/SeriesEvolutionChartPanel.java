@@ -698,7 +698,6 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
     public void actionPerformed(ActionEvent e) {
       Glob transaction = repository.find(transactionKey);
-      System.out.println("SeriesEvolutionChartPanel$CategorizeTransactionAction.actionPerformed " + transaction);
       if (transaction != null) {
         directory.get(NavigationService.class).gotoCategorization(new GlobList(transaction), true);
       }

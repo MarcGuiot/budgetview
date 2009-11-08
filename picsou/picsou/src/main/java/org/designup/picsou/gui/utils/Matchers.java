@@ -266,6 +266,15 @@ public class Matchers {
     protected abstract boolean isEligible(Glob series, GlobRepository repository);
   }
 
+  public static GlobMatcher userCreatedSavingsAccounts() {
+    return new GlobMatcher() {
+      public boolean matches(Glob account, GlobRepository repository) {
+        return Account.isUserCreatedSavingsAccount(account);
+      }
+    };
+
+  }
+
   public static class AccountDateMatcher implements GlobMatcher {
     private Set<Integer> months = new HashSet<Integer>();
 

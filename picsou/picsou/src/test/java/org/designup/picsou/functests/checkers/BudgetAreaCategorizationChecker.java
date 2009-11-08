@@ -84,13 +84,13 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     return this;
   }
 
-  public BudgetAreaCategorizationChecker checkNotActiveSeries(String seriesName) {
-    assertThat(panel.getRadioButton(seriesName).foregroundEquals("777777"));
+  public BudgetAreaCategorizationChecker checkActiveSeries(String seriesName) {
+    assertThat(panel.getRadioButton(seriesName).foregroundEquals("000000"));
     return this;
   }
 
-  public BudgetAreaCategorizationChecker checkActiveSeries(String seriesName) {
-    assertThat(panel.getRadioButton(seriesName).foregroundEquals("000000"));
+  public BudgetAreaCategorizationChecker checkNonActiveSeries(String seriesName) {
+    assertThat(panel.getRadioButton(seriesName).foregroundEquals("777777"));
     return this;
   }
 
@@ -172,6 +172,12 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   public BudgetAreaCategorizationChecker checkNoSeriesMessageHidden() {
     assertFalse(categorizationChecker.getPanel().getTextBox("noSeriesMessage").isVisible());
     return this;
+  }
+
+  public AccountEditionChecker clickSeriesMessageAccountCreationLink(String text) {
+    TextBox textBox = categorizationChecker.getPanel().getTextBox("noSeriesMessage");
+    assertTrue(textBox.isVisible());
+    return AccountEditionChecker.open(textBox.triggerClickOnHyperlink(text));
   }
 
   public SeriesEditionDialogChecker editSeries() {

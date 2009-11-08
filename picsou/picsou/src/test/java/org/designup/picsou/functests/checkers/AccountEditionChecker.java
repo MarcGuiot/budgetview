@@ -160,7 +160,7 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  public AccountEditionChecker checkUpdateModeIsEnabled() {
+  public AccountEditionChecker checkUpdateModeIsEditable() {
     assertThat(getUpdateModeCombo().isEnabled());
     return this;
   }

@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.categorization.components;
 
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.Lang;
@@ -9,6 +10,7 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.util.Set;
@@ -17,19 +19,37 @@ public class NoSeriesMessage {
 
   private JEditorPane htmlEditor;
   private BudgetArea budgetArea;
-  private GlobRepository repository;
+  protected final GlobRepository repository;
+  protected final Directory directory;
 
-  public NoSeriesMessage(BudgetArea budgetArea, GlobRepository repository) {
+  public NoSeriesMessage(BudgetArea budgetArea, GlobRepository repository, Directory directory) {
     this.budgetArea = budgetArea;
     this.repository = repository;
+    this.directory = directory;
 
-    this.htmlEditor = new JEditorPane();
+    htmlEditor = new JEditorPane();
     GuiUtils.initReadOnlyHtmlComponent(htmlEditor);
+    htmlEditor.addHyperlinkListener(new HyperlinkHandler(directory) {
+      protected void processCustomLink(String href) {
+        NoSeriesMessage.this.processHyperlinkClick(href);
+      }
+    });
 
-    this.htmlEditor.setText(Lang.get("categorization.noseries." + budgetArea.getName()));
+    setDefaultText();
 
     registerUpdateListener(repository);
     updateVisibility();
+  }
+
+  protected void processHyperlinkClick(String href) {
+  }
+
+  protected void setDefaultText() {
+    setText(Lang.get("categorization.noseries." + budgetArea.getName()));
+  }
+
+  protected void setText(String text) {
+    htmlEditor.setText(text);
   }
 
   private void registerUpdateListener(GlobRepository repository) {
