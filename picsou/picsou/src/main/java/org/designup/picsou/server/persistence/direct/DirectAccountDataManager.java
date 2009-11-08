@@ -161,7 +161,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     }
     catch (Exception e) {
     }
-    return new TransactionInfo(version, transactionInfo.timestamp);
+    return new TransactionInfo(version < snapshotVersion ? snapshotVersion : version, transactionInfo.timestamp);
   }
 
   private TransactionInfo readJournalVersion(SerializedInput serializedInput) {

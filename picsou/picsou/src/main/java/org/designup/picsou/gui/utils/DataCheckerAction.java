@@ -254,7 +254,7 @@ public class DataCheckerAction extends AbstractAction {
       hasError = true;
     }
     for (Integer month : budgetToCreate) {
-      MonthsToSeriesBudgetTrigger.addMonth(repository, month);
+      MonthsToSeriesBudgetTrigger.addMonthForSeries(repository, month, series);
     }
     return hasError;
   }

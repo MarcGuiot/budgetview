@@ -50,6 +50,7 @@ public class MainWindow implements WindowManager {
   private PicsouInit picsouInit;
   private MainPanel mainPanel;
   private boolean registered = false;
+  static private ShutDownThread thread;
 
   // Il faut etre sur qu'on ne fera plus de modif dans le repository en dehors du thread de dispath swing
   // sinon le thread de login fait un invokeLater mais comme le main est concourrent avec le thread de dispatch
@@ -78,6 +79,13 @@ public class MainWindow implements WindowManager {
     }
 
     MRJAdapter.addAboutListener(new AboutAction(directory));
+    if (thread == null){
+      thread = new ShutDownThread(serverAccess, serverDirectory);
+      Runtime.getRuntime().addShutdownHook(thread);
+    }else {
+      thread.serverAccess = serverAccess;
+      thread.serverDirectory = serverDirectory;
+    }
   }
 
   public void setPanel(JPanel panel) {

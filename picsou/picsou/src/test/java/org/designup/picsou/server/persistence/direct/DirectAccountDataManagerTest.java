@@ -96,6 +96,54 @@ public class DirectAccountDataManagerTest extends TestCase {
     continueWriting(pathForUser);
   }
 
+  public void testTakeSnapshotVersionIfNoJournal() throws Exception {
+    DirectAccountDataManager directAccountDataManager = new DirectAccountDataManager(PATH, false);
+    directAccountDataManager.setCountFileNotToDelete(3);
+    Integer userId = 123;
+    SerializedOutput initialOutput = SerializedInputOutputFactory.init(new ByteArrayOutputStream());
+    directAccountDataManager.getUserData(initialOutput, userId);
+    SerializedByteArrayOutput output = new SerializedByteArrayOutput();
+    MultiMap<String, ServerDelta> globMultiMap = new MultiMap<String, ServerDelta>();
+    createDelta(globMultiMap, 1, "A", ServerState.CREATED);
+    createDelta(globMultiMap, 2, "A", ServerState.CREATED);
+    SerializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
+    directAccountDataManager.updateUserData(output.getInput(), userId);
+    directAccountDataManager.close();
+
+    directAccountDataManager = new DirectAccountDataManager(PATH, false);
+    directAccountDataManager.setCountFileNotToDelete(3);
+    userId = 123;
+    initialOutput = SerializedInputOutputFactory.init(new ByteArrayOutputStream());
+    directAccountDataManager.getUserData(initialOutput, userId);
+    output = new SerializedByteArrayOutput();
+    globMultiMap = new MultiMap<String, ServerDelta>();
+    createDelta(globMultiMap, 3, "A", ServerState.CREATED);
+    createDelta(globMultiMap, 4, "A", ServerState.CREATED);
+    SerializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
+    directAccountDataManager.updateUserData(output.getInput(), userId);
+    directAccountDataManager.takeSnapshot(userId);
+    directAccountDataManager.close();
+
+    assertTrue(new File(PATH + "/" + userId + "/0000000000000000002.journal").delete());
+
+    directAccountDataManager = new DirectAccountDataManager(PATH, false);
+    directAccountDataManager.setCountFileNotToDelete(3);
+    userId = 123;
+    initialOutput = SerializedInputOutputFactory.init(new ByteArrayOutputStream());
+    directAccountDataManager.getUserData(initialOutput, userId);
+    output = new SerializedByteArrayOutput();
+    globMultiMap = new MultiMap<String, ServerDelta>();
+    createDelta(globMultiMap, 5, "A", ServerState.CREATED);
+    createDelta(globMultiMap, 6, "A", ServerState.CREATED);
+    SerializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
+    directAccountDataManager.updateUserData(output.getInput(), userId);
+    assertTrue(new File(PATH + "/" + userId + "/0000000000000000003.journal").exists());
+
+    directAccountDataManager.takeSnapshot(userId);
+    assertTrue(new File(PATH + "/" + userId + "/0000000000000000004.snapshot").exists());
+    
+  }
+
   private void checkSnapshot(DirectAccountDataManager directAccountDataManager, File permanent) {
     assertNotNull(permanent);
     MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();

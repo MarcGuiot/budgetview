@@ -1,10 +1,7 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.ProfileType;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
@@ -21,6 +18,9 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
   }
 
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
+    if (!changeSet.containsChanges(Month.TYPE) && !changeSet.containsChanges(CurrentMonth.TYPE)){
+      return;
+    }
     Set<Key> deleted = changeSet.getDeleted(Month.TYPE);
     if (!deleted.isEmpty()) {
       Set<Integer> deletedId = new HashSet<Integer>();
@@ -72,86 +72,90 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
                                                 GlobMatchers.fieldLesserOrEqual(Series.FIRST_MONTH, monthId)
                                               )));
     for (Glob series : seriesList) {
-      if (ProfileType.IRREGULAR.getId().equals(series.get(Series.PROFILE_TYPE))) {
-        repository.create(SeriesBudget.TYPE,
-                          value(SeriesBudget.AMOUNT, 0.),
-                          value(SeriesBudget.ACTIVE, true),
-                          value(SeriesBudget.SERIES, series.get(Series.ID)),
-                          value(SeriesBudget.DAY,
-                                Month.getDay(series.get(Series.DAY), monthId, Calendar.getInstance())),
-                          value(SeriesBudget.MONTH, monthId));
-      }
-      else {
-        GlobList globs = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
-          .getGlobs();
-        Glob[] existingSeriesBudget = globs.sort(SeriesBudget.MONTH).toArray(new Glob[globs.size()]);
+      addMonthForSeries(repository, monthId, series);
+    }
+  }
 
-        Glob budget = repository.create(SeriesBudget.TYPE,
-                                        value(SeriesBudget.ACTIVE, series.get(Series.getMonthField(monthId))),
-                                        value(SeriesBudget.SERIES, series.get(Series.ID)),
-                                        value(SeriesBudget.DAY,
-                                              Month.getDay(series.get(Series.DAY), monthId,
-                                                           Calendar.getInstance())),
-                                        value(SeriesBudget.MONTH, monthId));
+  public static void addMonthForSeries(GlobRepository repository, Integer monthId, Glob series) {
+    if (ProfileType.IRREGULAR.getId().equals(series.get(Series.PROFILE_TYPE))) {
+      repository.create(SeriesBudget.TYPE,
+                        value(SeriesBudget.AMOUNT, 0.),
+                        value(SeriesBudget.ACTIVE, true),
+                        value(SeriesBudget.SERIES, series.get(Series.ID)),
+                        value(SeriesBudget.DAY,
+                              Month.getDay(series.get(Series.DAY), monthId, Calendar.getInstance())),
+                        value(SeriesBudget.MONTH, monthId));
+    }
+    else {
+      GlobList globs = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
+        .getGlobs();
+      Glob[] existingSeriesBudget = globs.sort(SeriesBudget.MONTH).toArray(new Glob[globs.size()]);
 
-        // attention les creation de mois arrive dans un ordre aleatoire
-        // attention aussi a la creation de mois en debut de periode et non en fin
-        if (series.isTrue(Series.IS_AUTOMATIC)) {
-          Double amount = 0.;
-          int lastmonthId = 0;
-          int nextMonth = Month.next(monthId);
-          for (Glob seriesBudget : existingSeriesBudget) {
-            if (seriesBudget.get(SeriesBudget.MONTH) < monthId
-                && seriesBudget.isTrue(SeriesBudget.ACTIVE)
-                && seriesBudget.get(SeriesBudget.MONTH) > lastmonthId) {
-              amount = seriesBudget.get(SeriesBudget.AMOUNT);
-              lastmonthId = seriesBudget.get(SeriesBudget.MONTH);
-            }
-            if (seriesBudget.get(SeriesBudget.MONTH) == nextMonth) {
+      Glob budget = repository.create(SeriesBudget.TYPE,
+                                      value(SeriesBudget.ACTIVE, series.get(Series.getMonthField(monthId))),
+                                      value(SeriesBudget.SERIES, series.get(Series.ID)),
+                                      value(SeriesBudget.DAY,
+                                            Month.getDay(series.get(Series.DAY), monthId,
+                                                         Calendar.getInstance())),
+                                      value(SeriesBudget.MONTH, monthId));
+
+      // attention les creation de mois arrive dans un ordre aleatoire
+      // attention aussi a la creation de mois en debut de periode et non en fin
+      if (series.isTrue(Series.IS_AUTOMATIC)) {
+        Double amount = 0.;
+        int lastmonthId = 0;
+        int nextMonth = Month.next(monthId);
+        for (Glob seriesBudget : existingSeriesBudget) {
+          if (seriesBudget.get(SeriesBudget.MONTH) < monthId
+              && seriesBudget.isTrue(SeriesBudget.ACTIVE)
+              && seriesBudget.get(SeriesBudget.MONTH) > lastmonthId) {
+            amount = seriesBudget.get(SeriesBudget.AMOUNT);
+            lastmonthId = seriesBudget.get(SeriesBudget.MONTH);
+          }
+          if (seriesBudget.get(SeriesBudget.MONTH) == nextMonth) {
 //              ???
 //              repository.update(glob.getKey(), SeriesBudget.AMOUNT, 0.);
+            break;
+          }
+        }
+        repository.update(budget.getKey(), SeriesBudget.AMOUNT, amount);
+      }
+      else {
+        Double seriesAmount = null; // pour les tests de triggers
+
+        if (existingSeriesBudget.length != 0) {
+          int pos = existingSeriesBudget.length - 1;
+          while (pos >= 0) {
+            Glob budgets = existingSeriesBudget[pos];
+            pos--;
+            if (budgets.get(SeriesBudget.MONTH).equals(monthId)) {
               break;
             }
           }
-          repository.update(budget.getKey(), SeriesBudget.AMOUNT, amount);
-        }
-        else {
-          Double seriesAmount = null; // pour les tests de triggers
-
-          if (existingSeriesBudget.length != 0) {
-            int pos = existingSeriesBudget.length - 1;
-            while (pos >= 0) {
-              Glob budgets = existingSeriesBudget[pos];
-              pos--;
-              if (budgets.get(SeriesBudget.MONTH).equals(monthId)) {
-                break;
-              }
+          while (pos >= 0) {
+            Glob budgets = existingSeriesBudget[pos];
+            if (budgets.isTrue(SeriesBudget.ACTIVE) && !budgets.get(SeriesBudget.MONTH).equals(monthId)) {
+              seriesAmount = budgets.get(SeriesBudget.AMOUNT);
+              break;
             }
-            while (pos >= 0) {
+          }
+          if (seriesAmount == null) {
+            pos = pos < 0 ? 0 : pos;
+            while (pos < existingSeriesBudget.length - 1) {
               Glob budgets = existingSeriesBudget[pos];
               if (budgets.isTrue(SeriesBudget.ACTIVE) && !budgets.get(SeriesBudget.MONTH).equals(monthId)) {
                 seriesAmount = budgets.get(SeriesBudget.AMOUNT);
                 break;
               }
-            }
-            if (seriesAmount == null) {
-              pos = pos < 0 ? 0 : pos;
-              while (pos < existingSeriesBudget.length - 1) {
-                Glob budgets = existingSeriesBudget[pos];
-                if (budgets.isTrue(SeriesBudget.ACTIVE) && !budgets.get(SeriesBudget.MONTH).equals(monthId)) {
-                  seriesAmount = budgets.get(SeriesBudget.AMOUNT);
-                  break;
-                }
-                pos++;
-              }
+              pos++;
             }
           }
-          if (seriesAmount == null) {
-            seriesAmount = series.get(Series.INITIAL_AMOUNT);
-          }
-          if (seriesAmount != null) {
-            repository.update(budget.getKey(), SeriesBudget.AMOUNT, seriesAmount);
-          }
+        }
+        if (seriesAmount == null) {
+          seriesAmount = series.get(Series.INITIAL_AMOUNT);
+        }
+        if (seriesAmount != null) {
+          repository.update(budget.getKey(), SeriesBudget.AMOUNT, seriesAmount);
         }
       }
     }
