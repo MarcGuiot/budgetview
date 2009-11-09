@@ -860,17 +860,10 @@ public class SeriesEditionDialog {
       SeriesDeleteDialog seriesDeleteDialog = new SeriesDeleteDialog(localRepository, localDirectory, dialog);
       if (transactionsForSeries.isEmpty()) {
         localRepository.delete(seriesToDelete);
-        GlobList seriesToCategory = localRepository.getAll(SubSeries.TYPE, fieldIn(SubSeries.SERIES, series));
-        localRepository.delete(seriesToCategory);
         deleted = true;
       }
       else if (seriesDeleteDialog.show()) {
         localRepository.delete(seriesToDelete);
-        for (Glob transaction : transactionsForSeries) {
-          localRepository.update(transaction.getKey(), Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID);
-        }
-        GlobList seriesToCategory = localRepository.getAll(SubSeries.TYPE, fieldIn(SubSeries.SERIES, series));
-        localRepository.delete(seriesToCategory);
         deleted = true;
       }
 

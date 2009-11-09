@@ -85,6 +85,7 @@ public class PicsouInit {
   public static void initTriggerRepository(ServerAccess serverAccess, Directory directory, final GlobRepository repository) {
     repository.addTrigger(new CurrentMonthTrigger());
     repository.addTrigger(new SeriesRenameTrigger());
+    repository.addTrigger(new AccountDeleteTrigger());
     repository.addTrigger(new SeriesDeletionTrigger());
     repository.addTrigger(new RegistrationTrigger(directory));
     repository.addTrigger(new RegisterLicenseTrigger(serverAccess));

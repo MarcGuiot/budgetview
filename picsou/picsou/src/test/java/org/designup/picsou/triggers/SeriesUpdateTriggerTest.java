@@ -42,35 +42,4 @@ public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
       "          planned='true' series='100' transactionType='5' type='transaction' createdBySeries='false'/>" +
       "");
   }
-
-  public void testDeleteSeriesDeleteBudgetSerieAndSetTransactionSeries() throws Exception {
-    repository.create(Key.create(Transaction.TYPE, 10),
-                      value(Transaction.SERIES, 100),
-                      value(Transaction.MONTH, 200808),
-                      value(Transaction.BANK_MONTH, 200808),
-                      value(Transaction.BANK_DAY, 1),
-                      value(Transaction.AMOUNT, -40.));
-    Integer[] ids =
-      repository.getAll(Transaction.TYPE, fieldEquals(Transaction.PLANNED, true))
-      .sort(Transaction.MONTH)
-        .getValues(Transaction.ID);
-    Integer[] free = getBudgetId(FREE_SERIES_ID);
-    repository.delete(Key.create(Series.TYPE, FREE_SERIES_ID));
-
-    Integer[] occasional = getBudgetId(0);
-    listener.assertLastChangesEqual(
-      SeriesBudget.TYPE,
-      "  <delete _active='true' _amount='-29.9' _day='7' _month='200809'" +
-      "          _series='100' id='" + free[2] + "' type='seriesBudget'/>" +
-      "  <delete _active='true' _amount='-29.9' _day='7' _month='200808' _observedAmount='-40.0'" +
-      "          _series='100' id='" + free[1] + "' type='seriesBudget'/>" +
-      "  <delete _active='true' _amount='-29.9' _day='7' _month='200807'" +
-      "          _series='100' id='" + free[0] + "' type='seriesBudget'/>");
-
-    listener.assertLastChangesEqual(
-      Transaction.TYPE,
-      "  <delete _account='-1' _amount='-29.9' _bankDay='7' _bankMonth='200809' _mirror='false'\n" +
-      "          _day='7' _label='free telecom' _month='200809' _planned='true'\n" +
-      "          _series='100' _transactionType='5' id='" + ids[0] + "' type='transaction' _createdBySeries='false'/>");
-  }
 }

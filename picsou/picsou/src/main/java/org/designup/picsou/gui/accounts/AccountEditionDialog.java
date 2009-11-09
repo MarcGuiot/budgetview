@@ -205,8 +205,6 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
           try {
             parentRepository.startChangeSet();
             parentRepository.delete(currentAccount.getKey());
-            parentRepository.delete(parentRepository.getAll(Series.TYPE, seriesMatcher));
-            parentRepository.delete(parentRepository.getAll(Transaction.TYPE, transactionMatcher));
           }
           finally {
             parentRepository.completeChangeSet();

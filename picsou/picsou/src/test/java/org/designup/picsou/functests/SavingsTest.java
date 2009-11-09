@@ -1482,4 +1482,46 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
   }
 
+  public void testDeleteSavingsAccount() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
+      .addTransaction("2008/06/06", 100.00, "Virement Epargne")
+      .load();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/06", -100.00, "Virement vers Epargne")
+      .load();
+
+    views.selectHome();
+    mainAccounts.edit("Account n. 111222")
+      .setAsSavings()
+      .validate();
+
+    views.selectCategorization();
+    categorization.selectTransaction("Virement vers Epargne")
+      .selectSavings()
+      .createSeries()
+      .setName("Epargne")
+      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .setToAccount("Account n. 111222")
+      .validate();
+
+    categorization.selectTransaction("Virement Epargne")
+      .selectSavings()
+      .selectSeries("Epargne");
+
+    views.selectData();
+    transactions.initContent()
+      .add("06/06/2008", TransactionType.PRELEVEMENT, "VIREMENT VERS EPARGNE", "", -100.00, "Epargne")
+      .add("06/06/2008", TransactionType.VIREMENT, "VIREMENT EPARGNE", "", 100.00, "Epargne")
+      .check();
+
+    views.selectHome();
+    savingsAccounts.edit("Account n. 111222").delete().validate();
+    views.selectData();
+    transactions.initContent()
+      .add("06/06/2008", TransactionType.PRELEVEMENT, "VIREMENT VERS EPARGNE", "", -100.00)
+      .check();
+
+  }
 }
