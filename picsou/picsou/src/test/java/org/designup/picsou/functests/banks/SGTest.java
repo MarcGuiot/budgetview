@@ -38,7 +38,7 @@ public class SGTest extends SpecificBankTestCase {
       .check();
   }
 
-  public void testNewFormat() throws Exception {
+  public void testFormat2008() throws Exception {
     operations.importQifFile(getFile("sg2008.qif"), SOCIETE_GENERALE);
     timeline.selectAll();
     transactions.getTable().getHeader().click(1);
@@ -80,4 +80,21 @@ public class SGTest extends SpecificBankTestCase {
       .add("14/08/2008", "18/08/2008", TransactionType.CREDIT_CARD, "MAG SUPER U", "", -11.00)
       .check();
   }
+
+  public void testFormat2009() throws Exception {
+    operations.importQifFile(getFile("sg2009.qif"), SOCIETE_GENERALE);
+    timeline.selectAll();
+    transactions.getTable().getHeader().click(1);
+    transactions
+      .initContent()
+      .add("13/11/2009", TransactionType.CREDIT_CARD, "REMBT MR PHELIPPE YVES COMMERCE ELECTRONIQUE", "", 43.18)
+      .add("05/11/2009", "06/11/2009", TransactionType.CREDIT_CARD, "TOYS R US ERAGNY", "", -29.96)
+      .add("05/11/2009", "06/11/2009", TransactionType.CREDIT_CARD, "CENTRE E.LECLERC", "", -146.53)
+      .add("06/11/2009", TransactionType.PRELEVEMENT, "M.N.P.A.F. M.N.P.A.F. 8811941800", "", -108.00)
+      .add("05/11/2009", TransactionType.VIREMENT, "MARC GUIOT DU DOIGN 032811000033273411 COMPLEMENT SALAIRE", "", 1000.00)
+      .add("04/11/2009", TransactionType.PRELEVEMENT, "BOUYGUES TELECOM PAGP01006E0K6I *418323", "", -81.19)
+      .add("04/11/2009", TransactionType.CHECK, "CHEQUE N°838", "", -15.00)
+      .check();
+  }
+
 }

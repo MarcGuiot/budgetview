@@ -39,6 +39,14 @@
                         label="{M.2}" originalLabel="{M.0}"
                         groupForDate="{M.1}" dateFormat="dd/MM/yy"/>
 
+    <transactionMatcher qifM="CARTE X[0-9]+ (\d{2}/\d{2}) (.*)" transactionTypeName="credit_card"
+                        label="{M.2}" originalLabel="{M.0}"
+                        groupForDate="{M.1}" dateFormat="dd/MM"/>
+
+    <transactionMatcher qifM="CARTE X[0-9]+ REMBT (\d{2}/\d{2}) (.*)" transactionTypeName="credit_card"
+                        label="REMBT {M.2}" originalLabel="{M.0}"
+                        groupForDate="{M.2}" dateFormat="dd/MM"/>
+
     <transactionMatcher qifM="VIREMENT [\w]+ (.*)" transactionTypeName="virement"
                         label="{M.1}" originalLabel="{M.0}"/>
 

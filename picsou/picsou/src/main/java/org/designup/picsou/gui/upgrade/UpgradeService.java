@@ -28,7 +28,7 @@ public class UpgradeService {
         }
         Glob bank = Account.getBank(account, repository);
         GlobList transactions = repository.getAll(Transaction.TYPE,
-                                                  GlobMatchers.fieldEquals(Transaction.ACCOUNT, bank.get(Bank.ID)));
+                                                  GlobMatchers.fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)));
         transactionAnalyzer.processTransactions(bank.get(Bank.ID), transactions, repository);
       }
       repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_BANK_CONFIG_VERSION,
