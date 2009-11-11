@@ -819,7 +819,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     edition.setTwoMonths()
       .checkMonthIsChecked(2, 4, 6, 8, 10)
       .toggleMonth(3)
-      .checkMonthIsChecked(1,3,5,7,9,11)
+      .checkMonthIsChecked(1, 3, 5, 7, 9, 11)
       .toggleMonth(4)
       .checkMonthIsChecked(2, 4, 6, 8, 10);
     edition.cancel();
@@ -1376,7 +1376,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkUpdateModeIsFileImport()
       .checkIsSavings()
       .validate();
-    
+
     dialog
       .setFromAccount("Main")
       .setToAccount("Virt ING")
@@ -1394,6 +1394,26 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.editSeries("ING")
       .checkToAccount("Virt ING")
+      .validate();
+  }
+
+
+  public void testCreateDeleteCreateBudget() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(12).validate();
+    views.selectBudget();
+    budgetView.envelopes.createSeries()
+      .setName("Serie")
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount(100)
+      .validate();
+
+    budgetView.envelopes.editSeries("Serie")
+      .setEndDate(200808)
+      .removeEndDate()
+      .setStartDate(200808)
+      .setEndDate(200812)
+      .removeStartDate()
       .validate();
   }
 }

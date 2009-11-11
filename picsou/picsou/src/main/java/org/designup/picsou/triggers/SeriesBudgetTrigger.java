@@ -10,6 +10,12 @@ import org.globsframework.utils.Utils;
 import java.util.*;
 
 public class SeriesBudgetTrigger implements ChangeSetListener {
+  private GlobRepository parentRepository;
+
+  public SeriesBudgetTrigger(GlobRepository parentRepository) {
+    this.parentRepository = parentRepository;
+  }
+
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
@@ -90,12 +96,22 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
         boolean active = series.isTrue(Series.getMonthField(monthId));
         Glob seriesBudget = monthWithBudget.remove(monthId);
         if (seriesBudget == null) {
-          repository.create(SeriesBudget.TYPE,
-                            value(SeriesBudget.SERIES, seriesId),
-                            value(SeriesBudget.AMOUNT, getInitialAmount(series, active)),
-                            value(SeriesBudget.MONTH, monthId),
-                            value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
-                            value(SeriesBudget.ACTIVE, active));
+          Glob existingSeriesBudget =
+            parentRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
+              .findByIndex(SeriesBudget.MONTH, monthId).getGlobs().getFirst();
+
+          FieldValue[] values = new FieldValue[]{
+            value(SeriesBudget.SERIES, seriesId),
+            value(SeriesBudget.AMOUNT, getInitialAmount(series, active)),
+            value(SeriesBudget.MONTH, monthId),
+            value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
+            value(SeriesBudget.ACTIVE, active)};
+          if (existingSeriesBudget != null) {
+            repository.create(existingSeriesBudget.getKey(), values);
+          }
+          else {
+            repository.create(SeriesBudget.TYPE, values);
+          }
         }
         else {
           if (!active) {

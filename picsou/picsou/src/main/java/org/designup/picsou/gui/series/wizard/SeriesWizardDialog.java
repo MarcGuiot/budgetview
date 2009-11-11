@@ -44,7 +44,7 @@ public class SeriesWizardDialog {
               SeriesStat.TYPE, SeriesBudget.TYPE)
         .get();
 
-    SeriesEditionDialog.addSeriesCreationTriggers(localRepository, ProfileTypeSeriesTrigger.NULL);
+    SeriesEditionDialog.addSeriesCreationTriggers(localRepository, ProfileTypeSeriesTrigger.NULL, parentRepository);
 
     this.directory = directory;
     this.model = new SeriesWizardModel(localRepository);

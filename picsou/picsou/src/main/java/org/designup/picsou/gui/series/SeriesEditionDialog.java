@@ -100,7 +100,7 @@ public class SeriesEditionDialog {
       public Set<Integer> getMonthWithTransaction() {
         return selectedTransactions.getSortedSet(Transaction.MONTH);
       }
-    });
+    }, repository);
     localRepository.addTrigger(new UpdateUpdateMirror());
     localRepository.addTrigger(new UpdateBudgetOnSeriesAccountsChange());
     localRepository.addChangeListener(new ProfileTypeChangeListener());
@@ -241,10 +241,11 @@ public class SeriesEditionDialog {
   }
 
   public static void addSeriesCreationTriggers(GlobRepository repository,
-                                               final ProfileTypeSeriesTrigger.UserMonth userMonth) {
+                                               final ProfileTypeSeriesTrigger.UserMonth userMonth,
+                                               GlobRepository parentRepository) {
     repository.addTrigger(new ProfileTypeSeriesTrigger(userMonth));
     repository.addTrigger(new AutomaticSeriesBudgetTrigger());
-    repository.addTrigger(new SeriesBudgetTrigger());
+    repository.addTrigger(new SeriesBudgetTrigger(parentRepository));
   }
 
   private void updateMonthChooser() {
