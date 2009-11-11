@@ -12,7 +12,7 @@ public class BankFormatExportTest extends SpecificBankTestCase {
 
     views.selectCategorization();
     categorization.selectTransactions(
-      "SACLAY",
+      "REL. SACLAY",
       "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS");
 
     categorization.copyBankFormatToClipboard();

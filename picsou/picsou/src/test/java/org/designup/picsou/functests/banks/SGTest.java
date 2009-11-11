@@ -10,7 +10,7 @@ public class SGTest extends SpecificBankTestCase {
     transactions.getTable().getHeader().click(1);
     transactions
       .initContent()
-      .add("22/04/2006", TransactionType.CREDIT_CARD, "SACLAY", "", -55.49)
+      .add("22/04/2006", TransactionType.CREDIT_CARD, "REL. SACLAY", "", -55.49)
       .add("20/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65)
       .add("20/04/2006", TransactionType.CREDIT_CARD, "BISTROT ANDRE CARTE 06348905 PAIEMENT CB 1904 015 PARIS", "", -49.00)
       .add("19/04/2006", TransactionType.CREDIT_CARD, "SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", "", -14.50)
@@ -87,9 +87,10 @@ public class SGTest extends SpecificBankTestCase {
     transactions.getTable().getHeader().click(1);
     transactions
       .initContent()
+      .add("11/11/2009", "13/11/2009", TransactionType.WITHDRAWAL, "RETRAIT 11H39 DAB MONTMOROT HYPER U 00250262", "", -20.00)
       .add("13/11/2009", TransactionType.CREDIT_CARD, "REMBT MR PHELIPPE YVES COMMERCE ELECTRONIQUE", "", 43.18)
       .add("05/11/2009", "06/11/2009", TransactionType.CREDIT_CARD, "TOYS R US ERAGNY", "", -29.96)
-      .add("05/11/2009", "06/11/2009", TransactionType.CREDIT_CARD, "CENTRE E.LECLERC", "", -146.53)
+      .add("05/11/2009", "06/11/2009", TransactionType.CREDIT_CARD, "REL.CENTRE E.LECLERC", "", -146.53)
       .add("06/11/2009", TransactionType.PRELEVEMENT, "M.N.P.A.F. M.N.P.A.F. 8811941800", "", -108.00)
       .add("05/11/2009", TransactionType.VIREMENT, "MARC GUIOT DU DOIGN 032811000033273411 COMPLEMENT SALAIRE", "", 1000.00)
       .add("04/11/2009", TransactionType.PRELEVEMENT, "BOUYGUES TELECOM PAGP01006E0K6I *418323", "", -81.19)
