@@ -5,16 +5,23 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.indexing.IndexTables;
 import org.globsframework.model.indexing.IndexedTable;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ManyIndexTables implements IndexTables {
-  private List<IndexedTable> indexedTables = new ArrayList<IndexedTable>();
+public final class ManyIndexTables implements IndexTables {
+  private final IndexedTable indexedTables[];
 
   public ManyIndexTables(IndexedTable firstIndexedTable, IndexedTable secondIndexedTable, IndexedTable indexedTable) {
-    indexedTables.add(firstIndexedTable);
-    indexedTables.add(secondIndexedTable);
-    indexedTables.add(indexedTable);
+    indexedTables = new IndexedTable[3];
+    indexedTables[0] = firstIndexedTable;
+    indexedTables[1] = secondIndexedTable;
+    indexedTables[2] = indexedTable;
+  }
+
+  private ManyIndexTables(ManyIndexTables tables, IndexedTable indexedTable){
+    indexedTables = new IndexedTable[tables.indexedTables.length + 1];
+    int i;
+    for (i = 0; i < tables.indexedTables.length; i++) {
+      indexedTables[i] = tables.indexedTables[i];
+    }
+    indexedTables[i] = indexedTable;
   }
 
   public void remove(Field field, Object oldValue, Glob glob) {
@@ -42,8 +49,7 @@ public class ManyIndexTables implements IndexTables {
   }
 
   public IndexTables add(IndexedTable indexedTable) {
-    indexedTables.add(indexedTable);
-    return this;
+    return new ManyIndexTables(this, indexedTable);
   }
 
   public void removeAll() {

@@ -5,9 +5,9 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.indexing.IndexTables;
 import org.globsframework.model.indexing.IndexedTable;
 
-public class TwoIndexTables implements IndexTables {
-  private IndexedTable firstIndexedTable;
-  private IndexedTable secondIndexedTable;
+public final class TwoIndexTables implements IndexTables {
+  private final IndexedTable firstIndexedTable;
+  private final IndexedTable secondIndexedTable;
 
   public TwoIndexTables(IndexedTable firstIndexedTable, IndexedTable secondIndexedTable) {
     this.firstIndexedTable = firstIndexedTable;

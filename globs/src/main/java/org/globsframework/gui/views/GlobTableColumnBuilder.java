@@ -110,7 +110,8 @@ public class GlobTableColumnBuilder {
       }
 
       LabelCustomizer customizer = LabelCustomizers.chain(labelCustomizers);
-      return new LabelTableCellRenderer(customizer, backgroundPainter);
+      renderer = new LabelTableCellRenderer(customizer, backgroundPainter);
+      return renderer;
     }
 
     public TableCellEditor getEditor() {
@@ -128,7 +129,5 @@ public class GlobTableColumnBuilder {
     public boolean isEditable(int row, Glob glob) {
       return editor != null;
     }
-
-
   }
 }

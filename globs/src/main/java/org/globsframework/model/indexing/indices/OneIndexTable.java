@@ -5,8 +5,8 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.indexing.IndexTables;
 import org.globsframework.model.indexing.IndexedTable;
 
-public class OneIndexTable implements IndexTables {
-  IndexedTable indexedTable;
+public final class OneIndexTable implements IndexTables {
+  private final IndexedTable indexedTable;
 
   public OneIndexTable(IndexedTable indexedTable) {
     this.indexedTable = indexedTable;

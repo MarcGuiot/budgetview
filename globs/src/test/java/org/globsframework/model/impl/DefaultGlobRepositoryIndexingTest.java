@@ -4,10 +4,9 @@ import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObjectIndex;
 import org.globsframework.metamodel.Field;
 import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
+import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
 
@@ -83,6 +82,23 @@ public class DefaultGlobRepositoryIndexingTest extends DefaultGlobRepositoryTest
     change(3, 3, 3, "e");
     checkId(2, 3, 5).of(3, 3);
     checkId(4).of(2, 5, "a");
+  }
+
+  public void testUniqueIndexWithDeleteCreate() throws Exception {
+    init("<dummyObject id='3' name='obj1'/>" +
+         "<dummyObject id='4' name='obj3'/>");
+    Glob glob3 = repository.get(Key.create(DummyObject.TYPE, 4));
+    Glob glob4 = repository.get(Key.create(DummyObject.TYPE, 3));
+    LocalGlobRepositoryBuilder builder = LocalGlobRepositoryBuilder.init(repository);
+    builder.copy(DummyObject.TYPE);
+    LocalGlobRepository localGlobRepository = builder.get();
+    localGlobRepository.create(Key.create(DummyObject.TYPE, 5),
+                               FieldValue.value(DummyObject.NAME, "obj1"));
+    localGlobRepository.create(Key.create(DummyObject.TYPE, 1),
+                               FieldValue.value(DummyObject.NAME, "obj3"));
+    localGlobRepository.update(glob3.getKey(), DummyObject.NAME, "obj2");
+    localGlobRepository.update(glob4.getKey(), DummyObject.NAME, "obj4");
+    localGlobRepository.commitChanges(true);
   }
 
   public void testMultiFieldNotUniqueIndex() throws Exception {

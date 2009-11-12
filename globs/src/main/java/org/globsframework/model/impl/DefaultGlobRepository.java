@@ -706,8 +706,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
   private class ChangeSetExecutor implements ChangeSetVisitor {
     public void visitCreation(Key key, FieldValues values) {
-      FieldValues mergedValues = FieldValuesBuilder.init().set(key).set(values).get();
-      create(key.getGlobType(), mergedValues.toArray());
+       create(key, values.toArray());
     }
 
     public void visitUpdate(Key key, FieldValuesWithPrevious values) {

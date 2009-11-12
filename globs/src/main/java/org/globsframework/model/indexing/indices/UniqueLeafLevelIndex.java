@@ -14,9 +14,6 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
   private Map<Object, Glob> indexedGlob = new HashMap<Object, Glob>();
   private Field field;
 
-  public UniqueLeafLevelIndex() {
-  }
-
   public UniqueLeafLevelIndex(Field field) {
     this.field = field;
   }

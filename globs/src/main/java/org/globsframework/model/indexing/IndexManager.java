@@ -213,7 +213,7 @@ public class IndexManager {
     }
   }
 
-  private static class NULLIndexTables implements IndexTables {
+  private static final class NULLIndexTables implements IndexTables {
     public void add(Object newValue, Glob glob, Field field, Object oldValue) {
     }
 
