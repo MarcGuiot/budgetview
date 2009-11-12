@@ -1,15 +1,14 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.Trigger;
-import org.uispec4j.Window;
 import org.uispec4j.MenuItem;
 import org.uispec4j.TextBox;
+import org.uispec4j.Trigger;
+import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
-import org.mortbay.thread.Timeout;
 
 public class LicenseActivationChecker {
   private Window dialog;

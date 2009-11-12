@@ -22,6 +22,7 @@ import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.StubFtpServer;
 import org.mockftpserver.stub.command.AbstractStubDataCommandHandler;
 import org.uispec4j.UISpecTestCase;
+import org.uispec4j.UISpec4J;
 
 import java.util.Iterator;
 import java.util.Locale;
@@ -39,6 +40,7 @@ public abstract class LicenseTestCase extends UISpecTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
+    UISpec4J.setAssertionTimeLimit(1500);
     LoggedInFunctionalTestCase.resetWindow();
     Locale.setDefault(Locale.ENGLISH);
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");

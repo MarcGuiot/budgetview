@@ -87,7 +87,7 @@ public class LicenseActivationDialog {
             validateAction.setEnabled(true);
           }
           validateAction.setEnabled(true);
-          connectionMessage.setVisible(!isConnected);
+          connectionMessage.setVisible(false);
           activationState = repository.get(User.KEY).get(User.ACTIVATION_STATE);
           if (activationState != null) {
             if (activationState == User.ACTIVATION_OK) {
@@ -118,6 +118,7 @@ public class LicenseActivationDialog {
     boolean isConnected = repository.get(User.KEY).isTrue(User.CONNECTED);
     if (!isConnected) {
       connectionMessage.setText(Lang.get("license.connect"));
+      connectionMessage.setVisible(true);
       selectionService.clear(User.TYPE);
       validateAction.setEnabled(false);
     }

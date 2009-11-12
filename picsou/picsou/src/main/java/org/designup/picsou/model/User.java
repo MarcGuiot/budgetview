@@ -52,7 +52,7 @@ public class User {
 
 
   static {
-    GlobTypeLoader.init(User.class, "user");
+    GlobTypeLoader.init(User.class);
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
 

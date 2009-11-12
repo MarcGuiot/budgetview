@@ -23,6 +23,7 @@ public class DataCheckerTest extends LoggedInFunctionalTestCase {
       .checkCopy()
       .close();
 
+    Thread.sleep(50);
     PicsouApplication.EXIT_ON_DATA_ERROR = true;
   }
 }

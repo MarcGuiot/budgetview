@@ -106,6 +106,7 @@ public class Mailer {
       thread.join();
     }
     catch (InterruptedException e) {
+      e.printStackTrace();
     }
   }
 
