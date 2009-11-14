@@ -5,7 +5,6 @@ import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
@@ -79,9 +78,17 @@ public class AmountEditor {
     return numericEditor;
   }
 
+  public Double getValue() {
+    return numericEditor.getConvertedDisplayedValue();
+  }
+
   public AmountEditor forceSelection(Key key) {
     numericEditor.forceSelection(key);
     return this;
+  }
+
+  public void addAction(Action action) {
+    numericEditor.getComponent().addActionListener(action);
   }
 
   private class NumericEditor extends GlobNumericEditor {
@@ -100,7 +107,7 @@ public class AmountEditor {
       });
     }
 
-    protected Object getConvertedDisplayedValue() {
+    protected Double getConvertedDisplayedValue() {
       Double value = (Double)super.getConvertedDisplayedValue();
       if (value == null) {
         return null;

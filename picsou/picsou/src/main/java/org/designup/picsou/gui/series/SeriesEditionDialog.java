@@ -340,7 +340,7 @@ public class SeriesEditionDialog {
   }
 
   public void show(BudgetArea budgetArea, Set<Integer> monthIds, Integer seriesId) {
-    retreiveAssociatedTransactions(seriesId);
+    retrieveAssociatedTransactions(seriesId);
     try {
       localRepository.startChangeSet();
       localRepository.rollback();
@@ -358,7 +358,7 @@ public class SeriesEditionDialog {
   }
 
   public void show(Glob series, Set<Integer> monthIds) {
-    retreiveAssociatedTransactions(series.get(Series.ID));
+    retrieveAssociatedTransactions(series.get(Series.ID));
     try {
       localRepository.startChangeSet();
       localRepository.rollback();
@@ -373,7 +373,7 @@ public class SeriesEditionDialog {
     doShow(monthIds, localRepository.get(series.getKey()), false);
   }
 
-  private void retreiveAssociatedTransactions(Integer seriesId) {
+  private void retrieveAssociatedTransactions(Integer seriesId) {
     selectedTransactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES,
                                                   seriesId).getGlobs();
     selectedTransactions.removeAll(GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.PLANNED, true),
@@ -858,12 +858,12 @@ public class SeriesEditionDialog {
       Set<Integer> series = seriesToDelete.getValueSet(Series.ID);
       GlobList transactionsForSeries = localRepository.getAll(Transaction.TYPE, fieldIn(Transaction.SERIES, series));
       boolean deleted = false;
-      SeriesDeleteDialog seriesDeleteDialog = new SeriesDeleteDialog(localRepository, localDirectory, dialog);
+      SeriesDeletionDialog seriesDeletionDialog = new SeriesDeletionDialog(localRepository, localDirectory, dialog);
       if (transactionsForSeries.isEmpty()) {
         localRepository.delete(seriesToDelete);
         deleted = true;
       }
-      else if (seriesDeleteDialog.show()) {
+      else if (seriesDeletionDialog.show()) {
         localRepository.delete(seriesToDelete);
         deleted = true;
       }

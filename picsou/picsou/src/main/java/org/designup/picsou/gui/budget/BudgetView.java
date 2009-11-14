@@ -4,6 +4,7 @@ import com.jidesoft.swing.JideSplitPane;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.gui.utils.SetFieldValueAction;
 import org.designup.picsou.model.BudgetArea;
@@ -24,6 +25,8 @@ import java.util.Set;
 
 public class BudgetView extends View {
   private JEditorPane helpMessage;
+  private SeriesEditionDialog seriesEditionDialog;
+  private SeriesAmountEditionDialog seriesAmountEditionDialog;
 
   public BudgetView(GlobRepository repository, Directory parentDirectory) {
     super(repository, parentDirectory);
@@ -34,22 +37,24 @@ public class BudgetView extends View {
         }
       }
     });
+
+    seriesEditionDialog = new SeriesEditionDialog(repository, directory);
+    seriesAmountEditionDialog = new SeriesAmountEditionDialog(repository, directory);
+
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budgetView.splits",
                                                       repository, directory);
 
-    SeriesEditionDialog seriesEditionDialog = new SeriesEditionDialog(repository, directory);
-
     BudgetSummaryView budgetSummaryView = new BudgetSummaryView(repository, directory);
     budgetSummaryView.registerComponents(builder);
 
-    addBudgetAreaView("incomeBudgetView", BudgetArea.INCOME, builder, seriesEditionDialog);
-    addBudgetAreaView("recurringBudgetView", BudgetArea.RECURRING, builder, seriesEditionDialog);
-    addBudgetAreaView("envelopeBudgetView", BudgetArea.ENVELOPES, builder, seriesEditionDialog);
-    addBudgetAreaView("projectsBudgetView", BudgetArea.SPECIAL, builder, seriesEditionDialog);
-    addBudgetAreaView("savingsBudgetView", BudgetArea.SAVINGS, builder, seriesEditionDialog);
+    addBudgetAreaView("incomeBudgetView", BudgetArea.INCOME, builder);
+    addBudgetAreaView("recurringBudgetView", BudgetArea.RECURRING, builder);
+    addBudgetAreaView("envelopeBudgetView", BudgetArea.ENVELOPES, builder);
+    addBudgetAreaView("projectsBudgetView", BudgetArea.SPECIAL, builder);
+    addBudgetAreaView("savingsBudgetView", BudgetArea.SAVINGS, builder);
 
     builder.add("horizontalSplitPane", new JideSplitPane());
     builder.add("firstVerticalSplitPane", new JideSplitPane());
@@ -68,8 +73,11 @@ public class BudgetView extends View {
 
   }
 
-  private void addBudgetAreaView(String name, BudgetArea budgetArea, GlobsPanelBuilder builder, final SeriesEditionDialog seriesEditionDialog) {
-    View view = new BudgetAreaSeriesView(name, budgetArea, repository, directory, seriesEditionDialog);
+  private void addBudgetAreaView(String name,
+                                 BudgetArea budgetArea,
+                                 GlobsPanelBuilder builder) {
+    View view = new BudgetAreaSeriesView(name, budgetArea, repository, directory,
+                                         seriesEditionDialog, seriesAmountEditionDialog);
     view.registerComponents(builder);
   }
 

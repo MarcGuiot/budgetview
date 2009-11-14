@@ -476,7 +476,82 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     transactions.initContent().check();
   }
 
-  public void testEditingAPlannedSeriesAmountByClickingOnTheAmount() throws Exception {
+  public void testEditingAPlannedSeriesAmount() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
+      .load();
+
+    timeline.selectMonth("2008/07");
+    views.selectCategorization();
+    categorization.setNewRecurring("Free Telecom", "Internet");
+
+    // First update with propagation + switching to manual mode
+    views.selectBudget();
+    budgetView.recurring.clickOnPlannedAmount("Internet")
+      .checkAmountLabel("Planned amount for july 2008")
+      .checkNegativeAmountsSelected()
+      .checkAmount("29.00")
+      .checkAmountIsSelected()
+      .setAmount("100")
+      .checkPropagationEnabled()
+      .validate();
+    budgetView.recurring.checkSeries("Internet", -29.00, -100.00);
+    timeline.selectMonth("2008/08");
+    budgetView.recurring.checkSeries("Internet", 0.00, -100.00);
+
+    timeline.selectMonth("2008/07");
+    budgetView.recurring.editSeries("Internet")
+      .checkManualModeSelected()
+      .cancel();
+
+    // Propagation disabled
+    timeline.selectMonth("2008/07");
+    budgetView.recurring.clickOnPlannedAmount("Internet")
+      .checkAmount("100.00")
+      .checkAmountIsSelected()
+      .checkPropagationEnabled()
+      .setPropagationDisabled()
+      .setAmountAndValidate("150");
+    budgetView.recurring.checkSeries("Internet", -29.00, -150.00);
+    timeline.selectMonth("2008/08");
+    budgetView.recurring.checkSeries("Internet", 0.00, -100.00);
+
+    // Multi-selection without propagation
+    timeline.selectMonths("2008/07", "2008/09");
+    budgetView.recurring.clickOnPlannedAmount("Internet")
+      .checkAmountIsEmpty()
+      .checkPropagationEnabled()
+      .setPropagationDisabled()
+      .setAmountAndValidate("200");
+    timeline.selectMonth("2008/07");
+    budgetView.recurring.checkSeries("Internet", -29.00, -200.00);
+    timeline.selectMonth("2008/08");
+    budgetView.recurring.checkSeries("Internet", 0.00, -100.00);
+    timeline.selectMonth("2008/09");
+    budgetView.recurring.checkSeries("Internet", 0.00, -200.00);
+    timeline.selectMonth("2008/10");
+    budgetView.recurring.checkSeries("Internet", 0.00, -100.00);
+
+    // Multi-selection without propagation
+    timeline.selectMonths("2008/07", "2008/09");
+    budgetView.recurring.clickOnPlannedAmount("Internet")
+      .checkAmount("200.00")
+      .checkPropagationEnabled()
+      .setAmountAndValidate("300");
+    timeline.selectMonth("2008/07");
+    budgetView.recurring.checkSeries("Internet", -29.00, -300.00);
+    timeline.selectMonth("2008/08");
+    budgetView.recurring.checkSeries("Internet", 0.00, -100.00);
+    timeline.selectMonth("2008/09");
+    budgetView.recurring.checkSeries("Internet", 0.00, -300.00);
+    timeline.selectMonth("2008/10");
+    budgetView.recurring.checkSeries("Internet", 0.00, -300.00);
+  }
+
+  public void testEditingPlannedSeriesAmountsWithCancel() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
       .load();
@@ -487,14 +562,30 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.recurring.clickOnPlannedAmount("Internet")
-      .checkTitle("Recurring")
-      .checkName("Internet")
-      .setName("Free")
-      .switchToManual()
+      .checkAmountLabel("Planned amount for july 2008")
+      .checkAmount("29.00")
+      .checkAmountIsSelected()
+      .setAmount("100")
+      .checkPropagationEnabled()
+      .cancel();
+    budgetView.recurring.checkSeries("Internet", -29.00, -29.00);
+
+    timeline.selectMonth("2008/07");
+    budgetView.recurring.editSeries("Internet")
+      .checkAutomaticModeSelected()
+      .cancel();
+
+    budgetView.recurring.clickOnPlannedAmount("Internet")
+      .checkAmount("29.00")
       .setAmount("100")
       .validate();
+    budgetView.recurring.checkSeries("Internet", -29.00, -100.00);
 
-    budgetView.recurring.checkSeries("Free", -29.00, -100.00);
+    budgetView.recurring.clickOnPlannedAmount("Internet")
+      .checkAmount("100.00")
+      .setAmount("200")
+      .cancel();
+    budgetView.recurring.checkSeries("Internet", -29.00, -100.00);
   }
 
   public void testNavigatingToTransactions() throws Exception {

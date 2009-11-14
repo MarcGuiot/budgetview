@@ -1,11 +1,11 @@
 package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.series.utils.SeriesAmountLabelStringifier;
 import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.gui.description.MonthListStringifier;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
@@ -27,13 +27,11 @@ import org.globsframework.gui.views.utils.LabelCustomizers;
 import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
-import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.ReverseGlobFieldComparator;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -55,7 +53,7 @@ public class SeriesBudgetEditionPanel {
   private SelectionService selectionService;
   private CardHandler modeCard;
   private GlobTableView budgetTable;
-  private Boolean isNormalyPositive;
+  private Boolean isUsuallyPositive;
   private SwitchToAutomaticAction switchToAutomaticAction = new SwitchToAutomaticAction();
   private SwitchToManualAction switchToManualAction = new SwitchToManualAction();
 
@@ -80,7 +78,7 @@ public class SeriesBudgetEditionPanel {
     builder.add("positiveAmounts", amountEditor.getPositiveRadio());
     builder.add("negativeAmounts", amountEditor.getNegativeRadio());
 
-    builder.addLabel("seriesBudgetEditionAmountLabel", SeriesBudget.TYPE, new AmountLabelStringifier());
+    builder.addLabel("seriesBudgetEditionAmountLabel", SeriesBudget.TYPE, new SeriesAmountLabelStringifier());
 
     budgetTable = builder.addTable("seriesBudget", SeriesBudget.TYPE,
                                    new ReverseGlobFieldComparator(SeriesBudget.MONTH))
@@ -181,9 +179,9 @@ public class SeriesBudgetEditionPanel {
       SeriesEditionDialog.computeMultiplier(localRepository.findLinkTarget(currentSeries, Series.FROM_ACCOUNT),
                                             localRepository.findLinkTarget(currentSeries, Series.TO_ACCOUNT),
                                             localRepository);
-    isNormalyPositive = budgetArea.isIncome() ||
+    isUsuallyPositive = budgetArea.isIncome() ||
                         (budgetArea == BudgetArea.SAVINGS && multiplier > 0);
-    amountEditor.update(isNormalyPositive, budgetArea == BudgetArea.SAVINGS);
+    amountEditor.update(isUsuallyPositive, budgetArea == BudgetArea.SAVINGS);
   }
 
   public JPanel getPanel() {
@@ -232,10 +230,10 @@ public class SeriesBudgetEditionPanel {
         return "0";
       }
       StringBuilder builder = new StringBuilder();
-      if ((value < 0) && isNormalyPositive) {
+      if ((value < 0) && isUsuallyPositive) {
         builder.append("-");
       }
-      if ((value > 0) && !isNormalyPositive) {
+      if ((value > 0) && !isUsuallyPositive) {
         builder.append("+");
       }
       builder.append(Formatting.DECIMAL_FORMAT.format(Math.abs(value)));
@@ -367,19 +365,6 @@ public class SeriesBudgetEditionPanel {
         return str;
       }
       return "";
-    }
-  }
-
-  private class AmountLabelStringifier implements GlobListStringifier {
-    public String toString(GlobList list, GlobRepository repository) {
-      Set<Integer> monthIds = list.getValueSet(SeriesBudget.MONTH);
-      String monthDescription = MonthListStringifier.toString(monthIds);
-      if (Strings.isNullOrEmpty(monthDescription)) {
-        return Lang.get("seriesBudgetEdition.amount.label.short");
-      }
-      else {
-        return Lang.get("seriesBudgetEdition.amount.label.full", monthDescription.toLowerCase());
-      }
     }
   }
 

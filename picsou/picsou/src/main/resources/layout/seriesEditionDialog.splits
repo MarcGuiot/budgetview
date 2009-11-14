@@ -25,7 +25,7 @@
             <textField gridPos="(1,0)" ref="nameField" marginBottom="4"/>
 
             <label gridPos="(0,1)" text="$seriesEdition.description" styleClass="formLabel" marginBottom="4"/>
-            <scrollPane gridPos="(1,1)" minimumSize="(200,60)"
+            <scrollPane gridPos="(1,1)" minimumSize="(40,60)"
                         horizontalScrollbarPolicy="asNeeded" verticalScrollbarPolicy="never">
               <textArea ref="descriptionField" marginBottom="4" lineWrap="true"/>
             </scrollPane>

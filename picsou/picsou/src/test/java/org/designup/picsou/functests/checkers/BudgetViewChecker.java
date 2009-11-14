@@ -196,7 +196,7 @@ public class BudgetViewChecker extends GuiChecker {
       return openSeriesEditionDialog(seriesName);
     }
 
-    public SeriesEditionDialogChecker clickOnPlannedAmount(String seriesName) {
+    public SeriesAmountEditionDialogChecker clickOnPlannedAmount(String seriesName) {
       Button nameButton = getPanel().getButton(seriesName);
 
       JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
@@ -204,7 +204,7 @@ public class BudgetViewChecker extends GuiChecker {
 
       Button button = new Button((JButton)panel.getComponent(nameIndex + PLANNED_LABEL_OFFSET));
 
-      return SeriesEditionDialogChecker.open(button);
+      return SeriesAmountEditionDialogChecker.open(button.triggerClick());
     }
 
     public void checkEditAllSeriesIsEnabled(boolean enabled) {

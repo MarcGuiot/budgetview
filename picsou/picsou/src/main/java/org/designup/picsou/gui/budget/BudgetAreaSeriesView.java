@@ -10,6 +10,7 @@ import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
@@ -37,6 +38,7 @@ public class BudgetAreaSeriesView extends View {
   private String name;
   private BudgetArea budgetArea;
   private SeriesEditionDialog seriesEditionDialog;
+  private SeriesAmountEditionDialog seriesAmountEditionDialog;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
   private Matchers.SeriesFirstEndDateFilter seriesDateFilter;
   private GlobMatcher seriesFilter;
@@ -49,11 +51,13 @@ public class BudgetAreaSeriesView extends View {
                               final BudgetArea budgetArea,
                               final GlobRepository repository,
                               Directory directory,
-                              final SeriesEditionDialog seriesEditionDialog) {
+                              final SeriesEditionDialog seriesEditionDialog,
+                              final SeriesAmountEditionDialog seriesAmountEditionDialog) {
     super(repository, directory);
     this.name = name;
     this.budgetArea = budgetArea;
     this.seriesEditionDialog = seriesEditionDialog;
+    this.seriesAmountEditionDialog = seriesAmountEditionDialog;
 
     seriesButtons = new SeriesEditionButtons(budgetArea, repository, directory, seriesEditionDialog);
 
@@ -195,7 +199,7 @@ public class BudgetAreaSeriesView extends View {
 
       addAmountButton("plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder, new GlobListFunctor() {
         public void run(GlobList list, GlobRepository repository) {
-          seriesEditionDialog.show(series, selectedMonthIds);
+          seriesAmountEditionDialog.show(series, selectedMonthIds);
         }
       });
 

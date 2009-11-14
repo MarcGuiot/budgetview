@@ -1,7 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import junit.framework.AssertionFailedError;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.ProfileType;
 import org.uispec4j.*;
@@ -13,11 +12,10 @@ import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
-public class SeriesEditionDialogChecker extends GuiChecker {
-  private Window dialog;
+public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<SeriesEditionDialogChecker> {
   private Table table;
 
   public static final String JAN = "Jan";
@@ -43,7 +41,7 @@ public class SeriesEditionDialogChecker extends GuiChecker {
   }
 
   public SeriesEditionDialogChecker(Window dialog) {
-    this.dialog = dialog;
+    super(dialog);
   }
 
   public SeriesEditionDialogChecker checkTitle(String text) {
@@ -83,37 +81,6 @@ public class SeriesEditionDialogChecker extends GuiChecker {
 
   public SeriesEditionDialogChecker unselect() {
     dialog.getListBox("seriesList").clearSelection();
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkAmount(String displayedValue) {
-    TextBox getAmount = getAmountTextBox();
-    assertThat(getAmount.textEquals(displayedValue));
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkAmountDisabled() {
-    assertFalse(getAmountTextBox().isEnabled());
-    assertFalse(dialog.getRadioButton("positiveAmounts").isEnabled());
-    assertFalse(dialog.getRadioButton("negativeAmounts").isEnabled());
-    return this;
-  }
-
-  public TextBox getAmountTextBox() {
-    try {
-      return dialog.getInputTextBox("amountEditor");
-    }
-    catch (ItemNotFoundException e) {
-      throw new AssertionFailedError("Amount editor not found - make sure the series is in manual mode");
-    }
-  }
-
-  public SeriesEditionDialogChecker setAmount(double value) {
-    return setAmount(Double.toString(value));
-  }
-
-  public SeriesEditionDialogChecker setAmount(String value) {
-    getAmountTextBox().setText(value);
     return this;
   }
 
@@ -208,7 +175,6 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     }
     return this;
   }
-
 
   private String getMonthLabel(int month) {
     switch (month) {
@@ -519,43 +485,6 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     return this;
   }
 
-  public SeriesEditionDialogChecker checkAmountIsSelected() {
-    JTextField textEditor = (JTextField)dialog.getInputTextBox("amountEditor").getAwtComponent();
-    Assert.assertEquals(textEditor.getText(), textEditor.getSelectedText());
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkAmountLabel(final String text) {
-    assertThat(dialog.getTextBox("seriesBudgetEditionAmountLabel").textEquals(text));
-    return this;
-  }
-
-  public SeriesEditionDialogChecker selectPositiveAmounts() {
-    dialog.getRadioButton("positiveAmounts").click();
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkPositiveAmountsSelected() {
-    assertThat(dialog.getRadioButton("positiveAmounts").isSelected());
-    return this;
-  }
-
-  public SeriesEditionDialogChecker selectNegativeAmounts() {
-    dialog.getRadioButton("negativeAmounts").click();
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkNegativeAmountsSelected() {
-    assertThat(dialog.getRadioButton("negativeAmounts").isSelected());
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkAmountsRadioAreNotVisible() {
-    assertFalse(dialog.getRadioButton("negativeAmounts").isVisible());
-    assertFalse(dialog.getRadioButton("positiveAmounts").isVisible());
-    return this;
-  }
-
   public SeriesEditionDialogChecker checkProfiles(String... profiles) {
     UISpecAssert.assertThat(getProfileCombo().contentEquals(profiles));
     return this;
@@ -651,8 +580,8 @@ public class SeriesEditionDialogChecker extends GuiChecker {
     checkComponentVisible(dialog, JButton.class, "deleteSingleSeries", !visible);
   }
 
-  public SeriesEditionDialogChecker checkAmountIsDisabled() {
-    assertFalse(getAmountTextBox().isEnabled());
+  public SeriesEditionDialogChecker checkAmountLabel(final String text) {
+    assertThat(dialog.getTextBox("seriesBudgetEditionAmountLabel").textEquals(text));
     return this;
   }
 

@@ -931,7 +931,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       });
 
     edition.selectNoMonth()
-      .checkAmountDisabled();
+      .checkAmountIsDisabled();
 
     edition.selectMonth(200807)
       .checkNegativeAmountsSelected()
@@ -1014,7 +1014,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       });
 
     edition.selectNoMonth()
-      .checkAmountDisabled();
+      .checkAmountIsDisabled();
 
     edition.selectMonth(200807)
       .checkNegativeAmountsSelected()
@@ -1048,8 +1048,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthIsChecked(3, 9)
       .validate();
     timeline.selectMonth("2008/08");
-    budgetView.envelopes.editSeriesList().selectSeries("S1")
-      .checkAmountIsDisabled()
+    budgetView.envelopes.editSeriesList().selectSeries("S1").checkAmountIsDisabled()
       .cancel();
   }
 

@@ -11,11 +11,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-public class SeriesDeleteDialog {
+public class SeriesDeletionDialog {
   private PicsouDialog dialog;
   private boolean ok;
 
-  public SeriesDeleteDialog(GlobRepository repository, Directory directory, Window parent) {
+  public SeriesDeletionDialog(GlobRepository repository, Directory directory, Window parent) {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
                                                       "/layout/seriesDeletionDialog.splits",
                                                       repository, directory);
