@@ -66,6 +66,30 @@ public class Utils {
     return value != null ? value : def;
   }
 
+  public static <T extends Comparable> T min(Collection<T> values) {
+    return minOrMax(-1, values);
+  }
+
+  public static <T extends Comparable> T max(Collection<T> values) {
+    return minOrMax(1, values);
+  }
+
+  private static <T extends Comparable> T minOrMax(int sign, Collection<T> values) {
+    if (values.isEmpty()) {
+      return null;
+    }
+    T result = values.iterator().next();
+    for (T value : values) {
+      if (value == null) {
+        continue;
+      }
+      if ((result == null) || (result.compareTo(value) * sign < 0)) {
+        result = value;
+      }
+    }
+    return result;
+  }
+
   public static <T extends Comparable> T min(T... values) {
     return minOrMax(-1, values);
   }
@@ -251,9 +275,9 @@ public class Utils {
   public static void endRemove() {
   }
 
-  public static void releaseBeginRemove(){
+  public static void releaseBeginRemove() {
   }
 
-  public static void releaseEndRemove(){
+  public static void releaseEndRemove() {
   }
 }

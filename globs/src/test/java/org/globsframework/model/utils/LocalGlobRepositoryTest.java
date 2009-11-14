@@ -124,6 +124,7 @@ public class LocalGlobRepositoryTest extends TestCase {
                          "<dummyObject id='2' name='name' value='2.2'/>" +
                          "<dummyObject2 id='1'/>");
 
+    assertFalse(local.containsChanges());
     assertTrue(local.getCurrentChanges().isEmpty());
 
     local.create(DummyObject.TYPE,
@@ -134,6 +135,7 @@ public class LocalGlobRepositoryTest extends TestCase {
 
     local.delete(Key.create(DummyObject.TYPE, 2));
 
+    assertTrue(local.containsChanges());
     checker.assertChangesEqual(local.getCurrentChanges(),
                                "<update type='dummyObject' id='1' name='newName' _name='name'/>" +
                                "<create type='dummyObject' id='3' name='obj3'/>" +
