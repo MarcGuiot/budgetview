@@ -22,6 +22,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     Glob glob = repository.findUnique(DummyObject.TYPE,
                                       value(DummyObject.ID, 1),
                                       value(DummyObject.VALUE, 1.1));
+
     assertNotNull(glob);
     assertEquals(1, glob.get(DummyObject.ID).intValue());
     assertEquals(1.1, glob.get(DummyObject.VALUE), 0.01);

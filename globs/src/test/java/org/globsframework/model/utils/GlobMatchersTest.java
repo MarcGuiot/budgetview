@@ -38,6 +38,7 @@ public class GlobMatchersTest extends TestCase {
     check(fieldEquals(DummyObject.NAME, "obj_a"), a);
     check(fieldEqualsIgnoreCase(DummyObject.NAME, "OBJ_a"), a);
     check(fieldEquals(DummyObject.PRESENT, true), a, c);
+    check(isTrue(DummyObject.PRESENT), a, c);
   }
 
   public void testAnd() throws Exception {

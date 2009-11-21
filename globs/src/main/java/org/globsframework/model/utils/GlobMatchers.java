@@ -83,6 +83,14 @@ public class GlobMatchers {
     return fieldEqualsObject(field, value);
   }
 
+  public static GlobMatcher isTrue(BooleanField field) {
+    return fieldEqualsObject(field, true);
+  }
+
+  public static GlobMatcher isFalse(BooleanField field) {
+    return fieldEqualsObject(field, false);
+  }
+
   public static GlobMatcher fieldEquals(BooleanField field, Boolean value) {
     return fieldEqualsObject(field, value);
   }
@@ -326,7 +334,7 @@ public class GlobMatchers {
     };
   }
 
-  public static GlobMatcher fieldLesserOrEqual(final IntegerField field, final int value) {
+  public static GlobMatcher fieldLessOrEqual(final IntegerField field, final int value) {
     return new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {
         return item.get(field) <= value;
