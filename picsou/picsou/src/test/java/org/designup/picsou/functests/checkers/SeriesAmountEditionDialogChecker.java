@@ -42,4 +42,13 @@ public class SeriesAmountEditionDialogChecker extends SeriesAmountEditionChecker
   public void validate() {
     dialog.getButton("OK").click();
   }
+
+  public SeriesAmountEditionDialogChecker checkPeriodicity(String text) {
+    assertThat(dialog.getTextBox("periodicity").textEquals(text));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker editSeries() {
+    return SeriesEditionDialogChecker.open(dialog.getButton("editSeries"));
+  }
 }

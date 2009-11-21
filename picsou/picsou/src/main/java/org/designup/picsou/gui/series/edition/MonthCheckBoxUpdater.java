@@ -1,18 +1,18 @@
 package org.designup.picsou.gui.series.edition;
 
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.ProfileType;
+import org.designup.picsou.model.Series;
+import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.model.*;
-import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.GlobType;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.ProfileType;
-import org.designup.picsou.model.Month;
+import org.globsframework.metamodel.fields.BooleanField;
+import org.globsframework.model.*;
 
 import javax.swing.*;
-import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Set;
 
 public class MonthCheckBoxUpdater implements GlobSelectionListener, ItemListener, ChangeSetListener {
@@ -24,8 +24,8 @@ public class MonthCheckBoxUpdater implements GlobSelectionListener, ItemListener
   private GlobRepository repository;
 
   public MonthCheckBoxUpdater(Integer monthIndex,
-                               GlobRepository repository,
-                               SelectionService selectionService) {
+                              GlobRepository repository,
+                              SelectionService selectionService) {
     this.checkBox = new JCheckBox();
     this.monthIndex = monthIndex;
     selectionService.addListener(this, Series.TYPE);

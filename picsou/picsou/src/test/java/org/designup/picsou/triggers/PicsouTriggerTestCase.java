@@ -8,6 +8,7 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Dates;
 
 public abstract class PicsouTriggerTestCase extends PicsouTestCase {
@@ -53,15 +54,15 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
   }
 
   protected Integer[] getBudgetId(int seriesId) {
-    return repository.getAll(SeriesBudget.TYPE, GlobMatchers.fieldEquals(SeriesBudget.SERIES, seriesId))
+    return repository.getAll(SeriesBudget.TYPE, fieldEquals(SeriesBudget.SERIES, seriesId))
       .sort(SeriesBudget.MONTH)
       .getValues(SeriesBudget.ID);
   }
 
   protected Integer[] getPlannedTransaction(Integer... seriesId) {
-    GlobMatcher globMatcher = GlobMatchers.fieldEquals(Transaction.PLANNED, true);
+    GlobMatcher globMatcher = isTrue(Transaction.PLANNED);
     for (Integer series : seriesId) {
-      globMatcher = GlobMatchers.and(globMatcher, GlobMatchers.fieldEquals(Transaction.SERIES, series));
+      globMatcher = and(globMatcher, fieldEquals(Transaction.SERIES, series));
     }
     return repository.getAll(Transaction.TYPE, globMatcher).sort(Transaction.MONTH).getValues(Transaction.ID);
   }

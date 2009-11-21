@@ -74,15 +74,15 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
 
     if (currentJarVersion < 24) {
-      repository.safeApply(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, true),
-                           new RemovePlanedPrefixFunctor());
+      repository.safeApply(Transaction.TYPE, isTrue(Transaction.PLANNED), new RemovePlanedPrefixFunctor());
     }
 
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
   }
 
   private void upgradeFromV10(GlobRepository repository) {
-    repository.safeApply(Transaction.TYPE, fieldEquals(Transaction.PLANNED, false),
+    repository.safeApply(Transaction.TYPE,
+                         isFalse(Transaction.PLANNED),
                          new GlobFunctor() {
                            public void run(Glob transaction, GlobRepository repository) throws Exception {
                              String originalLabel = transaction.get(Transaction.ORIGINAL_LABEL);

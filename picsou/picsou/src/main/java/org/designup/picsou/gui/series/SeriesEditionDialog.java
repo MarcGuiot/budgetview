@@ -29,6 +29,8 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.FieldValue.*;
+import static org.globsframework.model.FieldValue.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.utils.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -275,7 +277,7 @@ public class SeriesEditionDialog {
       protected Integer getMonthLimit() {
         GlobList transactions =
           localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, currentSeries.get(Series.ID))
-            .getGlobs().filterSelf(fieldEquals(Transaction.PLANNED, false), localRepository)
+            .getGlobs().filterSelf(isFalse(Transaction.PLANNED), localRepository)
             .sort(Transaction.MONTH);
         Glob firstMonth = transactions.getFirst();
         if (firstMonth == null) {
@@ -376,8 +378,8 @@ public class SeriesEditionDialog {
   private void retrieveAssociatedTransactions(Integer seriesId) {
     selectedTransactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES,
                                                   seriesId).getGlobs();
-    selectedTransactions.removeAll(GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.PLANNED, true),
-                                                    GlobMatchers.fieldEquals(Transaction.CREATED_BY_SERIES, true)),
+    selectedTransactions.removeAll(and(isTrue(Transaction.PLANNED),
+                                       isTrue(Transaction.CREATED_BY_SERIES)),
                                    repository);
   }
 
@@ -490,12 +492,12 @@ public class SeriesEditionDialog {
                                                 series.get(Series.ID)).getGlobs());
       ReadOnlyGlobRepository.MultiFieldIndexed index =
         repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID));
-      globsToLoad.addAll(index.getGlobs().filterSelf(fieldEquals(Transaction.PLANNED, false), repository));
+      globsToLoad.addAll(index.getGlobs().filterSelf(isFalse(Transaction.PLANNED), repository));
     }
     localRepository.reset(globsToLoad, SeriesBudget.TYPE, Series.TYPE, Transaction.TYPE);
 
     this.seriesList.setFilter(and(fieldEquals(Series.BUDGET_AREA, budgetArea.getId()),
-                                  fieldEquals(Series.IS_MIRROR, false)));
+                                  isFalse(Series.IS_MIRROR)));
 
     if (budgetArea == BudgetArea.SAVINGS) {
       Set<Integer> positiveAccount = new HashSet<Integer>();
@@ -514,15 +516,15 @@ public class SeriesEditionDialog {
       }
       if (positiveAccount.size() == 1) {
         toAccountsCombo
-          .setFilter(GlobMatchers.fieldEquals(Account.ID, positiveAccount.iterator().next()))
+          .setFilter(fieldEquals(Account.ID, positiveAccount.iterator().next()))
           .setShowEmptyOption(false);
         toAccount.set(positiveAccount.iterator().next());
       }
       else {
         if (negativeAccount.size() == 1) {
           toAccountsCombo.setFilter(
-            GlobMatchers.and(accountFilter,
-                             GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, negativeAccount.iterator().next()))))
+            and(accountFilter,
+                GlobMatchers.not(fieldEquals(Account.ID, negativeAccount.iterator().next()))))
             .setShowEmptyOption(true);
         }
         else {
@@ -532,15 +534,15 @@ public class SeriesEditionDialog {
       }
       if (negativeAccount.size() == 1) {
         fromAccountsCombo
-          .setFilter(GlobMatchers.fieldEquals(Account.ID, negativeAccount.iterator().next()))
+          .setFilter(fieldEquals(Account.ID, negativeAccount.iterator().next()))
           .setShowEmptyOption(false);
         fromAccount.set(negativeAccount.iterator().next());
       }
       else {
         if (positiveAccount.size() == 1) {
           fromAccountsCombo.setFilter(
-            GlobMatchers.and(accountFilter,
-                             GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, positiveAccount.iterator().next()))))
+            and(accountFilter,
+                GlobMatchers.not(fieldEquals(Account.ID, positiveAccount.iterator().next()))))
             .setShowEmptyOption(true);
         }
         else {
@@ -748,13 +750,13 @@ public class SeriesEditionDialog {
   private GlobList uncategorize(final Integer seriesId) {
     GlobList transactions = localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES,
                                                         seriesId)
-      .getGlobs().filterSelf(and(fieldEquals(Transaction.PLANNED, false),
-                                 fieldEquals(Transaction.CREATED_BY_SERIES, false)),
+      .getGlobs().filterSelf(and(isFalse(Transaction.PLANNED),
+                                 isFalse(Transaction.CREATED_BY_SERIES)),
                              localRepository);
     for (Glob transaction : transactions) {
       localRepository.update(transaction.getKey(),
-                             FieldValue.value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                             FieldValue.value(Transaction.SUB_SERIES, null));
+                             value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+                             value(Transaction.SUB_SERIES, null));
     }
     return transactions;
   }
@@ -950,8 +952,8 @@ public class SeriesEditionDialog {
             for (Glob budget : seriesBudgets) {
               if (budget.get(SeriesBudget.MONTH) > currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
                 repository.update(budget.getKey(),
-                                  FieldValue.value(SeriesBudget.AMOUNT, 0.0),
-                                  FieldValue.value(SeriesBudget.OBSERVED_AMOUNT, 0.0));
+                                  value(SeriesBudget.AMOUNT, 0.0),
+                                  value(SeriesBudget.OBSERVED_AMOUNT, 0.0));
               }
             }
           }

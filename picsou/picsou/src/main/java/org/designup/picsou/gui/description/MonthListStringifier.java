@@ -15,7 +15,36 @@ public class MonthListStringifier implements GlobListStringifier {
     return toString(monthIds);
   }
 
+  public static String toString(int firstMonthId, int lastMonthId, MonthRangeFormatter rangeFormatter) {
+    int firstMonth = Month.toMonth(firstMonthId);
+    int firstYear = Month.toYear(firstMonthId);
+
+    int lastMonth = Month.toMonth(lastMonthId);
+    int lastYear = Month.toYear(lastMonthId);
+
+    if ((firstMonth == 1) && (lastMonth == 12)) {
+      if (firstYear == lastYear) {
+        return rangeFormatter.year(firstYear);
+      }
+      else {
+        return rangeFormatter.yearRange(firstYear, lastYear);
+      }
+    }
+    else {
+      if (firstYear == lastYear) {
+        return rangeFormatter.monthRangeInYear(firstMonthId, lastMonthId, firstYear);
+      }
+      else {
+        return rangeFormatter.monthRangeAcrossYears(firstMonthId, lastMonthId);
+      }
+    }
+  }
+
   public static String toString(Collection<Integer> monthIds) {
+    return toString(monthIds, MonthRangeFormatter.COMPACT);
+  }
+
+  public static String toString(Collection<Integer> monthIds, MonthRangeFormatter rangeFormatter) {
     if (monthIds.isEmpty()) {
       return "";
     }
@@ -26,36 +55,14 @@ public class MonthListStringifier implements GlobListStringifier {
     int[] months = getSortedMonths(monthIds);
 
     boolean isContinuous = Month.isContinuousSequence(months);
-
-    int firstMonthId = months[0];
-    int firstMonth = Month.toMonth(firstMonthId);
-    int firstYear = Month.toYear(firstMonthId);
-
-    int lastMonthId = months[months.length - 1];
-    int lastMonth = Month.toMonth(lastMonthId);
-    int lastYear = Month.toYear(lastMonthId);
-
-    if (isContinuous) {
-      if ((firstMonth == 1) && (lastMonth == 12)) {
-        if (firstYear == lastYear) {
-          return Integer.toString(firstYear);
-        }
-        else {
-          return Integer.toString(firstYear) + " - " + Integer.toString(lastYear);
-        }
-      }
-      else {
-        if (firstYear == lastYear) {
-          return Month.getFullMonthLabel(firstMonthId) + " - " + Month.getFullMonthLabel(lastMonthId) +
-                 " " + Integer.toString(firstYear);
-        }
-        else {
-          return Month.getFullLabel(firstMonthId) + " - " + Month.getFullLabel(lastMonthId);
-        }
-      }
+    if (!isContinuous) {
+      return "";
     }
 
-    return "";
+    int firstMonthId = months[0];
+    int lastMonthId = months[months.length - 1];
+
+    return toString(firstMonthId, lastMonthId, rangeFormatter);
   }
 
   private static int[] getSortedMonths(Collection<Integer> monthIds) {

@@ -11,6 +11,8 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.isTrue;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -71,7 +73,7 @@ public class CategorizationGaugePanel implements ChangeSetListener {
   public void update() {
     GlobList transactions =
       repository.getAll(Transaction.TYPE,
-                        not(fieldEquals(Transaction.PLANNED, true)));
+                        not(isTrue(Transaction.PLANNED)));
 
     double total = 0;
     double uncategorized = 0;

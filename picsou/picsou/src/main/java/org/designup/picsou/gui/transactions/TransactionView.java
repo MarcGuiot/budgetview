@@ -112,7 +112,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
           showPlannedTransactionsMatcher = GlobMatchers.ALL;
         }
         else {
-          showPlannedTransactionsMatcher = not(fieldEquals(Transaction.PLANNED, Boolean.TRUE));
+          showPlannedTransactionsMatcher = not(isTrue(Transaction.PLANNED));
         }
         updateFilter();
       }

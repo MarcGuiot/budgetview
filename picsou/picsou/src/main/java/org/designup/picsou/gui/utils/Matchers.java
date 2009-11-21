@@ -66,8 +66,8 @@ public class Matchers {
 
   public static GlobMatcher exportableTransactions() {
     return and(
-      not(fieldEquals(Transaction.PLANNED, Boolean.TRUE)),
-      not(fieldEquals(Transaction.MIRROR, Boolean.TRUE))
+      not(isTrue(Transaction.PLANNED)),
+      not(isTrue(Transaction.MIRROR))
     );
   }
 

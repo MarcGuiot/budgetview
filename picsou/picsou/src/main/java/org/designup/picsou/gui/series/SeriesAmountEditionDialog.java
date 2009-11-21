@@ -2,6 +2,7 @@ package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.description.SeriesPeriodicityAndScopeStringifier;
 import org.designup.picsou.gui.series.utils.SeriesAmountLabelStringifier;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
@@ -9,13 +10,13 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.format.GlobPrinter;
 import static org.globsframework.model.utils.GlobFunctors.update;
-import static org.globsframework.model.utils.GlobMatchers.fieldStrictlyGreaterThan;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.Utils;
@@ -35,11 +36,14 @@ public class SeriesAmountEditionDialog {
   private PicsouDialog dialog;
   private JCheckBox propagationCheckBox;
   private GlobRepository parentRepository;
+  private SeriesEditionDialog seriesEditionDialog;
 
   private Key currentSeries;
   private Integer maxMonth;
+  private Set<Integer> selectedMonthIds;
 
-  public SeriesAmountEditionDialog(GlobRepository parentRepository, Directory parentDirectory) {
+  public SeriesAmountEditionDialog(GlobRepository parentRepository, Directory parentDirectory,
+                                   SeriesEditionDialog seriesEditionDialog) {
 
     this.parentRepository = parentRepository;
     this.localRepository = LocalGlobRepositoryBuilder.init(parentRepository).get();
@@ -47,6 +51,8 @@ public class SeriesAmountEditionDialog {
     Directory directory = new DefaultDirectory(parentDirectory);
     selectionService = new SelectionService();
     directory.add(selectionService);
+
+    this.seriesEditionDialog = seriesEditionDialog;
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesAmountEditionDialog.class,
                                                       "/layout/seriesAmountEditionDialog.splits",
@@ -61,6 +67,10 @@ public class SeriesAmountEditionDialog {
 
     propagationCheckBox = new JCheckBox();
     builder.add("propagate", propagationCheckBox);
+
+    builder.addLabel("periodicity", Series.TYPE, new SeriesPeriodicityAndScopeStringifier());
+
+    builder.add("editSeries", new OpenSeriesEditorAction());
 
     dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
 
@@ -93,16 +103,22 @@ public class SeriesAmountEditionDialog {
   }
 
   private void select(Glob series, Set<Integer> monthIds) {
-    GlobList selection = new GlobList();
+    selectedMonthIds = monthIds;
+    GlobSelectionBuilder selection = GlobSelectionBuilder.init();
+
+    selection.add(series);
+
     Integer seriesId = series.get(Series.ID);
     for (Integer monthId : monthIds) {
-      selection.addAll(
+      selection.add(
         localRepository
           .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
           .findByIndex(SeriesBudget.MONTH, monthId)
-          .getGlobs());
+          .getGlobs(),
+        SeriesBudget.TYPE);
     }
-    selectionService.select(selection, SeriesBudget.TYPE);
+
+    selectionService.select(selection.get());
   }
 
   private class OkAction extends AbstractAction {
@@ -119,7 +135,9 @@ public class SeriesAmountEditionDialog {
       if (propagationCheckBox.isSelected()) {
         final Double amount = amountEditor.getValue();
         localRepository.safeApply(SeriesBudget.TYPE,
-                                  fieldStrictlyGreaterThan(SeriesBudget.MONTH, maxMonth),
+                                  and(
+                                    isTrue(SeriesBudget.ACTIVE),
+                                    fieldStrictlyGreaterThan(SeriesBudget.MONTH, maxMonth)),
                                   update(SeriesBudget.AMOUNT, amount));
       }
 
@@ -139,4 +157,16 @@ public class SeriesAmountEditionDialog {
     }
   }
 
+  private class OpenSeriesEditorAction extends AbstractAction {
+
+    private OpenSeriesEditorAction() {
+      super(Lang.get("seriesAmountEdition.editSeries"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      localRepository.rollback();
+      dialog.setVisible(false);
+      seriesEditionDialog.show(parentRepository.get(currentSeries), selectedMonthIds);
+    }
+  }
 }

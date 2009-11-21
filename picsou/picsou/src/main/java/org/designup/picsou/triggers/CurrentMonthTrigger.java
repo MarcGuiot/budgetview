@@ -6,7 +6,7 @@ import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 import java.util.Set;
 
@@ -24,14 +24,14 @@ public class CurrentMonthTrigger implements ChangeSetListener {
     int lastDay = previousLastDay;
     if (changeSet.containsCreationsOrDeletions(Transaction.TYPE)) {
       MonthCallback monthCallback = new MonthCallback();
-      repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, monthCallback);
+      repository.safeApply(Transaction.TYPE, ALL, monthCallback);
       lastMonth = monthCallback.getLastMonthId();
       if (previousLastMonth != lastMonth) {
         repository.update(CurrentMonth.KEY, CurrentMonth.LAST_TRANSACTION_MONTH, lastMonth);
         previousLastDay = -1;
       }
       DayCallback dayCallback = new DayCallback(lastMonth, previousLastDay);
-      repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, dayCallback);
+      repository.safeApply(Transaction.TYPE, ALL, dayCallback);
       lastDay = dayCallback.getLastMonthDay();
       if (previousLastDay != lastDay) {
         repository.update(CurrentMonth.KEY, CurrentMonth.LAST_TRANSACTION_DAY, lastDay);
@@ -41,11 +41,12 @@ public class CurrentMonthTrigger implements ChangeSetListener {
     if (changeSet.containsChanges(CurrentMonth.KEY) ||
         (previousLastMonth != lastMonth) ||
         (previousLastDay != lastDay)) {
-      GlobList transactions = repository.getAll(Transaction.TYPE, GlobMatchers.and(
-        GlobMatchers.fieldEquals(Transaction.PLANNED, true),
-        GlobMatchers.fieldStrictlyLessThan(Transaction.MONTH, lastMonth)));
+      GlobList transactions =
+        repository.getAll(Transaction.TYPE,
+                          and(isTrue(Transaction.PLANNED),
+                              fieldStrictlyLessThan(Transaction.MONTH, lastMonth)));
       repository.delete(transactions);
-      repository.safeApply(Transaction.TYPE, GlobMatchers.ALL,
+      repository.safeApply(Transaction.TYPE, ALL,
                            new UpdateDayCallback(lastMonth, lastDay));
     }
   }
@@ -90,7 +91,7 @@ public class CurrentMonthTrigger implements ChangeSetListener {
 
     public int getLastMonthDay() {
       if (lastMonthDay > TimeService.getCurrentDay() &&
-          lastMonthId == TimeService.getCurrentMonth()){
+          lastMonthId == TimeService.getCurrentMonth()) {
         return TimeService.getCurrentDay();
       }
       return lastMonthDay;

@@ -178,8 +178,7 @@ public class MainPanel {
   }
 
   private void selectLastMonthWithATransaction(GlobRepository repository, Directory directory) {
-    GlobList transactions = repository.getAll(Transaction.TYPE,
-                                              GlobMatchers.fieldEquals(Transaction.PLANNED, false));
+    GlobList transactions = repository.getAll(Transaction.TYPE, isFalse(Transaction.PLANNED));
     if (transactions.isEmpty()) {
       return;
     }

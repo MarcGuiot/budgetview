@@ -5,7 +5,7 @@ import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.BudgetArea;
@@ -49,12 +49,13 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
   protected SeriesEvolutionMonthEditor(int offset, GlobTableView view,
                                        GlobRepository repository, Directory directory,
                                        SeriesEvolutionColors colors,
-                                       SeriesEditionDialog seriesEditionDialog) {
+                                       SeriesAmountEditionDialog seriesAmountEditionDialog) {
     super(view, directory.get(DescriptionService.class), repository, directory);
     this.offset = offset;
     this.colors = colors;
 
-    OpenSeriesEditionDialogAction action = new OpenSeriesEditionDialogAction(seriesEditionDialog);
+    OpenSeriesAmountEditionDialogAction action =
+      new OpenSeriesAmountEditionDialogAction(seriesAmountEditionDialog);
 
     LabelCustomizers.BOLD.process(label);
     labelPanel = initCellPanel(label, false, new PaintablePanel());
@@ -202,15 +203,15 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
     };
   }
 
-  private class OpenSeriesEditionDialogAction extends AbstractAction {
-    private SeriesEditionDialog seriesEditionDialog;
+  private class OpenSeriesAmountEditionDialogAction extends AbstractAction {
+    private SeriesAmountEditionDialog seriesAmountEditionDialog;
 
-    public OpenSeriesEditionDialogAction(SeriesEditionDialog seriesEditionDialog) {
-      this.seriesEditionDialog = seriesEditionDialog;
+    public OpenSeriesAmountEditionDialogAction(SeriesAmountEditionDialog seriesAmountEditionDialog) {
+      this.seriesAmountEditionDialog = seriesAmountEditionDialog;
     }
 
     public void actionPerformed(ActionEvent e) {
-      seriesEditionDialog.show(currentSeries, Collections.singleton(referenceMonthId));
+      seriesAmountEditionDialog.show(currentSeries, Collections.singleton(referenceMonthId));
     }
   }
 }

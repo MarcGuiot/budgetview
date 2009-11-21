@@ -1,14 +1,14 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.UserPreferences;
-import org.designup.picsou.model.CurrentMonth;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
-import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.List;
@@ -37,9 +37,9 @@ public class MonthTrigger implements ChangeSetListener {
         }
       });
     }
-   if (changeSet.containsChanges(CurrentMonth.KEY)){
-     updateMonth(repository, repository.get(UserPreferences.KEY).get(UserPreferences.FUTURE_MONTH_COUNT));
-   }
+    if (changeSet.containsChanges(CurrentMonth.KEY)) {
+      updateMonth(repository, repository.get(UserPreferences.KEY).get(UserPreferences.FUTURE_MONTH_COUNT));
+    }
   }
 
   public void updateMonth(GlobRepository repository, Integer monthCount) {
@@ -64,8 +64,8 @@ public class MonthTrigger implements ChangeSetListener {
         Integer month = months[i];
         if (Month.distance(currentMonth, month) > monthCount) {
           GlobList all = repository.getAll(Transaction.TYPE,
-                                           GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.MONTH, month),
-                                                            GlobMatchers.fieldEquals(Transaction.PLANNED, false)));
+                                           and(fieldEquals(Transaction.MONTH, month),
+                                               isFalse(Transaction.PLANNED)));
           if (!all.isEmpty()) {
             return;
           }
@@ -77,7 +77,6 @@ public class MonthTrigger implements ChangeSetListener {
       repository.completeChangeSet();
     }
   }
-
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(UserPreferences.TYPE)) {

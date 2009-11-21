@@ -219,6 +219,97 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     );
   }
 
+  public void testEditingAmounts() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "00000123", 1000.0, "2008/07/30")
+      .addTransaction("2008/07/01", 320.00, "WorldCo")
+      .addTransaction("2008/07/15", 350.00, "Big Inc.")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewIncome("WorldCo", "John's");
+    categorization.setNewIncome("Big Inc.", "Mary's");
+
+    timeline.selectMonth("2008/07");
+
+    views.selectEvolution();
+    seriesEvolution.initContent()
+      .add("Balance", "", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00")
+      .add("Main accounts", "", "1000.00", "1670.00", "2340.00", "3010.00", "3680.00", "4350.00", "5020.00")
+      .add("Savings accounts", "", "", "", "", "", "", "", "")
+      .add("To categorize", "", "", "", "", "", "", "", "")
+      .add("Income", "", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00")
+      .add("John's", "", "320.00", "320.00", "320.00", "320.00", "320.00", "320.00", "320.00")
+      .add("Mary's", "", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
+      .add("Recurring", "", "", "", "", "", "", "", "")
+      .add("Envelopes", "", "", "", "", "", "", "", "")
+      .add("Special", "", "", "", "", "", "", "", "")
+      .add("Savings", "", "", "", "", "", "", "", "")
+      .check();
+
+    seriesEvolution.editSeries("John's", "Jul 08")
+      .checkPositiveAmountsSelected()
+      .setAmount(400.00)
+      .checkPropagationEnabled()
+      .validate();
+
+    seriesEvolution.initContent()
+      .add("Balance", "", "750.00", "750.00", "750.00", "750.00", "750.00", "750.00", "750.00")
+      .add("Main accounts", "", "1080.00", "1830.00", "2580.00", "3330.00", "4080.00", "4830.00", "5580.00")
+      .add("Savings accounts", "", "", "", "", "", "", "", "")
+      .add("To categorize", "", "", "", "", "", "", "", "")
+      .add("Income", "", "750.00", "750.00", "750.00", "750.00", "750.00", "750.00", "750.00")
+      .add("John's", "", "400.00", "400.00", "400.00", "400.00", "400.00", "400.00", "400.00")
+      .add("Mary's", "", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
+      .add("Recurring", "", "", "", "", "", "", "", "")
+      .add("Envelopes", "", "", "", "", "", "", "", "")
+      .add("Special", "", "", "", "", "", "", "", "")
+      .add("Savings", "", "", "", "", "", "", "", "")
+      .check();
+
+    seriesEvolution.editSeries("John's", "Sep 08")
+      .checkPositiveAmountsSelected()
+      .setAmount(500.00)
+      .setPropagationDisabled()
+      .validate();
+
+    seriesEvolution.initContent()
+      .add("Balance", "", "750.00", "750.00", "850.00", "750.00", "750.00", "750.00", "750.00")
+      .add("Main accounts", "", "1080.00", "1830.00", "2680.00", "3430.00", "4180.00", "4930.00", "5680.00")
+      .add("Savings accounts", "", "", "", "", "", "", "", "")
+      .add("To categorize", "", "", "", "", "", "", "", "")
+      .add("Income", "", "750.00", "750.00", "850.00", "750.00", "750.00", "750.00", "750.00")
+      .add("John's", "", "400.00", "400.00", "500.00", "400.00", "400.00", "400.00", "400.00")
+      .add("Mary's", "", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
+      .add("Recurring", "", "", "", "", "", "", "", "")
+      .add("Envelopes", "", "", "", "", "", "", "", "")
+      .add("Special", "", "", "", "", "", "", "", "")
+      .add("Savings", "", "", "", "", "", "", "", "")
+      .check();
+
+    seriesEvolution.editSeries("John's", "Sep 08")
+      .checkPositiveAmountsSelected()
+      .checkAmount("500.00")
+      .checkPeriodicity("Every month")
+      .editSeries()
+      .setTwoMonths()
+      .setEndDate(200812)
+      .validate();
+
+// On devrait n'avoir qu'un mois sur deux dans SeriesEvolution apres le validate, mais ils restent tous
+//    openApplication();
+    fail();
+//
+    seriesEvolution.initContent()
+      .dump();
+
+    seriesEvolution.editSeries("John's", "Sep 08")
+      .checkPositiveAmountsSelected()
+      .setAmount(500.00)
+      .checkPeriodicity("Every two months until dec 08")
+      .validate();
+  }
+
   public void testDeletingTheShownSeries() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "00000123", 1000.0, "2008/07/30")
@@ -248,6 +339,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .check();
 
     seriesEvolution.editSeries("John's", "Jul 08")
+      .editSeries()
       .deleteCurrentSeriesWithConfirmation();
 
     seriesEvolution.initContent()
@@ -348,9 +440,12 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     );
 
     seriesEvolution.editSeries("Groceries", "Sep 08")
-      .switchToManual()
-      .selectMonth(200809)
-      .setAmount("150")
+      .setAmount(150.00)
+      .setPropagationDisabled()
+      .validate();
+
+    seriesEvolution.editSeries("Groceries", "Sep 08")
+      .editSeries()
       .setEndDate(200810)
       .validate();
 

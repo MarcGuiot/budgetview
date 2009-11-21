@@ -14,6 +14,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -137,12 +138,12 @@ public class AccountPositionEditionPanel {
     SortedSet<Glob> globSortedSet =
       repository.getSorted(
         Transaction.TYPE, TransactionComparator.ASCENDING_BANK_SPLIT_AFTER,
-        GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)),
-                         GlobMatchers.fieldEquals(Transaction.PLANNED, false),
-                         GlobMatchers.or(
-                           (GlobMatchers.fieldStrictlyLessThan(Transaction.BANK_MONTH, TimeService.getCurrentMonth())),
-                           GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.BANK_MONTH, TimeService.getCurrentMonth()),
-                                            GlobMatchers.fieldLesserOrEqual(Transaction.DAY, TimeService.getCurrentDay())))));
+        and(fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)),
+                         isFalse(Transaction.PLANNED),
+                         or(
+                           fieldStrictlyLessThan(Transaction.BANK_MONTH, TimeService.getCurrentMonth()),
+                           and(fieldEquals(Transaction.BANK_MONTH, TimeService.getCurrentMonth()),
+                                            fieldLessOrEqual(Transaction.DAY, TimeService.getCurrentDay())))));
     if (!globSortedSet.isEmpty()) {
       return globSortedSet.last();
     }

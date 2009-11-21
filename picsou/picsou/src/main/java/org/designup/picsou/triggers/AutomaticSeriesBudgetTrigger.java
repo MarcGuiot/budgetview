@@ -5,6 +5,7 @@ import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 
 import java.util.Set;
 
@@ -34,21 +35,21 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
     GlobList seriesBudgets =
       repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
         .getGlobs().sort(SeriesBudget.MONTH);
-    Double previousAmount = 0.;
+    Double previousAmount = 0.00;
     boolean firstUpdate = false;
     for (Glob seriesBudget : seriesBudgets) {
       if (!seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
         repository.update(seriesBudget.getKey(),
-                          FieldValue.value(SeriesBudget.AMOUNT, 0.));
+                          value(SeriesBudget.AMOUNT, 0.00));
       }
       else {
         repository.update(seriesBudget.getKey(),
-                          FieldValue.value(SeriesBudget.AMOUNT, previousAmount));
+                          value(SeriesBudget.AMOUNT, previousAmount));
         Double currentAmount = previousAmount;
         if (seriesBudget.get(SeriesBudget.MONTH) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
           previousAmount = seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT);
           if (previousAmount == null) {
-            previousAmount = 0.;
+            previousAmount = 0.00;
           }
         }
         if (seriesBudget.get(SeriesBudget.MONTH).equals(currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))) {
@@ -65,7 +66,7 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
         }
         if (!firstUpdate) {
           repository.update(seriesBudget.getKey(),
-                            FieldValue.value(SeriesBudget.AMOUNT, previousAmount));
+                            value(SeriesBudget.AMOUNT, previousAmount));
           firstUpdate = true;
         }
       }

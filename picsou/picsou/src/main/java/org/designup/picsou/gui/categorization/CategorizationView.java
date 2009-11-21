@@ -463,12 +463,11 @@ public class CategorizationView extends View implements TableView, Filterable {
     }
 
     GlobMatcher matcher =
-      and(
-        filter,
-        fieldEquals(Transaction.PLANNED, false),
-        fieldEquals(Transaction.MIRROR, false),
-        fieldEquals(Transaction.CREATED_BY_SERIES, false),
-        getCurrentFilteringModeMatcher()
+      and(filter,
+          isFalse(Transaction.PLANNED),
+          isFalse(Transaction.MIRROR),
+          isFalse(Transaction.CREATED_BY_SERIES),
+          getCurrentFilteringModeMatcher()
       );
 
     transactionTable.setFilter(matcher);

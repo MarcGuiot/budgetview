@@ -39,7 +39,7 @@ public class BudgetView extends View {
     });
 
     seriesEditionDialog = new SeriesEditionDialog(repository, directory);
-    seriesAmountEditionDialog = new SeriesAmountEditionDialog(repository, directory);
+    seriesAmountEditionDialog = new SeriesAmountEditionDialog(repository, directory, seriesEditionDialog);
 
   }
 

@@ -7,6 +7,7 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
 
@@ -29,7 +30,7 @@ public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
       "          month='200807' series='100' type='seriesBudget' />");
 
     Integer[] ids =
-      repository.getAll(Transaction.TYPE, fieldEquals(Transaction.PLANNED, true))
+      repository.getAll(Transaction.TYPE, isTrue(Transaction.PLANNED))
         .sort(Transaction.MONTH)
         .getValues(Transaction.ID);
     listener.assertLastChangesEqual(

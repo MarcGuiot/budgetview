@@ -6,6 +6,7 @@ import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.expansion.*;
 import org.designup.picsou.gui.description.SeriesWrapperDescriptionStringifier;
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.series.view.*;
 import org.designup.picsou.gui.utils.Gui;
@@ -19,6 +20,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.gui.views.LabelCustomizer;
 import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
@@ -27,7 +29,7 @@ import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobStringifiers;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.utils.Utils;
+import static org.globsframework.utils.Utils.intRange;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -69,6 +71,7 @@ public class SeriesEvolutionView extends View {
                                                       repository, directory);
 
     SeriesEditionDialog seriesEditionDialog = new SeriesEditionDialog(repository, directory);
+    SeriesAmountEditionDialog seriesAmountEditionDialog = new SeriesAmountEditionDialog(repository, directory, seriesEditionDialog);
 
     ExpandableTable tableAdapter = new ExpandableTable(new SeriesWrapperMatcher()) {
       public Glob getSelectedGlob() {
@@ -97,7 +100,7 @@ public class SeriesEvolutionView extends View {
       }
     });
 
-    CustomBoldLabelCustomizer boldCustomizer = new CustomBoldLabelCustomizer(directory) {
+    LabelCustomizer boldCustomizer = new CustomBoldLabelCustomizer(directory) {
       protected boolean isBold(Glob glob) {
         return glob.get(SeriesWrapper.MASTER) == null;
       }
@@ -119,7 +122,7 @@ public class SeriesEvolutionView extends View {
 
     for (int offset = -1; offset < -1 + MONTH_COLUMNS_COUNT; offset++) {
       SeriesEvolutionMonthColumn monthColumn =
-        new SeriesEvolutionMonthColumn(offset, tableView, repository, directory, colors, seriesEditionDialog);
+        new SeriesEvolutionMonthColumn(offset, tableView, repository, directory, colors, seriesAmountEditionDialog);
       monthColumns.add(monthColumn);
       tableView.addColumn(monthColumn);
     }
@@ -128,7 +131,7 @@ public class SeriesEvolutionView extends View {
 
     table = tableView.getComponent();
 
-    Gui.installRolloverOnButtons(table, Utils.intRange(2, 10));
+    Gui.installRolloverOnButtons(table, intRange(2, 10));
     table.setDragEnabled(false);
     ToolTipManager.sharedInstance().unregisterComponent(table.getTableHeader());
 

@@ -217,7 +217,7 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
   private boolean containsTransactions(int monthToCheck) {
     return repository.contains(Transaction.TYPE,
                                and(fieldEquals(Transaction.MONTH, monthToCheck),
-                                   fieldEquals(Transaction.PLANNED, false)));
+                                   isFalse(Transaction.PLANNED)));
   }
 
   private String getMessageKey(ShiftDirection direction) {

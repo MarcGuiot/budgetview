@@ -81,10 +81,9 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .checkDiffColumn(1, "J", "2009", 300.00, 320.00, true);
     seriesEvolution.checkHistoChartLabel("Series 'John's' evolution --- planned --- actual");
 
-    seriesEvolution.editSeries("John's", "Jul 09")
-      .switchToManual()
-      .selectAllMonths()
+    seriesEvolution.editSeries("John's", "June 09")
       .setAmount(500)
+      .setPropagationEnabled()
       .validate();
     seriesEvolution.histoChart
       .checkDiffColumn(0, "J", "2009", 500.00, 300.00)

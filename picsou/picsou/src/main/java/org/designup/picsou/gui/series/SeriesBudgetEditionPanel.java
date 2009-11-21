@@ -82,7 +82,7 @@ public class SeriesBudgetEditionPanel {
 
     budgetTable = builder.addTable("seriesBudget", SeriesBudget.TYPE,
                                    new ReverseGlobFieldComparator(SeriesBudget.MONTH))
-      .setFilter(fieldEquals(SeriesBudget.ACTIVE, true))
+      .setFilter(isTrue(SeriesBudget.ACTIVE))
       .setDefaultBackgroundPainter(new TableBackgroundPainter())
       .setDefaultLabelCustomizer(new SeriesBudgetLabelCustomizer())
       .addColumn(Lang.get("seriesBudgetEdition.year"), new YearStringifier())
@@ -151,7 +151,7 @@ public class SeriesBudgetEditionPanel {
     }
 
     budgetTable.setFilter(
-      and(fieldEquals(SeriesBudget.ACTIVE, true),
+      and(isTrue(SeriesBudget.ACTIVE),
           fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID))));
 
     budgetArea = BudgetArea.get(currentSeries.get(Series.BUDGET_AREA));
@@ -201,11 +201,11 @@ public class SeriesBudgetEditionPanel {
       localRepository.getAll(SeriesBudget.TYPE,
                              and(fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID)),
                                  fieldIn(SeriesBudget.MONTH, monthIds),
-                                 fieldEquals(SeriesBudget.ACTIVE, true)));
+                                 isTrue(SeriesBudget.ACTIVE)));
     if (budgets.isEmpty()) {
       budgets = localRepository.getAll(SeriesBudget.TYPE,
                                        and(fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID)),
-                                           fieldEquals(SeriesBudget.ACTIVE, true)));
+                                           isTrue(SeriesBudget.ACTIVE)));
     }
 
     selectionService.select(budgets, SeriesBudget.TYPE);
@@ -356,13 +356,13 @@ public class SeriesBudgetEditionPanel {
         if (BudgetArea.SAVINGS.getId().equals(budgetArea)) {
           amount = Math.abs(amount);
         }
-        String str = format.format(amount);
+        String label = format.format(amount);
         if (!BudgetArea.get(budgetArea).isIncome()) {
           if (amount < 0) {
-            return str.replace("-", "+");
+            return label.replace("-", "+");
           }
         }
-        return str;
+        return label;
       }
       return "";
     }

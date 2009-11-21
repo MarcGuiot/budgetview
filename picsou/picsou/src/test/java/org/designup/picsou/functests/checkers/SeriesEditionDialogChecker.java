@@ -436,6 +436,16 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return getMonthChooser("seriesEndDateChooser");
   }
 
+  public SeriesEditionDialogChecker removeStartDate() {
+    dialog.getButton("deleteSeriesStartDate").click();
+    return this;
+  }
+
+  public SeriesEditionDialogChecker removeEndDate() {
+    dialog.getButton("deleteSeriesEndDate").click();
+    return this;
+  }
+
   private MonthChooserChecker getMonthChooser(String labelName) {
     return new MonthChooserChecker(
       WindowInterceptor.getModalDialog(dialog.getButton(labelName).triggerClick()));
@@ -461,16 +471,6 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
                               isEnabled, dialog.getButton("ok").isEnabled());
     return this;
 
-  }
-
-  public SeriesEditionDialogChecker removeStartDate() {
-    dialog.getButton("deleteSeriesStartDate").click();
-    return this;
-  }
-
-  public SeriesEditionDialogChecker removeEndDate() {
-    dialog.getButton("deleteSeriesEndDate").click();
-    return this;
   }
 
   public SeriesEditionDialogChecker checkCalendarsAreDisabled() {

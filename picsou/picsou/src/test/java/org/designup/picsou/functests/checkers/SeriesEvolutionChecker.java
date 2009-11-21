@@ -106,7 +106,7 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
     return window.getPanel(PANEL_NAME);
   }
 
-  public SeriesEditionDialogChecker editSeries(String rowLabel, String columnLabel) {
+  public SeriesAmountEditionDialogChecker editSeries(String rowLabel, String columnLabel) {
     Table table = getTable();
     int row = getRow(rowLabel.toUpperCase(), table);
     if (row == -1) {
@@ -114,7 +114,7 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
     }
     int column = table.getHeader().findColumnIndex(columnLabel);
     table.selectRow(row);
-    return SeriesEditionDialogChecker.open(table.editCell(row, column).getButton());
+    return SeriesAmountEditionDialogChecker.open(table.editCell(row, column).getButton().triggerClick());
   }
 
   public void checkTableIsEmpty(String... labels) {

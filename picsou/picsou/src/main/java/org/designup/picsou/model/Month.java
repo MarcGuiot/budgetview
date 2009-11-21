@@ -145,6 +145,10 @@ public class Month {
     return Lang.get("month." + toMonth(month) + ".long");
   }
 
+  public static String getFullMonthLabelWith4DigitYear(int monthId) {
+    return getFullMonthLabel(monthId) + " " + toYear(monthId);
+  }
+
   public static String getShortMonthLabel(Integer monthId) {
     if (monthId == null) {
       return "";
@@ -206,6 +210,10 @@ public class Month {
     return CALENDAR.getTime();
   }
 
+  public static Integer getDay(Integer day, int monthId) {
+    return getDay(day, monthId, Calendar.getInstance());
+  }
+
   public static Integer getDay(Integer day, int monthId, Calendar calendar) {
     calendar.setTime(toDate(monthId, 1));
     int lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -234,15 +242,15 @@ public class Month {
 
   public static int distance(int from, int to) {
     int distance = 0;
-    if (from <= to){
-      while (from < to){
+    if (from <= to) {
+      while (from < to) {
         from = next(from);
         distance++;
       }
       return distance;
     }
     else {
-      while (from > to){
+      while (from > to) {
         from = previous(from);
         distance--;
       }

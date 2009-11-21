@@ -1,12 +1,12 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesToCategory;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.isTrue;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +23,7 @@ public class SeriesRenameTrigger implements ChangeSetListener {
           if (values.contains(Series.NAME)) {
             GlobList globs =
               repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId).getGlobs()
-                .filterSelf(GlobMatchers.fieldEquals(Transaction.PLANNED, true), repository);
+                .filterSelf(isTrue(Transaction.PLANNED), repository);
             for (Glob transaction : globs) {
               repository.update(transaction.getKey(), Transaction.LABEL,
                                 Series.getPlannedTransactionLabel(seriesId, values));

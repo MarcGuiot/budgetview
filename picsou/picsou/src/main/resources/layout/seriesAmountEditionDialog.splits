@@ -2,7 +2,11 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(380,160)">
+  <styles>
+    <style selector=".small" font="-,plain,11"/>
+  </styles>
+
+  <panel styleClass="dialog" preferredSize="(380,220)">
 
     <column styleClass="innerDialog">
       <label text="$seriesAmountEdition.title" styleClass="title"/>
@@ -15,8 +19,19 @@
         <textField ref="amountEditor" columns="10"/>
         <filler fill="horizontal"/>
       </row>
-      <checkBox ref="propagate" text="$seriesAmountEdition.propagate"
-                marginTop="10"  marginBottom="10"/>
+      <row>
+        <filler fill="horizontal"/>
+        <checkBox ref="propagate" text="$seriesAmountEdition.propagate"
+                  marginTop="10" marginBottom="10"/>
+      </row>
+      <row styleClass="separator">
+        <row>
+          <label ref="periodicity" styleClass="small"/>
+          <filler fill="horizontal"/>
+          <button action="editSeries" styleClass="hyperlink" font="-,plain,11"/>
+        </row>
+      </row>
+
       <filler fill="vertical"/>
     </column>
 

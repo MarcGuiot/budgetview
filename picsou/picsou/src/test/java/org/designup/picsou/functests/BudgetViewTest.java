@@ -551,6 +551,88 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Internet", 0.00, -300.00);
   }
 
+  public void testAmountEditionDialogPeriodicityLabels() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(4).validate();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
+      .load();
+
+    timeline.selectMonth("2008/07");
+    views.selectCategorization();
+    categorization.setNewRecurring("Free Telecom", "Internet");
+
+    views.selectBudget();
+
+    budgetView.recurring.clickOnPlannedAmount("Internet")
+      .checkAmountLabel("Planned amount for july 2008")
+      .checkPeriodicity("Every month")
+      .validate();
+
+    budgetView.recurring.editSeries("Internet")
+      .setTwoMonths()
+      .validate();
+    budgetView.recurring.clickOnPlannedAmount("Internet")
+      .checkAmountLabel("Planned amount for july 2008")
+      .checkPeriodicity("Every two months")
+      .validate();
+
+    budgetView.recurring.editSeries("Internet")
+      .setTwoMonths()
+      .setEndDate(200810)
+      .validate();
+    budgetView.recurring.clickOnPlannedAmount("Internet")
+      .checkAmountLabel("Planned amount for july 2008")
+      .checkPeriodicity("Every two months until october 2008")
+      .validate();
+
+    budgetView.recurring.editSeries("Internet")
+      .setTwoMonths()
+      .setStartDate(200807)
+      .validate();
+    budgetView.recurring.clickOnPlannedAmount("Internet")
+      .checkAmountLabel("Planned amount for july 2008")
+      .checkPeriodicity("Every two months from july to october 2008")
+      .validate();
+
+    budgetView.recurring.editSeries("Internet")
+      .setEveryMonth()
+      .setEndDate(200807)
+      .validate();
+    budgetView.recurring.clickOnPlannedAmount("Internet")
+      .checkAmountLabel("Planned amount for july 2008")
+      .checkPeriodicity("July 2008 only")
+      .validate();
+
+    budgetView.recurring.editSeries("Internet")
+      .setIrregular()
+      .removeEndDate()
+      .validate();
+    budgetView.recurring.clickOnPlannedAmount("Internet")
+      .checkAmountLabel("Planned amount for july 2008")
+      .checkPeriodicity("Irregular from july 2008")
+      .validate();
+
+    budgetView.recurring.editSeries("Internet")
+      .setCustom()
+      .setStartDate(200801)
+      .setEndDate(200812)
+      .validate();
+    budgetView.recurring.clickOnPlannedAmount("Internet")
+      .checkPeriodicity("Custom from january to december 2008")
+      .validate();
+
+    budgetView.recurring.editSeries("Internet")
+      .setCustom()
+      .setStartDate(200801)
+      .setEndDate(200912)
+      .validate();
+    budgetView.recurring.clickOnPlannedAmount("Internet")
+      .checkPeriodicity("Custom from 2008 to 2009")
+      .validate();
+  }
+
   public void testEditingPlannedSeriesAmountsWithCancel() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
