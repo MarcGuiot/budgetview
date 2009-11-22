@@ -29,7 +29,7 @@ public class DirectAccountDataManager implements AccountDataManager {
   private String prevaylerPath;
   private boolean inMemory;
   private int countFileNotToDelete = 6;
-  private RandomAccessFile stream;
+  private RandomAccessFile streamLock;
   private FileLock lock;
   public static final String LATEST_VERSION = "T1";
 
@@ -52,15 +52,15 @@ public class DirectAccountDataManager implements AccountDataManager {
     File file = new File(prevaylerPath, "app.lock");
     file.getParentFile().mkdirs();
     try {
-      stream = new RandomAccessFile(file, "rw");
-      lock = stream.getChannel().tryLock();
+      streamLock = new RandomAccessFile(file, "rw");
+      lock = streamLock.getChannel().tryLock();
     }
     catch (IOException e) {
-      stream = null;
+      streamLock = null;
       throw new InvalidState(prevaylerPath);
     }
     if (lock == null) {
-      stream = null;
+      streamLock = null;
       throw new InvalidState("Repository already in use: " + prevaylerPath);
     }
   }
@@ -216,9 +216,12 @@ public class DirectAccountDataManager implements AccountDataManager {
     for (DurableOutputStream durableOutputStream : outputStreamMap.values()) {
       durableOutputStream.close();
     }
+    outputStreamMap.clear();
     try {
-      if (stream != null) {
-        stream.close();
+      if (streamLock != null) {
+        lock.release();
+        streamLock.close();
+        streamLock = null;
       }
     }
     catch (IOException e) {
@@ -231,14 +234,6 @@ public class DirectAccountDataManager implements AccountDataManager {
     if (durableOutputStream != null) {
       outputStreamMap.remove(userId);
       durableOutputStream.close();
-    }
-    try {
-      if (stream != null) {
-        stream.close();
-      }
-    }
-    catch (IOException e) {
-      Log.write("stream close error", e);
     }
   }
 

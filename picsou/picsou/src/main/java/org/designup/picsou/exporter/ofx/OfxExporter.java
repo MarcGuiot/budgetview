@@ -4,10 +4,7 @@ import org.designup.picsou.exporter.Exporter;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.importer.ofx.OfxImporter;
 import org.designup.picsou.importer.ofx.OfxWriter;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.BankEntity;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -56,7 +53,7 @@ public class OfxExporter implements Exporter {
       if (Account.SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID))) {
         continue;
       }
-      if (!account.isTrue(Account.IS_CARD_ACCOUNT)) {
+      if (account.get(Account.CARD_TYPE).equals(AccountCardType.NOT_A_CARD.getId())) {
         String bankEntity = account.get(Account.BANK_ENTITY_LABEL);
         if (bankEntity == null) {
           Glob bank = repository.findLinkTarget(account, Account.BANK);
@@ -82,7 +79,7 @@ public class OfxExporter implements Exporter {
       if (Account.SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID))) {
         continue;
       }
-      if (account.isTrue(Account.IS_CARD_ACCOUNT)) {
+      if (!account.get(Account.CARD_TYPE).equals(AccountCardType.NOT_A_CARD.getId())) {
         writer.writeCardMsgHeader(account.get(Account.NUMBER));
         Date date = writeTransactions(account);
         Date balanceDate = account.get(Account.POSITION_DATE);

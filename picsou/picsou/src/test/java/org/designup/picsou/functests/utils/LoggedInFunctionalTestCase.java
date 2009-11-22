@@ -248,6 +248,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected void changeUser(String user, String password) {
     if (mainWindow != null) {
       operations.deleteUser(this.password);
+      mainWindow.dispose();
     }
     this.user = user;
     this.password = password;

@@ -87,7 +87,7 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker setAsCard() {
-    getTypeCombo().select("Card");
+    getTypeCombo().select("Deferred debit card");
     return this;
   }
 
@@ -115,7 +115,7 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker checkIsCard() {
-    assertThat(getTypeCombo().selectionEquals("Card"));
+    assertThat(getTypeCombo().selectionEquals("Deferred debit card"));
     return this;
   }
 

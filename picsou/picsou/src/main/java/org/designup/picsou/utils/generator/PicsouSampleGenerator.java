@@ -132,7 +132,7 @@ public class PicsouSampleGenerator {
                                   value(Account.BANK, BANK_ID),
                                   value(Account.BRANCH_ID, BRANCH_ID),
                                   value(Account.NUMBER, accountNumber),
-                                  value(Account.IS_CARD_ACCOUNT, isCardAccount),
+                                  value(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()),
                                   value(Account.POSITION_DATE, Dates.parse(updateDate)),
                                   value(Account.POSITION, -1050.12))
       .get(Account.ID);

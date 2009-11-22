@@ -1,5 +1,6 @@
 package org.designup.picsou.gui;
 
+import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.ServerAccessDecorator;
 import org.designup.picsou.client.exceptions.BadPassword;
@@ -10,19 +11,18 @@ import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
 import org.designup.picsou.client.http.HttpsClientTransport;
 import org.designup.picsou.client.http.PasswordBasedEncryptor;
 import org.designup.picsou.client.local.LocalClientTransport;
+import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.license.LicenseCheckerThread;
 import org.designup.picsou.gui.startup.LoginPanel;
 import org.designup.picsou.gui.undo.UndoRedoService;
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.DataCheckerAction;
-import org.designup.picsou.gui.about.AboutAction;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.exceptions.InvalidState;
 
 import javax.swing.*;
@@ -33,8 +33,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Collections;
 import java.util.List;
-
-import net.roydesign.mac.MRJAdapter;
 
 public class MainWindow implements WindowManager {
   private PicsouFrame frame;
@@ -66,6 +64,11 @@ public class MainWindow implements WindowManager {
     this.dataInMemory = dataInMemory;
     this.directory = directory;
 
+    if (thread == null) {
+      thread = new ShutDownThread(serverAccess);
+      Runtime.getRuntime().addShutdownHook(thread);
+    }
+
     this.frame = new PicsouFrame(Lang.get("application"));
 
     ConfigService configService = directory.get(ConfigService.class);
@@ -79,13 +82,6 @@ public class MainWindow implements WindowManager {
     }
 
     MRJAdapter.addAboutListener(new AboutAction(directory));
-    if (thread == null){
-      thread = new ShutDownThread(serverAccess, serverDirectory);
-      Runtime.getRuntime().addShutdownHook(thread);
-    }else {
-      thread.serverAccess = serverAccess;
-      thread.serverDirectory = serverDirectory;
-    }
   }
 
   public void setPanel(JPanel panel) {
@@ -133,7 +129,6 @@ public class MainWindow implements WindowManager {
     frame.setSize(Gui.getWindowSize(1100, 800));
     GuiUtils.showCentered(frame);
     LicenseCheckerThread.launch(directory, picsouInit.getRepository());
-//    Runtime.getRuntime().addShutdownHook(new ShutDownThread(serverAccess, serverDirectory));
     synchronized (this) {
       initDone = true;
       notify();
@@ -169,12 +164,13 @@ public class MainWindow implements WindowManager {
 
   private ServerAccess.LocalInfo initServerAccess(String remoteAdress, String prevaylerPath, boolean dataInMemory) {
     if (!remoteAdress.startsWith("http")) {
+      this.serverAccess.takeSnapshot();
+      this.serverAccess.disconnect();
       if (serverDirectory != null) {
         serverDirectory.close();
       }
       serverDirectory = new ServerDirectory(prevaylerPath, dataInMemory);
-      this.serverAccess.takeSnapshot();
-      this.serverAccess.disconnect();
+      thread.serverDirectory = serverDirectory;
       ServerAccess serverAccess =
         new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
                                              directory);
@@ -198,6 +194,7 @@ public class MainWindow implements WindowManager {
       serverDirectory.close();
     }
     serverDirectory = new ServerDirectory(stream);
+    thread.serverDirectory = serverDirectory;
     ServerAccess serverAccess = new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
                                                                      directory);
 
@@ -376,11 +373,10 @@ public class MainWindow implements WindowManager {
 
   private static class ShutDownThread extends Thread {
     private ServerAccess serverAccess;
-    private ServerDirectory serverDirectory;
+    private ServerDirectory serverDirectory = null;
 
-    public ShutDownThread(ServerAccess serverAccess, ServerDirectory serverDirectory) {
+    public ShutDownThread(ServerAccess serverAccess) {
       this.serverAccess = serverAccess;
-      this.serverDirectory = serverDirectory;
     }
 
     public void run() {

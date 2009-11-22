@@ -2,6 +2,7 @@ package org.crossbowlabs.rooms.web.pages;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.security.WaspSession;
 import org.apache.wicket.security.components.SecureWebPage;
 import org.crossbowlabs.rooms.web.RoomSession;

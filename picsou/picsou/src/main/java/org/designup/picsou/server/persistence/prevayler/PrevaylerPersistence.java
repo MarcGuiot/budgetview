@@ -73,6 +73,8 @@ public class PrevaylerPersistence implements Persistence {
   public void close() {
     rootDataManager.close();
     accountDataManager.close();
+    accountDataManager = null;
+    rootDataManager = null;
   }
 
   public void close(Integer userId) {

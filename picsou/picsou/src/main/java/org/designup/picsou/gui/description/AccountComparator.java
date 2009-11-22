@@ -28,14 +28,16 @@ public class AccountComparator implements Comparator<Glob> {
     if (SUMMARY_ACCOUNT_IDS.contains(account2.get(ID))) {
       return 1;
     }
-    if ((account1.isTrue(IS_CARD_ACCOUNT))
-        && (!account2.isTrue(IS_CARD_ACCOUNT))) {
+    if ((account1.get(CARD_TYPE) != null) && (account2.get(CARD_TYPE) == null)) {
       return 1;
     }
-    if ((!account1.isTrue(IS_CARD_ACCOUNT))
-        && (account2.isTrue(IS_CARD_ACCOUNT))) {
+    if ((account1.get(CARD_TYPE) == null) && (account2.get(CARD_TYPE) != null)) {
       return -1;
     }
-    return Utils.compareIgnoreCase(account1.get(NAME), account2.get(NAME));
+    int compare = Utils.compareIgnoreCase(account1.get(NAME), account2.get(NAME));
+    if (compare == 0){
+      return account2.get(ID) - account1.get(ID);
+    }
+    return compare;
   }
 }

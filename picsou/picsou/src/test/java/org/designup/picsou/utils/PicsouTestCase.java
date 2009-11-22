@@ -27,6 +27,7 @@ public abstract class PicsouTestCase extends ServicesTestCase {
         .add(TransactionType.values())
         .add(BudgetArea.values())
         .add(ProfileType.values())
+        .add(AccountCardType.values())
         .get();
 
     Account.createSummary(repository);

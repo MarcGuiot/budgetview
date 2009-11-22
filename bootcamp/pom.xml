@@ -8,18 +8,18 @@
   <url>http://www.design-up.com</url>
 
   <repositories>
-    <repository>
-      <id>more complete???</id>
-      <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
-    </repository>
-    <repository>
-      <id>jgoodies, prevayler</id>
-      <url>http://startupxp.dynalias.org/maven2/</url>
-    </repository>
-    <repository>
-      <id>un autre pour jta</id>
-      <url>http://download.java.net/maven/2/</url>
-    </repository>
+    <!--<repository>-->
+      <!--<id>more complete???</id>-->
+      <!--<url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>-->
+    <!--</repository>-->
+    <!--<repository>-->
+      <!--<id>jgoodies, prevayler</id>-->
+      <!--<url>http://startupxp.dynalias.org/maven2/</url>-->
+    <!--</repository>-->
+    <!--<repository>-->
+      <!--<id>un autre pour jta</id>-->
+      <!--<url>http://download.java.net/maven/2/</url>-->
+    <!--</repository>-->
     <repository>
       <id>wicket</id>
       <url>http://wicketstuff.org/maven/repository</url>

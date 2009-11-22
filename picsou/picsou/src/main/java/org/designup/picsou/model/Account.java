@@ -61,8 +61,9 @@ public class Account {
 
   public static DateField CLOSED_DATE;
 
-  @DefaultBoolean(false)
-  public static BooleanField IS_CARD_ACCOUNT;
+  @Target(AccountCardType.class)
+  @DefaultInteger(0)
+  public static LinkField CARD_TYPE;
 
   @Target(AccountType.class)
   @DefaultInteger(1)
@@ -199,7 +200,7 @@ public class Account {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 7;
+      return 8;
     }
 
     public byte[] serializeData(FieldValues values) {
@@ -212,7 +213,6 @@ public class Account {
       outputStream.writeDouble(values.get(POSITION));
       outputStream.writeInteger(values.get(TRANSACTION_ID));
       outputStream.writeDate(values.get(POSITION_DATE));
-      outputStream.writeBoolean(values.get(IS_CARD_ACCOUNT));
       outputStream.writeInteger(values.get(ACCOUNT_TYPE));
       outputStream.writeInteger(values.get(UPDATE_MODE));
       outputStream.writeBoolean(values.get(IS_IMPORTED_ACCOUNT));
@@ -221,11 +221,15 @@ public class Account {
       outputStream.writeDouble(values.get(FIRST_POSITION));
       outputStream.writeInteger(values.get(BANK));
       outputStream.writeUtf8String(values.get(BANK_ENTITY_LABEL));
+      outputStream.writeInteger(values.get(CARD_TYPE));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 7) {
+      if (version == 8) {
+        deserializeDataV8(fieldSetter, data);
+      }
+      else if (version == 7) {
         deserializeDataV7(fieldSetter, data);
       }
       else if (version == 6) {
@@ -248,6 +252,26 @@ public class Account {
       }
     }
 
+    private void deserializeDataV8(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(NUMBER, input.readUtf8String());
+      fieldSetter.set(BANK_ENTITY, input.readInteger());
+      fieldSetter.set(BRANCH_ID, input.readInteger());
+      fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(POSITION, input.readDouble());
+      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(POSITION_DATE, input.readDate());
+      fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
+      fieldSetter.set(UPDATE_MODE, input.readInteger());
+      fieldSetter.set(IS_IMPORTED_ACCOUNT, input.readBoolean());
+      fieldSetter.set(CLOSED_DATE, input.readDate());
+      fieldSetter.set(OPEN_DATE, input.readDate());
+      fieldSetter.set(FIRST_POSITION, input.readDouble());
+      fieldSetter.set(BANK, input.readInteger());
+      fieldSetter.set(BANK_ENTITY_LABEL, input.readUtf8String());
+      fieldSetter.set(CARD_TYPE, input.readInteger());
+    }
+
     private void deserializeDataV7(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(NUMBER, input.readUtf8String());
@@ -257,7 +281,7 @@ public class Account {
       fieldSetter.set(POSITION, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
-      fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
+      readAndUpdateCardType(fieldSetter, input);
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
       fieldSetter.set(UPDATE_MODE, input.readInteger());
       fieldSetter.set(IS_IMPORTED_ACCOUNT, input.readBoolean());
@@ -266,6 +290,14 @@ public class Account {
       fieldSetter.set(FIRST_POSITION, input.readDouble());
       fieldSetter.set(BANK, input.readInteger());
       fieldSetter.set(BANK_ENTITY_LABEL, input.readUtf8String());
+    }
+
+    private void readAndUpdateCardType(FieldSetter fieldSetter, SerializedInput input) {
+      Boolean isCard = input.readBoolean();
+      isCard = isCard == null ? false : isCard;
+      fieldSetter.set(CARD_TYPE, isCard ?
+                                 AccountCardType.DEFERRED.getId()
+                                 : AccountCardType.NOT_A_CARD.getId());
     }
 
     private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {
@@ -277,7 +309,7 @@ public class Account {
       fieldSetter.set(POSITION, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
-      fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
+      readAndUpdateCardType(fieldSetter, input);
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
       fieldSetter.set(UPDATE_MODE, input.readInteger());
       fieldSetter.set(IS_IMPORTED_ACCOUNT, input.readBoolean());
@@ -296,7 +328,7 @@ public class Account {
       fieldSetter.set(POSITION, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
-      fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
+      readAndUpdateCardType(fieldSetter, input);
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
       fieldSetter.set(UPDATE_MODE, input.readInteger());
       fieldSetter.set(IS_IMPORTED_ACCOUNT, input.readBoolean());
@@ -312,7 +344,7 @@ public class Account {
       fieldSetter.set(POSITION, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
-      fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
+      readAndUpdateCardType(fieldSetter, input);
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
       fieldSetter.set(UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());
       fieldSetter.set(IS_IMPORTED_ACCOUNT, input.readBoolean());
@@ -328,7 +360,7 @@ public class Account {
       fieldSetter.set(POSITION, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
-      fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
+      readAndUpdateCardType(fieldSetter, input);
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
       fieldSetter.set(UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());
       fieldSetter.set(IS_IMPORTED_ACCOUNT, input.readBoolean());
@@ -343,7 +375,7 @@ public class Account {
       fieldSetter.set(POSITION, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
-      fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
+      readAndUpdateCardType(fieldSetter, input);
       fieldSetter.set(ACCOUNT_TYPE, AccountType.MAIN.getId());
       fieldSetter.set(UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());
       fieldSetter.set(IS_IMPORTED_ACCOUNT, true);
@@ -358,7 +390,7 @@ public class Account {
       fieldSetter.set(POSITION, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
-      fieldSetter.set(IS_CARD_ACCOUNT, input.readBoolean());
+      readAndUpdateCardType(fieldSetter, input);
       fieldSetter.set(ACCOUNT_TYPE, AccountType.MAIN.getId());
       fieldSetter.set(UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());
       fieldSetter.set(IS_IMPORTED_ACCOUNT, true);

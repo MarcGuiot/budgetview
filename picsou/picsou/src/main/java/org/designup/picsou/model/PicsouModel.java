@@ -11,6 +11,7 @@ public class PicsouModel {
   private static GlobModel MODEL =
     GlobModelBuilder.init(Account.TYPE,
                           AccountType.TYPE,
+                          AccountCardType.TYPE,
                           AccountUpdateMode.TYPE,
                           Bank.TYPE,
                           BankEntity.TYPE,

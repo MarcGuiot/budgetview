@@ -84,7 +84,7 @@ public class OfxBuilder {
                         value(Account.NUMBER, cardId),
                         value(Account.POSITION, position),
                         value(Account.POSITION_DATE, updateDate != null ? Dates.parse(updateDate) : null),
-                        value(Account.IS_CARD_ACCOUNT, true));
+                        value(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()));
     return this;
   }
 

@@ -140,6 +140,9 @@ public class PRootDataManager implements RootDataManager {
   }
 
   public void close() {
+    if (prevayler == null){
+      return;
+    }
     try {
       prevayler.takeSnapshot();
       PrevaylerDirectory directory = new PrevaylerDirectory(pathToPrevaylerDirectory);
@@ -150,6 +153,7 @@ public class PRootDataManager implements RootDataManager {
     }
     try {
       prevayler.close();
+      prevayler = null;
     }
     catch (IOException e) {
       e.printStackTrace();

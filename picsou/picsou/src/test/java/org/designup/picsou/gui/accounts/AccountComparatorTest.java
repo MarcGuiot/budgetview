@@ -2,6 +2,7 @@ package org.designup.picsou.gui.accounts;
 
 import junit.framework.TestCase;
 import static org.designup.picsou.model.Account.*;
+import org.designup.picsou.model.AccountCardType;
 import org.designup.picsou.gui.description.AccountComparator;
 import org.globsframework.model.*;
 import org.globsframework.model.impl.DefaultGlobRepository;
@@ -36,7 +37,7 @@ public class AccountComparatorTest extends TestCase {
     Glob account = globRepository.create(Key.create(TYPE, serverId),
                                          FieldValue.value(NUMBER, id),
                                          FieldValue.value(NAME, name),
-                                         FieldValue.value(IS_CARD_ACCOUNT, isCreditCard));
+                                         FieldValue.value(CARD_TYPE, isCreditCard == null ? null : (isCreditCard ? AccountCardType.DEFERRED.getId() : null)));
     accounts.add(account);
     return account;
   }

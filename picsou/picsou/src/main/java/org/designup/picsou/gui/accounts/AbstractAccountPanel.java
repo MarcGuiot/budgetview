@@ -1,9 +1,6 @@
 package org.designup.picsou.gui.accounts;
 
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.AccountType;
-import org.designup.picsou.model.Bank;
-import org.designup.picsou.model.BankEntity;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -16,6 +13,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -165,31 +163,43 @@ public class AbstractAccountPanel<T extends GlobRepository>  {
       new AccountTypeSelector("account.type.main") {
         protected void apply() {
           repository.update(currentAccount.getKey(), Account.ACCOUNT_TYPE, AccountType.MAIN.getId());
-          repository.update(currentAccount.getKey(), Account.IS_CARD_ACCOUNT, false);
+          repository.update(currentAccount.getKey(), Account.CARD_TYPE, null);
         }
 
         protected boolean isApplied(Glob account) {
           return AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE)) &&
-                 !account.isTrue(Account.IS_CARD_ACCOUNT);
+                 account.get(Account.CARD_TYPE) == null;
         }
       },
 
-      new AccountTypeSelector("account.type.card") {
+      new AccountTypeSelector("account.type.card.credit") {
         protected void apply() {
           repository.update(currentAccount.getKey(), Account.ACCOUNT_TYPE, AccountType.MAIN.getId());
-          repository.update(currentAccount.getKey(), Account.IS_CARD_ACCOUNT, true);
+          repository.update(currentAccount.getKey(), Account.CARD_TYPE, AccountCardType.CREDIT.getId());
         }
 
         protected boolean isApplied(Glob account) {
           return AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE)) &&
-                 account.isTrue(Account.IS_CARD_ACCOUNT);
+                 Utils.equal(account.get(Account.CARD_TYPE), AccountCardType.CREDIT.getId());
         }
       },
+      new AccountTypeSelector("account.type.card.deferred") {
+        protected void apply() {
+          repository.update(currentAccount.getKey(), Account.ACCOUNT_TYPE, AccountType.MAIN.getId());
+          repository.update(currentAccount.getKey(), Account.CARD_TYPE, AccountCardType.DEFERRED.getId());
+        }
+
+        protected boolean isApplied(Glob account) {
+          return AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE)) &&
+                 Utils.equal(account.get(Account.CARD_TYPE), AccountCardType.DEFERRED.getId());
+        }
+      }
+      ,
 
       new AccountTypeSelector("account.type.savings") {
         protected void apply() {
           repository.update(currentAccount.getKey(), Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId());
-          repository.update(currentAccount.getKey(), Account.IS_CARD_ACCOUNT, false);
+          repository.update(currentAccount.getKey(), Account.CARD_TYPE, null);
         }
 
         protected boolean isApplied(Glob account) {
