@@ -30,7 +30,6 @@ public class LicenseTest extends LicenseTestCase {
   private static final String MAIL = "alfred@free.fr";
   private static final String SECOND_PATH = "tmp/otherprevayler";
 
-
   protected void setUp() throws Exception {
     super.setUp();
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
@@ -143,7 +142,7 @@ public class LicenseTest extends LicenseTestCase {
     window.dispose();
   }
 
-  public void testRegisterAndReRegisterWithBadMail() throws Exception {
+  public void testRegisterAndReRegisterWithBadEmail() throws Exception {
     DbChecker dbChecker = new DbChecker();
     String mail = "alfred@free.fr";
     dbChecker.registerMail(mail, "1234");
@@ -198,8 +197,7 @@ public class LicenseTest extends LicenseTestCase {
     checkValidLicense(false);
   }
 
-
-  public void testUnknownMail() throws Exception {
+  public void testUnknownEmailAddress() throws Exception {
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
     LicenseActivationChecker activationChecker = LicenseActivationChecker.open(window);

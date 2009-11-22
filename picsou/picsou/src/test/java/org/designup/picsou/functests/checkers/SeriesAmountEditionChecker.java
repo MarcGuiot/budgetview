@@ -5,6 +5,7 @@ import junit.framework.AssertionFailedError;
 import org.uispec4j.ItemNotFoundException;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
+import org.uispec4j.CheckBox;
 import static org.uispec4j.assertion.UISpecAssert.*;
 
 import javax.swing.*;
@@ -85,6 +86,21 @@ public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> ex
   public T checkAmountsRadioAreNotVisible() {
     assertFalse(dialog.getRadioButton("negativeAmounts").isVisible());
     assertFalse(dialog.getRadioButton("positiveAmounts").isVisible());
+    return (T)this;
+  }
+
+  public T checkAlignPlannedAndActualEnabled() {
+    assertTrue(dialog.getButton("alignValue").isEnabled());
+    return (T)this;
+  }
+
+  public T checkAlignPlannedAndActualDisabled() {
+    assertFalse(dialog.getButton("alignValue").isEnabled());
+    return (T)this;
+  }
+
+  public T alignPlannedAndActual() {
+    dialog.getButton("alignValue").click();
     return (T)this;
   }
 }

@@ -2,6 +2,7 @@ package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.series.utils.SeriesAmountLabelStringifier;
+import org.designup.picsou.gui.series.edition.AlignSeriesBudgetAmountsAction;
 import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
@@ -77,6 +78,8 @@ public class SeriesBudgetEditionPanel {
     builder.add("amountEditor", amountEditor.getNumericEditor());
     builder.add("positiveAmounts", amountEditor.getPositiveRadio());
     builder.add("negativeAmounts", amountEditor.getNegativeRadio());
+
+    builder.add("alignValue", new AlignSeriesBudgetAmountsAction(localRepository, directory));
 
     builder.addLabel("seriesBudgetEditionAmountLabel", SeriesBudget.TYPE, new SeriesAmountLabelStringifier());
 

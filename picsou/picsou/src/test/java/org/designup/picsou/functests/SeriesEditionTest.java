@@ -325,7 +325,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.recurring.editSeriesList()
-      .unselect()
+      .unselectSeries()
       .checkAllMonthsDisabled()
       .checkCalendarsAreDisabled()
       .cancel();
@@ -470,7 +470,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
 
     budgetView.envelopes.createSeries()
-      .unselect()
+      .unselectSeries()
       .checkCalendarsAreDisabled()
       .cancel();
   }
@@ -1188,6 +1188,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2008/06/29", -100.00, "Virement")
       .load();
+
     views.selectCategorization();
     categorization.selectTableRow(0);
     categorization.selectSavings()
@@ -1197,6 +1198,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setIrregular()
       .setEndDate(200807)
       .validate();
+
     operations.openPreferences().setFutureMonthsCount(2).validate();
     categorization.selectSavings().editSeries("epargne")
       .setEndDate(200810)
@@ -1414,5 +1416,52 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setEndDate(200812)
       .removeStartDate()
       .validate();
+  }
+
+  public void testAlignPlannedAndObservedAmounts() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
+      .load();
+
+    timeline.selectMonth("2008/07");
+    views.selectCategorization();
+    categorization.checkTable(new Object[][]{
+      {"29/07/2008", "", "Free Telecom", -29.00}
+    });
+    categorization.setNewRecurring("Free Telecom", "Internet");
+
+    views.selectBudget();
+    budgetView.recurring.editSeries("Internet")
+      .switchToManual()
+      .checkTable(new Object[][]{
+        {"2008", "August", "0.00", "29.00"},
+        {"2008", "July", "29.00", "29.00"},
+      })
+      .checkMonthSelected(1)
+      .selectAllMonths()
+      .setAmount(50.00)
+      .validate();
+    budgetView.recurring.checkSeries("Internet", -29.00, -50.00);
+
+    budgetView.recurring.editSeries("Internet")
+      .checkAmount("50.00")
+      .checkAlignPlannedAndActualEnabled()
+      .alignPlannedAndActual()
+      .checkAmount("29.00")
+      .validate();
+    budgetView.recurring.checkSeries("Internet", -29.00, -29.00);
+
+    budgetView.recurring.editSeries("Internet")
+      .checkAmount("29.00")
+      .selectNoMonth()
+      .checkAlignPlannedAndActualDisabled()
+      .selectAllMonths()
+      .alignPlannedAndActual()
+      .checkAmount("")
+      .validate();
+    timeline.selectMonth("2008/07");
+    budgetView.recurring.checkSeries("Internet", -29.00, -29.00);
+    timeline.selectMonth("2008/08");
+    budgetView.recurring.checkSeries("Internet", 0.00, 0.00);
   }
 }

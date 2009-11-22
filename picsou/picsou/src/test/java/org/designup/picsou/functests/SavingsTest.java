@@ -1348,7 +1348,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .checkSavingsSeriesIsSelected("Epargne");
   }
 
-  public void testCanNotChoiceTheSameAccount() throws Exception {
+  public void testCanNotChooseTheSameAccount() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
       .addTransaction("2008/06/06", -100.00, "Virement Epargne")
