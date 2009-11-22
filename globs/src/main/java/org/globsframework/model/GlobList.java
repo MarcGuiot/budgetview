@@ -76,6 +76,26 @@ public class GlobList extends ArrayList<Glob> {
     return result;
   }
 
+  public GlobList getExistingGlobs(GlobRepository repository) {
+    GlobList result = new GlobList();
+    for (Iterator<Glob> iter = iterator(); iter.hasNext();) {
+      Glob glob = iter.next();
+      if (repository.contains(glob.getKey())) {
+        result.add(glob);
+      }
+    }
+    return result;
+  }
+
+  public void keepExistingGlobsOnly(GlobRepository repository) {
+    for (Iterator<Glob> iter = iterator(); iter.hasNext();) {
+      Glob glob = iter.next();
+      if (!repository.contains(glob.getKey())) {
+        iter.remove();
+      }
+    }
+  }
+
   public void removeAll(GlobMatcher matcher, GlobRepository repository) {
     for (Iterator<Glob> iter = iterator(); iter.hasNext();) {
       Glob glob = iter.next();

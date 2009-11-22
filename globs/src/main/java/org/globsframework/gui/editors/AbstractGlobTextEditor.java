@@ -112,10 +112,10 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     }
     isInitialized = true;
     initTextComponent();
+    repository.addChangeListener(this);
     if (forcedSelection != null) {
       GlobList elements = getForceSelectedGlob();
-      selectionUpdated(GlobSelectionBuilder.init()
-        .add(elements, type).get());
+      selectionUpdated(GlobSelectionBuilder.init().add(elements, type).get());
     }
     else {
       SelectionService service = directory.get(SelectionService.class);
@@ -140,7 +140,6 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
       SelectionService service = directory.get(SelectionService.class);
       service.removeListener(this);
     }
-    repository.addChangeListener(this);
     this.forcedSelection = new ArrayList<Key>();
     forcedSelection.add(key);
     if (isInitialized) {
@@ -162,6 +161,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
       return;
     }
     try {
+      isAdjusting = true;
       repository.startChangeSet();
       for (Glob glob : currentGlobs) {
         repository.update(glob.getKey(), AbstractGlobTextEditor.this.field, value);
@@ -169,6 +169,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     }
     finally {
       repository.completeChangeSet();
+      isAdjusting = false;
     }
   }
 
@@ -222,9 +223,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
 
   public void dispose() {
     selectionService.removeListener(this);
-    if (forcedSelection == null) {
-      repository.removeChangeListener(this);
-    }
+    repository.removeChangeListener(this);
     for (FocusListener listener : textComponent.getFocusListeners()) {
       textComponent.removeFocusListener(listener);
     }
@@ -234,19 +233,29 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     return isAdjusting;
   }
 
-  public void setAdjusting(boolean adjusting) {
+  protected void setAdjusting(boolean adjusting) {
     this.isAdjusting = adjusting;
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (forcedSelection == null){
+    if (isAdjusting) {
       return;
     }
-    if (!changeSet.containsCreationsOrDeletions(type)) {
+    if ((forcedSelection == null) && currentGlobs.isEmpty()) {
       return;
     }
-    GlobList elements = getForceSelectedGlob();
-    selectionUpdated(GlobSelectionBuilder.init().add(elements, type).get());
+    if (!changeSet.containsCreationsOrDeletions(type) &&
+        !changeSet.containsUpdates(field)) {
+      return;
+    }
+    if (forcedSelection != null) {
+      GlobList elements = getForceSelectedGlob();
+      selectionUpdated(GlobSelectionBuilder.init().add(elements, type).get());
+    }
+    else {
+      currentGlobs.keepExistingGlobsOnly(this.repository);
+      selectionUpdated(GlobSelectionBuilder.init().add(currentGlobs, type).get());
+    }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
