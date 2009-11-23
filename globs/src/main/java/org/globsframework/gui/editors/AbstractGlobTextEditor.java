@@ -263,5 +263,16 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
       GlobList elements = getForceSelectedGlob();
       selectionUpdated(GlobSelectionBuilder.init().add(elements, type).get());
     }
+    else {
+      GlobList newCurrentsGlob = new GlobList();
+      for (Glob glob : currentGlobs) {
+        Glob newGlob = repository.find(glob.getKey());
+        if (newGlob != null) {
+          newCurrentsGlob.add(newGlob);
+        }
+      }
+      currentGlobs = newCurrentsGlob;
+      selectionUpdated(GlobSelectionBuilder.init().add(currentGlobs, type).get());
+    }
   }
 }

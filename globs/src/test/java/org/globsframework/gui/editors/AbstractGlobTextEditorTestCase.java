@@ -9,6 +9,8 @@ import org.globsframework.model.FieldValue;
 import org.globsframework.model.GlobList;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.model.utils.LocalGlobRepository;
 import org.uispec4j.Key;
 import org.uispec4j.TextBox;
 
@@ -189,6 +191,19 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
     repository.delete(glob1.getKey());
     assertThat(textBox.textEquals(""));
     assertFalse(textBox.isEnabled());
+  }
+  
+  public void testRoolbackOfLocalRepository() throws Exception {
+    LocalGlobRepository localGlobRepository = LocalGlobRepositoryBuilder.init(repository).copy(DummyObject.TYPE).get();
+    repository = localGlobRepository;
+    TextBox textBox = init(DummyObject.NAME, "...", true, true);
+    glob1 = localGlobRepository.get(glob1.getKey());
+    selectionService.select(GlobSelectionBuilder.init().add(glob1).get());
+
+    textBox.setText("BBB");
+    assertEquals("BBB", glob1.get(DummyObject.NAME));
+    localGlobRepository.rollback();
+    assertThat(textBox.textEquals("name1"));
   }
 
   protected abstract TextBox init(StringField field, String defaultValueForMultivalue, boolean isEditable, boolean sendAtKeyPressed);
