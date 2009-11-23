@@ -4,6 +4,7 @@ import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.SeriesPeriodicityAndScopeStringifier;
 import org.designup.picsou.gui.series.utils.SeriesAmountLabelStringifier;
+import org.designup.picsou.gui.series.edition.AlignSeriesBudgetAmountsAction;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.utils.Lang;
@@ -67,6 +68,8 @@ public class SeriesAmountEditionDialog {
 
     propagationCheckBox = new JCheckBox();
     builder.add("propagate", propagationCheckBox);
+
+    builder.add("alignValue", new AlignSeriesBudgetAmountsAction(localRepository, directory));
 
     builder.addLabel("periodicity", Series.TYPE, new SeriesPeriodicityAndScopeStringifier());
 

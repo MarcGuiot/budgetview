@@ -196,7 +196,7 @@ public class BudgetViewChecker extends GuiChecker {
       return openSeriesEditionDialog(seriesName);
     }
 
-    public SeriesAmountEditionDialogChecker clickOnPlannedAmount(String seriesName) {
+    public SeriesAmountEditionDialogChecker editPlannedAmount(String seriesName) {
       Button nameButton = getPanel().getButton(seriesName);
 
       JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
