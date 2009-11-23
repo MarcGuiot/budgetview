@@ -188,7 +188,7 @@ public class SavingsBudgetStatTrigger implements ChangeSetListener {
           for (Integer accountId : seriesToAccounts.getValue()) {
             Boolean isSavings = isSavingsSeriesAndAccount.get(seriesToAccounts.getKey(), accountId);
             SavingsData data = getOrCreateStat(month.get(Month.ID), accountId);
-            if (seriesBudget != null) {
+            if (seriesBudget != null && seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
               if (isSavings) {
                 data.savingsPlanned += Math.abs(seriesBudget.get(SeriesBudget.AMOUNT));
               }

@@ -33,35 +33,6 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
         repository.delete(seriesToBudget);
       }
     });
-
-    changeSet.safeVisit(SeriesBudget.TYPE, new ChangeSetVisitor() {
-      Set<Key> updatedSeries = new HashSet<Key>();
-
-      public void visitCreation(Key key, FieldValues values) throws Exception {
-      }
-
-      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(SeriesBudget.ACTIVE)) {
-          if (!values.isTrue(SeriesBudget.ACTIVE)) {
-            repository.update(key, SeriesBudget.AMOUNT, 0.0);
-          }
-        }
-        Glob seriesBudget = repository.get(key);
-        Glob series = repository.findLinkTarget(seriesBudget, SeriesBudget.SERIES);
-        if (series == null) {
-          return;
-        }
-        if (series.isTrue(Series.IS_AUTOMATIC) && !series.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
-          if (!updatedSeries.contains(series.getKey())) {
-            AutomaticSeriesBudgetTrigger.updateSeriesBudget(series.getKey(), repository);
-            updatedSeries.add(series.getKey());
-          }
-        }
-      }
-
-      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-      }
-    });
   }
 
 

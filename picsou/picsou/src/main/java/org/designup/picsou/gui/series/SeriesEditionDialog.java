@@ -246,6 +246,7 @@ public class SeriesEditionDialog {
     repository.addTrigger(new ProfileTypeSeriesTrigger(userMonth));
     repository.addTrigger(new AutomaticSeriesBudgetTrigger());
     repository.addTrigger(new SeriesBudgetTrigger(parentRepository));
+//    repository.addTrigger(new SeriesBudgetAmountTrigger());
   }
 
   private void updateMonthChooser() {
