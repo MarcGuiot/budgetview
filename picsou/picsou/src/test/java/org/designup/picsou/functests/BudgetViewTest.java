@@ -490,7 +490,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     // First update with propagation + switching to manual mode
     views.selectBudget();
-    budgetView.recurring.clickOnPlannedAmount("Internet")
+    budgetView.recurring.editPlannedAmount("Internet")
       .checkAmountLabel("Planned amount for july 2008")
       .checkNegativeAmountsSelected()
       .checkAmount("29.00")
@@ -509,7 +509,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     // Propagation disabled
     timeline.selectMonth("2008/07");
-    budgetView.recurring.clickOnPlannedAmount("Internet")
+    budgetView.recurring.editPlannedAmount("Internet")
       .checkAmount("100.00")
       .checkAmountIsSelected()
       .checkPropagationEnabled()
@@ -521,7 +521,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     // Multi-selection without propagation
     timeline.selectMonths("2008/07", "2008/09");
-    budgetView.recurring.clickOnPlannedAmount("Internet")
+    budgetView.recurring.editPlannedAmount("Internet")
       .checkAmountIsEmpty()
       .checkPropagationEnabled()
       .setPropagationDisabled()
@@ -537,7 +537,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     // Multi-selection without propagation
     timeline.selectMonths("2008/07", "2008/09");
-    budgetView.recurring.clickOnPlannedAmount("Internet")
+    budgetView.recurring.editPlannedAmount("Internet")
       .checkAmount("200.00")
       .checkPropagationEnabled()
       .setAmountAndValidate("300");
@@ -565,7 +565,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
 
-    budgetView.recurring.clickOnPlannedAmount("Internet")
+    budgetView.recurring.editPlannedAmount("Internet")
       .checkAmountLabel("Planned amount for july 2008")
       .checkPeriodicity("Every month")
       .validate();
@@ -573,7 +573,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.editSeries("Internet")
       .setTwoMonths()
       .validate();
-    budgetView.recurring.clickOnPlannedAmount("Internet")
+    budgetView.recurring.editPlannedAmount("Internet")
       .checkAmountLabel("Planned amount for july 2008")
       .checkPeriodicity("Every two months")
       .validate();
@@ -582,7 +582,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setTwoMonths()
       .setEndDate(200810)
       .validate();
-    budgetView.recurring.clickOnPlannedAmount("Internet")
+    budgetView.recurring.editPlannedAmount("Internet")
       .checkAmountLabel("Planned amount for july 2008")
       .checkPeriodicity("Every two months until october 2008")
       .validate();
@@ -591,7 +591,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setTwoMonths()
       .setStartDate(200807)
       .validate();
-    budgetView.recurring.clickOnPlannedAmount("Internet")
+    budgetView.recurring.editPlannedAmount("Internet")
       .checkAmountLabel("Planned amount for july 2008")
       .checkPeriodicity("Every two months from july to october 2008")
       .validate();
@@ -600,7 +600,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setEveryMonth()
       .setEndDate(200807)
       .validate();
-    budgetView.recurring.clickOnPlannedAmount("Internet")
+    budgetView.recurring.editPlannedAmount("Internet")
       .checkAmountLabel("Planned amount for july 2008")
       .checkPeriodicity("July 2008 only")
       .validate();
@@ -609,7 +609,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setIrregular()
       .removeEndDate()
       .validate();
-    budgetView.recurring.clickOnPlannedAmount("Internet")
+    budgetView.recurring.editPlannedAmount("Internet")
       .checkAmountLabel("Planned amount for july 2008")
       .checkPeriodicity("Irregular from july 2008")
       .validate();
@@ -619,7 +619,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setStartDate(200801)
       .setEndDate(200812)
       .validate();
-    budgetView.recurring.clickOnPlannedAmount("Internet")
+    budgetView.recurring.editPlannedAmount("Internet")
       .checkPeriodicity("Custom from january to december 2008")
       .validate();
 
@@ -628,7 +628,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setStartDate(200801)
       .setEndDate(200912)
       .validate();
-    budgetView.recurring.clickOnPlannedAmount("Internet")
+    budgetView.recurring.editPlannedAmount("Internet")
       .checkPeriodicity("Custom from 2008 to 2009")
       .validate();
   }
@@ -643,7 +643,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("Free Telecom", "Internet");
 
     views.selectBudget();
-    budgetView.recurring.clickOnPlannedAmount("Internet")
+    budgetView.recurring.editPlannedAmount("Internet")
       .checkAmountLabel("Planned amount for july 2008")
       .checkAmount("29.00")
       .checkAmountIsSelected()
@@ -657,17 +657,63 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .checkAutomaticModeSelected()
       .cancel();
 
-    budgetView.recurring.clickOnPlannedAmount("Internet")
+    budgetView.recurring.editPlannedAmount("Internet")
       .checkAmount("29.00")
       .setAmount("100")
       .validate();
     budgetView.recurring.checkSeries("Internet", -29.00, -100.00);
 
-    budgetView.recurring.clickOnPlannedAmount("Internet")
+    budgetView.recurring.editPlannedAmount("Internet")
       .checkAmount("100.00")
       .setAmount("200")
       .cancel();
     budgetView.recurring.checkSeries("Internet", -29.00, -100.00);
+  }
+
+  public void testAligningThePlannedSeriesAmountOnTheActualAmount() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
+      .load();
+
+    timeline.selectMonth("2008/07");
+    views.selectCategorization();
+    categorization.setNewRecurring("Free Telecom", "Internet");
+
+    // First update with propagation + switching to manual mode
+    views.selectBudget();
+    budgetView.recurring.editPlannedAmount("Internet")
+      .checkAmountLabel("Planned amount for july 2008")
+      .setAmount("100")
+      .checkPropagationEnabled()
+      .validate();
+    budgetView.recurring.checkSeries("Internet", -29.00, -100.00);
+    timeline.selectMonth("2008/08");
+    budgetView.recurring.checkSeries("Internet", 0.00, -100.00);
+
+    timeline.selectMonth("2008/07");
+    budgetView.recurring.editPlannedAmount("Internet")
+      .checkNegativeAmountsSelected()
+      .checkAmount("100.00")
+      .alignPlannedAndActual()
+      .checkNegativeAmountsSelected()
+      .checkAmount("29.00")
+      .validate();
+    budgetView.recurring.checkSeries("Internet", -29.00, -29.00);
+    timeline.selectMonth("2008/08");
+    budgetView.recurring.checkSeries("Internet", 0.00, -29.00);
+
+    timeline.selectMonths("2008/07", "2008/08");
+    budgetView.recurring.editPlannedAmount("Internet")
+      .checkAmount("29.00")
+      .alignPlannedAndActual()
+      .validate();
+    timeline.selectMonth("2008/07");
+    budgetView.recurring.checkSeries("Internet", -29.00, -29.00);
+    timeline.selectMonth("2008/08");
+    budgetView.recurring.checkSeries("Internet", 0.00, 0.00);    
   }
 
   public void testNavigatingToTransactions() throws Exception {
