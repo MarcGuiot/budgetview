@@ -97,6 +97,7 @@ public class SingleApplicationInstanceListener {
       return;
     }
     socket.setSoTimeout(ACCEPT_TIMEOUT);
+    socket.setTcpNoDelay(true);
     ObjectInputStream inputStream = null;
     ObjectOutputStream outputStream = null;
     try {
@@ -201,6 +202,7 @@ public class SingleApplicationInstanceListener {
 
     public boolean checkSameApplication() throws IOException, ClassNotFoundException {
       socket = new Socket((String)null, port);
+      socket.setTcpNoDelay(true);
       socket.setSoTimeout(REMOTE_APPLICATION_DETECTION_TIMEOUT);
       output = new ObjectOutputStream(socket.getOutputStream());
       output.flush();
