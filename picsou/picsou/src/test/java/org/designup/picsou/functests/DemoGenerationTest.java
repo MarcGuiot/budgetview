@@ -297,12 +297,15 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectCategorization();
-    
-    File out = new File("tmp/demo/demo.cashpilot");
-    out.delete();
-    operations.backup(out.getAbsoluteFile().getAbsolutePath());
+
+    String outputFile = System.getProperty("outfile");
+    if (outputFile != null) {
+      File out = new File(outputFile);
+      out.delete();
+      operations.backup(out.getAbsoluteFile().getAbsolutePath());
+    }
   }
-  
+
   private String first(int day) {
     return Month.toString(firstMonth) + "/" + day;
   }

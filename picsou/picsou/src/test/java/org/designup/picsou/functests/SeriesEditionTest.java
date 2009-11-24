@@ -186,7 +186,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkTable(new Object[][]{
         {"2008", "August", "29.00", "29.00"},
         {"2008", "July", "29.00", "29.00"},
-        {"2008", "June", "29.00", "0"},
+        {"2008", "June", "29.00", "29.00"},
         {"2008", "May", "0.00", "0"},
       });
     editionDialogChecker
@@ -194,21 +194,21 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkTable(new Object[][]{
         {"2008", "August", "29.00", "29.00"},
         {"2008", "July", "29.00", "29.00"},
-        {"2008", "June", "29.00", "0"},
+        {"2008", "June", "29.00", "29.00"},
       });
     editionDialogChecker
       .toggleMonth("Aug")
       .checkTable(new Object[][]{
         {"2008", "August", "29.00", "29.00"},
         {"2008", "July", "29.00", "29.00"},
-        {"2008", "June", "29.00", "0"},
+        {"2008", "June", "29.00", "29.00"},
       });
     editionDialogChecker
       .toggleMonth("Aug")
       .checkTable(new Object[][]{
         {"2008", "August", "29.00", "29.00"},
         {"2008", "July", "29.00", "29.00"},
-        {"2008", "June", "29.00", "0"},
+        {"2008", "June", "29.00", "29.00"},
       })
       .validate();
 
@@ -216,7 +216,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkTable(new Object[][]{
         {"2008", "August", "29.00", "29.00"},
         {"2008", "July", "29.00", "29.00"},
-        {"2008", "June", "29.00", "0"},
+        {"2008", "June", "29.00", "29.00"},
       })
       .cancel();
   }
@@ -304,7 +304,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectSeries("Internet")
       .checkMonthIsChecked("Aug")
       .checkTable(new Object[][]{
-        {"2008", "August", "29.00", "0"},
+        {"2008", "August", "29.00", "29.00"},
         {"2008", "July", "0.00", "0"},
       })
       .toggleMonth("Jul")
@@ -1463,5 +1463,60 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Internet", -29.00, -29.00);
     timeline.selectMonth("2008/08");
     budgetView.recurring.checkSeries("Internet", 0.00, 0.00);
+  }
+
+  public void testAutomatiqueAdjustPlannedAndObservedForFirstMonthWithObserved() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    OfxBuilder.init(this)
+      .addTransaction("2008/05/15", -10.00, "Tel")
+      .addTransaction("2008/06/15", -90.00, "Auchan")
+      .addTransaction("2008/07/15", -95.00, "Auchan")
+      .addTransaction("2008/08/15", -98.00, "Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTransactions("Auchan")
+      .selectEnvelopes()
+      .createSeries("course");
+
+    views.selectBudget();
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkSeries("course", -90, -90);
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.checkSeries("course", -95, -90);
+    timeline.selectMonth("2008/08");
+    budgetView.envelopes.checkSeries("course", -98, -95);
+    timeline.selectMonth("2008/09");
+    budgetView.envelopes.checkSeries("course", 0, -98);
+
+    views.selectCategorization();
+    categorization.showSelectedMonthsOnly();
+    timeline.selectMonth("2008/07");
+    categorization.selectTransaction("auchan")
+      .setUncategorized();
+    views.selectBudget();
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkSeries("course", -90, -90);
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.checkSeries("course", 0, -90);
+    timeline.selectMonth("2008/08");
+    budgetView.envelopes.checkSeries("course", -98, 0);
+    timeline.selectMonth("2008/09");
+    budgetView.envelopes.checkSeries("course", 0, -98);
+
+    views.selectCategorization();
+    categorization.showSelectedMonthsOnly();
+    timeline.selectMonth("2008/06");
+    categorization.selectTransaction("auchan")
+      .setUncategorized();
+    views.selectBudget();
+    timeline.selectMonth("2008/06");
+    budgetView.envelopes.checkSeries("course", 0, 0);
+    timeline.selectMonth("2008/07");
+    budgetView.envelopes.checkSeries("course", 0, 0);
+    timeline.selectMonth("2008/08");
+    budgetView.envelopes.checkSeries("course", -98, -98);
+    timeline.selectMonth("2008/09");
+    budgetView.envelopes.checkSeries("course", 0, -98);
   }
 }

@@ -667,14 +667,14 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsView.checkSavingsOut(0, 0);
 
     timeline.selectMonth("2008/08");
-    savingsView.checkSavingsIn(100, 0);
+    savingsView.checkSavingsIn(100, 100);
 
     views.selectBudget();
-    budgetView.savings.checkSeries("CA", 100, 0);
+    budgetView.savings.checkSeries("CA", 100, 100);
     views.selectSavings();
-    savingsView.checkAmount("Account n. 111", "CA", 100, 0);
+    savingsView.checkAmount("Account n. 111", "CA", 100, 100);
     views.selectBudget();
-    budgetView.savings.checkTotalAmounts(100, 0);
+    budgetView.savings.checkTotalAmounts(100, 100);
 
     budgetView.savings.editSeries("CA").switchToManual()
       .selectAllMonths()

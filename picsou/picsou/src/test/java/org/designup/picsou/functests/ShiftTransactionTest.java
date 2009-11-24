@@ -245,7 +245,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/06");
     budgetView.envelopes.checkTotalAmounts(-15.00, -15.00);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkTotalAmounts(-22.00, -15.00);
+    budgetView.envelopes.checkTotalAmounts(-22.00, -25.00);
 
     views.selectCategorization();
     transactionDetails.openSplitDialog()
