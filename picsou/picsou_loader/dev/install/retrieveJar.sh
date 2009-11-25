@@ -6,7 +6,7 @@ then
   exit -1
 fi
 
-if [ -a retreiveJar.sh ];
+if [ -a retrieveJar.sh ];
 then
   echo back to ../..
   cd ../../
