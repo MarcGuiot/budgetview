@@ -19,7 +19,7 @@
           </scrollPane>
         </column>
 
-        <column weightX="7" preferredSize="(550,520)">
+        <column weightX="7" preferredSize="(560,520)">
           <grid weightY="0.1">
             <label gridPos="(0,0)" text="$seriesEdition.name" styleClass="formLabel" marginBottom="4"/>
             <textField gridPos="(1,0)" ref="nameField" marginBottom="4"/>

@@ -1,12 +1,16 @@
 package org.globsframework.gui.editors;
 
 import org.globsframework.gui.utils.GuiComponentTestCase;
+import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.GlobList;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobBuilder;
+import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.model.utils.LocalGlobRepository;
 import org.uispec4j.Key;
 import org.uispec4j.TextBox;
 
@@ -118,7 +122,7 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
     changeListener.assertNoChanges();
   }
 
-  public void testChangeAreSendOnKeyPressed() throws Exception {
+  public void testChangesAreSentOnKeyPressed() throws Exception {
     TextBox textBox = init(DummyObject.NAME, null, true, true);
     selectionService.select(glob1);
     textBox.setText("");
@@ -133,7 +137,7 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
       "<update type='dummyObject' id='1' name='AAAB' _name='AAA'/>");
   }
 
-  public void testSelectionDoNotSendChanges() throws Exception {
+  public void testSelectionsDoNotSendChanges() throws Exception {
     TextBox textBox = init(DummyObject.NAME, null, true, true);
     selectionService.select(glob1);
     textBox.setText("");
@@ -150,18 +154,56 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
     org.globsframework.model.Key key = org.globsframework.model.Key.create(DummyObject.TYPE, 10);
     forceEdition(key);
     assertFalse(textBox.isEnabled());
-    repository.create(key, FieldValue.value(DummyObject.NAME, "name 100"));
+    repository.create(key, value(DummyObject.NAME, "name 100"));
     assertTrue(textBox.textEquals("name 100"));
   }
 
-  public void testForceSelectionAndRest() throws Exception {
+  public void testForceSelectionAndReset() throws Exception {
     TextBox textBox = init(DummyObject.NAME, "...", false, false);
     org.globsframework.model.Key key = org.globsframework.model.Key.create(DummyObject.TYPE, 10);
     forceEdition(key);
     assertFalse(textBox.isEnabled());
-    Glob glob = GlobBuilder.init(key, FieldValue.value(DummyObject.NAME, "name 100")).get();
+    Glob glob = GlobBuilder.init(key, value(DummyObject.NAME, "name 100")).get();
     repository.reset(new GlobList(glob), DummyObject.TYPE);
     assertTrue(textBox.textEquals("name 100"));
+  }
+
+  public void testUpdatesAndDeletionsOnCurrentSelection() throws Exception {
+    TextBox textBox = init(DummyObject.NAME, "...", true, true);
+    selectionService.select(GlobSelectionBuilder.init().add(glob1).add(glob2).get());
+
+    textBox.setText("aa");
+    assertEquals("aa", glob1.get(DummyObject.NAME));
+    assertEquals("aa", glob2.get(DummyObject.NAME));
+
+    repository.update(glob2.getKey(), DummyObject.NAME, "cc");
+    assertThat(textBox.textEquals("..."));
+
+    repository.delete(glob2.getKey());
+    assertThat(textBox.textEquals("aa"));
+
+    textBox.setText("bb");
+    assertEquals("bb", glob1.get(DummyObject.NAME));
+
+    repository.update(glob1.getKey(), DummyObject.NAME, "dd");
+    assertThat(textBox.textEquals("dd"));
+    
+    repository.delete(glob1.getKey());
+    assertThat(textBox.textEquals(""));
+    assertFalse(textBox.isEnabled());
+  }
+  
+  public void testRoolbackOfLocalRepository() throws Exception {
+    LocalGlobRepository localGlobRepository = LocalGlobRepositoryBuilder.init(repository).copy(DummyObject.TYPE).get();
+    repository = localGlobRepository;
+    TextBox textBox = init(DummyObject.NAME, "...", true, true);
+    glob1 = localGlobRepository.get(glob1.getKey());
+    selectionService.select(GlobSelectionBuilder.init().add(glob1).get());
+
+    textBox.setText("BBB");
+    assertEquals("BBB", glob1.get(DummyObject.NAME));
+    localGlobRepository.rollback();
+    assertThat(textBox.textEquals("name1"));
   }
 
   protected abstract TextBox init(StringField field, String defaultValueForMultivalue, boolean isEditable, boolean sendAtKeyPressed);

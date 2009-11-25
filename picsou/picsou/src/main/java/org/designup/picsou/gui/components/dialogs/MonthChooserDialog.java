@@ -16,8 +16,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
 
 public class MonthChooserDialog implements ColorChangeListener {
@@ -32,11 +31,14 @@ public class MonthChooserDialog implements ColorChangeListener {
   private int currentYear;
   private Directory directory;
   private MonthRangeBound bound;
-  private int yearLimit;
-  private int monthLimit;
+  private int yearLowerLimit;
+  private int monthLowerLimit;
+  private int yearUpperLimit;
+  private int monthUpperLimit;
   private int newMonth;
   private Color todayColor;
   private Color defaultForegroundColor;
+  private Set<Integer> forceDesable = new HashSet<Integer>();
 
   public MonthChooserDialog(Window parent, final Directory directory) {
     this.directory = directory;
@@ -90,32 +92,50 @@ public class MonthChooserDialog implements ColorChangeListener {
     return builder.load();
   }
 
+  public int show(int selectedMonthId, int lowerLimit, int upperLimit, List<Integer> forceDesables) {
+    bound = MonthRangeBound.BOTH;
+    this.selectedMonth = Month.toMonth(selectedMonthId);
+    this.selectedYear = Month.toYear(selectedMonthId);
+    initBoundLimit(MonthRangeBound.UPPER, lowerLimit);
+    initBoundLimit(MonthRangeBound.LOWER, upperLimit);
+    currentYear = selectedYear;
+    this.forceDesable.addAll(forceDesables);
+    return show();
+  }
+
   public int show(int selectedMonthId, MonthRangeBound bound, int limitMonthId) {
     this.newMonth = -1;
     this.bound = bound;
-    this.yearLimit = Month.toYear(limitMonthId);
-    this.monthLimit = Month.toMonth(limitMonthId);
     this.selectedMonth = Month.toMonth(selectedMonthId);
     this.selectedYear = Month.toYear(selectedMonthId);
+    initBoundLimit(bound, limitMonthId);
+    return show();
+  }
+
+  private int show() {
+    update();
+    dialog.pack();
+    GuiUtils.showCentered(dialog);
+    dialog = null;
+    return newMonth;
+  }
+
+  private void initBoundLimit(MonthRangeBound bound, int limitMonthId) {
     switch (bound) {
       case NONE:
         this.currentYear = selectedYear;
         break;
       case LOWER:
-        this.currentYear = yearLimit - 1;
+        this.yearLowerLimit = Month.toYear(limitMonthId);
+        this.monthLowerLimit = Month.toMonth(limitMonthId);
+        this.currentYear = yearLowerLimit - 1;
         break;
       case UPPER:
-        this.currentYear = yearLimit + 1;
+        this.yearUpperLimit = Month.toYear(limitMonthId);
+        this.monthUpperLimit = Month.toMonth(limitMonthId);
+        this.currentYear = yearUpperLimit + 1;
         break;
     }
-
-    update();
-
-    dialog.pack();
-    GuiUtils.showCentered(dialog);
-    dialog = null;
-
-    return newMonth;
   }
 
   private void update() {
@@ -178,13 +198,21 @@ public class MonthChooserDialog implements ColorChangeListener {
       for (int i = 0; i < buttons.length; i++) {
         buttons[i].setSelected(currentYear == selectedYear && selectedMonth == i + 1);
         int currentMonthId = Month.toMonthId(currentYear, i + 1);
-        switch (bound) {
-          case LOWER:
-            buttons[i].setEnabled(currentMonthId <= Month.toMonthId(yearLimit, monthLimit));
-            break;
-          case UPPER:
-            buttons[i].setEnabled(currentMonthId >= Month.toMonthId(yearLimit, monthLimit));
-            break;
+        if (currentYear != selectedYear || selectedMonth != i + 1) {
+          switch (bound) {
+            case LOWER:
+              buttons[i].setEnabled(currentMonthId <= Month.toMonthId(yearLowerLimit, monthLowerLimit));
+              break;
+            case UPPER:
+              buttons[i].setEnabled(currentMonthId >= Month.toMonthId(yearUpperLimit, monthUpperLimit));
+              break;
+            case BOTH:
+              buttons[i].setEnabled(currentMonthId >= Month.toMonthId(yearUpperLimit, monthUpperLimit) &&
+                                    currentMonthId <= Month.toMonthId(yearLowerLimit, monthLowerLimit));
+          }
+          if (forceDesable.contains(currentMonthId)) {
+            buttons[i].setEnabled(false);
+          }
         }
         if (todayId == currentMonthId) {
           buttons[i].setForeground(todayColor);

@@ -4,4 +4,5 @@ public enum MonthRangeBound {
   NONE,
   UPPER,
   LOWER,
+  BOTH,
   }

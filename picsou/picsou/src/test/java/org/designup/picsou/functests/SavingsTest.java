@@ -667,14 +667,14 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsView.checkSavingsOut(0, 0);
 
     timeline.selectMonth("2008/08");
-    savingsView.checkSavingsIn(100, 0);
+    savingsView.checkSavingsIn(100, 100);
 
     views.selectBudget();
-    budgetView.savings.checkSeries("CA", 100, 0);
+    budgetView.savings.checkSeries("CA", 100, 100);
     views.selectSavings();
-    savingsView.checkAmount("Account n. 111", "CA", 100, 0);
+    savingsView.checkAmount("Account n. 111", "CA", 100, 100);
     views.selectBudget();
-    budgetView.savings.checkTotalAmounts(100, 0);
+    budgetView.savings.checkTotalAmounts(100, 100);
 
     budgetView.savings.editSeries("CA").switchToManual()
       .selectAllMonths()
@@ -1348,7 +1348,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .checkSavingsSeriesIsSelected("Epargne");
   }
 
-  public void testCanNotChoiceTheSameAccount() throws Exception {
+  public void testCanNotChooseTheSameAccount() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
       .addTransaction("2008/06/06", -100.00, "Virement Epargne")

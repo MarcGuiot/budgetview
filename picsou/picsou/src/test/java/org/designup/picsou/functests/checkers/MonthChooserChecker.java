@@ -112,7 +112,7 @@ public class MonthChooserChecker extends GuiChecker {
   }
 
   public MonthChooserChecker checkEnabledInCurrentYear(int month) {
-    UISpecAssert.assertThat(getButtonInCurrentYear(month).isEnabled());
+    UISpecAssert.assertThat("For month " + month, getButtonInCurrentYear(month).isEnabled());
     return this;
   }
 

@@ -11,6 +11,7 @@ import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.util.Arrays;
 
 public class MonthChooserDemo {
   public static void main(String[] args) throws Exception {
@@ -23,6 +24,6 @@ public class MonthChooserDemo {
 
     PicsouDialog.FORCE_NONMODAL = true;
     MonthChooserDialog chooser = new MonthChooserDialog(new JFrame(), directory);
-    chooser.show(200806, MonthRangeBound.LOWER, 200904);
+    chooser.show(200806, 200701, 200909, Arrays.asList(200904, 200704));
   }
 }

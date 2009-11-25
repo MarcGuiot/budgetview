@@ -29,8 +29,6 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.FieldValue.*;
-import static org.globsframework.model.FieldValue.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.utils.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -248,6 +246,7 @@ public class SeriesEditionDialog {
     repository.addTrigger(new ProfileTypeSeriesTrigger(userMonth));
     repository.addTrigger(new AutomaticSeriesBudgetTrigger());
     repository.addTrigger(new SeriesBudgetTrigger(parentRepository));
+//    repository.addTrigger(new SeriesBudgetAmountTrigger());
   }
 
   private void updateMonthChooser() {

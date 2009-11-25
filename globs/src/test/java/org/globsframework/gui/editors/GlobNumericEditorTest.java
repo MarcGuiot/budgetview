@@ -1,17 +1,18 @@
 package org.globsframework.gui.editors;
 
+import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.gui.utils.GuiComponentTestCase;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.Field;
-import org.globsframework.model.FieldValue;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.uispec4j.Key;
 import org.uispec4j.TextBox;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.Locale;
-import java.awt.event.ActionEvent;
 
 public class GlobNumericEditorTest extends GuiComponentTestCase {
   protected Glob glob;
@@ -32,8 +33,8 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
   }
 
   public void testUpdateWithNullValue() throws Exception {
-    Glob glob1 = repository.create(DummyObject.TYPE, FieldValue.value(DummyObject.VALUE, 1.0));
-    Glob glob2 = repository.create(DummyObject.TYPE, FieldValue.value(DummyObject.VALUE, null));
+    Glob glob1 = repository.create(DummyObject.TYPE, value(DummyObject.VALUE, 1.0));
+    Glob glob2 = repository.create(DummyObject.TYPE, value(DummyObject.VALUE, null));
     TextBox textBox = init(DummyObject.VALUE);
 
     selectionService.select(glob1);
@@ -126,15 +127,59 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     assertThat(textBox.textEquals("8.8"));
   }
 
-  public void testSendUpdateAtKeyPressed() throws Exception {
+  public void testUpdatesAndDeletionsOnCurrentSelection() throws Exception {
+
+    Glob glob1 = repository.create(DummyObject.TYPE, value(DummyObject.ID, 11), value(DummyObject.VALUE, 100.0));
+    Glob glob2 = repository.create(DummyObject.TYPE, value(DummyObject.ID, 12), value(DummyObject.VALUE, 100.0));
+
+    TextBox textBox = init(DummyObject.VALUE);
+    selectionService.select(GlobSelectionBuilder.init().add(glob1).add(glob2).get());
+
+    textBox.setText("1.1");
+    assertEquals(1.1, glob1.get(DummyObject.VALUE));
+    assertEquals(1.1, glob2.get(DummyObject.VALUE));
+
+    repository.update(glob2.getKey(), DummyObject.VALUE, 5.0);
+    assertThat(textBox.textIsEmpty());
+
+    repository.delete(glob2.getKey());
+    assertThat(textBox.textEquals("1.1"));
+
+    textBox.setText("3.3");
+    assertEquals(3.3, glob1.get(DummyObject.VALUE));
+
+    repository.update(glob1.getKey(), DummyObject.VALUE, 4.4);
+    assertThat(textBox.textEquals("4.4"));
+
+    repository.delete(glob1.getKey());
+    assertThat(textBox.textIsEmpty());
+    assertFalse(textBox.isEnabled());
+  }
+
+  public void testValuesUpdatesAreTakenIntoAccount() throws Exception {
+    JTextField textField =
+      GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
+        .getComponent();
+    TextBox textBox = new TextBox(textField);
+
+    selectionService.select(glob);
+    assertThat(textBox.textEquals("3.5"));
+
+    repository.update(glob.getKey(), DummyObject.VALUE, -8.8);
+    assertThat(textBox.textEquals("-8.8"));
+  }
+
+  public void testSendUpdateOnKeyPressed() throws Exception {
     JTextField textField =
       GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
         .setNotifyOnKeyPressed(true)
         .getComponent();
     TextBox textBox = new TextBox(textField);
 
-    repository.update(glob.getKey(), DummyObject.VALUE, 0.);
     selectionService.select(glob);
+    repository.update(glob.getKey(), DummyObject.VALUE, 0.00);
+    assertThat(textBox.textEquals("0"));
+
     textBox.setText("-8.8");
     assertThat(textBox.textEquals("-8.8"));
     changeListener.assertLastChangesEqual(
@@ -158,8 +203,8 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
   }
 
   public void testMultiSelection() throws Exception {
-    Glob glob1 = repository.create(org.globsframework.model.Key.create(DummyObject.TYPE, 2), FieldValue.value(DummyObject.VALUE, 1.0));
-    Glob glob2 = repository.create(org.globsframework.model.Key.create(DummyObject.TYPE, 3), FieldValue.value(DummyObject.VALUE, 2.0));
+    Glob glob1 = repository.create(org.globsframework.model.Key.create(DummyObject.TYPE, 2), value(DummyObject.VALUE, 1.0));
+    Glob glob2 = repository.create(org.globsframework.model.Key.create(DummyObject.TYPE, 3), value(DummyObject.VALUE, 2.0));
     JTextField textField =
       GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
         .setNotifyOnKeyPressed(true).getComponent();
@@ -181,8 +226,8 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
   }
 
   public void testSetValueForNullAndNotifyAtKeyPressed() throws Exception {
-    Glob glob1 = repository.create(org.globsframework.model.Key.create(DummyObject.TYPE, 2), FieldValue.value(DummyObject.VALUE, 1.0));
-    Glob glob2 = repository.create(org.globsframework.model.Key.create(DummyObject.TYPE, 3), FieldValue.value(DummyObject.VALUE, 2.0));
+    Glob glob1 = repository.create(org.globsframework.model.Key.create(DummyObject.TYPE, 2), value(DummyObject.VALUE, 1.0));
+    Glob glob2 = repository.create(org.globsframework.model.Key.create(DummyObject.TYPE, 3), value(DummyObject.VALUE, 2.0));
     JTextField textField =
       GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
         .setNotifyOnKeyPressed(true)
@@ -197,7 +242,7 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
       "<update type='dummyObject' id='2' value='44.0' _value='1.0'/>" +
       "<update type='dummyObject' id='3' value='44.0' _value='2.0'/>" +
       "");
-    
+
     selectionService.select(Arrays.asList(glob1), DummyObject.TYPE);
     ((JTextField)textBox.getAwtComponent()).setSelectionEnd(0);
     textBox.pressKey(Key.DELETE);

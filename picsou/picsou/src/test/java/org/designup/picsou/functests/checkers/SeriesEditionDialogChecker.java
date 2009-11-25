@@ -79,13 +79,17 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
-  public SeriesEditionDialogChecker unselect() {
-    dialog.getListBox("seriesList").clearSelection();
+  public SeriesEditionDialogChecker unselectSeries() {
+    ListBox seriesList = dialog.getListBox("seriesList");
+    assertThat(seriesList.isVisible());
+    seriesList.clearSelection();
     return this;
   }
 
   public SeriesEditionDialogChecker selectAllMonths() {
-    getTable().selectRowSpan(0, getTable().getRowCount() - 1);
+    Table table = getTable();
+    assertFalse(table.isEmpty());
+    table.selectRowSpan(0, table.getRowCount() - 1);
     return this;
   }
 
@@ -766,5 +770,4 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     tab.getListBox().select(names);
     return DeleteSubSeriesDialogChecker.open(tab.getButton("deleteSubSeries").triggerClick());
   }
-
 }

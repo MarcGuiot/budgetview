@@ -95,7 +95,7 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
   }
 
   private void updateSeriesBudget(Integer currentMonthId, Glob series, Integer seriesId, Integer statMonthId,
-                                  Double amount, GlobRepository repository) {
+                                  Double observedAmount, GlobRepository repository) {
     if (!series.isTrue(Series.IS_AUTOMATIC) || statMonthId > currentMonthId) {
       return;
     }
@@ -110,7 +110,16 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
     if (statMonthId.equals(currentMonthId)) {
       GlobList seriesBudgets = budgetIndex.getGlobs().sort(SeriesBudget.MONTH);
       Integer previousMonth = null;
+      int firstMonthWithObserved = Integer.MAX_VALUE;
       for (Glob budget : seriesBudgets) {
+        {
+          Glob currentSeriesStat =
+            repository.findOrCreate(Key.create(SeriesStat.SERIES, seriesId,
+                                               SeriesStat.MONTH, budget.get(SeriesBudget.MONTH)));
+          if (firstMonthWithObserved == Integer.MAX_VALUE && Amounts.isNotZero(currentSeriesStat.get(SeriesStat.AMOUNT))) {
+            firstMonthWithObserved = budget.get(SeriesBudget.MONTH);
+          }
+        }
         if (budget.isTrue(SeriesBudget.ACTIVE) && budget.get(SeriesBudget.MONTH) < statMonthId) {
           previousMonth = budget.get(SeriesBudget.MONTH);
         }
@@ -118,16 +127,16 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
           break;
         }
       }
-      if (previousMonth != null) {
+      if (previousMonth != null && firstMonthWithObserved < statMonthId) {
         Glob previousStat = repository.findOrCreate(Key.create(SeriesStat.SERIES, seriesId,
                                                                SeriesStat.MONTH, previousMonth));
         // Si on a un changement de signe : ex on passe de -10 a 5 on propage le changement vers 5
         Double futureAmount;
         if (Amounts.isNearZero(previousStat.get(SeriesStat.AMOUNT))
-            || (!Amounts.sameSign(previousStat.get(SeriesStat.AMOUNT), amount) &&
-                !Amounts.isNearZero(amount))
-            || Math.abs(amount) > Math.abs(previousStat.get(SeriesStat.AMOUNT))) {
-          futureAmount = amount;
+            || (!Amounts.sameSign(previousStat.get(SeriesStat.AMOUNT), observedAmount) &&
+                !Amounts.isNearZero(observedAmount))
+            || Math.abs(observedAmount) > Math.abs(previousStat.get(SeriesStat.AMOUNT))) {
+          futureAmount = observedAmount;
         }
         else {
           futureAmount = previousStat.get(SeriesStat.AMOUNT);
@@ -142,7 +151,7 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
         // c'est le premier
         for (Glob budget : seriesBudgets) {
           if (budget.isTrue(SeriesBudget.ACTIVE) && budget.get(SeriesBudget.MONTH) >= currentMonthId) {
-            repository.update(budget.getKey(), SeriesBudget.AMOUNT, amount);
+            repository.update(budget.getKey(), SeriesBudget.AMOUNT, observedAmount);
           }
         }
       }
@@ -153,29 +162,51 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
       .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
       .getGlobs().sort(SeriesBudget.MONTH);
 
-    boolean first = true;
+    double firstMonthAmout = 0;
+    int firstMonthWithObserved = 0;
     for (Iterator it = serieBudgets.iterator(); it.hasNext();) {
       Glob budget = (Glob)it.next();
       if (!budget.isTrue(SeriesBudget.ACTIVE)) {
         continue;
       }
 
-      if (first && statMonthId.equals(budget.get(SeriesBudget.MONTH))) {
-        repository.update(budget.getKey(), SeriesBudget.AMOUNT, amount);
+      {
+        Glob currentSeriesStat =
+          repository.findOrCreate(Key.create(SeriesStat.SERIES, seriesId,
+                                             SeriesStat.MONTH, budget.get(SeriesBudget.MONTH)));
+        if (firstMonthWithObserved == 0 && Amounts.isNotZero(currentSeriesStat.get(SeriesStat.AMOUNT))) {
+          firstMonthWithObserved = budget.get(SeriesBudget.MONTH);
+          firstMonthAmout = currentSeriesStat.get(SeriesStat.AMOUNT);
+        }
       }
-      first = false;
+
+      if (firstMonthWithObserved == statMonthId && statMonthId.equals(budget.get(SeriesBudget.MONTH))) {
+        repository.update(budget.getKey(), SeriesBudget.AMOUNT, firstMonthAmout);
+        observedAmount = firstMonthAmout;
+      }
+
+      if (firstMonthWithObserved == 0) {
+        repository.update(budget.getKey(), SeriesBudget.AMOUNT, 0.);
+        continue;
+      }
+      // Le premier mois reel de la series, c-a-d celui dans laquel il y a un observedAmount != 0
 
       if (budget.get(SeriesBudget.MONTH) > statMonthId) {
-        repository.update(budget.getKey(), SeriesBudget.AMOUNT, amount);
-        Double futureAmount = amount;
+        if (firstMonthWithObserved == budget.get(SeriesBudget.MONTH)) {
+          repository.update(budget.getKey(), SeriesBudget.AMOUNT, firstMonthAmout);
+        }
+        else {
+          repository.update(budget.getKey(), SeriesBudget.AMOUNT, observedAmount);
+        }
+        Double futureAmount = observedAmount;
         if (budget.get(SeriesBudget.MONTH).equals(currentMonthId)) {
           Glob currentSeriesStat =
             repository.findOrCreate(Key.create(SeriesStat.SERIES, seriesId,
                                                SeriesStat.MONTH, currentMonthId));
-          if (Amounts.isNearZero(amount)
-              || (!Amounts.sameSign(currentSeriesStat.get(SeriesStat.AMOUNT), amount) &&
+          if (Amounts.isNearZero(observedAmount)
+              || (!Amounts.sameSign(currentSeriesStat.get(SeriesStat.AMOUNT), observedAmount) &&
                   !Amounts.isNearZero(currentSeriesStat.get(SeriesStat.AMOUNT)))
-              || Math.abs(currentSeriesStat.get(SeriesStat.AMOUNT)) > Math.abs(amount)) {
+              || Math.abs(currentSeriesStat.get(SeriesStat.AMOUNT)) > Math.abs(observedAmount)) {
             futureAmount = currentSeriesStat.get(SeriesStat.AMOUNT);
           }
         }

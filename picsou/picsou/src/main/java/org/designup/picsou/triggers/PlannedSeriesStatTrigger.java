@@ -20,12 +20,13 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(SeriesBudget.AMOUNT)) {
+        if (values.contains(SeriesBudget.AMOUNT) || values.contains(SeriesBudget.ACTIVE)) {
           Glob seriesBudget = repository.get(key);
           Key seriesStat = createKey(seriesBudget.get(SeriesBudget.SERIES),
                                      seriesBudget.get(SeriesBudget.MONTH));
           repository.findOrCreate(seriesStat);
-          repository.update(seriesStat, SeriesStat.PLANNED_AMOUNT, seriesBudget.get(SeriesBudget.AMOUNT));
+          repository.update(seriesStat, SeriesStat.PLANNED_AMOUNT,
+                            seriesBudget.isTrue(SeriesBudget.ACTIVE) ? seriesBudget.get(SeriesBudget.AMOUNT) : 0);
         }
       }
 
@@ -51,7 +52,8 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
       Key seriesStat = createKey(seriesBudget.get(SeriesBudget.SERIES),
                                  seriesBudget.get(SeriesBudget.MONTH));
       repository.findOrCreate(seriesStat);
-      repository.update(seriesStat, SeriesStat.PLANNED_AMOUNT, seriesBudget.get(SeriesBudget.AMOUNT));
+      repository.update(seriesStat, SeriesStat.PLANNED_AMOUNT,
+                        seriesBudget.isTrue(SeriesBudget.ACTIVE) ? seriesBudget.get(SeriesBudget.AMOUNT) : 0);
     }
   }
 
