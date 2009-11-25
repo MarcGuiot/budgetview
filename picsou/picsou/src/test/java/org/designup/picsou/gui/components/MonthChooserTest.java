@@ -11,6 +11,7 @@ import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
+import java.util.Arrays;
 
 public class MonthChooserTest extends GuiTestCase {
   private int selectedMonth;
@@ -68,6 +69,27 @@ public class MonthChooserTest extends GuiTestCase {
       .checkEnabledInCurrentYear(4)
       .checkEnabledInCurrentYear(5)
       .checkDisabledInCurrentYear(6);
+  }
+
+  public void testEnableMultipleMonth() throws Exception {
+    final MonthChooserDialog monthChooser = new MonthChooserDialog(new JFrame(), directory);
+    Window window = WindowInterceptor.getModalDialog(new Trigger() {
+      public void run() throws Exception {
+        selectedMonth = monthChooser.show(200805, 200705, 200809, Arrays.asList(200707, 200804, 200805));
+      }
+    });
+    MonthChooserChecker month = new MonthChooserChecker(window);
+    month.checkVisibleYears(2007, 2008, 2009)
+      .checkIsDisabled(200707, 200804)
+      .checkEnabledInCurrentYear(5)
+      .checkDisabledInCurrentYear(4)
+      .checkEnabledInCurrentYear(3)
+      .checkEnabledInCurrentYear(7)
+      .checkDisabledInCurrentYear(10)
+      .previousYear()
+      .checkDisabledInCurrentYear(7)
+      .checkEnabledInCurrentYear(5)
+      .checkDisabledInCurrentYear(3);
   }
 
   public void testWihoutSelectedMonth() throws Exception {

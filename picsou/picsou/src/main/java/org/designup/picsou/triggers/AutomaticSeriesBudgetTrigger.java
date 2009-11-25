@@ -39,10 +39,7 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
     Double previousAmount = 0.00;
     boolean firstUpdate = true;
     for (Glob seriesBudget : seriesBudgets) {
-      if (!seriesBudget.isTrue(SeriesBudget.ACTIVE)
-        // a tester.
-//          && !Amounts.isNotZero(seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT))
-        ) {
+      if (!seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
         repository.update(seriesBudget.getKey(),
                           value(SeriesBudget.AMOUNT, 0.00));
       }
