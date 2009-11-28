@@ -496,7 +496,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .checkAmount("29.00")
       .checkAmountIsSelected()
       .setAmount("100")
-      .checkPropagationEnabled()
+      .checkPropagationDisabled()
+      .setPropagationEnabled()
       .validate();
     budgetView.recurring.checkSeries("Internet", -29.00, -100.00);
     timeline.selectMonth("2008/08");
@@ -512,8 +513,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.editPlannedAmount("Internet")
       .checkAmount("100.00")
       .checkAmountIsSelected()
-      .checkPropagationEnabled()
-      .setPropagationDisabled()
+      .checkPropagationDisabled()
       .setAmountAndValidate("150");
     budgetView.recurring.checkSeries("Internet", -29.00, -150.00);
     timeline.selectMonth("2008/08");
@@ -523,8 +523,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonths("2008/07", "2008/09");
     budgetView.recurring.editPlannedAmount("Internet")
       .checkAmountIsEmpty()
-      .checkPropagationEnabled()
-      .setPropagationDisabled()
+      .checkPropagationDisabled()
       .setAmountAndValidate("200");
     timeline.selectMonth("2008/07");
     budgetView.recurring.checkSeries("Internet", -29.00, -200.00);
@@ -535,11 +534,12 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/10");
     budgetView.recurring.checkSeries("Internet", 0.00, -100.00);
 
-    // Multi-selection without propagation
+    // Multi-selection with propagation
     timeline.selectMonths("2008/07", "2008/09");
     budgetView.recurring.editPlannedAmount("Internet")
       .checkAmount("200.00")
-      .checkPropagationEnabled()
+      .checkPropagationDisabled()
+      .setPropagationEnabled()
       .setAmountAndValidate("300");
     timeline.selectMonth("2008/07");
     budgetView.recurring.checkSeries("Internet", -29.00, -300.00);
@@ -648,7 +648,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .checkAmount("29.00")
       .checkAmountIsSelected()
       .setAmount("100")
-      .checkPropagationEnabled()
+      .checkPropagationDisabled()
       .cancel();
     budgetView.recurring.checkSeries("Internet", -29.00, -29.00);
 
@@ -660,6 +660,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.editPlannedAmount("Internet")
       .checkAmount("29.00")
       .setAmount("100")
+      .setPropagationEnabled()
       .validate();
     budgetView.recurring.checkSeries("Internet", -29.00, -100.00);
 
@@ -689,7 +690,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.editPlannedAmount("Internet")
       .checkAmountLabel("Planned amount for july 2008")
       .setAmount("100")
-      .checkPropagationEnabled()
+      .checkPropagationDisabled()
+      .setPropagationEnabled()
       .validate();
     budgetView.recurring.checkSeries("Internet", -29.00, -100.00);
     timeline.selectMonth("2008/08");
@@ -703,6 +705,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .alignPlannedAndActual()
       .checkNegativeAmountsSelected()
       .checkAmount("29.00")
+      .setPropagationEnabled()
       .validate();
     budgetView.recurring.checkSeries("Internet", -29.00, -29.00);
     timeline.selectMonth("2008/08");
@@ -713,6 +716,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .checkAmount("29.00")
       .checkActualAmount("Actual")
       .alignPlannedAndActual()
+      .setPropagationEnabled()
       .validate();
     timeline.selectMonth("2008/07");
     budgetView.recurring.checkSeries("Internet", -29.00, -29.00);
@@ -729,11 +733,11 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .alignPlannedAndActual()
       .checkPositiveAmountsSelected()
       .checkAmount("1500.00")
+      .setPropagationEnabled()
       .validate();
     budgetView.income.checkSeries("Salary", 1500.00, 1500.00);
     timeline.selectMonth("2008/08");
     budgetView.income.checkSeries("Salary", 0.00, 1500.00);
-
   }
 
   public void testNavigatingToTransactions() throws Exception {

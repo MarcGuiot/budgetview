@@ -90,7 +90,7 @@ public class SeriesAmountEditionDialog {
     this.maxMonth = Utils.max(months);
     loadGlobs(series);
     select(series, months);
-    propagationCheckBox.setSelected(true);
+    propagationCheckBox.setSelected(false);
     amountEditor.selectAll();
     GuiUtils.showCentered(dialog);
   }
