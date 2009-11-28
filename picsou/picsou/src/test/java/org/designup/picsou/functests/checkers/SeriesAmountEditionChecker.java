@@ -98,6 +98,11 @@ public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> ex
     return (T)this;
   }
 
+  public T checkActualAmount(String text) {
+    assertThat(dialog.getTextBox("actualAmountLabel").textEquals(text));
+    return (T)this;
+  }
+
   public T alignPlannedAndActual() {
     dialog.getButton("alignValue").click();
     return (T)this;

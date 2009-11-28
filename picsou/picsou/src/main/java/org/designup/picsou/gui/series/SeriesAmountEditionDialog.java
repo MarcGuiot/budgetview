@@ -70,7 +70,9 @@ public class SeriesAmountEditionDialog {
     propagationCheckBox = new JCheckBox();
     builder.add("propagate", propagationCheckBox);
 
-    builder.add("alignValue", new AlignSeriesBudgetAmountsAction(localRepository, directory));
+    AlignSeriesBudgetAmountsAction alignAction = new AlignSeriesBudgetAmountsAction(localRepository, directory);
+    builder.add("alignValue", alignAction);
+    builder.add("actualAmountLabel", alignAction.getActualAmountLabel());
 
     builder.addButton("editSeries", Series.TYPE, new SeriesPeriodicityAndScopeStringifier(), new OpenSeriesEditorCallback());
 

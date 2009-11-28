@@ -19,6 +19,7 @@
         <textField ref="amountEditor" columns="10"/>
         <row styleClass="iconButtonGroup" marginTop="0" marginLeft="5">
           <button action="alignValue" styleClass="align_value"/>
+          <label ref="actualAmountLabel" styleClass="alignActualAmount"/>
         </row>
         <filler fill="horizontal"/>
       </row>

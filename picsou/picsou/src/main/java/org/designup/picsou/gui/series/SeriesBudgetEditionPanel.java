@@ -79,7 +79,9 @@ public class SeriesBudgetEditionPanel {
     builder.add("positiveAmounts", amountEditor.getPositiveRadio());
     builder.add("negativeAmounts", amountEditor.getNegativeRadio());
 
-    builder.add("alignValue", new AlignSeriesBudgetAmountsAction(localRepository, directory));
+    AlignSeriesBudgetAmountsAction alignAction = new AlignSeriesBudgetAmountsAction(localRepository, directory);
+    builder.add("alignValue", alignAction);
+    builder.add("actualAmountLabel", alignAction.getActualAmountLabel());
 
     builder.addLabel("seriesBudgetEditionAmountLabel", SeriesBudget.TYPE, new SeriesAmountLabelStringifier());
 

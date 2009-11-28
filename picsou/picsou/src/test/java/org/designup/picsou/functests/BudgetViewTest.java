@@ -635,7 +635,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
   public void testEditingPlannedSeriesAmountsWithCancel() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
+      .addTransaction("2008/07/29", -29.00, "Free Telecom")
       .load();
 
     timeline.selectMonth("2008/07");
@@ -675,11 +675,13 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
     OfxBuilder.init(this)
-      .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
+      .addTransaction("2008/07/29", +1500.00, "WorldCo")
+      .addTransaction("2008/07/29", -29.00, "Free Telecom")
       .load();
 
     timeline.selectMonth("2008/07");
     views.selectCategorization();
+    categorization.setNewIncome("WorldCo", "Salary");
     categorization.setNewRecurring("Free Telecom", "Internet");
 
     // First update with propagation + switching to manual mode
@@ -697,6 +699,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.editPlannedAmount("Internet")
       .checkNegativeAmountsSelected()
       .checkAmount("100.00")
+      .checkActualAmount("29.00")
       .alignPlannedAndActual()
       .checkNegativeAmountsSelected()
       .checkAmount("29.00")
@@ -708,12 +711,29 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonths("2008/07", "2008/08");
     budgetView.recurring.editPlannedAmount("Internet")
       .checkAmount("29.00")
+      .checkActualAmount("Actual")
       .alignPlannedAndActual()
       .validate();
     timeline.selectMonth("2008/07");
     budgetView.recurring.checkSeries("Internet", -29.00, -29.00);
     timeline.selectMonth("2008/08");
-    budgetView.recurring.checkSeries("Internet", 0.00, 0.00);    
+    budgetView.recurring.checkSeries("Internet", 0.00, 0.00);
+
+    // Positive amount
+    timeline.selectMonth("2008/07");
+    budgetView.income.editPlannedAmount("Salary")
+      .checkPositiveAmountsSelected()
+      .checkAmount("1500.00")
+      .checkActualAmount("1500.00")
+      .setAmount(1000.00)
+      .alignPlannedAndActual()
+      .checkPositiveAmountsSelected()
+      .checkAmount("1500.00")
+      .validate();
+    budgetView.income.checkSeries("Salary", 1500.00, 1500.00);
+    timeline.selectMonth("2008/08");
+    budgetView.income.checkSeries("Salary", 0.00, 1500.00);
+
   }
 
   public void testNavigatingToTransactions() throws Exception {
