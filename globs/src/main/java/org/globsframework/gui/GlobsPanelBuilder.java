@@ -21,6 +21,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
 
@@ -55,7 +56,6 @@ public class GlobsPanelBuilder extends SplitsBuilder {
   public GlobComboView addCombo(String name, GlobType type) {
     return addCombo(type).setName(name);
   }
-
 
   public GlobLinkComboEditor addComboEditor(String name, Link field) {
     return store(new GlobLinkComboEditor(field, repository, directory).setName(name));
@@ -133,6 +133,10 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     return store(GlobMultiLineTextView.init(type, repository, directory, stringifier).setName(name));
   }
 
+  public GlobButtonView addButton(String name, GlobType type, GlobListStringifier stringifier, GlobListFunctor callback) {
+    return store(GlobButtonView.init(type, repository, directory, stringifier, callback).setName(name));
+  }
+  
   public GlobsPanelBuilder add(String name, ComponentHolder holder) {
     holder.setName(name);
     store(holder);
