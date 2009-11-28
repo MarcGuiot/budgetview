@@ -5,7 +5,6 @@ import junit.framework.AssertionFailedError;
 import org.uispec4j.ItemNotFoundException;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
-import org.uispec4j.CheckBox;
 import static org.uispec4j.assertion.UISpecAssert.*;
 
 import javax.swing.*;
@@ -23,7 +22,7 @@ public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> ex
   }
 
   public T checkAmountIsEmpty() {
-    assertThat(getAmountTextBox().textIsEmpty());    
+    assertThat(getAmountTextBox().textIsEmpty());
     return (T)this;
   }
 

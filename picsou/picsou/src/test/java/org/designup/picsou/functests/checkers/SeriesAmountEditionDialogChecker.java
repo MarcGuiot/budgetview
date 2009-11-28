@@ -44,7 +44,7 @@ public class SeriesAmountEditionDialogChecker extends SeriesAmountEditionChecker
   }
 
   public SeriesAmountEditionDialogChecker checkPeriodicity(String text) {
-    assertThat(dialog.getTextBox("periodicity").textEquals(text));
+    assertThat(dialog.getButton("editSeries").textEquals(text));
     return this;
   }
 

@@ -786,7 +786,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.checkHelpMessageDisplayed(false);
   }
 
-  public void testPositifEnvelopeBudgetDoNotCreateNegativePlannedTransaction() throws Exception {
+  public void testPositiveEnvelopeBudgetDoNotCreateNegativePlannedTransaction() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", 15.00, "Loto")
       .addTransaction("2008/07/05", 19.00, "Loto")
