@@ -2,7 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
 
 public class SeriesAmountEditionDialogChecker extends SeriesAmountEditionChecker<SeriesAmountEditionDialogChecker> {
@@ -25,6 +25,11 @@ public class SeriesAmountEditionDialogChecker extends SeriesAmountEditionChecker
     return this;
   }
 
+  public SeriesAmountEditionDialogChecker checkPropagationDisabled() {
+    assertFalse(dialog.getCheckBox().isSelected());
+    return this;
+  }
+
   public SeriesAmountEditionDialogChecker setPropagationEnabled() {
     dialog.getCheckBox().select();
     return this;
@@ -44,7 +49,7 @@ public class SeriesAmountEditionDialogChecker extends SeriesAmountEditionChecker
   }
 
   public SeriesAmountEditionDialogChecker checkPeriodicity(String text) {
-    assertThat(dialog.getTextBox("periodicity").textEquals(text));
+    assertThat(dialog.getButton("editSeries").textEquals(text));
     return this;
   }
 

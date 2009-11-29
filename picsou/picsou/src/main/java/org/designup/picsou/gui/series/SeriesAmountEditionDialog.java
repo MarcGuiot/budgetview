@@ -20,6 +20,7 @@ import static org.globsframework.model.utils.GlobFunctors.update;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -69,11 +70,11 @@ public class SeriesAmountEditionDialog {
     propagationCheckBox = new JCheckBox();
     builder.add("propagate", propagationCheckBox);
 
-    builder.add("alignValue", new AlignSeriesBudgetAmountsAction(localRepository, directory));
+    AlignSeriesBudgetAmountsAction alignAction = new AlignSeriesBudgetAmountsAction(localRepository, directory);
+    builder.add("alignValue", alignAction);
+    builder.add("actualAmountLabel", alignAction.getActualAmountLabel());
 
-    builder.addLabel("periodicity", Series.TYPE, new SeriesPeriodicityAndScopeStringifier());
-
-    builder.add("editSeries", new OpenSeriesEditorAction());
+    builder.addButton("editSeries", Series.TYPE, new SeriesPeriodicityAndScopeStringifier(), new OpenSeriesEditorCallback());
 
     dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
 
@@ -89,7 +90,7 @@ public class SeriesAmountEditionDialog {
     this.maxMonth = Utils.max(months);
     loadGlobs(series);
     select(series, months);
-    propagationCheckBox.setSelected(true);
+    propagationCheckBox.setSelected(false);
     amountEditor.selectAll();
     GuiUtils.showCentered(dialog);
   }
@@ -160,13 +161,8 @@ public class SeriesAmountEditionDialog {
     }
   }
 
-  private class OpenSeriesEditorAction extends AbstractAction {
-
-    private OpenSeriesEditorAction() {
-      super(Lang.get("seriesAmountEdition.editSeries"));
-    }
-
-    public void actionPerformed(ActionEvent e) {
+  private class OpenSeriesEditorCallback implements GlobListFunctor {
+    public void run(GlobList list, GlobRepository repository) {
       localRepository.rollback();
       dialog.setVisible(false);
       seriesEditionDialog.show(parentRepository.get(currentSeries), selectedMonthIds);

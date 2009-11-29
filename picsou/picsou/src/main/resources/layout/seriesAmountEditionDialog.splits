@@ -6,7 +6,7 @@
     <style selector=".small" font="-,plain,11"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(380,220)">
+  <panel styleClass="dialog" preferredSize="(400,190)">
 
     <column styleClass="innerDialog">
       <label text="$seriesAmountEdition.title" styleClass="title"/>
@@ -19,20 +19,20 @@
         <textField ref="amountEditor" columns="10"/>
         <row styleClass="iconButtonGroup" marginTop="0" marginLeft="5">
           <button action="alignValue" styleClass="align_value"/>
+          <label ref="actualAmountLabel" styleClass="alignActualAmount"/>
         </row>
         <filler fill="horizontal"/>
       </row>
       <row>
         <filler fill="horizontal"/>
         <checkBox ref="propagate" text="$seriesAmountEdition.propagate"
-                  marginTop="10" marginBottom="10"/>
+                  marginTop="10" marginBottom="2" weightX="0"/>
       </row>
-      <row styleClass="separator">
-        <row>
-          <label ref="periodicity" styleClass="small"/>
-          <filler fill="horizontal"/>
-          <button action="editSeries" styleClass="hyperlink" font="-,plain,11"/>
-        </row>
+      <row>
+        <filler fill="horizontal"/>
+        <label text="$seriesAmountEdition.periodicity" styleClass="small" weightX="0"/>
+        <button ref="editSeries" styleClass="hyperlink" font="-,plain,11" marginLeft="5"
+                tooltipText="$seriesAmountEdition.editSeries.tooltip" weightX="0"/>
       </row>
 
       <filler fill="vertical"/>

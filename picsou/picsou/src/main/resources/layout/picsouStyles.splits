@@ -141,6 +141,8 @@
     <style selector=".innerBlock label.largeAmount" foreground="block.inner.amount" font="-,bold,13" anchor="top"/>
     <style selector=".innerBlock .hyperlink" foreground="block.inner.hyperlink" font="-,plain,10"/>
 
+    <style selector="label.alignActualAmount" foreground="block.inner.item" font="-,plain,12" marginLeft="5"/>
+    
     <style selector="button.amountLink" ui="hyperlinkButtonWithoutUnderline"
            fill="none" anchor="right" horizontalAlignment="right"
            foreground="block.amount.link" font="-,bold,11"/>

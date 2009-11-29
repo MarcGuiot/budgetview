@@ -53,80 +53,84 @@
           <tabs marginTop="10">
             <tab title="$seriesEdition.tabs.terms">
               <row margin="5">
-                <column marginTop="5" weightX="0" preferredSize="(200,400)">
+                <column marginTop="5" weightX="0" preferredSize="(200,400)"
+                        border="matte(0,0,0,1,dialog.separator.light)">
 
-                  <label text="$seriesEdition.profile" styleClass="formLabelTop" marginTop="5" marginBottom="5"/>
-                  <comboBox ref="profileCombo"/>
-                  <panel ref="monthSelectionPanel" opaque="false">
-                    <column>
-                      <repeat ref="monthRepeat" styleClass="innerBlock" margin="5" marginTop="2"
-                              layout="horizontalGrid" gridWrapLimit="3" weightY="0.1">
-                        <label ref="monthLabel" styleClass="month" labelFor="monthSelector"
-                               fill="none" anchor="south" marginBottom="0"/>
-                        <checkBox ref="monthSelector"
-                                  fill="none" anchor="north" marginTop="0" marginBottom="3"/>
-                      </repeat>
-                    </column>
-                  </panel>
+                  <column marginRight="10">
 
-                  <cards ref="monthSelection">
-                    <card name="monthRangeSelection">
+                    <label text="$seriesEdition.profile" styleClass="formLabelTop" marginTop="5" marginBottom="5"/>
+                    <comboBox ref="profileCombo"/>
+                    <panel ref="monthSelectionPanel" opaque="false">
                       <column>
-                        <label text="$seriesEdition.begin" styleClass="formLabelTop"
-                               fill="horizontal" marginTop="2"/>
-                        <row>
-                          <textField ref="seriesStartDate" fill="horizontal" columns="20"
-                                     marginRight="5"/>
-                          <button action="deleteSeriesStartDate" icon="button_delete.png" styleClass="icon"
-                                  pressedIcon="button_delete_pressed.png" autoHideIfDisabled="true"
-                                  fill="none" tooltipText="$seriesEdition.begin.delete.tooltip"/>
-                          <button action="seriesStartDateChooser" icon="button_calendar.png" styleClass="icon"
-                                  pressedIcon="button_calendar_pressed.png"
-                                  marginLeft="5" fill="none" tooltipText="$seriesEdition.begin.edit.tooltip"/>
-                          <filler fill="horizontal" weightX="0.1"/>
-                        </row>
-
-                        <label text="$seriesEdition.end" styleClass="formLabelTop" labelFor="seriesEndDate"
-                               fill="horizontal" marginTop="10"/>
-                        <row>
-                          <textField ref="seriesEndDate" fill="horizontal" columns="20"
-                                     marginRight="5"/>
-                          <button action="deleteSeriesEndDate" icon="button_delete.png" styleClass="icon"
-                                  pressedIcon="button_delete_pressed.png" autoHideIfDisabled="true"
-                                  fill="none" tooltipText="$seriesEdition.end.delete.tooltip"/>
-                          <button action="seriesEndDateChooser" icon="button_calendar.png" styleClass="icon"
-                                  pressedIcon="button_calendar_pressed.png"
-                                  marginLeft="5" fill="none" tooltipText="$seriesEdition.end.edit.tooltip"/>
-                          <filler fill="horizontal" weightX="0.1"/>
-                        </row>
+                        <repeat ref="monthRepeat" styleClass="innerBlock" margin="5" marginTop="2"
+                                layout="horizontalGrid" gridWrapLimit="3" weightY="0.1">
+                          <label ref="monthLabel" styleClass="month" labelFor="monthSelector"
+                                 fill="none" anchor="south" marginBottom="0"/>
+                          <checkBox ref="monthSelector"
+                                    fill="none" anchor="north" marginTop="0" marginBottom="3"/>
+                        </repeat>
                       </column>
-                    </card>
+                    </panel>
 
-                    <card name="singleMonthSelection">
-                      <column>
-                        <label text="$seriesEdition.singleMonth" styleClass="formLabelTop"
-                               fill="horizontal" marginTop="2"/>
-                        <row>
-                          <textField ref="singleMonthDate" fill="horizontal" columns="20"
-                                     marginRight="5"/>
-                          <button action="singleMonthChooser" icon="button_calendar.png" styleClass="icon"
-                                  pressedIcon="button_calendar_pressed.png"
-                                  marginLeft="5" fill="none" tooltipText="$seriesEdition.begin.edit.tooltip"/>
-                          <filler fill="horizontal" weightX="0.1"/>
-                        </row>
-                      </column>
-                    </card>
+                    <cards ref="monthSelection">
+                      <card name="monthRangeSelection">
+                        <column>
+                          <label text="$seriesEdition.begin" styleClass="formLabelTop"
+                                 fill="horizontal" marginTop="2"/>
+                          <row>
+                            <textField ref="seriesStartDate" fill="horizontal" columns="20"
+                                       marginRight="5"/>
+                            <button action="deleteSeriesStartDate" icon="button_delete.png" styleClass="icon"
+                                    pressedIcon="button_delete_pressed.png" autoHideIfDisabled="true"
+                                    fill="none" tooltipText="$seriesEdition.begin.delete.tooltip"/>
+                            <button action="seriesStartDateChooser" icon="button_calendar.png" styleClass="icon"
+                                    pressedIcon="button_calendar_pressed.png"
+                                    marginLeft="5" fill="none" tooltipText="$seriesEdition.begin.edit.tooltip"/>
+                            <filler fill="horizontal" weightX="0.1"/>
+                          </row>
 
-                  </cards>
+                          <label text="$seriesEdition.end" styleClass="formLabelTop" labelFor="seriesEndDate"
+                                 fill="horizontal" marginTop="10"/>
+                          <row>
+                            <textField ref="seriesEndDate" fill="horizontal" columns="20"
+                                       marginRight="5"/>
+                            <button action="deleteSeriesEndDate" icon="button_delete.png" styleClass="icon"
+                                    pressedIcon="button_delete_pressed.png" autoHideIfDisabled="true"
+                                    fill="none" tooltipText="$seriesEdition.end.delete.tooltip"/>
+                            <button action="seriesEndDateChooser" icon="button_calendar.png" styleClass="icon"
+                                    pressedIcon="button_calendar_pressed.png"
+                                    marginLeft="5" fill="none" tooltipText="$seriesEdition.end.edit.tooltip"/>
+                            <filler fill="horizontal" weightX="0.1"/>
+                          </row>
+                        </column>
+                      </card>
 
-                  <label text="$seriesEdition.dayChooser" styleClass="formLabelTop" autoHideSource="dayChooser"/>
-                  <comboBox ref="dayChooser" autoHideIfDisabled="true"/>
+                      <card name="singleMonthSelection">
+                        <column>
+                          <label text="$seriesEdition.singleMonth" styleClass="formLabelTop"
+                                 fill="horizontal" marginTop="2"/>
+                          <row>
+                            <textField ref="singleMonthDate" fill="horizontal" columns="20"
+                                       marginRight="5"/>
+                            <button action="singleMonthChooser" icon="button_calendar.png" styleClass="icon"
+                                    pressedIcon="button_calendar_pressed.png"
+                                    marginLeft="5" fill="none" tooltipText="$seriesEdition.begin.edit.tooltip"/>
+                            <filler fill="horizontal" weightX="0.1"/>
+                          </row>
+                        </column>
+                      </card>
 
-                  <filler fill="vertical"/>
+                    </cards>
 
+                    <label text="$seriesEdition.dayChooser" styleClass="formLabelTop" autoHideSource="dayChooser"/>
+                    <comboBox ref="dayChooser" autoHideIfDisabled="true"/>
+
+                    <filler fill="vertical"/>
+
+                  </column>
                 </column>
 
-                <panel ref="seriesBudgetEditionPanel" weightX="1"/>
+                <panel ref="seriesBudgetEditionPanel" weightX="1" marginLeft="5"/>
               </row>
             </tab>
             <tab title="$seriesEdition.tabs.subseries">
