@@ -1446,6 +1446,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.editSeries("Internet")
       .checkAmount("50.00")
       .checkAlignPlannedAndActualEnabled()
+      .checkActualAmount("29.00")
       .alignPlannedAndActual()
       .checkAmount("29.00")
       .validate();
@@ -1456,6 +1457,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectNoMonth()
       .checkAlignPlannedAndActualDisabled()
       .selectAllMonths()
+      .checkActualAmount("Actual")
       .alignPlannedAndActual()
       .checkAmount("")
       .validate();

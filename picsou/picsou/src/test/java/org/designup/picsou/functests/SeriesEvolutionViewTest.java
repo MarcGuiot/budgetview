@@ -250,7 +250,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesEvolution.editSeries("John's", "Jul 08")
       .checkPositiveAmountsSelected()
       .setAmount(400.00)
-      .checkPropagationEnabled()
+      .setPropagationEnabled()
       .validate();
 
     seriesEvolution.initContent()
@@ -270,7 +270,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesEvolution.editSeries("John's", "Sep 08")
       .checkPositiveAmountsSelected()
       .setAmount(500.00)
-      .setPropagationDisabled()
+      .checkPropagationDisabled()
       .validate();
 
     seriesEvolution.initContent()
@@ -296,9 +296,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .setEndDate(200812)
       .validate();
 
-// On devrait n'avoir qu'un mois sur deux dans SeriesEvolution apres le validate, mais ils restent tous
-//    openApplication();
-//
     seriesEvolution.initContent()
       .add("Balance", "", "750.00", "350.00", "850.00", "350.00", "750.00", "350.00", "350.00")
       .add("Main accounts", "", "1080.00", "1430.00", "2280.00", "2630.00", "3380.00", "3730.00", "4080.00")
@@ -318,6 +315,20 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .setAmount(500.00)
       .checkPeriodicity("Every two months until december 2008")
       .validate();
+
+    seriesEvolution.initContent()
+      .add("Balance", "", "750.00", "350.00", "850.00", "350.00", "750.00", "350.00", "350.00")
+      .add("Main accounts", "", "1080.00", "1430.00", "2280.00", "2630.00", "3380.00", "3730.00", "4080.00")
+      .add("Savings accounts", "", "", "", "", "", "", "", "")
+      .add("To categorize", "", "", "", "", "", "", "", "")
+      .add("Income", "", "750.00", "350.00", "850.00", "350.00", "750.00", "350.00", "350.00")
+      .add("John's", "", "400.00", "", "500.00", "", "400.00", "", "")
+      .add("Mary's", "", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
+      .add("Recurring", "", "", "", "", "", "", "", "")
+      .add("Envelopes", "", "", "", "", "", "", "", "")
+      .add("Special", "", "", "", "", "", "", "", "")
+      .add("Savings", "", "", "", "", "", "", "", "")
+      .check();
   }
 
   public void testDeletingTheShownSeries() throws Exception {
@@ -451,7 +462,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     seriesEvolution.editSeries("Groceries", "Sep 08")
       .setAmount(150.00)
-      .setPropagationDisabled()
+      .checkPropagationDisabled()
       .validate();
 
     seriesEvolution.editSeries("Groceries", "Sep 08")

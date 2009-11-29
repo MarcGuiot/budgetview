@@ -147,6 +147,14 @@ public class GlobList extends ArrayList<Glob> {
     return result;
   }
 
+  public Set<Double> getValueSet(DoubleField field) {
+    Set<Double> result = new HashSet<Double>();
+    for (Glob glob : this) {
+      result.add(glob.get(field));
+    }
+    return result;
+  }
+
   public Set<String> getValueSet(StringField field) {
     Set<String> result = new HashSet<String>();
     for (Glob glob : this) {
