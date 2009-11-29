@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class Main {
   private static final String MAC_PLATFORM_ID = "Mac OS X";
-  private static final String LINUX_PLATFORM_ID = "Linux";
+  private static final String WINDOWS_PLATFORM_ID = "Windows";
   private static final String PICSOU = "cashpilot";
   private static final Pattern FILTER = Pattern.compile(PICSOU + "[0-9][0-9]*" + "\\.jar");
   private static final String JAR_DIRECTORY = "/jars";
@@ -104,20 +104,35 @@ public class Main {
     return files[files.length - 1];
   }
 
-  private File loadJar() {
-    String path = System.getProperty("user.home") + "/." + PICSOU + JAR_DIRECTORY;
+  public static String getDataPath() {
     if (isMacOSX()) {
-      path = System.getProperty("user.home") + "/Library/Application Support/" + PICSOU + JAR_DIRECTORY;
+      return System.getProperty("user.home") + "/Library/Application Support/" + PICSOU + JAR_DIRECTORY;
     }
+    if (isVista()) {
+      return System.getProperty("user.home") + "/AppData/Local/" + PICSOU + JAR_DIRECTORY;
+    }
+    if (isWindows()) {
+      return System.getProperty("user.home") + "/Application Data/" + PICSOU + JAR_DIRECTORY;
+    }
+    return System.getProperty("user.home") + "/." + PICSOU + JAR_DIRECTORY;
+  }
+
+  private File loadJar() {
+    String path = getDataPath();
     return findLastJar(path);
+  }
+
+  public static boolean isVista() {
+    String os = (String)AccessController.doPrivileged(new GetPropertyAction("os.name"));
+    return os.contains(WINDOWS_PLATFORM_ID) && os.toLowerCase().contains("vista");
+  }
+
+  public static boolean isWindows() {
+    return ((String)AccessController.doPrivileged(new GetPropertyAction("os.name"))).contains(WINDOWS_PLATFORM_ID);
   }
 
   public static boolean isMacOSX() {
     return ((String)AccessController.doPrivileged(new GetPropertyAction("os.name"))).contains(MAC_PLATFORM_ID);
-  }
-
-  public static boolean isLinux() {
-    return ((String)AccessController.doPrivileged(new GetPropertyAction("os.name"))).contains(LINUX_PLATFORM_ID);
   }
 
   private void dumpLog(String message, Exception e,
