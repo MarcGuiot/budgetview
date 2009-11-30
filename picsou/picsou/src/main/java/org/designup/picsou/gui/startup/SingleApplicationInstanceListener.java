@@ -2,6 +2,7 @@ package org.designup.picsou.gui.startup;
 
 import org.globsframework.utils.Log;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -119,9 +120,13 @@ public class SingleApplicationInstanceListener {
         outputStream.flush();
         String message = (String)inputStream.readObject();
         if (FILES_MESSAGE_KEY.equals(message)) {
-          List<File> files = readFileName(inputStream);
+          final List<File> files = readFileName(inputStream);
           outputStream.writeObject(RESPONSE_OK);
-          openRequestManager.openFiles(files);
+          SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+              openRequestManager.openFiles(files);
+            }
+          });
         }
         else if (SHOW_MESSAGE_KEY.equals(message)) {
           readFileName(inputStream);
