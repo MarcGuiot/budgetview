@@ -26,6 +26,15 @@ public class ImportChecker {
     importButton = dialog.getButton("Import");
   }
 
+  private ImportChecker() {
+  }
+
+  static public ImportChecker create(Panel dialog){
+    ImportChecker importChecker = new ImportChecker();
+    importChecker.dialog = dialog;
+    return importChecker;
+  }
+
   public ImportChecker setFilePath(String text) {
     fileField.setText(text);
     return this;
@@ -143,36 +152,13 @@ public class ImportChecker {
     return this;
   }
 
-  public ImportChecker selectAccountBank(String bankName) {
-    ComboBox accountBankCombo = dialog.getComboBox("accountBank");
-    accountBankCombo.select(bankName);
-    return this;
-  }
-
-  public ImportChecker selectOfxAccountBank(String bankName) {
-    ComboBox accountBankCombo = dialog.getComboBox("bankCombo");
-    accountBankCombo.select(bankName);
-    return this;
-  }
-
   public ImportChecker skipFile() {
     dialog.getButton("Skip").click();
     return this;
   }
 
-  public ImportChecker checkImportMessage(String message) {
-    TextBox accountMessage = dialog.getTextBox("importMessage");
-    assertTrue(accountMessage.textEquals(message));
-    return this;
-  }
-
-  public ImportChecker checkAccountsForEntity(String entityId, String[] accounts) {
-    assertTrue(dialog.getTextBox("accountNames:" + entityId).textContains(accounts));
-    return this;
-  }
-
-  public ImportChecker selectBankForEntity(String entityId, String bankName) {
-    dialog.getComboBox("bankCombo:" + entityId).select(bankName);
+  public ImportChecker checkMessageCreateFirstAccount() {
+    dialog.getTextBox("You must create an account");
     return this;
   }
 
@@ -208,12 +194,21 @@ public class ImportChecker {
     return this;
   }
 
+  public AccountEditionChecker openAccount(){
+    return AccountEditionChecker.open(dialog.getButton("Create an account").triggerClick());
+  }
+
   public ImportChecker defineAccount(String bank, String accountName, String number) {
-    selectAccountBank(bank);
-    setAccountName(accountName);
-    setAccountNumber(number);
+    AccountEditionChecker accountEditionChecker = 
+      AccountEditionChecker.open(dialog.getButton("Create an account").triggerClick());
+    accountEditionChecker.selectBank(bank)
+      .checkAccountName("Main account")
+      .setAccountName(accountName)
+      .setAccountNumber(number);
+    accountEditionChecker.validate();
     return this;
   }
+
 
   public ImportChecker createNewAccount(String bank, String accountName, String number, double initialBalance) {
     AccountEditionChecker.open(dialog.getButton("newAccount").triggerClick())
@@ -236,6 +231,22 @@ public class ImportChecker {
     WindowInterceptor.init(dialog.getButton("Browse").triggerClick())
       .process(FileChooserHandler.init().assertCurrentDirEquals(new File(directory)).cancelSelection())
       .run();
+    return this;
+  }
+
+  public BankEntityEditionChecker openEntityEditionChecker() {
+    Window window = WindowInterceptor.getModalDialog(dialog.getButton("Set the bank").triggerClick());
+    return new BankEntityEditionChecker(window);
+  }
+
+  public ImportChecker checkMessageSelectABank() {
+    dialog.getTextBox("You must select a bank for this account");
+    return this;
+  }
+
+  public ImportChecker selectOfxAccountBank(String bank) {
+    openEntityEditionChecker().selectBank(bank)
+      .validate();
     return this;
   }
 }

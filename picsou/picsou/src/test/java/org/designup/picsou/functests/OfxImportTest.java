@@ -296,13 +296,16 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addBankAccount(12345, 54321, "111", 1000.00, "2008/08/07")
       .addTransaction("2008/08/10", -50.00, "Virement")
       .save();
-    operations.openImportDialog()
+    ImportChecker importChecker = operations.openImportDialog()
       .setFilePath(path)
       .acceptFile()
-      .doImport()
-      .checkImportMessage("You must select a bank for this account")
-      .selectOfxAccountBank("Autre")
-      .checkNoErrorMessage()
+      .checkMessageSelectABank();
+    importChecker
+      .openEntityEditionChecker()
+      .selectBank("Autre")
+      .validate();
+      importChecker
+        .checkNoErrorMessage()
       .completeImport();
 
     mainAccounts.checkAccount("Account n. 111", 950.00, "2008/08/10");

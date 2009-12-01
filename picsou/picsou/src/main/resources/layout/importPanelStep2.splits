@@ -27,15 +27,17 @@
 
       <panel ref="dateSelectionPanel"/>
 
-      <panel ref="bankEntityEditionPanel"/>
+      <repeat ref="additionalActions">
+        <row>
+          <label ref="message"/>
+          <button action="action"/>
+        </row>
+      </repeat>
 
       <row>
         <comboBox ref="accountCombo"/>
         <button ref="newAccount"/>
       </row>
-
-      <label text="$import.account.panel.title" styleClass="header" autoHideSource="accountEditionPanel"/>
-      <panel ref="accountEditionPanel"/>
 
       <panel minimumSize="(200,20)" opaque="false" marginTop="5">
         <label ref="importMessage" styleClass="errorMessage"/>

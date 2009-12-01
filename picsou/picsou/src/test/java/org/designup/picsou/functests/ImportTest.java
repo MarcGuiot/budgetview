@@ -141,10 +141,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkFileContent(new Object[][]{
         {"10/01/2006", "Menu K", "-1.10"}
       })
-      .selectAccountBank(SOCIETE_GENERALE)
-      .checkAccountName("Main account")
-      .setAccountName("My SG account")
-      .setAccountNumber("0123546")
+      .defineAccount(SOCIETE_GENERALE, "My SG account", "0123546")
       .doImport()
       .completeImport();
 
@@ -207,9 +204,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     ImportChecker importDialog = operations.openImportDialog()
       .setFilePath(path)
       .acceptFile()
-      .selectAccountBank(SOCIETE_GENERALE)
-      .setAccountName("Main")
-      .setAccountNumber("12345");
+      .defineAccount(SOCIETE_GENERALE,"Main","12345");
 
     importDialog
       .doImportWithBalance()
@@ -272,14 +267,13 @@ public class ImportTest extends LoggedInFunctionalTestCase {
         {"10/01/2006", "First operation", "-1.10"}
       })
       .doImport()
-      .checkImportMessage("You must select a bank for this account")
+      .checkMessageCreateFirstAccount()
       .skipFile()
-      .checkImportMessage("")
+      .checkMessageCreateFirstAccount()
       .checkFileContent(new Object[][]{
         {"20/01/2006", "Second operation", "-2.20"}
       })
-      .selectAccountBank(SOCIETE_GENERALE)
-      .setAccountNumber("1111")
+      .defineAccount(SOCIETE_GENERALE, "main", "1111")
       .completeImport();
 
     transactions
@@ -321,16 +315,19 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
 
-    operations.openImportDialog()
+    ImportChecker importChecker = operations.openImportDialog()
       .setFilePath(path1)
       .acceptFile()
       .checkFileContent(new Object[][]{
         {"10/01/2006", "Menu K", "-1.10"}
-      })
-      .checkNoAccountBankSelected()
+      });
+    importChecker
+      .openAccount()
+      .checkNoBankSelected()
       .setAccountNumber("0123546")
-      .doImport()
-      .checkImportMessage("You must select a bank for this account")
+      .cancel();
+    importChecker.doImport()
+      .checkMessageCreateFirstAccount()
       .skipFile();
   }
 
@@ -346,7 +343,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/10", 71.0, "Metro")
       .save();
 
-    operations.openImportDialog()
+    ImportChecker importChecker = operations.openImportDialog()
       .setFilePath(fileName)
       .acceptFile()
       .checkFileContent(new Object[][]{
@@ -354,12 +351,15 @@ public class ImportTest extends LoggedInFunctionalTestCase {
         {"10/06/2008", "Metro", "71.00"},
         {"10/06/2008", "McDo", "10.00"},
         {"10/06/2008", "V'lib", "1.00"},
-      })
+      });
+    importChecker
+      .openEntityEditionChecker()
       .checkAccountsForEntity("666", new String[]{ "12345678a", "12345678b"})
       .checkAccountsForEntity("777", new String[]{"1111222233334444", "87654321"})
       .selectBankForEntity("777", SOCIETE_GENERALE)
       .selectBankForEntity("666", SOCIETE_GENERALE)
-      .completeImport();
+      .validate();
+    importChecker.completeImport();
 
     String secondFileName = OfxBuilder.init(this)
       .addBankAccount(666, 2048, "77777777", 77.0, "2008/06/11")
@@ -413,7 +413,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkFileContent(new Object[][]{
         {"02/01/01", "Menu K", "-1.10"}
       })
-      .selectBank(SOCIETE_GENERALE)
+      .defineAccount(SOCIETE_GENERALE, "main acount", "0123546")
       .checkDates("Year/Month/Day", "Month/Day/Year", "Day/Month/Year")
       .doImport()
       .checkErrorMessage("import.dateformat.undefined")
@@ -421,7 +421,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkFileContent(new Object[][]{
         {"01/02/2001", "Menu K", "-1.10"}
       })
-      .enterAccountNumber("0123546")
       .completeImport();
 
     transactions.initContent()

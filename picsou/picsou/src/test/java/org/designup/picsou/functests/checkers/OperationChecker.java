@@ -94,12 +94,15 @@ public class OperationChecker {
             .run();
 
           importDialog.getButton("Import").click();
-          if (importDialog.getInputTextBox("number").isEditable().isTrue()) {
-            importDialog.getInputTextBox("number").setText(DEFAULT_ACCOUNT_NUMBER);
-            importDialog.getComboBox("accountBank").select(bank);
+          JButton createFirstAccount = importDialog.findSwingComponent(JButton.class, "Create an account");
+          if (createFirstAccount != null){
+            ImportChecker.create(importDialog)
+              .defineAccount(bank, "Main account", DEFAULT_ACCOUNT_NUMBER);
           }
-          else if (bank != null && importDialog.findSwingComponent(JComboBox.class, "bankCombo") != null){ // OFX
-            importDialog.getComboBox("bankCombo").select(bank);
+          else if (bank != null && importDialog.findSwingComponent(JButton.class, "Set the bank") != null){ // OFX
+            ImportChecker.create(importDialog).openEntityEditionChecker()
+              .selectBank(bank)
+              .validate();
           }
           if (targetAccount != null) {
             importDialog.getComboBox("accountCombo").select(targetAccount);

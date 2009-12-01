@@ -110,7 +110,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .checkNoErrorDisplayed()
       .clickEnter()
       .checkErrorMessage("login.invalid.credentials");
-    
+
     login.setCreation()
       .confirmPassword("titi")
       .checkNoErrorDisplayed()
@@ -376,16 +376,13 @@ public class LoginTest extends StartUpFunctionalTestCase {
     WindowInterceptor.init(trigger)
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          window.getInputTextBox("fileField").setText(path);
-          window.getButton("Import").click();
-          assertTrue(window.getComboBox("accountBank")
-            .contentEquals("(Select a bank)", "Autre", "AXA Banque", "Banque Populaire", "BNP Paribas",
-                           "Caisse d'épargne", "CIC",
-                           "Crédit Agricole", "Crédit Mutuel", "ING Direct", "La Poste", "LCL",
-                           "Société Générale"));
+          ImportChecker importChecker = new ImportChecker(window);
+
+          importChecker.setFilePath(path)
+            .doImport();
+
           return window.getButton("Skip file").triggerClick();
         }
       }).run();
   }
-
 }

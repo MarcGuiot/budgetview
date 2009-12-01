@@ -37,8 +37,7 @@ public class LoginFuncTest extends ServerFuncTestCase {
       .openImportDialog()
       .selectFiles(fileName)
       .acceptFile()
-      .selectBank("Société Générale")
-      .enterAccountNumber("1111")
+      .defineAccount("Société Générale", "Main account", "1111")
       .doImportWithBalance()
       .setAmount(10.00)
       .validate();

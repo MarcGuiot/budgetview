@@ -212,8 +212,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     ImportChecker importer = ImportChecker.open(operations.getImportTrigger());
     AccountPositionEditionChecker accountPosition = importer.selectFiles(file)
       .acceptFile()
-      .selectBank(LoggedInFunctionalTestCase.SOCIETE_GENERALE)
-      .enterAccountNumber("11111")
+      .defineAccount(LoggedInFunctionalTestCase.SOCIETE_GENERALE, "Main account", "11111")
       .doImportWithBalance();
     NewApplicationThread newApplication = new NewApplicationThread(file);
     newApplication.start();

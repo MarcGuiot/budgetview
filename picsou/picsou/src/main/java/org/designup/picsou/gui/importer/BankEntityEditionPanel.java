@@ -1,8 +1,9 @@
-package org.designup.picsou.gui.startup;
+package org.designup.picsou.gui.importer;
 
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -20,14 +21,12 @@ import java.util.Set;
 public class BankEntityEditionPanel {
   private GlobRepository repository;
   private Directory directory;
-  private JLabel messageLabel;
   private JPanel panel = new JPanel();
   private GlobList accounts;
 
-  public BankEntityEditionPanel(GlobRepository repository, Directory directory, JLabel messageLabel) {
+  public BankEntityEditionPanel(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
-    this.messageLabel = messageLabel;
   }
 
   public void init(final GlobList accounts) {
@@ -37,7 +36,6 @@ public class BankEntityEditionPanel {
                                                       repository, directory);
 
     builder.add("panel", panel);
-    panel.setVisible(!accounts.isEmpty());
     Set<String> valueSet = accounts.getSortedSet(Account.BANK_ENTITY_LABEL);
     builder.addRepeat("repeat",
                       valueSet,
@@ -54,15 +52,6 @@ public class BankEntityEditionPanel {
     builder.load();
   }
 
-  public boolean check() {
-    for (Glob account : accounts) {
-      if (account.get(Account.BANK) == null){
-        messageLabel.setText(Lang.get("account.error.missing.bank"));
-        return false;
-      }
-    }
-    return true;
-  }
 
   public JPanel getPanel() {
     return panel;
@@ -83,6 +72,8 @@ public class BankEntityEditionPanel {
 
   private JComboBox createCombo(final GlobList accounts, String entityId) {
     return GlobComboView.init(Bank.TYPE, repository, directory)
+      .setShowEmptyOption(true)
+      .setEmptyOptionLabel(Lang.get("account.select.bank"))
       .setSelectionHandler(new GlobComboView.GlobSelectionHandler() {
         public void processSelection(Glob bank) {
           Key bankKey = bank != null ? bank.getKey() : null;
@@ -94,7 +85,6 @@ public class BankEntityEditionPanel {
               return;
             }
           }
-          messageLabel.setText("");
         }
       })
       .setName("bankCombo:" + entityId)

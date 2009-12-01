@@ -1,0 +1,15 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="dialog">
+    <column styleClass="innerDialog">
+      <label text="$bankEntityEdition.title" styleClass="title"/>
+
+      <panel ref="editionPanel"/>
+
+      <filler fill="vertical"/>
+    </column>
+  </panel>
+
+</splits>

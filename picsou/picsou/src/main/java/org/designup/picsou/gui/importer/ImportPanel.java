@@ -1,16 +1,18 @@
-package org.designup.picsou.gui.startup;
+package org.designup.picsou.gui.importer;
 
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.accounts.AccountEditionPanel;
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
 import org.designup.picsou.gui.accounts.NewAccountAction;
-import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.startup.AutoCategorizationFunctor;
+import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.utils.ApplicationColors;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.importer.BankFileType;
 import org.designup.picsou.importer.ImportSession;
 import org.designup.picsou.model.*;
@@ -20,13 +22,17 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.SingleComponentLayout;
+import org.globsframework.gui.splits.repeat.Repeat;
+import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
-import static org.globsframework.gui.views.utils.LabelCustomizers.*;
+import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
+import static org.globsframework.gui.views.utils.LabelCustomizers.fontSize;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
@@ -86,10 +92,13 @@ public class ImportPanel {
   private JPanel mainPanel;
   private JPanel panelStep1;
   private JPanel panelStep2;
+  private List<AdditionalImportAction> actions = new ArrayList<AdditionalImportAction>();
 
   private static final int[] COLUMN_SIZES = {10, 45};
 
   private PicsouDialog dialog;
+  private Repeat<AdditionalImportAction> additionalActionImportRepeat;
+  private List<AdditionalImportAction> currentActions;
 
   public ImportPanel(String textForCloseButton, List<File> files, Glob defaultAccount,
                      final Window owner, final GlobRepository repository, Directory directory,
@@ -216,14 +225,26 @@ public class ImportPanel {
 
     registerAccountCreationListener(sessionRepository, sessionDirectory);
 
-    bankEntityEditionPanel = new BankEntityEditionPanel(sessionRepository, sessionDirectory, importMessageLabel);
-    builder2.add("bankEntityEditionPanel", bankEntityEditionPanel.getPanel());
+    AdditionalImportAction bankEntity = new BankEntityEditionAction(dialog, sessionRepository, sessionDirectory);
+    actions.add(bankEntity);
 
-    accountEditionPanel = new AccountEditionPanel(sessionRepository, sessionDirectory, importMessageLabel);
-    accountEditionPanel.setBalanceEditorVisible(false);
-    builder2.add("accountEditionPanel", accountEditionPanel.getBuilder());
+    AdditionalImportAction accountEdition = new AccountEditionAction(dialog, sessionRepository, sessionDirectory);
+    actions.add(accountEdition);
 
     builder2.add("importMessage", importMessageLabel);
+
+    additionalActionImportRepeat = builder2.addRepeat("additionalActions", Collections.<AdditionalImportAction>emptyList(),
+                                                      new RepeatComponentFactory<AdditionalImportAction>() {
+                                                        public void registerComponents(RepeatCellBuilder cellBuilder, final AdditionalImportAction item) {
+                                                          cellBuilder.add("message", new JLabel(item.getMessage()));
+                                                          cellBuilder.add("action", new AbstractAction(item.getButtonMessage()) {
+                                                            public void actionPerformed(ActionEvent e) {
+                                                              item.getAction().actionPerformed(e);
+                                                              updateActions();
+                                                            }
+                                                          });
+                                                        }
+                                                      });
 
     builder2.add("skipFile", new SkipFileAction());
     builder2.add("finish", new FinishAction());
@@ -473,8 +494,8 @@ public class ImportPanel {
     try {
       fileNameLabel.setText(file.getAbsolutePath());
       List<String> dateFormat = importSession.loadFile(file);
-      initBankEntityEditionPanel();
-      initCreationAccountFields(file);
+      updateActions();
+      initQifAccountChooserFields(file);
       initDateFormatSelectionPanel(dateFormat);
       return true;
     }
@@ -484,6 +505,16 @@ public class ImportPanel {
       messageLabel.setText(message);
       return false;
     }
+  }
+
+  private void updateActions() {
+    currentActions = new ArrayList<AdditionalImportAction>();
+    for (AdditionalImportAction action : actions) {
+      if (!action.isValid()) {
+        currentActions.add(action);
+      }
+    }
+    additionalActionImportRepeat.set(currentActions);
   }
 
   private void showPositionDialog() {
@@ -551,26 +582,13 @@ public class ImportPanel {
     dateFormatSelectionPanel.init(dateFormats);
   }
 
-  private void initBankEntityEditionPanel() {
-    bankEntityEditionPanel.init(sessionRepository.getAll(Account.TYPE)
-      .filterSelf(GlobMatchers.and(GlobMatchers.fieldIsNull(Account.BANK),
-                                   GlobMatchers.not(GlobMatchers.fieldIsNull(Account.BANK_ENTITY_LABEL))) , sessionRepository));
-  }
-
-  private void initCreationAccountFields(File file) {
+  private void initQifAccountChooserFields(File file) {
     if (BankFileType.getTypeFromName(file.getAbsolutePath()).equals(BankFileType.QIF)) {
       GlobList accounts = sessionRepository.getAll(Account.TYPE);
       for (Integer accountId : Account.SUMMARY_ACCOUNT_IDS) {
         accounts.remove(sessionRepository.get(Key.create(Account.TYPE, accountId)));
       }
-      if (accounts.size() == 0) {
-        Glob createdAccount = importSession.createDefaultAccount();
-        accountEditionPanel.setAccount(createdAccount);
-        accountComboBox.setVisible(false);
-        newAccountButton.setVisible(false);
-        sessionDirectory.get(SelectionService.class).select(createdAccount);
-      }
-      else {
+      if (accounts.size() != 0) {
         Glob account = null;
         if (defaultAccount != null) {
           account = sessionRepository.get(defaultAccount.getKey());
@@ -578,16 +596,14 @@ public class ImportPanel {
         else if (accounts.size() == 1) {
           account = accounts.get(0);
         }
-        accountComboBox.setVisible(true);
-        newAccountButton.setVisible(true);
-        accountEditionPanel.setAccount(null);
         if (account != null) {
           sessionDirectory.get(SelectionService.class).select(account);
         }
       }
+      accountComboBox.setVisible(!accounts.isEmpty());
+      newAccountButton.setVisible(!accounts.isEmpty());
     }
     else {
-      accountEditionPanel.setAccount(null);
       accountComboBox.setVisible(false);
       newAccountButton.setVisible(false);
     }
@@ -605,10 +621,7 @@ public class ImportPanel {
         if (!dateFormatSelectionPanel.check()) {
           return;
         }
-        if (!bankEntityEditionPanel.check()) {
-          return;
-        }
-        if (!accountEditionPanel.check()) {
+        if (!currentActions.isEmpty()) {
           return;
         }
         Key importKey = importSession.importTransactions(currentlySelectedAccount,

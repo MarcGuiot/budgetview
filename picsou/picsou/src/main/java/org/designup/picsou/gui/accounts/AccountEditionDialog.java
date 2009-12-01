@@ -146,6 +146,14 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
     GuiUtils.showCentered(dialog);
   }
 
+  public void createAndShow() {
+    localRepository.reset(GlobList.EMPTY, Account.TYPE);
+    Glob account = localRepository.create(Account.TYPE, value(Account.NAME, Lang.get("account.default.current.name")));
+    setBalanceEditorVisible(false);
+    updateModeCombo.setEnabled(!accountHasTransactions(account));
+    doShow(localRepository.get(account.getKey()));
+  }
+
   private class OkAction extends AbstractAction {
     public OkAction() {
       super(Lang.get("ok"));
