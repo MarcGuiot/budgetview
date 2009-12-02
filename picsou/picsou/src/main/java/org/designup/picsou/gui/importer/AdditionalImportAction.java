@@ -11,7 +11,7 @@ public interface AdditionalImportAction {
 
   String getMessage();
 
-  Action getAction();
-
   String getButtonMessage();
+
+  Action getAction();
 }

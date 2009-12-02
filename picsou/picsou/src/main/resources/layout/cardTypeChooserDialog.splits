@@ -1,0 +1,23 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="dialog">
+    <column styleClass="innerDialog">
+
+      <repeat ref="cardTypeRepeat">
+        <row>
+          <label ref="accountName" anchor="center"/>
+          <column>
+            <toggleButton ref="deferredDebit"/>
+            <toggleButton ref="creditCard"/>
+          </column>
+          <label text="cardTypeChooser.day" autoHideSource="comboOfDay"/>
+          <comboBox ref="comboOfDay"/>
+        </row>
+      </repeat>
+      <filler fill="vertical"/>
+    </column>
+  </panel>
+
+</splits>

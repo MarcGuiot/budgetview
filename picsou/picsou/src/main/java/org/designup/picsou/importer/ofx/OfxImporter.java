@@ -285,7 +285,7 @@ public class OfxImporter implements AccountFileImporter {
         }
         else {
           for (Glob account : repository.getAll(Account.TYPE)) {
-            if (bankEntityLabel.equals(account.get(Account.BANK_ENTITY_LABEL))){
+            if (bankEntityLabel != null && bankEntityLabel.equals(account.get(Account.BANK_ENTITY_LABEL))){
               bankId = account.get(Account.BANK);
               break;
             }

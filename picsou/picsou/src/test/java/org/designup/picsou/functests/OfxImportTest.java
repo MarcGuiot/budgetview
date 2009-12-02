@@ -335,4 +335,23 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .checkIsMain()
       .cancel();
   }
+
+  public void testImportCardAccount() throws Exception {
+    String file = OfxBuilder.init(this)
+      .addBankAccount("unknown", 111, "111", 1000.00, "2008/08/07")
+      .addCardAccount("111", 10, "2008/08/07")
+      .addTransaction("2008/08/10", -50.00, "Virement")
+      .save();
+    ImportChecker importChecker = operations.openImportDialog();
+    importChecker
+      .setFilePath(file)
+      .acceptFile()
+      .checkMessageSelectABank()
+      .checkMessageSelectACardType()
+      .openCardType()
+      .checkNoneAreSelected()
+      .selectCreditCard(29)
+      .validate();
+    importChecker.doImport();
+  }
 }

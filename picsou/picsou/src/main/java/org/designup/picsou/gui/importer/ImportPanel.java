@@ -231,6 +231,9 @@ public class ImportPanel {
     AdditionalImportAction accountEdition = new AccountEditionAction(dialog, sessionRepository, sessionDirectory);
     actions.add(accountEdition);
 
+    AdditionalImportAction cardType = new CardTypeAction(dialog, repository, directory);
+    actions.add(cardType);
+
     builder2.add("importMessage", importMessageLabel);
 
     additionalActionImportRepeat = builder2.addRepeat("additionalActions", Collections.<AdditionalImportAction>emptyList(),

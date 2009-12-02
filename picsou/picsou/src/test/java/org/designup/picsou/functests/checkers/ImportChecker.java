@@ -249,4 +249,14 @@ public class ImportChecker {
       .validate();
     return this;
   }
+
+  public ImportChecker checkMessageSelectACardType() {
+    dialog.getTextBox("You must select a card type");
+    return this;
+  }
+
+  public CardTypeChooserChecker openCardType() {
+    Window window = WindowInterceptor.getModalDialog(dialog.getButton("Select a card type").triggerClick());
+    return new CardTypeChooserChecker(window);
+  }
 }
