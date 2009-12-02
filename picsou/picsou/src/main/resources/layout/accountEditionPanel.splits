@@ -2,6 +2,8 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
+  <column>
+
   <grid defaultMarginBottom="5">
     <label text="$account.name" gridPos="(0,0)" styleClass="formLabel"/>
     <textField ref="name" gridPos="(1,0)"/>
@@ -18,7 +20,11 @@
 
     <label text="$account.position" gridPos="(0,5)" styleClass="formLabel" autoHideSource="position"/>
     <textField ref="position" gridPos="(1,5)"/>
-
   </grid>
+
+
+  <panel ref="cardPanelEdition"/>
+
+  </column>
   
 </splits>

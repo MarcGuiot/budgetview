@@ -3,6 +3,8 @@ package org.designup.picsou.gui.model;
 import org.designup.picsou.model.*;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
+import org.designup.picsou.model.DeferredCardPeriod;
+import org.designup.picsou.gui.accounts.Day;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.utils.DefaultGlobModel;
@@ -21,7 +23,9 @@ public class PicsouGuiModel {
     SavingsBudgetStat.TYPE,
     SeriesStat.TYPE,
     SeriesWrapper.TYPE,
-    SeriesWrapperType.TYPE
+    SeriesWrapperType.TYPE,
+    DeferredCardPeriod.TYPE,
+    Day.TYPE
   );
 
   public static GlobModel get() {

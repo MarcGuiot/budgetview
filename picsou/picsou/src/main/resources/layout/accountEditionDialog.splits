@@ -41,6 +41,10 @@
 
       <label ref="message" foreground="#FF0000"/>
 
+      <panel ref="cardPanelEdition"/>
+
+      <panel ref="cardPanelEdition"/>
+
       <filler fill="vertical" weightY="10"/>
 
     </column>

@@ -559,4 +559,16 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
 
   }
+  
+  public void testImpotOfxDeferredCard() throws Exception {
+//    String fileName = OfxBuilder.init(this)
+//      .addCardAccount("1111", 0., "2008/01/01")
+//      .addTransaction("2008/01/01", 1000.00, "Salaire/oct")
+//      .save();
+//    ImportChecker importChecker = operations.openImportDialog();
+//    DeferredCardEditionChecker accountEditionChecker =
+//      importChecker.browseAndSelect(fileName)
+//      .selectDeferredCardType();
+  }
+
 }

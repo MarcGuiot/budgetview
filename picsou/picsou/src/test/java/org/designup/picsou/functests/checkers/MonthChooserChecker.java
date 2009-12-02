@@ -4,6 +4,7 @@ import org.designup.picsou.model.Month;
 import org.uispec4j.TextBox;
 import org.uispec4j.ToggleButton;
 import org.uispec4j.Window;
+import org.uispec4j.Trigger;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
@@ -164,4 +165,13 @@ public class MonthChooserChecker extends GuiChecker {
     selectMonthInCurrent(Month.toMonth(monthId));
     return this;
   }
+
+  public Trigger triggerMonth(int monthId){
+    centerOn(monthId);
+    int month = Month.toMonth(monthId);
+    ToggleButton button = getButtonInCurrentYear(month);
+    UISpecAssert.assertThat("Month " + month + " cannot be selected", button.isEnabled());
+    return button.triggerClick();
+  }
+
 }

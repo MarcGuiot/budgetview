@@ -74,8 +74,6 @@ public class ImportPanel {
   private final List<File> files = new ArrayList<File>();
   private Key currentlySelectedAccount;
 
-  private AccountEditionPanel accountEditionPanel;
-  private BankEntityEditionPanel bankEntityEditionPanel;
   private DateFormatSelectionPanel dateFormatSelectionPanel;
 
   private JButton newAccountButton;

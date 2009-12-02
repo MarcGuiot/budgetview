@@ -1,20 +1,29 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.uispec4j.*;
-import org.uispec4j.Window;
-import org.uispec4j.assertion.UISpecAssert;
-import org.uispec4j.assertion.Assertion;
-import static org.uispec4j.assertion.UISpecAssert.*;
-import org.uispec4j.interception.WindowInterceptor;
-import org.jdesktop.swingx.JXDatePicker;
 import org.globsframework.utils.Dates;
+import org.jdesktop.swingx.JXDatePicker;
+import org.uispec4j.ComboBox;
+import org.uispec4j.TextBox;
+import org.uispec4j.Trigger;
+import org.uispec4j.Window;
+import org.uispec4j.assertion.Assertion;
+import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import org.uispec4j.interception.WindowInterceptor;
+import org.apache.xerces.impl.dv.XSSimpleType;
+import org.apache.wicket.extensions.wizard.IWizardModel;
 
 import javax.swing.*;
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.awt.*;
+
+import com.sun.org.apache.bcel.internal.generic.InstructionList;
 
 public class AccountEditionChecker extends GuiChecker {
   private Window dialog;
+  private CardPanelEditionChecker cardPanelEditionChecker;
 
   public static AccountEditionChecker open(Trigger trigger) {
     return new AccountEditionChecker(WindowInterceptor.getModalDialog(trigger));
@@ -22,6 +31,7 @@ public class AccountEditionChecker extends GuiChecker {
 
   private AccountEditionChecker(Window dialog) {
     this.dialog = dialog;
+    cardPanelEditionChecker = new CardPanelEditionChecker(dialog);
   }
 
   public AccountEditionChecker selectBank(String bankName) {
@@ -91,6 +101,11 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
+  public AccountEditionChecker setAsDeferredCard() {
+    getTypeCombo().select("Deferred");
+    return this;
+  }
+
   public AccountEditionChecker setAsSavings() {
     getTypeCombo().select("Savings");
     return this;
@@ -150,6 +165,7 @@ public class AccountEditionChecker extends GuiChecker {
     assertThat(getUpdateModeCombo().selectionEquals("File import"));
     return this;
   }
+
   public AccountEditionChecker checkUpdateModeIsManualInput() {
     assertThat(getUpdateModeCombo().selectionEquals("Manual input"));
     return this;
@@ -233,7 +249,7 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  public AccountEditionChecker cancelStartDate(){
+  public AccountEditionChecker cancelStartDate() {
     dialog.getButton("removeStartDate").click();
     assertThat(new Assertion() {
       public void check() throws Exception {
@@ -245,7 +261,7 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  public AccountEditionChecker cancelEndDate(){
+  public AccountEditionChecker cancelEndDate() {
     dialog.getButton("removeEndDate").click();
     assertThat(new Assertion() {
       public void check() throws Exception {
@@ -254,6 +270,67 @@ public class AccountEditionChecker extends GuiChecker {
         Assert.assertNull(((JXDatePicker)swingComponents[0]).getDate());
       }
     });
+    return this;
+  }
+
+  public AccountEditionChecker checkValidateIsDesable() {
+    assertFalse(dialog.getButton("OK").isEnabled());
+    return this;
+  }
+
+  public AccountEditionChecker setDayFromBegining(int day) {
+    cardPanelEditionChecker.setDayFromBegining(day);
+    return this;
+  }
+
+  public AccountEditionChecker addMonth() {
+    cardPanelEditionChecker.addMonth();
+    return this;
+  }
+
+  public AccountEditionChecker checkMonth(int month) {
+    cardPanelEditionChecker.checkMonth(month);
+    return this;
+  }
+
+  public AccountEditionChecker setDay(int month, int day) {
+    cardPanelEditionChecker.setDay(month, day);
+    return this;
+  }
+
+  public AccountEditionChecker checkFromBeginingDay(int day) {
+    cardPanelEditionChecker.checkFromBeginingDay(day);
+    return this;
+  }
+
+  public AccountEditionChecker checkDay(int month, int day) {
+    cardPanelEditionChecker.checkDay(month,  day);
+    return this;
+  }
+
+  public AccountEditionChecker checkBeginingUnchangable() {
+    cardPanelEditionChecker.checkBeginingUnchangable();
+    return this;
+  }
+
+  public AccountEditionChecker delete(int month) {
+    cardPanelEditionChecker.delete(month);
+    return this;
+  }
+
+  public AccountEditionChecker changeMonth(int month, int newMonth) {
+    cardPanelEditionChecker.changeMonth(month, newMonth);
+    checkMonth(newMonth);
+    return this;
+  }
+
+  public AccountEditionChecker checkFromBegining() {
+    cardPanelEditionChecker.checkFromBegining();
+    return this;
+  }
+
+  public AccountEditionChecker checkPeriod(Integer[][] periods) {
+    cardPanelEditionChecker.checkPeriod(periods);
     return this;
   }
 }

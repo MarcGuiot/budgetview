@@ -2,6 +2,7 @@ package org.designup.picsou.gui.upgrade;
 
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.accounts.Day;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.initial.InitialSeries;
@@ -238,6 +239,9 @@ public class UpgradeTrigger implements ChangeSetListener {
   public void createDataForNewUser(GlobRepository repository) {
     repository.startChangeSet();
     try {
+      for (int i = 1; i < 32; i++){
+        repository.findOrCreate(Key.create(Day.TYPE, i));
+      }
       repository.findOrCreate(AccountPositionThreshold.KEY);
       repository.findOrCreate(Notes.KEY, value(Notes.TEXT, Lang.get("notes.initial")));
       repository.findOrCreate(UserVersionInformation.KEY,

@@ -1,6 +1,7 @@
 package org.designup.picsou.server.serialization;
 
 import org.designup.picsou.model.*;
+import org.designup.picsou.model.DeferredCardPeriod;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.properties.Property;
@@ -20,6 +21,7 @@ public class SerializationManager {
     SERIALIZATION_PROPERTY = globModel.createGlobTypeProperty("serialization");
 
     Account.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Account.Serializer());
+    DeferredCardPeriod.TYPE.updateProperty(SERIALIZATION_PROPERTY, new DeferredCardPeriod.Serializer());
     Category.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Category.Serializer());
     Transaction.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Transaction.Serializer());
     TransactionImport.TYPE.updateProperty(SERIALIZATION_PROPERTY, new TransactionImport.Serializer());

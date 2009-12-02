@@ -217,7 +217,7 @@ public class Month {
   public static Integer getDay(Integer day, int monthId, Calendar calendar) {
     calendar.setTime(toDate(monthId, 1));
     int lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-    if (day == null || day < 0 || day > lastDay) {
+    if (day == null || day <= 0 || day > lastDay) {
       return lastDay;
     }
     return day;

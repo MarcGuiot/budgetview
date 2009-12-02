@@ -92,7 +92,8 @@ public class MonthChooserDialog implements ColorChangeListener {
     return builder.load();
   }
 
-  public int show(int selectedMonthId, int lowerLimit, int upperLimit, List<Integer> forceDesables) {
+  public int show(int selectedMonthId, int lowerLimit, int upperLimit, Collection<Integer> forceDesables) {
+    this.newMonth = -1;
     bound = MonthRangeBound.BOTH;
     this.selectedMonth = Month.toMonth(selectedMonthId);
     this.selectedYear = Month.toYear(selectedMonthId);

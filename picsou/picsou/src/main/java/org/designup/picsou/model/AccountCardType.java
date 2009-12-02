@@ -13,7 +13,7 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 public enum AccountCardType implements GlobConstantContainer {
-  NOT_A_CARD("NOTACARD", 0),
+  NOT_A_CARD("NOT_A_CARD", 0),
   UNDEFINED("UNDEFINED", 1),
   DEFERRED("DEFERRED", 2),
   CREDIT("CREDIT", 3);
@@ -50,9 +50,13 @@ public enum AccountCardType implements GlobConstantContainer {
 
   public static AccountCardType get(int id) {
     switch (id) {
+      case 0:
+        return NOT_A_CARD;
       case 1:
-        return DEFERRED;
+        return UNDEFINED;
       case 2:
+        return DEFERRED;
+      case 3:
         return CREDIT;
     }
     throw new ItemNotFound(id + " not associated to any AccountType enum value");

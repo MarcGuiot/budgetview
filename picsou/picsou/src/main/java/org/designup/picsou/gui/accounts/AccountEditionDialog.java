@@ -23,14 +23,14 @@ import java.util.Set;
 
 public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobRepository> {
   private PicsouDialog dialog;
-  private Window owner;
   private GlobRepository parentRepository;
   private GlobLinkComboEditor updateModeCombo;
 
   public AccountEditionDialog(Window owner, final GlobRepository parentRepository, Directory directory) {
     super(createLocalRepository(parentRepository), directory, new JLabel());
-    this.owner = owner;
     this.parentRepository = parentRepository;
+
+    dialog = PicsouDialog.create(owner, localDirectory);
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountEditionDialog.splits",
                                                       localRepository, localDirectory);
@@ -62,7 +62,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
       }
     });
 
-    super.createComponents(builder);
+    super.createComponents(builder, dialog);
 
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -110,7 +110,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
       }
     });
 
-    dialog = PicsouDialog.create(owner, localDirectory);
+
     dialog.addPanelWithButtons(builder.<JPanel>load(),
                                new OkAction(), new CancelAction(),
                                new DeleteAction());
@@ -118,12 +118,16 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
 
   private static LocalGlobRepository createLocalRepository(GlobRepository parentRepository) {
     return LocalGlobRepositoryBuilder.init(parentRepository)
-      .copy(Bank.TYPE, BankEntity.TYPE, AccountUpdateMode.TYPE)
+      .copy(Bank.TYPE, BankEntity.TYPE, AccountUpdateMode.TYPE, Day.TYPE, CurrentMonth.TYPE,
+            AccountCardType.TYPE, AccountType.TYPE, Month.TYPE, DeferredCardPeriod.TYPE, DeferredCardDate.TYPE)
       .get();
   }
 
   public void show(Glob account) {
-    localRepository.reset(new GlobList(account), Account.TYPE);
+    GlobList globs = parentRepository.findByIndex(DeferredCardDate.ACCOUNT_AND_DATE, DeferredCardDate.ACCOUNT, account.get(Account.ID))
+      .getGlobs();
+    globs.add(account);
+    localRepository.reset(globs, Account.TYPE, DeferredCardDate.TYPE);
     setBalanceEditorVisible(false);
     updateModeCombo.setEnabled(!accountHasTransactions(account));
     doShow(localRepository.get(account.getKey()));
@@ -208,7 +212,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
                          linkedTo(currentAccount, Series.TO_ACCOUNT));
 
       ConfirmationDialog confirmDialog = new ConfirmationDialog("accountDeletion.confirm.title",
-                                                                getMessageKey(), owner, localDirectory) {
+                                                                getMessageKey(), dialog, localDirectory) {
         protected void postValidate() {
           try {
             parentRepository.startChangeSet();

@@ -2,6 +2,8 @@ package org.designup.picsou.importer;
 
 import org.apache.commons.collections.iterators.ReverseListIterator;
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.accounts.Day;
+import org.designup.picsou.model.DeferredCardPeriod;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.importer.utils.DateFormatAnalyzer;
@@ -53,8 +55,10 @@ public class ImportSession {
   }
 
   public List<String> loadFile(File file) throws IOException, TruncatedFile {
-    localRepository.reset(GlobList.EMPTY, Transaction.TYPE, ImportedTransaction.TYPE);
-    GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE};
+    localRepository.reset(GlobList.EMPTY, Transaction.TYPE, ImportedTransaction.TYPE, Day.TYPE, CurrentMonth.TYPE,
+                          DeferredCardDate.TYPE, DeferredCardPeriod.TYPE, AccountCardType.TYPE);
+    GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Day.TYPE, DeferredCardDate.TYPE,
+                        DeferredCardPeriod.TYPE, AccountCardType.TYPE, CurrentMonth.TYPE};
     localRepository.reset(referenceRepository.getAll(types), types);
 
     importChangeSet = new DefaultChangeSet();

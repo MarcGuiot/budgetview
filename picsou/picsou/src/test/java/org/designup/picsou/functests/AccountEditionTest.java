@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.AccountEditionChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
@@ -437,5 +438,80 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     mainAccounts.checkAccountNames(OfxBuilder.DEFAULT_ACCOUNT_NAME);
     mainAccounts.checkEstimatedPosition(0);
+  }
+
+  public void testCreateCard() throws Exception {
+    views.selectHome();
+    AccountEditionChecker newAccount = mainAccounts.createNewAccount();
+    newAccount
+      .setAccountName("Carte a débit Différé")
+      .selectBank("ING Direct")
+      .setAsDeferredCard()
+      .checkFromBegining()
+      .setDayFromBegining(25)
+      .setPosition(1000)
+      .validate();
+  }
+
+  public void testUpdateDeferredCardAmount() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/01", 1000.00, "Salaire/oct")
+      .load();
+
+    operations.openPreferences().setFutureMonthsCount(12).validate();
+    views.selectHome();
+    AccountEditionChecker newAccount = mainAccounts.createNewAccount();
+    newAccount
+      .setAccountName("Carte a DD")
+      .selectBank("ING Direct")
+      .setAsDeferredCard()
+      .setDayFromBegining(25)
+      .checkBeginingUnchangable()
+      .setPosition(1000)
+      .validate();
+    timeline.selectMonth("2008/10");
+    mainAccounts.edit("Carte a DD")
+      .addMonth()
+      .checkMonth(200808)
+      .setDay(200808, 27)
+      .validate();
+    mainAccounts.edit("Carte a DD")
+      .checkFromBeginingDay(25)
+      .checkDay(200808, 27)
+      .delete(200808)
+      .addMonth()
+      .changeMonth(200808, 200809)
+      .cancel();
+  }
+
+  public void testChangeBeginOfAccountAndEndOfAccount() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(12).validate();
+    views.selectHome();
+
+    AccountEditionChecker newAccount = mainAccounts.createNewAccount();
+    newAccount
+      .setAccountName("Carte a DD")
+      .selectBank("ING Direct")
+      .setAsDeferredCard()
+      .setDayFromBegining(25)
+      .addMonth()
+      .setDay(200809, 27)
+      .addMonth()
+      .changeMonth(200810, 200903)
+      .setDay(200903, 30)
+      .setPosition(1000)
+      .checkPeriod(new Integer[][]{{0, 25}, {200809, 27}, {200903, 30}})
+      .validate();
+
+    mainAccounts.edit("Carte a DD")
+      .setStartDate("2008/12/01")
+      .setEndDate("2009/02/01")
+      .checkFromBeginingDay(27)
+      .checkPeriod(new Integer[][]{{0, 27}})
+      .validate();
+  }
+
+
+  public void testImportCardWithMonthBeforeFirstMonth() throws Exception {
   }
 }

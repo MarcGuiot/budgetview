@@ -1,0 +1,37 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <cards ref="CardTypes">
+    <card name="notACard">
+      <panel/>
+    </card>
+    <card name="undefined">
+      <panel/>
+    </card>
+    <card name="credit">
+      <panel/>
+    </card>
+    <card name="deferred">
+      <column>
+        <repeat ref="deferredPeriodeRepeat">
+          <row>
+            <label ref="deferredPeriodLabel"/>
+            <button ref="changeDeferredMonthAction" icon="button_calendar.png" styleClass="icon"
+                    pressedIcon="button_calendar_pressed.png" autoHideIfDisabled="true"
+                    marginLeft="5" fill="none"/>
+            <label text="$account.deferred.at.day"/>
+            <comboBox ref="dayChooser"/>
+            <button ref="removePeriod" icon="button_delete.png" styleClass="icon"
+                    pressedIcon="button_delete_pressed.png" autoHideIfDisabled="true"/>
+          </row>
+        </repeat>
+        <row>
+          <filler fill="horizontal"/>
+          <button action="createNewPeriod" icon="button_plus.png" styleClass="icon"/>
+        </row>
+      </column>
+    </card>
+  </cards>
+
+</splits>

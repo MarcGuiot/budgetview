@@ -167,6 +167,11 @@ public class OfxBuilder {
     operations.importOfxFile(fileName);
   }
 
+  public void loadDeferredCard() {
+    save();
+    operations.importOfxFile(fileName);
+  }
+
   public void loadUnknown(String bank) {
     save();
     operations.importOfxFile(fileName, bank);
