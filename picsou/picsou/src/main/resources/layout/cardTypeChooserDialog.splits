@@ -12,10 +12,11 @@
             <toggleButton ref="deferredDebit"/>
             <toggleButton ref="creditCard"/>
           </column>
-          <label text="cardTypeChooser.day" autoHideSource="comboOfDay"/>
+          <label text="$cardTypeChooser.day" autoHideSource="comboOfDay"/>
           <comboBox ref="comboOfDay"/>
         </row>
       </repeat>
+      <label ref="creditMessage"/>
       <filler fill="vertical"/>
     </column>
   </panel>

@@ -47,7 +47,7 @@ public class SlaValidationDialog {
   }
 
   public boolean show() {
-    GuiUtils.showCentered(dialog);
+    dialog.showCentered();
     return accepted;
   }
 

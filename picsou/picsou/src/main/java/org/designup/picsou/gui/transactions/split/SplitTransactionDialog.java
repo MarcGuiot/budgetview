@@ -123,7 +123,7 @@ public class SplitTransactionDialog {
 
     okAction.setEnabled(false);
     amountField.requestFocus();
-    GuiUtils.showCentered(dialog);
+    dialog.showCentered();
   }
 
   private void addAmountPanel(GlobsPanelBuilder builder) {

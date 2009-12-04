@@ -263,4 +263,8 @@ public class PicsouDialog extends JDialog {
       }
     }
   }
+
+  public String toString() {
+    return "PicsouDialog";
+  }
 }

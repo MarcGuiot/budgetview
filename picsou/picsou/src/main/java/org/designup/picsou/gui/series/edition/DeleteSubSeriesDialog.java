@@ -53,7 +53,7 @@ public class DeleteSubSeriesDialog {
 
   public void show() {
     dialog.pack();
-    GuiUtils.showCentered(dialog);
+    dialog.showCentered();
   }
 
   public GlobFunctor[] getFunctors() {

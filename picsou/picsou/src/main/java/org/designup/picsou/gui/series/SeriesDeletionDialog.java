@@ -38,7 +38,7 @@ public class SeriesDeletionDialog {
   public boolean show() {
     ok = false;
     dialog.pack();
-    GuiUtils.showCentered(dialog);
+    dialog.showCentered();
     return ok;
   }
 }

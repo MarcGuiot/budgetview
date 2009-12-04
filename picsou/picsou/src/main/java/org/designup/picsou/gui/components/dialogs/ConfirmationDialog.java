@@ -32,7 +32,7 @@ public abstract class ConfirmationDialog {
   }
 
   public final void show() {
-    GuiUtils.showCentered(dialog);
+    dialog.showCentered();
   }
 
   protected void postValidate() {

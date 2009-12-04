@@ -30,7 +30,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1, "EDF")
       .addCardAccount("1000200030004000", 300, "2006/01/28")
       .addTransaction("2006/01/17", -3, "Foo")
-      .load();
+      .loadDeferredCard(20);
 
     OfxBuilder
       .init(this)
@@ -138,7 +138,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     mainAccounts.edit("Account n. 000123")
       .setAsSavings()
       .checkSavingsWarning()
-      .setAsCard()
+      .setAsDeferredCard()
       .checkNoSavingsWarning()
       .setAsSavings()
       .checkSavingsWarning()

@@ -583,7 +583,7 @@ public class SeriesEditionDialog {
         }
       }
     });
-    GuiUtils.showCentered(dialog);
+    dialog.showCentered();
   }
 
   private void updateMonthSelectionCard() {

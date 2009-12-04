@@ -359,6 +359,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .selectBankForEntity("777", SOCIETE_GENERALE)
       .selectBankForEntity("666", SOCIETE_GENERALE)
       .validate();
+    importChecker.openCardType()
+      .selectDeferredCard(31)
+      .validate();
     importChecker.completeImport();
 
     String secondFileName = OfxBuilder.init(this)
@@ -557,18 +560,36 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .add("09/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.00)
       .add("09/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.00)
       .check();
-
   }
   
-  public void testImpotOfxDeferredCard() throws Exception {
-//    String fileName = OfxBuilder.init(this)
-//      .addCardAccount("1111", 0., "2008/01/01")
-//      .addTransaction("2008/01/01", 1000.00, "Salaire/oct")
-//      .save();
-//    ImportChecker importChecker = operations.openImportDialog();
-//    DeferredCardEditionChecker accountEditionChecker =
-//      importChecker.browseAndSelect(fileName)
-//      .selectDeferredCardType();
+  public void testImportOfxDeferredCard() throws Exception {
+    String fileName = OfxBuilder.init(this)
+      .addCardAccount("1111", 0., "2008/01/01")
+      .addTransaction("2008/01/01", 1000.00, "Salaire/oct")
+      .save();
+    ImportChecker importChecker = operations.openImportDialog();
+    importChecker.setFilePath(fileName)
+      .doImport()
+      .openCardType()
+      .selectDeferredCard(15)
+      .validate();
   }
 
+  public void testImportOfxCreditCardShowMessage() throws Exception {
+    String fileName = OfxBuilder.init(this)
+      .addCardAccount("1111", 0., "2008/01/01")
+      .addTransaction("2008/01/01", 1000.00, "Salaire/oct")
+      .save();
+    ImportChecker importChecker = operations.openImportDialog();
+    importChecker.setFilePath(fileName)
+      .acceptFile()
+      .openCardType()
+      .selectCreditCard()
+      .validate();
+    importChecker.doImport();
+
+    views.selectData();
+    transactions.initContent()
+      .check();
+  }
 }

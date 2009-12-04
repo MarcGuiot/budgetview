@@ -11,6 +11,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 /**
  * WindowHandler implementation dedicated to file chooser dialogs.<p>
@@ -174,14 +175,14 @@ public class FileChooserHandler {
         AssertAdapter.fail("The shown window is not a file chooser - window content:" +
                            Utils.LINE_SEPARATOR + window.getDescription());
       }
-      JFileChooser fileChooser = (JFileChooser)components[0];
+      final JFileChooser fileChooser = (JFileChooser)components[0];
       for (FileChooserInternalHandler handler : fileChooserHandlers) {
         handler.process(fileChooser);
       }
-      fileChooser.approveSelection();
       return new Trigger() {
         public void run() throws Exception {
-          ComponentUtils.close(window);
+          fileChooser.approveSelection();
+//          ComponentUtils.close(window);
         }
       };
     }

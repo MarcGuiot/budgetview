@@ -77,7 +77,7 @@ public class SeriesWizardDialog {
         scrollToTop();
       }
     });
-    GuiUtils.showCentered(dialog);
+    dialog.showCentered();
   }
 
   private void scrollToTop() {

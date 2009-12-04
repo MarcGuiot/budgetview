@@ -230,7 +230,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/07/01", -200.00, "MAIN TO IMPORTED")
       .addTransaction("2009/07/01", -50.00, "MAIN TO NON IMPORTED")
       .addTransaction("2009/07/01", 500.00, "WORLDCO")
-      .loadUnknown("Autre");
+      .load();
 
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "0002", 20000.0, "2009/07/30")
@@ -239,7 +239,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/06/01", 220.00, "IMPORTED FROM NON IMPORTED")
       .addTransaction("2009/06/01", 200.00, "IMPORTED FROM EXTERNAL")
       .addTransaction("2009/06/01", -300.00, "IMPORTED TO EXTERNAL ")
-      .loadUnknown("Autre");
+      .load();
 
     timeline.selectMonth("2009/06");
 

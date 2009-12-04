@@ -4,7 +4,7 @@ import org.designup.picsou.model.TransactionType;
 
 public class CICTest extends SpecificBankTestCase {
   public void test() throws Exception {
-    operations.importOfxFile(getFile("cic1.ofx"));
+    operations.importOfxWithDeferred(getFile("cic1.ofx"), 28);
     timeline.selectMonths("2006/05", "2006/06", "2006/07");
     transactions.getTable().getHeader().click(1);
     transactions

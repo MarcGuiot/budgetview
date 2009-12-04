@@ -336,22 +336,54 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
-  public void testImportCardAccount() throws Exception {
+  public void testImportDeferredCardAccount() throws Exception {
     String file = OfxBuilder.init(this)
       .addBankAccount("unknown", 111, "111", 1000.00, "2008/08/07")
-      .addCardAccount("111", 10, "2008/08/07")
+      .addCardAccount("1234", 10, "2008/08/07")
       .addTransaction("2008/08/10", -50.00, "Virement")
       .save();
     ImportChecker importChecker = operations.openImportDialog();
     importChecker
       .setFilePath(file)
-      .acceptFile()
+      .acceptFile();
+    importChecker
       .checkMessageSelectABank()
+      .openEntityEditionChecker()
+      .selectBank("Autre")
+      .validate();
+    importChecker
       .checkMessageSelectACardType()
       .openCardType()
       .checkNoneAreSelected()
-      .selectCreditCard(29)
+      .selectDeferredCard(29)
       .validate();
     importChecker.doImport();
+    views.selectHome();
+    mainAccounts.edit("Card n. 1234")
+      .checkFromBeginingDay(29)
+      .cancel();
   }
+
+  public void testImportCreditCardAccount() throws Exception {
+    String file = OfxBuilder.init(this)
+      .addCardAccount("1234", 10, "2008/08/07")
+      .addTransaction("2008/08/10", -50.00, "Virement")
+      .save();
+    ImportChecker importChecker = operations.openImportDialog();
+    importChecker
+      .setFilePath(file)
+      .acceptFile();
+    importChecker
+      .checkMessageSelectACardType()
+      .openCardType()
+      .checkNoneAreSelected()
+      .selectCreditCard()
+      .validate();
+    importChecker.doImport();
+    views.selectHome();
+    mainAccounts.edit("Card n. 1234")
+      .checkIsCreditCard()
+      .cancel();
+  }
+
 }

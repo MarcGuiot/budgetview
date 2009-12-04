@@ -116,7 +116,7 @@ public class MonthChooserDialog implements ColorChangeListener {
   private int show() {
     update();
     dialog.pack();
-    GuiUtils.showCentered(dialog);
+    dialog.showCentered();
     dialog = null;
     return newMonth;
   }

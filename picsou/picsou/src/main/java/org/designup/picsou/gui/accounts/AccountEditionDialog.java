@@ -147,7 +147,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
   private void doShow(Glob localAccount) {
     setAccount(localAccount);
     dialog.pack();
-    GuiUtils.showCentered(dialog);
+    dialog.showCentered();
   }
 
   public void createAndShow() {

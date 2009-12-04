@@ -3,6 +3,7 @@ package org.designup.picsou.functests.utils;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.designup.picsou.functests.checkers.OperationChecker;
+import org.designup.picsou.functests.checkers.ImportChecker;
 import org.designup.picsou.exporter.ofx.OfxExporter;
 import org.designup.picsou.model.*;
 import static org.designup.picsou.model.Transaction.*;
@@ -167,9 +168,16 @@ public class OfxBuilder {
     operations.importOfxFile(fileName);
   }
 
-  public void loadDeferredCard() {
+  public void loadDeferredCard(final int day) {
     save();
-    operations.importOfxFile(fileName);
+    ImportChecker importChecker = operations.openImportDialog()
+      .setFilePath(fileName)
+      .acceptFile();
+    importChecker
+      .openCardType()
+      .selectDeferredCard(day)
+      .validate();
+    importChecker.doImport();
   }
 
   public void loadUnknown(String bank) {

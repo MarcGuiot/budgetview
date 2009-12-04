@@ -56,7 +56,7 @@ public class HelpDialog {
     forwardPages.clear();
     openPage(ref, true);
     if (!dialog.isVisible()) {
-      GuiUtils.showCentered(dialog);
+      dialog.showCentered();
     }
   }
 

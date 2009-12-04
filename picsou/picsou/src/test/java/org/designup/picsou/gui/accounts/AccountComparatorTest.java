@@ -19,13 +19,13 @@ public class AccountComparatorTest extends TestCase {
   }
 
   public void test() throws Exception {
-    Glob account3 = createAccount("b", "bb", false, 2);
+    Glob account3 = createAccount("b", "bb", null, 2);
     Glob account4 = createAccount("c", "cc", null, 4);
     Glob account6 = createAccount("bb", "bb", true, 1);
     Glob account2 = createAccount("a", "aa", null, 7);
     Glob account1 = createAccount(SUMMARY_ACCOUNT_NUMBER, "blah", false, MAIN_SUMMARY_ACCOUNT_ID);
     Glob account5 = createAccount("aa", "aa", true, 6);
-    Glob account7 = createAccount("cc", "cc", true, 5);
+    Glob account7 = createAccount("cc", "cc", false, 5);
 
     Collections.sort(accounts, new AccountComparator());
 
@@ -33,11 +33,14 @@ public class AccountComparatorTest extends TestCase {
                            account1, account2, account3, account4, account5, account6, account7);
   }
 
-  private Glob createAccount(String id, String name, Boolean isCreditCard, int serverId) {
+  private Glob createAccount(String id, String name, Boolean isDeferredCard, int serverId) {
     Glob account = globRepository.create(Key.create(TYPE, serverId),
                                          FieldValue.value(NUMBER, id),
                                          FieldValue.value(NAME, name),
-                                         FieldValue.value(CARD_TYPE, isCreditCard == null ? null : (isCreditCard ? AccountCardType.DEFERRED.getId() : null)));
+                                         FieldValue.value(CARD_TYPE, isDeferredCard == null ?
+                                                                     AccountCardType.NOT_A_CARD.getId() :
+                                                                     (isDeferredCard ? AccountCardType.DEFERRED.getId() :
+                                                                      AccountCardType.CREDIT.getId())));
     accounts.add(account);
     return account;
   }

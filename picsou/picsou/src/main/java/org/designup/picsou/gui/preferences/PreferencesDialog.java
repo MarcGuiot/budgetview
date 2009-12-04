@@ -54,6 +54,6 @@ public class PreferencesDialog {
     Glob preference = repository.get(UserPreferences.KEY);
     futureMonth.setSelectedItem(preference.get(UserPreferences.FUTURE_MONTH_COUNT));
     dialog.pack();
-    GuiUtils.showCentered(dialog);
+    dialog.showCentered();
   }
 }

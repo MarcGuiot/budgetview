@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.importer;
 
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.accounts.AccountEditionPanel;
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
+import org.designup.picsou.gui.accounts.Day;
 import org.designup.picsou.gui.accounts.NewAccountAction;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
@@ -229,7 +229,7 @@ public class ImportPanel {
     AdditionalImportAction accountEdition = new AccountEditionAction(dialog, sessionRepository, sessionDirectory);
     actions.add(accountEdition);
 
-    AdditionalImportAction cardType = new CardTypeAction(dialog, repository, directory);
+    AdditionalImportAction cardType = new CardTypeAction(dialog, sessionRepository, sessionDirectory);
     actions.add(cardType);
 
     builder2.add("importMessage", importMessageLabel);
@@ -307,7 +307,7 @@ public class ImportPanel {
   }
 
   private void loadLocalRepository(GlobRepository repository) {
-    GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE,
+    GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, Day.TYPE,
                             Account.TYPE, AccountUpdateMode.TYPE,
                             Transaction.TYPE, Month.TYPE, UserPreferences.TYPE};
 
@@ -388,7 +388,7 @@ public class ImportPanel {
         public void windowDeiconified(WindowEvent e) {
           frame.removeWindowListener(this);
           dialog.pack();
-          GuiUtils.showCentered(dialog);
+          dialog.showCentered();
         }
       });
       final JDialog dialog = new JDialog(frame);
@@ -405,7 +405,7 @@ public class ImportPanel {
     }
     else {
       dialog.pack();
-      GuiUtils.showCentered(dialog);
+      dialog.showCentered();
     }
   }
 
@@ -454,7 +454,8 @@ public class ImportPanel {
       synchronized (files) {
         files.addAll(Arrays.asList(file));
       }
-      if (nextImport()) {
+      boolean b = nextImport();
+      if (b) {
         showStep(panelStep2);
       }
     }

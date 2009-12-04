@@ -63,6 +63,17 @@ public class OperationChecker {
     importFile(new String[]{name}, null, null, null);
   }
 
+  public void importOfxWithDeferred(String name, int day) {
+    ImportChecker importChecker = openImportDialog()
+      .setFilePath(name)
+      .acceptFile();
+    importChecker
+      .openCardType()
+      .selectDeferredCard(day)
+      .validate();
+    importChecker.doImport();
+  }
+
   public void importOfxFile(String name, String bank) {
     importFile(new String[]{name}, bank, null, null);
   }
@@ -89,9 +100,17 @@ public class OperationChecker {
       .process(new WindowHandler() {
         public Trigger process(Window importDialog) throws Exception {
 
-          WindowInterceptor.init(importDialog.getButton("Browse").triggerClick())
-            .process(FileChooserHandler.init().select(fileNames))
-            .run();
+//          WindowInterceptor.init(importDialog.getButton("Browse").triggerClick())
+//            .process(FileChooserHandler.init().select(fileNames))
+//            .run();
+
+
+          TextBox fileField = importDialog.getInputTextBox("fileField");
+          String txt = "";
+          for (String name : fileNames) {
+            txt += name + ";";
+          }
+          fileField.setText(txt);
 
           importDialog.getButton("Import").click();
           JButton createFirstAccount = importDialog.findSwingComponent(JButton.class, "Create an account");
@@ -107,7 +126,7 @@ public class OperationChecker {
           if (targetAccount != null) {
             importDialog.getComboBox("accountCombo").select(targetAccount);
           }
-          Button okButton = importDialog.getButton(Lang.get("import.ok"));
+          final Button okButton = importDialog.getButton(Lang.get("import.ok"));
           for (int i = 0; i < fileNames.length - 1; i++) {
             okButton.click();
           }

@@ -27,6 +27,6 @@ public class MessageDialog {
   }
 
   public final void show() {
-    GuiUtils.showCentered(dialog);
+    dialog.showCentered();
   }
 }

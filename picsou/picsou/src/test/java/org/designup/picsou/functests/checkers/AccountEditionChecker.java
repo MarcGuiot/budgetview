@@ -96,13 +96,13 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  public AccountEditionChecker setAsCard() {
+  public AccountEditionChecker setAsDeferredCard() {
     getTypeCombo().select("Deferred debit card");
     return this;
   }
 
-  public AccountEditionChecker setAsDeferredCard() {
-    getTypeCombo().select("Deferred");
+  public AccountEditionChecker setAsCreditCard() {
+    getTypeCombo().select("Credit card");
     return this;
   }
 
@@ -129,8 +129,13 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  public AccountEditionChecker checkIsCard() {
+  public AccountEditionChecker checkIsDeferredCard() {
     assertThat(getTypeCombo().selectionEquals("Deferred debit card"));
+    return this;
+  }
+
+  public AccountEditionChecker checkIsCreditCard() {
+    assertThat(getTypeCombo().selectionEquals("Credit card"));
     return this;
   }
 

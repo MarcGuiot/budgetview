@@ -29,6 +29,7 @@ public class DeferredCardPeriod {
   public static LinkField FROM_MONTH;
 
   @Target(Day.class)
+  @DefaultInteger(31)
   public static LinkField DAY;
 
 

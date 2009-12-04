@@ -44,7 +44,7 @@ public class CardPanelEdition {
   }
 
   public GlobsPanelBuilder createComponent() {
-
+    
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/cardTypeEditionPanel.splits",
                                                       repository, directory);
 

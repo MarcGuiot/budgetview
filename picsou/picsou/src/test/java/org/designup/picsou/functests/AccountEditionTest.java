@@ -125,17 +125,27 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.edit("Account n. 0000123")
       .checkAccountName("Account n. 0000123")
       .checkIsMain()
-      .setAsCard()
+      .setAsCreditCard()
       .validate();
 
     mainAccounts.edit("Account n. 0000123")
-      .checkIsCard()
+      .checkIsCreditCard()
       .setAsMain()
       .validate();
 
     mainAccounts.edit("Account n. 0000123")
       .checkIsMain()
       .cancel();
+
+    mainAccounts.edit("Account n. 0000123")
+      .setAsDeferredCard()
+      .setDayFromBegining(15)
+      .validate();
+
+    mainAccounts.edit("Account n. 0000123")
+      .checkIsDeferredCard()
+      .cancel();
+
   }
 
   public void testUpdateModeCanBeChangedUntilTransactionsAreImportedIntoTheAccount() throws Exception {
