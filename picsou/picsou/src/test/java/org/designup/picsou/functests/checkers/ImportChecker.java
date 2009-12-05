@@ -250,7 +250,7 @@ public class ImportChecker {
     return this;
   }
 
-  public ImportChecker checkMessageSelectACardType() {
+  public ImportChecker checkSelectACardTypeMessage() {
     dialog.getTextBox("You must select a card type");
     return this;
   }

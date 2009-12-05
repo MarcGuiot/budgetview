@@ -352,12 +352,13 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .selectBank("Autre")
       .validate();
     importChecker
-      .checkMessageSelectACardType()
+      .checkSelectACardTypeMessage()
       .openCardType()
-      .checkNoneAreSelected()
-      .selectDeferredCard(29)
+      .checkNoneAreSelected("Card n. 1234")
+      .selectDeferredCard("Card n. 1234", 29)
       .validate();
     importChecker.doImport();
+    
     views.selectHome();
     mainAccounts.edit("Card n. 1234")
       .checkFromBeginingDay(29)
@@ -374,16 +375,20 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .setFilePath(file)
       .acceptFile();
     importChecker
-      .checkMessageSelectACardType()
+      .checkSelectACardTypeMessage()
       .openCardType()
-      .checkNoneAreSelected()
-      .selectCreditCard()
+      .checkNoneAreSelected("Card n. 1234")
+      .selectCreditCard("Card n. 1234")
       .validate();
     importChecker.doImport();
+
     views.selectHome();
     mainAccounts.edit("Card n. 1234")
       .checkIsCreditCard()
       .cancel();
+
+    views.selectData();
+    transactions.checkTableIsEmpty();
   }
 
 }

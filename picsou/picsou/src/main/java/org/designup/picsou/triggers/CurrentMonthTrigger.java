@@ -4,7 +4,10 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.*;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.ChangeSetListener;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobFunctor;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
@@ -41,11 +44,9 @@ public class CurrentMonthTrigger implements ChangeSetListener {
     if (changeSet.containsChanges(CurrentMonth.KEY) ||
         (previousLastMonth != lastMonth) ||
         (previousLastDay != lastDay)) {
-      GlobList transactions =
-        repository.getAll(Transaction.TYPE,
-                          and(isTrue(Transaction.PLANNED),
-                              fieldStrictlyLessThan(Transaction.MONTH, lastMonth)));
-      repository.delete(transactions);
+      repository.delete(Transaction.TYPE,
+                        and(isTrue(Transaction.PLANNED),
+                            fieldStrictlyLessThan(Transaction.MONTH, lastMonth)));
       repository.safeApply(Transaction.TYPE, ALL,
                            new UpdateDayCallback(lastMonth, lastDay));
     }

@@ -190,10 +190,7 @@ public class UpgradeTrigger implements ChangeSetListener {
                          }
     );
 
-    GlobList budgets = repository.getAll(SeriesBudget.TYPE,
-                                         fieldEquals(SeriesBudget.SERIES,
-                                                     Series.OCCASIONAL_SERIES_ID));
-    repository.delete(budgets);
+    repository.delete(SeriesBudget.TYPE, fieldEquals(SeriesBudget.SERIES, Series.OCCASIONAL_SERIES_ID));
 
     Key occasionalSeriesKey = Key.create(Series.TYPE, Series.OCCASIONAL_SERIES_ID);
     if (repository.contains(occasionalSeriesKey)) {
@@ -239,7 +236,7 @@ public class UpgradeTrigger implements ChangeSetListener {
   public void createDataForNewUser(GlobRepository repository) {
     repository.startChangeSet();
     try {
-      for (int i = 1; i < 32; i++){
+      for (int i = 1; i < 32; i++) {
         repository.findOrCreate(Key.create(Day.TYPE, i));
       }
       repository.findOrCreate(AccountPositionThreshold.KEY);
@@ -279,13 +276,16 @@ public class UpgradeTrigger implements ChangeSetListener {
 
     public void run(Glob glob, GlobRepository repository) throws Exception {
       String label = glob.get(Transaction.LABEL);
-      if (label.startsWith("Planned: ")){
+      if (label.startsWith("Planned: ")) {
         label = label.substring(9);
-      }else if (label.startsWith("Prévu : ")){
+      }
+      else if (label.startsWith("Prévu : ")) {
         label = label.substring(8);
-      }else if (label.startsWith("Planned:")){
+      }
+      else if (label.startsWith("Planned:")) {
         label = label.substring(8);
-      }else if (label.startsWith("Prévu :")){
+      }
+      else if (label.startsWith("Prévu :")) {
         label = label.substring(7);
       }
       repository.update(glob.getKey(), Transaction.LABEL, label);

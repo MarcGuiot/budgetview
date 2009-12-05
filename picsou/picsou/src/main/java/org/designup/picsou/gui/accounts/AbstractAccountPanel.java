@@ -5,7 +5,6 @@ import org.designup.picsou.model.AccountCardType;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsLoader;
@@ -36,7 +35,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   protected Directory localDirectory;
   private SelectionService selectionService;
   private AccountTypeSelector[] accountTypeSelectors;
-  private CardPanelEdition cardPanelEdition;
+  private CardTypeEditionPanel cardTypeEditionPanel;
 
   public AbstractAccountPanel(T repository, Directory parentDirectory, JLabel messageLabel) {
     this.localRepository = repository;
@@ -49,10 +48,10 @@ public class AbstractAccountPanel<T extends GlobRepository> {
 
   protected void createComponents(GlobsPanelBuilder builder, Window dialog) {
 
-    cardPanelEdition = new CardPanelEdition(dialog, localRepository, localDirectory);
+    cardTypeEditionPanel = new CardTypeEditionPanel(dialog, localRepository, localDirectory);
     accountTypeSelectors = createTypeSelectors(localRepository);
 
-    builder.add("cardPanelEdition", cardPanelEdition.createComponent());
+    builder.add("cardPanelEdition", cardTypeEditionPanel.createComponent());
     
     builder.addCombo("accountBank", Bank.TYPE)
       .setShowEmptyOption(true)
@@ -136,7 +135,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
 
   public void setAccount(Glob account) {
     this.currentAccount = account;
-    cardPanelEdition.setAccount(account);
+    cardTypeEditionPanel.setAccount(account);
     updateCombo();
     if (account != null) {
       selectionService.select(account);

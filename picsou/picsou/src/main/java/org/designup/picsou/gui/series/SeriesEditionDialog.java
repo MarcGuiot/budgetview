@@ -22,7 +22,6 @@ import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobListView;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
@@ -134,13 +133,13 @@ public class SeriesEditionDialog {
                         not(fieldEquals(Account.ID, Account.MAIN_SUMMARY_ACCOUNT_ID)),
                         not(fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID)));
 
-    fromAccountsCombo = new GlobLinkComboEditor(Series.FROM_ACCOUNT, localRepository, localDirectory)
+    fromAccountsCombo = GlobLinkComboEditor.init(Series.FROM_ACCOUNT, localRepository, localDirectory)
       .setFilter(accountFilter)
       .setShowEmptyOption(true)
       .setEmptyOptionLabel(Lang.get("seriesEdition.account.external"));
     builder.add("fromAccount", fromAccountsCombo);
 
-    toAccountsCombo = new GlobLinkComboEditor(Series.TO_ACCOUNT, localRepository, localDirectory)
+    toAccountsCombo = GlobLinkComboEditor.init(Series.TO_ACCOUNT, localRepository, localDirectory)
       .setFilter(accountFilter)
       .setShowEmptyOption(true)
       .setEmptyOptionLabel(Lang.get("seriesEdition.account.external"));
@@ -166,15 +165,14 @@ public class SeriesEditionDialog {
     builder.add("dayChooser", dayChooser);
 
     GlobLinkComboEditor profileTypeCombo =
-      new GlobLinkComboEditor(Series.PROFILE_TYPE, localRepository, localDirectory);
-    profileTypeCombo
-      .setShowEmptyOption(false)
-      .setComparator(new Comparator<Glob>() {
-        public int compare(Glob o1, Glob o2) {
-          return ProfileType.get(o1.get(ProfileType.ID)).getOrder()
-            .compareTo(ProfileType.get(o2.get(ProfileType.ID)).getOrder());
-        }
-      });
+      GlobLinkComboEditor.init(Series.PROFILE_TYPE, localRepository, localDirectory)
+        .setShowEmptyOption(false)
+        .setComparator(new Comparator<Glob>() {
+          public int compare(Glob o1, Glob o2) {
+            return ProfileType.get(o1.get(ProfileType.ID)).getOrder()
+              .compareTo(ProfileType.get(o2.get(ProfileType.ID)).getOrder());
+          }
+        });
     builder.add("profileCombo", profileTypeCombo);
 
     monthSelectionPanel = new JPanel();

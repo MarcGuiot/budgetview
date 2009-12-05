@@ -1,14 +1,14 @@
 package org.designup.picsou.triggers;
 
+import org.designup.picsou.model.*;
+import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.*;
-import org.designup.picsou.model.*;
-import org.designup.picsou.model.DeferredCardPeriod;
 
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.Date;
+import java.util.Iterator;
 
 public class DeferredCardDayTrigger extends DefaultChangeSetListener {
 
@@ -42,9 +42,8 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        GlobList periods = repository.getAll(DeferredCardPeriod.TYPE,
-                                             GlobMatchers.fieldEquals(DeferredCardPeriod.ACCOUNT, key.get(Account.ID)));
-        repository.delete(periods);
+        repository.delete(DeferredCardPeriod.TYPE,
+                          GlobMatchers.fieldEquals(DeferredCardPeriod.ACCOUNT, key.get(Account.ID)));
         repository.delete(repository.findByIndex(DeferredCardDate.ACCOUNT_AND_DATE,
                                                  DeferredCardDate.ACCOUNT, key.get(Account.ID)).getGlobs());
       }
@@ -72,7 +71,7 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
     public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
       Integer accountId = previousValues.get(DeferredCardPeriod.ACCOUNT);
       Glob account = repository.find(Key.create(Account.TYPE, accountId));
-      if (account != null){
+      if (account != null) {
         updateDeferredCarDay(repository, account);
       }
     }
@@ -92,11 +91,10 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
     Iterator<Glob> iterator = periods.iterator();
 
     // on detruit tout les deferredCardDays si pas periode.
-    if (!iterator.hasNext()){
+    if (!iterator.hasNext()) {
       repository.delete(deferredCardDays);
       return;
     }
-
 
     // on creer/detruit des DeferredCardDay suivant les changements sur les mois ou sur
     // l'overture/fermeture du compte
@@ -104,23 +102,23 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
 
     int startMonth = months.getFirst().get(Month.ID);
     Date openDate = account.get(Account.OPEN_DATE);
-    if (openDate != null){
+    if (openDate != null) {
       startMonth = Math.max(Month.getMonthId(openDate), startMonth);
     }
 
     int endMonth = months.getLast().get(Month.ID);
     Date closedDate = account.get(Account.CLOSED_DATE);
-    if (closedDate != null){
+    if (closedDate != null) {
       endMonth = Math.min(Month.getMonthId(closedDate), endMonth);
     }
 
-    while (startMonth != endMonth){
+    while (startMonth != endMonth) {
       GlobList globs = indexOnDeferredCardDay.findByIndex(DeferredCardDate.MONTH, startMonth).getGlobs();
-      if (globs.isEmpty()){
+      if (globs.isEmpty()) {
         repository.create(DeferredCardDate.TYPE,
-                          FieldValue.value(DeferredCardDate.ACCOUNT, accountId),
-                          FieldValue.value(DeferredCardDate.MONTH, startMonth),
-                          FieldValue.value(DeferredCardDate.DAY, 31));
+                          value(DeferredCardDate.ACCOUNT, accountId),
+                          value(DeferredCardDate.MONTH, startMonth),
+                          value(DeferredCardDate.DAY, 31));
       }
       else {
         deferredCardDays.remove(globs.getFirst());
@@ -135,7 +133,7 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
     // on met a jour le jour de chaque mois
     Glob currentPeriod = iterator.next();
     int day = currentPeriod.get(DeferredCardPeriod.DAY);
-    currentPeriod = iterator.hasNext()? iterator.next() : null;
+    currentPeriod = iterator.hasNext() ? iterator.next() : null;
     for (Glob deferredCardDay : deferredCardDays) {
       if (currentPeriod == null ||
           deferredCardDay.get(DeferredCardDate.MONTH) < currentPeriod.get(DeferredCardPeriod.FROM_MONTH)) {
@@ -144,7 +142,7 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
       }
       else {
         day = currentPeriod.get(DeferredCardPeriod.DAY);
-        currentPeriod = iterator.hasNext()? iterator.next() : null;
+        currentPeriod = iterator.hasNext() ? iterator.next() : null;
       }
     }
   }

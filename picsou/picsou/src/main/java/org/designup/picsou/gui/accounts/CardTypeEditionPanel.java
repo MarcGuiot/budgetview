@@ -12,10 +12,12 @@ import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -25,7 +27,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CardPanelEdition {
+public class CardTypeEditionPanel {
   private CardHandler cardHandler;
   private int firstMonth;
   private int lastMonth;
@@ -36,24 +38,21 @@ public class CardPanelEdition {
   private Glob currentAccount;
   private GlobRepeat periods;
 
-
-  public CardPanelEdition(Window owner, GlobRepository globRepository, Directory directory) {
+  public CardTypeEditionPanel(Window owner, GlobRepository repository, Directory directory) {
     this.owner = owner;
-    this.repository = globRepository;
+    this.repository = repository;
     this.directory = directory;
   }
 
   public GlobsPanelBuilder createComponent() {
-    
+
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/cardTypeEditionPanel.splits",
                                                       repository, directory);
-
 
     cardHandler = builder.addCardHandler("CardTypes");
 
     repository.addTrigger(new UpdatePeriodOnAccountDateChange());
     repository.addTrigger(new OnCardTypeChangeListener());
-
 
     periods = builder.addRepeat("deferredPeriodeRepeat", DeferredCardPeriod.TYPE, GlobMatchers.NONE,
                                 new GlobFieldComparator(DeferredCardPeriod.FROM_MONTH),
@@ -70,17 +69,19 @@ public class CardPanelEdition {
                                         .getComponent();
                                     deferredDateChooserButton.setEnabled(monthId != 0);
                                     GlobLinkComboEditor dayCombo =
-                                      new GlobLinkComboEditor(DeferredCardPeriod.DAY, repository, directory)
+                                      GlobLinkComboEditor.init(DeferredCardPeriod.DAY, repository, directory)
                                         .setComparator(new GlobFieldComparator(Day.ID))
                                         .forceSelection(item.getKey());
                                     cellBuilder.add("dayChooser", dayCombo.getComponent());
                                     JButton removePeriod = new JButton(new RemovePeriod(item));
                                     cellBuilder.add("removePeriod", removePeriod);
                                     removePeriod.setEnabled(monthId != 0);
-                                    if (monthId == 0){
+                                    if (monthId == 0) {
                                       monthToIgnore.add(firstMonth);
-                                    }else
-                                    monthToIgnore.add(monthId);
+                                    }
+                                    else {
+                                      monthToIgnore.add(monthId);
+                                    }
                                     final DefaultChangeSetListener listener = new DefaultChangeSetListener() {
                                       Key key = item.getKey();
 
@@ -113,15 +114,15 @@ public class CardPanelEdition {
         while (true) {
           Glob glob =
             repository.getAll(DeferredCardPeriod.TYPE,
-                              GlobMatchers.and(
-                                GlobMatchers.fieldEquals(DeferredCardPeriod.ACCOUNT, currentAccount.get(Account.ID)),
-                                GlobMatchers.fieldEquals(DeferredCardPeriod.FROM_MONTH, month.get(Month.ID))))
+                              and(
+                                fieldEquals(DeferredCardPeriod.ACCOUNT, currentAccount.get(Account.ID)),
+                                fieldEquals(DeferredCardPeriod.FROM_MONTH, month.get(Month.ID))))
               .getFirst();
           if (glob == null && month.get(Month.ID) != firstMonth) {
             repository.create(DeferredCardPeriod.TYPE,
-                              FieldValue.value(DeferredCardPeriod.ACCOUNT, currentAccount.get(Account.ID)),
-                              FieldValue.value(DeferredCardPeriod.FROM_MONTH, month.get(Month.ID)),
-                              FieldValue.value(DeferredCardPeriod.DAY, 31));
+                              value(DeferredCardPeriod.ACCOUNT, currentAccount.get(Account.ID)),
+                              value(DeferredCardPeriod.FROM_MONTH, month.get(Month.ID)),
+                              value(DeferredCardPeriod.DAY, 31));
             monthToIgnore.add(month.get(Month.ID));
             return;
           }
@@ -162,22 +163,25 @@ public class CardPanelEdition {
     monthToIgnore.clear();
     if (account != null) {
       updateMonthsFromAccount();
-      periods.setFilter(GlobMatchers.fieldEquals(DeferredCardPeriod.ACCOUNT, account.get(Account.ID)));
+      periods.setFilter(fieldEquals(DeferredCardPeriod.ACCOUNT, account.get(Account.ID)));
     }
-    Integer cardType = account == null ? AccountCardType.NOT_A_CARD.getId() : account.get(Account.CARD_TYPE);
+    Integer cardType = (account == null) ? AccountCardType.NOT_A_CARD.getId() : account.get(Account.CARD_TYPE);
     cardHandler.show(AccountCardType.get(cardType).getName());
   }
 
   private void updateMonthsFromAccount() {
-    ExistingMonth existingMonth = new ExistingMonth();
-    repository.safeApply(Month.TYPE, GlobMatchers.ALL, existingMonth);
-    firstMonth = existingMonth.firstMonth;
-    lastMonth = existingMonth.lastMonth;
+    ExistingMonthsCollector existingMonthsCollector = new ExistingMonthsCollector();
+    repository.safeApply(Month.TYPE, GlobMatchers.ALL, existingMonthsCollector);
+
+    firstMonth = existingMonthsCollector.firstMonth;
+    lastMonth = existingMonthsCollector.lastMonth;
+
     Date openDate = currentAccount.get(Account.OPEN_DATE);
-    Date closeDate = currentAccount.get(Account.CLOSED_DATE);
     if (openDate != null) {
       firstMonth = Math.max(Month.getMonthId(openDate), firstMonth);
     }
+
+    Date closeDate = currentAccount.get(Account.CLOSED_DATE);
     if (closeDate != null) {
       lastMonth = Math.min(Month.getMonthId(closeDate), lastMonth);
     }
@@ -214,7 +218,7 @@ public class CardPanelEdition {
     }
   }
 
-  private static class ExistingMonth implements GlobFunctor {
+  private static class ExistingMonthsCollector implements GlobFunctor {
     public int firstMonth = Integer.MAX_VALUE;
     public int lastMonth = Integer.MIN_VALUE;
 
@@ -243,7 +247,7 @@ public class CardPanelEdition {
           int openMonthId = firstMonth;
           GlobList deferredPeriods =
             repository.getAll(DeferredCardPeriod.TYPE,
-                              GlobMatchers.fieldEquals(DeferredCardPeriod.ACCOUNT, currentAccount.get(Account.ID)))
+                              fieldEquals(DeferredCardPeriod.ACCOUNT, currentAccount.get(Account.ID)))
               .sort(DeferredCardPeriod.FROM_MONTH);
           int lastDay = 0;
           for (Glob period : deferredPeriods) {
@@ -261,7 +265,7 @@ public class CardPanelEdition {
           int closedMonthId = lastMonth;
           GlobList deferredPeriods =
             repository.getAll(DeferredCardPeriod.TYPE,
-                              GlobMatchers.fieldEquals(DeferredCardPeriod.ACCOUNT, currentAccount.get(Account.ID)))
+                              fieldEquals(DeferredCardPeriod.ACCOUNT, currentAccount.get(Account.ID)))
               .sort(DeferredCardPeriod.FROM_MONTH);
 
           while (deferredPeriods.getLast().get(DeferredCardPeriod.FROM_MONTH) > closedMonthId) {
@@ -283,14 +287,14 @@ public class CardPanelEdition {
         cardHandler.show(cardType.get(AccountCardType.NAME));
 
         if (cardType.get(AccountCardType.ID).equals(AccountCardType.DEFERRED.getId())) {
-          repository.create(DeferredCardPeriod.TYPE, FieldValue.value(DeferredCardPeriod.DAY, 31),
-                            FieldValue.value(DeferredCardPeriod.ACCOUNT, currentAccount.get(Account.ID)),
-                            FieldValue.value(DeferredCardPeriod.FROM_MONTH, 0));
+          repository.create(DeferredCardPeriod.TYPE, value(DeferredCardPeriod.DAY, 31),
+                            value(DeferredCardPeriod.ACCOUNT, currentAccount.get(Account.ID)),
+                            value(DeferredCardPeriod.FROM_MONTH, 0));
         }
         else {
-          repository.delete(repository.getAll(DeferredCardPeriod.TYPE,
-                                              GlobMatchers.fieldEquals(DeferredCardPeriod.ACCOUNT,
-                                                                       currentAccount.get(Account.ID))));
+          repository.delete(DeferredCardPeriod.TYPE,
+                            fieldEquals(DeferredCardPeriod.ACCOUNT,
+                                        currentAccount.get(Account.ID)));
         }
       }
     }
