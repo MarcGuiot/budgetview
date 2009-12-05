@@ -18,20 +18,21 @@ public class ImportedTransactionsTable {
 
   private static final int[] COLUMN_SIZES = {10, 45};
 
-  public ImportedTransactionsTable(GlobRepository sessionRepository, DefaultDirectory sessionDirectory, ImportedTransactionDateRenderer dateRenderer) {
+  public ImportedTransactionsTable(GlobRepository repository, DefaultDirectory directory,
+                                   ImportedTransactionDateRenderer dateRenderer) {
 
-    GlobTableView tableView = GlobTableView.init(ImportedTransaction.TYPE, sessionRepository,
-                                                 dateRenderer.getComparator(), sessionDirectory)
+    GlobTableView tableView = GlobTableView.init(ImportedTransaction.TYPE, repository,
+                                                 dateRenderer.getComparator(), directory)
       .addColumn(Lang.get("import.bankDate"), ImportedTransaction.BANK_DATE,
                  chain(fontSize(9), dateRenderer))
       .addColumn(Lang.get("label"), new TransactionLabelGlobStringifier(), LabelCustomizers.autoTooltip())
       .addColumn(Lang.get("amount"), ImportedTransaction.AMOUNT);
 
-    PicsouTableHeaderPainter.install(tableView, sessionDirectory);
+    PicsouTableHeaderPainter.install(tableView, directory);
 
     transactionTable = tableView.getComponent();
     dateRenderer.setTable(tableView);
-    ApplicationColors.setSelectionColors(transactionTable, sessionDirectory);
+    ApplicationColors.setSelectionColors(transactionTable, directory);
     Gui.setColumnSizes(transactionTable, COLUMN_SIZES);
   }
 

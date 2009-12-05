@@ -21,7 +21,6 @@ public class TransactionLabelGlobStringifier extends AbstractGlobStringifier {
       complete(builder, glob.get(ImportedTransaction.QIF_P));
       return builder.toString();
     }
-
   }
 
   void complete(StringBuilder builder, String s) {

@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.importer;
 
-import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
 import org.designup.picsou.gui.accounts.Day;
 import org.designup.picsou.gui.accounts.NewAccountAction;
@@ -10,13 +9,11 @@ import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.importer.additionalactions.AccountEditionAction;
 import org.designup.picsou.gui.importer.additionalactions.BankEntityEditionAction;
 import org.designup.picsou.gui.importer.additionalactions.CardTypeAction;
+import org.designup.picsou.gui.importer.edition.BrowseFilesAction;
 import org.designup.picsou.gui.importer.edition.DateFormatSelectionPanel;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionDateRenderer;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionsTable;
-import org.designup.picsou.gui.startup.AutoCategorizationFunctor;
-import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.importer.BankFileType;
-import org.designup.picsou.importer.ImportSession;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -33,19 +30,18 @@ import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.*;
-import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
-import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -56,7 +52,12 @@ public class ImportDialog {
   private LocalGlobRepository localRepository;
   private Directory localDirectory;
 
-  private boolean usePreferedPath;
+  private ImportController controller;
+
+  private GlobRepository sessionRepository;
+  private DefaultDirectory sessionDirectory;
+
+  private boolean usePreferredPath;
 
   private JLabel messageLabel = new JLabel();
   private JPanel filePanel = new JPanel();
@@ -64,9 +65,6 @@ public class ImportDialog {
   private JButton fileButton = new JButton();
   private JLabel fileNameLabel = new JLabel();
 
-  private DefaultDirectory sessionDirectory;
-  private ImportSession importSession;
-  private final List<File> files = new ArrayList<File>();
   private Key currentlySelectedAccount;
 
   private DateFormatSelectionPanel dateFormatSelectionPanel;
@@ -74,39 +72,35 @@ public class ImportDialog {
   private JButton newAccountButton;
   private JComboBox accountComboBox;
   private JLabel importMessageLabel = new JLabel();
-  private GlobRepository sessionRepository;
   private ImportedTransactionDateRenderer dateRenderer;
-  private boolean step1 = true;
-  private boolean step2 = true;
-  private boolean completed = false;
-  private OpenRequestManager openRequestManager;
   private Glob defaultAccount;
-  private Set<Integer> importKeys = new HashSet<Integer>();
 
   private JPanel mainPanel;
-  private JPanel panelStep1;
-  private JPanel panelStep2;
-  private List<AdditionalImportAction> actions = new ArrayList<AdditionalImportAction>();
-
+  private JPanel step1Panel;
+  private JPanel step2Panel;
   private PicsouDialog dialog;
-  private Repeat<AdditionalImportAction> additionalActionImportRepeat;
+
+  private List<AdditionalImportAction> additionalImportActions = new ArrayList<AdditionalImportAction>();
   private List<AdditionalImportAction> currentActions;
+  private Repeat<AdditionalImportAction> additionalActionImportRepeat;
 
   public ImportDialog(String textForCloseButton, List<File> files, Glob defaultAccount,
                       final Window owner, final GlobRepository repository, Directory directory,
-                      boolean usePreferedPath) {
+                      boolean usePreferredPath) {
 
     this.defaultAccount = defaultAccount;
     this.repository = repository;
     this.directory = directory;
-    this.usePreferedPath = usePreferedPath;
+    this.usePreferredPath = usePreferredPath;
 
     updateFileField(files);
-    initOpenRequestManager(directory);
+
     loadLocalRepository(repository);
 
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(new SelectionService());
+
+    controller = new ImportController(this, fileField, repository, localRepository, directory);
 
     dialog = PicsouDialog.create(owner, directory);
     dialog.setOpenRequestIsManaged(true);
@@ -126,11 +120,11 @@ public class ImportDialog {
   private void initMainPanel() {
     mainPanel = new JPanel();
     mainPanel.setLayout(new SingleComponentLayout(null));
-    mainPanel.add(panelStep1);
+    mainPanel.add(step1Panel);
   }
 
   private void initStep1Panel(String textForCloseButton, Directory directory) {
-    fileButton.setAction(new BrowseFilesAction());
+    fileButton.setAction(new BrowseFilesAction(fileField, localRepository, usePreferredPath, dialog));
 
     initFileField();
 
@@ -142,13 +136,13 @@ public class ImportDialog {
     builder1.add("import", new ImportAction());
     builder1.add("close", new AbstractAction(textForCloseButton) {
       public void actionPerformed(ActionEvent e) {
-        openRequestManager.popCallback();
-        complete();
+        controller.complete();
+        closeDialog();
       }
     });
     builder1.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
 
-    panelStep1 = builder1.load();
+    step1Panel = builder1.load();
   }
 
   private void initFileField() {
@@ -179,8 +173,7 @@ public class ImportDialog {
       }
     }, Account.TYPE);
 
-    importSession = new ImportSession(localRepository, sessionDirectory);
-    sessionRepository = importSession.getTempRepository();
+    sessionRepository = controller.getSessionRepository();
 
     ImportedTransactionsTable table = new ImportedTransactionsTable(sessionRepository, sessionDirectory, dateRenderer);
     builder2.add("table", table.getTable());
@@ -204,34 +197,36 @@ public class ImportDialog {
 
     registerAccountCreationListener(sessionRepository, sessionDirectory);
 
-    AdditionalImportAction bankEntity = new BankEntityEditionAction(dialog, sessionRepository, sessionDirectory);
-    actions.add(bankEntity);
-
-    AdditionalImportAction accountEdition = new AccountEditionAction(dialog, sessionRepository, sessionDirectory);
-    actions.add(accountEdition);
-
-    AdditionalImportAction cardType = new CardTypeAction(dialog, sessionRepository, sessionDirectory);
-    actions.add(cardType);
+    loadAdditionalImportActions();
 
     builder2.add("importMessage", importMessageLabel);
 
-    additionalActionImportRepeat = builder2.addRepeat("additionalActions", Collections.<AdditionalImportAction>emptyList(),
-                                                      new RepeatComponentFactory<AdditionalImportAction>() {
-                                                        public void registerComponents(RepeatCellBuilder cellBuilder, final AdditionalImportAction item) {
-                                                          cellBuilder.add("message", new JLabel(item.getMessage()));
-                                                          cellBuilder.add("action", new AbstractAction(item.getButtonMessage()) {
-                                                            public void actionPerformed(ActionEvent e) {
-                                                              item.getAction().actionPerformed(e);
-                                                              updateActions();
-                                                            }
-                                                          });
-                                                        }
-                                                      });
+    additionalActionImportRepeat =
+      builder2.addRepeat("additionalActions", Collections.<AdditionalImportAction>emptyList(),
+                         new RepeatComponentFactory<AdditionalImportAction>() {
+                           public void registerComponents(RepeatCellBuilder cellBuilder,
+                                                          final AdditionalImportAction item) {
+                             cellBuilder.add("message", new JLabel(item.getMessage()));
+                             cellBuilder.add("action", new AbstractAction(item.getButtonMessage()) {
+                               public void actionPerformed(ActionEvent e) {
+                                 item.getAction().actionPerformed(e);
+                                 updateAdditionalImportActions();
+                               }
+                             });
+                           }
+                         });
 
     builder2.add("skipFile", new SkipFileAction());
     builder2.add("finish", new FinishAction());
     builder2.add("close", new CancelAction(textForCloseButton));
-    this.panelStep2 = builder2.load();
+    this.step2Panel = builder2.load();
+  }
+
+  private void loadAdditionalImportActions() {
+    additionalImportActions.addAll(Arrays.asList(
+      new BankEntityEditionAction(dialog, sessionRepository, sessionDirectory),
+      new AccountEditionAction(dialog, sessionRepository, sessionDirectory),
+      new CardTypeAction(dialog, sessionRepository, sessionDirectory)));
   }
 
   private void registerAccountCreationListener(final GlobRepository sessionRepository,
@@ -245,41 +240,6 @@ public class ImportDialog {
         }
       }
     });
-  }
-
-  private void initOpenRequestManager(Directory directory) {
-    openRequestManager = directory.get(OpenRequestManager.class);
-    openRequestManager.pushCallback(new OpenRequestManager.Callback() {
-      public boolean accept() {
-        synchronized (fileField) {
-          if (step1) {
-            return true;
-          }
-        }
-        return false;
-      }
-
-      public void openFiles(final List<File> files) {
-        SwingUtilities.invokeLater(new Runnable() {
-          public void run() {
-            synchronized (fileField) {
-              if (step1) {
-                updateFileField(files);
-              }
-              else {
-                openRequestManager.openFiles(files);
-              }
-            }
-          }
-        });
-      }
-    });
-  }
-
-  private void showStep(JPanel step) {
-    mainPanel.removeAll();
-    mainPanel.add(step);
-    contentChanged();
   }
 
   protected void contentChanged() {
@@ -301,7 +261,7 @@ public class ImportDialog {
     }
   }
 
-  private void updateFileField(List<File> files) {
+  public void updateFileField(List<File> files) {
     StringBuilder builder = new StringBuilder(fileField.getText());
     for (File file : files) {
       if (builder.length() != 0) {
@@ -312,24 +272,8 @@ public class ImportDialog {
     fileField.setText(builder.toString());
   }
 
-  protected void complete() {
+  protected void closeDialog() {
     dialog.setVisible(false);
-  }
-
-  private File[] getInitialFiles() {
-    synchronized (fileField) {
-      String path = fileField.getText();
-      String[] strings = path.split(";");
-      File[] files = new File[strings.length];
-      for (int i = 0; i < strings.length; i++) {
-        String string = strings[i];
-        files[i] = new File(string);
-      }
-      if (Strings.isNullOrEmpty(path)) {
-        return null;
-      }
-      return files;
-    }
   }
 
   private boolean initialFileAccepted() {
@@ -355,11 +299,11 @@ public class ImportDialog {
   }
 
   private void displayErrorMessage(String key) {
-    messageLabel.setText("<html><font color=red>" + Lang.get(key) + "</font></html>");
+    showMessage("<html><font color=red>" + Lang.get(key) + "</font></html>");
   }
 
   private void clearErrorMessage() {
-    messageLabel.setText("");
+    showMessage("");
   }
 
   public void show() {
@@ -390,108 +334,39 @@ public class ImportDialog {
     }
   }
 
-  private class ImportAction extends AbstractAction {
-    public ImportAction() {
-      super(Lang.get("import.ok"));
-    }
-
-    public void actionPerformed(ActionEvent event) {
-      if (!initialFileAccepted()) {
-        return;
-      }
-      openRequestManager.popCallback();
-      openRequestManager.pushCallback(new OpenRequestManager.Callback() {
-        public boolean accept() {
-          synchronized (ImportDialog.this.files) {
-            if (step2) {
-              return true;
-            }
-          }
-          return false;
-        }
-
-        public void openFiles(final List<File> files) {
-          synchronized (ImportDialog.this.files) {
-            if (step2) {
-              ImportDialog.this.files.addAll(files);
-            }
-            else {
-              SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                  try {
-                    Thread.sleep(50);
-                  }
-                  catch (InterruptedException e) {
-                  }
-                  openRequestManager.openFiles(files);
-                }
-              });
-            }
-          }
-        }
-      });
-      step1 = false;
-      File[] file = getInitialFiles();
-      synchronized (files) {
-        files.addAll(Arrays.asList(file));
-      }
-      if (nextImport()) {
-        showStep(panelStep2);
-      }
-    }
+  public void setFileName(String absolutePath) {
+    fileNameLabel.setText(absolutePath);
   }
 
-  private boolean nextImport() {
-
-    synchronized (files) {
-      if (files.isEmpty()) {
-        step2 = false;
-      }
+  public void showLastImportedMonthAndClose(Set<Integer> months) {
+    GlobList monthsToSelect =
+      repository.getAll(Month.TYPE, GlobMatchers.fieldIn(Month.ID, months)).sort(Month.ID);
+    if (!monthsToSelect.isEmpty()) {
+      SelectionService selectionService = directory.get(SelectionService.class);
+      selectionService.select(monthsToSelect.getLast());
     }
-    if (completed) {
-      return true;
-    }
-    if (!step2) {
-      try {
-        completed = true;
-        Set<Integer> month = createMonths();
-        autocategorize();
-        showPositionDialog();
-        openRequestManager.popCallback();
-        localRepository.commitChanges(true);
-        selectLastImportedMonth(month);
-        complete();
-        return true;
-      }
-      catch (Exception e) {
-        Log.write("nextImport", e);
-        return false;
-      }
-    }
-
-    File file;
-    synchronized (files) {
-      file = files.remove(0);
-    }
-    try {
-      fileNameLabel.setText(file.getAbsolutePath());
-      List<String> dateFormat = importSession.loadFile(file);
-      updateActions();
-      initQifAccountChooserFields(file);
-      initDateFormatSelectionPanel(dateFormat);
-      return true;
-    }
-    catch (Exception e) {
-      String message = Lang.get("import.file.error");
-      Log.write("", e);
-      messageLabel.setText(message);
-      return false;
-    }
+    closeDialog();
   }
 
-  private void updateActions() {
+  public void showMessage(String message) {
+    messageLabel.setText(message);
+  }
+
+  public void updateForNextImport(File file, List<String> dateFormats) throws IOException {
+    updateAdditionalImportActions();
+    initQifAccountChooserFields(file);
+    dateFormatSelectionPanel.init(dateFormats);
+  }
+
+  public void showStep2() {
+    mainPanel.removeAll();
+    mainPanel.add(step2Panel);
+    contentChanged();
+  }
+
+  private void updateAdditionalImportActions() {
     currentActions = new ArrayList<AdditionalImportAction>();
-    for (AdditionalImportAction action : actions) {
+    for (AdditionalImportAction action : additionalImportActions) {
       if (!action.isValid()) {
         currentActions.add(action);
       }
@@ -499,7 +374,7 @@ public class ImportDialog {
     additionalActionImportRepeat.set(currentActions);
   }
 
-  private void showPositionDialog() {
+  public void showPositionDialog() {
     Set<Key> transactions = localRepository.getCurrentChanges().getCreated(Transaction.TYPE);
     Set<Integer> accounts = new HashSet<Integer>();
     for (Key transaction : transactions) {
@@ -513,55 +388,6 @@ public class ImportDialog {
         dialog.show();
       }
     }
-  }
-
-  private Set<Integer> createMonths() {
-    localRepository.startChangeSet();
-    final SortedSet<Integer> monthIds = new TreeSet<Integer>();
-    try {
-      localRepository.safeApply(Transaction.TYPE,
-                                GlobMatchers.fieldIn(Transaction.IMPORT, importKeys),
-                                new GlobFunctor() {
-                                  public void run(Glob month, GlobRepository repository) throws Exception {
-                                    monthIds.add(month.get(Transaction.BANK_MONTH));
-                                    monthIds.add(month.get(Transaction.MONTH));
-                                  }
-                                });
-      if (monthIds.isEmpty()) {
-        return monthIds;
-      }
-      int firstMonth = monthIds.first();
-      TimeService time = directory.get(TimeService.class);
-      int currentMonth = time.getCurrentMonthId();
-      List<Integer> futureMonth = Month.createMonths(firstMonth, currentMonth);
-      futureMonth.addAll(Month.createMonths(monthIds.last(), currentMonth));
-      for (int month : futureMonth) {
-        localRepository.findOrCreate(Key.create(Month.TYPE, month));
-      }
-    }
-    finally {
-      localRepository.completeChangeSet();
-    }
-    return monthIds;
-  }
-
-  private void autocategorize() {
-    localRepository.safeApply(Transaction.TYPE,
-                              GlobMatchers.fieldIn(Transaction.IMPORT, importKeys),
-                              new AutoCategorizationFunctor(repository));
-  }
-
-  private void selectLastImportedMonth(Set<Integer> month) {
-    GlobList monthsToSelect =
-      repository.getAll(Month.TYPE, GlobMatchers.fieldIn(Month.ID, month)).sort(Month.ID);
-    if (!monthsToSelect.isEmpty()) {
-      SelectionService selectionService = directory.get(SelectionService.class);
-      selectionService.select(monthsToSelect.getLast());
-    }
-  }
-
-  private void initDateFormatSelectionPanel(List<String> dateFormats) {
-    dateFormatSelectionPanel.init(dateFormats);
   }
 
   private void initQifAccountChooserFields(File file) {
@@ -591,6 +417,19 @@ public class ImportDialog {
     }
   }
 
+  private class ImportAction extends AbstractAction {
+    public ImportAction() {
+      super(Lang.get("import.ok"));
+    }
+
+    public void actionPerformed(ActionEvent event) {
+      if (!initialFileAccepted()) {
+        return;
+      }
+      controller.doImport();
+    }
+  }
+
   private class FinishAction extends AbstractAction {
     public FinishAction() {
       super(Lang.get("import.ok"));
@@ -599,19 +438,14 @@ public class ImportDialog {
     public void actionPerformed(ActionEvent event) {
       setEnabled(false);
       try {
-        messageLabel.setText("");
+        showMessage("");
         if (!dateFormatSelectionPanel.check()) {
           return;
         }
         if (!currentActions.isEmpty()) {
           return;
         }
-        Key importKey = importSession.importTransactions(currentlySelectedAccount,
-                                                         dateFormatSelectionPanel.getSelectedFormat());
-        if (importKey != null) {
-          importKeys.add(importKey.get(TransactionImport.ID));
-        }
-        nextImport();
+        controller.finish(currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
       }
       finally {
         setEnabled(true);
@@ -627,78 +461,10 @@ public class ImportDialog {
     public void actionPerformed(ActionEvent e) {
       setEnabled(false);
       try {
-        importSession.discard();
-        nextImport();
+        controller.skipFile();
       }
       finally {
         setEnabled(true);
-      }
-    }
-  }
-
-  private static File[] queryFile(Component parent, File path) {
-    JFileChooser chooser = new JFileChooser();
-    if (path != null && path.exists()) {
-      chooser.setCurrentDirectory(path);
-    }
-    chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    chooser.setMultiSelectionEnabled(true);
-    chooser.addChoosableFileFilter(new FileFilter() {
-      public boolean accept(File file) {
-        return BankFileType.isFileNameSupported(file.getName())
-               || file.isDirectory();
-      }
-
-      public String getDescription() {
-        return Lang.get("bank.file.format");
-      }
-    });
-    int returnVal = chooser.showOpenDialog(parent);
-    if (returnVal == JFileChooser.APPROVE_OPTION) {
-      File[] selectedFiles = chooser.getSelectedFiles();
-      if (selectedFiles == null || selectedFiles.length == 0) {
-        Log.write("import : no file selected ");
-      }
-      else {
-        for (File selectedFile : selectedFiles) {
-          if (!selectedFile.exists()) {
-            Log.write("import : Error: file " + selectedFile.getName() + " not found");
-          }
-        }
-      }
-      return selectedFiles;
-    }
-    return null;
-  }
-
-  private class BrowseFilesAction extends AbstractAction {
-    private BrowseFilesAction() {
-      super(Lang.get("browse"));
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      File path = null;
-      if (usePreferedPath) {
-        Glob preferences = localRepository.get(UserPreferences.KEY);
-        String directory = preferences.get(UserPreferences.LAST_IMPORT_DIRECTORY);
-        if (directory != null) {
-          path = new File(directory);
-        }
-      }
-      File[] files = queryFile(dialog, path);
-      if (files != null) {
-        StringBuffer buffer = new StringBuffer();
-        for (int i = 0; i < files.length; i++) {
-          buffer.append(files[i].getPath());
-          if (i + 1 < files.length) {
-            buffer.append(";");
-          }
-          if (usePreferedPath) {
-            localRepository.update(UserPreferences.KEY, UserPreferences.LAST_IMPORT_DIRECTORY,
-                                   files[i].getAbsoluteFile().getParent());
-          }
-        }
-        fileField.setText(buffer.toString());
       }
     }
   }
@@ -709,7 +475,7 @@ public class ImportDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
-      complete();
+      closeDialog();
     }
   }
 }

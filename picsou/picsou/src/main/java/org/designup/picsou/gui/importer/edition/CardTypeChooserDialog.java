@@ -11,9 +11,10 @@ import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
-import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.Directory;
@@ -23,13 +24,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 
-public class CartTypeChooserDialog {
+public class CardTypeChooserDialog {
   private GlobRepository repository;
   private Directory directory;
   private PicsouDialog dialog;
   private JLabel creditMessage;
 
-  public CartTypeChooserDialog(GlobRepository repository, Directory directory) {
+  public CardTypeChooserDialog(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
   }
@@ -56,6 +57,7 @@ public class CartTypeChooserDialog {
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
       }
     });
+
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/cardTypeChooserDialog.splits",
                                                       localRepository, directory);
     builder.addRepeat("cardTypeRepeat", accounts, new RepeatComponentFactory<Glob>() {
@@ -71,8 +73,8 @@ public class CartTypeChooserDialog {
             localRepository.update(item.getKey(), Account.CARD_TYPE, AccountCardType.CREDIT.getId());
             localRepository.delete(
               localRepository.getAll(DeferredCardPeriod.TYPE,
-                                     GlobMatchers.and(GlobMatchers.fieldEquals(DeferredCardPeriod.ACCOUNT, item.get(Account.ID)),
-                                                      GlobMatchers.fieldEquals(DeferredCardPeriod.FROM_MONTH, 0))));
+                                     and(fieldEquals(DeferredCardPeriod.ACCOUNT, item.get(Account.ID)),
+                                         fieldEquals(DeferredCardPeriod.FROM_MONTH, 0))));
             dayCombo.setVisible(false);
           }
         });
@@ -82,8 +84,8 @@ public class CartTypeChooserDialog {
           public void actionPerformed(ActionEvent e) {
             localRepository.update(item.getKey(), Account.CARD_TYPE, AccountCardType.DEFERRED.getId());
             Glob glob = localRepository.create(DeferredCardPeriod.TYPE,
-                                               FieldValue.value(DeferredCardPeriod.ACCOUNT, item.get(Account.ID)),
-                                               FieldValue.value(DeferredCardPeriod.FROM_MONTH, 0));
+                                               value(DeferredCardPeriod.ACCOUNT, item.get(Account.ID)),
+                                               value(DeferredCardPeriod.FROM_MONTH, 0));
             directory.get(SelectionService.class).select(glob);
             dayCombo.setVisible(true);
           }
@@ -110,7 +112,6 @@ public class CartTypeChooserDialog {
     );
     dialog.pack();
     dialog.showCentered();
-
   }
 
   private class ValidateAction extends AbstractAction {

@@ -49,8 +49,8 @@ public class AccountEditionAction implements AdditionalImportAction {
           accounts.remove(repository.get(Key.create(Account.TYPE, accountId)));
         }
         if (accounts.size() == 0) {
-          AccountEditionDialog accountEditionDialog = new AccountEditionDialog(parent, repository, directory);
-          accountEditionDialog.createAndShow();
+          AccountEditionDialog dialog = new AccountEditionDialog(parent, repository, directory);
+          dialog.createAndShow();
         }
       }
     };

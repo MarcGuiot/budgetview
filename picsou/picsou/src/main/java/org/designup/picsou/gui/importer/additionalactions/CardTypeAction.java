@@ -4,7 +4,7 @@ import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountCardType;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.gui.importer.AdditionalImportAction;
-import org.designup.picsou.gui.importer.edition.CartTypeChooserDialog;
+import org.designup.picsou.gui.importer.edition.CardTypeChooserDialog;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatchers;
@@ -43,7 +43,7 @@ public class CardTypeAction implements AdditionalImportAction {
   public Action getAction() {
     return new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
-        CartTypeChooserDialog chooserDialog = new CartTypeChooserDialog(repository, directory);
+        CardTypeChooserDialog chooserDialog = new CardTypeChooserDialog(repository, directory);
         chooserDialog.show(parent, accounts);
       }
     };

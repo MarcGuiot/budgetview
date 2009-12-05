@@ -51,7 +51,6 @@ public class BankEntityEditionPanel {
     builder.load();
   }
 
-
   public JPanel getPanel() {
     return panel;
   }

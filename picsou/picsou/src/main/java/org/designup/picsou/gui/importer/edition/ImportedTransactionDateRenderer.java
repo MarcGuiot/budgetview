@@ -48,23 +48,23 @@ public class ImportedTransactionDateRenderer implements LabelCustomizer {
 
   public Comparator<Glob> getComparator() {
     return new Comparator<Glob>() {
-      public int compare(Glob o1, Glob o2) {
+      public int compare(Glob transaction1, Glob transaction2) {
         if (format == null) {
-          return Utils.compare(o1.get(ImportedTransaction.BANK_DATE), o2.get(ImportedTransaction.BANK_DATE));
+          return Utils.compare(transaction1.get(ImportedTransaction.BANK_DATE), transaction2.get(ImportedTransaction.BANK_DATE));
         }
         try {
-          Date date1 = format.parse(o1.get(ImportedTransaction.BANK_DATE));
-          Date date2 = format.parse(o2.get(ImportedTransaction.BANK_DATE));
+          Date date1 = format.parse(transaction1.get(ImportedTransaction.BANK_DATE));
+          Date date2 = format.parse(transaction2.get(ImportedTransaction.BANK_DATE));
           int compareResult = date2.compareTo(date1);
           if (compareResult == 0) {
-            Integer id2 = o2.get(ImportedTransaction.ID);
-            Integer id1 = o1.get(ImportedTransaction.ID);
+            Integer id2 = transaction2.get(ImportedTransaction.ID);
+            Integer id1 = transaction1.get(ImportedTransaction.ID);
             return Utils.compare(id2, id1);
           }
           return compareResult;
         }
         catch (ParseException e) {
-          return Utils.compare(o1.get(ImportedTransaction.BANK_DATE), o2.get(ImportedTransaction.BANK_DATE));
+          return Utils.compare(transaction1.get(ImportedTransaction.BANK_DATE), transaction2.get(ImportedTransaction.BANK_DATE));
         }
       }
     };
