@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.importer;
+package org.designup.picsou.gui.importer.edition;
 
 import org.designup.picsou.importer.utils.DateFormatAnalyzer;
 import org.designup.picsou.utils.Lang;
@@ -44,7 +44,7 @@ public class DateFormatSelectionPanel {
     });
   }
 
-  interface Callback {
+  public interface Callback {
     void dateFormatSelected(String format);
   }
 

@@ -1,8 +1,10 @@
-package org.designup.picsou.gui.importer;
+package org.designup.picsou.gui.importer.additionalactions;
 
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountCardType;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.gui.importer.AdditionalImportAction;
+import org.designup.picsou.gui.importer.edition.CartTypeChooserDialog;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatchers;

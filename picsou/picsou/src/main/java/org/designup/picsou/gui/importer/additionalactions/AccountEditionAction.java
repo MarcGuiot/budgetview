@@ -1,15 +1,14 @@
-package org.designup.picsou.gui.importer;
+package org.designup.picsou.gui.importer.additionalactions;
 
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.gui.SelectionService;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.gui.accounts.AccountEditionDialog;
+import org.designup.picsou.gui.importer.AdditionalImportAction;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,9 +1,8 @@
-package org.designup.picsou.gui.importer;
+package org.designup.picsou.gui.importer.edition;
 
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;

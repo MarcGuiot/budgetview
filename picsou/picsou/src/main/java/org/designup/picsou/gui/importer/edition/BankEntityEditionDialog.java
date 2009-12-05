@@ -1,6 +1,7 @@
-package org.designup.picsou.gui.importer;
+package org.designup.picsou.gui.importer.edition;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.importer.edition.BankEntityEditionPanel;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.BankEntity;

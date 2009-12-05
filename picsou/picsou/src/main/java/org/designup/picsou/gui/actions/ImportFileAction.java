@@ -3,7 +3,7 @@ package org.designup.picsou.gui.actions;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.license.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
-import org.designup.picsou.gui.importer.ImportPanel;
+import org.designup.picsou.gui.importer.ImportDialog;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;
@@ -71,7 +71,7 @@ public class ImportFileAction extends AbstractAction {
   }
 
   private static class OpenRunnable implements Runnable {
-    private ImportPanel panel = null;
+    private ImportDialog dialog = null;
     private Directory directory;
     private GlobRepository repository;
 
@@ -81,7 +81,7 @@ public class ImportFileAction extends AbstractAction {
       this.directory = directory;
       this.repository = repository;
       if (!LicenseService.trialExpired(repository) && !User.isDemoUser(repository.get(User.KEY))) {
-        panel = new ImportPanel(Lang.get("import.step1.close"), files, defaultAccount,
+        dialog = new ImportDialog(Lang.get("import.step1.close"), files, defaultAccount,
                                 directory.get(JFrame.class),
                                 repository, directory,
                                 usePreferedPath);
@@ -89,8 +89,8 @@ public class ImportFileAction extends AbstractAction {
     }
 
     public void run() {
-      if (panel != null) {
-        panel.show();
+      if (dialog != null) {
+        dialog.show();
       }
       else {
         if (User.isDemoUser(repository.get(User.KEY))) {

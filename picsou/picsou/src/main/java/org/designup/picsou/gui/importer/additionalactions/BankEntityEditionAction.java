@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.importer;
+package org.designup.picsou.gui.importer.additionalactions;
 
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobList;
@@ -6,13 +6,14 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.importer.AdditionalImportAction;
+import org.designup.picsou.gui.importer.edition.BankEntityEditionDialog;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.*;
 
-public class BankEntityEditionAction implements AdditionalImportAction{
+public class BankEntityEditionAction implements AdditionalImportAction {
   private Window parent;
   private GlobRepository repository;
   private Directory directory;

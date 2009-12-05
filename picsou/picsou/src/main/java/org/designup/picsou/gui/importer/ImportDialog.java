@@ -5,14 +5,16 @@ import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
 import org.designup.picsou.gui.accounts.Day;
 import org.designup.picsou.gui.accounts.NewAccountAction;
 import org.designup.picsou.gui.components.PicsouFrame;
-import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.importer.additionalactions.AccountEditionAction;
+import org.designup.picsou.gui.importer.additionalactions.BankEntityEditionAction;
+import org.designup.picsou.gui.importer.additionalactions.CardTypeAction;
+import org.designup.picsou.gui.importer.edition.DateFormatSelectionPanel;
+import org.designup.picsou.gui.importer.edition.ImportedTransactionDateRenderer;
+import org.designup.picsou.gui.importer.edition.ImportedTransactionsTable;
 import org.designup.picsou.gui.startup.AutoCategorizationFunctor;
 import org.designup.picsou.gui.startup.OpenRequestManager;
-import org.designup.picsou.gui.utils.ApplicationColors;
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.importer.BankFileType;
 import org.designup.picsou.importer.ImportSession;
 import org.designup.picsou.model.*;
@@ -28,18 +30,11 @@ import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.views.GlobComboView;
-import org.globsframework.gui.views.GlobTableView;
-import org.globsframework.gui.views.LabelCustomizer;
-import org.globsframework.gui.views.utils.LabelCustomizers;
-import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
-import static org.globsframework.gui.views.utils.LabelCustomizers.fontSize;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -51,23 +46,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
-public class ImportPanel {
+public class ImportDialog {
+
+  private GlobRepository repository;
+  private Directory directory;
+  private LocalGlobRepository localRepository;
+  private Directory localDirectory;
+
+  private boolean usePreferedPath;
+
   private JLabel messageLabel = new JLabel();
   private JPanel filePanel = new JPanel();
   private final JTextField fileField = new JTextField();
   private JButton fileButton = new JButton();
   private JLabel fileNameLabel = new JLabel();
-
-  private GlobRepository repository;
-  private Directory directory;
-  private boolean usePreferedPath;
-  private LocalGlobRepository localRepository;
-  private Directory localDirectory;
 
   private DefaultDirectory sessionDirectory;
   private ImportSession importSession;
@@ -87,20 +82,19 @@ public class ImportPanel {
   private OpenRequestManager openRequestManager;
   private Glob defaultAccount;
   private Set<Integer> importKeys = new HashSet<Integer>();
+
   private JPanel mainPanel;
   private JPanel panelStep1;
   private JPanel panelStep2;
   private List<AdditionalImportAction> actions = new ArrayList<AdditionalImportAction>();
 
-  private static final int[] COLUMN_SIZES = {10, 45};
-
   private PicsouDialog dialog;
   private Repeat<AdditionalImportAction> additionalActionImportRepeat;
   private List<AdditionalImportAction> currentActions;
 
-  public ImportPanel(String textForCloseButton, List<File> files, Glob defaultAccount,
-                     final Window owner, final GlobRepository repository, Directory directory,
-                     boolean usePreferedPath) {
+  public ImportDialog(String textForCloseButton, List<File> files, Glob defaultAccount,
+                      final Window owner, final GlobRepository repository, Directory directory,
+                      boolean usePreferedPath) {
 
     this.defaultAccount = defaultAccount;
     this.repository = repository;
@@ -111,7 +105,7 @@ public class ImportPanel {
     initOpenRequestManager(directory);
     loadLocalRepository(repository);
 
-    this.localDirectory = new DefaultDirectory(directory);
+    localDirectory = new DefaultDirectory(directory);
     localDirectory.add(new SelectionService());
 
     dialog = PicsouDialog.create(owner, directory);
@@ -140,7 +134,7 @@ public class ImportPanel {
 
     initFileField();
 
-    GlobsPanelBuilder builder1 = new GlobsPanelBuilder(getClass(), "/layout/importPanelStep1.splits", localRepository, localDirectory);
+    GlobsPanelBuilder builder1 = new GlobsPanelBuilder(getClass(), "/layout/importDialogStep1.splits", localRepository, localDirectory);
     builder1.add("importMessage", messageLabel);
     builder1.add("filePanel", filePanel);
     builder1.add("fileField", fileField);
@@ -166,7 +160,7 @@ public class ImportPanel {
   }
 
   private void initStep2Panel(final String textForCloseButton, Window owner) {
-    GlobsPanelBuilder builder2 = new GlobsPanelBuilder(getClass(), "/layout/importPanelStep2.splits",
+    GlobsPanelBuilder builder2 = new GlobsPanelBuilder(getClass(), "/layout/importDialogStep2.splits",
                                                        localRepository, localDirectory);
     dateRenderer = new ImportedTransactionDateRenderer();
     dateFormatSelectionPanel = new DateFormatSelectionPanel(localRepository, localDirectory,
@@ -188,21 +182,8 @@ public class ImportPanel {
     importSession = new ImportSession(localRepository, sessionDirectory);
     sessionRepository = importSession.getTempRepository();
 
-    GlobTableView tableView = GlobTableView.init(ImportedTransaction.TYPE, sessionRepository,
-                                                 dateRenderer.getComparator(), sessionDirectory)
-      .addColumn(Lang.get("import.bankDate"), ImportedTransaction.BANK_DATE,
-                 chain(fontSize(9), dateRenderer))
-      .addColumn(Lang.get("label"), new TransactionLabelGlobStringifier(), LabelCustomizers.autoTooltip())
-      .addColumn(Lang.get("amount"), ImportedTransaction.AMOUNT);
-
-    PicsouTableHeaderPainter.install(tableView, localDirectory);
-
-    JTable transactionTable = tableView.getComponent();
-    dateRenderer.setTable(tableView);
-    ApplicationColors.setSelectionColors(transactionTable, directory);
-    Gui.setColumnSizes(transactionTable, COLUMN_SIZES);
-
-    builder2.add("table", transactionTable);
+    ImportedTransactionsTable table = new ImportedTransactionsTable(sessionRepository, sessionDirectory, dateRenderer);
+    builder2.add("table", table.getTable());
     builder2.add("fileName", fileNameLabel);
 
     NewAccountAction newAccountAction =
@@ -421,7 +402,7 @@ public class ImportPanel {
       openRequestManager.popCallback();
       openRequestManager.pushCallback(new OpenRequestManager.Callback() {
         public boolean accept() {
-          synchronized (ImportPanel.this.files) {
+          synchronized (ImportDialog.this.files) {
             if (step2) {
               return true;
             }
@@ -430,9 +411,9 @@ public class ImportPanel {
         }
 
         public void openFiles(final List<File> files) {
-          synchronized (ImportPanel.this.files) {
+          synchronized (ImportDialog.this.files) {
             if (step2) {
-              ImportPanel.this.files.addAll(files);
+              ImportDialog.this.files.addAll(files);
             }
             else {
               SwingUtilities.invokeLater(new Runnable() {
@@ -454,8 +435,7 @@ public class ImportPanel {
       synchronized (files) {
         files.addAll(Arrays.asList(file));
       }
-      boolean b = nextImport();
-      if (b) {
+      if (nextImport()) {
         showStep(panelStep2);
       }
     }
@@ -474,8 +454,8 @@ public class ImportPanel {
     if (!step2) {
       try {
         completed = true;
-        Set<Integer> month = createMonth();
-        learn();
+        Set<Integer> month = createMonths();
+        autocategorize();
         showPositionDialog();
         openRequestManager.popCallback();
         localRepository.commitChanges(true);
@@ -535,7 +515,7 @@ public class ImportPanel {
     }
   }
 
-  private Set<Integer> createMonth() {
+  private Set<Integer> createMonths() {
     localRepository.startChangeSet();
     final SortedSet<Integer> monthIds = new TreeSet<Integer>();
     try {
@@ -565,7 +545,7 @@ public class ImportPanel {
     return monthIds;
   }
 
-  private void learn() {
+  private void autocategorize() {
     localRepository.safeApply(Transaction.TYPE,
                               GlobMatchers.fieldIn(Transaction.IMPORT, importKeys),
                               new AutoCategorizationFunctor(repository));
@@ -723,64 +703,6 @@ public class ImportPanel {
     }
   }
 
-  private class ImportedTransactionDateRenderer implements LabelCustomizer {
-    private GlobTableView transactionTable;
-    private SimpleDateFormat format;
-
-    public void changeDateFormat(String dateFormat) {
-      if (dateFormat == null) {
-        format = null;
-      }
-      else {
-        format = new SimpleDateFormat(dateFormat);
-      }
-      transactionTable.refresh();
-    }
-
-    public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
-      if (format == null) {
-        label.setText(glob.get(ImportedTransaction.BANK_DATE));
-        return;
-      }
-      Date date = null;
-      try {
-        date = format.parse(glob.get(ImportedTransaction.BANK_DATE));
-      }
-      catch (ParseException e) {
-        label.setText("Failed to parse date");
-      }
-      label.setText(Formatting.toString(date));
-    }
-
-    public void setTable(GlobTableView transactionTable) {
-      this.transactionTable = transactionTable;
-    }
-
-    public Comparator<Glob> getComparator() {
-      return new Comparator<Glob>() {
-        public int compare(Glob o1, Glob o2) {
-          if (format == null) {
-            return Utils.compare(o1.get(ImportedTransaction.BANK_DATE), o2.get(ImportedTransaction.BANK_DATE));
-          }
-          try {
-            Date date1 = format.parse(o1.get(ImportedTransaction.BANK_DATE));
-            Date date2 = format.parse(o2.get(ImportedTransaction.BANK_DATE));
-            int compareResult = date2.compareTo(date1);
-            if (compareResult == 0) {
-              Integer id2 = o2.get(ImportedTransaction.ID);
-              Integer id1 = o1.get(ImportedTransaction.ID);
-              return Utils.compare(id2, id1);
-            }
-            return compareResult;
-          }
-          catch (ParseException e) {
-            return Utils.compare(o1.get(ImportedTransaction.BANK_DATE), o2.get(ImportedTransaction.BANK_DATE));
-          }
-        }
-      };
-    }
-  }
-
   private class CancelAction extends AbstractAction {
     public CancelAction(String textForCloseButton) {
       super(textForCloseButton);
@@ -788,36 +710,6 @@ public class ImportPanel {
 
     public void actionPerformed(ActionEvent e) {
       complete();
-    }
-  }
-
-  private static class TransactionLabelGlobStringifier extends AbstractGlobStringifier {
-
-    public String toString(Glob glob, GlobRepository repository) {
-      if (glob.isTrue(ImportedTransaction.IS_OFX)) {
-        StringBuilder builder = new StringBuilder();
-        complete(builder, glob.get(ImportedTransaction.OFX_NAME));
-        complete(builder, glob.get(ImportedTransaction.OFX_CHECK_NUM));
-        complete(builder, glob.get(ImportedTransaction.OFX_MEMO));
-        return builder.toString();
-      }
-      else {
-        StringBuilder builder = new StringBuilder();
-        complete(builder, glob.get(ImportedTransaction.QIF_M));
-        complete(builder, glob.get(ImportedTransaction.QIF_P));
-        return builder.toString();
-      }
-
-    }
-
-    void complete(StringBuilder builder, String s) {
-      if (s == null) {
-        return;
-      }
-      if (builder.length() != 0) {
-        builder.append(":");
-      }
-      builder.append(s);
     }
   }
 }
