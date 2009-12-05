@@ -27,6 +27,10 @@ public class GlobLinkComboEditor
   private boolean forcedEnabled = true;
   private Key forcedSelectionKey = null;
 
+  public static GlobLinkComboEditor init(final Link link, final GlobRepository repository, Directory directory)  {
+    return new GlobLinkComboEditor(link, repository, directory);
+  }
+
   public GlobLinkComboEditor(final Link link, final GlobRepository repository, Directory directory) {
     super(link.getTargetType(), repository, directory);
     this.link = link;

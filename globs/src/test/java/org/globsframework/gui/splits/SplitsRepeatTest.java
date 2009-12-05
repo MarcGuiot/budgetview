@@ -471,6 +471,9 @@ public class SplitsRepeatTest extends SplitsTestCase {
     org.uispec4j.Panel panel = new org.uispec4j.Panel(jPanel);
     panel.getButton("aaButton").getAwtComponent().setVisible(false);
     assertFalse(panel.getTextBox("aa").isVisible());
+
+    assertThat(panel.getButton("bbButton").isVisible());
+    assertThat(panel.getTextBox("bb").isVisible());
   }
 
   public void testUpdateNotCreatedPanelRepeat() throws Exception {
