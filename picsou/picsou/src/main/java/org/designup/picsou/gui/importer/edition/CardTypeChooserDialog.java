@@ -9,6 +9,7 @@ import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.format.DescriptionService;
@@ -22,6 +23,8 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+
+import com.jidesoft.swing.AutoResizingTextArea;
 
 public class CardTypeChooserDialog {
   private GlobRepository repository;
@@ -40,6 +43,7 @@ public class CardTypeChooserDialog {
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/cardTypeChooserDialog.splits",
                                                       localRepository, directory);
+
     builder.addRepeat("cardTypeRepeat", accounts, new RepeatComponentFactory<Glob>() {
       public void registerComponents(RepeatCellBuilder cellBuilder, final Glob account) {
         String accountName = getAccountName(account, localRepository);
@@ -49,13 +53,13 @@ public class CardTypeChooserDialog {
         accountPanel.setName("accountPanel:" + accountName);
         cellBuilder.add("accountPanel", accountPanel);
 
+        final CardHandler cards = cellBuilder.addCardHandler("cards");
+
         final GlobLinkComboEditor dayCombo =
           GlobLinkComboEditor.init(DeferredCardPeriod.DAY, localRepository, directory);
-        dayCombo.setVisible(false);
         cellBuilder.add("dayCombo", dayCombo.getComponent());
 
-        final JTextArea creditMessage = new JTextArea(Lang.get("cardTypeChooser.credit.message"));
-        creditMessage.setVisible(false);
+        final JTextArea creditMessage = new AutoResizingTextArea(Lang.get("cardTypeChooser.credit.message"));
         cellBuilder.add("creditMessage", creditMessage);
 
         final Key accountKey = account.getKey();
@@ -79,8 +83,7 @@ public class CardTypeChooserDialog {
                 localRepository.delete(DeferredCardPeriod.TYPE,
                                        and(fieldEquals(DeferredCardPeriod.ACCOUNT, account.get(Account.ID)),
                                            fieldEquals(DeferredCardPeriod.FROM_MONTH, 0)));
-                dayCombo.setVisible(false);
-                creditMessage.setVisible(true);
+                cards.show("credit");
                 break;
 
               case DEFERRED:
@@ -88,13 +91,11 @@ public class CardTypeChooserDialog {
                                                      value(DeferredCardPeriod.ACCOUNT, account.get(Account.ID)),
                                                      value(DeferredCardPeriod.FROM_MONTH, 0));
                 dayCombo.forceSelection(period.getKey());
-                dayCombo.setVisible(true);
-                creditMessage.setVisible(false);
+                cards.show("deferred");
                 break;
 
               default:
-                dayCombo.setVisible(false);
-                creditMessage.setVisible(false);
+                cards.show("none");
             }
           }
         };

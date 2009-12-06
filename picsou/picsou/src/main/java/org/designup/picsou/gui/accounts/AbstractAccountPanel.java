@@ -51,7 +51,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     cardTypeEditionPanel = new CardTypeEditionPanel(dialog, localRepository, localDirectory);
     accountTypeSelectors = createTypeSelectors(localRepository);
 
-    builder.add("cardPanelEdition", cardTypeEditionPanel.createComponent());
+    builder.add("cardTypeEditionPanel", cardTypeEditionPanel.createComponent());
     
     builder.addCombo("accountBank", Bank.TYPE)
       .setShowEmptyOption(true)
@@ -82,7 +82,6 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     messageSavingsWarning = new JLabel(Lang.get("account.savings.warning"));
     builder.add("savingsMessageWarning", messageSavingsWarning);
     messageSavingsWarning.setVisible(false);
-
 
     positionEditor = builder.addEditor("position", Account.POSITION).setNotifyOnKeyPressed(true).getComponent();
 
@@ -180,7 +179,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
         }
       },
 
-      new AccountTypeSelector("account.type.card.credit") {
+      new AccountTypeSelector("accountCardType.credit") {
         protected void apply() {
           repository.update(currentAccount.getKey(), Account.ACCOUNT_TYPE, AccountType.MAIN.getId());
           repository.update(currentAccount.getKey(), Account.CARD_TYPE, AccountCardType.CREDIT.getId());
@@ -191,7 +190,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
                  Utils.equal(account.get(Account.CARD_TYPE), AccountCardType.CREDIT.getId());
         }
       },
-      new AccountTypeSelector("account.type.card.deferred") {
+      new AccountTypeSelector("accountCardType.deferred") {
         protected void apply() {
           repository.update(currentAccount.getKey(), Account.ACCOUNT_TYPE, AccountType.MAIN.getId());
           repository.update(currentAccount.getKey(), Account.CARD_TYPE, AccountCardType.DEFERRED.getId());

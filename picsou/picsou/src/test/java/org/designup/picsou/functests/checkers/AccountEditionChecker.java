@@ -12,18 +12,13 @@ import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.interception.WindowInterceptor;
-import org.apache.xerces.impl.dv.XSSimpleType;
-import org.apache.wicket.extensions.wizard.IWizardModel;
 
 import javax.swing.*;
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.awt.*;
-
-import com.sun.org.apache.bcel.internal.generic.InstructionList;
 
 public class AccountEditionChecker extends GuiChecker {
   private Window dialog;
-  private CardPanelEditionChecker cardPanelEditionChecker;
+  private CardEditionPanelChecker cardEditionPanelChecker;
 
   public static AccountEditionChecker open(Trigger trigger) {
     return new AccountEditionChecker(WindowInterceptor.getModalDialog(trigger));
@@ -31,7 +26,7 @@ public class AccountEditionChecker extends GuiChecker {
 
   private AccountEditionChecker(Window dialog) {
     this.dialog = dialog;
-    cardPanelEditionChecker = new CardPanelEditionChecker(dialog);
+    cardEditionPanelChecker = new CardEditionPanelChecker(dialog);
   }
 
   public AccountEditionChecker selectBank(String bankName) {
@@ -284,58 +279,58 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker setDayFromBegining(int day) {
-    cardPanelEditionChecker.setDayFromBegining(day);
+    cardEditionPanelChecker.setDayFromBegining(day);
     return this;
   }
 
   public AccountEditionChecker addMonth() {
-    cardPanelEditionChecker.addMonth();
+    cardEditionPanelChecker.addMonth();
     return this;
   }
 
   public AccountEditionChecker checkMonth(int month) {
-    cardPanelEditionChecker.checkMonth(month);
+    cardEditionPanelChecker.checkMonth(month);
     return this;
   }
 
   public AccountEditionChecker setDay(int month, int day) {
-    cardPanelEditionChecker.setDay(month, day);
+    cardEditionPanelChecker.setDay(month, day);
     return this;
   }
 
   public AccountEditionChecker checkFromBeginingDay(int day) {
-    cardPanelEditionChecker.checkFromBeginingDay(day);
+    cardEditionPanelChecker.checkFromBeginingDay(day);
     return this;
   }
 
   public AccountEditionChecker checkDay(int month, int day) {
-    cardPanelEditionChecker.checkDay(month,  day);
+    cardEditionPanelChecker.checkDay(month,  day);
     return this;
   }
 
   public AccountEditionChecker checkBeginingUnchangable() {
-    cardPanelEditionChecker.checkBeginingUnchangable();
+    cardEditionPanelChecker.checkBeginingUnchangable();
     return this;
   }
 
   public AccountEditionChecker delete(int month) {
-    cardPanelEditionChecker.delete(month);
+    cardEditionPanelChecker.delete(month);
     return this;
   }
 
   public AccountEditionChecker changeMonth(int month, int newMonth) {
-    cardPanelEditionChecker.changeMonth(month, newMonth);
+    cardEditionPanelChecker.changeMonth(month, newMonth);
     checkMonth(newMonth);
     return this;
   }
 
   public AccountEditionChecker checkFromBegining() {
-    cardPanelEditionChecker.checkFromBegining();
+    cardEditionPanelChecker.checkFromBegining();
     return this;
   }
 
   public AccountEditionChecker checkPeriod(Integer[][] periods) {
-    cardPanelEditionChecker.checkPeriod(periods);
+    cardEditionPanelChecker.checkPeriod(periods);
     return this;
   }
 }

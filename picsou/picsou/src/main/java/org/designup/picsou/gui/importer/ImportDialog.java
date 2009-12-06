@@ -45,6 +45,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
+import com.jidesoft.swing.AutoResizingTextArea;
+
 public class ImportDialog {
 
   private GlobRepository repository;
@@ -206,7 +208,7 @@ public class ImportDialog {
                          new RepeatComponentFactory<AdditionalImportAction>() {
                            public void registerComponents(RepeatCellBuilder cellBuilder,
                                                           final AdditionalImportAction item) {
-                             cellBuilder.add("message", new JLabel(item.getMessage()));
+                             cellBuilder.add("message", new AutoResizingTextArea(item.getMessage()));
                              cellBuilder.add("action", new AbstractAction(item.getButtonMessage()) {
                                public void actionPerformed(ActionEvent e) {
                                  item.getAction().actionPerformed(e);

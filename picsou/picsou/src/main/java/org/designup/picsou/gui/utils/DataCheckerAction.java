@@ -68,7 +68,7 @@ public class DataCheckerAction extends AbstractAction {
       return true;
     }
 
-    // on recupere les premier et dernier mois par rapport au transaction.
+    // on recupere les premier et dernier mois par rapport aux transactions.
     int firstMonth = months.getFirst().get(Month.ID);
     int lastMonth = months.getLast().get(Month.ID);
     if (firstMonth > extractMonthFromTransaction.getFirstMonthForTransaction()) {

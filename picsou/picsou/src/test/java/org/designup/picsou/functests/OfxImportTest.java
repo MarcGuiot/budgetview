@@ -390,5 +390,4 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions.checkTableIsEmpty();
   }
-
 }

@@ -7,6 +7,8 @@ import org.uispec4j.TextBox;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
+import javax.swing.*;
+
 public class CardTypeChooserChecker extends GuiChecker {
   private Window dialog;
 
@@ -20,10 +22,10 @@ public class CardTypeChooserChecker extends GuiChecker {
   }
 
   public CardTypeChooserChecker selectDeferredCard(String accountName, int day) {
-    getTypeCombo(accountName).select("deferred");
+    getTypeCombo(accountName).select("Deferred debit card");
 
     Panel panel = getPanel(accountName);
-    assertFalse(panel.getTextBox("creditMessage").isVisible());
+    checkComponentVisible(panel, JTextArea.class, "creditMessage", false);
 
     ComboBox dayCombo = panel.getComboBox("day");
     assertThat(dayCombo.isVisible());
@@ -35,14 +37,14 @@ public class CardTypeChooserChecker extends GuiChecker {
   }
 
   public CardTypeChooserChecker selectCreditCard(String accountName) {
-    getTypeCombo(accountName).select("credit");
+    getTypeCombo(accountName).select("Credit card");
 
     Panel panel = getPanel(accountName);
     TextBox messageBox = panel.getTextBox("creditMessage");
     assertThat(messageBox.isVisible());
     assertThat(messageBox.textEquals("Credit cards are not managed"));
 
-    assertFalse(panel.getComboBox("day").isVisible());
+    checkComponentVisible(panel, JComboBox.class, "day", false);
     return this;
   }
 

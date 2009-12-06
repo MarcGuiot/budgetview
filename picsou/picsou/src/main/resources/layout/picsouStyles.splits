@@ -79,10 +79,10 @@
     <style selector=".innerDialog" opaque="false" margin="15" marginBottom="10"/>
     <style selector=".innerDialogContent" opaque="false" margin="15"/>
 
-    <style selector=".dialog label" foreground="dialog.bg.text" opaque="false"/>
-    <style selector=".dialog textArea" foreground="dialog.bg.text"/>
-    <style selector=".dialog htmlEditorPane" foreground="dialog.bg.text" opaque="false"/>
-    <style selector=".dialog checkBox" foreground="dialog.bg.text" opaque="false"/>
+    <style selector=".dialog label" foreground="dialog.text" opaque="false"/>
+    <style selector=".dialog textArea" foreground="dialog.text"/>
+    <style selector=".dialog htmlEditorPane" foreground="dialog.text" opaque="false"/>
+    <style selector=".dialog checkBox" foreground="dialog.text" opaque="false"/>
 
     <style selector=".dialog label.title"
            font="-,bold,20" foreground="dialog.title"

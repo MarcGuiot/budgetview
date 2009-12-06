@@ -41,9 +41,7 @@
 
       <label ref="message" foreground="#FF0000"/>
 
-      <panel ref="cardPanelEdition"/>
-
-      <panel ref="cardPanelEdition"/>
+      <panel ref="cardTypeEditionPanel"/>
 
       <filler fill="vertical" weightY="10"/>
 
