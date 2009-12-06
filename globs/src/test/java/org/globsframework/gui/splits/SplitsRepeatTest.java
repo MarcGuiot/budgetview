@@ -1,20 +1,19 @@
 package org.globsframework.gui.splits;
 
-import org.globsframework.gui.splits.layout.Anchor;
-import org.globsframework.gui.splits.layout.Fill;
-import org.globsframework.gui.splits.layout.SwingStretches;
-import org.globsframework.gui.splits.layout.WrappedColumnLayout;
+import org.globsframework.gui.splits.layout.*;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.utils.Strings;
 import org.uispec4j.finder.ComponentMatchers;
+import org.uispec4j.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.ArrayList;
 
 public class SplitsRepeatTest extends SplitsTestCase {
 
@@ -506,6 +505,54 @@ public class SplitsRepeatTest extends SplitsTestCase {
                "panel\n" +
                "  label:bb\n" +
                "  button:bb\n");
+  }
+
+  public void testCardLayoutInRepeat() throws Exception {
+
+    final java.util.List<CardHandler> handlers = new ArrayList<CardHandler>();
+
+    Repeat<String> repeat =
+      builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
+                        new RepeatComponentFactory<String>() {
+                          public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                            JPanel panel = new JPanel();
+                            panel.setName(object + "Panel");
+                            cellBuilder.add("panel", panel);
+
+                            cellBuilder.add("label", new JLabel(object));
+
+                            cellBuilder.add("button", new JButton(object));
+                            cellBuilder.add("radio", new JRadioButton(object));
+
+                            handlers.add(cellBuilder.addCardHandler("cards"));
+                          }
+                        });
+
+    org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)parse(
+      "<repeat ref='myRepeat'>" +
+      "  <row ref='panel'>" +
+      "    <label ref='label'/>" +
+      "    <cards ref='cards'>" +
+      "      <card name='aa'>" +
+      "        <button ref='button'/>" +
+      "      </card>" +
+      "      <card name='bb'>" +
+      "        <radioButton ref='radio'/>" +
+      "      </card>" +
+      "    </cards>" +
+      "  </row>" +
+      "</repeat>"));
+
+    handlers.get(0).show("aa");
+    handlers.get(1).show("bb");
+
+    org.uispec4j.Panel aaPanel = panel.getPanel("aaPanel");
+    assertThat(aaPanel.getButton("aa").isVisible());
+    assertFalse(aaPanel.containsSwingComponent(JRadioButton.class));
+
+    org.uispec4j.Panel bbPanel = panel.getPanel("bbPanel");
+    assertThat(bbPanel.getRadioButton("bb").isVisible());
+    assertFalse(bbPanel.containsSwingComponent(JButton.class));
   }
 
   private void checkButton(JPanel panel, int componentIndex, String label, int x, int y) {
