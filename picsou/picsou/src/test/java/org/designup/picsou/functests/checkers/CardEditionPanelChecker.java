@@ -1,22 +1,20 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.TextBox;
-import org.uispec4j.Panel;
-import org.uispec4j.Trigger;
-import org.uispec4j.Window;
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import org.uispec4j.interception.WindowInterceptor;
-import org.uispec4j.interception.WindowHandler;
+import junit.framework.Assert;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
+import org.uispec4j.Panel;
+import org.uispec4j.TextBox;
+import org.uispec4j.Trigger;
+import org.uispec4j.Window;
+import static org.uispec4j.assertion.UISpecAssert.*;
+import org.uispec4j.interception.WindowHandler;
+import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.awt.*;
 
-import junit.framework.Assert;
-
-public class CardEditionPanelChecker extends GuiChecker{
+public class CardEditionPanelChecker extends GuiChecker {
   Panel panel;
 
   public CardEditionPanelChecker(Panel dialog) {
@@ -38,7 +36,7 @@ public class CardEditionPanelChecker extends GuiChecker{
   }
 
   private String getLabel(int monthId) {
-    if (monthId == 0){
+    if (monthId == 0) {
       return "From begining";
     }
     String month = Month.getFullMonthLabel(monthId);
@@ -63,20 +61,18 @@ public class CardEditionPanelChecker extends GuiChecker{
   }
 
   private void setDay(int day, TextBox box) {
-    JPanel panel = (JPanel)box.getContainer().getAwtContainer();
-    Panel panelChecker = new Panel(panel);
-    panelChecker.getComboBox("day").select(Integer.toString(day));
+    Panel container = box.getContainer("deferredPeriodPanel");
+    container.getComboBox("day").select(Integer.toString(day));
   }
 
   public CardEditionPanelChecker changeMonth(int monthId, final int newMonth) {
     TextBox box = getDeferredLabel(monthId);
-    JPanel panel = (JPanel)box.getContainer().getAwtContainer();
-    Panel panelChecker = new Panel(panel);
-    WindowInterceptor.init(panelChecker.getButton("changeDeferredMonthAction").triggerClick())
+    Panel panel = box.getContainer("deferredPeriodPanel");
+    WindowInterceptor.init(panel.getButton("changeDeferredMonthAction").triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          MonthChooserChecker monthChooserChecker = new MonthChooserChecker(window);
-          return monthChooserChecker.triggerMonth(newMonth);
+          MonthChooserChecker monthChooser = new MonthChooserChecker(window);
+          return monthChooser.triggerMonth(newMonth);
         }
       }).run();
     return this;
@@ -89,17 +85,15 @@ public class CardEditionPanelChecker extends GuiChecker{
 
   public CardEditionPanelChecker checkBeginingUnchangable() {
     TextBox box = getDeferredLabel(0);
-    JPanel panel = (JPanel)box.getContainer().getAwtContainer();
-    Panel panelChecker = new Panel(panel);
-    assertFalse(panelChecker.getButton("removePeriod").isVisible());
-    assertFalse(panelChecker.getButton("changeDeferredMonthAction").isVisible());
+    Panel panel = box.getContainer("deferredPeriodPanel");
+    assertFalse(panel.getButton("removePeriod").isVisible());
+    assertFalse(panel.getButton("changeDeferredMonthAction").isVisible());
     return this;
   }
 
   private void checkDay(int day, TextBox box) {
-    JPanel panel = (JPanel)box.getContainer().getAwtContainer();
-    Panel panelChecker = new Panel(panel);
-    assertThat(panelChecker.getComboBox("day").selectionEquals(Integer.toString(day)));
+    Panel panel = box.getContainer("deferredPeriodPanel");
+    assertThat(panel.getComboBox("day").selectionEquals(Integer.toString(day)));
   }
 
   public CardEditionPanelChecker checkDay(int monthId, int day) {
@@ -110,9 +104,8 @@ public class CardEditionPanelChecker extends GuiChecker{
 
   public CardEditionPanelChecker delete(int monthId) {
     TextBox box = getDeferredLabel(monthId);
-    JPanel panel = (JPanel)box.getContainer().getAwtContainer();
-    Panel panelChecker = new Panel(panel);
-    panelChecker.getButton("removePeriod").click();
+    Panel panel = box.getContainer("deferredPeriodPanel");
+    panel.getButton("removePeriod").click();
     return this;
   }
 
@@ -125,16 +118,16 @@ public class CardEditionPanelChecker extends GuiChecker{
     Component[] swingComponents = panel.getSwingComponents(JLabel.class, "From ");
     int index = 0;
     for (Integer[] period : periods) {
-      if (index >= swingComponents.length){
+      if (index >= swingComponents.length) {
         Assert.fail("" + period[0] + "/" + period[1] + " unexpected");
       }
       assertThat(new TextBox((JLabel)swingComponents[index]).textEquals(getLabel(period[0])));
       checkDay(period[0], period[1]);
       index++;
     }
-    if (index < swingComponents.length){
+    if (index < swingComponents.length) {
       String message = "Actual : ";
-      while (index < swingComponents.length){
+      while (index < swingComponents.length) {
         message += ((JLabel)swingComponents[index]).getText() + "\n";
         index++;
       }

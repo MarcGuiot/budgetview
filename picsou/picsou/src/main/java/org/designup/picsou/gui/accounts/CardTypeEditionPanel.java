@@ -27,6 +27,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.jidesoft.swing.AutoResizingTextArea;
+
 public class CardTypeEditionPanel {
   private CardHandler cardHandler;
   private int firstMonth;
@@ -54,90 +56,15 @@ public class CardTypeEditionPanel {
     repository.addTrigger(new UpdatePeriodOnAccountDateChange());
     repository.addTrigger(new OnCardTypeChangeListener());
 
-    periods = builder.addRepeat("deferredPeriodeRepeat", DeferredCardPeriod.TYPE, GlobMatchers.NONE,
+    periods = builder.addRepeat("deferredPeriodRepeat", DeferredCardPeriod.TYPE, GlobMatchers.NONE,
                                 new GlobFieldComparator(DeferredCardPeriod.FROM_MONTH),
-                                new RepeatComponentFactory<Glob>() {
-                                  public void registerComponents(RepeatCellBuilder cellBuilder, final Glob item) {
-                                    Integer monthId = item.get(DeferredCardPeriod.FROM_MONTH);
-                                    String labelForMonth = getLabel(monthId);
-                                    final JLabel swingLabel = new JLabel(labelForMonth);
-                                    cellBuilder.add("deferredPeriodLabel", swingLabel);
+                                new DeferredPeriodRepeatComponentFactory());
 
-                                    JButton deferredDateChooserButton =
-                                      cellBuilder.add("changeDeferredMonthAction",
-                                                      new JButton(new DeferredDateChooserAction(item.getKey(), monthId)))
-                                        .getComponent();
-                                    deferredDateChooserButton.setEnabled(monthId != 0);
-                                    GlobLinkComboEditor dayCombo =
-                                      GlobLinkComboEditor.init(DeferredCardPeriod.DAY, repository, directory)
-                                        .setComparator(new GlobFieldComparator(Day.ID))
-                                        .forceSelection(item.getKey());
-                                    cellBuilder.add("dayChooser", dayCombo.getComponent());
-                                    JButton removePeriod = new JButton(new RemovePeriod(item));
-                                    cellBuilder.add("removePeriod", removePeriod);
-                                    removePeriod.setEnabled(monthId != 0);
-                                    if (monthId == 0) {
-                                      monthToIgnore.add(firstMonth);
-                                    }
-                                    else {
-                                      monthToIgnore.add(monthId);
-                                    }
-                                    final DefaultChangeSetListener listener = new DefaultChangeSetListener() {
-                                      Key key = item.getKey();
+    builder.add("createNewPeriod", new CreateNewPeriodAction());
 
-                                      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-                                        Glob item = repository.find(key);
-                                        if (item == null) {
-                                          return;
-                                        }
-                                        if (changeSet.containsChanges(key, DeferredCardPeriod.FROM_MONTH)) {
-                                          Integer monthId = item.get(DeferredCardPeriod.FROM_MONTH);
-                                          String s = getLabel(monthId);
-                                          swingLabel.setText(s);
-                                        }
-                                      }
-                                    };
-                                    repository.addChangeListener(listener);
-                                    cellBuilder.addDisposeListener(new Disposable() {
-                                      public void dispose() {
-                                        repository.removeChangeListener(listener);
-                                      }
-                                    });
-                                  }
-                                });
+    final JTextArea creditMessage = new AutoResizingTextArea(Lang.get("cardTypeChooser.credit.message"));
+    builder.add("creditMessage", creditMessage);
 
-    builder.add("createNewPeriod", new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        GlobList months = repository.getAll(Month.TYPE).sort(Month.ID);
-        Glob currentMonth = repository.get(CurrentMonth.KEY);
-        Glob month = repository.findLinkTarget(currentMonth, CurrentMonth.CURRENT_MONTH);
-        while (true) {
-          Glob glob =
-            repository.getAll(DeferredCardPeriod.TYPE,
-                              and(
-                                fieldEquals(DeferredCardPeriod.ACCOUNT, currentAccount.get(Account.ID)),
-                                fieldEquals(DeferredCardPeriod.FROM_MONTH, month.get(Month.ID))))
-              .getFirst();
-          if (glob == null && month.get(Month.ID) != firstMonth) {
-            repository.create(DeferredCardPeriod.TYPE,
-                              value(DeferredCardPeriod.ACCOUNT, currentAccount.get(Account.ID)),
-                              value(DeferredCardPeriod.FROM_MONTH, month.get(Month.ID)),
-                              value(DeferredCardPeriod.DAY, 31));
-            monthToIgnore.add(month.get(Month.ID));
-            return;
-          }
-          months.remove(month);
-          if (months.isEmpty()) {
-            return;
-          }
-          Integer newMonthId = Month.next(month.get(Month.ID));
-          month = repository.find(Key.create(Month.TYPE, newMonthId));
-          if (month == null) {
-            month = months.getFirst();
-          }
-        }
-      }
-    });
     return builder;
   }
 
@@ -165,8 +92,13 @@ public class CardTypeEditionPanel {
       updateMonthsFromAccount();
       periods.setFilter(fieldEquals(DeferredCardPeriod.ACCOUNT, account.get(Account.ID)));
     }
-    Integer cardType = (account == null) ? AccountCardType.NOT_A_CARD.getId() : account.get(Account.CARD_TYPE);
-    cardHandler.show(AccountCardType.get(cardType).getName());
+    Integer cardTypeId = (account == null) ? AccountCardType.NOT_A_CARD.getId() : account.get(Account.CARD_TYPE);
+    AccountCardType cardType = AccountCardType.get(cardTypeId);
+    cardHandler.show(cardType.getName());
+  }
+
+  private boolean isDisplayed(AccountCardType cardType) {
+    return AccountCardType.CREDIT.equals(cardType) || AccountCardType.DEFERRED.equals(cardType);
   }
 
   private void updateMonthsFromAccount() {
@@ -300,4 +232,85 @@ public class CardTypeEditionPanel {
     }
   }
 
+  private class DeferredPeriodRepeatComponentFactory implements RepeatComponentFactory<Glob> {
+    public void registerComponents(RepeatCellBuilder cellBuilder, final Glob item) {
+      Integer monthId = item.get(DeferredCardPeriod.FROM_MONTH);
+      String labelForMonth = getLabel(monthId);
+      final JLabel swingLabel = new JLabel(labelForMonth);
+      cellBuilder.add("deferredPeriodLabel", swingLabel);
+
+      JButton deferredDateChooserButton =
+        cellBuilder.add("changeDeferredMonthAction",
+                        new JButton(new DeferredDateChooserAction(item.getKey(), monthId)))
+          .getComponent();
+      deferredDateChooserButton.setEnabled(monthId != 0);
+      GlobLinkComboEditor dayCombo =
+        GlobLinkComboEditor.init(DeferredCardPeriod.DAY, repository, directory)
+          .setComparator(new GlobFieldComparator(Day.ID))
+          .forceSelection(item.getKey());
+      cellBuilder.add("dayChooser", dayCombo.getComponent());
+      JButton removePeriod = new JButton(new RemovePeriod(item));
+      cellBuilder.add("removePeriod", removePeriod);
+      removePeriod.setEnabled(monthId != 0);
+      if (monthId == 0) {
+        monthToIgnore.add(firstMonth);
+      }
+      else {
+        monthToIgnore.add(monthId);
+      }
+      final DefaultChangeSetListener listener = new DefaultChangeSetListener() {
+        Key key = item.getKey();
+
+        public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+          Glob item = repository.find(key);
+          if (item == null) {
+            return;
+          }
+          if (changeSet.containsChanges(key, DeferredCardPeriod.FROM_MONTH)) {
+            Integer monthId = item.get(DeferredCardPeriod.FROM_MONTH);
+            String s = getLabel(monthId);
+            swingLabel.setText(s);
+          }
+        }
+      };
+      repository.addChangeListener(listener);
+      cellBuilder.addDisposeListener(new Disposable() {
+        public void dispose() {
+          repository.removeChangeListener(listener);
+        }
+      });
+    }
+  }
+
+  private class CreateNewPeriodAction extends AbstractAction {
+    public void actionPerformed(ActionEvent e) {
+      GlobList months = repository.getAll(Month.TYPE).sort(Month.ID);
+      Glob currentMonth = repository.get(CurrentMonth.KEY);
+      Glob month = repository.findLinkTarget(currentMonth, CurrentMonth.CURRENT_MONTH);
+      while (true) {
+        Glob glob =
+          repository.getAll(DeferredCardPeriod.TYPE,
+                            and(fieldEquals(DeferredCardPeriod.ACCOUNT, currentAccount.get(Account.ID)),
+                                fieldEquals(DeferredCardPeriod.FROM_MONTH, month.get(Month.ID))))
+            .getFirst();
+        if (glob == null && month.get(Month.ID) != firstMonth) {
+          repository.create(DeferredCardPeriod.TYPE,
+                            value(DeferredCardPeriod.ACCOUNT, currentAccount.get(Account.ID)),
+                            value(DeferredCardPeriod.FROM_MONTH, month.get(Month.ID)),
+                            value(DeferredCardPeriod.DAY, 31));
+          monthToIgnore.add(month.get(Month.ID));
+          return;
+        }
+        months.remove(month);
+        if (months.isEmpty()) {
+          return;
+        }
+        Integer newMonthId = Month.next(month.get(Month.ID));
+        month = repository.find(Key.create(Month.TYPE, newMonthId));
+        if (month == null) {
+          month = months.getFirst();
+        }
+      }
+    }
+  }
 }

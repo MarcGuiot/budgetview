@@ -67,6 +67,7 @@ public class CardTypeChooserDialog {
           GlobLinkComboEditor.init(Account.CARD_TYPE, localRepository, directory)
             .forceSelection(accountKey)
             .setName("cardType:" + accountName)
+            .setEmptyOptionLabel(Lang.get("cardTypeChooser.selectType"))
             .setFilter(fieldIn(AccountCardType.ID,
                                AccountCardType.CREDIT.getId(),
                                AccountCardType.DEFERRED.getId()));

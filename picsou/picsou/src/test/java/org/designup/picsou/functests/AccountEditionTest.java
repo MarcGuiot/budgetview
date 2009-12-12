@@ -126,10 +126,12 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkAccountName("Account n. 0000123")
       .checkIsMain()
       .setAsCreditCard()
+      .checkCreditCardWarning()
       .validate();
 
     mainAccounts.edit("Account n. 0000123")
       .checkIsCreditCard()
+      .checkCreditCardWarning()
       .setAsMain()
       .validate();
 
@@ -145,7 +147,6 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.edit("Account n. 0000123")
       .checkIsDeferredCard()
       .cancel();
-
   }
 
   public void testUpdateModeCanBeChangedUntilTransactionsAreImportedIntoTheAccount() throws Exception {
@@ -521,7 +522,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
-
   public void testImportCardWithMonthBeforeFirstMonth() throws Exception {
+    fail("Marc, ce test vide te dit-il quelque chose ?");
   }
 }

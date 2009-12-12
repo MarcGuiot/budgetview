@@ -22,7 +22,7 @@
 
       <label text="$import.file.content" styleClass="header"/>
 
-      <scrollPane maximumSize="(400,300)">
+      <scrollPane maximumSize="(400,300)" weightY="500">
         <table ref="table"/>
       </scrollPane>
 
@@ -31,7 +31,11 @@
       <repeat ref="additionalActions">
         <column>
           <textArea ref="message" styleClass="additionalActionMessage"/>
-          <button action="action" styleClass="additionalActionButton"/>
+          <row marginTop="5">
+            <filler fill="horizontal"/>
+            <button action="action" styleClass="additionalActionButton"/>
+            <filler fill="horizontal"/>
+          </row>
         </column>
       </repeat>
 

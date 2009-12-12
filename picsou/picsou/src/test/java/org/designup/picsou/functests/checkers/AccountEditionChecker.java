@@ -101,6 +101,11 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
+  public AccountEditionChecker checkCreditCardWarning() {
+    checkComponentVisible(dialog, JTextArea.class, "creditMessage", true);
+    return this;
+  }
+
   public AccountEditionChecker setAsSavings() {
     getTypeCombo().select("Savings");
     return this;
