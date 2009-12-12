@@ -31,11 +31,15 @@ public class RepeatSplitter extends AbstractSplitter {
   }
 
   protected SplitComponent createRawStretch(SplitsContext context) {
+
+    boolean autoHideIfEmpty = Boolean.TRUE.equals(properties.getBoolean("autoHideIfEmpty"));
+
     RepeatHandler repeatHandler = context.getRepeat(ref);
     if (repeatHandler == null) {
       throw new ItemNotFound("Repeat '" + ref + "' not declared");
     }
-    RepeatPanel repeatPanel = new RepeatPanel(ref, repeatHandler, layout, splitterTemplates, context);
+    RepeatPanel repeatPanel =
+      new RepeatPanel(ref, repeatHandler, layout, autoHideIfEmpty, splitterTemplates, context);
     return repeatPanel.getSplitComponent();
   }
 
@@ -83,6 +87,6 @@ public class RepeatSplitter extends AbstractSplitter {
   }
 
   protected String[] getExcludedParameters() {
-    return new String[]{"layout", "gridWrapLimit"};
+    return new String[]{"layout", "gridWrapLimit", "autoHideIfEmpty"};
   }
 }

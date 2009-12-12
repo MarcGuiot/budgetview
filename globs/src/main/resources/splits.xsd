@@ -349,6 +349,13 @@
         </xs:simpleType>
       </xs:attribute>
       <xs:attribute name="gridWrapLimit" type="xs:integer" use="optional"/>
+      <xs:attribute name="autoHideIfEmpty" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">
+            If true, the repeat's JPanel is hidden when no elements are displayed.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
 

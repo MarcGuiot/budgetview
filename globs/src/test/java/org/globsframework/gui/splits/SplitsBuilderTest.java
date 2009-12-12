@@ -4,7 +4,7 @@ import com.jidesoft.swing.JideSplitPane;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.finder.ComponentFinder;
-import org.uispec4j.finder.ComponentMatchers;
+import static org.uispec4j.finder.ComponentMatchers.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -236,19 +236,19 @@ public class SplitsBuilderTest extends SplitsTestCase {
     ComponentFinder finder = new ComponentFinder(panel);
 
     handler.show("a");
-    assertSame(aButton, finder.findComponent(ComponentMatchers.fromClass(JButton.class)));
-    assertNull(finder.findComponent(ComponentMatchers.fromClass(JTable.class)));
-    assertNull(finder.findComponent(ComponentMatchers.fromClass(JList.class)));
+    assertSame(aButton, finder.findComponent(fromClass(JButton.class)));
+    assertNull(finder.findComponent(fromClass(JTable.class)));
+    assertNull(finder.findComponent(fromClass(JList.class)));
 
     handler.show("b");
-    assertNull(finder.findComponent(ComponentMatchers.fromClass(JButton.class)));
-    assertSame(aTable, finder.findComponent(ComponentMatchers.fromClass(JTable.class)));
-    assertNull(finder.findComponent(ComponentMatchers.fromClass(JList.class)));
+    assertNull(finder.findComponent(fromClass(JButton.class)));
+    assertSame(aTable, finder.findComponent(fromClass(JTable.class)));
+    assertNull(finder.findComponent(fromClass(JList.class)));
 
     handler.show("c");
-    assertNull(finder.findComponent(ComponentMatchers.fromClass(JButton.class)));
-    assertNull(finder.findComponent(ComponentMatchers.fromClass(JTable.class)));
-    assertSame(aList, finder.findComponent(ComponentMatchers.fromClass(JList.class)));
+    assertNull(finder.findComponent(fromClass(JButton.class)));
+    assertNull(finder.findComponent(fromClass(JTable.class)));
+    assertSame(aList, finder.findComponent(fromClass(JList.class)));
   }
 
   public void testTextLocator() throws Exception {

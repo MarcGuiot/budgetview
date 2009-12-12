@@ -15,6 +15,7 @@ public class RepeatPanel implements Repeat {
   private ComponentConstraints constraints;
   private JPanel panel = new JPanel();
   private RepeatHandler repeatHandler;
+  private boolean autoHideIfEmpty;
   private Splitter[] splitterTemplates;
   private SplitsContext context;
   private List<RepeatContext> repeatContexts = new ArrayList<RepeatContext>();
@@ -22,8 +23,9 @@ public class RepeatPanel implements Repeat {
   private DefaultSplitsNode<Component> splitsNode;
 
   public RepeatPanel(String name, RepeatHandler repeatHandler, RepeatLayout layout,
-                     Splitter[] splitterTemplates, SplitsContext context) {
+                     boolean autoHideIfEmpty, Splitter[] splitterTemplates, SplitsContext context) {
     this.repeatHandler = repeatHandler;
+    this.autoHideIfEmpty = autoHideIfEmpty;
     this.splitterTemplates = splitterTemplates;
     this.context = context;
     this.layout = layout;
@@ -35,6 +37,11 @@ public class RepeatPanel implements Repeat {
     this.context.addComponent(name, splitsNode);
     set(repeatHandler.getInitialItems());
     this.constraints = SwingStretches.get(panel);
+    updateVisibility();
+  }
+
+  private void updateVisibility() {
+    this.panel.setVisible(!autoHideIfEmpty || (panel.getComponentCount() > 0));
   }
 
   public void set(List items) {
@@ -52,11 +59,13 @@ public class RepeatPanel implements Repeat {
 
     layout.set(panel, constraints);
     panel.revalidate();
+    updateVisibility();
   }
 
   public void insert(Object item, int index) {
     layout.insert(panel, createStretches(item, index), index);
     panel.revalidate();
+    updateVisibility();
   }
 
   public void remove(int index) {
@@ -65,6 +74,7 @@ public class RepeatPanel implements Repeat {
     context.dispose();
     panel.revalidate();
     panel.repaint();
+    updateVisibility();
   }
 
   public void move(int previousIndex, int newIndex) {

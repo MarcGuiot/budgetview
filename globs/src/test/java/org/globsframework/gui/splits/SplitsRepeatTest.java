@@ -47,7 +47,6 @@ public class SplitsRepeatTest extends SplitsTestCase {
                "  button:bb\n");
 
     repeat.insert("cc", 1);
-
     checkPanel(panel,
                "panel\n" +
                "  label:aa\n" +
@@ -58,9 +57,9 @@ public class SplitsRepeatTest extends SplitsTestCase {
                "panel\n" +
                "  label:bb\n" +
                "  button:bb\n");
+    assertTrue(panel.isVisible());
 
     repeat.remove(0);
-
     checkPanel(panel,
                "panel\n" +
                "  label:cc\n" +
@@ -68,6 +67,91 @@ public class SplitsRepeatTest extends SplitsTestCase {
                "panel\n" +
                "  label:bb\n" +
                "  button:bb\n");
+    assertTrue(panel.isVisible());
+
+    repeat.remove(0);
+    checkPanel(panel,
+               "panel\n" +
+               "  label:bb\n" +
+               "  button:bb\n");
+    assertTrue(panel.isVisible());
+
+    repeat.remove(0);
+    checkPanel(panel, "");
+    assertTrue(panel.isVisible());
+  }
+
+  public void testRepeatAutoHidesWhenNothingIsShown() throws Exception {
+    Repeat<String> repeat =
+      builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
+                        new RepeatComponentFactory<String>() {
+                          public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                            cellBuilder.add("label", new JLabel(object));
+                            cellBuilder.add("btn", new JButton(object));
+                          }
+                        });
+
+    JPanel panel = parse(
+      "<repeat ref='myRepeat' autoHideIfEmpty='true'>" +
+      "  <row>" +
+      "    <label ref='label'/>" +
+      "    <button ref='btn'/>" +
+      "  </row>" +
+      "</repeat>");
+
+    assertEquals("myRepeat", panel.getName());
+    assertSame(panel, builder.getComponent("myRepeat"));
+
+    assertTrue(panel.isVisible());
+    checkPanel(panel,
+               "panel\n" +
+               "  label:aa\n" +
+               "  button:aa\n" +
+               "panel\n" +
+               "  label:bb\n" +
+               "  button:bb\n");
+
+    repeat.remove(0);
+    assertTrue(panel.isVisible());
+    checkPanel(panel,
+               "panel\n" +
+               "  label:bb\n" +
+               "  button:bb\n");
+
+    repeat.remove(0);
+    assertFalse(panel.isVisible());
+    checkPanel(panel, "");
+
+    repeat.insert("cc", 0);
+    assertTrue(panel.isVisible());
+    checkPanel(panel,
+               "panel\n" +
+               "  label:cc\n" +
+               "  button:cc\n");
+
+    repeat.remove(0);
+    assertFalse(panel.isVisible());
+    checkPanel(panel, "");
+  }
+
+  public void testAutoHideRepeatWithNoInitialItemsIsHidden() throws Exception {
+    Repeat<String> repeat =
+      builder.addRepeat("myRepeat", new ArrayList<String>(),
+                        new RepeatComponentFactory<String>() {
+                          public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                            cellBuilder.add("label", new JLabel(object));
+                            cellBuilder.add("btn", new JButton(object));
+                          }
+                        });
+
+    JPanel panel = parse(
+      "<repeat ref='myRepeat' autoHideIfEmpty='true'>" +
+      "  <row>" +
+      "    <label ref='label'/>" +
+      "    <button ref='btn'/>" +
+      "  </row>" +
+      "</repeat>");
+    assertFalse(panel.isVisible());
   }
 
   public void testRepeatWithDefaultLayoutAcceptsOnlyOneSubComponent() throws Exception {

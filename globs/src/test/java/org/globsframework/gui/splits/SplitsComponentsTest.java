@@ -12,6 +12,7 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import org.uispec4j.TextBox;
 import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;
+import static org.uispec4j.finder.ComponentMatchers.innerNameIdentity;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -609,6 +610,14 @@ public class SplitsComponentsTest extends SplitsTestCase {
     assertNull(finder.findComponent(ComponentMatchers.fromClass(JButton.class)));
     assertNull(finder.findComponent(ComponentMatchers.fromClass(JTable.class)));
     assertSame(aList, finder.findComponent(ComponentMatchers.fromClass(JList.class)));
+
+    assertTrue(panel.isVisible());
+
+    handler.setVisible(false);
+    assertFalse(panel.isVisible());
+
+    handler.setVisible(true);
+    assertTrue(panel.isVisible());
   }
 
   public void testCardLayoutMustReferenceAPanelWithACardLayout() throws Exception {

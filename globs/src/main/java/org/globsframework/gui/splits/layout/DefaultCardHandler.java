@@ -21,4 +21,8 @@ public class DefaultCardHandler implements CardHandler {
   public void show(String cardName) {
     layout.show(panel, cardName);
   }
+
+  public void setVisible(boolean visible) {
+    this.panel.setVisible(visible);
+  }
 }
