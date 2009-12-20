@@ -150,7 +150,7 @@ public class LoginPanel {
       }
     }
     if (autoLoginUser != null) {
-      autoLoginButton.getAction().putValue(Action.NAME, Lang.get("login.auto.login"));
+      autoLoginButton.getAction().putValue(Action.NAME, Lang.get("login.nopassword.button"));
     }
     else {
       autoLoginButton.getAction().putValue(Action.NAME, Lang.get("login.auto.create.login"));

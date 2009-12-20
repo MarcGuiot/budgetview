@@ -131,7 +131,7 @@ public class LoginChecker extends GuiChecker {
   }
 
   public void clickAutoLogin() {
-    doLoggin("Use auto login user", false);
+    doLoggin("Enter without password", false);
   }
 
   private void doLoggin(String message, boolean slaValidation) {
