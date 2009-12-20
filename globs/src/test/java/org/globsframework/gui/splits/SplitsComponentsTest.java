@@ -742,4 +742,9 @@ public class SplitsComponentsTest extends SplitsTestCase {
     JButton button = parse("<button enabled='false' autoHideIfDisabled='true'/>");
     assertFalse(button.isVisible());
   }
+
+  public void testSeparator() throws Exception {
+    JSeparator separator = parse("<separator orientation='vertical'/>");
+    assertEquals(SwingConstants.VERTICAL, separator.getOrientation());
+  }
 }
