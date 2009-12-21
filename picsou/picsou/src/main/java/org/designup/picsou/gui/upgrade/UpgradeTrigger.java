@@ -100,7 +100,7 @@ public class UpgradeTrigger implements ChangeSetListener {
 
   private void upgradeFromV9(GlobRepository repository) {
     repository
-      .getAll(SeriesBudget.TYPE, fieldIsNull(SeriesBudget.DAY))
+      .getAll(SeriesBudget.TYPE, isNull(SeriesBudget.DAY))
       .safeApply(new GlobFunctor() {
         public void run(Glob seriesBudget, GlobRepository repository) throws Exception {
           final int lastDay = Month.getLastDayNumber(seriesBudget.get(SeriesBudget.MONTH));

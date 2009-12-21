@@ -71,7 +71,7 @@ public class SavingsView extends View {
 
   private GlobMatcher getNextProjectsMatcher() {
     final int currentMonthId = directory.get(TimeService.class).getCurrentMonthId();
-    return and(not(fieldIsNull(Series.FIRST_MONTH)),
+    return and(not(isNull(Series.FIRST_MONTH)),
                fieldStrictlyGreaterThan(Series.FIRST_MONTH, currentMonthId));
   }
 

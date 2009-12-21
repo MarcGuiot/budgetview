@@ -259,6 +259,13 @@
     <style selector="horizontalSplit" showGripper="false" dividerSize="20" opaque="false"/>
     <style selector="verticalSplit" showGripper="false" dividerSize="10" opaque="false"/>
 
+
+    <!-- Inner dialog blocks -->
+    <ui name="dialogBlockUI" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="dialogBlock.bg" bottomColor="dialogBlock.bg" borderColor="dialogBlock.border"
+        borderWidth="2" cornerRadius="10"/>
+    <style selector=".dialogBlock" ui="dialogBlockUI" opaque="true"/>
+
   </styles>
 
 </splits>

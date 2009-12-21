@@ -17,7 +17,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
   public void testStandardImport() throws Exception {
 
-    final String path = OfxBuilder
+    String path = OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
@@ -589,5 +589,25 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("01/01/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", -100.00)
       .check();
+  }
+
+  public void testImportDialogGivesAccessToBankSites() throws Exception {
+
+    String path1 = OfxBuilder
+      .init(this)
+      .addBankAccount(30004, 12345, "00000111", 0.0, "2009/12/22")
+      .addTransaction("2009/12/21", -15.00, "Menu K")
+      .save();
+
+    operations.openImportDialog()
+      .checkContainsBankSites("BNP Paribas", "CIC", "Crédit Agricole", "ING Direct", "Société Générale")
+      .checkSelectedBankSite("-- Select your bank --")
+      .checkSiteAccessDisabled()
+      .selectBankSite("BNP Paribas")
+      .checkSiteAccessEnabled()
+      .checkSiteAccess("http://www.bnpparibas.net")
+      .setFilePath(path1)
+      .acceptFile()
+      .completeImport();
   }
 }

@@ -71,9 +71,6 @@
 
                 <button ref="userLogin" fill="none" anchor="center"/>
 
-                <component ref="progressPanel" opaque="false" visible="false"
-                           preferredSize="(30,30)" minimumSize="(30,30)"/>
-
                 <filler fill="vertical"/>
 
               </column>
@@ -100,6 +97,10 @@
               </column>
             </column>
           </horizontalBoxes>
+
+          <panel preferredSize="(30,30)" minimumSize="(30,30)" border="empty(10,0,0,0)" opaque="false">
+            <component ref="progressPanel" opaque="false" visible="false"/>
+          </panel>
 
           <label text="$login.security.message" styleClass="centered" marginTop="10" marginBottom="5"/>
 

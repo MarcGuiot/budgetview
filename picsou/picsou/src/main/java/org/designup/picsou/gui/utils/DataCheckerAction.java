@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.utils;
 
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.triggers.MonthsToSeriesBudgetTrigger;
 import org.designup.picsou.model.*;
@@ -281,7 +280,7 @@ public class DataCheckerAction extends AbstractAction {
   private boolean checkSplitedTransactions(StringBuilder buf) {
     boolean hasError = false;
     GlobList transactions = repository.getAll(Transaction.TYPE,
-                                              GlobMatchers.not(GlobMatchers.fieldIsNull(Transaction.SPLIT_SOURCE)));
+                                              GlobMatchers.not(GlobMatchers.isNull(Transaction.SPLIT_SOURCE)));
     for (Glob transaction : transactions) {
       if (repository.findLinkTarget(transaction, Transaction.SPLIT_SOURCE) == null) {
         buf.append("Error : split source was deleted for ")

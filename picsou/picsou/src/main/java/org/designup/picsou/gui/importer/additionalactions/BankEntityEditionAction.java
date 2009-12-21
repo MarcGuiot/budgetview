@@ -27,8 +27,8 @@ public class BankEntityEditionAction implements AdditionalImportAction {
 
   public boolean isValid() {
     accounts = repository.getAll(Account.TYPE)
-      .filterSelf(GlobMatchers.and(GlobMatchers.fieldIsNull(Account.BANK),
-                                   GlobMatchers.not(GlobMatchers.fieldIsNull(Account.BANK_ENTITY_LABEL))), repository);
+      .filterSelf(GlobMatchers.and(GlobMatchers.isNull(Account.BANK),
+                                   GlobMatchers.not(GlobMatchers.isNull(Account.BANK_ENTITY_LABEL))), repository);
     return accounts.isEmpty();
   }
 
