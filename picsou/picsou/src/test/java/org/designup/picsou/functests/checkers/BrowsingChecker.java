@@ -11,5 +11,6 @@ public class BrowsingChecker {
   public static void checkDisplay(Button button, String url) {
     Window window = WindowInterceptor.run(button.triggerClick());
     UISpecAssert.assertThat(window.getTextBox("url").textEquals(url));
+    window.getButton("Close").click();
   }
 }

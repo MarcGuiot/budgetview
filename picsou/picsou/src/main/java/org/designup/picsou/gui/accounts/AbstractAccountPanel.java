@@ -7,6 +7,7 @@ import org.designup.picsou.model.Bank;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.views.GlobComboView;
@@ -36,6 +37,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   private SelectionService selectionService;
   private AccountTypeSelector[] accountTypeSelectors;
   private CardTypeEditionPanel cardTypeEditionPanel;
+  private GlobTextEditor nameField;
 
   public AbstractAccountPanel(T repository, Directory parentDirectory, JLabel messageLabel) {
     this.localRepository = repository;
@@ -75,7 +77,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
       }
     });
 
-    builder.addEditor("name", Account.NAME).setNotifyOnKeyPressed(true);
+    nameField = builder.addEditor("name", Account.NAME).setNotifyOnKeyPressed(true);
     builder.addEditor("number", Account.NUMBER).setNotifyOnKeyPressed(true);
     builder.add("type", createAccountTypeCombo());
 
@@ -153,12 +155,13 @@ public class AbstractAccountPanel<T extends GlobRepository> {
 
   public boolean check() {
     if (panel.isVisible()) {
-      if (currentAccount.get(Account.BANK) == null) {
-        setMessage("account.error.missing.bank");
-        return false;
-      }
       if (Strings.isNullOrEmpty(currentAccount.get(Account.NAME))) {
         setMessage("account.error.missing.name");
+        nameField.getComponent().requestFocus();
+        return false;
+      }
+      if (currentAccount.get(Account.BANK) == null) {
+        setMessage("account.error.missing.bank");
         return false;
       }
     }

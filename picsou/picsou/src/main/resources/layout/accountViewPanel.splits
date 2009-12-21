@@ -3,6 +3,10 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
     <style selector="label.referenceAmount" font="-,plain,12"/>
+
+    <style selector="button.website" ui="hyperlinkButtonWithoutUnderline"
+           font="-,plain,11" fill="none" anchor="left" marginLeft="10"
+           foreground="block.item.link.light"/>
   </styles>
 
   <panel styleClass="block">
@@ -18,7 +22,7 @@
             <column name="accountParent" margin="5" marginBottom="10">
               <grid>
                 <button ref="accountName" gridPos="(0,0)" anchor="west" styleClass="itemLink"/>
-                <label ref="accountNumber" gridPos="(0,1)" anchor="west" styleClass="subitem" visible="false"/>
+                <button action="gotoWebsite" gridPos="(0,1)" anchor="west" styleClass="website"/>
                 <button ref="accountPosition" gridPos="(1,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
                 <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east" styleClass="subitem"/>
                 <label ref="estimatedAccountPosition" gridPos="(2,0)" tooltipText="$budgetSummaryView.estimated.tooltip"

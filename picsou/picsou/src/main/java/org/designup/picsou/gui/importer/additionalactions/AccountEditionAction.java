@@ -1,14 +1,13 @@
 package org.designup.picsou.gui.importer.additionalactions;
 
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
-import org.globsframework.model.GlobList;
-import static org.globsframework.model.FieldValue.value;
-import org.globsframework.utils.directory.Directory;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.utils.Lang;
 import org.designup.picsou.gui.accounts.AccountEditionDialog;
 import org.designup.picsou.gui.importer.AdditionalImportAction;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.utils.Lang;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +36,7 @@ public class AccountEditionAction implements AdditionalImportAction {
     return Lang.get("import.account.none");
   }
 
-  public String getButtonMessage(){
+  public String getButtonMessage() {
     return Lang.get("import.account.button");
   }
 

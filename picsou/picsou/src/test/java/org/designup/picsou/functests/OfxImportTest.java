@@ -361,7 +361,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     
     views.selectHome();
     mainAccounts.edit("Card n. 1234")
-      .checkFromBeginingDay(29)
+      .checkFromBeginningDay(29)
       .cancel();
   }
 

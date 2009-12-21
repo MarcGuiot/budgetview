@@ -118,8 +118,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     mainAccounts
       .checkEstimatedPosition(-100)
       .checkEstimatedPositionColor("darkRed")
-      .checkIsRealPosition()
-      ;
+      .checkIsRealPosition();
   }
 
   public void testChangeAccountTypeUncategorizeTransactionIfAssociatedSeriesIsNotSavings() throws Exception {

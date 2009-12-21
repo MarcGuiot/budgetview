@@ -26,7 +26,7 @@ public class CardEditionPanelChecker extends GuiChecker {
     return this;
   }
 
-  public CardEditionPanelChecker checkFromBegining() {
+  public CardEditionPanelChecker checkFromBeginning() {
     panel.getTextBox("From begining");
     return this;
   }
@@ -78,12 +78,12 @@ public class CardEditionPanelChecker extends GuiChecker {
     return this;
   }
 
-  public CardEditionPanelChecker checkFromBeginingDay(int day) {
+  public CardEditionPanelChecker checkFromBeginningDay(int day) {
     checkDay(day, getDeferredLabel(0));
     return this;
   }
 
-  public CardEditionPanelChecker checkBeginingUnchangable() {
+  public CardEditionPanelChecker checkBeginningUnchangeable() {
     TextBox box = getDeferredLabel(0);
     Panel panel = box.getContainer("deferredPeriodPanel");
     assertFalse(panel.getButton("removePeriod").isVisible());

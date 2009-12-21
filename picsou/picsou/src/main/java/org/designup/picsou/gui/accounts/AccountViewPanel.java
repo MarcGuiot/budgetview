@@ -1,19 +1,20 @@
 package org.designup.picsou.gui.accounts;
 
-import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.description.AccountComparator;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.monthsummary.AccountPositionThresholdAction;
 import org.designup.picsou.gui.utils.Matchers;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.model.AccountType;
+import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.AbstractGlobTextView;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
@@ -25,11 +26,9 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 
 public abstract class AccountViewPanel {
   protected GlobRepository repository;
@@ -39,7 +38,6 @@ public abstract class AccountViewPanel {
   private Integer summaryId;
   private JPanel panel;
   private JPanel header;
-  private JLabel labelTypeName;
   private GlobRepeat accountRepeat;
 
   public AccountViewPanel(final GlobRepository repository, final Directory directory,
@@ -75,12 +73,12 @@ public abstract class AccountViewPanel {
       .setAutoHideIfEmpty(true)
       .forceSelection(summaryAccount);
 
-    labelTypeName = new JLabel();
+    JLabel labelTypeName = new JLabel();
     builder.add("labelTypeName", labelTypeName);
 
     accountRepeat = builder.addRepeat("accountRepeat", Account.TYPE, accountTypeMatcher,
-                      new AccountComparator(),
-                      new AccountRepeatFactory());
+                                      new AccountComparator(),
+                                      new AccountRepeatFactory());
 
     builder.add("createAccount",
                 new NewAccountAction(getAccountType(), repository, directory, directory.get(JFrame.class)));
@@ -106,12 +104,8 @@ public abstract class AccountViewPanel {
   }
 
   protected void updateEstimatedPosition() {
-
     boolean hasAccounts = !repository.getAll(Account.TYPE, accountTypeMatcher).isEmpty();
     header.setVisible(hasAccounts);
-    if (!hasAccounts) {
-      return;
-    }
   }
 
   protected abstract JLabel getEstimatedAccountPositionLabel(Key accountKey);
@@ -121,12 +115,9 @@ public abstract class AccountViewPanel {
   private class AccountRepeatFactory implements RepeatComponentFactory<Glob> {
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob account) {
       add("accountName",
-          createAccountNameButton(account, repository, directory),
-          account, cellBuilder);
+          createAccountNameButton(account, repository, directory), account, cellBuilder);
 
-      add("accountNumber",
-          GlobLabelView.init(Account.NUMBER, repository, directory),
-          account, cellBuilder);
+      cellBuilder.add("gotoWebsite", new GotoAccountWebsiteAction(account, repository, directory));
 
       add("accountUpdateDate",
           GlobLabelView.init(Account.POSITION_DATE, repository, directory),
@@ -165,20 +156,6 @@ public abstract class AccountViewPanel {
       labelView.forceSelection(account.getKey());
       cellBuilder.add(name, labelView.getComponent());
       cellBuilder.addDisposeListener(labelView);
-    }
-
-    private class GotoWebsiteAction extends AbstractAction {
-      private String url;
-
-      public GotoWebsiteAction(Glob account) {
-        super(Lang.get("accountView.goto.website"));
-        url = Account.getBank(account, repository).get(Bank.DOWNLOAD_URL);
-        setEnabled(Strings.isNotEmpty(url));
-      }
-
-      public void actionPerformed(ActionEvent e) {
-        directory.get(BrowsingService.class).launchBrowser(url);
-      }
     }
   }
 

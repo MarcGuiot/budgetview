@@ -283,7 +283,7 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  public AccountEditionChecker setDayFromBegining(int day) {
+  public AccountEditionChecker setFromBeginningDay(int day) {
     cardEditionPanelChecker.setDayFromBegining(day);
     return this;
   }
@@ -303,23 +303,18 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  public AccountEditionChecker checkFromBeginingDay(int day) {
-    cardEditionPanelChecker.checkFromBeginingDay(day);
+  public AccountEditionChecker checkFromBeginningDay(int day) {
+    cardEditionPanelChecker.checkFromBeginningDay(day);
+    return this;
+  }
+
+  public AccountEditionChecker checkBeginningUnchangeable() {
+    cardEditionPanelChecker.checkBeginningUnchangeable();
     return this;
   }
 
   public AccountEditionChecker checkDay(int month, int day) {
     cardEditionPanelChecker.checkDay(month,  day);
-    return this;
-  }
-
-  public AccountEditionChecker checkBeginingUnchangable() {
-    cardEditionPanelChecker.checkBeginingUnchangable();
-    return this;
-  }
-
-  public AccountEditionChecker delete(int month) {
-    cardEditionPanelChecker.delete(month);
     return this;
   }
 
@@ -329,13 +324,18 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  public AccountEditionChecker checkFromBegining() {
-    cardEditionPanelChecker.checkFromBegining();
+  public AccountEditionChecker checkFromBeginning() {
+    cardEditionPanelChecker.checkFromBeginning();
     return this;
   }
 
   public AccountEditionChecker checkPeriod(Integer[][] periods) {
     cardEditionPanelChecker.checkPeriod(periods);
+    return this;
+  }
+
+  public AccountEditionChecker delete(int month) {
+    cardEditionPanelChecker.delete(month);
     return this;
   }
 }

@@ -5,7 +5,7 @@
     <style selector="datePicker" fill="horizontal" weightY="0"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(700,300)">
+  <panel styleClass="dialog" preferredSize="(700,330)">
     <column styleClass="innerDialog">
 
       <label text="$account.panel.title" styleClass="title"/>
@@ -54,7 +54,7 @@
         </column>
       </row>
 
-      <label ref="message" foreground="#FF0000"/>
+      <label ref="message" foreground="#FF0000" fill="none" anchor="center" marginTop="5"/>
 
     </column>
   </panel>
