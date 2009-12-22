@@ -243,7 +243,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
                       value(Transaction.BANK_DAY, day),
                       value(Transaction.MONTH, monthId),
                       value(Transaction.DAY, day),
-                      value(Transaction.LABEL, Series.getPlannedTransactionLabel(series.get(Series.ID), series)),
+                      value(Transaction.LABEL, Series.getPlannedTransactionLabel(seriesId, series)),
                       value(Transaction.PLANNED, true),
                       value(Transaction.TRANSACTION_TYPE,
                             amount > 0 ? TransactionType.VIREMENT.getId() : TransactionType.PRELEVEMENT.getId()));

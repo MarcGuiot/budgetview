@@ -14,7 +14,7 @@
            gridPos="(1,0)"
            horizontalAlignment="right"
            ui="hyperlinkButtonWithoutUnderline" foreground="block.item.link"
-           marginTop="10" marginBottom="0" anchor="northwest" fill="none" weightX="10"/>
+           marginTop="10" marginBottom="2" anchor="northwest" fill="none" weightX="10"/>
 
     <style selector="textArea.text"
            gridPos="(1,1)"
