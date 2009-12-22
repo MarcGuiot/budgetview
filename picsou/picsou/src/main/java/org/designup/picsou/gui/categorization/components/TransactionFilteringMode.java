@@ -1,9 +1,6 @@
 package org.designup.picsou.gui.categorization.components;
 
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.TransactionImport;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.GlobList;
@@ -20,7 +17,8 @@ public enum TransactionFilteringMode {
   ALL(1),
   SELECTED_MONTHS(2),
   LAST_IMPORTED_FILE(3),
-  UNCATEGORIZED(4);
+  UNCATEGORIZED(4),
+  UNCATEGORIZED_LAST_THREE_MONTHS(5);
 
   private int id;
 
@@ -54,6 +52,16 @@ public enum TransactionFilteringMode {
       case UNCATEGORIZED:
         return GlobMatchers.fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID);
 
+      case UNCATEGORIZED_LAST_THREE_MONTHS:
+        Integer month = CurrentMonth.getCurrentMonth(repository);
+        if (month == null) {
+          return GlobMatchers.NONE;
+        }
+        int lastMonth = Month.normalize(month - 2);
+        return GlobMatchers.and(
+          GlobMatchers.fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+          GlobMatchers.fieldGreaterOrEqual(Transaction.MONTH, lastMonth)
+        );
     }
     throw new UnexpectedApplicationState(name());
   }
