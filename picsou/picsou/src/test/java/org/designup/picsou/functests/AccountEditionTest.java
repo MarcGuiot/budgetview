@@ -15,6 +15,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     views.selectHome();
 
     mainAccounts.edit("Account n. 0000123")
+      .checkTitle("Edit account")
       .checkAccountName("Account n. 0000123")
       .checkAccountNumber("0000123")
       .checkBalanceDisplayed(false)
@@ -31,6 +32,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     views.selectHome();
 
     mainAccounts.createNewAccount()
+      .checkTitle("Create account")
       .checkAccountName("")
       .setAccountName("Main CIC account")
       .checkTypes("Main", "Credit card", "Deferred debit card", "Savings")
@@ -47,6 +49,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
   public void testCreatingASavingsAccount() throws Exception {
     views.selectHome();
     savingsAccounts.createNewAccount()
+      .checkTitle("Create account")
       .setAccountName("Savings")
       .setAccountNumber("123")
       .checkUpdateModeIsFileImport()
@@ -72,6 +75,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     mainAccounts.edit("Main")
+      .checkTitle("Edit account")
       .checkSelectedBank("Autre")
       .cancel();
   }

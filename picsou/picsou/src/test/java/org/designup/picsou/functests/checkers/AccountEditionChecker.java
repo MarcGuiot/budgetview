@@ -29,6 +29,11 @@ public class AccountEditionChecker extends GuiChecker {
     cardEditionPanelChecker = new CardEditionPanelChecker(dialog);
   }
 
+  public AccountEditionChecker checkTitle(String title) {
+    assertThat(dialog.getTextBox("title").textEquals(title));
+    return this;
+  }
+
   public AccountEditionChecker selectBank(String bankName) {
     ComboBox accountBankCombo = dialog.getComboBox("accountBank");
     accountBankCombo.select(bankName);

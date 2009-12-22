@@ -8,7 +8,7 @@
   <panel styleClass="dialog" preferredSize="(700,330)">
     <column styleClass="innerDialog">
 
-      <label text="$account.panel.title" styleClass="title"/>
+      <label ref="title" styleClass="title"/>
 
       <row>
         <column border="matte(0,0,0,1,dialog.separator.light)" weightX="5" opaque="false">

@@ -49,7 +49,7 @@ public class AccountEditionAction implements AdditionalImportAction {
         }
         if (accounts.size() == 0) {
           AccountEditionDialog dialog = new AccountEditionDialog(parent, repository, directory);
-          dialog.createAndShow();
+          dialog.showWithNewAccount();
         }
       }
     };
