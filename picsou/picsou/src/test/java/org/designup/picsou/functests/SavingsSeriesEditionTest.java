@@ -264,7 +264,6 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSavingsSeriesDescriptionsAreShownInTooltips() throws Exception {
-
     views.selectHome();
     savingsAccounts.createNewAccount().setAsSavings()
       .setAccountName("Epargne LCL")

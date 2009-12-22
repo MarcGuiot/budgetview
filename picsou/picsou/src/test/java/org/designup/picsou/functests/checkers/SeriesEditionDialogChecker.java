@@ -70,6 +70,7 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   public SeriesEditionDialogChecker setDescription(String text) {
+    dialog.getTabGroup().selectTab("Description");
     dialog.getInputTextBox("descriptionField").setText(text);
     return this;
   }
