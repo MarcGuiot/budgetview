@@ -157,6 +157,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     mainAccounts.checkBalance(110);
     mainAccounts.checkEstimatedPosition(0);
+    mainAccounts.checkAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0., "2008/06/15");
 
     OfxBuilder
       .init(this)
@@ -164,6 +165,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/15", -90.00, "Auchan")
       .load();
 
+    mainAccounts.checkAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0., "2008/07/15");
     timeline.selectMonth("2008/07");
     views.selectData();
     transactions.initContent()

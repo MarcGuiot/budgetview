@@ -143,6 +143,10 @@
                       <panel ref="savingsSeriesChooser"/>
                     </card>
 
+                    <card name="deferred">
+                      <panel ref="deferredSeriesChooser"/>
+                    </card>
+
                   </cards>
 
                 </column>

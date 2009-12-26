@@ -108,10 +108,12 @@ public class CurrentMonthTrigger implements ChangeSetListener {
     }
 
     public void run(Glob transaction, GlobRepository repository) {
-      if (transaction.isTrue(Transaction.PLANNED) && transaction.get(Transaction.BANK_MONTH).equals(lastMonth)
-          && transaction.get(Transaction.BANK_DAY) < lastDay) {
-        repository.update(transaction.getKey(), Transaction.BANK_DAY, lastDay);
-        repository.update(transaction.getKey(), Transaction.DAY, lastDay);
+      if (transaction.isTrue(Transaction.PLANNED) && transaction.get(Transaction.POSITION_MONTH).equals(lastMonth)
+          && transaction.get(Transaction.POSITION_DAY) < lastDay) {
+        repository.update(transaction.getKey(),
+                          FieldValue.value(Transaction.POSITION_DAY, lastDay),
+                          FieldValue.value(Transaction.BANK_DAY, lastDay),
+                          FieldValue.value(Transaction.DAY, lastDay));
       }
     }
   }

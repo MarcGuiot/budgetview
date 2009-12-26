@@ -74,6 +74,22 @@ public class OperationChecker {
     importChecker.doImport();
   }
 
+  public void importQifFileWithDeferred(String fileName, String bank, double position, int day) {
+    ImportChecker importChecker = openImportDialog()
+      .setFilePath(fileName)
+      .acceptFile();
+    importChecker
+      .addNewAccount()
+      .selectBank(bank)
+      .setAccountNumber("1111")
+      .setAccountName("card 1111")
+      .setAsDeferredCard()
+      .setDayFromBegining(day)
+      .validate();
+    importChecker.doImportWithBalance()
+      .setAmountAndEnter(position);
+  }
+
   public void importOfxFile(String name, String bank) {
     importFile(new String[]{name}, bank, null, null);
   }
@@ -127,7 +143,7 @@ public class OperationChecker {
             importDialog.getComboBox("accountCombo").select(targetAccount);
           }
           final Button okButton = importDialog.getButton(Lang.get("import.ok"));
-          for (int i = 0; i < fileNames.length - 1; i++) {
+          for (int i = 0; i < fileNames.length - 2; i++) {
             okButton.click();
           }
           if (amount != null) {

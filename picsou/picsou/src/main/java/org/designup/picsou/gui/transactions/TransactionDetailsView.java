@@ -18,6 +18,7 @@ import org.globsframework.gui.utils.AutoHideOnSelectionPanel;
 import org.globsframework.gui.views.GlobHtmlView;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -79,7 +80,11 @@ public class TransactionDetailsView extends View {
 
     builder.add("bankDate",
                 addLabel(new TransactionDateListStringifier(Transaction.BANK_MONTH, Transaction.BANK_DAY), true)
-                  .setAutoHideMatcher(new BankDateVisibilityMatcher()));
+                  .setAutoHideMatcher(new DateVisibilityMatcher(Transaction.BANK_DAY, Transaction.BANK_MONTH)));
+
+    builder.add("budgetDate",
+                addLabel(new TransactionDateListStringifier(Transaction.BUDGET_MONTH, Transaction.BUDGET_DAY), true)
+                  .setAutoHideMatcher(new DateVisibilityMatcher(Transaction.BUDGET_DAY, Transaction.BUDGET_MONTH)));
 
     builder.addEditor("noteField", Transaction.NOTE);
 
@@ -161,14 +166,22 @@ public class TransactionDetailsView extends View {
     }
   }
 
-  private static class BankDateVisibilityMatcher implements GlobListMatcher {
+  private static class DateVisibilityMatcher implements GlobListMatcher {
+    private IntegerField dayField;
+    private LinkField monthField;
+
+    private DateVisibilityMatcher(final IntegerField dayField, final LinkField monthField) {
+      this.dayField = dayField;
+      this.monthField = monthField;
+    }
+
     public boolean matches(GlobList list, GlobRepository repository) {
       if (list.size() != 1) {
         return false;
       }
       Glob transaction = list.get(0);
-      return !Utils.equal(transaction.get(Transaction.DAY), transaction.get(Transaction.BANK_DAY)) ||
-             !Utils.equal(transaction.get(Transaction.MONTH), transaction.get(Transaction.BANK_MONTH));
+      return !Utils.equal(transaction.get(Transaction.DAY), transaction.get(dayField)) ||
+             !Utils.equal(transaction.get(Transaction.MONTH), transaction.get(monthField));
     }
   }
 

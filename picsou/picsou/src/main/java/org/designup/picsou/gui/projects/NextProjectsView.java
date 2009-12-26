@@ -104,7 +104,7 @@ public class NextProjectsView extends View implements GlobSelectionListener {
     tableView.setFilter(new GlobMatcher() {
       public boolean matches(Glob seriesBudget, GlobRepository repository) {
         if ((seriesBudget.get(SeriesBudget.MONTH) < currentMonthId) ||
-            Amounts.isNearZero(seriesBudget.get(SeriesBudget.AMOUNT))) {
+            Amounts.isNullOrZero(seriesBudget.get(SeriesBudget.AMOUNT))) {
           return false;
         }
         Glob series = repository.get(Key.create(Series.TYPE, seriesBudget.get(SeriesBudget.SERIES)));

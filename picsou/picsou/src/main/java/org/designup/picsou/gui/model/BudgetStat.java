@@ -93,6 +93,18 @@ public class BudgetStat {
   public static DoubleField SPECIAL_SUMMARY;
 
   @DefaultDouble(0.0)
+  public static DoubleField DEFERRED;
+
+  @DefaultDouble(0.0)
+  public static DoubleField DEFERRED_REMAINING;
+
+  @DefaultDouble(0.0)
+  public static DoubleField DEFERRED_PLANNED;
+
+  @DefaultDouble(0.0)
+  public static DoubleField DEFERRED_SUMMARY;
+
+  @DefaultDouble(0.0)
   public static DoubleField SAVINGS;
 
   @DefaultDouble(0.0)
@@ -155,6 +167,8 @@ public class BudgetStat {
         return RECURRING_REMAINING;
       case SPECIAL:
         return SPECIAL_REMAINING;
+      case DEFERRED:
+        return DEFERRED_REMAINING;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
   }
@@ -171,6 +185,8 @@ public class BudgetStat {
         return RECURRING;
       case SPECIAL:
         return SPECIAL;
+      case DEFERRED:
+        return DEFERRED;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
   }
@@ -187,6 +203,8 @@ public class BudgetStat {
         return RECURRING_PLANNED;
       case SPECIAL:
         return SPECIAL_PLANNED;
+      case DEFERRED:
+        return DEFERRED_PLANNED;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
   }
@@ -203,6 +221,8 @@ public class BudgetStat {
         return RECURRING_SUMMARY;
       case SPECIAL:
         return SPECIAL_SUMMARY;
+      case DEFERRED:
+        return DEFERRED_SUMMARY;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
   }

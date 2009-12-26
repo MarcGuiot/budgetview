@@ -27,20 +27,23 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
                       value(Transaction.BANK_MONTH, 200808),
                       value(Transaction.BANK_DAY, 1),
                       value(Transaction.MONTH, 200808),
+                      value(Transaction.BUDGET_MONTH, 200808),
                       value(Transaction.AMOUNT, -1000.0),
                       value(Transaction.SERIES, ENVELOPPE_SERIES_ID));
     listener.assertLastChangesEqual(
       Transaction.TYPE,
-      "<delete _account='-1' _amount='-1000.0' _bankDay='25' _bankMonth='200808'\n" +
+      "<delete _account='-1' _amount='-1000.0' _bankDay='25' _bankMonth='200808' " +
+      "        _budgetDay='25' _budgetMonth='200808' _positionDay='25' _positionMonth='200808'" +
       "        _day='25' _label='courses' _month='200808' _planned='true' _mirror='false'" +
       "        _series='101' _transactionType='5' id='100' type='transaction' _createdBySeries='false'/>\n" +
-      "<create amount='-1000.0' bankMonth='200808' id='0' month='200808' bankDay='1' \n" +
+      "<create amount='-1000.0' bankMonth='200808' id='0' month='200808' bankDay='1' budgetMonth='200808' " +
       "        planned='false' series='101' type='transaction' mirror='false' createdBySeries='false'/>");
     repository.update(Key.create(SeriesBudget.TYPE, budgetId[1]), SeriesBudget.AMOUNT, -1200.);
     listener.assertLastChangesEqual(
       Transaction.TYPE,
-      "  <create account='-1' amount='-200.0' bankDay='25' bankMonth='200808' mirror='false'\n" +
-      "          day='25' id='102' label='courses' month='200808'\n" +
+      "  <create id='102' account='-1' amount='-200.0' bankDay='25' bankMonth='200808' mirror='false'\n" +
+      "          day='25' month='200808' label='courses'" +
+      "          budgetDay='25' budgetMonth='200808' positionDay='25' positionMonth='200808' " +
       "          planned='true' series='101' transactionType='5' type='transaction' createdBySeries='false'/>");
   }
 
@@ -52,7 +55,8 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
                       value(Transaction.ID, 0),
                       value(Transaction.BANK_MONTH, 200808),
                       value(Transaction.BANK_DAY, 1),
-                      value(Transaction.MONTH, 200808),
+//                      value(Transaction.MONTH, 200808),
+                      value(Transaction.BUDGET_MONTH, 200808),
                       value(Transaction.AMOUNT, -1000.0),
                       value(Transaction.SERIES, ENVELOPPE_SERIES_ID));
     repository.update(Key.create(SeriesBudget.TYPE, budgetId[1]), SeriesBudget.AMOUNT, -900.);
@@ -72,7 +76,8 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
     Integer[] enveloppeTransactions = getPlannedTransaction(ENVELOPPE_SERIES_ID);
     listener.assertLastChangesEqual(
       Transaction.TYPE,
-      "<create account='-1' amount='-100.0' bankDay='25' bankMonth='200808'\n" +
+      "<create account='-1' amount='-100.0' bankDay='25' budgetMonth='200808' budgetDay='25' bankMonth='200808'" +
+      "        positionMonth='200808' positionDay='25' " +
       "        day='25' id='" + enveloppeTransactions[0] + "' label='courses' month='200808'\n" +
       "        planned='true' series='101' transactionType='5' type='transaction' mirror='false' createdBySeries='false'/>");
     listener.assertLastChangesEqual(
@@ -86,9 +91,10 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
     Integer[] budgetId = getBudgetId(INCOME_SERIES_ID);
     repository.create(Transaction.TYPE,
                       value(Transaction.ID, 0),
-                      value(Transaction.BANK_MONTH, 200808),
+                      value(Transaction.BUDGET_DAY, 1),
+                      value(Transaction.BUDGET_MONTH, 200808),
                       value(Transaction.BANK_DAY, 1),
-                      value(Transaction.MONTH, 200808),
+                      value(Transaction.BANK_MONTH, 200808),
                       value(Transaction.AMOUNT, 1500.0),
                       value(Transaction.SERIES, INCOME_SERIES_ID));
     Key budget = Key.create(SeriesBudget.TYPE, budgetId[1]);
@@ -96,7 +102,8 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "<update _amount='2000.0' amount='500.0' id='" + transaction[0] + "' type='transaction'/>\n" +
-      "<create amount='1500.0' bankMonth='200808' bankDay='1' id='0' month='200808'\n" +
+      "<create amount='1500.0' budgetDay='1' budgetMonth='200808' id='0'" +
+      "        bankDay='1' bankMonth='200808' " +
       "        planned='false' series='102' type='transaction' mirror='false' createdBySeries='false'/>");
     repository.update(budget, SeriesBudget.AMOUNT, 1800.);
     Integer[] occasionalBudgetIds = getBudgetId(Series.OCCASIONAL_SERIES_ID);
@@ -111,7 +118,8 @@ public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestC
     repository.update(budget, SeriesBudget.AMOUNT, 1500.);
     listener.assertLastChangesEqual(
       Transaction.TYPE,
-      "<delete _account='-1' _amount='300.0' _bankDay='4' _bankMonth='200808'\n" +
+      "<delete _account='-1' _amount='300.0' _bankDay='4' _bankMonth='200808'" +
+      "         _positionDay='4' _positionMonth='200808'  _budgetDay='4' _budgetMonth='200808'" +
       "        _day='4' _label='salaire' _month='200808' _planned='true'\n" +
       "        _series='102' _transactionType='1' id='100' type='transaction' _mirror='false' _createdBySeries='false'/>" +
       "");

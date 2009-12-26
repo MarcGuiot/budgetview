@@ -39,8 +39,7 @@ public class SeriesWizardDialog {
 
     this.localRepository =
       LocalGlobRepositoryBuilder.init(parentRepository)
-        .copy(Series.TYPE, SubSeries.TYPE, Month.TYPE,
-              CurrentMonth.TYPE,
+        .copy(Series.TYPE, SubSeries.TYPE, Month.TYPE, CurrentMonth.TYPE,
               SeriesStat.TYPE, SeriesBudget.TYPE)
         .get();
 
@@ -130,7 +129,6 @@ public class SeriesWizardDialog {
             model.createSeries(localRepository);
             localRepository.commitChanges(true);
 
-            GlobList list = getAllMonths();
             directory.get(NavigationService.class).gotoCategorization();
 
             dialog.setVisible(false);
@@ -139,11 +137,6 @@ public class SeriesWizardDialog {
         confirm.show();
       }
     };
-  }
-
-  private GlobList getAllMonths() {
-    Set<Integer> valueSet = parentRepository.getAll(Transaction.TYPE).getValueSet(Transaction.MONTH);
-    return parentRepository.getAll(Month.TYPE, GlobMatchers.fieldIn(Month.ID, valueSet));
   }
 
   private AbstractAction createCancelAction() {

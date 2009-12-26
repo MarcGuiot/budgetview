@@ -31,15 +31,17 @@ public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
 
     Integer[] ids =
       repository.getAll(Transaction.TYPE, isTrue(Transaction.PLANNED))
-        .sort(Transaction.MONTH)
+        .sort(Transaction.BUDGET_MONTH)
         .getValues(Transaction.ID);
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <create account='-1' amount='-29.9' bankDay='7' bankMonth='200808' mirror='false'" +
       "          day='7' id='" + ids[0] + "' label='free telecom' month='200808'" +
+      "          budgetDay='7' budgetMonth='200808' positionDay='7' positionMonth='200808' " +
       "          planned='true' series='100' transactionType='5' type='transaction' createdBySeries='false'/>" +
       "  <create account='-1' amount='-29.9' bankDay='7' bankMonth='200809' mirror='false'" +
       "          day='7' id='" + ids[1] + "' label='free telecom' month='200809'" +
+      "          budgetDay='7' budgetMonth='200809' positionDay='7' positionMonth='200809' " +
       "          planned='true' series='100' transactionType='5' type='transaction' createdBySeries='false'/>" +
       "");
   }

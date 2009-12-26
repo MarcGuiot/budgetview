@@ -102,6 +102,10 @@ public class CategorizationChecker extends GuiChecker {
     return new SavingsCategorizationChecker(this, BudgetArea.SAVINGS);
   }
 
+  public BudgetAreaCategorizationChecker selectDeferred() {
+    return selectAndReturn(BudgetArea.DEFERRED);
+  }
+
   public CategorizationChecker checkCategorizationTips() {
     HelpChecker help = new HelpChecker(getPanel().getButton("Categorization tips").triggerClick());
     help.checkTitle("Categorization tips");
@@ -111,6 +115,20 @@ public class CategorizationChecker extends GuiChecker {
   public void copyBankFormatToClipboard() {
     JTable jTable = getTable().getAwtComponent();
     KeyUtils.pressKey(jTable, org.uispec4j.Key.plaformSpecificCtrl(org.uispec4j.Key.B));
+  }
+
+  public void checkEditSeriesNotVisible() {
+    assertFalse(getPanel().getPanel("groupCreateEditSeries").isVisible());
+  }
+
+  public void checkEditSeriesNotVisitble(String seriesLabel){
+    Button button = getPanel().getPanel("seriesCard").getButton("editSeries:" + seriesLabel);
+    assertFalse(button.isVisible());
+  }
+
+  public void checkUserDate(TransactionDetailsChecker details, String yyyyMMdd, String label) {
+    selectTransaction(label);
+    details.checkBudgetDate(yyyyMMdd);
   }
 
   public class SavingsCategorizationChecker extends BudgetAreaCategorizationChecker {
@@ -426,8 +444,7 @@ public class CategorizationChecker extends GuiChecker {
       selectTableRow(index);
       if (first) {
         selectEnvelopes()
-          .createSeries(seriesName)
-          .selectSeries(seriesName);
+          .createSeries(seriesName);
         first = false;
       }
       else {

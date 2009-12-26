@@ -402,6 +402,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     operations.checkOk();
   }
 
+
   public void testChangeDayChangeTransactionFromPlannedToRealAndViceversaForNotImportedAccount() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectHome();

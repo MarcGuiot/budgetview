@@ -22,7 +22,6 @@ public class SeriesStat {
   @Key @Target(Month.class)
   public static LinkField MONTH;
 
-  @DefaultDouble(0.0)
   public static DoubleField AMOUNT;
 
   @DefaultDouble(0.0)

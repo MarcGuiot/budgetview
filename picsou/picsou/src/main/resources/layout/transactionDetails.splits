@@ -62,6 +62,11 @@
             <label text="$transaction.details.bankDate" styleClass="formLabel"
                    autoHideSource="bankDate" marginRight="3"/>
             <label ref="bankDate" styleClass="formLabel"/>
+
+            <label text=" - " styleClass="formLabel" autoHideSource="budgetDate" marginRight="0"/>
+            <label text="$transaction.details.budgetDate" styleClass="formLabel"
+                   autoHideSource="budgetDate" marginRight="3"/>
+            <label ref="budgetDate" styleClass="formLabel"/>
             <filler fill="horizontal"/>
           </row>
 

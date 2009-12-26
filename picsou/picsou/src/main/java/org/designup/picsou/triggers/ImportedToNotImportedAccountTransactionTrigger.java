@@ -65,6 +65,18 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
             if (values.contains(Transaction.MONTH)) {
               repository.update(mirrorKey, Transaction.MONTH, values.get(Transaction.MONTH));
             }
+            if (values.contains(Transaction.BUDGET_DAY)) {
+              repository.update(mirrorKey, Transaction.BUDGET_DAY, values.get(Transaction.BUDGET_DAY));
+            }
+            if (values.contains(Transaction.BUDGET_MONTH)) {
+              repository.update(mirrorKey, Transaction.BUDGET_MONTH, values.get(Transaction.BUDGET_MONTH));
+            }
+            if (values.contains(Transaction.POSITION_DAY)) {
+              repository.update(mirrorKey, Transaction.POSITION_DAY, values.get(Transaction.POSITION_DAY));
+            }
+            if (values.contains(Transaction.POSITION_MONTH)) {
+              repository.update(mirrorKey, Transaction.POSITION_MONTH, values.get(Transaction.POSITION_MONTH));
+            }
             if (values.contains(Transaction.LABEL)) {
               repository.update(mirrorKey, Transaction.LABEL, values.get(Transaction.LABEL));
             }

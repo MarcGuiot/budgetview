@@ -136,7 +136,7 @@ public class SavingsBudgetStatTrigger implements ChangeSetListener {
         absoluteFirstTransactionForMonth.put(accountId, transaction);
       }
 
-      SavingsData data = getOrCreateStat(transaction.get(Transaction.MONTH), accountId);
+      SavingsData data = getOrCreateStat(transaction.get(Transaction.BUDGET_MONTH), accountId);
 
       accountBySeries.putUnique(transaction.get(Transaction.SERIES), accountId);
       Double amount = transaction.get(Transaction.AMOUNT);

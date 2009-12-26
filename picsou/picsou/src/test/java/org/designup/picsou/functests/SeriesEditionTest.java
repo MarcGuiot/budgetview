@@ -35,7 +35,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("Free")
       .switchToManual()
       .checkTable(new Object[][]{
-        {"2008", "August", "0.00", "29.00"},
+        {"2008", "August", "", "29.00"},
         {"2008", "July", "29.00", "29.00"},
       })
       .checkMonthSelected(1)
@@ -135,14 +135,14 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.editSeries("Internet")
       .switchToManual()
       .checkTable(new Object[][]{
-        {"2008", "August", "0.00", "29.00"},
+        {"2008", "August", "", "29.00"},
         {"2008", "July", "29.00", "29.00"},
       })
       .checkMonthSelected(1)
       .checkAmount("29.00")
       .setAmount("40.00")
       .checkTable(new Object[][]{
-        {"2008", "August", "0.00", "29.00"},
+        {"2008", "August", "", "29.00"},
         {"2008", "July", "29.00", "40.00"},
       })
       .validate();
@@ -151,7 +151,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.recurring.editSeries("Internet")
       .checkTable(new Object[][]{
-        {"2008", "August", "0.00", "29.00"},
+        {"2008", "August", "", "29.00"},
         {"2008", "July", "29.00", "40.00"},
       })
       .checkAmountIsSelected()
@@ -187,7 +187,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         {"2008", "August", "29.00", "29.00"},
         {"2008", "July", "29.00", "29.00"},
         {"2008", "June", "29.00", "29.00"},
-        {"2008", "May", "0.00", "0"},
+        {"2008", "May", "", "0"},
       });
     editionDialogChecker
       .toggleMonth("May")
@@ -289,23 +289,26 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("EDF", "Electricity");
 
     views.selectBudget();
-    budgetView.recurring.editSeriesList()
+    SeriesEditionDialogChecker editionDialogChecker = budgetView.recurring.editSeriesList();
+    editionDialogChecker
       .checkSeriesListEquals("Electricity", "Internet")
       .checkSeriesSelected("Electricity")
       .setCustom()
       .switchToManual()
       .selectAllMonths()
-      .setAmount("70")
+      .setAmount("70");
+    editionDialogChecker
       .toggleMonth("Aug")
       .checkTable(new Object[][]{
         {"2008", "July", "55.00", "70.00"},
-      })
+      });
 
+    editionDialogChecker
       .selectSeries("Internet")
       .checkMonthIsChecked("Aug")
       .checkTable(new Object[][]{
         {"2008", "August", "29.00", "29.00"},
-        {"2008", "July", "0.00", "0"},
+        {"2008", "July", "", "0"},
       })
       .toggleMonth("Jul")
 
@@ -773,14 +776,14 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.setEnvelope("Auchan", "Courant");
     categorization.selectEnvelopes().editSeries()
       .checkTable(new Object[][]{
-        {"2008", "August", "0.00", "40.00"},
+        {"2008", "August", "", "40.00"},
         {"2008", "July", "30.00", "40.00"},
         {"2008", "June", "20.00", "40.00"}
       })
       .switchToAutomatic()
       .switchToManual()
       .checkTable(new Object[][]{
-        {"2008", "August", "0.00", "30.00"},
+        {"2008", "August", "", "30.00"},
         {"2008", "July", "30.00", "20.00"},
         {"2008", "June", "20.00", "20.00"}
       })
@@ -1136,8 +1139,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectSavings().editSeries("epargne")
       .setIrregular()
       .checkTable(new Object[][]{
-        {"2008", "August", "0.00", "0"},
-        {"2008", "July", "0.00", "0"},
+        {"2008", "August", "", "0"},
+        {"2008", "July", "", "0"},
         {"2008", "June", "100.00", "100.00"}
       })
       .validate();
@@ -1434,7 +1437,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.editSeries("Internet")
       .switchToManual()
       .checkTable(new Object[][]{
-        {"2008", "August", "0.00", "29.00"},
+        {"2008", "August", "", "29.00"},
         {"2008", "July", "29.00", "29.00"},
       })
       .checkMonthSelected(1)

@@ -322,7 +322,8 @@ public class SeriesBudgetEditionPanel {
       Glob seriesStat = repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
       if (seriesStat != null) {
         if (!BudgetArea.get(currentSeries.get(Series.BUDGET_AREA)).isIncome()) {
-          if (seriesStat.get(SeriesStat.AMOUNT) < glob.get(SeriesBudget.AMOUNT)) {
+          if (seriesStat.get(SeriesStat.AMOUNT) != null &&
+              seriesStat.get(SeriesStat.AMOUNT) < glob.get(SeriesBudget.AMOUNT)) {
             label.setForeground(color);
           }
         }
@@ -354,6 +355,9 @@ public class SeriesBudgetEditionPanel {
       Glob seriesStat = this.repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
       if (seriesStat != null) {
         Double amount = seriesStat.get(SeriesStat.AMOUNT);
+        if (amount == null){
+          return "";
+        }
         Integer budgetArea = currentSeries.get(Series.BUDGET_AREA);
         if (!BudgetArea.get(budgetArea).isIncome() && !Amounts.isNullOrZero(amount)) {
           amount = -amount;

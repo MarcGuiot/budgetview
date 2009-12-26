@@ -24,7 +24,8 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Recurring",
                          "Envelopes",
                          "Special",
-                         "Savings");
+                         "Savings",
+                         "Deferred debit");
 
     views.selectCategorization();
     categorization.setNewEnvelope("Auchan", "Groceries");
@@ -41,7 +42,8 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Recurring", "Electricity", "Internet",
                          "Envelopes", "Groceries",
                          "Special",
-                         "Savings");
+                         "Savings",
+                         "Deferred debit");
 
     series.select("Income");
     transactions.initContent()
@@ -94,7 +96,8 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Recurring",
                          "Envelopes", "New envelope",
                          "Special",
-                         "Savings");
+                         "Savings",
+                         "Deferred debit");
 
     views.selectBudget();
     budgetView.envelopes.editSeriesList()
@@ -109,7 +112,8 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Recurring",
                          "Envelopes",
                          "Special",
-                         "Savings");
+                         "Savings",
+                         "Deferred debit");
   }
 
   public void testExpandingAndCollapsingBudgetAreas() throws Exception {
@@ -124,7 +128,8 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Recurring",
                          "Envelopes",
                          "Special",
-                         "Savings");
+                         "Savings",
+                         "Deferred debit");
 
     views.selectBudget();
     budgetView.income.createSeries("salary");
@@ -139,7 +144,8 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Recurring", "mortgage",
                          "Envelopes", "envelope1", "envelope2",
                          "Special",
-                         "Savings");
+                         "Savings",
+                         "Deferred debit");
 
     series.checkExpansionEnabled("All", false);
     series.checkExpansionEnabled("To categorize", false);
@@ -155,7 +161,8 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Recurring", "mortgage",
                          "Envelopes",
                          "Special",
-                         "Savings");
+                         "Savings",
+                         "Deferred debit");
 
     series.expandAll();
     series.checkContains("All",
@@ -164,7 +171,8 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Recurring", "mortgage",
                          "Envelopes", "envelope1", "envelope2",
                          "Special",
-                         "Savings");
+                         "Savings",
+                         "Deferred debit");
     
     series.collapseAll();
     series.checkContains("All",
@@ -173,7 +181,8 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Recurring",
                          "Envelopes",
                          "Special",
-                         "Savings");
+                         "Savings",
+                         "Deferred debit");
 
     series.toggleExpansion("Income");
     series.expandAll();
@@ -183,7 +192,8 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Recurring", "mortgage",
                          "Envelopes", "envelope1", "envelope2",
                          "Special",
-                         "Savings");
+                         "Savings",
+                         "Deferred debit");
 
     series.collapseAll();
     series.checkContains("All",
@@ -192,6 +202,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Recurring",
                          "Envelopes",
                          "Special",
-                         "Savings");
+                         "Savings",
+                         "Deferred debit");
   }
 }

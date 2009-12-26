@@ -173,6 +173,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     addSeriesChooser("envelopesSeriesChooser", BudgetArea.ENVELOPES, builder);
     addSeriesChooser("specialSeriesChooser", BudgetArea.SPECIAL, builder);
     addSeriesChooser("savingsSeriesChooser", BudgetArea.SAVINGS, builder);
+    addSeriesChooser("deferredSeriesChooser", BudgetArea.DEFERRED, builder);
 
     TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory, this);
     transactionDetailsView.registerComponents(builder);
@@ -244,7 +245,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         currentTransactions = selection.getAll(Transaction.TYPE);
-        Set<Integer> months = currentTransactions.getValueSet(Transaction.MONTH);
+        Set<Integer> months = currentTransactions.getValueSet(Transaction.BUDGET_MONTH);
         for (Pair<Matchers.CategorizationFilter, GlobRepeat> filter : seriesRepeat) {
           filter.getFirst().filterDates(months, currentTransactions);
           filter.getSecond().setFilter(filter.getFirst());
@@ -283,19 +284,23 @@ public class CategorizationView extends View implements TableView, Filterable {
 
     JRadioButton invisibleRadio = new JRadioButton(name);
     panelBuilder.add("invisibleToggle", invisibleRadio);
+    Matchers.CategorizationFilter filter = Matchers.seriesFilter(budgetArea.getId());
     GlobRepeat repeat = panelBuilder.addRepeat("seriesRepeat",
                                                Series.TYPE,
-                                               linkedTo(budgetArea.getGlob(), Series.BUDGET_AREA),
+                                               filter,
                                                SeriesNameComparator.INSTANCE,
                                                new SeriesChooserComponentFactory(budgetArea, invisibleRadio,
                                                                                  seriesEditionDialog,
                                                                                  repository,
                                                                                  directory));
-    seriesRepeat.add(
-      new Pair<Matchers.CategorizationFilter, GlobRepeat>(
-        Matchers.seriesFilter(budgetArea.getId()), repeat));
+    seriesRepeat.add(new Pair<Matchers.CategorizationFilter, GlobRepeat>(filter, repeat));
+    JPanel groupForSeries = new JPanel();
+    panelBuilder.add("groupCreateEditSeries", groupForSeries);
     panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
     panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
+    if (budgetArea == BudgetArea.DEFERRED){
+      groupForSeries.setVisible(false);
+    }
 
     panelBuilder.add("openCategorizationTipsAction",
                      new HelpAction(Lang.get("categorization.openTips"), "categorizationTips", parentDirectory));

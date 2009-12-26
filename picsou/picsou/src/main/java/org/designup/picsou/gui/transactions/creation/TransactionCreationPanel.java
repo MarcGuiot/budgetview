@@ -112,6 +112,8 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     repository.findOrCreate(PROTOTYPE_TRANSACTION_KEY);
     repository.update(PROTOTYPE_TRANSACTION_KEY,
                       value(Transaction.MONTH, currentMonth),
+                      value(Transaction.BUDGET_MONTH, currentMonth),
+                      value(Transaction.POSITION_MONTH, currentMonth),
                       value(Transaction.BANK_MONTH, currentMonth));
     monthLabel.setText(Month.getFullLabel(currentMonth));
   }
@@ -198,6 +200,8 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
       FieldValues values = FieldValuesBuilder.init()
         .set(repository.get(PROTOTYPE_TRANSACTION_KEY).getValues())
         .set(Transaction.BANK_DAY, day)
+        .set(Transaction.POSITION_DAY, day)
+        .set(Transaction.BUDGET_DAY, day)
         .set(Transaction.LABEL, upperCaseLabel)
         .set(Transaction.ORIGINAL_LABEL, upperCaseLabel)
         .set(Transaction.LABEL_FOR_CATEGORISATION, Transaction.anonymise(upperCaseLabel))
@@ -214,6 +218,8 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
                         value(Transaction.AMOUNT, null),
                         value(Transaction.DAY, null),
                         value(Transaction.BANK_DAY, null),
+                        value(Transaction.POSITION_DAY, null),
+                        value(Transaction.BUDGET_DAY, null),
                         value(Transaction.LABEL, ""));
 
       amountField.requestFocus();

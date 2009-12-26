@@ -36,7 +36,7 @@ public class Matchers {
   }
 
   public static GlobMatcher transactionsForMonths(Set<Integer> months) {
-    return GlobMatchers.contained(Transaction.MONTH, months);
+    return GlobMatchers.contained(Transaction.BUDGET_MONTH, months);
   }
 
   public static GlobMatcher transactionsForSeries(final Set<Integer> targetBudgetAreas,
@@ -142,7 +142,7 @@ public class Matchers {
   }
 
   public static class CategorizationFilter implements GlobMatcher {
-    private List<Glob> transactions;
+    private List<Glob> transactions = Collections.emptyList();
     private SeriesFirstEndDateFilter filter;
 
     public CategorizationFilter(final Integer budgetAreaId) {
@@ -150,7 +150,16 @@ public class Matchers {
     }
 
     public boolean matches(Glob series, GlobRepository repository) {
+      if (transactions.isEmpty()){
+        return false;
+      }
       if (filter.matches(series, repository)) {
+        if (series.get(Series.BUDGET_AREA).equals(BudgetArea.DEFERRED.getId())) {
+          return checkInMain(repository);
+        }
+        if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
+          return true;
+        }
         Integer toAccountId = series.get(Series.TO_ACCOUNT);
         Integer fromAccountId = series.get(Series.FROM_ACCOUNT);
         Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
@@ -216,6 +225,28 @@ public class Matchers {
         return true;
       }
       return false;
+    }
+
+    private boolean checkAccountIfDiferred(Glob series, GlobRepository repository) {
+      if (series.get(Series.BUDGET_AREA).equals(BudgetArea.DEFERRED.getId())) {
+        if (checkInMain(repository)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    private boolean checkInMain(GlobRepository repository) {
+      for (Glob transaction : transactions) {
+        Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
+        if (!account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+          return false;
+        }
+        if (!account.get(Account.CARD_TYPE).equals(AccountCardType.NOT_A_CARD.getId())) {
+          return false;
+        }
+      }
+      return true;
     }
 
     public void filterDates(Set<Integer> monthIds, List<Glob> transactions) {

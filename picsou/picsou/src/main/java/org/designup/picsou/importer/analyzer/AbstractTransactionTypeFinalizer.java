@@ -95,7 +95,9 @@ public abstract class AbstractTransactionTypeFinalizer implements TransactionTyp
                         value(Transaction.TRANSACTION_TYPE, transactionTypeId),
                         value(field, label),
                         value(Transaction.MONTH, Month.getMonthId(parsedDate)),
-                        value(Transaction.DAY, Month.getDay(parsedDate)));
+                        value(Transaction.DAY, Month.getDay(parsedDate)),
+                        value(Transaction.BUDGET_MONTH, Month.getMonthId(parsedDate)),
+                        value(Transaction.BUDGET_DAY, Month.getDay(parsedDate)));
     }
     catch (ParseException e) {
       repository.update(key,

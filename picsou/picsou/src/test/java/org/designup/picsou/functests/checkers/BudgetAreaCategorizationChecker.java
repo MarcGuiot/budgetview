@@ -18,7 +18,6 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     this.budgetArea = budgetArea;
     this.panel = categorizationChecker.selectAndGetBudgetArea(budgetArea);
     assertTrue(panel.isVisible());
-
   }
 
   public BudgetAreaCategorizationChecker checkContainsSeries(String... seriesNames) {
@@ -76,7 +75,7 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     if (uiComponents.length > 1) {
       List<String> names = new ArrayList<String>();
       for (UIComponent uiComponent : uiComponents) {
-        ToggleButton toggle = (ToggleButton)uiComponent;
+        RadioButton toggle = (RadioButton)uiComponent;
         names.add(toggle.getLabel());
       }
       fail("Unexpect toggles found: " + names);
@@ -86,7 +85,7 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
 
   public BudgetAreaCategorizationChecker checkActiveSeries(String seriesName) {
     assertThat(panel.getRadioButton(seriesName).foregroundEquals("000000"));
-    return this;
+    return this;  
   }
 
   public BudgetAreaCategorizationChecker checkNonActiveSeries(String seriesName) {
@@ -109,7 +108,7 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
 
   public BudgetAreaCategorizationChecker selectNewSeries(String seriesName) {
     createSeries().setName(seriesName).validate();
-    return selectSeries(seriesName);
+    return this;
   }
 
   public BudgetAreaCategorizationChecker selectNewSeries(String seriesName, String description) {
@@ -195,6 +194,11 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
 
   public BudgetAreaCategorizationChecker checkSeriesTooltip(String seriesName, String tooltip) {
     assertThat(panel.getRadioButton(seriesName).tooltipContains(tooltip));
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker checkEditSeriesButtonNotVisible() {
+    categorizationChecker.checkEditSeriesNotVisible();
     return this;
   }
 }

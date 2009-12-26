@@ -12,7 +12,16 @@ public class TransactionDateUpdater implements TransactionTypeFinalizer {
       repository.update(transaction.getKey(),
                         value(Transaction.MONTH, transaction.get(Transaction.BANK_MONTH)),
                         value(Transaction.DAY, transaction.get(Transaction.BANK_DAY)));
-      return true;
+    }
+    if ((transaction.get(Transaction.BUDGET_MONTH) == null) || (transaction.get(Transaction.BUDGET_DAY) == null)) {
+      repository.update(transaction.getKey(),
+                        value(Transaction.BUDGET_MONTH, transaction.get(Transaction.MONTH)),
+                        value(Transaction.BUDGET_DAY, transaction.get(Transaction.DAY)));
+    }
+    if ((transaction.get(Transaction.POSITION_MONTH) == null) || (transaction.get(Transaction.POSITION_DAY) == null)) {
+      repository.update(transaction.getKey(),
+                        value(Transaction.POSITION_MONTH, transaction.get(Transaction.BANK_MONTH)),
+                        value(Transaction.POSITION_DAY, transaction.get(Transaction.BANK_DAY)));
     }
     return false;
   }

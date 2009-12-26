@@ -60,6 +60,12 @@ public class Amounts {
   }
 
   public static double max(Double val1, Double planned, boolean isIncome) {
+    if (val1 == null){
+      return planned;
+    }
+    if (planned == null){
+      return val1;
+    }
     if (isIncome) {
       return Math.max(val1, planned);
     }

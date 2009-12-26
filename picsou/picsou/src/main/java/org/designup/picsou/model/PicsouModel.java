@@ -32,6 +32,8 @@ public class PicsouModel {
                           AppVersionInformation.TYPE,
                           UserVersionInformation.TYPE,
                           AccountPositionThreshold.TYPE,
+                          DeferredCardDate.TYPE,
+                          DeferredCardPeriod.TYPE,
                           Notes.TYPE)
       .get();
 

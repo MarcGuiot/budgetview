@@ -198,6 +198,10 @@ public class ImportChecker {
     return AccountEditionChecker.open(dialog.getButton("Create an account").triggerClick());
   }
 
+  public AccountEditionChecker addNewAccount(){
+    return AccountEditionChecker.open(dialog.getButton("newAccount").triggerClick());
+  }
+
   public ImportChecker defineAccount(String bank, String accountName, String number) {
     AccountEditionChecker accountEditionChecker = 
       AccountEditionChecker.open(dialog.getButton("Create an account").triggerClick());
@@ -211,7 +215,7 @@ public class ImportChecker {
 
 
   public ImportChecker createNewAccount(String bank, String accountName, String number, double initialBalance) {
-    AccountEditionChecker.open(dialog.getButton("newAccount").triggerClick())
+    addNewAccount()
       .selectBank(bank)
       .checkUpdateModeIsDisabled()
       .checkUpdateModeIsFileImport()
