@@ -59,7 +59,7 @@ public class Utils {
   }
 
   public static Double zeroIfNull(Double value) {
-    return value != null ? value : 0;
+    return value != null ? value : 0.;
   }
 
   public static Integer defaultIfNull(Integer value, int def) {

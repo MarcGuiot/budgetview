@@ -74,9 +74,9 @@ public class MiddleLevelIndex implements UpdatableMultiFieldIndex, GlobRepositor
     return globs;
   }
 
-  public void apply(GlobFunctor functor, GlobRepository repository) throws Exception {
+  public void saveApply(GlobFunctor functor, GlobRepository repository) {
     for (GlobRepository.MultiFieldIndexed multiFieldIndexed : downLevels.values()) {
-      multiFieldIndexed.apply(functor, repository);
+      multiFieldIndexed.saveApply(functor, repository);
     }
   }
 

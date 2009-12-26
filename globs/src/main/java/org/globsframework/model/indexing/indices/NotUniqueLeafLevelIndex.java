@@ -5,6 +5,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobFunctor;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,11 +26,16 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
     return globs;
   }
 
-  public void apply(GlobFunctor functor, GlobRepository repository) throws Exception {
-    for (GlobList globList : indexedGlob.values()) {
-      for (Glob glob : globList) {
-        functor.run(glob, repository);
+  public void saveApply(GlobFunctor functor, GlobRepository repository) {
+    try {
+      for (GlobList globList : indexedGlob.values()) {
+        for (Glob glob : globList) {
+          functor.run(glob, repository);
+        }
       }
+    }
+    catch (Exception e) {
+      throw new UnexpectedApplicationState(e);
     }
   }
 
@@ -65,13 +71,18 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
         return NotUniqueLeafLevelIndex.this.findByIndex(value);
       }
 
-      public void apply(GlobFunctor functor, GlobRepository repository) throws Exception {
-        GlobList globs = indexedGlob.get(value);
-        if (globs == null){
-          return;
+      public void saveApply(GlobFunctor functor, GlobRepository repository) {
+        try {
+          GlobList globs = indexedGlob.get(value);
+          if (globs == null){
+            return;
+          }
+          for (Glob glob : globs) {
+            functor.run(glob, repository);
+          }
         }
-        for (Glob glob : globs) {
-          functor.run(glob, repository);
+        catch (Exception e) {
+          throw new UnexpectedApplicationState(e);
         }
       }
 
