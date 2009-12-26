@@ -253,7 +253,7 @@
            foreground="toggle.selector.budgetArea" font="-,bold,12"
            marginRight="2" fill="horizontal" anchor="center" weightY="0"/>
     <style selector="radioButton.selector" opaque="false"
-           foreground="toggle.selector.normal" font="-,plain,12" cursor='hand'
+           font="-,plain,12" cursor='hand'
            marginRight="2" fill="none" anchor="center" weightY="0"/>
     <style selector=".subSeriesSelector" opaque="false"
            foreground="toggle.selector.categories.sub" cursor='hand'

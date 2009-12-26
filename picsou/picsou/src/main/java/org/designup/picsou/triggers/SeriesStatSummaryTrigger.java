@@ -2,6 +2,7 @@ package org.designup.picsou.triggers;
 
 import org.globsframework.model.*;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.utils.Utils;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Series;
@@ -66,7 +67,7 @@ public class SeriesStatSummaryTrigger implements ChangeSetListener {
     }
     else if (month == referenceMonth) {
       BudgetArea budgetArea = SeriesStat.getBudgetArea(key, repository);
-      value = Amounts.max(observed, planned, budgetArea.isIncome());
+      value = Amounts.max(Utils.zeroIfNull(observed), planned, budgetArea.isIncome());
     }
     else {
       value = observed;

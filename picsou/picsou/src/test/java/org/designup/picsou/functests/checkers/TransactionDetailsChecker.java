@@ -151,4 +151,15 @@ public class TransactionDetailsChecker extends GuiChecker {
     button.click();
   }
 
+  public void checkBudgetDate(String yyyyMMdd) {
+    TextBox budgetDate = getPanel().getTextBox("budgetDate");
+    assertTrue(budgetDate.isVisible());
+    assertThat(budgetDate.textEquals(yyyyMMdd));
+
+  }
+
+  public void checkBudgetDateNotVisible(String label) {
+    TextBox budgetDate = getPanel().getTextBox("budgetDate");
+    assertFalse(budgetDate.isVisible());
+  }
 }

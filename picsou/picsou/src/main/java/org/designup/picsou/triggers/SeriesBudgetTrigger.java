@@ -39,7 +39,7 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 
-  void updateSeriesBudget(Glob series, GlobRepository repository) {
+  public void updateSeriesBudget(Glob series, GlobRepository repository) {
     Integer seriesId = series.get(Series.ID);
     Map<Integer, Glob> monthWithBudget =
       toMap(repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId).getGlobs(),

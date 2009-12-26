@@ -337,6 +337,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
   }
 
   public void testImportDeferredCardAccount() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
     String file = OfxBuilder.init(this)
       .addBankAccount("unknown", 111, "111", 1000.00, "2008/08/07")
       .addCardAccount("1234", 10, "2008/08/07")

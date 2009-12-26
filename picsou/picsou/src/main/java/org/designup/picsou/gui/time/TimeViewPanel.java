@@ -29,6 +29,7 @@ import java.util.*;
 import java.util.List;
 
 public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionListener,
+                                                     MouseWheelListener,
                                                      SelectableContainer,
                                                      ChangeSetListener, GlobSelectionListener, PositionProvider {
 
@@ -94,6 +95,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     setFocusable(true);
     addMouseListener(this);
     addMouseMotionListener(this);
+    addMouseWheelListener(this);
     Dimension dimension = new Dimension(50, timeGraph.getAbsoluteHeight());
     setMinimumSize(dimension);
     setPreferredSize(dimension);
@@ -167,6 +169,20 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
 
   public double getPositionThreshold(int monthId) {
     return AccountPositionThreshold.getValue(repository);
+  }
+
+  public void mouseWheelMoved(MouseWheelEvent e) {
+    int wheelRotation = e.getWheelRotation();
+    if (wheelRotation >= 0){
+      if (scrollRight(wheelRotation * timeGraph.getMonthWidth())){
+        repaint();
+      }
+    }
+    else {
+      if (scrollLeft(-wheelRotation * timeGraph.getMonthWidth())) {
+        repaint();
+      }
+    }
   }
 
   public interface VisibilityListener {

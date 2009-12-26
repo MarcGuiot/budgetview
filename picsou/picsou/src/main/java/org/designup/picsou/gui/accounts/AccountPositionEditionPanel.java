@@ -13,7 +13,6 @@ import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
@@ -41,8 +40,7 @@ public class AccountPositionEditionPanel {
                                      AbstractAction validateAction,
                                      GlobRepository repository,
                                      Directory directory,
-                                     Window parent) {
-    this.account = account;
+                                     Window parent) {    
     this.repository = repository;
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountPositionEditionPanel.splits",
@@ -98,7 +96,7 @@ public class AccountPositionEditionPanel {
       transaction = transactionsRepository.get(Key.create(Transaction.TYPE, transactionId));
       if (transaction.get(Transaction.BANK_MONTH) > TimeService.getCurrentMonth() ||
           (transaction.get(Transaction.BANK_MONTH) == TimeService.getCurrentMonth() &&
-           transaction.get(Transaction.BANK_DAY) == TimeService.getCurrentDay())) {
+           transaction.get(Transaction.BANK_DAY) > TimeService.getCurrentDay())) {
         transaction = getLatestTransactions(account, transactionsRepository);
       }
     }
@@ -111,9 +109,9 @@ public class AccountPositionEditionPanel {
       int month = Month.toMonth(monthId);
       Integer day = transaction.get(Transaction.BANK_DAY);
       date = Lang.get("transactionView.dateFormat",
-                          (day < 10 ? "0" : "") + day,
-                          (month < 10 ? "0" : "") + month,
-                          Integer.toString(Month.toYear(monthId)));
+                      (day < 10 ? "0" : "") + day,
+                      (month < 10 ? "0" : "") + month,
+                      Integer.toString(Month.toYear(monthId)));
       balanceDate = Month.toDate(monthId, day);
       label = transaction.get(Transaction.LABEL);
       amount = Formatting.DECIMAL_FORMAT.format(transaction.get(Transaction.AMOUNT));
@@ -139,11 +137,10 @@ public class AccountPositionEditionPanel {
       repository.getSorted(
         Transaction.TYPE, TransactionComparator.ASCENDING_BANK_SPLIT_AFTER,
         and(fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)),
-                         isFalse(Transaction.PLANNED),
-                         or(
-                           fieldStrictlyLessThan(Transaction.BANK_MONTH, TimeService.getCurrentMonth()),
-                           and(fieldEquals(Transaction.BANK_MONTH, TimeService.getCurrentMonth()),
-                                            fieldLessOrEqual(Transaction.DAY, TimeService.getCurrentDay())))));
+            isFalse(Transaction.PLANNED),
+            or(fieldStrictlyLessThan(Transaction.BANK_MONTH, TimeService.getCurrentMonth()),
+               and(fieldEquals(Transaction.BANK_MONTH, TimeService.getCurrentMonth()),
+                   fieldLessOrEqual(Transaction.DAY, TimeService.getCurrentDay())))));
     if (!globSortedSet.isEmpty()) {
       return globSortedSet.last();
     }

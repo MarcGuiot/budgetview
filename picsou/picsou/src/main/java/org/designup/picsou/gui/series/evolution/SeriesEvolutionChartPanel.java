@@ -27,6 +27,7 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.TablePrinter;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
@@ -314,7 +315,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       Integer seriesId = stat.getKey().get(SeriesStat.SERIES);
       Glob series = repository.get(Key.create(Series.TYPE, seriesId));
       Double amount = stat.get(SeriesStat.SUMMARY_AMOUNT);
-      if (amount < 0) {
+      if (amount != null && amount < 0) {
         dataset.add(series.get(Series.NAME), -amount, createSelectionAction(seriesId));
       }
     }
@@ -399,7 +400,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     for (Glob seriesStat : repository.getAll(SeriesStat.TYPE,
                                              and(fieldEquals(SeriesStat.MONTH, currentMonthId),
                                                  not(fieldEquals(SeriesStat.SERIES, Series.UNCATEGORIZED_SERIES_ID))))) {
-      categorized += Math.abs(seriesStat.get(SeriesStat.AMOUNT));
+      categorized += Math.abs(Utils.zeroIfNull(seriesStat.get(SeriesStat.AMOUNT)));
     }
     dataset.add(Lang.get("seriesEvolution.chart.balance.uncategorized.categorized"),
                 categorized, null, false);
@@ -413,7 +414,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     GlobList uncategorizedTransactions =
       repository.getAll(Transaction.TYPE,
                         and(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                            fieldEquals(Transaction.MONTH, currentMonthId)));
+                            fieldEquals(Transaction.BUDGET_MONTH, currentMonthId)));
 
     StackChartDataset dataset = new StackChartDataset();
     for (Glob transaction : uncategorizedTransactions) {

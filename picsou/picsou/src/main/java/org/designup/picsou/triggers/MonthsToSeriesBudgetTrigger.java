@@ -85,7 +85,13 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
                         value(SeriesBudget.MONTH, monthId));
     }
     else {
-      GlobList globs = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
+      ReadOnlyGlobRepository.MultiFieldIndexed index = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID));
+      // cas des SB creer par le trigger de creation de comptes a debit differé ==> c'est le trigger
+      //qui creé les SB en parcourant les mois. il ne faut pas recreer le SB.
+      if (!index.findByIndex(SeriesBudget.MONTH, monthId).getGlobs().isEmpty()){
+        return;
+      }
+      GlobList globs = index
         .getGlobs();
       Glob[] existingSeriesBudget = globs.sort(SeriesBudget.MONTH).toArray(new Glob[globs.size()]);
 

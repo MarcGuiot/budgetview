@@ -685,10 +685,10 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectAllMonths()
       .checkAmount("200.00")
       .checkTable(new Object[][]{
-        {"2008", "October", "0.00", "200.00"},
-        {"2008", "September", "0.00", "200.00"},
+        {"2008", "October", "", "200.00"},
+        {"2008", "September", "", "200.00"},
         {"2008", "August", "100.00", "200.00"},
-        {"2008", "July", "0.00", "200.00"},
+        {"2008", "July", "", "200.00"},
       }
       )
       .validate();

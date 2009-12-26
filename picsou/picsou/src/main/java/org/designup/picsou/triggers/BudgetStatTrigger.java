@@ -11,6 +11,7 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
+import org.globsframework.utils.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -294,8 +295,8 @@ public class BudgetStatTrigger implements ChangeSetListener {
     }
 
     public void addValues(Glob seriesStat, int currentMonthId) {
-      Double seriesAmount = seriesStat.get(SeriesStat.AMOUNT);
-      Double seriesPlannedAmount = seriesStat.get(SeriesStat.PLANNED_AMOUNT);
+      double seriesAmount = Utils.zeroIfNull(seriesStat.get(SeriesStat.AMOUNT));
+      double seriesPlannedAmount = Utils.zeroIfNull(seriesStat.get(SeriesStat.PLANNED_AMOUNT));
 
       amount += seriesAmount;
       plannedAmount += seriesPlannedAmount;

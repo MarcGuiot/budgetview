@@ -2,9 +2,7 @@ package org.designup.picsou.gui.transactions.shift;
 
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -88,6 +86,12 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
       return;
     }
 
+    Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
+    if (!account.get(Account.CARD_TYPE).equals(AccountCardType.NOT_A_CARD.getId())){
+      setEnabled(false);
+      return;
+    }
+
     if (transaction.get(Transaction.DAY_BEFORE_SHIFT) != null) {
       putValue(NAME, Lang.get("unshift.transaction.button"));
       putValue(SHORT_DESCRIPTION, Lang.get("unshift.transaction.tooltip"));
@@ -98,8 +102,8 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
     putValue(NAME, Lang.get("shift.transaction.button"));
     putValue(SHORT_DESCRIPTION, Lang.get("shift.transaction.tooltip"));
 
-    int day = transaction.get(Transaction.DAY);
-    int month = transaction.get(Transaction.MONTH);
+    int day = transaction.get(Transaction.BUDGET_DAY);
+    int month = transaction.get(Transaction.BUDGET_MONTH);
 
     if (day < DAY_LIMIT_FOR_PREVIOUS) {
       targetMonth = Month.previous(month);
@@ -148,7 +152,7 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
                              directory,
                              Month.getFullLabel(targetMonth)) {
         protected void postValidate() {
-          getSeriesEditionDialog().show(series, Collections.singleton(transaction.get(Transaction.MONTH)));
+          getSeriesEditionDialog().show(series, Collections.singleton(transaction.get(Transaction.BUDGET_MONTH)));
         }
       };
     dialog.show();
@@ -175,8 +179,8 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
   }
 
   private void doShift(Glob transaction) {
-    int day = transaction.get(Transaction.DAY);
-    int month = transaction.get(Transaction.MONTH);
+    int day = transaction.get(Transaction.BUDGET_DAY);
+    int month = transaction.get(Transaction.BUDGET_MONTH);
 
     int newDay = day;
     int newMonth = month;
@@ -192,14 +196,14 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
     }
 
     repository.update(transaction.getKey(),
-                      value(Transaction.MONTH, newMonth),
-                      value(Transaction.DAY, newDay),
+                      value(Transaction.BUDGET_MONTH, newMonth),
+                      value(Transaction.BUDGET_DAY, newDay),
                       value(Transaction.DAY_BEFORE_SHIFT, day));
   }
 
   protected void unshift() {
     int dayBeforeShift = transaction.get(Transaction.DAY_BEFORE_SHIFT);
-    int month = transaction.get(Transaction.MONTH);
+    int month = transaction.get(Transaction.BUDGET_MONTH);
     int monthBeforeShift = month;
     if (dayBeforeShift > DAY_LIMIT_FOR_NEXT) {
       monthBeforeShift = Month.previous(month);
@@ -209,14 +213,14 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
     }
 
     repository.update(transaction.getKey(),
-                      value(Transaction.DAY, dayBeforeShift),
-                      value(Transaction.MONTH, monthBeforeShift),
+                      value(Transaction.BUDGET_DAY, dayBeforeShift),
+                      value(Transaction.BUDGET_MONTH, monthBeforeShift),
                       value(Transaction.DAY_BEFORE_SHIFT, null));
   }
 
   private boolean containsTransactions(int monthToCheck) {
     return repository.contains(Transaction.TYPE,
-                               and(fieldEquals(Transaction.MONTH, monthToCheck),
+                               and(fieldEquals(Transaction.BUDGET_MONTH, monthToCheck),
                                    isFalse(Transaction.PLANNED)));
   }
 

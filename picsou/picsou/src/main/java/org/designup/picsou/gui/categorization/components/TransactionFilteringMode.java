@@ -38,7 +38,7 @@ public enum TransactionFilteringMode {
 
       case SELECTED_MONTHS:
         Set<Integer> selectedMonthIds = selectionService.getSelection(Month.TYPE).getValueSet(Month.ID);
-        return GlobMatchers.fieldIn(Transaction.MONTH, selectedMonthIds);
+        return GlobMatchers.fieldIn(Transaction.BUDGET_MONTH, selectedMonthIds);
 
       case LAST_IMPORTED_FILE:
         GlobList imports = repository.getAll(TransactionImport.TYPE)

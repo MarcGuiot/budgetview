@@ -17,18 +17,18 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     createMonth(200807);
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     "<create type='seriesStat' series='10' month='200807'" +
-                                    "        amount='0.0' plannedAmount='150.0'/>" +
+                                    "        plannedAmount='150.0'/>" +
                                     "<create type='seriesStat' series='1' month='200807' " +
-                                    "        amount='0.0' plannedAmount='0.0'/>");
+                                    "        plannedAmount='0.0'/>");
     repository.startChangeSet();
     createTransaction(10, 10, 200807, 10.0);
     createTransaction(11, 1, 200807, -20.0);
     repository.completeChangeSet();
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     "<update type='seriesStat' series='10' month='200807'" +
-                                    "        amount='10.0' _amount='0.0'/>" +
+                                    "        amount='10.0' _amount='(null)'/>" +
                                     "<update type='seriesStat' series='1' month='200807'" +
-                                    "        amount='-20.0' _amount='0.0'/>");
+                                    "        amount='-20.0' _amount='(null)'/>");
   }
 
   public void testUnassignedTransactionSeriesAndDeleteSeries() throws Exception {
@@ -39,10 +39,10 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                   "<series id='20' initialAmount='-100.0' budgetAreaName='recurring' " +
                   "        profileTypeName='custom' isAutomatic='false'  name='20'/>" +
                   "<month id='200807'/>" +
-                  "<transaction id='1' series='10' month='200807' day='1' bankMonth='200807' bankDay='1' amount='-10.0'/>" +
-                  "<transaction id='2' series='20' month='200807' day='1' bankMonth='200807' bankDay='1' amount='-10.0'/>" +
-                  "<transaction id='3' series='20' month='200807' day='1' bankMonth='200807' bankDay='1' amount='-10.0'/>" +
-                  "<transaction id='4' month='200807' bankMonth='200807' bankDay='1' amount='-50.0'/>" +
+                  "<transaction id='1' series='10' month='200807' day='1' budgetMonth='200807' budgetDay='1' bankMonth='200807' bankDay='1' amount='-10.0'/>" +
+                  "<transaction id='2' series='20' month='200807' day='1' budgetMonth='200807' budgetDay='1' bankMonth='200807' bankDay='1' amount='-10.0'/>" +
+                  "<transaction id='3' series='20' month='200807' day='1' budgetMonth='200807' budgetDay='1' bankMonth='200807' bankDay='1' amount='-10.0'/>" +
+                  "<transaction id='4' month='200807' bankMonth='200807' bankDay='1' budgetMonth='200807' budgetDay='1' amount='-50.0'/>" +
                   "");
 
     listener.assertLastChangesEqual(SeriesStat.TYPE,
@@ -87,9 +87,9 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     repository.completeChangeSet();
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     "<update type='seriesStat' series='10' month='200807'" +
-                                    "        amount='0.0' _amount='10.0'/>" +
+                                    "        amount='(null)' _amount='10.0'/>" +
                                     "<update type='seriesStat' series='20' month='200807'" +
-                                    "        amount='5.0' _amount='0.0'/>");
+                                    "        amount='5.0' _amount='(null)'/>");
   }
 
   public void testChangingMonths() throws Exception {
@@ -98,15 +98,15 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                   "        july='true' profileTypeName='custom' name='10'/>" +
                   "<month id='200807'/>" +
                   "<month id='200808'/>" +
-                  "<transaction id='1' series='10' month='200807' bankMonth='200807' bankDay='1' amount='10.0'/>" +
-                  "<transaction id='2' series='10' month='200808' bankMonth='200808' bankDay='1' amount='20.0'/>");
+                  "<transaction id='1' series='10' month='200807' bankMonth='200807' bankDay='1' budgetMonth='200807' budgetDay='1' amount='10.0'/>" +
+                  "<transaction id='2' series='10' month='200808' bankMonth='200808' bankDay='1' budgetMonth='200808' budgetDay='1' amount='20.0'/>");
 
-    repository.update(Key.create(Transaction.TYPE, 1), value(Transaction.MONTH, 200808));
+    repository.update(Key.create(Transaction.TYPE, 1), value(Transaction.BUDGET_MONTH, 200808));
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     "<update type='seriesStat' series='10' month='200808'" +
                                     "        amount='30.0' _amount='20.0'/>" +
                                     "<update type='seriesStat' series='10' month='200807'" +
-                                    "        amount='0.0' _amount='10.0'/>");
+                                    "        amount='(null)' _amount='10.0'/>");
   }
 
   public void testUpdatingPlannedAmount() throws Exception {
@@ -114,7 +114,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                   "<series id='10' initialAmount='100.0' budgetAreaName='recurring' isAutomatic='false' " +
                   "        profileTypeName='custom' name='10'/>" +
                   "<month id='200807'/>" +
-                  "<transaction id='1' series='10' month='200807' bankMonth='200807' bankDay='1'  amount='10.0'/>");
+                  "<transaction id='1' series='10' month='200807' bankMonth='200807' bankDay='1' budgetMonth='200807' budgetDay='1'  amount='10.0'/>");
 
     repository.update(Key.create(Series.TYPE, 10), value(Series.INITIAL_AMOUNT, 150.0));
 
@@ -130,18 +130,18 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                   "<series id='30' initialAmount='-500.0' profileTypeName='custom'" +
                   "        isAutomatic='false' name='10'/>" +
                   "<month id='200807'/>" +
-                  "<transaction id='1' series='10' month='200807' bankMonth='200807' bankDay='1' amount='-90.0'/>" +
-                  "<transaction id='2' series='30' month='200807' bankMonth='200807' bankDay='1' amount='200.0'/>" +
+                  "<transaction id='1' series='10' month='200807' bankMonth='200807' bankDay='1' budgetMonth='200807' budgetDay='1' amount='-90.0'/>" +
+                  "<transaction id='2' series='30' month='200807' bankMonth='200807' bankDay='1' budgetMonth='200807' budgetDay='1' amount='200.0'/>" +
                   "");
     listener.assertLastChangesEqual(
       SeriesStat.TYPE,
       "<create amount='-90.0' month='200807' plannedAmount='-100.0' series='10' type='seriesStat'/>" +
-      "<create amount='0.0' month='200807' plannedAmount='1000.0' series='20' type='seriesStat'/>" +
-      "<create amount='0.0' month='200807' plannedAmount='0.0' series='1' type='seriesStat'/>" +
+      "<create month='200807' plannedAmount='1000.0' series='20' type='seriesStat'/>" +
+      "<create month='200807' plannedAmount='0.0' series='1' type='seriesStat'/>" +
       "<create amount='200.0' month='200807' plannedAmount='-500.0' series='30' type='seriesStat'/>");
     createTransaction(10, 20, 200807, 750.);
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<update _amount='0.0' amount='750.0' month='200807' series='20'" +
+                                    "<update _amount='(null)' amount='750.0' month='200807' series='20'" +
                                     "        type='seriesStat'/>" +
                                     "");
   }
@@ -158,6 +158,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     repository.create(Key.create(Transaction.TYPE, transactionId),
                       value(Transaction.SERIES, seriesId),
                       value(Transaction.MONTH, monthId),
+                      value(Transaction.BUDGET_MONTH, monthId),
                       value(Transaction.DAY, 1),
                       value(Transaction.BANK_DAY, 1),
                       value(Transaction.BANK_MONTH, monthId),

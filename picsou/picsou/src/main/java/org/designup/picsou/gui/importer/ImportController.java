@@ -212,6 +212,7 @@ public class ImportController {
                                   public void run(Glob month, GlobRepository repository) throws Exception {
                                     monthIds.add(month.get(Transaction.BANK_MONTH));
                                     monthIds.add(month.get(Transaction.MONTH));
+                                    monthIds.add(month.get(Transaction.BUDGET_MONTH));
                                   }
                                 });
       if (monthIds.isEmpty()) {

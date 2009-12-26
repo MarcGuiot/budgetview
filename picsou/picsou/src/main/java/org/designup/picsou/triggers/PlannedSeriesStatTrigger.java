@@ -6,6 +6,7 @@ import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.utils.Utils;
 
 import java.util.Set;
 
@@ -26,7 +27,8 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
                                      seriesBudget.get(SeriesBudget.MONTH));
           repository.findOrCreate(seriesStat);
           repository.update(seriesStat, SeriesStat.PLANNED_AMOUNT,
-                            seriesBudget.isTrue(SeriesBudget.ACTIVE) ? seriesBudget.get(SeriesBudget.AMOUNT) : 0);
+                            seriesBudget.isTrue(SeriesBudget.ACTIVE) ? Utils.zeroIfNull(seriesBudget.get(SeriesBudget.AMOUNT))
+                            : 0.);
         }
       }
 

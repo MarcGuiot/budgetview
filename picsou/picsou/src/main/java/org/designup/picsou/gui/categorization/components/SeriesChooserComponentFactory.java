@@ -111,6 +111,9 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
     JButton editSeriesButton = new JButton(new EditSeriesAction(seriesKey));
     editSeriesButton.setName("editSeries:" + seriesName);
     cellBuilder.add("editSeries", editSeriesButton);
+    if (budgetArea == BudgetArea.DEFERRED){
+      editSeriesButton.setVisible(false);
+    }
 
     cellBuilder.addDisposeListener(new Disposable() {
       public void dispose() {
@@ -139,8 +142,9 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
     }
 
     boolean atLeastOneIsActivated = false;
-    ReadOnlyGlobRepository.MultiFieldIndexed seriesBudgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID));
-    Set<Integer> months = currentTransactions.getValueSet(Transaction.MONTH);
+    ReadOnlyGlobRepository.MultiFieldIndexed seriesBudgets =
+      repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID));
+    Set<Integer> months = currentTransactions.getValueSet(Transaction.BUDGET_MONTH);
     for (Integer month : months) {
       Glob seriesBudget =
         seriesBudgets.findByIndex(SeriesBudget.MONTH, month).getGlobs().getFirst();

@@ -1,6 +1,7 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.model.*;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.DefaultChangeSetListener;
@@ -9,6 +10,7 @@ import org.globsframework.model.utils.GlobMatchers;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Set;
 
 public class DeferredCardDayTrigger extends DefaultChangeSetListener {
 
@@ -51,6 +53,15 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
     changeSet.safeVisit(DeferredCardPeriod.TYPE, new PeriodChangeSetVisitor(repository));
   }
 
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+    if (changedTypes.contains(Account.TYPE)) {
+      GlobList deferredAccount = repository.getAll(Account.TYPE, GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()));
+      for (Glob account : deferredAccount) {
+        updateDeferredCarDay(repository, account);
+      }
+    }
+  }
+
   private class PeriodChangeSetVisitor implements ChangeSetVisitor {
     private GlobRepository repository;
 
@@ -78,13 +89,18 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
   }
 
   private void updateDeferredCarDay(GlobRepository repository, final Glob account) {
+
+    Glob series = repository.getAll(Series.TYPE, GlobMatchers.and(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.DEFERRED.getId()),
+                                                                  GlobMatchers.fieldEquals(Series.FROM_ACCOUNT, account.get(Account.ID))))
+      .getFirst();
     Calendar calendar = Calendar.getInstance();
     Integer accountId = account.get(Account.ID);
     GlobList periods = repository.getAll(DeferredCardPeriod.TYPE,
                                          GlobMatchers.fieldEquals(DeferredCardPeriod.ACCOUNT, accountId))
       .sort(DeferredCardPeriod.FROM_MONTH);
 
-    ReadOnlyGlobRepository.MultiFieldIndexed indexOnDeferredCardDay = repository.findByIndex(DeferredCardDate.ACCOUNT_AND_DATE, DeferredCardDate.ACCOUNT, accountId);
+    ReadOnlyGlobRepository.MultiFieldIndexed indexOnDeferredCardDay =
+      repository.findByIndex(DeferredCardDate.ACCOUNT_AND_DATE, DeferredCardDate.ACCOUNT, accountId);
 
     GlobList deferredCardDays = indexOnDeferredCardDay.getGlobs();
 
@@ -134,16 +150,38 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
     Glob currentPeriod = iterator.next();
     int day = currentPeriod.get(DeferredCardPeriod.DAY);
     currentPeriod = iterator.hasNext() ? iterator.next() : null;
+    ReadOnlyGlobRepository.MultiFieldIndexed seriesIndex = null;
+    if (series != null) {
+      seriesIndex = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID));
+    }
     for (Glob deferredCardDay : deferredCardDays) {
-      if (currentPeriod == null ||
-          deferredCardDay.get(DeferredCardDate.MONTH) < currentPeriod.get(DeferredCardPeriod.FROM_MONTH)) {
-        repository.update(deferredCardDay.getKey(), DeferredCardDate.DAY,
-                          Month.getDay(day, deferredCardDay.get(DeferredCardDate.MONTH), calendar));
-      }
-      else {
+      if (currentPeriod != null &&
+          deferredCardDay.get(DeferredCardDate.MONTH) >= currentPeriod.get(DeferredCardPeriod.FROM_MONTH)) {
         day = currentPeriod.get(DeferredCardPeriod.DAY);
         currentPeriod = iterator.hasNext() ? iterator.next() : null;
       }
+      if (seriesIndex != null) {
+        Glob transaction = seriesIndex.findByIndex(Transaction.POSITION_MONTH,
+                                                   deferredCardDay.get(DeferredCardDate.MONTH)).getGlobs().getFirst();
+        if (transaction != null){
+          repository.update(deferredCardDay.getKey(), DeferredCardDate.DAY, transaction.get(Transaction.BANK_DAY));
+        }
+        else {
+          repository.update(deferredCardDay.getKey(), DeferredCardDate.DAY,
+                            Month.getDay(day, deferredCardDay.get(DeferredCardDate.MONTH), calendar));
+        }
+      }
+      else {
+        repository.update(deferredCardDay.getKey(), DeferredCardDate.DAY,
+                          Month.getDay(day, deferredCardDay.get(DeferredCardDate.MONTH), calendar));
+      }
+//<<<<<<< local
+//=======
+//      else {
+//        day = currentPeriod.get(DeferredCardPeriod.DAY);
+//        currentPeriod = iterator.hasNext() ? iterator.next() : null;
+//      }
+//>>>>>>> other
     }
   }
 

@@ -4,10 +4,7 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetListener;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFunctor;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
@@ -109,10 +106,12 @@ public class CurrentMonthTrigger implements ChangeSetListener {
     }
 
     public void run(Glob transaction, GlobRepository repository) {
-      if (transaction.isTrue(Transaction.PLANNED) && transaction.get(Transaction.BANK_MONTH).equals(lastMonth)
-          && transaction.get(Transaction.BANK_DAY) < lastDay) {
-        repository.update(transaction.getKey(), Transaction.BANK_DAY, lastDay);
-        repository.update(transaction.getKey(), Transaction.DAY, lastDay);
+      if (transaction.isTrue(Transaction.PLANNED) && transaction.get(Transaction.POSITION_MONTH).equals(lastMonth)
+          && transaction.get(Transaction.POSITION_DAY) < lastDay) {
+        repository.update(transaction.getKey(),
+                          FieldValue.value(Transaction.POSITION_DAY, lastDay),
+                          FieldValue.value(Transaction.BANK_DAY, lastDay),
+                          FieldValue.value(Transaction.DAY, lastDay));
       }
     }
   }

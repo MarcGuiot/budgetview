@@ -6,6 +6,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFunctor;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,9 +27,14 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
     return globs;
   }
 
-  public void apply(GlobFunctor functor, GlobRepository repository) throws Exception {
-    for (Glob glob : indexedGlob.values()) {
-      functor.run(glob, repository);
+  public void saveApply(GlobFunctor functor, GlobRepository repository) {
+    try {
+      for (Glob glob : indexedGlob.values()) {
+        functor.run(glob, repository);
+      }
+    }
+    catch (Exception e) {
+      throw new UnexpectedApplicationState(e);
     }
   }
 
@@ -69,10 +75,15 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
         return null;
       }
 
-      public void apply(GlobFunctor functor, GlobRepository repository) throws Exception {
-        Glob glob = indexedGlob.get(value);
-        if (glob != null) {
-          functor.run(glob, repository);
+      public void saveApply(GlobFunctor functor, GlobRepository repository) {
+        try {
+          Glob glob = indexedGlob.get(value);
+          if (glob != null) {
+            functor.run(glob, repository);
+          }
+        }
+        catch (Exception e) {
+          throw new UnexpectedApplicationState(e);
         }
       }
     };

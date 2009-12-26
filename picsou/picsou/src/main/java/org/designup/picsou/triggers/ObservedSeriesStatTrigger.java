@@ -3,12 +3,13 @@ package org.designup.picsou.triggers;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.util.Amounts;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.utils.Log;
+import org.globsframework.model.utils.GlobFunctor;
+import org.globsframework.utils.Utils;
 
 import java.util.Set;
 
@@ -25,8 +26,9 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         if (!values.contains(Transaction.SERIES)
-            && !values.contains(Transaction.MONTH)
-            && !values.contains(Transaction.AMOUNT)) {
+            && !values.contains(Transaction.BUDGET_MONTH)
+            && !values.contains(Transaction.AMOUNT)
+            && !values.contains(Transaction.PLANNED)) {
           return;
         }
 
@@ -47,13 +49,18 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
 
         Integer previousMonthId;
         Integer currentMonthId;
-        if (values.contains(Transaction.MONTH)) {
-          previousMonthId = values.getPrevious(Transaction.MONTH);
-          currentMonthId = values.get(Transaction.MONTH);
+        if (values.contains(Transaction.BUDGET_MONTH)) {
+          previousMonthId = values.getPrevious(Transaction.BUDGET_MONTH);
+          currentMonthId = values.get(Transaction.BUDGET_MONTH);
         }
         else {
-          previousMonthId = transaction.get(Transaction.MONTH);
-          currentMonthId = transaction.get(Transaction.MONTH);
+          previousMonthId = transaction.get(Transaction.BUDGET_MONTH);
+          currentMonthId = transaction.get(Transaction.BUDGET_MONTH);
+        }
+
+        Boolean isPlanned = null;
+        if (values.contains(Transaction.PLANNED)) {
+          isPlanned = values.get(Transaction.PLANNED);
         }
 
         Double previousAmount;
@@ -68,24 +75,12 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
         }
 
         Glob previousStat = repository.find(createKey(previousSeriesId, previousMonthId));
-        if (previousStat != null) {
+        if (previousStat != null && (isPlanned == null || isPlanned)) {
           updateStat(previousStat, previousAmount, -1, repository);
         }
 
-        Glob currentStat = repository.find(createKey(currentSeriesId, currentMonthId));
-        if (currentStat == null) {
-          GlobList seriesBudgets =
-            repository
-              .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, currentSeriesId)
-              .findByIndex(SeriesBudget.MONTH, currentMonthId)
-              .getGlobs();
-          Glob series = repository.get(Key.create(Series.TYPE, currentSeriesId));
-          String name = series.get(Series.NAME);
-          Log.write("Observed stat : visitUpdate series : " + name + ", " + currentSeriesId +
-                    " month = " + currentMonthId + " series Budget :" +
-                    (seriesBudgets.isEmpty() ? " <none> " : seriesBudgets.get(0).get(SeriesBudget.AMOUNT)));
-        }
-        else {
+        Glob currentStat = repository.findOrCreate(createKey(currentSeriesId, currentMonthId));
+        if ((isPlanned == null || !isPlanned)) {
           updateStat(currentStat, currentAmount, 1, repository);
         }
       }
@@ -104,22 +99,35 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
       return;
     }
 
-    Glob stat = repository.findOrCreate(createKey(seriesId, values.get(Transaction.MONTH)));
+    Glob stat = repository.findOrCreate(createKey(seriesId, values.get(Transaction.BUDGET_MONTH)));
     if (stat != null) {
       final Double transactionAmount = values.get(Transaction.AMOUNT);
       updateStat(stat, transactionAmount, multiplier, repository);
     }
     else {
       if (throwIfNull) {
-        throw new RuntimeException("Missing stat for month " + values.get(Transaction.MONTH) + " on series : " +
+        throw new RuntimeException("Missing stat for month " + values.get(Transaction.BUDGET_MONTH) + " on series : " +
                                    GlobPrinter.toString(repository.get(Key.create(Series.TYPE, seriesId))));
       }
     }
   }
 
   private void updateStat(Glob stat, Double transactionAmount, int multiplier, GlobRepository repository) {
-    double newValue = stat.get(SeriesStat.AMOUNT) + multiplier * transactionAmount;
-    repository.update(stat.getKey(), SeriesStat.AMOUNT, newValue);
+    double newValue = Utils.zeroIfNull(stat.get(SeriesStat.AMOUNT)) + multiplier * transactionAmount;
+    if (Amounts.isNearZero(newValue)) {
+      IsTransactionPresent transactionPresent = new IsTransactionPresent(stat);
+      repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, stat.get(SeriesStat.SERIES))
+        .saveApply(transactionPresent, repository);
+      if (transactionPresent.found) {
+        repository.update(stat.getKey(), SeriesStat.AMOUNT, 0.);
+      }
+      else {
+        repository.update(stat.getKey(), SeriesStat.AMOUNT, null);
+      }
+    }
+    else {
+      repository.update(stat.getKey(), SeriesStat.AMOUNT, newValue);
+    }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
@@ -144,5 +152,20 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
   private Key createKey(Integer seriesId, Integer monthId) {
     return Key.create(SeriesStat.SERIES, seriesId,
                       SeriesStat.MONTH, monthId);
+  }
+
+  private static class IsTransactionPresent implements GlobFunctor {
+    private final int month;
+    private boolean found = false;
+
+    public IsTransactionPresent(Glob stat) {
+      this.month = stat.get(SeriesStat.MONTH);
+    }
+
+    public void run(Glob glob, GlobRepository repository) throws Exception {
+      if (glob.get(Transaction.BUDGET_MONTH) == month && !glob.isTrue(Transaction.PLANNED)) {
+        found = true;
+      }
+    }
   }
 }

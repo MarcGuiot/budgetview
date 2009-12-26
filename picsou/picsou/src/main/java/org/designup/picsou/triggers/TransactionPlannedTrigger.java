@@ -2,6 +2,7 @@ package org.designup.picsou.triggers;
 
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.Amounts;
+import org.designup.picsou.gui.model.SeriesStat;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
@@ -27,7 +28,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         Integer seriesId = values.get(Transaction.SERIES);
-        Integer monthId = values.get(Transaction.MONTH);
+        Integer monthId = values.get(Transaction.BUDGET_MONTH);
         if (seriesId != null && monthId != null) {
           listOfSeriesAndMonth.add(new Pair<Integer, Integer>(seriesId, monthId));
         }
@@ -47,12 +48,12 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
           newSeries = transaction.get(Transaction.SERIES);
           previousSeries = newSeries;
         }
-        if (values.contains(Transaction.MONTH)) {
-          previousMonth = values.getPrevious(Transaction.MONTH);
-          newMonth = values.get(Transaction.MONTH);
+        if (values.contains(Transaction.BUDGET_MONTH)) {
+          previousMonth = values.getPrevious(Transaction.BUDGET_MONTH);
+          newMonth = values.get(Transaction.BUDGET_MONTH);
         }
         else {
-          newMonth = transaction.get(Transaction.MONTH);
+          newMonth = transaction.get(Transaction.BUDGET_MONTH);
           previousMonth = newMonth;
         }
         if (values.contains(Transaction.AMOUNT)
@@ -69,7 +70,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
         Integer series = previousValues.get(Transaction.SERIES);
-        Integer monthId = previousValues.get(Transaction.MONTH);
+        Integer monthId = previousValues.get(Transaction.BUDGET_MONTH);
         if (series != null) {
           listOfSeriesAndMonth.add(new Pair<Integer, Integer>(series, monthId));
         }
@@ -125,12 +126,12 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       }
 
       repository.update(seriesBudget.getKey(), SeriesBudget.OBSERVED_AMOUNT, observedAmount);
-      if (Amounts.isNearZero(seriesBudget.get(SeriesBudget.AMOUNT)) || !seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
+      if (Amounts.isNullOrZero(seriesBudget.get(SeriesBudget.AMOUNT)) || !seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
         repository.delete(transactions);
       }
       else if (monthId >= currentMonthId) {
         Double wantedAmount = seriesBudget.get(SeriesBudget.AMOUNT);
-        double diff = wantedAmount - (observedAmount == null ? 0.0 : observedAmount);
+        double diff = wantedAmount - Utils.zeroIfNull(observedAmount);
         if (((wantedAmount > 0 && diff > 0) || (wantedAmount < 0 && diff < 0)) && !Amounts.isNearZero(diff)) {
           Glob transaction = transactions.getFirst();
           if (transaction == null) {
@@ -161,7 +162,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
 
   private static GlobList getPlannedTransactions(GlobRepository repository, Integer series, Integer month) {
     return repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series)
-      .findByIndex(Transaction.MONTH, month)
+      .findByIndex(Transaction.POSITION_MONTH, month)
       .getGlobs()
       .filter(and(isTrue(Transaction.PLANNED),
                   not(isTrue(Transaction.MIRROR))), repository)
@@ -180,10 +181,11 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
 
   Double computeObservedAmount(GlobRepository repository, int seriesId, int monthId) {
     try {
-      ComputeObservedFunctor computeObservedFunctor = new ComputeObservedFunctor();
-      repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
-        .findByIndex(Transaction.MONTH, monthId).apply(computeObservedFunctor, repository);
-      return computeObservedFunctor.amount;
+      Glob seriesStat = repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
+      if (seriesStat == null){ // il n'y a pas d'operations.
+        return null;
+      }
+      return seriesStat.get(SeriesStat.AMOUNT);
     }
     catch (Exception e) {
       throw new RuntimeException(e);
@@ -241,26 +243,15 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
                       value(Transaction.SERIES, seriesId),
                       value(Transaction.BANK_MONTH, monthId),
                       value(Transaction.BANK_DAY, day),
+                      value(Transaction.POSITION_MONTH, monthId),
+                      value(Transaction.POSITION_DAY, day),
                       value(Transaction.MONTH, monthId),
                       value(Transaction.DAY, day),
+                      value(Transaction.BUDGET_MONTH, monthId),
+                      value(Transaction.BUDGET_DAY, day),
                       value(Transaction.LABEL, Series.getPlannedTransactionLabel(seriesId, series)),
                       value(Transaction.PLANNED, true),
                       value(Transaction.TRANSACTION_TYPE,
                             amount > 0 ? TransactionType.VIREMENT.getId() : TransactionType.PRELEVEMENT.getId()));
-  }
-
-  private static class ComputeObservedFunctor implements GlobFunctor {
-    public Double amount = null;
-
-    public void run(Glob transaction, GlobRepository repository) throws Exception {
-      if (!transaction.isTrue(Transaction.PLANNED) && !transaction.isTrue(Transaction.MIRROR)) {
-        if (amount == null) {
-          amount = transaction.get(Transaction.AMOUNT);
-        }
-        else {
-          amount += transaction.get(Transaction.AMOUNT);
-        }
-      }
-    }
   }
 }

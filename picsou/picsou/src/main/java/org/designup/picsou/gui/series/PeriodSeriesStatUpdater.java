@@ -99,8 +99,10 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     public void run(Glob seriesStat, GlobRepository remote) throws Exception {
       Glob periodStat =
         repository.findOrCreate(Key.create(PeriodSeriesStat.TYPE, seriesStat.get(SeriesStat.SERIES)));
-      double amount = periodStat.get(PeriodSeriesStat.AMOUNT) + seriesStat.get(SeriesStat.AMOUNT);
-      double plannedAmount = periodStat.get(PeriodSeriesStat.PLANNED_AMOUNT) + seriesStat.get(SeriesStat.PLANNED_AMOUNT);
+      double amount = periodStat.get(PeriodSeriesStat.AMOUNT) +
+                      Utils.zeroIfNull(seriesStat.get(SeriesStat.AMOUNT));
+      double plannedAmount = periodStat.get(PeriodSeriesStat.PLANNED_AMOUNT) +
+                             Utils.zeroIfNull(seriesStat.get(SeriesStat.PLANNED_AMOUNT));
       repository.update(periodStat.getKey(),
                         value(PeriodSeriesStat.AMOUNT, amount),
                         value(PeriodSeriesStat.PLANNED_AMOUNT, plannedAmount),

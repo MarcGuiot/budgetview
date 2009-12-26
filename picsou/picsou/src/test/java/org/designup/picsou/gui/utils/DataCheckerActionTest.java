@@ -137,8 +137,12 @@ public class DataCheckerActionTest extends TestCase {
     repository.create(Transaction.TYPE, value(Transaction.SERIES, 123),
                       value(Transaction.MONTH, monthId),
                       value(Transaction.DAY, 1),
+                      value(Transaction.BUDGET_MONTH, monthId),
+                      value(Transaction.BUDGET_DAY, 1),
                       value(Transaction.BANK_MONTH, monthId),
                       value(Transaction.BANK_DAY, 1),
+                      value(Transaction.POSITION_MONTH, monthId),
+                      value(Transaction.POSITION_DAY, 1),
                       value(Transaction.AMOUNT, 100.),
                       value(Transaction.ACCOUNT, -1),
                       value(Transaction.TRANSACTION_TYPE, TransactionType.DEPOSIT.getId()));
@@ -153,6 +157,8 @@ public class DataCheckerActionTest extends TestCase {
     for (String error : expectedError) {
       assertTrue(text, text.contains(error));
     }
-    assertFalse(checkerAction.doCheck(new StringBuilder()));
+    StringBuilder output = new StringBuilder();
+    boolean result = checkerAction.doCheck(output);
+    assertFalse(output.toString(), result);
   }
 }

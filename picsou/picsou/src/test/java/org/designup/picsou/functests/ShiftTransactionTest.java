@@ -25,15 +25,8 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     categorization.selectAllTransactions();
     categorization.selectEnvelopes();
     categorization.selectEnvelopes().selectNewSeries("An enveloppe");
-    categorization.checkTable(new Object[][]{
-      {"01/05/2008", "An enveloppe", "NON SHIFTABLE - FIRST MONTH", -10.00},
-      {"25/07/2008", "An enveloppe", "NON SHIFTABLE - LAST MONTH", -27.50},
-      {"10/06/2008", "An enveloppe", "NON SHIFTABLE - MIDDLE OF MONTH 1", -15.10},
-      {"15/06/2008", "An enveloppe", "NON SHIFTABLE - MIDDLE OF MONTH 2", -17.10},
-      {"20/06/2008", "An enveloppe", "NON SHIFTABLE - MIDDLE OF MONTH 3", -11.10},
-      {"21/06/2008", "An enveloppe", "SHIFTABLE TO NEXT", -77.50},
-      {"09/06/2008", "An enveloppe", "SHIFTABLE TO PREVIOUS", -13.00}
-    });
+    transactionDetails.checkBudgetDateNotVisible("SHIFTABLE TO NEXT");
+    transactionDetails.checkBudgetDateNotVisible("SHIFTABLE TO PREVIOUS");
 
     transactionDetails.checkShiftDisabled();
 
@@ -70,15 +63,8 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .validate();
     transactionDetails.checkShiftInverted();
 
-    categorization.checkTable(new Object[][]{
-      {"01/05/2008", "An enveloppe", "NON SHIFTABLE - FIRST MONTH", -10.00},
-      {"25/07/2008", "An enveloppe", "NON SHIFTABLE - LAST MONTH", -27.50},
-      {"10/06/2008", "An enveloppe", "NON SHIFTABLE - MIDDLE OF MONTH 1", -15.10},
-      {"15/06/2008", "An enveloppe", "NON SHIFTABLE - MIDDLE OF MONTH 2", -17.10},
-      {"20/06/2008", "An enveloppe", "NON SHIFTABLE - MIDDLE OF MONTH 3", -11.10},
-      {"01/07/2008", "An enveloppe", "SHIFTABLE TO NEXT", -77.50},
-      {"31/05/2008", "An enveloppe", "SHIFTABLE TO PREVIOUS", -13.00}
-    });
+    categorization.checkUserDate(transactionDetails, "01/07/2008", "SHIFTABLE TO NEXT");
+    categorization.checkUserDate(transactionDetails, "31/05/2008", "SHIFTABLE TO PREVIOUS");
 
     categorization.selectTransaction("SHIFTABLE TO NEXT");
     transactionDetails.checkShiftInverted();
@@ -90,15 +76,8 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     transactionDetails.unshift();
     transactionDetails.checkShiftEnabled();
 
-    categorization.checkTable(new Object[][]{
-      {"01/05/2008", "An enveloppe", "NON SHIFTABLE - FIRST MONTH", -10.00},
-      {"25/07/2008", "An enveloppe", "NON SHIFTABLE - LAST MONTH", -27.50},
-      {"10/06/2008", "An enveloppe", "NON SHIFTABLE - MIDDLE OF MONTH 1", -15.10},
-      {"15/06/2008", "An enveloppe", "NON SHIFTABLE - MIDDLE OF MONTH 2", -17.10},
-      {"20/06/2008", "An enveloppe", "NON SHIFTABLE - MIDDLE OF MONTH 3", -11.10},
-      {"21/06/2008", "An enveloppe", "SHIFTABLE TO NEXT", -77.50},
-      {"09/06/2008", "An enveloppe", "SHIFTABLE TO PREVIOUS", -13.00}
-    });
+    transactionDetails.checkBudgetDateNotVisible("SHIFTABLE TO NEXT");
+    transactionDetails.checkBudgetDateNotVisible("SHIFTABLE TO PREVIOUS");
   }
 
   public void testShiftingToNextOrPreviousYear() throws Exception {
@@ -125,12 +104,9 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .validate();
     transactionDetails.checkShiftInverted();
 
-    categorization.checkTable(new Object[][]{
-      {"15/12/2008", "", "NON SHIFTABLE 1", -10.0},
-      {"15/01/2008", "", "NON SHIFTABLE 2", -15.1},
-      {"01/01/2009", "", "SHIFTABLE TO NEXT", -77.5},
-      {"31/12/2008", "", "SHIFTABLE TO PREVIOUS", -13.0}
-    });
+
+    categorization.checkUserDate(transactionDetails, "01/01/2009", "SHIFTABLE TO NEXT");
+    categorization.checkUserDate(transactionDetails, "31/12/2008", "SHIFTABLE TO PREVIOUS");
   }
 
   public void testAmountsAreProperlyUpdatedDuringAShiftAndAnUnshift() throws Exception {
@@ -163,11 +139,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTransaction("Monoprix / End of june");
     transactionDetails.shift();
-    categorization.checkTable(new Object[][]{
-      {"01/07/2008", "Groceries", "MONOPRIX / END OF JUNE", -10.0},
-      {"15/07/2008", "Groceries", "MONOPRIX / JULY", -12.0},
-      {"15/06/2008", "Groceries", "MONOPRIX / JUNE", -15.0},
-    });
+    categorization.checkUserDate(transactionDetails, "01/07/2008", "MONOPRIX / END OF JUNE");
 
     // Account positions are unchanged
     views.selectHome();
@@ -227,11 +199,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRow(2);
     categorization.selectEnvelopes().selectNewSeries("Leisures");
     transactionDetails.shift();
-    categorization.checkTable(new Object[][]{
-      {"15/07/2008", "Groceries", "MONOPRIX / JULY", -12.0},
-      {"25/06/2008", "Groceries", "MONOPRIX / JUNE", -15.0},
-      {"01/07/2008", "Leisures", "MONOPRIX / JUNE", -10.0},
-    });
+    transactionDetails.checkBudgetDate("01/07/2008");
 
     // Account positions are unchanged
     views.selectHome();
@@ -289,10 +257,8 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .validate();
     transactionDetails.checkShiftEnabled();
     transactionDetails.shift();
-    categorization.checkTable(new Object[][]{
-      {"05/07/2008", "", "MONOPRIX / JULY", -30.0},
-      {"01/07/2008", "Groceries", "MONOPRIX / JUNE", -25.0},
-    });
+    categorization.checkUserDate(transactionDetails, "01/07/2008", "MONOPRIX / JUNE");
+
     transactionDetails.unshift();
     categorization.setUncategorized();
 
@@ -313,10 +279,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .validate();
     transactionDetails.shift();
 
-    categorization.checkTable(new Object[][]{
-      {"30/06/2008", "Groceries", "MONOPRIX / JULY", -30.0},
-      {"25/06/2008", "", "MONOPRIX / JUNE", -25.0},
-    });
+    categorization.checkUserDate(transactionDetails, "30/06/2008", "MONOPRIX / JULY");
   }
 
   public void testShiftingAMirroredTransaction() throws Exception {
@@ -347,8 +310,8 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .add("01/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", -55.00, "Epargne")
       .add("05/07/2008", TransactionType.PLANNED, "Planned: Epargne", "", 55.00, "Epargne")
       .add("05/07/2008", TransactionType.PLANNED, "Planned: Epargne", "", -55.00, "Epargne")
-      .add("30/06/2008", "05/07/2008", TransactionType.VIREMENT, "EPARGNE / JULY", "", 30.00, "Epargne")
-      .add("30/06/2008", "05/07/2008", TransactionType.PRELEVEMENT, "EPARGNE / JULY", "", -30.00, "Epargne")
+      .add("05/07/2008", TransactionType.VIREMENT, "EPARGNE / JULY", "", 30.00, "Epargne")
+      .add("05/07/2008", TransactionType.PRELEVEMENT, "EPARGNE / JULY", "", -30.00, "Epargne")
       .add("25/06/2008", TransactionType.VIREMENT, "EPARGNE / JUNE", "", 25.00, "Epargne")
       .add("25/06/2008", TransactionType.PRELEVEMENT, "EPARGNE / JUNE", "", -25.00, "Epargne")
       .check();
@@ -365,11 +328,12 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     transactionDetails.shift();
 
+    categorization.checkUserDate(transactionDetails, "01/01/2008", "ORANGE");
     views.selectData();
     transactions
       .initContent()
       .add("03/01/2008", TransactionType.VIREMENT, "MCDO", "", 15.00)
-      .add("01/01/2008", "25/12/2007", TransactionType.PRELEVEMENT, "ORANGE", "", -50.00)
+      .add("25/12/2007", TransactionType.PRELEVEMENT, "ORANGE", "", -50.00)
       .check();
 
     views.selectCategorization();
@@ -382,6 +346,8 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .add("03/01/2008", TransactionType.VIREMENT, "MCDO", "", 15.00)
       .add("25/12/2007", TransactionType.PRELEVEMENT, "ORANGE", "", -50.00)
       .check();
+    views.selectCategorization();
+    transactionDetails.checkBudgetDateNotVisible("ORANGE");
   }
 
   public void testMonthUndoRedo() throws Exception {
@@ -401,9 +367,12 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     transactions
       .initContent()
       .add("03/01/2008", TransactionType.VIREMENT, "MCDO", "", 15.00)
-      .add("01/01/2008", "25/12/2007", TransactionType.PRELEVEMENT, "ORANGE", "", -50.00)
+      .add("25/12/2007", TransactionType.PRELEVEMENT, "ORANGE", "", -50.00)
       .check();
+    views.selectCategorization();
+    categorization.checkUserDate(transactionDetails, "01/01/2008", "ORANGE");
 
+    views.selectData();
     operations.undo();
     transactions
       .initContent()
@@ -414,7 +383,9 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     transactions
       .initContent()
       .add("03/01/2008", TransactionType.VIREMENT, "MCDO", "", 15.00)
-      .add("01/01/2008", "25/12/2007", TransactionType.PRELEVEMENT, "ORANGE", "", -50.00)
+      .add("25/12/2007", TransactionType.PRELEVEMENT, "ORANGE", "", -50.00)
       .check();
+    views.selectCategorization();
+    categorization.checkUserDate(transactionDetails, "01/01/2008", "ORANGE");
   }
 }

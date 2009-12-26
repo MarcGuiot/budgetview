@@ -7,6 +7,7 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.LocalGlobRepository;
+import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
 
@@ -213,6 +214,13 @@ public class DefaultGlobRepositoryIndexingTest extends DefaultGlobRepositoryTest
       GlobList globs = result.getGlobs();
       assertEquals(ids.size(), globs.size());
       TestUtils.assertSetEquals(ids, globs.getValueSet(DummyObjectIndex.ID));
+      final List<Integer> actual = new ArrayList<Integer>();
+      result.saveApply(new GlobFunctor() {
+        public void run(Glob glob, GlobRepository repository) throws Exception {
+          actual.add(glob.get(DummyObjectIndex.ID));
+        }
+      }, repository);
+      TestUtils.assertSetEquals(ids, actual);
     }
   }
 

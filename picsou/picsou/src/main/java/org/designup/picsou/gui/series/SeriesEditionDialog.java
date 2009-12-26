@@ -97,7 +97,7 @@ public class SeriesEditionDialog {
     localRepository.addTrigger(new ResetAllBudgetIfInAutomaticAndNoneAccountAreImported());
     addSeriesCreationTriggers(localRepository, new ProfileTypeSeriesTrigger.UserMonth() {
       public Set<Integer> getMonthWithTransaction() {
-        return selectedTransactions.getSortedSet(Transaction.MONTH);
+        return selectedTransactions.getSortedSet(Transaction.BUDGET_MONTH);
       }
     }, repository);
     localRepository.addTrigger(new UpdateUpdateMirror());
@@ -275,15 +275,15 @@ public class SeriesEditionDialog {
         GlobList transactions =
           localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, currentSeries.get(Series.ID))
             .getGlobs().filterSelf(isFalse(Transaction.PLANNED), localRepository)
-            .sort(Transaction.MONTH);
+            .sort(Transaction.BUDGET_MONTH);
         Glob firstMonth = transactions.getFirst();
         if (firstMonth == null) {
           return currentSeries.get(Series.LAST_MONTH);
         }
         if (currentSeries.get(Series.LAST_MONTH) != null) {
-          return Math.min(firstMonth.get(Transaction.MONTH), currentSeries.get(Series.LAST_MONTH));
+          return Math.min(firstMonth.get(Transaction.BUDGET_MONTH), currentSeries.get(Series.LAST_MONTH));
         }
-        return firstMonth.get(Transaction.MONTH);
+        return firstMonth.get(Transaction.BUDGET_MONTH);
       }
     };
     builder.add("seriesStartDateChooser", startDateChooserAction);
@@ -303,15 +303,15 @@ public class SeriesEditionDialog {
       protected Integer getMonthLimit() {
         GlobList transactions =
           localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, currentSeries.get(Series.ID))
-            .getGlobs().sort(Transaction.MONTH);
+            .getGlobs().sort(Transaction.BUDGET_MONTH);
         Glob lastMonth = transactions.getLast();
         if (lastMonth == null) {
           return currentSeries.get(Series.FIRST_MONTH);
         }
         if (currentSeries.get(Series.FIRST_MONTH) != null) {
-          return Math.max(lastMonth.get(Transaction.MONTH), currentSeries.get(Series.FIRST_MONTH));
+          return Math.max(lastMonth.get(Transaction.BUDGET_MONTH), currentSeries.get(Series.FIRST_MONTH));
         }
-        return lastMonth.get(Transaction.MONTH);
+        return lastMonth.get(Transaction.BUDGET_MONTH);
       }
     };
     builder.add("seriesEndDateChooser", endDateChooserAction);
@@ -447,7 +447,7 @@ public class SeriesEditionDialog {
       values.add(value(Series.IS_AUTOMATIC, false));
       SelectionService selectionService = directory.get(SelectionService.class);
       if (!selectedTransactions.isEmpty()) {
-        SortedSet<Integer> months = selectedTransactions.getSortedSet(Transaction.MONTH);
+        SortedSet<Integer> months = selectedTransactions.getSortedSet(Transaction.BUDGET_MONTH);
         values.add(value(Series.FIRST_MONTH, months.first()));
         values.add(value(Series.LAST_MONTH, months.last()));
         if (selectedTransactions.size() == 1) {
@@ -950,7 +950,7 @@ public class SeriesEditionDialog {
               if (budget.get(SeriesBudget.MONTH) > currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
                 repository.update(budget.getKey(),
                                   value(SeriesBudget.AMOUNT, 0.0),
-                                  value(SeriesBudget.OBSERVED_AMOUNT, 0.0));
+                                  value(SeriesBudget.OBSERVED_AMOUNT, null));
               }
             }
           }
