@@ -1,7 +1,8 @@
-package org.designup.picsou.gui.accounts;
+package org.designup.picsou.gui.accounts.utils;
 
 import org.designup.picsou.gui.description.AccountComparator;
 import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.accounts.utils.AccountRenderer;
 import org.designup.picsou.model.Account;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.model.Glob;

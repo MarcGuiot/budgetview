@@ -2,6 +2,7 @@ package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.components.TextDisplay;
+import org.designup.picsou.gui.budget.summary.BudgetAreaSummaryComputer;
 import org.designup.picsou.model.BudgetArea;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;

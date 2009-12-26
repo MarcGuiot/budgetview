@@ -2,7 +2,7 @@ package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
-import org.designup.picsou.gui.budget.SavingsBudgetSummaryView;
+import org.designup.picsou.gui.budget.summary.SavingsBudgetSummaryView;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Month;

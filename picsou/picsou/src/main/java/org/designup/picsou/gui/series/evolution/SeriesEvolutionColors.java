@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.series.evolution;
 
-import org.designup.picsou.gui.budget.BudgetAreaSummaryComputer;
+import org.designup.picsou.gui.budget.summary.BudgetAreaSummaryComputer;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;

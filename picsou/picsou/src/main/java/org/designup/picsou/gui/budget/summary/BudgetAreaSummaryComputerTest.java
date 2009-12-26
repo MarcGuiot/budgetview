@@ -1,8 +1,9 @@
-package org.designup.picsou.gui.budget;
+package org.designup.picsou.gui.budget.summary;
 
 import junit.framework.TestCase;
-import org.designup.picsou.gui.components.charts.Gauge;
+import org.designup.picsou.gui.budget.BudgetAreaHeaderUpdater;
 import org.designup.picsou.gui.components.TextDisplay;
+import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.CurrentMonth;

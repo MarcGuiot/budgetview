@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.accounts;
+package org.designup.picsou.gui.budget.summary;
 
 import org.designup.picsou.gui.components.CloseAction;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
@@ -79,7 +79,7 @@ public class BudgetSummaryDetailsDialog {
   }
 
   private void updateTitle(GlobList months) {
-    title.setText(Lang.get("budgetSummaryDetails.title", 
+    title.setText(Lang.get("budgetSummaryDetails.title",
                            MonthListStringifier.toString(months.getValueSet(Month.ID)).toLowerCase()));
   }
 

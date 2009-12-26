@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.accounts;
+package org.designup.picsou.gui.accounts.utils;
 
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.model.Account;

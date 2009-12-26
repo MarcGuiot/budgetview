@@ -3,7 +3,7 @@ package org.designup.picsou.model;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
-import org.designup.picsou.gui.accounts.Day;
+import org.designup.picsou.gui.accounts.utils.Day;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.IntegerField;

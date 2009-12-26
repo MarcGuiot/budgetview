@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.description;
 
-import org.designup.picsou.gui.accounts.Day;
+import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.Field;

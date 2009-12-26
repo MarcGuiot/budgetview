@@ -2,7 +2,7 @@ package org.designup.picsou.importer;
 
 import org.apache.commons.collections.iterators.ReverseListIterator;
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.accounts.Day;
+import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.model.DeferredCardPeriod;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;

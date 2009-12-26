@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.accounts;
+package org.designup.picsou.gui.description;
 
 import junit.framework.TestCase;
 import static org.designup.picsou.model.Account.*;

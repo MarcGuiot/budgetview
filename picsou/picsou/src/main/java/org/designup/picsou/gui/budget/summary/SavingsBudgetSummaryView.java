@@ -1,23 +1,23 @@
-package org.designup.picsou.gui.budget;
+package org.designup.picsou.gui.budget.summary;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
-import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Account;
+import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.ChangeSet;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.metamodel.GlobType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -77,7 +77,7 @@ public class SavingsBudgetSummaryView extends View implements GlobSelectionListe
       Integer lastSelectedMonthId = selectedMonthIds.last();
       positionTitle.setText(getShortDate(lastSelectedMonthId));
     }
-    
+
     GlobList budgetStats =
       repository.getAll(SavingsBudgetStat.TYPE,
                         and(fieldEquals(SavingsBudgetStat.ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID),

@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.importer.edition;
 
-import org.designup.picsou.gui.accounts.Day;
+import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;

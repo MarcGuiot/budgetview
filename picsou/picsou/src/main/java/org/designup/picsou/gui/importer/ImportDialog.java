@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.importer;
 
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
-import org.designup.picsou.gui.accounts.Day;
+import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.gui.accounts.NewAccountAction;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;

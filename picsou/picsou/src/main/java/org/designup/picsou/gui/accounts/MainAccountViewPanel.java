@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.model.BudgetStat;
-import org.designup.picsou.gui.budget.BudgetSummaryView;
+import org.designup.picsou.gui.budget.summary.BudgetSummaryView;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobsPanelBuilder;

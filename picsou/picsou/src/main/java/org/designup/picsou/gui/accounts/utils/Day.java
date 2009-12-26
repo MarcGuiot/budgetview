@@ -1,10 +1,8 @@
-package org.designup.picsou.gui.accounts;
+package org.designup.picsou.gui.accounts.utils;
 
-import org.designup.picsou.model.Month;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
 public class Day {
