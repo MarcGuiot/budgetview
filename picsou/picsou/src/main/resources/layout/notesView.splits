@@ -8,14 +8,12 @@
 
     <style selector="label.amount" font="-,plain,10"/>
 
-    <ui name="introMessagePanel" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        borderWidth="1" cornerRadius="6"
-        topColor="notesView.introMessage.top"
-        bottomColor="notesView.introMessage.bottom"
-        borderColor="notesView.introMessage.border"/>
-    <style selector=".introMessage" ui="introMessagePanel" opaque="false" marginTop="20" margin="10" weightY="0"/>
+    <style selector=".introMessage"
+           opaque="true" background="notesView.introMessage.bg"
+           border="matte(1,0,1,0,notesView.introMessage.border)"
+           marginTop="20" marginBottom="0" weightY="0"/>
     <style selector=".introMessage label" margin="2" fill="horizontal" horizontalAlignment="center"
-           foreground="notesView.introMessage.text" font="-,bold,16"/>
+           foreground="notesView.introMessage.text" font="-,bold,24"/>
 
     <style selector="label.plannedAmount" foreground="" font="-,bold,10"/>
 
@@ -27,9 +25,9 @@
       <scrollPane styleClass="guidance" verticalUnitIncrement="10" forceVerticalScroll="true">
 
         <column styleClass="message">
-          <panel styleClass="introMessage">
+          <row styleClass="introMessage">
             <label text="$notesView.intro.title"/>
-          </panel>
+          </row>
           <htmlEditorPane text="$notesView.noData.text" name="noDataMessage"
                           hyperlinkListener="hyperlinkHandler"/>
           <button action="import"/>

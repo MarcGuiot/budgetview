@@ -4,6 +4,7 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseExpirationDialog;
@@ -40,11 +41,17 @@ public class DialogDemo {
     JFrame frame = window.getFrame();
     directory.add(JFrame.class, frame);
 
+    showImportDialog(repository, directory, frame);
 //    showHelpDialog(repository, directory, frame);
 //    showSeriesWizardDialog(repository, directory, frame);
-    showSeriesEditionDialog(repository, directory, frame);
+//    showSeriesEditionDialog(repository, directory, frame);
 //    showLicenseExpirationDialog(repository, directory, frame);
 //    showCategoriesEditionDialog(repository, directory);
+  }
+
+  private static void showImportDialog(GlobRepository repository, Directory directory, JFrame frame) {
+    ImportFileAction action = ImportFileAction.initForMenu("Import", repository, directory);
+    action.actionPerformed(null);
   }
 
   private static void showHelpDialog(GlobRepository repository, Directory directory, JFrame frame) {

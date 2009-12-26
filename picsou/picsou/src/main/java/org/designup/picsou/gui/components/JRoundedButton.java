@@ -103,6 +103,7 @@ public abstract class JRoundedButton extends JButton implements ColorChangeListe
     setOpaque(false);
     setBorderPainted(false);
     setFocusPainted(false);
+    setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
   }
 
   public void colorsChanged(ColorLocator colorSource) {

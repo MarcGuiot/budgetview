@@ -10,7 +10,12 @@
   <column>
     <grid marginLeft="5" marginRight="10">
 
-      <button ref="openDetailsButton" styleClass="roundedButton" gridPos="(0,0,1,2)"/>
+      <button ref="openDetailsButton"
+              styleClass="roundedButton" gridPos="(0,0,1,2)"
+        icon="button_magnifier.png"
+        rolloverIcon="button_magnifier_rollover.png"
+        pressedIcon="button_magnifier.png"
+        disabledIcon="button_magnifier_disabled.png"/>
 
       <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle" gridPos="(1,0)"/>
       <label ref="balanceLabel" styleClass="totalAmount" gridPos="(1,1)"

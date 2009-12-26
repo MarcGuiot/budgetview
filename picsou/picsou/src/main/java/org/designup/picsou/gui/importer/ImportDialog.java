@@ -334,11 +334,13 @@ public class ImportDialog {
           dialog.setVisible(false);
         }
       });
+      fileField.requestFocus();
       dialog.setModal(true);
       dialog.setVisible(true);
     }
     else {
       dialog.pack();
+      fileField.requestFocus();
       dialog.showCentered();
     }
   }

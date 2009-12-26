@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.components.JRoundedButton;
 import org.designup.picsou.gui.accounts.BudgetSummaryDetailsDialog;
+import org.designup.picsou.gui.components.JRoundedButton;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.utils.AmountColors;
@@ -18,7 +18,6 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
-import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
@@ -78,12 +77,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   }
 
   private JButton createOpenDetailsButton() {
-    JRoundedButton button = JRoundedButton.createCircle(new OpenDetailsAction(directory), colorService);
-    ImageLocator imageLocator = directory.get(ImageLocator.class);
-    button.setIcon(imageLocator.get("button_magnifier.png"));
-    button.setPressedIcon(imageLocator.get("button_magnifier.png"));
-    button.setDisabledIcon(imageLocator.get("button_magnifier_disabled.png"));
-    return button;
+    return JRoundedButton.createCircle(new OpenDetailsAction(directory), colorService);
   }
 
   private HyperlinkButtonUI createHyperlinkButtonUI() {

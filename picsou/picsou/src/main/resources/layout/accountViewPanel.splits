@@ -25,8 +25,9 @@
                 <button action="gotoWebsite" gridPos="(0,1)" anchor="west" styleClass="website"/>
                 <button ref="accountPosition" gridPos="(1,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
                 <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east" styleClass="subitem"/>
-                <label ref="estimatedAccountPosition" gridPos="(2,0)" tooltipText="$budgetSummaryView.estimated.tooltip"
-                       anchor="east" styleClass="subitem" marginLeft="10"/>
+                <label ref="estimatedAccountPosition" gridPos="(2,0)"
+                       tooltipText="$budgetSummaryView.estimated.tooltip"
+                       anchor="east" styleClass="subitem" font="-,plain,12" marginLeft="10"/>
                 <label ref="estimatedAccountPositionDate" gridPos="(2,1)"
                        anchor="east" styleClass="subitem" marginLeft="10"
                        autoHideSource="estimatedAccountPosition"/>

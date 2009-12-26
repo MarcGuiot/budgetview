@@ -13,13 +13,13 @@
 
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(500,380)">
+  <panel styleClass="dialog" preferredSize="(460,320)">
 
     <column styleClass="innerDialog">
 
       <label text="$import.step1.title" styleClass="title"/>
 
-      <htmlEditorPane text="$import.step1.select.file"/>
+      <htmlEditorPane text="$import.step1.select.file" marginTop="15"/>
 
       <row margin="5" defaultAnchor="center">
         <textField ref="fileField" marginRight="10" anchor="center" weightX="100"/>
@@ -30,21 +30,18 @@
         <label ref="importMessage" styleClass="errorMessage" border="empty(0,0,10,0)"/>
       </panel>
 
-      <panel styleClass="dialogBlock">
-        <column margin="20">
+      <column styleClass="separator" marginTop="20">
 
-          <textArea styleClass="multiLineLabel" text="$import.step1.bank.message"/>
+        <textArea styleClass="multiLineLabel" text="$import.step1.bank.message" font="-,plain,11" marginTop="10"/>
+        <row margin="5" defaultAnchor="center">
+          <comboBox ref="banks" marginRight="10" anchor="center" weightX="100"/>
+          <button action="openUrl" anchor="west"/>
+        </row>
 
-          <row margin="5" defaultAnchor="center">
-            <comboBox ref="banks" marginRight="10" anchor="center" weightX="100"/>
-            <button action="openUrl" anchor="west"/>
-          </row>
+        <htmlEditorPane text="$import.step1.format.advice" marginTop="10" font="-,plain,11"
+                        styleClass="multiLineLabel" hyperlinkListener="hyperlinkHandler"/>
 
-          <htmlEditorPane text="$import.step1.format.advice" marginTop="10"
-                          styleClass="multiLineLabel" hyperlinkListener="hyperlinkHandler"/>
-
-        </column>
-      </panel>
+      </column>
 
       <filler fill="vertical"/>
 

@@ -63,6 +63,10 @@
            icon="magnifier_small.png" rolloverIcon="magnifier_rollover.png" pressedIcon="magnifier_rollover.png"
            preferredSize="(18,18)" text="" opaque="false" borderPainted="false"/>
 
+    <style selector="button.remove" weightX="0"
+           text="" opaque="false" borderPainted="false" icon="button_delete.png"
+           cursor="hand"/>
+
     <style selector="cards" opaque="false"/>
 
     <style selector="radioButton" opaque="false"/>
@@ -168,7 +172,7 @@
         bottomColor="mainpanel.message.bottom"
         borderColor="mainpanel.message.border"/>
     <style selector=".mainPanelMessage" ui="mainPanelMessage"
-           fill="horizontal" anchor="center" weightX="100" weightY="0" marginLeft="100" marginRight="100"
+           fill="horizontal" anchor="center" weightX="100" weightY="0" marginLeft="10" marginRight="10"
            border="empty(0,0,10,0)"/>
     <style selector=".mainPanelMessage htmlEditorPane" fill="horizontal" anchor="center"
            foreground="mainpanel.message" weightX="10" weightY="0" border="empty(5,20,5,0)"/>

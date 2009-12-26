@@ -21,7 +21,7 @@
       <filler fill="vertical" weightY="10"/>
 
       <panel ui="loginPanel" name="loginPanel" opaque="false" anchor="center" fill="none" weightY="20"
-             preferredSize="(600,600)">
+             preferredSize="(600,630)">
 
         <column margin="20" anchor="center" fill="none" marginBottom="20">
 
@@ -67,9 +67,11 @@
 
                 </column>
 
-                <htmlEditorPane ref="message" minimumSize="(200,30)" preferredSize="(200,40)"/>
+                <panel minimumSize="(200,40)" preferredSize="(200,40)" marginTop="5" opaque="false">
+                  <htmlEditorPane ref="message"/>
+                </panel>
 
-                <button ref="userLogin" fill="none" anchor="center"/>
+                <button ref="userLogin" fill="none" anchor="center" marginTop="5"/>
 
                 <filler fill="vertical"/>
 
@@ -102,7 +104,7 @@
             <component ref="progressPanel" opaque="false" visible="false"/>
           </panel>
 
-          <label text="$login.security.message" styleClass="centered" marginTop="10" marginBottom="5"/>
+          <label text="$login.security.message" styleClass="centered" marginTop="10" marginBottom="0"/>
 
         </column>
 
