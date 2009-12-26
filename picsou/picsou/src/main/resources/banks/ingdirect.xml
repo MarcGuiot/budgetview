@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="ING Direct" id="10">
+  <bank name="ING Direct" downloadUrl="https://secure.ingdirect.fr" id="10">
     <bankEntity id="14559"/>
   </bank>
 </globs>

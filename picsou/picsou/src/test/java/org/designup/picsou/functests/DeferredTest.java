@@ -19,7 +19,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/27", -50, "Auchan")
       .addBankAccount("", -1, "1234", 1000, "2008/06/30")
       .addTransaction("2008/06/28", -550, "Prelevement")
-      .loadDeferredCard(28);
+      .loadDeferredCard("Card n. 1111", 28);
 
     views.selectCategorization();
     categorization.selectTransaction("Auchan")
@@ -53,7 +53,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/11/28", -30, "Prelevement novembre")
       .addTransaction("2009/10/28", 0, "Prelevement octobre")
       .addTransaction("2009/09/26", -35 - 15 /* -15 : transaction precedente non importé */, "Prelevement aout")
-      .loadDeferredCard(28);
+      .loadDeferredCard("Card n. 1111", 28);
 
     timeline.selectAll();
     views.selectData();
@@ -115,7 +115,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addCardAccount("1111", -100, "2009/12/07")
       .addTransaction("2009/11/30", -60, "Auchan")
       .addBankAccount("", -1, "1234", 1000, "2009/11/30")
-      .loadDeferredCard(28);
+      .loadDeferredCard("Card n. 1111", 28);
 
     timeline.selectAll();
     views.selectData();
@@ -226,7 +226,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/11/30", -60, "Auchan")
       .addBankAccount("", -1, "1234", 1000, "2009/11/30")
       .addTransaction("2009/11/28", -30, "Prelevement novembre")
-      .loadDeferredCard(28);
+      .loadDeferredCard("Card n. 1111", 28);
     views.selectCategorization();
     categorization.selectTransaction("Auchan");
     transactionDetails.checkShiftDisabled();
@@ -248,7 +248,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/11/28", -30, "Prelevement novembre")
       .addTransaction("2009/10/28", 0, "Prelevement octobre")
       .addTransaction("2009/09/26", -35 - 15 /* -15 : transaction precedente non importé */, "Prelevement aout")
-      .loadDeferredCard(28);
+      .loadDeferredCard("Card n. 1111", 28);
 
     views.selectCategorization();
     categorization
@@ -280,7 +280,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/09/01", -130, "Auchan")
       .addBankAccount("", -1, "1234", 1000, "2009/11/30")
       .addTransaction("2009/11/28", -30, "Prelevement novembre")
-      .loadDeferredCard(28);
+      .loadDeferredCard("Card n. 1111", 28);
 
     views.selectCategorization();
     categorization

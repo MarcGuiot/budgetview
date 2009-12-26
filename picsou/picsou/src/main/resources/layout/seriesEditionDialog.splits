@@ -19,17 +19,11 @@
           </scrollPane>
         </column>
 
-        <column weightX="7" preferredSize="(560,520)">
-          <grid weightY="0.1">
-            <label gridPos="(0,0)" text="$seriesEdition.name" styleClass="formLabel" marginBottom="4"/>
-            <textField gridPos="(1,0)" ref="nameField" marginBottom="4"/>
-
-            <label gridPos="(0,1)" text="$seriesEdition.description" styleClass="formLabel" marginBottom="4"/>
-            <scrollPane gridPos="(1,1)" minimumSize="(40,60)"
-                        horizontalScrollbarPolicy="asNeeded" verticalScrollbarPolicy="never">
-              <textArea ref="descriptionField" marginBottom="4" lineWrap="true"/>
-            </scrollPane>
-          </grid>
+        <column weightX="7" preferredSize="(560,460)">
+          <row weightY="0.1">
+            <label text="$seriesEdition.name" styleClass="formLabel" marginBottom="4"/>
+            <textField ref="nameField" marginBottom="4"/>
+          </row>
 
           <column autoHideSource="fromAccount" border="empty(10 ,0,15,0)">
             <label text="$seriesEdition.accountSelection" styleClass="separatorTitle"/>
@@ -134,7 +128,18 @@
               </row>
             </tab>
             <tab title="$seriesEdition.tabs.subseries">
-              <panel ref="subSeriesEditionPanel"/>
+              <panel ref="subSeriesEditionPanel" border="empty(10)"/>
+            </tab>
+            <tab title="$seriesEdition.tabs.description">
+              <row border="empty(10)">
+                <label text="$seriesEdition.description" styleClass="formLabel" anchor="top"/>
+                <scrollPane minimumSize="(40,60)"
+                            horizontalScrollbarPolicy="asNeeded"
+                            verticalScrollbarPolicy="never"
+                            marginBottom="5">
+                  <textArea ref="descriptionField" lineWrap="true"/>
+                </scrollPane>
+              </row>
             </tab>
           </tabs>
 

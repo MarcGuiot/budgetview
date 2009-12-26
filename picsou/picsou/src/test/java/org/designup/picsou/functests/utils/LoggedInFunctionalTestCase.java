@@ -4,6 +4,7 @@ import org.designup.picsou.functests.FunctionalTestCase;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
@@ -38,7 +39,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected VersionInfoChecker versionInfo;
   protected NavigationViewChecker navigation;
   protected NotesChecker notes;
-  protected BackupChecker backupChecker;
+  protected BackupChecker backup;
 
   protected GlobRepository repository;
 
@@ -47,7 +48,8 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   private boolean deleteLocalPrevayler = true;
   private String localPrevaylerPath = FunctionalTestCase.getUrl();
 
-  static public String SOCIETE_GENERALE = "Société Générale";
+  public static String SOCIETE_GENERALE = "Société Générale";
+
   private boolean notRegistered = false;
   protected String user = "anonymous";
   protected String password = "password";
@@ -55,6 +57,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected void setUp() throws Exception {
     super.setUp();
     TimeService.setCurrentDate(currentDate);
+    BrowsingService.setDummyBrowser(true);
 
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, localPrevaylerPath);
     System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "");
@@ -80,8 +83,8 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
     mainWindow = getMainWindow();
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
-    LoginChecker loginChecker = new LoginChecker(mainWindow);
-    loginChecker.logNewUser(user, password);
+    LoginChecker login = new LoginChecker(mainWindow);
+    login.logNewUser(user, password);
     initCheckers();
     if (!notRegistered) {
       LicenseActivationChecker.enterLicense(mainWindow, "admin", "zz");
@@ -108,7 +111,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     mainAccounts = new MainAccountViewChecker(mainWindow);
     savingsAccounts = new SavingsAccountViewChecker(mainWindow);
     operations = new OperationChecker(mainWindow);
-    backupChecker = new BackupChecker(operations);
+    backup = new BackupChecker(operations);
     timeline = new TimeViewChecker(mainWindow);
     transactions = new TransactionChecker(mainWindow);
     transactionDetails = new TransactionDetailsChecker(mainWindow);
@@ -127,9 +130,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected void tearDown() throws Exception {
-
 //    GlobRepositoryValidator.run(repository);
-
 //    operations.checkOk();
     try {
       if (operations != null) {
@@ -154,7 +155,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     transactionDetails = null;
     transactionCreation = null;
     operations = null;
-    backupChecker = null;
+    backup = null;
     title = null;
     versionInfo = null;
     budgetView = null;

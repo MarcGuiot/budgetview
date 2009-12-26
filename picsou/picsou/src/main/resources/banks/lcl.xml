@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="LCL" id='8'>
+  <bank name="LCL" downloadUrl="https://particuliers.secure.lcl.fr" id='8'>
     <bankEntity id="30002"/>
 
     <transactionMatcher bankType="CHECK" ofxCheckNum="([\d]+)"

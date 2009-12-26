@@ -17,7 +17,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
   public void testStandardImport() throws Exception {
 
-    final String path = OfxBuilder
+    String path = OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
@@ -109,7 +109,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-
   public void testSameOperations() throws Exception {
     final String path = QifBuilder
       .init(this)
@@ -149,7 +148,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
-    
+
     views.selectHome();
     mainAccounts.edit("My SG account")
       .checkUpdateModeIsFileImport()
@@ -204,7 +203,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     ImportChecker importDialog = operations.openImportDialog()
       .setFilePath(path)
       .acceptFile()
-      .defineAccount(SOCIETE_GENERALE,"Main","12345");
+      .defineAccount(SOCIETE_GENERALE, "Main", "12345");
 
     importDialog
       .doImportWithBalance()
@@ -315,18 +314,18 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
 
-    ImportChecker importChecker = operations.openImportDialog()
+    ImportChecker importDialog = operations.openImportDialog()
       .setFilePath(path1)
       .acceptFile()
       .checkFileContent(new Object[][]{
         {"10/01/2006", "Menu K", "-1.10"}
       });
-    importChecker
+    importDialog
       .openAccount()
       .checkNoBankSelected()
       .setAccountNumber("0123546")
       .cancel();
-    importChecker.doImport()
+    importDialog.doImport()
       .checkMessageCreateFirstAccount()
       .skipFile();
   }
@@ -343,7 +342,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/10", 71.0, "Metro")
       .save();
 
-    ImportChecker importChecker = operations.openImportDialog()
+    ImportChecker importDialog = operations.openImportDialog()
       .setFilePath(fileName)
       .acceptFile()
       .checkFileContent(new Object[][]{
@@ -352,17 +351,20 @@ public class ImportTest extends LoggedInFunctionalTestCase {
         {"10/06/2008", "McDo", "10.00"},
         {"10/06/2008", "V'lib", "1.00"},
       });
-    importChecker
+
+    importDialog
       .openEntityEditionChecker()
-      .checkAccountsForEntity("666", new String[]{ "12345678a", "12345678b"})
+      .checkAccountsForEntity("666", new String[]{"12345678a", "12345678b"})
       .checkAccountsForEntity("777", new String[]{"1111222233334444", "87654321"})
       .selectBankForEntity("777", SOCIETE_GENERALE)
       .selectBankForEntity("666", SOCIETE_GENERALE)
       .validate();
-    importChecker.openCardType()
-      .selectDeferredCard(31)
+
+    importDialog.openCardType()
+      .selectDeferredCard("Card n. 1111-2222-3333-4444", 31)
       .validate();
-    importChecker.completeImport();
+
+    importDialog.completeImport();
 
     String secondFileName = OfxBuilder.init(this)
       .addBankAccount(666, 2048, "77777777", 77.0, "2008/06/11")
@@ -402,7 +404,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkUpdateModeIsFileImport()
       .cancel();
   }
-
 
   public void testSelectDateFormat() throws Exception {
     final String path1 = QifBuilder
@@ -509,7 +510,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-
   public void testImportFromDiferentAccountWithSameTransactionsInOfx() throws Exception {
     String fileName1 = OfxBuilder.init(this)
       .addBankAccount(666, 1024, "12345678a", 12.0, "2008/06/11")
@@ -561,35 +561,53 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .add("09/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.00)
       .check();
   }
-  
-  public void testImportOfxDeferredCard() throws Exception {
-    String fileName = OfxBuilder.init(this)
-      .addCardAccount("1111", 0., "2008/01/01")
-      .addTransaction("2008/01/01", 1000.00, "Salaire/oct")
-      .save();
-    ImportChecker importChecker = operations.openImportDialog();
-    importChecker.setFilePath(fileName)
-      .doImport()
-      .openCardType()
-      .selectDeferredCard(15)
-      .validate();
-  }
 
-  public void testImportOfxCreditCardShowMessage() throws Exception {
+  public void testImportOfxWithDeferredAndCreditCards() throws Exception {
     String fileName = OfxBuilder.init(this)
-      .addCardAccount("1111", 0., "2008/01/01")
-      .addTransaction("2008/01/01", 1000.00, "Salaire/oct")
+      .addCardAccount("1111", 0.00, "2008/01/01")
+      .addTransaction("2008/01/01", -100.00, "Auchan")
+      .addCardAccount("2222", 0.00, "2008/01/01")
+      .addTransaction("2008/01/15", -200.00, "FNAC")
       .save();
-    ImportChecker importChecker = operations.openImportDialog();
-    importChecker.setFilePath(fileName)
-      .acceptFile()
+
+    ImportChecker importDialog = operations.openImportDialog()
+      .setFilePath(fileName)
+      .doImport();
+
+    importDialog
       .openCardType()
-      .selectCreditCard()
+      .checkValidateDisabled()
+      .selectDeferredCard("Card n. 1111", 15)
+      .checkValidateDisabled()
+      .selectCreditCard("Card n. 2222")
+      .checkValidateEnabled()
       .validate();
-    importChecker.doImport();
+
+    importDialog.doImport();
 
     views.selectData();
     transactions.initContent()
+      .add("01/01/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", -100.00)
       .check();
+  }
+
+  public void testImportDialogGivesAccessToBankSites() throws Exception {
+
+    String path1 = OfxBuilder
+      .init(this)
+      .addBankAccount(30004, 12345, "00000111", 0.0, "2009/12/22")
+      .addTransaction("2009/12/21", -15.00, "Menu K")
+      .save();
+
+    operations.openImportDialog()
+      .checkContainsBankSites("BNP Paribas", "CIC", "Crédit Agricole", "ING Direct", "Société Générale")
+      .checkSelectedBankSite("-- Select your bank --")
+      .checkSiteAccessDisabled()
+      .selectBankSite("BNP Paribas")
+      .checkSiteAccessEnabled()
+      .checkSiteAccess("http://www.bnpparibas.net")
+      .setFilePath(path1)
+      .acceptFile()
+      .completeImport();
   }
 }

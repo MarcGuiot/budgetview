@@ -5,9 +5,9 @@ import org.designup.picsou.model.AccountCardType;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.views.GlobComboView;
@@ -36,7 +36,8 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   protected Directory localDirectory;
   private SelectionService selectionService;
   private AccountTypeSelector[] accountTypeSelectors;
-  private CardPanelEdition cardPanelEdition;
+  private CardTypeEditionPanel cardTypeEditionPanel;
+  private GlobTextEditor nameField;
 
   public AbstractAccountPanel(T repository, Directory parentDirectory, JLabel messageLabel) {
     this.localRepository = repository;
@@ -49,10 +50,10 @@ public class AbstractAccountPanel<T extends GlobRepository> {
 
   protected void createComponents(GlobsPanelBuilder builder, Window dialog) {
 
-    cardPanelEdition = new CardPanelEdition(dialog, localRepository, localDirectory);
+    cardTypeEditionPanel = new CardTypeEditionPanel(dialog, localRepository, localDirectory);
     accountTypeSelectors = createTypeSelectors(localRepository);
 
-    builder.add("cardPanelEdition", cardPanelEdition.createComponent());
+    builder.add("cardTypeEditionPanel", cardTypeEditionPanel.createComponent());
     
     builder.addCombo("accountBank", Bank.TYPE)
       .setShowEmptyOption(true)
@@ -76,14 +77,13 @@ public class AbstractAccountPanel<T extends GlobRepository> {
       }
     });
 
-    builder.addEditor("name", Account.NAME).setNotifyOnKeyPressed(true);
+    nameField = builder.addEditor("name", Account.NAME).setNotifyOnKeyPressed(true);
     builder.addEditor("number", Account.NUMBER).setNotifyOnKeyPressed(true);
     builder.add("type", createAccountTypeCombo());
 
     messageSavingsWarning = new JLabel(Lang.get("account.savings.warning"));
     builder.add("savingsMessageWarning", messageSavingsWarning);
     messageSavingsWarning.setVisible(false);
-
 
     positionEditor = builder.addEditor("position", Account.POSITION).setNotifyOnKeyPressed(true).getComponent();
 
@@ -136,7 +136,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
 
   public void setAccount(Glob account) {
     this.currentAccount = account;
-    cardPanelEdition.setAccount(account);
+    cardTypeEditionPanel.setAccount(account);
     updateCombo();
     if (account != null) {
       selectionService.select(account);
@@ -155,12 +155,13 @@ public class AbstractAccountPanel<T extends GlobRepository> {
 
   public boolean check() {
     if (panel.isVisible()) {
-      if (currentAccount.get(Account.BANK) == null) {
-        setMessage("account.error.missing.bank");
-        return false;
-      }
       if (Strings.isNullOrEmpty(currentAccount.get(Account.NAME))) {
         setMessage("account.error.missing.name");
+        nameField.getComponent().requestFocus();
+        return false;
+      }
+      if (currentAccount.get(Account.BANK) == null) {
+        setMessage("account.error.missing.bank");
         return false;
       }
     }
@@ -181,7 +182,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
         }
       },
 
-      new AccountTypeSelector("account.type.card.credit") {
+      new AccountTypeSelector("accountCardType.credit") {
         protected void apply() {
           repository.update(currentAccount.getKey(), Account.ACCOUNT_TYPE, AccountType.MAIN.getId());
           repository.update(currentAccount.getKey(), Account.CARD_TYPE, AccountCardType.CREDIT.getId());
@@ -192,7 +193,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
                  Utils.equal(account.get(Account.CARD_TYPE), AccountCardType.CREDIT.getId());
         }
       },
-      new AccountTypeSelector("account.type.card.deferred") {
+      new AccountTypeSelector("accountCardType.deferred") {
         protected void apply() {
           repository.update(currentAccount.getKey(), Account.ACCOUNT_TYPE, AccountType.MAIN.getId());
           repository.update(currentAccount.getKey(), Account.CARD_TYPE, AccountCardType.DEFERRED.getId());

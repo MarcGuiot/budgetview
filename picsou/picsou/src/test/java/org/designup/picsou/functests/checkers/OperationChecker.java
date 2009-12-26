@@ -63,13 +63,13 @@ public class OperationChecker {
     importFile(new String[]{name}, null, null, null);
   }
 
-  public void importOfxWithDeferred(String name, int day) {
+  public void importOfxWithDeferred(String fileName, String cardAccountName, int day) {
     ImportChecker importChecker = openImportDialog()
-      .setFilePath(name)
+      .setFilePath(fileName)
       .acceptFile();
     importChecker
       .openCardType()
-      .selectDeferredCard(day)
+      .selectDeferredCard(cardAccountName, day)
       .validate();
     importChecker.doImport();
   }
@@ -84,7 +84,7 @@ public class OperationChecker {
       .setAccountNumber("1111")
       .setAccountName("card 1111")
       .setAsDeferredCard()
-      .setDayFromBegining(day)
+      .setFromBeginningDay(day)
       .validate();
     importChecker.doImportWithBalance()
       .setAmountAndEnter(position);

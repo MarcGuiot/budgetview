@@ -1,10 +1,7 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.AccountType;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
 
 public abstract class AccountTypeSelector {
   private String label;
@@ -20,5 +17,4 @@ public abstract class AccountTypeSelector {
   public String toString() {
     return label;
   }
-  
 }

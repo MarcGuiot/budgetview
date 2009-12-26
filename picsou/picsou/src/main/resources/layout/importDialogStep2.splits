@@ -5,9 +5,10 @@
   <styles>
     <style selector="label#fileName"
            fill="none" anchor="left" font="-,bold,12" marginBottom="5"/>
-
     <style selector="scrollPane" marginBottom="10"/>
-
+    <style selector=".additionalActionMessage" foreground="$dialog.text.error" anchor="left"
+           opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"/>
+    <style selector="label.additionalActionButton" anchor="center" fill="none"/>
   </styles>
 
   <panel styleClass="dialog" preferredSize="(550,550)">
@@ -21,17 +22,21 @@
 
       <label text="$import.file.content" styleClass="header"/>
 
-      <scrollPane maximumSize="(400,300)">
+      <scrollPane maximumSize="(400,300)" weightY="500">
         <table ref="table"/>
       </scrollPane>
 
       <panel ref="dateSelectionPanel"/>
 
       <repeat ref="additionalActions">
-        <row>
-          <label ref="message"/>
-          <button action="action"/>
-        </row>
+        <column>
+          <textArea ref="message" styleClass="additionalActionMessage"/>
+          <row marginTop="5">
+            <filler fill="horizontal"/>
+            <button action="action" styleClass="additionalActionButton"/>
+            <filler fill="horizontal"/>
+          </row>
+        </column>
       </repeat>
 
       <row>

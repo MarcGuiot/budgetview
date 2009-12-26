@@ -507,22 +507,19 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addCardAccount("123", 1000.00, "2008/08/19")
       .addTransaction("2008/08/06", -30.00, "FNAC")
-      .loadDeferredCard(29);
-
+      .loadDeferredCard("Card n. 123", 29);
 
     OfxBuilder.init(this)
       .addBankAccount("unknown 222", 222, "222", 1000.00, "2008/08/19")
       .addTransaction("2008/08/10", -50.00, "Virement")
       .loadUnknown("Autre");
 
+    // On veut juste verifier que l'import marche toujours.
     restartApplication();
-
-    // On veux juste verifier que l'import marche toujours.
     OfxBuilder.init(this)
       .addBankAccount("unknown 222", 222, "222", 1000.00, "2008/08/19")
       .addTransaction("2008/08/10", -50.00, "Virement")
       .load();
-
     mainAccounts.checkAccount("Account n. 222", 1000.00, "2008/08/10");
   }
 

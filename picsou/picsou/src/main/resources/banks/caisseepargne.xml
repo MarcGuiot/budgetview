@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="Caisse d'épargne" id='6'>
+  <bank name="Caisse d'épargne" downloadUrl="https://www.caisse-epargne.fr" id='6'>
     <bankEntity id="18645"/>
     <bankEntity id="13335"/>
     <bankEntity id="12225"/>

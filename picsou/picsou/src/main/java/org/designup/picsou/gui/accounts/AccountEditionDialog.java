@@ -1,14 +1,13 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.components.DatePicker;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.components.DatePicker;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
@@ -25,6 +24,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
   private PicsouDialog dialog;
   private GlobRepository parentRepository;
   private GlobLinkComboEditor updateModeCombo;
+  private JLabel titleLabel;
 
   public AccountEditionDialog(Window owner, final GlobRepository parentRepository, Directory directory) {
     super(createLocalRepository(parentRepository), directory, new JLabel());
@@ -34,6 +34,8 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountEditionDialog.splits",
                                                       localRepository, localDirectory);
+
+    titleLabel = builder.add("title", new JLabel()).getComponent();
 
     builder.add("message", messageLabel);
 
@@ -110,7 +112,6 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
       }
     });
 
-
     dialog.addPanelWithButtons(builder.<JPanel>load(),
                                new OkAction(), new CancelAction(),
                                new DeleteAction());
@@ -130,32 +131,34 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
     localRepository.reset(globs, Account.TYPE, DeferredCardDate.TYPE);
     setBalanceEditorVisible(false);
     updateModeCombo.setEnabled(!accountHasTransactions(account));
-    doShow(localRepository.get(account.getKey()));
-  }
-
-  private boolean accountHasTransactions(Glob account) {
-    return parentRepository.contains(Transaction.TYPE, GlobMatchers.linkedTo(account, Transaction.ACCOUNT));
+    doShow(localRepository.get(account.getKey()), false);
   }
 
   public void showWithNewAccount(AccountType type, AccountUpdateMode updateMode, boolean updateModeEditable) {
     updateModeCombo.setEnabled(updateModeEditable);
-    doShow(localRepository.create(Account.TYPE,
-                                  value(Account.ACCOUNT_TYPE, type.getId()),
-                                  value(Account.UPDATE_MODE, updateMode.getId())));
+    Glob newAccount = localRepository.create(Account.TYPE,
+                                             value(Account.ACCOUNT_TYPE, type.getId()),
+                                             value(Account.UPDATE_MODE, updateMode.getId()));
+    doShow(newAccount, true);
   }
 
-  private void doShow(Glob localAccount) {
+  public void showWithNewAccount() {
+    localRepository.reset(GlobList.EMPTY, Account.TYPE);
+    Glob account = localRepository.create(Account.TYPE, value(Account.NAME, Lang.get("account.default.current.name")));
+    setBalanceEditorVisible(false);
+    updateModeCombo.setEnabled(!accountHasTransactions(account));
+    doShow(localRepository.get(account.getKey()), true);
+  }
+
+  private void doShow(Glob localAccount, boolean creation) {
+    titleLabel.setText(Lang.get(creation ? "account.panel.title.creation" : "account.panel.title.edition"));
     setAccount(localAccount);
     dialog.pack();
     dialog.showCentered();
   }
 
-  public void createAndShow() {
-    localRepository.reset(GlobList.EMPTY, Account.TYPE);
-    Glob account = localRepository.create(Account.TYPE, value(Account.NAME, Lang.get("account.default.current.name")));
-    setBalanceEditorVisible(false);
-    updateModeCombo.setEnabled(!accountHasTransactions(account));
-    doShow(localRepository.get(account.getKey()));
+  private boolean accountHasTransactions(Glob account) {
+    return parentRepository.contains(Transaction.TYPE, GlobMatchers.linkedTo(account, Transaction.ACCOUNT));
   }
 
   private class OkAction extends AbstractAction {
@@ -250,10 +253,8 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
                                                                                          account.get(Account.ID)));
     for (Glob transaction : transactions) {
       repository.update(transaction.getKey(),
-                        FieldValue.value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                        FieldValue.value(Transaction.SUB_SERIES, null));
+                        value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+                        value(Transaction.SUB_SERIES, null));
     }
-
   }
-
 }

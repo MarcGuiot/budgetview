@@ -25,7 +25,7 @@
            foreground="help.messages.text" opaque="false"/>
     <style selector="scrollPane htmlEditorPane" border="empty(10)"/>
 
-    <style selector="htmlEditorPane.note"  font="-,plain,11"
+    <style selector="htmlEditorPane.note" font="-,plain,11"
            foreground="help.messages.text" opaque="false"/>
 
     <style selector="label.message"
@@ -65,7 +65,7 @@
 
     <style selector="cards" opaque="false"/>
 
-    <style selector="radioButton" opaque="false"/> 
+    <style selector="radioButton" opaque="false"/>
 
     <!-- Main panel -->
 
@@ -79,10 +79,10 @@
     <style selector=".innerDialog" opaque="false" margin="15" marginBottom="10"/>
     <style selector=".innerDialogContent" opaque="false" margin="15"/>
 
-    <style selector=".dialog label" foreground="dialog.bg.text" opaque="false"/>
-    <style selector=".dialog textArea" foreground="dialog.bg.text"/>
-    <style selector=".dialog htmlEditorPane" foreground="dialog.bg.text" opaque="false"/>
-    <style selector=".dialog checkBox" foreground="dialog.bg.text" opaque="false"/>
+    <style selector=".dialog label" foreground="dialog.text" opaque="false"/>
+    <style selector=".dialog textArea" foreground="dialog.text"/>
+    <style selector=".dialog htmlEditorPane" foreground="dialog.text" opaque="false"/>
+    <style selector=".dialog checkBox" foreground="dialog.text" opaque="false"/>
 
     <style selector=".dialog label.title"
            font="-,bold,20" foreground="dialog.title"
@@ -97,6 +97,11 @@
     <style selector="label.errorMessage" horizontalAlignment="center" foreground="#FF0000" font="-,bold,12"
            fill="horizontal" anchor="center"/>
 
+    <style selector="textArea.errorMessage"
+           opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"
+           foreground="#FF0000" font="-,bold,12"
+           fill="horizontal" anchor="center"/>
+
     <!-- Hyperlinks -->
 
     <ui name="hyperlinkButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"/>
@@ -106,7 +111,7 @@
     <ui name="hyperlinkButtonWithoutUnderline" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         underline="false"/>
     <style selector="button.hyperlinkWithoutUnderline" ui="hyperlinkButtonWithoutUnderline"
-           fill="none" anchor="right"  foreground="hyperlink"/>
+           fill="none" anchor="right" foreground="hyperlink"/>
 
     <!-- Blocks and inner blocks -->
 
@@ -142,7 +147,7 @@
     <style selector=".innerBlock .hyperlink" foreground="block.inner.hyperlink" font="-,plain,10"/>
 
     <style selector="label.alignActualAmount" foreground="block.inner.item" font="-,plain,12" marginLeft="5"/>
-    
+
     <style selector="button.amountLink" ui="hyperlinkButtonWithoutUnderline"
            fill="none" anchor="right" horizontalAlignment="right"
            foreground="block.amount.link" font="-,bold,11"/>
@@ -163,9 +168,10 @@
         bottomColor="mainpanel.message.bottom"
         borderColor="mainpanel.message.border"/>
     <style selector=".mainPanelMessage" ui="mainPanelMessage"
-           fill="horizontal" anchor="center" weightX="100" weightY="0" marginLeft="100" marginRight="100" border="empty(0,0,10,0)"/>
+           fill="horizontal" anchor="center" weightX="100" weightY="0" marginLeft="100" marginRight="100"
+           border="empty(0,0,10,0)"/>
     <style selector=".mainPanelMessage htmlEditorPane" fill="horizontal" anchor="center"
-           foreground="mainpanel.message" weightX="10"  weightY="0" border="empty(5,20,5,0)"/>
+           foreground="mainpanel.message" weightX="10" weightY="0" border="empty(5,20,5,0)"/>
     <style selector=".mainPanelMessage button" weightX="0" border="empty(5,0,5,20)"/>
 
     <!-- Icon buttons -->
@@ -252,6 +258,13 @@
     <!-- Split panes -->
     <style selector="horizontalSplit" showGripper="false" dividerSize="20" opaque="false"/>
     <style selector="verticalSplit" showGripper="false" dividerSize="10" opaque="false"/>
+
+
+    <!-- Inner dialog blocks -->
+    <ui name="dialogBlockUI" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="dialogBlock.bg" bottomColor="dialogBlock.bg" borderColor="dialogBlock.border"
+        borderWidth="2" cornerRadius="10"/>
+    <style selector=".dialogBlock" ui="dialogBlockUI" opaque="true"/>
 
   </styles>
 

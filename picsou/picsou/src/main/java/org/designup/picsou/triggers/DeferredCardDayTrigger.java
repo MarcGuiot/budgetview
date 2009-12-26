@@ -3,6 +3,7 @@ package org.designup.picsou.triggers;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatchers;
 
@@ -43,9 +44,8 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        GlobList periods = repository.getAll(DeferredCardPeriod.TYPE,
-                                             GlobMatchers.fieldEquals(DeferredCardPeriod.ACCOUNT, key.get(Account.ID)));
-        repository.delete(periods);
+        repository.delete(DeferredCardPeriod.TYPE,
+                          GlobMatchers.fieldEquals(DeferredCardPeriod.ACCOUNT, key.get(Account.ID)));
         repository.delete(repository.findByIndex(DeferredCardDate.ACCOUNT_AND_DATE,
                                                  DeferredCardDate.ACCOUNT, key.get(Account.ID)).getGlobs());
       }
@@ -132,9 +132,9 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
       GlobList globs = indexOnDeferredCardDay.findByIndex(DeferredCardDate.MONTH, startMonth).getGlobs();
       if (globs.isEmpty()) {
         repository.create(DeferredCardDate.TYPE,
-                          FieldValue.value(DeferredCardDate.ACCOUNT, accountId),
-                          FieldValue.value(DeferredCardDate.MONTH, startMonth),
-                          FieldValue.value(DeferredCardDate.DAY, 31));
+                          value(DeferredCardDate.ACCOUNT, accountId),
+                          value(DeferredCardDate.MONTH, startMonth),
+                          value(DeferredCardDate.DAY, 31));
       }
       else {
         deferredCardDays.remove(globs.getFirst());
@@ -175,6 +175,13 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
         repository.update(deferredCardDay.getKey(), DeferredCardDate.DAY,
                           Month.getDay(day, deferredCardDay.get(DeferredCardDate.MONTH), calendar));
       }
+//<<<<<<< local
+//=======
+//      else {
+//        day = currentPeriod.get(DeferredCardPeriod.DAY);
+//        currentPeriod = iterator.hasNext() ? iterator.next() : null;
+//      }
+//>>>>>>> other
     }
   }
 

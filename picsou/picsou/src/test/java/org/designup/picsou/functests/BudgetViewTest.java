@@ -962,7 +962,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDescriptionsAreUsedAsTooltips() throws Exception {
-
     views.selectBudget();
     budgetView.envelopes.createSeries()
       .setName("Groceries")

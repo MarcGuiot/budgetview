@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="AXA Banque" id="9">
+  <bank name="AXA Banque" downloadUrl="https://clients.axabanque.fr/client/" id="9">
     <bankEntity id="12548"/>
 
     <transactionMatcher bankType="([0-9]+)" qifP="CHEQUE"

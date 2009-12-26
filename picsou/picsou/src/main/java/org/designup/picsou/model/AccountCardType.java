@@ -11,6 +11,7 @@ import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
+import org.designup.picsou.utils.Lang;
 
 public enum AccountCardType implements GlobConstantContainer {
   NOT_A_CARD("NOT_A_CARD", 0),
@@ -48,7 +49,14 @@ public enum AccountCardType implements GlobConstantContainer {
     return Strings.toNiceLowerCase(name);
   }
 
-  public static AccountCardType get(int id) {
+  public String getLabel() {
+    return Lang.get("accountCardType." + Strings.toNiceLowerCase(name));
+  }
+
+  public static AccountCardType get(Integer id) {
+    if (id == null) {
+      return UNDEFINED;
+    }
     switch (id) {
       case 0:
         return NOT_A_CARD;

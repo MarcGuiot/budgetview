@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="Banque Populaire" id='11'>
+  <bank name="Banque Populaire" downloadUrl="http://www.banquepopulaire.fr" id='11'>
     <bankEntity id="10807"/>
 
     <transactionMatcher ofxName="CHEQUE"

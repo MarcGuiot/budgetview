@@ -5,6 +5,7 @@ import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.model.Transaction;
@@ -17,8 +18,8 @@ public class SeriesDeletionTrigger extends DefaultChangeSetListener {
       public void visitDeletion(Key seriesKey, FieldValues values) throws Exception {
         Integer seriesId = seriesKey.get(Series.ID);
 
-        repository.delete(repository.getAll(SeriesStat.TYPE,
-                                            GlobMatchers.linkedTo(seriesKey, SeriesStat.SERIES)));
+        repository.delete(SeriesStat.TYPE,
+                          GlobMatchers.linkedTo(seriesKey, SeriesStat.SERIES));
 
         repository.delete(repository.findByIndex(SeriesBudget.SERIES_INDEX, 
                                                  SeriesBudget.SERIES, seriesId).getGlobs());
@@ -26,14 +27,15 @@ public class SeriesDeletionTrigger extends DefaultChangeSetListener {
         GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
           .getGlobs();
         transactions.apply(new GlobFunctor() {
-            public void run(Glob glob, GlobRepository repository) throws Exception {
-              repository.update(glob.getKey(), FieldValue.value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                                FieldValue.value(Transaction.SUB_SERIES, null));
+            public void run(Glob transaction, GlobRepository repository) throws Exception {
+              repository.update(transaction.getKey(),
+                                value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+                                value(Transaction.SUB_SERIES, null));
             }
           }, repository);
 
-        repository.delete(repository.getAll(SubSeries.TYPE,
-                                            GlobMatchers.linkedTo(seriesKey, SubSeries.SERIES)));
+        repository.delete(SubSeries.TYPE,
+                          GlobMatchers.linkedTo(seriesKey, SubSeries.SERIES));
       }
     });
   }

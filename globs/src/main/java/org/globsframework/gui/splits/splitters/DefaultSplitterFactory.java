@@ -102,6 +102,9 @@ public class DefaultSplitterFactory implements SplitterFactory {
     else if (name.equals("progressBar")) {
       return createDefaultComponent(JProgressBar.class, "progressBar", properties, subSplitters);
     }
+    else if (name.equals("separator")) {
+      return createDefaultComponent(JSeparator.class, "separator", properties, subSplitters);
+    }
     else if (name.equals("tabs")) {
       return new TabGroupSplitter(properties, subSplitters);
     }

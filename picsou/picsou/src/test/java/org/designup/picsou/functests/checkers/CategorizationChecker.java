@@ -590,6 +590,11 @@ public class CategorizationChecker extends GuiChecker {
     selectUncategorized().setUncategorized();
   }
 
+  public void setUncategorized(String label) {
+    selectTableRows(getRowIndices(label));
+    setUncategorized();
+  }
+
   public CategorizationChecker setUncategorized() {
     selectUncategorized();
     getPanel().getButton("uncategorizeSelected").click();
@@ -624,6 +629,11 @@ public class CategorizationChecker extends GuiChecker {
 
   public CategorizationChecker showSelectedMonthsOnly() {
     selectTransactionFilterMode(TransactionFilteringMode.SELECTED_MONTHS);
+    return this;
+  }
+
+  public CategorizationChecker showRecentUncategorizedTransactionsOnly() {
+    selectTransactionFilterMode(TransactionFilteringMode.UNCATEGORIZED_LAST_THREE_MONTHS);
     return this;
   }
 

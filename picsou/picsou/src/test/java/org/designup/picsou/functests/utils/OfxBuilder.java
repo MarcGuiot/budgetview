@@ -2,13 +2,13 @@ package org.designup.picsou.functests.utils;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import org.designup.picsou.functests.checkers.OperationChecker;
-import org.designup.picsou.functests.checkers.ImportChecker;
 import org.designup.picsou.exporter.ofx.OfxExporter;
+import org.designup.picsou.functests.checkers.ImportChecker;
+import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.model.*;
 import static org.designup.picsou.model.Transaction.*;
-import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
+import org.globsframework.model.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
@@ -57,13 +57,13 @@ public class OfxBuilder {
   }
 
   public OfxBuilder addBankAccount(int bankEntityId, int branchId, String accountNumber, double position, String updateDate) {
-    return addBankAccount(Integer.toString(bankEntityId), branchId, accountNumber,position, updateDate);
+    return addBankAccount(Integer.toString(bankEntityId), branchId, accountNumber, position, updateDate);
   }
 
   public OfxBuilder addBankAccount(String bankEntity, int branchId, String accountNumber, double position, String updateDate) {
     Integer bankEntityId = BankEntity.find(bankEntity, repository);
     Integer bankId = Bank.GENERIC_BANK_ID;
-    if (bankEntityId != null){
+    if (bankEntityId != null) {
       bankId = BankEntity.getBank(repository.find(Key.create(BankEntity.TYPE, bankEntityId)), repository)
         .get(Bank.ID);
     }
@@ -168,16 +168,17 @@ public class OfxBuilder {
     operations.importOfxFile(fileName);
   }
 
-  public void loadDeferredCard(final int day) {
+  public void loadDeferredCard(String accountName, final int day) {
     save();
     ImportChecker importChecker = operations.openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
     importChecker
       .openCardType()
-      .selectDeferredCard(day)
+      .selectDeferredCard(accountName, day)
       .validate();
-    importChecker.doImport();
+    importChecker
+      .doImport();
   }
 
   public void loadUnknown(String bank) {

@@ -20,7 +20,7 @@ import java.util.Set;
 public class BorderLayoutComponent extends AbstractSplitter {
   private static final String BORDER_POS = "borderPos";
   private static final Set<String> BORDER_POS_VALUES =
-    new HashSet(Arrays.asList("center", "west", "east", "north", "south"));
+    new HashSet<String>(Arrays.asList("center", "west", "east", "north", "south"));
 
   public BorderLayoutComponent(SplitProperties properties, Splitter[] subSplitters) {
     super(properties, subSplitters);

@@ -1,7 +1,7 @@
 package org.globsframework.gui.editors;
 
-import org.globsframework.gui.utils.GuiComponentTestCase;
 import org.globsframework.gui.DummySelectionListener;
+import org.globsframework.gui.utils.GuiComponentTestCase;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObjectWithLinks;
 import static org.globsframework.model.FieldValue.value;
@@ -9,6 +9,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobBuilder;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.uispec4j.ComboBox;
 
 import java.util.Arrays;
@@ -25,7 +26,7 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
     Glob glob1 = repository.get(key1);
     Glob glob2 = repository.get(key2);
 
-    GlobLinkComboEditor editor = new GlobLinkComboEditor(DummyObject.LINK, repository, directory);
+    GlobLinkComboEditor editor = GlobLinkComboEditor.init(DummyObject.LINK, repository, directory);
     ComboBox combo = new ComboBox(editor.getComponent());
 
     assertTrue(combo.contentEquals("", "name1", "name2", "name3"));
@@ -61,7 +62,7 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
     Glob glob1 = repository.get(key1);
     Glob glob2 = repository.get(key2);
 
-    GlobLinkComboEditor editor = new GlobLinkComboEditor(DummyObject.LINK, repository, directory);
+    GlobLinkComboEditor editor = GlobLinkComboEditor.init(DummyObject.LINK, repository, directory);
     ComboBox combo = new ComboBox(editor.getComponent());
 
     selectionService.select(Arrays.asList(glob1, glob2), DummyObject.TYPE);
@@ -82,7 +83,7 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
                     "");
     repository.addChangeListener(changeListener);
     Glob glob1 = repository.get(Key.create(DummyObjectWithLinks.TYPE, 1));
-    GlobLinkComboEditor editor = new GlobLinkComboEditor(DummyObjectWithLinks.PARENT_LINK, repository, directory);
+    GlobLinkComboEditor editor = GlobLinkComboEditor.init(DummyObjectWithLinks.PARENT_LINK, repository, directory);
     ComboBox combo = new ComboBox(editor.getComponent());
 
     selectionService.select(glob1);
@@ -105,7 +106,7 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
                     "");
     repository.addChangeListener(changeListener);
     Glob glob1 = repository.get(Key.create(DummyObjectWithLinks.TYPE, 1));
-    GlobLinkComboEditor editor = new GlobLinkComboEditor(DummyObjectWithLinks.PARENT_LINK, repository, directory);
+    GlobLinkComboEditor editor = GlobLinkComboEditor.init(DummyObjectWithLinks.PARENT_LINK, repository, directory);
     ComboBox combo = new ComboBox(editor.getComponent());
 
     selectionService.select(glob1);
@@ -121,7 +122,7 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
     Glob glob1 = repository.get(key1);
     Glob glob2 = repository.get(key2);
 
-    GlobLinkComboEditor editor = new GlobLinkComboEditor(DummyObject.LINK, repository, directory);
+    GlobLinkComboEditor editor = GlobLinkComboEditor.init(DummyObject.LINK, repository, directory);
     ComboBox combo = new ComboBox(editor.getComponent());
 
     selectionService.select(glob1);
@@ -151,7 +152,7 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
                     "<dummyObject id='3' name='name3'/>");
     repository.addChangeListener(changeListener);
 
-    GlobLinkComboEditor editor = new GlobLinkComboEditor(DummyObject.LINK, repository, directory);
+    GlobLinkComboEditor editor = GlobLinkComboEditor.init(DummyObject.LINK, repository, directory);
     editor.setShowEmptyOption(false);
     editor.setComparator(new Comparator<Glob>() {
       public int compare(Glob o1, Glob o2) {
@@ -172,7 +173,7 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
     Glob glob1 = repository.get(key1);
     Glob glob2 = repository.get(key2);
 
-    GlobLinkComboEditor editor = new GlobLinkComboEditor(DummyObject.LINK, repository, directory);
+    GlobLinkComboEditor editor = GlobLinkComboEditor.init(DummyObject.LINK, repository, directory);
     ComboBox combo = new ComboBox(editor.getComponent());
 
     selectionService.select(glob1);
@@ -205,7 +206,7 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
     Glob glob1 = repository.get(key1);
     Glob glob2 = repository.get(key2);
 
-    GlobLinkComboEditor editor = new GlobLinkComboEditor(DummyObject.LINK, repository, directory);
+    GlobLinkComboEditor editor = GlobLinkComboEditor.init(DummyObject.LINK, repository, directory);
     ComboBox combo = new ComboBox(editor.getComponent());
     editor.setEnabled(false);
 
@@ -234,7 +235,7 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
 
     editor.setEnabled(true);
     assertFalse(combo.isEnabled());
-    
+
     selectionService.select(glob2);
     assertThat(combo.isEnabled());
   }
@@ -248,13 +249,13 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
     Glob glob1 = repository.get(key1);
     Glob glob2 = repository.get(key2);
 
-    GlobLinkComboEditor editor = new GlobLinkComboEditor(DummyObject.LINK, repository, directory)
+    GlobLinkComboEditor editor = GlobLinkComboEditor.init(DummyObject.LINK, repository, directory)
       .setShowEmptyOption(false);
     ComboBox combo = new ComboBox(editor.getComponent());
 
     selectionService.select(glob1);
     assertThat(combo.contentEquals("name1", "name2", "name3"));
-    
+
     editor.setShowEmptyOption(true);
     assertThat(combo.contentEquals("", "name1", "name2", "name3"));
 
@@ -271,7 +272,7 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
     Glob glob1 = repository.get(key1);
     Glob glob2 = repository.get(key2);
 
-    GlobLinkComboEditor editor = new GlobLinkComboEditor(DummyObject.LINK, repository, directory)
+    GlobLinkComboEditor editor = GlobLinkComboEditor.init(DummyObject.LINK, repository, directory)
       .forceSelection(glob2.getKey());
     ComboBox combo = new ComboBox(editor.getComponent());
 
@@ -302,5 +303,24 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
     editor.forceSelection(glob1.getKey());
     assertTrue(combo.contentEquals("", "name1", "name2", "name3"));
     assertTrue(combo.selectionEquals("name1"));
+  }
+
+  public void testFilter() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' link='2'/>" +
+                    "<dummyObject id='2' name='name2' link='1'/>" +
+                    "<dummyObject id='3' name='name3'/>");
+    repository.addChangeListener(changeListener);
+    Glob glob1 = repository.get(key1);
+    Glob glob2 = repository.get(key2);
+
+    GlobLinkComboEditor editor =
+      GlobLinkComboEditor.init(DummyObject.LINK, repository, directory)
+        .setShowEmptyOption(false)
+        .setFilter(fieldIn(DummyObject.ID, 1, 3));
+    ComboBox combo = new ComboBox(editor.getComponent());
+
+    selectionService.select(glob1);
+    assertTrue(combo.contentEquals("name1", "name3"));
   }
 }

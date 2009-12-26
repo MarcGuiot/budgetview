@@ -219,6 +219,22 @@ public class GlobMatchers {
     };
   }
 
+  public static GlobMatcher isNullOrEmpty(final StringField field) {
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        return Strings.isNullOrEmpty(item.get(field));
+      }
+    };
+  }
+
+  public static GlobMatcher isNotEmpty(final StringField field) {
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        return Strings.isNotEmpty(item.get(field));
+      }
+    };
+  }
+
   public static GlobMatcher and(final GlobMatcher... matchers) {
     for (GlobMatcher matcher : matchers) {
       if (matcher.equals(NONE)) {
@@ -346,14 +362,6 @@ public class GlobMatchers {
     return new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {
         return values.contains(item.getValue(field));
-      }
-    };
-  }
-
-  public static GlobMatcher fieldIsNull(final Field field) {
-    return new GlobMatcher() {
-      public boolean matches(Glob item, GlobRepository repository) {
-        return item.getValue(field) == null;
       }
     };
   }

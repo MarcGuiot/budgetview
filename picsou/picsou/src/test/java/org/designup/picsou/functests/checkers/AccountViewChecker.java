@@ -14,6 +14,7 @@ import org.uispec4j.finder.ComponentMatcher;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
+import javax.swing.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -94,13 +95,6 @@ public class AccountViewChecker extends GuiChecker {
     return AccountEditionChecker.open(getAccountPanel(accountName).getButton(accountName).triggerClick());
   }
 
-  public AccountViewChecker checkAccountInformation(String accountName, String accountNumber) {
-    Panel panel = getAccountPanel(accountName);
-    assertThat(panel.getButton("name").textEquals(accountName));
-    assertThat(panel.getTextBox("number").textEquals(accountNumber));
-    return this;
-  }
-
   private Panel getAccountPanel(final String accountName) {
     Button account = null;
     try {
@@ -142,4 +136,17 @@ public class AccountViewChecker extends GuiChecker {
   public void checkBalance(double balance) {
     assertThat(panel.getTextBox("balanceLabel").textEquals(toString(balance, true)));
   }
+
+  public void checkAccountWebsite(String accountName, String expectedUrl) {
+    Panel panel = getAccountPanel(accountName);
+    Button button = panel.getButton("gotoWebsite");
+    assertThat(button.isVisible());
+    BrowsingChecker.checkDisplay(button, expectedUrl);
+  }
+
+  public void checkAccountWebsiteLinkNotShown(String accountName) {
+    Panel panel = getAccountPanel(accountName);
+    checkComponentVisible(panel, JButton.class, "gotoWebsite", false);
+  }
+
 }

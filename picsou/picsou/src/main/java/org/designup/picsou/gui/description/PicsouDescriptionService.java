@@ -59,6 +59,9 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
     if (globType.equals(Account.TYPE)) {
       return new AccountStringifier();
     }
+    if (globType.equals(AccountCardType.TYPE)) {
+      return new AccountCardTypeStringifier();
+    }
     if (globType.equals(Bank.TYPE)) {
       return new BankStringifier();
     }

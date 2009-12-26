@@ -28,7 +28,7 @@ public class Strings {
     return (text == null) || (text.length() == 0);
   }
 
-  private String toString(Throwable exception) {
+  public static String toString(Throwable exception) {
     StringWriter writer = new StringWriter();
     PrintWriter printWriter = new PrintWriter(writer);
     exception.printStackTrace(printWriter);

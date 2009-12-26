@@ -437,6 +437,10 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     }
   }
 
+  public void delete(GlobType type, GlobMatcher matcher) throws OperationDenied {
+    delete(getAll(type, matcher));
+  }
+
   public void deleteAll(GlobType... types) throws OperationDenied {
     startChangeSet();
     OperationDenied exception = null;

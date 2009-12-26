@@ -41,11 +41,9 @@ public class CurrentMonthTrigger implements ChangeSetListener {
     if (changeSet.containsChanges(CurrentMonth.KEY) ||
         (previousLastMonth != lastMonth) ||
         (previousLastDay != lastDay)) {
-      GlobList transactions =
-        repository.getAll(Transaction.TYPE,
-                          and(isTrue(Transaction.PLANNED),
-                              fieldStrictlyLessThan(Transaction.MONTH, lastMonth)));
-      repository.delete(transactions);
+      repository.delete(Transaction.TYPE,
+                        and(isTrue(Transaction.PLANNED),
+                            fieldStrictlyLessThan(Transaction.MONTH, lastMonth)));
       repository.safeApply(Transaction.TYPE, ALL,
                            new UpdateDayCallback(lastMonth, lastDay));
     }

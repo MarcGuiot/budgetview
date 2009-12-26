@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="Crédit Mutuel" id='7'>
+  <bank name="Crédit Mutuel" downloadUrl="https://www.creditmutuel.fr" id='7'>
 
     <bankEntity id="16306"/>
     <bankEntity id="10278"/>

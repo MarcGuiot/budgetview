@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="Société Générale" id="4" downloadUrl="https://logitelnet.socgen.com/index.html">
+  <bank name="Société Générale" id="4" downloadUrl="https://particuliers.societegenerale.fr">
     <bankEntity id="30003"/>
 
     <transactionMatcher qifM="VIR RECU [\d]+ DE:[\s]*(.*)" transactionTypeName="virement"

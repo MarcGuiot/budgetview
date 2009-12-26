@@ -2,6 +2,8 @@ package org.globsframework.gui.splits.repeat;
 
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.SplitsNode;
+import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.gui.splits.layout.DefaultCardHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +16,8 @@ public interface RepeatCellBuilder {
   <T extends Action> T add(String name, T action);
 
   <T> Repeat<T> addRepeat(String name, Collection<T> items, RepeatComponentFactory<T> repeatFactory);
+
+  CardHandler addCardHandler(String handlerName);
 
   void addDisposeListener(Disposable dispose);
 

@@ -7,14 +7,14 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class CloseAction extends AbstractAction {
-  private PicsouDialog dialog;
+  private JDialog dialog;
 
-  public CloseAction(String key, PicsouDialog dialog) {
+  public CloseAction(String key, JDialog dialog) {
     super(Lang.get(key));
     this.dialog = dialog;
   }
 
-  public CloseAction(PicsouDialog dialog) {
+  public CloseAction(JDialog dialog) {
     this("close", dialog);
   }
 

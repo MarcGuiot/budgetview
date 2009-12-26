@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="La Poste" id='3'>
+  <bank name="La Poste" downloadUrl="https://www.labanquepostale.fr" id='3'>
     <bankEntity id="20041"/>
 
     <transactionMatcher ofxName="ACHAT CB (.*)[\s]+(\d{2,4}.\d{2}.\d{2,4})"

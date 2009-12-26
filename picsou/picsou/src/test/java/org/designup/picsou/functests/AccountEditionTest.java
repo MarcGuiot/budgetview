@@ -15,6 +15,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     views.selectHome();
 
     mainAccounts.edit("Account n. 0000123")
+      .checkTitle("Edit account")
       .checkAccountName("Account n. 0000123")
       .checkAccountNumber("0000123")
       .checkBalanceDisplayed(false)
@@ -25,14 +26,13 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     mainAccounts.checkAccountNames("My account");
-
-    mainAccounts.checkAccountInformation("My account", "12345");
   }
 
   public void testCreatingAMainAccount() throws Exception {
     views.selectHome();
 
     mainAccounts.createNewAccount()
+      .checkTitle("Create account")
       .checkAccountName("")
       .setAccountName("Main CIC account")
       .checkTypes("Main", "Credit card", "Deferred debit card", "Savings")
@@ -49,6 +49,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
   public void testCreatingASavingsAccount() throws Exception {
     views.selectHome();
     savingsAccounts.createNewAccount()
+      .checkTitle("Create account")
       .setAccountName("Savings")
       .setAccountNumber("123")
       .checkUpdateModeIsFileImport()
@@ -74,6 +75,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     mainAccounts.edit("Main")
+      .checkTitle("Edit account")
       .checkSelectedBank("Autre")
       .cancel();
   }
@@ -126,10 +128,12 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkAccountName("Account n. 0000123")
       .checkIsMain()
       .setAsCreditCard()
+      .checkCreditCardWarning()
       .validate();
 
     mainAccounts.edit("Account n. 0000123")
       .checkIsCreditCard()
+      .checkCreditCardWarning()
       .setAsMain()
       .validate();
 
@@ -139,13 +143,12 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.edit("Account n. 0000123")
       .setAsDeferredCard()
-      .setDayFromBegining(15)
+      .setFromBeginningDay(15)
       .validate();
 
     mainAccounts.edit("Account n. 0000123")
       .checkIsDeferredCard()
       .cancel();
-
   }
 
   public void testUpdateModeCanBeChangedUntilTransactionsAreImportedIntoTheAccount() throws Exception {
@@ -457,8 +460,8 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .setAccountName("Carte a débit Différé")
       .selectBank("ING Direct")
       .setAsDeferredCard()
-      .checkFromBegining()
-      .setDayFromBegining(25)
+      .checkFromBeginning()
+      .setFromBeginningDay(25)
       .setPosition(1000)
       .validate();
   }
@@ -475,8 +478,8 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .setAccountName("Carte a DD")
       .selectBank("ING Direct")
       .setAsDeferredCard()
-      .setDayFromBegining(25)
-      .checkBeginingUnchangable()
+      .setFromBeginningDay(25)
+      .checkBeginningUnchangeable()
       .setPosition(1000)
       .validate();
     timeline.selectMonth("2008/10");
@@ -486,7 +489,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .setDay(200808, 27)
       .validate();
     mainAccounts.edit("Carte a DD")
-      .checkFromBeginingDay(25)
+      .checkFromBeginningDay(25)
       .checkDay(200808, 27)
       .delete(200808)
       .addMonth()
@@ -498,12 +501,11 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(12).validate();
     views.selectHome();
 
-    AccountEditionChecker newAccount = mainAccounts.createNewAccount();
-    newAccount
+    mainAccounts.createNewAccount()
       .setAccountName("Carte a DD")
       .selectBank("ING Direct")
       .setAsDeferredCard()
-      .setDayFromBegining(25)
+      .setFromBeginningDay(25)
       .addMonth()
       .setDay(200809, 27)
       .addMonth()
@@ -516,12 +518,37 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.edit("Carte a DD")
       .setStartDate("2008/12/01")
       .setEndDate("2009/02/01")
-      .checkFromBeginingDay(27)
+      .checkFromBeginningDay(27)
       .checkPeriod(new Integer[][]{{0, 27}})
       .validate();
   }
 
+  public void testAccountViewDisplaysLinksToWebsites() throws Exception {
+    mainAccounts.createNewAccount()
+      .setAccountName("Account 1")
+      .selectBank("BNP Paribas")
+      .validate();
+
+    mainAccounts.createNewAccount()
+      .setAccountName("No site account")
+      .selectBank("Autre")
+      .validate();
+
+    mainAccounts.checkAccountWebsite("Account 1", "http://www.bnpparibas.net");
+    mainAccounts.checkAccountWebsiteLinkNotShown("No site account");
+
+    mainAccounts.edit("Account 1")
+      .selectBank("Autre")
+      .validate();
+    mainAccounts.checkAccountWebsiteLinkNotShown("Account 1");
+
+    mainAccounts.edit("Account 1")
+      .selectBank("CIC")
+      .validate();
+    mainAccounts.checkAccountWebsite("Account 1", "http://www.cic.fr");
+  }
 
   public void testImportCardWithMonthBeforeFirstMonth() throws Exception {
+    fail("Marc, ce test vide te dit-il quelque chose ?");
   }
 }

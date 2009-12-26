@@ -125,6 +125,7 @@
       <xs:element ref="editorPane"/>
       <xs:element ref="htmlEditorPane"/>
       <xs:element ref="filler"/>
+      <xs:element ref="separator"/>
     </xs:choice>
   </xs:group>
 
@@ -349,6 +350,13 @@
         </xs:simpleType>
       </xs:attribute>
       <xs:attribute name="gridWrapLimit" type="xs:integer" use="optional"/>
+      <xs:attribute name="autoHideIfEmpty" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">
+            If true, the repeat's JPanel is hidden when no elements are displayed.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
 
@@ -663,13 +671,36 @@
   <xs:element name="list">
     <xs:complexType>
       <xs:attributeGroup ref="componentAttributes"/>
-      <xs:attribute name="visibleRowCount" type="xs:integer"/>      
+      <xs:attribute name="visibleRowCount" type="xs:integer"/>
     </xs:complexType>
   </xs:element>
 
   <xs:element name="filler">
     <xs:complexType>
       <xs:attributeGroup ref="componentAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="separator">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          Represents a JDialog component
+        </xs:documentation>
+      </xs:annotation>
+      <xs:attribute name="orientation">
+        <xs:simpleType>
+          <xs:annotation>
+            <xs:documentation xml:lang="en">
+              Value can be one of 'horizontal' or 'vertical'.
+            </xs:documentation>
+          </xs:annotation>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="horizontal"/>
+            <xs:enumeration value="vertical"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
 

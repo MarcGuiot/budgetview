@@ -596,6 +596,22 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     changeListener.assertNoChanges();
   }
 
+  public void testDeleteWithMatcher() throws Exception {
+    init(
+      "<dummyObject id='1'/>" +
+      "<dummyObject id='2'/>" +
+      "<dummyObject id='3'/>" +
+      "<dummyObject id='4'/>" +
+      "<dummyObject2 id='1'/>" +
+      "<dummyObjectWithCompositeKey id1='1' id2='2'/>"
+    );
+    repository.delete(DummyObject.TYPE, GlobMatchers.fieldIn(DummyObject.ID, 1, 3));
+    changeListener.assertLastChangesEqual(
+      "<delete type='dummyObject' id='1'/>" +
+      "<delete type='dummyObject' id='3'/>"
+    );
+  }
+
   public void testDeleteAll() throws Exception {
     init(
       "<dummyObject id='1'/>" +

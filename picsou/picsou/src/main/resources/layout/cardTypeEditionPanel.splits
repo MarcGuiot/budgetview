@@ -2,33 +2,50 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <cards ref="CardTypes">
+  <styles>
+    <style selector="scrollPane.etched" border="etched" viewportBackground="dialog.block"/>
+  </styles>
+
+  <cards ref="CardTypes" minimumSize="(200,120)">
     <card name="notACard">
-      <panel/>
+      <panel opaque="false"/>
     </card>
     <card name="undefined">
-      <panel/>
+      <panel opaque="false"/>
     </card>
     <card name="credit">
-      <panel/>
+      <panel opaque="false">
+        <textArea ref="creditMessage" styleClass="errorMessage"/>
+      </panel>
     </card>
     <card name="deferred">
       <column>
-        <repeat ref="deferredPeriodeRepeat">
-          <row>
-            <label ref="deferredPeriodLabel"/>
-            <button ref="changeDeferredMonthAction" icon="button_calendar.png" styleClass="icon"
-                    pressedIcon="button_calendar_pressed.png" autoHideIfDisabled="true"
-                    marginLeft="5" fill="none"/>
-            <label text="$account.deferred.at.day"/>
-            <comboBox ref="dayChooser"/>
-            <button ref="removePeriod" icon="button_delete.png" styleClass="icon"
-                    pressedIcon="button_delete_pressed.png" autoHideIfDisabled="true"/>
-          </row>
-        </repeat>
-        <row>
+        <scrollPane styleClass="etched" minimumSize="(250,100)">
+          <column>
+            <repeat ref="deferredPeriodRepeat" margin="5">
+              <column name="deferredPeriodPanel">
+                <row>
+                  <label ref="deferredPeriodLabel"/>
+                  <button ref="changeDeferredMonthAction" icon="button_calendar.png" styleClass="icon"
+                          pressedIcon="button_calendar_pressed.png" autoHideIfDisabled="true"
+                          marginLeft="5" fill="none"/>
+                  <filler fill="horizontal"/>
+                </row>
+                <row marginLeft="20">
+                  <label text="$account.deferred.at.day"/>
+                  <comboBox ref="dayChooser"/>
+                  <button ref="removePeriod" icon="button_delete.png" styleClass="icon"
+                          pressedIcon="button_delete_pressed.png" autoHideIfDisabled="true"/>
+                  <filler fill="horizontal"/>
+                </row>
+              </column>
+            </repeat>
+            <filler fill="vertical" weightY="100"/>
+          </column>
+        </scrollPane>
+        <row styleClass="iconButtonGroup">
+          <button action="createNewPeriod" styleClass="create"/>
           <filler fill="horizontal"/>
-          <button action="createNewPeriod" icon="button_plus.png" styleClass="icon"/>
         </row>
       </column>
     </card>

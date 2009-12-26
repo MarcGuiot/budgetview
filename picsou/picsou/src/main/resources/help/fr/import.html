@@ -2,49 +2,64 @@
 <body>
 
 <p>CashPilot utilise les relevés bancaires électroniques que vous fournit votre banque.</p>
-<p>Si votre banque
-  ne propose pas ces téléchargements, vous pouvez <a href="help:manualInput">saisir vos opérations manuellement</a>.</p>
 
-<h2>Télécharger vos relevés</h2>
+<p>Si votre banque ne propose pas ces téléchargements, vous pouvez
+  <a href="help:manualInput">saisir vos opérations manuellement</a>.</p>
 
-<p>Pour télécharger ces relevés, vous devez disposer d'un accès au site internet de votre banque. La séquence d'import
-  se déroule alors comme suit&nbsp;:</p>
+<p>Pour télécharger ces relevés, suivez la séquence suivante&nbsp;:</p>
 
-<ul>
-  <li>Vous vous <b>connectez au site internet</b> de votre banque</li>
-  <li>Vous vous rendez sur la <b>page de téléchargement</b> du site</li>
-  <li>Vous sélectionnez les comptes, la période et le format d'export souhaités (ces notions sont
-    détaillées ci-dessous)</li>
-  <li>Vous <b>lancez le téléchargement</b> proprement dit</li>
-  <li>Si votre navigateur vous propose un choix entre "Ouvrir avec CashPilot" et "Enregistrer sous",
-    vous pouvez choisir "<b>Ouvrir avec CashPilot</b>"&nbsp;: le fichier sera alors automatiquement redirigé vers CashPilot,
-    où vous pourrez poursuivre l'import.</li>
-  <li>Si vous n'avez pas opté pour l'option "Ouvrir avec", vous devez enregistrer le fichier de relevés
-    sur votre ordinateur, puis l'ouvrir à partir de CashPilot.</li>
-</ul>
+<h2>1. Connectez-vous au site de votre banque</h2>
 
-<h2>Banques et formats supportés</h2>
+<p>Vous devrez entrer vos identifiants de connexion, puis vous rendre sur la
+  page de téléchargement des relevés du site.</p>
 
-<p>CashPilot fonctionne avec les principales <a href="help:banks">banques Françaises</a>, mais aussi avec la plupart
-  des banques qui proposent un service de téléchargement en ligne.</p>
+<h2>2. Préparez le téléchargement</h2>
 
-<p>CashPilot reconnaît les deux formats de fichiers les plus couramment utilisés&nbsp;:</p>
-<ul>
-  <li><b>OFX</b>: Il s'agit du format proposé pour des logiciels tels que Microsoft Money.
-    <b>Nous vous recommandons d'utiliser ce format</b>, qui contient les informations de compte et de solde.</li>
-  <li><b>QIF</b>: Il s'agit du format géré par le logiciel Quicken d'Intuit. Il ne doit être utilisé qu'en absence
-    de fichiers OFX, car il ne contient pas d'informations sur le compte des opérations téléchargées, en particulier
-    les soldes de ces comptes.</li>
-</ul>
+<p>Vous devrez indiquer les informations suivantes :</p>
 
-<h2>Import initial</h2>
+<table>
+  <tr>
+    <td valign="top"><b>Format</b></td>
+    <td valign="top"><p>CashPilot reconnaît les deux formats de fichiers les plus couramment utilisés&nbsp;:</p>
+      <ul>
+        <li><b>OFX</b>: Il s'agit du format proposé pour des logiciels tels que Microsoft Money.
+          <b>Nous vous recommandons d'utiliser ce format</b>, qui contient les informations de compte et de solde.</li>
+        <li><b>QIF</b>: Il s'agit du format géré par le logiciel Quicken d'Intuit. Il ne doit être utilisé qu'en absence
+          de fichiers OFX, car il ne contient pas d'informations sur le compte des opérations téléchargées, en
+          particulier les soldes de ces comptes.</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top"><b>Période des opérations</b></td>
+    <td valign="top"><p>Vous pouvez télécharger les opérations des deux ou trois derniers mois sans vous soucier
+      des données déjà importées dans l'outil - CashPilot saura éviter d'importer des opérations en doublon.</p>
+      <p>Pour établir un budget réaliste, <b>importez environ un ou deux mois complets</b>
+        de données&nbsp; lors de la première utilisation.</p>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top"><b>Format de dates</b></td>
+    <td valign="top"><p>Dans la plupart des cas CashPilot saura reconnaître les formats de dates par lui-même.
+      Il n'est donc pas utile de se soucier de cette information.
+      En cas de problème spécifique, choisissez le format JJ/MM/AAAA.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top"><b>Comptes</b></td>
+    <td valign="top">
+      <p>Dans un premier temps, <b>importez les opérations de vos comptes chèques</b> uniquement.
+        Vous pourrez récupérer vos autres comptes par la suite.</p>
+    </td>
+  </tr>
+</table>
 
-<p>Dans un premier temps, <b>importez les opérations de vos comptes chèques</b> uniquement.
-  Vous pourrez récupérer vos autres comptes par la suite.</p>
+<h2>3. Lancez le téléchargement</h2>
 
-<p>Pour établir un budget réaliste, <b>importez environ un ou deux mois complets</b>
-  de données&nbsp;. Il n'est pas utile d'importer une plage plus large, cela vous donnera plus de travail
-  de catégorisation pour un bénéfice limité.</p>
+<p>Si votre navigateur vous propose un choix entre "Ouvrir avec CashPilot" et "Enregistrer sous",
+  vous pouvez choisir "<b>Ouvrir avec CashPilot</b>"&nbsp;: le fichier sera alors automatiquement redirigé vers
+  CashPilot, où vous pourrez poursuivre l'import.</p>
+
 
 </body>
 </html>

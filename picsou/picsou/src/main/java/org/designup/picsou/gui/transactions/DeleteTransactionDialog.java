@@ -75,12 +75,12 @@ public class DeleteTransactionDialog extends ConfirmationDialog {
       repository.startChangeSet();
       while (!transactions.isEmpty()) {
         Glob glob = transactions.remove(0);
-        GlobList linkedTo = null;
+        GlobList linkedToList = null;
         if (Transaction.isSplit(glob)) {
-          linkedTo = repository.findLinkedTo(glob, Transaction.SPLIT_SOURCE);
-          repository.delete(linkedTo);
-          for (Glob glob1 : linkedTo) {
-            transactions.remove(glob1);
+          linkedToList = repository.findLinkedTo(glob, Transaction.SPLIT_SOURCE);
+          repository.delete(linkedToList);
+          for (Glob transaction : linkedToList) {
+            transactions.remove(transaction);
           }
         }
         Glob account = repository.findLinkTarget(glob, Transaction.ACCOUNT);

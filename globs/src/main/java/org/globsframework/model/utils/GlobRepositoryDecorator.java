@@ -124,6 +124,10 @@ public class GlobRepositoryDecorator implements GlobRepository {
     getRepository().delete(list);
   }
 
+  public void delete(GlobType type, GlobMatcher matcher) throws OperationDenied {
+    getRepository().delete(type, matcher);
+  }
+
   public void deleteAll(GlobType... types) throws OperationDenied {
     getRepository().deleteAll(types);
   }

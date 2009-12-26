@@ -29,7 +29,7 @@ public class ImportChecker {
   private ImportChecker() {
   }
 
-  static public ImportChecker create(Panel dialog){
+  static public ImportChecker create(Panel dialog) {
     ImportChecker importChecker = new ImportChecker();
     importChecker.dialog = dialog;
     return importChecker;
@@ -74,6 +74,36 @@ public class ImportChecker {
   public ImportChecker checkHeaderMessage(String text) {
     TextBox fileMessage = dialog.findUIComponent(TextBox.class, text);
     assertTrue(fileMessage.isVisible());
+    return this;
+  }
+
+  public ImportChecker checkContainsBankSites(String... banks) {
+    assertThat(dialog.getComboBox().contains(banks));
+    return this;
+  }
+
+  public ImportChecker selectBankSite(String bank) {
+    dialog.getComboBox().select(bank);
+    return this;
+  }
+
+  public ImportChecker checkSiteAccessEnabled() {
+    assertThat(dialog.getButton("Open website").isEnabled());
+    return this;
+  }
+
+  public ImportChecker checkSiteAccessDisabled() {
+    assertFalse(dialog.getButton("Open website").isEnabled());
+    return this;
+  }
+
+  public ImportChecker checkSiteAccess(String url) {
+    BrowsingChecker.checkDisplay(dialog.getButton("Open website"), url);
+    return this;
+  }
+
+  public ImportChecker checkSelectedBankSite(String bank) {
+    assertThat(dialog.getComboBox().selectionEquals(bank));
     return this;
   }
 
@@ -194,7 +224,7 @@ public class ImportChecker {
     return this;
   }
 
-  public AccountEditionChecker openAccount(){
+  public AccountEditionChecker openAccount() {
     return AccountEditionChecker.open(dialog.getButton("Create an account").triggerClick());
   }
 
@@ -203,7 +233,7 @@ public class ImportChecker {
   }
 
   public ImportChecker defineAccount(String bank, String accountName, String number) {
-    AccountEditionChecker accountEditionChecker = 
+    AccountEditionChecker accountEditionChecker =
       AccountEditionChecker.open(dialog.getButton("Create an account").triggerClick());
     accountEditionChecker.selectBank(bank)
       .checkAccountName("Main account")
@@ -212,7 +242,6 @@ public class ImportChecker {
     accountEditionChecker.validate();
     return this;
   }
-
 
   public ImportChecker createNewAccount(String bank, String accountName, String number, double initialBalance) {
     addNewAccount()
@@ -254,7 +283,7 @@ public class ImportChecker {
     return this;
   }
 
-  public ImportChecker checkMessageSelectACardType() {
+  public ImportChecker checkSelectACardTypeMessage() {
     dialog.getTextBox("You must select a card type");
     return this;
   }

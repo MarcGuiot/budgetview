@@ -6,6 +6,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.*;
@@ -27,9 +28,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
       for (Key key : deleted) {
         deletedId.add(key.get(Month.ID));
       }
-      GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE,
-                                                 GlobMatchers.fieldIn(SeriesBudget.MONTH, deletedId));
-      repository.delete(seriesBudgets);
+      repository.delete(SeriesBudget.TYPE, fieldIn(SeriesBudget.MONTH, deletedId));
     }
     Set<Key> createdMonth = changeSet.getCreated(Month.TYPE);
     SortedSet<Key> rightMonth = new TreeSet<Key>(new Comparator<Key>() {
@@ -64,11 +63,11 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
     GlobList seriesList = repository.getAll(Series.TYPE,
                                             GlobMatchers.and(
                                               GlobMatchers.or(
-                                                GlobMatchers.fieldIsNull(Series.LAST_MONTH),
+                                                GlobMatchers.isNull(Series.LAST_MONTH),
                                                 GlobMatchers.fieldGreaterOrEqual(Series.LAST_MONTH, monthId)
                                               ),
                                               GlobMatchers.or(
-                                                GlobMatchers.fieldIsNull(Series.FIRST_MONTH),
+                                                GlobMatchers.isNull(Series.FIRST_MONTH),
                                                 GlobMatchers.fieldLessOrEqual(Series.FIRST_MONTH, monthId)
                                               )));
     for (Glob series : seriesList) {
