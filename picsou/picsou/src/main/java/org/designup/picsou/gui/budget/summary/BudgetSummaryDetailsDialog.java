@@ -8,9 +8,12 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.MonthListStringifier;
 import org.designup.picsou.gui.model.BudgetStat;
+import org.designup.picsou.gui.help.HelpAction;
+import org.designup.picsou.model.AccountPositionThreshold;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -24,24 +27,37 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
+import org.globsframework.model.utils.ChangeSetMatchers;
+import org.globsframework.model.utils.LocalGlobRepository;
+import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 public class BudgetSummaryDetailsDialog {
+
+  private JLabel title;
   private JLabel amountSummaryLabel;
   private JTextArea positionDescription;
   private StackChart balanceChart;
   private StackChartColors balanceChartColors;
-  private Directory directory;
-  private GlobRepository repository;
-  private PicsouDialog dialog;
   private CardHandler positionCard;
-  private JLabel title;
+  private PicsouDialog dialog;
+
+  private Directory directory;
+  private LocalGlobRepository localRepository;
 
   public BudgetSummaryDetailsDialog(GlobRepository repository, Directory parentDirectory) {
-    this.repository = repository;
+    this.localRepository =
+      LocalGlobRepositoryBuilder.init(repository)
+        .copy(BudgetStat.TYPE)
+        .copy(AccountPositionThreshold.TYPE)
+        .copy(Month.TYPE)
+        .copy(CurrentMonth.TYPE)
+        .get();
+
     this.directory = createDirectory(parentDirectory);
     this.balanceChart = new StackChart();
 
@@ -63,8 +79,10 @@ public class BudgetSummaryDetailsDialog {
 
   public void show(GlobList selectedMonths) {
 
+    localRepository.rollback();
+
     Integer maxMonthId = selectedMonths.getLast().get(Month.ID);
-    if (maxMonthId >= CurrentMonth.getLastTransactionMonth(repository)) {
+    if (maxMonthId >= CurrentMonth.getLastTransactionMonth(localRepository)) {
       showEstimatedPositionDetails();
     }
     else {
@@ -86,7 +104,7 @@ public class BudgetSummaryDetailsDialog {
   private void selectStats(GlobList selectedMonths) {
     GlobList stats = new GlobList();
     for (Glob month : selectedMonths) {
-      stats.add(repository.find(Key.create(BudgetStat.TYPE, month.get(Month.ID))));
+      stats.add(localRepository.find(Key.create(BudgetStat.TYPE, month.get(Month.ID))));
     }
     directory.get(SelectionService.class).select(stats, BudgetStat.TYPE);
   }
@@ -109,7 +127,9 @@ public class BudgetSummaryDetailsDialog {
 
   public void createDialog() {
     GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/budgetSummaryDetailsDialog.splits", repository, directory);
+      new GlobsPanelBuilder(getClass(), "/layout/budgetSummaryDetailsDialog.splits", localRepository, directory);
+
+    dialog = PicsouDialog.create(directory.get(JFrame.class), true, directory);
 
     title = builder.add("title", new JLabel()).getComponent();
 
@@ -130,10 +150,23 @@ public class BudgetSummaryDetailsDialog {
     addLabel(builder, "remainingOutSavings", BudgetStat.SAVINGS_OUT_REMAINING, true);
     addLabel(builder, "remainingSpecial", BudgetStat.SPECIAL_REMAINING, true);
 
+    PositionThresholdIndicator thresholdIndicator =
+      builder.add("thresholdIndicator",
+                  new PositionThresholdIndicator(localRepository, directory,
+                                                 "budgetSummaryDialog.threshold.top",
+                                                 "budgetSummaryDialog.threshold.bottom",
+                                                 "budgetSummaryDialog.threshold.border")).getComponent();
+    builder.addEditor("thresholdField", AccountPositionThreshold.THRESHOLD)
+      .forceSelection(AccountPositionThreshold.KEY)
+      .setNotifyOnKeyPressed(true)
+      .setValueForNull(0.00);
+    builder.addLabel("thresholdMessage", BudgetStat.TYPE, new ThresholdStringifier())
+      .setUpdateMatcher(ChangeSetMatchers.changesForKey(AccountPositionThreshold.KEY));
+    builder.add("thresholdHelp", new HelpAction(Lang.get("help"), "positionThreshold", directory, dialog));
+
     JPanel panel = builder.load();
 
-    dialog = PicsouDialog.create(directory.get(JFrame.class), true, directory);
-    dialog.setPanelAndButton(panel, new CloseAction(dialog));
+    dialog.addPanelWithButtons(panel, new ValidateAction(), new CloseAction(dialog));
     dialog.pack();
   }
 
@@ -221,6 +254,37 @@ public class BudgetSummaryDetailsDialog {
         amount = budgetStat.get(BudgetStat.BEGIN_OF_MONTH_ACCOUNT_POSITION);
       }
       return Formatting.toString(amount);
+    }
+  }
+
+  private class ThresholdStringifier implements GlobListStringifier {
+    public String toString(GlobList stats, GlobRepository repository) {
+      Glob budgetStat = getLastBudgetStat(stats);
+      if (budgetStat == null) {
+        return "";
+      }
+      Double position = budgetStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
+      Double threshold = AccountPositionThreshold.getValue(repository);
+      double diff = Amounts.diff(position, threshold);
+      if (diff < 0) {
+        return Lang.get("budgetSummaryDetails.threshold.negative");
+      }
+      else if (diff > 0) {
+        return Lang.get("budgetSummaryDetails.threshold.positive");
+      }
+      return Lang.get("budgetSummaryDetails.threshold.equal");
+    }
+  }
+
+  private class ValidateAction extends AbstractAction {
+
+    private ValidateAction() {
+      super(Lang.get("ok"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      localRepository.commitChanges(false);
+      dialog.setVisible(false);
     }
   }
 }

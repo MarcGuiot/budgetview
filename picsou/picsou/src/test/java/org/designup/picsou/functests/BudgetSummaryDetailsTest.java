@@ -191,7 +191,6 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/09", 40, "remboursement")
       .addTransaction("2008/07/12", 1500, "Salaire")
       .addTransaction("2008/08/07", -100, "ED")
-//      .addTransaction("2008/07/09", 40, "remboursement")
       .load();
 
     timeline.selectMonth("2008/07");
@@ -265,5 +264,61 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
       .checkSavingsOut(50)
       .checkSavingsIn(300)
       .close();
+  }
+
+  public void testThresholdDisplayedAndSettableFromThePositionDetailsDialog() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(12).validate();
+    OfxBuilder.init(this)
+      .addBankAccount(30066, 10674, "0123456", 1500.00, "2008/08/30")
+      .addTransaction("2008/07/15", -200, "FNAC")
+      .addTransaction("2008/08/15", -500, "Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewEnvelope("Auchan", "groceries");
+    categorization.setNewEnvelope("FNAC", "Equipment");
+
+    views.selectHome();
+
+    timeline.selectMonth("2008/07");
+    mainAccounts.openEstimatedPositionDetails()
+      .checkPosition(2000.00)
+      .checkThreshold(0.00, "The position is greater than the threshold", 2000.00)
+      .checkThresholdHelpAvailable()
+      .setThreshold(3000.00)
+      .checkThreshold(3000.00, "The position is less than the threshold", -1000.00)
+      .close();
+    mainAccounts.checkThreshold(0.00);
+
+    timeline.selectMonth("2008/08");
+    mainAccounts.openEstimatedPositionDetails()
+      .checkPosition(1300.00)
+      .checkThreshold(0.00, "The position is greater than the threshold", 1300.00)
+      .setThreshold(1500.00)
+      .checkThreshold(1500.00, "The position is less than the threshold", -200.00)
+      .validate();
+    mainAccounts.checkThreshold(1500.00);
+
+    mainAccounts.openEstimatedPositionDetails()
+      .clearThreshold()
+      .validate();
+    mainAccounts.checkThreshold(0.00);
+
+    mainAccounts.openEstimatedPositionDetails()
+      .checkPosition(1300.00)
+      .checkThreshold(0.00, "The position is greater than the threshold", 1300.00)
+      .setThreshold(1500.00)
+      .checkThreshold(1500.00, "The position is less than the threshold", -200.00)
+      .validate();
+    mainAccounts.checkThreshold(1500.00);
+
+    timeline.selectMonths("2008/07", "2008/08");
+    mainAccounts.openEstimatedPositionDetails()
+      .checkPosition(1300.00)
+      .checkThreshold(1500.00, "The position is less than the threshold", -200.00)
+      .setThreshold(1300.00)
+      .checkThreshold(1300.00, "The position is equal to the threshold", 0.00)
+      .validate();
+    mainAccounts.checkThreshold(1300.00);
   }
 }

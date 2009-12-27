@@ -38,7 +38,11 @@ public class AccountPositionThreshold {
     if (limit == null) {
       return null;
     }
-    return limit.get(THRESHOLD);
+    Double value = limit.get(THRESHOLD);
+    if (value == null) {
+      return 0.0;
+    }
+    return value;
   }
 
   public static class Serializer implements PicsouGlobSerializer {

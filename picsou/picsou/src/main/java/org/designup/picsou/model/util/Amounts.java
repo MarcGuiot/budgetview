@@ -59,6 +59,19 @@ public class Amounts {
     return Math.abs(val1 - val2) < 0.0001;
   }
 
+  public static double diff(Double val1, Double val2) {
+    if ((val1 == null) && (val2 == null)) {
+      return 0.0;
+    }
+    if (val1 == null) {
+      return -val2;
+    }
+    if (val2 == null) {
+      return val1;
+    }
+    return val1 - val2;
+  }
+
   public static double max(Double val1, Double planned, boolean isIncome) {
     if (val1 == null){
       return planned;

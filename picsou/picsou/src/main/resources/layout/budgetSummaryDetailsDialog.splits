@@ -27,6 +27,10 @@
            editable="false" lineWrap="true" wrapStyleWord="true"
            marginLeft="10" marginRight="10" marginTop="5" marginBottom="10"/>
 
+    <style selector="label.description"
+           foreground="budgetSummaryDialog.description" opaque="false" marginBottom="5"
+           fill="horizontal" anchor="left" horizontalAlignment="left"/>
+    
     <style selector="label.header" foreground="budgetSummaryDialog.header" font="-,bold,12"
            fill="horizontal" anchor="center" horizontalAlignment="center"/>
 
@@ -38,16 +42,20 @@
            font="-,bold,11" foreground="budgetSummaryDialog.amount"
            fill="none" anchor="right" marginRight="10" weightX="0"
            border="empty(5,0,5,0)"/>
+
+    <style selector="label.threshold" foreground="budgetSummaryDialog.label" font="-,plain,12"
+           fill="horizontal" anchor="center" horizontalAlignment="left"
+           weightX="1" marginRight="5"/>
   </styles>
 
-  <column styleClass="dialog" preferredSize="(700,580)">
+  <column styleClass="dialog" preferredSize="(700,650)">
     <column styleClass="innerDialog">
 
       <label ref="title" styleClass="title"/>
 
-      <row styleClass="innerBlockBackground">
+      <column styleClass="innerBlockBackground">
 
-        <row margin="10">
+        <column margin="10">
 
           <grid>
 
@@ -78,8 +86,7 @@
             <column gridPos="(2,3)" weightX="5">
               <cards ref="cards">
                 <card name="estimated">
-                  <row>
-                    <filler fill="horizontal"/>
+                  <column>
                     <grid weightX="1">
                       <label gridPos="(0,0,2,1)" text="$budgetSummaryDetails.position.initial.balance"
                              styleClass="header"/>
@@ -118,19 +125,35 @@
                              styleClass="amountLabel"/>
                       <label gridPos="(1,9)" ref="remainingSpecial" styleClass="amount"/>
                     </grid>
-                    <filler fill="horizontal"/>
-                  </row>
+
+                    <filler fill="vertical"/>
+                  </column>
                 </card>
                 <card name="actual">
                   <panel background="block.inner.bg"/>
                 </card>
               </cards>
-              <filler fill="vertical"/>
+
+              <row marginTop="15" border="matte(1,0,0,0,budgetSummaryDialog.separator)">
+                <component ref="thresholdIndicator"
+                           marginRight="5" marginTop="10"
+                           fill="none" anchor="center"/>
+                <column marginTop="10">
+                  <label ref="thresholdMessage" styleClass="description"/>
+                  <row>
+                    <label text="Seuil" styleClass="threshold"/>
+                    <textField ref="thresholdField"/>
+                    <button action="thresholdHelp" styleClass="hyperlink"/>
+                    <filler fill="horizontal"/>
+                  </row>
+                </column>
+              </row>
             </column>
 
           </grid>
-        </row>
-      </row>
+        </column>
+
+      </column>
     </column>
   </column>
 </splits>

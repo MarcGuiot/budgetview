@@ -4,6 +4,7 @@ import junit.framework.Assert;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
 import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.gui.budget.summary.PositionThresholdIndicator;
 import org.designup.picsou.model.Month;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
@@ -136,6 +137,37 @@ public class BudgetSummaryDetailsChecker extends GuiChecker {
     }
 
     return this;
+  }
+
+  public BudgetSummaryDetailsChecker checkThreshold(double value, String message, double diff) {
+    assertThat(window.getTextBox("thresholdField").textEquals(toString(value)));
+    assertThat(window.getTextBox("thresholdMessage").textEquals(message));
+
+    PositionThresholdIndicator indicator =
+      (PositionThresholdIndicator)window.getPanel("thresholdIndicator").getAwtComponent();
+    Assert.assertEquals(diff, indicator.getDiff(), 0.01);
+    return this;
+  }
+
+  public BudgetSummaryDetailsChecker checkThresholdHelpAvailable() {
+    HelpChecker.open(window.getButton("thresholdHelp").triggerClick())
+      .checkTitle("Position threshold")
+      .close();
+    return this;
+  }
+
+  public BudgetSummaryDetailsChecker setThreshold(double value) {
+    window.getTextBox("thresholdField").setText(toString(value));
+    return this;
+  }
+
+  public BudgetSummaryDetailsChecker clearThreshold() {
+    window.getTextBox("thresholdField").clear();
+    return this;
+  }
+
+  public void validate() {
+    window.getButton("OK").click();
   }
 
   public void close() {
