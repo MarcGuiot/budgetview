@@ -54,7 +54,7 @@ public class BudgetView extends View {
     addBudgetAreaView("incomeBudgetView", BudgetArea.INCOME, builder);
     addBudgetAreaView("recurringBudgetView", BudgetArea.RECURRING, builder);
     addBudgetAreaView("envelopeBudgetView", BudgetArea.ENVELOPES, builder);
-    addBudgetAreaView("projectsBudgetView", BudgetArea.SPECIAL, builder);
+    addBudgetAreaView("extrasBudgetView", BudgetArea.EXTRAS, builder);
     addBudgetAreaView("savingsBudgetView", BudgetArea.SAVINGS, builder);
 
     builder.add("horizontalSplitPane", new JideSplitPane());

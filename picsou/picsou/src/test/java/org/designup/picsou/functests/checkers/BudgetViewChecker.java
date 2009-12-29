@@ -20,7 +20,7 @@ public class BudgetViewChecker extends GuiChecker {
   public final BudgetAreaChecker income;
   public final BudgetAreaChecker recurring;
   public final BudgetAreaChecker envelopes;
-  public final BudgetAreaChecker specials;
+  public final BudgetAreaChecker extras;
   public final BudgetAreaChecker savings;
 
   private Window window;
@@ -30,7 +30,7 @@ public class BudgetViewChecker extends GuiChecker {
     this.income = new BudgetAreaChecker("incomeBudgetView", true, BudgetArea.INCOME);
     this.recurring = new BudgetAreaChecker("recurringBudgetView", true, BudgetArea.RECURRING);
     this.envelopes = new BudgetAreaChecker("envelopeBudgetView", false, BudgetArea.ENVELOPES);
-    this.specials = new BudgetAreaChecker("projectsBudgetView", false, BudgetArea.SPECIAL);
+    this.extras = new BudgetAreaChecker("extrasBudgetView", false, BudgetArea.EXTRAS);
     this.savings = new BudgetAreaChecker("savingsBudgetView", true, BudgetArea.SAVINGS);
   }
 

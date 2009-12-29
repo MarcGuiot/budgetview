@@ -380,15 +380,15 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("Orange", "Mobile");
     categorization.setNewEnvelope("Auchan", "Groceries");
-    categorization.setNewSpecial("Check n. 12345", "Gift");
-    categorization.setNewSpecial("Fouquet's", "Dining");
+    categorization.setNewExtra("Check n. 12345", "Gift");
+    categorization.setNewExtra("Fouquet's", "Dining");
 
     views.selectEvolution();
 
     seriesEvolution.balanceChart.getLeftDataset()
       .checkSize(2)
       .checkValue("Income", 500.00)
-      .checkValue("Special", 250.00);
+      .checkValue("Extras", 250.00);
     seriesEvolution.balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Envelopes", 400.00)
@@ -401,11 +401,11 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("Mobile", 100.00)
       .checkValue("Internet", 50.00);
 
-    seriesEvolution.select("Special");
+    seriesEvolution.select("Extras");
     seriesEvolution.balanceChart.getLeftDataset()
       .checkSize(2)
       .checkValue("Income", 500.00)
-      .checkValue("Special", 250.00, true);
+      .checkValue("Extras", 250.00, true);
     seriesEvolution.balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Envelopes", 400.00)

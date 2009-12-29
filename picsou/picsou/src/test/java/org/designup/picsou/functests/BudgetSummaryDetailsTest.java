@@ -28,7 +28,7 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     categorization.setNewEnvelope("Auchan", "Groceries");
     categorization.setNewEnvelope("FNAC", "Equipment");
     categorization.setNewIncome("Salaire", "Salaire");
-    categorization.setNewSpecial("Air France", "Trips");
+    categorization.setNewExtra("Air France", "Trips");
     categorization.setNewSavings("VIRT ING", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "External account");
 
     double incomeFor200807 = 1500;
@@ -66,7 +66,7 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
       .checkEnvelope(300 + 100)
       .checkSavingsIn(0.00)
       .checkSavingsOut(100.00)
-      .checkProjects(0.00)
+      .checkExtras(0.00)
       .close();
 
     timeline.selectAll();
@@ -80,7 +80,7 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
       .checkEnvelope(300 + 100)
       .checkSavingsOut(100.00)
       .checkSavingsIn(0.00)
-      .checkProjects(0.00)
+      .checkExtras(0.00)
       .close();
   }
 

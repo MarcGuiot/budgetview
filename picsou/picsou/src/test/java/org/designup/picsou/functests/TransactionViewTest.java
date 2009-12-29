@@ -188,7 +188,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .check();
     categorization.checkSelectedTableRows(0, 1);
     categorization.checkCustomFilterVisible(true);
-    categorization.selectSpecial().selectNewSeries("Leisures");
+    categorization.selectExtras().selectNewSeries("Leisures");
 
     categorization.clearCustomFilter();
     categorization.initContent()

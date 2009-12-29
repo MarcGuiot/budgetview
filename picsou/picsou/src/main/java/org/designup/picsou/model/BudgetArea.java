@@ -20,11 +20,10 @@ public enum BudgetArea implements GlobConstantContainer {
   INCOME("INCOME", 0, true, true),
   RECURRING("RECURRING", 1, false, false),
   ENVELOPES("ENVELOPES", 2, false, false),
-  SPECIAL("SPECIAL", 4, false, false),
+  EXTRAS("EXTRAS", 4, false, false),
   SAVINGS("SAVINGS", 5, false, true),
   UNCATEGORIZED("UNCATEGORIZED", 6, false, false),
-  DEFERRED("DEFERRED", 7, false, false)
-  ;
+  DEFERRED("DEFERRED", 7, false, false);
 
   public static GlobType TYPE;
 
@@ -40,8 +39,8 @@ public enum BudgetArea implements GlobConstantContainer {
   private boolean overrunAllowed;
 
   public static final BudgetArea[] INCOME_AREAS = {INCOME};
-  public static final BudgetArea[] EXPENSES_AREAS = {RECURRING, ENVELOPES, SPECIAL, SAVINGS};
-  public static final BudgetArea[] INCOME_AND_EXPENSES_AREAS = {INCOME, RECURRING, ENVELOPES, SPECIAL, SAVINGS};
+  public static final BudgetArea[] EXPENSES_AREAS = {RECURRING, ENVELOPES, EXTRAS, SAVINGS};
+  public static final BudgetArea[] INCOME_AND_EXPENSES_AREAS = {INCOME, RECURRING, ENVELOPES, EXTRAS, SAVINGS};
 
   BudgetArea(String name, int id, boolean isIncome, boolean overrunAllowed) {
     this.name = name;
@@ -91,7 +90,7 @@ public enum BudgetArea implements GlobConstantContainer {
       case 2:
         return ENVELOPES;
       case 4:
-        return SPECIAL;
+        return EXTRAS;
       case 5:
         return SAVINGS;
       case 6:

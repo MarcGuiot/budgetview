@@ -182,12 +182,12 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testSpecialSeriesWithSingleMonthProfile() throws Exception {
+  public void testExtraSeriesWithSingleMonthProfile() throws Exception {
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     timeline.selectMonth("2008/09");
     views.selectBudget();
-    budgetView.specials.createSeries()
+    budgetView.extras.createSeries()
       .setName("Miami trip")
       .setAmount(2000.00)
       .validate();

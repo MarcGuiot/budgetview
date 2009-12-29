@@ -94,8 +94,8 @@ public class CategorizationChecker extends GuiChecker {
     return selectAndReturn(BudgetArea.ENVELOPES);
   }
 
-  public BudgetAreaCategorizationChecker selectSpecial() {
-    return selectAndReturn(BudgetArea.SPECIAL);
+  public BudgetAreaCategorizationChecker selectExtras() {
+    return selectAndReturn(BudgetArea.EXTRAS);
   }
 
   public SavingsCategorizationChecker selectSavings() {
@@ -170,8 +170,8 @@ public class CategorizationChecker extends GuiChecker {
     return checkSelectedAndReturn(BudgetArea.ENVELOPES);
   }
 
-  public BudgetAreaCategorizationChecker getSpecial() {
-    return checkSelectedAndReturn(BudgetArea.SPECIAL);
+  public BudgetAreaCategorizationChecker getExtras() {
+    return checkSelectedAndReturn(BudgetArea.EXTRAS);
   }
 
   public BudgetAreaCategorizationChecker getSavings() {
@@ -484,42 +484,42 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
-  public CategorizationChecker setNewSpecial(String label, String seriesName) {
+  public CategorizationChecker setNewExtra(String label, String seriesName) {
     int[] indices = getRowIndices(label);
     boolean first = true;
     for (int index : indices) {
       selectTableRow(index);
       if (first) {
-        selectSpecial()
+        selectExtras()
           .createSeries(seriesName)
           .selectSeries(seriesName);
         first = false;
       }
       else {
-        selectSpecial().selectSeries(seriesName);
+        selectExtras().selectSeries(seriesName);
       }
     }
     return this;
   }
 
-  public CategorizationChecker setSpecial(String label, String seriesName) {
+  public CategorizationChecker setExtra(String label, String seriesName) {
     int[] indices = getRowIndices(label);
     for (int index : indices) {
       selectTableRow(index);
-      selectSpecial().selectSeries(seriesName);
+      selectExtras().selectSeries(seriesName);
     }
     return this;
   }
 
-  public CategorizationChecker setNewSpecial(int row, String seriesName) {
+  public CategorizationChecker setNewExtra(int row, String seriesName) {
     selectTableRow(row);
-    selectSpecial().selectNewSeries(seriesName);
+    selectExtras().selectNewSeries(seriesName);
     return this;
   }
 
-  public CategorizationChecker setSpecial(int row, String seriesName) {
+  public CategorizationChecker setExtra(int row, String seriesName) {
     selectTableRow(row);
-    selectSpecial().selectSeries(seriesName);
+    selectExtras().selectSeries(seriesName);
     return this;
   }
 

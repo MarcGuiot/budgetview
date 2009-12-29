@@ -23,7 +23,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Income",
                          "Recurring",
                          "Envelopes",
-                         "Special",
+                         "Extras",
                          "Savings",
                          "Deferred debit");
 
@@ -41,7 +41,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Income", "Exceptional Income", "Salary",
                          "Recurring", "Electricity", "Internet",
                          "Envelopes", "Groceries",
-                         "Special",
+                         "Extras",
                          "Savings",
                          "Deferred debit");
 
@@ -95,7 +95,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Income",
                          "Recurring",
                          "Envelopes", "New envelope",
-                         "Special",
+                         "Extras",
                          "Savings",
                          "Deferred debit");
 
@@ -111,7 +111,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Income",
                          "Recurring",
                          "Envelopes",
-                         "Special",
+                         "Extras",
                          "Savings",
                          "Deferred debit");
   }
@@ -127,7 +127,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Income",
                          "Recurring",
                          "Envelopes",
-                         "Special",
+                         "Extras",
                          "Savings",
                          "Deferred debit");
 
@@ -143,14 +143,14 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Income", "salary",
                          "Recurring", "mortgage",
                          "Envelopes", "envelope1", "envelope2",
-                         "Special",
+                         "Extras",
                          "Savings",
                          "Deferred debit");
 
     series.checkExpansionEnabled("All", false);
     series.checkExpansionEnabled("To categorize", false);
     series.checkExpansionEnabled("Income", true);
-    series.checkExpansionEnabled("Special", false);
+    series.checkExpansionEnabled("Extras", false);
 
     series.checkExpansionEnabled("Envelopes", true);
     series.toggleExpansion("Envelopes");
@@ -160,7 +160,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Income", "salary",
                          "Recurring", "mortgage",
                          "Envelopes",
-                         "Special",
+                         "Extras",
                          "Savings",
                          "Deferred debit");
 
@@ -170,7 +170,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Income", "salary",
                          "Recurring", "mortgage",
                          "Envelopes", "envelope1", "envelope2",
-                         "Special",
+                         "Extras",
                          "Savings",
                          "Deferred debit");
     
@@ -180,7 +180,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Income",
                          "Recurring",
                          "Envelopes",
-                         "Special",
+                         "Extras",
                          "Savings",
                          "Deferred debit");
 
@@ -191,7 +191,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Income", "salary",
                          "Recurring", "mortgage",
                          "Envelopes", "envelope1", "envelope2",
-                         "Special",
+                         "Extras",
                          "Savings",
                          "Deferred debit");
 
@@ -201,7 +201,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Income",
                          "Recurring",
                          "Envelopes",
-                         "Special",
+                         "Extras",
                          "Savings",
                          "Deferred debit");
   }

@@ -670,7 +670,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTransactions("Monoprix");
     categorization.selectEnvelopes().createSeries("series1");
-    categorization.selectSpecial().selectNewSeries("Occasional");
+    categorization.selectExtras().selectNewSeries("Occasional");
 
     views.selectData();
     transactions.checkSeries("Monoprix", "Occasional");
@@ -730,7 +730,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     timeline.selectMonth("2008/05");
-    categorization.setNewSpecial("ED", "Occasional");
+    categorization.setNewExtra("ED", "Occasional");
 
     views.selectBudget();
     timeline.selectMonth("2008/05");
@@ -844,7 +844,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/06");
     categorization.selectTransactions("ED");
     transactionDetails.split("5", "DVD");
-    categorization.selectSpecial().selectNewSeries("Leisures");
+    categorization.selectExtras().selectNewSeries("Leisures");
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
@@ -859,7 +859,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows(categorization.getTable()
       .getRowIndex(CategorizationChecker.AMOUNT_COLUMN_INDEX, -15.0));
     transactionDetails.split("10", "CD");
-    categorization.selectSpecial().selectSeries("Leisures");
+    categorization.selectExtras().selectSeries("Leisures");
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
@@ -898,7 +898,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/05");
     categorization.selectTransactions("Auchan");
     transactionDetails.split("9", "DVD");
-    categorization.selectSpecial().selectNewSeries("Leisures");
+    categorization.selectExtras().selectNewSeries("Leisures");
 
     views.selectBudget();
     timeline.selectMonth("2008/05");

@@ -121,9 +121,9 @@
                              styleClass="amountLabel"/>
                       <label gridPos="(1,8)" ref="remainingEnvelope" styleClass="amount"/>
 
-                      <label gridPos="(0,9)" text="$budgetSummaryDetails.position.amount.special"
+                      <label gridPos="(0,9)" text="$budgetSummaryDetails.position.amount.extras"
                              styleClass="amountLabel"/>
-                      <label gridPos="(1,9)" ref="remainingSpecial" styleClass="amount"/>
+                      <label gridPos="(1,9)" ref="remainingExtras" styleClass="amount"/>
                     </grid>
 
                     <filler fill="vertical"/>

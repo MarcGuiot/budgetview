@@ -81,16 +81,16 @@ public class BudgetStat {
   public static DoubleField ENVELOPES_SUMMARY;
 
   @DefaultDouble(0.0)
-  public static DoubleField SPECIAL;
+  public static DoubleField EXTRAS;
 
   @DefaultDouble(0.0)
-  public static DoubleField SPECIAL_REMAINING;
+  public static DoubleField EXTRAS_REMAINING;
 
   @DefaultDouble(0.0)
-  public static DoubleField SPECIAL_PLANNED;
+  public static DoubleField EXTRAS_PLANNED;
 
   @DefaultDouble(0.0)
-  public static DoubleField SPECIAL_SUMMARY;
+  public static DoubleField EXTRAS_SUMMARY;
 
   @DefaultDouble(0.0)
   public static DoubleField DEFERRED;
@@ -149,7 +149,7 @@ public class BudgetStat {
   public static DoubleField[] INCOME_FIELDS = {INCOME, INCOME_REMAINING};
 
   public static DoubleField[] EXPENSE_FIELDS = {ENVELOPES, ENVELOPES_REMAINING,
-                                                SPECIAL, SPECIAL_REMAINING, SAVINGS, SAVINGS_REMAINING, UNCATEGORIZED};
+                                                EXTRAS, EXTRAS_REMAINING, SAVINGS, SAVINGS_REMAINING, UNCATEGORIZED};
 
   static {
     GlobTypeLoader.init(BudgetStat.class);
@@ -165,8 +165,8 @@ public class BudgetStat {
         return SAVINGS_REMAINING;
       case RECURRING:
         return RECURRING_REMAINING;
-      case SPECIAL:
-        return SPECIAL_REMAINING;
+      case EXTRAS:
+        return EXTRAS_REMAINING;
       case DEFERRED:
         return DEFERRED_REMAINING;
     }
@@ -183,8 +183,8 @@ public class BudgetStat {
         return SAVINGS;
       case RECURRING:
         return RECURRING;
-      case SPECIAL:
-        return SPECIAL;
+      case EXTRAS:
+        return EXTRAS;
       case DEFERRED:
         return DEFERRED;
     }
@@ -201,8 +201,8 @@ public class BudgetStat {
         return SAVINGS_PLANNED;
       case RECURRING:
         return RECURRING_PLANNED;
-      case SPECIAL:
-        return SPECIAL_PLANNED;
+      case EXTRAS:
+        return EXTRAS_PLANNED;
       case DEFERRED:
         return DEFERRED_PLANNED;
     }
@@ -219,8 +219,8 @@ public class BudgetStat {
         return SAVINGS_SUMMARY;
       case RECURRING:
         return RECURRING_SUMMARY;
-      case SPECIAL:
-        return SPECIAL_SUMMARY;
+      case EXTRAS:
+        return EXTRAS_SUMMARY;
       case DEFERRED:
         return DEFERRED_SUMMARY;
     }

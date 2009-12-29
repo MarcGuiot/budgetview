@@ -44,7 +44,7 @@ public class SavingsView extends View {
     NextProjectsView nextProjectsView = new NextProjectsView(repository, directory);
     nextProjectsView.registerComponents(builder);
 
-    SeriesEditionButtons seriesButtons = new SeriesEditionButtons(BudgetArea.SPECIAL,
+    SeriesEditionButtons seriesButtons = new SeriesEditionButtons(BudgetArea.EXTRAS,
                                                                   repository, directory, seriesEditionDialog);
     seriesButtons.setNames("createProject", "editAllProjects");
     seriesButtons.registerButtons(builder);

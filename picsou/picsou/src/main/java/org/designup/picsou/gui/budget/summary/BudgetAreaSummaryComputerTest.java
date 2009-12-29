@@ -111,7 +111,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testExpensesWithPositivePlanned() throws Exception {
-    init(BudgetArea.SPECIAL, 1000, 1200, 200)
+    init(BudgetArea.EXTRAS, 1000, 1200, 200)
       .checkObserved("+1000.00")
       .checkPlanned("+1200.00")
       .checkNoOverrun()
@@ -120,7 +120,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testExpensesWithPositivePlannedAndOverrun() throws Exception {
-    init(BudgetArea.SPECIAL, 1000, 1200, 300)
+    init(BudgetArea.EXTRAS, 1000, 1200, 300)
       .checkObserved("+1000.00")
       .checkPlanned("+1200.00")
       .checkPositiveOverrun()
@@ -129,7 +129,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testExpensesWithPositiveObserved() throws Exception {
-    init(BudgetArea.SPECIAL, 100, -1200, -1000)
+    init(BudgetArea.EXTRAS, 100, -1200, -1000)
       .checkObserved("+100.00")
       .checkPlanned("1200.00")
       .checkNormalTooltip()
@@ -139,7 +139,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testEmptyExpenses() throws Exception {
-    init(BudgetArea.SPECIAL, 0, 0, 0)
+    init(BudgetArea.EXTRAS, 0, 0, 0)
       .checkObserved("0.00")
       .checkPlanned("0.00")
       .checkNoOverrun()
@@ -147,7 +147,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testExpensesWithNoPlannedAndNegativeObserved() throws Exception {
-    init(BudgetArea.SPECIAL, -200, 0, 0)
+    init(BudgetArea.EXTRAS, -200, 0, 0)
       .checkObserved("200.00")
       .checkPlanned("0.00")
       .checkErrorOverrun()
@@ -156,7 +156,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testExpensesWithNoPlannedAndPositiveObserved() throws Exception {
-    init(BudgetArea.SPECIAL, 200, 0, 0)
+    init(BudgetArea.EXTRAS, 200, 0, 0)
       .checkObserved("+200.00")
       .checkPlanned("0.00")
       .checkPositiveOverrun()
@@ -165,7 +165,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testPastExpensesWithOverrun() throws Exception {
-    init(BudgetArea.SPECIAL, 200809, -110, -100, 0)
+    init(BudgetArea.EXTRAS, 200809, -110, -100, 0)
       .checkObserved("110.00")
       .checkPlanned("100.00")
       .checkErrorOverrun()
@@ -174,7 +174,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testPastExpensesWithNoObserved() throws Exception {
-    init(BudgetArea.SPECIAL, 200809, 0, -100, 0)
+    init(BudgetArea.EXTRAS, 200809, 0, -100, 0)
       .checkObserved("0.00")
       .checkPlanned("100.00")
       .checkNoOverrun()

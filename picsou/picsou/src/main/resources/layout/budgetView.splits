@@ -33,7 +33,7 @@
 
       <verticalSplit ref="secondVerticalSplitPane" weightX="3">
         <panel ref="recurringBudgetView" weightY="6"/>
-        <panel ref="projectsBudgetView" weightY="4"/>
+        <panel ref="extrasBudgetView" weightY="4"/>
       </verticalSplit>
 
       <verticalSplit ref="thirdVerticalSplitPane" weightX="3">

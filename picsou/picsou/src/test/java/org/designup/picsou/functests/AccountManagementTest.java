@@ -133,7 +133,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     timeline.selectAll();
     categorization.setNewIncome("WorldCo", "income");
-    categorization.setNewSpecial("Epargne", "Epargne");
+    categorization.setNewExtra("Epargne", "Epargne");
     views.selectHome();
     mainAccounts.edit("Account n. 000123")
       .setAsSavings()

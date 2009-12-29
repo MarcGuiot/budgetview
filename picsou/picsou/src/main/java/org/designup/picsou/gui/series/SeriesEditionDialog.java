@@ -443,7 +443,7 @@ public class SeriesEditionDialog {
     if (toAccountId != null) {
       values.add(value(Series.TO_ACCOUNT, toAccountId));
     }
-    if (budgetArea == BudgetArea.SPECIAL) {
+    if (budgetArea == BudgetArea.EXTRAS) {
       values.add(value(Series.IS_AUTOMATIC, false));
       SelectionService selectionService = directory.get(SelectionService.class);
       if (!selectedTransactions.isEmpty()) {

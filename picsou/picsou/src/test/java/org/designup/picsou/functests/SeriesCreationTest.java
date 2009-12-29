@@ -80,10 +80,10 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     transactions.checkSeries(0, "Regime");
   }
 
-  public void testNewSpecialSeries() throws Exception {
+  public void testNewExtraSeries() throws Exception {
 
     views.selectBudget();
-    budgetView.specials.createSeries()
+    budgetView.extras.createSeries()
       .setName("Machine a laver")
       .checkSingleMonthDate("June 2008")
       .checkTable(new Object[][]{{"2008", "June", "", "0"}})
@@ -95,7 +95,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       .load();
 
     timeline.selectMonths("2008/06", "2008/07");
-    budgetView.specials.createSeries()
+    budgetView.extras.createSeries()
       .setName("Machine a laver")
       .setEveryMonth()
       .checkStartDate("June 2008")

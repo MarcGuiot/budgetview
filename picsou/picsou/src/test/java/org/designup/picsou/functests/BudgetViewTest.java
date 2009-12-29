@@ -87,7 +87,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Exceptional Income", 0, 0);
   }
 
-  public void testSpecialSeries() throws Exception {
+  public void testExtraSeries() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")
       .load();
@@ -99,16 +99,16 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     timeline.checkSelection("2008/07");
     views.selectCategorization();
-    categorization.setNewSpecial("Auchan", "Anniversaire");
+    categorization.setNewExtra("Auchan", "Anniversaire");
 
     views.selectBudget();
 
-    budgetView.specials.checkTitle("Special");
-    budgetView.specials.checkTotalAmounts(-95.0, -95.0);
-    budgetView.specials.checkSeries("Anniversaire", -95.0, -95.0);
+    budgetView.extras.checkTitle("Extras");
+    budgetView.extras.checkTotalAmounts(-95.0, -95.0);
+    budgetView.extras.checkSeries("Anniversaire", -95.0, -95.0);
 
     views.selectCategorization();
-    categorization.getSpecial().checkSeriesIsSelected("Anniversaire");
+    categorization.getExtras().checkSeriesIsSelected("Anniversaire");
   }
 
   public void testSavingsSeries() throws Exception {
@@ -291,7 +291,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .selectAllMonths()
       .setAmount("100")
       .validate();
-    budgetView.specials.createSeries().setName("courantAuchan")
+    budgetView.extras.createSeries().setName("courantAuchan")
       .setStartDate(200806)
       .setEndDate(200806)
       .selectAllMonths()
@@ -307,7 +307,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectCategorization();
     categorization.setEnvelope("Monoprix", "courantMonoprix");
-    categorization.setSpecial("Auchan", "courantAuchan");
+    categorization.setExtra("Auchan", "courantAuchan");
     categorization.setEnvelope("ED1", "courantED");
     categorization.setEnvelope("ED2", "courantED");
 
@@ -316,27 +316,27 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.envelopes.checkSeries("courantMonoprix", -50, -200).checkSeries("courantED", -79, -200);
 
-    budgetView.specials.checkSeries("courantAuchan", -95, -100);
+    budgetView.extras.checkSeries("courantAuchan", -95, -100);
 
     timeline.selectMonth("2008/05");
     budgetView.envelopes.checkSeries("courantED", -29, -100)
       .checkSeriesNotPresent("courantMonoprix");
 
-    budgetView.specials
+    budgetView.extras
       .checkSeriesNotPresent("courantAuchan");
 
     timeline.selectMonth("2008/06");
     budgetView.envelopes.checkSeries("courantMonoprix", -0, -100)
       .checkSeriesNotPresent("courantED");
 
-    budgetView.specials.checkSeries("courantAuchan", -95, -100);
+    budgetView.extras.checkSeries("courantAuchan", -95, -100);
 
     timeline.selectMonth("2008/07");
 
     budgetView.envelopes.checkSeries("courantMonoprix", -50, -100)
       .checkSeriesNotPresent("courantED");
 
-    budgetView.specials
+    budgetView.extras
       .checkSeriesNotPresent("courantAuchan");
 
     timeline.selectMonth("2008/08");

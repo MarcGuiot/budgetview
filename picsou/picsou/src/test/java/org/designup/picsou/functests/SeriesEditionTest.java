@@ -109,17 +109,17 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonths("2008/10", "2008/11");
-    budgetView.specials.createSeries()
+    budgetView.extras.createSeries()
       .setName("Plumber")
       .checkMonthsSelected(0, 1)
       .setAmount(200)
       .validate();
 
     timeline.selectMonth("2008/10");
-    budgetView.specials.checkSeries("Plumber", 0, -200.00);
+    budgetView.extras.checkSeries("Plumber", 0, -200.00);
 
     timeline.selectMonth("2008/11");
-    budgetView.specials.checkSeries("Plumber", 0, -200.00);
+    budgetView.extras.checkSeries("Plumber", 0, -200.00);
   }
 
   public void testChangingTheAmountForAMonth() throws Exception {
@@ -1300,7 +1300,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testSpecialWithOnlyOneMonth() throws Exception {
+  public void testExtraWithOnlyOneMonth() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2007/05/04", -100.00, "Virement")
       .addTransaction("2007/06/04", -100.00, "CENTER PARC")
@@ -1308,7 +1308,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
     views.selectCategorization();
     categorization.selectTransactions("CENTER PARC");
-    categorization.selectSpecial().createSeries()
+    categorization.selectExtras().createSeries()
       .setName("Center Parc")
       .checkSingleMonthSelected()
       .checkSingleMonthDate("June 2007")
@@ -1316,7 +1316,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
-  public void testSpecialWithSeveralMonths() throws Exception {
+  public void testExtraWithSeveralMonths() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2007/05/04", -100.00, "Virement")
       .addTransaction("2007/06/04", -100.00, "CENTER PARC")
@@ -1326,7 +1326,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
     views.selectCategorization();
     categorization.selectTransactions("CENTER PARC");
-    categorization.selectSpecial().createSeries()
+    categorization.selectExtras().createSeries()
       .setName("Center Parc")
       .checkEveryMonthSelected()
       .checkStartDate("June 2007")
@@ -1335,14 +1335,14 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
-  public void testSpecialIsInitializedWithASingleMonthPeriodicityWhenOnlyOneMonthIsSelected() throws Exception {
+  public void testExtraIsInitializedWithASingleMonthPeriodicityWhenOnlyOneMonthIsSelected() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/06/04", -10.00, "McDo")
       .load();
 
     timeline.selectMonth("2008/06");
     views.selectBudget();
-    budgetView.specials.createSeries()
+    budgetView.extras.createSeries()
       .setName("Center Parc")
       .checkSingleMonthSelected()
       .checkSingleMonthDate("June 2008")

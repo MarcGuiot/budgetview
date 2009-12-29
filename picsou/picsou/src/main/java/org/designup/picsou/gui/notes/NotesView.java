@@ -27,7 +27,7 @@ public class NotesView extends View {
             BudgetArea.INCOME.getId(),
             BudgetArea.RECURRING.getId(),
             BudgetArea.ENVELOPES.getId(),
-            BudgetArea.SPECIAL.getId(),
+            BudgetArea.EXTRAS.getId(),
             BudgetArea.SAVINGS.getId());
 
   private CardHandler cards;

@@ -135,8 +135,8 @@
                       <panel ref="envelopesSeriesChooser"/>
                     </card>
 
-                    <card name="special">
-                      <panel ref="specialSeriesChooser"/>
+                    <card name="extras">
+                      <panel ref="extrasSeriesChooser"/>
                     </card>
 
                     <card name="savings">

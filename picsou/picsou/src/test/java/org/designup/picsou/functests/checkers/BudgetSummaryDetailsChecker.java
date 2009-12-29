@@ -85,12 +85,8 @@ public class BudgetSummaryDetailsChecker extends GuiChecker {
     return check(amount, "remainingOutSavings");
   }
 
-  public BudgetSummaryDetailsChecker checkOccasional(double amount) {
-    return check(amount, "remainingOccasional");
-  }
-
-  public BudgetSummaryDetailsChecker checkProjects(double amount) {
-    return check(amount, "remainingSpecial");
+  public BudgetSummaryDetailsChecker checkExtras(double amount) {
+    return check(amount, "remainingExtras");
   }
 
   public BudgetSummaryDetailsChecker checkNoPositionDetails() {
@@ -113,7 +109,7 @@ public class BudgetSummaryDetailsChecker extends GuiChecker {
     return this;
   }
 
-  public BudgetSummaryDetailsChecker checkBalanceDetails(double income, double recurring, double envelopes, double savings, double special) {
+  public BudgetSummaryDetailsChecker checkBalanceDetails(double income, double recurring, double envelopes, double savings, double extras) {
     StackChart chart = (StackChart)window.getPanel("balanceChart").getAwtComponent();
 
     StackChartDataset incomeDataset = chart.getLeftDataset();
@@ -124,7 +120,7 @@ public class BudgetSummaryDetailsChecker extends GuiChecker {
     expected.put("Envelopes", envelopes);
     expected.put("Recurring", recurring);
     expected.put("Savings", savings);
-    expected.put("Special", special);
+    expected.put("Extras", extras);
 
     StackChartDataset expensesDataset = chart.getRightDataset();
     for (int i = 0; i < expensesDataset.size(); i++) {

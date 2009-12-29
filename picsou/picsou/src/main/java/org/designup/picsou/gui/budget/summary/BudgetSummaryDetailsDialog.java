@@ -148,7 +148,7 @@ public class BudgetSummaryDetailsDialog {
     addLabel(builder, "remainingEnvelope", BudgetStat.ENVELOPES_REMAINING, true);
     addLabel(builder, "remainingInSavings", BudgetStat.SAVINGS_IN_REMAINING, false);
     addLabel(builder, "remainingOutSavings", BudgetStat.SAVINGS_OUT_REMAINING, true);
-    addLabel(builder, "remainingSpecial", BudgetStat.SPECIAL_REMAINING, true);
+    addLabel(builder, "remainingExtras", BudgetStat.EXTRAS_REMAINING, true);
 
     PositionThresholdIndicator thresholdIndicator =
       builder.add("thresholdIndicator",

@@ -52,8 +52,6 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
     }
     GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE);
 
-    GlobPrinter.print(seriesBudgets);
-
     for (Glob seriesBudget : seriesBudgets) {
       Key seriesStat = createKey(seriesBudget.get(SeriesBudget.SERIES),
                                  seriesBudget.get(SeriesBudget.MONTH));

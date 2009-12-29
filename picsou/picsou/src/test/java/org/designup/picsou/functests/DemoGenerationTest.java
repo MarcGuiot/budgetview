@@ -123,7 +123,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addTransaction(first(19), -13.50, "ZINGMAN")
       .addTransaction(second(19), -11.50, "ZINGMAN")
       .addTransaction(third(9), -6.50, "DAILY MAGS")
-        // SPECIAL
+        // EXTRAS
       .addTransaction(second(28), -680.50, "PLOMBERIE 24/7")
         // SAVINGS
       .addTransaction(first(5), -200.00, "VIRT MENS. LIVRET")
@@ -181,7 +181,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     categorization.setNewEnvelope("ZINGMAN", "Divers");
 
-    categorization.setNewSpecial("PLOMBERIE 24/7", "Plombier");
+    categorization.setNewExtra("PLOMBERIE 24/7", "Plombier");
 
     //  ================ SAVINGS   ================
     views.selectHome();
@@ -241,7 +241,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth(Month.toString(Month.normalize(thirdMonth + 2)));
-    budgetView.specials.createSeries()
+    budgetView.extras.createSeries()
       .setName("Cadeaux")
       .selectAllMonths()
       .setAmount(150)
@@ -249,7 +249,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     int holidaysMonth = Month.normalize(thirdMonth + 4);
     timeline.selectMonth(Month.toString(holidaysMonth));
-    budgetView.specials.createSeries()
+    budgetView.extras.createSeries()
       .setName("Vacances")
       .selectAllMonths()
       .setAmount(2250)

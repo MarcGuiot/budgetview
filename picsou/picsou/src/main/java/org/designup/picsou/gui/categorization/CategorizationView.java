@@ -171,7 +171,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     addSeriesChooser("incomeSeriesChooser", BudgetArea.INCOME, builder);
     addSeriesChooser("recurringSeriesChooser", BudgetArea.RECURRING, builder);
     addSeriesChooser("envelopesSeriesChooser", BudgetArea.ENVELOPES, builder);
-    addSeriesChooser("specialSeriesChooser", BudgetArea.SPECIAL, builder);
+    addSeriesChooser("extrasSeriesChooser", BudgetArea.EXTRAS, builder);
     addSeriesChooser("savingsSeriesChooser", BudgetArea.SAVINGS, builder);
     addSeriesChooser("deferredSeriesChooser", BudgetArea.DEFERRED, builder);
 

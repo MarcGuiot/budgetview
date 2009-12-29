@@ -108,7 +108,7 @@ public class NextProjectsView extends View implements GlobSelectionListener {
           return false;
         }
         Glob series = repository.get(Key.create(Series.TYPE, seriesBudget.get(SeriesBudget.SERIES)));
-        return BudgetArea.SPECIAL.getId().equals(series.get(Series.BUDGET_AREA));
+        return BudgetArea.EXTRAS.getId().equals(series.get(Series.BUDGET_AREA));
       }
     });
   }
