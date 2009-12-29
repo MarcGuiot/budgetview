@@ -6,6 +6,7 @@ import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Utils;
 
 import java.util.Set;
@@ -50,12 +51,17 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
       }
     }
     GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE);
+
+    GlobPrinter.print(seriesBudgets);
+
     for (Glob seriesBudget : seriesBudgets) {
       Key seriesStat = createKey(seriesBudget.get(SeriesBudget.SERIES),
                                  seriesBudget.get(SeriesBudget.MONTH));
       repository.findOrCreate(seriesStat);
-      repository.update(seriesStat, SeriesStat.PLANNED_AMOUNT,
-                        seriesBudget.isTrue(SeriesBudget.ACTIVE) ? seriesBudget.get(SeriesBudget.AMOUNT) : 0);
+
+      // Do not inline - amount can be null
+      Double value = seriesBudget.isTrue(SeriesBudget.ACTIVE) ? seriesBudget.get(SeriesBudget.AMOUNT) : Double.valueOf(0.0);
+      repository.update(seriesStat, SeriesStat.PLANNED_AMOUNT, value);
     }
   }
 
