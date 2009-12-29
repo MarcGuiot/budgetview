@@ -56,6 +56,10 @@ public class OfxBuilder {
     repository.create(Key.create(BankEntity.TYPE, BankEntity.GENERIC_BANK_ENTITY_ID));
   }
 
+  public OfxBuilder addBankAccount(String accountNumber, double position, String updateDate) {
+    return addBankAccount("-1", 1234, accountNumber, position, updateDate);
+  }
+
   public OfxBuilder addBankAccount(int bankEntityId, int branchId, String accountNumber, double position, String updateDate) {
     return addBankAccount(Integer.toString(bankEntityId), branchId, accountNumber, position, updateDate);
   }
@@ -80,9 +84,15 @@ public class OfxBuilder {
   }
 
   public OfxBuilder addCardAccount(String cardId, double position, String updateDate) {
+    String bankEntityLabel = "-1";
+    Integer bankEntityId = BankEntity.find(bankEntityLabel, repository);
+    Integer bankId = Bank.GENERIC_BANK_ID;
     currentAccount =
       repository.create(Key.create(Account.TYPE, repository.getIdGenerator().getNextId(Account.ID, 1)),
                         value(Account.NUMBER, cardId),
+                        value(Account.BANK, bankId),
+                        value(Account.BANK_ENTITY, bankEntityId),
+                        value(Account.BANK_ENTITY_LABEL, bankEntityLabel),
                         value(Account.POSITION, position),
                         value(Account.POSITION_DATE, updateDate != null ? Dates.parse(updateDate) : null),
                         value(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()));
