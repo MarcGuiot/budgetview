@@ -7,6 +7,7 @@ import org.designup.picsou.model.util.Amounts;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
+import org.globsframework.utils.Utils;
 
 import java.util.Set;
 
@@ -45,7 +46,7 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
       }
       else {
         repository.update(seriesBudget.getKey(),
-                          value(SeriesBudget.AMOUNT, previousAmount));
+                          value(SeriesBudget.AMOUNT, Utils.zeroIfNull(previousAmount)));
         Double currentAmount = previousAmount;
         if (seriesBudget.get(SeriesBudget.MONTH) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
           previousAmount = seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT);
@@ -69,7 +70,7 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
             && Amounts.isNotZero(previousAmount)
           ) {
           repository.update(seriesBudget.getKey(),
-                            value(SeriesBudget.AMOUNT, previousAmount));
+                            value(SeriesBudget.AMOUNT, Utils.zeroIfNull(previousAmount)));
           firstUpdate = false;
         }
       }

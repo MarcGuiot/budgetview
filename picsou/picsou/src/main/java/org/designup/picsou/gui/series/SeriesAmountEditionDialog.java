@@ -142,7 +142,7 @@ public class SeriesAmountEditionDialog {
                                   and(
                                     isTrue(SeriesBudget.ACTIVE),
                                     fieldStrictlyGreaterThan(SeriesBudget.MONTH, maxMonth)),
-                                  update(SeriesBudget.AMOUNT, amount));
+                                  update(SeriesBudget.AMOUNT, Utils.zeroIfNull(amount)));
       }
 
       localRepository.commitChanges(false);

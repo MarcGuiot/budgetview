@@ -15,6 +15,7 @@ import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
+import org.globsframework.utils.Utils;
 
 public class SeriesBudget {
   public static GlobType TYPE;
@@ -58,7 +59,7 @@ public class SeriesBudget {
       SerializedOutput output = serializedByteArrayOutput.getOutput();
       output.writeInteger(fieldValues.get(SeriesBudget.SERIES));
       output.writeInteger(fieldValues.get(SeriesBudget.MONTH));
-      output.writeDouble(fieldValues.get(SeriesBudget.AMOUNT));
+      output.writeDouble(Utils.zeroIfNull(fieldValues.get(SeriesBudget.AMOUNT)));
       output.writeInteger(fieldValues.get(SeriesBudget.DAY));
       output.writeBoolean(fieldValues.get(SeriesBudget.ACTIVE));
       output.writeDouble(fieldValues.get(SeriesBudget.OBSERVED_AMOUNT));
@@ -78,7 +79,7 @@ public class SeriesBudget {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(SeriesBudget.SERIES, input.readInteger());
       fieldSetter.set(SeriesBudget.MONTH, input.readInteger());
-      fieldSetter.set(SeriesBudget.AMOUNT, input.readDouble());
+      fieldSetter.set(SeriesBudget.AMOUNT, Utils.zeroIfNull(input.readDouble()));
       fieldSetter.set(SeriesBudget.DAY, input.readInteger());
       fieldSetter.set(SeriesBudget.ACTIVE, input.readBoolean());
       fieldSetter.set(SeriesBudget.OBSERVED_AMOUNT, null);
@@ -88,7 +89,7 @@ public class SeriesBudget {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(SeriesBudget.SERIES, input.readInteger());
       fieldSetter.set(SeriesBudget.MONTH, input.readInteger());
-      fieldSetter.set(SeriesBudget.AMOUNT, input.readDouble());
+      fieldSetter.set(SeriesBudget.AMOUNT, Utils.zeroIfNull(input.readDouble()));
       fieldSetter.set(SeriesBudget.DAY, input.readInteger());
       fieldSetter.set(SeriesBudget.ACTIVE, input.readBoolean());
       fieldSetter.set(SeriesBudget.OBSERVED_AMOUNT, input.readDouble());

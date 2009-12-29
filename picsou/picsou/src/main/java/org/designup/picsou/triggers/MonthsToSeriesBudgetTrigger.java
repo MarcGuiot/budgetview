@@ -8,6 +8,7 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Utils;
 
 import java.util.*;
 
@@ -120,7 +121,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
             break;
           }
         }
-        repository.update(budget.getKey(), SeriesBudget.AMOUNT, amount);
+        repository.update(budget.getKey(), SeriesBudget.AMOUNT, Utils.zeroIfNull(amount));
       }
       else {
         Double seriesAmount = null; // pour les tests de triggers
