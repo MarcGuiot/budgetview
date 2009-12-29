@@ -91,7 +91,7 @@
 
                 <column weightY="0.1">
                   <row name="budgetAreaSelectionPanel" border="matte(1,1,0,1,#999999)">
-                    <repeat ref="budgetAreaToggles" layout="horizontalGrid" gridWrapLimit="3" margin="5">
+                    <repeat ref="budgetAreaToggles" layout="horizontalGrid" gridWrapLimit="4" margin="5">
                       <toggleButton ref="budgetAreaToggle" styleClass="budgetAreaSelector" anchor="left"/>
                     </repeat>
                   </row>

@@ -38,10 +38,12 @@
     <!-- Back/forward buttons -->
     <ui name="backArrow" class="org.designup.picsou.gui.components.ArrowButtonUI"
         rotation="180" doubleArrow="false"
-        rolloverColor="backforward.rollover" pressedColor="backforward.pressed" disabledColor="backforward.disabled"/>
+        rolloverColor="backforward.rollover" pressedColor="backforward.pressed" disabledColor="backforward.disabled"
+        size="(20,16)"/>
     <ui name="forwardArrow" class="org.designup.picsou.gui.components.ArrowButtonUI"
         rotation="0" doubleArrow="false"
-        rolloverColor="backforward.rollover" pressedColor="backforward.pressed" disabledColor="backforward.disabled"/>
+        rolloverColor="backforward.rollover" pressedColor="backforward.pressed" disabledColor="backforward.disabled"
+        size="(20,16)"/>
     <style selector="button.backforward"
            minimumSize="(20,16)" preferredSize="(20,16)" foreground="backforward.normal"
            fill="none" margin="3" weightX="0"/>
@@ -66,7 +68,7 @@
   <panel styleClass="main" ui="wave">
     <column marginTop="15" marginLeft="20" marginRight="20" marginBottom="10">
 
-      <row weightY="0.1" name="mainWindowHeader">
+      <horizontalBoxes weightY="0.1" name="mainWindowHeader">
         <column>
           <label ref="title" opaque="false" font="Arial,bold,22" weightX="0"
                  horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
@@ -78,7 +80,7 @@
         <repeat ref="cards" layout="row" weightX="0">
           <toggleButton ref="toggle" styleClass="masterViewSelector"/>
         </repeat>
-      </row>
+      </horizontalBoxes>
 
       <row weightY="0.1" name="time" marginTop="15" marginLeft="20" marginRight="20">
         <button ref="firstPeriod" ui="doubleArrowLeft" styleClass="doublePeriodButton"
