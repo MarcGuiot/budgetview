@@ -102,8 +102,8 @@ public class CategorizationChecker extends GuiChecker {
     return new SavingsCategorizationChecker(this, BudgetArea.SAVINGS);
   }
 
-  public BudgetAreaCategorizationChecker selectDeferred() {
-    return selectAndReturn(BudgetArea.DEFERRED);
+  public BudgetAreaCategorizationChecker selectOther() {
+    return selectAndReturn(BudgetArea.OTHER);
   }
 
   public CategorizationChecker checkCategorizationTips() {

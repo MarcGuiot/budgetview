@@ -33,7 +33,7 @@ public class PositionTrigger implements ChangeSetListener {
       for (Key transaction : seriesKey) {
         Glob glob = repository.findLinkTarget(repository.get(transaction), Transaction.SERIES);
         if (glob != null) {
-          if (glob.get(Series.BUDGET_AREA).equals(BudgetArea.DEFERRED.getId())) {
+          if (glob.get(Series.BUDGET_AREA).equals(BudgetArea.OTHER.getId())) {
             GlobList account = repository.getAll(Account.TYPE);
             updateTransactionPosition(repository, account);
             return;
@@ -49,7 +49,7 @@ public class PositionTrigger implements ChangeSetListener {
   private void updateTransactionPosition(GlobRepository repository, GlobList updatedAccount) {
 
     GlobList deferredSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA,
-                                                                                      BudgetArea.DEFERRED.getId()));
+                                                                                      BudgetArea.OTHER.getId()));
     Set<Integer> deferredSeriesId =
       deferredSeries
         .getValueSet(Series.ID);
@@ -160,7 +160,7 @@ public class PositionTrigger implements ChangeSetListener {
 
     Glob series = repository.getAll(Series.TYPE,
                                     GlobMatchers.and(
-                                      GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.DEFERRED.getId()),
+                                      GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
                                       GlobMatchers.fieldEquals(Series.FROM_ACCOUNT, account.get(Account.ID))))
       .getFirst();
     ReadOnlyGlobRepository.MultiFieldIndexed debitTransaction =

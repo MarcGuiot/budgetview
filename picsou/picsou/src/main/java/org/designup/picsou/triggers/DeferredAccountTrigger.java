@@ -45,7 +45,7 @@ public class DeferredAccountTrigger implements ChangeSetListener {
     if (changedTypes.contains(Account.TYPE)) {
       final GlobList deferredSeries =
         repository.getAll(Series.TYPE,
-                          GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.DEFERRED.getId()));
+                          GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()));
       repository.safeApply(Account.TYPE,
                            GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()),
                            new GlobFunctor() {
@@ -68,7 +68,7 @@ public class DeferredAccountTrigger implements ChangeSetListener {
     try {
       final GlobList deferredSeries =
         repository.getAll(Series.TYPE,
-                          GlobMatchers.and(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.DEFERRED.getId()),
+                          GlobMatchers.and(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
                                            GlobMatchers.fieldEquals(Series.FROM_ACCOUNT, key.get(Account.ID))));
       repository.delete(deferredSeries);
     }
@@ -82,7 +82,7 @@ public class DeferredAccountTrigger implements ChangeSetListener {
     try {
       Glob series = repository.create(Series.TYPE,
                                       FieldValue.value(Series.NAME, glob.get(Account.NAME)),
-                                      FieldValue.value(Series.BUDGET_AREA, BudgetArea.DEFERRED.getId()),
+                                      FieldValue.value(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
                                       FieldValue.value(Series.FIRST_MONTH, getDate(glob, Account.OPEN_DATE)),
                                       FieldValue.value(Series.LAST_MONTH, getDate(glob, Account.CLOSED_DATE)),
                                       FieldValue.value(Series.FROM_ACCOUNT, accountId),

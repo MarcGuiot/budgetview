@@ -173,7 +173,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     addSeriesChooser("envelopesSeriesChooser", BudgetArea.ENVELOPES, builder);
     addSeriesChooser("extrasSeriesChooser", BudgetArea.EXTRAS, builder);
     addSeriesChooser("savingsSeriesChooser", BudgetArea.SAVINGS, builder);
-    addSeriesChooser("deferredSeriesChooser", BudgetArea.DEFERRED, builder);
+    addSeriesChooser("otherSeriesChooser", BudgetArea.OTHER, builder);
 
     TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory, this);
     transactionDetailsView.registerComponents(builder);
@@ -298,7 +298,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     panelBuilder.add("groupCreateEditSeries", groupForSeries);
     panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
     panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
-    if (budgetArea == BudgetArea.DEFERRED){
+    if (budgetArea == BudgetArea.OTHER){
       groupForSeries.setVisible(false);
     }
 

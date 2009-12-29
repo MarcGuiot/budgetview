@@ -111,7 +111,7 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
     JButton editSeriesButton = new JButton(new EditSeriesAction(seriesKey));
     editSeriesButton.setName("editSeries:" + seriesName);
     cellBuilder.add("editSeries", editSeriesButton);
-    if (budgetArea == BudgetArea.DEFERRED){
+    if (budgetArea == BudgetArea.OTHER){
       editSeriesButton.setVisible(false);
     }
 

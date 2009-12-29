@@ -4,7 +4,6 @@ import org.designup.picsou.model.*;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.utils.GlobFunctor;
 
 import java.util.Set;
 
@@ -47,7 +46,7 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
         if (values.contains(Transaction.SERIES)){
           Integer seriesId = values.get(Transaction.SERIES);
           Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-          if (series.get(Series.BUDGET_AREA).equals(BudgetArea.DEFERRED.getId())){
+          if (series.get(Series.BUDGET_AREA).equals(BudgetArea.OTHER.getId())){
             int accountId = series.get(Series.FROM_ACCOUNT);
             Glob transaction = repository.get(key);
             Integer month = transaction.get(Transaction.BANK_MONTH);

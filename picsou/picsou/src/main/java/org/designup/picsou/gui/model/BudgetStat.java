@@ -93,16 +93,16 @@ public class BudgetStat {
   public static DoubleField EXTRAS_SUMMARY;
 
   @DefaultDouble(0.0)
-  public static DoubleField DEFERRED;
+  public static DoubleField OTHER;
 
   @DefaultDouble(0.0)
-  public static DoubleField DEFERRED_REMAINING;
+  public static DoubleField OTHER_REMAINING;
 
   @DefaultDouble(0.0)
-  public static DoubleField DEFERRED_PLANNED;
+  public static DoubleField OTHER_PLANNED;
 
   @DefaultDouble(0.0)
-  public static DoubleField DEFERRED_SUMMARY;
+  public static DoubleField OTHER_SUMMARY;
 
   @DefaultDouble(0.0)
   public static DoubleField SAVINGS;
@@ -167,8 +167,8 @@ public class BudgetStat {
         return RECURRING_REMAINING;
       case EXTRAS:
         return EXTRAS_REMAINING;
-      case DEFERRED:
-        return DEFERRED_REMAINING;
+      case OTHER:
+        return OTHER_REMAINING;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
   }
@@ -185,8 +185,8 @@ public class BudgetStat {
         return RECURRING;
       case EXTRAS:
         return EXTRAS;
-      case DEFERRED:
-        return DEFERRED;
+      case OTHER:
+        return OTHER;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
   }
@@ -203,8 +203,8 @@ public class BudgetStat {
         return RECURRING_PLANNED;
       case EXTRAS:
         return EXTRAS_PLANNED;
-      case DEFERRED:
-        return DEFERRED_PLANNED;
+      case OTHER:
+        return OTHER_PLANNED;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
   }
@@ -221,8 +221,8 @@ public class BudgetStat {
         return RECURRING_SUMMARY;
       case EXTRAS:
         return EXTRAS_SUMMARY;
-      case DEFERRED:
-        return DEFERRED_SUMMARY;
+      case OTHER:
+        return OTHER_SUMMARY;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
   }

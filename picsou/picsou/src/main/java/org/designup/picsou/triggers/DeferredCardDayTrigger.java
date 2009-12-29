@@ -90,7 +90,7 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
 
   private void updateDeferredCarDay(GlobRepository repository, final Glob account) {
 
-    Glob series = repository.getAll(Series.TYPE, GlobMatchers.and(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.DEFERRED.getId()),
+    Glob series = repository.getAll(Series.TYPE, GlobMatchers.and(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
                                                                   GlobMatchers.fieldEquals(Series.FROM_ACCOUNT, account.get(Account.ID))))
       .getFirst();
     Calendar calendar = Calendar.getInstance();

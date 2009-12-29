@@ -71,7 +71,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Christmas", "", "", "", "", "", "", "300.00", "")
       .add("Lottery", "", "", "", "", "", "+100.00", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Deferred debit", "", "", "", "", "", "", "", "")
+      .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
     seriesEvolution.checkForeground("To categorize", "Jul 08", "red");
@@ -130,7 +130,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Groceries", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Deferred debit", "", "", "", "", "", "", "", "")
+      .add("Other", "", "", "", "", "", "", "", "")
       .check();
   }
 
@@ -168,7 +168,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Groceries", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Deferred debit", "", "", "", "", "", "", "", "")
+      .add("Other", "", "", "", "", "", "", "", "")
       .check();
   }
 
@@ -180,7 +180,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     );
     seriesEvolution.checkTableIsEmpty(
       "Balance", "Main accounts", "Savings accounts", "To categorize",
-      "Income", "Recurring", "Envelopes", "Extras", "Savings", "Deferred debit");
+      "Income", "Recurring", "Envelopes", "Extras", "Savings", "Other");
   }
 
   public void testColumnNamesAreUpdatedOnMonthSelection() throws Exception {
@@ -248,7 +248,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Envelopes", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Deferred debit", "", "", "", "", "", "", "", "")
+      .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
     seriesEvolution.editSeries("John's", "Jul 08")
@@ -269,7 +269,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Envelopes", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Deferred debit", "", "", "", "", "", "", "", "")
+      .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
     seriesEvolution.editSeries("John's", "Sep 08")
@@ -290,7 +290,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Envelopes", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Deferred debit", "", "", "", "", "", "", "", "")
+      .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
     seriesEvolution.editSeries("John's", "Sep 08")
@@ -314,7 +314,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Envelopes", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Deferred debit", "", "", "", "", "", "", "", "")
+      .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
     seriesEvolution.editSeries("John's", "Sep 08")
@@ -335,7 +335,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Envelopes", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Deferred debit", "", "", "", "", "", "", "", "")
+      .add("Other", "", "", "", "", "", "", "", "")
       .check();
   }
 
@@ -365,7 +365,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Envelopes", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Deferred debit", "", "", "", "", "", "", "", "")
+      .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
     seriesEvolution.editSeries("John's", "Jul 08")
@@ -383,7 +383,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Envelopes", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Deferred debit", "", "", "", "", "", "", "", "")
+      .add("Other", "", "", "", "", "", "", "", "")
       .check();
   }
 
@@ -428,10 +428,10 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
                          "Income", "Salary", "Salary 2",
                          "Recurring", "Internet",
                          "Envelopes", "Groceries",
-                         "Extras", "Savings", "Deferred debit"};
+                         "Extras", "Savings", "Other"};
 
     String[] collapsed = {"Balance", "Main accounts", "Savings accounts", "To categorize",
-                          "Income", "Recurring", "Envelopes", "Extras", "Savings", "Deferred debit"};
+                          "Income", "Recurring", "Envelopes", "Extras", "Savings", "Other"};
 
     seriesEvolution.checkRowLabels(expanded);
 
@@ -448,7 +448,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
                                    "Envelopes", "Groceries",
                                    "Extras",
                                    "Savings",
-                                   "Deferred debit");
+                                   "Other");
 
     seriesEvolution.expandAll();
     seriesEvolution.checkRowLabels(expanded);
@@ -572,7 +572,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       "\tEnvelopes\t\t\t\t\t\t\t\t\n" +
       "\tExtras\t\t\t\t\t\t\t\t\n" +
       "\tSavings\t\t\t\t\t\t\t\t\n" +
-      "\tDeferred debit\t\t\t\t\t\t\t\t\n"
+      "\tOther\t\t\t\t\t\t\t\t\n"
     );
   }
 }

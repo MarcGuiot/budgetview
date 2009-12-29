@@ -23,12 +23,12 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTransaction("Auchan")
-      .selectDeferred()
+      .selectOther()
       .checkContainsNoSeries()
       .checkEditSeriesButtonNotVisible();
 
     categorization.selectTransaction("Prelevement")
-      .selectDeferred()
+      .selectOther()
       .checkActiveSeries("Card n. 1111")
       .checkEditSeriesButtonNotVisible()
       .selectSeries("Card n. 1111");
@@ -70,13 +70,13 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTransaction("Prelevement novembre")
-      .selectDeferred()
+      .selectOther()
       .selectSeries("Card n. 1111");
     categorization.selectTransaction("Prelevement octobre")
-      .selectDeferred()
+      .selectOther()
       .selectSeries("Card n. 1111");
     categorization.selectTransaction("Prelevement aout")
-      .selectDeferred()
+      .selectOther()
       .selectSeries("Card n. 1111");
     views.selectData();
     transactions.initAmountContent()
@@ -157,10 +157,10 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .check();
     views.selectCategorization();
     categorization.selectTransaction("Prelevement novembre")
-      .selectDeferred()
+      .selectOther()
       .selectSeries("Card 1111");
     categorization.selectTransaction("Prelevement octobre")
-      .selectDeferred()
+      .selectOther()
       .selectSeries("Card 1111");
     views.selectData();
     transactions.initAmountContent()

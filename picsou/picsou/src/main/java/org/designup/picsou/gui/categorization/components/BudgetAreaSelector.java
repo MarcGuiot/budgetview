@@ -18,8 +18,8 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobUtils;
-import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -30,7 +30,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
   private BudgetArea[] budgetAreas =
     {BudgetArea.UNCATEGORIZED,
      BudgetArea.INCOME, BudgetArea.RECURRING, BudgetArea.ENVELOPES,
-     BudgetArea.SAVINGS, BudgetArea.EXTRAS, BudgetArea.DEFERRED};
+     BudgetArea.SAVINGS, BudgetArea.EXTRAS, BudgetArea.OTHER};
 
   private GlobRepository repository;
   private CardHandler budgetAreaCard;
@@ -81,28 +81,28 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
   private void select(BudgetArea budgetArea, boolean activateToggle) {
     if (activateToggle) {
       toggles.get(budgetArea).doClick(0);
+      return;
     }
-    else {
-      budgetAreaCard.show("series");
 
-      if (BudgetArea.UNCATEGORIZED.equals(budgetArea)) {
-        SortedSet<Integer> areaIds = getSelectedTransactionAreas();
-        if ((areaIds.size() == 1) && BudgetArea.UNCATEGORIZED.getId().equals(areaIds.iterator().next())) {
-          if (selectedTransactions.size() == 1) {
-            uncategorizedMessage.setText(Lang.get("categorization.uncategorized.single"));
-          }
-          else {
-            uncategorizedMessage.setText(Lang.get("categorization.uncategorized.multiple"));
-          }
-          seriesCard.show(budgetArea.getName());
+    budgetAreaCard.show("series");
+
+    if (BudgetArea.UNCATEGORIZED.equals(budgetArea)) {
+      SortedSet<Integer> areaIds = getSelectedTransactionAreas();
+      if ((areaIds.size() == 1) && BudgetArea.UNCATEGORIZED.getId().equals(areaIds.iterator().next())) {
+        if (selectedTransactions.size() == 1) {
+          uncategorizedMessage.setText(Lang.get("categorization.uncategorized.single"));
         }
         else {
-          seriesCard.show("revertToUncategorized");
+          uncategorizedMessage.setText(Lang.get("categorization.uncategorized.multiple"));
         }
-      }
-      else {
         seriesCard.show(budgetArea.getName());
       }
+      else {
+        seriesCard.show("revertToUncategorized");
+      }
+    }
+    else {
+      seriesCard.show(budgetArea.getName());
     }
   }
 

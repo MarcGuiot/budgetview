@@ -23,7 +23,7 @@ public enum BudgetArea implements GlobConstantContainer {
   EXTRAS("EXTRAS", 4, false, false),
   SAVINGS("SAVINGS", 5, false, true),
   UNCATEGORIZED("UNCATEGORIZED", 6, false, false),
-  DEFERRED("DEFERRED", 7, false, false);
+  OTHER("OTHER", 7, false, false);
 
   public static GlobType TYPE;
 
@@ -96,7 +96,7 @@ public enum BudgetArea implements GlobConstantContainer {
       case 6:
         return UNCATEGORIZED;
       case 7:
-        return DEFERRED;
+        return OTHER;
     }
     throw new ItemNotFound(id + " not associated to any BugdetArea enum value");
   }

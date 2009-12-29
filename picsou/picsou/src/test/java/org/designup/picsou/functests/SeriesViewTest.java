@@ -25,7 +25,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Envelopes",
                          "Extras",
                          "Savings",
-                         "Deferred debit");
+                         "Other");
 
     views.selectCategorization();
     categorization.setNewEnvelope("Auchan", "Groceries");
@@ -43,7 +43,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Envelopes", "Groceries",
                          "Extras",
                          "Savings",
-                         "Deferred debit");
+                         "Other");
 
     series.select("Income");
     transactions.initContent()
@@ -97,7 +97,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Envelopes", "New envelope",
                          "Extras",
                          "Savings",
-                         "Deferred debit");
+                         "Other");
 
     views.selectBudget();
     budgetView.envelopes.editSeriesList()
@@ -113,7 +113,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Envelopes",
                          "Extras",
                          "Savings",
-                         "Deferred debit");
+                         "Other");
   }
 
   public void testExpandingAndCollapsingBudgetAreas() throws Exception {
@@ -129,7 +129,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Envelopes",
                          "Extras",
                          "Savings",
-                         "Deferred debit");
+                         "Other");
 
     views.selectBudget();
     budgetView.income.createSeries("salary");
@@ -145,7 +145,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Envelopes", "envelope1", "envelope2",
                          "Extras",
                          "Savings",
-                         "Deferred debit");
+                         "Other");
 
     series.checkExpansionEnabled("All", false);
     series.checkExpansionEnabled("To categorize", false);
@@ -162,7 +162,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Envelopes",
                          "Extras",
                          "Savings",
-                         "Deferred debit");
+                         "Other");
 
     series.expandAll();
     series.checkContains("All",
@@ -172,7 +172,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Envelopes", "envelope1", "envelope2",
                          "Extras",
                          "Savings",
-                         "Deferred debit");
+                         "Other");
     
     series.collapseAll();
     series.checkContains("All",
@@ -182,7 +182,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Envelopes",
                          "Extras",
                          "Savings",
-                         "Deferred debit");
+                         "Other");
 
     series.toggleExpansion("Income");
     series.expandAll();
@@ -193,7 +193,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Envelopes", "envelope1", "envelope2",
                          "Extras",
                          "Savings",
-                         "Deferred debit");
+                         "Other");
 
     series.collapseAll();
     series.checkContains("All",
@@ -203,6 +203,6 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Envelopes",
                          "Extras",
                          "Savings",
-                         "Deferred debit");
+                         "Other");
   }
 }
