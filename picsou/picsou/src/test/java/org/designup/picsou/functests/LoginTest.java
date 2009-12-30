@@ -5,10 +5,7 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.model.TransactionType;
-import org.uispec4j.ToggleButton;
-import org.uispec4j.Trigger;
-import org.uispec4j.UISpecAdapter;
-import org.uispec4j.Window;
+import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
@@ -333,6 +330,24 @@ public class LoginTest extends StartUpFunctionalTestCase {
     login.clickFirstAutoLogin();
     operations.deleteAutoLoginUser();
     login.checkFirstAutoLogin();
+  }
+
+  public void testDeleteWithBadPwd() throws Exception {
+    login.logNewUser("toto", "p4ssw0rd");
+    operations = new OperationChecker(window);
+    MenuItem subMenu = window.getMenuBar().getMenu("File").getSubMenu("Delete");
+    PasswordDialogChecker dialogChecker =
+      new PasswordDialogChecker(WindowInterceptor.getModalDialog(subMenu.triggerClick()));
+    dialogChecker.setPassword("otherpwd");
+    WindowInterceptor.init(dialogChecker.getOkTrigger())
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          MessageDialogChecker checker = new MessageDialogChecker(window);
+          checker.checkMessageContains("Bad password");
+          return checker.triggerClose();
+        }
+      })
+      .run();
   }
 
   public void testLoginWithPwdAndAutologin() throws Exception {
