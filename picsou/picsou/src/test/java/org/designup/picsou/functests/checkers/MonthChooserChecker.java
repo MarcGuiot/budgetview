@@ -3,8 +3,8 @@ package org.designup.picsou.functests.checkers;
 import org.designup.picsou.model.Month;
 import org.uispec4j.TextBox;
 import org.uispec4j.ToggleButton;
-import org.uispec4j.Window;
 import org.uispec4j.Trigger;
+import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
@@ -112,6 +112,10 @@ public class MonthChooserChecker extends GuiChecker {
     assertFalse(dialog.isVisible());
   }
 
+  public Trigger triggerCancel() {
+    return dialog.getButton("cancel").triggerClick();
+  }
+
   public MonthChooserChecker checkEnabledInCurrentYear(int month) {
     UISpecAssert.assertThat("For month " + month, getButtonInCurrentYear(month).isEnabled());
     return this;
@@ -166,12 +170,11 @@ public class MonthChooserChecker extends GuiChecker {
     return this;
   }
 
-  public Trigger triggerMonth(int monthId){
+  public Trigger triggerMonth(int monthId) {
     centerOn(monthId);
     int month = Month.toMonth(monthId);
     ToggleButton button = getButtonInCurrentYear(month);
     UISpecAssert.assertThat("Month " + month + " cannot be selected", button.isEnabled());
     return button.triggerClick();
   }
-
 }

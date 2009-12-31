@@ -231,31 +231,31 @@ public class AccountEditionChecker extends GuiChecker {
     assertFalse(dialog.isVisible());
   }
 
-  public AccountEditionChecker setStartDate(String date) {
+  public AccountEditionChecker setStartDate(String yyyyMMdd) {
     Component[] swingComponents = dialog.getSwingComponents(JXDatePicker.class, "startDatePicker");
     Assert.assertEquals(1, swingComponents.length);
-    ((JXDatePicker)swingComponents[0]).setDate(Dates.parse(date));
+    ((JXDatePicker)swingComponents[0]).setDate(Dates.parse(yyyyMMdd));
     return this;
   }
 
-  public AccountEditionChecker checkStartDate(String date) {
+  public AccountEditionChecker checkStartDate(String yyyyMMdd) {
     Component[] swingComponents = dialog.getSwingComponents(JXDatePicker.class, "startDatePicker");
     Assert.assertEquals(1, swingComponents.length);
-    Assert.assertEquals(Dates.parse(date), ((JXDatePicker)swingComponents[0]).getDate());
+    Assert.assertEquals(Dates.parse(yyyyMMdd), ((JXDatePicker)swingComponents[0]).getDate());
     return this;
   }
 
-  public AccountEditionChecker setEndDate(String date) {
+  public AccountEditionChecker setEndDate(String yyyyMMdd) {
     Component[] swingComponents = dialog.getSwingComponents(JXDatePicker.class, "endDatePicker");
     Assert.assertEquals(1, swingComponents.length);
-    ((JXDatePicker)swingComponents[0]).setDate(Dates.parse(date));
+    ((JXDatePicker)swingComponents[0]).setDate(Dates.parse(yyyyMMdd));
     return this;
   }
 
-  public AccountEditionChecker checkEndDate(String date) {
+  public AccountEditionChecker checkEndDate(String yyyyMMdd) {
     Component[] swingComponents = dialog.getSwingComponents(JXDatePicker.class, "endDatePicker");
     Assert.assertEquals(1, swingComponents.length);
-    Assert.assertEquals(Dates.parse(date), ((JXDatePicker)swingComponents[0]).getDate());
+    Assert.assertEquals(Dates.parse(yyyyMMdd), ((JXDatePicker)swingComponents[0]).getDate());
     return this;
   }
 
@@ -286,6 +286,10 @@ public class AccountEditionChecker extends GuiChecker {
   public AccountEditionChecker checkValidateIsDesable() {
     assertFalse(dialog.getButton("OK").isEnabled());
     return this;
+  }
+
+  public CardEditionPanelChecker getCardEditionPanelChecker() {
+    return cardEditionPanelChecker;
   }
 
   public AccountEditionChecker setFromBeginningDay(int day) {

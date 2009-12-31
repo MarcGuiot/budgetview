@@ -10,6 +10,8 @@ import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
+import javax.swing.*;
+
 public class LoginTest extends StartUpFunctionalTestCase {
 
   private Window window;
@@ -348,6 +350,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
         }
       })
       .run();
+    UISpecAssert.waitUntil(window.containsSwingComponent(JPasswordField.class, "password"), 2000);
   }
 
   public void testLoginWithPwdAndAutologin() throws Exception {

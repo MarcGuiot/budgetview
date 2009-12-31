@@ -78,6 +78,20 @@ public class CardEditionPanelChecker extends GuiChecker {
     return this;
   }
 
+  public CardEditionPanelChecker checkNotSelectableMonth(int monthId, final int... monthIds){
+    TextBox box = getDeferredLabel(monthId);
+    Panel panel = box.getContainer("deferredPeriodPanel");
+    WindowInterceptor.init(panel.getButton("changeDeferredMonthAction").triggerClick())
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          MonthChooserChecker monthChooser = new MonthChooserChecker(window);
+          monthChooser.checkIsDisabled(monthIds);
+          return monthChooser.triggerCancel();
+        }
+      }).run();
+    return this;
+  }
+
   public CardEditionPanelChecker checkFromBeginningDay(int day) {
     checkDay(day, getDeferredLabel(0));
     return this;

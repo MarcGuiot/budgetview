@@ -33,7 +33,8 @@ public class PositionTrigger implements ChangeSetListener {
       for (Key transaction : seriesKey) {
         Glob glob = repository.findLinkTarget(repository.get(transaction), Transaction.SERIES);
         if (glob != null) {
-          if (glob.get(Series.BUDGET_AREA).equals(BudgetArea.OTHER.getId())) {
+          if (glob.get(Series.BUDGET_AREA).equals(BudgetArea.OTHER.getId()) &&
+              glob.get(Series.FROM_ACCOUNT) != null) {
             GlobList account = repository.getAll(Account.TYPE);
             updateTransactionPosition(repository, account);
             return;
@@ -48,8 +49,9 @@ public class PositionTrigger implements ChangeSetListener {
 
   private void updateTransactionPosition(GlobRepository repository, GlobList updatedAccount) {
 
-    GlobList deferredSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA,
-                                                                                      BudgetArea.OTHER.getId()));
+    GlobList deferredSeries = repository.getAll(Series.TYPE,
+                                                GlobMatchers.and(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
+                                                                 GlobMatchers.isNotNull(Series.FROM_ACCOUNT)));
     Set<Integer> deferredSeriesId =
       deferredSeries
         .getValueSet(Series.ID);

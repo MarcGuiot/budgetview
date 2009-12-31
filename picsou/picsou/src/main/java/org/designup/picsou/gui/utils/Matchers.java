@@ -154,7 +154,8 @@ public class Matchers {
         return false;
       }
       if (filter.matches(series, repository)) {
-        if (series.get(Series.BUDGET_AREA).equals(BudgetArea.OTHER.getId())) {
+        if (series.get(Series.BUDGET_AREA).equals(BudgetArea.OTHER.getId()) &&
+            series.get(Series.FROM_ACCOUNT) != null) {
           return checkInMain(repository);
         }
         if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
@@ -223,15 +224,6 @@ public class Matchers {
           }
         }
         return true;
-      }
-      return false;
-    }
-
-    private boolean checkAccountIfDiferred(Glob series, GlobRepository repository) {
-      if (series.get(Series.BUDGET_AREA).equals(BudgetArea.OTHER.getId())) {
-        if (checkInMain(repository)) {
-          return true;
-        }
       }
       return false;
     }

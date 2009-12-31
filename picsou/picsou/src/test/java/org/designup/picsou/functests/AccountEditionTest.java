@@ -454,16 +454,26 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCreateCard() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(4).validate();
     views.selectHome();
     AccountEditionChecker newAccount = mainAccounts.createNewAccount();
-    newAccount
+    AccountEditionChecker accountEditionChecker = newAccount
       .setAccountName("Carte a débit Différé")
       .selectBank("ING Direct")
       .setAsDeferredCard()
       .checkFromBeginning()
       .setFromBeginningDay(25)
-      .setPosition(1000)
-      .validate();
+      .setPosition(1000);
+
+    accountEditionChecker
+      .getCardEditionPanelChecker()
+      .addMonth()
+      .addMonth()
+      .addMonth()
+      .checkNotSelectableMonth(200809, 200808, 200810, 200811)
+      .changeMonth(200810, 200812)
+      .checkNotSelectableMonth(200809, 200808, 200811, 200812);
+    accountEditionChecker.validate();
   }
 
   public void testUpdateDeferredCardAmount() throws Exception {
@@ -548,7 +558,64 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkAccountWebsite("Account 1", "http://www.cic.fr");
   }
 
+  public void testImportWithFirstTransactionBeforeAndAfterOpenCloseAccount() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/01", 1000.00, "Salaire/oct")
+      .load();
+
+    mainAccounts.edit(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .setStartDate("2008/05/01")
+      .setEndDate("2008/07/01")
+      .validate();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/05/01", 1000.00, "Salaire/oct")
+      .addTransaction("2008/08/01", 1000.00, "Salaire/oct")
+      .load();
+
+    timeline.selectAll();
+    views.selectData();
+    transactions
+      .initAmountContent()
+      .add("01/08/2008", "SALAIRE/OCT", 1000.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("01/06/2008", "SALAIRE/OCT", 1000.00, "To categorize", -1000.00, -1000.00, "Account n. 00001123")
+      .add("01/05/2008", "SALAIRE/OCT", 1000.00, "To categorize", -2000.00, -2000.00, "Account n. 00001123")
+      .check();
+  }
+
   public void testImportCardWithMonthBeforeFirstMonth() throws Exception {
-    fail("Marc, ce test vide te dit-il quelque chose ?");
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/01", 1000.00, "Salaire/oct")
+      .load();
+
+    operations.openPreferences().setFutureMonthsCount(12).validate();
+    views.selectHome();
+
+    OfxBuilder.init(this)
+      .addCardAccount("1111", 100, "2008/06/30")
+      .addTransaction("2008/06/27", -50, "Auchan")
+      .addBankAccount("1234", 1000, "2008/06/30")
+      .addTransaction("2008/06/28", -550, "Prelevement")
+      .loadDeferredCard("Card n. 1111", 28);
+
+    mainAccounts.edit("Card n. 1111")
+      .setStartDate("2008/06/01")
+      .validate();
+
+    OfxBuilder.init(this)
+      .addCardAccount("1111", 100, "2008/06/30")
+      .addTransaction("2008/05/29", -50, "Auchan")
+      .addBankAccount("1234", 1000, "2008/06/30")
+      .addTransaction("2008/06/28", -550, "Prelevement")
+      .load();
+
+    timeline.selectMonth("2008/06");
+    views.selectData();
+    transactions.initContent()
+    .add("28/06/2008", TransactionType.PRELEVEMENT, "PRELEVEMENT", "", -550.00)
+    .add("27/06/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", -50.00)
+    .add("01/06/2008", TransactionType.VIREMENT, "SALAIRE/OCT", "", 1000.00)
+    .add("29/05/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", -50.00)
+    .check();
   }
 }

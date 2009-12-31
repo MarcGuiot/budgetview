@@ -233,7 +233,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkShiftDisabled();
   }
 
-  public void testCheckDeferredAcountPositionInMainInDifferentMonth() throws Exception {
+  public void testCheckShowTransactionAtBudgetMonth() throws Exception {
     OfxBuilder.init(this)
       .addCardAccount("1111", -100, "2009/12/07")
       .addTransaction("2009/11/30", -60, "Auchan")
@@ -244,16 +244,30 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addBankAccount("1234", 1000, "2009/11/30")
       .addTransaction("2009/11/28", -30, "Prelevement novembre")
       .addTransaction("2009/10/28", 0, "Prelevement octobre")
-      .addTransaction("2009/09/26", -35 - 15 /* -15 : transaction precedente non importé */, "Prelevement aout")
+      .addTransaction("2009/09/26", -35 - 15, "Prelevement aout")
       .loadDeferredCard("Card n. 1111", 28);
 
     views.selectCategorization();
     categorization
       .setNewEnvelope("Auchan", "course");
+    views.selectData();
+    timeline.selectMonth("2009/12");
+    transactions.initContent()
+      .add("30/11/2009", TransactionType.CREDIT_CARD, "AUCHAN", "", -60.00, "course")
+      .add("29/11/2009", TransactionType.CREDIT_CARD, "AUCHAN", "", -40.00, "course")
+      .check();
 
+    timeline.selectMonth("2009/11");
+    transactions.initContent()
+      .add("28/11/2009", TransactionType.PRELEVEMENT, "PRELEVEMENT NOVEMBRE", "", -30.00)
+      .add("25/11/2009", TransactionType.CREDIT_CARD, "AUCHAN", "", -10.00, "course")
+      .add("29/10/2009", TransactionType.CREDIT_CARD, "AUCHAN", "", -20.00, "course")
+      .check();
+    
     timeline.selectMonth("2009/10");
-//    mainAccounts.checkSummary()
-//      .checkAccount("Card n. 1111", );
+    transactions.initContent()
+      .add("28/10/2009", TransactionType.VIREMENT, "PRELEVEMENT OCTOBRE", "", 0.00)
+      .check();
   }
 
   public void testDeferredWithPlannedAndOverburn() throws Exception {

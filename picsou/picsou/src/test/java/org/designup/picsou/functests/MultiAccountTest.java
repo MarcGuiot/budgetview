@@ -30,11 +30,4 @@ public class MultiAccountTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testChangeSeriesBudgetPeriodicity() throws Exception {
-    fail("Marc: on garde ce test vide ?");
-  }
-
-  public void testChangeSeriesBudgetAmount() throws Exception {
-    fail("Marc: on garde ce test vide ?");
-  }  
 }
