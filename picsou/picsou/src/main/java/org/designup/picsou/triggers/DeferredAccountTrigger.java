@@ -21,6 +21,18 @@ public class DeferredAccountTrigger implements ChangeSetListener {
         }
 
         public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+          if (values.contains(Account.NAME)){
+            if (repository.get(key).get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId())){
+              Glob deferredSeries =
+                repository.getAll(Series.TYPE,
+                                  GlobMatchers.and(
+                                    GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
+                                    GlobMatchers.fieldEquals(Series.FROM_ACCOUNT, key.get(Account.ID)))).getFirst();
+              if (deferredSeries != null){
+                repository.update(deferredSeries.getKey(), Series.NAME, values.get(Account.NAME));
+              }
+            }
+          }
           if (!values.contains(Account.CARD_TYPE)) {
             return;
           }
