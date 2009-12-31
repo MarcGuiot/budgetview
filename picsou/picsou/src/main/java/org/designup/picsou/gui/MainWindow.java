@@ -6,6 +6,7 @@ import org.designup.picsou.client.ServerAccessDecorator;
 import org.designup.picsou.client.exceptions.BadPassword;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.client.exceptions.UserNotRegistered;
+import org.designup.picsou.client.exceptions.RemoteException;
 import org.designup.picsou.client.http.ConnectionRetryServerAccess;
 import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
 import org.designup.picsou.client.http.HttpsClientTransport;
@@ -13,6 +14,7 @@ import org.designup.picsou.client.http.PasswordBasedEncryptor;
 import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.components.PicsouFrame;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.license.LicenseCheckerThread;
 import org.designup.picsou.gui.startup.LoginPanel;
@@ -158,7 +160,13 @@ public class MainWindow implements WindowManager {
 
   public void logOutAndDeleteUser(String name, char[] password) {
     initServerAccess(serverAddress, prevaylerPath, dataInMemory);
-    serverAccess.deleteUser(name, password);
+    try {
+      serverAccess.deleteUser(name, password);
+    }
+    catch (RemoteException e) {
+      new MessageDialog("delete.user.fail.title", "delete.user.fail.content", frame, directory)
+        .show();
+    }
     logout();
   }
 

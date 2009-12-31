@@ -175,13 +175,6 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
         repository.update(deferredCardDay.getKey(), DeferredCardDate.DAY,
                           Month.getDay(day, deferredCardDay.get(DeferredCardDate.MONTH), calendar));
       }
-//<<<<<<< local
-//=======
-//      else {
-//        day = currentPeriod.get(DeferredCardPeriod.DAY);
-//        currentPeriod = iterator.hasNext() ? iterator.next() : null;
-//      }
-//>>>>>>> other
     }
   }
 

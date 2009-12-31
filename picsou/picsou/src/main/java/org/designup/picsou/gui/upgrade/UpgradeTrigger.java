@@ -128,7 +128,7 @@ public class UpgradeTrigger implements ChangeSetListener {
                   GlobMatchers.fieldStrictlyGreaterThan(SeriesBudget.MONTH, lastMonthId)))
         .safeApply(new GlobFunctor() {
           public void run(Glob seriesBudget, GlobRepository repository) throws Exception {
-            repository.update(seriesBudget.getKey(), value(SeriesBudget.AMOUNT, 0.00));
+            repository.update(seriesBudget.getKey(), value(SeriesBudget.AMOUNT, 0.0));
           }
         }, repository);
     }

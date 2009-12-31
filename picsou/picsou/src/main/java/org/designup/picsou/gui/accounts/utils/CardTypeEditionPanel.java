@@ -133,6 +133,7 @@ public class CardTypeEditionPanel {
       int newMonth = monthChooser.show(monthId, firstMonth, lastMonth, monthToIgnore);
       if (newMonth != -1) {
         repository.update(key, DeferredCardPeriod.FROM_MONTH, newMonth);
+        monthToIgnore.add(newMonth);
       }
     }
   }

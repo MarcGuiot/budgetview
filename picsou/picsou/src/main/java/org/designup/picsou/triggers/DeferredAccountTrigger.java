@@ -45,7 +45,9 @@ public class DeferredAccountTrigger implements ChangeSetListener {
     if (changedTypes.contains(Account.TYPE)) {
       final GlobList deferredSeries =
         repository.getAll(Series.TYPE,
-                          GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()));
+                          GlobMatchers.and(
+                            GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
+                            GlobMatchers.isNotNull(Series.FROM_ACCOUNT)));
       repository.safeApply(Account.TYPE,
                            GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()),
                            new GlobFunctor() {
@@ -63,17 +65,19 @@ public class DeferredAccountTrigger implements ChangeSetListener {
   }
 
   private void deleteDeferredSeries(Key key, GlobRepository repository) {
-    SeriesBudgetTrigger trigger = new SeriesBudgetTrigger(repository);
-    repository.addChangeListener(trigger);
     try {
+      repository.startChangeSet();
       final GlobList deferredSeries =
         repository.getAll(Series.TYPE,
                           GlobMatchers.and(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
                                            GlobMatchers.fieldEquals(Series.FROM_ACCOUNT, key.get(Account.ID))));
+      for (Glob series : deferredSeries) {
+        SeriesDeletionTrigger.propagateSeriesDeletion(series.getKey(), repository);
+      }
       repository.delete(deferredSeries);
     }
     finally {
-      repository.removeChangeListener(trigger);
+      repository.completeChangeSet();
     }
   }
 
@@ -83,8 +87,6 @@ public class DeferredAccountTrigger implements ChangeSetListener {
       Glob series = repository.create(Series.TYPE,
                                       FieldValue.value(Series.NAME, glob.get(Account.NAME)),
                                       FieldValue.value(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
-                                      FieldValue.value(Series.FIRST_MONTH, getDate(glob, Account.OPEN_DATE)),
-                                      FieldValue.value(Series.LAST_MONTH, getDate(glob, Account.CLOSED_DATE)),
                                       FieldValue.value(Series.FROM_ACCOUNT, accountId),
                                       FieldValue.value(Series.IS_AUTOMATIC, false),
                                       FieldValue.value(Series.INITIAL_AMOUNT, 0.));
