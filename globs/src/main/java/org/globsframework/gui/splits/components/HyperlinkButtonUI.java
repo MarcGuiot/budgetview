@@ -1,16 +1,11 @@
 package org.globsframework.gui.splits.components;
 
-import org.globsframework.gui.splits.layout.Anchor;
-import org.globsframework.gui.splits.layout.Fill;
-import org.globsframework.gui.splits.layout.GridBagBuilder;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -56,6 +51,7 @@ public class HyperlinkButtonUI extends BasicButtonUI {
     };
     button.addPropertyChangeListener("font", fontMetricsUpdater);
     button.addPropertyChangeListener("text", fontMetricsUpdater);
+    button.addPropertyChangeListener("icon", fontMetricsUpdater);
   }
 
   private void updateVisibility(AbstractButton button) {
@@ -105,8 +101,13 @@ public class HyperlinkButtonUI extends BasicButtonUI {
       return;
     }
 
-    int x1 = getLabelX(button);
-    int y1 = (button.getHeight() + fontHeight) / 2 - descent;
+    Icon icon = button.getIcon();
+    if (icon != null) {
+      icon.paintIcon(button, g, 0, button.getHeight() / 2 - icon.getIconHeight() / 2);
+    }
+
+    int textX = getLabelX(button);
+    int textY = (button.getHeight() + fontHeight) / 2 - descent;
     if (button.getModel().isRollover() || button.getModel().isArmed()) {
       d.setColor(rolloverColor);
     }
@@ -117,20 +118,22 @@ public class HyperlinkButtonUI extends BasicButtonUI {
       d.setColor(button.getForeground());
     }
 
-    d.drawString(text, x1, y1);
+    d.drawString(text, textX, textY);
 
     if (button.isEnabled() && (underline || button.getModel().isRollover())) {
-      d.drawLine(x1, y1 + 1, x1 + textWidth, y1 + 1);
+      d.drawLine(textX, textY + 1, textX + textWidth, textY + 1);
     }
   }
 
   private int getLabelX(AbstractButton button) {
+    int iconOffset = button.getIcon() != null ? button.getIcon().getIconWidth() + button.getIconTextGap() : 0;
+
     int alignment = button.getHorizontalAlignment();
     switch (alignment) {
       case SwingConstants.LEFT:
-        return 0;
+        return iconOffset;
       case SwingConstants.CENTER:
-        return (button.getWidth() - textWidth) / 2;
+        return iconOffset + (button.getWidth() - iconOffset - textWidth) / 2;
       case SwingConstants.RIGHT:
         return (button.getWidth() - textWidth);
     }
@@ -142,36 +145,28 @@ public class HyperlinkButtonUI extends BasicButtonUI {
     textWidth = fontMetrics.stringWidth(button.getText() == null ? "" : button.getText());
     fontHeight = fontMetrics.getHeight();
     descent = fontMetrics.getDescent();
-    button.setSize(textWidth, fontHeight);
-    Dimension dimension = new Dimension(textWidth, fontHeight);
+
+    int width = computeWidth(button);
+    int height = computeHeight(button);
+
+    button.setSize(width, height);
+    Dimension dimension = new Dimension(width, height);
     button.setPreferredSize(dimension);
     button.setMaximumSize(dimension);
     button.setMinimumSize(dimension);
   }
 
-  public static void main(String[] args) {
-    final AbstractAction action = new AbstractAction("toto") {
-      public void actionPerformed(ActionEvent e) {
-        System.out.println("HyperlinkButtonUI.actionPerformed: ");
-      }
-    };
-    final JButton button = new JButton(action);
-    button.setText("hello");
-    button.setUI(new HyperlinkButtonUI());
+  private int computeWidth(AbstractButton button) {
+    if (button.getIcon() == null) {
+      return textWidth;
+    }
+    return textWidth + button.getIconTextGap() + button.getIcon().getIconWidth();
+  }
 
-    JPanel panel =
-      GridBagBuilder.init()
-        .add(button, 0, 0, 1, 1, 1, 1, Fill.NONE, Anchor.CENTER)
-        .add(new JButton(new AbstractAction("disable") {
-          public void actionPerformed(ActionEvent e) {
-            final boolean newState = !button.isEnabled();
-            action.setEnabled(newState);
-            putValue(Action.NAME, newState ? "disable" : "enable");
-          }
-        }), 0, 1, 1, 1, 1, 1, Fill.NONE, Anchor.CENTER)
-        .getPanel();
-    panel.setOpaque(true);
-    panel.setBackground(Color.CYAN);
-    GuiUtils.show(panel);
+  private int computeHeight(AbstractButton button) {
+    if (button.getIcon() == null) {
+      return fontHeight;
+    }
+    return Math.max(button.getIcon().getIconHeight(), fontHeight);
   }
 }

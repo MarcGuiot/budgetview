@@ -139,7 +139,7 @@ public class SplitsBuilder {
 
   public Component getComponent(String id) {
     SplitsNode node = context.findComponent(id);
-    if (node == null){
+    if (node == null) {
       return null;
     }
     return node.getComponent();
@@ -149,12 +149,11 @@ public class SplitsBuilder {
     return context;
   }
 
-  public <T extends Component> T load(){
+  public <T extends Component> T load() {
     return (T)loadWithNode().getComponent();
   }
 
-
-  public <T extends Component> SplitsNode<T> loadWithNode(){
+  public <T extends Component> SplitsNode<T> loadWithNode() {
     context.cleanUp();
     for (Map.Entry<String, SplitsBuilder> entry : children.entrySet()) {
       String name = entry.getKey();
