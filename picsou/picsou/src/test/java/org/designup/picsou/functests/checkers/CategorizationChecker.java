@@ -106,19 +106,13 @@ public class CategorizationChecker extends GuiChecker {
     return selectAndReturn(BudgetArea.OTHER);
   }
 
-  public CategorizationChecker checkCategorizationTips() {
-    HelpChecker help = new HelpChecker(getPanel().getButton("Categorization tips").triggerClick());
-    help.checkTitle("Categorization tips");
-    return this;
-  }
-
   public void copyBankFormatToClipboard() {
     JTable jTable = getTable().getAwtComponent();
     KeyUtils.pressKey(jTable, org.uispec4j.Key.plaformSpecificCtrl(org.uispec4j.Key.B));
   }
 
   public void checkEditSeriesNotVisible() {
-    assertFalse(getPanel().getPanel("groupCreateEditSeries").isVisible());
+    checkComponentVisible(getPanel(), JPanel.class, "groupCreateEditSeries", false);
   }
 
   public void checkEditSeriesNotVisitble(String seriesLabel){

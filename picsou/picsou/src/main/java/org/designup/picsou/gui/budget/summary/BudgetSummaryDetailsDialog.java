@@ -162,7 +162,9 @@ public class BudgetSummaryDetailsDialog {
       .setValueForNull(0.00);
     builder.addLabel("thresholdMessage", BudgetStat.TYPE, new ThresholdStringifier())
       .setUpdateMatcher(ChangeSetMatchers.changesForKey(AccountPositionThreshold.KEY));
-    builder.add("thresholdHelp", new HelpAction(Lang.get("help"), "positionThreshold", directory, dialog));
+    builder.add("thresholdHelp",
+                new HelpAction(Lang.get("budgetSummaryDetails.thresholdHelp"), "positionThreshold",
+                               directory, dialog));
 
     JPanel panel = builder.load();
 

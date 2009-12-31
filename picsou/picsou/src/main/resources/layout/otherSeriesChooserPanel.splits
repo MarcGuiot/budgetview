@@ -1,0 +1,43 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="scrollPane" opaque="false" border=""/>
+    <style selector="panel.descriptionPanel"
+           opaque="true" background="categorization.budgetArea.description.bg"
+           border="matte(0,0,1,0,categorization.budgetArea.description.border)"/>
+    <style selector="textArea#description"
+           foreground="categorization.budgetArea.description.text" opaque="false" font="-,plain,12"
+           editable="false" lineWrap="true" wrapStyleWord="true" fill="both" margin="5"/>
+
+    <ui name="showHideLabelLink" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+        underline="false" disabledColor=""/>
+
+    <style selector="button.showHideLabel" font="-,bold,13" marginBottom="5"
+           ui="hyperlinkButtonWithoutUnderline" weightX="0" fill="none" anchor="left"/>
+    <style selector="button.showHideIcon" border="none" opaque="false" borderPainted="false"
+           weightX="0" fill="none" anchor="left" marginLeft="5"/>
+    <style selector="button.showHide" ui="hyperlinkButtonWithoutUnderline"
+           marginLeft="5" font="-,plain,10" foreground="categorization.showHide" fill="none" anchor="left"/>
+  </styles>
+
+  <column>
+    <column styleClass="budgetAreaSelection">
+      <panel styleClass="descriptionPanel" weightY="0">
+        <textArea ref="description"/>
+      </panel>
+      <scrollPane weightY="100" forceVerticalScroll="true">
+        <repeat ref="specialCategorizationPanels" layout="verticalGrid" margin="10">
+          <verticalBoxes>
+            <row>
+              <button ref="showHideLabel" styleClass="showHideLabel"/>
+              <filler fill="horizontal"/>
+            </row>
+            <panel ref="specialCasePanel"/>
+          </verticalBoxes>
+        </repeat>
+      </scrollPane>
+    </column>
+  </column>
+
+</splits>
