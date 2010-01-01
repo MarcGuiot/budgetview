@@ -33,7 +33,7 @@ public class ShowHideButtonTest extends TestCase {
     assertThat(button.iconEquals(hideIcon));
   }
 
-  public void testForceVisible() throws Exception {
+  public void testLocking() throws Exception {
     JPanel panel = new JPanel();
     panel.setVisible(false);
 
@@ -42,8 +42,20 @@ public class ShowHideButtonTest extends TestCase {
     assertThat(button.textEquals("show"));
     assertThat(button.isEnabled());
 
-    showHideButton.forceVisible();
+    showHideButton.setShown();
+    assertTrue(panel.isVisible());
+    UISpecAssert.assertTrue(button.isEnabled());
+
+    showHideButton.lock();
+    assertTrue(panel.isVisible());
+    UISpecAssert.assertFalse(button.isEnabled());
+
+    showHideButton.setHidden();
     assertFalse(panel.isVisible());
     UISpecAssert.assertFalse(button.isEnabled());
+    
+    showHideButton.unlock();
+    assertFalse(panel.isVisible());
+    UISpecAssert.assertTrue(button.isEnabled());
   }
 }

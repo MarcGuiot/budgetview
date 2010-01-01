@@ -141,6 +141,22 @@ public class GuiUtils {
     });
   }
 
+  public static JComponent getEnclosingValidateRoot(Component component) {
+    return (JComponent)getEnclosingComponent(component, new ComponentMatcher() {
+      public boolean matches(Component component) {
+        return JComponent.class.isInstance(component) && ((JComponent)component).isValidateRoot();
+      }
+    });
+  }
+
+  public static void revalidate(final JComponent component) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        component.revalidate();
+      }
+    });
+  }
+
   public static JFrame getEnclosingFrame(Component component) {
     return (JFrame)getEnclosingComponent(component, new ComponentMatcher() {
       public boolean matches(Component component) {
@@ -217,6 +233,18 @@ public class GuiUtils {
   public static Font getDefaultLabelFont() {
     Font ref = new JLabel().getFont();
     return ref.deriveFont(Font.PLAIN, ref.getSize());
+  }
+
+  public static JEditorPane createReadOnlyHtmlComponent() {
+    JEditorPane editorPane = new JEditorPane();
+    initReadOnlyHtmlComponent(editorPane);
+    return editorPane;
+  }
+
+  public static JEditorPane createReadOnlyHtmlComponent(String text) {
+    JEditorPane editorPane = createReadOnlyHtmlComponent();
+    editorPane.setText(text);
+    return editorPane;
   }
 
   public static void initReadOnlyHtmlComponent(JEditorPane editorPane) {

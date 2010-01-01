@@ -1,10 +1,13 @@
 package org.globsframework.gui.utils;
 
+import org.globsframework.gui.splits.utils.GuiUtils;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
 
 public class ShowHideButton extends JButton {
   private JComponent component;
@@ -32,7 +35,7 @@ public class ShowHideButton extends JButton {
     addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         final boolean visible = !component.isVisible();
-        component.setVisible(visible);
+        setComponentVisible(visible);
       }
     });
   }
@@ -40,12 +43,26 @@ public class ShowHideButton extends JButton {
   public void setIcons(Icon showIcon, Icon hideIcon) {
     this.showIcon = showIcon;
     this.hideIcon = hideIcon;
-    setIcon(this.component.isVisible() ? this.hideIcon: this.showIcon);
+    setIcon(this.component.isVisible() ? this.hideIcon : this.showIcon);
   }
 
-  public void forceVisible() {
-    component.setVisible(false);
+  public void setShown() {
+    setComponentVisible(true);
+  }
+
+  public void setHidden() {
+    setComponentVisible(false);
+  }
+
+  private void setComponentVisible(boolean visible) {
+    component.setVisible(visible);
+  }
+
+  public void lock() {
     setEnabled(false);
   }
 
+  public void unlock() {
+    setEnabled(true);
+  }
 }

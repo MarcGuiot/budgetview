@@ -18,9 +18,9 @@ public class ChangeSetAggregator {
     this(repository, new DefaultChangeSet());
   }
 
-  public ChangeSetAggregator(GlobRepository repository, MutableChangeSet importChangeSet) {
+  public ChangeSetAggregator(GlobRepository repository, MutableChangeSet initialChangeSet) {
     this.repository = repository;
-    changeSet = importChangeSet;
+    changeSet = initialChangeSet;
     this.listener = new Listener();
     repository.addChangeListener(listener);
   }
