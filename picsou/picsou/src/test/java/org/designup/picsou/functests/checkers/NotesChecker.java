@@ -42,7 +42,7 @@ public class NotesChecker extends GuiChecker {
   }
 
   public NotesChecker checkNoDataMessage() {
-    return checkMessage("You must import your financial operations", "noDataMessage", "noData");
+    return checkMessage("You must first import your financial operations", "noDataMessage", "noData");
   }
 
   public NotesChecker checkNoSeriesMessage() {

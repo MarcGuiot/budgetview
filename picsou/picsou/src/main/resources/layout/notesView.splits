@@ -31,6 +31,8 @@
           <htmlEditorPane text="$notesView.noData.text" name="noDataMessage"
                           hyperlinkListener="hyperlinkHandler"/>
           <button action="import"/>
+          <htmlEditorPane text="$notesView.noData.footer"
+                          hyperlinkListener="hyperlinkHandler" marginTop="10"/>
           <filler fill="vertical"/>
         </column>
       </scrollPane>
