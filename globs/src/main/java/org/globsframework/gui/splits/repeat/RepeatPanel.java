@@ -2,6 +2,7 @@ package org.globsframework.gui.splits.repeat;
 
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.impl.DefaultSplitsNode;
 import org.globsframework.gui.splits.layout.ComponentConstraints;
 import org.globsframework.gui.splits.layout.SwingStretches;
@@ -58,13 +59,13 @@ public class RepeatPanel implements Repeat {
     }
 
     layout.set(panel, constraints);
-    panel.revalidate();
+    GuiUtils.revalidate(panel);
     updateVisibility();
   }
 
   public void insert(Object item, int index) {
     layout.insert(panel, createStretches(item, index), index);
-    panel.revalidate();
+    GuiUtils.revalidate(panel);
     updateVisibility();
   }
 
@@ -72,7 +73,7 @@ public class RepeatPanel implements Repeat {
     layout.remove(panel, index);
     RepeatContext context = repeatContexts.remove(index);
     context.dispose();
-    panel.revalidate();
+    GuiUtils.revalidate(panel);
     panel.repaint();
     updateVisibility();
   }
@@ -81,7 +82,7 @@ public class RepeatPanel implements Repeat {
     layout.move(panel, previousIndex, newIndex);
     RepeatContext context = repeatContexts.remove(previousIndex);
     repeatContexts.add(newIndex, context);
-    panel.revalidate();
+    GuiUtils.revalidate(panel);
   }
 
   private ComponentConstraints[] createStretches(Object item, int index) {

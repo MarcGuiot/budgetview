@@ -184,7 +184,7 @@ public class OfxBuilder {
       .setFilePath(fileName)
       .acceptFile();
     importChecker
-      .openCardType()
+      .openCardTypeChooser()
       .selectDeferredCard(accountName, day)
       .validate();
     importChecker

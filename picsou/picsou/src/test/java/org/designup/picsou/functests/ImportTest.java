@@ -360,7 +360,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .selectBankForEntity("666", SOCIETE_GENERALE)
       .validate();
 
-    importDialog.openCardType()
+    importDialog.openCardTypeChooser()
       .selectDeferredCard("Card n. 1111-2222-3333-4444", 31)
       .validate();
 
@@ -575,7 +575,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .doImport();
 
     importDialog
-      .openCardType()
+      .openCardTypeChooser()
       .checkValidateDisabled()
       .selectDeferredCard("Card n. 1111", 15)
       .checkValidateDisabled()

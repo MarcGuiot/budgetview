@@ -68,7 +68,7 @@ public class OperationChecker {
       .setFilePath(fileName)
       .acceptFile();
     importChecker
-      .openCardType()
+      .openCardTypeChooser()
       .selectDeferredCard(cardAccountName, day)
       .validate();
     importChecker.doImport();
