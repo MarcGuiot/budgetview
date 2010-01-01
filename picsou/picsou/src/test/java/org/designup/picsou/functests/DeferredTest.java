@@ -1,10 +1,12 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.BudgetAreaCategorizationChecker;
+import org.designup.picsou.functests.checkers.DeferredCardCategorizationChecker;
+import org.designup.picsou.functests.checkers.ImportChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.model.BudgetArea;
 
 public class DeferredTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
@@ -13,7 +15,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(2).validate();
   }
 
-  public void testCategorisation() throws Exception {
+  public void testCategorization() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     OfxBuilder.init(this)
       .addCardAccount("1111", 100, "2008/06/30")
@@ -25,13 +27,16 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTransaction("Auchan")
       .selectOther()
+      .selectDeferred()
+      .checkMessage("Select a transfer operation from your main account to a card account.")
       .checkContainsNoSeries()
       .checkEditSeriesButtonNotVisible();
 
     categorization.selectTransaction("Prelevement")
       .selectOther()
+      .selectDeferred()
+      .checkMessage("Assign the monthly transfer operation to the corresponding card account:")
       .checkActiveSeries("Card n. 1111")
-      .checkEditSeriesButtonNotVisible()
       .selectSeries("Card n. 1111");
 
     views.selectData();
@@ -40,6 +45,49 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("28/06/2008", "PRELEVEMENT", -550.00, "Card n. 1111", 1000.00, 1000.00, "Account n. 1234")
       .add("27/06/2008", "AUCHAN", -50.00, "To categorize", 100.00, 1000.00, "Card n. 1111")
       .check();
+  }
+
+  public void testCategorizationMessageAllowsToImportTheCardAccount() throws Exception {
+    QifBuilder.init(this)
+      .addTransaction("2008/06/28", -550, "Prelevement carte")
+      .load();
+
+    views.selectCategorization();
+    DeferredCardCategorizationChecker cardCategorization = categorization.selectTransaction("Prelevement carte")
+      .selectOther()
+      .selectDeferred()
+      .checkContainsNoSeries()
+      .checkEditSeriesButtonNotVisible()
+      .checkMessage("You must first import the corresponding card account operations.");
+
+    String cardFile = QifBuilder.init(this)
+      .addTransaction("2009/11/30", -60, "Auchan")
+      .addTransaction("2009/11/29", -40, "Auchan")
+      .addTransaction("2009/11/25", -10, "Auchan")
+      .addTransaction("2009/10/29", -20, "Auchan")
+      .addTransaction("2009/09/14", -35, "Auchan")
+      .save();
+
+    ImportChecker importer = cardCategorization.importAccount()
+      .setFilePath(cardFile)
+      .acceptFile();
+    importer.addNewAccount()
+      .setAccountName("Card account")
+      .selectBank("CIC")
+      .setAsDeferredCard()
+      .setPosition(-1000)
+      .validate();
+    importer.completeImport();
+
+    cardCategorization
+      .checkMessage("Assign the monthly transfer operation to the corresponding card account:")
+      .selectSeries("Card account");
+
+    categorization.selectTransactions("Auchan")
+      .checkToCategorize();
+    
+    categorization.selectTransaction("Prelevement carte")
+      .checkOtherSeriesIsSelected("Card account");
   }
 
   public void testFirstOfxImport() throws Exception {
@@ -72,12 +120,15 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTransaction("Prelevement novembre")
       .selectOther()
+      .selectDeferred()
       .selectSeries("Card n. 1111");
     categorization.selectTransaction("Prelevement octobre")
       .selectOther()
+      .selectDeferred()
       .selectSeries("Card n. 1111");
     categorization.selectTransaction("Prelevement aout")
       .selectOther()
+      .selectDeferred()
       .selectSeries("Card n. 1111");
     views.selectData();
     transactions.initAmountContent()
@@ -93,9 +144,8 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
 
     // check budget
     views.selectCategorization();
-    BudgetAreaCategorizationChecker budgetAreaCategorizationChecker = categorization.selectTransactions("Auchan")
-      .selectEnvelopes();
-    budgetAreaCategorizationChecker
+    categorization.selectTransactions("Auchan")
+      .selectEnvelopes()
       .createSeries()
       .setName("Course")
       .switchToManual()
@@ -159,9 +209,11 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTransaction("Prelevement novembre")
       .selectOther()
+      .selectDeferred()
       .selectSeries("Card 1111");
     categorization.selectTransaction("Prelevement octobre")
       .selectOther()
+      .selectDeferred()
       .selectSeries("Card 1111");
     views.selectData();
     transactions.initAmountContent()
@@ -176,7 +228,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testImportQifWithOperationMixInMonthWithoutVirement() throws Exception {
+  public void testImportQifWithOperationMixInMonthWithoutTransfer() throws Exception {
     String mainAccount = QifBuilder.init(this)
       .addTransaction("2009/11/28", -30, "Prelevement novembre")
       .addTransaction("2009/10/28", -35 - 15 /* -15 : transaction precedente non importé */, "Prelevement octobre")
@@ -263,14 +315,14 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("25/11/2009", TransactionType.CREDIT_CARD, "AUCHAN", "", -10.00, "course")
       .add("29/10/2009", TransactionType.CREDIT_CARD, "AUCHAN", "", -20.00, "course")
       .check();
-    
+
     timeline.selectMonth("2009/10");
     transactions.initContent()
       .add("28/10/2009", TransactionType.VIREMENT, "PRELEVEMENT OCTOBRE", "", 0.00)
       .check();
   }
 
-  public void testDeferredWithPlannedAndOverburn() throws Exception {
+  public void testDeferredWithPlannedAndOverrun() throws Exception {
     OfxBuilder.init(this)
       .addCardAccount("1111", -100, "2009/12/07")
       .addTransaction("2009/11/30", -60, "Auchan")
@@ -348,6 +400,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     categorization
       .selectTransaction("Prelevement novembre")
       .selectOther()
+      .selectDeferred()
       .selectSeries("Card n. 1111");
 
     views.selectHome();

@@ -59,10 +59,8 @@ public class ExportDialog {
 
                           radioGroup.add(radio);
 
-                          JEditorPane htmlEditor = new JEditorPane();
-                          GuiUtils.initReadOnlyHtmlComponent(htmlEditor);
-                          htmlEditor.setText(Lang.get("exportDialog." + exporterType + ".description"));
-                          cellBuilder.add("description", htmlEditor);
+                          String text = Lang.get("exportDialog." + exporterType + ".description");
+                          cellBuilder.add("description", GuiUtils.createReadOnlyHtmlComponent(text));
                         }
                       });
 

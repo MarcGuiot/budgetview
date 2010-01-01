@@ -13,6 +13,7 @@ import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.ChangeSet;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.TypeChangeSetListener;
 import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.metamodel.GlobType;
@@ -60,18 +61,9 @@ public class NotesView extends View {
   }
 
   private void registerCardUpdater() {
-    repository.addChangeListener(new ChangeSetListener() {
-      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsCreationsOrDeletions(Transaction.TYPE) ||
-            changeSet.containsCreationsOrDeletions(Series.TYPE)) {
-          updateCard();
-        }
-      }
-
-      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        if (changedTypes.contains(Transaction.TYPE) || changedTypes.contains(Series.TYPE)) {
-          updateCard();
-        }
+    repository.addChangeListener(new TypeChangeSetListener(Transaction.TYPE, Series.TYPE) {
+      protected void update(GlobRepository repository) {
+        updateCard();
       }
     });
   }

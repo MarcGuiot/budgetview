@@ -29,6 +29,10 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
   private GlobLinkComboEditor updateModeCombo;
   private JLabel titleLabel;
 
+  public AccountEditionDialog(final GlobRepository parentRepository, Directory directory) {
+    this(directory.get(JFrame.class), parentRepository, directory);
+  }
+
   public AccountEditionDialog(Window owner, final GlobRepository parentRepository, Directory directory) {
     super(createLocalRepository(parentRepository), directory, new JLabel());
     this.parentRepository = parentRepository;

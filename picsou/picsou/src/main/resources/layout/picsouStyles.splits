@@ -256,7 +256,7 @@
            font="-,plain,12" cursor='hand'
            marginRight="2" fill="none" anchor="center" weightY="0"/>
     <style selector=".subSeriesSelector" opaque="false"
-           foreground="toggle.selector.categories.sub" cursor='hand'
+           foreground="toggle.selector.subSeries" cursor='hand'
            font="-,plain,10" fill="none" anchor="west"/>
 
     <!-- Split panes -->

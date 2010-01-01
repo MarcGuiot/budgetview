@@ -37,26 +37,22 @@ public class HtmlCategorizationPanel implements SpecialCategorizationPanel {
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory) {
       protected void processCustomLink(String href) {
         if ("href".equals("createDeferredCardAccount")) {
-          AccountEditionDialog dialog = new AccountEditionDialog(directory.get(JFrame.class),
-                                                                 repository, directory);
+          AccountEditionDialog dialog = new AccountEditionDialog(repository, directory);
           dialog.showWithNewAccount();
         }
       }
     });
 
-    JEditorPane htmlEditor = new JEditorPane();
-    GuiUtils.initReadOnlyHtmlComponent(htmlEditor);
-    htmlEditor.setText(getMessageKey(repository, directory));
+    JEditorPane htmlEditor = GuiUtils.createReadOnlyHtmlComponent(getMessageKey(repository, directory));
     builder.add("message", htmlEditor);
 
     return builder.load();
   }
 
-  public boolean canBeHidden() {
-    return true;
-  }
-
   protected String getMessageKey(GlobRepository repository, Directory directory) {
     return Lang.get("categorization.specialCases." + id + ".message");
+  }
+
+  public void registerController(SpecialCategorizationPanelController controller) {
   }
 }

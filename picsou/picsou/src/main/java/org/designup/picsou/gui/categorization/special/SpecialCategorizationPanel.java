@@ -15,5 +15,5 @@ public interface SpecialCategorizationPanel {
                    FilteredRepeats filteredRepeats,
                    SeriesEditionDialog seriesEditionDialog);
 
-  boolean canBeHidden();
+  void registerController(SpecialCategorizationPanelController controller);
 }

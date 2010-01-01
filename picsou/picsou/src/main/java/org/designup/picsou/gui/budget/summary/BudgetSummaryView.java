@@ -81,7 +81,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
   private HyperlinkButtonUI createHyperlinkButtonUI() {
     HyperlinkButtonUI hyperlinkButtonUI = new HyperlinkButtonUI();
-    hyperlinkButtonUI.setAutoHideIfDisabled(false);
+    hyperlinkButtonUI.setAutoHideEnabled(false);
     hyperlinkButtonUI.setUseNormalColorWhenDisabled(true);
     return hyperlinkButtonUI;
   }

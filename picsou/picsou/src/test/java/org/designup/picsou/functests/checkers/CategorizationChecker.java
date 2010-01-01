@@ -36,9 +36,13 @@ public class CategorizationChecker extends GuiChecker {
   Panel selectAndGetBudgetArea(BudgetArea budgetArea) {
     selectBudgetArea(budgetArea);
 
-    Panel panel = getPanel().getPanel(budgetArea.name().toLowerCase() + "SeriesChooser");
+    Panel panel = getPanel(budgetArea);
     assertTrue(panel.isVisible());
     return panel;
+  }
+
+  private Panel getPanel(BudgetArea budgetArea) {
+    return getPanel().getPanel(budgetArea.name().toLowerCase() + "SeriesChooser");
   }
 
   private void selectBudgetArea(BudgetArea budgetArea) {
@@ -102,8 +106,9 @@ public class CategorizationChecker extends GuiChecker {
     return new SavingsCategorizationChecker(this, BudgetArea.SAVINGS);
   }
 
-  public BudgetAreaCategorizationChecker selectOther() {
-    return selectAndReturn(BudgetArea.OTHER);
+  public OtherCategorizationChecker selectOther() {
+    selectBudgetArea(BudgetArea.OTHER);
+    return new OtherCategorizationChecker(getPanel(BudgetArea.OTHER), this);
   }
 
   public void copyBankFormatToClipboard() {
@@ -183,33 +188,30 @@ public class CategorizationChecker extends GuiChecker {
   }
 
   public CategorizationChecker checkRecurringSeriesIsSelected(String seriesName) {
-    assertTrue(getPanel().getToggleButton("Recurring").isSelected());
-    Panel panel = getPanel();
-    assertTrue(panel.containsUIComponent(Panel.class, "recurringSeriesChooser"));
-
-    Panel recurringSeriesPanel = panel.getPanel("recurringSeriesChooser");
-    assertTrue(recurringSeriesPanel.isVisible());
-    assertTrue(recurringSeriesPanel.getRadioButton(seriesName).isSelected());
-    return this;
+    return checkSeriesIsSelected(BudgetArea.RECURRING, seriesName);
   }
 
   public CategorizationChecker checkSavingsSeriesIsSelected(String seriesName) {
-    assertTrue(getPanel().getToggleButton(BudgetArea.SAVINGS.getName()).isSelected());
-    Panel panel = getPanel();
-    assertTrue(panel.containsUIComponent(Panel.class, "savingsSeriesChooser"));
-
-    Panel savingsSeriesPanel = panel.getPanel("savingsSeriesChooser");
-    assertTrue(savingsSeriesPanel.isVisible());
-    assertTrue(savingsSeriesPanel.getRadioButton(seriesName).isSelected());
-    return this;
+    return checkSeriesIsSelected(BudgetArea.SAVINGS, seriesName);
   }
 
   public CategorizationChecker checkIncomeSeriesIsSelected(String seriesName) {
-    assertTrue(getPanel().getToggleButton("Income").isSelected());
+    return checkSeriesIsSelected(BudgetArea.INCOME, seriesName);
+  }
 
-    Panel panel = this.getPanel().getPanel("incomeSeriesChooser");
-    assertTrue(panel.isVisible());
-    assertTrue(panel.getRadioButton(seriesName).isSelected());
+  public CategorizationChecker checkOtherSeriesIsSelected(String seriesName) {
+    return checkSeriesIsSelected(BudgetArea.OTHER, seriesName);
+  }
+
+  private CategorizationChecker checkSeriesIsSelected(BudgetArea budgetArea, String seriesName) {
+    String prefix = budgetArea.getName();
+    assertTrue(getPanel().getToggleButton(prefix).isSelected());
+    Panel panel = getPanel();
+    assertTrue(panel.containsUIComponent(Panel.class, prefix + "SeriesChooser"));
+
+    Panel recurringSeriesPanel = panel.getPanel(prefix + "SeriesChooser");
+    assertTrue(recurringSeriesPanel.isVisible());
+    assertTrue(recurringSeriesPanel.getRadioButton(seriesName).isSelected());
     return this;
   }
 

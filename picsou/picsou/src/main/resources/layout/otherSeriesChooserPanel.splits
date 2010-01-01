@@ -13,8 +13,10 @@
     <ui name="showHideLabelLink" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         underline="false" disabledColor=""/>
 
-    <style selector="button.showHideLabel" font="-,bold,13" marginBottom="5"
-           ui="hyperlinkButtonWithoutUnderline" weightX="0" fill="none" anchor="left"/>
+    <ui name="showHideLabelUI" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+        underline="false" autoHideEnabled="false" useNormalColorWhenDisabled="true"/>
+    <style selector="button#showHide" font="-,bold,13" marginBottom="5"
+           ui="showHideLabelUI" weightX="0" fill="none" anchor="left"/>
     <style selector="button.showHideIcon" border="none" opaque="false" borderPainted="false"
            weightX="0" fill="none" anchor="left" marginLeft="5"/>
     <style selector="button.showHide" ui="hyperlinkButtonWithoutUnderline"
@@ -28,9 +30,9 @@
       </panel>
       <scrollPane weightY="100" forceVerticalScroll="true">
         <repeat ref="specialCategorizationPanels" layout="verticalGrid" margin="10">
-          <verticalBoxes>
+          <verticalBoxes ref="specialCaseBlock">
             <row>
-              <button ref="showHideLabel" styleClass="showHideLabel"/>
+              <button ref="showHide"/>
               <filler fill="horizontal"/>
             </row>
             <panel ref="specialCasePanel"/>

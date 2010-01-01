@@ -27,8 +27,7 @@ public class NoSeriesMessage {
     this.repository = repository;
     this.directory = directory;
 
-    htmlEditor = new JEditorPane();
-    GuiUtils.initReadOnlyHtmlComponent(htmlEditor);
+    htmlEditor = GuiUtils.createReadOnlyHtmlComponent();
     htmlEditor.addHyperlinkListener(new HyperlinkHandler(directory) {
       protected void processCustomLink(String href) {
         NoSeriesMessage.this.processHyperlinkClick(href);

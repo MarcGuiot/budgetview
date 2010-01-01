@@ -3,19 +3,18 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <verticalBoxes>
-    <htmlEditorPane ref="noSeriesMessage" border="empty(0,20,0,0)" hyperlinkListener="hyperlinkHandler"/>
+    <htmlEditorPane ref="message" border="empty(0,20,0,0)" hyperlinkListener="hyperlinkHandler"/>
     <radioButton ref="invisibleToggle" visible="false"/>
     <repeat ref="seriesRepeat" layout="verticalGrid" border="empty(0,20,10,0)" autoHideIfEmpty="true">
-      <column name="seriesBlock">
+      <verticalBoxes name="seriesBlock">
         <row>
           <radioButton ref="seriesToggle" styleClass="selector"/>
-          <button ref="editSeries" styleClass="editIcon" tooltipText="$series.edit.tooltip"/>
           <filler fill="horizontal"/>
         </row>
         <repeat ref="subSeriesRepeat" marginLeft="20">
           <radioButton ref="subSeriesSelector" styleClass="selector" horizontalAlignment="left"/>
         </repeat>
-      </column>
+      </verticalBoxes>
     </repeat>
   </verticalBoxes>
 
