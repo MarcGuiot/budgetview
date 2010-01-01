@@ -247,6 +247,21 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     mainAccounts.checkAccountNames("Main account", "Second account");
+
+    String secondSecondQif = QifBuilder
+      .init(this)
+      .addTransaction("2006/01/11", -1.1, "secondAgain")
+      .save();
+
+    operations.openImportDialog()
+      .setFilePath(secondSecondQif)
+      .acceptFile()
+      .checkSelectedAccount(null)
+      .doImport()
+      .checkErrorMessage("import.no.account")
+      .selectAccount("Second account")
+      .checkNoErrorMessage()
+      .completeImport();
   }
 
   public void testSkipFirstQifFile() throws Exception {

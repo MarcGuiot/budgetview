@@ -243,4 +243,8 @@ public class ImportSession {
     }
     return importKey;
   }
+
+  public boolean isAccountNeeded() {
+    return fileType.equals(BankFileType.QIF);
+  }
 }
