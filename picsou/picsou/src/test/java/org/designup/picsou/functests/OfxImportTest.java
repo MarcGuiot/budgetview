@@ -354,7 +354,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .validate();
     importChecker
       .checkSelectACardTypeMessage()
-      .openCardType()
+      .openCardTypeChooser()
       .checkNoneAreSelected("Card n. 1234")
       .selectDeferredCard("Card n. 1234", 29)
       .validate();
@@ -377,7 +377,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .acceptFile();
     importChecker
       .checkSelectACardTypeMessage()
-      .openCardType()
+      .openCardTypeChooser()
       .checkNoneAreSelected("Card n. 1234")
       .selectCreditCard("Card n. 1234")
       .validate();

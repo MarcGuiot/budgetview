@@ -288,7 +288,7 @@ public class ImportChecker {
     return this;
   }
 
-  public CardTypeChooserChecker openCardType() {
+  public CardTypeChooserChecker openCardTypeChooser() {
     Window window = WindowInterceptor.getModalDialog(dialog.getButton("Select a card type").triggerClick());
     return new CardTypeChooserChecker(window);
   }

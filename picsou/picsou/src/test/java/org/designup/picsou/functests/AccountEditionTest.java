@@ -482,6 +482,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTransaction("prelevement")
       .selectOther()
+      .selectDeferred()
       .checkActiveSeries("Carte a débit Différé");
 
     views.selectHome();
@@ -492,6 +493,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTransaction("prelevement")
       .selectOther()
+      .selectDeferred()
       .checkActiveSeries("other name");
   }
 

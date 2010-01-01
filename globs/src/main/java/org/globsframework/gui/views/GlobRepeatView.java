@@ -79,7 +79,12 @@ public class GlobRepeatView implements ComponentHolder {
   private void revalidate() {
     Container parent = jPanel.getParent();
     if (parent != null) {
-      parent.validate();
+      if (parent instanceof JComponent) {
+        ((JComponent)parent).revalidate();
+      }
+      else {
+        parent.validate();
+      }
     }
   }
 

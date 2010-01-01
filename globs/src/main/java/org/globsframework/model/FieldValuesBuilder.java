@@ -27,6 +27,14 @@ public class FieldValuesBuilder {
     return builder;
   }
 
+  public static FieldValuesBuilder init(FieldValue... values) {
+    FieldValuesBuilder builder = new FieldValuesBuilder();
+    for (FieldValue value : values) {
+      builder.setValue(value.getField(), value.getValue());
+    }
+    return builder;
+  }
+
   public FieldValuesBuilder set(Map<Field, Object> map) {
     for (Map.Entry<Field, Object> entry : map.entrySet()) {
       setValue(entry.getKey(), entry.getValue());
@@ -85,6 +93,13 @@ public class FieldValuesBuilder {
 
   public FieldValuesBuilder setValue(Field field, Object value) {
     values.setValue(field, value);
+    return this;
+  }
+
+  public FieldValuesBuilder set(FieldValue[] values) {
+    for (FieldValue value : values) {
+      this.values.setValue(value.getField(), value.getValue());
+    }
     return this;
   }
 

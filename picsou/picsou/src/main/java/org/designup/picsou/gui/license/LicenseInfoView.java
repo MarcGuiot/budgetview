@@ -30,8 +30,7 @@ public class LicenseInfoView extends View {
     this.repository = repository;
     this.directory = directory;
 
-    licenseMessage = new JEditorPane();
-    GuiUtils.initReadOnlyHtmlComponent(licenseMessage);
+    licenseMessage = GuiUtils.createReadOnlyHtmlComponent();
     licenseMessage.setVisible(false);
 
     final JFrame parent = directory.get(JFrame.class);

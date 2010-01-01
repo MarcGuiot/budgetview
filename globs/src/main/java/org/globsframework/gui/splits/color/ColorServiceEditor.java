@@ -2,6 +2,7 @@ package org.globsframework.gui.splits.color;
 
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.splits.color.utils.ColorRectIcon;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -208,31 +209,4 @@ public class ColorServiceEditor implements ColorCreationListener {
     }
   }
 
-  private static class ColorRectIcon implements Icon {
-
-    private Color color = Color.WHITE;
-
-    public void setColor(Color color) {
-      this.color = color;
-    }
-
-    public int getIconHeight() {
-      return 12;
-    }
-
-    public int getIconWidth() {
-      return 15;
-    }
-
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-      int w = getIconWidth();
-      int h = getIconHeight();
-
-      Graphics2D g2 = (Graphics2D)g;
-      g2.setColor(color);
-      g.fillRect(x, y + 1, x + w, y + h - 2);
-      g2.setColor(Color.DARK_GRAY);
-      g.drawRect(x, y + 1, x + w, y + h - 2);
-    }
-  }
 }

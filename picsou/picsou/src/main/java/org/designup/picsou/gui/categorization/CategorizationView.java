@@ -2,14 +2,19 @@ package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.categorization.components.*;
+import org.designup.picsou.gui.categorization.special.DeferredCardCategorizationPanel;
+import org.designup.picsou.gui.categorization.special.HtmlCategorizationPanel;
+import org.designup.picsou.gui.categorization.special.ShowHidePanelController;
+import org.designup.picsou.gui.categorization.special.SpecialCategorizationPanel;
+import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.CustomFilterMessagePanel;
 import org.designup.picsou.gui.components.filtering.FilterSet;
 import org.designup.picsou.gui.components.filtering.FilterSetListener;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.description.SeriesDescriptionStringifier;
+import org.designup.picsou.gui.description.SeriesNameComparator;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
-import org.designup.picsou.gui.help.HelpAction;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
@@ -29,8 +34,12 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.ImageLocator;
+import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.GlobRepeat;
+import org.globsframework.gui.utils.ShowHideButton;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import static org.globsframework.gui.views.utils.LabelCustomizers.*;
@@ -56,7 +65,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Set;
 
@@ -64,8 +73,7 @@ public class CategorizationView extends View implements TableView, Filterable {
   private GlobList currentTransactions = GlobList.EMPTY;
   private GlobTableView transactionTable;
   private JComboBox filteringModeCombo;
-  private java.util.List<Pair<Matchers.CategorizationFilter, GlobRepeat>> seriesRepeat =
-    new ArrayList<Pair<Matchers.CategorizationFilter, GlobRepeat>>();
+  private FilteredRepeats seriesRepeat = new FilteredRepeats();
 
   private Directory parentDirectory;
 
@@ -173,7 +181,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     addSeriesChooser("envelopesSeriesChooser", BudgetArea.ENVELOPES, builder);
     addSeriesChooser("extrasSeriesChooser", BudgetArea.EXTRAS, builder);
     addSeriesChooser("savingsSeriesChooser", BudgetArea.SAVINGS, builder);
-    addSeriesChooser("otherSeriesChooser", BudgetArea.OTHER, builder);
+    addOtherSeriesChooser("otherSeriesChooser", builder);
 
     TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory, this);
     transactionDetailsView.registerComponents(builder);
@@ -271,41 +279,84 @@ public class CategorizationView extends View implements TableView, Filterable {
   }
 
   private void addSeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder parentBuilder) {
-    GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationView.class,
-                                                           "/layout/seriesChooserPanel.splits",
-                                                           repository, directory);
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(CategorizationView.class,
+                                                      "/layout/seriesChooserPanel.splits",
+                                                      repository, directory);
 
-    panelBuilder.add("hyperlinkHandler", new HyperlinkHandler(directory));
+    builder.add("hyperlinkHandler", new HyperlinkHandler(directory));
 
-    panelBuilder.add("description", new JTextArea(budgetArea.getDescription()));
+    builder.add("description", new JTextArea(budgetArea.getDescription()));
 
     NoSeriesMessage noSeriesMessage = NoSeriesMessageFactory.create(budgetArea, repository, directory);
-    panelBuilder.add("noSeriesMessage", noSeriesMessage.getComponent());
+    builder.add("noSeriesMessage", noSeriesMessage.getComponent());
 
     JRadioButton invisibleRadio = new JRadioButton(name);
-    panelBuilder.add("invisibleToggle", invisibleRadio);
-    Matchers.CategorizationFilter filter = Matchers.seriesFilter(budgetArea.getId());
-    GlobRepeat repeat = panelBuilder.addRepeat("seriesRepeat",
-                                               Series.TYPE,
-                                               filter,
-                                               SeriesNameComparator.INSTANCE,
-                                               new SeriesChooserComponentFactory(budgetArea, invisibleRadio,
-                                                                                 seriesEditionDialog,
-                                                                                 repository,
-                                                                                 directory));
-    seriesRepeat.add(new Pair<Matchers.CategorizationFilter, GlobRepeat>(filter, repeat));
+    builder.add("invisibleToggle", invisibleRadio);
+
+    Matchers.CategorizationFilter filter = Matchers.seriesCategorizationFilter(budgetArea.getId());
+    GlobRepeat repeat = builder.addRepeat("seriesRepeat",
+                                          Series.TYPE,
+                                          filter,
+                                          SeriesNameComparator.INSTANCE,
+                                          new SeriesChooserComponentFactory(budgetArea, invisibleRadio,
+                                                                            seriesEditionDialog,
+                                                                            repository,
+                                                                            directory));
+    seriesRepeat.add(filter, repeat);
     JPanel groupForSeries = new JPanel();
-    panelBuilder.add("groupCreateEditSeries", groupForSeries);
-    panelBuilder.add("createSeries", new CreateSeriesAction(budgetArea));
-    panelBuilder.add("editSeries", new EditAllSeriesAction(budgetArea));
-    if (budgetArea == BudgetArea.OTHER){
-      groupForSeries.setVisible(false);
+    builder.add("groupCreateEditSeries", groupForSeries);
+    builder.add("createSeries", new CreateSeriesAction(budgetArea));
+    builder.add("editSeries", new EditAllSeriesAction(budgetArea));
+
+    parentBuilder.add(name, builder);
+  }
+
+  private void addOtherSeriesChooser(String name, GlobsPanelBuilder parentBuilder) {
+
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(CategorizationView.class,
+                                                      "/layout/otherSeriesChooserPanel.splits",
+                                                      repository, directory);
+
+    builder.add("description", new JTextArea(BudgetArea.OTHER.getDescription()));
+
+    java.util.List<SpecialCategorizationPanel> categorizationPanels = Arrays.asList(
+      new DeferredCardCategorizationPanel(),
+      new HtmlCategorizationPanel("internalTransferts"),
+      new HtmlCategorizationPanel("cash"),
+      new HtmlCategorizationPanel("healthReimbursements"),
+      new HtmlCategorizationPanel("loans"),
+      new HtmlCategorizationPanel("exceptionalIncome")
+    );
+
+    builder.addRepeat("specialCategorizationPanels",
+                      categorizationPanels,
+                      new SpecialCategorizationRepeatFactory());
+
+    parentBuilder.add(name, builder);
+  }
+
+  public class SpecialCategorizationRepeatFactory implements RepeatComponentFactory<SpecialCategorizationPanel> {
+    public void registerComponents(RepeatCellBuilder cellBuilder, SpecialCategorizationPanel categorizationPanel) {
+
+      JPanel blockPanel = new JPanel();
+      blockPanel.setName(categorizationPanel.getId());
+      cellBuilder.add("specialCaseBlock", blockPanel);
+
+      JPanel panel = categorizationPanel.loadPanel(repository, directory, seriesRepeat, seriesEditionDialog);
+      panel.setVisible(false);
+      cellBuilder.add("specialCasePanel", panel);
+
+      String label = Lang.get("categorization.specialCases." + categorizationPanel.getId());
+
+      ImageLocator imageLocator = directory.get(ImageLocator.class);
+      ImageIcon rightArrow = imageLocator.get("arrow_right.png");
+      ImageIcon downArrow = imageLocator.get("arrow_down.png");
+
+      final ShowHideButton showHide = new ShowHideButton(panel, label, label);
+      showHide.setIcons(rightArrow, downArrow);
+      categorizationPanel.registerController(new ShowHidePanelController(showHide));
+      cellBuilder.add("showHide", showHide);
     }
-
-    panelBuilder.add("openCategorizationTipsAction",
-                     new HelpAction(Lang.get("categorization.openTips"), "categorizationTips", parentDirectory));
-
-    parentBuilder.add(name, panelBuilder);
   }
 
   private Comparator<Glob> getTransactionComparator() {
@@ -512,13 +563,5 @@ public class CategorizationView extends View implements TableView, Filterable {
 
   public GlobList getDisplayedGlobs() {
     return transactionTable.getGlobs();
-  }
-
-  private static class SeriesNameComparator implements Comparator<Glob> {
-    static Comparator<Glob> INSTANCE = new SeriesNameComparator();
-
-    public int compare(Glob o1, Glob o2) {
-      return Utils.compareIgnoreCase(o1.get(Series.NAME), o2.get(Series.NAME));
-    }
   }
 }

@@ -39,7 +39,6 @@
         <button action="editSeries" styleClass="list" tooltipText="$series.list.tooltip"/>
       </row>
       <filler fill="horizontal"/>
-      <button action="openCategorizationTipsAction" styleClass="hyperlink"/>
     </row>
   </column>
 

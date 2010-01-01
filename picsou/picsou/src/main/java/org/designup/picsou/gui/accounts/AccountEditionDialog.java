@@ -15,17 +15,23 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Utils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
+import java.util.Arrays;
 
 public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobRepository> {
   private PicsouDialog dialog;
   private GlobRepository parentRepository;
   private GlobLinkComboEditor updateModeCombo;
   private JLabel titleLabel;
+
+  public AccountEditionDialog(final GlobRepository parentRepository, Directory directory) {
+    this(directory.get(JFrame.class), parentRepository, directory);
+  }
 
   public AccountEditionDialog(Window owner, final GlobRepository parentRepository, Directory directory) {
     super(createLocalRepository(parentRepository), directory, new JLabel());
@@ -143,9 +149,15 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
     doShow(newAccount, true);
   }
 
-  public void showWithNewAccount() {
+  public void showWithNewAccount(FieldValue... defaultValues) {
     localRepository.reset(GlobList.EMPTY, Account.TYPE);
-    Glob account = localRepository.create(Account.TYPE, value(Account.NAME, Lang.get("account.default.current.name")));
+
+    FieldValues values = FieldValuesBuilder.init()
+      .set(Account.NAME, Lang.get("account.default.current.name"))
+      .set(defaultValues)
+      .get();
+
+    Glob account = localRepository.create(Account.TYPE, values.toArray());
     setBalanceEditorVisible(false);
     updateModeCombo.setEnabled(!accountHasTransactions(account));
     doShow(localRepository.get(account.getKey()), true);

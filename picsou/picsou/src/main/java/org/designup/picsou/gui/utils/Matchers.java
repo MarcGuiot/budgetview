@@ -137,7 +137,17 @@ public class Matchers {
     };
   }
 
-  public static CategorizationFilter seriesFilter(final Integer budgetAreaId) {
+  public static GlobMatcher deferredCardSeries() {
+    // TODO: à completer
+    return GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId());
+  }
+
+  public static CategorizationFilter deferredCardCategorizationFilter() {
+    // TODO: à completer
+    return seriesCategorizationFilter(BudgetArea.OTHER.getId());
+  }
+
+  public static CategorizationFilter seriesCategorizationFilter(final Integer budgetAreaId) {
     return new CategorizationFilter(budgetAreaId);
   }
 

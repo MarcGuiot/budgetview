@@ -9,27 +9,20 @@
 
       <label text="$cardTypeChooser.message"/>
 
-      <scrollPane horizontalScrollbarPolicy="never">
+      <scrollPane forceVerticalScroll="true">
         <column margin="10">
           <repeat ref="cardTypeRepeat" styleClass="innerBlock">
-            <column ref="accountPanel" marginTop="10">
+            <column ref="accountPanel" marginBottom="10">
               <label ref="accountName" styleClass="item" anchor="left"/>
               <comboBox ref="cardTypeCombo" marginLeft="40" margin="5"/>
-              <cards ref="cards" marginLeft="60">
-                <card name="none">
-                  <panel opaque="true" background="block.inner.bg"/>
-                </card>
-                <card name="credit">
-                  <textArea ref="creditMessage" styleClass="multiLineLabel" opaque="true" background="block.inner.bg"/>
-                </card>
-                <card name="deferred">
-                  <row opaque="true" background="block.inner.bg">
-                    <label text="$cardTypeChooser.day"/>
-                    <comboBox ref="dayCombo"/>
-                    <filler fill="horizontal"/>
-                  </row>
-                </card>
-              </cards>
+              <verticalBoxes marginLeft="60">
+                <textArea ref="creditMessage" styleClass="multiLineLabel" opaque="true" background="block.inner.bg"/>
+                <row opaque="true" background="block.inner.bg" autoHideSource="dayCombo">
+                  <label text="$cardTypeChooser.day"/>
+                  <comboBox ref="dayCombo"/>
+                  <filler fill="horizontal"/>
+                </row>
+              </verticalBoxes>
             </column>
           </repeat>
           <filler fill="vertical"/>

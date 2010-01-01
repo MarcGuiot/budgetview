@@ -87,8 +87,8 @@ public abstract class AbstractSplitsContext implements SplitsContext {
     return componentsByName.get(id);
   }
 
-  public void add(String name, Action action) {
-    actionsByName.put(name, action);
+  public void add(String id, Action action) {
+    actionsByName.put(id, action);
   }
 
   public Action getAction(String id) {

@@ -8,6 +8,7 @@ import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.utils.GlobRepeat;
+import org.globsframework.gui.utils.GlobRepeatListener;
 import org.globsframework.gui.views.*;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
@@ -17,6 +18,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
@@ -136,7 +138,7 @@ public class GlobsPanelBuilder extends SplitsBuilder {
   public GlobButtonView addButton(String name, GlobType type, GlobListStringifier stringifier, GlobListFunctor callback) {
     return store(GlobButtonView.init(type, repository, directory, stringifier, callback).setName(name));
   }
-  
+
   public GlobsPanelBuilder add(String name, ComponentHolder holder) {
     holder.setName(name);
     store(holder);
@@ -167,25 +169,25 @@ public class GlobsPanelBuilder extends SplitsBuilder {
   public static GlobRepeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
                                      Comparator<Glob> comparator, GlobRepository repository, SplitsBuilder builder,
                                      RepeatComponentFactory<Glob> factory) {
-    GlobRepeatListener listener = new GlobRepeatListener();
-    GlobViewModel model = new GlobViewModel(type, repository, comparator, listener);
+    GlobRepeatUpdater updater = new GlobRepeatUpdater();
+    GlobViewModel model = new GlobViewModel(type, repository, comparator, updater);
     model.setFilter(matcher, true);
     Repeat<Glob> repeat = builder.addRepeat(name, model.getAll(), factory);
     builder.addDisposable(model);
-    listener.set(model, repeat);
-    return listener;
+    updater.set(model, repeat);
+    return updater;
   }
 
   public static GlobRepeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
                                      Comparator<Glob> comparator, GlobRepository repository, RepeatCellBuilder builder,
                                      RepeatComponentFactory<Glob> factory) {
-    GlobRepeatListener listener = new GlobRepeatListener();
-    final GlobViewModel model = new GlobViewModel(type, repository, comparator, listener);
+    GlobRepeatUpdater updater = new GlobRepeatUpdater();
+    final GlobViewModel model = new GlobViewModel(type, repository, comparator, updater);
     model.setFilter(matcher, true);
     Repeat<Glob> repeat = builder.addRepeat(name, model.getAll(), factory);
     builder.addDisposeListener(model);
-    listener.set(model, repeat);
-    return listener;
+    updater.set(model, repeat);
+    return updater;
   }
 
   private <T extends ComponentHolder> T store(T component) {
@@ -201,12 +203,14 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     componentHolders.clear();
   }
 
-  private static class GlobRepeatListener implements GlobViewModel.Listener, GlobRepeat {
+  private static class GlobRepeatUpdater implements GlobViewModel.Listener, GlobRepeat {
     private GlobViewModel model;
     private Repeat<Glob> repeat;
+    private List<GlobRepeatListener> listeners;
 
     public void globInserted(int index) {
       repeat.insert(model.get(index), index);
+      notifyListeners();
     }
 
     public void globUpdated(int index) {
@@ -214,10 +218,12 @@ public class GlobsPanelBuilder extends SplitsBuilder {
 
     public void globRemoved(int index) {
       repeat.remove(index);
+      notifyListeners();
     }
 
     public void globMoved(int previousIndex, int newIndex) {
       repeat.move(previousIndex, newIndex);
+      notifyListeners();
     }
 
     public void globListPreReset() {
@@ -226,16 +232,53 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     public void globListReset() {
       if ((repeat != null) && (model != null)) {
         repeat.set(model.getAll());
+        notifyListeners();
       }
     }
 
     public void set(GlobViewModel model, Repeat<Glob> repeat) {
       this.model = model;
       this.repeat = repeat;
+      notifyListeners();
+    }
+
+    public GlobList getCurrentGlobs() {
+      return model.getAll();
     }
 
     public void setFilter(GlobMatcher matcher) {
       model.setFilter(matcher, false);
+    }
+
+    public boolean isEmpty() {
+      return model.size() == 0;
+    }
+
+    public int size() {
+      return model.size();
+    }
+
+    public void addListener(GlobRepeatListener listener) {
+      if (listeners == null) {
+        listeners = new ArrayList<GlobRepeatListener>();
+      }
+      listeners.add(listener);
+    }
+
+    public void removeListener(GlobRepeatListener listener) {
+      listeners.remove(listener);
+      if (listeners.isEmpty()) {
+        listeners = null;
+      }
+    }
+
+    private void notifyListeners() {
+      if (listeners != null) {
+        GlobList currentList = model.getAll();
+        for (GlobRepeatListener listener : listeners) {
+          listener.listChanged(currentList);
+        }
+      }
     }
   }
 }

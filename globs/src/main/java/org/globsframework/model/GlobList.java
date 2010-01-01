@@ -188,7 +188,7 @@ public class GlobList extends ArrayList<Glob> {
     }
     return result;
   }
-
+  
   public SortedSet<Integer> getSortedSet(IntegerField field) {
     SortedSet<Integer> result = new TreeSet<Integer>();
     for (FieldValues values : this) {

@@ -17,26 +17,26 @@ public class ContextualRepeatCellBuilder implements RepeatCellBuilder {
     this.repeatContext = repeatContext;
   }
 
-  public <T extends Component> SplitsNode<T> add(String name, T component) {
+  public <T extends Component> SplitsNode<T> add(String id, T component) {
     SplitsNode<T> splitsNode = new DefaultSplitsNode<T>(component, repeatContext);
-    repeatContext.addComponent(name, (SplitsNode<Component>)splitsNode);
+    repeatContext.addComponent(id, (SplitsNode<Component>)splitsNode);
     return splitsNode;
   }
 
-  public <T extends Action> T add(String name, T action) {
-    repeatContext.add(name, action);
+  public <T extends Action> T add(String id, T action) {
+    repeatContext.add(id, action);
     return action;
   }
 
-  public <T> DefaultRepeat<T> addRepeat(String name, Collection<T> items, RepeatComponentFactory<T> repeatFactory) {
+  public <T> DefaultRepeat<T> addRepeat(String id, Collection<T> items, RepeatComponentFactory<T> repeatFactory) {
     DefaultRepeat<T> repeat = new DefaultRepeat<T>(repeatFactory, items);
-    repeatContext.addRepeat(name, repeat);
+    repeatContext.addRepeat(id, repeat);
     return repeat;
   }
 
-  public CardHandler addCardHandler(String handlerName) {
+  public CardHandler addCardHandler(String handlerId) {
     JPanel panel = new JPanel();
-    add(handlerName, panel);
+    add(handlerId, panel);
     return DefaultCardHandler.init(panel);
   }
 

@@ -1,0 +1,8 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel opaque="false">
+    <htmlEditorPane ref="message" border="empty(0,20,0,0)" hyperlinkListener="hyperlinkHandler"/>
+  </panel>
+</splits>

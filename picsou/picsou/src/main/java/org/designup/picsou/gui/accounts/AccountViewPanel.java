@@ -171,7 +171,7 @@ public abstract class AccountViewPanel {
     }
 
     public void run(GlobList list, GlobRepository repository) {
-      AccountEditionDialog dialog = new AccountEditionDialog(directory.get(JFrame.class), repository, directory);
+      AccountEditionDialog dialog = new AccountEditionDialog(repository, directory);
       dialog.show(list.get(0));
     }
   }

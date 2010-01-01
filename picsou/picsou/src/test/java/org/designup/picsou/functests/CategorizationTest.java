@@ -1010,22 +1010,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkSeries("Courant", 0, -20);
   }
 
-  public void testCategorizationHelp() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2008/06/30", -20.00, "Auchan")
-      .load();
-
-    views.selectCategorization();
-    categorization.selectTableRow(0);
-    categorization.clickHelpLink("categorization")
-      .checkTitle("Categorization")
-      .close();
-    
-    categorization.selectEnvelopes();
-    categorization.checkCategorizationTips();
-  }
-
   public void testCreatedSavingTransactionAreNotVisibleInCategorization() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/10", -100.00, "Virement")

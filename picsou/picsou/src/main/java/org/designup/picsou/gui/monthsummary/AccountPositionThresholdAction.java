@@ -7,38 +7,31 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 
-public class AccountPositionThresholdAction extends AbstractAction implements ChangeSetListener {
+public class AccountPositionThresholdAction extends AbstractAction {
   private GlobRepository repository;
   private Directory directory;
 
   public AccountPositionThresholdAction(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
-    repository.addChangeListener(this);
+    repository.addChangeListener(new TypeChangeSetListener(AccountPositionThreshold.TYPE) {
+      protected void update(GlobRepository repository) {
+        updateName();
+      }
+    });
     updateName();
   }
 
   public void actionPerformed(ActionEvent e) {
     AccountPositionThresholdDialog dialog = new AccountPositionThresholdDialog(repository, directory);
     dialog.show();
-  }
-
-  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsChanges(AccountPositionThreshold.TYPE)) {
-      updateName();
-    }
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(AccountPositionThreshold.TYPE)) {
-      updateName();
-    }
   }
 
   private void updateName() {

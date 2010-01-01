@@ -20,7 +20,7 @@
     </card>
     <card name="deferred">
       <column>
-        <scrollPane styleClass="etched" minimumSize="(250,100)">
+        <scrollPane styleClass="etched" minimumSize="(250,100)" forceVerticalScroll="true">
           <column>
             <repeat ref="deferredPeriodRepeat" margin="5">
               <column name="deferredPeriodPanel">

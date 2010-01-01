@@ -39,7 +39,7 @@ public class NoSavingsSeriesMessage extends NoSeriesMessage {
 
   protected void processHyperlinkClick(String href) {
     if ("createSavingsAccount".equals(href)) {
-      AccountEditionDialog dialog = new AccountEditionDialog(directory.get(JFrame.class), repository, directory);
+      AccountEditionDialog dialog = new AccountEditionDialog(repository, directory);
       dialog.showWithNewAccount(AccountType.SAVINGS, AccountUpdateMode.AUTOMATIC, true);
     }
   }

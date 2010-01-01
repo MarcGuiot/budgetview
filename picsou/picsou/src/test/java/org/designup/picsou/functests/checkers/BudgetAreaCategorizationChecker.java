@@ -14,9 +14,15 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   private Panel panel;
 
   public BudgetAreaCategorizationChecker(CategorizationChecker categorizationChecker, BudgetArea budgetArea) {
+    this(categorizationChecker, budgetArea, categorizationChecker.selectAndGetBudgetArea(budgetArea));
+  }
+
+  public BudgetAreaCategorizationChecker(CategorizationChecker categorizationChecker,
+                                         BudgetArea budgetArea,
+                                         Panel panel) {
     this.categorizationChecker = categorizationChecker;
     this.budgetArea = budgetArea;
-    this.panel = categorizationChecker.selectAndGetBudgetArea(budgetArea);
+    this.panel = panel;
     assertTrue(panel.isVisible());
   }
 
