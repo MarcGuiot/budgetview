@@ -242,4 +242,8 @@ public class ImportController {
   public GlobRepository getSessionRepository() {
     return importSession.getTempRepository();
   }
+
+  public boolean isAccountNeeded() {
+    return importSession.isAccountNeeded();
+  }
 }

@@ -177,6 +177,7 @@ public class ImportDialog {
     sessionDirectory.add(new SelectionService());
     sessionDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
+        importMessageLabel.setText("");
         currentlySelectedAccount = selection.getAll(Account.TYPE).isEmpty() ? null :
                                    selection.getAll(Account.TYPE).get(0).getKey();
       }
@@ -450,10 +451,15 @@ public class ImportDialog {
       setEnabled(false);
       try {
         showMessage("");
+        importMessageLabel.setText("");
         if (!dateFormatSelectionPanel.check()) {
           return;
         }
         if (!currentActions.isEmpty()) {
+          return;
+        }
+        if (currentlySelectedAccount == null && controller.isAccountNeeded()){
+          importMessageLabel.setText(Lang.get("import.no.account"));
           return;
         }
         controller.finish(currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());

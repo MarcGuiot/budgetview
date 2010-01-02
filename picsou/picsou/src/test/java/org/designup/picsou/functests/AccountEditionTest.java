@@ -474,6 +474,27 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .changeMonth(200810, 200812)
       .checkNotSelectableMonth(200809, 200808, 200811, 200812);
     accountEditionChecker.validate();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/01", 1000.00, "prelevement")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTransaction("prelevement")
+      .selectOther()
+      .selectDeferred()
+      .checkActiveSeries("Carte a débit Différé");
+
+    views.selectHome();
+    mainAccounts.edit("Carte a débit Différé")
+      .setAccountName("other name")
+      .validate();
+    views.selectCategorization();
+
+    categorization.selectTransaction("prelevement")
+      .selectOther()
+      .selectDeferred()
+      .checkActiveSeries("other name");
   }
 
   public void testUpdateDeferredCardAmount() throws Exception {

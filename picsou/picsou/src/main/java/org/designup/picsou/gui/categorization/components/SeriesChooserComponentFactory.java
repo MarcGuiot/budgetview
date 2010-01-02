@@ -144,6 +144,7 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
     boolean atLeastOneIsActivated = false;
     ReadOnlyGlobRepository.MultiFieldIndexed seriesBudgets =
       repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID));
+    GlobList currentTransactions = selectionService.getSelection(Transaction.TYPE);
     Set<Integer> months = currentTransactions.getValueSet(Transaction.BUDGET_MONTH);
     for (Integer month : months) {
       Glob seriesBudget =
