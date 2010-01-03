@@ -96,7 +96,7 @@ public class FieldValuesBuilder {
     return this;
   }
 
-  public FieldValuesBuilder set(FieldValue[] values) {
+  public FieldValuesBuilder set(FieldValue... values) {
     for (FieldValue value : values) {
       this.values.setValue(value.getField(), value.getValue());
     }
