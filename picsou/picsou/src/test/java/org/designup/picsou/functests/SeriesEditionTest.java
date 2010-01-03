@@ -139,7 +139,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         {"2008", "July", "29.00", "29.00"},
       })
       .checkMonthSelected(1)
-      .checkAmount("29.00")
+      .checkAmount(29.00)
       .setAmount("40.00")
       .checkTable(new Object[][]{
         {"2008", "August", "", "29.00"},
@@ -156,7 +156,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       })
       .checkAmountIsSelected()
       .checkMonthSelected(1)
-      .checkAmount("40.00")
+      .checkAmount(40.00)
       .setAmount("30.00")
       .validate();
 
@@ -925,7 +925,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     edition.selectMonth(200806)
       .checkPositiveAmountsSelected()
-      .checkAmount("35.00")
+      .checkAmount(35.00)
       .selectNegativeAmounts()
       .checkTable(new Object[][]{
         {"2008", "August", "", "10.00"},
@@ -938,7 +938,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     edition.selectMonth(200807)
       .checkNegativeAmountsSelected()
-      .checkAmount("20.00")
+      .checkAmount(20.00)
       .selectPositiveAmounts()
       .checkTable(new Object[][]{
         {"2008", "August", "", "10.00"},
@@ -1008,7 +1008,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     edition.selectMonth(200806)
       .checkPositiveAmountsSelected()
-      .checkAmount("35.00")
+      .checkAmount(35.00)
       .setAmount("30")
       .checkTable(new Object[][]{
         {"2008", "August", "", "-10.00"},
@@ -1021,7 +1021,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     edition.selectMonth(200807)
       .checkNegativeAmountsSelected()
-      .checkAmount("20.00")
+      .checkAmount(20.00)
       .selectPositiveAmounts()
       .checkTable(new Object[][]{
         {"2008", "August", "", "-10.00"},
@@ -1447,16 +1447,16 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Internet", -29.00, -50.00);
 
     budgetView.recurring.editSeries("Internet")
-      .checkAmount("50.00")
+      .checkAmount(50.00)
       .checkAlignPlannedAndActualEnabled()
       .checkActualAmount("29.00")
       .alignPlannedAndActual()
-      .checkAmount("29.00")
+      .checkAmount(29.00)
       .validate();
     budgetView.recurring.checkSeries("Internet", -29.00, -29.00);
 
     budgetView.recurring.editSeries("Internet")
-      .checkAmount("29.00")
+      .checkAmount(29.00)
       .selectNoMonth()
       .checkAlignPlannedAndActualDisabled()
       .selectAllMonths()

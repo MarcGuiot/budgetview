@@ -2,11 +2,9 @@ package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.categorization.components.*;
-import org.designup.picsou.gui.categorization.special.DeferredCardCategorizationPanel;
-import org.designup.picsou.gui.categorization.special.HtmlCategorizationPanel;
-import org.designup.picsou.gui.categorization.special.ShowHidePanelController;
-import org.designup.picsou.gui.categorization.special.SpecialCategorizationPanel;
+import org.designup.picsou.gui.categorization.special.*;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
+import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.CustomFilterMessagePanel;
 import org.designup.picsou.gui.components.filtering.FilterSet;
@@ -321,10 +319,10 @@ public class CategorizationView extends View implements TableView, Filterable {
 
     java.util.List<SpecialCategorizationPanel> categorizationPanels = Arrays.asList(
       new DeferredCardCategorizationPanel(),
-      new HtmlCategorizationPanel("internalTransferts"),
-      new HtmlCategorizationPanel("cash"),
+      new InternalTransfersCategorizationPanel(),
       new HtmlCategorizationPanel("healthReimbursements"),
       new HtmlCategorizationPanel("loans"),
+      new HtmlCategorizationPanel("cash"),
       new HtmlCategorizationPanel("exceptionalIncome")
     );
 
@@ -342,7 +340,14 @@ public class CategorizationView extends View implements TableView, Filterable {
       blockPanel.setName(categorizationPanel.getId());
       cellBuilder.add("specialCaseBlock", blockPanel);
 
-      JPanel panel = categorizationPanel.loadPanel(repository, directory, seriesRepeat, seriesEditionDialog);
+      SeriesCreationHandler handler = new SeriesCreationHandler() {
+        public void createSeries(BudgetArea budgetArea, FieldValue... forcedValues) {
+          CreateSeriesAction action = new CreateSeriesAction(budgetArea, forcedValues);
+          action.actionPerformed(null);
+        }
+      };
+
+      JPanel panel = categorizationPanel.loadPanel(repository, directory, seriesRepeat, seriesEditionDialog, handler);
       panel.setVisible(false);
       cellBuilder.add("specialCasePanel", panel);
 
@@ -416,15 +421,18 @@ public class CategorizationView extends View implements TableView, Filterable {
 
   private class CreateSeriesAction extends AbstractAction {
     private final BudgetArea budgetArea;
+    private FieldValue[] forcedValues;
 
-    public CreateSeriesAction(BudgetArea budgetArea) {
+    public CreateSeriesAction(BudgetArea budgetArea, FieldValue... forcedValues) {
       this.budgetArea = budgetArea;
+      this.forcedValues = forcedValues;
     }
 
     public void actionPerformed(ActionEvent e) {
       Key key = seriesEditionDialog.showNewSeries(currentTransactions,
                                                   selectionService.getSelection(Month.TYPE),
-                                                  budgetArea);
+                                                  budgetArea,
+                                                  forcedValues);
       Glob series = repository.find(key);
       if (key != null && series != null) {
         repository.startChangeSet();

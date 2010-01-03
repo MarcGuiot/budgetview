@@ -1205,7 +1205,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectTransactions("2_Auchan")
       .selectEnvelopes()
       .selectSeries("Courses");
-    
   }
 
   public void testDeleteTransaction() throws Exception {
@@ -1225,5 +1224,26 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.initContent()
       .add("15/06/2008", "2_Auchan", -40.0)
       .check();
+  }
+
+  public void testInternalTransferSeriesHelp() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/25", -50.00, "Transfer")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTransaction("Transfer");
+    categorization.selectOther()
+      .selectInternalTransfers()
+      .clickAndOpenSeriesEdition("create series")
+      .checkName("Internal transfers")
+      .checkSelectedProfile("Irregular")
+      .checkAmount(0.00)
+      .validate();
+    
+    categorization.checkTable(new Object[][]{
+      {"25/06/2008", "Internal transfers", "Transfer", -50.00}
+    });
   }
 }

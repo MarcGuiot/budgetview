@@ -1,6 +1,9 @@
 package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Panel;
+import org.uispec4j.TextBox;
+
+import java.awt.*;
 
 public class OtherCategorizationChecker extends GuiChecker {
 
@@ -14,6 +17,10 @@ public class OtherCategorizationChecker extends GuiChecker {
 
   public DeferredCardCategorizationChecker selectDeferred() {
     return new DeferredCardCategorizationChecker(getPanel("deferredCard"), categorizationChecker);
+  }
+
+  public HtmlCategorizationChecker selectInternalTransfers() {
+    return new HtmlCategorizationChecker(getPanel("internalTransfers"));
   }
 
   private Panel getPanel(String categorizationPanelId) {

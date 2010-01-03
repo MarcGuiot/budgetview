@@ -40,7 +40,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkAmount("100")
       .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Epargne LCL")
-      .checkAmount("100.00")
+      .checkAmount(100.00)
       .validate();
   }
 

@@ -4,6 +4,7 @@ import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.categorization.components.SeriesChooserComponentFactory;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
+import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
 import org.designup.picsou.gui.description.SeriesNameComparator;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
@@ -39,7 +40,7 @@ public class DeferredCardCategorizationPanel implements SpecialCategorizationPan
   public JPanel loadPanel(final GlobRepository repository,
                           final Directory directory,
                           FilteredRepeats filteredRepeats,
-                          SeriesEditionDialog seriesEditionDialog) {
+                          SeriesEditionDialog seriesEditionDialog, SeriesCreationHandler seriesCreationHandler) {
     this.repository = repository;
 
     registerUpdater();
@@ -100,11 +101,11 @@ public class DeferredCardCategorizationPanel implements SpecialCategorizationPan
 
   private void updateDisplay() {
     if (repository.contains(Series.TYPE, Matchers.deferredCardSeries())) {
-      controller.setShown(true);
       if (repeat.isEmpty()) {
         message.setText(Lang.get("categorization.specialCases.deferredCard.invalidSelection"));
       }
       else {
+        controller.setShown(true);
         message.setText(Lang.get("categorization.specialCases.deferredCard.select"));
       }
     }

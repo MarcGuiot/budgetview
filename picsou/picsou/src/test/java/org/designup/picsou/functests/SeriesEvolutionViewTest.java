@@ -295,7 +295,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     seriesEvolution.editSeries("John's", "Sep 08")
       .checkPositiveAmountsSelected()
-      .checkAmount("500.00")
+      .checkAmount(500.00)
       .checkPeriodicity("Every month")
       .editSeries()
       .setTwoMonths()

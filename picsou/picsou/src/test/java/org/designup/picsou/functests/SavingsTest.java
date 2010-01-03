@@ -683,7 +683,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectSavings();
     savingsView.editSeries("Account n. 111", "CA").checkManualModeSelected()
       .selectAllMonths()
-      .checkAmount("200.00")
+      .checkAmount(200.00)
       .checkTable(new Object[][]{
         {"2008", "October", "", "200.00"},
         {"2008", "September", "", "200.00"},

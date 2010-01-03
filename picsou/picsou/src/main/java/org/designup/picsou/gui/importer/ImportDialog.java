@@ -1,8 +1,9 @@
 package org.designup.picsou.gui.importer;
 
+import com.jidesoft.swing.AutoResizingTextArea;
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
-import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.gui.accounts.NewAccountAction;
+import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
@@ -45,8 +46,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
-
-import com.jidesoft.swing.AutoResizingTextArea;
 
 public class ImportDialog {
 
@@ -163,8 +162,8 @@ public class ImportDialog {
   }
 
   private void initStep2Panel(final String textForCloseButton, Window owner) {
-    GlobsPanelBuilder builder2 = new GlobsPanelBuilder(getClass(), "/layout/importDialogStep2.splits",
-                                                       localRepository, localDirectory);
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importDialogStep2.splits",
+                                                      localRepository, localDirectory);
     dateRenderer = new ImportedTransactionDateRenderer();
     dateFormatSelectionPanel = new DateFormatSelectionPanel(localRepository, localDirectory,
                                                             new DateFormatSelectionPanel.Callback() {
@@ -172,7 +171,7 @@ public class ImportDialog {
                                                                 dateRenderer.changeDateFormat(format);
                                                               }
                                                             }, importMessageLabel);
-    builder2.add("dateSelectionPanel", dateFormatSelectionPanel.getBuilder());
+    builder.add("dateSelectionPanel", dateFormatSelectionPanel.getBuilder());
     sessionDirectory = new DefaultDirectory(localDirectory);
     sessionDirectory.add(new SelectionService());
     sessionDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
@@ -186,50 +185,52 @@ public class ImportDialog {
     sessionRepository = controller.getSessionRepository();
 
     ImportedTransactionsTable table = new ImportedTransactionsTable(sessionRepository, sessionDirectory, dateRenderer);
-    builder2.add("table", table.getTable());
-    builder2.add("fileName", fileNameLabel);
+    builder.add("table", table.getTable());
+    builder.add("fileName", fileNameLabel);
 
     NewAccountAction newAccountAction =
       new NewAccountAction(AccountType.MAIN, sessionRepository, sessionDirectory, dialog)
         .setUpdateModeEditable(false);
-    newAccountButton = builder2.add("newAccount", new JButton(newAccountAction)).getComponent();
+    newAccountButton = builder.add("newAccount", new JButton(newAccountAction)).getComponent();
 
-    GlobComboView comboView = GlobComboView.init(Account.TYPE, sessionRepository, sessionDirectory);
+    GlobComboView comboView =
+      GlobComboView.init(Account.TYPE, sessionRepository, sessionDirectory)
+        .setEmptyOptionLabel(Lang.get("import.account.combo.select"))
+        .setFilter(new GlobMatcher() {
+          public boolean matches(Glob account, GlobRepository repository) {
+            return account != null &&
+                   !Account.SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID)) &&
+                   AccountUpdateMode.AUTOMATIC.getId().equals(account.get(Account.UPDATE_MODE));
+          }
+        });
     accountComboBox = comboView.getComponent();
-    builder2.add("accountCombo", accountComboBox);
-    comboView.setFilter(new GlobMatcher() {
-      public boolean matches(Glob account, GlobRepository repository) {
-        return account != null &&
-               !Account.SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID)) &&
-               AccountUpdateMode.AUTOMATIC.getId().equals(account.get(Account.UPDATE_MODE));
-      }
-    });
+    builder.add("accountCombo", accountComboBox);
 
     registerAccountCreationListener(sessionRepository, sessionDirectory);
 
     loadAdditionalImportActions();
 
-    builder2.add("importMessage", importMessageLabel);
+    builder.add("importMessage", importMessageLabel);
 
     additionalActionImportRepeat =
-      builder2.addRepeat("additionalActions", Collections.<AdditionalImportAction>emptyList(),
-                         new RepeatComponentFactory<AdditionalImportAction>() {
-                           public void registerComponents(RepeatCellBuilder cellBuilder,
-                                                          final AdditionalImportAction item) {
-                             cellBuilder.add("message", new AutoResizingTextArea(item.getMessage()));
-                             cellBuilder.add("action", new AbstractAction(item.getButtonMessage()) {
-                               public void actionPerformed(ActionEvent e) {
-                                 item.getAction().actionPerformed(e);
-                                 updateAdditionalImportActions();
-                               }
-                             });
-                           }
-                         });
+      builder.addRepeat("additionalActions", Collections.<AdditionalImportAction>emptyList(),
+                        new RepeatComponentFactory<AdditionalImportAction>() {
+                          public void registerComponents(RepeatCellBuilder cellBuilder,
+                                                         final AdditionalImportAction item) {
+                            cellBuilder.add("message", new AutoResizingTextArea(item.getMessage()));
+                            cellBuilder.add("action", new AbstractAction(item.getButtonMessage()) {
+                              public void actionPerformed(ActionEvent e) {
+                                item.getAction().actionPerformed(e);
+                                updateAdditionalImportActions();
+                              }
+                            });
+                          }
+                        });
 
-    builder2.add("skipFile", new SkipFileAction());
-    builder2.add("finish", new FinishAction());
-    builder2.add("close", new CancelAction(textForCloseButton));
-    this.step2Panel = builder2.load();
+    builder.add("skipFile", new SkipFileAction());
+    builder.add("finish", new FinishAction());
+    builder.add("close", new CancelAction(textForCloseButton));
+    this.step2Panel = builder.load();
   }
 
   private void loadAdditionalImportActions() {
@@ -458,7 +459,7 @@ public class ImportDialog {
         if (!currentActions.isEmpty()) {
           return;
         }
-        if (currentlySelectedAccount == null && controller.isAccountNeeded()){
+        if (currentlySelectedAccount == null && controller.isAccountNeeded()) {
           importMessageLabel.setText(Lang.get("import.no.account"));
           return;
         }

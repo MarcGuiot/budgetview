@@ -28,13 +28,18 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("Auchan")
       .selectOther()
       .selectDeferred()
+      .checkHidden()
+      .toggle()
       .checkMessage("Select a transfer operation from your main account to a card account.")
       .checkContainsNoSeries()
-      .checkEditSeriesButtonNotVisible();
+      .checkEditSeriesButtonNotVisible()
+      .toggle()
+      .checkHidden();
 
     categorization.selectTransaction("Prelevement")
       .selectOther()
       .selectDeferred()
+      .checkShown()
       .checkMessage("Assign the monthly transfer operation to the corresponding card account:")
       .checkActiveSeries("Card n. 1111")
       .selectSeries("Card n. 1111");
