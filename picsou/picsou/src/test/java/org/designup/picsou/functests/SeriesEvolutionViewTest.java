@@ -368,8 +368,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
-    seriesEvolution.editSeries("John's", "Jul 08")
-      .editSeries()
+    seriesEvolution.editSeries("John's")
       .deleteCurrentSeriesWithConfirmation();
 
     seriesEvolution.initContent()
@@ -476,8 +475,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .checkPropagationDisabled()
       .validate();
 
-    seriesEvolution.editSeries("Groceries", "Sep 08")
-      .editSeries()
+    seriesEvolution.editSeries("Groceries")
       .setEndDate(200810)
       .validate();
 
