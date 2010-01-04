@@ -14,9 +14,10 @@ import java.awt.event.ActionEvent;
 public class SeriesDeletionDialog {
   private PicsouDialog dialog;
   private boolean ok;
+  private GlobsPanelBuilder builder;
 
   public SeriesDeletionDialog(GlobRepository repository, Directory directory, Window parent) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
+    builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
                                                       "/layout/seriesDeletionDialog.splits",
                                                       repository, directory);
 
@@ -39,6 +40,7 @@ public class SeriesDeletionDialog {
     ok = false;
     dialog.pack();
     dialog.showCentered();
+    builder.dispose();
     return ok;
   }
 }

@@ -20,6 +20,7 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -93,7 +94,7 @@ public class BudgetSummaryDetailsDialog {
 
     updateTitle(selectedMonths);
 
-    dialog.showCentered();
+    GuiUtils.showCentered(dialog);
   }
 
   private void updateTitle(GlobList months) {
@@ -150,7 +151,6 @@ public class BudgetSummaryDetailsDialog {
     addLabel(builder, "remainingOutSavings", BudgetStat.SAVINGS_OUT_REMAINING, true);
     addLabel(builder, "remainingExtras", BudgetStat.EXTRAS_REMAINING, true);
 
-    PositionThresholdIndicator thresholdIndicator =
       builder.add("thresholdIndicator",
                   new PositionThresholdIndicator(localRepository, directory,
                                                  "budgetSummaryDialog.threshold.top",

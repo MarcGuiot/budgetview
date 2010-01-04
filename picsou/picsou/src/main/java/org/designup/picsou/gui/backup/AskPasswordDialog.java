@@ -59,7 +59,7 @@ public class AskPasswordDialog {
     dialog.pack();
     passwordField.requestFocusInWindow();
     dialog.showCentered();
-
+    builder.dispose();
     return passwordField.getPassword();
   }
 

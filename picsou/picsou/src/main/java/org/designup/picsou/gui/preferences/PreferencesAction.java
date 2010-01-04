@@ -9,15 +9,18 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class PreferencesAction extends AbstractAction {
-  private PreferencesDialog dialog;
+  private GlobRepository repository;
+  private Directory directory;
 
   public PreferencesAction(GlobRepository repository, Directory directory) {
     super(Lang.get("preferences"));
-    JFrame parent = directory.get(JFrame.class);
-    dialog = new PreferencesDialog(parent, repository, directory);
+    this.repository = repository;
+    this.directory = directory;
   }
 
   public void actionPerformed(ActionEvent e) {
+    JFrame parent = directory.get(JFrame.class);
+    PreferencesDialog dialog = new PreferencesDialog(parent, repository, directory);
     dialog.show();
   }
 }

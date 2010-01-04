@@ -96,8 +96,7 @@ public class PicsouTableHeaderPainter implements CellPainter, ColorChangeListene
     return filtered ? filteredDarkColor : darkColor;
   }
 
-  protected void finalize() throws Throwable {
-    super.finalize();
+  public void dispose() {
     colorService.removeListener(this);
   }
 }

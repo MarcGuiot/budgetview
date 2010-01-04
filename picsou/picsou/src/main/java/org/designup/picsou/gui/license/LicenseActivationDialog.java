@@ -38,6 +38,7 @@ public class LicenseActivationDialog {
   private JProgressBar connectionState = new JProgressBar();
   private ValidateAction validateAction = new ValidateAction();
   private Integer activationState;
+  private GlobsPanelBuilder builder;
 
   public LicenseActivationDialog(Window parent, GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -51,7 +52,7 @@ public class LicenseActivationDialog {
 
     dialog = PicsouDialog.create(parent, directory);
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/licenseActivationDialog.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/licenseActivationDialog.splits",
                                                       localRepository, this.localDirectory);
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
     builder.addEditor("ref-mail", User.MAIL).setNotifyOnKeyPressed(true);
@@ -142,6 +143,7 @@ public class LicenseActivationDialog {
     selectionService.select(localRepository.get(User.KEY));
     updateConnectionState(localRepository);
     dialog.showCentered();
+    builder.dispose();
   }
 
   public void showExpiration() {

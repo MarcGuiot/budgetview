@@ -28,10 +28,11 @@ public class AboutDialog {
   };
 
   private PicsouDialog dialog;
+  private SplitsBuilder builder;
 
   public AboutDialog(Directory directory) {
 
-    SplitsBuilder builder = new SplitsBuilder(directory);
+    builder = new SplitsBuilder(directory);
     builder.setSource(getClass(), "/layout/aboutDialog.splits");
 
     String version = Lang.get("about.version", PicsouApplication.APPLICATION_VERSION);
@@ -71,5 +72,6 @@ public class AboutDialog {
 
   public void show() {
     GuiUtils.showCentered(dialog);
+    builder.dispose();
   }
 }

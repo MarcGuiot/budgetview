@@ -20,11 +20,12 @@ public class PreferencesDialog {
   private PicsouDialog dialog;
   private GlobRepository repository;
   private JComboBox futureMonth;
+  private GlobsPanelBuilder builder;
 
   public PreferencesDialog(Window parent, final GlobRepository repository, Directory directory) {
     this.repository = repository;
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
+    builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
                                                       "/layout/preferencesDialog.splits",
                                                       repository, directory);
     Integer[] items= new Integer[]{12, 18, 24, 36};
@@ -55,5 +56,6 @@ public class PreferencesDialog {
     futureMonth.setSelectedItem(preference.get(UserPreferences.FUTURE_MONTH_COUNT));
     dialog.pack();
     dialog.showCentered();
+    builder.dispose();
   }
 }

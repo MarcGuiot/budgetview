@@ -124,8 +124,7 @@ public class TransactionRendererColors implements ColorChangeListener {
     this.splitGroupSourceId = splitGroupSourceId;
   }
 
-  protected void finalize() throws Throwable {
-    super.finalize();
+  public void dispose(){
     colorService.removeListener(this);
   }
 }

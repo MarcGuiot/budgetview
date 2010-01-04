@@ -51,6 +51,7 @@ public class CardTypeChooserDialog {
                                             new CancelAction());
     dialog.pack();
     dialog.showCentered();
+    builder.dispose();
   }
 
   private String getAccountName(Glob account, LocalGlobRepository localRepository) {

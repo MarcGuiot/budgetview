@@ -20,6 +20,7 @@ public class AccountPositionThresholdDialog {
   private LocalGlobRepository localRepository;
   private Directory directory;
   private GlobNumericEditor editor;
+  private GlobsPanelBuilder builder;
 
   public AccountPositionThresholdDialog(GlobRepository repository, Directory directory) {
     this.directory = directory;
@@ -31,7 +32,7 @@ public class AccountPositionThresholdDialog {
   }
 
   private void createDialog() {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountPositionThresholdDialog.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/accountPositionThresholdDialog.splits",
                                                       localRepository, directory);
 
 
@@ -67,5 +68,6 @@ public class AccountPositionThresholdDialog {
 
   public void show() {
     dialog.showCentered();
+    builder.dispose();
   }
 }

@@ -1,8 +1,9 @@
 package org.designup.picsou.gui.importer;
 
+import com.jidesoft.swing.AutoResizingTextArea;
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
-import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.gui.accounts.NewAccountAction;
+import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
@@ -46,8 +47,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
-import com.jidesoft.swing.AutoResizingTextArea;
-
 public class ImportDialog {
 
   private GlobRepository repository;
@@ -85,6 +84,9 @@ public class ImportDialog {
   private List<AdditionalImportAction> additionalImportActions = new ArrayList<AdditionalImportAction>();
   private List<AdditionalImportAction> currentActions;
   private Repeat<AdditionalImportAction> additionalActionImportRepeat;
+  private GlobsPanelBuilder builder2;
+  private GlobsPanelBuilder builder1;
+  private ImportedTransactionsTable importedTransactionTable;
 
   public ImportDialog(String textForCloseButton, List<File> files, Glob defaultAccount,
                       final Window owner, final GlobRepository repository, Directory directory,
@@ -129,29 +131,29 @@ public class ImportDialog {
 
     initFileField();
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importDialogStep1.splits", localRepository, localDirectory);
-    builder.add("importMessage", messageLabel);
-    builder.add("filePanel", filePanel);
-    builder.add("fileField", fileField);
-    builder.add("browseFiles", new BrowseFilesAction(fileField, localRepository, usePreferredPath, dialog));
-    builder.add("import", new ImportAction());
-    builder.add("close", new AbstractAction(textForCloseButton) {
+    builder1 = new GlobsPanelBuilder(getClass(), "/layout/importDialogStep1.splits", localRepository, localDirectory);
+    builder1.add("importMessage", messageLabel);
+    builder1.add("filePanel", filePanel);
+    builder1.add("fileField", fileField);
+    builder1.add("browseFiles", new BrowseFilesAction(fileField, localRepository, usePreferredPath, dialog));
+    builder1.add("import", new ImportAction());
+    builder1.add("close", new AbstractAction(textForCloseButton) {
       public void actionPerformed(ActionEvent e) {
         controller.complete();
         closeDialog();
       }
     });
 
-    builder.addCombo(Bank.TYPE)
+    builder1.addCombo(Bank.TYPE)
       .setFilter(GlobMatchers.isNotEmpty(Bank.DOWNLOAD_URL))
       .setShowEmptyOption(true)
       .setEmptyOptionLabel(Lang.get("import.step1.selectBank"))
       .setName("banks");
-    builder.add("openUrl", new OpenBankUrlAction(localDirectory));
+    builder1.add("openUrl", new OpenBankUrlAction(localDirectory));
 
-    builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
+    builder1.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
 
-    step1Panel = builder.load();
+    step1Panel = builder1.load();
   }
 
   private void initFileField() {
@@ -163,8 +165,8 @@ public class ImportDialog {
   }
 
   private void initStep2Panel(final String textForCloseButton, Window owner) {
-    GlobsPanelBuilder builder2 = new GlobsPanelBuilder(getClass(), "/layout/importDialogStep2.splits",
-                                                       localRepository, localDirectory);
+    builder2 = new GlobsPanelBuilder(getClass(), "/layout/importDialogStep2.splits",
+                                     localRepository, localDirectory);
     dateRenderer = new ImportedTransactionDateRenderer();
     dateFormatSelectionPanel = new DateFormatSelectionPanel(localRepository, localDirectory,
                                                             new DateFormatSelectionPanel.Callback() {
@@ -185,8 +187,8 @@ public class ImportDialog {
 
     sessionRepository = controller.getSessionRepository();
 
-    ImportedTransactionsTable table = new ImportedTransactionsTable(sessionRepository, sessionDirectory, dateRenderer);
-    builder2.add("table", table.getTable());
+    importedTransactionTable = new ImportedTransactionsTable(sessionRepository, sessionDirectory, dateRenderer);
+    builder2.add("table", importedTransactionTable.getTable());
     builder2.add("fileName", fileNameLabel);
 
     NewAccountAction newAccountAction =
@@ -279,10 +281,13 @@ public class ImportDialog {
       }
       builder.append(file.getAbsolutePath());
     }
+    System.out.println("ImportDialog.updateFileField " + builder.toString());
     fileField.setText(builder.toString());
+    System.out.println("ImportDialog.updateFileField end setText ");
   }
 
   protected void closeDialog() {
+    System.out.println("ImportDialog.closeDialog");
     dialog.setVisible(false);
   }
 
@@ -324,6 +329,9 @@ public class ImportDialog {
           frame.removeWindowListener(this);
           dialog.pack();
           dialog.showCentered();
+          builder1.dispose();
+          builder2.dispose();
+          importedTransactionTable.dispose();
         }
       });
       final JDialog dialog = new JDialog(frame);
@@ -342,7 +350,12 @@ public class ImportDialog {
     else {
       dialog.pack();
       fileField.requestFocus();
+      System.out.println("ImportDialog.show start normal " + new Date());
       dialog.showCentered();
+      System.out.println("ImportDialog.show ended normal " + new Date());
+      builder1.dispose();
+      builder2.dispose();
+      importedTransactionTable.dispose();
     }
   }
 
@@ -458,7 +471,7 @@ public class ImportDialog {
         if (!currentActions.isEmpty()) {
           return;
         }
-        if (currentlySelectedAccount == null && controller.isAccountNeeded()){
+        if (currentlySelectedAccount == null && controller.isAccountNeeded()) {
           importMessageLabel.setText(Lang.get("import.no.account"));
           return;
         }

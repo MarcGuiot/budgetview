@@ -10,6 +10,7 @@ import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
+import org.uispec4j.UISpec4J;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.ThreadLauncherTrigger;
 
@@ -22,6 +23,8 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "false");
     SingleApplicationInstanceListener.REMOTE_APPLICATION_DETECTION_TIMEOUT = 100;
     SingleApplicationInstanceListener.ACCEPT_TIMEOUT = 100;
+    UISpec4J.setAssertionTimeLimit(600000);
+    UISpec4J.setWindowInterceptionTimeLimit(600000);
   }
 
   public void testOpenRequestsDuringLoginAndInitialFileImport() throws Exception {
@@ -106,17 +109,25 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .save();
     WaitEndTriggerDecorator trigger = new WaitEndTriggerDecorator(new Trigger() {
       public void run() throws Exception {
+        System.out.println("SingleInstanceTest.run");
         PicsouApplication.main(initialFile);
+        System.out.println("SingleInstanceTest.run end app");
       }
     });
 
+    System.out.println("SingleInstanceTest.testOpenRequestsWhenTheApplicationIsRunning " + initialFile);
     ImportChecker importer = ImportChecker.open(trigger);
+    Thread.sleep(5000);
+    System.out.println("SingleInstanceTest.testOpenRequestsWhenTheApplicationIsRunning after 5 s");
     importer.checkSelectedFiles(initialFile);
 
     String step1File = OfxBuilder.init(this)
       .addTransaction("2000/01/01", 1.2, "mac do")
       .save();
+    System.out.println("SingleInstanceTest.testOpenRequestsWhenTheApplicationIsRunning " + step1File);
     PicsouApplication.main(step1File);
+    Thread.sleep(5000);
+    
     importer.checkSelectedFiles(initialFile, step1File);
     importer.acceptFile();
     String step2File = OfxBuilder.init(this)

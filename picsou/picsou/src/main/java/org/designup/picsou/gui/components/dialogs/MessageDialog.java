@@ -11,11 +11,12 @@ import java.awt.*;
 
 public class MessageDialog {
   private PicsouDialog dialog;
+  private SplitsBuilder builder;
 
   public MessageDialog(String titleKey, String contentKey,
                        Window owner, Directory directory,
                        String... args) {
-    SplitsBuilder builder = SplitsBuilder.init(directory)
+    builder = SplitsBuilder.init(directory)
       .setSource(getClass(), "/layout/messageDialog.splits");
 
     builder.add("title", new JLabel(Lang.get(titleKey)));
@@ -28,5 +29,6 @@ public class MessageDialog {
 
   public final void show() {
     dialog.showCentered();
+    builder.dispose();
   }
 }

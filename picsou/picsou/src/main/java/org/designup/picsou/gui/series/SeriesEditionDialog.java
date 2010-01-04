@@ -22,6 +22,7 @@ import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobListView;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
@@ -581,7 +582,7 @@ public class SeriesEditionDialog {
         }
       }
     });
-    dialog.showCentered();
+    GuiUtils.showCentered(dialog);
   }
 
   private void updateMonthSelectionCard() {

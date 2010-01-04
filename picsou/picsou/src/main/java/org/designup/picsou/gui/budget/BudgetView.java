@@ -39,9 +39,8 @@ public class BudgetView extends View {
       }
     });
 
-    seriesEditionDialog = new SeriesEditionDialog(repository, directory);
+    seriesEditionDialog = directory.get(SeriesEditionDialog.class);
     seriesAmountEditionDialog = new SeriesAmountEditionDialog(repository, directory, seriesEditionDialog);
-
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {

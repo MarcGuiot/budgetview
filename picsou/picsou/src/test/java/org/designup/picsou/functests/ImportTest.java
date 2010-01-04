@@ -598,7 +598,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkValidateEnabled()
       .validate();
 
-    importDialog.doImport();
+    importDialog.completeImport();
 
     views.selectData();
     transactions.initContent()

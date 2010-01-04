@@ -39,7 +39,7 @@ public class BankEntityEditionDialog {
     );
     dialog.pack();
     dialog.showCentered();
-
+    panel.dispose();
   }
 
   private class ValidateAction extends AbstractAction {

@@ -70,6 +70,10 @@ public class ImportController {
           public void run() {
             synchronized (fileField) {
               if (step1) {
+                System.out.println("ImportController.run ");
+                for (File file : files) {
+                  System.out.println("ImportController.run " + file.getName());
+                }
                 importDialog.updateFileField(files);
               }
               else {

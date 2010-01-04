@@ -31,7 +31,6 @@ public class PicsouDialog extends JDialog {
   private Directory directory;
   private boolean openRequestIsManaged = false;
   private ColorUpdater updater;
-  private Exception ex = new Exception();
 
   public static PicsouDialog create(Window owner, Directory directory) {
     return create(owner, true, directory);
@@ -134,13 +133,11 @@ public class PicsouDialog extends JDialog {
   }
 
   public void dispose() {
-    if (updater == null){
-      ex.printStackTrace();
+    System.out.println("PicsouDialog.dispose ");
+    if (updater != null){
+      updater.dispose();
     }
-    else {
-    updater.dispose();
-    }
-    GuiUtils.removeShortcut(getRootPane(), "ESCAPE", KeyStroke.getKeyStroke("ESCAPE"));
+    updater = null;
     super.dispose();
   }
 
@@ -151,6 +148,7 @@ public class PicsouDialog extends JDialog {
   }
 
   public void setVisible(boolean visible) {
+    System.out.println("PicsouDialog.setVisible " + visible);
     final OpenRequestManager requestManager = directory.get(OpenRequestManager.class);
     if (visible && !openRequestIsManaged) {
       requestManager.pushCallback(new OpenRequestManager.Callback() {
@@ -237,7 +235,15 @@ public class PicsouDialog extends JDialog {
   }
 
   public void showCentered() {
+    if (updater == null){
+      updater = new BackgroundColorUpdater("dialog.bg.bottom", getContentPane());
+      updater.install(colorService);
+    }
     GuiUtils.showCentered(this);
+    if (isModal()){
+      GuiUtils.removeShortcut(getRootPane(), "ESCAPE", KeyStroke.getKeyStroke("ESCAPE"));
+      dispose();
+    }
   }
 
   public void setAutoFocusOnOpen(final JTextField editor) {
@@ -267,4 +273,11 @@ public class PicsouDialog extends JDialog {
   public String toString() {
     return "PicsouDialog";
   }
+
+  @Deprecated
+  public void hide() {
+    System.out.println("PicsouDialog.hide called");
+    super.hide();
+  }
+
 }

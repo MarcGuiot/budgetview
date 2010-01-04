@@ -26,6 +26,7 @@ public class HelpDialog {
   private String currentPage;
   private Stack<String> backPages = new Stack<String>();
   private Stack<String> forwardPages = new Stack<String>();
+  private GlobsPanelBuilder builder;
 
   public HelpDialog(HelpSource source, GlobRepository repository, Directory directory, Window owner) {
     this.source = source;
@@ -33,7 +34,7 @@ public class HelpDialog {
   }
 
   private void createDialog(Window owner, GlobRepository repository, Directory directory) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/helpDialog.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/helpDialog.splits",
                                                       repository, directory);
     title = builder.add("title", new JLabel()).getComponent();
     editor = builder.add("editor", new JEditorPane()).getComponent();
@@ -78,6 +79,10 @@ public class HelpDialog {
 
   public void close() {
     dialog.setVisible(false);
+  }
+
+  public void dispose() {
+    builder.dispose();
   }
 
   private class HomePageAction extends AbstractAction {
