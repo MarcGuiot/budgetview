@@ -17,6 +17,8 @@ import org.uispec4j.utils.ThreadLauncherTrigger;
 import javax.swing.*;
 import java.net.ServerSocket;
 
+import sun.awt.AWTAutoShutdown;
+
 public class SingleInstanceTest extends StartUpFunctionalTestCase {
 
   protected void setUp() throws Exception {
@@ -24,8 +26,6 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "false");
     SingleApplicationInstanceListener.REMOTE_APPLICATION_DETECTION_TIMEOUT = 100;
     SingleApplicationInstanceListener.ACCEPT_TIMEOUT = 100;
-    UISpec4J.setAssertionTimeLimit(600000);
-    UISpec4J.setWindowInterceptionTimeLimit(600000);
   }
 
   public void testOpenRequestsDuringLoginAndInitialFileImport() throws Exception {

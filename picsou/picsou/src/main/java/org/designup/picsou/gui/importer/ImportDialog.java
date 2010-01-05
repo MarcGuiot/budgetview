@@ -348,7 +348,6 @@ public class ImportDialog {
       dialog.pack();
       fileField.requestFocus();
       dialog.showCentered();
-      System.out.println("ImportDialog.show end");
       builder1.dispose();
       builder2.dispose();
       importedTransactionTable.dispose();
