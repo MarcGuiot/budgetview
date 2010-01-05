@@ -493,7 +493,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.editPlannedAmount("Internet")
       .checkAmountLabel("Planned amount for july 2008")
       .checkNegativeAmountsSelected()
-      .checkAmount("29.00")
+      .checkAmount(29.00)
       .checkAmountIsSelected()
       .setAmount("100")
       .checkPropagationDisabled()
@@ -511,7 +511,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     // Propagation disabled
     timeline.selectMonth("2008/07");
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkAmount("100.00")
+      .checkAmount(100.00)
       .checkAmountIsSelected()
       .checkPropagationDisabled()
       .setAmountAndValidate("150");
@@ -537,7 +537,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     // Multi-selection with propagation
     timeline.selectMonths("2008/07", "2008/09");
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkAmount("200.00")
+      .checkAmount(200.00)
       .checkPropagationDisabled()
       .setPropagationEnabled()
       .setAmountAndValidate("300");
@@ -645,7 +645,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.recurring.editPlannedAmount("Internet")
       .checkAmountLabel("Planned amount for july 2008")
-      .checkAmount("29.00")
+      .checkAmount(29.00)
       .checkAmountIsSelected()
       .setAmount("100")
       .checkPropagationDisabled()
@@ -658,14 +658,14 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .cancel();
 
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkAmount("29.00")
+      .checkAmount(29.00)
       .setAmount("100")
       .setPropagationEnabled()
       .validate();
     budgetView.recurring.checkSeries("Internet", -29.00, -100.00);
 
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkAmount("100.00")
+      .checkAmount(100.00)
       .setAmount("200")
       .cancel();
     budgetView.recurring.checkSeries("Internet", -29.00, -100.00);
@@ -700,11 +700,11 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     budgetView.recurring.editPlannedAmount("Internet")
       .checkNegativeAmountsSelected()
-      .checkAmount("100.00")
+      .checkAmount(100.00)
       .checkActualAmount("29.00")
       .alignPlannedAndActual()
       .checkNegativeAmountsSelected()
-      .checkAmount("29.00")
+      .checkAmount(29.00)
       .setPropagationEnabled()
       .validate();
     budgetView.recurring.checkSeries("Internet", -29.00, -29.00);
@@ -713,7 +713,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/07", "2008/08");
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkAmount("29.00")
+      .checkAmount(29.00)
       .checkActualAmount("Actual")
       .alignPlannedAndActual()
       .setPropagationEnabled()
@@ -727,12 +727,12 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     budgetView.income.editPlannedAmount("Salary")
       .checkPositiveAmountsSelected()
-      .checkAmount("1500.00")
+      .checkAmount(1500.00)
       .checkActualAmount("1500.00")
       .setAmount(1000.00)
       .alignPlannedAndActual()
       .checkPositiveAmountsSelected()
-      .checkAmount("1500.00")
+      .checkAmount(1500.00)
       .setPropagationEnabled()
       .validate();
     budgetView.income.checkSeries("Salary", 1500.00, 1500.00);

@@ -16,6 +16,10 @@ public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> ex
     this.dialog = dialog;
   }
 
+  public T checkAmount(double value) {
+    return checkAmount(toString(value));
+  }
+
   public T checkAmount(String displayedValue) {
     assertThat(getAmountTextBox().textEquals(displayedValue));
     return (T)this;

@@ -39,10 +39,13 @@
         </column>
       </repeat>
 
-      <row>
-        <comboBox ref="accountCombo"/>
-        <button ref="newAccount"/>
-      </row>
+      <column>
+        <label text="$import.select.account" styleClass="header" autoHideSource="accountCombo"/>        
+        <row>
+          <comboBox ref="accountCombo"/>
+          <button ref="newAccount"/>
+        </row>
+      </column>
 
       <panel minimumSize="(200,20)" opaque="false" marginTop="5">
         <label ref="importMessage" styleClass="errorMessage"/>

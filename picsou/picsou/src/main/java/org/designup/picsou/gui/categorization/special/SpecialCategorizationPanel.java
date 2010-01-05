@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.categorization.special;
 
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
+import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -13,7 +14,7 @@ public interface SpecialCategorizationPanel {
   JPanel loadPanel(GlobRepository repository,
                    Directory directory,
                    FilteredRepeats filteredRepeats,
-                   SeriesEditionDialog seriesEditionDialog);
+                   SeriesEditionDialog seriesEditionDialog, SeriesCreationHandler seriesCreationHandler);
 
   void registerController(SpecialCategorizationPanelController controller);
 }

@@ -381,7 +381,7 @@ public class SeriesEditionDialog {
                                    repository);
   }
 
-  public Key showNewSeries(GlobList transactions, GlobList selectedMonths, BudgetArea budgetArea) {
+  public Key showNewSeries(GlobList transactions, GlobList selectedMonths, BudgetArea budgetArea, FieldValue... forcedValues) {
     selectedTransactions = transactions;
     this.budgetArea = BudgetArea.get(budgetArea.getId());
     Glob createdSeries;
@@ -402,7 +402,7 @@ public class SeriesEditionDialog {
       }
       SortedSet<Integer> days = transactions.getSortedSet(Transaction.DAY);
       Integer day = days.isEmpty() ? 1 : days.last();
-      createdSeries = createSeries(label, day, fromAccount.get(), toAccount.get());
+      createdSeries = createSeries(label, day, fromAccount.get(), toAccount.get(), forcedValues);
     }
     finally {
       localRepository.completeChangeSet();
@@ -420,59 +420,62 @@ public class SeriesEditionDialog {
     singleSeriesDeleteButton.setVisible(!visible);
   }
 
-  private Glob createSeries(String label, Integer day, Integer fromAccountId, Integer toAccountId) {
-    java.util.List<FieldValue> values =
-      new ArrayList<FieldValue>(Arrays.asList(value(Series.BUDGET_AREA, budgetArea.getId()),
-                                              value(Series.INITIAL_AMOUNT, 0.),
-                                              value(Series.NAME, label),
-                                              value(Series.DAY, day),
-                                              value(Series.JANUARY, true),
-                                              value(Series.FEBRUARY, true),
-                                              value(Series.MARCH, true),
-                                              value(Series.APRIL, true),
-                                              value(Series.MAY, true),
-                                              value(Series.JUNE, true),
-                                              value(Series.JULY, true),
-                                              value(Series.AUGUST, true),
-                                              value(Series.SEPTEMBER, true),
-                                              value(Series.OCTOBER, true),
-                                              value(Series.NOVEMBER, true),
-                                              value(Series.DECEMBER, true)));
+  private Glob createSeries(String label, Integer day, Integer fromAccountId, Integer toAccountId, FieldValue... forcedValues) {
+    FieldValuesBuilder values =
+      FieldValuesBuilder.init(value(Series.BUDGET_AREA, budgetArea.getId()),
+                              value(Series.INITIAL_AMOUNT, 0.),
+                              value(Series.NAME, label),
+                              value(Series.DAY, day),
+                              value(Series.JANUARY, true),
+                              value(Series.FEBRUARY, true),
+                              value(Series.MARCH, true),
+                              value(Series.APRIL, true),
+                              value(Series.MAY, true),
+                              value(Series.JUNE, true),
+                              value(Series.JULY, true),
+                              value(Series.AUGUST, true),
+                              value(Series.SEPTEMBER, true),
+                              value(Series.OCTOBER, true),
+                              value(Series.NOVEMBER, true),
+                              value(Series.DECEMBER, true));
     if (fromAccountId != null) {
-      values.add(value(Series.FROM_ACCOUNT, fromAccountId));
+      values.set(value(Series.FROM_ACCOUNT, fromAccountId));
     }
     if (toAccountId != null) {
-      values.add(value(Series.TO_ACCOUNT, toAccountId));
+      values.set(value(Series.TO_ACCOUNT, toAccountId));
     }
     if (budgetArea == BudgetArea.EXTRAS) {
-      values.add(value(Series.IS_AUTOMATIC, false));
+      values.set(Series.IS_AUTOMATIC, false);
       SelectionService selectionService = directory.get(SelectionService.class);
       if (!selectedTransactions.isEmpty()) {
         SortedSet<Integer> months = selectedTransactions.getSortedSet(Transaction.BUDGET_MONTH);
-        values.add(value(Series.FIRST_MONTH, months.first()));
-        values.add(value(Series.LAST_MONTH, months.last()));
+        values.set(Series.FIRST_MONTH, months.first());
+        values.set(Series.LAST_MONTH, months.last());
         if (selectedTransactions.size() == 1) {
-          values.add(value(Series.PROFILE_TYPE, ProfileType.SINGLE_MONTH.getId()));
-          values.add(value(Series.INITIAL_AMOUNT, selectedTransactions.getFirst().get(Transaction.AMOUNT)));
+          values.set(Series.PROFILE_TYPE, ProfileType.SINGLE_MONTH.getId());
+          values.set(Series.INITIAL_AMOUNT, selectedTransactions.getFirst().get(Transaction.AMOUNT));
         }
       }
       else {
         GlobList monthIds = selectionService.getSelection(Month.TYPE).sort(Month.ID);
         if (!monthIds.isEmpty()) {
-          values.add(value(Series.FIRST_MONTH, monthIds.getFirst().get(Month.ID)));
-          values.add(value(Series.LAST_MONTH, monthIds.getLast().get(Month.ID)));
+          values.set(Series.FIRST_MONTH, monthIds.getFirst().get(Month.ID));
+          values.set(Series.LAST_MONTH, monthIds.getLast().get(Month.ID));
         }
         else {
           int monthId = localDirectory.get(TimeService.class).getCurrentMonthId();
-          values.add(value(Series.FIRST_MONTH, monthId));
-          values.add(value(Series.LAST_MONTH, monthId));
+          values.set(Series.FIRST_MONTH, monthId);
+          values.set(Series.LAST_MONTH, monthId);
         }
         if (monthIds.size() == 1) {
-          values.add(value(Series.PROFILE_TYPE, ProfileType.SINGLE_MONTH.getId()));
+          values.set(Series.PROFILE_TYPE, ProfileType.SINGLE_MONTH.getId());
         }
       }
     }
-    return localRepository.create(Series.TYPE, values.toArray(new FieldValue[values.size()]));
+
+    values.set(forcedValues);
+
+    return localRepository.create(Series.TYPE, values.toArray());
   }
 
   private void initBudgetAreaSeries(BudgetArea budgetArea, Ref<Integer> fromAccount, Ref<Integer> toAccount) {

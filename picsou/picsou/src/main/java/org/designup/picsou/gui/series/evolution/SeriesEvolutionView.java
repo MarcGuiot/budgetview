@@ -4,7 +4,6 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.CustomBoldLabelCustomizer;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.expansion.*;
-import org.designup.picsou.gui.description.SeriesWrapperDescriptionStringifier;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
@@ -21,7 +20,6 @@ import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
-import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -116,9 +114,11 @@ public class SeriesEvolutionView extends View {
       .setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 
     tableView
-      .addColumn("", expandColumn, expandColumn, GlobStringifiers.empty(stringifier.getComparator(repository)))
-      .addColumn("", stringifier,
-                 chain(boldCustomizer, tooltip(new SeriesWrapperDescriptionStringifier(), repository)));
+      .addColumn("", expandColumn, expandColumn, GlobStringifiers.empty(stringifier.getComparator(repository)));
+
+    SeriesEvolutionLabelColumn labelColumn =
+      new SeriesEvolutionLabelColumn(tableView, repository, directory, colors, seriesEditionDialog);
+    tableView.addColumn(labelColumn);
 
     for (int offset = -1; offset < -1 + MONTH_COLUMNS_COUNT; offset++) {
       SeriesEvolutionMonthColumn monthColumn =

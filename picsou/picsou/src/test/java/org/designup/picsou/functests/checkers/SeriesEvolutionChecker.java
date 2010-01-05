@@ -90,8 +90,8 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
     if (table == null) {
       table = window.getTable("seriesEvolutionTable");
       table.setCellValueConverter(0, new BlankColumnConverter());
-      MonthColumnConverter converter = new MonthColumnConverter();
-      for (int i = 2; i < 2 + SeriesEvolutionView.MONTH_COLUMNS_COUNT; i++) {
+      ColumnConverter converter = new ColumnConverter();
+      for (int i = 1; i < 3 + SeriesEvolutionView.MONTH_COLUMNS_COUNT; i++) {
         table.setCellValueConverter(i, converter);
       }
     }
@@ -104,6 +104,15 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
 
   protected Panel getPanel() {
     return window.getPanel(PANEL_NAME);
+  }
+
+  public SeriesEditionDialogChecker editSeries(String rowLabel) {
+    Table table = getTable();
+    int row = getRow(rowLabel.toUpperCase(), table);
+    if (row == -1) {
+      row = table.getRowIndex(SeriesEvolutionView.LABEL_COLUMN_INDEX, rowLabel);
+    }
+    return SeriesEditionDialogChecker.open(table.editCell(row, SeriesEvolutionView.LABEL_COLUMN_INDEX).getButton().triggerClick());
   }
 
   public SeriesAmountEditionDialogChecker editSeries(String rowLabel, String columnLabel) {
@@ -205,7 +214,7 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
     }
   }
 
-  private class MonthColumnConverter implements TableCellValueConverter {
+  private class ColumnConverter implements TableCellValueConverter {
     public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
       org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)renderedComponent);
       JButton button = panel.findSwingComponent(JButton.class);

@@ -165,8 +165,7 @@ public class ImportDialog {
   }
 
   private void initStep2Panel(final String textForCloseButton, Window owner) {
-    builder2 = new GlobsPanelBuilder(getClass(), "/layout/importDialogStep2.splits",
-                                     localRepository, localDirectory);
+    builder2  = new GlobsPanelBuilder(getClass(), "/layout/importDialogStep2.splits", localRepository, localDirectory);
     dateRenderer = new ImportedTransactionDateRenderer();
     dateFormatSelectionPanel = new DateFormatSelectionPanel(localRepository, localDirectory,
                                                             new DateFormatSelectionPanel.Callback() {
@@ -196,16 +195,18 @@ public class ImportDialog {
         .setUpdateModeEditable(false);
     newAccountButton = builder2.add("newAccount", new JButton(newAccountAction)).getComponent();
 
-    GlobComboView comboView = GlobComboView.init(Account.TYPE, sessionRepository, sessionDirectory);
+    GlobComboView comboView =
+      GlobComboView.init(Account.TYPE, sessionRepository, sessionDirectory)
+        .setEmptyOptionLabel(Lang.get("import.account.combo.select"))
+        .setFilter(new GlobMatcher() {
+          public boolean matches(Glob account, GlobRepository repository) {
+            return account != null &&
+                   !Account.SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID)) &&
+                   AccountUpdateMode.AUTOMATIC.getId().equals(account.get(Account.UPDATE_MODE));
+          }
+        });
     accountComboBox = comboView.getComponent();
     builder2.add("accountCombo", accountComboBox);
-    comboView.setFilter(new GlobMatcher() {
-      public boolean matches(Glob account, GlobRepository repository) {
-        return account != null &&
-               !Account.SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID)) &&
-               AccountUpdateMode.AUTOMATIC.getId().equals(account.get(Account.UPDATE_MODE));
-      }
-    });
 
     registerAccountCreationListener(sessionRepository, sessionDirectory);
 
@@ -215,18 +216,18 @@ public class ImportDialog {
 
     additionalActionImportRepeat =
       builder2.addRepeat("additionalActions", Collections.<AdditionalImportAction>emptyList(),
-                         new RepeatComponentFactory<AdditionalImportAction>() {
-                           public void registerComponents(RepeatCellBuilder cellBuilder,
-                                                          final AdditionalImportAction item) {
-                             cellBuilder.add("message", new AutoResizingTextArea(item.getMessage()));
-                             cellBuilder.add("action", new AbstractAction(item.getButtonMessage()) {
-                               public void actionPerformed(ActionEvent e) {
-                                 item.getAction().actionPerformed(e);
-                                 updateAdditionalImportActions();
-                               }
-                             });
-                           }
-                         });
+                        new RepeatComponentFactory<AdditionalImportAction>() {
+                          public void registerComponents(RepeatCellBuilder cellBuilder,
+                                                         final AdditionalImportAction item) {
+                            cellBuilder.add("message", new AutoResizingTextArea(item.getMessage()));
+                            cellBuilder.add("action", new AbstractAction(item.getButtonMessage()) {
+                              public void actionPerformed(ActionEvent e) {
+                                item.getAction().actionPerformed(e);
+                                updateAdditionalImportActions();
+                              }
+                            });
+                          }
+                        });
 
     builder2.add("skipFile", new SkipFileAction());
     builder2.add("finish", new FinishAction());

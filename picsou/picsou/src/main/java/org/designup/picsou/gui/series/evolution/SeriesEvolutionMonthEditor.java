@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.series.evolution;
 
-import org.designup.picsou.gui.components.AbstractRolloverEditor;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
@@ -11,10 +10,7 @@ import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.util.Amounts;
-import org.globsframework.gui.splits.components.HyperlinkButton;
-import org.globsframework.gui.splits.painters.PaintablePanel;
 import org.globsframework.gui.views.GlobTableView;
-import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -27,85 +23,26 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 
-public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
+public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
 
   private int offset;
-  private Integer referenceMonthId;
-  private SeriesEvolutionColors colors;
 
-  private Glob currentSeries;
-
-  private JLabel label = new JLabel();
-  private PaintablePanel labelPanel;
-  private HyperlinkButton rendererButton;
-  private PaintablePanel rendererPanel;
-  private HyperlinkButton editorButton;
-  private PaintablePanel editorPanel;
 
   protected SeriesEvolutionMonthEditor(int offset, GlobTableView view,
                                        GlobRepository repository, Directory directory,
                                        SeriesEvolutionColors colors,
                                        SeriesAmountEditionDialog seriesAmountEditionDialog) {
-    super(view, directory.get(DescriptionService.class), repository, directory);
+    super(view, directory.get(DescriptionService.class), repository, directory, colors);
+
     this.offset = offset;
-    this.colors = colors;
-
-    OpenSeriesAmountEditionDialogAction action =
-      new OpenSeriesAmountEditionDialogAction(seriesAmountEditionDialog);
-
-    LabelCustomizers.BOLD.process(label);
-    labelPanel = initCellPanel(label, false, new PaintablePanel());
-
-    rendererButton = createHyperlinkButton(action);
-    rendererPanel = initCellPanel(rendererButton, false, new PaintablePanel());
-
-    editorButton = createHyperlinkButton(action);
-    editorPanel = initCellPanel(editorButton, false, new PaintablePanel());
+    
+    complete(new OpenSeriesAmountEditionDialogAction(seriesAmountEditionDialog));
   }
 
-  public void setReferenceMonth(Integer monthId) {
-    this.referenceMonthId = monthId;
-  }
-
-  protected Component getComponent(Glob seriesWrapper, boolean render) {
-    if (referenceMonthId == null) {
-      label.setText("no month");
-      return labelPanel;
-    }
-
-    Integer itemId = seriesWrapper.get(SeriesWrapper.ITEM_ID);
-    if (!render) {
-      currentSeries = repository.get(Key.create(Series.TYPE, itemId));
-    }
-
-    switch (SeriesWrapperType.get(seriesWrapper)) {
-      case BUDGET_AREA:
-        label.setText(stringify(seriesWrapper));
-        colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, label, labelPanel);
-        return labelPanel;
-
-      case SERIES:
-        JButton button = render ? rendererButton : editorButton;
-        button.setText(stringify(seriesWrapper));
-        PaintablePanel panel = render ? rendererPanel : editorPanel;
-        colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, button, panel);
-        return panel;
-
-      case SUMMARY:
-        label.setText(stringify(seriesWrapper));
-        colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, label, labelPanel);
-        return labelPanel;
-
-      default:
-        throw new InvalidParameter("Unexpected type: " + SeriesWrapperType.get(seriesWrapper));
-    }
-  }
-
-  private String stringify(Glob seriesWrapper) {
+  protected String getText(Glob seriesWrapper) {
 
     Integer itemId = seriesWrapper.get(SeriesWrapper.ITEM_ID);
 
@@ -122,6 +59,10 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
       default:
         throw new InvalidParameter("Unexpected type: " + SeriesWrapperType.get(seriesWrapper));
     }
+  }
+
+  protected String getDescription(Glob seriesWrapper) {
+    return "";
   }
 
   private String getBudgetAreaLabelText(BudgetArea budgetArea) {
@@ -188,17 +129,10 @@ public class SeriesEvolutionMonthEditor extends AbstractRolloverEditor {
     return Formatting.toString(value);
   }
 
-  protected HyperlinkButton createHyperlinkButton(Action action) {
-    HyperlinkButton button = super.createHyperlinkButton(action);
-    final Font font = button.getFont().deriveFont(Font.PLAIN, 10);
-    button.setFont(font);
-    return button;
-  }
-
   public GlobStringifier getStringifier() {
     return new AbstractGlobStringifier() {
       public String toString(Glob seriesWrapper, GlobRepository repository) {
-        return stringify(seriesWrapper);
+        return getText(seriesWrapper);
       }
     };
   }
