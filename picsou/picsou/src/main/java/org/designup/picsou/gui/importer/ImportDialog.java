@@ -281,13 +281,10 @@ public class ImportDialog {
       }
       builder.append(file.getAbsolutePath());
     }
-    System.out.println("ImportDialog.updateFileField " + builder.toString());
     fileField.setText(builder.toString());
-    System.out.println("ImportDialog.updateFileField end setText ");
   }
 
   protected void closeDialog() {
-    System.out.println("ImportDialog.closeDialog");
     dialog.setVisible(false);
   }
 
@@ -350,9 +347,8 @@ public class ImportDialog {
     else {
       dialog.pack();
       fileField.requestFocus();
-      System.out.println("ImportDialog.show start normal " + new Date());
       dialog.showCentered();
-      System.out.println("ImportDialog.show ended normal " + new Date());
+      System.out.println("ImportDialog.show end");
       builder1.dispose();
       builder2.dispose();
       importedTransactionTable.dispose();

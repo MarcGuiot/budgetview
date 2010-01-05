@@ -125,7 +125,6 @@ public class SingleApplicationInstanceListener {
           outputStream.writeObject(RESPONSE_OK);
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-              System.out.println("SingleApplicationInstanceListener.run " + new Date());
               openRequestManager.openFiles(files);
             }
           });

@@ -174,12 +174,9 @@ public class PicsouApplication {
 
     singleInstanceListener = new SingleApplicationInstanceListener(openRequestManager);
     if (singleInstanceListener.findRemoteOrListen() == SingleApplicationInstanceListener.ReturnState.EXIT) {
-      System.out.println("PicsouApplication.run stop");
-      Thread.sleep(4000);
-      System.out.println("PicsouApplication.run stoped");
+      Thread.sleep(2000);
       return;
     }
-    System.out.println("PicsouApplication.run ");
     initLogger();
     clearRepositoryIfNeeded();
 
@@ -193,7 +190,6 @@ public class PicsouApplication {
       Log.write("Erreur au lancement", e);
       showMultipleInstanceError(e.getMessage());
     }
-    System.out.println("PicsouApplication.run out ");
   }
 
   private void initEncryption() {

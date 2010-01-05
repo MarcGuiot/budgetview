@@ -14,6 +14,7 @@ import org.uispec4j.UISpec4J;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.ThreadLauncherTrigger;
 
+import javax.swing.*;
 import java.net.ServerSocket;
 
 public class SingleInstanceTest extends StartUpFunctionalTestCase {
@@ -109,25 +110,18 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .save();
     WaitEndTriggerDecorator trigger = new WaitEndTriggerDecorator(new Trigger() {
       public void run() throws Exception {
-        System.out.println("SingleInstanceTest.run");
         PicsouApplication.main(initialFile);
-        System.out.println("SingleInstanceTest.run end app");
       }
     });
 
-    System.out.println("SingleInstanceTest.testOpenRequestsWhenTheApplicationIsRunning " + initialFile);
     ImportChecker importer = ImportChecker.open(trigger);
-    Thread.sleep(5000);
-    System.out.println("SingleInstanceTest.testOpenRequestsWhenTheApplicationIsRunning after 5 s");
     importer.checkSelectedFiles(initialFile);
 
     String step1File = OfxBuilder.init(this)
       .addTransaction("2000/01/01", 1.2, "mac do")
       .save();
-    System.out.println("SingleInstanceTest.testOpenRequestsWhenTheApplicationIsRunning " + step1File);
     PicsouApplication.main(step1File);
-    Thread.sleep(5000);
-    
+
     importer.checkSelectedFiles(initialFile, step1File);
     importer.acceptFile();
     String step2File = OfxBuilder.init(this)

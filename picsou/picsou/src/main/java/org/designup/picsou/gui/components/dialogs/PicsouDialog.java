@@ -133,7 +133,6 @@ public class PicsouDialog extends JDialog {
   }
 
   public void dispose() {
-    System.out.println("PicsouDialog.dispose ");
     if (updater != null){
       updater.dispose();
     }
@@ -148,7 +147,6 @@ public class PicsouDialog extends JDialog {
   }
 
   public void setVisible(boolean visible) {
-    System.out.println("PicsouDialog.setVisible " + visible);
     final OpenRequestManager requestManager = directory.get(OpenRequestManager.class);
     if (visible && !openRequestIsManaged) {
       requestManager.pushCallback(new OpenRequestManager.Callback() {
@@ -273,11 +271,4 @@ public class PicsouDialog extends JDialog {
   public String toString() {
     return "PicsouDialog";
   }
-
-  @Deprecated
-  public void hide() {
-    System.out.println("PicsouDialog.hide called");
-    super.hide();
-  }
-
 }

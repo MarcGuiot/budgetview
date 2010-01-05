@@ -48,7 +48,6 @@ public class ImportFileAction extends AbstractAction {
       }
 
       public void openFiles(List<File> files) {
-        System.out.println("ImportFileAction.openFiles runable on " + files.get(0).getName());
         SwingUtilities.invokeLater(new OpenRunnable(files, directory, repository, defaulAccount,
                                                     ImportFileAction.this.usePreference));
         defaulAccount = null;
@@ -67,9 +66,7 @@ public class ImportFileAction extends AbstractAction {
 
   public void actionPerformed(ActionEvent event) {
     OpenRunnable runnable = new OpenRunnable(Collections.<File>emptyList(), directory, repository, defaulAccount, usePreference);
-    System.out.println("ImportFileAction.actionPerformed begin");
     runnable.run();
-    System.out.println("ImportFileAction.actionPerformed end");
     defaulAccount = null;
   }
 
@@ -84,7 +81,6 @@ public class ImportFileAction extends AbstractAction {
       this.directory = directory;
       this.repository = repository;
       if (!LicenseService.trialExpired(repository) && !User.isDemoUser(repository.get(User.KEY))) {
-        System.out.println("ImportFileAction$OpenRunnable.OpenRunnable " + files.get(0).getName());
         dialog = new ImportDialog(Lang.get("import.step1.close"), files, defaultAccount,
                                 directory.get(JFrame.class),
                                 repository, directory,
