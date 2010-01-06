@@ -1176,7 +1176,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .checkActiveSeries("Courses 2");
   }
 
-  public void testDoNotFilterValidMonthIfMonthIsUncheckedButWithAlreadyCategorizedOperations() throws Exception {
+    public void testDoNotFilterValidMonthIfMonthIsUncheckedButWithAlreadyCategorizedOperations() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/25", -50.0, "1_Auchan")

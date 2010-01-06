@@ -8,12 +8,12 @@ import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.model.Glob;
 import org.uispec4j.Button;
-import org.uispec4j.Panel;
 import org.uispec4j.*;
+import org.uispec4j.Panel;
 import org.uispec4j.Window;
+import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.KeyUtils;
-import static org.uispec4j.assertion.UISpecAssert.*;
 
 import javax.swing.AbstractButton;
 import javax.swing.*;
@@ -120,7 +120,7 @@ public class CategorizationChecker extends GuiChecker {
     checkComponentVisible(getPanel(), JPanel.class, "groupCreateEditSeries", false);
   }
 
-  public void checkEditSeriesNotVisitble(String seriesLabel){
+  public void checkEditSeriesNotVisitble(String seriesLabel) {
     Button button = getPanel().getPanel("seriesCard").getButton("editSeries:" + seriesLabel);
     assertFalse(button.isVisible());
   }
@@ -128,6 +128,40 @@ public class CategorizationChecker extends GuiChecker {
   public void checkUserDate(TransactionDetailsChecker details, String yyyyMMdd, String label) {
     selectTransaction(label);
     details.checkBudgetDate(yyyyMMdd);
+  }
+
+  public CategorizationChecker checkAllButSavingBudgetAreaAreDisable() {
+    for (BudgetArea area : BudgetArea.values()) {
+      if (area == BudgetArea.ALL){
+        continue;
+      }
+      if (area == BudgetArea.SAVINGS || area == BudgetArea.UNCATEGORIZED) {
+        assertTrue(getPanel().getToggleButton(area.getName()).isEnabled());
+      }
+      else {
+        assertFalse(getPanel().getToggleButton(area.getName()).isEnabled());
+      }
+    }
+    return this;
+  }
+
+  public void checkAllBudgetAreaAreEnable() {
+    for (BudgetArea area : BudgetArea.values()) {
+      if (area == BudgetArea.ALL){
+        continue;
+      }
+      assertTrue(getPanel().getToggleButton(area.getName()).isEnabled());
+    }
+  }
+
+  public CategorizationChecker checkMultipleSeriesSelection() {
+    assertThat(getPanel().getPanel("seriesCard").getInputTextBox().textContains("Multiple Series selection"));
+    return this;
+  }
+
+  public CategorizationChecker checkSavingPreSelected() {
+    assertThat(getPanel().getToggleButton(BudgetArea.SAVINGS.getName()).isSelected());
+    return this;
   }
 
   public class SavingsCategorizationChecker extends BudgetAreaCategorizationChecker {
@@ -664,7 +698,7 @@ public class CategorizationChecker extends GuiChecker {
     return delete(row);
   }
 
-  public ConfirmationDialogChecker delete(int ...row) {
+  public ConfirmationDialogChecker delete(int... row) {
     getTable().selectRows(row);
     Window deleteDialog = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {

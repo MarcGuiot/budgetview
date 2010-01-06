@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.categorization.components;
 
-import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.description.SeriesDescriptionStringifier;
+import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -47,10 +47,10 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
   private BudgetArea budgetArea;
 
   public SeriesChooserComponentFactory(BudgetArea budgetArea,
-                                              JRadioButton invisibleSelector,
-                                              SeriesEditionDialog seriesEditionDialog,
-                                              GlobRepository repository,
-                                              Directory directory) {
+                                       JRadioButton invisibleSelector,
+                                       SeriesEditionDialog seriesEditionDialog,
+                                       GlobRepository repository,
+                                       Directory directory) {
     this.invisibleSelector = invisibleSelector;
     this.buttonGroup.add(invisibleSelector);
 
@@ -111,7 +111,7 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
     JButton editSeriesButton = new JButton(new EditSeriesAction(seriesKey));
     editSeriesButton.setName("editSeries:" + seriesName);
     cellBuilder.add("editSeries", editSeriesButton);
-    if (budgetArea == BudgetArea.OTHER){
+    if (budgetArea == BudgetArea.OTHER) {
       editSeriesButton.setVisible(false);
     }
 
@@ -137,7 +137,7 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
 
   private void updateSeriesStyle(Glob series) {
     SplitsNode<JRadioButton> button = seriesToComponent.get(series.getKey());
-    if (button == null){
+    if (button == null) {
       return;
     }
 

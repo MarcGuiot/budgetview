@@ -3,8 +3,8 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.model.BankEntity;
+import org.designup.picsou.model.TransactionType;
 
 public class SavingsTest extends LoggedInFunctionalTestCase {
 
@@ -604,7 +604,40 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/10");
     savingsAccounts.checkPosition("Account n. 111", 1200);
     mainAccounts.checkEstimatedPosition(-200);
+  }
 
+  public void testDesableBudgetAreaIfSavingTransaction() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/10", -100.00, "Prelevement")
+      .load();
+    OfxBuilder.init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")  //compte d'épargne
+      .addTransaction("2008/08/10", 100.00, "Virement")
+      .load();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    views.selectHome();
+    this.mainAccounts.edit("Account n. 111")
+      .setAsSavings()
+      .validate();
+    views.selectCategorization();
+    categorization.showSelectedMonthsOnly();
+    timeline.selectMonth("2008/08");
+
+    categorization.selectTransaction("Virement");
+    categorization.checkAllButSavingBudgetAreaAreDisable();
+
+    categorization.selectTransaction("Prelevement");
+    categorization.checkAllBudgetAreaAreEnable();
+
+    categorization.setNewSavings("Virement", "epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "Account n. 111");
+    categorization.setNewEnvelope("Prelevement", "economie du mois");
+
+    categorization.selectTransactions("Prelevement", "Virement")
+      .checkAllButSavingBudgetAreaAreDisable()
+      .checkMultipleSeriesSelection()
+      .setUncategorized()
+      .selectTransaction("Prelevement")
+      .checkToCategorize();
   }
 
   public void testImportedSavingsAccountWithMainAccount() throws Exception {
@@ -863,7 +896,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.checkSeries("Placement", 0, 100);
     budgetView.savings.checkSeriesNotPresent("Account n. 111222");
-    
+
     views.selectSavings();
     savingsView.checkAmount("Account n. 111222", "Placement", 0, 100);
 
@@ -1239,7 +1272,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("Virement vers Epargne")
       .checkToCategorize()
       .selectTransaction("Virement Epargne")
-      .checkToCategorize();
+      .checkSavingPreSelected();
   }
 
   public void testCreatingSavingsFromCategorisationDoNotAssign() throws Exception {
@@ -1274,12 +1307,12 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
 
     categorization.selectTransaction("Virement vers Epargne")
-      .checkToCategorize()
+      .checkSavingPreSelected()
       .selectSavings()
       .checkContainsNoSeries();
 
     categorization.selectTransaction("Virement Epargne")
-      .checkToCategorize()
+      .checkSavingPreSelected()
       .selectSavings()
       .checkContainsNoSeries();
   }
@@ -1459,7 +1492,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setFromAccount("Livret A")
       .validate();
 
-    
+
     categorization.selectAllTransactions()
       .selectSavings()
       .selectSeries("Financement");
