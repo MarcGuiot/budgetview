@@ -65,7 +65,6 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNoAutoCategorizationIfAmbiguityOnSubSeries() throws Exception {
-
     views.selectBudget();
     budgetView.envelopes
       .createSeries()
@@ -248,4 +247,24 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .getEnvelopes().checkSeriesIsSelected("Courses_2");
   }
 
+  public void testAutoCategorisationOnSameLabelWithNumber() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "Menu K 1")
+      .addTransaction("2006/01/10", -1.1, "Menu K")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewEnvelope("Menu K 1", "dej");
+    categorization.setNewEnvelope("Menu K", "petit dej");
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/12", -1.3, "Menu K 1")
+      .load();
+    views.selectData();
+    transactions.checkSeries(0, "dej");
+    transactions.checkSeries(1, "petit dej");
+    transactions.checkSeries(2, "dej");
+  }
 }
