@@ -12,9 +12,13 @@ import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.util.Arrays;
+import java.util.Date;
+
+import sun.awt.AWTAutoShutdown;
 
 public class MonthChooserTest extends GuiTestCase {
   private int selectedMonth;
+  private Boolean ok = Boolean.FALSE;
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -51,7 +55,16 @@ public class MonthChooserTest extends GuiTestCase {
       .previousPage()
       .checkVisibleYears(2004, 2005, 2006)
       .selectMonthInCurrent(1);
-    assertEquals(200501, selectedMonth);
+    checkMonthIs(200501);
+  }
+
+  public void checkMonthIs(int expectedMonthId) throws InterruptedException {
+    synchronized (this){
+      if (!ok){
+        wait(1000);
+      }
+    }
+    assertEquals(expectedMonthId, selectedMonth);
   }
 
   public void testEnable() throws Exception {
@@ -113,7 +126,7 @@ public class MonthChooserTest extends GuiTestCase {
   public void testCancel() throws Exception {
     MonthChooserChecker month = createChooser();
     month.cancel();
-    assertEquals(-1, selectedMonth);
+    checkMonthIs(-1);
   }
 
   private MonthChooserChecker createChooser() {
@@ -121,6 +134,10 @@ public class MonthChooserTest extends GuiTestCase {
     Window window = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         selectedMonth = monthChooser.show(200805, MonthRangeBound.NONE, 200805);
+        synchronized (this){
+          ok = true;
+          notify();
+        }
       }
     });
     return new MonthChooserChecker(window);

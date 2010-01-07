@@ -15,9 +15,7 @@ import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class AccountViewChecker extends GuiChecker {
   protected Panel panel;
@@ -38,6 +36,17 @@ public class AccountViewChecker extends GuiChecker {
       existingNames.add(button.getLabel());
     }
     return existingNames;
+  }
+
+  public AccountViewChecker checkAccountOrder(String ...accounts){
+    UIComponent[] uiComponents = panel.getUIComponents(Button.class, "accountName");
+    List<String> existingNames = new ArrayList<String>();
+    for (UIComponent uiComponent : uiComponents) {
+      Button button = (Button)uiComponent;
+      existingNames.add(button.getLabel());
+    }
+    TestUtils.assertEquals(existingNames, accounts);
+    return this;
   }
 
   public void checkNoAccountsDisplayed() {
