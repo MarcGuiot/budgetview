@@ -5,6 +5,8 @@
   <panel styleClass="dialog" preferredSize="(500,500)">
     <column styleClass="innerDialog">
 
+      <label name="title" text="aboutDialog" visible="false"/>
+
       <label icon="app_icon_128.png" fill="none" anchor="center" marginTop="20" marginBottom="5"/>
 
       <label ref="versionLabel" marginBottom="10" fill="horizontal" horizontalAlignment="center"/>

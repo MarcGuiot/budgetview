@@ -43,7 +43,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountEditionDialog.splits",
                                                       localRepository, localDirectory);
 
-    titleLabel = builder.add("title", new JLabel()).getComponent();
+    titleLabel = builder.add("title", new JLabel("accountEditionDialog")).getComponent();
 
     builder.add("message", messageLabel);
 

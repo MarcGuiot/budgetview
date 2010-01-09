@@ -55,7 +55,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
   public void testCategorizationMessageAllowsToImportTheCardAccount() throws Exception {
     QifBuilder.init(this)
       .addTransaction("2008/06/28", -550, "Prelevement carte")
-      .load();
+      .load(0.);
 
     views.selectCategorization();
     DeferredCardCategorizationChecker cardCategorization = categorization.selectTransaction("Prelevement carte")

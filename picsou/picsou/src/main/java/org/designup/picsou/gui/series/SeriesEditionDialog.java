@@ -113,7 +113,7 @@ public class SeriesEditionDialog {
                                                       "/layout/seriesEditionDialog.splits",
                                                       localRepository, localDirectory);
 
-    titleLabel = builder.add("title", new JLabel()).getComponent();
+    titleLabel = builder.add("title", new JLabel("SeriesEditionDialog")).getComponent();
 
     seriesList = GlobListView.init(Series.TYPE, localRepository, localDirectory);
     seriesPanel = builder.add("seriesPanel", new JPanel()).getComponent();

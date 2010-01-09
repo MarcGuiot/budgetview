@@ -14,6 +14,7 @@ import org.uispec4j.Trigger;
 import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.interception.toolkit.UISpecDisplay;
 
 import java.util.Date;
 
@@ -133,6 +134,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 //    GlobRepositoryValidator.run(repository);
 //    operations.checkOk();
     try {
+      UISpecDisplay.instance().reset();
       if (operations != null) {
         operations.deleteUser(password);
       }

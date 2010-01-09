@@ -4,6 +4,8 @@ import junit.framework.Assert;
 import org.uispec4j.TextBox;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
+import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
@@ -25,6 +27,19 @@ public class AccountPositionEditionChecker extends GuiChecker {
 
   public void setAmountAndEnter(Double amount) {
     window.getInputTextBox("amountField").setText(Double.toString(amount));
+    UISpecAssert.assertFalse(window.isVisible());
+  }
+
+  public void setAmountAndEnterInImport(final Double amount) {
+    WindowInterceptor.init(new Trigger() {
+      public void run() throws Exception {
+        window.getInputTextBox("amountField").setText(Double.toString(amount));
+      }
+    }).process(new WindowHandler() {
+      public Trigger process(Window window) throws Exception {
+        return new MessageDialogChecker(window).triggerClose();
+      }
+    }).run();
     UISpecAssert.assertFalse(window.isVisible());
   }
 
@@ -66,6 +81,11 @@ public class AccountPositionEditionChecker extends GuiChecker {
 
   public void validate() {
     window.getButton("ok").click();
+    UISpecAssert.assertFalse(window.isVisible());
+  }
+
+  public void validateFromImport() {
+    ImportChecker.validate(-1, -1, window, "ok");
     UISpecAssert.assertFalse(window.isVisible());
   }
 

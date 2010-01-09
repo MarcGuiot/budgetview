@@ -13,12 +13,15 @@ import java.util.ListIterator;
 
 public class AutoCategorizationFunctor implements GlobFunctor {
   private GlobRepository referenceRepository;
+  private int autocategorized = 0;
+  private int transactionCount = 0;
 
   public AutoCategorizationFunctor(GlobRepository referenceRepository) {
     this.referenceRepository = referenceRepository;
   }
 
   public void run(Glob transaction, GlobRepository repository) throws Exception {
+    transactionCount++;
     GlobList index = referenceRepository.findByIndex(Transaction.LABEL_FOR_CATEGORISATION_INDEX,
                                                      transaction.get(Transaction.LABEL_FOR_CATEGORISATION))
       .sort(TransactionComparator.ASCENDING);
@@ -42,11 +45,22 @@ public class AutoCategorizationFunctor implements GlobFunctor {
         }
       };
     if (strictAutoCategorization.apply(index)) {
+      autocategorized++;
       return;
     }
     ValidTransactionFunctor autoCategorization =
       new ValidTransactionFunctor(transaction, repository, referenceRepository);
-    autoCategorization.apply(index);
+    if (autoCategorization.apply(index)){
+      autocategorized++;
+    }
+  }
+
+  public int getAutocategorizedTransaction() {
+    return autocategorized;
+  }
+
+  public int getTransactionCount() {
+    return transactionCount;
   }
 
   static class ValidTransactionFunctor {

@@ -70,7 +70,7 @@ public class AccountViewChecker extends GuiChecker {
 
   public void checkDisplayIsEmpty(String accountName) {
     Panel parentPanel = getAccountPanel(accountName);
-    UISpecAssert.assertTrue(parentPanel.getButton("accountPosition").textEquals("0.0"));
+    UISpecAssert.assertTrue(parentPanel.getButton("accountPosition").textEquals("0.00"));
     UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals("31/08/2008"));
   }
 

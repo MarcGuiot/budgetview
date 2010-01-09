@@ -5,6 +5,7 @@ import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
 import org.designup.picsou.gui.accounts.NewAccountAction;
 import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.gui.components.PicsouFrame;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.importer.additionalactions.AccountEditionAction;
@@ -165,7 +166,7 @@ public class ImportDialog {
   }
 
   private void initStep2Panel(final String textForCloseButton, Window owner) {
-    builder2  = new GlobsPanelBuilder(getClass(), "/layout/importDialogStep2.splits", localRepository, localDirectory);
+    builder2 = new GlobsPanelBuilder(getClass(), "/layout/importDialogStep2.splits", localRepository, localDirectory);
     dateRenderer = new ImportedTransactionDateRenderer();
     dateFormatSelectionPanel = new DateFormatSelectionPanel(localRepository, localDirectory,
                                                             new DateFormatSelectionPanel.Callback() {
@@ -216,18 +217,18 @@ public class ImportDialog {
 
     additionalActionImportRepeat =
       builder2.addRepeat("additionalActions", Collections.<AdditionalImportAction>emptyList(),
-                        new RepeatComponentFactory<AdditionalImportAction>() {
-                          public void registerComponents(RepeatCellBuilder cellBuilder,
-                                                         final AdditionalImportAction item) {
-                            cellBuilder.add("message", new AutoResizingTextArea(item.getMessage()));
-                            cellBuilder.add("action", new AbstractAction(item.getButtonMessage()) {
-                              public void actionPerformed(ActionEvent e) {
-                                item.getAction().actionPerformed(e);
-                                updateAdditionalImportActions();
-                              }
-                            });
-                          }
-                        });
+                         new RepeatComponentFactory<AdditionalImportAction>() {
+                           public void registerComponents(RepeatCellBuilder cellBuilder,
+                                                          final AdditionalImportAction item) {
+                             cellBuilder.add("message", new AutoResizingTextArea(item.getMessage()));
+                             cellBuilder.add("action", new AbstractAction(item.getButtonMessage()) {
+                               public void actionPerformed(ActionEvent e) {
+                                 item.getAction().actionPerformed(e);
+                                 updateAdditionalImportActions();
+                               }
+                             });
+                           }
+                         });
 
     builder2.add("skipFile", new SkipFileAction());
     builder2.add("finish", new FinishAction());
@@ -349,6 +350,7 @@ public class ImportDialog {
       dialog.pack();
       fileField.requestFocus();
       dialog.showCentered();
+      System.out.println("ImportDialog.show end");
       builder1.dispose();
       builder2.dispose();
       importedTransactionTable.dispose();
@@ -436,6 +438,23 @@ public class ImportDialog {
       accountComboBox.setVisible(false);
       newAccountButton.setVisible(false);
     }
+  }
+
+  public void showCompleteMessage(int autocategorizedTransaction, int transactionCount) {
+    new MessageDialog("import.end.info.title",
+                      "import.end.info.operations." + normalize(transactionCount) + "." +
+                      normalize(autocategorizedTransaction), dialog, localDirectory).show();
+
+  }
+
+  public static String normalize(int count) {
+    if (count == 0) {
+      return "none";
+    }
+    if (count == 1) {
+      return "one";
+    }
+    return "many";
   }
 
   private class ImportAction extends AbstractAction {

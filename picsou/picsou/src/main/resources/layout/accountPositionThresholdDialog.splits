@@ -5,7 +5,7 @@
   <panel styleClass="dialog" preferredSize="(400,180)">
     <column styleClass="innerDialog">
 
-      <label text="$accountPositionThresholdDialog.title" styleClass="title"/>
+      <label text="$accountPositionThresholdDialog.title" name="title" styleClass="title"/>
 
       <htmlEditorPane text="$accountPositionThresholdDialog.message" hyperlinkListener="hyperlinkHandler"/>
 

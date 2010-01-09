@@ -11,7 +11,7 @@
   <panel styleClass="dialog" preferredSize="(500,600)">
     <column styleClass="innerDialog">
 
-      <label text="$seriesWizard.title" styleClass="title"/>
+      <label text="$seriesWizard.title" name="title" styleClass="title"/>
 
       <htmlEditorPane text="$seriesWizard.message.top" hyperlinkListener="hyperlinkHandler"/>
 

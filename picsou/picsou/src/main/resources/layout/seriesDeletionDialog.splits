@@ -4,7 +4,7 @@
 
   <panel styleClass="dialog" preferredSize="(450, 230)" opaque="true">
     <column styleClass="innerDialog">
-      <label text="$seriesEdition.delete.title" styleClass="title"/>
+      <label text="$seriesEdition.delete.title" name="title" styleClass="title"/>
       <filler fill="vertical" weightY="10"/>
       <htmlEditorPane text="$seriesEdition.delete.message" name="message"/>
       <filler fill="vertical" weightY="20"/>

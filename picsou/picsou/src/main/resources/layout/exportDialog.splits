@@ -5,7 +5,7 @@
   <panel styleClass="dialog" preferredSize="(450,220)" opaque="true">
     <column styleClass="innerDialog">
 
-      <label text="$exportDialog.title" styleClass="title"/>
+      <label text="$exportDialog.title" name="title" styleClass="title"/>
 
       <label text="$exportDialog.intro" marginBottom="10"/>
 

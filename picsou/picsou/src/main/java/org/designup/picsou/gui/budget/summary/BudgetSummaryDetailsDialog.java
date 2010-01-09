@@ -132,7 +132,7 @@ public class BudgetSummaryDetailsDialog {
 
     dialog = PicsouDialog.create(directory.get(JFrame.class), true, directory);
 
-    title = builder.add("title", new JLabel()).getComponent();
+    title = builder.add("title", new JLabel("budgetSummaryDetailsDialog")).getComponent();
 
     builder.add("balanceChart", balanceChart);
     builder.addLabel("balanceLabel", BudgetStat.TYPE, new BalanceStringifier()).getComponent();

@@ -75,7 +75,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     importer.doImport();
     importer.doImport();
     importer.doImport();
-    importer.doImport();
+    importer.completeImport();
 
     getTransactionView(window).initContent()
       .add("04/01/2000", TransactionType.VIREMENT, "menu K", "", 1.20)
@@ -130,7 +130,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     PicsouApplication.main(step2File);
     importer.doImport();
     importer.doImport();
-    importer.doImport();
+    importer.completeImport();
 
     getTransactionView(window).initContent()
       .add("03/01/2000", TransactionType.VIREMENT, "menu K", "", 1.20)
@@ -177,7 +177,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     ImportChecker importer = new ImportChecker(importDialog);
     importer.checkSelectedFiles(initialFile);
     importer.acceptFile();
-    importer.doImport();
+    importer.completeImport();
     getTransactionView(window).initContent()
       .add("03/01/2000", TransactionType.VIREMENT, "menu K", "", 1.20)
       .check();
@@ -223,7 +223,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     newApplication.start();
     Thread.sleep(1000);
     newApplication.checkNotOpen();
-    accountPosition.setAmountAndEnter(0.0);
+    accountPosition.setAmountAndEnterInImport(0.0);
     Window newImportDialog = newApplication.getImportDialog();
     assertNotNull(newImportDialog);
     new ImportChecker(newImportDialog).close();

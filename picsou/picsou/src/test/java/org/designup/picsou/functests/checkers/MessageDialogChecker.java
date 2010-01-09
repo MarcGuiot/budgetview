@@ -32,7 +32,11 @@ public class MessageDialogChecker extends GuiChecker {
   }
 
   public Trigger triggerClose() {
-    return dialog.getButton("Close").triggerClick();
+    return new Trigger() {
+      public void run() throws Exception {
+        dialog.getButton("Close").click();
+      }
+    };
   }
 
 

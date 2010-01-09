@@ -4,6 +4,7 @@ import org.designup.picsou.model.TransactionType;
 
 public class LCLTest extends SpecificBankTestCase {
   public void testOFC() throws Exception {
+    fail("missing balise");
     operations.importOfxFile(getFile("lcl_money.ofc"));
     checkContent();
   }
@@ -14,32 +15,32 @@ public class LCLTest extends SpecificBankTestCase {
   }
 
   public void testMoneyQifDateFr() throws Exception {
-    operations.importQifFile(getFile("lcl_money_date_fr.qif"), "LCL");
+    operations.importQifFile(getFile("lcl_money_date_fr.qif"), "LCL", 0.);
     checkContent();
   }
 
   public void testMoneyQifDateUs() throws Exception {
-    operations.importQifFile(getFile("lcl_money_date_us.qif"), "LCL");
+    operations.importQifFile(getFile("lcl_money_date_us.qif"), "LCL", 0.);
     checkContent();
   }
 
   public void testQuickenQifDateFr() throws Exception {
-    operations.importQifFile(getFile("lcl_quicken_date_fr.qif"), "LCL");
+    operations.importQifFile(getFile("lcl_quicken_date_fr.qif"), "LCL", 0.);
     checkContent();
   }
 
   public void testQuickenQifDateUs() throws Exception {
-    operations.importQifFile(getFile("lcl_quicken_date_us.qif"), "LCL");
+    operations.importQifFile(getFile("lcl_quicken_date_us.qif"), "LCL", 0.);
     checkContent();
   }
 
   public void testTousComptesFaitsQifDateFr() throws Exception {
-    operations.importQifFile(getFile("lcl_tout_compte_fait_date_fr.qif"), "LCL");
+    operations.importQifFile(getFile("lcl_tout_compte_fait_date_fr.qif"), "LCL", 0.);
     checkContent();
   }
 
   public void testImportAll() throws Exception {
-    operations.importQifFile(getFile("lcl_tout_compte_fait_date_fr.qif"), "LCL");
+    operations.importQifFile(getFile("lcl_tout_compte_fait_date_fr.qif"), "LCL", 0.);
     operations.importQifFile(getFile("lcl_quicken_date_us.qif"), "LCL");
     operations.importQifFile(getFile("lcl_quicken_date_fr.qif"), "LCL");
     operations.importQifFile(getFile("lcl_money_date_us.qif"), "LCL");

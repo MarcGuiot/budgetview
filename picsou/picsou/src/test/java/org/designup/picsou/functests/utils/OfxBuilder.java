@@ -178,6 +178,14 @@ public class OfxBuilder {
     operations.importOfxFile(fileName);
   }
 
+  public void load(int importedTransactionCount, int autocategorizedTransactionCount) {
+    save();
+    operations.openImportDialog()
+      .setFilePath(fileName)
+      .acceptFile()
+      .completeImport(importedTransactionCount, autocategorizedTransactionCount);
+  }
+
   public void loadDeferredCard(String accountName, final int day) {
     save();
     ImportChecker importChecker = operations.openImportDialog()
@@ -188,7 +196,7 @@ public class OfxBuilder {
       .selectDeferredCard(accountName, day)
       .validate();
     importChecker
-      .doImport();
+      .completeImport();
   }
 
   public void loadUnknown(String bank) {

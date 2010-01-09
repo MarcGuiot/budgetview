@@ -4,7 +4,7 @@
 
   <panel styleClass="dialog">
     <column styleClass="innerDialog">
-      <label text="$bankEntityEdition.title" styleClass="title"/>
+      <label text="$bankEntityEdition.title" name="title" styleClass="title"/>
 
       <panel ref="editionPanel"/>
 

@@ -6,7 +6,7 @@
 
     <column styleClass="innerDialog">
 
-      <label text="$split.transaction.title" styleClass="title"/>
+      <label text="$split.transaction.title" name="title" styleClass="title"/>
 
       <htmlEditorPane text="$split.transaction.help" hyperlinkListener="hyperlinkHandler"/>
 
