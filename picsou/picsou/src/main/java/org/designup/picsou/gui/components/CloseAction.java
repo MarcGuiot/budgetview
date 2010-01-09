@@ -19,7 +19,6 @@ public class CloseAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent e) {
-    System.out.println("CloseAction.actionPerformed called ");
     dialog.setVisible(false);
   }
 }

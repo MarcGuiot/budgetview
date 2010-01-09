@@ -96,6 +96,10 @@ public class OperationChecker {
     importFile(new String[]{name}, bank, null, null);
   }
 
+  public void importOfxFile(String name, Double amount) {
+    importFile(new String[]{name}, null, amount, null);
+  }
+
   public void importQifFile(String file, String bank) {
     importFile(new String[]{file}, bank, null, null);
   }

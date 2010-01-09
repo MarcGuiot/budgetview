@@ -4,8 +4,7 @@ import org.designup.picsou.model.TransactionType;
 
 public class LCLTest extends SpecificBankTestCase {
   public void testOFC() throws Exception {
-    fail("missing balise");
-    operations.importOfxFile(getFile("lcl_money.ofc"));
+    operations.importOfxFile(getFile("lcl_money.ofc"), 0.);
     checkContent();
   }
 
