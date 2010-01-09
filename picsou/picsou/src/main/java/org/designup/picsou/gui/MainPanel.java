@@ -88,6 +88,7 @@ public class MainPanel {
   private NotesView notesView;
   private SeriesEvolutionView seriesEvolutionView;
   private LogoutService logoutService;
+  private CategorizationView categorizationView;
 
   public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
@@ -119,7 +120,7 @@ public class MainPanel {
     TransactionSelection transactionSelection = new TransactionSelection(repository, directory);
 
     transactionView = new TransactionView(repository, directory, transactionSelection);
-    CategorizationView categorizationView = new CategorizationView(repository, directory);
+    categorizationView = new CategorizationView(repository, directory);
     seriesView = new SeriesView(repository, directory);
     timeView = new TimeView(repository, directory);
 
@@ -207,6 +208,7 @@ public class MainPanel {
     cardView.showInitialCard();
     search.reset();
     transactionView.reset();
+    categorizationView.reset();
     directory.get(NavigationService.class).reset();
     directory.get(UndoRedoService.class).reset();
     directory.get(HelpService.class).reset();

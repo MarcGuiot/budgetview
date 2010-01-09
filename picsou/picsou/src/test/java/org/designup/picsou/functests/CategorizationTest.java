@@ -804,6 +804,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2008/06/20", -10, "FT")
       .load();
+    views.selectBudget();
     budgetView.recurring.checkSeries("Tel", -10, -10);
   }
 
@@ -999,6 +1000,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2008/06/20", -20.00, "Auchan")
       .load();
+    views.selectBudget();
 
     timeline.selectMonth("2008/05");
     budgetView.envelopes.checkSeries("Courant", -5, -10);

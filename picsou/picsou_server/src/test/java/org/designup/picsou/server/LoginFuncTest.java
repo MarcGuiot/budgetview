@@ -42,8 +42,5 @@ public class LoginFuncTest extends ServerFuncTestCase {
       .setAmount(10.00)
       .validateFromImport();
 
-    fail("Marc : en cours");
-    MainAccountViewChecker mainAccountViewChecker = new MainAccountViewChecker(window);
-    mainAccountViewChecker.checkAccountNames("Account N.1111");
   }
 }

@@ -9,27 +9,15 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.ChangeSetListener;
-import org.globsframework.model.ChangeSet;
 import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.TypeChangeSetListener;
 import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.metamodel.GlobType;
 
 import javax.swing.*;
-import java.util.Set;
 import java.awt.event.ActionEvent;
 
 public class NotesView extends View {
-  private static final GlobMatcher USER_SERIES_MATCHER =
-    fieldIn(Series.BUDGET_AREA,
-            BudgetArea.INCOME.getId(),
-            BudgetArea.RECURRING.getId(),
-            BudgetArea.ENVELOPES.getId(),
-            BudgetArea.EXTRAS.getId(),
-            BudgetArea.SAVINGS.getId());
 
   private CardHandler cards;
   private ImportFileAction importFileAction;
@@ -76,7 +64,7 @@ public class NotesView extends View {
     if (!repository.contains(Transaction.TYPE)) {
       cards.show("noData");
     }
-    else if (!repository.contains(Series.TYPE, USER_SERIES_MATCHER)) {
+    else if (!repository.contains(Series.TYPE, Series.USER_SERIES_MATCHER)) {
       cards.show("noSeries");
     }
     else {

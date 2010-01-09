@@ -31,7 +31,7 @@ public class BackupAction extends AbstractBackupRestoreAction {
 
     Glob glob = repository.get(User.KEY);
     if (!glob.isTrue(User.IS_REGISTERED_USER)){
-      MessageDialog dialog = new MessageDialog("backup.trial.title", "backup.trial.content", frame, directory);
+      MessageDialog dialog = MessageDialog.createMessageDialog("backup.trial.title", "backup.trial.content", frame, directory);
       dialog.show();
     }
 

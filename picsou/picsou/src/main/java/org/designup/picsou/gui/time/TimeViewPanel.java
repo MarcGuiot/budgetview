@@ -105,6 +105,9 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public void paintComponent(Graphics g) {
+    if (timeGraph.getFirstSelectable() == null){
+      return;
+    }
     boolean scroll = false;
     if (previousWidth > 0 && getWidth() > previousWidth && translation < 0) {
       translation += (getWidth() - previousWidth) / 2.;

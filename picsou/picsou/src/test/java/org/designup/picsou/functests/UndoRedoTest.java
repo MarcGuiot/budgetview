@@ -170,6 +170,7 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
       .load();
 
     timeline.selectAll();
+    categorization.showAllTransactions();
     categorization.selectTableRows(0, 1, 2, 3, 4);
     views.selectCategorization();
     operations.undo();

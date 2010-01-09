@@ -31,7 +31,7 @@ public class RestoreAction extends AbstractBackupRestoreAction {
 
     Glob glob = repository.get(User.KEY);
     if (!glob.isTrue(User.IS_REGISTERED_USER)){
-      MessageDialog dialog = new MessageDialog("restore.trial.title", "restore.trial.content", frame, directory);
+      MessageDialog dialog = MessageDialog.createMessageDialog("restore.trial.title", "restore.trial.content", frame, directory);
       dialog.show();
       return;
     }
@@ -53,7 +53,7 @@ public class RestoreAction extends AbstractBackupRestoreAction {
             Gui.setDefaultCursor(frame);
           }
           if (completed == BackupService.Status.badBersion){
-            MessageDialog dialog = new MessageDialog("restore.error.title", "restore.bad.version", frame, directory);
+            MessageDialog dialog = MessageDialog.createMessageDialog("restore.error.title", "restore.bad.version", frame, directory);
             dialog.show();
             return;
           }

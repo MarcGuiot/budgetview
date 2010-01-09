@@ -186,6 +186,14 @@ public class OfxBuilder {
       .completeImport(importedTransactionCount, autocategorizedTransactionCount);
   }
 
+  public void loadAndGotoCategorize(int importedTransactionCount, int autocategorizedTransactionCount) {
+    save();
+    operations.openImportDialog()
+      .setFilePath(fileName)
+      .acceptFile()
+      .completeImportAndGotoCategorize(importedTransactionCount, autocategorizedTransactionCount);
+  }
+
   public void loadDeferredCard(String accountName, final int day) {
     save();
     ImportChecker importChecker = operations.openImportDialog()

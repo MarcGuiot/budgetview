@@ -333,6 +333,9 @@ public class CategorizationView extends View implements TableView, Filterable {
     parentBuilder.add(name, builder);
   }
 
+  public void reset() {
+  }
+
   public class SpecialCategorizationRepeatFactory implements RepeatComponentFactory<SpecialCategorizationPanel> {
     public void registerComponents(RepeatCellBuilder cellBuilder, SpecialCategorizationPanel categorizationPanel) {
 

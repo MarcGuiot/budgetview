@@ -4,6 +4,7 @@ import com.jidesoft.swing.AutoResizingTextArea;
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
 import org.designup.picsou.gui.accounts.NewAccountAction;
 import org.designup.picsou.gui.accounts.utils.Day;
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
@@ -367,6 +368,10 @@ public class ImportDialog {
       SelectionService selectionService = directory.get(SelectionService.class);
       selectionService.select(monthsToSelect.getLast());
     }
+    if (repository.contains(Series.TYPE, Series.USER_SERIES_MATCHER)) {
+      directory.get(NavigationService.class)
+        .gotoCategorizationAndSelectLastImported();
+    }
     closeDialog();
   }
 
@@ -440,9 +445,17 @@ public class ImportDialog {
   }
 
   public void showCompleteMessage(int autocategorizedTransaction, int transactionCount) {
-    new MessageDialog("import.end.info.title",
-                      "import.end.info.operations." + normalize(transactionCount) + "." +
-                      normalize(autocategorizedTransaction), dialog, localDirectory).show();
+    String keyMessage = "close";
+    if (repository.contains(Series.TYPE, Series.USER_SERIES_MATCHER)) {
+      keyMessage = "import.end.button.goto";
+    }
+    MessageDialog.createMessageDialogWithButtonMessage("import.end.info.title",
+                                                       "import.end.info.operations." + normalize(transactionCount) + "." +
+                                                       normalize(autocategorizedTransaction),
+                                                       dialog, localDirectory,
+                                                       keyMessage,
+                                                       Integer.toString(transactionCount),
+                                                       Integer.toString(autocategorizedTransaction)).show();
 
   }
 

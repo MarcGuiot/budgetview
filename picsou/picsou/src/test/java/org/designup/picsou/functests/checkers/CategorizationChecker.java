@@ -649,6 +649,10 @@ public class CategorizationChecker extends GuiChecker {
     checkTransctionFilterMode(TransactionFilteringMode.UNCATEGORIZED);
   }
 
+  public void checkShowsLastImportedTransaction() {
+    checkTransctionFilterMode(TransactionFilteringMode.LAST_IMPORTED_FILE);
+  }
+
   private void checkTransctionFilterMode(final TransactionFilteringMode mode) {
     assertThat(getPanel().getComboBox("transactionFilterCombo").selectionEquals(mode.toString()));
   }

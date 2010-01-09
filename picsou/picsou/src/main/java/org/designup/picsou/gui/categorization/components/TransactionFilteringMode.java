@@ -43,7 +43,6 @@ public enum TransactionFilteringMode {
       case LAST_IMPORTED_FILE:
         GlobList imports = repository.getAll(TransactionImport.TYPE)
           .sort(new GlobFieldsComparator(TransactionImport.IMPORT_DATE, true, TransactionImport.ID, true));
-        imports.getLast().get(TransactionImport.IMPORT_DATE);
         if (imports.isEmpty()) {
           return GlobMatchers.NONE;
         }

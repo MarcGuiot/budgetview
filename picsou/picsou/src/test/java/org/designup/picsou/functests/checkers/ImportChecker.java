@@ -141,6 +141,13 @@ public class ImportChecker {
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
+  public void completeImportAndGotoCategorize(int importedTransactionCount, int autocategorizedTransactionCount) {
+    WindowInterceptor.init(dialog.getButton(Lang.get("import.ok")).triggerClick())
+      .process(new ImportCompleteWindowHandler(importedTransactionCount,
+                                               autocategorizedTransactionCount, "Categorize operations")).run();
+    UISpecAssert.assertFalse(dialog.isVisible());
+  }
+
   public static void validate(final int importedTransactionCount, final int autocategorizedTransactionCount, final Panel dialog, final String key) {
     WindowInterceptor.init(dialog.getButton(Lang.get(key)).triggerClick())
       .process(new ImportCompleteWindowHandler(importedTransactionCount, autocategorizedTransactionCount)).run();
@@ -313,10 +320,16 @@ public class ImportChecker {
   public static class ImportCompleteWindowHandler extends WindowHandler {
     private final int importedTransactionCount;
     private final int autocategorizedTransactionCount;
+    private String buttonMessage = null;
 
     public ImportCompleteWindowHandler(int importedTransactionCount, int autocategorizedTransactionCount) {
       this.importedTransactionCount = importedTransactionCount;
       this.autocategorizedTransactionCount = autocategorizedTransactionCount;
+    }
+
+    public ImportCompleteWindowHandler(int importedTransactionCount, int autocategorizedTransactionCount, String buttonMessage) {
+      this(importedTransactionCount, autocategorizedTransactionCount);
+      this.buttonMessage = buttonMessage;
     }
 
     public Trigger process(Window window) throws Exception {
@@ -325,9 +338,16 @@ public class ImportChecker {
         checker
           .checkMessageContains(Lang.get("import.end.info.operations." +
                                          ImportDialog.normalize(importedTransactionCount)
-                                         + "." + ImportDialog.normalize(autocategorizedTransactionCount)));
+                                         + "." + ImportDialog.normalize(autocategorizedTransactionCount),
+                                         Integer.toString(importedTransactionCount),
+                                         Integer.toString(autocategorizedTransactionCount)));
       }
-      return checker.triggerClose();
+      if (buttonMessage == null) {
+        return checker.triggerCloseUndefined();
+      }
+      else {
+        return checker.triggerClose(buttonMessage);
+      }
     }
   }
 }
