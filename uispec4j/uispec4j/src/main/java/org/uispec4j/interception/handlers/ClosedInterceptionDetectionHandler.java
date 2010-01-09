@@ -49,7 +49,6 @@ public class ClosedInterceptionDetectionHandler extends AbstractInterceptionHand
               return;
             }
           }
-          System.err.println("For close on " + window.getAwtComponent());
         }
         finally {
           ComponentUtils.close(window);
