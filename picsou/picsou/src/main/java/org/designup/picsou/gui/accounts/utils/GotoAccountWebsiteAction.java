@@ -20,7 +20,8 @@ public class GotoAccountWebsiteAction extends AbstractAction implements ChangeSe
   private BrowsingService browsingService;
 
   public GotoAccountWebsiteAction(Glob account, GlobRepository repository, Directory directory) {
-    super(Lang.get("accountView.goto.website"));
+    super(getName(account, repository));
+    putValue(Action.SHORT_DESCRIPTION, Lang.get("accountView.goto.website.tooltip"));
     this.repository = repository;
     this.browsingService = directory.get(BrowsingService.class);
     this.accountKey = account.getKey();
@@ -42,6 +43,7 @@ public class GotoAccountWebsiteAction extends AbstractAction implements ChangeSe
       url = bank.get(Bank.DOWNLOAD_URL);
     }
     setEnabled(Strings.isNotEmpty(url));
+    putValue(Action.NAME, bank != null ? getName(account, repository) : "");
   }
 
   public void actionPerformed(ActionEvent e) {
@@ -58,5 +60,9 @@ public class GotoAccountWebsiteAction extends AbstractAction implements ChangeSe
     if (changedTypes.contains(Account.TYPE)) {
       update();
     }
+  }
+
+  private static String getName(Glob account, GlobRepository repository) {
+    return Lang.get("accountView.goto.website", Account.getBank(account, repository).get(Bank.NAME));
   }
 }
