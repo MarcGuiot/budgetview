@@ -40,10 +40,7 @@ public class LoginFuncTest extends ServerFuncTestCase {
       .defineAccount("Société Générale", "Main account", "1111")
       .doImportWithBalance()
       .setAmount(10.00)
-      .validate();
+      .validateFromImport();
 
-    fail("Marc : en cours");
-    MainAccountViewChecker mainAccountViewChecker = new MainAccountViewChecker(window);
-    mainAccountViewChecker.checkAccountNames("Account N.1111");
   }
 }

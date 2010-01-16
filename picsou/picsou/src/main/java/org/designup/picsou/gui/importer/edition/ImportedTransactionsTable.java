@@ -17,6 +17,7 @@ public class ImportedTransactionsTable {
   private JTable transactionTable;
 
   private static final int[] COLUMN_SIZES = {10, 45};
+  private PicsouTableHeaderPainter headerPainter;
 
   public ImportedTransactionsTable(GlobRepository repository, DefaultDirectory directory,
                                    ImportedTransactionDateRenderer dateRenderer) {
@@ -28,7 +29,7 @@ public class ImportedTransactionsTable {
       .addColumn(Lang.get("label"), new TransactionLabelGlobStringifier(), LabelCustomizers.autoTooltip())
       .addColumn(Lang.get("amount"), ImportedTransaction.AMOUNT);
 
-    PicsouTableHeaderPainter.install(tableView, directory);
+    headerPainter = PicsouTableHeaderPainter.install(tableView, directory);
 
     transactionTable = tableView.getComponent();
     dateRenderer.setTable(tableView);
@@ -38,5 +39,9 @@ public class ImportedTransactionsTable {
 
   public JTable getTable() {
     return transactionTable;
+  }
+
+  public void dispose() {
+    headerPainter.dispose();
   }
 }

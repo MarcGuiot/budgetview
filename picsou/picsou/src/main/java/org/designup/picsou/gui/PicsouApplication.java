@@ -177,7 +177,6 @@ public class PicsouApplication {
       Thread.sleep(2000);
       return;
     }
-
     initLogger();
     clearRepositoryIfNeeded();
 

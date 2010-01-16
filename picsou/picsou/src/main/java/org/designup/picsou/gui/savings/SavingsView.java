@@ -26,7 +26,7 @@ public class SavingsView extends View {
 
   public SavingsView(GlobRepository repository, Directory directory) {
     super(repository, directory);
-    this.seriesEditionDialog = new SeriesEditionDialog(repository, directory);
+    seriesEditionDialog = directory.get(SeriesEditionDialog.class);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {

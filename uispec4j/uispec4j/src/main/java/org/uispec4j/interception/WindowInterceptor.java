@@ -11,10 +11,7 @@ import org.uispec4j.utils.ComponentUtils;
 import org.uispec4j.utils.ExceptionContainer;
 import org.uispec4j.utils.TriggerRunner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Intercepts popped-up windows such as JFrame or JDialog. <p>
@@ -343,7 +340,7 @@ public final class WindowInterceptor {
     NewThreadInterceptionHandlerDecorator newThreadHandler = new NewThreadInterceptionHandlerDecorator(closeDetector);
     UISpecDisplay.instance().add(newThreadHandler);
     try {
-      TriggerRunner.runInCurrentThread(triggerAccessor.getTrigger());
+      TriggerRunner.runInSwingThread(triggerAccessor.getTrigger());
       showDetector.waitWindow();
       newThreadHandler.complete();
       closeDetector.checkWindowWasClosed();

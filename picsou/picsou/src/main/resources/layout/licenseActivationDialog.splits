@@ -4,7 +4,7 @@
 
   <panel styleClass="dialog" minimumSize="(470,180)" preferredSize="(470,250)" opaque="true">
     <column styleClass="innerDialog">
-      <label text="$license.title" styleClass="title"/>
+      <label name="title" text="$license.title" styleClass="title"/>
       <label ref="expirationLabel" text="$license.trial.completed" marginBottom="5"/>
       <htmlEditorPane text="$license.acquisition" hyperlinkListener="hyperlinkHandler" marginBottom="5"/>
       <grid>

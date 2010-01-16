@@ -5,7 +5,7 @@
   <panel styleClass="dialog" preferredSize="(480,400)" maximumSize="(480,2000)">
     <column styleClass="innerDialog">
 
-      <label text="$cardTypeChooser.title" styleClass="title"/>
+      <label text="$cardTypeChooser.title" name="title" styleClass="title"/>
 
       <label text="$cardTypeChooser.message"/>
 

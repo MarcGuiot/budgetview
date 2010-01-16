@@ -222,6 +222,9 @@ public class TimeGraph {
   }
 
   public Selectable getLastSelectable() {
+    if (yearGraphs.isEmpty()){
+      return null;
+    }
     return yearGraphs.get(yearGraphs.size() - 1).getLastMonth();
   }
 

@@ -1,8 +1,6 @@
 package org.designup.picsou.gui.categorization.components;
 
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -168,6 +166,21 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
     SortedSet<Integer> areas = getSelectedTransactionAreas();
     if (areas.size() != 1) {
       multiBudgetAreaToggle.doClick(0);
+    }
+
+    GlobList accounts = getSelectecTransacionAcounts();
+    for (Glob account : accounts) {
+      if (account.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
+        enableGoodBudgetArea(false);
+        if (areas.size() == 1) {
+          select(BudgetArea.SAVINGS, true);
+        }
+        return;
+      }
+    }
+    enableGoodBudgetArea(true);
+
+    if (areas.size() != 1) {
       return;
     }
 
@@ -175,8 +188,20 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
     select(BudgetArea.get(selectedAreaId), true);
   }
 
+  private void enableGoodBudgetArea(boolean allEnable) {
+    for (Map.Entry<BudgetArea, JToggleButton> entry : toggles.entrySet()) {
+      entry.getValue().setEnabled(allEnable
+                                  || entry.getKey() == BudgetArea.SAVINGS 
+                                  || entry.getKey() == BudgetArea.UNCATEGORIZED);
+    }
+  }
+
+  private GlobList getSelectecTransacionAcounts() {
+    return GlobUtils.getUniqueTargets(selectedTransactions, Transaction.ACCOUNT, repository);
+  }
+
   private SortedSet<Integer> getSelectedTransactionAreas() {
-    GlobList series = GlobUtils.getTargets(selectedTransactions, Transaction.SERIES, repository);
+    GlobList series = GlobUtils.getUniqueTargets(selectedTransactions, Transaction.SERIES, repository);
     return series.getSortedSet(Series.BUDGET_AREA);
   }
 

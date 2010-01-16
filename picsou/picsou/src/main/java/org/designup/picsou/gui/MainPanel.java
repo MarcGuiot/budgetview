@@ -23,6 +23,7 @@ import org.designup.picsou.gui.notes.NotesView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
+import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.series.evolution.SeriesEvolutionView;
 import org.designup.picsou.gui.series.view.SeriesView;
 import org.designup.picsou.gui.startup.LogoutService;
@@ -87,6 +88,7 @@ public class MainPanel {
   private NotesView notesView;
   private SeriesEvolutionView seriesEvolutionView;
   private LogoutService logoutService;
+  private CategorizationView categorizationView;
 
   public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
@@ -109,6 +111,8 @@ public class MainPanel {
     };
     directory.add(LogoutService.class, logoutService);
 
+    directory.add(SeriesEditionDialog.class, new SeriesEditionDialog(repository, directory));
+
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
 
     TitleView titleView = new TitleView(repository, directory);
@@ -116,7 +120,7 @@ public class MainPanel {
     TransactionSelection transactionSelection = new TransactionSelection(repository, directory);
 
     transactionView = new TransactionView(repository, directory, transactionSelection);
-    CategorizationView categorizationView = new CategorizationView(repository, directory);
+    categorizationView = new CategorizationView(repository, directory);
     seriesView = new SeriesView(repository, directory);
     timeView = new TimeView(repository, directory);
 
@@ -204,6 +208,7 @@ public class MainPanel {
     cardView.showInitialCard();
     search.reset();
     transactionView.reset();
+    categorizationView.reset();
     directory.get(NavigationService.class).reset();
     directory.get(UndoRedoService.class).reset();
     directory.get(HelpService.class).reset();

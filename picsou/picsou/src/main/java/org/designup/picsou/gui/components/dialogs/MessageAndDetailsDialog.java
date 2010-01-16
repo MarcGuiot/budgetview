@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 public class MessageAndDetailsDialog {
   private PicsouDialog dialog;
   private JButton copyButton;
+  private SplitsBuilder builder;
 
   public MessageAndDetailsDialog(String titleKey,
                                  String messageKey,
@@ -20,7 +21,7 @@ public class MessageAndDetailsDialog {
                                  Window owner,
                                  Directory directory,
                                  String... messageArgs) {
-    SplitsBuilder builder = SplitsBuilder.init(directory)
+    builder = SplitsBuilder.init(directory)
       .setSource(getClass(), "/layout/messageAndDetailsDialog.splits");
 
     builder.add("title", new JLabel(Lang.get(titleKey)));
@@ -50,5 +51,6 @@ public class MessageAndDetailsDialog {
 
   public final void show() {
     dialog.showCentered();
+    builder.dispose();
   }
 }

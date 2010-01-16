@@ -27,13 +27,13 @@ public class LicenseExpirationDialog {
   private JLabel response = new JLabel();
   private LocalGlobRepository localGlobRepository;
   private AbstractAction sendAction;
+  private GlobsPanelBuilder builder;
 
   public LicenseExpirationDialog(Window parent, final GlobRepository repository, final Directory directory) {
     localGlobRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(User.TYPE).get();
-    GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/licenseExpirationDialog.splits",
-                            localGlobRepository, directory);
+    builder = new GlobsPanelBuilder(getClass(), "/layout/licenseExpirationDialog.splits",
+                          localGlobRepository, directory);
 
     builder.add("mailResponse", response);
     sendAction = new AbstractAction(Lang.get("license.mail.request.send")) {
@@ -78,8 +78,8 @@ public class LicenseExpirationDialog {
   }
 
   public void show() {
-    GuiUtils.center(dialog);
-    dialog.setVisible(true);
+    dialog.showCentered();
+    builder.dispose();
   }
 
   private class ValidateAction extends AbstractAction {

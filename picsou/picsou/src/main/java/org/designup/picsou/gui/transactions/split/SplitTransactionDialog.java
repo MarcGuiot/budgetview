@@ -65,6 +65,8 @@ public class SplitTransactionDialog {
   private SplitTransactionDialog.OkAction okAction;
   private GlobRepository parentRepository;
   private GlobTableView tableView;
+  private GlobsPanelBuilder builder;
+  private PicsouTableHeaderPainter headerPainter;
 
   public SplitTransactionDialog(GlobRepository repository, Directory directory) {
     this.parentRepository = repository;
@@ -86,7 +88,7 @@ public class SplitTransactionDialog {
   }
 
   private void createDialog(Directory directory) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/splitTransactionDialog.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/splitTransactionDialog.splits",
                                                       localRepository, localDirectory);
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
@@ -124,6 +126,9 @@ public class SplitTransactionDialog {
     okAction.setEnabled(false);
     amountField.requestFocus();
     dialog.showCentered();
+    builder.dispose();
+    headerPainter.dispose();
+    rendererColors.dispose();
   }
 
   private void addAmountPanel(GlobsPanelBuilder builder) {
@@ -149,7 +154,7 @@ public class SplitTransactionDialog {
     tableView.setFilter(GlobMatchers.isNotNull(Transaction.AMOUNT));
 
     tableView.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
-    PicsouTableHeaderPainter.install(tableView, localDirectory);
+    headerPainter = PicsouTableHeaderPainter.install(tableView, localDirectory);
 
     DeleteSplitTransactionColumn deleteSplitColumn = new DeleteSplitTransactionColumn();
 

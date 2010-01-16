@@ -100,7 +100,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
                     "PFAC.FRANCE 4561409\n" +
                     "MFAC.FRANCE 4561409787231717 19/04/06 STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS\n" +
                     "^");
-    operations.importQifFile(file, SOCIETE_GENERALE);
+    operations.importQifFile(file, SOCIETE_GENERALE, 0.);
     operations.importQifFile(file, SOCIETE_GENERALE);
 
     timeline.selectMonth("2006/04");
@@ -145,7 +145,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Tx 1")
       .addTransaction("2006/01/11", -2.23, "Tx 2")
-      .load();
+      .load(0.);
     views.selectCategorization();
     categorization.selectTransactions("Tx 2");
     transactionDetails.split("-1.19", "info 1");

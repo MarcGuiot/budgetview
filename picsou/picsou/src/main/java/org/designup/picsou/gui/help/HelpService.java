@@ -28,6 +28,7 @@ public class HelpService {
     if ((dialog != null) && dialog.isVisible()) {
       if (owner != lastOwner) {
         dialog.close();
+        dialog.dispose();
         dialog = null;
         lastOwner = null;
       }

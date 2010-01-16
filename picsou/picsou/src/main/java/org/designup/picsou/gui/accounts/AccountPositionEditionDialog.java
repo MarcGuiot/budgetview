@@ -22,6 +22,7 @@ public class AccountPositionEditionDialog {
   private LocalGlobRepository localRepository;
   private Date balanceDate;
   private AccountPositionEditionPanel editionPanel;
+  private GlobsPanelBuilder builder;
 
   public AccountPositionEditionDialog(Glob account, boolean accountInitialization,
                                       GlobRepository repository, Directory directory, Window parent) {
@@ -31,7 +32,7 @@ public class AccountPositionEditionDialog {
         .copy(Account.TYPE)
         .get();
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountPositionEditionDialog.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/accountPositionEditionDialog.splits",
                                                       localRepository, directory);
 
     ValidateAction validateAction = new ValidateAction();
@@ -61,8 +62,7 @@ public class AccountPositionEditionDialog {
   }
 
   public void show() {
-    GuiUtils.center(dialog);
-    dialog.setVisible(true);
+    dialog.showCentered();
   }
 
   private class ValidateAction extends AbstractAction {

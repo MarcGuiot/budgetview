@@ -15,9 +15,10 @@ public abstract class ConfirmationDialog {
   protected JEditorPane editorPane;
   protected AbstractAction cancel;
   protected AbstractAction ok;
+  private SplitsBuilder builder;
 
   public ConfirmationDialog(String titleKey, String contentKey, Window owner, Directory directory, String... args) {
-    SplitsBuilder builder = SplitsBuilder.init(directory)
+    builder = SplitsBuilder.init(directory)
       .setSource(getClass(), "/layout/confirmationDialog.splits");
 
     dialog = PicsouDialog.create(owner, directory);
@@ -33,6 +34,7 @@ public abstract class ConfirmationDialog {
 
   public final void show() {
     dialog.showCentered();
+    builder.dispose();
   }
 
   protected void postValidate() {

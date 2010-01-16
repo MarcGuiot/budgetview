@@ -33,6 +33,7 @@ public class SeriesWizardDialog {
   private PicsouDialog dialog;
   private JScrollPane scrollPane;
   private GlobRepository parentRepository;
+  private GlobsPanelBuilder builder;
 
   public SeriesWizardDialog(GlobRepository parentRepository, Directory directory) {
     this.parentRepository = parentRepository;
@@ -53,7 +54,7 @@ public class SeriesWizardDialog {
   private void createDialog() {
     dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/seriesWizardDialog.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/seriesWizardDialog.splits",
                                                       localRepository, directory);
 
     builder.addRepeat("budgetAreasRepeat",
@@ -77,6 +78,7 @@ public class SeriesWizardDialog {
       }
     });
     dialog.showCentered();
+    builder.dispose();
   }
 
   private void scrollToTop() {

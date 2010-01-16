@@ -15,9 +15,7 @@ import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class AccountViewChecker extends GuiChecker {
   protected Panel panel;
@@ -38,6 +36,17 @@ public class AccountViewChecker extends GuiChecker {
       existingNames.add(button.getLabel());
     }
     return existingNames;
+  }
+
+  public AccountViewChecker checkAccountOrder(String ...accounts){
+    UIComponent[] uiComponents = panel.getUIComponents(Button.class, "accountName");
+    List<String> existingNames = new ArrayList<String>();
+    for (UIComponent uiComponent : uiComponents) {
+      Button button = (Button)uiComponent;
+      existingNames.add(button.getLabel());
+    }
+    TestUtils.assertEquals(existingNames, accounts);
+    return this;
   }
 
   public void checkNoAccountsDisplayed() {
@@ -61,8 +70,8 @@ public class AccountViewChecker extends GuiChecker {
 
   public void checkDisplayIsEmpty(String accountName) {
     Panel parentPanel = getAccountPanel(accountName);
-    UISpecAssert.assertTrue(parentPanel.getButton("accountPosition").textEquals("0.0"));
-    UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals("31/08/2008"));
+    UISpecAssert.assertTrue(parentPanel.getButton("accountPosition").textEquals("0.00"));
+    UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals("01/02/2006"));
   }
 
   public AccountViewChecker checkSummary(double amount, String updateDate) {

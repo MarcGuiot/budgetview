@@ -22,6 +22,7 @@ public class BankEntityEditionPanel {
   private Directory directory;
   private JPanel panel = new JPanel();
   private GlobList accounts;
+  private GlobsPanelBuilder builder;
 
   public BankEntityEditionPanel(GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -31,7 +32,7 @@ public class BankEntityEditionPanel {
   public void init(final GlobList accounts) {
     this.accounts = accounts;
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/bankEntityEditionPanel.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/bankEntityEditionPanel.splits",
                                                       repository, directory);
 
     builder.add("panel", panel);
@@ -87,5 +88,9 @@ public class BankEntityEditionPanel {
       })
       .setName("bankCombo:" + entityId)
       .getComponent();
+  }
+
+  public void dispose() {
+    builder.dispose();
   }
 }

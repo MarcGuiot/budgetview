@@ -46,5 +46,6 @@ public class MessageFileDialog {
     dialog.addPanelWithButton(builder.<JPanel>load(), action);
     dialog.pack();
     dialog.showCentered();
+    builder.dispose();
   }
 }

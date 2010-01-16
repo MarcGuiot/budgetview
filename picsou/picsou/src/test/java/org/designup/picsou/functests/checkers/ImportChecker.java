@@ -1,11 +1,13 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.gui.importer.ImportDialog;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.FileChooserHandler;
+import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import java.io.File;
@@ -125,8 +127,30 @@ public class ImportChecker {
   }
 
   public void completeImport() {
-    dialog.getButton(Lang.get("import.ok")).click();
+    validate(-1, -1, dialog, "import.ok");
     UISpecAssert.assertFalse(dialog.isVisible());
+  }
+
+  public void completeImport(double amount) {
+    doImportWithBalance().setAmount(amount).validateFromImport();
+    UISpecAssert.assertFalse(dialog.isVisible());
+  }
+
+  public void completeImport(final int importedTransactionCount, final int autocategorizedTransactionCount) {
+    validate(importedTransactionCount, autocategorizedTransactionCount, dialog, "import.ok");
+    UISpecAssert.assertFalse(dialog.isVisible());
+  }
+
+  public void completeImportAndGotoCategorize(int importedTransactionCount, int autocategorizedTransactionCount) {
+    WindowInterceptor.init(dialog.getButton(Lang.get("import.ok")).triggerClick())
+      .process(new ImportCompleteWindowHandler(importedTransactionCount,
+                                               autocategorizedTransactionCount, "Categorize operations")).run();
+    UISpecAssert.assertFalse(dialog.isVisible());
+  }
+
+  public static void validate(final int importedTransactionCount, final int autocategorizedTransactionCount, final Panel dialog, final String key) {
+    WindowInterceptor.init(dialog.getButton(Lang.get(key)).triggerClick())
+      .process(new ImportCompleteWindowHandler(importedTransactionCount, autocategorizedTransactionCount)).run();
   }
 
   public AccountPositionEditionChecker doImportWithBalance() {
@@ -228,7 +252,7 @@ public class ImportChecker {
     return AccountEditionChecker.open(dialog.getButton("Create an account").triggerClick());
   }
 
-  public AccountEditionChecker addNewAccount(){
+  public AccountEditionChecker addNewAccount() {
     return AccountEditionChecker.open(dialog.getButton("newAccount").triggerClick());
   }
 
@@ -291,5 +315,39 @@ public class ImportChecker {
   public CardTypeChooserChecker openCardTypeChooser() {
     Window window = WindowInterceptor.getModalDialog(dialog.getButton("Select a card type").triggerClick());
     return new CardTypeChooserChecker(window);
+  }
+
+  public static class ImportCompleteWindowHandler extends WindowHandler {
+    private final int importedTransactionCount;
+    private final int autocategorizedTransactionCount;
+    private String buttonMessage = null;
+
+    public ImportCompleteWindowHandler(int importedTransactionCount, int autocategorizedTransactionCount) {
+      this.importedTransactionCount = importedTransactionCount;
+      this.autocategorizedTransactionCount = autocategorizedTransactionCount;
+    }
+
+    public ImportCompleteWindowHandler(int importedTransactionCount, int autocategorizedTransactionCount, String buttonMessage) {
+      this(importedTransactionCount, autocategorizedTransactionCount);
+      this.buttonMessage = buttonMessage;
+    }
+
+    public Trigger process(Window window) throws Exception {
+      MessageDialogChecker checker = new MessageDialogChecker(window);
+      if (importedTransactionCount != -1) {
+        checker
+          .checkMessageContains(Lang.get("import.end.info.operations." +
+                                         ImportDialog.normalize(importedTransactionCount)
+                                         + "." + ImportDialog.normalize(autocategorizedTransactionCount),
+                                         Integer.toString(importedTransactionCount),
+                                         Integer.toString(autocategorizedTransactionCount)));
+      }
+      if (buttonMessage == null) {
+        return checker.triggerCloseUndefined();
+      }
+      else {
+        return checker.triggerClose(buttonMessage);
+      }
+    }
   }
 }

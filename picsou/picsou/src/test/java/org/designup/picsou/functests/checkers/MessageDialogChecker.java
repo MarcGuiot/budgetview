@@ -31,8 +31,28 @@ public class MessageDialogChecker extends GuiChecker {
     assertFalse(dialog.isVisible());
   }
 
+  public Trigger triggerCloseUndefined() {
+    return new Trigger() {
+      public void run() throws Exception {
+        dialog.getButton().click();
+      }
+    };
+  }
+
   public Trigger triggerClose() {
-    return dialog.getButton("Close").triggerClick();
+    return new Trigger() {
+      public void run() throws Exception {
+        dialog.getButton("Close").click();
+      }
+    };
+  }
+
+  public Trigger triggerClose(final String buttonMessage) {
+    return new Trigger() {
+      public void run() throws Exception {
+        dialog.getButton(buttonMessage).click();
+      }
+    };
   }
 
 

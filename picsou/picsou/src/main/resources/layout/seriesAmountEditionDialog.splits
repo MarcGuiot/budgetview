@@ -9,7 +9,7 @@
   <panel styleClass="dialog" preferredSize="(400,190)">
 
     <column styleClass="innerDialog">
-      <label text="$seriesAmountEdition.title" styleClass="title"/>
+      <label name="title" text="$seriesAmountEdition.title" styleClass="title"/>
 
       <label ref="dateLabel" marginBottom="10"/>
       <row>

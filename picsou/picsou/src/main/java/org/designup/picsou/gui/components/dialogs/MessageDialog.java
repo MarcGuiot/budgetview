@@ -11,22 +11,38 @@ import java.awt.*;
 
 public class MessageDialog {
   private PicsouDialog dialog;
+  private SplitsBuilder builder;
 
-  public MessageDialog(String titleKey, String contentKey,
+  private MessageDialog(String titleKey, String contentKey,
                        Window owner, Directory directory,
+                       String key,
                        String... args) {
-    SplitsBuilder builder = SplitsBuilder.init(directory)
+    builder = SplitsBuilder.init(directory)
       .setSource(getClass(), "/layout/messageDialog.splits");
 
     builder.add("title", new JLabel(Lang.get(titleKey)));
     builder.add("message", new JEditorPane("text/html", Lang.get(contentKey, args)));
 
     dialog = PicsouDialog.create(owner, directory);
-    dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction(dialog));
+    dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction(key, dialog));
     dialog.pack();
   }
 
   public final void show() {
     dialog.showCentered();
+    builder.dispose();
+  }
+
+  public static MessageDialog createMessageDialogWithButtonMessage(String titleKey, String contentKey,
+                                                  Window owner, Directory directory,
+                                                  String key,
+                                                  String... args) {
+    return new MessageDialog(titleKey, contentKey, owner, directory, key, args);
+  }
+
+  public static MessageDialog createMessageDialog(String titleKey, String contentKey,
+                                                  Window owner, Directory directory,
+                                                  String... args) {
+    return new MessageDialog(titleKey, contentKey, owner, directory, "close", args);
   }
 }

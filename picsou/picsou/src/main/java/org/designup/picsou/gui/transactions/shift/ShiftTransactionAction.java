@@ -28,7 +28,6 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
   private ShiftDirection direction;
   private Glob series;
   private boolean validMonthForSeries;
-  private SeriesEditionDialog seriesEditionDialog;
   private int targetMonth;
 
   public ShiftTransactionAction(GlobRepository repository, Directory directory) {
@@ -87,7 +86,7 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
     }
 
     Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
-    if (!account.get(Account.CARD_TYPE).equals(AccountCardType.NOT_A_CARD.getId())){
+    if (!account.get(Account.CARD_TYPE).equals(AccountCardType.NOT_A_CARD.getId())) {
       setEnabled(false);
       return;
     }
@@ -159,10 +158,7 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
   }
 
   private SeriesEditionDialog getSeriesEditionDialog() {
-    if (seriesEditionDialog == null) {
-      seriesEditionDialog = new SeriesEditionDialog(repository, directory);
-    }
-    return seriesEditionDialog;
+    return directory.get(SeriesEditionDialog.class);
   }
 
   private void openShiftDialog() {

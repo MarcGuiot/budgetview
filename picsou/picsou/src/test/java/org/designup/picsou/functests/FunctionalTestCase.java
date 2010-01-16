@@ -11,6 +11,8 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import java.io.File;
 import java.util.Locale;
 
+import sun.awt.AWTAutoShutdown;
+
 public abstract class FunctionalTestCase extends UISpecTestCase {
   
   static {
@@ -24,6 +26,7 @@ public abstract class FunctionalTestCase extends UISpecTestCase {
     super.setUp();
     Locale.setDefault(Locale.ENGLISH);
     Log.reset();
+    AWTAutoShutdown.notifyToolkitThreadBusy();
   }
 
   protected static String createPrevaylerRepository() {

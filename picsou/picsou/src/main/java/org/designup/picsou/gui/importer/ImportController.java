@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.importer;
 
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.startup.AutoCategorizationFunctor;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.importer.ImportSession;
@@ -138,8 +139,11 @@ public class ImportController {
       try {
         completed = true;
         Set<Integer> months = createMonths();
-        autocategorize();
+        AutoCategorizationFunctor autoCategorizationFunctor = autocategorize();
         importDialog.showPositionDialog();
+
+        importDialog.showCompleteMessage(autoCategorizationFunctor.getAutocategorizedTransaction(), 
+                                         autoCategorizationFunctor.getTransactionCount());
         openRequestManager.popCallback();
         localRepository.commitChanges(true);
         importDialog.showLastImportedMonthAndClose(months);
@@ -233,10 +237,12 @@ public class ImportController {
     return monthIds;
   }
 
-  private void autocategorize() {
+  private AutoCategorizationFunctor autocategorize() {
+    AutoCategorizationFunctor autoCategorizationFunctor = new AutoCategorizationFunctor(repository);
     localRepository.safeApply(Transaction.TYPE,
                               GlobMatchers.fieldIn(Transaction.IMPORT, importKeys),
-                              new AutoCategorizationFunctor(repository));
+                              autoCategorizationFunctor);
+    return autoCategorizationFunctor;
   }
 
   public GlobRepository getSessionRepository() {

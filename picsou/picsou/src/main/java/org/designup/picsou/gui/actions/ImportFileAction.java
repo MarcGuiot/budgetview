@@ -94,7 +94,7 @@ public class ImportFileAction extends AbstractAction {
       }
       else {
         if (User.isDemoUser(repository.get(User.KEY))) {
-          MessageDialog dialog = new MessageDialog("demo.import.title", "demo.import.content", directory.get(JFrame.class),
+          MessageDialog dialog = MessageDialog.createMessageDialog("demo.import.title", "demo.import.content", directory.get(JFrame.class),
                                                    directory);
           dialog.show();
         }

@@ -148,7 +148,7 @@ public class ExportTest extends LoggedInFunctionalTestCase {
 
     String fileName = TestUtils.getFileName(this, ".qif");
     Files.dumpStringToFile(fileName, content);
-    operations.importQifFile(fileName, SOCIETE_GENERALE);
+    operations.importQifFile(fileName, SOCIETE_GENERALE, 0.);
 
     transactions.initContent()
       .add("28/03/2007", TransactionType.VIREMENT, "AVRIL", "", 12345.67)

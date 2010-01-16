@@ -4,7 +4,7 @@
 
   <panel styleClass="dialog">
     <column styleClass="innerDialog">
-      <label text="$accountPositionEdition.title" styleClass="title"/>
+      <label name="title" text="$accountPositionEdition.title" styleClass="title"/>
 
       <panel ref="editionPanel"/>
 

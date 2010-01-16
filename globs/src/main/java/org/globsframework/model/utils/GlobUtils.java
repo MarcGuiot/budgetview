@@ -92,11 +92,12 @@ public class GlobUtils {
     }
   }
 
-  public static GlobList getTargets(GlobList from, Link link, GlobRepository repository) {
+  public static GlobList getUniqueTargets(GlobList from, Link link, GlobRepository repository) {
     GlobList result = new GlobList();
+    Set<Glob> added = new HashSet<Glob>();
     for (Glob glob : from) {
       Glob target = repository.findLinkTarget(glob, link);
-      if (target != null) {
+      if (target != null && added.add(target)) {
         result.add(target);
       }
     }

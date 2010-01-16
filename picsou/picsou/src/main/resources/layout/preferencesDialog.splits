@@ -5,7 +5,7 @@
   <panel styleClass="dialog" preferredSize="(300, 150)" opaque="true">
     <column styleClass="innerDialog">
 
-      <label text="$preferences.title" styleClass="title"/>
+      <label text="$preferences.title" name="title" styleClass="title"/>
       <grid>
         <label gridPos="(0,0)" text="$preferences.future.month" styleClass="formLabel"/>
         <comboBox gridPos="(1,0)" ref="futureMonth"/>

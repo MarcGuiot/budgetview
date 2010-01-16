@@ -26,7 +26,7 @@
 
   <panel styleClass="dialog" opaque="true">
     <column styleClass="innerDialog">
-
+      <label name="title" text="monthChooserDialog" visible="false"/>
       <row styleClass="buttonGroup" marginTop="5" marginBottom="10">
         <button action="previousPageAction" icon="button_prev2.png" styleClass="icon"/>
         <button action="previousYearAction" icon="button_prev.png" styleClass="icon"/>

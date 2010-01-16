@@ -4,7 +4,7 @@ import org.designup.picsou.model.TransactionType;
 
 public class CreditMutuelTest extends SpecificBankTestCase {
   public void test() throws Exception {
-    operations.importQifFile(getFile("credit_mutuel.qif"), "Crédit Mutuel");
+    operations.importQifFile(getFile("credit_mutuel.qif"), "Crédit Mutuel", 0.);
     timeline.selectAll();
 
     transactions.getTable().getHeader().click(1);

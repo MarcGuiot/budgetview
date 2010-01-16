@@ -10,6 +10,7 @@ import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -30,6 +31,7 @@ public class Series {
   @Target(BudgetArea.class)
   @Required
   public static LinkField BUDGET_AREA;
+  public static final GlobMatcher USER_SERIES_MATCHER;
 
   public static StringField DESCRIPTION;
 
@@ -128,6 +130,12 @@ public class Series {
   static {
     GlobTypeLoader.init(Series.class, "series");
     UNCATEGORIZED_SERIES = org.globsframework.model.Key.create(TYPE, UNCATEGORIZED_SERIES_ID);
+    USER_SERIES_MATCHER = org.globsframework.model.utils.GlobMatchers.fieldIn(BUDGET_AREA,
+                                                                              BudgetArea.INCOME.getId(),
+                                                                              BudgetArea.RECURRING.getId(),
+                                                                              BudgetArea.ENVELOPES.getId(),
+                                                                              BudgetArea.EXTRAS.getId(),
+                                                                              BudgetArea.SAVINGS.getId());
   }
 
   public static BooleanField getMonthField(int monthId) {

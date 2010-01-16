@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import sun.awt.AWTAutoShutdown;
+
 public class OperationChecker {
   private MenuItem importMenu;
   private MenuItem exportMenu;
@@ -87,11 +89,15 @@ public class OperationChecker {
       .setFromBeginningDay(day)
       .validate();
     importChecker.doImportWithBalance()
-      .setAmountAndEnter(position);
+      .setAmountAndEnterInImport(position);
   }
 
   public void importOfxFile(String name, String bank) {
     importFile(new String[]{name}, bank, null, null);
+  }
+
+  public void importOfxFile(String name, Double amount) {
+    importFile(new String[]{name}, null, amount, null);
   }
 
   public void importQifFile(String file, String bank) {
@@ -107,7 +113,7 @@ public class OperationChecker {
   }
 
   public void importQifFiles(String bank, String... files) {
-    importFile(files, bank, null, null);
+    importFile(files, bank, 0., null);
   }
 
   private void importFile(final String[] fileNames, final String bank, final Double amount, final String targetAccount) {
@@ -115,12 +121,6 @@ public class OperationChecker {
       .init(importMenu.triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window importDialog) throws Exception {
-
-//          WindowInterceptor.init(importDialog.getButton("Browse").triggerClick())
-//            .process(FileChooserHandler.init().select(fileNames))
-//            .run();
-
-
           TextBox fileField = importDialog.getInputTextBox("fileField");
           String txt = "";
           for (String name : fileNames) {
@@ -146,17 +146,22 @@ public class OperationChecker {
           for (int i = 0; i < fileNames.length - 2; i++) {
             okButton.click();
           }
+          Trigger trigger;
           if (amount != null) {
             Window window = WindowInterceptor.getModalDialog(okButton.triggerClick());
             AccountPositionEditionChecker accountPosition = new AccountPositionEditionChecker(window);
             accountPosition.setAmount(amount);
-            return accountPosition.triggerValidate();
+            trigger = accountPosition.triggerValidate();
           }
-          return okButton.triggerClick();
+          else {
+            trigger = okButton.triggerClick();
+          }
+          ImportChecker.ImportCompleteWindowHandler importCompleteWindowHandler =
+            new ImportChecker.ImportCompleteWindowHandler(-1, -1);
+          return importCompleteWindowHandler.process(WindowInterceptor.getModalDialog(trigger));
         }
       })
       .run();
-
   }
 
   public void exportOfxFile(String name) {

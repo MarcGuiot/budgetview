@@ -28,6 +28,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
   private GlobRepository parentRepository;
   private GlobLinkComboEditor updateModeCombo;
   private JLabel titleLabel;
+  private GlobsPanelBuilder builder;
 
   public AccountEditionDialog(final GlobRepository parentRepository, Directory directory) {
     this(directory.get(JFrame.class), parentRepository, directory);
@@ -42,7 +43,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountEditionDialog.splits",
                                                       localRepository, localDirectory);
 
-    titleLabel = builder.add("title", new JLabel()).getComponent();
+    titleLabel = builder.add("title", new JLabel("accountEditionDialog")).getComponent();
 
     builder.add("message", messageLabel);
 
@@ -119,7 +120,8 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
       }
     });
 
-    dialog.addPanelWithButtons(builder.<JPanel>load(),
+    this.builder = builder;
+    dialog.addPanelWithButtons(this.builder.<JPanel>load(),
                                new OkAction(), new CancelAction(),
                                new DeleteAction());
   }
@@ -147,6 +149,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
                                              value(Account.ACCOUNT_TYPE, type.getId()),
                                              value(Account.UPDATE_MODE, updateMode.getId()));
     doShow(newAccount, true);
+    builder.dispose();
   }
 
   public void showWithNewAccount(FieldValue... defaultValues) {
@@ -161,6 +164,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
     setBalanceEditorVisible(false);
     updateModeCombo.setEnabled(!accountHasTransactions(account));
     doShow(localRepository.get(account.getKey()), true);
+    builder.dispose();
   }
 
   private void doShow(Glob localAccount, boolean creation) {

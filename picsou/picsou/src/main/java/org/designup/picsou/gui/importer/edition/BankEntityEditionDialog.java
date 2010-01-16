@@ -11,6 +11,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.gui.GlobsPanelBuilder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,14 +33,18 @@ public class BankEntityEditionDialog {
       .get();
     BankEntityEditionPanel panel = new BankEntityEditionPanel(localRepository, directory);
     panel.init(accounts);
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/bankEntityEditionDialog.splits",
+                                                      localRepository, directory);
+
+    builder.add("editionPanel", panel.getPanel());
     dialog = PicsouDialog.createWithButtons(parent, directory,
-                                            panel.getPanel(),
+                                            builder.<JPanel>load(),
                                             new ValidateAction(localRepository),
                                             new CancelAction()
     );
     dialog.pack();
     dialog.showCentered();
-
+    panel.dispose();
   }
 
   private class ValidateAction extends AbstractAction {

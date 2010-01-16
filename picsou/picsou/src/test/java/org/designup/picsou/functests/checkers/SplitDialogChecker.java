@@ -64,8 +64,9 @@ public class SplitDialogChecker {
 
   public SplitDialogChecker validate() {
     Button addButton = getOkButton();
+    TextBox box = window.getTextBox("message");
     addButton.click();
-    assertTrue(window.getTextBox("message").textIsEmpty());
+    assertTrue(box.textIsEmpty());
     assertFalse(window.isVisible());
     return this;
   }

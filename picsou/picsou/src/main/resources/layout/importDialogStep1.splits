@@ -17,7 +17,7 @@
 
     <column styleClass="innerDialog">
 
-      <label text="$import.step1.title" styleClass="title"/>
+      <label text="$import.step1.title" name="title" styleClass="title"/>
 
       <htmlEditorPane text="$import.step1.select.file" marginTop="15"/>
 

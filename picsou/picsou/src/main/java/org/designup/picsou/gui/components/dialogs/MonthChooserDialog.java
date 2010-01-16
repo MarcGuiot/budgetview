@@ -11,6 +11,7 @@ import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -19,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.util.*;
 import java.util.List;
 
-public class MonthChooserDialog implements ColorChangeListener {
+public class MonthChooserDialog implements ColorChangeListener, Disposable {
 
   private JLabel nextYearLabel = new JLabel();
   private JLabel previousYearLabel = new JLabel();
@@ -39,6 +40,7 @@ public class MonthChooserDialog implements ColorChangeListener {
   private Color todayColor;
   private Color defaultForegroundColor;
   private Set<Integer> forceDesable = new HashSet<Integer>();
+  private SplitsBuilder builder;
 
   public MonthChooserDialog(Window parent, final Directory directory) {
     this.directory = directory;
@@ -49,7 +51,7 @@ public class MonthChooserDialog implements ColorChangeListener {
   }
 
   private JPanel createPanel() {
-    SplitsBuilder builder = new SplitsBuilder(directory);
+    builder = new SplitsBuilder(directory);
     builder.setSource(MonthChooserDialog.class, "/layout/monthChooserDialog.splits");
     builder.add("previousYearLabel", previousYearLabel);
     builder.add("currentYearLabel", currentYearLabel);
@@ -89,6 +91,7 @@ public class MonthChooserDialog implements ColorChangeListener {
       }
     });
 
+    builder.addDisposable(this);
     return builder.load();
   }
 
@@ -117,6 +120,7 @@ public class MonthChooserDialog implements ColorChangeListener {
     update();
     dialog.pack();
     dialog.showCentered();
+    builder.dispose();
     dialog = null;
     return newMonth;
   }
@@ -165,6 +169,10 @@ public class MonthChooserDialog implements ColorChangeListener {
     todayColor = colorLocator.get("monthChooser.today");
     defaultForegroundColor = colorLocator.get("monthChooser.text");
     update();
+  }
+
+  public void dispose() {
+    this.directory.get(ColorService.class).removeListener(this);
   }
 
   private class MonthsComponentFactory implements RepeatComponentFactory<Integer> {

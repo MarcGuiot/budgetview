@@ -17,6 +17,7 @@ public class SlaValidationDialog {
   private boolean accepted = false;
   private JLabel errorMessage;
   private JCheckBox checkBox;
+  private SplitsBuilder builder;
 
   public static boolean termsAccepted(Window owner, Directory directory) {
     SlaValidationDialog dialog = new SlaValidationDialog(owner, directory);
@@ -25,8 +26,7 @@ public class SlaValidationDialog {
 
   public SlaValidationDialog(Window owner, Directory directory) {
 
-    SplitsBuilder builder =
-      SplitsBuilder.init(directory).setSource(getClass(), "/layout/slaValidationDialog.splits");
+    builder = SplitsBuilder.init(directory).setSource(getClass(), "/layout/slaValidationDialog.splits");
 
     errorMessage = builder.add("errorMessage", new JLabel()).getComponent();
     errorMessage.setVisible(false);
@@ -48,6 +48,7 @@ public class SlaValidationDialog {
 
   public boolean show() {
     dialog.showCentered();
+    builder.dispose();
     return accepted;
   }
 

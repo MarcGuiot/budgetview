@@ -109,7 +109,7 @@ public class CategorizationView extends View implements TableView, Filterable {
   private GlobsPanelBuilder createPanelBuilder() {
     JFrame parent = directory.get(JFrame.class);
 
-    seriesEditionDialog = new SeriesEditionDialog(parent, this.repository, directory);
+    seriesEditionDialog = directory.get(SeriesEditionDialog.class);
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorizationView.splits",
                                                       this.repository, directory);
@@ -331,6 +331,9 @@ public class CategorizationView extends View implements TableView, Filterable {
                       new SpecialCategorizationRepeatFactory());
 
     parentBuilder.add(name, builder);
+  }
+
+  public void reset() {
   }
 
   public class SpecialCategorizationRepeatFactory implements RepeatComponentFactory<SpecialCategorizationPanel> {

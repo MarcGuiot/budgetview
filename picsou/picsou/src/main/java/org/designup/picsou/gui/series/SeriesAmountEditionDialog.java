@@ -92,7 +92,7 @@ public class SeriesAmountEditionDialog {
     select(series, months);
     propagationCheckBox.setSelected(false);
     amountEditor.selectAll();
-    dialog.showCentered();
+    GuiUtils.showCentered(dialog);
   }
 
   private void loadGlobs(Glob series) {
