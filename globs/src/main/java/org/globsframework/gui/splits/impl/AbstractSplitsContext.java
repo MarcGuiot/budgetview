@@ -5,6 +5,7 @@ import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.repeat.RepeatHandler;
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import javax.swing.*;
@@ -214,7 +215,15 @@ public abstract class AbstractSplitsContext implements SplitsContext {
       Component sourceComponent = getSourceComponent(context);
       componentListener = createListener();
       sourceComponent.addComponentListener(componentListener);
-      targetComponent.setVisible(sourceComponent.isVisible());
+      setVisible(sourceComponent.isVisible());
+    }
+
+    private void setVisible(boolean visible) {
+      targetComponent.setVisible(visible);
+      if (targetComponent instanceof JComponent) {
+        GuiUtils.revalidate((JComponent)targetComponent);
+      }
+
     }
 
     public void dispose(SplitsContext context) {
@@ -235,11 +244,11 @@ public abstract class AbstractSplitsContext implements SplitsContext {
     private ComponentAdapter createListener() {
       return new ComponentAdapter() {
         public void componentShown(ComponentEvent e) {
-          targetComponent.setVisible(true);
+          setVisible(true);
         }
 
         public void componentHidden(ComponentEvent e) {
-          targetComponent.setVisible(false);
+          setVisible(false);
         }
       };
     }
