@@ -106,6 +106,9 @@
            foreground="#FF0000" font="-,bold,12"
            fill="horizontal" anchor="center"/>
 
+    <style selector="htmlEditorPane.errorMessage"
+           foreground="#FF0000" font="-,bold,12" fill="horizontal" anchor="center"/>
+
     <!-- Hyperlinks -->
 
     <ui name="hyperlinkButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"/>
@@ -141,7 +144,7 @@
     <style selector=".innerBlockBackground"
            opaque="true" background="block.inner.bg" border="line(block.inner.border)"
            marginBottom="10" weightY="100"/>
-    <style selector=".innerBlock scrollPane" border="line(block.inner.border)"
+    <style selector=".innerBlock scrollPane" border="matte(1,1,0,1,block.inner.border)"
            marginBottom="10" weightY="100"/>
 
     <style selector=".innerBlock label.item" foreground="block.inner.item" font="-,bold,13" anchor="top"/>
@@ -165,18 +168,17 @@
            fill="none" anchor="right" horizontalAlignment="right"
            foreground="block.amount.actual.link" font="-,bold,11"/>
 
-    <!-- Main window message panel -->
-    <ui name="mainPanelMessage" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        borderWidth="1" cornerRadius="6"
-        topColor="mainpanel.message.top"
-        bottomColor="mainpanel.message.bottom"
-        borderColor="mainpanel.message.border"/>
-    <style selector=".mainPanelMessage" ui="mainPanelMessage"
-           fill="horizontal" anchor="center" weightX="100" weightY="0" marginLeft="10" marginRight="10"
-           border="empty(0,0,10,0)"/>
-    <style selector=".mainPanelMessage htmlEditorPane" fill="horizontal" anchor="center"
-           foreground="mainpanel.message" weightX="10" weightY="0" border="empty(5,20,5,0)"/>
-    <style selector=".mainPanelMessage button" weightX="0" border="empty(5,0,5,20)"/>
+    <!-- Block footer -->
+    <style selector=".footer" background="block.footer.bg" border="matte(1,0,0,0,block.footer.top)"
+           opaque="true"/>
+    <style selector=".footer button" ui="hyperlinkButtonWithoutUnderline" foreground="block.footer.button"
+           marginTop="2" marginBottom="2"/>
+
+    <style selector=".blockScrollBorder" border="line(block.inner.border)"/>
+    <style selector=".blockScrollBorder scrollPane" border="none" marginBottom="0"/>
+
+    <style selector=".preFooter" opaque="true" background="block.prefooter.bg"
+           border="matte(1,0,0,0,block.prefooter.top)"/>
 
     <!-- Icon buttons -->
     <style selector=".iconButtonGroup" opaque="false" marginTop="5" weightY="0"/>
@@ -227,6 +229,19 @@
            minimumSize="(18,20)" preferredSize="(18,20)" maximumSize="(18,20)"
            fill='none' weightX='0'/>
 
+    <!-- Main window message panel -->
+    <ui name="mainPanelMessage" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        borderWidth="1" cornerRadius="6"
+        topColor="mainpanel.message.top"
+        bottomColor="mainpanel.message.bottom"
+        borderColor="mainpanel.message.border"/>
+    <style selector=".mainPanelMessage" ui="mainPanelMessage"
+           fill="horizontal" anchor="center" weightX="100" weightY="0" marginLeft="10" marginRight="10"
+           border="empty(0,0,10,0)"/>
+    <style selector=".mainPanelMessage htmlEditorPane" fill="horizontal" anchor="center"
+           foreground="mainpanel.message" weightX="10" weightY="0" border="empty(5,20,5,0)"/>
+    <style selector=".mainPanelMessage button" weightX="0" border="empty(5,0,5,20)"/>
+
     <!-- Gauge -->
     <style selector=".totalGauge"
            opaque="false"
@@ -240,7 +255,7 @@
 
     <style selector=".detailGauge"
            opaque="false" background="block.inner.bg"
-           fill="horizontal" anchor="center" preferredSize="(40,30)" weightX="10"
+           fill="horizontal" anchor="center" preferredSize="(40,22)" weightX="10"
            marginLeft="6" marginRight="6"
            borderColor="gauge.detail.border"
            emptyColorTop="gauge.detail.empty.top" emptyColorBottom="gauge.detail.empty.bottom"
@@ -262,7 +277,6 @@
     <!-- Split panes -->
     <style selector="horizontalSplit" showGripper="false" dividerSize="20" opaque="false"/>
     <style selector="verticalSplit" showGripper="false" dividerSize="10" opaque="false"/>
-
 
     <!-- Inner dialog blocks -->
     <ui name="dialogBlockUI" class="org.globsframework.gui.splits.components.StyledPanelUI"

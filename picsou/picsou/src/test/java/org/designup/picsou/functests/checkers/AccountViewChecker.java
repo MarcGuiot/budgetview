@@ -148,5 +148,4 @@ public class AccountViewChecker extends GuiChecker {
     Panel panel = getAccountPanel(accountName);
     checkComponentVisible(panel, JButton.class, "gotoWebsite", false);
   }
-
 }

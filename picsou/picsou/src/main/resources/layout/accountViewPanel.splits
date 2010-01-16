@@ -16,46 +16,50 @@
         <panel ref="budgetSummaryView" marginTop="5"/>
       </panel>
 
-      <scrollPane marginTop="0" marginBottom="0" weightY="100">
-        <column>
-          <repeat ref="accountRepeat" marginTop="5" marginBottom="15">
-            <column name="accountParent" margin="5" marginBottom="10">
-              <grid>
-                <button ref="accountName" gridPos="(0,0)" anchor="west" styleClass="itemLink"/>
-                <button action="gotoWebsite" gridPos="(0,1)" anchor="west" styleClass="website"/>
-                <button ref="accountPosition" gridPos="(1,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
-                <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east" styleClass="subitem"/>
-                <label ref="estimatedAccountPosition" gridPos="(2,0)"
-                       tooltipText="$budgetSummaryView.estimated.tooltip"
-                       anchor="east" styleClass="subitem" font="-,plain,12" marginLeft="10"/>
-                <label ref="estimatedAccountPositionDate" gridPos="(2,1)"
-                       anchor="east" styleClass="subitem" marginLeft="10"
-                       autoHideSource="estimatedAccountPosition"/>
-              </grid>
-            </column>
-          </repeat>
-          <filler fill="vertical"/>
-        </column>
-      </scrollPane>
+      <column styleClass="blockScrollBorder">
+        <scrollPane marginTop="0" marginBottom="0" weightY="100">
+          <column>
+            <repeat ref="accountRepeat" marginTop="5" marginBottom="15">
+              <column name="accountParent" margin="5" marginBottom="5">
+                <grid>
+                  <button ref="accountName" gridPos="(0,0)" anchor="west" styleClass="itemLink"/>
+                  <button action="gotoWebsite" gridPos="(0,1)" anchor="west" styleClass="website"/>
+                  <button ref="accountPosition" gridPos="(1,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
+                  <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east" styleClass="subitem"/>
+                  <label ref="estimatedAccountPosition" gridPos="(2,0)"
+                         tooltipText="$budgetSummaryView.estimated.tooltip"
+                         anchor="east" styleClass="subitem" font="-,plain,12" marginLeft="10"/>
+                  <label ref="estimatedAccountPositionDate" gridPos="(2,1)"
+                         anchor="east" styleClass="subitem" marginLeft="10"
+                         autoHideSource="estimatedAccountPosition"/>
+                </grid>
+              </column>
+            </repeat>
+            <filler fill="vertical"/>
+          </column>
+        </scrollPane>
 
-      <row>
-        <row styleClass="iconButtonGroup">
-          <button action="createAccount" styleClass="create" tooltipText="$accountView.create.tooltip"/>
+        <row styleClass="preFooter">
+          <row marginTop="5" marginBottom="5">
+            <filler fill="horizontal"/>
+            <label text="$accountView.reference.title"
+                   styleClass="totalAmountTitle" autoHideSource="referencePosition"
+                   marginTop="0" marginBottom="0" marginRight="5"/>
+            <label ref="referencePosition"
+                   styleClass="referenceAmount" tooltipText="$accountView.reference.tooltip"
+                   marginTop="0" marginBottom="0" marginRight="5"/>
+            <label ref="referencePositionDate"
+                   styleClass="totalAmountTitle" autoHideSource="referencePosition"
+                   marginTop="0" marginBottom="0"/>
+          </row>
         </row>
-        <filler fill="horizontal"/>
-        <button action="accountPositionThreshold" styleClass="hyperlink"
-                tooltipText="$accountPositionThresholdAction.tooltip"/>
-        <filler fill="horizontal"/>
-        <label text="$accountView.reference.title"
-               styleClass="totalAmountTitle" autoHideSource="referencePosition"
-               marginTop="0" marginBottom="0" marginRight="5"/>
-        <label ref="referencePosition"
-               styleClass="referenceAmount" tooltipText="$accountView.reference.tooltip"
-               marginTop="0" marginBottom="0" marginRight="5"/>
-        <label ref="referencePositionDate"
-               styleClass="totalAmountTitle" autoHideSource="referencePosition"
-               marginTop="0" marginBottom="0"/>
-      </row>
+        <row styleClass="footer">
+          <button action="createAccount" styleClass="create" tooltipText="$accountView.create.tooltip"/>
+          <filler fill="horizontal"/>
+          <button action="accountPositionThreshold"
+                  tooltipText="$accountPositionThresholdAction.tooltip"/>
+        </row>
+      </column>
     </column>
   </panel>
 </splits>

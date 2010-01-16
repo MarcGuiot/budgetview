@@ -63,6 +63,10 @@ public class GotoAccountWebsiteAction extends AbstractAction implements ChangeSe
   }
 
   private static String getName(Glob account, GlobRepository repository) {
-    return Lang.get("accountView.goto.website", Account.getBank(account, repository).get(Bank.NAME));
+    Glob bank = Account.findBank(account, repository);
+    if (bank == null) {
+      return "";
+    }
+    return Lang.get("accountView.goto.website", bank.get(Bank.NAME));
   }
 }
