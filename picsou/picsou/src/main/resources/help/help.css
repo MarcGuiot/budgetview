@@ -1,0 +1,12 @@
+td {
+  vertical-align: top;
+}
+
+td.field {
+  vertical-align: top;
+  margin-right: 5px;
+}
+
+div.centered {
+  text-align: center;
+}

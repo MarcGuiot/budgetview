@@ -115,6 +115,20 @@ public class ImportChecker {
     return this;
   }
 
+  public ImportChecker checkSiteHelpAvailable() {
+    assertThat(dialog.getButton("openSiteHelp").isEnabled());
+    return this;
+  }
+
+  public ImportChecker checkSiteHelpUnavailable() {
+    assertFalse(dialog.getButton("openSiteHelp").isEnabled());
+    return this;
+  }
+
+  public HelpChecker openSiteHelp() {
+    return HelpChecker.open(dialog.getButton("openSiteHelp").triggerClick());
+  }
+
   public ImportChecker checkDates(String... dates) {
     ComboBox dateFormatCombo = dialog.getComboBox("dateFormatCombo");
     assertTrue(dateFormatCombo.contentEquals(dates));
@@ -336,9 +350,7 @@ public class ImportChecker {
       MessageDialogChecker checker = new MessageDialogChecker(window);
       if (importedTransactionCount != -1) {
         checker
-          .checkMessageContains(Lang.get("import.end.info.operations." +
-                                         ImportDialog.normalize(importedTransactionCount)
-                                         + "." + ImportDialog.normalize(autocategorizedTransactionCount),
+          .checkMessageContains(Lang.get(ImportDialog.getEndOfImportMessageKey(importedTransactionCount, autocategorizedTransactionCount),
                                          Integer.toString(importedTransactionCount),
                                          Integer.toString(autocategorizedTransactionCount)));
       }

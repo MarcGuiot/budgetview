@@ -35,11 +35,12 @@ public class HelpDialog {
 
   private void createDialog(Window owner, GlobRepository repository, Directory directory) {
     builder = new GlobsPanelBuilder(getClass(), "/layout/helpDialog.splits",
-                                                      repository, directory);
+                                    repository, directory);
     title = builder.add("title", new JLabel()).getComponent();
     editor = builder.add("editor", new JEditorPane()).getComponent();
-
     editor.addHyperlinkListener(new HyperlinkHandler(directory, owner));
+    GuiUtils.initHtmlComponent(editor);
+    GuiUtils.loadCssResource("/help/help.css", editor, HelpDialog.class);
 
     builder.add("home", homePageAction);
     builder.add("forward", forwardPageAction);

@@ -48,17 +48,33 @@ public class Lang {
     return getFile("help", fileName);
   }
 
+  public static String findHelpFile(String fileName) {
+    return findFile("help", fileName);
+  }
+
   public static String getDocFile(String fileName) {
     return getFile("docs", fileName);
   }
 
-  private static String getFile(String dir, String fileName) {
-    String filePath = "/" + dir + "/" + LOCALE.getLanguage() + "/" + fileName;
+  private static String findFile(String dir, String fileName) {
+    String filePath = getFilePath(dir, fileName);
     InputStream stream = Lang.class.getResourceAsStream(filePath);
     if (stream == null) {
-      throw new ResourceAccessFailed("File " + filePath);
+      return null;
     }
     return Files.loadStreamToString(stream, "UTF-8");
+  }
+
+  private static String getFile(String dir, String fileName) {
+    String content = findFile(dir, fileName);
+    if (content == null) {
+      throw new ResourceAccessFailed("File " + getFilePath(dir, fileName));
+    }
+    return content;
+  }
+
+  private static String getFilePath(String dir, String fileName) {
+    return "/" + dir + "/" + LOCALE.getLanguage() + "/" + fileName;
   }
 
   private static String getMessage(String key) {

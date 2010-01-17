@@ -1,10 +1,15 @@
 package org.designup.picsou.gui.help;
 
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.model.Bank;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Strings;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HelpService {
 
@@ -13,6 +18,9 @@ public class HelpService {
   private Directory directory;
   private HelpSource source;
   private Window lastOwner;
+
+  private static final String BANK_SITES = "bankSites";
+  private Map<String, String> bankTitles = new HashMap<String, String>();
 
   public HelpService(GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -40,17 +48,43 @@ public class HelpService {
     dialog.show(helpRef);
   }
 
+  public boolean hasBankHelp(Glob bank) {
+    return Strings.isNotEmpty(source.findContent(getBankSiteRef(bank)));
+  }
+
+  public void showBankHelp(Glob bank, Window owner) {
+    String siteRef = getBankSiteRef(bank);
+    bankTitles.put(siteRef, Lang.get("help.bankDownloadInstructions", bank.get(Bank.NAME)));
+    show(siteRef, owner);
+  }
+
+  private String getBankSiteRef(Glob bank) {
+    return BANK_SITES + "." + bank.get(Bank.NAME).replaceAll("[\\s]+", "_").toLowerCase();
+  }
+
   public void reset(){
     dialog = null;
   }
 
   private class I18NHelpSource implements HelpSource {
     public String getTitle(String ref) {
+      String bankRef = bankTitles.get(ref);
+      if (bankRef != null) {
+        return bankRef;
+      }
       return Lang.get("help." + ref);
     }
 
     public String getContent(String ref) {
-      return Lang.getHelpFile(ref + ".html");
+      return Lang.getHelpFile(getFilePath(ref));
+    }
+
+    public String findContent(String ref) {
+      return Lang.findHelpFile(getFilePath(ref));
+    }
+
+    private String getFilePath(String ref) {
+      return ref.replaceAll("\\.", "/") + ".html";
     }
   }
 }
