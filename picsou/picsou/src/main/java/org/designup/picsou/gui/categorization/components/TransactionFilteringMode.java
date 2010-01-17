@@ -56,10 +56,9 @@ public enum TransactionFilteringMode {
         if (month == null) {
           return GlobMatchers.NONE;
         }
-        int lastMonth = Month.normalize(month - 2);
         return GlobMatchers.and(
           GlobMatchers.fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-          GlobMatchers.fieldGreaterOrEqual(Transaction.MONTH, lastMonth)
+          GlobMatchers.fieldGreaterOrEqual(Transaction.MONTH, Month.previous(month, 2))
         );
     }
     throw new UnexpectedApplicationState(name());

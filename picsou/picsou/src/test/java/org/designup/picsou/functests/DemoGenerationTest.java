@@ -240,14 +240,14 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .setAmount(50.0)
       .validate();
 
-    timeline.selectMonth(Month.toString(Month.normalize(thirdMonth + 2)));
+    timeline.selectMonth(Month.toString(Month.next(thirdMonth, 2)));
     budgetView.extras.createSeries()
       .setName("Cadeaux")
       .selectAllMonths()
       .setAmount(150)
       .validate();
 
-    int holidaysMonth = Month.normalize(thirdMonth + 4);
+    int holidaysMonth = Month.next(thirdMonth, 4);
     timeline.selectMonth(Month.toString(holidaysMonth));
     budgetView.extras.createSeries()
       .setName("Vacances")
@@ -274,7 +274,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    timeline.selectMonth(Month.toString(Month.normalize(thirdMonth + 1)));
+    timeline.selectMonth(Month.toString(Month.next(thirdMonth)));
     budgetView.savings.createSeries()
       .setName("Prov. vacances")
       .setFromAccount("Compte courant")

@@ -29,16 +29,6 @@ public class SeriesEvolutionLabelColumn implements GlobTableColumn {
     this.editor = new SeriesEvolutionLabelEditor(view, repository, directory, colors, seriesEditionDialog);
   }
 
-  public void setReferenceMonthId(Integer monthId) {
-    if ((monthId == null) || !repository.contains(Key.create(Month.TYPE, monthId))) {
-      referenceMonthId = null;
-    }
-    else {
-      referenceMonthId = Month.normalize(monthId);
-    }
-    editor.setReferenceMonth(referenceMonthId);
-  }
-
   public String getName() {
     return "";
   }
