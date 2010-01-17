@@ -5,7 +5,7 @@
   <styles>
     <style selector="scrollPane" marginBottom="10"/>
     <style selector="button.bankLink" ui="hyperlinkButton"
-           foreground="hyperlink" fill="none" anchor="left" marginLeft="40"/>
+           foreground="hyperlink" fill="none" anchor="center"/>
 
   </styles>
 
@@ -30,7 +30,7 @@
 
         <textArea styleClass="multiLineLabel" text="$import.step1.bank.message" font="-,plain,11" marginTop="10"/>
         <column margin="5">
-          <comboBox ref="banks" marginRight="10" anchor="center" weightX="100"/>
+          <comboBox ref="banks" marginRight="10" anchor="center" weightX="100" marginBottom="10"/>
           <button action="openSiteHelp" styleClass="bankLink"/>
           <button action="openUrl" styleClass="bankLink"/>
         </column>
