@@ -44,6 +44,9 @@ public class SavingsBudgetStat {
   public static DoubleField SAVINGS_IN_REMAINING;
 
   @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_IN_OVERRUN;
+
+  @DefaultDouble(0.0)
   public static DoubleField SAVINGS_IN_PLANNED;
 
   @DefaultDouble(0.0)
@@ -51,6 +54,9 @@ public class SavingsBudgetStat {
 
   @DefaultDouble(0.0)
   public static DoubleField SAVINGS_OUT_REMAINING;
+
+  @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_OUT_OVERRUN;
 
   @DefaultDouble(0.0)
   public static DoubleField SAVINGS_OUT_PLANNED;
@@ -79,6 +85,14 @@ public class SavingsBudgetStat {
     switch (budgetArea) {
       case SAVINGS:
         return SAVINGS_IN_REMAINING;
+    }
+    throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
+  }
+
+  public static DoubleField getOverrun(BudgetArea budgetArea) {
+    switch (budgetArea) {
+      case SAVINGS:
+        return SAVINGS_IN_OVERRUN;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
   }

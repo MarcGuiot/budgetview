@@ -144,12 +144,12 @@ public class BudgetSummaryDetailsDialog {
     builder.addLabel("estimatedPosition", BudgetStat.TYPE, new EspectedPositionStringifier()).getComponent();
     builder.addLabel("estimatedPositionDate", BudgetStat.TYPE, new PositionDateStringifier()).getComponent();
     builder.addLabel("initialPosition", BudgetStat.TYPE, new InitialPositionStringifier()).getComponent();
-    addLabel(builder, "remainingIncome", BudgetStat.INCOME_REMAINING, false);
-    addLabel(builder, "remainingFixed", BudgetStat.RECURRING_REMAINING, true);
-    addLabel(builder, "remainingEnvelope", BudgetStat.ENVELOPES_REMAINING, true);
-    addLabel(builder, "remainingInSavings", BudgetStat.SAVINGS_IN_REMAINING, false);
-    addLabel(builder, "remainingOutSavings", BudgetStat.SAVINGS_OUT_REMAINING, true);
-    addLabel(builder, "remainingExtras", BudgetStat.EXTRAS_REMAINING, true);
+    addLabel(builder, "remainingIncome", false, BudgetStat.INCOME_POSITIVE_REMAINING, BudgetStat.INCOME_NEGATIVE_REMAINING);
+    addLabel(builder, "remainingFixed", true, BudgetStat.RECURRING_POSITIVE_REMAINING, BudgetStat.RECURRING_NEGATIVE_REMAINING);
+    addLabel(builder, "remainingEnvelope", true, BudgetStat.ENVELOPES_POSITIVE_REMAINING, BudgetStat.ENVELOPES_NEGATIVE_REMAINING);
+    addLabel(builder, "remainingInSavings", false, BudgetStat.SAVINGS_IN_POSITIVE_REMAINING);
+    addLabel(builder, "remainingOutSavings", true, BudgetStat.SAVINGS_OUT_NEGATIVE_REMAINING);
+    addLabel(builder, "remainingExtras", true, BudgetStat.EXTRAS_POSITIVE_REMAINING, BudgetStat.EXTRAS_NEGATIVE_REMAINING);
 
       builder.add("thresholdIndicator",
                   new PositionThresholdIndicator(localRepository, directory,
@@ -192,8 +192,8 @@ public class BudgetSummaryDetailsDialog {
     balanceChart.update(incomeDataset, expensesDataset, balanceChartColors);
   }
 
-  private void addLabel(GlobsPanelBuilder builder, String name, DoubleField field, boolean invert) {
-    builder.addLabel(name, BudgetStat.TYPE, GlobListStringifiers.sum(field, Formatting.DECIMAL_FORMAT, invert));
+  private void addLabel(GlobsPanelBuilder builder, String name, boolean invert, DoubleField ...fields) {
+    builder.addLabel(name, BudgetStat.TYPE, GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT, invert, fields));
   }
 
   private Glob getLastBudgetStat(GlobList list) {

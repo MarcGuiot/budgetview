@@ -53,7 +53,8 @@ public class GlobListStringifiers {
     };
   }
 
-  public static GlobListStringifier sum(final DecimalFormat format, final DoubleField... fields) {
+  public static GlobListStringifier sum(final DecimalFormat format, boolean invert, final DoubleField... fields) {
+    final int multiplier = invert ? -1 : 1;
     return new GlobListStringifier() {
       public String toString(GlobList list, GlobRepository repository) {
         if (list.isEmpty()) {
@@ -65,7 +66,7 @@ public class GlobListStringifiers {
           for (DoubleField field : fields) {
             final Double value = glob.get(field);
             if (value != null) {
-              total += value;
+              total += value * multiplier;
             }
           }
         }

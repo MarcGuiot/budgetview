@@ -7,6 +7,7 @@ import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.CurrentMonth;
+import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.ColorService;
 import static org.globsframework.model.FieldValue.value;
@@ -22,7 +23,7 @@ import javax.swing.*;
 public class BudgetAreaSummaryComputerTest extends TestCase {
 
   public void testStandardIncome() throws Exception {
-    init(BudgetArea.INCOME, 1000, 1200, 200)
+    init(BudgetArea.INCOME, 1000, 1200, 200, 0)
       .checkObserved("1000.00")
       .checkPlanned("1200.00")
       .checkNormalTooltip()
@@ -31,7 +32,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testIncomeOverrun() throws Exception {
-    init(BudgetArea.INCOME, 1000, 1200, 300)
+    init(BudgetArea.INCOME, 1000, 1200, 300, 100)
       .checkObserved("1000.00")
       .checkPlanned("1200.00")
       .checkOverrunTooltip("1300.00", "100.00")
@@ -40,17 +41,17 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testIncomeWithNegativeObserved() throws Exception {
-    init(BudgetArea.INCOME, -200, 1200, 1000)
+    init(BudgetArea.INCOME, -200, 1200, 1000, -200)
       .checkObserved("-200.00")
       .checkPlanned("1200.00")
-      .checkNoLabelOverrun()
-      .checkGaugeErrorOverrun()
-      .checkNormalTooltip()
+//      .checkBegin()
+//      .checkGaugeErrorOverrun()
+      .checkOverrunTooltip("800.00", "200.00")
       .checkGauge(-200, 1200);
   }
 
   public void testIncomeWithNegativePlanned() throws Exception {
-    init(BudgetArea.INCOME, -200, -1200, -1000)
+    init(BudgetArea.INCOME, -200, -1200, -1000, 0)
       .checkObserved("-200.00")
       .checkPlanned("-1200.00")
       .checkNoOverrun()
@@ -58,7 +59,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testEmptyIncome() throws Exception {
-    init(BudgetArea.INCOME, 0, 0, 0)
+    init(BudgetArea.INCOME, 0, 0, 0, 0)
       .checkObserved("0.00")
       .checkPlanned("0.00")
       .checkNoOverrun()
@@ -66,7 +67,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testIncomeWithNoPlannedAndPositiveObserved() throws Exception {
-    init(BudgetArea.INCOME, 200, 0, 0)
+    init(BudgetArea.INCOME, 200, 0, 0, 200)
       .checkObserved("200.00")
       .checkPlanned("0.00")
       .checkPositiveOverrun()
@@ -75,7 +76,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testIncomeWithNoPlannedAndNegativeObserved() throws Exception {
-    init(BudgetArea.INCOME, -200, 0, 0)
+    init(BudgetArea.INCOME, -200, 0, 0, -200)
       .checkObserved("-200.00")
       .checkPlanned("0.00")
       .checkErrorOverrun()
@@ -84,7 +85,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testStandardExpenses() throws Exception {
-    init(BudgetArea.ENVELOPES, -1000, -1200, -200)
+    init(BudgetArea.ENVELOPES, -1000, -1200, -200, 0)
       .checkObserved("1000.00")
       .checkPlanned("1200.00")
       .checkNormalTooltip()
@@ -93,7 +94,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testExpensesWithNoObserved() throws Exception {
-    init(BudgetArea.ENVELOPES, 0, -1200, -1200)
+    init(BudgetArea.ENVELOPES, 0, -1200, -1200, 0)
       .checkObserved("0.00")
       .checkPlanned("1200.00")
       .checkNoOverrun()
@@ -102,7 +103,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testExpensesWithNegativeOverrun() throws Exception {
-    init(BudgetArea.ENVELOPES, -1000, -1200, -300)
+    init(BudgetArea.ENVELOPES, -1000, -1200, -300, -100)
       .checkObserved("1000.00")
       .checkPlanned("1200.00")
       .checkErrorOverrun()
@@ -111,7 +112,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testExpensesWithPositivePlanned() throws Exception {
-    init(BudgetArea.EXTRAS, 1000, 1200, 200)
+    init(BudgetArea.EXTRAS, 1000, 1200, 200, 0)
       .checkObserved("+1000.00")
       .checkPlanned("+1200.00")
       .checkNoOverrun()
@@ -120,7 +121,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testExpensesWithPositivePlannedAndOverrun() throws Exception {
-    init(BudgetArea.EXTRAS, 1000, 1200, 300)
+    init(BudgetArea.EXTRAS, 1000, 1200, 300, 100)
       .checkObserved("+1000.00")
       .checkPlanned("+1200.00")
       .checkPositiveOverrun()
@@ -129,17 +130,17 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testExpensesWithPositiveObserved() throws Exception {
-    init(BudgetArea.EXTRAS, 100, -1200, -1000)
+    init(BudgetArea.EXTRAS, 100, -1200, -1000, 100)
       .checkObserved("+100.00")
       .checkPlanned("1200.00")
-      .checkNormalTooltip()
-      .checkNoLabelOverrun()
-      .checkGaugePositiveOverrun()
+      .checkOverrunTooltip("900.00", "100.00")
+//      .checkNoLabelOverrun()
+//      .checkGaugePositiveOverrun()
       .checkGauge(100, -1200);
   }
 
   public void testEmptyExpenses() throws Exception {
-    init(BudgetArea.EXTRAS, 0, 0, 0)
+    init(BudgetArea.EXTRAS, 0, 0, 0, 0)
       .checkObserved("0.00")
       .checkPlanned("0.00")
       .checkNoOverrun()
@@ -147,7 +148,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testExpensesWithNoPlannedAndNegativeObserved() throws Exception {
-    init(BudgetArea.EXTRAS, -200, 0, 0)
+    init(BudgetArea.EXTRAS, -200, 0, 0, -200)
       .checkObserved("200.00")
       .checkPlanned("0.00")
       .checkErrorOverrun()
@@ -156,7 +157,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testExpensesWithNoPlannedAndPositiveObserved() throws Exception {
-    init(BudgetArea.EXTRAS, 200, 0, 0)
+    init(BudgetArea.EXTRAS, 200, 0, 0, 200)
       .checkObserved("+200.00")
       .checkPlanned("0.00")
       .checkPositiveOverrun()
@@ -165,7 +166,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testPastExpensesWithOverrun() throws Exception {
-    init(BudgetArea.EXTRAS, 200809, -110, -100, 0)
+    initMonth(BudgetArea.EXTRAS, 200809, -110, -100, 0, -10)
       .checkObserved("110.00")
       .checkPlanned("100.00")
       .checkErrorOverrun()
@@ -174,7 +175,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
   }
 
   public void testPastExpensesWithNoObserved() throws Exception {
-    init(BudgetArea.EXTRAS, 200809, 0, -100, 0)
+    initMonth(BudgetArea.EXTRAS, 200809, 0, -100, 0, 0)
       .checkObserved("0.00")
       .checkPlanned("100.00")
       .checkNoOverrun()
@@ -182,11 +183,12 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
       .checkGauge(0, -100);
   }
 
-  private Checker init(BudgetArea budgetArea, double observed, double planned, double remaining) {
-    return init(budgetArea, 200808, observed, planned, remaining);
+  private Checker init(BudgetArea budgetArea, double observed, double planned, double remaining, final int overrun) {
+    return initMonth(budgetArea, 200808, observed, planned, remaining, overrun);
   }
 
-  private Checker init(BudgetArea budgetArea, int currentMonth, double observed, double planned, double remaining) {
+  private Checker initMonth(BudgetArea budgetArea, int currentMonth, double observed, double planned,
+                            double remaining, final double overrun) {
     GlobRepository repository = new DefaultGlobRepository();
 
     Glob budgetStat =
@@ -194,9 +196,12 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
                         value(BudgetStat.MONTH, 200808),
                         value(BudgetStat.getObserved(budgetArea), observed),
                         value(BudgetStat.getPlanned(budgetArea), planned),
-                        value(BudgetStat.getRemaining(budgetArea), remaining));
+                        value(overrun < 0 ? BudgetStat.getNegativeOverrun(budgetArea) : BudgetStat.getPositiveOverrun(budgetArea),
+                              overrun),
+                        value(remaining < 0 ? BudgetStat.getNegativeRemaining(budgetArea) : BudgetStat.getPositiveRemaining(budgetArea),
+                              remaining));
 
-    repository.create(CurrentMonth.KEY, value(CurrentMonth.LAST_TRANSACTION_MONTH, currentMonth));
+    repository.create(CurrentMonth.KEY, value(CurrentMonth.CURRENT_MONTH, currentMonth));
 
     return new Checker(budgetArea, budgetStat, repository);
   }
@@ -282,6 +287,10 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
       assertFalse(computer.hasPositiveOverrun());
       assertTrue(gauge.isErrorOverrunShown());
       assertFalse(gauge.isPositiveOverrunShown());
+      return this;
+    }
+    public Checker checkBegin(){
+      assertTrue(Amounts.isNotZero(gauge.getBeginPercent()));
       return this;
     }
 

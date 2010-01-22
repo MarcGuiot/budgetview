@@ -36,7 +36,10 @@ public class BudgetStat {
   public static DoubleField INCOME;
 
   @DefaultDouble(0.0)
-  public static DoubleField INCOME_REMAINING;
+  public static DoubleField INCOME_POSITIVE_REMAINING;
+
+  @DefaultDouble(0.0)
+  public static DoubleField INCOME_NEGATIVE_REMAINING;
 
   @DefaultDouble(0.0)
   public static DoubleField INCOME_PLANNED;
@@ -45,10 +48,19 @@ public class BudgetStat {
   public static DoubleField INCOME_SUMMARY;
 
   @DefaultDouble(0.0)
+  public static DoubleField INCOME_POSITIVE_OVERRUN;
+
+  @DefaultDouble(0.0)
+  public static DoubleField INCOME_NEGATIVE_OVERRUN;
+
+  @DefaultDouble(0.0)
   public static DoubleField EXPENSE;
 
   @DefaultDouble(0.0)
   public static DoubleField EXPENSE_REMAINING;
+
+  @DefaultDouble(0.0)
+  public static DoubleField EXPENSE_OVERRUN;
 
   @DefaultDouble(0.0)
   public static DoubleField EXPENSE_PLANNED;
@@ -60,7 +72,10 @@ public class BudgetStat {
   public static DoubleField RECURRING;
 
   @DefaultDouble(0.0)
-  public static DoubleField RECURRING_REMAINING;
+  public static DoubleField RECURRING_POSITIVE_REMAINING;
+
+  @DefaultDouble(0.0)
+  public static DoubleField RECURRING_NEGATIVE_REMAINING;
 
   @DefaultDouble(0.0)
   public static DoubleField RECURRING_PLANNED;
@@ -69,10 +84,19 @@ public class BudgetStat {
   public static DoubleField RECURRING_SUMMARY;
 
   @DefaultDouble(0.0)
+  public static DoubleField RECURRING_POSITIVE_OVERRUN;
+
+  @DefaultDouble(0.0)
+  public static DoubleField RECURRING_NEGATIVE_OVERRUN;
+
+  @DefaultDouble(0.0)
   public static DoubleField ENVELOPES;
 
   @DefaultDouble(0.0)
-  public static DoubleField ENVELOPES_REMAINING;
+  public static DoubleField ENVELOPES_POSITIVE_REMAINING;
+
+  @DefaultDouble(0.0)
+  public static DoubleField ENVELOPES_NEGATIVE_REMAINING;
 
   @DefaultDouble(0.0)
   public static DoubleField ENVELOPES_PLANNED;
@@ -81,10 +105,19 @@ public class BudgetStat {
   public static DoubleField ENVELOPES_SUMMARY;
 
   @DefaultDouble(0.0)
+  public static DoubleField ENVELOPES_POSITIVE_OVERRUN;
+
+  @DefaultDouble(0.0)
+  public static DoubleField ENVELOPES_NEGATIVE_OVERRUN;
+
+  @DefaultDouble(0.0)
   public static DoubleField EXTRAS;
 
   @DefaultDouble(0.0)
-  public static DoubleField EXTRAS_REMAINING;
+  public static DoubleField EXTRAS_POSITIVE_REMAINING;
+
+  @DefaultDouble(0.0)
+  public static DoubleField EXTRAS_NEGATIVE_REMAINING;
 
   @DefaultDouble(0.0)
   public static DoubleField EXTRAS_PLANNED;
@@ -93,10 +126,19 @@ public class BudgetStat {
   public static DoubleField EXTRAS_SUMMARY;
 
   @DefaultDouble(0.0)
+  public static DoubleField EXTRAS_POSITIVE_OVERRUN;
+
+  @DefaultDouble(0.0)
+  public static DoubleField EXTRAS_NEGATIVE_OVERRUN;
+
+  @DefaultDouble(0.0)
   public static DoubleField OTHER;
 
   @DefaultDouble(0.0)
-  public static DoubleField OTHER_REMAINING;
+  public static DoubleField OTHER_POSITIVE_REMAINING;
+
+  @DefaultDouble(0.0)
+  public static DoubleField OTHER_NEGATIVE_REMAINING;
 
   @DefaultDouble(0.0)
   public static DoubleField OTHER_PLANNED;
@@ -105,10 +147,19 @@ public class BudgetStat {
   public static DoubleField OTHER_SUMMARY;
 
   @DefaultDouble(0.0)
+  public static DoubleField OTHER_POSITIVE_OVERRUN;
+
+  @DefaultDouble(0.0)
+  public static DoubleField OTHER_NEGATIVE_OVERRUN;
+
+  @DefaultDouble(0.0)
   public static DoubleField SAVINGS;
 
   @DefaultDouble(0.0)
-  public static DoubleField SAVINGS_REMAINING;
+  public static DoubleField SAVINGS_POSITIVE_REMAINING;
+
+  @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_NEGATIVE_REMAINING;
 
   @DefaultDouble(0.0)
   public static DoubleField SAVINGS_PLANNED;
@@ -117,10 +168,19 @@ public class BudgetStat {
   public static DoubleField SAVINGS_SUMMARY;
 
   @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_POSITIVE_OVERRUN;
+
+  @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_NEGATIVE_OVERRUN;
+
+  @DefaultDouble(0.0)
   public static DoubleField SAVINGS_IN;
 
   @DefaultDouble(0.0)
-  public static DoubleField SAVINGS_IN_REMAINING;
+  public static DoubleField SAVINGS_IN_POSITIVE_REMAINING;
+
+  @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_IN_NEGATIVE_REMAINING;
 
   @DefaultDouble(0.0)
   public static DoubleField SAVINGS_IN_PLANNED;
@@ -129,10 +189,19 @@ public class BudgetStat {
   public static DoubleField SAVINGS_IN_SUMMARY;
 
   @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_IN_POSITIVE_OVERRUN;
+
+  @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_IN_NEGATIVE_OVERRUN;
+
+  @DefaultDouble(0.0)
   public static DoubleField SAVINGS_OUT;
 
   @DefaultDouble(0.0)
-  public static DoubleField SAVINGS_OUT_REMAINING;
+  public static DoubleField SAVINGS_OUT_POSITIVE_REMAINING;
+
+  @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_OUT_NEGATIVE_REMAINING;
 
   @DefaultDouble(0.0)
   public static DoubleField SAVINGS_OUT_PLANNED;
@@ -141,34 +210,58 @@ public class BudgetStat {
   public static DoubleField SAVINGS_OUT_SUMMARY;
 
   @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_OUT_POSITIVE_OVERRUN;
+
+  @DefaultDouble(0.0)
+  public static DoubleField SAVINGS_OUT_NEGATIVE_OVERRUN;
+
+  @DefaultDouble(0.0)
   public static DoubleField UNCATEGORIZED;
 
   @DefaultDouble(0.0)
   public static DoubleField UNCATEGORIZED_ABS;
 
-  public static DoubleField[] INCOME_FIELDS = {INCOME, INCOME_REMAINING};
+  public static DoubleField[] INCOME_FIELDS = {INCOME, INCOME_POSITIVE_REMAINING};
 
-  public static DoubleField[] EXPENSE_FIELDS = {ENVELOPES, ENVELOPES_REMAINING,
-                                                EXTRAS, EXTRAS_REMAINING, SAVINGS, SAVINGS_REMAINING, UNCATEGORIZED};
+  public static DoubleField[] EXPENSE_FIELDS = {ENVELOPES, ENVELOPES_POSITIVE_REMAINING,
+                                                EXTRAS, EXTRAS_POSITIVE_REMAINING, SAVINGS, SAVINGS_POSITIVE_REMAINING, UNCATEGORIZED};
 
   static {
     GlobTypeLoader.init(BudgetStat.class);
   }
 
-  public static DoubleField getRemaining(BudgetArea budgetArea) {
+  public static DoubleField getPositiveRemaining(BudgetArea budgetArea) {
     switch (budgetArea) {
       case ENVELOPES:
-        return ENVELOPES_REMAINING;
+        return ENVELOPES_POSITIVE_REMAINING;
       case INCOME:
-        return INCOME_REMAINING;
+        return INCOME_POSITIVE_REMAINING;
       case SAVINGS:
-        return SAVINGS_REMAINING;
+        return SAVINGS_POSITIVE_REMAINING;
       case RECURRING:
-        return RECURRING_REMAINING;
+        return RECURRING_POSITIVE_REMAINING;
       case EXTRAS:
-        return EXTRAS_REMAINING;
+        return EXTRAS_POSITIVE_REMAINING;
       case OTHER:
-        return OTHER_REMAINING;
+        return OTHER_POSITIVE_REMAINING;
+    }
+    throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
+  }
+
+  public static DoubleField getNegativeRemaining(BudgetArea budgetArea) {
+    switch (budgetArea) {
+      case ENVELOPES:
+        return ENVELOPES_NEGATIVE_REMAINING;
+      case INCOME:
+        return INCOME_NEGATIVE_REMAINING;
+      case SAVINGS:
+        return SAVINGS_NEGATIVE_REMAINING;
+      case RECURRING:
+        return RECURRING_NEGATIVE_REMAINING;
+      case EXTRAS:
+        return EXTRAS_NEGATIVE_REMAINING;
+      case OTHER:
+        return OTHER_NEGATIVE_REMAINING;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
   }
@@ -223,6 +316,42 @@ public class BudgetStat {
         return EXTRAS_SUMMARY;
       case OTHER:
         return OTHER_SUMMARY;
+    }
+    throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
+  }
+
+  public static DoubleField getPositiveOverrun(BudgetArea budgetArea) {
+    switch (budgetArea) {
+      case ENVELOPES:
+        return ENVELOPES_POSITIVE_OVERRUN;
+      case INCOME:
+        return INCOME_POSITIVE_OVERRUN;
+      case SAVINGS:
+        return SAVINGS_POSITIVE_OVERRUN;
+      case RECURRING:
+        return RECURRING_POSITIVE_OVERRUN;
+      case EXTRAS:
+        return EXTRAS_POSITIVE_OVERRUN;
+      case OTHER:
+        return OTHER_POSITIVE_OVERRUN;
+    }
+    throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
+  }
+
+  public static DoubleField getNegativeOverrun(BudgetArea budgetArea) {
+    switch (budgetArea) {
+      case ENVELOPES:
+        return ENVELOPES_NEGATIVE_OVERRUN;
+      case INCOME:
+        return INCOME_NEGATIVE_OVERRUN;
+      case SAVINGS:
+        return SAVINGS_NEGATIVE_OVERRUN;
+      case RECURRING:
+        return RECURRING_NEGATIVE_OVERRUN;
+      case EXTRAS:
+        return EXTRAS_NEGATIVE_OVERRUN;
+      case OTHER:
+        return OTHER_NEGATIVE_OVERRUN;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
   }

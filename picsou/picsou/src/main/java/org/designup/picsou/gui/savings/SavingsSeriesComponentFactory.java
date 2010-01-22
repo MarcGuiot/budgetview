@@ -11,6 +11,7 @@ import org.designup.picsou.gui.budget.SeriesEditionButtons;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
@@ -97,8 +98,9 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
                                                                              account);
 
     final GlobGaugeView gaugeView =
-      new GlobGaugeView(PeriodSeriesStat.TYPE, gauge, PeriodSeriesStat.AMOUNT,
-                        PeriodSeriesStat.PLANNED_AMOUNT,
+      new GlobGaugeView(PeriodSeriesStat.TYPE, gauge, BudgetArea.SAVINGS, PeriodSeriesStat.AMOUNT,
+                        PeriodSeriesStat.PLANNED_AMOUNT, PeriodSeriesStat.PAST_REMAINING, PeriodSeriesStat.FUTURE_REMAINING,
+                        PeriodSeriesStat.PAST_OVERRUN, PeriodSeriesStat.FUTURE_OVERRUN, 
                         GlobMatchers.fieldEquals(PeriodSeriesStat.SERIES, series.get(Series.ID)),
                         repository, directory) {
         protected double getValue(Glob glob, DoubleField field) {

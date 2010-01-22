@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.gui.components.charts.Gauge;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
@@ -116,7 +117,41 @@ public class BudgetViewChecker extends GuiChecker {
     }
 
     public BudgetAreaChecker checkTotalErrorOverrun() {
-      assertThat(getPanel().getTextBox("totalPlannedAmount").foregroundNear("darkRed"));
+      assertThat(getPanel().getTextBox("totalPlannedAmount").foregroundNear("red"));
+      return this;
+    }
+
+    public BudgetAreaChecker checkGaugeInError(){
+      GaugeChecker gauge = new GaugeChecker(getPanel(), "totalGauge");
+      gauge.checkOnError(true);
+      return this;
+    }
+    public BudgetAreaChecker checkGaugeBeginInError() {
+      GaugeChecker gauge = new GaugeChecker(getPanel(), "totalGauge");
+      gauge.checkBeginInError();
+      return this;
+    }
+
+    public BudgetAreaChecker checkTotalTooltips(double remaining, double overrun, double newAmount) {
+      GaugeChecker gauge = new GaugeChecker(getPanel(), "totalGauge");
+      gauge.checkTooltipContains(Integer.toString((int)remaining));
+      gauge.checkTooltipContains(Integer.toString((int)overrun));
+      assertThat(getPanel().getTextBox("totalPlannedAmount").tooltipContains(Double.toString(newAmount)));
+      return this;
+    }
+
+    public BudgetAreaChecker checkTotalGaugeTooltips(String... text) {
+      GaugeChecker gauge = new GaugeChecker(getPanel(), "totalGauge");
+      for (String s : text) {
+        gauge.checkTooltipContains(s);
+      }
+      return this;
+    }
+
+    public BudgetAreaChecker checkTotalTooltips(double overrun, double newAmount) {
+      assertThat(getPanel().getTextBox("totalPlannedAmount")
+        .tooltipEquals("Planned with overrun: " + Formatting.DECIMAL_FORMAT.format(newAmount) +
+                       " - Overrun: " + Formatting.DECIMAL_FORMAT.format(overrun)));
       return this;
     }
 
@@ -132,7 +167,22 @@ public class BudgetViewChecker extends GuiChecker {
       return this;
     }
 
-    public BudgetAreaChecker checkSeriesGaugeRemaining(String seriesName, double remaining) {
+    public BudgetAreaChecker checkSeriesGaugeRemaining(String seriesName, double pastRemaining,
+                                                       double remaining, boolean onError) {
+      GaugeChecker gauge = getGauge(seriesName);
+      gauge.checkRemaining(remaining);
+      gauge.checkOnError(onError);
+      return this;
+    }
+
+    public BudgetAreaChecker checkSeriesGaugeRemaining(String seriesName, double remaining, boolean onError) {
+      GaugeChecker gauge = getGauge(seriesName);
+      gauge.checkRemaining(remaining);
+      gauge.checkOnError(onError);
+      return this;
+    }
+
+    private GaugeChecker getGauge(String seriesName) {
       Panel budgetPanel = getPanel();
       Button nameButton = budgetPanel.getButton(seriesName);
 
@@ -140,8 +190,7 @@ public class BudgetViewChecker extends GuiChecker {
       int nameIndex = getIndex(panel, nameButton.getAwtComponent());
 
       GaugeChecker gauge = new GaugeChecker((Gauge)panel.getComponent(nameIndex + GAUGE_OFFSET));
-      gauge.checkOverrunPart(remaining);
-      return this;
+      return gauge;
     }
 
     private void checkAmount(String label, int offset,
@@ -242,8 +291,16 @@ public class BudgetViewChecker extends GuiChecker {
       return this;
     }
 
-    public void checkSeriesTooltip(String seriesName, String tooltipText) {
+    public BudgetAreaChecker checkSeriesTooltip(String seriesName, String tooltipText) {
       assertThat(getPanel().getButton(seriesName).tooltipContains(tooltipText));
+      return this;
+    }
+
+    public BudgetAreaChecker checkGaugeTooltip(String seriesName, String ...tooltipText) {
+      for (String s : tooltipText) {
+        getGauge(seriesName).checkTooltipContains(s);
+      }
+      return this;
     }
   }
 

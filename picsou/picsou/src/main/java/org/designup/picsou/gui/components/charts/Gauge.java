@@ -7,13 +7,11 @@ import org.designup.picsou.utils.Lang;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class Gauge extends JPanel {
 
-  private boolean overrunIsAnError;
-  private boolean invertedSignIsAnError;
+  private String keyPrefix;
+  private boolean invertAll;
 
   private double actualValue;
   private double targetValue;
@@ -22,6 +20,7 @@ public class Gauge extends JPanel {
   private double fillPercent = 0;
   private double overrunPercent = 0;
   private double emptyPercent = 1.0;
+  private double beginPercent = 0.;
   private boolean overrunError = false;
 
   private Color borderColor = Color.DARK_GRAY;
@@ -37,19 +36,23 @@ public class Gauge extends JPanel {
   private static final int BAR_HEIGHT = 10;
   private static final float TRIANGLE_HEIGHT = 16f;
   private static final float TRIANGLE_WIDTH = 16f;
+  private double remainder;
 
   public Gauge() {
-    this(true, true);
+    this(false);
   }
 
-  public Gauge(boolean overrunIsAnError, boolean invertedSignIsAnError) {
-    this.overrunIsAnError = overrunIsAnError;
-    this.invertedSignIsAnError = invertedSignIsAnError;
+  public Gauge(boolean invertAll) {
+    this.invertAll = invertAll;
 
     setMinimumSize(new Dimension(20, 28));
     setPreferredSize(new Dimension(200, 28));
 
     setToolTip("gauge.unset");
+  }
+
+  public boolean shouldInvertAll() {
+    return invertAll;
   }
 
   public static void showToolTip(JComponent comp) {
@@ -73,84 +76,144 @@ public class Gauge extends JPanel {
   }
 
   public void setValues(double actualValue, double targetValue) {
-    this.actualValue = actualValue;
-    this.targetValue = targetValue;
+
+    this.actualValue = actualValue * (invertAll ? -1. : 1.);
+    this.targetValue = targetValue * (invertAll ? -1. : 1.);
 
     boolean sameSign = Amounts.sameSign(this.actualValue, this.targetValue);
     double absActual = Math.abs(this.actualValue);
     double absTarget = Math.abs(this.targetValue);
+    remainder = this.targetValue - this.actualValue;
 
-    if ((absTarget == 0) && (absActual == 0)) {
-      fillPercent = 0;
-      overrunPercent = 0;
-      emptyPercent = 1;
-      overrunError = false;
+    fillPercent = 0;
+    overrunPercent = 0;
+    emptyPercent = 1;
+    beginPercent = 0;
+    overrunError = false;
+
+    if (Amounts.isNearZero(this.targetValue) && Amounts.isNearZero(this.actualValue)) {
       setToolTip("gauge.unset");
     }
-    else if (Amounts.isNearZero(absTarget)) {
-      fillPercent = 0;
-      overrunPercent = 1;
-      emptyPercent = 0;
-      overrunError = overrunIsAnError;
-      setToolTip("gauge.overrun." + (overrunIsAnError ? "error" : "ok"), absActual);
-    }
-    else if (!sameSign) {
-      fillPercent = 0;
-      overrunPercent = absActual / (absActual + absTarget);
-      emptyPercent = 1 - overrunPercent;
-      overrunError = invertedSignIsAnError;
-      setToolTip("gauge.inverted." + (invertedSignIsAnError ? "error" : "ok"), absActual);
-    }
-    else if (absActual - absTarget >= 0.01) {
-      fillPercent = absTarget / absActual;
-      overrunPercent = 1 - fillPercent;
-      emptyPercent = 0;
-      overrunError = overrunIsAnError;
-      setToolTip("gauge.overrun." + (overrunIsAnError ? "error" : "ok"), absActual - absTarget);
-    }
-    else if (Amounts.isNearZero(absTarget - absActual)) {
+    else if (Amounts.isNearZero(this.targetValue - this.actualValue)) { // passer par remaining et overrun
       fillPercent = 1;
-      overrunPercent = 0;
       emptyPercent = 0;
-      overrunError = false;
       setToolTip("gauge.complete");
     }
-    else {
-      fillPercent = absActual / absTarget;
-      if (fillPercent > 1) {
-        fillPercent = 1;
+    else if (this.targetValue > 0) {
+      if (this.actualValue > this.targetValue) { // if (overrun == 0 && remaining != 0)
+        fillPercent = absTarget / absActual;  //==> differencié passe et future
+        overrunPercent = 1 - fillPercent;
+        setToolTip("gauge.overrun.ok", Math.abs(remainder));
+        emptyPercent = 0;
       }
-      overrunPercent = 0;
-      emptyPercent = 1 - fillPercent;
-      overrunError = false;
-      setToolTip("gauge.partial", absTarget - absActual);
+      else {
+        if (!sameSign && !Amounts.isNearZero(this.actualValue)) {
+          beginPercent = absActual / (absActual + absTarget);
+        }
+        else {
+          fillPercent = absActual / absTarget;
+        }
+        emptyPercent = 1 - fillPercent - beginPercent;
+        setToolTip("gauge.expected", Math.abs(remainder));
+      }
+    }
+    else if (this.targetValue < 0) {
+      if (this.actualValue < this.targetValue) {
+        fillPercent = absTarget / absActual;
+        overrunPercent = 1 - fillPercent;
+        overrunError = true;
+        emptyPercent = 0;
+        setToolTip("gauge.overrun.error", Math.abs(remainder));
+      }
+      else {
+        if (!sameSign && !Amounts.isNearZero(this.actualValue)) {
+          fillPercent = absActual / (absActual + absTarget);
+        }
+        else {
+          fillPercent = absActual / absTarget;
+        }
+        emptyPercent = 1 - fillPercent;
+        setToolTip("gauge.partial", Math.abs(remainder));
+      }
+    }
+    else {
+      if (this.actualValue != 0) {
+        fillPercent = 0;
+        overrunPercent = 1;
+        emptyPercent = 0;
+        if (this.actualValue > 0) {
+          setToolTip("gauge.overrun.ok", Math.abs(remainder));
+        }
+        else {
+          overrunError = true;
+          setToolTip("gauge.overrun.error", Math.abs(remainder));
+        }
+      }
     }
     repaint();
   }
 
-  public void setValues(double actualValue, double targetValue, double partialOverrun) {
-    if (Amounts.isNearZero(partialOverrun) || (Math.abs(actualValue) > Math.abs(targetValue))) {
-      setValues(actualValue, targetValue);
-      return;
-    }
+  public void setValues(double actualValue, double targetValue, double partialOverrun, double remaining, String text) {
+    fillPercent = 0;
+    overrunPercent = 0;
+    emptyPercent = 1;
+    beginPercent = 0;
+    overrunError = false;
 
     this.actualValue = actualValue;
     this.targetValue = targetValue;
     this.overrunPart = partialOverrun;
+    this.remainder = remaining;
+    boolean sameSign = Amounts.sameSign(this.actualValue, this.targetValue);
 
-    double fillValue = actualValue - partialOverrun;
-    fillPercent = Math.abs(fillValue / targetValue);
-    overrunPercent = Math.abs(partialOverrun / targetValue);
-    emptyPercent = 1 - overrunPercent - fillPercent;
-    overrunError = overrunIsAnError;
-    double remainingValue = targetValue - actualValue;
-    setToolTip("gauge.partial.overrun." + (overrunIsAnError ? "error" : "ok"),
-               remainingValue, Math.abs(partialOverrun));
+    if (Amounts.isNearZero(this.targetValue) && Amounts.isNearZero(this.actualValue)) {
+      text = Lang.get("gauge.unset");
+    }
+    else if (Amounts.isNearZero(this.targetValue - this.actualValue) && Amounts.isNearZero(partialOverrun)
+             && Amounts.isNearZero(remaining)) { // passer par remaining et overrun
+      fillPercent = 1;
+      emptyPercent = 0;
+      text = Lang.get("gauge.complete");
+    }
+    else if (Math.abs(actualValue) > Math.abs(targetValue) && sameSign) {
+      double total = Math.abs(remaining) + Math.abs(actualValue);
+      fillPercent = (Math.abs(actualValue) - Math.abs(partialOverrun)) / total;
+      overrunPercent = Math.abs(partialOverrun / total);
+    }
+    else if (!sameSign && !Amounts.isNearZero(this.actualValue)) {
+      double total = Math.abs(remaining) + Math.abs(actualValue) + Math.abs(targetValue);
+      beginPercent = (Math.abs(actualValue) - Math.abs(partialOverrun)) / total;
+      overrunPercent = Math.abs(partialOverrun / total);
+    }
+    else {
+      double total = Math.abs(targetValue);
+      fillPercent = (Math.abs(actualValue) - Math.abs(partialOverrun)) / total;
+      overrunPercent = Math.abs(partialOverrun / total);
+    }
+    emptyPercent = 1 - overrunPercent - fillPercent - beginPercent;
 
+    if (Amounts.isNearZero(targetValue)) {
+      if (actualValue > 0) {
+        overrunError = invertAll;
+      }
+      else {
+        overrunError = !invertAll;
+      }
+    }
+    else {
+      if (partialOverrun > 0) {
+        overrunError = invertAll;
+      }
+      else {
+        overrunError = !invertAll;
+      }
+    }
+
+    this.setToolTipText(text);
     repaint();
   }
 
-  private void setToolTip(String key, Double... values) {
+  protected void setToolTip(String key, Double... values) {
     String[] formattedValues = new String[values.length];
     for (int i = 0; i < values.length; i++) {
       formattedValues[i] = Formatting.DECIMAL_FORMAT.format(values[i]);
@@ -174,22 +237,29 @@ public class Gauge extends JPanel {
     int barTop = (height - BAR_HEIGHT) / 2;
     int barBottom = height - barTop;
 
+    int beginWidth = (int)(width * beginPercent);
     int fillWidth = (int)(width * fillPercent);
     int emptyWidth = (int)(width * emptyPercent);
 
-    int overrunWidth = width - fillWidth - emptyWidth;
-    int overrunEnd = fillWidth + overrunWidth;
+    int overrunWidth = width - fillWidth - emptyWidth - beginWidth;
+    int overrunEnd = beginWidth + fillWidth + overrunWidth;
+
+    int overrunStart = beginWidth + fillWidth;
 
     if (fillPercent > 0) {
       fillBar(g2, filledColorTop, filledColorBottom, 0, fillWidth, barTop, barBottom);
     }
 
+    if (beginPercent > 0) {
+      fillBar(g2, overrunErrorColorTop, overrunErrorColorBottom, 0, beginWidth, barTop, barBottom);
+    }
+
     if (overrunPercent > 0) {
       if (overrunError) {
-        fillBar(g2, overrunErrorColorTop, overrunErrorColorBottom, fillWidth, overrunWidth, barTop, barBottom);
+        fillBar(g2, overrunErrorColorTop, overrunErrorColorBottom, overrunStart, overrunWidth, barTop, barBottom);
       }
       else {
-        fillBar(g2, overrunColorTop, overrunColorBottom, fillWidth, overrunWidth, barTop, barBottom);
+        fillBar(g2, overrunColorTop, overrunColorBottom, overrunStart, overrunWidth, barTop, barBottom);
       }
     }
 
@@ -230,20 +300,20 @@ public class Gauge extends JPanel {
     return overrunPercent;
   }
 
+  public double getRemainder() {
+    return remainder;
+  }
+
   public double getEmptyPercent() {
     return emptyPercent;
   }
 
-  public void setOverrunIsAnError(boolean value) {
-    this.overrunIsAnError = value;
-  }
-
   public boolean isErrorOverrunShown() {
-    return overrunIsAnError && (overrunPercent > 0);
+    return overrunError && overrunPercent > 0;
   }
 
   public boolean isPositiveOverrunShown() {
-    return !overrunIsAnError && (overrunPercent > 0);
+    return !overrunError && overrunPercent > 0;
   }
 
   public void setBorderColor(Color borderColor) {
@@ -282,7 +352,7 @@ public class Gauge extends JPanel {
     this.overrunErrorColorBottom = overrunErrorColorBottom;
   }
 
-  public void setInvertedSignIsAnError(boolean invertedSignIsAnError) {
-    this.invertedSignIsAnError = invertedSignIsAnError;
+  public double getBeginPercent() {
+    return beginPercent;
   }
 }

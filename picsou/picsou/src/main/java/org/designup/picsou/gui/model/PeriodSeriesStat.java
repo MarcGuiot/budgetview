@@ -23,6 +23,18 @@ public class PeriodSeriesStat {
   public static DoubleField PLANNED_AMOUNT;
 
   @DefaultDouble(0.0)
+  public static DoubleField PAST_REMAINING;
+
+  @DefaultDouble(0.0)
+  public static DoubleField FUTURE_REMAINING;
+
+  @DefaultDouble(0.0)
+  public static DoubleField PAST_OVERRUN;
+
+  @DefaultDouble(0.0)
+  public static DoubleField FUTURE_OVERRUN;
+
+  @DefaultDouble(0.0)
   public static DoubleField ABS_SUM_AMOUNT;
 
   static {

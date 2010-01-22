@@ -49,7 +49,6 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.ReplicationGlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -148,7 +147,7 @@ public class MainPanel {
     };
     builder.add("transactionSearch", search.getPanel());
     builder.addLabel("sum", Transaction.TYPE,
-                     GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT, Transaction.AMOUNT))
+                     GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT, false, Transaction.AMOUNT))
       .setAutoHideIfEmpty(true);
 
     LicenseInfoView licenseInfoView = new LicenseInfoView(repository, directory);
