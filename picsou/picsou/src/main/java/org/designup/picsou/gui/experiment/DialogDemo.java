@@ -12,6 +12,7 @@ import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.series.wizard.SeriesWizardDialog;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Bank;
 import org.designup.picsou.utils.generator.PicsouSampleGenerator;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -41,8 +42,8 @@ public class DialogDemo {
     JFrame frame = window.getFrame();
     directory.add(JFrame.class, frame);
 
-    showImportDialog(repository, directory, frame);
-//    showHelpDialog(repository, directory, frame);
+//    showImportDialog(repository, directory, frame);
+    showHelpDialog(repository, directory, frame);
 //    showSeriesWizardDialog(repository, directory, frame);
 //    showSeriesEditionDialog(repository, directory, frame);
 //    showLicenseExpirationDialog(repository, directory, frame);
@@ -56,7 +57,7 @@ public class DialogDemo {
 
   private static void showHelpDialog(GlobRepository repository, Directory directory, JFrame frame) {
     HelpService service = directory.get(HelpService.class);
-    service.show("intro", frame);
+    service.showBankHelp(repository.get(Key.create(Bank.TYPE, 5)), frame);
   }
 
   private static void showSeriesWizardDialog(GlobRepository repository, Directory directory, JFrame frame) {

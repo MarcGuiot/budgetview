@@ -146,9 +146,9 @@ public class AccountViewChecker extends GuiChecker {
     assertThat(panel.getTextBox("balanceLabel").textEquals(toString(balance, true)));
   }
 
-  public void checkAccountWebsite(String accountName, String expectedUrl) {
+  public void checkAccountWebsite(String accountName, String linkText, String expectedUrl) {
     Panel panel = getAccountPanel(accountName);
-    Button button = panel.getButton("gotoWebsite");
+    Button button = panel.getButton(linkText);
     assertThat(button.isVisible());
     BrowsingChecker.checkDisplay(button, expectedUrl);
   }
@@ -157,5 +157,4 @@ public class AccountViewChecker extends GuiChecker {
     Panel panel = getAccountPanel(accountName);
     checkComponentVisible(panel, JButton.class, "gotoWebsite", false);
   }
-
 }

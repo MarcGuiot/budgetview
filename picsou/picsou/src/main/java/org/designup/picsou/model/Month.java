@@ -80,17 +80,23 @@ public class Month {
     return CALENDAR.getTime();
   }
 
+  public static int offset(int yyyymm, int offset) {
+    if (offset < 0) {
+      return previous(yyyymm, -offset);
+    }
+    else if (offset > 0) {
+      return next(yyyymm, offset);
+    }
+    return yyyymm;
+  }
+
   public static int next(int yyyymm) {
-    return normalize(yyyymm + 1);
+    return next(yyyymm, 1);
   }
 
-  public static int previous(int yyyymm) {
-    return normalize(yyyymm - 1);
-  }
-
-  public static int normalize(int yyyymm) {
-    int year = toYear(yyyymm);
-    int month = toMonth(yyyymm);
+  public static int next(int yyyymm, int monthsLater) {
+    int year = toYear(yyyymm + monthsLater);
+    int month = toMonth(yyyymm + monthsLater);
 
     if (month == 0) {
       year--;
@@ -102,6 +108,25 @@ public class Month {
       year += years;
     }
     return toYyyyMm(year, month);
+  }
+
+  public static int previous(int yyyymm) {
+    return previous(yyyymm, 1);
+  }
+
+  public static int previous(int yyyymm, int monthsBack) {
+    int year = toYear(yyyymm);
+    int month = toMonth(yyyymm);
+
+    year -= (monthsBack / 12);
+    month -= monthsBack % 12;
+
+    if (month <= 0) {
+      year--;
+      month = 12 + month;
+    }
+
+    return toMonthId(year, month);
   }
 
   public static Iterable<Integer> range(final int minYyyyMm, final int maxYyyyMm) {

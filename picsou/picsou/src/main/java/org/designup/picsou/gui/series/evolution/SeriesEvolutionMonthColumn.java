@@ -36,7 +36,7 @@ public class SeriesEvolutionMonthColumn implements GlobTableColumn {
       referenceMonthId = null;
     }
     else {
-      referenceMonthId = Month.normalize(monthId + offset);
+      referenceMonthId = Month.offset(monthId, offset);
     }
     editor.setReferenceMonth(referenceMonthId);
   }

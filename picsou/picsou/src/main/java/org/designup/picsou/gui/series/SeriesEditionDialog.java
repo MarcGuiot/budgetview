@@ -123,7 +123,7 @@ public class SeriesEditionDialog {
     seriesListButtonPanel = new JPanel();
     builder.add("seriesListButtonPanel", seriesListButtonPanel);
     builder.add("create", new CreateSeriesAction());
-    builder.add("delete", new DeleteSeriesAction(false));
+    builder.add("delete", new DeleteSeriesAction("seriesEdition.delete", false));
 
     nameEditor = builder.addEditor("nameField", Series.NAME).setNotifyOnKeyPressed(true);
     nameEditor.getComponent().addActionListener(okAction);
@@ -233,7 +233,7 @@ public class SeriesEditionDialog {
     localRepository.addChangeListener(new OkButtonUpdater());
 
     JPanel panel = builder.load();
-    singleSeriesDeleteButton = new JButton(new DeleteSeriesAction(true));
+    singleSeriesDeleteButton = new JButton(new DeleteSeriesAction("seriesEdition.deleteCurrent", true));
     singleSeriesDeleteButton.setOpaque(false);
     singleSeriesDeleteButton.setName("deleteSingleSeries");
     dialog.addPanelWithButtons(panel, okAction, new CancelAction(), singleSeriesDeleteButton);
@@ -815,7 +815,7 @@ public class SeriesEditionDialog {
 
   private class CreateSeriesAction extends AbstractAction {
     public CreateSeriesAction() {
-      super("create");
+      super(Lang.get("seriesEdition.create"));
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -834,8 +834,8 @@ public class SeriesEditionDialog {
     private GlobList seriesToDelete = GlobList.EMPTY;
     private boolean closeOnDelete;
 
-    public DeleteSeriesAction(boolean closeOnDelete) {
-      super(Lang.get("seriesEdition.delete"));
+    public DeleteSeriesAction(String labelKey, boolean closeOnDelete) {
+      super(Lang.get(labelKey));
       this.closeOnDelete = closeOnDelete;
       selectionService.addListener(new GlobSelectionListener() {
         public void selectionUpdated(GlobSelection selection) {

@@ -22,11 +22,9 @@ import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.TablePrinter;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -660,7 +658,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
   public List<Integer> getMonthIds() {
     List<Integer> result = new ArrayList<Integer>();
-    for (Integer monthId : Month.range(Month.normalize(currentMonthId - 100), Month.normalize(currentMonthId + 6))) {
+    for (Integer monthId : Month.range(Month.previous(currentMonthId, 12), Month.next(currentMonthId, 6))) {
       if (repository.contains(Key.create(Month.TYPE, monthId))) {
         result.add(monthId);
       }

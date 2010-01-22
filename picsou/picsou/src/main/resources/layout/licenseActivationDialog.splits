@@ -14,7 +14,7 @@
         <textField gridPos="(1,1)" ref="ref-code"/>
       </grid>
       <progressBar ref="connectionState" visible="false"/>
-      <htmlEditorPane ref="connectionMessage" styleClass="errorMessage"/>
+      <htmlEditorPane ref="connectionMessage" styleClass="errorMessage" border="empty(5,0,0,0)"/>
       <filler fill="vertical" weightY="20"/>
     </column>
   </panel>

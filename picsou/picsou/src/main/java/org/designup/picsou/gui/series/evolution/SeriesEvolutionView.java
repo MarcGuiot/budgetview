@@ -194,7 +194,7 @@ public class SeriesEvolutionView extends View {
       }
 
       for (int offset = -1; offset < -1 + MONTH_COLUMNS_COUNT; offset++) {
-        int monthId = Month.normalize(referenceMonthId + offset);
+        int monthId = Month.offset(referenceMonthId, offset);
         Glob seriesStat = SeriesEvolutionView.this.repository.find(Key.create(SeriesStat.SERIES, wrapper.get(SeriesWrapper.ITEM_ID),
                                                                               SeriesStat.MONTH, monthId));
         if ((seriesStat != null) &&

@@ -32,14 +32,12 @@
           </column>
         </repeat>
       </scrollPane>
-    </column>
-    <row>
-      <row styleClass="iconButtonGroup" ref="groupCreateEditSeries">
+      <row styleClass="footer" ref="groupCreateEditSeries">
         <button action="createSeries" styleClass="create" tooltipText="$series.create.tooltip"/>
         <button action="editSeries" styleClass="list" tooltipText="$series.list.tooltip"/>
+        <filler fill="horizontal"/>
       </row>
-      <filler fill="horizontal"/>
-    </row>
+    </column>
   </column>
 
 </splits>

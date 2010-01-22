@@ -14,9 +14,16 @@
 
       <horizontalSplit>
         <column ref="seriesPanel" weightX="3" preferredSize="(200,400)">
-          <scrollPane>
-            <list ref="seriesList"/>
-          </scrollPane>
+          <column styleClass="blockScrollBorder">
+            <scrollPane>
+              <list ref="seriesList"/>
+            </scrollPane>
+            <row ref="seriesListButtonPanel" styleClass="footer">
+              <button action="create" name="create" tooltipText="$series.create.tooltip"/>
+              <button action="delete" name="deleteSelected" tooltipText="$series.delete.tooltip"/>
+              <filler fill="horizontal"/>
+            </row>
+          </column>
         </column>
 
         <column weightX="7" preferredSize="(560,460)">
@@ -145,14 +152,6 @@
 
         </column>
       </horizontalSplit>
-
-      <row ref="seriesListButtonPanel" styleClass="iconButtonGroup">
-        <button action="create" name="create" tooltipText="$series.create.tooltip"
-                icon='button_plus.png' disabledIcon='button_plus_disabled.png'/>
-        <button action="delete" name="deleteSelected" tooltipText="$series.delete.tooltip"
-                icon='button_minus.png' disabledIcon='button_minus_disabled.png'/>
-        <filler fill="horizontal"/>
-      </row>
 
     </column>
   </panel>

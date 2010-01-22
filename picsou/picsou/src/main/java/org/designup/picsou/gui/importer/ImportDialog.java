@@ -17,6 +17,7 @@ import org.designup.picsou.gui.importer.edition.DateFormatSelectionPanel;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionDateRenderer;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionsTable;
 import org.designup.picsou.gui.importer.utils.OpenBankUrlAction;
+import org.designup.picsou.gui.importer.utils.OpenBankSiteHelpAction;
 import org.designup.picsou.importer.BankFileType;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -151,6 +152,7 @@ public class ImportDialog {
       .setShowEmptyOption(true)
       .setEmptyOptionLabel(Lang.get("import.step1.selectBank"))
       .setName("banks");
+    builder1.add("openSiteHelp", new OpenBankSiteHelpAction(localDirectory, dialog));
     builder1.add("openUrl", new OpenBankUrlAction(localDirectory));
 
     builder1.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
@@ -445,21 +447,27 @@ public class ImportDialog {
   }
 
   public void showCompleteMessage(int autocategorizedTransaction, int transactionCount) {
-    String keyMessage = "close";
-    if (repository.contains(Series.TYPE, Series.USER_SERIES_MATCHER)) {
-      keyMessage = "import.end.button.goto";
+    String messageKey = "close";
+    if ((transactionCount > 0) && repository.contains(Series.TYPE, Series.USER_SERIES_MATCHER)) {
+      messageKey = "import.end.button.goto";
     }
     MessageDialog.createMessageDialogWithButtonMessage("import.end.info.title",
-                                                       "import.end.info.operations." + normalize(transactionCount) + "." +
-                                                       normalize(autocategorizedTransaction),
+                                                       getEndOfImportMessageKey(transactionCount, autocategorizedTransaction),
                                                        dialog, localDirectory,
-                                                       keyMessage,
+                                                       messageKey,
                                                        Integer.toString(transactionCount),
                                                        Integer.toString(autocategorizedTransaction)).show();
 
   }
 
-  public static String normalize(int count) {
+  public static String getEndOfImportMessageKey(int transactionCount, int autocategorizedTransactions) {
+    if ((transactionCount > 1) && (transactionCount == autocategorizedTransactions)) {
+      return "import.end.info.operations.many.all";
+    }
+    return "import.end.info.operations." + normalize(transactionCount) + "." + normalize(autocategorizedTransactions);
+  }
+
+  private static String normalize(int count) {
     if (count == 0) {
       return "none";
     }

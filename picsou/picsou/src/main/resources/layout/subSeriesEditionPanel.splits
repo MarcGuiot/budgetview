@@ -13,15 +13,17 @@
              anchor="northeast" border="empty(2,0,2,0)" horizontalAlignment="left"/>
 
       <label gridPos="(0,2)" text="$subseries.list" styleClass="formLabel" anchor="northeast" marginTop="2"/>
-      <scrollPane gridPos="(1,2,2,1)" margin="2">
-        <list ref="list"/>
-      </scrollPane>
+      <column gridPos="(1,2,2,1)" styleClass="blockScrollBorder">
+        <scrollPane>
+          <list ref="list"/>
+        </scrollPane>
 
-      <row gridPos="(1,3)" styleClass="iconButtonGroup">
-        <button action="delete" name="deleteSubSeries" styleClass="delete"/>
-        <button action="rename" name="renameSubSeries" styleClass="rename"/>
-        <filler fill="horizontal"/>
-      </row>
+        <row styleClass="footer">
+          <button action="delete" name="deleteSubSeries" styleClass="delete"/>
+          <button action="rename" name="renameSubSeries" styleClass="rename"/>
+          <filler fill="horizontal"/>
+        </row>
+      </column>
     </grid>
   </panel>
 

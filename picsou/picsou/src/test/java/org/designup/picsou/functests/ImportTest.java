@@ -626,8 +626,18 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setFilePath(path1)
       .acceptFile()
       .completeImport();
-  }
 
+    ImportChecker importDialog = operations.openImportDialog()
+      .checkSiteHelpUnavailable()
+      .selectBankSite("AXA Banque")
+      .checkSiteHelpUnavailable()
+      .selectBankSite("BNP Paribas")
+      .checkSiteHelpAvailable();
+    importDialog.openSiteHelp()
+      .checkTitle("BNP Paribas downloads")
+      .close();
+    importDialog.close();
+  }
 
   public void testImportTwiceTheSameFile() throws Exception {
     OfxBuilder
@@ -639,6 +649,5 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/12", -1.3, "Menu K 2")
       .load(0, 0);
-
   }
 }

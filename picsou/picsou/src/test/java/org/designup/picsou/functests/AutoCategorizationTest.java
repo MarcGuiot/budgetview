@@ -22,11 +22,12 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/12", -1.3, "Menu K 2")
       .loadAndGotoCategorize(1, 1);
+
     views.checkCategorizationSelected();
     categorization.checkShowsLastImportedTransaction();
     views.selectData();
-    transactions.checkSeries(0, "dej");
-    transactions.checkSeries(2, "dej");
+    transactions.checkSeries("Menu K 1", "dej");
+    transactions.checkSeries("Menu K 2", "dej");
   }
 
   public void testAutoCategorizationWithSubSeries() throws Exception {

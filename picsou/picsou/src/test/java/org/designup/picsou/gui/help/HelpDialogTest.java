@@ -109,6 +109,14 @@ public class HelpDialogTest extends PicsouGuiTestCase {
     }
 
     public String getContent(String ref) {
+      String result = findContent(ref);
+      if (result == null) {
+        throw new ItemNotFound(ref);
+      }
+      return result;
+    }
+
+    public String findContent(String ref) {
       if (ref.equals("index")) {
         return "home - <a href='help:page1'>page1</a> - <a href='help:page2'>page2</a>";
       }
@@ -118,7 +126,7 @@ public class HelpDialogTest extends PicsouGuiTestCase {
       if (ref.equals("page2")) {
         return "page2 content - <a href='help:page1'>page1</a>";
       }
-      throw new ItemNotFound(ref);
+      return null;
     }
   }
 }

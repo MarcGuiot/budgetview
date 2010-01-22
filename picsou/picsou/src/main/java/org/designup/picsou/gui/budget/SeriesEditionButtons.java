@@ -5,6 +5,7 @@ import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.views.GlobButtonView;
@@ -58,6 +59,11 @@ public class SeriesEditionButtons {
   }
 
   private class CreateSeriesAction extends AbstractAction {
+
+    private CreateSeriesAction() {
+      super(Lang.get("add"));
+    }
+
     public void actionPerformed(ActionEvent e) {
       seriesEditionDialog.showNewSeries(GlobList.EMPTY,
                                         selectionService.getSelection(Month.TYPE),

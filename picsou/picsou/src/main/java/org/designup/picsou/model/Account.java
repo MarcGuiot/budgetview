@@ -103,6 +103,14 @@ public class Account {
   }
 
   public static Glob getBank(Glob account, GlobRepository repository) {
+    Glob bank = findBank(account, repository);
+    if (bank == null) {
+      throw new ItemNotFound("Account with no bank : " + account);
+    }
+    return bank;
+  }
+
+  public static Glob findBank(Glob account, GlobRepository repository) {
     Glob bank;
     if (account.get(Account.BANK) == null) { // l'upgrade n'est pas encore passé
       Glob bankEntity = repository.findLinkTarget(account, Account.BANK_ENTITY);
@@ -110,9 +118,6 @@ public class Account {
     }
     else {
       bank = repository.findLinkTarget(account, Account.BANK);
-    }
-    if (bank == null) {
-      throw new ItemNotFound("Account with no bank : " + account);
     }
     return bank;
   }

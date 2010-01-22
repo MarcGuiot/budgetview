@@ -1,17 +1,22 @@
 package org.globsframework.gui.splits.utils;
 
+import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import sun.security.action.GetPropertyAction;
 
 import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
-import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.AccessController;
 
 public class GuiUtils {
@@ -255,7 +260,6 @@ public class GuiUtils {
 
   public static void initHtmlComponent(JEditorPane editorPane) {
     editorPane.setContentType("text/html");
-
     editorPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true);
 
     HTMLEditorKit kit = (HTMLEditorKit)editorPane.getEditorKit();
@@ -266,6 +270,25 @@ public class GuiUtils {
     css.addRule("table { border:none; }");
     css.addRule("td { vertical-align:top;}");
   }
+
+  public static void loadCssResource(String path, JEditorPane htmlEditor, Class referenceClass) {
+    InputStream is = referenceClass.getResourceAsStream(path);
+    if (is == null) {
+      return;
+    }
+
+    HTMLEditorKit editorKit = (HTMLEditorKit)htmlEditor.getEditorKit();
+    StyleSheet styleSheet= editorKit.getStyleSheet();
+    try {
+      BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+      styleSheet.loadRules(reader, null);
+      reader.close();
+    }
+    catch (IOException e) {
+      throw new ResourceAccessFailed("Couldn't find resource file: " + path, e);
+    }
+  }
+
 
   public static void runInSwingThread(Runnable runnable) {
     try {

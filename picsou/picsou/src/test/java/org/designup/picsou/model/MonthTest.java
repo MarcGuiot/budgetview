@@ -12,23 +12,23 @@ public class MonthTest extends TestCase {
     assertEquals(1, Month.toMonth(200601));
   }
 
-  public void testNormalize() throws Exception {
-    assertEquals(200601, Month.normalize(200601));
-    assertEquals(200612, Month.normalize(200612));
-    assertEquals(200701, Month.normalize(200613));
-    assertEquals(200801, Month.normalize(200625));
-  }
-
   public void testNext() throws Exception {
     assertEquals(200602, Month.next(200601));
     assertEquals(200512, Month.next(200511));
     assertEquals(200701, Month.next(200612));
+
+    assertEquals(200703, Month.next(200610, 5));
+    assertEquals(200712, Month.next(200612, 12));
+    assertEquals(200901, Month.next(200612, 25));
   }
 
   public void testPrevious() throws Exception {
     assertEquals(200601, Month.previous(200602));
     assertEquals(200511, Month.previous(200512));
     assertEquals(200612, Month.previous(200701));
+
+    assertEquals(200910, Month.previous(201001, 3));
+    assertEquals(200810, Month.previous(201001, 15));
   }
 
   public void testRange() throws Exception {

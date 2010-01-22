@@ -565,7 +565,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .selectBank("Autre")
       .validate();
 
-    mainAccounts.checkAccountWebsite("Account 1", "http://www.bnpparibas.net");
+    mainAccounts.checkAccountWebsite("Account 1", "BNP Paribas website", "http://www.bnpparibas.net");
     mainAccounts.checkAccountWebsiteLinkNotShown("No site account");
 
     mainAccounts.edit("Account 1")
@@ -576,7 +576,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.edit("Account 1")
       .selectBank("CIC")
       .validate();
-    mainAccounts.checkAccountWebsite("Account 1", "http://www.cic.fr");
+    mainAccounts.checkAccountWebsite("Account 1", "CIC website", "http://www.cic.fr");
   }
 
   public void testImportWithFirstTransactionBeforeAndAfterOpenCloseAccount() throws Exception {
