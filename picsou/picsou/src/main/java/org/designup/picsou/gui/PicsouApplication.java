@@ -80,7 +80,7 @@ public class PicsouApplication {
     Gui.init();
   }
 
-  public static void main(String... args) throws Exception {
+  public static void main(final String... args) throws Exception {
     if (args.length > 0) {
       if ("-v".equals(args[0])) {
         if (args.length > 1) {
@@ -106,7 +106,16 @@ public class PicsouApplication {
     Utils.beginRemove();
     changeDate();
     Utils.endRemove();
-    new PicsouApplication().run(args);
+    SwingUtilities.invokeAndWait(new Runnable() {
+      public void run() {
+        try {
+          new PicsouApplication().run(args);
+        }
+        catch (Exception e) {
+          Log.write("At startup ", e);
+        }
+      }
+    });
   }
 
   static void changeDate() {
