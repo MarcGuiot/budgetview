@@ -16,7 +16,7 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/08", -1500, "Loyer")
       .addTransaction("2008/07/09", -300, "Auchan")
       .addTransaction("2008/07/11", -100, "FNAC")
-      .addTransaction("2008/07/12", 1500, "Salaire")
+      .addTransaction("2008/07/12", 2200, "Salaire")
       .addTransaction("2008/07/13", -20, "cheque")
       .addTransaction("2008/07/13", -200, "Air France")
       .addTransaction("2008/07/15", -100, "VIRT ING")
@@ -31,11 +31,11 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     categorization.setNewExtra("Air France", "Trips");
     categorization.setNewSavings("VIRT ING", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "External account");
 
-    double incomeFor200807 = 1500;
+    double incomeFor200807 = 2200;
     double expensesFor200807 = (30 + 1500) + (300 + 100) + 200 + 100 + 20;
     double balanceFor200807 = incomeFor200807 - expensesFor200807;
 
-    double incomeFor200808 = 1500;
+    double incomeFor200808 = 2200;
     double expensesFor200808 = 30 + 1500 + 300 + 100 + 100;
     double balanceFor200808 = incomeFor200808 - expensesFor200808;
 
@@ -46,6 +46,7 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkBalance(balanceFor200807);
     mainAccounts.openEstimatedPositionDetails()
       .checkBalance(balanceFor200807)
+      .checkBalanceText("You have to spend 50.00 less")
       .checkBalanceDetails(incomeFor200807, 1530.00, 400.00, 100.00, 200.00)
       .close();
 
@@ -58,10 +59,11 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     mainAccounts.openEstimatedPositionDetails()
       .checkTitle("Budget summary for august 2008")
       .checkBalance(balanceFor200808)
+      .checkBalanceText("You have 170.00 left to distribute")
       .checkBalanceDetails(incomeFor200808, 1530.00, 400.00, 100.00, 0)
       .checkPositionDescriptionContains("Computation details")
       .checkInitialPosition(1000.00)
-      .checkIncome(1500.00)
+      .checkIncome(2200.00)
       .checkFixed(30 + 1500)
       .checkEnvelope(300 + 100)
       .checkSavingsIn(0.00)
@@ -74,13 +76,27 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     mainAccounts.openEstimatedPositionDetails()
       .checkTitle("Budget summary for july - august 2008")
       .checkBalance(balanceFor200807 + balanceFor200808)
+      .checkBalanceText("You have 120.00 left to distribute")
       .checkInitialPosition(1000.00)
-      .checkIncome(1500.00)
+      .checkIncome(2200.00)
       .checkFixed(30 + 1500)
       .checkEnvelope(300 + 100)
       .checkSavingsOut(100.00)
       .checkSavingsIn(0.00)
       .checkExtras(0.00)
+      .close();
+
+    timeline.selectMonth("2008/08");
+    views.selectBudget();
+    budgetView.extras.createSeries()
+      .setName("Trip")
+      .setAmount(170)
+      .validate();
+    
+    budgetView.getSummary().openEstimatedPositionDetails()
+      .checkTitle("Budget summary for august 2008")
+      .checkBalance(0)
+      .checkBalanceText("Your budget is balanced")
       .close();
   }
 

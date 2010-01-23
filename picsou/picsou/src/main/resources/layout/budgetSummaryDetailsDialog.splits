@@ -7,30 +7,29 @@
            font="-,bold,18" weightY="0" marginTop="10"
            fill="horizontal" anchor="center" horizontalAlignment="center"/>
 
+    <style selector=".amountBlock"
+           minimumSize="(40,70)" preferredSize="(80,70)"
+           marginLeft="40" marginRight="40" marginTop="15" marginBottom="15"
+           opaque="true" border="line(budgetSummaryDialog.amount.border)"
+           background="budgetSummaryDialog.amount.bg"/>
+
     <style selector="label.mainAmount"
            font="-,bold,20" fill="none" anchor="center" marginTop="20"/>
-
-    <style selector=".amountBlock" opaque="false"/>
-
-    <style selector=".amountBlock column"
-           opaque="true"
-           border="line(budgetSummaryDialog.amount.border)"
-           background="budgetSummaryDialog.amount.bg"
-           marginLeft="40" marginRight="40" marginTop="10" marginBottom="10"/>
 
     <style selector="label#estimatedPositionDate"
            font="-,plain,9" foreground="budgetSummaryDialog.label"
            fill="none" anchor="center" marginTop="0" marginBottom="20"/>
 
-    <style selector="textArea.description"
+    <style selector=".description"
            foreground="budgetSummaryDialog.description" opaque="false"
-           editable="false" lineWrap="true" wrapStyleWord="true"
            marginLeft="10" marginRight="10" marginTop="5" marginBottom="10"/>
+
+    <style selector="textArea.description" editable="false" lineWrap="true" wrapStyleWord="true"/>
 
     <style selector="label.description"
            foreground="budgetSummaryDialog.description" opaque="false" marginBottom="5"
            fill="horizontal" anchor="left" horizontalAlignment="left"/>
-    
+
     <style selector="label.header" foreground="budgetSummaryDialog.header" font="-,bold,12"
            fill="horizontal" anchor="center" horizontalAlignment="center"/>
 
@@ -42,6 +41,9 @@
            font="-,bold,11" foreground="budgetSummaryDialog.amount"
            fill="none" anchor="right" marginRight="10" weightX="0"
            border="empty(5,0,5,0)"/>
+
+    <style selector="label#thresholdMessage" foreground="budgetSummaryDialog.label" font="-,plain,12"
+           fill="horizontal" anchor="left" horizontalAlignment="left" marginBottom="5"/>
 
     <style selector="label.threshold" foreground="budgetSummaryDialog.label" font="-,plain,12"
            fill="horizontal" anchor="center" horizontalAlignment="left"
@@ -57,103 +59,114 @@
 
         <column margin="10">
 
-          <grid>
+          <horizontalBoxes>
 
-            <label gridPos="(0,0)" text="$budgetSummaryDetails.balance.title"
-                   styleClass="columnTitle" weightX="5"/>
-            <panel gridPos="(0,1)" styleClass="amountBlock" weightX="5">
-              <column>
-                <label ref="balanceLabel" styleClass="mainAmount" marginTop="0"/>
-              </column>
-            </panel>
-            <textArea gridPos="(0,2)" text="$budgetSummaryDetails.balance.description"
-                      styleClass="description" weightX="5"/>
-            <panel gridPos="(0,3)" ref="balanceChart" background="block.inner.bg" weightX="5"/>
+            <verticalBoxes border="empty(0,0,0,10)" preferredSize="(340,1000)">
+              <label text="$budgetSummaryDetails.balance.title"
+                     styleClass="columnTitle"/>
+              <panel styleClass="amountBlock">
+                <column>
+                  <label ref="balanceLabel" styleClass="mainAmount" marginTop="0"/>
+                </column>
+              </panel>
+              <htmlEditorPane ref="balanceDescription" styleClass="description"/>
+              <panel ref="balanceChart" background="block.inner.bg"/>
+            </verticalBoxes>
 
-            <panel gridPos="(1,0,1,4)" opaque="false"
+            <panel opaque="false"
                    border="matte(0,0,0,1,budgetSummaryDialog.separator)"
                    weightX="0.01" preferredSize="(2,1000)"/>
 
-            <label gridPos="(2,0)" text="$budgetSummaryDetails.position.title"
-                   styleClass="columnTitle" weightX="5"/>
-            <panel gridPos="(2,1)" styleClass="amountBlock" weightX="5">
-              <column>
-                <label ref="estimatedPosition" styleClass="mainAmount"/>
-                <label ref="estimatedPositionDate"/>
-              </column>
-            </panel>
-            <textArea gridPos="(2,2)" ref="positionDescription" styleClass="description" weightX="5"/>
-            <column gridPos="(2,3)" weightX="5">
-              <cards ref="cards">
-                <card name="estimated">
-                  <column>
-                    <grid weightX="1">
-                      <label gridPos="(0,0,2,1)" text="$budgetSummaryDetails.position.initial.balance"
-                             styleClass="header"/>
-
-                      <label gridPos="(0,1)" text="$budgetSummaryDetails.position.amount.balance"
-                             styleClass="amountLabel"/>
-                      <label gridPos="(1,1)" ref="initialPosition" styleClass="amount"/>
-
-                      <label gridPos="(0,2,2,1)" text="$budgetSummaryDetails.position.expected.income"
-                             styleClass="header"/>
-
-                      <label gridPos="(0,3)" text="$budgetSummaryDetails.position.amount.income"
-                             styleClass="amountLabel"/>
-                      <label gridPos="(1,3)" ref="remainingIncome" styleClass="amount"/>
-
-                      <label gridPos="(0,4)" text="$budgetSummaryDetails.position.amount.savings.in"
-                             styleClass="amountLabel"/>
-                      <label gridPos="(1,4)" ref="remainingInSavings" styleClass="amount"/>
-
-                      <label gridPos="(0,5,2,1)" text="$budgetSummaryDetails.position.expected.expenses"
-                             styleClass="header"/>
-
-                      <label gridPos="(0,6)" text="$budgetSummaryDetails.position.amount.savings.out"
-                             styleClass="amountLabel"/>
-                      <label gridPos="(1,6)" ref="remainingOutSavings" styleClass="amount"/>
-
-                      <label gridPos="(0,7)" text="$budgetSummaryDetails.position.amount.fixed"
-                             styleClass="amountLabel"/>
-                      <label gridPos="(1,7)" ref="remainingFixed" styleClass="amount"/>
-
-                      <label gridPos="(0,8)" text="$budgetSummaryDetails.position.amount.envelope"
-                             styleClass="amountLabel"/>
-                      <label gridPos="(1,8)" ref="remainingEnvelope" styleClass="amount"/>
-
-                      <label gridPos="(0,9)" text="$budgetSummaryDetails.position.amount.extras"
-                             styleClass="amountLabel"/>
-                      <label gridPos="(1,9)" ref="remainingExtras" styleClass="amount"/>
-                    </grid>
-
-                    <filler fill="vertical"/>
-                  </column>
-                </card>
-                <card name="actual">
-                  <panel background="block.inner.bg"/>
-                </card>
-              </cards>
-
-              <row marginTop="15" border="matte(1,0,0,0,budgetSummaryDialog.separator)">
-                <component ref="thresholdIndicator"
-                           marginRight="5" marginTop="10"
-                           fill="none" anchor="center"/>
-                <column marginTop="10">
-                  <label ref="thresholdMessage" styleClass="description"/>
-                  <row>
-                    <label text="Seuil" styleClass="threshold"/>
-                    <textField ref="thresholdField"/>
-                    <button action="thresholdHelp" styleClass="hyperlink"/>
-                    <filler fill="horizontal"/>
-                  </row>
+            <verticalBoxes border="empty(0,10,0,0)" preferredSize="(340,1000)">
+              <label text="$budgetSummaryDetails.position.title" styleClass="columnTitle"/>
+              <panel styleClass="amountBlock">
+                <column>
+                  <label ref="estimatedPosition" styleClass="mainAmount"/>
+                  <label ref="estimatedPositionDate"/>
                 </column>
-              </row>
-            </column>
+              </panel>
+              <textArea ref="positionDescription" styleClass="description"/>
+              <column>
+                <cards ref="cards">
+                  <card name="estimated">
+                    <column>
+                      <grid weightX="1">
+                        <label gridPos="(0,0,2,1)" text="$budgetSummaryDetails.position.initial.balance"
+                               styleClass="header"/>
 
-          </grid>
+                        <label gridPos="(0,1)" text="$budgetSummaryDetails.position.amount.balance"
+                               styleClass="amountLabel"/>
+                        <label gridPos="(1,1)" ref="initialPosition" styleClass="amount"/>
+
+                        <label gridPos="(0,2,2,1)" text="$budgetSummaryDetails.position.expected.income"
+                               styleClass="header"/>
+
+                        <label gridPos="(0,3)" text="$budgetSummaryDetails.position.amount.income"
+                               styleClass="amountLabel"/>
+                        <label gridPos="(1,3)" ref="remainingIncome" styleClass="amount"/>
+
+                        <label gridPos="(0,4)" text="$budgetSummaryDetails.position.amount.savings.in"
+                               styleClass="amountLabel"/>
+                        <label gridPos="(1,4)" ref="remainingInSavings" styleClass="amount"/>
+
+                        <label gridPos="(0,5,2,1)" text="$budgetSummaryDetails.position.expected.expenses"
+                               styleClass="header"/>
+
+                        <label gridPos="(0,6)" text="$budgetSummaryDetails.position.amount.savings.out"
+                               styleClass="amountLabel"/>
+                        <label gridPos="(1,6)" ref="remainingOutSavings" styleClass="amount"/>
+
+                        <label gridPos="(0,7)" text="$budgetSummaryDetails.position.amount.fixed"
+                               styleClass="amountLabel"/>
+                        <label gridPos="(1,7)" ref="remainingFixed" styleClass="amount"/>
+
+                        <label gridPos="(0,8)" text="$budgetSummaryDetails.position.amount.envelope"
+                               styleClass="amountLabel"/>
+                        <label gridPos="(1,8)" ref="remainingEnvelope" styleClass="amount"/>
+
+                        <label gridPos="(0,9)" text="$budgetSummaryDetails.position.amount.extras"
+                               styleClass="amountLabel"/>
+                        <label gridPos="(1,9)" ref="remainingExtras" styleClass="amount"/>
+                      </grid>
+
+                      <filler fill="vertical"/>
+                    </column>
+                  </card>
+                  <card name="actual">
+                    <panel background="block.inner.bg"/>
+                  </card>
+                </cards>
+
+                <row marginTop="15" border="matte(1,0,0,0,budgetSummaryDialog.separator)">
+                  <component ref="thresholdIndicator"
+                             marginRight="5" marginTop="10"
+                             fill="none" anchor="center"/>
+                  <column marginTop="20">
+                    <label ref="thresholdMessage"/>
+                    <row>
+                      <label text="$budgetSummaryDetails.threshold.label" styleClass="threshold"/>
+                      <textField ref="thresholdField"/>
+                      <button action="thresholdHelp" styleClass="hyperlink"/>
+                      <filler fill="horizontal"/>
+                    </row>
+                  </column>
+                </row>
+              </column>
+            </verticalBoxes>
+
+          </horizontalBoxes>
+
         </column>
 
       </column>
+
+      <row marginTop="10" marginBottom="10">
+        <filler fill="horizontal"/>
+        <htmlEditorPane text="$budgetSummaryDetails.budgetTuning" hyperlinkListener="hyperlinkHandler"
+                        fill="horizontal" anchor="center"/>
+        <filler fill="horizontal"/>
+      </row>
+
     </column>
   </column>
 </splits>

@@ -30,7 +30,7 @@
           <label text="$login.intro.message" styleClass="centered" marginBottom="15"/>
 
           <horizontalBoxes>
-            <column weightX="10" preferredSize="(260,700)">
+            <column preferredSize="(260,700)">
 
               <column marginRight="15">
 
@@ -79,7 +79,7 @@
 
             </column>
 
-            <column weightX="10" preferredSize="(260,700)"
+            <column preferredSize="(260,700)"
                     border="matte(0,2,0,0,dialog.separator.light)">
 
               <column marginLeft="15">
