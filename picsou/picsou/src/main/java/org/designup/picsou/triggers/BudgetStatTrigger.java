@@ -250,8 +250,11 @@ public class BudgetStatTrigger implements ChangeSetListener {
 
         values.set(BudgetStat.getObserved(budgetArea), amounts.getAmount());
         values.set(BudgetStat.getPlanned(budgetArea), amounts.getPlannedAmount());
-        values.set(BudgetStat.getRemaining(budgetArea), amounts.getRemainingAmount());
+        values.set(BudgetStat.getPositiveRemaining(budgetArea), amounts.getRemainingPositiveAmount());
+        values.set(BudgetStat.getNegativeRemaining(budgetArea), amounts.getRemainingNegativeAmount());
         values.set(BudgetStat.getSummary(budgetArea), amounts.getSummaryAmount());
+        values.set(BudgetStat.getPositiveOverrun(budgetArea), amounts.getOverrunPositiveAmount());
+        values.set(BudgetStat.getNegativeOverrun(budgetArea), amounts.getOverrunNegativeAmount());
 
         if (!budgetArea.isIncome()) {
           expensesAmounts.addValues(amounts);
@@ -260,17 +263,24 @@ public class BudgetStatTrigger implements ChangeSetListener {
 
       values.set(BudgetStat.EXPENSE, expensesAmounts.getAmount());
       values.set(BudgetStat.EXPENSE_PLANNED, expensesAmounts.getPlannedAmount());
-      values.set(BudgetStat.EXPENSE_REMAINING, expensesAmounts.getRemainingAmount());
+      values.set(BudgetStat.EXPENSE_REMAINING, expensesAmounts.getRemainingPositiveAmount());
+      values.set(BudgetStat.EXPENSE_OVERRUN, expensesAmounts.getOverrunPositiveAmount());
       values.set(BudgetStat.EXPENSE_SUMMARY, expensesAmounts.getSummaryAmount());
 
       values.set(BudgetStat.SAVINGS_IN, savingsInAmounts.getAmount());
       values.set(BudgetStat.SAVINGS_IN_PLANNED, savingsInAmounts.getPlannedAmount());
-      values.set(BudgetStat.SAVINGS_IN_REMAINING, savingsInAmounts.getRemainingAmount());
+      values.set(BudgetStat.SAVINGS_IN_POSITIVE_REMAINING, savingsInAmounts.getRemainingPositiveAmount());
+      values.set(BudgetStat.SAVINGS_IN_POSITIVE_OVERRUN, savingsInAmounts.getOverrunPositiveAmount());
+      values.set(BudgetStat.SAVINGS_IN_NEGATIVE_REMAINING, savingsInAmounts.getRemainingNegativeAmount());
+      values.set(BudgetStat.SAVINGS_IN_NEGATIVE_OVERRUN, savingsInAmounts.getOverrunNegativeAmount());
       values.set(BudgetStat.SAVINGS_IN_SUMMARY, savingsInAmounts.getSummaryAmount());
 
       values.set(BudgetStat.SAVINGS_IN, savingsOutAmounts.getAmount());
       values.set(BudgetStat.SAVINGS_OUT_PLANNED, savingsOutAmounts.getPlannedAmount());
-      values.set(BudgetStat.SAVINGS_OUT_REMAINING, savingsOutAmounts.getRemainingAmount());
+      values.set(BudgetStat.SAVINGS_OUT_POSITIVE_REMAINING, savingsOutAmounts.getRemainingPositiveAmount());
+      values.set(BudgetStat.SAVINGS_OUT_POSITIVE_OVERRUN, savingsOutAmounts.getOverrunPositiveAmount());
+      values.set(BudgetStat.SAVINGS_OUT_NEGATIVE_OVERRUN, savingsOutAmounts.getOverrunNegativeAmount());
+      values.set(BudgetStat.SAVINGS_OUT_NEGATIVE_REMAINING, savingsOutAmounts.getRemainingNegativeAmount());
       values.set(BudgetStat.SAVINGS_OUT_SUMMARY, savingsOutAmounts.getSummaryAmount());
 
       double uncategorizedAbs = 0;
@@ -287,8 +297,11 @@ public class BudgetStatTrigger implements ChangeSetListener {
     private BudgetArea budgetArea;
     private double amount;
     private double plannedAmount;
-    private double remainingAmount;
+    private double remainingPositiveAmount;
     private double summaryAmount;
+    private double overrunPositiveAmount;
+    private double overrunNegativeAmount;
+    private double remainingNegativeAmount;
 
     public BudgetAreaAmounts(BudgetArea budgetArea) {
       this.budgetArea = budgetArea;
@@ -297,39 +310,41 @@ public class BudgetStatTrigger implements ChangeSetListener {
     public void addValues(Glob seriesStat, int currentMonthId) {
       double seriesAmount = Utils.zeroIfNull(seriesStat.get(SeriesStat.AMOUNT));
       double seriesPlannedAmount = Utils.zeroIfNull(seriesStat.get(SeriesStat.PLANNED_AMOUNT));
+      double seriesRemainingAmount = Utils.zeroIfNull(seriesStat.get(SeriesStat.REMAINING_AMOUNT));
+      double serisOverrunAmount = Utils.zeroIfNull(seriesStat.get(SeriesStat.OVERRUN_AMOUNT));
 
       amount += seriesAmount;
       plannedAmount += seriesPlannedAmount;
-
-      if (budgetArea.isIncome()) {
-        if (seriesAmount < seriesPlannedAmount) {
-          remainingAmount += seriesPlannedAmount - seriesAmount;
-        }
+      if (seriesRemainingAmount >0){
+        remainingPositiveAmount += seriesRemainingAmount;
       }
       else {
-        if ((seriesPlannedAmount < 0 && seriesAmount > seriesPlannedAmount) ||
-            (seriesPlannedAmount > 0 && seriesAmount < seriesPlannedAmount)) {
-          remainingAmount += seriesPlannedAmount - seriesAmount;
-        }
+        remainingNegativeAmount += seriesRemainingAmount;
+      }
+      if (serisOverrunAmount > 0){
+        overrunPositiveAmount += serisOverrunAmount;
+      }
+      else {
+        overrunNegativeAmount += serisOverrunAmount;
       }
 
       int monthId = seriesStat.get(SeriesStat.MONTH);
       if (monthId < currentMonthId) {
         summaryAmount += seriesAmount;
       }
-      else if (monthId == currentMonthId) { // ??? carte a debit differe
-        summaryAmount += Amounts.max(seriesAmount, seriesPlannedAmount, budgetArea.isIncome());
-      }
       else {
-        summaryAmount += seriesPlannedAmount;
+        summaryAmount += Amounts.max(seriesAmount, seriesPlannedAmount, budgetArea.isIncome());
       }
     }
 
     public void addValues(BudgetAreaAmounts amounts) {
       this.amount += amounts.amount;
-      this.plannedAmount += amounts.plannedAmount;
-      this.remainingAmount += amounts.remainingAmount;
       this.summaryAmount += amounts.summaryAmount;
+      this.plannedAmount += amounts.plannedAmount;
+      this.remainingPositiveAmount += amounts.remainingPositiveAmount;
+      this.remainingNegativeAmount += amounts.remainingNegativeAmount;
+      this.overrunPositiveAmount += amounts.overrunPositiveAmount;
+      this.overrunNegativeAmount += amounts.overrunNegativeAmount;
     }
 
     public Double getAmount() {
@@ -340,12 +355,24 @@ public class BudgetStatTrigger implements ChangeSetListener {
       return plannedAmount;
     }
 
-    public double getRemainingAmount() {
-      return remainingAmount;
+    public double getRemainingPositiveAmount() {
+      return remainingPositiveAmount;
+    }
+
+    public double getOverrunNegativeAmount() {
+      return overrunNegativeAmount;
+    }
+
+    public double getRemainingNegativeAmount() {
+      return remainingNegativeAmount;
     }
 
     public Double getSummaryAmount() {
       return summaryAmount;
+    }
+
+    public double getOverrunPositiveAmount() {
+      return overrunPositiveAmount;
     }
   }
 }

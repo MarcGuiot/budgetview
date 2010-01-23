@@ -3,11 +3,11 @@ package org.designup.picsou.gui.components.charts;
 import org.designup.picsou.model.BudgetArea;
 
 public class BudgetAreaGaugeFactory {
-  public static Gauge createGauge(BudgetArea budgetArea) {
-    return new Gauge(!budgetArea.isOverrunAllowed(), budgetArea.isIncome());
+  public static Gauge createGauge(BudgetArea area) {
+    return new Gauge(area == BudgetArea.SAVINGS);
   }
 
-  public static Gauge createSavingsGauge(boolean overrunIsAnError) {
-    return new Gauge(overrunIsAnError, false);
+  public static Gauge createSavingsGauge(boolean invert) {
+    return new Gauge(invert);
   }
 }

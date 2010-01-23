@@ -10,39 +10,55 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.awt.*;
+import java.util.Set;
 
 public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
   protected final GlobRepository repository;
 
-  protected double overrun;
-  protected double observed;
-  protected double initiallyPlanned;
-  protected double adjustedPlanned;
-
-  protected boolean isPartialOverrun;
-  protected double gaugeActual;
-  protected double gaugeTarget;
-
+  protected ComputeAmounts totalAmounts;
   protected Color normalAmountColor;
   protected Color errorOverrunAmountColor;
-  protected Color positiveOverrunAmountColor;
 
+  protected Color positiveOverrunAmountColor;
   private String normalAmountColorKey = "block.inner.amount";
   private String errorOverrunAmountColorKey = "block.inner.amount.overrun.error";
   private String positiveOverrunAmountColorKey = "block.inner.amount.overrun.positive";
   private ColorService colorService;
+  private Integer currentMonthId;
 
-  public BudgetAreaSummaryComputer(GlobRepository repository, Directory directory) {
+
+  public BudgetAreaSummaryComputer(final GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.colorService = directory.get(ColorService.class);
     this.colorService.addListener(this);
+    if (repository.contains(CurrentMonth.KEY)) {
+      currentMonthId = CurrentMonth.getCurrentMonth(repository);
+    }
+    totalAmounts = new ComputeAmounts(repository) {
+      protected boolean isFuture(Glob budgetStat) {
+        return isFutureOrPresentMonth(budgetStat, currentMonthId);
+      }
+    };
+    repository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(CurrentMonth.KEY)) {
+          currentMonthId = CurrentMonth.getCurrentMonth(repository);
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        if (repository.contains(CurrentMonth.KEY) || repository.contains(CurrentMonth.KEY)) {
+          currentMonthId = CurrentMonth.getCurrentMonth(repository);
+        }
+      }
+    }
+    );
   }
 
   public void setColors(String normalAmountColorKey,
@@ -65,164 +81,207 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
       clearComponents();
       return;
     }
-
-    observed = 0.0;
-    initiallyPlanned = 0.0;
-    Double remaining = 0.0;
-    for (Glob budgetStat : budgetStats) {
-      observed += getObserved(budgetStat, budgetArea);
-      initiallyPlanned += getPlanned(budgetStat, budgetArea);
-      remaining += getRemaining(budgetStat, budgetArea);
-    }
-
-    observed = Amounts.normalize(observed);
-    remaining = Amounts.normalize(remaining);
-    initiallyPlanned = Amounts.normalize(initiallyPlanned);
-
-    if (Amounts.isNotZero(remaining)) {
-
-      adjustedPlanned = Amounts.normalize(observed + remaining);
-
-      if (Amounts.isNearZero(initiallyPlanned) && Amounts.isNotZero(adjustedPlanned)) {
-        isPartialOverrun = true;
-        overrun = observed;
-        gaugeActual = observed;
-        gaugeTarget = initiallyPlanned;
-      }
-      else if (Amounts.sameSign(adjustedPlanned, initiallyPlanned)) {
-        if (Math.abs(adjustedPlanned) > Math.abs(initiallyPlanned)) {
-          isPartialOverrun = true;
-          overrun = Amounts.normalize(adjustedPlanned - initiallyPlanned);
-          gaugeActual = observed;
-          gaugeTarget = initiallyPlanned;
-        }
-        else {
-          isPartialOverrun = false;
-          overrun = 0;
-          gaugeActual = observed;
-          gaugeTarget = initiallyPlanned;
-        }
-      }
-      else {
-        isPartialOverrun = false;
-        overrun = adjustedPlanned;
-        gaugeActual = observed;
-        gaugeTarget = initiallyPlanned;
-      }
-    }
-    else if (isPastMonths(budgetStats)) {
-      isPartialOverrun = false;
-      gaugeActual = observed;
-      gaugeTarget = initiallyPlanned;
-      if (Amounts.isNearZero(initiallyPlanned) && Amounts.isNotZero(observed)) {
-        adjustedPlanned = observed;
-        overrun = observed;
-      }
-      else if (Amounts.isNearZero(observed) && Amounts.isNotZero(initiallyPlanned)) {
-        adjustedPlanned = initiallyPlanned;
-        overrun = 0;
-      }
-      else if (Amounts.sameSign(observed, initiallyPlanned)) {
-        if (Math.abs(observed) > Math.abs(initiallyPlanned)) {
-          adjustedPlanned = observed;
-          overrun = Amounts.normalize(observed - initiallyPlanned);
-        }
-        else {
-          adjustedPlanned = initiallyPlanned;
-          overrun = 0;
-        }
-      }
-      else {
-        adjustedPlanned = observed;
-        overrun = Amounts.normalize(observed - initiallyPlanned);
-      }
-    }
-    else {
-
-      adjustedPlanned = Amounts.normalize(observed + remaining);
-
-      isPartialOverrun = false;
-      gaugeActual = observed;
-      gaugeTarget = initiallyPlanned;
-      if (Amounts.isNearZero(initiallyPlanned) && (Amounts.isNotZero(observed))) {
-        overrun = observed;
-      }
-      else if (Amounts.sameSign(observed, initiallyPlanned)) {
-        if (Math.abs(observed) > Math.abs(initiallyPlanned)) {
-          overrun = Amounts.normalize(observed - initiallyPlanned);
-        }
-        else {
-          overrun = 0;
-        }
-      }
-      else {
-        overrun = Amounts.normalize(observed - initiallyPlanned);
-      }
-    }
-
+    totalAmounts.update(budgetStats, budgetArea);
     updateComponents(budgetArea);
   }
 
-  protected Double getObserved(Glob stat, BudgetArea budgetArea) {
-    if (stat.getType() == BudgetStat.TYPE) {
-      return stat.get(BudgetStat.getObserved(budgetArea));
+  public static abstract class ComputeAmounts {
+    protected double futurePositiveOverrun;
+    protected double observed;
+    protected double initiallyPlanned;
+    protected double adjustedPlanned;
+
+    protected boolean isPartialOverrun;
+    protected double gaugeActual;
+    protected double gaugeTarget;
+    private GlobRepository repository;
+    private Double futurePositiveRemaining;
+    private double pastRemaining;
+    private double pastOverrun;
+    private double totalRemaining;
+    private double futureNegativeRemaining;
+    private double futureNegativeOverrun;
+
+    public ComputeAmounts(GlobRepository repository) {
+      this.repository = repository;
     }
-    if (stat.getType() == SavingsBudgetStat.TYPE) {
-      return stat.get(SavingsBudgetStat.getObserved(budgetArea));
+
+    public void update(GlobList budgetStats, BudgetArea budgetArea) {
+      observed = 0.0;
+      initiallyPlanned = 0.0;
+      double futurPositiveRemaining = 0.0;
+      double futurNegativeRemaining = 0.0;
+      double pastRemaining = 0.0;
+      double futurPositiveOverrun = 0.0;
+      double futurNegativeOverrun = 0.0;
+      double pastOverrun = 0.0;
+      for (Glob budgetStat : budgetStats) {
+        observed += getObserved(budgetStat, budgetArea);
+        initiallyPlanned += getPlanned(budgetStat, budgetArea);
+        if (isFuture(budgetStat)) {
+          futurPositiveRemaining += getPositiveRemaining(budgetStat, budgetArea);
+          futurNegativeRemaining += getNegativeRemaining(budgetStat, budgetArea);
+
+          futurPositiveOverrun += getPositiveOverrun(budgetStat, budgetArea);
+          futurNegativeOverrun += getNegativeOverrun(budgetStat, budgetArea);
+        }
+        else {
+          pastRemaining += getPositiveRemaining(budgetStat, budgetArea);
+          pastRemaining += getNegativeRemaining(budgetStat, budgetArea);
+          pastOverrun += getPositiveOverrun(budgetStat, budgetArea);
+          pastOverrun += getNegativeOverrun(budgetStat, budgetArea);
+        }
+      }
+      futurePositiveRemaining = Amounts.normalize(futurPositiveRemaining);
+      futureNegativeRemaining = Amounts.normalize(futurNegativeRemaining);
+      futurePositiveOverrun = Amounts.normalize(futurPositiveOverrun);
+      futureNegativeOverrun = Amounts.normalize(futurNegativeOverrun);
+
+      this.pastRemaining = Amounts.normalize(pastRemaining);
+      this.pastOverrun = Amounts.normalize(pastOverrun);
+
+      totalRemaining = futurePositiveRemaining + futureNegativeRemaining + this.pastRemaining;
+      double totalOverrun = pastOverrun + futurePositiveOverrun;
+      observed = Amounts.normalize(observed);
+      initiallyPlanned = Amounts.normalize(initiallyPlanned);
+      adjustedPlanned = Amounts.normalize(observed + totalRemaining);
+      isPartialOverrun = !Amounts.isNearZero(totalOverrun);
+      gaugeActual = observed;
+      gaugeTarget = initiallyPlanned;
     }
-    throw new UnexpectedApplicationState(stat.getType().getName());
+
+    protected abstract boolean isFuture(Glob budgetStat);
+
+    public double getFuturePositiveOverrun() {
+      return futurePositiveOverrun;
+    }
+
+    public double getFutureNegativeOverrun() {
+      return futureNegativeOverrun;
+    }
+
+    public Double getFuturePositiveRemaining() {
+      return futurePositiveRemaining;
+    }
+
+    public Double getFutureNegativeRemaining() {
+      return futureNegativeRemaining;
+    }
+
+    public double getObserved() {
+      return observed;
+    }
+
+    public double getInitiallyPlanned() {
+      return initiallyPlanned;
+    }
+
+    public double getAdjustedPlanned() {
+      return adjustedPlanned;
+    }
+
+    public Double getPastRemaining() {
+      return pastRemaining;
+    }
+
+    public Double getPastOverrun() {
+      return pastOverrun;
+    }
+
+    public boolean isPartialOverrun() {
+      return isPartialOverrun;
+    }
+
+    public double getGaugeActual() {
+      return gaugeActual;
+    }
+
+    public double getGaugeTarget() {
+      return gaugeTarget;
+    }
+
+    protected Double getObserved(Glob stat, BudgetArea budgetArea) {
+      if (stat.getType() == BudgetStat.TYPE) {
+        return stat.get(BudgetStat.getObserved(budgetArea));
+      }
+      if (stat.getType() == SavingsBudgetStat.TYPE) {
+        return stat.get(SavingsBudgetStat.getObserved(budgetArea));
+      }
+      throw new UnexpectedApplicationState(stat.getType().getName());
+    }
+
+    protected Double getPlanned(Glob stat, BudgetArea budgetArea) {
+      if (stat.getType() == BudgetStat.TYPE) {
+        return stat.get(BudgetStat.getPlanned(budgetArea));
+      }
+      if (stat.getType() == SavingsBudgetStat.TYPE) {
+        return stat.get(SavingsBudgetStat.getPlanned(budgetArea));
+      }
+      throw new UnexpectedApplicationState(stat.getType().getName());
+    }
+
+    protected Double getPositiveRemaining(Glob stat, BudgetArea budgetArea) {
+      if (stat.getType() == BudgetStat.TYPE) {
+        return stat.get(BudgetStat.getPositiveRemaining(budgetArea));
+      }
+      if (stat.getType() == SavingsBudgetStat.TYPE) {
+        return stat.get(SavingsBudgetStat.getRemaining(budgetArea));
+      }
+      throw new UnexpectedApplicationState(stat.getType().getName());
+    }
+
+    protected Double getNegativeRemaining(Glob stat, BudgetArea budgetArea) {
+      if (stat.getType() == BudgetStat.TYPE) {
+        return stat.get(BudgetStat.getNegativeRemaining(budgetArea));
+      }
+      if (stat.getType() == SavingsBudgetStat.TYPE) {
+        return stat.get(SavingsBudgetStat.getRemaining(budgetArea));
+      }
+      throw new UnexpectedApplicationState(stat.getType().getName());
+    }
+
+    protected Double getPositiveOverrun(Glob stat, BudgetArea budgetArea) {
+      if (stat.getType() == BudgetStat.TYPE) {
+        return stat.get(BudgetStat.getPositiveOverrun(budgetArea));
+      }
+      if (stat.getType() == SavingsBudgetStat.TYPE) {
+        return stat.get(SavingsBudgetStat.getRemaining(budgetArea));
+      }
+      throw new UnexpectedApplicationState(stat.getType().getName());
+    }
+
+    protected Double getNegativeOverrun(Glob stat, BudgetArea budgetArea) {
+      if (stat.getType() == BudgetStat.TYPE) {
+        return stat.get(BudgetStat.getNegativeOverrun(budgetArea));
+      }
+      if (stat.getType() == SavingsBudgetStat.TYPE) {
+        return stat.get(SavingsBudgetStat.getRemaining(budgetArea));
+      }
+      throw new UnexpectedApplicationState(stat.getType().getName());
+    }
   }
 
-  protected Double getPlanned(Glob stat, BudgetArea budgetArea) {
-    if (stat.getType() == BudgetStat.TYPE) {
-      return stat.get(BudgetStat.getPlanned(budgetArea));
-    }
-    if (stat.getType() == SavingsBudgetStat.TYPE) {
-      return stat.get(SavingsBudgetStat.getPlanned(budgetArea));
-    }
-    throw new UnexpectedApplicationState(stat.getType().getName());
-  }
+  static boolean isFutureOrPresentMonth(Glob budgetStat, final Integer currentMonthId) {
 
-  protected Double getRemaining(Glob stat, BudgetArea budgetArea) {
-    if (stat.getType() == BudgetStat.TYPE) {
-      return stat.get(BudgetStat.getRemaining(budgetArea));
-    }
-    if (stat.getType() == SavingsBudgetStat.TYPE) {
-      return stat.get(SavingsBudgetStat.getRemaining(budgetArea));
-    }
-    throw new UnexpectedApplicationState(stat.getType().getName());
-  }
-
-  private boolean isPastMonths(GlobList budgetStats) {
-    Integer currentMonthId = CurrentMonth.getLastTransactionMonth(repository);
-    if (currentMonthId == null) {
-      return false;
-    }
-
-    Integer lastMonth = -1;
-    for (Glob budgetStat : budgetStats) {
-      Integer monthId = budgetStat.getType() == BudgetStat.TYPE ?
-                        budgetStat.get(BudgetStat.MONTH) :
-                        budgetStat.get(SavingsBudgetStat.MONTH);
-      lastMonth = monthId > lastMonth ? monthId : lastMonth;
-    }
-
-    return lastMonth < currentMonthId;
+    Integer monthId = budgetStat.getType() == BudgetStat.TYPE ?
+                      budgetStat.get(BudgetStat.MONTH) :
+                      budgetStat.get(SavingsBudgetStat.MONTH);
+    return monthId >= currentMonthId;
   }
 
   public String getObservedLabel(BudgetArea budgetArea) {
-    return format(observed, budgetArea);
+    return format(totalAmounts.getObserved(), budgetArea);
   }
 
   public String getPlannedLabel(BudgetArea budgetArea) {
-    return format(initiallyPlanned, budgetArea);
+    return format(totalAmounts.getInitiallyPlanned(), budgetArea);
   }
 
   public String getPlannedTooltip(BudgetArea budgetArea) {
-    if (Amounts.isNotZero(overrun)) {
+    if (Amounts.isNotZero(getOverrun())) {
       return Lang.get("budgetSummary.planned.tooltip.overrun",
-                      format(adjustedPlanned, budgetArea),
-                      Formatting.toString(Math.abs(overrun)));
+                      format(totalAmounts.getAdjustedPlanned(), budgetArea),
+                      Formatting.toString(Math.abs(getOverrun())));
     }
     else {
       return Lang.get("budgetSummary.planned.tooltip.normal");
@@ -233,16 +292,35 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
     colorService.removeListener(this);
   }
 
-  public boolean isPartialOverrun() {
-    return isPartialOverrun;
-  }
-
   public boolean hasPositiveOverrun() {
+    Double overrun = getOverrun();
     return Amounts.isNotZero(overrun) && overrun > 0;
   }
 
   public boolean hasErrorOverrun() {
+    Double overrun = getOverrun();
     return Amounts.isNotZero(overrun) && overrun < 0;
+  }
+
+  public Double getOverrun() {
+    return totalAmounts.getFuturePositiveOverrun() + totalAmounts.getFutureNegativeOverrun() +
+           totalAmounts.getPastOverrun();
+  }
+
+  public Double getObserved() {
+    return totalAmounts.getObserved();
+  }
+
+  public Double getGaugeTarget() {
+    return totalAmounts.getGaugeTarget();
+  }
+
+  public Double getInitialyPlanned() {
+    return totalAmounts.getInitiallyPlanned();
+  }
+
+  public Double getGaugeActual() {
+    return totalAmounts.getGaugeActual();
   }
 
   private String format(Double value, final BudgetArea budgetArea) {

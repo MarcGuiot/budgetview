@@ -27,6 +27,12 @@ public class SeriesStat {
   @DefaultDouble(0.0)
   public static DoubleField PLANNED_AMOUNT;
 
+  @DefaultDouble(0.0)
+  public static DoubleField REMAINING_AMOUNT;  
+
+  @DefaultDouble(0.0)
+  public static DoubleField OVERRUN_AMOUNT;
+
   public static DoubleField SUMMARY_AMOUNT;
 
   static {

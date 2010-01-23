@@ -3,6 +3,8 @@ package org.designup.picsou.gui.series;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.CurrentMonth;
+import org.designup.picsou.model.util.Amounts;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -50,6 +52,9 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     else if (changeSet.containsChanges(SeriesStat.TYPE)) {
       updateSelection();
     }
+    else if (changeSet.containsChanges(CurrentMonth.KEY)){
+      updateSelection();
+    }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
@@ -91,9 +96,13 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
   private static class PeriodSeriesStatFunctor implements GlobFunctor {
     private Set<Glob> stats = new HashSet<Glob>();
     private GlobRepository repository;
+    private Integer monthId = 0;
 
     public PeriodSeriesStatFunctor(GlobRepository repository) {
       this.repository = repository;
+      if (repository.contains(CurrentMonth.KEY)){
+        monthId = CurrentMonth.getCurrentMonth(repository);
+      }
     }
 
     public void run(Glob seriesStat, GlobRepository remote) throws Exception {
@@ -103,9 +112,25 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
                       Utils.zeroIfNull(seriesStat.get(SeriesStat.AMOUNT));
       double plannedAmount = periodStat.get(PeriodSeriesStat.PLANNED_AMOUNT) +
                              Utils.zeroIfNull(seriesStat.get(SeriesStat.PLANNED_AMOUNT));
+      double pastRemaining = periodStat.get(PeriodSeriesStat.PAST_REMAINING);
+      double futureRemaining = periodStat.get(PeriodSeriesStat.FUTURE_REMAINING);
+      double pastOverrun = periodStat.get(PeriodSeriesStat.PAST_OVERRUN);
+      double futureOverrun = periodStat.get(PeriodSeriesStat.FUTURE_OVERRUN);
+      if (seriesStat.get(SeriesStat.MONTH) < monthId){
+        pastRemaining += seriesStat.get(SeriesStat.REMAINING_AMOUNT);
+        pastOverrun += seriesStat.get(SeriesStat.OVERRUN_AMOUNT);
+      }
+      else {
+        futureRemaining += seriesStat.get(SeriesStat.REMAINING_AMOUNT);
+        futureOverrun += seriesStat.get(SeriesStat.OVERRUN_AMOUNT);
+      }
       repository.update(periodStat.getKey(),
                         value(PeriodSeriesStat.AMOUNT, amount),
                         value(PeriodSeriesStat.PLANNED_AMOUNT, plannedAmount),
+                        value(PeriodSeriesStat.PAST_REMAINING, pastRemaining),
+                        value(PeriodSeriesStat.FUTURE_REMAINING, futureRemaining),
+                        value(PeriodSeriesStat.PAST_OVERRUN, pastOverrun),
+                        value(PeriodSeriesStat.FUTURE_OVERRUN, futureOverrun),
                         value(PeriodSeriesStat.ABS_SUM_AMOUNT,
                               Math.abs(plannedAmount) > Math.abs(amount) ? Math.abs(plannedAmount) : Math.abs(amount)));
       stats.add(periodStat);

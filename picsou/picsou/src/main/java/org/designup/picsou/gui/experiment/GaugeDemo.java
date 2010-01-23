@@ -16,13 +16,19 @@ public class GaugeDemo {
 
   private static final double[][] pairs = {
     {0, 0},
-    {0, 20},
+    {0, -20},
+    {-12, -20},
+    {-20, -20},
+    {-25, -20},
+    {-50, -20},
+    {5, -20},
+    {-5, 0},
     {12, 20},
     {20, 20},
     {25, 20},
-    {50, 20},
-    {-5, 20},
-    {5, 0},
+    {-12, 20},
+    {-20, 20},
+    {-25, 20},
   };
 
   private static final double[][] triples = {
@@ -59,7 +65,7 @@ public class GaugeDemo {
           addLabel(row, column++, invertedSignIsAnError);
 
           for (double[] pair : pairs) {
-            Gauge gauge = new Gauge(overrunIsAnError, invertedSignIsAnError);
+            Gauge gauge = new Gauge(overrunIsAnError);
             gauge.setPreferredSize(new Dimension(100, 28));
             gauge.setMaximumSize(new Dimension(100, 28));
             gauge.setValues(pair[0], pair[1]);
@@ -67,10 +73,10 @@ public class GaugeDemo {
                         new Insets(5, 5, 5, 5));
           }
           for (double[] triple : triples) {
-            Gauge gauge = new Gauge(overrunIsAnError, invertedSignIsAnError);
+            Gauge gauge = new Gauge(overrunIsAnError);
             gauge.setPreferredSize(new Dimension(100, 28));
             gauge.setMaximumSize(new Dimension(100, 28));
-            gauge.setValues(triple[0], triple[1], triple[2]);
+            gauge.setValues(triple[0], triple[1], triple[2], 0, "");
             builder.add(gauge, column++, row, 1, 1, 1, 1, Fill.HORIZONTAL, Anchor.CENTER,
                         new Insets(5, 5, 5, 5));
 

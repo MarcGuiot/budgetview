@@ -75,12 +75,9 @@ public class CardTypeEditionPanel {
     }
     else {
       String month = Month.getFullMonthLabel(monthId);
-      if (Lang.find("account.deferred.repeat.label." + Month.toMonth(monthId)) != null) {
-        labelForMonth = Lang.get("account.deferred.repeat.label." + Month.toMonth(monthId), Integer.toString(Month.toYear(monthId)));
-      }
-      else {
-        labelForMonth = Lang.get("account.deferred.repeat.label", month, Integer.toString(Month.toYear(monthId)));
-      }
+      labelForMonth = Lang.getWithDefault("account.deferred.repeat.label." + Month.toMonth(monthId),
+                                          "account.deferred.repeat.label",
+                                          month, Integer.toString(Month.toYear(monthId)));
     }
     return labelForMonth;
   }

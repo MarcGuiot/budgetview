@@ -37,6 +37,13 @@ public class Lang {
     return getFormat(key).format(arguments);
   }
 
+  public static String getWithDefault(String key, String defaultKey, Object... arguments) throws ItemNotFound {
+    if (find(key) != null){
+      return get(key, arguments);
+    }
+    return get(defaultKey, arguments);
+  }
+
   public static MessageFormat getFormat(String key) {
     String message = getMessage(key);
     MessageFormat formatter = new MessageFormat(message.replace("'", "''"));

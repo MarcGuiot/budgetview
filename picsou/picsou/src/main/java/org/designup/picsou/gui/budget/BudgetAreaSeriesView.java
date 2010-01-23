@@ -206,6 +206,8 @@ public class BudgetAreaSeriesView extends View {
       final GlobGaugeView gaugeView =
         new GlobGaugeView(PeriodSeriesStat.TYPE, budgetArea, PeriodSeriesStat.AMOUNT,
                           PeriodSeriesStat.PLANNED_AMOUNT,
+                          PeriodSeriesStat.PAST_REMAINING, PeriodSeriesStat.FUTURE_REMAINING,
+                          PeriodSeriesStat.PAST_OVERRUN, PeriodSeriesStat.FUTURE_OVERRUN,
                           GlobMatchers.fieldEquals(PeriodSeriesStat.SERIES, series.get(Series.ID)),
                           repository, directory);
       cellBuilder.add("gauge", gaugeView.getComponent());

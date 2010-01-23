@@ -16,19 +16,19 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
     createMonth(200807);
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<create type='seriesStat' series='10' month='200807'" +
-                                    "        plannedAmount='150.0'/>" +
-                                    "<create type='seriesStat' series='1' month='200807' " +
-                                    "        plannedAmount='0.0'/>");
+                                    "<create type='seriesStat' series='10' month='200807' overrunAmount='0.0'" +
+                                    "        plannedAmount='150.0' remainingAmount='150.0'/>" +
+                                    "<create type='seriesStat' series='1' month='200807' overrunAmount='0.0'" +
+                                    "        plannedAmount='0.0' remainingAmount='0.0'/>");
     repository.startChangeSet();
     createTransaction(10, 10, 200807, 10.0);
     createTransaction(11, 1, 200807, -20.0);
     repository.completeChangeSet();
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<update type='seriesStat' series='10' month='200807'" +
-                                    "        amount='10.0' _amount='(null)'/>" +
-                                    "<update type='seriesStat' series='1' month='200807'" +
-                                    "        amount='-20.0' _amount='(null)'/>");
+                                    "<update type='seriesStat' series='10' month='200807' remainingAmount='140.0'" +
+                                    "        amount='10.0' _amount='(null)' _remainingAmount='150.0'/>" +
+                                    "<update type='seriesStat' series='1' month='200807' _overrunAmount='0.0'" +
+                                    "        amount='-20.0' _amount='(null)' overrunAmount='-20.0'/>");
   }
 
   public void testUnassignedTransactionSeriesAndDeleteSeries() throws Exception {
@@ -45,13 +45,14 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                   "<transaction id='4' month='200807' bankMonth='200807' bankDay='1' budgetMonth='200807' budgetDay='1' amount='-50.0'/>" +
                   "");
 
-    listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<create type='seriesStat' series='10' month='200807'" +
-                                    "        amount='-10.0' plannedAmount='-100.0'/>" +
-                                    "<create type='seriesStat' series='20' month='200807'" +
-                                    "        amount='-20.0' plannedAmount='-100.0'/>" +
-                                    "<create type='seriesStat' series='1' month='200807'" +
-                                    "        amount='-50.0' plannedAmount='0.0'/>");
+    listener.assertLastChangesEqual(
+      SeriesStat.TYPE,
+      "<create type='seriesStat' series='10' month='200807'  overrunAmount='0.0'" +
+      "        amount='-10.0' plannedAmount='-100.0' remainingAmount='-90.0'/>" +
+      "<create type='seriesStat' series='20' month='200807' overrunAmount='0.0'" +
+      "        amount='-20.0' plannedAmount='-100.0' remainingAmount='-80.0'/>" +
+      "<create type='seriesStat' series='1' month='200807' overrunAmount='-50.0'" +
+      "        amount='-50.0' plannedAmount='0.0' remainingAmount='0.0'/>");
 
     repository.startChangeSet();
     repository.update(Key.create(Transaction.TYPE, 2), value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID));
@@ -60,10 +61,10 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     repository.completeChangeSet();
 
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<delete type='seriesStat' series='20' month='200807'" +
-                                    "        _amount='-20.0' _plannedAmount='-100.0'/>" +
-                                    "<update type='seriesStat' series='1' month='200807'" +
-                                    "        _amount='-50.0' amount='-60.0'/>");
+                                    "<update type='seriesStat' series='1' month='200807' _overrunAmount='-50.0'" +
+                                    "        _amount='-50.0' amount='-60.0' overrunAmount='-60.0'/>" +
+                                    "<delete type='seriesStat' series='20' month='200807' _overrunAmount='0.0'" +
+                                    "        _amount='-20.0' _plannedAmount='-100.0'  _remainingAmount='-80.0'/>");
   }
 
   public void testTransactionChangeAmount() throws Exception {
@@ -72,8 +73,8 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     createTransaction(10, 10, 200807, 10.0);
     updateTransactionAmount(10, 5.0);
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<update type='seriesStat' series='10' month='200807'" +
-                                    "        amount='5.0' _amount='10.0'/>");
+                                    "<update type='seriesStat' series='10' month='200807' remainingAmount='145.0'" +
+                                    "        amount='5.0' _amount='10.0' _remainingAmount='140.0'/>");
   }
 
   public void testChangeSerie() throws Exception {
@@ -86,10 +87,10 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     updateTransactionSeries(10, 20);
     repository.completeChangeSet();
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<update type='seriesStat' series='10' month='200807'" +
-                                    "        amount='(null)' _amount='10.0'/>" +
-                                    "<update type='seriesStat' series='20' month='200807'" +
-                                    "        amount='5.0' _amount='(null)'/>");
+                                    "<update type='seriesStat' series='10' month='200807' _remainingAmount='140.0'" +
+                                    "        amount='(null)' _amount='10.0' remainingAmount='150.0'/>" +
+                                    "<update type='seriesStat' series='20' month='200807' _remainingAmount='50.0'" +
+                                    "        amount='5.0' _amount='(null)' remainingAmount='45.0'/>");
   }
 
   public void testChangingMonths() throws Exception {
@@ -103,10 +104,10 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
     repository.update(Key.create(Transaction.TYPE, 1), value(Transaction.BUDGET_MONTH, 200808));
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<update type='seriesStat' series='10' month='200808'" +
-                                    "        amount='30.0' _amount='20.0'/>" +
-                                    "<update type='seriesStat' series='10' month='200807'" +
-                                    "        amount='(null)' _amount='10.0'/>");
+                                    "<update type='seriesStat' series='10' month='200808'  remainingAmount='70.0'" +
+                                    "        amount='30.0' _amount='20.0'  _remainingAmount='80.0'/>" +
+                                    "<update type='seriesStat' series='10' month='200807' _remainingAmount='90.0'" +
+                                    "        amount='(null)' _amount='10.0' remainingAmount='100.0'/>");
   }
 
   public void testUpdatingPlannedAmount() throws Exception {
@@ -135,15 +136,18 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                   "");
     listener.assertLastChangesEqual(
       SeriesStat.TYPE,
-      "<create amount='-90.0' month='200807' plannedAmount='-100.0' series='10' type='seriesStat'/>" +
-      "<create month='200807' plannedAmount='1000.0' series='20' type='seriesStat'/>" +
-      "<create month='200807' plannedAmount='0.0' series='1' type='seriesStat'/>" +
-      "<create amount='200.0' month='200807' plannedAmount='-500.0' series='30' type='seriesStat'/>");
+      "  <create amount='200.0' month='200807' overrunAmount='0.0' plannedAmount='-500.0'\n" +
+      "          remainingAmount='-700.0' series='30' type='seriesStat'/>\n" +
+      "  <create amount='-90.0' month='200807' overrunAmount='0.0' plannedAmount='-100.0'\n" +
+      "          remainingAmount='-10.0' series='10' type='seriesStat'/>" +
+      "  <create month='200807' overrunAmount='0.0' plannedAmount='0.0' remainingAmount='0.0'" +
+      "          series='1' type='seriesStat'/>\n" +
+      "  <create month='200807' overrunAmount='0.0' plannedAmount='1000.0' remainingAmount='1000.0'" +
+      "          series='20' type='seriesStat'/>");
     createTransaction(10, 20, 200807, 750.);
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<update _amount='(null)' amount='750.0' month='200807' series='20'" +
-                                    "        type='seriesStat'/>" +
-                                    "");
+                                    "<update _amount='(null)' amount='750.0' _remainingAmount='1000.0' month='200807' series='20'" +
+                                    "        type='seriesStat' remainingAmount='250.0'/>");
   }
 
   private void updateTransactionSeries(int transactionId, int seriesId) {

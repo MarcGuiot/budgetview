@@ -133,6 +133,10 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
+  public boolean isManual(){
+    return !dialog.getButton("manual").getAwtComponent().isVisible();
+  }
+
   public SeriesEditionDialogChecker switchToAutomatic() {
     WindowInterceptor.init(dialog.getButton("automatic").triggerClick())
       .process(new WindowHandler() {

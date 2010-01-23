@@ -37,7 +37,8 @@ public class GlobGaugeViewTest extends GuiTestCase {
     obj4 = create(4, null, null);
 
     GlobGaugeView view = new GlobGaugeView(MyObject.TYPE, BudgetArea.ENVELOPES,
-                                           MyObject.ACTUAL, MyObject.TARGET,
+                                           MyObject.ACTUAL, MyObject.TARGET, MyObject.PAST_REMAINING, MyObject.FUTURE_REMAINING, 
+                                           MyObject.PAST_OVERRUN, MyObject.FUTURE_OVERRUN,
                                            GlobMatchers.not(fieldEquals(MyObject.ID, 3)),
                                            repository, directory);
     gauge = view.getComponent();
@@ -114,6 +115,12 @@ public class GlobGaugeViewTest extends GuiTestCase {
 
     public static DoubleField ACTUAL;
     public static DoubleField TARGET;
+
+    public static DoubleField PAST_OVERRUN;
+    public static DoubleField FUTURE_OVERRUN;
+
+    public static DoubleField PAST_REMAINING;
+    public static DoubleField FUTURE_REMAINING;
 
     static {
       GlobTypeLoader.init(MyObject.class);
