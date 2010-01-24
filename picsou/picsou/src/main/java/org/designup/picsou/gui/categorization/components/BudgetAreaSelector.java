@@ -85,22 +85,26 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
     budgetAreaCard.show("series");
 
     if (BudgetArea.UNCATEGORIZED.equals(budgetArea)) {
-      SortedSet<Integer> areaIds = getSelectedTransactionAreas();
-      if ((areaIds.size() == 1) && BudgetArea.UNCATEGORIZED.getId().equals(areaIds.iterator().next())) {
-        if (selectedTransactions.size() == 1) {
-          uncategorizedMessage.setText(Lang.get("categorization.uncategorized.single"));
-        }
-        else {
-          uncategorizedMessage.setText(Lang.get("categorization.uncategorized.multiple"));
-        }
-        seriesCard.show(budgetArea.getName());
-      }
-      else {
-        seriesCard.show("revertToUncategorized");
-      }
+      updateUncategorizedMessage(budgetArea);
     }
     else {
       seriesCard.show(budgetArea.getName());
+    }
+  }
+
+  private void updateUncategorizedMessage(BudgetArea budgetArea) {
+    SortedSet<Integer> areaIds = getSelectedTransactionAreas();
+    if ((areaIds.size() == 1) && BudgetArea.UNCATEGORIZED.getId().equals(areaIds.iterator().next())) {
+      if (selectedTransactions.size() == 1) {
+        uncategorizedMessage.setText(Lang.get("categorization.uncategorized.single"));
+      }
+      else {
+        uncategorizedMessage.setText(Lang.get("categorization.uncategorized.multiple"));
+      }
+      seriesCard.show(budgetArea.getName());
+    }
+    else {
+      seriesCard.show("revertToUncategorized");
     }
   }
 
@@ -155,17 +159,20 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     this.selectedTransactions = GlobList.EMPTY;
+    showNoSelection();
   }
 
   private void updateSelection() {
     if (selectedTransactions.isEmpty()) {
+      select(BudgetArea.UNCATEGORIZED, true);
       showNoSelection();
       return;
     }
 
     SortedSet<Integer> areas = getSelectedTransactionAreas();
     if (areas.size() != 1) {
-      multiBudgetAreaToggle.doClick(0);
+      budgetAreaCard.show("series");
+      seriesCard.show("multipleAreas");
     }
 
     GlobList accounts = getSelectecTransacionAcounts();
@@ -185,7 +192,23 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
     }
 
     final Integer selectedAreaId = areas.first();
-    select(BudgetArea.get(selectedAreaId), true);
+    BudgetArea budgetArea = BudgetArea.get(selectedAreaId);
+    if (budgetArea != BudgetArea.UNCATEGORIZED) {
+      select(budgetArea, true);
+    }
+    else {
+      budgetAreaCard.show("series");
+      JToggleButton uncategorizedButton = this.toggles.get(BudgetArea.UNCATEGORIZED);
+      for (JToggleButton button : toggles.values()) {
+        if (button.isSelected()){
+          if (button == uncategorizedButton){
+            updateUncategorizedMessage(budgetArea);
+          }
+          return;
+        }
+      }
+      select(BudgetArea.UNCATEGORIZED, true);
+    }
   }
 
   private void enableGoodBudgetArea(boolean allEnable) {

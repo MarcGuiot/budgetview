@@ -637,7 +637,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .checkMultipleSeriesSelection()
       .setUncategorized()
       .selectTransaction("Prelevement")
-      .checkToCategorize();
+      .checkSavingPreSelected();
   }
 
   public void testImportedSavingsAccountWithMainAccount() throws Exception {
@@ -1269,7 +1269,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .checkFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .validate();
 
-    categorization.selectTransaction("Virement vers Epargne")
+    categorization
+      .selectUncategorized()
+      .selectTransaction("Virement vers Epargne")
       .checkToCategorize()
       .selectTransaction("Virement Epargne")
       .checkSavingPreSelected();
