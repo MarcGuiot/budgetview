@@ -574,4 +574,22 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 //    operations.checkOk();
   }
 
+  public void testMutltiSelectionAtStartup() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/25", -50.0, "Auchan")
+      .addTransaction("2008/06/15", -40.0, "EDF")
+      .addTransaction("2008/06/16", -30.0, "Monop")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewEnvelope("Auchan", "courses");
+    categorization.setNewRecurring("EDF", "electricite");
+
+    restartApplication();
+    views.selectCategorization();
+    categorization.selectAllTransactions();
+    categorization.checkMultipleSeriesSelection();
+  }
+
 }

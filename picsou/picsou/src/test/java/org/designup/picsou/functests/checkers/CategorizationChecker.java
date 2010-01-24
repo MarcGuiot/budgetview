@@ -75,8 +75,8 @@ public class CategorizationChecker extends GuiChecker {
     Panel panel = getPanel();
     for (BudgetArea area : BudgetArea.values()) {
       if ((area != BudgetArea.UNCATEGORIZED) && (area != BudgetArea.ALL)) {
-        assertFalse(panel.containsUIComponent(Button.class, area.getName()));
-        assertFalse(panel.containsUIComponent(ToggleButton.class, area.getName()));
+        assertFalse(area.getName(), panel.containsUIComponent(Button.class, area.getName()));
+        assertFalse(area.getName(), panel.containsUIComponent(ToggleButton.class, area.getName()));
       }
     }
     assertThat(panel.getTextBox("noSelectionMessage").textContains("You must select an operation"));
@@ -161,6 +161,16 @@ public class CategorizationChecker extends GuiChecker {
 
   public CategorizationChecker checkSavingPreSelected() {
     assertThat(getPanel().getToggleButton(BudgetArea.SAVINGS.getName()).isSelected());
+    return this;
+  }
+
+  public CategorizationChecker checkRecurringPreSelected() {
+    assertThat(getPanel().getToggleButton(BudgetArea.RECURRING.getName()).isSelected());
+    return this;
+  }
+
+  public CategorizationChecker checkEnvelopesPreSelected() {
+    assertThat(getPanel().getToggleButton(BudgetArea.ENVELOPES.getName()).isSelected());
     return this;
   }
 

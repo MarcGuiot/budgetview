@@ -107,7 +107,6 @@ public class CategorizationView extends View implements TableView, Filterable {
   }
 
   private GlobsPanelBuilder createPanelBuilder() {
-    JFrame parent = directory.get(JFrame.class);
 
     seriesEditionDialog = directory.get(SeriesEditionDialog.class);
 

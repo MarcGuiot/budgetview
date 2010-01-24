@@ -1248,4 +1248,34 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"25/06/2008", "Internal transfers", "Transfer", -50.00}
     });
   }
+
+  public void testDoNotSwitchToUncategorized() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/25", -50.0, "Auchan")
+      .addTransaction("2008/06/15", -40.0, "EDF")
+      .addTransaction("2008/06/16", -30.0, "Monop")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTransaction("Auchan")
+      .checkToCategorize();
+    categorization.setNewEnvelope("Auchan", "courses")
+      .setNewRecurring("EDF", "electricite");
+    categorization.selectTransaction("Monop")
+      .checkRecurringPreSelected();
+
+    categorization.selectTransaction("Auchan")
+      .selectTransaction("Monop")
+      .checkEnvelopesPreSelected()
+      .selectAllTransactions()
+      .checkMultipleSeriesSelection();
+
+    categorization.selectTransaction("Monop")
+      .checkEnvelopesPreSelected()
+      .selectTransaction("Auchan")
+      .selectUncategorized()
+      .selectTransaction("Monop")
+      .checkToCategorize();
+  }
 }
