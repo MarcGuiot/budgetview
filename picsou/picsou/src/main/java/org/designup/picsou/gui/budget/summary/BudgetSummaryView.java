@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.budget.summary;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.JRoundedButton;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
@@ -25,6 +26,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.Set;
 import java.util.SortedSet;
@@ -34,7 +36,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   private JLabel balanceLabel = new JLabel();
   private JLabel estimatedPositionLabel = new JLabel();
   private JLabel estimatedPositionTitle = new JLabel();
-  private JLabel uncategorizedLabel = new JLabel();
+  private JButton uncategorizedButton = new JButton();
   private JLabel multiSelectionLabel = new JLabel();
   private final DecimalFormat format = Formatting.DECIMAL_FORMAT;
 
@@ -68,9 +70,11 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     builder.add("balanceLabel", balanceLabel);
     builder.add("positionLabel", estimatedPositionLabel);
     builder.add("positionTitle", estimatedPositionTitle);
-    builder.add("uncategorizedLabel", uncategorizedLabel);
+    builder.add("uncategorized", uncategorizedButton);
     builder.add("multiSelectionLabel", multiSelectionLabel);
     builder.add("openDetailsButton", createOpenDetailsButton());
+
+    uncategorizedButton.addActionListener(new GotoUncategorizedAction());
 
     parentBuilder.add("budgetSummaryView", builder);
   }
@@ -103,7 +107,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     if (!repository.contains(Transaction.TYPE) || budgetStats.isEmpty()) {
       clear(balanceLabel);
       clear(estimatedPositionLabel);
-      clear(uncategorizedLabel);
+      clear(uncategorizedButton);
       return;
     }
 
@@ -120,13 +124,14 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
     Double uncategorized = budgetStats.getSum(BudgetStat.UNCATEGORIZED_ABS);
     if ((uncategorized != null) && (uncategorized > 0.01)) {
-      uncategorizedLabel.setText(format.format(uncategorized));
-      uncategorizedLabel.setForeground(errorColor);
+      uncategorizedButton.setText(format.format(uncategorized));
+      uncategorizedButton.setForeground(errorColor);
+      uncategorizedButton.setEnabled(true);
     }
     else {
-      clear(uncategorizedLabel);
+      clear(uncategorizedButton);
+      uncategorizedButton.setEnabled(false);
     }
-
   }
 
   private void updateEstimatedPosition(SortedSet<Integer> selectedMonthIds) {
@@ -232,4 +237,9 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     }
   }
 
+  private class GotoUncategorizedAction extends AbstractAction {
+    public void actionPerformed(ActionEvent e) {
+      directory.get(NavigationService.class).gotoUncategorized();
+    }
+  }
 }

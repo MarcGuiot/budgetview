@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
+import org.uispec4j.Button;
 import org.uispec4j.interception.WindowInterceptor;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
@@ -32,13 +33,21 @@ public class BudgetSummaryViewChecker extends GuiChecker {
   }
 
   public BudgetSummaryViewChecker checkUncategorized(double amount) {
-    assertThat(getPanel().getTextBox("uncategorizedLabel").textEquals(toString(amount, false)));
+    Button button = getPanel().getButton("uncategorized");
+    assertThat(button.textEquals(toString(amount, false)));
+    assertThat(button.isEnabled());
     return this;
   }
 
   public BudgetSummaryViewChecker checkUncategorizedNotShown() {
-    assertThat(getPanel().getTextBox("uncategorizedLabel").textEquals("-"));
+    Button button = getPanel().getButton("uncategorized");
+    assertThat(button.textEquals("-"));
+    assertFalse(button.isEnabled());
     return this;
+  }
+
+  public void gotoUncategorized() {
+    getPanel().getButton("uncategorized").click();
   }
 
   public void checkEmpty() {
@@ -64,12 +73,12 @@ public class BudgetSummaryViewChecker extends GuiChecker {
   }
 
   public BudgetSummaryDetailsChecker openEstimatedPositionDetails() {
-    Window window = WindowInterceptor.getModalDialog(getPanel().getButton().triggerClick());
+    Window window = WindowInterceptor.getModalDialog(getPanel().getButton("openDetailsButton").triggerClick());
     return new BudgetSummaryDetailsChecker(window);
   }
 
   public void checkNoEstimatedPositionDetails() {
-    assertFalse(getPanel().getButton().isEnabled());
+    assertFalse(getPanel().getButton("openDetailsButton").isEnabled());
   }
 
   public void checkNoEstimatedPosition() {

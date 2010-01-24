@@ -5,6 +5,7 @@ import org.uispec4j.*;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.utils.Utils;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,6 +143,7 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   }
 
   public BudgetAreaCategorizationChecker selectSeries(String seriesName) {
+    checkComponentVisible(panel, JRadioButton.class, seriesName, true);
     panel.getRadioButton(seriesName).click();
     return this;
   }

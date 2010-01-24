@@ -29,14 +29,15 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     timeline.checkSelection("2008/07");
     timeline.selectAll();
     budgetView.getSummary().checkUncategorized(1000.00 + 200.00 + 50.00);
+    budgetView.getSummary().gotoUncategorized();
+
+    views.checkCategorizationSelected();
+    categorization.checkShowsUncategorizedTransactionsOnly();
+    categorization.checkNoSelectedTableRows();
+    categorization.selectTransactions("WorldCo").selectIncome().createSeries("Salary");
+    categorization.selectTransactions("Auchan").selectEnvelopes().createSeries("Groceries");
 
     timeline.selectMonth("2008/07");
-
-    views.selectCategorization();
-    categorization.setNewIncome("WorldCo", "Salary");
-    categorization.setNewEnvelope("Auchan", "Groceries");
-
-    timeline.checkSelection("2008/07");
     views.selectBudget();
     budgetView.getSummary()
       .checkMultiSelectionNotShown()
@@ -60,6 +61,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .checkUncategorizedNotShown();
 
     views.selectCategorization();
+    categorization.showAllTransactions();
     categorization.setNewEnvelope("FNAC", "Leisures");
 
     timeline.selectMonth("2008/07");

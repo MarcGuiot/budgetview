@@ -3,8 +3,13 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <styles>
-    <style selector="label.totalAmount" foreground=""/>
+    <style selector="label.totalAmount" foreground="" weightX="10"/>
     <style selector="button.roundedButton" fill="none" weightX="0"/>
+
+    <ui name="uncategorizedButtonUI" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+        underline="true" useNormalColorWhenDisabled="true" autoHideEnabled="false"/>
+    <style selector="button#uncategorized" ui="uncategorizedButtonUI" font="-,bold,12"
+           weightX="10" fill="none"/>
   </styles>
 
   <column>
@@ -12,20 +17,20 @@
 
       <button ref="openDetailsButton"
               styleClass="roundedButton" gridPos="(0,0,1,2)"
-        icon="button_magnifier.png"
-        rolloverIcon="button_magnifier_rollover.png"
-        pressedIcon="button_magnifier.png"
-        disabledIcon="button_magnifier_disabled.png"/>
+              icon="button_magnifier.png"
+              rolloverIcon="button_magnifier_rollover.png"
+              pressedIcon="button_magnifier.png"
+              disabledIcon="button_magnifier_disabled.png"/>
 
       <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle" gridPos="(1,0)"/>
       <label ref="balanceLabel" styleClass="totalAmount" gridPos="(1,1)"
-        tooltipText="$budgetSummaryView.balance.tooltip"/>
+             tooltipText="$budgetSummaryView.balance.tooltip"/>
 
       <label ref="positionTitle" styleClass="totalAmountTitle" gridPos="(2,0)"/>
       <label ref="positionLabel" styleClass="totalAmount" gridPos="(2,1)"/>
 
       <label text="$budgetSummaryView.uncategorized" styleClass="totalAmountTitle" gridPos="(3,0)"/>
-      <label ref="uncategorizedLabel" styleClass="totalAmount" font="-,bold,12" gridPos="(3,1)"/>
+      <button ref="uncategorized" styleClass="uncategorized" gridPos="(3,1)"/>
 
     </grid>
     <row>

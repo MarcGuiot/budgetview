@@ -109,6 +109,12 @@ public class BudgetSummaryDetailsChecker extends GuiChecker {
     return this;
   }
 
+  public BudgetSummaryDetailsChecker checkBalanceText(String text) {
+    TextBox textBox = window.getTextBox("balanceDescription");
+    assertThat(textBox.textContains(text));
+    return this;
+  }
+
   public BudgetSummaryDetailsChecker checkBalanceDetails(double income, double recurring, double envelopes, double savings, double extras) {
     StackChart chart = (StackChart)window.getPanel("balanceChart").getAwtComponent();
 

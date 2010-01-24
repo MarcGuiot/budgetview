@@ -7,8 +7,9 @@ import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.MonthListStringifier;
-import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.help.HelpAction;
+import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.model.AccountPositionThreshold;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.CurrentMonth;
@@ -44,9 +45,10 @@ public class BudgetSummaryDetailsDialog {
   private JTextArea positionDescription;
   private StackChart balanceChart;
   private StackChartColors balanceChartColors;
+  private JEditorPane balanceDescription;
   private CardHandler positionCard;
-  private PicsouDialog dialog;
 
+  private PicsouDialog dialog;
   private Directory directory;
   private LocalGlobRepository localRepository;
 
@@ -134,8 +136,13 @@ public class BudgetSummaryDetailsDialog {
 
     title = builder.add("title", new JLabel("budgetSummaryDetailsDialog")).getComponent();
 
+    builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
+
     builder.add("balanceChart", balanceChart);
     builder.addLabel("balanceLabel", BudgetStat.TYPE, new BalanceStringifier()).getComponent();
+
+    balanceDescription = GuiUtils.createReadOnlyHtmlComponent();
+    builder.add("balanceDescription", balanceDescription);
 
     positionCard = builder.addCardHandler("cards");
 
@@ -151,11 +158,11 @@ public class BudgetSummaryDetailsDialog {
     addLabel(builder, "remainingOutSavings", true, BudgetStat.SAVINGS_OUT_NEGATIVE_REMAINING);
     addLabel(builder, "remainingExtras", true, BudgetStat.EXTRAS_POSITIVE_REMAINING, BudgetStat.EXTRAS_NEGATIVE_REMAINING);
 
-      builder.add("thresholdIndicator",
-                  new PositionThresholdIndicator(localRepository, directory,
-                                                 "budgetSummaryDialog.threshold.top",
-                                                 "budgetSummaryDialog.threshold.bottom",
-                                                 "budgetSummaryDialog.threshold.border")).getComponent();
+    builder.add("thresholdIndicator",
+                new PositionThresholdIndicator(localRepository, directory,
+                                               "budgetSummaryDialog.threshold.top",
+                                               "budgetSummaryDialog.threshold.bottom",
+                                               "budgetSummaryDialog.threshold.border")).getComponent();
     builder.addEditor("thresholdField", AccountPositionThreshold.THRESHOLD)
       .forceSelection(AccountPositionThreshold.KEY)
       .setNotifyOnKeyPressed(true)
@@ -207,8 +214,23 @@ public class BudgetSummaryDetailsDialog {
         return "";
       }
       double total = list.getSum(BudgetStat.MONTH_BALANCE);
+      updateBalanceDescription(total);
       return Formatting.toStringWithPlus(total);
     }
+  }
+
+  private void updateBalanceDescription(double total) {
+    String amountString = Formatting.toString(Math.abs(total));
+    if (total > 0) {
+      balanceDescription.setText(Lang.get("budgetSummaryDetails.balance.positive", amountString));
+    }
+    else if (total < 0) {
+      balanceDescription.setText(Lang.get("budgetSummaryDetails.balance.negative", amountString));
+    }
+    else {
+      balanceDescription.setText(Lang.get("budgetSummaryDetails.balance.zero"));
+    }
+    GuiUtils.revalidate(balanceDescription);
   }
 
   private class EspectedPositionStringifier implements GlobListStringifier {
