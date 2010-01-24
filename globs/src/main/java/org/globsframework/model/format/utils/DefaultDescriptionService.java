@@ -6,8 +6,8 @@ import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeUtils;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.*;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.Utils;
@@ -63,6 +63,7 @@ public class DefaultDescriptionService implements DescriptionService {
         }
       }
       catch (MissingResourceException e) {
+        // Will return the default value
       }
     }
     return defaultValue;
@@ -165,6 +166,11 @@ public class DefaultDescriptionService implements DescriptionService {
     return new CompositeGlobListStringifier(stringifier);
   }
 
+  public GlobListStringifier getListStringifier(Link link, String textForEmptySelection, String textForMultipleValues) {
+    GlobStringifier stringifier = getStringifier(link);
+    return new CompositeGlobListStringifier(stringifier, textForEmptySelection, textForMultipleValues);
+  }
+
   public GlobStringifier getStringifier(LinkField link) {
     return getStringifier((Link)link);
   }
@@ -175,20 +181,30 @@ public class DefaultDescriptionService implements DescriptionService {
 
   private static class CompositeGlobListStringifier implements GlobListStringifier {
     private final GlobStringifier stringifier;
+    private String textForEmptySelection;
+    private String textForMultipleValues;
 
     public CompositeGlobListStringifier(GlobStringifier stringifier) {
+      this(stringifier, "", "...");
+    }
+
+    public CompositeGlobListStringifier(GlobStringifier stringifier,
+                                        String textForEmptySelection,
+                                        String textForMultipleValues) {
       this.stringifier = stringifier;
+      this.textForEmptySelection = textForEmptySelection;
+      this.textForMultipleValues = textForMultipleValues;
     }
 
     public String toString(GlobList list, GlobRepository repository) {
       if (list.isEmpty()) {
-        return "";
+        return textForEmptySelection;
       }
       String current = stringifier.toString(list.get(0), repository);
       for (Glob glob : list) {
         String text = stringifier.toString(glob, repository);
         if (!Utils.equal(current, text)) {
-          return "...";
+          return textForMultipleValues;
         }
       }
       return current;

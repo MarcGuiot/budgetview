@@ -75,8 +75,9 @@ public class GlobListStringifiers {
     };
   }
 
-  public static GlobListStringifier conditionnalSum(final GlobMatcher matcher,
-                                                    final DecimalFormat format, final DoubleField... fields) {
+  public static GlobListStringifier conditionalSum(final GlobMatcher matcher,
+                                                   final DecimalFormat format,
+                                                   final DoubleField... fields) {
     return new GlobListStringifier() {
       public String toString(GlobList list, GlobRepository repository) {
         if (list.isEmpty()) {

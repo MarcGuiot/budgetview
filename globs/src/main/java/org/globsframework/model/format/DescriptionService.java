@@ -31,4 +31,5 @@ public interface DescriptionService {
 
   GlobListStringifier getListStringifier(LinkField link);
 
+  GlobListStringifier getListStringifier(Link link, String textForEmptySelection, String textForMultipleValues);
 }

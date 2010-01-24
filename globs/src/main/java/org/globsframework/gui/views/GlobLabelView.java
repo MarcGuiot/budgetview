@@ -40,6 +40,13 @@ public class GlobLabelView extends AbstractGlobTextView<GlobLabelView> {
     return init(link.getSourceType(), repository, directory, stringifier);
   }
 
+  public static GlobLabelView init(LinkField link, String textForEmptySelection, String textForMultipleValues,
+                                   GlobRepository repository, Directory directory) {
+    GlobListStringifier stringifier = directory.get(DescriptionService.class)
+      .getListStringifier(link, textForEmptySelection, textForMultipleValues);
+    return init(link.getSourceType(), repository, directory, stringifier);
+  }
+
   private GlobLabelView(GlobType type, GlobRepository repository, Directory directory, GlobListStringifier stringifier) {
     super(type, repository, directory, stringifier);
     this.label = new JLabel();

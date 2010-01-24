@@ -127,6 +127,11 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     return store(GlobLabelView.init(link, repository, directory)).setName(name);
   }
 
+  public GlobLabelView addLabel(String name, LinkField link, String textForEmptySelection, String textForMultipleValues) {
+    return store(GlobLabelView.init(link, textForEmptySelection, textForMultipleValues, repository, directory))
+      .setName(name);
+  }
+
   public GlobMultiLineTextView addMultiLineTextView(String name, GlobType type) {
     return addMultiLineTextView(name, type, directory.get(DescriptionService.class).getListStringifier(type));
   }
