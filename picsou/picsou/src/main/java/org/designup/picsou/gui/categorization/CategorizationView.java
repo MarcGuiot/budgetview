@@ -432,7 +432,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     private FieldValue[] forcedValues;
 
     public CreateSeriesAction(BudgetArea budgetArea, FieldValue... forcedValues) {
-      super(Lang.get("add"));
+      super(Lang.get("categorization.series.add"));
       this.budgetArea = budgetArea;
       this.forcedValues = forcedValues;
     }

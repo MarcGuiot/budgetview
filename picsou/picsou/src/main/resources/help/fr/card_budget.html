@@ -1,30 +1,70 @@
 <html>
 <body>
 
-<p>La vue <b>Budget</b> présente le détail des différents <a href="help:budgetAreas">postes budgétaires</a>
-  qui constituent votre budget.</p>
-<p>C'est dans cette vue que vous <a href="help:budgetTuning">affinez la définition de votre budget</a>
-  et que vous le pilotez chaque mois.</p>
+<p>La vue <b>Budget</b> présente l'état de toutes vos séries&nbsp;:</p>
 
 <div class="centered">
-  <img src="help/budget_screen.png">
+  <img src="help/fr/budget_depassements.png">
 </div>
 
-<p>Pour chaque poste budgétaire, CashPilot vous indique quelle somme a été relevée au total pour le mois
-  sélectionné, et quelle somme totale est prévue.</p>
+<p>Une fois vos opérations <a href="help:import">importées</a> et
+  <a href="help:categorization">catégorisées</a>, vous utilisez cette vue pour régler vos séries en suivant
+  les indications ci-dessous&nbsp;:</p>
 
-<p>Le centre de chaque bloc donne le détail des séries du poste budgétaire. Le chiffre affiché à gauche de la jauge
-  représente le montant réellement observé, tandis que celui de droite représente le montant prévu pour le mois
-  en cours. Pour modifier le ce montant prévu, vous devez éditer la série elle-même en cliquant sur son nom. Si
-  cette série est en mode "budget automatique", vous pouvez activer le "mode manuel" pour saisir vous-même
-  les montants attendus.</p>
+<h2>Comprenez votre balance et votre solde de fin de mois</h2>
 
-<p>Au bas de chaque bloc, le bouton "+" vous permet de créer une nouvelle série, tandis que le bouton "liste"
-  vous permet d'éditer la liste complète des séries du poste budgétaire&nbsp;-y compris celles qui ne sont pas
-  visibles dans le mois sélectionné.</p>
+<p>Il s'agit de vos deux indicateurs principaux pour régler votre budget.
+  Cliquez sur le bouton "loupe" pour accéder au détail de ces indicateurs&nbsp;:</p>
 
-<p style="text-align:right;font-size:9pt;margin-top:10px;">Revenir à la
-  <a href="help:interface">présentation de l'interface</a></p>
+<div class="centered">
+  <img src="help/fr/budget_details.png">
+</div>
+
+
+<h2>Réglez les montants attendus pour vos séries</h2>
+
+<p>Cliquez sur les montants prévus pour les ajuster&nbsp;:</p>
+
+<div class="centered">
+  <img src="help/fr/budget_reglage_montants.png">
+</div>
+
+
+<h2>Réglez les périodicités des séries</h2>
+
+<p>Certaines séries ont des periodicités différentes des périodicités mensuelles classiques - par exemple un paiement
+  de factures d'électricité qui survient tous les deux mois. Là encore, vous pouvez les éditer pour choisir la
+  périodicité adaptée&nbsp;:</p>
+<div class="centered">
+  <img src="help/fr/budget_reglage_periodicite.png">
+</div>
+
+
+<h2>Créez les séries "extra"</h2>
+
+<p>Enfin, vous devez créer des séries dans le poste budgétaire "<b>Extra</b>" pour représenter les dépenses
+  particulières qui vont marquer le budget de ce mois&nbsp;: achats importants, réparations, voyages, etc.</p>
+<p>Vous utilisez aussi les séries "Extra" pour anticiper vos projets dans le futur&nbsp;:</p>
+<div class="centered">
+  <img src="help/fr/budget_creation_projets.png">
+</div>
+
+
+<h2>Décalez des opérations</h2>
+
+<p>Il se peut que votre budget soit faussé par le fait qu'une opération importante ait été comptabilisée au mois
+  précédent ou suivant celui où vous l'attendiez.</p>
+<p>Le cas typique concerne les salaires, avec par exemple le salaire du mois de mai qui arrive au 1er juin,
+  et celui du mois de juin qui arrive au 31 mai. Dans cette configuration, le budget de mai ne comporte aucun
+  salaire tandis que celui de juin en comporte deux.</p>
+<p>Pour corriger cette situation, vous devez vous rendre dans la vue
+  <a href="help:card_categorization">Catégorisation</a>, retrouver l'opération en question, et la décaler au bon
+  mois en cliquant sur le bouton "Décaler".</p>
+
+<h2>Préparez les mois suivants</h2>
+
+<p>Une fois vos séries correctement réglées, vous pouvez repéter l'opération pour les mois suivants de manière à vous
+  anticiper votre budget et préparer vos projets pour les mois à venir.</p>
 
 </body>
 </html>
