@@ -70,6 +70,11 @@ public class NavigationService implements GlobSelectionListener {
     gotoCategorization();
   }
 
+  public void gotoUncategorized() {
+    categorizationView.showUncategorized();
+    gotoCategorization();
+  }
+
   public void gotoDataForSeries(Glob series) {
     selectionService.select(repository.get(Account.ALL_SUMMARY_KEY));
     seriesView.selectSeries(series);

@@ -9,7 +9,6 @@
 
   <column styleClass="main">
 
-
     <horizontalSplit ref="horizontalSplitPane">
 
       <column weightX="3">
@@ -32,8 +31,8 @@
       </column>
 
       <verticalSplit ref="secondVerticalSplitPane" weightX="3">
-        <panel ref="recurringBudgetView" weightY="6"/>
-        <panel ref="extrasBudgetView" weightY="4"/>
+        <panel ref="recurringBudgetView" weightY="7"/>
+        <panel ref="extrasBudgetView" weightY="3"/>
       </verticalSplit>
 
       <verticalSplit ref="thirdVerticalSplitPane" weightX="3">

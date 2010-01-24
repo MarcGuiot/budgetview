@@ -392,6 +392,13 @@ public class CategorizationView extends View implements TableView, Filterable {
     doShow(transactions);
   }
 
+  public void showUncategorized() {
+    setFilteringMode(TransactionFilteringMode.UNCATEGORIZED);
+    filterSet.clear();
+    updateTableFilter();
+    transactionTable.clearSelection();
+  }
+
   private void updateFilteringMode(GlobList transactions, boolean forceShowUncategorized) {
     if (forceShowUncategorized) {
       setFilteringMode(TransactionFilteringMode.UNCATEGORIZED);
@@ -412,13 +419,12 @@ public class CategorizationView extends View implements TableView, Filterable {
   private void doShow(GlobList transactions) {
     if (transactions.size() < 2) {
       filterSet.clear();
-      updateTableFilter();
     }
     else {
       filterSet.replaceAllWith(CustomFilterMessagePanel.CUSTOM,
                                fieldIn(Transaction.ID, transactions.getValueSet(Transaction.ID)));
-      updateTableFilter();
     }
+    updateTableFilter();
     transactionTable.select(transactions);
   }
 
