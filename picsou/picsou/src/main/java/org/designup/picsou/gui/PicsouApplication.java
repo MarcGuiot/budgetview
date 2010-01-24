@@ -46,8 +46,8 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "0.34";
-  public static final Long JAR_VERSION = 31L;
+  public static final String APPLICATION_VERSION = "0.35";
+  public static final Long JAR_VERSION = 32L;
   public static final Long BANK_CONFIG_VERSION = 6L;
   private static final String JAR_DIRECTORY = "jars";
   private static final String BANK_CONFIG_DIRECTORY = "configs";

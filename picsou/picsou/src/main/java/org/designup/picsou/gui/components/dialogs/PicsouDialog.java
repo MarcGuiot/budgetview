@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.components.dialogs;
 
+import org.designup.picsou.gui.components.DisposeCallback;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.components.DisposeCallback;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorUpdater;
@@ -12,10 +12,6 @@ import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.Strings;
-import org.uispec4j.UISpec4J;
-import org.uispec4j.ItemNotFoundException;
-import org.uispec4j.ComponentAmbiguityException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +20,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.List;
-import java.beans.PropertyChangeListener;
 
 public class PicsouDialog extends JDialog {
 
@@ -55,7 +50,7 @@ public class PicsouDialog extends JDialog {
       return new PicsouDialog((JDialog)parent, modal, directory);
     }
     else {
-      return new PicsouDialog((JFrame)null, true,  directory);
+      return new PicsouDialog((JFrame)null, true, directory);
     }
   }
 
@@ -139,7 +134,7 @@ public class PicsouDialog extends JDialog {
   }
 
   public void dispose() {
-    if (updater != null){
+    if (updater != null) {
       updater.dispose();
     }
     updater = null;
@@ -185,7 +180,6 @@ public class PicsouDialog extends JDialog {
     }
 //    System.out.println("PicsouDialog.setVisible end : " + panelName + " visibility : " + visible + "  " + isVisible());
   }
-
 
 //  @Deprecated
 //  public void hide() {
@@ -259,12 +253,12 @@ public class PicsouDialog extends JDialog {
 
   public void showCentered() {
 //    System.out.println("PicsouDialog.showCentered enter " + panelName);
-    if (updater == null){
+    if (updater == null) {
       updater = new BackgroundColorUpdater("dialog.bg.bottom", getContentPane());
       updater.install(colorService);
     }
     GuiUtils.showCentered(this);
-    if (isModal()){
+    if (isModal()) {
       GuiUtils.removeShortcut(getRootPane(), "ESCAPE", KeyStroke.getKeyStroke("ESCAPE"));
       dispose();
     }
