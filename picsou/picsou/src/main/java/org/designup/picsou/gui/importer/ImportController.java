@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.importer;
 
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.startup.AutoCategorizationFunctor;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.importer.ImportSession;
@@ -107,6 +106,7 @@ public class ImportController {
                   Thread.sleep(50);
                 }
                 catch (InterruptedException e) {
+                  // Ignore
                 }
                 openRequestManager.openFiles(files);
               }
@@ -142,7 +142,7 @@ public class ImportController {
         AutoCategorizationFunctor autoCategorizationFunctor = autocategorize();
         importDialog.showPositionDialog();
 
-        importDialog.showCompleteMessage(autoCategorizationFunctor.getAutocategorizedTransaction(), 
+        importDialog.showCompleteMessage(autoCategorizationFunctor.getAutocategorizedTransaction(),
                                          autoCategorizationFunctor.getTransactionCount());
         openRequestManager.popCallback();
         localRepository.commitChanges(true);

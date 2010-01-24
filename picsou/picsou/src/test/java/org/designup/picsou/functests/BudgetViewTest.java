@@ -682,12 +682,12 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/07");
     views.selectCategorization();
-    categorization.setNewIncome("WorldCo", "Salary");
     categorization.setNewRecurring("Free Telecom", "Internet");
 
     // First update with propagation + switching to manual mode
     views.selectBudget();
     budgetView.recurring.editPlannedAmount("Internet")
+      .checkNegativeAmountsSelected()
       .checkAmountLabel("Planned amount for july 2008")
       .setAmount("100")
       .checkPropagationDisabled()
@@ -723,8 +723,19 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     budgetView.recurring.checkSeries("Internet", 0.00, 0.00);
 
-    // Positive amount
+    // Positive amounts
+
     timeline.selectMonth("2008/07");
+    budgetView.income.createSeries("Salary");
+    budgetView.income.editPlannedAmount("Salary")
+      .checkPositiveAmountsSelected()
+      .setAmount(1500)
+      .validate();
+
+    views.selectCategorization();
+    categorization.setIncome("WorldCo", "Salary");
+
+    views.selectBudget();
     budgetView.income.editPlannedAmount("Salary")
       .checkPositiveAmountsSelected()
       .checkAmount(1500.00)

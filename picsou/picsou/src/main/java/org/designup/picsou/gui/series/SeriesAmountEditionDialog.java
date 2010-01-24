@@ -88,6 +88,7 @@ public class SeriesAmountEditionDialog {
   public void show(Glob series, Set<Integer> months) {
     this.currentSeries = series.getKey();
     this.maxMonth = Utils.max(months);
+    amountEditor.update(Series.getBudgetArea(series).isIncome(), false);
     loadGlobs(series);
     select(series, months);
     propagationCheckBox.setSelected(false);

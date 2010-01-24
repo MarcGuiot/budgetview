@@ -197,6 +197,10 @@ public class Series {
 
   public static BudgetArea getBudgetArea(Integer seriesId, GlobRepository repository) {
     Glob series = repository.get(org.globsframework.model.Key.create(Series.TYPE, seriesId));
+    return getBudgetArea(series);
+  }
+
+  public static BudgetArea getBudgetArea(Glob series) {
     return BudgetArea.get(series.get(Series.BUDGET_AREA));
   }
 
