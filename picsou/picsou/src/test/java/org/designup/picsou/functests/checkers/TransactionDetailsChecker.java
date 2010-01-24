@@ -8,6 +8,7 @@ import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
@@ -115,7 +116,17 @@ public class TransactionDetailsChecker extends GuiChecker {
   }
 
   public void checkMessage(String message) {
-    UISpecAssert.assertThat(getPanel().getTextBox().textContains(message));
+    assertThat(getPanel().getTextBox().textContains(message));
+  }
+
+  public void checkAccount(String text) {
+    TextBox textBox = getPanel().getTextBox("account");
+    assertThat(textBox.textEquals(text));
+    assertThat(textBox.isVisible());
+  }
+
+  public void checkNoAccountDisplayed() {
+    checkComponentVisible(getPanel(), JLabel.class, "account", false);
   }
 
   public void shift() {

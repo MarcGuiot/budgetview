@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
 public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
@@ -71,6 +70,27 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     categorization.showSelectedMonthsOnly();
     categorization.checkNoSelectedTableRows();
     transactionDetails.checkMessage("No data");
+  }
+
+  public void testDisplayAccount() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount("0001", 0.0, "2008/07/31")
+      .addTransaction("2008/08/18", -10.00, "Burger King")
+      .addBankAccount("0002", 0.0, "2008/07/31")
+      .addTransaction("2008/06/15", -20.00, "McDo")
+      .load();
+
+    categorization.checkNoSelectedTableRows();
+    transactionDetails.checkNoAccountDisplayed();
+
+    categorization.selectTransaction("Burger King");
+    transactionDetails.checkAccount("Account n. 0001");
+    
+    categorization.selectTransaction("McDo");
+    transactionDetails.checkAccount("Account n. 0002");
+
+    categorization.selectAllTransactions();
+    transactionDetails.checkAccount("Multiple accounts");
   }
 
   public void testSplitButtonInitiallyVisibleWithOneTransaction() throws Exception {

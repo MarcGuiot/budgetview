@@ -71,6 +71,11 @@
           </row>
 
           <row marginTop="5">
+            <label ref="account" styleClass="formLabel"/>
+            <filler fill="horizontal"/>
+          </row>
+
+          <row marginTop="5">
             <label text="$transaction.details.note" styleClass="formLabel"/>
             <textField ref="noteField"/>
           </row>

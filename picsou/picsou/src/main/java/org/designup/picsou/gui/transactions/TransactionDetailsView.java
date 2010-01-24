@@ -88,6 +88,9 @@ public class TransactionDetailsView extends View {
 
     builder.addEditor("noteField", Transaction.NOTE);
 
+    builder.addLabel("account", Transaction.ACCOUNT, 
+                     "", Lang.get("transaction.details.account.multi")).setAutoHideIfEmpty(true);
+
     builder.add("splitPanel",
                 new AutoHideOnSelectionPanel(Transaction.TYPE, GlobListMatchers.AT_LEAST_ONE,
                                              repository, directory));
