@@ -214,14 +214,36 @@ public class GuiUtils {
       parentSize = parent.getSize();
     }
     else {
-      Toolkit toolkit = Toolkit.getDefaultToolkit();
-      origin = new Point(0, 0);
-      parentSize = toolkit.getScreenSize();
+      Insets screenInsets = getScreenInsets(window);
+      origin = new Point(screenInsets.left,  screenInsets.top);
+      parentSize = getMaxSize(window);
     }
 
     Dimension windowSize = window.getSize();
     window.setLocation(origin.x + parentSize.width / 2 - windowSize.width / 2,
                        origin.y + parentSize.height / 2 - windowSize.height / 2);
+  }
+
+  public static void setSizeWithinScreen(JFrame frame, int preferredWidth, int preferredHeight) {
+    Dimension screenSize = getMaxSize(frame);
+    frame.setSize(new Dimension(Math.min(preferredWidth, screenSize.width),
+                                Math.min(preferredHeight, screenSize.height)));
+  }
+
+  private static Dimension getMaxSize(Window frame) {
+    Toolkit toolkit = Toolkit.getDefaultToolkit();
+    GraphicsConfiguration config = frame.getGraphicsConfiguration();
+    Dimension availableScreenSize = toolkit.getScreenSize();
+    Insets insets = toolkit.getScreenInsets(config);
+    availableScreenSize.width -= (insets.left + insets.right);
+    availableScreenSize.height -= (insets.top + insets.bottom);
+    return availableScreenSize;
+  }
+
+  private static Insets getScreenInsets(Window window) {
+    Toolkit toolkit = Toolkit.getDefaultToolkit();
+    GraphicsConfiguration config = window.getGraphicsConfiguration();
+    return toolkit.getScreenInsets(config);
   }
 
   public static JFrame getFrame(ActionEvent e) {
@@ -288,7 +310,6 @@ public class GuiUtils {
       throw new ResourceAccessFailed("Couldn't find resource file: " + path, e);
     }
   }
-
 
   public static void runInSwingThread(Runnable runnable) {
     try {
