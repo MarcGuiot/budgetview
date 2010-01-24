@@ -20,7 +20,6 @@ import org.designup.picsou.gui.license.LicenseCheckerThread;
 import org.designup.picsou.gui.startup.LoginPanel;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.utils.DataCheckerAction;
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -123,12 +122,12 @@ public class MainWindow implements WindowManager {
       }
     }
     if (autoLogin && localUsers.size() == 1) {
-      autoLoggin(user);
+      autoLogin(user);
     }
     else {
       setPanel(loginPanel.preparePanelForShow(localUsers));
     }
-    frame.setSize(Gui.getWindowSize(1100, 800));
+    GuiUtils.setSizeWithinScreen(frame, 1100, 800);
     GuiUtils.showCentered(frame);
     LicenseCheckerThread.launch(directory, picsouInit.getRepository());
     synchronized (this) {
@@ -137,7 +136,7 @@ public class MainWindow implements WindowManager {
     }
   }
 
-  public void autoLoggin(String user) {
+  public void autoLogin(String user) {
     LoginFunctor functor = new LoginFunctor(new AutoLoginFeedback(), user, user.toCharArray(), false, false, true);
     Thread thread = new Thread(functor);
     thread.setDaemon(true);
@@ -210,7 +209,6 @@ public class MainWindow implements WindowManager {
     localUsers = Collections.emptyList();
     this.serverAccess.connect();
   }
-
 
   interface FeedbackLoadingData {
 

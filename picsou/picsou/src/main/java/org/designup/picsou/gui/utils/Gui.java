@@ -163,12 +163,6 @@ public class Gui {
     return panel;
   }
 
-  public static Dimension getWindowSize(int width, int height) {
-    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    return new Dimension(Math.min(width, screenSize.width),
-                         Math.min(height, screenSize.height));
-  }
-
   public static void setColumnSizes(JTable targetTable, int[] columnSizes) {
     int columns = Math.min(columnSizes.length, targetTable.getColumnCount() - 1);
     for (int column = 0; column < columns; column++) {

@@ -81,7 +81,7 @@ public class MainWindowLauncher {
     })
       .show();
 
-    frame.setSize(Gui.getWindowSize(1100, 800));
+    GuiUtils.setSizeWithinScreen(frame, 1100, 800);
     GuiUtils.showCentered(frame);
 
     return directory;
