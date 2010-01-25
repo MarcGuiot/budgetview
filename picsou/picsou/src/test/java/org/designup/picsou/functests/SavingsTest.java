@@ -1557,6 +1557,41 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("06/06/2008", TransactionType.PRELEVEMENT, "VIREMENT VERS EPARGNE", "", -100.00)
       .check();
+  }
 
+  public void testChangePlannedFomBudgetView() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/06", -100.00, "Virement vers Epargne")
+      .load();
+    views.selectHome();
+    savingsAccounts.createSavingsAccount("ING", 1000.);
+    views.selectBudget();
+    budgetView.getSummary().checkEndPosition(0);
+    budgetView.savings.createSeries().setName("Main to Savings")
+      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .setToAccount("External account")
+      .switchToManual()
+      .validate();
+    budgetView.savings.editPlannedAmount("Main to Savings").setPropagationEnabled().setAmountAndValidate("500");
+    budgetView.getSummary().checkEndPosition(-500.);
+    timeline.selectMonth("2008/09");
+    budgetView.getSummary().checkEndPosition(-1000.);
+    timeline.selectMonth("2008/10");
+    budgetView.getSummary().checkEndPosition(-1500.);
+
+    timeline.selectMonth("2008/08");
+    budgetView.savings.createSeries().setName("Savings to Main")
+      .setToAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .setFromAccount("External account")
+      .switchToManual()
+      .validate();
+    budgetView.savings.editPlannedAmount("Savings to Main").setPropagationEnabled().setAmountAndValidate("500");
+    budgetView.getSummary().checkEndPosition(0.);
+
+    timeline.selectMonth("2008/09");
+    budgetView.getSummary().checkEndPosition(0.);
+    timeline.selectMonth("2008/10");
+    budgetView.getSummary().checkEndPosition(0.);
   }
 }

@@ -157,8 +157,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .switchToManual()
       .setAmount("1000")
       .validate();
-    double free1 = -600;
-    budgetView.checkBalance(free1);
+    budgetView.checkBalance(-600.);
 
     budgetView.checkHelpMessageDisplayed(true);
     budgetView.hideHelpMessage();
@@ -167,8 +166,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/08");
-    double free = -600;
-    budgetView.checkBalance(free);
+    budgetView.checkBalance(-600.);
 
     budgetView.checkHelpMessageDisplayed(false);
   }

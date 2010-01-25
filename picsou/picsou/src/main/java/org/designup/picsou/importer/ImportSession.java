@@ -141,7 +141,8 @@ public class ImportSession {
                                            currentlySelectedAccount != null ?
                                            currentlySelectedAccount.get(Account.ID) : null);
       }
-
+      //
+      // 
       localRepository.completeChangeSet();
       updateImportAggregator.dispose();
       referenceRepository.apply(importChangeSet);

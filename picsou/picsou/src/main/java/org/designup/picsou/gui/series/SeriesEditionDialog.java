@@ -1129,7 +1129,7 @@ public class SeriesEditionDialog {
             Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
             Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
             double multiplier = computeMultiplier(fromAccount, toAccount, repository);
-            if (!series.isTrue(Series.IS_MIRROR)) {
+            if (!series.isTrue(Series.IS_MIRROR)) { //la series miroir est updater par trigger
               GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE,
                                                          fieldEquals(SeriesBudget.SERIES, key.get(Series.ID)));
               for (Glob budget : seriesBudgets) {

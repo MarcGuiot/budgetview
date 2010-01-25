@@ -43,6 +43,14 @@ public class GlobList extends ArrayList<Glob> {
     }
   }
 
+  public void addNotNull(Glob...globs){
+    for (Glob glob : globs) {
+      if (glob != null){
+        add(glob);
+      }
+    }
+  }
+
   public String toString() {
     List<String> strings = new ArrayList<String>();
     for (Glob glob : this) {
