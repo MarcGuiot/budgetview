@@ -16,6 +16,7 @@ import org.designup.picsou.model.AppVersionInformation;
 import org.designup.picsou.model.User;
 import org.designup.picsou.triggers.*;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.bank.SpecificBankLoader;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -80,6 +81,8 @@ public class PicsouInit {
       directory.get(TransactionAnalyzerFactory.class)
         .load(this.getClass().getClassLoader(), PicsouApplication.BANK_CONFIG_VERSION, repository);
     }
+    SpecificBankLoader loader = new SpecificBankLoader();
+    loader.load(repository, directory);
   }
 
   public static void initTriggerRepository(ServerAccess serverAccess, Directory directory, final GlobRepository repository) {

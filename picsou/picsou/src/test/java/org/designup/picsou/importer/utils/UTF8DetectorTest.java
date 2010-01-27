@@ -23,6 +23,15 @@ public class UTF8DetectorTest extends TestCase {
     assertSame(UTF8Detector.undef, coder);
   }
 
+  public void testUndefIso15(){
+    int[] bytes = {0xe9, 0x62};
+    UTF8Detector.Coder coder = UTF8Detector.first;
+    for (int b : bytes) {
+      coder = coder.push(b);
+    }
+    assertSame(UTF8Detector.undef, coder);
+  }
+
   public void testMayBe() throws Exception {
     byte[] bytes = "some".getBytes("UTF-8");
     UTF8Detector.Coder coder = UTF8Detector.first;

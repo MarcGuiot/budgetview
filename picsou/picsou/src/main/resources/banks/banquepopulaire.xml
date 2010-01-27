@@ -3,6 +3,10 @@
   <bank name="Banque Populaire" downloadUrl="http://www.banquepopulaire.fr" id='11'>
     <bankEntity id="10807"/>
 
+    <transactionMatcher ofxName="FACTURETTE CB.*"
+                        label="{MEMO.0}" originalLabel="{MEMO.0}"
+                        transactionTypeName="credit_card"/>
+
     <transactionMatcher ofxName="CHEQUE"
                         label="CHEQUE N°{NUM.0}" originalLabel="CHEQUE N.{NUM.0}"
                         transactionTypeName="check"/>

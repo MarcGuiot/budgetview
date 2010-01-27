@@ -3,10 +3,7 @@ package org.globsframework.model.utils;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
-import org.globsframework.metamodel.fields.BooleanField;
-import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.*;
 import org.globsframework.utils.Utils;
 
@@ -109,6 +106,15 @@ public class GlobUtils {
     if (glob != null) {
       repository.update(key, field, value);
     }
+  }
+
+  public static void copy(GlobRepository repository, Glob from, Glob to, Field...fields) {
+    FieldValue fieldValues[] = new FieldValue[fields.length];
+    for (int i = 0; i < fields.length; i++) {
+      Field field = fields[i];
+      fieldValues[i] = new FieldValue(field, from.getValue(field));
+    }
+    repository.update(to.getKey(), fieldValues);
   }
 
   public interface DiffFunctor<T> {

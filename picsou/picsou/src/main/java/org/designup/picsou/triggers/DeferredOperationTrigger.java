@@ -75,6 +75,27 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
                               DeferredCardDate.DAY, day);
 
           }
+          else {
+            Integer previousSeriesId = values.getPrevious(Transaction.SERIES);
+            Glob previousSeries = repository.find(Key.create(Series.TYPE, previousSeriesId));
+            if (previousSeries != null
+                && previousSeries.get(Series.BUDGET_AREA).equals(BudgetArea.OTHER.getId())
+                && previousSeries.get(Series.FROM_ACCOUNT) != null){
+              Integer accountId = previousSeries.get(Series.FROM_ACCOUNT);
+              Glob transaction = repository.get(key);
+              Integer month = transaction.get(Transaction.BANK_MONTH);
+              Glob deferredCardPeriod = repository.getAll(DeferredCardPeriod.TYPE,
+                                                          GlobMatchers.and(
+                                                            GlobMatchers.fieldEquals(DeferredCardPeriod.ACCOUNT, accountId),
+                                                            GlobMatchers.fieldLessOrEqual(DeferredCardPeriod.FROM_MONTH, month)
+                                                          )).sort(DeferredCardPeriod.FROM_MONTH)
+                .getLast();
+              if (deferredCardPeriod != null){
+                repository.update(Key.create(DeferredCardDate.ACCOUNT, accountId, DeferredCardDate.MONTH, month),
+                                  DeferredCardDate.DAY, deferredCardPeriod.get(DeferredCardPeriod.DAY));
+              }
+            }
+          }
         }
       }
 

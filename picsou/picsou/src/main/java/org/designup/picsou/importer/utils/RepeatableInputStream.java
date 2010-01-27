@@ -74,4 +74,8 @@ public class RepeatableInputStream extends InputStream {
     }
     return 0;
   }
+
+  public String toString() {
+    return new String(currentPart.bytes);
+  }
 }

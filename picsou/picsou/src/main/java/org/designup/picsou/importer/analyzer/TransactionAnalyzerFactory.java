@@ -3,6 +3,7 @@ package org.designup.picsou.importer.analyzer;
 import org.designup.picsou.model.PreTransactionTypeMatcher;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.model.BankEntity;
+import org.designup.picsou.bank.BankPluginService;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -40,12 +41,16 @@ public class TransactionAnalyzerFactory {
 
   public interface Loader {
     InputStream load(String file);
+    void loadBank(BankPluginService bankPluginService);
   }
 
   synchronized public void load(final ClassLoader loader, Long version, final GlobRepository repository) {
     load(new Loader() {
       public InputStream load(String file) {
         return loader.getResourceAsStream(file);
+      }
+
+      public void loadBank(BankPluginService bankPluginService) {
       }
     }, version, repository);
   }

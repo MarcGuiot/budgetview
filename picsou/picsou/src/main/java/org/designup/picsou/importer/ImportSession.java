@@ -10,6 +10,7 @@ import org.designup.picsou.importer.utils.DateFormatAnalyzer;
 import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.bank.BankPluginService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.StringField;
 import static org.globsframework.model.FieldValue.value;
@@ -68,7 +69,12 @@ public class ImportSession {
     typedStream = new TypedInputStream(file);
     fileType = typedStream.getType();
     importService.run(typedStream, referenceRepository, localRepository);
+
     localRepository.completeChangeSet();
+
+    BankPluginService bankPluginService = directory.get(BankPluginService.class);
+    bankPluginService.apply(referenceRepository, localRepository, importChangeSet);
+
     load = true;
     return getImportedTransactionFormat();
   }
@@ -85,7 +91,6 @@ public class ImportSession {
       return null;
     }
     load = false;
-    TransactionFilter transactionFilter = new TransactionFilter();
 
     if (fileType.equals(BankFileType.QIF)) {
       GlobList transactions = localRepository.getAll(ImportedTransaction.TYPE);
@@ -104,12 +109,6 @@ public class ImportSession {
       referenceRepository.startChangeSet();
       ChangeSetAggregator updateImportAggregator = new ChangeSetAggregator(localRepository, updateImportChangeSet);
       localRepository.startChangeSet();
-// TODO:     importChangeSet.getCreated(BankEntity.TYPE);
-//      if (fileType.equals(BankFileType.QIF)) {
-//        for (Key key : importChangeSet.getCreated(Transaction.TYPE)) {
-//          localRepository.update(key, Transaction.ACCOUNT, currentlySelectedAccount.get(Account.ID));
-//        }
-//      }
 
       MultiMap<Integer, Glob> transactionByAccountId = new MultiMap<Integer, Glob>();
       for (Key key : importChangeSet.getCreated(Transaction.TYPE)) {
@@ -136,13 +135,12 @@ public class ImportSession {
                                                 localRepository);
         localRepository.update(account.getKey(), Account.IS_IMPORTED_ACCOUNT, true);
 
+        TransactionFilter transactionFilter = new TransactionFilter();
         transactionFilter.loadTransactions(referenceRepository, localRepository,
                                            new GlobList(accountIdAndTransactions.getValue()),
                                            currentlySelectedAccount != null ?
                                            currentlySelectedAccount.get(Account.ID) : null);
       }
-      //
-      // 
       localRepository.completeChangeSet();
       updateImportAggregator.dispose();
       referenceRepository.apply(importChangeSet);

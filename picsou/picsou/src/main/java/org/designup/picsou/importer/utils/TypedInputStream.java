@@ -73,6 +73,9 @@ public class TypedInputStream {
     notUTF8 = false;
     UTF8Detector.Coder coder = UTF8Detector.first;
     while ((byt = stream.read()) != -1) {
+      if (byt == 0xe9){
+        System.out.println("TypedInputStream.checkCoding " );
+      }
       coder = coder.push(byt);
       if (coder == UTF8Detector.undef) {
         notUTF8 = true;
