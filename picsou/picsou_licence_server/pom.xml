@@ -106,6 +106,12 @@
       <version>6.1.6</version>
     </dependency>
     <dependency>
+      <groupId>asm</groupId>
+      <artifactId>asm-util</artifactId>
+      <version>3.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.globsframework</groupId>
       <artifactId>globs</artifactId>
       <version>1.0</version>

@@ -12,6 +12,7 @@ import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Files;
+import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import org.globsframework.xml.XmlGlobParser;
 
@@ -44,7 +45,7 @@ public class TransactionAnalyzerFactory {
     void loadBank(BankPluginService bankPluginService);
   }
 
-  synchronized public void load(final ClassLoader loader, Long version, final GlobRepository repository) {
+  synchronized public void load(final ClassLoader loader, Long version, final GlobRepository repository, Directory directory) {
     load(new Loader() {
       public InputStream load(String file) {
         return loader.getResourceAsStream(file);
@@ -52,16 +53,17 @@ public class TransactionAnalyzerFactory {
 
       public void loadBank(BankPluginService bankPluginService) {
       }
-    }, version, repository);
+    }, version, repository, directory);
   }
 
-  synchronized public void load(Loader loader, Long version, final GlobRepository repository) {
+  synchronized public void load(Loader loader, Long version, final GlobRepository repository, Directory directory) {
     if (this.version < version) {
       this.version = version;
       this.analyzer = new DefaultTransactionAnalyzer();
       loadMatchers(loader, repository);
       analyzer.add(new LabelForCategorizationUpdater());
       analyzer.add(new TransactionDateUpdater());
+      loader.loadBank(directory.get(BankPluginService.class));
     }
   }
 

@@ -412,7 +412,7 @@ public class ConfigService {
   }
 
   static class SpecificBankLoader extends ClassLoader {
-    public void load(Directory directory, InputStream stream, String name) {
+    public void load(GlobRepository globRepository, Directory directory, InputStream stream, String name) {
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       byte tab[] = new byte[1024];
       try {
@@ -423,8 +423,8 @@ public class ConfigService {
         }
         byte[] def = outputStream.toByteArray();
         Class<?> specificClass = this.defineClass(name, def, 0, def.length);
-        Constructor<?> constructor = specificClass.getConstructor(Directory.class);
-        constructor.newInstance(directory);
+        Constructor<?> constructor = specificClass.getConstructor(GlobRepository.class, Directory.class);
+        constructor.newInstance(globRepository, directory);
       }
       catch (IOException e) {
         Log.write("fail to read " + name, e);
@@ -435,7 +435,7 @@ public class ConfigService {
     }
   }
 
-  private boolean loadConfigFile(File jarFile, long version, GlobRepository repository, final Directory directory) {
+  private boolean loadConfigFile(File jarFile, long version, final GlobRepository repository, final Directory directory) {
     try {
       final SpecificBankLoader bankLoader = new SpecificBankLoader();
       final JarFile jar = new JarFile(jarFile);
@@ -454,19 +454,22 @@ public class ConfigService {
           Enumeration<JarEntry> jarEntryEnumeration = jar.entries();
           while (jarEntryEnumeration.hasMoreElements()) {
             JarEntry entry = jarEntryEnumeration.nextElement();
-            if (!entry.isDirectory() && entry.getName().endsWith(".class")) {
+            String className = entry.getName();
+            if (!entry.isDirectory() && className.endsWith(".class")) {
               try {
                 InputStream inputStream = jar.getInputStream(entry);
-                bankLoader.load(directory, inputStream, entry.getName());
+                bankLoader.load(repository, directory, inputStream,
+                                className.substring(0, className.length() - ".class".length())
+                .replace("/", "."));
               }
               catch (IOException e) {
-                Log.write("fail to get entry for " + entry.getName(), e);
+                Log.write("fail to get entry for " + className, e);
               }
             }
           }
         }
       };
-      directory.get(TransactionAnalyzerFactory.class).load(loader, version, repository);
+      directory.get(TransactionAnalyzerFactory.class).load(loader, version, repository, directory);
       repository.update(AppVersionInformation.KEY, AppVersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION, version);
       return true;
     }

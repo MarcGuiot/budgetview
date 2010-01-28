@@ -79,7 +79,7 @@ public class PicsouInit {
 
     if (!directory.get(ConfigService.class).loadConfigFileFromLastestJar(directory, this.repository)) {
       directory.get(TransactionAnalyzerFactory.class)
-        .load(this.getClass().getClassLoader(), PicsouApplication.BANK_CONFIG_VERSION, repository);
+        .load(this.getClass().getClassLoader(), PicsouApplication.BANK_CONFIG_VERSION, repository, directory);
     }
     SpecificBankLoader loader = new SpecificBankLoader();
     loader.load(repository, directory);
