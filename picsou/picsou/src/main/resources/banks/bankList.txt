@@ -11,3 +11,4 @@ axa.xml
 ingdirect.xml
 banquepopulaire.xml
 hsbc.xml
+fortis.xml

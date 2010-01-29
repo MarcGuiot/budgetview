@@ -60,7 +60,7 @@ public class BankFormatExportTest extends SpecificBankTestCase {
       "            name='RET DAB GAB LONS SULLY 2'\n" +
       "            memo='CARTE *123123123 RETRAIT LE 09/02/2009 A 10:24' " +
       "            checkNum='2LV9570' />\n" +
-      "  <bank bankEntityId='10807' bankEntityLabel='10807' bankId='11' id='100'/>" +
+      "  <bank bankEntityId='10807' bankEntityLabel='10807' bankId='12' id='100'/>" +
       "</bankFormat>",
       Clipboard.getContentAsText());
   }
