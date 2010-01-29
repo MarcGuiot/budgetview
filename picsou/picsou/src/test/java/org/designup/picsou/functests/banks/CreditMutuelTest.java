@@ -22,7 +22,7 @@ public class CreditMutuelTest extends SpecificBankTestCase {
       .add("30/06/2008", TransactionType.PRELEVEMENT, "URSSAF ST ETIENNE-CN 143065", "", -148.23)
       .add("27/06/2008", TransactionType.VIREMENT, "CAPMA & CAPMI", "", 172.29)
       .add("26/06/2008", TransactionType.VIREMENT, "CNE AVAILLES 24", "", 111.69)
-      .add("22/06/2008", TransactionType.PRELEVEMENT, "DOMI LIVRET FIDELITE", "", -1222.33)
+      .add("22/06/2008", TransactionType.VIREMENT, "DOMI LIVRET FIDELITE", "", -1222.33)
       .add("20/06/2008", TransactionType.PRELEVEMENT, "COFINTEX 6 - ACTIVEI 443639", "", -89.94)
       .add("18/06/2008", TransactionType.DEPOSIT, "REMISE CHEQUE 7185464 0513 001 CHQ", "", 1234567.89)
       .add("12/06/2008", TransactionType.DEPOSIT, "REMISE CHEQUE GUICHET", "", 60.00)

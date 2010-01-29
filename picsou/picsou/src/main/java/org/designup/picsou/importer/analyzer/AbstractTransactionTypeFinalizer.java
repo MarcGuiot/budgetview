@@ -75,15 +75,6 @@ public abstract class AbstractTransactionTypeFinalizer implements TransactionTyp
                                     SimpleDateFormat format, StringField field, String label) {
     Key key = transaction.getKey();
     int transactionTypeId = transactionType.getId();
-    if (transactionType == TransactionType.VIREMENT ||
-        transactionType == TransactionType.PRELEVEMENT) {
-      if (transaction.get(Transaction.AMOUNT) >= 0) {
-        transactionTypeId = TransactionType.VIREMENT.getId();
-      }
-      else {
-        transactionTypeId = TransactionType.PRELEVEMENT.getId();
-      }
-    }
     if (date == null) {
       repository.update(key, value(Transaction.TRANSACTION_TYPE, transactionTypeId),
                         value(field, label));

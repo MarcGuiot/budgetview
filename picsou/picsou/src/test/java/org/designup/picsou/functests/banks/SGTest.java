@@ -26,7 +26,7 @@ public class SGTest extends SpecificBankTestCase {
       .initContent()
       .add("22/07/2006", "24/07/2006", TransactionType.CREDIT_CARD, "ANTONYCARBURANT", "", -45.83)
       .add("21/07/2006", "24/07/2006", TransactionType.WITHDRAWAL, "RETRAIT 12H37 PARIS LAFFITTE 000089", "", -60.00)
-      .add("21/07/2006", "21/07/2006", TransactionType.PRELEVEMENT, "21.07 SG 04042 CPT 00050741769", "", -1000.00)
+      .add("21/07/2006", "21/07/2006", TransactionType.VIREMENT, "VIREMENT LOGITEL 21.07 SG 04042 CPT 00050741769", "", -1000.00)
       .add("21/07/2006", "21/07/2006", TransactionType.VIREMENT, "VIREMENT LOGITEL", "", 1000.0)
       .add("28/06/2006", "28/06/2006", TransactionType.CHECK, "CHEQUE N°186", "", -206.04)
       .add("21/06/2006", "21/06/2006", TransactionType.VIREMENT, "AGF ASSET MANAGEME 2006/05", "", 10333.44)
