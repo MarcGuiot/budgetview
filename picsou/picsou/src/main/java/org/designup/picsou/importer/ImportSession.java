@@ -117,14 +117,6 @@ public class ImportSession {
       }
       for (Map.Entry<Integer, List<Glob>> accountIdAndTransactions : transactionByAccountId.entries()) {
         Glob account = localRepository.get(Key.create(Account.TYPE, accountIdAndTransactions.getKey()));
-
-        if (account.get(Account.CARD_TYPE).equals(AccountCardType.CREDIT.getId())){
-          for (Glob glob : accountIdAndTransactions.getValue()) {
-            localRepository.delete(glob.getKey());
-          }
-          continue;
-        }
-
         Glob bank = localRepository.findLinkTarget(account, Account.BANK);
         Integer bankId = Bank.GENERIC_BANK_ID;
         if (bank != null) {

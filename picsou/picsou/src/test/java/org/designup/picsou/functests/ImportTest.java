@@ -604,6 +604,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.initContent()
+      .add("15/01/2008", TransactionType.CREDIT_CARD, "FNAC", "", -200.00)
       .add("01/01/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", -100.00)
       .check();
   }
