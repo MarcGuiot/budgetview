@@ -87,6 +87,10 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     return store(GlobMultiLineTextEditor.init(field, repository, directory).setName(name));
   }
 
+  public GlobSliderEditor addSlider(String name, DoubleField field, GlobSliderAdapter adapter) {
+    return store(GlobSliderEditor.init(field, repository,directory, adapter).setName(name));
+  }
+
   public GlobNumericEditor addEditor(DoubleField field) {
     return store(GlobNumericEditor.init(field, repository, directory));
   }

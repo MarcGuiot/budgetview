@@ -119,7 +119,7 @@ public class GlobUtils {
     void move(int previousIndex, int newIndex);
   }
 
-  static Object NULL = new Object();
+  private static Object NULL = new Object();
 
   public static <T> void diff(List<T> from, List<T> to, DiffFunctor<T> functor) {
     Object[] fromArray = from.toArray(new Object[from.size() + to.size()]);

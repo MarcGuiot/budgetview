@@ -8,7 +8,6 @@ import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
@@ -43,9 +42,9 @@ public class GlobList extends ArrayList<Glob> {
     }
   }
 
-  public void addNotNull(Glob...globs){
+  public void addNotNull(Glob... globs) {
     for (Glob glob : globs) {
-      if (glob != null){
+      if (glob != null) {
         add(glob);
       }
     }
@@ -54,11 +53,12 @@ public class GlobList extends ArrayList<Glob> {
   public String toString() {
     List<String> strings = new ArrayList<String>();
     for (Glob glob : this) {
-      if (glob == null){
+      if (glob == null) {
         strings.add("null");
       }
-      else
-      strings.add(glob.toString());
+      else {
+        strings.add(glob.toString());
+      }
     }
     Collections.sort(strings);
     return strings.toString();
@@ -98,7 +98,7 @@ public class GlobList extends ArrayList<Glob> {
   public void keepExistingGlobsOnly(GlobRepository repository) {
     for (Iterator<Glob> iter = iterator(); iter.hasNext();) {
       Glob glob = iter.next();
-      if (!repository.contains(glob.getKey())) {
+      if (!glob.exists() || !repository.contains(glob.getKey())) {
         iter.remove();
       }
     }
@@ -196,11 +196,22 @@ public class GlobList extends ArrayList<Glob> {
     }
     return result;
   }
-  
+
   public SortedSet<Integer> getSortedSet(IntegerField field) {
     SortedSet<Integer> result = new TreeSet<Integer>();
     for (FieldValues values : this) {
       result.add(values.get(field));
+    }
+    return result;
+  }
+
+  public SortedSet<Double> getSortedSet(DoubleField field) {
+    SortedSet<Double> result = new TreeSet<Double>();
+    for (FieldValues values : this) {
+      Double value = values.get(field);
+      if (value != null) {
+        result.add(value);
+      }
     }
     return result;
   }
