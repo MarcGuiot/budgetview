@@ -753,6 +753,63 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Salary", 0.00, 1500.00);
   }
 
+  public void testUsingTheSliderToSetThePlannedAmount() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/29", +1500.00, "WorldCo")
+      .addTransaction("2008/07/29", -29.00, "Free Telecom")
+      .load();
+
+    timeline.selectMonth("2008/07");
+    views.selectCategorization();
+    categorization.setNewRecurring("Free Telecom", "Internet");
+    categorization.setNewIncome("WorldCo", "Salary");
+
+    views.selectBudget();
+    budgetView.recurring.editPlannedAmount("Internet")
+      .checkAmount(29.00)
+      .checkSliderLabels("0","25","50","75","100","125","150","175","200")
+      .checkSliderPosition(100*29/200)
+      .setSliderPosition(100*40/200)
+      .checkAmount(40.00)
+      .checkNegativeAmountsSelected()
+      .validate();
+    budgetView.recurring.checkSeries("Internet", -29.00, -40.00);
+
+    budgetView.recurring.editPlannedAmount("Internet")
+      .checkAmount(40.00)
+      .checkNegativeAmountsSelected()
+      .setAmount(200.00)
+      .checkSliderLabels("0","100","200","300","400","500")
+      .checkSliderPosition(100*200/500)
+      .setSliderPosition(100*30/500)
+      .selectPositiveAmounts()
+      .checkAmount(30.00)
+      .validate();
+    budgetView.recurring.checkSeries("Internet", -29.00, +30.00);
+
+    budgetView.recurring.editPlannedAmount("Internet")
+      .checkAmount(30.00)
+      .selectNegativeAmounts()
+      .checkSliderLabels("0","25","50","75","100","125","150","175","200")
+      .checkSliderPosition(100*30/200)
+      .checkAmount(30.00)
+      .validate();
+    budgetView.recurring.checkSeries("Internet", -29.00, -30.00);
+    
+    budgetView.income.editPlannedAmount("Salary")
+      .checkAmount(1500)
+      .checkPositiveAmountsSelected()
+      .checkSliderLabels("0","1000","2000","3000","4000","5000")
+      .checkSliderPosition(100*1500/5000)
+      .setSliderPosition(100*1700/5000)
+      .checkAmount(1700.00)
+      .checkPositiveAmountsSelected()
+      .validate();
+    budgetView.income.checkSeries("Salary", +1500, +1700);
+  }
+
   public void testNavigatingToTransactions() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")

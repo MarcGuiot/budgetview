@@ -181,7 +181,7 @@ public class SeriesBudgetEditionPanel {
 
   private void updatePositiveOrNegativeRadio() {
     double multiplier =
-      SeriesEditionDialog.computeMultiplier(localRepository.findLinkTarget(currentSeries, Series.FROM_ACCOUNT),
+      Account.computeAmountMultiplier(localRepository.findLinkTarget(currentSeries, Series.FROM_ACCOUNT),
                                             localRepository.findLinkTarget(currentSeries, Series.TO_ACCOUNT),
                                             localRepository);
     isUsuallyPositive = budgetArea.isIncome() ||

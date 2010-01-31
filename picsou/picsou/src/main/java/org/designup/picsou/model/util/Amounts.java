@@ -196,4 +196,9 @@ public class Amounts {
     }
     return tooltips;
   }
+
+  public static double upperOrder(double value) {
+    int power = (int)Math.log10(value);
+    return Math.pow(10, power + 1);
+  }
 }

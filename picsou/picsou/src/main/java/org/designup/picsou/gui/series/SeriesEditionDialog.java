@@ -603,35 +603,6 @@ public class SeriesEditionDialog {
     return dialog;
   }
 
-  public static double computeMultiplier(Glob fromAccount, Glob toAccount, GlobRepository repository) {
-    if (Account.areBothImported(fromAccount, toAccount)) {
-      return 1;
-    }
-    double multiplier = Account.getMultiplierWithMainAsPointOfView(fromAccount, toAccount, repository);
-    if (multiplier == 0) {
-      if (fromAccount == null && toAccount == null) {
-        multiplier = 1;
-      }
-      else {
-        if (Account.onlyOneIsImported(fromAccount, toAccount)) {
-          if (fromAccount.isTrue(Account.IS_IMPORTED_ACCOUNT)) {
-            multiplier = -1;
-          }
-          else {
-            multiplier = 1;
-          }
-        }
-        else if (fromAccount == null) {
-          multiplier = 1;
-        }
-        else {
-          multiplier = -1;
-        }
-      }
-    }
-    return multiplier;
-  }
-
   public void setCurrentSeries(Glob currentSeries) {
     this.currentSeries = currentSeries;
     this.subSeriesEditionPanel.setCurrentSeries(currentSeries);
@@ -1128,7 +1099,7 @@ public class SeriesEditionDialog {
             }
             Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
             Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-            double multiplier = computeMultiplier(fromAccount, toAccount, repository);
+            double multiplier = Account.computeAmountMultiplier(fromAccount, toAccount, repository);
             if (!series.isTrue(Series.IS_MIRROR)) { //la series miroir est updater par trigger
               GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE,
                                                          fieldEquals(SeriesBudget.SERIES, key.get(Series.ID)));

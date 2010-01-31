@@ -6,23 +6,28 @@
     <style selector=".small" font="-,plain,11"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(400,190)">
+  <panel styleClass="dialog" preferredSize="(460,260)">
 
     <column styleClass="innerDialog">
       <label name="title" text="$seriesAmountEdition.title" styleClass="title"/>
 
-      <label ref="dateLabel" marginBottom="10"/>
-      <row>
-        <filler fill="horizontal"/>
-        <radioButton ref="positiveAmounts" weightX="0"/>
-        <radioButton ref="negativeAmounts" weightX="0"/>
-        <textField ref="amountEditor" columns="10"/>
-        <row styleClass="iconButtonGroup" marginTop="0" marginLeft="5">
-          <button action="alignValue" styleClass="align_value"/>
-          <label ref="actualAmountLabel" styleClass="alignActualAmount"/>
+      <label ref="dateLabel" marginBottom="5"/>
+
+      <column styleClass="dialogBlock">
+        <row border="empty(20,10,5,10)">
+          <filler fill="horizontal"/>
+          <radioButton ref="positiveAmounts" weightX="0"/>
+          <radioButton ref="negativeAmounts" weightX="0"/>
+          <textField ref="amountEditor" columns="10"/>
+          <row styleClass="iconButtonGroup" marginTop="0" marginLeft="5">
+            <button action="alignValue" styleClass="align_value"/>
+            <label ref="actualAmountLabel" styleClass="alignActualAmount"/>
+          </row>
+          <filler fill="horizontal"/>
         </row>
-        <filler fill="horizontal"/>
-      </row>
+        <component ref="slider" border="empty(0,10,10,10)"/>
+      </column>
+
       <row>
         <filler fill="horizontal"/>
         <checkBox ref="propagate" text="$seriesAmountEdition.propagate"

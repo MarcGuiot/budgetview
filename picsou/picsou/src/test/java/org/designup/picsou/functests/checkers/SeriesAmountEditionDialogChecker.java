@@ -56,4 +56,19 @@ public class SeriesAmountEditionDialogChecker extends SeriesAmountEditionChecker
   public SeriesEditionDialogChecker editSeries() {
     return SeriesEditionDialogChecker.open(dialog.getButton("editSeries"));
   }
+
+  public SeriesAmountEditionDialogChecker checkSliderPosition(int percentage) {
+    assertThat(dialog.getSlider().relativePositionEquals(percentage));
+    return this;
+  }
+
+  public SeriesAmountEditionDialogChecker setSliderPosition(int percentage) {
+    dialog.getSlider().setRelativePosition(percentage);
+    return this;
+  }
+
+  public SeriesAmountEditionDialogChecker checkSliderLabels(String... labels) {
+    assertThat(dialog.getSlider().labelsEqual(labels));
+    return this;
+  }
 }

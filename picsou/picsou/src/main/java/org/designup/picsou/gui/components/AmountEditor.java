@@ -19,7 +19,7 @@ public class AmountEditor {
   private JRadioButton positiveRadio = new JRadioButton(new RadioAction(Lang.get("amount.positive"), true));
   private JRadioButton negativeRadio = new JRadioButton(new RadioAction(Lang.get("amount.negative"), false));
   private boolean updateInProgress = false;
-  private boolean preferedPositive;
+  private boolean preferredPositive;
 
   public AmountEditor(DoubleField field, GlobRepository repository, Directory directory,
                       boolean notifyOnKeyPressed, Double valueForNull) {
@@ -32,12 +32,14 @@ public class AmountEditor {
     ButtonGroup group = new ButtonGroup();
     group.add(positiveRadio);
     group.add(negativeRadio);
+
+    positiveRadio.doClick(0);
   }
 
   public AmountEditor update(boolean preferredPositive, boolean hideRadio) {
     try {
       updateInProgress = true;
-      this.preferedPositive = preferredPositive;
+      this.preferredPositive = preferredPositive;
       updateRadios(preferredPositive);
       positiveRadio.setVisible(!hideRadio);
       negativeRadio.setVisible(!hideRadio);
@@ -48,7 +50,14 @@ public class AmountEditor {
     return this;
   }
 
+  public Double adjustSign(Double value) {
+    return positiveMode ? value : -value;
+  }
+ 
   private void updateRadios(boolean positive) {
+    if (positive == positiveRadio.isSelected()) {
+      return;
+    }
     this.positiveMode = positive;
     if (positive) {
       positiveRadio.doClick(0);
@@ -112,14 +121,14 @@ public class AmountEditor {
       if (value == null) {
         return null;
       }
-      return positiveMode ? value : -value;
+      return adjustSign(value);
     }
 
     protected void setDisplayedValue(Object value) {
       super.setDisplayedValue(value);
       if (value != null) {
         double amount = (Double)value;
-        boolean positive = (amount > 0) || ((amount == 0) && preferedPositive);
+        boolean positive = (amount > 0) || ((amount == 0) && preferredPositive);
         updateInProgress = true;
         try {
           updateRadios(positive);

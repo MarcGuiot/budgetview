@@ -202,6 +202,35 @@ public class Account {
            account1.isTrue(Account.IS_IMPORTED_ACCOUNT) != account2.isTrue(Account.IS_IMPORTED_ACCOUNT);
   }
 
+  public static double computeAmountMultiplier(Glob fromAccount, Glob toAccount, GlobRepository repository) {
+    if (areBothImported(fromAccount, toAccount)) {
+      return 1;
+    }
+    double multiplier = getMultiplierWithMainAsPointOfView(fromAccount, toAccount, repository);
+    if (multiplier == 0) {
+      if (fromAccount == null && toAccount == null) {
+        multiplier = 1;
+      }
+      else {
+        if (onlyOneIsImported(fromAccount, toAccount)) {
+          if (fromAccount.isTrue(IS_IMPORTED_ACCOUNT)) {
+            multiplier = -1;
+          }
+          else {
+            multiplier = 1;
+          }
+        }
+        else if (fromAccount == null) {
+          multiplier = 1;
+        }
+        else {
+          multiplier = -1;
+        }
+      }
+    }
+    return multiplier;
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {

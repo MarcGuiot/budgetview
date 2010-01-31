@@ -4,6 +4,7 @@ import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.SeriesPeriodicityAndScopeStringifier;
 import org.designup.picsou.gui.series.edition.AlignSeriesBudgetAmountsAction;
+import org.designup.picsou.gui.series.edition.SeriesBudgetSliderAdapter;
 import org.designup.picsou.gui.series.utils.SeriesAmountLabelStringifier;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
@@ -33,12 +34,13 @@ import java.util.Set;
 
 public class SeriesAmountEditionDialog {
 
-  private LocalGlobRepository localRepository;
-  private Directory directory;
   private AmountEditor amountEditor;
   private SelectionService selectionService;
-  private PicsouDialog dialog;
   private JCheckBox propagationCheckBox;
+  private PicsouDialog dialog;
+
+  private LocalGlobRepository localRepository;
+  private Directory directory;
   private GlobRepository parentRepository;
   private SeriesEditionDialog seriesEditionDialog;
 
@@ -76,6 +78,10 @@ public class SeriesAmountEditionDialog {
     builder.add("alignValue", alignAction);
     builder.add("actualAmountLabel", alignAction.getActualAmountLabel());
 
+    builder.addSlider("slider",
+                      SeriesBudget.AMOUNT,
+                      new SeriesBudgetSliderAdapter(amountEditor, localRepository, directory));
+
     builder.addButton("editSeries", Series.TYPE, new SeriesPeriodicityAndScopeStringifier(), new OpenSeriesEditorCallback());
 
     dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
@@ -88,22 +94,28 @@ public class SeriesAmountEditionDialog {
   }
 
   public void show(Glob series, Set<Integer> months) {
+
     this.currentSeries = series.getKey();
     this.maxMonth = Utils.max(months);
     loadGlobs(series);
-    double multiplier =
-      SeriesEditionDialog.computeMultiplier(localRepository.findLinkTarget(series, Series.FROM_ACCOUNT),
-                                            localRepository.findLinkTarget(series, Series.TO_ACCOUNT),
-                                            localRepository);
+
     BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
-    boolean isUsuallyPositive = budgetArea.isIncome() ||
-                                (budgetArea == BudgetArea.SAVINGS && multiplier > 0);
-    amountEditor.update(isUsuallyPositive, budgetArea == BudgetArea.SAVINGS);
+    amountEditor.update(isUsuallyPositive(series, budgetArea),
+                        budgetArea == BudgetArea.SAVINGS);
 
     select(series, months);
+
     propagationCheckBox.setSelected(false);
     amountEditor.selectAll();
     GuiUtils.showCentered(dialog);
+  }
+
+  private boolean isUsuallyPositive(Glob series, BudgetArea budgetArea) {
+    double multiplier =
+      Account.computeAmountMultiplier(localRepository.findLinkTarget(series, Series.FROM_ACCOUNT),
+                                      localRepository.findLinkTarget(series, Series.TO_ACCOUNT),
+                                      localRepository);
+    return budgetArea.isIncome() || (budgetArea == BudgetArea.SAVINGS && multiplier > 0);
   }
 
   private void loadGlobs(Glob series) {
@@ -115,10 +127,10 @@ public class SeriesAmountEditionDialog {
   }
 
   private GlobList getLinkedAccounts(Glob series) {
-    GlobList globs = new GlobList();
-    globs.addNotNull(parentRepository.findLinkTarget(series, Series.FROM_ACCOUNT),
-                     parentRepository.findLinkTarget(series, Series.TO_ACCOUNT));
-    return globs;
+    GlobList accounts = new GlobList();
+    accounts.addNotNull(parentRepository.findLinkTarget(series, Series.FROM_ACCOUNT),
+                        parentRepository.findLinkTarget(series, Series.TO_ACCOUNT));
+    return accounts;
   }
 
   private GlobList getBudgets(Glob series) {
