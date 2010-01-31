@@ -69,4 +69,20 @@ public class GlobUtilsTest extends TestCase {
     });
     TestUtils.assertEquals(to, actual);
   }
+
+  public void testCopy() throws Exception {
+    Key k1 = Key.create(DummyObject.TYPE, 1);
+    Key k2 = Key.create(DummyObject.TYPE, 2);
+
+    DefaultGlobRepository repository = new DefaultGlobRepository();
+    Glob g1 = repository.create(k1);
+    repository.update(g1.getKey(), DummyObject.NAME, "g1");
+    repository.update(g1.getKey(), DummyObject.VALUE, 3.14);
+    repository.update(g1.getKey(), DummyObject.PRESENT, false);
+    Glob g2 = repository.create(k2);
+    GlobUtils.copy(repository, g1, g2, DummyObject.NAME, DummyObject.VALUE);
+    assertEquals("g1", g2.get(DummyObject.NAME));
+    assertEquals(3.14, g2.get(DummyObject.VALUE));
+    assertNull(g2.get(DummyObject.PRESENT));
+  }
 }

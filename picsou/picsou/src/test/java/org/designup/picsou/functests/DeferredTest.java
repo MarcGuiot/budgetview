@@ -87,9 +87,6 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     cardCategorization
       .checkMessage("Assign the monthly transfer operation to the corresponding card account:")
       .selectSeries("Card account");
-
-//    categorization.selectTransactions("Auchan")
-//      .checkToCategorize();
     
     categorization.selectTransaction("Prelevement carte")
       .checkOtherSeriesIsSelected("Card account");

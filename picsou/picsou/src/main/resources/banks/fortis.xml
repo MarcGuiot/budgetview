@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<globs>
+  <bank name="Fortis" id="13">
+    <bankEntity label="FORTIS"/>
+
+    <transactionMatcher
+      label="VIREMENT AU COMPTE {MEMO.1} COMMUNICATION: {MEMO.2}"
+      ofxMemo="VIREMENT AU COMPTE.*[0-9+-.,]+(DE.*)COMMUNICATION:(.*)EXECUTE LE (\d{2}-\d{2}) DATE VALEUR.*"
+      groupForDate="{MEMO.3}" dateFormat="dd-MM"
+      transactionTypeName="virement"  originalLabel="{MEMO.0}"/>
+
+    <transactionMatcher
+      label="VIREMENT AU COMPTE {MEMO.1} COMMUNICATION: {MEMO.2}"
+      ofxMemo="VIREMENT AU COMPTE.*[0-9+-.,]+(DE.*)COMMUNICATION:(.*)DATE VALEUR.*"
+      transactionTypeName="virement"  originalLabel="{MEMO.0}"/>
+
+    <transactionMatcher
+      label="VIREMENT AU COMPTE {MEMO.1} COMMUNICATION: {MEMO.2}"
+      ofxMemo="VIREMENT AU COMPTE.*[0-9+-.,]+(DE.*)COMMUNICATION:(.*)"
+      transactionTypeName="virement" originalLabel="{MEMO.0}"/>
+
+    <transactionMatcher
+      label="VIREMENT AU COMPTE {MEMO.1}"
+      ofxMemo="VIREMENT AU COMPTE.*[0-9+-.,]+(DE.*)EXECUTE LE (\d{2}-\d{2}) DATE VALEUR.*"
+      groupForDate="{MEMO.2}" dateFormat="dd-MM"
+      transactionTypeName="virement"  originalLabel="{MEMO.0}"/>
+
+    <transactionMatcher
+      label="VIREMENT AU COMPTE {MEMO.1}"
+      ofxMemo="VIREMENT AU COMPTE.*[0-9+-.,]+(DE.*)DATE VALEUR.*"
+      transactionTypeName="virement"  originalLabel="{MEMO.0}"/>
+
+    <transactionMatcher
+      label="{MEMO.0}"
+      ofxMemo="VIREMENT AU COMPTE.*"
+      transactionTypeName="virement"  originalLabel="{MEMO.0}"/>
+
+    <transactionMatcher
+      label="VIREMENT DU COMPTE {MEMO.1} COMMUNICATION:{MEMO.2}"
+      ofxMemo="VIREMENT DU COMPTE.* [0-9+-.,]+(DE.*) COMMUNICATION:(.*)EXECUTE LE (\d{2}-\d{2}) DATE VALEUR.*"
+      groupForDate="{MEMO.3}" dateFormat="dd-MM"
+      transactionTypeName="virement" originalLabel="{MEMO.0}"/>
+
+    <transactionMatcher
+      label="VIREMENT DU COMPTE {MEMO.1} COMMUNICATION:{MEMO.2}"
+      ofxMemo="VIREMENT DU COMPTE.* [0-9+-.,]+(DE.*) COMMUNICATION:(.*)DATE VALEUR.*"
+      transactionTypeName="virement" originalLabel="{MEMO.0}"/>
+
+    <transactionMatcher
+      label="VIREMENT DU COMPTE {MEMO.1} COMMUNICATION:{MEMO.2}"
+      ofxMemo="VIREMENT DU COMPTE.* [0-9+-.,]+(DE.*) COMMUNICATION:(.*)"
+      transactionTypeName="virement" originalLabel="{MEMO.0}"/>
+
+    <transactionMatcher
+      label="VIREMENT DU COMPTE {MEMO.1}"
+      ofxMemo="VIREMENT DU COMPTE.* [0-9+-.,]+(DE.*) EXECUTE LE (\d{2}-\d{2}) DATE VALEUR.*"
+      groupForDate="{MEMO.2}" dateFormat="dd-MM"
+      transactionTypeName="virement" originalLabel="{MEMO.0}"/>
+
+    <transactionMatcher
+      label="{MEMO.0}"
+      ofxMemo="VIREMENT DU COMPTE.*"
+      transactionTypeName="virement" originalLabel="{MEMO.0}"/>
+
+    <transactionMatcher
+      label="PAIEMENT CARTE {MEMO.2}"
+      ofxMemo="PAIEMENT PAR CARTE DE BANQUE (\d{2}-\d{2}) .*AVEC LA CARTE(.*) DATE VALEUR.*"
+      originalLabel="{MEMO.0}"
+      transactionTypeName="credit_card"
+      groupForDate="{MEMO.1}"
+      dateFormat="dd-MM"/>
+
+    <transactionMatcher
+      label="PAIEMENT CARTE {MEMO.0}"
+      ofxName="PAIEMENT PAR CARTE DE BANQUE"
+      originalLabel="{MEMO.0}"
+      transactionTypeName="credit_card"/>
+
+    <transactionMatcher
+      label="DOMICILIATION {MEMO.2}"
+      ofxName="DOMICILIATION"
+      ofxMemo="DOMICILIATION (\d{2}-\d{2}) [0-9+-.,]+(.*) DATE VALEUR.*"
+      originalLabel="{MEMO.0}"
+      groupForDate="{MEMO.1}"
+      dateFormat="dd-MM"
+      transactionTypeName="prelevement"/>
+
+    <transactionMatcher
+      label="{MEMO.0}"
+      ofxName="DOMICILIATION"
+      originalLabel="{MEMO.0}"
+      transactionTypeName="prelevement"/>
+
+
+    <transactionMatcher
+      label="RETRAIT {MEMO.2}"
+      ofxName="RETRAIT D'ARGENT A NOS DISTRIBUT"
+      ofxMemo="RETRAIT D'ARGENT A NOS DISTRIBUTEURS (\d{2}-\d{2}) [0-9+-.,]+(AVEC LA CARTE.*) DATE VALEUR.*"
+      originalLabel="{MEMO.0}"
+      groupForDate="{MEMO.1}"
+      dateFormat="dd-MM"
+      transactionTypeName="withdrawal"/>
+
+    <transactionMatcher
+      label="RETRAIT {MEMO.1}"
+      ofxName="RETRAIT D'ARGENT"
+      ofxMemo="RETRAIT D'ARGENT(.*)"
+      originalLabel="{MEMO.0}"
+      transactionTypeName="withdrawal"/>
+
+  </bank>
+
+  <!--<bankFormat>-->
+    <!--<ofxEntry-->
+      <!--date="20091203" name="001-3660220-01"-->
+      <!--memo="VIREMENT AU COMPTE 001-3660220-01 02-12 55,55-DE SCARLET VIA PC BANKING COMMUNICATION: 953101296156 EXECUTE LE 02-12 DATE VALEUR : 02/12/2009"-->
+      <!--checkNum="20090100"/>-->
+    <!--<ofxEntry-->
+      <!--date="20091202" name="310-0415848-95"-->
+      <!--memo="VIREMENT AU COMPTE 310-0415848-95 02-12 555,55-DE MARIE FRANCE LECLOUX VIA PC BANKING EXECUTE LE 01-12 DATE VALEUR : 02/12/2009"-->
+      <!--checkNum="20090098"/>-->
+    <!--<ofxEntry-->
+      <!--date="20091222" name="310-0764684-22"-->
+      <!--memo="VIREMENT DU COMPTE 310-0764684-22 22-12 5.555,55+DE SOGETI BELGIUM SA AVENUE JULES BORDET 160 1140 EVERE COMMUNICATION: /A/ 1AA3800-04-0001023 SALAIRE DATE VALEUR : 22/12/2009"-->
+      <!--checkNum="20090111"/>-->
+  <!--</bankFormat>-->
+
+  <!--<bankFormat>-->
+    <!--<ofxEntry-->
+      <!--date="20091201" name="PAIEMENT PAR CARTE DE BANQUE"-->
+      <!--memo="PAIEMENT PAR CARTE DE BANQUE 01-12 7,25-AVEC LA CARTE XXXX 0413 3617 71XX QUICK RUE NEUVE 1000 BRUX 01-12-2009 DATE VALEUR : 01/12/2009"-->
+      <!--checkNum="20090097"/>-->
+    <!--<ofxEntry-->
+      <!--date="20091204" name="PAIEMENT PAR CARTE DE BANQUE"-->
+      <!--memo="PAIEMENT PAR CARTE DE BANQUE 03-12 24,60-AVEC LA CARTE XXXX 0413 3617 71XX STIB ROGIER SCHAERBEE 03-12-2009 EXECUTE LE 03-12 DATE VALEUR : 03/12/2009"-->
+      <!--checkNum="20090101"/>-->
+    <!--<ofxEntry-->
+      <!--date="20091205" name="PAIEMENT PAR CARTE DE BANQUE"-->
+      <!--memo="PAIEMENT PAR CARTE DE BANQUE 05-12 300,00-AVEC LA CARTE XXXX 0413 3617 71XX PADEG COMPUTERS BRUXELLES 05-12-2009 DATE VALEUR : 05/12/2009"-->
+      <!--checkNum="20090102"/>-->
+    <!--<ofxEntry-->
+      <!--date="20091205" name="PAIEMENT PAR CARTE DE BANQUE"-->
+      <!--memo="PAIEMENT PAR CARTE DE BANQUE 05-12 31,23-AVEC LA CARTE XXXX 0413 3617 71XX DELH_FLAGEY 1050 BRUX 05-12-2009 DATE VALEUR : 05/12/2009"-->
+      <!--checkNum="20090103"/>-->
+    <!--<ofxEntry-->
+      <!--date="20091209" name="PAIEMENT PAR CARTE DE BANQUE"-->
+      <!--memo="PAIEMENT PAR CARTE DE BANQUE 09-12 6,55-AVEC LA CARTE XXXX 0413 3617 71XX MAC DONALDS 1000 BRUX 09-12-2009 DATE VALEUR : 09/12/2009"-->
+      <!--checkNum="20090105"/>-->
+  <!--</bankFormat>-->
+
+
+  <!--prelevement -->
+  <!--<bankFormat>-->
+    <!--<ofxEntry-->
+      <!--originalLabel="DOMICILIATION DOMICILIATION 03-12 31,00-SA MOBISTAR NV COMMUNICATION: 010762102005 DATE VALEUR : 03/12/2009"-->
+      <!--date="20091203" name="DOMICILIATION"-->
+      <!--memo="DOMICILIATION 03-12 31,00-SA MOBISTAR NV COMMUNICATION: 010762102005 DATE VALEUR : 03/12/2009"-->
+      <!--checkNum="20090099"/>-->
+  <!--</bankFormat>-->
+
+  <!--<bankFormat>-->
+    <!--<ofxEntry originalLabel="RETRAIT D'ARGENT A NOS DISTRIBUT" date="20091210" name="RETRAIT D'ARGENT A NOS DISTRIBUT"-->
+              <!--memo="RETRAIT D'ARGENT A NOS DISTRIBUTEURS 10-12 70,00-AVEC LA CARTE XXXX 0413 3617 71XX FORTIS RUE NEUVE BRUXELLES 10-12-2009 DATE VALEUR : 10/12/2009"-->
+              <!--checkNum="20090106"/>-->
+  <!--</bankFormat>-->
+
+</globs>

@@ -193,7 +193,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     transactionTable.addKeyBinding(GuiUtils.ctrl(KeyEvent.VK_B), "ExportBankFormat", new AbstractAction() {
       public void actionPerformed(ActionEvent event) {
         try {
-          String text = BankFormatExporter.export(transactionTable.getCurrentSelection());
+          String text = BankFormatExporter.export(repository, transactionTable.getCurrentSelection());
           GuiUtils.copyTextToClipboard(text);
         }
         catch (IOException e) {

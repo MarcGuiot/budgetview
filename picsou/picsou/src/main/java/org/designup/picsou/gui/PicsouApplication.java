@@ -17,6 +17,7 @@ import org.designup.picsou.gui.upgrade.UpgradeService;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.bank.BankPluginService;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
@@ -341,6 +342,7 @@ public class PicsouApplication {
     directory.add(FontLocator.class, Gui.FONT_LOCATOR);
     directory.add(PasswordBasedEncryptor.class, new RedirectPasswordBasedEncryptor());
     directory.add(createConfigService());
+    directory.add(new BankPluginService());
     return directory;
   }
 

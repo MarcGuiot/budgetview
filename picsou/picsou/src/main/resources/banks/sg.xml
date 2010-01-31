@@ -10,7 +10,7 @@
                         label="VIREMENT LOGITEL" originalLabel="{M.0}"/>
 
     <transactionMatcher qifM="VIR.LOGITEL (.*)" transactionTypeName="virement"
-                        label="{M.1}" originalLabel="{M.0}"/>
+                        label="VIREMENT LOGITEL {M.1}" originalLabel="{M.0}"/>
 
     <transactionMatcher qifM="PRELEVEMENT [\d]+ (.*)" transactionTypeName="prelevement"
                         label="{M.1}" originalLabel="{M.0}"/>

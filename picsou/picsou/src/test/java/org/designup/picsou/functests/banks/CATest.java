@@ -15,7 +15,7 @@ public class CATest extends SpecificBankTestCase {
       .add("09/08/2006", TransactionType.DEPOSIT, "REMISE CHEQUES  6125145", "", 6828.50)
       .add("07/08/2006", TransactionType.CHECK, "CHEQUE N°0000119", "", -600.00)
       .add("06/08/2006", TransactionType.CREDIT_CARD, "Grosbill Paris", "", -420.90)
-      .add("04/08/2006", TransactionType.PRELEVEMENT, "Sarl 2 Ab Audit", "", -238.00)
+      .add("04/08/2006", TransactionType.VIREMENT, "Sarl 2 Ab Audit", "", -238.00)
       .add("02/08/2006", TransactionType.PRELEVEMENT, "Rbt Adi 08-2006/prets Contrat D", "", -2.32)
       .add("01/08/2006", TransactionType.WITHDRAWAL, "RETRAIT NIMES COUPOLE 31/07 162", "", -100.00)
       .add("01/08/2006", TransactionType.PRELEVEMENT, "*cotis Csca Pro Non Soumis A Tva", "", -17.34)

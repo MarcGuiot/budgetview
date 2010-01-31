@@ -304,14 +304,30 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .openEntityEditionChecker()
       .selectBank("Autre")
       .validate();
-      importChecker
-        .checkNoErrorMessage()
+    importChecker
+      .checkNoErrorMessage()
       .completeImport();
 
     mainAccounts.checkAccount("Account n. 111", 950.00, "2008/08/10");
     mainAccounts.edit("Account n. 111")
       .checkSelectedBank("Autre")
       .validate();
+
+    String secondAccountOnSameBank = OfxBuilder.init(this)
+      .addBankAccount(12345, 54321, "111.222", 1000.00, "2008/08/07")
+      .addTransaction("2008/08/10", -50.00, "other")
+      .save();
+
+    operations.openImportDialog()
+      .setFilePath(secondAccountOnSameBank)
+      .acceptFile()
+      .completeImport();
+
+    views.selectData();
+    transactions.initContent()
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "OTHER", "", -50.00)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "VIREMENT", "", -50.00)
+      .check();
   }
 
   public void testImportOfxWithDateInThePast() throws Exception {
@@ -359,7 +375,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .selectDeferredCard("Card n. 1234", 29)
       .validate();
     importChecker.doImport();
-    
+
     views.selectHome();
     mainAccounts.edit("Card n. 1234")
       .checkFromBeginningDay(29)

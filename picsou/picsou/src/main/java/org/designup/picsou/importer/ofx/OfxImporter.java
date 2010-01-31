@@ -34,7 +34,7 @@ public class OfxImporter implements AccountFileImporter {
                                    GlobRepository targetRepository) throws TruncatedFile {
     OfxParser parser = new OfxParser();
     try {
-      Functor functor = new Functor(targetRepository, initialRepository);
+      Functor functor = new Functor(targetRepository);
       parser.parse(reader, functor);
       if (!functor.fileCompleted) {
         throw new TruncatedFile();
@@ -68,7 +68,7 @@ public class OfxImporter implements AccountFileImporter {
     private String transactionType;
     private String checkNum;
 
-    public Functor(GlobRepository targetRepository, ReadOnlyGlobRepository initialRepository) {
+    public Functor(GlobRepository targetRepository) {
       this.repository = targetRepository;
       generator = new ImportedTransactionIdGenerator(targetRepository.getIdGenerator());
     }
@@ -250,10 +250,11 @@ public class OfxImporter implements AccountFileImporter {
     }
 
     private void updateTransactionLabel() {
-      repository.update(currentTransactionKey, ImportedTransaction.OFX_NAME, name);
-      repository.update(currentTransactionKey, ImportedTransaction.OFX_MEMO, memo);
-      repository.update(currentTransactionKey, ImportedTransaction.OFX_CHECK_NUM, checkNum);
-      repository.update(currentTransactionKey, ImportedTransaction.BANK_TRANSACTION_TYPE, transactionType);
+      repository.update(currentTransactionKey,
+                        FieldValue.value(ImportedTransaction.OFX_NAME, name),
+                        FieldValue.value(ImportedTransaction.OFX_MEMO, memo),
+                        FieldValue.value(ImportedTransaction.OFX_CHECK_NUM, checkNum),
+                        FieldValue.value(ImportedTransaction.BANK_TRANSACTION_TYPE, transactionType));
       name = null;
       memo = null;
       checkNum = null;
@@ -276,43 +277,36 @@ public class OfxImporter implements AccountFileImporter {
     }
 
     private void updateAccount(String accountNumber) {
-      currentAccount = repository.findUnique(Account.TYPE, value(Account.NUMBER, accountNumber));
-      if (currentAccount == null) {
-        Integer bankId = null;
-        Integer bankEntityId = BankEntity.find(bankEntityLabel, repository);
-        if (bankEntityId != null) {
-          bankId = BankEntity.getBank(repository.find(Key.create(BankEntity.TYPE, bankEntityId)), repository).get(Bank.ID);
-        }
-        else {
-          for (Glob account : repository.getAll(Account.TYPE)) {
-            if (bankEntityLabel != null && bankEntityLabel.equals(account.get(Account.BANK_ENTITY_LABEL))){
-              bankId = account.get(Account.BANK);
-              break;
-            }
-          }
-        }
-        currentAccount = repository.create(Account.TYPE,
-                                           value(Account.NUMBER, accountNumber),
-                                           value(Account.ID, generator.getNextId(Account.ID, 1)),
-                                           value(Account.NAME, getName(accountNumber, isCreditCard)),
-                                           value(Account.BANK, bankId),
-                                           value(Account.BANK_ENTITY_LABEL, bankEntityLabel),
-                                           value(Account.BANK_ENTITY, bankEntityId),
-                                           value(Account.CARD_TYPE, isCreditCard ? AccountCardType.UNDEFINED.getId()
-                                                                    : AccountCardType.NOT_A_CARD.getId()),
-                                           value(Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId()));
+      Integer bankId = null;
+      Integer bankEntityId = BankEntity.find(bankEntityLabel, repository);
+      if (bankEntityId != null) {
+        bankId = BankEntity.getBank(repository.find(Key.create(BankEntity.TYPE, bankEntityId)), repository).get(Bank.ID);
       }
       else {
-        repository.update(currentAccount.getKey(), Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());
+        for (Glob account : repository.getAll(Account.TYPE)) {
+          if (bankEntityLabel != null && bankEntityLabel.equals(account.get(Account.BANK_ENTITY_LABEL))) {
+            bankId = account.get(Account.BANK);
+            break;
+          }
+        }
       }
+      currentAccount = repository.create(Account.TYPE,
+                                         value(Account.NUMBER, accountNumber),
+                                         value(Account.ID, generator.getNextId(Account.ID, 1)),
+                                         value(Account.NAME, getName(accountNumber, isCreditCard)),
+                                         value(Account.BANK, bankId),
+                                         value(Account.BANK_ENTITY_LABEL, bankEntityLabel),
+                                         value(Account.BANK_ENTITY, bankEntityId),
+                                         value(Account.CARD_TYPE, isCreditCard ? AccountCardType.UNDEFINED.getId()
+                                                                  : AccountCardType.NOT_A_CARD.getId()),
+                                         value(Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId()));
     }
 
     private void updateAccountBalance() {
       if (!isInLedgerBal || (currentAccount == null)) {
         return;
       }
-      Date previousDate = currentAccount.get(Account.POSITION_DATE);
-      if ((updateDate != null) && ((previousDate == null) || updateDate.equals(previousDate) || updateDate.after(previousDate))) {
+      if (updateDate != null) {
         repository.update(currentAccount.getKey(),
                           value(Account.POSITION_DATE, updateDate),
                           value(Account.POSITION, position),

@@ -4,12 +4,13 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.designup.picsou.bank.BankPluginService;
 import org.designup.picsou.client.http.HttpsClientTransport;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.utils.KeyService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
-import org.designup.picsou.model.User;
 import org.designup.picsou.model.AppVersionInformation;
+import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Inline;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
@@ -19,9 +20,13 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.serialization.Encoder;
 
 import javax.swing.*;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -125,7 +130,7 @@ public class ConfigService {
 
 
   synchronized private boolean sendRequestForNewConfig(byte[] repoId, String mail, String signature,
-                                          long launchCount, String activationCode) throws IOException {
+                                                       long launchCount, String activationCode) throws IOException {
     this.repoId = repoId;
     String url = URL + REQUEST_FOR_CONFIG;
     PostMethod postMethod = new PostMethod(url);
@@ -279,7 +284,7 @@ public class ConfigService {
   }
 
   synchronized public boolean update(final byte[] repoId, final long launchCount, byte[] mailInBytes,
-                        byte[] signatureInByte, final String activationCode) {
+                                     byte[] signatureInByte, final String activationCode) {
     boolean isValideUser;
     final String mail = mailInBytes == null ? null : new String(mailInBytes);
     if (signatureInByte != null && activationCode != null) {
@@ -406,8 +411,33 @@ public class ConfigService {
     }
   }
 
-  private boolean loadConfigFile(File jarFile, long version, GlobRepository repository, Directory directory) {
+  static class SpecificBankLoader extends ClassLoader {
+    public void load(GlobRepository globRepository, Directory directory, InputStream stream, String name) {
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      byte tab[] = new byte[1024];
+      try {
+        int len = stream.read(tab);
+        while (len != -1) {
+          outputStream.write(tab, 0, len);
+          len = stream.read(tab);
+        }
+        byte[] def = outputStream.toByteArray();
+        Class<?> specificClass = this.defineClass(name, def, 0, def.length);
+        Constructor<?> constructor = specificClass.getConstructor(GlobRepository.class, Directory.class);
+        constructor.newInstance(globRepository, directory);
+      }
+      catch (IOException e) {
+        Log.write("fail to read " + name, e);
+      }
+      catch (Exception e) {
+        Log.write("fail to load class " + name, e);
+      }
+    }
+  }
+
+  private boolean loadConfigFile(File jarFile, long version, final GlobRepository repository, final Directory directory) {
     try {
+      final SpecificBankLoader bankLoader = new SpecificBankLoader();
       final JarFile jar = new JarFile(jarFile);
       TransactionAnalyzerFactory.Loader loader = new TransactionAnalyzerFactory.Loader() {
         public InputStream load(String file) {
@@ -419,8 +449,27 @@ public class ConfigService {
             return null;
           }
         }
+
+        public void loadBank(BankPluginService bankPluginService) {
+          Enumeration<JarEntry> jarEntryEnumeration = jar.entries();
+          while (jarEntryEnumeration.hasMoreElements()) {
+            JarEntry entry = jarEntryEnumeration.nextElement();
+            String className = entry.getName();
+            if (!entry.isDirectory() && className.endsWith(".class")) {
+              try {
+                InputStream inputStream = jar.getInputStream(entry);
+                bankLoader.load(repository, directory, inputStream,
+                                className.substring(0, className.length() - ".class".length())
+                .replace("/", "."));
+              }
+              catch (IOException e) {
+                Log.write("fail to get entry for " + className, e);
+              }
+            }
+          }
+        }
       };
-      directory.get(TransactionAnalyzerFactory.class).load(loader, version, repository);
+      directory.get(TransactionAnalyzerFactory.class).load(loader, version, repository, directory);
       repository.update(AppVersionInformation.KEY, AppVersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION, version);
       return true;
     }

@@ -151,7 +151,7 @@ public class ExportTest extends LoggedInFunctionalTestCase {
     operations.importQifFile(fileName, SOCIETE_GENERALE, 0.);
 
     transactions.initContent()
-      .add("28/03/2007", TransactionType.VIREMENT, "AVRIL", "", 12345.67)
+      .add("28/03/2007", TransactionType.VIREMENT, "VIREMENT LOGITEL AVRIL", "", 12345.67)
       .add("27/03/2007", TransactionType.CREDIT_CARD,
            "MONOPRIX CARTE 24371925 PAIEMENT CB 2303 SCEAUX", "", -30.58)
       .add("26/03/2007", TransactionType.CHECK, "CHEQUE N°0416063", "", -45.0)
@@ -163,7 +163,7 @@ public class ExportTest extends LoggedInFunctionalTestCase {
     operations.importOfxFile(ofxFileName);
 
     transactions.initContent()
-      .add("28/03/2007", TransactionType.VIREMENT, "AVRIL", "", 12345.67)
+      .add("28/03/2007", TransactionType.VIREMENT, "VIREMENT LOGITEL AVRIL", "", 12345.67)
       .add("27/03/2007", TransactionType.CREDIT_CARD,
            "MONOPRIX CARTE 24371925 PAIEMENT CB 2303 SCEAUX", "", -30.58)
       .add("26/03/2007", TransactionType.CHECK, "CHEQUE N°0416063", "", -45.0)

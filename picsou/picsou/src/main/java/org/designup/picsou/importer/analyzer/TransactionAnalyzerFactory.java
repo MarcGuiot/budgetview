@@ -3,6 +3,7 @@ package org.designup.picsou.importer.analyzer;
 import org.designup.picsou.model.PreTransactionTypeMatcher;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.model.BankEntity;
+import org.designup.picsou.bank.BankPluginService;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -11,6 +12,7 @@ import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Files;
+import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import org.globsframework.xml.XmlGlobParser;
 
@@ -40,23 +42,28 @@ public class TransactionAnalyzerFactory {
 
   public interface Loader {
     InputStream load(String file);
+    void loadBank(BankPluginService bankPluginService);
   }
 
-  synchronized public void load(final ClassLoader loader, Long version, final GlobRepository repository) {
+  synchronized public void load(final ClassLoader loader, Long version, final GlobRepository repository, Directory directory) {
     load(new Loader() {
       public InputStream load(String file) {
         return loader.getResourceAsStream(file);
       }
-    }, version, repository);
+
+      public void loadBank(BankPluginService bankPluginService) {
+      }
+    }, version, repository, directory);
   }
 
-  synchronized public void load(Loader loader, Long version, final GlobRepository repository) {
+  synchronized public void load(Loader loader, Long version, final GlobRepository repository, Directory directory) {
     if (this.version < version) {
       this.version = version;
       this.analyzer = new DefaultTransactionAnalyzer();
       loadMatchers(loader, repository);
       analyzer.add(new LabelForCategorizationUpdater());
       analyzer.add(new TransactionDateUpdater());
+      loader.loadBank(directory.get(BankPluginService.class));
     }
   }
 
