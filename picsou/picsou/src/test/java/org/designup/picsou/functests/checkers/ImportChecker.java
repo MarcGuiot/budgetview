@@ -331,6 +331,11 @@ public class ImportChecker {
     return new CardTypeChooserChecker(window);
   }
 
+  public ImportChecker checkMessageEmptyFile() {
+    dialog.getTextBox("No operations in file");
+    return this;
+  }
+
   public static class ImportCompleteWindowHandler extends WindowHandler {
     private final int importedTransactionCount;
     private final int autocategorizedTransactionCount;

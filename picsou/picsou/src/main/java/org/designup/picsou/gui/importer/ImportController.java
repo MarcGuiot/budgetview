@@ -165,6 +165,11 @@ public class ImportController {
       importDialog.updateForNextImport(file, dateFormats);
       return true;
     }
+    catch (NoOperations e){
+      String message = Lang.get("import.file.empty");
+      importDialog.showMessage(message);
+      return false;
+    }
     catch (Exception e) {
       String message = Lang.get("import.file.error");
       Log.write(message, e);

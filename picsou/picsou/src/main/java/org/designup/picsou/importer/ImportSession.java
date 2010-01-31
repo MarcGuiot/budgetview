@@ -56,7 +56,7 @@ public class ImportSession {
     return localRepository;
   }
 
-  public List<String> loadFile(File file) throws IOException, TruncatedFile {
+  public List<String> loadFile(File file) throws IOException, TruncatedFile, NoOperations {
     localRepository.reset(GlobList.EMPTY, Transaction.TYPE, ImportedTransaction.TYPE, Day.TYPE, CurrentMonth.TYPE,
                           DeferredCardDate.TYPE, DeferredCardPeriod.TYPE, AccountCardType.TYPE);
     GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Day.TYPE, DeferredCardDate.TYPE,
@@ -77,6 +77,9 @@ public class ImportSession {
     bankPluginService.apply(referenceRepository, localRepository, importChangeSet);
 
     load = true;
+    if (localRepository.getAll(ImportedTransaction.TYPE).isEmpty()){
+      throw new NoOperations();
+    }
     return getImportedTransactionFormat();
   }
 

@@ -646,9 +646,49 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/12", -1.3, "Menu K 2")
       .load(1, 0);
 
-    OfxBuilder
+    String sameFile = OfxBuilder
       .init(this)
       .addTransaction("2006/01/12", -1.3, "Menu K 2")
-      .load(0, 0);
+      .save();
+
+    String otherFile = OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/13", -1.3, "Menu K 2")
+      .save();
+
+    operations.openImportDialog()
+      .setFilePath(sameFile + ";" + otherFile)
+      .acceptFile()
+      .doImport()
+      .doImport();
+    
+    views.selectData();
+    transactions.initContent()
+      .add("13/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
+      .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
+      .check();
+  }
+
+  public void testImportEmptyFile() throws Exception {
+    String emptyFile = OfxBuilder
+      .init(this)
+      .save();
+
+    String notEmpty = OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/12", -1.3, "Menu K 2")
+      .save();
+
+    operations.openImportDialog()
+      .setFilePath(emptyFile)
+      .acceptFile()
+      .checkMessageEmptyFile()
+      .setFilePath(notEmpty)
+      .acceptFile()
+      .completeImport();
+    views.selectData();
+    transactions.initContent()
+      .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
+      .check();
   }
 }
