@@ -28,17 +28,12 @@ import java.util.Collections;
 
 public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
 
-  private int offset;
-
-
   protected SeriesEvolutionMonthEditor(int offset, GlobTableView view,
                                        GlobRepository repository, Directory directory,
                                        SeriesEvolutionColors colors,
                                        SeriesAmountEditionDialog seriesAmountEditionDialog) {
-    super(view, directory.get(DescriptionService.class), repository, directory, colors);
+    super(offset, view, directory.get(DescriptionService.class), repository, directory, colors);
 
-    this.offset = offset;
-    
     complete(new OpenSeriesAmountEditionDialogAction(seriesAmountEditionDialog));
   }
 
