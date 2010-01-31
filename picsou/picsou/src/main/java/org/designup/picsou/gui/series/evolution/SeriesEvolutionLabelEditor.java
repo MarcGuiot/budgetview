@@ -24,7 +24,7 @@ public class SeriesEvolutionLabelEditor extends SeriesEvolutionEditor {
                                        Directory directory,
                                        SeriesEvolutionColors colors,
                                        SeriesEditionDialog seriesEditionDialog) {
-    super(view, directory.get(DescriptionService.class), repository, directory, colors);
+    super(-1, view, directory.get(DescriptionService.class), repository, directory, colors);
 
     this.stringifier = new SeriesWrapperStringifier(repository, directory);
     this.descriptionStringifier = new SeriesWrapperDescriptionStringifier();

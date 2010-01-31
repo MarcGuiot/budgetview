@@ -20,6 +20,7 @@ import java.awt.*;
 
 public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
 
+  private int offset;
   private SeriesEvolutionColors colors;
 
   protected Glob currentSeries;
@@ -34,13 +35,14 @@ public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
   protected int referenceMonthId;
 
 
-  public SeriesEvolutionEditor(GlobTableView view,
+  public SeriesEvolutionEditor(int offset,
+                               GlobTableView view,
                                DescriptionService descriptionService,
                                GlobRepository repository,
                                Directory directory,
                                SeriesEvolutionColors colors) {
     super(view, descriptionService, repository, directory);
-
+    this.offset = offset;
     this.colors = colors;
 
     LabelCustomizers.BOLD.process(label);
@@ -74,7 +76,7 @@ public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
       case BUDGET_AREA:
         label.setText(text);
         label.setToolTipText(description);
-        colors.setColors(seriesWrapper, row, -1, referenceMonthId, isSelected, label, labelPanel);
+        colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, label, labelPanel);
         return labelPanel;
 
       case SERIES:
@@ -82,13 +84,13 @@ public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
         button.setText(text);
         button.setToolTipText(description);
         PaintablePanel panel = render ? rendererPanel : editorPanel;
-        colors.setColors(seriesWrapper, row, -1, referenceMonthId, isSelected, button, panel);
+        colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, button, panel);
         return panel;
 
       case SUMMARY:
         label.setText(text);
         label.setToolTipText(description);
-        colors.setColors(seriesWrapper, row, -1, referenceMonthId, isSelected, label, labelPanel);
+        colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, label, labelPanel);
         return labelPanel;
 
       default:
