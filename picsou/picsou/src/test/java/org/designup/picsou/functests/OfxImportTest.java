@@ -405,6 +405,12 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .cancel();
 
     views.selectData();
-    transactions.checkTableIsEmpty();
+    transactions
+      .initContent()
+      .add("10/08/2008", TransactionType.CREDIT_CARD, "VIREMENT", "", -50.00)
+      .check();
+    views.selectHome();
+    mainAccounts.checkBalance(-50);
+    
   }
 }

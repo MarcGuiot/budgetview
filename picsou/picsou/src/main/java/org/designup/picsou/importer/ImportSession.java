@@ -2,6 +2,7 @@ package org.designup.picsou.importer;
 
 import org.apache.commons.collections.iterators.ReverseListIterator;
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.importer.NoOperations;
 import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.model.DeferredCardPeriod;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
@@ -117,14 +118,6 @@ public class ImportSession {
       }
       for (Map.Entry<Integer, List<Glob>> accountIdAndTransactions : transactionByAccountId.entries()) {
         Glob account = localRepository.get(Key.create(Account.TYPE, accountIdAndTransactions.getKey()));
-
-        if (account.get(Account.CARD_TYPE).equals(AccountCardType.CREDIT.getId())){
-          for (Glob glob : accountIdAndTransactions.getValue()) {
-            localRepository.delete(glob.getKey());
-          }
-          continue;
-        }
-
         Glob bank = localRepository.findLinkTarget(account, Account.BANK);
         Integer bankId = Bank.GENERIC_BANK_ID;
         if (bank != null) {

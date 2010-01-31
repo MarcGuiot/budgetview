@@ -142,8 +142,9 @@ public class AccountViewChecker extends GuiChecker {
       .validate();
   }
 
-  public void checkBalance(double balance) {
+  public AccountViewChecker checkBalance(double balance) {
     assertThat(panel.getTextBox("balanceLabel").textEquals(toString(balance, true)));
+    return this;
   }
 
   public void checkAccountWebsite(String accountName, String linkText, String expectedUrl) {

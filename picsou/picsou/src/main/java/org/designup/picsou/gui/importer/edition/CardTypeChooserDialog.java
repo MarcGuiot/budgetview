@@ -137,17 +137,17 @@ public class CardTypeChooserDialog {
           Glob account = repository.get(accountKey);
           AccountCardType cardType = AccountCardType.get(account.get(Account.CARD_TYPE));
           switch (cardType) {
-            case CREDIT:
-              localRepository.delete(DeferredCardPeriod.TYPE,
-                                     and(fieldEquals(DeferredCardPeriod.ACCOUNT, account.get(Account.ID)),
-                                         fieldEquals(DeferredCardPeriod.FROM_MONTH, 0)));
-              break;
 
             case DEFERRED:
               Glob period = localRepository.create(DeferredCardPeriod.TYPE,
                                                    value(DeferredCardPeriod.ACCOUNT, account.get(Account.ID)),
                                                    value(DeferredCardPeriod.FROM_MONTH, 0));
               dayCombo.forceSelection(period.getKey());
+              break;
+            default:
+              localRepository.delete(DeferredCardPeriod.TYPE,
+                                     and(fieldEquals(DeferredCardPeriod.ACCOUNT, account.get(Account.ID)),
+                                         fieldEquals(DeferredCardPeriod.FROM_MONTH, 0)));
               break;
           }
           creditMessage.setVisible(AccountCardType.CREDIT.equals(cardType));

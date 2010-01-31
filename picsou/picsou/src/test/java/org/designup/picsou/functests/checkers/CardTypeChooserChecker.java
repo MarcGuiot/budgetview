@@ -42,7 +42,7 @@ public class CardTypeChooserChecker extends GuiChecker {
     Panel panel = getPanel(accountName);
     TextBox messageBox = panel.getTextBox("creditMessage");
     assertThat(messageBox.isVisible());
-    assertThat(messageBox.textEquals("Credit cards are not managed"));
+    assertThat(messageBox.textEquals(""));
 
     checkComponentVisible(panel, JComboBox.class, "day", false);
     return this;
