@@ -85,7 +85,7 @@ public class AccountPositionEditionChecker extends GuiChecker {
   }
 
   public void validateFromImport() {
-    ImportChecker.validate(-1, -1, window, "ok");
+    ImportChecker.validate(-1, -1, -1, window, "ok");
     UISpecAssert.assertFalse(window.isVisible());
   }
 

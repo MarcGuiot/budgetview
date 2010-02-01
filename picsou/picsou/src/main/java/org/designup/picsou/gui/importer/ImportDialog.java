@@ -459,25 +459,30 @@ public class ImportDialog {
     }
   }
 
-  public void showCompleteMessage(int autocategorizedTransaction, int transactionCount) {
+  public void showCompleteMessage(int importedTransactionCount, int autocategorizedTransaction, int transactionCount) {
     String messageKey = "close";
     if ((transactionCount > 0) && repository.contains(Series.TYPE, Series.USER_SERIES_MATCHER)) {
       messageKey = "import.end.button.goto";
     }
     MessageDialog.createMessageDialogWithButtonMessage("import.end.info.title",
-                                                       getEndOfImportMessageKey(transactionCount, autocategorizedTransaction),
+                                                       getEndOfImportMessageKey(importedTransactionCount, transactionCount, autocategorizedTransaction),
                                                        dialog, localDirectory,
                                                        messageKey,
                                                        Integer.toString(transactionCount),
-                                                       Integer.toString(autocategorizedTransaction)).show();
+                                                       Integer.toString(autocategorizedTransaction),
+                                                       Integer.toString(importedTransactionCount)).show();
 
   }
 
-  public static String getEndOfImportMessageKey(int transactionCount, int autocategorizedTransactions) {
+  public static String getEndOfImportMessageKey(int importedTransactionCount, int transactionCount, int autocategorizedTransactions) {
+    if (transactionCount == 0){
+      return "import.end.info.operations.none.none." + normalize(importedTransactionCount);
+    }else {
     if ((transactionCount > 1) && (transactionCount == autocategorizedTransactions)) {
       return "import.end.info.operations.many.all";
     }
     return "import.end.info.operations." + normalize(transactionCount) + "." + normalize(autocategorizedTransactions);
+    }
   }
 
   private static String normalize(int count) {

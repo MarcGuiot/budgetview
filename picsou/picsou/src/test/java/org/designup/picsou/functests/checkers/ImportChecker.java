@@ -141,7 +141,7 @@ public class ImportChecker {
   }
 
   public void completeImport() {
-    validate(-1, -1, dialog, "import.ok");
+    validate(-1, -1, -1, dialog, "import.ok");
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
@@ -151,20 +151,27 @@ public class ImportChecker {
   }
 
   public void completeImport(final int importedTransactionCount, final int autocategorizedTransactionCount) {
-    validate(importedTransactionCount, autocategorizedTransactionCount, dialog, "import.ok");
+    validate(-1, importedTransactionCount, autocategorizedTransactionCount, dialog, "import.ok");
+    UISpecAssert.assertFalse(dialog.isVisible());
+  }
+
+  public void completeImportNone(int loadTransaction) {
+    validate(loadTransaction, 0, 0, dialog, "import.ok");
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
   public void completeImportAndGotoCategorize(int importedTransactionCount, int autocategorizedTransactionCount) {
     WindowInterceptor.init(dialog.getButton(Lang.get("import.ok")).triggerClick())
-      .process(new ImportCompleteWindowHandler(importedTransactionCount,
+      .process(new ImportCompleteWindowHandler(0,
+                                               importedTransactionCount,
                                                autocategorizedTransactionCount, "Categorize operations")).run();
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
-  public static void validate(final int importedTransactionCount, final int autocategorizedTransactionCount, final Panel dialog, final String key) {
+  public static void validate(final int loadedTransaction, final int importedTransactionCount, final int autocategorizedTransactionCount,
+                              final Panel dialog, final String key) {
     WindowInterceptor.init(dialog.getButton(Lang.get(key)).triggerClick())
-      .process(new ImportCompleteWindowHandler(importedTransactionCount, autocategorizedTransactionCount)).run();
+      .process(new ImportCompleteWindowHandler(loadedTransaction, importedTransactionCount, autocategorizedTransactionCount)).run();
   }
 
   public AccountPositionEditionChecker doImportWithBalance() {
@@ -337,17 +344,19 @@ public class ImportChecker {
   }
 
   public static class ImportCompleteWindowHandler extends WindowHandler {
+    private int loadedTransactionCount;
     private final int importedTransactionCount;
     private final int autocategorizedTransactionCount;
     private String buttonMessage = null;
 
-    public ImportCompleteWindowHandler(int importedTransactionCount, int autocategorizedTransactionCount) {
+    public ImportCompleteWindowHandler(int loadedTransactionCount, int importedTransactionCount, int autocategorizedTransactionCount) {
+      this.loadedTransactionCount = loadedTransactionCount;
       this.importedTransactionCount = importedTransactionCount;
       this.autocategorizedTransactionCount = autocategorizedTransactionCount;
     }
 
-    public ImportCompleteWindowHandler(int importedTransactionCount, int autocategorizedTransactionCount, String buttonMessage) {
-      this(importedTransactionCount, autocategorizedTransactionCount);
+    public ImportCompleteWindowHandler(int loadedTransactionCount, int importedTransactionCount, int autocategorizedTransactionCount, String buttonMessage) {
+      this(loadedTransactionCount, importedTransactionCount, autocategorizedTransactionCount);
       this.buttonMessage = buttonMessage;
     }
 
@@ -355,7 +364,7 @@ public class ImportChecker {
       MessageDialogChecker checker = new MessageDialogChecker(window);
       if (importedTransactionCount != -1) {
         checker
-          .checkMessageContains(Lang.get(ImportDialog.getEndOfImportMessageKey(importedTransactionCount, autocategorizedTransactionCount),
+          .checkMessageContains(Lang.get(ImportDialog.getEndOfImportMessageKey(loadedTransactionCount, importedTransactionCount, autocategorizedTransactionCount),
                                          Integer.toString(importedTransactionCount),
                                          Integer.toString(autocategorizedTransactionCount)));
       }

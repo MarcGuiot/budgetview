@@ -157,7 +157,7 @@ public class OperationChecker {
             trigger = okButton.triggerClick();
           }
           ImportChecker.ImportCompleteWindowHandler importCompleteWindowHandler =
-            new ImportChecker.ImportCompleteWindowHandler(-1, -1);
+            new ImportChecker.ImportCompleteWindowHandler(-1, -1, -1);
           return importCompleteWindowHandler.process(WindowInterceptor.getModalDialog(trigger));
         }
       })

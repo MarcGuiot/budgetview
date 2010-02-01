@@ -142,7 +142,8 @@ public class ImportController {
         AutoCategorizationFunctor autoCategorizationFunctor = autocategorize();
         importDialog.showPositionDialog();
 
-        importDialog.showCompleteMessage(autoCategorizationFunctor.getAutocategorizedTransaction(),
+        importDialog.showCompleteMessage(importSession.getImportedOperationsCount(), 
+                                         autoCategorizationFunctor.getAutocategorizedTransaction(),
                                          autoCategorizationFunctor.getTransactionCount());
         openRequestManager.popCallback();
         localRepository.commitChanges(true);

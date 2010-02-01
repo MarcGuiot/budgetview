@@ -41,6 +41,8 @@ public class ImportSession {
   private ChangeSetAggregator importChangeSetAggregator;
   private TypedInputStream typedStream;
   private boolean load = false;
+  private int lastLoadOperationsCount = 0;
+  private int importedOperationsCount = 0;
 
   public ImportSession(GlobRepository referenceRepository, Directory directory) {
     this.referenceRepository = referenceRepository;
@@ -77,9 +79,11 @@ public class ImportSession {
     bankPluginService.apply(referenceRepository, localRepository, importChangeSet);
 
     load = true;
-    if (localRepository.getAll(ImportedTransaction.TYPE).isEmpty()){
+    GlobList importedOperations = localRepository.getAll(ImportedTransaction.TYPE);
+    if (importedOperations.isEmpty()){
       throw new NoOperations();
     }
+    lastLoadOperationsCount = importedOperations.size();
     return getImportedTransactionFormat();
   }
 
@@ -145,7 +149,12 @@ public class ImportSession {
     finally {
       referenceRepository.completeChangeSet();
     }
+    importedOperationsCount += lastLoadOperationsCount;
     return importKey;
+  }
+
+  public int getImportedOperationsCount() {
+    return importedOperationsCount;
   }
 
   private GlobList convertImportedTransaction(String selectedDateFormat) {

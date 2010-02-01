@@ -643,13 +643,20 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   public void testImportTwiceTheSameFile() throws Exception {
     OfxBuilder
       .init(this)
+      .addTransaction("2006/01/11", -1.3, "Menu K 1")
       .addTransaction("2006/01/12", -1.3, "Menu K 2")
-      .load(1, 0);
+      .load(2, 0);
 
     String sameFile = OfxBuilder
       .init(this)
+      .addTransaction("2006/01/11", -1.3, "Menu K 1")
       .addTransaction("2006/01/12", -1.3, "Menu K 2")
       .save();
+
+    operations.openImportDialog()
+      .setFilePath(sameFile)
+      .acceptFile()
+      .completeImportNone(2);
 
     String otherFile = OfxBuilder
       .init(this)
@@ -660,12 +667,13 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setFilePath(sameFile + ";" + otherFile)
       .acceptFile()
       .doImport()
-      .doImport();
+      .completeImport();
     
     views.selectData();
     transactions.initContent()
       .add("13/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
       .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "MENU K 1", "", -1.30)
       .check();
   }
 
