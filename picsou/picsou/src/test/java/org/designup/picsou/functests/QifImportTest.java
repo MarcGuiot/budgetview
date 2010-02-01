@@ -2,6 +2,7 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.QifBuilder;
+import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
@@ -170,6 +171,32 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info 2", -0.69, "Income")
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info 1", -1.19, "Income")
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1)
+      .check();
+  }
+
+  public void testAutomaticalySelectAccount() throws Exception {
+    QifBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "Tx 1")
+      .addTransaction("2006/01/11", -2.23, "Tx 2")
+      .load(0.);
+    mainAccounts.createMainAccount("other Account", 0);
+
+    String newFile = QifBuilder
+      .init(this)
+      .addTransaction("2006/01/12", -2.23, "Tx 2")
+      .save();
+
+    operations.openImportDialog()
+      .setFilePath(newFile)
+      .acceptFile()
+      .checkSelectedAccount("Main account")
+      .completeImport();
+    views.selectData();
+    transactions.initContent()
+      .add("12/01/2006", TransactionType.PRELEVEMENT, "TX 2", "", -2.23)
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "TX 2", "", -2.23)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "TX 1", "", -1.10)
       .check();
   }
 

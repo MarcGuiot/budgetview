@@ -16,8 +16,8 @@ import org.designup.picsou.gui.importer.edition.BrowseFilesAction;
 import org.designup.picsou.gui.importer.edition.DateFormatSelectionPanel;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionDateRenderer;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionsTable;
-import org.designup.picsou.gui.importer.utils.OpenBankUrlAction;
 import org.designup.picsou.gui.importer.utils.OpenBankSiteHelpAction;
+import org.designup.picsou.gui.importer.utils.OpenBankUrlAction;
 import org.designup.picsou.importer.BankFileType;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -33,8 +33,10 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.*;
+import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -425,8 +427,8 @@ public class ImportDialog {
       for (Integer accountId : Account.SUMMARY_ACCOUNT_IDS) {
         accounts.remove(sessionRepository.get(Key.create(Account.TYPE, accountId)));
       }
+      Glob account = null;
       if (accounts.size() != 0) {
-        Glob account = null;
         if (defaultAccount != null) {
           account = sessionRepository.get(defaultAccount.getKey());
         }
@@ -437,6 +439,17 @@ public class ImportDialog {
           sessionDirectory.get(SelectionService.class).select(account);
         }
       }
+      if (account == null) {
+        GlobList importedTransactions = sessionRepository.getAll(ImportedTransaction.TYPE);
+        AccountFinder callback = new AccountFinder();
+        repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, callback);
+        Integer accountId = callback.findAccount(importedTransactions);
+        if (accountId != null) {
+          account = sessionRepository.find(Key.create(Account.TYPE, accountId));
+          sessionDirectory.get(SelectionService.class).select(account);
+        }
+      }
+
       accountComboBox.setVisible(!accounts.isEmpty());
       newAccountButton.setVisible(!accounts.isEmpty());
     }
@@ -541,6 +554,58 @@ public class ImportDialog {
 
     public void actionPerformed(ActionEvent e) {
       closeDialog();
+    }
+  }
+
+  private static class AccountFinder implements GlobFunctor {
+    private MultiMap<String, Integer> accountsByLabel = new MultiMap<String, Integer>();
+
+    public void run(Glob glob, GlobRepository repository) throws Exception {
+      String label = createLabel(glob, Transaction.QIF_M, Transaction.QIF_P);
+      accountsByLabel.put(label, glob.get(Transaction.ACCOUNT));
+    }
+
+    private String createLabel(Glob glob, final StringField qif_m, final StringField qif_p) {
+      String label = "";
+      if (glob.get(qif_m) != null) {
+        label += glob.get(qif_m).toUpperCase();
+      }
+      if (glob.get(qif_p) != null) {
+        label += ":" + glob.get(qif_p).toUpperCase();
+      }
+      return label;
+    }
+
+    Integer findAccount(GlobList importedTransactions) {
+      Map<Integer, Integer> foundAccountsCount = new HashMap<Integer, Integer>();
+      for (Glob transaction : importedTransactions) {
+        String label = createLabel(transaction, ImportedTransaction.QIF_M, ImportedTransaction.QIF_P);
+        List<Integer> accounts = accountsByLabel.get(label);
+        for (Integer accountId : accounts) {
+          Integer count = foundAccountsCount.get(accountId);
+          foundAccountsCount.put(accountId, count != null ? count + 1 : 1);
+        }
+      }
+      if (foundAccountsCount.isEmpty()){
+        return null;
+      }
+      if (foundAccountsCount.size() == 1) {
+        return foundAccountsCount.keySet().iterator().next();
+      }
+      Integer maxCount = 0;
+      Integer secondCount = 0;
+      Integer accountId = null;
+      for (Map.Entry<Integer, Integer> entry : foundAccountsCount.entrySet()) {
+        if (entry.getValue() > maxCount) {
+          secondCount = maxCount;
+          maxCount = entry.getValue();
+          accountId = entry.getKey();
+        }
+      }
+      if (maxCount > secondCount * 1.5) {
+        return accountId;
+      }
+      return null;
     }
   }
 }

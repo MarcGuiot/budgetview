@@ -33,10 +33,6 @@ public class ImportedTransaction {
 
   public static StringField BANK_TRANSACTION_TYPE;  // N for qif, TRNTYPE for ofx. 
 
-  public static StringField LABEL;
-
-  public static StringField ORIGINAL_LABEL;
-
   public static BooleanField IS_CARD;
 
   public static BooleanField IS_OFX;

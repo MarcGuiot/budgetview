@@ -189,8 +189,6 @@ public class ImportSession {
         value(Transaction.ACCOUNT, importedTransaction.get(ImportedTransaction.ACCOUNT)),
         value(Transaction.AMOUNT, importedTransaction.get(ImportedTransaction.AMOUNT)),
         value(Transaction.NOTE, importedTransaction.get(ImportedTransaction.NOTE)),
-        value(Transaction.LABEL, importedTransaction.get(ImportedTransaction.LABEL)),
-        value(Transaction.ORIGINAL_LABEL, importedTransaction.get(ImportedTransaction.ORIGINAL_LABEL)),
         value(Transaction.BANK_TRANSACTION_TYPE, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.BANK_TRANSACTION_TYPE))),
         value(Transaction.SPLIT, importedTransaction.get(ImportedTransaction.SPLIT)),
         value(Transaction.SPLIT_SOURCE, importedTransaction.get(ImportedTransaction.SPLIT_SOURCE)),
