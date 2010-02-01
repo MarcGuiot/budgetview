@@ -2,15 +2,15 @@ package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.components.charts.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.components.TextDisplay;
-import org.designup.picsou.gui.components.charts.GlobGaugeView;
+import org.designup.picsou.gui.components.charts.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.components.charts.Gauge;
+import org.designup.picsou.gui.components.charts.GlobGaugeView;
 import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
+import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
@@ -37,7 +37,6 @@ import java.util.Set;
 public class BudgetAreaSeriesView extends View {
   private String name;
   private BudgetArea budgetArea;
-  private SeriesEditionDialog seriesEditionDialog;
   private SeriesAmountEditionDialog seriesAmountEditionDialog;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
   private Matchers.SeriesFirstEndDateFilter seriesDateFilter;
@@ -56,7 +55,6 @@ public class BudgetAreaSeriesView extends View {
     super(repository, directory);
     this.name = name;
     this.budgetArea = budgetArea;
-    this.seriesEditionDialog = seriesEditionDialog;
     this.seriesAmountEditionDialog = seriesAmountEditionDialog;
 
     seriesButtons = new SeriesEditionButtons(budgetArea, repository, directory, seriesEditionDialog);
@@ -129,7 +127,7 @@ public class BudgetAreaSeriesView extends View {
   private void update() {
     GlobList budgetStat = new GlobList();
     budgetStat.addAll(repository.getAll(BudgetStat.TYPE,
-                                         GlobMatchers.fieldIn(BudgetStat.MONTH, selectedMonthIds)));
+                                        GlobMatchers.fieldIn(BudgetStat.MONTH, selectedMonthIds)));
     headerUpdater.update(budgetStat, budgetArea);
   }
 

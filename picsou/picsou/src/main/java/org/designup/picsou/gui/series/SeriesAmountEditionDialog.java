@@ -94,7 +94,10 @@ public class SeriesAmountEditionDialog {
   }
 
   public void show(Glob series, Set<Integer> months) {
-
+    if (series != null && series.isTrue(Series.IS_MIRROR)) {
+      series = parentRepository.findLinkTarget(series, Series.MIRROR_SERIES);
+    }
+    
     this.currentSeries = series.getKey();
     this.maxMonth = Utils.max(months);
     loadGlobs(series);

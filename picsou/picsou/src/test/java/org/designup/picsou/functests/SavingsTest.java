@@ -1574,6 +1574,10 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .switchToManual()
       .validate();
     budgetView.savings.editPlannedAmount("Main to Savings").setPropagationEnabled().setAmountAndValidate("500");
+    budgetView.savings.editSeries("Main to Savings")
+      .selectMonth(200808)
+      .checkAmount("500.00")
+      .cancel();
     budgetView.getSummary().checkEndPosition(-500.);
     timeline.selectMonth("2008/09");
     budgetView.getSummary().checkEndPosition(-1000.);
@@ -1587,11 +1591,62 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .switchToManual()
       .validate();
     budgetView.savings.editPlannedAmount("Savings to Main").setPropagationEnabled().setAmountAndValidate("500");
+    budgetView.savings.editSeries("Savings to Main")
+      .selectMonth(200808)
+      .checkAmount("500.00")
+      .cancel();
+    
     budgetView.getSummary().checkEndPosition(0.);
 
     timeline.selectMonth("2008/09");
     budgetView.getSummary().checkEndPosition(0.);
     timeline.selectMonth("2008/10");
     budgetView.getSummary().checkEndPosition(0.);
+  }
+
+  public void testChange() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
+      .addTransaction("2008/06/06", 100.00, "Virement Epargne")
+      .addTransaction("2008/07/06", 100.00, "Virement Epargne")
+      .addTransaction("2008/08/06", 100.00, "Virement Epargne")
+      .load();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/06", -100.00, "Virement vers Epargne")
+      .addTransaction("2008/07/06", -100.00, "Virement vers Epargne")
+      .addTransaction("2008/08/06", -100.00, "Virement vers Epargne")
+      .load();
+
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    views.selectHome();
+    mainAccounts.edit("Account n. 111222")
+      .setAsSavings()
+      .validate();
+    views.selectBudget();
+
+    budgetView.savings.createSeries()
+      .setName("Placement")
+      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .setToAccount("Account n. 111222")
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount("100")
+      .validate();
+
+    views.selectCategorization();
+    categorization
+      .setSavings("Virement vers Epargne", "Placement");
+
+    categorization
+      .setSavings("Virement Epargne", "Placement");
+
+    views.selectBudget();
+    budgetView.savings.editPlannedAmount("Placement")
+      .setAmount("200")
+      .validate();
+    budgetView.savings.editSeries("Placement")
+      .checkAmount("200.00")
+      .cancel();
   }
 }
