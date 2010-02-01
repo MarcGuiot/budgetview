@@ -82,6 +82,7 @@ public class CategorizationView extends View implements TableView, Filterable {
   private PicsouTableHeaderPainter headerPainter;
   private FilterSet filterSet;
   private GlobMatcher filter = GlobMatchers.ALL;
+  private GlobMatcher currentTableFilter;
 
   public CategorizationView(final GlobRepository repository, Directory parentDirectory) {
     super(repository, createLocalDirectory(parentDirectory));
@@ -403,16 +404,13 @@ public class CategorizationView extends View implements TableView, Filterable {
       setFilteringMode(TransactionFilteringMode.UNCATEGORIZED);
       return;
     }
-    if (TransactionFilteringMode.UNCATEGORIZED.equals(getFilteringMode())
-        && containsCategorizedTransactions(transactions)) {
-      setFilteringMode(TransactionFilteringMode.SELECTED_MONTHS);
-    }
-  }
 
-  private boolean containsCategorizedTransactions(GlobList transactions) {
-    Set<Integer> seriesIds = transactions.getValueSet(Transaction.SERIES);
-    seriesIds.remove(Series.UNCATEGORIZED_SERIES_ID);
-    return !seriesIds.isEmpty();
+    for (Glob transaction : transactions) {
+      if (!currentTableFilter.matches(transaction, repository)){
+        setFilteringMode(TransactionFilteringMode.SELECTED_MONTHS);
+        return;
+      }
+    }
   }
 
   private void doShow(GlobList transactions) {
@@ -535,15 +533,14 @@ public class CategorizationView extends View implements TableView, Filterable {
       return;
     }
 
-    GlobMatcher matcher =
-      and(filter,
+    currentTableFilter = and(filter,
           isFalse(Transaction.PLANNED),
           isFalse(Transaction.MIRROR),
           isFalse(Transaction.CREATED_BY_SERIES),
           getCurrentFilteringModeMatcher()
       );
 
-    transactionTable.setFilter(matcher);
+    transactionTable.setFilter(currentTableFilter);
   }
 
   public void setFilteringMode(TransactionFilteringMode mode) {

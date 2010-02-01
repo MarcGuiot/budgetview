@@ -23,4 +23,26 @@ public class NavigationViewTest extends LoggedInFunctionalTestCase {
       {"29/07/2008", "", "DVD", -19.0}
     });
   }
+
+  public void testNavigationChangeCategorizationFilter() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/05/25", -50.0, "Auchan_1")
+      .load();
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/25", -50.0, "Auchan_2")
+      .load();
+
+    views.selectCategorization();
+    categorization.showLastImportedFileOnly();
+
+    views.selectData();
+    timeline.selectMonth("2008/05");
+    transactions.categorize("AUCHAN_1");
+    categorization.initContent()
+    .add("25/05/2008", "AUCHAN_1", -50.0)
+    .check();
+  }
 }

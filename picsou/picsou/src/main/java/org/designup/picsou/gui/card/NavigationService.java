@@ -62,7 +62,7 @@ public class NavigationService implements GlobSelectionListener {
 
   public void gotoCategorizationAndSelectLastImported() {
     categorizationView.setFilteringMode(TransactionFilteringMode.LAST_IMPORTED_FILE);
-    gotoCard(Card.CATEGORIZATION);
+    gotoCategorization();
   }
 
   public void gotoCategorization(GlobList transactions, boolean showAllUncategorized) {
