@@ -1023,7 +1023,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization
       .selectTransactions("Virement")
       .selectSavings().createSeries()
-      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .setFromAccount("Main accounts")
       .setToAccount("Epargne")
       .setName("Epargne")
       .validate();
@@ -1059,7 +1059,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("My savings")
-      .setFromAccount("Account n. 00001123")
+      .setFromAccount("Main accounts")
       .setToAccount("Epargne")
       .validate();
 

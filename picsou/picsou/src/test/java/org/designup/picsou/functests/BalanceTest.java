@@ -196,7 +196,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     categorization.selectTransactions("P3 CE", "P2 CE");
 
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "Account n. 111");
+      .selectAndCreateSavingsSeries("epargne", "Main accounts", "Account n. 111");
 
     categorization.selectTransactions("V3 CC", "V2 CC")
       .selectSavings().selectSeries("epargne");

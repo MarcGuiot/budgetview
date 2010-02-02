@@ -131,7 +131,8 @@ public class SeriesEditionDialog {
     builder.addMultiLineEditor("descriptionField", Series.DESCRIPTION).setNotifyOnKeyPressed(true);
 
     accountFilter = and(not(fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)),
-                        not(fieldEquals(Account.ID, Account.MAIN_SUMMARY_ACCOUNT_ID)),
+                        or(fieldEquals(Account.ID, Account.MAIN_SUMMARY_ACCOUNT_ID),
+                           not(fieldEquals(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()))),
                         not(fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID)));
 
     fromAccountsCombo = GlobLinkComboEditor.init(Series.FROM_ACCOUNT, localRepository, localDirectory)
@@ -507,11 +508,15 @@ public class SeriesEditionDialog {
         Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
         if (account.isTrue(Account.IS_IMPORTED_ACCOUNT) &&
             account.get(Account.UPDATE_MODE).equals(AccountUpdateMode.AUTOMATIC.getId())) {
+          Integer accountId = transaction.get(Transaction.ACCOUNT);
+          if (account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())){
+            accountId = Account.MAIN_SUMMARY_ACCOUNT_ID;
+          }
           if (transaction.get(Transaction.AMOUNT) >= 0) {
-            positiveAccount.add(transaction.get(Transaction.ACCOUNT));
+            positiveAccount.add(accountId);
           }
           else {
-            negativeAccount.add(transaction.get(Transaction.ACCOUNT));
+            negativeAccount.add(accountId);
           }
         }
       }

@@ -1128,7 +1128,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRow(0);
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME);
+      .selectAndCreateSavingsSeries("epargne", "Main accounts");
     views.selectData();
     timeline.selectMonths("2008/06", "2008/07");
     transactions.initContent()
@@ -1158,7 +1158,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRow(0);
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME);
+      .selectAndCreateSavingsSeries("epargne", "Main accounts");
 
     SeriesEditionDialogChecker edition = categorization.selectSavings()
       .editSeries("epargne")
@@ -1195,7 +1195,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRow(0);
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME);
+      .selectAndCreateSavingsSeries("epargne", "Main accounts");
     categorization.selectSavings().editSeries("epargne")
       .checkAutomaticModeSelected()
       .setIrregular()
@@ -1222,7 +1222,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTransactions("Virement");
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME);
+      .selectAndCreateSavingsSeries("epargne", "Main accounts");
     categorization.selectSavings().editSeries("epargne")
       .setTwoMonths()
       .validate();
@@ -1252,7 +1252,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTransactions("Virement");
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME);
+      .selectAndCreateSavingsSeries("epargne", "Main accounts");
     operations.openPreferences().setFutureMonthsCount(1).validate();
     categorization.selectSavings().editSeries("epargne")
       .switchToManual()

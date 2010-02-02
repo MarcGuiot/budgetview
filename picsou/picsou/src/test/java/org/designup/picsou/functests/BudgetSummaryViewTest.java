@@ -134,8 +134,8 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/04", 30, "prelevement")
       .load();
     views.selectCategorization();
-    categorization.setNewSavings("virement", "epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "external account");
-    categorization.setNewSavings("prelevement", "financement", "external account", OfxBuilder.DEFAULT_ACCOUNT_NAME);
+    categorization.setNewSavings("virement", "epargne", "Main accounts", "external account");
+    categorization.setNewSavings("prelevement", "financement", "external account", "Main accounts");
     views.selectBudget();
     setSavingsAmount("epargne", 20);
     budgetView.savings
@@ -164,8 +164,8 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/04", 30, "prelevement")
       .load();
     views.selectCategorization();
-    categorization.setNewSavings("virement", "epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "external account");
-    categorization.setNewSavings("prelevement", "financement", "external account", OfxBuilder.DEFAULT_ACCOUNT_NAME);
+    categorization.setNewSavings("virement", "epargne", "Main accounts", "external account");
+    categorization.setNewSavings("prelevement", "financement", "external account", "Main accounts");
     views.selectBudget();
     setSavingsAmount("epargne", 20);
     budgetView.savings

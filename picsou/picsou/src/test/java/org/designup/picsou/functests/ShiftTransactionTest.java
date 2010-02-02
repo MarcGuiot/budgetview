@@ -294,7 +294,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("Epargne")
-      .setFromAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .setFromAccount("Main accounts")
       .setToAccount("Epargne")
       .validate();
 

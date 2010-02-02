@@ -8,6 +8,7 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.model.initial.InitialSeries;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobFunctor;
@@ -78,7 +79,37 @@ public class UpgradeTrigger implements ChangeSetListener {
       repository.safeApply(Transaction.TYPE, isTrue(Transaction.PLANNED), new RemovePlanedPrefixFunctor());
     }
 
+    if (currentJarVersion < 34){
+      updateSavings(repository);
+    }
+
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
+  }
+
+  private void updateSavings(GlobRepository repository) {
+    GlobList series = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
+    for (Glob oneSeries : series) {
+      updateAccount(repository, oneSeries, Series.FROM_ACCOUNT);
+      updateAccount(repository, oneSeries, Series.TO_ACCOUNT);
+    }
+  }
+
+  private void updateAccount(GlobRepository repository, Glob series, final LinkField accountField) {
+    Glob account = repository.findLinkTarget(series, accountField);
+    if (account != null && account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())){
+      repository.update(series.getKey(), accountField, Account.MAIN_SUMMARY_ACCOUNT_ID);
+      GlobList planned =
+        repository.getAll(Transaction.TYPE,
+                          GlobMatchers.and(
+                            GlobMatchers.fieldEquals(Transaction.SERIES, series.get(Series.ID)),
+                            GlobMatchers.fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)),
+                            GlobMatchers.isTrue(Transaction.PLANNED)));
+      for (Glob glob : planned) {
+        repository.update(glob.getKey(),
+                          FieldValue.value(Transaction.ACCOUNT_POSITION, null),
+                          FieldValue.value(Transaction.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID));
+      }
+    }
   }
 
   private void upgradeFromV10(GlobRepository repository) {

@@ -93,6 +93,7 @@ public class Account {
     repository.create(TYPE,
                       value(ID, MAIN_SUMMARY_ACCOUNT_ID),
                       value(NUMBER, SUMMARY_ACCOUNT_NUMBER),
+                      value(ACCOUNT_TYPE, AccountType.MAIN.getId()),
                       value(IS_IMPORTED_ACCOUNT, true));
     repository.create(TYPE,
                       value(ID, SAVINGS_SUMMARY_ACCOUNT_ID),

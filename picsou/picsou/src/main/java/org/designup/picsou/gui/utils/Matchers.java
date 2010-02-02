@@ -160,7 +160,7 @@ public class Matchers {
     }
 
     public boolean matches(Glob series, GlobRepository repository) {
-      if (transactions.isEmpty()){
+      if (transactions.isEmpty()) {
         return false;
       }
       if (filter.matches(series, repository)) {
@@ -195,7 +195,7 @@ public class Matchers {
               if (series.isTrue(Series.IS_MIRROR)) {
                 return false;
               }
-              if (!toAccountId.equals(transaction.get(Transaction.ACCOUNT))) {
+              if (!isSameAccountType(repository, toAccount, transaction)) {
                 return false;
               }
             }
@@ -203,7 +203,7 @@ public class Matchers {
               if (!series.isTrue(Series.IS_MIRROR)) {
                 return false;
               }
-              if (!fromAccountId.equals(transaction.get(Transaction.ACCOUNT))) {
+              if (!isSameAccountType(repository, fromAccount, transaction)) {
                 return false;
               }
             }
@@ -213,7 +213,7 @@ public class Matchers {
           for (Glob transaction : transactions) {
             if (transaction.get(Transaction.AMOUNT) < 0) {
               if (fromAccountId != null) {
-                if (!fromAccountId.equals(transaction.get(Transaction.ACCOUNT))) {
+                if (!isSameAccountType(repository, fromAccount, transaction)) {
                   return false;
                 }
               }
@@ -223,7 +223,7 @@ public class Matchers {
             }
             else {
               if (toAccountId != null) {
-                if (!toAccountId.equals(transaction.get(Transaction.ACCOUNT))) {
+                if (!isSameAccountType(repository, toAccount, transaction)) {
                   return false;
                 }
               }
@@ -236,6 +236,16 @@ public class Matchers {
         return true;
       }
       return false;
+    }
+
+    private boolean isSameAccountType(GlobRepository repository, Glob account, Glob transaction) {
+      if (account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+        Glob operationAccount = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
+        return operationAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId());
+      }
+      else {
+        return account.get(Account.ID).equals(transaction.get(Transaction.ACCOUNT));
+      }
     }
 
     private boolean checkInMain(GlobRepository repository) {

@@ -193,7 +193,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
 
-    categorization.setNewSavings("VIRT MENS. LIVRET", "Virt. auto livret", "Compte courant", "Livret");
+    categorization.setNewSavings("VIRT MENS. LIVRET", "Virt. auto livret", "Main accounts", "Livret");
 
     categorization.getCompletionGauge().hideProgressMessage();
 
@@ -277,7 +277,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth(Month.toString(Month.next(thirdMonth)));
     budgetView.savings.createSeries()
       .setName("Prov. vacances")
-      .setFromAccount("Compte courant")
+      .setFromAccount("Main accounts")
       .setToAccount("Compte provisions")
       .setStartDate(firstMonth)
       .switchToManual()
@@ -288,7 +288,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     budgetView.savings.createSeries()
       .setName("Reglement vacances")
       .setFromAccount("Compte provisions")
-      .setToAccount("Compte courant")
+      .setToAccount("Main accounts")
       .setIrregular()
       .selectAllMonths()
       .setStartDate(holidaysMonth)

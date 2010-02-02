@@ -29,7 +29,7 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     categorization.setNewEnvelope("FNAC", "Equipment");
     categorization.setNewIncome("Salaire", "Salaire");
     categorization.setNewExtra("Air France", "Trips");
-    categorization.setNewSavings("VIRT ING", "Epargne", OfxBuilder.DEFAULT_ACCOUNT_NAME, "External account");
+    categorization.setNewSavings("VIRT ING", "Epargne", "Main accounts", "External account");
 
     double incomeFor200807 = 2200;
     double expensesFor200807 = (30 + 1500) + (300 + 100) + 200 + 100 + 20;
@@ -247,9 +247,9 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.setNewIncome("WorldCo", "Salary");
     categorization.setNewSavings("Virement vers Livret A", "Epargne",
-                                 OfxBuilder.DEFAULT_ACCOUNT_NAME, "External account");
+                                 "Main accounts", "External account");
     categorization.setNewSavings("Virement du Livret A", "Finanencement tele",
-                                 "External account", OfxBuilder.DEFAULT_ACCOUNT_NAME);
+                                 "External account", "Main accounts");
 
     timeline.selectMonth("2008/08");
     views.selectBudget();

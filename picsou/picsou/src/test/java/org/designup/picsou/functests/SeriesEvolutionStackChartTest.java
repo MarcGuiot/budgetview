@@ -43,7 +43,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("Orange", "Mobile");
     categorization.setNewEnvelope("Auchan", "Groceries");
-    categorization.setNewSavings("Virt Epargne", "Virt Livret", OfxBuilder.DEFAULT_ACCOUNT_NAME, "Livret");
+    categorization.setNewSavings("Virt Epargne", "Virt Livret", "Main accounts", "Livret");
 
     views.selectEvolution();
 
