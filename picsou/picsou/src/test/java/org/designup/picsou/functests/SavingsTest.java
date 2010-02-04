@@ -1661,13 +1661,13 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   public void testAutomaticalyCreateSeriesAtSavingCreation() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
-      .addTransaction("2008/06/06", 100.00, "Virement de Epargne")
-      .addTransaction("2008/06/06", -100.00, "Virement vers Epargne")
+      .addTransaction("2008/06/06", 100.00, "Virement de courant")
+      .addTransaction("2008/06/06", -100.00, "Virement vers courant")
       .load();
 
     OfxBuilder.init(this)
-      .addTransaction("2008/06/06", -100.00, "Virement vers courant")
-      .addTransaction("2008/06/06", 100.00, "Virement de courant")
+      .addTransaction("2008/06/06", -100.00, "Virement vers Epargne")
+      .addTransaction("2008/06/06", 100.00, "Virement de Epargne")
       .load();
 
     views.selectHome();
@@ -1692,19 +1692,19 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectSeries("From Account n. 111222");
     timeline.selectAll();
     views.selectData();
-    transactions.initContent()
-      .add("01/08/2008", TransactionType.PLANNED, "Planned: To Account n. 111222", "", -100.00, "To Account n. 111222")
-      .add("01/08/2008", TransactionType.PLANNED, "Planned: From Account n. 111222", "", 100.00, "From Account n. 111222")
-      .add("01/08/2008", TransactionType.PLANNED, "Planned: From Account n. 111222", "", -100.00, "From Account n. 111222")
-      .add("01/08/2008", TransactionType.PLANNED, "Planned: To Account n. 111222", "", 100.00, "To Account n. 111222")
-      .add("01/07/2008", TransactionType.PLANNED, "Planned: To Account n. 111222", "", -100.00, "To Account n. 111222")
-      .add("01/07/2008", TransactionType.PLANNED, "Planned: From Account n. 111222", "", 100.00, "From Account n. 111222")
-      .add("01/07/2008", TransactionType.PLANNED, "Planned: From Account n. 111222", "", -100.00, "From Account n. 111222")
-      .add("01/07/2008", TransactionType.PLANNED, "Planned: To Account n. 111222", "", 100.00, "To Account n. 111222")
-      .add("06/06/2008", TransactionType.VIREMENT, "VIREMENT DE COURANT", "", 100.00, "To Account n. 111222")
-      .add("06/06/2008", TransactionType.PRELEVEMENT, "VIREMENT VERS COURANT", "", -100.00, "From Account n. 111222")
-      .add("06/06/2008", TransactionType.PRELEVEMENT, "VIREMENT VERS EPARGNE", "", -100.00, "To Account n. 111222")
-      .add("06/06/2008", TransactionType.VIREMENT, "VIREMENT DE EPARGNE", "", 100.00, "From Account n. 111222")
+    transactions.initAmountContent()
+      .add("01/08/2008", "Planned: From Account n. 111222", -100.00, "From Account n. 111222", 3000.00, 3000.00, "Account n. 111222")
+      .add("01/08/2008", "Planned: To Account n. 111222", 100.00, "To Account n. 111222", 3100.00, 3100.00, "Account n. 111222")
+      .add("01/08/2008", "Planned: To Account n. 111222", -100.00, "To Account n. 111222", 0.00, "Main accounts")
+      .add("01/08/2008", "Planned: From Account n. 111222", 100.00, "From Account n. 111222", 100.00, "Main accounts")
+      .add("01/07/2008", "Planned: From Account n. 111222", -100.00, "From Account n. 111222", 3000.00, 3000.00, "Account n. 111222")
+      .add("01/07/2008", "Planned: To Account n. 111222", 100.00, "To Account n. 111222", 3100.00, 3100.00, "Account n. 111222")
+      .add("01/07/2008", "Planned: To Account n. 111222", -100.00, "To Account n. 111222", 0.00, "Main accounts")
+      .add("01/07/2008", "Planned: From Account n. 111222", 100.00, "From Account n. 111222", 100.00, "Main accounts")
+      .add("06/06/2008", "VIREMENT DE EPARGNE", 100.00, "From Account n. 111222", 0.00, 0.00, "Account n. 00001123")
+      .add("06/06/2008", "VIREMENT VERS EPARGNE", -100.00, "To Account n. 111222", -100.00, -100.00, "Account n. 00001123")
+      .add("06/06/2008", "VIREMENT VERS COURANT", -100.00, "From Account n. 111222", 3000.00, 3000.00, "Account n. 111222")
+      .add("06/06/2008", "VIREMENT DE COURANT", 100.00, "To Account n. 111222", 3100.00, 3100.00, "Account n. 111222")
       .check();
   }
 }

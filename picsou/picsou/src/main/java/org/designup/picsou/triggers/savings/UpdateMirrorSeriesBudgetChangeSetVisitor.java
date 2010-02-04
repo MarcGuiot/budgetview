@@ -35,11 +35,6 @@ public class UpdateMirrorSeriesBudgetChangeSetVisitor implements ChangeSetVisito
       final Glob mirrorBudget =
         localRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirrorSeries)
           .findByIndex(SeriesBudget.MONTH, budget.get(SeriesBudget.MONTH)).getGlobs().getFirst();
-      if (mirrorBudget == null) {
-        System.out.println("UpdateMirrorSeriesBudgetChangeSetVisitor.updateMirror " + mirrorSeries + " " +
-                           budget.get(SeriesBudget.MONTH));
-
-      }
       values.safeApply(new FieldValues.Functor() {
         public void process(Field field, Object value) throws Exception {
           if (field.equals(SeriesBudget.SERIES)) {
