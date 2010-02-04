@@ -888,14 +888,14 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/06");
     budgetView.savings.checkSeries("Placement", 100, 100);
-    budgetView.savings.checkSeriesNotPresent("Account n. 111222");
+    budgetView.savings.checkSeriesNotPresent("Virement CAF");
     views.selectSavings();
     savingsView.checkAmount("Account n. 111222", "Placement", 100, 100);
 
     timeline.selectMonth("2008/09");
     views.selectBudget();
     budgetView.savings.checkSeries("Placement", 0, 100);
-    budgetView.savings.checkSeriesNotPresent("Account n. 111222");
+    budgetView.savings.checkSeriesNotPresent("Virement CAF");
 
     views.selectSavings();
     savingsView.checkAmount("Account n. 111222", "Placement", 0, 100);
@@ -1297,6 +1297,13 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     mainAccounts.edit(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setAsSavings()
       .validate();
+    views.selectBudget();
+    budgetView.savings.editSeriesList()
+      .selectSeries(0).deleteSelectedSeries()
+      .selectSeries(0).deleteSelectedSeries()
+      .selectSeries(0).deleteSelectedSeries()
+      .selectSeries(0).deleteSelectedSeries()
+      .validate();
 
     views.selectCategorization();
     categorization.selectAllTransactions()
@@ -1649,5 +1656,55 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     budgetView.savings.editSeries("Placement")
       .checkAmount("200.00")
       .cancel();
+  }
+
+  public void testAutomaticalyCreateSeriesAtSavingCreation() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
+      .addTransaction("2008/06/06", 100.00, "Virement de Epargne")
+      .addTransaction("2008/06/06", -100.00, "Virement vers Epargne")
+      .load();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/06", -100.00, "Virement vers courant")
+      .addTransaction("2008/06/06", 100.00, "Virement de courant")
+      .load();
+
+    views.selectHome();
+    mainAccounts.edit("Account n. 111222")
+      .setAsSavings()
+      .validate();
+    views.selectBudget();
+    budgetView.savings.checkSeriesPresent("To Account n. 111222");
+    budgetView.savings.checkSeriesPresent("From Account n. 111222");
+    views.selectCategorization();
+    categorization.selectTransaction("Virement de Epargne")
+      .selectSavings()
+      .selectSeries("From Account n. 111222");
+    categorization.selectTransaction("Virement vers Epargne")
+      .selectSavings()
+      .selectSeries("To Account n. 111222");
+    categorization.selectTransaction("Virement de courant")
+      .selectSavings()
+      .selectSeries("To Account n. 111222");
+    categorization.selectTransaction("Virement vers courant")
+      .selectSavings()
+      .selectSeries("From Account n. 111222");
+    timeline.selectAll();
+    views.selectData();
+    transactions.initContent()
+      .add("01/08/2008", TransactionType.PLANNED, "Planned: To Account n. 111222", "", -100.00, "To Account n. 111222")
+      .add("01/08/2008", TransactionType.PLANNED, "Planned: From Account n. 111222", "", 100.00, "From Account n. 111222")
+      .add("01/08/2008", TransactionType.PLANNED, "Planned: From Account n. 111222", "", -100.00, "From Account n. 111222")
+      .add("01/08/2008", TransactionType.PLANNED, "Planned: To Account n. 111222", "", 100.00, "To Account n. 111222")
+      .add("01/07/2008", TransactionType.PLANNED, "Planned: To Account n. 111222", "", -100.00, "To Account n. 111222")
+      .add("01/07/2008", TransactionType.PLANNED, "Planned: From Account n. 111222", "", 100.00, "From Account n. 111222")
+      .add("01/07/2008", TransactionType.PLANNED, "Planned: From Account n. 111222", "", -100.00, "From Account n. 111222")
+      .add("01/07/2008", TransactionType.PLANNED, "Planned: To Account n. 111222", "", 100.00, "To Account n. 111222")
+      .add("06/06/2008", TransactionType.VIREMENT, "VIREMENT DE COURANT", "", 100.00, "To Account n. 111222")
+      .add("06/06/2008", TransactionType.PRELEVEMENT, "VIREMENT VERS COURANT", "", -100.00, "From Account n. 111222")
+      .add("06/06/2008", TransactionType.PRELEVEMENT, "VIREMENT VERS EPARGNE", "", -100.00, "To Account n. 111222")
+      .add("06/06/2008", TransactionType.VIREMENT, "VIREMENT DE EPARGNE", "", 100.00, "From Account n. 111222")
+      .check();
   }
 }

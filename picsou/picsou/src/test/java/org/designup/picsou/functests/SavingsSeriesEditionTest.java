@@ -157,7 +157,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.savings.editSeriesList()
-      .checkSeriesListEquals("CA")
+      .checkSeriesListEquals("CA", "From Account n. 111", "To Account n. 111")
       .validate();
   }
 

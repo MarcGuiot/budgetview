@@ -1051,6 +1051,14 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .setPosition(0.00)
       .validate();
 
+    views.selectBudget();
+    budgetView.savings
+      .editSeriesList()
+      .selectSeries(0).deleteSelectedSeries()
+      .selectSeries(0).deleteSelectedSeries()
+      .validate();
+
+    views.selectCategorization();
     categorization
       .selectTransactions("Virement")
       .selectSavings()

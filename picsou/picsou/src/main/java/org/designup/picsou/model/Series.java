@@ -134,8 +134,7 @@ public class Series {
                                                                               BudgetArea.INCOME.getId(),
                                                                               BudgetArea.RECURRING.getId(),
                                                                               BudgetArea.ENVELOPES.getId(),
-                                                                              BudgetArea.EXTRAS.getId(),
-                                                                              BudgetArea.SAVINGS.getId());
+                                                                              BudgetArea.EXTRAS.getId());
   }
 
   public static BooleanField getMonthField(int monthId) {

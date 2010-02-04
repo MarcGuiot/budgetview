@@ -1,0 +1,73 @@
+package org.designup.picsou.triggers;
+
+import org.designup.picsou.model.*;
+import org.designup.picsou.utils.Lang;
+import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
+import org.designup.picsou.triggers.savings.UpdateMirrorSeriesBudgetChangeSetVisitor;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.*;
+import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.model.utils.LocalGlobRepository;
+
+import java.util.Set;
+
+public class SavingsAccountCreateSeriesTrigger implements ChangeSetListener {
+  public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
+    changeSet.safeVisit(Account.TYPE, new ChangeSetVisitor() {
+      public void visitCreation(Key key, FieldValues values) throws Exception {
+        if (values.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
+          if (values.get(Account.ID) != Account.SAVINGS_SUMMARY_ACCOUNT_ID) {
+            createSerie(repository, values);
+          }
+        }
+      }
+
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+        if (values.contains(Account.ACCOUNT_TYPE) && values.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
+          createSerie(repository, repository.get(key));
+        }
+      }
+
+      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+      }
+    });
+  }
+
+  private void createSerie(GlobRepository repository, FieldValues values) {
+    final LocalGlobRepository localRespository =
+      LocalGlobRepositoryBuilder.init(repository)
+        .copy(Account.TYPE, AccountType.TYPE, BudgetArea.TYPE, Month.TYPE, CurrentMonth.TYPE)
+      .get();
+    localRespository.addTrigger(new SeriesBudgetTrigger(localRespository));
+
+    localRespository.create(Series.TYPE,
+                      FieldValue.value(Series.INITIAL_AMOUNT, 0.),
+                      FieldValue.value(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()),
+                      FieldValue.value(Series.FROM_ACCOUNT, values.get(Account.ID)),
+                      FieldValue.value(Series.TO_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
+                      FieldValue.value(Series.NAME, Lang.get("savings.series.auto.create.name.to.savings", values.get(Account.NAME))),
+                      FieldValue.value(Series.IS_AUTOMATIC, true));
+
+    localRespository.create(Series.TYPE,
+                      FieldValue.value(Series.INITIAL_AMOUNT, 0.),
+                      FieldValue.value(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()),
+                      FieldValue.value(Series.TO_ACCOUNT, values.get(Account.ID)),
+                      FieldValue.value(Series.FROM_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
+                      FieldValue.value(Series.NAME, Lang.get("savings.series.auto.create.name.from.savings", values.get(Account.NAME))),
+                      FieldValue.value(Series.IS_AUTOMATIC, true));
+    ChangeSet currentChanges = localRespository.getCurrentChanges();
+
+    localRespository.startChangeSet();
+    currentChanges.safeVisit(Series.TYPE, new UpdateMirrorSeriesChangeSetVisitor(localRespository));
+    localRespository.completeChangeSet();
+
+    localRespository.startChangeSet();
+    currentChanges.safeVisit(SeriesBudget.TYPE, new UpdateMirrorSeriesBudgetChangeSetVisitor(localRespository));
+    localRespository.completeChangeSet();
+    
+    repository.apply(currentChanges);
+  }
+
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+  }
+}

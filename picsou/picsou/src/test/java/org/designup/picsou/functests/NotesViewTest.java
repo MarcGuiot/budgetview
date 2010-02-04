@@ -84,6 +84,17 @@ public class NotesViewTest extends LoggedInFunctionalTestCase {
 
   }
 
+  public void testWizardShowIfSavingAreCreated() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/1", 3000.00, "Epargne")
+      .load();
+    views.selectHome();
+    mainAccounts.edit(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .setAsSavings().validate();
+    notes.checkNoSeriesMessage();
+  }
+
+
   public void testMonthTooltipWithNoPositionAvailable() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "000123", 100, "2008/08/15")
