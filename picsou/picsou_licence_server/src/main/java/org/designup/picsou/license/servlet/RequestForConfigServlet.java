@@ -44,7 +44,7 @@ public class RequestForConfigServlet extends HttpServlet {
     sqlService = directory.get(SqlService.class);
     mailer = directory.get(Mailer.class);
     versionService = directory.get(VersionService.class);
-    logger.info("RequestForConfigServlet started");
+    logInfo("RequestForConfigServlet started");
     initDb();
   }
 
@@ -56,16 +56,17 @@ public class RequestForConfigServlet extends HttpServlet {
     updateLastAccessRequest = new UpdateLastAccessRequest(db);
     updateAnonymousAccesCount = new UpdateAnonymousAccesCount(db);
     repoIdAnonymousRequest = new RepoIdAnonymousRequest(db);
-    logger.info("RequestForConfigServlet.init");
+    logInfo("RequestForConfigServlet.init");
   }
 
   public void destroy() {
     super.destroy();
-    logger.info("RequestForConfigServlet.destroy");
+    logInfo("RequestForConfigServlet.destroy");
     closeDb();
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    String ip = req.getRemoteAddr();
     String id = req.getHeader(ConfigService.HEADER_REPO_ID).trim();
     String mail = req.getHeader(ConfigService.HEADER_MAIL);
     String activationCode = req.getHeader(ConfigService.HEADER_CODE);
@@ -75,31 +76,31 @@ public class RequestForConfigServlet extends HttpServlet {
     String applicationVersion = req.getHeader(ConfigService.HEADER_CONFIG_VERSION);
     if (mail != null && activationCode != null) {
       if (count == null || id == null || lang == null) {
-        logger.info("For " + mail + ", one element is missing count : " + count + ", id :" + id + ", lang : " + lang);
+        logInfo("For " + mail + " ip = " + ip + ", one element is missing count : " + count + ", id :" + id + ", lang : " + lang);
         resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
         resp.setHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
       }
       else {
-        computeLicense(resp, mail, activationCode, Long.parseLong(count), id, lang);
+        computeLicense(resp, mail, activationCode, Long.parseLong(count), id, lang, ip);
       }
     }
     else {
-      computeAnonymous(id, resp);
+      computeAnonymous(id, resp, ip);
     }
     resp.setHeader(ConfigService.HEADER_NEW_JAR_VERSION, Long.toString(versionService.getJarVersion()));
     resp.setHeader(ConfigService.HEADER_NEW_CONFIG_VERSION, Long.toString(versionService.getConfigVersion()));
   }
 
-  private void computeAnonymous(String id, HttpServletResponse resp) {
+  private void computeAnonymous(String id, HttpServletResponse resp, String ip) {
     try {
-      computeAnonymous(id);
+      computeAnonymous(id, ip);
     }
     catch (Exception e) {
       logger.log(Level.SEVERE, "RequestForConfigServlet : ", e);
       closeDb();
       initDb();
       try {
-        computeAnonymous(id);
+        computeAnonymous(id, ip);
       }
       catch (Exception e1) {
         logger.log(Level.SEVERE, "RequestForConfigServlet : Retry fail", e);
@@ -206,38 +207,38 @@ public class RequestForConfigServlet extends HttpServlet {
     }
   }
 
-  private void computeAnonymous(String id) {
-    logger.info("computeAnonymous " + id);
+  private void computeAnonymous(String id, String ip) {
     GlobList globList = repoIdAnonymousRequest.execute(id);
     db.commit();
     if (globList.size() == 0) {
+      logInfo("new anonymous ip = " + ip + " id =" + id);
       createAnonymousRequest.execute(id, new Date());
       db.commit();
     }
     else if (globList.size() > 1) {
-      logger.finest("many repo with the same id");
+      logger.finest("compute anonymous : ip = " + ip + " id =" + id + "many repo with the same id");
     }
     if (globList.size() >= 1) {
       Long accessCount = globList.get(0).get(RepoInfo.COUNT) + 1;
-      logger.info(" accessCount = " + accessCount);
+      logInfo("known anonymous ip = " + ip + " id =" + id + " access count = " + accessCount);
       updateAnonymousAccesCount.execute(id, new Date(), accessCount);
       db.commit();
     }
   }
 
   private void computeLicense(HttpServletResponse resp, String mail, String activationCode,
-                              Long count, String repoId, String lang) {
-    logger.info("compute license : mail : '" + mail + "' count :'" + count + "' " +
-                "repoId :'" + repoId + "' code :'" + activationCode + "'");
+                              Long count, String repoId, String lang, String ip) {
+    logInfo("compute license : ip : " + ip + " mail : '" + mail + "' count :'" + count + "' " +
+            "repoId :'" + repoId + "' code :'" + activationCode + "'");
     try {
-      computeLicense(resp, mail, activationCode, count, lang);
+      computeLicense(resp, mail, activationCode, count, lang, ip);
     }
     catch (Exception e) {
       logger.throwing("RequestForConfigServlet", "computeLicense", e);
       try {
         closeDb();
         initDb();
-        computeLicense(resp, mail, activationCode, count, lang);
+        computeLicense(resp, mail, activationCode, count, lang, ip);
       }
       catch (Exception ex) {
         logger.throwing("RequestForConfigServlet", "computeLicense retry", e);
@@ -246,14 +247,18 @@ public class RequestForConfigServlet extends HttpServlet {
     }
   }
 
+  private void logInfo(String message) {
+    logger.logrb(Level.INFO, "", "", null, "thread : " + Thread.currentThread().getId() + " msg : " + message);
+  }
+
   private void computeLicense(HttpServletResponse resp, String mail,
-                              String activationCode, Long count, String lang) {
+                              String activationCode, Long count, String lang, String ip) {
     GlobList globList = licenseRequest.execute(mail);
     db.commit();
     if (globList.isEmpty()) {
       resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
       resp.setHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
-      logger.info("unknown mail : " + mail);
+      logInfo("unknown mail : " + mail);
     }
     else {
       Glob license = globList.get(0);
@@ -265,11 +270,11 @@ public class RequestForConfigServlet extends HttpServlet {
           db.commit();
           resp.setHeader(ConfigService.HEADER_MAIL_SENT, "true");
           if (mailer.sendNewLicense(mail, code, lang)) {
-            logger.info("Run count decrease send new license to " + mail);
+            logInfo("Run count decrease send new license to " + mail);
           }
         }
         else {
-          logger.info("Run count decrease with different activation code for " + mail);
+          logInfo("Run count decrease with different activation code for " + mail);
         }
       }
       else {
@@ -277,12 +282,12 @@ public class RequestForConfigServlet extends HttpServlet {
           updateLastAccessRequest.execute(mail, count, new Date());
           db.commit();
           resp.setHeader(ConfigService.HEADER_IS_VALIDE, "true");
-          logger.info("ok for " + mail);
+          logInfo("ok for " + mail);
         }
         else {
           resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
           resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
-          logger.info("Different code for " + mail);
+          logInfo("Different code for " + mail);
         }
       }
     }

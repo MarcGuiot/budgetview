@@ -6,6 +6,7 @@ import org.designup.picsou.functests.utils.QifBuilder;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Files;
+import org.globsframework.utils.Utils;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.Window;
@@ -21,6 +22,8 @@ public class FirstTimeTest extends UISpecTestCase {
     Lang.setLocale(Locale.ENGLISH);
     Locale.setDefault(Locale.ENGLISH);
     System.setProperty("SINGLE_INSTANCE_DISABLED", "true");
+    String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "cashpilot";
+    Files.deleteSubtree(new File(tmpDir));
   }
 
   public void testLoad() throws Exception {
@@ -64,7 +67,7 @@ public class FirstTimeTest extends UISpecTestCase {
         prevaylerDir.mkdirs();
         InputStream stream =
           getClass().getResourceAsStream(File.separator + "jars" + File.separator + "cashpilot.jar");
-        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot1.jar");
+        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot9999999.jar");
         System.setProperty("cashpilot.exe.dir", jarDir.getAbsolutePath());
         System.setProperty("cashpilot.prevayler.path", prevaylerDir.getAbsolutePath());
         com.cashpilot.Main.main(new String[0]);
@@ -463,7 +466,7 @@ public class FirstTimeTest extends UISpecTestCase {
 
         InputStream stream =
           getClass().getResourceAsStream(File.separator + "jars" + File.separator + "cashpilot.jar");
-        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot1.jar");
+        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot9999999.jar");
         System.setProperty("cashpilot.exe.dir", jarDir.getAbsolutePath());
         System.setProperty("cashpilot.prevayler.path", prevaylerDir.getAbsolutePath());
         Main.main(new String[0]);
@@ -546,7 +549,7 @@ public class FirstTimeTest extends UISpecTestCase {
 
         InputStream stream =
           getClass().getResourceAsStream(File.separator + "jars" + File.separator + "cashpilot.jar");
-        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot1.jar");
+        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot9999999.jar");
         System.setProperty("cashpilot.exe.dir", jarDir.getAbsolutePath());
         System.setProperty("cashpilot.prevayler.path", prevaylerDir.getAbsolutePath());
         Main.main(new String[0]);
@@ -700,7 +703,7 @@ public class FirstTimeTest extends UISpecTestCase {
 
         InputStream stream =
           getClass().getResourceAsStream(File.separator + "jars" + File.separator + "cashpilot.jar");
-        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot1.jar");
+        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot9999999.jar");
         System.setProperty("cashpilot.exe.dir", jarDir.getAbsolutePath());
         System.setProperty("cashpilot.prevayler.path", prevaylerDir.getAbsolutePath());
         Main.main(new String[0]);
