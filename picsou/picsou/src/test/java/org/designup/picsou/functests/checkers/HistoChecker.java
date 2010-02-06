@@ -15,9 +15,11 @@ import java.awt.*;
 public class HistoChecker extends GuiChecker {
 
   public Window window;
+  private String panelName;
 
-  public HistoChecker(Window window) {
+  public HistoChecker(Window window, String panelName) {
     this.window = window;
+    this.panelName = panelName;
   }
 
   public HistoChecker checkColumnCount(int count) {
@@ -77,8 +79,7 @@ public class HistoChecker extends GuiChecker {
   }
 
   private <T extends HistoDataset> HistoChart getChart() {
-    Panel panel = window.getPanel("seriesEvolutionView").getPanel("histoChart");
-    HistoChart chart = (HistoChart)panel.getAwtComponent();
-    return chart;
+    Panel panel = window.getPanel(panelName).getPanel("histoChart");
+    return (HistoChart)panel.getAwtComponent();
   }
 }

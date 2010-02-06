@@ -140,7 +140,10 @@ public class HistoChart extends JPanel {
 
   public void click() {
     if ((currentRollover != null) && (listener != null) && (painter != null)) {
-      listener.columnClicked(painter.getDataset().getId(currentRollover));
+      HistoDataset dataset = painter.getDataset();
+      if (currentRollover < dataset.size()) {
+        listener.columnClicked(dataset.getId(currentRollover));
+      }
     }
   }
 
