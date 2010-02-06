@@ -10,7 +10,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     super.setUp();
   }
 
-  public void testAccounts() throws Exception {
+  public void testSavingsAccountsEvolution() throws Exception {
 
     operations.openPreferences().setFutureMonthsCount(12).validate();
 
@@ -62,8 +62,5 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .checkLineColumn(2, "S", "2009", 700.00)
       .checkLineColumn(3, "O", "2009", 900.00)
       .checkLineColumn(6, "J", "2010", 1500.00);
-
-    savingsView.histoChart.click(0.99);
-    timeline.checkSelection("2010/07");
   }
 }
