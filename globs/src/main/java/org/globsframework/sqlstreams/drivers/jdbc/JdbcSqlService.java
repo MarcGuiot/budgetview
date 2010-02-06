@@ -26,6 +26,7 @@ public class JdbcSqlService extends AbstractSqlService {
     dbInfo = new Properties();
     dbInfo.put("user", user);
     dbInfo.put("password", password);
+    dbInfo.put("autoReconnect", Boolean.TRUE);
     loadDriver();
   }
 

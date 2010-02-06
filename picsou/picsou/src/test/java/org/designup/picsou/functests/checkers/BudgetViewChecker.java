@@ -284,7 +284,7 @@ public class BudgetViewChecker extends GuiChecker {
 
     public BudgetAreaChecker checkOrder(String... seriesNames) {
       UIComponent[] uiComponents = getPanel().getUIComponents(Button.class, "seriesName");
-      Assert.assertEquals(uiComponents.length, seriesNames.length);
+      Assert.assertEquals(seriesNames.length, uiComponents.length);
       for (int i = 0; i < uiComponents.length; i++) {
         UIComponent component = uiComponents[i];
         assertThat(((Button)component).textEquals(seriesNames[i]));

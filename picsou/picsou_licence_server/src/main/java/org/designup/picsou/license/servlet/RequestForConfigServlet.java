@@ -211,16 +211,16 @@ public class RequestForConfigServlet extends HttpServlet {
     GlobList globList = repoIdAnonymousRequest.execute(id);
     db.commit();
     if (globList.size() == 0) {
-      logInfo("new anonymous ip = " + ip + " id =" + id);
+      logInfo("new_anonymous ip = " + ip + " id =" + id);
       createAnonymousRequest.execute(id, new Date());
       db.commit();
     }
     else if (globList.size() > 1) {
-      logger.finest("compute anonymous : ip = " + ip + " id =" + id + "many repo with the same id");
+      logger.finest("compute_anonymous ip = " + ip + " id = " + id + " many repo with the same id");
     }
     if (globList.size() >= 1) {
       Long accessCount = globList.get(0).get(RepoInfo.COUNT) + 1;
-      logInfo("known anonymous ip = " + ip + " id =" + id + " access count = " + accessCount);
+      logInfo("known_anonymous ip = " + ip + " id =" + id + " access_count = " + accessCount);
       updateAnonymousAccesCount.execute(id, new Date(), accessCount);
       db.commit();
     }
@@ -228,8 +228,8 @@ public class RequestForConfigServlet extends HttpServlet {
 
   private void computeLicense(HttpServletResponse resp, String mail, String activationCode,
                               Long count, String repoId, String lang, String ip) {
-    logInfo("compute license : ip : " + ip + " mail : '" + mail + "' count :'" + count + "' " +
-            "repoId :'" + repoId + "' code :'" + activationCode + "'");
+    logInfo("compute_license ip = " + ip + " mail = " + mail + " count = " + count +
+            " id = " + repoId + " code = " + activationCode);
     try {
       computeLicense(resp, mail, activationCode, count, lang, ip);
     }
@@ -248,7 +248,7 @@ public class RequestForConfigServlet extends HttpServlet {
   }
 
   private void logInfo(String message) {
-    logger.logrb(Level.INFO, "", "", null, "thread : " + Thread.currentThread().getId() + " msg : " + message);
+    logger.logrb(Level.INFO, "", "", null, "thread " + Thread.currentThread().getId() + " msg : " + message);
   }
 
   private void computeLicense(HttpServletResponse resp, String mail,
@@ -258,7 +258,7 @@ public class RequestForConfigServlet extends HttpServlet {
     if (globList.isEmpty()) {
       resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
       resp.setHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
-      logInfo("unknown mail : " + mail);
+      logInfo("unknown_mail mail = " + mail);
     }
     else {
       Glob license = globList.get(0);
@@ -270,11 +270,11 @@ public class RequestForConfigServlet extends HttpServlet {
           db.commit();
           resp.setHeader(ConfigService.HEADER_MAIL_SENT, "true");
           if (mailer.sendNewLicense(mail, code, lang)) {
-            logInfo("Run count decrease send new license to " + mail);
+            logInfo("Run_count_decrease_send_new_license_to mail = " + mail);
           }
         }
         else {
-          logInfo("Run count decrease with different activation code for " + mail);
+          logInfo("Run_count_decrease_with_different_activation_code_for mail = " + mail);
         }
       }
       else {
@@ -282,12 +282,12 @@ public class RequestForConfigServlet extends HttpServlet {
           updateLastAccessRequest.execute(mail, count, new Date());
           db.commit();
           resp.setHeader(ConfigService.HEADER_IS_VALIDE, "true");
-          logInfo("ok for " + mail);
+          logInfo("ok_for mail = " + mail + " count = " + count);
         }
         else {
           resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
           resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
-          logInfo("Different code for " + mail);
+          logInfo("Different_code_for mail = " + mail);
         }
       }
     }

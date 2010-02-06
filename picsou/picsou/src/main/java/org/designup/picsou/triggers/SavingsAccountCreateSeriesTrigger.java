@@ -6,6 +6,7 @@ import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 
@@ -34,6 +35,16 @@ public class SavingsAccountCreateSeriesTrigger implements ChangeSetListener {
   }
 
   private void createSerie(GlobRepository repository, FieldValues values) {
+    GlobList globList = repository.getAll(Series.TYPE,
+                                          and(
+                                            fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()),
+                                            or(
+                                              fieldEquals(Series.FROM_ACCOUNT, values.get(Account.ID)),
+                                              fieldEquals(Series.TO_ACCOUNT, values.get(Account.ID))
+                                            )));
+    if (!globList.isEmpty()) {
+      return;
+    }
     final LocalGlobRepository localRespository =
       LocalGlobRepositoryBuilder.init(repository)
         .copy(Account.TYPE, AccountType.TYPE, BudgetArea.TYPE, Month.TYPE, CurrentMonth.TYPE)
@@ -53,13 +64,13 @@ public class SavingsAccountCreateSeriesTrigger implements ChangeSetListener {
     {
 
       localRespository.create(Series.TYPE,
-                            FieldValue.value(Series.INITIAL_AMOUNT, 0.),
-                            FieldValue.value(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()),
-                            FieldValue.value(Series.TO_ACCOUNT, values.get(Account.ID)),
-                            FieldValue.value(Series.FROM_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
-                            FieldValue.value(Series.NAME,
-                                             getSeriesName(values, "savings.series.auto.create.name.to.savings")),
-                            FieldValue.value(Series.IS_AUTOMATIC, true));
+                              FieldValue.value(Series.INITIAL_AMOUNT, 0.),
+                              FieldValue.value(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()),
+                              FieldValue.value(Series.TO_ACCOUNT, values.get(Account.ID)),
+                              FieldValue.value(Series.FROM_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
+                              FieldValue.value(Series.NAME,
+                                               getSeriesName(values, "savings.series.auto.create.name.to.savings")),
+                              FieldValue.value(Series.IS_AUTOMATIC, true));
     }
     ChangeSet currentChanges = localRespository.getCurrentChanges();
 

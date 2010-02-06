@@ -15,7 +15,7 @@ import java.util.*;
 
 public class PositionTrigger implements ChangeSetListener {
 
-  // donnée menmbre utilisé temporairement (template methode)
+  // donnée menmbre utilisé temporairement
   private double positionBefore;
   private double positionAfter;
   private Integer lastUpdateTransactionId;
@@ -308,6 +308,12 @@ public class PositionTrigger implements ChangeSetListener {
   }
 
 
+  // En qif on repart de la derniere operation
+  // En ofx on part du nouveau solde recu donc de la derniere operations
+  // On utilise la date de bank pour trouver cette derniere operation
+  // Au chargement on connait la derniere operation mais on ne sais pas si elle n'a
+  // pas deja ete importé. L'ofx import n'update la balance que si la date est superieur a la
+  // derniere date (bizarre : on est donc sur que la derniere operations n'a pas ete deja importé)
   // on utilise la date de bank et non de position :
   // pour un comptes a debit differe la date de position est dans le futur
   private boolean initPivot(GlobRepository repository, TransactionComparator comparator, Glob[] transactions, Glob account, Integer transactionId) {

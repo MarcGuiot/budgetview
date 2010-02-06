@@ -124,10 +124,7 @@ public class Account {
   }
 
   public static boolean shouldCreateMirror(Glob fromAccount, Glob toAccount) {
-    return (fromAccount != null) && (toAccount != null) &&
-           ((fromAccount.isTrue(Account.IS_IMPORTED_ACCOUNT) && !toAccount.isTrue(Account.IS_IMPORTED_ACCOUNT))
-            ||
-            (!fromAccount.isTrue(Account.IS_IMPORTED_ACCOUNT) && toAccount.isTrue(Account.IS_IMPORTED_ACCOUNT)));
+    return onlyOneIsImported(fromAccount, toAccount);
   }
 
   public static boolean areNoneImported(Glob fromAccount, Glob toAccount) {

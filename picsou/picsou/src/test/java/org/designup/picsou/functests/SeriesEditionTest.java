@@ -1399,6 +1399,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings.editSeries("ING")
       .checkToAccount("Virt ING")
       .validate();
+    budgetView.savings.checkOrder("ING");
   }
 
 
