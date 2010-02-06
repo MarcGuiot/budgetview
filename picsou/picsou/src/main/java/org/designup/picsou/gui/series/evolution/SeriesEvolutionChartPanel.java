@@ -1,9 +1,6 @@
 package org.designup.picsou.gui.series.evolution;
 
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.components.charts.histo.HistoChart;
-import org.designup.picsou.gui.components.charts.histo.HistoChartListener;
-import org.designup.picsou.gui.components.charts.histo.painters.*;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
 import org.designup.picsou.gui.components.charts.stack.StackChartColors;
 import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
@@ -18,9 +15,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.GlobUtils;
@@ -31,8 +26,6 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 public class SeriesEvolutionChartPanel implements GlobSelectionListener {
@@ -43,19 +36,13 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
   private Integer currentMonthId;
   private Key currentWrapperKey;
 
-  private HistoChart histoChart;
+  private HistoChartBuilder histoChartBuilder;
+
   private StackChart balanceChart;
   private StackChart seriesChart;
 
-  private JLabel histoChartLabel;
   private JLabel balanceChartLabel;
   private JLabel seriesChartLabel;
-
-  private HistoDiffColors balanceColors;
-  private HistoDiffColors incomeColors;
-  private HistoDiffColors expensesColors;
-  private HistoLineColors uncategorizedColors;
-  private HistoLineColors accountColors;
 
   private StackChartColors balanceStackColors;
   private StackChartColors incomeStackColors;
@@ -72,57 +59,9 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
     this.currentWrapperKey = getMainSummaryWrapper();
 
-    histoChart = new HistoChart(directory);
+    histoChartBuilder = new HistoChartBuilder(repository, directory, parentSelectionService, 12, 6);
     balanceChart = new StackChart();
     seriesChart = new StackChart();
-
-    histoChart.setListener(new HistoChartListener() {
-      public void columnClicked(int monthId) {
-        Glob month = repository.get(Key.create(Month.TYPE, monthId));
-        parentSelectionService.select(month);
-      }
-    });
-
-    balanceColors = new HistoDiffColors(
-      "histo.income.line",
-      "histo.income.overrun",
-      "histo.expenses.line",
-      "histo.expenses.overrun",
-      "histo.balance.fill",
-      directory
-    );
-
-    incomeColors = new HistoDiffColors(
-      "histo.balance.income.line.planned",
-      null,
-      "histo.income.line",
-      "histo.income.overrun",
-      "histo.balance.income.fill",
-      directory
-    );
-
-    expensesColors = new HistoDiffColors(
-      "histo.balance.expenses.line.planned",
-      null,
-      "histo.expenses.line",
-      "histo.expenses.overrun",
-      "histo.expenses.fill",
-      directory
-    );
-
-    uncategorizedColors = new HistoLineColors(
-      "histo.expenses.line",
-      "histo.expenses.fill",
-      "histo.expenses.fill",
-      directory
-    );
-
-    accountColors = new HistoLineColors(
-      "histo.account.line",
-      "histo.fill",
-      "histo.expenses.overrun",
-      directory
-    );
 
     balanceStackColors = createStackColors("stack.income.bar", "stack.income.border",
                                            "stack.expenses.bar", "stack.expenses.border", directory);
@@ -167,11 +106,11 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
   }
 
   public void registerCharts(GlobsPanelBuilder builder) {
-    builder.add("histoChart", histoChart);
+    builder.add("histoChart", histoChartBuilder.getChart());
     builder.add("balanceChart", balanceChart);
     builder.add("seriesChart", seriesChart);
 
-    histoChartLabel = builder.add("histoChartLabel", new JLabel()).getComponent();
+    builder.add("histoChartLabel", histoChartBuilder.getLabel()).getComponent();
     balanceChartLabel = builder.add("balanceChartLabel", new JLabel()).getComponent();
     seriesChartLabel = builder.add("seriesChartLabel", new JLabel()).getComponent();
   }
@@ -208,19 +147,19 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       currentWrapper = repository.find(currentWrapperKey);
     }
     if ((currentMonthId == null) || (currentWrapper == null) || repository.find(CurrentMonth.KEY) == null) {
-      histoChart.clear();
+      histoChartBuilder.clear();
       return;
     }
     switch (SeriesWrapperType.get(currentWrapper)) {
       case BUDGET_AREA: {
         BudgetArea budgetArea = BudgetArea.get(currentWrapper.get(SeriesWrapper.ITEM_ID));
         if (budgetArea.equals(BudgetArea.UNCATEGORIZED)) {
-          updateUncategorizedHisto();
+          histoChartBuilder.showUncategorizedHisto(currentMonthId);
           updateUncategorizedBalanceStack();
           updateUncategorizedSeriesStack();
         }
         else {
-          updateBudgetAreaHisto(budgetArea);
+          histoChartBuilder.showBudgetAreaHisto(budgetArea, currentMonthId);
           updateMainBalanceStack(budgetArea);
           updateBudgetAreaSeriesStack(budgetArea, null);
         }
@@ -230,7 +169,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       case SERIES: {
         Integer seriesId = currentWrapper.get(SeriesWrapper.ITEM_ID);
         BudgetArea budgetArea = Series.getBudgetArea(seriesId, repository);
-        updateSeriesHisto(seriesId);
+        histoChartBuilder.showSeriesHisto(seriesId, currentMonthId);
         updateMainBalanceStack(budgetArea);
         updateBudgetAreaSeriesStack(budgetArea, seriesId);
       }
@@ -239,17 +178,17 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       case SUMMARY: {
         Integer id = currentWrapper.get(SeriesWrapper.ID);
         if (id.equals(SeriesWrapper.BALANCE_SUMMARY_ID)) {
-          updateMainBalanceHisto();
+          histoChartBuilder.showMainBalanceHisto(currentMonthId);
           updateMainBalanceStack(null);
           updateMainAccountExpensesSeriesStack();
         }
         else if (id.equals(SeriesWrapper.MAIN_POSITION_SUMMARY_ID)) {
-          updateMainAccountsHisto();
+          histoChartBuilder.showMainAccountsHisto(currentMonthId);
           updateMainBalanceStack(null);
           updateMainAccountExpensesSeriesStack();
         }
         else if (id.equals(SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID)) {
-          updateSavingsAccountsHisto();
+          histoChartBuilder.showSavingsAccountsHisto(currentMonthId);
           updateSavingsStacks();
         }
       }
@@ -258,27 +197,6 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       default:
         throw new InvalidParameter("Unexpected case: " + currentWrapper);
     }
-  }
-
-  private void updateMainBalanceHisto() {
-    HistoDatasetBuilder dataset = new HistoDatasetBuilder();
-
-    for (int monthId : getMonthIds()) {
-      Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, monthId));
-      if (budgetStat != null) {
-        Double income = budgetStat.get(BudgetStat.INCOME_SUMMARY);
-        Double expense = budgetStat.get(BudgetStat.EXPENSE_SUMMARY);
-        dataset.add(monthId, income, expense != null ? -expense : null);
-      }
-      else {
-        dataset.addEmpty(monthId);
-      }
-    }
-
-    dataset.apply(balanceColors,
-                  "mainBalance",
-                  Colors.toString(balanceColors.getReferenceLineColor()),
-                  Colors.toString(balanceColors.getActualLineColor()));
   }
 
   private void updateMainBalanceStack(BudgetArea selectedBudgetArea) {
@@ -322,34 +240,6 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     updateSeriesLabel("mainAccount");
   }
 
-  private void updateBudgetAreaHisto(BudgetArea budgetArea) {
-    HistoDatasetBuilder dataset = new HistoDatasetBuilder();
-
-    DoubleField plannedField = BudgetStat.getPlanned(budgetArea);
-    DoubleField actualField = BudgetStat.getObserved(budgetArea);
-    dataset.setInverted(!budgetArea.isIncome());
-    dataset.setActualHiddenInTheFuture();
-
-    for (int monthId : getMonthIds()) {
-      Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, monthId));
-      if (budgetStat != null) {
-        Double planned = budgetStat.get(plannedField);
-        Double actual = budgetStat.get(actualField);
-        dataset.add(monthId, planned, actual);
-      }
-      else {
-        dataset.addEmpty(monthId);
-      }
-    }
-
-    HistoDiffColors colors = budgetArea.isIncome() ? incomeColors : expensesColors;
-    dataset.apply(colors,
-                  "budgetArea",
-                  budgetArea.getLabel(),
-                  Colors.toString(colors.getReferenceLineColor()),
-                  Colors.toString(colors.getActualLineColor()));
-  }
-
   private void updateBudgetAreaSeriesStack(BudgetArea budgetArea, Integer selectedSeriesId) {
     StackChartDataset dataset = new StackChartDataset();
 
@@ -368,19 +258,6 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     StackChartColors colors = budgetArea.isIncome() ? incomeStackColors : expensesStackColors;
     seriesChart.update(dataset, colors);
     updateSeriesLabel("budgetArea", budgetArea.getLabel().toLowerCase());
-  }
-
-  private void updateUncategorizedHisto() {
-    HistoLineDataset dataset = new HistoLineDataset();
-
-    for (int monthId : getMonthIds()) {
-      Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, monthId));
-      double value = budgetStat != null ? budgetStat.get(BudgetStat.UNCATEGORIZED_ABS) : 0.0;
-      dataset.add(monthId, value, getLabel(monthId), getSection(monthId), isCurrentMonth(monthId));
-    }
-
-    histoChart.update(new HistoLinePainter(dataset, uncategorizedColors));
-    updateHistoLabel("uncategorized");
   }
 
   private void updateUncategorizedBalanceStack() {
@@ -424,64 +301,6 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
     seriesChart.update(dataset, expensesStackColors);
     updateSeriesLabel("uncategorized");
-  }
-
-  private void updateSeriesHisto(Integer seriesId) {
-    HistoDatasetBuilder dataset = new HistoDatasetBuilder();
-
-    Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-    BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
-    dataset.setInverted(!budgetArea.isIncome());
-    dataset.setActualHiddenInTheFuture();
-
-    for (int monthId : getMonthIds()) {
-      Glob stat = repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
-      if (stat != null) {
-        Double planned = stat.get(SeriesStat.PLANNED_AMOUNT);
-        Double actual = stat.get(SeriesStat.AMOUNT);
-        dataset.add(monthId, planned, actual);
-      }
-      else {
-        dataset.addEmpty(monthId);
-      }
-    }
-
-    HistoDiffColors colors = budgetArea.isIncome() ? incomeColors : expensesColors;
-    dataset.apply(colors,
-                  "series",
-                  series.get(Series.NAME),
-                  Colors.toString(colors.getReferenceLineColor()),
-                  Colors.toString(colors.getActualLineColor()));
-  }
-
-  private void updateMainAccountsHisto() {
-    HistoLineDataset dataset = new HistoLineDataset();
-
-    for (int monthId : getMonthIds()) {
-      Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
-      Double value = stat != null ? stat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION) : 0.0;
-      dataset.add(monthId, value, getLabel(monthId), getSection(monthId), isCurrentMonth(monthId));
-    }
-
-    histoChart.update(new HistoLinePainter(dataset, accountColors));
-    updateHistoLabel("mainAccounts");
-  }
-
-  private boolean isCurrentMonth(int monthId) {
-    return monthId == currentMonthId;
-  }
-
-  private void updateSavingsAccountsHisto() {
-    HistoLineDataset dataset = new HistoLineDataset();
-
-    for (int monthId : getMonthIds()) {
-      Glob stat = SavingsBudgetStat.findSummary(monthId, repository);
-      Double value = stat != null ? stat.get(SavingsBudgetStat.END_OF_MONTH_POSITION) : 0.0;
-      dataset.add(monthId, value, getLabel(monthId), getSection(monthId), isCurrentMonth(monthId));
-    }
-
-    histoChart.update(new HistoLinePainter(dataset, accountColors));
-    updateHistoLabel("savingsAccounts");
   }
 
   private void updateSavingsStacks() {
@@ -598,52 +417,6 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     balanceChartLabel.setText(null);
   }
 
-  private String getLabel(int monthId) {
-    return Month.getOneLetterMonthLabel(monthId);
-  }
-
-  private class HistoDatasetBuilder {
-
-    private HistoDiffDataset dataset = new HistoDiffDataset();
-    private int multiplier = 1;
-    private boolean showActualInTheFuture = true;
-    private int lastMonthWithTransactions;
-
-    private HistoDatasetBuilder() {
-      lastMonthWithTransactions = CurrentMonth.getLastTransactionMonth(repository);
-    }
-
-    public void setActualHiddenInTheFuture() {
-      showActualInTheFuture = false;
-    }
-
-    public void setInverted(boolean inverted) {
-      this.multiplier = inverted ? -1 : 1;
-    }
-
-    public void add(int monthId, Double reference, Double actual) {
-      dataset.add(monthId,
-                  reference != null ? reference * multiplier : 0,
-                  actual != null ? actual * multiplier : 0,
-                  getLabel(monthId), getSection(monthId),
-                  isCurrentMonth(monthId),
-                  monthId > lastMonthWithTransactions);
-    }
-
-    public void addEmpty(int monthId) {
-      add(monthId, 0.0, 0.0);
-    }
-
-    public void apply(HistoDiffColors colors, String messageKey, String... args) {
-      histoChart.update(new HistoDiffPainter(dataset, colors, showActualInTheFuture));
-      updateHistoLabel(messageKey, args);
-    }
-  }
-
-  private void updateHistoLabel(String messageKey, String... args) {
-    updateLabel(histoChartLabel, "chart.histo." + messageKey, args);
-  }
-
   private void updateBalanceLabel(String messageKey, String... args) {
     updateLabel(balanceChartLabel, "chart.balance." + messageKey, args);
   }
@@ -654,16 +427,6 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
   private void updateLabel(JLabel label, String messageKey, String... args) {
     label.setText(Lang.get("seriesEvolution." + messageKey, args));
-  }
-
-  public List<Integer> getMonthIds() {
-    List<Integer> result = new ArrayList<Integer>();
-    for (Integer monthId : Month.range(Month.previous(currentMonthId, 12), Month.next(currentMonthId, 6))) {
-      if (repository.contains(Key.create(Month.TYPE, monthId))) {
-        result.add(monthId);
-      }
-    }
-    return result;
   }
 
   private Action createSelectionAction(final BudgetArea budgetArea) {
@@ -682,10 +445,6 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
         selectionService.select(wrapper);
       }
     };
-  }
-
-  private String getSection(int monthId) {
-    return Integer.toString(Month.toYear(monthId));
   }
 
   private class CategorizeTransactionAction extends AbstractAction {

@@ -29,7 +29,7 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
 
   public SeriesEvolutionChecker(Window mainWindow) {
     super(mainWindow);
-    this.histoChart = new HistoChecker(mainWindow);
+    this.histoChart = new HistoChecker(mainWindow, "seriesEvolutionView");
     this.balanceChart = new StackChecker(mainWindow, PANEL_NAME, "balanceChart");
     this.seriesChart = new StackChecker(mainWindow, PANEL_NAME, "seriesChart");
   }

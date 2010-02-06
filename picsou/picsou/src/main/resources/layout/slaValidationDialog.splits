@@ -17,7 +17,10 @@
         <htmlEditorPane ref="editor" opaque="false" foreground="#222222"/>
       </scrollPane>
 
-      <checkBox ref="checkBox" text="$slaValidation.checkBox"/>
+      <row>
+        <filler fill="horizontal"/>
+        <checkBox ref="checkBox" text="$slaValidation.checkBox"/>
+      </row>
 
       <column minimumSize="(200,30)" preferredSize="(200,30)">
         <label ref="errorMessage" text="$slaValidation.error"

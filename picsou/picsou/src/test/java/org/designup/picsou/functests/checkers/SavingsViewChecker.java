@@ -5,15 +5,18 @@ import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.finder.ComponentMatchers.*;
-import org.designup.picsou.model.BudgetArea;
 
 import javax.swing.*;
 
 public class SavingsViewChecker extends GuiChecker {
+
+  public HistoChecker histoChart;
+  
   private Window window;
 
   public SavingsViewChecker(Window window) {
     this.window = window;
+    this.histoChart = new HistoChecker(window, "savingsEvolutionPanel");
   }
 
   public void checkTotalPositionHidden() {
