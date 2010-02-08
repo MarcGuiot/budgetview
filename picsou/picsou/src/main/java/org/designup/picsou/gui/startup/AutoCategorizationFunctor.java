@@ -1,8 +1,7 @@
 package org.designup.picsou.gui.startup;
 
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.model.*;
+import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -20,7 +19,7 @@ public class AutoCategorizationFunctor implements GlobFunctor {
     this.referenceRepository = referenceRepository;
   }
 
-  public void run(Glob transaction, GlobRepository repository) throws Exception {
+  public void run(Glob transaction, final GlobRepository repository) throws Exception {
     transactionCount++;
     GlobList index = referenceRepository.findByIndex(Transaction.LABEL_FOR_CATEGORISATION_INDEX,
                                                      transaction.get(Transaction.LABEL_FOR_CATEGORISATION))
@@ -35,24 +34,62 @@ public class AutoCategorizationFunctor implements GlobFunctor {
         !transaction.get(Transaction.SERIES).equals(Series.UNCATEGORIZED_SERIES_ID)) {
       return;
     }
-    ValidTransactionFunctor strictAutoCategorization =
-      new ValidTransactionFunctor(transaction, repository, referenceRepository) {
-        boolean isValid(Glob findTransaction, Glob transaction, Glob currentSeries) {
-          if (super.isValid(findTransaction, transaction, currentSeries)) {
-            return transaction.get(Transaction.LABEL).equals(findTransaction.get(Transaction.LABEL));
+    {
+      ValidTransactionFunctor strictAutoCategorization =
+        new ValidTransactionFunctor(transaction, repository, referenceRepository) {
+          boolean isValid(Glob findTransaction, Glob transaction, Glob currentSeries) {
+            if (super.isValid(findTransaction, transaction, currentSeries)) {
+              boolean sameSign = isSameSign(findTransaction, transaction);
+              return sameSign && transaction.get(Transaction.LABEL).equals(findTransaction.get(Transaction.LABEL));
+            }
+            return false;
           }
-          return false;
-        }
-      };
-    if (strictAutoCategorization.apply(index)) {
-      autocategorized++;
-      return;
+        };
+      if (strictAutoCategorization.apply(index)) {
+        autocategorized++;
+        return;
+      }
     }
-    ValidTransactionFunctor autoCategorization =
-      new ValidTransactionFunctor(transaction, repository, referenceRepository);
-    if (autoCategorization.apply(index)){
-      autocategorized++;
+    {
+      ValidTransactionFunctor strictAutoCategorization =
+        new ValidTransactionFunctor(transaction, repository, referenceRepository) {
+          boolean isValid(Glob findTransaction, Glob transaction, Glob currentSeries) {
+            if (super.isValid(findTransaction, transaction, currentSeries)) {
+              return transaction.get(Transaction.LABEL).equals(findTransaction.get(Transaction.LABEL));
+            }
+            return false;
+          }
+        };
+      if (strictAutoCategorization.apply(index)) {
+        autocategorized++;
+        return;
+      }
     }
+    {
+      ValidTransactionFunctor autoCategorization =
+        new ValidTransactionFunctor(transaction, repository, referenceRepository) {
+          boolean isValid(Glob findTransaction, Glob transaction, Glob currentSeries) {
+            boolean sameSign = isSameSign(findTransaction, transaction);
+            return sameSign && super.isValid(findTransaction, transaction, currentSeries);
+          }
+        };
+      if (autoCategorization.apply(index)) {
+        autocategorized++;
+        return;
+      }
+    }
+    {
+      ValidTransactionFunctor autoCategorization =
+        new ValidTransactionFunctor(transaction, repository, referenceRepository);
+      if (autoCategorization.apply(index)) {
+        autocategorized++;
+        return;
+      }
+    }
+  }
+
+  private boolean isSameSign(Glob findTransaction, Glob transaction) {
+    return Amounts.sameSign(findTransaction.get(Transaction.AMOUNT), transaction.get(Transaction.AMOUNT));
   }
 
   public int getAutocategorizedTransaction() {
@@ -79,19 +116,27 @@ public class AutoCategorizationFunctor implements GlobFunctor {
 
     boolean apply(GlobList index) {
       ListIterator<Glob> iterator = index.listIterator(index.size());
+      int currentMonthId = 0;
       while (iterator.hasPrevious()) {
         Glob findTransaction = iterator.previous();
         Glob currentSeries = referenceRepository.findLinkTarget(findTransaction, Transaction.SERIES);
         if (!isValid(transaction, findTransaction, currentSeries)) {
           continue;
         }
-
+        if (currentMonthId == 0) {
+          currentMonthId = findTransaction.get(Transaction.MONTH);
+        }
+        //on check ici pour ne pas prendre en comptes les operations en mois n-2 si count >= 3
+        // ca veux dire que le mois n-1 est bon.
+        if (count >= 3 && Month.distance(findTransaction.get(Transaction.MONTH), currentMonthId) > 1) {
+          break;
+        }
         Integer currentSubSeries = findTransaction.get(Transaction.SUB_SERIES);
         if (!isSameSeries(currentSeries, currentSubSeries)) {
           return false;
         }
         count++;
-        if (count == 3) {
+        if (count >= 3 && Month.distance(findTransaction.get(Transaction.MONTH), currentMonthId) > 1) {
           break;
         }
       }

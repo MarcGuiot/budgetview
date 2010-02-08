@@ -144,8 +144,8 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .addTransaction("2006/01/09", -1.1, "Menu K")
-      .addTransaction("2006/01/08", -1.1, "Menu K")
-      .addTransaction("2006/01/07", -1.1, "Menu K")
+      .addTransaction("2005/12/08", -1.1, "Menu K")
+      .addTransaction("2005/11/07", -1.1, "Menu K")
       .load();
     views.selectCategorization();
     categorization.setNewEnvelope("Menu K", "dej");
