@@ -639,4 +639,27 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     .add("29/05/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", -50.00)
     .check();
   }
+
+  public void testUpdateOperationsOnBankChange() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount("30002", 123, "1111", 0., "2008/06/01")
+      .addTransaction("2008/06/01", 1000.00, "F COM INTERVENTION POUR VIREMENT EXTERNE")
+      .load();
+
+    views.selectData();
+    transactions.initContent()
+      .add("01/06/2008", TransactionType.VIREMENT, "F COM INTERVENTION POUR VIREMENT EXTERNE", "", 1000.00)
+      .check();
+
+
+    views.selectHome();
+    mainAccounts.edit("Account n. 1111")
+      .selectBank("cic")
+      .validate();
+    views.selectData();
+    transactions.initContent()
+      .add("01/06/2008", TransactionType.BANK_FEES, "COMMISSIONS POUR VIREMENT EXTERNE", "", 1000.00)
+      .check();
+  }
+
 }

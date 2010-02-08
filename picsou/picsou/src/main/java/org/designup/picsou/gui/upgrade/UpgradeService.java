@@ -17,8 +17,6 @@ public class UpgradeService {
   public void upgradeBankData(GlobRepository repository, Glob version) {
     repository.startChangeSet();
     try {
-      TransactionAnalyzerFactory analyzerFactory = directory.get(TransactionAnalyzerFactory.class);
-      TransactionAnalyzer transactionAnalyzer = analyzerFactory.getAnalyzer();
       GlobList accounts = repository.getAll(Account.TYPE);
       for (Glob account : accounts) {
         if (Account.SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID))) {
@@ -35,9 +33,7 @@ public class UpgradeService {
                               FieldValue.value(Account.BANK_ENTITY, bankEntityId));
           }
         }
-        GlobList transactions = repository.getAll(Transaction.TYPE,
-                                                  GlobMatchers.fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)));
-        transactionAnalyzer.processTransactions(account.get(Account.BANK), transactions, repository);
+        updateOperations(repository, account);
       }
       repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_BANK_CONFIG_VERSION,
                         version.get(AppVersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION));
@@ -45,5 +41,13 @@ public class UpgradeService {
     finally {
       repository.completeChangeSet();
     }
+  }
+
+  public void updateOperations(GlobRepository repository, Glob account) {
+    GlobList transactions = repository.getAll(Transaction.TYPE,
+                                              GlobMatchers.fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)));
+    TransactionAnalyzerFactory analyzerFactory = directory.get(TransactionAnalyzerFactory.class);
+    TransactionAnalyzer transactionAnalyzer = analyzerFactory.getAnalyzer();
+    transactionAnalyzer.processTransactions(account.get(Account.BANK), transactions, repository);
   }
 }
