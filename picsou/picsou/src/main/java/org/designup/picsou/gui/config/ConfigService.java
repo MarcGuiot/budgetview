@@ -74,6 +74,8 @@ public class ConfigService {
   private byte[] repoId;
   public static int RETRY_PERIOD = 10000;
   public static final String HEADER_BAD_ADRESS = "badAdress";
+  private Directory directory = null;
+  private GlobRepository repository = null;
 
   public ConfigService(String applicationVersion, Long jarVersion, Long localConfigVersion, File currentConfigFile) {
     this.currentConfigFile = currentConfigFile;
@@ -152,7 +154,7 @@ public class ConfigService {
       if (configVersionHeader != null) {
         long newConfigVersion = Long.parseLong(configVersionHeader.getValue());
         if (localConfigVersion < newConfigVersion) {
-          configReceive = new ConfigReceive();
+          configReceive = new ConfigReceive(directory, repository);
           dowloadConfigThread =
             new DownloadThread(FTP_URL, PicsouApplication.getBankConfigPath(),
                                generateConfigJarName(newConfigVersion), newConfigVersion, configReceive);
@@ -163,7 +165,7 @@ public class ConfigService {
       if (jarVersionHeader != null) {
         long newJarVersion = Long.parseLong(jarVersionHeader.getValue());
         if (localJarVersion < newJarVersion) {
-          jarReceive = new JarReceive();
+          jarReceive = new JarReceive(directory, repository);
           dowloadJarThread =
             new DownloadThread(FTP_URL, PicsouApplication.getJarPath(),
                                generatePicsouJarName(newJarVersion), newJarVersion, jarReceive);
@@ -350,16 +352,22 @@ public class ConfigService {
     userState = userState.updateUserValidity(directory, repository);
   }
 
-  synchronized public boolean loadConfig(Directory directory, GlobRepository repository) {
+  public boolean loadConfig(Directory directory, GlobRepository repository) {
     boolean configLoaded = false;
     if (configReceive != null) {
       configLoaded = configReceive.set(directory, repository);
     }
     if (!configLoaded && currentConfigFile != null) {
-      configLoaded = loadConfigFile(currentConfigFile, localConfigVersion, repository, directory);
+      synchronized (this){
+        configLoaded = loadConfigFile(currentConfigFile, localConfigVersion, repository, directory);
+      }
     }
     if (jarReceive != null) {
       jarReceive.set(directory, repository);
+    }
+    synchronized (this){
+      this.directory = directory;
+      this.repository = repository;
     }
     return configLoaded;
   }
@@ -405,6 +413,11 @@ public class ConfigService {
   }
 
   private class ConfigReceive extends AbstractJarReceived {
+
+    // directory/repository can be null
+    public ConfigReceive(Directory directory, GlobRepository repository) {
+      set(directory, repository);
+    }
 
     protected void loadJar(File jarFile, long version) {
       loadConfigFile(jarFile, version, repository, directory);
@@ -479,6 +492,9 @@ public class ConfigService {
   }
 
   private static class JarReceive extends AbstractJarReceived {
+    public JarReceive(Directory directory, GlobRepository repository) {
+      set(directory, repository);
+    }
 
     protected void loadJar(File jarFile, long version) {
       repository.update(AppVersionInformation.KEY, AppVersionInformation.LATEST_AVALAIBLE_JAR_VERSION, version);

@@ -54,13 +54,8 @@ public class DownloadTest extends LicenseTestCase {
     });
   }
 
-  public void testJarIsSent() throws Exception {
-    SqlConnection connection = getSqlConnection();
-    connection.getCreateBuilder(SoftwareInfo.TYPE)
-      .set(SoftwareInfo.LATEST_JAR_VERSION, PicsouApplication.JAR_VERSION + 1L)
-      .set(SoftwareInfo.LATEST_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION + 1L)
-      .getRequest().run();
-    connection.commitAndClose();
+  public void testJarIsSentAndConfigUpdated() throws Exception {
+    updateDb();
     startServers();
     final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
     final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);
@@ -100,6 +95,46 @@ public class DownloadTest extends LicenseTestCase {
       }
     });
     assertTrue(configs.length == 1);
+  }
+
+  private void updateDb() {
+    SqlConnection connection = getSqlConnection();
+    connection.getCreateBuilder(SoftwareInfo.TYPE)
+      .set(SoftwareInfo.LATEST_JAR_VERSION, PicsouApplication.JAR_VERSION + 1L)
+      .set(SoftwareInfo.LATEST_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION + 1L)
+      .getRequest().run();
+    connection.commitAndClose();
+  }
+
+  public void testNewBankInConfig() throws Exception {
+    updateDb();
+    startPicsou();
+    LoginChecker loginChecker = new LoginChecker(window);
+    loginChecker.logNewUser("user", "passw@rd");
+
+    OperationChecker operations = new OperationChecker(window);
+    String fileName = OfxBuilder.init(this)
+      .addBankAccount("4321", 111, "1111", 0, "10/09/2008")
+      .addTransaction("2008/09/10", -100., "STUPID HEADER blabla")
+      .save();
+    operations.importOfxFile(fileName, "Autre");
+
+    final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
+    final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);
+    byte[] content = generateConfigContent();
+    LicenseTestCase.Retr retr = setFtpReply(jarName, "jar content", configJarName, content);
+    startServers();
+
+    retr.assertOk();
+    VersionInfoChecker versionInfo = new VersionInfoChecker(window);
+    versionInfo.checkNewVersion();
+
+    ViewSelectionChecker views = new ViewSelectionChecker(window);
+    views.selectData();
+    TransactionChecker transaction = new TransactionChecker(window);
+    transaction.initContent()
+      .add("10/09/2008", TransactionType.VIREMENT, "GOOD HEADER", "", -100.00) // le plugin specific de banque n'est pas appelé
+      .check();
   }
 
 

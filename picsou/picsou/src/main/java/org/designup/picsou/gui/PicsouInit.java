@@ -9,6 +9,7 @@ import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.series.view.SeriesWrapperUpdateTrigger;
 import org.designup.picsou.gui.startup.BackupService;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
+import org.designup.picsou.gui.upgrade.ConfigUpgradeTrigger;
 import org.designup.picsou.gui.utils.DataCheckerAction;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
@@ -86,6 +87,7 @@ public class PicsouInit {
   }
 
   public static void initTriggerRepository(ServerAccess serverAccess, Directory directory, final GlobRepository repository) {
+    repository.addTrigger(new ConfigUpgradeTrigger(directory));
     repository.addTrigger(new SavingsAccountCreateSeriesTrigger());
     repository.addTrigger(new CurrentMonthTrigger());
     repository.addTrigger(new SeriesRenameTrigger());
