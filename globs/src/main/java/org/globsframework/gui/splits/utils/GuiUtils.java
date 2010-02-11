@@ -274,10 +274,11 @@ public class GuiUtils {
     return editorPane;
   }
 
-  public static void initReadOnlyHtmlComponent(JEditorPane editorPane) {
+  public static JEditorPane initReadOnlyHtmlComponent(JEditorPane editorPane) {
     editorPane.setEditable(false);
     editorPane.setOpaque(false);
     initHtmlComponent(editorPane);
+    return editorPane;
   }
 
   public static void initHtmlComponent(JEditorPane editorPane) {

@@ -282,7 +282,8 @@ public class CategorizationView extends View implements TableView, Filterable {
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory));
 
-    builder.add("description", new JEditorPane("text/html", budgetArea.getDescription()));
+    builder.add("description",
+                GuiUtils.initReadOnlyHtmlComponent(new JEditorPane("text/html", budgetArea.getDescription())));
 
     NoSeriesMessage noSeriesMessage = NoSeriesMessageFactory.create(budgetArea, repository, directory);
     builder.add("noSeriesMessage", noSeriesMessage.getComponent());
@@ -314,7 +315,8 @@ public class CategorizationView extends View implements TableView, Filterable {
                                                       "/layout/otherSeriesChooserPanel.splits",
                                                       repository, directory);
 
-    builder.add("description", new JEditorPane("text/html", BudgetArea.OTHER.getDescription()));
+    builder.add("description",
+                GuiUtils.initReadOnlyHtmlComponent(new JEditorPane("text/html", BudgetArea.OTHER.getDescription())));
 
     java.util.List<SpecialCategorizationPanel> categorizationPanels = Arrays.asList(
       new DeferredCardCategorizationPanel(),
