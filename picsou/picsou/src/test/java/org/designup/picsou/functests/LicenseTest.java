@@ -25,14 +25,14 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
   public void testMessage() throws Exception {
     TextBox box = mainWindow.getTextBox("licenseMessage");
     assertThat(box.isVisible());
-    assertThat(box.textEquals("30 days left for trying CashPilot."));
+    assertThat(box.textEquals("60 days left for trying CashPilot."));
 
     LicenseActivationChecker.enterLicense(mainWindow, "admin", "zz");
     UISpecAssert.assertFalse(box.isVisible());
   }
 
   public void testOneDayLeft() throws Exception {
-    TimeService.setCurrentDate(Dates.parse("2008/09/29"));
+    TimeService.setCurrentDate(Dates.parse("2008/10/29"));
 
     restartApplication();
     TextBox box = mainWindow.getTextBox("licenseMessage");
@@ -41,7 +41,7 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
   }
 
   public void testLastDay() throws Exception {
-    TimeService.setCurrentDate(Dates.parse("2008/09/30"));
+    TimeService.setCurrentDate(Dates.parse("2008/10/30"));
 
     restartApplication();
     TextBox box = mainWindow.getTextBox("licenseMessage");
@@ -50,7 +50,7 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
   }
 
   public void testTrialOver() throws Exception {
-    TimeService.setCurrentDate(Dates.parse("2008/10/01"));
+    TimeService.setCurrentDate(Dates.parse("2008/11/01"));
 
     restartApplication();
     TextBox box = mainWindow.getTextBox("licenseMessage");
@@ -59,7 +59,7 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCannotCreateTransactionsWhenTrialIsOver() throws Exception {
-    TimeService.setCurrentDate(Dates.parse("2008/10/01"));
+    TimeService.setCurrentDate(Dates.parse("2008/11/01"));
 
     restartApplication();
     views.selectCategorization();

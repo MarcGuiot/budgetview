@@ -64,6 +64,6 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .checkLineColumn(6, "J", "2010", 1500.00);
 
     savingsView.histoChart.click(0.99);
-    timeline.checkSelection("2010/07");
+    timeline.checkSelection("2010/01");
   }
 }
