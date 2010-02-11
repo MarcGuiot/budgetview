@@ -6,9 +6,9 @@
     <style selector="panel.descriptionPanel"
            opaque="true" background="categorization.budgetArea.description.bg"
            border="matte(0,0,1,0,categorization.budgetArea.description.border)"/>
-    <style selector="textArea#description"
+    <style selector="htmlEditorPane#description"
            foreground="categorization.budgetArea.description.text" opaque="false" font="-,plain,12"
-           editable="false" lineWrap="true" wrapStyleWord="true" fill="both" margin="5"/>
+           editable="false" fill="both" margin="5"/>
 
     <ui name="showHideLabelLink" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         underline="false" disabledColor=""/>
@@ -26,7 +26,7 @@
   <column>
     <column styleClass="budgetAreaSelection">
       <panel styleClass="descriptionPanel" weightY="0">
-        <textArea ref="description"/>
+        <htmlEditorPane ref="description"/>
       </panel>
       <scrollPane weightY="100" forceVerticalScroll="true">
         <repeat ref="specialCategorizationPanels" layout="verticalGrid" margin="10">

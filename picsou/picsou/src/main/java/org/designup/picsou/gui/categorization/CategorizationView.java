@@ -63,9 +63,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 
 public class CategorizationView extends View implements TableView, Filterable {
   private GlobList currentTransactions = GlobList.EMPTY;
@@ -283,7 +282,7 @@ public class CategorizationView extends View implements TableView, Filterable {
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory));
 
-    builder.add("description", new JTextArea(budgetArea.getDescription()));
+    builder.add("description", new JEditorPane("text/html", budgetArea.getDescription()));
 
     NoSeriesMessage noSeriesMessage = NoSeriesMessageFactory.create(budgetArea, repository, directory);
     builder.add("noSeriesMessage", noSeriesMessage.getComponent());
@@ -315,7 +314,7 @@ public class CategorizationView extends View implements TableView, Filterable {
                                                       "/layout/otherSeriesChooserPanel.splits",
                                                       repository, directory);
 
-    builder.add("description", new JTextArea(BudgetArea.OTHER.getDescription()));
+    builder.add("description", new JEditorPane("text/html", BudgetArea.OTHER.getDescription()));
 
     java.util.List<SpecialCategorizationPanel> categorizationPanels = Arrays.asList(
       new DeferredCardCategorizationPanel(),
