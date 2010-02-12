@@ -63,8 +63,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.*;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Set;
 
 public class CategorizationView extends View implements TableView, Filterable {
   private GlobList currentTransactions = GlobList.EMPTY;
@@ -282,8 +283,7 @@ public class CategorizationView extends View implements TableView, Filterable {
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory));
 
-    builder.add("description",
-                GuiUtils.initReadOnlyHtmlComponent(new JEditorPane("text/html", budgetArea.getDescription())));
+    builder.add("description", GuiUtils.createReadOnlyHtmlComponent(budgetArea.getHtmlDescription()));
 
     NoSeriesMessage noSeriesMessage = NoSeriesMessageFactory.create(budgetArea, repository, directory);
     builder.add("noSeriesMessage", noSeriesMessage.getComponent());
@@ -315,8 +315,7 @@ public class CategorizationView extends View implements TableView, Filterable {
                                                       "/layout/otherSeriesChooserPanel.splits",
                                                       repository, directory);
 
-    builder.add("description",
-                GuiUtils.initReadOnlyHtmlComponent(new JEditorPane("text/html", BudgetArea.OTHER.getDescription())));
+    builder.add("description", GuiUtils.createReadOnlyHtmlComponent(BudgetArea.OTHER.getHtmlDescription()));
 
     java.util.List<SpecialCategorizationPanel> categorizationPanels = Arrays.asList(
       new DeferredCardCategorizationPanel(),
@@ -407,7 +406,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     }
 
     for (Glob transaction : transactions) {
-      if (!currentTableFilter.matches(transaction, repository)){
+      if (!currentTableFilter.matches(transaction, repository)) {
         setFilteringMode(TransactionFilteringMode.SELECTED_MONTHS);
         return;
       }
@@ -535,11 +534,11 @@ public class CategorizationView extends View implements TableView, Filterable {
     }
 
     currentTableFilter = and(filter,
-          isFalse(Transaction.PLANNED),
-          isFalse(Transaction.MIRROR),
-          isFalse(Transaction.CREATED_BY_SERIES),
-          getCurrentFilteringModeMatcher()
-      );
+                             isFalse(Transaction.PLANNED),
+                             isFalse(Transaction.MIRROR),
+                             isFalse(Transaction.CREATED_BY_SERIES),
+                             getCurrentFilteringModeMatcher()
+    );
 
     transactionTable.setFilter(currentTableFilter);
   }

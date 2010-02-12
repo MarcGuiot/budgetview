@@ -196,9 +196,7 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   }
 
   public BudgetAreaCategorizationChecker checkDescriptionDisplayed() {
-    assertThat(panel.getTextBox("description").textContains(budgetArea.getDescription()
-      .replaceAll("<html>", "")
-      .replaceAll("</html>", "")));
+    assertThat(panel.getTextBox("description").textContains(budgetArea.getDescription()));
     return this;
   }
 
