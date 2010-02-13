@@ -228,6 +228,30 @@ public class HistoChartBuilder {
     updateHistoLabel("savingsAccounts");
   }
 
+  public void showAllAccountsHisto(int currentMonthId) {
+    HistoLineDataset dataset = new HistoLineDataset();
+
+    for (int monthId : getMonthIds(currentMonthId)) {
+
+      double value = 0.0;
+
+      Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
+      if (stat != null) {
+        stat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
+      }
+
+      Glob savingsStat = SavingsBudgetStat.findSummary(monthId, repository);
+      if (savingsStat != null) {
+        value += savingsStat.get(SavingsBudgetStat.END_OF_MONTH_POSITION);
+      }
+
+      dataset.add(monthId, value, getLabel(monthId), getSection(monthId), monthId == currentMonthId);
+    }
+
+    histoChart.update(new HistoLinePainter(dataset, accountColors));
+    updateHistoLabel("allAccounts");
+  }
+
   private class HistoDatasetBuilder {
 
     private HistoDiffDataset dataset = new HistoDiffDataset();

@@ -99,26 +99,29 @@
           <column>
             <horizontalSplit>
 
-              <column weightX="2">
+              <verticalSplit weightX="2">
 
-                <label text="$notesView.title" styleClass="blockTitle"/>
+                <column weightY="7">
+                  <label text="$notesView.title" styleClass="blockTitle"/>
+                  <panel styleClass="block">
+                    <column styleClass="innerBlock">
+                      <panel ref="notesView" minimumSize="(300,100)" preferredSize="(200,100)" weightY="3"/>
+                      <panel autoHideSource="newVersionMessage" styleClass="infoMessage">
+                        <panel styleClass="infoMessageBorder">
+                          <htmlEditorPane ref="newVersionMessage"/>
+                        </panel>
+                      </panel>
+                      <panel autoHideSource="licenseMessage" styleClass="infoMessage">
+                        <panel styleClass="infoMessageBorder">
+                          <htmlEditorPane ref="licenseMessage"/>
+                        </panel>
+                      </panel>
+                    </column>
+                  </panel>
+                </column>
 
-                <panel styleClass="block">
-                  <column styleClass="innerBlock">
-                    <panel ref="notesView" minimumSize="(300,100)" preferredSize="(200,100)" weightY="3"/>
-                    <panel autoHideSource="newVersionMessage" styleClass="infoMessage">
-                      <panel styleClass="infoMessageBorder">
-                        <htmlEditorPane ref="newVersionMessage"/>
-                      </panel>
-                    </panel>
-                    <panel autoHideSource="licenseMessage" styleClass="infoMessage">
-                      <panel styleClass="infoMessageBorder">
-                        <htmlEditorPane ref="licenseMessage"/>
-                      </panel>
-                    </panel>
-                  </column>
-                </panel>
-              </column>
+                <panel ref="accountEvolutionView" weightY="3"/>
+              </verticalSplit>
 
               <verticalSplit weightX="3">
                 <panel ref="accountView" minimumSize="(250,200)" preferredSize="(400,700)"/>

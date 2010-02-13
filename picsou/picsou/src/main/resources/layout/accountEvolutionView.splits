@@ -1,0 +1,22 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+
+  </styles>
+
+  <column name="accountEvolutionView" styleClass="main">
+
+    <label text="$accountEvolutionView.title" styleClass="blockTitle"/>
+
+    <panel styleClass="block" preferredSize="(300,200)">
+      <column styleClass="innerBlock">
+        <panel background="seriesEvolution.chart.bg" border="line(block.inner.border)">
+          <component ref="histoChart" margin="15" opaque="true" background="seriesEvolution.chart.bg"/>
+        </panel>
+      </column>
+    </panel>
+
+  </column>
+
+</splits>
