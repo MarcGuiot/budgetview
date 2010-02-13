@@ -1286,4 +1286,35 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectTransaction("Monop")
       .checkToCategorize();
   }
+
+  public void testUseSignInCategorisation() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/05/25", -50.0, "MSA")
+      .addTransaction("2008/05/15", 200.0, "MSA")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRow(0)
+      .selectIncome()
+      .createSeries("Alloc");
+    categorization.selectTableRow(1)
+      .selectEnvelopes()
+      .createSeries("Remboursement");
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/25", -50.0, "MSA")
+      .addTransaction("2008/06/15", 200.0, "MSA")
+      .load();
+
+    views.selectData();
+    timeline.selectAll();
+    transactions.initContent()
+      .add("25/06/2008", TransactionType.PRELEVEMENT, "MSA", "", -50.00, "Remboursement")
+      .add("15/06/2008", TransactionType.VIREMENT, "MSA", "", 200.00, "Alloc")
+      .add("25/05/2008", TransactionType.PRELEVEMENT, "MSA", "", -50.00, "Remboursement")
+      .add("15/05/2008", TransactionType.VIREMENT, "MSA", "", 200.00, "Alloc")
+      .check();
+  }
 }

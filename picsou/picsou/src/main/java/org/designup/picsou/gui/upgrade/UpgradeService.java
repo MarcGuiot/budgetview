@@ -3,9 +3,7 @@ package org.designup.picsou.gui.upgrade;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
@@ -19,17 +17,23 @@ public class UpgradeService {
   public void upgradeBankData(GlobRepository repository, Glob version) {
     repository.startChangeSet();
     try {
-      TransactionAnalyzerFactory analyzerFactory = directory.get(TransactionAnalyzerFactory.class);
-      TransactionAnalyzer transactionAnalyzer = analyzerFactory.getAnalyzer();
       GlobList accounts = repository.getAll(Account.TYPE);
       for (Glob account : accounts) {
         if (Account.SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID))) {
           continue;
         }
         Glob bank = Account.getBank(account, repository);
-        GlobList transactions = repository.getAll(Transaction.TYPE,
-                                                  GlobMatchers.fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)));
-        transactionAnalyzer.processTransactions(bank.get(Bank.ID), transactions, repository);
+        Integer bankEntityId = BankEntity.find(account.get(Account.BANK_ENTITY_LABEL), repository);
+        if (bankEntityId != null) {
+          Integer newBankId = BankEntity.getBank(repository.find(Key.create(BankEntity.TYPE, bankEntityId)),
+                                                 repository).get(Bank.ID);
+          if (!newBankId.equals(bank.get(Bank.ID))) {
+            repository.update(account.getKey(),
+                              FieldValue.value(Account.BANK, newBankId),
+                              FieldValue.value(Account.BANK_ENTITY, bankEntityId));
+          }
+        }
+        updateOperations(repository, account);
       }
       repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_BANK_CONFIG_VERSION,
                         version.get(AppVersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION));
@@ -37,5 +41,13 @@ public class UpgradeService {
     finally {
       repository.completeChangeSet();
     }
+  }
+
+  public void updateOperations(GlobRepository repository, Glob account) {
+    GlobList transactions = repository.getAll(Transaction.TYPE,
+                                              GlobMatchers.fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)));
+    TransactionAnalyzerFactory analyzerFactory = directory.get(TransactionAnalyzerFactory.class);
+    TransactionAnalyzer transactionAnalyzer = analyzerFactory.getAnalyzer();
+    transactionAnalyzer.processTransactions(account.get(Account.BANK), transactions, repository);
   }
 }

@@ -282,7 +282,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
       if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
         repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
-                          Month.addOneMonth(TimeService.getToday()));
+                          Month.addOneMonth(Month.addOneMonth(TimeService.getToday())));
       }
 
       repository.findOrCreate(CurrentMonth.KEY,

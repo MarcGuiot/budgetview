@@ -283,7 +283,7 @@ public class CategorizationView extends View implements TableView, Filterable {
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory));
 
-    builder.add("description", new JTextArea(budgetArea.getDescription()));
+    builder.add("description", GuiUtils.createReadOnlyHtmlComponent(budgetArea.getHtmlDescription()));
 
     NoSeriesMessage noSeriesMessage = NoSeriesMessageFactory.create(budgetArea, repository, directory);
     builder.add("noSeriesMessage", noSeriesMessage.getComponent());
@@ -315,7 +315,7 @@ public class CategorizationView extends View implements TableView, Filterable {
                                                       "/layout/otherSeriesChooserPanel.splits",
                                                       repository, directory);
 
-    builder.add("description", new JTextArea(BudgetArea.OTHER.getDescription()));
+    builder.add("description", GuiUtils.createReadOnlyHtmlComponent(BudgetArea.OTHER.getHtmlDescription()));
 
     java.util.List<SpecialCategorizationPanel> categorizationPanels = Arrays.asList(
       new DeferredCardCategorizationPanel(),
@@ -406,7 +406,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     }
 
     for (Glob transaction : transactions) {
-      if (!currentTableFilter.matches(transaction, repository)){
+      if (!currentTableFilter.matches(transaction, repository)) {
         setFilteringMode(TransactionFilteringMode.SELECTED_MONTHS);
         return;
       }
@@ -534,11 +534,11 @@ public class CategorizationView extends View implements TableView, Filterable {
     }
 
     currentTableFilter = and(filter,
-          isFalse(Transaction.PLANNED),
-          isFalse(Transaction.MIRROR),
-          isFalse(Transaction.CREATED_BY_SERIES),
-          getCurrentFilteringModeMatcher()
-      );
+                             isFalse(Transaction.PLANNED),
+                             isFalse(Transaction.MIRROR),
+                             isFalse(Transaction.CREATED_BY_SERIES),
+                             getCurrentFilteringModeMatcher()
+    );
 
     transactionTable.setFilter(currentTableFilter);
   }
