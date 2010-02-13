@@ -11,19 +11,23 @@ public class NotesViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNoData() throws Exception {
+
     views.selectHome();
     versionInfo.checkNoNewVersion();
     notes.checkNoDataMessage();
     notes.openImportHelp().checkContains("import").close();
-
     mainAccounts.checkNoEstimatedPosition();
+
+    views.selectBudget();
+    budgetView.getSummary()
+      .checkNoEstimatedPosition();
     timeline.checkMonthTooltip("2008/08", "August 2008");
 
+    views.selectHome();
     String file = OfxBuilder.init(this)
       .addBankAccount(12345, 456456, "120901111", 125.00, "2008/08/26")
       .addTransaction("2008/08/26", 1000, "Company")
       .save();
-
     notes
       .openImport()
       .selectFiles(file)

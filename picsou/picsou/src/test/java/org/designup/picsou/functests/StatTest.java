@@ -134,14 +134,16 @@ public class StatTest extends LoggedInFunctionalTestCase {
     categorization.setNewEnvelope("Auchan", "courses");
     categorization.setEnvelope("Carouf", "courses");
 
-    views.selectHome();
+    views.selectBudget();
     timeline.selectMonth("2008/06");
-    mainAccounts.checkBalance(200 - 90 - 80);
-    mainAccounts.checkEstimatedPosition(80);
+    budgetView.getSummary()
+      .checkMonthBalance(200 - 90 - 80)
+      .checkEndPosition(80);
 
     timeline.selectMonth("2008/07");
-    mainAccounts.checkBalance(200 - 90 - 80);
-    mainAccounts.checkEstimatedPosition(200 - 170);
+    budgetView.getSummary()
+      .checkMonthBalance(200 - 90 - 80)
+      .checkEndPosition(200 - 170);
   }
 
   public void testWithIncomeReimbursement() throws Exception {
@@ -154,8 +156,12 @@ public class StatTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("Salaire", "Salaire");
     categorization.setNewEnvelope("Auchan", "courses");
 
+    views.selectBudget();
+    budgetView.getSummary()
+      .checkMonthBalance(110)
+      .checkEndPosition(0);
+
     views.selectHome();
-    mainAccounts.checkBalance(110);
     mainAccounts.checkEstimatedPosition(0);
     mainAccounts.checkAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0., "2008/06/15");
 
@@ -174,14 +180,16 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .add("01/07/2008", TransactionType.PRELEVEMENT, "Salaire", "", -200.00, "Salaire")
       .check();
     views.selectHome();
-    mainAccounts.checkBalance(110);
     mainAccounts.checkEstimatedPosition(400);
 
-    mainAccounts.openEstimatedPositionDetails()
+    views.selectBudget();
+    budgetView.getSummary()
+      .checkMonthBalance(110)
+      .checkEndPosition(400);
+    budgetView.getSummary().openEstimatedPositionDetails()
       .checkInitialPosition(0)
       .close();
 
-    views.selectBudget();
     budgetView.income.editSeriesList()
       .switchToManual()
       .selectMonth(200807)
@@ -196,9 +204,13 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectHome();
-    mainAccounts.checkBalance(-290);
     mainAccounts.checkEstimatedPosition(0);
-    mainAccounts.openEstimatedPositionDetails()
+
+    views.selectBudget();
+    budgetView.getSummary()
+      .checkMonthBalance(-290)
+      .checkEndPosition(0);
+    budgetView.getSummary().openEstimatedPositionDetails()
       .checkInitialPosition(0)
       .close();
   }

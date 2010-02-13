@@ -1,10 +1,9 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.model.BudgetStat;
-import org.designup.picsou.gui.budget.summary.BudgetSummaryView;
-import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
+import org.designup.picsou.gui.accounts.position.MainAccountPositionLabels;
 import org.designup.picsou.model.*;
-import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatcher;
@@ -46,14 +45,6 @@ public class MainAccountViewPanel extends AccountViewPanel {
                not(fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)));
   }
 
-  protected JLabel getEstimatedAccountPositionLabel(Key accountKey) {
-    return Gui.createInvisibleLabel();
-  }
-
-  protected JLabel getEstimatedAccountPositionDateLabel(Key accountKey) {
-    return Gui.createInvisibleLabel();
-  }
-
   protected boolean showPositionThreshold() {
     return true;
   }
@@ -62,8 +53,7 @@ public class MainAccountViewPanel extends AccountViewPanel {
     return AccountType.MAIN;
   }
 
-  protected void registerSummaryView(GlobsPanelBuilder builder) {
-    BudgetSummaryView view = new BudgetSummaryView(repository, directory);
-    view.registerComponents(builder);
+  protected AccountPositionLabels createPositionLabels(Key accountKey) {
+    return new MainAccountPositionLabels(accountKey, repository, directory);
   }
 }

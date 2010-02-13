@@ -17,7 +17,7 @@ import org.uispec4j.interception.WindowInterceptor;
 import javax.swing.*;
 import java.util.*;
 
-public class AccountViewChecker extends GuiChecker {
+public class AccountViewChecker<T extends AccountViewChecker> extends GuiChecker {
   protected Panel panel;
 
   public AccountViewChecker(Panel panel, String panelName) {
@@ -38,7 +38,7 @@ public class AccountViewChecker extends GuiChecker {
     return existingNames;
   }
 
-  public AccountViewChecker checkAccountOrder(String ...accounts){
+  public T checkAccountOrder(String ...accounts){
     UIComponent[] uiComponents = panel.getUIComponents(Button.class, "accountName");
     List<String> existingNames = new ArrayList<String>();
     for (UIComponent uiComponent : uiComponents) {
@@ -46,7 +46,7 @@ public class AccountViewChecker extends GuiChecker {
       existingNames.add(button.getLabel());
     }
     TestUtils.assertEquals(existingNames, accounts);
-    return this;
+    return (T)this;
   }
 
   public void checkNoAccountsDisplayed() {
@@ -74,12 +74,32 @@ public class AccountViewChecker extends GuiChecker {
     UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals("01/02/2006"));
   }
 
-  public AccountViewChecker checkSummary(double amount, String updateDate) {
+  public T checkSummary(double amount, String updateDate) {
     Date date = Dates.parse(updateDate);
     assertThat(panel.getTextBox("referencePosition").textEquals(toString(amount)));
     assertThat(panel.getTextBox("referencePositionDate")
       .textEquals("on " + Formatting.toString(date)));
-    return this;
+    return (T)this;
+  }
+
+  public T checkEstimatedPosition(double amount) {
+    assertThat(panel.getTextBox("estimatedPosition").textEquals(toString(amount)));
+    return (T)this;
+  }
+
+  public T checkNoEstimatedPosition() {
+    assertThat(panel.getTextBox("estimatedPosition").textEquals("-"));
+    return (T)this;
+  }
+
+  public T checkEstimatedPositionColor(String color) {
+    assertThat(panel.getTextBox("estimatedPosition").foregroundNear(color));
+    return (T)this;
+  }
+
+  public T checkEstimatedPositionDate(String text) {
+    assertThat(panel.getTextBox("estimatedPositionDate").textEquals(text));
+    return (T)this;
   }
 
   public ImportChecker openImportForAccount(String accountName) {
@@ -93,11 +113,11 @@ public class AccountViewChecker extends GuiChecker {
     return new AccountPositionEditionChecker(window);
   }
 
-  public AccountViewChecker changePosition(String accountName, final double balance, final String operationLabel) {
+  public T changePosition(String accountName, final double balance, final String operationLabel) {
     editPosition(accountName)
       .checkOperationLabel(operationLabel.toUpperCase())
       .setAmountAndEnter(balance);
-    return this;
+    return (T)this;
   }
 
   public AccountEditionChecker edit(String accountName) {
@@ -140,11 +160,6 @@ public class AccountViewChecker extends GuiChecker {
       .checkIsMain()
       .setPosition(balance)
       .validate();
-  }
-
-  public AccountViewChecker checkBalance(double balance) {
-    assertThat(panel.getTextBox("balanceLabel").textEquals(toString(balance, true)));
-    return this;
   }
 
   public void checkAccountWebsite(String accountName, String linkText, String expectedUrl) {

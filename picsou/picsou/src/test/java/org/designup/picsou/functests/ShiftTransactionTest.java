@@ -104,7 +104,6 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .validate();
     transactionDetails.checkShiftInverted();
 
-
     categorization.checkUserDate(transactionDetails, "01/01/2009", "SHIFTABLE TO NEXT");
     categorization.checkUserDate(transactionDetails, "31/12/2008", "SHIFTABLE TO PREVIOUS");
   }
@@ -124,11 +123,16 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     mainAccounts.checkAccount("Account n. 00001234", 100.00, "2008/07/15");
     timeline.selectMonth("2008/06");
-    mainAccounts.checkBalance(-25.00);
-    mainAccounts.checkEstimatedPosition(112.00);
+
+    views.selectBudget();
+    budgetView.getSummary()
+      .checkMonthBalance(-25.00)
+      .checkEndPosition(112.00);
+
     timeline.selectMonth("2008/07");
-    mainAccounts.checkBalance(-25.00);
-    mainAccounts.checkEstimatedPosition(87.00);
+    budgetView.getSummary()
+      .checkMonthBalance(-25.00)
+      .checkEndPosition(87.00);
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
@@ -149,14 +153,13 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(100.00);
 
     // Balances are updated
-    views.selectHome();
+    views.selectBudget();
     timeline.selectMonth("2008/06");
-    mainAccounts.checkBalance(-15.00);
+    budgetView.getSummary().checkMonthBalance(-15.00);
     timeline.selectMonth("2008/07");
-    mainAccounts.checkBalance(-22.00);
+    budgetView.getSummary().checkMonthBalance(-22.00);
 
     // Series are updated
-    views.selectBudget();
     timeline.selectMonth("2008/06");
     budgetView.envelopes.checkTotalAmounts(-15.00, -15.00);
     timeline.selectMonth("2008/07");

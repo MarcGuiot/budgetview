@@ -1,10 +1,12 @@
 package org.designup.picsou.gui.accounts;
 
+import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
+import org.designup.picsou.gui.accounts.utils.GotoAccountWebsiteAction;
 import org.designup.picsou.gui.description.AccountComparator;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.monthsummary.AccountPositionThresholdAction;
 import org.designup.picsou.gui.utils.Matchers;
-import org.designup.picsou.gui.accounts.utils.GotoAccountWebsiteAction;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Month;
@@ -19,10 +21,8 @@ import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.AbstractGlobTextView;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatcher;
@@ -30,6 +30,7 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.util.Set;
 
 public abstract class AccountViewPanel {
   protected GlobRepository repository;
@@ -47,6 +48,7 @@ public abstract class AccountViewPanel {
     this.directory = directory;
     this.accountTypeMatcher = accountMatcher;
     this.summaryId = summaryId;
+
     directory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         GlobList months = selection.getAll(Month.TYPE);
@@ -56,6 +58,20 @@ public abstract class AccountViewPanel {
         accountRepeat.setFilter(filterMatcherWithDates);
       }
     }, Month.TYPE);
+
+    repository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(SavingsBudgetStat.TYPE)) {
+          updateEstimatedPosition();
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        if (changedTypes.contains(SavingsBudgetStat.TYPE)) {
+          updateEstimatedPosition();
+        }
+      }
+    });
   }
 
   private void createPanel() {
@@ -65,7 +81,6 @@ public abstract class AccountViewPanel {
     header = builder.add("header", new JPanel()).getComponent();
 
     Key summaryAccount = Key.create(Account.TYPE, summaryId);
-    registerSummaryView(builder);
 
     builder.addLabel("referencePosition", Account.POSITION)
       .setAutoHideIfEmpty(true)
@@ -73,6 +88,12 @@ public abstract class AccountViewPanel {
     builder.addLabel("referencePositionDate", Account.TYPE, new ReferenceAmountStringifier())
       .setAutoHideIfEmpty(true)
       .forceSelection(summaryAccount);
+
+    AccountPositionLabels positionLabels = createPositionLabels(summaryAccount);
+    builder.add("estimatedPosition",
+                positionLabels.getEstimatedAccountPositionLabel(true));
+    builder.add("estimatedPositionDate",
+                positionLabels.getEstimatedAccountPositionDateLabel());
 
     JLabel labelTypeName = new JLabel();
     builder.add("labelTypeName", labelTypeName);
@@ -91,8 +112,6 @@ public abstract class AccountViewPanel {
     panel = builder.load();
   }
 
-  protected abstract void registerSummaryView(GlobsPanelBuilder builder);
-
   protected abstract AccountType getAccountType();
 
   protected abstract boolean showPositionThreshold();
@@ -108,10 +127,6 @@ public abstract class AccountViewPanel {
     boolean hasAccounts = !repository.getAll(Account.TYPE, accountTypeMatcher).isEmpty();
     header.setVisible(hasAccounts);
   }
-
-  protected abstract JLabel getEstimatedAccountPositionLabel(Key accountKey);
-
-  protected abstract JLabel getEstimatedAccountPositionDateLabel(Key accountKey);
 
   private class AccountRepeatFactory implements RepeatComponentFactory<Glob> {
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob account) {
@@ -147,8 +162,9 @@ public abstract class AccountViewPanel {
                             }).forceSelection(account.getKey());
       cellBuilder.add("accountPosition", balance.getComponent());
 
-      cellBuilder.add("estimatedAccountPosition", getEstimatedAccountPositionLabel(account.getKey()));
-      cellBuilder.add("estimatedAccountPositionDate", getEstimatedAccountPositionDateLabel(account.getKey()));
+      AccountPositionLabels positionLabels = createPositionLabels(account.getKey());
+      cellBuilder.add("estimatedAccountPosition", positionLabels.getEstimatedAccountPositionLabel(false));
+      cellBuilder.add("estimatedAccountPositionDate", positionLabels.getEstimatedAccountPositionDateLabel());
 
       cellBuilder.addDisposeListener(balance);
     }
@@ -159,6 +175,8 @@ public abstract class AccountViewPanel {
       cellBuilder.addDisposeListener(labelView);
     }
   }
+
+  protected abstract AccountPositionLabels createPositionLabels(Key accountKey);
 
   private static class EditAccountFunctor implements GlobListFunctor {
 

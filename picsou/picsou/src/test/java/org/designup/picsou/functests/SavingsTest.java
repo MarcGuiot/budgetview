@@ -695,13 +695,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkPosition("Account n. 111", 1200);
     mainAccounts.checkEstimatedPosition(-200);
 
-    views.selectSavings();
-    savingsView.checkSavingsIn(0, 100);
-    savingsView.checkSavingsOut(0, 0);
-
     timeline.selectMonth("2008/08");
-    savingsView.checkSavingsIn(100, 100);
-
     views.selectBudget();
     budgetView.savings.checkSeries("CA", 100, 100);
     views.selectSavings();
@@ -726,12 +720,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       )
       .validate();
 
-    views.selectSavings();
-    savingsView.checkSavingsIn(100, 200);
-
     views.selectBudget();
     budgetView.savings.checkTotalAmounts(100, 200);
-
   }
 
   public void testImportedSavingsAccountWithMainAccountInManual() throws Exception {
@@ -1135,7 +1125,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   public void testSavingsAccounts() throws Exception {
     views.selectSavings();
     savingsView.checkNoAccounts();
-    savingsView.checkTotalPositionHidden();
+    savingsView.checkNoTotalPosition();
 
     views.selectHome();
     savingsAccounts.createSavingsAccount("Epargne", 1000);
@@ -1146,11 +1136,10 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setAsMain()
       .checkIsMain()
       .setPosition(99.0)
-//      .setUpdateModeToManualInput()
       .validate();
 
     views.selectSavings();
-    savingsView.checkTotalPositionHidden();
+    savingsView.checkNoTotalPosition();
     savingsView.checkAccountWithNoPosition("Epargne");
 
     savingsView.createSeries()
@@ -1241,7 +1230,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/09");
 
     views.selectBudget();
-    mainAccounts.checkBalance(-50);
+    budgetView.getSummary().checkMonthBalance(-50);
   }
 
   public void testCheckComboAccountContents() throws Exception {

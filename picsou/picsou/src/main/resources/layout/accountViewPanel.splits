@@ -12,10 +12,6 @@
   <panel styleClass="block">
     <column styleClass="innerBlock">
 
-      <panel ref="header" opaque="false" weightY="0.1">
-        <panel ref="budgetSummaryView" marginTop="5"/>
-      </panel>
-
       <column styleClass="blockScrollBorder">
         <scrollPane marginTop="0" marginBottom="0" weightY="100">
           <column>
@@ -53,6 +49,23 @@
                    marginTop="0" marginBottom="0"/>
           </row>
         </row>
+
+        <row styleClass="preFooter">
+          <row marginTop="5" marginBottom="5">
+            <filler fill="horizontal"/>
+            <label text="$accountView.estimated.title"
+                   styleClass="totalAmountTitle" autoHideSource="estimatedPosition"
+                   marginTop="0" marginBottom="0" marginRight="5"/>
+            <label ref="estimatedPosition"
+                   styleClass="referenceAmount"
+                   foreground="" tooltipText="$accountView.estimated.tooltip"
+                   marginTop="0" marginBottom="0" marginRight="5"/>
+            <label ref="estimatedPositionDate"
+                   styleClass="totalAmountTitle" autoHideSource="estimatedPosition"
+                   marginTop="0" marginBottom="0"/>
+          </row>
+        </row>
+        
         <row styleClass="footer">
           <button action="createAccount" styleClass="create" tooltipText="$accountView.create.tooltip"/>
           <filler fill="horizontal"/>

@@ -3,7 +3,7 @@ package org.designup.picsou.functests.checkers;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 
-public class SavingsAccountViewChecker extends AccountViewChecker {
+public class SavingsAccountViewChecker extends AccountViewChecker<SavingsAccountViewChecker> {
 
   public SavingsAccountViewChecker(Window window) {
     super(window, "savingsAccountView");
@@ -11,18 +11,6 @@ public class SavingsAccountViewChecker extends AccountViewChecker {
 
   public SavingsAccountViewChecker checkPosition(String accountName, double position) {
     UISpecAssert.assertThat(panel.getTextBox("estimatedAccountPosition." + accountName).textEquals(toString(position)));
-    return this;
-  }
-
-  public AccountViewChecker checkEstimatedPosition(double amount) {
-    SavingsBudgetSummaryChecker summary = new SavingsBudgetSummaryChecker(panel);
-    summary.checkEndPosition(amount);
-    return this;
-  }
-
-  public SavingsAccountViewChecker checkEstimatedPositionTitle(String title) {
-    SavingsBudgetSummaryChecker summary = new SavingsBudgetSummaryChecker(panel);
-    summary.checkEndPositionTitle(title);
     return this;
   }
 }

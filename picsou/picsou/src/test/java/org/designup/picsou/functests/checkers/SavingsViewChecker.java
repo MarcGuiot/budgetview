@@ -3,7 +3,7 @@ package org.designup.picsou.functests.checkers;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.*;
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import static org.uispec4j.finder.ComponentMatchers.*;
 
 import javax.swing.*;
@@ -19,42 +19,18 @@ public class SavingsViewChecker extends GuiChecker {
     this.histoChart = new HistoChecker(window, "savingsEvolutionPanel");
   }
 
-  public void checkTotalPositionHidden() {
-    checkComponentVisible(getPanel(), JLabel.class, "totalSavingsPositionAmount", false);
-    checkComponentVisible(getPanel(), JLabel.class, "totalSavingsPositionDate", false);
+  public void checkNoTotalPosition() {
+    assertThat(getPanel().getTextBox("totalSavingsPositionAmount").textEquals("-"));
   }
 
   public void checkTotalPosition(double amount, String updateDate) {
     TextBox position = getPanel().getTextBox("totalSavingsPositionAmount");
-    UISpecAssert.assertThat(position.isVisible());
-    UISpecAssert.assertThat(position.textEquals(toString(amount)));
+    assertThat(position.isVisible());
+    assertThat(position.textEquals(toString(amount)));
 
     TextBox date = getPanel().getTextBox("totalSavingsPositionDate");
-    UISpecAssert.assertThat(date.isVisible());
-    UISpecAssert.assertThat(date.textEquals(updateDate));
-  }
-
-  public SavingsViewChecker checkSavingsIn(double observedAmount, double plannedAmount) {
-    // On a plus de moyen IHM de tester ces montants. 
-    return this;
-//    assertThat(window.getButton(BudgetArea.SAVINGS.getName() + ":in:budgetAreaAmount")
-//      .textEquals(toString(observedAmount)));
-//    assertThat(window.getTextBox(BudgetArea.SAVINGS.getName() + ":in:budgetAreaPlannedAmount")
-//      .textEquals(toString(plannedAmount)));
-//    GaugeChecker gauge = new GaugeChecker(getPanel(), BudgetArea.SAVINGS.getName() + ":in:budgetAreaGauge");
-//    gauge.checkActualValue(-observedAmount);
-//    gauge.checkTargetValue(-plannedAmount);
-//    return this;
-  }
-
-  public SavingsViewChecker checkSavingsOut(double observedAmount, double plannedAmount) {
-    return this;
-//    assertThat(window.getButton(BudgetArea.SAVINGS.getName() + ":out:budgetAreaAmount").textEquals(toString(observedAmount)));
-//    assertThat(window.getTextBox(BudgetArea.SAVINGS.getName() + ":out:budgetAreaPlannedAmount").textEquals(toString(plannedAmount)));
-//    GaugeChecker gauge = new GaugeChecker(getPanel(), BudgetArea.SAVINGS.getName() + ":out:budgetAreaGauge");
-//    gauge.checkActualValue(observedAmount);
-//    gauge.checkTargetValue(plannedAmount);
-//    return this;
+    assertThat(date.isVisible());
+    assertThat(date.textEquals(updateDate));
   }
 
   public void checkSavingsIn(String accountName, double observedAmount, double plannedAmount) {
@@ -97,7 +73,7 @@ public class SavingsViewChecker extends GuiChecker {
   }
 
   public void checkSavingsInNotVisible(String accountName, String seriesName) {
-    UISpecAssert.assertFalse(window.getPanel(accountName + "." + seriesName + ".gauge").isVisible());
+    assertFalse(window.getPanel(accountName + "." + seriesName + ".gauge").isVisible());
   }
 
   public void checkNoAccounts() {
@@ -106,14 +82,14 @@ public class SavingsViewChecker extends GuiChecker {
 
   public void checkAccountWithNoPosition(String accountName) {
     final Panel accountPanel = getAccountPanel(accountName);
-    UISpecAssert.assertTrue(accountPanel.getTextBox("estimatedAccountPosition." + accountName).textIsEmpty());
-    UISpecAssert.assertFalse(accountPanel.getTextBox("estimatedAccountPositionDate." + accountName).isVisible());
+    assertThat(accountPanel.getTextBox("estimatedAccountPosition." + accountName).textEquals("-"));
+    assertTrue(accountPanel.getTextBox("estimatedAccountPositionDate." + accountName).isVisible());
   }
 
   public void checkAccount(String accountName, Double position, String updateDate) {
     final Panel accountPanel = getAccountPanel(accountName);
-    UISpecAssert.assertTrue(accountPanel.getTextBox("estimatedAccountPosition." + accountName).textEquals(toString(position)));
-    UISpecAssert.assertTrue(accountPanel.getTextBox("estimatedAccountPositionDate." + accountName).textEquals(updateDate));
+    assertTrue(accountPanel.getTextBox("estimatedAccountPosition." + accountName).textEquals(toString(position)));
+    assertTrue(accountPanel.getTextBox("estimatedAccountPositionDate." + accountName).textEquals(updateDate));
   }
 
   private Panel getAccountPanel(String accountName) {

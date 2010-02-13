@@ -2,7 +2,8 @@ package org.designup.picsou.gui.savings;
 
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.accounts.SavingsAccountViewPanel;
+import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
+import org.designup.picsou.gui.accounts.position.SavingsAccountPositionLabels;
 import org.designup.picsou.gui.budget.SeriesEditionButtons;
 import org.designup.picsou.gui.projects.NextProjectsView;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
@@ -60,10 +61,11 @@ public class SavingsView extends View {
     seriesButtons.registerButtons(builder);
 
     Key accountKey = Key.create(Account.TYPE, Account.SAVINGS_SUMMARY_ACCOUNT_ID);
+    AccountPositionLabels positionLabels = new SavingsAccountPositionLabels(accountKey, repository, directory);
     builder.add("totalSavingsPositionAmount",
-                SavingsAccountViewPanel.getEstimatedAccountPositionLabel(accountKey, repository, directory));
+                positionLabels.getEstimatedAccountPositionLabel(true));
     builder.add("totalSavingsPositionDate",
-                SavingsAccountViewPanel.getEstimatedAccountPositionDateLabel(accountKey, repository, directory));
+                positionLabels.getEstimatedAccountPositionDateLabel());
 
     builder.addRepeat("savingsAccounts", Account.TYPE,
                       GlobMatchers.and(new AccountMatcher(),
@@ -98,12 +100,13 @@ public class SavingsView extends View {
                         .forceSelection(account.getKey()).getComponent());
 
       Key accountKey = account.getKey();
+      AccountPositionLabels positionLabels = new SavingsAccountPositionLabels(accountKey, repository, directory);
       cellBuilder.add("estimatedAccountPosition",
-                      SavingsAccountViewPanel.getEstimatedAccountPositionLabel(accountKey, repository, directory));
+                      positionLabels.getEstimatedAccountPositionLabel(false));
       cellBuilder.add("estimatedAccountPositionDate",
-                      SavingsAccountViewPanel.getEstimatedAccountPositionDateLabel(accountKey, repository, directory));
+                      positionLabels.getEstimatedAccountPositionDateLabel());
 
-      final SavingsSeriesView seriesView = new SavingsSeriesView(account, repository, directory, 
+      final SavingsSeriesView seriesView = new SavingsSeriesView(account, repository, directory,
                                                                  seriesEditionDialog, seriesButtons);
       cellBuilder.add("savingsSeries", seriesView.getPanel());
       cellBuilder.addDisposeListener(seriesView);

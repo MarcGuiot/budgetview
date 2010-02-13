@@ -100,7 +100,6 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     mainAccounts
       .checkEstimatedPosition(100)
       .checkEstimatedPositionColor("darkGray")
-      .checkIsEstimatedPosition()
       .checkThreshold(0);
 
     mainAccounts
@@ -118,8 +117,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     mainAccounts
       .checkEstimatedPosition(-100)
-      .checkEstimatedPositionColor("darkRed")
-      .checkIsRealPosition();
+      .checkEstimatedPositionColor("darkRed");
   }
 
   public void testChangeAccountTypeUncategorizeTransactionIfAssociatedSeriesIsNotSavings() throws Exception {

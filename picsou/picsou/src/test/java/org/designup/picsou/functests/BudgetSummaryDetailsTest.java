@@ -42,13 +42,13 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     double fixed = 30 + 1500;
 
     timeline.selectMonth("2008/07");
-    views.selectHome();
-    mainAccounts.checkBalance(balanceFor200807);
-    mainAccounts.openEstimatedPositionDetails()
+    views.selectBudget();
+    budgetView.getSummary().openEstimatedPositionDetails()
       .checkBalance(balanceFor200807)
       .checkBalanceText("You have to spend 50.00 less")
       .checkBalanceDetails(incomeFor200807, 1530.00, 400.00, 100.00, 200.00)
       .close();
+    views.selectHome();
 
     mainAccounts.changePosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000, "VIRT ING");
     timeline.checkMonthTooltip("2008/07", balanceFor200807, 1000.00);
@@ -56,7 +56,8 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     mainAccounts.checkEstimatedPosition(1000 + balanceFor200808);
 
-    mainAccounts.openEstimatedPositionDetails()
+    views.selectBudget();
+    budgetView.getSummary().openEstimatedPositionDetails()
       .checkTitle("Budget summary for august 2008")
       .checkBalance(balanceFor200808)
       .checkBalanceText("You have 170.00 left to distribute")
@@ -72,8 +73,10 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
       .close();
 
     timeline.selectAll();
+    views.selectHome();
     mainAccounts.checkEstimatedPosition(1000 + incomeFor200808 - expensesFor200808);
-    mainAccounts.openEstimatedPositionDetails()
+    views.selectBudget();
+    budgetView.getSummary().openEstimatedPositionDetails()
       .checkTitle("Budget summary for july - august 2008")
       .checkBalance(balanceFor200807 + balanceFor200808)
       .checkBalanceText("You have 120.00 left to distribute")
@@ -92,7 +95,6 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
       .setName("Trip")
       .setAmount(170)
       .validate();
-    
     budgetView.getSummary().openEstimatedPositionDetails()
       .checkTitle("Budget summary for august 2008")
       .checkBalance(0)
@@ -123,12 +125,12 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     categorization.setNewEnvelope("FNAC", "Equipment");
     categorization.setNewIncome("Salaire", "Salaire");
 
-    views.selectHome();
+    views.selectBudget();
 
     double balanceFor200807 = 1500 - (29.9 + 1500 + 60 + 20 + 10);
-    mainAccounts.checkBalance(balanceFor200807);
-
-    mainAccounts.checkEstimatedPosition(1529.90);
+    budgetView.getSummary()
+      .checkMonthBalance(balanceFor200807)
+      .checkEndPosition(1529.90);
 
     timeline.checkMonthTooltip("2008/07", balanceFor200807, 1529.90);
 
@@ -139,24 +141,32 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
       .setRecurring("Free", "internet")
       .setRecurring("Loyer", "rental");
 
-    views.selectHome();
     double balanceFor200808 = 1500 - (29.9 + 1500 + 60 + 20 + 10);
-    mainAccounts.checkBalance(balanceFor200808);
-    mainAccounts.checkEstimatedPosition(1410.00);
-    mainAccounts.openEstimatedPositionDetails()
+    views.selectBudget();
+    budgetView.getSummary()
+      .checkMonthBalance(balanceFor200808)
+      .checkEndPosition(1410.00);
+    budgetView.getSummary().openEstimatedPositionDetails()
       .checkInitialPosition(0.0)
       .checkFixed(0)
       .checkEnvelope(90)
       .checkIncome(1500)
       .close();
+    views.selectHome();
+    mainAccounts.checkEstimatedPosition(1410);
     timeline.checkMonthTooltip("2008/08", balanceFor200808, 1410.00);
 
     timeline.selectMonths("2008/07", "2008/08");
-    mainAccounts
-      .checkBalance((1500 + 1500) - ((29.9 + 1500 + 60 + 20 + 10) + (29.9 + 1500 + 60 + 20 + 10)));
+    views.selectBudget();
+    budgetView.getSummary()
+      .checkMonthBalance((1500 + 1500) - ((29.9 + 1500 + 60 + 20 + 10) + (29.9 + 1500 + 60 + 20 + 10)))
+      .checkEndPosition(1410);
+
+    views.selectHome();
     mainAccounts.checkEstimatedPosition(1410);
 
-    mainAccounts.openEstimatedPositionDetails()
+    views.selectBudget();
+    budgetView.getSummary().openEstimatedPositionDetails()
       .checkPositionDate("31/08/2008")
       .checkInitialPosition(0)
       .checkIncome(1500)
@@ -165,9 +175,11 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
       .close();
 
     timeline.selectMonth("2008/09");
+    views.selectHome();
     mainAccounts.checkEstimatedPosition(1420 + 1500 - 1529.90 - 80 - 10 - 10);
 
-    mainAccounts.openEstimatedPositionDetails()
+    views.selectBudget();
+    budgetView.getSummary().openEstimatedPositionDetails()
       .checkPositionDate("30/09/2008")
       .checkInitialPosition(1410)
       .checkIncome(1500)
@@ -191,7 +203,8 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/07");
     views.selectHome();
-    mainAccounts.openEstimatedPositionDetails()
+    views.selectBudget();
+    budgetView.getSummary().openEstimatedPositionDetails()
       .checkTitle("Budget summary for july 2008")
       .checkBalance(1000.00)
       .checkPosition(500)
@@ -216,22 +229,21 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     categorization.setNewEnvelope("remboursement", "secu");
     categorization.setNewIncome("Salaire", "Salaire");
 
-    views.selectHome();
-
-    double balanceFor200807 = 1500 - (200 - 40);
-    mainAccounts.checkBalance(balanceFor200807);
+    views.selectBudget();
+    budgetView.getSummary().checkMonthBalance(1500 - (200 - 40));
 
     timeline.selectMonth("2008/08");
-    views.selectHome();
     double balanceFor200808 = 1500 - (200 - 40);
-    mainAccounts.checkBalance(balanceFor200808);
-    mainAccounts.checkEstimatedPosition(1440.00);
-    mainAccounts.openEstimatedPositionDetails()
+
+    budgetView.getSummary().checkMonthBalance(balanceFor200808);
+    budgetView.getSummary().openEstimatedPositionDetails()
       .checkInitialPosition(0.0)
       .checkFixed(100)
       .checkEnvelope(-40)
       .checkIncome(1500)
       .close();
+    views.selectHome();
+    mainAccounts.checkEstimatedPosition(1440.00);
     timeline.checkMonthTooltip("2008/08", balanceFor200808, 1440.00);
   }
 
@@ -266,7 +278,8 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectHome();
-    mainAccounts.openEstimatedPositionDetails()
+    views.selectBudget();
+    budgetView.getSummary().openEstimatedPositionDetails()
       .checkPositionDate("31/08/2008")
       .checkInitialPosition(1000)
       .checkSavingsOut(30)
@@ -274,7 +287,8 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
       .close();
 
     timeline.selectMonth("2008/09");
-    mainAccounts.openEstimatedPositionDetails()
+    views.selectBudget();
+    budgetView.getSummary().openEstimatedPositionDetails()
       .checkPositionDate("30/09/2008")
       .checkInitialPosition(1070)
       .checkSavingsOut(50)
@@ -297,44 +311,54 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     views.selectHome();
 
     timeline.selectMonth("2008/07");
-    mainAccounts.openEstimatedPositionDetails()
+    views.selectBudget();
+    budgetView.getSummary().openEstimatedPositionDetails()
       .checkPosition(2000.00)
       .checkThreshold(0.00, "The position is greater than the threshold", 2000.00)
       .checkThresholdHelpAvailable()
       .setThreshold(3000.00)
       .checkThreshold(3000.00, "The position is less than the threshold", -1000.00)
       .close();
+    views.selectHome();
     mainAccounts.checkThreshold(0.00);
 
     timeline.selectMonth("2008/08");
-    mainAccounts.openEstimatedPositionDetails()
+    views.selectBudget();
+    budgetView.getSummary().openEstimatedPositionDetails()
       .checkPosition(1300.00)
       .checkThreshold(0.00, "The position is greater than the threshold", 1300.00)
       .setThreshold(1500.00)
       .checkThreshold(1500.00, "The position is less than the threshold", -200.00)
       .validate();
+    views.selectHome();
     mainAccounts.checkThreshold(1500.00);
 
-    mainAccounts.openEstimatedPositionDetails()
+    views.selectBudget();
+    budgetView.getSummary().openEstimatedPositionDetails()
       .clearThreshold()
       .validate();
+    views.selectHome();
     mainAccounts.checkThreshold(0.00);
 
-    mainAccounts.openEstimatedPositionDetails()
+    views.selectBudget();
+    budgetView.getSummary().openEstimatedPositionDetails()
       .checkPosition(1300.00)
       .checkThreshold(0.00, "The position is greater than the threshold", 1300.00)
       .setThreshold(1500.00)
       .checkThreshold(1500.00, "The position is less than the threshold", -200.00)
       .validate();
+    views.selectHome();
     mainAccounts.checkThreshold(1500.00);
 
     timeline.selectMonths("2008/07", "2008/08");
-    mainAccounts.openEstimatedPositionDetails()
+    views.selectBudget();
+    budgetView.getSummary().openEstimatedPositionDetails()
       .checkPosition(1300.00)
       .checkThreshold(1500.00, "The position is less than the threshold", -200.00)
       .setThreshold(1300.00)
       .checkThreshold(1300.00, "The position is equal to the threshold", 0.00)
       .validate();
+    views.selectHome();
     mainAccounts.checkThreshold(1300.00);
   }
 }

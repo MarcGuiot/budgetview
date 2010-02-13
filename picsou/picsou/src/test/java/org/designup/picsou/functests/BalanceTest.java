@@ -62,12 +62,12 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .check();
     views.selectHome();
     timeline.selectMonth("2009/05");
-    mainAccounts.checkIsEstimatedPosition()
+    mainAccounts
       .checkEstimatedPosition(-39.90)
       .checkAccount("Manual", 0, "2009/05/15");
 
     timeline.selectMonth("2009/06");
-    mainAccounts.checkIsEstimatedPosition()
+    mainAccounts
       .checkEstimatedPosition(-79.80)
       .checkAccount("Manual", 0, "2009/05/15");
   }
@@ -86,13 +86,14 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .setName("NoName")
       .validate();
 
-    views.selectHome();
     timeline.selectMonth("2009/04");
-    mainAccounts.checkBalance(-29.90);
+    budgetView.getSummary().checkMonthBalance(-29.90);
+
     timeline.selectMonth("2009/05");
-    mainAccounts.checkBalance(0);
+    budgetView.getSummary().checkMonthBalance(0);
+
     timeline.selectMonth("2009/06");
-    mainAccounts.checkBalance(0);
+    budgetView.getSummary().checkMonthBalance(0);
   }
 
   public void testSavingsWithMonthWithoutTransaction() throws Exception {
@@ -125,17 +126,17 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     // sur savings
     timeline.selectMonth("2008/06");
     savingsAccounts
-      .checkEstimatedPositionTitle("End of june 08 position")
+      .checkEstimatedPositionDate("30/06/2008")
       .checkEstimatedPosition(300);
 
     timeline.selectMonth("2008/07");
     savingsAccounts
-      .checkEstimatedPositionTitle("End of jul 08 position")
+      .checkEstimatedPositionDate("31/07/2008")
       .checkEstimatedPosition(300);
 
     timeline.selectMonth("2008/08");
     savingsAccounts
-      .checkEstimatedPositionTitle("End of aug 08 position")
+      .checkEstimatedPositionDate("31/08/2008")
       .checkEstimatedPosition(0);
   }
 

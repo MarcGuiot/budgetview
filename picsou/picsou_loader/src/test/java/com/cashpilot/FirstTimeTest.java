@@ -6,7 +6,6 @@ import org.designup.picsou.functests.utils.QifBuilder;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Files;
-import org.globsframework.utils.Utils;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.Window;
@@ -200,13 +199,9 @@ public class FirstTimeTest extends UISpecTestCase {
     budget.envelopes.checkTotalAmounts(-415.00, -415.00);
     budget.recurring.checkTotalAmounts(-1413.90, -1413.90);
 
-    views.selectSavings();
-    SavingsViewChecker savings = new SavingsViewChecker(window);
-    savings.checkSavingsIn(100, 100);
-
-    views.selectHome();
-    MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
-    mainAccounts.openEstimatedPositionDetails()
+    views.selectBudget();
+    BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
+    budgetSummary.openEstimatedPositionDetails()
       .checkPosition(1900.00)
       .close();
 
@@ -289,7 +284,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .add("01/10/2008", "Planned: Health", 20.00, "Health", 1920.00, "Main accounts")
       .check();
 
-    mainAccounts.openEstimatedPositionDetails()
+    budgetSummary.openEstimatedPositionDetails()
       .checkPosition(1971.10)
       .checkInitialPosition(1900)
       .checkEnvelope(415)
@@ -317,7 +312,7 @@ public class FirstTimeTest extends UISpecTestCase {
 
     views.selectBudget();
     views.selectHome();
-    mainAccounts.openEstimatedPositionDetails()
+    budgetSummary.openEstimatedPositionDetails()
       .checkPosition(1831.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
@@ -391,14 +386,13 @@ public class FirstTimeTest extends UISpecTestCase {
     LoginChecker login = new LoginChecker(window);
     login.logExistingUser("toto", "toto");
 
-    MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
-
     ViewSelectionChecker views = new ViewSelectionChecker(window);
-    views.selectHome();
+    views.selectBudget();
     TimeViewChecker timeView = new TimeViewChecker(window);
     timeView.selectMonth("2008/10");
 
-    mainAccounts.openEstimatedPositionDetails()
+    BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
+    budgetSummary.openEstimatedPositionDetails()
       .checkPosition(2386.10)
       .checkInitialPosition(780.10)
       .checkIncome(2000)
@@ -475,11 +469,11 @@ public class FirstTimeTest extends UISpecTestCase {
     LoginChecker login = new LoginChecker(window);
     login.logExistingUser("toto", "toto");
 
-    MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
     ViewSelectionChecker views = new ViewSelectionChecker(window);
-    views.selectHome();
+    views.selectBudget();
 
-    mainAccounts.openEstimatedPositionDetails()
+    BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
+    budgetSummary.openEstimatedPositionDetails()
       .checkPosition(2386.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
@@ -560,9 +554,10 @@ public class FirstTimeTest extends UISpecTestCase {
     MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);
-    views.selectHome();
+    views.selectBudget();
 
-    mainAccounts.openEstimatedPositionDetails()
+    BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
+    budgetSummary.openEstimatedPositionDetails()
       .checkPosition(2386.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
@@ -714,11 +709,13 @@ public class FirstTimeTest extends UISpecTestCase {
     MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);
-    views.selectHome();
+    views.selectBudget();
 
     TimeViewChecker checker = new TimeViewChecker(window);
     checker.selectMonths("2008/10");
-    mainAccounts.openEstimatedPositionDetails()
+
+    BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
+    budgetSummary.openEstimatedPositionDetails()
       .checkPosition(1886.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
