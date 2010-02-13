@@ -26,6 +26,19 @@ public class ChangeSetMatchers {
     };
   }
 
+  public static ChangeSetMatcher changesForTypes(final GlobType... types) {
+    return new ChangeSetMatcher() {
+      public boolean matches(ChangeSet changeSet, GlobRepository repository) {
+        for (GlobType type : types) {
+          if (changeSet.containsChanges(type)) {
+            return true;
+          }
+        }
+        return false;
+      }
+    };
+  }
+
   public static ChangeSetMatcher changesForKey(final Key key) {
     return new ChangeSetMatcher() {
       public boolean matches(ChangeSet changeSet, GlobRepository repository) {
