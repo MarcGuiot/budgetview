@@ -66,9 +66,7 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
             }
           }
         }
-        if (firstUpdate
-            && Amounts.isNotZero(previousAmount)
-          ) {
+        if (firstUpdate && Amounts.isNotZero(previousAmount)) {
           repository.update(seriesBudget.getKey(),
                             value(SeriesBudget.AMOUNT, Utils.zeroIfNull(previousAmount)));
           firstUpdate = false;
