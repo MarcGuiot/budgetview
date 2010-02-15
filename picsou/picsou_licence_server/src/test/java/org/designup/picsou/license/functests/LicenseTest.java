@@ -224,7 +224,7 @@ public class LicenseTest extends LicenseTestCase {
       .enterLicenseAndValidate("titi@foo.org", "az")
       .checkErrorMessage("Activation failed")
       .cancel();
-    checkMessage("62 days left for trying CashPilot");
+    checkMessage("31 days left for trying CashPilot");
     checkMessage("Activation code not valid. You can ");
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     startApplication();
@@ -242,7 +242,7 @@ public class LicenseTest extends LicenseTestCase {
     license.checkErrorMessage("Activation failed")
       .cancel();
 
-    checkMessage("62 days left for trying CashPilot");
+    checkMessage("31 days left for trying CashPilot");
     checkMessage("Can not connect to remote server");
 
     exit();
@@ -266,7 +266,7 @@ public class LicenseTest extends LicenseTestCase {
     license.checkErrorMessage("Activation failed");
     license.cancel();
 
-    checkMessage("62 days left for trying CashPilot");
+    checkMessage("31 days left for trying CashPilot");
     checkMessage("Activation code not valid. You can ask for ");
 
     exit();
