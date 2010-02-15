@@ -53,7 +53,7 @@
                   </classpath>
                   <sysproperty key="with.debug" value="true"/>
                   <arg
-                    line="picsouLicenseServer.jar ${project.build.directory}/../dev/ant/input.txt ${project.build.directory}/../dev/ant/ignore.txt"/>
+                    line="picsouLicenceServer.jar ${project.build.directory}/../dev/ant/input.txt ${project.build.directory}/../dev/ant/ignore.txt"/>
                 </java>
               </tasks>
             </configuration>
