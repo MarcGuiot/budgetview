@@ -19,6 +19,7 @@ import org.designup.picsou.gui.importer.edition.ImportedTransactionsTable;
 import org.designup.picsou.gui.importer.utils.OpenBankSiteHelpAction;
 import org.designup.picsou.gui.importer.utils.OpenBankUrlAction;
 import org.designup.picsou.importer.BankFileType;
+import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -305,20 +306,36 @@ public class ImportDialog {
     String[] strings = path.split(";");
     for (String fileName : strings) {
       File file = new File(fileName);
-      if (BankFileType.getTypeFromName(fileName) == null) {
-        displayErrorMessage("import.invalid.extension");
+      if (!file.exists()) {
+        displayErrorMessage("login.data.file.not.found", fileName);
         return false;
       }
-      if (!file.exists()) {
-        displayErrorMessage("login.data.file.not.found");
-        return false;
+      if (file.isDirectory()){
+        if (strings.length == 1){
+          displayErrorMessage("import.file.is.directory", fileName);
+          return false;
+        }
+      }
+      else {
+        TypedInputStream inputStream;
+        try {
+          inputStream = new TypedInputStream(file);
+        }
+        catch (IOException e) {
+          displayErrorMessage("login.data.file.not.found", fileName);
+          return false;
+        }
+        if (inputStream.getType() == null) {
+          displayErrorMessage("import.invalid.extension", fileName);
+          return false;
+        }
       }
     }
     return true;
   }
 
-  private void displayErrorMessage(String key) {
-    showMessage("<html><font color=red>" + Lang.get(key) + "</font></html>");
+  private void displayErrorMessage(String key, String ...args) {
+    showMessage("<html><font color=red>" + Lang.get(key, args) + "</font></html>");
   }
 
   private void clearErrorMessage() {
@@ -383,9 +400,9 @@ public class ImportDialog {
     messageLabel.setText(message);
   }
 
-  public void updateForNextImport(File file, List<String> dateFormats) throws IOException {
+  public void updateForNextImport(boolean isAccountNeeded, List<String> dateFormats) throws IOException {
     updateAdditionalImportActions();
-    initQifAccountChooserFields(file);
+    initQifAccountChooserFields(isAccountNeeded);
     dateFormatSelectionPanel.init(dateFormats);
   }
 
@@ -421,8 +438,8 @@ public class ImportDialog {
     }
   }
 
-  private void initQifAccountChooserFields(File file) {
-    if (BankFileType.getTypeFromName(file.getAbsolutePath()).equals(BankFileType.QIF)) {
+  private void initQifAccountChooserFields(boolean isAccountNeeded) {
+    if (isAccountNeeded) {
       GlobList accounts = sessionRepository.getAll(Account.TYPE);
       for (Integer accountId : Account.SUMMARY_ACCOUNT_IDS) {
         accounts.remove(sessionRepository.get(Key.create(Account.TYPE, accountId)));

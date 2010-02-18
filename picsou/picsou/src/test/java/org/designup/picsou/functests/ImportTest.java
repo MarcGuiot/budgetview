@@ -699,4 +699,66 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
       .check();
   }
+
+  public void testImportDirectory() throws Exception {
+    operations.openImportDialog()
+      .setFilePath("/tmp")
+      .acceptFile()
+      .checkErrorMessage("import.file.is.directory", "/tmp")
+      .close();
+  }
+
+  public void testLoadUnknownOfxIfContentOk() throws Exception {
+    String fileName = OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/12", -1.3, "Menu K 2")
+      .save();
+    File file = new File(fileName);
+    File newFileName = new File(fileName.replace(".ofx", ".toto"));
+    file.renameTo(newFileName);
+    operations.openImportDialog()
+      .setFilePath(newFileName.getPath())
+      .acceptFile()
+      .checkNoErrorMessage()
+      .doImport();
+    views.selectData();
+    transactions.initContent()
+      .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
+      .check();
+  }
+
+  public void testLoadUnknownQifIfContentOk() throws Exception {
+    String fileName = QifBuilder.init(this)
+      .addTransaction("2006/01/12", -1.3, "Menu K 2")
+      .save();
+    File file = new File(fileName);
+    File newFileName = new File(fileName.replace(".qif", ".toto"));
+    file.renameTo(newFileName);
+    operations.openImportDialog()
+      .setFilePath(newFileName.getPath())
+      .acceptFile()
+      .checkNoErrorMessage()
+      .defineAccount("CIC", "main", "1111")
+      .completeImport(0.);
+    views.selectData();
+    transactions.initContent()
+      .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
+      .check();
+  }
+
+  public void testMixedInvalidDirAndFile() throws Exception {
+    String fileName = OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/12", -1.3, "Menu K 2")
+      .save();
+    operations.openImportDialog()
+      .setFilePath(fileName + ";" + "/tmp")
+      .acceptFile()
+      .checkNoErrorMessage()
+      .doImport();
+    views.selectData();
+    transactions.initContent()
+      .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
+      .check();
+  }
 }

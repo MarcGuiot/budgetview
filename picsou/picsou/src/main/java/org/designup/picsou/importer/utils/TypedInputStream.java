@@ -18,12 +18,18 @@ public class TypedInputStream {
     checkCoding();
     fileName = file.getName().toLowerCase();
     type = BankFileType.getTypeFromName(fileName);
+    if (type == null){
+      findType();
+    }
   }
 
   public TypedInputStream(InputStream inputStream) throws IOException {
     stream = new RepeatableInputStream(inputStream);
     checkCoding();
+    findType();
+  }
 
+  private void findType() throws IOException {
     Reader reader = new InputStreamReader(stream);
     BufferedReader bufferedReader = new BufferedReader(reader);
     String line;

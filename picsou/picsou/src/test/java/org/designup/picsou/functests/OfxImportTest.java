@@ -13,6 +13,8 @@ import org.uispec4j.Window;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
+import java.io.File;
+
 public class OfxImportTest extends LoggedInFunctionalTestCase {
 
   public void testImportingTheSameFileTwiceDoesNotDuplicateTransactions() throws Exception {
@@ -278,11 +280,13 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
   }
 
   public void testInvalidFileExtension() throws Exception {
+    final File file = File.createTempFile("pref", "suf");
+    file.deleteOnExit();
     WindowInterceptor
       .init(operations.getImportTrigger())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          window.getInputTextBox("fileField").setText("file.dat");
+          window.getInputTextBox("fileField").setText(file.getAbsolutePath());
           window.getButton("Import").click();
           assertTrue(window.containsLabel("only OFX and QIF files are supported"));
           return window.getButton("Close").triggerClick();
