@@ -149,4 +149,25 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .add("26/07/2008", TransactionType.VIREMENT, "WorldCo", "", 1000.00)
       .check();
   }
+
+  public void testRemoveAllAccount() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "000123", 100, "2008/08/26")
+      .addTransaction("2008/07/26", 1000, "WorldCo")
+      .addTransaction("2008/08/26", 1000, "WorldCo")
+      .addTransaction("2008/08/26", -800, "Epargne")
+      .load();
+
+    views.selectHome();
+    mainAccounts.edit("Account n. 000123")
+      .delete()
+      .validate();
+
+    mainAccounts
+      .checkNoAccountsDisplayed()
+      .checkNoEstimatedPosition();
+    views.selectBudget();
+    budgetView.getSummary()
+      .checkNoEstimatedPosition();
+  }
 }

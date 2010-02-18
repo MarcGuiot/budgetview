@@ -284,6 +284,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .add("01/10/2008", "Planned: Health", 20.00, "Health", 1920.00, "Main accounts")
       .check();
 
+    views.selectBudget();
     budgetSummary.openEstimatedPositionDetails()
       .checkPosition(1971.10)
       .checkInitialPosition(1900)
@@ -311,7 +312,6 @@ public class FirstTimeTest extends UISpecTestCase {
     operation.importQifFile(file2, "CIC");
 
     views.selectBudget();
-    views.selectHome();
     budgetSummary.openEstimatedPositionDetails()
       .checkPosition(1831.10)
       .checkInitialPosition(780.1)

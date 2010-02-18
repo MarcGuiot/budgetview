@@ -49,8 +49,9 @@ public class AccountViewChecker<T extends AccountViewChecker> extends GuiChecker
     return (T)this;
   }
 
-  public void checkNoAccountsDisplayed() {
+  public T checkNoAccountsDisplayed() {
     TestUtils.assertEmpty(getDisplayedAccounts());
+    return (T)this;
   }
 
   public void checkContainsAccount(String accountName) {

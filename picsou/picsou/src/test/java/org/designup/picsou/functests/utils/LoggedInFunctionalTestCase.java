@@ -214,7 +214,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     restartApplication(false);
   }
 
-
   public void restartApplication(boolean createUser) {
     operations.exit();
     mainWindow.dispose();

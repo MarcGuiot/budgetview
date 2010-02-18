@@ -130,10 +130,10 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
           int pos = existingSeriesBudget.length - 1;
           while (pos >= 0) {
             Glob budgets = existingSeriesBudget[pos];
-            pos--;
-            if (budgets.get(SeriesBudget.MONTH).equals(monthId)) {
+            if (budgets.get(SeriesBudget.MONTH) < monthId) {
               break;
             }
+            pos--;
           }
           while (pos >= 0) {
             Glob budgets = existingSeriesBudget[pos];
@@ -141,6 +141,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
               seriesAmount = budgets.get(SeriesBudget.AMOUNT);
               break;
             }
+            pos--;
           }
           if (seriesAmount == null) {
             pos = pos < 0 ? 0 : pos;
