@@ -218,6 +218,7 @@ public class MainPanel {
     notesView.init();
     timeView.selectCurrentMonth();
     selectLastMonthWithATransaction(repository, directory);
+    timeView.centerToSelected();
     seriesView.selectAll();
 
     SplitsEditor.show(builder, parent);

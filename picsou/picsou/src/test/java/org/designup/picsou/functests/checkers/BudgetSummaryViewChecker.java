@@ -77,12 +77,14 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     return new BudgetWizardPageChecker(wizardWindow);
   }
 
-  public void checkNoEstimatedPositionDetails() {
+  public BudgetSummaryViewChecker checkNoEstimatedPositionDetails() {
     assertFalse(getPanel().getButton("openDetailsButton").isEnabled());
+    return this;
   }
 
-  public void checkNoEstimatedPosition() {
+  public BudgetSummaryViewChecker checkNoEstimatedPosition() {
     assertThat(getPanel().getTextBox("positionLabel").textEquals("-"));
+    return this;
   }
 
   public void checkEstimatedPositionColor(String color) {

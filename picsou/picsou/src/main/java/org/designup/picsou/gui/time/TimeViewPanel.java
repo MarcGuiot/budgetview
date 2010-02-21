@@ -188,6 +188,33 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     }
   }
 
+  public void centerToSelected() {
+    if (previousWidth == -1) {
+      pendingOperation = new Runnable() {
+        public void run() {
+          centerToSelected();
+        }
+      };
+      return;
+    }
+    Selectable currentlySelected = null;
+    for (Selectable selectable : this.currentlySelected) {
+      currentlySelected = selectable;
+    }
+    int countOfSelected = 1;
+    Selectable tmp = timeGraph.getFirstSelectable();
+    while (tmp != null) {
+      if (tmp == currentlySelected){
+        break;
+      }
+      countOfSelected++;
+      tmp = tmp.getRight();
+    }
+    translation = 0;
+    scrollRight(countOfSelected * timeGraph.getMonthWidth() - getWidth() / 2);
+    repaint();
+  }
+
   public interface VisibilityListener {
     void change(Selectable first, Selectable last);
   }
@@ -423,6 +450,10 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       return false;
     }
 
+    if (getWidth() / timeGraph.getMonthWidth() < 2) {
+      return false;
+    }
+
     Selectable tmp = timeGraph.getLastSelectable();
     boolean visibleOnRight = false;
     while (tmp != lastSelected) {
@@ -433,9 +464,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       tmp = tmp.getLeft();
     }
 
-    if (getWidth() / timeGraph.getMonthWidth() < 2) {
-      return false;
-    }
     if (visibleOnRight) {
       Selectable left = lastSelected.getRight();
       int count = 3;

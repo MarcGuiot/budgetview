@@ -1525,4 +1525,30 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/09");
     budgetView.envelopes.checkSeries("course", 0, -98);
   }
+
+  public void testCategorizeOutOfThePeriod() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    OfxBuilder.init(this)
+      .addTransaction("2008/03/15", -10.00, "Tel")
+      .addTransaction("2008/06/1", -10.00, "Tel")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRow(0)
+      .selectRecurring()
+      .createSeries()
+      .setName("Telephone")
+      .setCustom()
+      .setPeriodMonths(1, 3, 5)
+      .validate();
+
+    categorization.selectTableRow(1)
+      .selectRecurring()
+      .checkNonActiveSeries("Telephone")
+      .selectSeries("Telephone");
+
+    views.selectBudget();
+    timeline.selectMonth("2008/06");
+    budgetView.recurring.checkSeries("Telephone", -10, 0);
+  }
 }

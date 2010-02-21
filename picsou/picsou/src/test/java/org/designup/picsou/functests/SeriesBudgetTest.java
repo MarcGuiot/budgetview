@@ -1,7 +1,7 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
+import org.designup.picsou.functests.utils.OfxBuilder;
 
 public class SeriesBudgetTest extends LoggedInFunctionalTestCase {
 
@@ -38,22 +38,29 @@ public class SeriesBudgetTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Free", -29, -29);
   }
 
-//  public void testSerieBudgetWithShift() throws Exception {
-//    OfxBuilder.init(this)
-//      .addTransaction("2009/01/01", 1000.00, "Salaire")
-//      .addTransaction("2009/01/01", -1000.00, "Loyer")
-//      .addTransaction("2009/02/02", 1000.00, "Salaire")
-//      .addTransaction("2009/02/02", -1000.00, "Loyer")
-//      .addTransaction("2009/03/01", 1000.00, "Salaire")
-//      .addTransaction("2009/03/01", -1000.00, "Loyer")
-//      .addTransaction("2009/04/06", 1000.00, "Salaire")
-//      .addTransaction("2009/04/06", -1000.00, "Loyer")
-//      .load();
-//    views.selectCategorization();
-//    categorization.setNewIncome("Salaire", "Salaire");
-//    categorization.setNewEnvelope("Loyer", "Loyer");
-//    String path = operations.backup(this);
-//    System.out.println("SeriesBudgetTest.testSerieBudgetWithShift " + path);
-//    openApplication();
-//  }
+  public void testAddMonthWithDifferentValueInSerireBudget() throws Exception {
+
+    views.selectBudget();
+    budgetView.envelopes.createSeries().setName("Courses")
+      .switchToManual().selectAllMonths().setAmount(100).validate();
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    timeline.checkSpanEquals("2009/04", "2009/06");
+    timeline.selectMonth("2009/06");
+    budgetView.envelopes.
+      checkSeries("Courses", 0, -100);
+    budgetView.envelopes
+      .editSeries("Courses")
+      .selectMonth(200906)
+      .setAmount(200)
+      .validate();
+
+    operations.openPreferences().setFutureMonthsCount(3).validate();
+    timeline.checkSpanEquals("2009/04", "2009/07");
+    timeline.selectMonth("2009/06");
+    budgetView.envelopes.
+      checkSeries("Courses", 0, -200);
+    timeline.selectMonth("2009/07");
+    budgetView.envelopes.
+      checkSeries("Courses", 0, -200);
+  }
 }

@@ -57,6 +57,10 @@ public class TimeView extends View {
     Gui.configureIconButton(gotoNextButton, "nextPeriod", new Dimension(19, 19));
   }
 
+  public void centerToSelected() {
+    viewPanel.centerToSelected();
+  }
+
   private static abstract class MonthNavigationAction extends AbstractAction {
 
     public MonthNavigationAction(String name) {

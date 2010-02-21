@@ -97,7 +97,11 @@ public class ImportController {
       public void openFiles(final List<File> files) {
         synchronized (selectedFiles) {
           if (step2) {
-            selectedFiles.addAll(files);
+            for (File file : files) {
+              if (!file.isDirectory()) {
+                selectedFiles.add(file);
+              }
+            }
           }
           else {
             SwingUtilities.invokeLater(new Runnable() {
@@ -116,9 +120,9 @@ public class ImportController {
       }
     });
     step1 = false;
-    File[] file = getInitialFiles();
+    List<File> file = getInitialFiles();
     synchronized (selectedFiles) {
-      selectedFiles.addAll(Arrays.asList(file));
+      selectedFiles.addAll(file);
     }
     if (nextImport()) {
       importDialog.showStep2();
@@ -142,7 +146,7 @@ public class ImportController {
         AutoCategorizationFunctor autoCategorizationFunctor = autocategorize();
         importDialog.showPositionDialog();
 
-        importDialog.showCompleteMessage(importSession.getImportedOperationsCount(), 
+        importDialog.showCompleteMessage(importSession.getImportedOperationsCount(),
                                          autoCategorizationFunctor.getAutocategorizedTransaction(),
                                          autoCategorizationFunctor.getTransactionCount());
         openRequestManager.popCallback();
@@ -163,10 +167,10 @@ public class ImportController {
     try {
       importDialog.setFileName(file.getAbsolutePath());
       List<String> dateFormats = importSession.loadFile(file);
-      importDialog.updateForNextImport(file, dateFormats);
+      importDialog.updateForNextImport(isAccountNeeded(), dateFormats);
       return true;
     }
-    catch (NoOperations e){
+    catch (NoOperations e) {
       String message = Lang.get("import.file.empty");
       importDialog.showMessage(message);
       return false;
@@ -196,14 +200,16 @@ public class ImportController {
     openRequestManager.popCallback();
   }
 
-  private File[] getInitialFiles() {
+  private List<File> getInitialFiles() {
     synchronized (fileField) {
       String path = fileField.getText();
       String[] strings = path.split(";");
-      File[] files = new File[strings.length];
-      for (int i = 0; i < strings.length; i++) {
-        String string = strings[i];
-        files[i] = new File(string);
+      List<File> files = new ArrayList<File>();
+      for (String string : strings) {
+        File file = new File(string);
+        if (!file.isDirectory()) {
+          files.add(file);
+        }
       }
       if (Strings.isNullOrEmpty(path)) {
         return null;
