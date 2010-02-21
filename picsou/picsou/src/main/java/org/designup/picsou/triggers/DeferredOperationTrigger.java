@@ -41,7 +41,7 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
           else {
             deferredDay = deferredCardDate.get(DeferredCardDate.DAY);
           }
-          if (day < deferredDay) {
+          if (day <= deferredDay) {
             repository.update(key, FieldValue.value(Transaction.POSITION_DAY, deferredDay),
                               FieldValue.value(Transaction.POSITION_MONTH, monthId),
                               FieldValue.value(Transaction.BUDGET_DAY, 1),

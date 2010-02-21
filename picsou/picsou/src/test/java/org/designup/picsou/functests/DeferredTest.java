@@ -258,7 +258,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
 
     String newDeferredAccount = QifBuilder.init(this)
       .addTransaction("2009/12/02", -70, "Auchan")
-      .addTransaction("2009/09/12", -15, "Auchan")
+      .addTransaction("2009/09/28", -15, "Auchan")
       .save();
     operations.importQifFile(newDeferredAccount, "Autre", "card 1111");
     timeline.selectAll();
@@ -270,8 +270,8 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("25/11/2009", "AUCHAN", -10.00, "To categorize", -30.00, 1000.00, "card 1111")
       .add("29/10/2009", "AUCHAN", -20.00, "To categorize", -20.00, 1000.00, "card 1111")
       .add("28/10/2009", "PRELEVEMENT OCTOBRE", -50.00, "To categorize", 1030.00, 1030.00, "Main account")
-      .add("14/09/2009", "AUCHAN", -35.00, "To categorize", -50.00, 1080.00, "card 1111")
-      .add("12/09/2009", "AUCHAN", -15.00, "To categorize", -15.00, 1080.00, "card 1111")
+      .add("28/09/2009", "AUCHAN", -15.00, "To categorize", -50.00, 1080.00, "card 1111")
+      .add("14/09/2009", "AUCHAN", -35.00, "To categorize", -35.00, 1080.00, "card 1111")
       .check();
   }
 
