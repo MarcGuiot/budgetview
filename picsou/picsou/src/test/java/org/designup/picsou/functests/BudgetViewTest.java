@@ -1050,4 +1050,28 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .validate();
     budgetView.envelopes.checkSeriesTooltip("Groceries", "");
   }
+
+  public void testIncomeAreOrdered() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", 100.00, "Retraite 1")
+      .addTransaction("2008/07/10", 200.00, "Retraite 2")
+      .addTransaction("2008/07/05", 400.00, "Retraite 3")
+      .load();
+
+    views.selectCategorization();
+    categorization
+      .selectTransaction("Retraite 1")
+      .selectIncome().selectNewSeries("Retraite 1");
+
+    categorization
+      .selectTransaction("Retraite 2")
+      .selectIncome().selectNewSeries("Retraite 2");
+    categorization
+      .selectTransaction("Retraite 3")
+      .selectIncome().selectNewSeries("Retraite 3");
+
+    views.selectBudget();
+    budgetView.income.checkOrder("Retraite 3", "Retraite 2", "Retraite 1");
+  }
+
 }
