@@ -139,7 +139,7 @@
     <style selector="label.totalAmountTitle" foreground="block.total.title" font="-,plain,10"
            fill="vertical" anchor="bottom" weightY="0"/>
     <style selector=".totalAmount" foreground="block.total" font="-,bold,20"
-           fill="vertical" anchor="top" weightY="1" border="empty(0,0,5,0)"/>
+           fill="vertical" anchor="top" weightY="1"/>
 
     <style selector=".innerBlockBackground"
            opaque="true" background="block.inner.bg" border="line(block.inner.border)"

@@ -29,8 +29,8 @@ public class RestoreAction extends AbstractBackupRestoreAction {
 
   public void actionPerformed(ActionEvent e) {
 
-    Glob glob = repository.get(User.KEY);
-    if (!glob.isTrue(User.IS_REGISTERED_USER)){
+    Glob user = repository.get(User.KEY);
+    if (!user.isTrue(User.IS_REGISTERED_USER)){
       MessageDialog dialog = MessageDialog.createMessageDialog("restore.trial.title", "restore.trial.content", frame, directory);
       dialog.show();
       return;
@@ -52,12 +52,12 @@ public class RestoreAction extends AbstractBackupRestoreAction {
           finally {
             Gui.setDefaultCursor(frame);
           }
-          if (completed == BackupService.Status.badBersion){
+          if (completed == BackupService.Status.BAD_VERSION){
             MessageDialog dialog = MessageDialog.createMessageDialog("restore.error.title", "restore.bad.version", frame, directory);
             dialog.show();
             return;
           }
-          if (completed == BackupService.Status.ok) {
+          if (completed == BackupService.Status.OK) {
             resetUndoRedo();
             selectCurrentMonth();
             showConfirmationDialog(file);

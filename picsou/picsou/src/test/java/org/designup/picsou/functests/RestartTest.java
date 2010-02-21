@@ -73,7 +73,10 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Salary", 0.0, 1000.0);
     mainAccounts.checkEstimatedPosition(1000.0);
     views.selectBudget();
-    budgetView.getSummary().openEstimatedPositionDetails().checkIncome(1000.0).close();
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoPosition()
+      .checkIncome(1000.0)
+      .close();
 
     timeline.selectMonth("2008/08");
     views.selectBudget();
@@ -83,7 +86,10 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(0.0);
 
     views.selectBudget();
-    budgetView.getSummary().openEstimatedPositionDetails().checkIncome(0.0).close();
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoPosition()
+      .checkIncome(0.0)
+      .close();
 
     restartApplication();
 
@@ -92,7 +98,10 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.income.checkTotalAmounts(1000.0, 1000.0);
 
-    budgetView.getSummary().openEstimatedPositionDetails().checkIncome(0.0).close();
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoPosition()
+      .checkIncome(0.0)
+      .close();
     budgetView.income.checkSeries("Salary", 1000.0, 1000.0);
 
     timeline.selectMonth("2008/09");

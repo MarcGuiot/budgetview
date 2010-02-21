@@ -1,0 +1,11 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <scrollPane weightY="100" forceVerticalScroll="true" border="">
+    <htmlEditorPane ref="editor" useImageLocator="true"
+                    opaque="true" background="#FFFFFF" foreground="#222222"
+                    border="matte(10,10,10,10,#FFFFFF)"/>
+  </scrollPane>
+
+</splits>

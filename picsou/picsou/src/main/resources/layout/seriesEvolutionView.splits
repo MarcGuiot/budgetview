@@ -15,7 +15,7 @@
 
       <verticalSplit styleClass="innerBlock">
 
-        <column weightY="5">
+        <column weightY="6">
 
           <scrollPane marginBottom="0" verticalUnitIncrement="10" border="matte(1,1,1,1,seriesEvolution.border)">
             <table ref="seriesEvolutionTable" rowHeight="20"/>
@@ -29,7 +29,7 @@
 
         </column>
 
-        <grid weightY="5" opaque="true" background="seriesEvolution.chart.bg" border="line(block.inner.border)">
+        <grid weightY="4" opaque="true" background="seriesEvolution.chart.bg" border="line(block.inner.border)">
           <label gridPos="(0,0)" ref="balanceChartLabel" weightX="1" styleClass="chartLabel"/>
           <label gridPos="(1,0)" ref="seriesChartLabel" weightX="1" styleClass="chartLabel"/>
           <label gridPos="(2,0)" ref="histoChartLabel" weightX="10" styleClass="chartLabel"/>
