@@ -8,6 +8,7 @@ import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.SwingStretches;
 import org.globsframework.gui.splits.utils.DummyAction;
 import org.globsframework.gui.splits.utils.DummyImageLocator;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.uispec4j.TextBox;
 import org.uispec4j.finder.ComponentFinder;
@@ -198,6 +199,25 @@ public class SplitsComponentsTest extends SplitsTestCase {
   public void testUsingAnImageLocatorInHtmlComponents() throws Exception {
     textLocator.set("editor.text", "<html><img src='anImage'/></html>");
     JEditorPane editorPane = parse("<htmlEditorPane text='$editor.text' useImageLocator='true'/>");
+    assertEquals("anImage", iconLocator.lastRequestedImageName);
+  }
+
+  public void testSettingTheImageLocatorOnAnHtmlEditorDoesNoClearTheText() throws Exception {
+    JEditorPane editor = new JEditorPane();
+    GuiUtils.initReadOnlyHtmlComponent(editor);
+    final String text = "<html><img src='anImage'></html>";
+    editor.setText(text);
+    builder.add("editor", editor);
+
+    TextBox textBox = new TextBox((JEditorPane)parse("<htmlEditorPane ref='editor' useImageLocator='true'/>"));
+
+    assertThat(textBox.htmlEquals("<html>\n" +
+                                  "  <head>\n" +
+                                  "  </head>\n" +
+                                  "  <body>\n" +
+                                  "    <img src='anImage'>\n" +
+                                  "  </body>\n" +
+                                  "</html>"));
     assertEquals("anImage", iconLocator.lastRequestedImageName);
   }
 

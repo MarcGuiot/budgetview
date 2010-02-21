@@ -2,7 +2,6 @@ package org.globsframework.gui.splits.components;
 
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidParameter;
-import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
