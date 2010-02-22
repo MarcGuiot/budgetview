@@ -105,7 +105,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public void paintComponent(Graphics g) {
-    if (timeGraph.getFirstSelectable() == null){
+    if (timeGraph.getFirstSelectable() == null) {
       return;
     }
     boolean scroll = false;
@@ -176,8 +176,8 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
 
   public void mouseWheelMoved(MouseWheelEvent e) {
     int wheelRotation = e.getWheelRotation();
-    if (wheelRotation >= 0){
-      if (scrollRight(wheelRotation * timeGraph.getMonthWidth())){
+    if (wheelRotation >= 0) {
+      if (scrollRight(wheelRotation * timeGraph.getMonthWidth())) {
         repaint();
       }
     }
@@ -204,14 +204,17 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     int countOfSelected = 1;
     Selectable tmp = timeGraph.getFirstSelectable();
     while (tmp != null) {
-      if (tmp == currentlySelected){
+      if (tmp == currentlySelected) {
         break;
       }
       countOfSelected++;
       tmp = tmp.getRight();
     }
     translation = 0;
-    scrollRight(countOfSelected * timeGraph.getMonthWidth() - getWidth() / 2);
+    int shift = countOfSelected * timeGraph.getMonthWidth() - getWidth() / 2;
+    if (shift > 0) {
+      scrollRight(shift);
+    }
     repaint();
   }
 
@@ -392,11 +395,11 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     }
     else {
       if (!stillThere.equals(selectionService.getSelection(Month.TYPE))) {
-      repository.invokeAfterChangeSet(new GlobRepository.InvokeAction(){
-        public void run() {
-          selectionService.select(stillThere, Month.TYPE);
-        }
-      });
+        repository.invokeAfterChangeSet(new GlobRepository.InvokeAction() {
+          public void run() {
+            selectionService.select(stillThere, Month.TYPE);
+          }
+        });
       }
     }
   }
