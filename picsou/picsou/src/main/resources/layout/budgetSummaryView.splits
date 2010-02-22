@@ -22,12 +22,12 @@
               pressedIcon="button_magnifier.png"
               disabledIcon="button_magnifier_disabled.png"/>
 
-      <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle" gridPos="(1,0)"/>
-      <label ref="balanceLabel" styleClass="totalAmount" gridPos="(1,1)"
-             tooltipText="$budgetSummaryView.balance.tooltip"/>
+      <label ref="positionTitle" styleClass="totalAmountTitle" gridPos="(1,0)"/>
+      <label ref="positionLabel" styleClass="totalAmount" gridPos="(1,1)"/>
 
-      <label ref="positionTitle" styleClass="totalAmountTitle" gridPos="(2,0)"/>
-      <label ref="positionLabel" styleClass="totalAmount" gridPos="(2,1)"/>
+      <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle" gridPos="(2,0)"/>
+      <label ref="balanceLabel" styleClass="totalAmount" gridPos="(2,1)"
+             tooltipText="$budgetSummaryView.balance.tooltip"/>
 
       <label text="$budgetSummaryView.uncategorized" styleClass="totalAmountTitle" gridPos="(3,0)"/>
       <button ref="uncategorized" styleClass="uncategorized" gridPos="(3,1)"/>
