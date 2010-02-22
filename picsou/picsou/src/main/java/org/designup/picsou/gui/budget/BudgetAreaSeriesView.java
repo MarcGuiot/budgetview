@@ -102,9 +102,7 @@ public class BudgetAreaSeriesView extends View {
 
   private void updateRepeat() {
     Comparator<Glob> comparator = new GlobFieldComparator(PeriodSeriesStat.ABS_SUM_AMOUNT);
-    if (!budgetArea.isIncome()) {
-      comparator = Collections.reverseOrder(comparator);
-    }
+    comparator = Collections.reverseOrder(comparator);
     List<Key> newSeries = repository.getAll(PeriodSeriesStat.TYPE, seriesFilter)
       .sort(comparator)
       .toKeyList();

@@ -37,8 +37,8 @@ public class AutoCategorizationFunctor implements GlobFunctor {
     {
       ValidTransactionFunctor strictAutoCategorization =
         new ValidTransactionFunctor(transaction, repository, referenceRepository) {
-          boolean isValid(Glob findTransaction, Glob transaction, Glob currentSeries) {
-            if (super.isValid(findTransaction, transaction, currentSeries)) {
+          boolean isValid(Glob transaction, Glob findTransaction, Glob currentSeries) {
+            if (super.isValid(transaction, findTransaction, currentSeries)) {
               boolean sameSign = isSameSign(findTransaction, transaction);
               return sameSign && transaction.get(Transaction.LABEL).equals(findTransaction.get(Transaction.LABEL));
             }
@@ -53,8 +53,8 @@ public class AutoCategorizationFunctor implements GlobFunctor {
     {
       ValidTransactionFunctor strictAutoCategorization =
         new ValidTransactionFunctor(transaction, repository, referenceRepository) {
-          boolean isValid(Glob findTransaction, Glob transaction, Glob currentSeries) {
-            if (super.isValid(findTransaction, transaction, currentSeries)) {
+          boolean isValid(Glob transaction, Glob findTransaction, Glob currentSeries) {
+            if (super.isValid(transaction, findTransaction, currentSeries)) {
               return transaction.get(Transaction.LABEL).equals(findTransaction.get(Transaction.LABEL));
             }
             return false;
@@ -68,9 +68,9 @@ public class AutoCategorizationFunctor implements GlobFunctor {
     {
       ValidTransactionFunctor autoCategorization =
         new ValidTransactionFunctor(transaction, repository, referenceRepository) {
-          boolean isValid(Glob findTransaction, Glob transaction, Glob currentSeries) {
+          boolean isValid(Glob transaction, Glob findTransaction, Glob currentSeries) {
             boolean sameSign = isSameSign(findTransaction, transaction);
-            return sameSign && super.isValid(findTransaction, transaction, currentSeries);
+            return sameSign && super.isValid(transaction, findTransaction, currentSeries);
           }
         };
       if (autoCategorization.apply(index)) {
@@ -148,8 +148,8 @@ public class AutoCategorizationFunctor implements GlobFunctor {
       return false;
     }
 
-    boolean isValid(Glob findTransaction, Glob transaction, Glob currentSeries) {
-      if (!findTransaction.get(Transaction.ACCOUNT).equals(transaction.get(Transaction.ACCOUNT))) {
+    boolean isValid(Glob transaction, Glob findTransaction, Glob currentSeries) {
+      if (!transaction.get(Transaction.ACCOUNT).equals(findTransaction.get(Transaction.ACCOUNT))) {
         return false;
       }
       if (currentSeries == null) {

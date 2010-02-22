@@ -22,11 +22,11 @@
                         transactionTypeName="virement"/>
 
     <transactionMatcher bankType="CREDIT" ofxName="VIR (.*)"
-                        label="VIREMENT DE {NAME.1}" originalLabel="{NAME.0} {MEMO.0}"
+                        label="VIREMENT DE {NAME.1}" originalLabel="{NAME.0}"
                         transactionTypeName="virement"/>
 
     <transactionMatcher bankType="DEBIT" ofxName="VIR (.*)"
-                        label="PRELEVEMENT DE {NAME.1}" originalLabel="{NAME.0} {MEMO.0}"
+                        label="PRELEVEMENT DE {NAME.1}" originalLabel="{NAME.0}"
                         transactionTypeName="prelevement"/>
 
     <transactionMatcher bankType="DEBIT" ofxName="RET DAB (.*)"

@@ -37,7 +37,8 @@ public class DeferredDayChangeTrigger extends DefaultChangeSetListener {
                                       fieldEquals(Transaction.BANK_MONTH, monthId))),
                                  new GlobFunctor() {
                                    public void run(Glob glob, GlobRepository repository) throws Exception {
-                                     if (glob.get(Transaction.BANK_DAY) > day){
+                                     if (glob.get(Transaction.BANK_DAY) > day
+                                         && glob.get(Transaction.BANK_MONTH).equals(monthId)) {
                                        repository.update(glob.getKey(),
                                                          FieldValue.value(Transaction.POSITION_DAY, nextDay),
                                                          FieldValue.value(Transaction.POSITION_MONTH, nextMonthId),

@@ -1317,4 +1317,29 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .add("15/05/2008", TransactionType.VIREMENT, "MSA", "", 200.00, "Alloc")
       .check();
   }
+
+  public void testNotAutocategorizationOutOfBeginEndDate() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/04/25", -50.0, "Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRow(0)
+      .selectRecurring()
+      .createSeries().setName("courses")
+      .setStartDate(200804)
+      .setEndDate(200804)
+      .validate();
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/05/25", -50.0, "Auchan")
+      .load();
+    timeline.selectAll();
+    views.selectData();
+    transactions.initContent()
+      .add("25/05/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -50.00)
+      .add("25/04/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -50.00, "courses")
+      .check();
+  }
 }

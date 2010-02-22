@@ -26,7 +26,6 @@ public class JdbcSqlService extends AbstractSqlService {
     dbInfo = new Properties();
     dbInfo.put("user", user);
     dbInfo.put("password", password);
-    dbInfo.put("autoReconnect", Boolean.TRUE);
     loadDriver();
   }
 
@@ -57,6 +56,7 @@ public class JdbcSqlService extends AbstractSqlService {
         if (!loadedDrivers.containsKey("mysdb")) {
           driver = (Driver)Class.forName("com.mysql.jdbc.Driver").newInstance();
         }
+//    dbInfo.put("autoReconnect", Boolean.TRUE);
         dbFactory = new DbFactory() {
           public SqlConnection create() {
             Connection connection = getConnection();
