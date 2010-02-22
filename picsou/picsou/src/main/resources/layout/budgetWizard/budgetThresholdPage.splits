@@ -16,17 +16,16 @@
 
         <htmlEditorPane ref="textTop" useImageLocator="true"/>
 
-        <row margin="10">
+        <row margin="10" border="line(#CCCCCC)" opaque="true" background="#EEEEEE">
           <filler fill="horizontal"/>
           <label text="$budgetWizard.threshold.label" styleClass="threshold"/>
           <textField ref="thresholdField"/>
 
-          <component ref="thresholdIndicator"
-                     marginLeft="5" marginRight="5"
+          <component ref="thresholdIndicator" margin="10"
                      fill="none" anchor="center"/>
           <column>
-            <label ref="estimatedPosition" styleClass="thresholdInfo"/>
-            <label ref="thresholdMessage" styleClass="thresholdInfo"/>
+            <label ref="estimatedPosition" styleClass="thresholdInfo" anchor="south" marginBottom="5"/>
+            <label ref="thresholdMessage" styleClass="thresholdInfo" anchor="north"/>
           </column>
           <filler fill="horizontal"/>
         </row>
