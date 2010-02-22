@@ -6,6 +6,7 @@ import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Log;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -19,7 +20,7 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         GlobList deferredAccount = repository.getAll(Account.TYPE, GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()));
         for (Glob account : deferredAccount) {
-          updateDeferredCarDay(repository, account);
+          updateDeferredCarDayOnAccountChange(repository, account);
         }
       }
 
@@ -29,18 +30,18 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
         GlobList deferredAccount = repository.getAll(Account.TYPE, GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()));
         for (Glob account : deferredAccount) {
-          updateDeferredCarDay(repository, account);
+          updateDeferredCarDayOnAccountChange(repository, account);
         }
       }
     });
 
     changeSet.safeVisit(Account.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        updateDeferredCarDay(repository, repository.find(key));
+        updateDeferredCarDayOnAccountChange(repository, repository.find(key));
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        updateDeferredCarDay(repository, repository.find(key));
+        updateDeferredCarDayOnAccountChange(repository, repository.find(key));
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
@@ -57,7 +58,7 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
     if (changedTypes.contains(Account.TYPE)) {
       GlobList deferredAccount = repository.getAll(Account.TYPE, GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()));
       for (Glob account : deferredAccount) {
-        updateDeferredCarDay(repository, account);
+        updateDeferredCarDayOnAccountChange(repository, account);
       }
     }
   }
@@ -71,24 +72,24 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
 
     public void visitCreation(Key key, FieldValues values) throws Exception {
       Integer accountId = values.get(DeferredCardPeriod.ACCOUNT);
-      updateDeferredCarDay(repository, repository.find(Key.create(Account.TYPE, accountId)));
+      updateDeferredCarDayOnAccountChange(repository, repository.find(Key.create(Account.TYPE, accountId)));
     }
 
     public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
       Integer accountId = repository.find(key).get(DeferredCardPeriod.ACCOUNT);
-      updateDeferredCarDay(repository, repository.find(Key.create(Account.TYPE, accountId)));
+      updateDeferredCarDayOnAccountChange(repository, repository.find(Key.create(Account.TYPE, accountId)));
     }
 
     public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
       Integer accountId = previousValues.get(DeferredCardPeriod.ACCOUNT);
       Glob account = repository.find(Key.create(Account.TYPE, accountId));
       if (account != null) {
-        updateDeferredCarDay(repository, account);
+        updateDeferredCarDayOnAccountChange(repository, account);
       }
     }
   }
 
-  private void updateDeferredCarDay(GlobRepository repository, final Glob account) {
+  private void updateDeferredCarDayOnAccountChange(GlobRepository repository, final Glob account) {
 
     Glob series = repository.getAll(Series.TYPE, GlobMatchers.and(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
                                                                   GlobMatchers.fieldEquals(Series.FROM_ACCOUNT, account.get(Account.ID))))

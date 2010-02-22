@@ -6,7 +6,6 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
 import org.designup.picsou.model.TransactionType;
-import org.designup.picsou.model.BudgetArea;
 
 public class DeferredTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
@@ -87,7 +86,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     cardCategorization
       .checkMessage("Assign the monthly transfer operation to the corresponding card account:")
       .selectSeries("Card account");
-    
+
     categorization.selectTransaction("Prelevement carte")
       .checkOtherSeriesIsSelected("Card account");
   }
@@ -104,20 +103,9 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/11/28", -30, "Prelevement novembre")
       .addTransaction("2009/10/28", 0, "Prelevement octobre")
       .addTransaction("2009/09/26", -35 - 15 /* -15 : transaction precedente non importé */, "Prelevement aout")
-      .loadDeferredCard("Card n. 1111", 28);
+      .loadDeferredCard("Card n. 1111", 30);
 
     timeline.selectAll();
-    views.selectData();
-    transactions.initAmountContent()
-      .add("30/11/2009", "AUCHAN", -60.00, "To categorize", -100.00, 900.00, "Card n. 1111")
-      .add("29/11/2009", "AUCHAN", -40.00, "To categorize", -40.00, 960.00, "Card n. 1111")
-      .add("28/11/2009", "PRELEVEMENT NOVEMBRE", -30.00, "To categorize", 1000.00, 1000.00, "Account n. 1234")
-      .add("25/11/2009", "AUCHAN", -10.00, "To categorize", -30.00, 1000.00, "Card n. 1111")
-      .add("29/10/2009", "AUCHAN", -20.00, "To categorize", -20.00, 1000.00, "Card n. 1111")
-      .add("28/10/2009", "PRELEVEMENT OCTOBRE", 0.00, "To categorize", 1030.00, 1030.00, "Account n. 1234")
-      .add("26/09/2009", "PRELEVEMENT AOUT", -50.00, "To categorize", 1030.00, 1030.00, "Account n. 1234")
-      .add("14/09/2009", "AUCHAN", -35.00, "To categorize", -35.00, 1030.00, "Card n. 1111")
-      .check();
 
     views.selectCategorization();
     categorization.selectTransaction("Prelevement novembre")
@@ -193,21 +181,10 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/09/29", -35, "Auchan")
       .addTransaction("2009/09/14", -15, "Auchan")
       .save();
-    operations.importQifFileWithDeferred(deferredAccount, "Autre", -100., 28);
+    operations.importQifFileWithDeferred(deferredAccount, "Autre", -100., 30);
 
     timeline.selectAll();
 
-    views.selectData();
-    transactions.initAmountContent()
-      .add("30/11/2009", "AUCHAN", -60.00, "To categorize", -100.00, 900.00, "card 1111")
-      .add("29/11/2009", "AUCHAN", -40.00, "To categorize", -40.00, 960.00, "card 1111")
-      .add("28/11/2009", "PRELEVEMENT NOVEMBRE", -30.00, "To categorize", 1000.00, 1000.00, "Main account")
-      .add("25/11/2009", "AUCHAN", -10.00, "To categorize", -30.00, 1000.00, "card 1111")
-      .add("29/10/2009", "AUCHAN", -20.00, "To categorize", -20.00, 1000.00, "card 1111")
-      .add("28/10/2009", "PRELEVEMENT OCTOBRE", -50.00, "To categorize", 1030.00, 1030.00, "Main account")
-      .add("29/09/2009", "AUCHAN", -35.00, "To categorize", -35.00, 1030.00, "card 1111")
-      .add("14/09/2009", "AUCHAN", -15.00, "To categorize", -15.00, 1080.00, "card 1111")
-      .check();
     views.selectCategorization();
     categorization.selectTransaction("Prelevement novembre")
       .selectOther()
@@ -225,7 +202,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("25/11/2009", "AUCHAN", -10.00, "To categorize", -30.00, 1000.00, "card 1111")
       .add("29/10/2009", "AUCHAN", -20.00, "To categorize", -20.00, 1000.00, "card 1111")
       .add("28/10/2009", "PRELEVEMENT OCTOBRE", -50.00, "card 1111", 1030.00, 1030.00, "Main account")
-      .add("29/09/2009", "AUCHAN", -35.00, "To categorize", -50.00, 1030.00, "card 1111")
+      .add("29/09/2009", "AUCHAN", -35.00, "To categorize", -50.00, 1080.00, "card 1111")
       .add("14/09/2009", "AUCHAN", -15.00, "To categorize", -15.00, 1080.00, "card 1111")
       .check();
   }
@@ -273,6 +250,19 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("28/09/2009", "AUCHAN", -15.00, "To categorize", -50.00, 1080.00, "card 1111")
       .add("14/09/2009", "AUCHAN", -35.00, "To categorize", -35.00, 1080.00, "card 1111")
       .check();
+
+
+    operations.importQifFile(QifBuilder.init(this)
+      .addTransaction("2009/12/04", -20, "cheque 1")
+      .save(), "Société Générale", "Main account");
+
+    transactions.initAmountContent()
+      .add("04/12/2009", "CHEQUE N°1", -20.00, "To categorize", 980.00, 980.00, "Main account")
+      .add("02/12/2009", "AUCHAN", -70.00, "To categorize", -170.00, 810.00, "card 1111")
+      .add("30/11/2009", "AUCHAN", -60.00, "To categorize", -100.00, 880.00, "card 1111")
+      .add("29/11/2009", "AUCHAN", -40.00, "To categorize", -40.00, 940.00, "card 1111")
+      .check();
+
   }
 
   public void testShiftNotAllowedOnDeferredCardOperation() throws Exception {
@@ -415,4 +405,98 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testChangeDayFrom31TO28() throws Exception {
+
+    OfxBuilder.init(this)
+      .addCardAccount("1111", -110, "2009/12/07")
+      .addTransaction("2009/12/07", -10, "Auchan")
+      .addTransaction("2009/11/30", -60, "Auchan")
+      .addTransaction("2009/11/29", -40, "Auchan")
+      .addTransaction("2009/11/25", -80, "Auchan")
+      .addTransaction("2009/10/31", -120, "Auchan")
+      .addTransaction("2009/09/30", -130, "Auchan")
+      .addBankAccount("1234", 990, "2009/12/07")
+      .addTransaction("2009/12/04", -10, "cheque 5")
+      .addTransaction("2009/11/28", -200, "Prelevement novembre")
+      .addTransaction("2009/10/30", -10, "cheque 4")
+      .addTransaction("2009/10/28", -130, "Prelevement octobre")
+      .addTransaction("2009/10/27", -10, "cheque 3")
+      .addTransaction("2009/09/30", -10, "cheque 2")
+      .addTransaction("2009/09/28", -130, "Prelevement septembre")
+      .addTransaction("2009/09/28", -10, "cheque 1")
+      .loadDeferredCard("Card n. 1111", 29);
+
+   views.selectBudget();
+    budgetView.envelopes.createSeries()
+      .setName("Mc Do")
+      .switchToManual()
+      .selectAllMonths()
+      .setAmount("100")
+      .validate();
+
+    views.selectCategorization();
+    categorization.selectTransaction("Prelevement octobre")
+      .selectOther()
+      .selectDeferred()
+      .selectSeries("Card n. 1111");
+
+    views.selectData();
+    timeline.selectMonth("2009/12");
+    transactions.initAmountContent()
+      .add("07/12/2009", "Planned: Mc Do", -100.00, "Mc Do", 890.00, "Main accounts")
+      .add("07/12/2009", "AUCHAN", -10.00, "To categorize", -110.00, 820.00, "Card n. 1111")
+      .add("04/12/2009", "CHEQUE N°5", -10.00, "To categorize", 990.00, 990.00, "Account n. 1234")
+      .add("30/11/2009", "AUCHAN", -60.00, "To categorize", -100.00, 830.00, "Card n. 1111")
+      .check();
+
+    timeline.selectMonth("2009/11");
+    transactions.initAmountContent()
+      .add("29/11/2009", "AUCHAN", -40.00, "To categorize", -240.00, 1000.00, "Card n. 1111")
+      .add("28/11/2009", "PRELEVEMENT NOVEMBRE", -200.00, "To categorize", 1000.00, 1000.00, "Account n. 1234")
+      .add("25/11/2009", "AUCHAN", -80.00, "To categorize", -200.00, 1000.00, "Card n. 1111")
+      .add("31/10/2009", "AUCHAN", -120.00, "To categorize", -120.00, 1000.00, "Card n. 1111")
+      .check();
+
+    timeline.selectMonth("2009/10");
+    transactions.initAmountContent()
+      .add("30/10/2009", "CHEQUE N°4", -10.00, "To categorize", 1200.00, 1200.00, "Account n. 1234")
+      .add("28/10/2009", "PRELEVEMENT OCTOBRE", -130.00, "Card n. 1111", 1210.00, 1210.00, "Account n. 1234")
+      .add("27/10/2009", "CHEQUE N°3", -10.00, "To categorize", 1340.00, 1340.00, "Account n. 1234")
+      .add("30/09/2009", "AUCHAN", -130.00, "To categorize", -130.00, 1210.00, "Card n. 1111")
+      .check();
+
+    views.selectCategorization();
+    categorization.selectTransaction("Prelevement novembre")
+      .selectOther()
+      .selectDeferred()
+      .selectSeries("Card n. 1111");
+    categorization.selectTransaction("Prelevement septembre")
+      .selectOther()
+      .selectDeferred()
+      .selectSeries("Card n. 1111");
+
+    timeline.selectMonth("2009/09");
+    views.selectData();
+    transactions.initAmountContent()
+      .add("30/09/2009", "CHEQUE N°2", -10.00, "To categorize", 1350.00, 1350.00, "Account n. 1234")
+      .add("28/09/2009", "CHEQUE N°1", -10.00, "To categorize", 1360.00, 1360.00, "Account n. 1234")
+      .add("28/09/2009", "PRELEVEMENT SEPTEMBRE", -130.00, "Card n. 1111", 1370.00, 1370.00, "Account n. 1234")
+      .check();
+
+    timeline.selectMonth("2009/11");
+    transactions.initAmountContent()
+      .add("28/11/2009", "PRELEVEMENT NOVEMBRE", -200.00, "Card n. 1111", 1000.00, 1000.00, "Account n. 1234")
+      .add("25/11/2009", "AUCHAN", -80.00, "To categorize", -200.00, 1000.00, "Card n. 1111")
+      .add("31/10/2009", "AUCHAN", -120.00, "To categorize", -120.00, 1000.00, "Card n. 1111")
+      .check();
+
+    timeline.selectMonth("2009/12");
+    transactions.initAmountContent()
+      .add("07/12/2009", "Planned: Mc Do", -100.00, "Mc Do", 890.00, "Main accounts")
+      .add("07/12/2009", "AUCHAN", -10.00, "To categorize", -110.00, 780.00, "Card n. 1111")
+      .add("04/12/2009", "CHEQUE N°5", -10.00, "To categorize", 990.00, 990.00, "Account n. 1234")
+      .add("30/11/2009", "AUCHAN", -60.00, "To categorize", -100.00, 790.00, "Card n. 1111")
+      .add("29/11/2009", "AUCHAN", -40.00, "To categorize", -40.00, 850.00, "Card n. 1111")
+      .check();
+  }
 }

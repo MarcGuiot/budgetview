@@ -397,7 +397,7 @@ public class SeriesEditionDialog {
 
       String label;
       if (!transactions.isEmpty() && budgetArea == BudgetArea.RECURRING
-          && transactions.get(0).get(Transaction.TRANSACTION_TYPE).equals(TransactionType.CHECK.getId())) {
+          && !transactions.get(0).get(Transaction.TRANSACTION_TYPE).equals(TransactionType.CHECK.getId())) {
         Glob firstTransaction = transactions.get(0);
         label = Transaction.anonymise(firstTransaction.get(Transaction.LABEL));
       }

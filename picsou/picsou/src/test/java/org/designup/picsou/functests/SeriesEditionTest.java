@@ -1551,4 +1551,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/06");
     budgetView.recurring.checkSeries("Telephone", -10, 0);
   }
+
+  public void test() throws Exception {
+  }
 }

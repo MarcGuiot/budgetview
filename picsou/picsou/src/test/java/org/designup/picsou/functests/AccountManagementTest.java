@@ -48,7 +48,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     transactions.initAmountContent()
       .add("20/01/2006", "BAR", -6.00, "To categorize", 10.00, 10.00, "Card n. 1000-2000-3000-4000")
-      .add("17/01/2006", "FOO", -3.00, "To categorize", -3.00, 10.00, "Card n. 1000-2000-3000-4000")
+      .add("17/01/2006", "FOO", -3.00, "To categorize", 16.00, 10.00, "Card n. 1000-2000-3000-4000")
       .add("15/01/2006", "GDF", -10.00, "To categorize", 10.00, 10.00, "Account n. 123123123")
       .add("10/01/2006", "EDF", -1.00, "To categorize", 20.00, 20.00, "Account n. 123123123")
       .check();

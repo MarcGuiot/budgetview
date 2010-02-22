@@ -8,7 +8,7 @@ import org.globsframework.metamodel.utils.GlobTypeLoader;
 public class Day {
   public static GlobType TYPE;
 
-  @Key @NamingField
+  @Key
   public static IntegerField ID;
 
   static {
