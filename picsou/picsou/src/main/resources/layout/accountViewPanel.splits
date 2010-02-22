@@ -2,8 +2,6 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <style selector="label.referenceAmount" font="-,plain,12"/>
-
     <style selector="button.website" ui="hyperlinkButtonWithoutUnderline"
            font="-,plain,11" fill="none" anchor="left" marginLeft="10"
            foreground="block.item.link.light"/>
@@ -11,6 +9,28 @@
 
   <panel styleClass="block">
     <column styleClass="innerBlock">
+      <row marginBottom="5">
+        <grid>
+          <label text="$accountView.reference.title" gridPos="(0,0)"
+                 styleClass="totalAmountTitle" autoHideSource="referencePosition"
+                 marginTop="0" marginBottom="0" marginRight="5"/>
+          <label ref="referencePosition" gridPos="(0,1)"
+                 styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"/>
+          <label ref="referencePositionDate" gridPos="(0,2)"
+                 styleClass="totalAmountTitle" autoHideSource="referencePosition"
+                 marginTop="0" marginBottom="0"/>
+
+          <label text="$accountView.estimated.title" gridPos="(1,0)"
+                 styleClass="totalAmountTitle" autoHideSource="estimatedPosition"
+                 marginTop="0" marginBottom="0" marginRight="5"/>
+          <label ref="estimatedPosition" gridPos="(1,1)"
+                 styleClass="totalAmount"
+                 foreground="" tooltipText="$accountView.estimated.tooltip"/>
+          <label ref="estimatedPositionDate" gridPos="(1,2)"
+                 styleClass="totalAmountTitle" autoHideSource="estimatedPosition"
+                 marginTop="0" marginBottom="0"/>
+        </grid>
+      </row>
 
       <column styleClass="blockScrollBorder">
         <scrollPane marginTop="0" marginBottom="0" weightY="100">
@@ -35,37 +55,6 @@
           </column>
         </scrollPane>
 
-        <row styleClass="preFooter">
-          <row marginTop="5" marginBottom="5">
-            <filler fill="horizontal"/>
-            <label text="$accountView.reference.title"
-                   styleClass="totalAmountTitle" autoHideSource="referencePosition"
-                   marginTop="0" marginBottom="0" marginRight="5"/>
-            <label ref="referencePosition"
-                   styleClass="referenceAmount" tooltipText="$accountView.reference.tooltip"
-                   marginTop="0" marginBottom="0" marginRight="5"/>
-            <label ref="referencePositionDate"
-                   styleClass="totalAmountTitle" autoHideSource="referencePosition"
-                   marginTop="0" marginBottom="0"/>
-          </row>
-        </row>
-
-        <row styleClass="preFooter">
-          <row marginTop="5" marginBottom="5">
-            <filler fill="horizontal"/>
-            <label text="$accountView.estimated.title"
-                   styleClass="totalAmountTitle" autoHideSource="estimatedPosition"
-                   marginTop="0" marginBottom="0" marginRight="5"/>
-            <label ref="estimatedPosition"
-                   styleClass="referenceAmount"
-                   foreground="" tooltipText="$accountView.estimated.tooltip"
-                   marginTop="0" marginBottom="0" marginRight="5"/>
-            <label ref="estimatedPositionDate"
-                   styleClass="totalAmountTitle" autoHideSource="estimatedPosition"
-                   marginTop="0" marginBottom="0"/>
-          </row>
-        </row>
-        
         <row styleClass="footer">
           <button action="createAccount" styleClass="create" tooltipText="$accountView.create.tooltip"/>
           <filler fill="horizontal"/>

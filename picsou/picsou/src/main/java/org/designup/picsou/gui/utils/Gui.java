@@ -8,6 +8,8 @@ import org.globsframework.gui.splits.utils.JarImageLocator;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.utils.Utils;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
+import org.designup.picsou.gui.help.HelpDialog;
+import org.designup.picsou.utils.Lang;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
@@ -203,6 +205,14 @@ public class Gui {
     result = false;
     Utils.endRemove();
     return result;
+  }
+
+  public static JEditorPane createHelpTextComponent(String helpFile) {
+    JEditorPane editor = new JEditorPane();
+    GuiUtils.initReadOnlyHtmlComponent(editor);
+    GuiUtils.loadCssResource("/help/help.css", editor, HelpDialog.class);
+    editor.setText(Lang.getHelpFile(helpFile));
+    return editor;
   }
 
   public static class RolloverColorListener extends MouseAdapter {

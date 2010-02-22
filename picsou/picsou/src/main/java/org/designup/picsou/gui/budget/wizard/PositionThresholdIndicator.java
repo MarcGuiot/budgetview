@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.budget.summary;
+package org.designup.picsou.gui.budget.wizard;
 
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.utils.AmountColors;

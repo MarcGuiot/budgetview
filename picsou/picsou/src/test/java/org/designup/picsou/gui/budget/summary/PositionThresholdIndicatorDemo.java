@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.budget.summary;
 
 import org.designup.picsou.gui.utils.ApplicationColors;
+import org.designup.picsou.gui.budget.wizard.PositionThresholdIndicator;
 import org.designup.picsou.model.AccountPositionThreshold;
 import org.globsframework.gui.splits.layout.SingleComponentLayout;
 import org.globsframework.gui.splits.SplitsEditor;

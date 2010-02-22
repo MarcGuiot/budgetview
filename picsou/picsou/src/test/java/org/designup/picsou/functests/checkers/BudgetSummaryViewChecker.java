@@ -2,8 +2,8 @@ package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
-import org.uispec4j.Window;
 import org.uispec4j.Button;
+import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
@@ -72,9 +72,9 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     return mainWindow.getPanel("budgetSummaryView");
   }
 
-  public BudgetSummaryDetailsChecker openEstimatedPositionDetails() {
-    Window window = WindowInterceptor.getModalDialog(getPanel().getButton("openDetailsButton").triggerClick());
-    return new BudgetSummaryDetailsChecker(window);
+  public BudgetWizardPageChecker openWizardBalancePage() {
+    Window wizardWindow = WindowInterceptor.run(getPanel().getButton("openDetailsButton").triggerClick());
+    return new BudgetWizardPageChecker(wizardWindow);
   }
 
   public BudgetSummaryViewChecker checkNoEstimatedPositionDetails() {

@@ -203,7 +203,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .setLabel("Retrait").setAmount(20).setDay(8).create()
       .setLabel("Retrait").setAmount(40).setDay(12).create()
       .setLabel("Retrait").setAmount(20).setDay(22).create()
-      .setLabel("Retrait").setAmount(20).setDay(30).create()
+      .setLabel("Retrait").setAmount(20).setDay(27).create()
       .setLabel("Boulangerie").setAmount(-20.).setDay(28).create()
       .setLabel("Boucherie").setAmount(-40).setDay(28).create()
       .setLabel("Primeur").setAmount(-40).setDay(28).create();

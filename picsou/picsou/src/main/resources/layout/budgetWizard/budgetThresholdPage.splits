@@ -1,0 +1,39 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.thresholdInfo" foreground="budgetSummaryDialog.label" font="-,plain,12"
+           fill="horizontal" anchor="left" horizontalAlignment="left" marginBottom="5"/>
+
+    <style selector="label.threshold" foreground="budgetSummaryDialog.label" font="-,plain,12"
+           fill="horizontal" anchor="center" horizontalAlignment="left"
+           weightX="1" marginRight="5"/>
+  </styles>
+
+  <panel>
+    <scrollPane forceVerticalScroll="true" border="none">
+      <verticalBoxes margin="10">
+
+        <htmlEditorPane ref="textTop" useImageLocator="true"/>
+
+        <row margin="10">
+          <filler fill="horizontal"/>
+          <label text="$budgetWizard.threshold.label" styleClass="threshold"/>
+          <textField ref="thresholdField"/>
+
+          <component ref="thresholdIndicator"
+                     marginLeft="5" marginRight="5"
+                     fill="none" anchor="center"/>
+          <column>
+            <label ref="estimatedPosition" styleClass="thresholdInfo"/>
+            <label ref="thresholdMessage" styleClass="thresholdInfo"/>
+          </column>
+          <filler fill="horizontal"/>
+        </row>
+
+        <htmlEditorPane ref="textBottom" useImageLocator="true"/>
+
+      </verticalBoxes>
+    </scrollPane>
+  </panel>
+</splits>

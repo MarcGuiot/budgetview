@@ -3,7 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 
-public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
+public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -43,7 +43,8 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/07");
     views.selectBudget();
-    budgetView.getSummary().openEstimatedPositionDetails()
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoBalance()
       .checkBalance(balanceFor200807)
       .checkBalanceText("You have to spend 50.00 less")
       .checkBalanceDetails(incomeFor200807, 1530.00, 400.00, 100.00, 200.00)
@@ -57,11 +58,12 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(1000 + balanceFor200808);
 
     views.selectBudget();
-    budgetView.getSummary().openEstimatedPositionDetails()
-      .checkTitle("Budget summary for august 2008")
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoBalance()
       .checkBalance(balanceFor200808)
       .checkBalanceText("You have 170.00 left to distribute")
       .checkBalanceDetails(incomeFor200808, 1530.00, 400.00, 100.00, 0)
+      .gotoPosition()
       .checkPositionDescriptionContains("Computation details")
       .checkInitialPosition(1000.00)
       .checkIncome(2200.00)
@@ -76,10 +78,11 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     mainAccounts.checkEstimatedPosition(1000 + incomeFor200808 - expensesFor200808);
     views.selectBudget();
-    budgetView.getSummary().openEstimatedPositionDetails()
-      .checkTitle("Budget summary for july - august 2008")
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoBalance()
       .checkBalance(balanceFor200807 + balanceFor200808)
       .checkBalanceText("You have 120.00 left to distribute")
+      .gotoPosition()
       .checkInitialPosition(1000.00)
       .checkIncome(2200.00)
       .checkFixed(30 + 1500)
@@ -95,8 +98,8 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
       .setName("Trip")
       .setAmount(170)
       .validate();
-    budgetView.getSummary().openEstimatedPositionDetails()
-      .checkTitle("Budget summary for august 2008")
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoBalance()
       .checkBalance(0)
       .checkBalanceText("Your budget is balanced")
       .close();
@@ -146,7 +149,8 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary()
       .checkMonthBalance(balanceFor200808)
       .checkEndPosition(1410.00);
-    budgetView.getSummary().openEstimatedPositionDetails()
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoPosition()
       .checkInitialPosition(0.0)
       .checkFixed(0)
       .checkEnvelope(90)
@@ -166,7 +170,8 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(1410);
 
     views.selectBudget();
-    budgetView.getSummary().openEstimatedPositionDetails()
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoPosition()
       .checkPositionDate("31/08/2008")
       .checkInitialPosition(0)
       .checkIncome(1500)
@@ -179,7 +184,8 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(1420 + 1500 - 1529.90 - 80 - 10 - 10);
 
     views.selectBudget();
-    budgetView.getSummary().openEstimatedPositionDetails()
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoPosition()
       .checkPositionDate("30/09/2008")
       .checkInitialPosition(1410)
       .checkIncome(1500)
@@ -204,9 +210,10 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     views.selectHome();
     views.selectBudget();
-    budgetView.getSummary().openEstimatedPositionDetails()
-      .checkTitle("Budget summary for july 2008")
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoBalance()
       .checkBalance(1000.00)
+      .gotoPosition()
       .checkPosition(500)
       .checkNoPositionDetails()
       .checkPositionDescriptionContains("observed")
@@ -236,7 +243,8 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     double balanceFor200808 = 1500 - (200 - 40);
 
     budgetView.getSummary().checkMonthBalance(balanceFor200808);
-    budgetView.getSummary().openEstimatedPositionDetails()
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoPosition()
       .checkInitialPosition(0.0)
       .checkFixed(100)
       .checkEnvelope(-40)
@@ -279,7 +287,8 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     views.selectBudget();
-    budgetView.getSummary().openEstimatedPositionDetails()
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoPosition()
       .checkPositionDate("31/08/2008")
       .checkInitialPosition(1000)
       .checkSavingsOut(30)
@@ -288,7 +297,8 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/09");
     views.selectBudget();
-    budgetView.getSummary().openEstimatedPositionDetails()
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoPosition()
       .checkPositionDate("30/09/2008")
       .checkInitialPosition(1070)
       .checkSavingsOut(50)
@@ -312,10 +322,11 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/07");
     views.selectBudget();
-    budgetView.getSummary().openEstimatedPositionDetails()
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoPosition()
       .checkPosition(2000.00)
+      .gotoThreshold()
       .checkThreshold(0.00, "The position is greater than the threshold", 2000.00)
-      .checkThresholdHelpAvailable()
       .setThreshold(3000.00)
       .checkThreshold(3000.00, "The position is less than the threshold", -1000.00)
       .close();
@@ -324,8 +335,10 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/08");
     views.selectBudget();
-    budgetView.getSummary().openEstimatedPositionDetails()
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoPosition()
       .checkPosition(1300.00)
+      .gotoThreshold()
       .checkThreshold(0.00, "The position is greater than the threshold", 1300.00)
       .setThreshold(1500.00)
       .checkThreshold(1500.00, "The position is less than the threshold", -200.00)
@@ -334,15 +347,18 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkThreshold(1500.00);
 
     views.selectBudget();
-    budgetView.getSummary().openEstimatedPositionDetails()
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoThreshold()
       .clearThreshold()
       .validate();
     views.selectHome();
     mainAccounts.checkThreshold(0.00);
 
     views.selectBudget();
-    budgetView.getSummary().openEstimatedPositionDetails()
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoPosition()
       .checkPosition(1300.00)
+      .gotoThreshold()
       .checkThreshold(0.00, "The position is greater than the threshold", 1300.00)
       .setThreshold(1500.00)
       .checkThreshold(1500.00, "The position is less than the threshold", -200.00)
@@ -352,8 +368,10 @@ public class BudgetSummaryDetailsTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/07", "2008/08");
     views.selectBudget();
-    budgetView.getSummary().openEstimatedPositionDetails()
+    budgetView.getSummary().openWizardBalancePage()
+      .gotoPosition()
       .checkPosition(1300.00)
+      .gotoThreshold()
       .checkThreshold(1500.00, "The position is less than the threshold", -200.00)
       .setThreshold(1300.00)
       .checkThreshold(1300.00, "The position is equal to the threshold", 0.00)

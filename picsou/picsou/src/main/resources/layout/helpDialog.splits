@@ -1,12 +1,16 @@
 <splits xmlns="http://www.design-up.com/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label#title"
+           foreground="help.title" font="-,bold,24" icon="help_logo.png"
+           fill="horizontal" horizontalAlignment="center" weightY="0" marginBottom="5"/>
+  </styles>
 
   <panel styleClass="dialog" preferredSize="(600,500)" opaque="true">
     <column styleClass="innerDialog">
 
-      <label ref="title" foreground="help.title" font="-,bold,24" icon="help_logo.png"
-             fill="horizontal" horizontalAlignment="center" weightY="0" marginBottom="5"/>
+      <label ref="title"/>
 
       <scrollPane weightY="100">
         <htmlEditorPane ref="editor" useImageLocator="true" opaque="false" foreground="#222222"/>

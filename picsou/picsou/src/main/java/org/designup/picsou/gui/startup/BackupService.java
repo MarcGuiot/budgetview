@@ -8,7 +8,6 @@ import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
 import org.designup.picsou.model.User;
-import org.designup.picsou.model.PicsouModel;
 import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.server.persistence.direct.ReadOnlyAccountDataManager;
 import org.globsframework.metamodel.GlobModel;
@@ -21,7 +20,6 @@ import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.utils.Files;
-import org.globsframework.utils.Log;
 import org.globsframework.utils.MapOfMaps;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
@@ -39,9 +37,9 @@ public class BackupService {
   private UpgradeTrigger upgradeTrigger;
 
   public enum Status {
-    badBersion,
-    ok,
-    decryptFail
+    BAD_VERSION,
+    OK,
+    DECRYPT_FAILED
   }
 
   public BackupService(ServerAccess serverAccess,
@@ -72,7 +70,7 @@ public class BackupService {
       new MapOfMaps<String, Integer, SerializableGlobType>();
     ReadOnlyAccountDataManager.SnapshotInfo snapshotInfo = ReadOnlyAccountDataManager.readSnapshot(serverData, stream);
     if (snapshotInfo.version > PicsouApplication.JAR_VERSION) {
-      return Status.badBersion;
+      return Status.BAD_VERSION;
     }
     PasswordBasedEncryptor readPasswordBasedEncryptor;
     PasswordBasedEncryptor writeBasedEncryptor = directory.get(PasswordBasedEncryptor.class);
@@ -95,7 +93,7 @@ public class BackupService {
       }, serverData, readPasswordBasedEncryptor, globModel);
     }
     catch (Exception e) {
-      return Status.decryptFail;
+      return Status.DECRYPT_FAILED;
     }
 
     if (readPasswordBasedEncryptor != writeBasedEncryptor) {
@@ -127,6 +125,6 @@ public class BackupService {
       repository.completeChangeSet();
     }
     repository.removeTrigger(upgradeTrigger);
-    return Status.ok;
+    return Status.OK;
   }
 }

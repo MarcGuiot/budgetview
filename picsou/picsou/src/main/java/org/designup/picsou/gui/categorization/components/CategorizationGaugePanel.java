@@ -11,11 +11,11 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
-import static org.globsframework.model.utils.GlobMatchers.isTrue;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import java.text.DecimalFormat;
 import java.util.Set;
 
@@ -54,6 +54,13 @@ public class CategorizationGaugePanel implements ChangeSetListener {
   private void createProgressMessage() {
     progressMessage = new JEditorPane();
     progressMessage.setContentType("text/html");
+    progressMessage.addHyperlinkListener(new HyperlinkListener() {
+      public void hyperlinkUpdate(HyperlinkEvent e) {
+        if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
+          getHideProgressMessageAction().actionPerformed(null);
+        }
+      }
+    });
     ApplicationColors.installLinkColor(progressMessage, "mainpanel", "mainpanel.message.link", directory);
     progressMessage.setVisible(false);
   }
@@ -72,8 +79,7 @@ public class CategorizationGaugePanel implements ChangeSetListener {
 
   public void update() {
     GlobList transactions =
-      repository.getAll(Transaction.TYPE,
-                        not(isTrue(Transaction.PLANNED)));
+      repository.getAll(Transaction.TYPE, not(isTrue(Transaction.PLANNED)));
 
     double total = 0;
     double uncategorized = 0;
@@ -107,7 +113,7 @@ public class CategorizationGaugePanel implements ChangeSetListener {
 
   private void updateProgressMessage(double total, double percentage) {
     Glob preferences = repository.find(UserPreferences.KEY);
-    if (preferences == null){
+    if (preferences == null) {
       return;
     }
     Boolean preference = preferences.isTrue(UserPreferences.SHOW_CATEGORIZATION_HELP_MESSAGE);

@@ -1,0 +1,65 @@
+package org.designup.picsou.gui.components.wizard;
+
+import org.designup.picsou.utils.Lang;
+import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.help.HelpDialog;
+import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.directory.Directory;
+
+import javax.swing.*;
+
+public class HelpWizardPage implements WizardPage {
+
+  private String title;
+  private String htmlContent;
+  private HyperlinkHandler hyperlinkHandler;
+  private String id;
+  private GlobRepository repository;
+  private Directory directory;
+  private JEditorPane editor;
+
+  public HelpWizardPage(String id, String titleKey, String helpFilePath, HyperlinkHandler hyperlinkHandler,
+                        GlobRepository repository, Directory directory) {
+    this.id = id;
+    this.repository = repository;
+    this.directory = directory;
+    this.title = Lang.get(titleKey);
+    this.htmlContent = Lang.getHelpFile(helpFilePath);
+    this.hyperlinkHandler = hyperlinkHandler;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public JComponent getPanel() {
+    GlobsPanelBuilder builder =
+      new GlobsPanelBuilder(getClass(), "/layout/helpWizardPage.splits", repository, directory);
+
+    builder.add("handler", hyperlinkHandler);
+
+    editor = new JEditorPane();
+    GuiUtils.initReadOnlyHtmlComponent(editor);
+    GuiUtils.loadCssResource("/help/help.css", editor, HelpDialog.class);
+    builder.add("editor", editor);
+
+    return builder.load();
+  }
+
+  public void init() {
+    editor.setText(htmlContent);
+    editor.setCaretPosition(0);
+  }
+
+  public void update() {
+  }
+
+  public void applyChanges() {
+  }
+}

@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.budget.summary;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.budget.wizard.BudgetWizardDialog;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.JRoundedButton;
 import org.designup.picsou.gui.description.Formatting;
@@ -39,7 +40,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   private JLabel multiSelectionLabel = new JLabel();
   private final DecimalFormat format = Formatting.DECIMAL_FORMAT;
 
-  private BudgetSummaryDetailsDialog budgetSummaryDetailsDialog;
+  private BudgetWizardDialog budgetWizardDialog;
 
   private AmountColors amountColors;
   private Color normalColor;
@@ -53,7 +54,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
     this.amountColors = new AmountColors(directory);
 
-    this.budgetSummaryDetailsDialog = new BudgetSummaryDetailsDialog(repository, directory);
+    this.budgetWizardDialog = new BudgetWizardDialog(repository, directory);
 
     update();
   }
@@ -232,7 +233,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     }
 
     public void actionPerformed(ActionEvent e) {
-      budgetSummaryDetailsDialog.show(selectedMonths);
+      budgetWizardDialog.show();
     }
   }
 

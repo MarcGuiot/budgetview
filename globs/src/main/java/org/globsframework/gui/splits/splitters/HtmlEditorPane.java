@@ -36,16 +36,18 @@ public class HtmlEditorPane extends DefaultComponent<JEditorPane> {
     return new String[]{"hyperlinkListener", "useImageLocator"};
   }
 
-  protected void postCreateComponent(JEditorPane component, SplitsContext context) {
-    GuiUtils.initReadOnlyHtmlComponent(component);
+  protected void postCreateComponent(JEditorPane editor, SplitsContext context) {
+    GuiUtils.initReadOnlyHtmlComponent(editor);
 
     if (listenerName != null) {
       HyperlinkListener hyperlinkListener = context.getHyperlinkListener(listenerName);
-      component.addHyperlinkListener(hyperlinkListener);
+      editor.addHyperlinkListener(hyperlinkListener);
     }
 
     if (useImageLocator) {
-      setLocatorEditorKit(component, context.getDirectory().get(ImageLocator.class));
+      String text = editor.getText();
+      setLocatorEditorKit(editor, context.getDirectory().get(ImageLocator.class));
+      editor.setText(text);
     }
   }
 

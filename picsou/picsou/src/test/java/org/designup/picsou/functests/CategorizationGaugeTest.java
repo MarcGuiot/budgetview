@@ -117,13 +117,6 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
     views.checkBudgetSelected();
 
     views.back();
-    categorization.setNewEnvelope("McDo", "Food");
-    gauge.checkCompleteProgressMessageShown();
-
-    gauge.clickOnProgressMessageLink();
-    views.checkBudgetSelected();
-    
-    views.back();
-    views.checkCategorizationSelected();
+    gauge.checkProgressMessageHidden();
   }
 }
