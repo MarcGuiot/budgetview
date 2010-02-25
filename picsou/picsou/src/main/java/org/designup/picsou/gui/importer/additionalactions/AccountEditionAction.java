@@ -24,12 +24,12 @@ public class AccountEditionAction implements AdditionalImportAction {
     this.directory = directory;
   }
 
-  public boolean isValid() {
+  public boolean shouldApplyAction() {
     GlobList accounts = repository.getAll(Account.TYPE);
     for (Integer accountId : Account.SUMMARY_ACCOUNT_IDS) {
       accounts.remove(repository.get(Key.create(Account.TYPE, accountId)));
     }
-    return !accounts.isEmpty();
+    return accounts.isEmpty();
   }
 
   public String getMessage() {

@@ -27,8 +27,9 @@ public class BankPluginService {
         bankPlugin.apply(referenceRepository, localRepository, changeSet);
       }
       else {
-        GlobList existingAccounts = referenceRepository.getAll(Account.TYPE,
-                                                               GlobMatchers.fieldEquals(Account.NUMBER, newAccount.get(Account.NUMBER)));
+        GlobList existingAccounts =
+          referenceRepository.getAll(Account.TYPE,
+                                     GlobMatchers.fieldEquals(Account.NUMBER, newAccount.get(Account.NUMBER)));
         if (existingAccounts.size() == 1) {
           Glob realAccount = existingAccounts.getFirst();
           updateImportedTransaction(localRepository, newAccount, realAccount);
@@ -58,7 +59,8 @@ public class BankPluginService {
 
     existingAccountId = existingAccount.get(Account.ID);
     GlobList transactions = localRepository.getAll(ImportedTransaction.TYPE,
-                                                   GlobMatchers.fieldEquals(ImportedTransaction.ACCOUNT, newAccount.get(Account.ID)));
+                                                   GlobMatchers.fieldEquals(ImportedTransaction.ACCOUNT,
+                                                                            newAccount.get(Account.ID)));
     for (Glob transaction : transactions) {
       localRepository.update(transaction.getKey(), ImportedTransaction.ACCOUNT, existingAccountId);
     }

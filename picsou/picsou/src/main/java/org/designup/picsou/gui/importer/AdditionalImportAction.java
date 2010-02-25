@@ -7,7 +7,7 @@ import javax.swing.*;
 
 public interface AdditionalImportAction {
 
-  boolean isValid();
+  boolean shouldApplyAction();
 
   String getMessage();
 

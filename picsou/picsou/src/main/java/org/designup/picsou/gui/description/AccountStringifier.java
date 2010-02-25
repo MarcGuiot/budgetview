@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.description;
 
 import org.designup.picsou.model.Account;
+import org.designup.picsou.model.AccountCardType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;

@@ -6,6 +6,7 @@ import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
@@ -27,11 +28,61 @@ public class SavingsAccountCreateSeriesTrigger implements ChangeSetListener {
         if (values.contains(Account.ACCOUNT_TYPE) && values.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
           createSerie(repository, repository.get(key));
         }
+        else if (values.contains(Account.IS_IMPORTED_ACCOUNT)) {
+          createMirrorSeriesOnChange(key, repository);
+        }
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
       }
     });
+  }
+
+
+  void createMirrorSeriesOnChange(Key key, GlobRepository repository) {
+    final LocalGlobRepository localRespository =
+      LocalGlobRepositoryBuilder.init(repository)
+        .copy(Account.TYPE, AccountType.TYPE, BudgetArea.TYPE, Month.TYPE, CurrentMonth.TYPE,
+              Series.TYPE, SeriesBudget.TYPE)
+        .get();
+    localRespository.addTrigger(new SeriesBudgetTrigger(repository));
+
+    GlobList savingSeries = repository.getAll(Series.TYPE,
+                                              GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
+    localRespository.startChangeSet();
+    for (Glob series : savingSeries) {
+      Integer newSeriesId = UpdateMirrorSeriesChangeSetVisitor.createMirrorSeries(series.getKey(), localRespository);
+      if (newSeriesId != null) {
+        Glob newSeries = localRespository.get(Key.create(Series.TYPE, newSeriesId));
+        Glob otherSeries = localRespository.findLinkTarget(newSeries, Series.MIRROR_SERIES);
+        repository.delete(
+          repository.getAll(Transaction.TYPE,
+                            GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.SERIES, newSeriesId))));
+
+        repository.delete(
+          repository.getAll(Transaction.TYPE,
+                            GlobMatchers.and(
+                              GlobMatchers.fieldEquals(Transaction.MIRROR, Boolean.TRUE),
+                              GlobMatchers.fieldEquals(Transaction.SERIES, otherSeries.get(Series.ID)))));
+        GlobList transations = repository.getAll(Transaction.TYPE, GlobMatchers.or(
+          GlobMatchers.fieldEquals(Transaction.SERIES, newSeriesId),
+          GlobMatchers.fieldEquals(Transaction.SERIES, otherSeries.get(Series.ID))
+        ));
+        for (Glob transation : transations) {
+          repository.update(transation.getKey(), FieldValue.value(Transaction.NOT_IMPORTED_TRANSACTION, null),
+                            FieldValue.value(Transaction.MIRROR, Boolean.FALSE));
+        }
+      }
+    }
+    localRespository.completeChangeSet();
+
+    ChangeSet currentChanges = localRespository.getCurrentChanges();
+
+    localRespository.startChangeSet();
+    currentChanges.safeVisit(SeriesBudget.TYPE, new UpdateMirrorSeriesBudgetChangeSetVisitor(localRespository));
+    localRespository.completeChangeSet();
+
+    repository.apply(currentChanges);
   }
 
   private void createSerie(GlobRepository repository, FieldValues values) {

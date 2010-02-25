@@ -24,7 +24,7 @@ public class UpdateMirrorSeriesBudgetChangeSetVisitor implements ChangeSetVisito
 
   private void updateMirror(Key key, FieldValues values) {
     Glob budget = localRepository.get(key);
-    Glob series = localRepository.find(Key.create(Series.TYPE, budget.get(SeriesBudget.SERIES)));
+    final Glob series = localRepository.find(Key.create(Series.TYPE, budget.get(SeriesBudget.SERIES)));
     Glob fromAccount = localRepository.findLinkTarget(series, Series.FROM_ACCOUNT);
     Glob toAccount = localRepository.findLinkTarget(series, Series.TO_ACCOUNT);
     if (Account.areBothImported(fromAccount, toAccount)) {
@@ -37,11 +37,16 @@ public class UpdateMirrorSeriesBudgetChangeSetVisitor implements ChangeSetVisito
           .findByIndex(SeriesBudget.MONTH, budget.get(SeriesBudget.MONTH)).getGlobs().getFirst();
       values.safeApply(new FieldValues.Functor() {
         public void process(Field field, Object value) throws Exception {
+          if (field.equals(SeriesBudget.OBSERVED_AMOUNT)) {
+            return;
+          }
           if (field.equals(SeriesBudget.SERIES)) {
             return;
           }
           if (field.equals(SeriesBudget.AMOUNT)) {
-            localRepository.update(mirrorBudget.getKey(), SeriesBudget.AMOUNT, -((Double)value));
+            if (!series.get(Series.IS_AUTOMATIC)) {
+              localRepository.update(mirrorBudget.getKey(), SeriesBudget.AMOUNT, -((Double)value));
+            }
           }
           else {
             localRepository.update(mirrorBudget.getKey(), field, value);

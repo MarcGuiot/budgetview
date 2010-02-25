@@ -12,13 +12,13 @@ import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.importer.additionalactions.AccountEditionAction;
 import org.designup.picsou.gui.importer.additionalactions.BankEntityEditionAction;
 import org.designup.picsou.gui.importer.additionalactions.CardTypeAction;
+import org.designup.picsou.gui.importer.additionalactions.ChooseOrCreateAccount;
 import org.designup.picsou.gui.importer.edition.BrowseFilesAction;
 import org.designup.picsou.gui.importer.edition.DateFormatSelectionPanel;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionDateRenderer;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionsTable;
 import org.designup.picsou.gui.importer.utils.OpenBankSiteHelpAction;
 import org.designup.picsou.gui.importer.utils.OpenBankUrlAction;
-import org.designup.picsou.importer.BankFileType;
 import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -93,6 +93,7 @@ public class ImportDialog {
   private GlobsPanelBuilder builder2;
   private GlobsPanelBuilder builder1;
   private ImportedTransactionsTable importedTransactionTable;
+  private GlobComboView comboView;
 
   public ImportDialog(String textForCloseButton, List<File> files, Glob defaultAccount,
                       final Window owner, final GlobRepository repository, Directory directory,
@@ -202,16 +203,15 @@ public class ImportDialog {
         .setUpdateModeEditable(false);
     newAccountButton = builder2.add("newAccount", new JButton(newAccountAction)).getComponent();
 
-    GlobComboView comboView =
-      GlobComboView.init(Account.TYPE, sessionRepository, sessionDirectory)
-        .setEmptyOptionLabel(Lang.get("import.account.combo.select"))
-        .setFilter(new GlobMatcher() {
-          public boolean matches(Glob account, GlobRepository repository) {
-            return account != null &&
-                   !Account.SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID)) &&
-                   AccountUpdateMode.AUTOMATIC.getId().equals(account.get(Account.UPDATE_MODE));
-          }
-        });
+    comboView = GlobComboView.init(Account.TYPE, sessionRepository, sessionDirectory)
+      .setEmptyOptionLabel(Lang.get("import.account.combo.select"))
+      .setFilter(new GlobMatcher() {
+        public boolean matches(Glob account, GlobRepository repository) {
+          return account != null &&
+                 !Account.SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID)) &&
+                 AccountUpdateMode.AUTOMATIC.getId().equals(account.get(Account.UPDATE_MODE));
+        }
+      });
     accountComboBox = comboView.getComponent();
     builder2.add("accountCombo", accountComboBox);
 
@@ -244,6 +244,7 @@ public class ImportDialog {
 
   private void loadAdditionalImportActions() {
     additionalImportActions.addAll(Arrays.asList(
+      new ChooseOrCreateAccount(dialog, sessionRepository, sessionDirectory),
       new BankEntityEditionAction(dialog, sessionRepository, sessionDirectory),
       new AccountEditionAction(dialog, sessionRepository, sessionDirectory),
       new CardTypeAction(dialog, sessionRepository, sessionDirectory)));
@@ -415,7 +416,7 @@ public class ImportDialog {
   private void updateAdditionalImportActions() {
     currentActions = new ArrayList<AdditionalImportAction>();
     for (AdditionalImportAction action : additionalImportActions) {
-      if (!action.isValid()) {
+      if (action.shouldApplyAction()) {
         currentActions.add(action);
       }
     }

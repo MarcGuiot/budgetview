@@ -4,8 +4,6 @@ import org.designup.picsou.importer.AccountFileImporter;
 import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.Amounts;
-import org.designup.picsou.utils.Lang;
-import org.designup.picsou.utils.PicsouUtils;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobIdGenerator;
@@ -291,9 +289,11 @@ public class OfxImporter implements AccountFileImporter {
         }
       }
       currentAccount = repository.create(Account.TYPE,
+                                         value(Account.IS_VALIDADED, false),
+                                         value(Account.IS_IMPORTED_ACCOUNT, true),
                                          value(Account.NUMBER, accountNumber),
                                          value(Account.ID, generator.getNextId(Account.ID, 1)),
-                                         value(Account.NAME, getName(accountNumber, isCreditCard)),
+                                         value(Account.NAME, Account.getName(accountNumber, isCreditCard)),
                                          value(Account.BANK, bankId),
                                          value(Account.BANK_ENTITY_LABEL, bankEntityLabel),
                                          value(Account.BANK_ENTITY, bankEntityId),
@@ -322,16 +322,5 @@ public class OfxImporter implements AccountFileImporter {
         repository.update(currentTransactionKey, ImportedTransaction.NOTE, content);
       }
     }
-
-    private String getName(String number, boolean isCard) {
-      if (isCard) {
-        return Lang.get("account.defaultName.card", PicsouUtils.splitCardNumber(number));
-      }
-      else {
-        return Lang.get("account.defaultName.standard", number);
-      }
-    }
-
   }
-
 }

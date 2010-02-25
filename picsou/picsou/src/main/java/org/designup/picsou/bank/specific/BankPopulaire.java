@@ -43,6 +43,7 @@ public class BankPopulaire implements BankPlugin {
                                  FieldValue.value(Account.POSITION_DATE, null),
                                  FieldValue.value(Account.POSITION, null),
                                  FieldValue.value(Account.TRANSACTION_ID, null),
+                                 FieldValue.value(Account.NAME, Account.getName(account.get(Account.NUMBER), Boolean.TRUE)),
                                  FieldValue.value(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()));
         }
         else if (existingAccounts.size() == 1) {

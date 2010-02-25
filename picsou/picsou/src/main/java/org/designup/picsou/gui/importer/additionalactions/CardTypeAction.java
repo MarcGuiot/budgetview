@@ -26,10 +26,10 @@ public class CardTypeAction implements AdditionalImportAction {
     this.directory = directory;
   }
 
-  public boolean isValid() {
+  public boolean shouldApplyAction() {
     accounts = repository.getAll(Account.TYPE)
       .filterSelf(GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.UNDEFINED.getId()), repository);
-    return accounts.isEmpty();
+    return !accounts.isEmpty();
   }
 
   public String getMessage() {

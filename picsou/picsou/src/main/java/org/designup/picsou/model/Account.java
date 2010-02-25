@@ -1,6 +1,8 @@
 package org.designup.picsou.model;
 
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
+import org.designup.picsou.utils.Lang;
+import org.designup.picsou.utils.PicsouUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.*;
@@ -78,6 +80,10 @@ public class Account {
   @DefaultBoolean(false)
   @Required
   public static BooleanField IS_IMPORTED_ACCOUNT;
+
+  @DefaultBoolean(true)
+  @Required
+  public static BooleanField IS_VALIDADED;
 
   static {
     GlobTypeLoader.init(Account.class, "account");
@@ -227,6 +233,15 @@ public class Account {
       }
     }
     return multiplier;
+  }
+
+  static public String getName(String number, boolean isCard) {
+    if (isCard) {
+      return Lang.get("account.defaultName.card", PicsouUtils.splitCardNumber(number));
+    }
+    else {
+      return Lang.get("account.defaultName.standard", number);
+    }
   }
 
   public static class Serializer implements PicsouGlobSerializer {

@@ -9,6 +9,7 @@ import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
+import org.mozilla.javascript.ClassCache;
 
 import java.io.File;
 
@@ -277,6 +278,11 @@ public class ImportChecker {
     return AccountEditionChecker.open(dialog.getButton("newAccount").triggerClick());
   }
 
+  public AccountChooserChecker openChooseAccount() {
+    return AccountChooserChecker.open(this, dialog.getButton("Associate").triggerClick());
+  }
+
+
   public ImportChecker defineAccount(String bank, String accountName, String number) {
     AccountEditionChecker accountEditionChecker =
       AccountEditionChecker.open(dialog.getButton("Create an account").triggerClick());
@@ -342,6 +348,7 @@ public class ImportChecker {
     dialog.getTextBox("No operations in file");
     return this;
   }
+
 
   public static class ImportCompleteWindowHandler extends WindowHandler {
     private int loadedTransactionCount;

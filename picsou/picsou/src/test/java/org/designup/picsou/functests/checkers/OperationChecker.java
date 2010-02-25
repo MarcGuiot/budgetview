@@ -100,6 +100,17 @@ public class OperationChecker {
     importFile(new String[]{name}, null, amount, null);
   }
 
+  public void importOfxOnAccount(String fileName, String newAccount, String existingAccount){
+    ImportChecker importChecker = openImportDialog()
+      .setFilePath(fileName)
+      .acceptFile();
+    importChecker.openChooseAccount()
+      .associate(newAccount, existingAccount)
+      .validate();
+
+    importChecker.completeImport();
+  }
+
   public void importQifFile(String file, String bank) {
     importFile(new String[]{file}, bank, null, null);
   }
@@ -107,6 +118,7 @@ public class OperationChecker {
   public void importQifFile(String file, String bank, Double amount) {
     importFile(new String[]{file}, bank, amount, null);
   }
+
 
   public void importQifFile(String file, String bank, String targetAccount) {
     importFile(new String[]{file}, bank, null, targetAccount);

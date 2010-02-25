@@ -166,10 +166,10 @@ class DefaultFieldFactory {
         visitor.visitInteger(this);
       }
       catch (RuntimeException e) {
-        throw e;
+        throw new RuntimeException("On " + this, e);
       }
       catch (Exception e) {
-        throw new UnexpectedApplicationState(e);
+        throw new UnexpectedApplicationState("On " + this, e);
       }
     }
 
@@ -178,10 +178,10 @@ class DefaultFieldFactory {
         visitor.visitInteger(this, (Integer)value);
       }
       catch (RuntimeException e) {
-        throw e;
+        throw new RuntimeException("On " + this, e);
       }
       catch (Exception e) {
-        throw new UnexpectedApplicationState(e);
+        throw new UnexpectedApplicationState("On " + this, e);
       }
     }
   }
@@ -239,10 +239,10 @@ class DefaultFieldFactory {
         visitor.visitLink(this);
       }
       catch (RuntimeException e) {
-        throw e;
+        throw new RuntimeException("On " + this, e);
       }
       catch (Exception e) {
-        throw new UnexpectedApplicationState(e);
+        throw new UnexpectedApplicationState("On " + this, e);
       }
     }
 
@@ -251,10 +251,10 @@ class DefaultFieldFactory {
         visitor.visitInteger(this, (Integer)value);
       }
       catch (RuntimeException e) {
-        throw e;
+        throw new RuntimeException("On " + this, e);
       }
       catch (Exception e) {
-        throw new UnexpectedApplicationState(e);
+        throw new UnexpectedApplicationState("On " + this, e);
       }
     }
 
@@ -303,10 +303,10 @@ class DefaultFieldFactory {
         visitor.visitLong(this);
       }
       catch (RuntimeException e) {
-        throw e;
+        throw new RuntimeException("On " + this, e);
       }
       catch (Exception e) {
-        throw new UnexpectedApplicationState(e);
+        throw new UnexpectedApplicationState("On " + this, e);
       }
     }
 
@@ -315,10 +315,10 @@ class DefaultFieldFactory {
         visitor.visitLong(this, (Long)value);
       }
       catch (RuntimeException e) {
-        throw e;
+        throw new RuntimeException("On " + this, e);
       }
       catch (Exception e) {
-        throw new UnexpectedApplicationState(e);
+        throw new UnexpectedApplicationState("On " + this, e);
       }
     }
   }
@@ -339,10 +339,10 @@ class DefaultFieldFactory {
         visitor.visitDouble(this);
       }
       catch (RuntimeException e) {
-        throw e;
+        throw new RuntimeException("On " + this, e);
       }
       catch (Exception e) {
-        throw new UnexpectedApplicationState(e);
+        throw new UnexpectedApplicationState("On " + this, e);
       }
     }
 
@@ -351,10 +351,10 @@ class DefaultFieldFactory {
         visitor.visitDouble(this, (Double)value);
       }
       catch (RuntimeException e) {
-        throw e;
+        throw new RuntimeException("On " + this, e);
       }
       catch (Exception e) {
-        throw new UnexpectedApplicationState(e);
+        throw new UnexpectedApplicationState("On " + this, e);
       }
     }
 
@@ -381,10 +381,10 @@ class DefaultFieldFactory {
         visitor.visitBoolean(this);
       }
       catch (RuntimeException e) {
-        throw e;
+        throw new RuntimeException("On " + this, e);
       }
       catch (Exception e) {
-        throw new UnexpectedApplicationState(e);
+        throw new UnexpectedApplicationState("On " + this, e);
       }
     }
 
@@ -426,10 +426,10 @@ class DefaultFieldFactory {
         visitor.visitString(this);
       }
       catch (RuntimeException e) {
-        throw e;
+        throw new RuntimeException("On " + this, e);
       }
       catch (Exception e) {
-        throw new UnexpectedApplicationState(e);
+        throw new UnexpectedApplicationState("On " + this, e);
       }
     }
 
@@ -438,10 +438,10 @@ class DefaultFieldFactory {
         visitor.visitString(this, (String)value);
       }
       catch (RuntimeException e) {
-        throw e;
+        throw new RuntimeException("On " + this, e);
       }
       catch (Exception e) {
-        throw new UnexpectedApplicationState(e);
+        throw new UnexpectedApplicationState("On " + this, e);
       }
     }
 
@@ -466,10 +466,10 @@ class DefaultFieldFactory {
         visitor.visitDate(this);
       }
       catch (RuntimeException e) {
-        throw e;
+        throw new RuntimeException("On " + this, e);
       }
       catch (Exception e) {
-        throw new UnexpectedApplicationState(e);
+        throw new UnexpectedApplicationState("On " + this, e);
       }
     }
 
@@ -478,10 +478,10 @@ class DefaultFieldFactory {
         visitor.visitDate(this, (Date)value);
       }
       catch (RuntimeException e) {
-        throw e;
+        throw new RuntimeException("On " + this, e);
       }
       catch (Exception e) {
-        throw new UnexpectedApplicationState(e);
+        throw new UnexpectedApplicationState("On " + this, e);
       }
     }
   }
@@ -502,10 +502,10 @@ class DefaultFieldFactory {
         visitor.visitTimeStamp(this);
       }
       catch (RuntimeException e) {
-        throw e;
+        throw new RuntimeException("On " + this, e);
       }
       catch (Exception e) {
-        throw new UnexpectedApplicationState(e);
+        throw new UnexpectedApplicationState("On " + this, e);
       }
     }
 
@@ -514,10 +514,10 @@ class DefaultFieldFactory {
         visitor.visitTimeStamp(this, (Date)value);
       }
       catch (RuntimeException e) {
-        throw e;
+        throw new RuntimeException("On " + this, e);
       }
       catch (Exception e) {
-        throw new UnexpectedApplicationState(e);
+        throw new UnexpectedApplicationState("On " + this, e);
       }
     }
   }
@@ -546,10 +546,10 @@ class DefaultFieldFactory {
         visitor.visitBlob(this);
       }
       catch (RuntimeException e) {
-        throw e;
+        throw new RuntimeException("On " + this, e);
       }
       catch (Exception e) {
-        throw new UnexpectedApplicationState(e);
+        throw new UnexpectedApplicationState("On " + this, e);
       }
     }
 
@@ -558,10 +558,10 @@ class DefaultFieldFactory {
         visitor.visitBlob(this, (byte[])value);
       }
       catch (RuntimeException e) {
-        throw e;
+        throw new RuntimeException("On " + this, e);
       }
       catch (Exception e) {
-        throw new UnexpectedApplicationState(e);
+        throw new UnexpectedApplicationState("On " + this, e);
       }
     }
 

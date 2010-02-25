@@ -120,7 +120,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -25.00, "Virt Compte Epargne")
-      .load();
+      .loadInNewAccount();
 
     views.selectData();
     transactions.initContent()

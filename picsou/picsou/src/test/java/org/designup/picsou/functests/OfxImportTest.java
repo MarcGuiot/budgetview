@@ -2,6 +2,7 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.CategorizationChecker;
 import org.designup.picsou.functests.checkers.ImportChecker;
+import org.designup.picsou.functests.checkers.AccountChooserChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BankEntity;
@@ -415,5 +416,63 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .check();
     views.selectBudget();
     budgetView.getSummary().checkMonthBalance(-50);
+  }
+
+  public void testIfAnAccountAlreadyExistWeAskToAssociateToIt() throws Exception {
+    mainAccounts.createMainAccount("First account", 100);
+    String ofxFile = OfxBuilder.init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")
+      .addTransaction("2008/08/10", -50.00, "Virement")
+      .addTransaction("2008/08/06", -30.00, "Virement")
+      .save();
+
+    operations.openImportDialog()
+      .setFilePath(ofxFile)
+      .acceptFile()
+      .openChooseAccount()
+      .associate("Account n. 111", "First account")
+      .validate()
+      .completeImport();
+
+    OfxBuilder.init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 950.00, "2008/08/12")
+      .addTransaction("2008/08/11", -50.00, "Virement")
+      .load();
+
+    mainAccounts.checkAccountOrder("First account");
+
+    views.selectData();
+    transactions.initContent()
+      .add("11/08/2008", TransactionType.PRELEVEMENT, "VIREMENT", "", -50.00)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "VIREMENT", "", -50.00)
+      .add("06/08/2008", TransactionType.PRELEVEMENT, "VIREMENT", "", -30.00)
+      .check();
+  }
+
+  public void testCreateTwoAccoutInOfxAndCheckOnlyOneIsVailable() throws Exception {
+    mainAccounts.createMainAccount("First account", 100);
+    String ofxFile = OfxBuilder.init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")
+      .addTransaction("2008/08/10", -50.00, "Virement 111")
+      .addTransaction("2008/08/06", -30.00, "Virement 111")
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 222, "222", 1000.00, "2008/08/10")
+      .addTransaction("2008/08/10", -50.00, "Virement 222")
+      .addTransaction("2008/08/06", -30.00, "Virement 222")
+      .save();
+
+    AccountChooserChecker chooserChecker = operations.openImportDialog()
+      .setFilePath(ofxFile)
+      .acceptFile()
+      .openChooseAccount();
+    chooserChecker
+      .associate("Account n. 111", "First account")
+      .checkSelected("Account n. 222", "Create imported account")
+      .checkTargetContent("Account n. 222", "Create imported account");
+    chooserChecker
+      .associate("Account n. 111", "Create imported account")
+      .checkTargetContent("Account n. 222", "Create imported account", "First account")
+      .validate()
+      .completeImport();
+
   }
 }

@@ -178,6 +178,21 @@ public class OfxBuilder {
     operations.importOfxFile(fileName);
   }
 
+  public void load(String newAccount, String existingAccount) {
+    save();
+    operations.importOfxOnAccount(fileName, newAccount, existingAccount);
+  }
+
+  public void loadInNewAccount() {
+    save();
+    ImportChecker importChecker = operations.openImportDialog()
+      .setFilePath(fileName)
+      .acceptFile();
+    importChecker.openChooseAccount()
+      .validate();
+    importChecker.completeImport();
+  }
+
   public void load(int importedTransactionCount, int autocategorizedTransactionCount) {
     save();
     operations.openImportDialog()
@@ -238,4 +253,5 @@ public class OfxBuilder {
   public static String getFileName(TestCase testCase) {
     return TestUtils.getFileName(testCase, ".ofx");
   }
+
 }

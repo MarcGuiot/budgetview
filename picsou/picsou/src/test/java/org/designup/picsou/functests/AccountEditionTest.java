@@ -477,7 +477,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     OfxBuilder.init(this)
       .addTransaction("2008/06/01", 1000.00, "prelevement")
-      .load();
+      .loadInNewAccount();
 
     views.selectCategorization();
     categorization.selectTransaction("prelevement")

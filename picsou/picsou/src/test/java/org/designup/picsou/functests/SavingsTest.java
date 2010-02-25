@@ -1592,7 +1592,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectMonth(200808)
       .checkAmount("500.00")
       .cancel();
-    
+
     budgetView.getSummary().checkEndPosition(0.);
 
     timeline.selectMonth("2008/09");
@@ -1695,5 +1695,87 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("06/06/2008", "VIREMENT VERS COURANT", -100.00, "From Account n. 111222", 3000.00, 3000.00, "Account n. 111222")
       .add("06/06/2008", "VIREMENT DE COURANT", 100.00, "To Account n. 111222", 3100.00, 3100.00, "Account n. 111222")
       .check();
+  }
+
+  public void testImportOnMirrorAccount() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/06", -100.00, "Virement vers Epargne")
+      .addTransaction("2008/06/06", 100.00, "Virement de Epargne")
+      .load();
+
+    savingsAccounts.createSavingsAccount("epargne", 100);
+
+    views.selectCategorization();
+    categorization.selectTransaction("Virement de Epargne")
+      .selectSavings()
+      .selectSeries("From Account epargne");
+    categorization.selectTransaction("Virement vers Epargne")
+      .selectSavings()
+      .selectSeries("To Account epargne");
+
+    timeline.selectAll();
+    views.selectData();
+    transactions.initAmountContent()
+      .add("01/08/2008", "Planned: To account epargne", 100.00, "To account epargne", 200.00, 200.00, "epargne")
+      .add("01/08/2008", "Planned: From account epargne", -100.00, "From account epargne", 100.00, 100.00, "epargne")
+      .add("01/08/2008", "Planned: To account epargne", -100.00, "To account epargne", 0.00, "Main accounts")
+      .add("01/08/2008", "Planned: From account epargne", 100.00, "From account epargne", 100.00, "Main accounts")
+      .add("01/07/2008", "Planned: To account epargne", 100.00, "To account epargne", 200.00, 200.00, "epargne")
+      .add("01/07/2008", "Planned: From account epargne", -100.00, "From account epargne", 100.00, 100.00, "epargne")
+      .add("01/07/2008", "Planned: To account epargne", -100.00, "To account epargne", 0.00, "Main accounts")
+      .add("01/07/2008", "Planned: From account epargne", 100.00, "From account epargne", 100.00, "Main accounts")
+      .add("06/06/2008", "VIREMENT VERS EPARGNE", 100.00, "To account epargne", 200.00, 200.00, "epargne")
+      .add("06/06/2008", "VIREMENT DE EPARGNE", -100.00, "From account epargne", 100.00, 100.00, "epargne")
+      .add("06/06/2008", "VIREMENT DE EPARGNE", 100.00, "From account epargne", 0.00, 0.00, "Account n. 00001123")
+      .add("06/06/2008", "VIREMENT VERS EPARGNE", -100.00, "To account epargne", -100.00, -100.00, "Account n. 00001123")
+      .check();
+
+    System.out.println("SavingsTest.testImportOnMirrorAccount start");
+    OfxBuilder.init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
+      .addTransaction("2008/06/06", 100.00, "Virement de courant")
+      .addTransaction("2008/06/06", -100.00, "Virement vers courant")
+      .load("Account n. 111", "epargne");
+
+    System.out.println("SavingsTest.testImportOnMirrorAccount end");
+
+    timeline.selectAll();
+    transactions.initAmountContent()
+      .add("01/08/2008", "Planned: To account epargne", -100.00, "To account epargne", 0.00, "Main accounts")
+      .add("01/08/2008", "Planned: From account epargne", 100.00, "From account epargne", 100.00, "Main accounts")
+      .add("01/07/2008", "Planned: To account epargne", -100.00, "To account epargne", 0.00, "Main accounts")
+      .add("01/07/2008", "Planned: From account epargne", 100.00, "From account epargne", 100.00, "Main accounts")
+      .add("06/06/2008", "VIREMENT VERS COURANT", -100.00, "To categorize", 3000.00, 3000.00, "epargne")
+      .add("06/06/2008", "VIREMENT DE COURANT", 100.00, "To categorize", 3100.00, 3100.00, "epargne")
+      .add("06/06/2008", "VIREMENT DE EPARGNE", 100.00, "From account epargne", 0.00, 0.00, "Account n. 00001123")
+      .add("06/06/2008", "VIREMENT VERS EPARGNE", -100.00, "To account epargne", -100.00, -100.00, "Account n. 00001123")
+      .check();
+
+
+    views.selectCategorization();
+    categorization.selectTransaction("Virement de courant")
+      .selectSavings()
+      .selectSeries("To Account epargne");
+    categorization.selectTransaction("Virement vers courant")
+      .selectSavings()
+      .selectSeries("From Account epargne");
+
+    timeline.selectAll();
+    views.selectData();
+    transactions.initAmountContent()
+      .add("01/08/2008", "Planned: From account epargne", -100.00, "From account epargne", 3000.00, 3000.00, "epargne")
+      .add("01/08/2008", "Planned: To account epargne", 100.00, "To account epargne", 3100.00, 3100.00, "epargne")
+      .add("01/08/2008", "Planned: To account epargne", -100.00, "To account epargne", 0.00, "Main accounts")
+      .add("01/08/2008", "Planned: From account epargne", 100.00, "From account epargne", 100.00, "Main accounts")
+      .add("01/07/2008", "Planned: From account epargne", -100.00, "From account epargne", 3000.00, 3000.00, "epargne")
+      .add("01/07/2008", "Planned: To account epargne", 100.00, "To account epargne", 3100.00, 3100.00, "epargne")
+      .add("01/07/2008", "Planned: To account epargne", -100.00, "To account epargne", 0.00, "Main accounts")
+      .add("01/07/2008", "Planned: From account epargne", 100.00, "From account epargne", 100.00, "Main accounts")
+      .add("06/06/2008", "VIREMENT VERS COURANT", -100.00, "From account epargne", 3000.00, 3000.00, "epargne")
+      .add("06/06/2008", "VIREMENT DE COURANT", 100.00, "To account epargne", 3100.00, 3100.00, "epargne")
+      .add("06/06/2008", "VIREMENT DE EPARGNE", 100.00, "From account epargne", 0.00, 0.00, "Account n. 00001123")
+      .add("06/06/2008", "VIREMENT VERS EPARGNE", -100.00, "To account epargne", -100.00, -100.00, "Account n. 00001123")
+      .check();
+
   }
 }

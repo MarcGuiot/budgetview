@@ -77,49 +77,55 @@ public class TransactionAnalyzerFactory {
   }
 
   private void parseDefinitionFile(Loader loader, final GlobRepository repository) {
-    InputStream bankListStream = loader.load(BANK_LIST_FILE_NAME);
-    if (bankListStream == null) {
-      throw new ResourceAccessFailed("Missing bank file list: " + BANK_LIST_FILE_NAME);
+    repository.startChangeSet();
+    try {
+      InputStream bankListStream = loader.load(BANK_LIST_FILE_NAME);
+      if (bankListStream == null) {
+        throw new ResourceAccessFailed("Missing bank file list: " + BANK_LIST_FILE_NAME);
+      }
+
+      String bankList = Files.loadStreamToString(bankListStream, "UTF-8");
+      for (String bankFileName : bankList.split("\\s")) {
+        String path = "banks/" + bankFileName;
+        InputStream stream = loader.load(path);
+        if (stream == null) {
+          throw new ResourceAccessFailed("missing bank file '" + path + "'");
+        }
+
+        InputStreamReader reader;
+        try {
+          reader = new InputStreamReader(stream, "UTF-8");
+        }
+        catch (UnsupportedEncodingException e) {
+          throw new ResourceAccessFailed(e);
+        }
+        XmlGlobParser.parse(model, repository, reader, "globs");
+      }
+
+      repository.safeApply(BankEntity.TYPE, GlobMatchers.ALL, new GlobFunctor() {
+        public void run(Glob bankEntity, GlobRepository repository) throws Exception {
+          BankEntity.setLabelIfNeeded(bankEntity, repository);
+        }
+      });
+
+      GlobList matchers = repository.getAll(PreTransactionTypeMatcher.TYPE);
+      for (Glob matcher : matchers) {
+        if (matcher.get(PreTransactionTypeMatcher.FOR_OFX) == null) {
+          if (OfxTransactionFinalizer.isOfType(matcher)) {
+            repository.update(matcher.getKey(), PreTransactionTypeMatcher.FOR_OFX, true);
+          }
+          else if (QifTransactionFinalizer.isOfType(matcher)) {
+            repository.update(matcher.getKey(), PreTransactionTypeMatcher.FOR_OFX, false);
+          }
+          else {
+            throw new RuntimeException("Unable to know if we should parse ofx tags or qif attributes for " +
+                                       GlobPrinter.toString(matcher));
+          }
+        }
+      }
     }
-
-    String bankList = Files.loadStreamToString(bankListStream, "UTF-8");
-    for (String bankFileName : bankList.split("\\s")) {
-      String path = "banks/" + bankFileName;
-      InputStream stream = loader.load(path);
-      if (stream == null) {
-        throw new ResourceAccessFailed("missing bank file '" + path + "'");
-      }
-
-      InputStreamReader reader;
-      try {
-        reader = new InputStreamReader(stream, "UTF-8");
-      }
-      catch (UnsupportedEncodingException e) {
-        throw new ResourceAccessFailed(e);
-      }
-      XmlGlobParser.parse(model, repository, reader, "globs");
-    }
-
-    repository.safeApply(BankEntity.TYPE, GlobMatchers.ALL, new GlobFunctor() {
-      public void run(Glob bankEntity, GlobRepository repository) throws Exception {
-        BankEntity.setLabelIfNeeded(bankEntity, repository);
-      }
-    });
-
-    GlobList matchers = repository.getAll(PreTransactionTypeMatcher.TYPE);
-    for (Glob matcher : matchers) {
-      if (matcher.get(PreTransactionTypeMatcher.FOR_OFX) == null) {
-        if (OfxTransactionFinalizer.isOfType(matcher)) {
-          repository.update(matcher.getKey(), PreTransactionTypeMatcher.FOR_OFX, true);
-        }
-        else if (QifTransactionFinalizer.isOfType(matcher)) {
-          repository.update(matcher.getKey(), PreTransactionTypeMatcher.FOR_OFX, false);
-        }
-        else {
-          throw new RuntimeException("Unable to know if we should parse ofx tags or qif attributes for " +
-                                     GlobPrinter.toString(matcher));
-        }
-      }
+    finally {
+      repository.completeChangeSet();
     }
   }
 
