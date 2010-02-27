@@ -1,5 +1,6 @@
 package org.designup.picsou.gui;
 
+import org.designup.picsou.bank.SpecificBankLoader;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
@@ -8,8 +9,8 @@ import org.designup.picsou.gui.config.RegistrationTrigger;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.series.view.SeriesWrapperUpdateTrigger;
 import org.designup.picsou.gui.startup.BackupService;
-import org.designup.picsou.gui.upgrade.UpgradeTrigger;
 import org.designup.picsou.gui.upgrade.ConfigUpgradeTrigger;
+import org.designup.picsou.gui.upgrade.UpgradeTrigger;
 import org.designup.picsou.gui.utils.DataCheckerAction;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
@@ -17,7 +18,6 @@ import org.designup.picsou.model.AppVersionInformation;
 import org.designup.picsou.model.User;
 import org.designup.picsou.triggers.*;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.bank.SpecificBankLoader;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -87,10 +87,10 @@ public class PicsouInit {
   }
 
   public static void initTriggerRepository(ServerAccess serverAccess, Directory directory, final GlobRepository repository) {
+    repository.addTrigger(new CurrentMonthTrigger());
     repository.addTrigger(new UpdateActiveBudgetTrigger());
     repository.addTrigger(new ConfigUpgradeTrigger(directory));
-    repository.addTrigger(new SavingsAccountCreateSeriesTrigger());
-    repository.addTrigger(new CurrentMonthTrigger());
+    repository.addTrigger(new SavingsAccountUpdateSeriesTrigger());
     repository.addTrigger(new SeriesRenameTrigger());
     repository.addTrigger(new AccountDeleteTrigger());
     repository.addTrigger(new SeriesDeletionTrigger());
@@ -160,6 +160,7 @@ public class PicsouInit {
             repository.reset(userData, typesToReplace);
           }
           catch (Exception e) {
+            e.printStackTrace();
             GlobRepository repository =
               GlobRepositoryBuilder.init(idGenerator)
                 .add(directory.get(GlobModel.class).getConstants())

@@ -1730,14 +1730,11 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("06/06/2008", "VIREMENT VERS EPARGNE", -100.00, "To account epargne", -100.00, -100.00, "Account n. 00001123")
       .check();
 
-    System.out.println("SavingsTest.testImportOnMirrorAccount start");
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
       .addTransaction("2008/06/06", 100.00, "Virement de courant")
       .addTransaction("2008/06/06", -100.00, "Virement vers courant")
       .load("Account n. 111", "epargne");
-
-    System.out.println("SavingsTest.testImportOnMirrorAccount end");
 
     timeline.selectAll();
     transactions.initAmountContent()
@@ -1776,6 +1773,49 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("06/06/2008", "VIREMENT DE EPARGNE", 100.00, "From account epargne", 0.00, 0.00, "Account n. 00001123")
       .add("06/06/2008", "VIREMENT VERS EPARGNE", -100.00, "To account epargne", -100.00, -100.00, "Account n. 00001123")
       .check();
-
   }
+
+  public void testImportOnSavingWithExternalSeries() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/06", -100.00, "ope")
+      .load();
+
+    savingsAccounts.createSavingsAccount("epargne", 100);
+
+    views.selectBudget();
+    budgetView.savings.createSeries()
+      .setName("CAF")
+      .setFromAccount("External account")
+      .setToAccount("epargne")
+      .selectAllMonths()
+      .setAmount(200)
+      .validate();
+
+    timeline.selectAll();
+    views.selectData();
+    transactions.initAmountContent()
+      .add("01/10/2008", "Planned: CAF", 200.00, "CAF", 500.00, 500.00, "epargne")
+      .add("01/09/2008", "Planned: CAF", 200.00, "CAF", 300.00, 300.00, "epargne")
+      .add("06/08/2008", "OPE", -100.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("01/08/2008", "CAF", 200.00, "CAF", 100.00, 100.00, "epargne")
+      .check();
+
+    OfxBuilder.init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
+      .addTransaction("2008/07/06", 100.00, "Alloc")
+      .addTransaction("2008/08/06", 100.00, "Alloc")
+      .load("Account n. 111", "epargne");
+
+    timeline.selectAll();
+    transactions.initAmountContent()
+      .add("01/10/2008", "Planned: CAF", 200.00, "CAF", 3600.00, 3600.00, "epargne")
+      .add("01/09/2008", "Planned: CAF", 200.00, "CAF", 3400.00, 3400.00, "epargne")
+      .add("06/08/2008", "Planned: CAF", 200.00, "CAF", 3200.00, 3200.00, "epargne")
+      .add("06/08/2008", "ALLOC", 100.00, "To categorize", 3000.00, 3000.00, "epargne")
+      .add("06/08/2008", "OPE", -100.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("06/07/2008", "ALLOC", 100.00, "To categorize", 2900.00, 2900.00, "epargne")
+      .check();
+  }
+
 }

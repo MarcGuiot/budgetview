@@ -13,7 +13,7 @@ import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 
 import java.util.Set;
 
-public class SavingsAccountCreateSeriesTrigger implements ChangeSetListener {
+public class SavingsAccountUpdateSeriesTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Account.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
@@ -30,6 +30,7 @@ public class SavingsAccountCreateSeriesTrigger implements ChangeSetListener {
         }
         else if (values.contains(Account.IS_IMPORTED_ACCOUNT)) {
           createMirrorSeriesOnChange(key, repository);
+          deleteCreatedBySeries(key, repository);
         }
       }
 
@@ -38,49 +39,73 @@ public class SavingsAccountCreateSeriesTrigger implements ChangeSetListener {
     });
   }
 
+  private void deleteCreatedBySeries(Key key, GlobRepository repository) {
+    GlobList savingSeries = repository.getAll(Series.TYPE,
+                                              GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
+    repository.startChangeSet();
+    try {
+      for (Glob series : savingSeries) {
+        if ((series.get(Series.FROM_ACCOUNT) != null && series.get(Series.FROM_ACCOUNT).equals(key.get(Account.ID))) ||
+            (series.get(Series.TO_ACCOUNT) != null && series.get(Series.TO_ACCOUNT).equals(key.get(Account.ID)))) {
+          repository.delete(
+            repository.getAll(Transaction.TYPE,
+                              GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.SERIES, series.get(Series.ID)),
+                                               GlobMatchers.fieldEquals(Transaction.CREATED_BY_SERIES, Boolean.TRUE))));
+        }
+      }
+    }
+    finally {
+      repository.completeChangeSet();
+    }
+
+  }
+
 
   void createMirrorSeriesOnChange(Key key, GlobRepository repository) {
-    final LocalGlobRepository localRespository =
+    final LocalGlobRepository localRepository =
       LocalGlobRepositoryBuilder.init(repository)
         .copy(Account.TYPE, AccountType.TYPE, BudgetArea.TYPE, Month.TYPE, CurrentMonth.TYPE,
               Series.TYPE, SeriesBudget.TYPE)
         .get();
-    localRespository.addTrigger(new SeriesBudgetTrigger(repository));
+    localRepository.addTrigger(new SeriesBudgetTrigger(repository));
 
     GlobList savingSeries = repository.getAll(Series.TYPE,
                                               GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
-    localRespository.startChangeSet();
+    localRepository.startChangeSet();
     for (Glob series : savingSeries) {
-      Integer newSeriesId = UpdateMirrorSeriesChangeSetVisitor.createMirrorSeries(series.getKey(), localRespository);
-      if (newSeriesId != null) {
-        Glob newSeries = localRespository.get(Key.create(Series.TYPE, newSeriesId));
-        Glob otherSeries = localRespository.findLinkTarget(newSeries, Series.MIRROR_SERIES);
-        repository.delete(
-          repository.getAll(Transaction.TYPE,
-                            GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.SERIES, newSeriesId))));
+      if ((series.get(Series.FROM_ACCOUNT) != null && series.get(Series.FROM_ACCOUNT).equals(key.get(Account.ID))) ||
+          (series.get(Series.TO_ACCOUNT) != null && series.get(Series.TO_ACCOUNT).equals(key.get(Account.ID)))) {
+        Integer newSeriesId = UpdateMirrorSeriesChangeSetVisitor.createMirrorSeries(series.getKey(), localRepository);
+        if (newSeriesId != null) {
+          Glob newSeries = localRepository.get(Key.create(Series.TYPE, newSeriesId));
+          Glob otherSeries = localRepository.findLinkTarget(newSeries, Series.MIRROR_SERIES);
+          repository.delete(
+            repository.getAll(Transaction.TYPE,
+                              GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.SERIES, newSeriesId))));
 
-        repository.delete(
-          repository.getAll(Transaction.TYPE,
-                            GlobMatchers.and(
-                              GlobMatchers.fieldEquals(Transaction.MIRROR, Boolean.TRUE),
-                              GlobMatchers.fieldEquals(Transaction.SERIES, otherSeries.get(Series.ID)))));
-        GlobList transations = repository.getAll(Transaction.TYPE, GlobMatchers.or(
-          GlobMatchers.fieldEquals(Transaction.SERIES, newSeriesId),
-          GlobMatchers.fieldEquals(Transaction.SERIES, otherSeries.get(Series.ID))
-        ));
-        for (Glob transation : transations) {
-          repository.update(transation.getKey(), FieldValue.value(Transaction.NOT_IMPORTED_TRANSACTION, null),
-                            FieldValue.value(Transaction.MIRROR, Boolean.FALSE));
+          repository.delete(
+            repository.getAll(Transaction.TYPE,
+                              GlobMatchers.and(
+                                GlobMatchers.fieldEquals(Transaction.MIRROR, Boolean.TRUE),
+                                GlobMatchers.fieldEquals(Transaction.SERIES, otherSeries.get(Series.ID)))));
+          GlobList transations = repository.getAll(Transaction.TYPE, GlobMatchers.or(
+            GlobMatchers.fieldEquals(Transaction.SERIES, newSeriesId),
+            GlobMatchers.fieldEquals(Transaction.SERIES, otherSeries.get(Series.ID))
+          ));
+          for (Glob transation : transations) {
+            repository.update(transation.getKey(), FieldValue.value(Transaction.NOT_IMPORTED_TRANSACTION, null),
+                              FieldValue.value(Transaction.MIRROR, Boolean.FALSE));
+          }
         }
       }
     }
-    localRespository.completeChangeSet();
+    localRepository.completeChangeSet();
 
-    ChangeSet currentChanges = localRespository.getCurrentChanges();
+    ChangeSet currentChanges = localRepository.getCurrentChanges();
 
-    localRespository.startChangeSet();
-    currentChanges.safeVisit(SeriesBudget.TYPE, new UpdateMirrorSeriesBudgetChangeSetVisitor(localRespository));
-    localRespository.completeChangeSet();
+    localRepository.startChangeSet();
+    currentChanges.safeVisit(SeriesBudget.TYPE, new UpdateMirrorSeriesBudgetChangeSetVisitor(localRepository));
+    localRepository.completeChangeSet();
 
     repository.apply(currentChanges);
   }
