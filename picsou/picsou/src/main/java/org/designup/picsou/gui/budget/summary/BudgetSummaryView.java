@@ -7,10 +7,7 @@ import org.designup.picsou.gui.components.JRoundedButton;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.utils.AmountColors;
-import org.designup.picsou.model.AccountPositionThreshold;
-import org.designup.picsou.model.CurrentMonth;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -22,6 +19,7 @@ import org.globsframework.gui.splits.components.HyperlinkButtonUI;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -39,6 +37,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   private JButton uncategorizedButton = new JButton();
   private JLabel multiSelectionLabel = new JLabel();
   private final DecimalFormat format = Formatting.DECIMAL_FORMAT;
+  private JLabel helpMessage = new JLabel();
 
   private BudgetWizardDialog budgetWizardDialog;
 
@@ -76,6 +75,9 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
     uncategorizedButton.addActionListener(new GotoUncategorizedAction());
 
+    builder.add("helpMessage", helpMessage);
+    helpMessage.setVisible(false);
+
     parentBuilder.add("budgetSummaryView", builder);
   }
 
@@ -91,6 +93,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   }
 
   public void update() {
+
     SortedSet<Integer> selectedMonthIds = selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID);
     if (selectedMonthIds.size() > 1) {
       multiSelectionLabel.setText(Lang.get("budgetSummaryView.multimonth", selectedMonthIds.size()));
@@ -132,6 +135,8 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
       clear(uncategorizedButton);
       uncategorizedButton.setEnabled(false);
     }
+
+    updateHelpMessage();
   }
 
   private void updateEstimatedPosition(SortedSet<Integer> selectedMonthIds) {
@@ -206,13 +211,18 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
     if (changeSet.containsChanges(BudgetStat.TYPE) ||
+        changeSet.containsChanges(Series.TYPE) ||
+        changeSet.containsChanges(UserPreferences.TYPE) ||
         changeSet.containsChanges(AccountPositionThreshold.TYPE)) {
       update();
     }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(BudgetStat.TYPE)) {
+    if (changedTypes.contains(BudgetStat.TYPE) ||
+        changedTypes.contains(Series.TYPE) ||
+        changedTypes.contains(UserPreferences.TYPE) ||
+        changedTypes.contains(AccountPositionThreshold.TYPE)) {
       update();
     }
   }
@@ -233,6 +243,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     }
 
     public void actionPerformed(ActionEvent e) {
+      repository.update(UserPreferences.KEY, UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE, false);
       budgetWizardDialog.show();
     }
   }
@@ -242,4 +253,15 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
       directory.get(NavigationService.class).gotoUncategorized();
     }
   }
+
+  private void updateHelpMessage() {
+    Glob prefs = repository.find(UserPreferences.KEY);
+    boolean visible =
+      (prefs != null)
+      && prefs.isTrue(UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE)
+      && repository.contains(Series.TYPE, not(fieldEquals(Series.ID, Series.UNCATEGORIZED_SERIES_ID)));
+
+    helpMessage.setVisible(visible);
+  }
 }
+

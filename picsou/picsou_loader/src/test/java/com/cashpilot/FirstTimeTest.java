@@ -201,7 +201,7 @@ public class FirstTimeTest extends UISpecTestCase {
 
     views.selectBudget();
     BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
-    budgetSummary.openWizardBalancePage()
+    budgetSummary.openBudgetWizardPage()
       .gotoPosition()
       .checkPosition(1900.00)
       .close();
@@ -286,7 +286,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .check();
 
     views.selectBudget();
-    budgetSummary.openWizardBalancePage()
+    budgetSummary.openBudgetWizardPage()
       .gotoPosition()
       .checkPosition(1971.10)
       .checkInitialPosition(1900)
@@ -314,7 +314,7 @@ public class FirstTimeTest extends UISpecTestCase {
     operation.importQifFile(file2, "CIC");
 
     views.selectBudget();
-    budgetSummary.openWizardBalancePage()
+    budgetSummary.openBudgetWizardPage()
       .gotoPosition()
       .checkPosition(1831.10)
       .checkInitialPosition(780.1)
@@ -395,7 +395,7 @@ public class FirstTimeTest extends UISpecTestCase {
     timeView.selectMonth("2008/10");
 
     BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
-    budgetSummary.openWizardBalancePage()
+    budgetSummary.openBudgetWizardPage()
       .gotoPosition()
       .checkPosition(2386.10)
       .checkInitialPosition(780.10)
@@ -477,7 +477,7 @@ public class FirstTimeTest extends UISpecTestCase {
     views.selectBudget();
 
     BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
-    budgetSummary.openWizardBalancePage()
+    budgetSummary.openBudgetWizardPage()
       .gotoPosition()
       .checkPosition(2386.10)
       .checkInitialPosition(780.1)
@@ -562,7 +562,7 @@ public class FirstTimeTest extends UISpecTestCase {
     views.selectBudget();
 
     BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
-    budgetSummary.openWizardBalancePage()
+    budgetSummary.openBudgetWizardPage()
       .gotoPosition()
       .checkPosition(2386.10)
       .checkInitialPosition(780.1)
@@ -721,7 +721,7 @@ public class FirstTimeTest extends UISpecTestCase {
     checker.selectMonths("2008/10");
 
     BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
-    budgetSummary.openWizardBalancePage()
+    budgetSummary.openBudgetWizardPage()
       .gotoPosition()
       .checkPosition(1886.10)
       .checkInitialPosition(780.1)

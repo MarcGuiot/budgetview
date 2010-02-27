@@ -14,16 +14,9 @@
       <column weightX="3">
         <label text="$budgetSummaryView.title" styleClass="blockTitle"/>
         <column styleClass="block" marginBottom="10">
-          <panel ref="budgetSummaryView" weightY="0.1" marginTop="10" marginBottom="5" marginLeft="5"/>
-          
-          <row name="helpMessagePanel" autoHideSource="helpMessage">
-            <row styleClass="mainPanelMessage">
-              <htmlEditorPane ref="helpMessage" text="$budgetview.help.message" hyperlinkListener="hyperlinkHandler"/>
-              <button action="hideHelpMessage" styleClass="remove" tooltipText="$hideMessage"/>
-            </row>
-          </row>          
+          <panel ref="budgetSummaryView" weightY="0.1"/>
         </column>
-        
+
         <verticalSplit ref="firstVerticalSplitPane">
           <panel ref="incomeBudgetView" weightY="5"/>
           <panel ref="savingsBudgetView" weightY="5"/>

@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.budget.wizard;
 
-import org.designup.picsou.gui.components.wizard.WizardPage;
+import org.designup.picsou.gui.components.wizard.AbstractWizardPage;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.utils.Gui;
@@ -22,7 +22,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
-public class BudgetPositionPage implements WizardPage {
+public class BudgetPositionPage extends AbstractWizardPage {
 
   private JLabel amountSummaryLabel;
   private JTextArea positionDescription;
@@ -38,8 +38,6 @@ public class BudgetPositionPage implements WizardPage {
     this.parentDirectory = parentDirectory;
 
     this.directory = createDirectory(parentDirectory);
-
-    createDialog();
   }
 
   public String getId() {
@@ -55,9 +53,10 @@ public class BudgetPositionPage implements WizardPage {
   }
 
   public void init() {
+    createDialog();
   }
 
-  public void update() {
+  public void updateBeforeDisplay() {
     GlobList selectedMonths = getSelectedMonths();
     Integer maxMonthId = selectedMonths.getLast().get(Month.ID);
     if (maxMonthId >= CurrentMonth.getLastTransactionMonth(repository)) {

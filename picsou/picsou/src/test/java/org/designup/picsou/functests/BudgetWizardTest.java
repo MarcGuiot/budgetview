@@ -43,7 +43,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/07");
     views.selectBudget();
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoBalance()
       .checkBalance(balanceFor200807)
       .checkBalanceText("You have to spend 50.00 less")
@@ -58,7 +58,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(1000 + balanceFor200808);
 
     views.selectBudget();
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoBalance()
       .checkBalance(balanceFor200808)
       .checkBalanceText("You have 170.00 left to distribute")
@@ -78,7 +78,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     mainAccounts.checkEstimatedPosition(1000 + incomeFor200808 - expensesFor200808);
     views.selectBudget();
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoBalance()
       .checkBalance(balanceFor200807 + balanceFor200808)
       .checkBalanceText("You have 120.00 left to distribute")
@@ -98,7 +98,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .setName("Trip")
       .setAmount(170)
       .validate();
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoBalance()
       .checkBalance(0)
       .checkBalanceText("Your budget is balanced")
@@ -149,7 +149,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary()
       .checkMonthBalance(balanceFor200808)
       .checkEndPosition(1410.00);
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoPosition()
       .checkInitialPosition(0.0)
       .checkFixed(0)
@@ -170,7 +170,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(1410);
 
     views.selectBudget();
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoPosition()
       .checkPositionDate("31/08/2008")
       .checkInitialPosition(0)
@@ -184,7 +184,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(1420 + 1500 - 1529.90 - 80 - 10 - 10);
 
     views.selectBudget();
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoPosition()
       .checkPositionDate("30/09/2008")
       .checkInitialPosition(1410)
@@ -210,7 +210,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     views.selectHome();
     views.selectBudget();
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoBalance()
       .checkBalance(1000.00)
       .gotoPosition()
@@ -243,7 +243,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     double balanceFor200808 = 1500 - (200 - 40);
 
     budgetView.getSummary().checkMonthBalance(balanceFor200808);
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoPosition()
       .checkInitialPosition(0.0)
       .checkFixed(100)
@@ -287,7 +287,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     views.selectBudget();
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoPosition()
       .checkPositionDate("31/08/2008")
       .checkInitialPosition(1000)
@@ -297,7 +297,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/09");
     views.selectBudget();
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoPosition()
       .checkPositionDate("30/09/2008")
       .checkInitialPosition(1070)
@@ -322,7 +322,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/07");
     views.selectBudget();
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoPosition()
       .checkPosition(2000.00)
       .gotoThreshold()
@@ -335,7 +335,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/08");
     views.selectBudget();
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoPosition()
       .checkPosition(1300.00)
       .gotoThreshold()
@@ -347,7 +347,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkThreshold(1500.00);
 
     views.selectBudget();
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoThreshold()
       .clearThreshold()
       .validate();
@@ -355,7 +355,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkThreshold(0.00);
 
     views.selectBudget();
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoPosition()
       .checkPosition(1300.00)
       .gotoThreshold()
@@ -368,7 +368,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/07", "2008/08");
     views.selectBudget();
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoPosition()
       .checkPosition(1300.00)
       .gotoThreshold()

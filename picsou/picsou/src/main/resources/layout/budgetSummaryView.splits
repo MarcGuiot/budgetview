@@ -10,10 +10,15 @@
         underline="true" useNormalColorWhenDisabled="true" autoHideEnabled="false"/>
     <style selector="button#uncategorized" ui="uncategorizedButtonUI" font="-,bold,12"
            weightX="10" fill="none"/>
+
+    <style selector="label#helpMessage"
+           weightY="0" fill="horizontal"
+           foreground="block.highlighted.text" font="-,bold,12" 
+           shadowDirection="southeast" shadowColor="#999999"/>
   </styles>
 
-  <column>
-    <grid marginLeft="5" marginRight="10">
+  <column border="empty(10,10,10,10)">
+    <grid>
 
       <button ref="openDetailsButton"
               styleClass="roundedButton" gridPos="(0,0,1,2)"
@@ -33,10 +38,13 @@
       <button ref="uncategorized" styleClass="uncategorized" gridPos="(3,1)"/>
 
     </grid>
-    <row>
-      <label ref="multiSelectionLabel" styleClass="totalAmountTitle"
-             horizontalAlignment="center" fill="horizontal" border="empty(0,0,5,0)"/>
-    </row>
+
+    <label ref="helpMessage" icon="yellow_arrow.png" text="$budgetview.help.message"
+           border="empty(0,5,0,0)"/>
+
+    <label ref="multiSelectionLabel" styleClass="totalAmountTitle"
+           horizontalAlignment="center" border="empty(0,0,0,0)"/>
+
   </column>
 
 </splits>

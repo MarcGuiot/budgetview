@@ -867,17 +867,17 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
   public void testHelpMessage() throws Exception {
     views.selectBudget();
-    budgetView.checkHelpMessageDisplayed(false);
+    budgetView.getSummary().checkHelpMessageDisplayed(false);
 
     budgetView.recurring.createSeries()
       .setName("Taxes")
       .switchToManual()
       .setAmount(100)
       .validate();
-    budgetView.checkHelpMessageDisplayed(true);
+    budgetView.getSummary().checkHelpMessageDisplayed(true);
 
-    budgetView.hideHelpMessage();
-    budgetView.checkHelpMessageDisplayed(false);
+    budgetView.getSummary().openBudgetWizardPage().close();
+    budgetView.getSummary().checkHelpMessageDisplayed(false);
   }
 
   public void testPositiveEnvelopeBudgetDoNotCreateNegativePlannedTransaction() throws Exception {
