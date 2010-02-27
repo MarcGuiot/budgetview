@@ -33,8 +33,9 @@
         </repeat>
       </scrollPane>
       <row styleClass="footer" ref="groupCreateEditSeries">
-        <button action="createSeries" styleClass="create" tooltipText="$series.create.tooltip"/>
-        <button action="editSeries" styleClass="list" tooltipText="$series.list.tooltip"/>
+        <button action="createSeries" tooltipText="$series.create.tooltip"/>
+        <button action="editSeries" tooltipText="$series.list.tooltip"/>
+        <button action="additionalAction"/>
         <filler fill="horizontal"/>
       </row>
     </column>

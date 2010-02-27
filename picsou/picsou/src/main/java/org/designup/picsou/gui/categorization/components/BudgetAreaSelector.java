@@ -175,17 +175,17 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
       seriesCard.show("multipleAreas");
     }
 
-    GlobList accounts = getSelectecTransacionAcounts();
+    GlobList accounts = getSelectedTransacionAcounts();
     for (Glob account : accounts) {
       if (account.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
-        enableGoodBudgetArea(false);
+        enableValidBudgetAreas(false);
         if (areas.size() == 1) {
           select(BudgetArea.SAVINGS, true);
         }
         return;
       }
     }
-    enableGoodBudgetArea(true);
+    enableValidBudgetAreas(true);
 
     if (areas.size() != 1) {
       return;
@@ -211,15 +211,15 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
     }
   }
 
-  private void enableGoodBudgetArea(boolean allEnable) {
+  private void enableValidBudgetAreas(boolean enableAll) {
     for (Map.Entry<BudgetArea, JToggleButton> entry : toggles.entrySet()) {
-      entry.getValue().setEnabled(allEnable
+      entry.getValue().setEnabled(enableAll
                                   || entry.getKey() == BudgetArea.SAVINGS 
                                   || entry.getKey() == BudgetArea.UNCATEGORIZED);
     }
   }
 
-  private GlobList getSelectecTransacionAcounts() {
+  private GlobList getSelectedTransacionAcounts() {
     return GlobUtils.getUniqueTargets(selectedTransactions, Transaction.ACCOUNT, repository);
   }
 

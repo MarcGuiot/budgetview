@@ -298,7 +298,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testTransactionFilteringMode() throws Exception {
-    
+
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/30", -29.90, "Carouf")
@@ -360,7 +360,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"15/05/2008", "", "Auchan", -40.00},
       {"30/06/2008", "", "Carouf", -29.90}
     });
-    
+
     categorization.setEnvelope("Carouf", "Food");
     categorization.checkTable(new Object[][]{
       {"15/05/2008", "", "Auchan", -40.00}
@@ -739,7 +739,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     budgetView.envelopes.checkSeries("Courant", -10, -20);
     timeline.selectMonth("2008/07");
     budgetView.envelopes.checkSeries("Courant", 0, -20);
-    
+
     views.selectData();
     timeline.selectAll();
     transactions.initContent()
@@ -1088,12 +1088,33 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     savingsAccounts.edit("Epargne").delete().validate();
-    
+
     views.selectCategorization();
     categorization
       .selectTransactions("Virement")
       .selectSavings()
       .checkNoSeriesMessage("No savings account is declared");
+  }
+
+  public void testCreateSavingsAccountActionAvailableInSavingsBlock() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/25", -50.0, "ING")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRows(0)
+      .selectSavings()
+      .createSavingsAccount()
+      .setAccountName("Epargne ING")
+      .selectBank("ING Direct")
+      .setPosition(200.00)
+      .validate();
+
+    views.selectHome();
+    savingsAccounts.edit("Epargne ING")
+      .checkSelectedBank("ING Direct")
+      .validate();
   }
 
   public void testCreateSeriesShouldNotCategorizeToTransactionIfNotValid() throws Exception {
@@ -1186,7 +1207,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .checkActiveSeries("Courses 2");
   }
 
-    public void testDoNotFilterValidMonthIfMonthIsUncheckedButWithAlreadyCategorizedOperations() throws Exception {
+  public void testDoNotFilterValidMonthIfMonthIsUncheckedButWithAlreadyCategorizedOperations() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/25", -50.0, "1_Auchan")
@@ -1251,7 +1272,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .checkSelectedProfile("Irregular")
       .checkAmount(0.00)
       .validate();
-    
+
     categorization.checkTable(new Object[][]{
       {"25/06/2008", "Internal transfers", "Transfer", -50.00}
     });
