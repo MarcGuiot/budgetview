@@ -312,6 +312,12 @@ public class GuiUtils {
     }
   }
 
+  public static void scrollToTop(JScrollPane scrollPane) {
+    final JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
+    verticalScrollBar.setValue(verticalScrollBar.getMinimum());
+
+  }
+
   public static void runInSwingThread(Runnable runnable) {
     try {
       if (SwingUtilities.isEventDispatchThread()) {

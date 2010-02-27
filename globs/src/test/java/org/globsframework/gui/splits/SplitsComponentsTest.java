@@ -323,6 +323,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
     assertSame(scrollPane, aTable.getParent().getParent());
     assertEquals(12, scrollPane.getVerticalScrollBar().getUnitIncrement());
     assertEquals(15, scrollPane.getHorizontalScrollBar().getUnitIncrement());
+    assertEquals(0, scrollPane.getVerticalScrollBar().getValue());
 
     assertEquals(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, scrollPane.getVerticalScrollBarPolicy());
     assertEquals(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED, scrollPane.getHorizontalScrollBarPolicy());
