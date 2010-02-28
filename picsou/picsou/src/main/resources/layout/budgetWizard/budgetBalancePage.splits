@@ -36,6 +36,7 @@
   <column margin="10">
 
     <verticalBoxes border="empty(0,0,0,10)">
+      <htmlEditorPane text="$budgetWizard.balance.top" styleClass="description"/>
       <panel styleClass="amountBlock">
         <column>
           <label ref="balanceLabel" styleClass="mainAmount" marginTop="0"/>

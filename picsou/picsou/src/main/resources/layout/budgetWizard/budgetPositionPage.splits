@@ -43,7 +43,7 @@
 
     <verticalBoxes margin="10">
 
-      <htmlEditorPane ref="text"/>
+      <htmlEditorPane ref="text" weightY="0.1"/>
 
       <panel styleClass="amountBlock">
         <column>

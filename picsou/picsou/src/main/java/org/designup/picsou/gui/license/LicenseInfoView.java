@@ -63,6 +63,7 @@ public class LicenseInfoView extends View {
         update(repository);
       }
     });
+    update(repository);
   }
 
   private void update(GlobRepository repository) {
@@ -92,39 +93,38 @@ public class LicenseInfoView extends View {
     }
 
     licenseMessage.setVisible(true);
-    String message = null;
-    long daysLeft =
+    long days =
       (userPreferences.get(UserPreferences.LAST_VALID_DAY).getTime() - TimeService.getToday().getTime()) / Millis.ONE_DAY;
     Integer state = user.get(User.ACTIVATION_STATE);
-    if (daysLeft > 1) {
-      message = Lang.get("license.info.day.count", daysLeft);
+
+    StringBuilder htmlText = new StringBuilder();
+    htmlText.append("<html>");
+    htmlText.append(getDaysLeftMessage(user, days, state));
+    htmlText.append(getRegisterMessage(user, days, state));
+    htmlText.append("</html>");
+
+    licenseMessage.setText(htmlText.toString());
+  }
+
+  private String getDaysLeftMessage(Glob user, long days, Integer state) {
+    if (days > 1) {
+      return Lang.get("license.info.day.count", days);
     }
-    else if (daysLeft == 1) {
-      message = Lang.get("license.info.one.day");
+    else if (days == 1) {
+      return Lang.get("license.info.one.day");
     }
-    else if (daysLeft == 0) {
-      message = Lang.get("license.info.last.day");
+    else if (days == 0) {
+      return Lang.get("license.info.last.day");
     }
     else if (user.get(User.MAIL) == null || state == null) {
-      message = Lang.get("license.expiration.message");
+      return Lang.get("license.expiration.message");
     }
-
-    StringBuilder msg = new StringBuilder();
-    msg.append("<html>");
-    if (message != null) {
-      msg.append(message);
-    }
-    String registerMessage = getRegisterMessage(user, daysLeft, state);
-    if (registerMessage != null) {
-      msg.append(registerMessage);
-    }
-    msg.append("</html>");
-    licenseMessage.setText(msg.toString());
+    return "";
   }
 
   private String getRegisterMessage(Glob user, long days, Integer state) {
     if (state == null) {
-      return null;
+      return "";
     }
 
     if (state == User.ACTIVATION_FAILED_MAIL_SENT) {
@@ -158,6 +158,6 @@ public class LicenseInfoView extends View {
         return Lang.get("license.registered.user.killed.trial.mail.sent");
       }
     }
-    return null;
+    return "";
   }
 }
