@@ -579,35 +579,35 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testImportOfxWithDeferredAndCreditCards() throws Exception {
-    String fileName = OfxBuilder.init(this)
-      .addCardAccount("1111", 0.00, "2008/01/01")
-      .addTransaction("2008/01/01", -100.00, "Auchan")
-      .addCardAccount("2222", 0.00, "2008/01/01")
-      .addTransaction("2008/01/15", -200.00, "FNAC")
-      .save();
-
-    ImportChecker importDialog = operations.openImportDialog()
-      .setFilePath(fileName)
-      .doImport();
-
-    importDialog
-      .openCardTypeChooser()
-      .checkValidateDisabled()
-      .selectDeferredCard("Card n. 1111", 15)
-      .checkValidateDisabled()
-      .selectCreditCard("Card n. 2222")
-      .checkValidateEnabled()
-      .validate();
-
-    importDialog.completeImport();
-
-    views.selectData();
-    transactions.initContent()
-      .add("15/01/2008", TransactionType.CREDIT_CARD, "FNAC", "", -200.00)
-      .add("01/01/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", -100.00)
-      .check();
-  }
+//  public void testImportOfxWithDeferredAndCreditCards() throws Exception {
+//    String fileName = OfxBuilder.init(this)
+//      .addCardAccount("1111", 0.00, "2008/01/01")
+//      .addTransaction("2008/01/01", -100.00, "Auchan")
+//      .addCardAccount("2222", 0.00, "2008/01/01")
+//      .addTransaction("2008/01/15", -200.00, "FNAC")
+//      .save();
+//
+//    ImportChecker importDialog = operations.openImportDialog()
+//      .setFilePath(fileName)
+//      .doImport();
+//
+//    importDialog
+//      .openCardTypeChooser()
+//      .checkValidateDisabled()
+//      .selectDeferredCard("Card n. 1111", 15)
+//      .checkValidateDisabled()
+//      .selectCreditCard("Card n. 2222")
+//      .checkValidateEnabled()
+//      .validate();
+//
+//    importDialog.completeImport();
+//
+//    views.selectData();
+//    transactions.initContent()
+//      .add("15/01/2008", TransactionType.CREDIT_CARD, "FNAC", "", -200.00)
+//      .add("01/01/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", -100.00)
+//      .check();
+//  }
 
   public void testImportDialogGivesAccessToBankSites() throws Exception {
 
