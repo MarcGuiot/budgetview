@@ -73,7 +73,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Salary", 0.0, 1000.0);
     mainAccounts.checkEstimatedPosition(1000.0);
     views.selectBudget();
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoPosition()
       .checkIncome(1000.0)
       .close();
@@ -86,7 +86,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(0.0);
 
     views.selectBudget();
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoPosition()
       .checkIncome(0.0)
       .close();
@@ -98,7 +98,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.income.checkTotalAmounts(1000.0, 1000.0);
 
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoPosition()
       .checkIncome(0.0)
       .close();
@@ -168,8 +168,8 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .validate();
     budgetView.checkBalance(-600.);
 
-    budgetView.checkHelpMessageDisplayed(true);
-    budgetView.hideHelpMessage();
+    budgetView.getSummary().checkHelpMessageDisplayed(true);
+    budgetView.getSummary().openBudgetWizardPage().close();
 
     restartApplication();
 
@@ -177,7 +177,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     budgetView.checkBalance(-600.);
 
-    budgetView.checkHelpMessageDisplayed(false);
+    budgetView.getSummary().checkHelpMessageDisplayed(false);
   }
 
   public void testCategorizationView() throws Exception {

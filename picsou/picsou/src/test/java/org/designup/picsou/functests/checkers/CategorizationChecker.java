@@ -195,6 +195,11 @@ public class CategorizationChecker extends GuiChecker {
         .validate();
       return this;
     }
+
+    public AccountEditionChecker createSavingsAccount() {
+      selectSavings();
+      return AccountEditionChecker.open(getPanel().getButton("New account").triggerClick());
+    }
   }
 
   private BudgetAreaCategorizationChecker selectAndReturn(BudgetArea budgetArea) {

@@ -56,6 +56,10 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     assertThat(getPanel().getTextBox("uncategorizedLabel").textEquals("-"));
   }
 
+  public void checkHelpMessageDisplayed(boolean visible) {
+    checkComponentVisible(getPanel(), JLabel.class, "helpMessage", visible);
+  }
+
   public BudgetSummaryViewChecker checkMultiSelection(int count) {
     TextBox label = getPanel().getTextBox("multiSelectionLabel");
     assertThat(label.isVisible());
@@ -72,7 +76,7 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     return mainWindow.getPanel("budgetSummaryView");
   }
 
-  public BudgetWizardPageChecker openWizardBalancePage() {
+  public BudgetWizardPageChecker openBudgetWizardPage() {
     Window wizardWindow = WindowInterceptor.run(getPanel().getButton("openDetailsButton").triggerClick());
     return new BudgetWizardPageChecker(wizardWindow);
   }

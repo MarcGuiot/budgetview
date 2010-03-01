@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.budget.wizard;
 
-import org.designup.picsou.gui.components.wizard.WizardPage;
+import org.designup.picsou.gui.components.wizard.AbstractWizardPage;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.AccountPositionThreshold;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
@@ -24,12 +24,13 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
-public class BudgetThresholdPage implements WizardPage {
+public class BudgetThresholdPage extends AbstractWizardPage {
 
   private Directory directory;
   private LocalGlobRepository localRepository;
   private JPanel panel;
   private Directory parentDirectory;
+  private JTextField thresholdField;
 
   public BudgetThresholdPage(GlobRepository repository, Directory parentDirectory) {
     this.parentDirectory = parentDirectory;
@@ -42,7 +43,6 @@ public class BudgetThresholdPage implements WizardPage {
         .get();
 
     this.directory = createDirectory(parentDirectory);
-    createDialog();
   }
 
   public String getId() {
@@ -58,14 +58,41 @@ public class BudgetThresholdPage implements WizardPage {
   }
 
   public void init() {
+    GlobsPanelBuilder builder =
+      new GlobsPanelBuilder(getClass(), "/layout/budgetWizard/budgetThresholdPage.splits", localRepository, directory);
+
+    builder.add("textTop", Gui.createHelpTextComponent("budgetWizard/8_threshold1.html"));
+    builder.add("textBottom", Gui.createHelpTextComponent("budgetWizard/8_threshold2.html"));
+
+    builder.addLabel("estimatedPosition", BudgetStat.TYPE,
+                     new EspectedPositionStringifier());
+
+    builder.add("thresholdIndicator",
+                new PositionThresholdIndicator(localRepository, directory,
+                                               "budgetSummaryDialog.threshold.top",
+                                               "budgetSummaryDialog.threshold.bottom",
+                                               "budgetSummaryDialog.threshold.border"));
+    thresholdField = builder.addEditor("thresholdField", AccountPositionThreshold.THRESHOLD)
+      .forceSelection(AccountPositionThreshold.KEY)
+      .setNotifyOnKeyPressed(true)
+      .setValueForNull(0.00)
+      .getComponent();
+    builder.addLabel("thresholdMessage", BudgetStat.TYPE, new ThresholdStringifier())
+      .setUpdateMatcher(ChangeSetMatchers.changesForKey(AccountPositionThreshold.KEY));
+
+    panel = builder.load();
   }
 
-  public void update() {
+  public void updateBeforeDisplay() {
     localRepository.rollback();
 
     GlobList selectedMonths = getSelectedMonths();
     Integer maxMonthId = selectedMonths.getLast().get(Month.ID);
     selectStats(selectedMonths);
+  }
+
+  public void updateAfterDisplay() {
+    thresholdField.requestFocus();
   }
 
   private GlobList getSelectedMonths() {
@@ -88,31 +115,6 @@ public class BudgetThresholdPage implements WizardPage {
     Directory directory = new DefaultDirectory(parentDirectory);
     directory.add(new SelectionService());
     return directory;
-  }
-
-  public void createDialog() {
-    GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/budgetWizard/budgetThresholdPage.splits", localRepository, directory);
-
-    builder.add("textTop", Gui.createHelpTextComponent("budgetWizard/8_threshold1.html"));
-    builder.add("textBottom", Gui.createHelpTextComponent("budgetWizard/8_threshold2.html"));
-
-    builder.addLabel("estimatedPosition", BudgetStat.TYPE,
-                     new EspectedPositionStringifier());
-
-    builder.add("thresholdIndicator",
-                new PositionThresholdIndicator(localRepository, directory,
-                                               "budgetSummaryDialog.threshold.top",
-                                               "budgetSummaryDialog.threshold.bottom",
-                                               "budgetSummaryDialog.threshold.border"));
-    builder.addEditor("thresholdField", AccountPositionThreshold.THRESHOLD)
-      .forceSelection(AccountPositionThreshold.KEY)
-      .setNotifyOnKeyPressed(true)
-      .setValueForNull(0.00);
-    builder.addLabel("thresholdMessage", BudgetStat.TYPE, new ThresholdStringifier())
-      .setUpdateMatcher(ChangeSetMatchers.changesForKey(AccountPositionThreshold.KEY));
-
-    panel = builder.load();
   }
 
   private Glob getLastBudgetStat(GlobList list) {

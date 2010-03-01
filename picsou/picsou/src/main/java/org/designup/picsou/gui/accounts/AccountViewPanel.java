@@ -102,8 +102,7 @@ public abstract class AccountViewPanel {
                                       new AccountComparator(),
                                       new AccountRepeatFactory());
 
-    builder.add("createAccount",
-                new NewAccountAction(getAccountType(), repository, directory, directory.get(JFrame.class)));
+    builder.add("createAccount", new NewAccountAction(getAccountType(), repository, directory));
 
     AccountPositionThresholdAction action = new AccountPositionThresholdAction(repository, directory);
     action.setEnabled(showPositionThreshold());

@@ -4,6 +4,7 @@ import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.SplitsNode;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorUpdater;
 import org.globsframework.gui.splits.color.Colors;
@@ -91,6 +92,12 @@ public class ScrollPaneComponent extends AbstractSplitter {
     }
 
     return new SplitComponent(constraints, splitsNode);
+  }
+
+  protected void complete(Component component) {
+    super.complete(component);
+    JScrollPane scroll = (JScrollPane)component;
+    GuiUtils.scrollToTop(scroll);
   }
 
   protected SplitsNode<JScrollPane> findOrCreateComponent(SplitsContext context) {

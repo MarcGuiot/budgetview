@@ -1,7 +1,8 @@
 package org.designup.picsou.gui.components.wizard;
 
-import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.CloseAction;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -45,6 +46,7 @@ public class WizardDialog {
       throw new InvalidState("Pages cannot be added when the wizard has been shown");
     }
     checkId(page);
+    page.init();
     pages.add(page);
     comboModel.addElement(page);
     contentPanel.add(page.getId(), page.getPanel());
@@ -68,19 +70,16 @@ public class WizardDialog {
       throw new InvalidState("No pages in wizard");
     }
 
+    for (WizardPage page : pages) {
+      page.updateBeforeDisplay();
+    }
+
     if (!shown) {
-      for (WizardPage page : pages) {
-        page.init();
-      }
       showPage(0);
     }
 
-    for (WizardPage page : pages) {
-      page.update();
-    }
-
     shown = true;
-    
+
     GuiUtils.showCentered(dialog);
   }
 
@@ -119,14 +118,16 @@ public class WizardDialog {
   private void showPage(int pageIndex) {
     currentIndex = pageIndex;
 
-    WizardPage page = pages.get(currentIndex);
-    comboModel.setSelectedItem(page);
+    WizardPage currentPage = pages.get(currentIndex);
+    comboModel.setSelectedItem(currentPage);
 
-    title.setText(page.getTitle());
-    cardLayout.show(contentPanel, page.getId());
+    title.setText(currentPage.getTitle());
+    cardLayout.show(contentPanel, currentPage.getId());
 
     next.setEnabled(currentIndex < pages.size() - 1);
     previous.setEnabled(currentIndex > 0);
+
+    currentPage.updateAfterDisplay();
   }
 
   private class NextPageAction extends AbstractAction {

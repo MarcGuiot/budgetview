@@ -11,6 +11,7 @@ public interface WizardPage {
   JComponent getPanel();
   
   void init();
-  void update();
+  void updateBeforeDisplay();
+  void updateAfterDisplay();
   void applyChanges();
 }

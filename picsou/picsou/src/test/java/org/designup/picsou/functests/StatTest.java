@@ -186,7 +186,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary()
       .checkMonthBalance(110)
       .checkEndPosition(400);
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoPosition()
       .checkInitialPosition(0)
       .close();
@@ -211,7 +211,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary()
       .checkMonthBalance(-290)
       .checkEndPosition(0);
-    budgetView.getSummary().openWizardBalancePage()
+    budgetView.getSummary().openBudgetWizardPage()
       .gotoPosition()
       .checkInitialPosition(0)
       .close();

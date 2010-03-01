@@ -32,6 +32,7 @@ public class UpgradeTrigger implements ChangeSetListener {
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     createDataForNewUser(repository);
+    
     Glob appVersion = repository.get(AppVersionInformation.KEY);
     Glob userVersion = repository.get(UserVersionInformation.KEY);
     if (userVersion.get(UserVersionInformation.CURRENT_BANK_CONFIG_VERSION)
@@ -81,6 +82,10 @@ public class UpgradeTrigger implements ChangeSetListener {
 
     if (currentJarVersion < 34){
       updateSavings(repository);
+    }
+
+    if (currentJarVersion < 35) {
+      repository.update(UserPreferences.KEY, UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE, true);
     }
 
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);

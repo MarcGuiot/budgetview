@@ -104,19 +104,19 @@
                 <column weightY="7">
                   <label text="$notesView.title" styleClass="blockTitle"/>
                   <panel styleClass="block">
-                    <column styleClass="innerBlock">
-                      <panel ref="notesView" minimumSize="(300,100)" preferredSize="(200,100)" weightY="3"/>
-                      <panel autoHideSource="newVersionMessage" styleClass="infoMessage">
+                    <verticalBoxes styleClass="innerBlock">
+                      <panel ref="notesView" minimumSize="(300,100)" preferredSize="(200,150)" weightY="10"/>
+                      <panel autoHideSource="newVersionMessage" styleClass="infoMessage" weightY="3">
                         <panel styleClass="infoMessageBorder">
                           <htmlEditorPane ref="newVersionMessage"/>
                         </panel>
                       </panel>
-                      <panel autoHideSource="licenseMessage" styleClass="infoMessage">
+                      <panel autoHideSource="licenseMessage" styleClass="infoMessage" weightY="3">
                         <panel styleClass="infoMessageBorder">
                           <htmlEditorPane ref="licenseMessage"/>
                         </panel>
                       </panel>
-                    </column>
+                    </verticalBoxes>
                   </panel>
                 </column>
 

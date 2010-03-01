@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.accounts.NewAccountAction;
 import org.designup.picsou.gui.categorization.components.*;
 import org.designup.picsou.gui.categorization.special.*;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
@@ -28,10 +29,8 @@ import org.designup.picsou.importer.utils.BankFormatExporter;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
-import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.*;
+import org.globsframework.gui.actions.DisabledAction;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -190,6 +189,10 @@ public class CategorizationView extends View implements TableView, Filterable {
     return builder;
   }
 
+  private NewAccountAction getAdditionalAction() {
+    return new NewAccountAction(AccountType.SAVINGS, repository, directory);
+  }
+
   private void registerBankFormatExporter(final GlobTableView transactionTable) {
     transactionTable.addKeyBinding(GuiUtils.ctrl(KeyEvent.VK_B), "ExportBankFormat", new AbstractAction() {
       public void actionPerformed(ActionEvent event) {
@@ -305,8 +308,16 @@ public class CategorizationView extends View implements TableView, Filterable {
     builder.add("groupCreateEditSeries", groupForSeries);
     builder.add("createSeries", new CreateSeriesAction(budgetArea));
     builder.add("editSeries", new EditAllSeriesAction(budgetArea));
+    builder.add("additionalAction", getAdditionalAction(budgetArea));
 
     parentBuilder.add(name, builder);
+  }
+
+  private Action getAdditionalAction(BudgetArea budgetArea) {
+    if (BudgetArea.SAVINGS.equals(budgetArea)) {
+      return new NewAccountAction(AccountType.SAVINGS, repository, directory);
+    }
+    return new DisabledAction();
   }
 
   private void addOtherSeriesChooser(String name, GlobsPanelBuilder parentBuilder) {

@@ -1,0 +1,27 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="dialog" preferredSize="(500,300)" opaque="true">
+    <column styleClass="innerDialog">
+
+      <label text="$chooseOrCreate.title" name="title" styleClass="title"/>
+
+      <column>
+        <scrollPane forceVerticalScroll="true">
+          <column margin="10">
+            <repeat ref="repeat">
+              <column>
+                <row name="parent">
+                  <label ref="accounts" marginLeft="30" marginRight="10"/>
+                  <comboBox ref="accountsCombo" marginRight="30"/>
+                </row>
+              </column>
+            </repeat>
+            <filler fill="vertical"/>
+          </column>
+        </scrollPane>
+      </column>
+    </column>
+  </panel>
+</splits>
