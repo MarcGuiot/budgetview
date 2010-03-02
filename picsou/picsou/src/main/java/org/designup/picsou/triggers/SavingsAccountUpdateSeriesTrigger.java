@@ -72,40 +72,48 @@ public class SavingsAccountUpdateSeriesTrigger implements ChangeSetListener {
     GlobList savingSeries = repository.getAll(Series.TYPE,
                                               GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
     localRepository.startChangeSet();
-    for (Glob series : savingSeries) {
-      if ((series.get(Series.FROM_ACCOUNT) != null && series.get(Series.FROM_ACCOUNT).equals(key.get(Account.ID))) ||
-          (series.get(Series.TO_ACCOUNT) != null && series.get(Series.TO_ACCOUNT).equals(key.get(Account.ID)))) {
-        Integer newSeriesId = UpdateMirrorSeriesChangeSetVisitor.createMirrorSeries(series.getKey(), localRepository);
-        if (newSeriesId != null) {
-          Glob newSeries = localRepository.get(Key.create(Series.TYPE, newSeriesId));
-          Glob otherSeries = localRepository.findLinkTarget(newSeries, Series.MIRROR_SERIES);
-          repository.delete(
-            repository.getAll(Transaction.TYPE,
-                              GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.SERIES, newSeriesId))));
+    try {
+      for (Glob series : savingSeries) {
+        if ((series.get(Series.FROM_ACCOUNT) != null && series.get(Series.FROM_ACCOUNT).equals(key.get(Account.ID))) ||
+            (series.get(Series.TO_ACCOUNT) != null && series.get(Series.TO_ACCOUNT).equals(key.get(Account.ID)))) {
+          Integer newSeriesId = UpdateMirrorSeriesChangeSetVisitor.createMirrorSeries(series.getKey(), localRepository);
+          if (newSeriesId != null) {
+            Glob newSeries = localRepository.get(Key.create(Series.TYPE, newSeriesId));
+            Glob otherSeries = localRepository.findLinkTarget(newSeries, Series.MIRROR_SERIES);
+            repository.delete(
+              repository.getAll(Transaction.TYPE,
+                                GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.SERIES, newSeriesId))));
 
-          repository.delete(
-            repository.getAll(Transaction.TYPE,
-                              GlobMatchers.and(
-                                GlobMatchers.fieldEquals(Transaction.MIRROR, Boolean.TRUE),
-                                GlobMatchers.fieldEquals(Transaction.SERIES, otherSeries.get(Series.ID)))));
-          GlobList transations = repository.getAll(Transaction.TYPE, GlobMatchers.or(
-            GlobMatchers.fieldEquals(Transaction.SERIES, newSeriesId),
-            GlobMatchers.fieldEquals(Transaction.SERIES, otherSeries.get(Series.ID))
-          ));
-          for (Glob transation : transations) {
-            repository.update(transation.getKey(), FieldValue.value(Transaction.NOT_IMPORTED_TRANSACTION, null),
-                              FieldValue.value(Transaction.MIRROR, Boolean.FALSE));
+            repository.delete(
+              repository.getAll(Transaction.TYPE,
+                                GlobMatchers.and(
+                                  GlobMatchers.fieldEquals(Transaction.MIRROR, Boolean.TRUE),
+                                  GlobMatchers.fieldEquals(Transaction.SERIES, otherSeries.get(Series.ID)))));
+            GlobList transations = repository.getAll(Transaction.TYPE, GlobMatchers.or(
+              GlobMatchers.fieldEquals(Transaction.SERIES, newSeriesId),
+              GlobMatchers.fieldEquals(Transaction.SERIES, otherSeries.get(Series.ID))
+            ));
+            for (Glob transation : transations) {
+              repository.update(transation.getKey(), FieldValue.value(Transaction.NOT_IMPORTED_TRANSACTION, null),
+                                FieldValue.value(Transaction.MIRROR, Boolean.FALSE));
+            }
           }
         }
       }
     }
-    localRepository.completeChangeSet();
+    finally {
+      localRepository.completeChangeSet();
+    }
 
     ChangeSet currentChanges = localRepository.getCurrentChanges();
 
     localRepository.startChangeSet();
-    currentChanges.safeVisit(SeriesBudget.TYPE, new UpdateMirrorSeriesBudgetChangeSetVisitor(localRepository));
-    localRepository.completeChangeSet();
+    try {
+      currentChanges.safeVisit(SeriesBudget.TYPE, new UpdateMirrorSeriesBudgetChangeSetVisitor(localRepository));
+    }
+    finally {
+      localRepository.completeChangeSet();
+    }
 
     repository.apply(currentChanges);
   }
@@ -151,12 +159,20 @@ public class SavingsAccountUpdateSeriesTrigger implements ChangeSetListener {
     ChangeSet currentChanges = localRespository.getCurrentChanges();
 
     localRespository.startChangeSet();
-    currentChanges.safeVisit(Series.TYPE, new UpdateMirrorSeriesChangeSetVisitor(localRespository));
-    localRespository.completeChangeSet();
+    try {
+      currentChanges.safeVisit(Series.TYPE, new UpdateMirrorSeriesChangeSetVisitor(localRespository));
+    }
+    finally {
+      localRespository.completeChangeSet();
+    }
 
     localRespository.startChangeSet();
-    currentChanges.safeVisit(SeriesBudget.TYPE, new UpdateMirrorSeriesBudgetChangeSetVisitor(localRespository));
-    localRespository.completeChangeSet();
+    try {
+      currentChanges.safeVisit(SeriesBudget.TYPE, new UpdateMirrorSeriesBudgetChangeSetVisitor(localRespository));
+    }
+    finally {
+      localRespository.completeChangeSet();
+    }
 
     repository.apply(currentChanges);
   }

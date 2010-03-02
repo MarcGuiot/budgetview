@@ -661,13 +661,21 @@ public class SeriesEditionDialog {
     ChangeSet changeSet = localRepository.getCurrentChanges();
 
     localRepository.startChangeSet();
-    changeSet.safeVisit(Series.TYPE, new UpdateMirrorSeriesChangeSetVisitor(localRepository));
-    localRepository.completeChangeSet();
+    try {
+      changeSet.safeVisit(Series.TYPE, new UpdateMirrorSeriesChangeSetVisitor(localRepository));
+    }
+    finally {
+      localRepository.completeChangeSet();
+    }
 
     localRepository.startChangeSet();
-    changeSet.safeVisit(SeriesBudget.TYPE, new UpdateMirrorSeriesBudgetChangeSetVisitor(localRepository));
-    localRepository.completeChangeSet();
-    
+    try {
+      changeSet.safeVisit(SeriesBudget.TYPE, new UpdateMirrorSeriesBudgetChangeSetVisitor(localRepository));
+    }
+    finally {
+      localRepository.completeChangeSet();
+    }
+
   }
 
 

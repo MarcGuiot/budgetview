@@ -67,13 +67,17 @@ public class ImportSession {
 
     importChangeSet = new DefaultChangeSet();
     importChangeSetAggregator = new ChangeSetAggregator(localRepository, importChangeSet);
+
     localRepository.startChangeSet();
+    try {
+      typedStream = new TypedInputStream(file);
+      fileType = typedStream.getType();
+      importService.run(typedStream, referenceRepository, localRepository);
+    }
+    finally {
+      localRepository.completeChangeSet();
+    }
 
-    typedStream = new TypedInputStream(file);
-    fileType = typedStream.getType();
-    importService.run(typedStream, referenceRepository, localRepository);
-
-    localRepository.completeChangeSet();
 
     BankPluginService bankPluginService = directory.get(BankPluginService.class);
     bankPluginService.apply(referenceRepository, localRepository, importChangeSet);
@@ -118,30 +122,34 @@ public class ImportSession {
       ChangeSetAggregator updateImportAggregator = new ChangeSetAggregator(localRepository, updateImportChangeSet);
       localRepository.startChangeSet();
 
-      MultiMap<Integer, Glob> transactionByAccountId = new MultiMap<Integer, Glob>();
-      for (Key key : importChangeSet.getCreated(Transaction.TYPE)) {
-        Glob transaction = localRepository.get(key);
-        transactionByAccountId.put(transaction.get(Transaction.ACCOUNT), transaction);
-      }
-      for (Map.Entry<Integer, List<Glob>> accountIdAndTransactions : transactionByAccountId.entries()) {
-        Glob account = localRepository.get(Key.create(Account.TYPE, accountIdAndTransactions.getKey()));
-        Glob bank = localRepository.findLinkTarget(account, Account.BANK);
-        Integer bankId = Bank.GENERIC_BANK_ID;
-        if (bank != null) {
-          bankId = bank.get(Bank.ID);
+      try {
+        MultiMap<Integer, Glob> transactionByAccountId = new MultiMap<Integer, Glob>();
+        for (Key key : importChangeSet.getCreated(Transaction.TYPE)) {
+          Glob transaction = localRepository.get(key);
+          transactionByAccountId.put(transaction.get(Transaction.ACCOUNT), transaction);
         }
-        TransactionAnalyzer transactionAnalyzer = directory.get(TransactionAnalyzerFactory.class).getAnalyzer();
-        transactionAnalyzer.processTransactions(bankId, accountIdAndTransactions.getValue(),
-                                                localRepository);
-        localRepository.update(account.getKey(), Account.IS_IMPORTED_ACCOUNT, true);
+        for (Map.Entry<Integer, List<Glob>> accountIdAndTransactions : transactionByAccountId.entries()) {
+          Glob account = localRepository.get(Key.create(Account.TYPE, accountIdAndTransactions.getKey()));
+          Glob bank = localRepository.findLinkTarget(account, Account.BANK);
+          Integer bankId = Bank.GENERIC_BANK_ID;
+          if (bank != null) {
+            bankId = bank.get(Bank.ID);
+          }
+          TransactionAnalyzer transactionAnalyzer = directory.get(TransactionAnalyzerFactory.class).getAnalyzer();
+          transactionAnalyzer.processTransactions(bankId, accountIdAndTransactions.getValue(),
+                                                  localRepository);
+          localRepository.update(account.getKey(), Account.IS_IMPORTED_ACCOUNT, true);
 
-        TransactionFilter transactionFilter = new TransactionFilter();
-        transactionFilter.loadTransactions(referenceRepository, localRepository,
-                                           new GlobList(accountIdAndTransactions.getValue()),
-                                           currentlySelectedAccount != null ?
-                                           currentlySelectedAccount.get(Account.ID) : null);
+          TransactionFilter transactionFilter = new TransactionFilter();
+          transactionFilter.loadTransactions(referenceRepository, localRepository,
+                                             new GlobList(accountIdAndTransactions.getValue()),
+                                             currentlySelectedAccount != null ?
+                                             currentlySelectedAccount.get(Account.ID) : null);
+        }
       }
-      localRepository.completeChangeSet();
+      finally {
+        localRepository.completeChangeSet();
+      }
       updateImportAggregator.dispose();
       referenceRepository.apply(importChangeSet);
       referenceRepository.apply(updateImportChangeSet);

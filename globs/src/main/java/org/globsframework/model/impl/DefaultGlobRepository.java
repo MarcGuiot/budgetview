@@ -545,36 +545,40 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
   public void reset(GlobList newGlobs, GlobType... changedTypes) {
     startChangeSet();
-    Set<GlobType> typesList = new HashSet<GlobType>(Arrays.asList(changedTypes));
-    for (GlobType type : changedTypes) {
-      for (Map.Entry<Key, Glob> entry : globs.get(type).entrySet()) {
-        IndexTables indexTables = indexManager.getAssociatedTable(type);
-        if (indexTables != null) {
-          indexTables.remove(entry.getValue());
+    try {
+      Set<GlobType> typesList = new HashSet<GlobType>(Arrays.asList(changedTypes));
+      for (GlobType type : changedTypes) {
+        for (Map.Entry<Key, Glob> entry : globs.get(type).entrySet()) {
+          IndexTables indexTables = indexManager.getAssociatedTable(type);
+          if (indexTables != null) {
+            indexTables.remove(entry.getValue());
+          }
+          disable(entry.getValue());
         }
-        disable(entry.getValue());
+        globs.removeAll(type);
+        add(type.getConstants());
       }
-      globs.removeAll(type);
-      add(type.getConstants());
-    }
-    for (Glob glob : newGlobs) {
-      Key key = glob.getKey();
-      if (typesList.contains(key.getGlobType())) {
-        Glob duplicatedGlob = glob.duplicate();
-        IndexTables indexTables = indexManager.getAssociatedTable(key.getGlobType());
-        globs.put(key.getGlobType(), key, duplicatedGlob);
-        if (indexTables != null) {
-          indexTables.add(duplicatedGlob);
+      for (Glob glob : newGlobs) {
+        Key key = glob.getKey();
+        if (typesList.contains(key.getGlobType())) {
+          Glob duplicatedGlob = glob.duplicate();
+          IndexTables indexTables = indexManager.getAssociatedTable(key.getGlobType());
+          globs.put(key.getGlobType(), key, duplicatedGlob);
+          if (indexTables != null) {
+            indexTables.add(duplicatedGlob);
+          }
         }
       }
+      for (ChangeSetListener listener : triggers) {
+        listener.globsReset(this, typesList);
+      }
+      for (ChangeSetListener listener : changeListeners) {
+        listener.globsReset(this, typesList);
+      }
     }
-    for (ChangeSetListener listener : triggers) {
-      listener.globsReset(this, typesList);
+    finally {
+      completeChangeSet();
     }
-    for (ChangeSetListener listener : changeListeners) {
-      listener.globsReset(this, typesList);
-    }
-    completeChangeSet();
   }
 
   public GlobIdGenerator getIdGenerator() {

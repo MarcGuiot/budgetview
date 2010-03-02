@@ -160,10 +160,14 @@ public class DataCheckerAction extends AbstractAction {
 
         // On remet à UNCATEGORIZED les transactions avec SERIES à null
         repository.startChangeSet();
-        repository.safeApply(Transaction.TYPE,
+        try {
+          repository.safeApply(Transaction.TYPE,
                              GlobMatchers.isNull(Transaction.SERIES),
                              GlobFunctors.update(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID));
-        repository.completeChangeSetWithoutTriggers();
+        }
+        finally {
+          repository.completeChangeSetWithoutTriggers();
+        }
 
         // On verifie que les dates de debut/fin de series sont bien dans les bornes des transactions
         // associé a la serie
