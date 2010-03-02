@@ -111,6 +111,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
       clear(balanceLabel);
       clear(estimatedPositionLabel);
       clear(uncategorizedButton);
+      updateHelpMessage();
       return;
     }
 
