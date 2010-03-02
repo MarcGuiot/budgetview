@@ -584,7 +584,7 @@ public class ImportDialog {
     private MultiMap<String, Integer> accountsByLabel = new MultiMap<String, Integer>();
 
     public void run(Glob glob, GlobRepository repository) throws Exception {
-      String label = createLabel(glob, Transaction.QIF_M, Transaction.QIF_P);
+      String label = Transaction.anonymise(createLabel(glob, Transaction.QIF_M, Transaction.QIF_P));
       accountsByLabel.put(label, glob.get(Transaction.ACCOUNT));
     }
 
@@ -602,7 +602,7 @@ public class ImportDialog {
     Integer findAccount(GlobList importedTransactions) {
       Map<Integer, Integer> foundAccountsCount = new HashMap<Integer, Integer>();
       for (Glob transaction : importedTransactions) {
-        String label = createLabel(transaction, ImportedTransaction.QIF_M, ImportedTransaction.QIF_P);
+        String label = Transaction.anonymise(createLabel(transaction, ImportedTransaction.QIF_M, ImportedTransaction.QIF_P));
         List<Integer> accounts = accountsByLabel.get(label);
         for (Integer accountId : accounts) {
           Integer count = foundAccountsCount.get(accountId);
