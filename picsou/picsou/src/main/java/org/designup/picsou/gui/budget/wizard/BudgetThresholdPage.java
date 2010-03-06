@@ -61,8 +61,8 @@ public class BudgetThresholdPage extends AbstractWizardPage {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/budgetWizard/budgetThresholdPage.splits", localRepository, directory);
 
-    builder.add("textTop", Gui.createHelpTextComponent("budgetWizard/8_threshold1.html"));
-    builder.add("textBottom", Gui.createHelpTextComponent("budgetWizard/8_threshold2.html"));
+    builder.add("textTop", Gui.createHelpTextComponent("budgetWizard/08_threshold1.html"));
+    builder.add("textBottom", Gui.createHelpTextComponent("budgetWizard/08_threshold2.html"));
 
     builder.addLabel("estimatedPosition", BudgetStat.TYPE,
                      new EspectedPositionStringifier());

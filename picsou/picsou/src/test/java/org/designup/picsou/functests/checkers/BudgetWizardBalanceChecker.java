@@ -16,14 +16,13 @@ public class BudgetWizardBalanceChecker extends BudgetWizardPageChecker {
   }
 
   public BudgetWizardBalanceChecker checkBalance(double balance) {
-    TextBox textBox = panel.getTextBox("balanceLabel");
-    assertThat(textBox.textEquals(toString(balance, true)));
-    return this;
-  }
-
-  public BudgetWizardBalanceChecker checkBalanceText(String text) {
     TextBox textBox = panel.getTextBox("balanceDescription");
-    assertThat(textBox.textContains(text));
+    if (balance < 0)
+    assertThat(textBox.textContains("You spend " + toAbsString(balance) + " more than you earn"));
+    else if (balance > 0)
+      assertThat(textBox.textContains("You earn " + toAbsString(balance) + " more than you spend"));
+    else
+      assertThat(textBox.textContains("Your budget is balanced"));
     return this;
   }
 

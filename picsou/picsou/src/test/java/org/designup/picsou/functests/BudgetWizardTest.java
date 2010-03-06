@@ -46,7 +46,6 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary().openBudgetWizardPage()
       .gotoBalance()
       .checkBalance(balanceFor200807)
-      .checkBalanceText("You have to spend 50.00 less")
       .checkBalanceDetails(incomeFor200807, 1530.00, 400.00, 100.00, 200.00)
       .close();
     views.selectHome();
@@ -61,7 +60,6 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary().openBudgetWizardPage()
       .gotoBalance()
       .checkBalance(balanceFor200808)
-      .checkBalanceText("You have 170.00 left to distribute")
       .checkBalanceDetails(incomeFor200808, 1530.00, 400.00, 100.00, 0)
       .gotoPosition()
       .checkPositionDescriptionContains("Computation details")
@@ -81,7 +79,6 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary().openBudgetWizardPage()
       .gotoBalance()
       .checkBalance(balanceFor200807 + balanceFor200808)
-      .checkBalanceText("You have 120.00 left to distribute")
       .gotoPosition()
       .checkInitialPosition(1000.00)
       .checkIncome(2200.00)
@@ -101,7 +98,6 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary().openBudgetWizardPage()
       .gotoBalance()
       .checkBalance(0)
-      .checkBalanceText("Your budget is balanced")
       .close();
   }
 

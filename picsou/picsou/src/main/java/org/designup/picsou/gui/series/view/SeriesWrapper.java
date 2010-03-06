@@ -30,8 +30,8 @@ public class SeriesWrapper {
   public static final Integer ALL_ID = 0;
   public static final Integer UNCATEGORIZED_ID = 1;
 
-  public static final Integer BALANCE_SUMMARY_ID = -2;
-  public static final Integer MAIN_POSITION_SUMMARY_ID = -3;
+  public static final Integer MAIN_POSITION_SUMMARY_ID = -2;
+  public static final Integer BALANCE_SUMMARY_ID = -3;
   public static final Integer SAVINGS_POSITION_SUMMARY_ID = -4;
 
   public static final Integer[] SUMMARY_IDS = {BALANCE_SUMMARY_ID,

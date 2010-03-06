@@ -2,50 +2,19 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-
-    <style selector="label.columnTitle" foreground="budgetSummaryDialog.columnTitle"
-           font="-,bold,18" weightY="0" marginTop="10"
-           fill="horizontal" anchor="center" horizontalAlignment="center"/>
-
-    <style selector=".amountBlock"
-           minimumSize="(40,70)" preferredSize="(80,70)"
-           marginLeft="40" marginRight="40" marginTop="15" marginBottom="15"
-           opaque="true" border="line(budgetSummaryDialog.amount.border)"
-           background="budgetSummaryDialog.amount.bg"/>
-
-    <style selector="label.mainAmount"
-           font="-,bold,20" fill="none" anchor="center" marginTop="20"/>
-
     <style selector=".description"
-           foreground="budgetSummaryDialog.description" opaque="false"
-           marginLeft="10" marginRight="10" marginTop="5" marginBottom="10"/>
-
-    <style selector="label.header" foreground="budgetSummaryDialog.header" font="-,bold,12"
-           fill="horizontal" anchor="center" horizontalAlignment="center"/>
-
-    <style selector="label.amountLabel" foreground="budgetSummaryDialog.label" font="-,plain,10"
-           fill="horizontal" anchor="center" horizontalAlignment="right"
-           weightX="10" marginRight="15"/>
-
-    <style selector="label.amount"
-           font="-,bold,11" foreground="budgetSummaryDialog.amount"
-           fill="none" anchor="right" marginRight="10" weightX="0"
-           border="empty(5,0,5,0)"/>
+           foreground="block.text" opaque="false"
+           marginLeft="10" marginRight="10" marginTop="5" marginBottom="5"/>
   </styles>
 
   <column margin="10">
 
     <verticalBoxes border="empty(0,0,0,10)">
       <htmlEditorPane text="$budgetWizard.balance.top" styleClass="description"/>
-      <panel styleClass="amountBlock">
-        <column>
-          <label ref="balanceLabel" styleClass="mainAmount" marginTop="0"/>
-        </column>
-      </panel>
       <htmlEditorPane ref="balanceDescription" styleClass="description"/>
       <row>
         <filler fill="horizontal"/>
-        <panel ref="balanceChart" background="block.inner.bg"/>
+        <panel ref="balanceChart" background="block.inner.bg" margin="10"/>
         <filler fill="horizontal"/>
       </row>
     </verticalBoxes>

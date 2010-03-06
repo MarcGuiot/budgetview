@@ -2,14 +2,14 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(600,620)" opaque="true">
+  <panel styleClass="dialog" preferredSize="(560,620)" opaque="true">
     <column styleClass="innerDialog">
 
       <label ref="title" styleClass="title"/>
 
       <column styleClass="blockScrollBorder">
 
-        <panel ref="content" opaque="true" background="#FFFFFF"/>
+        <panel ref="content" opaque="true" background="block.inner.bg"/>
 
         <row name="wizardControls" styleClass="footer">
           <button action="previous" marginLeft="10"/>

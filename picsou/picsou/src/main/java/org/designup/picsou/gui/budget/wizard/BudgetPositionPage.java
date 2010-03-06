@@ -103,7 +103,7 @@ public class BudgetPositionPage extends AbstractWizardPage {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/budgetWizard/budgetPositionPage.splits", repository, directory);
 
-    builder.add("text", Gui.createHelpTextComponent("budgetWizard/7_endOfMonthPosition.html"));
+    builder.add("text", Gui.createHelpTextComponent("budgetWizard/07_endOfMonthPosition.html"));
 
     positionCard = builder.addCardHandler("cards");
 

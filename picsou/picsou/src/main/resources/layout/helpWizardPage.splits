@@ -4,7 +4,7 @@
 
   <scrollPane weightY="100" forceVerticalScroll="true" border="">
     <htmlEditorPane ref="editor" useImageLocator="true"
-                    opaque="true" background="#FFFFFF" foreground="#222222"
+                    opaque="true" background="#FFFFFF" foreground="block.text"
                     border="matte(10,10,10,10,#FFFFFF)"/>
   </scrollPane>
 

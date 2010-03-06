@@ -13,7 +13,7 @@
       <label ref="title"/>
 
       <scrollPane weightY="100">
-        <htmlEditorPane ref="editor" useImageLocator="true" opaque="false" foreground="#222222"/>
+        <htmlEditorPane ref="editor" useImageLocator="true" opaque="false" foreground="block.text"/>
       </scrollPane>
 
       <row margin="0" weightY="0">

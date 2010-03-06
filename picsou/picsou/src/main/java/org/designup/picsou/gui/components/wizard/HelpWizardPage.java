@@ -54,9 +54,11 @@ public class HelpWizardPage extends AbstractWizardPage {
     GuiUtils.loadCssResource("/help/help.css", editor, HelpDialog.class);
     builder.add("editor", editor);
 
+    panel = builder.load();
+  }
+
+  public void updateBeforeDisplay() {
     editor.setText(htmlContent);
     editor.setCaretPosition(0);
-
-    panel = builder.load();
   }
 }

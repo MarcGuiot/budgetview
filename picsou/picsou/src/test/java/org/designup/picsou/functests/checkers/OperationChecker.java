@@ -147,13 +147,11 @@ public class OperationChecker {
               .defineAccount(bank, "Main account", DEFAULT_ACCOUNT_NUMBER);
           }
           else if (bank != null && importDialog.findSwingComponent(JButton.class, "Set the bank") != null){ // OFX
-            System.out.println("OperationChecker.process");
             ImportChecker.create(importDialog).openEntityEditionChecker()
               .selectBank(bank)
               .validate();
           }
           if (targetAccount != null) {
-            System.out.println("OperationChecker.process");
             importDialog.getComboBox("accountCombo").select(targetAccount);
           }
           final Button okButton = importDialog.getButton(Lang.get("import.ok"));

@@ -17,13 +17,13 @@
            fill="none" anchor="center" marginTop="0" marginBottom="20"/>
 
     <style selector=".description"
-           foreground="budgetSummaryDialog.description" opaque="false"
+           foreground="block.text" opaque="false"
            marginTop="5" marginBottom="5"/>
 
     <style selector="textArea.description" editable="false" lineWrap="true" wrapStyleWord="true"/>
 
     <style selector="label.description"
-           foreground="budgetSummaryDialog.description" opaque="false" marginBottom="5"
+           foreground="block.text" opaque="false" marginBottom="5"
            fill="horizontal" anchor="left" horizontalAlignment="left"/>
 
     <style selector="label.header" foreground="budgetSummaryDialog.header" font="-,bold,12"
