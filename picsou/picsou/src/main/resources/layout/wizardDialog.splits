@@ -9,9 +9,9 @@
 
       <column styleClass="blockScrollBorder">
 
-        <panel ref="content" opaque="true" background="block.inner.bg"/>
+        <panel ref="content" opaque="true" background="block.inner.bg" weightY="10"/>
 
-        <row name="wizardControls" styleClass="footer">
+        <row name="wizardControls" styleClass="footer" weightY="0.1">
           <button action="previous" marginLeft="10"/>
           <filler fill="horizontal"/>
           <comboBox ref="combo" marginTop="4" marginBottom="4"/>

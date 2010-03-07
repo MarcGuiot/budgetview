@@ -4,6 +4,7 @@ import org.designup.picsou.gui.components.wizard.AbstractWizardPage;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
@@ -104,6 +105,7 @@ public class BudgetPositionPage extends AbstractWizardPage {
       new GlobsPanelBuilder(getClass(), "/layout/budgetWizard/budgetPositionPage.splits", repository, directory);
 
     builder.add("text", Gui.createHelpTextComponent("budgetWizard/07_endOfMonthPosition.html"));
+    builder.add("handler", new HyperlinkHandler(directory));
 
     positionCard = builder.addCardHandler("cards");
 

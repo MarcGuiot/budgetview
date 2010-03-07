@@ -24,7 +24,6 @@ public class BudgetWizardDialog {
     wizard.add(newHelpPage("setPeriodicities", "03_setPeriodicities.html"));
     wizard.add(newHelpPage("prepareSavings", "04_prepareSavings.html"));
     wizard.add(newHelpPage("prepareProjects", "05_prepareProjects.html"));
-    wizard.add(newHelpPage("adjustBudget", "06_adjustBudget.html"));
     wizard.add(new BudgetPositionPage(repository, directory));
     wizard.add(new BudgetThresholdPage(repository, directory));
     wizard.add(newHelpPage("endOfCurrentMonth", "09_endOfCurrentMonth.html"));
