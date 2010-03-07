@@ -93,7 +93,6 @@ public class ImportDialog {
   private GlobsPanelBuilder builder2;
   private GlobsPanelBuilder builder1;
   private ImportedTransactionsTable importedTransactionTable;
-  private GlobComboView comboView;
 
   public ImportDialog(String textForCloseButton, List<File> files, Glob defaultAccount,
                       final Window owner, final GlobRepository repository, Directory directory,
@@ -203,7 +202,7 @@ public class ImportDialog {
         .setUpdateModeEditable(false);
     newAccountButton = builder2.add("newAccount", new JButton(newAccountAction)).getComponent();
 
-    comboView = GlobComboView.init(Account.TYPE, sessionRepository, sessionDirectory)
+    GlobComboView comboView = GlobComboView.init(Account.TYPE, sessionRepository, sessionDirectory)
       .setEmptyOptionLabel(Lang.get("import.account.combo.select"))
       .setFilter(new GlobMatcher() {
         public boolean matches(Glob account, GlobRepository repository) {
