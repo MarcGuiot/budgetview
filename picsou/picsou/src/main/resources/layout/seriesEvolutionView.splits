@@ -15,16 +15,17 @@
 
       <verticalSplit styleClass="innerBlock">
 
-        <column weightY="6">
-
-          <scrollPane marginBottom="0" verticalUnitIncrement="10" border="matte(1,1,1,1,seriesEvolution.border)">
-            <table ref="seriesEvolutionTable" rowHeight="20"/>
+        <column styleClass="blockScrollBorder" weightY="6">
+          <scrollPane verticalUnitIncrement="10" border="matte(1,1,0,1,block.scroll.border)">
+            <table ref="seriesEvolutionTable" rowHeight="20" border="none"/>
           </scrollPane>
 
-          <row styleClass="iconButtonGroup">
-            <button action="expand" styleClass="expand" tooltipText="$series.expand.tooltip"/>
-            <button action="collapse" styleClass="collapse" tooltipText="$series.collapse.tooltip"/>
+          <row styleClass="footer">
+            <button action="expand" tooltipText="$series.expand.tooltip"/>
+            <button action="collapse" tooltipText="$series.collapse.tooltip"/>
             <filler fill="horizontal"/>
+            <button action="previousMonth"/>
+            <button action="nextMonth"/>
           </row>
 
         </column>

@@ -50,10 +50,10 @@ public class TimeView extends View {
     gotoLastButton = new JButton(new LastMonthNavigationAction(viewPanel));
     Gui.configureIconButton(gotoLastButton, "lastPeriod", new Dimension(19, 19));
 
-    gotoPrevButton = new JButton(new PreviousMonthNavigationAction(viewPanel));
+    gotoPrevButton = new JButton(new ScrollToPreviousMonthAction(viewPanel));
     Gui.configureIconButton(gotoPrevButton, "prevPeriod", new Dimension(19, 19));
 
-    gotoNextButton = new JButton(new NextMonthNavigationAction(viewPanel));
+    gotoNextButton = new JButton(new ScrollToNextMonthAction(viewPanel));
     Gui.configureIconButton(gotoNextButton, "nextPeriod", new Dimension(19, 19));
   }
 
@@ -94,10 +94,10 @@ public class TimeView extends View {
     }
   }
 
-  private static class PreviousMonthNavigationAction extends MonthNavigationAction {
+  private static class ScrollToPreviousMonthAction extends MonthNavigationAction {
     private TimeViewPanel viewPanel;
 
-    public PreviousMonthNavigationAction(TimeViewPanel viewPanel) {
+    public ScrollToPreviousMonthAction(TimeViewPanel viewPanel) {
       super("Prev");
       this.viewPanel = viewPanel;
     }
@@ -107,10 +107,10 @@ public class TimeView extends View {
     }
   }
 
-  private static class NextMonthNavigationAction extends MonthNavigationAction {
+  private static class ScrollToNextMonthAction extends MonthNavigationAction {
     private TimeViewPanel viewPanel;
 
-    public NextMonthNavigationAction(TimeViewPanel viewPanel) {
+    public ScrollToNextMonthAction(TimeViewPanel viewPanel) {
       super("Next");
       this.viewPanel = viewPanel;
     }

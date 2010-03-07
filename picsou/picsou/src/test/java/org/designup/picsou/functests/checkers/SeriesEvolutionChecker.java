@@ -10,6 +10,7 @@ import org.uispec4j.Panel;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import org.uispec4j.utils.ColorUtils;
 import org.uispec4j.utils.KeyUtils;
 
@@ -137,7 +138,7 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
   }
 
   public void checkSeriesNotShown(String seriesName) {
-    UISpecAssert.assertFalse(getTable().containsRow(SeriesEvolutionView.LABEL_COLUMN_INDEX, seriesName));
+    assertFalse(getTable().containsRow(SeriesEvolutionView.LABEL_COLUMN_INDEX, seriesName));
   }
 
   public SeriesEvolutionChecker checkValue(String rowLabel, String columnLabel, String displayedValue) {
@@ -194,6 +195,22 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
   public void checkSeriesChartLabel(String text) {
     TextBox textBox = getPanel().getTextBox("seriesChartLabel");
     Assert.assertEquals(text, org.uispec4j.utils.Utils.cleanupHtml(textBox.getText()));
+  }
+
+  public void selectNextMonth() {
+    getPanel().getButton("nextMonth").click();
+  }
+
+  public void checkNextMonthSelectionDisabled() {
+    assertFalse(getPanel().getButton("nextMonth").isEnabled());
+  }
+
+  public void selectPreviousMonth() {
+    getPanel().getButton("previousMonth").click();
+  }
+
+  public void checkPreviousMonthSelectionDisabled() {
+    assertFalse(getPanel().getButton("previousMonth").isEnabled());
   }
 
   public class SeriesTableChecker extends TableChecker {

@@ -573,4 +573,49 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       "\tOther\t\t\t\t\t\t\t\t\n"
     );
   }
+
+  public void testMonthSelection() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.00, "Auchan")
+      .load();
+
+    views.selectEvolution();
+    timeline.checkSelection("2008/07");
+    seriesEvolution.checkColumnNames(
+      "", "June 08", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09"
+    );
+
+    seriesEvolution.checkPreviousMonthSelectionDisabled();
+    seriesEvolution.selectNextMonth();
+    timeline.checkSelection("2008/08");
+    seriesEvolution.checkColumnNames(
+      "", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09", "Feb 09"
+    );
+
+    seriesEvolution.selectPreviousMonth();
+    timeline.checkSelection("2008/07");
+    seriesEvolution.checkColumnNames(
+      "", "June 08", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09"
+    );
+
+    timeline.selectMonth("2009/01");
+    seriesEvolution.checkNextMonthSelectionDisabled();
+    seriesEvolution.selectPreviousMonth();
+    timeline.checkSelection("2008/12");
+    seriesEvolution.checkColumnNames(
+      "", "Nov 08", "Dec 08", "Jan 09", "Feb 09", "Mar 09", "Apr 09", "May 09", "June 09"
+    );
+
+    timeline.selectMonths("2008/07", "2009/01");
+    seriesEvolution.checkPreviousMonthSelectionDisabled();
+    seriesEvolution.checkNextMonthSelectionDisabled();
+
+    timeline.selectMonths("2008/11", "2008/12");
+    seriesEvolution.selectNextMonth();
+    timeline.checkSelection("2009/01");
+
+    timeline.selectMonths("2008/11", "2008/12");
+    seriesEvolution.selectPreviousMonth();
+    timeline.checkSelection("2008/10");
+  }
 }

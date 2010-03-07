@@ -172,7 +172,7 @@
     <style selector=".footer" background="block.footer.bg" border="matte(1,0,0,0,block.footer.top)"
            opaque="true"/>
     <style selector=".footer button" ui="hyperlinkButtonWithoutUnderline" foreground="block.footer.button"
-           marginTop="2" marginBottom="2"/>
+           marginTop="2" marginBottom="2" fill="none"/>
 
     <style selector=".blockScrollBorder" border="line(block.inner.border)"/>
     <style selector=".blockScrollBorder scrollPane" border="none" marginBottom="0"/>

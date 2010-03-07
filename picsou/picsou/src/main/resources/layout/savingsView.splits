@@ -21,7 +21,7 @@
           <panel styleClass="block" preferredSize="(300,400)" name="nextProjectsPanel">
             <column styleClass="innerBlock">
               <column styleClass="blockScrollBorder">
-                <scrollPane verticalUnitIncrement="10" border="none">
+                <scrollPane verticalUnitIncrement="10" border="matte(1,1,0,1,block.scroll.border)">
                   <table ref="nextProjects" rowHeight="20"/>
                 </scrollPane>
                 <row styleClass="footer">

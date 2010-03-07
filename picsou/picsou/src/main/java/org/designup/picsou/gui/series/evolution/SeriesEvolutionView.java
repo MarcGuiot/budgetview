@@ -1,6 +1,8 @@
 package org.designup.picsou.gui.series.evolution;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.actions.SelectNextMonthAction;
+import org.designup.picsou.gui.actions.SelectPreviousMonthAction;
 import org.designup.picsou.gui.components.CustomBoldLabelCustomizer;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.expansion.*;
@@ -41,6 +43,7 @@ public class SeriesEvolutionView extends View {
   public static final int LABEL_COLUMN_INDEX = 1;
   public static final int MONTH_COLUMNS_COUNT = 8;
 
+  private Directory parentDirectory;
   private SelectionService parentSelectionService;
   private GlobTableView tableView;
   private JTable table;
@@ -50,6 +53,7 @@ public class SeriesEvolutionView extends View {
 
   public SeriesEvolutionView(GlobRepository repository, Directory directory) {
     super(repository, createLocalDirectory(directory));
+    this.parentDirectory = directory;
     this.parentSelectionService = directory.get(SelectionService.class);
   }
 
@@ -171,6 +175,8 @@ public class SeriesEvolutionView extends View {
 
     builder.add("expand", new ExpandTableAction(expansionModel));
     builder.add("collapse", new CollapseTableAction(expansionModel));
+    builder.add("previousMonth", new SelectPreviousMonthAction(repository, parentDirectory));
+    builder.add("nextMonth", new SelectNextMonthAction(repository, parentDirectory));
 
     this.chartPanel = new SeriesEvolutionChartPanel(repository, directory, parentSelectionService);
     this.chartPanel.registerCharts(builder);
