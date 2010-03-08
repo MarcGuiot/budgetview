@@ -70,17 +70,19 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   }
 
   public GlobTableView addColumn(String name, Field field) {
-    startColumn()
+    GlobTableColumnBuilder builder = startColumn()
       .setName(name)
       .setField(field);
+    columnAdded(builder.getColumn());
     return this;
   }
 
   public GlobTableView addColumn(String name, Field field, TableCellEditor editor) {
-    startColumn()
+    GlobTableColumnBuilder builder = startColumn()
       .setName(name)
       .setField(field)
       .setEditor(editor);
+    columnAdded(builder.getColumn());
     return this;
   }
 
@@ -89,12 +91,13 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   }
 
   public GlobTableView addColumn(String name, Field field, LabelCustomizer customizer) {
-    startColumn()
+    GlobTableColumnBuilder builder = startColumn()
       .setName(name)
       .setField(field)
       .addLabelCustomizer(customizer)
       .setBackgroundPainter(defaultBackgroundPainter)
       .setEditor(null);
+    columnAdded(builder.getColumn());
     return this;
   }
 
@@ -112,11 +115,12 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
                                  LabelCustomizer customizer,
                                  CellPainter backgroundPainter,
                                  TableCellEditor editor) {
-    startColumn()
+    GlobTableColumnBuilder builder = startColumn()
       .setField(field)
       .addLabelCustomizer(customizer)
       .setBackgroundPainter(backgroundPainter)
       .setEditor(editor);
+    columnAdded(builder.getColumn());
     return this;
   }
 
@@ -141,33 +145,46 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   }
 
   public GlobTableView addColumn(String name, GlobStringifier stringifier, LabelCustomizer customizer, CellPainter backgroundPainter) {
-    startColumn()
+    GlobTableColumnBuilder builder = startColumn()
       .setName(name)
       .setStringifier(stringifier)
       .setBackgroundPainter(backgroundPainter)
       .addLabelCustomizer(chain(LabelCustomizers.stringifier(stringifier, repository), customizer))
       .setComparator(new CompositeComparator<Glob>(stringifier.getComparator(repository), initialComparator));
+    columnAdded(builder.getColumn());
     return this;
   }
 
+  private void columnAdded(GlobTableColumn column) {
+    if (table != null){
+      TableCellEditor editor = column.getEditor();
+      if (editor != null) {
+        table.getColumnModel().getColumn(columns.size() - 1).setCellEditor(editor);
+      }
+      refresh(true);
+    }
+  }
+
   public GlobTableView addColumn(String name, TableCellRenderer renderer, GlobStringifier stringifier) {
-    startColumn()
+    GlobTableColumnBuilder builder = startColumn()
       .setName(name)
       .setRenderer(renderer)
       .setBackgroundPainter(defaultBackgroundPainter)
       .setStringifier(stringifier)
       .setComparator(new CompositeComparator<Glob>(stringifier.getComparator(repository), initialComparator));
+    columnAdded(builder.getColumn());
     return this;
   }
 
   public GlobTableView addColumn(String name, TableCellRenderer renderer, TableCellEditor editor, GlobStringifier stringifier) {
-    startColumn()
+    GlobTableColumnBuilder builder = startColumn()
       .setName(name)
       .setBackgroundPainter(defaultBackgroundPainter)
       .setRenderer(renderer)
       .setEditor(editor)
       .setStringifier(stringifier)
       .setComparator(new CompositeComparator<Glob>(stringifier.getComparator(repository), initialComparator));
+    columnAdded(builder.getColumn());
     return this;
   }
 
@@ -303,7 +320,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     return table;
   }
 
-  public void resetSort(){
+  public void resetSort() {
     tableModel.sortColumn(-1);
   }
 
@@ -373,7 +390,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     return tableModel.getRowCount();
   }
 
-  public void refresh() {
+  public void refresh(boolean structChanged) {
     ListSelectionModel selectionModel = table.getSelectionModel();
     disableSelectionNotification();
     try {
@@ -381,7 +398,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       for (int index : table.getSelectedRows()) {
         selection.add(tableModel.get(index));
       }
-      tableModel.refresh();
+      tableModel.refresh(structChanged);
       doSelect(selectionModel, selection);
     }
     finally {
@@ -489,6 +506,11 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   public void dispose() {
     tableModel.dispose();
     selectionService.removeListener(this);
+  }
+
+  public void removeColumn(int index) {
+    columns.remove(index);
+    refresh(true);
   }
 
   private static class ColumnHeaderRenderer implements LabelCustomizer {
@@ -615,10 +637,15 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       });
     }
 
-    public void refresh() {
+    public void refresh(boolean structChanged) {
       model.refresh();
-      refreshColumnNames();
-      fireTableDataChanged();
+      if (structChanged) {
+        fireTableStructureChanged();
+      }
+      else {
+        refreshColumnNames();
+        fireTableDataChanged();
+      }
     }
 
     private void refreshColumnNames() {
@@ -713,6 +740,8 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     public void dispose() {
       repository.removeChangeListener(model);
     }
+
+
   }
 
   private void initClipboardHandler() {

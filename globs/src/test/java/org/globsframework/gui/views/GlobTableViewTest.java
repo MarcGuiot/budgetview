@@ -738,7 +738,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     assertTrue(table.rowsAreSelected(0, 1));
     listener.assertEmpty();
 
-    view.refresh();
+    view.refresh(false);
     assertTrue(table.contentEquals(new String[][]{
       {"3", "a1"},
       {"2", "a2"},
@@ -788,7 +788,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     repository.startChangeSet();
     repository.delete(key1);
 
-    view.refresh();
+    view.refresh(false);
     assertTrue(table.contentEquals(new String[][]{
       {"name2", "2.2"}
     }));
@@ -813,7 +813,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     column1.name = "Col A";
     column2.name = "Col B";
 
-    view.refresh();
+    view.refresh(false);
     assertThat(table.getHeader().contentEquals("Col A", "Col B"));
   }
 
@@ -1056,6 +1056,47 @@ public class GlobTableViewTest extends GuiComponentTestCase {
 
     KeyUtils.pressKey(jTable, org.uispec4j.Key.plaformSpecificCtrl(org.uispec4j.Key.K));
     assertEquals("ok", logger.toString());
+  }
+
+  public void testAddColumn() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' value='1.1' present='false'/>" +
+                    "<dummyObject id='2' name='name2' value='2.2' present='true'/>");
+    Table table = createTableWithNameAndValueColumns(repository);
+
+    assertTrue(table.getHeader().contentEquals("name", "value"));
+
+    view.addColumn(DummyObject.PRESENT);
+
+    assertTrue(table.getHeader().contentEquals("name", "value", "present"));
+
+    assertTrue(table.contentEquals(new String[][]{
+      {"name1", "1.1", "no"},
+      {"name2", "2.2", "yes"},
+    }));
+
+  }
+
+  public void testRemoveColumn() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' value='1.1'/>" +
+                    "<dummyObject id='2' name='name2' value='2.2'/>");
+    Table table = createTableWithNameAndValueColumns(repository);
+
+    assertTrue(table.getHeader().contentEquals("name", "value"));
+    
+    view.removeColumn(1);
+
+    assertTrue(table.getHeader().contentEquals("name"));
+
+    assertTrue(table.contentEquals(new String[][]{
+      {"name1"},
+      {"name2"},
+    }));
+
+    view.removeColumn(0);
+
+    assertTrue(table.getHeader().contentEquals());
   }
 
   private void checkColumnIsNotRightAligned(Table table, int column) {
