@@ -45,4 +45,9 @@ then
 fi
 
 scp ../picsou/obfuscated/cashpilot${JAR_VERSION}.jar ../picsou/ChangeLogOutput-${JAR_VERSION}.txt.bz2 build@91.121.123.100:versions/
-scp ../picsou_licence_server/picsouLicenceServer.jar build@91.121.123.100:versions/picousLicenceServer${JAR_VERSION}.jar
+
+if [ -a ../picsou_licence_server/picsouLicenceServer.jar ];
+then
+  scp ../picsou_licence_server/picsouLicenceServer.jar build@91.121.123.100:versions/picsouLicenceServer${JAR_VERSION}.jar
+fi
+

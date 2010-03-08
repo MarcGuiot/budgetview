@@ -69,7 +69,7 @@ public class LicenseServer {
   }
 
   private static void initLogger() throws IOException {
-    InputStream stream = LicenseServer.class.getClassLoader().getResourceAsStream("logging.properties");
+    InputStream stream = LicenseServer.class.getClassLoader().getResourceAsStream("loggingLicenceServer.properties");
     LogManager.getLogManager().readConfiguration(stream);
   }
 
@@ -137,6 +137,7 @@ public class LicenseServer {
 
   public void start() throws Exception {
     init();
+    logger.info("starting server");
     jetty.start();
   }
 

@@ -4,7 +4,7 @@ C org.designup.picsou.license.servlet.LicenseServer
 C org.designup.picsou.license.generator.LicenseGenerator
 C org.mortbay.jetty.RetryRequest
 C javax.servlet.SingleThreadModel
-R logging.properties
+R loggingLicenceServer.properties
 R javax/servlet/LocalStrings.properties
 R javax/servlet/http/LocalStrings.properties
 R i18n/
