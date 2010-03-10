@@ -20,11 +20,13 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
                                       values.get(SeriesBudget.MONTH));
         Glob seriesStat = repository.findOrCreate(seriesStatKey);
 
-        Pair<Double, Double> remainingAndOverrun = computeRemainingAndOverrun(values, seriesStat);
-        repository.update(seriesStatKey,
-                          FieldValue.value(SeriesStat.PLANNED_AMOUNT, values.get(SeriesBudget.AMOUNT)),
-                          FieldValue.value(SeriesStat.REMAINING_AMOUNT, remainingAndOverrun.getFirst()),
-                          FieldValue.value(SeriesStat.OVERRUN_AMOUNT, remainingAndOverrun.getSecond()));
+        if (values.isTrue(SeriesBudget.ACTIVE)) {
+          Pair<Double, Double> remainingAndOverrun = computeRemainingAndOverrun(values, seriesStat);
+          repository.update(seriesStatKey,
+                            FieldValue.value(SeriesStat.PLANNED_AMOUNT, values.get(SeriesBudget.AMOUNT)),
+                            FieldValue.value(SeriesStat.REMAINING_AMOUNT, remainingAndOverrun.getFirst()),
+                            FieldValue.value(SeriesStat.OVERRUN_AMOUNT, remainingAndOverrun.getSecond()));
+        }
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
@@ -65,12 +67,14 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
                                   seriesBudget.get(SeriesBudget.MONTH));
     Glob seriesStat = repository.findOrCreate(seriesStatKey);
 
-    Pair<Double, Double> remainingAndOverrun = computeRemainingAndOverrun(seriesBudget, seriesStat);
-    repository.update(seriesStatKey,
-                      FieldValue.value(SeriesStat.PLANNED_AMOUNT,
-                                       seriesBudget.isTrue(SeriesBudget.ACTIVE) ? Utils.zeroIfNull(seriesBudget.get(SeriesBudget.AMOUNT)) : 0.),
-                      FieldValue.value(SeriesStat.REMAINING_AMOUNT, remainingAndOverrun.getFirst()),
-                      FieldValue.value(SeriesStat.OVERRUN_AMOUNT, remainingAndOverrun.getSecond()));
+    if (seriesBudget.get(SeriesBudget.ACTIVE)) {
+      Pair<Double, Double> remainingAndOverrun = computeRemainingAndOverrun(seriesBudget, seriesStat);
+      repository.update(seriesStatKey,
+                        FieldValue.value(SeriesStat.PLANNED_AMOUNT,
+                                         seriesBudget.isTrue(SeriesBudget.ACTIVE) ? Utils.zeroIfNull(seriesBudget.get(SeriesBudget.AMOUNT)) : 0.),
+                        FieldValue.value(SeriesStat.REMAINING_AMOUNT, remainingAndOverrun.getFirst()),
+                        FieldValue.value(SeriesStat.OVERRUN_AMOUNT, remainingAndOverrun.getSecond()));
+    }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
@@ -86,14 +90,17 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
                                     seriesBudget.get(SeriesBudget.MONTH));
       Glob seriesStat = repository.findOrCreate(seriesStatKey);
 
-      Pair<Double, Double> remainingAndOverrun = computeRemainingAndOverrun(seriesBudget, seriesStat);
+      if (seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
 
-      // Do not inline - amount can be null
-      Double value = seriesBudget.isTrue(SeriesBudget.ACTIVE) ? seriesBudget.get(SeriesBudget.AMOUNT) : Double.valueOf(0.0);
-      repository.update(seriesStatKey,
-                        FieldValue.value(SeriesStat.PLANNED_AMOUNT, value),
-                        FieldValue.value(SeriesStat.REMAINING_AMOUNT, remainingAndOverrun.getFirst()),
-                        FieldValue.value(SeriesStat.OVERRUN_AMOUNT, remainingAndOverrun.getSecond()));
+        Pair<Double, Double> remainingAndOverrun = computeRemainingAndOverrun(seriesBudget, seriesStat);
+
+        // Do not inline - amount can be null
+        Double value = seriesBudget.get(SeriesBudget.AMOUNT);
+        repository.update(seriesStatKey,
+                          FieldValue.value(SeriesStat.PLANNED_AMOUNT, value),
+                          FieldValue.value(SeriesStat.REMAINING_AMOUNT, remainingAndOverrun.getFirst()),
+                          FieldValue.value(SeriesStat.OVERRUN_AMOUNT, remainingAndOverrun.getSecond()));
+      }
     }
   }
 
