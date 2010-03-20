@@ -83,16 +83,7 @@ public class QifParser {
             if (Strings.isNotEmpty(pValue)) {
               values.set(ImportedTransaction.QIF_P, pValue);
             }
-//            if (!Strings.isNullOrEmpty(mValue) && !Strings.isNullOrEmpty(pValue)) {
-//              if (mValue.startsWith(pValue.substring(0, pValue.length() > 10 ? 10 : pValue.length()))) {
-//                value = mValue;
-//              }
-//              else {
-//                value = Strings.join(pValue, mValue);
-//              }
-//            }
             values.set(ImportedTransaction.BANK_TRANSACTION_TYPE, nValue != null ? nValue.trim() : null);
-//            values.set(ImportedTransaction.ORIGINAL_LABEL, value != null ? value.trim() : null);
             values.set(ImportedTransaction.IS_OFX, false);
             return createTransaction(values);
         }

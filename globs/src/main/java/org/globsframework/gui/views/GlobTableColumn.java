@@ -20,4 +20,6 @@ public interface GlobTableColumn {
   Comparator<Glob> getComparator();
 
   boolean isEditable(int row, Glob glob);
+
+  boolean isReSizable();
 }

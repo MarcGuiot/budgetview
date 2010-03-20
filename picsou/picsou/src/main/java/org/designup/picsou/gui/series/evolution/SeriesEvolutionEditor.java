@@ -33,7 +33,7 @@ public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
   private PaintablePanel editorPanel;
 
   protected int referenceMonthId;
-
+  private static final String TEXT_FOR_WIDTH = "+888888.88";
 
   public SeriesEvolutionEditor(int offset,
                                GlobTableView view,
@@ -56,6 +56,10 @@ public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
 
     editorButton = createHyperlinkButton(action);
     editorPanel = initCellPanel(editorButton, true, new PaintablePanel());
+  }
+
+  public int getWidth(){
+    return label.getFontMetrics(label.getFont()).stringWidth(TEXT_FOR_WIDTH);
   }
 
   public void setReferenceMonth(Integer monthId) {

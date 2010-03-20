@@ -129,5 +129,9 @@ public class GlobTableColumnBuilder {
     public boolean isEditable(int row, Glob glob) {
       return editor != null;
     }
+
+    public boolean isReSizable() {
+      return true;
+    }
   }
 }

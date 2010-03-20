@@ -28,8 +28,10 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("WorldCo", "Salary");
 
     views.selectBudget();
+    System.out.println("SeriesEvolutionViewTest.testStandardDisplay 1 ");
     budgetView.recurring.editSeries("Energy").setTwoMonths().validate();
 
+    System.out.println("SeriesEvolutionViewTest.testStandardDisplay 2 ");
     timeline.selectMonth("2008/11");
     budgetView.extras.createSeries()
       .setName("Lottery")

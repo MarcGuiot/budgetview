@@ -156,11 +156,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   }
 
   private void columnAdded(GlobTableColumn column) {
-    if (table != null){
-      TableCellEditor editor = column.getEditor();
-      if (editor != null) {
-        table.getColumnModel().getColumn(columns.size() - 1).setCellEditor(editor);
-      }
+    if (table != null) {
       refresh(true);
     }
   }
@@ -190,6 +186,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
 
   public GlobTableView addColumn(GlobTableColumn column) {
     columns.add(column);
+    columnAdded(column);
     return this;
   }
 
@@ -312,7 +309,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       initHeader();
       initPopupFactory();
       initClipboardHandler();
-      registerEditors();
+      resetColumns();
       if (initialFilter != null) {
         setFilter(initialFilter);
       }
@@ -343,13 +340,20 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     table.scrollRectToVisible(rect);
   }
 
-  private void registerEditors() {
+  private void resetColumns() {
     int index = 0;
     for (GlobTableColumn column : columns) {
+      TableColumn tableColumn = table.getColumnModel().getColumn(index);
       TableCellEditor editor = column.getEditor();
       if (editor != null) {
-        table.getColumnModel().getColumn(index).setCellEditor(editor);
+        tableColumn.setCellEditor(editor);
       }
+      tableColumn.setResizable(column.isReSizable());
+      TableCellRenderer cellRenderer = column.getRenderer();
+      if (cellRenderer != null) {
+        tableColumn.setCellRenderer(cellRenderer);
+      }
+//      tableColumn.setHeaderRenderer(column.getRenderer());
       index++;
     }
   }
@@ -403,6 +407,9 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     }
     finally {
       enableSelectionNotification(false);
+    }
+    if (structChanged) {
+      resetColumns();
     }
   }
 
@@ -740,8 +747,6 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     public void dispose() {
       repository.removeChangeListener(model);
     }
-
-
   }
 
   private void initClipboardHandler() {

@@ -24,7 +24,7 @@ public class ImportedTransactionDateRenderer implements LabelCustomizer {
     else {
       format = new SimpleDateFormat(dateFormat);
     }
-    transactionTable.refresh();
+    transactionTable.refresh(false);
   }
 
   public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {

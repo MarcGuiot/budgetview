@@ -98,4 +98,9 @@ public abstract class HyperlinkTableColumn extends AbstractRolloverEditor implem
   public boolean isEditable(int row, Glob glob) {
     return true;
   }
+
+  public boolean isReSizable() {
+    return true;
+  }
+
 }

@@ -57,7 +57,7 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
   }
 
   protected String getDescription(Glob seriesWrapper) {
-    return "";
+    return null;
   }
 
   private String getBudgetAreaLabelText(BudgetArea budgetArea) {

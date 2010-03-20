@@ -27,6 +27,7 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
   private Table table;
 
   private static final String PANEL_NAME = "seriesEvolutionView";
+  private int COUNT_COLMUMN = 10;
 
   public SeriesEvolutionChecker(Window mainWindow) {
     super(mainWindow);
@@ -45,7 +46,7 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
   }
 
   public void checkColumnNames(String... names) {
-    assertThat(getTable().getHeader().contentEquals(Utils.join("", names)));
+    assertThat(getTable().getHeader().contentEquals(COUNT_COLMUMN, Utils.join("", names)));
   }
 
   public void checkRow(String label, String... values) {
@@ -92,7 +93,7 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
       table = window.getTable("seriesEvolutionTable");
       table.setCellValueConverter(0, new BlankColumnConverter());
       ColumnConverter converter = new ColumnConverter();
-      for (int i = 1; i < 3 + SeriesEvolutionView.MONTH_COLUMNS_COUNT; i++) {
+      for (int i = 1; i < 3 + table.getColumnCount() - 1; i++) {
         table.setCellValueConverter(i, converter);
       }
     }
@@ -129,7 +130,7 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
 
   public void checkTableIsEmpty(String... labels) {
     SeriesEvolutionChecker.SeriesTableChecker checker = initContent();
-    String[] values = new String[SeriesEvolutionView.MONTH_COLUMNS_COUNT];
+    String[] values = new String[table.getColumnCount() - 1];
     Arrays.fill(values, "");
     for (String label : labels) {
       checker.add(label, values);
@@ -222,6 +223,11 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
 
     protected Table getTable() {
       return SeriesEvolutionChecker.this.getTable();
+    }
+
+    public void check(){
+      Object[][] expectedContent = content.toArray(new Object[content.size()][]);
+      org.uispec4j.assertion.UISpecAssert.assertTrue(getTable().contentEquals(COUNT_COLMUMN, expectedContent));
     }
   }
 
