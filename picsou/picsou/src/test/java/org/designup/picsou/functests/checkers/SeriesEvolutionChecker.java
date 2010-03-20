@@ -52,7 +52,7 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
   public void checkRow(String label, String... values) {
     Table table = getTable();
     int index = getRow(label, table);
-    assertThat(table.rowEquals(index, Utils.join(new String[]{"", label}, values)));
+    assertThat(table.rowEquals(COUNT_COLMUMN, index, Utils.join(new String[]{"", label}, values)));
   }
 
   public void select(String label) {
@@ -130,7 +130,7 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
 
   public void checkTableIsEmpty(String... labels) {
     SeriesEvolutionChecker.SeriesTableChecker checker = initContent();
-    String[] values = new String[table.getColumnCount() - 1];
+    String[] values = new String[COUNT_COLMUMN];
     Arrays.fill(values, "");
     for (String label : labels) {
       checker.add(label, values);

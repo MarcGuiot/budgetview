@@ -20,13 +20,12 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
                                       values.get(SeriesBudget.MONTH));
         Glob seriesStat = repository.findOrCreate(seriesStatKey);
 
-        if (values.isTrue(SeriesBudget.ACTIVE)) {
-          Pair<Double, Double> remainingAndOverrun = computeRemainingAndOverrun(values, seriesStat);
-          repository.update(seriesStatKey,
-                            FieldValue.value(SeriesStat.PLANNED_AMOUNT, values.get(SeriesBudget.AMOUNT)),
-                            FieldValue.value(SeriesStat.REMAINING_AMOUNT, remainingAndOverrun.getFirst()),
-                            FieldValue.value(SeriesStat.OVERRUN_AMOUNT, remainingAndOverrun.getSecond()));
-        }
+        Boolean isActive = values.isTrue(SeriesBudget.ACTIVE);
+        Pair<Double, Double> remainingAndOverrun = computeRemainingAndOverrun(values, seriesStat, isActive);
+        repository.update(seriesStatKey,
+                          FieldValue.value(SeriesStat.PLANNED_AMOUNT, isActive ? values.get(SeriesBudget.AMOUNT) : 0.),
+                          FieldValue.value(SeriesStat.REMAINING_AMOUNT, remainingAndOverrun.getFirst()),
+                          FieldValue.value(SeriesStat.OVERRUN_AMOUNT, remainingAndOverrun.getSecond()));
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
@@ -67,14 +66,13 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
                                   seriesBudget.get(SeriesBudget.MONTH));
     Glob seriesStat = repository.findOrCreate(seriesStatKey);
 
-    if (seriesBudget.get(SeriesBudget.ACTIVE)) {
-      Pair<Double, Double> remainingAndOverrun = computeRemainingAndOverrun(seriesBudget, seriesStat);
+    Boolean isActive = seriesBudget.isTrue(SeriesBudget.ACTIVE);
+    Pair<Double, Double> remainingAndOverrun = computeRemainingAndOverrun(seriesBudget, seriesStat, isActive);
       repository.update(seriesStatKey,
                         FieldValue.value(SeriesStat.PLANNED_AMOUNT,
-                                         seriesBudget.isTrue(SeriesBudget.ACTIVE) ? Utils.zeroIfNull(seriesBudget.get(SeriesBudget.AMOUNT)) : 0.),
+                                         isActive ? Utils.zeroIfNull(seriesBudget.get(SeriesBudget.AMOUNT)) : 0.),
                         FieldValue.value(SeriesStat.REMAINING_AMOUNT, remainingAndOverrun.getFirst()),
                         FieldValue.value(SeriesStat.OVERRUN_AMOUNT, remainingAndOverrun.getSecond()));
-    }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
@@ -90,22 +88,20 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
                                     seriesBudget.get(SeriesBudget.MONTH));
       Glob seriesStat = repository.findOrCreate(seriesStatKey);
 
-      if (seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
-
-        Pair<Double, Double> remainingAndOverrun = computeRemainingAndOverrun(seriesBudget, seriesStat);
+      Boolean isActive = seriesBudget.isTrue(SeriesBudget.ACTIVE);
+      Pair<Double, Double> remainingAndOverrun = computeRemainingAndOverrun(seriesBudget, seriesStat, isActive);
 
         // Do not inline - amount can be null
-        Double value = seriesBudget.get(SeriesBudget.AMOUNT);
+        Double value = isActive ? seriesBudget.get(SeriesBudget.AMOUNT) : 0.;
         repository.update(seriesStatKey,
                           FieldValue.value(SeriesStat.PLANNED_AMOUNT, value),
                           FieldValue.value(SeriesStat.REMAINING_AMOUNT, remainingAndOverrun.getFirst()),
                           FieldValue.value(SeriesStat.OVERRUN_AMOUNT, remainingAndOverrun.getSecond()));
-      }
     }
   }
 
-  private Pair<Double, Double> computeRemainingAndOverrun(FieldValues seriesBudget, Glob seriesStat) {
-    Double plannedAmount = Amounts.zeroIfNull(seriesBudget.get(SeriesBudget.AMOUNT));
+  private Pair<Double, Double> computeRemainingAndOverrun(FieldValues seriesBudget, Glob seriesStat, Boolean isActive) {
+    Double plannedAmount = isActive ? Amounts.zeroIfNull(seriesBudget.get(SeriesBudget.AMOUNT)) : 0.;
     Double obervedAmount = Amounts.zeroIfNull(seriesStat.get(SeriesStat.AMOUNT));
     double remaining = 0;
     double overrun = 0;

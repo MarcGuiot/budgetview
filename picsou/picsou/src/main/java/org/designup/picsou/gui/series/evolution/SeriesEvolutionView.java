@@ -12,7 +12,6 @@ import org.designup.picsou.gui.series.view.*;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -34,7 +33,8 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
-import java.awt.event.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -146,6 +146,10 @@ public class SeriesEvolutionView extends View {
     TableExpansionInstaller.setUp(tableAdapter, expansionModel, table, expandColumn, LABEL_COLUMN_INDEX);
     table.setDragEnabled(false);
     TableUtils.setSize(table, LABEL_COLUMN_INDEX, 150);
+    int width = monthColumns.get(0).getWidth();
+    for (int i = 0; i < monthColumns.size(); i++) {
+      TableUtils.setSize(table, i + 2, width);
+    }
 
     expansionModel.completeInit();
 

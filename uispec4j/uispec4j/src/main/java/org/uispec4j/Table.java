@@ -307,7 +307,6 @@ public class Table extends AbstractSwingUIComponent {
           AssertAdapter.assertTrue(lengthErrorMessage(checkFirstCountColumn),
                                      checkFirstCountColumn <= getRowCount());
           for (int i = 0; i < checkFirstCountColumn; i++) {
-            checkRow(i, expected[i]);
             for (int columnIndex = 0; columnIndex < expected[i].length; columnIndex++) {
               checkValueAt(i, columnIndex, expected[i][columnIndex]);
             }
@@ -401,6 +400,27 @@ public class Table extends AbstractSwingUIComponent {
         }
         try {
           checkRow(rowIndex, expectedRow);
+        }
+        catch (Error e) {
+          StringBuffer buffer = new StringBuffer();
+          dumpRow(jTable, rowIndex, buffer, ",");
+          AssertAdapter.assertEquals(ArrayUtils.toString(expectedRow), buffer);
+        }
+      }
+    };
+  }
+
+  public Assertion rowEquals(final int checkFirstCountColumn, final int rowIndex, final Object[] expectedRow) {
+    return new Assertion() {
+      public void check() {
+        if (rowIndex < 0) {
+          AssertAdapter.fail("Row index should be positive");
+        }
+        if (rowIndex >= jTable.getRowCount()) {
+          AssertAdapter.fail("Table contains only " + jTable.getRowCount() + " rows, unable to access row " + rowIndex);
+        }
+        try {
+          checkRow(checkFirstCountColumn, rowIndex, expectedRow);
         }
         catch (Error e) {
           StringBuffer buffer = new StringBuffer();
@@ -1114,6 +1134,14 @@ public class Table extends AbstractSwingUIComponent {
   private void checkRow(int rowIndex, Object[] expectedRow) {
     AssertAdapter.assertEquals(expectedRow.length, jTable.getColumnCount());
     for (int columnIndex = 0; columnIndex < expectedRow.length; columnIndex++) {
+      checkValueAt(rowIndex, columnIndex, expectedRow[columnIndex]);
+    }
+  }
+
+  private void checkRow(int checkFirstCountColumn, int rowIndex, Object[] expectedRow) {
+    int columnCount = Math.min(checkFirstCountColumn, expectedRow.length);
+    AssertAdapter.assertTrue(columnCount <= jTable.getColumnCount());
+    for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
       checkValueAt(rowIndex, columnIndex, expectedRow[columnIndex]);
     }
   }
