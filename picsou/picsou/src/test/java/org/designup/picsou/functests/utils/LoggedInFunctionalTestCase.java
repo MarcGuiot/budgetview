@@ -87,10 +87,12 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     LoginChecker login = new LoginChecker(mainWindow);
     login.logNewUser(user, password);
     initCheckers();
+
     if (!notRegistered) {
       LicenseActivationChecker.enterLicense(mainWindow, "admin", "zz");
       operations.openPreferences().setFutureMonthsCount(0).validate();
     }
+    
     selectInitialView();
   }
 

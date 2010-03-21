@@ -42,7 +42,15 @@ public class SeriesWizardTest extends LoggedInFunctionalTestCase {
       .cancel();
 
     budgetView.recurring.editSeriesList()
-      .checkSeriesListEquals("Cell phone 1", "Rent")
+      .checkSeriesListEquals("Car credit",
+                             "Car insurance",
+                             "Cell phone 1",
+                             "Electricity",
+                             "Gas",
+                             "Income taxes",
+                             "Internet",
+                             "Rent",
+                             "Water")
       .selectSeries("Rent")
       .checkSelectedProfile("Every month")
       .selectSeries("Cell phone 1")

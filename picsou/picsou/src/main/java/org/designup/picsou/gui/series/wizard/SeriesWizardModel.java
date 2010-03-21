@@ -43,40 +43,42 @@ public class SeriesWizardModel {
   }
 
   private void createEntries() {
-    createEntry(BudgetArea.INCOME, ProfileType.EVERY_MONTH, "income1");
-    createEntry(BudgetArea.INCOME, ProfileType.EVERY_MONTH, "income2");
-    createEntry(BudgetArea.INCOME, ProfileType.IRREGULAR, "exceptional");
+    createEntry(BudgetArea.INCOME, ProfileType.EVERY_MONTH, "income1", true);
+    createEntry(BudgetArea.INCOME, ProfileType.EVERY_MONTH, "income2", false);
+    createEntry(BudgetArea.INCOME, ProfileType.IRREGULAR, "exceptional", true);
 
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "rent");
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "mortgage");
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "electricity");
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "gas");
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "water");
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "carCredit");
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "carInsurance");
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "incomeTaxes");
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "cellPhone1");
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "cellPhone2");
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "internet");
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "fixedPhone");
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "rent", false);
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "mortgage", false);
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "electricity", true);
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "gas", true);
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "water", true);
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "carCredit", true);
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "carInsurance", true);
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "incomeTaxes", true);
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "cellPhone1", true);
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "cellPhone2", false);
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "internet", true);
+    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "fixedPhone", false);
 
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "misc");
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "groceries");
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "fuel");
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "health", "physician", "pharmacy", "reimbursements");
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "leisures");
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "clothing");
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "beauty");
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "cash");
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "bankFees");
+    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "groceries", true);
+    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "health", true, "physician", "pharmacy", "reimbursements");
+    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "leisures", true);
+    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "clothing", true);
+    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "beauty", true);
+    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "fuel", true);
+    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "cash", true);
+    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "bankFees", true);
+    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "misc", true);
   }
 
   private void createEntry(BudgetArea budgetArea,
                            ProfileType profileType,
                            String nameKey,
+                           boolean selected,
                            String... subSeries) {
     SeriesWizardEntry entry = new SeriesWizardEntry(budgetArea, profileType, nameKey,
-                                                    subSeries, repository);
+                                                    subSeries, repository,
+                                                    selected);
     entries.put(budgetArea, entry);
   }
 }
