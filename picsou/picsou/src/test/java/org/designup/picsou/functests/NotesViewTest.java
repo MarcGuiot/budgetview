@@ -85,10 +85,9 @@ public class NotesViewTest extends LoggedInFunctionalTestCase {
 
     notes.setText("One note");
     notes.checkText("One note");
-
   }
 
-  public void testWizardShowIfSavingAreCreated() throws Exception {
+  public void testWizardShownIfSavingAreCreated() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/06/1", 3000.00, "Epargne")
       .load();
@@ -97,7 +96,6 @@ public class NotesViewTest extends LoggedInFunctionalTestCase {
       .setAsSavings().validate();
     notes.checkNoSeriesMessage();
   }
-
 
   public void testMonthTooltipWithNoPositionAvailable() throws Exception {
     OfxBuilder.init(this)

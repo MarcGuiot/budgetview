@@ -18,15 +18,18 @@ public class SeriesWizardEntry {
   private String[] subSeries;
   private boolean selected;
 
-  public SeriesWizardEntry(BudgetArea budgetArea, ProfileType profileType, String seriesKey,
+  public SeriesWizardEntry(BudgetArea budgetArea,
+                           ProfileType profileType,
+                           String seriesKey,
                            String[] subSeriesKeys,
-                           GlobRepository repository) {
+                           GlobRepository repository,
+                           boolean selected) {
     this.budgetArea = budgetArea;
     this.profileType = profileType;
     this.seriesKey = seriesKey;
     this.name = Lang.get("seriesWizard." + budgetArea.getName() + "." + seriesKey);
     this.subSeries = subSeriesKeys;
-    this.selected = budgetArea == BudgetArea.ENVELOPES;
+    this.selected = selected;
   }
 
   public String getName() {
