@@ -23,7 +23,8 @@
       </row>
 
       <panel opaque="false" marginTop="0">
-        <label ref="importMessage" styleClass="errorMessage" border="empty(0,0,10,0)"/>
+        <htmlEditorPane ref="importMessage" styleClass="errorMessage" hyperlinkListener="hyperlinkHandler"
+                        border="empty(0,0,10,0)"/>
       </panel>
 
       <column styleClass="separator" marginTop="20">

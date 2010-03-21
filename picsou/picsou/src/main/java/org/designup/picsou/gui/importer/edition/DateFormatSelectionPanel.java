@@ -19,11 +19,11 @@ public class DateFormatSelectionPanel {
   private JComboBox combo;
   private String selectedFormat;
   private Callback callback;
-  private JLabel messageLabel;
+  private JEditorPane messageLabel;
   protected GlobsPanelBuilder builder;
 
   public DateFormatSelectionPanel(GlobRepository repository, Directory directory, final Callback callback,
-                                  JLabel messageLabel) {
+                                  JEditorPane messageLabel) {
     this.callback = callback;
     this.messageLabel = messageLabel;
     combo = new JComboBox();

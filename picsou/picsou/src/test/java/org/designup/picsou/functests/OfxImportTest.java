@@ -268,7 +268,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
         public Trigger process(Window window) throws Exception {
           window.getInputTextBox("fileField").setText(fileName);
           window.getButton("Import").click();
-          assertTrue(window.containsLabel("Invalid file content"));
+          assertTrue(window.getTextBox("importMessage").textContains("Invalid file content"));
           return window.getButton("Close").triggerClick();
         }
       })
@@ -289,7 +289,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
         public Trigger process(Window window) throws Exception {
           window.getInputTextBox("fileField").setText(file.getAbsolutePath());
           window.getButton("Import").click();
-          assertTrue(window.containsLabel("only OFX and QIF files are supported"));
+          assertTrue(window.getTextBox("importMessage").textContains("only OFX and QIF files are supported"));
           return window.getButton("Close").triggerClick();
         }
       })
