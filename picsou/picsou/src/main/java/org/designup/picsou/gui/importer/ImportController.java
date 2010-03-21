@@ -172,13 +172,13 @@ public class ImportController {
     }
     catch (NoOperations e) {
       String message = Lang.get("import.file.empty");
-      importDialog.showMessage(message);
+      importDialog.showStep1Message(message);
       return false;
     }
     catch (Exception e) {
       String message = Lang.get("import.file.error");
       Log.write(message, e);
-      importDialog.showMessage(message);
+      importDialog.showStep1Message(message, e);
       return false;
     }
   }

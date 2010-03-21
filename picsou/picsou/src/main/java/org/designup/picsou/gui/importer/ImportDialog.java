@@ -8,6 +8,7 @@ import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.importer.additionalactions.AccountEditionAction;
 import org.designup.picsou.gui.importer.additionalactions.BankEntityEditionAction;
@@ -67,7 +68,7 @@ public class ImportDialog {
 
   private boolean usePreferredPath;
 
-  private JLabel messageLabel = new JLabel();
+  private JEditorPane step1Message = new JEditorPane();
   private JPanel filePanel = new JPanel();
   private final JTextField fileField = new JTextField();
   private JLabel fileNameLabel = new JLabel();
@@ -78,7 +79,7 @@ public class ImportDialog {
 
   private JButton newAccountButton;
   private JComboBox accountComboBox;
-  private JLabel importMessageLabel = new JLabel();
+  private JEditorPane step2Message = new JEditorPane();
   private ImportedTransactionDateRenderer dateRenderer;
   private Glob defaultAccount;
 
@@ -93,6 +94,8 @@ public class ImportDialog {
   private GlobsPanelBuilder builder2;
   private GlobsPanelBuilder builder1;
   private ImportedTransactionsTable importedTransactionTable;
+
+  private Exception lastException;
 
   public ImportDialog(String textForCloseButton, List<File> files, Glob defaultAccount,
                       final Window owner, final GlobRepository repository, Directory directory,
@@ -138,7 +141,7 @@ public class ImportDialog {
     initFileField();
 
     builder1 = new GlobsPanelBuilder(getClass(), "/layout/importDialogStep1.splits", localRepository, localDirectory);
-    builder1.add("importMessage", messageLabel);
+    builder1.add("importMessage", step1Message);
     builder1.add("filePanel", filePanel);
     builder1.add("fileField", fileField);
     builder1.add("browseFiles", new BrowseFilesAction(fileField, localRepository, usePreferredPath, dialog));
@@ -158,7 +161,13 @@ public class ImportDialog {
     builder1.add("openSiteHelp", new OpenBankSiteHelpAction(localDirectory, dialog));
     builder1.add("openUrl", new OpenBankUrlAction(localDirectory));
 
-    builder1.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
+    final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(directory, dialog);
+    hyperlinkHandler.registerLinkAction("openErrorDetails", new Runnable() {
+      public void run() {
+        showLastException();
+      }
+    });
+    builder1.add("hyperlinkHandler", hyperlinkHandler);
 
     step1Panel = builder1.load();
   }
@@ -179,13 +188,13 @@ public class ImportDialog {
                                                               public void dateFormatSelected(String format) {
                                                                 dateRenderer.changeDateFormat(format);
                                                               }
-                                                            }, importMessageLabel);
+                                                            }, step2Message);
     builder2.add("dateSelectionPanel", dateFormatSelectionPanel.getBuilder());
     sessionDirectory = new DefaultDirectory(localDirectory);
     sessionDirectory.add(new SelectionService());
     sessionDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
-        importMessageLabel.setText("");
+        showStep2Message("");
         currentlySelectedAccount = selection.getAll(Account.TYPE).isEmpty() ? null :
                                    selection.getAll(Account.TYPE).get(0).getKey();
       }
@@ -218,7 +227,7 @@ public class ImportDialog {
 
     loadAdditionalImportActions();
 
-    builder2.add("importMessage", importMessageLabel);
+    builder2.add("importMessage", step2Message);
 
     additionalActionImportRepeat =
       builder2.addRepeat("additionalActions", Collections.<AdditionalImportAction>emptyList(),
@@ -335,11 +344,11 @@ public class ImportDialog {
   }
 
   private void displayErrorMessage(String key, String ...args) {
-    showMessage("<html><font color=red>" + Lang.get(key, args) + "</font></html>");
+    showStep1Message("<html><font color=red>" + Lang.get(key, args) + "</font></html>");
   }
 
   private void clearErrorMessage() {
-    showMessage("");
+    showStep1Message("");
   }
 
   public void show() {
@@ -396,8 +405,18 @@ public class ImportDialog {
     closeDialog();
   }
 
-  public void showMessage(String message) {
-    messageLabel.setText(message);
+  public void showStep1Message(String message, Exception exception) {
+    lastException = exception;
+    step1Message.setText(message);
+  }
+
+  public void showStep1Message(String message) {
+    lastException = null;
+    step1Message.setText(message);
+  }
+
+  public void showStep2Message(String message) {
+    step2Message.setText(message);
   }
 
   public void updateForNextImport(boolean isAccountNeeded, List<String> dateFormats) throws IOException {
@@ -533,8 +552,8 @@ public class ImportDialog {
     public void actionPerformed(ActionEvent event) {
       setEnabled(false);
       try {
-        showMessage("");
-        importMessageLabel.setText("");
+        showStep1Message("");
+        showStep2Message("");
         if (!dateFormatSelectionPanel.check()) {
           return;
         }
@@ -542,7 +561,7 @@ public class ImportDialog {
           return;
         }
         if (currentlySelectedAccount == null && controller.isAccountNeeded()) {
-          importMessageLabel.setText(Lang.get("import.no.account"));
+          showStep2Message(Lang.get("import.no.account"));
           return;
         }
         controller.finish(currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
@@ -629,5 +648,14 @@ public class ImportDialog {
       }
       return null;
     }
+  }
+
+  private void showLastException() {
+    MessageAndDetailsDialog dialog = new MessageAndDetailsDialog("import.file.error.title",
+                                                                 "import.file.error.message",
+                                                                 Strings.toString(lastException),
+                                                                 directory.get(JFrame.class),
+                                                                 directory);
+    dialog.show();
   }
 }

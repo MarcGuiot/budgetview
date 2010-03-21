@@ -184,8 +184,18 @@ public class ImportChecker {
   }
 
   public ImportChecker checkErrorMessage(String message, String... arg) {
-    assertTrue(dialog.getTextBox("importMessage").textContains(Lang.get(message, arg)));
+    assertTrue(dialog.getTextBox("importMessage").textEquals(Lang.get(message, arg)));
     return this;
+  }
+
+  public ImportChecker checkHtmlErrorMessage(String message, String... arg) {
+    assertTrue(dialog.getTextBox("importMessage").htmlEquals(Lang.get(message, arg)));
+    return this;
+  }
+
+  public MessageAndDetailsDialogChecker clickErrorMessage() {
+    return MessageAndDetailsDialogChecker.init(
+      dialog.getTextBox("importMessage").triggerClickOnHyperlink("Click here"));
   }
 
   public ImportChecker selectDate(String dateFormat) {

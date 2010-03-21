@@ -48,7 +48,7 @@
       </column>
 
       <panel minimumSize="(200,20)" opaque="false" marginTop="5">
-        <label ref="importMessage" styleClass="errorMessage"/>
+        <htmlEditorPane ref="importMessage" styleClass="errorMessage"/>
       </panel>
 
       <row>

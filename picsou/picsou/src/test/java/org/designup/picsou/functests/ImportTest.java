@@ -455,11 +455,19 @@ public class ImportTest extends LoggedInFunctionalTestCase {
                            "Dsdfsdf sdfsf\n" +
                            "^sdfsf");
 
-    operations.openImportDialog()
+    ImportChecker importDialog = operations.openImportDialog()
       .selectFiles(path)
       .acceptFile()
-      .checkErrorMessage("import.file.error")
+      .checkHtmlErrorMessage("import.file.error");
+
+    importDialog
+      .clickErrorMessage()
+      .checkTitle("Invalid file")
+      .checkMessageContains("The content of this file is invalid")
+      .checkDetailsContain("InvalidData")
       .close();
+     
+    importDialog.close();
   }
 
   public void testBadFormatForOfx() throws Exception {
@@ -472,7 +480,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .selectFiles(path)
       .acceptFile()
-      .checkErrorMessage("import.file.error")
+      .checkHtmlErrorMessage("import.file.error")
       .close();
   }
 
