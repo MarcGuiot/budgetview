@@ -3,7 +3,6 @@ package org.designup.picsou.gui;
 import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.accounts.AccountView;
-import org.designup.picsou.gui.accounts.AccountEvolutionView;
 import org.designup.picsou.gui.actions.*;
 import org.designup.picsou.gui.backup.BackupAction;
 import org.designup.picsou.gui.backup.RestoreAction;
@@ -173,7 +172,6 @@ public class MainPanel {
       new BudgetView(replicationGlobRepository, directory),
       seriesView,
       seriesEvolutionView,
-      new AccountEvolutionView(repository, directory),
       new SavingsView(replicationGlobRepository, directory),
       licenseInfoView,
       notesView);
@@ -222,6 +220,14 @@ public class MainPanel {
     seriesView.selectAll();
 
     SplitsEditor.show(builder, parent);
+
+    showInitialMessageIfNeeded();
+  }
+
+  private void showInitialMessageIfNeeded() {
+//    if (!repository.contains(Transaction.TYPE)) {
+//      directory.get(HelpService.class).show("intro", parent);
+//    }
   }
 
   public void createMenuBar(final PicsouFrame frame, Directory directory) {

@@ -63,7 +63,7 @@ public class NextProjectsView extends View implements GlobSelectionListener {
     repository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(Series.TYPE)) {
-          tableView.refresh();
+          tableView.refresh(false);
         }
       }
     });
