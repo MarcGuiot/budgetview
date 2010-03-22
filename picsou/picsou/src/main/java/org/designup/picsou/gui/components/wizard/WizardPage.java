@@ -9,9 +9,12 @@ public interface WizardPage {
   String getTitle();
 
   JComponent getPanel();
-  
+
   void init();
+
   void updateBeforeDisplay();
+
   void updateAfterDisplay();
+
   void applyChanges();
 }
