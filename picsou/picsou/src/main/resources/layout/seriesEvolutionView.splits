@@ -16,7 +16,8 @@
       <verticalSplit styleClass="innerBlock">
 
         <column styleClass="blockScrollBorder" weightY="6">
-          <scrollPane verticalUnitIncrement="10" border="matte(1,1,0,1,block.scroll.border)">
+          <scrollPane ref="tableScrollPane" verticalUnitIncrement="10" border="matte(1,1,0,1,block.scroll.border)"
+                      horizontalScrollbarPolicy="never">
             <table ref="seriesEvolutionTable" rowHeight="20" border="none"/>
           </scrollPane>
 

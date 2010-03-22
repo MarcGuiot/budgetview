@@ -848,6 +848,10 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     public boolean isEditable(int row, Glob glob) {
       return false;
     }
+
+    public boolean isReSizable() {
+      return false;
+    }
   }
 
   public void testHeaderDisplaysIconsAccordingToColumnSorting() throws Exception {

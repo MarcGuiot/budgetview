@@ -559,18 +559,18 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     views.selectEvolution();
     seriesEvolution.checkClipboardExport(
-      "\t\tJune 08\tJul 08\tAug 08\tSep 08\tOct 08\tNov 08\tDec 08\tJan 09\n" +
-      "\tMain accounts\t\t-200.00\t-400.00\t-600.00\t-800.00\t-1000.00\t-1200.00\t-1400.00\n" +
-      "\tBalance\t\t3416.00\t-200.00\t-200.00\t-200.00\t-200.00\t-200.00\t-200.00\n" +
-      "\tSavings accounts\t\t\t\t\t\t\t\t\n" +
-      "\tTo categorize\t\t3864.00\t\t\t\t\t\t\n" +
-      "\tIncome\t\t\t\t\t\t\t\t\n" +
-      "\tRecurring\t\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\n" +
-      "\tTaxes\t\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\n" +
-      "\tEnvelopes\t\t\t\t\t\t\t\t\n" +
-      "\tExtras\t\t\t\t\t\t\t\t\n" +
-      "\tSavings\t\t\t\t\t\t\t\t\n" +
-      "\tOther\t\t\t\t\t\t\t\t\n"
+      "\t\tJune 08\tJul 08\tAug 08\tSep 08\tOct 08\tNov 08\tDec 08\tJan 09\tFeb 09\tMar 09\tApr 09\tMay 09\n" +
+      "\tMain accounts\t\t-200.00\t-400.00\t-600.00\t-800.00\t-1000.00\t-1200.00\t-1400.00\t\t\t\t\n" +
+      "\tBalance\t\t3416.00\t-200.00\t-200.00\t-200.00\t-200.00\t-200.00\t-200.00\t\t\t\t\n" +
+      "\tSavings accounts\t\t\t\t\t\t\t\t\t\t\t\t\n" +
+      "\tTo categorize\t\t3864.00\t\t\t\t\t\t\t\t\t\t\n" +
+      "\tIncome\t\t\t\t\t\t\t\t\t\t\t\t\n" +
+      "\tRecurring\t\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t\t\t\t\n" +
+      "\tTaxes\t\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t\t\t\t\n" +
+      "\tEnvelopes\t\t\t\t\t\t\t\t\t\t\t\t\n" +
+      "\tExtras\t\t\t\t\t\t\t\t\t\t\t\t\n" +
+      "\tSavings\t\t\t\t\t\t\t\t\t\t\t\t\n" +
+      "\tOther\t\t\t\t\t\t\t\t\t\t\t\t\n"
     );
   }
 

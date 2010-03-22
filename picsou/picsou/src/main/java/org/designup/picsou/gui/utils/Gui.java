@@ -1,5 +1,10 @@
 package org.designup.picsou.gui.utils;
 
+import com.jgoodies.looks.Options;
+import com.jgoodies.looks.plastic.PicsouWindowsLookAndFeel;
+import org.designup.picsou.gui.help.HelpDialog;
+import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.font.FontService;
@@ -7,17 +12,13 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.utils.JarImageLocator;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.utils.Utils;
-import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
-import org.designup.picsou.gui.help.HelpDialog;
-import org.designup.picsou.utils.Lang;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.*;
-
-import com.jgoodies.looks.Options;
-import com.jgoodies.looks.plastic.PicsouWindowsLookAndFeel;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Gui {
 
@@ -133,29 +134,10 @@ public class Gui {
     component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
   }
 
-  public static void installRolloverOnButtons(final JTable table, final int... editorColumns) {
-    table.addMouseMotionListener(new MouseMotionAdapter() {
-      public void mouseMoved(MouseEvent e) {
-        final TableColumnModel columnModel = table.getColumnModel();
-        int graphicalColumnIndex = columnModel.getColumnIndexAtX(e.getX());
-        int modelColumnIndex = columnModel.getColumn(graphicalColumnIndex).getModelIndex();
-        if (modelColumnIndex < 0) {
-          return;
-        }
-        for (int column : editorColumns) {
-          if (modelColumnIndex == column) {
-            int row = e.getY() / table.getRowHeight();
-            if (table.isEditing() &&
-                (table.getEditingColumn() == modelColumnIndex) &&
-                (table.getEditingRow() == row)) {
-              return;
-            }
-            table.editCellAt(row, column);
-            return;
-          }
-        }
-      }
-    });
+  public static RolloverMouseMotionListener installRolloverOnButtons(final JTable table, final int... editorColumns) {
+    RolloverMouseMotionListener listener = new RolloverMouseMotionListener(table, editorColumns);
+    table.addMouseMotionListener(listener);
+    return listener;
   }
 
   public static JPanel createHorizontalBoxLayoutPanel() {
@@ -266,5 +248,43 @@ public class Gui {
     JLabel empty = new JLabel();
     empty.setVisible(false);
     return empty;
+  }
+
+  public static class RolloverMouseMotionListener extends MouseMotionAdapter {
+    private final JTable table;
+    private final Set<Integer> editorColumns = new HashSet<Integer>();
+
+    public RolloverMouseMotionListener(JTable table, int... editorColumns) {
+      this.table = table;
+      for (int editorColumn : editorColumns) {
+        this.editorColumns.add(editorColumn);
+      }
+    }
+
+    public void addColumn(int editableColumnIndex) {
+      editorColumns.add(editableColumnIndex);
+    }
+
+    public void removeColumn(int editableColumnIndex) {
+      editorColumns.remove(editableColumnIndex);
+    }
+
+    public void mouseMoved(MouseEvent e) {
+      final TableColumnModel columnModel = table.getColumnModel();
+      int graphicalColumnIndex = columnModel.getColumnIndexAtX(e.getX());
+      int modelColumnIndex = columnModel.getColumn(graphicalColumnIndex).getModelIndex();
+      if (modelColumnIndex < 0) {
+        return;
+      }
+      if (this.editorColumns.contains(modelColumnIndex)) {
+        int row = e.getY() / table.getRowHeight();
+        if (table.isEditing() &&
+            (table.getEditingColumn() == modelColumnIndex) &&
+            (table.getEditingRow() == row)) {
+          return;
+        }
+        table.editCellAt(row, modelColumnIndex);
+      }
+    }
   }
 }

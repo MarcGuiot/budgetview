@@ -57,7 +57,7 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
   }
 
   protected String getDescription(Glob seriesWrapper) {
-    return "";
+    return null;
   }
 
   private String getBudgetAreaLabelText(BudgetArea budgetArea) {
@@ -83,7 +83,6 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
     Glob series = repository.find(Key.create(Series.TYPE, itemId));
     BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
     Double value = seriesStat.get(SeriesStat.SUMMARY_AMOUNT);
-
     return format(value, budgetArea);
   }
 

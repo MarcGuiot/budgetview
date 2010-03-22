@@ -6,6 +6,8 @@ import org.globsframework.model.GlobRepository;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.ComponentEvent;
 
 public class PicsouFrame extends JFrame {
   private GlobRepository repository;

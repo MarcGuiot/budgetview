@@ -3,7 +3,6 @@ package org.designup.picsou.gui.series.evolution;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.actions.SelectNextMonthAction;
 import org.designup.picsou.gui.actions.SelectPreviousMonthAction;
-import org.designup.picsou.gui.components.CustomBoldLabelCustomizer;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.expansion.*;
 import org.designup.picsou.gui.model.SeriesStat;
@@ -21,7 +20,6 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
-import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -34,14 +32,18 @@ import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import javax.swing.table.TableColumn;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.SortedSet;
 
 public class SeriesEvolutionView extends View {
 
   public static final int LABEL_COLUMN_INDEX = 1;
-  public static final int MONTH_COLUMNS_COUNT = 8;
+  public int monthColumnsCount = 12;
 
   private Directory parentDirectory;
   private SelectionService parentSelectionService;
@@ -50,6 +52,9 @@ public class SeriesEvolutionView extends View {
   private SeriesEvolutionChartPanel chartPanel;
   private List<SeriesEvolutionMonthColumn> monthColumns = new ArrayList<SeriesEvolutionMonthColumn>();
   private Integer referenceMonthId;
+  private SeriesEvolutionColors seriesEvolutionColors;
+  private SeriesAmountEditionDialog seriesAmountEditionDialog;
+  private Gui.RolloverMouseMotionListener rolloverMouseMotionListener;
 
   public SeriesEvolutionView(GlobRepository repository, Directory directory) {
     super(repository, createLocalDirectory(directory));
@@ -73,7 +78,7 @@ public class SeriesEvolutionView extends View {
                                                       repository, directory);
 
     SeriesEditionDialog seriesEditionDialog = directory.get(SeriesEditionDialog.class);
-    SeriesAmountEditionDialog seriesAmountEditionDialog = new SeriesAmountEditionDialog(repository, directory, seriesEditionDialog);
+    seriesAmountEditionDialog = new SeriesAmountEditionDialog(repository, directory, seriesEditionDialog);
 
     ExpandableTable tableAdapter = new ExpandableTable(new SeriesWrapperMatcher()) {
       public Glob getSelectedGlob() {
@@ -102,14 +107,8 @@ public class SeriesEvolutionView extends View {
       }
     });
 
-    LabelCustomizer boldCustomizer = new CustomBoldLabelCustomizer(directory) {
-      protected boolean isBold(Glob glob) {
-        return glob.get(SeriesWrapper.MASTER) == null;
-      }
-    };
-
-    SeriesEvolutionColors colors = new SeriesEvolutionColors(repository, directory);
-    CellPainter backgroundPainter = new SeriesEvolutionBackgroundPainter(colors);
+    seriesEvolutionColors = new SeriesEvolutionColors(repository, directory);
+    CellPainter backgroundPainter = new SeriesEvolutionBackgroundPainter(seriesEvolutionColors);
     TableExpansionColumn expandColumn = new TableExpansionColumn(backgroundPainter);
 
     tableView
@@ -121,12 +120,13 @@ public class SeriesEvolutionView extends View {
       .addColumn("", expandColumn, expandColumn, GlobStringifiers.empty(stringifier.getComparator(repository)));
 
     SeriesEvolutionLabelColumn labelColumn =
-      new SeriesEvolutionLabelColumn(tableView, repository, directory, colors, seriesEditionDialog);
+      new SeriesEvolutionLabelColumn(tableView, repository, directory, seriesEvolutionColors, seriesEditionDialog);
     tableView.addColumn(labelColumn);
 
-    for (int offset = -1; offset < -1 + MONTH_COLUMNS_COUNT; offset++) {
+    for (int offset = -1; offset < -1 + monthColumnsCount; offset++) {
       SeriesEvolutionMonthColumn monthColumn =
-        new SeriesEvolutionMonthColumn(offset, tableView, repository, directory, colors, seriesAmountEditionDialog);
+        new SeriesEvolutionMonthColumn(offset, tableView, repository, directory,
+                                       seriesEvolutionColors, seriesAmountEditionDialog);
       monthColumns.add(monthColumn);
       tableView.addColumn(monthColumn);
     }
@@ -134,8 +134,9 @@ public class SeriesEvolutionView extends View {
     PicsouTableHeaderPainter.install(tableView, directory);
 
     table = tableView.getComponent();
+    table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-    Gui.installRolloverOnButtons(table, intRange(2, 10));
+    rolloverMouseMotionListener = Gui.installRolloverOnButtons(table, intRange(2, monthColumnsCount + 1));
     table.setDragEnabled(false);
     ToolTipManager.sharedInstance().unregisterComponent(table.getTableHeader());
 
@@ -145,10 +146,22 @@ public class SeriesEvolutionView extends View {
     TableExpansionInstaller.setUp(tableAdapter, expansionModel, table, expandColumn, LABEL_COLUMN_INDEX);
     table.setDragEnabled(false);
     TableUtils.setSize(table, LABEL_COLUMN_INDEX, 150);
+    int width = monthColumns.get(0).getWidth();
+    for (int i = 0; i < monthColumns.size(); i++) {
+      TableUtils.setSize(table, i + 2, width);
+    }
 
     expansionModel.completeInit();
 
     builder.add("seriesEvolutionTable", table);
+
+    final JScrollPane scrollPane = new JScrollPane();
+    builder.add("tableScrollPane", scrollPane);
+    scrollPane.addComponentListener(new ComponentAdapter() {
+      public void componentResized(ComponentEvent e) {
+        addOrRemoveColumn(scrollPane);
+      }
+    });
 
     parentSelectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
@@ -184,6 +197,57 @@ public class SeriesEvolutionView extends View {
     return builder;
   }
 
+  private void addOrRemoveColumn(final JScrollPane scrollPane) {
+    int[] size;
+    size = getColumnSize();
+    int lastColumnSize = size[size.length - 1];
+    int free = scrollPane.getWidth() - table.getColumnModel().getTotalColumnWidth();
+    if (free < -lastColumnSize) {
+      if (monthColumns.isEmpty()) {
+        return;
+      }
+      monthColumnsCount--;
+      rolloverMouseMotionListener.removeColumn(monthColumnsCount + 2);
+      monthColumns.remove(monthColumnsCount);
+      tableView.removeColumn(monthColumnsCount + 2);
+      parentSelectionService.select(parentSelectionService.getSelection(Month.TYPE), Month.TYPE);
+    }
+    else if (free > lastColumnSize / 3.) {
+      monthColumnsCount++;
+      SeriesEvolutionMonthColumn monthColumn =
+        new SeriesEvolutionMonthColumn(monthColumnsCount - 2, tableView, repository, directory,
+                                       seriesEvolutionColors, seriesAmountEditionDialog);
+      monthColumns.add(monthColumn);
+      tableView.addColumn(monthColumn);
+      rolloverMouseMotionListener.addColumn(monthColumnsCount + 1);
+      TableUtils.setSize(table, monthColumnsCount + 1, monthColumn.getWidth());
+      parentSelectionService.select(parentSelectionService.getSelection(Month.TYPE), Month.TYPE);
+    }
+    else {
+      return;
+    }
+    for (int i = 0; i < size.length && i < table.getColumnModel().getColumnCount(); i++) {
+      TableUtils.setSize(table, i, size[i]);
+    }
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        addOrRemoveColumn(scrollPane);
+      }
+    });
+  }
+
+  private int[] getColumnSize() {
+    int size[] = new int[table.getColumnModel().getColumnCount()];
+    Enumeration<TableColumn> columns = table.getColumnModel().getColumns();
+    int i = 0;
+    while (columns.hasMoreElements()) {
+      TableColumn column = columns.nextElement();
+      size[i] = column.getWidth();
+      i++;
+    }
+    return size;
+  }
+
   public void reset() {
     chartPanel.reset();
     referenceMonthId = null;
@@ -199,7 +263,7 @@ public class SeriesEvolutionView extends View {
         return false;
       }
 
-      for (int offset = -1; offset < -1 + MONTH_COLUMNS_COUNT; offset++) {
+      for (int offset = -1; offset < -1 + monthColumnsCount; offset++) {
         int monthId = Month.offset(referenceMonthId, offset);
         Glob seriesStat = SeriesEvolutionView.this.repository.find(Key.create(SeriesStat.SERIES, wrapper.get(SeriesWrapper.ITEM_ID),
                                                                               SeriesStat.MONTH, monthId));

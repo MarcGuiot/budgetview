@@ -9,7 +9,7 @@ import junit.framework.Assert;
 
 public abstract class TableChecker {
 
-  private List<Object[]> content = new ArrayList<Object[]>();
+  protected List<Object[]> content = new ArrayList<Object[]>();
 
   protected abstract Table getTable();
 

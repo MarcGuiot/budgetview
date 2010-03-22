@@ -9,6 +9,7 @@ import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -98,7 +99,8 @@ public class SeriesBudgetSliderAdapter implements GlobSliderAdapter, ColorChange
 
   private Scale getScale(int absValue) {
     double maxValue = absValue;
-    Set<Double> allValues = repository.getAll(SeriesBudget.TYPE).getValueSet(SeriesBudget.AMOUNT);
+    Set<Double> allValues = repository.getAll(SeriesBudget.TYPE,
+                                              GlobMatchers.isTrue(SeriesBudget.ACTIVE)).getValueSet(SeriesBudget.AMOUNT);
     for (Double value : allValues) {
       if (value != null) {
         maxValue = Math.max(maxValue, Math.abs(value));

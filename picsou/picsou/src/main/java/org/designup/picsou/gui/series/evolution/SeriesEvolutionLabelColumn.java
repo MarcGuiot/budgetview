@@ -52,4 +52,8 @@ public class SeriesEvolutionLabelColumn implements GlobTableColumn {
   public boolean isEditable(int row, Glob seriesWrapper) {
     return SeriesWrapperType.SERIES.isOfType(seriesWrapper);
   }
+
+  public boolean isReSizable() {
+    return false;
+  }
 }

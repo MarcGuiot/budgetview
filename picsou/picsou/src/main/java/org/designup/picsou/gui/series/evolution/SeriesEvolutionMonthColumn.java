@@ -64,4 +64,12 @@ public class SeriesEvolutionMonthColumn implements GlobTableColumn {
   public boolean isEditable(int row, Glob seriesWrapper) {
     return SeriesWrapperType.SERIES.isOfType(seriesWrapper);
   }
+
+  public boolean isReSizable() {
+    return false;
+  }
+
+  public int getWidth(){
+    return editor.getWidth(); 
+  }
 }
