@@ -52,8 +52,13 @@ public class LoginChecker extends GuiChecker {
     enterPassword(password);
     setCreation();
     confirmPassword(password);
-    loginAndSkipSla();
-    waitForApplicationToLoad();
+    HelpChecker.open(
+    new Trigger() {
+      public void run() throws Exception {
+        loginAndSkipSla();
+        waitForApplicationToLoad();
+      }
+    }).close();
   }
 
   public LoginChecker loginAndSkipSla() {
@@ -67,12 +72,21 @@ public class LoginChecker extends GuiChecker {
     return this;
   }
 
-  public void logExistingUser(String user, String password) {
+  public void logExistingUser(String user, String password, final boolean showWelcomeMessage) throws Exception {
     enterUserName(user);
     enterPassword(password);
-    loginButton.click();
-    checkNoErrorDisplayed();
-    waitForApplicationToLoad();
+    Trigger trigger = new Trigger() {
+      public void run() throws Exception {
+        loginButton.click();
+        checkNoErrorDisplayed();
+        waitForApplicationToLoad();
+      }
+    };
+    if (showWelcomeMessage){
+      HelpChecker.open(trigger).close();
+    }else{
+      trigger.run();
+    }
   }
 
   public void clickDemoLink() {
@@ -127,7 +141,11 @@ public class LoginChecker extends GuiChecker {
   }
 
   public void clickFirstAutoLogin() {
-    doLogin("Create auto login user", true);
+    HelpChecker.open(new Trigger() {
+      public void run() throws Exception {
+        doLogin("Create auto login user", true);
+      }
+    }).close();
   }
 
   public void clickAutoLogin() {

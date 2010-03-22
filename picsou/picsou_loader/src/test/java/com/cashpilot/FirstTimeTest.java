@@ -387,7 +387,7 @@ public class FirstTimeTest extends UISpecTestCase {
       }
     });
     LoginChecker login = new LoginChecker(window);
-    login.logExistingUser("toto", "toto");
+    login.logExistingUser("toto", "toto", true);
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectBudget();
@@ -471,7 +471,7 @@ public class FirstTimeTest extends UISpecTestCase {
       }
     });
     LoginChecker login = new LoginChecker(window);
-    login.logExistingUser("toto", "toto");
+    login.logExistingUser("toto", "toto", true);
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectBudget();
@@ -555,7 +555,7 @@ public class FirstTimeTest extends UISpecTestCase {
       }
     });
     LoginChecker login = new LoginChecker(window);
-    login.logExistingUser("toto", "toto");
+    login.logExistingUser("toto", "toto", true);
     MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);
@@ -711,7 +711,7 @@ public class FirstTimeTest extends UISpecTestCase {
       }
     });
     LoginChecker login = new LoginChecker(window);
-    login.logExistingUser("toto", "toto");
+    login.logExistingUser("toto", "toto", true);
     MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);

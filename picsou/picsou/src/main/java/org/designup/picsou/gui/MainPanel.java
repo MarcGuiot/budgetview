@@ -225,9 +225,9 @@ public class MainPanel {
   }
 
   private void showInitialMessageIfNeeded() {
-//    if (!repository.contains(Transaction.TYPE)) {
-//      directory.get(HelpService.class).show("intro", parent);
-//    }
+    if (!repository.contains(Transaction.TYPE)) {
+      directory.get(HelpService.class).show("intro", parent);
+    }
   }
 
   public void createMenuBar(final PicsouFrame frame, Directory directory) {

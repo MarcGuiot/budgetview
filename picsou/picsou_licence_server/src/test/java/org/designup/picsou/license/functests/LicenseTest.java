@@ -74,7 +74,7 @@ public class LicenseTest extends LicenseTestCase {
 
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startApplication();
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
 
     Glob license = dbChecker.getLicense(mail, License.ACCESS_COUNT, 2L);
     assertEquals(2L, license.get(License.ACCESS_COUNT).longValue());
@@ -89,11 +89,11 @@ public class LicenseTest extends LicenseTestCase {
 
     startApplication();
     dbChecker.checkRepoIdIsUpdated(2L, null);
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
     exit();
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     startApplication();
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
     checkLicenseExpired();
   }
 
@@ -134,10 +134,10 @@ public class LicenseTest extends LicenseTestCase {
     checkVersionValidity(false, SECOND_PATH);
   }
 
-  private void checkKilledVersion(String pathToData) {
+  private void checkKilledVersion(String pathToData) throws Exception {
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, pathToData);
     startApplication();
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
     checkKilled();
     exit();
   }
@@ -151,14 +151,14 @@ public class LicenseTest extends LicenseTestCase {
 
     exit();
     startApplication();
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
     LicenseActivationChecker.enterBadLicense(window, "titi@foo.org", "4321", "Unknown mail adress");
 
     dbChecker.checkLicenseCount(mail, 2);
     checkValidLicense(false);
     exit();
     startApplication();
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
     checkValidLicense(false);
   }
 
@@ -171,14 +171,14 @@ public class LicenseTest extends LicenseTestCase {
 
     exit();
     startApplication();
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
     LicenseActivationChecker.enterBadLicense(window, "alfred@free.fr", "4321", "Activation failed");
 
     dbChecker.checkLicenseCount(mail, 2);
     checkValidLicense(false);
     exit();
     startApplication();
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
     checkValidLicense(false);
   }
 
@@ -193,7 +193,7 @@ public class LicenseTest extends LicenseTestCase {
     checkValidLicense(false);
     exit();
     startApplication();
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
     checkValidLicense(false);
   }
 
@@ -228,7 +228,7 @@ public class LicenseTest extends LicenseTestCase {
     checkMessage("Activation code not valid. You can ");
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     startApplication();
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
     checkLicenseExpired();
   }
 
@@ -248,7 +248,7 @@ public class LicenseTest extends LicenseTestCase {
     exit();
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     startApplication();
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
     checkLicenseExpired();
   }
 
@@ -272,7 +272,7 @@ public class LicenseTest extends LicenseTestCase {
     exit();
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     startApplication();
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
     checkLicenseExpired();
   }
 
@@ -305,7 +305,7 @@ public class LicenseTest extends LicenseTestCase {
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startApplication();
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
     LicenseActivationChecker.enterBadLicense(window, mail, "1234", "Activation failed a mail was sent at alfred@free.fr");
     checkReceivedMail(mail);
     checkWithMailKilled();
@@ -355,7 +355,7 @@ public class LicenseTest extends LicenseTestCase {
     TimeService.setCurrentDate(Dates.parseMonth("2008/10"));
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startApplication();
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
 
     LicenseActivationChecker.enterBadLicense(window, MAIL, "1234", "Activation failed a mail was sent at alfred@free.fr");
     String messageCode = checkReceivedMail(MAIL);
@@ -365,7 +365,7 @@ public class LicenseTest extends LicenseTestCase {
 
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, PATH_TO_DATA);
     startApplication();
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
 
     LicenseMessageChecker licenseMessageChecker = new LicenseMessageChecker(window);
     LicenseExpirationChecker expirationChecker = licenseMessageChecker.clickNewLicense();
@@ -390,7 +390,7 @@ public class LicenseTest extends LicenseTestCase {
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startApplication();
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
     LicenseMessageChecker messageChecker = new LicenseMessageChecker(window);
     messageChecker.checkMessage("Your free trial period is over. You can buy");
   }
@@ -426,26 +426,26 @@ public class LicenseTest extends LicenseTestCase {
     }
   }
 
-  private void restartAppAndLogAndDispose() {
+  private void restartAppAndLogAndDispose() throws Exception {
     startApplication();
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
     exit();
   }
 
-  private void activateNewLicenseInNewVersion(String code) {
+  private void activateNewLicenseInNewVersion(String code) throws Exception {
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
     startApplication();
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
     checkValidLicense(true);
     LicenseActivationChecker.enterLicense(window, MAIL, code);
     checkValidLicense(false);
     exit();
   }
 
-  private void checkVersionValidity(final boolean anonymous, final String pathToData) {
+  private void checkVersionValidity(final boolean anonymous, final String pathToData) throws Exception {
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, pathToData);
     startApplication();
-    login.logExistingUser("user", "passw@rd");
+    login.logExistingUser("user", "passw@rd", true);
     checkValidLicense(anonymous);
     exit();
   }

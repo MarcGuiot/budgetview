@@ -200,23 +200,23 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     operations.backupAndLaunchApplication("anonymous", "password", currentDate);
   }
 
-  protected void restartApplication(String user, String passwd) {
+  protected void restartApplication(String user, String passwd) throws Exception {
     mainWindow.dispose();
     mainWindow = null;
     this.user = user;
     this.password = passwd;
     mainWindow = getMainWindow();
     LoginChecker loginChecker = new LoginChecker(mainWindow);
-    loginChecker.logExistingUser(user, password);
+    loginChecker.logExistingUser(user, password, false);
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     initCheckers();
   }
 
-  protected void restartApplication() {
+  protected void restartApplication() throws Exception {
     restartApplication(false);
   }
 
-  public void restartApplication(boolean createUser) {
+  public void restartApplication(boolean createUser) throws Exception {
     operations.exit();
     mainWindow.dispose();
     mainWindow = null;
@@ -226,7 +226,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
       loginChecker.logNewUser(user, password);
     }
     else {
-      loginChecker.logExistingUser(user, password);
+      loginChecker.logExistingUser(user, password, false);
     }
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     initCheckers();
