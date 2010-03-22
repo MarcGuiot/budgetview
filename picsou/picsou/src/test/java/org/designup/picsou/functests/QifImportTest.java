@@ -73,11 +73,11 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       "D20/04/2006" + "\n" +
       "T-17,65\n" +
       "MPARIS\n" +
-      "^" +
+      "^\n" +
       "D21/04/2006" + "\n" +
       "T,117.65\n" +
       "MPARIS\n" +
-      "^" +
+      "^\n" +
       "D22/04/2006" + "\n" +
       "T-,65\n" +
       "MPARIS\n" +
@@ -240,6 +240,24 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       "PMONOPRIX CARTE 24371925 PAIEMENT CB 2303 SCEAUX";
 
     return createQifFile(discriminant, content);
+  }
+
+  public void testReadUnknownTag() throws Exception {
+    String file =
+      createQifFile("file",
+                    "!Type:Bank\n" +
+                    "D20/04/2006\n" +
+                    "T-17.65\n" +
+                    "N\n" +
+                    "ZTransfert\n" +
+                    "MFAC.FRANCE 4561409787231717 19/04/06 STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS\n" +
+                    "^");
+
+    operations.importQifFile(file, SOCIETE_GENERALE, 0.);
+    transactions.initContent()
+      .add("19/04/2006", "20/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65)
+      .check();
+
   }
 
   private String createQifFile(String discriminant, String content) {

@@ -8,6 +8,7 @@ import org.globsframework.model.FieldValuesBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobIdGenerator;
 import org.globsframework.utils.Strings;
 
@@ -85,7 +86,12 @@ public class QifParser {
             }
             values.set(ImportedTransaction.BANK_TRANSACTION_TYPE, nValue != null ? nValue.trim() : null);
             values.set(ImportedTransaction.IS_OFX, false);
+            reader.readLine();
             return createTransaction(values);
+          case '\n':
+            break;
+          default:
+            reader.readLine();
         }
       }
     }
