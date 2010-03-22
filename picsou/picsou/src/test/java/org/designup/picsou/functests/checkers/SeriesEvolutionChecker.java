@@ -8,7 +8,6 @@ import org.globsframework.utils.Utils;
 import org.uispec4j.*;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
-import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import org.uispec4j.utils.ColorUtils;
@@ -52,7 +51,7 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
   public void checkRow(String label, String... values) {
     Table table = getTable();
     int index = getRow(label, table);
-    assertThat(table.rowEquals(COUNT_COLMUMN, index, Utils.join(new String[]{"", label}, values)));
+    assertThat(table.rowEquals(index, 0, COUNT_COLMUMN, Utils.join(new String[]{"", label}, values)));
   }
 
   public void select(String label) {
@@ -227,7 +226,7 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
 
     public void check(){
       Object[][] expectedContent = content.toArray(new Object[content.size()][]);
-      org.uispec4j.assertion.UISpecAssert.assertTrue(getTable().contentEquals(COUNT_COLMUMN, expectedContent));
+      org.uispec4j.assertion.UISpecAssert.assertTrue(getTable().blockEquals(0, 0, COUNT_COLMUMN, content.size(), expectedContent));
     }
   }
 
