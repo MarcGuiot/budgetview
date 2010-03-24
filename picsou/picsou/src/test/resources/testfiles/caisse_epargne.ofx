@@ -1,0 +1,118 @@
+OFXHEADER:100
+DATA:OFXSGML
+VERSION:102
+SECURITY:NONE
+ENCODING:USASCII
+CHARSET:1252
+COMPRESSION:NONE
+OLDFILEUID:NONE
+NEWFILEUID:NONE
+
+<OFX>
+  <SIGNONMSGSRSV1>
+    <SONRS>
+      <STATUS>
+        <CODE>0
+        <SEVERITY>INFO
+      </STATUS>
+      <DTSERVER>20060810152838
+      <LANGUAGE>FRA
+    </SONRS>
+  </SIGNONMSGSRSV1>
+  <BANKMSGSRSV1>
+    <STMTTRNRS>
+      <TRNUID>XXXXXXXXX
+      <STATUS>
+        <CODE>0
+        <SEVERITY>INFO
+      </STATUS>
+      <CLTCOOKIE>2
+      <STMTRS>
+        <CURDEF>EUR
+        <BANKACCTFROM>
+          <BANKID>17515
+          <BRANCHID>1111
+          <ACCTID>123123
+          <ACCTTYPE>CHECKING
+          <ACCTKEY>1
+        </BANKACCTFROM>
+        <BANKTRANLIST>
+          <DTSTART>20100305
+          <DTEND>20100305
+          <STMTTRN>
+            <TRNTYPE>CREDIT
+            <DTPOSTED>20100305
+            <TRNAMT>5.00
+            <FITID>id_mvt1
+            <NAME>C.A.F DE L'ESSONNE
+            <MEMO> C.A.F DE L'ESSONNE P 7246098DXXXXX 022010ME
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>CREDIT
+            <DTPOSTED>20100309
+            <TRNAMT>10.82
+            <FITID>id_mvt8
+            <NAME>C.P.A.M. D'EVRY
+            <MEMO>C.P.A.M. D&apos;EVRY 100690007134
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>DEBIT
+            <DTPOSTED>20100309
+            <TRNAMT>-60.00
+            <FITID>id_mvt9
+            <NAME>CB AMAZON EU SARL FACT 050310
+            <MEMO>CB AMAZON EU SARL FACT 050310
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>DEBIT
+            <DTPOSTED>20100302
+            <TRNAMT>-56.14
+            <FITID>id_mvt10
+            <NAME>CHEQUE N 6579909
+            <MEMO>CHEQUE N 6579909
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>DEBIT
+            <DTPOSTED>20100305
+            <TRNAMT>-11.00
+            <FITID>id_mvt11
+            <NAME>ECH PRET 1321969 DU 05/03/10
+            <MEMO>ECH PRET 1321969 DU 05/03/10
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>DEBIT
+            <DTPOSTED>20100310
+            <TRNAMT>-60.00
+            <FITID>id_mvt12
+            <NAME>FREE TELECOM
+            <MEMO>FREE TELECOM FREE HAUTDEBIT 199027559
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>DEBIT
+            <DTPOSTED>20100308
+            <TRNAMT>-11.35
+            <FITID>id_mvt13
+            <NAME>RETRAIT DAB 0201080 080310 11H01
+            <MEMO>RETRAIT DAB 0201080 080310 11H0
+          </STMTTRN>
+          <STMTTRN>
+            <TRNTYPE>DEBIT
+            <DTPOSTED>20100113
+            <TRNAMT>-27.20
+            <FITID>id_mvt14
+            <NAME>CHEQUE : 6579929
+            <MEMO>CHEQUE N°6579929
+          </STMTTRN>
+        </BANKTRANLIST>
+        <LEDGERBAL>
+          <BALAMT>125.67
+          <DTASOF>20100310
+        </LEDGERBAL>
+        <AVAILBAL>
+          <BALAMT>125.67
+          <DTASOF>20100310
+        </AVAILBAL>
+      </STMTRS>
+    </STMTTRNRS>
+  </BANKMSGSRSV1>
+</OFX>

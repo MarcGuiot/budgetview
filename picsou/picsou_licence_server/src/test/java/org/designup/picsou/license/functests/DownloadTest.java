@@ -204,9 +204,9 @@ public class DownloadTest extends LicenseTestCase {
         mv.visitEnd();
       }
       {
-        mv = cw.visitMethod(ACC_PUBLIC, "apply", "(Lorg/globsframework/model/ReadOnlyGlobRepository;Lorg/globsframework/model/GlobRepository;Lorg/globsframework/model/delta/MutableChangeSet;)V", null, null);
+        mv = cw.visitMethod(ACC_PUBLIC, "apply", "(Lorg/globsframework/model/Glob;Lorg/globsframework/model/ReadOnlyGlobRepository;Lorg/globsframework/model/GlobRepository;Lorg/globsframework/model/delta/MutableChangeSet;)V", null, null);
         mv.visitCode();
-        mv.visitVarInsn(ALOAD, 2);
+        mv.visitVarInsn(ALOAD, 3);
         mv.visitInsn(ICONST_1);
         mv.visitTypeInsn(ANEWARRAY, "org/globsframework/metamodel/GlobType");
         mv.visitInsn(DUP);
@@ -214,22 +214,22 @@ public class DownloadTest extends LicenseTestCase {
         mv.visitFieldInsn(GETSTATIC, "org/designup/picsou/model/ImportedTransaction", "TYPE", "Lorg/globsframework/metamodel/GlobType;");
         mv.visitInsn(AASTORE);
         mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/model/GlobRepository", "getAll", "([Lorg/globsframework/metamodel/GlobType;)Lorg/globsframework/model/GlobList;");
-        mv.visitVarInsn(ASTORE, 4);
-        mv.visitVarInsn(ALOAD, 4);
-        mv.visitMethodInsn(INVOKEVIRTUAL, "org/globsframework/model/GlobList", "iterator", "()Ljava/util/Iterator;");
         mv.visitVarInsn(ASTORE, 5);
+        mv.visitVarInsn(ALOAD, 5);
+        mv.visitMethodInsn(INVOKEVIRTUAL, "org/globsframework/model/GlobList", "iterator", "()Ljava/util/Iterator;");
+        mv.visitVarInsn(ASTORE, 6);
         Label l0 = new Label();
         mv.visitLabel(l0);
-        mv.visitVarInsn(ALOAD, 5);
+        mv.visitVarInsn(ALOAD, 6);
         mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z");
         Label l1 = new Label();
         mv.visitJumpInsn(IFEQ, l1);
-        mv.visitVarInsn(ALOAD, 5);
+        mv.visitVarInsn(ALOAD, 6);
         mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;");
         mv.visitTypeInsn(CHECKCAST, "org/globsframework/model/Glob");
-        mv.visitVarInsn(ASTORE, 6);
-        mv.visitVarInsn(ALOAD, 2);
-        mv.visitVarInsn(ALOAD, 6);
+        mv.visitVarInsn(ASTORE, 7);
+        mv.visitVarInsn(ALOAD, 3);
+        mv.visitVarInsn(ALOAD, 7);
         mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/model/Glob", "getKey", "()Lorg/globsframework/model/Key;");
         mv.visitFieldInsn(GETSTATIC, "org/designup/picsou/model/ImportedTransaction", "AMOUNT", "Lorg/globsframework/metamodel/fields/DoubleField;");
         mv.visitLdcInsn(new Double("-234.0"));
@@ -238,7 +238,7 @@ public class DownloadTest extends LicenseTestCase {
         mv.visitJumpInsn(GOTO, l0);
         mv.visitLabel(l1);
         mv.visitInsn(RETURN);
-        mv.visitMaxs(5, 7);
+        mv.visitMaxs(5, 8);
         mv.visitEnd();
       }
       {

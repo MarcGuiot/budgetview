@@ -120,7 +120,8 @@ public class AutoCategorizationFunctor implements GlobFunctor {
       while (iterator.hasPrevious()) {
         Glob findTransaction = iterator.previous();
         Glob currentSeries = referenceRepository.findLinkTarget(findTransaction, Transaction.SERIES);
-        if (!isValid(transaction, findTransaction, currentSeries)) {
+        if (currentSeries.get(Series.ID).equals(Series.UNCATEGORIZED_SERIES_ID) ||
+            !isValid(transaction, findTransaction, currentSeries)) {
           continue;
         }
         if (currentMonthId == 0) {

@@ -16,7 +16,7 @@ public class DummyBankPlugin implements BankPlugin {
     bankPluginService.add(bankEntity.get(BankEntity.BANK), this);
   }
 
-  public void apply(ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
+  public void apply(Glob newAccount, ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
     GlobList list = localRepository.getAll(ImportedTransaction.TYPE);
     for (Glob glob : list) {
       localRepository.update(glob.getKey(), ImportedTransaction.AMOUNT, -234.);

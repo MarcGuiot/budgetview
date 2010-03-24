@@ -104,8 +104,8 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     setCurrentDate(monthId + "/15");
   }
 
-  protected void setCurrentDate(String date) {
-    this.currentDate = Dates.parse(date);
+  protected void setCurrentDate(String yyyyMMdd) {
+    this.currentDate = Dates.parse(yyyyMMdd);
     TimeService.setCurrentDate(currentDate);
   }
 
