@@ -2,6 +2,7 @@ package org.designup.picsou.gui.budget.summary;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.budget.wizard.BudgetWizardDialog;
+import org.designup.picsou.gui.budget.BalanceDialog;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.JRoundedButton;
 import org.designup.picsou.gui.description.Formatting;
@@ -31,8 +32,8 @@ import java.util.SortedSet;
 
 public class BudgetSummaryView extends View implements GlobSelectionListener, ChangeSetListener, ColorChangeListener {
 
-  private JLabel balanceLabel = new JLabel();
-  private JLabel estimatedPositionLabel = new JLabel();
+  private JButton balanceLabel = new JButton();
+  private JButton estimatedPositionLabel = new JButton();
   private JLabel estimatedPositionTitle = new JLabel();
   private JButton uncategorizedButton = new JButton();
   private JLabel multiSelectionLabel = new JLabel();
@@ -74,7 +75,8 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     builder.add("openDetailsButton", createOpenDetailsButton());
 
     uncategorizedButton.addActionListener(new GotoUncategorizedAction());
-
+    balanceLabel.addActionListener(new OpenBalanceAction());
+    estimatedPositionLabel.addActionListener(new OpenBalanceAction());
     builder.add("helpMessage", helpMessage);
     helpMessage.setVisible(false);
 
@@ -225,6 +227,14 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
         changedTypes.contains(UserPreferences.TYPE) ||
         changedTypes.contains(AccountPositionThreshold.TYPE)) {
       update();
+    }
+  }
+
+  private class OpenBalanceAction extends AbstractAction{
+
+    public void actionPerformed(ActionEvent e) {
+      BalanceDialog dialog = new BalanceDialog(repository, directory);
+      dialog.show(selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID));
     }
   }
 
