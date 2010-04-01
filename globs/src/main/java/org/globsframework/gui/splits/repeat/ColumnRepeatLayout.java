@@ -10,7 +10,13 @@ import java.util.List;
 
 public abstract class ColumnRepeatLayout implements RepeatLayout {
 
-  public void check(Splitter[] splitterTemplates, String repeatRef) {
+  public void checkHeader(Splitter[] splitters, String repeatRef) {
+    if ((splitters != null) && (splitters.length != 1)) {
+      throw new SplitsException("Repeat component '" + repeatRef + "' must have exactly one header component");
+    }
+  }
+
+  public void checkContent(Splitter[] splitterTemplates, String repeatRef) {
     if (splitterTemplates.length != 1) {
       throw new SplitsException("Repeat component '" + repeatRef + "' must have exactly one subcomponent");
     }

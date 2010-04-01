@@ -1,6 +1,7 @@
 package org.globsframework.gui.splits.layout;
 
 import org.globsframework.gui.splits.exceptions.SplitsException;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.awt.*;
 
@@ -48,5 +49,14 @@ public enum Anchor {
       }
     }
     throw new SplitsException("No enum Anchor found for value: " + anchor);
+  }
+
+  public static Anchor get(int value) {
+    for (Anchor anchor : values()) {
+      if (anchor.value == value) {
+        return anchor;
+      }
+    }
+    throw new ItemNotFound("No anchor defined for value: " + value);
   }
 }

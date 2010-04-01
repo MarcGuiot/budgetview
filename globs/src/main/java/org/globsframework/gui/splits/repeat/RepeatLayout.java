@@ -8,11 +8,13 @@ import java.util.List;
 
 public interface RepeatLayout {
 
-  void check(Splitter[] splitterTemplates, String repeatRef);
+  void checkHeader(Splitter[] splitters, String repeatRef);
+
+  void checkContent(Splitter[] splitterTemplates, String repeatRef);
 
   void init(JPanel panel);
 
-  void set(JPanel panel, List<ComponentConstraints[]> constraints);
+  void set(JPanel panel, List<ComponentConstraints[]> components);
 
   void insert(JPanel panel, ComponentConstraints[] constraints, int index);
 

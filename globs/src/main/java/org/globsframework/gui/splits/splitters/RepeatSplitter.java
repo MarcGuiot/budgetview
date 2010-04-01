@@ -8,12 +8,15 @@ import org.globsframework.gui.splits.layout.WrappedColumnLayout;
 import org.globsframework.gui.splits.repeat.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class RepeatSplitter extends AbstractSplitter {
-  private Splitter[] splitterTemplates;
+  private Splitter[] headerSplitters;
+  private Splitter[] contentSplitters;
   private String ref;
   private RepeatLayout layout;
 
@@ -24,10 +27,27 @@ public class RepeatSplitter extends AbstractSplitter {
       throw new SplitsException("Repeat items must have a 'ref' attribute");
     }
 
-    this.splitterTemplates = subSplitters;
+    initSplitters(subSplitters);
 
     layout = getLayout(properties.get("layout"), ref);
-    layout.check(subSplitters, ref);
+    layout.checkHeader(headerSplitters, ref);
+    layout.checkContent(contentSplitters, ref);
+  }
+
+  private void initSplitters(Splitter[] subSplitters) {
+    java.util.List<Splitter> splitters = new ArrayList<Splitter>();
+    for (Splitter subSplitter : subSplitters) {
+      if (subSplitter instanceof Header) {
+        if (headerSplitters != null) {
+          throw new InvalidParameter("Only one Header is accepted for a given repeat");
+        }
+        this.headerSplitters  = ((Header)subSplitter).getHeaderSplitters();
+      }
+      else {
+        splitters.add(subSplitter);
+      }
+    }
+    this.contentSplitters = splitters.toArray(new Splitter[splitters.size()]);
   }
 
   protected SplitComponent createRawStretch(SplitsContext context) {
@@ -39,11 +59,12 @@ public class RepeatSplitter extends AbstractSplitter {
       throw new ItemNotFound("Repeat '" + ref + "' not declared");
     }
     RepeatPanel repeatPanel =
-      new RepeatPanel(ref, repeatHandler, layout, autoHideIfEmpty, splitterTemplates, context);
+      new RepeatPanel(ref, repeatHandler, layout, autoHideIfEmpty, headerSplitters, contentSplitters, context);
     return repeatPanel.getSplitComponent();
   }
 
   private RepeatLayout getLayout(String layoutProperty, String ref) {
+
     if (Strings.isNullOrEmpty(layoutProperty) || "column".equalsIgnoreCase(layoutProperty)) {
       return new ColumnRepeatLayout() {
         protected LayoutManager getLayout(JPanel panel) {

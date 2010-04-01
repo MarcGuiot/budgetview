@@ -111,8 +111,8 @@ public abstract class SplitsTestCase extends UISpecTestCase {
     assertEquals(h, constraints.gridheight);
     assertEquals(weightX, constraints.weightx);
     assertEquals(weightY, constraints.weighty);
-    assertEquals(fill.getValue(), constraints.fill);
-    assertEquals(anchor.getValue(), constraints.anchor);
+    assertEquals(fill, Fill.get(constraints.fill));
+    assertEquals(anchor, Anchor.get(constraints.anchor));
     assertEquals(insets, constraints.insets);
   }
 
