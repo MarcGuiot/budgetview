@@ -1,5 +1,6 @@
 package org.globsframework.gui.splits;
 
+import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.*;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
@@ -7,12 +8,13 @@ import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.utils.Strings;
 import org.uispec4j.finder.ComponentMatchers;
+import org.uispec4j.utils.AssertionFailureNotDetectedError;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.ArrayList;
 
 public class SplitsRepeatTest extends SplitsTestCase {
 
@@ -313,6 +315,222 @@ public class SplitsRepeatTest extends SplitsTestCase {
     checkButton(panel, 1, "cc", 1, 0);
     checkLabel(panel, 2, "bb", 0, 1);
     checkButton(panel, 3, "bb", 1, 1);
+  }
+
+  public void testHeader() throws Exception {
+    Repeat<String> repeat =
+      builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
+                        new RepeatComponentFactory<String>() {
+                          public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                            cellBuilder.add("label", new JLabel(object));
+                            cellBuilder.add("btn", new JButton(object));
+                          }
+                        });
+
+    JPanel panel = parse(
+      "<repeat ref='myRepeat'>" +
+      "  <header>" +
+      "    <label text='header'/>" +
+      "  </header>" +
+      "  <row>" +
+      "    <label ref='label'/>" +
+      "    <button ref='btn'/>" +
+      "  </row>" +
+      "</repeat>");
+
+    assertEquals("myRepeat", panel.getName());
+    assertSame(panel, builder.getComponent("myRepeat"));
+
+    checkPanel(panel,
+               "label:header\n" +
+               "panel\n" +
+               "  label:aa\n" +
+               "  button:aa\n" +
+               "panel\n" +
+               "  label:bb\n" +
+               "  button:bb\n");
+
+    repeat.insert("cc", 1);
+    checkPanel(panel,
+               "label:header\n" +
+               "panel\n" +
+               "  label:aa\n" +
+               "  button:aa\n" +
+               "panel\n" +
+               "  label:cc\n" +
+               "  button:cc\n" +
+               "panel\n" +
+               "  label:bb\n" +
+               "  button:bb\n");
+    assertTrue(panel.isVisible());
+
+    repeat.remove(0);
+    checkPanel(panel,
+               "label:header\n" +
+               "panel\n" +
+               "  label:cc\n" +
+               "  button:cc\n" +
+               "panel\n" +
+               "  label:bb\n" +
+               "  button:bb\n");
+    assertTrue(panel.isVisible());
+
+    repeat.remove(0);
+    checkPanel(panel,
+               "label:header\n" +
+               "panel\n" +
+               "  label:bb\n" +
+               "  button:bb\n");
+    assertTrue(panel.isVisible());
+
+    repeat.remove(0);
+    checkPanel(panel, "");
+    assertTrue(panel.isVisible());
+  }
+
+  public void testOnlyOneHeaderItemAllowedInDefaultLayout() throws Exception {
+    Repeat<String> repeat =
+      builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
+                        new RepeatComponentFactory<String>() {
+                          public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                            cellBuilder.add("label", new JLabel(object));
+                            cellBuilder.add("btn", new JButton(object));
+                          }
+                        });
+
+    try {
+      parse(
+        "<repeat ref='myRepeat'>" +
+        "  <header>" +
+        "    <label text='header'/>" +
+        "    <label text='subHeader'/>" +
+        "  </header>" +
+        "  <row>" +
+        "    <label ref='label'/>" +
+        "    <button ref='btn'/>" +
+        "  </row>" +
+        "</repeat>");
+      throw new AssertionFailureNotDetectedError();
+    }
+    catch (SplitsException e) {
+      assertEquals("Repeat component 'myRepeat' must have exactly one header component", e.getMessage());
+    }
+  }
+
+  public void testHeaderInVerticalGridLayout() throws Exception {
+    builder.add("title1", new JLabel("col1"));
+    Repeat<String> repeat = builder.addRepeat("repeat", Arrays.asList("aa", "bb"), new RepeatComponentFactory<String>() {
+      public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+        cellBuilder.add("label", new JLabel(object));
+        cellBuilder.add("button", new JButton(object));
+      }
+    });
+    JPanel panel = parse(
+      "<repeat ref='repeat' layout='verticalGrid'>" +
+      "  <header>" +
+      "    <label ref='title1'/>" +
+      "    <label text='col2'/>" +
+      "  </header>" +
+      "  <label ref='label' fill='horizontal' anchor='south' marginTop='10' marginBottom='5'/>" +
+      "  <button ref='button' marginLeft='5' marginRight='5'/>" +
+      "</repeat>");
+
+    checkPanel(panel,
+               "label:col1\n" +
+               "label:col2\n" +
+               "label:aa\n" +
+               "button:aa\n" +
+               "label:bb\n" +
+               "button:bb\n");
+
+    checkDefaultLabel(panel, 0, "col1", 0, 0);
+    checkDefaultLabel(panel, 1, "col2", 1, 0);
+    checkLabel(panel, 2, "aa", 0, 1);
+    checkButton(panel, 3, "aa", 1, 1);
+    checkLabel(panel, 4, "bb", 0, 2);
+    checkButton(panel, 5, "bb", 1, 2);
+
+    repeat.insert("cc", 1);
+
+    checkPanel(panel,
+               "label:col1\n" +
+               "label:col2\n" +
+               "label:aa\n" +
+               "button:aa\n" +
+               "label:cc\n" +
+               "button:cc\n" +
+               "label:bb\n" +
+               "button:bb\n");
+    checkDefaultLabel(panel, 0, "col1", 0, 0);
+    checkDefaultLabel(panel, 1, "col2", 1, 0);
+    checkLabel(panel, 2, "aa", 0, 1);
+    checkButton(panel, 3, "aa", 1, 1);
+    checkLabel(panel, 4, "cc", 0, 2);
+    checkButton(panel, 5, "cc", 1, 2);
+    checkLabel(panel, 6, "bb", 0, 3);
+    checkButton(panel, 7, "bb", 1, 3);
+
+    repeat.remove(0);
+
+    checkPanel(panel,
+               "label:col1\n" +
+               "label:col2\n" +
+               "label:cc\n" +
+               "button:cc\n" +
+               "label:bb\n" +
+               "button:bb\n");
+    checkDefaultLabel(panel, 0, "col1", 0, 0);
+    checkDefaultLabel(panel, 1, "col2", 1, 0);
+    checkLabel(panel, 2, "cc", 0, 1);
+    checkButton(panel, 3, "cc", 1, 1);
+    checkLabel(panel, 4, "bb", 0, 2);
+    checkButton(panel, 5, "bb", 1, 2);
+
+    repeat.remove(0);
+    repeat.remove(0);
+    checkPanel(panel, "");
+  }
+
+  public void testHeaderNotShownInEmptyRepeat() throws Exception {
+    builder.add("title1", new JLabel("col1"));
+    Repeat<String> repeat = builder.addRepeat("repeat", new ArrayList<String>(), new RepeatComponentFactory<String>() {
+      public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+        cellBuilder.add("label", new JLabel(object));
+        cellBuilder.add("button", new JButton(object));
+      }
+    });
+    JPanel panel = parse(
+      "<repeat ref='repeat' layout='verticalGrid'>" +
+      "  <header>" +
+      "    <label ref='title1'/>" +
+      "    <label text='col2'/>" +
+      "  </header>" +
+      "  <label ref='label' fill='horizontal' anchor='south' marginTop='10' marginBottom='5'/>" +
+      "  <button ref='button' marginLeft='5' marginRight='5'/>" +
+      "</repeat>");
+
+    checkPanel(panel, "");
+
+    repeat.insert("aa", 0);
+    checkPanel(panel,
+               "label:col1\n" +
+               "label:col2\n" +
+               "label:aa\n" +
+               "button:aa\n");
+    checkDefaultLabel(panel, 0, "col1", 0, 0);
+    checkDefaultLabel(panel, 1, "col2", 1, 0);
+    checkLabel(panel, 2, "aa", 0, 1);
+    checkButton(panel, 3, "aa", 1, 1);
+
+    repeat.remove(0);
+    checkPanel(panel, "");
+    repeat.insert("aa", 0);
+    checkPanel(panel,
+               "label:col1\n" +
+               "label:col2\n" +
+               "label:aa\n" +
+               "button:aa\n");
+
   }
 
   public void testSwapInRepeat() throws Exception {
@@ -649,13 +867,21 @@ public class SplitsRepeatTest extends SplitsTestCase {
   }
 
   private void checkLabel(JPanel panel, int componentIndex, String label, int x, int y) {
+    checkLabel(panel, componentIndex, label, x, y, Fill.HORIZONTAL, Anchor.SOUTH, new Insets(10, 0, 5, 0));
+  }
+
+  private void checkDefaultLabel(JPanel panel, int componentIndex, String label, int x, int y) {
+    checkLabel(panel, componentIndex, label, x, y, Fill.NONE, Anchor.WEST, new Insets(0, 0, 0, 0));
+  }
+
+  private void checkLabel(JPanel panel, int componentIndex, String label, int x, int y, Fill fill, Anchor anchor, Insets insets) {
     JLabel jLabel = (JLabel)panel.getComponent(componentIndex);
     assertEquals(label, jLabel.getText());
     checkGridPos(panel, jLabel,
                  x, y, 1, 1,
                  SwingStretches.NULL_WEIGHT, SwingStretches.NULL_WEIGHT,
-                 Fill.HORIZONTAL, Anchor.SOUTH,
-                 new Insets(10, 0, 5, 0));
+                 fill, anchor,
+                 insets);
   }
 
   public static void checkPanel(JPanel panel, String expected) {

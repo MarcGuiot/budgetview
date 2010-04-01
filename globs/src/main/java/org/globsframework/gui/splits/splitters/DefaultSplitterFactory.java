@@ -111,6 +111,9 @@ public class DefaultSplitterFactory implements SplitterFactory {
     else if (name.equals("tab")) {
       return new TabSplitter(properties, subSplitters, context);
     }
+    else if (name.equals("header")) {
+      return new Header(properties, subSplitters);
+    }
     throw new SplitsException("Unknown splitter name: " + name);
   }
 

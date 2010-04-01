@@ -25,7 +25,10 @@ public class GridRepeatLayout implements RepeatLayout {
     this.gridWrapLimit = gridWrapLimit;
   }
 
-  public void check(Splitter[] splitterTemplates, String repeatRef) {
+  public void checkHeader(Splitter[] splitters, String repeatRef) {
+  }
+
+  public void checkContent(Splitter[] splitterTemplates, String repeatRef) {
   }
 
   public void init(JPanel panel) {

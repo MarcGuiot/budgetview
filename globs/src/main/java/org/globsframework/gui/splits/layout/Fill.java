@@ -1,5 +1,7 @@
 package org.globsframework.gui.splits.layout;
 
+import org.globsframework.utils.exceptions.ItemNotFound;
+
 import java.awt.*;
 
 public enum Fill {
@@ -16,5 +18,14 @@ public enum Fill {
 
   public int getValue() {
     return value;
+  }
+
+  public static Fill get(int value) {
+    for (Fill fill : values()) {
+      if (fill.value == value) {
+        return fill;
+      }
+    }
+    throw new ItemNotFound("No Fill defined for value: " + value);
   }
 }

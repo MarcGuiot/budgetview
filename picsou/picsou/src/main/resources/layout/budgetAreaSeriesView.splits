@@ -4,6 +4,9 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
     <style selector="#budgetAreaSeriesView .amount" font="-,plain,11" anchor="right"/>
+    <style selector="header label" font="-,plain,10"
+           foreground="block.inner.columnTitle" 
+           fill="none"/>
   </styles>
 
   <column name="budgetAreaSeriesView" styleClass="main">
@@ -25,7 +28,14 @@
         <column styleClass="blockScrollBorder">
           <scrollPane verticalUnitIncrement="10">
             <column>
-              <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid" margin="10" marginBottom="5">
+              <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid"
+                      margin="10" marginTop="5" marginBottom="5">
+                <header>
+                  <label text="$budgetview.columnTitle.series" anchor="right"/>
+                  <label text="$budgetview.columnTitle.real" anchor="right"/>
+                  <label text="$budgetview.columnTitle.gauge" anchor="center"/>
+                  <label text="$budgetview.columnTitle.planned" anchor="right"/>
+                </header>
                 <button ref="seriesName" styleClass="itemLink" marginRight="5" marginBottom="2"/>
                 <button ref="observedSeriesAmount" styleClass="actualAmountLink"
                         tooltipText="$budgetview.tooltip.detail.observed"/>

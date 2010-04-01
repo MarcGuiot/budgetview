@@ -331,10 +331,25 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="repeat">
+  <xs:element name="header">
     <xs:complexType>
       <xs:sequence minOccurs="1" maxOccurs="unbounded">
         <xs:group ref="splitsComponents"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:group name="repeatComponents">
+    <xs:choice>
+      <xs:group ref="splitsComponents"/>
+      <xs:element ref="header"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:element name="repeat">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="unbounded">
+        <xs:group ref="repeatComponents"/>
       </xs:sequence>
       <xs:attributeGroup ref="componentAttributes"/>
       <xs:attribute name="layout" use="optional">
