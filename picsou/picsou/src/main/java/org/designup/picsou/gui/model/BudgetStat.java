@@ -221,13 +221,15 @@ public class BudgetStat {
   @DefaultDouble(0.0)
   public static DoubleField UNCATEGORIZED_ABS;
 
-  public static DoubleField[] INCOME_FIELDS = {INCOME, INCOME_POSITIVE_REMAINING};
-
-  public static DoubleField[] EXPENSE_FIELDS = {ENVELOPES, ENVELOPES_POSITIVE_REMAINING,
-                                                EXTRAS, EXTRAS_POSITIVE_REMAINING, SAVINGS, SAVINGS_POSITIVE_REMAINING, UNCATEGORIZED};
+  public static DoubleField[] EXPENSE_FIELDS;
+  public static DoubleField[] EXPENSE_REMAINING_FIELDS;
 
   static {
     GlobTypeLoader.init(BudgetStat.class);
+    EXPENSE_FIELDS = new DoubleField[]{ENVELOPES, RECURRING, EXTRAS};
+    EXPENSE_REMAINING_FIELDS = new DoubleField[]{ENVELOPES_NEGATIVE_REMAINING, ENVELOPES_POSITIVE_REMAINING,
+                                                 RECURRING_NEGATIVE_REMAINING, RECURRING_POSITIVE_REMAINING,
+                                                 EXTRAS_NEGATIVE_REMAINING, EXTRAS_POSITIVE_REMAINING};
   }
 
   public static DoubleField getPositiveRemaining(BudgetArea budgetArea) {

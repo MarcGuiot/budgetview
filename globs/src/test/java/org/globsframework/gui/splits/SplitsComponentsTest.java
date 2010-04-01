@@ -13,7 +13,6 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import org.uispec4j.TextBox;
 import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;
-import static org.uispec4j.finder.ComponentMatchers.innerNameIdentity;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;

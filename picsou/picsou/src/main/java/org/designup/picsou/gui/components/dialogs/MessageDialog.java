@@ -3,7 +3,6 @@ package org.designup.picsou.gui.components.dialogs;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.gui.components.CloseAction;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;

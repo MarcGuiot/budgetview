@@ -13,7 +13,6 @@ import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
-import javax.swing.*;
 import java.util.Set;
 
 public class NoSavingsSeriesMessage extends NoSeriesMessage {

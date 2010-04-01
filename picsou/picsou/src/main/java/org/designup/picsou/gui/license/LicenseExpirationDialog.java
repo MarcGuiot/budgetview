@@ -6,7 +6,6 @@ import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobTextEditor;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;

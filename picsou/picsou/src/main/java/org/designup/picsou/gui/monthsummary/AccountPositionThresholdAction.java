@@ -3,16 +3,12 @@ package org.designup.picsou.gui.monthsummary;
 import org.designup.picsou.model.AccountPositionThreshold;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.gui.description.Formatting;
-import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.Set;
 
 public class AccountPositionThresholdAction extends AbstractAction {
   private GlobRepository repository;

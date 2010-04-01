@@ -132,7 +132,7 @@ public class CategorizationChecker extends GuiChecker {
 
   public CategorizationChecker checkAllButSavingBudgetAreaAreDisable() {
     for (BudgetArea area : BudgetArea.values()) {
-      if (area == BudgetArea.ALL){
+      if (area == BudgetArea.ALL) {
         continue;
       }
       if (area == BudgetArea.SAVINGS || area == BudgetArea.UNCATEGORIZED) {
@@ -147,7 +147,7 @@ public class CategorizationChecker extends GuiChecker {
 
   public void checkAllBudgetAreaAreEnable() {
     for (BudgetArea area : BudgetArea.values()) {
-      if (area == BudgetArea.ALL){
+      if (area == BudgetArea.ALL) {
         continue;
       }
       assertTrue(getPanel().getToggleButton(area.getName()).isEnabled());
@@ -406,14 +406,25 @@ public class CategorizationChecker extends GuiChecker {
   }
 
   public CategorizationChecker setNewIncome(String label, String seriesName) {
+    return setNewIncome(label, seriesName, null);
+  }
+
+  public CategorizationChecker setNewIncome(String label, String seriesName, Double amount) {
     int[] indices = getRowIndices(label);
     boolean first = true;
     for (int index : indices) {
       selectTableRow(index);
       if (first) {
-        selectIncome()
-          .createSeries(seriesName)
-          .selectSeries(seriesName);
+        SeriesEditionDialogChecker editionDialogChecker = selectIncome()
+          .createSeries()
+          .setName(seriesName);
+          if (amount != null){
+            editionDialogChecker.switchToManual()
+              .selectAllMonths()
+              .setAmount(amount);
+          }
+        editionDialogChecker.validate();
+//          .selectSeries(seriesName);
         first = false;
       }
       else {
@@ -483,13 +494,25 @@ public class CategorizationChecker extends GuiChecker {
   }
 
   public CategorizationChecker setNewEnvelope(String label, String seriesName) {
+    return setNewEnvelope(label, seriesName, null);
+  }
+
+  public CategorizationChecker setNewEnvelope(String label, String seriesName, Double amount) {
     int[] indices = getRowIndices(label);
     boolean first = true;
     for (int index : indices) {
       selectTableRow(index);
       if (first) {
-        selectEnvelopes()
-          .createSeries(seriesName);
+        SeriesEditionDialogChecker editionDialogChecker = selectEnvelopes()
+          .createSeries()
+          .setName(seriesName);
+        if (amount != null){
+          editionDialogChecker.switchToManual()
+            .selectAllMonths()
+            .setAmount(amount);
+        }
+        editionDialogChecker
+          .validate();
         first = false;
       }
       else {

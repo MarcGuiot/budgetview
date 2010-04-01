@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import sun.awt.AWTAutoShutdown;
-
 public class OperationChecker {
   private MenuItem importMenu;
   private MenuItem exportMenu;

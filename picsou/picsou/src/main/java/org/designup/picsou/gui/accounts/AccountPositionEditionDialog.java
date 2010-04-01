@@ -5,7 +5,6 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.LocalGlobRepository;

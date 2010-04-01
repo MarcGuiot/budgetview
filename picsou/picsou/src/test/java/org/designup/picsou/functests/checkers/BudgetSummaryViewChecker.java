@@ -18,12 +18,12 @@ public class BudgetSummaryViewChecker extends GuiChecker {
   }
 
   public BudgetSummaryViewChecker checkMonthBalance(double amount) {
-    assertThat(getPanel().getTextBox("balanceLabel").textEquals(toString(amount, true)));
+    assertThat(getPanel().getButton("balanceLabel").textEquals(toString(amount, true)));
     return this;
   }
 
   public BudgetSummaryViewChecker checkEndPosition(double amount) {
-    assertThat(getPanel().getTextBox("positionLabel").textEquals(toString(amount, false)));
+    assertThat(getPanel().getButton("positionLabel").textEquals(toString(amount, false)));
     return this;
   }
 
@@ -87,7 +87,7 @@ public class BudgetSummaryViewChecker extends GuiChecker {
   }
 
   public BudgetSummaryViewChecker checkNoEstimatedPosition() {
-    assertThat(getPanel().getTextBox("positionLabel").textEquals("-"));
+    assertThat(getPanel().getButton("positionLabel").textEquals("-"));
     return this;
   }
 
@@ -104,5 +104,10 @@ public class BudgetSummaryViewChecker extends GuiChecker {
   public void checkIsRealPosition() {
     TextBox label = getPanel().getTextBox("positionTitle");
     assertThat(label.textEquals("Position"));
+  }
+
+  public BalanceChecker openBalancePanel() {
+    Window window = WindowInterceptor.getModalDialog(getPanel().getButton("positionLabel").triggerClick());
+    return new BalanceChecker(window);
   }
 }

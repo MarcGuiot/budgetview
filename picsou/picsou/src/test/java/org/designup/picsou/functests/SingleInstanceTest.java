@@ -10,14 +10,10 @@ import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
-import org.uispec4j.UISpec4J;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.ThreadLauncherTrigger;
 
-import javax.swing.*;
 import java.net.ServerSocket;
-
-import sun.awt.AWTAutoShutdown;
 
 public class SingleInstanceTest extends StartUpFunctionalTestCase {
 

@@ -10,7 +10,6 @@ import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.utils.directory.Directory;
 

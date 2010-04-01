@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.components;
 
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

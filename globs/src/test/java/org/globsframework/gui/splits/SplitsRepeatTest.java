@@ -7,7 +7,6 @@ import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.utils.Strings;
 import org.uispec4j.finder.ComponentMatchers;
-import org.uispec4j.*;
 
 import javax.swing.*;
 import java.awt.*;
