@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="Fortis" id="13">
+  <bank name="Fortis" id="13" downloadUrl="https://www.fortisbanking.be/">
     <bankEntity label="FORTIS"/>
 
     <transactionMatcher
