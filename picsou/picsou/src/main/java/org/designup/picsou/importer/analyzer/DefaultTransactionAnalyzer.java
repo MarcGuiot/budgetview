@@ -52,6 +52,12 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
         if (Utils.equal(name, memo)) {
           content = name;
         }
+        else if (name != null && memo != null && name.contains(memo)){
+          content = name;
+        }
+        else if (name != null && memo != null && memo.contains(name)){
+          content = memo;
+        }
         else {
           content = Strings.join(name, memo);
         }

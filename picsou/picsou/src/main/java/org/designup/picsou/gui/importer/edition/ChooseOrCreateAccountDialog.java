@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.importer.edition;
 
-import org.designup.picsou.bank.BankPluginService;
+import org.designup.picsou.bank.specific.AbstractBankPlugin;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.utils.Lang;
@@ -121,7 +121,7 @@ public class ChooseOrCreateAccountDialog {
           Glob existingAccount = localRepository.findLinkTarget(account, AccountToAccountType.TO_ACCOUNT);
           localRepository.update(existingAccount.getKey(),
                                  Account.NUMBER, newAccount.get(Account.NUMBER));
-          BankPluginService.updateImportedTransaction(parentSessionRepository, newAccount, existingAccount);
+          AbstractBankPlugin.updateImportedTransaction(parentSessionRepository, newAccount, existingAccount);
         }
         else {
           Glob newAccount = localRepository.findLinkTarget(account, AccountToAccountType.FROM_ACCOUNT);

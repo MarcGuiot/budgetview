@@ -1,0 +1,62 @@
+OFXHEADER:100
+DATA:OFXSGML
+VERSION:102
+SECURITY:NONE
+ENCODING:USASCII
+CHARSET:1252
+COMPRESSION:NONE
+OLDFILEUID:NONE
+NEWFILEUID:NONE
+
+<OFX>
+  <SIGNONMSGSRSV1>
+    <SONRS>
+      <STATUS>
+        <CODE>0
+        <SEVERITY>INFO
+      </STATUS>
+      <DTSERVER>20060810152838
+      <LANGUAGE>FRA
+    </SONRS>
+  </SIGNONMSGSRSV1>
+  <BANKMSGSRSV1>
+    <STMTTRNRS>
+      <TRNUID>XXXXXXXXX
+      <STATUS>
+        <CODE>0
+        <SEVERITY>INFO
+      </STATUS>
+      <CLTCOOKIE>2
+      <STMTRS>
+        <CURDEF>EUR
+        <BANKACCTFROM>
+          <BANKID>17515
+          <BRANCHID>1111
+          <ACCTID>123123
+          <ACCTTYPE>CHECKING
+          <ACCTKEY>1
+        </BANKACCTFROM>
+        <BANKTRANLIST>
+          <DTSTART>20100305
+          <DTEND>20100305
+          <STMTTRN>
+            <TRNTYPE>CREDIT
+            <DTPOSTED>20100320
+            <TRNAMT>5.00
+            <FITID>id_mvt1
+            <NAME>C.A.F DE L'ESSONNE
+            <MEMO> C.A.F DE L'ESSONNE P 7246098DXXXXX 022010ME
+          </STMTTRN>
+        </BANKTRANLIST>
+        <LEDGERBAL>
+          <BALAMT>12345
+          <DTASOF>20100320
+        </LEDGERBAL>
+        <AVAILBAL>
+          <BALAMT>12345
+          <DTASOF>20100320
+        </AVAILBAL>
+      </STMTRS>
+    </STMTTRNRS>
+  </BANKMSGSRSV1>
+</OFX>
