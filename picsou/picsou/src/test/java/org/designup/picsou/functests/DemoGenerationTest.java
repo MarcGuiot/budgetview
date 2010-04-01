@@ -123,6 +123,16 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addTransaction(first(19), -13.50, "ZINGMAN")
       .addTransaction(second(19), -11.50, "ZINGMAN")
       .addTransaction(third(9), -6.50, "DAILY MAGS")
+      .addTransaction(first(7), -57.00, "CENTRE MEDICAL DES FLORETTES")
+      .addTransaction(first(9), -16.80, "PHARMACIE DES 4 CHEMINS")
+      .addTransaction(second(5), 7.80, "REMB. MUTUELLE SANTEPLUS")
+      .addTransaction(second(15), 35.00, "REMB. MUTUELLE SANTEPLUS")
+      .addTransaction(second(22), 12.50, "REMB. MUTUELLE SANTEPLUS")
+      .addTransaction(second(9), -16.80, "PHARMACIE DES 4 CHEMINS")
+      .addTransaction(first(7), -57.00, "CENTRE MEDICAL DES FLORETTES")
+      .addTransaction(second(8), -35.00, "DR PHU")
+      .addTransaction(third(22), 25.80, "REMB. MUTUELLE SANTEPLUS")
+
         // EXTRAS
       .addTransaction(second(28), -680.50, "PLOMBERIE 24/7")
         // SAVINGS
@@ -132,6 +142,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .save();
 
     operations.importOfxFile(OFX_PATH);
+    System.out.println("OFX File saved in: " + new File(OFX_PATH).getAbsolutePath());
 
     views.selectHome();
     mainAccounts.edit("Account n. 00000123456")
