@@ -42,6 +42,8 @@ public class TimeManagementTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     timeline.checkSelection("2006/01", "2006/02");
     timeline.selectMonth("2006/02");
+
+    views.selectData();
     transactions.initContent()
       .add("20/02/2006", TransactionType.VIREMENT, "income", "", 5.0)
       .check();
@@ -60,6 +62,7 @@ public class TimeManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     timeline.selectMonth("2006/03");
+    views.selectData();
     transactions
       .initContent()
       .add("20/03/2006", TransactionType.VIREMENT, "income", "", 5)
@@ -91,6 +94,7 @@ public class TimeManagementTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2006/01", "2006/02", "2006/03");
 
+    views.selectData();
     transactions
       .initContent()
       .add("20/03/2006", TransactionType.VIREMENT, "income2", "", +5)

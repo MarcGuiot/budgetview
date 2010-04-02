@@ -148,8 +148,9 @@ public class ExportTest extends LoggedInFunctionalTestCase {
 
     String fileName = TestUtils.getFileName(this, ".qif");
     Files.dumpStringToFile(fileName, content);
-    operations.importQifFile(fileName, SOCIETE_GENERALE, 0.);
+    operations.importQifFile(fileName, SOCIETE_GENERALE, 0.00);
 
+    views.selectData();
     transactions.initContent()
       .add("28/03/2007", TransactionType.VIREMENT, "VIREMENT LOGITEL AVRIL", "", 12345.67)
       .add("27/03/2007", TransactionType.CREDIT_CARD,
@@ -177,9 +178,9 @@ public class ExportTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "000123", -25.00, "15/06/2008")
       .addTransaction("2008/06/10", -100.0, "FNAC")
-      .addBankAccount(-1, 1024, "12345678b", 12.0, "15/06/2008")
-      .addTransaction("2008/06/05", -256.0, "Monop's")
-      .addTransaction("2008/06/13", "2008/06/15", 1.0, "Carouf")
+      .addBankAccount(-1, 1024, "12345678b", 12.00, "15/06/2008")
+      .addTransaction("2008/06/05", -256.00, "Monop's")
+      .addTransaction("2008/06/13", "2008/06/15", 1.00, "Carouf")
       .load();
 
     views.selectCategorization();

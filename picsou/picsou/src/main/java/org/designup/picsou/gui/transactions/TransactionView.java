@@ -150,7 +150,8 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
 
     GlobStringifier amountStringifier = descriptionService.getStringifier(Transaction.AMOUNT);
 
-    GlobTableView view = GlobTableView.init(TYPE, repository, comparator, directory);
+    GlobTableView view = GlobTableView.init(TYPE, repository, comparator, directory)
+      .setName("transactionsTable");
 
     view.setDefaultBackgroundPainter(new DefaultTableCellPainter(directory));
 

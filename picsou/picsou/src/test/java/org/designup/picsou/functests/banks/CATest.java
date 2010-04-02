@@ -6,8 +6,9 @@ public class CATest extends SpecificBankTestCase {
   public void test() throws Exception {
     operations.importOfxWithDeferred(getFile("ca1.ofx"), "Card n. 5341-1130-2611-1111", 26);
     timeline.selectAll();
-    transactions.getTable().getHeader().click(1);
 
+    views.selectData();
+    transactions.getTable().getHeader().click(1);
     transactions.initContent()
       .add("14/08/2006", TransactionType.PRELEVEMENT, "Prel 459654 Free Telecom Free Hautdebit 44804529", "", -45.78)
       .add("11/08/2006", TransactionType.CREDIT_CARD, "Websncf Lille", "", -162.80)

@@ -7,6 +7,8 @@ public class SGTest extends SpecificBankTestCase {
   public void test1() throws Exception {
     operations.importQifFile(getFile("sg1.qif"), SOCIETE_GENERALE, 0.);
     timeline.selectAll();
+
+    views.selectData();
     transactions.getTable().getHeader().click(1);
     transactions
       .initContent()
@@ -21,6 +23,8 @@ public class SGTest extends SpecificBankTestCase {
   public void test2() throws Exception {
     operations.importQifFile(getFile("sg2.qif"), SOCIETE_GENERALE, 0.);
     timeline.selectAll();
+
+    views.selectData();
     transactions.getTable().getHeader().click(1);
     transactions
       .initContent()
@@ -41,6 +45,8 @@ public class SGTest extends SpecificBankTestCase {
   public void testFormat2008() throws Exception {
     operations.importQifFile(getFile("sg2008.qif"), SOCIETE_GENERALE, 0.);
     timeline.selectAll();
+
+    views.selectData();
     transactions.getTable().getHeader().click(1);
     transactions
       .initContent()
@@ -84,6 +90,8 @@ public class SGTest extends SpecificBankTestCase {
   public void testFormat2009() throws Exception {
     operations.importQifFile(getFile("sg2009.qif"), SOCIETE_GENERALE, 0.);
     timeline.selectAll();
+
+    views.selectData();
     transactions.getTable().getHeader().click(1);
     transactions
       .initContent()

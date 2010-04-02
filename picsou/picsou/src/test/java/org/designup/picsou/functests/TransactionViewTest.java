@@ -20,6 +20,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .addTransactionWithNote("2006/05/02", -200.00, "sg", "")
       .addTransactionWithNote("2006/05/06", -100.00, "nounou", "nourrice")
       .load();
+    views.selectData();
     table = transactions.getTable();
   }
 
@@ -100,7 +101,9 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2006/01");
 
+    views.selectData();
     transactions.categorize("SOMETHING ELSE");
+
     views.checkCategorizationSelected();
     categorization.showSelectedMonthsOnly();
     categorization.checkTable(new Object[][]{
@@ -219,9 +222,12 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     timeline.selectMonth("2006/05");
+
+    views.selectData();
     transactions.checkSeriesTooltipContains("SOMETHING ELSE", "Click to categorize this operation");
-    
     transactions.categorize("SOMETHING ELSE");
+
+    views.selectCategorization();
     categorization.setNewEnvelope("SOMETHING ELSE", "Clothes");
     categorization.editSeries("Clothes").setDescription("Stuff to dress with").validate();
 

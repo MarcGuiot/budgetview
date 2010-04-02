@@ -21,8 +21,9 @@ public class BNPTest extends SpecificBankTestCase {
   public void test4() throws Exception {
     operations.importQifFile(getFile("bnp_Herve.qif"), "BNP Paribas", 0.);
     timeline.selectAll();
-    transactions.getTable().getHeader().click(1);
 
+    views.selectData();
+    transactions.getTable().getHeader().click(1);
     transactions.initContent()
       .add("06/05/2008", "07/05/2008", TransactionType.WITHDRAWAL, "RETRAIT 13H46 142170 BNP GERLAND DEBOUR", "", -40.00)
       .add("06/05/2008", TransactionType.PRELEVEMENT, "EDF PR QE CLIO BNPP NUM 001007 ECH 06.05", "", -24.00)
@@ -40,8 +41,8 @@ public class BNPTest extends SpecificBankTestCase {
   private void checkFile(String path) throws IOException {
     operations.importQifFile(getFile(path), "BNP Paribas", 0.);
     timeline.selectAll();
+    views.selectData();
     transactions.getTable().getHeader().click(1);
-
     transactions.initContent()
       .add("05/06/2008", TransactionType.CHECK, "CHEQUE N°6872464", "", -20.50)
       .add("03/06/2008", TransactionType.VIREMENT, "VIREMENT DE VTL 03/06 12H13 V06031213 75315 4698764 3", "", 45.00)

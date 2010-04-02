@@ -126,10 +126,12 @@ public class DownloadTest extends LicenseTestCase {
     startServers();
 
     retr.assertOk();
+
+    ViewSelectionChecker views = new ViewSelectionChecker(window);
+    views.selectHome();
     VersionInfoChecker versionInfo = new VersionInfoChecker(window);
     versionInfo.checkNewVersion();
 
-    ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectData();
     TransactionChecker transaction = new TransactionChecker(window);
     transaction.initContent()

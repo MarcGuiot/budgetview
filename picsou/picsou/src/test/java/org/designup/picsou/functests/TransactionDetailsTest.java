@@ -151,14 +151,15 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
     operations.importQifFiles(SOCIETE_GENERALE, fileName);
 
+    views.selectCategorization();
     categorization.initContent()
       .add("15/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -20.00)
       .add("14/06/2008", TransactionType.PRELEVEMENT, "Burger King", "", -100.00)
       .check();
 
-    transactions.getTable().selectRow(0);
+    views.selectCategorization();
+    categorization.selectTableRow(0);
     transactionDetails.checkOriginalLabel("PRELEVEMENT 123123 AUCHAN");
-
     categorization.selectTableRow(1);
     transactionDetails.checkOriginalLabelNotVisible();
   }

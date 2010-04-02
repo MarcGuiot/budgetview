@@ -6,8 +6,8 @@ public class CaisseEpargneTest extends SpecificBankTestCase {
   public void test() throws Exception {
     operations.importQifFile(getFile("caisse_epargne.qif"), "Caisse d'épargne", 0.);
     timeline.selectAll();
+    views.selectData();
     transactions.getTable().getHeader().click(1);
-
     transactions.initContent()
       .add("05/09/2008", TransactionType.PRELEVEMENT, "AGF 12743YO43PH93175", "", -23.18)
       .add("05/09/2008", TransactionType.PRELEVEMENT, "ECUREUIL ASSURANCES IARD *PJ 001919414", "", -4.00)
@@ -30,6 +30,7 @@ public class CaisseEpargneTest extends SpecificBankTestCase {
     setCurrentDate("2010/03/24");
     operations.importOfxFile(getFile("caisse_epargne.ofx"), 100.);
     timeline.selectAll();
+    views.selectData();
     transactions.initContent()
       .add("10/03/2010", TransactionType.PRELEVEMENT, "FREE TELECOM FREE HAUTDEBIT 199027559", "", -60.00)
       .add("09/03/2010", TransactionType.VIREMENT, "C.P.A.M. D'EVRY C.P.A.M. D&APOS;EVRY 100690007134", "", 10.82)

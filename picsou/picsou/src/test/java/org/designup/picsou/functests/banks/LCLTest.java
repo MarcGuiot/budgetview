@@ -44,15 +44,13 @@ public class LCLTest extends SpecificBankTestCase {
     operations.importQifFile(getFile("lcl_quicken_date_fr.qif"), "LCL");
     operations.importQifFile(getFile("lcl_money_date_us.qif"), "LCL");
     operations.importQifFile(getFile("lcl_money_date_fr.qif"), "LCL");
-//    operations.importOfxFile(getFile("lcl_money_ofx.ofc"));
-//    operations.importOfxFile(getFile("lcl_money.ofc"));
     checkContent();
   }
 
   private void checkContent() {
     timeline.selectAll();
+    views.selectData();
     transactions.getTable().getHeader().click(1);
-
     transactions.initContent()
       .add("22/06/2008", "27/06/2008", TransactionType.CREDIT_CARD, "SOFREMI SARL", "", -21.59)
       .add("24/06/2008", "26/06/2008", TransactionType.CREDIT_CARD, "SM CASINO CS494", "", -36.42)

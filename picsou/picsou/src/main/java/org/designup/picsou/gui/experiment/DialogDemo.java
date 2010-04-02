@@ -9,7 +9,6 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseExpirationDialog;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
-import org.designup.picsou.gui.series.wizard.SeriesWizardDialog;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Bank;
@@ -58,12 +57,6 @@ public class DialogDemo {
   private static void showHelpDialog(GlobRepository repository, Directory directory, JFrame frame) {
     HelpService service = directory.get(HelpService.class);
     service.showBankHelp(repository.get(Key.create(Bank.TYPE, 5)), frame);
-  }
-
-  private static void showSeriesWizardDialog(GlobRepository repository, Directory directory, JFrame frame) {
-    SeriesWizardDialog dialog = new SeriesWizardDialog(repository, directory);
-//    SplitsEditor.show(dialog.getDialog(), directory);
-    dialog.show();
   }
 
   private static void showLicenseExpirationDialog(GlobRepository repository, Directory directory, JFrame frame) {

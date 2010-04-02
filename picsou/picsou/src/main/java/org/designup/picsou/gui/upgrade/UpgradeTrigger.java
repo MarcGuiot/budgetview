@@ -2,11 +2,9 @@ package org.designup.picsou.gui.upgrade;
 
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.accounts.utils.Day;
+import org.designup.picsou.gui.PicsouInit;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
-import org.designup.picsou.model.initial.InitialSeries;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.*;
@@ -31,8 +29,8 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    createDataForNewUser(repository);
-    
+    PicsouInit.createTransientDataForNewUser(repository);
+
     Glob appVersion = repository.get(AppVersionInformation.KEY);
     Glob userVersion = repository.get(UserVersionInformation.KEY);
     if (userVersion.get(UserVersionInformation.CURRENT_BANK_CONFIG_VERSION)
@@ -267,45 +265,6 @@ public class UpgradeTrigger implements ChangeSetListener {
 
     repository.deleteAll(SeriesToCategory.TYPE);
     repository.deleteAll(Category.TYPE);
-  }
-
-  public void createDataForNewUser(GlobRepository repository) {
-    repository.startChangeSet();
-    try {
-      for (int i = 1; i < 32; i++) {
-        repository.findOrCreate(Key.create(Day.TYPE, i));
-      }
-      repository.findOrCreate(AccountPositionThreshold.KEY);
-      repository.findOrCreate(Notes.KEY, value(Notes.TEXT, Lang.get("notes.initial")));
-      repository.findOrCreate(UserVersionInformation.KEY,
-                              value(UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION),
-                              value(UserVersionInformation.CURRENT_BANK_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
-                              value(UserVersionInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION));
-//                            value(AppVersionInformation.LATEST_AVALAIBLE_JAR_VERSION, PicsouApplication.JAR_VERSION),
-//                            value(AppVersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
-//                            value(AppVersionInformation.LATEST_AVALAIBLE_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION)
-      Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
-      if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
-        repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
-                          Month.addOneMonth(TimeService.getToday()));
-      }
-
-      repository.findOrCreate(CurrentMonth.KEY,
-                              value(CurrentMonth.LAST_TRANSACTION_MONTH, 0),
-                              value(CurrentMonth.LAST_TRANSACTION_DAY, 0),
-                              value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
-                              value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
-      repository.findOrCreate(Account.MAIN_SUMMARY_KEY,
-                              value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()),
-                              value(Account.IS_IMPORTED_ACCOUNT, true));
-      repository.findOrCreate(Account.SAVINGS_SUMMARY_KEY,
-                              value(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()));
-      repository.findOrCreate(Account.ALL_SUMMARY_KEY);
-      InitialSeries.run(repository);
-    }
-    finally {
-      repository.completeChangeSet();
-    }
   }
 
   private static class RemovePlanedPrefixFunctor implements GlobFunctor {

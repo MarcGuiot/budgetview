@@ -30,7 +30,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    notes.checkNoSeriesMessage();
     mainAccounts
       .checkEstimatedPosition(0.00)
       .setThreshold(25.00);
@@ -45,7 +44,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     operations.checkUndoNotAvailable();
 
     views.selectHome();
-    notes.checkNoSeriesMessage();
     mainAccounts
       .checkEstimatedPosition(0.00)
       .checkThreshold(25.00);
@@ -122,12 +120,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/15", 1000, "Company")
       .addTransaction("2008/05/15", -100, "FNAC")
       .load();
-
-    views.selectHome();
-    notes
-      .checkNoSeriesMessage()
-      .openSeriesWizard()
-      .validate();
 
     views.selectHome();
     notes.setText("A little note");

@@ -95,6 +95,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       .load();
 
     timeline.selectMonths("2008/06", "2008/07");
+    views.selectBudget();
     budgetView.extras.createSeries()
       .setName("Machine a laver")
       .setEveryMonth()

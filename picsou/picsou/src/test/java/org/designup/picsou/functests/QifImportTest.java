@@ -12,10 +12,11 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
   public void testImportsQifFilesFromSG() throws Exception {
     String fileName = TestUtils.getFileName(this, ".qif");
 
-    Files.copyStreamTofile(QifImportTest.class.getResourceAsStream("/testfiles/sg1.qif"),
-                           fileName);
+    Files.copyStreamTofile(QifImportTest.class.getResourceAsStream("/testfiles/sg1.qif"), fileName);
 
-    operations.importQifFile(fileName, SOCIETE_GENERALE, 0.);
+    operations.importQifFile(fileName, SOCIETE_GENERALE, 0.00);
+
+    views.selectData();
     transactions
       .initContent()
       .add("22/04/2006", TransactionType.CREDIT_CARD, "REL. SACLAY", "", -55.49)
@@ -32,9 +33,10 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .add("19/04/2006", "SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", -14.50, "To categorize", 122.14, 122.14, "Main account")
       .add("13/04/2006", "STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", -18.70, "To categorize", 136.64, 136.64, "Main account")
       .check();
-    views.selectHome();
 
+    views.selectHome();
     mainAccounts.changePosition("Main account", 100, "REL. SACLAY");
+
     views.selectData();
     transactions.initAmountContent()
       .add("22/04/2006", "REL. SACLAY", -55.49, "To categorize", 100.00, 100.00, "Main account")
@@ -53,6 +55,8 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
                     "MAuchan\n" +
                     "^");
     operations.importQifFile(file, SOCIETE_GENERALE);
+
+    views.selectData();
     transactions.initAmountContent()
       .add("30/04/2006", "AUCHAN", -20.00, "To categorize", 80.00, 80.00, "Main account")
       .add("22/04/2006", "REL. SACLAY", -55.49, "To categorize", 100.00, 100.00, "Main account")
@@ -61,6 +65,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .add("19/04/2006", "SARL KALISTEA CARTE 06348905 PAIEMENT CB 1404 PARIS", -14.50, "To categorize", 222.14, 222.14, "Main account")
       .add("13/04/2006", "STATION BP MAIL CARTE 06348905 PAIEMENT CB 1104 PARIS", -18.70, "To categorize", 236.64, 236.64, "Main account")
       .check();
+
     views.selectHome();
     mainAccounts.changePosition("Main account", 80, "Auchan");
     mainAccounts.editPosition("Main account")
@@ -105,6 +110,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
     operations.importQifFile(file, SOCIETE_GENERALE);
 
     timeline.selectMonth("2006/04");
+    views.selectData();
     transactions.initContent()
       .add("19/04/2006", "20/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65)
       .check();
@@ -221,7 +227,8 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       builder.append(block);
     }
     String file = createQifFile("file", builder.toString());
-    operations.importQifFile(file, SOCIETE_GENERALE, 0.);
+    operations.importQifFile(file, SOCIETE_GENERALE, 0.0);
+    views.selectData();
   }
 
   private String createQifFile(String discriminant) {
@@ -254,6 +261,8 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
                     "^");
 
     operations.importQifFile(file, SOCIETE_GENERALE, 0.);
+
+    views.selectData();
     transactions.initContent()
       .add("19/04/2006", "20/04/2006", TransactionType.CREDIT_CARD, "STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS", "", -17.65)
       .check();

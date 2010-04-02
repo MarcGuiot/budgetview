@@ -6,6 +6,7 @@ public class FortisTest extends SpecificBankTestCase {
 
   public void test() throws Exception {
     operations.importOfxFile(getFile("fortis.ofx"));
+    views.selectData();
     transactions.getTable().getHeader().click(1);
     transactions
       .initContent()

@@ -36,21 +36,6 @@
       </scrollPane>
     </card>
 
-    <card name="noSeries">
-      <scrollPane styleClass="guidance" verticalUnitIncrement="10" forceVerticalScroll="true">
-
-        <column styleClass="message">
-          <panel styleClass="introMessage">
-            <label text="$notesView.intro.title"/>
-          </panel>
-          <htmlEditorPane text="$notesView.noSeries.text" name="noSeriesMessage"
-                          hyperlinkListener="hyperlinkHandler"/>
-          <button action="openSeriesWizard"/>
-          <filler fill="vertical"/>
-        </column>
-      </scrollPane>
-    </card>
-
     <card name="standard">
       <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true">
         <textArea ref="notesEditor" lineWrap="true" wrapStyleWord="true" margin="5" fill="both"/>
