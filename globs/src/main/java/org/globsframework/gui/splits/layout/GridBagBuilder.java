@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GridBagBuilder {
+
+  private static final Insets NULL_INSETS = new Insets(0, 0, 0, 0);
+
   private JPanel panel;
   private GridBagConstraints constraints = new GridBagConstraints();
   private Insets defaultInsets = null;
@@ -76,6 +79,9 @@ public class GridBagBuilder {
     constraints.weighty = weighty;
     if (insets != null) {
       constraints.insets = insets;
+    }
+    else {
+      constraints.insets = NULL_INSETS;
     }
 
     panel.add(component, constraints);
