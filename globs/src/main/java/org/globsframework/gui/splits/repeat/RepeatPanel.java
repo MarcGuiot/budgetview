@@ -91,6 +91,9 @@ public class RepeatPanel implements Repeat {
     RepeatContext context = repeatContexts.remove(index);
     context.dispose();
     if (repeatContexts.isEmpty()) {
+      if (hasHeader()){
+        layout.remove(panel, 0);
+      }
       panel.removeAll();
     }
 

@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicPanelUI;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.VolatileImage;
 
 public class StyledPanelUI extends BasicPanelUI {
   private Color topColor = Color.WHITE;
@@ -19,7 +20,7 @@ public class StyledPanelUI extends BasicPanelUI {
   private int shadowWidth = 0;
   private int distance = 0;
   private float opacity = 0.5f;
-  private BufferedImage image;
+  private Image image;
   private int height;
   private int width;
 
@@ -77,7 +78,9 @@ public class StyledPanelUI extends BasicPanelUI {
       createImage(graphics, component);
     }
     if (image != null) {
-      graphics.drawImage(image, 0, 0, null);
+      do{
+        graphics.drawImage(image, 0, 0, null);
+      } while (image != null && image instanceof VolatileImage && ((VolatileImage)image).contentsLost());
     }
   }
 
@@ -89,12 +92,15 @@ public class StyledPanelUI extends BasicPanelUI {
       int type;
       if (cornerRadius != 0) {
         type = BufferedImage.TYPE_INT_ARGB;
+        BufferedImage bufferedImage = new BufferedImage(width, height, type);
+        image = bufferedImage;
+        g2d = bufferedImage.createGraphics();
       }
       else {
-        type = BufferedImage.TYPE_INT_BGR;
+        VolatileImage volatileImage = c.createVolatileImage(c.getWidth(), c.getHeight());
+        image = volatileImage;
+        g2d = volatileImage.createGraphics();
       }
-      image = new BufferedImage(width, height, type);
-      g2d = image.createGraphics();
     }
     catch (OutOfMemoryError e) {
       image = null;

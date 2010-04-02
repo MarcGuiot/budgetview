@@ -9,7 +9,6 @@ import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
-import org.mozilla.javascript.ClassCache;
 
 import java.io.File;
 

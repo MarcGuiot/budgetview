@@ -142,22 +142,12 @@ public class PicsouDialog extends JDialog {
   }
 
   public void setContentPane(Container contentPane) {
-//    try {
-//      panelName = new org.uispec4j.Panel(contentPane).getTextBox("title").getText();
-//    }
-//    catch (ItemNotFoundException e) {
-//      panelName = "unknown";
-//    }
-//    catch (ComponentAmbiguityException e) {
-//      e.printStackTrace();
-//    }
     updater = new BackgroundColorUpdater("dialog.bg.bottom", contentPane);
     updater.install(colorService);
     super.setContentPane(contentPane);
   }
 
   public void setVisible(boolean visible) {
-//    System.out.println("PicsouDialog.setVisible start : " + panelName + " visibility : " + visible + "  " + isVisible());
     final OpenRequestManager requestManager = directory.get(OpenRequestManager.class);
     if (visible && !openRequestIsManaged) {
       requestManager.pushCallback(new OpenRequestManager.Callback() {
@@ -178,15 +168,7 @@ public class PicsouDialog extends JDialog {
     if (visible && !openRequestIsManaged) {
       requestManager.popCallback();
     }
-//    System.out.println("PicsouDialog.setVisible end : " + panelName + " visibility : " + visible + "  " + isVisible());
   }
-
-//  @Deprecated
-//  public void hide() {
-//    System.out.println("PicsouDialog.hide call start ");
-//    super.hide();
-//    System.out.println("PicsouDialog.hide call end ");
-//  }
 
   private JButton createButton(final Action action) {
     JButton button = new JButton(action);
@@ -252,7 +234,6 @@ public class PicsouDialog extends JDialog {
   }
 
   public void showCentered() {
-//    System.out.println("PicsouDialog.showCentered enter " + panelName);
     if (updater == null) {
       updater = new BackgroundColorUpdater("dialog.bg.bottom", getContentPane());
       updater.install(colorService);
@@ -262,7 +243,6 @@ public class PicsouDialog extends JDialog {
       GuiUtils.removeShortcut(getRootPane(), "ESCAPE", KeyStroke.getKeyStroke("ESCAPE"));
       dispose();
     }
-//    System.out.println("PicsouDialog.showCentered leave " + panelName);
   }
 
   public void setAutoFocusOnOpen(final JTextField editor) {
@@ -291,43 +271,6 @@ public class PicsouDialog extends JDialog {
 
   public String toString() {
     return "PicsouDialog";
-//    return "PicsouDialog " + panelName;
   }
 
-//  static class DecroratedAction implements Action {
-//    private Action action;
-//
-//    DecroratedAction(Action action) {
-//      this.action = action;
-//    }
-//
-//    public Object getValue(String key) {
-//      return action.getValue(key);
-//    }
-//
-//    public void putValue(String key, Object value) {
-//      action.putValue(key, value);
-//    }
-//
-//    public void setEnabled(boolean b) {
-//      action.setEnabled(b);
-//    }
-//
-//    public boolean isEnabled() {
-//      return action.isEnabled();
-//    }
-//
-//    public void addPropertyChangeListener(PropertyChangeListener listener) {
-//      action.addPropertyChangeListener(listener);
-//    }
-//
-//    public void removePropertyChangeListener(PropertyChangeListener listener) {
-//      action.removePropertyChangeListener(listener);
-//    }
-//
-//    public void actionPerformed(ActionEvent e) {
-//      action.actionPerformed(e);
-//      System.out.println("PicsouDialog$DecroratedAction.actionPerformed " + action.getValue(Action.NAME));
-//    }
-//  }
 }

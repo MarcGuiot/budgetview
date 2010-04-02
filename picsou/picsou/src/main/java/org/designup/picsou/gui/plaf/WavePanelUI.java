@@ -7,7 +7,7 @@ import javax.swing.plaf.basic.BasicPanelUI;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
-import java.awt.image.BufferedImage;
+import java.awt.image.VolatileImage;
 
 public class WavePanelUI extends BasicPanelUI {
 
@@ -18,7 +18,7 @@ public class WavePanelUI extends BasicPanelUI {
   protected GeneralPath path;
   private int width;
   private int height;
-  private BufferedImage image;
+  private VolatileImage image;
 
   public WavePanelUI() {
     path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
@@ -50,7 +50,10 @@ public class WavePanelUI extends BasicPanelUI {
       createImage(g, component, dimension);
     }
     if (image != null) {
-      g.drawImage(image, 0, 0, null);
+      do {
+        g.drawImage(image, 0, 0, null);
+      }
+      while (image != null && image.contentsLost());
     }
   }
 
@@ -60,12 +63,12 @@ public class WavePanelUI extends BasicPanelUI {
 
     Graphics2D g2;
     try {
-      if (!GuiUtils.isWindows()) {
-        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        g2 = image.createGraphics();
+      if (GuiUtils.isWindows()) {
+        g2 = (Graphics2D)g;
       }
       else {
-        g2 = (Graphics2D)g;
+        image = component.createVolatileImage(width, height);
+        g2 = image.createGraphics();
       }
     }
     catch (Exception e) {

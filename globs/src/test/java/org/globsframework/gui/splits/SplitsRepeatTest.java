@@ -1,11 +1,11 @@
 package org.globsframework.gui.splits;
 
+import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.*;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
-import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.utils.Strings;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.utils.AssertionFailureNotDetectedError;
@@ -524,6 +524,13 @@ public class SplitsRepeatTest extends SplitsTestCase {
 
     repeat.remove(0);
     checkPanel(panel, "");
+    repeat.insert("aa", 0);
+    checkPanel(panel,
+               "label:col1\n" +
+               "label:col2\n" +
+               "label:aa\n" +
+               "button:aa\n");
+
   }
 
   public void testSwapInRepeat() throws Exception {
