@@ -10,6 +10,7 @@ import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 
 import javax.swing.*;
 import java.awt.*;
@@ -225,7 +226,7 @@ public class BudgetViewChecker extends GuiChecker {
     public BudgetAreaChecker checkSeriesNotPresent(String... seriesName) {
       Panel budgetPanel = getPanel();
       for (String name : seriesName) {
-        UISpecAssert.assertFalse(budgetPanel.containsUIComponent(Button.class, name));
+        assertFalse(budgetPanel.containsUIComponent(Button.class, name));
       }
       return this;
     }
@@ -289,11 +290,22 @@ public class BudgetViewChecker extends GuiChecker {
       return this;
     }
 
-    public BudgetAreaChecker checkGaugeTooltip(String seriesName, String ...tooltipText) {
-      for (String s : tooltipText) {
-        getGauge(seriesName).checkTooltipContains(s);
+    public BudgetAreaChecker checkGaugeTooltip(String seriesName, String... tooltipTextFragments) {
+      for (String text : tooltipTextFragments) {
+        getGauge(seriesName).checkTooltipContains(text);
       }
       return this;
+    }
+
+    public BudgetAreaChecker checkFooterContains(String text) {
+      assertThat(getPanel().getTextBox("footerArea").textContains(text));
+      return this;
+    }
+
+    public void checkFooterHidden() {
+      final TextBox textBox = getPanel().getTextBox("footerArea");
+      assertFalse(textBox.isVisible());
+      assertThat(textBox.textIsEmpty());
     }
   }
 

@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.budget.footers.BudgetAreaSeriesFooter;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.TextDisplay;
 import org.designup.picsou.gui.components.charts.BudgetAreaGaugeFactory;
@@ -19,6 +20,7 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
@@ -37,24 +39,31 @@ import java.util.Set;
 public class BudgetAreaSeriesView extends View {
   private String name;
   private BudgetArea budgetArea;
-  private SeriesAmountEditionDialog seriesAmountEditionDialog;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
   private Matchers.SeriesFirstEndDateFilter seriesDateFilter;
-  private GlobMatcher seriesFilter;
-  private Repeat<Glob> seriesRepeat;
   private List<Key> currentSeries = Collections.emptyList();
+
   private BudgetAreaHeaderUpdater headerUpdater;
+  private BudgetAreaSeriesFooter footerGenerator;
+
+  private Repeat<Glob> seriesRepeat;
+  private GlobMatcher seriesFilter;
   private SeriesEditionButtons seriesButtons;
+  private JEditorPane footerArea = GuiUtils.createReadOnlyHtmlComponent();
+
+  private SeriesAmountEditionDialog seriesAmountEditionDialog;
 
   public BudgetAreaSeriesView(String name,
                               final BudgetArea budgetArea,
                               final GlobRepository repository,
                               Directory directory,
+                              BudgetAreaSeriesFooter footerGenerator,
                               final SeriesEditionDialog seriesEditionDialog,
                               final SeriesAmountEditionDialog seriesAmountEditionDialog) {
     super(repository, directory);
     this.name = name;
     this.budgetArea = budgetArea;
+    this.footerGenerator = footerGenerator;
     this.seriesAmountEditionDialog = seriesAmountEditionDialog;
 
     seriesButtons = new SeriesEditionButtons(budgetArea, repository, directory, seriesEditionDialog);
@@ -120,6 +129,7 @@ public class BudgetAreaSeriesView extends View {
       }
     });
     currentSeries = newSeries;
+    footerGenerator.update(currentSeries);
   }
 
   private void update() {
@@ -160,6 +170,7 @@ public class BudgetAreaSeriesView extends View {
     else {
       seriesDateFilter = Matchers.seriesDateFilter(budgetArea.getId(), false);
     }
+
     seriesFilter = new GlobMatcher() {
       public boolean matches(Glob periodSeriesStat, GlobRepository repository) {
         Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
@@ -176,6 +187,9 @@ public class BudgetAreaSeriesView extends View {
         return !(selectedMonthIds.size() == notActive) && seriesDateFilter.matches(series, repository);
       }
     };
+
+    footerGenerator.init(footerArea);
+    builder.add("footerArea", footerArea);
   }
 
   private class SeriesRepeatComponentFactory implements RepeatComponentFactory<Glob> {
@@ -195,6 +209,7 @@ public class BudgetAreaSeriesView extends View {
 
       addAmountButton("plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder, new GlobListFunctor() {
         public void run(GlobList list, GlobRepository repository) {
+          repository.update(UserPreferences.KEY, UserPreferences.SHOW_ENVELOPES_EDITION_MESSAGE, false);
           seriesAmountEditionDialog.show(series, selectedMonthIds);
         }
       });

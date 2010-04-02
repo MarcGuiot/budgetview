@@ -1073,5 +1073,4 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.income.checkOrder("Retraite 3", "Retraite 2", "Retraite 1");
   }
-
 }
