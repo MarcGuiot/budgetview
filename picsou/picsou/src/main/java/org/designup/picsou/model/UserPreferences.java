@@ -6,8 +6,10 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.annotations.DefaultDouble;
-import org.globsframework.metamodel.fields.*;
+import org.globsframework.metamodel.fields.BooleanField;
+import org.globsframework.metamodel.fields.DateField;
+import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
@@ -42,6 +44,9 @@ public class UserPreferences {
   @DefaultBoolean(true)
   public static BooleanField SHOW_CATEGORIZATION_HELP_MESSAGE;
 
+  @DefaultBoolean(true)
+  public static BooleanField SHOW_ENVELOPES_EDITION_MESSAGE;
+
   @DefaultInteger(1)
   public static IntegerField CATEGORIZATION_FILTERING_MODE;
 
@@ -64,26 +69,30 @@ public class UserPreferences {
       outputStream.writeInteger(values.get(CATEGORIZATION_FILTERING_MODE));
       outputStream.writeBoolean(values.get(SHOW_BUDGET_VIEW_HELP_MESSAGE));
       outputStream.writeBoolean(values.get(SHOW_CATEGORIZATION_HELP_MESSAGE));
+      outputStream.writeBoolean(values.get(SHOW_ENVELOPES_EDITION_MESSAGE));
       outputStream.writeDate(values.get(LAST_VALID_DAY));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public int getWriteVersion() {
-      return 4;
+      return 5;
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
-      if (version == 2) {
+      else if (version == 2) {
         deserializeDataV2(fieldSetter, data);
       }
-      if (version == 3) {
+      else if (version == 3) {
         deserializeDataV3(fieldSetter, data);
       }
-      if (version == 4) {
+      else if (version == 4) {
         deserializeDataV4(fieldSetter, data);
+      }
+      else if (version == 5) {
+        deserializeDataV5(fieldSetter, data);
       }
     }
 
@@ -95,6 +104,7 @@ public class UserPreferences {
       fieldSetter.set(LAST_VALID_DAY, Month.addOneMonth(TimeService.getToday()));
       fieldSetter.set(SHOW_BUDGET_VIEW_HELP_MESSAGE, false);
       fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, false);
+      fieldSetter.set(SHOW_ENVELOPES_EDITION_MESSAGE, false);
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
@@ -106,6 +116,7 @@ public class UserPreferences {
       fieldSetter.set(LAST_VALID_DAY, Month.addOneMonth(TimeService.getToday()));
       fieldSetter.set(SHOW_BUDGET_VIEW_HELP_MESSAGE, false);
       fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, false);
+      fieldSetter.set(SHOW_ENVELOPES_EDITION_MESSAGE, false);
     }
 
     private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
@@ -116,6 +127,7 @@ public class UserPreferences {
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
       fieldSetter.set(SHOW_BUDGET_VIEW_HELP_MESSAGE, input.readBoolean());
       fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, input.readBoolean());
+      fieldSetter.set(SHOW_ENVELOPES_EDITION_MESSAGE, false);
       fieldSetter.set(LAST_VALID_DAY, input.readDate());
     }
 
@@ -128,6 +140,20 @@ public class UserPreferences {
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
       fieldSetter.set(SHOW_BUDGET_VIEW_HELP_MESSAGE, input.readBoolean());
       fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, input.readBoolean());
+      fieldSetter.set(SHOW_ENVELOPES_EDITION_MESSAGE, false);
+      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+    }
+
+    private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readUtf8String());
+      fieldSetter.set(LAST_BACKUP_RESTORE_DIRECTORY, input.readUtf8String());
+      fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
+      fieldSetter.set(REGISTERED_USER, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
+      fieldSetter.set(SHOW_BUDGET_VIEW_HELP_MESSAGE, input.readBoolean());
+      fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, input.readBoolean());
+      fieldSetter.set(SHOW_ENVELOPES_EDITION_MESSAGE, input.readBoolean());
       fieldSetter.set(LAST_VALID_DAY, input.readDate());
     }
   }

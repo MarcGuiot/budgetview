@@ -18,6 +18,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .addTransactionWithNote("2008/07/16", -15, "Pizza Pino", "miam miam")
       .load();
 
+    views.selectData();
     TextBox searchField = transactions.getSearchField();
     searchField.setText("pizza");
     transactions.initContent()

@@ -5,6 +5,7 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.model.initial.DefaultSeriesFactory;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowHandler;
@@ -86,6 +87,46 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .add("11/01/2006", TransactionType.CHECK, "CHEQUE N°12345", "", -12.00)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
+  }
+
+  public void testCreatingAUserWithDefaultUserSeriesModeActivated() throws Exception {
+    DefaultSeriesFactory.AUTO_CREATE_DEFAULT_SERIES = true;
+    try {
+      login.logNewUser("toto", "p4ssw0rd");
+
+      {
+        NavigationViewChecker navigation = new NavigationViewChecker(window);
+        navigation.gotoBudget();
+
+        BudgetViewChecker budgetView = new BudgetViewChecker(window);
+        budgetView.income.checkSeriesPresent("Income 1", "Income 2");
+        budgetView.envelopes.checkSeriesPresent("Groceries", "Health", "Fuel");
+
+        operations = new OperationChecker(window);
+        String filePath = OfxBuilder
+          .init(this)
+          .addTransaction("2006/01/10", 1300, "WorldCo")
+          .addTransaction("2006/01/11", -12.0, "Cheque 12345")
+          .save();
+        operations.importOfxFile(filePath);
+
+        operations.logout();
+      }
+
+      login.logExistingUser("toto", "p4ssw0rd", false);
+
+      {
+        NavigationViewChecker navigation = new NavigationViewChecker(window);
+        navigation.gotoCategorization();
+
+        CategorizationChecker categorization = new CategorizationChecker(window);
+        categorization.selectTransaction("WorldCo");
+        categorization.selectIncome().checkSeriesListEquals("Income 1", "Income 2");
+      }
+    }
+    finally {
+      DefaultSeriesFactory.AUTO_CREATE_DEFAULT_SERIES = false;
+    }
   }
 
   public void testBanksAreCorrectlyReImported() throws Exception {

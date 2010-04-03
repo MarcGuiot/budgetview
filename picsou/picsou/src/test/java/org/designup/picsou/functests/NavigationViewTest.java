@@ -17,6 +17,8 @@ public class NavigationViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/29", -19.00, "DVD")
       .save();
     navigation.openImport().selectFiles(path).doImport().completeImport();
+
+    views.selectHome();
     navigation.gotoCategorization();
     views.checkCategorizationSelected();
     categorization.checkTable(new Object[][]{

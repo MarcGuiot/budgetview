@@ -311,7 +311,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-
     categorization.checkShowsAllTransactions();
     categorization.checkTable(new Object[][]{
       {"15/05/2008", "", "Auchan", -40.00},

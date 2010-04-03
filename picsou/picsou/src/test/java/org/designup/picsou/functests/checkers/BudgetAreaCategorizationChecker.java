@@ -28,6 +28,18 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   }
 
   public BudgetAreaCategorizationChecker checkContainsSeries(String... seriesNames) {
+    List<String> names = getSeriesNames();
+    org.globsframework.utils.TestUtils.assertContains(names, seriesNames);
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker checkSeriesListEquals(String... seriesNames) {
+    List<String> names = getSeriesNames();
+    org.globsframework.utils.TestUtils.assertEquals(names, seriesNames);
+    return this;
+  }
+
+  private List<String> getSeriesNames() {
     List<String> names = new ArrayList<String>();
     UIComponent[] radios = panel.getUIComponents(RadioButton.class);
     for (UIComponent radio : radios) {
@@ -35,8 +47,7 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
         names.add(radio.getLabel());
       }
     }
-    org.globsframework.utils.TestUtils.assertContains(names, seriesNames);
-    return this;
+    return names;
   }
 
   private boolean isSeriesRadio(UIComponent radio) {

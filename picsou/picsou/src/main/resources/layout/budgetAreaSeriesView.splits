@@ -7,6 +7,7 @@
     <style selector="header label" font="-,plain,10"
            foreground="block.inner.columnTitle" 
            fill="none"/>
+    <style selector="htmlEditorPane.hints" foreground="block.inner.hints"/>
   </styles>
 
   <column name="budgetAreaSeriesView" styleClass="main">
@@ -26,12 +27,12 @@
         </grid>
 
         <column styleClass="blockScrollBorder">
-          <scrollPane verticalUnitIncrement="10">
-            <column>
+          <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true">
+            <verticalBoxes>
               <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid"
                       margin="10" marginTop="5" marginBottom="5">
                 <header>
-                  <label text="$budgetview.columnTitle.series" anchor="right"/>
+                  <label text="$budgetview.columnTitle.series" anchor="center"/>
                   <label text="$budgetview.columnTitle.real" anchor="right"/>
                   <label text="$budgetview.columnTitle.gauge" anchor="center"/>
                   <label text="$budgetview.columnTitle.planned" anchor="right"/>
@@ -43,8 +44,9 @@
                 <button ref="plannedSeriesAmount" styleClass="plannedAmountLink"
                         tooltipText="$budgetview.tooltip.detail.planned"/>
               </repeat>
+              <htmlEditorPane ref="footerArea" styleClass="hints"/>
               <filler fill="vertical"/>
-            </column>
+            </verticalBoxes>
           </scrollPane>
 
           <row styleClass="footer">

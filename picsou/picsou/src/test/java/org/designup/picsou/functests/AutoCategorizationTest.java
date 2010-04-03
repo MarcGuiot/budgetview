@@ -24,7 +24,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .loadAndGotoCategorize(1, 1);
 
     views.checkCategorizationSelected();
-    categorization.checkShowsLastImportedTransaction();
+
     views.selectData();
     transactions.checkSeries("Menu K 1", "dej");
     transactions.checkSeries("Menu K 2", "dej");
@@ -205,7 +205,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
     transactions.checkSeries(1, "Mutuelle");
   }
 
-  public void testNoAutomaticCategorisationIfSeriesIsDisable() throws Exception {
+  public void testNoAutomaticCategorisationIfSeriesIsDisabled() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/05/25", -50.0, "Auchan")
@@ -226,7 +226,6 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectCategorization();
-
     categorization
       .selectTransactions("Auchan")
       .selectEnvelopes()
@@ -236,6 +235,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2008/06/11", -50.0, "2_Auchan")
       .load(1, 0);
+
     categorization
       .selectTransaction("2_Auchan")
       .checkToCategorize()

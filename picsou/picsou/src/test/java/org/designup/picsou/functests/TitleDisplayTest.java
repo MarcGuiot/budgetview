@@ -28,6 +28,7 @@ public class TitleDisplayTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     timeline.checkSelection("2008/08", "2008/09", "2008/10", "2008/11", "2008/12", "2009/01", "2009/02");
 
+    views.selectHome();
     title.checkContent("Dashboard august 2008 - february 2009");
 
     timeline.selectMonth("2008/10");

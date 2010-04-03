@@ -5,6 +5,7 @@ import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.assertion.UISpecAssert;
 import org.designup.picsou.gui.model.Card;
+import junit.framework.Assert;
 
 public class ViewSelectionChecker extends GuiChecker {
   private Window window;
@@ -58,7 +59,19 @@ public class ViewSelectionChecker extends GuiChecker {
   }
 
   private void assertSelected(String viewName) {
-    assertTrue(getToggle(viewName).isSelected());
+    assertTrue("Selection: " + getSelectedToggle().getLabel(),
+               getToggle(viewName).isSelected());
+  }
+
+  private ToggleButton getSelectedToggle() {
+    for (Card card : Card.values()) {
+      ToggleButton button = getToggle(card.getName());
+      if (button.isSelected().isTrue()) {
+        return button;
+      }
+    }
+    Assert.fail("No view selected");
+    return null;
   }
 
   private ToggleButton getToggle(String viewName) {

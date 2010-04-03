@@ -39,6 +39,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       })
       .completeImport();
 
+    views.selectData();
     transactions
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
@@ -86,6 +87,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     timeline.checkSelection("2006/02");
 
     timeline.selectAll();
+    views.selectData();
     transactions
       .initContent()
       .add("20/02/2006", TransactionType.PRELEVEMENT, "Menu K", "", -2.2)
@@ -103,6 +105,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .completeImport();
 
+    views.selectData();
     transactions
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
@@ -145,6 +148,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setAmount(0.)
       .validateFromImport();
 
+    views.selectData();
     transactions
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
@@ -291,6 +295,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .defineAccount(SOCIETE_GENERALE, "main", "1111")
       .completeImport(0.);
 
+    views.selectData();
     transactions
       .initContent()
       .add("20/01/2006", TransactionType.PRELEVEMENT, "Second operation", "", -2.2)
@@ -392,6 +397,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .completeImport();
 
+    views.selectData();
     transactions
       .initContent()
       .add("21/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
@@ -444,6 +450,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       })
       .completeImport(0.);
 
+    views.selectData();
     transactions.initContent()
       .add("01/02/2001", TransactionType.PRELEVEMENT, "Menu K", "", -1.10)
       .check();
@@ -520,10 +527,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .save();
     operations.importQifFile(file2, SOCIETE_GENERALE);
 
-    transactions
-      .getTable()
-      .getHeader().click(1);
-
+    views.selectData();
+    transactions.getTable().getHeader().click(1);
     transactions
       .initAmountContent()
       .add("12/01/2006", "MENU K", -6.00, "To categorize", 85.00, 85.00, "Main account")

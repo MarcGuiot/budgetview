@@ -6,9 +6,9 @@ import org.designup.picsou.gui.accounts.NewAccountAction;
 import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.PicsouFrame;
+import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.importer.additionalactions.AccountEditionAction;
 import org.designup.picsou.gui.importer.additionalactions.BankEntityEditionAction;
@@ -319,8 +319,8 @@ public class ImportDialog {
         displayErrorMessage("login.data.file.not.found", fileName);
         return false;
       }
-      if (file.isDirectory()){
-        if (strings.length == 1){
+      if (file.isDirectory()) {
+        if (strings.length == 1) {
           displayErrorMessage("import.file.is.directory", fileName);
           return false;
         }
@@ -343,7 +343,7 @@ public class ImportDialog {
     return true;
   }
 
-  private void displayErrorMessage(String key, String ...args) {
+  private void displayErrorMessage(String key, String... args) {
     showStep1Message("<html><font color=red>" + Lang.get(key, args) + "</font></html>");
   }
 
@@ -398,10 +398,7 @@ public class ImportDialog {
       SelectionService selectionService = directory.get(SelectionService.class);
       selectionService.select(monthsToSelect.getLast());
     }
-    if (repository.contains(Series.TYPE, Series.USER_SERIES_MATCHER)) {
-      directory.get(NavigationService.class)
-        .gotoCategorizationAndSelectLastImported();
-    }
+    directory.get(NavigationService.class).gotoCategorization();
     closeDialog();
   }
 
@@ -511,13 +508,14 @@ public class ImportDialog {
   }
 
   public static String getEndOfImportMessageKey(int importedTransactionCount, int transactionCount, int autocategorizedTransactions) {
-    if (transactionCount == 0){
+    if (transactionCount == 0) {
       return "import.end.info.operations.none.none." + normalize(importedTransactionCount);
-    }else {
-    if ((transactionCount > 1) && (transactionCount == autocategorizedTransactions)) {
-      return "import.end.info.operations.many.all";
     }
-    return "import.end.info.operations." + normalize(transactionCount) + "." + normalize(autocategorizedTransactions);
+    else {
+      if ((transactionCount > 1) && (transactionCount == autocategorizedTransactions)) {
+        return "import.end.info.operations.many.all";
+      }
+      return "import.end.info.operations." + normalize(transactionCount) + "." + normalize(autocategorizedTransactions);
     }
   }
 
@@ -627,7 +625,7 @@ public class ImportDialog {
           foundAccountsCount.put(accountId, count != null ? count + 1 : 1);
         }
       }
-      if (foundAccountsCount.isEmpty()){
+      if (foundAccountsCount.isEmpty()) {
         return null;
       }
       if (foundAccountsCount.size() == 1) {

@@ -37,35 +37,10 @@ public class NotesViewTest extends LoggedInFunctionalTestCase {
 
     timeline.checkSelection("2008/08");
 
-    notes.checkNoSeriesMessage();
+    views.selectHome();
     mainAccounts.checkEstimatedPosition(125.00);
+
     timeline.checkYearTooltip(2008, "2008");
-  }
-
-  public void testNoSeries() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/06/15", 1000, "Company")
-      .addTransaction("2008/05/15", -100, "FNAC")
-      .load();
-
-    timeline.selectMonth("2008/06");
-
-    views.selectHome();
-    notes
-      .checkNoSeriesMessage()
-      .openSeriesWizard()
-      .validate();
-
-    views.checkCategorizationSelected();
-    categorization
-      .checkTable(new Object[][]{
-        {"15/06/2008", "", "Company", 1000.0},
-        {"15/05/2008", "", "FNAC", -100.0},
-      })
-      .setNewIncome("Company", "Salary");
-
-    views.selectHome();
-    notes.checkNoHelpMessageDisplayed();
   }
 
   public void testNotes() throws Exception {
@@ -75,26 +50,10 @@ public class NotesViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    notes
-      .checkNoSeriesMessage()
-      .openSeriesWizard()
-      .validate();
-
-    views.selectHome();
     notes.checkText("Click here to enter your own notes");
 
     notes.setText("One note");
     notes.checkText("One note");
-  }
-
-  public void testWizardShownIfSavingAreCreated() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/06/1", 3000.00, "Epargne")
-      .load();
-    views.selectHome();
-    mainAccounts.edit(OfxBuilder.DEFAULT_ACCOUNT_NAME)
-      .setAsSavings().validate();
-    notes.checkNoSeriesMessage();
   }
 
   public void testMonthTooltipWithNoPositionAvailable() throws Exception {

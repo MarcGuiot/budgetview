@@ -31,6 +31,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/11", -2.2, "TX 2")
       .load();
 
+    views.selectData();
     transactions
       .initAmountContent()
       .add("11/01/2006", "TX 2", -2.20, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
@@ -51,6 +52,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/14", -4.4, "TX 4")
       .load();
 
+    views.selectData();
     transactions
       .initAmountContent()
       .add("14/01/2006", "TX 4", -4.40, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
@@ -73,6 +75,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .load();
 
     timeline.selectMonths("2005/12", "2006/01");
+    views.selectData();
     transactions
       .initAmountContent()
       .add("11/01/2006", "TX 2", -2.20, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
@@ -94,6 +97,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/12", -3.3, "TX 3")
       .load();
 
+    views.selectData();
     transactions
       .initAmountContent()
       .add("12/01/2006", "TX 3", -3.30, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
@@ -118,6 +122,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/12", -2.2, "TX 2")
       .load();
 
+    views.selectData();
     transactions
       .initAmountContent()
       .add("16/01/2006", "TX 6", -6.60, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
@@ -138,6 +143,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", "2006/01/10", -1.1, "Operation 1")
       .load();
 
+    views.selectData();
     transactions
       .initContent()
       .add("15/01/2006", "10/01/2006", TransactionType.PRELEVEMENT, "Operation 1", "", -1.1)
@@ -151,6 +157,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Tx 1")
       .addTransaction("2006/01/11", -2.2, "Tx 2")
       .load();
+
     views.selectCategorization();
     categorization.selectTransactions("Tx 2");
     transactionDetails.split("-1", "info");
@@ -255,6 +262,8 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/10", -45.0, "Dr Lecter")
       .load();
+
+    views.selectData();
     transactions
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Dr Lecter", "", -45.0)
@@ -274,6 +283,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       })
       .run();
 
+    views.selectData();
     transactions
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Dr Lecter", "", -45.0)
@@ -313,6 +323,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .checkNoErrorMessage()
       .completeImport();
 
+    views.selectHome();
     mainAccounts.checkAccount("Account n. 111", 950.00, "2008/08/10");
     mainAccounts.edit("Account n. 111")
       .checkSelectedBank("Autre")
@@ -341,6 +352,8 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/10", -50.00, "Virement")
       .addTransaction("2008/08/06", -30.00, "Virement")
       .load();
+
+    views.selectHome();
     mainAccounts.checkAccount("Account n. 111", 950.00, "2008/08/10");
   }
 
@@ -350,6 +363,8 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/10", -50.00, "Virement")
       .addTransaction("2008/08/06", -30.00, "Virement")
       .loadUnknown("Autre");
+
+    views.selectHome();
     mainAccounts.checkAccount("Account n. 111", 950.00, "2008/08/10");
     mainAccounts.edit("Account n. 111")
       .checkSelectedBank("Autre")
@@ -420,6 +435,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
   public void testIfAnAccountAlreadyExistWeAskToAssociateToIt() throws Exception {
     mainAccounts.createMainAccount("First account", 100);
+
     String ofxFile = OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")
       .addTransaction("2008/08/10", -50.00, "Virement")
@@ -439,6 +455,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/11", -50.00, "Virement")
       .load();
 
+    views.selectHome();
     mainAccounts.checkAccountOrder("First account");
 
     views.selectData();

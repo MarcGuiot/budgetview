@@ -47,7 +47,7 @@ public class TransactionChecker extends ViewChecker {
 
   public Table getTable() {
     if (table == null) {
-      table = window.getTable(Transaction.TYPE.getName());
+      table = window.getTable("transactionsTable");
       table.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter());
       table.setCellValueConverter(TransactionView.SUBSERIES_COLUMN_INDEX, new SubSeriesCellValueConverter(window));
       table.setCellValueConverter(TransactionView.SERIES_COLUMN_INDEX, new SeriesCellConverter(true));
@@ -60,7 +60,7 @@ public class TransactionChecker extends ViewChecker {
   }
 
   protected UIComponent findMainComponent(Window window) {
-    return window.findUIComponent(ComponentMatchers.innerNameIdentity(Transaction.TYPE.getName()));
+    return window.findUIComponent(ComponentMatchers.innerNameIdentity("transactionsTable"));
   }
 
   public TransactionChecker categorize(String... labels) {

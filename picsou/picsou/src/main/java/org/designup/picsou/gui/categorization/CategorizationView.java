@@ -125,7 +125,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     Comparator<Glob> transactionComparator = getTransactionComparator();
     DescriptionService descriptionService = directory.get(DescriptionService.class);
     transactionTable =
-      builder.addTable("transactionTable", Transaction.TYPE, transactionComparator)
+      builder.addTable("transactionsToCategorize", Transaction.TYPE, transactionComparator)
         .setDefaultLabelCustomizer(new TransactionLabelCustomizer())
         .addColumn(Lang.get("date"), new TransactionDateStringifier(TransactionComparator.DESCENDING_SPLIT_AFTER),
                    fontSize(9))

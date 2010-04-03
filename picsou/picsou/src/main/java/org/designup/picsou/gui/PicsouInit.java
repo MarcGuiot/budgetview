@@ -12,10 +12,11 @@ import org.designup.picsou.gui.startup.BackupService;
 import org.designup.picsou.gui.upgrade.ConfigUpgradeTrigger;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
 import org.designup.picsou.gui.utils.DataCheckerAction;
+import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
-import org.designup.picsou.model.AppVersionInformation;
-import org.designup.picsou.model.User;
+import org.designup.picsou.model.*;
+import org.designup.picsou.model.initial.DefaultSeriesFactory;
 import org.designup.picsou.triggers.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobModel;
@@ -154,7 +155,11 @@ public class PicsouInit {
                           value(User.NAME, user),
                           value(User.AUTO_LOGIN, autoLogin),
                           value(User.IS_DEMO_USER, useDemoAccount));
-        if (!userData.isEmpty()) {
+        if (userData.isEmpty()) {
+          createTransientDataForNewUser(repository);
+          createPersistentDataForNewUser(repository);
+        }
+        else {
           firstReset = true;
           try {
             repository.reset(userData, typesToReplace);
@@ -186,9 +191,6 @@ public class PicsouInit {
             PicsouInit.this.repository.reset(userData, typesToReplace);
           }
         }
-        else {
-          upgradeTrigger.createDataForNewUser(repository);
-        }
         serverAccess.applyChanges(changeSet, repository);
       }
       catch (Exception e) {
@@ -210,6 +212,60 @@ public class PicsouInit {
     directory.add(ImportService.class, importService);
 
     directory.add(new BackupService(serverAccess, directory, repository, idGenerator, upgradeTrigger));
+  }
+
+  public static void createTransientDataForNewUser(GlobRepository repository) {
+    repository.startChangeSet();
+    try {
+      for (int i = 1; i < 32; i++) {
+        repository.findOrCreate(Key.create(Day.TYPE, i));
+      }
+    }
+    finally {
+      repository.completeChangeSet();
+    }
+
+  }
+
+  public static void createPersistentDataForNewUser(GlobRepository repository) {
+    repository.startChangeSet();
+    try {
+      for (int i = 1; i < 32; i++) {
+        repository.findOrCreate(Key.create(Day.TYPE, i));
+      }
+
+      repository.findOrCreate(AccountPositionThreshold.KEY);
+      repository.findOrCreate(Notes.KEY, value(Notes.TEXT, Lang.get("notes.initial")));
+      repository.findOrCreate(UserVersionInformation.KEY,
+                              value(UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION),
+                              value(UserVersionInformation.CURRENT_BANK_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
+                              value(UserVersionInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION));
+//                            value(AppVersionInformation.LATEST_AVALAIBLE_JAR_VERSION, PicsouApplication.JAR_VERSION),
+//                            value(AppVersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
+//                            value(AppVersionInformation.LATEST_AVALAIBLE_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION)
+      Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
+      if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
+        repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
+                          Month.addOneMonth(TimeService.getToday()));
+      }
+
+      repository.findOrCreate(CurrentMonth.KEY,
+                              value(CurrentMonth.LAST_TRANSACTION_MONTH, 0),
+                              value(CurrentMonth.LAST_TRANSACTION_DAY, 0),
+                              value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
+                              value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
+      repository.findOrCreate(Account.MAIN_SUMMARY_KEY,
+                              value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()),
+                              value(Account.IS_IMPORTED_ACCOUNT, true));
+      repository.findOrCreate(Account.SAVINGS_SUMMARY_KEY,
+                              value(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()));
+      repository.findOrCreate(Account.ALL_SUMMARY_KEY);
+
+      DefaultSeriesFactory.run(repository);
+    }
+    finally {
+      repository.completeChangeSet();
+    }
   }
 
   private static class ServerChangeSetListener extends DefaultChangeSetListener {

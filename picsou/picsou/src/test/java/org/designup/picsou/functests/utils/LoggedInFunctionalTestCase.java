@@ -8,6 +8,7 @@ import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
+import org.designup.picsou.model.initial.DefaultSeriesFactory;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
@@ -68,6 +69,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
     System.setProperty(ConfigService.COM_APP_LICENSE_URL, "");
     System.setProperty(ConfigService.COM_APP_LICENSE_FTP_URL, "");
+    DefaultSeriesFactory.AUTO_CREATE_DEFAULT_SERIES = false;
 
     setAdapter(new UISpecAdapter() {
       public Window getMainWindow() {
@@ -84,6 +86,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
     mainWindow = getMainWindow();
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
+
     LoginChecker login = new LoginChecker(mainWindow);
     login.logNewUser(user, password);
     initCheckers();

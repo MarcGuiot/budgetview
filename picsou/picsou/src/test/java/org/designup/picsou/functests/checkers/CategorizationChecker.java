@@ -372,7 +372,7 @@ public class CategorizationChecker extends GuiChecker {
   }
 
   public Table getTable() {
-    Table table = getPanel().getTable();
+    Table table = getPanel().getTable("transactionsToCategorize");
     table.setCellValueConverter(0, new DateCellConverter());
     table.setCellValueConverter(3, new TableCellValueConverter() {
       public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
@@ -594,7 +594,7 @@ public class CategorizationChecker extends GuiChecker {
   int[] getRowIndices(String label) {
     int[] index = getTable().getRowIndices(LABEL_COLUMN_INDEX, label.toUpperCase());
     if (index.length <= 0) {
-      Assert.fail("Label '" + label + "' not found");
+      Assert.fail("Label '" + label + "' not found - actual table content:\n" + getTable().toString());
     }
     return index;
   }

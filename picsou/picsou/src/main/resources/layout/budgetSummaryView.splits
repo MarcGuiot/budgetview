@@ -25,10 +25,10 @@
 
       <button ref="openDetailsButton"
               styleClass="roundedButton" gridPos="(0,0,1,2)"
-              icon="button_magnifier.png"
-              rolloverIcon="button_magnifier_rollover.png"
-              pressedIcon="button_magnifier.png"
-              disabledIcon="button_magnifier_disabled.png"/>
+              icon="question_mark.png"
+              rolloverIcon="question_mark_rollover.png"
+              pressedIcon="question_mark_rollover.png"
+              disabledIcon="question_mark_disabled.png"/>
 
       <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle" gridPos="(1,0)"/>
       <button ref="balanceLabel" styleClass="totalAmount" gridPos="(1,1)"

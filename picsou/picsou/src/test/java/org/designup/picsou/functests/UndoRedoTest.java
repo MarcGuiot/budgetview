@@ -20,6 +20,7 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/11", 95.00, "Fouquet's")
       .load();
 
+    views.selectData();
     transactions.initContent()
       .add("11/07/2008", TransactionType.VIREMENT, "Fouquet's", "", 95.00)
       .check();

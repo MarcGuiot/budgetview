@@ -83,6 +83,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .validate();
     importer.completeImport();
 
+    views.selectCategorization();
     cardCategorization
       .checkMessage("Assign the monthly transfer operation to the corresponding card account:")
       .selectSeries("Card account");
@@ -222,7 +223,9 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/09/14", -35, "Auchan")
       .save();
     operations.importQifFileWithDeferred(deferredAccount, "Autre", -100., 28);
+
     timeline.selectAll();
+    views.selectData();
     transactions.initAmountContent()
       .add("30/11/2009", "AUCHAN", -60.00, "To categorize", -100.00, 900.00, "card 1111")
       .add("29/11/2009", "AUCHAN", -40.00, "To categorize", -40.00, 960.00, "card 1111")
@@ -238,7 +241,9 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/09/28", -15, "Auchan")
       .save();
     operations.importQifFile(newDeferredAccount, "Autre", "card 1111");
+
     timeline.selectAll();
+    views.selectData();
     transactions.initAmountContent()
       .add("02/12/2009", "AUCHAN", -70.00, "To categorize", -170.00, 830.00, "card 1111")
       .add("30/11/2009", "AUCHAN", -60.00, "To categorize", -100.00, 900.00, "card 1111")
@@ -251,18 +256,18 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("14/09/2009", "AUCHAN", -35.00, "To categorize", -35.00, 1080.00, "card 1111")
       .check();
 
-
-    operations.importQifFile(QifBuilder.init(this)
+    String filePath = QifBuilder.init(this)
       .addTransaction("2009/12/04", -20, "cheque 1")
-      .save(), "Société Générale", "Main account");
+      .save();
+    operations.importQifFile(filePath, "Société Générale", "Main account");
 
+    views.selectData();
     transactions.initAmountContent()
       .add("04/12/2009", "CHEQUE N°1", -20.00, "To categorize", 980.00, 980.00, "Main account")
       .add("02/12/2009", "AUCHAN", -70.00, "To categorize", -170.00, 810.00, "card 1111")
       .add("30/11/2009", "AUCHAN", -60.00, "To categorize", -100.00, 880.00, "card 1111")
       .add("29/11/2009", "AUCHAN", -40.00, "To categorize", -40.00, 940.00, "card 1111")
       .check();
-
   }
 
   public void testShiftNotAllowedOnDeferredCardOperation() throws Exception {

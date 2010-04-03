@@ -7,8 +7,9 @@ public class BanquePopulaireTest extends SpecificBankTestCase {
   public void test() throws Exception {
     operations.importOfxFile(getFile("banque_pop.ofx"));
     timeline.selectAll();
-    transactions.getTable().getHeader().click(1);
 
+    views.selectData();
+    transactions.getTable().getHeader().click(1);
     transactions.initContent()
       .add("13/02/2009", TransactionType.PRELEVEMENT, "PRELEVEMENT DE MR OU MME XYZ", "", -100.00)
       .add("13/02/2009", TransactionType.PRELEVEMENT, "FT INTERNET ORANGE 432123 123456790WFE N.EMETTEUR: 422262", "", -46.33)
@@ -32,6 +33,7 @@ public class BanquePopulaireTest extends SpecificBankTestCase {
     operations.importOfxFile(getFile("banque_pop.ofx"));
     operations.importOfxFile(getFile("banque_pop_facturette.ofx"));
     operations.importOfxFile(getFile("banque_pop_en_cours.ofx"));
+
     views.selectCategorization();
     timeline.selectAll();
     categorization.selectTransaction("CARTE FACTURETTES CB VOTRE RELEVE ARRETE AU 30/01/09")

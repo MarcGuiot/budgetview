@@ -182,7 +182,7 @@
                     <scrollPane borderPos="center" viewportBackground="transactions.bg"
                                 border="line(transaction.border)" opaque="false"
                                 marginTop="5" marginLeft="5">
-                      <table ref="transaction" background="transactions.bg" rowHeight="20"
+                      <table ref="transactionsTable" background="transactions.bg" rowHeight="20"
                              autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
                     </scrollPane>
                     <row marginBottom="5">

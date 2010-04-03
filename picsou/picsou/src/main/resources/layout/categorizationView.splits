@@ -49,7 +49,7 @@
               <comboBox ref="transactionFilterCombo"/>
             </row>
             <scrollPane viewportBackground="#FFFFFF" marginBottom="0" weightY="100">
-              <table ref="transactionTable" rowHeight="20"/>
+              <table ref="transactionsToCategorize" rowHeight="20"/>
             </scrollPane>
             <row autoHideSource="customFilterMessage">
               <filler fill="horizontal"/>

@@ -6,6 +6,8 @@ public class CICTest extends SpecificBankTestCase {
   public void test() throws Exception {
     operations.importOfxWithDeferred(getFile("cic1.ofx"), "Card n. 4976-0500-1234-4321", 28);
     timeline.selectMonths("2006/05", "2006/06", "2006/07");
+
+    views.selectData();
     transactions.getTable().getHeader().click(1);
     transactions
       .initContent()

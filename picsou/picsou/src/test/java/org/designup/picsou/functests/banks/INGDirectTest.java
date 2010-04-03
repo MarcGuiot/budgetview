@@ -7,6 +7,7 @@ public class INGDirectTest extends SpecificBankTestCase {
     operations.importQifFile(getFile("ingdirect.qif"), "ING Direct", 0.);
     timeline.selectAll();
 
+    views.selectData();
     transactions.getTable().getHeader().click(1);
     transactions.initContent()
       .add("10/12/2008", TransactionType.VIREMENT, "PRÉLÈVEMENT AUTOMATIQUE GASTON", "", 100.00)

@@ -7,6 +7,7 @@ public class CreditMutuelTest extends SpecificBankTestCase {
     operations.importQifFile(getFile("credit_mutuel.qif"), "Crédit Mutuel", 0.);
     timeline.selectAll();
 
+    views.selectData();
     transactions.getTable().getHeader().click(1);
     transactions.initContent()
       .add("15/07/2008", TransactionType.PRELEVEMENT, "EDF PR QE CLIO BRED 001007", "", -25.00)

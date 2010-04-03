@@ -270,9 +270,9 @@
     <style selector="radioButton.selector" opaque="false"
            font="-,plain,12" cursor='hand'
            marginRight="2" fill="none" anchor="center" weightY="0"/>
-    <style selector=".subSeriesSelector" opaque="false"
+    <style selector="radioButton.subSeriesSelector" opaque="false"
            foreground="toggle.selector.subSeries" cursor='hand'
-           font="-,plain,10" fill="none" anchor="west"/>
+           font="-,plain,12" fill="none" anchor="west"/>
 
     <!-- Split panes -->
     <style selector="horizontalSplit" showGripper="false" dividerSize="20" opaque="false"/>

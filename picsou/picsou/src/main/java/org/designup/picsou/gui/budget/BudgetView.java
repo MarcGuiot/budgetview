@@ -3,6 +3,9 @@ package org.designup.picsou.gui.budget;
 import com.jidesoft.swing.JideSplitPane;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.budget.summary.BudgetSummaryView;
+import org.designup.picsou.gui.budget.footers.BudgetAreaSeriesFooter;
+import org.designup.picsou.gui.budget.footers.EmptyBudgetAreaSeriesFooter;
+import org.designup.picsou.gui.budget.footers.EnvelopesSeriesFooter;
 import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.BudgetArea;
@@ -30,7 +33,7 @@ public class BudgetView extends View {
 
     addBudgetAreaView("incomeBudgetView", BudgetArea.INCOME, builder);
     addBudgetAreaView("recurringBudgetView", BudgetArea.RECURRING, builder);
-    addBudgetAreaView("envelopeBudgetView", BudgetArea.ENVELOPES, builder);
+    addBudgetAreaView("envelopeBudgetView", BudgetArea.ENVELOPES, new EnvelopesSeriesFooter(repository), builder);
     addBudgetAreaView("extrasBudgetView", BudgetArea.EXTRAS, builder);
     addBudgetAreaView("savingsBudgetView", BudgetArea.SAVINGS, builder);
 
@@ -46,8 +49,16 @@ public class BudgetView extends View {
   private void addBudgetAreaView(String name,
                                  BudgetArea budgetArea,
                                  GlobsPanelBuilder builder) {
-    View view = new BudgetAreaSeriesView(name, budgetArea, repository, directory,
+    addBudgetAreaView(name, budgetArea, new EmptyBudgetAreaSeriesFooter(), builder);
+  }
+
+  private void addBudgetAreaView(String name,
+                                 BudgetArea budgetArea,
+                                 BudgetAreaSeriesFooter footer,
+                                 GlobsPanelBuilder builder) {
+    View view = new BudgetAreaSeriesView(name, budgetArea, repository, directory, footer,
                                          seriesEditionDialog, seriesAmountEditionDialog);
     view.registerComponents(builder);
+
   }
 }

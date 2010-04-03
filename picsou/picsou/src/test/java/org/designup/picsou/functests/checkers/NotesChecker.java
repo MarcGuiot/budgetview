@@ -45,10 +45,6 @@ public class NotesChecker extends GuiChecker {
     return checkMessage("You must first import your financial operations", "noDataMessage", "noData");
   }
 
-  public NotesChecker checkNoSeriesMessage() {
-    return checkMessage("Use the series wizard:", "noSeriesMessage", "noSeries");
-  }
-
   public void categorize() {
     getPanel().getButton("categorize").click();
   }
@@ -59,10 +55,6 @@ public class NotesChecker extends GuiChecker {
 
   public HelpChecker openImportHelp() {
     return HelpChecker.open(window.getTextBox("noDataMessage").triggerClickOnHyperlink("import"));
-  }
-
-  public SeriesWizardChecker openSeriesWizard() {
-    return SeriesWizardChecker.open(getPanel().getButton("openSeriesWizard").triggerClick());
   }
 
   public void checkSeriesWizardButtonVisible(boolean visible) {

@@ -6,6 +6,8 @@ public class AXATest extends SpecificBankTestCase {
   public void test() throws Exception {
     operations.importQifFile(getFile("axa.qif"), "AXA Banque", 0.);
     timeline.selectAll();
+
+    views.selectData();
     transactions.getTable().getHeader().click(1);
     transactions
       .initContent()

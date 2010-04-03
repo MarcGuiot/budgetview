@@ -80,17 +80,6 @@ public class FirstTimeTest extends UISpecTestCase {
       .acceptFile()
       .completeImport();
 
-    notes.openSeriesWizard()
-      .select("Income 1")
-      .select("Mortgage")
-      .select("Cell phone 1")
-      .select("Internet")
-      .select("Groceries")
-      .select("Leisures")
-      .select("Health")
-      .select("gas")
-      .validate();
-
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectData();
     TransactionChecker transaction = new TransactionChecker(window);

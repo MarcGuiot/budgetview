@@ -30,7 +30,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    notes.checkNoSeriesMessage();
     mainAccounts
       .checkEstimatedPosition(0.00)
       .setThreshold(25.00);
@@ -45,7 +44,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     operations.checkUndoNotAvailable();
 
     views.selectHome();
-    notes.checkNoSeriesMessage();
     mainAccounts
       .checkEstimatedPosition(0.00)
       .checkThreshold(25.00);
@@ -122,12 +120,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/15", 1000, "Company")
       .addTransaction("2008/05/15", -100, "FNAC")
       .load();
-
-    views.selectHome();
-    notes
-      .checkNoSeriesMessage()
-      .openSeriesWizard()
-      .validate();
 
     views.selectHome();
     notes.setText("A little note");
@@ -594,13 +586,9 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       operations = null;
       mainWindow = null;
     }
-
-//    views.selectEvolution();
-//    seriesEvolution.checkRow("Salaire", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00");
-//    operations.checkOk();
   }
 
-  public void testMutltiSelectionAtStartup() throws Exception {
+  public void testMultiSelectionAtStartup() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/25", -50.0, "Auchan")
@@ -618,4 +606,18 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     categorization.checkMultipleSeriesSelection();
   }
 
+  public void testEnvelopesEditionHint() throws Exception {
+    setDeleteLocalPrevayler(false);
+
+    views.selectBudget();
+    budgetView.envelopes.createSeries("Groceries");
+    budgetView.envelopes.checkFooterContains("Click on the planned amounts");
+    budgetView.envelopes.editPlannedAmount("Groceries").setAmount(200.00).validate();
+    budgetView.envelopes.checkFooterHidden();
+
+    restartApplication();
+
+    views.selectBudget();
+    budgetView.envelopes.checkFooterHidden();
+  }
 }
