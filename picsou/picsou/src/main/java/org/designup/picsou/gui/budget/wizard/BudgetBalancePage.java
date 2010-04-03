@@ -8,6 +8,7 @@ import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -34,6 +35,17 @@ public class BudgetBalancePage extends AbstractWizardPage {
   private GlobRepository repository;
   private JPanel panel;
   private Directory parentDirectory;
+  private JLabel balanceAmount = new JLabel();
+
+  private JLabel beginOfMonthLabel = new JLabel();
+  private JLabel beginOfMonthAmount = new JLabel();
+  private JLabel shiftAmount = new JLabel();
+  private JLabel shiftLabel = new JLabel();
+  private JLabel balanceLabelExplain = new JLabel();
+  private JLabel balanceAmountExplain = new JLabel();
+  private JLabel endOfMonthAmount = new JLabel();
+  private JLabel endOfMonthLabel = new JLabel();
+  private JEditorPane balanceExplain = new JEditorPane();
 
   public BudgetBalancePage(GlobRepository repository, Directory parentDirectory) {
     this.repository = repository;
@@ -67,7 +79,7 @@ public class BudgetBalancePage extends AbstractWizardPage {
   }
 
   public void init() {
-    createDialog();
+    createPanel();
     registerBalanceChartUpdater();
   }
 
@@ -93,15 +105,27 @@ public class BudgetBalancePage extends AbstractWizardPage {
     return directory;
   }
 
-  public void createDialog() {
+  public void createPanel() {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/budgetWizard/budgetBalancePage.splits", repository, directory);
 
     builder.add("balanceChart", balanceChart);
-    builder.addLabel("balanceLabel", BudgetStat.TYPE, new BalanceStringifier()).getComponent();
 
     balanceDescription = GuiUtils.createReadOnlyHtmlComponent();
     builder.add("balanceDescription", balanceDescription);
+
+    builder.add("balanceAmount", balanceAmount);
+
+    builder.add("balanceExplain", balanceExplain);
+
+    builder.add("beginOfMonthAmount", beginOfMonthAmount);
+    builder.add("beginOfMonthLabel", beginOfMonthLabel);
+    builder.add("shiftLabel", shiftLabel);
+    builder.add("shiftAmount", shiftAmount);
+    builder.add("balanceLabelExplain", balanceLabelExplain);
+    builder.add("balanceAmountExplain", balanceAmountExplain);
+    builder.add("endOfMonthAmount", endOfMonthAmount);
+    builder.add("endOfMonthLabel", endOfMonthLabel);
 
     panel = builder.load();
   }
@@ -124,35 +148,42 @@ public class BudgetBalancePage extends AbstractWizardPage {
     }
 
     balanceChart.update(incomeDataset, expensesDataset, balanceChartColors);
+
+    double balance = budgetStats.getSum(BudgetStat.MONTH_BALANCE);
+    budgetStats.sort(BudgetStat.MONTH);
+    Glob firstBudgetStat = budgetStats.getFirst();
+    Double beginOfMonthPosition = firstBudgetStat.get(BudgetStat.BEGIN_OF_MONTH_ACCOUNT_POSITION);
+    Glob lastBudgetStat = budgetStats.getLast();
+    Double endOfMonthPosition = lastBudgetStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
+    double shift =  endOfMonthPosition - (beginOfMonthPosition + balance);
+
+    boolean hasShift = !Amounts.isNearZero(shift);
+    if (hasShift){
+      balanceExplain.setText(Lang.get("budgetWizard.balance.explain.shift"));
+      shiftAmount.setText(Formatting.toStringWithPlus(shift));
+    }else {
+      balanceExplain.setText(Lang.get("budgetWizard.balance.explain.noShift"));
+    }
+    shiftLabel.setVisible(hasShift);
+    shiftAmount.setVisible(hasShift);
+
+    beginOfMonthLabel.setText(Lang.get("budgetWizard.balance.beginOfMonth",
+                                       Month.getFullMonthLabelWith4DigitYear(firstBudgetStat.get(BudgetStat.MONTH))));
+    beginOfMonthAmount.setText(Formatting.toString(beginOfMonthPosition));
+    balanceLabelExplain.setText(Lang.get("budgetWizard.balance.balanceLabelExplain",
+                                  budgetStats.size() == 1 ?
+                                  Month.getFullMonthLabelWith4DigitYear(firstBudgetStat.get(BudgetStat.MONTH)):
+                                  "..."));
+    balanceAmount.setText(Formatting.toStringWithPlus(balance));
+    balanceAmountExplain.setText(Formatting.toStringWithPlus(balance));
+    endOfMonthLabel.setText(Lang.get("budgetWizard.balance.endOfMonth",
+                                     Month.getFullMonthLabelWith4DigitYear(lastBudgetStat.get(BudgetStat.MONTH))));
+    endOfMonthAmount.setText(Formatting.toString(endOfMonthPosition));
+
   }
 
   private Glob getLastBudgetStat(GlobList list) {
     list.sort(BudgetStat.MONTH);
     return list.getLast();
-  }
-
-  private class BalanceStringifier implements GlobListStringifier {
-    public String toString(GlobList list, GlobRepository repository) {
-      if (list.isEmpty()) {
-        return "";
-      }
-      double total = list.getSum(BudgetStat.MONTH_BALANCE);
-      updateBalanceDescription(total);
-      return Formatting.toStringWithPlus(total);
-    }
-  }
-
-  private void updateBalanceDescription(double total) {
-    String amountString = Formatting.toString(Math.abs(total));
-    if (total > 0) {
-      balanceDescription.setText(Lang.get("budgetWizard.balance.positive", amountString));
-    }
-    else if (total < 0) {
-      balanceDescription.setText(Lang.get("budgetWizard.balance.negative", amountString));
-    }
-    else {
-      balanceDescription.setText(Lang.get("budgetWizard.balance.zero"));
-    }
-    GuiUtils.revalidate(balanceDescription);
   }
 }

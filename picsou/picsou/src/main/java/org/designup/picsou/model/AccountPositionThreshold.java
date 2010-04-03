@@ -28,6 +28,9 @@ public class AccountPositionThreshold {
   @DefaultDouble(0.0)
   public static DoubleField THRESHOLD;
 
+  @DefaultDouble(100.0)
+  public static DoubleField THRESHOLD_FOR_WARN;
+
   static {
     GlobTypeLoader.init(AccountPositionThreshold.class, "accountBalanceLimit");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
@@ -51,6 +54,7 @@ public class AccountPositionThreshold {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
       outputStream.writeDouble(values.get(THRESHOLD));
+      outputStream.writeDouble(values.get(THRESHOLD_FOR_WARN));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -58,6 +62,10 @@ public class AccountPositionThreshold {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
+      if (version == 2) {
+        deserializeDataV2(fieldSetter, data);
+      }
+
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
@@ -65,8 +73,14 @@ public class AccountPositionThreshold {
       fieldSetter.set(THRESHOLD, input.readDouble());
     }
 
+    private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(THRESHOLD, input.readDouble());
+      fieldSetter.set(THRESHOLD_FOR_WARN, input.readDouble());
+    }
+
     public int getWriteVersion() {
-      return 1;
+      return 2;
     }
   }
 

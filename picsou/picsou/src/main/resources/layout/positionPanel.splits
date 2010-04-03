@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.inner" foreground=""/>
+  </styles>
+
+  <panel styleClass="dialog" preferredSize="(400,300)">
+
+    <column styleClass="innerDialog">
+
+      <label name="title" text="$position.title" styleClass="title"/>
+
+      <column styleClass="blockScrollBorder">
+        <panel opaque="true" background="block.inner.bg">
+
+
+          <cards ref="cardHandler">
+            <card name="past">
+              <column>
+                <row>
+                  <label ref="positionPast"/>
+                  <label ref="positionPastAmount"/>
+                </row>
+                <label ref="thresholdPast"/>
+              </column>
+            </card>
+            <card name="present">
+              <column>
+
+                <label name="subTitle" text="$position.subtitle"/>
+                <grid>
+                  <label ref="bankPositionLabel" gridPos="(0,0,1,1)" fill="horizontal" horizontalAlignment="right"/>
+                  <label ref="bankPositionAmount" gridPos="(1,0,1,1)" fill="horizontal" horizontalAlignment="right"/>
+
+                  <htmlEditorPane text="$position.panel.explain" gridPos="(0,1)"/>
+
+                  <label text="$position.panel.income" gridPos="(0,2,1,1)"
+                         fill="horizontal" horizontalAlignment="right" styleClass="inner"/>
+                  <label ref="waitedIncomeAmount" gridPos="(1,2,1,1)" fill="horizontal" horizontalAlignment="right"/>
+
+                  <label text="$position.panel.expenseAmountLabel" gridPos="(0,3,1,1)"
+                         fill="horizontal" horizontalAlignment="right" styleClass="inner"/>
+                  <label ref="waitedExpenseAmount" gridPos="(1,3,1,1)" fill="horizontal" horizontalAlignment="right"/>
+
+                  <label text="$position.panel.savingsAmountLabel" gridPos="(0,4,1,1)"
+                         fill="horizontal" horizontalAlignment="right" styleClass="inner"/>
+                  <label ref="waitedSavingsAmount" gridPos="(1,4,1,1)" fill="horizontal" horizontalAlignment="right"/>
+
+                  <label ref="estimatedPositionLabel" gridPos="(0,5,1,1)" fill="horizontal"
+                         horizontalAlignment="right"/>
+                  <label ref="estimatedPosition" gridPos="(1,5,1,1)" fill="horizontal" horizontalAlignment="right"/>
+                </grid>
+
+                <editorPane ref="positionPanelLimit"/>
+              </column>
+            </card>
+          </cards>
+        </panel>
+      </column>
+    </column>
+  </panel>
+</splits>

@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
 import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
+import org.designup.picsou.gui.description.Formatting;
 import org.uispec4j.TextBox;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
@@ -16,13 +17,8 @@ public class BudgetWizardBalanceChecker extends BudgetWizardPageChecker {
   }
 
   public BudgetWizardBalanceChecker checkBalance(double balance) {
-    TextBox textBox = panel.getTextBox("balanceDescription");
-    if (balance < 0)
-    assertThat(textBox.textContains("You spend " + toAbsString(balance) + " more than you earn"));
-    else if (balance > 0)
-      assertThat(textBox.textContains("You earn " + toAbsString(balance) + " more than you spend"));
-    else
-      assertThat(textBox.textContains("Your budget is balanced"));
+    TextBox textBox = panel.getTextBox("balanceAmount");
+    assertThat(textBox.textContains(Formatting.toString(balance)));
     return this;
   }
 

@@ -3,6 +3,7 @@ package org.designup.picsou.gui.budget.summary;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.budget.wizard.BudgetWizardDialog;
 import org.designup.picsou.gui.budget.BalanceDialog;
+import org.designup.picsou.gui.budget.PositionDialog;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.JRoundedButton;
 import org.designup.picsou.gui.description.Formatting;
@@ -76,7 +77,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
     uncategorizedButton.addActionListener(new GotoUncategorizedAction());
     balanceLabel.addActionListener(new OpenBalanceAction());
-    estimatedPositionLabel.addActionListener(new OpenBalanceAction());
+    estimatedPositionLabel.addActionListener(new OpenPositionAction());
     builder.add("helpMessage", helpMessage);
     helpMessage.setVisible(false);
 
@@ -234,6 +235,14 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
     public void actionPerformed(ActionEvent e) {
       BalanceDialog dialog = new BalanceDialog(repository, directory);
+      dialog.show(selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID));
+    }
+  }
+
+  private class OpenPositionAction extends AbstractAction{
+
+    public void actionPerformed(ActionEvent e) {
+      PositionDialog dialog = new PositionDialog(repository, directory);
       dialog.show(selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID));
     }
   }

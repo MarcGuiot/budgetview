@@ -11,12 +11,34 @@
 
     <verticalBoxes border="empty(0,0,0,10)">
       <htmlEditorPane text="$budgetWizard.balance.top" styleClass="description"/>
-      <htmlEditorPane ref="balanceDescription" styleClass="description"/>
       <row>
-        <filler fill="horizontal"/>
-        <panel ref="balanceChart" background="block.inner.bg" margin="10"/>
-        <filler fill="horizontal"/>
+        <column>
+          <row>
+            <filler fill="horizontal"/>
+            <label text="$budgetWizard.balance.label"/>
+            <label ref="balanceAmount"/>
+            <filler fill="horizontal"/>
+          </row>
+        </column>
+        <column>
+          <row>
+            <filler fill="horizontal"/>
+            <panel ref="balanceChart" background="block.inner.bg"/>
+            <filler fill="horizontal"/>
+          </row>
+        </column>
       </row>
+      <htmlEditorPane ref="balanceExplain" styleClass="description"/>
+      <grid>
+        <label ref="beginOfMonthLabel" gridPos="(0,0)" fill="horizontal" horizontalAlignment="right"/>
+        <label ref="beginOfMonthAmount" gridPos="(1,0)" fill="horizontal" horizontalAlignment="right"/>
+        <label text="$budgetWizard.balance.shift" gridPos="(0,1)" fill="horizontal" horizontalAlignment="right"/>
+        <label ref="shiftAmount" gridPos="(1,1)" fill="horizontal" horizontalAlignment="right"/>
+        <label ref="balanceLabelExplain" gridPos="(0,2)" fill="horizontal" horizontalAlignment="right"/>
+        <label ref="balanceAmountExplain" gridPos="(1,2)" fill="horizontal" horizontalAlignment="right"/>
+        <label ref="endOfMonthLabel" gridPos="(0,3)" fill="horizontal" horizontalAlignment="right"/>
+        <label ref="endOfMonthAmount" gridPos="(1,3)" fill="horizontal" horizontalAlignment="right"/>
+      </grid>
     </verticalBoxes>
 
   </column>
