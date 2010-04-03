@@ -3,12 +3,17 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
     <style selector="scrollPane" opaque="false" border=""/>
+
     <style selector="panel.descriptionPanel"
            opaque="true" background="categorization.budgetArea.description.bg"
            border="matte(0,0,1,0,categorization.budgetArea.description.border)"/>
+
     <style selector="htmlEditorPane#description"
            foreground="categorization.budgetArea.description.text" opaque="false" font="-,plain,12"
            editable="false" fill="both" margin="5"/>
+
+    <style selector="radioButton.subSeriesSelector" horizontalAlignment="left"/>
+
   </styles>
 
   <column>
@@ -27,7 +32,7 @@
               <filler fill="horizontal"/>
             </row>
             <repeat ref="subSeriesRepeat" marginLeft="20">
-              <radioButton ref="subSeriesSelector" styleClass="selector" horizontalAlignment="left"/>
+              <radioButton ref="subSeriesSelector" styleClass="subSeriesSelector"/>
             </repeat>
           </column>
         </repeat>
