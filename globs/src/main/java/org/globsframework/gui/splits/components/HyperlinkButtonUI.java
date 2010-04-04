@@ -13,12 +13,14 @@ public class HyperlinkButtonUI extends BasicButtonUI {
   private int textWidth;
   private int fontHeight;
   private int descent;
+
   private boolean underline = true;
   private boolean autoHideEnabled = true;
   private boolean useNormalColorWhenDisabled = false;
 
   private Color rolloverColor = Color.BLUE.brighter();
   private Color disabledColor = Color.GRAY;
+
   private PropertyChangeListener autoHideListener;
   private PropertyChangeListener fontMetricsUpdater;
 

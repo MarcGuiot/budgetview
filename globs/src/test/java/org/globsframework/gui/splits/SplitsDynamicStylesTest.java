@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SplitsStylesDynamicTest extends SplitsTestCase {
+public class SplitsDynamicStylesTest extends SplitsTestCase {
 
   public void testChangeStyle() throws Exception {
     SplitsNode<Component> splitsNode =
