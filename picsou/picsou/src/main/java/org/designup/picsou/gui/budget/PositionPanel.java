@@ -1,8 +1,10 @@
 package org.designup.picsou.gui.budget;
 
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.model.BudgetStat;
+import org.designup.picsou.gui.monthsummary.AccountPositionThresholdDialog;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
@@ -20,6 +22,7 @@ import javax.swing.*;
 import java.util.SortedSet;
 
 public class PositionPanel {
+  private PicsouDialog dialog;
   private GlobRepository repository;
   private GlobsPanelBuilder builder;
   private JPanel panel;
@@ -33,13 +36,14 @@ public class PositionPanel {
   private JLabel waitedSavingsAmount = new JLabel();
   private JEditorPane positionPanelLimit = GuiUtils.createReadOnlyHtmlComponent();
 
-  private JLabel positionPast = new JLabel();
+  private JEditorPane positionPast = GuiUtils.createReadOnlyHtmlComponent();
   private JLabel positionPastAmount = new JLabel();
-  private JLabel thresholdPast = new JLabel();
+  private JEditorPane thresholdPast = GuiUtils.createReadOnlyHtmlComponent();
   private CardHandler cardHandler;
+  private SortedSet<Integer> monthIds;
 
-
-  public PositionPanel(GlobRepository repository, Directory directory) {
+  public PositionPanel(final PicsouDialog dialog, final GlobRepository repository, final Directory directory) {
+    this.dialog = dialog;
     this.repository = repository;
     builder = new GlobsPanelBuilder(getClass(), "/layout/budget/positionPanel.splits", repository, directory);
     cardHandler = builder.addCardHandler("cardHandler");
@@ -58,13 +62,18 @@ public class PositionPanel {
     builder.add("positionPastAmount", positionPastAmount);
     builder.add("thresholdPast", thresholdPast);
 
-    positionPanelLimit.addHyperlinkListener(new HyperlinkHandler(directory) {
+    HyperlinkHandler thresholdHandler = new HyperlinkHandler(directory) {
       protected void processCustomLink(String href) {
-        if (href.equals("alerte")){
-          
+        if (href.equals("alerte")) {
+          AccountPositionThresholdDialog positionThresholdDialog =
+            new AccountPositionThresholdDialog(dialog, repository, directory);
+          positionThresholdDialog.show();
+          update();
         }
       }
-    });
+    };
+    positionPanelLimit.addHyperlinkListener(thresholdHandler);
+    thresholdPast.addHyperlinkListener(thresholdHandler);
     panel = builder.load();
   }
 
@@ -73,6 +82,11 @@ public class PositionPanel {
   }
 
   public void setMonth(SortedSet<Integer> monthIds) {
+    this.monthIds = monthIds;
+    update();
+  }
+
+  private void update() {
     Integer currentMonthId = repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH);
 
     boolean hasCurrentMonth = false;
@@ -104,17 +118,18 @@ public class PositionPanel {
                                              Month.toYearString(lastMonthId)));
     Double amount = lastMonthStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
     positionPastAmount.setText(Formatting.toStringWithPlus(amount));
-    Double threshold = repository.get(AccountPositionThreshold.KEY).get(AccountPositionThreshold.THRESHOLD_FOR_WARN);
-    if (amount < threshold) {
+    Double threshold = repository.get(AccountPositionThreshold.KEY).get(AccountPositionThreshold.THRESHOLD);
+    Double thresholdWarm = repository.get(AccountPositionThreshold.KEY).get(AccountPositionThreshold.THRESHOLD_FOR_WARN);
+    if (amount < threshold - thresholdWarm) {
       thresholdPast.setText(Lang.get("position.panel.past.threshold.inf",
                                      Formatting.toString(threshold)));
     }
-    else if (amount > threshold) {
+    else if (amount > threshold + thresholdWarm) {
       thresholdPast.setText(Lang.get("position.panel.past.threshold.sup",
                                      Formatting.toString(threshold)));
     }
     else {
-      thresholdPast.setText(Lang.get("position.panel.past.threshold.equal"));
+      thresholdPast.setText(Lang.get("position.panel.past.threshold.equal", Formatting.toString(threshold)));
     }
   }
 
@@ -169,16 +184,22 @@ public class PositionPanel {
     estimatedPosition.setText(
       Formatting.toString(lastMonthStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION)));
 
+    updateLimiteMessage(lastMonthStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION));
+  }
+
+  private void updateLimiteMessage(final Double currentPosition) {
     Double threshold = repository.get(AccountPositionThreshold.KEY).get(AccountPositionThreshold.THRESHOLD);
     Double thresholdWarn = repository.get(AccountPositionThreshold.KEY).get(AccountPositionThreshold.THRESHOLD_FOR_WARN);
-    if (Math.abs(lastMonthStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION)) < threshold - thresholdWarn) {
-      positionPanelLimit.setText(Lang.get("position.panel.alerte.inf", Formatting.toString(thresholdWarn)));
+    if (currentPosition < (threshold - thresholdWarn)) {
+      positionPanelLimit.setText(Lang.get("position.panel.alerte.inf", Formatting.toString(threshold)));
     }
     else {
       boolean hasSavingsAccount =
         !repository.getAll(Account.TYPE,
-                           GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId())).isEmpty();
-      if (lastMonthStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION) > threshold + thresholdWarn) {
+                           GlobMatchers.and(
+                             GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()),
+                             GlobMatchers.not(GlobMatchers.fieldIn(Account.ID, Account.SUMMARY_ACCOUNT_IDS)))).isEmpty();
+      if (currentPosition > threshold + thresholdWarn) {
         if (hasSavingsAccount) {
           positionPanelLimit.setText(Lang.get("position.panel.alerte.sup.withSavings", Formatting.toString(threshold)));
         }

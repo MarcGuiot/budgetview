@@ -15,8 +15,8 @@ public class PositionDialog {
 
   public PositionDialog(GlobRepository repository, Directory directory) {
 
-    positionPanel = new PositionPanel(repository, directory);
     dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+    positionPanel = new PositionPanel(dialog, repository, directory);
     dialog.setPanelAndButton(positionPanel.getPanel(), new AbstractAction(Lang.get("close")) {
       public void actionPerformed(ActionEvent e) {
         dialog.setVisible(false);

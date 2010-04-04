@@ -28,7 +28,7 @@ public class AccountPositionThreshold {
   @DefaultDouble(0.0)
   public static DoubleField THRESHOLD;
 
-  @DefaultDouble(100.0)
+  @DefaultDouble(50.0)
   public static DoubleField THRESHOLD_FOR_WARN;
 
   static {
