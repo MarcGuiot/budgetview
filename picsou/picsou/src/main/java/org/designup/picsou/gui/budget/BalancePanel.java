@@ -163,9 +163,7 @@ public class BalancePanel {
 
     if (hasCurrentMonth || isPast) {
       newStartPositionLabel.setVisible(true);
-      newStartPositionLabel.setText(Lang.getWithDefault("balance.panel.newStartPosition." + firstMonthId,
-                                                        "balance.panel.newStartPosition",
-                                                        Month.getFullMonthLabel(firstMonthId)).toLowerCase());
+      newStartPositionLabel.setText(Lang.get("balance.panel.newStartPosition"));
       shiftOperationsLabel.setVisible(true);
       shiftOperationsLabel.setText(Lang.getWithDefault("balance.panel.shiftOperations." + firstMonthId,
                                                        "balance.panel.shiftOperations",
