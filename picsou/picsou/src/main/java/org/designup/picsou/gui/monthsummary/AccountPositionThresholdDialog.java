@@ -32,7 +32,7 @@ public class AccountPositionThresholdDialog {
   }
 
   private void createDialog() {
-    builder = new GlobsPanelBuilder(getClass(), "/layout/accountPositionThresholdDialog.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountPositionThresholdDialog.splits",
                                                       localRepository, directory);
 
 

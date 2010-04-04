@@ -17,7 +17,7 @@ public class SeriesDeletionDialog {
 
   public SeriesDeletionDialog(GlobRepository repository, Directory directory, Window parent) {
     builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
-                                                      "/layout/seriesDeletionDialog.splits",
+                                    "/layout/series/seriesDeletionDialog.splits",
                                                       repository, directory);
 
     dialog = PicsouDialog.createWithButtons(parent, directory, builder.<JPanel>load(),

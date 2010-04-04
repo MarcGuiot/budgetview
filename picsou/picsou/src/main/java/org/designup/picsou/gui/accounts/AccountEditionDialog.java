@@ -38,7 +38,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
 
     dialog = PicsouDialog.create(owner, localDirectory);
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountEditionDialog.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountEditionDialog.splits",
                                                       localRepository, localDirectory);
 
     titleLabel = builder.add("title", new JLabel("accountEditionDialog")).getComponent();

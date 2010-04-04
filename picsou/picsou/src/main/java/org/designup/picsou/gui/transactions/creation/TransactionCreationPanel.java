@@ -61,7 +61,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
 
   private JPanel createPanel() {
     GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/transactionCreationPanel.splits",
+      new GlobsPanelBuilder(getClass(), "/layout/transactions/transactionCreationPanel.splits",
                             repository, directory);
 
     accountCombo = builder.addComboEditor("account", Transaction.ACCOUNT)

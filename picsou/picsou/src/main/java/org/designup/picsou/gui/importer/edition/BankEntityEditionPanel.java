@@ -32,7 +32,7 @@ public class BankEntityEditionPanel {
   public void init(final GlobList accounts) {
     this.accounts = accounts;
 
-    builder = new GlobsPanelBuilder(getClass(), "/layout/bankEntityEditionPanel.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/bankEntityEditionPanel.splits",
                                                       repository, directory);
 
     builder.add("panel", panel);

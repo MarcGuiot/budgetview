@@ -17,8 +17,6 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkListener;
-import javax.swing.event.HyperlinkEvent;
 import java.util.SortedSet;
 
 public class PositionPanel {
@@ -43,7 +41,7 @@ public class PositionPanel {
 
   public PositionPanel(GlobRepository repository, Directory directory) {
     this.repository = repository;
-    builder = new GlobsPanelBuilder(getClass(), "/layout/positionPanel.splits", repository, directory);
+    builder = new GlobsPanelBuilder(getClass(), "/layout/budget/positionPanel.splits", repository, directory);
     cardHandler = builder.addCardHandler("cardHandler");
     builder.add("bankPositionAmount", bankPositionAmount);
     builder.add("bankPositionLabel", bankPositionLabel);

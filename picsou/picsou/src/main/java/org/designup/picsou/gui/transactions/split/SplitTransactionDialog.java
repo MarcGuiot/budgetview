@@ -87,7 +87,7 @@ public class SplitTransactionDialog {
   }
 
   private void createDialog(Directory directory) {
-    builder = new GlobsPanelBuilder(getClass(), "/layout/splitTransactionDialog.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/transactions/splitTransactionDialog.splits",
                                                       localRepository, localDirectory);
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));

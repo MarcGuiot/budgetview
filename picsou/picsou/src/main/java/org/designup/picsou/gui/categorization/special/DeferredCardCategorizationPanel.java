@@ -47,9 +47,10 @@ public class DeferredCardCategorizationPanel implements SpecialCategorizationPan
 
     BudgetArea budgetArea = BudgetArea.OTHER;
 
-    GlobsPanelBuilder panelBuilder = new GlobsPanelBuilder(CategorizationView.class,
-                                                           "/layout/specialCategorizationPanels/deferredCardCategorizationPanel.splits",
-                                                           repository, directory);
+    GlobsPanelBuilder panelBuilder =
+      new GlobsPanelBuilder(CategorizationView.class,
+                            "/layout/categorization/specialCategorizationPanels/deferredCardCategorizationPanel.splits",
+                            repository, directory);
 
     HyperlinkHandler handler = new HyperlinkHandler(directory);
     handler.registerLinkAction("importDeferredCardAccount", new Runnable() {

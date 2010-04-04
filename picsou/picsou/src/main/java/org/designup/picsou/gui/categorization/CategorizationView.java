@@ -110,7 +110,7 @@ public class CategorizationView extends View implements TableView, Filterable {
 
     seriesEditionDialog = directory.get(SeriesEditionDialog.class);
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorizationView.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorization/categorizationView.splits",
                                                       this.repository, directory);
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory));
@@ -281,7 +281,7 @@ public class CategorizationView extends View implements TableView, Filterable {
 
   private void addSeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder parentBuilder) {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(CategorizationView.class,
-                                                      "/layout/seriesChooserPanel.splits",
+                                                      "/layout/categorization/seriesChooserPanel.splits",
                                                       repository, directory);
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory));
@@ -323,7 +323,7 @@ public class CategorizationView extends View implements TableView, Filterable {
   private void addOtherSeriesChooser(String name, GlobsPanelBuilder parentBuilder) {
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(CategorizationView.class,
-                                                      "/layout/otherSeriesChooserPanel.splits",
+                                                      "/layout/categorization/otherSeriesChooserPanel.splits",
                                                       repository, directory);
 
     builder.add("description", GuiUtils.createReadOnlyHtmlComponent(BudgetArea.OTHER.getHtmlDescription()));

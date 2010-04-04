@@ -43,7 +43,7 @@ public class AccountPositionEditionPanel {
                                      Window parent) {    
     this.repository = repository;
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accountPositionEditionPanel.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountPositionEditionPanel.splits",
                                                       repository, directory);
 
     editor = builder.addEditor("amountField", Account.POSITION)

@@ -42,7 +42,7 @@ public class ChooseOrCreateAccountDialog {
                                FieldValue.value(AccountToAccountType.FROM_ACCOUNT, account.get(Account.ID))));
       id++;
     }
-    builder = new GlobsPanelBuilder(getClass(), "/layout/chooseOrCreateAccountDialog.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/chooseOrCreateAccountDialog.splits",
                                     localRepository, directory);
 
     builder.addRepeat("repeat",

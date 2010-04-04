@@ -140,7 +140,7 @@ public class BudgetAreaSeriesView extends View {
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budgetAreaSeriesView.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budget/budgetAreaSeriesView.splits",
                                                       repository, directory);
 
     builder.add("budgetAreaTitle", new JLabel(budgetArea.getLabel()));

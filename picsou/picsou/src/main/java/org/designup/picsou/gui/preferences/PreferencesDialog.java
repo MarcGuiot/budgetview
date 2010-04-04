@@ -25,7 +25,7 @@ public class PreferencesDialog {
     this.repository = repository;
 
     builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
-                                                      "/layout/preferencesDialog.splits",
+                                    "/layout/general/preferencesDialog.splits",
                                                       repository, directory);
     Integer[] items= new Integer[]{12, 18, 24, 36};
     Utils.beginRemove();

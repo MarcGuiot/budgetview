@@ -52,7 +52,7 @@ public class LicenseActivationDialog {
 
     dialog = PicsouDialog.create(parent, directory);
 
-    builder = new GlobsPanelBuilder(getClass(), "/layout/licenseActivationDialog.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/general/licenseActivationDialog.splits",
                                                       localRepository, this.localDirectory);
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
     builder.addEditor("ref-mail", User.MAIL).setNotifyOnKeyPressed(true);

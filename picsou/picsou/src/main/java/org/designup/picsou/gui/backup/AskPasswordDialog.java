@@ -27,7 +27,7 @@ public class AskPasswordDialog {
 
   public char[] show() {
     SplitsBuilder builder = new SplitsBuilder(directory);
-    builder.setSource(getClass(), "/layout/askPasswordDialog.splits");
+    builder.setSource(getClass(), "/layout/general/askPasswordDialog.splits");
     builder.add("title", new JLabel(Lang.get(title)));
     builder.add("passwordLabel", new JLabel(Lang.get(label)));
     builder.add("message", Gui.createHtmlEditor(Lang.get(message, argsForMessage)));

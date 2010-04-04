@@ -34,7 +34,7 @@ public class DateFormatSelectionPanel {
       }
     });
 
-    builder = new GlobsPanelBuilder(getClass(), "/layout/dateFormatSelectionPanel.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/utils/dateFormatSelectionPanel.splits",
                                     repository, directory);
     builder.add("dateFormatCombo", combo);
     builder.addLoader(new SplitsLoader() {

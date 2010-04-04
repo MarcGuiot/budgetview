@@ -40,7 +40,7 @@ public class DeleteSubSeriesDialog {
   }
 
   private void createDialog(Window owner) {
-    builder = new GlobsPanelBuilder(getClass(), "/layout/deleteSubSeriesDialog.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/series/deleteSubSeriesDialog.splits",
                                                       repository, directory);
 
     combo = builder.add("combo", new JComboBox(getFunctors())).getComponent();

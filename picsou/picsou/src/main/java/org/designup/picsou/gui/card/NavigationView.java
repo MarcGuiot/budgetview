@@ -27,7 +27,7 @@ public class NavigationView extends View {
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/navigationView.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/home/navigationView.splits",
                                                       repository, directory);
 
     final ImageLocator images = directory.get(ImageLocator.class);

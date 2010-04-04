@@ -19,7 +19,7 @@ public class AccountEditionPanel extends AbstractAccountPanel<GlobRepository> {
   }
 
   private void createPanel() {
-    builder = new GlobsPanelBuilder(getClass(), "/layout/accountEditionPanel.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountEditionPanel.splits",
                                     localRepository, localDirectory);
     super.createComponents(builder, owner);
   }

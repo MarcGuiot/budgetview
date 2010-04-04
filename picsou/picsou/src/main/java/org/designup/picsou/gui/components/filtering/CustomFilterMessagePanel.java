@@ -20,7 +20,7 @@ public class CustomFilterMessagePanel implements FilterSetListener {
   }
 
   private void createPanel(GlobRepository repository, Directory directory) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/customFilterMessagePanel.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/utils/customFilterMessagePanel.splits",
                                                       repository, directory);
 
     panel = builder.add("panel", new JPanel()).getComponent();

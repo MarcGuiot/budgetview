@@ -61,7 +61,7 @@ public class SeriesAmountEditionDialog {
     this.seriesEditionDialog = seriesEditionDialog;
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesAmountEditionDialog.class,
-                                                      "/layout/seriesAmountEditionDialog.splits",
+                                                      "/layout/series/seriesAmountEditionDialog.splits",
                                                       localRepository, directory);
 
     builder.addLabel("dateLabel", SeriesBudget.TYPE, new SeriesAmountLabelStringifier());

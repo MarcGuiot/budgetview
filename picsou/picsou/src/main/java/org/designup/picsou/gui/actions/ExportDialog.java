@@ -44,7 +44,7 @@ public class ExportDialog {
   }
 
   private void createDialog() {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/exportDialog.splits", repository, directory);
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/exportDialog.splits", repository, directory);
 
     builder.addRepeat("types",
                       exporters.getAll(),

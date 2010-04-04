@@ -76,7 +76,7 @@ public abstract class AccountViewPanel {
 
   private void createPanel() {
     GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/accountViewPanel.splits", repository, directory);
+      new GlobsPanelBuilder(getClass(), "/layout/accounts/accountViewPanel.splits", repository, directory);
 
     header = builder.add("header", new JPanel()).getComponent();
 

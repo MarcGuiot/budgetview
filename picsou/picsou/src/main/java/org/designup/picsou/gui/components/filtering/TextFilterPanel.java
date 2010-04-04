@@ -43,7 +43,7 @@ public abstract class TextFilterPanel {
   }
 
   private void createPanel(GlobRepository repository, Directory directory) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/textFilterPanel.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/utils/textFilterPanel.splits",
                                                       repository, directory);
 
     createTextField();

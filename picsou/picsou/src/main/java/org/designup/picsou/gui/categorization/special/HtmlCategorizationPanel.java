@@ -32,7 +32,7 @@ public class HtmlCategorizationPanel implements SpecialCategorizationPanel {
                           SeriesCreationHandler seriesCreationHandler) {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(CategorizationView.class,
-                            "/layout/specialCategorizationPanels/htmlCategorizationPanel.splits",
+                            "/layout/categorization/specialCategorizationPanels/htmlCategorizationPanel.splits",
                             repository, directory);
 
     builder.add("hyperlinkHandler", createHyperlinkHandler(repository, directory,

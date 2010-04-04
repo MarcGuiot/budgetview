@@ -38,7 +38,7 @@ public class SubSeriesEditionPanel {
     this.selectionService = directory.get(SelectionService.class);
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
-                                                      "/layout/subSeriesEditionPanel.splits",
+                                                      "/layout/series/subSeriesEditionPanel.splits",
                                                       repository, directory);
 
     builder.add("subSeriesNameField", nameField).getComponent().addActionListener(addAction);

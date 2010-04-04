@@ -74,7 +74,7 @@ public class SeriesEvolutionView extends View {
   }
 
   private GlobsPanelBuilder createLocalPanel() {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/seriesEvolutionView.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/evolution/seriesEvolutionView.splits",
                                                       repository, directory);
 
     SeriesEditionDialog seriesEditionDialog = directory.get(SeriesEditionDialog.class);

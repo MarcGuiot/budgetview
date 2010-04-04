@@ -31,7 +31,7 @@ public class SavingsView extends View {
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/savingsView.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/savings/savingsView.splits",
                                                       repository, directory);
 
     createNextProjectsBlock(builder);

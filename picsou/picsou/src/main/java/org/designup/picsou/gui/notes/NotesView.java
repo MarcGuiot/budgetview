@@ -23,7 +23,7 @@ public class NotesView extends View {
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/notesView.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/home/notesView.splits",
                                                       repository, directory);
 
     cards = builder.addCardHandler("cards");

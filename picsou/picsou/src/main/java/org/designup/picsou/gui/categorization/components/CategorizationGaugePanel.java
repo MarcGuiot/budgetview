@@ -39,7 +39,7 @@ public class CategorizationGaugePanel implements ChangeSetListener {
   }
 
   public void createPanel() {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorizationGaugePanel.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorization/categorizationGaugePanel.splits",
                                                       repository, directory);
 
     gauge = builder.add("gauge", new Gauge()).getComponent();

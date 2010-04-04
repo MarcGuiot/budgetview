@@ -66,7 +66,7 @@ public class SeriesBudgetEditionPanel {
     DescriptionService descriptionService = directory.get(DescriptionService.class);
     timeService = directory.get(TimeService.class);
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
-                                                      "/layout/seriesBudgetEditionPanel.splits",
+                                                      "/layout/series/seriesBudgetEditionPanel.splits",
                                                       localRepository, directory);
 
     modeCard = builder.addCardHandler("modeCard");

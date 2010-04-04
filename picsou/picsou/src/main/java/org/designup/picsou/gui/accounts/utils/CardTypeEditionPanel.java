@@ -48,7 +48,7 @@ public class CardTypeEditionPanel {
 
   public GlobsPanelBuilder createComponent() {
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/cardTypeEditionPanel.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/cardTypeEditionPanel.splits",
                                                       repository, directory);
 
     cardHandler = builder.addCardHandler("CardTypes");

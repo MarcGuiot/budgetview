@@ -33,7 +33,7 @@ public class AboutDialog {
   public AboutDialog(Directory directory) {
 
     builder = new SplitsBuilder(directory);
-    builder.setSource(getClass(), "/layout/aboutDialog.splits");
+    builder.setSource(getClass(), "/layout/general/aboutDialog.splits");
 
     String version = Lang.get("about.version", PicsouApplication.APPLICATION_VERSION);
     builder.add("versionLabel", new JLabel(version));

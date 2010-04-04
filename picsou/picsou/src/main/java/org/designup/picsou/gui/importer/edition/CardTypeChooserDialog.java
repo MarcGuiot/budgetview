@@ -40,7 +40,7 @@ public class CardTypeChooserDialog {
       .copy(Account.TYPE, AccountCardType.TYPE, Bank.TYPE, BankEntity.TYPE, Day.TYPE)
       .get();
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/cardTypeChooserDialog.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/cardTypeChooserDialog.splits",
                                                       localRepository, directory);
 
     builder.addRepeat("cardTypeRepeat", accounts, new RepeatFactory(localRepository));

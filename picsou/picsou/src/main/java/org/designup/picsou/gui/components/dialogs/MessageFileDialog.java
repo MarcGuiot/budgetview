@@ -19,7 +19,7 @@ public class MessageFileDialog {
   }
 
   public void show(String titleKey, String messageKey, File file) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/messageFileDialog.splits", repository, directory);
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/utils/messageFileDialog.splits", repository, directory);
 
     builder.add("title", new JLabel(Lang.get(titleKey)));
 

@@ -22,7 +22,7 @@ public class MessageAndDetailsDialog {
                                  Directory directory,
                                  String... messageArgs) {
     builder = SplitsBuilder.init(directory)
-      .setSource(getClass(), "/layout/messageAndDetailsDialog.splits");
+      .setSource(getClass(), "/layout/utils/messageAndDetailsDialog.splits");
 
     builder.add("title", new JLabel(Lang.get(titleKey)));
     builder.add("message", new JEditorPane("text/html", Lang.get(messageKey, messageArgs)));

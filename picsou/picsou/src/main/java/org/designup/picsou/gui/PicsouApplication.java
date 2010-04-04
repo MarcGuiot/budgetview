@@ -218,7 +218,7 @@ public class PicsouApplication {
 
   void showMultipleInstanceError(String message) {
     SplitsBuilder builder = SplitsBuilder.init(directory)
-      .setSource(getClass(), "/layout/messageDialog.splits");
+      .setSource(getClass(), "/layout/utils/messageDialog.splits");
 
     builder.add("title", new JLabel(Lang.get("init.dialog.lock.title")));
     JEditorPane editorPane = new JEditorPane("text/html", Lang.get("init.dialog.lock.content", message));

@@ -33,7 +33,7 @@ public class BankEntityEditionDialog {
       .get();
     BankEntityEditionPanel panel = new BankEntityEditionPanel(localRepository, directory);
     panel.init(accounts);
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/bankEntityEditionDialog.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/bankEntityEditionDialog.splits",
                                                       localRepository, directory);
 
     builder.add("editionPanel", panel.getPanel());

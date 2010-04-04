@@ -60,7 +60,7 @@ public class BalancePanel {
 
   public BalancePanel(GlobRepository repository, Directory directory) {
     this.repository = repository;
-    builder = new GlobsPanelBuilder(getClass(), "/layout/balancePanel.splits", repository, directory);
+    builder = new GlobsPanelBuilder(getClass(), "/layout/budget/balancePanel.splits", repository, directory);
     builder.add("budgetBalanceLabel", budgetBalanceLabel);
     builder.add("realBalanceLabel", realBalanceLabel);
     builder.add("previousMonthLabel", previousMonthLabel);

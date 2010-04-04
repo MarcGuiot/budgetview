@@ -18,7 +18,7 @@ public abstract class ConfirmationDialog {
 
   public ConfirmationDialog(String titleKey, String contentKey, Window owner, Directory directory, String... args) {
     builder = SplitsBuilder.init(directory)
-      .setSource(getClass(), "/layout/confirmationDialog.splits");
+      .setSource(getClass(), "/layout/utils/confirmationDialog.splits");
 
     dialog = PicsouDialog.create(owner, directory);
 

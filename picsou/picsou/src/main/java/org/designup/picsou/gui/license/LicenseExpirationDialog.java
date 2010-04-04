@@ -31,7 +31,7 @@ public class LicenseExpirationDialog {
   public LicenseExpirationDialog(Window parent, final GlobRepository repository, final Directory directory) {
     localGlobRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(User.TYPE).get();
-    builder = new GlobsPanelBuilder(getClass(), "/layout/licenseExpirationDialog.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/general/licenseExpirationDialog.splits",
                           localGlobRepository, directory);
 
     builder.add("mailResponse", response);

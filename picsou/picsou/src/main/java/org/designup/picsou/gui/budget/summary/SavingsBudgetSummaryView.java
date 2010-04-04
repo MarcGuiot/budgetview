@@ -49,7 +49,7 @@ public class SavingsBudgetSummaryView extends View implements GlobSelectionListe
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/savingsBudgetSummaryView.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/savings/savingsBudgetSummaryView.splits",
                                                       repository, directory);
     builder.add("balanceLabel", balanceLabel);
     builder.add("positionTitle", positionTitle);

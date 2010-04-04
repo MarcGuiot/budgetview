@@ -18,7 +18,7 @@ public class BalanceDialog {
   public BalanceDialog(GlobRepository repository, Directory directory) {
 
     GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/balancePanel.splits", repository, directory);
+      new GlobsPanelBuilder(getClass(), "/layout/budget/balancePanel.splits", repository, directory);
 
     balancePanel = new BudgetBalancePage(repository, directory);
     balancePanel.init();

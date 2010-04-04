@@ -83,7 +83,7 @@ public class SavingsSeriesView implements Disposable {
   }
 
   public void registerComponents() {
-    builder = new GlobsPanelBuilder(getClass(), "/layout/savingsSeriesView.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/savings/savingsSeriesView.splits",
                                     repository, directory);
 
     String accountName = Lang.get("budgetView.savings.accountName.from",

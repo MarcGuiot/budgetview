@@ -31,7 +31,7 @@ public class AccountPositionEditionDialog {
         .copy(Account.TYPE)
         .get();
 
-    builder = new GlobsPanelBuilder(getClass(), "/layout/accountPositionEditionDialog.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountPositionEditionDialog.splits",
                                                       localRepository, directory);
 
     ValidateAction validateAction = new ValidateAction();

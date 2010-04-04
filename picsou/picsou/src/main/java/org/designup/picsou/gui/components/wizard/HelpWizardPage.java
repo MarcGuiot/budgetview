@@ -45,7 +45,7 @@ public class HelpWizardPage extends AbstractWizardPage {
 
   public void init() {
     GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/helpWizardPage.splits", repository, directory);
+      new GlobsPanelBuilder(getClass(), "/layout/utils/helpWizardPage.splits", repository, directory);
 
     builder.add("handler", hyperlinkHandler);
 

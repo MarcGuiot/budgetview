@@ -25,7 +25,7 @@ public class SlaValidationDialog {
 
   public SlaValidationDialog(Window owner, Directory directory) {
 
-    builder = SplitsBuilder.init(directory).setSource(getClass(), "/layout/slaValidationDialog.splits");
+    builder = SplitsBuilder.init(directory).setSource(getClass(), "/layout/general/slaValidationDialog.splits");
 
     errorMessage = builder.add("errorMessage", new JLabel()).getComponent();
     errorMessage.setVisible(false);

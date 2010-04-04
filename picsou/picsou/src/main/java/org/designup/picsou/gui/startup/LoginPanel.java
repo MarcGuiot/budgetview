@@ -78,7 +78,7 @@ public class LoginPanel {
 
     setVisible(creationComponents, false);
 
-    SplitsBuilder builder = SplitsBuilder.init(directory).setSource(getClass(), "/layout/loginPanel.splits");
+    SplitsBuilder builder = SplitsBuilder.init(directory).setSource(getClass(), "/layout/general/loginPanel.splits");
     builder.add("name", userField);
     builder.add("password", passwordField);
     builder.add("confirmPassword", confirmPasswordField);

@@ -112,7 +112,7 @@ public class SeriesEditionDialog {
 
     dialog = PicsouDialog.create(parent, directory);
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
-                                                      "/layout/seriesEditionDialog.splits",
+                                                      "/layout/series/seriesEditionDialog.splits",
                                                       localRepository, localDirectory);
 
     titleLabel = builder.add("title", new JLabel("SeriesEditionDialog")).getComponent();

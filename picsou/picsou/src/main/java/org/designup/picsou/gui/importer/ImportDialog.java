@@ -140,7 +140,7 @@ public class ImportDialog {
 
     initFileField();
 
-    builder1 = new GlobsPanelBuilder(getClass(), "/layout/importDialogStep1.splits", localRepository, localDirectory);
+    builder1 = new GlobsPanelBuilder(getClass(), "/layout/importexport/importDialogStep1.splits", localRepository, localDirectory);
     builder1.add("importMessage", step1Message);
     builder1.add("filePanel", filePanel);
     builder1.add("fileField", fileField);
@@ -181,7 +181,7 @@ public class ImportDialog {
   }
 
   private void initStep2Panel(final String textForCloseButton, Window owner) {
-    builder2 = new GlobsPanelBuilder(getClass(), "/layout/importDialogStep2.splits", localRepository, localDirectory);
+    builder2 = new GlobsPanelBuilder(getClass(), "/layout/importexport/importDialogStep2.splits", localRepository, localDirectory);
     dateRenderer = new ImportedTransactionDateRenderer();
     dateFormatSelectionPanel = new DateFormatSelectionPanel(localRepository, localDirectory,
                                                             new DateFormatSelectionPanel.Callback() {

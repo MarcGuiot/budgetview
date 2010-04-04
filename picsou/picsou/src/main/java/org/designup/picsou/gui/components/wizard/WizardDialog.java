@@ -84,7 +84,7 @@ public class WizardDialog {
 
   private void createDialog() {
     GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/wizardDialog.splits", repository, directory);
+      new GlobsPanelBuilder(getClass(), "/layout/utils/wizardDialog.splits", repository, directory);
     title = builder.add("title", new JLabel()).getComponent();
 
     cardLayout = new CardLayout();

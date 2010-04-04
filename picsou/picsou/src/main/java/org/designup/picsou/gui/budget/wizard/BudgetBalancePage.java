@@ -107,7 +107,7 @@ public class BudgetBalancePage extends AbstractWizardPage {
 
   public void createPanel() {
     GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/budgetWizard/budgetBalancePage.splits", repository, directory);
+      new GlobsPanelBuilder(getClass(), "/layout/budget/budgetWizard/budgetBalancePage.splits", repository, directory);
 
     builder.add("balanceChart", balanceChart);
 

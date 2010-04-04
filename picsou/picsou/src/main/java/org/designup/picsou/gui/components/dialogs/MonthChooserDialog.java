@@ -51,7 +51,7 @@ public class MonthChooserDialog implements ColorChangeListener, Disposable {
 
   private JPanel createPanel() {
     builder = new SplitsBuilder(directory);
-    builder.setSource(MonthChooserDialog.class, "/layout/monthChooserDialog.splits");
+    builder.setSource(MonthChooserDialog.class, "/layout/utils/monthChooserDialog.splits");
     builder.add("previousYearLabel", previousYearLabel);
     builder.add("currentYearLabel", currentYearLabel);
     builder.add("nextYearLabel", nextYearLabel);

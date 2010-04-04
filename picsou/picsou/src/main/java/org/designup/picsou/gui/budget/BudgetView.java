@@ -25,7 +25,7 @@ public class BudgetView extends View {
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budgetView.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budget/budgetView.splits",
                                                       repository, directory);
 
     BudgetSummaryView budgetSummaryView = new BudgetSummaryView(repository, directory);

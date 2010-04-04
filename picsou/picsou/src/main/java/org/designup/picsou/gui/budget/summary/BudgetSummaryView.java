@@ -67,7 +67,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budgetSummaryView.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budget/budgetSummaryView.splits",
                                                       repository, directory);
     builder.add("balanceLabel", balanceLabel);
     builder.add("positionLabel", estimatedPositionLabel);
