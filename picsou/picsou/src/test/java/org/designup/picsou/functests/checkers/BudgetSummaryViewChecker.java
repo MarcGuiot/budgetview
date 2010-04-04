@@ -77,12 +77,12 @@ public class BudgetSummaryViewChecker extends GuiChecker {
   }
 
   public BudgetWizardPageChecker openBudgetWizardPage() {
-    Window wizardWindow = WindowInterceptor.run(getPanel().getButton("openDetailsButton").triggerClick());
+    Window wizardWindow = WindowInterceptor.run(getPanel().getButton("openDetails").triggerClick());
     return new BudgetWizardPageChecker(wizardWindow);
   }
 
   public BudgetSummaryViewChecker checkNoEstimatedPositionDetails() {
-    assertFalse(getPanel().getButton("openDetailsButton").isEnabled());
+    assertFalse(getPanel().getButton("openDetails").isEnabled());
     return this;
   }
 

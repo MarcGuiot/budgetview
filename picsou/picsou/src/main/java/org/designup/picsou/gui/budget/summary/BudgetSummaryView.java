@@ -1,10 +1,9 @@
 package org.designup.picsou.gui.budget.summary;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.budget.wizard.BudgetWizardDialog;
 import org.designup.picsou.gui.budget.BalanceDialog;
+import org.designup.picsou.gui.budget.wizard.BudgetWizardDialog;
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.components.JRoundedButton;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.utils.AmountColors;
@@ -14,6 +13,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
@@ -45,6 +45,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   private AmountColors amountColors;
   private Color normalColor;
   private Color errorColor;
+  private SplitsNode<JButton> openDetailsNode;
 
   public BudgetSummaryView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -72,7 +73,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     builder.add("positionTitle", estimatedPositionTitle);
     builder.add("uncategorized", uncategorizedButton);
     builder.add("multiSelectionLabel", multiSelectionLabel);
-    builder.add("openDetailsButton", createOpenDetailsButton());
+    openDetailsNode = builder.add("openDetails", new JButton(new OpenDetailsAction(directory)));
 
     uncategorizedButton.addActionListener(new GotoUncategorizedAction());
     balanceLabel.addActionListener(new OpenBalanceAction());
@@ -81,10 +82,6 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     helpMessage.setVisible(false);
 
     parentBuilder.add("budgetSummaryView", builder);
-  }
-
-  private JButton createOpenDetailsButton() {
-    return JRoundedButton.createCircle(new OpenDetailsAction(directory), colorService);
   }
 
   private HyperlinkButtonUI createHyperlinkButtonUI() {
@@ -230,7 +227,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     }
   }
 
-  private class OpenBalanceAction extends AbstractAction{
+  private class OpenBalanceAction extends AbstractAction {
 
     public void actionPerformed(ActionEvent e) {
       BalanceDialog dialog = new BalanceDialog(repository, directory);
@@ -267,12 +264,15 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
   private void updateHelpMessage() {
     Glob prefs = repository.find(UserPreferences.KEY);
-    boolean visible =
+    boolean showHelp =
       (prefs != null)
       && prefs.isTrue(UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE)
       && repository.contains(Series.TYPE, not(fieldEquals(Series.ID, Series.UNCATEGORIZED_SERIES_ID)));
 
-    helpMessage.setVisible(visible);
+    helpMessage.setVisible(showHelp);
+    if (openDetailsNode != null) {
+      openDetailsNode.applyStyle(showHelp ? "highlightedRoundButton" : "roundButton");
+    }
   }
 }
 
