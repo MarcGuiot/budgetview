@@ -10,6 +10,7 @@ import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.card.NavigationView;
+import org.designup.picsou.gui.card.ActionView;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.filtering.TextFilterPanel;
@@ -19,6 +20,7 @@ import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.monthsummary.VersionInfoView;
+import org.designup.picsou.gui.notes.InitializationView;
 import org.designup.picsou.gui.notes.NotesView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.savings.SavingsView;
@@ -85,6 +87,7 @@ public class MainPanel {
   private TransactionView transactionView;
   private TextFilterPanel search;
   private NotesView notesView;
+  private InitializationView initializationView;
   private SeriesEvolutionView seriesEvolutionView;
   private LogoutService logoutService;
   private CategorizationView categorizationView;
@@ -158,7 +161,8 @@ public class MainPanel {
     PeriodSeriesStatUpdater.init(replicationGlobRepository, directory);
 
     cardView = new CardView(repository, directory);
-    notesView = new NotesView(importFileAction, repository, directory);
+    notesView = new NotesView(repository, directory);
+    initializationView = new InitializationView(importFileAction, repository, directory);
     seriesEvolutionView = new SeriesEvolutionView(repository, directory);
     createPanel(
       titleView,
@@ -168,6 +172,7 @@ public class MainPanel {
       new AccountView(repository, directory),
       categorizationView,
       cardView,
+      new ActionView(repository, directory),
       new NavigationView(repository, directory),
       new BudgetView(replicationGlobRepository, directory),
       seriesView,
@@ -213,7 +218,6 @@ public class MainPanel {
     directory.get(HelpService.class).reset();
     windowManager.setPanel(panel);
     seriesEvolutionView.reset();
-    notesView.init();
     timeView.selectCurrentMonth();
     selectLastMonthWithATransaction(repository, directory);
     timeView.centerToSelected();

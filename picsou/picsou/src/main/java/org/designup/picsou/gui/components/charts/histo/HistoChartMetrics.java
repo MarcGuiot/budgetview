@@ -26,6 +26,7 @@ public class HistoChartMetrics {
   private int columnCount;
   private double maxPositiveValue;
   private double maxNegativeValue;
+  private boolean drawLabels;
 
   private int positiveHeight;
   private int negativeHeight;
@@ -36,6 +37,8 @@ public class HistoChartMetrics {
   private int sectionZoneHeight;
 
   private int sectionTextY;
+  private int labelZoneHeight;
+  private int labelBottomMargin;
 
   public HistoChartMetrics(int panelWidth,
                            int panelHeight,
@@ -43,6 +46,7 @@ public class HistoChartMetrics {
                            int columnCount,
                            double maxNegativeValue,
                            double maxPositiveValue,
+                           boolean drawLabels,
                            boolean drawSections) {
     this.panelWidth = panelWidth;
     this.panelHeight = panelHeight;
@@ -50,11 +54,16 @@ public class HistoChartMetrics {
     this.columnCount = columnCount;
     this.maxPositiveValue = maxPositiveValue;
     this.maxNegativeValue = maxNegativeValue;
+    this.drawLabels = drawLabels;
 
-    this.scaleZoneWidth = scaleZoneWidth();
-    this.sectionZoneHeight = drawSections ? SECTION_ZONE_HEIGHT : 0;
+    this.scaleZoneWidth = drawLabels ? scaleZoneWidth() : 0;
+    this.sectionZoneHeight = drawLabels && drawSections ? SECTION_ZONE_HEIGHT : 0;
     this.chartWidth = panelWidth - scaleZoneWidth;
-    this.chartHeight = panelHeight - LABEL_ZONE_HEIGHT - sectionZoneHeight;
+
+    this.labelZoneHeight = drawLabels ? LABEL_ZONE_HEIGHT : 0;
+    this.labelBottomMargin = drawLabels ? LABEL_BOTTOM_MARGIN : 0;
+
+    this.chartHeight = panelHeight - labelZoneHeight - sectionZoneHeight;
     if (maxNegativeValue != 0.0) {
       this.positiveHeight = (int)((chartHeight - 2 * VERTICAL_CHART_PADDING) * this.maxPositiveValue
                                   / (this.maxPositiveValue + this.maxNegativeValue));
@@ -121,7 +130,7 @@ public class HistoChartMetrics {
   }
 
   public int labelY() {
-    return panelHeight - sectionZoneHeight - LABEL_BOTTOM_MARGIN;
+    return panelHeight - sectionZoneHeight - labelBottomMargin;
   }
 
   public int labelX(String label, int index) {

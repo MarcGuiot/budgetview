@@ -12,6 +12,7 @@ import org.designup.picsou.gui.startup.BackupService;
 import org.designup.picsou.gui.upgrade.ConfigUpgradeTrigger;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
 import org.designup.picsou.gui.utils.DataCheckerAction;
+import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
@@ -228,12 +229,9 @@ public class PicsouInit {
   }
 
   public static void createPersistentDataForNewUser(GlobRepository repository) {
+
     repository.startChangeSet();
     try {
-      for (int i = 1; i < 32; i++) {
-        repository.findOrCreate(Key.create(Day.TYPE, i));
-      }
-
       repository.findOrCreate(AccountPositionThreshold.KEY);
       repository.findOrCreate(Notes.KEY, value(Notes.TEXT, Lang.get("notes.initial")));
       repository.findOrCreate(UserVersionInformation.KEY,

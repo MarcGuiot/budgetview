@@ -242,6 +242,11 @@
            foreground="mainpanel.message" weightX="10" weightY="0" border="empty(5,20,5,0)"/>
     <style selector=".mainPanelMessage button" weightX="0" border="empty(5,0,5,20)"/>
 
+    <!-- Navigation widgets -->
+    <style selector=".navigationWidgetLabel"
+           foreground="navigationView.text" opaque="false" font="-,plain,11"
+           fill="horizontal" margin="0"/>
+
     <!-- Gauge -->
     <style selector=".totalGauge"
            opaque="false"

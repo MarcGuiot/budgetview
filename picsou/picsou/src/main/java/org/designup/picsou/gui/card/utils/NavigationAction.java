@@ -1,10 +1,11 @@
-package org.designup.picsou.gui.card;
+package org.designup.picsou.gui.card.utils;
 
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.utils.directory.Directory;
 import org.designup.picsou.gui.model.Card;
+import org.designup.picsou.gui.card.NavigationService;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

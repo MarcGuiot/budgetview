@@ -13,7 +13,7 @@ public class HistoChartMetricsTest extends ChartTestCase {
   public void testColumns() throws Exception {
 
     HistoChartMetrics metrics =
-      new HistoChartMetrics(180, 135, getFontMetrics(), 10, 1000, 3000, false);
+      new HistoChartMetrics(180, 135, getFontMetrics(), 10, 1000, 3000, true, false);
 
     assertEquals(30, metrics.left(0));
     assertEquals(45, metrics.left(1));
@@ -42,7 +42,7 @@ public class HistoChartMetricsTest extends ChartTestCase {
   public void testVerticalPositions() throws Exception {
 
     HistoChartMetrics metrics =
-      new HistoChartMetrics(180, 140, getFontMetrics(), 10, 1000, 3000, false);
+      new HistoChartMetrics(180, 140, getFontMetrics(), 10, 1000, 3000, true, false);
 
     int margin = 10;
     assertEquals(margin + 78, metrics.y(0));
@@ -57,7 +57,7 @@ public class HistoChartMetricsTest extends ChartTestCase {
 
   public void testVerticalPositionsWithNoNegativeValues() throws Exception {
     HistoChartMetrics metrics =
-      new HistoChartMetrics(180, 145, getFontMetrics(), 10, 0, 100, false);
+      new HistoChartMetrics(180, 145, getFontMetrics(), 10, 0, 100, true, false);
 
     assertEquals(130, metrics.y(0));
     assertEquals(10, metrics.y(100));
@@ -80,7 +80,7 @@ public class HistoChartMetricsTest extends ChartTestCase {
 
   public void testColumnAt() throws Exception {
     HistoChartMetrics metrics =
-      new HistoChartMetrics(150, 145, getFontMetrics(), 10, 0, 100, false);
+      new HistoChartMetrics(150, 145, getFontMetrics(), 10, 0, 100, true, false);
     assertEquals(25, metrics.left(0));
     assertEquals(0, metrics.getColumnAt(35));
     assertEquals(1, metrics.getColumnAt(45));
@@ -90,7 +90,7 @@ public class HistoChartMetricsTest extends ChartTestCase {
 
   public void testSectionBlocks() throws Exception {
     HistoChartMetrics metrics =
-      new HistoChartMetrics(150, 130, getFontMetrics(), 10, 0, 100, false);
+      new HistoChartMetrics(150, 130, getFontMetrics(), 10, 0, 100, true, false);
 
     HistoLineDataset dataset = new HistoLineDataset();
     dataset.add(1, 1.0, "item1", "section A", false);
@@ -122,7 +122,7 @@ public class HistoChartMetricsTest extends ChartTestCase {
 
   private void checkScaleValues(int panelHeight, int maxNegative, int maxPositive, double[] expected) {
     HistoChartMetrics metrics =
-      new HistoChartMetrics(200, panelHeight, getFontMetrics(), 10, maxNegative, maxPositive, false);
+      new HistoChartMetrics(200, panelHeight, getFontMetrics(), 10, maxNegative, maxPositive, false, true);
     double[] actual = metrics.scaleValues();
     Arrays.sort(actual);
     TestUtils.assertEquals(actual, expected);

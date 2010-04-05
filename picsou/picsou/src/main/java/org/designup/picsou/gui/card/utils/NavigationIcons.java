@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.card;
+package org.designup.picsou.gui.card.utils;
 
 import org.designup.picsou.gui.model.Card;
 import org.globsframework.utils.exceptions.InvalidParameter;

@@ -41,30 +41,8 @@ public class NotesChecker extends GuiChecker {
     return window.getPanel("notesView");
   }
 
-  public NotesChecker checkNoDataMessage() {
-    return checkMessage("You must first import your financial operations", "noDataMessage", "noData");
-  }
-
   public void categorize() {
     getPanel().getButton("categorize").click();
-  }
-
-  public ImportChecker openImport() {
-    return ImportChecker.open(getPanel().getButton("import").triggerClick());
-  }
-
-  public HelpChecker openImportHelp() {
-    return HelpChecker.open(window.getTextBox("noDataMessage").triggerClickOnHyperlink("import"));
-  }
-
-  public void checkSeriesWizardButtonVisible(boolean visible) {
-    if (visible) {
-      Button button = getPanel().getButton("openSeriesWizard");
-      assertThat(and(button.isVisible(), button.isEnabled()));
-    }
-    else {
-      checkComponentVisible(getPanel(), JButton.class, "openSeriesWizard", false);
-    }
   }
 
   private NotesChecker checkMessage(String text, String textBoxName, final String panelName) {

@@ -17,12 +17,16 @@ public class HistoChart extends JPanel {
   private HistoChartMetrics metrics;
   private Integer currentRollover;
   private Font selectedLabelFont;
+  private boolean drawLabels;
 
-  public HistoChart(Directory directory) {
+  public HistoChart(boolean drawLabels, boolean clickable, Directory directory) {
+    this.drawLabels = drawLabels;
     this.colors = new HistoChartColors(directory);
     setFont(getFont().deriveFont(9f));
     this.selectedLabelFont = getFont().deriveFont(Font.BOLD);
-    registerMouseActions();
+    if (clickable) {
+      registerMouseActions();
+    }
   }
 
   public void setListener(HistoChartListener listener) {
@@ -73,6 +77,7 @@ public class HistoChart extends JPanel {
                                       getFontMetrics(getFont()),
                                       dataset.size(),
                                       dataset.getMaxNegativeValue(), dataset.getMaxPositiveValue(),
+                                      drawLabels,
                                       dataset.containsSections());
     }
 
@@ -98,10 +103,12 @@ public class HistoChart extends JPanel {
   private void paintLabels(Graphics2D g2, HistoDataset dataset) {
     g2.setStroke(new BasicStroke(1));
     for (int i = 0; i < dataset.size(); i++) {
-      String label = dataset.getLabel(i);
-      g2.setFont(getLabelFont(dataset, i));
-      g2.setColor(getLabelColor(dataset, i));
-      g2.drawString(label, metrics.labelX(label, i), metrics.labelY());
+      if (drawLabels) {
+        String label = dataset.getLabel(i);
+        g2.setFont(getLabelFont(dataset, i));
+        g2.setColor(getLabelColor(dataset, i));
+        g2.drawString(label, metrics.labelX(label, i), metrics.labelY());
+      }
 
       if (dataset.isSelected(i)) {
         g2.setColor(colors.getSelectedColumnColor());
@@ -109,7 +116,11 @@ public class HistoChart extends JPanel {
       }
     }
   }
+
   private void paintSections(Graphics2D g2, int panelHeight, HistoDataset dataset) {
+    if (!drawLabels) {
+      return;
+    }
     g2.setStroke(new BasicStroke(1));
     boolean firstBlock = true;
     for (HistoChartMetrics.Section section : metrics.getSections(dataset)) {
@@ -132,9 +143,11 @@ public class HistoChart extends JPanel {
       g2.setColor(colors.getScaleLineColor());
       g2.drawLine(metrics.chartX(), metrics.y(scaleValue), panelWidth, metrics.y(scaleValue));
 
-      g2.setColor(colors.getLabelColor());
-      String label = Integer.toString((int)scaleValue);
-      g2.drawString(label, metrics.scaleX(label), metrics.scaleY(scaleValue));
+      if (drawLabels) {
+        g2.setColor(colors.getLabelColor());
+        String label = Integer.toString((int)scaleValue);
+        g2.drawString(label, metrics.scaleX(label), metrics.scaleY(scaleValue));
+      }
     }
   }
 

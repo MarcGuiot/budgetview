@@ -1,0 +1,44 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+
+    <style selector="button.icon"
+           gridPos="(0,0,1,2)"
+           text="" opaque="false" borderPainted="false"
+           minimumSize="(35,30)" preferredSize="(35,30)"
+           fill="none" anchor="center" weightY="0"
+           marginRight="10"/>
+
+    <style selector="button.rowTitle"
+           gridPos="(1,0)" font="-,plain,13"
+           horizontalAlignment="right"
+           ui="hyperlinkButtonWithoutUnderline" foreground="block.item.link"
+           marginBottom="0"
+           fill="none" anchor="west" weightY="0"/>
+
+    <ui name="highlightedPanelUI" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="navigationWidget.highlight.top" bottomColor="navigationWidget.highlight.bottom"
+        borderColor="navigationWidget.highlight.border" borderWidth="1"/>
+    <ui name="normalPanelUI" class="javax.swing.plaf.basic.BasicPanelUI"/>
+
+    <style id="normalWidget" selector="x" ui="normalPanelUI" opaque="false"/>
+    <style id="highlightedWidget" selector="x" ui="highlightedPanelUI"/>
+
+    <style selector="panel#contentPanel"
+           fill="both" weightY="10" marginTop="0"/>
+    <style selector="panel#contentPanel component"/>
+
+  </styles>
+
+  <panel ref="panel">
+    <grid margin="4" opaque="false">
+      <button ref="icon" gridPos="(0,0)" styleClass="icon"/>
+      <button action="widgetAction" gridPos="(1,0)" styleClass="rowTitle"/>
+      <panel ref="contentPanel" gridPos="(0,1,2,1)" opaque="false">
+        <component ref="content"/>
+      </panel>
+    </grid>
+  </panel>
+
+</splits>

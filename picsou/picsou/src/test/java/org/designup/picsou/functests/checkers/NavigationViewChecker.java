@@ -10,14 +10,6 @@ public class NavigationViewChecker extends GuiChecker {
     this.window = window;
   }
 
-  public ImportChecker openImport() {
-    return ImportChecker.open(getPanel().getButton("Import").triggerClick());
-  }
-
-  public HelpChecker openHelp() {
-    return HelpChecker.open(getPanel().getButton("Help").triggerClick());
-  }
-
   public void gotoBudget() {
     getPanel().getButton("Budget").click();
   }
