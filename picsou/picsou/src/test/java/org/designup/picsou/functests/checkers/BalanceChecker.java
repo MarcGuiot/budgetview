@@ -11,14 +11,16 @@ public class BalanceChecker extends GuiChecker {
     this.window = window;
   }
 
-  public BalanceChecker checkBalance(double budgetBalance, Double realBalance) {
-    UISpecAssert.assertThat(window.getTextBox("budgetBalanceLabel").textContains(Formatting.toString(budgetBalance)));
-    if (realBalance == null) {
-      UISpecAssert.assertFalse(window.getTextBox("realBalanceLabel").isVisible());
+  public BalanceChecker check(double beginOfMonth, Double shift, double balance, double endOfMonth) {
+    UISpecAssert.assertThat(window.getTextBox("beginOfMonthAmount").textContains(Formatting.toString(beginOfMonth)));
+    if (shift != null) {
+      UISpecAssert.assertThat(window.getTextBox("shiftAmount").textContains(Formatting.toString(shift)));
     }
     else {
-      UISpecAssert.assertThat(window.getTextBox("realBalanceLabel").textContains(Formatting.toString(realBalance)));
+      UISpecAssert.assertFalse(window.getTextBox("shiftAmount").isVisible());
     }
+    UISpecAssert.assertThat(window.getTextBox("balanceAmountExplain").textContains(Formatting.toString(balance)));
+    UISpecAssert.assertThat(window.getTextBox("endOfMonthAmount").textContains(Formatting.toString(endOfMonth)));
     return this;
   }
 

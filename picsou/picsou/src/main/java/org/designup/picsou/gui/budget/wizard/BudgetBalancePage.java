@@ -19,7 +19,6 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -168,19 +167,24 @@ public class BudgetBalancePage extends AbstractWizardPage {
     shiftAmount.setVisible(hasShift);
 
     beginOfMonthLabel.setText(Lang.get("budgetWizard.balance.beginOfMonth",
-                                       Month.getFullMonthLabelWith4DigitYear(firstBudgetStat.get(BudgetStat.MONTH))));
+                                       getMonthAndYear(Month.previous(firstBudgetStat.get(BudgetStat.MONTH)))));
     beginOfMonthAmount.setText(Formatting.toString(beginOfMonthPosition));
     balanceLabelExplain.setText(Lang.get("budgetWizard.balance.balanceLabelExplain",
                                   budgetStats.size() == 1 ?
-                                  Month.getFullMonthLabelWith4DigitYear(firstBudgetStat.get(BudgetStat.MONTH)):
-                                  "..."));
+                                  getMonthAndYear(firstBudgetStat.get(BudgetStat.MONTH)) :
+                                  ""));
     balanceAmount.setText(Formatting.toStringWithPlus(balance));
     balanceAmountExplain.setText(Formatting.toStringWithPlus(balance));
     endOfMonthLabel.setText(Lang.get("budgetWizard.balance.endOfMonth",
-                                     Month.getFullMonthLabelWith4DigitYear(lastBudgetStat.get(BudgetStat.MONTH))));
+                                     getMonthAndYear(lastBudgetStat.get(BudgetStat.MONTH))));
     endOfMonthAmount.setText(Formatting.toString(endOfMonthPosition));
 
   }
+
+  private String getMonthAndYear(final Integer monthId) {
+    return Month.getFullMonthLabelWith4DigitYear(monthId).toLowerCase();
+  }
+
 
   private Glob getLastBudgetStat(GlobList list) {
     list.sort(BudgetStat.MONTH);

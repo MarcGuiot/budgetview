@@ -14,6 +14,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.*;
 
 public class AccountPositionThresholdDialog {
   private PicsouDialog dialog;
@@ -22,16 +23,20 @@ public class AccountPositionThresholdDialog {
   private GlobNumericEditor editor;
   private GlobsPanelBuilder builder;
 
-  public AccountPositionThresholdDialog(GlobRepository repository, Directory directory) {
+  public AccountPositionThresholdDialog(Window parent, GlobRepository repository, Directory directory) {
     this.directory = directory;
     localRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(AccountPositionThreshold.TYPE)
       .get();
 
-    createDialog();
+    createDialog(parent);
   }
 
-  private void createDialog() {
+  public AccountPositionThresholdDialog(GlobRepository repository, Directory directory) {
+    this(directory.get(JFrame.class), repository, directory);
+  }
+
+  private void createDialog(final Window parent) {
     builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountPositionThresholdDialog.splits",
                                                       localRepository, directory);
 
@@ -43,7 +48,7 @@ public class AccountPositionThresholdDialog {
       .setValueForNull(0.)
       .forceSelection(AccountPositionThreshold.KEY);
 
-    dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+    dialog = PicsouDialog.create(parent, directory);
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
 

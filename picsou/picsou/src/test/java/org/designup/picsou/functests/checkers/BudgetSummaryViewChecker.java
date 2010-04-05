@@ -107,7 +107,12 @@ public class BudgetSummaryViewChecker extends GuiChecker {
   }
 
   public BalanceChecker openBalancePanel() {
-    Window window = WindowInterceptor.getModalDialog(getPanel().getButton("positionLabel").triggerClick());
+    Window window = WindowInterceptor.getModalDialog(getPanel().getButton("balanceLabel").triggerClick());
     return new BalanceChecker(window);
+  }
+
+  public PositionChecker openPositionPanel() {
+    Window window = WindowInterceptor.getModalDialog(getPanel().getButton("positionLabel").triggerClick());
+    return new PositionChecker(window);
   }
 }
