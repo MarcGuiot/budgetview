@@ -17,7 +17,6 @@ public abstract class ComponentColorUpdater extends ColorUpdater {
   public void updateColor(Color color) {
     Component component = ref.get();
     if (component == null) {
-      System.out.println("ComponentColorUpdater.updateColor: WEAK REF RELEASED");
       dispose();
       return;
     }
