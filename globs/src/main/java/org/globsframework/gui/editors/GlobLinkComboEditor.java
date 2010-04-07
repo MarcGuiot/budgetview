@@ -180,7 +180,7 @@ public class GlobLinkComboEditor
   }
 
   public GlobLinkComboEditor setName(String name) {
-    super.setName(name);
+    globComboView.setName(name);
     return this;
   }
 

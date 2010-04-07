@@ -86,6 +86,9 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
 
   public GlobComboView setName(String name) {
     this.name = name;
+    if (jComboBox != null){
+      jComboBox.setName(name);
+    }
     return this;
   }
 

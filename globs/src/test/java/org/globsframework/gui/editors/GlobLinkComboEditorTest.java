@@ -323,4 +323,24 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
     selectionService.select(glob1);
     assertTrue(combo.contentEquals("name1", "name3"));
   }
+  
+  public void testSetNameBeforeSetComparator() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' link='2'/>" +
+                    "<dummyObject id='2' name='name2' link='1'/>" +
+                    "<dummyObject id='3' name='name3'/>");
+    repository.addChangeListener(changeListener);
+
+    GlobLinkComboEditor editor = GlobLinkComboEditor.init(DummyObject.LINK, repository, directory);
+    editor.setName("combo");
+    editor.setShowEmptyOption(false);
+    editor.setComparator(new Comparator<Glob>() {
+      public int compare(Glob o1, Glob o2) {
+        return o2.get(DummyObject.NAME).compareTo(o1.get(DummyObject.NAME));
+      }
+    });
+    ComboBox combo = new ComboBox(editor.getComponent());
+
+    assertTrue(combo.contentEquals("name3", "name2", "name1"));
+  }
 }
