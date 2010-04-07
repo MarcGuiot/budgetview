@@ -20,7 +20,8 @@ import java.util.Set;
 public class BudgetStatTrigger implements ChangeSetListener {
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsChanges(Transaction.TYPE) || changeSet.containsChanges(SeriesBudget.TYPE)) {
+    if (changeSet.containsChanges(Transaction.TYPE) || changeSet.containsChanges(SeriesBudget.TYPE)
+        || changeSet.containsUpdates(Series.BUDGET_AREA)) {
       computeStat(repository);
     }
   }

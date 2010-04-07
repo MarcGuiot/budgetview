@@ -126,6 +126,8 @@
                     <label text="$seriesEdition.dayChooser" styleClass="formLabelTop" autoHideSource="dayChooser"/>
                     <comboBox ref="dayChooser" autoHideIfDisabled="true"/>
 
+                    <label text="$seriesEdition.budgetArea" autoHideSource="budgetAreaChooser"/>
+                    <comboBox ref="budgetAreaChooser"/>
                     <filler fill="vertical"/>
 
                   </column>

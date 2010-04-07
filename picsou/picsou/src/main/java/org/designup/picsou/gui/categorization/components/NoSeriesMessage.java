@@ -54,7 +54,8 @@ public class NoSeriesMessage {
   private void registerUpdateListener(GlobRepository repository) {
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsCreationsOrDeletions(Series.TYPE)) {
+        if (changeSet.containsCreationsOrDeletions(Series.TYPE) ||
+            changeSet.containsUpdates(Series.BUDGET_AREA)) {
           updateVisibility();
         }
       }

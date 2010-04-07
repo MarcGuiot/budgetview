@@ -9,6 +9,7 @@ import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
+import org.apache.tools.ant.types.selectors.BaseSelector;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -774,5 +775,25 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     Panel tab = getSelectedTab();
     tab.getListBox().select(names);
     return DeleteSubSeriesDialogChecker.open(tab.getButton("deleteSubSeries").triggerClick());
+  }
+
+  public SeriesEditionDialogChecker checkBudgetArea(String budgetAreaName) {
+    assertThat(dialog.getComboBox("budgetAreaChooser").selectionEquals(budgetAreaName));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker changeBudgetArea(String budgetArea) {
+    dialog.getComboBox("budgetAreaChooser").select(budgetArea);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkBudgetAreaContent() {
+    assertThat(dialog.getComboBox("budgetAreaChooser").contentEquals("Recurring", "Envelopes", "Extras"));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkBudgetAreaIsHidden() {
+    assertFalse(dialog.getComboBox("budgetAreaChooser").isVisible());
+    return this;
   }
 }

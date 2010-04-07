@@ -1552,6 +1552,62 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Telephone", -10, 0);
   }
 
-  public void test() throws Exception {
+  public void testChangeBugdetArea() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/01", -29.00, "Free Telecom")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewRecurring("Free Telecom", "Internet");
+    categorization.editSeries("Internet")
+      .checkBudgetAreaContent()
+      .checkBudgetArea("Recurring")
+      .changeBudgetArea("Envelopes")
+      .checkBudgetArea("Envelopes")
+      .validate();
+    categorization.selectTransaction("Free Telecom")
+      .selectEnvelopes()
+      .checkNoSeriesMessageHidden();
+
+    views.selectBudget();
+    budgetView.recurring.checkTotalGauge(0, 0);
+    budgetView.envelopes.checkTotalGauge(-29., -29.);
+    budgetView.envelopes.checkSeries("Internet", -29., -29.);
+
+    views.selectEvolution();
+    seriesEvolution.initContent()
+      .add("Main accounts", "", "", "", "", "", "", "", "", "", "", "", "")
+        .add("Balance", "", "-29.00", "", "", "", "", "", "", "", "", "", "")
+        .add("Savings accounts", "", "", "", "", "", "", "", "", "", "", "", "")
+        .add("To categorize", "", "", "", "", "", "", "", "", "", "", "", "")
+        .add("Income", "", "", "", "", "", "", "", "", "", "", "", "")
+        .add("Recurring", "", "", "", "", "", "", "", "", "", "", "", "")
+        .add("Envelopes", "", "29.00", "", "", "", "", "", "", "", "", "", "")
+        .add("Internet", "", "29.00", "", "", "", "", "", "", "", "", "", "")
+        .add("Extras", "", "", "", "", "", "", "", "", "", "", "", "")
+        .add("Savings", "", "", "", "", "", "", "", "", "", "", "", "")
+        .add("Other", "", "", "", "", "", "", "", "", "", "", "", "")
+        .check();
+  }
+
+  public void testNoBudgetAreaForSavingsAndIncom() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/01", 1000, "salaire")
+      .load();
+    views.selectCategorization();
+    categorization.setNewIncome("salaire", "salaire");
+    views.selectBudget();
+    budgetView.income.editSeries("salaire")
+      .checkBudgetAreaIsHidden()
+      .validate();
+    views.selectCategorization();
+    categorization.selectTransaction("salaire")
+      .selectUncategorized().setUncategorized();
+    views.selectCategorization();
+    categorization.setNewSavings("salaire", "complement", "external", "Main accounts");
+    views.selectBudget();
+    budgetView.savings.editSeries("complement")
+      .checkBudgetAreaIsHidden()
+      .validate();
   }
 }

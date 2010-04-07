@@ -56,6 +56,7 @@ public class SeriesEditionDialog {
   private Glob currentSeries;
   private Integer lastSelectedSubSeriesId;
   private Set<Integer> currentMonthIds = Collections.emptySet();
+  private Set<Integer> selectedSeries = new HashSet<Integer>();
 
   private JLabel titleLabel;
   private GlobListView seriesList;
@@ -80,6 +81,9 @@ public class SeriesEditionDialog {
   private JLabel savingsMessage;
   private SubSeriesEditionPanel subSeriesEditionPanel;
   private GlobMatcher accountFilter;
+  static private Set<Integer> CHANGABLE_BUDGET_AREA =
+    new HashSet<Integer>(Arrays.asList(BudgetArea.ENVELOPES.getId(), BudgetArea.RECURRING.getId(), BudgetArea.EXTRAS.getId()));
+  private GlobLinkComboEditor budgetAreaCombo;
 
   public SeriesEditionDialog(final GlobRepository repository, Directory directory) {
     this(directory.get(JFrame.class), repository, directory);
@@ -192,7 +196,7 @@ public class SeriesEditionDialog {
 
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
-        setCurrentSeries(selection.getAll(Series.TYPE).getFirst());
+        setCurrentSeries(selectionService.getSelection(Series.TYPE).getFirst());
         if (currentSeries != null) {
           boolean isSavingsSeries = currentSeries.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId());
           fromAccountsCombo.setVisible(isSavingsSeries);
@@ -210,6 +214,7 @@ public class SeriesEditionDialog {
         updateDateSelectors();
         updateMonthChooser();
         updateMonthSelectionCard();
+        updateBudgetAreaCombo();
       }
     }, Series.TYPE);
 
@@ -230,6 +235,11 @@ public class SeriesEditionDialog {
                         }
                       });
 
+    budgetAreaCombo = builder.addComboEditor("budgetAreaChooser", Series.BUDGET_AREA)
+      .setShowEmptyOption(false)
+      .setFilter(GlobMatchers.contained(BudgetArea.ID, CHANGABLE_BUDGET_AREA))
+      .setComparator(new GlobFieldComparator(BudgetArea.ID));
+
     subSeriesEditionPanel = new SubSeriesEditionPanel(localRepository, localDirectory, dialog);
     builder.add("subSeriesEditionPanel", subSeriesEditionPanel.getPanel());
 
@@ -240,6 +250,10 @@ public class SeriesEditionDialog {
     singleSeriesDeleteButton.setOpaque(false);
     singleSeriesDeleteButton.setName("deleteSingleSeries");
     dialog.addPanelWithButtons(panel, okAction, new CancelAction(), singleSeriesDeleteButton);
+  }
+
+  private void updateBudgetAreaCombo() {
+    budgetAreaCombo.setVisible(CHANGABLE_BUDGET_AREA.contains(budgetArea.getId()));
   }
 
   public static void addSeriesCreationTriggers(GlobRepository repository,
@@ -343,6 +357,7 @@ public class SeriesEditionDialog {
   }
 
   public void show(BudgetArea budgetArea, Set<Integer> monthIds, Integer seriesId) {
+    selectedSeries.clear();
     retrieveAssociatedTransactions(seriesId);
     try {
       localRepository.startChangeSet();
@@ -361,6 +376,7 @@ public class SeriesEditionDialog {
   }
 
   public void show(Glob series, Set<Integer> monthIds) {
+    selectedSeries.clear();
     retrieveAssociatedTransactions(series.get(Series.ID));
     try {
       localRepository.startChangeSet();
@@ -385,6 +401,7 @@ public class SeriesEditionDialog {
   }
 
   public Key showNewSeries(GlobList transactions, GlobList selectedMonths, BudgetArea budgetArea, FieldValue... forcedValues) {
+    selectedSeries.clear();
     selectedTransactions = transactions;
     this.budgetArea = BudgetArea.get(budgetArea.getId());
     Glob createdSeries;
@@ -501,8 +518,8 @@ public class SeriesEditionDialog {
     }
     localRepository.reset(globsToLoad, SeriesBudget.TYPE, Series.TYPE, Transaction.TYPE);
 
-    this.seriesList.setFilter(and(fieldEquals(Series.BUDGET_AREA, budgetArea.getId()),
-                                  isFalse(Series.IS_MIRROR)));
+    this.seriesList.setFilter(or(and(fieldEquals(Series.BUDGET_AREA, budgetArea.getId()), isFalse(Series.IS_MIRROR)),
+                                 fieldContained(Series.ID, selectedSeries)));
 
     if (budgetArea == BudgetArea.SAVINGS) {
       Set<Integer> positiveAccount = new HashSet<Integer>();
@@ -612,6 +629,9 @@ public class SeriesEditionDialog {
   }
 
   public void setCurrentSeries(Glob currentSeries) {
+    if (currentSeries != null){
+      selectedSeries.add(currentSeries.get(Series.ID));
+    }
     this.currentSeries = currentSeries;
     this.subSeriesEditionPanel.setCurrentSeries(currentSeries);
   }
@@ -675,9 +695,7 @@ public class SeriesEditionDialog {
     finally {
       localRepository.completeChangeSet();
     }
-
   }
-
 
   private class CancelAction extends AbstractAction {
     public CancelAction() {
