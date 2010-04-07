@@ -6,20 +6,21 @@
   </styles>
 
   <column>
-    <label text="$navigationView.title" styleClass="blockTitle"/>
+    <label text="$actionView.title" styleClass="blockTitle"/>
     <panel styleClass="block">
       <panel styleClass="innerBlock">
         <panel styleClass="innerBlockBackground" marginBottom="0">
           <column margin="10" marginTop="0">
-            <component ref="categorization"/>
-            <component ref="budget"/>
-            <component ref="evolution" weightY="4"/>
-            <component ref="savings" weightY="4"/>
-            <component ref="data"/>
+
+            <component ref="import"/>
+            <component ref="help"/>
+
+            <filler fill="vertical"/>
           </column>
         </panel>
       </panel>
     </panel>
   </column>
-  
+
+
 </splits>

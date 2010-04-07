@@ -39,6 +39,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected SeriesViewChecker series;
   protected SeriesEvolutionChecker seriesEvolution;
   protected VersionInfoChecker versionInfo;
+  protected ActionViewChecker actions;
   protected NavigationViewChecker navigation;
   protected NotesChecker notes;
   protected BackupChecker backup;
@@ -131,6 +132,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     seriesEvolution = new SeriesEvolutionChecker(mainWindow);
     license = new LicenseActivationChecker(mainWindow);
     versionInfo = new VersionInfoChecker(mainWindow);
+    actions = new ActionViewChecker(mainWindow);
     navigation = new NavigationViewChecker(mainWindow);
     notes = new NotesChecker(mainWindow);
   }
@@ -172,6 +174,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     series = null;
     seriesEvolution = null;
     license = null;
+    actions = null;
     navigation = null;
     notes = null;
     repository = null;

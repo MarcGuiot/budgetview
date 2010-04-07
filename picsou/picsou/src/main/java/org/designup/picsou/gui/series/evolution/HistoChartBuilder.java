@@ -37,12 +37,14 @@ public class HistoChartBuilder {
   private int monthsBack;
   private int monthsLater;
 
-  public HistoChartBuilder(final GlobRepository repository,
+  public HistoChartBuilder(boolean drawLabels,
+                           boolean clickable,
+                           final GlobRepository repository,
                            Directory directory,
                            final SelectionService parentSelectionService,
                            int monthsBack, int monthsLater) {
     this.repository = repository;
-    histoChart = new HistoChart(directory);
+    histoChart = new HistoChart(drawLabels, clickable, directory);
     histoChart.setListener(new HistoChartListener() {
       public void columnClicked(int monthId) {
         Glob month = repository.get(Key.create(Month.TYPE, monthId));

@@ -8,7 +8,6 @@ import org.designup.picsou.gui.components.charts.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.components.charts.GlobGaugeView;
 import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
-import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
@@ -43,7 +42,7 @@ public class BudgetAreaSeriesView extends View {
   private Matchers.SeriesFirstEndDateFilter seriesDateFilter;
   private List<Key> currentSeries = Collections.emptyList();
 
-  private BudgetAreaHeaderUpdater headerUpdater;
+  private BudgetAreaHeader header;
   private BudgetAreaSeriesFooter footerGenerator;
 
   private Repeat<Glob> seriesRepeat;
@@ -73,23 +72,8 @@ public class BudgetAreaSeriesView extends View {
         selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
         seriesDateFilter.filterDates(selectedMonthIds);
         updateRepeat();
-        update();
       }
     }, Month.TYPE);
-
-    repository.addChangeListener(new ChangeSetListener() {
-      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(BudgetStat.TYPE)) {
-          update();
-        }
-      }
-
-      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        if (changedTypes.contains(BudgetStat.TYPE)) {
-          update();
-        }
-      }
-    });
 
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -132,13 +116,6 @@ public class BudgetAreaSeriesView extends View {
     footerGenerator.update(currentSeries);
   }
 
-  private void update() {
-    GlobList budgetStat = new GlobList();
-    budgetStat.addAll(repository.getAll(BudgetStat.TYPE,
-                                        GlobMatchers.fieldIn(BudgetStat.MONTH, selectedMonthIds)));
-    headerUpdater.update(budgetStat, budgetArea);
-  }
-
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budget/budgetAreaSeriesView.splits",
                                                       repository, directory);
@@ -150,12 +127,14 @@ public class BudgetAreaSeriesView extends View {
     Gauge gauge = BudgetAreaGaugeFactory.createGauge(budgetArea);
     builder.add("totalGauge", gauge);
 
-    this.headerUpdater =
+    BudgetAreaHeaderUpdater headerUpdater =
       new BudgetAreaHeaderUpdater(TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
                                   repository, directory);
-    this.headerUpdater.setColors("block.total",
-                                 "block.total.overrun.error",
-                                 "block.total.overrun.positive");
+    headerUpdater.setColors("block.total",
+                            "block.total.overrun.error",
+                            "block.total.overrun.positive");
+
+    this.header = new BudgetAreaHeader(budgetArea, headerUpdater, repository, directory);
 
     seriesRepeat =
       builder.addRepeat("seriesRepeat", new GlobList(), new SeriesRepeatComponentFactory());

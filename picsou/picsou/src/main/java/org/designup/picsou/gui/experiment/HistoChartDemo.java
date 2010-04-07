@@ -46,7 +46,7 @@ public class HistoChartDemo {
       directory
     );
 
-    HistoChart chart = new HistoChart(directory);
+    HistoChart chart = new HistoChart(true, true, directory);
 
     chart.setListener(new HistoChartListener() {
       public void columnClicked(int id) {

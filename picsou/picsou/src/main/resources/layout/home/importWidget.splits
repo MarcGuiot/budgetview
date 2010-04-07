@@ -1,0 +1,21 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style id="normalText" selector="x"
+           foreground="navigationView.text" font="-,plain,11"
+           border="none"/>
+    <style id="highlightedText" selector="x"
+           foreground="navigationWidget.highlight.text" font="-,plain,12"
+           border="empty(0,4,0,4)"/>
+  </styles>
+
+  <column opaque="false">
+
+    <htmlEditorPane ref="editor" styleClass="navigationWidgetLabel" opaque="false"/>
+
+    <button ref="importButton" fill="none" anchor="center" marginTop="4"/>
+
+  </column>
+
+</splits>

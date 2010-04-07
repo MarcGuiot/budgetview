@@ -5,6 +5,11 @@ import java.awt.*;
 
 public abstract class TextDisplay {
 
+  public static final TextDisplay NULL = new TextDisplay(new JLabel()) {
+    public void setText(String text) {
+    }
+  };
+
   protected JComponent component;
 
   public static TextDisplay create(final JButton button) {

@@ -20,7 +20,7 @@ public class DefaultSeriesFactory {
   public static void run(GlobRepository repository) {
     DefaultSeriesFactory factory = new DefaultSeriesFactory(repository);
     factory.createSystemSeries();
-    if (AUTO_CREATE_DEFAULT_SERIES) {
+    if (AUTO_CREATE_DEFAULT_SERIES && !repository.contains(Series.TYPE, Series.USER_SERIES_MATCHER)) {
       factory.createUserSeries();
     }
   }

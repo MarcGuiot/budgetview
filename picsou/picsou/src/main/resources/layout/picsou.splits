@@ -52,7 +52,7 @@
 
     <!-- Front page information messages -->
     <style selector=".infoMessage" opaque="false"/>
-    <style selector=".infoMessageBorder" opaque="true" marginTop="10"
+    <style selector=".infoMessageBorder" opaque="true"
            border="line(notesView.introMessage.border)" background="guidingPanel.bg"/>
     <style selector=".infoMessageBorder htmlEditorPane"
            margin="1" border="empty(10)" opaque="true" background="guidingPanel.bg"
@@ -98,33 +98,42 @@
         <card name="home">
           <column>
             <horizontalSplit>
-
-              <column weightX="2">
-                <label text="$notesView.title" styleClass="blockTitle"/>
-                <panel styleClass="block">
-                  <verticalBoxes styleClass="innerBlock">
-                    <panel ref="notesView" minimumSize="(300,100)" preferredSize="(200,150)" weightY="10"/>
-                    <panel autoHideSource="newVersionMessage" styleClass="infoMessage" weightY="3">
-                      <panel styleClass="infoMessageBorder">
-                        <htmlEditorPane ref="newVersionMessage"/>
-                      </panel>
+              <verticalSplit weightX="2">
+                <column weightY="3">
+                  <panel ref="actionView"/>
+                </column>
+                <column weightY="4">
+                  <label text="$notesView.label" styleClass="blockTitle"/>
+                  <panel styleClass="block">
+                    <panel styleClass="innerBlock">
+                      <column>
+                        <panel ref="notesView" minimumSize="(200,100)" preferredSize="(200,100)"/>
+                        <panel autoHideSource="newVersionMessage" styleClass="infoMessage"
+                               border="empty(10,0,0,0)">
+                          <panel styleClass="infoMessageBorder">
+                            <htmlEditorPane ref="newVersionMessage"/>
+                          </panel>
+                        </panel>
+                        <panel autoHideSource="licenseMessage" styleClass="infoMessage"
+                               border="empty(10,0,0,0)">
+                          <panel styleClass="infoMessageBorder">
+                            <htmlEditorPane ref="licenseMessage"/>
+                          </panel>
+                        </panel>
+                      </column>
                     </panel>
-                    <panel autoHideSource="licenseMessage" styleClass="infoMessage" weightY="3">
-                      <panel styleClass="infoMessageBorder">
-                        <htmlEditorPane ref="licenseMessage"/>
-                      </panel>
-                    </panel>
-                  </verticalBoxes>
-                </panel>
-              </column>
-
-              <verticalSplit weightX="3">
-                <panel ref="accountView" minimumSize="(250,200)" preferredSize="(400,700)"/>
+                  </panel>
+                </column>
               </verticalSplit>
 
-              <column weightX="2">
-                <panel ref="navigationView" minimumSize="(150,360)" preferredSize="(200,700)"/>
+              <column weightX="3">
+                <panel ref="accountView" minimumSize="(250,200)" preferredSize="(400,700)"/>
               </column>
+              
+              <column weightX="2">
+                <panel ref="navigationView"/>
+              </column>
+
 
             </horizontalSplit>
           </column>

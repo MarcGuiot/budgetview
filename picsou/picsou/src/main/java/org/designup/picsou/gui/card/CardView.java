@@ -1,6 +1,8 @@
 package org.designup.picsou.gui.card;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.card.utils.NavigationAction;
+import org.designup.picsou.gui.card.utils.NavigationIcons;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.utils.Gui;
