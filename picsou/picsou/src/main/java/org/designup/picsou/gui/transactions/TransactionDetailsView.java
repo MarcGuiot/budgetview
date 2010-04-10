@@ -23,6 +23,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.format.utils.CompositeGlobListStringifier;
 import org.globsframework.model.format.utils.GlobListFieldStringifier;
 import org.globsframework.model.format.utils.GlobListStringFieldStringifier;
 import org.globsframework.model.utils.GlobListMatcher;
@@ -67,29 +68,22 @@ public class TransactionDetailsView extends View {
       }
     });
 
-    builder.add("transactionType",
-                addLabel(new GlobListFieldStringifier(Transaction.TRANSACTION_TYPE, "", "") {
-                  protected String stringify(Object value) {
-                    return Lang.get("transactionType." + TransactionType.getType((Integer)value).getName());
-                  }
-                }, true));
-
     builder.add("userLabel",
                 GlobHtmlView.init(Transaction.TYPE, repository, directory, new UserLabelStringifier())
                   .setAutoHideIfEmpty(true));
 
-    builder.add("bankDate",
-                addLabel(new TransactionDateListStringifier(Transaction.BANK_MONTH, Transaction.BANK_DAY), true)
-                  .setAutoHideMatcher(new DateVisibilityMatcher(Transaction.BANK_DAY, Transaction.BANK_MONTH)));
+    CompositeGlobListStringifier detailsStringifier = new CompositeGlobListStringifier(" - ");
+    detailsStringifier.add(new TransactionTypeStringifier());
+    detailsStringifier.add(descriptionService.getListStringifier(Transaction.ACCOUNT,
+                                                                 "", Lang.get("transaction.details.account.multi")));
+    detailsStringifier.add(new DateVisibilityMatcher(Transaction.BANK_DAY, Transaction.BANK_MONTH),
+                           new TransactionDateListStringifier("transaction.details.bankDate", Transaction.BANK_MONTH, Transaction.BANK_DAY));
+    detailsStringifier.add(new DateVisibilityMatcher(Transaction.BUDGET_DAY, Transaction.BUDGET_MONTH),
+                           new TransactionDateListStringifier("transaction.details.budgetDate", Transaction.BUDGET_MONTH, Transaction.BUDGET_DAY));
 
-    builder.add("budgetDate",
-                addLabel(new TransactionDateListStringifier(Transaction.BUDGET_MONTH, Transaction.BUDGET_DAY), true)
-                  .setAutoHideMatcher(new DateVisibilityMatcher(Transaction.BUDGET_DAY, Transaction.BUDGET_MONTH)));
+    builder.add("details", addLabel(detailsStringifier, true));
 
     builder.addEditor("noteField", Transaction.NOTE);
-
-    builder.addLabel("account", Transaction.ACCOUNT, 
-                     "", Lang.get("transaction.details.account.multi")).setAutoHideIfEmpty(true);
 
     builder.add("splitPanel",
                 new AutoHideOnSelectionPanel(Transaction.TYPE, GlobListMatchers.AT_LEAST_ONE,
@@ -131,10 +125,12 @@ public class TransactionDetailsView extends View {
   }
 
   private static class TransactionDateListStringifier implements GlobListStringifier {
+    private String prefix;
     private IntegerField month;
     private IntegerField day;
 
-    private TransactionDateListStringifier(IntegerField month, IntegerField day) {
+    private TransactionDateListStringifier(String prefixKey, IntegerField month, IntegerField day) {
+      this.prefix = Lang.get(prefixKey) + " ";
       this.month = month;
       this.day = day;
     }
@@ -150,9 +146,9 @@ public class TransactionDetailsView extends View {
       if (values.size() == 1) {
         int value = values.iterator().next();
         int monthId = Month.intToMonthId(value);
-        return TransactionDateStringifier.toString(Month.toYear(monthId),
-                                                   Month.toMonth(monthId),
-                                                   Month.intToDay(value));
+        return prefix + TransactionDateStringifier.toString(Month.toYear(monthId),
+                                                            Month.toMonth(monthId),
+                                                            Month.intToDay(value));
       }
       return "";
     }
@@ -218,6 +214,16 @@ public class TransactionDetailsView extends View {
 
       String firstName = names.iterator().next();
       return Lang.get("transaction.details.multilabel.similar", firstName, list.size());
+    }
+  }
+
+  private static class TransactionTypeStringifier extends GlobListFieldStringifier {
+    public TransactionTypeStringifier() {
+      super(Transaction.TRANSACTION_TYPE, "", "");
+    }
+
+    protected String stringify(Object value) {
+      return Lang.get("transactionType." + TransactionType.getType((Integer)value).getName());
     }
   }
 }

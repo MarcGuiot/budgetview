@@ -70,9 +70,9 @@ public class TransactionDetailsChecker extends GuiChecker {
   }
 
   public void checkType(TransactionType transactionType) {
-    TextBox box = getPanel().getTextBox("transactionType");
-    assertTrue(box.isVisible());
-    assertThat(box.textEquals(Lang.get("transactionType." + transactionType.getName())));
+    TextBox details = getPanel().getTextBox("details");
+    assertTrue(details.isVisible());
+    assertThat(details.textContains(Lang.get("transactionType." + transactionType.getName())));
   }
 
   public void checkTypeNotVisible() {
@@ -80,13 +80,39 @@ public class TransactionDetailsChecker extends GuiChecker {
   }
 
   public void checkBankDate(String yyyyMMdd) {
-    TextBox bankDate = getPanel().getTextBox("bankDate");
-    assertTrue(bankDate.isVisible());
-    assertThat(bankDate.textEquals(yyyyMMdd));
+    TextBox details = getPanel().getTextBox("details");
+    assertTrue(details.isVisible());
+    assertThat(details.textContains("Bank date: " + yyyyMMdd));
+  }
+
+  public void checkDetailsNotVisible() {
+    checkComponentVisible(getPanel(), JLabel.class, "details", false);
   }
 
   public void checkBankDateNotVisible() {
-    checkComponentVisible(getPanel(), JLabel.class, "bankDate", false);
+    TextBox details = getPanel().getTextBox("details");
+    assertFalse(details.textContains("Bank date"));
+  }
+
+  public void checkBudgetDate(String yyyyMMdd) {
+    TextBox details = getPanel().getTextBox("details");
+    assertTrue(details.isVisible());
+    assertThat(details.textContains("Budget date: " + yyyyMMdd));
+  }
+
+  public void checkBudgetDateNotVisible(String label) {
+    TextBox details = getPanel().getTextBox("details");
+    assertFalse(details.textContains("Budget date"));
+  }
+
+  public void checkAccount(String text) {
+    TextBox details = getPanel().getTextBox("details");
+    assertThat(details.isVisible());
+    assertThat(details.textContains(text));
+  }
+
+  public void checkNoAccountDisplayed() {
+    checkComponentVisible(getPanel(), JLabel.class, "account", false);
   }
 
   public SplitDialogChecker openSplitDialog() {
@@ -117,16 +143,6 @@ public class TransactionDetailsChecker extends GuiChecker {
 
   public void checkMessage(String message) {
     assertThat(getPanel().getTextBox().textContains(message));
-  }
-
-  public void checkAccount(String text) {
-    TextBox textBox = getPanel().getTextBox("account");
-    assertThat(textBox.textEquals(text));
-    assertThat(textBox.isVisible());
-  }
-
-  public void checkNoAccountDisplayed() {
-    checkComponentVisible(getPanel(), JLabel.class, "account", false);
   }
 
   public void shift() {
@@ -160,17 +176,5 @@ public class TransactionDetailsChecker extends GuiChecker {
     Button button = getPanel().getButton("shift");
     assertThat(button.textEquals("Cancel shift"));
     button.click();
-  }
-
-  public void checkBudgetDate(String yyyyMMdd) {
-    TextBox budgetDate = getPanel().getTextBox("budgetDate");
-    assertTrue(budgetDate.isVisible());
-    assertThat(budgetDate.textEquals(yyyyMMdd));
-
-  }
-
-  public void checkBudgetDateNotVisible(String label) {
-    TextBox budgetDate = getPanel().getTextBox("budgetDate");
-    assertFalse(budgetDate.isVisible());
   }
 }

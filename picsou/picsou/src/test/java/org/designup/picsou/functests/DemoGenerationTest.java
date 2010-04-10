@@ -63,9 +63,9 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addTransaction(third(9), -1010.00, "PRET IMMO N.3325566")
       .addTransaction(first(20), -289.75, "PRET CONSO N.6784562 F657")
       .addTransaction(second(20), -289.75, "PRET CONSO N.6784562 F657")
-      .addTransaction(first(14), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ")
-      .addTransaction(second(13), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ")
-      .addTransaction(third(15), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ")
+      .addTransaction(first(9), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR")
+      .addTransaction(second(8), second(9), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR")
+      .addTransaction(third(12), third(14), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR")
       .addTransaction(first(5), -110.70, "TRESOR PUBLIC I.R. 23225252323")
       .addTransaction(second(5), -110.70, "TRESOR PUBLIC I.R. 23225252323")
       .addTransaction(third(5), -110.70, "TRESOR PUBLIC I.R. 23225252323")
@@ -86,11 +86,11 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addTransaction(third(2), -29.90, "OPTIBOX ABT INTERNET 2523Z233")
       .addTransaction(second(15), -65.89, "EDF")
         // Envelopes
-      .addTransaction(first(2), -100.60, "HYPER M")
+      .addTransaction(first(1), first(2), -100.60, "HYPER M")
       .addTransaction(first(7), -230.30, "HYPER M")
       .addTransaction(first(15), -130.00, "HYPER M")
       .addTransaction(first(23), -200.30, "HYPER M")
-      .addTransaction(second(2), -100.60, "HYPER M")
+      .addTransaction(first(29), second(2), -100.60, "HYPER M")
       .addTransaction(second(7), -230.30, "HYPER M")
       .addTransaction(second(15), -130.00, "HYPER M")
       .addTransaction(second(23), -200.30, "HYPER M")
@@ -166,7 +166,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     categorization.setNewRecurring("PRET IMMO N.3325566", "Credit immo");
     categorization.setNewRecurring("PRET CONSO N.6784562 F657", "Credit auto");
-    categorization.setNewRecurring("VROUMBOUM ASSUR. CONTRAT 5G7878HJ", "Assurance auto");
+    categorization.setNewRecurring("VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR", "Assurance auto");
     categorization.setNewRecurring("TRESOR PUBLIC I.R. 23225252323", "Impots revenu");
     categorization.setNewRecurring("RATP NAVIGO 10/08", "Navigo");
     categorization.setNewRecurring("GROUPE SCOLAIRE R.L OCT. 2008", "Ecole");
