@@ -10,13 +10,11 @@
     <panel styleClass="block">
       <panel styleClass="innerBlock">
         <panel styleClass="innerBlockBackground" marginBottom="0">
-          <column margin="10" marginTop="0">
-
+          <verticalBoxes margin="10" marginTop="0">
             <component ref="import"/>
             <component ref="help"/>
-
             <filler fill="vertical"/>
-          </column>
+          </verticalBoxes>
         </panel>
       </panel>
     </panel>

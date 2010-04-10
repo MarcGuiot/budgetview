@@ -12,9 +12,9 @@
 
   <column opaque="false">
 
-    <htmlEditorPane ref="editor" styleClass="navigationWidgetLabel" opaque="false"/>
+    <htmlEditorPane ref="editor" styleClass="navigationWidgetLabel" opaque="false" border="empty(0,0,4,0)"/>
 
-    <button ref="importButton" fill="none" anchor="center" marginTop="4"/>
+    <button ref="importButton" fill="none" anchor="center"/>
 
   </column>
 

@@ -54,18 +54,18 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addBankAccount(30066, 10678, "00000123456", 1410.20, third(20))
         // Income
       .addTransaction(first(28), 1760.50, "WORLDCO")
-      .addTransaction(first(29), 1312.80, "BIGCORP")
+      .addTransaction(first(29), 1312.80, "BIGCORP PAIE " + first(29))
       .addTransaction(second(28), 1760.50, "WORLDCO")
-      .addTransaction(second(29), 1312.80, "BIGCORP")
+      .addTransaction(second(28), 1312.80, "BIGCORP PAIE " + second(28))
         // Fixed
       .addTransaction(first(9), -1010.00, "PRET IMMO N.3325566")
       .addTransaction(second(9), -1010.00, "PRET IMMO N.3325566")
       .addTransaction(third(9), -1010.00, "PRET IMMO N.3325566")
       .addTransaction(first(20), -289.75, "PRET CONSO N.6784562 F657")
       .addTransaction(second(20), -289.75, "PRET CONSO N.6784562 F657")
-      .addTransaction(first(14), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ")
-      .addTransaction(second(13), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ")
-      .addTransaction(third(15), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ")
+      .addTransaction(first(9), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR")
+      .addTransaction(second(8), second(9), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR")
+      .addTransaction(third(12), third(14), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR")
       .addTransaction(first(5), -110.70, "TRESOR PUBLIC I.R. 23225252323")
       .addTransaction(second(5), -110.70, "TRESOR PUBLIC I.R. 23225252323")
       .addTransaction(third(5), -110.70, "TRESOR PUBLIC I.R. 23225252323")
@@ -78,19 +78,19 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addTransaction(first(11), -25.50, "TVSAT")
       .addTransaction(second(11), -25.50, "TVSAT")
       .addTransaction(third(12), -25.50, "TVSAT")
-      .addTransaction(first(8), -45.30, "RED TELECOMS")
-      .addTransaction(second(8), -45.30, "RED TELECOMS")
-      .addTransaction(third(10), -66.10, "RED TELECOMS")
-      .addTransaction(first(3), -29.90, "OPTIBOX")
-      .addTransaction(second(2), -29.90, "OPTIBOX")
-      .addTransaction(third(2), -29.90, "OPTIBOX")
+      .addTransaction(first(8), -45.30, "RED TELECOMS MOBILE")
+      .addTransaction(second(8), -45.30, "RED TELECOMS MOBILE")
+      .addTransaction(third(10), -66.10, "RED TELECOMS MOBILE")
+      .addTransaction(first(3), -29.90, "OPTIBOX ABT INTERNET 2523Z233")
+      .addTransaction(second(2), -29.90, "OPTIBOX ABT INTERNET 2523Z233")
+      .addTransaction(third(2), -29.90, "OPTIBOX ABT INTERNET 2523Z233")
       .addTransaction(second(15), -65.89, "EDF")
         // Envelopes
-      .addTransaction(first(2), -100.60, "HYPER M")
+      .addTransaction(first(1), first(2), -100.60, "HYPER M")
       .addTransaction(first(7), -230.30, "HYPER M")
       .addTransaction(first(15), -130.00, "HYPER M")
       .addTransaction(first(23), -200.30, "HYPER M")
-      .addTransaction(second(2), -100.60, "HYPER M")
+      .addTransaction(first(29), second(2), -100.60, "HYPER M")
       .addTransaction(second(7), -230.30, "HYPER M")
       .addTransaction(second(15), -130.00, "HYPER M")
       .addTransaction(second(23), -200.30, "HYPER M")
@@ -122,7 +122,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addTransaction(third(7), -75.00, "PARIS MODE CENTRE")
       .addTransaction(first(19), -13.50, "ZINGMAN")
       .addTransaction(second(19), -11.50, "ZINGMAN")
-      .addTransaction(third(9), -6.50, "DAILY MAGS")
+      .addTransaction(third(9), -6.50, "DAILY MAGAZINES")
       .addTransaction(first(7), -57.00, "CENTRE MEDICAL DES FLORETTES")
       .addTransaction(first(9), -16.80, "PHARMACIE DES 4 CHEMINS")
       .addTransaction(second(5), 7.80, "REMB. MUTUELLE SANTEPLUS")
@@ -136,9 +136,9 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
         // EXTRAS
       .addTransaction(second(28), -680.50, "PLOMBERIE 24/7")
         // SAVINGS
-      .addTransaction(first(5), -200.00, "VIRT MENS. LIVRET")
-      .addTransaction(second(3), -200.00, "VIRT MENS. LIVRET")
-      .addTransaction(third(20), -200.00, "VIRT MENS. LIVRET")
+      .addTransaction(first(5), -200.00, "VIRT MENS. LIVRET A")
+      .addTransaction(second(3), -200.00, "VIRT MENS. LIVRET A")
+      .addTransaction(third(20), -200.00, "VIRT MENS. LIVRET A")
       .save();
 
     operations.importOfxFile(OFX_PATH);
@@ -161,18 +161,19 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
 
     categorization.setNewIncome("WORLDCO", "Salaire Marie");
-    categorization.setNewIncome("BIGCORP", "Salaire Eric");
+    categorization.setNewIncome("BIGCORP PAIE " + first(29), "Salaire Eric");
+    categorization.setNewIncome("BIGCORP PAIE " + second(28), "Salaire Eric");
 
     categorization.setNewRecurring("PRET IMMO N.3325566", "Credit immo");
     categorization.setNewRecurring("PRET CONSO N.6784562 F657", "Credit auto");
-    categorization.setNewRecurring("VROUMBOUM ASSUR. CONTRAT 5G7878HJ", "Assurance auto");
+    categorization.setNewRecurring("VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR", "Assurance auto");
     categorization.setNewRecurring("TRESOR PUBLIC I.R. 23225252323", "Impots revenu");
     categorization.setNewRecurring("RATP NAVIGO 10/08", "Navigo");
     categorization.setNewRecurring("GROUPE SCOLAIRE R.L OCT. 2008", "Ecole");
     categorization.setRecurring("GROUPE SCOLAIRE R.L NOV. 2008", "Ecole");
     categorization.setNewRecurring("TVSAT", "TV Sat");
-    categorization.setNewRecurring("RED TELECOMS", "Tel. mobile");
-    categorization.setNewRecurring("OPTIBOX", "Internet");
+    categorization.setNewRecurring("RED TELECOMS MOBILE", "Tel. mobile");
+    categorization.setNewRecurring("OPTIBOX ABT INTERNET 2523Z233", "Internet");
     categorization.setNewRecurring("EDF", "EDF");
 
     categorization.setNewEnvelope("HYPER M", "Courses");
@@ -204,7 +205,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
 
-    categorization.setNewSavings("VIRT MENS. LIVRET", "Virt. auto livret", "Main accounts", "Livret");
+    categorization.setNewSavings("VIRT MENS. LIVRET A", "Virt. auto livret", "Main accounts", "Livret");
 
     categorization.getCompletionGauge().hideProgressMessage();
 

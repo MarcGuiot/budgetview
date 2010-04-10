@@ -1,6 +1,5 @@
 package org.designup.picsou.functests.utils;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.designup.picsou.exporter.ofx.OfxExporter;
 import org.designup.picsou.functests.checkers.ImportChecker;
@@ -8,8 +7,10 @@ import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.model.*;
 import static org.designup.picsou.model.Transaction.*;
 import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.*;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.model.Key;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
@@ -107,37 +108,8 @@ public class OfxBuilder {
     return doAddTransaction(userDate, bankDate, amount, label, null, null);
   }
 
-  public OfxBuilder addTransaction(String yyyyMMdd, double amount, String label, String category) {
-    return doAddTransaction(yyyyMMdd, null, amount, label, null, null);
-  }
-
   public OfxBuilder addTransactionWithNote(String yyyyMMdd, double amount, String label, String note) {
     return doAddTransaction(yyyyMMdd, null, amount, label, note, null);
-  }
-
-  public OfxBuilder addTransactionWithNote(String yyyyMMdd, double amount, String label, String category, String note) {
-    return doAddTransaction(yyyyMMdd, null, amount, label, note, null);
-  }
-
-  public OfxBuilder addDispensableTransaction(String date, double amount, String label) {
-    return doAddTransaction(date, null, amount, label, null, null);
-  }
-
-  public OfxBuilder splitTransaction(String date, String label, double amount, String note, String category) {
-    Date parsedDate = Dates.parse(date);
-
-    GlobList all = repository.getAll(Transaction.TYPE,
-                                     and(fieldEquals(Transaction.DAY, Month.getDay(parsedDate)),
-                                         fieldEquals(Transaction.MONTH, Month.getMonthId(parsedDate)),
-                                         fieldEquals(Transaction.LABEL, label),
-                                         isNull(Transaction.SPLIT_SOURCE)));
-    Assert.assertEquals("transaction not found", 1, all.size());
-    Glob parent = all.get(0);
-    doAddTransaction(date, null, amount, label, note,
-                     parent.get(Transaction.ID));
-
-    repository.update(parent.getKey(), Transaction.SPLIT, Boolean.TRUE);
-    return this;
   }
 
   private OfxBuilder doAddTransaction(String userDate, String bankDate, double amount, String label, String note,

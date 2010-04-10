@@ -51,38 +51,21 @@
 
       <card name="selection">
         <verticalBoxes>
-          <htmlEditorPane ref="userLabel"/>
+          <htmlEditorPane ref="userLabel" weightY="0.1"/>
 
           <htmlEditorPane ref="originalLabel"
                     foreground="transaction.detail.formLabel" font="-,plain,10"/>
 
-          <row marginTop="2">
-            <label ref="transactionType" styleClass="formLabel" marginRight="0"/>
-            <label text=" - " styleClass="formLabel" autoHideSource="bankDate" marginRight="0"/>
-            <label text="$transaction.details.bankDate" styleClass="formLabel"
-                   autoHideSource="bankDate" marginRight="3"/>
-            <label ref="bankDate" styleClass="formLabel"/>
-
-            <label text=" - " styleClass="formLabel" autoHideSource="budgetDate" marginRight="0"/>
-            <label text="$transaction.details.budgetDate" styleClass="formLabel"
-                   autoHideSource="budgetDate" marginRight="3"/>
-            <label ref="budgetDate" styleClass="formLabel"/>
-            <filler fill="horizontal"/>
-          </row>
-
-          <row marginTop="5">
-            <label ref="account" styleClass="formLabel"/>
-            <filler fill="horizontal"/>
-          </row>
+          <label ref="details" styleClass="formLabel" horizontalAlignment="left"/>
 
           <row marginTop="5">
             <label text="$transaction.details.note" styleClass="formLabel"/>
             <textField ref="noteField"/>
           </row>
 
-          <filler fill="vertical" weightY="10.0"/>
+          <filler fill="vertical" weightY="1.0"/>
 
-          <row border="empty(10,0,0,0)">
+          <row border="empty(5,0,0,0)">
             <label text="$categorization.series.title" styleClass="header"/>
             <filler fill="horizontal"/>
             <button name="shift" action="shift" autoHideIfDisabled="true"

@@ -58,6 +58,7 @@ public class ImportWidget extends AbstractNavigationWidget {
     editor.setText(Lang.get(hasTransactions ? "importWidget.text" : "importWidget.initial"));
     editorNode.applyStyle(hasTransactions ? "normalText" : "highlightedText");
     importButton.setVisible(!hasTransactions);
+    GuiUtils.revalidate(importButton);
     setHighlighted(!hasTransactions);
   }
 }

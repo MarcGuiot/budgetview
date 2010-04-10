@@ -1,14 +1,20 @@
 package org.globsframework.model.format;
 
 import org.globsframework.metamodel.fields.DoubleField;
+import org.globsframework.metamodel.Field;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.utils.GlobListFieldStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 
 import java.text.DecimalFormat;
 
 public class GlobListStringifiers {
+
+  public static GlobListStringifier fieldValue(Field field, String textForEmptySelection, String textForMultiSelection) {
+    return new GlobListFieldStringifier(field, textForEmptySelection, textForMultiSelection);
+  }
 
   public static GlobListStringifier singularOrPlural(final String emptyText,
                                                      final String singularText,

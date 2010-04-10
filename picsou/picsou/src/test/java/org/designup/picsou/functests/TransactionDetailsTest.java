@@ -213,7 +213,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .add("10/06/2008", TransactionType.CREDIT_CARD, "AUCHAN2", "", -10.00)
       .check();
 
-    transactionDetails.checkBankDateNotVisible();
+    transactionDetails.checkDetailsNotVisible();
 
     categorization.selectTableRow(0);
     transactionDetails.checkBankDate("15/06/2008");
