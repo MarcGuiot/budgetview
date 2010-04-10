@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.AccountEditionChecker;
 import org.designup.picsou.functests.checkers.BalanceChecker;
 import org.designup.picsou.functests.checkers.PositionChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
@@ -93,7 +94,7 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
       .changeThreshold(-200)
       .checkOpenSavings()
       .close();
-    
+
     views.selectHome();
     savingsAccounts.createSavingsAccount("ING", 100.);
 
@@ -104,6 +105,47 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
       .changeThreshold(-100)
       .checkBalanceZeroWithSavings()
       .close();
+  }
+
+  public void testWithSavings() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/20", -50.00, "ed")
+      .addTransaction("2008/07/02", -40.00, "ed")
+      .addTransaction("2008/07/10", -200.00, "epargne")
+      .addTransaction("2008/07/10", -200.00, "loyer")
+      .addTransaction("2008/07/20", 500, "revenu")
+      .addTransaction("2008/08/02", -25.00, "ed")
+      .addTransaction("2008/08/10", -200.00, "epargne")
+      .addTransaction("2008/08/10", -200.00, "loyer")
+      .addTransaction("2008/08/20", 500, "revenu")
+      .load();
+
+    views.selectCategorization();
+    AccountEditionChecker account = categorization
+      .setNewRecurring("loyer", "loyer")
+      .setNewEnvelope("ed", "courses", 300.)
+      .setNewIncome("revenu", "revenue")
+      .selectSavings()
+      .createSavingsAccount();
+    account.setAccountName("ING")
+      .selectBank("Autre")
+      .validate();
+
+    categorization.setSavings("epargne", "To account ING");
+
+    timeline.selectMonth("2008/08");
+    views.selectBudget();
+    PositionChecker position_08 = budgetView.getSummary().openPositionPanel();
+    position_08.checkPresent(0, 0, -275, 0, -275);
+
+    views.selectCategorization();
+    categorization.showSelectedMonthsOnly();
+    categorization.selectTransaction("epargne")
+      .selectUncategorized().setUncategorized();
+    views.selectBudget();
+    position_08 = budgetView.getSummary().openPositionPanel();
+    position_08.checkPresent(0, 0, -275, -200, -475);
 
   }
 }

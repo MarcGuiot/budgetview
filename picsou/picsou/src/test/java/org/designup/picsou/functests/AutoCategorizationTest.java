@@ -237,6 +237,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .load(1, 0);
 
     categorization
+      .unselectAllTransactions()
       .selectTransaction("2_Auchan")
       .checkToCategorize()
       .selectEnvelopes()

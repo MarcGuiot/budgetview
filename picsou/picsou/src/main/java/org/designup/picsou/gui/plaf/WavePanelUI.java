@@ -71,7 +71,7 @@ public class WavePanelUI extends BasicPanelUI {
         g2 = image.createGraphics();
       }
     }
-    catch (Exception e) {
+    catch (Throwable e) {
       image = null;
       g2 = (Graphics2D)g;
     }
