@@ -23,7 +23,7 @@
       </panel>
       <htmlEditorPane ref="noSeriesMessage" border="empty(10)" hyperlinkListener="hyperlinkHandler"/>
       <radioButton ref="invisibleToggle" visible="false"/>
-      <scrollPane weightY="100">
+      <scrollPane verticalUnitIncrement="15" weightY="100">
         <repeat ref="seriesRepeat" layout="wrappedColumn" margin="10">
           <column name="seriesBlock">
             <row>
