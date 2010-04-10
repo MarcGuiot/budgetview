@@ -2,6 +2,7 @@ package org.globsframework.model.utils;
 
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Glob;
 
 public class GlobListMatchers {
   public static final GlobListMatcher ALL = new GlobListMatcher() {
@@ -68,6 +69,14 @@ public class GlobListMatchers {
     return new GlobListMatcher() {
       public boolean matches(GlobList list, GlobRepository repository) {
         return list.size() > number;
+      }
+    };
+  }
+
+  public static GlobListMatcher contains(final Glob glob) {
+    return new GlobListMatcher() {
+      public boolean matches(GlobList list, GlobRepository repository) {
+        return list.contains(glob);
       }
     };
   }
