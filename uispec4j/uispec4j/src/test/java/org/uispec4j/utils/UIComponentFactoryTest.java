@@ -1,20 +1,18 @@
 package org.uispec4j.utils;
 
+import org.uispec4j.Key;
 import org.uispec4j.UIComponent;
 import org.uispec4j.assertion.Assertion;
+import org.uispec4j.extension.JCountingButton;
 
-import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class UIComponentFactoryTest extends UnitTestCase {
 
   public void testInitWithDummyComponent() throws Exception {
-    Map result = new HashMap();
-    UIComponentFactory.fillSwingToUISpecMap(result, new Class[]{ComponentWithSwingClassesField.class});
-    assertEquals(ComponentWithSwingClassesField.class, result.get(JButton.class));
+    UIComponentFactory.register(ComponentWithSwingClassesField.class);
+    UIComponent uiComponent = UIComponentFactory.createUIComponent(new JCountingButton(""));
+    assertEquals(ComponentWithSwingClassesField.class, uiComponent.getClass());
   }
 
   public void testInitErrorForClassWithoutSwingClassesField() throws Exception {
@@ -69,9 +67,9 @@ public class UIComponentFactoryTest extends UnitTestCase {
                    "Class '" + String.class + "' should implement " + UIComponent.class);
   }
 
-  private void checkInitError(Class swingClass, String message) {
+  private void checkInitError(Class uiClass, String message) {
     try {
-      UIComponentFactory.initUIComponentClasses(new Class[]{swingClass}, new ArrayList());
+      UIComponentFactory.register(uiClass);
       fail();
     }
     catch (RuntimeException e) {
@@ -80,8 +78,11 @@ public class UIComponentFactoryTest extends UnitTestCase {
   }
 
   private static class ComponentWithSwingClassesField extends DummyUIComponent {
-    public static Class[] SWING_CLASSES = {JButton.class};
+    public static Class[] SWING_CLASSES = {JCountingButton.class};
     public static String TYPE_NAME = "Type";
+
+    public ComponentWithSwingClassesField(JCountingButton button) {
+    }
   }
 
   private static class ComponentWithoutSwingClassesField extends DummyUIComponent {
@@ -140,7 +141,7 @@ public class UIComponentFactoryTest extends UnitTestCase {
 
     public Assertion isVisible() {
       return new Assertion() {
-        public void check() throws Exception {
+        public void check() {
         }
       };
     }
@@ -155,6 +156,18 @@ public class UIComponentFactoryTest extends UnitTestCase {
 
     public String getLabel() {
       return null;
+    }
+
+    public DummyUIComponent typeKey(Key key) {
+      return this;
+    }
+
+    public UIComponent pressKey(Key key) {
+      return this;
+    }
+
+    public DummyUIComponent releaseKey(Key key) {
+      return this;
     }
   }
 }

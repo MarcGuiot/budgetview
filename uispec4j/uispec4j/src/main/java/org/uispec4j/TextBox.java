@@ -36,15 +36,6 @@ public class TextBox extends AbstractSwingUIComponent {
   }
 
   /**
-   * Simulates pressing a key while the focus is in the text box.<br>
-   * Warning: the default cursor position is 0.
-   */
-  public TextBox pressKey(Key key) {
-    handler.pressKey(key);
-    return this;
-  }
-
-  /**
    * Replaces the text box contents and simulates pressing the Enter key.
    */
   public void setText(String text) {
@@ -121,7 +112,7 @@ public class TextBox extends AbstractSwingUIComponent {
    * This method is useful for checking key information in the displayed string,
    * without being too dependent on the actual wording.
    */
-  public Assertion textContains(final String[] orderedTexts) {
+  public Assertion textContains(final String... orderedTexts) {
     return new Assertion() {
       public void check() {
         String actual = handler.getText();
@@ -222,8 +213,6 @@ public class TextBox extends AbstractSwingUIComponent {
     Assertion isEditable();
 
     void clickOnHyperlink(String link);
-
-    void pressKey(Key key);
 
     Assertion iconEquals(Icon icon);
 

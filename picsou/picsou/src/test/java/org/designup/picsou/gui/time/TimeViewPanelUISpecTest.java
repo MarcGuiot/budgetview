@@ -91,7 +91,7 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
 
   private void checkSelectedIsVisible() {
     UISpecAssert.assertThat(new Assertion() {
-      public void check() throws Exception {
+      public void check() {
         Selectable selectable = getLastSelected();
         assertTrue(selectable.getVisibility() == Selectable.Visibility.FULLY);
       }
@@ -100,7 +100,7 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
 
   private void checkSelectedIsNoInvisible() {
     UISpecAssert.assertThat(new Assertion() {
-      public void check() throws Exception {
+      public void check() {
         Selectable selectable = getLastSelected();
         assertTrue(selectable.getVisibility() != Selectable.Visibility.NOT_VISIBLE);
       }

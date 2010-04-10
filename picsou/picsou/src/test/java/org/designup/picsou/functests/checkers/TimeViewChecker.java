@@ -48,7 +48,7 @@ public class TimeViewChecker extends GuiChecker {
 
   public void checkSelection(final String... yyyymm) {
     UISpecAssert.assertThat(new Assertion() {
-      public void check() throws Exception {
+      public void check() {
         Set<Selectable> list = timeViewPanel.getCurrentlySelectedToUpdate();
         GlobList selectedMonths = new GlobList();
         for (Selectable selectable : list) {

@@ -5,7 +5,8 @@ import org.uispec4j.assertion.testlibrairies.AssertAdapter;
 import org.uispec4j.finder.FinderUtils;
 import org.uispec4j.finder.StringMatcher;
 import org.uispec4j.utils.ArrayUtils;
-import org.uispec4j.utils.KeyUtils;
+import org.uispec4j.utils.ColorUtils;
+import org.uispec4j.utils.ComponentColorChecker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,7 +70,7 @@ public class ListBox extends AbstractSwingUIComponent {
 
   public Assertion contains(final String... items) {
     return new Assertion() {
-      public void check() throws Exception {
+      public void check() {
         List content = Arrays.asList(getContent());
         for (String item : items) {
           if (!content.contains(item)) {
@@ -96,7 +97,7 @@ public class ListBox extends AbstractSwingUIComponent {
       indices[i] = getIndexForString(values[i]);
       if (indices[i] == -1) {
         AssertAdapter.fail("Item '" + values[i] + "' not found in " +
-                            ArrayUtils.toString(getContent()));
+                           ArrayUtils.toString(getContent()));
       }
     }
     selectIndices(indices);
@@ -112,6 +113,49 @@ public class ListBox extends AbstractSwingUIComponent {
 
   public void doubleClick() {
     Mouse.doubleClick(this);
+  }
+
+  public void click(int row) {
+    click(row, Key.Modifier.NONE);
+  }
+
+  public void click(int row, Key.Modifier modifier) {
+    Rectangle rect = jList.getCellBounds(row, row);
+    Mouse.doClickInRectangle(this, rect, false, modifier);
+  }
+
+  public void rightClick(int row) {
+    Rectangle rect = jList.getCellBounds(row, row);
+    Mouse.doClickInRectangle(this, rect, true, Key.Modifier.NONE);
+  }
+
+  public void doubleClick(int row) {
+    Rectangle rect = jList.getCellBounds(row, row);
+    Mouse.doDoubleClickInRectangle(jList, rect);
+  }
+
+  public Trigger triggerClick(final int row, final Key.Modifier modifier) {
+    return new Trigger() {
+      public void run() throws Exception {
+        click(row, modifier);
+      }
+    };
+  }
+
+  public Trigger triggerRightClick(final int row) {
+    return new Trigger() {
+      public void run() throws Exception {
+        rightClick(row);
+      }
+    };
+  }
+
+  public Trigger triggerDoubleClick(final int row) {
+    return new Trigger() {
+      public void run() throws Exception {
+        doubleClick(row);
+      }
+    };
   }
 
   public Assertion selectionIsEmpty() {
@@ -133,8 +177,66 @@ public class ListBox extends AbstractSwingUIComponent {
     };
   }
 
-  public void pressKey(Key key) {
-    KeyUtils.pressKey(jList, key);
+  /**
+   * Checks the foreground color of the table cells using either Color or String objects
+   *
+   * @see <a href="http://www.uispec4j.org/usingcolors.html">Using colors</a>
+   */
+  public Assertion foregroundEquals(final Object[] colors) {
+    return new Assertion() {
+      public void check() {
+        checkColors(colors, ComponentColorChecker.FOREGROUND);
+      }
+    };
+  }
+
+  public Assertion foregroundNear(final int index, final Object expected) {
+    return new Assertion() {
+      public void check() {
+        final Component component = getSwingRendererComponentAt(index);
+        ColorUtils.assertSimilar("Error at (" + index + ")",
+                                 expected, component.getForeground());
+      }
+    };
+  }
+
+  public Assertion backgroundNear(final int index, final Object expected) {
+    return new Assertion() {
+      public void check() {
+        final Component component = getSwingRendererComponentAt(index);
+        ColorUtils.assertSimilar("Error at (" + index + ")",
+                                 expected, component.getBackground());
+      }
+    };
+  }
+
+  /**
+   * Checks the background color of the List cells using either Color or String objects
+   *
+   * @see <a href="http://www.uispec4j.org/usingcolors.html">Using colors</a>
+   */
+  public Assertion backgroundEquals(final Object[] colors) {
+    return new Assertion() {
+      public void check() {
+        checkColors(colors, ComponentColorChecker.BACKGROUND);
+      }
+    };
+  }
+
+  public Component getSwingRendererComponentAt(int index) {
+    ListCellRenderer cellRenderer = jList.getCellRenderer();
+    return cellRenderer.getListCellRendererComponent(jList,
+                                                     jList.getModel().getElementAt(index),
+                                                     index,
+                                                     jList.isSelectedIndex(index),
+                                                     false);
+  }
+
+  private void checkColors(Object[] colors, ComponentColorChecker colorChecker) {
+    AssertAdapter.assertEquals(colors.length, jList.getModel().getSize());
+    for (int index = 0; index < colors.length; index++) {
+      colorChecker.check("Error at index " + index, colors[index], getSwingRendererComponentAt(index));
+    }
   }
 
   private String[] getContent() {

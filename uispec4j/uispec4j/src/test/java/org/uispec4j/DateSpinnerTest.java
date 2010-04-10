@@ -1,30 +1,30 @@
 package org.uispec4j;
 
-import org.uispec4j.utils.DateUtils;
+import static org.uispec4j.DummySpinner.*;
 
 import javax.swing.*;
 import java.util.Calendar;
-import java.util.Date;
 
 public class DateSpinnerTest extends SpinnerTestCase {
   private DateSpinner dateSpinner;
-  private Date currentDate;
+  private SpinnerDateModel model;
+
+  public DateSpinnerTest() throws Exception {
+    model = DummySpinner.dateModel();
+  }
 
   protected void setUp() throws Exception {
     super.setUp();
-    dateSpinner = (DateSpinner) spinner;
+    dateSpinner = (DateSpinner)spinner;
   }
 
   public String getText() {
-    return ((JSpinner.DateEditor) dateSpinner.getAwtComponent().getEditor())
-      .getFormat().format(currentDate);
+    return ((JSpinner.DateEditor)dateSpinner.getAwtComponent().getEditor())
+      .getFormat().format(model.getDate());
   }
 
   protected SpinnerModel createSpinnerModel() throws Exception {
-    Date startDate = DateUtils.getDate("1964.11.23 19:55");
-    currentDate = DateUtils.getDate("1974.11.23 19:55");
-    Date endDate = DateUtils.getDate("1984.11.23 19:55");
-    return new SpinnerDateModel(currentDate, startDate, endDate, Calendar.MONTH);
+    return model;
   }
 
   protected Spinner createSpinner(JSpinner jSpinner) {
@@ -32,11 +32,11 @@ public class DateSpinnerTest extends SpinnerTestCase {
   }
 
   public void testStartAndEndDate() throws Exception {
-    assertTrue(dateSpinner.startDateEquals("1964.11.23 19:55"));
-    assertTrue(dateSpinner.endDateEquals("1984.11.23 19:55"));
+    assertTrue(dateSpinner.startDateEquals(START_DATE));
+    assertTrue(dateSpinner.endDateEquals(END_DATE));
 
-    assertFalse(dateSpinner.startDateEquals("1964.11.23 19:56"));
-    assertFalse(dateSpinner.endDateEquals("1964.11.23 19:56"));
+    assertFalse(dateSpinner.startDateEquals(OTHER_DATE));
+    assertFalse(dateSpinner.endDateEquals(OTHER_DATE));
   }
 
   public void testCalendarFielsEquals() throws Exception {

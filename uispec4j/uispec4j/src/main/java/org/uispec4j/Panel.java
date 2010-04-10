@@ -1,6 +1,5 @@
 package org.uispec4j;
 
-import junit.framework.AssertionFailedError;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.testlibrairies.AssertAdapter;
 import org.uispec4j.finder.ComponentFinder;
@@ -415,6 +414,7 @@ public class Panel extends AbstractUIComponent {
 
   private static <T extends UIComponent> T getComponent(ComponentFinder finder, Class<T> uiComponentClass, Class[] swingClasses, String componentName)
     throws ComponentAmbiguityException, ItemNotFoundException {
+    UIComponentFactory.register(uiComponentClass);
     String typeName = UIComponentAnalyzer.getTypeName(uiComponentClass);
     Component swingComponent = finder.getComponent(componentName, swingClasses, typeName);
     return (T)UIComponentFactory.createUIComponent(swingComponent);
@@ -423,6 +423,7 @@ public class Panel extends AbstractUIComponent {
   private static <T extends UIComponent> T findComponent(ComponentFinder finder,
                                                          Class<T> uiComponentClass, String name)
     throws ComponentAmbiguityException {
+    UIComponentFactory.register(uiComponentClass);
     Class[] swingClasses = UIComponentAnalyzer.getSwingClasses(uiComponentClass);
     String typeName = UIComponentAnalyzer.getTypeName(uiComponentClass);
     Component swingComponent = finder.findComponent(name, swingClasses, typeName);
@@ -435,6 +436,7 @@ public class Panel extends AbstractUIComponent {
   }
 
   private static UIComponent[] getComponents(ComponentFinder finder, Class uiComponentClass, String name) {
+    UIComponentFactory.register(uiComponentClass);
     Class[] swingClasses = UIComponentAnalyzer.getSwingClasses(uiComponentClass);
     Component[] swingComponents = finder.getComponents(name, swingClasses);
     return UIComponentFactory.createUIComponents(swingComponents);
@@ -442,7 +444,7 @@ public class Panel extends AbstractUIComponent {
 
   public <T extends UIComponent> Assertion containsUIComponent(final Class<T> uicomponentClass) {
     return new Assertion() {
-      public void check() throws Exception {
+      public void check() {
         UIComponent[] uiComponents = getUIComponents(uicomponentClass);
         AssertAdapter.assertTrue(uiComponents.length > 0);
       }
@@ -451,7 +453,7 @@ public class Panel extends AbstractUIComponent {
 
   public <T extends Component> Assertion containsSwingComponent(final Class<T> swingComponentClass) {
     return new Assertion() {
-      public void check() throws Exception {
+      public void check() {
         Component[] swingComponents = getSwingComponents(swingComponentClass);
         AssertAdapter.assertTrue(swingComponents.length > 0);
       }
@@ -460,7 +462,7 @@ public class Panel extends AbstractUIComponent {
 
   public <T extends UIComponent> Assertion containsUIComponent(final Class<T> uiComponentClass, final String name) {
     return new Assertion() {
-      public void check() throws Exception {
+      public void check() {
         UIComponent[] uiComponents = getUIComponents(uiComponentClass, name);
         AssertAdapter.assertTrue(uiComponents.length > 0);
       }
@@ -469,7 +471,7 @@ public class Panel extends AbstractUIComponent {
 
   public <T extends Component> Assertion containsSwingComponent(final Class<T> swingComponentClass, final String name) {
     return new Assertion() {
-      public void check() throws Exception {
+      public void check() {
         Component[] swingComponents = getSwingComponents(swingComponentClass, name);
         AssertAdapter.assertTrue(swingComponents.length > 0);
       }
@@ -478,7 +480,7 @@ public class Panel extends AbstractUIComponent {
 
   public Assertion containsComponent(final ComponentMatcher matcher) {
     return new Assertion() {
-      public void check() throws Exception {
+      public void check() {
         AssertAdapter.assertTrue(getSwingComponents(matcher).length > 0);
       }
     };
@@ -491,10 +493,10 @@ public class Panel extends AbstractUIComponent {
    */
   public Assertion containsLabel(final String text) {
     return new Assertion() {
-      public void check() throws Exception {
+      public void check() {
         Component[] result = getSwingComponents(and(fromClass(JLabel.class), displayedNameSubstring(text)));
         if (result.length == 0) {
-          throw new AssertionFailedError("No label found with text '" + text + "'");
+          AssertAdapter.fail("No label found with text '" + text + "'");
         }
       }
     };

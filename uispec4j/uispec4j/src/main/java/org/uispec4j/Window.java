@@ -56,7 +56,7 @@ public class Window extends Panel {
 
   public Assertion containsMenuBar() {
     return new Assertion() {
-      public void check() throws Exception {
+      public void check() {
         if (adapter.getJMenuBar() == null) {
           AssertAdapter.fail("No menuBar available");
         }
@@ -75,7 +75,7 @@ public class Window extends Panel {
   public Assertion titleEquals(final String expected) {
     return new Assertion() {
       public void check() {
-        AssertAdapter.assertEquals(expected, getTitle());
+        AssertAdapter.assertEquals("Unexpected title -", expected, getTitle());
       }
     };
   }

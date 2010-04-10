@@ -262,7 +262,7 @@ public class AccountEditionChecker extends GuiChecker {
   public AccountEditionChecker cancelStartDate() {
     dialog.getButton("removeStartDate").click();
     assertThat(new Assertion() {
-      public void check() throws Exception {
+      public void check() {
         Component[] swingComponents = dialog.getSwingComponents(JXDatePicker.class, "startDatePicker");
         Assert.assertEquals(1, swingComponents.length);
         Assert.assertNull(((JXDatePicker)swingComponents[0]).getDate());
@@ -274,7 +274,7 @@ public class AccountEditionChecker extends GuiChecker {
   public AccountEditionChecker cancelEndDate() {
     dialog.getButton("removeEndDate").click();
     assertThat(new Assertion() {
-      public void check() throws Exception {
+      public void check() {
         Component[] swingComponents = dialog.getSwingComponents(JXDatePicker.class, "endDatePicker");
         Assert.assertEquals(1, swingComponents.length);
         Assert.assertNull(((JXDatePicker)swingComponents[0]).getDate());

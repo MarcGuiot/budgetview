@@ -14,7 +14,7 @@ public class NumberSpinner extends Spinner {
   public NumberSpinner(JSpinner jSpinner) {
     super(jSpinner);
     SpinnerModel model = jSpinner.getModel();
-    if (!model.getClass().isAssignableFrom(SpinnerNumberModel.class)) {
+    if (!SpinnerNumberModel.class.isInstance(model)) {
       throw new ItemNotFoundException("Expected JSpinner using a SpinnerNumberModel");
     }
     this.model = (SpinnerNumberModel)model;
@@ -25,7 +25,7 @@ public class NumberSpinner extends Spinner {
    */
   public Assertion minEquals(final int expectedMin) {
     return new Assertion() {
-      public void check() throws Exception {
+      public void check() {
         AssertAdapter.assertEquals(new Integer(expectedMin), model.getMinimum());
       }
     };
@@ -36,7 +36,7 @@ public class NumberSpinner extends Spinner {
    */
   public Assertion maxEquals(final int expectedMax) {
     return new Assertion() {
-      public void check() throws Exception {
+      public void check() {
         AssertAdapter.assertEquals(new Integer(expectedMax), model.getMaximum());
       }
     };
@@ -47,7 +47,7 @@ public class NumberSpinner extends Spinner {
    */
   public Assertion stepSizeEquals(final int expectedStepSize) {
     return new Assertion() {
-      public void check() throws Exception {
+      public void check() {
         AssertAdapter.assertEquals(new Integer(expectedStepSize), model.getStepSize());
       }
     };

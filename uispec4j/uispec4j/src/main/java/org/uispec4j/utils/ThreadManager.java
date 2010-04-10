@@ -26,7 +26,6 @@ public class ThreadManager {
         try {
           synchronized (this) {
             if (runnable == null) {
-              setName("nothing to run : wait");
               wait();
             }
           }

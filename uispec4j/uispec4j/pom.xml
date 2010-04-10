@@ -1,18 +1,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <!-- POM's layout - http://www.javaworld.com/javaworld/jw-05-2006/jw-0529-maven.html -->
-  <!--http://maven.apache.org/plugins/maven-release-plugin/-->
-  <!--http://maven.apache.org/guides/index.html-->
+<!--
+ ~ Creating an ibiblio upload bundle:
+ ~
+ ~  Main instructions here: http://maven.apache.org/guides/mini/guide-ibiblio-upload.html
+ ~
+ - mvn clean install
+ ~ mvn source:jar javadoc:jar repository:bundle-create -Dmaven.test.skip=true
+ ~ mv target/uispec4j-<version>-bundle.jar target/uispec4j-<version>-<jdk15/jdk16>-bundle.jar (this step is weird, but necessary)
+ ~
+ ~ When you are all done, open a JIRA upload request as was done here: http://jira.codehaus.org/browse/MAVENUPLOAD-2647
+-->
   <modelVersion>4.0.0</modelVersion>
 
-  <!-- POM Relationships -->
-  <parent>
-    <groupId>org.uispec4j</groupId>
-    <artifactId>uispec4j-root</artifactId>
-    <version>2.0-SNAPSHOT</version>
-  </parent>
   <groupId>org.uispec4j</groupId>
   <artifactId>uispec4j</artifactId>
+  <version>2.2-SNAPSHOT</version>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -95,12 +99,15 @@
     </developer>
   </developers>
 
-  <repositories>
-    <repository>
-      <id>codehaus</id>
-      <url>http://repository.codehaus.org/</url>
-    </repository>
-  </repositories>
+  <scm>
+    <connection>scm:cvs:cvs.dev.java.net:/cvs/uispec4j</connection>
+    <url>https://uispec4j.dev.java.net/source/browse/uispec4j/</url>
+  </scm>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
   <!-- Build Settings -->
   <build>
     <plugins>
@@ -110,6 +117,9 @@
         <configuration>
           <source>1.5</source>
           <target>1.5</target>
+          <encoding>UTF-8</encoding>
+          <showDeprecation>true</showDeprecation>
+          <showWarnings>true</showWarnings>
         </configuration>
       </plugin>
       <plugin>
@@ -128,10 +138,7 @@
       </plugin>
     </plugins>
   </build>
-  <!--
-      <packaging>...</packaging>
-      <properties>...</properties>
-  -->
+
   <reporting>
     <plugins>
       <plugin>
@@ -153,54 +160,10 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jxr-plugin</artifactId>
       </plugin>
     </plugins>
   </reporting>
-  <!--
-      <packaging>...</packaging>
-      <properties>...</properties>
-      <reporting>...</reporting>
-  -->
-
-  <!-- Build Environment -->
-  <!-- Environment Information -->
-  <!--
-      <issueManagement>...</issueManagement>
-      <ciManagement>...</ciManagement>
-      <mailingLists>...</mailingLists>
-  <scm>
-      <connection>scm:svn:http://bd-subversion/development/framework/lib/agf-reflect/trunk</connection>
-      <developerConnection>scm:svn:http://bd-subversion/development/framework/lib/agf-reflect/trunk</developerConnection>
-      <url>http://bd-subversion/development/framework/lib/agf-reflect/trunk</url>
-  </scm>
-  -->
-  <!-- Maven Environment -->
-  <!--
-      <prerequisites>...</prerequisites>
-      <repositories>...</repositories>
-      <pluginRepositories>...</pluginRepositories>
-  <distributionManagement>
-      <repository>
-          <id>scp-agf-repository</id>
-          <url>scp://ad_cvs/AGFAM/DEV/SOFT_GEN1/SMB/DAT1/partage/maven/m2/inhouse</url>
-      </repository>
-      <snapshotRepository>
-          <id>scp-agf-repository</id>
-          <url>scp://ad_cvs/AGFAM/DEV/SOFT_GEN1/SMB/DAT1/partage/maven/m2/inhouse-snapshot</url>
-      </snapshotRepository>
-      <site>
-          <id>webdav-agf-documentation</id>
-          <name>Serveur de documentation</name>
-          <url>dav:http://wp-documentation:8080/sites</url>
-      </site>
-  </distributionManagement>
-      <profiles>...</profiles>
-  -->
 
   <profiles>
     <profile>
@@ -209,12 +172,24 @@
         <jdk>1.5</jdk>
       </activation>
       <build>
-        <finalName>uispec4j-jdk5-${pom.version}</finalName>
         <plugins>
+          <plugin>
+            <artifactId>maven-jar-plugin</artifactId>
+            <executions>
+              <execution>
+                <configuration>
+                  <classifier>jdk15</classifier>
+                </configuration>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
-            <version>1.2</version>
+            <version>1.1</version>
             <executions>
               <execution>
                 <id>add-specific-source</id>
@@ -232,36 +207,46 @@
         </plugins>
       </build>
     </profile>
-
-    <!--<profile>-->
-      <!--<id>jdk16</id>-->
-      <!--<activation>-->
-        <!--<jdk>1.6</jdk>-->
-      <!--</activation>-->
-      <!--<build>-->
-        <!--<finalName>uispec4j-jdk6-${pom.version}</finalName>-->
-        <!--<plugins>-->
-          <!--<plugin>-->
-            <!--<groupId>org.codehaus.mojo</groupId>-->
-            <!--<artifactId>build-helper-maven-plugin</artifactId>-->
-            <!--<version>1.2</version>-->
-            <!--<executions>-->
-              <!--<execution>-->
-                <!--<id>add-specific-source</id>-->
-                <!--<goals>-->
-                  <!--<goal>add-source</goal>-->
-                <!--</goals>-->
-                <!--<configuration>-->
-                  <!--<sources>-->
-                    <!--<source>${basedir}/src/main/java-jdk16</source>-->
-                  <!--</sources>-->
-                <!--</configuration>-->
-              <!--</execution>-->
-            <!--</executions>-->
-          <!--</plugin>-->
-        <!--</plugins>-->
-      <!--</build>-->
-    <!--</profile>-->
+    <profile>
+      <id>jdk16</id>
+      <activation>
+        <jdk>1.6</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-jar-plugin</artifactId>
+            <executions>
+              <execution>
+                <configuration>
+                  <classifier>jdk16</classifier>
+                </configuration>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>1.1</version>
+            <executions>
+              <execution>
+                <id>add-specific-source</id>
+                <goals>
+                  <goal>add-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>${basedir}/src/main/java-jdk16</source>
+                  </sources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
-
 </project>
