@@ -20,6 +20,7 @@ public class HyperlinkButtonUI extends BasicButtonUI {
 
   private Color rolloverColor = Color.BLUE.brighter();
   private Color disabledColor = Color.GRAY;
+  private Color lineColor = null;
 
   private PropertyChangeListener autoHideListener;
   private PropertyChangeListener fontMetricsUpdater;
@@ -86,16 +87,20 @@ public class HyperlinkButtonUI extends BasicButtonUI {
     this.disabledColor = disabledColor;
   }
 
+  public void setLineColor(Color lineColor) {
+    this.lineColor = lineColor;
+  }
+
   public void paint(Graphics g, JComponent c) {
 
     AbstractButton button = (AbstractButton)c;
 
-    Graphics2D d = (Graphics2D)g;
-    d.setFont(button.getFont());
-    d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    Graphics2D graphics = (Graphics2D)g;
+    graphics.setFont(button.getFont());
+    graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     if (button.isOpaque()) {
-      d.setColor(button.getParent().getBackground());
-      d.clearRect(0, 0, button.getWidth(), button.getHeight());
+      graphics.setColor(button.getParent().getBackground());
+      graphics.clearRect(0, 0, button.getWidth(), button.getHeight());
     }
 
     String text = button.getText();
@@ -110,6 +115,17 @@ public class HyperlinkButtonUI extends BasicButtonUI {
 
     int textX = getLabelX(button);
     int textY = (button.getHeight() + fontHeight) / 2 - descent;
+    setTextColor(button, graphics);
+
+    graphics.drawString(text, textX, textY);
+
+    if (button.isEnabled() && (underline || button.getModel().isRollover())) {
+      setLineColor(button, graphics);
+      graphics.drawLine(textX, textY + 1, textX + textWidth, textY + 1);
+    }
+  }
+
+  private void setTextColor(AbstractButton button, Graphics2D d) {
     if (button.getModel().isRollover() || button.getModel().isArmed()) {
       d.setColor(rolloverColor);
     }
@@ -119,11 +135,17 @@ public class HyperlinkButtonUI extends BasicButtonUI {
     else {
       d.setColor(button.getForeground());
     }
+  }
 
-    d.drawString(text, textX, textY);
-
-    if (button.isEnabled() && (underline || button.getModel().isRollover())) {
-      d.drawLine(textX, textY + 1, textX + textWidth, textY + 1);
+  private void setLineColor(AbstractButton button, Graphics2D d) {
+    if (button.getModel().isRollover() || button.getModel().isArmed()) {
+      d.setColor(rolloverColor);
+    }
+    else if (lineColor != null) {
+      d.setColor(lineColor);
+    }
+    else {
+      d.setColor(button.getForeground());
     }
   }
 
