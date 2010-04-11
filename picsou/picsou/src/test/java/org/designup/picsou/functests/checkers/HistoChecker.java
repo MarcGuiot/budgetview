@@ -8,6 +8,7 @@ import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffDataset
 import org.designup.picsou.gui.components.charts.histo.painters.HistoLineDataset;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
+import org.uispec4j.utils.Utils;
 import org.uispec4j.interception.toolkit.Empty;
 
 import java.awt.*;
@@ -54,6 +55,12 @@ public class HistoChecker extends GuiChecker {
 
   public HistoChecker checkLineColumn(int index, String label, String section, double value) {
     checkLineColumn(index, label, section, value, false);
+    return this;
+  }
+
+  public HistoChecker checkTooltip(int index, String expectedText) {
+    HistoDataset dataset = getDataset(HistoDataset.class);
+    Assert.assertEquals(expectedText, Utils.cleanupHtml(dataset.getTooltip(index)));
     return this;
   }
 

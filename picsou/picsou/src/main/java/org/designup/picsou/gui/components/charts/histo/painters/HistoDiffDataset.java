@@ -2,6 +2,7 @@ package org.designup.picsou.gui.components.charts.histo.painters;
 
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Strings;
 
 import java.util.ArrayList;
@@ -14,8 +15,14 @@ public class HistoDiffDataset implements HistoDataset {
   private double maxNegative = 0;
   private boolean containsSections = false;
 
-  public void add(int id, double reference, double actual, String label, String section, boolean isSelected, boolean isFuture) {
-    this.elements.add(new Element(id, label, section, reference, actual, isSelected, isFuture));
+  private String tooltipKey;
+
+  public HistoDiffDataset(String tooltipKey) {
+    this.tooltipKey = tooltipKey;
+  }
+
+  public void add(int id, double reference, double actual, String label, String tooltipLabel, String section, boolean isSelected, boolean isFuture) {
+    this.elements.add(new Element(id, label, tooltipLabel, section, reference, actual, isSelected, isFuture));
     this.containsSections |= Strings.isNotEmpty(section);
     updateMax(reference);
     updateMax(actual);
@@ -43,6 +50,16 @@ public class HistoDiffDataset implements HistoDataset {
 
   public String getLabel(int index) {
     return elements.get(index).label;
+  }
+
+  public String getTooltip(int index) {
+    if ((index < 0) || (index >= elements.size())) {
+      return "";
+    }
+    return Lang.get(tooltipKey,
+                    elements.get(index).tooltipLabel,
+                    Formatting.toString(getReferenceValue(index)),
+                    Formatting.toString(getActualValue(index)));
   }
 
   public String getSection(int index) {
@@ -112,6 +129,7 @@ public class HistoDiffDataset implements HistoDataset {
   private class Element {
     final int id;
     final String label;
+    final String tooltipLabel;
     final String section;
     final double referenceValue;
     final double actualValue;
@@ -119,11 +137,12 @@ public class HistoDiffDataset implements HistoDataset {
     final boolean future;
 
     private Element(int id,
-                    String label, String section,
+                    String label, String tooltipLabel, String section,
                     double referenceValue, double actualValue,
                     boolean selected, boolean future) {
       this.id = id;
       this.label = label;
+      this.tooltipLabel = tooltipLabel;
       this.section = section;
       this.referenceValue = referenceValue;
       this.actualValue = actualValue;

@@ -1,6 +1,8 @@
 package org.designup.picsou.gui.components.charts.histo.painters;
 
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
+import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Strings;
 
 import java.util.ArrayList;
@@ -13,9 +15,14 @@ public class HistoLineDataset implements HistoDataset {
 
   private List<Element> elements = new ArrayList<Element>();
   private boolean containsSections;
+  private String tooltipKey;
 
-  public void add(int id, double value, String label, String section, boolean selected) {
-    this.elements.add(new Element(id, label, section, value, selected));
+  public HistoLineDataset(String tooltipKey) {
+    this.tooltipKey = tooltipKey;
+  }
+
+  public void add(int id, double value, String label, String tooltipLabel, String section, boolean selected) {
+    this.elements.add(new Element(id, label, tooltipLabel, section, value, selected));
     this.containsSections |= Strings.isNotEmpty(section);
     updateMax(value);
   }
@@ -73,6 +80,13 @@ public class HistoLineDataset implements HistoDataset {
     return containsSections;
   }
 
+  public String getTooltip(int index) {
+    if ((index < 0) || (index >= elements.size())) {
+      return "";
+    }
+    return Lang.get(tooltipKey, elements.get(index).tooltipLabel, Formatting.toString(getValue(index)));
+  }
+
   public String toString() {
     StringBuilder builder = new StringBuilder();
     for (Element element : elements) {
@@ -94,13 +108,15 @@ public class HistoLineDataset implements HistoDataset {
   private class Element {
     final int id;
     final String label;
+    final String tooltipLabel;
     final String section;
     final double value;
     private boolean selected;
 
-    private Element(int id, String label, String section, double value, boolean selected) {
+    private Element(int id, String label, String tooltipLabel, String section, double value, boolean selected) {
       this.id = id;
       this.label = label;
+      this.tooltipLabel = tooltipLabel;
       this.section = section;
       this.value = value;
       this.selected = selected;

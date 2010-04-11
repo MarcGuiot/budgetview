@@ -38,6 +38,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .checkLineColumn(3, "O", "2009", 800.00)
       .checkLineColumn(6, "J", "2010", 1400.00)
       .checkLineColumn(12, "J", "2010", 2600.00);
+    savingsView.histoChart.checkTooltip(1, "End of August 2009 position: 400.00");
 
     views.selectHome();
     savingsAccounts.editPosition("ING").setAmount(300.00).validate();
@@ -62,7 +63,5 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .checkLineColumn(2, "S", "2009", 700.00)
       .checkLineColumn(3, "O", "2009", 900.00)
       .checkLineColumn(6, "J", "2010", 1500.00);
-//    savingsView.histoChart.click(0.99);
-//    timeline.checkSelection("2010/07");
   }
 }

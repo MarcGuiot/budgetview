@@ -20,6 +20,8 @@ public interface HistoDataset {
 
   boolean containsSections();
 
+  String getTooltip(int index);
+
   public static final HistoDataset NULL = new HistoDataset() {
 
     public int getId(int index) {
@@ -47,6 +49,10 @@ public interface HistoDataset {
     }
 
     public String getSection(int index) {
+      return "";
+    }
+
+    public String getTooltip(int index) {
       return "";
     }
 

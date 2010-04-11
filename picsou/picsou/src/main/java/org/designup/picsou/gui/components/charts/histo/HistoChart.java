@@ -18,15 +18,15 @@ public class HistoChart extends JPanel {
   private Integer currentRollover;
   private Font selectedLabelFont;
   private boolean drawLabels;
+  private boolean clickable;
 
   public HistoChart(boolean drawLabels, boolean clickable, Directory directory) {
     this.drawLabels = drawLabels;
+    this.clickable = clickable;
     this.colors = new HistoChartColors(directory);
     setFont(getFont().deriveFont(9f));
     this.selectedLabelFont = getFont().deriveFont(Font.BOLD);
-    if (clickable) {
-      registerMouseActions();
-    }
+    registerMouseActions();
   }
 
   public void setListener(HistoChartListener listener) {
@@ -152,11 +152,12 @@ public class HistoChart extends JPanel {
   }
 
   public void click() {
-    if ((currentRollover != null) && (listener != null) && (painter != null)) {
-      HistoDataset dataset = painter.getDataset();
-      if (currentRollover < dataset.size()) {
-        listener.columnClicked(dataset.getId(currentRollover));
-      }
+    if (!clickable || (currentRollover == null) || (listener == null) || (painter == null)) {
+      return;
+    }
+    HistoDataset dataset = painter.getDataset();
+    if (currentRollover < dataset.size()) {
+      listener.columnClicked(dataset.getId(currentRollover));
     }
   }
 
@@ -171,8 +172,11 @@ public class HistoChart extends JPanel {
     }
 
     currentRollover = index;
-    setCursor(currentRollover != null ?
+    setCursor(clickable && (currentRollover != null) ?
               Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+    setToolTipText(painter.getDataset().getTooltip(currentRollover));
+
     repaint();
   }
 
