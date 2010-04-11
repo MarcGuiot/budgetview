@@ -2,6 +2,7 @@ package org.uispec4j.interception;
 
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
+import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.assertion.testlibrairies.AssertAdapter;
 import org.uispec4j.utils.ComponentUtils;
 import org.uispec4j.utils.Utils;
@@ -11,14 +12,13 @@ import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
 
 /**
  * WindowHandler implementation dedicated to file chooser dialogs.<p>
  * Sample usage:
  * <pre><code>
  * WindowInterceptor
- *   .run(openMenu.triggerClick())
+ *   .init(openMenu.triggerClick())
  *   .process(FileChooserHandler.init()
  *            .titleEquals("Select a template file")
  *            .assertAcceptsFilesOnly()
@@ -70,12 +70,7 @@ public class FileChooserHandler {
   }
 
   public FileChooserHandler titleEquals(final String title) {
-    handler.add(new FileChooserInternalHandler() {
-      public void process(JFileChooser fileChooser) {
-        AssertAdapter.assertEquals("Unexpected title -",
-                                   title, fileChooser.getDialogTitle());
-      }
-    });
+    handler.expectsTitle(title);
     return this;
   }
 
@@ -150,16 +145,26 @@ public class FileChooserHandler {
    * Clicks on "Cancel".
    */
   public WindowHandler cancelSelection() {
-    handler.add(new FileChooserInternalHandler() {
-      public void process(JFileChooser fileChooser) {
-        fileChooser.cancelSelection();
-      }
-    });
+    handler.cancelSelection();
     return handler;
   }
 
+  private static final FileChooserInternalHandler APPROVE = new FileChooserInternalHandler() {
+    public void process(JFileChooser fileChooser) {
+      fileChooser.approveSelection();
+    }
+  };
+
+  private static final FileChooserInternalHandler CANCEL = new FileChooserInternalHandler() {
+    public void process(JFileChooser fileChooser) {
+      fileChooser.cancelSelection();
+    }
+  };
+
   private static class DialogHandler extends WindowHandler {
     private List<FileChooserInternalHandler> fileChooserHandlers = new ArrayList<FileChooserInternalHandler>();
+    private FileChooserInternalHandler lastHandler = APPROVE;
+    private String expectedTitle;
 
     public DialogHandler() {
       super("FileChooserHandler");
@@ -169,22 +174,37 @@ public class FileChooserHandler {
       fileChooserHandlers.add(handler);
     }
 
+    void cancelSelection() {
+      lastHandler = CANCEL;
+    }
+
     public Trigger process(final Window window) {
       Component[] components = window.getSwingComponents(JFileChooser.class);
       if (components.length != 1) {
         AssertAdapter.fail("The shown window is not a file chooser - window content:" +
                            Utils.LINE_SEPARATOR + window.getDescription());
       }
-      final JFileChooser fileChooser = (JFileChooser)components[0];
+      JFileChooser fileChooser = (JFileChooser)components[0];
       for (FileChooserInternalHandler handler : fileChooserHandlers) {
         handler.process(fileChooser);
       }
+      checkTitle(window);
+      lastHandler.process(fileChooser);
       return new Trigger() {
         public void run() throws Exception {
-          fileChooser.approveSelection();
-//          ComponentUtils.close(window);
+          ComponentUtils.close(window);
         }
       };
+    }
+
+    private void checkTitle(Window window) {
+      if (expectedTitle != null) {
+        UISpecAssert.assertTrue(window.titleEquals(expectedTitle));
+      }
+    }
+
+    public void expectsTitle(String title) {
+      expectedTitle = title;
     }
   }
 

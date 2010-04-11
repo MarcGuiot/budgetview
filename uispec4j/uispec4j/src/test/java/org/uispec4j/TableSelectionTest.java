@@ -33,12 +33,6 @@ public class TableSelectionTest extends TableTestCase {
       {false, false, false}
     }));
 
-    table.click(1, 1, Key.Modifier.CONTROL);
-    assertTrue(table.selectionEquals(new boolean[][]{
-      {false, true, false},
-      {false, true, false}
-    }));
-
     try {
       assertTrue(table.selectionEquals(new boolean[][]{
         {false, false, false},
@@ -48,8 +42,16 @@ public class TableSelectionTest extends TableTestCase {
     }
     catch (AssertionFailedError e) {
       assertEquals("expected:<[[false,false,false], [false,false,false]]> " +
-                   "but was:<[[false,true,false], [false,true,false]]>",
+                   "but was:<[[false,true,false], [false,false,false]]>",
                    e.getMessage());
+    }
+
+    if (!TestUtils.isMacOsX()) {
+      table.click(1, 1, Key.Modifier.CONTROL);
+      assertTrue(table.selectionEquals(new boolean[][]{
+        {false, true, false},
+        {false, true, false}
+      }));
     }
   }
 
@@ -86,12 +88,12 @@ public class TableSelectionTest extends TableTestCase {
     assertTrue(table.rowsAreSelected());
 
     table.click(0, 1);
-    assertTrue(table.rowIsSelected(0));
+    assertTrue(table.rowsAreSelected(0));
 
     table.click(1, 1);
     assertTrue(table.rowsAreSelected(1));
 
-    table.click(0, 1, Key.Modifier.CONTROL);
+    table.click(0, 1, Key.Modifier.SHIFT);
     assertTrue(table.rowsAreSelected(0, 1));
     assertTrue(table.rowsAreSelected(1, 0));
 

@@ -4,23 +4,34 @@
   </properties>
 
   <body>
-
-    <release version="???" date="???">
+    <release version="???">
+      <action dev="mguiot" type="add">
+        Added Table.blockEquals(int fromRowIndex, int fromColumnIndex, int columnCount, int rowCount, Object[][] expected)
+        Added Table.rowEquals(int rowIndex, int fromColumnIndex, int columnCount, Object[] expectedRow)
+      </action>
       <action dev="rmedina" type="add">
-        Added FileChooserHandler.assertCurrentDirEquals().
+        Added Slider.setRelativePosition(percentage)
+      </action>
+      <action dev="mguiot" type="add">
+        WindowInterceptor : the trigger is launch in swing thread
+      </action>
+      <action dev="rmedina" type="add">
+        Added Table.selectRowsWithText(int column, String... labels).
       </action>
       <action dev="rmedina" type="add">
         Added Table.getColumnIndex(String columnName).
       </action>
       <action dev="rmedina" type="add">
-        Added Table.selectRowsWithText(int column, String... labels).
+        Added FileChooserHandler.assertCurrentDirEquals().
       </action>
-    </release>
-
-    <release version="???" date="???">
-      <action dev="rmedina" type="update">
-        Made UISpecAssert.fail() fail immediately instead of returning an Assertion, and introduced UISpecAssert.failure
-        to return an Assertion that always fails.
+      <action dev="rmedina" type="add">
+        If Tab.selectTab(tabName) fail it now give the existing tabs in the message
+      </action>
+      <action dev="rmedina" type="add">
+        Added TextBox.setText(String, boolean) to select whether Enter is simulated or not.
+      </action>
+      <action dev="rmedina" type="add">
+        Added TextBox.focusLost().
       </action>
       <action dev="rmedina" type="add">
         Added Clipboard.getContentAsText().
@@ -32,25 +43,64 @@
       <action dev="rmedina" type="add">
         Added Table.selectAllRows().
       </action>
-      <action dev="rmedina" type="add">
-        Added TextBox.setText(String, boolean) to select whether Enter is simulated or not.
-      </action>
-      <action dev="rmedina" type="add">
-        Added TextBox.focusLost().
+
+      <action dev="rmedina" type="update">
+        Made UISpecAssert.fail() fail immediately instead of returning an Assertion, and introduced UISpecAssert.failure
+        to return an Assertion that always fails.
       </action>
     </release>
-
-    <release version="2.0-RC2" date="2009-01-18">
+    
+    <release version="2.2" date="2010-02-13">
+      <action dev="pratmarty" type="add">
+        Added Tree.doubleClick().
+      </action>
+      <action dev="pratmarty" type="add">
+        Added methods on ListBox for double-clicking and right-clicking on individual rows.
+      </action>
+    </release>
+    <release version="2.1" date="2009-10-31">
+      <action dev="pratmarty" type="add">
+        Added methods on ListBox for checking individual cell colors (background and foreground).
+      </action>
+      <action dev="pratmarty" type="fix">
+        Made DateSpinner, NumberSpinner and ListSpinner accept a subclass instance of, respectively,
+        SpinnerDateModel, SpinnerNumberModel and SpinnerListModel as the model of the wrapped JSpinner component.
+      </action>
+      <action dev="pratmarty" type="add">
+        Added UIComponent.typeKey(Key), pressKey(Key) and releaseKey(Key) to simulate key typing with the focus on the component.
+      </action>
+      <action dev="pratmarty" type="fix">
+        Improved Key low-level management through Key and KeyUtils classes. (Thanks to Michael Muthukrishna)
+      </action>
+      <action dev="pratmarty" type="add">
+        Added BasicHandler.titleEquals() and titleContains().
+      </action>
+      <action dev="pratmarty" type="add">
+        Made the method Panel.findUIComponent() work for customized components without running the ExtensionGenerator.
+      </action>
+    </release>
+    <release version="2.0" date="2009-06-07">
+      <action dev="pratmarty" type="fix">
+        Fixed FileChooserHandler.titleEquals() (worked only with customized titles, not with default titles).
+      </action>
+      <action dev="pratmarty" type="fix">
+        Made the JFileChooser return the CANCEL_OPTION code when FileChooserHandler.cancelSelection is getting called.
+      </action>
+    </release>
+    <release version="2.0-RC3" date="2009-02-03">
+      <action dev="pratmarty" type="fix">
+        Changed Graphics configuration of the Peer elements returned by the UISpecToolkit (fix specific to Java 6)
+      </action>
+    </release>
+    <release version="2.0-RC2" date="2009-01-19">
       <action dev="mguiot" type="fix">
-        In class WindowInterceptor, revert call to TriggerRunner.runInSwingThread in call to
-        TriggerRunner.runInCurrentThread
+        In class WindowInterceptor, revert call to TriggerRunner.runInSwingThread in call to TriggerRunner.runInCurrentThread
       </action>
       <action dev="mguiot" type="fix">
         In ComboBox.selectionEquals : use the rendered value in assert if selection is null
       </action>
       <action dev="pratmarty" type="fix">
-        Fixed TestNG library adapter: reversed expected and actual parameters in 'assertEquals(String expected, String
-        actual)'
+        Fixed TestNG library adapter:  reversed expected and actual parameters in 'assertEquals(String expected, String actual)'
       </action>
       <action dev="rmedina" type="add">
         Added ComponentMatchers.toolTipEquals(String)
@@ -60,7 +110,7 @@
         approximative comparisons.
       </action>
       <action dev="mguiot" type="fix">
-        Improved the handling of multi-threading conditions in the window interception mechanism.
+       Improved the handling of multi-threading conditions in the window interception mechanism.
       </action>
     </release>
     <release version="2.0-RC1" date="2008-12-25">
@@ -266,10 +316,7 @@
     <release version="0.16" date="2006-03-05">
       <action dev="rmedina, ppratmarty, scrego" type="update">
         Changed all "assertXxx" methods into "xxx" methods that return Assertion objects to be used
-        with UISpecAssert.assertTrue(). Please refer to the
-        <a href="/assertions.html">Using assertions</a>
-        page for further details on the new assertions
-        mechanism.
+        with UISpecAssert.assertTrue().
         The main motivation behind this evolution is that the UISpecAssert.assertTrue() method
         now performs automatic retries when the first assertion check fails, so that
         the tests are less dependent on slight delays in multithreaded applications.

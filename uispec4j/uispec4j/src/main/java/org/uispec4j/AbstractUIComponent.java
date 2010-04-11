@@ -3,6 +3,7 @@ package org.uispec4j;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.testlibrairies.AssertAdapter;
 import org.uispec4j.utils.ColorUtils;
+import org.uispec4j.utils.KeyUtils;
 import org.uispec4j.utils.UIComponentFactory;
 import org.uispec4j.xml.XmlWriter;
 
@@ -36,7 +37,7 @@ public abstract class AbstractUIComponent implements UIComponent {
   }
 
   protected void getDescription(Component component, XmlWriter.Tag tag, boolean showVisibleOnly) {
-    if (!JComponent.class.isAssignableFrom(component.getClass())) {
+    if (!JComponent.class.isInstance(component)) {
       return;
     }
     JComponent jComponent = (JComponent)component;
@@ -206,5 +207,20 @@ public abstract class AbstractUIComponent implements UIComponent {
       return new Panel(parent);
     }
     return null;
+  }
+
+  public AbstractUIComponent typeKey(Key key) {
+    KeyUtils.enterKeys(getAwtComponent(), key);
+    return this;
+  }
+
+  public AbstractUIComponent pressKey(Key key) {
+    KeyUtils.pressKey(getAwtComponent(), key);
+    return this;
+  }
+
+  public AbstractUIComponent releaseKey(Key key) {
+    KeyUtils.releaseKey(getAwtComponent(), key);
+    return this;
   }
 }

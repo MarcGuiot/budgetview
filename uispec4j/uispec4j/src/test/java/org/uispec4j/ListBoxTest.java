@@ -2,7 +2,6 @@ package org.uispec4j;
 
 import junit.framework.AssertionFailedError;
 import org.uispec4j.utils.AssertionFailureNotDetectedError;
-import org.uispec4j.utils.Counter;
 import org.uispec4j.xml.EventLogger;
 import org.uispec4j.xml.XmlAssert;
 
@@ -10,8 +9,9 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class ListBoxTest extends UIComponentTestCase {
   private static final String[] ALL_ITEMS = {"First Item", "Second Item", "Third Item"};
@@ -21,7 +21,7 @@ public class ListBoxTest extends UIComponentTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
-    init(new JList(new Object[]{"First Item", "Second Item", "Third Item"}));
+    init(new JList(ALL_ITEMS));
   }
 
   private void init(JList list) {
@@ -280,24 +280,17 @@ public class ListBoxTest extends UIComponentTestCase {
     assertTrue(listBox.selectionEquals(ALL_ITEMS));
   }
 
-  public void testPressingKeyNotifiesCustomKeyListeners() throws Exception {
-    final Counter counter = new Counter();
-    jList.addKeyListener(new KeyListener() {
-      public void keyPressed(KeyEvent event) {
-        counter.increment();
-      }
-
-      public void keyReleased(KeyEvent event) {
-      }
-
-      public void keyTyped(KeyEvent event) {
-      }
-    });
+  public void testPressingDownAndUpKeysChangesTheSelection() throws Exception {
+    DummyKeyListener keyListener = new DummyKeyListener();
+    jList.addKeyListener(keyListener);
     jList.setSelectedIndex(0);
     assertTrue(listBox.selectionEquals("First Item"));
     listBox.pressKey(Key.DOWN);
-    assertEquals(1, counter.getCount());
+    keyListener.checkEvents("keyPressed");
     assertTrue(listBox.selectionEquals("Second Item"));
+    listBox.pressKey(Key.UP);
+    keyListener.checkEvents("keyPressed");
+    assertTrue(listBox.selectionEquals("First Item"));
   }
 
   public void testUsingARenderer() throws Exception {
@@ -399,6 +392,43 @@ public class ListBoxTest extends UIComponentTestCase {
     }
   }
 
+  public void testCellForegroundAndBackground() throws Exception {
+    jList.setCellRenderer(new DefaultListCellRenderer() {
+      public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        if (index == 1) {
+          component.setForeground(Color.red);
+          component.setBackground(Color.pink);
+        }
+        return component;
+      }
+    });
+
+    assertTrue(listBox.foregroundEquals(new String[]{"black", "red", "black"}));
+
+    assertTrue(listBox.backgroundEquals(new String[]{"white", "pink", "white"}));
+
+    try {
+      assertTrue(listBox.backgroundEquals(new String[]{"white", "blue", "white"}));
+      throw new AssertionFailureNotDetectedError();
+    }
+    catch (AssertionFailedError e) {
+      assertEquals("Error at index 1 - expected:<BLUE> but was:<FFAFAF>", e.getMessage());
+    }
+
+    assertTrue(listBox.foregroundNear(0, "black"));
+    assertTrue(listBox.foregroundNear(0, "010101"));
+
+    assertTrue(listBox.backgroundNear(0, "white"));
+    assertTrue(listBox.backgroundNear(0, "FEFEFE"));
+
+    assertTrue(listBox.foregroundNear(1, "red"));
+    assertTrue(listBox.foregroundNear(1, "DD1111"));
+
+    assertTrue(listBox.backgroundNear(1, "pink"));
+    assertTrue(listBox.backgroundNear(1, "FFAEAE"));
+  }
+
   private void checkSelectionByName(String... names) {
     listBox.select(names[0]);
     assertTrue(listBox.selectionEquals("First Item"));
@@ -409,5 +439,54 @@ public class ListBoxTest extends UIComponentTestCase {
     listBox.select(names[2]);
     assertTrue(listBox.selectionEquals("Third Item"));
     assertEquals(2, jList.getSelectedIndex());
+  }
+
+  public void testItemClicks() throws Exception {
+    DummySelectionListener listener = new DummySelectionListener();
+    installSelection(listener);
+
+    listBox.doubleClick(0);
+    listBox.click(1);
+    listBox.rightClick(1);
+
+    listener.checkEvents("First Item doubleClicked", "Second Item clicked", "Second Item rightClicked");
+
+  }
+
+  private void installSelection(DummySelectionListener listener) {
+    jList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    jList.getSelectionModel().addListSelectionListener(listener);
+    jList.addMouseListener(listener);
+  }
+
+  private class DummySelectionListener extends MouseAdapter implements ListSelectionListener {
+    private final java.util.List<String> events = new ArrayList<String>();
+    private Object selectedValue;
+
+    public void valueChanged(ListSelectionEvent e) {
+      selectedValue = jList.getSelectedValue();
+    }
+
+    public void checkEvents(String... expectedEvents) {
+      TestUtils.assertEquals(expectedEvents, events);
+      events.clear();
+    }
+
+    public void mouseClicked(MouseEvent e) {
+      int clickCount = e.getClickCount();
+      int button = e.getButton();
+      if (button == MouseEvent.BUTTON3 && clickCount == 1) {
+        events.add(selectedValue + " rightClicked");
+      }
+      else if (button == MouseEvent.BUTTON1 && clickCount == 1) {
+        events.add(selectedValue + " clicked");
+      }
+      else if (button == MouseEvent.BUTTON1 && clickCount == 2) {
+        events.add(selectedValue + " doubleClicked");
+      }
+      else {
+        events.add(selectedValue + " unexpected event: " + e);
+      }
+    }
   }
 }

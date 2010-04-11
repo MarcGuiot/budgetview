@@ -44,4 +44,19 @@ public interface UIComponent {
    * Returns the first container named parentName or null if not found
    */
   Panel getContainer(String parentName);
+
+  /**
+   * Simulates typing a key while the focus is on the component.
+   */
+  UIComponent typeKey(Key key);
+
+  /**
+   * Simulates pressing a key while the focus is on the component.
+   */
+  UIComponent pressKey(Key key);
+
+  /**
+   * Simulates releasing a key while the focus is on the component.
+   */
+  UIComponent releaseKey(Key key);
 }

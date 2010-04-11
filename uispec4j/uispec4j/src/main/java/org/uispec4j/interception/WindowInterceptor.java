@@ -11,7 +11,10 @@ import org.uispec4j.utils.ComponentUtils;
 import org.uispec4j.utils.ExceptionContainer;
 import org.uispec4j.utils.TriggerRunner;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Intercepts popped-up windows such as JFrame or JDialog. <p>

@@ -15,7 +15,7 @@ public class ListSpinner extends Spinner {
   public ListSpinner(JSpinner jSpinner) {
     super(jSpinner);
     SpinnerModel model = jSpinner.getModel();
-    if (!model.getClass().isAssignableFrom(SpinnerListModel.class)) {
+    if (!SpinnerListModel.class.isInstance(model)) {
       throw new ItemNotFoundException("Expected JSpinner using a SpinnerListModel");
     }
     this.model = (SpinnerListModel)model;
@@ -26,7 +26,7 @@ public class ListSpinner extends Spinner {
    */
   public Assertion contentEquals(final Object... expectedContents) {
     return new Assertion() {
-      public void check() throws Exception {
+      public void check() {
         List list = model.getList();
         Utils.assertEquals(expectedContents, list.toArray(new Object[list.size()]));
       }

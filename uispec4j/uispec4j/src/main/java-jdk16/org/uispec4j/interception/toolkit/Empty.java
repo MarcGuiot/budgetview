@@ -18,9 +18,7 @@ import java.awt.image.*;
 import java.awt.image.renderable.RenderableImage;
 import java.awt.peer.*;
 import java.text.AttributedCharacterIterator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Locale;
+import java.util.*;
 import java.net.URI;
 import java.io.IOException;
 import java.io.File;
@@ -74,6 +72,9 @@ public final class Empty {
 
   static class WindowPeeer implements WindowPeer {
     public void toBack() {
+    }
+
+    public void updateWindow() {
     }
 
     public void setAlwaysOnTop(boolean b) {
@@ -361,6 +362,9 @@ public final class Empty {
     public void setResizable(boolean resizeable) {
     }
 
+    public void blockWindows(java.util.List<Window> windows) {
+    }
+
     public void setTitle(String title) {
     }
   }
@@ -399,11 +403,11 @@ public final class Empty {
 
   static class DummyGraphicsConfiguration extends GraphicsConfiguration {
     public BufferedImage createCompatibleImage(int width, int height) {
-      return new BufferedImage(width, height, 0);
+      return new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     }
 
     public BufferedImage createCompatibleImage(int width, int height, int transparency) {
-      return new BufferedImage(width, height, 0);
+      return new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     }
 
     public VolatileImage createCompatibleVolatileImage(int width, int height) {

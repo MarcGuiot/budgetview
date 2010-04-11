@@ -10,7 +10,7 @@ public class ClosedInterceptionDetectionHandler extends AbstractInterceptionHand
     "by the production code";
 
   private long timeout;
-  private final Object lock = new Object();
+  private Object lock = new Object();
   private boolean exceptionThrown = false;
   private String windowTitle;
   private Window window;
@@ -41,7 +41,6 @@ public class ClosedInterceptionDetectionHandler extends AbstractInterceptionHand
               Thread.sleep(delay);
             }
             catch (InterruptedException e) {
-              System.err.println("ClosedInterceptionDetectionHandler.run");
               return;
             }
             if (!window.getAwtComponent().isVisible()) {
