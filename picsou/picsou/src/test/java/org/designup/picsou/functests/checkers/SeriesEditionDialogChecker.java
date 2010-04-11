@@ -9,7 +9,6 @@ import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
-import org.apache.tools.ant.types.selectors.BaseSelector;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -134,7 +133,7 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
-  public boolean isManual(){
+  public boolean isManual() {
     return !dialog.getButton("manual").getAwtComponent().isVisible();
   }
 
