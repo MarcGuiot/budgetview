@@ -47,6 +47,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   private Color normalColor;
   private Color errorColor;
   private SplitsNode<JButton> openDetailsNode;
+  private BudgetSummaryView.OpenDetailsAction openDetailsAction;
 
   public BudgetSummaryView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -57,6 +58,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     this.amountColors = new AmountColors(directory);
 
     this.budgetWizardDialog = new BudgetWizardDialog(repository, directory);
+    this.openDetailsAction = new OpenDetailsAction(directory);
 
     update();
   }
@@ -74,7 +76,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     builder.add("positionTitle", estimatedPositionTitle);
     builder.add("uncategorized", uncategorizedButton);
     builder.add("multiSelectionLabel", multiSelectionLabel);
-    openDetailsNode = builder.add("openDetails", new JButton(new OpenDetailsAction(directory)));
+    openDetailsNode = builder.add("openDetails", new JButton(openDetailsAction));
 
     uncategorizedButton.addActionListener(new GotoUncategorizedAction());
     balanceLabel.addActionListener(new OpenBalanceAction());
@@ -253,7 +255,6 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
         public void selectionUpdated(GlobSelection selection) {
           selectedMonths = selection.getAll(Month.TYPE);
           selectedMonths.sort(Month.ID);
-
           setEnabled(!selectedMonths.isEmpty());
         }
       }, Month.TYPE);
@@ -274,7 +275,8 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   private void updateHelpMessage() {
     Glob prefs = repository.find(UserPreferences.KEY);
     boolean showHelp =
-      (prefs != null)
+      openDetailsAction.isEnabled()
+      && (prefs != null)
       && prefs.isTrue(UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE)
       && repository.contains(Series.TYPE, not(fieldEquals(Series.ID, Series.UNCATEGORIZED_SERIES_ID)));
 

@@ -4,8 +4,8 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
     <style selector="label.inner" foreground=""/>
-    <style selector=".amount" font="-,bold,13" marginTop="5"/>
-    <style selector=".amountLabel" font="-,bold,12" marginTop="5" foreground="balance.panel.amount.label"/>
+    <style selector=".amount" font="-,bold,13" marginTop="5" marginRight="10"/>
+    <style selector=".amountLabel" font="-,plain,12" marginTop="5" foreground="balance.panel.amount.label"/>
   </styles>
 
   <panel styleClass="dialog" preferredSize="(500,400)">
@@ -39,7 +39,7 @@
                   <label ref="bankPositionAmount" gridPos="(1,0,1,1)" styleClass="amount"
                          fill="horizontal" horizontalAlignment="right"/>
 
-                  <htmlEditorPane text="$position.panel.explain" gridPos="(0,1)"/>
+                  <htmlEditorPane text="$position.panel.explain" gridPos="(0,1,2,1)" marginTop="10" marginBottom="10"/>
 
                   <label text="$position.panel.income" gridPos="(0,2,1,1)"
                          fill="horizontal" horizontalAlignment="right" styleClass="amountLabel"/>

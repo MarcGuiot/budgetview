@@ -8,6 +8,7 @@
            foreground="block.inner.columnTitle" 
            fill="none"/>
     <style selector="htmlEditorPane.hints" foreground="block.inner.hints"/>
+    <style selector="label.totalAmount" font="-,bold,16" weightY="10" marginBottom="2"/>
   </styles>
 
   <column name="budgetAreaSeriesView" styleClass="main">
@@ -20,7 +21,8 @@
           <label text="$budgetview.observed" styleClass="totalAmountTitle" gridPos="(0,0)"/>
           <label ref="totalObservedAmount" styleClass="totalAmount" gridPos="(0,1)"
                  tooltipText="$budgetview.tooltip.total.observed"/>
-          <component ref="totalGauge" styleClass="totalGauge" gridPos="(1,0,1,2)" anchor="south" marginBottom="3"/>
+          <component ref="totalGauge" styleClass="totalGauge" gridPos="(1,0,1,2)"
+                     fill="horizontal" anchor="center" marginBottom="0"/>
           <label text="$budgetview.planned" styleClass="totalAmountTitle" gridPos="(2,0)"/>
           <label ref="totalPlannedAmount" styleClass="totalAmount" gridPos="(2,1)" foreground=""
                  tooltipText="$budgetview.tooltip.total.planned"/>

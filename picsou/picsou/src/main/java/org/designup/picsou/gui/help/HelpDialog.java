@@ -98,6 +98,10 @@ public class HelpDialog {
   }
 
   private class BackPageAction extends AbstractAction {
+    private BackPageAction() {
+      super(Lang.get("back"));
+    }
+
     public void actionPerformed(ActionEvent e) {
       if (currentPage != null) {
         forwardPages.push(currentPage);
@@ -107,6 +111,10 @@ public class HelpDialog {
   }
 
   private class ForwardPageAction extends AbstractAction {
+    private ForwardPageAction() {
+      super(Lang.get("forward"));
+    }
+
     public void actionPerformed(ActionEvent e) {
       if (currentPage != null) {
         backPages.push(currentPage);

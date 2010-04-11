@@ -45,7 +45,7 @@ public class PositionPanel {
   public PositionPanel(final PicsouDialog dialog, final GlobRepository repository, final Directory directory) {
     this.dialog = dialog;
     this.repository = repository;
-    builder = new GlobsPanelBuilder(getClass(), "/layout/budget/positionPanel.splits", repository, directory);
+    builder = new GlobsPanelBuilder(getClass(), "/layout/budget/positionDialog.splits", repository, directory);
     cardHandler = builder.addCardHandler("cardHandler");
     builder.add("bankPositionAmount", bankPositionAmount);
     builder.add("bankPositionLabel", bankPositionLabel);

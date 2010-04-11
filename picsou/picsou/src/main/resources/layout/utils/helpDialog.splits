@@ -12,20 +12,20 @@
 
       <label ref="title"/>
 
-      <scrollPane weightY="100">
-        <htmlEditorPane ref="editor" useImageLocator="true" opaque="false" foreground="block.text"/>
-      </scrollPane>
+      <column styleClass="blockScrollBorder">
+        <scrollPane weightY="100">
+          <htmlEditorPane ref="editor" useImageLocator="true" opaque="false" foreground="block.text"/>
+        </scrollPane>
 
-      <row margin="0" weightY="0">
-        <row styleClass="iconButtonGroup">
-          <button action="back" name="back" styleClass="icon" tooltipText="$helpDialog.back.tooltip"
+        <row name="wizardControls" styleClass="footer" weightY="0.1" margin="0">
+          <button action="back" name="back" tooltipText="$helpDialog.back.tooltip"
                   icon="button_prev.png" disabledIcon="button_prev_disabled.png"/>
-          <button action="forward" name="forward" styleClass="icon" tooltipText="$helpDialog.forward.tooltip"
+          <button action="forward" name="forward" tooltipText="$helpDialog.forward.tooltip"
                   icon="button_next.png" disabledIcon="button_next_disabled.png"/>
+          <filler fill="horizontal"/>
+          <button action="home"/>
         </row>
-        <filler fill="horizontal"/>
-        <button action="home" styleClass="hyperlink"/>
-      </row>
+      </column>
     </column>
   </panel>
 

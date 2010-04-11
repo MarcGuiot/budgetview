@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <style selector="datePicker" fill="horizontal" weightY="0"/>
+    <style selector="datePicker" fill="horizontal" weightX="100" weightY="0"/>
   </styles>
 
   <panel styleClass="dialog" preferredSize="(700,330)">
@@ -15,30 +15,38 @@
           <grid defaultMarginBottom="5" marginRight="10">
             <label text="$account.name" gridPos="(0,0)" styleClass="formLabel"/>
             <textField ref="name" gridPos="(1,0)"/>
+            <label gridPos="(2,0)" styleClass="formLabelMandatorySign"/>
 
             <label text="$account.bank" gridPos="(0,1)" styleClass="formLabel"/>
             <comboBox ref="accountBank" gridPos="(1,1)"/>
+            <label gridPos="(2,1)" styleClass="formLabelMandatorySign"/>
 
-            <label text="$account.number" gridPos="(0,2)" styleClass="formLabel"/>
-            <textField ref="number" gridPos="(1,2)"/>
+            <label text="$form.mandatory.legend" gridPos="(0,2,3,1)" styleClass="formLabelMandatoryLegend"/>
 
-            <label text="$account.updateMode" gridPos="(0,3)" styleClass="formLabel"/>
-            <comboBox ref="updateMode" gridPos="(1,3)"/>
+            <label text="$account.number" gridPos="(0,3)" styleClass="formLabel"/>
+            <textField ref="number" gridPos="(1,3)"/>
 
-            <label text="$account.position" gridPos="(0,4)" styleClass="formLabel" autoHideSource="position"/>
-            <textField ref="position" gridPos="(1,4)"/>
+            <label text="$account.updateMode" gridPos="(0,4)" styleClass="formLabel"/>
+            <comboBox ref="updateMode" gridPos="(1,4)"/>
 
-            <label text="$account.date.start" gridPos="(0,5)" styleClass="formLabel"/>
-            <component ref="startDatePicker" gridPos="(1,5)" styleClass="datePicker"/>
-            <button action="removeStartDate" icon="button_delete.png" styleClass="icon"
-                    pressedIcon="button_delete_pressed.png" fill="none" gridPos="(2,5)"/>
+            <label text="$account.position" gridPos="(0,5)" styleClass="formLabel" autoHideSource="position"/>
+            <textField ref="position" gridPos="(1,5)"/>
 
-            <label text="$account.date.end" gridPos="(0,6)" styleClass="formLabel"/>
-            <component ref="endDatePicker" gridPos="(1,6)" styleClass="datePicker"/>
-            <button action="removeEndDate" icon="button_delete.png" styleClass="icon"
-                    pressedIcon="button_delete_pressed.png" fill="none" gridPos="(2,6)"/>
+            <label text="$account.date.start" gridPos="(0,6)" styleClass="formLabel"/>
+            <row gridPos="(1,6)">
+              <component ref="startDatePicker" styleClass="datePicker"/>
+              <button action="removeStartDate" icon="button_delete.png" styleClass="icon"
+                      pressedIcon="button_delete_pressed.png" fill="none"/>
+            </row>
+
+            <label text="$account.date.end" gridPos="(0,7)" styleClass="formLabel"/>
+            <row gridPos="(1,7)">
+              <component ref="endDatePicker" styleClass="datePicker"/>
+              <button action="removeEndDate" icon="button_delete.png" styleClass="icon"
+                      pressedIcon="button_delete_pressed.png" fill="none"/>
+            </row>
           </grid>
-          <filler fill="vertical" weightY="100"/>          
+          <filler fill="vertical" weightY="100"/>
         </column>
 
         <column marginLeft="10" weightX="5">

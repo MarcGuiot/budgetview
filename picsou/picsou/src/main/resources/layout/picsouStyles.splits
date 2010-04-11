@@ -44,6 +44,15 @@
            font="-,plain,12" foreground="import.form.label"
            anchor="west"/>
 
+    <style selector="label.formLabelMandatorySign" text="*"
+           font="-,plain,12" foreground="import.form.mandatory"
+           anchor="west" marginLeft="5" weightX="0"/>
+
+    <style selector="label.formLabelMandatoryLegend"
+           font="-,plain,11" foreground="import.form.mandatory"
+           fill="none" anchor="east" horizontalAlignment="right"
+           marginRight="5" weightX="0"/>
+
     <style selector="textField" fill="horizontal" weightX="10.0"/>
 
     <style selector="row.buttons"
@@ -137,9 +146,9 @@
            foreground="#FFFFFF" marginBottom="5" font="-,bold,13" weightY="0"
            shadowDirection="northwest" shadowColor="#222222"/>
     <style selector="label.totalAmountTitle" foreground="block.total.title" font="-,plain,10"
-           fill="vertical" anchor="bottom" weightY="0"/>
+           fill="none" anchor="bottom" weightY="0"/>
     <style selector=".totalAmount" foreground="block.total" font="-,bold,20"
-           fill="vertical" anchor="top" weightY="1"/>
+           fill="none" anchor="top" weightY="1"/>
 
     <style selector=".innerBlockBackground"
            opaque="true" background="block.inner.bg" border="line(block.inner.border)"
@@ -172,7 +181,8 @@
     <style selector=".footer" background="block.footer.bg" border="matte(1,0,0,0,block.footer.top)"
            opaque="true"/>
     <style selector=".footer button" ui="hyperlinkButtonWithoutUnderline" foreground="block.footer.button"
-           marginTop="2" marginBottom="2" fill="none"/>
+           marginTop="2" marginBottom="2" fill="none" iconTextGap="2"/>
+    <style selector=".footer label" foreground="block.footer.label" marginTop="2" marginBottom="2" anchor="center"/>
 
     <style selector=".blockScrollBorder" border="line(block.inner.border)"/>
     <style selector=".blockScrollBorder scrollPane" border="none" marginBottom="0"/>

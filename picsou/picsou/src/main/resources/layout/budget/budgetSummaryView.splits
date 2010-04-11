@@ -6,10 +6,11 @@
     <style selector="button.roundedButton" fill="none" weightX="0"/>
 
     <ui name="uncategorizedButtonUI" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
-        underline="true" useNormalColorWhenDisabled="true" autoHideEnabled="false"/>
+        underline="true" useNormalColorWhenDisabled="true" autoHideEnabled="false"
+        lineColor="block.total.underline"/>
+
     <style selector="button#uncategorized" ui="uncategorizedButtonUI" font="-,bold,12"
            weightX="10" fill="none"/>
-
     <style selector="button.totalAmount" ui="uncategorizedButtonUI" foreground="" weightX="10"/>
 
     <style selector="label#balanceLabel" font="-,bold,12"/>

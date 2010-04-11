@@ -12,11 +12,12 @@
         <panel ref="content" opaque="true" background="block.inner.bg" weightY="10"/>
 
         <row name="wizardControls" styleClass="footer" weightY="0.1">
-          <button action="previous" marginLeft="10"/>
+          <button action="previous" icon="button_prev.png" marginLeft="10"/>
           <filler fill="horizontal"/>
+          <label text="$wizard.page" marginRight="3"/>
           <comboBox ref="combo" marginTop="4" marginBottom="4"/>
           <filler fill="horizontal"/>
-          <button action="next" marginRight="10" foreground="#222222"/>
+          <button action="next" icon="button_next.png" marginRight="10" foreground="#222222"/>
         </row>
 
       </column>
