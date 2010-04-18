@@ -150,26 +150,26 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .switchToManual()
       .selectAllMonths().setAmount("100")
       .validate();
+
     timeline.selectMonth("2008/08");
-    budgetView.checkBalance((double)400);
+    budgetView.getSummary().checkMonthBalanceHidden();
 
     budgetView.recurring.createSeries()
       .setName("Loyer")
       .switchToManual()
       .setAmount("1000")
       .validate();
-    budgetView.checkBalance(-600.);
-
-    budgetView.getSummary().checkHelpMessageDisplayed(true);
-    budgetView.getSummary().openBudgetWizardPage().close();
+    budgetView.getSummary().checkHelpMessageDisplayed();
+    budgetView.getSummary().skipWizard();
+    budgetView.getSummary().checkMonthBalance(-600.00);
 
     restartApplication();
 
     views.selectBudget();
     timeline.selectMonth("2008/08");
-    budgetView.checkBalance(-600.);
+    budgetView.getSummary().checkMonthBalance(-600.00);
 
-    budgetView.getSummary().checkHelpMessageDisplayed(false);
+    budgetView.getSummary().checkHelpMessageHidden();
   }
 
   public void testCategorizationView() throws Exception {

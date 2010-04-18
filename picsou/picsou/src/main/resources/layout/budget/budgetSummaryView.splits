@@ -9,11 +9,13 @@
         underline="true" useNormalColorWhenDisabled="true" autoHideEnabled="false"
         lineColor="block.total.underline"/>
 
-    <style selector="button#uncategorized" ui="uncategorizedButtonUI" font="-,bold,12"
-           weightX="10" fill="none"/>
-    <style selector="button.totalAmount" ui="uncategorizedButtonUI" foreground="" weightX="10"/>
+    <style selector="button#balanceLabel" font="-,bold,14" fill="none" anchor="center"/>
 
-    <style selector="label#balanceLabel" font="-,bold,12"/>
+    <style selector="button.totalAmount" ui="uncategorizedButtonUI" foreground="" weightX="10"/>
+    
+    <style selector="button#uncategorized" ui="uncategorizedButtonUI" font="-,bold,14"
+           weightX="10" fill="none"/>
+
 
     <style selector="label.message"
            foreground="block.total.title" font="-,plain,10"
@@ -58,26 +60,39 @@
            pressedIcon="question_mark_rollover.png"
            disabledIcon="question_mark_disabled.png"/>
 
+    <style selector="htmlEditorPane#helpMessage"
+           border="empty(5,0,0,0)" foreground="budgetSummary.help.message"/>
+
   </styles>
 
   <column border="empty(10,10,10,10)">
-    <grid>
 
-      <button ref="openDetails" gridPos="(0,0,1,2)"/>
+    <row>
+      <button ref="openDetails"/>
 
-      <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle" gridPos="(1,0)"/>
-      <button ref="balanceLabel" styleClass="totalAmount" gridPos="(1,1)"
-              tooltipText="$budgetSummaryView.balance.tooltip"/>
+      <cards ref="cards">
+        <card name="beforeWizard">
+          <horizontalBoxes>
+            <label icon="budget_wizard_arrow.png" border="empty(0,10,0,10)"/>
+            <htmlEditorPane name="helpMessage" text="$budgetview.help.message"/>
+          </horizontalBoxes>
+        </card>
+        <card name="afterWizard">
+          <grid>
+            <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle" gridPos="(1,0)"/>
+            <button ref="balanceLabel" styleClass="totalAmount" gridPos="(1,1)"
+                    tooltipText="$budgetSummaryView.balance.tooltip"/>
 
-      <label ref="positionTitle" styleClass="totalAmountTitle" gridPos="(2,0)"/>
-      <button ref="positionLabel" styleClass="totalAmount" gridPos="(2,1)"/>
+            <label ref="positionTitle" styleClass="totalAmountTitle" gridPos="(2,0)"/>
+            <button ref="positionLabel" styleClass="totalAmount" gridPos="(2,1)"/>
 
-      <label text="$budgetSummaryView.uncategorized" styleClass="totalAmountTitle" gridPos="(3,0)"/>
-      <button ref="uncategorized" styleClass="uncategorized" gridPos="(3,1)"/>
+            <label text="$budgetSummaryView.uncategorized" styleClass="totalAmountTitle" gridPos="(3,0)"/>
+            <button ref="uncategorized" styleClass="uncategorized" gridPos="(3,1)"/>
+          </grid>
+        </card>
+      </cards>
+    </row>
 
-    </grid>
-
-    <label ref="helpMessage" text="$budgetview.help.message" styleClass="message"/>
 
     <label ref="multiSelectionLabel" styleClass="message"/>
 

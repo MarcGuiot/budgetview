@@ -17,6 +17,11 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     this.mainWindow = mainWindow;
   }
 
+  public BudgetSummaryViewChecker checkMonthBalanceHidden() {
+    checkComponentVisible(getPanel(), JButton.class, "balanceLabel", false);
+    return this;
+  }
+
   public BudgetSummaryViewChecker checkMonthBalance(double amount) {
     assertThat(getPanel().getButton("balanceLabel").textEquals(toString(amount, true)));
     return this;
@@ -56,8 +61,13 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     assertThat(getPanel().getTextBox("uncategorizedLabel").textEquals("-"));
   }
 
-  public void checkHelpMessageDisplayed(boolean visible) {
-    checkComponentVisible(getPanel(), JLabel.class, "helpMessage", visible);
+  public void checkHelpMessageDisplayed() {
+    checkComponentVisible(getPanel(), JEditorPane.class, "helpMessage", true);
+    checkMonthBalanceHidden();
+  }
+
+  public void checkHelpMessageHidden() {
+    checkComponentVisible(getPanel(), JEditorPane.class, "helpMessage", false);
   }
 
   public BudgetSummaryViewChecker checkMultiSelection(int count) {
@@ -79,6 +89,12 @@ public class BudgetSummaryViewChecker extends GuiChecker {
   public BudgetWizardPageChecker openBudgetWizardPage() {
     Window wizardWindow = WindowInterceptor.run(getPanel().getButton("openDetails").triggerClick());
     return new BudgetWizardPageChecker(wizardWindow);
+  }
+
+
+  public BudgetSummaryViewChecker skipWizard() {
+    openBudgetWizardPage().close();
+    return this;
   }
 
   public BudgetSummaryViewChecker checkNoEstimatedPositionDetails() {

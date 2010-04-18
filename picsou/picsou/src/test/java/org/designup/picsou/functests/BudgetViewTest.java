@@ -61,7 +61,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Salary", 3540.0, 3540.0);
     budgetView.income.checkSeries("Exceptional Income", 200.0, 0.0);
 
-    budgetView.checkBalance(3496.);
+    budgetView.getSummary().skipWizard().checkMonthBalance(3496.00);
 
     timeline.selectMonths("2008/08");
 
@@ -179,7 +179,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkTotalAmounts(3540.0, 3540.00);
     budgetView.income.checkSeries("Salary", 3540.0, 3540.0);
 
-    budgetView.checkBalance((3540 - 145 - 29));
+    budgetView.getSummary().skipWizard().checkMonthBalance(3540.00 - 145.00 - 29.00);
   }
 
   public void testEditingASeriesWithTransactions() throws Exception {
@@ -270,10 +270,10 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.income.checkTotalAmounts(0.00, 3540.00);
     budgetView.income.checkSeries("Salary", 0.00, 3540.00);
-    budgetView.checkBalance(-50);
+    budgetView.getSummary().skipWizard().checkMonthBalance(-50.00);
 
     timeline.selectMonth("2008/07");
-    budgetView.checkBalance(3540 - 95 - 29 - 50);
+    budgetView.getSummary().checkMonthBalance((double)(3540 - 95 - 29 - 50));
   }
 
   public void testSeveralMonthsShowOrNotSeries() throws Exception {
@@ -867,17 +867,18 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
   public void testHelpMessage() throws Exception {
     views.selectBudget();
-    budgetView.getSummary().checkHelpMessageDisplayed(false);
+    budgetView.getSummary().checkHelpMessageHidden();
 
     budgetView.recurring.createSeries()
       .setName("Taxes")
       .switchToManual()
       .setAmount(100)
       .validate();
-    budgetView.getSummary().checkHelpMessageDisplayed(true);
 
-    budgetView.getSummary().openBudgetWizardPage().close();
-    budgetView.getSummary().checkHelpMessageDisplayed(false);
+    budgetView.getSummary().checkHelpMessageDisplayed();
+
+    budgetView.getSummary().skipWizard();
+    budgetView.getSummary().checkHelpMessageHidden();
   }
 
   public void testPositiveEnvelopeBudgetDoNotCreateNegativePlannedTransaction() throws Exception {
