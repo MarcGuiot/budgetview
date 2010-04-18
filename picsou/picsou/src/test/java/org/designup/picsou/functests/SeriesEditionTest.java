@@ -735,7 +735,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     edition.setName(null)
       .switchToManual()
       .setAmount(null)
-      .getNameBox().pressKey(Key.A).pressKey(Key.A);
+      .getNameBox().pressKey(Key.shift(Key.A)).pressKey(Key.shift(Key.A));
     TextBox amount = edition.selectAllMonths().getAmountTextBox();
     JTextField textAmount = (JTextField)amount.getAwtComponent();
     textAmount.select(0, textAmount.getText().length());
