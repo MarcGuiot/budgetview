@@ -18,6 +18,7 @@ import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
+import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
@@ -39,7 +40,6 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   private JButton uncategorizedButton = new JButton();
   private JLabel multiSelectionLabel = new JLabel();
   private final DecimalFormat format = Formatting.DECIMAL_FORMAT;
-  private JLabel helpMessage = new JLabel();
 
   private BudgetWizardDialog budgetWizardDialog;
 
@@ -48,6 +48,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   private Color errorColor;
   private SplitsNode<JButton> openDetailsNode;
   private BudgetSummaryView.OpenDetailsAction openDetailsAction;
+  private CardHandler cards;
 
   public BudgetSummaryView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -71,6 +72,9 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budget/budgetSummaryView.splits",
                                                       repository, directory);
+
+    cards = builder.addCardHandler("cards");
+
     builder.add("balanceLabel", balanceLabel);
     builder.add("positionLabel", estimatedPositionLabel);
     builder.add("positionTitle", estimatedPositionTitle);
@@ -81,8 +85,6 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     uncategorizedButton.addActionListener(new GotoUncategorizedAction());
     balanceLabel.addActionListener(new OpenBalanceAction());
     estimatedPositionLabel.addActionListener(new OpenPositionAction());
-    builder.add("helpMessage", helpMessage);
-    helpMessage.setVisible(false);
 
     parentBuilder.add("budgetSummaryView", builder);
   }
@@ -273,17 +275,18 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   }
 
   private void updateHelpMessage() {
-    Glob prefs = repository.find(UserPreferences.KEY);
-    boolean showHelp =
-      openDetailsAction.isEnabled()
-      && (prefs != null)
-      && prefs.isTrue(UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE)
-      && repository.contains(Series.TYPE, not(fieldEquals(Series.ID, Series.UNCATEGORIZED_SERIES_ID)));
-
-    helpMessage.setVisible(showHelp);
-    if (openDetailsNode != null) {
-      openDetailsNode.applyStyle(showHelp ? "highlightedRoundButton" : "roundButton");
+    if ((cards == null) || (openDetailsNode == null)) {
+      return;
     }
+
+    Glob prefs = repository.find(UserPreferences.KEY);
+    boolean showHelp = openDetailsAction.isEnabled()
+                       && (prefs != null)
+                       && prefs.isTrue(UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE)
+                       && repository.contains(Series.TYPE, not(fieldEquals(Series.ID, Series.UNCATEGORIZED_SERIES_ID)));
+
+    cards.show(showHelp ? "beforeWizard" : "afterWizard");
+    openDetailsNode.applyStyle(showHelp ? "highlightedRoundButton" : "roundButton");
   }
 }
 

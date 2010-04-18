@@ -45,11 +45,6 @@ public class BudgetViewChecker extends GuiChecker {
     return -1;
   }
 
-  public BudgetViewChecker checkBalance(double free) {
-    getSummary().checkMonthBalance(free);
-    return this;
-  }
-
   public BudgetSummaryViewChecker getSummary() {
     return new BudgetSummaryViewChecker(window);
   }

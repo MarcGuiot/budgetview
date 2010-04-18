@@ -1227,7 +1227,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/09");
 
     views.selectBudget();
-    budgetView.getSummary().checkMonthBalance(-50);
+    budgetView.getSummary().skipWizard().checkMonthBalance(-50);
   }
 
   public void testCheckComboAccountContents() throws Exception {
@@ -1561,7 +1561,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     savingsAccounts.createSavingsAccount("ING", 1000.);
     views.selectBudget();
-    budgetView.getSummary().checkEndPosition(0);
+    budgetView.getSummary().skipWizard().checkEndPosition(0);
     budgetView.savings.createSeries().setName("Main to Savings")
       .setFromAccount("Main accounts")
       .setToAccount("External account")

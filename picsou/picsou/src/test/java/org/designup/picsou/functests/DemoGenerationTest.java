@@ -236,7 +236,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth(Month.toString(secondMonth));
-    budgetView.getSummary().openBudgetWizardPage().close();
+    budgetView.getSummary().skipWizard();
     budgetView.recurring.editSeries("EDF").setTwoMonths().validate();
 
     timeline.selectMonth(Month.toString(secondMonth));

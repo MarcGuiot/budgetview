@@ -28,8 +28,10 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     timeline.checkSelection("2008/07");
     timeline.selectAll();
-    budgetView.getSummary().checkUncategorized(1000.00 + 200.00 + 50.00);
-    budgetView.getSummary().gotoUncategorized();
+    budgetView.getSummary()
+      .skipWizard()
+      .checkUncategorized(1000.00 + 200.00 + 50.00)
+      .gotoUncategorized();
 
     views.checkCategorizationSelected();
     categorization.checkShowsUncategorizedTransactionsOnly();
@@ -40,6 +42,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     views.selectBudget();
     budgetView.getSummary()
+      .skipWizard()
       .checkMultiSelectionNotShown()
       .checkMonthBalance(+750.00)
       .checkEndPosition("End of jul 08 position", 2300.00)

@@ -128,6 +128,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     double balanceFor200807 = 1500 - (29.9 + 1500 + 60 + 20 + 10);
     budgetView.getSummary()
+      .skipWizard()
       .checkMonthBalance(balanceFor200807)
       .checkEndPosition(1529.90);
 
@@ -143,6 +144,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     double balanceFor200808 = 1500 - (29.9 + 1500 + 60 + 20 + 10);
     views.selectBudget();
     budgetView.getSummary()
+      .skipWizard()
       .checkMonthBalance(balanceFor200808)
       .checkEndPosition(1410.00);
     budgetView.getSummary().openBudgetWizardPage()
@@ -233,7 +235,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("Salaire", "Salaire");
 
     views.selectBudget();
-    budgetView.getSummary().checkMonthBalance(1500 - (200 - 40));
+    budgetView.getSummary().skipWizard().checkMonthBalance(1500 - (200 - 40));
 
     timeline.selectMonth("2008/08");
     double balanceFor200808 = 1500 - (200 - 40);
