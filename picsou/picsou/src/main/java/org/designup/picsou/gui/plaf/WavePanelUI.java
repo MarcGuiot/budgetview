@@ -10,7 +10,6 @@ import java.awt.geom.GeneralPath;
 import java.awt.image.VolatileImage;
 
 public class WavePanelUI extends BasicPanelUI {
-
   private Color topColor;
   private Color bottomColor;
   private Color waveColor;
@@ -18,7 +17,7 @@ public class WavePanelUI extends BasicPanelUI {
   protected GeneralPath path;
   private int width;
   private int height;
-  private VolatileImage image;
+  private VolatileImage image = null;
 
   public WavePanelUI() {
     path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);

@@ -27,10 +27,25 @@
         </column>
 
         <column weightX="7" preferredSize="(560,460)">
+
           <row weightY="0.1">
             <label text="$seriesEdition.name" styleClass="formLabel" marginBottom="4"/>
             <textField ref="nameField" marginBottom="4"/>
+            <label text="$seriesEdition.budgetArea" styleClass="formLabel" autoHideSource="budgetAreaChooser"
+                   marginLeft="10" marginBottom="4"/>
+            <comboBox ref="budgetAreaChooser" marginBottom="4"/>
           </row>
+
+          <!--<grid>-->
+            <!--<label text="$seriesEdition.name" styleClass="formLabel" gridPos="(0,0)"/>-->
+            <!--<textField ref="nameField" gridPos="(1,0)"/>-->
+            <!--<label text="$seriesEdition.budgetArea" styleClass="formLabel" autoHideSource="budgetAreaChooser"-->
+                   <!--gridPos="(0,1)" marginBottom="4"/>-->
+            <!--<row gridPos="(1,1)" marginBottom="4">-->
+              <!--<comboBox ref="budgetAreaChooser"/>-->
+              <!--<filler fill="horizontal"/>-->
+            <!--</row>-->
+          <!--</grid>-->
 
           <column autoHideSource="fromAccount" border="empty(10 ,0,15,0)">
             <label text="$seriesEdition.accountSelection" styleClass="separatorTitle"/>
@@ -126,10 +141,12 @@
                     <label text="$seriesEdition.dayChooser" styleClass="formLabelTop" autoHideSource="dayChooser"/>
                     <comboBox ref="dayChooser" autoHideIfDisabled="true"/>
 
-                    <label text="$seriesEdition.budgetArea" autoHideSource="budgetAreaChooser"/>
-                    <comboBox ref="budgetAreaChooser"/>
+                    <!--<row border="matte(1,0,0,0,dialog.separator.light)" marginTop="10">-->
+                    <!--<label text="$seriesEdition.budgetArea" styleClass="formLabel"-->
+                    <!--autoHideSource="budgetAreaChooser" marginTop="10"/>-->
+                    <!--<comboBox ref="budgetAreaChooser" marginTop="10"/>-->
+                    <!--</row>-->
                     <filler fill="vertical"/>
-
                   </column>
                 </column>
 
