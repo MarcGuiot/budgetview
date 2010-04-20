@@ -24,9 +24,6 @@ public class ArrowButtonUI extends BasicButtonUI {
     button.setBorderPainted(false);
     button.setBorder(null);
     button.setRolloverEnabled(true);
-    if (shapeSize == null) {
-      shapeSize = button.getPreferredSize();
-    }
   }
 
   public void paint(Graphics g, JComponent button) {
@@ -36,7 +33,13 @@ public class ArrowButtonUI extends BasicButtonUI {
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     initColor(g2, button);
 
-    int shapeHeight = shapeSize.height;
+    int shapeHeight;
+    if (shapeSize == null) {
+      shapeHeight = button.getSize().height;
+    }
+    else {
+      shapeHeight = shapeSize.height;
+    }
 
     int areaWidth = button.getWidth() - 1;
     int areaHeight = button.getHeight() - 1;
