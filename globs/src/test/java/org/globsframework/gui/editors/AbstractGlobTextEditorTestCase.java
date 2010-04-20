@@ -129,10 +129,10 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
     textBox.insertText("AA", 0);
     changeListener.assertLastChangesEqual(
       "<update type='dummyObject' id='1' name='AA' _name=''/>");
-    textBox.pressKey(Key.A);
+    textBox.pressKey(Key.shift(Key.A));
     changeListener.assertLastChangesEqual(
       "<update type='dummyObject' id='1' name='AAA' _name='AA'/>");
-    textBox.pressKey(Key.B);
+    textBox.pressKey(Key.shift(Key.B));
     changeListener.assertLastChangesEqual(
       "<update type='dummyObject' id='1' name='AAAB' _name='AAA'/>");
   }

@@ -441,6 +441,17 @@ public class SplitsComponentsTest extends SplitsTestCase {
     assertEquals("OK", button.getText());
   }
 
+  public void testReferencingATab() throws Exception {
+    JTabbedPane tabs = new JTabbedPane();
+    builder.add("tabs", tabs);
+    assertSame(tabs, parse(
+      "<tabs ref='tabs'>" +
+      "  <tab title='Tab 1'>" +
+      "    <label text='Blah'/>" +
+      "  </tab>" +
+      "</tabs>"));
+  }
+
   public void testTabGroupCanOnlyHaveTabElements() throws Exception {
     try {
       parseWithoutSchemaValidation(
