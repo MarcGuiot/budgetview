@@ -141,6 +141,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.getEnvelopes().editSeries("Groceries")
+      .gotoSubSeriesTab()
       .renameSubSeries("Food", "Misc")
       .validate();
 
@@ -203,6 +204,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     SeriesEditionDialogChecker editionDialogChecker = budgetView.envelopes.editSeries("Maison");
     editionDialogChecker
+      .gotoSubSeriesTab()
       .deleteSubSeriesWithConfirmation("Travaux")
       .validate();
     editionDialogChecker.validate();
@@ -248,6 +250,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     SeriesEditionDialogChecker seriesDialog = categorization.getEnvelopes().editSeries("series1");
     seriesDialog
+      .gotoSubSeriesTab()
       .deleteSubSeriesWithConfirmation("subSeries1", "subSeries3")
       .checkDeletionOptions("Move them to series 'series1'",
                             "Move them to sub-series 'subSeries2'",

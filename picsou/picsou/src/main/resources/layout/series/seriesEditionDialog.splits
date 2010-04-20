@@ -66,7 +66,7 @@
             </row>
           </column>
 
-          <tabs marginTop="10">
+          <tabs marginTop="10" ref="tabs">
             <tab title="$seriesEdition.tabs.terms">
               <row margin="5">
                 <column marginTop="5" weightX="0" preferredSize="(200,400)"

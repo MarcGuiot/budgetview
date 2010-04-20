@@ -84,6 +84,7 @@ public class SeriesEditionDialog {
   static private Set<Integer> CHANGABLE_BUDGET_AREA =
     new HashSet<Integer>(Arrays.asList(BudgetArea.ENVELOPES.getId(), BudgetArea.RECURRING.getId(), BudgetArea.EXTRAS.getId()));
   private GlobLinkComboEditor budgetAreaCombo;
+  private JTabbedPane tabbedPane;
 
   public SeriesEditionDialog(final GlobRepository repository, Directory directory) {
     this(directory.get(JFrame.class), repository, directory);
@@ -119,6 +120,7 @@ public class SeriesEditionDialog {
                                                       "/layout/series/seriesEditionDialog.splits",
                                                       localRepository, localDirectory);
 
+    tabbedPane = builder.add("tabs", new JTabbedPane()).getComponent();
     titleLabel = builder.add("title", new JLabel("SeriesEditionDialog")).getComponent();
 
     seriesList = GlobListView.init(Series.TYPE, localRepository, localDirectory);
@@ -596,6 +598,7 @@ public class SeriesEditionDialog {
       budgetEditionPanel.selectMonths(monthIds);
       updateMonthSelectionCard();
     }
+    tabbedPane.setSelectedIndex(0);
     dialog.pack();
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {

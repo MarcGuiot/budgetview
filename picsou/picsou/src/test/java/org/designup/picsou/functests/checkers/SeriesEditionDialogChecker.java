@@ -795,4 +795,9 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     assertFalse(dialog.getComboBox("budgetAreaChooser").isVisible());
     return this;
   }
+
+  public SeriesEditionDialogChecker checkMainTabIsSelected() {
+    assertThat(dialog.getTabGroup().selectedTabEquals("Terms"));
+    return this;
+  }
 }

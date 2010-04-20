@@ -1610,4 +1610,21 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkBudgetAreaIsHidden()
       .validate();
   }
+
+  public void testChangeTabAndReopen() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/01", -29.00, "Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRow(0);
+    categorization.selectEnvelopes().createSeries()
+      .setName("Groceries")
+      .gotoSubSeriesTab()
+      .validate();
+
+    categorization.editSeries("Groceries")
+      .checkMainTabIsSelected()
+      .cancel();
+  }
 }
