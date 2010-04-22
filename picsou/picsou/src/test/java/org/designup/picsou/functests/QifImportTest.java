@@ -155,10 +155,10 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTransactions("Tx 2");
     transactionDetails.split("-1.19", "info 1");
-    categorization.selectEnvelopes().selectNewSeries("Income");
+    categorization.selectVariable().selectNewSeries("Income");
 
     transactionDetails.split("-0.69", "info 2");
-    categorization.selectEnvelopes().selectSeries("Income");
+    categorization.selectVariable().selectSeries("Income");
     transactionDetails.split("-0.01", "info 3");
 
     QifBuilder

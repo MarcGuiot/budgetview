@@ -37,7 +37,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     categorization.checkShowsUncategorizedTransactionsOnly();
     categorization.checkNoSelectedTableRows();
     categorization.selectTransactions("WorldCo").selectIncome().createSeries("Salary");
-    categorization.selectTransactions("Auchan").selectEnvelopes().createSeries("Groceries");
+    categorization.selectTransactions("Auchan").selectVariable().createSeries("Groceries");
 
     timeline.selectMonth("2008/07");
     views.selectBudget();
@@ -65,7 +65,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.showAllTransactions();
-    categorization.setNewEnvelope("FNAC", "Leisures");
+    categorization.setNewVariable("FNAC", "Leisures");
 
     timeline.selectMonth("2008/07");
     views.selectBudget();
@@ -90,40 +90,40 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/04", -150, "Auchan")
       .load();
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "courses");
-    categorization.setNewEnvelope("fringue", "habillement");
+    categorization.setNewVariable("Auchan", "courses");
+    categorization.setNewVariable("fringue", "habillement");
 
     views.selectBudget();
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("habillement", -30, -30)
+    budgetView.variable.checkSeries("habillement", -30, -30)
       .checkSeries("courses", -150, -150);
 
-    setEnvelopesAmount("habillement", 70);
-    setEnvelopesAmount("courses", 130);
-    budgetView.envelopes
+    setVariableAmount("habillement", 70);
+    setVariableAmount("courses", 130);
+    budgetView.variable
       .checkSeriesGaugeRemaining("courses", 0., true)
       .checkGaugeTooltip("habillement", "Reste : 40")
       .checkTotalErrorOverrun()
       .checkTotalAmounts(-180, -200)
       .checkTotalTooltips(40., 20., 200. + 20.);
 
-    setEnvelopesAmount("habillement", 50);
-    budgetView.envelopes.checkTotalErrorOverrun()
+    setVariableAmount("habillement", 50);
+    budgetView.variable.checkTotalErrorOverrun()
       .checkTotalAmounts(-180, -180)
       .checkTotalTooltips(20., 20., 180. + 20.);
 
-    setEnvelopesAmount("habillement", 40);
-    budgetView.envelopes.checkTotalErrorOverrun()
+    setVariableAmount("habillement", 40);
+    budgetView.variable.checkTotalErrorOverrun()
       .checkTotalAmounts(-180, -170)
       .checkTotalTooltips(10., 20., 170. + 20.);
 
-    setEnvelopesAmount("habillement", 30);
-    budgetView.envelopes.checkTotalErrorOverrun()
+    setVariableAmount("habillement", 30);
+    budgetView.variable.checkTotalErrorOverrun()
       .checkTotalAmounts(-180, -160)
       .checkTotalTooltips(0., 20., 160. + 20.);
 
-    setEnvelopesAmount("habillement", -20);
-    budgetView.envelopes.checkSeries("habillement", -30, 20)
+    setVariableAmount("habillement", -20);
+    budgetView.variable.checkSeries("habillement", -30, 20)
       .checkGaugeTooltip("habillement", "Attendu : 50")
       .checkSeriesGaugeRemaining("habillement", 50., false)
       .checkTotalErrorOverrun()
@@ -200,37 +200,37 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .load();
     views.selectCategorization();
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "courses");
-    categorization.setNewEnvelope("remboursement", "SECU");
+    categorization.setNewVariable("Auchan", "courses");
+    categorization.setNewVariable("remboursement", "SECU");
     views.selectBudget();
     timeline.selectMonth("2008/07");
 
-    setEnvelopesAmount("SECU", 40);
-    setEnvelopesAmount("courses", 140);
+    setVariableAmount("SECU", 40);
+    setVariableAmount("courses", 140);
 
-    budgetView.envelopes.checkTotalAmounts(-120, -100)
+    budgetView.variable.checkTotalAmounts(-120, -100)
       .checkTotalTooltips(10, 110)
       .checkTotalGaugeTooltips("Attendu : 10", "Dépassement : 10");
 
-    setEnvelopesAmount("SECU", 30);
-    setEnvelopesAmount("courses",150);
+    setVariableAmount("SECU", 30);
+    setVariableAmount("courses",150);
 
-    budgetView.envelopes.checkTotalGauge(-120, -120);
+    budgetView.variable.checkTotalGauge(-120, -120);
 
-    setEnvelopesAmount("SECU", 40);
-    budgetView.envelopes.checkTotalAmounts(-120, -110)
+    setVariableAmount("SECU", 40);
+    budgetView.variable.checkTotalAmounts(-120, -110)
       .checkTotalGaugeTooltips("Attendu : 10");
 
-    setEnvelopesAmount("courses", 180);
-    budgetView.envelopes.checkTotalGaugeTooltips("Attendu : 10", "Reste : 30")
+    setVariableAmount("courses", 180);
+    budgetView.variable.checkTotalGaugeTooltips("Attendu : 10", "Reste : 30")
       .checkGaugeTooltip("SECU", "Attendu : 10")
       .checkGaugeTooltip("courses", "Reste : 30");
 
-    setEnvelopesAmount("courses", 120);
+    setVariableAmount("courses", 120);
 
-    setEnvelopesAmount("SECU", 20);
+    setVariableAmount("SECU", 20);
 
-    budgetView.envelopes.checkTotalGaugeTooltips("Dépassement : 30", "Extra : 10")
+    budgetView.variable.checkTotalGaugeTooltips("Dépassement : 30", "Extra : 10")
       .checkGaugeTooltip("SECU", "Extra : 10")
       .checkGaugeTooltip("courses", "Dépassement : 30")
       .checkTotalTooltips(20, 120);
@@ -244,24 +244,24 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "courses");
+    categorization.setNewVariable("Auchan", "courses");
     views.selectBudget();
 
-    budgetView.envelopes.editSeries("courses").switchToManual()
+    budgetView.variable.editSeries("courses").switchToManual()
       .selectAllMonths().setAmount(150).validate();
 
     timeline.selectAll();
     String nonDepense = "Non dépensé : 150";
     String reste = "Reste : 30";
-    budgetView.envelopes
+    budgetView.variable
       .checkGaugeTooltip("courses", nonDepense, reste)
       .checkTotalGaugeTooltips(nonDepense, reste)
       .checkTotalAmounts(-270., -450.);
 
-    setEnvelopesAmount("courses", 100);
+    setVariableAmount("courses", 100);
     nonDepense = "Non dépensé : 100";
     String depassement = "Dépassement : 70";
-    budgetView.envelopes
+    budgetView.variable
       .checkGaugeTooltip("courses", nonDepense, depassement)
       .checkTotalGaugeTooltips(nonDepense, depassement);
   }
@@ -272,14 +272,14 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/04", 29, "mutuel")
       .load();
     views.selectCategorization();
-    categorization.setNewEnvelope("medecin", "secu");
-    categorization.setEnvelope("mutuel", "secu");
+    categorization.setNewVariable("medecin", "secu");
+    categorization.setVariable("mutuel", "secu");
     views.selectBudget();
-    budgetView.envelopes.editSeries("secu").switchToManual()
+    budgetView.variable.editSeries("secu").switchToManual()
       .selectAllMonths().setAmount(0)
       .validate();
     timeline.selectAll();
-    budgetView.envelopes.checkTotalGaugeTooltips("Dépassement : 1")
+    budgetView.variable.checkTotalGaugeTooltips("Dépassement : 1")
       .checkTotalErrorOverrun();
   }
 
@@ -323,8 +323,8 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkGaugeBeginInError();
   }
 
-  private void setEnvelopesAmount(final String seriesName, final double amount) {
-    SeriesAmountEditionDialogChecker seriesAmountEditionChecker = budgetView.envelopes.editPlannedAmount(seriesName);
+  private void setVariableAmount(final String seriesName, final double amount) {
+    SeriesAmountEditionDialogChecker seriesAmountEditionChecker = budgetView.variable.editPlannedAmount(seriesName);
     if (amount < 0) {
       seriesAmountEditionChecker.selectPositiveAmounts();
     }

@@ -27,7 +27,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
 
   private BudgetArea[] budgetAreas =
     {BudgetArea.UNCATEGORIZED,
-     BudgetArea.INCOME, BudgetArea.RECURRING, BudgetArea.ENVELOPES,
+     BudgetArea.INCOME, BudgetArea.RECURRING, BudgetArea.VARIABLE,
      BudgetArea.SAVINGS, BudgetArea.EXTRAS, BudgetArea.OTHER};
 
   private GlobRepository repository;

@@ -42,7 +42,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("Big Inc.", "Mary's");
     categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("Orange", "Mobile");
-    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries");
     categorization.setNewSavings("Virt Epargne", "Virt Livret", "Main accounts", "Livret");
 
     views.selectEvolution();
@@ -54,7 +54,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesEvolution.balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Recurring", 80.00)
-      .checkValue("Envelopes", 450.00)
+      .checkValue("Variable", 450.00)
       .checkValue("Savings", 100.00);
     seriesEvolution.checkBalanceChartLabel("Main accounts balance");
     seriesEvolution.seriesChart.getSingleDataset()
@@ -102,7 +102,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesEvolution.balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Recurring", 90.00)
-      .checkValue("Envelopes", 450.00)
+      .checkValue("Variable", 450.00)
       .checkValue("Savings", 100.00);
     seriesEvolution.seriesChart.getSingleDataset()
       .checkSize(2)
@@ -117,7 +117,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesEvolution.balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Recurring", 90.00)
-      .checkValue("Envelopes", 450.00)
+      .checkValue("Variable", 450.00)
       .checkValue("Savings", 100.00);
     seriesEvolution.checkBalanceChartLabel("Main accounts balance");
     seriesEvolution.seriesChart.getSingleDataset()
@@ -133,7 +133,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesEvolution.balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Recurring", 90.00, true)
-      .checkValue("Envelopes", 450.00)
+      .checkValue("Variable", 450.00)
       .checkValue("Savings", 100.00);
     seriesEvolution.checkBalanceChartLabel("Main accounts balance");
     seriesEvolution.seriesChart.getSingleDataset()
@@ -149,7 +149,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesEvolution.balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Recurring", 90.00, true)
-      .checkValue("Envelopes", 450.00)
+      .checkValue("Variable", 450.00)
       .checkValue("Savings", 100.00);
     seriesEvolution.checkBalanceChartLabel("Main accounts balance");
     seriesEvolution.seriesChart.getSingleDataset()
@@ -167,7 +167,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesEvolution.balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Recurring", 90.00)
-      .checkValue("Envelopes", 450.00)
+      .checkValue("Variable", 450.00)
       .checkValue("Savings", 100.00);
   }
 
@@ -186,7 +186,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("Big Inc.", "Mary's");
     categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("Orange", "Mobile");
-    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries");
 
     views.selectEvolution();
 
@@ -204,7 +204,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("Income", 500.00);
     seriesEvolution.balanceChart.getRightDataset()
       .checkSize(2)
-      .checkValue("Envelopes", 400.00, true)
+      .checkValue("Variable", 400.00, true)
       .checkValue("Recurring", 150.00);
 
     seriesEvolution.balanceChart.click(0.8, 0.2);
@@ -309,7 +309,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewIncome("WorldCo", "John's");
-    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries");
 
     views.selectEvolution();
     seriesEvolution.select("To categorize");
@@ -348,7 +348,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.checkShowsUncategorizedTransactionsOnly();
     categorization.checkSelectedTableRow("UNKNOWN 3");
 
-    categorization.setNewEnvelope("UNKNOWN 3", "Misc");
+    categorization.setNewVariable("UNKNOWN 3", "Misc");
     
     views.selectEvolution();
     seriesEvolution.checkSelected("To categorize");
@@ -379,7 +379,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("Big Inc.", "Mary's");
     categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("Orange", "Mobile");
-    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries");
     categorization.setNewExtra("Check n. 12345", "Gift");
     categorization.setNewExtra("Fouquet's", "Dining");
 
@@ -391,7 +391,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("Extras", 250.00);
     seriesEvolution.balanceChart.getRightDataset()
       .checkSize(2)
-      .checkValue("Envelopes", 400.00)
+      .checkValue("Variable", 400.00)
       .checkValue("Recurring", 150.00);
 
     seriesEvolution.seriesChart.getSingleDataset()
@@ -408,7 +408,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("Extras", 250.00, true);
     seriesEvolution.balanceChart.getRightDataset()
       .checkSize(2)
-      .checkValue("Envelopes", 400.00)
+      .checkValue("Variable", 400.00)
       .checkValue("Recurring", 150.00);
     seriesEvolution.seriesChart.getSingleDataset()
       .checkSize(2)
@@ -428,8 +428,8 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewIncome("WorldCo", "John's");
-    categorization.setNewEnvelope("Auchan", "Groceries");
-    categorization.setNewEnvelope("Elf", "Fuel");
+    categorization.setNewVariable("Auchan", "Groceries");
+    categorization.setNewVariable("Elf", "Fuel");
 
     views.selectEvolution();
 
@@ -439,7 +439,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("Income", 300.00);
     seriesEvolution.balanceChart.getRightDataset()
       .checkSize(1)
-      .checkValue("Envelopes", 550.00);
+      .checkValue("Variable", 550.00);
     seriesEvolution.seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Groceries", 450.00)

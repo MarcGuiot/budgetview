@@ -15,7 +15,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .load(2, 0);
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Menu K 1", "dej");
+    categorization.setNewVariable("Menu K 1", "dej");
 
     views.selectHome();
     OfxBuilder
@@ -39,7 +39,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTransaction("MENU K 1");
-    categorization.selectEnvelopes()
+    categorization.selectVariable()
       .createSeries()
       .setName("Restau")
       .gotoSubSeriesTab()
@@ -70,7 +70,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
 
   public void testNoAutoCategorizationIfAmbiguityOnSubSeries() throws Exception {
     views.selectBudget();
-    budgetView.envelopes
+    budgetView.variable
       .createSeries()
       .setName("Restau")
       .gotoSubSeriesTab()
@@ -86,8 +86,8 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setEnvelope("MENU K 1", "Restau", "Jap");
-    categorization.setEnvelope("MENU K 2", "Restau", "Grec");
+    categorization.setVariable("MENU K 1", "Restau", "Jap");
+    categorization.setVariable("MENU K 2", "Restau", "Grec");
 
     categorization.checkTable(new Object[][]{
       {"10/01/2006", "Restau / Jap", "MENU K 1", -15.00},
@@ -125,7 +125,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Menu K", "dej");
+    categorization.setNewVariable("Menu K", "dej");
     OfxBuilder
       .init(this)
       .addCardAccount("000111", -1.3, "2006/01/12")
@@ -148,8 +148,8 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2005/11/07", -1.1, "Menu K")
       .load();
     views.selectCategorization();
-    categorization.setNewEnvelope("Menu K", "dej");
-    categorization.setNewEnvelope(0, "resto");
+    categorization.setNewVariable("Menu K", "dej");
+    categorization.setNewVariable(0, "resto");
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/12", -1.3, "Menu K")
@@ -159,7 +159,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.showAllTransactions();
-    categorization.setEnvelope(2, "resto");
+    categorization.setVariable(2, "resto");
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/13", -1.3, "Menu K")
@@ -174,7 +174,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Cheque 1")
       .load();
     views.selectCategorization();
-    categorization.setNewEnvelope("Cheque N°1", "dej");
+    categorization.setNewVariable("Cheque N°1", "dej");
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/11", -1.1, "Cheque 2")
@@ -193,7 +193,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .load(0.);
 
     views.selectCategorization();
-    categorization.setNewEnvelope(0, "Mutuelle");
+    categorization.setNewVariable(0, "Mutuelle");
 
     QifBuilder
       .init(this)
@@ -213,14 +213,14 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectBudget();
-    budgetView.envelopes.createSeries()
+    budgetView.variable.createSeries()
       .setName("Courses")
       .setCustom()
       .setStartDate(200804)
       .setEndDate(200805)
       .validate();
 
-    budgetView.envelopes.createSeries()
+    budgetView.variable.createSeries()
       .setName("Courses_2")
       .setCustom()
       .validate();
@@ -228,7 +228,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization
       .selectTransactions("Auchan")
-      .selectEnvelopes()
+      .selectVariable()
       .selectSeries("Courses");
 
     OfxBuilder
@@ -240,7 +240,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .unselectAllTransactions()
       .selectTransaction("2_Auchan")
       .checkToCategorize()
-      .selectEnvelopes()
+      .selectVariable()
       .selectSeries("Courses_2");
 
     OfxBuilder
@@ -250,7 +250,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization
       .selectTransaction("3_Auchan")
-      .getEnvelopes().checkSeriesIsSelected("Courses_2");
+      .getVariable().checkSeriesIsSelected("Courses_2");
   }
 
   public void testAutoCategorisationOnSameLabelWithNumber() throws Exception {
@@ -261,8 +261,8 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Menu K 1", "dej");
-    categorization.setNewEnvelope("Menu K", "petit dej");
+    categorization.setNewVariable("Menu K 1", "dej");
+    categorization.setNewVariable("Menu K", "petit dej");
 
     OfxBuilder
       .init(this)

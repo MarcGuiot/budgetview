@@ -73,9 +73,9 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Vinci", "Transports");
-    categorization.setNewEnvelope("Virgin", "Leisures");
-    categorization.setEnvelope("FNAC", "Leisures");
+    categorization.setNewVariable("Vinci", "Transports");
+    categorization.setNewVariable("Virgin", "Leisures");
+    categorization.setVariable("FNAC", "Leisures");
 
     views.selectData();
     timeline.selectAll();
@@ -115,9 +115,9 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Vinci", "Transports");
-    categorization.setNewEnvelope("Virgin", "Leisures");
-    categorization.setEnvelope("FNAC", "Leisures");
+    categorization.setNewVariable("Vinci", "Transports");
+    categorization.setNewVariable("Virgin", "Leisures");
+    categorization.setVariable("FNAC", "Leisures");
 
     views.selectData();
     timeline.selectAll();

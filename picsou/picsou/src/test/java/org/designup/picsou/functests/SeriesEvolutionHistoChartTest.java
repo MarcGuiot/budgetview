@@ -27,7 +27,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries");
     categorization.setNewIncome("WorldCo", "John's");
     categorization.setNewIncome("Big Inc.", "Mary's");
 
@@ -110,7 +110,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries");
 
     timeline.selectMonth("2009/07");
 
@@ -208,7 +208,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries");
     categorization.setNewIncome("WorldCo", "John's");
 
     views.selectEvolution();

@@ -176,22 +176,22 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("OPTIBOX ABT INTERNET 2523Z233", "Internet");
     categorization.setNewRecurring("EDF", "EDF");
 
-    categorization.setNewEnvelope("HYPER M", "Courses");
-    categorization.setEnvelope("BIO PLUS", "Courses");
+    categorization.setNewVariable("HYPER M", "Courses");
+    categorization.setVariable("BIO PLUS", "Courses");
     categorization.selectTransactions("RETRAIT GAB 4463", "RETRAIT GAB 5234", "RETRAIT GAB 0301",
                                       "RETRAIT GAB 5642", "RETRAIT GAB 1867", "RETRAIT GAB 9011")
-      .selectEnvelopes().selectNewSeries("Liquide");
+      .selectVariable().selectNewSeries("Liquide");
 
-    categorization.setNewEnvelope("GROUPE CINE SPECT.", "Loisirs");
-    categorization.setEnvelope("RESA CONCERTS. N151435", "Loisirs");
-    categorization.setEnvelope("JOURNAUX 2000", "Loisirs");
-    categorization.setEnvelope("UGC", "Loisirs");
+    categorization.setNewVariable("GROUPE CINE SPECT.", "Loisirs");
+    categorization.setVariable("RESA CONCERTS. N151435", "Loisirs");
+    categorization.setVariable("JOURNAUX 2000", "Loisirs");
+    categorization.setVariable("UGC", "Loisirs");
 
-    categorization.setNewEnvelope("CHAUSS'MODE", "Habillement");
-    categorization.setEnvelope("AU PIED AGILE", "Habillement");
-    categorization.setEnvelope("PARIS MODE CENTRE", "Habillement");
+    categorization.setNewVariable("CHAUSS'MODE", "Habillement");
+    categorization.setVariable("AU PIED AGILE", "Habillement");
+    categorization.setVariable("PARIS MODE CENTRE", "Habillement");
 
-    categorization.setNewEnvelope("ZINGMAN", "Divers");
+    categorization.setNewVariable("ZINGMAN", "Divers");
 
     categorization.setNewExtra("PLOMBERIE 24/7", "Plombier");
 
@@ -227,10 +227,10 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .setLabel("Boulangerie").setAmount(-5).setDay(6).create()
       .setLabel("Primeur").setAmount(-20).setDay(9).create();
 
-    categorization.setNewEnvelope("Boulangerie", "Tous les jours");
-    categorization.setEnvelope("Primeur", "Tous les jours");
-    categorization.setEnvelope("Boucherie", "Tous les jours");
-    categorization.setEnvelope("Retrait", "Liquide");
+    categorization.setNewVariable("Boulangerie", "Tous les jours");
+    categorization.setVariable("Primeur", "Tous les jours");
+    categorization.setVariable("Boucherie", "Tous les jours");
+    categorization.setVariable("Retrait", "Liquide");
 
     //======== SERIES TUNING ===========
 
@@ -240,13 +240,13 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.editSeries("EDF").setTwoMonths().validate();
 
     timeline.selectMonth(Month.toString(secondMonth));
-    budgetView.envelopes.editSeries("Courses")
+    budgetView.variable.editSeries("Courses")
       .switchToManual()
       .selectAllMonths()
       .setAmount(750.0)
       .validate();
 
-    budgetView.envelopes.editSeries("Habillement")
+    budgetView.variable.editSeries("Habillement")
       .switchToManual()
       .selectAllMonths()
       .setAmount(50.0)

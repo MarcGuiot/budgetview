@@ -41,14 +41,14 @@ public class SeriesBudgetTest extends LoggedInFunctionalTestCase {
   public void testAddMonthWithDifferentValueInSerireBudget() throws Exception {
 
     views.selectBudget();
-    budgetView.envelopes.createSeries().setName("Courses")
+    budgetView.variable.createSeries().setName("Courses")
       .switchToManual().selectAllMonths().setAmount(100).validate();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     timeline.checkSpanEquals("2009/04", "2009/06");
     timeline.selectMonth("2009/06");
-    budgetView.envelopes.
+    budgetView.variable.
       checkSeries("Courses", 0, -100);
-    budgetView.envelopes
+    budgetView.variable
       .editSeries("Courses")
       .selectMonth(200906)
       .setAmount(200)
@@ -57,10 +57,10 @@ public class SeriesBudgetTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(3).validate();
     timeline.checkSpanEquals("2009/04", "2009/07");
     timeline.selectMonth("2009/06");
-    budgetView.envelopes.
+    budgetView.variable.
       checkSeries("Courses", 0, -200);
     timeline.selectMonth("2009/07");
-    budgetView.envelopes.
+    budgetView.variable.
       checkSeries("Courses", 0, -200);
   }
 }

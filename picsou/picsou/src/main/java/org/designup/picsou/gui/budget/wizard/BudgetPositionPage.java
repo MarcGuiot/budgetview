@@ -116,7 +116,7 @@ public class BudgetPositionPage extends AbstractWizardPage {
     builder.addLabel("initialPosition", BudgetStat.TYPE, new InitialPositionStringifier());
     addLabel(builder, "remainingIncome", false, BudgetStat.INCOME_POSITIVE_REMAINING, BudgetStat.INCOME_NEGATIVE_REMAINING);
     addLabel(builder, "remainingFixed", true, BudgetStat.RECURRING_POSITIVE_REMAINING, BudgetStat.RECURRING_NEGATIVE_REMAINING);
-    addLabel(builder, "remainingEnvelope", true, BudgetStat.ENVELOPES_POSITIVE_REMAINING, BudgetStat.ENVELOPES_NEGATIVE_REMAINING);
+    addLabel(builder, "remainingVariable", true, BudgetStat.VARIABLE_POSITIVE_REMAINING, BudgetStat.VARIABLE_NEGATIVE_REMAINING);
     addLabel(builder, "remainingInSavings", false, BudgetStat.SAVINGS_IN_POSITIVE_REMAINING);
     addLabel(builder, "remainingOutSavings", true, BudgetStat.SAVINGS_OUT_NEGATIVE_REMAINING);
     addLabel(builder, "remainingExtras", true, BudgetStat.EXTRAS_POSITIVE_REMAINING, BudgetStat.EXTRAS_NEGATIVE_REMAINING);

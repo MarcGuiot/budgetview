@@ -161,7 +161,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTransactions("Tx 2");
     transactionDetails.split("-1", "info");
-    categorization.selectEnvelopes().selectNewSeries("Series 1");
+    categorization.selectVariable().selectNewSeries("Series 1");
 
     OfxBuilder
       .init(this)
@@ -189,12 +189,12 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTransactions("Tx 2");
     transactionDetails.split("-1.5", "info");
-    categorization.selectEnvelopes().selectNewSeries("Series 1");
+    categorization.selectVariable().selectNewSeries("Series 1");
 
     categorization.selectTableRow(categorization.getTable()
       .getRowIndex(CategorizationChecker.AMOUNT_COLUMN_INDEX, -4.2 + 1.5));
     transactionDetails.split("-1.5", "info2");
-    categorization.selectEnvelopes().selectNewSeries("Series 2");
+    categorization.selectVariable().selectNewSeries("Series 2");
 
     OfxBuilder
       .init(this)

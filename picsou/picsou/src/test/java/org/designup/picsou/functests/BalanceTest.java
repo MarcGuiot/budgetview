@@ -45,7 +45,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .create();
 
     categorization
-      .setNewEnvelope("prov", "Courses");
+      .setNewVariable("prov", "Courses");
 
     timeline.selectAll();
     views.selectData();

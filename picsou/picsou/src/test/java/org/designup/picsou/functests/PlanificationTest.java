@@ -50,12 +50,12 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/30", -100., "Auchan")
       .load();
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "Courant");
+    categorization.setNewVariable("Auchan", "Courant");
     operations.openPreferences().setFutureMonthsCount(1).validate();
     timeline.checkSpanEquals("2008/06", "2008/08");
     timeline.selectAll();
     views.selectBudget();
-    budgetView.envelopes.editSeriesList().selectSeries("Courant")
+    budgetView.variable.editSeriesList().selectSeries("Courant")
       .switchToManual()
       .checkTable(new Object[][]{
         {"2008", "August", "", "100.00"},
@@ -78,7 +78,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setEnvelope("ED", "Courant");
+    categorization.setVariable("ED", "Courant");
     timeline.selectAll();
     transactions
       .initContent()
@@ -96,10 +96,10 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .load();
     operations.openPreferences().setFutureMonthsCount(1).validate();
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "Courant");
+    categorization.setNewVariable("Auchan", "Courant");
     timeline.selectAll();
     views.selectBudget();
-    budgetView.envelopes.editSeriesList()
+    budgetView.variable.editSeriesList()
       .selectSeries("Courant")
       .switchToManual()
       .selectAllMonths()
@@ -129,7 +129,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectCategorization();
-    categorization.setEnvelope("ED", "Courant");
+    categorization.setVariable("ED", "Courant");
     views.selectData();
     transactions
       .initContent()
@@ -149,10 +149,10 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
 
 //    operations.openPreferences().setFutureMonthsCount(1).validate();
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "Courant");
+    categorization.setNewVariable("Auchan", "Courant");
     timeline.selectAll();
     views.selectBudget();
-    budgetView.envelopes.editSeriesList()
+    budgetView.variable.editSeriesList()
       .selectSeries("Courant")
       .switchToManual()
       .selectAllMonths()

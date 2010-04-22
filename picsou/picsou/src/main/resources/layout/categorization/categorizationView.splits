@@ -131,8 +131,8 @@
                       <panel ref="recurringSeriesChooser"/>
                     </card>
 
-                    <card name="envelopes">
-                      <panel ref="envelopesSeriesChooser"/>
+                    <card name="variable">
+                      <panel ref="variableSeriesChooser"/>
                     </card>
 
                     <card name="extras">

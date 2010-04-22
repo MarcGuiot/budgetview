@@ -22,7 +22,7 @@ public class BudgetWizardBalanceChecker extends BudgetWizardPageChecker {
     return this;
   }
 
-  public BudgetWizardBalanceChecker checkBalanceDetails(double income, double recurring, double envelopes, double savings, double extras) {
+  public BudgetWizardBalanceChecker checkBalanceDetails(double income, double recurring, double variable, double savings, double extras) {
     StackChart chart = (StackChart)panel.getPanel("balanceChart").getAwtComponent();
 
     StackChartDataset incomeDataset = chart.getLeftDataset();
@@ -30,7 +30,7 @@ public class BudgetWizardBalanceChecker extends BudgetWizardPageChecker {
     Assert.assertEquals("Actual income: " + incomeDataset, income, incomeDataset.getValue(0));
 
     Map<String, Double> expected = new HashMap<String, Double>();
-    expected.put("Envelopes", envelopes);
+    expected.put("Variable", variable);
     expected.put("Recurring", recurring);
     expected.put("Savings", savings);
     expected.put("Extras", extras);

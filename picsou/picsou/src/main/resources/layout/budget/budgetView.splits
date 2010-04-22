@@ -29,7 +29,7 @@
       </verticalSplit>
 
       <verticalSplit ref="thirdVerticalSplitPane" weightX="3">
-        <panel ref="envelopeBudgetView"/>
+        <panel ref="variableBudgetView"/>
       </verticalSplit>
     </horizontalSplit>
 

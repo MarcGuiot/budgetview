@@ -175,7 +175,7 @@ public class CategorizationView extends View implements TableView, Filterable {
 
     addSeriesChooser("incomeSeriesChooser", BudgetArea.INCOME, builder);
     addSeriesChooser("recurringSeriesChooser", BudgetArea.RECURRING, builder);
-    addSeriesChooser("envelopesSeriesChooser", BudgetArea.ENVELOPES, builder);
+    addSeriesChooser("variableSeriesChooser", BudgetArea.VARIABLE, builder);
     addSeriesChooser("extrasSeriesChooser", BudgetArea.EXTRAS, builder);
     addSeriesChooser("savingsSeriesChooser", BudgetArea.SAVINGS, builder);
     addOtherSeriesChooser("otherSeriesChooser", builder);
@@ -291,7 +291,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     NoSeriesMessage noSeriesMessage = NoSeriesMessageFactory.create(budgetArea, repository, directory);
     builder.add("noSeriesMessage", noSeriesMessage.getComponent());
 
-    JRadioButton invisibleRadio = new JRadioButton(name);
+    JRadioButton invisibleRadio = new JRadioButton("invisibleButton");
     builder.add("invisibleToggle", invisibleRadio);
 
     Matchers.CategorizationFilter filter = Matchers.seriesCategorizationFilter(budgetArea.getId());

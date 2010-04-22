@@ -15,11 +15,11 @@ public class StatTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
 
-    categorization.setNewEnvelope("Auchan", "Courant");
-    categorization.setEnvelope("Carouf", "Courant");
+    categorization.setNewVariable("Auchan", "Courant");
+    categorization.setVariable("Carouf", "Courant");
     views.selectBudget();
 
-    budgetView.envelopes.createSeries().setName("Secu")
+    budgetView.variable.createSeries().setName("Secu")
       .switchToManual()
       .selectAllMonths()
       .setAmount("0")
@@ -33,8 +33,8 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/13", 10.00, "Pharma")
       .load();
 
-    categorization.setEnvelope("Pharma", "Secu");
-    categorization.setEnvelope("ED", "Courant");
+    categorization.setVariable("Pharma", "Secu");
+    categorization.setVariable("ED", "Courant");
     views.selectData();
     transactions.initContent()
       .add("26/08/2008", TransactionType.PLANNED, "Planned: Courant", "", (-(80 + 90) - 60.90 + 49.9) /*181*/, "Courant")
@@ -45,20 +45,20 @@ public class StatTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", -90 - 80, -90 - 80);
-    budgetView.envelopes.checkTotalAmounts(-90 - 80, -90 - 80);
+    budgetView.variable.checkSeries("Courant", -90 - 80, -90 - 80);
+    budgetView.variable.checkTotalAmounts(-90 - 80, -90 - 80);
 
     timeline.selectMonth("2008/08");
-    budgetView.envelopes.checkSeries("Courant", (60.90 - 49.9), -90 - 80);// 11,  -170 == > 181
-    budgetView.envelopes.checkSeries("Secu", 10, 0);
+    budgetView.variable.checkSeries("Courant", (60.90 - 49.9), -90 - 80);// 11,  -170 == > 181
+    budgetView.variable.checkSeries("Secu", 10, 0);
 
-    budgetView.envelopes.checkTotalAmounts(10 + 60.90 - 49.9, -90 - 80);
+    budgetView.variable.checkTotalAmounts(10 + 60.90 - 49.9, -90 - 80);
   }
 
   public void testChangingSeriesBudgetCanCreatePlannedTransaction() throws Exception {
 
     views.selectBudget();
-    budgetView.envelopes.createSeries().setName("Secu")
+    budgetView.variable.createSeries().setName("Secu")
       .switchToManual()
       .selectAllMonths()
       .selectPositiveAmounts()
@@ -70,7 +70,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/13", 10.00, "Pharma")
       .load();
 
-    categorization.setEnvelope("Pharma", "Secu");
+    categorization.setVariable("Pharma", "Secu");
     views.selectData();
     transactions.initContent()
       .add("13/08/2008", TransactionType.VIREMENT, "Pharma", "", 10.00, "Secu")
@@ -81,7 +81,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     // je ne comprends pas pourquoi il faut faire un selectPositiveAmounts
     //alors que la series est deja en Positif.
     // non reproductible en vrai.
-    budgetView.envelopes.editSeriesList().selectSeries("Secu").selectAllMonths()
+    budgetView.variable.editSeriesList().selectSeries("Secu").selectAllMonths()
       .selectPositiveAmounts().setAmount("20").validate();
     transactions.initContent()
       .add("13/08/2008", TransactionType.PLANNED, "Planned: Secu", "", 10.00, "Secu")
@@ -98,8 +98,8 @@ public class StatTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
 
-    categorization.setNewEnvelope("Auchan", "Auchan");
-    categorization.setNewEnvelope("Carouf", "Carouf");
+    categorization.setNewVariable("Auchan", "Auchan");
+    categorization.setNewVariable("Carouf", "Carouf");
 
     OfxBuilder
       .init(this)
@@ -111,7 +111,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
 
     views.selectBudget();
-    budgetView.envelopes.checkTotalAmounts(-110, -170);
+    budgetView.variable.checkTotalAmounts(-110, -170);
 
     views.selectData();
     transactions.initContent()
@@ -131,8 +131,8 @@ public class StatTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewIncome("Salaire", "Salaire");
-    categorization.setNewEnvelope("Auchan", "courses");
-    categorization.setEnvelope("Carouf", "courses");
+    categorization.setNewVariable("Auchan", "courses");
+    categorization.setVariable("Carouf", "courses");
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
@@ -155,7 +155,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .load();
     views.selectCategorization();
     categorization.setNewIncome("Salaire", "Salaire");
-    categorization.setNewEnvelope("Auchan", "courses");
+    categorization.setNewVariable("Auchan", "courses");
 
     views.selectBudget();
     budgetView.getSummary()

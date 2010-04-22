@@ -69,10 +69,10 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows(0);
     categorization.checkLabel("FORFAIT KRO");
 
-    categorization.selectEnvelopes().createSeries()
+    categorization.selectVariable().createSeries()
       .setName("Regime")
       .validate();
-    categorization.selectEnvelopes()
+    categorization.selectVariable()
       .checkContainsSeries("Regime")
       .selectSeries("Regime");
 

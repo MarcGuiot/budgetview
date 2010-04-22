@@ -27,8 +27,8 @@
       <label text="$budgetArea.recurring" gridPos="(2,0)" styleClass="right"/>
       <component ref="recurring" gridPos="(3,0)" styleClass="detailGauge"/>
 
-      <label text="$budgetArea.envelopes" gridPos="(2,1)" styleClass="right"/>
-      <component ref="envelopes" gridPos="(3,1)" styleClass="detailGauge"/>
+      <label text="$budgetArea.variable" gridPos="(2,1)" styleClass="right"/>
+      <component ref="variable" gridPos="(3,1)" styleClass="detailGauge"/>
 
       <label text="$budgetArea.extras" gridPos="(2,2)" styleClass="right"/>
       <component ref="extras" gridPos="(3,2)" styleClass="detailGauge"/>

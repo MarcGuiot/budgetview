@@ -233,12 +233,12 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewIncome("WorldCo", "Salaire");
-    categorization.setNewEnvelope("MacDo", "Gastronomie");
-    categorization.setNewEnvelope("Quick", "Sante");
+    categorization.setNewVariable("MacDo", "Gastronomie");
+    categorization.setNewVariable("Quick", "Sante");
 
     views.selectBudget();
     budgetView.income.checkTotalObserved(1000);
-    budgetView.envelopes.checkTotalObserved(-30);
+    budgetView.variable.checkTotalObserved(-30);
 
     views.selectData();
     transactions.initContent()
@@ -260,7 +260,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.income.checkTotalObserved(0);
-    budgetView.envelopes.checkTotalObserved(-15);
+    budgetView.variable.checkTotalObserved(-15);
   }
 
   public void testDeletingASavingsAccountWithSeries() throws Exception {
@@ -277,7 +277,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewIncome("Salaire/oct", "Salaire");
-    categorization.setNewEnvelope("Virement octobre", "Savings");
+    categorization.setNewVariable("Virement octobre", "Savings");
 
     views.selectBudget();
     budgetView.income.checkTotalObserved(1000);

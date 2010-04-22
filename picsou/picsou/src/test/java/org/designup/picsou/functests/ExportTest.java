@@ -25,7 +25,7 @@ public class ExportTest extends LoggedInFunctionalTestCase {
       .loadUnknown("Autre");
 
     views.selectCategorization();
-    categorization.setNewEnvelope("MONOP'S", "Groceries");
+    categorization.setNewVariable("MONOP'S", "Groceries");
 
     String fileName = TestUtils.getFileName(this, "ofx");
     operations.exportOfxFile(fileName);
@@ -184,7 +184,7 @@ public class ExportTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("MONOP'S", "Groceries");
+    categorization.setNewVariable("MONOP'S", "Groceries");
 
     String fileName = TestUtils.getFileName(this, "txt");
     WindowInterceptor
@@ -201,7 +201,7 @@ public class ExportTest extends LoggedInFunctionalTestCase {
     assertEquals("Date\tBank date\tLabel\tAmount\tBudget area\tSeries\n" +
                  "13/06/2008\t15/06/2008\tCAROUF\t1.00\tTo categorize\t\n" +
                  "10/06/2008\t10/06/2008\tFNAC\t-100.00\tTo categorize\t\n" +
-                 "05/06/2008\t05/06/2008\tMONOP'S\t-256.00\tEnvelopes\tGroceries\n",
+                 "05/06/2008\t05/06/2008\tMONOP'S\t-256.00\tVariable\tGroceries\n",
                  Files.loadFileToString(fileName));
   }
 

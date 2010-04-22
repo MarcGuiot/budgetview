@@ -55,15 +55,15 @@ public class DefaultSeriesFactory {
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "internet", true);
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "fixedPhone", false);
 
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "groceries", true);
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "health", true, "physician", "pharmacy", "reimbursements");
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "leisures", true);
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "clothing", true);
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "beauty", true);
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "fuel", true);
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "cash", true);
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "bankFees", true);
-    createEntry(BudgetArea.ENVELOPES, ProfileType.EVERY_MONTH, "misc", true);
+    createEntry(BudgetArea.VARIABLE, ProfileType.EVERY_MONTH, "groceries", true);
+    createEntry(BudgetArea.VARIABLE, ProfileType.EVERY_MONTH, "health", true, "physician", "pharmacy", "reimbursements");
+    createEntry(BudgetArea.VARIABLE, ProfileType.EVERY_MONTH, "leisures", true);
+    createEntry(BudgetArea.VARIABLE, ProfileType.EVERY_MONTH, "clothing", true);
+    createEntry(BudgetArea.VARIABLE, ProfileType.EVERY_MONTH, "beauty", true);
+    createEntry(BudgetArea.VARIABLE, ProfileType.EVERY_MONTH, "fuel", true);
+    createEntry(BudgetArea.VARIABLE, ProfileType.EVERY_MONTH, "cash", true);
+    createEntry(BudgetArea.VARIABLE, ProfileType.EVERY_MONTH, "bankFees", true);
+    createEntry(BudgetArea.VARIABLE, ProfileType.EVERY_MONTH, "misc", true);
   }
 
   private void createEntry(BudgetArea budgetArea,

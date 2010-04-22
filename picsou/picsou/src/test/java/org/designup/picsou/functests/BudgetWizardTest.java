@@ -25,8 +25,8 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("Loyer", "Rental");
-    categorization.setNewEnvelope("Auchan", "Groceries");
-    categorization.setNewEnvelope("FNAC", "Equipment");
+    categorization.setNewVariable("Auchan", "Groceries");
+    categorization.setNewVariable("FNAC", "Equipment");
     categorization.setNewIncome("Salaire", "Salaire");
     categorization.setNewExtra("Air France", "Trips");
     categorization.setNewSavings("VIRT ING", "Epargne", "Main accounts", "External account");
@@ -66,7 +66,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .checkInitialPosition(1000.00)
       .checkIncome(2200.00)
       .checkFixed(30 + 1500)
-      .checkEnvelope(300 + 100)
+      .checkVariable(300 + 100)
       .checkSavingsIn(0.00)
       .checkSavingsOut(100.00)
       .checkExtras(0.00)
@@ -83,7 +83,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .checkInitialPosition(1000.00)
       .checkIncome(2200.00)
       .checkFixed(30 + 1500)
-      .checkEnvelope(300 + 100)
+      .checkVariable(300 + 100)
       .checkSavingsOut(100.00)
       .checkSavingsIn(0.00)
       .checkExtras(0.00)
@@ -119,9 +119,9 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.setNewRecurring("Free", "internet");
     categorization.setNewRecurring("Loyer", "rental");
-    categorization.setNewEnvelope("Auchan", "groceries");
-    categorization.setEnvelope("ED", "groceries");
-    categorization.setNewEnvelope("FNAC", "Equipment");
+    categorization.setNewVariable("Auchan", "groceries");
+    categorization.setVariable("ED", "groceries");
+    categorization.setNewVariable("FNAC", "Equipment");
     categorization.setNewIncome("Salaire", "Salaire");
 
     views.selectBudget();
@@ -151,7 +151,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .gotoPosition()
       .checkInitialPosition(0.0)
       .checkFixed(0)
-      .checkEnvelope(90)
+      .checkVariable(90)
       .checkIncome(1500)
       .close();
     views.selectHome();
@@ -174,7 +174,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .checkInitialPosition(0)
       .checkIncome(1500)
       .checkFixed(0)
-      .checkEnvelope(90)
+      .checkVariable(90)
       .close();
 
     timeline.selectMonth("2008/09");
@@ -188,7 +188,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .checkInitialPosition(1410)
       .checkIncome(1500)
       .checkFixed(1529.90)
-      .checkEnvelope(90)
+      .checkVariable(90)
       .close();
   }
 
@@ -202,7 +202,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries");
     categorization.setNewIncome("WorldCo", "Salary");
 
     timeline.selectMonth("2008/07");
@@ -231,7 +231,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewRecurring("ED", "courses");
-    categorization.setNewEnvelope("remboursement", "secu");
+    categorization.setNewVariable("remboursement", "secu");
     categorization.setNewIncome("Salaire", "Salaire");
 
     views.selectBudget();
@@ -245,7 +245,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .gotoPosition()
       .checkInitialPosition(0.0)
       .checkFixed(100)
-      .checkEnvelope(-40)
+      .checkVariable(-40)
       .checkIncome(1500)
       .close();
     views.selectHome();
@@ -313,8 +313,8 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "groceries");
-    categorization.setNewEnvelope("FNAC", "Equipment");
+    categorization.setNewVariable("Auchan", "groceries");
+    categorization.setNewVariable("FNAC", "Equipment");
 
     views.selectHome();
 

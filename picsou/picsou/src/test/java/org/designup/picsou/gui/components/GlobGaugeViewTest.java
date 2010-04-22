@@ -36,7 +36,7 @@ public class GlobGaugeViewTest extends GuiTestCase {
     obj3 = create(3, 10.0, 10.0);
     obj4 = create(4, null, null);
 
-    GlobGaugeView view = new GlobGaugeView(MyObject.TYPE, BudgetArea.ENVELOPES,
+    GlobGaugeView view = new GlobGaugeView(MyObject.TYPE, BudgetArea.VARIABLE,
                                            MyObject.ACTUAL, MyObject.TARGET, MyObject.PAST_REMAINING, MyObject.FUTURE_REMAINING, 
                                            MyObject.PAST_OVERRUN, MyObject.FUTURE_OVERRUN,
                                            GlobMatchers.not(fieldEquals(MyObject.ID, 3)),

@@ -112,22 +112,22 @@ public class FirstTimeTest extends UISpecTestCase {
     views.selectCategorization();
     CategorizationChecker categorization = new CategorizationChecker(window);
     categorization
-      .setEnvelope("MUTUELLE", "Health")
+      .setVariable("MUTUELLE", "Health")
       .setNewSavings("EPARGNE", "Regular savings", "Main accounts", "External account");
     categorization.selectTransactions("Habille moi", "Chausse moi");
     categorization
-      .selectEnvelopes().createSeries().setName("Fringue")
+      .selectVariable().createSeries().setName("Fringue")
       .validate();
-    categorization.setEnvelope("CHEQUE N°32", "Health");
+    categorization.setVariable("CHEQUE N°32", "Health");
 
     categorization.selectTransactions("ED", "Auchan", "Intermarché")
-      .selectEnvelopes().selectSeries("Groceries");
+      .selectVariable().selectSeries("Groceries");
     categorization
       .setRecurring("Credit", "Mortgage")
       .setNewRecurring("Institut pasteur", "Don")
       .setRecurring("Free telecom", "Internet")
-      .setEnvelope("Centre nautique", "Leisures")
-      .setEnvelope("CPAM", "Health")
+      .setVariable("Centre nautique", "Leisures")
+      .setVariable("CPAM", "Health")
       .selectTransactions("Impots");
 
     categorization.selectRecurring().createSeries()
@@ -137,7 +137,7 @@ public class FirstTimeTest extends UISpecTestCase {
 
     categorization
       .setRecurring("Gaz de France", "Gas")
-      .setEnvelope("Retrait", "cash")
+      .setVariable("Retrait", "cash")
       .setRecurring("SFR", "Cell phone 1")
       .selectRecurring();
     categorization.editSeries()
@@ -149,8 +149,8 @@ public class FirstTimeTest extends UISpecTestCase {
     categorization
       .setRecurring("GMF", "Assurance")
       .setNewRecurring("Cotisation carte bleue", "Frais banque")
-      .setNewEnvelope("Coup'coup", "Occasionel")
-      .setEnvelope("jeux pour tous", "Occasionel")
+      .setNewVariable("Coup'coup", "Occasionel")
+      .setVariable("jeux pour tous", "Occasionel")
       .setIncome("Salaire", "Income 1")
       .setNewRecurring("Ecole", "Ecole");
 
@@ -185,7 +185,7 @@ public class FirstTimeTest extends UISpecTestCase {
     views.selectBudget();
     BudgetViewChecker budget = new BudgetViewChecker(window);
     budget.income.checkTotalAmounts(2000.00, 2000.00);
-    budget.envelopes.checkTotalAmounts(-415.00, -415.00);
+    budget.variable.checkTotalAmounts(-415.00, -415.00);
     budget.recurring.checkTotalAmounts(-1413.90, -1413.90);
 
     views.selectBudget();
@@ -279,7 +279,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .gotoPosition()
       .checkPosition(1971.10)
       .checkInitialPosition(1900)
-      .checkEnvelope(415)
+      .checkVariable(415)
       .checkFixed(1413.9)
       .checkSavingsOut(100)
       .checkIncome(2000)
@@ -310,7 +310,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkIncome(2000)
       .checkFixed(584)
       .checkSavingsOut(100)
-      .checkEnvelope(265)
+      .checkVariable(265)
       .close();
 
     views.selectData();
@@ -391,7 +391,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkIncome(2000)
       .checkFixed(184)
       .checkSavingsIn(0)
-      .checkEnvelope(210)
+      .checkVariable(210)
       .close();
 
     views.selectData();
@@ -474,7 +474,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkFixed(184)
       .checkSavingsIn(0)
       .checkSavingsOut(0)
-      .checkEnvelope(210)
+      .checkVariable(210)
       .close();
 
     views.selectData();
@@ -559,7 +559,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkFixed(184)
       .checkSavingsIn(0)
       .checkSavingsOut(0)
-      .checkEnvelope(210)
+      .checkVariable(210)
       .close();
 
     views.selectData();
@@ -718,7 +718,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .checkFixed(584)
       .checkSavingsIn(0)
       .checkSavingsOut(100)
-      .checkEnvelope(210)
+      .checkVariable(210)
       .close();
 
     checker.selectMonths("2008/10", "2008/11");

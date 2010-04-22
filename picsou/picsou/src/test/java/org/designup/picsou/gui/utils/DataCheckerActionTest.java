@@ -88,7 +88,7 @@ public class DataCheckerActionTest extends TestCase {
     createMonth(200906, 200907, 200908, 200909, 200910);
     repository.create(Series.TYPE, value(Series.ID, 123),
                       value(Series.NAME, "telecom"),
-                      value(Series.BUDGET_AREA, BudgetArea.ENVELOPES.getId()),
+                      value(Series.BUDGET_AREA, BudgetArea.VARIABLE.getId()),
                       value(Series.FIRST_MONTH, 200905),
                       value(Series.LAST_MONTH, 200908));
 
@@ -102,7 +102,7 @@ public class DataCheckerActionTest extends TestCase {
     createMonth(200906, 200907, 200908, 200909, 200910);
     repository.create(Series.TYPE, value(Series.ID, 123),
                       value(Series.NAME, "telecom"),
-                      value(Series.BUDGET_AREA, BudgetArea.ENVELOPES.getId()),
+                      value(Series.BUDGET_AREA, BudgetArea.VARIABLE.getId()),
                       value(Series.FIRST_MONTH, 200905),
                       value(Series.LAST_MONTH, 200908));
 
@@ -115,7 +115,7 @@ public class DataCheckerActionTest extends TestCase {
     createMonth(200906, 200907, 200908, 200910);
     repository.create(Series.TYPE, value(Series.ID, 123),
                       value(Series.NAME, "telecom"),
-                      value(Series.BUDGET_AREA, BudgetArea.ENVELOPES.getId()),
+                      value(Series.BUDGET_AREA, BudgetArea.VARIABLE.getId()),
                       value(Series.FIRST_MONTH, 200905),
                       value(Series.LAST_MONTH, 2009010));
 

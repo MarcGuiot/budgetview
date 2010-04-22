@@ -2,9 +2,9 @@ CashPilot est l'application de gestion de finances personnelles qui permet de vo
 
 Pour démarrer, on télécharge ses relevés bancaires sur le site de sa banque. On les importe dans l'outil, puis on classe ses opérations.
 
-Le système de classement est ce qui fait l'originalité et la puissance de l'outil. Plutôt que de répartir simplement en catégories, on rattache chaque dépense à une "série" de dépenses. Par exemple, une échéance de crédit fait partie d'une série de dépenses qui se répète tous les mois pendant toute la durée du crédit. Un salaire se répète aussi tous les mois. Un achat en supermarché se rattache à une enveloppe "courses" à laquelle on donne un plafond mensuel. Un paiement en 5 fois sans frais fait partie d'une série de 5 opérations dont on connaît le montant.
+Le système de classement est ce qui fait l'originalité et la puissance de l'outil. Plutôt que de répartir simplement en catégories, on rattache chaque dépense à une "enveloppe" de dépenses. Par exemple, une échéance de crédit fait partie d'une enveloppe de dépenses qui se répète tous les mois pendant toute la durée du crédit. Un salaire se répète aussi tous les mois. Un achat en supermarché se rattache à une enveloppe "courses" à laquelle on donne un plafond mensuel. Un paiement en 5 fois sans frais fait partie d'une enveloppe de 5 opérations dont on connaît le montant.
 
-Les séries en question sont classées en 6 groupes complémentaires :
+Les enveloppes en question sont classées en 6 groupes complémentaires :
 - les revenus
 - les charges fixes
 - les frais courants
@@ -12,8 +12,8 @@ Les séries en question sont classées en 6 groupes complémentaires :
 - l'épargne
 - les opérations spéciales
 
-Lors de la première utilisation de l'outil, on crée dans chaque groupe les différentes séries qui vont modéliser le budget - revenus, loyer ou crédit immo, impôts, assurance auto, forfaits téléphoniques, enveloppes "courses", "santé", ou "habillement", etc.
+Lors de la première utilisation de l'outil, on crée dans chaque groupe les différentes enveloppes qui vont modéliser le budget - revenus, loyer ou crédit immo, impôts, assurance auto, forfaits téléphoniques, enveloppes "courses", "santé", ou "habillement", etc.
 
-Une fois les séries crées, et les opérations associées à ces séries, l'outil présente une vision de synthèse du budget dans un tableau de bord complet.
+Une fois les enveloppes crées, et les opérations associées à ces enveloppes, l'outil présente une vision de synthèse du budget dans un tableau de bord complet.
 
 A partir de ce tableau de bord, on peut suivre le budget du mois en cours (relevé vs prévu), mais on peut aussi aller dans les mois suivants pour se faire une idée de ce qui va nous arriver. On peut ainsi introduire des "opérations spéciales" dans le futur, par exemple un gros achat ou des vacances, et voir leur impact sur le budget.

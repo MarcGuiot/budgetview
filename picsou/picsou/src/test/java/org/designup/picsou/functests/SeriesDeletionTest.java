@@ -23,14 +23,14 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTableRow(0);
-    categorization.selectEnvelopes();
-    categorization.selectEnvelopes().createSeries()
+    categorization.selectVariable();
+    categorization.selectVariable().createSeries()
       .setName("AA")
       .validate();
-    categorization.setEnvelope("Forfait Kro", "AA");
+    categorization.setVariable("Forfait Kro", "AA");
 
     views.selectBudget();
-    SeriesEditionDialogChecker edition = budgetView.envelopes.editSeriesList();
+    SeriesEditionDialogChecker edition = budgetView.variable.editSeriesList();
 
     SeriesDeleteDialogChecker deleteDialog = edition
       .selectSeries("AA")
@@ -42,7 +42,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
 
     edition.checkSeriesListIsEmpty();
     edition.validate();
-    budgetView.envelopes.checkSeriesNotPresent("AA");
+    budgetView.variable.checkSeriesNotPresent("AA");
   }
 
   public void testDeleteFromSingleSeriesEditionDialog() throws Exception {
@@ -52,16 +52,16 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Forfait Kro", "Drinks");
+    categorization.setNewVariable("Forfait Kro", "Drinks");
     categorization.checkTable(new Object[][]{
       {"30/06/2008", "Drinks", "Forfait Kro", -60.0}
     });
 
     views.selectBudget();
-    budgetView.envelopes.editSeries("Drinks").deleteCurrentSeriesWithConfirmationAndCancel().validate();
-    budgetView.envelopes.checkSeriesPresent("Drinks");
-    budgetView.envelopes.editSeries("Drinks").deleteCurrentSeriesWithConfirmation();
-    budgetView.envelopes.checkSeriesNotPresent("Drinks");
+    budgetView.variable.editSeries("Drinks").deleteCurrentSeriesWithConfirmationAndCancel().validate();
+    budgetView.variable.checkSeriesPresent("Drinks");
+    budgetView.variable.editSeries("Drinks").deleteCurrentSeriesWithConfirmation();
+    budgetView.variable.checkSeriesNotPresent("Drinks");
 
     views.selectCategorization();
     categorization.checkTable(new Object[][]{
@@ -69,12 +69,12 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     });
 
     views.selectBudget();
-    budgetView.envelopes.createSeries()
+    budgetView.variable.createSeries()
       .setName("Empty")
       .validate();
 
-    budgetView.envelopes.editSeries("Empty").deleteCurrentSeries();
-    budgetView.envelopes.checkSeriesNotPresent("Empty");
+    budgetView.variable.editSeries("Empty").deleteCurrentSeries();
+    budgetView.variable.checkSeriesNotPresent("Empty");
   }
 
   public void testDeleteSavingsInManual() throws Exception {

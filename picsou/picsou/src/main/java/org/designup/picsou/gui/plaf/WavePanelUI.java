@@ -43,7 +43,7 @@ public class WavePanelUI extends BasicPanelUI {
   }
 
   public void paint(Graphics g, JComponent component) {
-    component.setOpaque(false);
+    component.setOpaque(true);
     Dimension dimension = component.getSize();
     if (height != dimension.height || width != dimension.width || image == null) {
       createImage(g, component, dimension);

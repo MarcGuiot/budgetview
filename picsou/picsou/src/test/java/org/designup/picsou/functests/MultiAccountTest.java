@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.model.BankEntity;
 
@@ -18,7 +17,7 @@ public class MultiAccountTest extends LoggedInFunctionalTestCase {
       .load();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectCategorization();
-    categorization.setNewEnvelope("Virement", "epargne");
+    categorization.setNewVariable("Virement", "epargne");
     views.selectHome();
     this.mainAccounts.edit("Account n. 111")
       .setAsSavings()

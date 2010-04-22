@@ -23,7 +23,7 @@ public class InternalTransfersCategorizationPanel extends HtmlCategorizationPane
                                           final SeriesCreationHandler seriesCreationHandler) {
     handler.registerLinkAction("createInternalTransfersSeries", new Runnable() {
       public void run() {
-        seriesCreationHandler.createSeries(BudgetArea.ENVELOPES,
+        seriesCreationHandler.createSeries(BudgetArea.VARIABLE,
                                            FieldValuesBuilder.init()
                                              .set(Series.NAME, Lang.get("categorization.specialCases.internalTransfers.seriesName"))
                                              .set(Series.PROFILE_TYPE, ProfileType.IRREGULAR.getId())

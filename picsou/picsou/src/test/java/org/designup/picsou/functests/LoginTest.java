@@ -100,7 +100,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
 
         BudgetViewChecker budgetView = new BudgetViewChecker(window);
         budgetView.income.checkSeriesPresent("Income 1", "Income 2");
-        budgetView.envelopes.checkSeriesPresent("Groceries", "Health", "Fuel");
+        budgetView.variable.checkSeriesPresent("Groceries", "Health", "Fuel");
 
         operations = new OperationChecker(window);
         String filePath = OfxBuilder
@@ -251,7 +251,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
 
-    getCategorizationView().setNewEnvelope("Menu K", "Food");
+    getCategorizationView().setNewVariable("Menu K", "Food");
 
     openNewLoginWindow();
     login.logExistingUser("toto", "p4ssw0rd", false);
@@ -267,7 +267,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1, "Food")
       .check();
 
-    getCategorizationView().setEnvelope("Menu A", "Food");
+    getCategorizationView().setVariable("Menu A", "Food");
 
     getTransactionView().initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "Menu A", "", -2, "Food")

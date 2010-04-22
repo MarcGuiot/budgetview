@@ -15,7 +15,7 @@ import javax.swing.*;
 public class BudgetWidget extends AbstractNavigationWidget {
 
   private BudgetArea[] BUDGET_AREAS = {BudgetArea.INCOME, BudgetArea.SAVINGS,
-                                       BudgetArea.RECURRING, BudgetArea.ENVELOPES, BudgetArea.EXTRAS};
+                                       BudgetArea.RECURRING, BudgetArea.VARIABLE, BudgetArea.EXTRAS};
 
   public BudgetWidget(GlobRepository repository, Directory directory) {
     super(Card.BUDGET, repository, directory);

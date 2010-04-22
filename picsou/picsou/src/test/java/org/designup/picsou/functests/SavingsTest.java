@@ -325,7 +325,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTransactions("Virement");
     transactionDetails.split("50", "Comportement impossible?");
-    categorization.selectEnvelopes().selectNewSeries("Occasional");
+    categorization.selectVariable().selectNewSeries("Occasional");
     views.selectData();
     transactions.initAmountContent()
       .add("10/08/2008", "VIREMENT", 50.00, "Epargne", 1000.00, 1000.00, "Epargne")
@@ -586,7 +586,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     categorization.checkAllBudgetAreaAreEnable();
 
     categorization.setNewSavings("Virement", "epargne", "Main accounts", "Account n. 111");
-    categorization.setNewEnvelope("Prelevement", "economie du mois");
+    categorization.setNewVariable("Prelevement", "economie du mois");
 
     categorization.selectTransactions("Prelevement", "Virement")
       .checkAllButSavingBudgetAreaAreDisable()

@@ -26,7 +26,7 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization
       .setNewRecurring("loyer", "loyer")
-      .setNewEnvelope("ed", "courses", 300.)
+      .setNewVariable("ed", "courses", 300.)
       .setNewIncome("revenu", "revenue");
 
     views.selectBudget();
@@ -84,7 +84,7 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization
       .setNewRecurring("loyer", "loyer")
-      .setNewEnvelope("ed", "courses", 300.)
+      .setNewVariable("ed", "courses", 300.)
       .setNewIncome("revenu", "revenue");
 
     views.selectBudget();
@@ -128,7 +128,7 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     AccountEditionChecker account = categorization
       .setNewRecurring("loyer", "loyer")
-      .setNewEnvelope("ed", "courses", 300.)
+      .setNewVariable("ed", "courses", 300.)
       .setNewIncome("revenu", "revenue")
       .selectSavings()
       .createSavingsAccount();

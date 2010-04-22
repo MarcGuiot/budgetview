@@ -33,11 +33,11 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
     gauge.checkLevel(1, "100%");
     gauge.checkProgressMessageHidden();
 
-    categorization.setNewEnvelope("WorldCo", "Income");
+    categorization.setNewVariable("WorldCo", "Income");
     gauge.checkLevel(0.5, "50%");
     gauge.checkProgressMessageHidden();
 
-    categorization.setNewEnvelope("Auchan", "Food");
+    categorization.setNewVariable("Auchan", "Food");
     gauge.checkLevel(0.05, "5%");
     gauge.checkQuasiCompleteProgressMessageShown();
 
@@ -49,11 +49,11 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
     gauge.checkLevel(0.05, "5%");
     gauge.checkQuasiCompleteProgressMessageShown();
 
-    categorization.setNewEnvelope("FNAC", "Leisures");
+    categorization.setNewVariable("FNAC", "Leisures");
     gauge.checkLevel(0.001, "1%");
     gauge.checkQuasiCompleteProgressMessageShown();
 
-    categorization.setEnvelope("SAPN", "Leisures");
+    categorization.setVariable("SAPN", "Leisures");
     gauge.checkHidden();
     gauge.checkCompleteProgressMessageShown();
   }
@@ -82,7 +82,7 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/10", 1000.0, "WorldCo")
       .load();
 
-    categorization.setNewEnvelope("WorldCo", "Income");
+    categorization.setNewVariable("WorldCo", "Income");
 
     categorization.getCompletionGauge().checkHidden();
     categorization.getCompletionGauge().checkCompleteProgressMessageShown();
@@ -94,7 +94,7 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/10", 1000.0, "WorldCo")
       .load();
 
-    categorization.setNewEnvelope("WorldCo", "Income");
+    categorization.setNewVariable("WorldCo", "Income");
 
     categorization.getCompletionGauge().checkCompleteProgressMessageShown();
     categorization.getCompletionGauge().hideProgressMessage();

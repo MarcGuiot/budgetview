@@ -11,7 +11,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
 
-    budgetView.envelopes.createSeries()
+    budgetView.variable.createSeries()
       .setName("Series")
       .gotoSubSeriesTab()
       .addSubSeries("SubSeries 1")
@@ -26,32 +26,32 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization
       .selectTransaction("Tx 1")
-      .selectEnvelopes()
+      .selectVariable()
       .checkSeriesContainsSubSeries("Series", "SubSeries 1", "SubSeries 2")
       .selectSeries("SubSeries 1");
 
     categorization
       .selectTransaction("Tx 2")
-      .selectEnvelopes()
+      .selectVariable()
       .checkSeriesContainsSubSeries("Series", "SubSeries 1", "SubSeries 2")
       .selectSeries("SubSeries 2");
 
     categorization
       .selectTransaction("Tx 1")
-      .selectEnvelopes()
+      .selectVariable()
       .checkSeriesIsSelected("SubSeries 1")
       .checkSeriesNotSelected("SubSeries 2");
 
     categorization
       .selectTransaction("Tx 2")
-      .selectEnvelopes()
+      .selectVariable()
       .checkSeriesNotSelected("SubSeries 1")
       .checkSeriesIsSelected("SubSeries 2");
 
     views.selectCategorization();
     categorization
       .selectTransaction("Tx 1")
-      .selectEnvelopes()
+      .selectVariable()
       .selectSeries("Series")
       .checkSeriesIsSelected("Series");
   }
@@ -59,7 +59,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
   public void testCreationChecks() throws Exception {
 
     views.selectBudget();
-    SeriesEditionDialogChecker dialog = budgetView.envelopes.createSeries();
+    SeriesEditionDialogChecker dialog = budgetView.variable.createSeries();
     dialog
       .setName("series1")
       .gotoSubSeriesTab()
@@ -95,14 +95,14 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows(0);
     categorization.checkLabel("PHARMAPLUS");
 
-    categorization.selectEnvelopes().createSeries()
+    categorization.selectVariable().createSeries()
       .setName("Health")
       .gotoSubSeriesTab()
       .addSubSeries("Pharmacy")
       .validate();
 
     categorization.selectTransaction("PHARMAPLUS");
-    categorization.getEnvelopes().checkSeriesIsSelectedWithSubSeries("Health", "Pharmacy");
+    categorization.getVariable().checkSeriesIsSelectedWithSubSeries("Health", "Pharmacy");
 
     views.selectCategorization();
     categorization.checkTable(new Object[][]{
@@ -126,26 +126,26 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows(0);
     categorization.checkLabel("AUCHAN");
 
-    categorization.selectEnvelopes().createSeries()
+    categorization.selectVariable().createSeries()
       .setName("Groceries")
       .gotoSubSeriesTab()
       .addSubSeries("Food")
       .validate();
 
     categorization.selectTransaction("AUCHAN");
-    categorization.getEnvelopes().checkSeriesIsSelectedWithSubSeries("Groceries", "Food");
+    categorization.getVariable().checkSeriesIsSelectedWithSubSeries("Groceries", "Food");
 
     views.selectCategorization();
     categorization.checkTable(new Object[][]{
       {"30/06/2008", "Groceries / Food", "AUCHAN", -129.90},
     });
 
-    categorization.getEnvelopes().editSeries("Groceries")
+    categorization.getVariable().editSeries("Groceries")
       .gotoSubSeriesTab()
       .renameSubSeries("Food", "Misc")
       .validate();
 
-    categorization.getEnvelopes()
+    categorization.getVariable()
       .checkNotPresent("Food")
       .checkSeriesIsSelectedWithSubSeries("Groceries", "Misc");
 
@@ -157,7 +157,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
 
   public void testCannotUseExistingNameDuringRename() throws Exception {
     views.selectBudget();
-    SeriesEditionDialogChecker dialog = budgetView.envelopes.createSeries();
+    SeriesEditionDialogChecker dialog = budgetView.variable.createSeries();
     dialog
       .setName("series1")
       .gotoSubSeriesTab()
@@ -176,7 +176,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTransactions("PointP");
-    categorization.selectEnvelopes().createSeries()
+    categorization.selectVariable().createSeries()
       .setName("Maison")
       .gotoSubSeriesTab()
       .addSubSeries("Entretien")
@@ -190,7 +190,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectBudget();
-    budgetView.envelopes.editSeries("Maison")
+    budgetView.variable.editSeries("Maison")
       .gotoSubSeriesTab()
       .renameSubSeries("Entretien", "Travaux")
       .validate();
@@ -202,7 +202,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectBudget();
-    SeriesEditionDialogChecker editionDialogChecker = budgetView.envelopes.editSeries("Maison");
+    SeriesEditionDialogChecker editionDialogChecker = budgetView.variable.editSeries("Maison");
     editionDialogChecker
       .gotoSubSeriesTab()
       .deleteSubSeriesWithConfirmation("Travaux")
@@ -227,7 +227,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTransaction("Tx1");
-    categorization.selectEnvelopes().createSeries()
+    categorization.selectVariable().createSeries()
       .setName("series1")
       .gotoSubSeriesTab()
       .addSubSeries("subSeries1")
@@ -237,9 +237,9 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
       .addSubSeries("subSeries5")
       .validate();
 
-    categorization.setEnvelope("Tx1", "series1", "subSeries1");
-    categorization.setEnvelope("Tx2", "series1", "subSeries2");
-    categorization.setEnvelope("Tx3", "series1", "subSeries3");
+    categorization.setVariable("Tx1", "series1", "subSeries1");
+    categorization.setVariable("Tx2", "series1", "subSeries2");
+    categorization.setVariable("Tx3", "series1", "subSeries3");
 
     categorization.checkTable(new Object[][]{
       {"30/06/2008", "series1 / subSeries1", "Tx1", -10.00},
@@ -248,7 +248,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
       {"30/06/2008", "series1 / subSeries3", "Tx3", -10.00},
     });
 
-    SeriesEditionDialogChecker seriesDialog = categorization.getEnvelopes().editSeries("series1");
+    SeriesEditionDialogChecker seriesDialog = categorization.getVariable().editSeries("series1");
     seriesDialog
       .gotoSubSeriesTab()
       .deleteSubSeriesWithConfirmation("subSeries1", "subSeries3")
@@ -271,7 +271,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.selectTransaction("Tx2");
-    SeriesEditionDialogChecker dialog2 = categorization.selectEnvelopes().editSeries("series1");
+    SeriesEditionDialogChecker dialog2 = categorization.selectVariable().editSeries("series1");
     dialog2
       .gotoSubSeriesTab()
       .deleteSubSeriesWithConfirmation("subSeries2")
@@ -293,7 +293,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.selectTransaction("Tx2");
-    SeriesEditionDialogChecker dialog3 = categorization.selectEnvelopes().editSeries("series1");
+    SeriesEditionDialogChecker dialog3 = categorization.selectVariable().editSeries("series1");
     dialog3
       .gotoSubSeriesTab()
       .deleteSubSeriesWithConfirmation("subSeries4")
@@ -314,7 +314,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     });
    
     categorization.selectTransaction("Tx2");
-    categorization.selectEnvelopes().editSeries("series1")
+    categorization.selectVariable().editSeries("series1")
       .gotoSubSeriesTab()
       .deleteSubSeries("subSeries5")
       .checkSubSeriesListIsEmpty()

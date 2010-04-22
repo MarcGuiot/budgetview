@@ -90,9 +90,9 @@
                          styleClass="amountLabel"/>
                   <label gridPos="(1,7)" ref="remainingFixed" styleClass="amount"/>
 
-                  <label gridPos="(0,8)" text="$budgetWizard.position.amount.envelope"
+                  <label gridPos="(0,8)" text="$budgetWizard.position.amount.variable"
                          styleClass="amountLabel"/>
-                  <label gridPos="(1,8)" ref="remainingEnvelope" styleClass="amount"/>
+                  <label gridPos="(1,8)" ref="remainingVariable" styleClass="amount"/>
 
                   <label gridPos="(0,9)" text="$budgetWizard.position.amount.extras"
                          styleClass="amountLabel"/>

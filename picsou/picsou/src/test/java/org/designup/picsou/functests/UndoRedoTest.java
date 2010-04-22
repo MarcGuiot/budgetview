@@ -75,8 +75,8 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
       .load();
     views.selectCategorization();
     categorization.selectTransactions("Auchan");
-    categorization.selectEnvelopes().selectNewSeries("Courant");
-    categorization.getEnvelopes().checkSeriesIsSelected("Courant");
+    categorization.selectVariable().selectNewSeries("Courant");
+    categorization.getVariable().checkSeriesIsSelected("Courant");
     views.selectData();
     transactions.checkSeries("Auchan", "Courant");
     operations.undo();
@@ -84,17 +84,17 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
     operations.redo();
     transactions.checkSeries("Auchan", "Courant");
     views.selectCategorization();
-    categorization.getEnvelopes().checkSeriesIsSelected("Courant");
+    categorization.getVariable().checkSeriesIsSelected("Courant");
     operations.undo();
     views.selectCategorization();
     categorization.selectAllTransactions();
-    categorization.selectEnvelopes().checkContainsSeries("Courant");
+    categorization.selectVariable().checkContainsSeries("Courant");
     views.selectData();
     transactions.checkSeries("Auchan", "To categorize");
     operations.undo();
     views.selectCategorization();
     categorization.selectAllTransactions();
-    categorization.selectEnvelopes().checkDoesNotContainSeries("Courant");
+    categorization.selectVariable().checkDoesNotContainSeries("Courant");
     views.selectData();
     transactions.checkSeries("Auchan", "To categorize");
     operations.undo();
@@ -107,12 +107,12 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
       .load();
     views.selectCategorization();
     categorization.selectTransactions("Auchan");
-    categorization.selectEnvelopes().selectNewSeries("Courant");
+    categorization.selectVariable().selectNewSeries("Courant");
     for (int i = 0; i < 30; i++) {
       categorization
         .selectUncategorized()
         .setUncategorized()
-        .selectEnvelopes().selectSeries("Courant");
+        .selectVariable().selectSeries("Courant");
     }
     int i;
     for (i = 0; i < 30; i++) {
@@ -163,7 +163,7 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.setNewRecurring("Orange", "FT");
     categorization.setNewRecurring("Free", "Free Telecom");
-    categorization.setNewEnvelope("McDo", "Resto");
+    categorization.setNewVariable("McDo", "Resto");
 
     OfxBuilder.init(this)
       .addTransaction("2008/05/10", -95.00, "Orange")

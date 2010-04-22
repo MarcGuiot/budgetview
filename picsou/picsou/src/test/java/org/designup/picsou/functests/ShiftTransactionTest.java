@@ -23,8 +23,8 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkShiftDisabled();
 
     categorization.selectAllTransactions();
-    categorization.selectEnvelopes();
-    categorization.selectEnvelopes().selectNewSeries("An enveloppe");
+    categorization.selectVariable();
+    categorization.selectVariable().selectNewSeries("An enveloppe");
     transactionDetails.checkBudgetDateNotVisible("SHIFTABLE TO NEXT");
     transactionDetails.checkBudgetDateNotVisible("SHIFTABLE TO PREVIOUS");
 
@@ -118,7 +118,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectAllTransactions();
-    categorization.selectEnvelopes().selectNewSeries("Groceries");
+    categorization.selectVariable().selectNewSeries("Groceries");
 
     views.selectHome();
     mainAccounts.checkAccount("Account n. 00001234", 100.00, "2008/07/15");
@@ -137,9 +137,9 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkTotalAmounts(-25.00, -25.00);
+    budgetView.variable.checkTotalAmounts(-25.00, -25.00);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkTotalAmounts(-12.00, -25.00);
+    budgetView.variable.checkTotalAmounts(-12.00, -25.00);
 
     views.selectCategorization();
     categorization.selectTransaction("Monoprix / End of june");
@@ -162,9 +162,9 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     // Series are updated
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkTotalAmounts(-15.00, -15.00);
+    budgetView.variable.checkTotalAmounts(-15.00, -15.00);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkTotalAmounts(-22.00, -15.00);
+    budgetView.variable.checkTotalAmounts(-22.00, -15.00);
   }
 
   public void testShiftingASplittedTransaction() throws Exception {
@@ -176,7 +176,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectAllTransactions();
-    categorization.selectEnvelopes().selectNewSeries("Groceries");
+    categorization.selectVariable().selectNewSeries("Groceries");
 
     views.selectHome();
     mainAccounts.checkAccount("Account n. 00001234", 100.00, "2008/07/15");
@@ -187,9 +187,9 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkTotalAmounts(-25.00, -25.00);
+    budgetView.variable.checkTotalAmounts(-25.00, -25.00);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkTotalAmounts(-12.00, -25.00);
+    budgetView.variable.checkTotalAmounts(-12.00, -25.00);
 
     views.selectCategorization();
     categorization.selectTransaction("Monoprix / June");
@@ -201,7 +201,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.selectTableRow(2);
-    categorization.selectEnvelopes().selectNewSeries("Leisures");
+    categorization.selectVariable().selectNewSeries("Leisures");
     transactionDetails.shift();
     transactionDetails.checkBudgetDate("01/07/2008");
 
@@ -215,9 +215,9 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     // Series are updated
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkTotalAmounts(-15.00, -15.00);
+    budgetView.variable.checkTotalAmounts(-15.00, -15.00);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkTotalAmounts(-22.00, -25.00);
+    budgetView.variable.checkTotalAmounts(-22.00, -25.00);
 
     views.selectCategorization();
     transactionDetails.openSplitDialog()
@@ -230,9 +230,9 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkTotalAmounts(-25.00, -25.00);
+    budgetView.variable.checkTotalAmounts(-25.00, -25.00);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkTotalAmounts(-12.00, -25.00);
+    budgetView.variable.checkTotalAmounts(-12.00, -25.00);
   }
 
   public void testSeriesNotValid() throws Exception {
@@ -243,7 +243,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTransaction("Monoprix / June");
-    categorization.selectEnvelopes().createSeries("Groceries");
+    categorization.selectVariable().createSeries("Groceries");
 
     transactionDetails.checkShiftEnabled();
     categorization.editSeries("Groceries")
@@ -266,7 +266,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     transactionDetails.unshift();
     categorization.setUncategorized();
 
-    categorization.setEnvelope("Monoprix / July", "Groceries");
+    categorization.setVariable("Monoprix / July", "Groceries");
     transactionDetails.checkShiftEnabled();
     categorization.editSeries("Groceries")
       .setStartDate(200807)

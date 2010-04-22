@@ -45,7 +45,7 @@ public class UserPreferences {
   public static BooleanField SHOW_CATEGORIZATION_HELP_MESSAGE;
 
   @DefaultBoolean(true)
-  public static BooleanField SHOW_ENVELOPES_EDITION_MESSAGE;
+  public static BooleanField SHOW_VARIABLE_EDITION_MESSAGE;
 
   @DefaultInteger(1)
   public static IntegerField CATEGORIZATION_FILTERING_MODE;
@@ -69,7 +69,7 @@ public class UserPreferences {
       outputStream.writeInteger(values.get(CATEGORIZATION_FILTERING_MODE));
       outputStream.writeBoolean(values.get(SHOW_BUDGET_VIEW_HELP_MESSAGE));
       outputStream.writeBoolean(values.get(SHOW_CATEGORIZATION_HELP_MESSAGE));
-      outputStream.writeBoolean(values.get(SHOW_ENVELOPES_EDITION_MESSAGE));
+      outputStream.writeBoolean(values.get(SHOW_VARIABLE_EDITION_MESSAGE));
       outputStream.writeDate(values.get(LAST_VALID_DAY));
       return serializedByteArrayOutput.toByteArray();
     }
@@ -104,7 +104,7 @@ public class UserPreferences {
       fieldSetter.set(LAST_VALID_DAY, Month.addOneMonth(TimeService.getToday()));
       fieldSetter.set(SHOW_BUDGET_VIEW_HELP_MESSAGE, false);
       fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, false);
-      fieldSetter.set(SHOW_ENVELOPES_EDITION_MESSAGE, false);
+      fieldSetter.set(SHOW_VARIABLE_EDITION_MESSAGE, false);
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
@@ -116,7 +116,7 @@ public class UserPreferences {
       fieldSetter.set(LAST_VALID_DAY, Month.addOneMonth(TimeService.getToday()));
       fieldSetter.set(SHOW_BUDGET_VIEW_HELP_MESSAGE, false);
       fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, false);
-      fieldSetter.set(SHOW_ENVELOPES_EDITION_MESSAGE, false);
+      fieldSetter.set(SHOW_VARIABLE_EDITION_MESSAGE, false);
     }
 
     private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
@@ -127,7 +127,7 @@ public class UserPreferences {
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
       fieldSetter.set(SHOW_BUDGET_VIEW_HELP_MESSAGE, input.readBoolean());
       fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, input.readBoolean());
-      fieldSetter.set(SHOW_ENVELOPES_EDITION_MESSAGE, false);
+      fieldSetter.set(SHOW_VARIABLE_EDITION_MESSAGE, false);
       fieldSetter.set(LAST_VALID_DAY, input.readDate());
     }
 
@@ -140,7 +140,7 @@ public class UserPreferences {
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
       fieldSetter.set(SHOW_BUDGET_VIEW_HELP_MESSAGE, input.readBoolean());
       fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, input.readBoolean());
-      fieldSetter.set(SHOW_ENVELOPES_EDITION_MESSAGE, false);
+      fieldSetter.set(SHOW_VARIABLE_EDITION_MESSAGE, false);
       fieldSetter.set(LAST_VALID_DAY, input.readDate());
     }
 
@@ -153,7 +153,7 @@ public class UserPreferences {
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
       fieldSetter.set(SHOW_BUDGET_VIEW_HELP_MESSAGE, input.readBoolean());
       fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, input.readBoolean());
-      fieldSetter.set(SHOW_ENVELOPES_EDITION_MESSAGE, input.readBoolean());
+      fieldSetter.set(SHOW_VARIABLE_EDITION_MESSAGE, input.readBoolean());
       fieldSetter.set(LAST_VALID_DAY, input.readDate());
     }
   }

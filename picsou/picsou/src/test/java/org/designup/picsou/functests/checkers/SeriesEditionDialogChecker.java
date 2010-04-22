@@ -787,7 +787,7 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   public SeriesEditionDialogChecker checkBudgetAreaContent() {
-    assertThat(dialog.getComboBox("budgetAreaChooser").contentEquals("Recurring", "Envelopes", "Extras"));
+    assertThat(dialog.getComboBox("budgetAreaChooser").contentEquals("Recurring", "Variable", "Extras"));
     return this;
   }
 

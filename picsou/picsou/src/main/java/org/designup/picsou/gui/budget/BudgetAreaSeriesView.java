@@ -188,7 +188,7 @@ public class BudgetAreaSeriesView extends View {
 
       addAmountButton("plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder, new GlobListFunctor() {
         public void run(GlobList list, GlobRepository repository) {
-          repository.update(UserPreferences.KEY, UserPreferences.SHOW_ENVELOPES_EDITION_MESSAGE, false);
+          repository.update(UserPreferences.KEY, UserPreferences.SHOW_VARIABLE_EDITION_MESSAGE, false);
           seriesAmountEditionDialog.show(series, selectedMonthIds);
         }
       });

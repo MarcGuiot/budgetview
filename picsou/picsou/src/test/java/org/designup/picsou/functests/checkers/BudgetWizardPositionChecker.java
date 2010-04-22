@@ -65,8 +65,8 @@ public class BudgetWizardPositionChecker extends BudgetWizardPageChecker {
     return check(amount, "remainingFixed");
   }
 
-  public BudgetWizardPositionChecker checkEnvelope(double amount) {
-    return check(amount, "remainingEnvelope");
+  public BudgetWizardPositionChecker checkVariable(double amount) {
+    return check(amount, "remainingVariable");
   }
 
   public BudgetWizardPositionChecker checkSavingsIn(double amount) {
@@ -82,7 +82,7 @@ public class BudgetWizardPositionChecker extends BudgetWizardPageChecker {
   }
 
   public BudgetWizardPositionChecker checkNoPositionDetails() {
-    String[] names = {"initialPosition, remainingIncome", "remainingEnvelopes", "remaining"};
+    String[] names = {"initialPosition, remainingIncome", "remainingVariable", "remaining"};
     for (String name : names) {
       checkComponentVisible(panel, JLabel.class, name, false);
     }
@@ -107,7 +107,7 @@ public class BudgetWizardPositionChecker extends BudgetWizardPageChecker {
     return this;
   }
 
-  public BudgetWizardPositionChecker checkBalanceDetails(double income, double recurring, double envelopes, double savings, double extras) {
+  public BudgetWizardPositionChecker checkBalanceDetails(double income, double recurring, double variable, double savings, double extras) {
     StackChart chart = (StackChart)panel.getPanel("balanceChart").getAwtComponent();
 
     StackChartDataset incomeDataset = chart.getLeftDataset();
@@ -115,7 +115,7 @@ public class BudgetWizardPositionChecker extends BudgetWizardPageChecker {
     Assert.assertEquals("Actual income: " + incomeDataset, income, incomeDataset.getValue(0));
 
     Map<String, Double> expected = new HashMap<String, Double>();
-    expected.put("Envelopes", envelopes);
+    expected.put("Variable", variable);
     expected.put("Recurring", recurring);
     expected.put("Savings", savings);
     expected.put("Extras", extras);

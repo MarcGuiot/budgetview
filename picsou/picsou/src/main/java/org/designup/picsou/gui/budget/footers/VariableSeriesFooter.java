@@ -8,11 +8,11 @@ import org.designup.picsou.model.UserPreferences;
 import javax.swing.*;
 import java.util.List;
 
-public class EnvelopesSeriesFooter implements BudgetAreaSeriesFooter {
+public class VariableSeriesFooter implements BudgetAreaSeriesFooter {
   private JEditorPane editorPane;
   private GlobRepository repository;
 
-  public EnvelopesSeriesFooter(GlobRepository repository) {
+  public VariableSeriesFooter(GlobRepository repository) {
     this.repository = repository;
   }
 
@@ -35,8 +35,8 @@ public class EnvelopesSeriesFooter implements BudgetAreaSeriesFooter {
     }
     
     Boolean showMessage =
-      preferences.get(UserPreferences.SHOW_ENVELOPES_EDITION_MESSAGE);
+      preferences.get(UserPreferences.SHOW_VARIABLE_EDITION_MESSAGE);
     editorPane.setVisible(showMessage);
-    editorPane.setText(showMessage ? Lang.get("budgetview.envelopes.editAmounts") : "");    
+    editorPane.setText(showMessage ? Lang.get("budgetview.variable.editAmounts") : "");    
   }
 }

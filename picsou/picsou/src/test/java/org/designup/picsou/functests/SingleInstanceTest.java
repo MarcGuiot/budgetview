@@ -245,7 +245,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     views.selectBudget();
 
     BudgetViewChecker budgetView = new BudgetViewChecker(window);
-    SeriesEditionDialogChecker edition = budgetView.envelopes.createSeries();
+    SeriesEditionDialogChecker edition = budgetView.variable.createSeries();
 
     NewApplicationThread newApplication = new NewApplicationThread(initialFile);
     newApplication.start();

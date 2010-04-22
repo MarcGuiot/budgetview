@@ -81,14 +81,14 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTransaction("essence")
-      .selectEnvelopes()
+      .selectVariable()
       .selectNewSeriesWithSubSeries("Voiture", "Carburant");
 
     views.selectData();
     Table table = transactions.getTable();
     UISpecAssert.assertTrue(
       table.rowEquals(table.getRowIndex(TransactionView.LABEL_COLUMN_INDEX, "ESSENCE"),
-                      new String[]{"01/05/2006", "01/05/2006", "Envelopes", "(prelevement)Voiture", "Carburant",
+                      new String[]{"01/05/2006", "01/05/2006", "Variable", "(prelevement)Voiture", "Carburant",
                                    "ESSENCE", "-70.00", "frais pro", "330.00", "330.00", OfxBuilder.DEFAULT_ACCOUNT_NAME}));
   }
 
@@ -113,7 +113,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     categorization.checkSelectedTableRows(1);
     categorization.checkCustomFilterVisible(false);
     categorization.showUncategorizedTransactionsOnly();
-    categorization.setNewEnvelope("SOMETHING ELSE", "Clothes");
+    categorization.setNewVariable("SOMETHING ELSE", "Clothes");
 
     views.back();
     views.checkDataSelected();
@@ -228,7 +228,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     transactions.categorize("SOMETHING ELSE");
 
     views.selectCategorization();
-    categorization.setNewEnvelope("SOMETHING ELSE", "Clothes");
+    categorization.setNewVariable("SOMETHING ELSE", "Clothes");
     categorization.editSeries("Clothes").setDescription("Stuff to dress with").validate();
 
     views.back();
@@ -243,7 +243,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
   public void testFutureBalance() throws Exception {
 
     views.selectCategorization();
-    categorization.setNewEnvelope("essence", "Voiture");
+    categorization.setNewVariable("essence", "Voiture");
     categorization.setNewRecurring("nounou", "Nounou");
 
     views.selectHome();
@@ -343,7 +343,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
   public void testToggleShowPlannedTransactions() throws Exception {
     views.selectCategorization();
-    categorization.setNewEnvelope("essence", "Voiture");
+    categorization.setNewVariable("essence", "Voiture");
     categorization.setNewRecurring("nounou", "Nounou");
 
     views.selectData();

@@ -22,7 +22,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries");
     categorization.setNewRecurring("Free Telecom", "Internet");
     categorization.setNewRecurring("EDF", "Energy");
     categorization.setNewIncome("WorldCo", "Salary");
@@ -44,7 +44,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.editSeries("Groceries")
+    budgetView.variable.editSeries("Groceries")
       .switchToManual()
       .setAmount(20)
       .validate();
@@ -65,7 +65,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Recurring", "", "80.00", "30.00", "80.00", "30.00", "80.00", "30.00", "80.00")
       .add("Energy", "", "50.00", "", "50.00", "", "50.00", "", "50.00")
       .add("Internet", "", "30.00", "30.00", "30.00", "30.00", "30.00", "30.00", "30.00")
-      .add("Envelopes", "", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00")
+      .add("Variable", "", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00")
       .add("Groceries", "", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00")
       .add("Extras", "", "", "", "", "", "+100.00", "300.00", "")
       .add("Christmas", "", "", "", "", "", "", "300.00", "")
@@ -82,8 +82,8 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesEvolution.checkForeground("Groceries", "Jul 08", "red");
     seriesEvolution.checkForeground("Groceries", "Aug 08", "0022BB");
 
-    seriesEvolution.checkForeground("Envelopes", "Jul 08", "AA0000"); // should be darkRed
-    seriesEvolution.checkForeground("Envelopes", "Aug 08", "darkGrey");
+    seriesEvolution.checkForeground("Variable", "Jul 08", "AA0000"); // should be darkRed
+    seriesEvolution.checkForeground("Variable", "Aug 08", "darkGrey");
 
     seriesEvolution.checkForeground("Recurring", "Jul 08", "darkGrey");
     seriesEvolution.checkForeground("Recurring", "Aug 08", "darkGrey");
@@ -110,7 +110,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries");
     categorization.setNewIncome("WorldCo", "John's");
     categorization.setNewIncome("Big Inc.", "Mary's");
 
@@ -126,7 +126,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("John's", "300.00", "310.00", "320.00", "320.00", "320.00", "320.00", "320.00", "320.00")
       .add("Mary's", "350.00", "360.00", "360.00", "360.00", "360.00", "360.00", "360.00", "360.00")
       .add("Recurring", "", "", "", "", "", "", "", "")
-      .add("Envelopes", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
+      .add("Variable", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
       .add("Groceries", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
@@ -148,7 +148,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries");
     categorization.setNewIncome("WorldCo", "John's");
     categorization.setNewIncome("Big Inc.", "Mary's");
 
@@ -164,7 +164,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("John's", "300.00", "310.00", "310.00", "310.00", "310.00", "310.00", "310.00", "310.00")
       .add("Mary's", "350.00", "360.00", "360.00", "360.00", "360.00", "360.00", "360.00", "360.00")
       .add("Recurring", "", "", "", "", "", "", "", "")
-      .add("Envelopes", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
+      .add("Variable", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
       .add("Groceries", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
@@ -180,7 +180,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     );
     seriesEvolution.checkTableIsEmpty(
       "Main accounts", "Balance", "Savings accounts", "To categorize",
-      "Income", "Recurring", "Envelopes", "Extras", "Savings", "Other");
+      "Income", "Recurring", "Variable", "Extras", "Savings", "Other");
   }
 
   public void testColumnNamesAreUpdatedOnMonthSelection() throws Exception {
@@ -245,7 +245,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("John's", "", "320.00", "320.00", "320.00", "320.00", "320.00", "320.00", "320.00")
       .add("Mary's", "", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
       .add("Recurring", "", "", "", "", "", "", "", "")
-      .add("Envelopes", "", "", "", "", "", "", "", "")
+      .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
       .add("Other", "", "", "", "", "", "", "", "")
@@ -266,7 +266,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("John's", "", "400.00", "400.00", "400.00", "400.00", "400.00", "400.00", "400.00")
       .add("Mary's", "", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
       .add("Recurring", "", "", "", "", "", "", "", "")
-      .add("Envelopes", "", "", "", "", "", "", "", "")
+      .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
       .add("Other", "", "", "", "", "", "", "", "")
@@ -287,7 +287,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("John's", "", "400.00", "400.00", "500.00", "400.00", "400.00", "400.00", "400.00")
       .add("Mary's", "", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
       .add("Recurring", "", "", "", "", "", "", "", "")
-      .add("Envelopes", "", "", "", "", "", "", "", "")
+      .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
       .add("Other", "", "", "", "", "", "", "", "")
@@ -311,7 +311,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("John's", "", "400.00", "", "500.00", "", "400.00", "", "")
       .add("Mary's", "", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
       .add("Recurring", "", "", "", "", "", "", "", "")
-      .add("Envelopes", "", "", "", "", "", "", "", "")
+      .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
       .add("Other", "", "", "", "", "", "", "", "")
@@ -332,7 +332,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("John's", "", "400.00", "", "500.00", "", "400.00", "", "")
       .add("Mary's", "", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
       .add("Recurring", "", "", "", "", "", "", "", "")
-      .add("Envelopes", "", "", "", "", "", "", "", "")
+      .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
       .add("Other", "", "", "", "", "", "", "", "")
@@ -362,7 +362,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("John's", "", "320.00", "320.00", "320.00", "320.00", "320.00", "320.00", "320.00")
       .add("Mary's", "", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
       .add("Recurring", "", "", "", "", "", "", "", "")
-      .add("Envelopes", "", "", "", "", "", "", "", "")
+      .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
       .add("Other", "", "", "", "", "", "", "", "")
@@ -379,7 +379,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Income", "", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
       .add("Mary's", "", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00", "350.00")
       .add("Recurring", "", "", "", "", "", "", "", "")
-      .add("Envelopes", "", "", "", "", "", "", "", "")
+      .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
       .add("Other", "", "", "", "", "", "", "", "")
@@ -395,7 +395,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries");
 
     views.selectEvolution();
     timeline.selectMonths("2008/08");
@@ -417,7 +417,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries");
     categorization.setNewRecurring("Free Telecom", "Internet");
     categorization.setNewIncome("WorldCo", "Salary");
     categorization.setNewIncome("GlobalCorp", "Salary 2");
@@ -426,11 +426,11 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     String[] expanded = {"Main accounts", "Balance", "Savings accounts", "To categorize",
                          "Income", "Salary", "Salary 2",
                          "Recurring", "Internet",
-                         "Envelopes", "Groceries",
+                         "Variable", "Groceries",
                          "Extras", "Savings", "Other"};
 
     String[] collapsed = {"Main accounts", "Balance", "Savings accounts", "To categorize",
-                          "Income", "Recurring", "Envelopes", "Extras", "Savings", "Other"};
+                          "Income", "Recurring", "Variable", "Extras", "Savings", "Other"};
 
     seriesEvolution.checkRowLabels(expanded);
 
@@ -444,7 +444,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesEvolution.checkRowLabels("Main accounts", "Balance", "Savings accounts", "To categorize",
                                    "Income",
                                    "Recurring", "Internet",
-                                   "Envelopes", "Groceries",
+                                   "Variable", "Groceries",
                                    "Extras",
                                    "Savings",
                                    "Other");
@@ -459,7 +459,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries");
 
     views.selectEvolution();
     timeline.selectMonth("2008/07");
@@ -567,7 +567,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       "\tIncome\t\t\t\t\t\t\t\t\t\t\t\t\n" +
       "\tRecurring\t\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t\t\t\t\n" +
       "\tTaxes\t\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t\t\t\t\n" +
-      "\tEnvelopes\t\t\t\t\t\t\t\t\t\t\t\t\n" +
+      "\tVariable\t\t\t\t\t\t\t\t\t\t\t\t\n" +
       "\tExtras\t\t\t\t\t\t\t\t\t\t\t\t\n" +
       "\tSavings\t\t\t\t\t\t\t\t\t\t\t\t\n" +
       "\tOther\t\t\t\t\t\t\t\t\t\t\t\t\n"

@@ -90,25 +90,25 @@ public class BudgetStat {
   public static DoubleField RECURRING_NEGATIVE_OVERRUN;
 
   @DefaultDouble(0.0)
-  public static DoubleField ENVELOPES;
+  public static DoubleField VARIABLE;
 
   @DefaultDouble(0.0)
-  public static DoubleField ENVELOPES_POSITIVE_REMAINING;
+  public static DoubleField VARIABLE_POSITIVE_REMAINING;
 
   @DefaultDouble(0.0)
-  public static DoubleField ENVELOPES_NEGATIVE_REMAINING;
+  public static DoubleField VARIABLE_NEGATIVE_REMAINING;
 
   @DefaultDouble(0.0)
-  public static DoubleField ENVELOPES_PLANNED;
+  public static DoubleField VARIABLE_PLANNED;
 
   @DefaultDouble(0.0)
-  public static DoubleField ENVELOPES_SUMMARY;
+  public static DoubleField VARIABLE_SUMMARY;
 
   @DefaultDouble(0.0)
-  public static DoubleField ENVELOPES_POSITIVE_OVERRUN;
+  public static DoubleField VARIABLE_POSITIVE_OVERRUN;
 
   @DefaultDouble(0.0)
-  public static DoubleField ENVELOPES_NEGATIVE_OVERRUN;
+  public static DoubleField VARIABLE_NEGATIVE_OVERRUN;
 
   @DefaultDouble(0.0)
   public static DoubleField EXTRAS;
@@ -226,16 +226,16 @@ public class BudgetStat {
 
   static {
     GlobTypeLoader.init(BudgetStat.class);
-    EXPENSE_FIELDS = new DoubleField[]{ENVELOPES, RECURRING, EXTRAS};
-    EXPENSE_REMAINING_FIELDS = new DoubleField[]{ENVELOPES_NEGATIVE_REMAINING, ENVELOPES_POSITIVE_REMAINING,
+    EXPENSE_FIELDS = new DoubleField[]{VARIABLE, RECURRING, EXTRAS};
+    EXPENSE_REMAINING_FIELDS = new DoubleField[]{VARIABLE_NEGATIVE_REMAINING, VARIABLE_POSITIVE_REMAINING,
                                                  RECURRING_NEGATIVE_REMAINING, RECURRING_POSITIVE_REMAINING,
                                                  EXTRAS_NEGATIVE_REMAINING, EXTRAS_POSITIVE_REMAINING};
   }
 
   public static DoubleField getPositiveRemaining(BudgetArea budgetArea) {
     switch (budgetArea) {
-      case ENVELOPES:
-        return ENVELOPES_POSITIVE_REMAINING;
+      case VARIABLE:
+        return VARIABLE_POSITIVE_REMAINING;
       case INCOME:
         return INCOME_POSITIVE_REMAINING;
       case SAVINGS:
@@ -252,8 +252,8 @@ public class BudgetStat {
 
   public static DoubleField getNegativeRemaining(BudgetArea budgetArea) {
     switch (budgetArea) {
-      case ENVELOPES:
-        return ENVELOPES_NEGATIVE_REMAINING;
+      case VARIABLE:
+        return VARIABLE_NEGATIVE_REMAINING;
       case INCOME:
         return INCOME_NEGATIVE_REMAINING;
       case SAVINGS:
@@ -270,8 +270,8 @@ public class BudgetStat {
 
   public static DoubleField getObserved(BudgetArea budgetArea) {
     switch (budgetArea) {
-      case ENVELOPES:
-        return ENVELOPES;
+      case VARIABLE:
+        return VARIABLE;
       case INCOME:
         return INCOME;
       case SAVINGS:
@@ -288,8 +288,8 @@ public class BudgetStat {
 
   public static DoubleField getPlanned(BudgetArea budgetArea) {
     switch (budgetArea) {
-      case ENVELOPES:
-        return ENVELOPES_PLANNED;
+      case VARIABLE:
+        return VARIABLE_PLANNED;
       case INCOME:
         return INCOME_PLANNED;
       case SAVINGS:
@@ -306,8 +306,8 @@ public class BudgetStat {
 
   public static DoubleField getSummary(BudgetArea budgetArea) {
     switch (budgetArea) {
-      case ENVELOPES:
-        return ENVELOPES_SUMMARY;
+      case VARIABLE:
+        return VARIABLE_SUMMARY;
       case INCOME:
         return INCOME_SUMMARY;
       case SAVINGS:
@@ -324,8 +324,8 @@ public class BudgetStat {
 
   public static DoubleField getPositiveOverrun(BudgetArea budgetArea) {
     switch (budgetArea) {
-      case ENVELOPES:
-        return ENVELOPES_POSITIVE_OVERRUN;
+      case VARIABLE:
+        return VARIABLE_POSITIVE_OVERRUN;
       case INCOME:
         return INCOME_POSITIVE_OVERRUN;
       case SAVINGS:
@@ -342,8 +342,8 @@ public class BudgetStat {
 
   public static DoubleField getNegativeOverrun(BudgetArea budgetArea) {
     switch (budgetArea) {
-      case ENVELOPES:
-        return ENVELOPES_NEGATIVE_OVERRUN;
+      case VARIABLE:
+        return VARIABLE_NEGATIVE_OVERRUN;
       case INCOME:
         return INCOME_NEGATIVE_OVERRUN;
       case SAVINGS:

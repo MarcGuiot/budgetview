@@ -48,7 +48,6 @@ public class DumpDataAction extends AbstractAction {
   private void printEnvelopeSeriesBudgetForMonth(final int monthId) {
 
     final Glob uncategorized = repository.get(Series.UNCATEGORIZED_SERIES);
-    System.out.println("DumpDataAction.printEnvelopeSeriesBudgetForMonth: ");
     GlobPrinter.print(new GlobList(uncategorized));
 
     final GlobList budgets =

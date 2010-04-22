@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.SplitDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.model.TransactionType;
 
 public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
@@ -20,7 +19,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/15", -20.0, "Auchan")
       .load();
 
-    categorization.setNewEnvelope("Auchan", "Food");
+    categorization.setNewVariable("Auchan", "Food");
     transactionDetails.checkSplitButtonAvailable();
 
     transactionDetails.openSplitDialog()
@@ -38,7 +37,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .check();
     categorization.checkSelectedTableRow(1);
     transactionDetails.checkNote("DVD");
-    categorization.selectTableRow(1).selectEnvelopes().selectNewSeries("Leisures");
+    categorization.selectTableRow(1).selectVariable().selectNewSeries("Leisures");
 
     transactionDetails.openSplitDialog()
       .checkTable(new Object[][]{
@@ -58,7 +57,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .check();
     categorization.checkSelectedTableRow(2);
     transactionDetails.checkNote("Youth Elixir");
-    categorization.setNewEnvelope(2, "Beauty");
+    categorization.setNewVariable(2, "Beauty");
 
     transactionDetails.openSplitDialog()
       .checkTable(new Object[][]{
@@ -106,7 +105,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .load();
 
     categorization.selectTableRow(0);
-    categorization.selectEnvelopes().selectNewSeries("Food");
+    categorization.selectVariable().selectNewSeries("Food");
     transactionDetails.openSplitDialog()
       .enterAmount("12.50")
       .close();
@@ -123,7 +122,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/15", -20.0, "Auchan")
       .load();
 
-    categorization.setNewEnvelope("Auchan", "Food");
+    categorization.setNewVariable("Auchan", "Food");
     transactionDetails.openSplitDialog()
       .close();
 
@@ -153,7 +152,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50)
       .check();
 
-    categorization.setNewEnvelope(1, "Leisures");
+    categorization.setNewVariable(1, "Leisures");
     transactionDetails.openSplitDialog()
       .checkTable(new Object[][]{
         {"Food", "Auchan", -7.50, ""},
@@ -295,7 +294,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .enterAmount("12.50")
       .validate();
 
-    categorization.selectTableRow(1).selectEnvelopes().selectNewSeries("Courses");
+    categorization.selectTableRow(1).selectVariable().selectNewSeries("Courses");
 
     transactionDetails.openSplitDialog()
       .deleteRow(1)
@@ -361,8 +360,8 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -50.0, "Monoprix")
       .load();
 
-    categorization.setNewEnvelope("Auchan", "Food");
-    categorization.setEnvelope("Monoprix", "Food");
+    categorization.setNewVariable("Auchan", "Food");
+    categorization.setVariable("Monoprix", "Food");
 
     categorization.selectTableRow(0);
     transactionDetails.openSplitDialog()
@@ -412,7 +411,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .addTransaction(date, amount, label)
       .load();
 
-    categorization.setNewEnvelope(0, series);
+    categorization.setNewVariable(0, series);
     return transactionDetails.openSplitDialog();
   }
 }

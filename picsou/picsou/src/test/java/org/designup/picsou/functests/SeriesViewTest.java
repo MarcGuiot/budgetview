@@ -22,14 +22,14 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "To categorize",
                          "Income",
                          "Recurring",
-                         "Envelopes",
+                         "Variable",
                          "Extras",
                          "Savings",
                          "Other");
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "Groceries");
-    categorization.setEnvelope("Monoprix", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries");
+    categorization.setVariable("Monoprix", "Groceries");
     categorization.setNewRecurring("Free Telecom", "Internet");
     categorization.setNewRecurring("EDF", "Electricity");
     categorization.setExceptionalIncome("WorldCo - Bonus", "Exceptional Income", true);
@@ -40,7 +40,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "To categorize",
                          "Income", "Exceptional Income", "Salary",
                          "Recurring", "Electricity", "Internet",
-                         "Envelopes", "Groceries",
+                         "Variable", "Groceries",
                          "Extras",
                          "Savings",
                          "Other");
@@ -85,7 +85,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectBudget();
-    budgetView.envelopes.createSeries()
+    budgetView.variable.createSeries()
       .setName("New envelope")
       .validate();
 
@@ -94,13 +94,13 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "To categorize",
                          "Income",
                          "Recurring",
-                         "Envelopes", "New envelope",
+                         "Variable", "New envelope",
                          "Extras",
                          "Savings",
                          "Other");
 
     views.selectBudget();
-    budgetView.envelopes.editSeriesList()
+    budgetView.variable.editSeriesList()
       .selectSeries("New envelope")
       .deleteSelectedSeries()
       .validate();
@@ -110,7 +110,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "To categorize",
                          "Income",
                          "Recurring",
-                         "Envelopes",
+                         "Variable",
                          "Extras",
                          "Savings",
                          "Other");
@@ -126,15 +126,15 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "To categorize",
                          "Income",
                          "Recurring",
-                         "Envelopes",
+                         "Variable",
                          "Extras",
                          "Savings",
                          "Other");
 
     views.selectBudget();
     budgetView.income.createSeries("salary");
-    budgetView.envelopes.createSeries("envelope1");
-    budgetView.envelopes.createSeries("envelope2");
+    budgetView.variable.createSeries("envelope1");
+    budgetView.variable.createSeries("envelope2");
     budgetView.recurring.createSeries("mortgage");
 
     views.selectData();
@@ -142,7 +142,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "To categorize",
                          "Income", "salary",
                          "Recurring", "mortgage",
-                         "Envelopes", "envelope1", "envelope2",
+                         "Variable", "envelope1", "envelope2",
                          "Extras",
                          "Savings",
                          "Other");
@@ -152,14 +152,14 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
     series.checkExpansionEnabled("Income", true);
     series.checkExpansionEnabled("Extras", false);
 
-    series.checkExpansionEnabled("Envelopes", true);
-    series.toggleExpansion("Envelopes");
+    series.checkExpansionEnabled("Variable", true);
+    series.toggleExpansion("Variable");
 
     series.checkContains("All",
                          "To categorize",
                          "Income", "salary",
                          "Recurring", "mortgage",
-                         "Envelopes",
+                         "Variable",
                          "Extras",
                          "Savings",
                          "Other");
@@ -169,7 +169,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "To categorize",
                          "Income", "salary",
                          "Recurring", "mortgage",
-                         "Envelopes", "envelope1", "envelope2",
+                         "Variable", "envelope1", "envelope2",
                          "Extras",
                          "Savings",
                          "Other");
@@ -179,7 +179,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "To categorize",
                          "Income",
                          "Recurring",
-                         "Envelopes",
+                         "Variable",
                          "Extras",
                          "Savings",
                          "Other");
@@ -190,7 +190,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "To categorize",
                          "Income", "salary",
                          "Recurring", "mortgage",
-                         "Envelopes", "envelope1", "envelope2",
+                         "Variable", "envelope1", "envelope2",
                          "Extras",
                          "Savings",
                          "Other");
@@ -200,7 +200,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "To categorize",
                          "Income",
                          "Recurring",
-                         "Envelopes",
+                         "Variable",
                          "Extras",
                          "Savings",
                          "Other");

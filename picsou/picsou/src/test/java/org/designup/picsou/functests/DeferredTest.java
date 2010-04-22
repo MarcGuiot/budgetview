@@ -136,7 +136,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     // check budget
     views.selectCategorization();
     categorization.selectTransactions("Auchan")
-      .selectEnvelopes()
+      .selectVariable()
       .createSeries()
       .setName("Course")
       .switchToManual()
@@ -146,10 +146,10 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2009/12");
-    budgetView.envelopes.checkSeries("Course", -100, -250);
+    budgetView.variable.checkSeries("Course", -100, -250);
 
     timeline.selectMonth("2009/11");
-    budgetView.envelopes.checkSeries("Course", -30, -250);
+    budgetView.variable.checkSeries("Course", -30, -250);
   }
 
   public void testOfxOnePartialMonth() throws Exception {
@@ -298,7 +298,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization
-      .setNewEnvelope("Auchan", "course");
+      .setNewVariable("Auchan", "course");
     views.selectData();
     timeline.selectMonth("2009/12");
     transactions.initContent()
@@ -335,7 +335,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization
-      .setNewEnvelope("Auchan", "course");
+      .setNewVariable("Auchan", "course");
     timeline.selectAll();
     views.selectData();
     transactions.initAmountContent()
@@ -367,7 +367,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization
-      .setNewEnvelope("Auchan", "course");
+      .setNewVariable("Auchan", "course");
     timeline.selectAll();
     views.selectData();
     transactions.
@@ -432,7 +432,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .loadDeferredCard("Card n. 1111", 29);
 
    views.selectBudget();
-    budgetView.envelopes.createSeries()
+    budgetView.variable.createSeries()
       .setName("Mc Do")
       .switchToManual()
       .selectAllMonths()

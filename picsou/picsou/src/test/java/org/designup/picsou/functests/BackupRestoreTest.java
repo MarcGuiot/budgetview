@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.MessageFileDialogChecker;
 import org.designup.picsou.functests.checkers.PasswordDialogChecker;
-import org.designup.picsou.functests.checkers.BackupChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
@@ -52,7 +51,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewIncome("Company", "Salaire");
-    categorization.setNewEnvelope("Auchan", "Course");
+    categorization.setNewVariable("Auchan", "Course");
 
     views.selectData();
     transactions
@@ -206,7 +205,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewIncome("Company", "Salaire");
-    categorization.setNewEnvelope("Auchan", "Course");
+    categorization.setNewVariable("Auchan", "Course");
 
     final String filePath = TestUtils.getFileName(this);
 
@@ -243,7 +242,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewIncome("Company", "Salaire");
-    categorization.setNewEnvelope("Auchan", "Course");
+    categorization.setNewVariable("Auchan", "Course");
 
     views.selectData();
     transactions
@@ -336,7 +335,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
       .load();
     views.selectCategorization();
     categorization.setNewIncome("Salaire", "Salaire");
-    categorization.setNewEnvelope("Loyer", "Loyer");
+    categorization.setNewVariable("Loyer", "Loyer");
     String path = operations.backup(this);
     
     operations.deleteUser(password);

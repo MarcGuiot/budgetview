@@ -82,7 +82,7 @@ public class SeriesEditionDialog {
   private SubSeriesEditionPanel subSeriesEditionPanel;
   private GlobMatcher accountFilter;
   static private Set<Integer> CHANGABLE_BUDGET_AREA =
-    new HashSet<Integer>(Arrays.asList(BudgetArea.ENVELOPES.getId(), BudgetArea.RECURRING.getId(), BudgetArea.EXTRAS.getId()));
+    new HashSet<Integer>(Arrays.asList(BudgetArea.VARIABLE.getId(), BudgetArea.RECURRING.getId(), BudgetArea.EXTRAS.getId()));
   private GlobLinkComboEditor budgetAreaCombo;
   private JTabbedPane tabbedPane;
 

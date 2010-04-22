@@ -84,7 +84,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRows(0)
       .checkLabel("AUCHAN C'EST BON")
-      .selectEnvelopes()
+      .selectVariable()
       .checkDescriptionDisplayed()
       .checkNoSeriesMessage("You must create a series")
       .selectNewSeries("Courant")
@@ -113,7 +113,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRow(0);
     categorization.checkLabel("AUCHAN");
     categorization.checkBudgetAreaSelectionPanelDisplayed();
-    categorization.selectEnvelopes().selectNewSeries("Groceries");
+    categorization.selectVariable().selectNewSeries("Groceries");
     categorization.checkTable(new Object[][]{
       {"15/06/2008", "Groceries", "Auchan", -40.00},
       {"25/06/2008", "", "France Telecom", -59.90},
@@ -143,7 +143,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.selectTableRow(0);
-    categorization.getEnvelopes().checkSeriesIsSelected("Groceries");
+    categorization.getVariable().checkSeriesIsSelected("Groceries");
     categorization.selectTableRow(1);
     categorization.checkRecurringSeriesIsSelected("Internet");
   }
@@ -175,7 +175,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.selectTableRows(0, 3);
-    categorization.selectEnvelopes().selectNewSeries("Groceries");
+    categorization.selectVariable().selectNewSeries("Groceries");
     categorization.checkTable(new Object[][]{
       {"15/06/2008", "Groceries", "Auchan", -40.00},
       {"25/06/2008", "Comm", "France Telecom", -59.90},
@@ -187,7 +187,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkRecurringSeriesIsSelected("Comm");
 
     categorization.selectTableRows(0, 3);
-    categorization.getEnvelopes().checkSeriesIsSelected("Groceries");
+    categorization.getVariable().checkSeriesIsSelected("Groceries");
   }
 
   public void testSelectingASeriesInABudgetAreaUnselectsPreviousSeriesInOtherBudgetAreas() throws Exception {
@@ -201,13 +201,13 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("France Telecom", "Telephone");
     categorization.checkRecurringSeriesIsSelected("Telephone");
 
-    categorization.setNewEnvelope("France Telecom", "Phone");
+    categorization.setNewVariable("France Telecom", "Phone");
 
     categorization.selectRecurring().checkSeriesNotSelected("Telephone");
     categorization.setRecurring("France Telecom", "Telephone");
 
-    categorization.selectEnvelopes();
-    categorization.getEnvelopes().checkSeriesNotSelected("Phone");
+    categorization.selectVariable();
+    categorization.getVariable().checkSeriesNotSelected("Phone");
   }
 
   public void testRevertingTransactionsToUncategorized() throws Exception {
@@ -221,7 +221,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("France Telecom", "Telephone");
-    categorization.setNewEnvelope("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries");
     categorization.checkTable(new Object[][]{
       {"15/06/2008", "Groceries", "Auchan", -40.00},
       {"25/06/2008", "Telephone", "France Telecom", -59.90},
@@ -342,7 +342,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"17/03/2008", "", "MacDo", -12.00}
     });
 
-    categorization.setNewEnvelope("MacDo", "Food");
+    categorization.setNewVariable("MacDo", "Food");
     categorization.checkTable(new Object[][]{
       {"15/05/2008", "", "Auchan", -40.00},
       {"17/03/2008", "Food", "MacDo", -12.00}
@@ -360,7 +360,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"30/06/2008", "", "Carouf", -29.90}
     });
 
-    categorization.setEnvelope("Carouf", "Food");
+    categorization.setVariable("Carouf", "Food");
     categorization.checkTable(new Object[][]{
       {"15/05/2008", "", "Auchan", -40.00}
     });
@@ -461,7 +461,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization.doubleClickTableRow("Auchan 1111");
     categorization.checkSelectedTableRows(0, 1);
-    categorization.selectEnvelopes().selectNewSeries("Groceries");
+    categorization.selectVariable().selectNewSeries("Groceries");
 
     views.selectData();
     timeline.selectAll();
@@ -534,7 +534,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
     categorization.showUncategorizedTransactionsOnly();
 
-    categorization.setNewEnvelope(0, "Groceries");
+    categorization.setNewVariable(0, "Groceries");
 
     categorization.checkTable(new Object[][]{
       {"14/05/2008", "", "Carouf", -80.00},
@@ -550,7 +550,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"14/05/2008", "", "Carouf", -80.00},
     });
 
-    categorization.setEnvelope(0, "Groceries");
+    categorization.setVariable(0, "Groceries");
 
     categorization.checkTableIsEmpty();
 
@@ -584,7 +584,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.selectTableRows(0, 1);
-    categorization.selectEnvelopes().selectNewSeries("Groceries");
+    categorization.selectVariable().selectNewSeries("Groceries");
 
     categorization.checkTable(new Object[][]{
       {"15/05/2008", "Groceries", "Auchan", -90.00},
@@ -593,7 +593,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
     categorization.checkSelectedTableRows(0, 1);
-    categorization.getEnvelopes().checkSeriesIsSelected("Groceries");
+    categorization.getVariable().checkSeriesIsSelected("Groceries");
 
     categorization.showUncategorizedTransactionsOnly();
     categorization.checkTable(new Object[][]{
@@ -620,20 +620,20 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectBudget();
-    budgetView.envelopes.createSeries().setName("courantED")
+    budgetView.variable.createSeries().setName("courantED")
       .setEndDate(200805)
       .switchToManual()
       .selectAllMonths()
       .setAmount("100")
       .validate();
-    budgetView.envelopes.createSeries().setName("courantAuchan")
+    budgetView.variable.createSeries().setName("courantAuchan")
       .setStartDate(200806)
       .setEndDate(200806)
       .switchToManual()
       .selectAllMonths()
       .setAmount("100")
       .validate();
-    budgetView.envelopes.createSeries().setName("courantMonoprix")
+    budgetView.variable.createSeries().setName("courantMonoprix")
       .setStartDate(200806)
       .switchToManual()
       .selectAllMonths()
@@ -641,21 +641,21 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectCategorization();
     categorization.selectTransactions("ED");
-    categorization.selectEnvelopes()
+    categorization.selectVariable()
       .checkContainsSeries("courantED")
       .checkDoesNotContainSeries("courantAuchan", "courantMonoprix");
 
     categorization.selectTransactions("Auchan", "Monoprix");
-    categorization.selectEnvelopes()
+    categorization.selectVariable()
       .checkContainsSeries("courantMonoprix")
       .checkDoesNotContainSeries("courantED", "courantAuchan");
 
     categorization.selectTransactions("Auchan", "ED");
-    categorization.selectEnvelopes()
+    categorization.selectVariable()
       .checkDoesNotContainSeries("courantED", "courantAuchan", "courantMonoprix");
 
     categorization.selectTransactions("Auchan");
-    categorization.selectEnvelopes()
+    categorization.selectVariable()
       .checkContainsSeries("courantAuchan")
       .checkContainsSeries("courantMonoprix")
       .checkDoesNotContainSeries("courantED");
@@ -668,26 +668,26 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTransactions("Monoprix");
-    categorization.selectEnvelopes().createSeries("series1");
+    categorization.selectVariable().createSeries("series1");
     categorization.selectExtras().selectNewSeries("Occasional");
 
     views.selectData();
     transactions.checkSeries("Monoprix", "Occasional");
 
     views.selectCategorization();
-    categorization.selectEnvelopes()
+    categorization.selectVariable()
       .editSeries()
       .selectSeries("series1")
       .deleteSelectedSeries()
       .validate();
-    categorization.getEnvelopes()
+    categorization.getVariable()
       .checkDoesNotContainSeries("series1");
   }
 
   public void testAutomaticBudget() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectBudget();
-    budgetView.envelopes.createSeries().setName("Courant")
+    budgetView.variable.createSeries().setName("Courant")
       .validate();
 
     OfxBuilder
@@ -697,15 +697,15 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setEnvelope("Auchan", "Courant");
+    categorization.setVariable("Auchan", "Courant");
 
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", -20, -20);
+    budgetView.variable.checkSeries("Courant", -20, -20);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", -10, -20);
+    budgetView.variable.checkSeries("Courant", -10, -20);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, -20);
+    budgetView.variable.checkSeries("Courant", 0, -20);
 
     OfxBuilder
       .init(this)
@@ -714,18 +714,18 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setEnvelope("ED", "Courant");
-    categorization.setEnvelope("ATAC", "Courant");
+    categorization.setVariable("ED", "Courant");
+    categorization.setVariable("ATAC", "Courant");
 
     views.selectBudget();
     timeline.selectMonth("2008/04");
-    budgetView.envelopes.checkSeries("Courant", -100, -100);
+    budgetView.variable.checkSeries("Courant", -100, -100);
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", -30, -100);
+    budgetView.variable.checkSeries("Courant", -30, -100);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", -10, -30);
+    budgetView.variable.checkSeries("Courant", -10, -30);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, -30);
+    budgetView.variable.checkSeries("Courant", 0, -30);
 
     views.selectCategorization();
     timeline.selectMonth("2008/05");
@@ -733,11 +733,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", -20, -100);
+    budgetView.variable.checkSeries("Courant", -20, -100);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", -10, -20);
+    budgetView.variable.checkSeries("Courant", -10, -20);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, -20);
+    budgetView.variable.checkSeries("Courant", 0, -20);
 
     views.selectData();
     timeline.selectAll();
@@ -754,7 +754,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
   public void testAutomaticInCurrentMonth() throws Exception {
     views.selectBudget();
-    budgetView.envelopes.createSeries().setName("Courant")
+    budgetView.variable.createSeries().setName("Courant")
       .validate();
     OfxBuilder
       .init(this)
@@ -762,24 +762,24 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/20", -20, "ED")
       .load();
     views.selectCategorization();
-    categorization.setEnvelope("ED", "Courant");
-    categorization.setEnvelope("Auchan", "Courant");
+    categorization.setVariable("ED", "Courant");
+    categorization.setVariable("Auchan", "Courant");
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", -30, -30);
+    budgetView.variable.checkSeries("Courant", -30, -30);
 
     OfxBuilder
       .init(this)
       .addTransaction("2008/05/10", -10, "ATAC")
       .load();
     views.selectCategorization();
-    categorization.setEnvelope("ATAC", "Courant");
+    categorization.setVariable("ATAC", "Courant");
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", -10, -10);
+    budgetView.variable.checkSeries("Courant", -10, -10);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", -30, -10);
+    budgetView.variable.checkSeries("Courant", -30, -10);
   }
 
   public void testAutomaticWithInactiveMonth() throws Exception {
@@ -817,28 +817,28 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "Courant");
+    categorization.setNewVariable("Auchan", "Courant");
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", -10, -10);
+    budgetView.variable.checkSeries("Courant", -10, -10);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", 0, -10);
+    budgetView.variable.checkSeries("Courant", 0, -10);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, -10);
+    budgetView.variable.checkSeries("Courant", 0, -10);
     timeline.selectMonth("2008/08");
-    budgetView.envelopes.checkSeries("Courant", 0, -10);
+    budgetView.variable.checkSeries("Courant", 0, -10);
 
     views.selectCategorization();
     timeline.selectMonth("2008/06");
-    categorization.setEnvelope("ED", "Courant");
+    categorization.setVariable("ED", "Courant");
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", -20, -10);
+    budgetView.variable.checkSeries("Courant", -20, -10);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, -20);
+    budgetView.variable.checkSeries("Courant", 0, -20);
     timeline.selectMonth("2008/08");
-    budgetView.envelopes.checkSeries("Courant", 0, -20);
+    budgetView.variable.checkSeries("Courant", 0, -20);
 
     views.selectCategorization();
     timeline.selectMonth("2008/06");
@@ -848,11 +848,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", -15, -10);
+    budgetView.variable.checkSeries("Courant", -15, -10);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, -15);
+    budgetView.variable.checkSeries("Courant", 0, -15);
     timeline.selectMonth("2008/08");
-    budgetView.envelopes.checkSeries("Courant", 0, -15);
+    budgetView.variable.checkSeries("Courant", 0, -15);
 
     views.selectCategorization();
     timeline.selectMonth("2008/06");
@@ -863,11 +863,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", -5, -10);
+    budgetView.variable.checkSeries("Courant", -5, -10);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, -10);
+    budgetView.variable.checkSeries("Courant", 0, -10);
     timeline.selectMonth("2008/08");
-    budgetView.envelopes.checkSeries("Courant", 0, -10);
+    budgetView.variable.checkSeries("Courant", 0, -10);
   }
 
   public void testInAutomaticUpdateImmediatelyPreviousFromCurrentImpactFutur() throws Exception {
@@ -879,20 +879,20 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/20", -20, "ED")
       .load();
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "Courant");
-    categorization.setEnvelope("ED", "Courant");
+    categorization.setNewVariable("Auchan", "Courant");
+    categorization.setVariable("ED", "Courant");
 
     categorization.selectTransactions("ED");
     transactionDetails.split("15", "DVD");
-    categorization.selectEnvelopes().selectNewSeries("Leisures");
+    categorization.selectVariable().selectNewSeries("Leisures");
 
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", -10, -10);
+    budgetView.variable.checkSeries("Courant", -10, -10);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", -5, -10);
+    budgetView.variable.checkSeries("Courant", -5, -10);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, -10);
+    budgetView.variable.checkSeries("Courant", 0, -10);
 
     views.selectCategorization();
     timeline.selectMonth("2008/05");
@@ -902,11 +902,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", -1, -1);
+    budgetView.variable.checkSeries("Courant", -1, -1);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", -5, -1);
+    budgetView.variable.checkSeries("Courant", -5, -1);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, -5);
+    budgetView.variable.checkSeries("Courant", 0, -5);
 
     views.selectCategorization();
     timeline.selectMonth("2008/05");
@@ -916,11 +916,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", -10, -10);
+    budgetView.variable.checkSeries("Courant", -10, -10);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", -5, -10);
+    budgetView.variable.checkSeries("Courant", -5, -10);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, -10);
+    budgetView.variable.checkSeries("Courant", 0, -10);
   }
 
   public void testAutomaticShouldNotTakeInAccountPreviousEmptyMonthWhenPositiveBudget() throws Exception {
@@ -951,7 +951,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   public void testAutomaticShouldNotTakeInAccountPreviousEmptyMonth() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectBudget();
-    budgetView.envelopes.createSeries().setName("Courant")
+    budgetView.variable.createSeries().setName("Courant")
       .validate();
 
     OfxBuilder
@@ -961,7 +961,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setEnvelope("ED", "Courant");
+    categorization.setVariable("ED", "Courant");
 
     views.selectData();
     timeline.selectAll();
@@ -984,16 +984,16 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "Courant");
-    categorization.setEnvelope("ATAC", "Courant");
+    categorization.setNewVariable("Auchan", "Courant");
+    categorization.setVariable("ATAC", "Courant");
 
     views.selectBudget();
     timeline.selectMonth("2008/04");
-    budgetView.envelopes.checkSeries("Courant", -10, -10);
+    budgetView.variable.checkSeries("Courant", -10, -10);
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", -5, -10);
+    budgetView.variable.checkSeries("Courant", -5, -10);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", 0, -10);
+    budgetView.variable.checkSeries("Courant", 0, -10);
 
     OfxBuilder
       .init(this)
@@ -1002,13 +1002,13 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     timeline.selectMonth("2008/05");
-    budgetView.envelopes.checkSeries("Courant", -5, -10);
+    budgetView.variable.checkSeries("Courant", -5, -10);
     timeline.selectMonth("2008/06");
-    budgetView.envelopes.checkSeries("Courant", -20, -5);
+    budgetView.variable.checkSeries("Courant", -20, -5);
     timeline.selectMonth("2008/07");
-    budgetView.envelopes.checkSeries("Courant", 0, -20);
+    budgetView.variable.checkSeries("Courant", 0, -20);
     timeline.selectMonth("2008/08");
-    budgetView.envelopes.checkSeries("Courant", 0, -20);
+    budgetView.variable.checkSeries("Courant", 0, -20);
   }
 
   public void testCreatedSavingTransactionAreNotVisibleInCategorization() throws Exception {
@@ -1125,7 +1125,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTableRows(0)
-      .selectEnvelopes().createSeries()
+      .selectVariable().createSeries()
       .setName("Courses")
       .setEndDate(200805)
       .validate();
@@ -1146,7 +1146,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectBudget();
-    budgetView.envelopes.createSeries("Courses");
+    budgetView.variable.createSeries("Courses");
 
     views.selectCategorization();
 
@@ -1155,11 +1155,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization
       .showSelectedMonthsOnly()
       .selectTableRow(0)
-      .selectEnvelopes()
+      .selectVariable()
       .editSeries("Courses")
       .setEndDate(200805)
       .validate();
-    categorization.getEnvelopes().checkDoesNotContainSeries("Courses");
+    categorization.getVariable().checkDoesNotContainSeries("Courses");
   }
 
   public void testFilteringSeriesByValidMonth() throws Exception {
@@ -1170,14 +1170,14 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectBudget();
-    budgetView.envelopes.createSeries()
+    budgetView.variable.createSeries()
       .setName("Courses 2")
       .setCustom()
       .toggleMonth(6)
       .setStartDate(200805)
       .validate();
 
-    budgetView.envelopes.createSeries()
+    budgetView.variable.createSeries()
       .setName("Courses 1")
       .setCustom()
       .toggleMonth(5)
@@ -1187,21 +1187,21 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization
       .selectTransactions("1_Auchan")
-      .selectEnvelopes()
+      .selectVariable()
       .checkNonActiveSeries("Courses 2")
       .checkActiveSeries("Courses 1")
       .selectSeries("Courses 1");
 
     categorization
       .selectTransactions("2_Auchan")
-      .selectEnvelopes()
+      .selectVariable()
       .checkNonActiveSeries("Courses 1")
       .checkActiveSeries("Courses 2");
 
     categorization
       .selectTransactions("1_Auchan", "2_Auchan")
       .checkSelectedTableRows(0, 1)
-      .selectEnvelopes()
+      .selectVariable()
       .checkActiveSeries("Courses 1")
       .checkActiveSeries("Courses 2");
   }
@@ -1214,7 +1214,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectBudget();
-    budgetView.envelopes.createSeries()
+    budgetView.variable.createSeries()
       .setName("Courses")
       .setCustom()
       .setStartDate(200804)
@@ -1224,7 +1224,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization
       .selectTransactions("1_Auchan")
-      .selectEnvelopes()
+      .selectVariable()
       .selectSeries("Courses");
 
     categorization.editSeries("Courses")
@@ -1233,7 +1233,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization
       .selectTransactions("2_Auchan")
-      .selectEnvelopes()
+      .selectVariable()
       .selectSeries("Courses");
   }
 
@@ -1288,19 +1288,19 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTransaction("Auchan")
       .checkToCategorize();
-    categorization.setNewEnvelope("Auchan", "courses")
+    categorization.setNewVariable("Auchan", "courses")
       .setNewRecurring("EDF", "electricite");
     categorization.selectTransaction("Monop")
       .checkRecurringPreSelected();
 
     categorization.selectTransaction("Auchan")
       .selectTransaction("Monop")
-      .checkEnvelopesPreSelected()
+      .checkVariablePreSelected()
       .selectAllTransactions()
       .checkMultipleSeriesSelection();
 
     categorization.selectTransaction("Monop")
-      .checkEnvelopesPreSelected()
+      .checkVariablePreSelected()
       .selectTransaction("Auchan")
       .selectUncategorized()
       .selectTransaction("Monop")
@@ -1319,7 +1319,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectIncome()
       .createSeries("Alloc");
     categorization.selectTableRow(1)
-      .selectEnvelopes()
+      .selectVariable()
       .createSeries("Remboursement");
 
     OfxBuilder

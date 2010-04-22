@@ -133,7 +133,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
   public void testBudgetView() throws Exception {
 
     views.selectBudget();
-    budgetView.envelopes.createSeries()
+    budgetView.variable.createSeries()
       .setName("Courant")
       .switchToManual()
       .selectAllMonths()
@@ -237,18 +237,18 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .load();
     // on creer une series a la main sans l'associé des le debut : du coup le montant initial de la series est a 0
     views.selectBudget();
-    budgetView.envelopes.createSeries().setName("End date").switchToManual()
+    budgetView.variable.createSeries().setName("End date").switchToManual()
       .selectAllMonths().setAmount("300").validate();
     views.selectCategorization();
     categorization.setNewIncome("Company", "Salaire")
-      .setNewEnvelope("Auchan", "Course")
-      .setEnvelope("ED", "End date")
-      .setNewEnvelope("Monop", "Begin and end date")
-      .setNewEnvelope("Fnac", "Begin date");
+      .setNewVariable("Auchan", "Course")
+      .setVariable("ED", "End date")
+      .setNewVariable("Monop", "Begin and end date")
+      .setNewVariable("Fnac", "Begin date");
     views.selectBudget();
-    budgetView.envelopes.editSeries("End date").setEndDate(200812).validate();
-    budgetView.envelopes.editSeries("Begin and end date").switchToManual().setStartDate(200808).setEndDate(200901).validate();
-    budgetView.envelopes.editSeries("Begin date").switchToManual().setStartDate(200808).validate();
+    budgetView.variable.editSeries("End date").setEndDate(200812).validate();
+    budgetView.variable.editSeries("Begin and end date").switchToManual().setStartDate(200808).setEndDate(200901).validate();
+    budgetView.variable.editSeries("Begin date").switchToManual().setStartDate(200808).validate();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectData();
     timeline.selectAll();
@@ -555,7 +555,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .load();
     views.selectCategorization();
     categorization.setNewIncome("Salaire", "Salaire");
-    categorization.setNewEnvelope("Loyer", "Loyer");
+    categorization.setNewVariable("Loyer", "Loyer");
 
     operations.exit();
     File file = new File(getLocalPrevaylerPath(), "data");
@@ -597,7 +597,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewEnvelope("Auchan", "courses");
+    categorization.setNewVariable("Auchan", "courses");
     categorization.setNewRecurring("EDF", "electricite");
 
     restartApplication();
@@ -610,14 +610,14 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     setDeleteLocalPrevayler(false);
 
     views.selectBudget();
-    budgetView.envelopes.createSeries("Groceries");
-    budgetView.envelopes.checkFooterContains("Click on the planned amounts");
-    budgetView.envelopes.editPlannedAmount("Groceries").setAmount(200.00).validate();
-    budgetView.envelopes.checkFooterHidden();
+    budgetView.variable.createSeries("Groceries");
+    budgetView.variable.checkFooterContains("Click on the planned amounts");
+    budgetView.variable.editPlannedAmount("Groceries").setAmount(200.00).validate();
+    budgetView.variable.checkFooterHidden();
 
     restartApplication();
 
     views.selectBudget();
-    budgetView.envelopes.checkFooterHidden();
+    budgetView.variable.checkFooterHidden();
   }
 }

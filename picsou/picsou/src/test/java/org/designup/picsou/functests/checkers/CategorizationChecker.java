@@ -94,8 +94,8 @@ public class CategorizationChecker extends GuiChecker {
     return selectAndReturn(BudgetArea.RECURRING);
   }
 
-  public BudgetAreaCategorizationChecker selectEnvelopes() {
-    return selectAndReturn(BudgetArea.ENVELOPES);
+  public BudgetAreaCategorizationChecker selectVariable() {
+    return selectAndReturn(BudgetArea.VARIABLE);
   }
 
   public BudgetAreaCategorizationChecker selectExtras() {
@@ -169,8 +169,8 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
-  public CategorizationChecker checkEnvelopesPreSelected() {
-    assertThat(getPanel().getToggleButton(BudgetArea.ENVELOPES.getName()).isSelected());
+  public CategorizationChecker checkVariablePreSelected() {
+    assertThat(getPanel().getToggleButton(BudgetArea.VARIABLE.getName()).isSelected());
     return this;
   }
 
@@ -214,8 +214,8 @@ public class CategorizationChecker extends GuiChecker {
     return checkSelectedAndReturn(BudgetArea.RECURRING);
   }
 
-  public BudgetAreaCategorizationChecker getEnvelopes() {
-    return checkSelectedAndReturn(BudgetArea.ENVELOPES);
+  public BudgetAreaCategorizationChecker getVariable() {
+    return checkSelectedAndReturn(BudgetArea.VARIABLE);
   }
 
   public BudgetAreaCategorizationChecker getExtras() {
@@ -493,17 +493,17 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
-  public CategorizationChecker setNewEnvelope(String label, String seriesName) {
-    return setNewEnvelope(label, seriesName, null);
+  public CategorizationChecker setNewVariable(String label, String seriesName) {
+    return setNewVariable(label, seriesName, null);
   }
 
-  public CategorizationChecker setNewEnvelope(String label, String seriesName, Double amount) {
+  public CategorizationChecker setNewVariable(String label, String seriesName, Double amount) {
     int[] indices = getRowIndices(label);
     boolean first = true;
     for (int index : indices) {
       selectTableRow(index);
       if (first) {
-        SeriesEditionDialogChecker editionDialogChecker = selectEnvelopes()
+        SeriesEditionDialogChecker editionDialogChecker = selectVariable()
           .createSeries()
           .setName(seriesName);
         if (amount != null){
@@ -516,38 +516,38 @@ public class CategorizationChecker extends GuiChecker {
         first = false;
       }
       else {
-        selectEnvelopes().selectSeries(seriesName);
+        selectVariable().selectSeries(seriesName);
       }
     }
     return this;
   }
 
-  public CategorizationChecker setNewEnvelope(int row, String seriesName) {
+  public CategorizationChecker setNewVariable(int row, String seriesName) {
     selectTableRow(row);
-    selectEnvelopes().selectNewSeries(seriesName);
+    selectVariable().selectNewSeries(seriesName);
     return this;
   }
 
-  public CategorizationChecker setEnvelope(int row, String seriesName) {
+  public CategorizationChecker setVariable(int row, String seriesName) {
     selectTableRow(row);
-    selectEnvelopes().selectSeries(seriesName);
+    selectVariable().selectSeries(seriesName);
     return this;
   }
 
-  public CategorizationChecker setEnvelope(String label, String seriesName) {
+  public CategorizationChecker setVariable(String label, String seriesName) {
     int[] indices = getRowIndices(label);
     for (int index : indices) {
       selectTableRow(index);
-      selectEnvelopes().selectSeries(seriesName);
+      selectVariable().selectSeries(seriesName);
     }
     return this;
   }
 
-  public CategorizationChecker setEnvelope(String label, String seriesName, String subSeriesName) {
+  public CategorizationChecker setVariable(String label, String seriesName, String subSeriesName) {
     int[] indices = getRowIndices(label);
     for (int index : indices) {
       selectTableRow(index);
-      selectEnvelopes().selectSubSeries(seriesName, subSeriesName);
+      selectVariable().selectSubSeries(seriesName, subSeriesName);
     }
     return this;
   }

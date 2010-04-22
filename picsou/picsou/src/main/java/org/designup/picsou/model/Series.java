@@ -133,7 +133,7 @@ public class Series {
     USER_SERIES_MATCHER = org.globsframework.model.utils.GlobMatchers.fieldIn(BUDGET_AREA,
                                                                               BudgetArea.INCOME.getId(),
                                                                               BudgetArea.RECURRING.getId(),
-                                                                              BudgetArea.ENVELOPES.getId(),
+                                                                              BudgetArea.VARIABLE.getId(),
                                                                               BudgetArea.EXTRAS.getId());
   }
 

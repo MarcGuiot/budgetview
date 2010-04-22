@@ -7,7 +7,6 @@ import org.globsframework.model.FieldValue;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Dates;
 
@@ -35,7 +34,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
     repository.create(Key.create(Series.TYPE, Series.UNCATEGORIZED_SERIES_ID),
                       value(Series.PROFILE_TYPE, ProfileType.IRREGULAR.getId()),
                       value(Series.IS_AUTOMATIC, false),
-                      value(Series.BUDGET_AREA, BudgetArea.ENVELOPES.getId()));
+                      value(Series.BUDGET_AREA, BudgetArea.VARIABLE.getId()));
   }
 
   protected void createSeries(int seriesId, double amount) {
@@ -82,7 +81,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
     Key key = Key.create(Series.TYPE, ENVELOPPE_SERIES_ID);
     repository.create(key,
                       value(Series.INITIAL_AMOUNT, -1000.),
-                      value(Series.BUDGET_AREA, BudgetArea.ENVELOPES.getId()),
+                      value(Series.BUDGET_AREA, BudgetArea.VARIABLE.getId()),
                       value(Series.DAY, 25),
                       value(Series.NAME, "courses"),
                       value(Series.PROFILE_TYPE, ProfileType.CUSTOM.getId()),
