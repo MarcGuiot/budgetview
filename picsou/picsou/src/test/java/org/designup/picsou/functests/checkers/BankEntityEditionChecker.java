@@ -30,7 +30,7 @@ public class BankEntityEditionChecker extends GuiChecker {
     dialog.getComboBox("bankCombo").select(bank);
     checkBanksEquals("(Select a bank)", "Autre", "AXA Banque", "Banque Populaire", "BNP Paribas",
                      "Caisse d'épargne", "CIC",
-                     "Crédit Agricole", "Crédit Mutuel", "Fortis", "HSBC", "ING Direct", "La Poste", 
+                     "Crédit Agricole", "Crédit Mutuel", "Fortis", "HSBC", "ING Direct", "La Banque Postale", 
                      "LCL",
                      "Société Générale");
     return this;
