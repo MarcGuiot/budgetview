@@ -10,11 +10,13 @@ import javax.swing.*;
 
 public class TextNavigationWidget extends AbstractNavigationWidget {
   private JEditorPane editor = GuiUtils.createReadOnlyHtmlComponent();
+  private boolean isNavigation;
 
   public TextNavigationWidget(Card card,
                               GlobRepository repository,
                               Directory directory) {
     super(card, repository, directory);
+    this.isNavigation = true;
     editor.setText(card.getDescription());
   }
 
@@ -24,10 +26,16 @@ public class TextNavigationWidget extends AbstractNavigationWidget {
                               String icon,
                               String rolloverIcon,
                               Action action,
+                              boolean isNavigation,
                               GlobRepository repository,
                               Directory directory) {
     super(name, title, icon, rolloverIcon, action, repository, directory);
+    this.isNavigation = isNavigation;
     editor.setText(content);
+  }
+
+  public boolean isNavigation() {
+    return isNavigation;
   }
 
   public JComponent getComponent() {

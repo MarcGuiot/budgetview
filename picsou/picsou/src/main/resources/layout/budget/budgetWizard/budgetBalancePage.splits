@@ -12,12 +12,12 @@
   <column margin="10">
 
     <verticalBoxes border="empty(0,0,0,10)">
-      <htmlEditorPane text="$budgetWizard.balance.top" styleClass="description"/>
+      <htmlEditorPane text="$budgetBalancePage.top" styleClass="description"/>
       <row>
         <column>
           <row>
             <filler fill="horizontal"/>
-            <label text="$budgetWizard.balance.label" marginTop="5"/>
+            <label text="$budgetBalancePage.label" marginTop="5"/>
             <label ref="balanceAmount" styleClass="amount"/>
             <filler fill="horizontal"/>
           </row>
@@ -38,7 +38,7 @@
                  horizontalAlignment="right"/>
           <label ref="beginOfMonthAmount" gridPos="(1,0)" styleClass="amount" fill="horizontal"
                  horizontalAlignment="right"/>
-          <label ref="shiftLabel" text="$budgetWizard.balance.shift" gridPos="(0,1)" styleClass="amountLabel" fill="horizontal"
+          <label ref="shiftLabel" text="$budgetBalancePage.shift" gridPos="(0,1)" styleClass="amountLabel" fill="horizontal"
                  horizontalAlignment="right"/>
           <label ref="shiftAmount" gridPos="(1,1)" styleClass="amount" fill="horizontal" horizontalAlignment="right"/>
           <label ref="balanceLabelExplain" gridPos="(0,2)" styleClass="amountLabel" fill="horizontal"

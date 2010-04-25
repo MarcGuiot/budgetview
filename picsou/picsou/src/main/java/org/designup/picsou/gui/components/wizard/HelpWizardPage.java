@@ -12,22 +12,26 @@ import javax.swing.*;
 
 public class HelpWizardPage extends AbstractWizardPage {
 
-  private String title;
   private String htmlContent;
   private HyperlinkHandler hyperlinkHandler;
   private String id;
+  private String helpRef;
   private GlobRepository repository;
   private Directory directory;
   private JEditorPane editor;
   private JComponent panel;
 
-  public HelpWizardPage(String id, String titleKey, String helpFilePath, HyperlinkHandler hyperlinkHandler,
-                        GlobRepository repository, Directory directory) {
+  public HelpWizardPage(String id,
+                        String textKey,
+                        String helpRef,
+                        HyperlinkHandler hyperlinkHandler,
+                        GlobRepository repository,
+                        Directory directory) {
     this.id = id;
+    this.htmlContent = Lang.get(textKey);
+    this.helpRef = helpRef;
     this.repository = repository;
     this.directory = directory;
-    this.title = Lang.get(titleKey);
-    this.htmlContent = Lang.getHelpFile(helpFilePath);
     this.hyperlinkHandler = hyperlinkHandler;
   }
 
@@ -35,12 +39,12 @@ public class HelpWizardPage extends AbstractWizardPage {
     return id;
   }
 
-  public String getTitle() {
-    return title;
-  }
-
   public JComponent getPanel() {
     return panel;
+  }
+
+  public String getHelpRef() {
+    return helpRef;
   }
 
   public void init() {

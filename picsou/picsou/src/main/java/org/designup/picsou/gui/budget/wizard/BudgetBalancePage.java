@@ -69,10 +69,6 @@ public class BudgetBalancePage extends AbstractWizardPage {
     return "balance";
   }
 
-  public String getTitle() {
-    return Lang.get("budgetWizard.balance.title");
-  }
-
   public JComponent getPanel() {
     return panel;
   }
@@ -158,24 +154,24 @@ public class BudgetBalancePage extends AbstractWizardPage {
 
     boolean hasShift = !Amounts.isNearZero(shift);
     if (hasShift){
-      balanceExplain.setText(Lang.get("budgetWizard.balance.explain.shift"));
+      balanceExplain.setText(Lang.get("budgetBalancePage.explain.shift"));
       shiftAmount.setText(Formatting.toStringWithPlus(shift));
     }else {
-      balanceExplain.setText(Lang.get("budgetWizard.balance.explain.noShift"));
+      balanceExplain.setText(Lang.get("budgetBalancePage.explain.noShift"));
     }
     shiftLabel.setVisible(hasShift);
     shiftAmount.setVisible(hasShift);
 
-    beginOfMonthLabel.setText(Lang.get("budgetWizard.balance.beginOfMonth",
+    beginOfMonthLabel.setText(Lang.get("budgetBalancePage.beginOfMonth",
                                        getMonthAndYear(Month.previous(firstBudgetStat.get(BudgetStat.MONTH)))));
     beginOfMonthAmount.setText(Formatting.toString(beginOfMonthPosition));
-    balanceLabelExplain.setText(Lang.get("budgetWizard.balance.balanceLabelExplain",
+    balanceLabelExplain.setText(Lang.get("budgetBalancePage.balanceLabelExplain",
                                   budgetStats.size() == 1 ?
                                   getMonthAndYear(firstBudgetStat.get(BudgetStat.MONTH)) :
                                   ""));
     balanceAmount.setText(Formatting.toStringWithPlus(balance));
     balanceAmountExplain.setText(Formatting.toStringWithPlus(balance));
-    endOfMonthLabel.setText(Lang.get("budgetWizard.balance.endOfMonth",
+    endOfMonthLabel.setText(Lang.get("budgetBalancePage.endOfMonth",
                                      getMonthAndYear(lastBudgetStat.get(BudgetStat.MONTH))));
     endOfMonthAmount.setText(Formatting.toString(endOfMonthPosition));
 

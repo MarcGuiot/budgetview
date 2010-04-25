@@ -11,6 +11,9 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
   }
 
   public void testOneMonth() throws Exception {
+
+    fail("à adapter sur BalanceDialog / PositionDialog");
+
     OfxBuilder.init(this)
       .addTransaction("2008/07/07", -30, "Free")
       .addTransaction("2008/07/08", -1500, "Loyer")
@@ -102,6 +105,9 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
   }
 
   public void testTwoMonths() throws Exception {
+
+    fail("à adapter sur BalanceDialog / PositionDialog");
+
     operations.openPreferences().setFutureMonthsCount(12).validate();
     OfxBuilder.init(this)
       .addTransaction("2008/07/07", -29.90, "Free")
@@ -193,6 +199,9 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
   }
 
   public void testBudgetSummaryDetailsShowsActualPositionInThePast() throws Exception {
+
+    fail("à adapter sur BalanceDialog / PositionDialog");
+
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.00, "2008/08/05")
       .addTransaction("2008/07/01", 1500, "WorldCo")
@@ -219,6 +228,9 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
   }
 
   public void testWithPositiveEnvelope() throws Exception {
+
+    fail("à adapter sur BalanceDialog / PositionDialog");
+
     operations.openPreferences().setFutureMonthsCount(4).validate();
     OfxBuilder.init(this)
       .addTransaction("2008/07/07", -200, "ED")
@@ -254,6 +266,9 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDetailForInAndOutOfSavings() throws Exception {
+
+    fail("à adapter sur BalanceDialog / PositionDialog");
+
     operations.openPreferences().setFutureMonthsCount(2).validate();
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.00, "2008/08/05")
@@ -305,6 +320,9 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
   }
 
   public void testThresholdDisplayedAndSettableFromThePositionDetailsDialog() throws Exception {
+
+    fail("à adapter sur BalanceDialog / PositionDialog");
+
     operations.openPreferences().setFutureMonthsCount(12).validate();
     OfxBuilder.init(this)
       .addBankAccount(30066, 10674, "0123456", 1500.00, "2008/08/30")

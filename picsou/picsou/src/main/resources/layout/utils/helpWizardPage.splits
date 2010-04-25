@@ -2,10 +2,9 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <scrollPane weightY="100" forceVerticalScroll="true" border="">
-    <htmlEditorPane ref="editor" useImageLocator="true"
-                    opaque="true" background="#FFFFFF" foreground="block.text"
-                    border="matte(10,10,10,10,#FFFFFF)"/>
+  <scrollPane weightY="100" forceVerticalScroll="true" border="" viewportBackground="wizardPanel.bg">
+    <htmlEditorPane ref="editor" useImageLocator="true" font="-,plain,12"
+                    opaque="false" foreground="block.text" border="empty(5)"/>
   </scrollPane>
 
 </splits>

@@ -10,12 +10,14 @@
            fill="none" anchor="center" weightY="0"
            marginRight="10"/>
 
-    <style selector="button.rowTitle"
+    <style selector="button#widgetAction"
            gridPos="(1,0)" font="-,plain,13"
-           horizontalAlignment="right"
            ui="hyperlinkButtonWithoutUnderline" foreground="block.item.link"
-           marginBottom="0"
+           marginBottom="0" iconTextGap="0" horizontalTextPosition="left"
            fill="none" anchor="west" weightY="0"/>
+
+    <style id="navigation" selector="x" icon="arrow_right_blue.png"/>
+    <style id="action" selector="x" icon=""/>
 
     <ui name="highlightedPanelUI" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="navigationWidget.highlight.top" bottomColor="navigationWidget.highlight.bottom"
@@ -34,7 +36,7 @@
   <panel ref="panel">
     <grid margin="4" opaque="false">
       <button ref="icon" gridPos="(0,0)" styleClass="icon"/>
-      <button action="widgetAction" gridPos="(1,0)" styleClass="rowTitle"/>
+      <button ref="widgetAction" gridPos="(1,0)"/>
       <panel ref="contentPanel" gridPos="(0,1,2,1)" opaque="false">
         <component ref="content"/>
       </panel>

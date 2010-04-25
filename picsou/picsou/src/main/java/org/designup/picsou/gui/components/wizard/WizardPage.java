@@ -6,7 +6,7 @@ public interface WizardPage {
 
   String getId();
 
-  String getTitle();
+  String getHelpRef();
 
   JComponent getPanel();
 
@@ -15,6 +15,4 @@ public interface WizardPage {
   void updateBeforeDisplay();
 
   void updateAfterDisplay();
-
-  void applyChanges();
 }

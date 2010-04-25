@@ -1,15 +1,8 @@
 package org.designup.picsou.gui.card;
 
-import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.budget.BudgetWidget;
-import org.designup.picsou.gui.series.evolution.EvolutionWidget;
-import org.designup.picsou.gui.savings.SavingsWidget;
-import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.card.widgets.TextNavigationWidget;
-import org.designup.picsou.gui.card.widgets.NavigationWidgetPanel;
 import org.designup.picsou.gui.card.widgets.ImportWidget;
 import org.designup.picsou.gui.help.HelpAction;
-import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
@@ -35,7 +28,7 @@ public class ActionView extends WidgetView {
                                                   "home/help_rollover.png",
                                                   new HelpAction(Lang.get("helpWidget.title"),
                                                                  "index", directory),
-                                                  repository, directory));
+                                                  false, repository, directory));
 
     parentBuilder.add("actionView", builder);
   }

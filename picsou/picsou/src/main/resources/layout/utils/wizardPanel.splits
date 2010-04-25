@@ -1,0 +1,32 @@
+<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector=".footer" background="wizardPanel.footer.bg"
+           border="matte(1,0,0,0,wizardPanel.footer.top)" opaque="true"/>
+
+    <style selector="button" iconTextGap="0" font="-,plain,11"/>
+
+    <style selector="button#help" ui="hyperlinkButtonWithoutUnderline"
+           foreground="hyperlink" marginLeft="5" fill="none" anchor="center"/>
+  </styles>
+
+  <panel opaque="true" background="block.inner.border" border="empty(10,0,0,0)">
+    <column name="wizardPanel" styleClass="blockScrollBorder">
+
+      <column opaque="true" background="wizardPanel.bg" weightY="100">
+        <panel ref="content" weightY="100"/>
+        <button action="help" name="help" text="$wizardPanel.help" weightY="0.1"/>
+      </column>
+
+      <row name="wizardControls" styleClass="footer" weightY="0.1">
+        <button action="previous" icon="button_prev.png" marginLeft="10"/>
+        <filler fill="horizontal"/>
+        <filler fill="horizontal"/>
+        <button action="next" icon="button_next.png" horizontalTextPosition="left"
+                marginRight="10"/>
+      </row>
+
+    </column>
+  </panel>
+</splits>

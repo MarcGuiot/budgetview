@@ -49,6 +49,10 @@ public class ImportWidget extends AbstractNavigationWidget {
     panel = builder.load();
   }
 
+  public boolean isNavigation() {
+    return false;
+  }
+
   public JComponent getComponent() {
     return panel;
   }

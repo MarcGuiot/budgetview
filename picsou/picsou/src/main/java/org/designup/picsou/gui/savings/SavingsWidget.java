@@ -13,6 +13,10 @@ public class SavingsWidget extends AbstractNavigationWidget {
     super(Card.SAVINGS, repository, directory);
   }
 
+  public boolean isNavigation() {
+    return true;
+  }
+
   public JComponent getComponent() {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/savings/savingsWidget.splits",
                                                       repository, directory);

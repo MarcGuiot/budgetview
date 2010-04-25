@@ -49,8 +49,8 @@ public class BudgetThresholdPage extends AbstractWizardPage {
     return "threshold";
   }
 
-  public String getTitle() {
-    return Lang.get("budgetWizard.threshold.title");
+  public String getHelpRef() {
+    return null;
   }
 
   public JComponent getPanel() {
@@ -61,8 +61,8 @@ public class BudgetThresholdPage extends AbstractWizardPage {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/budget/budgetWizard/budgetThresholdPage.splits", localRepository, directory);
 
-    builder.add("textTop", Gui.createHelpTextComponent("budgetWizard/08_threshold1.html"));
-    builder.add("textBottom", Gui.createHelpTextComponent("budgetWizard/08_threshold2.html"));
+    builder.add("textTop", Gui.createHelpTextComponent("budgetWizard/threshold1.html"));
+    builder.add("textBottom", Gui.createHelpTextComponent("budgetWizard/threshold2.html"));
 
     builder.addLabel("estimatedPosition", BudgetStat.TYPE,
                      new EspectedPositionStringifier());
@@ -128,7 +128,7 @@ public class BudgetThresholdPage extends AbstractWizardPage {
       if (budgetStat == null) {
         return "";
       }
-      return Lang.get("budgetWizard.threshold.position",
+      return Lang.get("budgetThresholdPage.position",
                       Formatting.toString(budgetStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION)));
     }
   }
@@ -143,12 +143,12 @@ public class BudgetThresholdPage extends AbstractWizardPage {
       Double threshold = AccountPositionThreshold.getValue(repository);
       double diff = Amounts.diff(position, threshold);
       if (diff < 0) {
-        return Lang.get("budgetWizard.threshold.negative");
+        return Lang.get("budgetThresholdPage.negative");
       }
       else if (diff > 0) {
-        return Lang.get("budgetWizard.threshold.positive");
+        return Lang.get("budgetThresholdPage.positive");
       }
-      return Lang.get("budgetWizard.threshold.equal");
+      return Lang.get("budgetThresholdPage.equal");
     }
   }
 }

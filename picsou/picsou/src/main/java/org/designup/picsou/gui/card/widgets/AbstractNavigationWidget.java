@@ -103,5 +103,4 @@ public abstract class AbstractNavigationWidget implements NavigationWidget {
     return action;
   }
 
-
 }

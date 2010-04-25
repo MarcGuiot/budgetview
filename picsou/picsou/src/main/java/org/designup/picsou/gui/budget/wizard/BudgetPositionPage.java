@@ -45,10 +45,6 @@ public class BudgetPositionPage extends AbstractWizardPage {
     return "position";
   }
 
-  public String getTitle() {
-    return Lang.get("budgetWizard.position.title");
-  }
-
   public JComponent getPanel() {
     return panel;
   }
@@ -86,12 +82,12 @@ public class BudgetPositionPage extends AbstractWizardPage {
 
   private void showEstimatedPositionDetails() {
     positionCard.show("estimated");
-    positionDescription.setText(Lang.get("budgetWizard.position.description.estimated"));
+    positionDescription.setText(Lang.get("budgetPositionPage.description.estimated"));
   }
 
   private void showActualPositionDetails() {
     positionCard.show("actual");
-    positionDescription.setText(Lang.get("budgetWizard.position.description.actual"));
+    positionDescription.setText(Lang.get("budgetPositionPage.description.actual"));
   }
 
   private static Directory createDirectory(Directory parentDirectory) {
@@ -104,7 +100,7 @@ public class BudgetPositionPage extends AbstractWizardPage {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/budget/budgetWizard/budgetPositionPage.splits", repository, directory);
 
-    builder.add("text", Gui.createHelpTextComponent("budgetWizard/07_endOfMonthPosition.html"));
+    builder.add("text", Gui.createHelpTextComponent("budgetWizard/endOfMonthPosition.html"));
     builder.add("handler", new HyperlinkHandler(directory));
 
     positionCard = builder.addCardHandler("cards");
@@ -160,7 +156,7 @@ public class BudgetPositionPage extends AbstractWizardPage {
         return "";
       }
       final String date = Formatting.toString(Month.getLastDay(budgetStat.get(BudgetStat.MONTH)));
-      return Lang.get("budgetWizard.position.date", date);
+      return Lang.get("budgetPositionPage.date", date);
     }
   }
 

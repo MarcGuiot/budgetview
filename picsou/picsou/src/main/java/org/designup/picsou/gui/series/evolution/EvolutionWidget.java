@@ -14,6 +14,10 @@ public class EvolutionWidget extends AbstractNavigationWidget {
     super(Card.EVOLUTION, repository, directory);
   }
 
+  public boolean isNavigation() {
+    return true;
+  }
+
   public JComponent getComponent() {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/evolution/evolutionWidget.splits",
                                                       repository, directory);

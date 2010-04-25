@@ -10,6 +10,8 @@ import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 
 import javax.swing.*;
 
+import junit.framework.Assert;
+
 public class BudgetSummaryViewChecker extends GuiChecker {
   private Panel mainWindow;
 
@@ -87,10 +89,10 @@ public class BudgetSummaryViewChecker extends GuiChecker {
   }
 
   public BudgetWizardPageChecker openBudgetWizardPage() {
+    Assert.fail("Budget wizard inline: il faut reecrire avec BalanceDialog / PositionDialog");
     Window wizardWindow = WindowInterceptor.run(getPanel().getButton("openDetails").triggerClick());
     return new BudgetWizardPageChecker(wizardWindow);
   }
-
 
   public BudgetSummaryViewChecker skipWizard() {
     openBudgetWizardPage().close();

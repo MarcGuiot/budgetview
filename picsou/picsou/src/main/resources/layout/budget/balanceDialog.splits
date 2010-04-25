@@ -3,7 +3,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(500,600)">
+  <panel styleClass="dialog" preferredSize="(550,520)">
 
     <column styleClass="innerDialog">
       <label name="title" text="$balance.title" styleClass="title"/>

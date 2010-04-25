@@ -15,6 +15,8 @@ public interface NavigationWidget {
 
   Action getAction();
 
+  boolean isNavigation();
+
   JComponent getComponent();
 
   void addListener(NavigationWidgetListener listener);

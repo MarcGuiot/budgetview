@@ -34,12 +34,15 @@ public class NavigationWidgetPanel {
     Action action = widget.getAction();
     panelNode = builder.add("panel", new JPanel());
     builder.add("icon", createIconButton(action));
-    builder.add("widgetAction", action);
+
+    SplitsNode<JButton> actionButtonNode = builder.add("widgetAction", new JButton(action));
     builder.add("contentPanel", contentPanel);
     builder.add("content", widget.getComponent());
 
     JPanel panel = builder.load();
-    
+
+    actionButtonNode.applyStyle(widget.isNavigation() ? "navigation" : "action");
+
     setHighlighted(widget.isHighlighted());
     widget.addListener(new NavigationWidgetListener() {
       public void highlightingChanged(boolean highlighted) {

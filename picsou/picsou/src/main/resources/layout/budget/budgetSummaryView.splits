@@ -12,53 +12,14 @@
     <style selector="button#balanceLabel" font="-,bold,14" fill="none" anchor="center"/>
 
     <style selector="button.totalAmount" ui="uncategorizedButtonUI" foreground="" weightX="10"/>
-    
+
     <style selector="button#uncategorized" ui="uncategorizedButtonUI" font="-,bold,14"
            weightX="10" fill="none"/>
-
 
     <style selector="label.message"
            foreground="block.total.title" font="-,plain,10"
            horizontalAlignment="center" border="empty(5,0,0,0)"
            fill="horizontal" anchor="bottom" weightY="0"/>
-
-    <ui name="roundButtonUI" class="org.designup.picsou.gui.components.RoundButtonUI"
-        topColor="button.bg.top"
-        bottomColor="button.bg.bottom"
-        innerBorderTopColor="button.inner.border.top"
-        innerBorderBottomColor="button.inner.border.bottom"
-        outerBorderTopColor="button.outer.border.top"
-        outerBorderBottomColor="button.outer.border.bottom"
-        pressedTopColor="button.pressed.bg.top"
-        pressedBottomColor="button.pressed.bg.bottom"
-        pressedInnerBorderTopColor="button.pressed.inner.border.top"
-        pressedInnerBorderBottomColor="button.pressed.inner.border.bottom"
-        pressedOuterBorderTopColor="button.pressed.outer.border.top"
-        pressedOuterBorderBottomColor="button.pressed.outer.border.bottom"/>
-
-    <ui name="hightlightedRoundButtonUI" class="org.designup.picsou.gui.components.RoundButtonUI"
-        topColor="button.highlighted.bg.top"
-        bottomColor="button.highlighted.bg.bottom"
-        innerBorderTopColor="button.highlighted.inner.border.top"
-        innerBorderBottomColor="button.highlighted.inner.border.bottom"
-        outerBorderTopColor="button.outer.border.top"
-        outerBorderBottomColor="button.outer.border.bottom"
-        pressedTopColor="button.highlighted.pressed.bg.top"
-        pressedBottomColor="button.highlighted.pressed.bg.bottom"
-        pressedInnerBorderTopColor="button.highlighted.pressed.inner.border.top"
-        pressedInnerBorderBottomColor="button.highlighted.pressed.inner.border.bottom"
-        pressedOuterBorderTopColor="button.pressed.outer.border.top"
-        pressedOuterBorderBottomColor="button.pressed.outer.border.bottom"/>
-
-    <style id="roundButton" selector="x" ui="roundButtonUI"/>
-
-    <style id="highlightedRoundButton" selector="x" ui="hightlightedRoundButtonUI"/>
-
-    <style selector="button#openDetails"
-           icon="question_mark.png"
-           rolloverIcon="question_mark_rollover.png"
-           pressedIcon="question_mark_rollover.png"
-           disabledIcon="question_mark_disabled.png"/>
 
     <style selector="htmlEditorPane#helpMessage"
            border="empty(5,0,0,0)" foreground="budgetSummary.help.message"/>
@@ -67,34 +28,21 @@
 
   <column border="empty(10,10,10,10)">
 
-    <row>
-      <button ref="openDetails"/>
+    <grid>
+      <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle" gridPos="(1,0)"/>
+      <button ref="balanceLabel" styleClass="totalAmount" gridPos="(1,1)"
+              tooltipText="$budgetSummaryView.balance.tooltip"/>
 
-      <cards ref="cards">
-        <card name="beforeWizard">
-          <horizontalBoxes>
-            <label icon="budget_wizard_arrow.png" border="empty(0,10,0,10)"/>
-            <htmlEditorPane name="helpMessage" text="$budgetview.help.message"/>
-          </horizontalBoxes>
-        </card>
-        <card name="afterWizard">
-          <grid>
-            <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle" gridPos="(1,0)"/>
-            <button ref="balanceLabel" styleClass="totalAmount" gridPos="(1,1)"
-                    tooltipText="$budgetSummaryView.balance.tooltip"/>
+      <label ref="positionTitle" styleClass="totalAmountTitle" gridPos="(2,0)"/>
+      <button ref="positionLabel" styleClass="totalAmount" gridPos="(2,1)"/>
 
-            <label ref="positionTitle" styleClass="totalAmountTitle" gridPos="(2,0)"/>
-            <button ref="positionLabel" styleClass="totalAmount" gridPos="(2,1)"/>
-
-            <label text="$budgetSummaryView.uncategorized" styleClass="totalAmountTitle" gridPos="(3,0)"/>
-            <button ref="uncategorized" styleClass="uncategorized" gridPos="(3,1)"/>
-          </grid>
-        </card>
-      </cards>
-    </row>
-
+      <label text="$budgetSummaryView.uncategorized" styleClass="totalAmountTitle" gridPos="(3,0)"/>
+      <button ref="uncategorized" styleClass="uncategorized" gridPos="(3,1)"/>
+    </grid>
 
     <label ref="multiSelectionLabel" styleClass="message"/>
+
+    <panel ref="wizardPanel" minimumSize="(200,120)" preferredSize="(200,120)"/>
 
   </column>
 

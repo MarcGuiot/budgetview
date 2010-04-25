@@ -3,7 +3,7 @@ package org.designup.picsou.gui.budget.summary;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.budget.BalanceDialog;
 import org.designup.picsou.gui.budget.PositionDialog;
-import org.designup.picsou.gui.budget.wizard.BudgetWizardDialog;
+import org.designup.picsou.gui.budget.wizard.BudgetWizardPanel;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
@@ -14,15 +14,12 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
-import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -39,16 +36,13 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   private JLabel estimatedPositionTitle = new JLabel();
   private JButton uncategorizedButton = new JButton();
   private JLabel multiSelectionLabel = new JLabel();
-  private final DecimalFormat format = Formatting.DECIMAL_FORMAT;
+  private BudgetWizardPanel wizardPanel;
 
-  private BudgetWizardDialog budgetWizardDialog;
+  private final DecimalFormat format = Formatting.DECIMAL_FORMAT;
 
   private AmountColors amountColors;
   private Color normalColor;
   private Color errorColor;
-  private SplitsNode<JButton> openDetailsNode;
-  private BudgetSummaryView.OpenDetailsAction openDetailsAction;
-  private CardHandler cards;
 
   public BudgetSummaryView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -57,9 +51,6 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     colorService.addListener(this);
 
     this.amountColors = new AmountColors(directory);
-
-    this.budgetWizardDialog = new BudgetWizardDialog(repository, directory);
-    this.openDetailsAction = new OpenDetailsAction(directory);
 
     update();
   }
@@ -73,18 +64,18 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budget/budgetSummaryView.splits",
                                                       repository, directory);
 
-    cards = builder.addCardHandler("cards");
-
     builder.add("balanceLabel", balanceLabel);
     builder.add("positionLabel", estimatedPositionLabel);
     builder.add("positionTitle", estimatedPositionTitle);
     builder.add("uncategorized", uncategorizedButton);
     builder.add("multiSelectionLabel", multiSelectionLabel);
-    openDetailsNode = builder.add("openDetails", new JButton(openDetailsAction));
 
     uncategorizedButton.addActionListener(new GotoUncategorizedAction());
     balanceLabel.addActionListener(new OpenBalanceAction());
     estimatedPositionLabel.addActionListener(new OpenPositionAction());
+
+    wizardPanel = new BudgetWizardPanel(repository, directory);
+    builder.add("wizardPanel", wizardPanel.getPanel());
 
     parentBuilder.add("budgetSummaryView", builder);
   }
@@ -115,7 +106,6 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
       clear(balanceLabel);
       clear(estimatedPositionLabel);
       clear(uncategorizedButton);
-      updateHelpMessage();
       return;
     }
 
@@ -140,8 +130,6 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
       clear(uncategorizedButton);
       uncategorizedButton.setEnabled(false);
     }
-
-    updateHelpMessage();
   }
 
   private void updateEstimatedPosition(SortedSet<Integer> selectedMonthIds) {
@@ -217,7 +205,6 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
     if (changeSet.containsChanges(BudgetStat.TYPE) ||
         changeSet.containsChanges(Series.TYPE) ||
-        changeSet.containsChanges(UserPreferences.TYPE) ||
         changeSet.containsChanges(AccountPositionThreshold.TYPE)) {
       update();
     }
@@ -226,7 +213,6 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(BudgetStat.TYPE) ||
         changedTypes.contains(Series.TYPE) ||
-        changedTypes.contains(UserPreferences.TYPE) ||
         changedTypes.contains(AccountPositionThreshold.TYPE)) {
       update();
     }
@@ -263,8 +249,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     }
 
     public void actionPerformed(ActionEvent e) {
-      repository.update(UserPreferences.KEY, UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE, false);
-      budgetWizardDialog.show();
+      repository.update(UserPreferences.KEY, UserPreferences.SHOW_BUDGET_VIEW_WIZARD, false);
     }
   }
 
@@ -272,21 +257,6 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     public void actionPerformed(ActionEvent e) {
       directory.get(NavigationService.class).gotoUncategorized();
     }
-  }
-
-  private void updateHelpMessage() {
-    if ((cards == null) || (openDetailsNode == null)) {
-      return;
-    }
-
-    Glob prefs = repository.find(UserPreferences.KEY);
-    boolean showHelp = openDetailsAction.isEnabled()
-                       && (prefs != null)
-                       && prefs.isTrue(UserPreferences.SHOW_BUDGET_VIEW_HELP_MESSAGE)
-                       && repository.contains(Series.TYPE, not(fieldEquals(Series.ID, Series.UNCATEGORIZED_SERIES_ID)));
-
-    cards.show(showHelp ? "beforeWizard" : "afterWizard");
-    openDetailsNode.applyStyle(showHelp ? "highlightedRoundButton" : "roundButton");
   }
 }
 

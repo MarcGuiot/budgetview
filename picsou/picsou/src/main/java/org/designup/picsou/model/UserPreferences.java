@@ -39,7 +39,7 @@ public class UserPreferences {
   public static BooleanField REGISTERED_USER;
 
   @DefaultBoolean(true)
-  public static BooleanField SHOW_BUDGET_VIEW_HELP_MESSAGE;
+  public static BooleanField SHOW_BUDGET_VIEW_WIZARD;
 
   @DefaultBoolean(true)
   public static BooleanField SHOW_CATEGORIZATION_HELP_MESSAGE;
@@ -67,7 +67,7 @@ public class UserPreferences {
       outputStream.writeInteger(values.get(FUTURE_MONTH_COUNT));
       outputStream.writeBoolean(values.get(REGISTERED_USER));
       outputStream.writeInteger(values.get(CATEGORIZATION_FILTERING_MODE));
-      outputStream.writeBoolean(values.get(SHOW_BUDGET_VIEW_HELP_MESSAGE));
+      outputStream.writeBoolean(values.get(SHOW_BUDGET_VIEW_WIZARD));
       outputStream.writeBoolean(values.get(SHOW_CATEGORIZATION_HELP_MESSAGE));
       outputStream.writeBoolean(values.get(SHOW_VARIABLE_EDITION_MESSAGE));
       outputStream.writeDate(values.get(LAST_VALID_DAY));
@@ -102,7 +102,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(LAST_VALID_DAY, Month.addOneMonth(TimeService.getToday()));
-      fieldSetter.set(SHOW_BUDGET_VIEW_HELP_MESSAGE, false);
+      fieldSetter.set(SHOW_BUDGET_VIEW_WIZARD, false);
       fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, false);
       fieldSetter.set(SHOW_VARIABLE_EDITION_MESSAGE, false);
     }
@@ -114,7 +114,7 @@ public class UserPreferences {
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
       fieldSetter.set(LAST_VALID_DAY, Month.addOneMonth(TimeService.getToday()));
-      fieldSetter.set(SHOW_BUDGET_VIEW_HELP_MESSAGE, false);
+      fieldSetter.set(SHOW_BUDGET_VIEW_WIZARD, false);
       fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, false);
       fieldSetter.set(SHOW_VARIABLE_EDITION_MESSAGE, false);
     }
@@ -125,7 +125,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(SHOW_BUDGET_VIEW_HELP_MESSAGE, input.readBoolean());
+      fieldSetter.set(SHOW_BUDGET_VIEW_WIZARD, input.readBoolean());
       fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, input.readBoolean());
       fieldSetter.set(SHOW_VARIABLE_EDITION_MESSAGE, false);
       fieldSetter.set(LAST_VALID_DAY, input.readDate());
@@ -138,7 +138,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(SHOW_BUDGET_VIEW_HELP_MESSAGE, input.readBoolean());
+      fieldSetter.set(SHOW_BUDGET_VIEW_WIZARD, input.readBoolean());
       fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, input.readBoolean());
       fieldSetter.set(SHOW_VARIABLE_EDITION_MESSAGE, false);
       fieldSetter.set(LAST_VALID_DAY, input.readDate());
@@ -151,7 +151,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(SHOW_BUDGET_VIEW_HELP_MESSAGE, input.readBoolean());
+      fieldSetter.set(SHOW_BUDGET_VIEW_WIZARD, input.readBoolean());
       fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, input.readBoolean());
       fieldSetter.set(SHOW_VARIABLE_EDITION_MESSAGE, input.readBoolean());
       fieldSetter.set(LAST_VALID_DAY, input.readDate());
