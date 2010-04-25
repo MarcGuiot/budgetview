@@ -52,9 +52,7 @@ public class HyperlinkButtonUI extends BasicButtonUI {
         initFontMetrics(button);
       }
     };
-    button.addPropertyChangeListener("font", fontMetricsUpdater);
-    button.addPropertyChangeListener("text", fontMetricsUpdater);
-    button.addPropertyChangeListener("icon", fontMetricsUpdater);
+    button.addPropertyChangeListener(fontMetricsUpdater);
   }
 
   private void updateVisibility(AbstractButton button) {
@@ -108,12 +106,14 @@ public class HyperlinkButtonUI extends BasicButtonUI {
       return;
     }
 
+    XPositions positions = getXPositions(button);
+
     Icon icon = button.getIcon();
     if (icon != null) {
-      icon.paintIcon(button, g, 0, button.getHeight() / 2 - icon.getIconHeight() / 2);
+      icon.paintIcon(button, g, positions.iconX, button.getHeight() / 2 - icon.getIconHeight() / 2);
     }
 
-    int textX = getLabelX(button);
+    int textX = positions.labelX;
     int textY = (button.getHeight() + fontHeight) / 2 - descent;
     setTextColor(button, graphics);
 
@@ -149,17 +149,53 @@ public class HyperlinkButtonUI extends BasicButtonUI {
     }
   }
 
-  private int getLabelX(AbstractButton button) {
+  private XPositions getXPositions(AbstractButton button) {
+
     int iconOffset = button.getIcon() != null ? button.getIcon().getIconWidth() + button.getIconTextGap() : 0;
+    int textOffset = button.getIcon() != null ? textWidth + button.getIconTextGap() : textWidth;
+
+    int contentWidth = textWidth + iconOffset;
 
     int alignment = button.getHorizontalAlignment();
+    int textPosition = button.getHorizontalTextPosition();
+
+
     switch (alignment) {
+
       case SwingConstants.LEFT:
-        return iconOffset;
+        switch (textPosition) {
+          case SwingConstants.RIGHT:
+          case SwingConstants.TRAILING:
+            return new XPositions(0, iconOffset);
+          case SwingConstants.LEFT:
+            return new XPositions(textOffset, 0);
+          default:
+            throw new InvalidParameter("Unsupported horizontalTextPosition value: " + textPosition);
+        }
+
       case SwingConstants.CENTER:
-        return iconOffset + (button.getWidth() - iconOffset - textWidth) / 2;
+        switch (textPosition) {
+          case SwingConstants.RIGHT:
+          case SwingConstants.TRAILING:
+            return new XPositions((button.getWidth() - textWidth - iconOffset) / 2,
+                                  (button.getWidth() - textWidth + iconOffset) / 2);
+          case SwingConstants.LEFT:
+            return new XPositions(button.getWidth()/2 - contentWidth/2 + textOffset,
+                                  button.getWidth()/2 - contentWidth/2);
+          default:
+            throw new InvalidParameter("Unsupported horizontalTextPosition value: " + textPosition);
+        }
+
       case SwingConstants.RIGHT:
-        return (button.getWidth() - textWidth);
+        switch (textPosition) {
+          case SwingConstants.RIGHT:
+          case SwingConstants.TRAILING:
+            return new XPositions(button.getWidth() - textWidth - iconOffset, button.getWidth() - textWidth);
+          case SwingConstants.LEFT:
+            return new XPositions(button.getWidth() - iconOffset, button.getWidth() - textWidth - iconOffset);
+          default:
+            throw new InvalidParameter("Unsupported horizontalTextPosition value: " + textPosition);
+        }
     }
     throw new InvalidParameter("Unsupported horizontalAlignement value: " + alignment);
   }
@@ -192,5 +228,15 @@ public class HyperlinkButtonUI extends BasicButtonUI {
       return fontHeight;
     }
     return Math.max(button.getIcon().getIconHeight(), fontHeight);
+  }
+
+  private class XPositions {
+    final int iconX;
+    final int labelX;
+
+    private XPositions(int iconX, int labelX) {
+      this.iconX = iconX;
+      this.labelX = labelX;
+    }
   }
 }

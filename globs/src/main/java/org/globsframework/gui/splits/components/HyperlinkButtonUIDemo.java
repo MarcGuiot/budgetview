@@ -1,6 +1,5 @@
 package org.globsframework.gui.splits.components;
 
-import org.globsframework.gui.splits.color.utils.ColorRectIcon;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
@@ -14,29 +13,36 @@ public class HyperlinkButtonUIDemo {
 
   public static void main(String[] args) {
 
+    JPanel panel =
+      GridBagBuilder.init()
+        .add(createButton(SwingConstants.LEFT),
+             0, 0, 1, 1, 1, 1, Fill.NONE, Anchor.CENTER)
+        .add(createButton(SwingConstants.RIGHT),
+             0, 1, 1, 1, 1, 1, Fill.NONE, Anchor.CENTER)
+        .getPanel();
+    panel.setOpaque(true);
+    panel.setBackground(Color.CYAN);
+    GuiUtils.show(panel);
+  }
+
+  private static JButton createButton(int horizontalTextPosition) {
     final AbstractAction action = new AbstractAction("toto") {
       public void actionPerformed(ActionEvent e) {
         System.out.println("HyperlinkButtonUI.actionPerformed: ");
       }
     };
+    action.setEnabled(true);
+
     final JButton button = new JButton(action);
     button.setText("hello");
-    button.setIcon(new ColorRectIcon(50, 10, Color.RED));
+    button.setIconTextGap(0);
+
+    button.setIcon(new ImageIcon("/Users/rmedina/Code/all_hg/ref/picsou/picsou/src/main/resources/images/arrow_right_blue.png"));
     button.setUI(new HyperlinkButtonUI());
 
-    JPanel panel =
-      GridBagBuilder.init()
-        .add(button, 0, 0, 1, 1, 1, 1, Fill.NONE, Anchor.CENTER)
-        .add(new JButton(new AbstractAction("disable") {
-          public void actionPerformed(ActionEvent e) {
-            final boolean newState = !button.isEnabled();
-            action.setEnabled(newState);
-            putValue(Action.NAME, newState ? "disable" : "enable");
-          }
-        }), 0, 1, 1, 1, 1, 1, Fill.NONE, Anchor.CENTER)
-        .getPanel();
-    panel.setOpaque(true);
-    panel.setBackground(Color.CYAN);
-    GuiUtils.show(panel);
+
+    button.setHorizontalTextPosition(horizontalTextPosition);
+
+    return button;
   }
 }
