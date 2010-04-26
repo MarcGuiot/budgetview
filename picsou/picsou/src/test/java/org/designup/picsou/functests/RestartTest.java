@@ -605,19 +605,4 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     categorization.selectAllTransactions();
     categorization.checkMultipleSeriesSelection();
   }
-
-  public void testEnvelopesEditionHint() throws Exception {
-    setDeleteLocalPrevayler(false);
-
-    views.selectBudget();
-    budgetView.variable.createSeries("Groceries");
-    budgetView.variable.checkFooterContains("Click on the planned amounts");
-    budgetView.variable.editPlannedAmount("Groceries").setAmount(200.00).validate();
-    budgetView.variable.checkFooterHidden();
-
-    restartApplication();
-
-    views.selectBudget();
-    budgetView.variable.checkFooterHidden();
-  }
 }

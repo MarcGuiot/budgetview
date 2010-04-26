@@ -42,7 +42,7 @@
 
     <label ref="multiSelectionLabel" styleClass="message"/>
 
-    <panel ref="wizardPanel" minimumSize="(200,120)" preferredSize="(200,120)"/>
+    <panel ref="wizardPanel" minimumSize="(200,130)" preferredSize="(200,130)"/>
 
   </column>
 

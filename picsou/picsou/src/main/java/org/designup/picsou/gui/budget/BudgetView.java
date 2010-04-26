@@ -5,7 +5,6 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.budget.summary.BudgetSummaryView;
 import org.designup.picsou.gui.budget.footers.BudgetAreaSeriesFooter;
 import org.designup.picsou.gui.budget.footers.EmptyBudgetAreaSeriesFooter;
-import org.designup.picsou.gui.budget.footers.VariableSeriesFooter;
 import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.BudgetArea;
@@ -33,7 +32,7 @@ public class BudgetView extends View {
 
     addBudgetAreaView("incomeBudgetView", BudgetArea.INCOME, builder);
     addBudgetAreaView("recurringBudgetView", BudgetArea.RECURRING, builder);
-    addBudgetAreaView("variableBudgetView", BudgetArea.VARIABLE, new VariableSeriesFooter(repository), builder);
+    addBudgetAreaView("variableBudgetView", BudgetArea.VARIABLE, builder);
     addBudgetAreaView("extrasBudgetView", BudgetArea.EXTRAS, builder);
     addBudgetAreaView("savingsBudgetView", BudgetArea.SAVINGS, builder);
 

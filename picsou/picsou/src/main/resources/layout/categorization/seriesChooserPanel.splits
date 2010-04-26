@@ -31,7 +31,7 @@
               <button ref="editSeries" styleClass="editIcon" tooltipText="$series.edit.tooltip"/>
               <filler fill="horizontal"/>
             </row>
-            <repeat ref="subSeriesRepeat" marginLeft="20">
+            <repeat ref="subSeriesRepeat" marginLeft="15" border="matte(0,1,0,0,categorization.subseries.line)">
               <radioButton ref="subSeriesSelector" styleClass="subSeriesSelector"/>
             </repeat>
           </column>

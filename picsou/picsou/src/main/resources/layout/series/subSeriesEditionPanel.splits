@@ -3,7 +3,8 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel name="subSeriesEditionPanel" opaque="false" margin="10">
+  <column name="subSeriesEditionPanel" opaque="false" margin="10">
+    <htmlEditorPane text="$subseries.description" weightY="0.1" marginBottom="5"/>
     <grid>
       <label gridPos="(0,0)" text="$subseries.create.inputlabel" styleClass="formLabel"/>
       <textField gridPos="(1,0)" ref="subSeriesNameField"/>
@@ -25,6 +26,6 @@
         </row>
       </column>
     </grid>
-  </panel>
+  </column>
 
 </splits>

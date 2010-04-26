@@ -44,8 +44,6 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
     init(BudgetArea.INCOME, -200, 1200, 1000, -200)
       .checkObserved("-200.00")
       .checkPlanned("1200.00")
-//      .checkBegin()
-//      .checkGaugeErrorOverrun()
       .checkOverrunTooltip("800.00", "200.00")
       .checkGauge(-200, 1200);
   }

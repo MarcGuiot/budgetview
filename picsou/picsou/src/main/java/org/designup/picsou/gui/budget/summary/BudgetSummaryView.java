@@ -36,7 +36,6 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   private JLabel estimatedPositionTitle = new JLabel();
   private JButton uncategorizedButton = new JButton();
   private JLabel multiSelectionLabel = new JLabel();
-  private BudgetWizardPanel wizardPanel;
 
   private final DecimalFormat format = Formatting.DECIMAL_FORMAT;
 
@@ -74,7 +73,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     balanceLabel.addActionListener(new OpenBalanceAction());
     estimatedPositionLabel.addActionListener(new OpenPositionAction());
 
-    wizardPanel = new BudgetWizardPanel(repository, directory);
+    BudgetWizardPanel wizardPanel = new BudgetWizardPanel(repository, directory);
     builder.add("wizardPanel", wizardPanel.getPanel());
 
     parentBuilder.add("budgetSummaryView", builder);

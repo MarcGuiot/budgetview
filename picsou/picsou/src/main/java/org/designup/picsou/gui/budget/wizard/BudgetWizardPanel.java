@@ -35,6 +35,7 @@ public class BudgetWizardPanel implements ChangeSetListener {
       }
     });
     wizard.add(newHelpPage("intro", false));
+    wizard.add(newHelpPage("budgetView", true));
     wizard.add(newHelpPage("setPlannedAmounts", true));
     wizard.add(newHelpPage("setPeriodicities", true));
     wizard.add(newHelpPage("prepareSavings", true));
@@ -79,6 +80,6 @@ public class BudgetWizardPanel implements ChangeSetListener {
       && prefs.isTrue(UserPreferences.SHOW_BUDGET_VIEW_WIZARD)
       && repository.contains(Series.TYPE, not(fieldEquals(Series.ID, Series.UNCATEGORIZED_SERIES_ID)));
     
-    wizard.getPanel().setVisible(showWizard);
+    wizard.getPanel().setVisible(true || showWizard);
   }
 }
