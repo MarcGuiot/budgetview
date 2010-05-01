@@ -31,7 +31,6 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/08");
-    budgetView.getSummary().skipWizard();
 
     BalanceChecker balance_08 = budgetView.getSummary().openBalancePanel();
     balance_08.check(-75., -25., 0., -100.).close();

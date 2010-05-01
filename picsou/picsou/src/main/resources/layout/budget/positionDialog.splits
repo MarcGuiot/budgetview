@@ -8,7 +8,7 @@
     <style selector=".amountLabel" font="-,plain,12" marginTop="5" foreground="balance.panel.amount.label"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(500,400)">
+  <panel styleClass="dialog" preferredSize="(550,620)">
 
     <column styleClass="innerDialog">
 
@@ -17,56 +17,66 @@
       <column styleClass="blockScrollBorder">
         <panel opaque="true" background="block.inner.bg">
 
-          <column  margin="10">
+          <column margin="10">
 
             <cards ref="cardHandler">
-            <card name="past">
-              <column>
-                <row>
-                  <htmlEditorPane ref="positionPast"/>
-                  <label ref="positionPastAmount" styleClass="amount"/>
-                </row>
-                <htmlEditorPane ref="thresholdPast"/>
-                <filler fill="vertical"/>
-              </column>
-            </card>
-            <card name="present">
-              <column>
-                <label name="subTitle" text="$position.subtitle" marginBottom="5"/>
-                <grid>
-                  <label ref="bankPositionLabel" gridPos="(0,0,1,1)" styleClass="amountLabel"
-                         fill="horizontal" horizontalAlignment="right"/>
-                  <label ref="bankPositionAmount" gridPos="(1,0,1,1)" styleClass="amount"
-                         fill="horizontal" horizontalAlignment="right"/>
+              <card name="past">
+                <column>
+                  <row>
+                    <htmlEditorPane ref="positionPast"/>
+                    <label ref="positionPastAmount" styleClass="amount"/>
+                  </row>
+                  <htmlEditorPane ref="thresholdPast"/>
+                  <filler fill="vertical"/>
+                </column>
+              </card>
+              <card name="present">
+                <column>
+                  <htmlEditorPane useImageLocator="true" name="subTitle" text="$position.intro" marginBottom="15"/>
 
-                  <htmlEditorPane text="$position.panel.explain" gridPos="(0,1,2,1)" marginTop="10" marginBottom="10"/>
+                  <label ref="valueLabel" marginBottom="15"/>
 
-                  <label text="$position.panel.income" gridPos="(0,2,1,1)"
-                         fill="horizontal" horizontalAlignment="right" styleClass="amountLabel"/>
-                  <label ref="waitedIncomeAmount" gridPos="(1,2,1,1)" fill="horizontal" styleClass="amount"
-                         horizontalAlignment="right"/>
+                  <htmlEditorPane ref="positionPanelLimit" marginBottom="15"/>
 
-                  <label text="$position.panel.expenseAmountLabel" gridPos="(0,3,1,1)"
-                         fill="horizontal" horizontalAlignment="right" styleClass="amountLabel"/>
-                  <label ref="waitedExpenseAmount" gridPos="(1,3,1,1)" fill="horizontal" styleClass="amount"
-                         horizontalAlignment="right"/>
 
-                  <label text="$position.panel.savingsAmountLabel" gridPos="(0,4,1,1)"
-                         fill="horizontal" horizontalAlignment="right" styleClass="amountLabel"/>
-                  <label ref="waitedSavingsAmount" gridPos="(1,4,1,1)" fill="horizontal" styleClass="amount"
-                         horizontalAlignment="right"/>
+                  <column opaque="true" background="help.content.innerBlock.bg" border="line(help.content.innerBlock.border)">
 
-                  <label ref="estimatedPositionLabel" gridPos="(0,5,1,1)" fill="horizontal" styleClass="amountLabel"
-                         horizontalAlignment="right"/>
-                  <label ref="estimatedPosition" gridPos="(1,5,1,1)" fill="horizontal" styleClass="amount"
-                         horizontalAlignment="right"/>
-                </grid>
+                    <label text="$position.detailsIntro" margin="10" marginBottom="0"/>
 
-                <editorPane ref="positionPanelLimit"  marginTop="15" />
-                <filler fill="vertical"/>
-              </column>
-            </card>
-          </cards>
+                    <grid margin="10">
+                      <label ref="bankPositionLabel" gridPos="(0,0,1,1)" styleClass="amountLabel"
+                             fill="horizontal" horizontalAlignment="right"/>
+                      <label ref="bankPositionAmount" gridPos="(1,0,1,1)" styleClass="amount"
+                             fill="horizontal" horizontalAlignment="right"/>
+
+                      <htmlEditorPane text="$position.panel.explain" gridPos="(0,1,2,1)" marginTop="10"
+                                      marginBottom="10"/>
+
+                      <label text="$position.panel.income" gridPos="(0,2,1,1)"
+                             fill="horizontal" horizontalAlignment="right" styleClass="amountLabel"/>
+                      <label ref="waitedIncomeAmount" gridPos="(1,2,1,1)" fill="horizontal" styleClass="amount"
+                             horizontalAlignment="right"/>
+
+                      <label text="$position.panel.expenseAmountLabel" gridPos="(0,3,1,1)"
+                             fill="horizontal" horizontalAlignment="right" styleClass="amountLabel"/>
+                      <label ref="waitedExpenseAmount" gridPos="(1,3,1,1)" fill="horizontal" styleClass="amount"
+                             horizontalAlignment="right"/>
+
+                      <label text="$position.panel.savingsAmountLabel" gridPos="(0,4,1,1)"
+                             fill="horizontal" horizontalAlignment="right" styleClass="amountLabel"/>
+                      <label ref="waitedSavingsAmount" gridPos="(1,4,1,1)" fill="horizontal" styleClass="amount"
+                             horizontalAlignment="right"/>
+
+                      <label ref="estimatedPositionLabel" gridPos="(0,5,1,1)" fill="horizontal" styleClass="amountLabel"
+                             horizontalAlignment="right"/>
+                      <label ref="estimatedPosition" gridPos="(1,5,1,1)" fill="horizontal" styleClass="amount"
+                             horizontalAlignment="right"/>
+                    </grid>
+                  </column>
+                  <filler fill="vertical"/>
+                </column>
+              </card>
+            </cards>
           </column>
 
         </panel>
