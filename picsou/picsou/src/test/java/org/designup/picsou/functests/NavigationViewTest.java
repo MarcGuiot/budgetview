@@ -35,7 +35,6 @@ public class NavigationViewTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.getSummary()
-      .skipWizard()
       .checkNoEstimatedPosition();
     timeline.checkMonthTooltip("2008/08", "August 2008");
 

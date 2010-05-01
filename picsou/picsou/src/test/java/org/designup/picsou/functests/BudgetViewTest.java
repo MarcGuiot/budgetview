@@ -61,7 +61,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Salary", 3540.0, 3540.0);
     budgetView.income.checkSeries("Exceptional Income", 200.0, 0.0);
 
-    budgetView.getSummary().skipWizard().checkMonthBalance(3496.00);
+    budgetView.getSummary().checkMonthBalance(3496.00);
 
     timeline.selectMonths("2008/08");
 
@@ -179,7 +179,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkTotalAmounts(3540.0, 3540.00);
     budgetView.income.checkSeries("Salary", 3540.0, 3540.0);
 
-    budgetView.getSummary().skipWizard().checkMonthBalance(3540.00 - 145.00 - 29.00);
+    budgetView.getSummary().checkMonthBalance(3540.00 - 145.00 - 29.00);
   }
 
   public void testEditingASeriesWithTransactions() throws Exception {
@@ -270,7 +270,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.income.checkTotalAmounts(0.00, 3540.00);
     budgetView.income.checkSeries("Salary", 0.00, 3540.00);
-    budgetView.getSummary().skipWizard().checkMonthBalance(-50.00);
+    budgetView.getSummary().checkMonthBalance(-50.00);
 
     timeline.selectMonth("2008/07");
     budgetView.getSummary().checkMonthBalance((double)(3540 - 95 - 29 - 50));

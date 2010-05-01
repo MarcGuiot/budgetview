@@ -71,8 +71,8 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Salary", 0.0, 1000.0);
     mainAccounts.checkEstimatedPosition(1000.0);
     views.selectBudget();
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoPosition()
+    budgetView.getSummary()
+      .openPositionPanel()
       .checkIncome(1000.0)
       .close();
 
@@ -84,8 +84,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(0.0);
 
     views.selectBudget();
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoPosition()
+    budgetView.getSummary().openPositionPanel()
       .checkIncome(0.0)
       .close();
 
@@ -96,8 +95,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.income.checkTotalAmounts(1000.0, 1000.0);
 
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoPosition()
+    budgetView.getSummary().openPositionPanel()
       .checkIncome(0.0)
       .close();
     budgetView.income.checkSeries("Salary", 1000.0, 1000.0);
@@ -151,16 +149,12 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .selectAllMonths().setAmount("100")
       .validate();
 
-    timeline.selectMonth("2008/08");
-    budgetView.getSummary().checkMonthBalanceHidden();
-
     budgetView.recurring.createSeries()
       .setName("Loyer")
       .switchToManual()
       .setAmount("1000")
       .validate();
     budgetView.getSummary().checkHelpMessageDisplayed();
-    budgetView.getSummary().skipWizard();
     budgetView.getSummary().checkMonthBalance(-600.00);
 
     restartApplication();

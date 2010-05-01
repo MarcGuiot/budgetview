@@ -17,12 +17,43 @@ public class PositionChecker extends GuiChecker{
     return this;
   }
 
-  public PositionChecker checkPresent(double amount, double income, double expence, double savings, double enfOfMonth){
-    UISpecAssert.assertThat(window.getTextBox("bankPositionAmount").textContains(Formatting.toString(amount)));
+  public PositionChecker checkPresent(double positionAmount, double income, double expence,
+                                      double savings, double enfOfMonth){
+    UISpecAssert.assertThat(window.getTextBox("bankPositionAmount").textContains(Formatting.toString(positionAmount)));
     UISpecAssert.assertThat(window.getTextBox("waitedIncomeAmount").textContains(Formatting.toString(income)));
     UISpecAssert.assertThat(window.getTextBox("waitedExpenseAmount").textContains(Formatting.toString(expence)));
-    UISpecAssert.assertThat(window.getTextBox("waitedSavingsAmount").textContains(Formatting.toString(savings)));
+    UISpecAssert.assertThat(window.getTextBox("waitedSavingsAmountToMain").textContains(Formatting.toString(savings)));
     UISpecAssert.assertThat(window.getTextBox("estimatedPosition").textContains(Formatting.toString(enfOfMonth)));
+    return this;
+  }
+
+  public PositionChecker checkPosition(double amount) {
+    UISpecAssert.assertThat(window.getTextBox("estimatedPosition").textContains(Formatting.toString(amount)));
+    return this;
+  }
+
+  public PositionChecker checkIncome(double amount){
+    UISpecAssert.assertThat(window.getTextBox("waitedIncomeAmount").textContains(Formatting.toString(amount)));
+    return this;
+  }
+
+  public PositionChecker checkExpense(double amount){
+    UISpecAssert.assertThat(window.getTextBox("waitedExpenseAmount").textContains(Formatting.toString(amount)));
+    return this;
+  }
+
+  public PositionChecker checkSavingsIn(double amount){
+    UISpecAssert.assertThat(window.getTextBox("waitedSavingsAmountToMain").textContains(Formatting.toString(amount)));
+    return this;
+  }
+
+  public PositionChecker checkSavingsOut(double amount){
+    UISpecAssert.assertThat(window.getTextBox("waitedSavingsAmountFromMain").textContains(Formatting.toString(amount)));
+    return this;
+  }
+
+  public PositionChecker checkInitialPosition(double positionAmount) {
+    UISpecAssert.assertThat(window.getTextBox("bankPositionAmount").textContains(Formatting.toString(positionAmount)));
     return this;
   }
 

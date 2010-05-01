@@ -41,6 +41,9 @@ public class UserPreferences {
   @DefaultBoolean(true)
   public static BooleanField SHOW_BUDGET_VIEW_WIZARD;
 
+  @DefaultInteger(0)
+  public static IntegerField CURRENT_WIZARD_PAGE;
+
   @DefaultBoolean(true)
   public static BooleanField SHOW_CATEGORIZATION_HELP_MESSAGE;
 
@@ -68,6 +71,7 @@ public class UserPreferences {
       outputStream.writeBoolean(values.get(REGISTERED_USER));
       outputStream.writeInteger(values.get(CATEGORIZATION_FILTERING_MODE));
       outputStream.writeBoolean(values.get(SHOW_BUDGET_VIEW_WIZARD));
+      outputStream.writeInteger(values.get(CURRENT_WIZARD_PAGE));
       outputStream.writeBoolean(values.get(SHOW_CATEGORIZATION_HELP_MESSAGE));
       outputStream.writeBoolean(values.get(SHOW_VARIABLE_EDITION_MESSAGE));
       outputStream.writeDate(values.get(LAST_VALID_DAY));
@@ -75,7 +79,7 @@ public class UserPreferences {
     }
 
     public int getWriteVersion() {
-      return 5;
+      return 6;
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
@@ -93,6 +97,9 @@ public class UserPreferences {
       }
       else if (version == 5) {
         deserializeDataV5(fieldSetter, data);
+      }
+      else if (version == 6) {
+        deserializeDataV6(fieldSetter, data);
       }
     }
 
@@ -152,6 +159,20 @@ public class UserPreferences {
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
       fieldSetter.set(SHOW_BUDGET_VIEW_WIZARD, input.readBoolean());
+      fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, input.readBoolean());
+      fieldSetter.set(SHOW_VARIABLE_EDITION_MESSAGE, input.readBoolean());
+      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+    }
+
+    private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readUtf8String());
+      fieldSetter.set(LAST_BACKUP_RESTORE_DIRECTORY, input.readUtf8String());
+      fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
+      fieldSetter.set(REGISTERED_USER, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
+      fieldSetter.set(SHOW_BUDGET_VIEW_WIZARD, input.readBoolean());
+      fieldSetter.set(CURRENT_WIZARD_PAGE, input.readInteger());
       fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, input.readBoolean());
       fieldSetter.set(SHOW_VARIABLE_EDITION_MESSAGE, input.readBoolean());
       fieldSetter.set(LAST_VALID_DAY, input.readDate());

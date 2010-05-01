@@ -43,9 +43,6 @@ public class BudgetWizardPanel implements ChangeSetListener {
     wizard.add(newHelpPage("endOfCurrentMonth", true));
     wizard.add(newHelpPage("future", true));
 
-    wizard.showFirstPage();
-
-    update();
   }
 
   public JPanel getPanel() {
@@ -75,11 +72,13 @@ public class BudgetWizardPanel implements ChangeSetListener {
 
   private void update() {
     Glob prefs = repository.find(UserPreferences.KEY);
+    if (prefs == null){
+      return;
+    }
     boolean showWizard =
-      (prefs != null)
-      && prefs.isTrue(UserPreferences.SHOW_BUDGET_VIEW_WIZARD)
+      prefs.isTrue(UserPreferences.SHOW_BUDGET_VIEW_WIZARD)
       && repository.contains(Series.TYPE, not(fieldEquals(Series.ID, Series.UNCATEGORIZED_SERIES_ID)));
-    
-    wizard.getPanel().setVisible(true || showWizard);
+    int page = prefs.get(UserPreferences.CURRENT_WIZARD_PAGE);
+    wizard.show(true || showWizard, page);
   }
 }

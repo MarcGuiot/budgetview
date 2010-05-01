@@ -31,7 +31,6 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/08");
-    budgetView.getSummary().skipWizard();
 
     BalanceChecker balance_08 = budgetView.getSummary().openBalancePanel();
     balance_08.check(-75., -25., 0., -100.).close();
@@ -86,9 +85,8 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
       .setNewRecurring("loyer", "loyer")
       .setNewVariable("ed", "courses", 300.)
       .setNewIncome("revenu", "revenue");
-
+    openApplication();
     views.selectBudget();
-    budgetView.getSummary().skipWizard();
 
     timeline.selectMonth("2008/08");
     PositionChecker position_08 = budgetView.getSummary().openPositionPanel();
@@ -140,7 +138,6 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/08");
     views.selectBudget();
-    budgetView.getSummary().skipWizard();
 
     PositionChecker position_08 = budgetView.getSummary().openPositionPanel();
     position_08.checkPresent(0, 0, -275, 0, -275);
@@ -151,7 +148,11 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
       .selectUncategorized().setUncategorized();
     views.selectBudget();
     position_08 = budgetView.getSummary().openPositionPanel();
-    position_08.checkPresent(0, 0, -275, -200, -475);
-
+    position_08
+      .checkInitialPosition(0)
+      .checkIncome(0)
+      .checkExpense(-275)
+      .checkSavingsOut(-200)
+      .checkPosition(-475);
   }
 }
