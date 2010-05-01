@@ -13,15 +13,15 @@ public class HelpTest extends LoggedInFunctionalTestCase {
   }
 
   public void testHelpForCards() throws Exception {
-    views.openHelp().checkTitle("Dashboard View").close();
+    operations.openHelp("Dashboard View").checkTitle("Dashboard View").close();
 
     views.selectCategorization();
-    views.openHelp().checkTitle("Categorization View").close();
+    operations.openHelp("Categorization View").checkTitle("Categorization View").close();
 
     views.selectBudget();
-    views.openHelp().checkTitle("Budget View").close();
+    operations.openHelp("Budget View").checkTitle("Budget View").close();
 
     views.selectData();
-    views.openHelp().checkTitle("Operations View").close();
+    operations.openHelp("Operations View").checkTitle("Operations View").close();
   }
 }

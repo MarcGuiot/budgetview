@@ -282,6 +282,7 @@ public class MainPanel {
     editMenu.add(redoAction);
 
 //    Utils.beginRemove();
+    editMenu.addSeparator();
     editMenu.add(dumpRepository);
     editMenu.add(checkRepository);
     editMenu.add(throwException);
@@ -302,6 +303,7 @@ public class MainPanel {
         directory.get(HelpService.class).show("index", parent);
       }
     });
+    menu.add(cardView.getHelpAction());
 
     if (!Gui.useMacOSMenu()) {
       menu.addSeparator();

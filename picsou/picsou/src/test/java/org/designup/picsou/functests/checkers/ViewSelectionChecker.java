@@ -91,10 +91,6 @@ public class ViewSelectionChecker extends GuiChecker {
     window.getButton("forward").click();
   }
 
-  public HelpChecker openHelp() {
-    return HelpChecker.open(window.getPanel("mainWindowHeader").getButton("Help").triggerClick());
-  }
-
   public void checkAllTooltipsPresent() {
     for (Card card : Card.values()) {
       ToggleButton button = getToggle(card.getName());
