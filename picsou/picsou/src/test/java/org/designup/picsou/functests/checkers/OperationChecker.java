@@ -349,6 +349,10 @@ public class OperationChecker {
     return HelpChecker.open(window.getMenuBar().getMenu("Help").getSubMenu("Index").triggerClick());
   }
 
+  public HelpChecker openHelp(String title) {
+    return HelpChecker.open(window.getMenuBar().getMenu("Help").getSubMenu(title).triggerClick());
+  }
+
   public AboutChecker openAbout() {
     return AboutChecker.open(window.getMenuBar().getMenu("Help").getSubMenu("About").triggerClick());
   }

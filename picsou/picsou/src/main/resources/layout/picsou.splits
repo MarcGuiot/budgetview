@@ -27,11 +27,11 @@
         rolloverColor="periods.button.rollover" pressedColor="periods.button.pressed"/>
 
     <style selector="button.periodButton"
-           anchor="south" margin="2" marginBottom="10"
+           anchor="south" margin="2" marginBottom="2"
            foreground="periods.button.normal"
            minimumSize="(20,14)" preferredSize="(20,14)"/>
     <style selector="button.doublePeriodButton"
-           anchor="south" margin="2" marginBottom="12"
+           anchor="south" margin="2" marginBottom="10"
            foreground="periods.button.normal"
            minimumSize="(20,10)" preferredSize="(20,10)"/>
 
@@ -39,16 +39,16 @@
     <ui name="backArrow" class="org.designup.picsou.gui.components.ArrowButtonUI"
         rotation="180" doubleArrow="false"
         rolloverColor="backforward.rollover" pressedColor="backforward.pressed" disabledColor="backforward.disabled"
-        size="(20,16)"/>
+        size="(16,12)"/>
     <ui name="forwardArrow" class="org.designup.picsou.gui.components.ArrowButtonUI"
         rotation="0" doubleArrow="false"
         rolloverColor="backforward.rollover" pressedColor="backforward.pressed" disabledColor="backforward.disabled"
-        size="(20,16)"/>
+        size="(16,12)"/>
     <style selector="button.backforward"
-           minimumSize="(20,16)" preferredSize="(20,16)" foreground="backforward.normal"
+           minimumSize="(20,16)" preferredSize="(16,12)" foreground="backforward.normal"
            fill="none" margin="3" weightX="0"/>
     <style selector="button#back" ui="backArrow"/>
-    <style selector="button#forward" ui="forwardArrow" marginRight="20"/>
+    <style selector="button#forward" ui="forwardArrow" marginRight="10"/>
 
     <!-- Front page information messages -->
     <style selector=".infoMessage" opaque="false"/>
@@ -58,40 +58,50 @@
            margin="1" border="empty(10)" opaque="true" background="guidingPanel.bg"
            font="-,plain,12" fill="both"/>
 
-    <!-- Help button -->
-    <ui name="helpButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
-        underline="false" rolloverColor="title.help.rollover"/>
-    <style selector="button.help" ui="helpButton" font="-,plain,11" foreground="title.help"/>
-
   </styles>
 
   <panel styleClass="main" ui="wave">
     <column marginTop="15" marginLeft="20" marginRight="20" marginBottom="10">
 
       <horizontalBoxes weightY="0.1" name="mainWindowHeader">
-        <column>
-          <label ref="title" opaque="false" font="Arial,bold,22" weightX="0"
-                 horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
-          <button action="help" styleClass="help" fill="none" anchor="west"/>
-        </column>
-        <filler fill="horizontal"/>
-        <button name="back" action="back" styleClass="backforward" tooltipText="$back"/>
-        <button name="forward" action="forward" styleClass="backforward" tooltipText="$forward"/>
-        <repeat ref="cards" layout="row" weightX="0">
-          <toggleButton ref="toggle" styleClass="masterViewSelector"/>
-        </repeat>
+        <row>
+          <column>
+            <row anchor="left" fill="horizontal" marginBottom="5">
+              <button name="back" action="back" styleClass="backforward" tooltipText="$back"/>
+              <button name="forward" action="forward" styleClass="backforward" tooltipText="$forward"/>
+              <label ref="title" opaque="false" font="Arial,bold,12" weightX="0"
+                     horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
+              <filler fill="horizontal"/>
+            </row>
+            <repeat ref="cards" layout="row" weightX="0" weightY="0.1" fill="horizontal">
+              <toggleButton ref="toggle" styleClass="masterViewSelector" marginBottom="2"/>
+            </repeat>
+          </column>
+          <row weightY="0.1" name="time" marginTop="0" marginLeft="40" marginRight="0">
+            <column>
+              <filler fill="vertical"/>
+              <button ref="prevPeriod" gridPos="(0,1)"
+                      ui="arrowLeft" styleClass="periodButton"
+                      tooltipText="$timeView.tooltip.previous"/>
+              <button ref="firstPeriod" gridPos="(0,0)"
+                      ui="doubleArrowLeft" styleClass="doublePeriodButton"
+                      tooltipText="$timeView.tooltip.first"/>
+            </column>
+            <component ref="timeView" gridPos="(1,0,1,2)"
+                       fill="horizontal" anchor="center"
+                       marginLeft="2" marginRight="2"
+                       weightX="1000.0" weightY="100.0" border="empty"/>
+            <column>
+              <filler fill="vertical"/>
+              <button ref="nextPeriod" gridPos="(2,0)"
+                      ui="arrowRight" styleClass="periodButton" tooltipText="$timeView.tooltip.next"/>
+              <button ref="lastPeriod" gridPos="(2,1)"
+                      ui="doubleArrowRight" styleClass="doublePeriodButton"
+                      tooltipText="$timeView.tooltip.last"/>
+            </column>
+          </row>
+        </row>
       </horizontalBoxes>
-
-      <row weightY="0.1" name="time" marginTop="15" marginLeft="20" marginRight="20">
-        <button ref="firstPeriod" ui="doubleArrowLeft" styleClass="doublePeriodButton"
-                tooltipText="$timeView.tooltip.first"/>
-        <button ref="prevPeriod" ui="arrowLeft" styleClass="periodButton" tooltipText="$timeView.tooltip.previous"/>
-        <component ref="timeView" gridPos="(1,0,1,2)" fill="horizontal" anchor="center"
-                   marginLeft="2" marginRight="2" weightX="1000.0" weightY="100.0" border="empty"/>
-        <button ref="nextPeriod" ui="arrowRight" styleClass="periodButton" tooltipText="$timeView.tooltip.next"/>
-        <button ref="lastPeriod" ui="doubleArrowRight" styleClass="doublePeriodButton"
-                tooltipText="$timeView.tooltip.last"/>
-      </row>
 
       <cards ref="mainCards" marginTop="20" weightY="10.0">
 
@@ -129,7 +139,7 @@
               <column weightX="3">
                 <panel ref="accountView" minimumSize="(250,200)" preferredSize="(400,700)"/>
               </column>
-              
+
               <column weightX="2">
                 <panel ref="navigationView"/>
               </column>

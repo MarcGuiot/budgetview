@@ -29,10 +29,12 @@ public class CardView extends View implements GlobSelectionListener {
   private Card lastSelectedCard = NavigationService.INITIAL_CARD;
   private JToggleButton[] toggles = new JToggleButton[Card.values().length];
   private static final Card[] CARDS = {Card.HOME, Card.CATEGORIZATION, Card.BUDGET, Card.EVOLUTION, Card.SAVINGS, Card.DATA};
+  private CardView.ViewHelpAction viewHelpAction;
 
   public CardView(GlobRepository repository, Directory directory) {
     super(repository, directory);
     this.selectionService.addListener(this, Card.TYPE);
+    this.viewHelpAction = new ViewHelpAction();
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
@@ -61,8 +63,6 @@ public class CardView extends View implements GlobSelectionListener {
     });
 
     addBackForwardActions(builder);
-
-    builder.add("help", new ViewHelpAction());
 
     showCard(NavigationService.INITIAL_CARD);
   }
@@ -99,6 +99,7 @@ public class CardView extends View implements GlobSelectionListener {
 
   private void showCard(Card card) {
     toggles[card.getId()].doClick(0);
+    viewHelpAction.setCurrentCard(card);
   }
 
   public void selectionUpdated(GlobSelection selection) {
@@ -111,6 +112,10 @@ public class CardView extends View implements GlobSelectionListener {
     if (selection.isRelevantForType(Month.TYPE)) {
       showCard(lastSelectedCard);
     }
+  }
+
+  public Action getHelpAction() {
+    return viewHelpAction;
   }
 
   private class ToggleAction extends AbstractAction {
@@ -136,6 +141,10 @@ public class CardView extends View implements GlobSelectionListener {
 
     private ViewHelpAction() {
       super(Lang.get("help"));
+    }
+
+    public void setCurrentCard(Card card) {
+      putValue(Action.NAME, Lang.get("cards.help", card.getLabel()));
     }
 
     public void actionPerformed(ActionEvent e) {
