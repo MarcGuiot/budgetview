@@ -85,7 +85,7 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
       .setNewRecurring("loyer", "loyer")
       .setNewVariable("ed", "courses", 300.)
       .setNewIncome("revenu", "revenue");
-    openApplication();
+
     views.selectBudget();
 
     timeline.selectMonth("2008/08");
