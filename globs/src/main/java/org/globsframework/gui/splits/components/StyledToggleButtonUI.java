@@ -1,6 +1,10 @@
 package org.globsframework.gui.splits.components;
 
+import com.sun.java.swing.SwingUtilities2;
+
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.plaf.basic.BasicToggleButtonUI;
 import java.awt.*;
 
@@ -8,6 +12,7 @@ public class StyledToggleButtonUI extends BasicToggleButtonUI {
   private Color topColor = Color.WHITE;
   private Color bottomColor = Color.WHITE;
   private Color borderColor = Color.BLACK;
+  private Color rolloverColor = Color.BLUE;
 
   private int borderWidth = 0;
 
@@ -16,7 +21,7 @@ public class StyledToggleButtonUI extends BasicToggleButtonUI {
 
   public StyledToggleButtonUI() {
   }
-
+  
   public Color getBorderColor() {
     return borderColor;
   }
@@ -27,6 +32,14 @@ public class StyledToggleButtonUI extends BasicToggleButtonUI {
 
   public Color getTopColor() {
     return topColor;
+  }
+
+  public Color getRolloverColor() {
+    return rolloverColor;
+  }
+
+  public void setRolloverColor(Color rolloverColor) {
+    this.rolloverColor = rolloverColor;
   }
 
   public void setTopColor(Color topColor) {
@@ -55,6 +68,32 @@ public class StyledToggleButtonUI extends BasicToggleButtonUI {
 
   public void setCornerRadius(int cornerRadius) {
     this.cornerRadius = cornerRadius;
+  }
+
+  protected void paintText(Graphics g, AbstractButton button, Rectangle textRect, String text) {
+    ButtonModel model = button.getModel();
+    FontMetrics fm = SwingUtilities2.getFontMetrics(button, g);
+    int mnemonicIndex = button.getDisplayedMnemonicIndex();
+
+    if (model.isEnabled()) {
+      if (model.isRollover()) {
+        g.setColor(rolloverColor);
+      }
+      else {
+        g.setColor(button.getForeground());
+      }
+      SwingUtilities2.drawStringUnderlineCharAt(button, g, text, mnemonicIndex,
+                                                textRect.x + getTextShiftOffset(),
+                                                textRect.y + fm.getAscent() + getTextShiftOffset());
+    }
+    else {
+      g.setColor(button.getBackground().brighter());
+      SwingUtilities2.drawStringUnderlineCharAt(button, g, text, mnemonicIndex,
+                                                textRect.x, textRect.y + fm.getAscent());
+      g.setColor(button.getBackground().darker());
+      SwingUtilities2.drawStringUnderlineCharAt(button, g, text, mnemonicIndex,
+                                                textRect.x - 1, textRect.y + fm.getAscent() - 1);
+    }
   }
 
   protected void paintButtonPressed(Graphics g, AbstractButton button) {
