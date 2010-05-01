@@ -1,10 +1,8 @@
 package org.globsframework.gui.splits.components;
 
-import com.sun.java.swing.SwingUtilities2;
+import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 import javax.swing.plaf.basic.BasicToggleButtonUI;
 import java.awt.*;
 
@@ -21,7 +19,7 @@ public class StyledToggleButtonUI extends BasicToggleButtonUI {
 
   public StyledToggleButtonUI() {
   }
-  
+
   public Color getBorderColor() {
     return borderColor;
   }
@@ -72,7 +70,7 @@ public class StyledToggleButtonUI extends BasicToggleButtonUI {
 
   protected void paintText(Graphics g, AbstractButton button, Rectangle textRect, String text) {
     ButtonModel model = button.getModel();
-    FontMetrics fm = SwingUtilities2.getFontMetrics(button, g);
+    FontMetrics fm = button.getFontMetrics(g.getFont());
     int mnemonicIndex = button.getDisplayedMnemonicIndex();
 
     if (model.isEnabled()) {
@@ -82,17 +80,20 @@ public class StyledToggleButtonUI extends BasicToggleButtonUI {
       else {
         g.setColor(button.getForeground());
       }
-      SwingUtilities2.drawStringUnderlineCharAt(button, g, text, mnemonicIndex,
-                                                textRect.x + getTextShiftOffset(),
-                                                textRect.y + fm.getAscent() + getTextShiftOffset());
+      g.drawString(text, textRect.x + getTextShiftOffset(),
+                   textRect.y + fm.getAscent() + getTextShiftOffset());
+      GuiUtils.drawUnderlineCharAt(g, text, mnemonicIndex, textRect.x + getTextShiftOffset(),
+                                   textRect.y + fm.getAscent() + getTextShiftOffset());
+
     }
     else {
       g.setColor(button.getBackground().brighter());
-      SwingUtilities2.drawStringUnderlineCharAt(button, g, text, mnemonicIndex,
-                                                textRect.x, textRect.y + fm.getAscent());
+      g.drawString(text, textRect.x, textRect.y + fm.getAscent());
+      GuiUtils.drawUnderlineCharAt(g, text, mnemonicIndex, textRect.x, textRect.y + fm.getAscent());
+
       g.setColor(button.getBackground().darker());
-      SwingUtilities2.drawStringUnderlineCharAt(button, g, text, mnemonicIndex,
-                                                textRect.x - 1, textRect.y + fm.getAscent() - 1);
+      g.drawString(text, textRect.x - 1, textRect.y + fm.getAscent() - 1);
+      GuiUtils.drawUnderlineCharAt(g, text, mnemonicIndex, textRect.x - 1, textRect.y + fm.getAscent() - 1);
     }
   }
 
