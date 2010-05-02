@@ -5,13 +5,17 @@
     <style selector="button.website" ui="hyperlinkButtonWithoutUnderline"
            font="-,plain,11" fill="none" anchor="left" marginLeft="10"
            foreground="block.item.link.light"
-           icon="open_website.png" iconTextGap="0"
+           icon="open_website.png"
+           rolloverIcon="open_website_rollover.png"
+           iconTextGap="0"
            horizontalTextPosition="left" verticalAlignment="bottom"/>
 
     <style selector="button.operations" ui="hyperlinkButtonWithoutUnderline"
            font="-,plain,11" fill="none" anchor="left" marginLeft="10"
            foreground="block.item.link.light"
-           icon="arrow_right_blue.png" iconTextGap="1"
+           icon="arrow_right_blue.png"
+           rolloverIcon="arrow_right_blue_rollover.png"
+           iconTextGap="1"
            horizontalTextPosition="left" verticalAlignment="bottom"/>
 
     <style selector=".right label.totalAmountTitle"
