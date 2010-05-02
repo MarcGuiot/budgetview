@@ -2,6 +2,7 @@ package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.accounts.utils.GotoAccountWebsiteAction;
+import org.designup.picsou.gui.accounts.utils.GotoAccountOperationsAction;
 import org.designup.picsou.gui.description.AccountComparator;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
@@ -133,6 +134,8 @@ public abstract class AccountViewPanel {
           createAccountNameButton(account, repository, directory), account, cellBuilder);
 
       cellBuilder.add("gotoWebsite", new GotoAccountWebsiteAction(account, repository, directory));
+
+      cellBuilder.add("gotoOperations", new GotoAccountOperationsAction(account, repository, directory));
 
       add("accountUpdateDate",
           GlobLabelView.init(Account.POSITION_DATE, repository, directory),

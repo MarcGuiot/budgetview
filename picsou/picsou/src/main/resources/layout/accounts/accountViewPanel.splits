@@ -4,7 +4,15 @@
   <styles>
     <style selector="button.website" ui="hyperlinkButtonWithoutUnderline"
            font="-,plain,11" fill="none" anchor="left" marginLeft="10"
-           foreground="block.item.link.light"/>
+           foreground="block.item.link.light"
+           icon="open_website.png" iconTextGap="0"
+           horizontalTextPosition="left" verticalAlignment="bottom"/>
+
+    <style selector="button.operations" ui="hyperlinkButtonWithoutUnderline"
+           font="-,plain,11" fill="none" anchor="left" marginLeft="10"
+           foreground="block.item.link.light"
+           icon="arrow_right_blue.png" iconTextGap="1"
+           horizontalTextPosition="left" verticalAlignment="bottom"/>
   </styles>
 
   <panel styleClass="block">
@@ -39,7 +47,11 @@
               <column name="accountParent" margin="5" marginBottom="5">
                 <grid>
                   <button ref="accountName" gridPos="(0,0)" anchor="west" styleClass="itemLink"/>
-                  <button action="gotoWebsite" gridPos="(0,1)" anchor="west" styleClass="website"/>
+                  <row gridPos="(0,1)">
+                    <button action="gotoWebsite" styleClass="website"/>
+                    <button action="gotoOperations" styleClass="operations"/>
+                    <filler fill="horizontal"/>
+                  </row>
                   <button ref="accountPosition" gridPos="(1,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
                   <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east" styleClass="subitem"/>
                   <label ref="estimatedAccountPosition" gridPos="(2,0)"

@@ -75,6 +75,12 @@ public class NavigationService implements GlobSelectionListener {
     gotoCategorization();
   }
 
+  public void gotoDataForAccount(Key accountKey) {
+    selectionService.select(repository.get(accountKey));
+    seriesView.selectAll();
+    select(Card.DATA, false);
+  }
+
   public void gotoDataForSeries(Glob series) {
     selectionService.select(repository.get(Account.ALL_SUMMARY_KEY));
     seriesView.selectSeries(series);
