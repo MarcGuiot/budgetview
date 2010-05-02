@@ -275,9 +275,7 @@ public class Utils {
   public static void endRemove() {
   }
 
-  public static void releaseBeginRemove() {
-  }
-
-  public static void releaseEndRemove() {
+  public static void throwException(RuntimeException exception) {
+    throw exception;
   }
 }

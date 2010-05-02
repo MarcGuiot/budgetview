@@ -22,27 +22,27 @@ import java.util.Date;
 public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   static protected Window mainWindow;
 
-  protected ViewSelectionChecker views;
-  protected MainAccountViewChecker mainAccounts;
-  protected SavingsAccountViewChecker savingsAccounts;
-  protected TimeViewChecker timeline;
-  protected TransactionChecker transactions;
-  protected TransactionDetailsChecker transactionDetails;
-  protected TransactionCreationChecker transactionCreation;
-  protected OperationChecker operations;
-  protected TitleChecker title;
-  protected LicenseActivationChecker license;
-  protected BudgetViewChecker budgetView;
-  protected SavingsViewChecker savingsView;
-  protected NextProjectsChecker nextProjects;
-  protected CategorizationChecker categorization;
-  protected SeriesViewChecker series;
-  protected SeriesEvolutionChecker seriesEvolution;
-  protected VersionInfoChecker versionInfo;
-  protected ActionViewChecker actions;
-  protected NavigationViewChecker navigation;
-  protected NotesChecker notes;
-  protected BackupChecker backup;
+  public ViewSelectionChecker views;
+  public MainAccountViewChecker mainAccounts;
+  public SavingsAccountViewChecker savingsAccounts;
+  public TimeViewChecker timeline;
+  public TransactionChecker transactions;
+  public TransactionDetailsChecker transactionDetails;
+  public TransactionCreationChecker transactionCreation;
+  public OperationChecker operations;
+  public TitleChecker title;
+  public LicenseActivationChecker license;
+  public BudgetViewChecker budgetView;
+  public SavingsViewChecker savingsView;
+  public NextProjectsChecker nextProjects;
+  public CategorizationChecker categorization;
+  public SeriesViewChecker series;
+  public SeriesEvolutionChecker seriesEvolution;
+  public VersionInfoChecker versionInfo;
+  public ActionViewChecker actions;
+  public NavigationViewChecker navigation;
+  public NotesChecker notes;
+  public BackupChecker backup;
 
   protected GlobRepository repository;
 

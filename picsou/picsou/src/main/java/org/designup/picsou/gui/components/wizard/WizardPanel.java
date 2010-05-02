@@ -1,14 +1,15 @@
 package org.designup.picsou.gui.components.wizard;
 
 import org.designup.picsou.gui.help.HelpService;
+import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Functor;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
-import org.globsframework.utils.exceptions.InvalidState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,13 +46,6 @@ public class WizardPanel {
     page.init();
     pages.add(page);
     contentPanel.add(page.getId(), page.getPanel());
-  }
-
-  public void showFirstPage() {
-    if (pages.isEmpty()) {
-      throw new InvalidState("There is no page to show");
-    }
-    showPage(0);
   }
 
   public JPanel getPanel() {
@@ -102,6 +96,22 @@ public class WizardPanel {
     previous.update();
 
     currentPage.updateAfterDisplay();
+    repository.update(UserPreferences.KEY, UserPreferences.CURRENT_WIZARD_PAGE, currentIndex);
+  }
+
+  public void show(boolean isVisible, int page) {
+    if (isVisible) {
+      if (page >= pages.size()) {
+        Utils.beginRemove();
+        Utils.throwException(new InvalidParameter("page " + page + " does not exist"));
+        Utils.endRemove();
+        page = 0;
+      }
+      showPage(page);
+    }
+
+    System.out.println("WizardPanel.show: setVisible " + isVisible);
+    getPanel().setVisible(isVisible);
   }
 
   private class NextPageAction extends AbstractAction {

@@ -126,7 +126,6 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.getSummary()
-      .skipWizard()
       .checkMonthBalance(-25.00)
       .checkEndPosition(112.00);
 

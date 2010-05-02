@@ -88,7 +88,6 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2009/04");
     budgetView.getSummary()
-      .skipWizard()
       .checkMonthBalance(-29.90);
 
     timeline.selectMonth("2009/05");

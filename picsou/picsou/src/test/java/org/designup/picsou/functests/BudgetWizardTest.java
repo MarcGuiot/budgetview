@@ -2,6 +2,7 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.functests.checkers.BudgetChecker;
 
 public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
@@ -11,8 +12,6 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
   }
 
   public void testOneMonth() throws Exception {
-
-    fail("à adapter sur BalanceDialog / PositionDialog");
 
     OfxBuilder.init(this)
       .addTransaction("2008/07/07", -30, "Free")
@@ -46,11 +45,14 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/07");
     views.selectBudget();
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoBalance()
-      .checkBalance(balanceFor200807)
-      .checkBalanceDetails(incomeFor200807, 1530.00, 400.00, 100.00, 200.00)
-      .close();
+
+    budgetView.getSummary()
+      .checkMonthBalance(balanceFor200807)
+      .checkEndPosition(0.00);
+    budgetView.income.checkTotalObserved(incomeFor200807);
+    budgetView.recurring.checkTotalObserved(-1530.00);
+    budgetView.savings.checkTotalObserved(100.);
+
     views.selectHome();
 
     mainAccounts.changePosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000, "VIRT ING");
@@ -60,36 +62,32 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(1000 + balanceFor200808);
 
     views.selectBudget();
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoBalance()
-      .checkBalance(balanceFor200808)
-      .checkBalanceDetails(incomeFor200808, 1530.00, 400.00, 100.00, 0)
-      .gotoPosition()
-      .checkPositionDescriptionContains("Computation details")
+    budgetView.getSummary()
+      .checkMonthBalance(balanceFor200808)
+      .openPositionPanel()
       .checkInitialPosition(1000.00)
       .checkIncome(2200.00)
-      .checkFixed(30 + 1500)
-      .checkVariable(300 + 100)
+      .checkExpense(-1930.)
       .checkSavingsIn(0.00)
       .checkSavingsOut(100.00)
-      .checkExtras(0.00)
       .close();
+    budgetView.recurring.checkTotalPlanned(-30 - 1500);
+    budgetView.variable.checkTotalPlanned(-300 - 100);
 
     timeline.selectAll();
     views.selectHome();
     mainAccounts.checkEstimatedPosition(1000 + incomeFor200808 - expensesFor200808);
     views.selectBudget();
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoBalance()
-      .checkBalance(balanceFor200807 + balanceFor200808)
-      .gotoPosition()
+    budgetView.getSummary()
+      .checkMonthBalance(balanceFor200807 + balanceFor200808);
+    budgetView.income.checkTotalPlanned(4400);
+    budgetView.getSummary()
+      .openPositionPanel()
       .checkInitialPosition(1000.00)
       .checkIncome(2200.00)
-      .checkFixed(30 + 1500)
-      .checkVariable(300 + 100)
+      .checkExpense(30 + 1500 + 300 + 100)
       .checkSavingsOut(100.00)
       .checkSavingsIn(0.00)
-      .checkExtras(0.00)
       .close();
 
     timeline.selectMonth("2008/08");
@@ -98,15 +96,11 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .setName("Trip")
       .setAmount(170)
       .validate();
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoBalance()
-      .checkBalance(0)
-      .close();
+    budgetView.getSummary()
+      .checkMonthBalance(0);
   }
 
   public void testTwoMonths() throws Exception {
-
-    fail("à adapter sur BalanceDialog / PositionDialog");
 
     operations.openPreferences().setFutureMonthsCount(12).validate();
     OfxBuilder.init(this)
@@ -134,7 +128,6 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     double balanceFor200807 = 1500 - (29.9 + 1500 + 60 + 20 + 10);
     budgetView.getSummary()
-      .skipWizard()
       .checkMonthBalance(balanceFor200807)
       .checkEndPosition(1529.90);
 
@@ -150,15 +143,12 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     double balanceFor200808 = 1500 - (29.9 + 1500 + 60 + 20 + 10);
     views.selectBudget();
     budgetView.getSummary()
-      .skipWizard()
       .checkMonthBalance(balanceFor200808)
       .checkEndPosition(1410.00);
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoPosition()
+    budgetView.getSummary().openPositionPanel()
       .checkInitialPosition(0.0)
-      .checkFixed(0)
-      .checkVariable(90)
       .checkIncome(1500)
+      .checkExpense(90)
       .close();
     views.selectHome();
     mainAccounts.checkEstimatedPosition(1410);
@@ -174,13 +164,12 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(1410);
 
     views.selectBudget();
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoPosition()
-      .checkPositionDate("31/08/2008")
+    budgetView.getSummary()
+      .openPositionPanel()
+//      .checkPositionDate("31/08/2008")
       .checkInitialPosition(0)
       .checkIncome(1500)
-      .checkFixed(0)
-      .checkVariable(90)
+      .checkExpense(90)
       .close();
 
     timeline.selectMonth("2008/09");
@@ -188,19 +177,16 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(1420 + 1500 - 1529.90 - 80 - 10 - 10);
 
     views.selectBudget();
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoPosition()
-      .checkPositionDate("30/09/2008")
+    budgetView.getSummary()
+      .openPositionPanel()
+//      .checkPositionDate("30/09/2008")
       .checkInitialPosition(1410)
       .checkIncome(1500)
-      .checkFixed(1529.90)
-      .checkVariable(90)
+      .checkExpense(1529.90 + 90)
       .close();
   }
 
   public void testBudgetSummaryDetailsShowsActualPositionInThePast() throws Exception {
-
-    fail("à adapter sur BalanceDialog / PositionDialog");
 
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.00, "2008/08/05")
@@ -217,19 +203,12 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     views.selectHome();
     views.selectBudget();
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoBalance()
-      .checkBalance(1000.00)
-      .gotoPosition()
-      .checkPosition(500)
-      .checkNoPositionDetails()
-      .checkPositionDescriptionContains("observed")
-      .close();
+    budgetView.getSummary()
+      .checkMonthBalance(1000.00)
+      .checkEndPosition(500);
   }
 
   public void testWithPositiveEnvelope() throws Exception {
-
-    fail("à adapter sur BalanceDialog / PositionDialog");
 
     operations.openPreferences().setFutureMonthsCount(4).validate();
     OfxBuilder.init(this)
@@ -247,17 +226,16 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("Salaire", "Salaire");
 
     views.selectBudget();
-    budgetView.getSummary().skipWizard().checkMonthBalance(1500 - (200 - 40));
+    budgetView.getSummary()
+      .checkMonthBalance(1500 - (200 - 40));
 
     timeline.selectMonth("2008/08");
     double balanceFor200808 = 1500 - (200 - 40);
 
     budgetView.getSummary().checkMonthBalance(balanceFor200808);
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoPosition()
+    budgetView.getSummary().openPositionPanel()
       .checkInitialPosition(0.0)
-      .checkFixed(100)
-      .checkVariable(-40)
+      .checkExpense(100 -40)
       .checkIncome(1500)
       .close();
     views.selectHome();
@@ -266,8 +244,6 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDetailForInAndOutOfSavings() throws Exception {
-
-    fail("à adapter sur BalanceDialog / PositionDialog");
 
     operations.openPreferences().setFutureMonthsCount(2).validate();
     OfxBuilder.init(this)
@@ -300,9 +276,8 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     views.selectBudget();
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoPosition()
-      .checkPositionDate("31/08/2008")
+    budgetView.getSummary().openPositionPanel()
+//      .checkPositionDate("31/08/2008")
       .checkInitialPosition(1000)
       .checkSavingsOut(30)
       .checkSavingsIn(100)
@@ -310,89 +285,11 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/09");
     views.selectBudget();
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoPosition()
-      .checkPositionDate("30/09/2008")
+    budgetView.getSummary().openPositionPanel()
+//      .checkPositionDate("30/09/2008")
       .checkInitialPosition(1070)
       .checkSavingsOut(50)
       .checkSavingsIn(300)
       .close();
-  }
-
-  public void testThresholdDisplayedAndSettableFromThePositionDetailsDialog() throws Exception {
-
-    fail("à adapter sur BalanceDialog / PositionDialog");
-
-    operations.openPreferences().setFutureMonthsCount(12).validate();
-    OfxBuilder.init(this)
-      .addBankAccount(30066, 10674, "0123456", 1500.00, "2008/08/30")
-      .addTransaction("2008/07/15", -200, "FNAC")
-      .addTransaction("2008/08/15", -500, "Auchan")
-      .load();
-
-    views.selectCategorization();
-    categorization.setNewVariable("Auchan", "groceries");
-    categorization.setNewVariable("FNAC", "Equipment");
-
-    views.selectHome();
-
-    timeline.selectMonth("2008/07");
-    views.selectBudget();
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoPosition()
-      .checkPosition(2000.00)
-      .gotoThreshold()
-      .checkThreshold(0.00, "The position is greater than the threshold", 2000.00)
-      .setThreshold(3000.00)
-      .checkThreshold(3000.00, "The position is less than the threshold", -1000.00)
-      .close();
-    views.selectHome();
-    mainAccounts.checkThreshold(0.00);
-
-    timeline.selectMonth("2008/08");
-    views.selectBudget();
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoPosition()
-      .checkPosition(1300.00)
-      .gotoThreshold()
-      .checkThreshold(0.00, "The position is greater than the threshold", 1300.00)
-      .setThreshold(1500.00)
-      .checkThreshold(1500.00, "The position is less than the threshold", -200.00)
-      .validate();
-    views.selectHome();
-    mainAccounts.checkThreshold(1500.00);
-
-    views.selectBudget();
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoThreshold()
-      .clearThreshold()
-      .validate();
-    views.selectHome();
-    mainAccounts.checkThreshold(0.00);
-
-    views.selectBudget();
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoPosition()
-      .checkPosition(1300.00)
-      .gotoThreshold()
-      .checkThreshold(0.00, "The position is greater than the threshold", 1300.00)
-      .setThreshold(1500.00)
-      .checkThreshold(1500.00, "The position is less than the threshold", -200.00)
-      .validate();
-    views.selectHome();
-    mainAccounts.checkThreshold(1500.00);
-
-    timeline.selectMonths("2008/07", "2008/08");
-    views.selectBudget();
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoPosition()
-      .checkPosition(1300.00)
-      .gotoThreshold()
-      .checkThreshold(1500.00, "The position is less than the threshold", -200.00)
-      .setThreshold(1300.00)
-      .checkThreshold(1300.00, "The position is equal to the threshold", 0.00)
-      .validate();
-    views.selectHome();
-    mainAccounts.checkThreshold(1300.00);
   }
 }

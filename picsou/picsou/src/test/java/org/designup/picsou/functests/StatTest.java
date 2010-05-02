@@ -137,7 +137,6 @@ public class StatTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     timeline.selectMonth("2008/06");
     budgetView.getSummary()
-      .skipWizard()
       .checkMonthBalance(200 - 90 - 80)
       .checkEndPosition(80);
 
@@ -159,7 +158,6 @@ public class StatTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.getSummary()
-      .skipWizard()
       .checkMonthBalance(110)
       .checkEndPosition(0);
 
@@ -188,8 +186,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary()
       .checkMonthBalance(110)
       .checkEndPosition(400);
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoPosition()
+    budgetView.getSummary().openPositionPanel()
       .checkInitialPosition(0)
       .close();
 
@@ -213,8 +210,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary()
       .checkMonthBalance(-290)
       .checkEndPosition(0);
-    budgetView.getSummary().openBudgetWizardPage()
-      .gotoPosition()
+    budgetView.getSummary().openPositionPanel()
       .checkInitialPosition(0)
       .close();
   }

@@ -12,7 +12,7 @@
   </styles>
 
   <panel opaque="true" background="block.inner.border" border="empty(10,0,0,0)">
-    <column name="wizardPanel" styleClass="blockScrollBorder">
+    <column name="wizardPanelBlock" styleClass="blockScrollBorder">
 
       <column opaque="true" background="wizardPanel.bg" weightY="100">
         <panel ref="content" weightY="100"/>

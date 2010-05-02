@@ -33,7 +33,8 @@ public class PositionDialog {
   private JLabel estimatedPosition = new JLabel();
   private JLabel waitedIncomeAmount = new JLabel();
   private JLabel waitedExpenseAmount = new JLabel();
-  private JLabel waitedSavingsAmount = new JLabel();
+  private JLabel waitedSavingsAmountToMain = new JLabel();
+  private JLabel waitedSavingsAmountFromMain = new JLabel();
   private JEditorPane positionPanelLimit = GuiUtils.createReadOnlyHtmlComponent();
 
   private JEditorPane positionPast = GuiUtils.createReadOnlyHtmlComponent();
@@ -57,7 +58,8 @@ public class PositionDialog {
 
     builder.add("waitedIncomeAmount", waitedIncomeAmount);
     builder.add("waitedExpenseAmount", waitedExpenseAmount);
-    builder.add("waitedSavingsAmount", waitedSavingsAmount);
+    builder.add("waitedSavingsAmountToMain", waitedSavingsAmountToMain);
+    builder.add("waitedSavingsAmountFromMain", waitedSavingsAmountFromMain);
 
     builder.add("estimatedPositionLabel", estimatedPositionLabel);
     builder.add("estimatedPosition", estimatedPosition);
@@ -158,7 +160,8 @@ public class PositionDialog {
 
     double expence_future = 0;
     double income_future = 0;
-    double savings_future = 0;
+    double savingsFutureFromMain = 0;
+    double savingsFutureToMain = 0;
     for (Integer monthId : monthIds) {
       Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
       if (monthId >= currentMonthId) {
@@ -167,8 +170,8 @@ public class PositionDialog {
         }
         income_future += Amounts.zeroIfNull(stat.get(BudgetStat.INCOME_NEGATIVE_REMAINING)) +
                          Amounts.zeroIfNull(stat.get(BudgetStat.INCOME_POSITIVE_REMAINING));
-        savings_future += Amounts.zeroIfNull(stat.get(BudgetStat.SAVINGS_NEGATIVE_REMAINING)) +
-                          Amounts.zeroIfNull(stat.get(BudgetStat.SAVINGS_POSITIVE_REMAINING));
+        savingsFutureFromMain += Amounts.zeroIfNull(stat.get(BudgetStat.SAVINGS_NEGATIVE_REMAINING));
+        savingsFutureToMain += Amounts.zeroIfNull(stat.get(BudgetStat.SAVINGS_POSITIVE_REMAINING));
       }
     }
 
@@ -185,7 +188,8 @@ public class PositionDialog {
 
     waitedIncomeAmount.setText(Formatting.toStringWithPlus(income_future));
     waitedExpenseAmount.setText(Formatting.toStringWithPlus(expence_future));
-    waitedSavingsAmount.setText(Formatting.toStringWithPlus(savings_future));
+    waitedSavingsAmountFromMain.setText(Formatting.toStringWithPlus(savingsFutureFromMain));
+    waitedSavingsAmountToMain.setText(Formatting.toStringWithPlus(savingsFutureToMain));
 
     estimatedPositionLabel.setText(Lang.getWithDefault("position.panel.estimatedLabel." + lastMonthId,
                                                        "position.panel.estimatedLabel",

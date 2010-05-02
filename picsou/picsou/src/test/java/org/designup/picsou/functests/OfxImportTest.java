@@ -430,7 +430,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .add("10/08/2008", TransactionType.CREDIT_CARD, "VIREMENT", "", -50.00)
       .check();
     views.selectBudget();
-    budgetView.getSummary().skipWizard().checkMonthBalance(-50);
+    budgetView.getSummary().checkMonthBalance(-50);
   }
 
   public void testIfAnAccountAlreadyExistWeAskToAssociateToIt() throws Exception {

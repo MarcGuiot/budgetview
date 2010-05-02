@@ -673,7 +673,7 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   public SeriesEditionDialogChecker checkAddSubSeriesTextIsEmpty() {
-    assertThat(getSelectedTab().getInputTextBox().textIsEmpty());
+    assertThat(getSelectedTab().getInputTextBox("subSeriesNameField").textIsEmpty());
     return this;
   }
 
