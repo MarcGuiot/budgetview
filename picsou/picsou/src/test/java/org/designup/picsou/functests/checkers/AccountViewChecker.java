@@ -103,7 +103,7 @@ public class AccountViewChecker<T extends AccountViewChecker> extends GuiChecker
   }
 
   public T checkEstimatedPositionDate(String text) {
-    assertThat(panel.getTextBox("estimatedPositionDate").textEquals(text));
+    assertThat(panel.getTextBox("estimatedPositionDate").textEquals("on "+ text));
     return (T)this;
   }
 

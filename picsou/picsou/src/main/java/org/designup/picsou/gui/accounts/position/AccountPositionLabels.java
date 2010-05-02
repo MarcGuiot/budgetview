@@ -6,6 +6,7 @@ import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountPositionThreshold;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
@@ -102,7 +103,7 @@ public abstract class AccountPositionLabels {
         return null;
       }
       Integer monthId = lastMonth.get(Month.ID);
-      return Formatting.toString(Month.getLastDay(monthId));
+      return Lang.get("accountView.total.date", Formatting.toString(Month.getLastDay(monthId)));
     }
   }
 }

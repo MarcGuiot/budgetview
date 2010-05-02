@@ -110,7 +110,6 @@ public class WizardPanel {
       showPage(page);
     }
 
-    System.out.println("WizardPanel.show: setVisible " + isVisible);
     getPanel().setVisible(isVisible);
   }
 

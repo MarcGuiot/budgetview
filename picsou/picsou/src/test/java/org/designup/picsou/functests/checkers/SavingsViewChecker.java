@@ -89,7 +89,7 @@ public class SavingsViewChecker extends GuiChecker {
   public void checkAccount(String accountName, Double position, String updateDate) {
     final Panel accountPanel = getAccountPanel(accountName);
     assertTrue(accountPanel.getTextBox("estimatedAccountPosition." + accountName).textEquals(toString(position)));
-    assertTrue(accountPanel.getTextBox("estimatedAccountPositionDate." + accountName).textEquals(updateDate));
+    assertTrue(accountPanel.getTextBox("estimatedAccountPositionDate." + accountName).textEquals("on " + updateDate));
   }
 
   private Panel getAccountPanel(String accountName) {

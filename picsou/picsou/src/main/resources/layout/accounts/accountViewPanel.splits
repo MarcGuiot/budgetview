@@ -13,31 +13,40 @@
            foreground="block.item.link.light"
            icon="arrow_right_blue.png" iconTextGap="1"
            horizontalTextPosition="left" verticalAlignment="bottom"/>
+
+    <style selector=".right label.totalAmountTitle"
+           fill="horizontal" horizontalAlignment="right" marginRight="10"/>
+
+    <style selector=".left label.totalAmountTitle"
+           fill="horizontal" horizontalAlignment="left" marginLeft="10"/>
+
   </styles>
 
   <panel styleClass="block">
     <column styleClass="innerBlock">
       <row marginBottom="5">
-        <grid>
-          <label text="$accountView.reference.title" gridPos="(0,0)"
-                 styleClass="totalAmountTitle" autoHideSource="referencePosition"
-                 marginTop="0" marginBottom="0" marginRight="5"/>
-          <label ref="referencePosition" gridPos="(0,1)"
-                 styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"/>
-          <label ref="referencePositionDate" gridPos="(0,2)"
-                 styleClass="totalAmountTitle" autoHideSource="referencePosition"
-                 marginTop="0" marginBottom="0"/>
 
+        <label ref="referencePosition" gridPos="(0,1)"
+               styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"/>
+        <column styleClass="left">
+          <label text="$accountView.reference.title" gridPos="(0,0)"
+                 styleClass="totalAmountTitle" autoHideSource="referencePosition"/>
+          <label ref="referencePositionDate" gridPos="(0,2)"
+                 styleClass="totalAmountTitle" autoHideSource="referencePosition"/>
+        </column>
+
+        <filler fill="horizontal"/>
+
+        <column styleClass="right">
           <label text="$accountView.estimated.title" gridPos="(1,0)"
-                 styleClass="totalAmountTitle" autoHideSource="estimatedPosition"
-                 marginTop="0" marginBottom="0" marginRight="5"/>
-          <label ref="estimatedPosition" gridPos="(1,1)"
-                 styleClass="totalAmount"
-                 foreground="" tooltipText="$accountView.estimated.tooltip"/>
+                 styleClass="totalAmountTitle" autoHideSource="estimatedPosition"/>
           <label ref="estimatedPositionDate" gridPos="(1,2)"
-                 styleClass="totalAmountTitle" autoHideSource="estimatedPosition"
-                 marginTop="0" marginBottom="0"/>
-        </grid>
+                 styleClass="totalAmountTitle" autoHideSource="estimatedPosition"/>
+        </column>
+        <label ref="estimatedPosition" gridPos="(1,1)"
+               styleClass="totalAmount"
+               foreground="" tooltipText="$accountView.estimated.tooltip"/>
+
       </row>
 
       <column styleClass="blockScrollBorder">
