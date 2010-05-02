@@ -2,11 +2,11 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.gui.series.view.SeriesView;
+import org.uispec4j.Panel;
 import org.uispec4j.Table;
 import org.uispec4j.Window;
-import org.uispec4j.Panel;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class SeriesViewChecker extends ExpandableTableChecker {
 
@@ -36,20 +36,25 @@ public class SeriesViewChecker extends ExpandableTableChecker {
     Table table = getTable();
     int row = table.getRowIndex(SeriesView.LABEL_COLUMN_INDEX, label);
     if (row == -1) {
-      Assert.fail(label + " not found");
+      Assert.fail("'" + label + "' not found - current selection: " + dumpSelection(table));
     }
     if (!table.rowIsSelected(row).isTrue()) {
-      int columnCount = table.getColumnCount();
-      String selectedRaw = "[";
-      for (int i = 0; i < columnCount; i++) {
-        if (table.rowIsSelected(i).isTrue()) {
-          selectedRaw += table.getContentAt(i, SeriesView.LABEL_COLUMN_INDEX).toString();
-          selectedRaw += ", ";
-        }
-      }
-      selectedRaw += "]";
+      String selectedRaw = dumpSelection(table);
       Assert.fail(label + " not selected but " + selectedRaw + " are selected");
     }
+  }
+
+  private String dumpSelection(Table table) {
+    int columnCount = table.getColumnCount();
+    String selectedRaw = "[";
+    for (int i = 0; i < columnCount; i++) {
+      if (table.rowIsSelected(i).isTrue()) {
+        selectedRaw += table.getContentAt(i, SeriesView.LABEL_COLUMN_INDEX).toString();
+        selectedRaw += ", ";
+      }
+    }
+    selectedRaw += "]";
+    return selectedRaw;
   }
 
   public void checkVisible(boolean visible) {

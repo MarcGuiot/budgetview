@@ -170,4 +170,38 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary()
       .checkNoEstimatedPosition();
   }
+
+  public void testNavigatingToOperations() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addBankAccount(30003, 12345, "000111", 12345.60, "2006/01/30")
+      .addTransaction("2006/01/01", -10, "Foo")
+      .load();
+    OfxBuilder
+      .init(this)
+      .addBankAccount(30003, 12345, "000222", 1111, "2006/01/30")
+      .addTransaction("2006/01/10", -20, "Bar")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewVariable("Foo", "Foos");
+    categorization.setNewVariable("Bar", "Bars");
+
+    views.selectHome();
+    mainAccounts.gotoOperations("Account n. 000111");
+
+    views.checkDataSelected();
+    transactions.initContent()
+      .add("01/01/2006", TransactionType.PRELEVEMENT, "FOO", "", -10.00, "Foos")
+      .check();
+    series.select("Foos");
+
+    views.selectHome();
+    mainAccounts.gotoOperations("Account n. 000222");
+    views.checkDataSelected();
+    transactions.initContent()
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "BAR", "", -20.00, "Bars")
+      .check();
+    series.checkSelection("All");
+  }
 }

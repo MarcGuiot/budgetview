@@ -75,6 +75,10 @@ public class AccountViewChecker<T extends AccountViewChecker> extends GuiChecker
     UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals("01/02/2006"));
   }
 
+  public void gotoOperations(String accountName) {
+    getAccountPanel(accountName).getButton("gotoOperations").click();
+  }
+
   public T checkSummary(double amount, String updateDate) {
     Date date = Dates.parse(updateDate);
     assertThat(panel.getTextBox("referencePosition").textEquals(toString(amount)));
