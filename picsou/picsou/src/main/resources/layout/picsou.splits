@@ -67,8 +67,8 @@
         <row>
           <column>
             <row anchor="left" fill="horizontal" marginBottom="5">
-              <button name="back" action="back" styleClass="backforward" tooltipText="$back"/>
-              <button name="forward" action="forward" styleClass="backforward" tooltipText="$forward"/>
+              <button name="backView" action="backView" styleClass="backforward" tooltipText="$back"/>
+              <button name="forwardView" action="forwardView" styleClass="backforward" tooltipText="$forward"/>
               <label ref="title" opaque="false" font="Arial,bold,12" weightX="0"
                      horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
               <filler fill="horizontal"/>

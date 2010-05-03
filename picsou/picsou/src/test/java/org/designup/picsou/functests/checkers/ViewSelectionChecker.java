@@ -79,16 +79,16 @@ public class ViewSelectionChecker extends GuiChecker {
   }
 
   public void checkBackForward(boolean backEnabled, boolean forwardEnabled) {
-    UISpecAssert.assertEquals("back", backEnabled, window.getButton("back").isEnabled());
-    UISpecAssert.assertEquals("forward", forwardEnabled, window.getButton("forward").isEnabled());
+    UISpecAssert.assertEquals("backView", backEnabled, window.getButton("backView").isEnabled());
+    UISpecAssert.assertEquals("forwardView", forwardEnabled, window.getButton("forwardView").isEnabled());
   }
 
   public void back() {
-    window.getButton("back").click();
+    window.getButton("backView").click();
   }
 
   public void forward() {
-    window.getButton("forward").click();
+    window.getButton("forwardView").click();
   }
 
   public void checkAllTooltipsPresent() {
