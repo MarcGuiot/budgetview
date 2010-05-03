@@ -30,7 +30,7 @@ public class SavingsViewChecker extends GuiChecker {
 
     TextBox date = getPanel().getTextBox("totalSavingsPositionDate");
     assertThat(date.isVisible());
-    assertThat(date.textEquals(updateDate));
+    assertThat(date.textContains(updateDate));
   }
 
   public void checkSavingsIn(String accountName, double observedAmount, double plannedAmount) {

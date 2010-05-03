@@ -379,6 +379,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   private void reloadMonth() {
+    previousWidth = -1;
     GlobList list = repository.getAll(Month.TYPE).sort(Month.ID);
     timeGraph = new TimeGraph(list, colors, timeService, getFontMetrics(colors.getYearFont()),
                               getFontMetrics(colors.getMonthFont()), this);
