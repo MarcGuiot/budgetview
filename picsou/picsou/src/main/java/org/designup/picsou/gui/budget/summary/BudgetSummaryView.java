@@ -14,6 +14,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
@@ -35,6 +36,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   private JButton estimatedPositionLabel = new JButton();
   private JLabel estimatedPositionTitle = new JLabel();
   private JButton uncategorizedButton = new JButton();
+  private SplitsNode<JButton> uncategorizedButtonNode;
   private JLabel multiSelectionLabel = new JLabel();
 
   private final DecimalFormat format = Formatting.DECIMAL_FORMAT;
@@ -66,7 +68,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     builder.add("balanceLabel", balanceLabel);
     builder.add("positionLabel", estimatedPositionLabel);
     builder.add("positionTitle", estimatedPositionTitle);
-    builder.add("uncategorized", uncategorizedButton);
+    uncategorizedButtonNode = builder.add("uncategorized", uncategorizedButton);
     builder.add("multiSelectionLabel", multiSelectionLabel);
 
     uncategorizedButton.addActionListener(new GotoUncategorizedAction());
@@ -104,7 +106,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     if (!repository.contains(Transaction.TYPE) || budgetStats.isEmpty()) {
       clear(balanceLabel);
       clear(estimatedPositionLabel);
-      clear(uncategorizedButton);
+      clearUncategorized();
       return;
     }
 
@@ -121,13 +123,27 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
     Double uncategorized = budgetStats.getSum(BudgetStat.UNCATEGORIZED_ABS);
     if ((uncategorized != null) && (uncategorized > 0.01)) {
-      uncategorizedButton.setText(format.format(uncategorized));
-      uncategorizedButton.setForeground(errorColor);
-      uncategorizedButton.setEnabled(true);
+      setUncategorized(uncategorized);
     }
     else {
-      clear(uncategorizedButton);
-      uncategorizedButton.setEnabled(false);
+      clearUncategorized();
+    }
+  }
+
+  private void setUncategorized(Double uncategorized) {
+    uncategorizedButton.setText(format.format(uncategorized));
+    uncategorizedButton.setForeground(errorColor);
+    uncategorizedButton.setEnabled(true);
+    if (uncategorizedButtonNode != null) {
+      uncategorizedButtonNode.applyStyle("uncategorizedEnabled");
+    }
+  }
+
+  private void clearUncategorized() {
+    clear(uncategorizedButton);
+    uncategorizedButton.setEnabled(false);
+    if (uncategorizedButtonNode != null) {
+      uncategorizedButtonNode.applyStyle("uncategorizedDisabled");
     }
   }
 

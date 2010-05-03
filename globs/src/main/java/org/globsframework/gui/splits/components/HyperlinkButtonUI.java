@@ -108,7 +108,7 @@ public class HyperlinkButtonUI extends BasicButtonUI {
 
     XPositions positions = getXPositions(button);
 
-    Icon icon = button.getIcon();
+    Icon icon = getIcon(button);
     if (icon != null) {
       icon.paintIcon(button, g, positions.iconX, button.getHeight() / 2 - icon.getIconHeight() / 2);
     }
@@ -122,6 +122,23 @@ public class HyperlinkButtonUI extends BasicButtonUI {
     if (button.isEnabled() && (underline || button.getModel().isRollover())) {
       setLineColor(button, graphics);
       graphics.drawLine(textX, textY + 1, textX + textWidth, textY + 1);
+    }
+  }
+
+  private Icon getIcon(AbstractButton button) {
+    ButtonModel model = button.getModel();
+    if (!model.isEnabled()) {
+      return button.getDisabledIcon();
+    }
+    else if (model.isRollover()) {
+      Icon icon = button.getRolloverIcon();
+      if (icon == null) {
+        return button.getIcon();
+      }
+      return icon;
+    }
+    else {
+      return button.getIcon();
     }
   }
 
@@ -151,14 +168,14 @@ public class HyperlinkButtonUI extends BasicButtonUI {
 
   private XPositions getXPositions(AbstractButton button) {
 
-    int iconOffset = button.getIcon() != null ? button.getIcon().getIconWidth() + button.getIconTextGap() : 0;
-    int textOffset = button.getIcon() != null ? textWidth + button.getIconTextGap() : textWidth;
+    Icon icon = getIcon(button);
+    int iconOffset = icon != null ? icon.getIconWidth() + button.getIconTextGap() : 0;
+    int textOffset = icon != null ? textWidth + button.getIconTextGap() : textWidth;
 
     int contentWidth = textWidth + iconOffset;
 
     int alignment = button.getHorizontalAlignment();
     int textPosition = button.getHorizontalTextPosition();
-
 
     switch (alignment) {
 
@@ -180,8 +197,8 @@ public class HyperlinkButtonUI extends BasicButtonUI {
             return new XPositions((button.getWidth() - textWidth - iconOffset) / 2,
                                   (button.getWidth() - textWidth + iconOffset) / 2);
           case SwingConstants.LEFT:
-            return new XPositions(button.getWidth()/2 - contentWidth/2 + textOffset,
-                                  button.getWidth()/2 - contentWidth/2);
+            return new XPositions(button.getWidth() / 2 - contentWidth / 2 + textOffset,
+                                  button.getWidth() / 2 - contentWidth / 2);
           default:
             throw new InvalidParameter("Unsupported horizontalTextPosition value: " + textPosition);
         }
@@ -217,17 +234,19 @@ public class HyperlinkButtonUI extends BasicButtonUI {
   }
 
   private int computeWidth(AbstractButton button) {
-    if (button.getIcon() == null) {
+    Icon icon = getIcon(button);
+    if (icon == null) {
       return textWidth;
     }
-    return textWidth + button.getIconTextGap() + button.getIcon().getIconWidth();
+    return textWidth + button.getIconTextGap() + icon.getIconWidth();
   }
 
   private int computeHeight(AbstractButton button) {
-    if (button.getIcon() == null) {
+    Icon icon = getIcon(button);
+    if (icon == null) {
       return fontHeight;
     }
-    return Math.max(button.getIcon().getIconHeight(), fontHeight);
+    return Math.max(icon.getIconHeight(), fontHeight);
   }
 
   private class XPositions {

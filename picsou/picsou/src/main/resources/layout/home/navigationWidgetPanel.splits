@@ -16,7 +16,9 @@
            marginBottom="0" iconTextGap="1" horizontalTextPosition="left"
            fill="none" anchor="west" weightY="0"/>
 
-    <style id="navigation" selector="x" icon="arrow_right_blue.png"/>
+    <style id="navigation" selector="x"
+           icon="arrow_right_blue.png"
+           rolloverIcon="arrow_right_blue_rollover.png"/>
     <style id="action" selector="x" icon=""/>
 
     <ui name="highlightedPanelUI" class="org.globsframework.gui.splits.components.StyledPanelUI"
