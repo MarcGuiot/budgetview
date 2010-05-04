@@ -339,10 +339,19 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="footer">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="unbounded">
+        <xs:group ref="splitsComponents"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
   <xs:group name="repeatComponents">
     <xs:choice>
       <xs:group ref="splitsComponents"/>
       <xs:element ref="header"/>
+      <xs:element ref="footer"/>
     </xs:choice>
   </xs:group>
 

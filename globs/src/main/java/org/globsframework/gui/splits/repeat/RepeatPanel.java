@@ -19,6 +19,7 @@ public class RepeatPanel implements Repeat {
   private boolean autoHideIfEmpty;
   private Splitter[] headerSplitters;
   private Splitter[] splitterTemplates;
+  private Splitter[] footerSplitters;
   private SplitsContext context;
   private List<RepeatContext> repeatContexts = new ArrayList<RepeatContext>();
   private RepeatLayout layout;
@@ -28,11 +29,12 @@ public class RepeatPanel implements Repeat {
                      boolean autoHideIfEmpty,
                      Splitter[] headerSplitters,
                      Splitter[] splitterTemplates,
-                     SplitsContext context) {
+                     Splitter[] footerSplitters, SplitsContext context) {
     this.repeatHandler = repeatHandler;
     this.autoHideIfEmpty = autoHideIfEmpty;
     this.headerSplitters = headerSplitters;
     this.splitterTemplates = splitterTemplates;
+    this.footerSplitters = footerSplitters;
     this.context = context;
     this.layout = layout;
     repeatHandler.register(this);
@@ -47,7 +49,7 @@ public class RepeatPanel implements Repeat {
   }
 
   private void updateVisibility() {
-    this.panel.setVisible(!autoHideIfEmpty || (panel.getComponentCount() > 0));
+    this.panel.setVisible(!autoHideIfEmpty || (!repeatContexts.isEmpty()));
   }
 
   public void set(List items) {
@@ -67,6 +69,10 @@ public class RepeatPanel implements Repeat {
       index++;
     }
 
+    if (hasFooter()) {
+      constraints.add(createFooterStretchers());
+    }
+
     layout.set(panel, constraints);
     GuiUtils.revalidate(panel);
     updateVisibility();
@@ -74,6 +80,10 @@ public class RepeatPanel implements Repeat {
 
   private boolean hasHeader() {
     return headerSplitters != null;
+  }
+
+  private boolean hasFooter() {
+    return footerSplitters != null;
   }
 
   public void insert(Object item, int index) {
@@ -91,10 +101,12 @@ public class RepeatPanel implements Repeat {
     RepeatContext context = repeatContexts.remove(index);
     context.dispose();
     if (repeatContexts.isEmpty()) {
-      if (hasHeader()){
+      if (hasHeader()) {
         layout.remove(panel, 0);
       }
-      panel.removeAll();
+      if (!hasFooter()) {
+        panel.removeAll();
+      }
     }
 
     GuiUtils.revalidate(panel);
@@ -123,6 +135,19 @@ public class RepeatPanel implements Repeat {
 
       Splitter.SplitComponent component =
         headerSplitters[i].createComponentStretch(context, !layout.managesInsets());
+      constraints[i] = component.componentConstraints;
+    }
+
+    return constraints;
+  }
+
+  private ComponentConstraints[] createFooterStretchers() {
+    ComponentConstraints[] constraints = new ComponentConstraints[footerSplitters.length];
+
+    for (int i = 0; i < footerSplitters.length; i++) {
+
+      Splitter.SplitComponent component =
+        footerSplitters[i].createComponentStretch(context, !layout.managesInsets());
       constraints[i] = component.componentConstraints;
     }
 

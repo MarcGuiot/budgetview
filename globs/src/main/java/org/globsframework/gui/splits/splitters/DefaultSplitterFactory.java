@@ -114,6 +114,9 @@ public class DefaultSplitterFactory implements SplitterFactory {
     else if (name.equals("header")) {
       return new Header(properties, subSplitters);
     }
+    else if (name.equals("footer")) {
+      return new Footer(properties, subSplitters);
+    }
     throw new SplitsException("Unknown splitter name: " + name);
   }
 
