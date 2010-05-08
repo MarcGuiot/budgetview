@@ -73,20 +73,45 @@ public class LabelCustomizers {
     };
   }
 
-  public static LabelCustomizer font(final Font font) {
-    return new LabelCustomizer() {
+  public interface FontCustomizer extends LabelCustomizer{
+    Font getFont();
+  }
+
+  public static FontCustomizer font(final Font font) {
+    return new FontCustomizer() {
       public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
         label.setFont(font);
+      }
+
+      public Font getFont() {
+        return font;
       }
     };
   }
 
-  public static LabelCustomizer fontSize(float newSize) {
-    JLabel defaultLabel = new JLabel();
-    final Font font = defaultLabel.getFont().deriveFont(newSize);
-    return new LabelCustomizer() {
+  public static FontCustomizer fontSize(FontCustomizer customizer, float newSize) {
+    final Font font = customizer.getFont().deriveFont(newSize);
+    return new FontCustomizer() {
       public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
         label.setFont(font);
+      }
+
+      public Font getFont() {
+        return font;
+      }
+    };
+  }
+
+  public static FontCustomizer fontSize(float newSize) {
+    JLabel defaultLabel = new JLabel();
+    final Font font = defaultLabel.getFont().deriveFont(newSize);
+    return new FontCustomizer() {
+      public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
+        label.setFont(font);
+      }
+
+      public Font getFont() {
+        return font;
       }
     };
   }
