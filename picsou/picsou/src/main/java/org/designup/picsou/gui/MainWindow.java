@@ -29,11 +29,14 @@ import org.globsframework.utils.exceptions.InvalidState;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.*;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Collections;
 import java.util.List;
+
+import com.jidesoft.swing.DefaultOverlayable;
 
 public class MainWindow implements WindowManager {
   private PicsouFrame frame;
@@ -86,7 +89,12 @@ public class MainWindow implements WindowManager {
   }
 
   public void setPanel(JPanel panel) {
-    frame.setContentPane(panel);
+    DefaultOverlayable overlayable = new DefaultOverlayable(panel){
+      public void paint(Graphics g) {
+        super.paint(g);
+      }
+    };
+    frame.setContentPane(overlayable);
     frame.validate();
   }
 

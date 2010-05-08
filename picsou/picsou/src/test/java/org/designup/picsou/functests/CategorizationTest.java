@@ -1362,4 +1362,23 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .add("25/04/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -50.00, "courses")
       .check();
   }
+
+  public void testColorChangeOnCategorization() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -29.90, "AUCHAN C'EST BON")
+      .addTransaction("2008/06/30", -29.90, "AUCHAN C'EST BON")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRows(0)
+      .checkLabel("AUCHAN C'EST BON")
+      .selectVariable()
+      .selectNewSeries("Courant")
+      .checkSeriesIsSelected("Courant");
+    categorization.checkYellowBgLabel(0, 1);
+    categorization.selectTableRow(1)
+      .checkNormalBgColor(0, 1)
+      .selectTableRow(0);
+  }
 }

@@ -29,9 +29,14 @@ import org.designup.picsou.importer.utils.BankFormatExporter;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
-import org.globsframework.gui.*;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.actions.DisabledAction;
 import org.globsframework.gui.splits.ImageLocator;
+import org.globsframework.gui.splits.color.ColorChangeListener;
+import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -64,13 +69,15 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Set;
 
-public class CategorizationView extends View implements TableView, Filterable {
+public class CategorizationView extends View implements TableView, Filterable, ColorChangeListener {
   private GlobList currentTransactions = GlobList.EMPTY;
   private GlobTableView transactionTable;
   private JComboBox filteringModeCombo;
   private FilteredRepeats seriesRepeat = new FilteredRepeats();
+  private Color envelopeSeriesLabelBackgroudColor;
 
   private Directory parentDirectory;
 
@@ -82,9 +89,11 @@ public class CategorizationView extends View implements TableView, Filterable {
   private FilterSet filterSet;
   private GlobMatcher filter = GlobMatchers.ALL;
   private GlobMatcher currentTableFilter;
+  private Set<Key> modifiedTransactions = new HashSet<Key>();
 
   public CategorizationView(final GlobRepository repository, Directory parentDirectory) {
     super(repository, createLocalDirectory(parentDirectory));
+    colorService.addListener(this);
     this.parentDirectory = parentDirectory;
     parentDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
@@ -130,14 +139,14 @@ public class CategorizationView extends View implements TableView, Filterable {
         .addColumn(Lang.get("date"), new TransactionDateStringifier(TransactionComparator.DESCENDING_SPLIT_AFTER),
                    fontSize(9))
         .addColumn(Lang.get("series"), new CompactSeriesStringifier(directory),
-                   chain(fontSize(9), tooltip(SeriesDescriptionStringifier.transactionSeries(), repository)))
+                   chain(new OnChangeLabelCustomizer(fontSize(9)), tooltip(SeriesDescriptionStringifier.transactionSeries(), repository)))
         .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL),
                    chain(BOLD, autoTooltip()))
         .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), ALIGN_RIGHT);
 
     headerPainter = PicsouTableHeaderPainter.install(transactionTable, directory);
 
-    JTable table = transactionTable.getComponent();
+    final JTable table = transactionTable.getComponent();
     TransactionKeyListener.install(table, -1, directory, repository, true);
     ApplicationColors.installSelectionColors(table, directory);
     Gui.setColumnSizes(table, COLUMN_SIZES);
@@ -173,11 +182,12 @@ public class CategorizationView extends View implements TableView, Filterable {
     BudgetAreaSelector selector = new BudgetAreaSelector(repository, directory);
     selector.registerComponents(builder);
 
-    addSeriesChooser("incomeSeriesChooser", BudgetArea.INCOME, builder);
-    addSeriesChooser("recurringSeriesChooser", BudgetArea.RECURRING, builder);
-    addSeriesChooser("variableSeriesChooser", BudgetArea.VARIABLE, builder);
-    addSeriesChooser("extrasSeriesChooser", BudgetArea.EXTRAS, builder);
-    addSeriesChooser("savingsSeriesChooser", BudgetArea.SAVINGS, builder);
+    SeriesChooserComponentFactory income = addSeriesChooser("incomeSeriesChooser", BudgetArea.INCOME, builder);
+    SeriesChooserComponentFactory recurring = addSeriesChooser("recurringSeriesChooser", BudgetArea.RECURRING, builder);
+    SeriesChooserComponentFactory variable = addSeriesChooser("variableSeriesChooser", BudgetArea.VARIABLE, builder);
+    SeriesChooserComponentFactory extras = addSeriesChooser("extrasSeriesChooser", BudgetArea.EXTRAS, builder);
+    SeriesChooserComponentFactory savings = addSeriesChooser("savingsSeriesChooser", BudgetArea.SAVINGS, builder);
+    final SeriesChooserComponentFactory factory[] = {variable, recurring, income, extras, savings};
     addOtherSeriesChooser("otherSeriesChooser", builder);
 
     TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory, this);
@@ -185,6 +195,18 @@ public class CategorizationView extends View implements TableView, Filterable {
 
     initSelectionListener();
     updateTableFilter();
+    repository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(Transaction.TYPE) &&
+            changeSet.containsUpdates(Transaction.SERIES)) {
+          modifiedTransactions = changeSet.getUpdated(Transaction.SERIES);
+          table.repaint();
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+      }
+    });
 
     return builder;
   }
@@ -261,6 +283,7 @@ public class CategorizationView extends View implements TableView, Filterable {
         }
         colors.setSplitGroupSourceId(getSplitGroupSourceId());
         transactionTable.getComponent().repaint();
+        modifiedTransactions.clear();
       }
     }, Transaction.TYPE);
   }
@@ -279,7 +302,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     return transaction.get(Transaction.SPLIT_SOURCE);
   }
 
-  private void addSeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder parentBuilder) {
+  private SeriesChooserComponentFactory addSeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder parentBuilder) {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(CategorizationView.class,
                                                       "/layout/categorization/seriesChooserPanel.splits",
                                                       repository, directory);
@@ -295,14 +318,15 @@ public class CategorizationView extends View implements TableView, Filterable {
     builder.add("invisibleToggle", invisibleRadio);
 
     Matchers.CategorizationFilter filter = Matchers.seriesCategorizationFilter(budgetArea.getId());
+    SeriesChooserComponentFactory componentFactory = new SeriesChooserComponentFactory(budgetArea, invisibleRadio,
+                                                                                       seriesEditionDialog,
+                                                                                       repository,
+                                                                                       directory);
     GlobRepeat repeat = builder.addRepeat("seriesRepeat",
                                           Series.TYPE,
                                           filter,
                                           SeriesNameComparator.INSTANCE,
-                                          new SeriesChooserComponentFactory(budgetArea, invisibleRadio,
-                                                                            seriesEditionDialog,
-                                                                            repository,
-                                                                            directory));
+                                          componentFactory);
     seriesRepeat.add(filter, repeat);
     JPanel groupForSeries = new JPanel();
     builder.add("groupCreateEditSeries", groupForSeries);
@@ -311,6 +335,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     builder.add("additionalAction", getAdditionalAction(budgetArea));
 
     parentBuilder.add(name, builder);
+    return componentFactory;
   }
 
   private Action getAdditionalAction(BudgetArea budgetArea) {
@@ -345,6 +370,10 @@ public class CategorizationView extends View implements TableView, Filterable {
   }
 
   public void reset() {
+  }
+
+  public void colorsChanged(ColorLocator colorLocator) {
+    envelopeSeriesLabelBackgroudColor = colorLocator.get("categorization.changed.envelope");
   }
 
   public class SpecialCategorizationRepeatFactory implements RepeatComponentFactory<SpecialCategorizationPanel> {
@@ -588,5 +617,26 @@ public class CategorizationView extends View implements TableView, Filterable {
 
   public GlobList getDisplayedGlobs() {
     return transactionTable.getGlobs();
+  }
+
+  private class OnChangeLabelCustomizer implements LabelCustomizer {
+    private Font font;
+    private Font originalFont;
+
+    private OnChangeLabelCustomizer(FontCustomizer fontCustomizer) {
+      originalFont = fontCustomizer.getFont();
+      font = originalFont.deriveFont(Font.BOLD);
+    }
+
+    public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
+      if (modifiedTransactions.contains(glob.getKey())) {
+        label.setBackground(envelopeSeriesLabelBackgroudColor);
+        label.setForeground(Color.BLACK);
+        label.setFont(font);
+      }
+      else {
+        label.setFont(originalFont);
+      }
+    }
   }
 }

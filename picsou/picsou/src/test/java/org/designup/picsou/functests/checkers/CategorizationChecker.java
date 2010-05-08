@@ -174,6 +174,16 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
+  public CategorizationChecker checkYellowBgLabel(int row, int column) {
+    assertThat(getTable().backgroundNear(row, column, new Color(0xFF, 0xB4, 0)));
+    return this;
+  }
+
+  public CategorizationChecker checkNormalBgColor(int row, int column) {
+    assertThat(getTable().backgroundNear(row, column, Color.white));
+    return this;
+  }
+  
   public class SavingsCategorizationChecker extends BudgetAreaCategorizationChecker {
     private SavingsCategorizationChecker(CategorizationChecker categorizationChecker, BudgetArea budgetArea) {
       super(categorizationChecker, budgetArea);
