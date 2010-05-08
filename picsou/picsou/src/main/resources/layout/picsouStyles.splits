@@ -134,7 +134,7 @@
     <ui name="block" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="block.top" bottomColor="block.bottom" borderColor="block.border" bevelTopColor="block.bevel.top"
         borderWidth="1" cornerRadius="15"/>
-    <style selector=".block" ui="block" opaque="false" marginBottom="5"/>
+    <style selector=".block" ui="block" opaque="false" marginBottom="0"/>
     <style selector=".block .innerBlock" margin="15" marginBottom="10"/>
     <style selector=".budgetAreaSelection" opaque="true" background="block.inner.bg"
            border="line(block.inner.border.noscroll)"/>

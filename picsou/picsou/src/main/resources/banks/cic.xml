@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="CIC" downloadUrl="http://www.cic.fr" id='2'>
+  <bank name="CIC"  downloadUrl="http://www.cic.fr" id='2'>
     <bankEntity id="30066"/>
     <bankEntity id="10037"/>
     <bankEntity id="10057"/>

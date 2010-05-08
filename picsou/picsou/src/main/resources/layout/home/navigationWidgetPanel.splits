@@ -13,7 +13,7 @@
     <style selector="button#widgetAction"
            gridPos="(1,0)" font="-,plain,13"
            ui="hyperlinkButtonWithoutUnderline" foreground="block.item.link"
-           marginBottom="0" iconTextGap="1" horizontalTextPosition="left"
+           marginBottom="0" iconTextGap="2" horizontalTextPosition="left"
            fill="none" anchor="west" weightY="0"/>
 
     <style id="navigation" selector="x"
