@@ -10,8 +10,8 @@ import org.globsframework.utils.Dates;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.nio.channels.FileChannel;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 public class RestartTest extends LoggedInFunctionalTestCase {
 
@@ -155,6 +155,13 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .setAmount("1000")
       .validate();
     budgetView.getSummary().checkHelpWizardDisplayed();
+    budgetView.getSummary().getHelpWizard()
+      .checkHelpMessageContains("Budget wizard")
+      .next()
+      .checkHelpMessageContains("Budget view")
+      .next()
+      .checkHelpMessageContains("Set planned amounts");
+
     budgetView.getSummary().checkMonthBalance(-600.00);
 
     restartApplication();
@@ -163,7 +170,8 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     budgetView.getSummary().checkMonthBalance(-600.00);
 
-    budgetView.getSummary().checkHelpMessageHidden();
+    budgetView.getSummary().getHelpWizard()
+      .checkHelpMessageContains("Set planned amounts");
   }
 
   public void testCategorizationView() throws Exception {
@@ -263,7 +271,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .add("10/08/2008", TransactionType.PRELEVEMENT, "ED", "", -300.00, "End date")
       .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -400.00, "Course")
       .check();
-    
+
     operations.checkOk();
 
     setCurrentDate("2008/09/02");
@@ -555,7 +563,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     File file = new File(getLocalPrevaylerPath(), "data");
     String[] subFiles = file.list();
     for (String fileName : subFiles) {
-      if (fileName.matches("[0-9]+")){
+      if (fileName.matches("[0-9]+")) {
         File file1 = new File(file, fileName);
         for (File journal : file1.listFiles()) {
           long size = journal.length();

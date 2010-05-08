@@ -76,9 +76,8 @@ public class BudgetWizardPanel implements ChangeSetListener {
       return;
     }
     boolean showWizard =
-      prefs.isTrue(UserPreferences.SHOW_BUDGET_VIEW_WIZARD)
-      && repository.contains(Series.TYPE, not(fieldEquals(Series.ID, Series.UNCATEGORIZED_SERIES_ID)));
+      prefs.isTrue(UserPreferences.SHOW_BUDGET_VIEW_WIZARD);
     int page = prefs.get(UserPreferences.CURRENT_WIZARD_PAGE);
-    wizard.show(true || showWizard, page);
+    wizard.show(showWizard, page);
   }
 }

@@ -886,7 +886,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .checkHelpMessageContains("Month per month follow-up")
       .next()
       .checkHelpMessageContains("Anticipating the next months")
-      .checkNextButtonText("Hide")
+      .checkNextButtonText("Hide");
+
+    budgetView.getSummary().getHelpWizard()
       .next();
 
     budgetView.getSummary().checkHelpMessageHidden();

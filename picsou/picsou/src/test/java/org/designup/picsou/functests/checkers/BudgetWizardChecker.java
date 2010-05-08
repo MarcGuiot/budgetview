@@ -6,7 +6,7 @@ import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class BudgetWizardChecker extends GuiChecker {
   private Panel panel;
-  public static final String PANEL_NAME = "wizardPanelBlock";
+  public static final String PANEL_NAME = "wizardPanel";
 
   public BudgetWizardChecker(Panel budgetSummaryView) {
     this.panel = budgetSummaryView.getPanel(PANEL_NAME);
@@ -15,13 +15,6 @@ public class BudgetWizardChecker extends GuiChecker {
 
   public BudgetWizardChecker checkHelpMessageContains(String text) {
     assertThat(panel.getPanel("content").getTextBox("editor").textContains(text));
-    return this;
-  }
-
-  public BudgetWizardChecker checkHelp(String title) {
-    Button helpButton = panel.getButton("help");
-    assertThat(helpButton.isVisible());
-    HelpChecker.open(helpButton.triggerClick()).checkTitle(title).close();
     return this;
   }
 

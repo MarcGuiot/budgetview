@@ -109,7 +109,6 @@ public class WizardPanel {
       }
       showPage(page);
     }
-
     getPanel().setVisible(isVisible);
   }
 

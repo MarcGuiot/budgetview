@@ -28,7 +28,7 @@
   <skeletonName>Windowed Wrapper</skeletonName>
   <skeletonProperties>
     <key>Message</key>
-    <value>Java has not been found on your computer. Do you want to download it?</value>
+    <value>Java n'a pas été trouvé sur votre ordinateur. Voulez vous le télécharger ? Une fois installé, il vous suffira de lancer CashPilot à nouveau.</value>
   </skeletonProperties>
   <skeletonProperties>
     <key>URL</key>

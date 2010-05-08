@@ -76,7 +76,7 @@ public class CardView extends View implements GlobSelectionListener {
   }
 
   private void addBackForwardActions(GlobsPanelBuilder builder) {
-    builder.add("back", new NavigationAction(directory) {
+    builder.add("backView", new NavigationAction(directory) {
       protected boolean getEnabledState(NavigationService navigationService) {
         return navigationService.backEnabled();
       }
@@ -86,7 +86,7 @@ public class CardView extends View implements GlobSelectionListener {
       }
     });
 
-    builder.add("forward", new NavigationAction(directory) {
+    builder.add("forwardView", new NavigationAction(directory) {
       protected boolean getEnabledState(NavigationService navigationService) {
         return navigationService.forwardEnabled();
       }

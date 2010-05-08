@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.functests.checkers.BudgetChecker;
 
 public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
