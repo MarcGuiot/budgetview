@@ -462,7 +462,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
     assertTrue(panel.isVisible());
 
     repeat.remove(0);
-    checkPanel(panel, "label:footer\n");
+    checkPanel(panel, "");
     assertTrue(panel.isVisible());
   }
 
@@ -493,6 +493,41 @@ public class SplitsRepeatTest extends SplitsTestCase {
     catch (SplitsException e) {
       assertEquals("Repeat component 'myRepeat' must have exactly one header component", e.getMessage());
     }
+  }
+
+  public void testHeaderAndFooterRepeatInitializedWithEmptyList() throws Exception {
+    builder.add("title1", new JLabel("col1"));
+    builder.add("title2", new JLabel("footerCol1"));
+    Repeat<String> repeat = builder.addRepeat("repeat", new ArrayList<String>(), new RepeatComponentFactory<String>() {
+      public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+        cellBuilder.add("label", new JLabel(object));
+        cellBuilder.add("button", new JButton(object));
+      }
+    });
+    JPanel panel = parse(
+      "<repeat ref='repeat' layout='verticalGrid'>" +
+      "  <header>" +
+      "    <label ref='title1'/>" +
+      "    <label text='col2'/>" +
+      "  </header>" +
+      "  <label ref='label' fill='horizontal' anchor='south' marginTop='10' marginBottom='5'/>" +
+      "  <button ref='button' marginLeft='5' marginRight='5'/>" +
+      "  <footer>" +
+      "    <label ref='title2'/>" +
+      "    <label text='footerCol2'/>" +
+      "  </footer>" +
+      "</repeat>");
+
+    checkPanel(panel, "");
+
+    repeat.insert("a", 0);
+
+    checkPanel(panel, "label:col1\n" +
+                      "label:col2\n" +
+                      "label:a\n" +
+                      "button:a\n" +
+                      "label:footerCol1\n" +
+                      "label:footerCol2\n");
   }
 
   public void testHeaderAndFooterInVerticalGridLayout() throws Exception {
@@ -581,9 +616,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
 
     repeat.remove(0);
     repeat.remove(0);
-    checkPanel(panel,
-               "label:footerCol1\n" +
-               "label:footerCol2\n");
+    checkPanel(panel, "");
   }
 
   public void testHeaderNotShownInEmptyRepeat() throws Exception {

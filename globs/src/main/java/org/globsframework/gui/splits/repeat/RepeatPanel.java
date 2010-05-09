@@ -49,7 +49,7 @@ public class RepeatPanel implements Repeat {
   }
 
   private void updateVisibility() {
-    this.panel.setVisible(!autoHideIfEmpty || (!repeatContexts.isEmpty()));
+    this.panel.setVisible(!autoHideIfEmpty || (panel.getComponentCount() > 0));
   }
 
   public void set(List items) {
@@ -69,7 +69,7 @@ public class RepeatPanel implements Repeat {
       index++;
     }
 
-    if (hasFooter()) {
+    if (!items.isEmpty() && hasFooter()) {
       constraints.add(createFooterStretchers());
     }
 
@@ -87,11 +87,18 @@ public class RepeatPanel implements Repeat {
   }
 
   public void insert(Object item, int index) {
-    if (repeatContexts.isEmpty() && hasHeader()) {
+    boolean firstItem = repeatContexts.isEmpty();
+
+    if (firstItem && hasHeader()) {
       layout.insert(panel, createHeaderStretchers(), 0);
     }
 
     layout.insert(panel, createStretches(item, index), adjustIndex(index));
+
+    if (firstItem && hasFooter()) {
+      layout.insert(panel, createFooterStretchers(), adjustIndex(index + 1));
+    }
+
     GuiUtils.revalidate(panel);
     updateVisibility();
   }
@@ -104,9 +111,7 @@ public class RepeatPanel implements Repeat {
       if (hasHeader()) {
         layout.remove(panel, 0);
       }
-      if (!hasFooter()) {
-        panel.removeAll();
-      }
+      panel.removeAll();
     }
 
     GuiUtils.revalidate(panel);
