@@ -14,12 +14,15 @@
 
     <style selector="radioButton.subSeriesSelector" horizontalAlignment="left"/>
 
+    <style selector="footer button" ui="hyperlinkButtonWithoutUnderline" foreground="categorization.footerButton" 
+           marginTop="5"/>
+
   </styles>
 
   <column>
     <column styleClass="budgetAreaSelection">
       <panel styleClass="descriptionPanel" weightY="0">
-        <htmlEditorPane ref="description" />
+        <htmlEditorPane ref="description"/>
       </panel>
       <htmlEditorPane ref="noSeriesMessage" border="empty(10)" hyperlinkListener="hyperlinkHandler"/>
       <radioButton ref="invisibleToggle" visible="false"/>
@@ -33,10 +36,10 @@
             </row>
             <repeat ref="subSeriesRepeat" marginLeft="15" border="matte(0,1,0,0,categorization.subseries.line)">
               <radioButton ref="subSeriesSelector" styleClass="subSeriesSelector"/>
-           </repeat>
+            </repeat>
           </column>
           <footer>
-            <button styleClass="footer" action="createSeries" tooltipText="$series.create.tooltip"/>
+            <button action="createSeries" tooltipText="$series.create.tooltip"/>
           </footer>
         </repeat>
       </scrollPane>

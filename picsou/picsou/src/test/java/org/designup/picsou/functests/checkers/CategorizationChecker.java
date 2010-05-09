@@ -7,6 +7,7 @@ import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.model.Glob;
+import org.globsframework.gui.splits.color.Colors;
 import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Panel;
@@ -174,6 +175,16 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
+  public CategorizationChecker checkYellowBgLabel(int row, int column) {
+    assertThat(getTable().backgroundNear(row, column, Colors.toColor("3C6CC6")));
+    return this;
+  }
+
+  public CategorizationChecker checkNormalBgColor(int row, int column) {
+    assertThat(getTable().backgroundNear(row, column, Color.white));
+    return this;
+  }
+  
   public class SavingsCategorizationChecker extends BudgetAreaCategorizationChecker {
     private SavingsCategorizationChecker(CategorizationChecker categorizationChecker, BudgetArea budgetArea) {
       super(categorizationChecker, budgetArea);

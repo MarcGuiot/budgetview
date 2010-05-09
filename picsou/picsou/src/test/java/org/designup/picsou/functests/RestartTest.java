@@ -214,11 +214,19 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     OfxBuilder
       .init(this)
       .addTransaction("2008/05/10", 1000.0, "WorldCo")
+      .addTransaction("2008/05/15", 500.0, "FNAC")
       .load();
 
     views.selectCategorization();
     categorization.setNewIncome("WorldCo", "Income");
+    categorization.getCompletionGauge().checkLevel(0.33, "33%");
 
+    restartApplication();
+
+    views.selectCategorization();
+    categorization.getCompletionGauge().checkLevel(0.33, "33%");
+
+    categorization.setNewVariable("FNAC", "Leisures");
     categorization.getCompletionGauge().checkCompleteProgressMessageShown();
     categorization.getCompletionGauge().hideProgressMessage();
     categorization.getCompletionGauge().checkProgressMessageHidden();

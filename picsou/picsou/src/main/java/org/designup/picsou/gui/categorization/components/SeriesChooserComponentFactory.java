@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.jidesoft.swing.DefaultOverlayable;
+
 public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glob> {
   protected JRadioButton invisibleSelector;
   protected ButtonGroup buttonGroup = new ButtonGroup();
@@ -270,6 +272,21 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
         }
       });
     }
+  }
+
+  public Rectangle getRectange(Key seriesId){
+    SplitsNode<JRadioButton> radioButtonSplitsNode = seriesToComponent.get(seriesId);
+    if (radioButtonSplitsNode != null){
+      Rectangle bounds = radioButtonSplitsNode.getComponent().getBounds();
+      Container parent = radioButtonSplitsNode.getComponent().getParent();
+      while (parent != null && !(parent instanceof DefaultOverlayable)){
+        parent = parent.getParent();
+        bounds.translate(parent.getX(), parent.getY());
+      }
+      System.out.println("SeriesChooserComponentFactory.getRectange " + bounds);
+      return bounds;
+    }
+    return null;
   }
 
   private void setText(JRadioButton selector, String seriesName, Glob series) {

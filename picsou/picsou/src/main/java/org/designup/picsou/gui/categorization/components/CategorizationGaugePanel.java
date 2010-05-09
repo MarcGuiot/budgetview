@@ -36,6 +36,7 @@ public class CategorizationGaugePanel implements ChangeSetListener {
     createPanel();
     createProgressMessage();
     repository.addChangeListener(this);
+    update();
   }
 
   public void createPanel() {
