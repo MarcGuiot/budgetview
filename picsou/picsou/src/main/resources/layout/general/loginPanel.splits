@@ -27,12 +27,35 @@
 
           <label icon="app_icon_128.png" fill="none" anchor="center" marginBottom="20"/>
 
+          <label text="$login.security.message" styleClass="centered" marginTop="10" marginBottom="5"/>
+
           <label text="$login.intro.message" styleClass="centered" marginBottom="15"/>
 
           <horizontalBoxes>
-            <column preferredSize="(260,700)">
+
+            <column preferredSize="(260,700)"
+                    border="matte(0,0,0,2,dialog.separator.light)">
 
               <column marginRight="15">
+
+                <label styleClass="choice" text="$login.nopassword.title"/>
+                <textArea styleClass="multiLineLabel" text="$login.nopassword.message" marginBottom="10"/>
+                <button ref="autoLogin" fill="none" anchor="center" marginBottom="20"/>
+
+                <separator orientation="horizontal"/>
+
+                <label styleClass="choice" text="$login.demo.title" marginTop="15"/>
+                <textArea styleClass="multiLineLabel" text="$login.demo.message" marginBottom="10"/>
+                <button action="demoMode" fill="none" anchor="center"/>
+
+                <filler fill="vertical"/>
+
+              </column>
+            </column>
+
+            <column preferredSize="(260,700)">
+
+              <column marginLeft="15">
 
                 <label styleClass="choice" text="$login.secure.title"/>
 
@@ -78,33 +101,11 @@
               </column>
 
             </column>
-
-            <column preferredSize="(260,700)"
-                    border="matte(0,2,0,0,dialog.separator.light)">
-
-              <column marginLeft="15">
-
-                <label styleClass="choice" text="$login.nopassword.title"/>
-                <textArea styleClass="multiLineLabel" text="$login.nopassword.message" marginBottom="10"/>
-                <button ref="autoLogin" fill="none" anchor="center" marginBottom="20"/>
-
-                <separator orientation="horizontal"/>
-
-                <label styleClass="choice" text="$login.demo.title" marginTop="15"/>
-                <textArea styleClass="multiLineLabel" text="$login.demo.message" marginBottom="10"/>
-                <button action="demoMode" fill="none" anchor="center"/>
-
-                <filler fill="vertical"/>
-
-              </column>
-            </column>
           </horizontalBoxes>
 
           <panel preferredSize="(30,30)" minimumSize="(30,30)" border="empty(10,0,0,0)" opaque="false">
             <component ref="progressPanel" opaque="false" visible="false"/>
           </panel>
-
-          <label text="$login.security.message" styleClass="centered" marginTop="10" marginBottom="0"/>
 
         </column>
 
