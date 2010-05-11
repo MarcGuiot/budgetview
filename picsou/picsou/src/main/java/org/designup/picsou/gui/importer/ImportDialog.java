@@ -291,7 +291,7 @@ public class ImportDialog {
   }
 
   public void updateFileField(List<File> files) {
-    StringBuilder builder = new StringBuilder(fileField.getText());
+    StringBuilder builder = new StringBuilder(fileField.getText().trim());
     for (File file : files) {
       if (builder.length() != 0) {
         builder.append(";");

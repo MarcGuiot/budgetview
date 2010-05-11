@@ -54,9 +54,9 @@ public class PreTransactionTypeMatcher {
   @NoObfuscation
   public static LinkField TRANSACTION_TYPE;
 
-  @Target(Bank.class)
+  @Target(BankFormat.class)
   @NoObfuscation
-  public static LinkField BANK;
+  public static LinkField BANK_FORMAT;
 
 
   static {

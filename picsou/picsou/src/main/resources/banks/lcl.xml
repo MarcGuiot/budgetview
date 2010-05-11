@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="LCL" downloadUrl="https://particuliers.secure.lcl.fr" id='8'>
-    <bankEntity id="30002"/>
+  <bankFormat id='8'>
+
+    <bank name="LCL" downloadUrl="https://particuliers.secure.lcl.fr" id='8'>
+      <bankEntity id="30002"/>
+    </bank>
 
     <transactionMatcher bankType="CHECK" ofxCheckNum="([\d]+)"
                         transactionTypeName="check" label="CHEQUE N°{NUM.1}" originalLabel="{NUM.1}"/>
@@ -58,5 +61,5 @@
     <transactionMatcher qifP="(.*)" bankType="VIREMENT"
                         transactionTypeName="virement" label="{P.0}" originalLabel="{P.0}"/>
 
-  </bank>
+  </bankFormat>
 </globs>

@@ -148,13 +148,16 @@ public class DownloadTest extends LicenseTestCase {
     jarOutputStream.write("picsouBank.xml\n".getBytes());
     jarOutputStream.putNextEntry(new ZipEntry("banks/picsouBank.xml"));
     jarOutputStream.write(("<globs>\n" +
-                           "  <bank name=\"picsouBank\" downloadUrl=\"\" id='-2'>\n" +
-                           "    <bankEntity id=\"10807\"/> \n" +
-                           "    <bankEntity id=\"4321\"/> \n" +
+                           "  <bankFormat id='-2'>\n" +
+                           "    <bank name=\"picsouBank\" downloadUrl=\"\" id='-2'>\n" +
+                           "      <bankEntity id=\"10807\"/> \n" +
+                           "      <bankEntity id=\"17515\"/> \n" +
+                           "      <bankEntity id=\"4321\"/> \n" +
+                           "    </bank>\n" +
                            "    <transactionMatcher ofxName=\"STUPID HEADER .*\"\n" +
                            "                        transactionTypeName=\"virement\" " +
                            "                        label=\"GOOD HEADER\"/>" +
-                           "  </bank>\n" +
+                           "  </bankFormat>\n" +
                            "</globs>\n").getBytes());
     jarOutputStream.putNextEntry(new ZipEntry("org/designup/picsou/license/functests/DummyBankPlugin.class"));
     DummyBankPluginDump bankPluginDump = new DummyBankPluginDump();

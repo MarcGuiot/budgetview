@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="CIC" downloadUrl="http://www.cic.fr" id='2'>
-    <bankEntity id="30066"/>
-    <bankEntity id="10037"/>
-    <bankEntity id="10057"/>
-    <bankEntity id="10096"/>
-    <bankEntity id="12319"/>
-    <bankEntity id="12719"/>
-    <bankEntity id="30027"/>
-    <bankEntity id="30047"/>
-    <bankEntity id="30087"/>
-    <bankEntity id="30568"/>
+
+  <bankFormat id='2'>
+
+    <bank name="CIC" downloadUrl="http://www.cic.fr" id='2'>
+      <bankEntity id="30066"/>
+      <bankEntity id="10037"/>
+      <bankEntity id="10057"/>
+      <bankEntity id="10096"/>
+      <bankEntity id="12319"/>
+      <bankEntity id="12719"/>
+      <bankEntity id="30027"/>
+      <bankEntity id="30047"/>
+      <bankEntity id="30087"/>
+      <bankEntity id="30568"/>
+    </bank>
 
     <transactionMatcher ofxName="F COM INTERVENTION (.*)"
                         transactionTypeName="bank_fees" label="COMMISSIONS {NAME.1}"
@@ -42,5 +46,5 @@
     <transactionMatcher ofxName="CHEQUE (.*)"
                         transactionTypeName="check" label="CHEQUE N°{NAME.1}"
                         originalLabel="{NAME.0}"/>
-  </bank>
+  </bankFormat>
 </globs>

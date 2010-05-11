@@ -2,12 +2,10 @@ package org.designup.picsou.model;
 
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.DefaultString;
-import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.annotations.NamingField;
-import org.globsframework.metamodel.annotations.NoObfuscation;
+import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
@@ -29,6 +27,9 @@ public class Bank {
 
   @DefaultString("") @NoObfuscation
   public static StringField DOWNLOAD_URL;
+  
+  @Target(BankFormat.class) @NoObfuscation
+  public static LinkField BANK_FORMAT;
 
   static {
     GlobTypeLoader.init(Bank.class, "bank");

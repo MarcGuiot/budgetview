@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="Autre" id="-123456">
-    <bankEntity id="-1"/>
+  <bankFormat id='-123456'>
+    <bank name="Autre" id="-123456">
+      <bankEntity id="-1"/>
+    </bank>
 
     <transactionMatcher ofxName="CHEQUE (.*)" transactionTypeName="check"
                         label="CHEQUE N°{NAME.1}" originalLabel="{NAME.0}"/>
@@ -26,5 +28,5 @@
 
     <transactionMatcher qifM="RETRAIT (.*)" transactionTypeName="withdrawal"
                         label="RETRAIT {M.1}" originalLabel="{M.0}"/>
-  </bank>
+  </bankFormat>
 </globs>
