@@ -487,6 +487,7 @@ public class ConfigService {
       return true;
     }
     catch (Exception e) {
+      Log.write("", e);
       return false;
     }
   }

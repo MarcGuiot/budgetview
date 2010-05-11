@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="La Banque Postale" downloadUrl="https://www.labanquepostale.fr" id='3'>
-    <bankEntity id="20041"/>
+  <bankFormat id='3'>
+
+    <bank name="La Banque Postale" downloadUrl="https://www.labanquepostale.fr" id='3'>
+      <bankEntity id="20041"/>
+    </bank>
 
     <transactionMatcher ofxName="ACHAT CB (.*)[\s]+(\d{2,4}.\d{2}.\d{2,4})"
                         transactionTypeName="credit_card" label="{NAME.1}"
@@ -27,5 +30,5 @@
     <transactionMatcher ofxName="PRELEVEMENT DE" transactionTypeName="prelevement"
                         label="PRELEVEMENT DE ????" originalLabel="{NAME.0}"/>
 
-  </bank>
+  </bankFormat>
 </globs>

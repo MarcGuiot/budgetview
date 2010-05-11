@@ -3,6 +3,7 @@ package org.designup.picsou.importer.analyzer;
 import org.designup.picsou.model.PreTransactionTypeMatcher;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.model.BankEntity;
+import org.designup.picsou.model.Bank;
 import org.designup.picsou.bank.BankPluginService;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.Glob;
@@ -79,6 +80,7 @@ public class TransactionAnalyzerFactory {
   private void parseDefinitionFile(Loader loader, final GlobRepository repository) {
     repository.startChangeSet();
     try {
+//      repository.deleteAll(Bank.TYPE, BankEntity.TYPE, PreTransactionTypeMatcher.TYPE);
       InputStream bankListStream = loader.load(BANK_LIST_FILE_NAME);
       if (bankListStream == null) {
         throw new ResourceAccessFailed("Missing bank file list: " + BANK_LIST_FILE_NAME);
@@ -135,7 +137,7 @@ public class TransactionAnalyzerFactory {
       String label = matcher.get(PreTransactionTypeMatcher.LABEL);
       String originalLabel = matcher.get(PreTransactionTypeMatcher.ORIGINAL_LABEL);
 
-      Glob bank = repository.findLinkTarget(matcher, PreTransactionTypeMatcher.BANK);
+      Glob bankFormat = repository.findLinkTarget(matcher, PreTransactionTypeMatcher.BANK_FORMAT);
       TransactionType type = TransactionType.get(matcher);
       String bankType = matcher.get(PreTransactionTypeMatcher.BANK_TYPE);
       String groupForDate = matcher.get(PreTransactionTypeMatcher.GROUP_FOR_DATE);
@@ -146,12 +148,12 @@ public class TransactionAnalyzerFactory {
         String memo = matcher.get(PreTransactionTypeMatcher.OFX_MEMO);
         String checkNum = matcher.get(PreTransactionTypeMatcher.OFX_CHECK_NUM);
         if (label != null) {
-          analyzer.addOfx(name, memo, checkNum, label, bank, bankType, groupForDate, dateFormat, type);
+          analyzer.addOfx(name, memo, checkNum, label, bankFormat, bankType, groupForDate, dateFormat, type);
           groupForDate = null; //pour ne pas updater deux fois la date si dans le meme group on a label et originallabel
           dateFormat = null;
         }
         if (originalLabel != null) {
-          analyzer.addOriginalOfx(name, memo, checkNum, originalLabel, bank, bankType,
+          analyzer.addOriginalOfx(name, memo, checkNum, originalLabel, bankFormat, bankType,
                                   groupForDate, dateFormat, type);
         }
       }
@@ -159,12 +161,12 @@ public class TransactionAnalyzerFactory {
         String qifM = matcher.get(PreTransactionTypeMatcher.QIF_M);
         String qifP = matcher.get(PreTransactionTypeMatcher.QIF_P);
         if (label != null) {
-          analyzer.addQif(qifM, qifP, label, bank, bankType, groupForDate, dateFormat, type);
+          analyzer.addQif(qifM, qifP, label, bankFormat, bankType, groupForDate, dateFormat, type);
           groupForDate = null; //pour ne pas updater deux fois la date
           dateFormat = null;
         }
         if (originalLabel != null) {
-          analyzer.addOriginalQif(qifM, qifP, originalLabel, bank, bankType,
+          analyzer.addOriginalQif(qifM, qifP, originalLabel, bankFormat, bankType,
                                   groupForDate, dateFormat, type);
         }
       }

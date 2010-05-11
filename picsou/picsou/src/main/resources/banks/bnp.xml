@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="BNP Paribas" downloadUrl="http://www.bnpparibas.net" id='5'>
-    <bankEntity id="30004"/>
+  <bankFormat id='5'>
+
+    <bank name="BNP Paribas" downloadUrl="http://www.bnpparibas.net" id='5'>
+      <bankEntity id="30004"/>
+
+    </bank>
 
     <transactionMatcher bankType="COMMISS" qifM="(.*)"
                         transactionTypeName="bank_fees" label="COMMISSIONS {M.1}"
@@ -83,5 +87,5 @@
                         transactionTypeName="prelevement" label="VIREMENT {M.0}"
                         originalLabel="VI.EMIS {M.0}"/>
 
-  </bank>
+  </bankFormat>
 </globs>

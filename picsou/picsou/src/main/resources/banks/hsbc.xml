@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="HSBC" downloadUrl="https://www.hsbc.fr/1/2/hsbc-france/particuliers/login" id="11" >
-    <bankEntity id="30056"/>
-    <bankEntity id="30368"/>
-  </bank>
+  <bankFormat id='11'>
+
+    <bank name="HSBC" downloadUrl="https://www.hsbc.fr/1/2/hsbc-france/particuliers/login" id="11">
+      <bankEntity id="30056"/>
+      <bankEntity id="30368"/>
+    </bank>
+  </bankFormat>
 </globs>

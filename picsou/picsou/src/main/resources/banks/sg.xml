@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="Société Générale" id="4" downloadUrl="https://particuliers.societegenerale.fr">
-    <bankEntity id="30003"/>
+  <bankFormat id='4'>
+    <bank name="Société Générale" id="4" downloadUrl="https://particuliers.societegenerale.fr">
+      <bankEntity id="30003"/>
+    </bank>
 
     <transactionMatcher qifM="VIR RECU [\d]+ DE:[\s]*(.*)" transactionTypeName="virement"
                         label="{M.1}" originalLabel="{M.0}"/>
@@ -36,12 +38,12 @@
                         groupForDate="{M.1}" dateFormat="dd/MM/yy"/>
 
     <!--<transactionMatcher qifM="CARTE [0-9]+ (\d{2,4}/\d{2}/\d{2,4}) REL\. (.*)" transactionTypeName="credit_card"-->
-                        <!--label="{M.2}" originalLabel="{M.0}"-->
-                        <!--groupForDate="{M.1}" dateFormat="dd/MM/yy"/>-->
+    <!--label="{M.2}" originalLabel="{M.0}"-->
+    <!--groupForDate="{M.1}" dateFormat="dd/MM/yy"/>-->
 
     <!--<transactionMatcher qifM="CARTE X[0-9]+ (\d{2}/\d{2}) REL\. (.*)" transactionTypeName="credit_card"-->
-                        <!--label="{M.2}" originalLabel="{M.0}"-->
-                        <!--groupForDate="{M.1}" dateFormat="dd/MM"/>-->
+    <!--label="{M.2}" originalLabel="{M.0}"-->
+    <!--groupForDate="{M.1}" dateFormat="dd/MM"/>-->
 
     <transactionMatcher qifM="CARTE [0-9]+ (\d{2,4}/\d{2}/\d{2,4}) (.*)" transactionTypeName="credit_card"
                         label="{M.2}" originalLabel="{M.0}"
@@ -73,5 +75,5 @@
     <transactionMatcher qifM="VIR (.*)" transactionTypeName="virement"
                         label="{M.1}" originalLabel="{M.0}"/>
 
-  </bank>
+  </bankFormat>
 </globs>

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="Banque Populaire" downloadUrl="http://www.banquepopulaire.fr" id='12'>
-    <bankEntity id="10807"/>
+  <bankFormat id='12'>
+
+    <bank name="Banque Populaire" downloadUrl="http://www.banquepopulaire.fr" id='12'>
+      <bankEntity id="10807"/>
+    </bank>
 
     <transactionMatcher ofxName="FACTURETTE CB.*"
                         label="{MEMO.0}" originalLabel="{MEMO.0}"
@@ -38,5 +41,5 @@
                         label="{NAME.1} {MEMO.0}" originalLabel="{NAME.0} {MEMO.0}"
                         transactionTypeName="prelevement"/>
 
-  </bank>
+  </bankFormat>
 </globs>

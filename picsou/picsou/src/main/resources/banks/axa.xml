@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="AXA Banque" downloadUrl="https://clients.axabanque.fr/client/" id="9">
-    <bankEntity id="12548"/>
+  <bankFormat id='9'>
+
+    <bank name="AXA Banque" downloadUrl="https://clients.axabanque.fr/client/" id="9">
+      <bankEntity id="12548"/>
+    </bank>
 
     <transactionMatcher bankType="([0-9]+)" qifP="CHEQUE"
                         transactionTypeName="check" label="CHEQUE N°{TYPE.1}"
@@ -20,5 +23,5 @@
 
     <transactionMatcher qifP="RETRAIT (.*)"
                         transactionTypeName="withdrawal" label="RETRAIT {P.1}" originalLabel="{P.0}"/>
-  </bank>
+  </bankFormat>
 </globs>

@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bank name="Crédit Mutuel" downloadUrl="https://www.creditmutuel.fr" id='7'>
+  <bankFormat id='7'>
 
-    <bankEntity id="16306"/>
-    <bankEntity id="10278"/>
-    <bankEntity id="15589"/>
-    <bankEntity id="18829"/>
-    <bankEntity id="15459"/>
-    <bankEntity id="15489"/>
-    <bankEntity id="15629"/>
-    <bankEntity id="15519"/>
-    <bankEntity id="15749"/>
-    <bankEntity id="15889"/>
-    <bankEntity id="15959"/>
-    <bankEntity id="15969"/>
-    <bankEntity id="15999"/>
-    <bankEntity id="16159"/>
+    <bank name="Crédit Mutuel" downloadUrl="https://www.creditmutuel.fr" id='7'>
+      <bankEntity id="16306"/>
+      <bankEntity id="10278"/>
+      <bankEntity id="15589"/>
+      <bankEntity id="18829"/>
+      <bankEntity id="15459"/>
+      <bankEntity id="15489"/>
+      <bankEntity id="15629"/>
+      <bankEntity id="15519"/>
+      <bankEntity id="15749"/>
+      <bankEntity id="15889"/>
+      <bankEntity id="15959"/>
+      <bankEntity id="15969"/>
+      <bankEntity id="15999"/>
+      <bankEntity id="16159"/>
+    </bank>
 
     <transactionMatcher qifP="CARTE[\s]+(\d{2}/\d{2})[\s]+(.*)"
                         transactionTypeName="credit_card" label="{P.2}" originalLabel="{P.0}"
@@ -39,5 +41,5 @@
 
     <transactionMatcher qifP="CHQ (.*)" transactionTypeName="check"
                         label="CHEQUE N°{P.1}" originalLabel="{P.0}"/>
-  </bank>
+  </bankFormat>
 </globs>

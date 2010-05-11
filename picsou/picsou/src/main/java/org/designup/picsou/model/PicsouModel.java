@@ -2,10 +2,7 @@ package org.designup.picsou.model;
 
 import org.designup.picsou.server.serialization.SerializationManager;
 import org.globsframework.metamodel.GlobModel;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.utils.GlobModelBuilder;
-
-import java.util.*;
 
 public class PicsouModel {
   private static GlobModel MODEL =
@@ -14,6 +11,7 @@ public class PicsouModel {
                           AccountCardType.TYPE,
                           AccountUpdateMode.TYPE,
                           Bank.TYPE,
+                          BankFormat.TYPE,
                           BankEntity.TYPE,
                           Category.TYPE,
                           Month.TYPE,

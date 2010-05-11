@@ -209,6 +209,9 @@ class DefaultFieldFactory {
                                    +
                                    "it does not define a Glob type");
       }
+      if (targetType == null){
+        throw new InvalidParameter("Is GlobTypeLoader.init() of " + targetClass + " called from static init?");
+      }
       Field[] keyFields = targetType.getKeyFields();
       if (keyFields.length != 1) {
         throw new InvalidParameter("LinkField '" + name + "' in type '" + globType.getName() +

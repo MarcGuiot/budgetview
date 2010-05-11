@@ -3,10 +3,12 @@ package org.designup.picsou.importer.analyzer;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.model.BankFormat;
 import static org.designup.picsou.model.TransactionType.PRELEVEMENT;
 import static org.designup.picsou.model.TransactionType.VIREMENT;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
@@ -25,16 +27,17 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
 
 
   public void processTransactions(Integer bankId, List<Glob> transactions, GlobRepository repository) {
+    Integer bankFormatId = repository.get(Key.create(Bank.TYPE, bankId)).get(Bank.BANK_FORMAT);
     for (Glob transaction : transactions) {
       boolean processed = false;
       boolean originalLabelProcessed = false;
-      for (TransactionTypeFinalizer transactionTypeFinalizer : analyserForLabel.get(bankId)) {
+      for (TransactionTypeFinalizer transactionTypeFinalizer : analyserForLabel.get(bankFormatId)) {
         if (transactionTypeFinalizer.processTransaction(transaction, repository)) {
           processed = true;
           break;
         }
       }
-      for (TransactionTypeFinalizer finalizer : analyserForOriginalLabel.get(bankId)) {
+      for (TransactionTypeFinalizer finalizer : analyserForOriginalLabel.get(bankFormatId)) {
         if (finalizer.processTransaction(transaction, repository)) {
           originalLabelProcessed = true;
           break;
@@ -126,28 +129,30 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
     finalizers.add(finalizer);
   }
 
-  public void addOfx(String name, String memo, String num, String label, Glob bank,
+  public void addOfx(String name, String memo, String num, String label, Glob bankFormat,
                      String type, String date, String format, TransactionType transactionType) {
-    analyserForLabel.put(bank.get(Bank.ID),
+    analyserForLabel.put(bankFormat.get(BankFormat.ID),
                          new OfxTransactionFinalizer(name, memo, num, label, Transaction.LABEL,
                                                      type, date, format, transactionType));
   }
 
-  public void addQif(String mValue, String pValue, String label, Glob bank,
+  public void addQif(String mValue, String pValue, String label, Glob bankFormat,
                      String type, String date, String format, TransactionType transactionType) {
-    analyserForLabel.put(bank.get(Bank.ID),
+    analyserForLabel.put(bankFormat.get(BankFormat.ID),
                          new QifTransactionFinalizer(mValue, pValue, label, Transaction.LABEL,
                                                      type, date, format, transactionType));
   }
 
-  public void addOriginalOfx(String name, String memo, String num, String label, Glob bank, String type, String date, String format, TransactionType transactionType) {
-    analyserForOriginalLabel.put(bank.get(Bank.ID),
+  public void addOriginalOfx(String name, String memo, String num, String label, Glob bankFormat, String type,
+                             String date, String format, TransactionType transactionType) {
+    analyserForOriginalLabel.put(bankFormat.get(BankFormat.ID),
                                  new OfxTransactionFinalizer(name, memo,
                                                              num, label, Transaction.ORIGINAL_LABEL, type, date, format, transactionType));
   }
 
-  public void addOriginalQif(String mValue, String pValue, String label, Glob bank, String type, String date, String format, TransactionType transactionType) {
-    analyserForOriginalLabel.put(bank.get(Bank.ID),
+  public void addOriginalQif(String mValue, String pValue, String label, Glob bankFormat, String type, 
+                             String date, String format, TransactionType transactionType) {
+    analyserForOriginalLabel.put(bankFormat.get(BankFormat.ID),
                                  new QifTransactionFinalizer(mValue, pValue, label,
                                                              Transaction.ORIGINAL_LABEL, type, date, format, transactionType));
   }
