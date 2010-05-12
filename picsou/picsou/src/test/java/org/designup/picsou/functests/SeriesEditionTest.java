@@ -1627,4 +1627,44 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMainTabIsSelected()
       .cancel();
   }
+
+  // En mode virement extern=>non importé on creé des operations automatiquement
+  // et du coup on ne peut plus changer la date de debut
+  // il faut autoriser le changement meme si il y a des operations
+  public void testAllowChangeOfBeginOfDayOnSavingsEnveloppe() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/01/01", -29.00, "Auchan") // pour creer des mois dans le passe
+      .load();
+    savingsAccounts.createSavingsAccount("ING", 1000);
+    views.selectSavings();
+    savingsView.createSeries()
+      .setName("Epargne")
+      .setFromAccount("External account")
+      .setToAccount("ING")
+      .setDay("4")
+      .selectAllMonths()
+      .setAmount(100)
+      .validate();
+
+    savingsView.editSeries("ING", "Epargne")
+      .setStartDate(200805)
+      .validate();
+
+    timeline.selectMonth("2008/03");
+
+    views.selectData();
+    transactions.initContent()  // should be empty
+      .check();
+
+    timeline.selectMonth("2008/08");
+    views.selectSavings();
+    savingsView.editSeries("ING", "Epargne")
+      .setEndDate(200807)
+      .validate();
+
+    views.selectData();
+    transactions.initContent()  // should be empty
+      .check();
+    
+  }
 }
