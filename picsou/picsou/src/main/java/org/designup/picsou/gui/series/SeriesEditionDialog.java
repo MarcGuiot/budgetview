@@ -294,7 +294,9 @@ public class SeriesEditionDialog {
       protected Integer getMonthLimit() {
         GlobList transactions =
           localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, currentSeries.get(Series.ID))
-            .getGlobs().filterSelf(isFalse(Transaction.PLANNED), localRepository)
+            .getGlobs()
+            .filterSelf(isFalse(Transaction.PLANNED), localRepository)
+            .filterSelf(isFalse(Transaction.CREATED_BY_SERIES), localRepository)
             .sort(Transaction.BUDGET_MONTH);
         Glob firstMonth = transactions.getFirst();
         if (firstMonth == null) {
@@ -323,7 +325,9 @@ public class SeriesEditionDialog {
       protected Integer getMonthLimit() {
         GlobList transactions =
           localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, currentSeries.get(Series.ID))
-            .getGlobs().sort(Transaction.BUDGET_MONTH);
+            .getGlobs()
+            .filterSelf(isFalse(Transaction.CREATED_BY_SERIES), localRepository)
+            .sort(Transaction.BUDGET_MONTH);
         Glob lastMonth = transactions.getLast();
         if (lastMonth == null) {
           return currentSeries.get(Series.FIRST_MONTH);
