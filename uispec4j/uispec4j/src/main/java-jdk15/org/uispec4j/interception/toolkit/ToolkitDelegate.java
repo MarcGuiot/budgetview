@@ -9,6 +9,7 @@ import java.awt.dnd.*;
 import java.awt.dnd.peer.DragSourceContextPeer;
 import java.awt.event.AWTEventListener;
 import java.awt.im.InputMethodHighlight;
+import java.awt.im.spi.InputMethodDescriptor;
 import java.awt.image.ColorModel;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
@@ -305,6 +306,64 @@ public abstract class ToolkitDelegate extends SunToolkit implements ComponentFac
                                                            DragGestureListener dgl) {
     return getUnderlyingToolkit().createDragGestureRecognizer(abstractRecognizerClass, ds,
                                                               cp, srcActions, dgl);
+  }
+
+  public TrayIconPeer createTrayIcon(TrayIcon trayIcon) throws HeadlessException, AWTException {
+    return null;
+  }
+
+  public SystemTrayPeer createSystemTray(SystemTray systemTray) {
+    return null;
+  }
+
+  public boolean isTraySupported() {
+    return false;
+  }
+
+  public RobotPeer createRobot(Robot robot, GraphicsDevice graphicsDevice) throws AWTException {
+    return null;
+  }
+
+  protected int getScreenWidth() {
+    return 0;
+  }
+
+  protected int getScreenHeight() {
+    return 0;
+  }
+
+  protected boolean syncNativeQueue() {
+    return false;
+  }
+
+  public void grab(Window window) {
+  }
+
+  public void ungrab(Window window) {
+  }
+
+  public boolean isDesktopSupported() {
+    return false;
+  }
+
+  public boolean isWindowOpacityControlSupported() {
+    return false;
+  }
+
+  public boolean isWindowShapingSupported() {
+    return false;
+  }
+
+  public boolean isWindowTranslucencySupported() {
+    return false;
+  }
+
+  public InputMethodDescriptor getInputMethodAdapterDescriptor() throws AWTException {
+    return null;
+  }
+
+  protected DesktopPeer createDesktopPeer(Desktop target) throws HeadlessException {
+    return null;
   }
 
   private SunToolkit asSun() {

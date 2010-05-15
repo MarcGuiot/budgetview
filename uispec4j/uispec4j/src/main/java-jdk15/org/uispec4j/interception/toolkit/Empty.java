@@ -1,6 +1,8 @@
 package org.uispec4j.interception.toolkit;
 
+import sun.awt.CausedFocusEvent;
 import sun.awt.image.SunVolatileImage;
+import sun.java2d.pipe.Region;
 
 import javax.swing.*;
 import java.awt.*;
@@ -172,6 +174,28 @@ public final class Empty {
     public void enable() {
     }
 
+    public void setOpacity(float opacity) {
+    }
+
+    public void setOpaque(boolean isOpaque) {
+    }
+
+    public void updateWindow(BufferedImage backBuffer) {
+    }
+
+    public void repositionSecurityWarning() {
+    }
+
+    public boolean requestFocus(Component lightweightChild, boolean temporary, boolean focusedWindowChangeAllowed, long time, CausedFocusEvent.Cause cause) {
+      return false;
+    }
+
+    public void flip(int x1, int y1, int x2, int y2, BufferCapabilities.FlipContents flipAction) {
+    }
+
+    public void applyShape(Region shape) {
+    }
+
     public void flip(BufferCapabilities.FlipContents flipAction) {
     }
 
@@ -317,6 +341,28 @@ public final class Empty {
 
     public void setTitle(String title) {
     }
+
+    public void setOpacity(float opacity) {
+    }
+
+    public void setOpaque(boolean isOpaque) {
+    }
+
+    public void updateWindow(BufferedImage backBuffer) {
+    }
+
+    public void repositionSecurityWarning() {
+    }
+
+    public boolean requestFocus(Component lightweightChild, boolean temporary, boolean focusedWindowChangeAllowed, long time, CausedFocusEvent.Cause cause) {
+      return false;
+    }
+
+    public void flip(int x1, int y1, int x2, int y2, BufferCapabilities.FlipContents flipAction) {
+    }
+
+    public void applyShape(Region shape) {
+    }
   }
 
   static class DialogPeer extends Empty.WindowPeeer implements java.awt.peer.DialogPeer {
@@ -354,6 +400,9 @@ public final class Empty {
     public int[] getRGBPixels(Rectangle bounds) {
       return new int[0];
     }
+
+    public void dispose() {
+    }
   }
 
   static class DummyGraphicsConfiguration extends GraphicsConfiguration {
@@ -366,7 +415,7 @@ public final class Empty {
     }
 
     public VolatileImage createCompatibleVolatileImage(int width, int height) {
-      return new SunVolatileImage(this, width, height);
+      return new SunVolatileImage(new JLabel(), width, height);
     }
 
     public VolatileImage createCompatibleVolatileImage(int width, int height, int transparency) {
@@ -551,6 +600,36 @@ public final class Empty {
     }
 
     public void setBounds(int x, int y, int width, int height) {
+    }
+
+    public void setBounds(int x, int y, int width, int height, int op) {
+    }
+
+    public boolean requestFocus(Component lightweightChild, boolean temporary, boolean focusedWindowChangeAllowed, long time, CausedFocusEvent.Cause cause) {
+      return false;
+    }
+
+    public void flip(int x1, int y1, int x2, int y2, BufferCapabilities.FlipContents flipAction) {
+    }
+
+    public void reparent(ContainerPeer newContainer) {
+    }
+
+    public boolean isReparentSupported() {
+      return false;
+    }
+
+    public void layout() {
+    }
+
+    public Rectangle getBounds() {
+      return null;
+    }
+
+    public void applyShape(Region shape) {
+    }
+
+    public void show() {
     }
 
     public void repaint(long tm, int x, int y, int width, int height) {
