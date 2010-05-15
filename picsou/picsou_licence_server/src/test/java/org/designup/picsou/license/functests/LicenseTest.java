@@ -416,7 +416,7 @@ public class LicenseTest extends LicenseTestCase {
   private void checkValidLicense(final boolean anonymous) {
     OperationChecker operation = new OperationChecker(window);
     Window dialog = WindowInterceptor.getModalDialog(operation.getImportTrigger());
-    ImportChecker importChecker = new ImportChecker(dialog);
+    ImportChecker importChecker = new ImportChecker(dialog, true);
     importChecker.close();
     if (!anonymous) {
       assertFalse(window.getTextBox("licenseMessage").isVisible());

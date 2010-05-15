@@ -71,6 +71,7 @@ public class ImportController {
             synchronized (fileField) {
               if (step1) {
                 importDialog.updateFileField(files);
+                importDialog.acceptFiles();
               }
               else {
                 openRequestManager.openFiles(files);

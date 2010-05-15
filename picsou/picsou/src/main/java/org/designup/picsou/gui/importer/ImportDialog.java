@@ -308,6 +308,14 @@ public class ImportDialog {
     dialog.setVisible(false);
   }
 
+
+  public void acceptFiles(){
+    if (!initialFileAccepted()) {
+      return;
+    }
+    controller.doImport();
+  }
+
   private boolean initialFileAccepted() {
     String path = fileField.getText();
     if (Strings.isNullOrEmpty(path)) {
@@ -538,10 +546,7 @@ public class ImportDialog {
     }
 
     public void actionPerformed(ActionEvent event) {
-      if (!initialFileAccepted()) {
-        return;
-      }
-      controller.doImport();
+      acceptFiles();
     }
   }
 

@@ -19,13 +19,20 @@ public class ImportChecker {
 
   public static ImportChecker open(Trigger trigger) {
     Window window = WindowInterceptor.getModalDialog(trigger);
-    return new ImportChecker(window);
+    return new ImportChecker(window, true);
   }
 
-  public ImportChecker(Panel dialog) {
+  public static ImportChecker openInStep2(Trigger trigger) {
+    Window window = WindowInterceptor.getModalDialog(trigger);
+    return new ImportChecker(window, false);
+  }
+
+  public ImportChecker(Panel dialog, final boolean step1) {
     this.dialog = dialog;
-    fileField = dialog.getInputTextBox("fileField");
-    importButton = dialog.getButton("Import");
+    if (step1){
+      fileField = dialog.getInputTextBox("fileField");
+      importButton = dialog.getButton("Import");
+    }
   }
 
   private ImportChecker() {
@@ -158,6 +165,11 @@ public class ImportChecker {
 
   public void completeImportNone(int loadTransaction) {
     validate(loadTransaction, 0, 0, dialog, "import.ok");
+    UISpecAssert.assertFalse(dialog.isVisible());
+  }
+
+  public void skipAndComplete(){
+    validate(-1, -1, -1, dialog, "import.skip.file");
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 

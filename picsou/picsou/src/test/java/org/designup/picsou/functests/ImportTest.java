@@ -348,7 +348,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .cancel();
     importDialog.doImport()
       .checkMessageCreateFirstAccount()
-      .skipFile();
+      .skipAndComplete();
   }
 
   public void testOfxWithUnknownBankEntities() throws Exception {

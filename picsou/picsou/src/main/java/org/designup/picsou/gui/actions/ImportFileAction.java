@@ -85,6 +85,7 @@ public class ImportFileAction extends AbstractAction {
                                 directory.get(JFrame.class),
                                 repository, directory,
                                 usePreferedPath);
+        dialog.acceptFiles();
       }
     }
 
