@@ -10,7 +10,9 @@ import org.uispec4j.Panel;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 
+import javax.swing.*;
 import java.util.*;
+import java.lang.reflect.InvocationTargetException;
 
 public class TimeViewChecker extends GuiChecker {
   protected TimeViewPanel timeViewPanel;
@@ -73,29 +75,45 @@ public class TimeViewChecker extends GuiChecker {
     timeViewPanel.selectMonthByIndex(index);
   }
 
-  public void selectMonth(String yyyymm) {
+  public void selectMonth(String yyyymm) throws InvocationTargetException, InterruptedException {
     selectMonths(yyyymm);
     checkSelection(yyyymm);
   }
 
-  public void selectMonths(String... yyyymm) {
-    Set<Integer> monthIds = new HashSet<Integer>();
+  public void selectMonths(String... yyyymm) throws InvocationTargetException, InterruptedException {
+    final Set<Integer> monthIds = new HashSet<Integer>();
     for (String date : yyyymm) {
       monthIds.add(parseMonthId(date));
     }
-    timeViewPanel.selectMonths(monthIds);
+    SwingUtilities.invokeAndWait(new Runnable() {
+      public void run() {
+        timeViewPanel.selectMonths(monthIds);
+      }
+    });
   }
 
-  public void selectLast() {
-    timeViewPanel.selectLastMonth();
+  public void selectLast() throws InvocationTargetException, InterruptedException {
+    SwingUtilities.invokeAndWait(new Runnable() {
+      public void run() {
+        timeViewPanel.selectLastMonth();
+      }
+    });
   }
 
-  public void selectNone() {
-    timeViewPanel.selectMonths(Collections.<Integer>emptySet());
+  public void selectNone() throws InvocationTargetException, InterruptedException {
+    SwingUtilities.invokeAndWait(new Runnable() {
+      public void run() {
+        timeViewPanel.selectMonths(Collections.<Integer>emptySet());
+      }
+    });
   }
 
-  public void selectAll() {
-    timeViewPanel.selectAll();
+  public void selectAll() throws InvocationTargetException, InterruptedException {
+    SwingUtilities.invokeAndWait(new Runnable() {
+      public void run() {
+        timeViewPanel.selectAll();
+      }
+    });
   }
 
   public void checkSpanEquals(String fromYyyyMm, String toYyyyMm) {

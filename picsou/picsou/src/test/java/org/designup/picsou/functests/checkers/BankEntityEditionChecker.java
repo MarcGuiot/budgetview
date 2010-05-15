@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
+import org.uispec4j.interception.WindowInterceptor;
 
 public class BankEntityEditionChecker extends GuiChecker {
   private Window dialog;
@@ -17,7 +18,10 @@ public class BankEntityEditionChecker extends GuiChecker {
   }
 
   public BankEntityEditionChecker selectBankForEntity(String entityId, String bankName) {
-    dialog.getComboBox("bankCombo:" + entityId).select(bankName);
+    Window bankChooserWindow = WindowInterceptor.getModalDialog(dialog.getButton("bankChooser:" + entityId).triggerClick());
+    BankChooserChecker chooserChecker = new BankChooserChecker(bankChooserWindow);
+    chooserChecker.selectBank(bankName);
+    chooserChecker.validate();
     return this;
   }
 
@@ -27,17 +31,15 @@ public class BankEntityEditionChecker extends GuiChecker {
   }
 
   public BankEntityEditionChecker selectBank(String bank) {
-    dialog.getComboBox("bankCombo").select(bank);
-    checkBanksEquals("(Select a bank)", "Autre", "AXA Banque", "Banque Populaire", "BNP Paribas",
-                     "Caisse d'épargne", "CIC",
-                     "Crédit Agricole", "Crédit Mutuel", "Fortis", "HSBC", "ING Direct", "La Banque Postale", 
-                     "LCL",
-                     "Société Générale");
-    return this;
-  }
-
-  public BankEntityEditionChecker checkBanksEquals(String... banks) {
-    assertTrue(dialog.getComboBox("bankCombo").contentEquals(banks));
+    Window bankChooserWindow = WindowInterceptor.getModalDialog(dialog.getButton("bankChooser").triggerClick());
+    BankChooserChecker chooserChecker = new BankChooserChecker(bankChooserWindow);
+    chooserChecker.selectBank(bank);
+    chooserChecker.checkListContent("Autre", "AXA Banque", "Banque Populaire", "BNP Paribas",
+                                    "Caisse d'épargne", "CIC",
+                                    "Crédit Agricole", "Crédit Mutuel", "Fortis", "HSBC", "ING Direct", "La Banque Postale",
+                                    "LCL",
+                                    "Société Générale");
+    chooserChecker.validate();
     return this;
   }
 }

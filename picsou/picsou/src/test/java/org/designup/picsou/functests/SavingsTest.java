@@ -6,6 +6,8 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BankEntity;
 import org.designup.picsou.model.TransactionType;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class SavingsTest extends LoggedInFunctionalTestCase {
 
   public void testCreateSavingsInMainAccount() throws Exception {
@@ -993,7 +995,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     checkDeleteSeries();
   }
 
-  private void checkDeleteSeries() {
+  private void checkDeleteSeries() throws Exception {
     String fileName = operations.backup(this);
     operations.restore(fileName);
     timeline.selectAll();

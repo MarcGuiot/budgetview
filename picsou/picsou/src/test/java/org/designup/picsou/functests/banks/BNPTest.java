@@ -3,6 +3,7 @@ package org.designup.picsou.functests.banks;
 import org.designup.picsou.model.TransactionType;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 public class BNPTest extends SpecificBankTestCase {
 
@@ -38,7 +39,7 @@ public class BNPTest extends SpecificBankTestCase {
       .check();
   }
 
-  private void checkFile(String path) throws IOException {
+  private void checkFile(String path) throws Exception {
     operations.importQifFile(getFile(path), "BNP Paribas", 0.);
     timeline.selectAll();
     views.selectData();

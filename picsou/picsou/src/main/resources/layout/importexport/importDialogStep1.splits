@@ -9,7 +9,7 @@
 
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(460,340)">
+  <panel styleClass="dialog" preferredSize="(560,440)">
 
     <column styleClass="innerDialog">
 
@@ -31,7 +31,8 @@
 
         <textArea styleClass="multiLineLabel" text="$import.step1.bank.message" font="-,plain,11" marginTop="10"/>
         <column margin="5">
-          <comboBox ref="banks" marginRight="10" anchor="center" weightX="100" marginBottom="10"/>
+          <panel ref="bankChooser" weightX="100" weightY="50" anchor="center" minimumSize="(50,130)" marginBottom="10"/>
+          <!--<comboBox ref="banks" marginRight="10" anchor="center" weightX="100" marginBottom="10"/>-->
           <button action="openSiteHelp" styleClass="bankLink"/>
           <button action="openUrl" styleClass="bankLink"/>
         </column>

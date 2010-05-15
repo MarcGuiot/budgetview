@@ -1,20 +1,23 @@
 package org.designup.picsou.gui.accounts;
 
+import org.designup.picsou.gui.accounts.utils.AccountTypeSelector;
+import org.designup.picsou.gui.accounts.utils.CardTypeEditionPanel;
+import org.designup.picsou.gui.bank.BankChooserDialog;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountCardType;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.gui.accounts.utils.AccountTypeSelector;
-import org.designup.picsou.gui.accounts.utils.CardTypeEditionPanel;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
-import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.Strings;
@@ -40,6 +43,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   private AccountTypeSelector[] accountTypeSelectors;
   private CardTypeEditionPanel cardTypeEditionPanel;
   private GlobTextEditor nameField;
+  private JButton accountBank;
 
   public AbstractAccountPanel(T repository, Directory parentDirectory, JLabel messageLabel) {
     this.localRepository = repository;
@@ -56,25 +60,16 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     accountTypeSelectors = createTypeSelectors(localRepository);
 
     builder.add("cardTypeEditionPanel", cardTypeEditionPanel.createComponent());
-    
-    builder.addCombo("accountBank", Bank.TYPE)
-      .setShowEmptyOption(true)
-      .setEmptyOptionLabel(Lang.get("account.select.bank"))
-      .setSelectionHandler(new GlobComboView.GlobSelectionHandler() {
-        public void processSelection(Glob bank) {
-          if (bank == null) {
-            return;
-          }
-          Glob account = AbstractAccountPanel.this.currentAccount;
-          if (account != null) {
-            localRepository.setTarget(account.getKey(), Account.BANK, bank.getKey());
-          }
-        }
-      });
+
+    AccountBankAction action = new AccountBankAction(dialog);
+    accountBank = new JButton(action);
+    builder.add("accountBank", accountBank);
+    selectionService.addListener(action, Account.TYPE);
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if ((currentAccount != null) && changeSet.containsChanges(currentAccount.getKey())) {
-          updateCombo();
+          updateAccountTypeCombo();
+          updateBank(currentAccount);
         }
       }
     });
@@ -111,7 +106,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     return accountTypeCombo;
   }
 
-  private void updateCombo() {
+  private void updateAccountTypeCombo() {
     if (currentAccount == null) {
       accountTypeCombo.setSelectedIndex(-1);
     }
@@ -139,7 +134,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   public void setAccount(Glob account) {
     this.currentAccount = account;
     cardTypeEditionPanel.setAccount(account);
-    updateCombo();
+    updateAccountTypeCombo();
     if (account != null) {
       selectionService.select(account);
     }
@@ -220,4 +215,44 @@ public class AbstractAccountPanel<T extends GlobRepository> {
       },
     };
   }
+
+  private class AccountBankAction extends AbstractAction implements GlobSelectionListener {
+    private Window dialog;
+
+    public AccountBankAction(Window dialog) {
+      this.dialog = dialog;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      BankChooserDialog bankChooserDialog = new BankChooserDialog(dialog, localRepository, localDirectory);
+      Integer bankId = bankChooserDialog.showBankChooser();
+      if (bankId != null) {
+        localRepository.update(currentAccount.getKey(), Account.BANK, bankId);
+      }
+    }
+
+    public void selectionUpdated(GlobSelection selection) {
+      GlobList list = selection.getAll(Account.TYPE);
+      setEnabled(list.size() <= 1);
+      Glob account = list.getFirst();
+      updateBank(account);
+    }
+
+  }
+
+  private void updateBank(Glob account) {
+    if (account == null) {
+      accountBank.setText(Lang.get("account.select.bank"));
+    }
+    else {
+      Glob bank = localRepository.findLinkTarget(account, Account.BANK);
+      if (bank == null) {
+        accountBank.setText(Lang.get("account.select.bank"));
+      }
+      else {
+        accountBank.setText(bank.get(Bank.NAME));
+      }
+    }
+  }
+
 }

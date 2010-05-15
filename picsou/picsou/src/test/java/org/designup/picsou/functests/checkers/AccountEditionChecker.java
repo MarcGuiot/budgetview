@@ -3,15 +3,16 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.globsframework.utils.Dates;
 import org.jdesktop.swingx.JXDatePicker;
-import org.uispec4j.ComboBox;
-import org.uispec4j.TextBox;
-import org.uispec4j.Trigger;
+import org.uispec4j.*;
 import org.uispec4j.Window;
+import org.uispec4j.Button;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.interception.WindowInterceptor;
+import org.designup.picsou.gui.bank.BankChooserDialog;
+import org.designup.picsou.utils.Lang;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,20 +36,22 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker selectBank(String bankName) {
-    ComboBox accountBankCombo = dialog.getComboBox("accountBank");
-    accountBankCombo.select(bankName);
+    Window bankChooserWindow = WindowInterceptor.getModalDialog(dialog.getButton("accountBank").triggerClick());
+    BankChooserChecker chooserChecker = new BankChooserChecker(bankChooserWindow);
+    chooserChecker.selectBank(bankName);
+    chooserChecker.validate();
     return this;
   }
 
   public AccountEditionChecker checkNoBankSelected() {
-    ComboBox accountBankCombo = dialog.getComboBox("accountBank");
-    assertThat(accountBankCombo.selectionEquals(null));
+    Button accountBankCombo = dialog.getButton("accountBank");
+    assertThat(accountBankCombo.textEquals(Lang.get("account.select.bank")));
     return this;
   }
 
   public AccountEditionChecker checkSelectedBank(String name) {
-    ComboBox accountBankCombo = dialog.getComboBox("accountBank");
-    assertThat(accountBankCombo.selectionEquals(name));
+    Button accountBankCombo = dialog.getButton("accountBank");
+    assertThat(accountBankCombo.textEquals(name));
     return this;
   }
 

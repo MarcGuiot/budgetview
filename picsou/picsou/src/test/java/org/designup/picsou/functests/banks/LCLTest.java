@@ -2,6 +2,8 @@ package org.designup.picsou.functests.banks;
 
 import org.designup.picsou.model.TransactionType;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class LCLTest extends SpecificBankTestCase {
   public void testOFC() throws Exception {
     operations.importOfxFile(getFile("lcl_money.ofc"), 0.);
@@ -47,7 +49,7 @@ public class LCLTest extends SpecificBankTestCase {
     checkContent();
   }
 
-  private void checkContent() {
+  private void checkContent() throws Exception {
     timeline.selectAll();
     views.selectData();
     transactions.getTable().getHeader().click(1);
