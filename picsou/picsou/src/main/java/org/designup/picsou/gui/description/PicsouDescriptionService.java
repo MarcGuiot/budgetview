@@ -71,6 +71,9 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
     if (globType.equals(Day.TYPE)) {
       return new DayGlobStringifier();
     }
+    if (globType.equals(AccountType.TYPE)){
+      return new BundleBasedStringifier(AccountType.NAME, "account.type.");
+    }
     if (globType.equals(Month.TYPE)) {
       return new AbstractGlobStringifier() {
         public String toString(Glob glob, GlobRepository repository) {

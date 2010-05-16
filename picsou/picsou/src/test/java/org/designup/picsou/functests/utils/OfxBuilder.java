@@ -15,6 +15,7 @@ import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -160,17 +161,27 @@ public class OfxBuilder {
     ImportChecker importChecker = operations.openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
-    importChecker.openChooseAccount()
+    importChecker.checkNoMessageSelectAnAccountType()
+      .openChooseAccount()      
+      .validate();
+    importChecker.openAccountType()
+      .selectMain()
       .validate();
     importChecker.completeImport();
   }
 
   public void load(int importedTransactionCount, int autocategorizedTransactionCount) {
     save();
-    operations.openImportDialog()
+    ImportChecker importChecker = operations.openImportDialog()
       .setFilePath(fileName)
-      .acceptFile()
-      .completeImport(importedTransactionCount, autocategorizedTransactionCount);
+      .acceptFile();
+    if (importChecker.hasAccountType()){
+      importChecker
+        .openAccountType()
+        .selectMain()
+        .validate();
+    }
+    importChecker.completeImport(importedTransactionCount, autocategorizedTransactionCount);
   }
 
   public void loadAndGotoCategorize(int importedTransactionCount, int autocategorizedTransactionCount) {
@@ -190,6 +201,12 @@ public class OfxBuilder {
       .openCardTypeChooser()
       .selectDeferredCard(accountName, day)
       .validate();
+    if (importChecker.hasAccountType()){
+    importChecker
+      .openAccountType()
+      .selectMain()
+      .validate();
+    }
     importChecker
       .completeImport();
   }

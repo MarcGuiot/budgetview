@@ -152,7 +152,7 @@ public class ImportController {
                                          autoCategorizationFunctor.getTransactionCount());
         openRequestManager.popCallback();
         localRepository.commitChanges(true);
-        importDialog.showLastImportedMonthAndClose(months);
+        importDialog.showLastImportedMonthAndClose(importSession.getImportedOperationsCount() != 0, months);
         return true;
       }
       catch (Exception e) {

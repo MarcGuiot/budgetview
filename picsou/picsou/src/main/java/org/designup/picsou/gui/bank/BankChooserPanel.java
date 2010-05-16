@@ -17,10 +17,11 @@ public class BankChooserPanel {
   private JTextField bankEditor;
   private JPanel panel;
   private SelectionService selectionService;
+  private GlobsPanelBuilder builder;
 
   public BankChooserPanel(GlobRepository repository, Directory directory) {
     selectionService = directory.get(SelectionService.class);
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/bank/bankChooserPanel.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/bank/bankChooserPanel.splits",
                                                       repository, directory);
     bankEditor = new JTextField();
     builder.add("bankEditor", bankEditor);
@@ -32,6 +33,10 @@ public class BankChooserPanel {
 
   public JPanel getPanel() {
     return panel;
+  }
+
+  public void dispose() {
+    builder.dispose();
   }
 
   private class OnKeyActionListener implements GlobMatcher, DocumentListener {

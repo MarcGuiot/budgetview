@@ -35,6 +35,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkFilePath(path)
       .checkNoErrorMessage()
       .acceptFile()
+      .openAccountType()
+      .selectMain()
+      .validate()
       .checkFileContent(new Object[][]{
         {"10/01/2006", "Menu K", "-1.10"}
       })
@@ -79,6 +82,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkFileContent(new Object[][]{
         {"10/01/2006", "Menu K", "-1.10"}
       })
+      .openAccountType().selectMain().validate()
       .doImport()
       .checkFileContent(new Object[][]{
         {"20/02/2006", "Menu K", "-2.20"}
@@ -104,6 +108,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .browseAndSelect(path)
       .acceptFile()
+      .openAccountType().selectMain().validate()
       .completeImport();
 
     views.selectData();
@@ -386,6 +391,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .selectDeferredCard("Card n. 1111-2222-3333-4444", 31)
       .validate();
 
+    importDialog.openAccountType()
+      .selectMain("Account n. 12345678a", "Account n. 12345678b", "Account n. 87654321").validate();
+
     importDialog.completeImport();
 
     String secondFileName = OfxBuilder.init(this)
@@ -396,6 +404,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .setFilePath(secondFileName)
       .acceptFile()
+      .openAccountType().selectMain().validate()
       .completeImport();
 
     views.selectData();
@@ -502,6 +511,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkDirectory(System.getProperty("user.home"))
       .browseAndSelect(path1)
       .acceptFile()
+      .openAccountType().selectMain().validate()
       .completeImport();
 
     operations.openImportDialog()
@@ -640,6 +650,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkSiteAccess("http://www.bnpparibas.net")
       .setFilePath(path1)
       .acceptFile()
+      .openAccountType().selectMain().validate()
       .completeImport();
 
     ImportChecker importDialog = operations.openImportDialog()
@@ -707,6 +718,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkMessageEmptyFile()
       .setFilePath(notEmpty)
       .acceptFile()
+      .openAccountType().selectMain().validate()
       .completeImport();
     views.selectData();
     transactions.initContent()
@@ -734,6 +746,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setFilePath(newFileName.getPath())
       .acceptFile()
       .checkNoErrorMessage()
+      .openAccountType().selectMain().validate()
       .doImport();
     views.selectData();
     transactions.initContent()
@@ -769,6 +782,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setFilePath(fileName + ";" + "/tmp")
       .acceptFile()
       .checkNoErrorMessage()
+      .openAccountType().selectMain().validate()
       .doImport();
     views.selectData();
     transactions.initContent()

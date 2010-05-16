@@ -60,7 +60,7 @@ public class ImportSession {
 
   public List<String> loadFile(File file) throws IOException, TruncatedFile, NoOperations {
     localRepository.reset(GlobList.EMPTY, Transaction.TYPE, ImportedTransaction.TYPE, Day.TYPE, CurrentMonth.TYPE,
-                          DeferredCardDate.TYPE, DeferredCardPeriod.TYPE, AccountCardType.TYPE);
+                          DeferredCardDate.TYPE, DeferredCardPeriod.TYPE, AccountCardType.TYPE, AccountType.TYPE);
     GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Day.TYPE, DeferredCardDate.TYPE,
                         DeferredCardPeriod.TYPE, AccountCardType.TYPE, CurrentMonth.TYPE};
     localRepository.reset(referenceRepository.getAll(types), types);
@@ -234,10 +234,6 @@ public class ImportSession {
 
   public void discard() {
     importChangeSetAggregator.dispose();
-  }
-
-  public Glob createDefaultAccount() {
-    return localRepository.create(Account.TYPE, value(Account.NAME, Lang.get("account.default.current.name")));
   }
 
   public Key createImport(TypedInputStream file, GlobList createdTransactions, GlobRepository targetRepository) {

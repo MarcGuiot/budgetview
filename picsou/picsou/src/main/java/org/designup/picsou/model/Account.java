@@ -68,8 +68,8 @@ public class Account {
   public static LinkField CARD_TYPE;
 
   @Target(AccountType.class)
-  @DefaultInteger(1)
-  @Required
+//  @DefaultInteger(1)
+//  @Required
   public static LinkField ACCOUNT_TYPE;
 
   @Target(AccountUpdateMode.class)
@@ -103,9 +103,11 @@ public class Account {
                       value(IS_IMPORTED_ACCOUNT, true));
     repository.create(TYPE,
                       value(ID, SAVINGS_SUMMARY_ACCOUNT_ID),
+                      value(ACCOUNT_TYPE, AccountType.SAVINGS.getId()),
                       value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
     repository.create(TYPE,
                       value(ID, ALL_SUMMARY_ACCOUNT_ID),
+//                      value(ACCOUNT_TYPE, AccountType.MAIN.getId()),
                       value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
   }
 

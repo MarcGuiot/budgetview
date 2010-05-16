@@ -297,6 +297,7 @@ public class OfxImporter implements AccountFileImporter {
                                          value(Account.BANK, bankId),
                                          value(Account.BANK_ENTITY_LABEL, bankEntityLabel),
                                          value(Account.BANK_ENTITY, bankEntityId),
+                                         value(Account.ACCOUNT_TYPE, isCreditCard ? AccountType.MAIN.getId() : null),
                                          value(Account.CARD_TYPE, isCreditCard ? AccountCardType.UNDEFINED.getId()
                                                                   : AccountCardType.NOT_A_CARD.getId()),
                                          value(Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId()));

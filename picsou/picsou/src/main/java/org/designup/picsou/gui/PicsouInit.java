@@ -257,7 +257,9 @@ public class PicsouInit {
                               value(Account.IS_IMPORTED_ACCOUNT, true));
       repository.findOrCreate(Account.SAVINGS_SUMMARY_KEY,
                               value(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()));
-      repository.findOrCreate(Account.ALL_SUMMARY_KEY);
+      repository.findOrCreate(Account.ALL_SUMMARY_KEY,
+                              value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId())
+                              );
 
       DefaultSeriesFactory.run(repository);
     }

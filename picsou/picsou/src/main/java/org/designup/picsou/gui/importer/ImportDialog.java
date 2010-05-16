@@ -4,23 +4,20 @@ import com.jidesoft.swing.AutoResizingTextArea;
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
 import org.designup.picsou.gui.accounts.NewAccountAction;
 import org.designup.picsou.gui.accounts.utils.Day;
+import org.designup.picsou.gui.bank.BankChooserPanel;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.gui.importer.additionalactions.AccountEditionAction;
-import org.designup.picsou.gui.importer.additionalactions.BankEntityEditionAction;
-import org.designup.picsou.gui.importer.additionalactions.CardTypeAction;
-import org.designup.picsou.gui.importer.additionalactions.ChooseOrCreateAccount;
+import org.designup.picsou.gui.importer.additionalactions.*;
 import org.designup.picsou.gui.importer.edition.BrowseFilesAction;
 import org.designup.picsou.gui.importer.edition.DateFormatSelectionPanel;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionDateRenderer;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionsTable;
 import org.designup.picsou.gui.importer.utils.OpenBankSiteHelpAction;
 import org.designup.picsou.gui.importer.utils.OpenBankUrlAction;
-import org.designup.picsou.gui.bank.BankChooserPanel;
 import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -256,6 +253,7 @@ public class ImportDialog {
   private void loadAdditionalImportActions() {
     additionalImportActions.addAll(Arrays.asList(
       new ChooseOrCreateAccount(dialog, sessionRepository, sessionDirectory),
+      new AccountTypeAction(dialog, sessionRepository, sessionDirectory),
       new BankEntityEditionAction(dialog, sessionRepository, sessionDirectory),
       new AccountEditionAction(dialog, sessionRepository, sessionDirectory),
       new CardTypeAction(dialog, sessionRepository, sessionDirectory)));
@@ -309,7 +307,7 @@ public class ImportDialog {
   }
 
 
-  public void acceptFiles(){
+  public void acceptFiles() {
     if (!initialFileAccepted()) {
       return;
     }
@@ -402,14 +400,16 @@ public class ImportDialog {
     fileNameLabel.setText(absolutePath);
   }
 
-  public void showLastImportedMonthAndClose(Set<Integer> months) {
+  public void showLastImportedMonthAndClose(boolean hasImportedOperations, Set<Integer> months) {
     GlobList monthsToSelect =
       repository.getAll(Month.TYPE, GlobMatchers.fieldIn(Month.ID, months)).sort(Month.ID);
     if (!monthsToSelect.isEmpty()) {
       SelectionService selectionService = directory.get(SelectionService.class);
       selectionService.select(monthsToSelect.getLast());
     }
-    directory.get(NavigationService.class).gotoCategorization();
+    if (hasImportedOperations) {
+      directory.get(NavigationService.class).gotoCategorization();
+    }
     closeDialog();
   }
 
