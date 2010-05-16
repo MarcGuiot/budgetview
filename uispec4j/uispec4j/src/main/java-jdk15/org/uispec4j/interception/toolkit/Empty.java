@@ -1,6 +1,5 @@
 package org.uispec4j.interception.toolkit;
 
-import sun.awt.CausedFocusEvent;
 import sun.awt.image.SunVolatileImage;
 import sun.java2d.pipe.Region;
 
