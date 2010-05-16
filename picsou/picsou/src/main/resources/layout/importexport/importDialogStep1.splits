@@ -9,36 +9,40 @@
 
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(460,340)">
+  <panel styleClass="dialog" preferredSize="(640,440)">
 
     <column styleClass="innerDialog">
 
       <label text="$import.step1.title" name="title" styleClass="title"/>
 
-      <htmlEditorPane text="$import.step1.select.file" marginTop="15"/>
+      <column marginTop="20">
 
-      <row margin="5" defaultAnchor="center">
-        <textField ref="fileField" marginRight="10" anchor="center" weightX="100"/>
-        <button action="browseFiles" anchor="west"/>
-      </row>
+        <textArea styleClass="multiLineLabel" text="$import.step1.bank.message" marginTop="10"/>
+        <column margin="5">
+          <panel ref="bankChooser" weightX="100" weightY="50" anchor="center" minimumSize="(50,130)" marginBottom="10"/>
+          <!--<comboBox ref="banks" marginRight="10" anchor="center" weightX="100" marginBottom="10"/>-->
+          <button action="openSiteHelp" styleClass="bankLink" marginBottom="5"/>
+          <button action="openUrl" styleClass="bankLink" />
+        </column>
 
-      <panel opaque="false" marginTop="0">
-        <htmlEditorPane ref="importMessage" styleClass="errorMessage" hyperlinkListener="hyperlinkHandler"
-                        border="empty(0,0,10,0)"/>
-      </panel>
+        <htmlEditorPane text="$import.step1.format.advice" marginTop="10" font="-,plain,11"
+                        styleClass="multiLineLabel" hyperlinkListener="hyperlinkHandler"/>
+
+      </column>
 
       <column styleClass="separator" marginTop="20">
 
-        <textArea styleClass="multiLineLabel" text="$import.step1.bank.message" font="-,plain,11" marginTop="10"/>
-        <column margin="5">
-          <comboBox ref="banks" marginRight="10" anchor="center" weightX="100" marginBottom="10"/>
-          <button action="openSiteHelp" styleClass="bankLink"/>
-          <button action="openUrl" styleClass="bankLink"/>
-        </column>
+        <htmlEditorPane text="$import.step1.select.file" marginTop="15"/>
 
-        <htmlEditorPane text="$import.step1.format.advice" marginTop="15" font="-,plain,11"
-                        styleClass="multiLineLabel" hyperlinkListener="hyperlinkHandler"/>
+        <row margin="5" defaultAnchor="center">
+          <textField ref="fileField" marginRight="10" anchor="center" weightX="100"/>
+          <button action="browseFiles" anchor="west"/>
+        </row>
 
+        <panel opaque="false" marginTop="0">
+          <htmlEditorPane ref="importMessage" styleClass="errorMessage" hyperlinkListener="hyperlinkHandler"
+                          border="empty(0,0,10,0)"/>
+        </panel>
       </column>
 
       <filler fill="vertical"/>

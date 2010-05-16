@@ -28,20 +28,19 @@ public class BankEntityEditionDialog {
   }
 
   public void show(Window parent, GlobList accounts) {
+    dialog = PicsouDialog.create(parent, directory);
     LocalGlobRepository localRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(Account.TYPE, Bank.TYPE, BankEntity.TYPE)
       .get();
-    BankEntityEditionPanel panel = new BankEntityEditionPanel(localRepository, directory);
+    BankEntityEditionPanel panel = new BankEntityEditionPanel(dialog, localRepository, directory);
     panel.init(accounts);
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/bankEntityEditionDialog.splits",
                                                       localRepository, directory);
 
     builder.add("editionPanel", panel.getPanel());
-    dialog = PicsouDialog.createWithButtons(parent, directory,
-                                            builder.<JPanel>load(),
-                                            new ValidateAction(localRepository),
-                                            new CancelAction()
-    );
+    dialog.addPanelWithButtons(builder.<JPanel>load(),
+                               new ValidateAction(localRepository),
+                               new CancelAction());
     dialog.pack();
     dialog.showCentered();
     panel.dispose();

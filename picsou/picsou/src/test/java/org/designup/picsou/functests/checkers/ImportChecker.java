@@ -19,13 +19,20 @@ public class ImportChecker {
 
   public static ImportChecker open(Trigger trigger) {
     Window window = WindowInterceptor.getModalDialog(trigger);
-    return new ImportChecker(window);
+    return new ImportChecker(window, true);
   }
 
-  public ImportChecker(Panel dialog) {
+  public static ImportChecker openInStep2(Trigger trigger) {
+    Window window = WindowInterceptor.getModalDialog(trigger);
+    return new ImportChecker(window, false);
+  }
+
+  public ImportChecker(Panel dialog, final boolean step1) {
     this.dialog = dialog;
-    fileField = dialog.getInputTextBox("fileField");
-    importButton = dialog.getButton("Import");
+    if (step1){
+      fileField = dialog.getInputTextBox("fileField");
+      importButton = dialog.getButton("Import");
+    }
   }
 
   private ImportChecker() {
@@ -80,12 +87,13 @@ public class ImportChecker {
   }
 
   public ImportChecker checkContainsBankSites(String... banks) {
-    assertThat(dialog.getComboBox().contains(banks));
+    assertThat(dialog.getListBox().contains(banks));
     return this;
   }
 
   public ImportChecker selectBankSite(String bank) {
-    dialog.getComboBox().select(bank);
+    BankChooserChecker checker = new BankChooserChecker(dialog);
+    checker.selectBank(bank);
     return this;
   }
 
@@ -105,7 +113,7 @@ public class ImportChecker {
   }
 
   public ImportChecker checkSelectedBankSite(String bank) {
-    assertThat(dialog.getComboBox().selectionEquals(bank));
+//    assertThat(dialog.getComboBox().selectionEquals(bank));
     return this;
   }
 
@@ -157,6 +165,11 @@ public class ImportChecker {
 
   public void completeImportNone(int loadTransaction) {
     validate(loadTransaction, 0, 0, dialog, "import.ok");
+    UISpecAssert.assertFalse(dialog.isVisible());
+  }
+
+  public void skipAndComplete(){
+    validate(-1, -1, -1, dialog, "import.skip.file");
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
@@ -295,7 +308,8 @@ public class ImportChecker {
   public ImportChecker defineAccount(String bank, String accountName, String number) {
     AccountEditionChecker accountEditionChecker =
       AccountEditionChecker.open(dialog.getButton("Create an account").triggerClick());
-    accountEditionChecker.selectBank(bank)
+    accountEditionChecker
+      .selectBank(bank)
       .checkAccountName("Main account")
       .setAccountName(accountName)
       .setAccountNumber(number);

@@ -8,7 +8,7 @@
         <label text="$import.select.entity.bank" styleClass="header"/>
         <row>
           <textArea ref="accounts" styleClass="multiLineLabel" marginLeft="30" marginRight="10"/>
-          <comboBox ref="banksCombo" anchor="north" marginRight="30"/>
+          <button ref="banksChooser" anchor="north" marginRight="30"/>
         </row>
       </column>
     </repeat>

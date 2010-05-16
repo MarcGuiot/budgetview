@@ -59,9 +59,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       }
     });
 
-    ImportChecker importer = new ImportChecker(importDialog);
-    importer.checkSelectedFiles(files);
-    importer.acceptFile();
+    ImportChecker importer = new ImportChecker(importDialog, false);
 
     String step2File = OfxBuilder.init(this)
       .addTransaction("2000/01/04", 1.2, "menu K")
@@ -110,16 +108,16 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       }
     });
 
-    ImportChecker importer = ImportChecker.open(trigger);
-    importer.checkSelectedFiles(initialFile);
+    ImportChecker importer = ImportChecker.openInStep2(trigger);
+//    importer.checkSelectedFiles(initialFile);
 
     String step1File = OfxBuilder.init(this)
       .addTransaction("2000/01/01", 1.2, "mac do")
       .save();
     PicsouApplication.main(step1File);
 
-    importer.checkSelectedFiles(initialFile, step1File);
-    importer.acceptFile();
+//    importer.checkSelectedFiles(initialFile, step1File);
+//    importer.acceptFile();
     String step2File = OfxBuilder.init(this)
       .addTransaction("2000/01/02", 1.2, "quick")
       .save();
@@ -158,9 +156,9 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     });
     Window importDialog = WindowInterceptor.getModalDialog(trigger1);
     trigger1.waitEnd();
-    ImportChecker firstImporter = new ImportChecker(importDialog);
-    firstImporter.checkSelectedFiles(initialFile);
-    firstImporter.close();
+    ImportChecker firstImporter = new ImportChecker(importDialog, false);
+//    firstImporter.checkSelectedFiles(initialFile);
+    firstImporter.skipAndComplete();
     assertFalse(importDialog.isVisible());
 
     WaitEndTriggerDecorator trigger2 = new WaitEndTriggerDecorator(new Trigger() {
@@ -170,9 +168,9 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     });
     importDialog = WindowInterceptor.getModalDialog(trigger2);
     trigger2.waitEnd();
-    ImportChecker importer = new ImportChecker(importDialog);
-    importer.checkSelectedFiles(initialFile);
-    importer.acceptFile();
+    ImportChecker importer = new ImportChecker(importDialog, false);
+//    importer.checkSelectedFiles(initialFile);
+//    importer.acceptFile();
     importer.completeImport();
     getTransactionView(window).initContent()
       .add("03/01/2000", TransactionType.VIREMENT, "menu K", "", 1.20)
@@ -219,10 +217,11 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     newApplication.start();
     Thread.sleep(1000);
     newApplication.checkNotOpen();
-    accountPosition.setAmountAndEnterInImport(0.0);
+    accountPosition.setAmount(0.).validateFromImport();
     Window newImportDialog = newApplication.getImportDialog();
     assertNotNull(newImportDialog);
-    new ImportChecker(newImportDialog).close();
+    new ImportChecker(newImportDialog, false)
+      .skipAndComplete();
     picsouApplication.shutdown();
     newApplication.clear();
   }
@@ -257,7 +256,9 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     Window dialog = newApplication.getImportDialog();
     assertNotNull(dialog);
 
-    new ImportChecker(dialog).checkSelectedFiles(initialFile).close();
+    new ImportChecker(dialog, false)
+//      .checkSelectedFiles(initialFile)
+      .skipAndComplete();
     picsouApplication.shutdown();
     newApplication.clear();
   }

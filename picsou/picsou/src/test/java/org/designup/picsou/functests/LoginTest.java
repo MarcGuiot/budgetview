@@ -435,7 +435,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     WindowInterceptor.init(trigger)
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          ImportChecker importChecker = new ImportChecker(window);
+          ImportChecker importChecker = new ImportChecker(window, true);
 
           importChecker.setFilePath(path)
             .doImport();

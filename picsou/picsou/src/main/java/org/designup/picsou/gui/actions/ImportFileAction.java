@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.actions;
 
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.importer.ImportDialog;
 import org.designup.picsou.gui.license.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
-import org.designup.picsou.gui.importer.ImportDialog;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;
@@ -28,7 +28,7 @@ public class ImportFileAction extends AbstractAction {
     return new ImportFileAction(text, repository, directory, null, true);
   }
 
-  static public void registerToOpenRequestManager(String text, final GlobRepository repository, final Directory directory){
+  static public void registerToOpenRequestManager(String text, final GlobRepository repository, final Directory directory) {
     new ImportFileAction(text, repository, directory, false);
   }
 
@@ -82,9 +82,12 @@ public class ImportFileAction extends AbstractAction {
       this.repository = repository;
       if (!LicenseService.trialExpired(repository) && !User.isDemoUser(repository.get(User.KEY))) {
         dialog = new ImportDialog(Lang.get("import.step1.close"), files, defaultAccount,
-                                directory.get(JFrame.class),
-                                repository, directory,
-                                usePreferedPath);
+                                  directory.get(JFrame.class),
+                                  repository, directory,
+                                  usePreferedPath);
+        if (!files.isEmpty()) {
+          dialog.acceptFiles();
+        }
       }
     }
 
@@ -95,7 +98,7 @@ public class ImportFileAction extends AbstractAction {
       else {
         if (User.isDemoUser(repository.get(User.KEY))) {
           MessageDialog dialog = MessageDialog.createMessageDialog("demo.import.title", "demo.import.content", directory.get(JFrame.class),
-                                                   directory);
+                                                                   directory);
           dialog.show();
         }
         else {

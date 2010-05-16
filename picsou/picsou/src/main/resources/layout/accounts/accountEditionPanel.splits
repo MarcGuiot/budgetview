@@ -20,7 +20,7 @@
       <panel ref="cardTypeEditionPanel" gridPos="(0,4,3,1)"/>
 
       <label text="$account.bank" gridPos="(0,5)" styleClass="formLabel"/>
-      <comboBox ref="accountBank" gridPos="(1,5)"/>
+      <button ref="accountBank" gridPos="(1,5)" styleClass="itemLink" anchor="left"/>
       <label text="*" gridPos="(2,4)" styleClass="formLabel"/>
 
       <label text="$account.number" gridPos="(0,6)" styleClass="formLabel"/>

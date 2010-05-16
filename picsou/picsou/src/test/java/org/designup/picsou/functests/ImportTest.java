@@ -23,6 +23,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .save();
 
     operations.openImportDialog()
+      .checkNoErrorMessage()
       .checkHeaderMessage("Select an OFX or QIF file to import")
       .acceptFile()
       .checkErrorMessage("login.data.file.required")
@@ -348,7 +349,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .cancel();
     importDialog.doImport()
       .checkMessageCreateFirstAccount()
-      .skipFile();
+      .skipAndComplete();
   }
 
   public void testOfxWithUnknownBankEntities() throws Exception {

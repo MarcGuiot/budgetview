@@ -18,7 +18,7 @@
             <label gridPos="(2,0)" styleClass="formLabelMandatorySign"/>
 
             <label text="$account.bank" gridPos="(0,1)" styleClass="formLabel"/>
-            <comboBox ref="accountBank" gridPos="(1,1)"/>
+            <button ref="accountBank" gridPos="(1,1)" styleClass="itemLink" anchor="left"/>
             <label gridPos="(2,1)" styleClass="formLabelMandatorySign"/>
 
             <label text="$form.mandatory.legend" gridPos="(0,2,3,1)" styleClass="formLabelMandatoryLegend"/>
