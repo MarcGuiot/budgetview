@@ -140,7 +140,8 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     PositionChecker position_08 = budgetView.getSummary().openPositionPanel();
-    position_08.checkPresent(0, 0, -275, 0, -275);
+    position_08.checkPresent(0, 0, -275, 0, -275)
+      .close();
 
     views.selectCategorization();
     categorization.showSelectedMonthsOnly();
@@ -153,6 +154,7 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
       .checkIncome(0)
       .checkExpense(-275)
       .checkSavingsOut(-200)
-      .checkPosition(-475);
+      .checkPosition(-475)
+      .close();
   }
 }

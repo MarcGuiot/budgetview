@@ -153,6 +153,9 @@ public class BudgetAreaSeriesView extends View {
     seriesFilter = new GlobMatcher() {
       public boolean matches(Glob periodSeriesStat, GlobRepository repository) {
         Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
+        if (series == null){
+          System.out.println("BudgetAreaSeriesView.matches");
+        }
         ReadOnlyGlobRepository.MultiFieldIndexed seriesBudgetIndex =
           repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID));
         int notActive = 0;

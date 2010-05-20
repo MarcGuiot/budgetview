@@ -80,17 +80,6 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     GlobList seriesStats = seriesStatFunctor.getStats();
     localSelectionService.select(GlobSelectionBuilder.init()
       .add(seriesStats, PeriodSeriesStat.TYPE).get());
-
-    Utils.beginRemove();
-    for (Glob seriesStat : seriesStats) {
-      if (repository.findLinkTarget(seriesStat, PeriodSeriesStat.SERIES) == null) {
-        Log.write("Error : SeriesStat without series ");
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        toolkit.beep();
-        break;
-      }
-    }
-    Utils.endRemove();
   }
 
   private static class PeriodSeriesStatFunctor implements GlobFunctor {

@@ -20,14 +20,20 @@ import java.io.File;
 
 public class DirectAccountDataManagerTest extends TestCase {
   private static final String PATH = "tmp/test_prevayler_direct";
+  private DirectAccountDataManager directAccountDataManager;
 
   protected void setUp() throws Exception {
     super.setUp();
     Files.deleteSubtree(new File(PATH));
   }
 
+  protected void tearDown() throws Exception {
+    super.tearDown();
+    directAccountDataManager.close();
+  }
+
   public void testDeltaOnUserData() throws Exception {
-    DirectAccountDataManager directAccountDataManager = new DirectAccountDataManager(PATH, false);
+    directAccountDataManager = new DirectAccountDataManager(PATH, false);
     Integer userId = 123;
     SerializedOutput initialOutput = SerializedInputOutputFactory.init(new ByteArrayOutputStream());
     directAccountDataManager.getUserData(initialOutput, userId);
@@ -47,7 +53,7 @@ public class DirectAccountDataManagerTest extends TestCase {
   }
 
   public void testTakeSnapshot() throws Exception {
-    DirectAccountDataManager directAccountDataManager = new DirectAccountDataManager(PATH, false);
+    directAccountDataManager = new DirectAccountDataManager(PATH, false);
     directAccountDataManager.setCountFileNotToDelete(1);
     Integer userId = 123;
     SerializedOutput initialOutput = SerializedInputOutputFactory.init(new ByteArrayOutputStream());
@@ -93,11 +99,12 @@ public class DirectAccountDataManagerTest extends TestCase {
     TestUtils.assertSetEquals(new String[]{"0000000000000000004.snapshot", "0000000000000000003.snapshot",
                                            "0000000000000000002.journal"},
                               new File(pathForUser).list());
+    directAccountDataManager.close();
     continueWriting(pathForUser);
   }
 
   public void testTakeSnapshotVersionIfNoJournal() throws Exception {
-    DirectAccountDataManager directAccountDataManager = new DirectAccountDataManager(PATH, false);
+    directAccountDataManager = new DirectAccountDataManager(PATH, false);
     directAccountDataManager.setCountFileNotToDelete(3);
     Integer userId = 123;
     SerializedOutput initialOutput = SerializedInputOutputFactory.init(new ByteArrayOutputStream());
@@ -154,7 +161,7 @@ public class DirectAccountDataManagerTest extends TestCase {
   }
 
   private void continueWriting(String pathForUser) {
-    DirectAccountDataManager directAccountDataManager = new DirectAccountDataManager(PATH, false);
+    directAccountDataManager = new DirectAccountDataManager(PATH, false);
     directAccountDataManager.setCountFileNotToDelete(2);
     Integer userId = 123;
     SerializedOutput initialOutput = SerializedInputOutputFactory.init(new ByteArrayOutputStream());
