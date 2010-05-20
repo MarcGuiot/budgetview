@@ -409,6 +409,9 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
       this.repository.startChangeSet();
       try {
+        for (ChangeSetListener trigger : this.repository.triggers) {
+          trigger.globsReset(repository, changedTypes);
+        }
         for (ChangeSetListener listener : this.repository.listeners) {
           listener.globsReset(this.repository, changedTypes);
         }
