@@ -71,6 +71,10 @@ public class OperationChecker {
       .openCardTypeChooser()
       .selectDeferredCard(cardAccountName, day)
       .validate();
+      importChecker
+      .openAccountType()
+      .selectMain()
+      .validate();
     importChecker.doImport();
   }
 
@@ -152,6 +156,13 @@ public class OperationChecker {
           }
           if (targetAccount != null) {
             importDialog.getComboBox("accountCombo").select(targetAccount);
+          }
+          JButton setAccountType = importDialog.findSwingComponent(JButton.class, "Set accountType");
+          if (setAccountType != null) {
+            ImportChecker.create(importDialog)
+              .openAccountType()
+              .selectMainForAll()
+              .validate();
           }
           final Button okButton = importDialog.getButton(Lang.get("import.ok"));
           for (int i = 0; i < fileNames.length - 2; i++) {

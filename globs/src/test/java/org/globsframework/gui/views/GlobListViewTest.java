@@ -483,6 +483,40 @@ public class GlobListViewTest extends GuiComponentTestCase {
     assertTrue(listBox.selectionIsEmpty());
   }
 
+  public void testSelectionFromJList() throws Exception {
+    GlobRepository repository =
+      checker.parse("<dummyObject id='1' name='name1'/>" +
+                    "<dummyObject id='2' name='name2'/>" +
+                    "<dummyObject id='3' name='name3'/>");
+
+    DummySelectionListener listener = DummySelectionListener.register(directory, TYPE);
+
+    ListBox listBox = createList(repository);
+    assertTrue(listBox.contentEquals("name1", "name2", "name3"));
+    listener.assertEmpty();
+    
+    listBox.selectIndex(0);
+    listener.assertEquals("<log>" +
+                          "<selection types='dummyObject'>" +
+                          "<item key='dummyObject[id=1]'/>" +
+                          "</selection>" +
+                          "</log>");
+
+    listBox.selectIndices(0, 2);
+    listener.assertEquals("<log>" +
+                          "<selection types='dummyObject'>" +
+                          "<item key='dummyObject[id=1]'/>" +
+                          "<item key='dummyObject[id=3]'/>" +
+                          "</selection>" +
+                          "</log>");
+    
+    listBox.clearSelection();
+    listener.assertEquals("<log>" +
+                          "<selection types='dummyObject'>" +
+                          "</selection>" +
+                          "</log>");
+  }
+
   public void testFilteringIsTakenIntoAccountDuringUpdates() throws Exception {
     GlobRepository repository =
       checker.parse("<dummyObject id='1' name='name1'/>" +

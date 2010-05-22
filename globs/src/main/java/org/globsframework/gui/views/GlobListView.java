@@ -14,6 +14,7 @@ import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidState;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -21,16 +22,20 @@ import javax.swing.event.ListSelectionListener;
 import java.util.*;
 
 public class GlobListView extends AbstractGlobComponentHolder<GlobListView> implements GlobSelectionListener {
+  private JList jList;
+  private Model model;
+  private String name;
+
+  private GlobStringifier stringifier;
   private ListCellRenderer renderer;
   private Comparator<Glob> comparator;
+
   private GlobSelectionHandler selectionHandler = new DefaultGlobSelectionHandler();
-  private Model model;
-  private JList jList;
+
   private boolean updateWithIncomingSelections = true;
   private boolean showEmptyOption = false;
   private boolean selectionEnabled = true;
   private boolean singleSelectionMode = false;
-  private String name;
 
   public static GlobListView init(GlobType type, GlobRepository repository, Directory directory) {
     return new GlobListView(type, repository, directory);
@@ -38,6 +43,7 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
 
   public GlobListView(GlobType type, GlobRepository repository, Directory directory) {
     super(type, repository, directory);
+    stringifier = descriptionService.getStringifier(type);
   }
 
   public GlobListView setComparator(Comparator<Glob> comparator) {
@@ -48,6 +54,10 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
   public GlobListView setSelectionHandler(GlobSelectionHandler selectionHandler) {
     this.selectionHandler = selectionHandler;
     return this;
+  }
+
+  GlobType getType() {
+    return type;
   }
 
   public void selectionUpdated(GlobSelection selection) {
@@ -82,6 +92,13 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
     return model.getSize();
   }
 
+  public String toString(Glob item) {
+    if (stringifier == null) {
+      throw new InvalidState("No stringifier defined");
+    }
+    return stringifier.toString(item, repository);
+  }
+
   public interface GlobSelectionHandler {
     void processSelection(GlobList selection);
   }
@@ -97,7 +114,10 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
   }
 
   public GlobListView setRenderer(GlobStringifier stringifier) {
-    return setRenderer(getDefaultRenderer(stringifier), stringifier.getComparator(repository));
+    this.stringifier = stringifier;
+    this.renderer = getDefaultRenderer(stringifier);
+    this.comparator = stringifier.getComparator(repository);
+    return this;
   }
 
   public GlobListView setRenderer(ListCellRenderer renderer, Comparator<Glob> comparator) {

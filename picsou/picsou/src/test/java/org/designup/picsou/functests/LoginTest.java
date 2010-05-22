@@ -59,9 +59,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
 
   private void closeWindow() {
     if (window != null) {
-      window.getAwtComponent().setVisible(false);
-      window.dispose();
-      picsouApplication.shutdown();
+      new OperationChecker(window).exit();
     }
   }
 
@@ -334,7 +332,6 @@ public class LoginTest extends StartUpFunctionalTestCase {
     operations.importOfxFile(path);
     operations.logout();
     login.clickAutoLogin();
-    operations.logout();
     closeWindow();
     window = getMainWindow();
     getTransactionView()
@@ -399,7 +396,6 @@ public class LoginTest extends StartUpFunctionalTestCase {
     operations = new OperationChecker(window);
     operations.logout();
     login.logNewUser("Alfred", "Alfred");
-    operations.logout();
     openNewLoginWindow();
     login.clickAutoLogin();
   }

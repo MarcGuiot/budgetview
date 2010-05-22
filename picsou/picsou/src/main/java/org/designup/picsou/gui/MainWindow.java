@@ -94,6 +94,10 @@ public class MainWindow implements WindowManager {
     return frame;
   }
 
+  public void shutdown(){
+    thread.run();
+  }
+
   public void show() {
     loginPanel = new LoginPanel(this, directory);
     picsouInit = PicsouInit.init(serverAccess, directory, registered);
@@ -385,7 +389,7 @@ public class MainWindow implements WindowManager {
       this.serverAccess = serverAccess;
     }
 
-    public void run() {
+    synchronized public void run() {
       try {
         if (serverAccess != null) {
           serverAccess.takeSnapshot();

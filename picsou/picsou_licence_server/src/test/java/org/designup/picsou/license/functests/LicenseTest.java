@@ -227,6 +227,7 @@ public class LicenseTest extends LicenseTestCase {
     checkMessage("31 days left for trying CashPilot");
     checkMessage("Activation code not valid. You can ");
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
+    exit();
     startApplication();
     login.logExistingUser("user", "passw@rd", true);
     checkLicenseExpired();

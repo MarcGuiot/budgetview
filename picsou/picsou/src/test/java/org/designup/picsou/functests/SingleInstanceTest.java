@@ -66,7 +66,9 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .save();
     PicsouApplication.main(step2File);
 
-    importer.doImport();
+    importer
+      .openAccountType().selectMain().validate()
+      .doImport();
     importer.doImport();
     importer.doImport();
     importer.completeImport();
@@ -122,7 +124,9 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .addTransaction("2000/01/02", 1.2, "quick")
       .save();
     PicsouApplication.main(step2File);
-    importer.doImport();
+    importer
+      .openAccountType().selectMain().validate()
+      .doImport();
     importer.doImport();
     importer.completeImport();
 
@@ -171,7 +175,9 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     ImportChecker importer = new ImportChecker(importDialog, false);
 //    importer.checkSelectedFiles(initialFile);
 //    importer.acceptFile();
-    importer.completeImport();
+    importer
+      .openAccountType().selectMain().validate()
+      .completeImport();
     getTransactionView(window).initContent()
       .add("03/01/2000", TransactionType.VIREMENT, "menu K", "", 1.20)
       .check();

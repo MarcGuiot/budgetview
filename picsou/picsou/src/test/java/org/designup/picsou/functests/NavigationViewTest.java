@@ -16,7 +16,9 @@ public class NavigationViewTest extends LoggedInFunctionalTestCase {
     String path = OfxBuilder.init(this)
       .addTransaction("2008/07/29", -19.00, "DVD")
       .save();
-    actions.openImport().selectFiles(path).doImport().completeImport();
+    actions.openImport().selectFiles(path).doImport()
+      .openAccountType().selectMain().validate()
+      .completeImport();
 
     views.selectHome();
     navigation.gotoCategorization();
@@ -48,6 +50,7 @@ public class NavigationViewTest extends LoggedInFunctionalTestCase {
       .selectFiles(file)
       .acceptFile()
       .selectOfxAccountBank("Autre")
+      .openAccountType().selectMain().validate()
       .doImport();
 
     timeline.checkSelection("2008/08");

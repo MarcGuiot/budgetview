@@ -3,6 +3,7 @@ package org.designup.picsou.functests;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.MessageFileDialogChecker;
 import org.designup.picsou.functests.checkers.PasswordDialogChecker;
+import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
@@ -337,18 +338,23 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("Salaire", "Salaire");
     categorization.setNewVariable("Loyer", "Loyer");
     String path = operations.backup(this);
-    
-    operations.deleteUser(password);
-    mainWindow.dispose();
-    setCurrentDate("2009/02/03");
-    resetWindow();
 
+    operations.deleteUser(password);
+    new LoginChecker(mainWindow).logNewUser("aaaa", "aaaa");
+    operations.exit();
+    setCurrentDate("2009/02/03");
+    mainWindow = null;
+    restartApplication("aaaa", "aaaa");
     changeUser("testSeriesEvolutionAfterRestore", "testSeriesEvolutionAfterRestore");
     operations.restoreWithNewPassword(path, "password");
 
     views.selectEvolution();
     seriesEvolution.checkRow("Salaire", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00");
     operations.checkOk();
+  }
+
+  public void testRestore() throws Exception {
+
   }
 
 }

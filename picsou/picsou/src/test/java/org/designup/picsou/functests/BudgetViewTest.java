@@ -127,7 +127,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("12/07/2008", TransactionType.PRELEVEMENT, "Virt Compte Epargne", "", -25.00)
       .check();
 
-
     views.selectCategorization();
     categorization.setNewSavings("Virt Compte Epargne", "Epargne", "Main accounts", "Livret");
 

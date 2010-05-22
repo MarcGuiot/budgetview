@@ -4,6 +4,7 @@ import org.designup.picsou.functests.checkers.HelpChecker;
 import org.designup.picsou.gui.PicsouGuiTestCase;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.TextLocator;
+import org.globsframework.gui.splits.exceptions.IconNotFound;
 import org.globsframework.gui.splits.utils.DummyImageLocator;
 import org.globsframework.gui.splits.utils.DummyTextLocator;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -17,7 +18,11 @@ public class HelpDialogTest extends PicsouGuiTestCase {
   protected void setUp() throws Exception {
     super.setUp();
     directory.add(new JFrame());
-    directory.add(ImageLocator.class, new DummyImageLocator());
+    directory.add(ImageLocator.class, new DummyImageLocator(){
+      public ImageIcon get(String name) throws IconNotFound {
+        return new ImageIcon(name);
+      }
+    });
     directory.add(TextLocator.class, new DummyTextLocator());
   }
 

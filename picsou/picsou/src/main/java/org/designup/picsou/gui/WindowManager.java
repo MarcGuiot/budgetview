@@ -12,4 +12,6 @@ public interface WindowManager {
   void logout();
 
   void logOutAndDeleteUser(String name, char[] passwd);
+
+  void shutdown();
 }

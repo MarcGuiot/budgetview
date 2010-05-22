@@ -78,6 +78,9 @@ public class MainWindowLauncher {
 
       public void logOutAndDeleteUser(String name, char[] passwd) {
       }
+
+      public void shutdown() {
+      }
     })
       .show();
 

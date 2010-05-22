@@ -320,6 +320,10 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .selectBank("Autre")
       .validate();
     importChecker
+      .openAccountType()
+      .selectMain()
+      .validate();
+    importChecker
       .checkNoErrorMessage()
       .completeImport();
 
@@ -337,6 +341,9 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .setFilePath(secondAccountOnSameBank)
       .acceptFile()
+      .openAccountType()
+      .selectMain()
+      .validate()
       .completeImport();
 
     views.selectData();
@@ -387,6 +394,10 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .checkMessageSelectABank()
       .openEntityEditionChecker()
       .selectBank("Autre")
+      .validate();
+    importChecker.checkMessageSelectAnAccountType()
+      .openAccountType()
+      .selectMain()
       .validate();
     importChecker
       .checkSelectACardTypeMessage()
@@ -477,9 +488,10 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/06", -30.00, "Virement 222")
       .save();
 
-    AccountChooserChecker chooserChecker = operations.openImportDialog()
+    ImportChecker importChecker = operations.openImportDialog()
       .setFilePath(ofxFile)
-      .acceptFile()
+      .acceptFile();
+    AccountChooserChecker chooserChecker = importChecker
       .openChooseAccount();
     chooserChecker
       .associate("Account n. 111", "First account")
@@ -488,6 +500,9 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     chooserChecker
       .associate("Account n. 111", "Create imported account")
       .checkTargetContent("Account n. 222", "Create imported account", "First account")
+      .validate()
+      .openAccountType()
+      .selectMain("Account n. 111", "Account n. 222")
       .validate()
       .completeImport();
 

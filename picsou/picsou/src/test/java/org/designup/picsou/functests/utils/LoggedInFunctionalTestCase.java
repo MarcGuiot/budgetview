@@ -96,7 +96,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
       LicenseActivationChecker.enterLicense(mainWindow, "admin", "zz");
       operations.openPreferences().setFutureMonthsCount(0).validate();
     }
-    
+
     selectInitialView();
   }
 
@@ -207,7 +207,9 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected void restartApplication(String user, String passwd) throws Exception {
-    mainWindow.dispose();
+    if (mainWindow != null) {
+      mainWindow.dispose();
+    }
     mainWindow = null;
     this.user = user;
     this.password = passwd;
@@ -258,12 +260,13 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected void changeUser(String user, String password) {
     if (mainWindow != null) {
       operations.deleteUser(this.password);
-      mainWindow.dispose();
+    }
+    else {
+      mainWindow = getMainWindow();
+      initCheckers();
     }
     this.user = user;
     this.password = password;
-    mainWindow = null;
-    mainWindow = getMainWindow();
     LoginChecker loginChecker = new LoginChecker(mainWindow);
     loginChecker.logNewUser(user, password);
     initCheckers();

@@ -57,6 +57,9 @@ public class BankChooserDialog implements GlobSelectionListener {
     dialog.pack();
     dialog.showCentered();
 
+    bankChooserPanel.dispose();
+    builder.dispose();
+
     if (selectedBank != null) {
       return selectedBank.get(Bank.ID);
     }

@@ -138,7 +138,7 @@ public class MainPanel {
     checkRepository = new DataCheckerAction(repository, directory);
     throwException = new ThrowExceptionAction();
     throwInRepoException = new ThrowInRepoExceptionAction(repository);
-    exitAction = new ExitAction(directory);
+    exitAction = new ExitAction(windowManager, directory);
     logoutAction = new LogoutAction(logoutService);
     deleteUserAction = new DeleteUserAction(this, repository, directory);
 

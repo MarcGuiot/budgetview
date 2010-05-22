@@ -44,6 +44,7 @@ public class BankEntityEditionDialog {
     dialog.pack();
     dialog.showCentered();
     panel.dispose();
+    builder.dispose();
   }
 
   private class ValidateAction extends AbstractAction {

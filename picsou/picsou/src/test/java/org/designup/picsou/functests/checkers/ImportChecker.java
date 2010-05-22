@@ -10,6 +10,7 @@ import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
+import javax.swing.*;
 import java.io.File;
 
 public class ImportChecker {
@@ -370,6 +371,31 @@ public class ImportChecker {
   public ImportChecker checkMessageEmptyFile() {
     dialog.getTextBox("No operations in file");
     return this;
+  }
+
+  public ImportChecker checkMessageSelectAnAccountType() {
+    dialog.getTextBox("You must choose the account type");
+    return this;
+  }
+
+  public ImportChecker checkNoMessageSelectAnAccountType() {
+    try {
+      dialog.getTextBox("You must choose the account type");
+      fail("message is present");
+    }
+    catch (ItemNotFoundException e) {
+    }
+    return this;
+  }
+
+
+  public AccountTypeChecker openAccountType() {
+    Window window = WindowInterceptor.getModalDialog(dialog.getButton("Set accountType").triggerClick());
+    return new AccountTypeChecker(this, window);
+  }
+
+  public boolean hasAccountType() {
+    return dialog.findSwingComponent(JButton.class, "Set accountType") != null;
   }
 
 
