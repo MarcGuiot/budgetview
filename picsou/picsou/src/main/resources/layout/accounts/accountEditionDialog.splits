@@ -5,7 +5,7 @@
     <style selector="datePicker" fill="horizontal" weightX="100" weightY="0"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(700,330)">
+  <panel styleClass="dialog" preferredSize="(740,330)">
     <column styleClass="innerDialog">
 
       <label ref="title" styleClass="title"/>
@@ -18,7 +18,7 @@
             <label gridPos="(2,0)" styleClass="formLabelMandatorySign"/>
 
             <label text="$account.bank" gridPos="(0,1)" styleClass="formLabel"/>
-            <button ref="accountBank" gridPos="(1,1)" styleClass="itemLink" anchor="left"/>
+            <button ref="accountBank" gridPos="(1,1)" styleClass="itemLinkUnderlined" anchor="left"/>
             <label gridPos="(2,1)" styleClass="formLabelMandatorySign"/>
 
             <label text="$form.mandatory.legend" gridPos="(0,2,3,1)" styleClass="formLabelMandatoryLegend"/>

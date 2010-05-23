@@ -170,6 +170,9 @@
     <style selector="button.itemLink" ui="hyperlinkButtonWithoutUnderline"
            fill="none" anchor="right" horizontalAlignment="right"
            foreground="block.item.link"/>
+    <style selector="button.itemLinkUnderlined" ui="hyperlinkButton"
+           fill="none" anchor="right" horizontalAlignment="right"
+           foreground="block.item.link"/>
     <style selector="button.plannedAmountLink" ui="hyperlinkButtonWithoutUnderline"
            fill="none" anchor="right" horizontalAlignment="right"
            foreground="block.amount.planned.link" font="-,bold,11"/>
