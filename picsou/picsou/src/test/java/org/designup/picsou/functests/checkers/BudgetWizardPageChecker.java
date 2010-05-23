@@ -16,15 +16,8 @@ public class BudgetWizardPageChecker extends WizardPageChecker<BudgetWizardPageC
     this.panel = page.getContent();
   }
 
-  public BudgetWizardBalanceChecker gotoBalance() {
-    return new BudgetWizardBalanceChecker(this);
-  }
-
   public BudgetWizardPositionChecker gotoPosition() {
     return new BudgetWizardPositionChecker(this);
   }
 
-  public BudgetWizardThresholdChecker gotoThreshold() {
-    return new BudgetWizardThresholdChecker(this);
-  }
 }

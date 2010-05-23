@@ -13,12 +13,6 @@ public class LicenseExpirationChecker extends GuiChecker {
     this.window = window;
   }
 
-  public LicenseExpirationChecker(Trigger trigger) {
-    window = WindowInterceptor.getModalDialog(trigger);
-    TextBox box = window.getTextBox("expirationMessage");
-    UISpecAssert.assertFalse(box.textIsEmpty());
-  }
-
   public void close() {
     window.getButton("ok").click();
     UISpecAssert.assertFalse(window.isVisible());
@@ -34,8 +28,4 @@ public class LicenseExpirationChecker extends GuiChecker {
     return this;
   }
 
-  public LicenseExpirationChecker checkMessageMailSent() {
-    window.getTextBox("mailResponse").textEquals("A mail was sent to you");
-    return this;
-  }
 }

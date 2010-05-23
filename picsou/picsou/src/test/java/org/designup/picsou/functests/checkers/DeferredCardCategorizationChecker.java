@@ -34,10 +34,6 @@ public class DeferredCardCategorizationChecker extends SpecialCaseCategorization
     return this;
   }
 
-  public void checkSelectedSeries(String seriesName) {
-    budgetAreaChecker.checkSeriesIsSelected(seriesName);
-  }
-
   public DeferredCardCategorizationChecker selectSeries(String seriesName) {
     budgetAreaChecker.selectSeries(seriesName);
     return this;

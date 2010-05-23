@@ -1,7 +1,8 @@
 package org.designup.picsou.gui.bank;
 
-import org.designup.picsou.gui.components.CancelAction;
+import org.designup.picsou.gui.components.CloseAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -20,21 +21,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-public class BankChooserDialog implements GlobSelectionListener {
+public class BankGuideDialog {
   private Window parent;
   private GlobRepository repository;
   private Directory directory;
   private PicsouDialog dialog;
-  private Glob selectedBank;
-  private BankChooserDialog.ValidateAction validateAction;
 
-  public BankChooserDialog(Window parent, GlobRepository repository, Directory directory) {
+  public BankGuideDialog(Window parent, GlobRepository repository, Directory directory) {
     this.parent = parent;
     this.repository = repository;
     this.directory = directory;
   }
 
-  public Integer show() {
+  public void show() {
     LocalGlobRepository localRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(Bank.TYPE)
       .get();
@@ -42,48 +41,52 @@ public class BankChooserDialog implements GlobSelectionListener {
     Directory localDirectory = new DefaultDirectory(directory);
     SelectionService selectionService = new SelectionService();
     localDirectory.add(SelectionService.class, selectionService);
-    selectionService.addListener(this, Bank.TYPE);
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/bank/bankChooserDialog.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/bank/bankGuideDialog.splits",
                                                       localRepository, localDirectory);
-    BankChooserPanel bankChooserPanel = new BankChooserPanel(localRepository, localDirectory, dialog);
 
-    builder.add("bankChooserPanel", bankChooserPanel.getPanel());
+    BankChooserPanel.registerComponents(builder);
 
-    validateAction = new ValidateAction();
+    builder.add("openHelp", new OpenHelpAction(localDirectory));
+
     dialog = PicsouDialog.create(parent, localDirectory);
-    dialog.addPanelWithButtons(builder.<JPanel>load(), validateAction, new CancelAction(dialog));
+    dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction(dialog));
 
     dialog.pack();
     dialog.showCentered();
-
-    bankChooserPanel.dispose();
-    builder.dispose();
-
-    if (selectedBank != null) {
-      return selectedBank.get(Bank.ID);
-    }
-    return null;
   }
 
-  public void selectionUpdated(GlobSelection selection) {
-    GlobList globList = selection.getAll(Bank.TYPE);
-    if (globList.size() > 1) {
-      selectedBank = null;
-    }
-    else {
-      selectedBank = globList.getFirst();
-    }
-    validateAction.setEnabled(selectedBank != null);
-  }
+  public class OpenHelpAction extends AbstractAction implements GlobSelectionListener {
+    private HelpService helpService;
+    private Glob lastBank;
 
-  private class ValidateAction extends AbstractAction {
-    public ValidateAction() {
-      super(Lang.get("ok"));
+    public OpenHelpAction(Directory localDirectory) {
+      super(Lang.get("bank.guide.button"));
+      setEnabled(false);
+      helpService = localDirectory.get(HelpService.class);
+      localDirectory.get(SelectionService.class).addListener(this, Bank.TYPE);
+    }
+
+    public void selectionUpdated(GlobSelection selection) {
+      GlobList banks = selection.getAll(Bank.TYPE);
+      if (banks.size() == 1) {
+        lastBank = banks.getFirst();
+      }
+      else {
+        lastBank = null;
+      }
+      setEnabled((lastBank != null));
     }
 
     public void actionPerformed(ActionEvent e) {
       dialog.setVisible(false);
+
+      if (helpService.hasBankHelp(lastBank)) {
+        helpService.showBankHelp(lastBank, parent);
+      }
+      else {
+        helpService.show("import", parent);
+      }
     }
   }
 }

@@ -17,24 +17,8 @@ public class WizardPageChecker<T> extends GuiChecker {
     this.window = page.window;
   }
 
-  public T checkTitle(String title) {
-    assertThat(window.getTextBox("title").textEquals(title));
-    assertThat(getControlPanel().getComboBox("combo").selectionEquals(title));
-    return (T)this;
-  }
-
   public WizardPageChecker gotoPage(String title) {
     getControlPanel().getComboBox("combo").select(title);
-    return this;
-  }
-
-  public WizardPageChecker nextPage() {
-    getControlPanel().getButton("next").click();
-    return this;
-  }
-
-  public WizardPageChecker previousPage() {
-    getControlPanel().getButton("previous").click();
     return this;
   }
 
@@ -42,17 +26,8 @@ public class WizardPageChecker<T> extends GuiChecker {
     return window.getPanel("wizardControls");
   }
 
-  protected Panel getPage(String title) {
-    gotoPage(title);
-    return getContent();
-  }
-
   public Panel getContent() {
     return window.getPanel("content");
-  }
-
-  public void validate() {
-    window.getButton("OK").click();
   }
 
   public void close() {

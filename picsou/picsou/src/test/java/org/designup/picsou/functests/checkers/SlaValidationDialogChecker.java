@@ -22,11 +22,6 @@ public class SlaValidationDialogChecker extends GuiChecker {
     return this;
   }
 
-  public SlaValidationDialogChecker checkContainsText(String message) {
-    assertThat(dialog.getTextBox("editor").textContains(message));
-    return this;
-  }
-
   public SlaValidationDialogChecker checkNoErrorMessage() {
     TextBox errorMessage = dialog.getTextBox("errorMessage");
     assertFalse(errorMessage.isVisible());

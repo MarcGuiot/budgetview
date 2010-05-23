@@ -80,29 +80,6 @@ public class StackChecker extends GuiChecker {
       return "Actual dataset contents:\n" + dataset;
     }
 
-    public void dump() {
-      StringBuilder builder = new StringBuilder();
-      builder
-        .append(".checkSize(")
-        .append(dataset.size())
-        .append(")\n");
-      for (int i = 0; i < dataset.size(); i++) {
-        builder
-          .append(".checkValue(\"")
-          .append(dataset.getLabel(i))
-          .append("\", ")
-          .append(Formatting.DECIMAL_FORMAT.format(dataset.getValue(i)))
-          .append(")");
-        if (i == dataset.size() - 1) {
-          builder.append(";");
-        }
-        else {
-          builder.append("\n");
-        }
-      }
-
-      Assert.fail("Replace with:\n" + builder.toString());
-    }
   }
 
   private StackChart getChart() {

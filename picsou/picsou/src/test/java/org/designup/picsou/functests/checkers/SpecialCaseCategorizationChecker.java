@@ -17,11 +17,6 @@ public class SpecialCaseCategorizationChecker<T extends SpecialCaseCategorizatio
     return (T)this;
   }
 
-  public T checkToggleDisabled() {
-    assertFalse(panel.getButton("showHide").isEnabled());
-    return (T)this;
-  }
-
   public T checkShown() {
     checkComponentVisible(panel, JPanel.class, "specialCasePanel", true);
     return (T)this;

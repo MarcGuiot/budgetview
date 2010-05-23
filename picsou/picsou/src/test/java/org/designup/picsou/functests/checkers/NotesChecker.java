@@ -31,24 +31,8 @@ public class NotesChecker extends GuiChecker {
     return window.getInputTextBox("notesEditor");
   }
 
-  public NotesChecker checkNoHelpMessageDisplayed() {
-    assertFalse(getPanel().containsComponent(ComponentMatchers.innerNameIdentity("noData")));
-    assertFalse(getPanel().containsComponent(ComponentMatchers.innerNameIdentity("noSeries")));
-    return this;
-  }
-
   private Panel getPanel() {
     return window.getPanel("notesView");
-  }
-
-  public void categorize() {
-    getPanel().getButton("categorize").click();
-  }
-
-  private NotesChecker checkMessage(String text, String textBoxName, final String panelName) {
-    TextBox textBox = window.getPanel(panelName).getTextBox(textBoxName);
-    UISpecAssert.assertThat(textBox.textEquals(text));
-    return this;
   }
 
 }

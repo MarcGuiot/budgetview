@@ -22,26 +22,4 @@ public abstract class TableChecker {
     org.uispec4j.assertion.UISpecAssert.assertTrue(getTable().contentEquals(expectedContent));
   }
 
-  public void dump() {
-    StringBuilder builder = new StringBuilder();
-
-    Table table = getTable();
-    for (int row = 0; row < table.getRowCount(); row++) {
-      builder.append("  .add(");
-      for (int column = 1; column < table.getColumnCount(); column++) {
-        builder
-          .append("\"")
-          .append(table.getContentAt(row, column))
-          .append("\"");
-        if (column < table.getColumnCount() - 1) {
-          builder.append(", ");
-        }
-      }
-      builder.append(")\n");
-    }
-    builder.append("  .check();");
-
-    Assert.fail("Use: \n" + builder.toString());
-  }
-
 }

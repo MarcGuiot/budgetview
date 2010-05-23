@@ -11,15 +11,6 @@ public class AccountPositionThresholdChecker extends GuiChecker {
     this.window = window;
   }
 
-  public AccountPositionThresholdChecker changeAmount(double amount) {
-    final TextBox textField = window.getInputTextBox("editor");
-    final String text = toString(amount);
-
-    textField.clear();
-    textField.appendText(text);
-    return this;
-  }
-
   public void setAmountAndClose(double amount) {
     final TextBox textField = window.getInputTextBox("editor");
     final String text = toString(amount);
@@ -27,8 +18,4 @@ public class AccountPositionThresholdChecker extends GuiChecker {
     assertFalse(window.isVisible());
   }
 
-  public void close() {
-    window.getButton("OK").click();
-    assertFalse(window.isVisible());
-  }
 }

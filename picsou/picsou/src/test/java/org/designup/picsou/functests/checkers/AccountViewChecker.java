@@ -54,10 +54,6 @@ public class AccountViewChecker<T extends AccountViewChecker> extends GuiChecker
     return (T)this;
   }
 
-  public void checkContainsAccount(String accountName) {
-    TestUtils.assertContains(getDisplayedAccounts(), accountName);
-  }
-
   public void checkNotPresent(String accountName) {
     TestUtils.assertNotContains(getDisplayedAccounts(), accountName);
   }
@@ -105,11 +101,6 @@ public class AccountViewChecker<T extends AccountViewChecker> extends GuiChecker
   public T checkEstimatedPositionDate(String text) {
     assertThat(panel.getTextBox("estimatedPositionDate").textEquals("on "+ text));
     return (T)this;
-  }
-
-  public ImportChecker openImportForAccount(String accountName) {
-    Button importButton = getAccountPanel(accountName).getButton("Import data");
-    return ImportChecker.open(importButton.triggerClick());
   }
 
   public AccountPositionEditionChecker editPosition(String accountName) {

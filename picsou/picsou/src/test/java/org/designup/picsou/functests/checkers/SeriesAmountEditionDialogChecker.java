@@ -20,11 +20,6 @@ public class SeriesAmountEditionDialogChecker extends SeriesAmountEditionChecker
     return this;
   }
 
-  public SeriesAmountEditionDialogChecker checkPropagationEnabled() {
-    assertThat(dialog.getCheckBox().isSelected());
-    return this;
-  }
-
   public SeriesAmountEditionDialogChecker checkPropagationDisabled() {
     assertFalse(dialog.getCheckBox().isSelected());
     return this;
@@ -32,11 +27,6 @@ public class SeriesAmountEditionDialogChecker extends SeriesAmountEditionChecker
 
   public SeriesAmountEditionDialogChecker setPropagationEnabled() {
     dialog.getCheckBox().select();
-    return this;
-  }
-
-  public SeriesAmountEditionDialogChecker setPropagationDisabled() {
-    dialog.getCheckBox().unselect();
     return this;
   }
 

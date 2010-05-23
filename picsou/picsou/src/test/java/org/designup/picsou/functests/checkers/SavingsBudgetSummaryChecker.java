@@ -10,10 +10,6 @@ import javax.swing.*;
 public class SavingsBudgetSummaryChecker extends GuiChecker {
   private Panel mainWindow;
 
-  public SavingsBudgetSummaryChecker(Panel mainWindow) {
-    this.mainWindow = mainWindow;
-  }
-
   public SavingsBudgetSummaryChecker checkMonthBalance(double amount) {
     assertThat(getPanel().getTextBox("balanceLabel").textEquals(toString(amount, true)));
     return this;

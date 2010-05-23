@@ -143,16 +143,6 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     return this;
   }
 
-  public BudgetAreaCategorizationChecker selectSeries(String seriesName, boolean createNewSeries) {
-    if (createNewSeries) {
-      createSeries().setName(seriesName).validate();
-    }
-    else {
-      selectSeries(seriesName);
-    }
-    return this;
-  }
-
   public BudgetAreaCategorizationChecker selectSeries(String seriesName) {
     checkComponentVisible(panel, JRadioButton.class, seriesName, true);
     panel.getRadioButton(seriesName).click();

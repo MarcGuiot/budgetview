@@ -82,7 +82,7 @@ public class BankEntityEditionPanel {
 
     public void actionPerformed(ActionEvent e) {
       BankChooserDialog bankChooserDialog = new BankChooserDialog(dialog, repository, directory);
-      Integer bankId = bankChooserDialog.showBankChooser();
+      Integer bankId = bankChooserDialog.show();
       if (bankId != null) {
         for (Glob account : accounts) {
           repository.update(account.getKey(), Account.BANK, bankId);

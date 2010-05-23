@@ -61,11 +61,6 @@ public class NextProjectsChecker extends GuiChecker {
 
   public class NextProjectsTableChecker extends TableChecker {
 
-    public NextProjectsTableChecker add(String month, String project, double amount) {
-      super.add(month, project, NextProjectsChecker.this.toString(amount), "", "", "");
-      return this;
-    }
-
     public NextProjectsTableChecker add(String month, String project, Double amount, Double mainPosition, Double savingsPosition, double totalPosition) {
       super.add(month, project,
                 NextProjectsChecker.this.toString(amount),

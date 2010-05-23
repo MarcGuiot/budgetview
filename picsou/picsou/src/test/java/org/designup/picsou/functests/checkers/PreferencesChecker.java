@@ -26,8 +26,4 @@ public class PreferencesChecker extends GuiChecker {
     UISpecAssert.assertFalse(window.isVisible());
   }
 
-  public void cancel() {
-    window.getButton("cancel").click();
-    UISpecAssert.assertFalse(window.isVisible());
-  }
 }

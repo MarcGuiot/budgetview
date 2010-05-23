@@ -32,10 +32,6 @@ public abstract class GuiChecker {
     return format.format(value);
   }
 
-  protected String toAbsString(double value) {
-    return format.format(Math.abs(value));
-  }
-
   protected String toString(double value, boolean forcePlus) {
     String prefix = (forcePlus && value > 0) ? "+" : "";
     return prefix + format.format(value);

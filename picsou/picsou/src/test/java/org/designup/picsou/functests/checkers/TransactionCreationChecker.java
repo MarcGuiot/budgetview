@@ -89,11 +89,6 @@ public class TransactionCreationChecker extends GuiChecker {
     return this;
   }
 
-  public TransactionCreationChecker checkLabel(String label) {
-    assertThat(getPanel().getInputTextBox("label").textEquals(label));
-    return this;
-  }
-
   public TransactionCreationChecker create() {
     Panel panel = getPanel();
     panel.getButton("Create").click();

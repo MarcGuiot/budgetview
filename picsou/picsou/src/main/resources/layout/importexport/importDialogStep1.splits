@@ -4,12 +4,12 @@
 
   <styles>
     <style selector="scrollPane" marginBottom="10"/>
-    <style selector="button.bankLink" ui="hyperlinkButton"
-           foreground="hyperlink" fill="none" anchor="center"/>
-
+    <style selector="textArea.sectionTitle" font="-,bold,14" marginBottom="5"
+           opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"/>
+    <style selector="htmlEditorPane.multiLineLabel" font="-,plain,11"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(640,440)">
+  <panel styleClass="dialog" preferredSize="(500,450)">
 
     <column styleClass="innerDialog">
 
@@ -17,22 +17,17 @@
 
       <column marginTop="20">
 
-        <textArea styleClass="multiLineLabel" text="$import.step1.bank.message" marginTop="10"/>
-        <column margin="5">
-          <panel ref="bankChooser" weightX="100" weightY="50" anchor="center" minimumSize="(50,130)" marginBottom="10"/>
-          <!--<comboBox ref="banks" marginRight="10" anchor="center" weightX="100" marginBottom="10"/>-->
-          <button action="openSiteHelp" styleClass="bankLink" marginBottom="5"/>
-          <button action="openUrl" styleClass="bankLink" />
-        </column>
+        <textArea text="$import.step1.bank.title" styleClass="sectionTitle"/>
 
-        <htmlEditorPane text="$import.step1.format.advice" marginTop="10" font="-,plain,11"
-                        styleClass="multiLineLabel" hyperlinkListener="hyperlinkHandler"/>
-
+        <htmlEditorPane name="bankMessage" text="$import.step1.bank.message" styleClass="multiLineLabel"
+                        hyperlinkListener="hyperlinkHandler"/>
       </column>
 
       <column styleClass="separator" marginTop="20">
 
-        <htmlEditorPane text="$import.step1.select.file" marginTop="15"/>
+        <textArea text="$import.step1.file.title" styleClass="sectionTitle" marginTop="20"/>
+
+        <htmlEditorPane text="$import.step1.file.message" styleClass="multiLineLabel"/>
 
         <row margin="5" defaultAnchor="center">
           <textField ref="fileField" marginRight="10" anchor="center" weightX="100"/>

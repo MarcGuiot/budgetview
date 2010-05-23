@@ -65,11 +65,6 @@ public class GaugeChecker extends GuiChecker {
     return this;
   }
 
-  public GaugeChecker checkOverrunPart(double amount) {
-    Assert.assertEquals(amount, gauge.getOverrunPart(), 0.01);
-    return this;
-  }
-
   public GaugeChecker checkOnError(boolean isOnError) {
     Assert.assertTrue(isOnError == gauge.isErrorOverrunShown());
     return this;

@@ -19,11 +19,6 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     this.mainWindow = mainWindow;
   }
 
-  public BudgetSummaryViewChecker checkMonthBalanceHidden() {
-    checkComponentVisible(getPanel(), JButton.class, "balanceLabel", false);
-    return this;
-  }
-
   public BudgetSummaryViewChecker checkMonthBalance(double amount) {
     assertThat(getPanel().getButton("balanceLabel").textEquals(toString(amount, true)));
     return this;
@@ -55,12 +50,6 @@ public class BudgetSummaryViewChecker extends GuiChecker {
 
   public void gotoUncategorized() {
     getPanel().getButton("uncategorized").click();
-  }
-
-  public void checkEmpty() {
-    assertThat(getPanel().getTextBox("balanceLabel").textEquals("-"));
-    assertThat(getPanel().getTextBox("positionLabel").textEquals("-"));
-    assertThat(getPanel().getTextBox("uncategorizedLabel").textEquals("-"));
   }
 
   public BudgetWizardChecker getHelpWizard() {
@@ -98,29 +87,9 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     return new BudgetWizardPageChecker(wizardWindow);
   }
 
-  public BudgetSummaryViewChecker checkNoEstimatedPositionDetails() {
-    assertFalse(getPanel().getButton("openDetails").isEnabled());
-    return this;
-  }
-
   public BudgetSummaryViewChecker checkNoEstimatedPosition() {
     assertThat(getPanel().getButton("positionLabel").textEquals("-"));
     return this;
-  }
-
-  public void checkEstimatedPositionColor(String color) {
-    TextBox label = getPanel().getTextBox("positionLabel");
-    assertThat(label.foregroundNear(color));
-  }
-
-  public void checkIsEstimatedPosition() {
-    TextBox label = getPanel().getTextBox("positionTitle");
-    assertThat(label.textContains("End of"));
-  }
-
-  public void checkIsRealPosition() {
-    TextBox label = getPanel().getTextBox("positionTitle");
-    assertThat(label.textEquals("Position"));
   }
 
   public BalanceChecker openBalancePanel() {

@@ -52,7 +52,6 @@ public class BudgetViewChecker extends GuiChecker {
   public class BudgetAreaChecker {
 
     private String panelName;
-    private boolean singleCategorySeries;
     private BudgetArea budgetArea;
 
     private static final int OBSERVED_LABEL_OFFSET = 1;
@@ -61,7 +60,6 @@ public class BudgetViewChecker extends GuiChecker {
 
     public BudgetAreaChecker(String panelName, boolean singleCategorySeries, BudgetArea budgetArea) {
       this.panelName = panelName;
-      this.singleCategorySeries = singleCategorySeries;
       this.budgetArea = budgetArea;
     }
 
@@ -110,11 +108,6 @@ public class BudgetViewChecker extends GuiChecker {
       return this;
     }
 
-    public BudgetAreaChecker checkGaugeInError(){
-      GaugeChecker gauge = new GaugeChecker(getPanel(), "totalGauge");
-      gauge.checkOnError(true);
-      return this;
-    }
     public BudgetAreaChecker checkGaugeBeginInError() {
       GaugeChecker gauge = new GaugeChecker(getPanel(), "totalGauge");
       gauge.checkBeginInError();
@@ -156,14 +149,6 @@ public class BudgetViewChecker extends GuiChecker {
       return this;
     }
 
-    public BudgetAreaChecker checkSeriesGaugeRemaining(String seriesName, double pastRemaining,
-                                                       double remaining, boolean onError) {
-      GaugeChecker gauge = getGauge(seriesName);
-      gauge.checkRemaining(remaining);
-      gauge.checkOnError(onError);
-      return this;
-    }
-
     public BudgetAreaChecker checkSeriesGaugeRemaining(String seriesName, double remaining, boolean onError) {
       GaugeChecker gauge = getGauge(seriesName);
       gauge.checkRemaining(remaining);
@@ -178,8 +163,7 @@ public class BudgetViewChecker extends GuiChecker {
       JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
       int nameIndex = getIndex(panel, nameButton.getAwtComponent());
 
-      GaugeChecker gauge = new GaugeChecker((Gauge)panel.getComponent(nameIndex + GAUGE_OFFSET));
-      return gauge;
+      return new GaugeChecker((Gauge)panel.getComponent(nameIndex + GAUGE_OFFSET));
     }
 
     private void checkAmount(String label, int offset,
@@ -292,16 +276,6 @@ public class BudgetViewChecker extends GuiChecker {
       return this;
     }
 
-    public BudgetAreaChecker checkFooterContains(String text) {
-      assertThat(getPanel().getTextBox("footerArea").textContains(text));
-      return this;
-    }
-
-    public void checkFooterHidden() {
-      final TextBox textBox = getPanel().getTextBox("footerArea");
-      assertFalse(textBox.isVisible());
-      assertThat(textBox.textIsEmpty());
-    }
   }
 
   public class SavingsAreaChecker extends BudgetAreaChecker {

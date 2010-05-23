@@ -73,69 +73,14 @@ public class ImportChecker {
     return this;
   }
 
-  public ImportChecker checkSelectedFiles(String... files) {
-    TextBox fileField = dialog.getTextBox("fileField");
-    for (String file : files) {
-      assertTrue(fileField.textContains(file));
-    }
-    return this;
-  }
-
   public ImportChecker checkHeaderMessage(String text) {
     TextBox fileMessage = dialog.findUIComponent(TextBox.class, text);
     assertTrue(fileMessage.isVisible());
     return this;
   }
 
-  public ImportChecker checkContainsBankSites(String... banks) {
-    assertThat(dialog.getListBox().contains(banks));
-    return this;
-  }
-
-  public ImportChecker selectBankSite(String bank) {
-    BankChooserChecker checker = new BankChooserChecker(dialog);
-    checker.selectBank(bank);
-    return this;
-  }
-
-  public ImportChecker checkSiteAccessEnabled() {
-    assertThat(dialog.getButton("Open website").isEnabled());
-    return this;
-  }
-
-  public ImportChecker checkSiteAccessDisabled() {
-    assertFalse(dialog.getButton("Open website").isEnabled());
-    return this;
-  }
-
-  public ImportChecker checkSiteAccess(String url) {
-    BrowsingChecker.checkDisplay(dialog.getButton("Open website"), url);
-    return this;
-  }
-
-  public ImportChecker checkSelectedBankSite(String bank) {
-//    assertThat(dialog.getComboBox().selectionEquals(bank));
-    return this;
-  }
-
-  public ImportChecker selectBank(String bank) {
-    ComboBox accountBankCombo = dialog.getComboBox("accountBank");
-    accountBankCombo.select(bank);
-    return this;
-  }
-
-  public ImportChecker checkSiteHelpAvailable() {
-    assertThat(dialog.getButton("openSiteHelp").isEnabled());
-    return this;
-  }
-
-  public ImportChecker checkSiteHelpUnavailable() {
-    assertFalse(dialog.getButton("openSiteHelp").isEnabled());
-    return this;
-  }
-
-  public HelpChecker openSiteHelp() {
-    return HelpChecker.open(dialog.getButton("openSiteHelp").triggerClick());
+  public BankGuideChecker openBankGuide() {
+    return BankGuideChecker.open(dialog.getTextBox("bankMessage").triggerClickOnHyperlink("download guide"));
   }
 
   public ImportChecker checkDates(String... dates) {
@@ -217,11 +162,6 @@ public class ImportChecker {
     return this;
   }
 
-  public ImportChecker enterAccountNumber(String number) {
-    dialog.getInputTextBox("number").setText(number);
-    return this;
-  }
-
   public void checkCloseButton(String text) {
     assertThat(dialog.getButton("close").textEquals(text));
   }
@@ -261,23 +201,6 @@ public class ImportChecker {
     return this;
   }
 
-  public ImportChecker checkAccountName(String text) {
-    TextBox accountNameField = dialog.getInputTextBox("name");
-    assertThat(accountNameField.textEquals("Main account"));
-    return this;
-  }
-
-  public ImportChecker setAccountName(final String name) {
-    TextBox accountNameField = dialog.getInputTextBox("name");
-    accountNameField.setText(name);
-    return this;
-  }
-
-  public ImportChecker setAccountNumber(final String number) {
-    dialog.getInputTextBox("number").setText(number);
-    return this;
-  }
-
   public ImportChecker checkAvailableAccounts(String... accountNames) {
     assertTrue(dialog.getComboBox("accountCombo").contentEquals(accountNames));
     return this;
@@ -285,11 +208,6 @@ public class ImportChecker {
 
   public ImportChecker selectAccount(final String accountName) {
     dialog.getComboBox("accountCombo").select(accountName);
-    return this;
-  }
-
-  public ImportChecker checkNoAccountBankSelected() {
-    assertTrue(dialog.getComboBox("accountBank").selectionEquals(null));
     return this;
   }
 

@@ -36,10 +36,6 @@ public class TransactionDetailsChecker extends GuiChecker {
     assertThat(getPanel().getTextBox(name).textEquals(label));
   }
 
-  private void checkNotVisible(String name) {
-    assertFalse(getPanel().getTextBox(name).isVisible());
-  }
-
   public void checkSplitNotVisible() {
     checkComponentVisible(getPanel(), JButton.class, "split", false);
   }

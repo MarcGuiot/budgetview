@@ -33,47 +33,9 @@ public class SavingsViewChecker extends GuiChecker {
     assertThat(date.textContains(updateDate));
   }
 
-  public void checkSavingsIn(String accountName, double observedAmount, double plannedAmount) {
-    fail("transfert");
-    assertThat(window.getButton(accountName + ":savingsInAmount").textEquals(toString(observedAmount)));
-    assertThat(window.getTextBox(accountName + ":savingsPlannedInAmount").textEquals(toString(plannedAmount)));
-  }
-
-  public SavingsViewChecker checkSavingsInNotVisible(String accountName) {
-    fail("transfert");
-    assertFalse(window.getButton(accountName + ":savingsInAmount").isVisible());
-    assertFalse(window.getTextBox(accountName + ":savingsPlannedInAmount").isVisible());
-    return this;
-  }
-
-  public void checkSavingsOut(String accoutName, double observedAmount, double plannedAmount) {
-    fail("transfert");
-    assertThat(window.getButton(accoutName + ":savingsOutAmount").textEquals(toString(observedAmount)));
-    assertThat(window.getTextBox(accoutName + ":savingsPlannedOutAmount").textEquals(toString(plannedAmount)));
-  }
-
-  public SavingsViewChecker checkSavingsOutNotVisible(String accountName) {
-    assertFalse(window.getButton(accountName + ":savingsOutAmount").isVisible());
-    assertFalse(window.getTextBox(accountName + ":savingsPlannedOutAmount").isVisible());
-    return this;
-  }
-
-  public void checkSavingsBalance(double balance) {
-    fail("transfert");
-    assertThat(getPanel().getTextBox("savingsBalanceAmount").textEquals(toString(balance, true)));
-  }
-
-  public void checkSavingsNotVisible(String accountName) {
-    assertFalse(window.getPanel("accountGroup:" + accountName).isVisible());
-  }
-
   public void checkAmount(String accountName, String seriesName, double observedAmount, double plannedAmount) {
     assertThat(window.getButton(accountName + "." + seriesName + ".observedSeriesAmount").textEquals(toString(observedAmount)));
     assertThat(window.getButton(accountName + "." + seriesName + ".plannedSeriesAmount").textEquals(toString(plannedAmount)));
-  }
-
-  public void checkSavingsInNotVisible(String accountName, String seriesName) {
-    assertFalse(window.getPanel(accountName + "." + seriesName + ".gauge").isVisible());
   }
 
   public void checkNoAccounts() {

@@ -8,11 +8,6 @@ public class HtmlCategorizationChecker extends SpecialCaseCategorizationChecker<
     super(panel);
   }
 
-  public HtmlCategorizationChecker checkMessageContains(String text) {
-    UISpecAssert.assertThat(panel.getTextBox("message").textContains(text));
-    return this;
-  }
-
   public SeriesEditionDialogChecker clickAndOpenSeriesEdition(String hyperlinkText) {
     return SeriesEditionDialogChecker.open(panel.getTextBox("message").triggerClickOnHyperlink(hyperlinkText));
   }

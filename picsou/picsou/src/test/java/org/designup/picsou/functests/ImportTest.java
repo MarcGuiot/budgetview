@@ -641,27 +641,20 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/12/21", -15.00, "Menu K")
       .save();
 
-    operations.openImportDialog()
-      .checkContainsBankSites("BNP Paribas", "CIC", "Crédit Agricole", "ING Direct", "Société Générale")
-      .checkSelectedBankSite("-- Select your bank --")
-      .checkSiteAccessDisabled()
-      .selectBankSite("BNP Paribas")
-      .checkSiteAccessEnabled()
-      .checkSiteAccess("http://www.bnpparibas.net")
-      .setFilePath(path1)
-      .acceptFile()
-      .openAccountType().selectMain().validate()
-      .completeImport();
+    ImportChecker importDialog = operations.openImportDialog();
 
-    ImportChecker importDialog = operations.openImportDialog()
-      .checkSiteHelpUnavailable()
-      .selectBankSite("AXA Banque")
-      .checkSiteHelpUnavailable()
-      .selectBankSite("BNP Paribas")
-      .checkSiteHelpAvailable();
-    importDialog.openSiteHelp()
+    importDialog
+      .openBankGuide()
+      .checkContainsBanks("BNP Paribas", "CIC", "Crédit Agricole", "ING Direct", "Société Générale")
+      .checkHelpAvailable(false)
+      .setFilter("BNP")
+      .checkBankList("Autre", "BNP Paribas")
+      .selectBank("BNP Paribas")
+      .checkHelpAvailable(true)
+      .openHelp()
       .checkTitle("BNP Paribas downloads")
       .close();
+
     importDialog.close();
   }
 

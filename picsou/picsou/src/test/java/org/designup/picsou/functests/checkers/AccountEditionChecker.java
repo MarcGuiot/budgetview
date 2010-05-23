@@ -184,11 +184,6 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  private AccountEditionChecker checkUpdateMode(String mode) {
-    assertThat(getUpdateModeCombo().selectionEquals(mode));
-    return this;
-  }
-
   public AccountEditionChecker checkUpdateModeIsEditable() {
     assertThat(getUpdateModeCombo().isEnabled());
     return this;
@@ -262,18 +257,6 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  public AccountEditionChecker cancelStartDate() {
-    dialog.getButton("removeStartDate").click();
-    assertThat(new Assertion() {
-      public void check() {
-        Component[] swingComponents = dialog.getSwingComponents(JXDatePicker.class, "startDatePicker");
-        Assert.assertEquals(1, swingComponents.length);
-        Assert.assertNull(((JXDatePicker)swingComponents[0]).getDate());
-      }
-    });
-    return this;
-  }
-
   public AccountEditionChecker cancelEndDate() {
     dialog.getButton("removeEndDate").click();
     assertThat(new Assertion() {
@@ -283,11 +266,6 @@ public class AccountEditionChecker extends GuiChecker {
         Assert.assertNull(((JXDatePicker)swingComponents[0]).getDate());
       }
     });
-    return this;
-  }
-
-  public AccountEditionChecker checkValidateIsDesable() {
-    assertFalse(dialog.getButton("OK").isEnabled());
     return this;
   }
 

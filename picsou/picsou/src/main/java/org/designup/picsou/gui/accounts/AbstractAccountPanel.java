@@ -225,7 +225,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
 
     public void actionPerformed(ActionEvent e) {
       BankChooserDialog bankChooserDialog = new BankChooserDialog(dialog, localRepository, localDirectory);
-      Integer bankId = bankChooserDialog.showBankChooser();
+      Integer bankId = bankChooserDialog.show();
       if (bankId != null) {
         localRepository.update(currentAccount.getKey(), Account.BANK, bankId);
       }

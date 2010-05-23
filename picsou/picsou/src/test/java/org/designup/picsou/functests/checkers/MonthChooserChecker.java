@@ -41,13 +41,6 @@ public class MonthChooserChecker extends GuiChecker {
     return this;
   }
 
-  public MonthChooserChecker checkSelectedInNextMonth(int monthId) {
-    assertFalse(getButtonInPreviousYear(monthId).isSelected());
-    assertFalse(getButtonInCurrentYear(monthId).isSelected());
-    assertTrue(getButtonInNextYear(monthId).isSelected());
-    return this;
-  }
-
   public MonthChooserChecker checkNoneSelected() {
     for (int i = 1; i <= 12; i++) {
       assertFalse(getButtonInPreviousYear(i).isSelected());

@@ -4,7 +4,9 @@ import com.jidesoft.swing.AutoResizingTextArea;
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
 import org.designup.picsou.gui.accounts.NewAccountAction;
 import org.designup.picsou.gui.accounts.utils.Day;
+import org.designup.picsou.gui.bank.BankChooserDialog;
 import org.designup.picsou.gui.bank.BankChooserPanel;
+import org.designup.picsou.gui.bank.BankGuideDialog;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
@@ -16,8 +18,6 @@ import org.designup.picsou.gui.importer.edition.BrowseFilesAction;
 import org.designup.picsou.gui.importer.edition.DateFormatSelectionPanel;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionDateRenderer;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionsTable;
-import org.designup.picsou.gui.importer.utils.OpenBankSiteHelpAction;
-import org.designup.picsou.gui.importer.utils.OpenBankUrlAction;
 import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -151,17 +151,13 @@ public class ImportDialog {
       }
     });
 
-//    builder1.addCombo(Bank.TYPE)
-//      .setFilter(GlobMatchers.isNotEmpty(Bank.DOWNLOAD_URL))
-//      .setShowEmptyOption(true)
-//      .setEmptyOptionLabel(Lang.get("import.step1.selectBank"))
-//      .setName("banks");
-    BankChooserPanel panel = new BankChooserPanel(localRepository, localDirectory);
-    builder1.add("bankChooser", panel.getPanel());
-    builder1.add("openSiteHelp", new OpenBankSiteHelpAction(localDirectory, dialog));
-    builder1.add("openUrl", new OpenBankUrlAction(localDirectory));
-
     final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(directory, dialog);
+    hyperlinkHandler.registerLinkAction("openBankList", new Runnable() {
+      public void run() {
+        BankGuideDialog chooser = new BankGuideDialog(dialog, localRepository, localDirectory);
+        chooser.show();
+      }
+    });
     hyperlinkHandler.registerLinkAction("openErrorDetails", new Runnable() {
       public void run() {
         showLastException();
@@ -305,7 +301,6 @@ public class ImportDialog {
   protected void closeDialog() {
     dialog.setVisible(false);
   }
-
 
   public void acceptFiles() {
     if (!initialFileAccepted()) {

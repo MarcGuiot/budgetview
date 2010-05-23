@@ -22,11 +22,6 @@ public class PasswordDialogChecker extends GuiChecker {
     return this;
   }
 
-  public void cancel() {
-    dialog.getButton("Cancel").click();
-    assertFalse(dialog.isVisible());
-  }
-
   public void validate() {
     dialog.getButton("OK").click();
     assertFalse(dialog.isVisible());

@@ -23,11 +23,6 @@ public class BudgetWizardChecker extends GuiChecker {
     return this;
   }
 
-  public BudgetWizardChecker previous() {
-    panel.getButton("previous").click();
-    return this;
-  }
-
   public BudgetWizardChecker checkNextButtonText(String text) {
     Button nextButton = panel.getButton("next");
     assertThat(nextButton.textEquals(text));

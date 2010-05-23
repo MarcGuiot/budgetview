@@ -56,16 +56,6 @@ public class CardTypeChooserChecker extends GuiChecker {
     return dialog.getPanel("accountPanel:" + accountName);
   }
 
-  public CardTypeChooserChecker checkValidateEnabled() {
-    assertThat(dialog.getButton("OK").isEnabled());
-    return this;
-  }
-
-  public CardTypeChooserChecker checkValidateDisabled() {
-    assertFalse(dialog.getButton("OK").isEnabled());
-    return this;
-  }
-
   public void validate(){
     dialog.getButton("OK").click();
     assertFalse(dialog.isVisible());

@@ -141,14 +141,6 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
     assertFalse(getTable().containsRow(SeriesEvolutionView.LABEL_COLUMN_INDEX, seriesName));
   }
 
-  public SeriesEvolutionChecker checkValue(String rowLabel, String columnLabel, String displayedValue) {
-    Table table = getTable();
-    int row = getRow(rowLabel.toUpperCase(), table);
-    int column = table.getHeader().findColumnIndex(columnLabel);
-    assertThat(table.cellEquals(row, column, displayedValue));
-    return this;
-  }
-
   public SeriesEvolutionChecker checkForeground(String rowLabel, String columnLabel, String expectedColor) {
     Table table = getTable();
     int row = getRow(rowLabel, table);

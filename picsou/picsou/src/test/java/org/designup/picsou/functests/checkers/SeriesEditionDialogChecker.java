@@ -133,10 +133,6 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
-  public boolean isManual() {
-    return !dialog.getButton("manual").getAwtComponent().isVisible();
-  }
-
   public SeriesEditionDialogChecker switchToAutomatic() {
     WindowInterceptor.init(dialog.getButton("automatic").triggerClick())
       .process(new WindowHandler() {
@@ -298,18 +294,9 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     checkClosed();
   }
 
-  public Trigger triggerValidate() {
-    return dialog.getButton("OK").triggerClick();
-  }
-
   public void cancel() {
     dialog.getButton("Cancel").click();
     checkClosed();
-  }
-
-  public SeriesEditionDialogChecker checkNoSeries() {
-    assertThat(dialog.getListBox().isEmpty());
-    return this;
   }
 
   public SeriesEditionDialogChecker checkSeriesListIsEmpty() {
@@ -654,11 +641,6 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     else {
       assertFalse(dialog.getTextBox("savingsMessage").isVisible());
     }
-    return this;
-  }
-
-  public SeriesEditionDialogChecker gotoTermsTab() {
-    dialog.getTabGroup().selectTab("Terms");
     return this;
   }
 

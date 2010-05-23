@@ -36,11 +36,6 @@ public class SplitDialogChecker {
     return this;
   }
 
-  public SplitDialogChecker checkNote(String text) {
-    assertTrue(window.getInputTextBox("note").textEquals(text));
-    return this;
-  }
-
   public SplitDialogChecker assertOkDisabled() {
     assertFalse(getOkButton().isEnabled());
     return this;

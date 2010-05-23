@@ -121,11 +121,6 @@ public class CategorizationChecker extends GuiChecker {
     checkComponentVisible(getPanel(), JPanel.class, "groupCreateEditSeries", false);
   }
 
-  public void checkEditSeriesNotVisitble(String seriesLabel) {
-    Button button = getPanel().getPanel("seriesCard").getButton("editSeries:" + seriesLabel);
-    assertFalse(button.isVisible());
-  }
-
   public void checkUserDate(TransactionDetailsChecker details, String yyyyMMdd, String label) {
     selectTransaction(label);
     details.checkBudgetDate(yyyyMMdd);
@@ -445,19 +440,6 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
-
-  public CategorizationChecker setNewIncome(int row, String seriesName) {
-    selectTableRow(row);
-    selectIncome().selectNewSeries(seriesName);
-    return this;
-  }
-
-  public CategorizationChecker setIncome(int row, String seriesName) {
-    selectTableRow(row);
-    selectIncome().selectSeries(seriesName);
-    return this;
-  }
-
   public CategorizationChecker setIncome(String label, String seriesName) {
     int[] rows = getRowIndices(label);
     selectTableRows(rows);
@@ -590,18 +572,6 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
-  public CategorizationChecker setNewExtra(int row, String seriesName) {
-    selectTableRow(row);
-    selectExtras().selectNewSeries(seriesName);
-    return this;
-  }
-
-  public CategorizationChecker setExtra(int row, String seriesName) {
-    selectTableRow(row);
-    selectExtras().selectSeries(seriesName);
-    return this;
-  }
-
   int[] getRowIndices(String label) {
     int[] index = getTable().getRowIndices(LABEL_COLUMN_INDEX, label.toUpperCase());
     if (index.length <= 0) {
@@ -669,21 +639,10 @@ public class CategorizationChecker extends GuiChecker {
     selectUncategorized().setUncategorized();
   }
 
-  public void setUncategorized(String label) {
-    selectTableRows(getRowIndices(label));
-    setUncategorized();
-  }
-
   public CategorizationChecker setUncategorized() {
     selectUncategorized();
     getPanel().getButton("uncategorizeSelected").click();
     return this;
-  }
-
-  public HelpChecker clickHelpLink(String linkText) {
-    JEditorPane editorPane = getPanel().getPanel("series").findSwingComponent(JEditorPane.class);
-    TextBox textBox = new TextBox(editorPane);
-    return HelpChecker.open(textBox.triggerClickOnHyperlink(linkText));
   }
 
   public void checkShowsAllTransactions() {
@@ -696,10 +655,6 @@ public class CategorizationChecker extends GuiChecker {
 
   public void checkShowsUncategorizedTransactionsOnly() {
     checkTransctionFilterMode(TransactionFilteringMode.UNCATEGORIZED);
-  }
-
-  public void checkShowsLastImportedTransaction() {
-    checkTransctionFilterMode(TransactionFilteringMode.LAST_IMPORTED_FILE);
   }
 
   private void checkTransctionFilterMode(final TransactionFilteringMode mode) {

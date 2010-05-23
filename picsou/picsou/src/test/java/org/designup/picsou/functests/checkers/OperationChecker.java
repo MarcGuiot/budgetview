@@ -31,7 +31,6 @@ public class OperationChecker {
   private MenuItem throwExceptionMenu;
   private MenuItem throwExceptionInRepositoryMenu;
   public static final String DEFAULT_ACCOUNT_NUMBER = "11111";
-  public static final String DEFAULT_ACCOUNT_NAME = "Account n. 11111";
   private Window window;
   private MenuItem checkMenu;
 
@@ -421,10 +420,6 @@ public class OperationChecker {
       catch (IllegalThreadStateException e) {
       }
     }
-  }
-
-  public void dump() {
-    dumpMenu.click();
   }
 
   public MessageAndDetailsDialogChecker throwExceptionInApplication(){
