@@ -4,6 +4,13 @@
   </properties>
 
   <body>
+
+    <release version="???">
+      <action dev="rmedina" type="add">
+        Replace &lt;br&gt; with &quot; &quot; in Utils.cleanupHtml()
+      </action>
+    </release>
+
     <release version="???">
       <action dev="mguiot" type="add">
         Added Table.blockEquals(int fromRowIndex, int fromColumnIndex, int columnCount, int rowCount, Object[][] expected)

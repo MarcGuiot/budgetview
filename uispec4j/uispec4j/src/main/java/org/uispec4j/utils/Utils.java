@@ -114,13 +114,13 @@ public class Utils {
 
   public static String cleanupHtml(String html) {
     String actual = html
+      .replaceAll("<br[ /]*>", " ")
       .replaceAll("<[^<>]+>", "")
       .replaceAll("\n", "")
       .replaceAll("&nbsp;", " ")
       .replaceAll(LINE_SEPARATOR, "")
       .replaceAll("[ ]+", " ")
       .trim();
-    String label = XmlEscape.convertXmlEntitiesToText(actual);
-    return label;
+    return XmlEscape.convertXmlEntitiesToText(actual);
   }
 }

@@ -64,6 +64,13 @@ public class UtilsTest extends UnitTestCase {
     Utils.assertEquals(new Object[]{bike, motorcycle, bag}, collection, new ItemStringifier());
   }
 
+  public void testCleanupHtml() throws Exception {
+    assertEquals("Hello world !", Utils.cleanupHtml("<html><body class='myBody'> Hello world&nbsp;!</body> </html>"));
+    assertEquals("Hello world!", Utils.cleanupHtml("<html><body>\n" +
+                                                    "<b>Hello<br/>world</b>!\n" +
+                                                    "</body></html>"));
+  }
+
   private void checkNormalize(String result, int size, String input) {
     assertEquals(result, Utils.normalize(input, size));
   }
