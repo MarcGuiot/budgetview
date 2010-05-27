@@ -4,6 +4,7 @@ import org.designup.picsou.gui.card.NavigationWidget;
 import org.designup.picsou.gui.card.utils.GotoCardAction;
 import org.designup.picsou.gui.card.utils.NavigationIcons;
 import org.designup.picsou.gui.model.Card;
+import org.designup.picsou.gui.signpost.Signpost;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -18,10 +19,8 @@ public abstract class AbstractNavigationWidget implements NavigationWidget {
   private Icon icon;
   private Icon rolloverIcon;
   protected Action action;
-  private List<NavigationWidgetListener> listeners = new ArrayList<NavigationWidgetListener>();
   protected final GlobRepository repository;
   protected final Directory directory;
-  private boolean highlighted;
 
   public AbstractNavigationWidget(Card card,
                                   GlobRepository repository,
@@ -64,25 +63,6 @@ public abstract class AbstractNavigationWidget implements NavigationWidget {
     this.directory = directory;
   }
 
-  public void addListener(NavigationWidgetListener listener) {
-    listeners.add(listener);
-  }
-
-  public void removeListener(NavigationWidgetListener listener) {
-    listeners.remove(listener);
-  }
-
-  protected void setHighlighted(boolean highlighted) {
-    this.highlighted = highlighted;
-    for (NavigationWidgetListener listener : listeners) {
-      listener.highlightingChanged(highlighted);
-    }
-  }
-
-  public boolean isHighlighted() {
-    return highlighted;
-  }
-
   public String getName() {
     return name;
   }
@@ -101,6 +81,10 @@ public abstract class AbstractNavigationWidget implements NavigationWidget {
 
   public Action getAction() {
     return action;
+  }
+
+  public Signpost getSignpost() {
+    return null;
   }
 
 }

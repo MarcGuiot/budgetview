@@ -1,6 +1,8 @@
 package org.designup.picsou.gui.card.widgets;
 
 import org.designup.picsou.gui.actions.ImportFileAction;
+import org.designup.picsou.gui.signpost.Signpost;
+import org.designup.picsou.gui.signpost.guides.ImportSignpost;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -57,12 +59,15 @@ public class ImportWidget extends AbstractNavigationWidget {
     return panel;
   }
 
+  public Signpost getSignpost() {
+    return new ImportSignpost(repository, directory);
+  }
+
   private void doUpdate() {
     boolean hasTransactions = repository.contains(Transaction.TYPE);
     editor.setText(Lang.get(hasTransactions ? "importWidget.text" : "importWidget.initial"));
     editorNode.applyStyle(hasTransactions ? "normalText" : "highlightedText");
     importButton.setVisible(!hasTransactions);
     GuiUtils.revalidate(importButton);
-    setHighlighted(!hasTransactions);
   }
 }

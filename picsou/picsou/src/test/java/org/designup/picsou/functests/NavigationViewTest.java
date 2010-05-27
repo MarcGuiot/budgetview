@@ -28,11 +28,11 @@ public class NavigationViewTest extends LoggedInFunctionalTestCase {
     });
   }
 
-  public void testImportHighlightedWhenNoData() throws Exception {
+  public void testInitialImport() throws Exception {
 
     views.selectHome();
     versionInfo.checkNoNewVersion();
-    actions.checkImportHightlighted("You must first import your bank operations");
+    actions.checkImportSignpostDisplayed("Click here to import your operations");
     mainAccounts.checkNoEstimatedPosition();
 
     views.selectBudget();

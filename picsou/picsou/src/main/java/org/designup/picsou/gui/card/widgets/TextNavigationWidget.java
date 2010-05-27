@@ -26,11 +26,10 @@ public class TextNavigationWidget extends AbstractNavigationWidget {
                               String icon,
                               String rolloverIcon,
                               Action action,
-                              boolean isNavigation,
                               GlobRepository repository,
                               Directory directory) {
     super(name, title, icon, rolloverIcon, action, repository, directory);
-    this.isNavigation = isNavigation;
+    this.isNavigation = false;
     editor.setText(content);
   }
 

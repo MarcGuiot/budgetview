@@ -20,8 +20,13 @@ public class ActionViewChecker extends GuiChecker {
     return this;
   }
 
-  public ActionViewChecker checkImportHightlighted(String message) {
-    UISpecAssert.assertThat(getPanel().getPanel("import").getTextBox("editor").textEquals(message));
+  public ActionViewChecker checkImportSignpostDisplayed(String message) {
+    checkSignpostVisible(getPanel(), getPanel().getButton("Import"), message);
+    return this;
+  }
+
+  public ActionViewChecker checkImportSignpostHidden() {
+    checkSignpostHidden(getPanel(), getPanel().getButton("Import"));
     return this;
   }
 

@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.card;
 
-import org.designup.picsou.gui.card.widgets.NavigationWidgetListener;
+import org.designup.picsou.gui.signpost.Signpost;
 
 import javax.swing.*;
 
@@ -19,9 +19,6 @@ public interface NavigationWidget {
 
   JComponent getComponent();
 
-  void addListener(NavigationWidgetListener listener);
+  Signpost getSignpost();
 
-  void removeListener(NavigationWidgetListener listener);
-
-  boolean isHighlighted();
 }

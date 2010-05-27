@@ -1,5 +1,9 @@
 package org.designup.picsou.gui.card;
 
+import net.java.balloontip.BalloonTip;
+import net.java.balloontip.styles.RoundedBalloonStyle;
+import net.java.balloontip.styles.EdgedBalloonStyle;
+import net.java.balloontip.styles.ModernBalloonStyle;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.card.utils.NavigationAction;
 import org.designup.picsou.gui.card.utils.NavigationIcons;
@@ -20,6 +24,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 
@@ -67,7 +72,7 @@ public class CardView extends View implements GlobSelectionListener {
     showCard(NavigationService.INITIAL_CARD);
   }
 
-  public void showInitialCard(){
+  public void showInitialCard() {
     showCard(NavigationService.INITIAL_CARD);
   }
 

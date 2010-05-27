@@ -4,8 +4,6 @@ import com.jidesoft.swing.AutoResizingTextArea;
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
 import org.designup.picsou.gui.accounts.NewAccountAction;
 import org.designup.picsou.gui.accounts.utils.Day;
-import org.designup.picsou.gui.bank.BankChooserDialog;
-import org.designup.picsou.gui.bank.BankChooserPanel;
 import org.designup.picsou.gui.bank.BankGuideDialog;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.PicsouFrame;

@@ -6,6 +6,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Functor;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -27,6 +28,7 @@ public class HelpDialog {
   private Stack<String> backPages = new Stack<String>();
   private Stack<String> forwardPages = new Stack<String>();
   private GlobsPanelBuilder builder;
+  private Functor onCloseCallback = Functor.NULL;
 
   public HelpDialog(HelpSource source, GlobRepository repository, Directory directory, Window owner) {
     this.source = source;
@@ -49,11 +51,12 @@ public class HelpDialog {
     JPanel panel = builder.load();
 
     dialog = PicsouDialog.create(owner, false, directory);
-    dialog.setPanelAndButton(panel, new CloseAction(dialog));
+    dialog.setPanelAndButton(panel, new CloseHelpAction(dialog));
     dialog.pack();
   }
 
-  public void show(String ref) {
+  public void show(String ref, Functor onCloseCallback) {
+    this.onCloseCallback = onCloseCallback;
     forwardPages.clear();
     openPage(ref, true);
     if (!dialog.isVisible()) {
@@ -127,5 +130,21 @@ public class HelpDialog {
     homePageAction.setEnabled(!HomePageAction.INDEX_PAGE.equals(currentPage));
     backPageAction.setEnabled(!backPages.isEmpty());
     forwardPageAction.setEnabled(!forwardPages.isEmpty());
+  }
+
+  private class CloseHelpAction extends CloseAction {
+    public CloseHelpAction(JDialog dialog) {
+      super(dialog);
+    }
+
+    public void actionPerformed(ActionEvent event) {
+      super.actionPerformed(event);
+      try {
+        onCloseCallback.run();
+      }
+      catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
   }
 }

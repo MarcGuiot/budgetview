@@ -6,6 +6,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Functor;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -33,6 +34,10 @@ public class HelpService {
   }
 
   public void show(String helpRef, Window owner) {
+    show(helpRef, owner, Functor.NULL);
+  }
+
+  public void show(String helpRef, Window owner, Functor onCloseCallback) {
     if ((dialog != null) && dialog.isVisible()) {
       if (owner != lastOwner) {
         dialog.close();
@@ -45,7 +50,7 @@ public class HelpService {
       dialog = new HelpDialog(source, repository, directory, owner);
       lastOwner = owner;
     }
-    dialog.show(helpRef);
+    dialog.show(helpRef, onCloseCallback);
   }
 
   public boolean hasBankHelp(Glob bank) {
