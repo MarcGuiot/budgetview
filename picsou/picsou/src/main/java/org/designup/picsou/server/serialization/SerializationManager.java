@@ -35,5 +35,6 @@ public class SerializationManager {
     AccountPositionThreshold.TYPE.updateProperty(SERIALIZATION_PROPERTY, new AccountPositionThreshold.Serializer());
     SubSeries.TYPE.updateProperty(SERIALIZATION_PROPERTY, new SubSeries.Serializer());
     Notes.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Notes.Serializer());
+    SignpostStatus.TYPE.updateProperty(SERIALIZATION_PROPERTY, new SignpostStatus.Serializer());
   }
 }

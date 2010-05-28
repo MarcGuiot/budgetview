@@ -4,6 +4,7 @@ import net.java.balloontip.BalloonTip;
 import net.java.balloontip.styles.ModernBalloonStyle;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.KeyChangeListener;
@@ -19,6 +20,7 @@ public abstract class Signpost {
   private BooleanField completionField;
   protected GlobRepository repository;
   protected Directory directory;
+  protected SelectionService selectionService;
 
   protected static final ModernBalloonStyle BALLOON_STYLE =
     new ModernBalloonStyle(15, 7, Color.YELLOW.brighter(), Color.YELLOW, Color.ORANGE);
@@ -34,9 +36,17 @@ public abstract class Signpost {
     this.completionField = completionField;
     this.repository = repository;
     this.directory = directory;
+    this.selectionService = directory.get(SelectionService.class);
   }
 
-  public void setComponent(JComponent component) {
+  public void activate() {
+    if (this.component == null) {
+      throw new InvalidState("No component was set for " + getClass().getSimpleName());
+    }
+    setup();
+  }
+
+  public void activate(JComponent component) {
     if (this.component != null) {
       throw new InvalidState("A component is already set for " + getClass().getSimpleName());
     }
@@ -51,18 +61,16 @@ public abstract class Signpost {
     completionListener = new KeyChangeListener(SignpostStatus.KEY) {
       protected void update() {
         if (isShowing() && isCompleted()) {
-          dispose();
+          hide();
         }
       }
     };
     repository.addChangeListener(completionListener);
 
-    startup();
+    init();
   }
 
-  protected abstract void startup();
-
-  protected abstract void shutdown();
+  protected abstract void init();
 
   private boolean isCompleted() {
     return SignpostStatus.isCompleted(completionField, repository);
@@ -80,17 +88,17 @@ public abstract class Signpost {
     if (isShowing() || isCompleted()) {
       return;
     }
-    doShow(component, Lang.get(textKey, args));
+    balloonTip = createBalloonTip(component, Lang.get(textKey, args));
+
   }
 
-  protected void doShow(JComponent component, String text) {
-    balloonTip = new BalloonTip(component,
-                                text,
-                                BALLOON_STYLE,
-                                BalloonTip.Orientation.RIGHT_BELOW,
-                                BalloonTip.AttachLocation.SOUTH,
-                                40, 20, false);
-
+  protected BalloonTip createBalloonTip(JComponent component, String text) {
+    return new BalloonTip(component,
+                          text,
+                          BALLOON_STYLE,
+                          BalloonTip.Orientation.RIGHT_BELOW,
+                          BalloonTip.AttachLocation.SOUTH,
+                          40, 20, false);
   }
 
   protected void hide() {
@@ -98,11 +106,6 @@ public abstract class Signpost {
       balloonTip.closeBalloon();
       balloonTip = null;
     }
-  }
-
-  protected void dispose() {
-    hide();
-    repository.removeChangeListener(completionListener);
-    shutdown();
+    SignpostStatus.setCompleted(completionField, repository);
   }
 }

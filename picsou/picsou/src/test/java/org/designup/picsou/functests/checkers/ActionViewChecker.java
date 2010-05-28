@@ -2,7 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
-import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class ActionViewChecker extends GuiChecker {
   private Window window;
@@ -16,7 +16,7 @@ public class ActionViewChecker extends GuiChecker {
   }
 
   public ActionViewChecker checkImportMessage(String message) {
-        UISpecAssert.assertThat(getPanel().getPanel("import").getTextBox("editor").textEquals(message));
+    assertThat(getPanel().getPanel("import").getTextBox("content").textEquals(message));
     return this;
   }
 

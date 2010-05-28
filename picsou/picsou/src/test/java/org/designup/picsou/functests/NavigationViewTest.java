@@ -29,7 +29,6 @@ public class NavigationViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testInitialImport() throws Exception {
-
     views.selectHome();
     versionInfo.checkNoNewVersion();
     actions.checkImportSignpostDisplayed("Click here to import your operations");

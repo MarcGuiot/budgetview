@@ -4,8 +4,7 @@ import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 import javax.swing.*;
 
@@ -52,8 +51,7 @@ public class LoginChecker extends GuiChecker {
     enterPassword(password);
     setCreation();
     confirmPassword(password);
-    HelpChecker.open(
-    new Trigger() {
+    HelpChecker.open(new Trigger() {
       public void run() throws Exception {
         loginAndSkipSla();
         waitForApplicationToLoad();
@@ -82,9 +80,10 @@ public class LoginChecker extends GuiChecker {
         waitForApplicationToLoad();
       }
     };
-    if (showWelcomeMessage){
+    if (showWelcomeMessage) {
       HelpChecker.open(trigger).close();
-    }else{
+    }
+    else {
       trigger.run();
     }
   }

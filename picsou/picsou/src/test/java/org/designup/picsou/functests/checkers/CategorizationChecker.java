@@ -687,6 +687,17 @@ public class CategorizationChecker extends GuiChecker {
     selectTransactionFilterMode(TransactionFilteringMode.UNCATEGORIZED);
   }
 
+
+  public CategorizationChecker checkSelectionSignpostDisplayed(String message) {
+    checkSignpostVisible(getPanel(), getTable(), message);
+    return this;
+  }
+
+  public CategorizationChecker checkSelectionSignpostHidden() {
+    checkSignpostHidden(getPanel(), getTable());
+    return this;
+  }
+
   public void checkTableBackground(String... colors) {
     Table table = getTable();
     assertThat(table.rowCountEquals(colors.length));

@@ -17,13 +17,9 @@ public class ImportSignpost extends Signpost implements ChangeSetListener {
     super(SignpostStatus.IMPORT_SHOWN, repository, directory);
   }
 
-  protected void startup() {
+  protected void init() {
     repository.addChangeListener(this);
     update();
-  }
-
-  protected void shutdown() {
-    repository.removeChangeListener(this);
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {

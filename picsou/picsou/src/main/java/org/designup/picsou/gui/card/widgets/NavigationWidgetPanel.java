@@ -40,7 +40,7 @@ public class NavigationWidgetPanel {
 
     Signpost signpost = widget.getSignpost();
     if (signpost != null) {
-      signpost.setComponent(button);
+      signpost.activate(button);
     }
 
     JPanel panel = builder.load();
