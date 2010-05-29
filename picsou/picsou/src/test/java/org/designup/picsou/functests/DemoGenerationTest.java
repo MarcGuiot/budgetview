@@ -207,8 +207,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     categorization.setNewSavings("VIRT MENS. LIVRET A", "Virt. auto livret", "Main accounts", "Livret");
 
-    categorization.getCompletionGauge().hideProgressMessage();
-
     // Gestion du liquide
     timeline.selectMonth(Month.toString(secondMonth));
     transactionCreation.show()

@@ -2,6 +2,7 @@ package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.signpost.guides.CategorizationSelectionSignpost;
+import org.designup.picsou.gui.signpost.guides.CategorizationCompletionSignpost;
 import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.accounts.NewAccountAction;
 import org.designup.picsou.gui.categorization.components.*;
@@ -88,16 +89,19 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private static final int[] COLUMN_SIZES = {10, 12, 28, 10};
   private SeriesEditionDialog seriesEditionDialog;
 
+  private Signpost signpost;
+
   private TransactionRendererColors colors;
   private PicsouTableHeaderPainter headerPainter;
   private FilterSet filterSet;
   private GlobMatcher filter = GlobMatchers.ALL;
   private GlobMatcher currentTableFilter;
   private Set<Key> modifiedTransactions = new HashSet<Key>();
+  private CategorizationLevel categorizationLevel;
 
   public CategorizationView(final GlobRepository repository, Directory parentDirectory) {
     super(repository, createLocalDirectory(parentDirectory));
-    colorService.addListener(this);
+    this.colorService.addListener(this);
     this.parentDirectory = parentDirectory;
     parentDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
@@ -106,7 +110,11 @@ public class CategorizationView extends View implements TableView, Filterable, C
       }
     }, Month.TYPE);
 
-    colors = new TransactionRendererColors(directory);
+    this.colors = new TransactionRendererColors(directory);
+
+    categorizationLevel = new CategorizationLevel(repository);
+
+    this.signpost = new CategorizationCompletionSignpost(categorizationLevel, repository, parentDirectory);
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
@@ -119,6 +127,10 @@ public class CategorizationView extends View implements TableView, Filterable, C
     headerPainter.setFiltered(matcher != GlobMatchers.ALL);
   }
 
+  public Signpost getCompletionSignpost() {
+    return signpost;
+  }
+
   private GlobsPanelBuilder createPanelBuilder() {
 
     seriesEditionDialog = directory.get(SeriesEditionDialog.class);
@@ -128,10 +140,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory));
 
-    CategorizationGaugePanel gauge = new CategorizationGaugePanel(repository, parentDirectory);
+    CategorizationGaugePanel gauge = new CategorizationGaugePanel(categorizationLevel, repository, parentDirectory);
     builder.add("gaugePanel", gauge.getPanel());
-    builder.add("progressMessage", gauge.getProgressMessage());
-    builder.add("hideProgressMessage", gauge.getHideProgressMessageAction());
 
     addFilteringModeCombo(builder);
 

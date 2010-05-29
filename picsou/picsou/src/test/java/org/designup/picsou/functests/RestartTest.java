@@ -184,11 +184,11 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
 
     CategorizationGaugeChecker gauge = categorization.getCompletionGauge();
-    gauge.checkLevel(1, "100%");
+    gauge.checkLevel(1);
     gauge.checkProgressMessageHidden();
 
     categorization.setNewIncome("WorldCo", "Salaire");
-    gauge.checkLevel(0.5, "50%");
+    gauge.checkLevel(0.5);
     gauge.checkProgressMessageHidden();
 
     categorization.showUncategorizedTransactionsOnly();
@@ -206,35 +206,8 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.getCompletionGauge()
-      .checkLevel(0.5, "50%")
+      .checkLevel(0.5)
       .checkProgressMessageHidden();
-  }
-
-  public void testCategorizationProgressMessage() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2008/05/10", 1000.0, "WorldCo")
-      .addTransaction("2008/05/15", 500.0, "FNAC")
-      .load();
-
-    views.selectCategorization();
-    categorization.setNewIncome("WorldCo", "Income");
-    categorization.getCompletionGauge().checkLevel(0.33, "33%");
-
-    restartApplication();
-
-    views.selectCategorization();
-    categorization.getCompletionGauge().checkLevel(0.33, "33%");
-
-    categorization.setNewVariable("FNAC", "Leisures");
-    categorization.getCompletionGauge().checkCompleteProgressMessageShown();
-    categorization.getCompletionGauge().hideProgressMessage();
-    categorization.getCompletionGauge().checkProgressMessageHidden();
-
-    restartApplication();
-
-    views.selectCategorization();
-    categorization.getCompletionGauge().checkProgressMessageHidden();
   }
 
   public void testRestartAfterCurrentMonthChanged() throws Exception {
@@ -245,7 +218,8 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/10", -200.0, "Monop")
       .addTransaction("2008/08/10", -100.0, "Fnac")
       .load();
-    // on creer une series a la main sans l'associé des le debut : du coup le montant initial de la series est a 0
+    
+    // on crée une serie a la main sans l'associé des le debut : du coup le montant initial de la series est a 0
     views.selectBudget();
     budgetView.variable.createSeries().setName("End date").switchToManual()
       .selectAllMonths().setAmount("300").validate();

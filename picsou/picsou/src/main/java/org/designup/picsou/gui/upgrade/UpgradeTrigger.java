@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.upgrade;
 
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
@@ -78,12 +78,21 @@ public class UpgradeTrigger implements ChangeSetListener {
       repository.safeApply(Transaction.TYPE, isTrue(Transaction.PLANNED), new RemovePlanedPrefixFunctor());
     }
 
-    if (currentJarVersion < 34){
+    if (currentJarVersion < 34) {
       updateSavings(repository);
     }
 
     if (currentJarVersion < 35) {
       repository.update(UserPreferences.KEY, UserPreferences.SHOW_BUDGET_VIEW_WIZARD, true);
+    }
+
+    if (currentJarVersion < 43) {
+      if (!repository.get(UserPreferences.KEY).isTrue(UserPreferences.SHOW_CATEGORIZATION_HELP_MESSAGE)) {
+        repository.findOrCreate(SignpostStatus.KEY);
+        repository.update(SignpostStatus.KEY, SignpostStatus.IMPORT_SHOWN, true);
+        repository.update(SignpostStatus.KEY, SignpostStatus.CATEGORIZATION_SELECTION_SHOWN, true);
+        repository.update(SignpostStatus.KEY, SignpostStatus.CATEGORIZATION_COMPLETION_SHOWN, true);
+      }
     }
 
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
@@ -99,7 +108,7 @@ public class UpgradeTrigger implements ChangeSetListener {
 
   private void updateAccount(GlobRepository repository, Glob series, final LinkField accountField) {
     Glob account = repository.findLinkTarget(series, accountField);
-    if (account != null && account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())){
+    if (account != null && account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
       repository.update(series.getKey(), accountField, Account.MAIN_SUMMARY_ACCOUNT_ID);
       GlobList planned =
         repository.getAll(Transaction.TYPE,

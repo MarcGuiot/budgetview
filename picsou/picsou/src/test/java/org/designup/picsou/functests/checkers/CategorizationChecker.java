@@ -613,7 +613,7 @@ public class CategorizationChecker extends GuiChecker {
   }
 
   public CategorizationGaugeChecker getCompletionGauge() {
-    return new CategorizationGaugeChecker(getPanel());
+    return new CategorizationGaugeChecker(mainWindow);
   }
 
   public CategorizationTableChecker initContent() {

@@ -35,15 +35,7 @@
         <panel styleClass="block">
           <column styleClass="innerBlock">
             <panel ref="gaugePanel" opaque="false"/>
-
-            <row name="helpMessagePanel" autoHideSource="progressMessage" weightY="0.1" fill="horizontal"
-                 border="empty(0,10,0,10)">
-              <row styleClass="mainPanelMessage">
-                <htmlEditorPane ref="progressMessage" hyperlinkListener="hyperlinkHandler"/>
-                <button action="hideProgressMessage" styleClass="remove" tooltipText="$hideMessage"/>
-              </row>
-            </row>
-
+            
             <row marginBottom="5">
               <label text="$categorization.filter.label" styleClass="formLabel"
                      foreground="gauge.categorization.label" marginRight="5"/>

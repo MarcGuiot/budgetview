@@ -1,30 +1,22 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.Panel;
-import org.uispec4j.TextBox;
-import org.uispec4j.Button;
-import static org.uispec4j.assertion.UISpecAssert.assertTrue;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import org.designup.picsou.gui.components.charts.Gauge;
+import org.uispec4j.*;
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class CategorizationGaugeChecker extends GuiChecker {
+  private Window mainWindow;
   private Panel panel;
-  private TextBox progressMessage;
-  private Button hideButton;
 
-  public CategorizationGaugeChecker(Panel panel) {
-    this.panel = panel.getPanel("gaugePanel");
-    this.progressMessage = panel.getTextBox("progressMessage");
-    this.hideButton = panel.getButton("hideProgressMessage");
+  public CategorizationGaugeChecker(Window mainWindow) {
+    this.mainWindow = mainWindow;
+    this.panel = mainWindow.getPanel("gaugePanel");
   }
 
-  public CategorizationGaugeChecker checkLevel(double gaugeLevel, String displayed) {
+  public CategorizationGaugeChecker checkLevel(double gaugeLevel) {
     assertThat(panel.isVisible());
     GaugeChecker gauge = new GaugeChecker(panel.findSwingComponent(Gauge.class));
     gauge.checkFill(gaugeLevel);
-
-    assertThat(panel.getTextBox("level").textEquals(displayed));
     return this;
   }
 
@@ -33,25 +25,20 @@ public class CategorizationGaugeChecker extends GuiChecker {
   }
 
   public void checkProgressMessageHidden() {
-    assertFalse(progressMessage.isVisible());
+    checkSignpostHidden(mainWindow, getBudgetToggle());
   }
 
   public void checkQuasiCompleteProgressMessageShown() {
-    assertTrue(progressMessage.isVisible());
-    assertTrue(progressMessage.textContains("quasi"));
+    checkSignpostVisible(mainWindow, getBudgetToggle(),
+                         "Categorization is quasi complete. You can now see the budget page.");
   }
 
   public void checkCompleteProgressMessageShown() {
-    assertTrue(progressMessage.isVisible());
-    assertTrue(progressMessage.textContains("completed"));
+    checkSignpostVisible(mainWindow, getBudgetToggle(),
+                         "Categorization is completed. You can now see the budget page.");
   }
 
-  public void hideProgressMessage() {
-    hideButton.click();
-  }
-
-  public void clickOnProgressMessageLink() {
-    assertTrue(progressMessage.isVisible());
-    progressMessage.clickOnHyperlink("budget");
+  private ToggleButton getBudgetToggle() {
+    return mainWindow.getToggleButton("budgetCardToggle");
   }
 }

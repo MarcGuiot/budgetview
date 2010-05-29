@@ -30,27 +30,27 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     views.selectCategorization();
 
-    gauge.checkLevel(1, "100%");
+    gauge.checkLevel(1);
     gauge.checkProgressMessageHidden();
 
     categorization.setNewVariable("WorldCo", "Income");
-    gauge.checkLevel(0.5, "50%");
+    gauge.checkLevel(0.5);
     gauge.checkProgressMessageHidden();
 
     categorization.setNewVariable("Auchan", "Food");
-    gauge.checkLevel(0.05, "5%");
+    gauge.checkLevel(0.05);
     gauge.checkQuasiCompleteProgressMessageShown();
 
     timeline.selectMonth("2008/06");
-    gauge.checkLevel(0.05, "5%");
+    gauge.checkLevel(0.05);
     gauge.checkQuasiCompleteProgressMessageShown();
 
     timeline.selectAll();
-    gauge.checkLevel(0.05, "5%");
+    gauge.checkLevel(0.05);
     gauge.checkQuasiCompleteProgressMessageShown();
 
     categorization.setNewVariable("FNAC", "Leisures");
-    gauge.checkLevel(0.001, "1%");
+    gauge.checkLevel(0.001);
     gauge.checkQuasiCompleteProgressMessageShown();
 
     categorization.setVariable("SAPN", "Leisures");
@@ -68,11 +68,11 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
 
     CategorizationGaugeChecker gauge = categorization.getCompletionGauge();
-    gauge.checkLevel(1, "100%");
+    gauge.checkLevel(1);
     gauge.checkProgressMessageHidden();
 
     categorization.setNewIncome("WorldCo", "Salaire");
-    gauge.checkLevel(0.5, "50%");
+    gauge.checkLevel(0.5);
     gauge.checkProgressMessageHidden();
   }
 
@@ -86,37 +86,5 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
 
     categorization.getCompletionGauge().checkHidden();
     categorization.getCompletionGauge().checkCompleteProgressMessageShown();
-  }
-
-  public void testHidingProgressMessage() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2008/05/10", 1000.0, "WorldCo")
-      .load();
-
-    categorization.setNewVariable("WorldCo", "Income");
-
-    categorization.getCompletionGauge().checkCompleteProgressMessageShown();
-    categorization.getCompletionGauge().hideProgressMessage();
-    categorization.getCompletionGauge().checkProgressMessageHidden();
-  }
-
-  public void testMessageNavigation() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2008/05/10", 1000.0, "WorldCo")
-      .addTransaction("2008/05/10", 10.0, "McDo")
-      .load();
-    CategorizationGaugeChecker gauge = categorization.getCompletionGauge();
-
-    views.selectCategorization();
-    categorization.setNewIncome("WorldCo", "Salary");
-    gauge.checkQuasiCompleteProgressMessageShown();
-
-    gauge.clickOnProgressMessageLink();
-    views.checkBudgetSelected();
-
-    views.back();
-    gauge.checkProgressMessageHidden();
   }
 }

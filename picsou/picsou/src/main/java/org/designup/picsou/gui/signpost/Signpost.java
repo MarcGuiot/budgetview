@@ -22,8 +22,15 @@ public abstract class Signpost {
   protected Directory directory;
   protected SelectionService selectionService;
 
-  protected static final ModernBalloonStyle BALLOON_STYLE =
-    new ModernBalloonStyle(15, 7, Color.YELLOW.brighter(), Color.YELLOW, Color.ORANGE);
+  protected static final ModernBalloonStyle BALLOON_STYLE = createBalloonStyle();
+
+  private static ModernBalloonStyle createBalloonStyle() {
+    ModernBalloonStyle style =
+      new ModernBalloonStyle(15, 7, Color.YELLOW.brighter(), Color.YELLOW, Color.ORANGE);
+    style.setBorderThickness(2);
+    return style;
+  }
+
   private BalloonTip balloonTip;
   private KeyChangeListener completionListener;
 
@@ -77,7 +84,7 @@ public abstract class Signpost {
   }
 
   protected boolean canShow() {
-    return !isCompleted() && !isShowing();
+    return !isCompleted();
   }
 
   protected boolean isShowing() {
@@ -85,11 +92,16 @@ public abstract class Signpost {
   }
 
   protected void show(String textKey, Object... args) {
-    if (isShowing() || isCompleted()) {
+    if (isCompleted()) {
       return;
     }
-    balloonTip = createBalloonTip(component, Lang.get(textKey, args));
-
+    String text = Lang.get(textKey, args);
+    if (isShowing()) {
+      balloonTip.setText(text);
+    }
+    else {
+      balloonTip = createBalloonTip(component, text);
+    }
   }
 
   protected BalloonTip createBalloonTip(JComponent component, String text) {

@@ -16,6 +16,8 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
   public void testImport() throws Exception {
 
+    // === Import ===
+
     views.selectHome();
     actions.checkImportSignpostDisplayed("Click here to import your operations");
 
@@ -28,11 +30,27 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/05/28", +500, "income")
       .load();
 
+    // === Categorization selection ===
+
     views.checkCategorizationSelected();
     categorization.checkSelectionSignpostDisplayed("Select the operations to categorize");
 
     categorization.selectTableRow(0);
     categorization.checkSelectionSignpostHidden();
+
+    // === Categorization completion ===
+
+    categorization.setNewRecurring("rent", "Rent");
+    categorization.setNewIncome("income", "Income");
+
+    categorization.getCompletionGauge().checkCompleteProgressMessageShown();
+
+    views.selectBudget();
+
+    views.selectCategorization();
+    categorization.getCompletionGauge().checkProgressMessageHidden();
+
+    // === Categorization restart ===
 
     restartApplication();
 
@@ -41,5 +59,6 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     
     views.selectCategorization();
     categorization.checkSelectionSignpostHidden();
+    categorization.getCompletionGauge().checkProgressMessageHidden();
   }
 }

@@ -30,6 +30,7 @@ public class SignpostStatus {
   public static BooleanField IMPORT_SHOWN;
   public static BooleanField WELCOME_SHOWN;
   public static BooleanField CATEGORIZATION_SELECTION_SHOWN;
+  public static BooleanField CATEGORIZATION_COMPLETION_SHOWN;
 
   static {
     GlobTypeLoader.init(SignpostStatus.class, "signpostStatus");
@@ -54,6 +55,7 @@ public class SignpostStatus {
       outputStream.writeBoolean(values.get(IMPORT_SHOWN));
       outputStream.writeBoolean(values.get(WELCOME_SHOWN));
       outputStream.writeBoolean(values.get(CATEGORIZATION_SELECTION_SHOWN));
+      outputStream.writeBoolean(values.get(CATEGORIZATION_COMPLETION_SHOWN));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -72,6 +74,7 @@ public class SignpostStatus {
       fieldSetter.set(IMPORT_SHOWN, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_SELECTION_SHOWN, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_COMPLETION_SHOWN, input.readBoolean());
     }
   }
 }

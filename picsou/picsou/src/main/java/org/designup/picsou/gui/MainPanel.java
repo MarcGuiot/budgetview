@@ -77,21 +77,14 @@ public class MainPanel {
   private Directory directory;
   private WindowManager windowManager;
   private RegisterLicenseAction registerAction;
-  private Action dumpRepository;
   private SeriesView seriesView;
-  private DataCheckerAction checkRepository;
-  private ThrowExceptionAction throwException;
-  private ThrowInRepoExceptionAction throwInRepoException;
   private JMenuBar menuBar;
   private JPanel panel;
   private TimeView timeView;
   private CardView cardView;
   private TransactionView transactionView;
   private TextFilterPanel search;
-  private NotesView notesView;
-  private InitializationView initializationView;
   private SeriesEvolutionView seriesEvolutionView;
-  private LogoutService logoutService;
   private CategorizationView categorizationView;
 
   public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
@@ -108,7 +101,7 @@ public class MainPanel {
     directory.add(JFrame.class, parent);
     directory.add(new UndoRedoService(repository));
     directory.add(new HelpService(repository, directory));
-    logoutService = new LogoutService() {
+    LogoutService logoutService = new LogoutService() {
       public void logout() {
         MainPanel.this.logout();
       }
@@ -136,10 +129,6 @@ public class MainPanel {
     restoreAction = new RestoreAction(repository, directory);
     preferencesAction = new PreferencesAction(repository, directory);
     registerAction = new RegisterLicenseAction(repository, directory);
-    dumpRepository = new DumpDataAction(repository);
-    checkRepository = new DataCheckerAction(repository, directory);
-    throwException = new ThrowExceptionAction();
-    throwInRepoException = new ThrowInRepoExceptionAction(repository);
     exitAction = new ExitAction(windowManager, directory);
     logoutAction = new LogoutAction(logoutService);
     deleteUserAction = new DeleteUserAction(this, repository, directory);
@@ -162,9 +151,9 @@ public class MainPanel {
 
     PeriodSeriesStatUpdater.init(replicationGlobRepository, directory);
 
-    cardView = new CardView(repository, directory);
-    notesView = new NotesView(repository, directory);
-    initializationView = new InitializationView(importFileAction, repository, directory);
+    cardView = new CardView(repository, directory, categorizationView.getCompletionSignpost());
+    NotesView notesView = new NotesView(repository, directory);
+    InitializationView initializationView = new InitializationView(importFileAction, repository, directory);
     seriesEvolutionView = new SeriesEvolutionView(repository, directory);
     createPanel(
       titleView,
@@ -289,10 +278,10 @@ public class MainPanel {
 
 //    Utils.beginRemove();
     editMenu.addSeparator();
-    editMenu.add(dumpRepository);
-    editMenu.add(checkRepository);
-    editMenu.add(throwException);
-    editMenu.add(throwInRepoException);
+    editMenu.add(new DumpDataAction(repository));
+    editMenu.add(new DataCheckerAction(repository, directory));
+    editMenu.add(new ThrowExceptionAction());
+    editMenu.add(new ThrowInRepoExceptionAction(repository));
 //    Utils.endRemove();
 
     JRootPane rootPane = frame.getRootPane();

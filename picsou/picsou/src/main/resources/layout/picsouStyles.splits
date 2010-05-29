@@ -242,19 +242,6 @@
            minimumSize="(18,20)" preferredSize="(18,20)" maximumSize="(18,20)"
            fill='none' weightX='0'/>
 
-    <!-- Main window message panel -->
-    <ui name="mainPanelMessage" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        borderWidth="1" cornerRadius="6"
-        topColor="mainpanel.message.top"
-        bottomColor="mainpanel.message.bottom"
-        borderColor="mainpanel.message.border"/>
-    <style selector=".mainPanelMessage" ui="mainPanelMessage"
-           fill="horizontal" anchor="center" weightX="100" weightY="0" marginLeft="10" marginRight="10"
-           border="empty(0,0,10,0)"/>
-    <style selector=".mainPanelMessage htmlEditorPane" fill="horizontal" anchor="center"
-           foreground="mainpanel.message" weightX="10" weightY="0" border="empty(5,20,5,0)"/>
-    <style selector=".mainPanelMessage button" weightX="0" border="empty(5,0,5,20)"/>
-
     <!-- Navigation widgets -->
     <style selector=".navigationWidgetLabel"
            foreground="navigationView.text" opaque="false" font="-,plain,11"

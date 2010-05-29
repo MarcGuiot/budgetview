@@ -1,10 +1,7 @@
 package org.designup.picsou.gui.card;
 
-import net.java.balloontip.BalloonTip;
-import net.java.balloontip.styles.RoundedBalloonStyle;
-import net.java.balloontip.styles.EdgedBalloonStyle;
-import net.java.balloontip.styles.ModernBalloonStyle;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.card.utils.NavigationAction;
 import org.designup.picsou.gui.card.utils.NavigationIcons;
 import org.designup.picsou.gui.help.HelpService;
@@ -24,7 +21,6 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 
@@ -35,11 +31,13 @@ public class CardView extends View implements GlobSelectionListener {
   private JToggleButton[] toggles = new JToggleButton[Card.values().length];
   private static final Card[] CARDS = {Card.HOME, Card.CATEGORIZATION, Card.BUDGET, Card.EVOLUTION, Card.SAVINGS, Card.DATA};
   private CardView.ViewHelpAction viewHelpAction;
+  private Signpost categorizationCompletionSignpost;
 
-  public CardView(GlobRepository repository, Directory directory) {
+  public CardView(GlobRepository repository, Directory directory, Signpost completionSignpost) {
     super(repository, directory);
     this.selectionService.addListener(this, Card.TYPE);
     this.viewHelpAction = new ViewHelpAction();
+    this.categorizationCompletionSignpost = completionSignpost;
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
@@ -59,6 +57,10 @@ public class CardView extends View implements GlobSelectionListener {
       Gui.configureIconButton(toggle, name, NavigationIcons.DIMENSION);
       masterGroup.add(toggle);
       toggles[card.getId()] = toggle;
+
+      if (card.equals(Card.BUDGET)) {
+        categorizationCompletionSignpost.activate(toggle);
+      }
     }
 
     builder.addRepeat("cards", Arrays.asList(CARDS), new RepeatComponentFactory<Card>() {
