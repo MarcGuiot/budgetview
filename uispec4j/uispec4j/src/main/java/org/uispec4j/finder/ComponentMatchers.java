@@ -1,7 +1,6 @@
 package org.uispec4j.finder;
 
 import org.uispec4j.utils.ComponentUtils;
-import org.uispec4j.utils.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,6 +65,7 @@ public class ComponentMatchers {
 
   /**
    * Matches components based on labels (very useful when dealing with forms).
+   *
    * @see JLabel#setLabelFor(java.awt.Component)
    */
   public static ComponentMatcher componentLabelFor(final String labelName) {
@@ -77,6 +77,14 @@ public class ComponentMatchers {
 
         JLabel label = ComponentUtils.findLabelFor(awtComp);
         return label == null ? false : displayedNameSubstring(labelName).matches(label);
+      }
+    };
+  }
+
+  public static ComponentMatcher visible(final boolean visible) {
+    return new ComponentMatcher() {
+      public boolean matches(Component component) {
+        return (component != null) && (component.isVisible() == visible);
       }
     };
   }

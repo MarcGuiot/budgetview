@@ -131,6 +131,18 @@ public class ComponentMatchersTest extends PanelComponentFinderTestCase {
                                         panel.getButton(ComponentMatchers.componentLabelFor("second button")));
   }
 
+  public void testVisible() throws Exception {
+    button1.setVisible(true);
+    button2.setVisible(false);
+    textField.setVisible(true);
+    otherButton.setVisible(false);
+
+    TestUtils.assertSwingComponentsEquals(new Component[]{button1, textField},
+                                          panel.getSwingComponents(ComponentMatchers.visible(true)));
+    TestUtils.assertSwingComponentsEquals(new Component[]{button2, otherButton},
+                                          panel.getSwingComponents(ComponentMatchers.visible(false)));
+  }
+
   public void testSearchWithTooltip() throws Exception {
     button1.setToolTipText("button 1");
 
