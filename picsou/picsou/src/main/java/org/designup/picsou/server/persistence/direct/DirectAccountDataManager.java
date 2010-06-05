@@ -268,6 +268,25 @@ public class DirectAccountDataManager implements AccountDataManager {
     return true;
   }
 
+  public boolean newData(Integer userId, SerializedInput input) {
+    MapOfMaps<String, Integer, SerializableGlobType> globs = new MapOfMaps<String, Integer, SerializableGlobType>();
+    TransactionInfo transactionInfo = readData(userId, globs);
+    DurableOutputStream durableOutputStream = new DurableOutputStream(this, transactionInfo.transactionId, userId);
+    outputStreamMap.put(userId, durableOutputStream);
+
+    MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
+    SerializableGlobSerializer.deserialize(input, data);
+    try {
+      writeSnapshot(durableOutputStream.getNextTransactionVersion(), data,
+                    durableOutputStream.getPrevaylerDirectory(), System.currentTimeMillis());
+    }
+    catch (IOException e) {
+      Log.write("in new data", e);
+      return false;
+    }
+    return true;
+  }
+
   synchronized private void writeSnapshot(long transactionId, MapOfMaps<String, Integer, SerializableGlobType> data,
                                           PrevaylerDirectory directory, long timestamp) throws IOException {
     File tempFile = directory.createTempFile("snapshot" + transactionId + "temp", "generatingSnapshot");

@@ -28,6 +28,7 @@ public class OperationChecker {
   private MenuItem undoMenu;
   private MenuItem redoMenu;
   private MenuItem dumpMenu;
+  private MenuItem protectMenu;
   private MenuItem throwExceptionMenu;
   private MenuItem throwExceptionInRepositoryMenu;
   public static final String DEFAULT_ACCOUNT_NUMBER = "11111";
@@ -41,6 +42,7 @@ public class OperationChecker {
   public OperationChecker(Window window) {
     this.window = window;
     MenuItem fileMenu = window.getMenuBar().getMenu("File");
+    protectMenu = fileMenu.getSubMenu("protect");
     importMenu = fileMenu.getSubMenu("Import");
     exportMenu = fileMenu.getSubMenu("Export");
     preferencesMenu = fileMenu.getSubMenu("Preferences");
@@ -434,4 +436,17 @@ public class OperationChecker {
     MessageAndDetailsDialogChecker.init(checkMenu.triggerClick())
       .checkDetailsContain("Start checking\nEnd checking").close();
   }
+
+  public void protect(String userName, String password) {
+    RenameChecker checker =
+      new RenameChecker(WindowInterceptor.getModalDialog(protectMenu.triggerClick()));
+    checker.set("password", userName, password);
+  }
+
+  public void protectFromAnonymous(String userName, String password) {
+    RenameChecker checker =
+      new RenameChecker(WindowInterceptor.getModalDialog(protectMenu.triggerClick()));
+    checker.set(userName, password);
+  }
+
 }

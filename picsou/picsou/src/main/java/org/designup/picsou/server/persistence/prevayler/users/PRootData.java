@@ -142,6 +142,8 @@ public class PRootData implements CustomSerializable {
     return true;
   }
 
+  // attention a ne pas changer cette fonction sinon on pourrait avoir des comportements d'excecution de transaction
+  // different (createUserAndHiddenUser
   public int getHash(Date date, String name) {
     int result;
     long ht = date.getTime();

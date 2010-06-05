@@ -48,6 +48,29 @@ public class DefaultConnectedState extends AbstractSessionState implements Conne
     output.writeBoolean(persistence.restore(input, userId));
   }
 
+  public void renameUser(SerializedInput input, SerializedOutput output) {
+    lastAccess();
+    checkPrivateId(input);
+    String newName = input.readUtf8String();
+    String oldName = input.readUtf8String();
+    boolean autoLog = input.readBoolean();
+    byte[] encryptedPassword = input.readBytes();
+    byte[] oldLinkInfo = input.readBytes();
+    byte[] oldEncryptedLinkInfo = input.readBytes();
+    byte[] linkInfo = input.readBytes();
+    byte[] encryptedLinkInfo = input.readBytes();
+    Integer newUserId = persistence.renameUser(newName, oldName, autoLog, encryptedPassword,
+                                               oldLinkInfo, oldEncryptedLinkInfo,
+                                               linkInfo, encryptedLinkInfo, userId, input);
+    if (newUserId != null) {
+      output.writeBoolean(Boolean.TRUE);
+      userId = newUserId;
+    }
+    else {
+      output.writeBoolean(Boolean.FALSE);
+    }
+  }
+
   public void register(SerializedInput input) {
     lastAccess();
     checkPrivateId(input);

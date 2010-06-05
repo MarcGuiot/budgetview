@@ -52,6 +52,12 @@ public class LocalClientTransport implements ClientTransport {
     return output.getInput();
   }
 
+  public SerializedInput rename(Long sessionId, byte[] data) {
+    SerializedByteArrayOutput output = new SerializedByteArrayOutput();
+    serverRequestProcessingService.renameUser(sessionId, SerializedInputOutputFactory.init(data), output.getOutput());
+    return output.getInput();
+  }
+
   public SerializedInput identifyUser(Long sessionId, byte[] data) {
     SerializedByteArrayOutput output = new SerializedByteArrayOutput();
     serverRequestProcessingService.identify(sessionId, SerializedInputOutputFactory.init(data), output.getOutput());

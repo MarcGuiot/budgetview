@@ -174,7 +174,14 @@ public class MainWindow implements WindowManager {
   }
 
   private ServerAccess.LocalInfo initServerAccess(String remoteAdress, String prevaylerPath, boolean dataInMemory) {
-    if (!remoteAdress.startsWith("http")) {
+    if (remoteAdress.startsWith("http")) {
+      this.serverAccess.takeSnapshot();
+      this.serverAccess.disconnect();
+      ServerAccess serverAccess = new ConnectionRetryServerAccess(
+        new EncrypterToTransportServerAccess(new HttpsClientTransport(remoteAdress), directory));
+      this.serverAccess.setServerAccess(serverAccess);
+    }
+    else {
       this.serverAccess.takeSnapshot();
       this.serverAccess.disconnect();
       if (serverDirectory != null) {
@@ -185,13 +192,6 @@ public class MainWindow implements WindowManager {
       ServerAccess serverAccess =
         new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
                                              directory);
-      this.serverAccess.setServerAccess(serverAccess);
-    }
-    else {
-      this.serverAccess.takeSnapshot();
-      this.serverAccess.disconnect();
-      ServerAccess serverAccess = new ConnectionRetryServerAccess(
-        new EncrypterToTransportServerAccess(new HttpsClientTransport(remoteAdress), directory));
       this.serverAccess.setServerAccess(serverAccess);
     }
     ServerAccess.LocalInfo info = serverAccess.connect();

@@ -5,6 +5,7 @@ import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

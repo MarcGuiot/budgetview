@@ -19,4 +19,6 @@ public interface AccountDataManager {
   void takeSnapshot(Integer userId);
 
   boolean restore(SerializedInput input, Integer userId);
+
+  boolean newData(Integer userId, SerializedInput input);
 }

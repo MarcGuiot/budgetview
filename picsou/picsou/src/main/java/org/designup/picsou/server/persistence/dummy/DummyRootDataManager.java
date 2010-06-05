@@ -34,12 +34,13 @@ public class DummyRootDataManager implements RootDataManager {
   }
 
   public Persistence.UserInfo createUserAndHiddenUser(String name, boolean autoLog, boolean isRegisteredUser,
-                                                      byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo) {
+                                                      byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo,
+                                                      Integer id) {
     this.autoLog = autoLog;
     this.cryptedPassword = cryptedPassword;
     this.linkInfo = linkInfo;
     this.cryptedLinkInfo = cryptedLinkInfo;
-    return new Persistence.UserInfo(USER_ID, true);
+    return new Persistence.UserInfo(id, true);
   }
 
   public void deleteUser(String name, byte[] cryptedLinkInfo) {
@@ -50,6 +51,13 @@ public class DummyRootDataManager implements RootDataManager {
 
   public GlobList getLocalUsers() {
     return GlobList.EMPTY;
+  }
+
+  public Integer allocateNewUserId(String name) {
+    return USER_ID;
+  }
+
+  public void replaceUserAndHiddenUser(boolean autoLog, boolean isRegisteredUser, String newName, byte[] newCryptedPassword, byte[] newLinkInfo, byte[] newCryptedLinkInfo, String name, byte[] linkInfo, byte[] cryptedLinkInfo, Integer userId) {
   }
 
   public RepoInfo getAndUpdateAccountInfo() {

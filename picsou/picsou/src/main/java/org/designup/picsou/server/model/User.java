@@ -21,12 +21,8 @@ public class User {
   public static BooleanField AUTO_LOG;
   public static BlobField ENCRYPTED_PASSWORD;   // Chiffrement PBE a partir du mot de passe de l'utilisateur.
   public static BlobField LINK_INFO;  // information generee sur lequel on applique un PBE specific
-  //  public static StringField TEMPORARY_PASSWORD;  // mot de passe en claire pour la premiere connection
   public static BooleanField IS_REGISTERED_USER;
   public final static byte LASTEST_VERSION = 3;
-  // (avec un salt et count different de celui pour le mot de passe
-  // de l'utilisateur)
-  // et qui creer l'association avec le Hidden user
 
   static {
     GlobTypeLoader.init(User.class);

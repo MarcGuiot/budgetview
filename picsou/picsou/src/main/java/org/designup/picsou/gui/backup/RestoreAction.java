@@ -4,7 +4,7 @@ import org.designup.picsou.gui.components.dialogs.MessageFileDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.undo.UndoRedoService;
-import org.designup.picsou.gui.startup.BackupService;
+import org.designup.picsou.gui.backup.BackupService;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;

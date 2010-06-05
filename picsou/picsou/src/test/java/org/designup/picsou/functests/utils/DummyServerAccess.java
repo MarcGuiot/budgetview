@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.utils;
 
 import org.designup.picsou.client.ServerAccess;
+import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.server.model.SerializableGlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.GlobList;
@@ -38,6 +39,10 @@ public class DummyServerAccess implements ServerAccess {
   }
 
   public void deleteUser(String name, char[] password) {
+  }
+
+  public boolean rename(String name, char[] passwd, char[] previousPasswd) throws UserAlreadyExists {
+    return false;
   }
 
   public void addTransaction(GlobList transactions) {

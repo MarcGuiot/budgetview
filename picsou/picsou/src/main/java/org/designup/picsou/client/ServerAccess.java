@@ -37,6 +37,8 @@ public interface ServerAccess {
 
   void deleteUser(String name, char[] password);
 
+  boolean rename(String name, char[] passwd, char[] previousPasswd) throws UserAlreadyExists;
+
   class UserInfo{
     public final String name;
     public final boolean autologin;
@@ -91,6 +93,10 @@ public interface ServerAccess {
     }
 
     public void deleteUser(String name, char[] password) {
+    }
+
+    public boolean rename(String name, char[] passwd, char[] previousPasswd) throws UserAlreadyExists {
+      return false;
     }
 
     public List<UserInfo> getLocalUsers() {
