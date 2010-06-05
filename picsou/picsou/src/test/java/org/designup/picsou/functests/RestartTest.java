@@ -72,7 +72,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(1000.0);
     views.selectBudget();
     budgetView.getSummary()
-      .openPositionPanel()
+      .openPositionDialog()
       .checkIncome(1000.0)
       .close();
 
@@ -84,7 +84,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(0.0);
 
     views.selectBudget();
-    budgetView.getSummary().openPositionPanel()
+    budgetView.getSummary().openPositionDialog()
       .checkIncome(0.0)
       .close();
 
@@ -95,7 +95,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.income.checkTotalAmounts(1000.0, 1000.0);
 
-    budgetView.getSummary().openPositionPanel()
+    budgetView.getSummary().openPositionDialog()
       .checkIncome(0.0)
       .close();
     budgetView.income.checkSeries("Salary", 1000.0, 1000.0);
@@ -154,13 +154,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .switchToManual()
       .setAmount("1000")
       .validate();
-    budgetView.getSummary().checkHelpWizardDisplayed();
-    budgetView.getSummary().getHelpWizard()
-      .checkHelpMessageContains("Budget wizard")
-      .next()
-      .checkHelpMessageContains("Budget view")
-      .next()
-      .checkHelpMessageContains("Set planned amounts");
 
     budgetView.getSummary().checkMonthBalance(-600.00);
 
@@ -169,9 +162,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     timeline.selectMonth("2008/08");
     budgetView.getSummary().checkMonthBalance(-600.00);
-
-    budgetView.getSummary().getHelpWizard()
-      .checkHelpMessageContains("Set planned amounts");
   }
 
   public void testCategorizationView() throws Exception {
@@ -185,11 +175,12 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     CategorizationGaugeChecker gauge = categorization.getCompletionGauge();
     gauge.checkLevel(1);
-    gauge.checkProgressMessageHidden();
+    categorization.selectTableRow(0);
+    checkNoSignpostVisible();
 
     categorization.setNewIncome("WorldCo", "Salaire");
     gauge.checkLevel(0.5);
-    gauge.checkProgressMessageHidden();
+    checkNoSignpostVisible();
 
     categorization.showUncategorizedTransactionsOnly();
     categorization.checkTable(new Object[][]{
@@ -205,9 +196,8 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       {"10/07/2008", "", "FNAC", -1000.00}
     });
 
-    categorization.getCompletionGauge()
-      .checkLevel(0.5)
-      .checkProgressMessageHidden();
+    categorization.getCompletionGauge().checkLevel(0.5);
+    checkNoSignpostVisible();
   }
 
   public void testRestartAfterCurrentMonthChanged() throws Exception {

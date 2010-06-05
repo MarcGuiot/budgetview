@@ -1,11 +1,15 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.PositionChecker;
+import org.designup.picsou.functests.checkers.SeriesAmountEditionDialogChecker;
+import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 
 public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
+    createDefaultSeries = true;
     resetWindow();
     setCurrentDate("2010/05/31");
     setInMemory(false);
@@ -14,20 +18,27 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     setDeleteLocalPrevayler(false);
   }
 
-  public void testImport() throws Exception {
+  public void testCompleteSequence() throws Exception {
 
     // === Import ===
 
     views.selectHome();
     actions.checkImportSignpostDisplayed("Click here to import your operations");
 
+    views.selectCategorization();
+    checkNoSignpostVisible();
+
+    views.selectHome();
+    actions.checkImportSignpostDisplayed("Click here to import your operations");
+
     actions.openImport().close();
-    actions.checkImportSignpostHidden();
+    checkNoSignpostVisible();
 
     OfxBuilder
       .init(this)
       .addTransaction("2010/05/27", -100, "rent")
-      .addTransaction("2006/05/28", +500, "income")
+      .addTransaction("2010/05/28", +500, "income")
+      .addTransaction("2010/05/29", -10, "auchan")
       .load();
 
     // === Categorization selection ===
@@ -36,29 +47,50 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     categorization.checkSelectionSignpostDisplayed("Select the operations to categorize");
 
     categorization.selectTableRow(0);
-    categorization.checkSelectionSignpostHidden();
+    checkNoSignpostVisible();
 
     // === Categorization completion ===
 
-    categorization.setNewRecurring("rent", "Rent");
-    categorization.setNewIncome("income", "Income");
+    categorization.setNewRecurring("rent", "Rent"); // SED shown
+    categorization.setIncome("income", "Income 1");
+    categorization.setVariable("auchan", "Groceries");
+    categorization.checkCompleteProgressMessageShown();
 
-    categorization.getCompletionGauge().checkCompleteProgressMessageShown();
+    // === Series periodicity ===
 
     views.selectBudget();
+    budgetView.recurring.checkNameSignpostDisplayed(
+      "Electricity",
+      "Click on the envelope names to change their periodicity " +
+      "(for instance once every two months)");
 
-    views.selectCategorization();
-    categorization.getCompletionGauge().checkProgressMessageHidden();
+    SeriesEditionDialogChecker editionDialog = budgetView.recurring.editSeries("Electricity");
+    checkNoSignpostVisible();
 
-    // === Categorization restart ===
+    editionDialog.cancel();
+    budgetView.variable.checkAmountSignpostDisplayed(
+      "Groceries", "Click on the planned amounts to set your own values");
+
+    SeriesAmountEditionDialogChecker amountDialog = budgetView.variable.editPlannedAmount("Groceries");
+    checkNoSignpostVisible();
+
+    amountDialog.cancel();
+    budgetView.getSummary().checkPositionSignpostDisplayed();
+
+    PositionChecker positionDialog = budgetView.getSummary().openPositionDialog();
+    checkNoSignpostVisible();
+
+    positionDialog.close();
+    checkNoSignpostVisible();
+    
+    // === Restart ===
 
     restartApplication();
 
     views.selectHome();
-    actions.checkImportSignpostHidden();
-    
+    checkNoSignpostVisible();
+
     views.selectCategorization();
-    categorization.checkSelectionSignpostHidden();
-    categorization.getCompletionGauge().checkProgressMessageHidden();
+    checkNoSignpostVisible();
   }
 }

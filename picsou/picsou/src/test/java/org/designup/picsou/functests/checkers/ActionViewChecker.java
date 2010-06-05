@@ -25,11 +25,6 @@ public class ActionViewChecker extends GuiChecker {
     return this;
   }
 
-  public ActionViewChecker checkImportSignpostHidden() {
-    checkSignpostHidden(getPanel(), getPanel().getButton("Import"));
-    return this;
-  }
-
   public HelpChecker openHelp() {
     return HelpChecker.open(getPanel().getButton("Help").triggerClick());
   }

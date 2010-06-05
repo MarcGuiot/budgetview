@@ -864,35 +864,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkOrder("Auchan", "Monop", "tel");
   }
 
-  public void testHelpMessage() throws Exception {
-    views.selectBudget();
-
-    budgetView.getSummary().checkHelpWizardDisplayed();
-
-    budgetView.getSummary().getHelpWizard()
-      .checkHelpMessageContains("Budget wizard")
-      .next()
-      .checkHelpMessageContains("Budget view")
-      .next()
-      .checkHelpMessageContains("Set planned amounts")
-      .next()
-      .checkHelpMessageContains("Set periodicities")
-      .next()
-      .checkHelpMessageContains("Prepare savings")
-      .next()
-      .checkHelpMessageContains("Prepare projects")
-      .next()
-      .checkHelpMessageContains("Month per month follow-up")
-      .next()
-      .checkHelpMessageContains("Anticipating the next months")
-      .checkNextButtonText("Hide");
-
-    budgetView.getSummary().getHelpWizard()
-      .next();
-
-    budgetView.getSummary().checkHelpMessageHidden();
-  }
-
   public void testPositiveEnvelopeBudgetDoNotCreateNegativePlannedTransaction() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", 15.00, "Loto")

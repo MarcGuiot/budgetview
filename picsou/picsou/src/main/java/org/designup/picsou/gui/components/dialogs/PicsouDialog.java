@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.components.dialogs;
 
-import org.designup.picsou.gui.components.DisposeCallback;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
@@ -19,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PicsouDialog extends JDialog {
@@ -30,8 +30,12 @@ public class PicsouDialog extends JDialog {
   private Action closeAction;
   private Directory directory;
   private boolean openRequestIsManaged = false;
-  private ColorUpdater updater;
-  private String panelName;
+  private ColorUpdater colorUpdater;
+
+  private static int dialogCount = 0;
+  private final int dialogId = dialogCount++;
+
+  private List<Action> onCloseActions;
 
   public static PicsouDialog create(Window owner, Directory directory) {
     return create(owner, true, directory);
@@ -93,7 +97,7 @@ public class PicsouDialog extends JDialog {
   }
 
   public void addPanelWithButtons(JPanel panel, Action ok, Action cancel, JButton additionalAction) {
-    closeAction = cancel;
+    this.closeAction = cancel;
     GridBagBuilder builder = GridBagBuilder.init()
       .add(panel, 0, 0, 4 + 1, 1, Gui.NO_INSETS);
 
@@ -112,7 +116,6 @@ public class PicsouDialog extends JDialog {
       adjustSizes(cancelButton, okButton);
     }
 
-    Insets buttonInsets = new Insets(0, 10, 10, 10);
     if (GuiUtils.isMacOSX()) {
       if (cancelButton != null) {
         builder.add(cancelButton, 2, 1, 1, 1, 1, 0, Fill.HORIZONTAL, Anchor.CENTER, BUTTON_INSETS);
@@ -134,16 +137,16 @@ public class PicsouDialog extends JDialog {
   }
 
   public void dispose() {
-    if (updater != null) {
-      updater.dispose();
+    if (colorUpdater != null) {
+      colorUpdater.dispose();
     }
-    updater = null;
+    colorUpdater = null;
     super.dispose();
   }
 
   public void setContentPane(Container contentPane) {
-    updater = new BackgroundColorUpdater("dialog.bg.bottom", contentPane);
-    updater.install(colorService);
+    colorUpdater = new BackgroundColorUpdater("dialog.bg.bottom", contentPane);
+    colorUpdater.install(colorService);
     super.setContentPane(contentPane);
   }
 
@@ -167,6 +170,9 @@ public class PicsouDialog extends JDialog {
     super.setVisible(visible);
     if (visible && !openRequestIsManaged) {
       requestManager.popCallback();
+    }
+    if (!visible) {
+      notifyOnClose();
     }
   }
 
@@ -195,14 +201,6 @@ public class PicsouDialog extends JDialog {
     }
   }
 
-  public void setWindowCloseCallback(final DisposeCallback disposeCallback) {
-    addWindowListener(new WindowAdapter() {
-      public void windowClosed(WindowEvent e) {
-        disposeCallback.processDispose();
-      }
-    });
-  }
-
   private PicsouDialog(JFrame parent, boolean modal, Directory directory) {
     super(parent, !FORCE_NONMODAL && modal);
     init(directory);
@@ -213,10 +211,18 @@ public class PicsouDialog extends JDialog {
     init(directory);
   }
 
-  private void init(Directory directory) {
+  private void init(Directory directory) {    
     this.directory = directory;
     setTitle(Lang.get("application"));
     colorService = directory.get(ColorService.class);
+  }
+
+  private void notifyOnClose() {
+    if (onCloseActions != null) {
+      for (Action action : onCloseActions) {
+        action.actionPerformed(new ActionEvent(this, 0, "closed"));
+      }
+    }
   }
 
   protected JRootPane createRootPane() {
@@ -234,9 +240,9 @@ public class PicsouDialog extends JDialog {
   }
 
   public void showCentered() {
-    if (updater == null) {
-      updater = new BackgroundColorUpdater("dialog.bg.bottom", getContentPane());
-      updater.install(colorService);
+    if (colorUpdater == null) {
+      colorUpdater = new BackgroundColorUpdater("dialog.bg.bottom", getContentPane());
+      colorUpdater.install(colorService);
     }
     GuiUtils.showCentered(this);
     if (isModal()) {
@@ -252,6 +258,13 @@ public class PicsouDialog extends JDialog {
         editor.requestFocusInWindow();
       }
     });
+  }
+
+  public void addOnWindowClosedAction(Action action) {
+    if (onCloseActions == null) {
+      onCloseActions = new ArrayList<Action>();
+    }
+    this.onCloseActions.add(action);
   }
 
   private class CloseAction extends AbstractAction {
@@ -270,7 +283,7 @@ public class PicsouDialog extends JDialog {
   }
 
   public String toString() {
-    return "PicsouDialog";
+    return "PicsouDialog " + dialogId;
   }
 
 }

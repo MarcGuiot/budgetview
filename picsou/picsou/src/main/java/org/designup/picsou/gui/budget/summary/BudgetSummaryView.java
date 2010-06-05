@@ -1,9 +1,10 @@
 package org.designup.picsou.gui.budget.summary;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.signpost.guides.EndOfMonthPositionSignpost;
+import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.budget.BalanceDialog;
 import org.designup.picsou.gui.budget.PositionDialog;
-import org.designup.picsou.gui.budget.wizard.BudgetWizardPanel;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
@@ -32,8 +33,8 @@ import java.util.SortedSet;
 
 public class BudgetSummaryView extends View implements GlobSelectionListener, ChangeSetListener, ColorChangeListener {
 
-  private JButton balanceLabel = new JButton();
-  private JButton estimatedPositionLabel = new JButton();
+  private JButton balanceButton = new JButton();
+  private JButton estimatedPositionButton = new JButton();
   private JLabel estimatedPositionTitle = new JLabel();
   private JButton uncategorizedButton = new JButton();
   private SplitsNode<JButton> uncategorizedButtonNode;
@@ -65,18 +66,17 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budget/budgetSummaryView.splits",
                                                       repository, directory);
 
-    builder.add("balanceLabel", balanceLabel);
-    builder.add("positionLabel", estimatedPositionLabel);
+    builder.add("balanceLabel", balanceButton);
+    builder.add("positionLabel", estimatedPositionButton);
     builder.add("positionTitle", estimatedPositionTitle);
     uncategorizedButtonNode = builder.add("uncategorized", uncategorizedButton);
     builder.add("multiSelectionLabel", multiSelectionLabel);
 
     uncategorizedButton.addActionListener(new GotoUncategorizedAction());
-    balanceLabel.addActionListener(new OpenBalanceAction());
-    estimatedPositionLabel.addActionListener(new OpenPositionAction());
-
-    BudgetWizardPanel wizardPanel = new BudgetWizardPanel(repository, directory);
-    builder.add("wizardPanel", wizardPanel.getPanel());
+    balanceButton.addActionListener(new OpenBalanceAction());
+    estimatedPositionButton.addActionListener(new OpenPositionAction());
+    Signpost signpost = new EndOfMonthPositionSignpost(repository, directory);
+    signpost.attach(estimatedPositionButton);
 
     parentBuilder.add("budgetSummaryView", builder);
   }
@@ -104,19 +104,19 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
         .sort(BudgetStat.MONTH);
 
     if (!repository.contains(Transaction.TYPE) || budgetStats.isEmpty()) {
-      clear(balanceLabel);
-      clear(estimatedPositionLabel);
+      clear(balanceButton);
+      clear(estimatedPositionButton);
       clearUncategorized();
       return;
     }
 
     Double balance = budgetStats.getSum(BudgetStat.MONTH_BALANCE);
     if (balance == null) {
-      clear(balanceLabel);
+      clear(balanceButton);
     }
     else {
-      balanceLabel.setText((balance > 0 ? "+" : "") + format.format(balance));
-      balanceLabel.setForeground(balance >= 0 ? normalColor : errorColor);
+      balanceButton.setText((balance > 0 ? "+" : "") + format.format(balance));
+      balanceButton.setForeground(balance >= 0 ? normalColor : errorColor);
     }
 
     updateEstimatedPosition(selectedMonthIds);
@@ -169,11 +169,11 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     Integer lastImportDate = repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH);
     if (lastSelectedMonthId >= lastImportDate) {
       estimatedPositionTitle.setText(getEstimatedPositionTitle(lastSelectedMonthId));
-      estimatedPositionLabel.setToolTipText(Lang.get("budgetSummaryView.estimated.tooltip"));
+      estimatedPositionButton.setToolTipText(Lang.get("budgetSummaryView.estimated.tooltip"));
     }
     else {
       estimatedPositionTitle.setText(Lang.get("budgetSummaryView.real.title"));
-      estimatedPositionLabel.setToolTipText(null);
+      estimatedPositionButton.setToolTipText(null);
     }
   }
 
@@ -184,15 +184,15 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
   private void setEstimatedPosition(Double amount) {
     if (amount == null) {
-      clear(estimatedPositionLabel);
+      clear(estimatedPositionButton);
       return;
     }
 
     String text = Formatting.toString(amount);
-    estimatedPositionLabel.setText(text);
+    estimatedPositionButton.setText(text);
 
     double diff = amount - AccountPositionThreshold.getValue(repository);
-    estimatedPositionLabel.setForeground(amountColors.getTextColor(diff));
+    estimatedPositionButton.setForeground(amountColors.getTextColor(diff));
   }
 
   private Glob getBudgetStat(Integer lastSelectedMonthId) {
@@ -244,6 +244,9 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   private class OpenPositionAction extends AbstractAction {
 
     public void actionPerformed(ActionEvent e) {
+
+      SignpostStatus.setCompleted(SignpostStatus.END_OF_MONTH_POSITION_SHOWN, repository);
+
       PositionDialog dialog = new PositionDialog(repository, directory);
       dialog.show(selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID));
     }

@@ -34,7 +34,7 @@ public class BudgetWidget extends AbstractNavigationWidget {
       Gauge gauge = BudgetAreaGaugeFactory.createGauge(budgetArea);
       BudgetAreaHeaderUpdater updater = new BudgetAreaHeaderUpdater(TextDisplay.NULL, TextDisplay.NULL,
                                                                     gauge, repository, directory);
-      BudgetAreaHeader header = new BudgetAreaHeader(budgetArea, updater, repository, directory);
+      BudgetAreaHeader.init(budgetArea, updater, repository, directory);
 
       builder.add(budgetArea.name().toLowerCase(), gauge);
     }

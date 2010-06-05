@@ -2,6 +2,7 @@ package org.designup.picsou.gui;
 
 import org.designup.picsou.bank.SpecificBankLoader;
 import org.designup.picsou.client.ServerAccess;
+import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.config.ConfigService;
@@ -12,8 +13,6 @@ import org.designup.picsou.gui.startup.BackupService;
 import org.designup.picsou.gui.upgrade.ConfigUpgradeTrigger;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
 import org.designup.picsou.gui.utils.DataCheckerAction;
-import org.designup.picsou.gui.utils.Matchers;
-import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
@@ -158,7 +157,7 @@ public class PicsouInit {
                           value(User.IS_DEMO_USER, useDemoAccount));
         if (userData.isEmpty()) {
           createTransientDataForNewUser(repository);
-          createPersistentDataForNewUser(repository);
+          createPersistentDataForNewUser(repository, directory);
         }
         else {
           firstReset = true;
@@ -228,7 +227,7 @@ public class PicsouInit {
 
   }
 
-  public static void createPersistentDataForNewUser(GlobRepository repository) {
+  public static void createPersistentDataForNewUser(GlobRepository repository, Directory directory) {
 
     repository.startChangeSet();
     try {
@@ -259,9 +258,9 @@ public class PicsouInit {
                               value(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()));
       repository.findOrCreate(Account.ALL_SUMMARY_KEY,
                               value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId())
-                              );
+      );
 
-      DefaultSeriesFactory.run(repository);
+      DefaultSeriesFactory.run(repository, directory);
     }
     finally {
       repository.completeChangeSet();

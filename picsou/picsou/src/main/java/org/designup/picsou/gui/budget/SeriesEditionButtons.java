@@ -2,9 +2,12 @@ package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.signpost.actions.SetSignpostStatusAction;
+import org.designup.picsou.gui.utils.SetFieldValueAction;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsBuilder;
@@ -49,6 +52,8 @@ public class SeriesEditionButtons {
     GlobButtonView buttonView =
       GlobButtonView.init(Series.TYPE, repository, directory, new EditSeriesFunctor())
         .forceSelection(series.getKey());
+    buttonView.getComponent().addActionListener(
+      new SetSignpostStatusAction(SignpostStatus.SERIES_PERIODICITY_SHOWN, repository));
     repository.addChangeListener(new TooltipUpdater(series.getKey(), buttonView));
     return buttonView;
   }

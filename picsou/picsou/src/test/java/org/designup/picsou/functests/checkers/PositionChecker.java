@@ -37,6 +37,16 @@ public class PositionChecker extends GuiChecker{
     return this;
   }
 
+  public PositionChecker checkFixed(double amount) {
+    System.out.println("PositionChecker.checkFixed: TBD?");
+    return this;
+  }
+
+  public PositionChecker checkVariable(double amount) {
+    System.out.println("PositionChecker.checkVariable: TBD?");
+    return this;
+  }
+
   public PositionChecker checkExpense(double amount){
     UISpecAssert.assertThat(window.getTextBox("waitedExpenseAmount").textContains(Formatting.toString(amount)));
     return this;

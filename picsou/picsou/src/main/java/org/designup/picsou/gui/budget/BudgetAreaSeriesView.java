@@ -1,6 +1,10 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.signpost.guides.BudgetSignpostService;
+import org.designup.picsou.gui.signpost.guides.SeriesPeriodicitySignpost;
+import org.designup.picsou.gui.signpost.guides.SeriesAmountSignpost;
+import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.budget.footers.BudgetAreaSeriesFooter;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.TextDisplay;
@@ -42,7 +46,6 @@ public class BudgetAreaSeriesView extends View {
   private Matchers.SeriesFirstEndDateFilter seriesDateFilter;
   private List<Key> currentSeries = Collections.emptyList();
 
-  private BudgetAreaHeader header;
   private BudgetAreaSeriesFooter footerGenerator;
 
   private Repeat<Glob> seriesRepeat;
@@ -51,6 +54,7 @@ public class BudgetAreaSeriesView extends View {
   private JEditorPane footerArea = GuiUtils.createReadOnlyHtmlComponent();
 
   private SeriesAmountEditionDialog seriesAmountEditionDialog;
+  private BudgetSignpostService budgetSignpostService;
 
   public BudgetAreaSeriesView(String name,
                               final BudgetArea budgetArea,
@@ -64,6 +68,7 @@ public class BudgetAreaSeriesView extends View {
     this.budgetArea = budgetArea;
     this.footerGenerator = footerGenerator;
     this.seriesAmountEditionDialog = seriesAmountEditionDialog;
+    this.budgetSignpostService = directory.get(BudgetSignpostService.class);
 
     seriesButtons = new SeriesEditionButtons(budgetArea, repository, directory, seriesEditionDialog);
 
@@ -134,7 +139,7 @@ public class BudgetAreaSeriesView extends View {
                             "block.total.overrun.error",
                             "block.total.overrun.positive");
 
-    this.header = new BudgetAreaHeader(budgetArea, headerUpdater, repository, directory);
+    BudgetAreaHeader.init(budgetArea, headerUpdater, repository, directory);
 
     seriesRepeat =
       builder.addRepeat("seriesRepeat", new GlobList(), new SeriesRepeatComponentFactory());
@@ -154,7 +159,7 @@ public class BudgetAreaSeriesView extends View {
       public boolean matches(Glob periodSeriesStat, GlobRepository repository) {
         Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
         if (series == null){
-          System.out.println("BudgetAreaSeriesView.matches");
+          return false;
         }
         ReadOnlyGlobRepository.MultiFieldIndexed seriesBudgetIndex =
           repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID));
@@ -189,7 +194,7 @@ public class BudgetAreaSeriesView extends View {
         }
       });
 
-      addAmountButton("plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder, new GlobListFunctor() {
+      JButton amountButton = addAmountButton("plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder, new GlobListFunctor() {
         public void run(GlobList list, GlobRepository repository) {
           repository.update(UserPreferences.KEY, UserPreferences.SHOW_VARIABLE_EDITION_MESSAGE, false);
           seriesAmountEditionDialog.show(series, selectedMonthIds);
@@ -205,11 +210,23 @@ public class BudgetAreaSeriesView extends View {
                           repository, directory);
       cellBuilder.add("gauge", gaugeView.getComponent());
 
+      if (budgetSignpostService.isPeriodicitySeries(series.getKey())) {
+        Signpost signpost = new SeriesPeriodicitySignpost(repository, directory);
+        cellBuilder.addDisposeListener(signpost);
+        signpost.attach(seriesNameButton.getComponent());
+      }
+
+      if (budgetSignpostService.isAmountSeries(series.getKey())) {
+        Signpost signpost = new SeriesAmountSignpost(repository, directory);
+        cellBuilder.addDisposeListener(signpost);
+        signpost.attach(amountButton);
+      }
+
       cellBuilder.addDisposeListener(gaugeView);
       cellBuilder.addDisposeListener(seriesNameButton);
     }
 
-    private void addAmountButton(String name,
+    private JButton addAmountButton(String name,
                                  DoubleField field,
                                  final Glob series,
                                  RepeatCellBuilder cellBuilder,
@@ -217,8 +234,10 @@ public class BudgetAreaSeriesView extends View {
       final GlobButtonView amountButtonView =
         GlobButtonView.init(PeriodSeriesStat.TYPE, repository, directory, getStringifier(field), callback)
           .setFilter(GlobMatchers.linkedTo(series, PeriodSeriesStat.SERIES));
-      cellBuilder.add(name, amountButtonView.getComponent());
+      JButton button = amountButtonView.getComponent();
+      cellBuilder.add(name, button);
       cellBuilder.addDisposeListener(amountButtonView);
+      return button;
     }
 
     private GlobListStringifier getStringifier(final DoubleField field) {

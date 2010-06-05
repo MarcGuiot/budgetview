@@ -31,31 +31,32 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
 
     gauge.checkLevel(1);
-    gauge.checkProgressMessageHidden();
 
     categorization.setNewVariable("WorldCo", "Income");
+    checkNoSignpostVisible();
+
     gauge.checkLevel(0.5);
-    gauge.checkProgressMessageHidden();
+    checkNoSignpostVisible();
 
     categorization.setNewVariable("Auchan", "Food");
     gauge.checkLevel(0.05);
-    gauge.checkQuasiCompleteProgressMessageShown();
+    categorization.checkQuasiCompleteProgressMessageShown();
 
     timeline.selectMonth("2008/06");
     gauge.checkLevel(0.05);
-    gauge.checkQuasiCompleteProgressMessageShown();
+    categorization.checkQuasiCompleteProgressMessageShown();
 
     timeline.selectAll();
     gauge.checkLevel(0.05);
-    gauge.checkQuasiCompleteProgressMessageShown();
+    categorization.checkQuasiCompleteProgressMessageShown();
 
     categorization.setNewVariable("FNAC", "Leisures");
     gauge.checkLevel(0.001);
-    gauge.checkQuasiCompleteProgressMessageShown();
+    categorization.checkQuasiCompleteProgressMessageShown();
 
     categorization.setVariable("SAPN", "Leisures");
     gauge.checkHidden();
-    gauge.checkCompleteProgressMessageShown();
+    categorization.checkCompleteProgressMessageShown();
   }
 
   public void testIgnoresPlannedTransactions() throws Exception {
@@ -69,11 +70,12 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
 
     CategorizationGaugeChecker gauge = categorization.getCompletionGauge();
     gauge.checkLevel(1);
-    gauge.checkProgressMessageHidden();
+    categorization.selectTableRow(0);
+    checkNoSignpostVisible();
 
     categorization.setNewIncome("WorldCo", "Salaire");
     gauge.checkLevel(0.5);
-    gauge.checkProgressMessageHidden();
+    checkNoSignpostVisible();    
   }
 
   public void testNothingIsShownIfThereAreNoTransactionsToCategorize() throws Exception {
@@ -85,6 +87,6 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("WorldCo", "Income");
 
     categorization.getCompletionGauge().checkHidden();
-    categorization.getCompletionGauge().checkCompleteProgressMessageShown();
+    categorization.checkCompleteProgressMessageShown();
   }
 }

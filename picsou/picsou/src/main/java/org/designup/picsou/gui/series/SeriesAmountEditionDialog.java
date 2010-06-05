@@ -6,10 +6,8 @@ import org.designup.picsou.gui.description.SeriesPeriodicityAndScopeStringifier;
 import org.designup.picsou.gui.series.edition.AlignSeriesBudgetAmountsAction;
 import org.designup.picsou.gui.series.edition.SeriesBudgetSliderAdapter;
 import org.designup.picsou.gui.series.utils.SeriesAmountLabelStringifier;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.gui.signpost.actions.SetSignpostStatusAction;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -19,9 +17,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import static org.globsframework.model.utils.GlobFunctors.update;
 import org.globsframework.model.utils.GlobListFunctor;
-import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.Utils;
@@ -31,6 +27,9 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
+
+import static org.globsframework.model.utils.GlobFunctors.update;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesAmountEditionDialog {
 
@@ -90,6 +89,7 @@ public class SeriesAmountEditionDialog {
     amountEditor.addAction(okAction);
     dialog.addPanelWithButtons(builder.<JPanel>load(), okAction, new CancelAction());
     dialog.setAutoFocusOnOpen(amountEditor.getNumericEditor().getComponent());
+    dialog.addOnWindowClosedAction(new SetSignpostStatusAction(SignpostStatus.SERIES_AMOUNT_CLOSED, parentRepository));
     dialog.pack();
   }
 
@@ -97,7 +97,7 @@ public class SeriesAmountEditionDialog {
     if (series != null && series.isTrue(Series.IS_MIRROR)) {
       series = parentRepository.findLinkTarget(series, Series.MIRROR_SERIES);
     }
-    
+
     this.currentSeries = series.getKey();
     this.maxMonth = Utils.max(months);
     loadGlobs(series);
@@ -110,6 +110,9 @@ public class SeriesAmountEditionDialog {
 
     propagationCheckBox.setSelected(false);
     amountEditor.selectAll();
+
+    SignpostStatus.setCompleted(SignpostStatus.SERIES_AMOUNT_SHOWN, parentRepository);
+
     GuiUtils.showCentered(dialog);
   }
 

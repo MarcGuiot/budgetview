@@ -59,7 +59,7 @@ public class CardView extends View implements GlobSelectionListener {
       toggles[card.getId()] = toggle;
 
       if (card.equals(Card.BUDGET)) {
-        categorizationCompletionSignpost.activate(toggle);
+        categorizationCompletionSignpost.attach(toggle);
       }
     }
 

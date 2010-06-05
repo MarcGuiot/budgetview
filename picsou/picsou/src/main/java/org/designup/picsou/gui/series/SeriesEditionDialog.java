@@ -9,11 +9,12 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.MonthYearStringifier;
 import org.designup.picsou.gui.series.edition.MonthCheckBoxUpdater;
 import org.designup.picsou.gui.series.subseries.SubSeriesEditionPanel;
+import org.designup.picsou.gui.signpost.actions.SetSignpostStatusAction;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AutomaticSeriesBudgetTrigger;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
-import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesBudgetChangeSetVisitor;
+import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -30,10 +31,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.utils.*;
-import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -43,6 +41,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
+
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesEditionDialog {
   private BudgetArea budgetArea;
@@ -94,7 +95,6 @@ public class SeriesEditionDialog {
     this.repository = repository;
     this.directory = directory;
 
-    DescriptionService descriptionService = directory.get(DescriptionService.class);
     localRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(BudgetArea.TYPE, Month.TYPE, CurrentMonth.TYPE,
             ProfileType.TYPE, Account.TYPE, SubSeries.TYPE,
@@ -116,6 +116,10 @@ public class SeriesEditionDialog {
     localDirectory.add(selectionService);
 
     dialog = PicsouDialog.create(parent, directory);
+    dialog.addOnWindowClosedAction(new SetSignpostStatusAction(SignpostStatus.SERIES_PERIODICITY_CLOSED,
+                                                               SignpostStatus.SERIES_PERIODICITY_SHOWN,
+                                                               repository));
+
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
                                                       "/layout/series/seriesEditionDialog.splits",
                                                       localRepository, localDirectory);
@@ -617,6 +621,7 @@ public class SeriesEditionDialog {
         }
       }
     });
+
     GuiUtils.showCentered(dialog);
   }
 
@@ -631,12 +636,8 @@ public class SeriesEditionDialog {
     }
   }
 
-  public Window getDialog() {
-    return dialog;
-  }
-
   public void setCurrentSeries(Glob currentSeries) {
-    if (currentSeries != null){
+    if (currentSeries != null) {
       selectedSeries.add(currentSeries.get(Series.ID));
     }
     this.currentSeries = currentSeries;

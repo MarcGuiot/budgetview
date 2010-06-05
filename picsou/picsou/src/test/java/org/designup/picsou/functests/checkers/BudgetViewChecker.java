@@ -14,8 +14,6 @@ import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashSet;
-import java.util.Set;
 
 public class BudgetViewChecker extends GuiChecker {
 
@@ -29,11 +27,11 @@ public class BudgetViewChecker extends GuiChecker {
 
   public BudgetViewChecker(Window window) {
     this.window = window;
-    this.income = new BudgetAreaChecker("incomeBudgetView", true, BudgetArea.INCOME);
-    this.recurring = new BudgetAreaChecker("recurringBudgetView", true, BudgetArea.RECURRING);
-    this.variable = new BudgetAreaChecker("variableBudgetView", false, BudgetArea.VARIABLE);
-    this.extras = new BudgetAreaChecker("extrasBudgetView", false, BudgetArea.EXTRAS);
-    this.savings = new BudgetAreaChecker("savingsBudgetView", true, BudgetArea.SAVINGS);
+    this.income = new BudgetAreaChecker("incomeBudgetView", BudgetArea.INCOME);
+    this.recurring = new BudgetAreaChecker("recurringBudgetView", BudgetArea.RECURRING);
+    this.variable = new BudgetAreaChecker("variableBudgetView", BudgetArea.VARIABLE);
+    this.extras = new BudgetAreaChecker("extrasBudgetView", BudgetArea.EXTRAS);
+    this.savings = new BudgetAreaChecker("savingsBudgetView", BudgetArea.SAVINGS);
   }
 
   private int getIndex(JPanel panel, Component component) {
@@ -58,7 +56,7 @@ public class BudgetViewChecker extends GuiChecker {
     private static final int GAUGE_OFFSET = 2;
     private static final int PLANNED_LABEL_OFFSET = 3;
 
-    public BudgetAreaChecker(String panelName, boolean singleCategorySeries, BudgetArea budgetArea) {
+    public BudgetAreaChecker(String panelName, BudgetArea budgetArea) {
       this.panelName = panelName;
       this.budgetArea = budgetArea;
     }
@@ -219,14 +217,18 @@ public class BudgetViewChecker extends GuiChecker {
     }
 
     public SeriesAmountEditionDialogChecker editPlannedAmount(String seriesName) {
+      Button button = getAmountButton(seriesName);
+
+      return SeriesAmountEditionDialogChecker.open(button.triggerClick());
+    }
+
+    private Button getAmountButton(String seriesName) {
       Button nameButton = getPanel().getButton(seriesName);
 
       JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
       int nameIndex = getIndex(panel, nameButton.getAwtComponent());
 
-      Button button = new Button((JButton)panel.getComponent(nameIndex + PLANNED_LABEL_OFFSET));
-
-      return SeriesAmountEditionDialogChecker.open(button.triggerClick());
+      return new Button((JButton)panel.getComponent(nameIndex + PLANNED_LABEL_OFFSET));
     }
 
     public void checkEditAllSeriesIsEnabled(boolean enabled) {
@@ -276,28 +278,14 @@ public class BudgetViewChecker extends GuiChecker {
       return this;
     }
 
-  }
-
-  public class SavingsAreaChecker extends BudgetAreaChecker {
-
-    public SavingsAreaChecker(String panelName, boolean singleCategorySeries, BudgetArea budgetArea) {
-      super(panelName, singleCategorySeries, budgetArea);
+    public BudgetAreaChecker checkNameSignpostDisplayed(String seriesName, String text) {
+      Button nameButton = getPanel().getButton(seriesName);
+      BudgetViewChecker.this.checkSignpostVisible(window, nameButton, text);
+      return this;
     }
 
-    private Set<String> getDisplayedAccounts() {
-      UIComponent[] uiComponents = getPanel().getUIComponents(TextBox.class, "accountName");
-      Set<String> existingNames = new HashSet<String>();
-      for (UIComponent uiComponent : uiComponents) {
-        TextBox label = (TextBox)uiComponent;
-        if (label.getAwtComponent().isVisible()) {
-          existingNames.add(label.getText());
-        }
-      }
-      return existingNames;
-    }
-
-    public BudgetAreaChecker checkNoAccountsDisplayed() {
-      org.globsframework.utils.TestUtils.assertEmpty(getDisplayedAccounts());
+    public BudgetAreaChecker checkAmountSignpostDisplayed(String seriesName, String text) {
+      BudgetViewChecker.this.checkSignpostVisible(window, getAmountButton(seriesName), text);
       return this;
     }
   }

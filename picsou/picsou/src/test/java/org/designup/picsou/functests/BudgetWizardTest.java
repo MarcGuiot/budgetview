@@ -63,7 +63,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.getSummary()
       .checkMonthBalance(balanceFor200808)
-      .openPositionPanel()
+      .openPositionDialog()
       .checkInitialPosition(1000.00)
       .checkIncome(2200.00)
       .checkExpense(-1930.)
@@ -81,7 +81,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .checkMonthBalance(balanceFor200807 + balanceFor200808);
     budgetView.income.checkTotalPlanned(4400);
     budgetView.getSummary()
-      .openPositionPanel()
+      .openPositionDialog()
       .checkInitialPosition(1000.00)
       .checkIncome(2200.00)
       .checkExpense(30 + 1500 + 300 + 100)
@@ -144,7 +144,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary()
       .checkMonthBalance(balanceFor200808)
       .checkEndPosition(1410.00);
-    budgetView.getSummary().openPositionPanel()
+    budgetView.getSummary().openPositionDialog()
       .checkInitialPosition(0.0)
       .checkIncome(1500)
       .checkExpense(90)
@@ -164,7 +164,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.getSummary()
-      .openPositionPanel()
+      .openPositionDialog()
 //      .checkPositionDate("31/08/2008")
       .checkInitialPosition(0)
       .checkIncome(1500)
@@ -177,7 +177,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.getSummary()
-      .openPositionPanel()
+      .openPositionDialog()
 //      .checkPositionDate("30/09/2008")
       .checkInitialPosition(1410)
       .checkIncome(1500)
@@ -232,7 +232,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     double balanceFor200808 = 1500 - (200 - 40);
 
     budgetView.getSummary().checkMonthBalance(balanceFor200808);
-    budgetView.getSummary().openPositionPanel()
+    budgetView.getSummary().openPositionDialog()
       .checkInitialPosition(0.0)
       .checkExpense(100 -40)
       .checkIncome(1500)
@@ -275,7 +275,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     views.selectBudget();
-    budgetView.getSummary().openPositionPanel()
+    budgetView.getSummary().openPositionDialog()
 //      .checkPositionDate("31/08/2008")
       .checkInitialPosition(1000)
       .checkSavingsOut(30)
@@ -284,7 +284,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/09");
     views.selectBudget();
-    budgetView.getSummary().openPositionPanel()
+    budgetView.getSummary().openPositionDialog()
 //      .checkPositionDate("30/09/2008")
       .checkInitialPosition(1070)
       .checkSavingsOut(50)

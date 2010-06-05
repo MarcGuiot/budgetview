@@ -1,16 +1,13 @@
 package org.designup.picsou.functests.checkers;
 
+import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
-import org.uispec4j.Button;
 import org.uispec4j.Window;
+import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 
 import javax.swing.*;
-
-import junit.framework.Assert;
 
 public class BudgetSummaryViewChecker extends GuiChecker {
   private Panel mainWindow;
@@ -53,15 +50,7 @@ public class BudgetSummaryViewChecker extends GuiChecker {
   }
 
   public BudgetWizardChecker getHelpWizard() {
-    return new BudgetWizardChecker(getPanel()); 
-  }
-
-  public void checkHelpWizardDisplayed() {
-    checkComponentVisible(getPanel(), JPanel.class, BudgetWizardChecker.PANEL_NAME, true);
-  }
-
-  public void checkHelpMessageHidden() {
-    checkComponentVisible(getPanel(), JPanel.class, BudgetWizardChecker.PANEL_NAME, false);
+    return new BudgetWizardChecker(getPanel());
   }
 
   public BudgetSummaryViewChecker checkMultiSelection(int count) {
@@ -80,13 +69,6 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     return mainWindow.getPanel("budgetSummaryView");
   }
 
-  /** @deprecated A SUPPRIMER **/
-  public BudgetWizardPageChecker openBudgetWizardPage() {
-    Assert.fail("Budget wizard inline: il faut reecrire avec BalanceDialog / PositionDialog");
-    Window wizardWindow = WindowInterceptor.run(getPanel().getButton("openDetails").triggerClick());
-    return new BudgetWizardPageChecker(wizardWindow);
-  }
-
   public BudgetSummaryViewChecker checkNoEstimatedPosition() {
     assertThat(getPanel().getButton("positionLabel").textEquals("-"));
     return this;
@@ -97,8 +79,13 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     return new BalanceChecker(window);
   }
 
-  public PositionChecker openPositionPanel() {
+  public PositionChecker openPositionDialog() {
     Window window = WindowInterceptor.getModalDialog(getPanel().getButton("positionLabel").triggerClick());
     return new PositionChecker(window);
+  }
+
+  public void checkPositionSignpostDisplayed() {
+    checkSignpostVisible(mainWindow, getPanel().getButton("positionLabel"),
+                         "Use the estimated end of month position");
   }
 }

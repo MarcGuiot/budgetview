@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.model.BudgetStat;
-import org.designup.picsou.gui.components.TextDisplay;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.BudgetArea;
 import org.globsframework.model.GlobList;
@@ -23,18 +22,23 @@ public class BudgetAreaHeader {
   private BudgetArea budgetArea;
   private BudgetAreaHeaderUpdater headerUpdater;
   private GlobRepository repository;
-  private Directory directory;
 
   private Set<Integer> selectedMonthIds = Collections.emptySet();
 
-  public BudgetAreaHeader(BudgetArea budgetArea, 
-                          BudgetAreaHeaderUpdater headerUpdater,
-                          GlobRepository repository,
-                          Directory directory) {
+  public static BudgetAreaHeader init(BudgetArea budgetArea,
+                                      BudgetAreaHeaderUpdater headerUpdater,
+                                      GlobRepository repository,
+                                      Directory directory) {
+    return new BudgetAreaHeader(budgetArea, headerUpdater, repository, directory);
+  }
+
+  private BudgetAreaHeader(BudgetArea budgetArea,
+                           BudgetAreaHeaderUpdater headerUpdater,
+                           GlobRepository repository,
+                           Directory directory) {
     this.budgetArea = budgetArea;
     this.headerUpdater = headerUpdater;
     this.repository = repository;
-    this.directory = directory;
 
     directory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {

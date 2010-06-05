@@ -23,22 +23,4 @@ public class CategorizationGaugeChecker extends GuiChecker {
   public void checkHidden() {
     assertFalse(panel.isVisible());
   }
-
-  public void checkProgressMessageHidden() {
-    checkSignpostHidden(mainWindow, getBudgetToggle());
-  }
-
-  public void checkQuasiCompleteProgressMessageShown() {
-    checkSignpostVisible(mainWindow, getBudgetToggle(),
-                         "Categorization is quasi complete. You can now see the budget page.");
-  }
-
-  public void checkCompleteProgressMessageShown() {
-    checkSignpostVisible(mainWindow, getBudgetToggle(),
-                         "Categorization is completed. You can now see the budget page.");
-  }
-
-  private ToggleButton getBudgetToggle() {
-    return mainWindow.getToggleButton("budgetCardToggle");
-  }
 }

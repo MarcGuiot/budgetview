@@ -5,6 +5,7 @@ import net.java.balloontip.TablecellBalloonTip;
 import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.model.GlobRepository;
@@ -19,19 +20,23 @@ public class CategorizationSelectionSignpost extends Signpost {
   private TableModelListener tableListener;
   private GlobSelectionListener selectionListener;
 
-  public CategorizationSelectionSignpost(JTable table, GlobRepository repository, Directory directory) {
-    super(table, SignpostStatus.CATEGORIZATION_SELECTION_SHOWN, repository, directory);
-    this.table = table;
-    tableListener = new TableModelListener() {
-      public void tableChanged(TableModelEvent e) {
-        update();
-      }
-    };
+  public CategorizationSelectionSignpost(GlobRepository repository, Directory directory) {
+    super(SignpostStatus.CATEGORIZATION_SELECTION_SHOWN, repository, directory);
     selectionListener = new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         update();
       }
     };
+  }
+
+  public void attach(JComponent table) {
+    this.table = (JTable)table;
+    tableListener = new TableModelListener() {
+      public void tableChanged(TableModelEvent e) {
+        update();
+      }
+    };
+    super.attach(table);
   }
 
   protected void init() {
@@ -47,10 +52,10 @@ public class CategorizationSelectionSignpost extends Signpost {
 
     boolean selection = table.getSelectedRows().length > 0;
     if (!selection && canShow()) {
-      show("signpost.categorizationSelection");
+      show(Lang.get("signpost.categorizationSelection"));
     }
     else if (selection && isShowing()) {
-      hide();
+      dispose();
     }
   }
 

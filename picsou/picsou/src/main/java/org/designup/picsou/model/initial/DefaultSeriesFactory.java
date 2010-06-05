@@ -1,5 +1,6 @@
 package org.designup.picsou.model.initial;
 
+import org.designup.picsou.gui.signpost.guides.BudgetSignpostService;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.ProfileType;
 import org.designup.picsou.model.Series;
@@ -10,23 +11,26 @@ import org.globsframework.model.FieldValuesBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.utils.directory.Directory;
 
 public class DefaultSeriesFactory {
 
   public static boolean AUTO_CREATE_DEFAULT_SERIES = true;
-  
-  private GlobRepository repository;
 
-  public static void run(GlobRepository repository) {
-    DefaultSeriesFactory factory = new DefaultSeriesFactory(repository);
+  private GlobRepository repository;
+  private BudgetSignpostService budgetSignpostService;
+
+  public static void run(GlobRepository repository, Directory directory) {
+    DefaultSeriesFactory factory = new DefaultSeriesFactory(repository, directory);
     factory.createSystemSeries();
     if (AUTO_CREATE_DEFAULT_SERIES && !repository.contains(Series.TYPE, Series.USER_SERIES_MATCHER)) {
       factory.createUserSeries();
     }
   }
 
-  private DefaultSeriesFactory(GlobRepository repository) {
+  private DefaultSeriesFactory(GlobRepository repository, Directory directory) {
     this.repository = repository;
+    this.budgetSignpostService = directory.get(BudgetSignpostService.class);
   }
 
   private void createSystemSeries() {
@@ -44,7 +48,10 @@ public class DefaultSeriesFactory {
     createEntry(BudgetArea.INCOME, ProfileType.EVERY_MONTH, "income2", true);
 
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "rent", false);
-    createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "electricity", true);
+
+    budgetSignpostService.setPeriodicitySeriesKey(
+      createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "electricity", true)
+    );
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "gas", true);
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "water", true);
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "carCredit", true);
@@ -55,7 +62,9 @@ public class DefaultSeriesFactory {
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "internet", true);
     createEntry(BudgetArea.RECURRING, ProfileType.EVERY_MONTH, "fixedPhone", false);
 
-    createEntry(BudgetArea.VARIABLE, ProfileType.EVERY_MONTH, "groceries", true);
+    budgetSignpostService.setAmountSeriesKey(
+      createEntry(BudgetArea.VARIABLE, ProfileType.EVERY_MONTH, "groceries", true)
+    );
     createEntry(BudgetArea.VARIABLE, ProfileType.EVERY_MONTH, "health", true, "physician", "pharmacy", "reimbursements");
     createEntry(BudgetArea.VARIABLE, ProfileType.EVERY_MONTH, "leisures", true);
     createEntry(BudgetArea.VARIABLE, ProfileType.EVERY_MONTH, "clothing", true);
@@ -66,11 +75,11 @@ public class DefaultSeriesFactory {
     createEntry(BudgetArea.VARIABLE, ProfileType.EVERY_MONTH, "misc", true);
   }
 
-  private void createEntry(BudgetArea budgetArea,
-                           ProfileType profileType,
-                           String nameKey,
-                           boolean selected,
-                           String... subSeries) {
+  private Key createEntry(BudgetArea budgetArea,
+                          ProfileType profileType,
+                          String nameKey,
+                          boolean selected,
+                          String... subSeries) {
 
     FieldValuesBuilder builder = FieldValuesBuilder.init()
       .set(Series.NAME, getName(budgetArea, nameKey))
@@ -85,6 +94,8 @@ public class DefaultSeriesFactory {
                         value(SubSeries.NAME, subSeriesName),
                         value(SubSeries.SERIES, series.get(Series.ID)));
     }
+
+    return series.getKey();
   }
 
   private String getName(BudgetArea budgetArea, String nameKey, String subSeriesKey) {

@@ -166,8 +166,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
     Gui.setColumnSizes(table, COLUMN_SIZES);
     installDoubleClickHandler();
     registerBankFormatExporter(transactionTable);
-    Signpost signpost = new CategorizationSelectionSignpost(table, repository, directory);
-    signpost.activate();
+    Signpost signpost = new CategorizationSelectionSignpost(repository, directory);
+    signpost.attach(table);
 
     this.filterSet = new FilterSet(this);
     CustomFilterMessagePanel filterMessagePanel = new CustomFilterMessagePanel(filterSet, repository, directory);

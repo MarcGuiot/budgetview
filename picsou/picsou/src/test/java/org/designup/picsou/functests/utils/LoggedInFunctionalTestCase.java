@@ -14,10 +14,17 @@ import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
+import org.uispec4j.utils.Utils;
+import org.uispec4j.finder.ComponentFinder;
+import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.interception.toolkit.UISpecDisplay;
 
 import java.util.Date;
+import java.awt.*;
+
+import net.java.balloontip.BalloonTip;
+import junit.framework.Assert;
 
 public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   static protected Window mainWindow;
@@ -54,6 +61,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public static String SOCIETE_GENERALE = "Société Générale";
 
   private boolean notRegistered = false;
+  protected boolean createDefaultSeries = false;
   protected String user = "anonymous";
   protected String password = "password";
 
@@ -70,7 +78,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
     System.setProperty(ConfigService.COM_APP_LICENSE_URL, "");
     System.setProperty(ConfigService.COM_APP_LICENSE_FTP_URL, "");
-    DefaultSeriesFactory.AUTO_CREATE_DEFAULT_SERIES = false;
+    DefaultSeriesFactory.AUTO_CREATE_DEFAULT_SERIES = createDefaultSeries;
 
     setAdapter(new UISpecAdapter() {
       public Window getMainWindow() {
@@ -277,5 +285,21 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   public String getLocalPrevaylerPath() {
     return localPrevaylerPath;
+  }
+
+  protected void checkNoSignpostVisible() {
+    ComponentFinder finder = new ComponentFinder(mainWindow.getAwtContainer());
+    final Component[] actual = finder.getComponents(ComponentMatchers.and(
+      ComponentMatchers.fromClass(BalloonTip.class),
+      ComponentMatchers.visible(true)
+    ));
+    if (actual.length > 0) {
+      StringBuilder builder = new StringBuilder("Visible tips:\n");
+      for (Component component : actual) {
+        BalloonTip tip = (BalloonTip)component;
+        builder.append(Utils.cleanupHtml(tip.getText())).append("\n");
+      }
+      Assert.fail(builder.toString());
+    }
   }
 }

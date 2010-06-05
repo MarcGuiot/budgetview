@@ -88,10 +88,7 @@ public class UpgradeTrigger implements ChangeSetListener {
 
     if (currentJarVersion < 43) {
       if (!repository.get(UserPreferences.KEY).isTrue(UserPreferences.SHOW_CATEGORIZATION_HELP_MESSAGE)) {
-        repository.findOrCreate(SignpostStatus.KEY);
-        repository.update(SignpostStatus.KEY, SignpostStatus.IMPORT_SHOWN, true);
-        repository.update(SignpostStatus.KEY, SignpostStatus.CATEGORIZATION_SELECTION_SHOWN, true);
-        repository.update(SignpostStatus.KEY, SignpostStatus.CATEGORIZATION_COMPLETION_SHOWN, true);
+        SignpostStatus.setAllCompleted(repository);
       }
     }
 

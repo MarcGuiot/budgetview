@@ -693,11 +693,6 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
-  public CategorizationChecker checkSelectionSignpostHidden() {
-    checkSignpostHidden(getPanel(), getTable());
-    return this;
-  }
-
   public void checkTableBackground(String... colors) {
     Table table = getTable();
     assertThat(table.rowCountEquals(colors.length));
@@ -767,5 +762,19 @@ public class CategorizationChecker extends GuiChecker {
     protected Table getTable() {
       return CategorizationChecker.this.getTable();
     }
+  }
+
+  public void checkQuasiCompleteProgressMessageShown() {
+    checkSignpostVisible(mainWindow, getBudgetToggle(),
+                         "Categorization is quasi complete. You can now see the Budget page.");
+  }
+
+  public void checkCompleteProgressMessageShown() {
+    checkSignpostVisible(mainWindow, getBudgetToggle(),
+                         "Categorization is completed. You can now see the Budget page.");
+  }
+
+  private ToggleButton getBudgetToggle() {
+    return mainWindow.getToggleButton("budgetCardToggle");
   }
 }

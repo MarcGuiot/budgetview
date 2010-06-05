@@ -190,8 +190,7 @@ public class FirstTimeTest extends UISpecTestCase {
 
     views.selectBudget();
     BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
-    budgetSummary.openBudgetWizardPage()
-      .gotoPosition()
+    budgetSummary.openPositionDialog()
       .checkPosition(1900.00)
       .close();
 
@@ -275,8 +274,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .check();
 
     views.selectBudget();
-    budgetSummary.openBudgetWizardPage()
-      .gotoPosition()
+    budgetSummary.openPositionDialog()
       .checkPosition(1971.10)
       .checkInitialPosition(1900)
       .checkVariable(415)
@@ -303,8 +301,7 @@ public class FirstTimeTest extends UISpecTestCase {
     operation.importQifFile(file2, "CIC");
 
     views.selectBudget();
-    budgetSummary.openBudgetWizardPage()
-      .gotoPosition()
+    budgetSummary.openPositionDialog()
       .checkPosition(1831.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
@@ -384,8 +381,7 @@ public class FirstTimeTest extends UISpecTestCase {
     timeView.selectMonth("2008/10");
 
     BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
-    budgetSummary.openBudgetWizardPage()
-      .gotoPosition()
+    budgetSummary.openPositionDialog()
       .checkPosition(2386.10)
       .checkInitialPosition(780.10)
       .checkIncome(2000)
@@ -466,8 +462,7 @@ public class FirstTimeTest extends UISpecTestCase {
     views.selectBudget();
 
     BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
-    budgetSummary.openBudgetWizardPage()
-      .gotoPosition()
+    budgetSummary.openPositionDialog()
       .checkPosition(2386.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
@@ -551,8 +546,7 @@ public class FirstTimeTest extends UISpecTestCase {
     views.selectBudget();
 
     BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
-    budgetSummary.openBudgetWizardPage()
-      .gotoPosition()
+    budgetSummary.openPositionDialog()
       .checkPosition(2386.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)
@@ -710,8 +704,7 @@ public class FirstTimeTest extends UISpecTestCase {
     checker.selectMonths("2008/10");
 
     BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
-    budgetSummary.openBudgetWizardPage()
-      .gotoPosition()
+    budgetSummary.openPositionDialog()
       .checkPosition(1886.10)
       .checkInitialPosition(780.1)
       .checkIncome(2000)

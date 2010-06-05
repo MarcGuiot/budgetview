@@ -3,6 +3,7 @@ package org.designup.picsou.gui.signpost.guides;
 import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
@@ -40,10 +41,10 @@ public class ImportSignpost extends Signpost implements ChangeSetListener {
     }
 
     if (!repository.contains(Transaction.TYPE) && canShow()) {
-      show("signpost.import");
+      show(Lang.get("signpost.import"));
     }
     else if (repository.contains(Transaction.TYPE) && isShowing()) {
-      hide();
+      dispose();
     }
   }
 }

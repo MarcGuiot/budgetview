@@ -35,21 +35,21 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
     BalanceChecker balance_08 = budgetView.getSummary().openBalancePanel();
     balance_08.check(-75., -25., 0., -100.).close();
 
-    PositionChecker position_08 = budgetView.getSummary().openPositionPanel();
+    PositionChecker position_08 = budgetView.getSummary().openPositionDialog();
     position_08.checkPresent(0., 0., -100, 0, -100).close();
 
     timeline.selectMonth("2008/07");
     BalanceChecker balance_07 = budgetView.getSummary().openBalancePanel();
     balance_07.check(-135., -15., 75., -75.).close();
 
-    PositionChecker position_07 = budgetView.getSummary().openPositionPanel();
+    PositionChecker position_07 = budgetView.getSummary().openPositionDialog();
     position_07.checkPast(-75).close();
 
     timeline.selectMonth("2008/09");
     BalanceChecker balance_09 = budgetView.getSummary().openBalancePanel();
     balance_09.check(-100., null, 0., -100.).close();
 
-    PositionChecker position_09 = budgetView.getSummary().openPositionPanel();
+    PositionChecker position_09 = budgetView.getSummary().openPositionDialog();
     position_09.checkPresent(-100, 500, -500, 0, -100);
     position_09.checkThreshold(0)
       .changeThreshold(100)
@@ -60,7 +60,7 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
     BalanceChecker balance_past = budgetView.getSummary().openBalancePanel();
     balance_past.check(-135., -40., 75., -100.).close();
 
-    PositionChecker position_past = budgetView.getSummary().openPositionPanel();
+    PositionChecker position_past = budgetView.getSummary().openPositionDialog();
     position_past.checkPresent(0., 0, -100, 0, -100).close();
   }
 
@@ -89,7 +89,7 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     timeline.selectMonth("2008/08");
-    PositionChecker position_08 = budgetView.getSummary().openPositionPanel();
+    PositionChecker position_08 = budgetView.getSummary().openPositionDialog();
     position_08.checkTooMuchExpence()
       .changeThreshold(-100)
       .checkBalanceZeroWithoutSavings()
@@ -102,7 +102,7 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/08");
-    PositionChecker new_position_08 = budgetView.getSummary().openPositionPanel();
+    PositionChecker new_position_08 = budgetView.getSummary().openPositionDialog();
     new_position_08.checkSavingsExpected()
       .changeThreshold(-100)
       .checkBalanceZeroWithSavings()
@@ -139,7 +139,7 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     views.selectBudget();
 
-    PositionChecker position_08 = budgetView.getSummary().openPositionPanel();
+    PositionChecker position_08 = budgetView.getSummary().openPositionDialog();
     position_08.checkPresent(0, 0, -275, 0, -275)
       .close();
 
@@ -148,7 +148,7 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("epargne")
       .selectUncategorized().setUncategorized();
     views.selectBudget();
-    position_08 = budgetView.getSummary().openPositionPanel();
+    position_08 = budgetView.getSummary().openPositionDialog();
     position_08
       .checkInitialPosition(0)
       .checkIncome(0)

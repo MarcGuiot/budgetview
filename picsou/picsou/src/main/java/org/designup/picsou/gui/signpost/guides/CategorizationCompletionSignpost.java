@@ -4,6 +4,7 @@ import org.designup.picsou.gui.categorization.components.CategorizationLevel;
 import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.model.SignpostStatus;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobList;
 import org.globsframework.utils.Updatable;
@@ -33,7 +34,7 @@ public class CategorizationCompletionSignpost extends Signpost implements Updata
           return;
         }
         if (Card.BUDGET.getId() == cards.get(0).get(Card.ID)) {
-          hide();
+          dispose();
         }
       }
     }, Card.TYPE);
@@ -44,16 +45,16 @@ public class CategorizationCompletionSignpost extends Signpost implements Updata
     double percentage = categorizationLevel.getPercentage();
 
     if ((total == 0) && isShowing()) {
-      hide();
+      dispose();
     }
     else if ((percentage == 0) && canShow()) {
-      show("signpost.categorizationCompletion.full");
+      show(Lang.get("signpost.categorizationCompletion.full"));
     }
     else if ((percentage <= 0.1) && canShow()) {
-      show("signpost.categorizationCompletion.quasi");
+      show(Lang.get("signpost.categorizationCompletion.quasi"));
     }
     else if (isShowing()) {
-      hide();
+      dispose();
     }
   }
 }
