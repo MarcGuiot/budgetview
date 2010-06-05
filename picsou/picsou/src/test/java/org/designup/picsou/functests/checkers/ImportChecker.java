@@ -90,12 +90,12 @@ public class ImportChecker {
   }
 
   public ImportChecker doImport() {
-    dialog.getButton(Lang.get("import.ok")).click();
+    dialog.getButton(Lang.get("import.step1.ok")).click();
     return this;
   }
 
   public void completeImport() {
-    validate(-1, -1, -1, dialog, "import.ok");
+    validate(-1, -1, -1, dialog, "import.step2.ok");
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
@@ -105,12 +105,12 @@ public class ImportChecker {
   }
 
   public void completeImport(final int importedTransactionCount, final int autocategorizedTransactionCount) {
-    validate(-1, importedTransactionCount, autocategorizedTransactionCount, dialog, "import.ok");
+    validate(-1, importedTransactionCount, autocategorizedTransactionCount, dialog, "import.step2.ok");
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
   public void completeImportNone(int loadTransaction) {
-    validate(loadTransaction, 0, 0, dialog, "import.ok");
+    validate(loadTransaction, 0, 0, dialog, "import.step2.ok");
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
@@ -120,7 +120,7 @@ public class ImportChecker {
   }
 
   public void completeImportAndGotoCategorize(int importedTransactionCount, int autocategorizedTransactionCount) {
-    WindowInterceptor.init(dialog.getButton(Lang.get("import.ok")).triggerClick())
+    WindowInterceptor.init(dialog.getButton(Lang.get("import.step2.ok")).triggerClick())
       .process(new ImportCompleteWindowHandler(0,
                                                importedTransactionCount,
                                                autocategorizedTransactionCount, "Categorize operations")).run();
@@ -134,7 +134,7 @@ public class ImportChecker {
   }
 
   public AccountPositionEditionChecker doImportWithBalance() {
-    return new AccountPositionEditionChecker(WindowInterceptor.getModalDialog(dialog.getButton(Lang.get("import.ok")).triggerClick()));
+    return new AccountPositionEditionChecker(WindowInterceptor.getModalDialog(dialog.getButton(Lang.get("import.step1.ok")).triggerClick()));
   }
 
   public void close() {

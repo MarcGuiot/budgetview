@@ -8,7 +8,7 @@
     <style selector=".amountLabel" font="-,plain,12" marginTop="5" foreground="balance.panel.amount.label"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(550,620)">
+  <panel styleClass="dialog" preferredSize="(550,650)">
 
     <column styleClass="innerDialog">
 

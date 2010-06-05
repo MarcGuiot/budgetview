@@ -535,7 +535,7 @@ public class ImportDialog {
 
   private class ImportAction extends AbstractAction {
     public ImportAction() {
-      super(Lang.get("import.ok"));
+      super(Lang.get("import.step1.ok"));
     }
 
     public void actionPerformed(ActionEvent event) {
@@ -545,7 +545,7 @@ public class ImportDialog {
 
   private class FinishAction extends AbstractAction {
     public FinishAction() {
-      super(Lang.get("import.ok"));
+      super(Lang.get("import.step2.ok"));
     }
 
     public void actionPerformed(ActionEvent event) {

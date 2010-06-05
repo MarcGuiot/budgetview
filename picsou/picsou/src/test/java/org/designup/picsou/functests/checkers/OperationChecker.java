@@ -163,7 +163,7 @@ public class OperationChecker {
               .selectMainForAll()
               .validate();
           }
-          final Button okButton = importDialog.getButton(Lang.get("import.ok"));
+          final Button okButton = importDialog.getButton(Lang.get("import.step1.ok"));
           for (int i = 0; i < fileNames.length - 2; i++) {
             okButton.click();
           }
