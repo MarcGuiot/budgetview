@@ -7,14 +7,11 @@ import org.globsframework.utils.Updatable;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.text.DecimalFormat;
 
 public class CategorizationGaugePanel implements Updatable {
   private CategorizationLevel categorizationLevel;
   private GlobRepository repository;
   private Directory directory;
-
-  private DecimalFormat format = new DecimalFormat("0");
 
   private Gauge gauge;
   private JPanel panel;

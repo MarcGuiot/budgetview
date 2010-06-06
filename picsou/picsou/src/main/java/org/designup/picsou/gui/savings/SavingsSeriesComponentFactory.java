@@ -51,12 +51,6 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
     this.seriesStringifier = directory.get(DescriptionService.class).getStringifier(Series.TYPE);
   }
 
-  private class EditSeriesFunctor implements GlobListFunctor {
-    public void run(GlobList list, GlobRepository repository) {
-      showSeriesEdition(list.getFirst());
-    }
-  }
-
   public void registerComponents(RepeatCellBuilder cellBuilder, final Glob periodSeriesStat) {
 
     final Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);

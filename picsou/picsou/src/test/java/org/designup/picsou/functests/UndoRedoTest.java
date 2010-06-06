@@ -105,6 +105,7 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
     transactions.checkSeries("Auchan", "To categorize");
     operations.undo();
     operations.undo(); // signpost
+    operations.undo(); // signpost
     transactions.checkTableIsEmpty();
   }
 

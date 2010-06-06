@@ -9,6 +9,4 @@ public interface MouseState {
   MouseState mouseReleased(MouseEvent e);
 
   MouseState mouseMoved(MouseEvent e);
-
-  MouseState keyPressed(KeyEvent e);
 }

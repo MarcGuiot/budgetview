@@ -79,7 +79,7 @@ public class NavigationViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/05");
     transactions.categorize("AUCHAN_1");
     categorization.initContent()
-    .add("25/05/2008", "AUCHAN_1", -50.0)
+    .add("25/05/2008", "", "AUCHAN_1", -50.0)
     .check();
   }
 }

@@ -205,20 +205,7 @@ public class YearGraph extends DefaultCompositeSelectable {
     return monthGraphs[monthGraphs.length - 1];
   }
 
-  public int getMonthHeight() {
-    int maxMonthHeight = 0;
-    for (MonthGraph month : monthGraphs) {
-      maxMonthHeight = Math.max(maxMonthHeight, month.getHeight());
-    }
-    return maxMonthHeight;
-  }
-
   public int getYear() {
     return year;
-  }
-
-  //pour les test
-  MonthGraph[] getMonthsGraph() {
-    return monthGraphs;
   }
 }

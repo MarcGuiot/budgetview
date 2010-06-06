@@ -26,7 +26,6 @@ public class HistoChartMetrics {
   private int columnCount;
   private double maxPositiveValue;
   private double maxNegativeValue;
-  private boolean drawLabels;
 
   private int positiveHeight;
   private int negativeHeight;
@@ -36,7 +35,6 @@ public class HistoChartMetrics {
   private int chartHeight;
   private int sectionZoneHeight;
 
-  private int sectionTextY;
   private int labelZoneHeight;
   private int labelBottomMargin;
 
@@ -54,7 +52,6 @@ public class HistoChartMetrics {
     this.columnCount = columnCount;
     this.maxPositiveValue = maxPositiveValue;
     this.maxNegativeValue = maxNegativeValue;
-    this.drawLabels = drawLabels;
 
     this.scaleZoneWidth = drawLabels ? scaleZoneWidth() : 0;
     this.sectionZoneHeight = drawLabels && drawSections ? SECTION_ZONE_HEIGHT : 0;

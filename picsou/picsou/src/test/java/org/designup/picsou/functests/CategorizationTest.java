@@ -1252,7 +1252,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .checkMessageContains("Removing one operation")
       .validate();
     categorization.initContent()
-      .add("15/06/2008", "2_Auchan", -40.0)
+      .add("15/06/2008", "", "2_Auchan", -40.0)
       .check();
   }
 

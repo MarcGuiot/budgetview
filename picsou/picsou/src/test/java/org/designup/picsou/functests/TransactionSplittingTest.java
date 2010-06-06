@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.SplitDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.TransactionType;
 
 public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
@@ -32,8 +31,8 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     categorization
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -7.5, "Food")
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "DVD", -12.50)
+      .add("15/01/2006", "Food", "Auchan", -7.5)
+      .add("15/01/2006", "", "Auchan", -12.50)
       .check();
     categorization.checkSelectedTableRow(1);
     transactionDetails.checkNote("DVD");
@@ -51,9 +50,9 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     categorization
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -5.00, "Food")
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "DVD", -12.50, "Leisures")
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "Youth Elixir", -2.50)
+      .add("15/01/2006", "Food", "Auchan", -5.00)
+      .add("15/01/2006", "Leisures", "Auchan", -12.50)
+      .add("15/01/2006", "", "Auchan", -2.50)
       .check();
     categorization.checkSelectedTableRow(2);
     transactionDetails.checkNote("Youth Elixir");
@@ -112,7 +111,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     categorization
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -20.0, "Food")
+      .add("15/01/2006", "Food", "Auchan", -20.0)
       .check();
   }
 
@@ -136,9 +135,12 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     categorization
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -7.5, "Food")
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "DVD", -12.50)
+      .add("15/01/2006", "Food", "Auchan", -7.5)
+      .add("15/01/2006", "", "Auchan", -12.50)
       .check();
+
+    categorization.selectTableRow(1);
+    transactionDetails.checkNote("DVD");
   }
 
   public void testSplittingASplitPart() throws Exception {
@@ -148,8 +150,8 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     categorization
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -7.50, "Food")
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50)
+      .add("15/01/2006", "Food", "Auchan", -7.50)
+      .add("15/01/2006", "", "Auchan", -12.50)
       .check();
 
     categorization.setNewVariable(1, "Leisures");
@@ -163,9 +165,9 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     categorization
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -5.00, "Food")
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50, "Leisures")
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -2.50)
+      .add("15/01/2006", "Food", "Auchan", -5.00)
+      .add("15/01/2006", "Leisures", "Auchan", -12.50)
+      .add("15/01/2006", "", "Auchan", -2.50)
       .check();
   }
 
@@ -182,8 +184,8 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     categorization
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -7.50, "Food")
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50)
+      .add("15/01/2006", "Food", "Auchan", -7.50)
+      .add("15/01/2006", "", "Auchan", -12.50)
       .check();
   }
 
@@ -194,8 +196,8 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     categorization
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -7.50, "Food")
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50)
+      .add("15/01/2006", "Food", "Auchan", -7.50)
+      .add("15/01/2006", "", "Auchan", -12.50)
       .check();
   }
 
@@ -206,8 +208,8 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     categorization
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -7.50, "Food")
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -12.50)
+      .add("15/01/2006", "Food", "Auchan", -7.50)
+      .add("15/01/2006", "", "Auchan", -12.50)
       .check();
   }
 
@@ -233,7 +235,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     categorization
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -20.0, "Food")
+      .add("15/01/2006", "Food", "Auchan", -20.0)
       .check();
   }
 
@@ -276,11 +278,12 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     categorization
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -13.0, "Food")
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "Another DVD", -7.0)
+      .add("15/01/2006", "Food", "Auchan", -13.0)
+      .add("15/01/2006", "", "Auchan", -7.0)
       .check();
 
     categorization.checkSelectedTableRow(1);
+    transactionDetails.checkNote("Another DVD");
   }
 
   public void testDeletingCategorizedSplitPartWithUncategorizedSource() throws Exception {
@@ -302,7 +305,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     categorization
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -20.0)
+      .add("15/01/2006", "", "Auchan", -20.0)
       .check();
   }
 
@@ -321,9 +324,9 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     categorization
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -20.0)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Monoprix", "", -40.0)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Monoprix", "CD", -10.0)
+      .add("15/01/2006", "", "Auchan", -20.0)
+      .add("10/01/2006", "", "Monoprix", -40.0)
+      .add("10/01/2006", "", "Monoprix", -10.0)
       .check();
 
     transactionDetails.openSplitDialog()
@@ -332,8 +335,8 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     categorization
       .initContent()
-      .add("15/01/2006", TransactionType.PRELEVEMENT, "Auchan", "", -20.0)
-      .add("10/01/2006", TransactionType.PRELEVEMENT, "Monoprix", "", -50.0)
+      .add("15/01/2006", "", "Auchan", -20.0)
+      .add("10/01/2006", "", "Monoprix", -50.0)
       .check();
     categorization.checkSelectedTableRow(1);
 

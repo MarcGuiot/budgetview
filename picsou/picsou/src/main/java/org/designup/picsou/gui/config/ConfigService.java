@@ -32,7 +32,6 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 
 public class ConfigService {
-  private static final Pattern FILTER = Pattern.compile(PicsouApplication.APPNAME + "[0-9][0-9]*" + "\\.jar");
 
   public static final String COM_APP_LICENSE_URL = PicsouApplication.APPNAME + ".license.url";
   public static final String COM_APP_LICENSE_FTP_URL = PicsouApplication.APPNAME + ".license.ftp.url";

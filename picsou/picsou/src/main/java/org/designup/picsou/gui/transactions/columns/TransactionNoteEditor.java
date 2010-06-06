@@ -1,30 +1,21 @@
 package org.designup.picsou.gui.transactions.columns;
 
-import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Transaction;
-import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.HashSet;
-import java.util.Set;
 
 public class TransactionNoteEditor extends DefaultCellEditor {
   private GlobStringifier noteStringifier;
   private GlobRepository globRepository;
   private Glob currentGlob;
-  private GlobList transactions;
   private JTextField textField = new JTextField();
   private BlockTableKeysListener tableKeyBlocker = new BlockTableKeysListener();
   private JTable table;
@@ -43,7 +34,6 @@ public class TransactionNoteEditor extends DefaultCellEditor {
     this.table.setSurrendersFocusOnKeystroke(true);
     removeListeners();
 
-    transactions = globRepository.getAll(Transaction.TYPE);
     currentGlob = (Glob)value;
     String valueToDisplay = noteStringifier.toString(currentGlob, globRepository);
     textField = (JTextField)super.getTableCellEditorComponent(table, valueToDisplay, isSelected, row, column);

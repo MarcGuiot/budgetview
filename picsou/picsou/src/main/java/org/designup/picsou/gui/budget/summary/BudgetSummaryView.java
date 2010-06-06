@@ -81,13 +81,6 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     parentBuilder.add("budgetSummaryView", builder);
   }
 
-  private HyperlinkButtonUI createHyperlinkButtonUI() {
-    HyperlinkButtonUI hyperlinkButtonUI = new HyperlinkButtonUI();
-    hyperlinkButtonUI.setAutoHideEnabled(false);
-    hyperlinkButtonUI.setUseNormalColorWhenDisabled(true);
-    return hyperlinkButtonUI;
-  }
-
   public void update() {
 
     SortedSet<Integer> selectedMonthIds = selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID);
@@ -203,11 +196,6 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     return budgetStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
   }
 
-  private void clear(JLabel label) {
-    label.setText("-");
-    label.setForeground(normalColor);
-  }
-
   private void clear(JButton button) {
     button.setText("-");
     button.setForeground(normalColor);
@@ -249,25 +237,6 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
       PositionDialog dialog = new PositionDialog(repository, directory);
       dialog.show(selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID));
-    }
-  }
-
-  private class OpenDetailsAction extends AbstractAction {
-
-    private GlobList selectedMonths;
-
-    private OpenDetailsAction(Directory directory) {
-      directory.get(SelectionService.class).addListener(new GlobSelectionListener() {
-        public void selectionUpdated(GlobSelection selection) {
-          selectedMonths = selection.getAll(Month.TYPE);
-          selectedMonths.sort(Month.ID);
-          setEnabled(!selectedMonths.isEmpty());
-        }
-      }, Month.TYPE);
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      repository.update(UserPreferences.KEY, UserPreferences.SHOW_BUDGET_VIEW_WIZARD, false);
     }
   }
 

@@ -186,8 +186,8 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     transactions.categorize(1, 3);
     views.checkCategorizationSelected();
     categorization.initContent()
-      .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00)
-      .add("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00)
+      .add("01/05/2006", "", "essence", -70.00)
+      .add("03/05/2006", "", "peage", -30.00)
       .check();
     categorization.checkSelectedTableRows(0, 1);
     categorization.checkCustomFilterVisible(true);
@@ -195,10 +195,10 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
     categorization.clearCustomFilter();
     categorization.initContent()
-      .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00, "Leisures")
-      .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00)
-      .add("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, "Leisures")
-      .add("02/05/2006", TransactionType.PRELEVEMENT, "sg", "", -200.00)
+      .add("01/05/2006", "Leisures", "essence", -70.00)
+      .add("06/05/2006", "", "nounou", -100.00)
+      .add("03/05/2006", "Leisures", "peage", -30.00)
+      .add("02/05/2006", "", "sg", -200.00)
       .check();
     categorization.checkNoTransactionSelected();
 

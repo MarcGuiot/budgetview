@@ -153,8 +153,8 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.initContent()
-      .add("15/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -20.00)
-      .add("14/06/2008", TransactionType.PRELEVEMENT, "Burger King", "", -100.00)
+      .add("15/06/2008", "", "AUCHAN", -20.00)
+      .add("14/06/2008", "", "Burger King", -100.00)
       .check();
 
     views.selectCategorization();
@@ -173,9 +173,9 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     operations.importQifFiles(SOCIETE_GENERALE, fileName);
 
     categorization.initContent()
-      .add("15/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -20.00)
-      .add("13/06/2008", TransactionType.CHECK, "CHEQUE N°123123", "", -40.00)
-      .add("14/06/2008", TransactionType.PRELEVEMENT, "MONOP", "", -10.00)
+      .add("15/06/2008", "", "AUCHAN", -20.00)
+      .add("13/06/2008", "", "CHEQUE N°123123", -40.00)
+      .add("14/06/2008", "", "MONOP", -10.00)
       .check();
 
     categorization.selectTableRow(0);
@@ -209,8 +209,8 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     operations.importQifFiles(SOCIETE_GENERALE, fileName);
 
     categorization.initContent()
-      .add("12/06/2008", TransactionType.CREDIT_CARD, "AUCHAN1", "", -20.00)
-      .add("10/06/2008", TransactionType.CREDIT_CARD, "AUCHAN2", "", -10.00)
+      .add("12/06/2008", "", "AUCHAN1", -20.00)
+      .add("10/06/2008", "", "AUCHAN2", -10.00)
       .check();
 
     transactionDetails.checkDetailsNotVisible();

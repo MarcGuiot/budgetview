@@ -74,12 +74,6 @@ public class SavingsView extends View {
                       new SavingsAccountsComponentFactory(seriesButtons));
   }
 
-  private GlobMatcher getNextProjectsMatcher() {
-    final int currentMonthId = directory.get(TimeService.class).getCurrentMonthId();
-    return and(not(isNull(Series.FIRST_MONTH)),
-               fieldStrictlyGreaterThan(Series.FIRST_MONTH, currentMonthId));
-  }
-
   private class AccountMatcher implements GlobMatcher {
     public boolean matches(Glob account, GlobRepository repository) {
       return Account.isUserCreatedSavingsAccount(account);
@@ -112,8 +106,5 @@ public class SavingsView extends View {
       cellBuilder.addDisposeListener(seriesView);
     }
 
-    private GlobMatcher getSavingsSeriesMatcher() {
-      return GlobMatchers.ALL;
-    }
   }
 }

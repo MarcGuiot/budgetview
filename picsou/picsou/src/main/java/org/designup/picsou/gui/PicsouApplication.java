@@ -71,7 +71,6 @@ public class PicsouApplication {
   private SingleApplicationInstanceListener singleInstanceListener;
   private Directory directory;
 
-  private WindowAdapter windowOpenListener;
   private AbstractAction mrjDocumentListener;
 
   public static boolean EXIT_ON_DATA_ERROR = true;

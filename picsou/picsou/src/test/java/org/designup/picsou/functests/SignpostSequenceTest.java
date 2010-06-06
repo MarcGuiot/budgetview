@@ -47,6 +47,9 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     categorization.checkSelectionSignpostDisplayed("Select the operations to categorize");
 
     categorization.selectTableRow(0);
+    categorization.checkAreaSelectionSignpostDisplayed("Select the budget area for this operation");
+
+    categorization.selectVariable();
     checkNoSignpostVisible();
 
     // === Categorization completion ===

@@ -21,10 +21,11 @@ public abstract class Signpost implements Disposable {
   protected JComponent component;
   private BooleanField completionField;
   protected GlobRepository repository;
-  protected Directory directory;
   protected SelectionService selectionService;
 
   protected static final ModernBalloonStyle BALLOON_STYLE = createBalloonStyle();
+  private BalloonTip.Orientation orientation;
+  private BalloonTip.AttachLocation attachLocation;
 
   private static ModernBalloonStyle createBalloonStyle() {
     ModernBalloonStyle style =
@@ -38,8 +39,14 @@ public abstract class Signpost implements Disposable {
   protected Signpost(BooleanField completionField, GlobRepository repository, Directory directory) {
     this.completionField = completionField;
     this.repository = repository;
-    this.directory = directory;
     this.selectionService = directory.get(SelectionService.class);
+    this.orientation = BalloonTip.Orientation.RIGHT_BELOW;
+    this.attachLocation = BalloonTip.AttachLocation.SOUTH;
+  }
+
+  protected void setLocation(BalloonTip.Orientation orientation, BalloonTip.AttachLocation attachLocation) {
+    this.orientation = orientation;
+    this.attachLocation = attachLocation;
   }
 
   public void attach(JComponent component) {
@@ -115,8 +122,8 @@ public abstract class Signpost implements Disposable {
     return new BalloonTip(component,
                           text,
                           BALLOON_STYLE,
-                          BalloonTip.Orientation.RIGHT_BELOW,
-                          BalloonTip.AttachLocation.SOUTH,
+                          orientation,
+                          attachLocation,
                           40, 20, false);
   }
 

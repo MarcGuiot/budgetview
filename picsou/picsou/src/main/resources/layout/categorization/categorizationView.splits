@@ -35,7 +35,7 @@
         <panel styleClass="block">
           <column styleClass="innerBlock">
             <panel ref="gaugePanel" opaque="false"/>
-            
+
             <row marginBottom="5">
               <label text="$categorization.filter.label" styleClass="formLabel"
                      foreground="gauge.categorization.label" marginRight="5"/>
@@ -83,7 +83,7 @@
               <card name="series">
 
                 <column weightY="0.1">
-                  <row name="budgetAreaSelectionPanel" border="matte(1,1,0,1,#999999)">
+                  <row border="matte(1,1,0,1,#999999)" ref="budgetAreaSelectionPanel">
                     <repeat ref="budgetAreaToggles" layout="horizontalGrid" gridWrapLimit="4" margin="5">
                       <toggleButton ref="budgetAreaToggle" styleClass="budgetAreaSelector" anchor="left"/>
                     </repeat>

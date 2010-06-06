@@ -15,8 +15,6 @@ import java.util.Set;
 
 public class MainAccountViewPanel extends AccountViewPanel {
 
-  private JLabel estimatedPositionDateLabel = new JLabel();
-
   public MainAccountViewPanel(final GlobRepository repository, final Directory directory) {
     super(repository, directory, createMatcher(), Account.MAIN_SUMMARY_ACCOUNT_ID);
 

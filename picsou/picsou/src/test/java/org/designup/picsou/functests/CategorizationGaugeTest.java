@@ -70,8 +70,6 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
 
     CategorizationGaugeChecker gauge = categorization.getCompletionGauge();
     gauge.checkLevel(1);
-    categorization.selectTableRow(0);
-    checkNoSignpostVisible();
 
     categorization.setNewIncome("WorldCo", "Salaire");
     gauge.checkLevel(0.5);

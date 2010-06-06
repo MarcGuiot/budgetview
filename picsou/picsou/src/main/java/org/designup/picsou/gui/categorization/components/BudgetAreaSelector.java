@@ -120,6 +120,9 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
       String label = budgetAreaStringifier.toString(repository.get(budgetArea.getKey()), repository);
       final JToggleButton toggle = new JToggleButton(new AbstractAction(label) {
         public void actionPerformed(ActionEvent e) {
+          if (!BudgetArea.UNCATEGORIZED.equals(budgetArea)) {
+            SignpostStatus.setCompleted(SignpostStatus.CATEGORIZATION_AREA_SHOWN, repository);            
+          }
           select(budgetArea, false);
         }
       });
@@ -175,7 +178,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
       seriesCard.show("multipleAreas");
     }
 
-    GlobList accounts = getSelectedTransacionAcounts();
+    GlobList accounts = getSelectedTransactionAccounts();
     for (Glob account : accounts) {
       if (account.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
         enableValidBudgetAreas(false);
@@ -219,7 +222,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
     }
   }
 
-  private GlobList getSelectedTransacionAcounts() {
+  private GlobList getSelectedTransactionAccounts() {
     return GlobUtils.getUniqueTargets(selectedTransactions, Transaction.ACCOUNT, repository);
   }
 

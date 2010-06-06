@@ -45,7 +45,4 @@ public class TextNavigationWidget extends AbstractNavigationWidget {
     return builder.load();
   }
 
-  protected void setText(String text) {
-    editor.setText(text);
-  }
 }

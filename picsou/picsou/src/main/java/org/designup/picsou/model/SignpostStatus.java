@@ -28,6 +28,7 @@ public class SignpostStatus {
   public static BooleanField IMPORT_SHOWN;
   public static BooleanField WELCOME_SHOWN;
   public static BooleanField CATEGORIZATION_SELECTION_SHOWN;
+  public static BooleanField CATEGORIZATION_AREA_SHOWN;
   public static BooleanField CATEGORIZATION_COMPLETION_SHOWN;
   public static BooleanField SERIES_PERIODICITY_SHOWN;
   public static BooleanField SERIES_PERIODICITY_CLOSED;
@@ -54,6 +55,7 @@ public class SignpostStatus {
     repository.findOrCreate(KEY);
     repository.update(KEY, IMPORT_SHOWN, true);
     repository.update(KEY, CATEGORIZATION_SELECTION_SHOWN, true);
+    repository.update(KEY, CATEGORIZATION_AREA_SHOWN, true);
     repository.update(KEY, CATEGORIZATION_COMPLETION_SHOWN, true);
     repository.update(KEY, SERIES_PERIODICITY_SHOWN, true);
     repository.update(KEY, SERIES_PERIODICITY_CLOSED, true);
@@ -70,6 +72,7 @@ public class SignpostStatus {
       outputStream.writeBoolean(values.get(IMPORT_SHOWN));
       outputStream.writeBoolean(values.get(WELCOME_SHOWN));
       outputStream.writeBoolean(values.get(CATEGORIZATION_SELECTION_SHOWN));
+      outputStream.writeBoolean(values.get(CATEGORIZATION_AREA_SHOWN));
       outputStream.writeBoolean(values.get(CATEGORIZATION_COMPLETION_SHOWN));
       outputStream.writeBoolean(values.get(SERIES_PERIODICITY_SHOWN));
       outputStream.writeBoolean(values.get(SERIES_PERIODICITY_CLOSED));
@@ -94,6 +97,7 @@ public class SignpostStatus {
       fieldSetter.set(IMPORT_SHOWN, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_SELECTION_SHOWN, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_AREA_SHOWN, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_COMPLETION_SHOWN, input.readBoolean());
       fieldSetter.set(SERIES_PERIODICITY_SHOWN, input.readBoolean());
       fieldSetter.set(SERIES_PERIODICITY_CLOSED, input.readBoolean());
