@@ -1,4 +1,4 @@
-<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
   <column maximumSize="(200,50)">
     <row marginTop="20"  background="#FF0000" opaque="true">
       <label ref="title"/>
