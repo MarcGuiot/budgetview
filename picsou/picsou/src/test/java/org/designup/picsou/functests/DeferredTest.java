@@ -1,7 +1,7 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.DeferredCardCategorizationChecker;
-import org.designup.picsou.functests.checkers.ImportChecker;
+import org.designup.picsou.functests.checkers.ImportDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
@@ -72,7 +72,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/09/14", -35, "Auchan")
       .save();
 
-    ImportChecker importer = cardCategorization.importAccount()
+    ImportDialogChecker importer = cardCategorization.importAccount()
       .setFilePath(cardFile)
       .acceptFile();
     importer.addNewAccount()

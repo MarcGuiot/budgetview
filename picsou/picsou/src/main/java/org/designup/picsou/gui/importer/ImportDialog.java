@@ -16,6 +16,7 @@ import org.designup.picsou.gui.importer.edition.BrowseFilesAction;
 import org.designup.picsou.gui.importer.edition.DateFormatSelectionPanel;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionDateRenderer;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionsTable;
+import org.designup.picsou.gui.importer.utils.QifAccountFinder;
 import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -31,10 +32,8 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.*;
-import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -86,7 +85,11 @@ public class ImportDialog {
 
   private List<AdditionalImportAction> additionalImportActions = new ArrayList<AdditionalImportAction>();
   private List<AdditionalImportAction> currentActions;
-  private Repeat<AdditionalImportAction> additionalActionImportRepeat;
+  private List<AdditionalImportPanel> additionalImportPanels = new ArrayList<AdditionalImportPanel>();
+  private List<AdditionalImportPanel> currentPanels;
+
+  private Repeat<AdditionalImportAction> additionalActionsRepeat;
+  private Repeat<AdditionalImportPanel> additionalPanelsRepeat;
   private GlobsPanelBuilder builder2;
   private GlobsPanelBuilder builder1;
   private ImportedTransactionsTable importedTransactionTable;
@@ -115,7 +118,7 @@ public class ImportDialog {
     dialog.setOpenRequestIsManaged(true);
 
     initStep1Panel(textForCloseButton, directory);
-    initStep2Panel(textForCloseButton, owner);
+    initStep2Panel(textForCloseButton);
     initMainPanel();
 
     dialog.setContentPane(mainPanel);
@@ -174,7 +177,7 @@ public class ImportDialog {
     });
   }
 
-  private void initStep2Panel(final String textForCloseButton, Window owner) {
+  private void initStep2Panel(final String textForCloseButton) {
     builder2 = new GlobsPanelBuilder(getClass(), "/layout/importexport/importDialogStep2.splits", localRepository, localDirectory);
     dateRenderer = new ImportedTransactionDateRenderer();
     dateFormatSelectionPanel = new DateFormatSelectionPanel(localRepository, localDirectory,
@@ -220,10 +223,20 @@ public class ImportDialog {
     registerAccountCreationListener(sessionRepository, sessionDirectory);
 
     loadAdditionalImportActions();
+    loadAdditionalImportPanels();
 
     builder2.add("importMessage", step2Message);
 
-    additionalActionImportRepeat =
+    additionalPanelsRepeat =
+      builder2.addRepeat("additionalPanels", Collections.<AdditionalImportPanel>emptyList(),
+                         new RepeatComponentFactory<AdditionalImportPanel>() {
+                           public void registerComponents(RepeatCellBuilder cellBuilder,
+                                                          final AdditionalImportPanel item) {
+                             cellBuilder.add("additionalPanel", item.getPanel());
+                           }
+                         });
+
+    additionalActionsRepeat =
       builder2.addRepeat("additionalActions", Collections.<AdditionalImportAction>emptyList(),
                          new RepeatComponentFactory<AdditionalImportAction>() {
                            public void registerComponents(RepeatCellBuilder cellBuilder,
@@ -233,6 +246,7 @@ public class ImportDialog {
                                public void actionPerformed(ActionEvent e) {
                                  item.getAction().actionPerformed(e);
                                  updateAdditionalImportActions();
+                                 updateAdditionalImportPanels(true);
                                }
                              });
                            }
@@ -247,10 +261,16 @@ public class ImportDialog {
   private void loadAdditionalImportActions() {
     additionalImportActions.addAll(Arrays.asList(
       new ChooseOrCreateAccount(dialog, sessionRepository, sessionDirectory),
-      new AccountTypeAction(dialog, sessionRepository, sessionDirectory),
       new BankEntityEditionAction(dialog, sessionRepository, sessionDirectory),
       new AccountEditionAction(dialog, sessionRepository, sessionDirectory),
-      new CardTypeAction(dialog, sessionRepository, sessionDirectory)));
+      new CardTypeAction(dialog, sessionRepository, sessionDirectory)
+    ));
+  }
+
+  private void loadAdditionalImportPanels() {
+    additionalImportPanels.addAll(Arrays.asList(
+      new AccountTypeSelectionPanel(sessionRepository, sessionDirectory)
+    ));
   }
 
   private void registerAccountCreationListener(final GlobRepository sessionRepository,
@@ -422,6 +442,7 @@ public class ImportDialog {
 
   public void updateForNextImport(boolean isAccountNeeded, List<String> dateFormats) throws IOException {
     updateAdditionalImportActions();
+    updateAdditionalImportPanels(false);
     initQifAccountChooserFields(isAccountNeeded);
     dateFormatSelectionPanel.init(dateFormats);
   }
@@ -439,7 +460,17 @@ public class ImportDialog {
         currentActions.add(action);
       }
     }
-    additionalActionImportRepeat.set(currentActions);
+    additionalActionsRepeat.set(currentActions);
+  }
+
+  private void updateAdditionalImportPanels(boolean showErrors) {
+    currentPanels = new ArrayList<AdditionalImportPanel>();
+    for (AdditionalImportPanel panel : additionalImportPanels) {
+      if (panel.shouldBeDisplayed(showErrors)) {
+        currentPanels.add(panel);
+      }
+    }
+    additionalPanelsRepeat.set(currentPanels);
   }
 
   public void showPositionDialog() {
@@ -478,9 +509,7 @@ public class ImportDialog {
       }
       if (account == null) {
         GlobList importedTransactions = sessionRepository.getAll(ImportedTransaction.TYPE);
-        AccountFinder callback = new AccountFinder();
-        repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, callback);
-        Integer accountId = callback.findAccount(importedTransactions);
+        Integer accountId = QifAccountFinder.findQifAccount(importedTransactions, repository);
         if (accountId != null) {
           account = sessionRepository.find(Key.create(Account.TYPE, accountId));
           sessionDirectory.get(SelectionService.class).select(account);
@@ -559,6 +588,10 @@ public class ImportDialog {
         if (!currentActions.isEmpty()) {
           return;
         }
+        updateAdditionalImportPanels(true);
+        if (!currentPanels.isEmpty()) {
+          return;
+        }
         if (currentlySelectedAccount == null && controller.isAccountNeeded()) {
           showStep2Message(Lang.get("import.no.account"));
           return;
@@ -594,58 +627,6 @@ public class ImportDialog {
 
     public void actionPerformed(ActionEvent e) {
       closeDialog();
-    }
-  }
-
-  private static class AccountFinder implements GlobFunctor {
-    private MultiMap<String, Integer> accountsByLabel = new MultiMap<String, Integer>();
-
-    public void run(Glob glob, GlobRepository repository) throws Exception {
-      String label = Transaction.anonymise(createLabel(glob, Transaction.QIF_M, Transaction.QIF_P));
-      accountsByLabel.put(label, glob.get(Transaction.ACCOUNT));
-    }
-
-    private String createLabel(Glob glob, final StringField qif_m, final StringField qif_p) {
-      String label = "";
-      if (glob.get(qif_m) != null) {
-        label += glob.get(qif_m).toUpperCase();
-      }
-      if (glob.get(qif_p) != null) {
-        label += ":" + glob.get(qif_p).toUpperCase();
-      }
-      return label;
-    }
-
-    Integer findAccount(GlobList importedTransactions) {
-      Map<Integer, Integer> foundAccountsCount = new HashMap<Integer, Integer>();
-      for (Glob transaction : importedTransactions) {
-        String label = Transaction.anonymise(createLabel(transaction, ImportedTransaction.QIF_M, ImportedTransaction.QIF_P));
-        List<Integer> accounts = accountsByLabel.get(label);
-        for (Integer accountId : accounts) {
-          Integer count = foundAccountsCount.get(accountId);
-          foundAccountsCount.put(accountId, count != null ? count + 1 : 1);
-        }
-      }
-      if (foundAccountsCount.isEmpty()) {
-        return null;
-      }
-      if (foundAccountsCount.size() == 1) {
-        return foundAccountsCount.keySet().iterator().next();
-      }
-      Integer maxCount = 0;
-      Integer secondCount = 0;
-      Integer accountId = null;
-      for (Map.Entry<Integer, Integer> entry : foundAccountsCount.entrySet()) {
-        if (entry.getValue() > maxCount) {
-          secondCount = maxCount;
-          maxCount = entry.getValue();
-          accountId = entry.getKey();
-        }
-      }
-      if (maxCount > secondCount * 1.5) {
-        return accountId;
-      }
-      return null;
     }
   }
 

@@ -11,20 +11,12 @@ import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.model.initial.DefaultSeriesFactory;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Dates;
-import org.uispec4j.Trigger;
-import org.uispec4j.UISpecAdapter;
+import org.uispec4j.*;
 import org.uispec4j.Window;
-import org.uispec4j.utils.Utils;
-import org.uispec4j.finder.ComponentFinder;
-import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.interception.toolkit.UISpecDisplay;
 
 import java.util.Date;
-import java.awt.*;
-
-import net.java.balloontip.BalloonTip;
-import junit.framework.Assert;
 
 public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   static protected Window mainWindow;
@@ -288,18 +280,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected void checkNoSignpostVisible() {
-    ComponentFinder finder = new ComponentFinder(mainWindow.getAwtContainer());
-    final Component[] actual = finder.getComponents(ComponentMatchers.and(
-      ComponentMatchers.fromClass(BalloonTip.class),
-      ComponentMatchers.visible(true)
-    ));
-    if (actual.length > 0) {
-      StringBuilder builder = new StringBuilder("Visible tips:\n");
-      for (Component component : actual) {
-        BalloonTip tip = (BalloonTip)component;
-        builder.append(Utils.cleanupHtml(tip.getText())).append("\n");
-      }
-      Assert.fail(builder.toString());
-    }
+    BalloonTipTesting.checkNoBalloonTipVisible(mainWindow);    
   }
 }

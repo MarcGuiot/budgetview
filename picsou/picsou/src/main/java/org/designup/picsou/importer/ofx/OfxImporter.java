@@ -289,7 +289,7 @@ public class OfxImporter implements AccountFileImporter {
         }
       }
       currentAccount = repository.create(Account.TYPE,
-                                         value(Account.IS_VALIDADED, false),
+                                         value(Account.IS_VALIDATED, false),
                                          value(Account.IS_IMPORTED_ACCOUNT, true),
                                          value(Account.NUMBER, accountNumber),
                                          value(Account.ID, generator.getNextId(Account.ID, 1)),

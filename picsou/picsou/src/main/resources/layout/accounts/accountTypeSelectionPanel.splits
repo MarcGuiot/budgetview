@@ -1,0 +1,17 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <column opaque="false" name="accountTypeSelection">
+    <label text="$import.accountTypeSelectionPanel.title" name="title" styleClass="title"/>
+
+    <repeat ref="accountTypeRepeat" marginLeft="20" marginRight="20">
+      <row marginTop="5">
+        <label ref="accountName"/>
+        <comboBox ref="accountType"/>
+      </row>
+    </repeat>
+
+  </column>
+
+</splits>

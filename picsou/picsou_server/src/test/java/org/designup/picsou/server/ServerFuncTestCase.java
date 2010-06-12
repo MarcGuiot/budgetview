@@ -2,7 +2,7 @@ package org.designup.picsou.server;
 
 import org.designup.picsou.PicsouServer;
 import org.designup.picsou.functests.checkers.CategorizationChecker;
-import org.designup.picsou.functests.checkers.ImportChecker;
+import org.designup.picsou.functests.checkers.ImportDialogChecker;
 import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.functests.checkers.ViewSelectionChecker;
 import org.designup.picsou.gui.PicsouApplication;
@@ -64,7 +64,7 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
     window.getButton("Enter").click();
 
     OperationChecker operations = new OperationChecker(window);
-    ImportChecker importDialog = operations.openImportDialog();
+    ImportDialogChecker importDialog = operations.openImportDialog();
     importDialog
       .selectFiles(fileName)
       .acceptFile()

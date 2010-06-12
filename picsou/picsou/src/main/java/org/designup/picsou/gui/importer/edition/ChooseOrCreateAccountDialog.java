@@ -17,6 +17,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+import static org.globsframework.model.FieldValue.value;
+
 public class ChooseOrCreateAccountDialog {
   private LocalGlobRepository localRepository;
   private GlobRepository parentSessionRepository;
@@ -39,7 +41,7 @@ public class ChooseOrCreateAccountDialog {
     for (Glob account : newAccounts) {
       this.accountToAccounts.add(
         localRepository.create(Key.create(AccountToAccountType.TYPE, id),
-                               FieldValue.value(AccountToAccountType.FROM_ACCOUNT, account.get(Account.ID))));
+                               value(AccountToAccountType.FROM_ACCOUNT, account.get(Account.ID))));
       id++;
     }
     builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/chooseOrCreateAccountDialog.splits",
@@ -49,7 +51,8 @@ public class ChooseOrCreateAccountDialog {
                       accountToAccounts,
                       new RepeatComponentFactory<Glob>() {
                         public void registerComponents(RepeatCellBuilder cellBuilder, final Glob accountToAccount) {
-                          GlobLabelView globLabelView = GlobLabelView.init(Account.TYPE, localRepository, directory)
+                          GlobLabelView globLabelView =
+                            GlobLabelView.init(Account.TYPE, localRepository, directory)
                             .forceSelection(
                               localRepository.findLinkTarget(accountToAccount,
                                                              AccountToAccountType.FROM_ACCOUNT).getKey());
@@ -115,8 +118,8 @@ public class ChooseOrCreateAccountDialog {
     public void actionPerformed(ActionEvent e) {
       dialog.setVisible(false);
       for (Glob account : accountToAccounts) {
-        Integer toAcount = account.get(AccountToAccountType.TO_ACCOUNT);
-        if (toAcount != null) {
+        Integer toAccount = account.get(AccountToAccountType.TO_ACCOUNT);
+        if (toAccount != null) {
           Glob newAccount = localRepository.findLinkTarget(account, AccountToAccountType.FROM_ACCOUNT);
           Glob existingAccount = localRepository.findLinkTarget(account, AccountToAccountType.TO_ACCOUNT);
           localRepository.update(existingAccount.getKey(),
@@ -125,7 +128,7 @@ public class ChooseOrCreateAccountDialog {
         }
         else {
           Glob newAccount = localRepository.findLinkTarget(account, AccountToAccountType.FROM_ACCOUNT);
-          localRepository.update(newAccount.getKey(), Account.IS_VALIDADED, Boolean.TRUE);
+          localRepository.update(newAccount.getKey(), Account.IS_VALIDATED, Boolean.TRUE);
         }
       }
       localRepository.delete(accountToAccounts);

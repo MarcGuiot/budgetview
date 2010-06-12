@@ -431,9 +431,9 @@ public class LoginTest extends StartUpFunctionalTestCase {
     WindowInterceptor.init(trigger)
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          ImportChecker importChecker = new ImportChecker(window, true);
+          ImportDialogChecker importDialog = new ImportDialogChecker(window, true);
 
-          importChecker.setFilePath(path)
+          importDialog.setFilePath(path)
             .doImport();
 
           return window.getButton("Skip file").triggerClick();

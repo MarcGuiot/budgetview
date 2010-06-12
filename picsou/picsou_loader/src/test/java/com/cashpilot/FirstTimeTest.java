@@ -75,8 +75,8 @@ public class FirstTimeTest extends UISpecTestCase {
     LoginChecker login = new LoginChecker(window);
     login.logNewUser("toto", "toto");
     ActionViewChecker actions = new ActionViewChecker(window);
-    ImportChecker ofxImport = actions.openImport();
-    ofxImport.browseAndSelect(file)
+    ImportDialogChecker ofxImportDialog = actions.openImport();
+    ofxImportDialog.browseAndSelect(file)
       .acceptFile()
       .completeImport();
 

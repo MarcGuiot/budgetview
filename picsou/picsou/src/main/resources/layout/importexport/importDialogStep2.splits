@@ -1,4 +1,4 @@
-<splits xmlns="http://www.design-up.com/xml/splits.xsd">
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
@@ -27,6 +27,10 @@
       </scrollPane>
 
       <panel ref="dateSelectionPanel"/>
+
+      <repeat ref="additionalPanels">
+        <panel ref="additionalPanel"/>
+      </repeat>
 
       <repeat ref="additionalActions">
         <column>

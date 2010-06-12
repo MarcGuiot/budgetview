@@ -2,6 +2,7 @@ package org.designup.picsou.gui.signpost;
 
 import net.java.balloontip.BalloonTip;
 import net.java.balloontip.styles.ModernBalloonStyle;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.SignpostStatus;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.Disposable;
@@ -76,19 +77,10 @@ public abstract class Signpost implements Disposable {
         if (balloonTip == null) {
           return;
         }
-        balloonTip.setVisible(isVisible(component));
+        balloonTip.setVisible(Gui.isVisible(component));
       }
     });
     init();
-  }
-
-  private boolean isVisible(JComponent component) {
-    for (Container parent = component; parent != null; parent = parent.getParent()) {
-      if (!parent.isVisible()) {
-        return false;
-      }
-    }
-    return true;
   }
 
   protected abstract void init();
@@ -114,7 +106,7 @@ public abstract class Signpost implements Disposable {
     }
     else {
       balloonTip = createBalloonTip(component, text);
-      balloonTip.setVisible(isVisible(component));
+      balloonTip.setVisible(Gui.isVisible(component));
     }
   }
 

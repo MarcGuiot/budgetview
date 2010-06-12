@@ -197,6 +197,15 @@ public class Gui {
     return editor;
   }
 
+  public static boolean isVisible(JComponent component) {
+    for (Container parent = component; parent != null; parent = parent.getParent()) {
+      if (!parent.isVisible()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public static class RolloverColorListener extends MouseAdapter {
     private final JComponent component;
     private final Color rolloverColor;

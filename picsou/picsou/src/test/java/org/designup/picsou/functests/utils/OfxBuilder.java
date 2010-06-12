@@ -2,7 +2,7 @@ package org.designup.picsou.functests.utils;
 
 import junit.framework.TestCase;
 import org.designup.picsou.exporter.ofx.OfxExporter;
-import org.designup.picsou.functests.checkers.ImportChecker;
+import org.designup.picsou.functests.checkers.ImportDialogChecker;
 import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.model.*;
 import static org.designup.picsou.model.Transaction.*;
@@ -15,7 +15,6 @@ import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -158,30 +157,26 @@ public class OfxBuilder {
 
   public void loadInNewAccount() {
     save();
-    ImportChecker importChecker = operations.openImportDialog()
+    ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
-    importChecker.checkNoMessageSelectAnAccountType()
+    importDialog.checkNoMessageSelectAnAccountType()
       .openChooseAccount()      
       .validate();
-    importChecker.openAccountType()
-      .selectMain()
-      .validate();
-    importChecker.completeImport();
+    importDialog
+      .setMainAccount()
+      .completeImport();
   }
 
   public void load(int importedTransactionCount, int autocategorizedTransactionCount) {
     save();
-    ImportChecker importChecker = operations.openImportDialog()
+    ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
-    if (importChecker.hasAccountType()){
-      importChecker
-        .openAccountType()
-        .selectMain()
-        .validate();
+    if (importDialog.hasAccountType()){
+      importDialog.setMainAccount();
     }
-    importChecker.completeImport(importedTransactionCount, autocategorizedTransactionCount);
+    importDialog.completeImport(importedTransactionCount, autocategorizedTransactionCount);
   }
 
   public void loadAndGotoCategorize(int importedTransactionCount, int autocategorizedTransactionCount) {
@@ -194,20 +189,17 @@ public class OfxBuilder {
 
   public void loadDeferredCard(String accountName, final int day) {
     save();
-    ImportChecker importChecker = operations.openImportDialog()
+    ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
-    importChecker
+    importDialog
       .openCardTypeChooser()
       .selectDeferredCard(accountName, day)
       .validate();
-    if (importChecker.hasAccountType()){
-    importChecker
-      .openAccountType()
-      .selectMain()
-      .validate();
+    if (importDialog.hasAccountType()){
+      importDialog.setMainAccount();
     }
-    importChecker
+    importDialog
       .completeImport();
   }
 

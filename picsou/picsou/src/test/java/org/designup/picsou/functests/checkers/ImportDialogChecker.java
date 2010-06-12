@@ -1,5 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
+import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.importer.ImportDialog;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
@@ -13,22 +15,22 @@ import org.uispec4j.interception.WindowInterceptor;
 import javax.swing.*;
 import java.io.File;
 
-public class ImportChecker {
+public class ImportDialogChecker extends GuiChecker {
   private Panel dialog;
   private TextBox fileField;
   private Button importButton;
 
-  public static ImportChecker open(Trigger trigger) {
+  public static ImportDialogChecker open(Trigger trigger) {
     Window window = WindowInterceptor.getModalDialog(trigger);
-    return new ImportChecker(window, true);
+    return new ImportDialogChecker(window, true);
   }
 
-  public static ImportChecker openInStep2(Trigger trigger) {
+  public static ImportDialogChecker openInStep2(Trigger trigger) {
     Window window = WindowInterceptor.getModalDialog(trigger);
-    return new ImportChecker(window, false);
+    return new ImportDialogChecker(window, false);
   }
 
-  public ImportChecker(Panel dialog, final boolean step1) {
+  public ImportDialogChecker(Panel dialog, final boolean step1) {
     this.dialog = dialog;
     if (step1){
       fileField = dialog.getInputTextBox("fileField");
@@ -36,21 +38,21 @@ public class ImportChecker {
     }
   }
 
-  private ImportChecker() {
+  private ImportDialogChecker() {
   }
 
-  static public ImportChecker create(Panel dialog) {
-    ImportChecker importChecker = new ImportChecker();
-    importChecker.dialog = dialog;
-    return importChecker;
+  static public ImportDialogChecker create(Panel dialog) {
+    ImportDialogChecker importDialog = new ImportDialogChecker();
+    importDialog.dialog = dialog;
+    return importDialog;
   }
 
-  public ImportChecker setFilePath(String text) {
+  public ImportDialogChecker setFilePath(String text) {
     fileField.setText(text);
     return this;
   }
 
-  public ImportChecker selectFiles(String... path) {
+  public ImportDialogChecker selectFiles(String... path) {
     StringBuilder builder = new StringBuilder();
     for (String file : path) {
       if (builder.length() != 0) {
@@ -62,18 +64,18 @@ public class ImportChecker {
     return this;
   }
 
-  public ImportChecker acceptFile() {
+  public ImportDialogChecker acceptFile() {
     importButton.click();
     return this;
   }
 
-  public ImportChecker checkFileContent(Object[][] expected) {
+  public ImportDialogChecker checkFileContent(Object[][] expected) {
     Table table = dialog.getTable();
     assertTrue(table.contentEquals(expected));
     return this;
   }
 
-  public ImportChecker checkHeaderMessage(String text) {
+  public ImportDialogChecker checkHeaderMessage(String text) {
     TextBox fileMessage = dialog.findUIComponent(TextBox.class, text);
     assertTrue(fileMessage.isVisible());
     return this;
@@ -83,13 +85,13 @@ public class ImportChecker {
     return BankGuideChecker.open(dialog.getTextBox("bankMessage").triggerClickOnHyperlink("download guide"));
   }
 
-  public ImportChecker checkDates(String... dates) {
+  public ImportDialogChecker checkDates(String... dates) {
     ComboBox dateFormatCombo = dialog.getComboBox("dateFormatCombo");
     assertTrue(dateFormatCombo.contentEquals(dates));
     return this;
   }
 
-  public ImportChecker doImport() {
+  public ImportDialogChecker doImport() {
     dialog.getButton(Lang.get("import.step1.ok")).click();
     return this;
   }
@@ -141,12 +143,12 @@ public class ImportChecker {
     dialog.getButton("close").click();
   }
 
-  public ImportChecker checkErrorMessage(String message, String... arg) {
+  public ImportDialogChecker checkErrorMessage(String message, String... arg) {
     assertTrue(dialog.getTextBox("importMessage").textEquals(Lang.get(message, arg)));
     return this;
   }
 
-  public ImportChecker checkHtmlErrorMessage(String message, String... arg) {
+  public ImportDialogChecker checkHtmlErrorMessage(String message, String... arg) {
     assertTrue(dialog.getTextBox("importMessage").htmlEquals(Lang.get(message, arg)));
     return this;
   }
@@ -156,7 +158,7 @@ public class ImportChecker {
       dialog.getTextBox("importMessage").triggerClickOnHyperlink("Click here"));
   }
 
-  public ImportChecker selectDate(String dateFormat) {
+  public ImportDialogChecker selectDate(String dateFormat) {
     ComboBox dateFormatCombo = dialog.getComboBox("dateFormatCombo");
     dateFormatCombo.select(dateFormat);
     return this;
@@ -166,12 +168,12 @@ public class ImportChecker {
     assertThat(dialog.getButton("close").textEquals(text));
   }
 
-  public ImportChecker checkSelectedAccount(String accountNumber) {
+  public ImportDialogChecker checkSelectedAccount(String accountNumber) {
     assertThat(dialog.getComboBox("accountCombo").selectionEquals(accountNumber));
     return this;
   }
 
-  public ImportChecker checkNoErrorMessage() {
+  public ImportDialogChecker checkNoErrorMessage() {
     TextBox message = (TextBox)dialog.findUIComponent(ComponentMatchers.innerNameIdentity("importMessage"));
     if (message != null) {
       assertTrue(message.textIsEmpty());
@@ -179,34 +181,34 @@ public class ImportChecker {
     return this;
   }
 
-  public ImportChecker checkFilePath(String path) {
+  public ImportDialogChecker checkFilePath(String path) {
     assertTrue(fileField.textEquals(path));
     return this;
   }
 
-  public ImportChecker browseAndSelect(String path) {
+  public ImportDialogChecker browseAndSelect(String path) {
     WindowInterceptor.init(dialog.getButton("Browse").triggerClick())
       .process(FileChooserHandler.init().select(new String[]{path}))
       .run();
     return this;
   }
 
-  public ImportChecker skipFile() {
+  public ImportDialogChecker skipFile() {
     dialog.getButton("Skip").click();
     return this;
   }
 
-  public ImportChecker checkMessageCreateFirstAccount() {
+  public ImportDialogChecker checkMessageCreateFirstAccount() {
     dialog.getTextBox("You must create an account");
     return this;
   }
 
-  public ImportChecker checkAvailableAccounts(String... accountNames) {
+  public ImportDialogChecker checkAvailableAccounts(String... accountNames) {
     assertTrue(dialog.getComboBox("accountCombo").contentEquals(accountNames));
     return this;
   }
 
-  public ImportChecker selectAccount(final String accountName) {
+  public ImportDialogChecker selectAccount(final String accountName) {
     dialog.getComboBox("accountCombo").select(accountName);
     return this;
   }
@@ -223,8 +225,7 @@ public class ImportChecker {
     return AccountChooserChecker.open(this, dialog.getButton("Associate").triggerClick());
   }
 
-
-  public ImportChecker defineAccount(String bank, String accountName, String number) {
+  public ImportDialogChecker defineAccount(String bank, String accountName, String number) {
     AccountEditionChecker accountEditionChecker =
       AccountEditionChecker.open(dialog.getButton("Create an account").triggerClick());
     accountEditionChecker
@@ -236,7 +237,7 @@ public class ImportChecker {
     return this;
   }
 
-  public ImportChecker createNewAccount(String bank, String accountName, String number, double initialBalance) {
+  public ImportDialogChecker createNewAccount(String bank, String accountName, String number, double initialBalance) {
     addNewAccount()
       .selectBank(bank)
       .checkUpdateModeIsDisabled()
@@ -253,30 +254,30 @@ public class ImportChecker {
     assertFalse(dialog.isVisible());
   }
 
-  public ImportChecker checkDirectory(String directory) {
+  public ImportDialogChecker checkDirectory(String directory) {
     WindowInterceptor.init(dialog.getButton("Browse").triggerClick())
       .process(FileChooserHandler.init().assertCurrentDirEquals(new File(directory)).cancelSelection())
       .run();
     return this;
   }
 
-  public BankEntityEditionChecker openEntityEditionChecker() {
+  public BankEntityEditionChecker openEntityEditor() {
     Window window = WindowInterceptor.getModalDialog(dialog.getButton("Set the bank").triggerClick());
     return new BankEntityEditionChecker(window);
   }
 
-  public ImportChecker checkMessageSelectABank() {
+  public ImportDialogChecker checkMessageSelectABank() {
     dialog.getTextBox("You must select a bank for this account");
     return this;
   }
 
-  public ImportChecker selectOfxAccountBank(String bank) {
-    openEntityEditionChecker().selectBank(bank)
+  public ImportDialogChecker selectOfxAccountBank(String bank) {
+    openEntityEditor().selectBank(bank)
       .validate();
     return this;
   }
 
-  public ImportChecker checkSelectACardTypeMessage() {
+  public ImportDialogChecker checkSelectACardTypeMessage() {
     dialog.getTextBox("You must select a card type");
     return this;
   }
@@ -286,36 +287,83 @@ public class ImportChecker {
     return new CardTypeChooserChecker(window);
   }
 
-  public ImportChecker checkMessageEmptyFile() {
+  public ImportDialogChecker checkMessageEmptyFile() {
     dialog.getTextBox("No operations in file");
     return this;
   }
 
-  public ImportChecker checkMessageSelectAnAccountType() {
-    dialog.getTextBox("You must choose the account type");
+  public ImportDialogChecker checkAccountTypeSelectionDisplayedFor(String... accounts) {
+    for (String account : accounts) {
+      getAccountTypeSelectionCombo(account);
+    }
     return this;
   }
 
-  public ImportChecker checkNoMessageSelectAnAccountType() {
+  public ImportDialogChecker checkAccountTypeWarningDisplayed(String accountName) {
+    BalloonTipTesting.checkBalloonTipVisible(dialog,
+                                             getAccountTypeSelectionCombo(accountName),
+                                             "Select the account type",
+                                             "No error tip shown for " + accountName);
+    return this;
+  }
+
+  public ImportDialogChecker checkNoAccountTypeMessageDisplayed() {
+    BalloonTipTesting.checkNoBalloonTipVisible(dialog);
+    return this;
+  }
+
+  public ImportDialogChecker checkNoMessageSelectAnAccountType() {
     try {
       dialog.getTextBox("You must choose the account type");
       fail("message is present");
     }
     catch (ItemNotFoundException e) {
+      // OK
     }
     return this;
   }
 
-
-  public AccountTypeChecker openAccountType() {
-    Window window = WindowInterceptor.getModalDialog(dialog.getButton("Set accountType").triggerClick());
-    return new AccountTypeChecker(this, window);
-  }
-
   public boolean hasAccountType() {
-    return dialog.findSwingComponent(JButton.class, "Set accountType") != null;
+    return new ComponentIsVisibleAssertion<JPanel>(dialog, JPanel.class, "accountTypeSelection", true).isTrue();
   }
 
+  public ImportDialogChecker setMainAccountForAll(){
+    UIComponent[] uiComponents = getAccountTypeSelectionPanel().getUIComponents(ComboBox.class);
+    for (UIComponent component : uiComponents) {
+      ((ComboBox)component).select("main");
+    }
+    return this;
+  }
+
+  public ImportDialogChecker setMainAccount(String... accounts) {
+    return setAccountType("main", accounts);
+  }
+
+  public ImportDialogChecker setSavingsAccount(String... accounts) {
+    return setAccountType("savings", accounts);
+  }
+
+  private ImportDialogChecker setAccountType(String accountType, String[] accounts) {
+    if (accounts.length == 0) {
+      getAccountTypeSelectionPanel().getComboBox().select(accountType);
+    }
+    else {
+      for (String account : accounts) {
+        getAccountTypeSelectionCombo(account).select(accountType);
+      }
+    }
+    return this;
+  }
+
+  private ComboBox getAccountTypeSelectionCombo(String account) {
+    return getAccountTypeSelectionPanel().getComboBox("Combo:" + account);
+  }
+
+  private Panel getAccountTypeSelectionPanel() {
+    Panel selectionPanel = dialog.getPanel("accountTypeSelection");
+    UISpecAssert.assertThat(selectionPanel.isVisible());
+    return selectionPanel;
+  }
 
   public static class ImportCompleteWindowHandler extends WindowHandler {
     private int loadedTransactionCount;
