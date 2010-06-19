@@ -103,22 +103,22 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .checkGaugeTooltip("habillement", "Reste : 40")
       .checkTotalErrorOverrun()
       .checkTotalAmounts(-180, -200)
-      .checkTotalTooltips(40., 20., 200. + 20.);
+      .checkTotalDescription(40., 20., 200. + 20.);
 
     setVariableAmount("habillement", 50);
     budgetView.variable.checkTotalErrorOverrun()
       .checkTotalAmounts(-180, -180)
-      .checkTotalTooltips(20., 20., 180. + 20.);
+      .checkTotalDescription(20., 20., 180. + 20.);
 
     setVariableAmount("habillement", 40);
     budgetView.variable.checkTotalErrorOverrun()
       .checkTotalAmounts(-180, -170)
-      .checkTotalTooltips(10., 20., 170. + 20.);
+      .checkTotalDescription(10., 20., 170. + 20.);
 
     setVariableAmount("habillement", 30);
     budgetView.variable.checkTotalErrorOverrun()
       .checkTotalAmounts(-180, -160)
-      .checkTotalTooltips(0., 20., 160. + 20.);
+      .checkTotalDescription(0., 20., 160. + 20.);
 
     setVariableAmount("habillement", -20);
     budgetView.variable.checkSeries("habillement", -30, 20)
@@ -126,7 +126,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .checkSeriesGaugeRemaining("habillement", 50., false)
       .checkTotalErrorOverrun()
       .checkTotalAmounts(-180, -110)
-      .checkTotalTooltips(20., 50., 110. + 20.);
+      .checkTotalDescription(20., 50., 110. + 20.);
   }
 
   public void testGaugeInSavingsInThePast() throws Exception {

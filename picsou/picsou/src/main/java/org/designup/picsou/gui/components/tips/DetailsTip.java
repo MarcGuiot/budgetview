@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.components;
+package org.designup.picsou.gui.components.tips;
 
 import net.java.balloontip.BalloonTip;
 import net.java.balloontip.positioners.Right_Above_Positioner;
@@ -8,38 +8,45 @@ import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.AWTEventListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
+import java.awt.event.MouseEvent;
 
-public class ErrorTip implements Disposable {
+public class DetailsTip implements Disposable {
 
   private BalloonTip balloonTip;
   private Color fillColor;
   private Color borderColor;
   private HierarchyListener visibilityUpdater;
   private JComponent component;
+  private String text;
+  private AWTEventListener mouseListener;
 
-  public static ErrorTip show(JComponent component, String text, Directory directory) {
-    return new ErrorTip(component, text, directory);
-  }
-
-  private ErrorTip(final JComponent component, String text, Directory directory) {
+  DetailsTip(final JComponent component, String text, Directory directory) {
     this.component = component;
+    this.text = text;
 
     directory.get(ColorService.class).addListener(new ColorChangeListener() {
       public void colorsChanged(ColorLocator colorLocator) {
-        fillColor = colorLocator.get("errorTip.bg");
-        borderColor = colorLocator.get("errorTip.border");
+        fillColor = colorLocator.get("detailsTip.bg");
+        borderColor = colorLocator.get("detailsTip.border");
+        if (balloonTip != null) {
+          balloonTip.setStyle(createStyle());
+        }
       }
     });
+  }
 
+  public void show() {
     balloonTip = new BalloonTip(component,
                                 text,
-                                new RoundedBalloonStyle(5, 5, fillColor, borderColor),
+                                createStyle(),
                                 BalloonTip.Orientation.LEFT_ABOVE,
                                 BalloonTip.AttachLocation.NORTHEAST,
                                 0, 20,
@@ -59,12 +66,43 @@ public class ErrorTip implements Disposable {
       }
     };
     component.addHierarchyListener(visibilityUpdater);
+
+    GuiUtils.runInSwingThread(new Runnable() {
+      public void run() {
+        registerMouseListener();
+      }
+    });
+
+  }
+
+  private void registerMouseListener() {
+    mouseListener = new AWTEventListener() {
+      public void eventDispatched(AWTEvent event) {
+        if (event instanceof MouseEvent) {
+          MouseEvent mouseEvent = (MouseEvent)event;
+          if (mouseEvent.getID() != MouseEvent.MOUSE_PRESSED) {
+            return;
+          }
+          if (mouseEvent.getComponent() == component) {
+            mouseEvent.consume();
+          }
+          dispose();
+        }
+      }
+    };
+    Toolkit.getDefaultToolkit().addAWTEventListener(mouseListener, AWTEvent.MOUSE_EVENT_MASK);
+  }
+
+  private RoundedBalloonStyle createStyle() {
+    return new RoundedBalloonStyle(5, 5, fillColor, borderColor);
   }
 
   public void dispose() {
-    if (component == null) {
+    if ((component == null) || (balloonTip == null)) {
       return;
     }
+    Toolkit.getDefaultToolkit().removeAWTEventListener(mouseListener);
+    mouseListener = null;
     component.removeHierarchyListener(visibilityUpdater);
     component = null;
     balloonTip.closeBalloon();

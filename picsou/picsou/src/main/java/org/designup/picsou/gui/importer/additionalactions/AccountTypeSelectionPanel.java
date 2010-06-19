@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.importer.additionalactions;
 
-import org.designup.picsou.gui.components.ErrorTip;
+import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.importer.AdditionalImportPanel;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.utils.Lang;

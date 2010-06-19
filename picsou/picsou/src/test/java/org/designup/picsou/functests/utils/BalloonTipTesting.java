@@ -17,10 +17,22 @@ import java.awt.*;
 import static org.uispec4j.finder.ComponentMatchers.*;
 
 public class BalloonTipTesting {
-  
-  public static void checkBalloonTipVisible(Panel enclosingPanel, UIComponent targetUIComponent, String text, String message) {
 
-    final BalloonTip balloon = getBalloonTip(enclosingPanel, targetUIComponent);
+  public static void checkBalloonTipVisible(Panel enclosingWindow,
+                                            UIComponent targetUIComponent,
+                                            String text,
+                                            String message) {
+    checkBalloonTipVisible(enclosingWindow.getAwtComponent(),
+                           targetUIComponent.getAwtComponent(),
+                           text,
+                           message);
+  }
+
+  public static void checkBalloonTipVisible(Component enclosingWindow,
+                                            Component targetUIComponent,
+                                            String text,
+                                            String message) {
+    final BalloonTip balloon = getBalloonTip(enclosingWindow, targetUIComponent);
     UISpecAssert.assertThat(message, new Assertion() {
       public void check() {
         Assert.assertTrue(balloon != null && balloon.isVisible());
@@ -29,8 +41,8 @@ public class BalloonTipTesting {
     Assert.assertEquals(text, Utils.cleanupHtml(balloon.getText()));
   }
 
-  private static BalloonTip getBalloonTip(Panel enclosingPanel, UIComponent targetUIComponent) {
-    final Component targetComponent = targetUIComponent.getAwtComponent();
+  private static BalloonTip getBalloonTip(Component enclosingPanel, Component targetUIComponent) {
+    final Component targetComponent = targetUIComponent;
     org.uispec4j.Window enclosingWindow = getEnclosingWindow(enclosingPanel);
     return (BalloonTip)enclosingWindow.findSwingComponent(new ComponentMatcher() {
       public boolean matches(Component component) {
@@ -43,17 +55,20 @@ public class BalloonTipTesting {
     });
   }
 
-  private static org.uispec4j.Window getEnclosingWindow(Panel enclosingPanel) {
-    Container awtComponent = enclosingPanel.getAwtComponent();
-    if (awtComponent instanceof java.awt.Window) {
-      return new org.uispec4j.Window((java.awt.Window)awtComponent);
+  private static org.uispec4j.Window getEnclosingWindow(Component enclosingPanel) {
+    if (enclosingPanel instanceof java.awt.Window) {
+      return new org.uispec4j.Window((java.awt.Window)enclosingPanel);
 
     }
-    return new org.uispec4j.Window(GuiUtils.getEnclosingFrame(awtComponent));
+    return new org.uispec4j.Window(GuiUtils.getEnclosingFrame(enclosingPanel));
   }
 
   public static void checkNoBalloonTipVisible(Panel panel) {
-    ComponentFinder finder = new ComponentFinder(panel.getAwtContainer());
+    checkNoBalloonTipVisible(panel.getAwtContainer());
+  }
+
+  public static void checkNoBalloonTipVisible(Container panel) {
+    ComponentFinder finder = new ComponentFinder(panel);
     final Component[] actual = finder.getComponents(and(fromClass(BalloonTip.class),
                                                         visible(true)));
     if (actual.length > 0) {

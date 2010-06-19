@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.components.charts;
 
+import org.designup.picsou.gui.components.tips.DetailsTipFactory;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.gui.GlobSelection;
@@ -36,23 +37,16 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
                        DoubleField pastRemainingField, DoubleField futureRemainingField,
                        DoubleField pastOverrunField, DoubleField futureOverrunField,
                        GlobMatcher matcher, GlobRepository repository, Directory directory) {
-    super(type, repository, directory);
-    this.budgetArea = budgetArea;
-    this.pastOverrunField = pastOverrunField;
-    this.futureOverrunField = futureOverrunField;
-    this.pastRemainingField = pastRemainingField;
-    this.futureRemainingField = futureRemainingField;
-    this.gauge = BudgetAreaGaugeFactory.createGauge(budgetArea);
-    this.actualField = actualField;
-    this.targetField = targetField;
-    this.matcher = matcher;
-    repository.addChangeListener(this);
-    selectionService.addListener(this, type);
-    currentSelection = selectionService.getSelection(type).filterSelf(matcher, repository).toKeyList();
-    update();
+    this(type,
+         BudgetAreaGaugeFactory.createGauge(budgetArea),
+         budgetArea,
+         actualField, targetField,
+         pastRemainingField, futureRemainingField, pastOverrunField, futureOverrunField,
+         matcher,
+         repository, directory);
   }
 
-  public GlobGaugeView(GlobType type, Gauge gauge, BudgetArea budgetArea,
+  public GlobGaugeView(GlobType type, final Gauge gauge, BudgetArea budgetArea,
                        DoubleField actualField, DoubleField targetField,
                        DoubleField pastRemainingField, DoubleField futureRemainingField,
                        DoubleField pastOverrunField, DoubleField futureOverrunField,
@@ -70,6 +64,9 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
     repository.addChangeListener(this);
     selectionService.addListener(this, type);
     currentSelection = selectionService.getSelection(type).filterSelf(matcher, repository).toKeyList();
+
+    gauge.enableDetailsTips(new DetailsTipFactory(directory));
+
     update();
   }
 
@@ -128,10 +125,10 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
       pastRemaining += getValue(glob, pastRemainingField);
       futureRemaining += getValue(glob, futureRemainingField);
     }
-    Amounts.updateGauge(futureRemaining > 0. ? futureRemaining : 0.,
-                        futureOverrun > 0 ? futureOverrun : 0.,
-                        futureRemaining < 0. ? futureRemaining : 0., 
-                        futureOverrun < 0 ? futureOverrun : 0.,
+    Amounts.updateGauge(futureRemaining > 0 ? futureRemaining : 0.0,
+                        futureOverrun > 0 ? futureOverrun : 0.0,
+                        futureRemaining < 0 ? futureRemaining : 0.0,
+                        futureOverrun < 0 ? futureOverrun : 0.0,
                         pastRemaining, pastOverrun, target, actual, gauge, budgetArea);
   }
 

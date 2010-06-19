@@ -112,10 +112,10 @@ public class BudgetViewChecker extends GuiChecker {
       return this;
     }
 
-    public BudgetAreaChecker checkTotalTooltips(double remaining, double overrun, double newAmount) {
+    public BudgetAreaChecker checkTotalDescription(double remaining, double overrun, double newAmount) {
       GaugeChecker gauge = new GaugeChecker(getPanel(), "totalGauge");
-      gauge.checkTooltipContains(Integer.toString((int)remaining));
-      gauge.checkTooltipContains(Integer.toString((int)overrun));
+      gauge.checkDescriptionContains(Integer.toString((int)remaining));
+      gauge.checkDescriptionContains(Integer.toString((int)overrun));
       assertThat(getPanel().getTextBox("totalPlannedAmount").tooltipContains(Double.toString(newAmount)));
       return this;
     }
@@ -123,7 +123,7 @@ public class BudgetViewChecker extends GuiChecker {
     public BudgetAreaChecker checkTotalGaugeTooltips(String... text) {
       GaugeChecker gauge = new GaugeChecker(getPanel(), "totalGauge");
       for (String s : text) {
-        gauge.checkTooltipContains(s);
+        gauge.checkDescriptionContains(s);
       }
       return this;
     }
@@ -273,7 +273,7 @@ public class BudgetViewChecker extends GuiChecker {
 
     public BudgetAreaChecker checkGaugeTooltip(String seriesName, String... tooltipTextFragments) {
       for (String text : tooltipTextFragments) {
-        getGauge(seriesName).checkTooltipContains(text);
+        getGauge(seriesName).checkDescriptionContains(text);
       }
       return this;
     }
