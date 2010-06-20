@@ -50,7 +50,10 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.Glob;
 import org.globsframework.model.format.GlobListStringifiers;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.ReplicationGlobRepository;
@@ -93,7 +96,7 @@ public class MainPanel {
     return panel;
   }
 
-  private MainPanel(final GlobRepository repository, Directory directory, WindowManager windowManager) {
+  private MainPanel(final GlobRepository repository, final Directory directory, WindowManager windowManager) {
     this.repository = repository;
     this.directory = directory;
     this.windowManager = windowManager;
@@ -133,11 +136,17 @@ public class MainPanel {
     logoutAction = new LogoutAction(logoutService);
     protectAction = new ProtectAction(repository, directory);
     deleteUserAction = new DeleteUserAction(this, repository, directory);
-
     search = new TextFilterPanel(transactionView.getFilterSet(), repository, directory) {
-      protected GlobMatcher createMatcher(String searchFilter) {
+      protected GlobMatcher createMatcher(final String searchFilter) {
         return or(fieldContainsIgnoreCase(Transaction.LABEL, searchFilter),
-                  fieldContainsIgnoreCase(Transaction.NOTE, searchFilter));
+                  fieldContainsIgnoreCase(Transaction.NOTE, searchFilter),
+                  new GlobMatcher() {
+                    final GlobStringifier amountStringifier =
+                      directory.get(DescriptionService.class).getStringifier(Transaction.AMOUNT);
+                    public boolean matches(Glob item, GlobRepository repository) {
+                      return amountStringifier.toString(item, repository).contains(searchFilter);
+                    }
+                  });
       }
     };
     builder.add("transactionSearch", search.getPanel());

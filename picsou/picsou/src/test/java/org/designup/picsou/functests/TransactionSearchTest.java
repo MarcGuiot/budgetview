@@ -59,6 +59,11 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .add("17/07/2008", TransactionType.PRELEVEMENT, "Pizza Lapino", "beurk", -20.00)
       .add("16/07/2008", TransactionType.PRELEVEMENT, "Pizza Pino", "miam miam", -15.00)
       .check();
+
+    searchField.setText("50.");
+    transactions.initContent()
+      .add("19/07/2008", TransactionType.PRELEVEMENT, "Mac Do", "mmhhh", -50.00)
+      .check();
   }
 
   public void testSearchIsPreservedDuringOtherSelectionChanges() throws Exception {
