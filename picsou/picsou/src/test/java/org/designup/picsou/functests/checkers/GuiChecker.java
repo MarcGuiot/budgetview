@@ -1,22 +1,17 @@
 package org.designup.picsou.functests.checkers;
 
-import junit.framework.Assert;
-import net.java.balloontip.BalloonTip;
+import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
+import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.model.Month;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Key;
 import org.uispec4j.Panel;
 import org.uispec4j.UIComponent;
 import org.uispec4j.Window;
-import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
-import org.uispec4j.finder.ComponentMatcher;
 import org.uispec4j.utils.KeyUtils;
-import org.uispec4j.utils.Utils;
 
 import javax.swing.*;
-import java.awt.*;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -44,49 +39,15 @@ public abstract class GuiChecker {
                                                               final Class<T> swingComponentClass,
                                                               final String componentName,
                                                               final boolean visible) {
-    UISpecAssert.assertThat(visible ? "is not visible" : "is visible", new Assertion() {
-      public void check() {
-        final JComponent component = panel.findSwingComponent(swingComponentClass, componentName);
-        Assert.assertEquals(visible, component != null && component.isVisible());
-      }
-    });
+    UISpecAssert.assertThat(visible ? "is not visible" : "is visible",
+                            new ComponentIsVisibleAssertion<T>(panel, swingComponentClass, componentName, visible));
   }
 
   protected void checkSignpostVisible(final Panel enclosingPanel,
                                       final UIComponent targetUIComponent,
                                       final String text) {
-    UISpecAssert.assertThat("Signpost is not visible", new Assertion() {
-      public void check() {
-        final BalloonTip balloon = getBalloonTip(enclosingPanel, targetUIComponent);
-        Assert.assertTrue(balloon != null && balloon.isVisible());
-      }
-    });
-    final BalloonTip balloon = getBalloonTip(enclosingPanel, targetUIComponent);
-    Assert.assertEquals(text, Utils.cleanupHtml(balloon.getText()));
-  }
-
-  protected void checkSignpostHidden(final Panel enclosingPanel,
-                                     final UIComponent targetUIComponent) {
-    UISpecAssert.assertThat("Signpost is visible", new Assertion() {
-      public void check() {
-        final BalloonTip balloon = getBalloonTip(enclosingPanel, targetUIComponent);
-        Assert.assertTrue((balloon == null) || !balloon.isVisible());
-      }
-    });
-  }
-
-  private BalloonTip getBalloonTip(Panel enclosingPanel, UIComponent targetUIComponent) {
-    final Component targetComponent = targetUIComponent.getAwtComponent();
-    Window enclosingWindow = new Window(GuiUtils.getEnclosingFrame(enclosingPanel.getAwtComponent()));
-    return (BalloonTip)enclosingWindow.findSwingComponent(new ComponentMatcher() {
-      public boolean matches(Component component) {
-        if (!BalloonTip.class.isAssignableFrom(component.getClass())) {
-          return false;
-        }
-        BalloonTip balloon = (BalloonTip)component;
-        return balloon.getAttachedComponent() == targetComponent;
-      }
-    });
+    BalloonTipTesting.checkBalloonTipVisible(enclosingPanel, targetUIComponent, text,
+                                             "Signpost is not visible for this component");
   }
 
   protected void pressEsc(final Window dialog) {

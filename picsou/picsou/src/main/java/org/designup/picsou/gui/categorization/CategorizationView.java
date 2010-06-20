@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.signpost.guides.CategorizationAreaSignpost;
 import org.designup.picsou.gui.signpost.guides.CategorizationSelectionSignpost;
 import org.designup.picsou.gui.signpost.guides.CategorizationCompletionSignpost;
 import org.designup.picsou.gui.signpost.Signpost;
@@ -198,12 +199,11 @@ public class CategorizationView extends View implements TableView, Filterable, C
     BudgetAreaSelector selector = new BudgetAreaSelector(repository, directory);
     selector.registerComponents(builder);
 
-    SeriesChooserComponentFactory income = addSeriesChooser("incomeSeriesChooser", BudgetArea.INCOME, builder);
-    SeriesChooserComponentFactory recurring = addSeriesChooser("recurringSeriesChooser", BudgetArea.RECURRING, builder);
-    SeriesChooserComponentFactory variable = addSeriesChooser("variableSeriesChooser", BudgetArea.VARIABLE, builder);
-    SeriesChooserComponentFactory extras = addSeriesChooser("extrasSeriesChooser", BudgetArea.EXTRAS, builder);
-    SeriesChooserComponentFactory savings = addSeriesChooser("savingsSeriesChooser", BudgetArea.SAVINGS, builder);
-    final SeriesChooserComponentFactory factory[] = {variable, recurring, income, extras, savings};
+    addSeriesChooser("incomeSeriesChooser", BudgetArea.INCOME, builder);
+    addSeriesChooser("recurringSeriesChooser", BudgetArea.RECURRING, builder);
+    addSeriesChooser("variableSeriesChooser", BudgetArea.VARIABLE, builder);
+    addSeriesChooser("extrasSeriesChooser", BudgetArea.EXTRAS, builder);
+    addSeriesChooser("savingsSeriesChooser", BudgetArea.SAVINGS, builder);
     addOtherSeriesChooser("otherSeriesChooser", builder);
 
     TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory, this);
@@ -224,11 +224,12 @@ public class CategorizationView extends View implements TableView, Filterable, C
       }
     });
 
-    return builder;
-  }
+    JPanel budgetAreaSelectionPanel = new JPanel();
+    builder.add("budgetAreaSelectionPanel", budgetAreaSelectionPanel);
+    CategorizationAreaSignpost areaSignpost = new CategorizationAreaSignpost(repository, directory);
+    areaSignpost.attach(budgetAreaSelectionPanel);
 
-  private NewAccountAction getAdditionalAction() {
-    return new NewAccountAction(AccountType.SAVINGS, repository, directory);
+    return builder;
   }
 
   private void registerBankFormatExporter(final GlobTableView transactionTable) {
@@ -344,6 +345,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
                                           SeriesNameComparator.INSTANCE,
                                           componentFactory);
     seriesRepeat.add(filter, repeat);
+    
     JPanel groupForSeries = new JPanel();
     builder.add("groupCreateEditSeries", groupForSeries);
     builder.add("createSeries", new CreateSeriesAction(budgetArea));
@@ -602,10 +604,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
   public void setFilteringMode(TransactionFilteringMode mode) {
     filteringModeCombo.setSelectedItem(mode);
-  }
-
-  public TransactionFilteringMode getFilteringMode() {
-    return (TransactionFilteringMode)filteringModeCombo.getSelectedItem();
   }
 
   private GlobMatcher getCurrentFilteringModeMatcher() {

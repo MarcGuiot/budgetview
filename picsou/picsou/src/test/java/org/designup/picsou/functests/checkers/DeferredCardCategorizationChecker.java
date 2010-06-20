@@ -14,9 +14,9 @@ public class DeferredCardCategorizationChecker extends SpecialCaseCategorization
     this.budgetAreaChecker = new BudgetAreaCategorizationChecker(categorizationChecker, BudgetArea.OTHER, panel);
   }
 
-  public ImportChecker importAccount() {
+  public ImportDialogChecker importAccount() {
     TextBox message = getSpecialCasePanel().getTextBox();
-    return ImportChecker.open(message.triggerClickOnHyperlink("import the corresponding card account"));
+    return ImportDialogChecker.open(message.triggerClickOnHyperlink("import the corresponding card account"));
   }
 
   public DeferredCardCategorizationChecker checkMessage(String text) {

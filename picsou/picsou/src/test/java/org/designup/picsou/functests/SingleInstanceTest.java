@@ -61,7 +61,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     assertEquals(0, errorCount);
 
 
-    ImportChecker importer = new ImportChecker(importDialog, false);
+    ImportDialogChecker importer = new ImportDialogChecker(importDialog, false);
 
     String step2File = OfxBuilder.init(this)
       .addTransaction("2000/01/04", 1.2, "menu K")
@@ -69,7 +69,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     PicsouApplication.main(step2File);
 
     importer
-      .openAccountType().selectMain().validate()
+      .setMainAccount()
       .doImport();
     importer.doImport();
     importer.doImport();
@@ -83,7 +83,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .add("01/01/2000", TransactionType.VIREMENT, "mac do", "", 1.20)
       .check();
 
-    ImportChecker importerForPathCheck = ImportChecker.open(new OperationChecker(mainWindow).getImportTrigger());
+    ImportDialogChecker importerForPathCheck = ImportDialogChecker.open(new OperationChecker(mainWindow).getImportTrigger());
     importerForPathCheck.checkDirectory(System.getProperty("user.home"))
       .close();
 
@@ -118,7 +118,8 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       }
     });
 
-    ImportChecker importer = ImportChecker.openInStep2(trigger);
+    ImportDialogChecker importer = ImportDialogChecker.openInStep2(trigger);
+//    importer.checkSelectedFiles(initialFile);
 
     String step1File = OfxBuilder.init(this)
       .addTransaction("2000/01/01", 1.2, "mac do")
@@ -130,7 +131,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .save();
     PicsouApplication.main(step2File);
     importer
-      .openAccountType().selectMain().validate()
+      .setMainAccount()
       .doImport();
     importer.doImport();
     importer.completeImport();
@@ -171,7 +172,8 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     });
     Window importDialog = WindowInterceptor.getModalDialog(trigger1);
     trigger1.waitEnd();
-    ImportChecker firstImporter = new ImportChecker(importDialog, false);
+    ImportDialogChecker firstImporter = new ImportDialogChecker(importDialog, false);
+//    firstImporter.checkSelectedFiles(initialFile);
     firstImporter.skipAndComplete();
     assertFalse(importDialog.isVisible());
 
@@ -182,9 +184,11 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     });
     importDialog = WindowInterceptor.getModalDialog(trigger2);
     trigger2.waitEnd();
-    ImportChecker importer = new ImportChecker(importDialog, false);
+    ImportDialogChecker importer = new ImportDialogChecker(importDialog, false);
+//    importer.checkSelectedFiles(initialFile);
+//    importer.acceptFile();
     importer
-      .openAccountType().selectMain().validate()
+      .setMainAccount()
       .completeImport();
     getTransactionView(mainWindow).initContent()
       .add("03/01/2000", TransactionType.VIREMENT, "menu K", "", 1.20)
@@ -228,7 +232,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
                     "MFAC.FRANCE 4561409787231717 19/04/06 STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS\n" +
                     "^");
     OperationChecker operations = new OperationChecker(mainWindow);
-    ImportChecker importer = ImportChecker.open(operations.getImportTrigger());
+    ImportDialogChecker importer = ImportDialogChecker.open(operations.getImportTrigger());
     AccountPositionEditionChecker accountPosition = importer.selectFiles(file)
       .acceptFile()
       .defineAccount(LoggedInFunctionalTestCase.SOCIETE_GENERALE, "Main account", "11111")
@@ -240,7 +244,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     accountPosition.setAmount(0.).validateFromImport();
     Window newImportDialog = newApplication.getImportDialog();
     assertNotNull(newImportDialog);
-    new ImportChecker(newImportDialog, false)
+    new ImportDialogChecker(newImportDialog, false)
       .skipAndComplete();
     picsouApplication.shutdown();
     newApplication.clear();
@@ -285,7 +289,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     Window dialog = newApplication.getImportDialog();
     assertNotNull(dialog);
 
-    new ImportChecker(dialog, false)
+    new ImportDialogChecker(dialog, false)
 //      .checkSelectedFiles(initialFile)
       .skipAndComplete();
     picsouApplication.shutdown();

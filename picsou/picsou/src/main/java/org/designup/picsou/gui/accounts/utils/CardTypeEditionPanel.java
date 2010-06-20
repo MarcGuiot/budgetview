@@ -94,10 +94,6 @@ public class CardTypeEditionPanel {
     cardHandler.show(cardType.getName());
   }
 
-  private boolean isDisplayed(AccountCardType cardType) {
-    return AccountCardType.CREDIT.equals(cardType) || AccountCardType.DEFERRED.equals(cardType);
-  }
-
   private void updateMonthsFromAccount() {
     ExistingMonthsCollector existingMonthsCollector = new ExistingMonthsCollector();
     repository.safeApply(Month.TYPE, GlobMatchers.ALL, existingMonthsCollector);

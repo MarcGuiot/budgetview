@@ -11,8 +11,8 @@ public class ActionViewChecker extends GuiChecker {
     this.window = window;
   }
 
-  public ImportChecker openImport() {
-    return ImportChecker.open(getPanel().getButton("Import").triggerClick());
+  public ImportDialogChecker openImport() {
+    return ImportDialogChecker.open(getPanel().getButton("Import").triggerClick());
   }
 
   public ActionViewChecker checkImportMessage(String message) {

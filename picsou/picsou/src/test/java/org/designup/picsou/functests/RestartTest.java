@@ -182,6 +182,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     CategorizationGaugeChecker gauge = categorization.getCompletionGauge();
     gauge.checkLevel(1);
     categorization.selectTableRow(0);
+    categorization.selectIncome();
     checkNoSignpostVisible();
 
     categorization.setNewIncome("WorldCo", "Salaire");

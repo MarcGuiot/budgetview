@@ -407,16 +407,6 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     updateSeriesLabel("savingsSeries");
   }
 
-  private void clearBalanceStack() {
-    balanceChart.clear();
-    balanceChartLabel.setText(null);
-  }
-
-  private void clearSeriesStack() {
-    seriesChart.clear();
-    balanceChartLabel.setText(null);
-  }
-
   private void updateBalanceLabel(String messageKey, String... args) {
     updateLabel(balanceChartLabel, "chart.balance." + messageKey, args);
   }

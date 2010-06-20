@@ -39,7 +39,6 @@ public class SeriesAmountEditionDialog {
   private PicsouDialog dialog;
 
   private LocalGlobRepository localRepository;
-  private Directory directory;
   private GlobRepository parentRepository;
   private SeriesEditionDialog seriesEditionDialog;
 

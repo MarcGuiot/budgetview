@@ -111,7 +111,7 @@ public class Amounts {
                                       futureNegativeRemaining, futureNegativeOverrun,
                                       pastRemaining, pastOverrun, gaugeTarget, gauge.shouldInvertAll(), budgetArea);
     gauge.setValues(gaugeActual, gaugeTarget, futureNegativeOverrun + futurePositiveOverrun + pastOverrun,
-                    futureNegativeRemaining + futurePositiveRemaining +  pastRemaining,
+                    futureNegativeRemaining + futurePositiveRemaining + pastRemaining,
                     "<html>" + tooltips + "</html>");
   }
 
@@ -131,11 +131,8 @@ public class Amounts {
       gaugeTarget = -1.0 * gaugeTarget;
     }
 
-
     String prefix = gaugeTarget > 0 ? "positive" : gaugeTarget < 0 ? "negative" : "zero";
     String tooltips = "";
-    String enterPara = "<p>";
-    String leavePara = "</p>";
 
     if (gaugeTarget > 0 && pastOverrun > 0 && futurePositiveOverrun > 0 && Amounts.isNearZero(futureNegativeOverrun)) {
       futurePositiveOverrun += pastOverrun;
@@ -148,53 +145,61 @@ public class Amounts {
     }
 
     if (isNotZero(pastRemaining)) {
-      String sufixe = pastRemaining > 0 ? ".positive" : ".negative";
-      tooltips += enterPara +
-                  Lang.getWithDefault("gauge." + prefix + ".past.remaining" + sufixe + "." + budgetArea.getName(),
-                                      "gauge." + prefix + ".past.remaining" + sufixe,
-                                      Formatting.DECIMAL_FORMAT.format(Math.abs(pastRemaining))) + leavePara;
+      tooltips += toString(budgetArea,
+                           prefix,
+                           pastRemaining > 0 ? ".positive" : ".negative",
+                           ".past.remaining",
+                           pastRemaining);
     }
 
     if (isNotZero(pastOverrun)) {
-      String sufixe = pastOverrun > 0 ? ".positive" : ".negative";
-      tooltips += enterPara +
-                  Lang.getWithDefault("gauge." + prefix + ".past.overrun" + sufixe + "." + budgetArea.getName(),
-                                      "gauge." + prefix + ".past.overrun" + sufixe,
-                                      Formatting.DECIMAL_FORMAT.format(Math.abs(pastOverrun))) + leavePara;
+      tooltips += toString(budgetArea,
+                           prefix,
+                           pastOverrun > 0 ? ".positive" : ".negative",
+                           ".past.overrun",
+                           pastOverrun);
     }
 
     if (isNotZero(futurePositiveRemaining)) {
-      String sufixe = ".positive";
-      tooltips += enterPara +
-                  Lang.getWithDefault("gauge." + prefix + ".future.remaining" + sufixe + "." + budgetArea.getName(),
-                                      "gauge." + prefix + ".future.remaining" + sufixe,
-                                      Formatting.DECIMAL_FORMAT.format(Math.abs(futurePositiveRemaining))) + leavePara;
+      tooltips += toString(budgetArea,
+                           prefix,
+                           ".positive",
+                           ".future.remaining",
+                           futurePositiveRemaining);
     }
 
     if (isNotZero(futureNegativeRemaining)) {
-      String sufixe = ".negative";
-      tooltips += enterPara +
-                  Lang.getWithDefault("gauge." + prefix + ".future.remaining" + sufixe + "." + budgetArea.getName(),
-                                      "gauge." + prefix + ".future.remaining" + sufixe,
-                                      Formatting.DECIMAL_FORMAT.format(Math.abs(futureNegativeRemaining))) + leavePara;
+      tooltips += toString(budgetArea,
+                           prefix,
+                           ".negative",
+                           ".future.remaining",
+                           futureNegativeRemaining);
     }
 
     if (isNotZero(futurePositiveOverrun)) {
-      String sufixe = ".positive";
-      tooltips += enterPara +
-                  Lang.getWithDefault("gauge." + prefix + ".future.overrun" + sufixe + "." + budgetArea.getName(),
-                                      "gauge." + prefix + ".future.overrun" + sufixe,
-                                      Formatting.DECIMAL_FORMAT.format(Math.abs(futurePositiveOverrun))) + leavePara;
+      tooltips += toString(budgetArea,
+                           prefix,
+                           ".positive",
+                           ".future.overrun",
+                           futurePositiveOverrun);
     }
 
     if (isNotZero(futureNegativeOverrun)) {
-      String sufixe = ".negative";
-      tooltips += enterPara +
-                  Lang.getWithDefault("gauge." + prefix + ".future.overrun" + sufixe + "." + budgetArea.getName(),
-                                      "gauge." + prefix + ".future.overrun" + sufixe,
-                                      Formatting.DECIMAL_FORMAT.format(Math.abs(futureNegativeOverrun))) + leavePara;
+      tooltips += toString(budgetArea,
+                           prefix,
+                           ".negative", 
+                           ".future.overrun",
+                           futureNegativeOverrun);
     }
     return tooltips;
+  }
+
+  private static String toString(BudgetArea budgetArea, String prefix, String suffix, String key, double value) {
+    return "<p>" +
+           Lang.getWithDefault("gauge." + prefix + key + suffix + "." + budgetArea.getName(),
+                               "gauge." + prefix + key + suffix,
+                               Formatting.DECIMAL_FORMAT.format(Math.abs(value))) +
+           "</p>";
   }
 
   public static double upperOrder(double value) {

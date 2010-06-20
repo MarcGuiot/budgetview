@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.components.tips.DetailsTipFactory;
 import org.designup.picsou.gui.signpost.guides.BudgetSignpostService;
 import org.designup.picsou.gui.signpost.guides.SeriesPeriodicitySignpost;
 import org.designup.picsou.gui.signpost.guides.SeriesAmountSignpost;
@@ -130,6 +131,7 @@ public class BudgetAreaSeriesView extends View {
     JLabel plannedLabel = builder.add("totalPlannedAmount", new JLabel()).getComponent();
 
     Gauge gauge = BudgetAreaGaugeFactory.createGauge(budgetArea);
+    gauge.enableDetailsTips(new DetailsTipFactory(directory));
     builder.add("totalGauge", gauge);
 
     BudgetAreaHeaderUpdater headerUpdater =
@@ -244,6 +246,5 @@ public class BudgetAreaSeriesView extends View {
       return new ForcedPlusGlobListStringifier(budgetArea,
                                                GlobListStringifiers.sum(field, decimalFormat, !budgetArea.isIncome()));
     }
-
   }
 }

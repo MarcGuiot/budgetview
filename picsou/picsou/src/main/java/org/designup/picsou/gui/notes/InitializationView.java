@@ -44,10 +44,6 @@ public class InitializationView extends View {
     });
   }
 
-  public void init() {
-    updateView();
-  }
-
   private void updateView() {
     panel.setVisible(!repository.contains(Transaction.TYPE));
   }

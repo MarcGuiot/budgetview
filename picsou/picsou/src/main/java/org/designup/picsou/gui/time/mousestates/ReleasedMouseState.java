@@ -8,8 +8,6 @@ import java.awt.event.MouseEvent;
 import java.util.Set;
 
 public class ReleasedMouseState extends AbstractMouseState {
-  int lastx;
-  int lasty;
 
   public ReleasedMouseState(SelectableContainer container) {
     super(container);

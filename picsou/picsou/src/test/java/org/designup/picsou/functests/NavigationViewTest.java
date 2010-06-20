@@ -17,7 +17,7 @@ public class NavigationViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/29", -19.00, "DVD")
       .save();
     actions.openImport().selectFiles(path).doImport()
-      .openAccountType().selectMain().validate()
+      .setMainAccount()
       .completeImport();
 
     views.selectHome();
@@ -49,7 +49,7 @@ public class NavigationViewTest extends LoggedInFunctionalTestCase {
       .selectFiles(file)
       .acceptFile()
       .selectOfxAccountBank("Autre")
-      .openAccountType().selectMain().validate()
+      .setMainAccount()
       .doImport();
 
     timeline.checkSelection("2008/08");
@@ -79,7 +79,7 @@ public class NavigationViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/05");
     transactions.categorize("AUCHAN_1");
     categorization.initContent()
-    .add("25/05/2008", "AUCHAN_1", -50.0)
+    .add("25/05/2008", "", "AUCHAN_1", -50.0)
     .check();
   }
 }

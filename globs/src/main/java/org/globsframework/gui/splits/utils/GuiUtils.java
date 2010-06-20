@@ -161,7 +161,7 @@ public class GuiUtils {
       }
     });
   }
-
+  
   public static JFrame getEnclosingFrame(Component component) {
     return (JFrame)getEnclosingComponent(component, new ComponentMatcher() {
       public boolean matches(Component component) {

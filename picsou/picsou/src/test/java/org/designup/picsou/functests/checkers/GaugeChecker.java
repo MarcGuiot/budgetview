@@ -47,12 +47,19 @@ public class GaugeChecker extends GuiChecker {
     return this;
   }
 
-  public void checkTooltip(String text) {
+  public GaugeChecker checkTooltip(String text) {
     Assert.assertEquals(text, gauge.getToolTipText());
+    return this;
   }
 
-  public void checkTooltipContains(String text) {
-    Assert.assertTrue(gauge.getToolTipText(), gauge.getToolTipText().contains(text));
+  public GaugeChecker checkDescription(String text) {
+    Assert.assertEquals(text, gauge.getDescription());
+    return this;
+  }
+
+  public GaugeChecker checkDescriptionContains(String text) {
+    Assert.assertTrue(gauge.getDescription(), gauge.getDescription().contains(text));
+    return this;
   }
 
   public GaugeChecker checkActualValue(double amount) {

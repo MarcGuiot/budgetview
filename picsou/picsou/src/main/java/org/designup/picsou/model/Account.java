@@ -83,7 +83,7 @@ public class Account {
 
   @DefaultBoolean(true)
   @Required
-  public static BooleanField IS_VALIDADED;
+  public static BooleanField IS_VALIDATED;
 
   static {
     GlobTypeLoader.init(Account.class, "account");

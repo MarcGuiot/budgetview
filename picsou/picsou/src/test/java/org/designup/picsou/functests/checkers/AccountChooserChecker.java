@@ -8,15 +8,15 @@ import org.uispec4j.interception.WindowInterceptor;
 
 public class AccountChooserChecker extends GuiChecker {
   private Window dialog;
-  private ImportChecker importChecker;
+  private ImportDialogChecker importDialog;
 
-  public AccountChooserChecker(ImportChecker importChecker, Window dialog) {
-    this.importChecker = importChecker;
+  public AccountChooserChecker(ImportDialogChecker importDialog, Window dialog) {
+    this.importDialog = importDialog;
     this.dialog = dialog;
   }
 
-  public static AccountChooserChecker open(ImportChecker importChecker, Trigger trigger) {
-    return new AccountChooserChecker(importChecker, WindowInterceptor.getModalDialog(trigger));
+  public static AccountChooserChecker open(ImportDialogChecker importDialog, Trigger trigger) {
+    return new AccountChooserChecker(importDialog, WindowInterceptor.getModalDialog(trigger));
   }
 
   public AccountChooserChecker associate(String newAccount, String existingAccount) {
@@ -41,9 +41,9 @@ public class AccountChooserChecker extends GuiChecker {
     return this;
   }
 
-  public ImportChecker validate() {
+  public ImportDialogChecker validate() {
     dialog.getButton("OK").click();
     assertFalse(dialog.isVisible());
-    return importChecker;
+    return importDialog;
   }
 }

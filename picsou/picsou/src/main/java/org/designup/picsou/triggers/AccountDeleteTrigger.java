@@ -25,7 +25,7 @@ public class AccountDeleteTrigger extends DefaultChangeSetListener {
     }
     Set<Key> created = changeSet.getCreated(Account.TYPE);
     for (Key key : created) {
-      repository.update(key, Account.IS_VALIDADED, Boolean.TRUE);
+      repository.update(key, Account.IS_VALIDATED, Boolean.TRUE);
     }
   }
 }

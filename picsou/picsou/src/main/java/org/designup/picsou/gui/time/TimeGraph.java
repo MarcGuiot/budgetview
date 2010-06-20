@@ -146,14 +146,6 @@ public class TimeGraph {
     return new Rectangle(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
   }
 
-  public List<Selectable> getSelected() {
-    ArrayList<Selectable> list = new ArrayList<Selectable>();
-    for (YearGraph year : yearGraphs) {
-      year.getSelected(list);
-    }
-    return list;
-  }
-
   public void selectLastMonth(Collection<Selectable> selectable) {
     if (months.isEmpty()) {
       return;
@@ -280,11 +272,6 @@ public class TimeGraph {
       }
       return yearGraphs.get(yearCount + 1);
     }
-  }
-
-  // pour les test
-  List<YearGraph> getYearGraphs() {
-    return yearGraphs;
   }
 }
 

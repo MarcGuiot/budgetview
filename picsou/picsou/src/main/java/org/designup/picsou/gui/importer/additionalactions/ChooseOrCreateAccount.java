@@ -3,7 +3,6 @@ package org.designup.picsou.gui.importer.additionalactions;
 import org.designup.picsou.gui.importer.AdditionalImportAction;
 import org.designup.picsou.gui.importer.edition.ChooseOrCreateAccountDialog;
 import org.designup.picsou.model.Account;
-import org.designup.picsou.model.AccountType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -28,11 +27,11 @@ public class ChooseOrCreateAccount implements AdditionalImportAction {
   }
 
   public boolean shouldApplyAction() {
-    accounts = repository.getAll(Account.TYPE, isFalse(Account.IS_VALIDADED));
+    accounts = repository.getAll(Account.TYPE, isFalse(Account.IS_VALIDATED));
     boolean hasNotImportedAccount = hasNotImported(repository);
     if (!accounts.isEmpty() && !hasNotImportedAccount){
       for (Glob account : accounts) {
-        repository.update(account.getKey(), Account.IS_VALIDADED, true);
+        repository.update(account.getKey(), Account.IS_VALIDATED, true);
       }
     }
     return !accounts.isEmpty() && hasNotImportedAccount;

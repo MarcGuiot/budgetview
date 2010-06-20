@@ -15,7 +15,6 @@ import java.util.SortedSet;
 public abstract class AbstractMonthSelectionAction extends AbstractAction implements GlobSelectionListener {
 
   protected final GlobRepository repository;
-  protected final Directory directory;
   protected SelectionService selectionService;
   protected Integer firstMonth;
   protected Integer lastMonth;
@@ -23,7 +22,6 @@ public abstract class AbstractMonthSelectionAction extends AbstractAction implem
   public AbstractMonthSelectionAction(String name, String tooltip, GlobRepository repository, Directory directory) {
     super(name);
     this.repository = repository;
-    this.directory = directory;
     this.selectionService = directory.get(SelectionService.class);
     setEnabled(false);
     selectionService.addListener(this, Month.TYPE);

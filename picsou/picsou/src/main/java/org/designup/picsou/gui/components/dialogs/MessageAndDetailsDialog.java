@@ -45,10 +45,6 @@ public class MessageAndDetailsDialog {
     dialog.pack();
   }
 
-  public void setCopyButtonVisible(boolean visible) {
-    copyButton.setVisible(visible);
-  }
-
   public final void show() {
     dialog.showCentered();
     builder.dispose();

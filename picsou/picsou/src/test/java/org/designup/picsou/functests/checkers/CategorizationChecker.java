@@ -5,7 +5,6 @@ import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.gui.categorization.components.TransactionFilteringMode;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.TransactionType;
 import org.globsframework.model.Glob;
 import org.globsframework.gui.splits.color.Colors;
 import org.uispec4j.Button;
@@ -55,7 +54,7 @@ public class CategorizationChecker extends GuiChecker {
   }
 
   private Panel getBudgetAreasPanel() {
-    return getPanel().getPanel("budgetAreaToggles");
+    return getPanel().getPanel("budgetAreaSelectionPanel");
   }
 
   public CategorizationChecker checkLabel(String expected) {
@@ -693,6 +692,11 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
+  public CategorizationChecker checkAreaSelectionSignpostDisplayed(String message) {
+    checkSignpostVisible(mainWindow, getPanel().getPanel("budgetAreaSelectionPanel"), message);
+    return this;
+  }
+
   public void checkTableBackground(String... colors) {
     Table table = getTable();
     assertThat(table.rowCountEquals(colors.length));
@@ -727,36 +731,16 @@ public class CategorizationChecker extends GuiChecker {
     private CategorizationTableChecker() {
     }
 
-    public CategorizationTableChecker add(String date, TransactionType prelevement, String label, String note, double amount, String series) {
-      if (!label.startsWith("Planned")) {
-        label = label.toUpperCase();
-      }
-      add(new Object[]{date, series, label, amount});
-      return this;
-    }
-
-    public CategorizationTableChecker add(String date, TransactionType prelevement, String label, String note, double amount) {
-      if (!label.startsWith("Planned")) {
-        label = label.toUpperCase();
-      }
-      add(new Object[]{date, "", label, amount});
-      return this;
-    }
-
-    public CategorizationTableChecker add(String date, String label, double amount) {
-      if (!label.startsWith("Planned")) {
-        label = label.toUpperCase();
-      }
-      add(new Object[]{date, "", label, amount});
-      return this;
-    }
-
     public CategorizationTableChecker add(String date, String series, String label, double amount) {
-      if (!label.startsWith("Planned")) {
-        label = label.toUpperCase();
-      }
-      add(new Object[]{date, series, label, amount});
+      add(new Object[]{date, series, convertLabel(label), amount});
       return this;
+    }
+
+    private String convertLabel(String label) {
+      if (!label.startsWith("Planned")) {
+        return label.toUpperCase();
+      }
+      return label;
     }
 
     protected Table getTable() {

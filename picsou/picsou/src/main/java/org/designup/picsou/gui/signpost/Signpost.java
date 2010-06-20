@@ -2,6 +2,7 @@ package org.designup.picsou.gui.signpost;
 
 import net.java.balloontip.BalloonTip;
 import net.java.balloontip.styles.ModernBalloonStyle;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.SignpostStatus;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.Disposable;
@@ -21,10 +22,11 @@ public abstract class Signpost implements Disposable {
   protected JComponent component;
   private BooleanField completionField;
   protected GlobRepository repository;
-  protected Directory directory;
   protected SelectionService selectionService;
 
   protected static final ModernBalloonStyle BALLOON_STYLE = createBalloonStyle();
+  private BalloonTip.Orientation orientation;
+  private BalloonTip.AttachLocation attachLocation;
 
   private static ModernBalloonStyle createBalloonStyle() {
     ModernBalloonStyle style =
@@ -38,8 +40,14 @@ public abstract class Signpost implements Disposable {
   protected Signpost(BooleanField completionField, GlobRepository repository, Directory directory) {
     this.completionField = completionField;
     this.repository = repository;
-    this.directory = directory;
     this.selectionService = directory.get(SelectionService.class);
+    this.orientation = BalloonTip.Orientation.RIGHT_BELOW;
+    this.attachLocation = BalloonTip.AttachLocation.SOUTH;
+  }
+
+  protected void setLocation(BalloonTip.Orientation orientation, BalloonTip.AttachLocation attachLocation) {
+    this.orientation = orientation;
+    this.attachLocation = attachLocation;
   }
 
   public void attach(JComponent component) {
@@ -69,19 +77,10 @@ public abstract class Signpost implements Disposable {
         if (balloonTip == null) {
           return;
         }
-        balloonTip.setVisible(isVisible(component));
+        balloonTip.setVisible(Gui.isVisible(component));
       }
     });
     init();
-  }
-
-  private boolean isVisible(JComponent component) {
-    for (Container parent = component; parent != null; parent = parent.getParent()) {
-      if (!parent.isVisible()) {
-        return false;
-      }
-    }
-    return true;
   }
 
   protected abstract void init();
@@ -107,7 +106,7 @@ public abstract class Signpost implements Disposable {
     }
     else {
       balloonTip = createBalloonTip(component, text);
-      balloonTip.setVisible(isVisible(component));
+      balloonTip.setVisible(Gui.isVisible(component));
     }
   }
 
@@ -115,8 +114,8 @@ public abstract class Signpost implements Disposable {
     return new BalloonTip(component,
                           text,
                           BALLOON_STYLE,
-                          BalloonTip.Orientation.RIGHT_BELOW,
-                          BalloonTip.AttachLocation.SOUTH,
+                          orientation,
+                          attachLocation,
                           40, 20, false);
   }
 

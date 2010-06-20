@@ -28,7 +28,6 @@ public class OperationChecker {
   private MenuItem preferencesMenu;
   private MenuItem undoMenu;
   private MenuItem redoMenu;
-  private MenuItem dumpMenu;
   private MenuItem protectMenu;
   private MenuItem throwExceptionMenu;
   private MenuItem throwExceptionInRepositoryMenu;
@@ -52,14 +51,13 @@ public class OperationChecker {
     MenuItem editMenu = window.getMenuBar().getMenu("Edit");
     undoMenu = editMenu.getSubMenu("Undo");
     redoMenu = editMenu.getSubMenu("Redo");
-    dumpMenu = editMenu.getSubMenu("Dump");
     checkMenu = editMenu.getSubMenu("[Check data (see logs)]");
     throwExceptionMenu = editMenu.getSubMenu("Throw exception");
     throwExceptionInRepositoryMenu = editMenu.getSubMenu("Throw exception in repo");
   }
 
-  public ImportChecker openImportDialog() {
-    return ImportChecker.open(importMenu.triggerClick());
+  public ImportDialogChecker openImportDialog() {
+    return ImportDialogChecker.open(importMenu.triggerClick());
   }
 
   public void importOfxFile(String name) {
@@ -67,25 +65,23 @@ public class OperationChecker {
   }
 
   public void importOfxWithDeferred(String fileName, String cardAccountName, int day) {
-    ImportChecker importChecker = openImportDialog()
+    ImportDialogChecker importDialog = openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
-    importChecker
+    importDialog
       .openCardTypeChooser()
       .selectDeferredCard(cardAccountName, day)
       .validate();
-    importChecker
-      .openAccountType()
-      .selectMain()
-      .validate();
-    importChecker.doImport();
+    importDialog
+      .setMainAccount()
+      .doImport();
   }
 
   public void importQifFileWithDeferred(String fileName, String bank, double position, int day) {
-    ImportChecker importChecker = openImportDialog()
+    ImportDialogChecker importDialog = openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
-    importChecker
+    importDialog
       .addNewAccount()
       .selectBank(bank)
       .setAccountNumber("1111")
@@ -93,7 +89,7 @@ public class OperationChecker {
       .setAsDeferredCard()
       .setFromBeginningDay(day)
       .validate();
-    importChecker.doImportWithBalance()
+    importDialog.doImportWithBalance()
       .setAmountAndEnterInImport(position);
   }
 
@@ -106,14 +102,14 @@ public class OperationChecker {
   }
 
   public void importOfxOnAccount(String fileName, String newAccount, String existingAccount) {
-    ImportChecker importChecker = openImportDialog()
+    ImportDialogChecker importDialog = openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
-    importChecker.openChooseAccount()
+    importDialog.openChooseAccount()
       .associate(newAccount, existingAccount)
       .validate();
 
-    importChecker.completeImport();
+    importDialog.completeImport();
   }
 
   public void importQifFile(String file, String bank) {
@@ -123,7 +119,6 @@ public class OperationChecker {
   public void importQifFile(String file, String bank, Double amount) {
     importFile(new String[]{file}, bank, amount, null);
   }
-
 
   public void importQifFile(String file, String bank, String targetAccount) {
     importFile(new String[]{file}, bank, null, targetAccount);
@@ -137,37 +132,37 @@ public class OperationChecker {
     WindowInterceptor
       .init(importMenu.triggerClick())
       .process(new WindowHandler() {
-        public Trigger process(Window importDialog) throws Exception {
-          TextBox fileField = importDialog.getInputTextBox("fileField");
+        public Trigger process(Window dialog) throws Exception {
+          TextBox fileField = dialog.getInputTextBox("fileField");
           String txt = "";
           for (String name : fileNames) {
             txt += name + ";";
           }
           fileField.setText(txt);
 
-          importDialog.getButton("Import").click();
-          JButton createFirstAccount = importDialog.findSwingComponent(JButton.class, "Create an account");
+          dialog.getButton("Import").click();
+
+          ImportDialogChecker importDialog = ImportDialogChecker.create(dialog);
+
+          JButton createFirstAccount = dialog.findSwingComponent(JButton.class, "Create an account");
           if (createFirstAccount != null) {
-            ImportChecker.create(importDialog)
+            importDialog
               .defineAccount(bank, "Main account", DEFAULT_ACCOUNT_NUMBER);
           }
-          else if (bank != null && importDialog.findSwingComponent(JButton.class, "Set the bank") != null) { // OFX
-            ImportChecker.create(importDialog)
-              .openEntityEditionChecker()
+          else if (bank != null && dialog.findSwingComponent(JButton.class, "Set the bank") != null) { // OFX
+            importDialog
+              .openEntityEditor()
               .selectBank(bank)
               .validate();
           }
           if (targetAccount != null) {
-            importDialog.getComboBox("accountCombo").select(targetAccount);
+            dialog.getComboBox("accountCombo").select(targetAccount);
           }
-          JButton setAccountType = importDialog.findSwingComponent(JButton.class, "Set accountType");
-          if (setAccountType != null) {
-            ImportChecker.create(importDialog)
-              .openAccountType()
-              .selectMainForAll()
-              .validate();
+          if (importDialog.hasAccountType()) {
+            importDialog.setMainAccountForAll();
           }
-          final Button okButton = importDialog.getButton(Lang.get("import.step1.ok"));
+
+          final Button okButton = dialog.getButton(Lang.get("import.step1.ok"));
           for (int i = 0; i < fileNames.length - 2; i++) {
             okButton.click();
           }
@@ -181,8 +176,8 @@ public class OperationChecker {
           else {
             trigger = okButton.triggerClick();
           }
-          ImportChecker.ImportCompleteWindowHandler importCompleteWindowHandler =
-            new ImportChecker.ImportCompleteWindowHandler(-1, -1, -1);
+          ImportDialogChecker.ImportCompleteWindowHandler importCompleteWindowHandler =
+            new ImportDialogChecker.ImportCompleteWindowHandler(-1, -1, -1);
           return importCompleteWindowHandler.process(WindowInterceptor.getModalDialog(trigger));
         }
       })

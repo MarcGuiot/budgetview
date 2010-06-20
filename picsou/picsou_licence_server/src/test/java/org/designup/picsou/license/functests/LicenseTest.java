@@ -424,13 +424,13 @@ public class LicenseTest extends LicenseTestCase {
     checkMessageOver();
   }
 
-  private void checkValidLicense(final boolean notRegistered) {
+  private void checkValidLicense(final boolean anonymous) {
     OperationChecker operation = new OperationChecker(window);
     Window dialog = WindowInterceptor.getModalDialog(operation.getImportTrigger());
-    ImportChecker importChecker = new ImportChecker(dialog, true);
-    importChecker.close();
-    if (notRegistered) {
-      assertTrue(window.getTextBox("licenseMessage").isVisible());
+    ImportDialogChecker importDialog = new ImportDialogChecker(dialog, true);
+    importDialog.close();
+    if (!anonymous) {
+      assertFalse(window.getTextBox("licenseMessage").isVisible());
     }
     else {
       assertFalse(window.getTextBox("licenseMessage").isVisible());

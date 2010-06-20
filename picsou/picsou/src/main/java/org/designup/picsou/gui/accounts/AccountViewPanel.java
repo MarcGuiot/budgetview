@@ -182,11 +182,9 @@ public abstract class AccountViewPanel {
 
   private static class EditAccountFunctor implements GlobListFunctor {
 
-    private GlobRepository repository;
     private Directory directory;
 
     private EditAccountFunctor(GlobRepository repository, Directory directory) {
-      this.repository = repository;
       this.directory = directory;
     }
 
