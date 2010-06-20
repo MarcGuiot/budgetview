@@ -6,6 +6,10 @@
   <body>
 
     <release version="???">
+      <action dev="mguiot" type="add">
+        Prevent lose of stackstrace.
+      </action>
+
       <action dev="rmedina" type="add">
         Replace &lt;br&gt; with &quot; &quot; in Utils.cleanupHtml()
       </action>
