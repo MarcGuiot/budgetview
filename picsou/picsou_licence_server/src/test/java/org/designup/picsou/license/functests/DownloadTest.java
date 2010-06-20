@@ -46,12 +46,11 @@ public class DownloadTest extends LicenseTestCase {
   }
 
   private void startPicsou() {
-    window = WindowInterceptor.run(new Trigger() {
-      public void run() throws Exception {
-        picsouApplication = new PicsouApplication();
-        picsouApplication.run();
-      }
-    });
+
+    StartupChecker startupChecker = new StartupChecker();
+    window = startupChecker.enterMain();
+
+    picsouApplication = startupChecker.getApplication();
   }
 
   public void testJarIsSentAndConfigUpdated() throws Exception {
@@ -63,8 +62,8 @@ public class DownloadTest extends LicenseTestCase {
     LicenseTestCase.Retr retr = setFtpReply(jarName, "jar content", configJarName, content);
     startPicsou();
     retr.assertOk();
-    LoginChecker loginChecker = new LoginChecker(window);
-    loginChecker.logNewUser("user", "passw@rd");
+//    LoginChecker loginChecker = new LoginChecker(window);
+//    loginChecker.logNewUser("user", "passw@rd");
     VersionInfoChecker versionInfo = new VersionInfoChecker(window);
     versionInfo.checkNewVersion();
 
@@ -109,8 +108,8 @@ public class DownloadTest extends LicenseTestCase {
   public void testNewBankInConfig() throws Exception {
     updateDb();
     startPicsou();
-    LoginChecker loginChecker = new LoginChecker(window);
-    loginChecker.logNewUser("user", "passw@rd");
+//    LoginChecker loginChecker = new LoginChecker(window);
+//    loginChecker.logNewUser("user", "passw@rd");
 
     OperationChecker operations = new OperationChecker(window);
     String fileName = OfxBuilder.init(this)

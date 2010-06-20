@@ -38,6 +38,7 @@ public class LoginPanel {
   private boolean useDemoAccount;
   private java.util.List<ServerAccess.UserInfo> users;
   private String autoLoginUser;
+  public static final String AUTOLOG_USER = "autologUser";
 
   public LoginPanel(MainWindow mainWindow, Directory directory) {
     this.mainWindow = mainWindow;
@@ -134,7 +135,7 @@ public class LoginPanel {
 
   private void autoLogin() {
     boolean createUser = autoLoginUser == null;
-    logUser("autologUser", "autologUser".toCharArray(), createUser, true);
+    logUser(AUTOLOG_USER, AUTOLOG_USER.toCharArray(), createUser, true);
   }
 
   public JPanel preparePanelForShow(java.util.List<ServerAccess.UserInfo> users) {

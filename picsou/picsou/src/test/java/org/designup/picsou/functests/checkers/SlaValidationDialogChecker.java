@@ -55,4 +55,25 @@ public class SlaValidationDialogChecker extends GuiChecker {
     dialog.getButton("Cancel").click();
     assertFalse(dialog.isVisible());
   }
+
+  public Trigger triggerOk() {
+    return dialog.getButton("OK").triggerClick();
+  }
+
+  public static class TriggerSlaOk implements Trigger {
+    private Window mainWindow;
+    private final SlaValidationDialogChecker slaValidationDialogChecker;
+
+    public TriggerSlaOk(SlaValidationDialogChecker slaValidationDialogChecker) {
+      this.slaValidationDialogChecker = slaValidationDialogChecker;
+    }
+
+    public void run() {
+      mainWindow = WindowInterceptor.run(slaValidationDialogChecker.triggerOk());
+    }
+
+    public Window getMainWindow() {
+      return mainWindow;
+    }
+  }
 }

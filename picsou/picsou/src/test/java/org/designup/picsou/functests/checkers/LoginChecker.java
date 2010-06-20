@@ -4,7 +4,8 @@ import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.*;
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 import javax.swing.*;
 
@@ -51,12 +52,8 @@ public class LoginChecker extends GuiChecker {
     enterPassword(password);
     setCreation();
     confirmPassword(password);
-    HelpChecker.open(new Trigger() {
-      public void run() throws Exception {
-        loginAndSkipSla();
-        waitForApplicationToLoad();
-      }
-    }).close();
+    loginAndSkipSla();
+    waitForApplicationToLoad();
   }
 
   public LoginChecker loginAndSkipSla() {
@@ -80,12 +77,12 @@ public class LoginChecker extends GuiChecker {
         waitForApplicationToLoad();
       }
     };
-    if (showWelcomeMessage) {
-      HelpChecker.open(trigger).close();
-    }
-    else {
-      trigger.run();
-    }
+//    if (showWelcomeMessage) {
+//      HelpChecker.open(trigger).close();
+//    }
+//    else {
+    trigger.run();
+//    }
   }
 
   public void clickDemoLink() {
@@ -140,11 +137,11 @@ public class LoginChecker extends GuiChecker {
   }
 
   public void clickFirstAutoLogin() {
-    HelpChecker.open(new Trigger() {
-      public void run() throws Exception {
-        doLogin("Create auto login user", true);
-      }
-    }).close();
+//    HelpChecker.open(new Trigger() {
+//      public void run() throws Exception {
+    doLogin("Create auto login user", true);
+//      }
+//    }).close();
   }
 
   public void clickAutoLogin() {

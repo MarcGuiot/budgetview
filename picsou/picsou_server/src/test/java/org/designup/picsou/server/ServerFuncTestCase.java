@@ -1,10 +1,7 @@
 package org.designup.picsou.server;
 
 import org.designup.picsou.PicsouServer;
-import org.designup.picsou.functests.checkers.CategorizationChecker;
-import org.designup.picsou.functests.checkers.ImportChecker;
-import org.designup.picsou.functests.checkers.OperationChecker;
-import org.designup.picsou.functests.checkers.ViewSelectionChecker;
+import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.uispec4j.*;
@@ -31,16 +28,26 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
     System.setProperty(PicsouServer.USE_SSHL, "false");
     picsouServer = new PicsouServer();
     picsouServer.start();
-    initWindow();
+    initWindow(true);
   }
 
-  protected void initWindow() {
-    window = WindowInterceptor.run(new Trigger() {
-      public void run() throws Exception {
-        picsouApplication = new PicsouApplication();
-        picsouApplication.run();
-      }
-    });
+  protected void initWindow(boolean isFirst) {
+    final StartupChecker startupChecker = new StartupChecker();
+    if (isFirst) {
+      window = startupChecker.enterMain();
+    }
+    else {
+      window = WindowInterceptor.run(new Trigger() {
+        public void run() throws Exception {
+          picsouApplication = new PicsouApplication();
+          picsouApplication.run();
+        }
+      });
+    }
+    if (isFirst){
+      new OperationChecker(window).logout();
+      picsouApplication = startupChecker.getApplication();
+    }
   }
 
   protected void tearDown() throws Exception {

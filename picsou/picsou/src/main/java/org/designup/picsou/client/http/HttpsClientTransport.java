@@ -87,7 +87,7 @@ public class HttpsClientTransport implements ClientTransport {
   }
 
   public void takeSnapshot(Long sessionId, byte[] data) {
-    sendRequest(sessionId, "/takeSnapshot", data);
+//    sendRequest(sessionId, "/takeSnapshot", data);
   }
 
   public SerializedInput getLocalUsers() {

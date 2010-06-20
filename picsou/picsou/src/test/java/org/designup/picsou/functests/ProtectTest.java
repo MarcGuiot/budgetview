@@ -16,11 +16,10 @@ public class ProtectTest extends LoggedInFunctionalTestCase {
   public void testRenameFromAnonymous() throws Exception {
     operations.logout();
     LoginChecker loginChecker = new LoginChecker(mainWindow);
-    loginChecker.clickFirstAutoLogin();
+    loginChecker.clickAutoLogin();
     operations.protectFromAnonymous("newUserName", "newPassword");
     operations.logout();
-    loginChecker = new LoginChecker(mainWindow);
     password = "newPassword";
-    loginChecker.logExistingUser("newUserName", password, true);
+    loginChecker.logExistingUser("newUserName", password, false);
   }
 }

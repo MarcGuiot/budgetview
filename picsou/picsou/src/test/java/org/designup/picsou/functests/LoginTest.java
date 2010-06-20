@@ -19,6 +19,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
   private PicsouApplication picsouApplication;
   private LoginChecker login;
   private OperationChecker operations;
+  private boolean firstLogin;
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -28,18 +29,26 @@ public class LoginTest extends StartUpFunctionalTestCase {
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "");
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
 
+    final StartupChecker startupChecker = new StartupChecker();
     setAdapter(new UISpecAdapter() {
       public Window getMainWindow() {
-        return WindowInterceptor.run(new Trigger() {
-          public void run() throws Exception {
-            picsouApplication = new PicsouApplication();
-            picsouApplication.run();
-          }
-        });
+        if (firstLogin){
+        return startupChecker.enterMain();
+        }else {
+          return WindowInterceptor.run(new Trigger() {
+            public void run() throws Exception {
+              picsouApplication = new PicsouApplication();
+              picsouApplication.run();
+            }
+          });
+        }
       }
     });
 
-    openNewLoginWindow();
+    openNewLoginWindow(true);
+    if (firstLogin){
+      picsouApplication = startupChecker.getApplication();
+    }
   }
 
   protected void tearDown() throws Exception {
@@ -51,9 +60,14 @@ public class LoginTest extends StartUpFunctionalTestCase {
     picsouApplication = null;
   }
 
-  private void openNewLoginWindow() throws Exception {
+  private void openNewLoginWindow(final boolean firstLogin) throws Exception {
+    this.firstLogin = firstLogin;
     closeWindow();
     window = getMainWindow();
+
+    if (firstLogin){
+      new OperationChecker(window).logout();
+    }
     login = new LoginChecker(window);
   }
 
@@ -78,7 +92,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
 
-    openNewLoginWindow();
+    openNewLoginWindow(false);
     login.logExistingUser("toto", "p4ssw0rd", false);
     getTransactionView()
       .initContent()
@@ -138,7 +152,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     OperationChecker.init(window).importOfxFile(filePath);
     checkBankOnImport(filePath);
 
-    openNewLoginWindow();
+    openNewLoginWindow(false);
     login.logExistingUser("toto", "p4ssw0rd", false);
     checkBankOnImport(filePath);
   }
@@ -165,7 +179,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     login.logNewUser("toto", "p4ssw0rd");
     OperationChecker.init(window).importOfxFile(path);
 
-    openNewLoginWindow();
+    openNewLoginWindow(false);
 
     login.enterUserName("toto")
       .setCreation()
@@ -251,7 +265,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
 
     getCategorizationView().setNewVariable("Menu K", "Food");
 
-    openNewLoginWindow();
+    openNewLoginWindow(false);
     login.logExistingUser("toto", "p4ssw0rd", false);
 
     login.checkLoggedIn();
@@ -323,7 +337,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
   }
 
   public void testAutoLogin() throws Exception {
-    login.clickFirstAutoLogin();
+    login.clickAutoLogin();
     String path = OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K")
@@ -331,6 +345,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     operations = new OperationChecker(window);
     operations.importOfxFile(path);
     operations.logout();
+    firstLogin = false;
     login.clickAutoLogin();
     closeWindow();
     window = getMainWindow();
@@ -341,7 +356,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
   }
 
   public void testAutoLoginAndImportInNewUser() throws Exception {
-    login.clickFirstAutoLogin();
+    login.clickAutoLogin();
     LicenseActivationChecker.enterLicense(window, "admin", "zz");
 
     operations = new OperationChecker(window);
@@ -392,11 +407,11 @@ public class LoginTest extends StartUpFunctionalTestCase {
   }
 
   public void testLoginWithPwdAndAutologin() throws Exception {
-    login.clickFirstAutoLogin();
+    login.clickAutoLogin();
     operations = new OperationChecker(window);
     operations.logout();
     login.logNewUser("Alfred", "Alfred");
-    openNewLoginWindow();
+    openNewLoginWindow(false);
     login.clickAutoLogin();
   }
 

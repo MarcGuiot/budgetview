@@ -2,6 +2,7 @@ package org.designup.picsou.license.functests;
 
 import org.designup.picsou.functests.checkers.LicenseActivationChecker;
 import org.designup.picsou.functests.checkers.LoginChecker;
+import org.designup.picsou.functests.checkers.SlaValidationDialogChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.config.ConfigService;
@@ -35,8 +36,6 @@ public class RegistrationTest extends LicenseTestCase {
 
   public void testNoServerAccessForRegistration() throws Exception {
     startPicsou();
-    LoginChecker loginChecker = new LoginChecker(window);
-    loginChecker.logNewUser("user", "passw@rd");
 
     LicenseActivationChecker license = LicenseActivationChecker.open(window);
     license.checkConnectionNotAvailable();
@@ -46,12 +45,17 @@ public class RegistrationTest extends LicenseTestCase {
   }
 
   private void startPicsou() {
-    window = WindowInterceptor.run(new Trigger() {
+    Window slaWindow = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         picsouApplication = new PicsouApplication();
         picsouApplication.run();
       }
     });
+    SlaValidationDialogChecker slaValidationDialogChecker = new SlaValidationDialogChecker(slaWindow);
+    slaValidationDialogChecker.acceptTerms();
+    SlaValidationDialogChecker.TriggerSlaOk triggerSlaOk = new SlaValidationDialogChecker.TriggerSlaOk(slaValidationDialogChecker);
+    triggerSlaOk.run();
+    window = triggerSlaOk.getMainWindow();
   }
 
 }

@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.TestCase;
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Ref;
@@ -40,6 +41,7 @@ public class OperationChecker {
   }
 
   public OperationChecker(Window window) {
+    UISpecAssert.waitUntil(window.containsSwingComponent(TimeViewPanel.class), 10000);
     this.window = window;
     MenuItem fileMenu = window.getMenuBar().getMenu("File");
     protectMenu = fileMenu.getSubMenu("protect");
@@ -72,7 +74,7 @@ public class OperationChecker {
       .openCardTypeChooser()
       .selectDeferredCard(cardAccountName, day)
       .validate();
-      importChecker
+    importChecker
       .openAccountType()
       .selectMain()
       .validate();
@@ -103,7 +105,7 @@ public class OperationChecker {
     importFile(new String[]{name}, null, amount, null);
   }
 
-  public void importOfxOnAccount(String fileName, String newAccount, String existingAccount){
+  public void importOfxOnAccount(String fileName, String newAccount, String existingAccount) {
     ImportChecker importChecker = openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
@@ -145,11 +147,11 @@ public class OperationChecker {
 
           importDialog.getButton("Import").click();
           JButton createFirstAccount = importDialog.findSwingComponent(JButton.class, "Create an account");
-          if (createFirstAccount != null){
+          if (createFirstAccount != null) {
             ImportChecker.create(importDialog)
               .defineAccount(bank, "Main account", DEFAULT_ACCOUNT_NUMBER);
           }
-          else if (bank != null && importDialog.findSwingComponent(JButton.class, "Set the bank") != null){ // OFX
+          else if (bank != null && importDialog.findSwingComponent(JButton.class, "Set the bank") != null) { // OFX
             ImportChecker.create(importDialog)
               .openEntityEditionChecker()
               .selectBank(bank)
@@ -216,7 +218,7 @@ public class OperationChecker {
     final Ref<String> selectedFile = new Ref<String>();
     WindowInterceptor interceptor = WindowInterceptor
       .init(getBackupTrigger());
-    if (warnTrial){
+    if (warnTrial) {
       interceptor.process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           MessageDialogChecker checker = new MessageDialogChecker(window);
@@ -253,12 +255,12 @@ public class OperationChecker {
       .run();
   }
 
-  public void restoreNotAvailable(){
+  public void restoreNotAvailable() {
     WindowInterceptor
       .init(getRestoreTrigger())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          MessageDialogChecker dialogChecker  = new MessageDialogChecker(window);
+          MessageDialogChecker dialogChecker = new MessageDialogChecker(window);
           dialogChecker.checkMessageContains("Restore is not possible during trial periode.");
           return dialogChecker.triggerClose();
         }
@@ -267,7 +269,7 @@ public class OperationChecker {
 
   }
 
-  public void restoreWithNewPassword(String filePath, final String password){
+  public void restoreWithNewPassword(String filePath, final String password) {
     WindowInterceptor.init(getRestoreTrigger())
       .process(FileChooserHandler.init().select(filePath))
       .process(new WindowHandler() {
@@ -309,7 +311,7 @@ public class OperationChecker {
     undoMenu.click();
   }
 
-  public boolean isUndoAvailable(){
+  public boolean isUndoAvailable() {
     return undoMenu.getAwtComponent().isEnabled();
   }
 
@@ -345,7 +347,9 @@ public class OperationChecker {
     MenuItem subMenu = window.getMenuBar().getMenu("File").getSubMenu("Delete");
     PasswordDialogChecker dialogChecker =
       new PasswordDialogChecker(WindowInterceptor.getModalDialog(subMenu.triggerClick()));
-    dialogChecker.setPassword(password);
+    if (password != null) {
+      dialogChecker.setPassword(password);
+    }
     dialogChecker.validate();
     UISpecAssert.waitUntil(window.containsSwingComponent(JPasswordField.class, "password"), 2000);
   }
@@ -424,11 +428,11 @@ public class OperationChecker {
     }
   }
 
-  public MessageAndDetailsDialogChecker throwExceptionInApplication(){
+  public MessageAndDetailsDialogChecker throwExceptionInApplication() {
     return MessageAndDetailsDialogChecker.init(throwExceptionMenu.triggerClick());
   }
 
-  public MessageAndDetailsDialogChecker throwExceptionInRepository(){
+  public MessageAndDetailsDialogChecker throwExceptionInRepository() {
     return MessageAndDetailsDialogChecker.init(throwExceptionInRepositoryMenu.triggerClick());
   }
 
