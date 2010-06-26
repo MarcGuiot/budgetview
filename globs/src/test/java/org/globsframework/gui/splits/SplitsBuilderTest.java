@@ -5,6 +5,7 @@ import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.finder.ComponentFinder;
 import static org.uispec4j.finder.ComponentMatchers.*;
+import org.uispec4j.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -233,7 +234,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
                          "  </borderLayout>" +
                          "</row>");
 
-    ComponentFinder finder = new ComponentFinder(panel);
+    ComponentFinder finder = new ComponentFinder(panel, new org.uispec4j.Panel(panel));
 
     handler.show("a");
     assertSame(aButton, finder.findComponent(fromClass(JButton.class)));

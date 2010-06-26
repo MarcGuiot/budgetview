@@ -278,4 +278,15 @@ public class Utils {
   public static void throwException(RuntimeException exception) {
     throw exception;
   }
+
+  public static void dumpStack(){
+    Map<Thread,StackTraceElement[]> map = Thread.getAllStackTraces();
+    for (StackTraceElement[] elements : map.values()) {
+      System.err.println("dumpStack ------------------------------------------");
+      for (StackTraceElement element : elements) {
+        System.err.println("  at " + element.getClassName() + "." + element.getMethodName()
+                           + "(" + element.getFileName() + ":" + element.getLineNumber() + ')');
+      }
+    }
+  }
 }

@@ -10,7 +10,7 @@ import org.globsframework.gui.splits.utils.DummyAction;
 import org.globsframework.gui.splits.utils.DummyImageLocator;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.exceptions.ItemNotFound;
-import org.uispec4j.TextBox;
+import org.uispec4j.*;
 import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;
 
@@ -625,7 +625,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
 
     assertTrue(panel.getLayout() instanceof CardLayout);
 
-    ComponentFinder finder = new ComponentFinder(panel);
+    ComponentFinder finder = new ComponentFinder(panel, new org.uispec4j.Panel(panel));
 
     handler.show("a");
     assertSame(aButton, finder.findComponent(ComponentMatchers.fromClass(JButton.class)));
