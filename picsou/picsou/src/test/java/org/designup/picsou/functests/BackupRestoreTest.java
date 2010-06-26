@@ -136,6 +136,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
   }
 
   public void testBackupAndRestoreWithOtherPassword() throws Exception {
+    changeUser("user", "password");
     OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "Company")
       .addTransaction("2008/08/10", -400.0, "Auchan")
@@ -172,6 +173,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
   }
 
   public void testBackupAndCancelRestoreWithOtherPassword() throws Exception {
+    changeUser("user", "password");
     OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "Company")
       .addTransaction("2008/08/10", -400.0, "Auchan")
@@ -323,6 +325,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSeriesEvolutionAfterRestore() throws Exception {
+    changeUser("user", "password");
     operations.openPreferences().setFutureMonthsCount(2).validate();
     OfxBuilder.init(this)
       .addTransaction("2008/05/01", 1000.00, "Salaire")

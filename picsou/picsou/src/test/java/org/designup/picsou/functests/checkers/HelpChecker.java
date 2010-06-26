@@ -33,6 +33,7 @@ public class HelpChecker extends GuiChecker {
 
   public void close() {
     dialog.getButton("Close").click();
+    UISpecAssert.assertFalse(dialog.isVisible());    
   }
 
   public void checkForwardEnabled(boolean enabled) {

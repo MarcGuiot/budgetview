@@ -35,16 +35,16 @@ public abstract class GuiChecker {
     return prefix + format.format(value);
   }
 
-  protected <T extends JComponent> void checkComponentVisible(Panel panel,
-                                                              Class<T> swingComponentClass,
-                                                              String componentName,
+  protected <T extends JComponent> void checkComponentVisible(final Panel panel,
+                                                              final Class<T> swingComponentClass,
+                                                              final String componentName,
                                                               final boolean visible) {
     UISpecAssert.assertThat(visible ? "is not visible" : "is visible",
                             new ComponentIsVisibleAssertion<T>(panel, swingComponentClass, componentName, visible));
   }
 
-  protected void checkSignpostVisible(Panel enclosingPanel,
-                                      UIComponent targetUIComponent,
+  protected void checkSignpostVisible(final Panel enclosingPanel,
+                                      final UIComponent targetUIComponent,
                                       final String text) {
     BalloonTipTesting.checkBalloonTipVisible(enclosingPanel, targetUIComponent, text,
                                              "Signpost is not visible for this component");

@@ -56,6 +56,12 @@ public class InMemoryAccountDataManager implements AccountDataManager {
     return true;
   }
 
+  public boolean newData(Integer userId, SerializedInput input) {
+    globs = new MapOfMaps<String, Integer, SerializableGlobType>();
+    SerializableGlobSerializer.deserialize(input, globs);
+    return true;
+  }
+
   public GlobList getLocalUsers() {
     return GlobList.EMPTY;
   }

@@ -38,4 +38,6 @@ public interface ServerRequestProcessingService {
   void restore(Long sessionId, SerializedInput input, SerializedOutput output);
 
   void getLocalUsers(SerializedOutput output);
+
+  void renameUser(long sessionId, SerializedInput input, SerializedOutput output);
 }

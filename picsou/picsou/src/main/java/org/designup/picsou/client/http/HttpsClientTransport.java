@@ -62,6 +62,10 @@ public class HttpsClientTransport implements ClientTransport {
     return null;
   }
 
+  public SerializedInput rename(Long sessionId, byte[] data) {
+    return sendRequest(sessionId, "/renameUser", data);
+  }
+
   public SerializedInput identifyUser(Long sessionId, byte[] data) {
     return sendRequest(sessionId, "/identifyUser", data);
   }
@@ -83,7 +87,7 @@ public class HttpsClientTransport implements ClientTransport {
   }
 
   public void takeSnapshot(Long sessionId, byte[] data) {
-    sendRequest(sessionId, "/takeSnapshot", data);
+//    sendRequest(sessionId, "/takeSnapshot", data);
   }
 
   public SerializedInput getLocalUsers() {

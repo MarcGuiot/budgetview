@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.TestCase;
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Ref;
@@ -27,6 +28,7 @@ public class OperationChecker {
   private MenuItem preferencesMenu;
   private MenuItem undoMenu;
   private MenuItem redoMenu;
+  private MenuItem protectMenu;
   private MenuItem throwExceptionMenu;
   private MenuItem throwExceptionInRepositoryMenu;
   public static final String DEFAULT_ACCOUNT_NUMBER = "11111";
@@ -38,8 +40,10 @@ public class OperationChecker {
   }
 
   public OperationChecker(Window window) {
+    UISpecAssert.waitUntil(window.containsSwingComponent(TimeViewPanel.class), 10000);
     this.window = window;
     MenuItem fileMenu = window.getMenuBar().getMenu("File");
+    protectMenu = fileMenu.getSubMenu("protect");
     importMenu = fileMenu.getSubMenu("Import");
     exportMenu = fileMenu.getSubMenu("Export");
     preferencesMenu = fileMenu.getSubMenu("Preferences");
@@ -338,7 +342,9 @@ public class OperationChecker {
     MenuItem subMenu = window.getMenuBar().getMenu("File").getSubMenu("Delete");
     PasswordDialogChecker dialogChecker =
       new PasswordDialogChecker(WindowInterceptor.getModalDialog(subMenu.triggerClick()));
-    dialogChecker.setPassword(password);
+    if (password != null) {
+      dialogChecker.setPassword(password);
+    }
     dialogChecker.validate();
     UISpecAssert.waitUntil(window.containsSwingComponent(JPasswordField.class, "password"), 2000);
   }
@@ -429,4 +435,17 @@ public class OperationChecker {
     MessageAndDetailsDialogChecker.init(checkMenu.triggerClick())
       .checkDetailsContain("Start checking\nEnd checking").close();
   }
+
+  public void protect(String userName, String password) {
+    RenameChecker checker =
+      new RenameChecker(WindowInterceptor.getModalDialog(protectMenu.triggerClick()));
+    checker.set("password", userName, password);
+  }
+
+  public void protectFromAnonymous(String userName, String password) {
+    RenameChecker checker =
+      new RenameChecker(WindowInterceptor.getModalDialog(protectMenu.triggerClick()));
+    checker.set(userName, password);
+  }
+
 }

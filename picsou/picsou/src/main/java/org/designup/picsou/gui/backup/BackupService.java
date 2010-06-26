@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.startup;
+package org.designup.picsou.gui.backup;
 
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
@@ -126,5 +126,9 @@ public class BackupService {
     }
     repository.removeTrigger(upgradeTrigger);
     return Status.OK;
+  }
+
+  public boolean rename(String newName, char[] passwd, final char[] previousPasswd){
+    return serverAccess.rename(newName, passwd, previousPasswd);
   }
 }

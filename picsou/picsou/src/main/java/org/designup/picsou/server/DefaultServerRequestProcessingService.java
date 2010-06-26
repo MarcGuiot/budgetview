@@ -84,4 +84,9 @@ public class DefaultServerRequestProcessingService implements ServerRequestProce
   public void getLocalUsers(SerializedOutput output) {
     sessionService.getLocalUsers(output);
   }
+
+  public void renameUser(long sessionId, SerializedInput input, SerializedOutput output) {
+    SessionState state = sessionService.getSessionState(sessionId);
+    state.connected().renameUser(input, output);
+  }
 }

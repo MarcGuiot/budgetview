@@ -9,7 +9,7 @@ import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.config.RegistrationTrigger;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.series.view.SeriesWrapperUpdateTrigger;
-import org.designup.picsou.gui.startup.BackupService;
+import org.designup.picsou.gui.backup.BackupService;
 import org.designup.picsou.gui.upgrade.ConfigUpgradeTrigger;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
 import org.designup.picsou.gui.utils.DataCheckerAction;

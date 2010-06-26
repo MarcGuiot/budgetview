@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.backup;
 
 import org.designup.picsou.model.UserPreferences;
-import org.designup.picsou.gui.startup.BackupService;
+import org.designup.picsou.gui.backup.BackupService;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;

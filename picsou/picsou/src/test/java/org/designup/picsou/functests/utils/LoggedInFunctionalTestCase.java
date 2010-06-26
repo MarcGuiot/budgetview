@@ -8,11 +8,14 @@ import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
+import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.model.initial.DefaultSeriesFactory;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Dates;
-import org.uispec4j.*;
+import org.uispec4j.Trigger;
+import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
+import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.interception.toolkit.UISpecDisplay;
 
@@ -55,13 +58,13 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   private boolean notRegistered = false;
   protected boolean createDefaultSeries = false;
   protected String user = "anonymous";
-  protected String password = "password";
+  protected String password = null;
+  private boolean firstLogin = true;
 
   protected void setUp() throws Exception {
     super.setUp();
     TimeService.setCurrentDate(currentDate);
     BrowsingService.setDummyBrowser(true);
-
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, localPrevaylerPath);
     System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "");
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, Boolean.toString(deleteLocalPrevayler));
@@ -75,21 +78,30 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     setAdapter(new UISpecAdapter() {
       public Window getMainWindow() {
         if (mainWindow == null) {
-          mainWindow = WindowInterceptor.run(new Trigger() {
-            public void run() throws Exception {
-              PicsouApplication.main();
-            }
-          });
+          if (firstLogin) {
+            mainWindow = new StartupChecker().enterMain();
+          }
+          else {
+            mainWindow = WindowInterceptor.run(new Trigger() {
+              public void run() throws Exception {
+                PicsouApplication.main();
+              }
+            });
+          }
         }
         return mainWindow;
       }
     });
 
-    mainWindow = getMainWindow();
+    if (mainWindow != null) {
+      LoginChecker login = new LoginChecker(mainWindow);
+      login.clickFirstAutoLogin();
+    }
+    else {
+      mainWindow = getMainWindow();
+    }
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
 
-    LoginChecker login = new LoginChecker(mainWindow);
-    login.logNewUser(user, password);
     initCheckers();
 
     if (!notRegistered) {
@@ -114,6 +126,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected void initCheckers() {
+    waitForApplicationToLoad();
     views = new ViewSelectionChecker(mainWindow);
     mainAccounts = new MainAccountViewChecker(mainWindow);
     savingsAccounts = new SavingsAccountViewChecker(mainWindow);
@@ -142,11 +155,12 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 //    operations.checkOk();
     try {
       UISpecDisplay.instance().reset();
-      if (operations != null) {
+      if (mainWindow != null && operations != null) {
         operations.deleteUser(password);
       }
     }
     catch (Throwable e) {
+      e.printStackTrace();
       try {
         mainWindow.dispose();
       }
@@ -210,6 +224,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     if (mainWindow != null) {
       mainWindow.dispose();
     }
+    this.firstLogin = false;
     mainWindow = null;
     this.user = user;
     this.password = passwd;
@@ -224,18 +239,13 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     restartApplication(false);
   }
 
-  public void restartApplication(boolean createUser) throws Exception {
+  public void restartApplication(boolean firstLogin) throws Exception {
     operations.exit();
     mainWindow.dispose();
     mainWindow = null;
+    this.firstLogin = firstLogin;
     mainWindow = getMainWindow();
-    LoginChecker loginChecker = new LoginChecker(mainWindow);
-    if (createUser) {
-      loginChecker.logNewUser(user, password);
-    }
-    else {
-      loginChecker.logExistingUser(user, password, false);
-    }
+
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     initCheckers();
     if (!notRegistered) {
@@ -258,13 +268,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected void changeUser(String user, String password) {
-    if (mainWindow != null) {
-      operations.deleteUser(this.password);
-    }
-    else {
-      mainWindow = getMainWindow();
-      initCheckers();
-    }
+    operations.deleteUser(this.password);
     this.user = user;
     this.password = password;
     LoginChecker loginChecker = new LoginChecker(mainWindow);
@@ -280,6 +284,11 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected void checkNoSignpostVisible() {
-    BalloonTipTesting.checkNoBalloonTipVisible(mainWindow);    
+    BalloonTipTesting.checkNoBalloonTipVisible(mainWindow);
   }
+
+  public void waitForApplicationToLoad() {
+    UISpecAssert.waitUntil(mainWindow.containsSwingComponent(TimeViewPanel.class), 10000);
+  }
+
 }

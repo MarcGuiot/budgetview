@@ -18,7 +18,6 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
 
 public class LoginPanel {
   private JTextField userField = new JTextField(15);
@@ -30,6 +29,7 @@ public class LoginPanel {
   private JCheckBox creationCheckBox = new JCheckBox();
   private JEditorPane messageLabel = new JEditorPane();
   private InfiniteProgressPanel progressPanel = new InfiniteProgressPanel();
+  private Passwords password = new LoginPasswords();
 
   private JComponent[] creationComponents = {confirmPasswordLabel, confirmPasswordField};
   private MainWindow mainWindow;
@@ -38,6 +38,7 @@ public class LoginPanel {
   private boolean useDemoAccount;
   private java.util.List<ServerAccess.UserInfo> users;
   private String autoLoginUser;
+  public static final String AUTOLOG_USER = "autologUser";
 
   public LoginPanel(MainWindow mainWindow, Directory directory) {
     this.mainWindow = mainWindow;
@@ -111,7 +112,7 @@ public class LoginPanel {
   private void login() {
     boolean createUser = false;
     if (creationCheckBox.isSelected()) {
-      if (!userIdAccepted() || !passwordAccepted()) {
+      if (!userIdAccepted() || !password.passwordAccepted()) {
         return;
       }
       createUser = true;
@@ -134,7 +135,7 @@ public class LoginPanel {
 
   private void autoLogin() {
     boolean createUser = autoLoginUser == null;
-    logUser("autologUser", "autologUser".toCharArray(), createUser, true);
+    logUser(AUTOLOG_USER, AUTOLOG_USER.toCharArray(), createUser, true);
   }
 
   public JPanel preparePanelForShow(java.util.List<ServerAccess.UserInfo> users) {
@@ -188,28 +189,6 @@ public class LoginPanel {
     return true;
   }
 
-  private boolean passwordAccepted() {
-    char[] pwd = passwordField.getPassword();
-    if (pwd.length == 0) {
-      displayErrorMessage("login.password.required");
-      return false;
-    }
-    if (pwd.length < 4) {
-      displayErrorMessage("login.password.too.short");
-      return false;
-    }
-    char[] confirm = confirmPasswordField.getPassword();
-    if (confirm.length == 0) {
-      displayErrorMessage("login.confirm.required");
-      return false;
-    }
-    if (!Arrays.equals(pwd, confirm)) {
-      displayErrorMessage("login.confirm.error");
-      return false;
-    }
-    clearMessage();
-    return true;
-  }
 
   private void clearMessage() {
     messageLabel.setText("");
@@ -272,6 +251,20 @@ public class LoginPanel {
         creationCheckBox.doClick();
       }
       loginButton.getAction().actionPerformed(null);
+    }
+  }
+
+  private class LoginPasswords extends Passwords {
+    public LoginPasswords() {
+      super(LoginPanel.this.passwordField, LoginPanel.this.confirmPasswordField);
+    }
+
+    public void displayErrorMessage(String key) {
+      LoginPanel.this.displayErrorMessage(key);
+    }
+
+    public void clearMessage() {
+      LoginPanel.this.clearMessage();
     }
   }
 }

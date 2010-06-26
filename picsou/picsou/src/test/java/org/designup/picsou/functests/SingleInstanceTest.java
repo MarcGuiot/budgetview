@@ -4,12 +4,14 @@ import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
+import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.ThreadLauncherTrigger;
 
@@ -41,7 +43,13 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     for (int i = 0; i < threads.length; i++) {
       threads[i] = new ApplicationThread(files[i]);
     }
-    final Window window = WindowInterceptor.run(new ThreadLauncherTrigger(threads));
+    final Window slaWindow = WindowInterceptor.getModalDialog(new ThreadLauncherTrigger(threads));
+
+    SlaValidationDialogChecker slaValidationDialogChecker = new SlaValidationDialogChecker(slaWindow);
+    slaValidationDialogChecker.acceptTerms();
+    final SlaValidationDialogChecker.TriggerSlaOk triggerSlaOk =
+      new SlaValidationDialogChecker.TriggerSlaOk(slaValidationDialogChecker);
+    Window importDialog = WindowInterceptor.getModalDialog(triggerSlaOk);
 
     int errorCount = 0;
     for (ApplicationThread thread : threads) {
@@ -52,12 +60,6 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     }
     assertEquals(0, errorCount);
 
-    final LoginChecker login = new LoginChecker(window);
-    Window importDialog = WindowInterceptor.getModalDialog(new Trigger() {
-      public void run() throws Exception {
-        login.logNewUser("calimero", "C@limero2");
-      }
-    });
 
     ImportDialogChecker importer = new ImportDialogChecker(importDialog, false);
 
@@ -73,33 +75,39 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     importer.doImport();
     importer.completeImport();
 
-    getTransactionView(window).initContent()
+    Window mainWindow = triggerSlaOk.getMainWindow();
+    getTransactionView(mainWindow).initContent()
       .add("04/01/2000", TransactionType.VIREMENT, "menu K", "", 1.20)
       .add("03/01/2000", TransactionType.VIREMENT, "pizza", "", 1.20)
       .add("02/01/2000", TransactionType.VIREMENT, "quick", "", 1.20)
       .add("01/01/2000", TransactionType.VIREMENT, "mac do", "", 1.20)
       .check();
 
-    ImportDialogChecker importerForPathCheck = ImportDialogChecker.open(new OperationChecker(window).getImportTrigger());
+    ImportDialogChecker importerForPathCheck = ImportDialogChecker.open(new OperationChecker(mainWindow).getImportTrigger());
     importerForPathCheck.checkDirectory(System.getProperty("user.home"))
       .close();
 
-    window.dispose();
+    mainWindow.dispose();
     for (ApplicationThread thread : threads) {
       thread.shutdown();
     }
   }
 
   public void testOpenRequestsWhenTheApplicationIsRunning() throws Exception {
+
     final PicsouApplication picsouApplication = new PicsouApplication();
-    final Window window = WindowInterceptor.run(new Trigger() {
+    final Window slaWindow = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         picsouApplication.run();
       }
     });
 
-    LoginChecker loginChecker = new LoginChecker(window);
-    loginChecker.logNewUser("calimero", "C@limero2");
+    SlaValidationDialogChecker slaValidationDialogChecker = new SlaValidationDialogChecker(slaWindow);
+    slaValidationDialogChecker.acceptTerms();
+    final SlaValidationDialogChecker.TriggerSlaOk triggerSlaOk =
+      new SlaValidationDialogChecker.TriggerSlaOk(slaValidationDialogChecker);
+
+    triggerSlaOk.run();
 
     final String initialFile = OfxBuilder.init(this)
       .addTransaction("2000/01/03", 1.2, "menu K")
@@ -118,8 +126,6 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .save();
     PicsouApplication.main(step1File);
 
-//    importer.checkSelectedFiles(initialFile, step1File);
-//    importer.acceptFile();
     String step2File = OfxBuilder.init(this)
       .addTransaction("2000/01/02", 1.2, "quick")
       .save();
@@ -130,25 +136,31 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     importer.doImport();
     importer.completeImport();
 
-    getTransactionView(window).initContent()
+    getTransactionView(triggerSlaOk.getMainWindow()).initContent()
       .add("03/01/2000", TransactionType.VIREMENT, "menu K", "", 1.20)
       .add("02/01/2000", TransactionType.VIREMENT, "quick", "", 1.20)
       .add("01/01/2000", TransactionType.VIREMENT, "mac do", "", 1.20)
       .check();
-    window.dispose();
+    triggerSlaOk.getMainWindow().dispose();
     picsouApplication.shutdown();
   }
 
   public void testOpenRequestAndCloseAndOpenRequest() throws Exception {
     final PicsouApplication picsouApplication = new PicsouApplication();
-    final Window window = WindowInterceptor.run(new Trigger() {
+    final Window slaWindow = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         picsouApplication.run();
       }
     });
 
-    LoginChecker loginChecker = new LoginChecker(window);
-    loginChecker.logNewUser("calimero", "C@limero2");
+    SlaValidationDialogChecker slaValidationDialogChecker = new SlaValidationDialogChecker(slaWindow);
+    slaValidationDialogChecker.acceptTerms();
+    final SlaValidationDialogChecker.TriggerSlaOk triggerSlaOk =
+      new SlaValidationDialogChecker.TriggerSlaOk(slaValidationDialogChecker);
+
+    triggerSlaOk.run();
+
+    Window mainWindow = triggerSlaOk.getMainWindow();
 
     final String initialFile = OfxBuilder.init(this)
       .addTransaction("2000/01/03", 1.2, "menu K")
@@ -178,10 +190,10 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     importer
       .setMainAccount()
       .completeImport();
-    getTransactionView(window).initContent()
+    getTransactionView(mainWindow).initContent()
       .add("03/01/2000", TransactionType.VIREMENT, "menu K", "", 1.20)
       .check();
-    window.dispose();
+    mainWindow.dispose();
     picsouApplication.shutdown();
   }
 
@@ -195,14 +207,20 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
 
   public void testImportQifWhileBalanceDialogIsOpen() throws Exception {
     final PicsouApplication picsouApplication = new PicsouApplication();
-    final Window window = WindowInterceptor.run(new Trigger() {
+    final Window slaWindow = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         picsouApplication.run();
       }
     });
 
-    LoginChecker loginChecker = new LoginChecker(window);
-    loginChecker.logNewUser("calimero", "C@limero2");
+    SlaValidationDialogChecker slaValidationDialogChecker = new SlaValidationDialogChecker(slaWindow);
+    slaValidationDialogChecker.acceptTerms();
+    final SlaValidationDialogChecker.TriggerSlaOk triggerSlaOk =
+      new SlaValidationDialogChecker.TriggerSlaOk(slaValidationDialogChecker);
+
+    triggerSlaOk.run();
+
+    Window mainWindow = triggerSlaOk.getMainWindow();
 
     final String file =
       createQifFile("file",
@@ -213,7 +231,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
                     "PFAC.FRANCE 4561409\n" +
                     "MFAC.FRANCE 4561409787231717 19/04/06 STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS\n" +
                     "^");
-    OperationChecker operations = new OperationChecker(window);
+    OperationChecker operations = new OperationChecker(mainWindow);
     ImportDialogChecker importer = ImportDialogChecker.open(operations.getImportTrigger());
     AccountPositionEditionChecker accountPosition = importer.selectFiles(file)
       .acceptFile()
@@ -234,23 +252,32 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
 
   public void testImportWithSeriesEditionDialogOpen() throws Exception {
     final PicsouApplication picsouApplication = new PicsouApplication();
-    final Window window = WindowInterceptor.run(new Trigger() {
+    final Window slaWindow = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         picsouApplication.run();
       }
     });
 
-    LoginChecker loginChecker = new LoginChecker(window);
-    loginChecker.logNewUser("calimero", "C@limero2");
+    SlaValidationDialogChecker slaValidationDialogChecker = new SlaValidationDialogChecker(slaWindow);
+    slaValidationDialogChecker.acceptTerms();
+    final SlaValidationDialogChecker.TriggerSlaOk triggerSlaOk =
+      new SlaValidationDialogChecker.TriggerSlaOk(slaValidationDialogChecker);
+
+    triggerSlaOk.run();
+
+    Window mainWindow = triggerSlaOk.getMainWindow();
+
+    UISpecAssert.waitUntil(mainWindow.containsSwingComponent(TimeViewPanel.class), 10000);
+
+    ViewSelectionChecker views = new ViewSelectionChecker(mainWindow);
+    views.selectBudget();
+
+    BudgetViewChecker budgetView = new BudgetViewChecker(mainWindow);
+    SeriesEditionDialogChecker edition = budgetView.variable.createSeries();
 
     final String initialFile = OfxBuilder.init(this)
       .addTransaction("2000/01/03", 1.2, "menu K")
       .save();
-    ViewSelectionChecker views = new ViewSelectionChecker(window);
-    views.selectBudget();
-
-    BudgetViewChecker budgetView = new BudgetViewChecker(window);
-    SeriesEditionDialogChecker edition = budgetView.variable.createSeries();
 
     NewApplicationThread newApplication = new NewApplicationThread(initialFile);
     newApplication.start();
@@ -389,4 +416,5 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       }
     }
   }
+
 }

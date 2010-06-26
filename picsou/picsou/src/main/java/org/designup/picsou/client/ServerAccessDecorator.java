@@ -30,6 +30,10 @@ public class ServerAccessDecorator implements ServerAccess {
     serverAccess.deleteUser(name, password);
   }
 
+  public boolean rename(String name, char[] passwd, char[] previousPasswd) throws UserAlreadyExists {
+    return serverAccess.rename(name, passwd, previousPasswd);
+  }
+
   public boolean initConnection(String name, char[] password, boolean privateComputer) throws IdentificationFailed {
     return serverAccess.initConnection(name, password, privateComputer);
   }

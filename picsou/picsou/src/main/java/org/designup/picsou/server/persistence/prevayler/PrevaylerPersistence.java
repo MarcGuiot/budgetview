@@ -3,6 +3,7 @@ package org.designup.picsou.server.persistence.prevayler;
 import org.designup.picsou.client.exceptions.BadPassword;
 import org.designup.picsou.client.exceptions.IdentificationFailed;
 import org.designup.picsou.client.exceptions.UserNotRegistered;
+import org.designup.picsou.client.exceptions.RemoteException;
 import org.designup.picsou.server.model.HiddenUser;
 import org.designup.picsou.server.model.User;
 import org.designup.picsou.server.session.Persistence;
@@ -53,8 +54,11 @@ public class PrevaylerPersistence implements Persistence {
     rootDataManager.register(mail, signature, activationCode);
   }
 
-  public UserInfo createUser(String name, boolean autoLog, boolean isRegisteredUser, byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo) {
-    return rootDataManager.createUserAndHiddenUser(name, autoLog, isRegisteredUser, cryptedPassword, linkInfo, cryptedLinkInfo);
+  public UserInfo createUser(String name, boolean autoLog, boolean isRegisteredUser, byte[] cryptedPassword,
+                             byte[] linkInfo, byte[] cryptedLinkInfo) {
+    Integer newUserId = rootDataManager.allocateNewUserId(name);
+    return rootDataManager.createUserAndHiddenUser(name, autoLog, isRegisteredUser, cryptedPassword,
+                                                   linkInfo, cryptedLinkInfo, newUserId);
   }
 
   public void delete(String name, byte[] cryptedLinkInfo, Integer userId) {
@@ -91,6 +95,21 @@ public class PrevaylerPersistence implements Persistence {
 
   public GlobList getLocalUsers() {
     return rootDataManager.getLocalUsers();
+  }
+
+  public Integer renameUser(String newName, String name, boolean autoLog, byte[] cryptedPassword,
+                            byte[] previousLinkInfo, byte[] previousEncryptedLinkInfo,
+                            byte[] linkInfo, byte[] encryptedLinkInfo,
+                            Integer previousUserId, SerializedInput input) throws RemoteException {
+    Integer newUserId = rootDataManager.allocateNewUserId(name);
+    if (!accountDataManager.newData(newUserId, input)){
+      return null;
+    }
+    rootDataManager.replaceUserAndHiddenUser(autoLog, false,  newName, cryptedPassword, linkInfo, encryptedLinkInfo, 
+                                             name, previousLinkInfo, previousEncryptedLinkInfo, newUserId);
+//    accountDataManager.deleteOldData(previousUserId);
+//    rootDataManager.deleteOldUserId(previousEncryptedLinkInfo, previousUserId);
+    return newUserId;
   }
 
   public void getData(SerializedOutput output, Integer userId) {

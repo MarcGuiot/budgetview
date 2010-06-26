@@ -13,4 +13,6 @@ public interface ConnectedState extends SessionState {
   void takeSnapshot(SerializedInput input);
 
   void restore(SerializedInput input, SerializedOutput output);
+
+  void renameUser(SerializedInput input, SerializedOutput output);
 }

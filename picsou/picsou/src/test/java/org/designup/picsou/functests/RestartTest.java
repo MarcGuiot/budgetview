@@ -4,10 +4,16 @@ import org.designup.picsou.functests.checkers.CategorizationGaugeChecker;
 import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Dates;
+import org.uispec4j.Trigger;
+import org.uispec4j.assertion.UISpecAssert;
+import org.uispec4j.interception.WindowInterceptor;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
@@ -209,7 +215,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/10", -200.0, "Monop")
       .addTransaction("2008/08/10", -100.0, "Fnac")
       .load();
-    
+
     // on crée une serie a la main sans l'associé des le debut : du coup le montant initial de la series est a 0
     views.selectBudget();
     budgetView.variable.createSeries().setName("End date").switchToManual()
@@ -230,13 +236,13 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("26/10/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("10/10/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
-      .add("10/10/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
       .add("10/10/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
       .add("01/10/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
       .add("26/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
-      .add("10/09/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
-      .add("10/09/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
       .add("10/09/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
+      .add("10/09/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("10/09/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
       .add("01/09/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
       .add("26/08/2008", TransactionType.VIREMENT, "COMPANY", "", 1000.00, "Salaire")
       .add("10/08/2008", TransactionType.PRELEVEMENT, "FNAC", "", -100.00, "Begin date")
@@ -550,17 +556,18 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     }
 
     mainWindow = null;
-    mainWindow = getMainWindow();
+    operations = null;
+
+    mainWindow = WindowInterceptor.run(new Trigger() {
+      public void run() throws Exception {
+        PicsouApplication.main();
+      }
+    });
+    UISpecAssert.waitUntil(mainWindow.containsSwingComponent(JPasswordField.class), 10000);
     LoginChecker loginChecker = new LoginChecker(mainWindow);
-    loginChecker.enterUserAndPassword(user, password);
-    try {
-      loginChecker.clickEnter().checkErrorMessage("data.load.error.journal");
-    }
-    finally {
-      operations.exit();
-      operations = null;
-      mainWindow = null;
-    }
+    loginChecker.checkErrorMessage("data.load.error.journal");
+    mainWindow.dispose();
+    mainWindow = null;
   }
 
   public void testMultiSelectionAtStartup() throws Exception {

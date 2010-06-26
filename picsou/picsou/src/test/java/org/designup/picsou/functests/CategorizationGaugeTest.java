@@ -3,6 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.checkers.CategorizationGaugeChecker;
+import org.globsframework.utils.TestUtils;
 
 public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {

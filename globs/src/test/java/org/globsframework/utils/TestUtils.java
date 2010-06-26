@@ -3,11 +3,14 @@ package org.globsframework.utils;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.globsframework.metamodel.GlobType;
+import org.uispec4j.Window;
+import org.saxstack.writer.XmlTag;
+import org.saxstack.writer.PrettyPrintRootXmlTag;
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.*;
+import java.util.List;
+import java.awt.*;
 
 public class TestUtils {
 
@@ -203,5 +206,33 @@ public class TestUtils {
 
   public static String getDirName(TestCase test) {
     return getFileName(test, "");
+  }
+
+  public static void describe(Window window) {
+    try {
+      OutputStreamWriter outputStreamWriter = new OutputStreamWriter(System.out);
+      XmlTag tag = new PrettyPrintRootXmlTag(outputStreamWriter, 10).createChildTag("root");
+      out(window.getAwtComponent(), tag);
+      tag.end();
+      outputStreamWriter.flush();
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static void out(Component awtComponent, XmlTag tag) throws IOException {
+    String name = awtComponent.getClass().getSimpleName();
+    if (Strings.isNullOrEmpty(name)){
+      name = awtComponent.getClass().getName();
+    }
+    XmlTag childTag = tag.createChildTag(name);
+    childTag.addAttribute("name", awtComponent.getName());
+    if (awtComponent instanceof Container) {
+      for (Component component : ((Container)awtComponent).getComponents()) {
+        out(component, childTag);
+      }
+    }
+    childTag.end();
   }
 }

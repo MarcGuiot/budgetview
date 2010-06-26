@@ -4,6 +4,7 @@ import org.designup.picsou.server.persistence.prevayler.CustomSerializablePolicy
 import org.designup.picsou.server.persistence.prevayler.DefaultSerializer;
 import org.designup.picsou.server.persistence.prevayler.RootDataManager;
 import org.designup.picsou.server.session.Persistence;
+import org.designup.picsou.client.exceptions.RemoteException;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.utils.directory.Directory;
@@ -57,6 +58,8 @@ public class PRootDataManager implements RootDataManager {
 
   private CustomSerializablePolicy initSerializerPolicy() {
     CustomSerializablePolicy serializablePolicy = new CustomSerializablePolicy(directory);
+    serializablePolicy.registerFactory(RenameUserAndHiddenUser.getFactory());
+    serializablePolicy.registerFactory(AllocateNewUserId.getFactory());
     serializablePolicy.registerFactory(CreateUserAndHiddenUser.getFactory());
     serializablePolicy.registerFactory(DeleteUserAndHiddenUser.getFactory());
     serializablePolicy.registerFactory(GetAndUpdateCount.getFactory());
@@ -76,6 +79,20 @@ public class PRootDataManager implements RootDataManager {
     }
     catch (Exception e) {
       throw new UnexpectedApplicationState(e);
+    }
+  }
+
+  public Integer allocateNewUserId(String name) {
+    try {
+      Integer newId =
+        (Integer)prevayler.execute(new AllocateNewUserId(name));
+      return newId;
+    }
+    catch (GlobsException e) {
+      throw e;
+    }
+    catch (Exception e) {
+      throw new UnexpectedApplicationState(pathToPrevaylerDirectory, e);
     }
   }
 
@@ -110,13 +127,37 @@ public class PRootDataManager implements RootDataManager {
   }
 
   public Persistence.UserInfo createUserAndHiddenUser(String name, boolean autoLog, boolean isRegisteredUser,
-                                                      byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo) {
+                                                               byte[] cryptedPassword, byte[] linkInfo,
+                                                               byte[] cryptedLinkInfo, Integer userId) {
     try {
       Persistence.UserInfo userInfo =
         (Persistence.UserInfo)prevayler.execute(new CreateUserAndHiddenUser(name, autoLog, isRegisteredUser, cryptedPassword,
-                                                                            linkInfo, cryptedLinkInfo));
+                                                                            linkInfo, cryptedLinkInfo, userId));
       prevayler.takeSnapshot();
       return userInfo;
+    }
+    catch (GlobsException e) {
+      throw e;
+    }
+    catch (Exception e) {
+      throw new UnexpectedApplicationState(pathToPrevaylerDirectory, e);
+    }
+  }
+
+  public void replaceUserAndHiddenUser(boolean autoLog, boolean isRegisteredUser,
+                                                       String newName, byte[] newCryptedPassword,
+                                                       byte[] newLinkInfo, byte[] newCryptedLinkInfo,
+                                                       String name, byte[] linkInfo, byte[] cryptedLinkInfo,
+                                                       Integer userId) {
+    try {
+      RemoteException error =
+        (RemoteException)prevayler.execute(
+          new RenameUserAndHiddenUser(autoLog, isRegisteredUser, newName, newCryptedPassword, newLinkInfo, newCryptedLinkInfo,
+                                      name, linkInfo, cryptedLinkInfo, userId));
+      if (error != null){
+        throw error;
+      }
+      prevayler.takeSnapshot();
     }
     catch (GlobsException e) {
       throw e;
@@ -140,7 +181,7 @@ public class PRootDataManager implements RootDataManager {
   }
 
   public void close() {
-    if (prevayler == null){
+    if (prevayler == null) {
       return;
     }
     try {

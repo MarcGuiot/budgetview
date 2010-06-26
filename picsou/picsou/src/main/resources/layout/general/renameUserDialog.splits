@@ -1,0 +1,28 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="dialog" preferredSize="(400,250)" opaque="true">
+    <column styleClass="innerDialog">
+      <label text="title" styleClass="title"/>
+      <grid>
+        <component ref="currentPassword" gridPos="(1,0)"/>
+
+        <label text="$login.id" gridPos="(0,1)" styleClass="formLabel" horizontalAlignment="left"/>
+        <textField ref="newName" gridPos="(1, 1)" columns="20"/>
+
+        <label text="$login.password.required" gridPos="(0,2)" styleClass="formLabel" horizontalAlignment="left"/>
+        <component ref="newPassword" gridPos="(1,2)"/>
+
+        <label text="$login.confirmation" styleClass="formLabel"
+               horizontalAlignment="left" gridPos="(0,3)"/>
+        <component ref="confirmedPassword" gridPos="(1,3)"/>
+      </grid>
+      <panel minimumSize="(200,40)" preferredSize="(200,40)" marginTop="5" opaque="false">
+        <htmlEditorPane ref="message"/>
+      </panel>
+      <filler fill="vertical"/>
+    </column>
+  </panel>
+
+</splits>

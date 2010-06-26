@@ -34,6 +34,8 @@ public abstract class RemoteException extends GlobsException {
     void visitUnknownId(UnknownId ex);
 
     void visitInvalidActionForState(InvalidActionForState ex);
+
+    void visitUnableToWrite(UnableToWrite write);
   }
 
   protected static void checkId(int id) {

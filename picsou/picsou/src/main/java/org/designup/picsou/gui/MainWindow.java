@@ -18,6 +18,7 @@ import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.license.LicenseCheckerThread;
 import org.designup.picsou.gui.startup.LoginPanel;
+import org.designup.picsou.gui.startup.SlaValidationDialog;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.utils.DataCheckerAction;
 import org.designup.picsou.server.ServerDirectory;
@@ -94,7 +95,7 @@ public class MainWindow implements WindowManager {
     return frame;
   }
 
-  public void shutdown(){
+  public void shutdown() {
     thread.run();
   }
 
@@ -127,6 +128,14 @@ public class MainWindow implements WindowManager {
     }
     if (autoLogin && localUsers.size() == 1) {
       autoLogin(user);
+    }
+    else if (localUsers.isEmpty()) {
+      if (SlaValidationDialog.termsAccepted(null, directory)) {
+        login(LoginPanel.AUTOLOG_USER, LoginPanel.AUTOLOG_USER.toCharArray(), true, false, true);
+      }
+      else{
+        setPanel(loginPanel.preparePanelForShow(localUsers));
+      }
     }
     else {
       setPanel(loginPanel.preparePanelForShow(localUsers));
@@ -174,7 +183,14 @@ public class MainWindow implements WindowManager {
   }
 
   private ServerAccess.LocalInfo initServerAccess(String remoteAdress, String prevaylerPath, boolean dataInMemory) {
-    if (!remoteAdress.startsWith("http")) {
+    if (remoteAdress.startsWith("http")) {
+      this.serverAccess.takeSnapshot();
+      this.serverAccess.disconnect();
+      ServerAccess serverAccess = new ConnectionRetryServerAccess(
+        new EncrypterToTransportServerAccess(new HttpsClientTransport(remoteAdress), directory));
+      this.serverAccess.setServerAccess(serverAccess);
+    }
+    else {
       this.serverAccess.takeSnapshot();
       this.serverAccess.disconnect();
       if (serverDirectory != null) {
@@ -185,13 +201,6 @@ public class MainWindow implements WindowManager {
       ServerAccess serverAccess =
         new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
                                              directory);
-      this.serverAccess.setServerAccess(serverAccess);
-    }
-    else {
-      this.serverAccess.takeSnapshot();
-      this.serverAccess.disconnect();
-      ServerAccess serverAccess = new ConnectionRetryServerAccess(
-        new EncrypterToTransportServerAccess(new HttpsClientTransport(remoteAdress), directory));
       this.serverAccess.setServerAccess(serverAccess);
     }
     ServerAccess.LocalInfo info = serverAccess.connect();
@@ -259,6 +268,7 @@ public class MainWindow implements WindowManager {
     }
 
     public void displayErrorText(String message) {
+      System.out.println("MainWindow$AutoLoginFeedback.displayErrorText " + message);
       setPanel(loginPanel.preparePanelForShow(localUsers));
       super.displayErrorText(message);
     }
@@ -347,6 +357,7 @@ public class MainWindow implements WindowManager {
         });
       }
       catch (final InvalidState e) {
+        System.out.println("MainWindow$LoginFunctor.run " + e.getMessage());
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
             feedbackLoadingData.displayErrorText(e.getMessage());
@@ -355,6 +366,7 @@ public class MainWindow implements WindowManager {
         e.printStackTrace();
       }
       catch (final Exception e) {
+        e.printStackTrace();
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
             feedbackLoadingData.displayErrorMessage("login.server.connection.failure");

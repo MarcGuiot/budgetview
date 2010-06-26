@@ -6,6 +6,7 @@ import org.designup.picsou.client.SerializableGlobSerializer;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.BadConnection;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
+import org.designup.picsou.client.exceptions.BadPassword;
 import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.server.model.ServerDelta;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
@@ -27,10 +28,7 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Collections;
+import java.util.*;
 
 public class EncrypterToTransportServerAccess implements ServerAccess {
   private ClientTransport clientTransport;
@@ -42,6 +40,8 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
   static public final byte[] salt = {0x54, 0x12, 0x43, 0x65, 0x77, 0x2, 0x79, 0x72};
   private GlobModel globModel;
   public static int count = 20;
+  private static final byte[] SOME_TEXT_TO_CHECK = "some text to check".getBytes();
+  private byte[] linkInfo;
 
   public EncrypterToTransportServerAccess(ClientTransport transport, Directory directory) {
     this.clientTransport = transport;
@@ -79,7 +79,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
       output.write(autoLogin);
       output.writeBytes(cryptPassword(password, passwordBasedEncryptor));
 
-      byte[] linkInfo = generateLinkInfo();
+      linkInfo = generateLinkInfo();
       output.writeBytes(linkInfo);
       output.writeBytes(passwordBasedEncryptor.encrypt(linkInfo));
 
@@ -109,17 +109,22 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     RedirectPasswordBasedEncryptor encryptor = (RedirectPasswordBasedEncryptor)directory.get(PasswordBasedEncryptor.class);
     encryptor.setPasswordBasedEncryptor(passwordBasedEncryptor);
 
+    linkInfo = requestLinkInfo(name, password, passwordBasedEncryptor);
+
+    SerializedByteArrayOutput confirmation = new SerializedByteArrayOutput();
+    confirmation.getOutput().writeBytes(privateId);
+    confirmation.getOutput().writeBytes(passwordBasedEncryptor.encrypt(linkInfo));
+    clientTransport.deleteUser(sessionId, confirmation.toByteArray());
+  }
+
+  private byte[] requestLinkInfo(String name, char[] password, PasswordBasedEncryptor passwordBasedEncryptor) {
     SerializedByteArrayOutput request = new SerializedByteArrayOutput();
     SerializedOutput output = request.getOutput();
     output.writeUtf8String(name);
     output.writeBytes(cryptPassword(password, passwordBasedEncryptor));
 
     SerializedInput response = clientTransport.identifyUser(sessionId, request.toByteArray());
-
-    SerializedByteArrayOutput confirmation = new SerializedByteArrayOutput();
-    confirmation.getOutput().writeBytes(privateId);
-    confirmation.getOutput().writeBytes(passwordBasedEncryptor.encrypt(response.readBytes()));
-    clientTransport.deleteUser(sessionId, confirmation.toByteArray());
+    return response.readBytes();
   }
 
   public boolean initConnection(String name, char[] password, boolean privateComputer) {
@@ -139,11 +144,62 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
 
     SerializedByteArrayOutput confirmation = new SerializedByteArrayOutput();
     confirmation.getOutput().writeBytes(privateId);
-    confirmation.getOutput().writeBytes(passwordBasedEncryptor.encrypt(response.readBytes()));
+    linkInfo = response.readBytes();
+    confirmation.getOutput().writeBytes(passwordBasedEncryptor.encrypt(linkInfo));
     Boolean isRegistered = response.readBoolean();
     clientTransport.confirmUser(sessionId, confirmation.toByteArray());
     notConnected = false;
     return isRegistered;
+  }
+
+  public boolean rename(String newName, char[] newPassword, char[] previousPassword) throws UserAlreadyExists, BadPassword {
+
+    PasswordBasedEncryptor newPasswordBasedEncryptor = new MD5PasswordBasedEncryptor(salt, newPassword, count);
+    RedirectPasswordBasedEncryptor encryptor = (RedirectPasswordBasedEncryptor)directory.get(PasswordBasedEncryptor.class);
+
+    PasswordBasedEncryptor confirmPasswordBasedEncryptor = new MD5PasswordBasedEncryptor(salt, previousPassword, count);
+    byte[] previousLinkInfo = linkInfo;
+
+    if (!Arrays.equals(confirmPasswordBasedEncryptor.encrypt(SOME_TEXT_TO_CHECK),
+                       encryptor.encrypt(SOME_TEXT_TO_CHECK))){
+      throw new BadPassword(this.name + " not identified correctly");
+    }
+
+    SerializedByteArrayOutput confirmation = new SerializedByteArrayOutput();
+    SerializedOutput output = confirmation.getOutput();
+    output.writeBytes(privateId);
+
+    MapOfMaps<String, Integer, SerializableGlobType> serverData = getServerData();
+    for (SerializableGlobType serializableGlobType : serverData.values()) {
+      serializableGlobType.setData(
+        newPasswordBasedEncryptor.encrypt(encryptor.decrypt(serializableGlobType.getData())));
+    }
+    output.writeUtf8String(newName);
+    output.writeUtf8String(this.name);
+    boolean autoLogin = false;
+    output.write(autoLogin);
+
+    output.writeBytes(cryptPassword(newPassword, newPasswordBasedEncryptor));
+
+    output.writeBytes(previousLinkInfo);
+    output.writeBytes(confirmPasswordBasedEncryptor.encrypt(previousLinkInfo));
+
+    byte[] linkInfo = generateLinkInfo();
+    output.writeBytes(linkInfo);
+    output.writeBytes(newPasswordBasedEncryptor.encrypt(linkInfo));
+
+    SerializableGlobSerializer.serialize(output, serverData);
+
+    SerializedInput input = clientTransport.rename(sessionId, confirmation.toByteArray());
+    Boolean done = input.readBoolean();
+    if (!done){
+        return false;
+    }
+    else{
+      encryptor.setPasswordBasedEncryptor(newPasswordBasedEncryptor);
+      this.name = newName;
+    }
+    return true;
   }
 
   public void localRegister(byte[] mail, byte[] signature, String activationCode) {

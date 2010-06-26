@@ -38,6 +38,11 @@ public interface Persistence {
 
   GlobList getLocalUsers();
 
+  Integer renameUser(String newName, String name, boolean autoLog, byte[] password,
+                     byte[] previousLinkInfo, byte[] previousEncryptedLinkInfo,
+                     byte[] linkInfo, byte[] encryptedLinkInfo,
+                     Integer previousUserId, SerializedInput input);
+
   class UserInfo {
     final public Integer userId;
     final public boolean isRegistered;

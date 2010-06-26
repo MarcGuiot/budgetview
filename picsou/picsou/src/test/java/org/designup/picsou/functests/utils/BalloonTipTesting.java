@@ -28,16 +28,17 @@ public class BalloonTipTesting {
                            message);
   }
 
-  public static void checkBalloonTipVisible(Component enclosingWindow,
-                                            Component targetUIComponent,
+  public static void checkBalloonTipVisible(final Component enclosingWindow,
+                                            final Component targetUIComponent,
                                             String text,
                                             String message) {
-    final BalloonTip balloon = getBalloonTip(enclosingWindow, targetUIComponent);
     UISpecAssert.assertThat(message, new Assertion() {
       public void check() {
+        final BalloonTip balloon = getBalloonTip(enclosingWindow, targetUIComponent);
         Assert.assertTrue(balloon != null && balloon.isVisible());
       }
     });
+    final BalloonTip balloon = getBalloonTip(enclosingWindow, targetUIComponent);
     Assert.assertEquals(text, Utils.cleanupHtml(balloon.getText()));
   }
 

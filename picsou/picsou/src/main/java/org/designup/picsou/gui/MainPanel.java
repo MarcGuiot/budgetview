@@ -54,7 +54,6 @@ import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.GlobMatcher;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.ReplicationGlobRepository;
-import org.globsframework.utils.Functor;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -66,6 +65,7 @@ public class MainPanel {
   private PicsouFrame parent;
   private ImportFileAction importFileAction;
   private ExportFileAction exportFileAction;
+  private ProtectAction protectAction;
   private BackupAction backupAction;
   private RestoreAction restoreAction;
   private PreferencesAction preferencesAction;
@@ -131,6 +131,7 @@ public class MainPanel {
     registerAction = new RegisterLicenseAction(repository, directory);
     exitAction = new ExitAction(windowManager, directory);
     logoutAction = new LogoutAction(logoutService);
+    protectAction = new ProtectAction(repository, directory);
     deleteUserAction = new DeleteUserAction(this, repository, directory);
 
     search = new TextFilterPanel(transactionView.getFilterSet(), repository, directory) {
@@ -221,11 +222,7 @@ public class MainPanel {
 
   private void showInitialMessageIfNeeded() {
     if (!repository.contains(Transaction.TYPE)) {
-      directory.get(HelpService.class).show("welcome", parent, new Functor() {
-        public void run() throws Exception {
-          SignpostStatus.setCompleted(SignpostStatus.WELCOME_SHOWN, repository);
-        }
-      });
+      SignpostStatus.setCompleted(SignpostStatus.WELCOME_SHOWN, repository);
     }
   }
 
@@ -243,6 +240,7 @@ public class MainPanel {
     menu.addSeparator();
     menu.add(backupAction);
     menu.add(restoreAction);
+    menu.add(protectAction);
 
     if (Gui.useMacOSMenu()) {
       MRJAdapter.setPreferencesEnabled(true);
