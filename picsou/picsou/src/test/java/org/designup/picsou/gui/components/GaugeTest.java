@@ -123,8 +123,7 @@ public class GaugeTest extends TestCase {
   }
 
   public void testOverrunAndRemaining() throws Exception {
-    init()
-      .set(10, 20, 10, 0);
+    init().set(10, 20, 10, 0);
   }
 
   public void testPartialOverrunIsIgnoredIfActualGreaterThanTarget() throws Exception {
@@ -137,10 +136,10 @@ public class GaugeTest extends TestCase {
 
   public void testDetailsTips() throws Exception {
     Gauge gauge = new Gauge();
-    assertEquals(null, gauge.getToolTipText());
+    assertEquals("No value defined", gauge.getToolTipText());
 
     gauge.enableDetailsTips(createDetailsTipFactory());
-    assertEquals("Click for a description", gauge.getToolTipText());
+    assertEquals("No value defined", gauge.getToolTipText());
 
     final JFrame frame = new JFrame();
     frame.add(gauge);

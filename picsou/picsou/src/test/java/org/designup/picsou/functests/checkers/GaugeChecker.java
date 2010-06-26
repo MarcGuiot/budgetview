@@ -54,6 +54,7 @@ public class GaugeChecker extends GuiChecker {
 
   public GaugeChecker checkDescription(String text) {
     Assert.assertEquals(text, gauge.getDescription());
+    Assert.assertEquals(text, gauge.getToolTipText());
     return this;
   }
 

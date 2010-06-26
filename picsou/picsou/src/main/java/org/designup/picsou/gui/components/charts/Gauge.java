@@ -5,6 +5,7 @@ import org.designup.picsou.gui.components.tips.DetailsTipFactory;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,7 +59,6 @@ public class Gauge extends JPanel {
 
   public void enableDetailsTips(final DetailsTipFactory detailsTipFactory) {
 
-    setToolTipText(Lang.get("gauge.tooltip"));
     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
     addMouseListener(new MouseAdapter() {
@@ -220,6 +220,7 @@ public class Gauge extends JPanel {
     }
 
     this.description = text;
+    setToolTipText(text);
     repaint();
   }
 
@@ -229,7 +230,8 @@ public class Gauge extends JPanel {
       formattedValues[i] = Formatting.DECIMAL_FORMAT.format(values[i]);
 
     }
-    this.description = Lang.get(key, formattedValues);
+    this.description = Strings.isNotEmpty(key) ? Lang.get(key, formattedValues) : "";
+    setToolTipText(description);
   }
 
   public void paint(Graphics g) {
