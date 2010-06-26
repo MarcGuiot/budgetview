@@ -128,8 +128,8 @@ public class CompositeKey extends Key {
       hashCode = 0;
       for (Field keyField : type.getKeyFields()) {
         Object value = getValue(keyField);
-        hashCode = 29 * hashCode + (value != null ? value.hashCode() : 0);
-        hashCode = 29 * hashCode + keyField.hashCode();
+        hashCode = 31 * hashCode + (value != null ? value.hashCode() : 0);
+        hashCode = 31 * hashCode + keyField.hashCode();
 
       }
     }

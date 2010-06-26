@@ -165,7 +165,7 @@ public class SingleFieldKey extends Key {
   public int hashCode() {
     if (hashCode < 0) {
       hashCode = (value != null ? value.hashCode() : 0);
-      hashCode = 29 * hashCode + keyField.hashCode();
+      hashCode = 31 * hashCode + keyField.hashCode();
     }
     return hashCode;
   }

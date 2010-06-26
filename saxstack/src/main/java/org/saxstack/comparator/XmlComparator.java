@@ -186,7 +186,7 @@ public class XmlComparator {
 
     public int hashCode() {
       int result = tag.hashCode();
-      result = 29 * result + attributes.hashCode();
+      result = 31 * result + attributes.hashCode();
       return result;
     }
 

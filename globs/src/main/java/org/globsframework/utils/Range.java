@@ -49,7 +49,7 @@ public class Range<T extends Comparable> {
   public int hashCode() {
     int result;
     result = min.hashCode();
-    result = 29 * result + max.hashCode();
+    result = 31 * result + max.hashCode();
     return result;
   }
 }

@@ -42,7 +42,7 @@ public class Pair<T, D> implements Serializable {
   public int hashCode() {
     int result;
     result = first.hashCode();
-    result = 29 * result + second.hashCode();
+    result = 31 * result + second.hashCode();
     return result;
   }
 }

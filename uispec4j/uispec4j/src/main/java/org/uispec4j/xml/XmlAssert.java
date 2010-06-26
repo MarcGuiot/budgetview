@@ -102,7 +102,7 @@ public class XmlAssert {
 
     public int hashCode() {
       int result = tag.hashCode();
-      result = 29 * result + attributes.hashCode();
+      result = 31 * result + attributes.hashCode();
       return result;
     }
 

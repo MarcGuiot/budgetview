@@ -58,9 +58,9 @@ public class GridPos {
   public int hashCode() {
     int result;
     result = x.hashCode();
-    result = 29 * result + y.hashCode();
-    result = 29 * result + w.hashCode();
-    result = 29 * result + h.hashCode();
+    result = 31 * result + y.hashCode();
+    result = 31 * result + w.hashCode();
+    result = 31 * result + h.hashCode();
     return result;
   }
 

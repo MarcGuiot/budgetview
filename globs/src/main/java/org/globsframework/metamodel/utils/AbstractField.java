@@ -101,7 +101,7 @@ abstract class AbstractField extends AnnotatedPropertyHolder<Field> implements F
   public int hashCode() {
     int result;
     result = name.hashCode();
-    result = 29 * result + globType.hashCode();
+    result = 31 * result + globType.hashCode();
     return result;
   }
 }
