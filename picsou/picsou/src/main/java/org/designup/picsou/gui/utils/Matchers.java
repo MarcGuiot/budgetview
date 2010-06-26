@@ -181,9 +181,15 @@ public class Matchers {
               if (!toAccount.isTrue(Account.IS_IMPORTED_ACCOUNT)) {
                 return false;
               }
+              if (!isSameAccount(repository, toAccount, transaction)) {
+                return false;
+              }
             }
             else {
               if (!fromAccount.isTrue(Account.IS_IMPORTED_ACCOUNT)) {
+                return false;
+              }
+              if (!isSameAccount(repository, fromAccount, transaction)) {
                 return false;
               }
             }
@@ -195,7 +201,7 @@ public class Matchers {
               if (series.isTrue(Series.IS_MIRROR)) {
                 return false;
               }
-              if (!isSameAccountType(repository, toAccount, transaction)) {
+              if (!isSameAccount(repository, toAccount, transaction)) {
                 return false;
               }
             }
@@ -203,7 +209,7 @@ public class Matchers {
               if (!series.isTrue(Series.IS_MIRROR)) {
                 return false;
               }
-              if (!isSameAccountType(repository, fromAccount, transaction)) {
+              if (!isSameAccount(repository, fromAccount, transaction)) {
                 return false;
               }
             }
@@ -213,7 +219,7 @@ public class Matchers {
           for (Glob transaction : transactions) {
             if (transaction.get(Transaction.AMOUNT) < 0) {
               if (fromAccountId != null) {
-                if (!isSameAccountType(repository, fromAccount, transaction)) {
+                if (!isSameAccount(repository, fromAccount, transaction)) {
                   return false;
                 }
               }
@@ -223,7 +229,7 @@ public class Matchers {
             }
             else {
               if (toAccountId != null) {
-                if (!isSameAccountType(repository, toAccount, transaction)) {
+                if (!isSameAccount(repository, toAccount, transaction)) {
                   return false;
                 }
               }
@@ -238,7 +244,7 @@ public class Matchers {
       return false;
     }
 
-    private boolean isSameAccountType(GlobRepository repository, Glob account, Glob transaction) {
+    private boolean isSameAccount(GlobRepository repository, Glob account, Glob transaction) {
       if (account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
         Glob operationAccount = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
         return operationAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId());

@@ -3,7 +3,6 @@ package org.designup.picsou.gui.budget;
 import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.signpost.actions.SetSignpostStatusAction;
-import org.designup.picsou.gui.utils.SetFieldValueAction;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
@@ -15,8 +14,8 @@ import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobListFunctor;
-import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
