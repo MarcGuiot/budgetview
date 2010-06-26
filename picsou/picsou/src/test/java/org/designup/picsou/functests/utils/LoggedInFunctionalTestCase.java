@@ -4,10 +4,13 @@ import org.designup.picsou.functests.FunctionalTestCase;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.MainPanel;
+import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
+import org.designup.picsou.gui.startup.LoginPanel;
 import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.model.initial.DefaultSeriesFactory;
 import org.globsframework.model.GlobRepository;
@@ -217,7 +220,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   public void openApplication() throws Exception {
-    operations.backupAndLaunchApplication("anonymous", "password", currentDate);
+    operations.backupAndLaunchApplication(LoginPanel.AUTOLOG_USER, LoginPanel.AUTOLOG_USER, currentDate);
   }
 
   protected void restartApplication(String user, String passwd) throws Exception {
@@ -254,13 +257,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   public static void resetWindow() {
-    if (mainWindow != null) {
-      mainWindow.dispose();
-      mainWindow = null;
-    }
-  }
-
-  public static void forceClose() {
     if (mainWindow != null) {
       mainWindow.dispose();
       mainWindow = null;

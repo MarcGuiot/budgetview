@@ -77,12 +77,7 @@ public class LoginChecker extends GuiChecker {
         waitForApplicationToLoad();
       }
     };
-//    if (showWelcomeMessage) {
-//      HelpChecker.open(trigger).close();
-//    }
-//    else {
     trigger.run();
-//    }
   }
 
   public void clickDemoLink() {

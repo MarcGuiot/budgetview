@@ -8,6 +8,9 @@ import org.globsframework.utils.Dates;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.*;
+import org.uispec4j.Button;
+import org.uispec4j.Window;
+import org.uispec4j.MenuItem;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
@@ -21,6 +24,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.awt.*;
 
 public class OperationChecker {
   private MenuItem importMenu;
@@ -40,7 +44,7 @@ public class OperationChecker {
   }
 
   public OperationChecker(Window window) {
-    UISpecAssert.waitUntil(window.containsSwingComponent(TimeViewPanel.class), 10000);
+    UISpecAssert.waitUntil(window.containsSwingComponent(JMenu.class), 10000);
     this.window = window;
     MenuItem fileMenu = window.getMenuBar().getMenu("File");
     protectMenu = fileMenu.getSubMenu("protect");
@@ -391,10 +395,15 @@ public class OperationChecker {
       args.add("-D" + PicsouApplication.APPNAME + ".today=" + Dates.toString(currentDate));
     }
     args.add("org.designup.picsou.gui.MainWindowLauncher");
-    args.add("-u");
-    args.add(user);
-    args.add("-p");
-    args.add(password);
+    if (user != null) {
+      args.add("-u");
+      args.add(user);
+    }
+
+    if (password != null) {
+      args.add("-p");
+      args.add(password);
+    }
     args.add("-s");
     args.add(backupFile);
     Process process = Runtime.getRuntime().exec(args.toArray(new String[args.size()]));

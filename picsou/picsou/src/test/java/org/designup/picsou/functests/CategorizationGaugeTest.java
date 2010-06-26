@@ -8,6 +8,7 @@ import org.globsframework.utils.TestUtils;
 public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
     setCurrentMonth("2008/06");
+    resetWindow();
     super.setUp();
   }
 

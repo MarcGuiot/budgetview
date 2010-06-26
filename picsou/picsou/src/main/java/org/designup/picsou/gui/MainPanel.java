@@ -217,6 +217,7 @@ public class MainPanel {
     directory.get(NavigationService.class).reset();
     directory.get(UndoRedoService.class).reset();
     directory.get(HelpService.class).reset();
+
     windowManager.setPanel(panel);
     seriesEvolutionView.reset();
     timeView.selectCurrentMonth();

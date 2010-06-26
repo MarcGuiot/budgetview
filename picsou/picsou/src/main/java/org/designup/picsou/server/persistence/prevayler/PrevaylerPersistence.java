@@ -10,6 +10,7 @@ import org.designup.picsou.server.session.Persistence;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.utils.Log;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.serialization.Encoder;
@@ -51,6 +52,9 @@ public class PrevaylerPersistence implements Persistence {
   }
 
   public void register(byte[] mail, byte[] signature, String activationCode) {
+//    if (rootDataManager == null){
+//      Utils.dumpStack();
+//    }
     rootDataManager.register(mail, signature, activationCode);
   }
 

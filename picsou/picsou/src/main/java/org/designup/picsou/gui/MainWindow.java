@@ -57,6 +57,7 @@ public class MainWindow implements WindowManager {
   // on a des concurrent modification
   private boolean initDone = false;
   private List<ServerAccess.UserInfo> localUsers;
+  private LicenseCheckerThread licenseCheckerThread;
 
   public MainWindow(PicsouApplication picsouApplication, String serverAddress,
                     String prevaylerPath, boolean dataInMemory, Directory directory) throws Exception {
@@ -96,6 +97,15 @@ public class MainWindow implements WindowManager {
   }
 
   public void shutdown() {
+    try {
+      licenseCheckerThread.join(2000);
+//      if (licenseCheckerThread.isAlive()){
+//        Utils.dumpStack();
+//      }
+    }
+    catch (InterruptedException e) {
+      e.printStackTrace();
+    }
     thread.run();
   }
 
@@ -133,7 +143,7 @@ public class MainWindow implements WindowManager {
       if (SlaValidationDialog.termsAccepted(null, directory)) {
         login(LoginPanel.AUTOLOG_USER, LoginPanel.AUTOLOG_USER.toCharArray(), true, false, true);
       }
-      else{
+      else {
         setPanel(loginPanel.preparePanelForShow(localUsers));
       }
     }
@@ -142,7 +152,7 @@ public class MainWindow implements WindowManager {
     }
     GuiUtils.setSizeWithinScreen(frame, 1100, 800);
     GuiUtils.showCentered(frame);
-    LicenseCheckerThread.launch(directory, picsouInit.getRepository());
+    licenseCheckerThread = LicenseCheckerThread.launch(directory, picsouInit.getRepository());
     synchronized (this) {
       initDone = true;
       notify();
@@ -268,7 +278,6 @@ public class MainWindow implements WindowManager {
     }
 
     public void displayErrorText(String message) {
-      System.out.println("MainWindow$AutoLoginFeedback.displayErrorText " + message);
       setPanel(loginPanel.preparePanelForShow(localUsers));
       super.displayErrorText(message);
     }
@@ -320,6 +329,7 @@ public class MainWindow implements WindowManager {
               preLoadData.load();
             }
             catch (Exception e) {
+              e.printStackTrace();
               DataCheckerAction action = new DataCheckerAction(picsouInit.getRepository(), picsouInit.getDirectory());
               action.actionPerformed(null);
             }
@@ -357,7 +367,6 @@ public class MainWindow implements WindowManager {
         });
       }
       catch (final InvalidState e) {
-        System.out.println("MainWindow$LoginFunctor.run " + e.getMessage());
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
             feedbackLoadingData.displayErrorText(e.getMessage());

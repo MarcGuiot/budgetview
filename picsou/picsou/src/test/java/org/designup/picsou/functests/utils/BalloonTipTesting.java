@@ -69,7 +69,7 @@ public class BalloonTipTesting {
   }
 
   public static void checkNoBalloonTipVisible(Container panel) {
-    ComponentFinder finder = new ComponentFinder(panel);
+    ComponentFinder finder = new ComponentFinder(panel, new Panel(panel));
     final Component[] actual = finder.getComponents(and(fromClass(BalloonTip.class),
                                                         visible(true)));
     if (actual.length > 0) {

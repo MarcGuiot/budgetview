@@ -45,7 +45,6 @@ public class LicenseTest extends LicenseTestCase {
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "true");
     if (window != null) {
       exit();
-      window = null;
     }
     picsouApplication.shutdown();
     picsouApplication = null;
@@ -433,7 +432,7 @@ public class LicenseTest extends LicenseTestCase {
       assertFalse(window.getTextBox("licenseMessage").isVisible());
     }
     else {
-      assertFalse(window.getTextBox("licenseMessage").isVisible());
+      assertTrue(window.getTextBox("licenseMessage").isVisible());
     }
   }
 
@@ -460,7 +459,7 @@ public class LicenseTest extends LicenseTestCase {
     checkValidLicense(anonymous);
     exit();
   }
-
+  
   private String loggingAndRegisterFirstPicsou() throws InterruptedException {
     DbChecker dbChecker = new DbChecker();
     String repoId = dbChecker.checkRepoIdIsUpdated(1L, null);
@@ -575,6 +574,8 @@ public class LicenseTest extends LicenseTestCase {
 
   private void exit() {
     new OperationChecker(window).exit();
+    assertFalse(window.isVisible());
+    window = null;
   }
 
 

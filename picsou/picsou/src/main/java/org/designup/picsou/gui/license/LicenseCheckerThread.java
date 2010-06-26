@@ -7,15 +7,17 @@ import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.model.User;
 
 import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
 
 public class LicenseCheckerThread extends Thread {
   private Directory directory;
   private GlobRepository repository;
 
-  public static void launch(Directory directory, GlobRepository repository) {
+  public static LicenseCheckerThread launch(Directory directory, GlobRepository repository) {
     LicenseCheckerThread thread = new LicenseCheckerThread(directory, repository);
     thread.setDaemon(true);
     thread.start();
+    return thread;
   }
 
   public LicenseCheckerThread(Directory directory, GlobRepository repository) {
@@ -25,17 +27,25 @@ public class LicenseCheckerThread extends Thread {
 
   public void run() {
     ConfigService.waitEndOfConfigRequest(directory);
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        repository.startChangeSet();
-        try {
-          ConfigService.check(directory, repository);
-          repository.update(User.KEY, User.CONNECTED, true);
+    try {
+      SwingUtilities.invokeAndWait(new Runnable() {
+        public void run() {
+          repository.startChangeSet();
+          try {
+            ConfigService.check(directory, repository);
+            repository.update(User.KEY, User.CONNECTED, true);
+          }
+          finally {
+            repository.completeChangeSet();
+          }
         }
-        finally {
-          repository.completeChangeSet();
-        }
-      }
-    });
+      });
+    }
+    catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    catch (InvocationTargetException e) {
+      e.printStackTrace();
+    }
   }
 }
