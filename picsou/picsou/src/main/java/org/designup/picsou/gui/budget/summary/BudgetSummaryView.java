@@ -1,24 +1,23 @@
 package org.designup.picsou.gui.budget.summary;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.signpost.guides.EndOfMonthPositionSignpost;
-import org.designup.picsou.gui.signpost.Signpost;
+import org.designup.picsou.gui.accounts.AccountViewPanel;
 import org.designup.picsou.gui.budget.BalanceDialog;
 import org.designup.picsou.gui.budget.PositionDialog;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
+import org.designup.picsou.gui.signpost.Signpost;
+import org.designup.picsou.gui.signpost.guides.EndOfMonthPositionSignpost;
 import org.designup.picsou.gui.utils.AmountColors;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
-import org.globsframework.gui.splits.components.HyperlinkButtonUI;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
@@ -66,9 +65,13 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budget/budgetSummaryView.splits",
                                                       repository, directory);
 
+    AccountViewPanel.registerReferencePositionLabels(builder, Account.MAIN_SUMMARY_ACCOUNT_ID,
+                                                     "lastPositionLabel", "lastPositionTitle",
+                                                     "budgetSummaryView.position.title");
+
+    builder.add("nextPositionLabel", estimatedPositionButton);
+    builder.add("nextPositionTitle", estimatedPositionTitle);
     builder.add("balanceLabel", balanceButton);
-    builder.add("positionLabel", estimatedPositionButton);
-    builder.add("positionTitle", estimatedPositionTitle);
     uncategorizedButtonNode = builder.add("uncategorized", uncategorizedButton);
     builder.add("multiSelectionLabel", multiSelectionLabel);
 
@@ -161,18 +164,19 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
     Integer lastImportDate = repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH);
     if (lastSelectedMonthId >= lastImportDate) {
-      estimatedPositionTitle.setText(getEstimatedPositionTitle(lastSelectedMonthId));
+      String title = getEstimatedPositionTitle(lastSelectedMonthId, "budgetSummaryView.estimated.title");
+      estimatedPositionTitle.setText(title);
       estimatedPositionButton.setToolTipText(Lang.get("budgetSummaryView.estimated.tooltip"));
     }
     else {
-      estimatedPositionTitle.setText(Lang.get("budgetSummaryView.real.title"));
+      String title = getEstimatedPositionTitle(lastSelectedMonthId, "budgetSummaryView.real.title");
+      estimatedPositionTitle.setText(title);
       estimatedPositionButton.setToolTipText(null);
     }
   }
 
-  public static String getEstimatedPositionTitle(Integer monthId) {
-    return Lang.get("budgetSummaryView.estimated.title",
-                    Month.getShortMonthLabelWithYear(monthId).toLowerCase());
+  public static String getEstimatedPositionTitle(Integer monthId, String key) {
+    return Lang.get(key, Month.getShortMonthLabelWithYear(monthId).toLowerCase());
   }
 
   private void setEstimatedPosition(Double amount) {

@@ -21,13 +21,23 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     return this;
   }
 
+  public BudgetSummaryViewChecker checkReferencePosition(double amount) {
+    assertThat(getPanel().getTextBox("lastPositionLabel").textEquals(toString(amount, false)));
+    return this;
+  }
+
+  public BudgetSummaryViewChecker checkReferencePosition(String title, double amount) {
+    assertThat(getPanel().getTextBox("lastPositionTitle").textEquals(title));
+    return checkReferencePosition(amount);
+  }
+
   public BudgetSummaryViewChecker checkEndPosition(double amount) {
-    assertThat(getPanel().getButton("positionLabel").textEquals(toString(amount, false)));
+    assertThat(getPanel().getButton("nextPositionLabel").textEquals(toString(amount, false)));
     return this;
   }
 
   public BudgetSummaryViewChecker checkEndPosition(String title, double amount) {
-    assertThat(getPanel().getTextBox("positionTitle").textEquals(title));
+    assertThat(getPanel().getTextBox("nextPositionTitle").textEquals(title));
     return checkEndPosition(amount);
   }
 

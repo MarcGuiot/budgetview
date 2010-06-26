@@ -9,12 +9,11 @@
         underline="true" useNormalColorWhenDisabled="true" autoHideEnabled="false"
         lineColor="block.total.underline"/>
 
-    <style selector="button#balanceLabel" font="-,bold,14" fill="none" anchor="center"/>
+    <style selector="button.totalAmount" ui="underlinedButtonUI" foreground=""/>
 
-    <style selector="button.totalAmount" ui="underlinedButtonUI" foreground="" weightX="10"/>
+    <style selector="button#balanceLabel" fill="none" anchor="center"/>
 
-    <style selector="button#uncategorized" ui="underlinedButtonUI" font="-,bold,14"
-           weightX="10" fill="none"  horizontalTextPosition="left" iconTextGap="2"/>
+    <style selector="button#uncategorized" ui="underlinedButtonUI" iconTextGap="2"/>
 
     <style id="uncategorizedEnabled" selector="x"
            icon="arrow_right_red.png" rolloverIcon="arrow_right_blue_full.png"/>
@@ -30,21 +29,44 @@
     <style selector="htmlEditorPane#helpMessage"
            border="empty(5,0,0,0)" foreground="budgetSummary.help.message"/>
 
+    <style selector=".totalAmountTitle" anchor="center" fill="none"/>
+    <style selector=".totalAmount" anchor="center" fill="none"/>
+
+    <style selector=".subRow .totalAmountTitle"
+           marginRight="10" weightX="1"/>
+    <style selector=".subRow button.totalAmount"
+           font="-,bold,12"  horizontalTextPosition="left"
+           weightX="1" fill="none" anchor="left"/>
+
   </styles>
 
   <column border="empty(10,10,10,10)">
 
-    <grid>
-      <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle" gridPos="(1,0)"/>
-      <button ref="balanceLabel" styleClass="totalAmount" gridPos="(1,1)"
-              tooltipText="$budgetSummaryView.balance.tooltip"/>
+    <row>
+      <filler fill="horizontal"/>
+      <column>
+        <label ref="lastPositionTitle" styleClass="totalAmountTitle"/>
+        <label ref="lastPositionLabel" styleClass="totalAmount"/>
+      </column>
+      <filler fill="horizontal"/>
+      <column>
+        <label ref="nextPositionTitle" styleClass="totalAmountTitle"/>
+        <button ref="nextPositionLabel" styleClass="totalAmount"/>
+      </column>
+      <filler fill="horizontal"/>
+    </row>
 
-      <label ref="positionTitle" styleClass="totalAmountTitle" gridPos="(2,0)"/>
-      <button ref="positionLabel" styleClass="totalAmount" gridPos="(2,1)"/>
-
-      <label text="$budgetSummaryView.uncategorized" styleClass="totalAmountTitle" gridPos="(3,0)"/>
-      <button ref="uncategorized" styleClass="uncategorized" gridPos="(3,1)"/>
-    </grid>
+    <column border="matte(1,0,0,0,block.header.separator)" marginTop="4">
+      <row marginTop="4" styleClass="subRow">
+        <filler fill="horizontal"/>
+        <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle"/>
+        <button ref="balanceLabel" styleClass="totalAmount" tooltipText="$budgetSummaryView.balance.tooltip"/>
+        <filler fill="horizontal"/>
+        <label text="$budgetSummaryView.uncategorized" styleClass="totalAmountTitle"/>
+        <button ref="uncategorized" styleClass="uncategorized"/>
+        <filler fill="horizontal"/>
+      </row>
+    </column>
 
     <label ref="multiSelectionLabel" styleClass="message"/>
 
