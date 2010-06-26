@@ -47,7 +47,7 @@ public class Panel extends AbstractUIComponent {
 
   public Panel(Container container) {
     this.container = container;
-    this.finder = new ComponentFinder(container);
+    this.finder = new ComponentFinder(container, this);
   }
 
   public String getDescriptionTypeName() {

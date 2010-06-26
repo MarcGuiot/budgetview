@@ -53,7 +53,8 @@ public class WindowInterceptorForModalDialogsTest extends WindowInterceptorTestC
       throw new AssertionFailureNotDetectedError();
     }
     catch (Exception e) {
-      assertEquals("Window 'aFrame' is non-modal, it must be intercepted with WindowInterceptor.run(Trigger)",
+      assertEquals("Window 'aFrame' is non-modal, it must be intercepted with WindowInterceptor.run(Trigger)\n" +
+                   "<window title=\"aFrame\"/>",
                    e.getCause().getMessage());
     }
   }
@@ -70,7 +71,7 @@ public class WindowInterceptorForModalDialogsTest extends WindowInterceptorTestC
       throw new AssertionFailureNotDetectedError();
     }
     catch (AssertionFailedError e) {
-      assertEquals("Window 'aDialog' is non-modal, it must be intercepted with WindowInterceptor.run(Trigger)",
+      assertEquals("Window 'aDialog' is non-modal, it must be intercepted with WindowInterceptor.run(Trigger)\n<window title=\"aDialog\"/>",
                    e.getMessage());
     }
   }

@@ -7,6 +7,14 @@
 
     <release version="???">
       <action dev="mguiot" type="add">
+        Add Window description in trace of ModelInterceptionCheckerHandler
+      </action>
+
+      <action dev="mguiot" type="add">
+        Call doClick on menu in Swing thread
+      </action>
+
+      <action dev="mguiot" type="add">
         Prevent lose of stackstrace.
       </action>
 

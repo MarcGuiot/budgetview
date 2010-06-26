@@ -4,6 +4,7 @@ import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.testlibrairies.AssertAdapter;
 import org.uispec4j.finder.StringMatcher;
 import org.uispec4j.utils.ArrayUtils;
+import org.uispec4j.utils.TriggerRunner;
 import org.uispec4j.xml.XmlAssert;
 import org.uispec4j.xml.XmlWriter;
 
@@ -164,7 +165,12 @@ public class MenuItem extends AbstractUIComponent {
     public void click() {
       AssertAdapter.assertTrue("The menu item is not enabled, it cannot be activated",
                                 menuItem.isEnabled());
-      AbstractButton.doClick(menuItem);
+      if (SwingUtilities.isEventDispatchThread()) {
+        AbstractButton.doClick(menuItem);
+      }
+      else {
+        TriggerRunner.runInSwingThread(triggerClick());
+      }
     }
 
     public MenuWrapper[] getSubElements(boolean skipSeparators) {

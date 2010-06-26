@@ -149,7 +149,7 @@ public class WindowInterceptorForNonModalWindowsTest extends WindowInterceptorTe
       throw new AssertionFailureNotDetectedError();
     }
     catch (AssertionFailedError e) {
-      assertEquals("Window 'aDialog' is modal, it must be intercepted with a WindowHandler",
+      assertEquals("Window 'aDialog' is modal, it must be intercepted with a WindowHandler \n<window title=\"aDialog\"/>",
                    e.getMessage());
     }
   }

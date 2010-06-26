@@ -94,5 +94,7 @@ public class ExceptionContainer {
   public void reset() {
     exception = null;
     error = null;
+    throwable = null;
+    registered.clear();
   }
 }

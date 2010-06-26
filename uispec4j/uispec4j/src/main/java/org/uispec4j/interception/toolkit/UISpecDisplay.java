@@ -80,7 +80,7 @@ public class UISpecDisplay {
     }
   }
 
-  public void rethrowIfNeeded() {
+  synchronized public void rethrowIfNeeded() {
     exceptionContainer.rethrowIfNeeded();
   }
 
@@ -137,7 +137,7 @@ public class UISpecDisplay {
     return currentPopup;
   }
 
-  public void store(Throwable throwable) {
+  synchronized public void store(Throwable throwable) {
     exceptionContainer.set(throwable);
   }
 

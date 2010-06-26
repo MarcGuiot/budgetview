@@ -1,8 +1,6 @@
 package org.uispec4j.finder;
 
-import org.uispec4j.ComponentAmbiguityException;
-import org.uispec4j.ItemNotFoundException;
-import org.uispec4j.UIComponent;
+import org.uispec4j.*;
 import org.uispec4j.utils.UIComponentFactory;
 
 import javax.swing.*;
@@ -16,9 +14,11 @@ import java.util.List;
  */
 public class ComponentFinder {
   private Container container;
+  private org.uispec4j.Panel panel;
 
-  public ComponentFinder(Container container) {
+  public ComponentFinder(Container container, org.uispec4j.Panel panel) {
     this.container = container;
+    this.panel = panel;
   }
 
   public Component getComponent(ComponentMatcher matcher) throws ComponentAmbiguityException, ItemNotFoundException {
@@ -46,7 +46,7 @@ public class ComponentFinder {
       Collections.sort(names);
       String message =
         Messages.computeNotFoundMessage(componentType, name, names);
-      throw new ItemNotFoundException(message);
+      throw new ItemNotFoundException(message + " : " + panel.getDescription());
     }
   }
 
@@ -69,7 +69,8 @@ public class ComponentFinder {
   private Component findComponent(ComponentMatcher[] matchers, String type, String name, Class[] swingClasses) throws ComponentAmbiguityException {
     Component[] foundComponents = getComponents(matchers, swingClasses);
     if (foundComponents.length > 1) {
-      throw new ComponentAmbiguityException(Messages.computeAmbiguityMessage(foundComponents, type, name));
+      throw new ComponentAmbiguityException(Messages.computeAmbiguityMessage(foundComponents, type, name)
+                                            + " : " + panel.getDescription());
     }
     return (foundComponents.length == 0) ? null : foundComponents[0];
   }
@@ -77,7 +78,8 @@ public class ComponentFinder {
   private Component getComponent(ComponentMatcher[] matchers, String type, String name, Class[] swingClasses) throws ItemNotFoundException, ComponentAmbiguityException {
     Component foundComponent = findComponent(matchers, type, name, swingClasses);
     if (foundComponent == null) {
-      throw new ItemNotFoundException(Messages.computeNotFoundMessage(type, name, null));
+      throw new ItemNotFoundException(Messages.computeNotFoundMessage(type, name, null)
+                                      + " : " + panel.getDescription());
     }
     return foundComponent;
   }

@@ -1,6 +1,7 @@
 package org.uispec4j.interception.handlers;
 
 import org.uispec4j.Window;
+import org.uispec4j.interception.toolkit.UISpecDisplay;
 import org.uispec4j.assertion.testlibrairies.AssertAdapter;
 
 public class ShownInterceptionDetectionHandler extends AbstractInterceptionHandlerDecorator {
@@ -35,6 +36,7 @@ public class ShownInterceptionDetectionHandler extends AbstractInterceptionHandl
         }
       }
     }
+    UISpecDisplay.instance().rethrowIfNeeded();
     if (!windowWasShown) {
       AssertAdapter.fail(NO_WINDOW_WAS_SHOWN_ERROR_MESSAGE);
     }

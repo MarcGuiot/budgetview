@@ -14,12 +14,14 @@ public class ModalInterceptionCheckerHandler extends AbstractInterceptionHandler
   public void process(Window window) {
     if (!shouldBeModal) {
       if (window.isModal().isTrue()) {
-        AssertAdapter.fail("Window '" + window.getTitle() + "' is modal, it must be intercepted with a WindowHandler");
+        AssertAdapter.fail("Window '" + window.getTitle() + "' is modal, it must be intercepted with a WindowHandler \n"
+                           + window.getDescription());
       }
     }
     else {
       if (!window.isModal().isTrue()) {
-        AssertAdapter.fail("Window '" + window.getTitle() + "' is non-modal, it must be intercepted with WindowInterceptor.run(Trigger)");
+        AssertAdapter.fail("Window '" + window.getTitle() + "' is non-modal, it must be intercepted with WindowInterceptor.run(Trigger)\n"
+                           + window.getDescription());
       }
     }
     super.process(window);
