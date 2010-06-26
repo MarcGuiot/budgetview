@@ -330,12 +330,22 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"30/06/2008", "", "Carouf", -29.90}
     });
 
-    categorization.showRecentUncategorizedTransactionsOnly();
+    categorization.showUncategorizedTransactionsForSelectedMonths();
+    categorization.checkTable(new Object[][]{
+      {"30/06/2008", "", "Carouf", -29.90},
+    });
+
+    timeline.selectMonths("2008/05", "2008/06");
     categorization.checkTable(new Object[][]{
       {"15/05/2008", "", "Auchan", -40.00},
       {"30/06/2008", "", "Carouf", -29.90},
     });
 
+    timeline.selectMonths("2008/06");
+    categorization.checkTable(new Object[][]{
+      {"30/06/2008", "", "Carouf", -29.90},
+    });
+    
     categorization.showLastImportedFileOnly();
     categorization.checkTable(new Object[][]{
       {"15/05/2008", "", "Auchan", -40.00},
@@ -354,18 +364,20 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"30/06/2008", "", "Carouf", -29.90}
     });
 
-    categorization.showRecentUncategorizedTransactionsOnly();
+    categorization.showUncategorizedTransactionsForSelectedMonths();
     categorization.checkTable(new Object[][]{
-      {"15/05/2008", "", "Auchan", -40.00},
       {"30/06/2008", "", "Carouf", -29.90}
     });
 
     categorization.setVariable("Carouf", "Food");
-    categorization.checkTable(new Object[][]{
-      {"15/05/2008", "", "Auchan", -40.00}
-    });
+    categorization.checkTableIsEmpty();
 
     categorization.showAllTransactions();
+    categorization.checkTable(new Object[][]{
+      {"15/05/2008", "", "Auchan", -40.00},
+      {"30/06/2008", "Food", "Carouf", -29.90},
+      {"17/03/2008", "Food", "MacDo", -12.00}
+    });
   }
 
   public void testSort() throws Exception {

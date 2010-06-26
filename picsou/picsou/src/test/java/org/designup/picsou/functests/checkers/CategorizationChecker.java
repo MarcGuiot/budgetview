@@ -656,6 +656,10 @@ public class CategorizationChecker extends GuiChecker {
     checkTransctionFilterMode(TransactionFilteringMode.UNCATEGORIZED);
   }
 
+  public void checkShowsUncategorizedTransactionsForSelectedMonths() {
+    checkTransctionFilterMode(TransactionFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
+  }
+
   private void checkTransctionFilterMode(final TransactionFilteringMode mode) {
     assertThat(getPanel().getComboBox("transactionFilterCombo").selectionEquals(mode.toString()));
   }
@@ -669,8 +673,8 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
-  public CategorizationChecker showRecentUncategorizedTransactionsOnly() {
-    selectTransactionFilterMode(TransactionFilteringMode.UNCATEGORIZED_LAST_THREE_MONTHS);
+  public CategorizationChecker showUncategorizedTransactionsForSelectedMonths() {
+    selectTransactionFilterMode(TransactionFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
     return this;
   }
 

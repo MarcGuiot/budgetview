@@ -242,7 +242,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
   private class GotoUncategorizedAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
-      directory.get(NavigationService.class).gotoUncategorized();
+      directory.get(NavigationService.class).gotoUncategorizedForSelectedMonths();
     }
   }
 }

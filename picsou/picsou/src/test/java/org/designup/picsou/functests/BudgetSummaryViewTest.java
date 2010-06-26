@@ -33,7 +33,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .gotoUncategorized();
 
     views.checkCategorizationSelected();
-    categorization.checkShowsUncategorizedTransactionsOnly();
+    categorization.checkShowsUncategorizedTransactionsForSelectedMonths();
     categorization.checkNoSelectedTableRows();
     categorization.selectTransactions("WorldCo").selectIncome().createSeries("Salary");
     categorization.selectTransactions("Auchan").selectVariable().createSeries("Groceries");

@@ -49,10 +49,6 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     getPanel().getButton("uncategorized").click();
   }
 
-  public BudgetWizardChecker getHelpWizard() {
-    return new BudgetWizardChecker(getPanel());
-  }
-
   public BudgetSummaryViewChecker checkMultiSelection(int count) {
     TextBox label = getPanel().getTextBox("multiSelectionLabel");
     assertThat(label.isVisible());

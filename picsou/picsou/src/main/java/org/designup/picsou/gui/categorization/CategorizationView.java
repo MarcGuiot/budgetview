@@ -451,8 +451,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
     doShow(transactions);
   }
 
-  public void showUncategorized() {
-    setFilteringMode(TransactionFilteringMode.UNCATEGORIZED);
+  public void showUncategorizedForSelectedMonths() {
+    setFilteringMode(TransactionFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
     filterSet.clear();
     updateTableFilter();
     transactionTable.clearSelection();
