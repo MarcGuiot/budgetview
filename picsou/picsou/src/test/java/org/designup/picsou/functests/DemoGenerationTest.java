@@ -6,11 +6,13 @@ import org.designup.picsou.model.Month;
 import org.designup.picsou.gui.TimeService;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Locale;
 
 public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   private static final String PREVAYLER_DIR = "tmp/demo/";
   private static final String OFX_PATH = "tmp/demo.ofx";
+  private static final String OFX_SAVINGS_PATH = "tmp/demo_savings.ofx";
 
   private int thirdMonth;
   private int secondMonth;
@@ -19,7 +21,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
     Locale.setDefault(Locale.FRENCH);
 
-    thirdMonth = Month.previous(TimeService.getCurrentMonth());
+    thirdMonth = Month.getMonthId(new Date());
     secondMonth = Month.previous(thirdMonth);
     firstMonth = Month.previous(secondMonth);
 
@@ -143,6 +145,14 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     operations.importOfxFile(OFX_PATH);
     System.out.println("OFX File saved in: " + new File(OFX_PATH).getAbsolutePath());
+
+    OfxBuilder.init(OFX_SAVINGS_PATH)
+      .addBankAccount(14559, 22500, "000123321", 1000, third(20))
+      .addTransaction(first(5), 200, "VIRT 1")
+      .addTransaction(second(3), 200, "VIRT 2")
+      .addTransaction(third(20), 200, "VIRT 3")
+      .save();
+    System.out.println("OFX Savings File saved in: " + new File(OFX_SAVINGS_PATH).getAbsolutePath());
 
     views.selectHome();
     mainAccounts.edit("Account n. 00000123456")

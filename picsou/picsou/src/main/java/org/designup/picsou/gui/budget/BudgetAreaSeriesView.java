@@ -3,6 +3,7 @@ package org.designup.picsou.gui.budget;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.tips.DetailsTipFactory;
 import org.designup.picsou.gui.signpost.guides.BudgetSignpostService;
+import org.designup.picsou.gui.signpost.guides.SeriesGaugeSignpost;
 import org.designup.picsou.gui.signpost.guides.SeriesPeriodicitySignpost;
 import org.designup.picsou.gui.signpost.guides.SeriesAmountSignpost;
 import org.designup.picsou.gui.signpost.Signpost;
@@ -131,7 +132,7 @@ public class BudgetAreaSeriesView extends View {
     JLabel plannedLabel = builder.add("totalPlannedAmount", new JLabel()).getComponent();
 
     Gauge gauge = BudgetAreaGaugeFactory.createGauge(budgetArea);
-    gauge.enableDetailsTips(new DetailsTipFactory(directory));
+    gauge.enableDetailsTips(new DetailsTipFactory(repository, directory));
     builder.add("totalGauge", gauge);
 
     BudgetAreaHeaderUpdater headerUpdater =
@@ -219,9 +220,13 @@ public class BudgetAreaSeriesView extends View {
       }
 
       if (budgetSignpostService.isAmountSeries(series.getKey())) {
-        Signpost signpost = new SeriesAmountSignpost(repository, directory);
-        cellBuilder.addDisposeListener(signpost);
-        signpost.attach(amountButton);
+        Signpost gaugeSignpost = new SeriesGaugeSignpost(repository, directory);
+        cellBuilder.addDisposeListener(gaugeSignpost);
+        gaugeSignpost.attach(gaugeView.getComponent());
+
+        Signpost amountSignpost = new SeriesAmountSignpost(repository, directory);
+        cellBuilder.addDisposeListener(amountSignpost);
+        amountSignpost.attach(amountButton);
       }
 
       cellBuilder.addDisposeListener(gaugeView);

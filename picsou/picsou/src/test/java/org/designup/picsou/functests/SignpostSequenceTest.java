@@ -59,9 +59,16 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     categorization.setVariable("auchan", "Groceries");
     categorization.checkCompleteProgressMessageShown();
 
-    // === Series periodicity ===
+    // === Gauge details ===
 
     views.selectBudget();
+    budgetView.variable.checkGaugeSignpostDisplayed(
+      "Groceries",
+      "Click on the gauges for a description");
+    budgetView.variable.clickGaugeAndCloseTip("Groceries");
+
+    // === Series periodicity ===
+
     budgetView.recurring.checkNameSignpostDisplayed(
       "Electricity",
       "Click on the envelope names to change their periodicity " +

@@ -6,6 +6,7 @@ import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.components.tips.DetailsTipFactory;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -161,7 +162,7 @@ public class GaugeTest extends TestCase {
   private DetailsTipFactory createDetailsTipFactory() {
     Directory directory = new DefaultDirectory();
     directory.add(new ColorService());
-    return new DetailsTipFactory(directory);
+    return new DetailsTipFactory(GlobRepositoryBuilder.createEmpty(), directory);
   }
 
   private GaugeChecker init() {

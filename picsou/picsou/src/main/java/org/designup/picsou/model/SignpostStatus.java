@@ -1,10 +1,10 @@
 package org.designup.picsou.model;
 
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
+import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.fields.BooleanField;
-import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
@@ -32,6 +32,7 @@ public class SignpostStatus {
   public static BooleanField CATEGORIZATION_COMPLETION_SHOWN;
   public static BooleanField SERIES_PERIODICITY_SHOWN;
   public static BooleanField SERIES_PERIODICITY_CLOSED;
+  public static BooleanField SERIES_GAUGE_SHOWN;
   public static BooleanField SERIES_AMOUNT_SHOWN;
   public static BooleanField SERIES_AMOUNT_CLOSED;
   public static BooleanField END_OF_MONTH_POSITION_SHOWN;
@@ -53,15 +54,11 @@ public class SignpostStatus {
 
   public static void setAllCompleted(GlobRepository repository) {
     repository.findOrCreate(KEY);
-    repository.update(KEY, IMPORT_SHOWN, true);
-    repository.update(KEY, CATEGORIZATION_SELECTION_SHOWN, true);
-    repository.update(KEY, CATEGORIZATION_AREA_SHOWN, true);
-    repository.update(KEY, CATEGORIZATION_COMPLETION_SHOWN, true);
-    repository.update(KEY, SERIES_PERIODICITY_SHOWN, true);
-    repository.update(KEY, SERIES_PERIODICITY_CLOSED, true);
-    repository.update(KEY, SERIES_AMOUNT_SHOWN, true);
-    repository.update(KEY, SERIES_AMOUNT_CLOSED, true);
-    repository.update(KEY, END_OF_MONTH_POSITION_SHOWN, true);
+    for (Field field : TYPE.getFields()) {
+      if (field instanceof BooleanField) {
+        repository.update(KEY, field, Boolean.TRUE);
+      }
+    }
   }
 
   public static class Serializer implements PicsouGlobSerializer {
@@ -76,6 +73,7 @@ public class SignpostStatus {
       outputStream.writeBoolean(values.get(CATEGORIZATION_COMPLETION_SHOWN));
       outputStream.writeBoolean(values.get(SERIES_PERIODICITY_SHOWN));
       outputStream.writeBoolean(values.get(SERIES_PERIODICITY_CLOSED));
+      outputStream.writeBoolean(values.get(SERIES_GAUGE_SHOWN));
       outputStream.writeBoolean(values.get(SERIES_AMOUNT_SHOWN));
       outputStream.writeBoolean(values.get(SERIES_AMOUNT_CLOSED));
       outputStream.writeBoolean(values.get(END_OF_MONTH_POSITION_SHOWN));
@@ -101,6 +99,7 @@ public class SignpostStatus {
       fieldSetter.set(CATEGORIZATION_COMPLETION_SHOWN, input.readBoolean());
       fieldSetter.set(SERIES_PERIODICITY_SHOWN, input.readBoolean());
       fieldSetter.set(SERIES_PERIODICITY_CLOSED, input.readBoolean());
+      fieldSetter.set(SERIES_GAUGE_SHOWN, input.readBoolean());
       fieldSetter.set(SERIES_AMOUNT_SHOWN, input.readBoolean());
       fieldSetter.set(SERIES_AMOUNT_CLOSED, input.readBoolean());
       fieldSetter.set(END_OF_MONTH_POSITION_SHOWN, input.readBoolean());

@@ -1,6 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import net.java.balloontip.BalloonTip;
+import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.BudgetArea;
@@ -271,6 +273,13 @@ public class BudgetViewChecker extends GuiChecker {
       return this;
     }
 
+    public void clickGaugeAndCloseTip(String seriesName) {
+      GaugeChecker gauge = getGauge(seriesName);
+      gauge.click();
+      BalloonTipTesting.closeTip(window, gauge.getPanel());
+
+    }
+
     public BudgetAreaChecker checkGaugeTooltip(String seriesName, String... tooltipTextFragments) {
       for (String text : tooltipTextFragments) {
         getGauge(seriesName).checkDescriptionContains(text);
@@ -281,6 +290,11 @@ public class BudgetViewChecker extends GuiChecker {
     public BudgetAreaChecker checkNameSignpostDisplayed(String seriesName, String text) {
       Button nameButton = getPanel().getButton(seriesName);
       BudgetViewChecker.this.checkSignpostVisible(window, nameButton, text);
+      return this;
+    }
+
+    public BudgetAreaChecker checkGaugeSignpostDisplayed(String seriesName, String text) {      
+      BudgetViewChecker.this.checkSignpostVisible(window, getGauge(seriesName).getPanel(), text);
       return this;
     }
 

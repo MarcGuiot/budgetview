@@ -3,8 +3,8 @@ package org.designup.picsou.gui.budget;
 import org.designup.picsou.gui.budget.summary.BudgetAreaSummaryComputer;
 import org.designup.picsou.gui.components.TextDisplay;
 import org.designup.picsou.gui.components.charts.Gauge;
+import org.designup.picsou.gui.components.charts.GaugeUpdater;
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.util.Amounts;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -45,11 +45,15 @@ public class BudgetAreaHeaderUpdater extends BudgetAreaSummaryComputer {
       plannedLabel.setForeground(normalAmountColor);
     }
 
-    Amounts.updateGauge(totalAmounts.getFuturePositiveRemaining(), totalAmounts.getFuturePositiveOverrun(), 
-                        totalAmounts.getFutureNegativeRemaining(), totalAmounts.getFutureNegativeOverrun(),
-                        totalAmounts.getPastRemaining(),
-                        totalAmounts.getPastOverrun(), totalAmounts.getGaugeTarget(), totalAmounts.getGaugeActual(),
-                        gauge, budgetArea);
+    GaugeUpdater.updateGauge(totalAmounts.getFuturePositiveRemaining(),
+                             totalAmounts.getFuturePositiveOverrun(),
+                             totalAmounts.getFutureNegativeRemaining(),
+                             totalAmounts.getFutureNegativeOverrun(),
+                             totalAmounts.getPastRemaining(),
+                             totalAmounts.getPastOverrun(),
+                             totalAmounts.getGaugeTarget(),
+                             totalAmounts.getGaugeActual(),
+                             gauge, budgetArea);
 
   }
 }
