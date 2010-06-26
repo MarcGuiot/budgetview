@@ -77,7 +77,7 @@ public class Gui {
         UIManager.setLookAndFeel(new PicsouWindowsLookAndFeel());
       }
       JDialog.setDefaultLookAndFeelDecorated(false);
-      ToolTipManager.sharedInstance().setInitialDelay(500);
+      ToolTipManager.sharedInstance().setInitialDelay(800);
       ToolTipManager.sharedInstance().setDismissDelay(100000);
     }
     catch (Exception e) {

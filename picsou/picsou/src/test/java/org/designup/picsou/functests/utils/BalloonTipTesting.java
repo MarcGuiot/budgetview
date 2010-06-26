@@ -86,4 +86,11 @@ public class BalloonTipTesting {
       Assert.fail(builder.toString());
     }
   }
+
+  public static void closeTip(Panel enclosingWindow,
+                              UIComponent targetUIComponent) {
+    BalloonTip tip = getBalloonTip(enclosingWindow.getAwtComponent(),
+                                   targetUIComponent.getAwtComponent());
+    tip.closeBalloon();
+  }
 }

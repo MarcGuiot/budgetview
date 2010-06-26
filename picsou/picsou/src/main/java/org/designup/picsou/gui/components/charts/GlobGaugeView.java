@@ -2,7 +2,6 @@ package org.designup.picsou.gui.components.charts;
 
 import org.designup.picsou.gui.components.tips.DetailsTipFactory;
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.util.Amounts;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
@@ -65,7 +64,7 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
     selectionService.addListener(this, type);
     currentSelection = selectionService.getSelection(type).filterSelf(matcher, repository).toKeyList();
 
-    gauge.enableDetailsTips(new DetailsTipFactory(directory));
+    gauge.enableDetailsTips(new DetailsTipFactory(repository, directory));
 
     update();
   }
@@ -125,7 +124,7 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
       pastRemaining += getValue(glob, pastRemainingField);
       futureRemaining += getValue(glob, futureRemainingField);
     }
-    Amounts.updateGauge(futureRemaining > 0 ? futureRemaining : 0.0,
+    GaugeUpdater.updateGauge(futureRemaining > 0 ? futureRemaining : 0.0,
                         futureOverrun > 0 ? futureOverrun : 0.0,
                         futureRemaining < 0 ? futureRemaining : 0.0,
                         futureOverrun < 0 ? futureOverrun : 0.0,

@@ -13,10 +13,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.AWTEventListener;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 public class DetailsTip implements Disposable {
 
@@ -66,6 +63,13 @@ public class DetailsTip implements Disposable {
       }
     };
     component.addHierarchyListener(visibilityUpdater);
+    GuiUtils.addShortcut(GuiUtils.getEnclosingFrame(component).getRootPane(),
+                         "ESCAPE",
+                         new AbstractAction() {
+                           public void actionPerformed(ActionEvent e) {
+                             dispose();
+                           }
+                         });
 
     GuiUtils.runInSwingThread(new Runnable() {
       public void run() {
@@ -103,6 +107,8 @@ public class DetailsTip implements Disposable {
     }
     Toolkit.getDefaultToolkit().removeAWTEventListener(mouseListener);
     mouseListener = null;
+    GuiUtils.removeShortcut(GuiUtils.getEnclosingFrame(component).getRootPane(),
+                            "ESCAPE", KeyStroke.getKeyStroke("ESCAPE"));
     component.removeHierarchyListener(visibilityUpdater);
     component = null;
     balloonTip.closeBalloon();

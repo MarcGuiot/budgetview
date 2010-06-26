@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.model.util.Amounts;
+import org.uispec4j.Mouse;
 import org.uispec4j.Panel;
 
 public class GaugeChecker extends GuiChecker {
@@ -15,6 +16,10 @@ public class GaugeChecker extends GuiChecker {
   public GaugeChecker(Gauge gauge) {
     this.gauge = gauge;
     Assert.assertNotNull(gauge);
+  }
+
+  Panel getPanel() {
+    return new Panel(gauge);
   }
 
   public GaugeChecker set(double actualValue, double targetValue) {
@@ -44,11 +49,6 @@ public class GaugeChecker extends GuiChecker {
 
   public GaugeChecker checkEmpty(double percentage) {
     Assert.assertEquals(percentage, gauge.getEmptyPercent(), 0.01);
-    return this;
-  }
-
-  public GaugeChecker checkTooltip(String text) {
-    Assert.assertEquals(text, gauge.getToolTipText());
     return this;
   }
 
@@ -90,5 +90,9 @@ public class GaugeChecker extends GuiChecker {
   public GaugeChecker checkRemaining(double remaining) {
     Assert.assertEquals(remaining, gauge.getRemainder(), 0.01);
     return this;
+  }
+
+  public void click() {
+    Mouse.click(new Panel(gauge));
   }
 }
