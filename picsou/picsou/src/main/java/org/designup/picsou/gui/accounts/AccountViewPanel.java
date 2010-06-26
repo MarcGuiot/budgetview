@@ -81,15 +81,12 @@ public abstract class AccountViewPanel {
 
     header = builder.add("header", new JPanel()).getComponent();
 
+    registerReferencePositionLabels(builder, summaryId,
+                                      "referencePosition",
+                                      "referencePositionDate",
+                                      "accountView.total.date");
+
     Key summaryAccount = Key.create(Account.TYPE, summaryId);
-
-    builder.addLabel("referencePosition", Account.POSITION)
-      .setAutoHideIfEmpty(true)
-      .forceSelection(summaryAccount);
-    builder.addLabel("referencePositionDate", Account.TYPE, new ReferenceAmountStringifier())
-      .setAutoHideIfEmpty(true)
-      .forceSelection(summaryAccount);
-
     AccountPositionLabels positionLabels = createPositionLabels(summaryAccount);
     builder.add("estimatedPosition",
                 positionLabels.getEstimatedAccountPositionLabel(true));
@@ -110,6 +107,20 @@ public abstract class AccountViewPanel {
     builder.add("accountPositionThreshold", action);
 
     panel = builder.load();
+  }
+
+  public static void registerReferencePositionLabels(GlobsPanelBuilder builder, 
+                                                    Integer summaryId,
+                                                    String positionLabelName,
+                                                    String titleLabelName,
+                                                    String titleLabelKey) {
+    Key summaryAccount = Key.create(Account.TYPE, summaryId);
+    builder.addLabel(positionLabelName, Account.POSITION)
+      .setAutoHideIfEmpty(true)
+      .forceSelection(summaryAccount);
+    builder.addLabel(titleLabelName, Account.TYPE, new ReferenceAmountStringifier(titleLabelKey))
+      .setAutoHideIfEmpty(true)
+      .forceSelection(summaryAccount);
   }
 
   protected abstract AccountType getAccountType();
@@ -195,12 +206,17 @@ public abstract class AccountViewPanel {
   }
 
   private static class ReferenceAmountStringifier implements GlobListStringifier {
+    private String key;
+
+    private ReferenceAmountStringifier(String key) {
+      this.key = key;
+    }
 
     public String toString(GlobList list, GlobRepository repository) {
       if (list.isEmpty() || list.get(0).get(Account.POSITION_DATE) == null) {
         return "";
       }
-      return Lang.get("accountView.total.date", Formatting.toString(list.get(0).get(Account.POSITION_DATE)));
+      return Lang.get(key, Formatting.toString(list.get(0).get(Account.POSITION_DATE)));
     }
   }
 

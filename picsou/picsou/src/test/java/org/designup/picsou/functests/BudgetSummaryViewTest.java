@@ -43,7 +43,8 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary()
       .checkMultiSelectionNotShown()
       .checkMonthBalance(+750.00)
-      .checkEndPosition("End of jul 08 position", 2300.00)
+      .checkReferencePosition("Position on 05/07/2008", 1500.00)
+      .checkEndPosition("Estimated end of jul 08 position", 2300.00)
       .checkUncategorized(50.00);
 
     timeline.selectAll();
@@ -51,14 +52,14 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary()
       .checkMultiSelection(4)
       .checkMonthBalance(+3150.00)
-      .checkEndPosition("End of sep 08 position", 3900.00)
+      .checkEndPosition("Estimated end of sep 08 position", 3900.00)
       .checkUncategorized(50.00);
 
     timeline.selectMonth("2008/06");
     budgetView.getSummary()
       .checkMultiSelectionNotShown()
       .checkMonthBalance(+800.00)
-      .checkEndPosition("Position", 1550.00)
+      .checkEndPosition("Position on june 08", 1550.00)
       .checkUncategorizedNotShown();
 
     views.selectCategorization();
@@ -70,7 +71,8 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary()
       .checkMultiSelectionNotShown()
       .checkMonthBalance(+750.00)
-      .checkEndPosition("End of jul 08 position", 2300.00)
+      .checkReferencePosition("Position on 05/07/2008", 1500.00)
+      .checkEndPosition("Estimated end of jul 08 position", 2300.00)
       .checkUncategorizedNotShown();
 
     timeline.selectMonth("2008/09");
@@ -78,7 +80,8 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary()
       .checkMultiSelectionNotShown()
       .checkMonthBalance(+750.00)
-      .checkEndPosition("End of sep 08 position", 3800.00)
+      .checkReferencePosition("Position on 05/07/2008", 1500.00)
+      .checkEndPosition("Estimated end of sep 08 position", 3800.00)
       .checkUncategorizedNotShown();
   }
 
