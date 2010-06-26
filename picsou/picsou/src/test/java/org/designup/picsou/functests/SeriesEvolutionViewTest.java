@@ -618,4 +618,39 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesEvolution.selectPreviousMonth();
     timeline.checkSelection("2008/10");
   }
+
+  public void testMirrorSavingsSeriesAreNotShown() throws Exception {
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.00, "Virement")
+      .load();
+
+    views.selectHome();
+    savingsAccounts.createNewAccount()
+      .setAccountName("Livret")
+      .selectBank("ING Direct")
+      .setAccountNumber("333")
+      .setPosition(10.00)
+      .validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount("333", 20, "2008/07/12")
+      .addTransaction("2008/07/12", +95.00, "Virt livret")
+      .load();
+
+    views.selectCategorization();
+    categorization.setSavings("Virement", "To account Livret");
+    categorization.setSavings("Virt livret", "To account Livret");
+
+    views.selectEvolution();
+    seriesEvolution.expandAll();
+    seriesEvolution.checkRowLabels(
+      "Main accounts", "Balance", "Savings accounts", "To categorize", "Income", "Recurring", "Variable", "Extras",
+      "Savings", "To account Livret", "Other"
+    );
+
+    views.selectData();
+    series.checkContains("All", "To categorize", "Income", "Recurring", "Variable", "Extras",
+                         "Savings", "From account Livret", "To account Livret", "Other");
+  }
 }
