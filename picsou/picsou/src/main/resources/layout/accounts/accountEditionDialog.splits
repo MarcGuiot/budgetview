@@ -29,6 +29,10 @@
                 <button ref="bankSelector" styleClass="itemLink" anchor="southeast" font="-,plain,11"/>
                 <filler fill="horizontal"/>
               </row>
+
+              <label text="$account.position" gridPos="(0,2)" styleClass="formLabel" autoHideSource="position"/>
+              <textField ref="position" gridPos="(1,2)"/>
+
             </grid>
 
             <label text="$account.panel.type" styleClass="formLabel" anchor="left" marginTop="10"/>
@@ -52,9 +56,6 @@
 
             <label text="$account.updateMode" gridPos="(0,4)" styleClass="formLabel"/>
             <comboBox ref="updateMode" gridPos="(1,4)"/>
-
-            <label text="$account.position" gridPos="(0,5)" styleClass="formLabel" autoHideSource="position"/>
-            <textField ref="position" gridPos="(1,5)"/>
 
             <label text="$account.date.start" gridPos="(0,6)" styleClass="formLabel"/>
             <row gridPos="(1,6)">
