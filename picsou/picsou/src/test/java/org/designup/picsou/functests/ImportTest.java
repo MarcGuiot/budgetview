@@ -1,6 +1,8 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.ImportDialogChecker;
+import org.designup.picsou.functests.checkers.BankChooserChecker;
+import org.designup.picsou.functests.checkers.AccountEditionChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
@@ -8,6 +10,8 @@ import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
+import org.uispec4j.Window;
+import org.uispec4j.interception.WindowInterceptor;
 
 import java.io.File;
 
@@ -350,9 +354,19 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkNoBankSelected()
       .setAccountNumber("0123546")
       .cancel();
-    importDialog.doImport()
+    AccountEditionChecker accountEditionChecker = importDialog.doImport()
       .checkMessageCreateFirstAccount()
-      .skipAndComplete();
+      .openAccount();
+    accountEditionChecker.openBankSelection()
+      .selectBank("CIC")
+      .cancel();
+    accountEditionChecker.checkNoBankSelected();
+    accountEditionChecker.openBankSelection()
+      .selectBank("LCL")
+      .validate();
+    accountEditionChecker.checkSelectedBank("LCL")
+      .validate();
+    importDialog.skipAndComplete();
   }
 
   public void testOfxWithUnknownBankEntities() throws Exception {

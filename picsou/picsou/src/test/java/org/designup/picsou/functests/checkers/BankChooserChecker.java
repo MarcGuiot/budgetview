@@ -16,6 +16,11 @@ public class BankChooserChecker extends GuiChecker {
     return this;
   }
 
+  public void cancel(){
+    panel.getButton("cancel").click();
+    assertFalse(panel.isVisible());
+  }
+
   public void validate() {
     panel.getButton("Ok").click();
     assertFalse(panel.isVisible());

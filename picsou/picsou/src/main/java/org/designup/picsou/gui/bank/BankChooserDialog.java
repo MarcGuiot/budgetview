@@ -27,6 +27,7 @@ public class BankChooserDialog implements GlobSelectionListener {
   private PicsouDialog dialog;
   private Glob selectedBank;
   private BankChooserDialog.ValidateAction validateAction;
+  private SelectionService selectionService;
 
   public BankChooserDialog(Window parent, GlobRepository repository, Directory directory) {
     this.parent = parent;
@@ -40,7 +41,7 @@ public class BankChooserDialog implements GlobSelectionListener {
       .get();
 
     Directory localDirectory = new DefaultDirectory(directory);
-    SelectionService selectionService = new SelectionService();
+    selectionService = new SelectionService();
     localDirectory.add(SelectionService.class, selectionService);
     selectionService.addListener(this, Bank.TYPE);
 
@@ -68,13 +69,7 @@ public class BankChooserDialog implements GlobSelectionListener {
 
   public void selectionUpdated(GlobSelection selection) {
     GlobList globList = selection.getAll(Bank.TYPE);
-    if (globList.size() > 1) {
-      selectedBank = null;
-    }
-    else {
-      selectedBank = globList.getFirst();
-    }
-    validateAction.setEnabled(selectedBank != null);
+    validateAction.setEnabled(globList.size() == 1);
   }
 
   private class ValidateAction extends AbstractAction {
@@ -84,6 +79,7 @@ public class BankChooserDialog implements GlobSelectionListener {
 
     public void actionPerformed(ActionEvent e) {
       dialog.setVisible(false);
+      selectedBank = selectionService.getSelection(Bank.TYPE).getFirst();
     }
   }
 }

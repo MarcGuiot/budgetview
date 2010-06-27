@@ -1,7 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Dates;
 import org.jdesktop.swingx.JXDatePicker;
 import org.uispec4j.ComboBox;
@@ -10,12 +9,12 @@ import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.awt.*;
-
-import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class AccountEditionChecker extends GuiChecker {
   private Window dialog;
@@ -42,6 +41,12 @@ public class AccountEditionChecker extends GuiChecker {
     chooserChecker.validate();
     return this;
   }
+
+  public BankChooserChecker openBankSelection() {
+    Window bankChooserWindow = WindowInterceptor.getModalDialog(dialog.getButton("bankSelector").triggerClick());
+    return new BankChooserChecker(bankChooserWindow);
+  }
+
 
   public AccountEditionChecker checkNoBankSelected() {
     assertThat(dialog.getTextBox("bankLabel").textEquals(""));

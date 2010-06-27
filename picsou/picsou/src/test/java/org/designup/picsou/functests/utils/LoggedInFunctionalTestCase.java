@@ -163,12 +163,12 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
       }
     }
     catch (Throwable e) {
-      e.printStackTrace();
+//      e.printStackTrace();  // on perd l'assert si il y en a eu un.
       try {
         mainWindow.dispose();
       }
       catch (Throwable e1) {
-        e1.printStackTrace();
+//        e1.printStackTrace();
       }
       mainWindow = null;
     }
