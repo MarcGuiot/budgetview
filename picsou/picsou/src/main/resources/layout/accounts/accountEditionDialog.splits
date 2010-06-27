@@ -3,6 +3,9 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
     <style selector="datePicker" fill="horizontal" weightX="100" weightY="0"/>
+    <style selector="label.columnTitle" fill="horizontal" marginBottom="5"
+           border="matte(0,0,1,0,dialog.separator.light)"
+           horizontalAlignment="left" font="-,plain,10"/>
   </styles>
 
   <panel styleClass="dialog" preferredSize="(740,330)">
@@ -10,18 +13,39 @@
 
       <label ref="title" styleClass="title"/>
 
-      <row>
-        <column border="matte(0,0,0,1,dialog.separator.light)" weightX="5" opaque="false">
-          <grid defaultMarginBottom="5" marginRight="10">
-            <label text="$account.name" gridPos="(0,0)" styleClass="formLabel"/>
-            <textField ref="name" gridPos="(1,0)"/>
-            <label gridPos="(2,0)" styleClass="formLabelMandatorySign"/>
+      <horizontalBoxes>
+        <column preferredSize="(350,300)" border="matte(0,0,0,1,dialog.separator.light)" opaque="false">
+          <column marginRight="10">
 
-            <label text="$account.bank" gridPos="(0,1)" styleClass="formLabel"/>
-            <button ref="accountBank" gridPos="(1,1)" styleClass="itemLinkUnderlined" anchor="left"/>
-            <label gridPos="(2,1)" styleClass="formLabelMandatorySign"/>
+            <label text="$form.mandatory.legend" styleClass="columnTitle"/>
 
-            <label text="$form.mandatory.legend" gridPos="(0,2,3,1)" styleClass="formLabelMandatoryLegend"/>
+            <grid defaultMarginBottom="5">
+              <label text="$account.name" gridPos="(0,0)" styleClass="formLabel"/>
+              <textField ref="name" gridPos="(1,0)"/>
+
+              <label text="$account.bank" gridPos="(0,1)" styleClass="formLabel"/>
+              <row gridPos="(1,1)">
+                <label ref="bankLabel" marginRight="5" font="-,bold,12"/>
+                <button ref="bankSelector" styleClass="itemLink" anchor="southeast" font="-,plain,11"/>
+                <filler fill="horizontal"/>
+              </row>
+            </grid>
+
+            <label text="$account.panel.type" styleClass="formLabel" anchor="left" marginTop="10"/>
+
+            <comboBox ref="type" marginTop="5" marginBottom="10"/>
+
+            <label ref="savingsMessageWarning" styleClass="errorMessage"/>
+
+            <panel ref="cardTypeEditionPanel" weightY="100"/>
+          </column>
+        </column>
+
+        <column marginLeft="10" preferredSize="(350,300)">
+
+          <label text="$form.optional.legend" styleClass="columnTitle"/>
+
+          <grid defaultMarginBottom="5">
 
             <label text="$account.number" gridPos="(0,3)" styleClass="formLabel"/>
             <textField ref="number" gridPos="(1,3)"/>
@@ -45,22 +69,13 @@
               <button action="removeEndDate" icon="button_delete.png" styleClass="icon"
                       pressedIcon="button_delete_pressed.png" fill="none"/>
             </row>
+
           </grid>
+
           <filler fill="vertical" weightY="100"/>
-        </column>
-
-        <column marginLeft="10" weightX="5">
-
-          <label text="$account.panel.type" styleClass="formLabel" anchor="left"/>
-
-          <comboBox ref="type" marginTop="5" marginBottom="10"/>
-
-          <label ref="savingsMessageWarning" styleClass="errorMessage"/>
-
-          <panel ref="cardTypeEditionPanel" weightY="100"/>
 
         </column>
-      </row>
+      </horizontalBoxes>
 
       <label ref="message" foreground="#FF0000" fill="none" anchor="center" marginTop="5"/>
 

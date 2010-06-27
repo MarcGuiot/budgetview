@@ -61,7 +61,7 @@ public class MainWindowLauncher {
     init.loadUserData(user, false, false).load();
 
     Directory initDirectory = init.getDirectory();
-    final PicsouFrame frame = new PicsouFrame("test");
+    final PicsouFrame frame = new PicsouFrame("CashPilot");
     MainPanel.init(init.getRepository(), initDirectory, new WindowManager() {
       public PicsouFrame getFrame() {
         return frame;

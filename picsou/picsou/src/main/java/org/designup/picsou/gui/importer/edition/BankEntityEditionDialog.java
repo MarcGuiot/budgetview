@@ -68,6 +68,7 @@ public class BankEntityEditionDialog {
 
     public void actionPerformed(ActionEvent e) {
       dialog.setVisible(false);
+      System.out.println("BankEntityEditionDialog$CancelAction.actionPerformed");
     }
   }
 }

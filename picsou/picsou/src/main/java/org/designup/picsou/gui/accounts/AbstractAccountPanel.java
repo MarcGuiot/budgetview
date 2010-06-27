@@ -43,7 +43,8 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   private AccountTypeSelector[] accountTypeSelectors;
   private CardTypeEditionPanel cardTypeEditionPanel;
   private GlobTextEditor nameField;
-  private JButton accountBank;
+  private JLabel accountBank;
+  private AccountBankAction bankSelectionAction;
 
   public AbstractAccountPanel(T repository, Directory parentDirectory, JLabel messageLabel) {
     this.localRepository = repository;
@@ -61,10 +62,11 @@ public class AbstractAccountPanel<T extends GlobRepository> {
 
     builder.add("cardTypeEditionPanel", cardTypeEditionPanel.createComponent());
 
-    AccountBankAction action = new AccountBankAction(dialog);
-    accountBank = new JButton(action);
-    builder.add("accountBank", accountBank);
-    selectionService.addListener(action, Account.TYPE);
+    accountBank = builder.add("bankLabel", new JLabel()).getComponent();
+
+    bankSelectionAction = new AccountBankAction(dialog);
+    builder.add("bankSelector", new JButton(bankSelectionAction));
+    selectionService.addListener(bankSelectionAction, Account.TYPE);
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if ((currentAccount != null) && changeSet.containsChanges(currentAccount.getKey())) {
@@ -238,19 +240,25 @@ public class AbstractAccountPanel<T extends GlobRepository> {
       updateBank(account);
     }
 
+    public void setText(String label) {
+      putValue(NAME, label);
+    }
   }
 
   private void updateBank(Glob account) {
     if (account == null) {
-      accountBank.setText(Lang.get("account.select.bank"));
+      accountBank.setText("");
+      bankSelectionAction.setText(Lang.get("account.bankSelector.choose"));
     }
     else {
       Glob bank = localRepository.findLinkTarget(account, Account.BANK);
       if (bank == null) {
-        accountBank.setText(Lang.get("account.select.bank"));
+        accountBank.setText("");
+        bankSelectionAction.setText(Lang.get("account.bankSelector.choose"));
       }
       else {
         accountBank.setText(bank.get(Bank.NAME));
+        bankSelectionAction.setText(Lang.get("account.bankSelector.modify"));
       }
     }
   }
