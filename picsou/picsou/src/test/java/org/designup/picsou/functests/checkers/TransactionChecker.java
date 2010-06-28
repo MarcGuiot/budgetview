@@ -279,6 +279,70 @@ public class TransactionChecker extends ViewChecker {
       return this;
     }
 
+    public void dumpCode() {
+      TransactionTypeDumper transactionTypeDumper = new TransactionTypeDumper();
+
+      final StringBuilder builder = new StringBuilder();
+      builder.append(".initContent()\n");
+      Table table = getTable();
+      for (int row = 0; row < table.getRowCount(); row++) {
+        String type = table.getContentAt(row, 0, transactionTypeDumper).toString();
+        String subSeries = table.getContentAt(row, TransactionView.SUBSERIES_COLUMN_INDEX).toString();
+        String date = table.getContentAt(row, TransactionView.DATE_COLUMN_INDEX).toString();
+        String bankDate = table.getContentAt(row, TransactionView.BANK_DATE_COLUMN_INDEX).toString();
+        String series = table.getContentAt(row, TransactionView.SERIES_COLUMN_INDEX, new TableCellValueConverter() {
+          public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
+            return SeriesCellConverter.extractSeries(renderedComponent);
+          }
+        }).toString();
+        String label = table.getContentAt(row, TransactionView.LABEL_COLUMN_INDEX).toString();
+        String amount = table.getContentAt(row, TransactionView.AMOUNT_COLUMN_INDEX).toString();
+        String note = table.getContentAt(row, TransactionView.NOTE_COLUMN_INDEX).toString();
+
+        builder.append(".add(\"")
+          .append(date).append("\", ");
+        if (!date.equals(bankDate)) {
+          builder.append("\"").append(bankDate).append("\", ");
+        }
+        builder
+          .append(type).append(", \"")
+          .append(label).append("\", \"")
+          .append(note).append("\", ")
+          .append(amount);
+
+        boolean hasSeries = !TO_CATEGORIZE.equals(series) && Strings.isNotEmpty(series);
+        boolean hasCategory = Strings.isNotEmpty(subSeries);
+        if (hasSeries || hasCategory) {
+          if (hasSeries) {
+            builder
+              .append(", \"")
+              .append(series)
+              .append("\"");
+          }
+          if (hasCategory) {
+            builder.append(", ").append(subSeries);
+          }
+        }
+        builder.append(")\n");
+      }
+      builder.append(".check();\n");
+      Assert.fail("Use this code:\n" + builder.toString());
+    }
+
+    private class TransactionTypeDumper implements TableCellValueConverter {
+      public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
+        Glob transaction = (Glob)modelObject;
+        TransactionType type = TransactionType.getType(transaction.get(Transaction.TRANSACTION_TYPE));
+        if (type == null) {
+          return "";
+        }
+        if (transaction.isTrue(Transaction.PLANNED)) {
+          type = TransactionType.PLANNED;
+        }
+        return "TransactionType." + type.getName().toUpperCase();
+      }
+    }
+
     protected void add(Object[] row) {
       content.add(row);
     }

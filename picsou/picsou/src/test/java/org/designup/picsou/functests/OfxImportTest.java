@@ -503,7 +503,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testCreateTwoAccountsInOfxAndCheckOnlyOneIsVailable() throws Exception {
+  public void testCreateTwoAccountsInOfxAndCheckOnlyOneIsAvailable() throws Exception {
     mainAccounts.createMainAccount("First account", 100);
     String ofxFile = OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")
@@ -530,5 +530,8 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .setMainAccountForAll()
       .completeImport();
 
+  }
+
+  public void testImport() throws Exception {
   }
 }

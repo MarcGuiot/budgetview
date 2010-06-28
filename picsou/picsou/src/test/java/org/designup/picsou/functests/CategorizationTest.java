@@ -1029,7 +1029,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
     timeline.selectAll();
     views.selectHome();
-    savingsAccounts.createSavingsAccount("Epargne", 1000);
+    savingsAccounts.createSavingsAccount("Epargne", 1000.);
     views.selectCategorization();
     categorization
       .selectTransactions("Virement")

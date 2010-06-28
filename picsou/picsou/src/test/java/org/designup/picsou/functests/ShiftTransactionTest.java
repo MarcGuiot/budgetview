@@ -292,7 +292,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    savingsAccounts.createSavingsAccount("Epargne", 0);
+    savingsAccounts.createSavingsAccount("Epargne", 0.);
 
     views.selectBudget();
     budgetView.savings.createSeries()

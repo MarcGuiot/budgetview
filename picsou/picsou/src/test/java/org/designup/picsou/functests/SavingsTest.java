@@ -20,7 +20,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     timeline.selectAll();
     views.selectHome();
-    savingsAccounts.createSavingsAccount("Epargne LCL", 1000);
+    savingsAccounts.createSavingsAccount("Epargne LCL", 1000.);
 
     views.selectCategorization();
     categorization
@@ -69,7 +69,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .load();
     timeline.selectAll();
     views.selectHome();
-    savingsAccounts.createSavingsAccount("Epargne LCL", 1000);
+    savingsAccounts.createSavingsAccount("Epargne LCL", 1000.);
     views.selectCategorization();
 
     categorization
@@ -309,7 +309,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     views.selectHome();
 
-    savingsAccounts.createSavingsAccount("Epargne", 1000);
+    savingsAccounts.createSavingsAccount("Epargne", 1000.);
     views.selectCategorization();
     categorization
       .selectTransactions("Virement")
@@ -343,7 +343,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .load();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectHome();
-    savingsAccounts.createSavingsAccount("Epargne", 1000);
+    savingsAccounts.createSavingsAccount("Epargne", 1000.);
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("CAF")
@@ -431,7 +431,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .load();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectHome();
-    savingsAccounts.createSavingsAccount("Epargne", 1000);
+    savingsAccounts.createSavingsAccount("Epargne", 1000.);
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("CAF")
@@ -494,7 +494,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .load();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectHome();
-    savingsAccounts.createSavingsAccount("Epargne", 1000);
+    savingsAccounts.createSavingsAccount("Epargne", 1000.);
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("CA")
@@ -798,7 +798,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     mainAccounts.edit("Account n. 111222")
       .setAsSavings()
       .validate();
-    savingsAccounts.createSavingsAccount("Epargne", 1000);
+    savingsAccounts.createSavingsAccount("Epargne", 1000.);
 
     views.selectBudget();
     budgetView.savings.createSeries()
@@ -1022,7 +1022,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
   public void testChangeAccountDirectionDoNotChangeBudgetSign() throws Exception {
     mainAccounts.createMainAccount("Main", 99);
-    savingsAccounts.createSavingsAccount("Epargne", 1000);
+    savingsAccounts.createSavingsAccount("Epargne", 1000.);
 
     views.selectBudget();
     budgetView.savings.createSeries()
@@ -1050,8 +1050,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
     views.selectHome();
-    savingsAccounts.createSavingsAccount("Savings 1", 1000);
-    savingsAccounts.createSavingsAccount("Savings 2", 1000);
+    savingsAccounts.createSavingsAccount("Savings 1", 1000.);
+    savingsAccounts.createSavingsAccount("Savings 2", 1000.);
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("Test")
@@ -1127,7 +1127,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsView.checkNoTotalPosition();
 
     views.selectHome();
-    savingsAccounts.createSavingsAccount("Epargne", 1000);
+    savingsAccounts.createSavingsAccount("Epargne", 1000.);
     mainAccounts.createNewAccount()
       .setAccountName("Main")
       .setAccountNumber("4321")
@@ -1711,7 +1711,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/06", 100.00, "Virement de Epargne")
       .load();
 
-    savingsAccounts.createSavingsAccount("epargne", 100);
+    savingsAccounts.createSavingsAccount("epargne", 100.);
 
     views.selectCategorization();
     categorization.selectTransaction("Virement de Epargne")
@@ -1790,7 +1790,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/06", -100.00, "ope")
       .load();
 
-    savingsAccounts.createSavingsAccount("epargne", 100);
+    savingsAccounts.createSavingsAccount("epargne", 100.);
 
     views.selectBudget();
     budgetView.savings.createSeries()
@@ -1825,6 +1825,28 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("06/08/2008", "ALLOC", 100.00, "To categorize", 3000.00, 3000.00, "epargne")
       .add("06/08/2008", "OPE", -100.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
       .add("06/07/2008", "ALLOC", 100.00, "To categorize", 2900.00, 2900.00, "epargne")
+      .check();
+  }
+
+  public void testImportOfxOnExistingAccountWithouAccountDoNotAskForAmount() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/06", -100.00, "ope")
+      .load();
+
+    savingsAccounts.createSavingsAccount("epargne", null);
+
+    OfxBuilder.init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
+      .addTransaction("2008/07/06", 100.00, "Alloc")
+      .addTransaction("2008/08/06", 100.00, "Alloc")
+      .load("Account n. 111", "epargne");
+
+    views.selectData();
+    transactions.initContent()
+      .add("06/08/2008", TransactionType.VIREMENT, "ALLOC", "", 100.00)
+      .add("06/08/2008", TransactionType.PRELEVEMENT, "OPE", "", -100.00)
       .check();
   }
 

@@ -1635,7 +1635,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2008/01/01", -29.00, "Auchan") // pour creer des mois dans le passe
       .load();
-    savingsAccounts.createSavingsAccount("ING", 1000);
+    savingsAccounts.createSavingsAccount("ING", 1000.);
     views.selectSavings();
     savingsView.createSeries()
       .setName("Epargne")

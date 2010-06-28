@@ -38,7 +38,7 @@ public class AccountViewChecker<T extends AccountViewChecker> extends GuiChecker
     return existingNames;
   }
 
-  public T checkAccountOrder(String ...accounts){
+  public T checkAccountOrder(String... accounts) {
     UIComponent[] uiComponents = panel.getUIComponents(Button.class, "accountName");
     List<String> existingNames = new ArrayList<String>();
     for (UIComponent uiComponent : uiComponents) {
@@ -99,7 +99,7 @@ public class AccountViewChecker<T extends AccountViewChecker> extends GuiChecker
   }
 
   public T checkEstimatedPositionDate(String text) {
-    assertThat(panel.getTextBox("estimatedPositionDate").textEquals("on "+ text));
+    assertThat(panel.getTextBox("estimatedPositionDate").textEquals("on " + text));
     return (T)this;
   }
 
@@ -136,14 +136,18 @@ public class AccountViewChecker<T extends AccountViewChecker> extends GuiChecker
     return AccountEditionChecker.open(panel.getButton("createAccount").triggerClick());
   }
 
-  public void createSavingsAccount(String name, double balance) {
-    createNewAccount()
+  public void createSavingsAccount(String name, Double position) {
+    AccountEditionChecker accountEditionChecker = createNewAccount()
       .setAccountName(name)
       .setAccountNumber("1234")
       .selectBank("LCL")
       .setAsSavings()
-      .checkIsSavings()
-      .setPosition(balance)
+      .checkIsSavings();
+    if (position != null) {
+      accountEditionChecker
+        .setPosition(position);
+    }
+    accountEditionChecker
       .validate();
   }
 

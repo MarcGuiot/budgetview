@@ -405,7 +405,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
   public void testChangeDayChangeTransactionFromPlannedToRealAndViceversaForNotImportedAccount() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectHome();
-    savingsAccounts.createSavingsAccount("Epargne", 1000);
+    savingsAccounts.createSavingsAccount("Epargne", 1000.);
     views.selectBudget();
     budgetView.income.createSeries()
       .setName("CAF")
@@ -438,7 +438,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
   public void testSavingsSeries() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectHome();
-    savingsAccounts.createSavingsAccount("Epargne", 1000);
+    savingsAccounts.createSavingsAccount("Epargne", 1000.);
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("CAF")

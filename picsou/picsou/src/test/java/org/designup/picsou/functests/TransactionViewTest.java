@@ -133,7 +133,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    savingsAccounts.createSavingsAccount("Epargne", 1000);
+    savingsAccounts.createSavingsAccount("Epargne", 1000.);
 
     transactions.categorize(0);
     categorization
@@ -311,7 +311,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
   public void testDeleteATransactionWithMirrorSavings() throws Exception {
     views.selectHome();
-    savingsAccounts.createSavingsAccount("Epargne LCL", 1000);
+    savingsAccounts.createSavingsAccount("Epargne LCL", 1000.);
     views.selectCategorization();
     categorization
       .selectTransactions("sg")
