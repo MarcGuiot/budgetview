@@ -179,9 +179,9 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
     }
     else {
       model.model.setFilter(matcher, true);
-      if (model.model.size() != 0) {
-        jComboBox.setSelectedIndex(0);
-      }
+//      if (model.model.size() != 0) {
+//        jComboBox.setSelectedIndex(0);
+//      }
     }
     return this;
   }
