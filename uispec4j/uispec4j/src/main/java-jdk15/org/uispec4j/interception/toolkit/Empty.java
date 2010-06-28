@@ -185,9 +185,9 @@ public final class Empty {
     public void repositionSecurityWarning() {
     }
 
-    public boolean requestFocus(Component lightweightChild, boolean temporary, boolean focusedWindowChangeAllowed, long time, CausedFocusEvent.Cause cause) {
-      return false;
-    }
+//    public boolean requestFocus(Component lightweightChild, boolean temporary, boolean focusedWindowChangeAllowed, long time, CausedFocusEvent.Cause cause) {
+//      return false;
+//    }
 
     public void flip(int x1, int y1, int x2, int y2, BufferCapabilities.FlipContents flipAction) {
     }
@@ -353,9 +353,9 @@ public final class Empty {
     public void repositionSecurityWarning() {
     }
 
-    public boolean requestFocus(Component lightweightChild, boolean temporary, boolean focusedWindowChangeAllowed, long time, CausedFocusEvent.Cause cause) {
-      return false;
-    }
+//    public boolean requestFocus(Component lightweightChild, boolean temporary, boolean focusedWindowChangeAllowed, long time, CausedFocusEvent.Cause cause) {
+//      return false;
+//    }
 
     public void flip(int x1, int y1, int x2, int y2, BufferCapabilities.FlipContents flipAction) {
     }
@@ -604,9 +604,9 @@ public final class Empty {
     public void setBounds(int x, int y, int width, int height, int op) {
     }
 
-    public boolean requestFocus(Component lightweightChild, boolean temporary, boolean focusedWindowChangeAllowed, long time, CausedFocusEvent.Cause cause) {
-      return false;
-    }
+//    public boolean requestFocus(Component lightweightChild, boolean temporary, boolean focusedWindowChangeAllowed, long time, CausedFocusEvent.Cause cause) {
+//      return false;
+//    }
 
     public void flip(int x1, int y1, int x2, int y2, BufferCapabilities.FlipContents flipAction) {
     }
