@@ -3,6 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
+import org.designup.picsou.functests.checkers.AccountEditionChecker;
 import org.designup.picsou.model.TransactionType;
 
 public class AccountManagementTest extends LoggedInFunctionalTestCase {
@@ -203,5 +204,20 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "BAR", "", -20.00, "Bars")
       .check();
     series.checkSelection("All");
+  }
+
+  public void testAccountWithoutPosition() throws Exception {
+    views.selectHome();
+    AccountEditionChecker accountEditionChecker = mainAccounts.createNewAccount()
+      .setAccountName("no position");
+    accountEditionChecker
+      .openBankSelection()
+      .selectBank("CIC")
+      .validate();
+
+    accountEditionChecker.validate();
+    
+    mainAccounts.checkAccountWithoutPosition("no position", "2008/08/31");
+
   }
 }

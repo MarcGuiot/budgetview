@@ -37,6 +37,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class MainWindow implements WindowManager {
+  public static final String DEMO_USER_NAME = "anonymous";
+  public static final String DEMO_PASSWORD = "password";
   private PicsouFrame frame;
   private WindowAdapter windowOpenListener;
   private PicsouApplication picsouApplication;
@@ -305,7 +307,7 @@ public class MainWindow implements WindowManager {
       try {
         if (useDemoAccount) {
           initDemoServerAccess();
-          serverAccess.createUser("anonymous", "password".toCharArray(), false);
+          serverAccess.createUser(DEMO_USER_NAME, DEMO_PASSWORD.toCharArray(), false);
         }
         else {
           if (createUser) {

@@ -161,7 +161,7 @@ public abstract class AccountViewPanel {
                                 }
                                 Double position = list.get(0).get(Account.POSITION);
                                 if (position == null) {
-                                  return "0.0";
+                                  return Lang.get("accountView.missing.position");
                                 }
                                 return Formatting.DECIMAL_FORMAT.format(position);
                               }

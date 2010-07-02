@@ -2,8 +2,10 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.MainWindow;
 
 import java.io.File;
 import java.util.Date;
@@ -47,6 +49,11 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   }
 
   public void test() throws Exception {
+
+    operations.logout();
+    LoginChecker loginChecker = new LoginChecker(mainWindow);
+    loginChecker.logNewUser(MainWindow.DEMO_USER_NAME, MainWindow.DEMO_PASSWORD);
+    initCheckers();
 
     Locale.setDefault(Locale.FRENCH);
 
@@ -322,6 +329,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       File out = new File(outputFile);
       out.delete();
       operations.backup(out.getAbsoluteFile().getAbsolutePath());
+      System.out.println("DemoGenerationTest.test : snapshot generated in " + out.getAbsoluteFile().getAbsolutePath());
     }
   }
 

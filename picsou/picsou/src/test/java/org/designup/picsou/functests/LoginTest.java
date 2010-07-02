@@ -58,6 +58,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     login = null;
     picsouApplication.shutdown();
     picsouApplication = null;
+    operations = null;
   }
 
   private void openNewLoginWindow(final boolean firstLogin) throws Exception {

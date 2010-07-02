@@ -65,6 +65,13 @@ public class AccountViewChecker<T extends AccountViewChecker> extends GuiChecker
     UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals(Formatting.toString(date)));
   }
 
+  public void checkAccountWithoutPosition(String accountName, String yyyymmdd) {
+    Panel parentPanel = getAccountPanel(accountName);
+    assertThat(parentPanel.getButton("accountPosition").textEquals("Click here to set the account position"));
+    Date date = Dates.parse(yyyymmdd);
+    UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals(Formatting.toString(date)));
+  }
+
   public void checkDisplayIsEmpty(String accountName) {
     Panel parentPanel = getAccountPanel(accountName);
     UISpecAssert.assertTrue(parentPanel.getButton("accountPosition").textEquals("0.00"));
