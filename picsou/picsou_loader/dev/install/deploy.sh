@@ -12,7 +12,7 @@ then
 else
   echo ../picsou/obfuscated/cashpilot.jar do not exist from `pwd`
   exit 1
-fi
+fi;
 
 VERSION=`java -jar ../picsou/obfuscated/cashpilot.jar -v -jar | grep "Jar version"`
 JAR_VERSION=`echo $VERSION | sed -e 's/Jar version://g' | sed -e 's/  *//g'`
