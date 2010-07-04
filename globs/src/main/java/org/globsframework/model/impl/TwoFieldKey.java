@@ -10,6 +10,7 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.MissingInfo;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class TwoFieldKey extends Key {
@@ -26,8 +27,8 @@ public class TwoFieldKey extends Key {
     SingleFieldKey.checkValue(keyField2, value2);
     Field[] keyFields = keyField1.getGlobType().getKeyFields();
     if (keyFields.length != 2) {
-      throw new InvalidParameter("Cannot use a Three field key for type " + keyField1.getGlobType() + " - " +
-                                 "key fields=" + keyFields);
+      throw new InvalidParameter("Cannot use a two-fields key for type " + keyField1.getGlobType() + " - " +
+                                 "key fields=" + Arrays.toString(keyFields));
     }
     Field field;
     field = keyFields[0];
