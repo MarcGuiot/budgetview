@@ -85,6 +85,9 @@ public class HistoChartMetrics {
   }
 
   public int getColumnAt(int x) {
+    if (columnWidth == 0) {
+      return -1;
+    }
     return (x - scaleZoneWidth) / columnWidth;
   }
 

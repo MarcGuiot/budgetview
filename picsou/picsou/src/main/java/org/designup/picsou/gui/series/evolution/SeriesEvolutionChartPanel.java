@@ -7,6 +7,7 @@ import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilder;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.*;

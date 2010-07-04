@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.savings;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.series.evolution.AccountHistoChartUpdater;
-import org.designup.picsou.gui.series.evolution.HistoChartBuilder;
+import org.designup.picsou.gui.series.evolution.histobuilders.AccountHistoChartUpdater;
+import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilder;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.GlobRepository;

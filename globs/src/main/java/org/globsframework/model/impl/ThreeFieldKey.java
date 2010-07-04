@@ -9,6 +9,7 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.MissingInfo;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class ThreeFieldKey extends Key {
@@ -29,10 +30,9 @@ public class ThreeFieldKey extends Key {
 
     Field[] keyFields = keyField1.getGlobType().getKeyFields();
     if (keyFields.length != 3) {
-      throw new InvalidParameter("Cannot use a Three field key for type " + keyField1.getGlobType() + " - " +
-                                 "key fields=" + keyFields);
+      throw new InvalidParameter("Cannot use a three-fields key for type " + keyField1.getGlobType() + " - " +
+                                 "key fields=" + Arrays.toString(keyFields));
     }
-    int i = 0;
     Field field;
     field = keyFields[0];
     this.keyField1 = field;

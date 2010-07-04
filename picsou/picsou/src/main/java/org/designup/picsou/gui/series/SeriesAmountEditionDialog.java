@@ -5,10 +5,13 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.SeriesPeriodicityAndScopeStringifier;
 import org.designup.picsou.gui.series.edition.AlignSeriesBudgetAmountsAction;
 import org.designup.picsou.gui.series.edition.SeriesBudgetSliderAdapter;
+import org.designup.picsou.gui.series.evolution.SeriesAmountChartPanel;
 import org.designup.picsou.gui.series.utils.SeriesAmountLabelStringifier;
 import org.designup.picsou.gui.signpost.actions.SetSignpostStatusAction;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -45,6 +48,8 @@ public class SeriesAmountEditionDialog {
   private Key currentSeries;
   private Integer maxMonth;
   private Set<Integer> selectedMonthIds;
+  private Directory localDirectory;
+  private boolean selectionInProgress;
 
   public SeriesAmountEditionDialog(GlobRepository parentRepository, Directory parentDirectory,
                                    SeriesEditionDialog seriesEditionDialog) {
@@ -52,19 +57,30 @@ public class SeriesAmountEditionDialog {
     this.parentRepository = parentRepository;
     this.localRepository = LocalGlobRepositoryBuilder.init(parentRepository).get();
 
-    Directory directory = new DefaultDirectory(parentDirectory);
+    localDirectory = new DefaultDirectory(parentDirectory);
     selectionService = new SelectionService();
-    directory.add(selectionService);
+    localDirectory.add(selectionService);
 
     this.seriesEditionDialog = seriesEditionDialog;
 
+// A remettre pour l'affichage du graphe
+//    selectionService.addListener(new GlobSelectionListener() {
+//      public void selectionUpdated(GlobSelection selection) {
+//        select(localRepository.find(currentSeries), selection.getAll(Month.TYPE).getValueSet(Month.ID));
+//      }
+//    }, Month.TYPE);
+
+    createDialog();
+  }
+
+  private void createDialog() {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesAmountEditionDialog.class,
                                                       "/layout/series/seriesAmountEditionDialog.splits",
-                                                      localRepository, directory);
+                                                      localRepository, localDirectory);
 
     builder.addLabel("dateLabel", SeriesBudget.TYPE, new SeriesAmountLabelStringifier());
 
-    amountEditor = new AmountEditor(SeriesBudget.AMOUNT, localRepository, directory, true, 0.0);
+    amountEditor = new AmountEditor(SeriesBudget.AMOUNT, localRepository, localDirectory, true, 0.0);
     builder.add("amountEditor", amountEditor.getNumericEditor());
     builder.add("positiveAmounts", amountEditor.getPositiveRadio());
     builder.add("negativeAmounts", amountEditor.getNegativeRadio());
@@ -72,17 +88,17 @@ public class SeriesAmountEditionDialog {
     propagationCheckBox = new JCheckBox();
     builder.add("propagate", propagationCheckBox);
 
-    AlignSeriesBudgetAmountsAction alignAction = new AlignSeriesBudgetAmountsAction(localRepository, directory);
+    AlignSeriesBudgetAmountsAction alignAction = new AlignSeriesBudgetAmountsAction(localRepository, localDirectory);
     builder.add("alignValue", alignAction);
     builder.add("actualAmountLabel", alignAction.getActualAmountLabel());
 
     builder.addSlider("slider",
                       SeriesBudget.AMOUNT,
-                      new SeriesBudgetSliderAdapter(amountEditor, localRepository, directory));
+                      new SeriesBudgetSliderAdapter(amountEditor, localRepository, localDirectory));
 
     builder.addButton("editSeries", Series.TYPE, new SeriesPeriodicityAndScopeStringifier(), new OpenSeriesEditorCallback());
 
-    dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+    dialog = PicsouDialog.create(localDirectory.get(JFrame.class), localDirectory);
 
     OkAction okAction = new OkAction();
     amountEditor.addAction(okAction);
@@ -128,7 +144,9 @@ public class SeriesAmountEditionDialog {
     globsToLoad.add(series);
     globsToLoad.addAll(getLinkedAccounts(series));
     globsToLoad.addAll(getBudgets(series));
-    localRepository.reset(globsToLoad, Series.TYPE, SeriesBudget.TYPE, Account.TYPE);
+    globsToLoad.addAll(parentRepository.getAll(Month.TYPE));
+    globsToLoad.addAll(parentRepository.getAll(CurrentMonth.TYPE));
+    localRepository.reset(globsToLoad, Series.TYPE, SeriesBudget.TYPE, Account.TYPE, Month.TYPE, CurrentMonth.TYPE);
   }
 
   private GlobList getLinkedAccounts(Glob series) {
@@ -143,22 +161,31 @@ public class SeriesAmountEditionDialog {
   }
 
   private void select(Glob series, Set<Integer> monthIds) {
-    selectedMonthIds = monthIds;
-    GlobSelectionBuilder selection = GlobSelectionBuilder.init();
-
-    selection.add(series);
-
-    Integer seriesId = series.get(Series.ID);
-    for (Integer monthId : monthIds) {
-      selection.add(
-        localRepository
-          .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
-          .findByIndex(SeriesBudget.MONTH, monthId)
-          .getGlobs(),
-        SeriesBudget.TYPE);
+    if (selectionInProgress) {
+      return;
     }
 
-    selectionService.select(selection.get());
+    selectionInProgress= true;
+    try {
+      selectedMonthIds = monthIds;
+      GlobSelectionBuilder selection = GlobSelectionBuilder.init();
+      selection.add(series);
+      Integer seriesId = series.get(Series.ID);
+      for (Integer monthId : monthIds) {
+        selection.add(
+          localRepository
+            .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
+            .findByIndex(SeriesBudget.MONTH, monthId)
+            .getGlobs(),
+          SeriesBudget.TYPE);
+
+        selection.add(localRepository.get(Key.create(Month.TYPE, monthId)));
+      }
+      selectionService.select(selection.get());
+    }
+    finally {
+      selectionInProgress= false;
+    }
   }
 
   private class OkAction extends AbstractAction {

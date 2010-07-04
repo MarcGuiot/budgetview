@@ -131,9 +131,9 @@ public class SavingsSeriesView implements Disposable {
     public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
       if (changeSet.containsChanges(PeriodSeriesStat.TYPE)
           || changeSet.containsChanges(Series.TYPE)) {
-        updateRepeat(repository);  // on passe the repository et non l'autre a cause du
-        // ReplicationGlobRepository : les listener sont enregistre sur les deux repository (le Replication et
-        // l'original
+        updateRepeat(repository);  // on passe ce repository et non l'autre a cause du
+        // ReplicationGlobRepository : les listener sont enregistres sur les deux repository (le Replication et
+        // l'original)
       }
     }
 
