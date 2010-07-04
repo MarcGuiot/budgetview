@@ -1,12 +1,10 @@
-package org.designup.picsou.gui.series.evolution;
+package org.designup.picsou.gui.series.evolution.histobuilders;
 
-import org.designup.picsou.gui.model.BudgetStat;
-import org.designup.picsou.gui.model.SavingsBudgetStat;
-import org.designup.picsou.model.Month;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
@@ -15,19 +13,30 @@ import org.globsframework.utils.directory.Directory;
 import java.util.Set;
 import java.util.SortedSet;
 
-public abstract class AccountHistoChartUpdater implements GlobSelectionListener {
+public abstract class HistoChartUpdater implements GlobSelectionListener {
   private HistoChartBuilder histoChartBuilder;
-  private Integer currentMonthId;
+  private GlobType selectionType;
+  private IntegerField selectionMonthField;
+  protected Integer currentMonthId;
 
-  public AccountHistoChartUpdater(HistoChartBuilder histoChartBuilder, GlobRepository repository, Directory directory) {
+  public HistoChartUpdater(HistoChartBuilder histoChartBuilder,
+                           GlobRepository repository,
+                           Directory directory,
+                           final GlobType selectionType,
+                           final IntegerField selectionMonthField,
+                           final GlobType... types) {
     this.histoChartBuilder = histoChartBuilder;
-    directory.get(SelectionService.class).addListener(this, Month.TYPE);
+    this.selectionType = selectionType;
+    this.selectionMonthField = selectionMonthField;
+    directory.get(SelectionService.class).addListener(this, selectionType);
 
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(BudgetStat.TYPE)
-            || changeSet.containsChanges(SavingsBudgetStat.TYPE)) {
-          update();
+        for (GlobType type : types) {
+          if (changeSet.containsChanges(type)) {
+            update();
+            return;
+          }
         }
       }
 
@@ -38,12 +47,12 @@ public abstract class AccountHistoChartUpdater implements GlobSelectionListener 
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    SortedSet<Integer> months = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
+    SortedSet<Integer> months = selection.getAll(selectionType).getSortedSet(selectionMonthField);
     this.currentMonthId = months.isEmpty() ? null : months.first();
     update();
   }
 
-  private void update() {
+  public void update() {
     if (currentMonthId == null) {
       histoChartBuilder.clear();
       return;
