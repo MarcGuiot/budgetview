@@ -1,10 +1,10 @@
 #!/bin/sh
 
-if [ -a deploy.sh ];
-then
-  echo back to ../..
-  cd ../../
-fi;
+#if [ -a deploy.sh ];
+#then
+#  echo back to ../..
+#  cd ../../
+#fi;
 
 if [ -a ../picsou/obfuscated/cashpilot.jar ];  # je n'ai pas trouve comment faire un not (!) 
 then

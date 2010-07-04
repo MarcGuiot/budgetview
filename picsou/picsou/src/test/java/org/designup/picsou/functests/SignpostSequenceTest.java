@@ -45,8 +45,17 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     views.checkCategorizationSelected();
     categorization.checkSelectionSignpostDisplayed("Select the operations to categorize");
-
     categorization.selectTableRow(0);
+
+    // === Amount signpost is already visible in the budget view ===
+
+    views.selectBudget();
+    budgetView.variable.checkAmountSignpostDisplayed(
+      "Groceries", "Click on the planned amounts to set your own values");
+
+    // === Back to the categorization ===
+
+    views.selectCategorization();
     categorization.checkAreaSelectionSignpostDisplayed("Select the budget area for this operation");
 
     categorization.selectVariable();
@@ -59,9 +68,18 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     categorization.setVariable("auchan", "Groceries");
     categorization.checkCompleteProgressMessageShown();
 
-    // === Gauge details ===
+    // === Series amounts ===
 
     views.selectBudget();
+    budgetView.variable.checkAmountSignpostDisplayed(
+      "Groceries", "Click on the planned amounts to set your own values");
+
+    SeriesAmountEditionDialogChecker amountDialog = budgetView.variable.editPlannedAmount("Groceries");
+    checkNoSignpostVisible();
+    amountDialog.cancel();
+
+    // === Gauge details ===
+
     budgetView.variable.checkGaugeSignpostDisplayed(
       "Groceries",
       "Click on the gauges for a description");
@@ -78,13 +96,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     checkNoSignpostVisible();
 
     editionDialog.cancel();
-    budgetView.variable.checkAmountSignpostDisplayed(
-      "Groceries", "Click on the planned amounts to set your own values");
 
-    SeriesAmountEditionDialogChecker amountDialog = budgetView.variable.editPlannedAmount("Groceries");
-    checkNoSignpostVisible();
-
-    amountDialog.cancel();
     budgetView.getSummary().checkPositionSignpostDisplayed();
 
     PositionChecker positionDialog = budgetView.getSummary().openPositionDialog();

@@ -13,7 +13,7 @@ public class EndOfMonthPositionSignpost extends SimpleSignpost {
   public EndOfMonthPositionSignpost(GlobRepository repository, Directory directory) {
     super(Lang.get("signpost.endOfMonthPosition"),
           SignpostStatus.END_OF_MONTH_POSITION_SHOWN,
-          SignpostStatus.SERIES_AMOUNT_CLOSED,
+          SignpostStatus.SERIES_PERIODICITY_CLOSED,
           repository, directory);
   }
 }

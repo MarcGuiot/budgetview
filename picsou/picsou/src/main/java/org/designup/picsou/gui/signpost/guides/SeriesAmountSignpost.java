@@ -12,7 +12,7 @@ public class SeriesAmountSignpost extends SimpleSignpost {
   public SeriesAmountSignpost(GlobRepository repository, Directory directory) {
     super(Lang.get("signpost.seriesAmount"),
           SignpostStatus.SERIES_AMOUNT_SHOWN,
-          SignpostStatus.SERIES_PERIODICITY_CLOSED,
+          SignpostStatus.CATEGORIZATION_SELECTION_SHOWN,
           repository, directory);
   }
 }

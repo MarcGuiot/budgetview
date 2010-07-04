@@ -86,10 +86,8 @@ public class UpgradeTrigger implements ChangeSetListener {
       repository.update(UserPreferences.KEY, UserPreferences.SHOW_BUDGET_VIEW_WIZARD, true);
     }
 
-    if (currentJarVersion < 44) {
-      if (!repository.get(UserPreferences.KEY).isTrue(UserPreferences.SHOW_CATEGORIZATION_HELP_MESSAGE)) {
-        SignpostStatus.setAllCompleted(repository);
-      }
+    if (currentJarVersion < 45) {
+      SignpostStatus.setAllCompleted(repository);
     }
 
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);

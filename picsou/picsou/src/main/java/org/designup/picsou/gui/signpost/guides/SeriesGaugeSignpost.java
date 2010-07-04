@@ -10,7 +10,7 @@ public class SeriesGaugeSignpost extends SimpleSignpost {
   public SeriesGaugeSignpost(GlobRepository repository, Directory directory) {
     super(Lang.get("signpost.gaugeDescriptions"),
           SignpostStatus.SERIES_GAUGE_SHOWN,
-          SignpostStatus.CATEGORIZATION_SELECTION_SHOWN,
+          SignpostStatus.SERIES_AMOUNT_CLOSED,
           repository, directory);
   }
 }
