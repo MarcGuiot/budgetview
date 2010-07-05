@@ -53,7 +53,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
 
     int errorCount = 0;
     for (ApplicationThread thread : threads) {
-      thread.join();
+      thread.join(5000);
       if (thread.errorReceived) {
         errorCount++;
       }

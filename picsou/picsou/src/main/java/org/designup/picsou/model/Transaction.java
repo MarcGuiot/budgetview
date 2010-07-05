@@ -9,6 +9,7 @@ import org.globsframework.metamodel.index.MultiFieldNotUniqueIndex;
 import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import static org.globsframework.model.Key.create;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
@@ -234,8 +235,9 @@ public class Transaction {
 
   public static GlobList getUncategorizedTransactions(Integer monthId, GlobRepository repository) {
     return repository.findByIndex(SERIES_INDEX, SERIES, Series.UNCATEGORIZED_SERIES_ID)
-      .findByIndex(POSITION_MONTH, monthId).getGlobs()
-      .filterSelf(org.globsframework.model.utils.GlobMatchers.fieldEquals(PLANNED, false), repository);
+      .getGlobs()
+      .filterSelf(fieldEquals(BUDGET_MONTH, monthId), repository)
+      .filterSelf(fieldEquals(PLANNED, false), repository);
   }
 
   public static class Serializer implements PicsouGlobSerializer {

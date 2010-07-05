@@ -87,6 +87,7 @@
                     <path refid="maven.test.classpath"/>
                   </classpath>
                 </java>
+                <copy file="src/main/resources/demo/demo.snapshot" tofile="target/classes/demo/demo.snapshot"/>
                 <java fork="yes"
                       classname="org.designup.shrinker.JarShrinker" failonerror="true">
                   <classpath>
