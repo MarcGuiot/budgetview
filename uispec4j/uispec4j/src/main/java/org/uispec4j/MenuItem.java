@@ -13,6 +13,7 @@ import java.awt.*;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 /**
  * Wrapper for menu items (commands or sub-menus) such as JMenu, JMenuItem or JPopupMenu.<p/>
@@ -66,6 +67,14 @@ public class MenuItem extends AbstractUIComponent {
                           ArrayUtils.toString(getSubElementNames()));
     }
     return menuItem;
+  }
+
+  public Assertion contain(final String expectedName){
+    return new Assertion() {
+      public void check() {
+        AssertAdapter.assertTrue(Arrays.asList(getSubElementNames()).contains(expectedName));
+      }
+    };
   }
 
   public Assertion contentEquals(final String... expectedNames) {

@@ -7,6 +7,10 @@
 
     <release version="???">
       <action dev="mguiot" type="add">
+        Add contain on MenuItem to check if a given menu is present.
+      </action>
+
+      <action dev="mguiot" type="add">
         Add Window description in trace of ModelInterceptionCheckerHandler
       </action>
 
