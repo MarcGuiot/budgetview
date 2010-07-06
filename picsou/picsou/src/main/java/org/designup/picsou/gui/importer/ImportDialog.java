@@ -294,7 +294,7 @@ public class ImportDialog {
   private void loadLocalRepository(GlobRepository repository) {
     GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, Day.TYPE,
                             Account.TYPE, AccountUpdateMode.TYPE,
-                            Transaction.TYPE, Month.TYPE, UserPreferences.TYPE};
+                            Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE};
 
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)

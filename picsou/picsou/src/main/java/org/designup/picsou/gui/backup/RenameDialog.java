@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.backup;
 
 import org.designup.picsou.client.exceptions.RemoteException;
+import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.startup.Passwords;
 import org.designup.picsou.model.User;
@@ -29,8 +30,7 @@ public class RenameDialog {
     final Glob user = repository.get(User.KEY);
 
     final JPasswordField currentPasswordField =
-      builder.add("currentPassword", new JPasswordField())
-        .getComponent();
+      builder.add("currentPassword", new JPasswordField()).getComponent();
 
     if (user.isTrue(User.AUTO_LOGIN)) {
       currentPasswordField.setVisible(false);
@@ -90,6 +90,9 @@ public class RenameDialog {
               dialog.setVisible(false);
             }
           }
+          catch (UserAlreadyExists ex){
+            setErrorText("rename.user.error", messageLabel);
+          }
           catch (RemoteException found) {
             setErrorText("rename.authentication.error", messageLabel);
           }
@@ -106,10 +109,10 @@ public class RenameDialog {
     dialog.addPanelWithButtons(builder.<JPanel>load(), validate, cancel);
     dialog.pack();
     if (user.isTrue(User.AUTO_LOGIN)) {
-      currentPasswordField.requestFocusInWindow();
+      newName.requestFocusInWindow();
     }
     else {
-      newName.requestFocusInWindow();
+      currentPasswordField.requestFocusInWindow();
     }
     dialog.showCentered();
     builder.dispose();

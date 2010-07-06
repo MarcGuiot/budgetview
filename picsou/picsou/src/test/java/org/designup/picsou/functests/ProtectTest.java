@@ -6,7 +6,7 @@ import org.designup.picsou.functests.checkers.LoginChecker;
 public class ProtectTest extends LoggedInFunctionalTestCase {
 
   public void testNominal() throws Exception {
-    operations.protect("newUserName", "newPassword");
+    operations.protectFromAnonymous("newUserName", "newPassword");
     operations.logout();
     LoginChecker loginChecker = new LoginChecker(mainWindow);
     password = "newPassword";

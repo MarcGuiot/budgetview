@@ -250,7 +250,6 @@ public class MainPanel {
     menu.addSeparator();
     menu.add(backupAction);
     menu.add(restoreAction);
-    menu.add(protectAction);
 
     if (Gui.useMacOSMenu()) {
       MRJAdapter.setPreferencesEnabled(true);
@@ -263,6 +262,7 @@ public class MainPanel {
 
     menu.addSeparator();
     menu.add(registerAction);
+    menu.add(protectAction);
     menu.add(logoutAction);
     menu.add(deleteUserAction);
 

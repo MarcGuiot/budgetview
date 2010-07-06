@@ -62,7 +62,7 @@ public class ImportSession {
     localRepository.reset(GlobList.EMPTY, Transaction.TYPE, ImportedTransaction.TYPE, Day.TYPE, CurrentMonth.TYPE,
                           DeferredCardDate.TYPE, DeferredCardPeriod.TYPE, AccountCardType.TYPE, AccountType.TYPE);
     GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Day.TYPE, DeferredCardDate.TYPE,
-                        DeferredCardPeriod.TYPE, AccountCardType.TYPE, CurrentMonth.TYPE};
+                        DeferredCardPeriod.TYPE, AccountCardType.TYPE, CurrentMonth.TYPE, Month.TYPE};
     localRepository.reset(referenceRepository.getAll(types), types);
 
     importChangeSet = new DefaultChangeSet();

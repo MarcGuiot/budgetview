@@ -32,12 +32,12 @@ public class OperationChecker {
   private MenuItem preferencesMenu;
   private MenuItem undoMenu;
   private MenuItem redoMenu;
-  private MenuItem protectMenu;
   private MenuItem throwExceptionMenu;
   private MenuItem throwExceptionInRepositoryMenu;
   public static final String DEFAULT_ACCOUNT_NUMBER = "11111";
   private Window window;
   private MenuItem checkMenu;
+  private MenuItem fileMenu;
 
   public static OperationChecker init(Window window) {
     return new OperationChecker(window);
@@ -46,8 +46,7 @@ public class OperationChecker {
   public OperationChecker(Window window) {
     UISpecAssert.waitUntil(window.containsSwingComponent(JMenu.class), 10000);
     this.window = window;
-    MenuItem fileMenu = window.getMenuBar().getMenu("File");
-    protectMenu = fileMenu.getSubMenu("protect");
+    fileMenu = window.getMenuBar().getMenu("File");
     importMenu = fileMenu.getSubMenu("Import");
     exportMenu = fileMenu.getSubMenu("Export");
     preferencesMenu = fileMenu.getSubMenu("Preferences");
@@ -446,15 +445,26 @@ public class OperationChecker {
   }
 
   public void protect(String userName, String password) {
+    MenuItem protectMenu = fileMenu.getSubMenu("Change identifier");
     RenameChecker checker =
       new RenameChecker(WindowInterceptor.getModalDialog(protectMenu.triggerClick()));
     checker.set("password", userName, password);
   }
 
   public void protectFromAnonymous(String userName, String password) {
+    MenuItem protectMenu = fileMenu.getSubMenu("protect");
     RenameChecker checker =
       new RenameChecker(WindowInterceptor.getModalDialog(protectMenu.triggerClick()));
     checker.set(userName, password);
   }
 
+  public void checkProtect() {
+    MenuItem fileMenu = window.getMenuBar().getMenu("File");
+    UISpecAssert.assertThat(fileMenu.contain("protect"));
+  }
+
+  public void checkChangeUserName(){
+    MenuItem fileMenu = window.getMenuBar().getMenu("File");
+    UISpecAssert.assertThat(fileMenu.contain("Change identifier"));
+  }
 }
