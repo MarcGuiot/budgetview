@@ -45,9 +45,10 @@ public class BankGuideDialog {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/bank/bankGuideDialog.splits",
                                                       localRepository, localDirectory);
 
-    BankChooserPanel.registerComponents(builder);
+    OpenHelpAction openHelpAction = new OpenHelpAction(localDirectory);
 
-    builder.add("openHelp", new OpenHelpAction(localDirectory));
+    BankChooserPanel.registerComponents(builder, openHelpAction);
+    builder.add("openHelp", openHelpAction);
 
     dialog = PicsouDialog.create(parent, localDirectory);
     dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction(dialog));

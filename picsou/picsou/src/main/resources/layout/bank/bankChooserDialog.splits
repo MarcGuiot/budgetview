@@ -5,7 +5,14 @@
   <panel styleClass="dialog" preferredSize="(400,250)" opaque="true">
     <column styleClass="innerDialog">
       <label text="$bank.chooser.title" styleClass="title"/>
-      <panel ref="bankChooserPanel"/>
+      <grid>
+        <label text="$bank.chooser.editLabel" gridPos="(0,0)" styleClass="formLabel"/>
+        <textField ref="bankEditor" gridPos="(1,0)"/>
+        <label text="$bank.chooser.message" gridPos="(0,1)" styleClass="formLabel"/>
+        <scrollPane gridPos="(1,1)">
+          <list ref="bankList"/>
+        </scrollPane>
+      </grid>
     </column>
   </panel>
 
