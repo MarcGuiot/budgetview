@@ -6,8 +6,6 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BankEntity;
 import org.designup.picsou.model.TransactionType;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class SavingsTest extends LoggedInFunctionalTestCase {
 
   public void testCreateSavingsInMainAccount() throws Exception {
@@ -159,8 +157,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkPosition("Epargne LCL", 1000);
 
     views.selectSavings();
-    savingsView.checkAmount("Epargne LCL", "Epargne", 0, 200);
-    savingsView.checkAmount("Epargne LCL", "Travaux", 0, -400);
+    savingsView.checkSeriesAmounts("Epargne LCL", "Epargne", 0, 200);
+    savingsView.checkSeriesAmounts("Epargne LCL", "Travaux", 0, -400);
   }
 
   public void testCreateSavingsSeriesAndAssociateLaterToAccount() throws Exception {
@@ -387,9 +385,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectSavings();
 
     timeline.selectMonth("2008/10");
-    savingsView.checkAmount("Epargne", "CAF", 0, 300);
+    savingsView.checkSeriesAmounts("Epargne", "CAF", 0, 300);
     timeline.selectMonth("2008/06");
-    savingsView.checkAmount("Epargne", "CAF", 300, 300);
+    savingsView.checkSeriesAmounts("Epargne", "CAF", 300, 300);
 
     savingsView.editSeries("Epargne", "CAF")
       .selectMonth(200806)
@@ -701,7 +699,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.checkSeries("CA", 100, 100);
     views.selectSavings();
-    savingsView.checkAmount("Account n. 111", "CA", 100, 100);
+    savingsView.checkSeriesAmounts("Account n. 111", "CA", 100, 100);
     views.selectBudget();
     budgetView.savings.checkTotalAmounts(100, 100);
 
@@ -854,8 +852,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkSummary(4000, "2008/08/06");
 
     views.selectSavings();
-    savingsView.checkAmount("Epargne", "Virement CAF", 300, 300);
-    savingsView.checkAmount("Account n. 111222", "Placement", 100, 100);
+    savingsView.checkSeriesAmounts("Epargne", "Virement CAF", 300, 300);
+    savingsView.checkSeriesAmounts("Account n. 111222", "Placement", 100, 100);
 
     views.selectHome();
     timeline.selectMonth("2008/09");
@@ -864,8 +862,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkEstimatedPosition(4400);
 
     views.selectSavings();
-    savingsView.checkAmount("Epargne", "Virement CAF", 0, 300);
-    savingsView.checkAmount("Account n. 111222", "Placement", 0, 100);
+    savingsView.checkSeriesAmounts("Epargne", "Virement CAF", 0, 300);
+    savingsView.checkSeriesAmounts("Account n. 111222", "Placement", 0, 100);
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
@@ -879,7 +877,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkSeries("Placement", 100, 100);
     budgetView.savings.checkSeriesNotPresent("Virement CAF");
     views.selectSavings();
-    savingsView.checkAmount("Account n. 111222", "Placement", 100, 100);
+    savingsView.checkSeriesAmounts("Account n. 111222", "Placement", 100, 100);
 
     timeline.selectMonth("2008/09");
     views.selectBudget();
@@ -887,7 +885,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkSeriesNotPresent("Virement CAF");
 
     views.selectSavings();
-    savingsView.checkAmount("Account n. 111222", "Placement", 0, 100);
+    savingsView.checkSeriesAmounts("Account n. 111222", "Placement", 0, 100);
 
     savingsView.editSeries("Account n. 111222", "Placement").deleteCurrentSeriesWithConfirmation();
     savingsView.editSeries("Epargne", "Virement CAF").deleteCurrentSeriesWithConfirmation();
@@ -1063,8 +1061,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/06");
 
     views.selectSavings();
-    savingsView.checkAmount("Savings 1", "Test", -300, -300);
-    savingsView.checkAmount("Savings 2", "Test", 300, 300);
+    savingsView.checkSeriesAmounts("Savings 1", "Test", -300, -300);
+    savingsView.checkSeriesAmounts("Savings 2", "Test", 300, 300);
     savingsView.editSeries("Savings 1", "Test").deleteCurrentSeriesWithConfirmation();
     String fileName = operations.backup(this);
     operations.restore(fileName);

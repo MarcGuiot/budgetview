@@ -10,6 +10,32 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     super.setUp();
   }
 
+  public void testEditingSavingsSeries() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/07/30")
+      .addTransaction("2009/07/10", -200.00, "Virt")
+      .load();
+
+    savingsAccounts
+      .createNewAccount()
+      .setAccountName("ING")
+      .selectBank("ING Direct")
+      .setPosition(200)
+      .validate();
+
+    views.selectCategorization();
+    categorization.setNewSavings("Virt", "Epargne", "Main accounts", "ING");
+
+    views.selectSavings();
+    savingsView.checkContainsSeries("ING", "Epargne");
+    savingsView.checkSeriesAmounts("ING", "Epargne", 200, 200);
+    savingsView.editPlannedAmount("ING", "Epargne")
+      .checkAmountsRadioAreNotVisible()
+      .setAmount(300)
+      .validate();
+    savingsView.checkSeriesAmounts("ING", "Epargne", 200, 300);
+  }
+
   public void testSavingsAccountsEvolution() throws Exception {
 
     operations.openPreferences().setFutureMonthsCount(12).validate();

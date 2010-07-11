@@ -6,7 +6,6 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
@@ -470,13 +469,13 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkTotalAmounts(0, 0);
 
     views.selectSavings();
-    savingsView.checkAmount("Epargne", "CAF", 300, 300);
+    savingsView.checkSeriesAmounts("Epargne", "CAF", 300, 300);
 
     restartApplication();
 
     views.selectSavings();
 
-    savingsView.checkAmount("Epargne", "CAF", 300, 300);
+    savingsView.checkSeriesAmounts("Epargne", "CAF", 300, 300);
     timeline.selectMonth("2008/08");
 
     views.selectHome();
