@@ -13,7 +13,8 @@
 
     <style selector="button#balanceLabel" fill="none" anchor="center"/>
 
-    <style selector="button#uncategorized" ui="underlinedButtonUI" iconTextGap="2"/>
+    <style selector="button#uncategorized" ui="underlinedButtonUI"
+           horizontalTextPosition="left" iconTextGap="2"/>
 
     <style id="uncategorizedEnabled" selector="x"
            icon="arrow_right_red.png" rolloverIcon="arrow_right_blue_full.png"/>

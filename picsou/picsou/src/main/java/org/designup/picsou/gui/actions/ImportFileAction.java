@@ -5,8 +5,8 @@ import org.designup.picsou.gui.importer.ImportDialog;
 import org.designup.picsou.gui.license.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.startup.OpenRequestManager;
-import org.designup.picsou.model.User;
 import org.designup.picsou.model.SignpostStatus;
+import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -99,9 +99,8 @@ public class ImportFileAction extends AbstractAction {
       }
       else {
         if (User.isDemoUser(repository.get(User.KEY))) {
-          MessageDialog dialog = MessageDialog.createMessageDialog("demo.import.title", "demo.import.content", directory.get(JFrame.class),
-                                                                   directory);
-          dialog.show();
+          MessageDialog.show("demo.import.title", "demo.import.content",
+                             directory.get(JFrame.class), directory);
         }
         else {
           LicenseActivationDialog dialog = new LicenseActivationDialog(directory.get(JFrame.class),

@@ -3,16 +3,16 @@ package org.designup.picsou.gui;
 import org.designup.picsou.bank.SpecificBankLoader;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.accounts.utils.Day;
+import org.designup.picsou.gui.backup.BackupService;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.config.RegistrationTrigger;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.series.view.SeriesWrapperUpdateTrigger;
-import org.designup.picsou.gui.backup.BackupService;
 import org.designup.picsou.gui.upgrade.ConfigUpgradeTrigger;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
-import org.designup.picsou.gui.utils.DataCheckerAction;
+import org.designup.picsou.gui.utils.datacheck.DataCheckingService;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
@@ -23,7 +23,6 @@ import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
@@ -36,6 +35,8 @@ import picsou.AwtExceptionHandler;
 
 import javax.swing.*;
 import java.util.Collection;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class PicsouInit {
 
@@ -178,8 +179,8 @@ public class PicsouInit {
               }
             });
             repository.reset(userData, typesToReplace);
-            DataCheckerAction action = new DataCheckerAction(repository, directory);
-            action.check();
+            DataCheckingService dataChecker = new DataCheckingService(repository, directory);
+            dataChecker.check();
             firstReset = false;
 
             userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdater() {

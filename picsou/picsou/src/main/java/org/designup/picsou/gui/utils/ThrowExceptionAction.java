@@ -11,7 +11,7 @@ public class ThrowExceptionAction extends AbstractAction {
   public void actionPerformed(ActionEvent e) {
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
-        throw new RuntimeException("");
+        throw new RuntimeException("Exception test");
       }
     });
   }

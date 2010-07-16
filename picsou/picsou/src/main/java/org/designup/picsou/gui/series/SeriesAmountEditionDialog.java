@@ -5,13 +5,10 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.SeriesPeriodicityAndScopeStringifier;
 import org.designup.picsou.gui.series.edition.AlignSeriesBudgetAmountsAction;
 import org.designup.picsou.gui.series.edition.SeriesBudgetSliderAdapter;
-import org.designup.picsou.gui.series.evolution.SeriesAmountChartPanel;
 import org.designup.picsou.gui.series.utils.SeriesAmountLabelStringifier;
 import org.designup.picsou.gui.signpost.actions.SetSignpostStatusAction;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -63,7 +60,7 @@ public class SeriesAmountEditionDialog {
 
     this.seriesEditionDialog = seriesEditionDialog;
 
-// A remettre pour l'affichage du graphe
+// TODO: A remettre pour l'affichage du graphe
 //    selectionService.addListener(new GlobSelectionListener() {
 //      public void selectionUpdated(GlobSelection selection) {
 //        select(localRepository.find(currentSeries), selection.getAll(Month.TYPE).getValueSet(Month.ID));
@@ -165,7 +162,7 @@ public class SeriesAmountEditionDialog {
       return;
     }
 
-    selectionInProgress= true;
+    selectionInProgress = true;
     try {
       selectedMonthIds = monthIds;
       GlobSelectionBuilder selection = GlobSelectionBuilder.init();
@@ -184,7 +181,7 @@ public class SeriesAmountEditionDialog {
       selectionService.select(selection.get());
     }
     finally {
-      selectionInProgress= false;
+      selectionInProgress = false;
     }
   }
 

@@ -439,9 +439,9 @@ public class OperationChecker {
     return MessageAndDetailsDialogChecker.init(throwExceptionInRepositoryMenu.triggerClick());
   }
 
-  public void checkOk() {
-    MessageAndDetailsDialogChecker.init(checkMenu.triggerClick())
-      .checkDetailsContain("Start checking\nEnd checking").close();
+  public void checkDataIsOk() {
+    MessageDialogChecker.init(checkMenu.triggerClick())
+      .checkMessageContains("No error was found").close();
   }
 
   public void protect(String userName, String password) {
