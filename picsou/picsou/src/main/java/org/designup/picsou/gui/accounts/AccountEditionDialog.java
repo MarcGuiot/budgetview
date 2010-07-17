@@ -141,7 +141,9 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
     doShow(localRepository.get(account.getKey()), false);
   }
 
-  public void showWithNewAccount(AccountType type, AccountUpdateMode updateMode, boolean updateModeEditable) {
+  public void showWithNewAccount(AccountType type, boolean accountTypeEditable,
+                                 AccountUpdateMode updateMode, boolean updateModeEditable) {
+    accountTypeCombo.setEnabled(accountTypeEditable);
     updateModeCombo.setEnabled(updateModeEditable);
     Glob newAccount = localRepository.create(Account.TYPE,
                                              value(Account.ACCOUNT_TYPE, type.getId()),

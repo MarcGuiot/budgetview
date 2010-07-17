@@ -111,6 +111,10 @@ public class CategorizationChecker extends GuiChecker {
     return new OtherCategorizationChecker(getPanel(BudgetArea.OTHER), this);
   }
 
+  public AccountEditionChecker createAccount() {
+    return AccountEditionChecker.open(getPanel().getButton("New account").triggerClick());
+  }
+
   public void copyBankFormatToClipboard() {
     JTable jTable = getTable().getAwtComponent();
     KeyUtils.pressKey(jTable, org.uispec4j.Key.plaformSpecificCtrl(org.uispec4j.Key.B));

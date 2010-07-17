@@ -266,7 +266,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
                                                          frame, directory) {
         protected void postValidate() {
           AccountEditionDialog accountEdition = new AccountEditionDialog(frame, parentRepository, directory);
-          accountEdition.showWithNewAccount(AccountType.MAIN, AccountUpdateMode.MANUAL, true);
+          accountEdition.showWithNewAccount(AccountType.MAIN, true, AccountUpdateMode.MANUAL, true);
         }
       };
       dialog.show();
