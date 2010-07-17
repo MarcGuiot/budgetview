@@ -2,7 +2,7 @@
 <globs>
   <bankFormat id='13'>
 
-    <bank name="Fortis" id="13" downloadUrl="https://www.fortisbanking.be/">
+    <bank name="Fortis" id="13" downloadUrl="https://www.bnpparibasfortis.be">
       <bankEntity label="FORTIS"/>
     </bank>
 
