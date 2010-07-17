@@ -4,6 +4,7 @@ import org.designup.picsou.gui.signpost.SimpleSignpost;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;

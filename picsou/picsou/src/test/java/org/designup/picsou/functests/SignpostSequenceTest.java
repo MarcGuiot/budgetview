@@ -68,6 +68,11 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     categorization.setVariable("auchan", "Groceries");
     categorization.checkCompleteProgressMessageShown();
 
+    // === Editing series amounts in SeriesEvolution does not remove budget view signpost ===
+
+    views.selectEvolution();
+    seriesEvolution.editSeries("Groceries", "May 10").validate();
+
     // === Series amounts ===
 
     views.selectBudget();
@@ -112,7 +117,37 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     checkNoSignpostVisible();
 
+    views.selectBudget();
+    checkNoSignpostVisible();
+
     views.selectCategorization();
     checkNoSignpostVisible();
+  }
+
+  public void testRestartDuringCategorization() throws Exception {
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2010/05/27", -100, "rent")
+      .addTransaction("2010/05/28", +500, "income")
+      .addTransaction("2010/05/29", -10, "auchan")
+      .load();
+
+    views.checkCategorizationSelected();
+    categorization.selectTableRow(0);
+    categorization.selectVariable();
+
+    // === Amount signpost is shown in the budget view ===
+    views.selectBudget();
+    budgetView.variable.checkAmountSignpostDisplayed(
+      "Groceries", "Click on the planned amounts to set your own values");
+
+    // === Restart ===
+    restartApplication();
+
+    // === Amount signpost is shown on restart ===
+    views.selectBudget();
+    budgetView.variable.checkAmountSignpostDisplayed(
+      "Groceries", "Click on the planned amounts to set your own values");
   }
 }

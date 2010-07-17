@@ -25,6 +25,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.Log;
@@ -34,6 +35,7 @@ import org.globsframework.utils.exceptions.InvalidData;
 import picsou.AwtExceptionHandler;
 
 import javax.swing.*;
+import java.util.Arrays;
 import java.util.Collection;
 
 import static org.globsframework.model.FieldValue.value;

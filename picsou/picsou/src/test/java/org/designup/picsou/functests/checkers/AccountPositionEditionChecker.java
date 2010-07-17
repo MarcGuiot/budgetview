@@ -75,7 +75,7 @@ public class AccountPositionEditionChecker extends GuiChecker {
   }
 
   public AccountPositionEditionChecker checkInitialMessageDisplayed() {
-    checkComponentVisible(window, JTextArea.class, "initialMessage", true);
+    checkComponentVisible(window, JEditorPane.class, "initialMessage", true);
     return this;
   }
 

@@ -44,9 +44,11 @@ public class UserPreferences {
   @DefaultInteger(0)
   public static IntegerField CURRENT_WIZARD_PAGE;
 
+  /** @deprecated */
   @DefaultBoolean(true)
   public static BooleanField SHOW_CATEGORIZATION_HELP_MESSAGE;
 
+  /** @deprecated */
   @DefaultBoolean(true)
   public static BooleanField SHOW_VARIABLE_EDITION_MESSAGE;
 
