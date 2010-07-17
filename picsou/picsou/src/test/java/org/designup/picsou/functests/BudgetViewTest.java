@@ -198,8 +198,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     budgetView.recurring.editSeries("Internet")
-      .checkTitle("Recurring")
+      .checkTitle("Editing a series")
       .checkName("Internet")
+      .checkBudgetArea("Recurring")
       .setName("Free")
       .validate();
 
