@@ -1,15 +1,14 @@
 package org.designup.picsou.gui.savings;
 
-import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.accounts.position.SavingsAccountPositionLabels;
 import org.designup.picsou.gui.budget.SeriesEditionButtons;
 import org.designup.picsou.gui.projects.NextProjectsView;
+import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Series;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -19,15 +18,12 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 public class SavingsView extends View {
-  private SeriesEditionDialog seriesEditionDialog;
 
   public SavingsView(GlobRepository repository, Directory directory) {
     super(repository, directory);
-    seriesEditionDialog = directory.get(SeriesEditionDialog.class);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -49,14 +45,16 @@ public class SavingsView extends View {
     savingsChartView.registerComponents(builder);
 
     SeriesEditionButtons seriesButtons = new SeriesEditionButtons(BudgetArea.EXTRAS,
-                                                                  repository, directory, seriesEditionDialog);
+                                                                  repository, directory,
+                                                                  directory.get(SeriesEditionDialog.class));
     seriesButtons.setNames("createProject", "editAllProjects");
     seriesButtons.registerButtons(builder);
   }
 
   private void createSavingsBlock(GlobsPanelBuilder builder) {
 
-    SeriesEditionButtons seriesButtons = new SeriesEditionButtons(BudgetArea.SAVINGS, repository, directory, seriesEditionDialog);
+    SeriesEditionButtons seriesButtons = new SeriesEditionButtons(BudgetArea.SAVINGS, repository, directory,
+                                                                  directory.get(SeriesEditionDialog.class));
     seriesButtons.setNames("createSavingsSeries", "editAllSavingsSeries");
     seriesButtons.registerButtons(builder);
 
@@ -101,7 +99,8 @@ public class SavingsView extends View {
                       positionLabels.getEstimatedAccountPositionDateLabel());
 
       final SavingsSeriesView seriesView = new SavingsSeriesView(account, repository, directory,
-                                                                 seriesEditionDialog, seriesButtons);
+                                                                 directory.get(SeriesAmountEditionDialog.class),
+                                                                 seriesButtons);
       cellBuilder.add("savingsSeries", seriesView.getPanel());
       cellBuilder.addDisposeListener(seriesView);
     }

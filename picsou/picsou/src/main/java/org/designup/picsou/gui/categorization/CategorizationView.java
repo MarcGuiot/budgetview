@@ -358,7 +358,9 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
   private Action getAdditionalAction(BudgetArea budgetArea) {
     if (BudgetArea.SAVINGS.equals(budgetArea)) {
-      return new NewAccountAction(AccountType.SAVINGS, repository, directory);
+      NewAccountAction action = new NewAccountAction(AccountType.SAVINGS, repository, directory);
+      action.setAccountTypeEditable(false);
+      return action;
     }
     return new DisabledAction();
   }

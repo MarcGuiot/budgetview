@@ -2,7 +2,6 @@ package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.tips.DetailsTipFactory;
-import org.designup.picsou.gui.signpost.guides.BudgetSignpostService;
 import org.designup.picsou.gui.signpost.guides.SeriesGaugeSignpost;
 import org.designup.picsou.gui.signpost.guides.SeriesPeriodicitySignpost;
 import org.designup.picsou.gui.signpost.guides.SeriesAmountSignpost;
@@ -56,7 +55,6 @@ public class BudgetAreaSeriesView extends View {
   private JEditorPane footerArea = GuiUtils.createReadOnlyHtmlComponent();
 
   private SeriesAmountEditionDialog seriesAmountEditionDialog;
-  private BudgetSignpostService budgetSignpostService;
 
   public BudgetAreaSeriesView(String name,
                               final BudgetArea budgetArea,
@@ -70,7 +68,6 @@ public class BudgetAreaSeriesView extends View {
     this.budgetArea = budgetArea;
     this.footerGenerator = footerGenerator;
     this.seriesAmountEditionDialog = seriesAmountEditionDialog;
-    this.budgetSignpostService = directory.get(BudgetSignpostService.class);
 
     seriesButtons = new SeriesEditionButtons(budgetArea, repository, directory, seriesEditionDialog);
 
@@ -190,6 +187,7 @@ public class BudgetAreaSeriesView extends View {
 
       GlobButtonView seriesNameButton = seriesButtons.createSeriesButton(series);
       cellBuilder.add("seriesName", seriesNameButton.getComponent());
+      cellBuilder.addDisposeListener(seriesNameButton);
 
       addAmountButton("observedSeriesAmount", PeriodSeriesStat.AMOUNT, series, cellBuilder, new GlobListFunctor() {
         public void run(GlobList list, GlobRepository repository) {
@@ -199,7 +197,7 @@ public class BudgetAreaSeriesView extends View {
 
       JButton amountButton = addAmountButton("plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder, new GlobListFunctor() {
         public void run(GlobList list, GlobRepository repository) {
-          repository.update(UserPreferences.KEY, UserPreferences.SHOW_VARIABLE_EDITION_MESSAGE, false);
+          SignpostStatus.setCompleted(SignpostStatus.SERIES_AMOUNT_SHOWN, repository);
           seriesAmountEditionDialog.show(series, selectedMonthIds);
         }
       });
@@ -212,14 +210,15 @@ public class BudgetAreaSeriesView extends View {
                           GlobMatchers.fieldEquals(PeriodSeriesStat.SERIES, series.get(Series.ID)),
                           repository, directory);
       cellBuilder.add("gauge", gaugeView.getComponent());
+      cellBuilder.addDisposeListener(gaugeView);
 
-      if (budgetSignpostService.isPeriodicitySeries(series.getKey())) {
+      if (SignpostStatus.isPeriodicitySeries(repository, series.getKey())) {
         Signpost signpost = new SeriesPeriodicitySignpost(repository, directory);
         cellBuilder.addDisposeListener(signpost);
         signpost.attach(seriesNameButton.getComponent());
       }
 
-      if (budgetSignpostService.isAmountSeries(series.getKey())) {
+      if (SignpostStatus.isAmountSeries(repository, series.getKey())) {
         Signpost gaugeSignpost = new SeriesGaugeSignpost(repository, directory);
         cellBuilder.addDisposeListener(gaugeSignpost);
         gaugeSignpost.attach(gaugeView.getComponent());
@@ -229,8 +228,6 @@ public class BudgetAreaSeriesView extends View {
         amountSignpost.attach(amountButton);
       }
 
-      cellBuilder.addDisposeListener(gaugeView);
-      cellBuilder.addDisposeListener(seriesNameButton);
     }
 
     private JButton addAmountButton(String name,

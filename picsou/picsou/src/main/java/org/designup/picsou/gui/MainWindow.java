@@ -188,8 +188,7 @@ public class MainWindow implements WindowManager {
       serverAccess.deleteUser(name, password);
     }
     catch (RemoteException e) {
-      MessageDialog.createMessageDialog("delete.user.fail.title", "delete.user.fail.content", frame, directory)
-        .show();
+      MessageDialog.show("delete.user.fail.title", "delete.user.fail.content", frame, directory);
     }
     logout();
   }

@@ -1029,11 +1029,22 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
     timeline.selectAll();
     views.selectHome();
-    savingsAccounts.createSavingsAccount("Epargne", 1000.);
     views.selectCategorization();
     categorization
       .selectTransactions("Virement")
-      .selectSavings().createSeries()
+      .selectSavings();
+
+    categorization.createAccount()
+      .setAccountName("Epargne")
+      .selectBank("ING Direct")
+      .checkIsSavings()
+      .checkAccountTypeNotEditable()
+      .setPosition(1000.0)
+      .validate();
+    
+    categorization
+      .selectSavings()
+      .createSeries()
       .setFromAccount("Main accounts")
       .setToAccount("Epargne")
       .setName("Epargne")
@@ -1117,6 +1128,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows(0)
       .selectSavings()
       .createSavingsAccount()
+      .checkIsSavings()
+      .checkAccountTypeNotEditable()
       .setAccountName("Epargne ING")
       .selectBank("ING Direct")
       .setPosition(200.00)

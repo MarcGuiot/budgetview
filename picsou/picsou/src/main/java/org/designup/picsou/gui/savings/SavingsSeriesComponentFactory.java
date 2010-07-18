@@ -1,17 +1,17 @@
 package org.designup.picsou.gui.savings;
 
+import org.designup.picsou.gui.budget.SeriesEditionButtons;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.components.charts.GlobGaugeView;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
-import org.designup.picsou.gui.budget.SeriesEditionButtons;
+import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
 import org.designup.picsou.model.Account;
+import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
-import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
@@ -34,19 +34,18 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
   private GlobRepository repository;
   private Directory directory;
   private GlobStringifier seriesStringifier;
-  private SeriesEditionDialog seriesEditionDialog;
+  private SeriesAmountEditionDialog seriesAmountEditionDialog;
   private SeriesEditionButtons seriesButtons;
 
   public SavingsSeriesComponentFactory(Glob account,
-                                       String accountName,
                                        GlobRepository repository,
                                        Directory directory,
-                                       SeriesEditionDialog seriesEditionDialog,
+                                       SeriesAmountEditionDialog seriesAmountEditionDialog,
                                        SeriesEditionButtons seriesButtons) {
     this.account = account;
     this.repository = repository;
     this.directory = directory;
-    this.seriesEditionDialog = seriesEditionDialog;
+    this.seriesAmountEditionDialog = seriesAmountEditionDialog;
     this.seriesButtons = seriesButtons;
     this.seriesStringifier = directory.get(DescriptionService.class).getStringifier(Series.TYPE);
   }
@@ -70,7 +69,7 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
 
     addAmountButton(name + ".", "plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder, new GlobListFunctor() {
       public void run(GlobList list, GlobRepository repository) {
-        showSeriesEdition(series);
+        showSeriesAmountEdition(series);
       }
     });
 
@@ -83,7 +82,7 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
     }
     else {
       if (toAccount == null || !toAccount.equals(account)) {
-        throw new UnexpectedApplicationState("");
+        throw new UnexpectedApplicationState("No target account");
       }
       gauge = BudgetAreaGaugeFactory.createSavingsGauge(mainAccount);
     }
@@ -94,7 +93,7 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
     final GlobGaugeView gaugeView =
       new GlobGaugeView(PeriodSeriesStat.TYPE, gauge, BudgetArea.SAVINGS, PeriodSeriesStat.AMOUNT,
                         PeriodSeriesStat.PLANNED_AMOUNT, PeriodSeriesStat.PAST_REMAINING, PeriodSeriesStat.FUTURE_REMAINING,
-                        PeriodSeriesStat.PAST_OVERRUN, PeriodSeriesStat.FUTURE_OVERRUN, 
+                        PeriodSeriesStat.PAST_OVERRUN, PeriodSeriesStat.FUTURE_OVERRUN,
                         GlobMatchers.fieldEquals(PeriodSeriesStat.SERIES, series.get(Series.ID)),
                         repository, directory) {
         protected double getValue(Glob glob, DoubleField field) {
@@ -139,7 +138,7 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
     };
   }
 
-  private void showSeriesEdition(Glob series) {
-    seriesEditionDialog.show(series, directory.get(SelectionService.class).getSelection(Month.TYPE).getValueSet(Month.ID));
+  private void showSeriesAmountEdition(Glob series) {
+    seriesAmountEditionDialog.show(series, directory.get(SelectionService.class).getSelection(Month.TYPE).getValueSet(Month.ID));
   }
 }

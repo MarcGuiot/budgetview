@@ -250,7 +250,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -400.00, "Course")
       .check();
 
-    operations.checkOk();
+    operations.checkDataIsOk();
 
     setCurrentDate("2008/09/02");
     restartApplication();
@@ -279,7 +279,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .add("10/08/2008", TransactionType.PRELEVEMENT, "ED", "", -300.00, "End date")
       .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -400.00, "Course")
       .check();
-    operations.checkOk();
+    operations.checkDataIsOk();
 
     setCurrentDate("2008/10/02");
     restartApplication();
@@ -313,7 +313,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .add("10/08/2008", TransactionType.PRELEVEMENT, "ED", "", -300.00, "End date")
       .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -400.00, "Course")
       .check();
-    operations.checkOk();
+    operations.checkDataIsOk();
 
 
     setCurrentDate("2009/01/02");
@@ -358,7 +358,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .add("10/08/2008", TransactionType.PRELEVEMENT, "ED", "", -300.00, "End date")
       .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -400.00, "Course")
       .check();
-    operations.checkOk();
+    operations.checkDataIsOk();
 
     operations.openPreferences().setFutureMonthsCount(1).validate();
     timeline.selectAll();
@@ -397,7 +397,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .add("10/08/2008", TransactionType.PRELEVEMENT, "ED", "", -300.00, "End date")
       .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -400.00, "Course")
       .check();
-    operations.checkOk();
+    operations.checkDataIsOk();
   }
 
 
@@ -469,13 +469,13 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkTotalAmounts(0, 0);
 
     views.selectSavings();
-    savingsView.checkAmount("Epargne", "CAF", 300, 300);
+    savingsView.checkSeriesAmounts("Epargne", "CAF", 300, 300);
 
     restartApplication();
 
     views.selectSavings();
 
-    savingsView.checkAmount("Epargne", "CAF", 300, 300);
+    savingsView.checkSeriesAmounts("Epargne", "CAF", 300, 300);
     timeline.selectMonth("2008/08");
 
     views.selectHome();

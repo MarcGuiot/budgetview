@@ -33,9 +33,25 @@ public class SavingsViewChecker extends GuiChecker {
     assertThat(date.textContains(updateDate));
   }
 
-  public void checkAmount(String accountName, String seriesName, double observedAmount, double plannedAmount) {
-    assertThat(window.getButton(accountName + "." + seriesName + ".observedSeriesAmount").textEquals(toString(observedAmount)));
-    assertThat(window.getButton(accountName + "." + seriesName + ".plannedSeriesAmount").textEquals(toString(plannedAmount)));
+  public void checkContainsSeries(String accountName, String seriesName) {
+    assertThat(getPanel().containsUIComponent(Button.class, getButtonName(accountName, seriesName)));
+  }
+
+  public void checkSeriesAmounts(String accountName, String seriesName, double observedAmount, double plannedAmount) {
+    assertThat(getObservedAmountButton(accountName, seriesName).textEquals(toString(observedAmount)));
+    assertThat(getPlannedAmountButton(accountName, seriesName).textEquals(toString(plannedAmount)));
+  }
+  
+  public SeriesAmountEditionDialogChecker editPlannedAmount(String accountName, String seriesName) {
+    return SeriesAmountEditionDialogChecker.open(getPlannedAmountButton(accountName, seriesName).triggerClick());
+  }
+
+  private Button getPlannedAmountButton(String accountName, String seriesName) {
+    return getPanel().getButton(accountName + "." + seriesName + ".plannedSeriesAmount");
+  }
+
+  private Button getObservedAmountButton(String accountName, String seriesName) {
+    return getPanel().getButton(accountName + "." + seriesName + ".observedSeriesAmount");
   }
 
   public void checkNoAccounts() {
@@ -88,7 +104,11 @@ public class SavingsViewChecker extends GuiChecker {
   }
 
   private Button getSeriesButton(String accountName, String seriesName) {
-    String buttonName = accountName + "." + seriesName + ".edit";
+    String buttonName = getButtonName(accountName, seriesName);
     return getPanel().getButton(buttonName);
+  }
+
+  private String getButtonName(String accountName, String seriesName) {
+    return accountName + "." + seriesName + ".edit";
   }
 }

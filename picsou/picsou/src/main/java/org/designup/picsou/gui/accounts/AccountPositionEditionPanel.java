@@ -3,6 +3,7 @@ package org.designup.picsou.gui.accounts;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.description.AccountStringifier;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -10,6 +11,7 @@ import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobNumericEditor;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -28,7 +30,7 @@ public class AccountPositionEditionPanel {
   private Date balanceDate;
   private AccountStringifier accountStringifier;
 
-  private JTextArea initialMessage;
+  private JEditorPane initialMessage;
   private GlobNumericEditor editor;
   private JLabel transactionDateField;
   private JLabel transactionLabelField;
@@ -50,7 +52,8 @@ public class AccountPositionEditionPanel {
       .setValidationAction(validateAction)
       .setNotifyOnKeyPressed(true);
 
-    initialMessage = builder.add("initialMessage", new JTextArea()).getComponent();
+    initialMessage = Gui.createHtmlDisplay();
+    builder.add("initialMessage", initialMessage);
 
     accountStringifier = new AccountStringifier();
     accountNameField = builder.add("accountName", new JLabel()).getComponent();
@@ -72,6 +75,7 @@ public class AccountPositionEditionPanel {
 
   public void setInitialMessageVisible(boolean visible) {
     initialMessage.setVisible(visible);
+    GuiUtils.revalidate(initialMessage);
   }
 
   public void setText(String text) {

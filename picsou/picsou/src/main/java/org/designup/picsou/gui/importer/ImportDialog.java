@@ -530,13 +530,13 @@ public class ImportDialog {
     if ((transactionCount > 0) && repository.contains(Series.TYPE, Series.USER_SERIES_MATCHER)) {
       messageKey = "import.end.button.goto";
     }
-    MessageDialog.createMessageDialogWithButtonMessage("import.end.info.title",
-                                                       getEndOfImportMessageKey(importedTransactionCount, transactionCount, autocategorizedTransaction),
-                                                       dialog, localDirectory,
-                                                       messageKey,
-                                                       Integer.toString(transactionCount),
-                                                       Integer.toString(autocategorizedTransaction),
-                                                       Integer.toString(importedTransactionCount)).show();
+    MessageDialog.showWithButtonMessage("import.end.info.title",
+                                        getEndOfImportMessageKey(importedTransactionCount, transactionCount, autocategorizedTransaction),
+                                        dialog, localDirectory,
+                                        messageKey,
+                                        Integer.toString(transactionCount),
+                                        Integer.toString(autocategorizedTransaction),
+                                        Integer.toString(importedTransactionCount));
 
   }
 

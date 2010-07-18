@@ -1,18 +1,19 @@
-package org.designup.picsou.gui.utils;
+package org.designup.picsou.gui.utils.datacheck;
 
 import junit.framework.TestCase;
-import org.globsframework.model.impl.DefaultGlobRepository;
-import org.globsframework.model.impl.DefaultGlobIdGenerator;
-import org.globsframework.model.Key;
-import static org.globsframework.model.FieldValue.value;
-import org.globsframework.utils.directory.DefaultDirectory;
-import org.globsframework.utils.Dates;
-import org.designup.picsou.model.*;
-import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.PicsouInit;
 import org.designup.picsou.client.ServerAccess;
+import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.model.*;
+import org.globsframework.model.Key;
+import org.globsframework.model.impl.DefaultGlobIdGenerator;
+import org.globsframework.model.impl.DefaultGlobRepository;
+import org.globsframework.utils.Dates;
+import org.globsframework.utils.directory.DefaultDirectory;
 
-public class DataCheckerActionTest extends TestCase {
+import static org.globsframework.model.FieldValue.value;
+
+public class DataCheckingServiceTest extends TestCase {
   private DefaultGlobRepository repository;
   private DefaultDirectory directory;
 
@@ -42,30 +43,31 @@ public class DataCheckerActionTest extends TestCase {
   }
 
   private void checkMissingMonth(int[] missingMonths, int... currentMonths) {
-    createMonth(currentMonths);
-    DataCheckerAction action = new DataCheckerAction(repository, directory);
-    StringBuilder builder = new StringBuilder();
-    assertTrue(action.doCheck(builder));
-    String result = builder.toString();
+    createMonths(currentMonths);
+
+    DataCheckingService action = new DataCheckingService(repository, directory);
+    DataCheckReport report = new DataCheckReport();
+    assertTrue(action.doCheck(report));
+    String result = report.toString();
     for (int month : missingMonths) {
       assertTrue(Integer.toString(month), result.contains("Missing month " + month));
     }
     for (int month : currentMonths) {
       assertFalse(Integer.toString(month), result.contains("Missing month " + month));
     }
-    builder = new StringBuilder();
-    boolean check = action.doCheck(builder);
-    assertFalse(builder.toString(), check);
+    report.clear();
+    boolean check = action.doCheck(report);
+    assertFalse(report.toString(), check);
   }
 
-  private void createMonth(final int... months) {
+  private void createMonths(final int... months) {
     for (int month : months) {
       repository.create(Key.create(Month.TYPE, month));
     }
   }
 
   public void testErrorOnSeriesBudget() throws Exception {
-    createMonth(200906,200907,200908,200909,200910,200911,200912,201001,201002);
+    createMonths(200906,200907,200908,200909,200910,200911,200912,201001,201002);
     repository.create(Series.TYPE, value(Series.NAME, "series name"),
                       value(Series.BUDGET_AREA, 0),
                       value(Series.FIRST_MONTH, 200906),
@@ -75,7 +77,7 @@ public class DataCheckerActionTest extends TestCase {
   }
 
   public void testMissingSeries() throws Exception {
-    createMonth(200906, 200907, 200908, 200909, 200910);
+    createMonths(200906, 200907, 200908, 200909, 200910);
     repository.create(SeriesBudget.TYPE, value(SeriesBudget.ID, 123),
                       value(SeriesBudget.MONTH, 200907),
                       value(SeriesBudget.DAY, 1),
@@ -85,7 +87,7 @@ public class DataCheckerActionTest extends TestCase {
   }
 
   public void testBadEndOfSeries() throws Exception {
-    createMonth(200906, 200907, 200908, 200909, 200910);
+    createMonths(200906, 200907, 200908, 200909, 200910);
     repository.create(Series.TYPE, value(Series.ID, 123),
                       value(Series.NAME, "telecom"),
                       value(Series.BUDGET_AREA, BudgetArea.VARIABLE.getId()),
@@ -99,7 +101,7 @@ public class DataCheckerActionTest extends TestCase {
   }
 
   public void testErrorOnSeriesBudgetBefore() throws Exception {
-    createMonth(200906, 200907, 200908, 200909, 200910);
+    createMonths(200906, 200907, 200908, 200909, 200910);
     repository.create(Series.TYPE, value(Series.ID, 123),
                       value(Series.NAME, "telecom"),
                       value(Series.BUDGET_AREA, BudgetArea.VARIABLE.getId()),
@@ -112,7 +114,7 @@ public class DataCheckerActionTest extends TestCase {
   }
 
   public void testMissingSeriesBudgetAndMonth() throws Exception {
-    createMonth(200906, 200907, 200908, 200910);
+    createMonths(200906, 200907, 200908, 200910);
     repository.create(Series.TYPE, value(Series.ID, 123),
                       value(Series.NAME, "telecom"),
                       value(Series.BUDGET_AREA, BudgetArea.VARIABLE.getId()),
@@ -134,6 +136,10 @@ public class DataCheckerActionTest extends TestCase {
   }
 
   private void createTransaction(final int monthId) {
+    repository.findOrCreate(Key.create(Account.TYPE, 1),
+                            value(Account.NAME, "Account"),
+                            value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()));
+
     repository.create(Transaction.TYPE, value(Transaction.SERIES, 123),
                       value(Transaction.MONTH, monthId),
                       value(Transaction.DAY, 1),
@@ -144,20 +150,20 @@ public class DataCheckerActionTest extends TestCase {
                       value(Transaction.POSITION_MONTH, monthId),
                       value(Transaction.POSITION_DAY, 1),
                       value(Transaction.AMOUNT, 100.),
-                      value(Transaction.ACCOUNT, -1),
+                      value(Transaction.ACCOUNT, 1),
                       value(Transaction.TRANSACTION_TYPE, TransactionType.DEPOSIT.getId()));
   }
 
   private void doCheck(final String... expectedError) {
     PicsouInit.initTriggerRepository(ServerAccess.NULL, directory, repository);
-    DataCheckerAction checkerAction = new DataCheckerAction(repository, directory);
-    StringBuilder builder = new StringBuilder();
+    DataCheckingService checkerAction = new DataCheckingService(repository, directory);
+    DataCheckReport builder = new DataCheckReport();
     assertTrue(checkerAction.doCheck(builder));
     String text = builder.toString();
     for (String error : expectedError) {
       assertTrue(text, text.contains(error));
     }
-    StringBuilder output = new StringBuilder();
+    DataCheckReport output = new DataCheckReport();
     boolean result = checkerAction.doCheck(output);
     assertFalse(output.toString(), result);
   }

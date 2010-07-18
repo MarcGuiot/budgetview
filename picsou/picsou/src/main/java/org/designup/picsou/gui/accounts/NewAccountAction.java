@@ -15,6 +15,7 @@ public class NewAccountAction extends AbstractAction {
   private GlobRepository repository;
   private Directory directory;
   private final Window owner;
+  private boolean accountTypeEditable = true;
   private boolean updateModeEditable = true;
 
   public NewAccountAction(AccountType accountType, GlobRepository repository, Directory directory) {
@@ -30,6 +31,10 @@ public class NewAccountAction extends AbstractAction {
     initTooltip();
   }
 
+  public void setAccountTypeEditable(boolean accountTypeEditable) {
+    this.accountTypeEditable = accountTypeEditable;
+  }
+
   public NewAccountAction setUpdateModeEditable(boolean editable) {
     this.updateModeEditable = editable;
     return this;
@@ -37,7 +42,7 @@ public class NewAccountAction extends AbstractAction {
 
   public void actionPerformed(ActionEvent e) {
     AccountEditionDialog dialog = new AccountEditionDialog(owner, repository, directory);
-    dialog.showWithNewAccount(accountType, AccountUpdateMode.AUTOMATIC, updateModeEditable);
+    dialog.showWithNewAccount(accountType, accountTypeEditable, AccountUpdateMode.AUTOMATIC, updateModeEditable);
   }
 
   private void initTooltip() {

@@ -31,6 +31,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     budgetView.recurring.editSeries("Internet")
+      .checkTitle("Editing a series")
       .checkName("Internet")
       .setName("Free")
       .switchToManual()
@@ -86,6 +87,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Internet", -58.00, -58.00);
 
     budgetView.recurring.editSeries("Internet")
+      .checkTitle("Editing a series")
       .checkName("Internet")
       .setName("Free")
       .checkAccountsComboAreHidden()
@@ -345,8 +347,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.recurring
       .createSeries()
+      .checkTitle("Creating a series")
       .switchToManual()
-      .checkTitle("Recurring")
       .checkNameIsSelected()
       .checkSeriesListEquals("New series")
       .checkSeriesSelected("New series")
@@ -368,12 +370,14 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     budgetView.recurring.createSeries()
-      .checkTitle("Recurring")
+      .checkTitle("Creating a series")
+      .checkBudgetArea("Recurring")
       .setName("My recurrence")
       .validate();
 
     budgetView.variable.createSeries()
-      .checkTitle("Variable")
+      .checkTitle("Creating a series")
+      .checkBudgetArea("Variable")
       .setName("My envelope")
       .validate();
 
@@ -439,6 +443,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")
       .load();
+
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("A series")

@@ -163,6 +163,11 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
+  public AccountEditionChecker checkAccountTypeNotEditable() {
+    assertFalse(getTypeCombo().isEnabled());
+    return this;
+  }
+
   private ComboBox getTypeCombo() {
     return dialog.getComboBox("type");
   }

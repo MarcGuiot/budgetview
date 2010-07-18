@@ -2,11 +2,11 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <column>
+  <verticalBoxes>
 
-    <textArea ref="initialMessage" text="$accountPositionEdition.initialMessage"
-              styleClass="multiLineLabel" anchor="left" border="empty(0,0,10,0)"
-              preferredSize="(250,50)"/>
+    <htmlEditorPane ref="initialMessage"
+                    text="$accountPositionEdition.initialMessage"
+                    border="empty(0,0,10,0)"/>
 
     <label ref="accountName" styleClass="formLabel" fill="horizontal" horizontalAlignment="center"
            marginBottom="10"/>
@@ -29,5 +29,5 @@
       <filler fill="horizontal"/>
     </row>
 
-  </column>
+  </verticalBoxes>
 </splits>

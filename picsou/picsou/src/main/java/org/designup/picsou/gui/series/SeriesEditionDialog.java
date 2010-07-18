@@ -382,7 +382,7 @@ public class SeriesEditionDialog {
     if (seriesId != null) {
       series = localRepository.get(Key.create(Series.TYPE, seriesId));
     }
-    doShow(monthIds, series, null);
+    doShow(monthIds, series, false, null);
   }
 
   public void show(Glob series, Set<Integer> monthIds) {
@@ -399,7 +399,7 @@ public class SeriesEditionDialog {
     setSeriesListVisible(false);
     seriesPanel.setVisible(false);
     seriesListButtonPanel.setVisible(false);
-    doShow(monthIds, localRepository.get(series.getKey()), false);
+    doShow(monthIds, localRepository.get(series.getKey()), false, false);
   }
 
   private void retrieveAssociatedTransactions(Integer seriesId) {
@@ -439,9 +439,8 @@ public class SeriesEditionDialog {
       localRepository.completeChangeSet();
     }
     setSeriesListVisible(false);
-
     this.createdSeries = null;
-    doShow(selectedMonths.getValueSet(Month.ID), createdSeries, true);
+    doShow(selectedMonths.getValueSet(Month.ID), createdSeries, true, true);
     return this.createdSeries;
   }
 
@@ -511,8 +510,6 @@ public class SeriesEditionDialog {
 
   private void initBudgetAreaSeries(BudgetArea budgetArea, Ref<Integer> fromAccount, Ref<Integer> toAccount) {
     this.budgetArea = budgetArea;
-
-    this.titleLabel.setText(Lang.get("seriesEdition.title." + budgetArea.getName()));
 
     GlobList seriesList =
       repository.getAll(Series.TYPE, not(fieldEquals(Series.BUDGET_AREA, BudgetArea.UNCATEGORIZED.getId())));
@@ -589,7 +586,7 @@ public class SeriesEditionDialog {
     }
   }
 
-  private void doShow(Set<Integer> monthIds, Glob series, final Boolean selectName) {
+  private void doShow(Set<Integer> monthIds, Glob series, boolean creation, final Boolean selectName) {
     if (series != null && series.isTrue(Series.IS_MIRROR)) {
       series = localRepository.findLinkTarget(series, Series.MIRROR_SERIES);
     }
@@ -606,8 +603,14 @@ public class SeriesEditionDialog {
       budgetEditionPanel.selectMonths(monthIds);
       updateMonthSelectionCard();
     }
+
     tabbedPane.setSelectedIndex(0);
+
+    titleLabel.setText(Lang.get("seriesEdition.title." + (creation ? "creation" : "edition")));
+
+
     dialog.pack();
+
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
         if (selectName != null) {

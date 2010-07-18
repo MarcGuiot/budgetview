@@ -4,7 +4,6 @@ import org.designup.picsou.gui.components.dialogs.MessageFileDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.undo.UndoRedoService;
-import org.designup.picsou.gui.backup.BackupService;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
@@ -31,8 +30,7 @@ public class RestoreAction extends AbstractBackupRestoreAction {
 
     Glob user = repository.get(User.KEY);
     if (!user.isTrue(User.IS_REGISTERED_USER)){
-      MessageDialog dialog = MessageDialog.createMessageDialog("restore.trial.title", "restore.trial.content", frame, directory);
-      dialog.show();
+      MessageDialog.show("restore.trial.title", "restore.trial.content", frame, directory);
       return;
     }
 
@@ -53,8 +51,7 @@ public class RestoreAction extends AbstractBackupRestoreAction {
             Gui.setDefaultCursor(frame);
           }
           if (completed == BackupService.Status.BAD_VERSION){
-            MessageDialog dialog = MessageDialog.createMessageDialog("restore.error.title", "restore.bad.version", frame, directory);
-            dialog.show();
+            MessageDialog.show("restore.error.title", "restore.bad.version", frame, directory);
             return;
           }
           if (completed == BackupService.Status.OK) {

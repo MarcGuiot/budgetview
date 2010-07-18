@@ -30,7 +30,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
     setDeleteLocalPrevayler(false);
   }
 
-  public void testRestoreIsNotPossibleAndBackupWarmThatRestoreIsNotPossibleDuringTheTrialPeriod() throws Exception {
+  public void testRestoreIsNotPossibleAndBackupWarnsThatRestoreIsNotPossibleDuringTheTrialPeriod() throws Exception {
     setDeleteLocalPrevayler(true);
     setNotRegistered();
     restartApplication(true);
@@ -353,11 +353,6 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
 
     views.selectEvolution();
     seriesEvolution.checkRow("Salaire", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00");
-    operations.checkOk();
+    operations.checkDataIsOk();
   }
-
-  public void testRestore() throws Exception {
-
-  }
-
 }

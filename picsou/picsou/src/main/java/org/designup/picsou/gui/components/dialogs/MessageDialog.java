@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.components.dialogs;
 
-import org.designup.picsou.utils.Lang;
 import org.designup.picsou.gui.components.CloseAction;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.utils.directory.Directory;
 
@@ -12,10 +12,25 @@ public class MessageDialog {
   private PicsouDialog dialog;
   private SplitsBuilder builder;
 
+  public static void showWithButtonMessage(String titleKey, String contentKey,
+                                                                   Window owner, Directory directory,
+                                                                   String key,
+                                                                   String... args) {
+    MessageDialog dialog = new MessageDialog(titleKey, contentKey, owner, directory, key, args);
+    dialog.show();
+  }
+
+  public static void show(String titleKey, String contentKey,
+                                           Window owner, Directory directory,
+                                           String... args) {
+    MessageDialog dialog = new MessageDialog(titleKey, contentKey, owner, directory, "close", args);
+    dialog.show();
+  }
+
   private MessageDialog(String titleKey, String contentKey,
-                       Window owner, Directory directory,
-                       String key,
-                       String... args) {
+                        Window owner, Directory directory,
+                        String key,
+                        String... args) {
     builder = SplitsBuilder.init(directory)
       .setSource(getClass(), "/layout/utils/messageDialog.splits");
 
@@ -30,18 +45,5 @@ public class MessageDialog {
   public final void show() {
     dialog.showCentered();
     builder.dispose();
-  }
-
-  public static MessageDialog createMessageDialogWithButtonMessage(String titleKey, String contentKey,
-                                                  Window owner, Directory directory,
-                                                  String key,
-                                                  String... args) {
-    return new MessageDialog(titleKey, contentKey, owner, directory, key, args);
-  }
-
-  public static MessageDialog createMessageDialog(String titleKey, String contentKey,
-                                                  Window owner, Directory directory,
-                                                  String... args) {
-    return new MessageDialog(titleKey, contentKey, owner, directory, "close", args);
   }
 }

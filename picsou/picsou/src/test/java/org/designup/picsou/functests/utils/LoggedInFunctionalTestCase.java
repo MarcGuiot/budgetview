@@ -12,8 +12,10 @@ import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.startup.LoginPanel;
 import org.designup.picsou.gui.time.TimeViewPanel;
+import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.initial.DefaultSeriesFactory;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecAdapter;
@@ -255,6 +257,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     mainWindow = getMainWindow();
 
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
+
     initCheckers();
     if (!notRegistered) {
       LicenseActivationChecker.enterLicense(mainWindow, "admin", "zz");

@@ -1,6 +1,7 @@
 package org.globsframework.gui.views;
 
 import org.globsframework.gui.DummySelectionListener;
+import org.globsframework.gui.splits.utils.DummyAction;
 import org.globsframework.gui.utils.GuiComponentTestCase;
 import org.globsframework.metamodel.DummyObject;
 import static org.globsframework.metamodel.DummyObject.*;
@@ -403,6 +404,24 @@ public class GlobListViewTest extends GuiComponentTestCase {
     assertTrue(listBox.contentEquals("zeNewName1", "zeNewName2"));
     assertTrue(listBox.selectionEquals("zeNewName1"));
     listener.assertEmpty();
+  }
+
+  public void testDoubleClickAction() throws Exception {
+
+    GlobRepository repository =
+      checker.parse("<dummyObject name='name1'/>" +
+                    "<dummyObject name='name2'/>" +
+                    "<dummyObject name='name3'/>");
+    ListBox listBox = createList(repository);
+
+    DummyAction action = new DummyAction();
+    view.addDoubleClickAction(action);
+    assertTrue(listBox.contentEquals("name1",
+                                     "name2",
+                                     "name3"));
+    listBox.doubleClick(1);
+
+    assertTrue(action.wasClicked());
   }
 
   public void testFiltering() throws Exception {

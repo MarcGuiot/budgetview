@@ -57,7 +57,7 @@ public class SeriesAmountEditionDialog {
 
     this.seriesEditionDialog = seriesEditionDialog;
 
-// A remettre pour l'affichage du graphe
+// TODO: A remettre pour l'affichage du graphe
 //    selectionService.addListener(new GlobSelectionListener() {
 //      public void selectionUpdated(GlobSelection selection) {
 //        select(localRepository.find(currentSeries), selection.getAll(Month.TYPE).getValueSet(Month.ID));
@@ -98,7 +98,9 @@ public class SeriesAmountEditionDialog {
     amountEditor.addAction(okAction);
     dialog.addPanelWithButtons(builder.<JPanel>load(), okAction, new CancelAction());
     dialog.setAutoFocusOnOpen(amountEditor.getNumericEditor().getComponent());
-    dialog.addOnWindowClosedAction(new SetSignpostStatusAction(SignpostStatus.SERIES_AMOUNT_CLOSED, parentRepository));
+    dialog.addOnWindowClosedAction(new SetSignpostStatusAction(SignpostStatus.SERIES_AMOUNT_CLOSED,
+                                                               SignpostStatus.SERIES_AMOUNT_SHOWN,
+                                                               parentRepository));
     dialog.pack();
   }
 
@@ -119,8 +121,6 @@ public class SeriesAmountEditionDialog {
 
     propagationCheckBox.setSelected(false);
     amountEditor.selectAll();
-
-    SignpostStatus.setCompleted(SignpostStatus.SERIES_AMOUNT_SHOWN, parentRepository);
 
     GuiUtils.showCentered(dialog);
   }

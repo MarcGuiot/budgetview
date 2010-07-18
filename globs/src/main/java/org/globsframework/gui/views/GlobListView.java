@@ -19,10 +19,13 @@ import org.globsframework.utils.exceptions.InvalidState;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.*;
 
 public class GlobListView extends AbstractGlobComponentHolder<GlobListView> implements GlobSelectionListener {
-  private JList jList;
+  private JList jList = new JList();
   private Model model;
   private String name;
 
@@ -103,11 +106,6 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
     void processSelection(GlobList selection);
   }
 
-  public GlobListView setBaseList(JList jList) {
-    this.jList = jList;
-    return this;
-  }
-
   public GlobListView setRenderer(Field field) {
     GlobStringifier stringifier = descriptionService.getStringifier(field);
     return setRenderer(stringifier);
@@ -128,6 +126,17 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
 
   public GlobListView setName(String name) {
     this.name = name;
+    return this;
+  }
+
+  public GlobListView addDoubleClickAction(final Action action) {
+    this.jList.addMouseListener(new MouseAdapter() {
+      public void mouseClicked(MouseEvent e) {
+        if (e.getClickCount() == 2) {
+          action.actionPerformed(new ActionEvent(jList, 0, "click"));
+        }
+      }
+    });
     return this;
   }
 
@@ -213,9 +222,6 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
     }
     if (model == null) {
       model = new Model();
-    }
-    if (jList == null) {
-      jList = new JList();
     }
   }
 

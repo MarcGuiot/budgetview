@@ -16,7 +16,6 @@ import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.upgrade.UpgradeService;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.signpost.guides.BudgetSignpostService;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.bank.BankPluginService;
 import org.globsframework.gui.SelectionService;
@@ -39,7 +38,6 @@ import picsou.AwtExceptionHandler;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -343,7 +341,6 @@ public class PicsouApplication {
     directory.add(PasswordBasedEncryptor.class, new RedirectPasswordBasedEncryptor());
     directory.add(createConfigService());
     directory.add(new BankPluginService());
-    directory.add(new BudgetSignpostService());
     return directory;
   }
 
