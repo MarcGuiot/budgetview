@@ -38,10 +38,10 @@ public class TriggerRunner {
         });
       }
       catch (InterruptedException e) {
-        throw new RuntimeException(e.getCause());
+        throw new RuntimeException("interrupted", e);
       }
       catch (InvocationTargetException e) {
-        throw new RuntimeException(e.getCause());
+        throw new RuntimeException(e);
       }
       container.rethrowIfNeeded();
     }

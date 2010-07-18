@@ -4,8 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ExceptionContainer {
-  private RuntimeException exception;
-  private Error error;
   private StackTraceElement[] stackTraceElements;
   private Set<Throwable> registered = new HashSet<Throwable>();
   private Throwable throwable = null;
@@ -17,7 +15,7 @@ public class ExceptionContainer {
     stackTraceElements = callerStack.getStackTrace();
   }
 
-  public void set(Throwable e) {
+  public synchronized void set(Throwable e) {
     if (!registered.add(e)) {
       return;
     }
@@ -40,36 +38,28 @@ public class ExceptionContainer {
       }
       subException.initCause(throwable);
     }
-    if (e instanceof RuntimeException) {
-      exception = (RuntimeException)e;
-    }
-    else if (e instanceof Error) {
-      error = (Error)e;
-    }
-    else {
-      exception = new RuntimeException(e);
-    }
     throwable = e;
   }
 
   public boolean isSet() {
-    return (exception != null) || (error != null);
+    return throwable != null;
   }
 
-  public void rethrowIfNeeded() {
+  public synchronized void rethrowIfNeeded() {
     try {
-      if (error != null) {
-        if (stackTraceElements != null) {
-          completeStackTrace(error);
-        }
-        throw error;
+      if (throwable == null){
+        return;
       }
-      if (exception != null) {
-        if (stackTraceElements != null) {
-          completeStackTrace(exception);
-        }
-        throw exception;
+      if (stackTraceElements != null) {
+        completeStackTrace(throwable);
       }
+      if (throwable instanceof RuntimeException) {
+        throw ((RuntimeException)throwable);
+      }
+      if (throwable instanceof Error) {
+        throw  (Error)throwable;
+      }
+      throw new RuntimeException(throwable);
     }
     finally {
       reset();
@@ -91,9 +81,7 @@ public class ExceptionContainer {
     exception.setStackTrace(newStack);
   }
 
-  public void reset() {
-    exception = null;
-    error = null;
+  public synchronized void reset() {
     throwable = null;
     registered.clear();
   }
