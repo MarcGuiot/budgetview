@@ -182,7 +182,7 @@ public class PicsouInit {
             });
             repository.reset(userData, typesToReplace);
             DataCheckingService dataChecker = new DataCheckingService(repository, directory);
-            dataChecker.check();
+            dataChecker.check(e);
             firstReset = false;
 
             userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdater() {

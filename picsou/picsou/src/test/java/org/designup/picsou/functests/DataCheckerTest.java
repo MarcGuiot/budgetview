@@ -6,10 +6,9 @@ import org.designup.picsou.gui.PicsouApplication;
 public class DataCheckerTest extends LoggedInFunctionalTestCase {
 
   public void testErrorDialog() throws Exception {
-    fail("A mettre à jour");
     operations.throwExceptionInApplication()
-      .checkMessageContains("The following errors have been found")
-      .checkDetailsContain("Start checking") // TODO: mettre le message de l'exception
+      .checkMessageContains("No error was found")
+      .checkDetailsContain("Exception test") // TODO: mettre le message de l'exception
       .close();
   }
 

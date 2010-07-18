@@ -18,11 +18,11 @@ public class DataCheckerAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent e) {
-    check();
+    check(null);
   }
 
-  public boolean check() {
+  public boolean check(Throwable exception) {
     DataCheckingService checker = new DataCheckingService(repository, directory);
-    return checker.check();
+    return checker.check(exception);
   }
 }

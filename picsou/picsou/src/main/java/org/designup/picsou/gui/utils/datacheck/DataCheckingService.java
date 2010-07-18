@@ -33,7 +33,7 @@ public class DataCheckingService {
     this.directory = directory;
   }
 
-  public boolean check() {
+  public boolean check(Throwable ex) {
     DataCheckReport report = new DataCheckReport();
     try {
       doCheck(report);
@@ -43,15 +43,36 @@ public class DataCheckingService {
       if (report.hasError()) {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         toolkit.beep();
+        String message = report.toString();
+        String message1 = message + "\n\n";
+        if (ex != null) {
+          StringWriter writer = new StringWriter();
+          writer.append(message1);
+          ex.printStackTrace(new PrintWriter(writer));
+          message1 = writer.toString();
+        }
         MessageAndDetailsDialog dialog =
           new MessageAndDetailsDialog("data.checker.error.title", "data.checker.error.message",
-                                      report.toString(), null, directory);
+                                      message1 + "\n\n\n", null, directory);
         dialog.show();
         Log.write(report.toString());
       }
       else {
-        MessageDialog.show("data.checker.ok.title", "data.checker.ok.message",
-                           directory.get(JFrame.class), directory);
+        if (ex != null) {
+          String message = "";
+          StringWriter writer = new StringWriter();
+          writer.append(message);
+          ex.printStackTrace(new PrintWriter(writer));
+          message = writer.toString();
+          MessageAndDetailsDialog dialog =
+            new MessageAndDetailsDialog("data.checker.ok.title", "data.checker.ok.message",
+                                        message + "\n\n\n", null, directory);
+          dialog.show();
+        }
+        else {
+          MessageDialog.show("data.checker.ok.title", "data.checker.ok.message",
+                             directory.get(JFrame.class), directory);
+        }
       }
     }
   }

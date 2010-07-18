@@ -19,7 +19,7 @@ public class AwtExceptionHandler {
     Log.write("Exception thrown: ", exception);
     if (repository != null) {
       DataCheckerAction action = new DataCheckerAction(repository, directory);
-      action.actionPerformed(null);
+      action.check(exception);
     }
   }
 
