@@ -143,7 +143,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.edit("Account n. 0000123")
       .setAsDeferredCard()
-      .setFromBeginningDay(15)
+      .checkDeferredWarning()
       .validate();
 
     mainAccounts.edit("Account n. 0000123")
@@ -461,18 +461,8 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .setAccountName("Carte a débit Différé")
       .selectBank("ING Direct")
       .setAsDeferredCard()
-      .checkFromBeginning()
-      .setFromBeginningDay(25)
       .setPosition(1000);
 
-    accountEditionChecker
-      .getCardEditionPanelChecker()
-      .addMonth()
-      .addMonth()
-      .addMonth()
-      .checkNotSelectableMonth(200809, 200808, 200810, 200811)
-      .changeMonth(200810, 200812)
-      .checkNotSelectableMonth(200809, 200808, 200811, 200812);
     accountEditionChecker.validate();
 
     OfxBuilder.init(this)
@@ -509,49 +499,9 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .setAccountName("Carte a DD")
       .selectBank("ING Direct")
       .setAsDeferredCard()
-      .setFromBeginningDay(25)
-      .checkBeginningUnchangeable()
       .setPosition(1000)
       .validate();
     timeline.selectMonth("2008/10");
-    mainAccounts.edit("Carte a DD")
-      .addMonth()
-      .checkMonth(200808)
-      .setDay(200808, 27)
-      .validate();
-    mainAccounts.edit("Carte a DD")
-      .checkFromBeginningDay(25)
-      .checkDay(200808, 27)
-      .delete(200808)
-      .addMonth()
-      .changeMonth(200808, 200809)
-      .cancel();
-  }
-
-  public void testChangeBeginOfAccountAndEndOfAccount() throws Exception {
-    operations.openPreferences().setFutureMonthsCount(12).validate();
-    views.selectHome();
-
-    mainAccounts.createNewAccount()
-      .setAccountName("Carte a DD")
-      .selectBank("ING Direct")
-      .setAsDeferredCard()
-      .setFromBeginningDay(25)
-      .addMonth()
-      .setDay(200809, 27)
-      .addMonth()
-      .changeMonth(200810, 200903)
-      .setDay(200903, 30)
-      .setPosition(1000)
-      .checkPeriod(new Integer[][]{{0, 25}, {200809, 27}, {200903, 30}})
-      .validate();
-
-    mainAccounts.edit("Carte a DD")
-      .setStartDate("2008/12/01")
-      .setEndDate("2009/02/01")
-      .checkFromBeginningDay(27)
-      .checkPeriod(new Integer[][]{{0, 27}})
-      .validate();
   }
 
   public void testAccountViewDisplaysLinksToWebsites() throws Exception {
@@ -617,7 +567,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/27", -50, "Auchan")
       .addBankAccount("1234", 1000, "2008/06/30")
       .addTransaction("2008/06/28", -550, "Prelevement")
-      .loadDeferredCard("Card n. 1111", 28);
+      .loadDeferredCard("Card n. 1111");
 
     mainAccounts.edit("Card n. 1111")
       .setStartDate("2008/06/01")
@@ -629,14 +579,15 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .addBankAccount("1234", 1000, "2008/06/30")
       .addTransaction("2008/06/28", -550, "Prelevement")
       .load();
+    views.selectCategorization();
+    categorization.setDeferred("Prelevement", "Card n. 1111");
 
     timeline.selectMonth("2008/06");
     views.selectData();
     transactions.initContent()
-    .add("28/06/2008", TransactionType.PRELEVEMENT, "PRELEVEMENT", "", -550.00)
+    .add("28/06/2008", TransactionType.PRELEVEMENT, "PRELEVEMENT", "", -550.00, "Card n. 1111")
     .add("27/06/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", -50.00)
     .add("01/06/2008", TransactionType.VIREMENT, "SALAIRE/OCT", "", 1000.00)
-    .add("29/05/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", -50.00)
     .check();
   }
 

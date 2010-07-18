@@ -1,17 +1,15 @@
 package org.designup.picsou.importer;
 
 import org.apache.commons.collections.iterators.ReverseListIterator;
+import org.designup.picsou.bank.BankPluginService;
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.importer.NoOperations;
 import org.designup.picsou.gui.accounts.utils.Day;
-import org.designup.picsou.model.DeferredCardPeriod;
+import org.designup.picsou.gui.importer.NoOperations;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.importer.utils.DateFormatAnalyzer;
 import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.model.*;
-import org.designup.picsou.utils.Lang;
-import org.designup.picsou.bank.BankPluginService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.StringField;
 import static org.globsframework.model.FieldValue.value;
@@ -60,9 +58,9 @@ public class ImportSession {
 
   public List<String> loadFile(File file) throws IOException, TruncatedFile, NoOperations {
     localRepository.reset(GlobList.EMPTY, Transaction.TYPE, ImportedTransaction.TYPE, Day.TYPE, CurrentMonth.TYPE,
-                          DeferredCardDate.TYPE, DeferredCardPeriod.TYPE, AccountCardType.TYPE, AccountType.TYPE);
+                          DeferredCardDate.TYPE, AccountCardType.TYPE, AccountType.TYPE);
     GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Day.TYPE, DeferredCardDate.TYPE,
-                        DeferredCardPeriod.TYPE, AccountCardType.TYPE, CurrentMonth.TYPE, Month.TYPE};
+                        AccountCardType.TYPE, CurrentMonth.TYPE, Month.TYPE};
     localRepository.reset(referenceRepository.getAll(types), types);
 
     importChangeSet = new DefaultChangeSet();
@@ -84,7 +82,7 @@ public class ImportSession {
 
     load = true;
     GlobList importedOperations = localRepository.getAll(ImportedTransaction.TYPE);
-    if (importedOperations.isEmpty()){
+    if (importedOperations.isEmpty()) {
       throw new NoOperations();
     }
     lastLoadOperationsCount = importedOperations.size();

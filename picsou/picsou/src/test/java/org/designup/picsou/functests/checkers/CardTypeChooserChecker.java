@@ -21,18 +21,12 @@ public class CardTypeChooserChecker extends GuiChecker {
     return this;
   }
 
-  public CardTypeChooserChecker selectDeferredCard(String accountName, int day) {
+  public CardTypeChooserChecker selectDeferredCard(String accountName) {
     getTypeCombo(accountName).select("Deferred debit card");
 
     Panel panel = getPanel(accountName);
-    checkComponentVisible(panel, JTextArea.class, "creditMessage", false);
-
-    ComboBox dayCombo = panel.getComboBox("day");
-    assertThat(dayCombo.isVisible());
-    assertThat(panel.getTextBox("Select the day of debit").isVisible());
-
-    assertThat(dayCombo.selectionEquals("31"));
-    dayCombo.select(Integer.toString(day));
+    TextBox box = panel.getTextBox("message");
+    assertThat(box.textContains("Withdraw from main account should be categorized"));
     return this;
   }
 
@@ -40,7 +34,7 @@ public class CardTypeChooserChecker extends GuiChecker {
     getTypeCombo(accountName).select("Credit card");
 
     Panel panel = getPanel(accountName);
-    TextBox messageBox = panel.getTextBox("creditMessage");
+    TextBox messageBox = panel.getTextBox("message");
     assertThat(messageBox.isVisible());
     assertThat(messageBox.textEquals(""));
 

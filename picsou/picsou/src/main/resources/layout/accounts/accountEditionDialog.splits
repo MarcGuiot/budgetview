@@ -39,9 +39,9 @@
 
             <comboBox ref="type" marginTop="5" marginBottom="10"/>
 
-            <label ref="savingsMessageWarning" styleClass="errorMessage"/>
+            <textArea ref="messageWarning" styleClass="errorMessage"/>
 
-            <panel ref="cardTypeEditionPanel" weightY="100"/>
+            <filler fill="vertical"/>
           </column>
         </column>
 

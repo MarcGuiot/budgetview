@@ -15,6 +15,7 @@ import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
+import org.globsframework.utils.serialization.YANBuffereInputStream;
 import org.prevayler.implementation.PrevaylerDirectory;
 
 import java.io.*;
@@ -117,7 +118,7 @@ public class DirectAccountDataManager implements AccountDataManager {
                                    File nextTransactionFile, PrevaylerDirectory prevaylerDirectory) throws FileNotFoundException {
     long version = PrevaylerDirectory.journalVersion(nextTransactionFile);
     File file = nextTransactionFile;
-    BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+    InputStream inputStream = new YANBuffereInputStream(new FileInputStream(file));
     TransactionInfo transactionInfo = new TransactionInfo(version, System.currentTimeMillis());
     while (true) {
       try {
@@ -153,7 +154,7 @@ public class DirectAccountDataManager implements AccountDataManager {
           break;
         }
         file = newfile;
-        inputStream = new BufferedInputStream(new FileInputStream(file));
+        inputStream = new YANBuffereInputStream(new FileInputStream(file));
       }
     }
     try {

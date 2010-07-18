@@ -429,13 +429,13 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .checkSelectACardTypeMessage()
       .openCardTypeChooser()
       .checkNoneAreSelected("Card n. 1234")
-      .selectDeferredCard("Card n. 1234", 29)
+      .selectDeferredCard("Card n. 1234")
       .validate();
     importDialog.doImport();
 
     views.selectHome();
     mainAccounts.edit("Card n. 1234")
-      .checkFromBeginningDay(29)
+      .checkIsDeferredCard()
       .cancel();
   }
 

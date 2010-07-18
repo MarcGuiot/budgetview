@@ -6,7 +6,6 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
@@ -236,13 +235,13 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("26/10/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("10/10/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
-      .add("10/10/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
       .add("10/10/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
       .add("01/10/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
       .add("26/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("10/09/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
-      .add("10/09/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
       .add("10/09/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
+      .add("10/09/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
       .add("01/09/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
       .add("26/08/2008", TransactionType.VIREMENT, "COMPANY", "", 1000.00, "Salaire")
       .add("10/08/2008", TransactionType.PRELEVEMENT, "FNAC", "", -100.00, "Begin date")
@@ -261,18 +260,18 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("26/11/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("10/11/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
-      .add("10/11/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
       .add("10/11/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
+      .add("10/11/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
       .add("01/11/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
       .add("26/10/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("10/10/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
-      .add("10/10/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
       .add("10/10/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
+      .add("10/10/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
       .add("01/10/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
       .add("26/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("10/09/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
-      .add("10/09/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
       .add("10/09/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
+      .add("10/09/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
       .add("01/09/2008", TransactionType.PLANNED, "Planned: End date", "", -300.00, "End date")
       .add("26/08/2008", TransactionType.VIREMENT, "COMPANY", "", 1000.00, "Salaire")
       .add("10/08/2008", TransactionType.PRELEVEMENT, "FNAC", "", -100.00, "Begin date")
@@ -506,7 +505,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addCardAccount("123", 1000.00, "2008/08/19")
       .addTransaction("2008/08/06", -30.00, "FNAC")
-      .loadDeferredCard("Card n. 123", 29);
+      .loadDeferredCard("Card n. 123");
 
     OfxBuilder.init(this)
       .addBankAccount("unknown 222", 222, "222", 1000.00, "2008/08/19")

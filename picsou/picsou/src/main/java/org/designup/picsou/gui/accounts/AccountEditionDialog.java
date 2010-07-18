@@ -74,10 +74,14 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
 
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (currentAccount == null || !changeSet.containsChanges(Account.TYPE)){
+          return;
+        }
+        Glob account = repository.get(currentAccount.getKey());
+        setWarning(account.get(Account.ACCOUNT_TYPE), account.get(Account.CARD_TYPE));
         if (changeSet.containsUpdates(Account.ACCOUNT_TYPE)) {
-          Integer accountType = repository.get(currentAccount.getKey()).get(Account.ACCOUNT_TYPE);
+          Integer accountType = account.get(Account.ACCOUNT_TYPE);
           if (!accountType.equals(AccountType.SAVINGS.getId())) {
-            setMessageSavingsWarning(false);
             return;
           }
           GlobList transactions = parentRepository.getAll(Transaction.TYPE, new GlobMatcher() {
@@ -93,7 +97,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
                        || series.get(Series.TO_ACCOUNT).equals(currentAccount.get(Account.ID)));
             }
           });
-          setMessageSavingsWarning(!transactions.isEmpty());
+          setSavingsWarning(!transactions.isEmpty());
         }
       }
     });
@@ -127,7 +131,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
   private static LocalGlobRepository createLocalRepository(GlobRepository parentRepository) {
     return LocalGlobRepositoryBuilder.init(parentRepository)
       .copy(Bank.TYPE, BankEntity.TYPE, AccountUpdateMode.TYPE, Day.TYPE, CurrentMonth.TYPE,
-            AccountCardType.TYPE, AccountType.TYPE, Month.TYPE, DeferredCardPeriod.TYPE, DeferredCardDate.TYPE)
+            AccountCardType.TYPE, AccountType.TYPE, Month.TYPE, DeferredCardDate.TYPE)
       .get();
   }
 

@@ -16,6 +16,7 @@ import org.globsframework.utils.serialization.SerializedOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 
+@Deprecated
 public class DeferredCardPeriod {
   public static GlobType TYPE;
 
@@ -39,21 +40,20 @@ public class DeferredCardPeriod {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 1;
+      return 2;
     }
 
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
-      SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
-      outputStream.writeInteger(values.get(ACCOUNT));
-      outputStream.writeInteger(values.get(FROM_MONTH));
-      outputStream.writeInteger(values.get(DAY));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
+      }
+      else if (version == 2){
+        // no read ==> deferredCardPeriod remove
       }
     }
 

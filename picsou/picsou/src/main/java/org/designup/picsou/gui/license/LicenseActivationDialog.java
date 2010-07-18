@@ -7,6 +7,7 @@ import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
@@ -39,6 +40,7 @@ public class LicenseActivationDialog {
   private ValidateAction validateAction = new ValidateAction();
   private Integer activationState;
   private GlobsPanelBuilder builder;
+  private GlobTextEditor mailEditor;
 
   public LicenseActivationDialog(Window parent, GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -55,7 +57,7 @@ public class LicenseActivationDialog {
     builder = new GlobsPanelBuilder(getClass(), "/layout/general/licenseActivationDialog.splits",
                                                       localRepository, this.localDirectory);
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
-    builder.addEditor("ref-mail", User.MAIL).setNotifyOnKeyPressed(true);
+    mailEditor = builder.addEditor("ref-mail", User.MAIL).setNotifyOnKeyPressed(true);
     builder.addEditor("ref-code", User.ACTIVATION_CODE)
       .setValidationAction(validateAction)
       .setNotifyOnKeyPressed(true);
@@ -142,6 +144,7 @@ public class LicenseActivationDialog {
     localRepository.update(User.KEY, User.SIGNATURE, null);
     selectionService.select(localRepository.get(User.KEY));
     updateConnectionState(localRepository);
+    mailEditor.getComponent().requestFocus();
     dialog.showCentered();
     builder.dispose();
   }

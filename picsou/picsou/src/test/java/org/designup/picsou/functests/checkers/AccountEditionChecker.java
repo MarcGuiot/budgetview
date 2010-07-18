@@ -115,7 +115,13 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker checkCreditCardWarning() {
-    checkComponentVisible(dialog, JTextArea.class, "creditMessage", true);
+    dialog.getTextBox("messageWarning")
+      .textContains("Operations in main acount should be clasified in Budget Area 'other'");
+    return this;
+  }
+
+  public AccountEditionChecker checkDeferredWarning() {
+    dialog.getTextBox("messageWarning").textContains("Credit card are not managed");
     return this;
   }
 
@@ -125,14 +131,14 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker checkSavingsWarning() {
-    TextBox label = dialog.getTextBox("savingsMessageWarning");
+    TextBox label = dialog.getTextBox("messageWarning");
     assertThat(label.isVisible());
     assertThat(label.foregroundNear("red"));
     return this;
   }
 
   public AccountEditionChecker checkNoSavingsWarning() {
-    TextBox label = dialog.getTextBox("savingsMessageWarning");
+    TextBox label = dialog.getTextBox("messageWarning");
     assertFalse(label.isVisible());
     return this;
   }

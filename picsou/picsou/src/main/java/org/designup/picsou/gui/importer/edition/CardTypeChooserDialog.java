@@ -109,14 +109,9 @@ public class CardTypeChooserDialog {
       accountPanel.setName("accountPanel:" + accountName);
       cellBuilder.add("accountPanel", accountPanel);
 
-      final GlobLinkComboEditor dayCombo =
-        GlobLinkComboEditor.init(DeferredCardPeriod.DAY, localRepository, directory);
-      cellBuilder.add("dayCombo", dayCombo.getComponent());
-      dayCombo.setVisible(false);
-
-      final JTextArea creditMessage = new AutoResizingTextArea(Lang.get("cardTypeChooser.credit.message"));
-      cellBuilder.add("creditMessage", creditMessage);
-      creditMessage.setVisible(false);
+      final JTextArea messageArea = new AutoResizingTextArea();
+      cellBuilder.add("message", messageArea);
+      messageArea.setVisible(false);
 
       final Key accountKey = account.getKey();
       GlobLinkComboEditor comboEditor =
@@ -136,22 +131,14 @@ public class CardTypeChooserDialog {
           }
           Glob account = repository.get(accountKey);
           AccountCardType cardType = AccountCardType.get(account.get(Account.CARD_TYPE));
-          switch (cardType) {
-
-            case DEFERRED:
-              Glob period = localRepository.create(DeferredCardPeriod.TYPE,
-                                                   value(DeferredCardPeriod.ACCOUNT, account.get(Account.ID)),
-                                                   value(DeferredCardPeriod.FROM_MONTH, 0));
-              dayCombo.forceSelection(period.getKey());
-              break;
-            default:
-              localRepository.delete(DeferredCardPeriod.TYPE,
-                                     and(fieldEquals(DeferredCardPeriod.ACCOUNT, account.get(Account.ID)),
-                                         fieldEquals(DeferredCardPeriod.FROM_MONTH, 0)));
-              break;
+          if (AccountCardType.CREDIT.equals(cardType)){
+            messageArea.setText(Lang.get("cardTypeChooser.credit.message"));
+            messageArea.setVisible(true);
           }
-          creditMessage.setVisible(AccountCardType.CREDIT.equals(cardType));
-          dayCombo.setVisible(AccountCardType.DEFERRED.equals(cardType));
+          else if (AccountCardType.DEFERRED.equals(cardType)){
+            messageArea.setText(Lang.get("cardTypeChooser.deferred.message"));
+            messageArea.setVisible(true);
+          }
           GuiUtils.revalidate(accountPanel);
         }
       };

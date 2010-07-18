@@ -1703,6 +1703,14 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("06/06/2008", "VIREMENT DE EPARGNE", 100.00, "From Account n. 111222", 0.00, 0.00, "Account n. 00001123")
       .add("06/06/2008", "VIREMENT VERS EPARGNE", -100.00, "To Account n. 111222", -100.00, -100.00, "Account n. 00001123")
       .check();
+
+
+    views.selectBudget();
+    budgetView.savings.editPlannedAmount("To account n. 111222")
+      .setAmount(150)
+      .validate();
+    timeline.selectMonth("2008/06");
+    budgetView.savings.checkSeries("To account n. 111222", 100., 150.);
   }
 
   public void testImportOnMirrorAccount() throws Exception {

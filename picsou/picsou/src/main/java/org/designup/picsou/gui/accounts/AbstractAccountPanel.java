@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.accounts.utils.AccountTypeSelector;
-import org.designup.picsou.gui.accounts.utils.CardTypeEditionPanel;
 import org.designup.picsou.gui.bank.BankChooserDialog;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountCardType;
@@ -37,11 +36,10 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   protected JLabel messageLabel;
   protected JTextField positionEditor;
   protected JComboBox accountTypeCombo;
-  protected JLabel messageSavingsWarning;
+  protected JTextArea messageWarning;
   protected Directory localDirectory;
   private SelectionService selectionService;
   private AccountTypeSelector[] accountTypeSelectors;
-  private CardTypeEditionPanel cardTypeEditionPanel;
   private GlobTextEditor nameField;
   private JLabel accountBank;
   private AccountBankAction bankSelectionAction;
@@ -57,10 +55,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
 
   protected void createComponents(GlobsPanelBuilder builder, Window dialog) {
 
-    cardTypeEditionPanel = new CardTypeEditionPanel(dialog, localRepository, localDirectory);
     accountTypeSelectors = createTypeSelectors(localRepository);
-
-    builder.add("cardTypeEditionPanel", cardTypeEditionPanel.createComponent());
 
     accountBank = builder.add("bankLabel", new JLabel()).getComponent();
 
@@ -80,9 +75,9 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     builder.addEditor("number", Account.NUMBER).setNotifyOnKeyPressed(true);
     builder.add("type", createAccountTypeCombo());
 
-    messageSavingsWarning = new JLabel(Lang.get("account.savings.warning"));
-    builder.add("savingsMessageWarning", messageSavingsWarning);
-    messageSavingsWarning.setVisible(false);
+    messageWarning = new JTextArea();
+    builder.add("messageWarning", messageWarning);
+    messageWarning.setVisible(false);
 
     positionEditor = builder.addEditor("position", Account.POSITION).setNotifyOnKeyPressed(true).getComponent();
 
@@ -125,8 +120,26 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     positionEditor.setVisible(visible);
   }
 
-  public void setMessageSavingsWarning(boolean visible) {
-    messageSavingsWarning.setVisible(visible);
+  public void setWarning(int accountType, int cardType){
+    boolean visible = false;
+    if (accountType == AccountType.MAIN.getId()){
+      if (cardType == AccountCardType.CREDIT.getId()){
+        messageWarning.setText(Lang.get("account.credit.warning"));
+        visible = true;
+      }
+      else if (cardType == AccountCardType.DEFERRED.getId()){
+        messageWarning.setText(Lang.get("account.deferred.warning"));
+        visible = true;
+      }
+    }
+    messageWarning.setVisible(visible);
+  }
+
+  public void setSavingsWarning(boolean visible) {
+    if (visible){
+      messageWarning.setText(Lang.get("account.savings.warning"));
+    }
+    messageWarning.setVisible(visible);
   }
 
   public void setMessage(String key) {
@@ -135,8 +148,8 @@ public class AbstractAccountPanel<T extends GlobRepository> {
 
   public void setAccount(Glob account) {
     this.currentAccount = account;
-    cardTypeEditionPanel.setAccount(account);
     updateAccountTypeCombo();
+    setWarning(account.get(Account.ACCOUNT_TYPE), account.get(Account.CARD_TYPE));
     if (account != null) {
       selectionService.select(account);
     }

@@ -22,6 +22,7 @@ public class SerializationManager {
 
     Account.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Account.Serializer());
     DeferredCardPeriod.TYPE.updateProperty(SERIALIZATION_PROPERTY, new DeferredCardPeriod.Serializer());
+    DeferredCardDate.TYPE.updateProperty(SERIALIZATION_PROPERTY, new DeferredCardDate.Serializer());
     Category.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Category.Serializer());
     Transaction.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Transaction.Serializer());
     TransactionImport.TYPE.updateProperty(SERIALIZATION_PROPERTY, new TransactionImport.Serializer());

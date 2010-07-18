@@ -57,7 +57,7 @@ public class Series {
   public static BooleanField IS_AUTOMATIC;
 
   @Target(Account.class)
-  public static LinkField FROM_ACCOUNT;
+  public static LinkField FROM_ACCOUNT;  // sert pour en savings mais aussi pour les compte carte a debit differe
 
   // cette serie appartient au compte courant mais ses transactions impactent le compte courant pointé
   @Target(Account.class)

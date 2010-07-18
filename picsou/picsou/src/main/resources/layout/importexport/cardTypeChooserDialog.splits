@@ -16,12 +16,7 @@
               <label ref="accountName" styleClass="item" anchor="left"/>
               <comboBox ref="cardTypeCombo" marginLeft="40" margin="5"/>
               <verticalBoxes marginLeft="60">
-                <textArea ref="creditMessage" styleClass="multiLineLabel" opaque="true" background="block.inner.bg"/>
-                <row opaque="true" background="block.inner.bg" autoHideSource="dayCombo">
-                  <label text="$cardTypeChooser.day"/>
-                  <comboBox ref="dayCombo"/>
-                  <filler fill="horizontal"/>
-                </row>
+                <textArea ref="message" styleClass="multiLineLabel" opaque="true" background="block.inner.bg"/>
               </verticalBoxes>
             </column>
           </repeat>

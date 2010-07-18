@@ -5,11 +5,9 @@ import org.globsframework.utils.exceptions.EOFIOFailure;
 import org.globsframework.utils.serialization.DefaultSerializationInput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
+import org.globsframework.utils.serialization.YANBuffereInputStream;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 
 public class Dump {
 
@@ -28,7 +26,7 @@ public class Dump {
   }
 
   private void dumpSnapshot(File file) throws FileNotFoundException {
-    BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+    InputStream inputStream = new YANBuffereInputStream(new FileInputStream(file));
     SerializedInput serializedInput = SerializedInputOutputFactory.init(inputStream);
     String version = serializedInput.readJavaString();
     if ("2".equals(version)) {
@@ -38,7 +36,7 @@ public class Dump {
 
   private void dumpJournal(File file) throws FileNotFoundException {
     SerializedInput serializedInput =
-      SerializedInputOutputFactory.init(new BufferedInputStream(new FileInputStream(file)));
+      SerializedInputOutputFactory.init(new YANBuffereInputStream(new FileInputStream(file)));
     try {
       long l = readJournalVersion(serializedInput);
       while (true) {

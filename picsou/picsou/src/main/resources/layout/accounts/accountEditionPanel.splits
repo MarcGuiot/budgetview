@@ -15,19 +15,17 @@
 
       <label text="$form.mandatory.legend" gridPos="(0,2,3,1)" styleClass="formLabelMandatoryLegend"/>
 
-      <label ref="savingsMessageWarning" gridPos="(1,3,3,1)" styleClass="errorMessage"/>
+      <label ref="messageWarning" gridPos="(1,3,3,1)" styleClass="errorMessage"/>
 
-      <panel ref="cardTypeEditionPanel" gridPos="(0,4,3,1)"/>
+      <label text="$account.bank" gridPos="(0,4)" styleClass="formLabel"/>
+      <button ref="accountBank" gridPos="(1,4)" styleClass="itemLink" anchor="left"/>
+      <label text="*" gridPos="(2,3)" styleClass="formLabel"/>
 
-      <label text="$account.bank" gridPos="(0,5)" styleClass="formLabel"/>
-      <button ref="accountBank" gridPos="(1,5)" styleClass="itemLink" anchor="left"/>
-      <label text="*" gridPos="(2,4)" styleClass="formLabel"/>
+      <label text="$account.number" gridPos="(0,5)" styleClass="formLabel"/>
+      <textField ref="number" gridPos="(1,5)"/>
 
-      <label text="$account.number" gridPos="(0,6)" styleClass="formLabel"/>
-      <textField ref="number" gridPos="(1,6)"/>
-
-      <label text="$account.position" gridPos="(0,7)" styleClass="formLabel" autoHideSource="position"/>
-      <textField ref="position" gridPos="(1,7)"/>
+      <label text="$account.position" gridPos="(0,6)" styleClass="formLabel" autoHideSource="position"/>
+      <textField ref="position" gridPos="(1,6)"/>
     </grid>
 
   </column>

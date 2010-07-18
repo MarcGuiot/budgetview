@@ -22,7 +22,7 @@ import java.util.List;
 
 import net.roydesign.mac.MRJAdapter;
 
-public class MainWindowLauncher {
+  public class MainWindowLauncher {
 
   static {
     PicsouMacLookAndFeel.initApplicationName();

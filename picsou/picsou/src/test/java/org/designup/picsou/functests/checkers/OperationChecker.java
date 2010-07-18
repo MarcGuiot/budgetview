@@ -2,7 +2,6 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.TestCase;
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Ref;
@@ -24,7 +23,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.awt.*;
 
 public class OperationChecker {
   private MenuItem importMenu;
@@ -73,14 +71,14 @@ public class OperationChecker {
       .acceptFile();
     importDialog
       .openCardTypeChooser()
-      .selectDeferredCard(cardAccountName, day)
+      .selectDeferredCard(cardAccountName)
       .validate();
     importDialog
       .setMainAccount()
       .doImport();
   }
 
-  public void importQifFileWithDeferred(String fileName, String bank, double position, int day) {
+  public void importQifFileWithDeferred(String fileName, String bank, double position) {
     ImportDialogChecker importDialog = openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
@@ -90,7 +88,6 @@ public class OperationChecker {
       .setAccountNumber("1111")
       .setAccountName("card 1111")
       .setAsDeferredCard()
-      .setFromBeginningDay(day)
       .validate();
     importDialog.doImportWithBalance()
       .setAmountAndEnterInImport(position);

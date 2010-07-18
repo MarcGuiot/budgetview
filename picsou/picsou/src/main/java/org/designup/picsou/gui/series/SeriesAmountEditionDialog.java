@@ -5,22 +5,19 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.SeriesPeriodicityAndScopeStringifier;
 import org.designup.picsou.gui.series.edition.AlignSeriesBudgetAmountsAction;
 import org.designup.picsou.gui.series.edition.SeriesBudgetSliderAdapter;
-import org.designup.picsou.gui.series.evolution.SeriesAmountChartPanel;
 import org.designup.picsou.gui.series.utils.SeriesAmountLabelStringifier;
 import org.designup.picsou.gui.signpost.actions.SetSignpostStatusAction;
 import org.designup.picsou.model.*;
+import org.designup.picsou.triggers.savings.UpdateMirrorSeriesBudgetChangeSetVisitor;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
+import static org.globsframework.model.utils.GlobFunctors.update;
 import org.globsframework.model.utils.GlobListFunctor;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.Utils;
@@ -30,9 +27,6 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
-
-import static org.globsframework.model.utils.GlobFunctors.update;
-import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesAmountEditionDialog {
 
@@ -157,7 +151,12 @@ public class SeriesAmountEditionDialog {
   }
 
   private GlobList getBudgets(Glob series) {
-    return parentRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID)).getGlobs();
+    GlobList globs = parentRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID)).getGlobs();
+    Integer value = series.get(Series.MIRROR_SERIES);
+    if (value != null) {
+      globs.addAll(parentRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, value).getGlobs());
+    }
+    return globs;
   }
 
   private void select(Glob series, Set<Integer> monthIds) {
@@ -165,7 +164,7 @@ public class SeriesAmountEditionDialog {
       return;
     }
 
-    selectionInProgress= true;
+    selectionInProgress = true;
     try {
       selectedMonthIds = monthIds;
       GlobSelectionBuilder selection = GlobSelectionBuilder.init();
@@ -184,7 +183,7 @@ public class SeriesAmountEditionDialog {
       selectionService.select(selection.get());
     }
     finally {
-      selectionInProgress= false;
+      selectionInProgress = false;
     }
   }
 
@@ -206,6 +205,16 @@ public class SeriesAmountEditionDialog {
                                     isTrue(SeriesBudget.ACTIVE),
                                     fieldStrictlyGreaterThan(SeriesBudget.MONTH, maxMonth)),
                                   update(SeriesBudget.AMOUNT, Utils.zeroIfNull(amount)));
+      }
+
+      ChangeSet changeSet = localRepository.getCurrentChanges();
+
+      localRepository.startChangeSet();
+      try {
+        changeSet.safeVisit(SeriesBudget.TYPE, new UpdateMirrorSeriesBudgetChangeSetVisitor(localRepository));
+      }
+      finally {
+        localRepository.completeChangeSet();
       }
 
       localRepository.commitChanges(false);

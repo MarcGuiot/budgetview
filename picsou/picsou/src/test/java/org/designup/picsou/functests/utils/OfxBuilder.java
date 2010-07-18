@@ -187,14 +187,14 @@ public class OfxBuilder {
       .completeImportAndGotoCategorize(importedTransactionCount, autocategorizedTransactionCount);
   }
 
-  public void loadDeferredCard(String accountName, final int day) {
+  public void loadDeferredCard(String accountName) {
     save();
     ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
     importDialog
       .openCardTypeChooser()
-      .selectDeferredCard(accountName, day)
+      .selectDeferredCard(accountName)
       .validate();
     if (importDialog.hasAccountType()){
       importDialog.setMainAccount();

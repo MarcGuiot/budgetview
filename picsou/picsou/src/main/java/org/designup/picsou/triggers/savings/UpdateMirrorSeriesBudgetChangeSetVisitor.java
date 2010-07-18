@@ -6,6 +6,7 @@ import org.designup.picsou.model.SeriesBudget;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.LocalGlobRepository;
+import org.globsframework.utils.Log;
 
 public class UpdateMirrorSeriesBudgetChangeSetVisitor implements ChangeSetVisitor {
   private LocalGlobRepository localRepository;
@@ -35,6 +36,10 @@ public class UpdateMirrorSeriesBudgetChangeSetVisitor implements ChangeSetVisito
       final Glob mirrorBudget =
         localRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirrorSeries)
           .findByIndex(SeriesBudget.MONTH, budget.get(SeriesBudget.MONTH)).getGlobs().getFirst();
+      if (mirrorBudget == null){
+        Log.write("missing mirror budget for " + mirrorSeries);
+        return ;
+      }
       values.safeApply(new FieldValues.Functor() {
         public void process(Field field, Object value) throws Exception {
           if (field.equals(SeriesBudget.OBSERVED_AMOUNT)) {
@@ -45,7 +50,7 @@ public class UpdateMirrorSeriesBudgetChangeSetVisitor implements ChangeSetVisito
           }
           if (field.equals(SeriesBudget.AMOUNT)) {
             if (!series.get(Series.IS_AUTOMATIC)) {
-              localRepository.update(mirrorBudget.getKey(), SeriesBudget.AMOUNT, -((Double)value));
+              localRepository.update(mirrorBudget.getKey(), SeriesBudget.AMOUNT, value == null ? null : -((Double)value));
             }
           }
           else {

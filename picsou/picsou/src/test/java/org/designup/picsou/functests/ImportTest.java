@@ -1,7 +1,6 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.ImportDialogChecker;
-import org.designup.picsou.functests.checkers.BankChooserChecker;
 import org.designup.picsou.functests.checkers.AccountEditionChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
@@ -10,8 +9,6 @@ import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
-import org.uispec4j.Window;
-import org.uispec4j.interception.WindowInterceptor;
 
 import java.io.File;
 
@@ -400,7 +397,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .validate();
 
     importDialog.openCardTypeChooser()
-      .selectDeferredCard("Card n. 1111-2222-3333-4444", 31)
+      .selectDeferredCard("Card n. 1111-2222-3333-4444")
       .validate();
 
     importDialog

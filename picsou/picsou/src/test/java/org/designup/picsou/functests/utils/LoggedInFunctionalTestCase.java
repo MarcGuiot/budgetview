@@ -172,7 +172,12 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
       }
       mainWindow = null;
     }
-    super.tearDown();
+    try {
+      super.tearDown();
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
     views = null;
     mainAccounts = null;
     savingsAccounts = null;

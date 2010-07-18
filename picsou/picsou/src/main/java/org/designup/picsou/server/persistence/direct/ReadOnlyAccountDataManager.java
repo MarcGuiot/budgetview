@@ -9,6 +9,7 @@ import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
+import org.globsframework.utils.serialization.YANBuffereInputStream;
 
 import java.io.*;
 import java.util.List;
@@ -29,9 +30,9 @@ public class ReadOnlyAccountDataManager {
   }
 
   public static SnapshotInfo readSnapshot(MapOfMaps<String, Integer, SerializableGlobType> globs, InputStream fileStream) {
-    BufferedInputStream inputStream = null;
+    InputStream inputStream = null;
     try {
-      inputStream = new BufferedInputStream(fileStream);
+      inputStream = new YANBuffereInputStream(fileStream);
       SerializedInput serializedInput = SerializedInputOutputFactory.init(inputStream);
       String version = serializedInput.readJavaString();
       if ("2".equals(version)) {

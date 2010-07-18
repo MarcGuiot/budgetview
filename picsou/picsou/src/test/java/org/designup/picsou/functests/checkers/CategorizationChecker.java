@@ -178,7 +178,15 @@ public class CategorizationChecker extends GuiChecker {
     assertThat(getTable().backgroundNear(row, column, Color.white));
     return this;
   }
-  
+
+  public CategorizationChecker setDeferred(String operationName, String seriesName) {
+    selectTransaction(operationName)
+      .selectOther()
+      .selectDeferred()
+      .selectSeries(seriesName);
+    return this;
+  }
+
   public class SavingsCategorizationChecker extends BudgetAreaCategorizationChecker {
     private SavingsCategorizationChecker(CategorizationChecker categorizationChecker, BudgetArea budgetArea) {
       super(categorizationChecker, budgetArea);
