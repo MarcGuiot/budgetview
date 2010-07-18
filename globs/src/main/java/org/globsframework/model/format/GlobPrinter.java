@@ -142,7 +142,7 @@ public class GlobPrinter {
           if (Strings.isNullOrEmpty(s)) {
             return Strings.toString(value);
           }
-          return s;
+          return "[" + value + "] " + s;
         }
       }
     }

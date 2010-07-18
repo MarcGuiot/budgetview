@@ -10,27 +10,27 @@ import org.globsframework.utils.ArrayTestUtils;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.util.Date;
 
 public class SerializationTest extends TestCase {
   protected SerializedOutput output;
-  protected FileOutputStream outputStream;
-  protected FileInputStream inputStream;
+  protected OutputStream outputStream;
+  protected InputStream inputStream;
   protected SerializedInput input;
   private Date currentDate;
 
   protected void setUp() throws Exception {
-    String fileName = TestUtils.getFileName(this, "sample.dat");
-
+//    String fileName = TestUtils.getFileName(this, "sample.dat");
+    String fileName = "/tmp/output.bin";
     new File(fileName).getParentFile().mkdirs();
 
-    outputStream = new FileOutputStream(fileName);
-    output = new SerializedOutputChecker(new DefaultSerializationOutput(outputStream));
+//    outputStream = new BufferedOutputStream(new FileOutputStream(fileName));
+//    output = new SerializedOutputChecker(new DefaultSerializationOutput(outputStream));
 
-    inputStream = new FileInputStream(fileName);
+//    inputStream = new FileInputStream(fileName);
+//    inputStream = new BufferedInputStream(new FileInputStream(fileName));
+    inputStream = new YANBuffereInputStream(new FileInputStream(fileName));
     input = new SerializationInputChecker(new DefaultSerializationInput(inputStream));
 
     currentDate = new Date();
@@ -111,6 +111,32 @@ public class SerializationTest extends TestCase {
                                      "<update type='dummyObject' id='2' name='name2' _name='(null)'/>" +
                                      "<delete type='dummyObject' id='3' _name='name3' _value='3.14'/>");
   }
+
+//  public void testBigWrite() throws Exception {
+//    for (int i = 0; i < 550000; i++){
+//      output.writeJavaString("blah");
+//      output.writeBoolean(Boolean.TRUE);
+//      output.writeDouble(6.33);
+//      output.writeDate(currentDate);
+//      output.writeInteger(4);
+//      output.writeLong(666L);
+//      output.write(new long[100]);
+//    }
+//    outputStream.close();
+//  }
+//
+//
+//  public void testBigRead() throws Exception {
+//    for (int i = 0; i < 250000; i++){
+//      input.readJavaString();
+//      input.readBoolean();
+//      input.readDouble();
+//      input.readDate();
+//      input.readInteger();
+//      assertEquals(666L, (long)input.readLong());
+//      input.readLongArray();
+//    }
+//  }
 
   private FieldValues createSampleValues() {
     return FieldValuesBuilder.init()
