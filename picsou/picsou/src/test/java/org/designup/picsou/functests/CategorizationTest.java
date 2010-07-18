@@ -634,20 +634,17 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.createSeries().setName("courantED")
       .setEndDate(200805)
-      .switchToManual()
       .selectAllMonths()
       .setAmount("100")
       .validate();
     budgetView.variable.createSeries().setName("courantAuchan")
       .setStartDate(200806)
       .setEndDate(200806)
-      .switchToManual()
       .selectAllMonths()
       .setAmount("100")
       .validate();
     budgetView.variable.createSeries().setName("courantMonoprix")
       .setStartDate(200806)
-      .switchToManual()
       .selectAllMonths()
       .setAmount("100")
       .validate();
@@ -700,6 +697,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectBudget();
     budgetView.variable.createSeries().setName("Courant")
+      .switchToAutomatic()
       .validate();
 
     OfxBuilder
@@ -767,6 +765,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   public void testAutomaticInCurrentMonth() throws Exception {
     views.selectBudget();
     budgetView.variable.createSeries().setName("Courant")
+      .switchToAutomatic()
       .validate();
     OfxBuilder
       .init(this)
@@ -964,6 +963,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectBudget();
     budgetView.variable.createSeries().setName("Courant")
+      .switchToAutomatic()
       .validate();
 
     OfxBuilder

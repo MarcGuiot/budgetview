@@ -58,6 +58,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRow(0);
     categorization.selectVariable().createSeries()
+      .switchToAutomatic()
       .setNameAndValidate("    Groceries   ");
 
     categorization.selectVariable().selectSeries("Groceries");
@@ -465,6 +466,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
   public void testEditDate() throws Exception {
     views.selectBudget();
     budgetView.variable.createSeries()
+      .switchToAutomatic()
       .switchToManual()
       .setStartDate(200809)
       .setEndDate(200810)
@@ -594,7 +596,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("manualThenSingleMonth")
-      .switchToManual()
       .setSingleMonth()
       .checkSingleMonthDate("June 2008")
       .checkTable(new Object[][]{
@@ -605,7 +606,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.variable.createSeries()
       .setName("singleMonthThenManual")
       .setSingleMonth()
-      .switchToManual()
       .checkSingleMonthDate("June 2008")
       .checkTable(new Object[][]{
         {"2008", "June", "", "0"}
@@ -621,7 +621,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     SeriesEditionDialogChecker edition = budgetView.variable.createSeries();
     edition.setCustom()
-      .switchToManual()
       .toggleMonth("Jan", "Mar", "Jul", "Sep", "Nov");
 
     edition.selectAllMonths()
@@ -686,6 +685,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTableRow(0);
     categorization.selectVariable().createSeries()
+      .switchToAutomatic()
       .setName("Drinking")
       .validate();
 
@@ -738,7 +738,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     SeriesEditionDialogChecker edition = budgetView.variable.createSeries();
     edition.setName(null)
-      .switchToManual()
       .setAmount(null)
       .getNameBox().pressKey(Key.shift(Key.A)).pressKey(Key.shift(Key.A));
     TextBox amount = edition.selectAllMonths().getAmountTextBox();
@@ -767,7 +766,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectTransactions("Auchan");
     categorization.selectVariable().createSeries()
-      .switchToManual()
       .setName("Courant")
       .checkTable(new Object[][]{
         {"2008", "August", "", "0"},
@@ -891,7 +889,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     SeriesEditionDialogChecker edition = categorization.selectVariable().createSeries();
 
     edition.setName("Diet Food")
-      .switchToManual()
       .checkTable(new Object[][]{
         {"2008", "August", "", "0"},
         {"2008", "July", "", "0"},
@@ -1050,7 +1047,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.variable.createSeries()
       .setName("S1")
       .setSixMonths()
-      .switchToManual()
       .checkMonthSelectorsVisible(true)
       .toggleMonth(3)
       .checkMonthIsChecked(3, 9)
@@ -1413,7 +1409,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("Serie")
-      .switchToManual()
       .selectAllMonths()
       .setAmount(100)
       .validate();

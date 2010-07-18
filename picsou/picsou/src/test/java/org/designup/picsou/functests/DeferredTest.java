@@ -131,7 +131,6 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .selectVariable()
       .createSeries()
       .setName("Course")
-      .switchToManual()
       .selectAllMonths()
       .setAmount("250")
       .validate();
@@ -427,7 +426,6 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("Mc Do")
-      .switchToManual()
       .selectAllMonths()
       .setAmount("100")
       .validate();

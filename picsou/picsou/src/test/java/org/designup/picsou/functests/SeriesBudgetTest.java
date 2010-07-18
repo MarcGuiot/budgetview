@@ -42,7 +42,7 @@ public class SeriesBudgetTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.variable.createSeries().setName("Courses")
-      .switchToManual().selectAllMonths().setAmount(100).validate();
+      .selectAllMonths().setAmount(100).validate();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     timeline.checkSpanEquals("2009/04", "2009/06");
     timeline.selectMonth("2009/06");

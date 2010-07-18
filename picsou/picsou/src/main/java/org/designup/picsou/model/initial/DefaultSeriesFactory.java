@@ -76,6 +76,7 @@ public class DefaultSeriesFactory {
 
     FieldValuesBuilder builder = FieldValuesBuilder.init()
       .set(Series.NAME, getName(budgetArea, nameKey))
+      .set(Series.IS_AUTOMATIC, budgetArea != BudgetArea.VARIABLE)
       .set(Series.BUDGET_AREA, budgetArea.getId())
       .set(Series.PROFILE_TYPE, profileType.getId());
 

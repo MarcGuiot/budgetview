@@ -283,7 +283,6 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
         parent = parent.getParent();
         bounds.translate(parent.getX(), parent.getY());
       }
-      System.out.println("SeriesChooserComponentFactory.getRectange " + bounds);
       return bounds;
     }
     return null;

@@ -289,7 +289,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.createSeries().setName("courantED")
       .setEndDate(200805)
-      .switchToManual()
       .selectAllMonths()
       .setAmount("100")
       .validate();
@@ -301,7 +300,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .validate();
     budgetView.variable.createSeries().setName("courantMonoprix")
       .setStartDate(200806)
-      .switchToManual()
       .selectAllMonths()
       .setAmount("100")
       .selectMonth(200808)
@@ -383,6 +381,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("santé")
+      .switchToAutomatic()
       .validate();
     views.selectCategorization();
     timeline.selectAll();
@@ -874,7 +873,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("Loto")
-      .switchToManual()
       .selectAllMonths()
       .setAmount("15")
       .selectPositiveAmounts()
@@ -903,7 +901,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("Loto")
-      .switchToManual()
       .selectAllMonths()
       .setAmount("15")
       .selectPositiveAmounts()
@@ -948,7 +945,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("ZeroSeries")
-      .switchToManual()
       .selectAllMonths()
       .setAmount("0")
       .selectPositiveAmounts()
@@ -1000,13 +996,11 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("Loto")
-      .switchToManual()
       .selectAllMonths()
       .setAmount("100")
       .selectPositiveAmounts()
       .createSeries()
       .setName("Auchan")
-      .switchToManual()
       .selectAllMonths()
       .setAmount("100")
       .selectNegativeAmounts()

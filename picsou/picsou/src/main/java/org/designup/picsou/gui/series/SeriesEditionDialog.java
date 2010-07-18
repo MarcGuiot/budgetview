@@ -159,7 +159,9 @@ public class SeriesEditionDialog {
       .setEmptyOptionLabel(Lang.get("seriesEdition.account.external"));
     builder.add("toAccount", toAccountsCombo);
 
-    builder.add("createAccount", new NewAccountAction(AccountType.SAVINGS, localRepository, directory, dialog));
+    NewAccountAction action = new NewAccountAction(AccountType.SAVINGS, localRepository, directory, dialog);
+    builder.add("createAccount", action);
+    action.setAccountTypeEditable(false);
 
     savingsMessage = new JLabel(Lang.get("seriesEdition.savingsMessagesError"));
     builder.add("savingsMessage", savingsMessage);
@@ -456,6 +458,7 @@ public class SeriesEditionDialog {
                               value(Series.INITIAL_AMOUNT, 0.),
                               value(Series.NAME, label),
                               value(Series.DAY, day),
+                              value(Series.IS_AUTOMATIC, budgetArea.isAutomatic()),
                               value(Series.JANUARY, true),
                               value(Series.FEBRUARY, true),
                               value(Series.MARCH, true),

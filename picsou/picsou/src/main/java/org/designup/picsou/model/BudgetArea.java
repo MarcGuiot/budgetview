@@ -16,14 +16,14 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 public enum BudgetArea implements GlobConstantContainer {
-  ALL("ALL", -1, false, false),
-  INCOME("INCOME", 0, true, true),
-  RECURRING("RECURRING", 1, false, false),
-  VARIABLE("VARIABLE", 2, false, false),
-  EXTRAS("EXTRAS", 4, false, false),
-  SAVINGS("SAVINGS", 5, false, true),
-  UNCATEGORIZED("UNCATEGORIZED", 6, false, false),
-  OTHER("OTHER", 7, false, false);
+  ALL("ALL", -1, false, false, false),
+  INCOME("INCOME", 0, true, true, true),
+  RECURRING("RECURRING", 1, false, false, true),
+  VARIABLE("VARIABLE", 2, false, false, false),
+  EXTRAS("EXTRAS", 4, false, false, false),
+  SAVINGS("SAVINGS", 5, false, true, true),
+  UNCATEGORIZED("UNCATEGORIZED", 6, false, false, true),
+  OTHER("OTHER", 7, false, false, true);
 
   public static GlobType TYPE;
 
@@ -37,12 +37,14 @@ public enum BudgetArea implements GlobConstantContainer {
   private int id;
   private boolean income;
   private boolean overrunAllowed;
+  private boolean automatic;
 
   public static final BudgetArea[] INCOME_AREAS = {INCOME};
   public static final BudgetArea[] EXPENSES_AREAS = {RECURRING, VARIABLE, EXTRAS, SAVINGS};
   public static final BudgetArea[] INCOME_AND_EXPENSES_AREAS = {INCOME, RECURRING, VARIABLE, EXTRAS, SAVINGS};
 
-  BudgetArea(String name, int id, boolean isIncome, boolean overrunAllowed) {
+  BudgetArea(String name, int id, boolean isIncome, boolean overrunAllowed, final boolean automatic) {
+    this.automatic = automatic;
     this.name = name;
     this.id = id;
     this.income = isIncome;
@@ -55,6 +57,11 @@ public enum BudgetArea implements GlobConstantContainer {
 
   public boolean isOverrunAllowed() {
     return overrunAllowed;
+  }
+
+
+  public boolean isAutomatic() {
+    return automatic;
   }
 
   static {

@@ -509,6 +509,7 @@ public class CategorizationChecker extends GuiChecker {
       if (first) {
         SeriesEditionDialogChecker editionDialogChecker = selectVariable()
           .createSeries()
+          .switchToAutomatic()
           .setName(seriesName);
         if (amount != null){
           editionDialogChecker.switchToManual()

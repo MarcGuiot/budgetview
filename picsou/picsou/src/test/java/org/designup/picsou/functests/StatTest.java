@@ -20,7 +20,6 @@ public class StatTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     budgetView.variable.createSeries().setName("Secu")
-      .switchToManual()
       .selectAllMonths()
       .setAmount("0")
       .validate();
@@ -59,7 +58,6 @@ public class StatTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.variable.createSeries().setName("Secu")
-      .switchToManual()
       .selectAllMonths()
       .selectPositiveAmounts()
       .setAmount("10").validate();

@@ -120,12 +120,21 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   }
 
   public BudgetAreaCategorizationChecker createSeries(String seriesName) {
-    createSeries().setName(seriesName).validate();
+    SeriesEditionDialogChecker editionDialogChecker = createSeries().setName(seriesName);
+    if (budgetArea == BudgetArea.VARIABLE){
+      editionDialogChecker.switchToAutomatic();
+    }
+    editionDialogChecker.validate();
     return this;
   }
 
   public BudgetAreaCategorizationChecker selectNewSeries(String seriesName) {
-    createSeries().setName(seriesName).validate();
+    SeriesEditionDialogChecker editionDialogChecker = createSeries().setName(seriesName);
+    if (budgetArea == BudgetArea.VARIABLE){
+      editionDialogChecker.switchToAutomatic();
+    }
+    editionDialogChecker
+      .validate();
     return this;
   }
 
