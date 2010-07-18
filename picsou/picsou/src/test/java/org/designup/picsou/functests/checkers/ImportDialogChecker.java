@@ -388,7 +388,8 @@ public class ImportDialogChecker extends GuiChecker {
         checker
           .checkMessageContains(Lang.get(ImportDialog.getEndOfImportMessageKey(loadedTransactionCount, importedTransactionCount, autocategorizedTransactionCount),
                                          Integer.toString(importedTransactionCount),
-                                         Integer.toString(autocategorizedTransactionCount)));
+                                         Integer.toString(autocategorizedTransactionCount),
+                                         Integer.toString(loadedTransactionCount)));
       }
       if (buttonMessage == null) {
         return checker.triggerCloseUndefined();
