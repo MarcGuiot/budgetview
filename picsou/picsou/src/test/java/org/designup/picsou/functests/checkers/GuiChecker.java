@@ -50,7 +50,7 @@ public abstract class GuiChecker {
                                              "Signpost is not visible for this component");
   }
 
-  protected void pressEsc(final Window dialog) {
+  public static void pressEsc(final Window dialog) {
     final JDialog jDialog = (JDialog)dialog.getAwtComponent();
     KeyUtils.pressKey(jDialog.getRootPane(), Key.ESCAPE);
   }
