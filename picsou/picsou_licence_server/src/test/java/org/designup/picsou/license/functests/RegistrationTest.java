@@ -40,7 +40,6 @@ public class RegistrationTest extends LicenseTestCase {
     LicenseActivationChecker license = LicenseActivationChecker.open(window);
     license.checkConnectionNotAvailable();
     startServers();
-    Thread.sleep(2000);
     license.checkConnectionIsAvailable();
   }
 
