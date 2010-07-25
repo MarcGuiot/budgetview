@@ -42,7 +42,7 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
   public GlobList findByIndex(Object value) {
     GlobList glob = indexedGlob.get(value);
     if (glob == null) {
-      return GlobList.EMPTY;
+      return new GlobList(); // do not use empty as the caller can modify the list
     }
     else {
       return new GlobList(glob);
