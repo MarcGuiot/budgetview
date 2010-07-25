@@ -124,7 +124,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     setVariableAmount("courses", 130);
     budgetView.variable
       .checkSeriesGaugeRemaining("courses", 0., true)
-      .checkGaugeTooltip("habillement", "Reste : 40")
+      .checkGaugeTooltip("habillement", "Il reste <b>40.00</b> à dépenser")
       .checkTotalErrorOverrun()
       .checkTotalAmounts(-180, -200)
       .checkTotalDescription(40., 20., 200. + 20.);
@@ -146,7 +146,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     setVariableAmount("habillement", -20);
     budgetView.variable.checkSeries("habillement", -30, 20)
-      .checkGaugeTooltip("habillement", "Attendu : 50")
+      .checkGaugeTooltip("habillement", "Il vous reste <b>50.00</b> à recevoir")
       .checkSeriesGaugeRemaining("habillement", 50., false)
       .checkTotalErrorOverrun()
       .checkTotalAmounts(-180, -110)
@@ -165,23 +165,22 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     setSavingsAmount("epargne", 20);
     budgetView.savings
       .checkSeriesGaugeRemaining("epargne", 0., false)
-      .checkGaugeTooltip("epargne", "Extra : 10");
+      .checkGaugeTooltip("epargne", "<p>Vous avez épargné <b>10.00</b> de plus que prévu</p>");
 
     setSavingsAmount("epargne", 40);
     budgetView.savings
       .checkSeriesGaugeRemaining("epargne", -10., false)
-      .checkGaugeTooltip("epargne", "10.00 aurait du être épargner");
+      .checkGaugeTooltip("epargne", "Vous avez épargné <b>10.00</b> de moins que prévu");
 
     setSavingsAmount("epargne", 30);
     setSavingsAmount("financement", 40);
     budgetView.savings
       .checkSeriesGaugeRemaining("financement", 10., false)
-      .checkGaugeTooltip("financement", "Restait 10.00 à retirer de l'épargne");
+      .checkGaugeTooltip("financement", "Il restait <b>10.00</b> à retirer de l'épargne");
 
     budgetView.savings
-      .checkTotalGaugeTooltips("Restait 10.00 à retirer de l'épargne");
+      .checkTotalGaugeTooltips("Il restait <b>10.00</b> à retirer de l'épargne");
   }
-
 
   public void testGaugeInSavings() throws Exception {
     OfxBuilder.init(this)
@@ -195,24 +194,26 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     setSavingsAmount("epargne", 20);
     budgetView.savings
       .checkSeriesGaugeRemaining("epargne", 0., false)
-      .checkGaugeTooltip("epargne", "Extra : 10");
+      .checkGaugeTooltip("epargne", "Vous avez épargné <b>10.00</b> de plus que prévu");
 
     setSavingsAmount("epargne", 40);
     budgetView.savings
       .checkSeriesGaugeRemaining("epargne", -10., false)
-      .checkGaugeTooltip("epargne", "Reste 10.00 à épargner");
+      .checkGaugeTooltip("epargne", "Il vous reste <b>10.00</b> à épargner");
 
     setSavingsAmount("financement", 20);
+
     budgetView.savings
       .checkSeriesGaugeRemaining("financement", 0., true)
-      .checkGaugeTooltip("financement", "Dépassement : 10")
-      .checkTotalGaugeTooltips("Dépassement : 10", "Reste 10.00 à épargner");
+      .checkGaugeTooltip("financement", "Vous avez retiré <b>10.00</b> de plus que prévu")
+      .checkTotalGaugeTooltips("Vous avez épargné <b>10.00</b> de moins que prévu",
+                               "Il vous reste <b>10.00</b> à épargner");
 
     setSavingsAmount("epargne", 30);
     setSavingsAmount("financement", 40);
     budgetView.savings
       .checkSeriesGaugeRemaining("financement", 10., false)
-      .checkGaugeTooltip("financement", "Reste 10.00 à retirer de l'épargne");
+      .checkGaugeTooltip("financement", "Il reste <b>10.00</b> à retirer de l'épargne");
   }
 
   public void testEnveloppeWithPositive() throws Exception {
@@ -232,7 +233,8 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.checkTotalAmounts(-120, -100)
       .checkTotalTooltips(10, 110)
-      .checkTotalGaugeTooltips("Attendu : 10", "Dépassement : 10");
+      .checkTotalGaugeTooltips("Il reste <b>10.00</b> à recevoir",
+                               "Vous avez dépensé <b>10.00</b> de plus que prévu");
 
     setVariableAmount("SECU", 30);
     setVariableAmount("courses",150);
@@ -241,20 +243,20 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     setVariableAmount("SECU", 40);
     budgetView.variable.checkTotalAmounts(-120, -110)
-      .checkTotalGaugeTooltips("Attendu : 10");
+      .checkTotalGaugeTooltips("Il reste <b>10.00</b> à recevoir");
 
     setVariableAmount("courses", 180);
-    budgetView.variable.checkTotalGaugeTooltips("Attendu : 10", "Reste : 30")
-      .checkGaugeTooltip("SECU", "Attendu : 10")
-      .checkGaugeTooltip("courses", "Reste : 30");
+    budgetView.variable.checkTotalGaugeTooltips("Il reste <b>20.00</b> à dépenser")
+      .checkGaugeTooltip("SECU", "Il vous reste <b>10.00</b> à recevoir")
+      .checkGaugeTooltip("courses", "Il reste <b>30.00</b> à dépenser");
 
     setVariableAmount("courses", 120);
 
     setVariableAmount("SECU", 20);
 
-    budgetView.variable.checkTotalGaugeTooltips("Dépassement : 30", "Extra : 10")
-      .checkGaugeTooltip("SECU", "Extra : 10")
-      .checkGaugeTooltip("courses", "Dépassement : 30")
+    budgetView.variable.checkTotalGaugeTooltips("Vous avez dépensé <b>20.00</b> de plus que prévu")
+      .checkGaugeTooltip("SECU", "Vous avez reçu <b>10.00</b> de plus que prévu")
+      .checkGaugeTooltip("courses", "Vous avez dépensé <b>30.00</b> de plus que prévu")
       .checkTotalTooltips(20, 120);
   }
 
@@ -273,19 +275,18 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .selectAllMonths().setAmount(150).validate();
 
     timeline.selectAll();
-    String nonDepense = "Non dépensé : 150";
-    String reste = "Reste : 30";
+    String nonDepense = "Vous avez dépensé <b>150.00</b> de moins que prévu";
+    String reste = "Il reste <b>30.00</b> à dépenser";
     budgetView.variable
       .checkGaugeTooltip("courses", nonDepense, reste)
       .checkTotalGaugeTooltips(nonDepense, reste)
       .checkTotalAmounts(-270., -450.);
 
     setVariableAmount("courses", 100);
-    nonDepense = "Non dépensé : 100";
-    String depassement = "Dépassement : 70";
+    String depassement = "Vous avez dépensé <b>30.00</b> de moins que prévu";
     budgetView.variable
-      .checkGaugeTooltip("courses", nonDepense, depassement)
-      .checkTotalGaugeTooltips(nonDepense, depassement);
+      .checkGaugeTooltip("courses", depassement)
+      .checkTotalGaugeTooltips(depassement);
   }
 
   public void testWithPlannedZero() throws Exception {
@@ -301,7 +302,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .selectAllMonths().setAmount(0)
       .validate();
     timeline.selectAll();
-    budgetView.variable.checkTotalGaugeTooltips("Dépassement : 1")
+    budgetView.variable.checkTotalGaugeTooltips("Vous avez dépensé <b>1.00</b><br>alors que vous n'aviez rien prévu")
       .checkTotalErrorOverrun();
   }
 
@@ -320,12 +321,13 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     setIncome("salaire", 900);
     setIncome("Loto", 100);
-    budgetView.income.checkTotalGaugeTooltips("Extra : 600", "Non reçu : 100")
+    budgetView.income.checkTotalGaugeTooltips("Vous avez reçu <b>500.00</b> de plus que prévu")
     .checkTotalTooltips(600., 2600);
 
     setIncome("salaire", 2000);
 
-    budgetView.income.checkTotalGaugeTooltips("Extra : 400", "Attendu : 1000", "Non reçu : 1100")
+    budgetView.income.checkTotalGaugeTooltips("Vous avez reçu <b>700.00</b> de moins que prévu",
+                                              "Il vous reste <b>1000.00</b> à recevoir")
       .checkTotalTooltips(400., 4600);
   }
 
@@ -340,7 +342,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("WorldCo", "salaire");
     views.selectBudget();
     timeline.selectAll();
-    budgetView.income.checkTotalGaugeTooltips("Attendu : 1100");
+    budgetView.income.checkTotalGaugeTooltips("Il vous reste <b>1100.00</b> à recevoir");
     timeline.selectMonth("2008/07");
     budgetView.income.checkGaugeBeginInError();
   }

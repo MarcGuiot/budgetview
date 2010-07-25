@@ -41,6 +41,7 @@ import org.designup.picsou.gui.utils.*;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -48,10 +49,7 @@ import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
-import org.globsframework.model.Glob;
+import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
@@ -64,6 +62,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.Date;
 
 public class MainPanel {
   private PicsouFrame parent;
@@ -293,6 +292,7 @@ public class MainPanel {
     editMenu.add(new DataCheckerAction(repository, directory));
     editMenu.add(new ThrowExceptionAction());
     editMenu.add(new ThrowInRepoExceptionAction(repository));
+    editMenu.add(new AddDayAction());
 //    Utils.endRemove();
 
     JRootPane rootPane = frame.getRootPane();
@@ -326,5 +326,22 @@ public class MainPanel {
   public void deleteUser(String userName, char[] chars) {
     directory.get(OpenRequestManager.class).popCallback();
     windowManager.logOutAndDeleteUser(userName, chars);
+  }
+
+  private class AddDayAction extends AbstractAction {
+    public AddDayAction() {
+      super("Add 10 days");
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        Glob currentMonth = repository.get(CurrentMonth.KEY);
+        Integer currentMonthId = currentMonth.get(CurrentMonth.CURRENT_MONTH);
+        Integer currentDayId = currentMonth.get(CurrentMonth.CURRENT_DAY);
+        Date date = Month.toDate(currentMonthId, currentDayId);
+        Date newDate = Month.addDays(date, 10);
+        repository.update(CurrentMonth.KEY,
+                          FieldValue.value(CurrentMonth.CURRENT_MONTH, Month.getMonthId(newDate)),
+                          FieldValue.value(CurrentMonth.CURRENT_DAY, Month.getDay(newDate)));
+      }
   }
 }

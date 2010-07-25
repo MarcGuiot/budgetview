@@ -45,10 +45,8 @@ public class BudgetAreaHeaderUpdater extends BudgetAreaSummaryComputer {
       plannedLabel.setForeground(normalAmountColor);
     }
 
-    GaugeUpdater.updateGauge(totalAmounts.getFuturePositiveRemaining(),
-                             totalAmounts.getFuturePositiveOverrun(),
-                             totalAmounts.getFutureNegativeRemaining(),
-                             totalAmounts.getFutureNegativeOverrun(),
+    GaugeUpdater.updateGauge(totalAmounts.getFutureRemaining(),
+                             totalAmounts.getFutureOverrun(),
                              totalAmounts.getPastRemaining(),
                              totalAmounts.getPastOverrun(),
                              totalAmounts.getGaugeTarget(),
