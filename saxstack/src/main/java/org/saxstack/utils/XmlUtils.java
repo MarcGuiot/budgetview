@@ -137,6 +137,9 @@ public class XmlUtils {
   }
 
   private static void write(XmlTag parentTag, XmlNodeBuilder xmlBuilder, Filter factory) throws IOException {
+    if (parentTag instanceof NullXmlTag) {
+      return;
+    }
     while (xmlBuilder.hasNext()) {
       String nextTagName = xmlBuilder.getNextTagName();
       XmlTag newTag = factory.enter(parentTag, nextTagName);
