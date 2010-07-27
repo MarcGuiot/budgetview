@@ -38,10 +38,10 @@ import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.utils.*;
+import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -50,8 +50,8 @@ import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -62,7 +62,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.Date;
 
 public class MainPanel {
   private PicsouFrame parent;
@@ -145,6 +144,7 @@ public class MainPanel {
                   new GlobMatcher() {
                     final GlobStringifier amountStringifier =
                       directory.get(DescriptionService.class).getStringifier(Transaction.AMOUNT);
+
                     public boolean matches(Glob item, GlobRepository repository) {
                       return amountStringifier.toString(item, repository).contains(searchFilter);
                     }
@@ -292,7 +292,7 @@ public class MainPanel {
     editMenu.add(new DataCheckerAction(repository, directory));
     editMenu.add(new ThrowExceptionAction());
     editMenu.add(new ThrowInRepoExceptionAction(repository));
-    editMenu.add(new AddDayAction());
+    editMenu.add(new NextMonthAction());
 //    Utils.endRemove();
 
     JRootPane rootPane = frame.getRootPane();
@@ -328,20 +328,17 @@ public class MainPanel {
     windowManager.logOutAndDeleteUser(userName, chars);
   }
 
-  private class AddDayAction extends AbstractAction {
-    public AddDayAction() {
-      super("Add 10 days");
+  private class NextMonthAction extends AbstractAction {
+    public NextMonthAction() {
+      super("goto to 10 of next month");
     }
 
     public void actionPerformed(ActionEvent e) {
-        Glob currentMonth = repository.get(CurrentMonth.KEY);
-        Integer currentMonthId = currentMonth.get(CurrentMonth.CURRENT_MONTH);
-        Integer currentDayId = currentMonth.get(CurrentMonth.CURRENT_DAY);
-        Date date = Month.toDate(currentMonthId, currentDayId);
-        Date newDate = Month.addDays(date, 10);
-        repository.update(CurrentMonth.KEY,
-                          FieldValue.value(CurrentMonth.CURRENT_MONTH, Month.getMonthId(newDate)),
-                          FieldValue.value(CurrentMonth.CURRENT_DAY, Month.getDay(newDate)));
-      }
+      Glob currentMonth = repository.get(CurrentMonth.KEY);
+      Integer currentMonthId = Month.next(currentMonth.get(CurrentMonth.CURRENT_MONTH));
+      repository.update(CurrentMonth.KEY,
+                        FieldValue.value(CurrentMonth.CURRENT_MONTH, currentMonthId),
+                        FieldValue.value(CurrentMonth.CURRENT_DAY, 10));
+    }
   }
 }

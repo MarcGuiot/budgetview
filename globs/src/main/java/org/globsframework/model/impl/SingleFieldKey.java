@@ -104,6 +104,11 @@ public class SingleFieldKey extends Key {
     return (Double)value;
   }
 
+  public Double get(DoubleField field, double valueIfNull) throws ItemNotFound {
+    checkIsKeyField(field);
+    return (Double)value;
+  }
+
   public Object getValue(Field field) {
     checkIsKeyField(field);
     return value;

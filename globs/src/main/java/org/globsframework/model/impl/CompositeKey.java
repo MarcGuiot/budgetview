@@ -8,6 +8,7 @@ import org.globsframework.model.Key;
 import org.globsframework.model.utils.FieldValueGetter;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.MissingInfo;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -158,6 +159,10 @@ public class CompositeKey extends Key {
 
   public Double get(DoubleField field) {
     return (Double)doGet(field);
+  }
+
+  public Double get(DoubleField field, double valueIfNull) throws ItemNotFound {
+    return get(field);
   }
 
   public Date get(DateField field) {

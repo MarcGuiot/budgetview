@@ -3,6 +3,7 @@ package org.globsframework.model;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.BooleanField;
+import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.impl.ThreeFieldKey;
 import org.globsframework.model.impl.TwoFieldKey;
 import org.globsframework.utils.exceptions.ItemNotFound;

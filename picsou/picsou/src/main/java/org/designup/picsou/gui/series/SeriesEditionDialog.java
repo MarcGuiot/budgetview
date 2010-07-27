@@ -22,6 +22,7 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
+import org.globsframework.gui.editors.GlobCheckBoxView;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -86,6 +87,7 @@ public class SeriesEditionDialog {
     new HashSet<Integer>(Arrays.asList(BudgetArea.VARIABLE.getId(), BudgetArea.RECURRING.getId(), BudgetArea.EXTRAS.getId()));
   private GlobLinkComboEditor budgetAreaCombo;
   private JTabbedPane tabbedPane;
+  private GlobCheckBoxView reportCheckBox;
 
   public SeriesEditionDialog(final GlobRepository repository, Directory directory) {
     this(directory.get(JFrame.class), repository, directory);
@@ -139,6 +141,31 @@ public class SeriesEditionDialog {
 
     nameEditor = builder.addEditor("nameField", Series.NAME).setNotifyOnKeyPressed(true);
     nameEditor.getComponent().addActionListener(okAction);
+
+    reportCheckBox = builder.addCheckBox("autoReport", Series.SHOULD_REPORT);
+    localRepository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
+        changeSet.safeVisit(Series.TYPE, new DefaultChangeSetVisitor(){
+          public void visitCreation(Key key, FieldValues values) throws Exception {
+            reportCheckBox.getComponent().setVisible(!values.get(Series.IS_AUTOMATIC));
+          }
+
+          public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+            if (values.contains(Series.IS_AUTOMATIC)){
+              if (values.get(Series.IS_AUTOMATIC)){
+                repository.update(key, Series.SHOULD_REPORT, false);
+                reportCheckBox.getComponent().setVisible(false);
+              }else{
+                reportCheckBox.getComponent().setVisible(true);
+              }
+            }
+          }
+        });
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+      }
+    });
 
     builder.addMultiLineEditor("descriptionField", Series.DESCRIPTION).setNotifyOnKeyPressed(true);
 
@@ -648,6 +675,8 @@ public class SeriesEditionDialog {
     }
     this.currentSeries = currentSeries;
     this.subSeriesEditionPanel.setCurrentSeries(currentSeries);
+    reportCheckBox.getComponent().setEnabled(this.currentSeries != null);
+    reportCheckBox.getComponent().setVisible(this.currentSeries != null && !currentSeries.get(Series.IS_AUTOMATIC));
   }
 
   private Integer getCurrentSubSeriesId() {

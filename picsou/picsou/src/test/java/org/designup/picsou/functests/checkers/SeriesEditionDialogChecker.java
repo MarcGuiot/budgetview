@@ -69,6 +69,16 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     assertFalse(dialog.isVisible());
   }
 
+  public SeriesEditionDialogChecker toggleAutoReport() {
+    dialog.getCheckBox("autoReport").select();
+    return this;
+  }
+
+  public SeriesEditionDialogChecker unToggleAutoReport() {
+    dialog.getCheckBox("autoReport").unselect();
+    return this;
+  }
+
   public SeriesEditionDialogChecker setDescription(String text) {
     dialog.getTabGroup().selectTab("Description");
     dialog.getInputTextBox("descriptionField").setText(text);

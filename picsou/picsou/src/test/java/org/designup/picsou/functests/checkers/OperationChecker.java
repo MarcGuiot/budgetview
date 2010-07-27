@@ -464,4 +464,9 @@ public class OperationChecker {
     MenuItem fileMenu = window.getMenuBar().getMenu("File");
     UISpecAssert.assertThat(fileMenu.contain("Change identifier"));
   }
+
+  public void nextMonth() {
+    MenuItem fileMenu = window.getMenuBar().getMenu("Edit");
+    fileMenu.getSubMenu("goto to 10 of next month").click();
+  }
 }
