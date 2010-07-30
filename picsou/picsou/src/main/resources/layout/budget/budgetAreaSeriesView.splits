@@ -34,10 +34,10 @@
               <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid"
                       margin="10" marginTop="5" marginBottom="5">
                 <header>
-                  <label text="$budgetview.columnTitle.series" anchor="center"/>
-                  <label text="$budgetview.columnTitle.real" anchor="right"/>
+                  <button action="titleSeries" styleClass="itemLink" text="$budgetview.columnTitle.series" anchor="center"/>
+                  <button action="titleAmountReal" styleClass="itemLink" text="$budgetview.columnTitle.real" anchor="right"/>
                   <label text="$budgetview.columnTitle.gauge" anchor="center"/>
-                  <label text="$budgetview.columnTitle.planned" anchor="right"/>
+                  <button action="titleAmountPlanned" styleClass="itemLink" text="$budgetview.columnTitle.planned" anchor="right"/>
                 </header>
                 <button ref="seriesName" styleClass="itemLink" marginRight="5" marginBottom="2"/>
                 <button ref="observedSeriesAmount" styleClass="actualAmountLink"

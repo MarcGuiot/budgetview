@@ -44,16 +44,33 @@ public class UserPreferences {
   @DefaultInteger(0)
   public static IntegerField CURRENT_WIZARD_PAGE;
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   @DefaultBoolean(true)
   public static BooleanField SHOW_CATEGORIZATION_HELP_MESSAGE;
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   @DefaultBoolean(true)
   public static BooleanField SHOW_VARIABLE_EDITION_MESSAGE;
 
   @DefaultInteger(1)
   public static IntegerField CATEGORIZATION_FILTERING_MODE;
+
+  /**
+   * 0 : no order 1/2 premiere colonne 3/4 second colonne...
+   */
+  public static IntegerField ORDER_INCOME;
+
+  public static IntegerField ORDER_SAVINGS;
+
+  public static IntegerField ORDER_RECURRING;
+
+  public static IntegerField ORDER_VARIABLE;
+  
+  public static IntegerField ORDER_EXTRA;
 
   public static DateField LAST_VALID_DAY;
 
@@ -77,11 +94,16 @@ public class UserPreferences {
       outputStream.writeBoolean(values.get(SHOW_CATEGORIZATION_HELP_MESSAGE));
       outputStream.writeBoolean(values.get(SHOW_VARIABLE_EDITION_MESSAGE));
       outputStream.writeDate(values.get(LAST_VALID_DAY));
+      outputStream.writeInteger(values.get(ORDER_INCOME));
+      outputStream.writeInteger(values.get(ORDER_RECURRING));
+      outputStream.writeInteger(values.get(ORDER_VARIABLE));
+      outputStream.writeInteger(values.get(ORDER_SAVINGS));
+      outputStream.writeInteger(values.get(ORDER_EXTRA));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public int getWriteVersion() {
-      return 6;
+      return 7;
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
@@ -102,6 +124,9 @@ public class UserPreferences {
       }
       else if (version == 6) {
         deserializeDataV6(fieldSetter, data);
+      }
+      else if (version == 7) {
+        deserializeDataV7(fieldSetter, data);
       }
     }
 
@@ -178,6 +203,25 @@ public class UserPreferences {
       fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, input.readBoolean());
       fieldSetter.set(SHOW_VARIABLE_EDITION_MESSAGE, input.readBoolean());
       fieldSetter.set(LAST_VALID_DAY, input.readDate());
+    }
+
+    private void deserializeDataV7(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readUtf8String());
+      fieldSetter.set(LAST_BACKUP_RESTORE_DIRECTORY, input.readUtf8String());
+      fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
+      fieldSetter.set(REGISTERED_USER, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
+      fieldSetter.set(SHOW_BUDGET_VIEW_WIZARD, input.readBoolean());
+      fieldSetter.set(CURRENT_WIZARD_PAGE, input.readInteger());
+      fieldSetter.set(SHOW_CATEGORIZATION_HELP_MESSAGE, input.readBoolean());
+      fieldSetter.set(SHOW_VARIABLE_EDITION_MESSAGE, input.readBoolean());
+      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      fieldSetter.set(ORDER_INCOME, input.readInteger());
+      fieldSetter.set(ORDER_RECURRING, input.readInteger());
+      fieldSetter.set(ORDER_VARIABLE, input.readInteger());
+      fieldSetter.set(ORDER_SAVINGS, input.readInteger());
+      fieldSetter.set(ORDER_EXTRA, input.readInteger());
     }
   }
 }
