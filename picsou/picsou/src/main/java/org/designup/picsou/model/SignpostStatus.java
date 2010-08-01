@@ -31,6 +31,7 @@ public class SignpostStatus {
   public static BooleanField WELCOME_SHOWN;
   public static BooleanField CATEGORIZATION_SELECTION_SHOWN;
   public static BooleanField CATEGORIZATION_AREA_SHOWN;
+  public static BooleanField FIRST_CATEGORIZATION_DONE_SHOWN;
   public static BooleanField CATEGORIZATION_COMPLETION_SHOWN;
   public static BooleanField SERIES_PERIODICITY_SHOWN;
   public static BooleanField SERIES_PERIODICITY_CLOSED;
@@ -106,11 +107,12 @@ public class SignpostStatus {
       outputStream.writeBoolean(values.get(END_OF_MONTH_POSITION_SHOWN));
       outputStream.writeInteger(values.get(AMOUNT_SERIES));
       outputStream.writeInteger(values.get(PERIODICITY_SERIES));
+      outputStream.writeBoolean(values.get(FIRST_CATEGORIZATION_DONE_SHOWN));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public int getWriteVersion() {
-      return 2;
+      return 3;
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
@@ -120,6 +122,27 @@ public class SignpostStatus {
       else if (version == 2) {
         deserializeDataV2(fieldSetter, data);
       }
+      else if (version == 3) {
+        deserializeDataV3(fieldSetter, data);
+      }
+    }
+
+    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(IMPORT_SHOWN, input.readBoolean());
+      fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_SELECTION_SHOWN, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_AREA_SHOWN, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_COMPLETION_SHOWN, input.readBoolean());
+      fieldSetter.set(SERIES_PERIODICITY_SHOWN, input.readBoolean());
+      fieldSetter.set(SERIES_PERIODICITY_CLOSED, input.readBoolean());
+      fieldSetter.set(SERIES_GAUGE_SHOWN, input.readBoolean());
+      fieldSetter.set(SERIES_AMOUNT_SHOWN, input.readBoolean());
+      fieldSetter.set(SERIES_AMOUNT_CLOSED, input.readBoolean());
+      fieldSetter.set(END_OF_MONTH_POSITION_SHOWN, input.readBoolean());
+      fieldSetter.set(AMOUNT_SERIES, input.readInteger());
+      fieldSetter.set(PERIODICITY_SERIES, input.readInteger());
+      fieldSetter.set(FIRST_CATEGORIZATION_DONE_SHOWN, input.readBoolean());
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {

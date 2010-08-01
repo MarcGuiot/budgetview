@@ -38,7 +38,9 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2010/05/27", -100, "rent")
       .addTransaction("2010/05/28", +500, "income")
-      .addTransaction("2010/05/29", -10, "auchan")
+      .addTransaction("2010/05/29", -100, "auchan")
+      .addTransaction("2010/05/29", -100, "auchan")
+      .addTransaction("2010/05/29", -100, "auchan")
       .load();
 
     // === Categorization selection ===
@@ -64,7 +66,11 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     // === Categorization completion ===
 
     categorization.setNewRecurring("rent", "Rent"); // SED shown
+
+    categorization.checkFirstCategorizationSignpostDisplayed("The operation is categorized, continue");
     categorization.setIncome("income", "Income 1");
+
+    checkNoSignpostVisible();
     categorization.setVariable("auchan", "Groceries");
     categorization.checkCompleteProgressMessageShown();
 

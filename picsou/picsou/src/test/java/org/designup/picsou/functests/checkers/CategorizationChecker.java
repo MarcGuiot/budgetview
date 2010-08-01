@@ -709,6 +709,11 @@ public class CategorizationChecker extends GuiChecker {
     return this;
   }
 
+  public CategorizationChecker checkFirstCategorizationSignpostDisplayed(String message) {
+    checkSignpostVisible(getPanel(), getTable(), message);
+    return this;
+  }
+  
   public CategorizationChecker checkAreaSelectionSignpostDisplayed(String message) {
     checkSignpostVisible(mainWindow, getPanel().getPanel("budgetAreaSelectionPanel"), message);
     return this;
