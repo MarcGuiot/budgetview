@@ -185,7 +185,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     categorization.setNewIncome("WorldCo", "Salaire");
     gauge.checkLevel(0.5);
-    checkNoSignpostVisible();
 
     categorization.showUncategorizedTransactionsOnly();
     categorization.checkTable(new Object[][]{

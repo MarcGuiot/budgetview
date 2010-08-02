@@ -21,6 +21,7 @@ import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -192,13 +193,14 @@ public class BudgetAreaSeriesView extends View {
     List<GlobGaugeView> visibles = new ArrayList<GlobGaugeView>();
 
     private SeriesRepeatComponentFactory(GlobsPanelBuilder builder) {
-      builder.add("titleSeries", new SeriesOrder(1, 2, orderManager));
-      builder.add("titleAmountReal",
-                  new AmountOrder(PeriodSeriesStat.AMOUNT, 3, 4, orderManager,
-                                  budgetArea.isIncome()));
-      builder.add("titleAmountPlanned",
-                  new AmountOrder(PeriodSeriesStat.PLANNED_AMOUNT, 5, 6, orderManager,
-                                  budgetArea.isIncome()));
+      SeriesOrder seriesOrder = new SeriesOrder(1, 2, orderManager);
+      seriesOrder.setStyleNode(builder.add("titleSeries", new JButton(seriesOrder)));
+      AmountOrder amountRealOrder = new AmountOrder(PeriodSeriesStat.AMOUNT, 3, 4, orderManager,
+                                                    budgetArea.isIncome());
+      amountRealOrder.setStyleNode(builder.add("titleAmountReal", new JButton(amountRealOrder)));
+      AmountOrder plannedAmountOrder = new AmountOrder(PeriodSeriesStat.PLANNED_AMOUNT, 5, 6, orderManager,
+                                                       budgetArea.isIncome());
+      plannedAmountOrder.setStyleNode(builder.add("titleAmountPlanned", new JButton(plannedAmountOrder)));
     }
 
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob periodSeriesStat) {
@@ -279,6 +281,7 @@ public class BudgetAreaSeriesView extends View {
   private class OrderManager implements ChangeSetListener {
     private List<Order> orders = new ArrayList<Order>();
     private IntegerField field;
+    private SplitsNode<JButton> previousNode;
 
     private OrderManager() {
       if (budgetArea == BudgetArea.INCOME) {
@@ -300,20 +303,34 @@ public class BudgetAreaSeriesView extends View {
 
     public Integer getUserCurrentOrder() {
       Glob glob = repository.find(UserPreferences.KEY);
-      if (glob == null){
+      if (glob == null) {
         return 0;
       }
       Integer order = glob.get(field);
-      if (order == null){
+      if (order == null) {
         return 0;
       }
       return order;
     }
 
-    public void setCurrentOrder(Integer order) {
+    public void setCurrentOrder(SplitsNode<JButton> node, Integer order) {
+      if (previousNode != null && previousNode != node) {
+        previousNode.applyStyle("none");
+      }
+      this.previousNode = node;
+      if (order == 0) {
+        node.applyStyle("none");
+      }
+      else {
+        node.applyStyle((order % 2) == 0 ? "up" : "down");
+      }
       repository.update(UserPreferences.KEY, field, order);
       comparator = getComparator();
       updateRepeat();
+    }
+
+    public void setPreviousNode(SplitsNode<JButton> previousNode) {
+      this.previousNode = previousNode;
     }
 
     Comparator<Glob> getComparator() {
@@ -337,6 +354,9 @@ public class BudgetAreaSeriesView extends View {
       if (changedTypes.contains(UserPreferences.TYPE)) {
         Glob glob = repository.find(UserPreferences.KEY);
         if (glob != null) {
+          for (Order order : orders) {
+            order.update();
+          }
           comparator = getComparator();
         }
       }
@@ -348,8 +368,11 @@ public class BudgetAreaSeriesView extends View {
     private Integer currentOrder = 0;
     private int ordered;
     private int oppositeOrder;
+    private SplitsNode<JButton> splitsNode;
+    private boolean inverted;
 
-    public Order(int ordered, int oppositeOrder, BudgetAreaSeriesView.OrderManager manager) {
+    public Order(int ordered, int oppositeOrder, BudgetAreaSeriesView.OrderManager manager, boolean inverted) {
+      this.inverted = inverted;
       manager.add(this);
       this.ordered = ordered;
       this.oppositeOrder = oppositeOrder;
@@ -366,10 +389,20 @@ public class BudgetAreaSeriesView extends View {
     Comparator<Glob> getComparator() {
       Integer currentOrder = orderManager.getUserCurrentOrder();
       if (currentOrder.equals(ordered)) {
-        return getOrder();
+        if (inverted) {
+          return new InvertedComparator(getOrder());
+        }
+        else {
+          return getOrder();
+        }
       }
       if (currentOrder.equals(oppositeOrder)) {
-        return new InvertedComparator(getOrder());
+        if (inverted) {
+          return getOrder();
+        }
+        else {
+          return new InvertedComparator(getOrder());
+        }
       }
       return null;
     }
@@ -389,7 +422,23 @@ public class BudgetAreaSeriesView extends View {
           currentOrder = 0;
         }
       }
-      orderManager.setCurrentOrder(currentOrder);
+      orderManager.setCurrentOrder(splitsNode, currentOrder);
+    }
+
+    public void setStyleNode(SplitsNode<JButton> splitsNode) {
+      this.splitsNode = splitsNode;
+    }
+
+    public void update() {
+      Integer realOrder = orderManager.getUserCurrentOrder();
+      if (realOrder == ordered || realOrder == oppositeOrder){
+        currentOrder = realOrder;
+        splitsNode.applyStyle((currentOrder % 2) == 0 ? "up" : "down");
+        orderManager.setPreviousNode(splitsNode);
+      }
+      else {
+        splitsNode.applyStyle("none");
+      }
     }
   }
 
@@ -397,7 +446,7 @@ public class BudgetAreaSeriesView extends View {
     private Comparator<Glob> globComparator;
 
     public SeriesOrder(int ordered, int oppositeOrder, final OrderManager orderManager) {
-      super(ordered, oppositeOrder, orderManager);
+      super(ordered, oppositeOrder, orderManager, false);
       GlobStringifier stringifier = descriptionService.getStringifier(Series.TYPE);
       final Comparator<Glob> seriesComparator = stringifier.getComparator(repository);
       globComparator = new Comparator<Glob>() {
@@ -416,21 +465,14 @@ public class BudgetAreaSeriesView extends View {
 
   private class AmountOrder extends Order {
     private DoubleField field;
-    private boolean invert;
 
     public AmountOrder(DoubleField field, int ordered, int oppositeOrder, OrderManager manager, boolean invert) {
-      super(ordered, oppositeOrder, manager);
+      super(ordered, oppositeOrder, manager, invert);
       this.field = field;
-      this.invert = invert;
     }
 
     public Comparator<Glob> getOrder() {
-      if (invert) {
-        return new InvertedComparator(new GlobFieldComparator(field));
-      }
-      else {
-        return new GlobFieldComparator(field);
-      }
+      return new GlobFieldComparator(field);
     }
   }
 

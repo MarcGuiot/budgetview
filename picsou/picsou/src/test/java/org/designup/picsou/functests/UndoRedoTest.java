@@ -106,6 +106,7 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
     operations.undo();
     operations.undo(); // signpost
     operations.undo(); // signpost
+    operations.undo(); // signpost
     transactions.checkTableIsEmpty();
   }
 
