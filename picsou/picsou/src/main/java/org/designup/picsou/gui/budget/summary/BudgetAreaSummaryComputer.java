@@ -86,7 +86,7 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
   }
 
   public static abstract class ComputeAmounts {
-    protected double futurePositiveOverrun;
+    protected double futureOverrun;
     protected double observed;
     protected double initiallyPlanned;
     protected double adjustedPlanned;
@@ -95,12 +95,10 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
     protected double gaugeActual;
     protected double gaugeTarget;
     private GlobRepository repository;
-    private Double futurePositiveRemaining;
+    private Double futureRemaining;
     private double pastRemaining;
     private double pastOverrun;
     private double totalRemaining;
-    private double futureNegativeRemaining;
-    private double futureNegativeOverrun;
 
     public ComputeAmounts(GlobRepository repository) {
       this.repository = repository;
@@ -109,21 +107,19 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
     public void update(GlobList budgetStats, BudgetArea budgetArea) {
       observed = 0.0;
       initiallyPlanned = 0.0;
-      double futurPositiveRemaining = 0.0;
-      double futurNegativeRemaining = 0.0;
+      double futurRemaining = 0.0;
       double pastRemaining = 0.0;
-      double futurPositiveOverrun = 0.0;
-      double futurNegativeOverrun = 0.0;
+      double futurOverrun = 0.0;
       double pastOverrun = 0.0;
       for (Glob budgetStat : budgetStats) {
         observed += getObserved(budgetStat, budgetArea);
         initiallyPlanned += getPlanned(budgetStat, budgetArea);
         if (isFuture(budgetStat)) {
-          futurPositiveRemaining += getPositiveRemaining(budgetStat, budgetArea);
-          futurNegativeRemaining += getNegativeRemaining(budgetStat, budgetArea);
+          futurRemaining += getPositiveRemaining(budgetStat, budgetArea);
+          futurRemaining += getNegativeRemaining(budgetStat, budgetArea);
 
-          futurPositiveOverrun += getPositiveOverrun(budgetStat, budgetArea);
-          futurNegativeOverrun += getNegativeOverrun(budgetStat, budgetArea);
+          futurOverrun += getPositiveOverrun(budgetStat, budgetArea);
+          futurOverrun += getNegativeOverrun(budgetStat, budgetArea);
         }
         else {
           pastRemaining += getPositiveRemaining(budgetStat, budgetArea);
@@ -132,16 +128,14 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
           pastOverrun += getNegativeOverrun(budgetStat, budgetArea);
         }
       }
-      futurePositiveRemaining = Amounts.normalize(futurPositiveRemaining);
-      futureNegativeRemaining = Amounts.normalize(futurNegativeRemaining);
-      futurePositiveOverrun = Amounts.normalize(futurPositiveOverrun);
-      futureNegativeOverrun = Amounts.normalize(futurNegativeOverrun);
+      futureRemaining = Amounts.normalize(futurRemaining);
+      futureOverrun = Amounts.normalize(futurOverrun);
 
       this.pastRemaining = Amounts.normalize(pastRemaining);
       this.pastOverrun = Amounts.normalize(pastOverrun);
 
-      totalRemaining = futurePositiveRemaining + futureNegativeRemaining + this.pastRemaining;
-      double totalOverrun = pastOverrun + futurePositiveOverrun;
+      totalRemaining = futureRemaining + this.pastRemaining;
+      double totalOverrun = pastOverrun + futureOverrun;
       observed = Amounts.normalize(observed);
       initiallyPlanned = Amounts.normalize(initiallyPlanned);
       adjustedPlanned = Amounts.normalize(observed + totalRemaining);
@@ -152,20 +146,12 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
 
     protected abstract boolean isFuture(Glob budgetStat);
 
-    public double getFuturePositiveOverrun() {
-      return futurePositiveOverrun;
+    public double getFutureOverrun() {
+      return futureOverrun;
     }
 
-    public double getFutureNegativeOverrun() {
-      return futureNegativeOverrun;
-    }
-
-    public Double getFuturePositiveRemaining() {
-      return futurePositiveRemaining;
-    }
-
-    public Double getFutureNegativeRemaining() {
-      return futureNegativeRemaining;
+    public Double getFutureRemaining() {
+      return futureRemaining;
     }
 
     public double getObserved() {
@@ -303,8 +289,7 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
   }
 
   public Double getOverrun() {
-    return totalAmounts.getFuturePositiveOverrun() + totalAmounts.getFutureNegativeOverrun() +
-           totalAmounts.getPastOverrun();
+    return totalAmounts.getFutureOverrun() + totalAmounts.getPastOverrun();
   }
 
   public Double getObserved() {

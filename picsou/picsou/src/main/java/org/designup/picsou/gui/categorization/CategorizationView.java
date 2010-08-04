@@ -4,6 +4,7 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.signpost.guides.CategorizationAreaSignpost;
 import org.designup.picsou.gui.signpost.guides.CategorizationSelectionSignpost;
 import org.designup.picsou.gui.signpost.guides.CategorizationCompletionSignpost;
+import org.designup.picsou.gui.signpost.guides.FirstCategorizationDoneSignpost;
 import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.accounts.NewAccountAction;
 import org.designup.picsou.gui.categorization.components.*;
@@ -169,6 +170,9 @@ public class CategorizationView extends View implements TableView, Filterable, C
     registerBankFormatExporter(transactionTable);
     Signpost signpost = new CategorizationSelectionSignpost(repository, directory);
     signpost.attach(table);
+
+    Signpost firstCategorization = new FirstCategorizationDoneSignpost(repository, directory);
+    firstCategorization.attach(table);
 
     this.filterSet = new FilterSet(this);
     CustomFilterMessagePanel filterMessagePanel = new CustomFilterMessagePanel(filterSet, repository, directory);

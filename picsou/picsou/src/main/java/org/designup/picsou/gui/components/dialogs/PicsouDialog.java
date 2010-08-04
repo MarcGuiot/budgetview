@@ -136,6 +136,10 @@ public class PicsouDialog extends JDialog {
     setContentPane(contentPane);
   }
 
+  public void setCloseAction(Action closeAction) {
+    this.closeAction = closeAction;
+  }
+
   public void dispose() {
     if (colorUpdater != null) {
       colorUpdater.dispose();

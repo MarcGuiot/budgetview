@@ -124,11 +124,8 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
       pastRemaining += getValue(glob, pastRemainingField);
       futureRemaining += getValue(glob, futureRemainingField);
     }
-    GaugeUpdater.updateGauge(futureRemaining > 0 ? futureRemaining : 0.0,
-                        futureOverrun > 0 ? futureOverrun : 0.0,
-                        futureRemaining < 0 ? futureRemaining : 0.0,
-                        futureOverrun < 0 ? futureOverrun : 0.0,
-                        pastRemaining, pastOverrun, target, actual, gauge, budgetArea);
+    GaugeUpdater.updateGauge(futureRemaining, futureOverrun, pastRemaining, pastOverrun,
+                             target, actual, gauge, budgetArea);
   }
 
   protected double getValue(Glob glob, DoubleField field) {

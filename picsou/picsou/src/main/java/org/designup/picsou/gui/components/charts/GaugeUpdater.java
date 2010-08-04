@@ -6,32 +6,52 @@ import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
 
 public class GaugeUpdater {
-  public static void updateGauge(double futurePositiveRemaining, double futurePositiveOverrun,
-                                 double futureNegativeRemaining, double futureNegativeOverrun,
+  public static void updateGauge(double futureRemaining, double futureOverrun,
                                  double pastRemaining,
                                  double pastOverrun, double gaugeTarget, double gaugeActual,
                                  final Gauge gauge, BudgetArea budgetArea) {
-    String tooltips = computeTooltips(futurePositiveRemaining, futurePositiveOverrun,
-                                      futureNegativeRemaining, futureNegativeOverrun,
+    String tooltips = computeTooltips(futureRemaining, futureOverrun,
                                       pastRemaining, pastOverrun,
                                       gaugeTarget, gauge.shouldInvertAll(),
                                       budgetArea);
-    gauge.setValues(gaugeActual, gaugeTarget, futureNegativeOverrun + futurePositiveOverrun + pastOverrun,
-                    futureNegativeRemaining + futurePositiveRemaining + pastRemaining,
+    gauge.setValues(gaugeActual, gaugeTarget, futureOverrun + pastOverrun,
+                    futureRemaining + pastRemaining,
                     "<html>" + tooltips + "</html>");
   }
 
-  public static String computeTooltips(double futurePositiveRemaining, double futurePositiveOverrun,
-                                        double futureNegativeRemaining, double futureNegativeOverrun,
-                                        double pastRemaining, double pastOverrun, double gaugeTarget,
-                                        final boolean shouldInvert, BudgetArea budgetArea) {
+  public static String computeTooltips(double futureRemaining, double futureOverrun,
+                                       double pastRemaining, double pastOverrun, double gaugeTarget,
+                                       final boolean shouldInvert, BudgetArea budgetArea) {
+    if (gaugeTarget < 0) {
+      double diff = (futureOverrun + pastOverrun) - pastRemaining;
+      if (diff > 0) {
+        futureOverrun = 0;
+        pastOverrun = 0;
+        pastRemaining = -diff;
+      }
+      else {
+        futureOverrun = 0;
+        pastRemaining = 0;
+        pastOverrun = diff;
+      }
+    }
+    else if (gaugeTarget > 0){
+      double diff = (futureOverrun + pastOverrun) - pastRemaining;
+      if (diff < 0) {
+        futureOverrun = 0;
+        pastOverrun = 0;
+        pastRemaining = -diff;
+      }
+      else {
+        pastRemaining = 0;
+        futureOverrun = 0;
+        pastOverrun = diff;
+      }
+    }
+
     if (shouldInvert) {
-      double tmp = futurePositiveOverrun;
-      futurePositiveOverrun = -1.0 * futureNegativeOverrun;
-      futureNegativeOverrun = -1.0 * tmp;
-      tmp = futurePositiveRemaining;
-      futurePositiveRemaining = -1.0 * futureNegativeRemaining;
-      futureNegativeRemaining = -1.0 * tmp;
+      futureOverrun = -1.0 * futureOverrun;
+      futureRemaining = -1.0 * futureRemaining;
       pastOverrun = -1.0 * pastOverrun;
       pastRemaining = -1.0 * pastRemaining;
       gaugeTarget = -1.0 * gaugeTarget;
@@ -40,13 +60,16 @@ public class GaugeUpdater {
     String prefix = gaugeTarget > 0 ? "positive" : gaugeTarget < 0 ? "negative" : "zero";
     String tooltips = "";
 
-    if (gaugeTarget > 0 && pastOverrun > 0 && futurePositiveOverrun > 0 && Amounts.isNearZero(futureNegativeOverrun)) {
-      futurePositiveOverrun += pastOverrun;
+    futureOverrun += pastOverrun;
+    pastOverrun = 0;
+
+    if (gaugeTarget > 0 && pastOverrun > 0 && futureOverrun > 0) {
+      futureOverrun += pastOverrun;
       pastOverrun = 0;
     }
 
-    if (gaugeTarget < 0 && pastOverrun < 0 && futureNegativeOverrun < 0 && Amounts.isNearZero(futurePositiveOverrun)) {
-      futureNegativeOverrun += pastOverrun;
+    if (gaugeTarget < 0 && pastOverrun < 0 && futureOverrun < 0 ) {
+      futureOverrun += pastOverrun;
       pastOverrun = 0;
     }
 
@@ -66,37 +89,23 @@ public class GaugeUpdater {
                            pastOverrun);
     }
 
-    if (Amounts.isNotZero(futurePositiveRemaining)) {
+    if (Amounts.isNotZero(futureRemaining)) {
       tooltips += toString(budgetArea,
                            prefix,
-                           ".positive",
+                           futureRemaining > 0 ? ".positive" : ".negative",
                            ".future.remaining",
-                           futurePositiveRemaining);
+                           futureRemaining);
     }
 
-    if (Amounts.isNotZero(futureNegativeRemaining)) {
-      tooltips += toString(budgetArea,
-                           prefix,
-                           ".negative",
-                           ".future.remaining",
-                           futureNegativeRemaining);
-    }
 
-    if (Amounts.isNotZero(futurePositiveOverrun)) {
+    if (Amounts.isNotZero(futureOverrun)) {
       tooltips += toString(budgetArea,
                            prefix,
-                           ".positive",
+                           futureOverrun > 0 ? ".positive" : ".negative",
                            ".future.overrun",
-                           futurePositiveOverrun);
+                           futureOverrun);
     }
 
-    if (Amounts.isNotZero(futureNegativeOverrun)) {
-      tooltips += toString(budgetArea,
-                           prefix,
-                           ".negative",
-                           ".future.overrun",
-                           futureNegativeOverrun);
-    }
     return tooltips;
   }
 
@@ -104,7 +113,7 @@ public class GaugeUpdater {
     return "<p>" +
            Lang.getWithDefault("gauge." + prefix + key + suffix + "." + budgetArea.getName(),
                                "gauge." + prefix + key + suffix,
-                               Formatting.DECIMAL_FORMAT.format(Math.abs(value))) +
-           "</p>";
+                               Formatting.DECIMAL_FORMAT.format(Math.abs(value)))
+           + "</p>";
   }
 }

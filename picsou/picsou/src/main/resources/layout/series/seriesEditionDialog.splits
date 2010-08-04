@@ -36,6 +36,8 @@
             <comboBox ref="budgetAreaChooser" marginBottom="4"/>
           </row>
 
+          <checkBox ref="autoReport" text="$seriesEdition.autoReport"/>
+
           <column autoHideSource="fromAccount" border="empty(10 ,0,15,0)">
             <label text="$seriesEdition.accountSelection" styleClass="separatorTitle"/>
             <row styleClass="separator">

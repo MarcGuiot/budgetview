@@ -3,12 +3,21 @@ package org.globsframework.model.impl;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.FieldValues;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Date;
 
 public abstract class AbstractFieldValues implements FieldValues {
   public Double get(DoubleField field) {
     return (Double)doGet(field);
+  }
+
+  public Double get(DoubleField field, double valueIfNull) throws ItemNotFound {
+    Object o = doGet(field);
+    if (o == null){
+      return valueIfNull;
+    }
+    return (Double)o;
   }
 
   public Date get(DateField field) {

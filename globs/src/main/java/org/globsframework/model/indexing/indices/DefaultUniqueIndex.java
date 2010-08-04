@@ -39,7 +39,7 @@ public class DefaultUniqueIndex implements IndexedTable {
   public GlobList findByIndex(Object value) {
     Glob glob = index.get(value);
     if (glob == null) {
-      return new EmptyGlobList();
+      return new GlobList();
     }
     return new GlobList(glob);
   }

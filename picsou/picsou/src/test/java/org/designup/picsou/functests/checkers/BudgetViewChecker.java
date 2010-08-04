@@ -302,5 +302,23 @@ public class BudgetViewChecker extends GuiChecker {
       BudgetViewChecker.this.checkSignpostVisible(window, getAmountButton(seriesName), text);
       return this;
     }
+
+    public BudgetAreaChecker clickTitleSeriesName() {
+      Button button = window.getButton("titleSeries");
+      button.click();
+      return this;
+    }
+
+    public BudgetAreaChecker clickTitleRealAmount() {
+      Button button = window.getButton("titleAmountReal");
+      button.click();
+      return this;
+    }
+
+    public BudgetAreaChecker clickTitlePlannedAmount() {
+      Button button = window.getButton("titleAmountPlanned");
+      button.click();
+      return this;
+    }
   }
 }

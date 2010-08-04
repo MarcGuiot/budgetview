@@ -21,6 +21,7 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -180,7 +181,9 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
                  LabelCustomizers.font(subSeriesFont))
       .addColumn(Lang.get("label"),
                  descriptionService.getStringifier(Transaction.LABEL),
-                 LabelCustomizers.chain(LabelCustomizers.BOLD, LabelCustomizers.autoTooltip()))
+                 LabelCustomizers.chain(LabelCustomizers.BOLD,
+                                        new PlannedLabelCustomizer(rendererColors),
+                                        LabelCustomizers.autoTooltip()))
       .addColumn(Lang.get("amount"),
                  amountColumn,
                  amountStringifier);
@@ -215,17 +218,21 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
     setFilter(GlobMatchers.ALL);
   }
 
-  private static class ShowPlannedTransactionsAction extends AbstractAction {
-    private final JCheckBox checkBox;
+  private static class PlannedLabelCustomizer implements LabelCustomizer {
+    private TransactionRendererColors rendererColors;
 
-    public ShowPlannedTransactionsAction(JCheckBox checkBox) {
-      super(Lang.get("transactionView.showPlannedTransactions"));
-      this.checkBox = checkBox;
+    public PlannedLabelCustomizer(TransactionRendererColors rendererColors) {
+      this.rendererColors = rendererColors;
     }
 
-    public void actionPerformed(ActionEvent e) {
-      if (checkBox.isSelected()) {
-
+    public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
+      if (glob.isTrue(Transaction.PLANNED)){
+        if (isSelected){
+          label.setForeground(rendererColors.getTransactionSelectedTextColor());
+        }
+        else {
+          label.setForeground(rendererColors.getTransactionPlannedTextColor());
+        }
       }
     }
   }

@@ -128,6 +128,10 @@ public class TwoFieldKey extends Key {
     return null;
   }
 
+  public Double get(DoubleField field, double valueIfNull) throws ItemNotFound {
+    return get(field);
+  }
+
   public Object getValue(Field field) {
     checkIsKeyField(field);
     if (field == keyField1) {

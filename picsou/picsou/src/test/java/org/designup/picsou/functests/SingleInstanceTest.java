@@ -11,6 +11,7 @@ import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
+import org.uispec4j.Key;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.ThreadLauncherTrigger;
@@ -289,11 +290,20 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     Window dialog = newApplication.getImportDialog();
     assertNotNull(dialog);
 
-    new ImportDialogChecker(dialog, false)
-//      .checkSelectedFiles(initialFile)
+    GuiChecker.pressEsc(dialog);
+    assertFalse(dialog.isVisible());
+
+    newApplication.clear();
+
+    NewApplicationThread sameFileApplication = new NewApplicationThread(initialFile);
+    sameFileApplication.start();
+
+    Window sameImportFileDialog = sameFileApplication.getImportDialog();
+    assertNotNull(sameImportFileDialog);
+
+    new ImportDialogChecker(sameImportFileDialog, false)
       .skipAndComplete();
     picsouApplication.shutdown();
-    newApplication.clear();
   }
 
   private String createQifFile(String discriminant, String content) {

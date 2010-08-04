@@ -85,7 +85,7 @@ public abstract class Signpost implements Disposable {
 
   protected abstract void init();
 
-  private boolean isCompleted() {
+  protected boolean isCompleted() {
     return SignpostStatus.isCompleted(completionField, repository);
   }
 

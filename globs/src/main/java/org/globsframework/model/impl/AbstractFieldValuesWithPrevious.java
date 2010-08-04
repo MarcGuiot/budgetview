@@ -21,6 +21,14 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
     return (Double)doGet(field);
   }
 
+  public Double get(DoubleField field, double valueIfNull) throws ItemNotFound {
+    Object value = doGet(field);
+    if (value == null){
+      return valueIfNull;
+    }
+    return (Double)value;
+  }
+
   public Date get(DateField field) throws ItemNotFound {
     return (Date)doGet(field);
   }

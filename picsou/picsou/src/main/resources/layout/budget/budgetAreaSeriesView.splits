@@ -7,8 +7,14 @@
     <style selector="header label" font="-,plain,10"
            foreground="block.inner.columnTitle" 
            fill="none"/>
+    <!--<style selector="header button" font="-,plain,10" horizontalTextPosition="left"-->
+           <!--foreground="block.inner.columnTitle" styleClass="itemLink" fill="none"/>-->
     <style selector="htmlEditorPane.hints" foreground="block.inner.hints"/>
     <style selector="label.totalAmount" font="-,bold,16" weightY="10" marginBottom="2"/>
+    <style id="up" selector="x" icon="button_up_blue.png"/>
+    <style id="down" selector="x" icon="button_down_blue.png"/>
+    <style id="none" selector="x" icon="button_empty.png"/>
+
   </styles>
 
   <column name="budgetAreaSeriesView" styleClass="main">
@@ -34,10 +40,13 @@
               <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid"
                       margin="10" marginTop="5" marginBottom="5">
                 <header>
-                  <label text="$budgetview.columnTitle.series" anchor="center"/>
-                  <label text="$budgetview.columnTitle.real" anchor="right"/>
+                  <button ref="titleSeries" styleClass="itemLink" text="$budgetview.columnTitle.series" anchor="center"
+                          foreground="block.inner.columnTitle" horizontalTextPosition="left"/>
+                  <button ref="titleAmountReal" styleClass="itemLink" text="$budgetview.columnTitle.real"
+                          foreground="block.inner.columnTitle" anchor="right" horizontalTextPosition="left"/>
                   <label text="$budgetview.columnTitle.gauge" anchor="center"/>
-                  <label text="$budgetview.columnTitle.planned" anchor="right"/>
+                  <button ref="titleAmountPlanned" styleClass="itemLink" text="$budgetview.columnTitle.planned"
+                          foreground="block.inner.columnTitle" anchor="right" horizontalTextPosition="left"/>
                 </header>
                 <button ref="seriesName" styleClass="itemLink" marginRight="5" marginBottom="2"/>
                 <button ref="observedSeriesAmount" styleClass="actualAmountLink"

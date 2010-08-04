@@ -1,11 +1,12 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.model.CurrentMonth;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
+import org.designup.picsou.model.util.Amounts;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFunctor;
+import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
 import java.util.Set;
@@ -46,6 +47,54 @@ public class CurrentMonthTrigger implements ChangeSetListener {
                             fieldStrictlyLessThan(Transaction.MONTH, lastMonth)));
       repository.safeApply(Transaction.TYPE, ALL,
                            new UpdateDayCallback(lastMonth, lastDay));
+    }
+
+    if (changeSet.containsChanges(CurrentMonth.KEY)) {
+      FieldValues value = changeSet.getPreviousValue(CurrentMonth.KEY);
+      if (value.contains(CurrentMonth.CURRENT_MONTH)) {
+        Integer previousMonth = value.get(CurrentMonth.CURRENT_MONTH);
+        if (previousMonth != null) {
+          GlobList series = repository.getAll(Series.TYPE, GlobMatchers.isTrue(Series.SHOULD_REPORT));
+          repository.startChangeSet();
+          try {
+            for (Glob aSeries : series) {
+              if (aSeries.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())){
+                if (Account.shouldCreateMirror(repository.findLinkTarget(aSeries, Series.FROM_ACCOUNT),
+                                               repository.findLinkTarget(aSeries, Series.TO_ACCOUNT))
+                  && aSeries.isTrue(Transaction.MIRROR)){
+                  continue;
+                }
+              }
+
+              ReadOnlyGlobRepository.MultiFieldIndexed index =
+                repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, aSeries.get(Series.ID));
+              Glob previousBudget = index.findByIndex(SeriesBudget.MONTH, previousMonth).getGlobs().getFirst();
+              double diff = previousBudget.get(SeriesBudget.AMOUNT, 0.) - previousBudget.get(SeriesBudget.OBSERVED_AMOUNT, 0.);
+              int maxMonthCount = 3;
+              for (int month = Month.next(previousMonth); !Amounts.isNearZero(diff) && maxMonthCount != 0; month = Month.next(month), maxMonthCount--) {
+                Glob newBudget = index.findByIndex(SeriesBudget.MONTH, month).getGlobs().getFirst();
+                if (newBudget != null) {
+                  Double newAmount = newBudget.get(SeriesBudget.AMOUNT, 0.);
+                  if (Amounts.sameSign(newAmount + diff, newAmount) || Amounts.isNearZero(newAmount)) {
+                    newAmount += diff;
+                    diff = 0;
+                  }
+                  else {
+                    diff += newAmount;
+                    newAmount = 0.;
+                  }
+                  repository.update(newBudget.getKey(), SeriesBudget.AMOUNT, newAmount);
+                }
+              }
+              repository.update(previousBudget.getKey(), SeriesBudget.AMOUNT,
+                                previousBudget.get(SeriesBudget.OBSERVED_AMOUNT, 0.) + diff);
+            }
+          }
+          finally {
+            repository.completeChangeSet();
+          }
+        }
+      }
     }
   }
 

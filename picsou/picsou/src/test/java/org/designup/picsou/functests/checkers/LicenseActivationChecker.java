@@ -1,9 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.MenuItem;
-import org.uispec4j.TextBox;
-import org.uispec4j.Trigger;
-import org.uispec4j.Window;
+import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
@@ -92,9 +89,16 @@ public class LicenseActivationChecker {
   }
 
   public void checkConnectionIsAvailable() {
-    assertTrue(dialog.getInputTextBox("ref-mail").isEnabled());
-    assertTrue(dialog.getInputTextBox("ref-code").isEnabled());
-    assertFalse(dialog.getTextBox("connectionMessage").isVisible());
+    long limit = UISpec4J.getAssertionTimeLimit();
+    UISpec4J.setAssertionTimeLimit(10000);
+    try {
+      assertTrue(dialog.getInputTextBox("ref-mail").isEnabled());
+      assertTrue(dialog.getInputTextBox("ref-code").isEnabled());
+      assertFalse(dialog.getTextBox("connectionMessage").isVisible());
+    }
+    finally {
+      UISpec4J.setAssertionTimeLimit(limit);
+    }
   }
 
   public LicenseActivationChecker checkErrorMessage(String message) {

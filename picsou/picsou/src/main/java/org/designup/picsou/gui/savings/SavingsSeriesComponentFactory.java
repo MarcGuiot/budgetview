@@ -78,7 +78,7 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
     boolean mainAccount = account.get(Account.ID).equals(Account.MAIN_SUMMARY_ACCOUNT_ID);
     Gauge gauge;
     if (fromAccount != null && fromAccount.equals(account)) {
-      gauge = BudgetAreaGaugeFactory.createSavingsGauge(!mainAccount);
+      gauge = BudgetAreaGaugeFactory.createSavingsGauge(mainAccount);
     }
     else {
       if (toAccount == null || !toAccount.equals(account)) {

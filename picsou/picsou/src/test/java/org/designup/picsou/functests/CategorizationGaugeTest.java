@@ -35,6 +35,7 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
     gauge.checkLevel(1);
 
     categorization.setNewVariable("WorldCo", "Income");
+    categorization.selectTransaction("Auchan");
     checkNoSignpostVisible();
 
     gauge.checkLevel(0.5);
@@ -75,6 +76,7 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
 
     categorization.setNewIncome("WorldCo", "Salaire");
     gauge.checkLevel(0.5);
+    categorization.selectTransaction("FNAC");
     checkNoSignpostVisible();    
   }
 

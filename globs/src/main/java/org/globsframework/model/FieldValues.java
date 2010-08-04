@@ -13,6 +13,8 @@ public interface FieldValues extends Serializable {
 
   Double get(DoubleField field) throws ItemNotFound;
 
+  Double get(DoubleField field, double valueIfNull) throws ItemNotFound;
+
   Date get(DateField field) throws ItemNotFound;
 
   Date get(TimeStampField field) throws ItemNotFound;
@@ -63,6 +65,10 @@ public interface FieldValues extends Serializable {
     }
 
     public Double get(DoubleField field) throws ItemNotFound {
+      throw new ItemNotFound(field.getName());
+    }
+
+    public Double get(DoubleField field, double valueIfNull) throws ItemNotFound {
       throw new ItemNotFound(field.getName());
     }
 

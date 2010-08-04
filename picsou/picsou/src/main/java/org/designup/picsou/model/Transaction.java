@@ -234,8 +234,11 @@ public class Transaction {
   }
 
   public static GlobList getUncategorizedTransactions(Integer monthId, GlobRepository repository) {
-    return repository.findByIndex(SERIES_INDEX, SERIES, Series.UNCATEGORIZED_SERIES_ID)
-      .getGlobs()
+    ReadOnlyGlobRepository.MultiFieldIndexed index = repository.findByIndex(SERIES_INDEX, SERIES, Series.UNCATEGORIZED_SERIES_ID);
+    GlobList prefiltered = index.findByIndex(BUDGET_MONTH, Month.previous(monthId)).getGlobs();
+    prefiltered.addAll(index.findByIndex(BUDGET_MONTH, monthId).getGlobs());
+    prefiltered.addAll(index.findByIndex(BUDGET_MONTH, Month.next(monthId)).getGlobs());
+    return prefiltered
       .filterSelf(fieldEquals(BUDGET_MONTH, monthId), repository)
       .filterSelf(fieldEquals(PLANNED, false), repository);
   }

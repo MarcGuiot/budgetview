@@ -133,6 +133,12 @@ public class ImportDialog {
     mainPanel = new JPanel();
     mainPanel.setLayout(new SingleComponentLayout(null));
     mainPanel.add(step1Panel);
+    dialog.setCloseAction(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        dialog.setVisible(false);
+        controller.complete();
+      }
+    });
   }
 
   private void initStep1Panel(String textForCloseButton, Directory directory) {

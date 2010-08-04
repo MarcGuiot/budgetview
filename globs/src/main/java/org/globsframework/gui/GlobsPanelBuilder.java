@@ -13,10 +13,7 @@ import org.globsframework.gui.views.*;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
-import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.LinkField;
-import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -66,6 +63,13 @@ public class GlobsPanelBuilder extends SplitsBuilder {
   public GlobLinkComboEditor addComboEditor(Link field) {
     return store(GlobLinkComboEditor.init(field, repository, directory));
   }
+
+  public GlobCheckBoxView addCheckBox(String name, BooleanField field) {
+    GlobCheckBoxView boxView = store(GlobCheckBoxView.init(field, repository, directory));
+    boxView.setName(name);
+    return boxView;
+  }
+
 
   public GlobTextEditor addEditor(String name, StringField field) {
     final GlobTextEditor editor = addEditor(field);

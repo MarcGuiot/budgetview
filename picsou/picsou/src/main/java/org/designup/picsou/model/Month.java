@@ -248,6 +248,12 @@ public class Month {
     return day;
   }
 
+  public static Date addDays(Date date, int day){
+    CALENDAR.setTime(date);
+    CALENDAR.add(Calendar.DAY_OF_MONTH, day);
+    return CALENDAR.getTime();
+  }
+
   public static Date addOneMonth(Date date) {
     CALENDAR.setTime(date);
     CALENDAR.add(Calendar.MONTH, 1);
