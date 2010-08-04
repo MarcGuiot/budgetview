@@ -244,9 +244,9 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     assertEquals(5l, glob.get(DummyObjectWithDefaultValues.LONG).longValue());
     assertEquals(true, glob.get(DummyObjectWithDefaultValues.BOOLEAN).booleanValue());
     assertTrue(glob.isTrue(DummyObjectWithDefaultValues.BOOLEAN));
-    TestUtils.assertDateEquals((Date)DummyObjectWithDefaultValues.DATE.getDefaultValue(),
+    TestUtils.assertDatesEqual((Date)DummyObjectWithDefaultValues.DATE.getDefaultValue(),
                                glob.get(DummyObjectWithDefaultValues.DATE), 500);
-    TestUtils.assertDateEquals((Date)DummyObjectWithDefaultValues.DATE.getDefaultValue(),
+    TestUtils.assertDatesEqual((Date)DummyObjectWithDefaultValues.DATE.getDefaultValue(),
                                glob.get(DummyObjectWithDefaultValues.TIMESTAMP), 500);
   }
 

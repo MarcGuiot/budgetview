@@ -135,7 +135,7 @@ public class TestUtils {
   }
 
   public static <T> void assertSetEquals(Collection<T> actual, Collection<T> expected) {
-    Assert.assertEquals(new HashSet(actual), new HashSet(expected));
+    Assert.assertEquals(new HashSet(expected), new HashSet(actual));
   }
 
   public static <T> void assertSetEquals(Iterator<T> actual, T... expected) {
@@ -168,7 +168,7 @@ public class TestUtils {
     }
   }
 
-  public static void assertDateEquals(Date date1, Date date2, int margin) throws Exception {
+  public static void assertDatesEqual(Date date1, Date date2, int margin) throws Exception {
     if (Math.abs(date1.getTime() - date2.getTime()) > margin) {
       Assert.assertEquals(date1, date2);
     }
