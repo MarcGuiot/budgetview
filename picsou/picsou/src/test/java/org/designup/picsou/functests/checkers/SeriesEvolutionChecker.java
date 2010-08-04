@@ -26,11 +26,11 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
   private Table table;
 
   private static final String PANEL_NAME = "seriesEvolutionView";
-  private int COUNT_COLMUMN = 10;
+  private int COUNT_COLUMN = 10;
 
   public SeriesEvolutionChecker(Window mainWindow) {
     super(mainWindow);
-    this.histoChart = new HistoChecker(mainWindow, "seriesEvolutionView");
+    this.histoChart = new HistoChecker(mainWindow, "seriesEvolutionView", "histoChart");
     this.balanceChart = new StackChecker(mainWindow, PANEL_NAME, "balanceChart");
     this.seriesChart = new StackChecker(mainWindow, PANEL_NAME, "seriesChart");
   }
@@ -45,13 +45,13 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
   }
 
   public void checkColumnNames(String... names) {
-    assertThat(getTable().getHeader().contentEquals(COUNT_COLMUMN, Utils.join("", names)));
+    assertThat(getTable().getHeader().contentEquals(COUNT_COLUMN, Utils.join("", names)));
   }
 
   public void checkRow(String label, String... values) {
     Table table = getTable();
     int index = getRow(label, table);
-    assertThat(table.rowEquals(index, 0, COUNT_COLMUMN, Utils.join(new String[]{"", label}, values)));
+    assertThat(table.rowEquals(index, 0, COUNT_COLUMN, Utils.join(new String[]{"", label}, values)));
   }
 
   public void select(String label) {
@@ -129,7 +129,7 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
 
   public void checkTableIsEmpty(String... labels) {
     SeriesEvolutionChecker.SeriesTableChecker checker = initContent();
-    String[] values = new String[COUNT_COLMUMN];
+    String[] values = new String[COUNT_COLUMN];
     Arrays.fill(values, "");
     for (String label : labels) {
       checker.add(label, values);
@@ -218,7 +218,7 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
 
     public void check(){
       Object[][] expectedContent = content.toArray(new Object[content.size()][]);
-      org.uispec4j.assertion.UISpecAssert.assertTrue(getTable().blockEquals(0, 0, COUNT_COLMUMN, content.size(), expectedContent));
+      org.uispec4j.assertion.UISpecAssert.assertTrue(getTable().blockEquals(0, 0, COUNT_COLUMN, content.size(), expectedContent));
     }
   }
 

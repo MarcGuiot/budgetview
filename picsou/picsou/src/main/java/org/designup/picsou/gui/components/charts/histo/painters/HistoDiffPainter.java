@@ -8,10 +8,14 @@ import java.awt.*;
 
 public class HistoDiffPainter implements HistoPainter {
 
+  private static final BasicStroke DEFAULT_LINE_STROKE = new BasicStroke(2);
+
   private HistoDiffDataset dataset;
   private HistoDiffColors colors;
   private boolean showActualInTheFuture;
-  private static final BasicStroke LINE_STROKE = new BasicStroke(2);
+
+  private BasicStroke actualLineStroke;
+  private BasicStroke plannedLineStroke;
 
   public HistoDiffPainter(HistoDiffDataset dataset, HistoDiffColors colors) {
     this(dataset, colors, true);
@@ -21,10 +25,20 @@ public class HistoDiffPainter implements HistoPainter {
     this.dataset = dataset;
     this.colors = colors;
     this.showActualInTheFuture = showActualInTheFuture;
+    this.actualLineStroke = DEFAULT_LINE_STROKE;
+    this.plannedLineStroke = DEFAULT_LINE_STROKE;
   }
 
   public HistoDataset getDataset() {
     return dataset;
+  }
+
+  public void setActualLineStroke(BasicStroke actualLineStroke) {
+    this.actualLineStroke = actualLineStroke;
+  }
+
+  public void setPlannedLineStroke(BasicStroke plannedLineStroke) {
+    this.plannedLineStroke = plannedLineStroke;
   }
 
   public void paint(Graphics2D g2, HistoChartMetrics metrics, Integer currentRollover) {
@@ -75,22 +89,22 @@ public class HistoDiffPainter implements HistoPainter {
         }
       }
 
-      g2.setComposite(AlphaComposite.Src);
-      g2.setColor(colors.getReferenceLineColor());
-      g2.setStroke(LINE_STROKE);
-      g2.drawLine(left, previousReferenceY, left, referenceY);
-      g2.drawLine(left, referenceY, right, referenceY);
-      previousReferenceY = referenceY;
-
       if (showActual(i)) {
         g2.setColor(colors.getActualLineColor());
-        g2.setStroke(LINE_STROKE);
+        g2.setStroke(actualLineStroke);
         if (previousActualY != actualY) {
           g2.drawLine(left, previousActualY, left, actualY);
         }
         g2.drawLine(left, actualY, right, actualY);
         previousActualY = actualY;
       }
+
+      g2.setComposite(AlphaComposite.Src);
+      g2.setColor(colors.getReferenceLineColor());
+      g2.setStroke(plannedLineStroke);
+      g2.drawLine(left, previousReferenceY, left, referenceY);
+      g2.drawLine(left, referenceY, right, referenceY);
+      previousReferenceY = referenceY;
     }
   }
 

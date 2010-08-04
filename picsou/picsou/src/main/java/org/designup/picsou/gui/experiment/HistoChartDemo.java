@@ -12,6 +12,7 @@ import org.designup.picsou.gui.utils.ApplicationColors;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Set;
 
 public class HistoChartDemo {
   public static void main(String... args) {
@@ -49,8 +50,8 @@ public class HistoChartDemo {
     HistoChart chart = new HistoChart(true, true, directory);
 
     chart.setListener(new HistoChartListener() {
-      public void columnClicked(int id) {
-        System.out.println("HistoChartDemo.columnClicked: " + id);
+      public void columnsClicked(Set<Integer> monthIds) {
+        System.out.println("HistoChartDemo.columnClicked: " + monthIds);
       }
     });
 

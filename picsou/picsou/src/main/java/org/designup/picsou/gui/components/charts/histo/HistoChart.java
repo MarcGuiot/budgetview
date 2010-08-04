@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class HistoChart extends JPanel {
 
@@ -15,9 +17,11 @@ public class HistoChart extends JPanel {
   private HistoPainter painter = HistoPainter.NULL;
   private HistoChartListener listener;
   private HistoChartMetrics metrics;
-  private Integer currentRollover;
+  private Integer currentRolloverIndex;
   private Font selectedLabelFont;
   private boolean drawLabels;
+  private Integer columnSelectionMinIndex;
+  private Integer columnSelectionMaxIndex;
   private boolean clickable;
 
   public HistoChart(boolean drawLabels, boolean clickable, Directory directory) {
@@ -35,7 +39,7 @@ public class HistoChart extends JPanel {
 
   public void update(HistoPainter painter) {
     this.painter = painter;
-    this.currentRollover = null;
+    this.currentRolloverIndex = null;
     this.metrics = null;
     repaint();
   }
@@ -56,6 +60,13 @@ public class HistoChart extends JPanel {
 
   public HistoDataset getCurrentDataset() {
     return painter.getDataset();
+  }
+
+  public int getX(int columnIndex) {
+    if (metrics == null) {
+      return -1;
+    }
+    return (metrics.left(columnIndex) + metrics.right(columnIndex)) / 2;
   }
 
   public void paint(Graphics g) {
@@ -87,7 +98,7 @@ public class HistoChart extends JPanel {
     paintSections(g2, panelHeight, dataset);
     paintBorder(g2);
 
-    painter.paint(g2, metrics, currentRollover);
+    painter.paint(g2, metrics, currentRolloverIndex);
   }
 
   private void paintBg(Graphics2D g2) {
@@ -106,7 +117,7 @@ public class HistoChart extends JPanel {
       if (drawLabels) {
         String label = dataset.getLabel(i);
         g2.setFont(getLabelFont(dataset, i));
-        g2.setColor(getLabelColor(dataset, i));
+        g2.setColor(getLabelColor(i));
         g2.drawString(label, metrics.labelX(label, i), metrics.labelY());
       }
 
@@ -151,58 +162,105 @@ public class HistoChart extends JPanel {
     }
   }
 
-  public void click() {
-    if (!clickable || (currentRollover == null) || (listener == null) || (painter == null)) {
+  public void startClick() {
+    if (!clickable()) {
       return;
     }
+
+    columnSelectionMinIndex = null;
+    columnSelectionMaxIndex = null;
+
     HistoDataset dataset = painter.getDataset();
-    if (currentRollover < dataset.size()) {
-      listener.columnClicked(dataset.getId(currentRollover));
+    if (currentRolloverIndex < dataset.size()) {
+      addColumnIndexToSelection(currentRolloverIndex);
+    }
+    else {
+      notifyColumnSelection();
     }
   }
 
-  public void mouseMoved(int x, int y) {
+  private boolean clickable() {
+    return clickable && (currentRolloverIndex != null) && (listener != null) && (painter != null);
+  }
+
+  public void mouseMoved(int x, boolean dragging) {
     if (metrics == null) {
       return;
     }
 
-    Integer index = metrics.getColumnAt(x);
-    if (Utils.equal(index, currentRollover)) {
+    Integer columnIndex = metrics.getColumnAt(x);
+    if (Utils.equal(columnIndex, currentRolloverIndex)) {
       return;
     }
 
-    currentRollover = index;
-    setCursor(clickable && (currentRollover != null) ?
+    currentRolloverIndex = columnIndex;
+    setCursor(clickable && (currentRolloverIndex != null) ?
               Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
-    setToolTipText(painter.getDataset().getTooltip(currentRollover));
+    setToolTipText(painter.getDataset().getTooltip(currentRolloverIndex));
+
+    if (dragging) {
+      addColumnIndexToSelection(currentRolloverIndex);
+    }
 
     repaint();
   }
 
+  private void addColumnIndexToSelection(Integer index) {
+    boolean selectionChanged = false;
+    if ((columnSelectionMinIndex == null) || (index < columnSelectionMinIndex)) {
+      columnSelectionMinIndex = index;
+      selectionChanged = true;
+    }
+    if ((columnSelectionMaxIndex == null) || (index > columnSelectionMaxIndex)) {
+      columnSelectionMaxIndex = index;
+      selectionChanged = true;
+    }
+    if (selectionChanged) {
+      notifyColumnSelection();
+    }
+  }
+
+  private void notifyColumnSelection() {
+    if ((columnSelectionMinIndex == null) || (columnSelectionMaxIndex == null)) {
+      return;
+    }
+
+    SortedSet<Integer> ids = new TreeSet<Integer>();
+    HistoDataset currentDataset = painter.getDataset();
+    for (Integer columnIndex : Utils.range(columnSelectionMinIndex, columnSelectionMaxIndex)) {
+      int id = currentDataset.getId(columnIndex);
+      if (id >= 0) {
+        ids.add(id);
+      }
+    }
+    listener.columnsClicked(ids);
+  }
+
   private void registerMouseActions() {
     addMouseListener(new MouseAdapter() {
-      public void mouseClicked(MouseEvent e) {
-        HistoChart.this.click();
+
+      public void mousePressed(MouseEvent e) {
+        HistoChart.this.startClick();
       }
 
       public void mouseEntered(MouseEvent e) {
-        currentRollover = null;
+        currentRolloverIndex = null;
       }
 
       public void mouseExited(MouseEvent e) {
-        currentRollover = null;
+        currentRolloverIndex = null;
         repaint();
       }
     });
 
     addMouseMotionListener(new MouseMotionListener() {
       public void mouseDragged(MouseEvent e) {
-        HistoChart.this.mouseMoved(e.getX(), e.getY());
+        HistoChart.this.mouseMoved(e.getX(), true);
       }
 
       public void mouseMoved(MouseEvent e) {
-        HistoChart.this.mouseMoved(e.getX(), e.getY());
+        HistoChart.this.mouseMoved(e.getX(), false);
       }
     });
   }
@@ -216,8 +274,8 @@ public class HistoChart extends JPanel {
     }
   }
 
-  private Color getLabelColor(HistoDataset dataset, int columnIndex) {
-    boolean isRollover = (currentRollover != null) && (currentRollover == columnIndex);
+  private Color getLabelColor(int columnIndex) {
+    boolean isRollover = (currentRolloverIndex != null) && (currentRolloverIndex == columnIndex);
     if (isRollover) {
       return colors.getRolloverLabelColor();
     }

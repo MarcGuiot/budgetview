@@ -1,5 +1,8 @@
 package org.designup.picsou.gui.components.charts.histo;
 
+import java.io.IOException;
+import java.util.Set;
+
 public interface HistoChartListener {
-  void columnClicked(int id);
+  void columnsClicked(Set<Integer> ids);
 }

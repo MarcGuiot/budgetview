@@ -18,6 +18,7 @@ public abstract class HistoChartUpdater implements GlobSelectionListener {
   private GlobType selectionType;
   private IntegerField selectionMonthField;
   protected Integer currentMonthId;
+  protected SortedSet<Integer> currentMonths;
 
   public HistoChartUpdater(HistoChartBuilder histoChartBuilder,
                            GlobRepository repository,
@@ -47,8 +48,8 @@ public abstract class HistoChartUpdater implements GlobSelectionListener {
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    SortedSet<Integer> months = selection.getAll(selectionType).getSortedSet(selectionMonthField);
-    this.currentMonthId = months.isEmpty() ? null : months.first();
+    this.currentMonths = selection.getAll(selectionType).getSortedSet(selectionMonthField);
+    this.currentMonthId = currentMonths.isEmpty() ? null : currentMonths.first();
     update();
   }
 

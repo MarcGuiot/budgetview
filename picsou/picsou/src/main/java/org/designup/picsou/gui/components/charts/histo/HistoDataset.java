@@ -12,6 +12,8 @@ public interface HistoDataset {
 
   int getId(int index);
 
+  int getIndex(int id);
+
   public String getLabel(int index);
 
   public String getSection(int index);
@@ -26,6 +28,10 @@ public interface HistoDataset {
 
     public int getId(int index) {
       return 0;
+    }
+
+    public int getIndex(int id) {
+      return -1;
     }
 
     public int size() {

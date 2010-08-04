@@ -11,6 +11,7 @@ Web
     * Wesabe (http://www.wesabe.com)
     * debitcredit.fr
     * Dimewise (https://www.dimewise.com)
+    * Optissima
 
 Autres
     * Cresus 3 (http://www.cresusweb.com/cresus3/)

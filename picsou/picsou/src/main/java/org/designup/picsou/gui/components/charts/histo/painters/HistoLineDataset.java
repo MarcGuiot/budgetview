@@ -61,7 +61,21 @@ public class HistoLineDataset implements HistoDataset {
   }
 
   public int getId(int index) {
+    if ((index < 0) || (index >= elements.size())) {
+      return -1;
+    }
     return elements.get(index).id;
+  }
+
+  public int getIndex(int id) {
+    int index = 0;
+    for (Element element : elements) {
+      if (element.id == id) {
+        return index;
+      }
+      index++;
+    }
+    return -1;
   }
 
   public Double getValue(int index) {

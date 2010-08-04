@@ -141,7 +141,7 @@ public class HistoChartMetrics {
   public double[] scaleValues() {
 
     int scaleCount = chartHeight / MIN_SCALE_ZONE_HEIGHT;
-    if (scaleCount == 0) {
+    if (scaleCount <= 0) {
       return new double[0];
     }
     double span = maxPositiveValue + maxNegativeValue;

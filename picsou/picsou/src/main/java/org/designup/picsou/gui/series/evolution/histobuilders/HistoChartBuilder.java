@@ -2,23 +2,25 @@ package org.designup.picsou.gui.series.evolution.histobuilders;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoChartListener;
-import org.designup.picsou.gui.components.charts.histo.painters.*;
+import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffColors;
+import org.designup.picsou.gui.components.charts.histo.painters.HistoLineColors;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SeriesBudget;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
-import org.globsframework.model.ReadOnlyGlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class HistoChartBuilder {
   private HistoChart histoChart;
@@ -30,6 +32,7 @@ public class HistoChartBuilder {
   private HistoDiffColors expensesColors;
   private HistoLineColors uncategorizedColors;
   private HistoLineColors accountColors;
+  private HistoDiffColors seriesAmountColors;
 
   private int monthsBack;
   private int monthsLater;
@@ -43,9 +46,13 @@ public class HistoChartBuilder {
     this.repository = repository;
     histoChart = new HistoChart(drawLabels, clickable, directory);
     histoChart.setListener(new HistoChartListener() {
-      public void columnClicked(int monthId) {
-        Glob month = repository.get(Key.create(Month.TYPE, monthId));
-        parentSelectionService.select(month);
+      public void columnsClicked(Set<Integer> monthIds) {
+        GlobList months = new GlobList();
+        for (Integer monthId : monthIds) {
+          months.add(repository.get(Key.create(Month.TYPE, monthId)));
+
+        }
+        parentSelectionService.select(months, Month.TYPE);
       }
     });
     histoChartLabel = new JLabel();
@@ -84,6 +91,15 @@ public class HistoChartBuilder {
       directory
     );
 
+    seriesAmountColors = new HistoDiffColors(
+      "histo.seriesAmount.line.planned",
+      null,
+      "histo.seriesAmount.line",
+      "histo.seriesAmount.overrun",
+      "histo.seriesAmount.fill",
+      directory
+    );
+
     uncategorizedColors = new HistoLineColors(
       "histo.expenses.line",
       "histo.expenses.fill",
@@ -119,10 +135,10 @@ public class HistoChartBuilder {
       if (budgetStat != null) {
         Double income = budgetStat.get(BudgetStat.INCOME_SUMMARY);
         Double expense = budgetStat.get(BudgetStat.EXPENSE_SUMMARY);
-        builder.add(monthId, currentMonthId, income, expense != null ? -expense : null);
+        builder.add(monthId, income, expense != null ? -expense : null, monthId == currentMonthId);
       }
       else {
-        builder.addEmpty(monthId, currentMonthId);
+        builder.addEmpty(monthId, monthId == currentMonthId);
       }
     }
 
@@ -145,10 +161,10 @@ public class HistoChartBuilder {
       if (budgetStat != null) {
         Double planned = budgetStat.get(plannedField);
         Double actual = budgetStat.get(actualField);
-        builder.add(monthId, currentMonthId, planned, actual);
+        builder.add(monthId, planned, actual, monthId == currentMonthId);
       }
       else {
-        builder.addEmpty(monthId, currentMonthId);
+        builder.addEmpty(monthId, monthId == currentMonthId);
       }
     }
 
@@ -185,10 +201,10 @@ public class HistoChartBuilder {
       if (stat != null) {
         Double planned = stat.get(SeriesStat.PLANNED_AMOUNT);
         Double actual = stat.get(SeriesStat.AMOUNT);
-        builder.add(monthId, currentMonthId, planned, actual);
+        builder.add(monthId, planned, actual, monthId == currentMonthId);
       }
       else {
-        builder.addEmpty(monthId, currentMonthId);
+        builder.addEmpty(monthId, monthId == currentMonthId);
       }
     }
 
@@ -228,8 +244,10 @@ public class HistoChartBuilder {
     dataset.apply(accountColors, "savingsAccounts");
   }
 
-  public void showSeriesBudget(Integer seriesId, int currentMonthId) {
+  public void showSeriesBudget(Integer seriesId, int currentMonthId, Set<Integer> selectedMonths) {
+
     HistoDiffDatasetBuilder dataset = createDiffDataset("series");
+    dataset.setFocusOnPlanned();
 
     Glob series = repository.get(Key.create(Series.TYPE, seriesId));
     BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
@@ -239,7 +257,7 @@ public class HistoChartBuilder {
       repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId);
     List<Integer> months = getMonthIds(currentMonthId);
 
-    for (Glob seriesBudget : seriesBudgets.getGlobs()) {
+    for (Glob seriesBudget : seriesBudgets.getGlobs().sort(SeriesBudget.MONTH)) {
       Integer monthId = seriesBudget.get(SeriesBudget.MONTH);
       if (!months.contains(monthId)) {
         continue;
@@ -247,24 +265,22 @@ public class HistoChartBuilder {
       if ((seriesBudgets != null) && (seriesBudget.isTrue(SeriesBudget.ACTIVE))) {
         Double planned = seriesBudget.get(SeriesBudget.AMOUNT);
         Double actual = seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT);
-        dataset.add(monthId, currentMonthId, planned, actual);
+        dataset.add(monthId, planned, actual, selectedMonths.contains(monthId));
       }
       else {
-        dataset.addEmpty(monthId, currentMonthId);
+        dataset.addEmpty(monthId, selectedMonths.contains(monthId));
       }
     }
 
-    HistoDiffColors colors = budgetArea.isIncome() ? incomeColors : expensesColors;
-    dataset.apply(colors,
+    dataset.apply(seriesAmountColors,
                   "series",
                   series.get(Series.NAME),
-                  Colors.toString(colors.getReferenceLineColor()),
-                  Colors.toString(colors.getActualLineColor()));
+                  Colors.toString(seriesAmountColors.getReferenceLineColor()),
+                  Colors.toString(seriesAmountColors.getActualLineColor()));
   }
 
-
   private HistoLineDatasetBuilder createLineDataset(String tooltipKey) {
-    return new HistoLineDatasetBuilder(histoChart, histoChartLabel, repository, 
+    return new HistoLineDatasetBuilder(histoChart, histoChartLabel, repository,
                                        "seriesEvolution.chart.histo." + tooltipKey + ".tooltip");
   }
 

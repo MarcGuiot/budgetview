@@ -30,6 +30,11 @@ public class SeriesAmountEditionDialogChecker extends SeriesAmountEditionChecker
     return this;
   }
 
+  public SeriesAmountEditionDialogChecker setPropagationDisabled() {
+    dialog.getCheckBox().unselect();
+    return this;
+  }
+
   public void cancel() {
     dialog.getButton("Cancel").click();
   }
@@ -60,5 +65,29 @@ public class SeriesAmountEditionDialogChecker extends SeriesAmountEditionChecker
   public SeriesAmountEditionDialogChecker checkSliderLabels(String... labels) {
     assertThat(dialog.getSlider().labelsEqual(labels));
     return this;
+  }
+
+  public SeriesAmountEditionDialogChecker checkSelectedMonths(Integer... months) {
+    getChart().checkSelectedIds(months);
+    return this;
+  }
+
+  public SeriesAmountEditionDialogChecker checkChartColumn(int index, String label, String section, double reference, double actual) {
+    getChart().checkDiffColumn(index, label, section, reference, actual);
+    return this;
+  }
+
+  public SeriesAmountEditionDialogChecker checkChartColumn(int index, String label, String section, double reference, double actual, boolean selected) {
+    getChart().checkDiffColumn(index, label, section, reference, actual, selected);
+    return this;
+  }
+
+  public SeriesAmountEditionDialogChecker clickMonth(int month) {
+    getChart().clickColumnId(month);
+    return this;
+  }
+
+  private HistoChecker getChart() {
+    return new HistoChecker(dialog, "innerBlock", "chart");
   }
 }

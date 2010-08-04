@@ -217,7 +217,9 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     // on crée une serie a la main sans l'associé des le debut : du coup le montant initial de la series est a 0
     views.selectBudget();
     budgetView.variable.createSeries().setName("End date")
-      .selectAllMonths().setAmount("300").validate();
+      .selectAllMonths()
+      .setAmount("300")
+      .validate();
     views.selectCategorization();
     categorization.setNewIncome("Company", "Salaire")
       .setNewVariable("Auchan", "Course")

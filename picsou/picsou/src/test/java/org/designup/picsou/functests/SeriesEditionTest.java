@@ -1471,7 +1471,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Internet", 0.00, 0.00);
   }
 
-  public void testAutomatiqueAdjustPlannedAndObservedForFirstMonthWithObserved() throws Exception {
+  public void testAutomaticAdjustPlannedAndObservedForFirstMonthWithObserved() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     OfxBuilder.init(this)
       .addTransaction("2008/05/15", -10.00, "Tel")
@@ -1631,7 +1631,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
   // En mode virement extern=>non importé on creé des operations automatiquement
   // et du coup on ne peut plus changer la date de debut
   // il faut autoriser le changement meme si il y a des operations
-  public void testAllowChangeOfBeginOfDayOnSavingsEnveloppe() throws Exception {
+  public void testAllowChangeOfBeginOfDayOnSavingsEnvelope() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/01/01", -29.00, "Auchan") // pour creer des mois dans le passe
       .load();

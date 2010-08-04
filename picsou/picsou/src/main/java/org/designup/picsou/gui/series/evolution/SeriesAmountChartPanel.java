@@ -23,7 +23,9 @@ public class SeriesAmountChartPanel {
                                     SeriesBudget.TYPE) {
       protected void update(HistoChartBuilder histoChartBuilder, Integer monthId) {
         if (currentSeriesId != null) {
-          histoChartBuilder.showSeriesBudget(currentSeriesId, currentMonthId);
+          histoChartBuilder.showSeriesBudget(currentSeriesId,
+                                             SeriesAmountChartPanel.this.currentMonthId,
+                                             currentMonths);
         }
       }
     };
@@ -31,10 +33,10 @@ public class SeriesAmountChartPanel {
     chart = histoChartBuilder.getChart();
   }
 
-  public void init(Integer seriesId, Integer monthId) {
+  public void init(Integer seriesId, Integer currentMonthId) {
     this.currentSeriesId = seriesId;
+    this.currentMonthId = currentMonthId;
     this.updater.update();
-    this.currentMonthId = monthId;
   }
 
   public HistoChart getChart() {

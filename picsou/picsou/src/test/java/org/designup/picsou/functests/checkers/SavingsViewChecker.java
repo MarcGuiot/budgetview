@@ -16,7 +16,7 @@ public class SavingsViewChecker extends GuiChecker {
 
   public SavingsViewChecker(Window window) {
     this.window = window;
-    this.histoChart = new HistoChecker(window, "savingsEvolutionPanel");
+    this.histoChart = new HistoChecker(window, "savingsEvolutionPanel", "histoChart");
   }
 
   public void checkNoTotalPosition() {

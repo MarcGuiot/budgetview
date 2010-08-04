@@ -42,9 +42,8 @@ public class DialogDemo {
     directory.add(JFrame.class, frame);
 
 //    showImportDialog(repository, directory, frame);
-    showHelpDialog(repository, directory, frame);
-//    showSeriesWizardDialog(repository, directory, frame);
-//    showSeriesEditionDialog(repository, directory, frame);
+//    showHelpDialog(repository, directory, frame);
+    showSeriesEditionDialog(repository, directory, frame);
 //    showLicenseExpirationDialog(repository, directory, frame);
 //    showCategoriesEditionDialog(repository, directory);
   }

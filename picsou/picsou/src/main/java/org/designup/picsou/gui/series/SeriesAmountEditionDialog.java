@@ -5,19 +5,20 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.SeriesPeriodicityAndScopeStringifier;
 import org.designup.picsou.gui.series.edition.AlignSeriesBudgetAmountsAction;
 import org.designup.picsou.gui.series.edition.SeriesBudgetSliderAdapter;
+import org.designup.picsou.gui.series.evolution.SeriesAmountChartPanel;
 import org.designup.picsou.gui.series.utils.SeriesAmountLabelStringifier;
 import org.designup.picsou.gui.signpost.actions.SetSignpostStatusAction;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesBudgetChangeSetVisitor;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.model.*;
-import static org.globsframework.model.utils.GlobFunctors.update;
 import org.globsframework.model.utils.GlobListFunctor;
-import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.Utils;
@@ -26,7 +27,13 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Collection;
 import java.util.Set;
+import java.util.SortedSet;
+
+import static org.globsframework.model.utils.GlobFunctors.update;
+import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldGreaterOrEqual;
 
 public class SeriesAmountEditionDialog {
 
@@ -40,10 +47,12 @@ public class SeriesAmountEditionDialog {
   private SeriesEditionDialog seriesEditionDialog;
 
   private Key currentSeries;
-  private Integer maxMonth;
+  private Integer currentMonth;
   private Set<Integer> selectedMonthIds;
   private Directory localDirectory;
   private boolean selectionInProgress;
+  private SeriesAmountChartPanel chart;
+  private boolean autoSelectFutureMonths;
 
   public SeriesAmountEditionDialog(GlobRepository parentRepository, Directory parentDirectory,
                                    SeriesEditionDialog seriesEditionDialog) {
@@ -57,12 +66,12 @@ public class SeriesAmountEditionDialog {
 
     this.seriesEditionDialog = seriesEditionDialog;
 
-// TODO: A remettre pour l'affichage du graphe
-//    selectionService.addListener(new GlobSelectionListener() {
-//      public void selectionUpdated(GlobSelection selection) {
-//        select(localRepository.find(currentSeries), selection.getAll(Month.TYPE).getValueSet(Month.ID));
-//      }
-//    }, Month.TYPE);
+    selectionService.addListener(new GlobSelectionListener() {
+      public void selectionUpdated(GlobSelection selection) {
+        Set<Integer> selectedMonths = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
+        select(localRepository.find(currentSeries), selectedMonths);
+      }
+    }, Month.TYPE);
 
     createDialog();
   }
@@ -74,12 +83,20 @@ public class SeriesAmountEditionDialog {
 
     builder.addLabel("dateLabel", SeriesBudget.TYPE, new SeriesAmountLabelStringifier());
 
+    chart = new SeriesAmountChartPanel(localRepository, localDirectory);
+    builder.add("chart", chart.getChart());
+
     amountEditor = new AmountEditor(SeriesBudget.AMOUNT, localRepository, localDirectory, true, 0.0);
     builder.add("amountEditor", amountEditor.getNumericEditor());
     builder.add("positiveAmounts", amountEditor.getPositiveRadio());
     builder.add("negativeAmounts", amountEditor.getNegativeRadio());
 
     propagationCheckBox = new JCheckBox();
+    propagationCheckBox.getModel().addActionListener(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        updateAutoSelect(propagationCheckBox.isSelected());
+      }
+    });
     builder.add("propagate", propagationCheckBox);
 
     AlignSeriesBudgetAmountsAction alignAction = new AlignSeriesBudgetAmountsAction(localRepository, localDirectory);
@@ -109,9 +126,15 @@ public class SeriesAmountEditionDialog {
       series = parentRepository.findLinkTarget(series, Series.MIRROR_SERIES);
     }
 
-    this.currentSeries = series.getKey();
-    this.maxMonth = Utils.max(months);
+    currentSeries = series.getKey();
+    currentMonth = Utils.max(months);
+    autoSelectFutureMonths = false;
+    propagationCheckBox.setSelected(false);
+
+    chart.init(null, null);
     loadGlobs(series);
+
+    chart.init(currentSeries.get(Series.ID), currentMonth);
 
     BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
     amountEditor.update(isUsuallyPositive(series, budgetArea),
@@ -119,7 +142,6 @@ public class SeriesAmountEditionDialog {
 
     select(series, months);
 
-    propagationCheckBox.setSelected(false);
     amountEditor.selectAll();
 
     GuiUtils.showCentered(dialog);
@@ -170,14 +192,13 @@ public class SeriesAmountEditionDialog {
       GlobSelectionBuilder selection = GlobSelectionBuilder.init();
       selection.add(series);
       Integer seriesId = series.get(Series.ID);
-      for (Integer monthId : monthIds) {
+      for (Integer monthId : getMonths(monthIds)) {
         selection.add(
           localRepository
             .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
             .findByIndex(SeriesBudget.MONTH, monthId)
             .getGlobs(),
           SeriesBudget.TYPE);
-
         selection.add(localRepository.get(Key.create(Month.TYPE, monthId)));
       }
       selectionService.select(selection.get());
@@ -185,6 +206,39 @@ public class SeriesAmountEditionDialog {
     finally {
       selectionInProgress = false;
     }
+  }
+
+  private void updateAutoSelect(boolean enabled) {
+
+    autoSelectFutureMonths = enabled;
+
+    SortedSet<Integer> monthIds = selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID);
+    if (monthIds.isEmpty()) {
+      return;
+    }
+
+    Integer firstMonthId = monthIds.first();
+
+    if (autoSelectFutureMonths) {
+      propagateValue(firstMonthId);
+      GlobList nextMonths =
+        localRepository.getAll(Month.TYPE, fieldGreaterOrEqual(Month.ID, firstMonthId));
+      selectionService.select(nextMonths, Month.TYPE);
+    }
+    else {
+      Glob firstMonth = localRepository.get(Key.create(Month.TYPE, firstMonthId));
+      selectionService.select(firstMonth);
+    }
+  }
+
+  private Collection<Integer> getMonths(Set<Integer> monthIds) {
+    if (!autoSelectFutureMonths || monthIds.isEmpty()) {
+      return monthIds;
+    }
+
+    GlobList nextMonths =
+      localRepository.getAll(Month.TYPE, fieldGreaterOrEqual(Month.ID, Utils.min(monthIds)));
+    return nextMonths.getValueSet(Month.ID);
   }
 
   private class OkAction extends AbstractAction {
@@ -199,12 +253,7 @@ public class SeriesAmountEditionDialog {
         localRepository.update(currentSeries, Series.IS_AUTOMATIC, false);
       }
       if (propagationCheckBox.isSelected()) {
-        final Double amount = amountEditor.getValue();
-        localRepository.safeApply(SeriesBudget.TYPE,
-                                  and(
-                                    isTrue(SeriesBudget.ACTIVE),
-                                    fieldStrictlyGreaterThan(SeriesBudget.MONTH, maxMonth)),
-                                  update(SeriesBudget.AMOUNT, Utils.zeroIfNull(amount)));
+        propagateValue(SeriesAmountEditionDialog.this.currentMonth);
       }
 
       ChangeSet changeSet = localRepository.getCurrentChanges();
@@ -222,6 +271,15 @@ public class SeriesAmountEditionDialog {
     }
   }
 
+  private void propagateValue(Integer startMonth) {
+    final Double amount = amountEditor.getValue();
+    localRepository.safeApply(SeriesBudget.TYPE,
+                              and(
+                                isTrue(SeriesBudget.ACTIVE),
+                                fieldStrictlyGreaterThan(SeriesBudget.MONTH, startMonth)),
+                              update(SeriesBudget.AMOUNT, Utils.zeroIfNull(amount)));
+  }
+  
   private class CancelAction extends AbstractAction {
     public CancelAction() {
       super(Lang.get("cancel"));

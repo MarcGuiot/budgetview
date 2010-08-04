@@ -12,7 +12,7 @@ import javax.swing.*;
 public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> extends GuiChecker {
   protected final Window dialog;
 
-  public SeriesAmountEditionChecker(Window dialog) {
+  SeriesAmountEditionChecker(Window dialog) {
     this.dialog = dialog;
   }
 
