@@ -41,10 +41,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
 import java.util.*;
 
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
+import com.jidesoft.swing.DelegateMouseListener;
 
 public class SeriesEditionDialog {
   private BudgetArea budgetArea;
@@ -312,9 +315,9 @@ public class SeriesEditionDialog {
 
   private void registerDateRangeComponents(GlobsPanelBuilder builder) {
 
-    builder.add("seriesStartDate",
-                ReadOnlyGlobTextFieldView.init(Series.TYPE, localRepository, localDirectory,
-                                               new MonthYearStringifier(Series.FIRST_MONTH)));
+    ReadOnlyGlobTextFieldView startTextFieldView = ReadOnlyGlobTextFieldView.init(Series.TYPE, localRepository, localDirectory,
+                                                                                  new MonthYearStringifier(Series.FIRST_MONTH));
+    builder.add("seriesStartDate", startTextFieldView);
 
     deleteStartDateAction = new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
@@ -342,10 +345,15 @@ public class SeriesEditionDialog {
       }
     };
     builder.add("seriesStartDateChooser", startDateChooserAction);
+    startTextFieldView.getComponent().addMouseListener(new MouseAdapter() {
+      public void mouseClicked(MouseEvent e) {
+        startDateChooserAction.actionPerformed(null);
+      }
+    });
 
-    builder.add("seriesEndDate",
-                ReadOnlyGlobTextFieldView.init(Series.TYPE, localRepository, localDirectory,
-                                               new MonthYearStringifier(Series.LAST_MONTH)));
+    ReadOnlyGlobTextFieldView textFieldView = ReadOnlyGlobTextFieldView.init(Series.TYPE, localRepository, localDirectory,
+                                                                             new MonthYearStringifier(Series.LAST_MONTH));
+    builder.add("seriesEndDate", textFieldView);
 
     deleteEndDateAction = new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
@@ -372,6 +380,11 @@ public class SeriesEditionDialog {
       }
     };
     builder.add("seriesEndDateChooser", endDateChooserAction);
+    textFieldView.getComponent().addMouseListener(new MouseAdapter(){
+      public void mouseClicked(MouseEvent e) {
+        endDateChooserAction.actionPerformed(null);
+      }
+    });
   }
 
   private void registerSingleMonthComponents(GlobsPanelBuilder builder) {
