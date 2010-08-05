@@ -123,6 +123,10 @@ public class HistoChartBuilder {
     return histoChartLabel;
   }
 
+  public void setSnapToScale(boolean value) {
+    histoChart.setSnapToScale(value);
+  }
+  
   public void clear() {
     histoChart.clear();
   }
