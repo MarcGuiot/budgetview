@@ -271,8 +271,10 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("Auchan", "courses");
     views.selectBudget();
 
-    budgetView.variable.editSeries("courses").switchToManual()
-      .selectAllMonths().setAmount(150).validate();
+    budgetView.variable.editSeries("courses")
+      .selectAllMonths()
+      .setAmount(150)
+      .validate();
 
     timeline.selectAll();
     String nonDepense = "Vous avez dépensé <b>150.00</b> de moins que prévu";
@@ -298,8 +300,9 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("medecin", "secu");
     categorization.setVariable("mutuel", "secu");
     views.selectBudget();
-    budgetView.variable.editSeries("secu").switchToManual()
-      .selectAllMonths().setAmount(0)
+    budgetView.variable.editSeries("secu")
+      .selectAllMonths()
+      .setAmount(0)
       .validate();
     timeline.selectAll();
     budgetView.variable.checkTotalGaugeTooltips("Vous avez dépensé <b>1.00</b><br>alors que vous n'aviez rien prévu")

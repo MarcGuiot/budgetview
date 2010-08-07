@@ -2,12 +2,13 @@ package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.*;
-import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.utils.Utils;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class BudgetAreaCategorizationChecker extends GuiChecker {
   private CategorizationChecker categorizationChecker;
@@ -103,7 +104,7 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
 
   public BudgetAreaCategorizationChecker checkActiveSeries(String seriesName) {
     assertThat(panel.getRadioButton(seriesName).foregroundEquals("000000"));
-    return this;  
+    return this;
   }
 
   public BudgetAreaCategorizationChecker checkNonActiveSeries(String seriesName) {
@@ -120,20 +121,13 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   }
 
   public BudgetAreaCategorizationChecker createSeries(String seriesName) {
-    SeriesEditionDialogChecker editionDialogChecker = createSeries().setName(seriesName);
-    if (budgetArea == BudgetArea.VARIABLE){
-      editionDialogChecker.switchToAutomatic();
-    }
-    editionDialogChecker.validate();
+    createSeries().setName(seriesName)
+      .validate();
     return this;
   }
 
   public BudgetAreaCategorizationChecker selectNewSeries(String seriesName) {
-    SeriesEditionDialogChecker editionDialogChecker = createSeries().setName(seriesName);
-    if (budgetArea == BudgetArea.VARIABLE){
-      editionDialogChecker.switchToAutomatic();
-    }
-    editionDialogChecker
+    createSeries().setName(seriesName)
       .validate();
     return this;
   }

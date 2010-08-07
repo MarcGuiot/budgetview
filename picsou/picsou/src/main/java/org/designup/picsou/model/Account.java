@@ -8,7 +8,6 @@ import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -20,6 +19,8 @@ import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class Account {
   public static final String SUMMARY_ACCOUNT_NUMBER = null;
@@ -108,7 +109,7 @@ public class Account {
     repository.create(TYPE,
                       value(ID, ALL_SUMMARY_ACCOUNT_ID),
 //                      value(ACCOUNT_TYPE, AccountType.MAIN.getId()),
-                      value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
+value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
   }
 
   public static Glob getBank(Glob account, GlobRepository repository) {
@@ -185,7 +186,7 @@ public class Account {
     double multiplier;
     Integer forAccountIdPointOfView = toAccount == null ?
                                       (fromAccount == null ? null : fromAccount.get(ID))
-                                      : toAccount.get(ID);
+                                                        : toAccount.get(ID);
     if (forAccountIdPointOfView == null) {
       multiplier = 0;
     }
@@ -206,6 +207,12 @@ public class Account {
   public static boolean onlyOneIsImported(Glob account1, Glob account2) {
     return account1 != null && account2 != null &&
            account1.isTrue(Account.IS_IMPORTED_ACCOUNT) != account2.isTrue(Account.IS_IMPORTED_ACCOUNT);
+  }
+
+  public static double computeAmountMultiplier(Glob series, GlobRepository repository) {
+    return computeAmountMultiplier(repository.findLinkTarget(series, Series.FROM_ACCOUNT),
+                                   repository.findLinkTarget(series, Series.TO_ACCOUNT),
+                                   repository);
   }
 
   public static double computeAmountMultiplier(Glob fromAccount, Glob toAccount, GlobRepository repository) {
@@ -346,7 +353,7 @@ public class Account {
       isCard = isCard == null ? false : isCard;
       fieldSetter.set(CARD_TYPE, isCard ?
                                  AccountCardType.DEFERRED.getId()
-                                 : AccountCardType.NOT_A_CARD.getId());
+                                        : AccountCardType.NOT_A_CARD.getId());
     }
 
     private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {

@@ -38,11 +38,6 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     budgetView.recurring.checkSeries("Internet", 0.00, -100.00);
 
-    timeline.selectMonth("2008/07");
-    budgetView.recurring.editSeries("Internet")
-      .checkManualModeSelected()
-      .cancel();
-
     // Propagation disabled
     timeline.selectMonth("2008/07");
     budgetView.recurring.editPlannedAmount("Internet")
@@ -188,10 +183,6 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Internet", -29.00, -29.00);
 
     timeline.selectMonth("2008/07");
-    budgetView.recurring.editSeries("Internet")
-      .checkAutomaticModeSelected()
-      .cancel();
-
     budgetView.recurring.editPlannedAmount("Internet")
       .checkAmount(29.00)
       .setAmount("100")
@@ -343,7 +334,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Salary", +1500, +1700);
   }
 
-  public void testEditingSeveralMonthsAtOnce() throws Exception {
+  public void testUsingTheChartToEditSeveralMonthsAtOnce() throws Exception {
 
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
@@ -391,7 +382,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Internet", 0, -50.00);
 
     timeline.selectMonth("2010/08");
-    SeriesAmountEditionDialogChecker dialog = budgetView.recurring.editPlannedAmount("Internet")
+    budgetView.recurring.editPlannedAmount("Internet")
       .checkPropagationDisabled()
       .checkSelectedMonths(201008)
       .checkChartColumn(0, "A", "2010", 40.00, 29.00, true)
@@ -403,10 +394,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .checkChartColumn(1, "S", "2010", 40.00, 0.00, true)
       .checkChartColumn(2, "O", "2010", 40.00, 0.00, true)
       .clickMonth(201009)
-      .checkSelectedMonths(201009, 201010);
-
-    System.out.println("\n\n\nSeriesAmountEditionTest.testEditingSeveralMonthsAtOnce ========");
-    dialog
+      .checkSelectedMonths(201009, 201010)
       .setPropagationDisabled()
       .checkSelectedMonths(201009)
       .setAmount(60.00)
@@ -420,9 +408,5 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2010/10");
     budgetView.recurring.checkSeries("Internet", 0, -40.00);
-  }
-
-  public void testScaleAdjustsByDiscreteLevels() throws Exception {
-    fail("todo");
   }
 }

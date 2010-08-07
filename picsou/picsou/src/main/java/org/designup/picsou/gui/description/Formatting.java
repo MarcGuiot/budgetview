@@ -23,6 +23,9 @@ public class Formatting {
     if (value == null) {
       return "";
     }
+    if (Amounts.isNearZero(value)) {
+      value = +0.00;
+    }
     return DECIMAL_FORMAT.format(value);
   }
 

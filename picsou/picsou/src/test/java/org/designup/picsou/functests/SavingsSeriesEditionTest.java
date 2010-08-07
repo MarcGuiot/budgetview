@@ -31,7 +31,6 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings
       .editSeries("Epargne")
       .checkToAccount("Epargne LCL")
-      .switchToManual()
       .setToAccount("Main accounts")
       .setFromAccount("Epargne LCL")
       .checkAmountsRadioAreNotVisible()
@@ -78,7 +77,6 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("Veranda")
       .setToAccount("Main accounts")
       .setFromAccount("Epargne CA")
-      .switchToManual()
       .setSingleMonth()
       .setSingleMonthDate(200810)
       .selectMonth(200810)
@@ -95,7 +93,6 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectSeries("Epargne")
       .checkFromAccount("Main accounts")
       .checkToAccount("Epargne LCL")
-      .checkAutomaticModeSelected()
       .cancel();
 
     views.selectCategorization();
@@ -129,7 +126,6 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectSavings()
       .editSeries("Epargne")
       .setToAccount("External account")
-      .switchToManual()
       .checkToAccount("External account")
       .cancel();
 
@@ -184,9 +180,8 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setSixMonths()
       .setSingleMonth()
       .setSingleMonthDate(200810)
-      .switchToManual()
-      .checkTable(new Object[][]{
-        {"2008", "October", "", "0"}})
+      .checkChart(new Object[][]{
+        {"2008", "October", 0.00, 0.00}})
       .validate();
   }
 
@@ -217,24 +212,19 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("Autre")
       .validate();
 
-//    views.selectSavings();
-//    savingsView.checkAmount("Account n. 111", "Autre", 0, 0);
-
     views.selectBudget();
     budgetView.savings.checkSeriesPresent("Autre");
 
     SeriesEditionDialogChecker firstSeriesChecker =
       budgetView.savings.editSeries("Autre");
-    firstSeriesChecker.switchToManual().selectAllMonths().setAmount(50).validate();
+    firstSeriesChecker.selectAllMonths().setAmount(50).validate();
     views.selectSavings();
-    SeriesEditionDialogChecker secondSeriesChecker = savingsView.editSeries("Account n. 111", "CA");
-    secondSeriesChecker.checkManualModeSelected()
+    savingsView.editSeries("Account n. 111", "CA")
       .checkName("Autre")
-      .switchToAutomatic()
       .validate();
     views.selectBudget();
     firstSeriesChecker = budgetView.savings.editSeries("Autre");
-    firstSeriesChecker.checkAutomaticModeSelected().validate();
+    firstSeriesChecker.validate();
   }
 
   public void testToAndFromInExternalIsNotPossible() throws Exception {

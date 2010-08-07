@@ -57,11 +57,10 @@ public class MonthCheckBoxUpdater implements GlobSelectionListener, ItemListener
     try {
       if (currentSeries != null) {
         BooleanField field = Series.getMonthField(monthIndex);
-        boolean newState = e.getStateChange() == ItemEvent.SELECTED;
-        repository.update(currentSeries.getKey(), field, newState);
+        boolean selected = e.getStateChange() == ItemEvent.SELECTED;
+        repository.update(currentSeries.getKey(), field, selected);
         ProfileType profileType = ProfileType.get(currentSeries.get(Series.PROFILE_TYPE));
-        if (newState &&
-            profileType.getMonthStep() != -1 && profileType != ProfileType.CUSTOM) {
+        if (selected && profileType.getMonthStep() != -1 && profileType != ProfileType.CUSTOM) {
           BooleanField[] months = Series.getMonths();
           for (BooleanField month : months) {
             if (month != field) {

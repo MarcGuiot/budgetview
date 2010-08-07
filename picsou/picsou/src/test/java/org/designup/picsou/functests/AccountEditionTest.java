@@ -394,7 +394,6 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.recurring.createSeries()
       .setName("edf")
-      .switchToManual()
       .selectAllMonths()
       .setAmount(50)
       .validate();

@@ -4,7 +4,6 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.model.Month;
-import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.MainWindow;
 
 import java.io.File;
@@ -255,13 +254,11 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth(Month.toString(secondMonth));
     budgetView.variable.editSeries("Courses")
-      .switchToManual()
       .selectAllMonths()
       .setAmount(750.0)
       .validate();
 
     budgetView.variable.editSeries("Habillement")
-      .switchToManual()
       .selectAllMonths()
       .setAmount(50.0)
       .validate();
@@ -306,7 +303,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .setFromAccount("Main accounts")
       .setToAccount("Compte provisions")
       .setStartDate(firstMonth)
-      .switchToManual()
       .selectAllMonths()
       .setAmount(150)
       .validate();

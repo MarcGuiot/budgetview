@@ -23,6 +23,7 @@ public class HistoChart extends JPanel {
   private Integer columnSelectionMinIndex;
   private Integer columnSelectionMaxIndex;
   private boolean clickable;
+  private boolean snapToScale;
 
   public HistoChart(boolean drawLabels, boolean clickable, Directory directory) {
     this.drawLabels = drawLabels;
@@ -35,6 +36,10 @@ public class HistoChart extends JPanel {
 
   public void setListener(HistoChartListener listener) {
     this.listener = listener;
+  }
+
+  public void setSnapToScale(boolean value) {
+    this.snapToScale = value;
   }
 
   public void update(HistoPainter painter) {
@@ -89,7 +94,8 @@ public class HistoChart extends JPanel {
                                       dataset.size(),
                                       dataset.getMaxNegativeValue(), dataset.getMaxPositiveValue(),
                                       drawLabels,
-                                      dataset.containsSections());
+                                      dataset.containsSections(),
+                                      snapToScale);
     }
 
     paintBg(g2);
@@ -283,4 +289,5 @@ public class HistoChart extends JPanel {
       return colors.getLabelColor();
     }
   }
+
 }

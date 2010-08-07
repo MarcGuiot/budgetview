@@ -116,7 +116,6 @@ public class LoginTest extends StartUpFunctionalTestCase {
         BudgetViewChecker budgetView = new BudgetViewChecker(window);
         budgetView.income.checkSeriesPresent("Income 1", "Income 2");
         budgetView.variable.checkSeriesPresent("Groceries", "Health", "Fuel");
-        budgetView.variable.editSeries("Groceries").checkManualModeSelected().cancel();
 
         operations = new OperationChecker(window);
         String filePath = OfxBuilder

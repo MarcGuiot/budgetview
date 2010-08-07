@@ -45,13 +45,14 @@ public class HistoChartMetrics {
                            double maxNegativeValue,
                            double maxPositiveValue,
                            boolean drawLabels,
-                           boolean drawSections) {
+                           boolean drawSections,
+                           boolean snapToScale) {
     this.panelWidth = panelWidth;
     this.panelHeight = panelHeight;
     this.fontMetrics = fontMetrics;
     this.columnCount = columnCount;
-    this.maxPositiveValue = maxPositiveValue;
-    this.maxNegativeValue = maxNegativeValue;
+    this.maxPositiveValue = adjustLimit(maxPositiveValue, snapToScale);
+    this.maxNegativeValue = adjustLimit(maxNegativeValue, snapToScale);
 
     this.scaleZoneWidth = drawLabels ? scaleZoneWidth() : 0;
     this.sectionZoneHeight = drawLabels && drawSections ? SECTION_ZONE_HEIGHT : 0;
@@ -71,6 +72,21 @@ public class HistoChartMetrics {
       this.negativeHeight = 0;
     }
     this.columnWidth = columnCount != 0 ? chartWidth / columnCount : 0;
+  }
+
+  private double adjustLimit(double value, boolean snapToScale) {
+    if (!snapToScale) {
+      return value;
+    }
+
+    for (long power = 1; ; power *= 10) {
+      for (double scale : SCALES) {
+        double limit = scale * power;
+        if (limit > value) {
+          return limit;
+        }
+      }
+    }
   }
 
   private int scaleZoneWidth() {
@@ -144,8 +160,8 @@ public class HistoChartMetrics {
     if (scaleCount <= 0) {
       return new double[0];
     }
-    double span = maxPositiveValue + maxNegativeValue;
 
+    double span = maxPositiveValue + maxNegativeValue;
     int power = (int)Math.log10(span);
 
     double selectedScale = 1;
@@ -159,10 +175,10 @@ public class HistoChartMetrics {
 
     double[] result = new double[scaleCount];
     int index = 0;
-    for (double value = 0; value <= maxPositiveValue && index < result.length; value += selectedScale) {
+    for (double value = 0; (value <= maxPositiveValue) && (index < result.length); value += selectedScale) {
       result[index++] = value;
     }
-    for (double value = selectedScale; value <= maxNegativeValue && index < result.length; value += selectedScale) {
+    for (double value = selectedScale; (value <= maxNegativeValue) && (index < result.length); value += selectedScale) {
       result[index++] = -value;
     }
     if (index < result.length) {

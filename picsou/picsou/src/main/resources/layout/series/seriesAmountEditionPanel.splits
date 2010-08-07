@@ -1,0 +1,45 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <styles>
+    <style selector=".small" font="-,plain,11"/>
+  </styles>
+
+  <column>
+
+    <label ref="dateLabel" marginBottom="5"/>
+
+    <row border="empty(20,10,5,10)" weightY="0">
+      <filler fill="horizontal"/>
+      <radioButton ref="positiveAmounts" weightX="0"/>
+      <radioButton ref="negativeAmounts" weightX="0"/>
+      <textField ref="amountEditor" columns="10"/>
+      <row styleClass="iconButtonGroup" marginTop="0" marginLeft="5">
+        <button action="alignValue" styleClass="align_value"/>
+        <label ref="actualAmountLabel" styleClass="alignActualAmount"/>
+      </row>
+      <filler fill="horizontal"/>
+    </row>
+
+    <component ref="slider" border="empty(0,10,10,10)" preferredSize="(200,60)" weightY="2"/>
+
+    <row>
+      <filler fill="horizontal"/>
+      <checkBox ref="propagate" text="$seriesAmountEdition.propagate" weightX="0"/>
+      <filler fill="horizontal"/>
+    </row>
+
+    <component ref="chart" preferredSize="(300,100)" margin="10" weightY="10"
+               background="dialogBlock.bg"/>
+
+    <row marginBottom="10" marginRight="10">
+      <filler fill="horizontal"/>
+      <label text="$seriesAmountEdition.periodicity" styleClass="small" weightX="0"/>
+      <button ref="editSeries" styleClass="hyperlink" font="-,plain,11" marginLeft="5"
+              tooltipText="$seriesAmountEdition.editSeries.tooltip" weightX="0"/>
+    </row>
+
+  </column>
+
+</splits>

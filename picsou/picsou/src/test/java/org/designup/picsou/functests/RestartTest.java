@@ -144,18 +144,17 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     budgetView.income.createSeries()
       .setName("Salaire")
-      .switchToManual()
-      .selectAllMonths().setAmount("3000")
+      .selectAllMonths()
+      .setAmount("3000")
       .validate();
     budgetView.recurring.createSeries()
       .setName("EDF")
-      .switchToManual()
-      .selectAllMonths().setAmount("100")
+      .selectAllMonths()
+      .setAmount("100")
       .validate();
 
     budgetView.recurring.createSeries()
       .setName("Loyer")
-      .switchToManual()
       .setAmount("1000")
       .validate();
 
@@ -227,8 +226,13 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .setNewVariable("Fnac", "Begin date");
     views.selectBudget();
     budgetView.variable.editSeries("End date").setEndDate(200812).validate();
-    budgetView.variable.editSeries("Begin and end date").switchToManual().setStartDate(200808).setEndDate(200901).validate();
-    budgetView.variable.editSeries("Begin date").switchToManual().setStartDate(200808).validate();
+    budgetView.variable.editSeries("Begin and end date")
+      .setStartDate(200808)
+      .setEndDate(200901)
+      .validate();
+    budgetView.variable.editSeries("Begin date")
+      .setStartDate(200808)
+      .validate();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectData();
     timeline.selectAll();

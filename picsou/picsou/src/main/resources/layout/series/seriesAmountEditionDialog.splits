@@ -2,53 +2,17 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <styles>
-    <style selector=".small" font="-,plain,11"/>
-  </styles>
-
-  <panel styleClass="dialog" preferredSize="(460,410)">
+  <panel styleClass="dialog" preferredSize="(460,380)">
 
     <column styleClass="innerDialog">
-      <label name="title" text="$seriesAmountEdition.title" styleClass="title"/>
 
-      <label ref="dateLabel" marginBottom="5"/>
+      <label name="title" text="$seriesAmountEdition.title" styleClass="title"/>
 
       <column name="innerBlock" styleClass="dialogBlock">
 
-        <component ref="chart" preferredSize="(300,100)" margin="10" weightY="10"
-                   background="dialogBlock.bg"/>
-
-        <row>
-          <filler fill="horizontal"/>
-          <checkBox ref="propagate" text="$seriesAmountEdition.propagate"
-                    marginBottom="10" weightX="0"/>
-          <filler fill="horizontal"/>
-        </row>
-
-        <row border="empty(20,10,5,10)" weightY="0">
-          <filler fill="horizontal"/>
-          <radioButton ref="positiveAmounts" weightX="0"/>
-          <radioButton ref="negativeAmounts" weightX="0"/>
-          <textField ref="amountEditor" columns="10"/>
-          <row styleClass="iconButtonGroup" marginTop="0" marginLeft="5">
-            <button action="alignValue" styleClass="align_value"/>
-            <label ref="actualAmountLabel" styleClass="alignActualAmount"/>
-          </row>
-          <filler fill="horizontal"/>
-        </row>
-
-        <component ref="slider" border="empty(0,10,10,10)" preferredSize="(200,60)" weightY="5"/>
+        <panel ref="editionPanel"/>
 
       </column>
-
-      <row>
-        <filler fill="horizontal"/>
-        <label text="$seriesAmountEdition.periodicity" styleClass="small" weightX="0"/>
-        <button ref="editSeries" styleClass="hyperlink" font="-,plain,11" marginLeft="5"
-                tooltipText="$seriesAmountEdition.editSeries.tooltip" weightX="0"/>
-      </row>
-
-      <filler fill="vertical"/>
     </column>
 
   </panel>

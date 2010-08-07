@@ -40,8 +40,6 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     double expensesFor200808 = 30 + 1500 + 300 + 100 + 100;
     double balanceFor200808 = incomeFor200808 - expensesFor200808;
 
-    double fixed = 30 + 1500;
-
     timeline.selectMonth("2008/07");
     views.selectBudget();
 
@@ -262,13 +260,11 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     views.selectBudget();
     budgetView.savings.editSeries("Epargne")
-      .switchToManual()
       .selectAllMonths()
       .setAmount("50")
       .validate();
 
     budgetView.savings.editSeries("Finanencement tele")
-      .switchToManual()
       .selectAllMonths()
       .setAmount("300")
       .validate();

@@ -38,7 +38,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization.selectIncome().createSeries()
       .setName("Exceptional Income")
-      .switchToManual()
       .setAmount("0.0")
       .validate();
     categorization.selectIncome()
@@ -694,10 +693,13 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAutomaticBudget() throws Exception {
+
+    System.out.println("CategorizationTest.testAutomaticBudget - A VALIDER");
+
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectBudget();
     budgetView.variable.createSeries().setName("Courant")
-      .switchToAutomatic()
+//      .switchToAutomatic()
       .validate();
 
     OfxBuilder
@@ -763,9 +765,12 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAutomaticInCurrentMonth() throws Exception {
+
+    System.out.println("CategorizationTest.testAutomaticInCurrentMonth -- A VALIDER");
+
     views.selectBudget();
     budgetView.variable.createSeries().setName("Courant")
-      .switchToAutomatic()
+//      .switchToAutomatic()
       .validate();
     OfxBuilder
       .init(this)
@@ -960,10 +965,13 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAutomaticShouldNotTakeInAccountPreviousEmptyMonth() throws Exception {
+
+    System.out.println("CategorizationTest.testAutomaticShouldNotTakeInAccountPreviousEmptyMonth - A VALIDER");
+
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectBudget();
     budgetView.variable.createSeries().setName("Courant")
-      .switchToAutomatic()
+//      .switchToAutomatic()
       .validate();
 
     OfxBuilder

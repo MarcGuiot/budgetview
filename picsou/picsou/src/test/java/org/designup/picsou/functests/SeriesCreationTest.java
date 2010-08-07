@@ -86,7 +86,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     budgetView.extras.createSeries()
       .setName("Machine a laver")
       .checkSingleMonthDate("June 2008")
-      .checkTable(new Object[][]{{"2008", "June", "", "0"}})
+      .checkChart(new Object[][]{{"2008", "June", 0.00, 0.00, true}})
       .cancel();
 
     OfxBuilder
@@ -101,9 +101,9 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       .setEveryMonth()
       .checkStartDate("June 2008")
       .checkEndDate("Jul 2008")
-      .checkTable(new Object[][]{
-        {"2008", "July", "", "0"},
-        {"2008", "June", "", "0"}
+      .checkChart(new Object[][]{
+        {"2008", "July", 0.00, 0.00, true},
+        {"2008", "June", 0.00, 0.00, true}
       })
       .cancel();
   }

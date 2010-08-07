@@ -45,7 +45,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/07");
     budgetView.variable.editSeries("Groceries")
-      .switchToManual()
       .setAmount(20)
       .validate();
 
@@ -498,7 +497,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.recurring.editSeries("Taxes")
-      .switchToManual()
       .selectAllMonths()
       .setAmount(200)
       .validate();
@@ -530,7 +528,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.recurring.createSeries()
       .setName("Taxes")
-      .switchToManual()
       .selectAllMonths()
       .setAmount(0)
       .validate();
@@ -552,7 +549,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.recurring.createSeries()
       .setName("Taxes")
-      .switchToManual()
       .selectAllMonths()
       .setAmount(200)
       .validate();

@@ -20,21 +20,6 @@ public class SeriesAmountEditionDialogChecker extends SeriesAmountEditionChecker
     return this;
   }
 
-  public SeriesAmountEditionDialogChecker checkPropagationDisabled() {
-    assertFalse(dialog.getCheckBox().isSelected());
-    return this;
-  }
-
-  public SeriesAmountEditionDialogChecker setPropagationEnabled() {
-    dialog.getCheckBox().select();
-    return this;
-  }
-
-  public SeriesAmountEditionDialogChecker setPropagationDisabled() {
-    dialog.getCheckBox().unselect();
-    return this;
-  }
-
   public void cancel() {
     dialog.getButton("Cancel").click();
   }

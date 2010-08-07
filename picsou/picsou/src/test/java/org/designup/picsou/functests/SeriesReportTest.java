@@ -20,7 +20,6 @@ public class SeriesReportTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("Auchan", "Courses");
     categorization
       .editSeries("Courses")
-      .switchToManual()
       .selectAllMonths()
       .setAmount("100")
       .toggleAutoReport()
@@ -29,7 +28,6 @@ public class SeriesReportTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("Fringue", "Fringues");
     categorization
       .editSeries("Fringues")
-      .switchToManual()
       .selectAllMonths()
       .setAmount("40")
       .toggleAutoReport()
@@ -38,7 +36,6 @@ public class SeriesReportTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("Loto", "Gain");
     categorization
       .editSeries("Gain")
-      .switchToManual()
       .selectAllMonths()
       .setAmount("200")
       .toggleAutoReport()
@@ -82,7 +79,6 @@ public class SeriesReportTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("Pharama", "Santé");
     categorization
       .editSeries("Santé")
-      .switchToManual()
       .selectAllMonths()
       .setAmount("0")
       .toggleAutoReport()
@@ -125,7 +121,6 @@ public class SeriesReportTest extends LoggedInFunctionalTestCase {
       .setName("CA")
       .setFromAccount("Main accounts")
       .setToAccount("Account n. 111")
-      .switchToManual()
       .selectAllMonths()
       .setAmount(100)
       .toggleAutoReport()

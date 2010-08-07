@@ -41,6 +41,7 @@ import java.awt.event.ActionEvent;
 import java.text.DecimalFormat;
 import java.util.Set;
 
+/* @deprecated ----- A SUPPRIMER ------ */
 public class SeriesBudgetEditionPanel {
   private AmountEditor amountEditor;
   private JPanel panel;
@@ -180,10 +181,7 @@ public class SeriesBudgetEditionPanel {
   }
 
   private void updatePositiveOrNegativeRadio() {
-    double multiplier =
-      Account.computeAmountMultiplier(localRepository.findLinkTarget(currentSeries, Series.FROM_ACCOUNT),
-                                            localRepository.findLinkTarget(currentSeries, Series.TO_ACCOUNT),
-                                            localRepository);
+    double multiplier = Account.computeAmountMultiplier(currentSeries, localRepository);
     isUsuallyPositive = budgetArea.isIncome() ||
                         (budgetArea == BudgetArea.SAVINGS && multiplier > 0);
     amountEditor.update(isUsuallyPositive, budgetArea == BudgetArea.SAVINGS);
