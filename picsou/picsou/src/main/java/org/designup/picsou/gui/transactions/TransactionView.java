@@ -234,6 +234,14 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
           label.setForeground(rendererColors.getTransactionPlannedTextColor());
         }
       }
+      else {
+        if (isSelected){
+          label.setForeground(rendererColors.getTransactionSelectedTextColor());
+        }
+        else {
+          label.setForeground(rendererColors.getTransactionTextColor());
+        }
+      }
     }
   }
 }

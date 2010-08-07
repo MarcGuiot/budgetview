@@ -139,7 +139,7 @@ public class MainPanel {
     deleteUserAction = new DeleteUserAction(this, repository, directory);
     search = new TextFilterPanel(transactionView.getFilterSet(), repository, directory) {
       protected GlobMatcher createMatcher(final String searchFilter) {
-        return or(fieldContainsIgnoreCase(Transaction.LABEL, searchFilter),
+        return or(fieldContainsIgnoreCase(Transaction.ORIGINAL_LABEL, searchFilter),
                   fieldContainsIgnoreCase(Transaction.NOTE, searchFilter),
                   new GlobMatcher() {
                     final GlobStringifier amountStringifier =
