@@ -637,21 +637,22 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
     // SVP : Laisser le code en commentaires : c'est parfois mon seul moyen de debug Marc.
 
-//    System.out.println("DefaultGlobRepository.notifyListeners " + changeSetToDispatch);
     try {
       bulkDispatchingModeLevel++;
 
       if (applyTriggers) {
+//        System.err.println("DefaultGlobRepository.notifyListeners " + changeSetToDispatch);
+//        Thread.dumpStack();
         for (ChangeSetListener trigger : triggers) {
           this.changeSetToDispatch = new DefaultChangeSet();
           trigger.globsChanged(currentChangeSetToDispatch, this);
           currentChangeSetToDispatch.merge(changeSetToDispatch);
 //          if (!changeSetToDispatch.isEmpty()) {
-//            System.out.println(trigger + " : " + changeSetToDispatch);
+//            System.err.println(trigger + " : " + changeSetToDispatch);
 //          }
         }
+//        System.err.println("------------------------------------------------------------");
       }
-//      System.out.println("------------------------------------------------------------");
     }
     finally {
       bulkDispatchingModeLevel--;

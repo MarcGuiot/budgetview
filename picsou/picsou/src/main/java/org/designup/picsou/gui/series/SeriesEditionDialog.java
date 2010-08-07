@@ -32,7 +32,9 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.*;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -41,13 +43,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.*;
-
-import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.*;
-import com.jidesoft.swing.DelegateMouseListener;
 
 public class SeriesEditionDialog {
   private BudgetArea budgetArea;
@@ -404,7 +402,7 @@ public class SeriesEditionDialog {
       }
     };
     builder.add("seriesEndDateChooser", endDateChooserAction);
-    textFieldView.getComponent().addMouseListener(new MouseAdapter(){
+    textFieldView.getComponent().addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent e) {
         endDateChooserAction.actionPerformed(null);
       }

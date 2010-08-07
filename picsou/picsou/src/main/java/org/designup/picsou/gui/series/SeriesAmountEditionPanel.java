@@ -14,8 +14,10 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetListener;
+import static org.globsframework.model.utils.GlobFunctors.update;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
@@ -24,9 +26,6 @@ import java.awt.event.ActionEvent;
 import java.util.Collection;
 import java.util.Set;
 import java.util.SortedSet;
-
-import static org.globsframework.model.utils.GlobFunctors.update;
-import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesAmountEditionPanel {
 
@@ -75,7 +74,8 @@ public class SeriesAmountEditionPanel {
 
     repository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if ((currentSeries != null) && changeSet.containsChanges(currentSeries)) {
+        if ((currentSeries != null) && changeSet.containsChanges(currentSeries)
+            && repository.find(currentSeries) != null) {
           FieldValues previousValue = changeSet.getPreviousValue(currentSeries);
           if (previousValue.contains(Series.FROM_ACCOUNT) || previousValue.contains(Series.TO_ACCOUNT)) {
             updatePositiveOrNegativeRadio();
@@ -103,6 +103,12 @@ public class SeriesAmountEditionPanel {
     builder.add("amountEditor", amountEditor.getNumericEditor());
     builder.add("positiveAmounts", amountEditor.getPositiveRadio());
     builder.add("negativeAmounts", amountEditor.getNegativeRadio());
+
+    amountEditor.addAction(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        applyChanges(true);
+      }
+    });
 
     propagationCheckBox = new JCheckBox();
     propagationCheckBox.getModel().addActionListener(new AbstractAction() {
@@ -251,6 +257,7 @@ public class SeriesAmountEditionPanel {
     if (series.isTrue(Series.IS_AUTOMATIC) && containsChanges) {
       repository.update(currentSeries, Series.IS_AUTOMATIC, false);
     }
+
     if (propagationCheckBox.isSelected()) {
       propagateValue(SeriesAmountEditionPanel.this.currentMonth);
     }
@@ -260,6 +267,7 @@ public class SeriesAmountEditionPanel {
     final Double amount = amountEditor.getValue();
     repository.safeApply(SeriesBudget.TYPE,
                          and(
+                           fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID)),
                            isTrue(SeriesBudget.ACTIVE),
                            fieldStrictlyGreaterThan(SeriesBudget.MONTH, startMonth)),
                          update(SeriesBudget.AMOUNT, Utils.zeroIfNull(amount)));

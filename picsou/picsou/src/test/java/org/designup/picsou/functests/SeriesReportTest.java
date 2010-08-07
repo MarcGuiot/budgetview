@@ -45,6 +45,11 @@ public class SeriesReportTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkSeries("Courses", -40, -100);
     budgetView.variable.checkSeries("Fringues", -100, -40);
     budgetView.income.checkSeries("Gain", 100, 200);
+    timeline.selectMonth("2008/09");
+    budgetView.variable.checkSeries("Courses", 0, -100);
+    budgetView.variable.checkSeries("Fringues", 0, -40);
+    budgetView.income.checkSeries("Gain", 0, 200);
+
 
     operations.nextMonth();
     timeline.selectMonth("2008/08");
