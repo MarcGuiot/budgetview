@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.MasterCategory;
 import org.designup.picsou.gui.TimeService;
 import org.globsframework.utils.Dates;
 
@@ -96,7 +95,6 @@ public class NextProjectsViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("Monthly payments")
-      .switchToManual()
       .setFromAccount("Main accounts")
       .setToAccount("ING")
       .selectAllMonths()
@@ -241,7 +239,6 @@ public class NextProjectsViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("Monthly payments")
-      .switchToManual()
       .setFromAccount("Main accounts")
       .setToAccount("ING")
       .selectAllMonths()

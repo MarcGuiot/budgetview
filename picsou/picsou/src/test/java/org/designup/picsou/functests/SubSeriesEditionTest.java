@@ -178,7 +178,6 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTransactions("PointP");
     categorization.selectVariable().createSeries()
       .setName("Maison")
-      .switchToAutomatic()
       .gotoSubSeriesTab()
       .addSubSeries("Entretien")
       .validate();

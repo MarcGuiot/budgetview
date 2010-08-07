@@ -136,7 +136,7 @@
                   </column>
                 </column>
 
-                <panel ref="seriesBudgetEditionPanel" weightX="1" marginLeft="5"/>
+                <panel ref="seriesAmountEditionPanel" weightX="1" marginLeft="5"/>
               </row>
             </tab>
             <tab title="$seriesEdition.tabs.subseries">

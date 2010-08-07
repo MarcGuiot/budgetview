@@ -38,11 +38,6 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     budgetView.recurring.checkSeries("Internet", 0.00, -100.00);
 
-    timeline.selectMonth("2008/07");
-    budgetView.recurring.editSeries("Internet")
-      .checkManualModeSelected()
-      .cancel();
-
     // Propagation disabled
     timeline.selectMonth("2008/07");
     budgetView.recurring.editPlannedAmount("Internet")
@@ -188,10 +183,6 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Internet", -29.00, -29.00);
 
     timeline.selectMonth("2008/07");
-    budgetView.recurring.editSeries("Internet")
-      .checkAutomaticModeSelected()
-      .cancel();
-
     budgetView.recurring.editPlannedAmount("Internet")
       .checkAmount(29.00)
       .setAmount("100")

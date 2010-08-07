@@ -57,7 +57,7 @@ public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> ex
   }
 
   public T setAmount(String value) {
-    getAmountTextBox().setText(value, false);
+    getAmountTextBox().setText(value, true);
     return (T)this;
   }
 
@@ -109,6 +109,21 @@ public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> ex
 
   public T alignPlannedAndActual() {
     dialog.getButton("alignValue").click();
+    return (T)this;
+  }
+
+  public T checkPropagationDisabled() {
+    assertFalse(dialog.getCheckBox().isSelected());
+    return (T)this;
+  }
+
+  public T setPropagationEnabled() {
+    dialog.getCheckBox("propagate").select();
+    return (T)this;
+  }
+
+  public T setPropagationDisabled() {
+    dialog.getCheckBox("propagate").unselect();
     return (T)this;
   }
 }

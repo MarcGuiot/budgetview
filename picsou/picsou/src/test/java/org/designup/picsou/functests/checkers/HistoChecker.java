@@ -6,6 +6,8 @@ import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffDataset;
 import org.designup.picsou.gui.components.charts.histo.painters.HistoLineDataset;
+import org.designup.picsou.gui.description.Formatting;
+import org.globsframework.utils.TablePrinter;
 import org.uispec4j.Mouse;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
@@ -13,7 +15,6 @@ import org.uispec4j.interception.toolkit.Empty;
 import org.uispec4j.utils.Utils;
 
 import java.awt.*;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -31,7 +32,10 @@ public class HistoChecker extends GuiChecker {
 
   public HistoChecker checkColumnCount(int count) {
     HistoDataset dataset = getDataset(HistoDataset.class);
-    Assert.assertEquals(count, dataset.size());
+    if (count != dataset.size()) {
+      Assert.fail("Found " + dataset.size() + " columns instead of " + count +
+                  ". Actual contents:\n" + dataset);
+    }
     return this;
   }
 
@@ -64,6 +68,37 @@ public class HistoChecker extends GuiChecker {
     return this;
   }
 
+  public void checkContents(Object[][] content) {
+    checkColumnCount(content.length);
+
+    TablePrinter expected = createPrinter();
+    for (Object[] row : content) {
+      expected.addRow(row[0],
+                      row[1].toString().substring(0, 1),
+                      Formatting.toString((Double)row[2]),
+                      Formatting.toString((Double)row[3]),
+                      row.length > 4 ? (Boolean)row[4] : "");
+    }
+
+    TablePrinter actual = createPrinter();
+    HistoDiffDataset dataset = getDataset(HistoDiffDataset.class);
+    for (int i = 0; i < dataset.size(); i++) {
+      actual.addRow(dataset.getSection(i),
+                    dataset.getLabel(i),
+                    Formatting.toString(dataset.getActualValue(i)),
+                    Formatting.toString(dataset.getReferenceValue(i)),
+                    dataset.isSelected(i) ? "true" : "");
+    }
+
+    Assert.assertEquals("Invalid chart content", expected.toString(), actual.toString());
+  }
+
+  private TablePrinter createPrinter() {
+    TablePrinter printer = new TablePrinter();
+    printer.setHeader("Year", "Month", "Actual", "Planned", "Selected");
+    return printer;
+  }
+
   public HistoChecker checkTooltip(int index, String expectedText) {
     HistoDataset dataset = getDataset(HistoDataset.class);
     Assert.assertEquals(expectedText, Utils.cleanupHtml(dataset.getTooltip(index)));
@@ -83,6 +118,34 @@ public class HistoChecker extends GuiChecker {
     chart.paint(Empty.NULL_GRAPHICS_2D);
     int x = chart.getX(columnIndex);
     doClick(chart, x);
+  }
+
+  public void clickColumnId(int month) {
+    HistoChart chart = getChart();
+    HistoDataset dataset = chart.getCurrentDataset();
+    int columnIndex = dataset.getIndex(month);
+    if (columnIndex < 0) {
+      Assert.fail("Month " + month + " not found - dataset contents:\n" + dataset);
+    }
+
+    clickColumn(columnIndex);
+  }
+
+  public void clickAllColumns() {
+    HistoChart chart = getChart();
+    chart.paint(Empty.NULL_GRAPHICS_2D);
+    int y = chart.getSize().height / 2;
+
+    int x0 = chart.getX(0);
+    Mouse.enter(chart, x0, y);
+    Mouse.move(chart, x0, y);
+    Mouse.pressed(chart, x0, y);
+
+    chart.paint(Empty.NULL_GRAPHICS_2D);
+    int x1 = chart.getX(chart.getCurrentDataset().size() - 1);
+    Mouse.drag(chart, x1, y);
+    Mouse.released(chart, x1, y);
+    Mouse.exit(chart, x1, y);
   }
 
   private void doClick(HistoChart chart, int x) {
@@ -107,17 +170,6 @@ public class HistoChecker extends GuiChecker {
     }
 
     org.globsframework.utils.TestUtils.assertSetEquals(selection, ids);
-  }
-
-  public void clickColumnId(int month) {
-    HistoChart chart = getChart();
-    HistoDataset dataset = chart.getCurrentDataset();
-    int columnIndex = dataset.getIndex(month);
-    if (columnIndex < 0) {
-      Assert.fail("Month " + month + " not found - dataset contents:\n" + dataset);
-    }
-
-    clickColumn(columnIndex);
   }
 
   private String getErrorMessage(int index, HistoDataset dataset) {

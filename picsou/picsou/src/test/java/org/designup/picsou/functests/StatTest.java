@@ -189,7 +189,6 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .close();
 
     budgetView.income.editSeriesList()
-      .switchToManual()
       .selectMonth(200807)
       .selectNegativeAmounts()
       .setAmount("200")

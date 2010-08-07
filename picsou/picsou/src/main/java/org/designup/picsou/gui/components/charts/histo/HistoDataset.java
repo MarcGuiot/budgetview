@@ -69,5 +69,9 @@ public interface HistoDataset {
     public boolean containsSections() {
       return false;
     }
+
+    public String toString() {
+      return "[null dataset]";
+    }
   };
 }

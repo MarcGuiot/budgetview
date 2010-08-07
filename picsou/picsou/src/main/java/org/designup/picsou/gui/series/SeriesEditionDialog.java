@@ -20,9 +20,9 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.editors.GlobCheckBoxView;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
-import org.globsframework.gui.editors.GlobCheckBoxView;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -73,7 +73,7 @@ public class SeriesEditionDialog {
   private JPanel seriesPanel;
   private Key createdSeries;
   private JPanel seriesListButtonPanel;
-  private SeriesBudgetEditionPanel budgetEditionPanel;
+  private SeriesAmountEditionPanel amountEditionPanel;
   private GlobList selectedTransactions = new EmptyGlobList();
   private GlobLinkComboEditor fromAccountsCombo;
   private GlobLinkComboEditor toAccountsCombo;
@@ -113,6 +113,30 @@ public class SeriesEditionDialog {
     localRepository.addTrigger(new UpdateUpdateMirror());
     localRepository.addTrigger(new UpdateBudgetOnSeriesAccountsChange());
     localRepository.addChangeListener(new ProfileTypeChangeListener());
+
+// TODO: A REINTEGRER ?
+//    localRepository.addChangeListener(new DefaultChangeSetListener() {
+//      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+//        if (currentSeries == null) {
+//          return;
+//        }
+//        if (changeSet.containsChanges(currentSeries.getKey())) {
+//          FieldValues previousValue = changeSet.getPreviousValue(currentSeries.getKey());
+//          if (previousValue.contains(Series.IS_AUTOMATIC)) {
+//            isAutomatic = currentSeries.isTrue(Series.IS_AUTOMATIC);
+//          }
+//          if (previousValue.contains(Series.PROFILE_TYPE)) {
+//            if (previousValue.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
+//              repository.update(currentSeries.getKey(), Series.IS_AUTOMATIC, isAutomatic);
+//            }
+//            else if (currentSeries.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
+//              repository.update(currentSeries.getKey(), Series.IS_AUTOMATIC, false);
+//            }
+//          }
+//        }
+//      }
+//    });
+
     selectionService = new SelectionService();
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(selectionService);
@@ -145,17 +169,18 @@ public class SeriesEditionDialog {
     reportCheckBox = builder.addCheckBox("autoReport", Series.SHOULD_REPORT);
     localRepository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
-        changeSet.safeVisit(Series.TYPE, new DefaultChangeSetVisitor(){
+        changeSet.safeVisit(Series.TYPE, new DefaultChangeSetVisitor() {
           public void visitCreation(Key key, FieldValues values) throws Exception {
             reportCheckBox.getComponent().setVisible(!values.get(Series.IS_AUTOMATIC));
           }
 
           public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-            if (values.contains(Series.IS_AUTOMATIC)){
-              if (values.get(Series.IS_AUTOMATIC)){
+            if (values.contains(Series.IS_AUTOMATIC)) {
+              if (values.get(Series.IS_AUTOMATIC)) {
                 repository.update(key, Series.SHOULD_REPORT, false);
                 reportCheckBox.getComponent().setVisible(false);
-              }else{
+              }
+              else {
                 reportCheckBox.getComponent().setVisible(true);
               }
             }
@@ -225,9 +250,9 @@ public class SeriesEditionDialog {
     registerDateRangeComponents(builder);
     registerSingleMonthComponents(builder);
 
-    budgetEditionPanel = new SeriesBudgetEditionPanel(dialog, repository, localRepository, localDirectory);
-    JPanel seriesBudgetPanel = budgetEditionPanel.getPanel();
-    builder.add("seriesBudgetEditionPanel", seriesBudgetPanel);
+    amountEditionPanel = new SeriesAmountEditionPanel(localRepository, localDirectory, null);
+    JPanel seriesBudgetPanel = amountEditionPanel.getPanel();
+    builder.add("seriesAmountEditionPanel", seriesBudgetPanel);
 
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
@@ -297,7 +322,6 @@ public class SeriesEditionDialog {
     repository.addTrigger(new ProfileTypeSeriesTrigger(userMonth));
     repository.addTrigger(new AutomaticSeriesBudgetTrigger());
     repository.addTrigger(new SeriesBudgetTrigger(parentRepository));
-//    repository.addTrigger(new SeriesBudgetAmountTrigger());
   }
 
   private void updateMonthChooser() {
@@ -396,7 +420,7 @@ public class SeriesEditionDialog {
   }
 
   public void show(BudgetArea budgetArea, Set<Integer> monthIds, Integer seriesId) {
-    selectedSeries.clear();
+    resetSeries();
     retrieveAssociatedTransactions(seriesId);
     try {
       localRepository.startChangeSet();
@@ -414,8 +438,13 @@ public class SeriesEditionDialog {
     doShow(monthIds, series, false, null);
   }
 
-  public void show(Glob series, Set<Integer> monthIds) {
+  private void resetSeries() {
     selectedSeries.clear();
+    amountEditionPanel.clear();
+  }
+
+  public void show(Glob series, Set<Integer> monthIds) {
+    resetSeries();
     retrieveAssociatedTransactions(series.get(Series.ID));
     try {
       localRepository.startChangeSet();
@@ -440,7 +469,7 @@ public class SeriesEditionDialog {
   }
 
   public Key showNewSeries(GlobList transactions, GlobList selectedMonths, BudgetArea budgetArea, FieldValue... forcedValues) {
-    selectedSeries.clear();
+    resetSeries();
     selectedTransactions = transactions;
     this.budgetArea = BudgetArea.get(budgetArea.getId());
     Glob createdSeries;
@@ -630,14 +659,14 @@ public class SeriesEditionDialog {
       seriesList.selectFirst();
     }
     if (currentSeries != null) {
-      budgetEditionPanel.selectMonths(monthIds);
+      amountEditionPanel.changeSeries(currentSeries.getKey());
+      amountEditionPanel.selectMonths(monthIds);
       updateMonthSelectionCard();
     }
 
     tabbedPane.setSelectedIndex(0);
 
     titleLabel.setText(Lang.get("seriesEdition.title." + (creation ? "creation" : "edition")));
-
 
     dialog.pack();
 
@@ -649,7 +678,7 @@ public class SeriesEditionDialog {
             nameEditor.getComponent().selectAll();
           }
           else {
-            budgetEditionPanel.selectAmountEditor();
+            amountEditionPanel.selectAmountEditor();
           }
         }
       }
@@ -818,11 +847,11 @@ public class SeriesEditionDialog {
   }
 
   private abstract class OpenMonthChooserAction extends AbstractAction {
-    private IntegerField date;
+    private IntegerField dateField;
     private MonthRangeBound bound;
 
-    private OpenMonthChooserAction(IntegerField date, MonthRangeBound bound) {
-      this.date = date;
+    private OpenMonthChooserAction(IntegerField dateField, MonthRangeBound bound) {
+      this.dateField = dateField;
       this.bound = bound;
     }
 
@@ -831,7 +860,7 @@ public class SeriesEditionDialog {
     public void actionPerformed(ActionEvent e) {
       MonthRangeBound bound = this.bound;
       MonthChooserDialog chooser = new MonthChooserDialog(dialog, localDirectory);
-      Integer monthId = currentSeries.get(date);
+      Integer monthId = currentSeries.get(dateField);
       Integer limit = getMonthLimit();
       if (monthId == null) {
         monthId = limit == null ? localDirectory.get(TimeService.class).getCurrentMonthId() : limit;
@@ -844,7 +873,7 @@ public class SeriesEditionDialog {
       if (result == -1) {
         return;
       }
-      localRepository.update(currentSeries.getKey(), date, result);
+      localRepository.update(currentSeries.getKey(), dateField, result);
     }
   }
 

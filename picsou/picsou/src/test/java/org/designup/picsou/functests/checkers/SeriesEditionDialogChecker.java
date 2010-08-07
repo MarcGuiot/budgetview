@@ -5,7 +5,6 @@ import org.designup.picsou.model.Month;
 import org.designup.picsou.model.ProfileType;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
@@ -15,8 +14,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.uispec4j.assertion.UISpecAssert.*;
+
 public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<SeriesEditionDialogChecker> {
-  private Table table;
 
   public static final String JAN = "Jan";
   public static final String FEB = "Feb";
@@ -25,7 +25,7 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   public static final String MAY = "May";
   public static final String JUN = "Jun";
   public static final String JUL = "Jul";
-  public static final String AOU = "Aug";
+  public static final String AUG = "Aug";
   public static final String SEP = "Sep";
   public static final String OCT = "Oct";
   public static final String NOV = "Nov";
@@ -98,59 +98,33 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   public SeriesEditionDialogChecker selectAllMonths() {
-    Table table = getTable();
-    assertFalse(table.isEmpty());
-    table.selectRowSpan(0, table.getRowCount() - 1);
+    setPropagationEnabled();
+    selectFirstMonth();
+    return this;
+  }
+
+  public SeriesEditionDialogChecker selectFirstMonth() {
+    getChart().clickColumn(0);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker selectAllVisibleMonths() {
+    getChart().clickAllColumns();
     return this;
   }
 
   public SeriesEditionDialogChecker selectMonth(Integer monthId) {
-    int[] indices = getTable().getRowIndices(0, Integer.toString(Month.toYear(monthId)));
-    for (int index : indices) {
-      if (getTable().getContentAt(index, 1).equals(Month.getFullMonthLabel(Month.toMonth(monthId)))) {
-        getTable().selectRow(index);
-        return this;
-      }
-    }
-    fail(monthId + " not found ");
-    return null;
+    getChart().clickColumnId(monthId);
+    return this;
   }
 
   public SeriesEditionDialogChecker selectNoMonth() {
-    getTable().clearSelection();
+    fail("A SUPPRIMER - impossible avec histoChart");
     return this;
   }
 
-  public SeriesEditionDialogChecker checkTableIsEmpty() {
-    assertThat(getTable().isEmpty());
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkTable(Object[][] content) {
-    assertThat(getTable().contentEquals(content));
-    return this;
-  }
-
-  private Table getTable() {
-    if (table == null) {
-      this.table = dialog.getTable();
-    }
-    return table;
-  }
-
-  public SeriesEditionDialogChecker switchToManual() {
-    dialog.getButton("manual").click();
-    return this;
-  }
-
-  public SeriesEditionDialogChecker switchToAutomatic() {
-    WindowInterceptor.init(dialog.getButton("automatic").triggerClick())
-      .process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          return window.getButton("ok").triggerClick();
-        }
-      }).run();
-    table = null;
+  public SeriesEditionDialogChecker checkChart(Object[][] content) {
+    getChart().checkContents(content);
     return this;
   }
 
@@ -159,13 +133,13 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
-  public SeriesEditionDialogChecker checkMonthSelected(int index) {
-    assertThat(getTable().rowIsSelected(index));
+  public SeriesEditionDialogChecker checkMonthSelected(int monthId) {
+    getChart().checkSelectedIds(monthId);
     return this;
   }
 
-  public SeriesEditionDialogChecker checkMonthsSelected(int... rows) {
-    assertThat(getTable().rowsAreSelected(rows));
+  public SeriesEditionDialogChecker checkMonthsSelected(Integer... monthIds) {
+    getChart().checkSelectedIds(monthIds);
     return this;
   }
 
@@ -208,7 +182,7 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
       case 7:
         return JUL;
       case 8:
-        return AOU;
+        return AUG;
       case 9:
         return SEP;
       case 10:
@@ -501,16 +475,6 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
-  public SeriesEditionDialogChecker checkManualModeSelected() {
-    UISpecAssert.assertTrue(dialog.getButton("automatic").isVisible());
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkAutomaticModeSelected() {
-    UISpecAssert.assertTrue(dialog.getButton("manual").isVisible());
-    return this;
-  }
-
   private ComboBox getProfileCombo() {
     return dialog.getComboBox("profileCombo");
   }
@@ -587,7 +551,7 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   public SeriesEditionDialogChecker checkAmountLabel(final String text) {
-    assertThat(dialog.getTextBox("seriesBudgetEditionAmountLabel").textEquals(text));
+    assertThat(dialog.getPanel("seriesAmountEditionPanel").getTextBox("dateLabel").textEquals(text));
     return this;
   }
 
@@ -791,5 +755,9 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   public SeriesEditionDialogChecker checkMainTabIsSelected() {
     assertThat(dialog.getTabGroup().selectedTabEquals("Terms"));
     return this;
+  }
+
+  private HistoChecker getChart() {
+    return new HistoChecker(dialog, "seriesAmountEditionPanel", "chart");
   }
 }

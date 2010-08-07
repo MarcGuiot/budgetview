@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.series.utils.SeriesAmountLabelStringifier;
 import org.designup.picsou.gui.signpost.actions.SetSignpostStatusAction;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesBudgetChangeSetVisitor;
@@ -70,9 +69,11 @@ public class SeriesAmountEditionDialog {
       series = parentRepository.findLinkTarget(series, Series.MIRROR_SERIES);
     }
 
-    editionPanel.prepareReload(series);
+    editionPanel.clear();
     loadGlobs(series);
-    editionPanel.postReload(months);
+    editionPanel.changeSeries(series.getKey());
+    localDirectory.get(SelectionService.class).select(series);
+    editionPanel.selectMonths(months);
 
     GuiUtils.showCentered(dialog);
   }

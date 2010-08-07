@@ -233,19 +233,16 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     categorization.selectVariable().editSeries()
       .selectSeries("Groceries")
-      .switchToManual()
       .selectAllMonths()
       .setAmount("95")
       .validate();
     categorization.selectRecurring().editSeries()
       .selectSeries("Internet")
-      .switchToManual()
       .selectAllMonths()
       .setAmount("29.0")
       .validate();
     categorization.selectIncome().editSeries()
       .selectSeries("Salary")
-      .switchToManual()
       .selectAllMonths()
       .setAmount("3540.0")
       .validate();
@@ -364,7 +361,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Fuel", 0, 0);
 
     budgetView.recurring.editSeriesList().selectSeries("Groceries")
-      .switchToManual()
       .selectMonth(200807)
       .setAmount("200")
       .validate();
@@ -381,7 +377,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("santé")
-      .switchToAutomatic()
       .validate();
     views.selectCategorization();
     timeline.selectAll();
@@ -421,7 +416,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Fuel", 0, 0);
 
     budgetView.recurring.editSeriesList().selectSeries("Groceries")
-      .switchToManual()
       .selectMonth(200807)
       .setAmount("200")
       .validate();
@@ -457,7 +451,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.income.createSeries()
       .setName("salaire")
-      .switchToManual()
       .selectAllMonths()
       .setAmount("1000")
       .validate();

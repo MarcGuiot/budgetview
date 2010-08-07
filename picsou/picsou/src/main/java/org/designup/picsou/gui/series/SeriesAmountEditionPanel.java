@@ -7,10 +7,15 @@ import org.designup.picsou.gui.series.edition.SeriesBudgetSliderAdapter;
 import org.designup.picsou.gui.series.evolution.SeriesAmountChartPanel;
 import org.designup.picsou.gui.series.utils.SeriesAmountLabelStringifier;
 import org.designup.picsou.model.*;
-import org.globsframework.gui.*;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobListFunctor;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
@@ -42,9 +47,9 @@ public class SeriesAmountEditionPanel {
   private SeriesEditorAccess seriesEditorAccess;
 
   public interface SeriesEditorAccess {
-
     void openSeriesEditor(Key seriees, Set<Integer> selectedMonthIds);
   }
+
   public SeriesAmountEditionPanel(GlobRepository repository,
                                   Directory directory,
                                   SeriesEditorAccess seriesEditorAccess) {
@@ -56,12 +61,28 @@ public class SeriesAmountEditionPanel {
     this.selectionService = directory.get(SelectionService.class);
     this.selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
-        Set<Integer> selectedMonths = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
-        select(SeriesAmountEditionPanel.this.repository.find(currentSeries), selectedMonths);
+        if (selection.isRelevantForType(Series.TYPE)) {
+          changeSeries(selection.getAll(Series.TYPE).getFirst().getKey());
+        }
+        if (selection.isRelevantForType(Month.TYPE)) {
+          Set<Integer> selectedMonths = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
+          doSelectMonths(SeriesAmountEditionPanel.this.repository.find(currentSeries), selectedMonths);
+        }
       }
     }, Month.TYPE);
 
     createPanel();
+
+    repository.addChangeListener(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if ((currentSeries != null) && changeSet.containsChanges(currentSeries)) {
+          FieldValues previousValue = changeSet.getPreviousValue(currentSeries);
+          if (previousValue.contains(Series.FROM_ACCOUNT) || previousValue.contains(Series.TO_ACCOUNT)) {
+            updatePositiveOrNegativeRadio();
+          }
+        }
+      }
+    });
   }
 
   public JPanel getPanel() {
@@ -112,38 +133,61 @@ public class SeriesAmountEditionPanel {
     return amountEditor.getNumericEditor().getComponent();
   }
 
-  public void prepareReload(Glob series) {
-    currentSeries = series.getKey();
+  public void selectAmountEditor() {
+    getFocusComponent().requestFocus();
+  }
+
+  public void clear() {
+    changeSeries(null);
+  }
+
+  public void changeSeries(Key seriesKey) {
+    currentSeries = seriesKey;
     autoSelectFutureMonths = false;
     propagationCheckBox.setSelected(false);
     chart.init(null, null);
   }
 
-  public void postReload(Set<Integer> months) {
+  public void selectMonths(Set<Integer> months) {
 
+    if (currentSeries == null) {
+      return;
+    }
+
+    Glob series = repository.get(currentSeries);
+    currentSeries = series.getKey();
     currentMonth = Utils.max(months);
 
     chart.init(currentSeries.get(Series.ID), currentMonth);
 
-    Glob series = repository.get(currentSeries);
-    BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
-    amountEditor.update(isUsuallyPositive(series, budgetArea),
-                        budgetArea == BudgetArea.SAVINGS);
+    updatePositiveOrNegativeRadio();
 
-    select(series, months);
+    doSelectMonths(series, months);
 
     amountEditor.selectAll();
   }
 
+  private void updatePositiveOrNegativeRadio() {
+    Glob series = repository.get(currentSeries);
+    BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
+    double multiplier = Account.computeAmountMultiplier(series, repository);
+    boolean isUsuallyPositive = budgetArea.isIncome() ||
+                                (budgetArea == BudgetArea.SAVINGS && multiplier > 0);
+    amountEditor.update(isUsuallyPositive, budgetArea == BudgetArea.SAVINGS);
+  }
+
+  private void toto(Glob series) {
+    BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
+    amountEditor.update(isUsuallyPositive(series, budgetArea),
+                        budgetArea == BudgetArea.SAVINGS);
+  }
+
   private boolean isUsuallyPositive(Glob series, BudgetArea budgetArea) {
-    double multiplier =
-      Account.computeAmountMultiplier(repository.findLinkTarget(series, Series.FROM_ACCOUNT),
-                                      repository.findLinkTarget(series, Series.TO_ACCOUNT),
-                                      repository);
+    double multiplier = Account.computeAmountMultiplier(series, repository);
     return budgetArea.isIncome() || (budgetArea == BudgetArea.SAVINGS && multiplier > 0);
   }
 
-  private void select(Glob series, Set<Integer> monthIds) {
+  private void doSelectMonths(Glob series, Set<Integer> monthIds) {
     if (selectionInProgress) {
       return;
     }
@@ -152,15 +196,14 @@ public class SeriesAmountEditionPanel {
     try {
       selectedMonthIds = monthIds;
       GlobSelectionBuilder selection = GlobSelectionBuilder.init();
-      selection.add(series);
       Integer seriesId = series.get(Series.ID);
       for (Integer monthId : getMonths(monthIds)) {
-        selection.add(
-          repository
-            .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
-            .findByIndex(SeriesBudget.MONTH, monthId)
-            .getGlobs(),
-          SeriesBudget.TYPE);
+        GlobList list = repository
+          .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
+          .findByIndex(SeriesBudget.MONTH, monthId)
+          .getGlobs();
+        list.filterSelf(GlobMatchers.isTrue(SeriesBudget.ACTIVE), repository);
+        selection.add(list, SeriesBudget.TYPE);
         selection.add(repository.get(Key.create(Month.TYPE, monthId)));
       }
       selectionService.select(selection.get());
@@ -216,10 +259,10 @@ public class SeriesAmountEditionPanel {
   private void propagateValue(Integer startMonth) {
     final Double amount = amountEditor.getValue();
     repository.safeApply(SeriesBudget.TYPE,
-                              and(
-                                isTrue(SeriesBudget.ACTIVE),
-                                fieldStrictlyGreaterThan(SeriesBudget.MONTH, startMonth)),
-                              update(SeriesBudget.AMOUNT, Utils.zeroIfNull(amount)));
+                         and(
+                           isTrue(SeriesBudget.ACTIVE),
+                           fieldStrictlyGreaterThan(SeriesBudget.MONTH, startMonth)),
+                         update(SeriesBudget.AMOUNT, Utils.zeroIfNull(amount)));
   }
 
   public class OpenSeriesEditorCallback implements GlobListFunctor {
