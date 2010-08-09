@@ -57,6 +57,11 @@ public class NavigationService implements GlobSelectionListener {
     gotoCard(Card.CATEGORIZATION);
   }
 
+  public void gotoCategorizationForCurrentSelection() {
+    categorizationView.setFilteringMode(TransactionFilteringMode.SELECTED_MONTHS);
+    gotoCategorization();
+  }
+
   public void gotoCategorizationAndSelectLastImported() {
     categorizationView.setFilteringMode(TransactionFilteringMode.LAST_IMPORTED_FILE);
     gotoCategorization();

@@ -11,7 +11,7 @@
       <panel styleClass="innerBlock">
         <panel styleClass="innerBlockBackground" marginBottom="0">
           <column margin="10" marginTop="0">
-            <component ref="categorization"/>
+            <component ref="categorization" weightY="0.1"/>
             <component ref="budget"/>
             <component ref="evolution" weightY="4"/>
             <component ref="savings" weightY="4"/>

@@ -114,7 +114,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     this.colors = new TransactionRendererColors(directory);
 
-    categorizationLevel = new CategorizationLevel(repository);
+    categorizationLevel = new CategorizationLevel(repository, directory);
 
     this.signpost = new CategorizationCompletionSignpost(categorizationLevel, repository, parentDirectory);
   }

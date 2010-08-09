@@ -1,17 +1,25 @@
 package org.designup.picsou.gui.categorization.components;
 
-import org.globsframework.model.*;
-import static org.globsframework.model.utils.GlobMatchers.not;
-import static org.globsframework.model.utils.GlobMatchers.isTrue;
-import org.globsframework.metamodel.GlobType;
-import org.globsframework.utils.Updatable;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.UserPreferences;
-import org.designup.picsou.model.Series;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.SelectionService;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Updatable;
+import org.globsframework.utils.directory.Directory;
 
-import java.util.Set;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class CategorizationLevel implements ChangeSetListener {
 
@@ -19,10 +27,22 @@ public class CategorizationLevel implements ChangeSetListener {
   private GlobRepository repository;
   private double total;
   private double percentage;
+  private Set<Integer> selectedMonths = Collections.emptySet();
+  private boolean filterOnCurrentMonth;
 
-  public CategorizationLevel(GlobRepository repository) {
+  public CategorizationLevel(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.repository.addChangeListener(this);
+    directory.get(SelectionService.class).addListener(new GlobSelectionListener() {
+      public void selectionUpdated(GlobSelection selection) {
+        selectedMonths = selection.getAll(Month.TYPE).getValueSet(Month.ID);
+        update();
+      }
+    }, Month.TYPE);
+  }
+
+  public void setFilterOnCurrentMonth() {
+    this.filterOnCurrentMonth = true;
   }
 
   public void addListener(Updatable updatable) {
@@ -50,8 +70,10 @@ public class CategorizationLevel implements ChangeSetListener {
   }
 
   private void update() {
+    GlobMatcher monthFilter =
+      filterOnCurrentMonth ? GlobMatchers.fieldIn(Transaction.MONTH, selectedMonths) : GlobMatchers.ALL;
     GlobList transactions =
-      repository.getAll(Transaction.TYPE, not(isTrue(Transaction.PLANNED)));
+      repository.getAll(Transaction.TYPE, and(not(isTrue(Transaction.PLANNED)), monthFilter));
 
     total = 0;
     double uncategorized = 0;

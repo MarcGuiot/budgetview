@@ -2,6 +2,7 @@ package org.designup.picsou.gui.card;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.budget.BudgetWidget;
+import org.designup.picsou.gui.categorization.components.CategorizationWidget;
 import org.designup.picsou.gui.series.evolution.EvolutionWidget;
 import org.designup.picsou.gui.savings.SavingsWidget;
 import org.designup.picsou.gui.actions.ImportFileAction;
@@ -27,13 +28,12 @@ public class NavigationView extends WidgetView {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/home/navigationView.splits",
                                                       repository, directory);
 
+    add("categorization", builder, new CategorizationWidget(repository, directory));
     add("budget", builder, new BudgetWidget(repository, directory));
     add("evolution", builder, new EvolutionWidget(repository, directory));
     add("savings", builder, new SavingsWidget(repository, directory));
 
-    for (Card card : CARDS) {
-      add(card.getName(), builder, new TextNavigationWidget(card, repository, directory));
-    }
+    add(Card.DATA.getName(), builder, new TextNavigationWidget(Card.DATA, repository, directory));
 
     parentBuilder.add("navigationView", builder);
   }
