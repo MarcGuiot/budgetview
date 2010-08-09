@@ -2,11 +2,11 @@ package org.globsframework.gui.views;
 
 import org.globsframework.gui.ComponentHolder;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.exceptions.InvalidParameter;
-import sun.print.ServiceDialog;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -22,8 +22,8 @@ public class GlobListViewFilter implements ComponentHolder {
   private JTextField textField = new JTextField();
   private GlobListView listView;
   private JList list;
-  private ServiceDialog actionListener;
   private Key defaultSelectionKey;
+  private GlobRepository repository;
 
   public static GlobListViewFilter init(final GlobListView listView) {
     return new GlobListViewFilter(listView);
@@ -32,13 +32,14 @@ public class GlobListViewFilter implements ComponentHolder {
   private GlobListViewFilter(final GlobListView listView) {
     this.listView = listView;
     this.list = listView.getComponent();
+    this.repository = listView.getRepository();
 
     this.textField.getDocument().addDocumentListener(new OnKeyActionListener());
     this.textField.setName(listView.getComponent().getName() + "Filter");
     installKeyListener();
     textField.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        notifyActionListener();
+        listView.triggerDoubleClickAction();
       }
     });
   }
@@ -61,13 +62,6 @@ public class GlobListViewFilter implements ComponentHolder {
     return textField;
   }
 
-  private void notifyActionListener() {
-    if (actionListener != null) {
-      ActionEvent event = new ActionEvent(this, 0, "selection");
-      actionListener.actionPerformed(event);
-    }
-  }
-
   public void dispose() {
   }
 
@@ -80,12 +74,25 @@ public class GlobListViewFilter implements ComponentHolder {
       for (int i = 0; i < filters.length; i++) {
         filters[i] = filters[i].toUpperCase();
       }
+
       listView.setFilter(this);
-      if (listView.getSize() == 1) {
-        listView.selectFirst();
+
+      GlobList listContent = listView.getGlobList();
+      if (defaultSelectionKey != null) {
+        Glob defaultGlob = repository.get(defaultSelectionKey);
+        if (!textMatches(defaultGlob)) {
+          listContent.remove(defaultGlob);
+        }
       }
-      if (listView.getSize() == 0) {
+
+      if (listContent.size() == 1) {
+        listView.select(listContent.getFirst());
+      }
+      if (listContent.size() == 0) {
         textField.setForeground(Color.RED);
+        if (defaultSelectionKey != null) {
+          listView.selectFirst();
+        }
       }
       else {
         textField.setForeground(null);
@@ -93,16 +100,21 @@ public class GlobListViewFilter implements ComponentHolder {
     }
 
     public boolean matches(Glob item, GlobRepository repository) {
-      if (defaultSelectionKey != null
-          && item != null
-          && defaultSelectionKey.equals(item.getKey())) {
+      if ((defaultSelectionKey != null) &&
+          (item != null) &&
+          defaultSelectionKey.equals(item.getKey())) {
         return true;
       }
 
+      return textMatches(item);
+    }
+
+    private boolean textMatches(Glob item) {
       String text = listView.toString(item);
-      if (text != null) {
-        text = text.toUpperCase();
+      if (text == null) {
+        return false;
       }
+      text = text.toUpperCase();
       for (String filter : filters) {
         if (text.indexOf(filter) < 0) {
           return false;

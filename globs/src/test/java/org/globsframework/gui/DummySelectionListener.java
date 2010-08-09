@@ -21,10 +21,22 @@ public class DummySelectionListener extends XmlTestLogger implements GlobSelecti
     return listener;
   }
 
+  private boolean dumpSelections;
+
   private DummySelectionListener() {
   }
 
+  public void dumpSelections() {
+    this.dumpSelections = true;
+  }
+
   public void selectionUpdated(GlobSelection selection) {
+
+    if (dumpSelections) {
+      System.out.println(selection);
+      Thread.dumpStack();
+    }
+
     List<String> keys = new ArrayList<String>();
     for (GlobType type : selection.getRelevantTypes()) {
       for (Glob glob : selection.getAll(type)) {

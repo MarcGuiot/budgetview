@@ -40,6 +40,8 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
   private boolean selectionEnabled = true;
   private boolean singleSelectionMode = false;
 
+  private Action doubleClickAction;
+
   public static GlobListView init(GlobType type, GlobRepository repository, Directory directory) {
     return new GlobListView(type, repository, directory);
   }
@@ -102,6 +104,10 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
     return stringifier.toString(item, repository);
   }
 
+  GlobRepository getRepository() {
+    return repository;
+  }
+
   public interface GlobSelectionHandler {
     void processSelection(GlobList selection);
   }
@@ -130,14 +136,21 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
   }
 
   public GlobListView addDoubleClickAction(final Action action) {
+    this.doubleClickAction = action;
     this.jList.addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 2) {
-          action.actionPerformed(new ActionEvent(jList, 0, "click"));
+          triggerDoubleClickAction();
         }
       }
     });
     return this;
+  }
+
+  void triggerDoubleClickAction() {
+    if (doubleClickAction != null) {
+      doubleClickAction.actionPerformed(new ActionEvent(jList, 0, "doubleClick"));
+    }
   }
 
   public JList getComponent() {
@@ -246,8 +259,8 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
     return this;
   }
 
-  public Glob getGlobAt(int index) {
-    return model.getElementAt(index);
+  GlobList getGlobList() {
+    return model.model.getAll();
   }
 
   public void clear() {
