@@ -78,6 +78,7 @@ public class SeriesEditionDialog {
   private GlobList selectedTransactions = new EmptyGlobList();
   private GlobLinkComboEditor fromAccountsCombo;
   private GlobLinkComboEditor toAccountsCombo;
+  private Boolean isAutomatic = false;
   private JComboBox dayChooser;
   private CardHandler monthSelectionCards;
   private JButton singleSeriesDeleteButton;
@@ -116,27 +117,27 @@ public class SeriesEditionDialog {
     localRepository.addChangeListener(new ProfileTypeChangeListener());
 
 // TODO: A REINTEGRER ?
-//    localRepository.addChangeListener(new DefaultChangeSetListener() {
-//      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-//        if (currentSeries == null) {
-//          return;
-//        }
-//        if (changeSet.containsChanges(currentSeries.getKey())) {
-//          FieldValues previousValue = changeSet.getPreviousValue(currentSeries.getKey());
-//          if (previousValue.contains(Series.IS_AUTOMATIC)) {
-//            isAutomatic = currentSeries.isTrue(Series.IS_AUTOMATIC);
-//          }
-//          if (previousValue.contains(Series.PROFILE_TYPE)) {
-//            if (previousValue.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
-//              repository.update(currentSeries.getKey(), Series.IS_AUTOMATIC, isAutomatic);
-//            }
-//            else if (currentSeries.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
-//              repository.update(currentSeries.getKey(), Series.IS_AUTOMATIC, false);
-//            }
-//          }
-//        }
-//      }
-//    });
+    localRepository.addChangeListener(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (currentSeries == null) {
+          return;
+        }
+        if (changeSet.containsChanges(currentSeries.getKey())) {
+          FieldValues previousValue = changeSet.getPreviousValue(currentSeries.getKey());
+          if (previousValue.contains(Series.IS_AUTOMATIC)) {
+            isAutomatic = currentSeries.get(Series.IS_AUTOMATIC);
+          }
+          if (previousValue.contains(Series.PROFILE_TYPE)) {
+            if (previousValue.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
+              repository.update(currentSeries.getKey(), Series.IS_AUTOMATIC, isAutomatic);
+            }
+            else if (currentSeries.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
+              repository.update(currentSeries.getKey(), Series.IS_AUTOMATIC, false);
+            }
+          }
+        }
+      }
+    });
 
     selectionService = new SelectionService();
     localDirectory = new DefaultDirectory(directory);
@@ -717,6 +718,9 @@ public class SeriesEditionDialog {
     this.subSeriesEditionPanel.setCurrentSeries(currentSeries);
     reportCheckBox.getComponent().setEnabled(this.currentSeries != null);
     reportCheckBox.getComponent().setVisible(this.currentSeries != null && !currentSeries.get(Series.IS_AUTOMATIC));
+    if (currentSeries != null){
+      isAutomatic = currentSeries.get(Series.IS_AUTOMATIC);
+    }
   }
 
   private Integer getCurrentSubSeriesId() {
@@ -841,11 +845,15 @@ public class SeriesEditionDialog {
       boolean deleted = false;
       SeriesDeletionDialog seriesDeletionDialog = new SeriesDeletionDialog(localRepository, localDirectory, dialog);
       if (transactionsForSeries.isEmpty()) {
-        localRepository.delete(seriesToDelete);
+        GlobList tmp = new GlobList(seriesToDelete);
+        selectionService.clear(Series.TYPE);
+        localRepository.delete(tmp);
         deleted = true;
       }
       else if (seriesDeletionDialog.show()) {
-        localRepository.delete(seriesToDelete);
+        GlobList tmp = new GlobList(seriesToDelete);
+        selectionService.clear(Series.TYPE);
+        localRepository.delete(tmp);
         deleted = true;
       }
 

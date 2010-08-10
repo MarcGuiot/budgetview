@@ -237,10 +237,10 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     budgetView.recurring.checkSeries("Internet", 0.00, -29.00);
 
-    timeline.selectMonths("2008/07", "2008/08");
+    timeline.selectMonths("2008/08");
     budgetView.recurring.editPlannedAmount("Internet")
       .checkAmount(29.00)
-      .checkActualAmount("Actual")
+//      .checkActualAmount("Actual")
       .alignPlannedAndActual()
       .setPropagationEnabled()
       .validate();

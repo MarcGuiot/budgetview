@@ -322,6 +322,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNoSeriesSelected() throws Exception {
+    fail("Gerer le unselect...");
     views.selectBudget();
     budgetView.recurring.createSeries()
       .setName("series")

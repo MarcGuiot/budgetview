@@ -319,7 +319,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization
-      .setNewVariable("Auchan", "course");
+      .setNewVariable("Auchan", "course", -30.);
     categorization.setDeferred("Prelevement novembre", "1111")
       .setDeferred("Prelevement octobre", "1111")
       .setDeferred("Prelevement aout", "1111");
@@ -358,7 +358,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization
-      .setNewVariable("Auchan", "course");
+      .setNewVariable("Auchan", "course", -200.0);
     timeline.selectAll();
     views.selectData();
     transactions.

@@ -472,7 +472,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization.doubleClickTableRow("Auchan 1111");
     categorization.checkSelectedTableRows(0, 1);
-    categorization.selectVariable().selectNewSeries("Groceries");
+    categorization.selectVariable().selectNewSeries("Groceries", -170.0);
 
     views.selectData();
     timeline.selectAll();
@@ -545,7 +545,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
     categorization.showUncategorizedTransactionsOnly();
 
-    categorization.setNewVariable(0, "Groceries");
+    categorization.setNewVariable(0, "Groceries", -170);
 
     categorization.checkTable(new Object[][]{
       {"14/05/2008", "", "Carouf", -80.00},
@@ -694,12 +694,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
   public void testAutomaticBudget() throws Exception {
 
-    System.out.println("CategorizationTest.testAutomaticBudget - A VALIDER");
-
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectBudget();
-    budgetView.variable.createSeries().setName("Courant")
-//      .switchToAutomatic()
+    budgetView.recurring.createSeries().setName("Courant")
       .validate();
 
     OfxBuilder
@@ -709,15 +706,15 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setVariable("Auchan", "Courant");
+    categorization.setRecurring("Auchan", "Courant");
 
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.variable.checkSeries("Courant", -20, -20);
+    budgetView.recurring.checkSeries("Courant", -20, -20);
     timeline.selectMonth("2008/06");
-    budgetView.variable.checkSeries("Courant", -10, -20);
+    budgetView.recurring.checkSeries("Courant", -10, -20);
     timeline.selectMonth("2008/07");
-    budgetView.variable.checkSeries("Courant", 0, -20);
+    budgetView.recurring.checkSeries("Courant", 0, -20);
 
     OfxBuilder
       .init(this)
@@ -726,18 +723,18 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setVariable("ED", "Courant");
-    categorization.setVariable("ATAC", "Courant");
+    categorization.setRecurring("ED", "Courant");
+    categorization.setRecurring("ATAC", "Courant");
 
     views.selectBudget();
     timeline.selectMonth("2008/04");
-    budgetView.variable.checkSeries("Courant", -100, -100);
+    budgetView.recurring.checkSeries("Courant", -100, -100);
     timeline.selectMonth("2008/05");
-    budgetView.variable.checkSeries("Courant", -30, -100);
+    budgetView.recurring.checkSeries("Courant", -30, -100);
     timeline.selectMonth("2008/06");
-    budgetView.variable.checkSeries("Courant", -10, -30);
+    budgetView.recurring.checkSeries("Courant", -10, -30);
     timeline.selectMonth("2008/07");
-    budgetView.variable.checkSeries("Courant", 0, -30);
+    budgetView.recurring.checkSeries("Courant", 0, -30);
 
     views.selectCategorization();
     timeline.selectMonth("2008/05");
@@ -745,11 +742,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.variable.checkSeries("Courant", -20, -100);
+    budgetView.recurring.checkSeries("Courant", -20, -100);
     timeline.selectMonth("2008/06");
-    budgetView.variable.checkSeries("Courant", -10, -20);
+    budgetView.recurring.checkSeries("Courant", -10, -20);
     timeline.selectMonth("2008/07");
-    budgetView.variable.checkSeries("Courant", 0, -20);
+    budgetView.recurring.checkSeries("Courant", 0, -20);
 
     views.selectData();
     timeline.selectAll();
@@ -766,11 +763,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
   public void testAutomaticInCurrentMonth() throws Exception {
 
-    System.out.println("CategorizationTest.testAutomaticInCurrentMonth -- A VALIDER");
-
     views.selectBudget();
-    budgetView.variable.createSeries().setName("Courant")
-//      .switchToAutomatic()
+    budgetView.recurring.createSeries().setName("Courant")
       .validate();
     OfxBuilder
       .init(this)
@@ -778,24 +772,24 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/20", -20, "ED")
       .load();
     views.selectCategorization();
-    categorization.setVariable("ED", "Courant");
-    categorization.setVariable("Auchan", "Courant");
+    categorization.setRecurring("ED", "Courant");
+    categorization.setRecurring("Auchan", "Courant");
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.variable.checkSeries("Courant", -30, -30);
+    budgetView.recurring.checkSeries("Courant", -30, -30);
 
     OfxBuilder
       .init(this)
       .addTransaction("2008/05/10", -10, "ATAC")
       .load();
     views.selectCategorization();
-    categorization.setVariable("ATAC", "Courant");
+    categorization.setRecurring("ATAC", "Courant");
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.variable.checkSeries("Courant", -10, -10);
+    budgetView.recurring.checkSeries("Courant", -10, -10);
     timeline.selectMonth("2008/06");
-    budgetView.variable.checkSeries("Courant", -30, -10);
+    budgetView.recurring.checkSeries("Courant", -30, -10);
   }
 
   public void testAutomaticWithInactiveMonth() throws Exception {
@@ -833,28 +827,28 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewVariable("Auchan", "Courant");
+    categorization.setNewRecurring("Auchan", "Courant");
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.variable.checkSeries("Courant", -10, -10);
+    budgetView.recurring.checkSeries("Courant", -10, -10);
     timeline.selectMonth("2008/06");
-    budgetView.variable.checkSeries("Courant", 0, -10);
+    budgetView.recurring.checkSeries("Courant", 0, -10);
     timeline.selectMonth("2008/07");
-    budgetView.variable.checkSeries("Courant", 0, -10);
+    budgetView.recurring.checkSeries("Courant", 0, -10);
     timeline.selectMonth("2008/08");
-    budgetView.variable.checkSeries("Courant", 0, -10);
+    budgetView.recurring.checkSeries("Courant", 0, -10);
 
     views.selectCategorization();
     timeline.selectMonth("2008/06");
-    categorization.setVariable("ED", "Courant");
+    categorization.setRecurring("ED", "Courant");
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.variable.checkSeries("Courant", -20, -10);
+    budgetView.recurring.checkSeries("Courant", -20, -10);
     timeline.selectMonth("2008/07");
-    budgetView.variable.checkSeries("Courant", 0, -20);
+    budgetView.recurring.checkSeries("Courant", 0, -20);
     timeline.selectMonth("2008/08");
-    budgetView.variable.checkSeries("Courant", 0, -20);
+    budgetView.recurring.checkSeries("Courant", 0, -20);
 
     views.selectCategorization();
     timeline.selectMonth("2008/06");
@@ -864,11 +858,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.variable.checkSeries("Courant", -15, -10);
+    budgetView.recurring.checkSeries("Courant", -15, -10);
     timeline.selectMonth("2008/07");
-    budgetView.variable.checkSeries("Courant", 0, -15);
+    budgetView.recurring.checkSeries("Courant", 0, -15);
     timeline.selectMonth("2008/08");
-    budgetView.variable.checkSeries("Courant", 0, -15);
+    budgetView.recurring.checkSeries("Courant", 0, -15);
 
     views.selectCategorization();
     timeline.selectMonth("2008/06");
@@ -879,11 +873,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/06");
-    budgetView.variable.checkSeries("Courant", -5, -10);
+    budgetView.recurring.checkSeries("Courant", -5, -10);
     timeline.selectMonth("2008/07");
-    budgetView.variable.checkSeries("Courant", 0, -10);
+    budgetView.recurring.checkSeries("Courant", 0, -10);
     timeline.selectMonth("2008/08");
-    budgetView.variable.checkSeries("Courant", 0, -10);
+    budgetView.recurring.checkSeries("Courant", 0, -10);
   }
 
   public void testInAutomaticUpdateImmediatelyPreviousFromCurrentImpactFutur() throws Exception {
@@ -895,20 +889,20 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/20", -20, "ED")
       .load();
     views.selectCategorization();
-    categorization.setNewVariable("Auchan", "Courant");
-    categorization.setVariable("ED", "Courant");
+    categorization.setNewRecurring("Auchan", "Courant");
+    categorization.setRecurring("ED", "Courant");
 
     categorization.selectTransactions("ED");
     transactionDetails.split("15", "DVD");
-    categorization.selectVariable().selectNewSeries("Leisures");
+    categorization.selectRecurring().selectNewSeries("Leisures");
 
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.variable.checkSeries("Courant", -10, -10);
+    budgetView.recurring.checkSeries("Courant", -10, -10);
     timeline.selectMonth("2008/06");
-    budgetView.variable.checkSeries("Courant", -5, -10);
+    budgetView.recurring.checkSeries("Courant", -5, -10);
     timeline.selectMonth("2008/07");
-    budgetView.variable.checkSeries("Courant", 0, -10);
+    budgetView.recurring.checkSeries("Courant", 0, -10);
 
     views.selectCategorization();
     timeline.selectMonth("2008/05");
@@ -918,11 +912,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.variable.checkSeries("Courant", -1, -1);
+    budgetView.recurring.checkSeries("Courant", -1, -1);
     timeline.selectMonth("2008/06");
-    budgetView.variable.checkSeries("Courant", -5, -1);
+    budgetView.recurring.checkSeries("Courant", -5, -1);
     timeline.selectMonth("2008/07");
-    budgetView.variable.checkSeries("Courant", 0, -5);
+    budgetView.recurring.checkSeries("Courant", 0, -5);
 
     views.selectCategorization();
     timeline.selectMonth("2008/05");
@@ -932,11 +926,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/05");
-    budgetView.variable.checkSeries("Courant", -10, -10);
+    budgetView.recurring.checkSeries("Courant", -10, -10);
     timeline.selectMonth("2008/06");
-    budgetView.variable.checkSeries("Courant", -5, -10);
+    budgetView.recurring.checkSeries("Courant", -5, -10);
     timeline.selectMonth("2008/07");
-    budgetView.variable.checkSeries("Courant", 0, -10);
+    budgetView.recurring.checkSeries("Courant", 0, -10);
   }
 
   public void testAutomaticShouldNotTakeInAccountPreviousEmptyMonthWhenPositiveBudget() throws Exception {
@@ -966,12 +960,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
   public void testAutomaticShouldNotTakeInAccountPreviousEmptyMonth() throws Exception {
 
-    System.out.println("CategorizationTest.testAutomaticShouldNotTakeInAccountPreviousEmptyMonth - A VALIDER");
-
     operations.openPreferences().setFutureMonthsCount(2).validate();
     views.selectBudget();
-    budgetView.variable.createSeries().setName("Courant")
-//      .switchToAutomatic()
+    budgetView.recurring.createSeries().setName("Courant")
       .validate();
 
     OfxBuilder
@@ -981,7 +972,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setVariable("ED", "Courant");
+    categorization.setRecurring("ED", "Courant");
 
     views.selectData();
     timeline.selectAll();
@@ -1004,16 +995,16 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewVariable("Auchan", "Courant");
-    categorization.setVariable("ATAC", "Courant");
+    categorization.setNewRecurring("Auchan", "Courant");
+    categorization.setRecurring("ATAC", "Courant");
 
     views.selectBudget();
     timeline.selectMonth("2008/04");
-    budgetView.variable.checkSeries("Courant", -10, -10);
+    budgetView.recurring.checkSeries("Courant", -10, -10);
     timeline.selectMonth("2008/05");
-    budgetView.variable.checkSeries("Courant", -5, -10);
+    budgetView.recurring.checkSeries("Courant", -5, -10);
     timeline.selectMonth("2008/06");
-    budgetView.variable.checkSeries("Courant", 0, -10);
+    budgetView.recurring.checkSeries("Courant", 0, -10);
 
     OfxBuilder
       .init(this)
@@ -1022,13 +1013,13 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     timeline.selectMonth("2008/05");
-    budgetView.variable.checkSeries("Courant", -5, -10);
+    budgetView.recurring.checkSeries("Courant", -5, -10);
     timeline.selectMonth("2008/06");
-    budgetView.variable.checkSeries("Courant", -20, -5);
+    budgetView.recurring.checkSeries("Courant", -20, -5);
     timeline.selectMonth("2008/07");
-    budgetView.variable.checkSeries("Courant", 0, -20);
+    budgetView.recurring.checkSeries("Courant", 0, -20);
     timeline.selectMonth("2008/08");
-    budgetView.variable.checkSeries("Courant", 0, -20);
+    budgetView.recurring.checkSeries("Courant", 0, -20);
   }
 
   public void testCreatedSavingTransactionAreNotVisibleInCategorization() throws Exception {

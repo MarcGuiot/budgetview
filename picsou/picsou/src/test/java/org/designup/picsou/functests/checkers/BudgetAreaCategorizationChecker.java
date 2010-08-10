@@ -132,6 +132,21 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     return this;
   }
 
+  public BudgetAreaCategorizationChecker selectNewSeries(String seriesName, double amount) {
+    SeriesEditionDialogChecker editionDialogChecker = createSeries()
+      .setName(seriesName)
+      .selectAllMonths();
+    if (amount>0){
+      editionDialogChecker.selectPositiveAmounts();
+    }else {
+      editionDialogChecker.selectNegativeAmounts();
+    }
+    editionDialogChecker
+      .setAmount(Math.abs(amount))
+      .validate();
+    return this;
+  }
+
   public BudgetAreaCategorizationChecker selectNewSeries(String seriesName, String description) {
     createSeries().setName(seriesName).setDescription(description).validate();
     return selectSeries(seriesName);

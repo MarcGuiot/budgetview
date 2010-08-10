@@ -5,8 +5,8 @@ import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.gui.categorization.components.TransactionFilteringMode;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Transaction;
-import org.globsframework.model.Glob;
 import org.globsframework.gui.splits.color.Colors;
+import org.globsframework.model.Glob;
 import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Panel;
@@ -435,11 +435,11 @@ public class CategorizationChecker extends GuiChecker {
         SeriesEditionDialogChecker editionDialogChecker = selectIncome()
           .createSeries()
           .setName(seriesName);
-          if (amount != null){
-            editionDialogChecker
-              .selectAllMonths()
-              .setAmount(amount);
-          }
+        if (amount != null) {
+          editionDialogChecker
+            .selectAllMonths()
+            .setAmount(amount);
+        }
         editionDialogChecker.validate();
 //          .selectSeries(seriesName);
         first = false;
@@ -509,11 +509,19 @@ public class CategorizationChecker extends GuiChecker {
       if (first) {
         SeriesEditionDialogChecker editionDialogChecker = selectVariable()
           .createSeries()
-          .setName(seriesName);
-        if (amount != null){
+          .setName(seriesName)
+          .selectAllMonths();
+        if (amount != null) {
+          if (amount < 0) {
+            editionDialogChecker.selectNegativeAmounts();
+            editionDialogChecker.checkNegativeAmountsSelected();
+          }
+          else {
+            editionDialogChecker.selectPositiveAmounts();
+            editionDialogChecker.checkPositiveAmountsSelected();
+          }
           editionDialogChecker
-            .selectAllMonths()
-            .setAmount(amount);
+            .setAmount(Math.abs(amount));
         }
         editionDialogChecker
           .validate();
@@ -529,6 +537,12 @@ public class CategorizationChecker extends GuiChecker {
   public CategorizationChecker setNewVariable(int row, String seriesName) {
     selectTableRow(row);
     selectVariable().selectNewSeries(seriesName);
+    return this;
+  }
+
+  public CategorizationChecker setNewVariable(int row, String seriesName, double amount) {
+    selectTableRow(row);
+    selectVariable().selectNewSeries(seriesName, amount);
     return this;
   }
 
@@ -712,7 +726,7 @@ public class CategorizationChecker extends GuiChecker {
     checkSignpostVisible(getPanel(), getTable(), message);
     return this;
   }
-  
+
   public CategorizationChecker checkAreaSelectionSignpostDisplayed(String message) {
     checkSignpostVisible(mainWindow, getPanel().getPanel("budgetAreaSelectionPanel"), message);
     return this;

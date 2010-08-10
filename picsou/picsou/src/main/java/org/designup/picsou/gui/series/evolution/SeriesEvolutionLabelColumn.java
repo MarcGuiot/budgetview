@@ -18,7 +18,6 @@ import java.util.Comparator;
 public class SeriesEvolutionLabelColumn implements GlobTableColumn {
 
   private GlobRepository repository;
-  private Integer referenceMonthId;
   private SeriesEvolutionLabelEditor editor;
 
   public SeriesEvolutionLabelColumn(GlobTableView view,
@@ -39,6 +38,10 @@ public class SeriesEvolutionLabelColumn implements GlobTableColumn {
 
   public TableCellEditor getEditor() {
     return editor;
+  }
+
+  public void setReferenceMonthId(Integer referenceMonthId) {
+    editor.setReferenceMonth(referenceMonthId);
   }
 
   public GlobStringifier getStringifier() {

@@ -126,6 +126,7 @@ public class NextProjectsViewTest extends LoggedInFunctionalTestCase {
       .setStartDate(200811)
       .selectAllMonths()
       .setAmount(500.00)
+      .setPropagationDisabled()
       .selectMonth(200901)
       .setAmount(0.00)
       .validate();

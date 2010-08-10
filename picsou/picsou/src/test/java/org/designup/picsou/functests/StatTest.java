@@ -15,11 +15,11 @@ public class StatTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
 
-    categorization.setNewVariable("Auchan", "Courant");
-    categorization.setVariable("Carouf", "Courant");
+    categorization.setNewRecurring("Auchan", "Courant");
+    categorization.setRecurring("Carouf", "Courant");
     views.selectBudget();
 
-    budgetView.variable.createSeries().setName("Secu")
+    budgetView.recurring.createSeries().setName("Secu")
       .selectAllMonths()
       .setAmount("0")
       .validate();
@@ -32,8 +32,8 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/13", 10.00, "Pharma")
       .load();
 
-    categorization.setVariable("Pharma", "Secu");
-    categorization.setVariable("ED", "Courant");
+    categorization.setRecurring("Pharma", "Secu");
+    categorization.setRecurring("ED", "Courant");
     views.selectData();
     transactions.initContent()
       .add("26/08/2008", TransactionType.PLANNED, "Planned: Courant", "", (-(80 + 90) - 60.90 + 49.9) /*181*/, "Courant")
@@ -44,14 +44,14 @@ public class StatTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth("2008/07");
-    budgetView.variable.checkSeries("Courant", -90 - 80, -90 - 80);
-    budgetView.variable.checkTotalAmounts(-90 - 80, -90 - 80);
+    budgetView.recurring.checkSeries("Courant", -90 - 80, -90 - 80);
+    budgetView.recurring.checkTotalAmounts(-90 - 80, -90 - 80);
 
     timeline.selectMonth("2008/08");
-    budgetView.variable.checkSeries("Courant", (60.90 - 49.9), -90 - 80);// 11,  -170 == > 181
-    budgetView.variable.checkSeries("Secu", 10, 0);
+    budgetView.recurring.checkSeries("Courant", (60.90 - 49.9), -90 - 80);// 11,  -170 == > 181
+    budgetView.recurring.checkSeries("Secu", 10, 0);
 
-    budgetView.variable.checkTotalAmounts(10 + 60.90 - 49.9, -90 - 80);
+    budgetView.recurring.checkTotalAmounts(10 + 60.90 - 49.9, -90 - 80);
   }
 
   public void testChangingSeriesBudgetCanCreatePlannedTransaction() throws Exception {
@@ -96,8 +96,8 @@ public class StatTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
 
-    categorization.setNewVariable("Auchan", "Auchan");
-    categorization.setNewVariable("Carouf", "Carouf");
+    categorization.setNewRecurring("Auchan", "Auchan");
+    categorization.setNewRecurring("Carouf", "Carouf");
 
     OfxBuilder
       .init(this)
@@ -109,7 +109,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
 
     views.selectBudget();
-    budgetView.variable.checkTotalAmounts(-110, -170);
+    budgetView.recurring.checkTotalAmounts(-110, -170);
 
     views.selectData();
     transactions.initContent()
@@ -129,8 +129,8 @@ public class StatTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewIncome("Salaire", "Salaire");
-    categorization.setNewVariable("Auchan", "courses");
-    categorization.setVariable("Carouf", "courses");
+    categorization.setNewRecurring("Auchan", "courses");
+    categorization.setRecurring("Carouf", "courses");
 
     views.selectBudget();
     timeline.selectMonth("2008/06");

@@ -61,14 +61,22 @@ public class SeriesAmountEditionPanel {
     this.selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         if (selection.isRelevantForType(Series.TYPE)) {
-          changeSeries(selection.getAll(Series.TYPE).getFirst().getKey());
+          Glob first = selection.getAll(Series.TYPE).getFirst();
+          if (first == null) {
+            clear();
+          }else {
+            changeSeries(first.getKey());
+            if (selectedMonthIds != null){
+              selectMonths(selectedMonthIds);
+            }
+          }
         }
         if (selection.isRelevantForType(Month.TYPE)) {
           Set<Integer> selectedMonths = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
           doSelectMonths(SeriesAmountEditionPanel.this.repository.find(currentSeries), selectedMonths);
         }
       }
-    }, Month.TYPE);
+    }, Month.TYPE, Series.TYPE);
 
     createPanel();
 
@@ -79,6 +87,16 @@ public class SeriesAmountEditionPanel {
           FieldValues previousValue = changeSet.getPreviousValue(currentSeries);
           if (previousValue.contains(Series.FROM_ACCOUNT) || previousValue.contains(Series.TO_ACCOUNT)) {
             updatePositiveOrNegativeRadio();
+          }
+        }
+      }
+    });
+    repository.addChangeListener(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsUpdates(SeriesBudget.AMOUNT)){
+          Glob series = repository.get(currentSeries);
+          if (series.isTrue(Series.IS_AUTOMATIC)) {
+            repository.update(currentSeries, Series.IS_AUTOMATIC, false);
           }
         }
       }
@@ -103,12 +121,6 @@ public class SeriesAmountEditionPanel {
     builder.add("amountEditor", amountEditor.getNumericEditor());
     builder.add("positiveAmounts", amountEditor.getPositiveRadio());
     builder.add("negativeAmounts", amountEditor.getNegativeRadio());
-
-    amountEditor.addAction(new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        applyChanges(true);
-      }
-    });
 
     propagationCheckBox = new JCheckBox();
     propagationCheckBox.getModel().addActionListener(new AbstractAction() {
@@ -145,6 +157,7 @@ public class SeriesAmountEditionPanel {
 
   public void clear() {
     changeSeries(null);
+    selectedMonthIds = null;
   }
 
   public void changeSeries(Key seriesKey) {
@@ -253,11 +266,6 @@ public class SeriesAmountEditionPanel {
   }
 
   public void applyChanges(boolean containsChanges) {
-    Glob series = repository.get(currentSeries);
-    if (series.isTrue(Series.IS_AUTOMATIC) && containsChanges) {
-      repository.update(currentSeries, Series.IS_AUTOMATIC, false);
-    }
-
     if (propagationCheckBox.isSelected()) {
       propagateValue(SeriesAmountEditionPanel.this.currentMonth);
     }
@@ -269,7 +277,7 @@ public class SeriesAmountEditionPanel {
                          and(
                            fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID)),
                            isTrue(SeriesBudget.ACTIVE),
-                           fieldStrictlyGreaterThan(SeriesBudget.MONTH, startMonth)),
+                         fieldGreaterOrEqual(SeriesBudget.MONTH, startMonth)),
                          update(SeriesBudget.AMOUNT, Utils.zeroIfNull(amount)));
   }
 

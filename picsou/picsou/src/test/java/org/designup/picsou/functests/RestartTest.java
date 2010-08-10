@@ -220,10 +220,10 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectCategorization();
     categorization.setNewIncome("Company", "Salaire")
-      .setNewVariable("Auchan", "Course")
+      .setNewVariable("Auchan", "Course", -400.)
       .setVariable("ED", "End date")
-      .setNewVariable("Monop", "Begin and end date")
-      .setNewVariable("Fnac", "Begin date");
+      .setNewVariable("Monop", "Begin and end date", -200.)
+      .setNewVariable("Fnac", "Begin date", -100.);
     views.selectBudget();
     budgetView.variable.editSeries("End date").setEndDate(200812).validate();
     budgetView.variable.editSeries("Begin and end date")

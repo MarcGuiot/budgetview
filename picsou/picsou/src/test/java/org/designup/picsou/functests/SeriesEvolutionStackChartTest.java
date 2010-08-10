@@ -42,7 +42,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("Big Inc.", "Mary's");
     categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("Orange", "Mobile");
-    categorization.setNewVariable("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries", -450.);
     categorization.setNewSavings("Virt Epargne", "Virt Livret", "Main accounts", "Livret");
 
     views.selectEvolution();

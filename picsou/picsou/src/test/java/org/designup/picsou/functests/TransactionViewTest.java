@@ -228,7 +228,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     transactions.categorize("SOMETHING ELSE");
 
     views.selectCategorization();
-    categorization.setNewVariable("SOMETHING ELSE", "Clothes");
+    categorization.setNewVariable("SOMETHING ELSE", "Clothes", -1.);
     categorization.editSeries("Clothes").setDescription("Stuff to dress with").validate();
 
     views.back();
@@ -243,7 +243,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
   public void testFutureBalance() throws Exception {
 
     views.selectCategorization();
-    categorization.setNewVariable("essence", "Voiture");
+    categorization.setNewVariable("essence", "Voiture", -70.);
     categorization.setNewRecurring("nounou", "Nounou");
 
     views.selectHome();
@@ -343,7 +343,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
   public void testToggleShowPlannedTransactions() throws Exception {
     views.selectCategorization();
-    categorization.setNewVariable("essence", "Voiture");
+    categorization.setNewVariable("essence", "Voiture", -70.);
     categorization.setNewRecurring("nounou", "Nounou");
 
     views.selectData();

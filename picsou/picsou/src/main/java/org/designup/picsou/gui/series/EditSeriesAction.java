@@ -3,6 +3,7 @@ package org.designup.picsou.gui.series;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
@@ -11,11 +12,13 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.gui.SelectionService;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.Set;
+import java.util.HashSet;
 
 public class EditSeriesAction extends AbstractAction {
   private Directory directory;
@@ -54,8 +57,10 @@ public class EditSeriesAction extends AbstractAction {
   }
 
   protected Set<Integer> getSelectedMonthIds() {
-    int currentMonthId = directory.get(TimeService.class).getCurrentMonthId();
-    return Collections.singleton(currentMonthId);
+    GlobList list = directory.get(SelectionService.class).getSelection(Month.TYPE);
+    return list.getValueSet(Month.ID);
+//    int currentMonthId = directory.get(TimeService.class).getCurrentMonthId();
+//    return Collections.singleton(currentMonthId);
   }
 
   public Integer getSelectedSeries() {

@@ -34,7 +34,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectCategorization();
-    categorization.setNewVariable("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries", -145.);
     categorization.setVariable("Monoprix", "Groceries");
     categorization.setNewRecurring("Free Telecom", "Internet");
     categorization.setNewRecurring("EDF", "Electricity");
@@ -159,7 +159,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectCategorization();
-    categorization.setNewVariable("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries", -145.);
     categorization.setVariable("Monoprix", "Groceries");
     categorization.setNewRecurring("Free Telecom", "Internet");
     categorization.setNewIncome("WorldCo", "Salary");
@@ -377,6 +377,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("santé")
+      .selectAllMonths()
+      .setAmount(30)
       .validate();
     views.selectCategorization();
     timeline.selectAll();

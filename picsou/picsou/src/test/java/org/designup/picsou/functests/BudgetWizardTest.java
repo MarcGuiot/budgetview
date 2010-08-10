@@ -26,8 +26,8 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("Loyer", "Rental");
-    categorization.setNewVariable("Auchan", "Groceries");
-    categorization.setNewVariable("FNAC", "Equipment");
+    categorization.setNewVariable("Auchan", "Groceries", -300.);
+    categorization.setNewVariable("FNAC", "Equipment", -100.);
     categorization.setNewIncome("Salaire", "Salaire");
     categorization.setNewExtra("Air France", "Trips");
     categorization.setNewSavings("VIRT ING", "Epargne", "Main accounts", "External account");
@@ -116,9 +116,9 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.setNewRecurring("Free", "internet");
     categorization.setNewRecurring("Loyer", "rental");
-    categorization.setNewVariable("Auchan", "groceries");
+    categorization.setNewVariable("Auchan", "groceries", -80.);
     categorization.setVariable("ED", "groceries");
-    categorization.setNewVariable("FNAC", "Equipment");
+    categorization.setNewVariable("FNAC", "Equipment", -10.);
     categorization.setNewIncome("Salaire", "Salaire");
 
     views.selectBudget();
@@ -219,7 +219,9 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewRecurring("ED", "courses");
-    categorization.setNewVariable("remboursement", "secu");
+    System.err.println("BudgetWizardTest.testWithPositiveEnvelope 1" );
+    categorization.setNewVariable("remboursement", "secu", 40.);
+    System.err.println("BudgetWizardTest.testWithPositiveEnvelope 2");
     categorization.setNewIncome("Salaire", "Salaire");
 
     views.selectBudget();
