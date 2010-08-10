@@ -251,10 +251,10 @@ public class CategorizationView extends View implements TableView, Filterable, C
   }
 
   private void addFilteringModeCombo(GlobsPanelBuilder builder) {
-    filteringModeCombo = builder.add("transactionFilterCombo", new JComboBox(TransactionFilteringMode.values())).getComponent();
+    filteringModeCombo = builder.add("transactionFilterCombo", new JComboBox(CategorizationFilteringMode.values())).getComponent();
     filteringModeCombo.addActionListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
-        TransactionFilteringMode mode = (TransactionFilteringMode)filteringModeCombo.getSelectedItem();
+        CategorizationFilteringMode mode = (CategorizationFilteringMode)filteringModeCombo.getSelectedItem();
         repository.update(UserPreferences.KEY, UserPreferences.CATEGORIZATION_FILTERING_MODE, mode.getId());
         updateTableFilter();
       }
@@ -265,7 +265,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
           Glob preferences = repository.find(UserPreferences.KEY);
           Integer defaultFilteringModeId =
             preferences.get(UserPreferences.CATEGORIZATION_FILTERING_MODE);
-          Object o = TransactionFilteringMode.get(defaultFilteringModeId);
+          Object o = CategorizationFilteringMode.get(defaultFilteringModeId);
           filteringModeCombo.setSelectedItem(o);
         }
       }
@@ -277,7 +277,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
         }
         Integer defaultFilteringModeId =
           preferences.get(UserPreferences.CATEGORIZATION_FILTERING_MODE);
-        Object o = TransactionFilteringMode.get(defaultFilteringModeId);
+        Object o = CategorizationFilteringMode.get(defaultFilteringModeId);
         filteringModeCombo.setSelectedItem(o);
       }
     });
@@ -463,7 +463,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
   }
 
   public void showUncategorizedForSelectedMonths() {
-    setFilteringMode(TransactionFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
+    setFilteringMode(CategorizationFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
     filterSet.clear();
     updateTableFilter();
     transactionTable.clearSelection();
@@ -471,13 +471,13 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
   private void updateFilteringMode(GlobList transactions, boolean forceShowUncategorized) {
     if (forceShowUncategorized) {
-      setFilteringMode(TransactionFilteringMode.UNCATEGORIZED);
+      setFilteringMode(CategorizationFilteringMode.UNCATEGORIZED);
       return;
     }
 
     for (Glob transaction : transactions) {
       if (!currentTableFilter.matches(transaction, repository)) {
-        setFilteringMode(TransactionFilteringMode.SELECTED_MONTHS);
+        setFilteringMode(CategorizationFilteringMode.SELECTED_MONTHS);
         return;
       }
     }
@@ -613,12 +613,12 @@ public class CategorizationView extends View implements TableView, Filterable, C
     transactionTable.setFilter(currentTableFilter);
   }
 
-  public void setFilteringMode(TransactionFilteringMode mode) {
+  public void setFilteringMode(CategorizationFilteringMode mode) {
     filteringModeCombo.setSelectedItem(mode);
   }
 
   private GlobMatcher getCurrentFilteringModeMatcher() {
-    TransactionFilteringMode mode = (TransactionFilteringMode)filteringModeCombo.getSelectedItem();
+    CategorizationFilteringMode mode = (CategorizationFilteringMode)filteringModeCombo.getSelectedItem();
     return mode.getMatcher(repository, selectionService);
   }
 

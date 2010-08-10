@@ -32,7 +32,8 @@ public class PicsouModel {
                           AccountPositionThreshold.TYPE,
                           DeferredCardDate.TYPE,
                           Notes.TYPE,
-                          SignpostStatus.TYPE)
+                          SignpostStatus.TYPE,
+                          SeriesOrder.TYPE)
       .get();
 
   static {

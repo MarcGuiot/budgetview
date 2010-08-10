@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.card;
 
 import org.designup.picsou.gui.categorization.CategorizationView;
-import org.designup.picsou.gui.categorization.components.TransactionFilteringMode;
+import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.series.view.SeriesView;
 import org.designup.picsou.model.Account;
@@ -58,12 +58,12 @@ public class NavigationService implements GlobSelectionListener {
   }
 
   public void gotoCategorizationForCurrentSelection() {
-    categorizationView.setFilteringMode(TransactionFilteringMode.SELECTED_MONTHS);
+    categorizationView.setFilteringMode(CategorizationFilteringMode.SELECTED_MONTHS);
     gotoCategorization();
   }
 
   public void gotoCategorizationAndSelectLastImported() {
-    categorizationView.setFilteringMode(TransactionFilteringMode.LAST_IMPORTED_FILE);
+    categorizationView.setFilteringMode(CategorizationFilteringMode.LAST_IMPORTED_FILE);
     gotoCategorization();
   }
 

@@ -159,12 +159,14 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.getSummary().checkMonthBalance(-600.00);
+    budgetView.recurring.clickTitleSeriesName().checkOrder("EDF", "Loyer");
 
     restartApplication();
 
     views.selectBudget();
     timeline.selectMonth("2008/08");
     budgetView.getSummary().checkMonthBalance(-600.00);
+    budgetView.recurring.checkOrder("EDF", "Loyer");
   }
 
   public void testCategorizationView() throws Exception {

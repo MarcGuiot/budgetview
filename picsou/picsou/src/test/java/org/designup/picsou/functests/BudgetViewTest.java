@@ -691,7 +691,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkSeriesTooltip("Groceries", "");
   }
 
-  public void testIncomeAreOrdered() throws Exception {
+  public void testSeriesCanBeReorderedByClickingOnColumnTitles() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", 100.00, "Retraite 1")
       .addTransaction("2008/07/10", 200.00, "Retraite 2")
@@ -712,20 +712,28 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.income.checkOrder("Retraite 3", "Retraite 2", "Retraite 1");
+
     budgetView.income.clickTitleSeriesName();
     budgetView.income.checkOrder("Retraite 1", "Retraite 2", "Retraite 3");
+
     budgetView.income.clickTitleSeriesName();
     budgetView.income.checkOrder("Retraite 3", "Retraite 2", "Retraite 1");
+
     budgetView.income.clickTitleSeriesName();
     budgetView.income.checkOrder("Retraite 3", "Retraite 2", "Retraite 1");
+
     budgetView.income.clickTitleRealAmount();
     budgetView.income.checkOrder("Retraite 3", "Retraite 2", "Retraite 1");
+
     budgetView.income.clickTitleRealAmount();
     budgetView.income.checkOrder("Retraite 1", "Retraite 2", "Retraite 3");
+
     budgetView.income.clickTitleSeriesName();
     budgetView.income.checkOrder("Retraite 1", "Retraite 2", "Retraite 3");
+
     budgetView.income.clickTitleRealAmount();
     budgetView.income.checkOrder("Retraite 1", "Retraite 2", "Retraite 3");
+    
     budgetView.income.clickTitleSeriesName();
     budgetView.income.checkOrder("Retraite 1", "Retraite 2", "Retraite 3");
   }

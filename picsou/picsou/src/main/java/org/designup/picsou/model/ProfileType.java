@@ -21,7 +21,6 @@ public enum ProfileType implements GlobConstantContainer {
   ONCE_A_YEAR("ONCE_A_YEAR", 7, 12, 6),
   SINGLE_MONTH("SINGLE_MONTH", 8, -1, 7);
 
-
   public static GlobType TYPE;
 
   @Key

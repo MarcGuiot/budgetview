@@ -6,10 +6,8 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.fields.BooleanField;
-import org.globsframework.metamodel.fields.DateField;
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
@@ -41,18 +39,20 @@ public class UserPreferences {
   @DefaultInteger(1)
   public static IntegerField CATEGORIZATION_FILTERING_MODE;
 
-  /**
-   * 0 : no order 1/2 premiere colonne 3/4 second colonne...
-   */
-  public static IntegerField ORDER_INCOME;
+  @Target(SeriesOrder.class)
+  public static LinkField SERIES_ORDER_INCOME;
 
-  public static IntegerField ORDER_SAVINGS;
+  @Target(SeriesOrder.class)
+  public static LinkField SERIES_ORDER_SAVINGS;
 
-  public static IntegerField ORDER_RECURRING;
+  @Target(SeriesOrder.class)
+  public static LinkField SERIES_ORDER_RECURRING;
 
-  public static IntegerField ORDER_VARIABLE;
+  @Target(SeriesOrder.class)
+  public static LinkField SERIES_ORDER_VARIABLE;
 
-  public static IntegerField ORDER_EXTRA;
+  @Target(SeriesOrder.class)
+  public static LinkField SERIES_ORDER_EXTRA;
 
   public static DateField LAST_VALID_DAY;
 
@@ -79,11 +79,11 @@ public class UserPreferences {
       outputStream.writeBoolean(values.get(REGISTERED_USER));
       outputStream.writeInteger(values.get(CATEGORIZATION_FILTERING_MODE));
       outputStream.writeDate(values.get(LAST_VALID_DAY));
-      outputStream.writeInteger(values.get(ORDER_INCOME));
-      outputStream.writeInteger(values.get(ORDER_RECURRING));
-      outputStream.writeInteger(values.get(ORDER_VARIABLE));
-      outputStream.writeInteger(values.get(ORDER_SAVINGS));
-      outputStream.writeInteger(values.get(ORDER_EXTRA));
+      outputStream.writeInteger(values.get(SERIES_ORDER_INCOME));
+      outputStream.writeInteger(values.get(SERIES_ORDER_RECURRING));
+      outputStream.writeInteger(values.get(SERIES_ORDER_VARIABLE));
+      outputStream.writeInteger(values.get(SERIES_ORDER_SAVINGS));
+      outputStream.writeInteger(values.get(SERIES_ORDER_EXTRA));
       outputStream.writeBoolean(values.get(SHOW_BUDGET_AREA_DESCRIPTIONS));
       return serializedByteArrayOutput.toByteArray();
     }
@@ -124,11 +124,11 @@ public class UserPreferences {
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
       fieldSetter.set(LAST_VALID_DAY, input.readDate());
-      fieldSetter.set(ORDER_INCOME, input.readInteger());
-      fieldSetter.set(ORDER_RECURRING, input.readInteger());
-      fieldSetter.set(ORDER_VARIABLE, input.readInteger());
-      fieldSetter.set(ORDER_SAVINGS, input.readInteger());
-      fieldSetter.set(ORDER_EXTRA, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_SAVINGS, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_EXTRA, input.readInteger());
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, input.readBoolean());
     }
 
@@ -144,11 +144,11 @@ public class UserPreferences {
       input.readBoolean(); // SHOW_CATEGORIZATION_HELP_MESSAGE
       input.readBoolean(); // SHOW_VARIABLE_EDITION_MESSAGE
       fieldSetter.set(LAST_VALID_DAY, input.readDate());
-      fieldSetter.set(ORDER_INCOME, input.readInteger());
-      fieldSetter.set(ORDER_RECURRING, input.readInteger());
-      fieldSetter.set(ORDER_VARIABLE, input.readInteger());
-      fieldSetter.set(ORDER_SAVINGS, input.readInteger());
-      fieldSetter.set(ORDER_EXTRA, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_SAVINGS, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_EXTRA, input.readInteger());
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, true);
     }
 
