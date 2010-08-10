@@ -337,6 +337,11 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     JRadioButton invisibleRadio = new JRadioButton("invisibleButton");
     builder.add("invisibleToggle", invisibleRadio);
+    
+    DescriptionPanelHandler descriptionHandler = new DescriptionPanelHandler(repository);
+    builder.add("descriptionPanel", descriptionHandler.getPanel());
+    builder.add("showDescription", descriptionHandler.getShowAction());
+    builder.add("hideDescription", descriptionHandler.getHideAction());
 
     Matchers.CategorizationFilter filter = Matchers.seriesCategorizationFilter(budgetArea.getId());
     SeriesChooserComponentFactory componentFactory = new SeriesChooserComponentFactory(budgetArea, invisibleRadio,

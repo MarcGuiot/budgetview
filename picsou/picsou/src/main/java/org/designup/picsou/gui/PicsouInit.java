@@ -25,7 +25,6 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.Log;
@@ -35,7 +34,6 @@ import org.globsframework.utils.exceptions.InvalidData;
 import picsou.AwtExceptionHandler;
 
 import javax.swing.*;
-import java.util.Arrays;
 import java.util.Collection;
 
 import static org.globsframework.model.FieldValue.value;
@@ -208,12 +206,8 @@ public class PicsouInit {
 
   private void initDirectory(GlobRepository repository) {
     directory.add(BrowsingService.class, BrowsingService.createService());
-
-    TransactionAnalyzerFactory factory = new TransactionAnalyzerFactory(PicsouGuiModel.get());
-    directory.add(TransactionAnalyzerFactory.class, factory);
-    ImportService importService = new ImportService();
-    directory.add(ImportService.class, importService);
-
+    directory.add(TransactionAnalyzerFactory.class, new TransactionAnalyzerFactory(PicsouGuiModel.get()));
+    directory.add(ImportService.class, new ImportService());
     directory.add(new BackupService(serverAccess, directory, repository, idGenerator, upgradeTrigger));
   }
 
@@ -240,9 +234,7 @@ public class PicsouInit {
                               value(UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION),
                               value(UserVersionInformation.CURRENT_BANK_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
                               value(UserVersionInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION));
-//                            value(AppVersionInformation.LATEST_AVALAIBLE_JAR_VERSION, PicsouApplication.JAR_VERSION),
-//                            value(AppVersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
-//                            value(AppVersionInformation.LATEST_AVALAIBLE_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION)
+
       Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
       if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
         repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,

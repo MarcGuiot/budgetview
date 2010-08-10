@@ -4,13 +4,17 @@
   <styles>
     <style selector="scrollPane" opaque="false" border=""/>
 
-    <style selector="panel.descriptionPanel"
+    <style selector=".descriptionPanel"
            opaque="true" background="categorization.budgetArea.description.bg"
            border="matte(0,0,1,0,categorization.budgetArea.description.border)"/>
 
-    <style selector="htmlEditorPane#description"
+    <style selector=".descriptionPanel htmlEditorPane"
            foreground="categorization.budgetArea.description.text" opaque="false" font="-,plain,12"
            editable="false" fill="both" margin="5"/>
+
+    <style selector=".descriptionPanel button"
+            icon="button_hide.png" rolloverIcon="button_hide_rollover.png"
+            border="" margin="5" marginLeft="0" weightX="0" fill="none" anchor="center"/>
 
     <style selector="radioButton.subSeriesSelector" horizontalAlignment="left"/>
 
@@ -21,9 +25,12 @@
 
   <column>
     <column styleClass="budgetAreaSelection">
-      <panel styleClass="descriptionPanel" weightY="0">
+
+      <row ref="descriptionPanel" styleClass="descriptionPanel" weightY="0">
         <htmlEditorPane ref="description"/>
-      </panel>
+        <button action="hideDescription" tooltipText="$categorization.hideDescriptionButton.tooltip"/>
+      </row>
+
       <htmlEditorPane ref="noSeriesMessage" border="empty(10)" hyperlinkListener="hyperlinkHandler"/>
       <radioButton ref="invisibleToggle" visible="false"/>
       <scrollPane verticalUnitIncrement="15" weightY="100">
@@ -48,6 +55,7 @@
         <button action="editSeries" tooltipText="$series.list.tooltip"/>
         <button action="additionalAction"/>
         <filler fill="horizontal"/>
+        <button action="showDescription" tooltipText="$categorization.showDescriptionButton.tooltip"/>
       </row>
     </column>
   </column>

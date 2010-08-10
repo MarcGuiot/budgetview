@@ -409,7 +409,6 @@ public class BudgetAreaSeriesView extends View {
 
     public abstract Comparator<Glob> getOrder();
 
-
     public void actionPerformed(ActionEvent e) {
       if (currentOrder == 0) {
         currentOrder = ordered;

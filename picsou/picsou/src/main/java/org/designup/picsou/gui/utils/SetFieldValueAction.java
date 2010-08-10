@@ -13,11 +13,16 @@ public class SetFieldValueAction extends AbstractAction {
   private Object value;
   private GlobRepository repository;
 
-  public SetFieldValueAction(Key key, Field field, Object value, GlobRepository repository) {
+  public SetFieldValueAction(String name, Key key, Field field, Object value, GlobRepository repository) {
+    super(name);
     this.key = key;
     this.field = field;
     this.value = value;
     this.repository = repository;
+  }
+
+  public SetFieldValueAction(Key key, Field field, Object value, GlobRepository repository) {
+    this(null, key, field, value, repository);
   }
 
   public void actionPerformed(ActionEvent e) {

@@ -82,11 +82,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       updateSavings(repository);
     }
 
-    if (currentJarVersion < 35) {
-      repository.update(UserPreferences.KEY, UserPreferences.SHOW_BUDGET_VIEW_WIZARD, true);
-    }
-
-    if (currentJarVersion < 45) {
+    if (currentJarVersion < 47) {
       SignpostStatus.setAllCompleted(repository);
     }
 

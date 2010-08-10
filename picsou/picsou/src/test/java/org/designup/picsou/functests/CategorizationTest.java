@@ -1414,4 +1414,35 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .checkNormalBgColor(0, 1)
       .selectTableRow(0);
   }
+
+  public void testHidingBudgetAreaDescriptions() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -29.90, "AUCHAN")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRow(0)
+      .selectVariable()
+      .checkDescriptionShown()
+      .checkShowDescriptionButtonHidden()
+      .hideDescription()
+      .checkDescriptionHidden();
+
+    categorization.selectIncome()
+      .checkDescriptionHidden()
+      .showDescription()
+      .checkDescriptionShown();
+
+    categorization.selectExtras()
+      .checkDescriptionShown()
+      .hideDescription();
+
+    categorization.selectSavings()
+      .checkDescriptionHidden()
+      .showDescription();
+     
+    categorization.selectVariable()
+      .checkDescriptionShown();
+  }
 }

@@ -213,4 +213,29 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     categorizationChecker.checkEditSeriesNotVisible();
     return this;
   }
+
+  public BudgetAreaCategorizationChecker hideDescription() {
+    panel.getButton("hideDescription").click();
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker checkDescriptionShown() {
+    checkComponentVisible(panel, JPanel.class, "descriptionPanel", true);
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker checkDescriptionHidden() {
+    checkComponentVisible(panel, JPanel.class, "descriptionPanel", false);
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker showDescription() {
+    panel.getButton("showDescription").click();
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker checkShowDescriptionButtonHidden() {
+    checkComponentVisible(panel, JButton.class, "showDescription", false);
+    return this;
+  }
 }

@@ -290,29 +290,29 @@ public class Transaction {
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 1) {
-        deserializeDataV1(fieldSetter, data);
-      }
-      else if (version == 2) {
-        deserializeDataV2(fieldSetter, data);
-      }
-      else if (version == 3) {
-        deserializeDataV3(fieldSetter, data);
-      }
-      else if (version == 4) {
-        deserializeDataV4(fieldSetter, data);
-      }
-      else if (version == 5) {
-        deserializeDataV5(fieldSetter, data);
-      }
-      else if (version == 6) {
-        deserializeDataV6(fieldSetter, data);
+      if (version == 8) {
+        deserializeDataV8(fieldSetter, data);
       }
       else if (version == 7) {
         deserializeDataV7(fieldSetter, data);
       }
-      else if (version == 8) {
-        deserializeDataV8(fieldSetter, data);
+      else if (version == 6) {
+        deserializeDataV6(fieldSetter, data);
+      }
+      else if (version == 5) {
+        deserializeDataV5(fieldSetter, data);
+      }
+      else if (version == 4) {
+        deserializeDataV4(fieldSetter, data);
+      }
+      else if (version == 3) {
+        deserializeDataV3(fieldSetter, data);
+      }
+      else if (version == 2) {
+        deserializeDataV2(fieldSetter, data);
+      }
+      else if (version == 1) {
+        deserializeDataV1(fieldSetter, data);
       }
     }
 
