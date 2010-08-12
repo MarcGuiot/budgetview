@@ -52,6 +52,10 @@ public class GlobMatchers {
         }
         return false;
       }
+
+      public String toString() {
+        return field.getFullName() + " in " + Arrays.toString(values);
+      }
     };
   }
 
@@ -67,6 +71,10 @@ public class GlobMatchers {
     return new GlobMatcher() {
       public boolean matches(Glob glob, GlobRepository repository) {
         return Utils.equalIgnoreCase(glob.get(field), value);
+      }
+
+      public String toString() {
+        return field.getFullName() + " equals [ignoreCase] " + value;
       }
     };
   }
@@ -111,6 +119,10 @@ public class GlobMatchers {
       public boolean matches(Glob item, GlobRepository repository) {
         String actual = item.get(field);
         return actual != null && actual.toLowerCase().contains(value.toLowerCase());
+      }
+
+      public String toString() {
+        return "field " + field.getFullName() + " contains[ignoreCase] " + value;
       }
     };
   }
@@ -161,6 +173,10 @@ public class GlobMatchers {
         }
         return true;
       }
+
+      public String toString() {
+        return "link " + link.getSourceType().getName() + "." + link.getName() + " with target " + target.getKey();
+      }
     };
   }
 
@@ -190,6 +206,10 @@ public class GlobMatchers {
         }
         return target.getValue(targetField).equals(targetFieldValue);
       }
+
+      public String toString() {
+        return link.getFullName() + " is linked to glob with " + targetField.getFullName() + " = " + targetFieldValue;
+      }
     };
   }
 
@@ -198,6 +218,10 @@ public class GlobMatchers {
       public boolean matches(Glob item, GlobRepository repository) {
         Glob target = repository.findLinkTarget(item, link);
         return (target != null) && linkedObjectMatcher.matches(target, repository);
+      }
+
+      public String toString() {
+        return link.getFullName() + " is linked to matcher " + linkedObjectMatcher;
       }
     };
   }
@@ -208,6 +232,10 @@ public class GlobMatchers {
       public boolean matches(Glob glob, GlobRepository repository) {
         return glob.getValue(field) == null;
       }
+
+      public String toString() {
+        return field.getFullName() + " is null";
+      }
     };
   }
 
@@ -215,6 +243,10 @@ public class GlobMatchers {
     return new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {
         return item.getValue(field) != null;
+      }
+
+      public String toString() {
+        return field.getFullName() + " is not null";
       }
     };
   }
@@ -224,6 +256,10 @@ public class GlobMatchers {
       public boolean matches(Glob item, GlobRepository repository) {
         return Strings.isNullOrEmpty(item.get(field));
       }
+      
+      public String toString() {
+        return field.getFullName() + " is null or empty";
+      }
     };
   }
 
@@ -232,7 +268,16 @@ public class GlobMatchers {
       public boolean matches(Glob item, GlobRepository repository) {
         return Strings.isNotEmpty(item.get(field));
       }
+      
+      public String toString() {
+        return field.getFullName() + " is not empty";
+      }
     };
+  }
+
+  public static GlobMatcher and(List<GlobMatcher> matchers) {
+    GlobMatcher[] array = matchers.toArray(new GlobMatcher[matchers.size()]);
+    return and(array);
   }
 
   public static GlobMatcher and(final GlobMatcher... matchers) {
@@ -243,7 +288,7 @@ public class GlobMatchers {
     }
     List<GlobMatcher> significantMatchers = new ArrayList<GlobMatcher>();
     for (GlobMatcher matcher : matchers) {
-      if ((matcher == null) || (matcher != ALL)) {
+      if ((matcher != null) && (matcher != ALL)) {
         significantMatchers.add(matcher);
       }
     }
@@ -262,6 +307,16 @@ public class GlobMatchers {
         }
         return true;
       }
+      
+      public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("and {\n");
+        for (GlobMatcher matcher : matchers) {
+          builder.append(matcher).append('\n');
+        }
+        builder.append("}");
+        return builder.toString();
+      }      
     };
   }
 
@@ -290,6 +345,16 @@ public class GlobMatchers {
         }
         return false;
       }
+      
+      public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("or {\n");
+        for (GlobMatcher matcher : matchers) {
+          builder.append(matcher).append('\n');
+        }
+        builder.append("}");
+        return builder.toString();
+      }      
     };
   }
 
@@ -297,6 +362,10 @@ public class GlobMatchers {
     return new GlobMatcher() {
       public boolean matches(Glob glob, GlobRepository repository) {
         return !matcher.matches(glob, repository);
+      }
+
+      public String toString() {
+        return "not(" + matcher + ")";
       }
     };
   }
@@ -306,13 +375,9 @@ public class GlobMatchers {
       public boolean matches(Glob item, GlobRepository repository) {
         return key.equals(item.getKey());
       }
-    };
-  }
 
-  public static GlobMatcher contains(final Glob glob) {
-    return new GlobMatcher() {
-      public boolean matches(Glob item, GlobRepository repository) {
-        return item.getKey().equals(glob.getKey());
+      public String toString() {
+        return "key equals " + key;
       }
     };
   }
@@ -323,6 +388,10 @@ public class GlobMatchers {
         Integer value = item.get(field);
         return value != null && values.contains(value);
       }
+
+      public String toString() {
+        return field.getFullName() + " in " + values;
+      }
     };
   }
 
@@ -331,6 +400,10 @@ public class GlobMatchers {
       public boolean matches(Glob item, GlobRepository repository) {
         return item.get(field) >= value;
       }
+
+      public String toString() {
+        return field.getFullName() + " >= " + value;
+      }      
     };
   }
 
@@ -339,6 +412,10 @@ public class GlobMatchers {
       public boolean matches(Glob item, GlobRepository repository) {
         return item.get(field) > value;
       }
+      
+      public String toString() {
+        return field.getFullName() + " > " + value;
+      }      
     };
   }
 
@@ -347,6 +424,10 @@ public class GlobMatchers {
       public boolean matches(Glob item, GlobRepository repository) {
         return item.get(field) < value;
       }
+      
+      public String toString() {
+        return field.getFullName() + " < " + value;
+      }      
     };
   }
 
@@ -355,6 +436,10 @@ public class GlobMatchers {
       public boolean matches(Glob item, GlobRepository repository) {
         return item.get(field) <= value;
       }
+      
+      public String toString() {
+        return field.getFullName() + " <= " + value;
+      }      
     };
   }
 
@@ -363,7 +448,12 @@ public class GlobMatchers {
       public boolean matches(Glob item, GlobRepository repository) {
         return values.contains(item.getValue(field));
       }
+
+      public String toString() {
+        return field.getFullName() + " in " + values;
+      }
     };
+
   }
 
   private static class SingleFieldMatcher implements GlobMatcher {
@@ -380,7 +470,7 @@ public class GlobMatchers {
     }
 
     public String toString() {
-      return field + " == " + value;
+      return field.getFullName() + " == " + value;
     }
   }
 
@@ -398,7 +488,7 @@ public class GlobMatchers {
     }
 
     public String toString() {
-      return field + " in " + values;
+      return field.getFullName() + " in " + values;
     }
   }
 }

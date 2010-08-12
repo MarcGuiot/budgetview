@@ -11,6 +11,8 @@ import java.io.Serializable;
 public interface Field extends PropertyHolder<Field>, Annotable, Serializable {
   String getName();
 
+  String getFullName();
+
   GlobType getGlobType();
 
   void checkValue(Object object) throws InvalidParameter;

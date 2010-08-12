@@ -33,6 +33,10 @@ abstract class AbstractField extends AnnotatedPropertyHolder<Field> implements F
     return name;
   }
 
+  public String getFullName() {
+    return globType.getName() + "." + name;
+  }
+
   public GlobType getGlobType() {
     return globType;
   }
