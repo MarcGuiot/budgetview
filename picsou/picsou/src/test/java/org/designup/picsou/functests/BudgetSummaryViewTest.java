@@ -57,7 +57,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     categorization.checkShowsUncategorizedTransactionsForSelectedMonths();
     categorization.checkNoSelectedTableRows();
     categorization.selectTransactions("WorldCo").selectIncome().createSeries("Salary");
-    categorization.selectTransactions("Auchan").selectVariable().createSeries("Groceries");
+    categorization.setNewVariable("Auchan", "Groceries", -200.);
 
     timeline.selectMonth("2008/07");
     views.selectBudget();
@@ -85,7 +85,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.showAllTransactions();
-    categorization.setNewVariable("FNAC", "Leisures");
+    categorization.setNewVariable("FNAC", "Leisures", -50.);
 
     timeline.selectMonth("2008/07");
     views.selectBudget();
@@ -112,8 +112,8 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/04", -150, "Auchan")
       .load();
     views.selectCategorization();
-    categorization.setNewVariable("Auchan", "courses");
-    categorization.setNewVariable("fringue", "habillement");
+    categorization.setNewVariable("Auchan", "courses", -150.);
+    categorization.setNewVariable("fringue", "habillement", -30.);
 
     views.selectBudget();
     timeline.selectMonth("2008/07");
@@ -223,8 +223,8 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .load();
     views.selectCategorization();
     views.selectCategorization();
-    categorization.setNewVariable("Auchan", "courses");
-    categorization.setNewVariable("remboursement", "SECU");
+    categorization.setNewVariable("Auchan", "courses", -150.);
+    categorization.setNewVariable("remboursement", "SECU", 30.);
     views.selectBudget();
     timeline.selectMonth("2008/07");
 
@@ -237,7 +237,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
                                "Vous avez dépensé <b>10.00</b> de plus que prévu");
 
     setVariableAmount("SECU", 30);
-    setVariableAmount("courses",150);
+    setVariableAmount("courses", 150);
 
     budgetView.variable.checkTotalGauge(-120, -120);
 
@@ -325,7 +325,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     setIncome("salaire", 900);
     setIncome("Loto", 100);
     budgetView.income.checkTotalGaugeTooltips("Vous avez reçu <b>500.00</b> de plus que prévu")
-    .checkTotalTooltips(600., 2600);
+      .checkTotalTooltips(600., 2600);
 
     setIncome("salaire", 2000);
 

@@ -92,6 +92,7 @@
                                     fill="none" tooltipText="$seriesEdition.begin.delete.tooltip"/>
                             <button action="seriesStartDateChooser" icon="button_calendar.png" styleClass="icon"
                                     pressedIcon="button_calendar_pressed.png"
+                                    rolloverIcon="button_calendar_rollover.png"
                                     marginLeft="5" fill="none" tooltipText="$seriesEdition.begin.edit.tooltip"/>
                             <filler fill="horizontal" weightX="0.1"/>
                           </row>
@@ -106,6 +107,7 @@
                                     fill="none" tooltipText="$seriesEdition.end.delete.tooltip"/>
                             <button action="seriesEndDateChooser" icon="button_calendar.png" styleClass="icon"
                                     pressedIcon="button_calendar_pressed.png"
+                                    rolloverIcon="button_calendar_rollover.png"
                                     marginLeft="5" fill="none" tooltipText="$seriesEdition.end.edit.tooltip"/>
                             <filler fill="horizontal" weightX="0.1"/>
                           </row>

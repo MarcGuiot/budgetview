@@ -22,7 +22,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewVariable("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries", -100.);
     categorization.setNewRecurring("Free Telecom", "Internet");
     categorization.setNewRecurring("EDF", "Energy");
     categorization.setNewIncome("WorldCo", "Salary");
@@ -109,7 +109,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewVariable("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries", -480.);
     categorization.setNewIncome("WorldCo", "John's");
     categorization.setNewIncome("Big Inc.", "Mary's");
 
@@ -147,7 +147,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewVariable("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries", -480.);
     categorization.setNewIncome("WorldCo", "John's");
     categorization.setNewIncome("Big Inc.", "Mary's");
 
@@ -394,7 +394,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewVariable("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries", -100.);
 
     views.selectEvolution();
     timeline.selectMonths("2008/08");
@@ -458,7 +458,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewVariable("Auchan", "Groceries");
+    categorization.setNewVariable("Auchan", "Groceries", -100.);
 
     views.selectEvolution();
     timeline.selectMonth("2008/07");

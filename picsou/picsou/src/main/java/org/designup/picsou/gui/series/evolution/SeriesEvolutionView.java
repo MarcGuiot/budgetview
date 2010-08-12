@@ -55,6 +55,7 @@ public class SeriesEvolutionView extends View {
   private SeriesEvolutionColors seriesEvolutionColors;
   private SeriesAmountEditionDialog seriesAmountEditionDialog;
   private Gui.RolloverMouseMotionListener rolloverMouseMotionListener;
+  private SeriesEvolutionLabelColumn seriesEvolutionLabelColumn;
 
   public SeriesEvolutionView(GlobRepository repository, Directory directory) {
     super(repository, createLocalDirectory(directory));
@@ -119,9 +120,8 @@ public class SeriesEvolutionView extends View {
     tableView
       .addColumn("", expandColumn, expandColumn, GlobStringifiers.empty(stringifier.getComparator(repository)));
 
-    SeriesEvolutionLabelColumn labelColumn =
-      new SeriesEvolutionLabelColumn(tableView, repository, directory, seriesEvolutionColors, seriesEditionDialog);
-    tableView.addColumn(labelColumn);
+    seriesEvolutionLabelColumn = new SeriesEvolutionLabelColumn(tableView, repository, directory, seriesEvolutionColors, seriesEditionDialog);
+    tableView.addColumn(seriesEvolutionLabelColumn);
 
     for (int offset = -1; offset < -1 + monthColumnsCount; offset++) {
       SeriesEvolutionMonthColumn monthColumn =
@@ -171,6 +171,7 @@ public class SeriesEvolutionView extends View {
           for (SeriesEvolutionMonthColumn column : monthColumns) {
             column.setReferenceMonthId(referenceMonthId);
           }
+          seriesEvolutionLabelColumn.setReferenceMonthId(referenceMonthId);
           tableView.reset();
           chartPanel.monthSelected(referenceMonthId);
         }

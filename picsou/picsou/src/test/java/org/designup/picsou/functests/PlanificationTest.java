@@ -51,7 +51,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .load();
     
     views.selectCategorization();
-    categorization.setNewVariable("Auchan", "Courant");
+    categorization.setNewVariable("Auchan", "Courant", -100.);
     operations.openPreferences().setFutureMonthsCount(1).validate();
     timeline.checkSpanEquals("2008/06", "2008/08");
 

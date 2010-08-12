@@ -57,7 +57,7 @@ public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> ex
   }
 
   public T setAmount(String value) {
-    getAmountTextBox().setText(value, true);
+    getAmountTextBox().setText(value, false);
     return (T)this;
   }
 

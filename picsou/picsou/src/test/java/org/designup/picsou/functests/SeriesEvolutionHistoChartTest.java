@@ -27,7 +27,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewVariable("Auchan", "Groceries");
+    categorization.setNewRecurring("Auchan", "Groceries");
     categorization.setNewIncome("WorldCo", "John's");
     categorization.setNewIncome("Big Inc.", "Mary's");
 

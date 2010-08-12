@@ -20,7 +20,7 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewVariable("Auchan", "Courant");
+    categorization.setNewVariable("Auchan", "Courant", -95.00);
     categorization.setNewRecurring("EDF", "EDF");
     categorization.setNewIncome("Salaire Aout", "Salaire");
 
