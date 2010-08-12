@@ -1,6 +1,10 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.components.filtering.FilterClearer;
+import org.designup.picsou.gui.components.filtering.FilterListener;
+import org.designup.picsou.gui.components.filtering.FilterManager;
+import org.designup.picsou.gui.components.filtering.components.FilterClearingPanel;
 import org.designup.picsou.gui.signpost.guides.CategorizationAreaSignpost;
 import org.designup.picsou.gui.signpost.guides.CategorizationSelectionSignpost;
 import org.designup.picsou.gui.signpost.guides.CategorizationCompletionSignpost;
@@ -12,9 +16,6 @@ import org.designup.picsou.gui.categorization.special.*;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
 import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
-import org.designup.picsou.gui.components.filtering.CustomFilterMessagePanel;
-import org.designup.picsou.gui.components.filtering.FilterSet;
-import org.designup.picsou.gui.components.filtering.FilterSetListener;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.description.SeriesDescriptionStringifier;
 import org.designup.picsou.gui.description.SeriesNameComparator;
@@ -72,10 +73,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 
 public class CategorizationView extends View implements TableView, Filterable, ColorChangeListener {
 
@@ -89,13 +88,13 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private Color envelopeSeriesLabelBackgroundColor;
 
   private static final int[] COLUMN_SIZES = {10, 12, 28, 10};
+  public static final String TRANSACTIONS_FILTER = "transactions";
+
   private SeriesEditionDialog seriesEditionDialog;
-
   private Signpost signpost;
-
   private TransactionRendererColors colors;
   private PicsouTableHeaderPainter headerPainter;
-  private FilterSet filterSet;
+  private FilterManager filterManager;
   private GlobMatcher filter = GlobMatchers.ALL;
   private GlobMatcher currentTableFilter;
   private Set<Key> modifiedTransactions = new HashSet<Key>();
@@ -174,17 +173,25 @@ public class CategorizationView extends View implements TableView, Filterable, C
     Signpost firstCategorization = new FirstCategorizationDoneSignpost(repository, directory);
     firstCategorization.attach(table);
 
-    this.filterSet = new FilterSet(this);
-    CustomFilterMessagePanel filterMessagePanel = new CustomFilterMessagePanel(filterSet, repository, directory);
-    builder.add("customFilterMessage", filterMessagePanel.getPanel());
-    filterSet.addListener(new FilterSetListener() {
-      public void filterUpdated(String name, boolean enabled) {
-        if (name.equals(CustomFilterMessagePanel.CUSTOM) && !enabled) {
-          transactionTable.clearSelection();
-        }
+    this.filterManager = new FilterManager(this);
+    this.filterManager.addListener(new FilterListener() {
+      public void filterUpdated(List<String> changedFilters) {
+        transactionTable.clearSelection();
+      }
+    });
+    this.filterManager.addClearer(new FilterClearer() {
+      public List<String> getAssociatedFilters() {
+        return Arrays.asList(TRANSACTIONS_FILTER);
+      }
+
+      public void clear() {
+        filterManager.remove(TRANSACTIONS_FILTER);
       }
     });
 
+    FilterClearingPanel filterClearingPanel = new FilterClearingPanel(filterManager, repository, directory);
+    builder.add("customFilterMessage", filterClearingPanel.getPanel());
+    
     builder.addLabel("transactionLabel", Transaction.TYPE, new GlobListStringifier() {
       public String toString(GlobList list, GlobRepository repository) {
         if (list.isEmpty()) {
@@ -459,12 +466,21 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
   public void show(GlobList transactions, boolean forceShowUncategorized) {
     updateFilteringMode(transactions, forceShowUncategorized);
-    doShow(transactions);
+
+    if (transactions.size() < 2) {
+      filterManager.reset();
+    }
+    else {
+      filterManager.replaceAllWith(TRANSACTIONS_FILTER,
+                                   fieldIn(Transaction.ID, transactions.getValueSet(Transaction.ID)));
+    }
+    updateTableFilter();
+    transactionTable.select(transactions);
   }
 
   public void showUncategorizedForSelectedMonths() {
     setFilteringMode(CategorizationFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
-    filterSet.clear();
+    filterManager.reset();
     updateTableFilter();
     transactionTable.clearSelection();
   }
@@ -481,18 +497,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
         return;
       }
     }
-  }
-
-  private void doShow(GlobList transactions) {
-    if (transactions.size() < 2) {
-      filterSet.clear();
-    }
-    else {
-      filterSet.replaceAllWith(CustomFilterMessagePanel.CUSTOM,
-                               fieldIn(Transaction.ID, transactions.getValueSet(Transaction.ID)));
-    }
-    updateTableFilter();
-    transactionTable.select(transactions);
   }
 
   private class CreateSeriesAction extends AbstractAction {

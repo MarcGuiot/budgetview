@@ -566,13 +566,16 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setAmount("15")
       .selectPositiveAmounts()
       .validate();
+
     views.selectCategorization();
     categorization.setVariable("Loto", "Loto");
+
     views.selectData();
     transactions.initContent()
       .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00, "Loto")
       .add("05/07/2008", TransactionType.VIREMENT, "Loto", "", 19.00, "Loto")
       .check();
+    
     views.selectBudget();
     budgetView.variable
       .editSeries("Loto")
@@ -610,8 +613,10 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setAmount("0")
       .selectPositiveAmounts()
       .validate();
+
     views.selectCategorization();
     categorization.setVariable("Loto", "ZeroSeries");
+
     views.selectData();
     transactions.initContent()
       .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00, "ZeroSeries")
@@ -623,6 +628,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .selectTransactions("Loto")
       .setUncategorized();
     categorization.setVariable("Auchan", "ZeroSeries");
+
     views.selectData();
     transactions.initContent()
       .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00)
@@ -645,7 +651,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00)
       .add("05/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -19.00, "ZeroSeries")
       .check();
-
   }
 
   public void testMixPositifAndNegativeBudgetInTotalBudget() throws Exception {
@@ -666,6 +671,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setAmount("100")
       .selectNegativeAmounts()
       .validate();
+
     views.selectBudget();
     budgetView.variable.checkTotalAmounts(0, 0);
     views.selectCategorization();

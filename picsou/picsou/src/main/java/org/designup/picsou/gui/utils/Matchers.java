@@ -7,9 +7,10 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.*;
 
 import java.util.*;
+
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class Matchers {
   private Matchers() {
@@ -40,7 +41,7 @@ public class Matchers {
   }
 
   public static GlobMatcher transactionsForSeries(final Set<Integer> targetBudgetAreas,
-                                                  Set<Integer> targetSeries,
+                                                  final Set<Integer> targetSeries,
                                                   GlobRepository repository) {
     if (targetBudgetAreas.contains(BudgetArea.ALL.getId())) {
       return GlobMatchers.ALL;
@@ -60,6 +61,10 @@ public class Matchers {
         }
         Glob series = repository.get(Key.create(Series.TYPE, seriesId));
         return targetBudgetAreas.contains(series.get(Series.BUDGET_AREA));
+      }
+
+      public String toString() {
+        return "transaction for series " + targetSeries + " from BudgetAreas " + targetBudgetAreas;
       }
     };
   }
@@ -252,6 +257,12 @@ public class Matchers {
       else {
         return account.get(Account.ID).equals(transaction.get(Transaction.ACCOUNT));
       }
+
+
+    }
+
+    public String toString() {
+      return "CategorizationFilter(" + filter + ")";
     }
 
     private boolean checkInMain(GlobRepository repository) {
@@ -312,6 +323,10 @@ public class Matchers {
       return false;
     }
 
+    public String toString() {
+      return "SeriesFirstEndDateFilter(" + monthIds + "," + exclusive + ")";
+    }
+
     protected abstract boolean isEligible(Glob series, GlobRepository repository);
   }
 
@@ -365,13 +380,9 @@ public class Matchers {
       }
       return false;
     }
-  }
 
-  public static void main(String[] args) {
-    int id = 6;
-    boolean ex = false;
-    if ((id < 5 || id > 10) == ex) {
-      System.out.println("PicsouMatchers.main " + !ex);
+    public String toString() {
+      return "AccountDateMatcher" + months;
     }
   }
 }

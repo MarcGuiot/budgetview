@@ -84,8 +84,10 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     timeline.selectAll();
-    transactions.setSearchText("vi");
+    transactions.checkClearFilterButtonHidden();
 
+    transactions.setSearchText("vi");
+    transactions.checkClearFilterButtonShown();
     transactions.initContent()
       .add("20/07/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, "Transports")
       .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, "Leisures")
@@ -94,21 +96,41 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .check();
 
     timeline.selectMonth("2008/07");
+    transactions.checkClearFilterButtonShown();
     transactions.initContent()
       .add("20/07/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, "Transports")
       .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, "Leisures")
       .check();
 
     series.select("Leisures");
+    transactions.checkClearFilterButtonShown();
     transactions.initContent()
       .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, "Leisures")
       .check();
 
     transactions.clearSearch();
+    transactions.checkClearFilterButtonShown();
     transactions.initContent()
       .add("15/07/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, "Leisures")
       .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, "Leisures")
       .check();
+
+    transactions.setSearchText("FN");
+    transactions.checkClearFilterButtonShown();
+    transactions.initContent()
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, "Leisures")
+      .check();
+
+    transactions.clearFilters();
+    transactions.initContent()
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "VINCI", "", -5.00, "Transports")
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, "Leisures")
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "VIRGIN", "", -50.00, "Leisures")
+      .check();
+    transactions.checkSearchTextIsEmpty();
+    series.checkSelection("All");
+    transactions.checkSelectedAccount("All accounts");
+    transactions.checkClearFilterButtonHidden();
   }
 
   public void testSearchTakesIntoAccountWhetherPlannedTransactionsAreShownOrNot() throws Exception {
