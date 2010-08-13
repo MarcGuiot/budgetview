@@ -26,7 +26,7 @@
           </column>
         </column>
 
-        <column weightX="7" preferredSize="(560,460)">
+        <column weightX="7" preferredSize="(680,460)">
 
           <row weightY="0.1">
             <label text="$seriesEdition.name" styleClass="formLabel" marginBottom="4"/>
@@ -35,8 +35,6 @@
                    marginLeft="15" marginBottom="4"/>
             <comboBox ref="budgetAreaChooser" marginBottom="4"/>
           </row>
-
-          <checkBox ref="autoReport" text="$seriesEdition.autoReport"/>
 
           <column autoHideSource="fromAccount" border="empty(10 ,0,15,0)">
             <label text="$seriesEdition.accountSelection" styleClass="separatorTitle"/>
@@ -60,8 +58,7 @@
           <tabs marginTop="10" ref="tabs">
             <tab title="$seriesEdition.tabs.terms">
               <row margin="5">
-                <column marginTop="5" weightX="0" preferredSize="(200,400)"
-                        border="matte(0,0,0,1,dialog.separator.light)">
+                <column marginTop="5" weightX="0" preferredSize="(200,400)">
 
                   <column marginRight="10">
 
@@ -86,14 +83,16 @@
                                  fill="horizontal" marginTop="2"/>
                           <row>
                             <textField ref="seriesStartDate" fill="horizontal" columns="20"
-                                       marginRight="5"/>
+                                       marginRight="5" cursor="hand"/>
                             <button action="deleteSeriesStartDate" icon="button_delete.png" styleClass="icon"
                                     pressedIcon="button_delete_pressed.png" autoHideIfDisabled="true"
-                                    fill="none" tooltipText="$seriesEdition.begin.delete.tooltip"/>
+                                    fill="none" tooltipText="$seriesEdition.begin.delete.tooltip"
+                                    cursor="hand"/>
                             <button action="seriesStartDateChooser" icon="button_calendar.png" styleClass="icon"
                                     pressedIcon="button_calendar_pressed.png"
                                     rolloverIcon="button_calendar_rollover.png"
-                                    marginLeft="5" fill="none" tooltipText="$seriesEdition.begin.edit.tooltip"/>
+                                    marginLeft="5" fill="none" tooltipText="$seriesEdition.begin.edit.tooltip"
+                                    cursor="hand"/>
                             <filler fill="horizontal" weightX="0.1"/>
                           </row>
 
@@ -101,14 +100,16 @@
                                  fill="horizontal" marginTop="10"/>
                           <row>
                             <textField ref="seriesEndDate" fill="horizontal" columns="20"
-                                       marginRight="5"/>
+                                       marginRight="5" cursor="hand"/>
                             <button action="deleteSeriesEndDate" icon="button_delete.png" styleClass="icon"
                                     pressedIcon="button_delete_pressed.png" autoHideIfDisabled="true"
-                                    fill="none" tooltipText="$seriesEdition.end.delete.tooltip"/>
+                                    fill="none" tooltipText="$seriesEdition.end.delete.tooltip"
+                                    cursor="hand"/>
                             <button action="seriesEndDateChooser" icon="button_calendar.png" styleClass="icon"
                                     pressedIcon="button_calendar_pressed.png"
                                     rolloverIcon="button_calendar_rollover.png"
-                                    marginLeft="5" fill="none" tooltipText="$seriesEdition.end.edit.tooltip"/>
+                                    marginLeft="5" fill="none" tooltipText="$seriesEdition.end.edit.tooltip"
+                                    cursor="hand"/>
                             <filler fill="horizontal" weightX="0.1"/>
                           </row>
                         </column>
@@ -138,7 +139,12 @@
                   </column>
                 </column>
 
-                <panel ref="seriesAmountEditionPanel" weightX="1" marginLeft="5"/>
+                <column weightX="1" marginLeft="5">
+                  <column name="innerBlock" styleClass="dialogBlock" weightY="100">
+                    <panel ref="seriesAmountEditionPanel"/>
+                  </column>
+                  <checkBox ref="autoReport" text="$seriesEdition.autoReport" marginTop="5"/>
+                </column>
               </row>
             </tab>
             <tab title="$seriesEdition.tabs.subseries">

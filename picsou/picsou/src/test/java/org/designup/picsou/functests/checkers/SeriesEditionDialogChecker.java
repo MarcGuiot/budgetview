@@ -504,6 +504,11 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
+  public SeriesEditionDialogChecker setThreeMonths() {
+    getProfileCombo().select(ProfileType.THREE_MONTHS.getLabel());
+    return this;
+  }
+
   public SeriesEditionDialogChecker setCustom() {
     getProfileCombo().select(ProfileType.CUSTOM.getLabel());
     return this;

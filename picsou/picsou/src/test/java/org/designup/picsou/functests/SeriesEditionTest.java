@@ -816,7 +816,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     SeriesEditionDialogChecker edition =
       budgetView.variable.createSeries()
         .setName("S1")
-        .checkProfiles("Every month", "Every two months", "Every six months",
+        .checkProfiles("Every month", "Every two months", "Every three months", "Every six months",
                        "Once a year", "Single month", "Custom", "Irregular");
     edition.cancel();
   }

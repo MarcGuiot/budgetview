@@ -120,17 +120,25 @@ public class HistoChart extends JPanel {
   private void paintLabels(Graphics2D g2, HistoDataset dataset) {
     g2.setStroke(new BasicStroke(1));
     for (int i = 0; i < dataset.size(); i++) {
+      if (dataset.isSelected(i)) {
+
+        int columnHeight = metrics.columnHeight();
+        int left = metrics.left(i);
+
+        g2.setColor(colors.getSelectedColumnColor());
+        g2.fillRect(left, 0, metrics.columnWidth(), columnHeight);
+
+        g2.setColor(colors.getSelectedLabelBackgroundColor());
+        g2.fillRect(left, columnHeight, metrics.columnWidth(), metrics.labelZoneHeightWithMargin());
+      }
+
       if (drawLabels) {
         String label = dataset.getLabel(i);
         g2.setFont(getLabelFont(dataset, i));
         g2.setColor(getLabelColor(i));
         g2.drawString(label, metrics.labelX(label, i), metrics.labelY());
       }
-
-      if (dataset.isSelected(i)) {
-        g2.setColor(colors.getSelectedColumnColor());
-        g2.fillRect(metrics.left(i), 0, metrics.columnWidth(), metrics.columnHeight());
-      }
+      
     }
   }
 

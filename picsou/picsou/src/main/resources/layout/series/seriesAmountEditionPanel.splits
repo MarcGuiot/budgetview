@@ -8,9 +8,12 @@
 
   <column>
 
-    <label ref="dateLabel" marginBottom="5"/>
+    <label ref="dateLabel" margin="10" marginTop="15"/>
 
-    <row border="empty(20,10,5,10)" weightY="0">
+    <component ref="chart" preferredSize="(300,100)" margin="10" weightY="10"
+               background="dialogBlock.bg"/>
+    
+    <row border="empty(10,10,5,10)" weightY="0">
       <filler fill="horizontal"/>
       <radioButton ref="positiveAmounts" weightX="0"/>
       <radioButton ref="negativeAmounts" weightX="0"/>
@@ -30,10 +33,7 @@
       <filler fill="horizontal"/>
     </row>
 
-    <component ref="chart" preferredSize="(300,100)" margin="10" weightY="10"
-               background="dialogBlock.bg"/>
-
-    <row marginBottom="10" marginRight="10">
+    <row border="empty(10)" autoHideSource="editSeries">
       <filler fill="horizontal"/>
       <label text="$seriesAmountEdition.periodicity" styleClass="small" weightX="0"/>
       <button ref="editSeries" styleClass="hyperlink" font="-,plain,11" marginLeft="5"
