@@ -9,6 +9,7 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
+import org.designup.picsou.gui.TimeService;
 
 import java.util.Set;
 import java.util.SortedSet;
@@ -19,6 +20,7 @@ public abstract class HistoChartUpdater implements GlobSelectionListener {
   private IntegerField selectionMonthField;
   protected Integer currentMonthId;
   protected SortedSet<Integer> currentMonths;
+  private int todayId;
 
   public HistoChartUpdater(HistoChartBuilder histoChartBuilder,
                            GlobRepository repository,
@@ -29,6 +31,7 @@ public abstract class HistoChartUpdater implements GlobSelectionListener {
     this.histoChartBuilder = histoChartBuilder;
     this.selectionType = selectionType;
     this.selectionMonthField = selectionMonthField;
+    todayId = directory.get(TimeService.class).getCurrentMonthId();
     directory.get(SelectionService.class).addListener(this, selectionType);
 
     repository.addChangeListener(new ChangeSetListener() {
@@ -54,12 +57,12 @@ public abstract class HistoChartUpdater implements GlobSelectionListener {
   }
 
   public void update() {
-    if (currentMonthId == null) {
-      histoChartBuilder.clear();
-      return;
-    }
+//    if (currentMonthId == null) {
+//      histoChartBuilder.clear();
+//      return;
+//    }
 
-    update(histoChartBuilder, currentMonthId);
+    update(histoChartBuilder, currentMonthId == null ? todayId : currentMonthId);
   }
 
   protected abstract void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId);

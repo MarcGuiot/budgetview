@@ -67,6 +67,7 @@ public class SubSeriesEditionPanel {
 
   public void setCurrentSeries(Glob series) {
     this.currentSeries = series;
+    nameField.setEnabled(series != null);
     list.setFilter(GlobMatchers.linkedTo(series, SubSeries.SERIES));
     list.selectFirst();
   }

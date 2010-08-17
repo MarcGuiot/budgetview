@@ -17,7 +17,8 @@ public class SeriesAmountChartPanel {
 
   public SeriesAmountChartPanel(GlobRepository repository, Directory directory) {
 
-    HistoChartBuilder histoChartBuilder = new HistoChartBuilder(true, true, repository, directory, directory.get(SelectionService.class), 4, 12);
+    HistoChartBuilder histoChartBuilder = new HistoChartBuilder(true, true, repository, directory,
+                                                                directory.get(SelectionService.class), 4, 12);
     histoChartBuilder.setSnapToScale(true);
     updater = new HistoChartUpdater(histoChartBuilder, repository, directory,
                                     SeriesBudget.TYPE, SeriesBudget.MONTH,
