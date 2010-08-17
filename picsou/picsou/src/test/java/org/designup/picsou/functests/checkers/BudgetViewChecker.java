@@ -1,7 +1,5 @@
 package org.designup.picsou.functests.checkers;
 
-import junit.framework.Assert;
-import net.java.balloontip.BalloonTip;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.description.Formatting;
@@ -11,11 +9,14 @@ import org.uispec4j.Panel;
 import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import org.globsframework.utils.TestUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class BudgetViewChecker extends GuiChecker {
 
@@ -259,12 +260,12 @@ public class BudgetViewChecker extends GuiChecker {
     }
 
     public BudgetAreaChecker checkOrder(String... seriesNames) {
-      UIComponent[] uiComponents = getPanel().getUIComponents(Button.class, "seriesName");
-      Assert.assertEquals(seriesNames.length, uiComponents.length);
-      for (int i = 0; i < uiComponents.length; i++) {
-        UIComponent component = uiComponents[i];
-        assertThat(((Button)component).textEquals(seriesNames[i]));
+      UIComponent[] seriesButtons = getPanel().getUIComponents(Button.class, "seriesName");
+      java.util.List<String> actualNames = new ArrayList<String>();
+      for (UIComponent button : seriesButtons) {
+        actualNames.add(button.getLabel());
       }
+      TestUtils.assertEquals(Arrays.asList(seriesNames), actualNames);
       return this;
     }
 
@@ -293,7 +294,7 @@ public class BudgetViewChecker extends GuiChecker {
       return this;
     }
 
-    public BudgetAreaChecker checkGaugeSignpostDisplayed(String seriesName, String text) {      
+    public BudgetAreaChecker checkGaugeSignpostDisplayed(String seriesName, String text) {
       BudgetViewChecker.this.checkSignpostVisible(window, getGauge(seriesName).getPanel(), text);
       return this;
     }
@@ -304,19 +305,19 @@ public class BudgetViewChecker extends GuiChecker {
     }
 
     public BudgetAreaChecker clickTitleSeriesName() {
-      Button button = window.getButton("titleSeries");
+      Button button = getPanel().getButton("titleSeries");
       button.click();
       return this;
     }
 
     public BudgetAreaChecker clickTitleRealAmount() {
-      Button button = window.getButton("titleAmountReal");
+      Button button = getPanel().getButton("titleAmountReal");
       button.click();
       return this;
     }
 
     public BudgetAreaChecker clickTitlePlannedAmount() {
-      Button button = window.getButton("titleAmountPlanned");
+      Button button = getPanel().getButton("titleAmountPlanned");
       button.click();
       return this;
     }

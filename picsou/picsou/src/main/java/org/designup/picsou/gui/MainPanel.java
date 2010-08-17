@@ -13,7 +13,7 @@ import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.card.NavigationView;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
-import org.designup.picsou.gui.components.filtering.TextFilterPanel;
+import org.designup.picsou.gui.components.filtering.components.TextFilterPanel;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseInfoView;
@@ -54,7 +54,6 @@ import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobMatcher;
-import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.ReplicationGlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -62,6 +61,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class MainPanel {
   private PicsouFrame parent;
@@ -118,9 +119,7 @@ public class MainPanel {
 
     TitleView titleView = new TitleView(repository, directory);
 
-    TransactionSelection transactionSelection = new TransactionSelection(repository, directory);
-
-    transactionView = new TransactionView(repository, directory, transactionSelection);
+    transactionView = new TransactionView(repository, directory);
     categorizationView = new CategorizationView(repository, directory);
     seriesView = new SeriesView(repository, directory);
     timeView = new TimeView(repository, directory);

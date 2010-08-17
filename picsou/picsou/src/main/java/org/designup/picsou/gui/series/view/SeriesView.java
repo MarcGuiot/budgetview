@@ -4,21 +4,18 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.CustomBoldLabelCustomizer;
 import org.designup.picsou.gui.components.SelectorBackgroundPainter;
 import org.designup.picsou.gui.components.expansion.*;
+import org.designup.picsou.gui.series.utils.SeriesSelectionConverter;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.format.GlobStringifiers;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -44,7 +41,10 @@ public class SeriesView extends View {
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
-    registerSelectionUpdater();
+
+    SeriesSelectionConverter converter = 
+      new SeriesSelectionConverter(parentSelectionService, selectionService, repository);
+    converter.register();
 
     ExpandableTable tableAdapter = new ExpandableTable(new SeriesWrapperMatcher());
 
@@ -89,26 +89,6 @@ public class SeriesView extends View {
     builder.add("collapse", new CollapseTableAction(expansionModel));
   }
 
-  private void registerSelectionUpdater() {
-    directory.get(SelectionService.class).addListener(new GlobSelectionListener() {
-      public void selectionUpdated(GlobSelection selection) {
-        GlobSelectionBuilder newSelection = new GlobSelectionBuilder();
-        for (Glob wrapper : selection.getAll(SeriesWrapper.TYPE)) {
-          Integer itemId = wrapper.get(SeriesWrapper.ITEM_ID);
-          if (SeriesWrapperType.BUDGET_AREA.isOfType(wrapper)) {
-            Glob budgetArea = repository.get(Key.create(BudgetArea.TYPE, itemId));
-            newSelection.add(budgetArea);
-          }
-          else if (SeriesWrapperType.SERIES.isOfType(wrapper)) {
-            Glob series = repository.get(Key.create(Series.TYPE, itemId));
-            newSelection.add(series);
-          }
-        }
-        parentSelectionService.select(newSelection.get());
-      }
-    }, SeriesWrapper.TYPE);
-  }
-
   public void selectBudgetArea(BudgetArea budgetArea) {
     Glob wrapper = SeriesWrapper.find(repository, SeriesWrapperType.BUDGET_AREA, budgetArea.getId());
     tableView.select(wrapper);
@@ -130,7 +110,8 @@ public class SeriesView extends View {
 
   private class SeriesWrapperMatcher implements GlobMatcher {
     public boolean matches(Glob wrapper, GlobRepository repository) {
-      return  !SeriesWrapper.isSummary(wrapper);
+      return !SeriesWrapper.isSummary(wrapper);
     }
   }
+
 }

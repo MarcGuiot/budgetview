@@ -77,6 +77,20 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("03/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -15.00, "To categorize")
       .check();
+
+    transactions.checkClearFilterButtonShown();
+    transactions.clearFilters();
+    transactions.initContent()
+      .add("12/07/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -95.00, "Groceries")
+      .add("10/07/2008", TransactionType.PRELEVEMENT, "MONOPRIX", "", -50.00, "Groceries")
+      .add("05/07/2008", TransactionType.PRELEVEMENT, "FREE TELECOM", "", -29.00, "Internet")
+      .add("04/07/2008", TransactionType.PRELEVEMENT, "EDF", "", -55.00, "Electricity")
+      .add("03/07/2008", TransactionType.PRELEVEMENT, "MCDO", "", -15.00)
+      .add("02/07/2008", TransactionType.VIREMENT, "WORLDCO - BONUS", "", 200.00, "Exceptional Income")
+      .add("01/07/2008", TransactionType.VIREMENT, "WORLDCO", "", 3540.00, "Salary")
+      .check();
+    series.checkSelection("All");
+    transactions.checkClearFilterButtonHidden();
   }
 
   public void testCreatingAndDeletingSeries() throws Exception {
@@ -173,7 +187,7 @@ public class SeriesViewTest extends LoggedInFunctionalTestCase {
                          "Extras",
                          "Savings",
                          "Other");
-    
+
     series.collapseAll();
     series.checkContains("All",
                          "To categorize",

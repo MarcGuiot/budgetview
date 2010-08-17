@@ -3,7 +3,6 @@ package org.designup.picsou.gui.budget.wizard;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
 import org.designup.picsou.gui.components.charts.stack.StackChartColors;
 import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
-import org.designup.picsou.gui.components.wizard.AbstractWizardPage;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.model.BudgetArea;
@@ -24,7 +23,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
-public class BudgetBalancePage extends AbstractWizardPage {
+public class BudgetBalancePage {
 
   private StackChart balanceChart;
   private StackChartColors balanceChartColors;

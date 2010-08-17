@@ -1,7 +1,8 @@
 package org.designup.picsou.gui;
 
-import org.designup.picsou.gui.utils.Matchers;
-import static org.designup.picsou.gui.utils.Matchers.*;
+import org.designup.picsou.gui.components.filtering.FilterClearer;
+import org.designup.picsou.gui.components.filtering.FilterManager;
+import org.designup.picsou.gui.components.filtering.FilterSetBuilder;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
@@ -9,50 +10,47 @@ import org.designup.picsou.model.Series;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.utils.GlobSelectionBuilder;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.and;
 import org.globsframework.utils.directory.Directory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+import static org.designup.picsou.gui.utils.Matchers.*;
 
 public class TransactionSelection implements GlobSelectionListener {
 
-  private Set<Integer> currentAccounts;
   private Set<Integer> currentMonths;
   private Set<Integer> currentBudgetAreas;
   private Set<Integer> currentSeries;
+
   private List<GlobSelectionListener> listeners = new ArrayList<GlobSelectionListener>();
   private GlobRepository repository;
-  private GlobMatcher currentMatcher;
+  private FilterManager filterManager;
+  private SelectionService selectionService;
 
-  public TransactionSelection(GlobRepository repository, Directory directory) {
-    init();
+  public static final String MONTHS_FILTER = "months";
+  public static final String SERIES_FILTER = "series";
+
+  public TransactionSelection(FilterManager filterManager, GlobRepository repository, Directory directory) {
+    this.filterManager = filterManager;
     this.repository = repository;
-    directory.get(SelectionService.class).addListener(this, Account.TYPE, Month.TYPE,
-                                                      BudgetArea.TYPE, Series.TYPE);
+    init();
+    selectionService = directory.get(SelectionService.class);
+    selectionService.addListener(this, Account.TYPE, Month.TYPE,
+                                 BudgetArea.TYPE, Series.TYPE);
+
+    filterManager.addClearer(new SeriesFilterClearer());
   }
 
-  public void init(){
-    currentMatcher = GlobMatchers.NONE;
+  public void init() {
     currentSeries = Collections.emptySet();
     currentBudgetAreas = Collections.singleton(BudgetArea.ALL.getId());
     currentMonths = Collections.emptySet();
-    currentAccounts = Collections.singleton(Account.ALL_SUMMARY_ACCOUNT_ID);
-  }
-
-  public void addListener(GlobSelectionListener listener) {
-    listeners.add(listener);
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    if (selection.isRelevantForType(Account.TYPE)) {
-      currentAccounts = selection.getAll(Account.TYPE).getValueSet(Account.ID);
-    }
     if (selection.isRelevantForType(Month.TYPE)) {
       currentMonths = selection.getAll(Month.TYPE).getValueSet(Month.ID);
     }
@@ -61,16 +59,22 @@ public class TransactionSelection implements GlobSelectionListener {
       currentSeries = selection.getAll(Series.TYPE).getValueSet(Series.ID);
     }
 
-    currentMatcher = and(transactionsForMonths(currentMonths),
-                         transactionsForAccounts(currentAccounts, repository),
-                         Matchers.transactionsForSeries(currentBudgetAreas, currentSeries, repository));
-
-    for (GlobSelectionListener listener : listeners) {
-      listener.selectionUpdated(selection);
-    }
+    filterManager.set(FilterSetBuilder.init()
+      .set(MONTHS_FILTER, transactionsForMonths(currentMonths))
+      .set(SERIES_FILTER, transactionsForSeries(currentBudgetAreas, currentSeries, repository))
+      .get());
   }
 
-  public GlobMatcher getCurrentMatcher() {
-    return currentMatcher;
+  private class SeriesFilterClearer implements FilterClearer {
+    public List<String> getAssociatedFilters() {
+      return Arrays.asList(SERIES_FILTER);
+    }
+
+    public void clear() {
+      selectionService.select(GlobSelectionBuilder.init()
+        .add(repository.get(BudgetArea.ALL.getKey()))
+        .add(GlobList.EMPTY, Series.TYPE)
+        .get());
+    }
   }
 }

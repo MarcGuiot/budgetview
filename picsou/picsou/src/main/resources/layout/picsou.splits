@@ -198,6 +198,9 @@
                       <filler fill="horizontal"/>
                       <checkBox ref="showPlannedTransactions" text="$transactionView.showPlannedTransactions"/>
                     </row>
+                    <row border="empty(5)" autoHideSource="customFilterMessage">
+                      <panel ref="customFilterMessage" fill="none" anchor="center"/>
+                    </row>
                     <scrollPane borderPos="center" viewportBackground="transactions.bg"
                                 border="line(transaction.border)" opaque="false"
                                 marginTop="5" marginLeft="5">

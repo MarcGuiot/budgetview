@@ -1,6 +1,10 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.components.filtering.FilterClearer;
+import org.designup.picsou.gui.components.filtering.FilterListener;
+import org.designup.picsou.gui.components.filtering.FilterManager;
+import org.designup.picsou.gui.components.filtering.components.FilterClearingPanel;
 import org.designup.picsou.gui.signpost.guides.CategorizationAreaSignpost;
 import org.designup.picsou.gui.signpost.guides.CategorizationSelectionSignpost;
 import org.designup.picsou.gui.signpost.guides.CategorizationCompletionSignpost;
@@ -12,9 +16,6 @@ import org.designup.picsou.gui.categorization.special.*;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
 import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
-import org.designup.picsou.gui.components.filtering.CustomFilterMessagePanel;
-import org.designup.picsou.gui.components.filtering.FilterSet;
-import org.designup.picsou.gui.components.filtering.FilterSetListener;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.description.SeriesDescriptionStringifier;
 import org.designup.picsou.gui.description.SeriesNameComparator;
@@ -72,10 +73,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 
 public class CategorizationView extends View implements TableView, Filterable, ColorChangeListener {
 
@@ -89,13 +88,13 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private Color envelopeSeriesLabelBackgroundColor;
 
   private static final int[] COLUMN_SIZES = {10, 12, 28, 10};
+  public static final String TRANSACTIONS_FILTER = "transactions";
+
   private SeriesEditionDialog seriesEditionDialog;
-
   private Signpost signpost;
-
   private TransactionRendererColors colors;
   private PicsouTableHeaderPainter headerPainter;
-  private FilterSet filterSet;
+  private FilterManager filterManager;
   private GlobMatcher filter = GlobMatchers.ALL;
   private GlobMatcher currentTableFilter;
   private Set<Key> modifiedTransactions = new HashSet<Key>();
@@ -114,7 +113,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     this.colors = new TransactionRendererColors(directory);
 
-    categorizationLevel = new CategorizationLevel(repository);
+    categorizationLevel = new CategorizationLevel(repository, directory);
 
     this.signpost = new CategorizationCompletionSignpost(categorizationLevel, repository, parentDirectory);
   }
@@ -174,17 +173,25 @@ public class CategorizationView extends View implements TableView, Filterable, C
     Signpost firstCategorization = new FirstCategorizationDoneSignpost(repository, directory);
     firstCategorization.attach(table);
 
-    this.filterSet = new FilterSet(this);
-    CustomFilterMessagePanel filterMessagePanel = new CustomFilterMessagePanel(filterSet, repository, directory);
-    builder.add("customFilterMessage", filterMessagePanel.getPanel());
-    filterSet.addListener(new FilterSetListener() {
-      public void filterUpdated(String name, boolean enabled) {
-        if (name.equals(CustomFilterMessagePanel.CUSTOM) && !enabled) {
-          transactionTable.clearSelection();
-        }
+    this.filterManager = new FilterManager(this);
+    this.filterManager.addListener(new FilterListener() {
+      public void filterUpdated(List<String> changedFilters) {
+        transactionTable.clearSelection();
+      }
+    });
+    this.filterManager.addClearer(new FilterClearer() {
+      public List<String> getAssociatedFilters() {
+        return Arrays.asList(TRANSACTIONS_FILTER);
+      }
+
+      public void clear() {
+        filterManager.remove(TRANSACTIONS_FILTER);
       }
     });
 
+    FilterClearingPanel filterClearingPanel = new FilterClearingPanel(filterManager, repository, directory);
+    builder.add("customFilterMessage", filterClearingPanel.getPanel());
+    
     builder.addLabel("transactionLabel", Transaction.TYPE, new GlobListStringifier() {
       public String toString(GlobList list, GlobRepository repository) {
         if (list.isEmpty()) {
@@ -251,10 +258,10 @@ public class CategorizationView extends View implements TableView, Filterable, C
   }
 
   private void addFilteringModeCombo(GlobsPanelBuilder builder) {
-    filteringModeCombo = builder.add("transactionFilterCombo", new JComboBox(TransactionFilteringMode.values())).getComponent();
+    filteringModeCombo = builder.add("transactionFilterCombo", new JComboBox(CategorizationFilteringMode.values())).getComponent();
     filteringModeCombo.addActionListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
-        TransactionFilteringMode mode = (TransactionFilteringMode)filteringModeCombo.getSelectedItem();
+        CategorizationFilteringMode mode = (CategorizationFilteringMode)filteringModeCombo.getSelectedItem();
         repository.update(UserPreferences.KEY, UserPreferences.CATEGORIZATION_FILTERING_MODE, mode.getId());
         updateTableFilter();
       }
@@ -265,7 +272,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
           Glob preferences = repository.find(UserPreferences.KEY);
           Integer defaultFilteringModeId =
             preferences.get(UserPreferences.CATEGORIZATION_FILTERING_MODE);
-          Object o = TransactionFilteringMode.get(defaultFilteringModeId);
+          Object o = CategorizationFilteringMode.get(defaultFilteringModeId);
           filteringModeCombo.setSelectedItem(o);
         }
       }
@@ -277,7 +284,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
         }
         Integer defaultFilteringModeId =
           preferences.get(UserPreferences.CATEGORIZATION_FILTERING_MODE);
-        Object o = TransactionFilteringMode.get(defaultFilteringModeId);
+        Object o = CategorizationFilteringMode.get(defaultFilteringModeId);
         filteringModeCombo.setSelectedItem(o);
       }
     });
@@ -337,6 +344,11 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     JRadioButton invisibleRadio = new JRadioButton("invisibleButton");
     builder.add("invisibleToggle", invisibleRadio);
+    
+    DescriptionPanelHandler descriptionHandler = new DescriptionPanelHandler(repository);
+    builder.add("descriptionPanel", descriptionHandler.getPanel());
+    builder.add("showDescription", descriptionHandler.getShowAction());
+    builder.add("hideDescription", descriptionHandler.getHideAction());
 
     Matchers.CategorizationFilter filter = Matchers.seriesCategorizationFilter(budgetArea.getId());
     SeriesChooserComponentFactory componentFactory = new SeriesChooserComponentFactory(budgetArea, invisibleRadio,
@@ -454,40 +466,37 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
   public void show(GlobList transactions, boolean forceShowUncategorized) {
     updateFilteringMode(transactions, forceShowUncategorized);
-    doShow(transactions);
+
+    if (transactions.size() < 2) {
+      filterManager.reset();
+    }
+    else {
+      filterManager.replaceAllWith(TRANSACTIONS_FILTER,
+                                   fieldIn(Transaction.ID, transactions.getValueSet(Transaction.ID)));
+    }
+    updateTableFilter();
+    transactionTable.select(transactions);
   }
 
   public void showUncategorizedForSelectedMonths() {
-    setFilteringMode(TransactionFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
-    filterSet.clear();
+    setFilteringMode(CategorizationFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
+    filterManager.reset();
     updateTableFilter();
     transactionTable.clearSelection();
   }
 
   private void updateFilteringMode(GlobList transactions, boolean forceShowUncategorized) {
     if (forceShowUncategorized) {
-      setFilteringMode(TransactionFilteringMode.UNCATEGORIZED);
+      setFilteringMode(CategorizationFilteringMode.UNCATEGORIZED);
       return;
     }
 
     for (Glob transaction : transactions) {
       if (!currentTableFilter.matches(transaction, repository)) {
-        setFilteringMode(TransactionFilteringMode.SELECTED_MONTHS);
+        setFilteringMode(CategorizationFilteringMode.SELECTED_MONTHS);
         return;
       }
     }
-  }
-
-  private void doShow(GlobList transactions) {
-    if (transactions.size() < 2) {
-      filterSet.clear();
-    }
-    else {
-      filterSet.replaceAllWith(CustomFilterMessagePanel.CUSTOM,
-                               fieldIn(Transaction.ID, transactions.getValueSet(Transaction.ID)));
-    }
-    updateTableFilter();
-    transactionTable.select(transactions);
   }
 
   private class CreateSeriesAction extends AbstractAction {
@@ -608,12 +617,12 @@ public class CategorizationView extends View implements TableView, Filterable, C
     transactionTable.setFilter(currentTableFilter);
   }
 
-  public void setFilteringMode(TransactionFilteringMode mode) {
+  public void setFilteringMode(CategorizationFilteringMode mode) {
     filteringModeCombo.setSelectedItem(mode);
   }
 
   private GlobMatcher getCurrentFilteringModeMatcher() {
-    TransactionFilteringMode mode = (TransactionFilteringMode)filteringModeCombo.getSelectedItem();
+    CategorizationFilteringMode mode = (CategorizationFilteringMode)filteringModeCombo.getSelectedItem();
     return mode.getMatcher(repository, selectionService);
   }
 

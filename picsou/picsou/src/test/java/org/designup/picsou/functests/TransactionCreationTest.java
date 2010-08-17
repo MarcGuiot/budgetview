@@ -85,14 +85,20 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .check();
 
     transactions.selectAccount("Cash");
+    transactions.checkClearFilterButtonShown();
     transactions.initContent()
       .add("15/08/2008", TransactionType.MANUAL, "TRANSACTION 1", "", -12.50)
       .check();
 
     transactions.selectAccount("Misc");
+    transactions.checkClearFilterButtonShown();
     transactions.initContent()
       .add("03/09/2008", TransactionType.MANUAL, "TRANSACTION 2", "", 20.00)
       .check();
+
+    transactions.clearFilters();
+    transactions.checkSelectedAccount("All accounts");
+    transactions.checkClearFilterButtonHidden();
   }
 
   public void testCreationPanelIsAvailableOnlyWhenManualInputAccountsExist() throws Exception {

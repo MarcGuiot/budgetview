@@ -27,7 +27,7 @@ public class CategorizationGaugePanel implements Updatable {
     update();
   }
 
-  public void createPanel() {
+  private void createPanel() {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/categorization/categorizationGaugePanel.splits",
                             repository, directory);

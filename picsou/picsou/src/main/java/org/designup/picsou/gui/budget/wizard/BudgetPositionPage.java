@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.budget.wizard;
 
-import org.designup.picsou.gui.components.wizard.AbstractWizardPage;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.utils.Gui;
@@ -23,7 +22,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
-public class BudgetPositionPage extends AbstractWizardPage {
+public class BudgetPositionPage {
 
   private JLabel amountSummaryLabel;
   private JTextArea positionDescription;

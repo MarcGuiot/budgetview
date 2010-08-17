@@ -2,7 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
-import org.designup.picsou.gui.categorization.components.TransactionFilteringMode;
+import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.splits.color.Colors;
@@ -671,49 +671,49 @@ public class CategorizationChecker extends GuiChecker {
   }
 
   public void checkShowsAllTransactions() {
-    checkTransctionFilterMode(TransactionFilteringMode.ALL);
+    checkTransctionFilterMode(CategorizationFilteringMode.ALL);
   }
 
   public void checkShowsSelectedMonthsOnly() {
-    checkTransctionFilterMode(TransactionFilteringMode.SELECTED_MONTHS);
+    checkTransctionFilterMode(CategorizationFilteringMode.SELECTED_MONTHS);
   }
 
   public void checkShowsUncategorizedTransactionsOnly() {
-    checkTransctionFilterMode(TransactionFilteringMode.UNCATEGORIZED);
+    checkTransctionFilterMode(CategorizationFilteringMode.UNCATEGORIZED);
   }
 
   public void checkShowsUncategorizedTransactionsForSelectedMonths() {
-    checkTransctionFilterMode(TransactionFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
+    checkTransctionFilterMode(CategorizationFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
   }
 
-  private void checkTransctionFilterMode(final TransactionFilteringMode mode) {
+  private void checkTransctionFilterMode(final CategorizationFilteringMode mode) {
     assertThat(getPanel().getComboBox("transactionFilterCombo").selectionEquals(mode.toString()));
   }
 
   public void showAllTransactions() {
-    selectTransactionFilterMode(TransactionFilteringMode.ALL);
+    selectTransactionFilterMode(CategorizationFilteringMode.ALL);
   }
 
   public CategorizationChecker showSelectedMonthsOnly() {
-    selectTransactionFilterMode(TransactionFilteringMode.SELECTED_MONTHS);
+    selectTransactionFilterMode(CategorizationFilteringMode.SELECTED_MONTHS);
     return this;
   }
 
   public CategorizationChecker showUncategorizedTransactionsForSelectedMonths() {
-    selectTransactionFilterMode(TransactionFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
+    selectTransactionFilterMode(CategorizationFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
     return this;
   }
 
-  private void selectTransactionFilterMode(TransactionFilteringMode mode) {
+  private void selectTransactionFilterMode(CategorizationFilteringMode mode) {
     getPanel().getComboBox("transactionFilterCombo").select(mode.toString());
   }
 
   public void showLastImportedFileOnly() {
-    selectTransactionFilterMode(TransactionFilteringMode.LAST_IMPORTED_FILE);
+    selectTransactionFilterMode(CategorizationFilteringMode.LAST_IMPORTED_FILE);
   }
 
   public void showUncategorizedTransactionsOnly() {
-    selectTransactionFilterMode(TransactionFilteringMode.UNCATEGORIZED);
+    selectTransactionFilterMode(CategorizationFilteringMode.UNCATEGORIZED);
   }
 
 

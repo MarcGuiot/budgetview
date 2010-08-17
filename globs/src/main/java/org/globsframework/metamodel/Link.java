@@ -15,6 +15,8 @@ public interface Link extends Annotable, Serializable {
 
   String getName();
 
+  String getFullName();
+
   boolean isRequired();
 
   void apply(FieldMappingFunctor functor);

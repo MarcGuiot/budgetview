@@ -5,18 +5,17 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.utils.AccountFilteringCombo;
 import org.designup.picsou.gui.components.DefaultTableCellPainter;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
-import org.designup.picsou.gui.components.filtering.FilterSet;
+import org.designup.picsou.gui.components.filtering.FilterClearer;
+import org.designup.picsou.gui.components.filtering.FilterManager;
 import org.designup.picsou.gui.components.filtering.Filterable;
+import org.designup.picsou.gui.components.filtering.components.FilterClearingPanel;
 import org.designup.picsou.gui.description.TransactionBudgetAreaStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Transaction;
-import static org.designup.picsou.model.Transaction.TYPE;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.views.GlobComboView;
@@ -29,15 +28,18 @@ import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import javax.swing.event.TableModelListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.*;
+import java.util.List;
 
-public class TransactionView extends View implements Filterable, GlobSelectionListener {
+import static org.designup.picsou.model.Transaction.TYPE;
+import static org.globsframework.model.utils.GlobMatchers.*;
+
+public class TransactionView extends View implements Filterable {
   public static final int DATE_COLUMN_INDEX = 0;
   public static final int BANK_DATE_COLUMN_INDEX = 1;
   public static final int BUDGET_AREA_COLUMN_INDEX = 2;
@@ -50,6 +52,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
   public static final int BALANCE_INDEX = 9;
   public static final int ACCOUNT_NAME_INDEX = 10;
 
+  public static final String ACCOUNT_FILTER = "accounts";
   private static final int[] COLUMN_SIZES = {10, 10, 10, 15, 10, 30, 9, 15, 10, 10, 30};
 
   private GlobTableView view;
@@ -58,25 +61,23 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
   private TransactionSelection transactionSelection;
   private GlobMatcher showPlannedTransactionsMatcher = GlobMatchers.ALL;
   private GlobMatcher filter = GlobMatchers.ALL;
-  private FilterSet filterSet;
+  private FilterManager filterManager;
   private PicsouTableHeaderPainter headerPainter;
 
-  public TransactionView(GlobRepository repository, Directory directory, TransactionSelection transactionSelection) {
+  public TransactionView(GlobRepository repository, Directory directory) {
     super(repository, directory);
     rendererColors = new TransactionRendererColors(directory);
     createTable();
-    this.transactionSelection = transactionSelection;
-    transactionSelection.addListener(this);
-  }
-
-  public void selectionUpdated(GlobSelection selection) {
-    updateFilter();
+    this.transactionSelection = new TransactionSelection(filterManager, repository, directory);
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
     addAccountCombo(builder);
     addShowTransactionsCheckbox(builder);
     builder.add(view.getComponent());
+
+    FilterClearingPanel filterClearingPanel = new FilterClearingPanel(filterManager, repository, directory);
+    builder.add("customFilterMessage", filterClearingPanel.getPanel());    
   }
 
   public void setFilter(GlobMatcher matcher) {
@@ -84,22 +85,26 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
     updateFilter();
   }
 
-  public void addTableListener(TableModelListener listener) {
-    this.view.getComponent().getModel().addTableModelListener(listener);
-  }
-
   private void updateFilter() {
-    view.setFilter(and(transactionSelection.getCurrentMatcher(),
-                       accountFilteringCombo.getCurrentAccountFilter(),
-                       showPlannedTransactionsMatcher,
-                       this.filter));
-    headerPainter.setFiltered((this.filter != null) && (this.filter != GlobMatchers.ALL));
+    GlobMatcher newFilter = and(showPlannedTransactionsMatcher,
+                                filter);
+    view.setFilter(newFilter);
+    headerPainter.setFiltered(filterManager.hasClearableFilters());
   }
 
   private void addAccountCombo(GlobsPanelBuilder builder) {
     accountFilteringCombo = new AccountFilteringCombo(repository, directory, new GlobComboView.GlobSelectionHandler() {
       public void processSelection(Glob glob) {
-        updateFilter();
+        filterManager.set(ACCOUNT_FILTER, accountFilteringCombo.getCurrentAccountFilter());
+      }
+    });
+    filterManager.addClearer(new FilterClearer() {
+      public List<String> getAssociatedFilters() {
+        return Arrays.asList(ACCOUNT_FILTER);
+      }
+
+      public void clear() {
+        accountFilteringCombo.reset();
       }
     });
     builder.add("accountFilterCombo", accountFilteringCombo.getComponent());
@@ -126,7 +131,7 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
     this.view.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 
     headerPainter = PicsouTableHeaderPainter.install(view, directory);
-    this.filterSet = new FilterSet(this);
+    this.filterManager = new FilterManager(this);
 
     JTable table = view.getComponent();
     table.setDefaultRenderer(Glob.class,
@@ -203,12 +208,8 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
     return view;
   }
 
-  public GlobTableView getView() {
-    return view;
-  }
-
-  public FilterSet getFilterSet() {
-    return filterSet;
+  public FilterManager getFilterSet() {
+    return filterManager;
   }
 
   public void reset() {
@@ -226,8 +227,8 @@ public class TransactionView extends View implements Filterable, GlobSelectionLi
     }
 
     public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
-      if (glob.isTrue(Transaction.PLANNED)){
-        if (isSelected){
+      if (glob.isTrue(Transaction.PLANNED)) {
+        if (isSelected) {
           label.setForeground(rendererColors.getTransactionSelectedTextColor());
         }
         else {

@@ -61,7 +61,7 @@ public class NavigationViewTest extends LoggedInFunctionalTestCase {
     timeline.checkYearTooltip(2008, "2008");
   }
 
-  public void testNavigationChangeCategorizationFilter() throws Exception {
+  public void testImportChangesCategorizationFilter() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/05/25", -50.0, "Auchan_1")
@@ -81,5 +81,59 @@ public class NavigationViewTest extends LoggedInFunctionalTestCase {
     categorization.initContent()
     .add("25/05/2008", "", "AUCHAN_1", -50.0)
     .check();
+  }
+
+  public void testCategorizationWidget() throws Exception {
+
+    views.selectHome();
+    navigation.checkCategorizationLabel("You must first load your bank operations");
+    navigation.checkCategorizationGaugeHidden();
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/05/15", -25.0, "Auchan1")
+      .addTransaction("2008/05/15", -75.0, "Auchan2")
+      .addTransaction("2008/06/15", -50.0, "Auchan3")
+      .addTransaction("2008/06/15", -50.0, "Auchan4")
+      .load();
+
+    timeline.checkSelection("2008/06");
+
+    views.selectHome();
+    navigation.checkCategorizationLabel("To categorize");
+    navigation.checkCategorizationLevel(1.0);
+
+    navigation.gotoCategorization();
+    categorization.checkShowsSelectedMonthsOnly();
+    categorization.setNewVariable("Auchan3", "Groceries");
+
+    views.selectHome();
+    navigation.checkCategorizationLabel("To categorize");
+    navigation.checkCategorizationLevel(0.5);
+
+    navigation.gotoCategorization();
+    categorization.setVariable("Auchan4", "Groceries");
+
+    views.selectHome();
+    navigation.checkCategorizationLabel("All operations are categorized");
+    navigation.checkCategorizationGaugeHidden();
+
+    timeline.selectMonth("2008/05");
+    navigation.checkCategorizationLabel("To categorize");
+    navigation.checkCategorizationLevel(1.0);
+
+    navigation.gotoCategorization();
+    categorization.setVariable("Auchan1", "Groceries");
+
+    views.selectHome();
+    navigation.checkCategorizationLabel("To categorize");
+    navigation.checkCategorizationLevel(0.75);
+
+    navigation.gotoCategorization();
+    categorization.setVariable("Auchan2", "Groceries");
+
+    views.selectHome();
+    navigation.checkCategorizationLabel("All operations are categorized");
+    navigation.checkCategorizationGaugeHidden();
   }
 }

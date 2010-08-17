@@ -17,14 +17,16 @@ import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
+
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.KeyUtils;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class TransactionChecker extends ViewChecker {
   public static final String TO_CATEGORIZE = "To categorize";
@@ -75,7 +77,7 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public void checkSeriesTooltipContains(String transactionLabel, String text) {
-    UISpecAssert.assertThat(getSeriesButton(getIndexOf(transactionLabel)).tooltipContains(text));
+    assertThat(getSeriesButton(getIndexOf(transactionLabel)).tooltipContains(text));
   }
 
   private void clickSeries(int rowIndex) {
@@ -97,21 +99,25 @@ public class TransactionChecker extends ViewChecker {
 
   public void checkSeries(int row, String seriesName) {
     Button seriesButton = getSeriesButton(row);
-    UISpecAssert.assertThat(seriesButton.textEquals(seriesName));
+    assertThat(seriesButton.textEquals(seriesName));
   }
 
   public void checkSeries(int row, String seriesName, String subSeries) {
     checkSeries(row, seriesName);
-    UISpecAssert.assertThat(getTable().cellEquals(row, TransactionView.SUBSERIES_COLUMN_INDEX, subSeries));
+    assertThat(getTable().cellEquals(row, TransactionView.SUBSERIES_COLUMN_INDEX, subSeries));
   }
 
   private int getIndexOf(String transactionLabel) {
-    UISpecAssert.assertThat(getTable().containsRow(TransactionView.LABEL_COLUMN_INDEX, transactionLabel));
+    assertThat(getTable().containsRow(TransactionView.LABEL_COLUMN_INDEX, transactionLabel));
     return getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, transactionLabel);
   }
 
   public void setSearchText(String text) {
     getSearchField().setText(text);
+  }
+
+  public void checkSearchTextIsEmpty() {
+    assertThat(getSearchField().textIsEmpty());
   }
 
   public void clearSearch() {
@@ -120,6 +126,21 @@ public class TransactionChecker extends ViewChecker {
 
   public TextBox getSearchField() {
     return mainWindow.getInputTextBox("searchField");
+  }
+
+  public TransactionChecker checkClearFilterButtonShown() {
+    checkComponentVisible(window, JPanel.class, "customFilterMessage", true);
+    return this;
+  }
+
+  public TransactionChecker checkClearFilterButtonHidden() {
+    checkComponentVisible(window, JPanel.class, "customFilterMessage", false);
+    return this;
+  }
+
+  public TransactionChecker clearFilters() {
+    window.getPanel("customFilterMessage").getButton().click();
+    return this;
   }
 
   public TransactionAmountChecker initAmountContent() {
@@ -136,6 +157,10 @@ public class TransactionChecker extends ViewChecker {
 
   public void selectAccount(String accountName) {
     mainWindow.getComboBox("accountFilterCombo").select(accountName);
+  }
+
+  public void checkSelectedAccount(String selection) {
+    assertThat(mainWindow.getComboBox("accountFilterCombo").selectionEquals(selection));
   }
 
   public void checkNotEmpty() {
@@ -200,7 +225,7 @@ public class TransactionChecker extends ViewChecker {
     }
 
     public void check() {
-      UISpecAssert.assertThat(getTable().contentEquals(
+      assertThat(getTable().contentEquals(
         new String[]{Lang.get("transactionView.date.user"),
                      Lang.get("label"),
                      Lang.get("amount"),

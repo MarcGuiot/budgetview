@@ -159,12 +159,14 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.getSummary().checkMonthBalance(-600.00);
+    budgetView.recurring.clickTitleSeriesName().checkOrder("EDF", "Loyer");
 
     restartApplication();
 
     views.selectBudget();
     timeline.selectMonth("2008/08");
     budgetView.getSummary().checkMonthBalance(-600.00);
+    budgetView.recurring.checkOrder("EDF", "Loyer");
   }
 
   public void testCategorizationView() throws Exception {
@@ -178,8 +180,11 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     CategorizationGaugeChecker gauge = categorization.getCompletionGauge();
     gauge.checkLevel(1);
-    categorization.selectTableRow(0);
-    categorization.selectIncome();
+    categorization
+      .selectTableRow(0)
+      .selectIncome()
+      .checkDescriptionShown()
+      .hideDescription();
     checkNoSignpostVisible();
 
     categorization.setNewIncome("WorldCo", "Salaire");
@@ -201,6 +206,11 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     categorization.getCompletionGauge().checkLevel(0.5);
     checkNoSignpostVisible();
+    
+    categorization
+      .selectTableRow(0)
+      .selectIncome()
+      .checkDescriptionHidden();
   }
 
   public void testRestartAfterCurrentMonthChanged() throws Exception {

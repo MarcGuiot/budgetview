@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.budget.wizard;
 
-import org.designup.picsou.gui.components.wizard.AbstractWizardPage;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.utils.Gui;
@@ -24,7 +23,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
-public class BudgetThresholdPage extends AbstractWizardPage {
+public class BudgetThresholdPage {
 
   private Directory directory;
   private LocalGlobRepository localRepository;

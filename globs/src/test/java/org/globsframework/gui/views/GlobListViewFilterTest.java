@@ -1,20 +1,24 @@
 package org.globsframework.gui.views;
 
 import org.globsframework.gui.DummySelectionListener;
+import org.globsframework.gui.splits.utils.DummyAction;
 import org.globsframework.gui.utils.GuiComponentTestCase;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
-import static org.globsframework.metamodel.DummyObject.NAME;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.uispec4j.Key;
 import org.uispec4j.ListBox;
 import org.uispec4j.TextBox;
 
+import javax.swing.*;
+
+import static org.globsframework.metamodel.DummyObject.NAME;
+
 public class GlobListViewFilterTest extends GuiComponentTestCase {
   private ListBox list;
   private TextBox filter;
+  private GlobListView listView;
 
   public void testCreationWithEmptyRepository() throws Exception {
     GlobRepository repository = checker.getEmptyRepository();
@@ -28,14 +32,20 @@ public class GlobListViewFilterTest extends GuiComponentTestCase {
       checker.parse("<dummyObject id='1' name='name1'/>" +
                     "<dummyObject id='2' name='name2'/>");
     init(repository);
+
     assertThat(list.contentEquals("name1", "name2"));
+    assertThat(list.selectionIsEmpty());
 
     filter.setText("1");
     assertThat(list.contentEquals("name1"));
+    assertThat(list.selectionEquals("name1"));
     assertThat(filter.foregroundNear("000000"));
+
+    list.clearSelection();
 
     filter.setText("NA");
     assertThat(list.contentEquals("name1", "name2"));
+    assertThat(list.selectionIsEmpty());
     assertThat(filter.foregroundNear("000000"));
 
     filter.setText("xx");
@@ -44,6 +54,7 @@ public class GlobListViewFilterTest extends GuiComponentTestCase {
 
     filter.clear();
     assertThat(list.contentEquals("name1", "name2"));
+    assertThat(list.selectionIsEmpty());
     assertThat(filter.foregroundNear("000000"));
 
     filter.pressKey(Key.E);
@@ -52,18 +63,7 @@ public class GlobListViewFilterTest extends GuiComponentTestCase {
     filter.pressKey(Key.d1);
     assertThat(list.contentEquals("name1"));
     assertThat(filter.foregroundNear("000000"));
-  }
-
-  public void testSelection() throws Exception {
-    GlobRepository repository =
-      checker.parse("<dummyObject id='1' name='name1'/>" +
-                    "<dummyObject id='2' name='name2'/>");
-    init(repository);
-
-    assertThat(list.selectionIsEmpty());
-
-    filter.setText("1");
-
+    assertThat(list.selectionEquals("name1"));
   }
 
   public void testUpDownKeyPressed() throws Exception {
@@ -115,10 +115,27 @@ public class GlobListViewFilterTest extends GuiComponentTestCase {
     filter.setText("name");
     assertThat(list.contentEquals("default", "name1", "name2", "name3"));
     assertThat(list.selectionIsEmpty());
-    
+
     filter.setText("XXX");
     assertThat(list.contentEquals("default"));
     assertThat(list.selectionEquals("default"));
+
+    filter.setText("1");
+    assertThat(list.contentEquals("default", "name1"));
+    assertThat(list.selectionEquals("name1"));
+  }
+
+  public void testEnterTriggersDoubleClickAction() throws Exception {
+    GlobRepository repository =
+      checker.parse("<dummyObject id='1' name='name1'/>" +
+                    "<dummyObject id='2' name='name2'/>");
+    init(repository);
+
+    DummyAction action = new DummyAction();
+    listView.addDoubleClickAction(action);
+
+    ((JTextField)filter.getAwtComponent()).postActionEvent();
+    assertTrue(action.wasClicked());
   }
 
   public void testDefaultValueMustUseSameTypeAsList() throws Exception {
@@ -137,8 +154,8 @@ public class GlobListViewFilterTest extends GuiComponentTestCase {
   }
 
   private void init(GlobRepository repository) {
-    GlobListView view = createList(repository);
-    filter = new TextBox(GlobListViewFilter.init(view).getComponent());
+    listView = createList(repository);
+    filter = new TextBox(GlobListViewFilter.init(listView).getComponent());
   }
 
   private void initWithDefault(int id, GlobRepository repository) {

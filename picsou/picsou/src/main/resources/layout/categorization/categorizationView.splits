@@ -44,10 +44,8 @@
             <scrollPane viewportBackground="#FFFFFF" marginBottom="0" weightY="100">
               <table ref="transactionsToCategorize" rowHeight="20"/>
             </scrollPane>
-            <row autoHideSource="customFilterMessage">
-              <filler fill="horizontal"/>
-              <component ref="customFilterMessage"/>
-              <filler fill="horizontal"/>
+            <row border="empty(5)" autoHideSource="customFilterMessage">
+              <panel ref="customFilterMessage" fill="none" anchor="center"/>
             </row>
             <row>
               <label text="$transactionCreation.title" styleClass="separatorTitle" marginTop="15"

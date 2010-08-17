@@ -99,6 +99,10 @@ public class DefaultLink extends AnnotatedPropertyHolder<Link> implements Link {
     return name;
   }
 
+  public String getFullName() {
+    return sourceType.getName() + "." + name;
+  }
+
   public boolean isRequired() {
     return required;
   }

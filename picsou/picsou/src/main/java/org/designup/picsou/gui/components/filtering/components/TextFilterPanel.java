@@ -1,5 +1,7 @@
-package org.designup.picsou.gui.components.filtering;
+package org.designup.picsou.gui.components.filtering.components;
 
+import org.designup.picsou.gui.components.filtering.FilterClearer;
+import org.designup.picsou.gui.components.filtering.FilterManager;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorChangeListener;
@@ -14,17 +16,21 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 public abstract class TextFilterPanel {
-  private FilterSet filterSet;
+  private FilterManager filterManager;
   private JTextField textField;
   private JPanel panel;
   private Color backgroundColor;
   private ColorService colorService;
   private ColorChangeListener listener;
 
-  public TextFilterPanel(FilterSet filterSet, GlobRepository repository, Directory directory) {
-    this.filterSet = filterSet;
+  public static final String SEARCH_FILTER = "textSearch";
+
+  public TextFilterPanel(FilterManager filterManager, GlobRepository repository, Directory directory) {
+    this.filterManager = filterManager;
 
     createPanel(repository, directory);
 
@@ -40,6 +46,16 @@ public abstract class TextFilterPanel {
       }
     };
     this.colorService.addListener(listener);
+
+    filterManager.addClearer(new FilterClearer() {
+      public List<String> getAssociatedFilters() {
+        return Arrays.asList(SEARCH_FILTER);
+      }
+
+      public void clear() {
+        textField.setText(null);
+      }
+    });
   }
 
   private void createPanel(GlobRepository repository, Directory directory) {
@@ -69,11 +85,11 @@ public abstract class TextFilterPanel {
   private void updateSearch(JTextField textField) {
     String text = textField.getText();
     if (Strings.isNullOrEmpty(text)) {
-      filterSet.remove("search");
+      filterManager.remove(SEARCH_FILTER);
       textField.setBackground(Color.WHITE);
     }
     else {
-      filterSet.set("search", createMatcher(text));
+      filterManager.set(SEARCH_FILTER, createMatcher(text));
       textField.setBackground(backgroundColor);
     }
   }

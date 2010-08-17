@@ -18,7 +18,7 @@ import java.util.Set;
 
 import static org.globsframework.model.utils.GlobMatchers.*;
 
-public enum TransactionFilteringMode {
+public enum CategorizationFilteringMode {
   ALL(1),
   SELECTED_MONTHS(2),
   LAST_IMPORTED_FILE(3),
@@ -27,7 +27,7 @@ public enum TransactionFilteringMode {
 
   private int id;
 
-  TransactionFilteringMode(int id) {
+  CategorizationFilteringMode(int id) {
     this.id = id;
   }
 
@@ -75,7 +75,7 @@ public enum TransactionFilteringMode {
   }
 
   public static Object get(Integer modeId) {
-    for (TransactionFilteringMode mode : values()) {
+    for (CategorizationFilteringMode mode : values()) {
       if (mode.getId() == modeId) {
         return mode;
       }
