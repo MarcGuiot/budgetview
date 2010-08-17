@@ -21,12 +21,12 @@ public class SerializationTest extends TestCase {
   private Date currentDate;
 
   protected void setUp() throws Exception {
-//    String fileName = TestUtils.getFileName(this, "sample.dat");
-    String fileName = "/tmp/output.bin";
+    String fileName = TestUtils.getFileName(this, "sample.dat");
+//    String fileName = "/tmp/output.bin";
     new File(fileName).getParentFile().mkdirs();
 
-//    outputStream = new BufferedOutputStream(new FileOutputStream(fileName));
-//    output = new SerializedOutputChecker(new DefaultSerializationOutput(outputStream));
+    outputStream = new BufferedOutputStream(new FileOutputStream(fileName));
+    output = new SerializedOutputChecker(new DefaultSerializationOutput(outputStream));
 
 //    inputStream = new FileInputStream(fileName);
 //    inputStream = new BufferedInputStream(new FileInputStream(fileName));

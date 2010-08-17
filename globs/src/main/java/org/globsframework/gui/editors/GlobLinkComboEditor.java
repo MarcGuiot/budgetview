@@ -111,7 +111,7 @@ public class GlobLinkComboEditor
   public void selectionUpdated(GlobSelection selection) {
     updateInProgress = true;
     try {
-      GlobList globs = selection.getAll(link.getTargetType());
+      GlobList globs = selection.getAll(link.getSourceType());
       select(globs);
     }
     finally {

@@ -1015,7 +1015,8 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
                              "date=null\n" +
                              "timestamp=null\n" +
                              "password=null\n" +
-                             "link=null\n");
+                             "link=null\n" +
+                             "link2=null\n");
   }
 
   public void testApplyChangeSetErrorOnUpdate() throws Exception {

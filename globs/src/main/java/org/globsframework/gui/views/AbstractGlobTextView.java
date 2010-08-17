@@ -27,6 +27,7 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
   private GlobMatcher filter = GlobMatchers.ALL;
   protected GlobList currentSelection = new GlobList();
   private boolean autoHideIfEmpty;
+  private boolean autoDisableIfEmpty;
   private GlobListMatcher autoHideMatcher = null;
   private ChangeSetMatcher updateMatcher = ChangeSetMatchers.NONE;
   protected boolean initCompleted = false;
@@ -52,6 +53,14 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
 
   public T setAutoHideIfEmpty(boolean autoHide) {
     this.autoHideIfEmpty = autoHide;
+    if (initCompleted) {
+      update();
+    }
+    return (T)this;
+  }
+
+  public T setAutoDisableIfEmpty(boolean autoDisableIfEmpty) {
+    this.autoDisableIfEmpty = autoDisableIfEmpty;
     if (initCompleted) {
       update();
     }
@@ -93,6 +102,9 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
                                  " - currentSelection=" + currentSelection, e);
     }
 
+    if (autoDisableIfEmpty){
+      component.setEnabled(!filteredSelection.isEmpty());
+    }
     if (autoHideMatcher != null) {
       boolean matches = autoHideMatcher.matches(filteredSelection, repository);
       component.setVisible(matches);

@@ -343,4 +343,31 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
 
     assertTrue(combo.contentEquals("name3", "name2", "name1"));
   }
+
+  public void testSelectWithTargetTypeDifferentFromSourceType() throws Exception {
+    repository =
+      checker.parse("" +
+                    "<dummyObject2 id='1' label='name21'/>" +
+                    "<dummyObject2 id='2' label='name22'/>" +
+                    "<dummyObject id='1' name='name1' link2='2'/>" +
+                    "<dummyObject id='2' name='name2' link2='1'/>" +
+                    "<dummyObject id='3' name='name3'/>");
+    repository.addChangeListener(changeListener);
+    Glob glob1 = repository.get(key1);
+    Glob glob2 = repository.get(key2);
+
+    GlobLinkComboEditor editor = GlobLinkComboEditor.init(DummyObject.LINK2, repository, directory);
+    ComboBox combo = new ComboBox(editor.getComponent());
+
+    assertTrue(combo.contentEquals("", "dummyObject2[id=1]", "dummyObject2[id=2]"));
+    assertTrue(combo.selectionEquals(null));
+    assertFalse(combo.isEnabled());
+
+    selectionService.select(glob1);
+
+    assertTrue(combo.isEnabled());
+    assertTrue(combo.contentEquals("", "dummyObject2[id=1]", "dummyObject2[id=2]"));
+    assertTrue(combo.selectionEquals("dummyObject2[id=2]"));
+
+  }
 }
