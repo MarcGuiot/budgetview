@@ -124,6 +124,10 @@ public class HistoChartMetrics {
     return chartHeight;
   }
 
+  public int labelZoneHeightWithMargin() {
+    return labelZoneHeight + 2;
+  }
+
   public int y(double value) {
     if (value >= 0) {
       return VERTICAL_CHART_PADDING + (int)(positiveHeight * (1 - value / maxPositiveValue));

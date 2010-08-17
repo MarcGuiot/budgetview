@@ -17,6 +17,7 @@ public enum ProfileType implements GlobConstantContainer {
   IRREGULAR("UNKNOWN", 1, -1, 9),
   EVERY_MONTH("EVERY_MONTH", 2, -1, 1),
   TWO_MONTHS("EVERY_TWO_MONTHS", 3, 2, 2),
+  THREE_MONTHS("EVERY_THREE_MONTHS", 4, 3, 3),
   SIX_MONTHS("EVERY_SIX_MONTHS", 6, 6, 5),
   ONCE_A_YEAR("ONCE_A_YEAR", 7, 12, 6),
   SINGLE_MONTH("SINGLE_MONTH", 8, -1, 7);
@@ -61,6 +62,8 @@ public enum ProfileType implements GlobConstantContainer {
         return EVERY_MONTH;
       case 3:
         return TWO_MONTHS;
+      case 4:
+        return THREE_MONTHS;
       case 6:
         return SIX_MONTHS;
       case 7:

@@ -11,21 +11,26 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.SplitsLoader;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
+import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetListener;
-import static org.globsframework.model.utils.GlobFunctors.update;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
 import java.util.Set;
 import java.util.SortedSet;
+
+import static org.globsframework.model.utils.GlobFunctors.update;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesAmountEditionPanel {
 
@@ -46,7 +51,12 @@ public class SeriesAmountEditionPanel {
   private SeriesEditorAccess seriesEditorAccess;
 
   public interface SeriesEditorAccess {
-    void openSeriesEditor(Key seriees, Set<Integer> selectedMonthIds);
+    void openSeriesEditor(Key series, Set<Integer> selectedMonthIds);
+  }
+
+  public SeriesAmountEditionPanel(GlobRepository repository,
+                                  Directory directory) {
+    this(repository, directory, null);
   }
 
   public SeriesAmountEditionPanel(GlobRepository repository,
@@ -139,7 +149,24 @@ public class SeriesAmountEditionPanel {
                       SeriesBudget.AMOUNT,
                       new SeriesBudgetSliderAdapter(amountEditor, repository, directory));
 
-    builder.addButton("editSeries", Series.TYPE, new SeriesPeriodicityAndScopeStringifier(), new OpenSeriesEditorCallback());
+
+    final JButton editSeriesButton;
+    if (seriesEditorAccess != null) {
+      editSeriesButton = GlobButtonView.init(Series.TYPE, repository, directory,
+                                             new SeriesPeriodicityAndScopeStringifier(),
+                                             new OpenSeriesEditorCallback())
+        .getComponent();
+    }
+    else {
+      editSeriesButton = new JButton();
+    }
+    builder.add("editSeries", editSeriesButton);
+
+    builder.addLoader(new SplitsLoader() {
+      public void load(Component component, SplitsNode node) {
+        editSeriesButton.setVisible(seriesEditorAccess != null);
+      }
+    });
 
     this.panel = builder.load();
   }
