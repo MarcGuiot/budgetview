@@ -68,7 +68,11 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     if (source == null) {
       return null;
     }
-    return find(source.getTargetKey(link));
+    Key targetKey = source.getTargetKey(link);
+    if (targetKey == null){
+      return null;
+    }
+    return find(targetKey);
   }
 
   public GlobList findLinkedTo(Glob target, Link link) {

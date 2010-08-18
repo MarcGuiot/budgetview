@@ -31,6 +31,7 @@ public class PicsouModel {
                           UserVersionInformation.TYPE,
                           AccountPositionThreshold.TYPE,
                           DeferredCardDate.TYPE,
+                          DeferredCardPeriod.TYPE,
                           Notes.TYPE,
                           SignpostStatus.TYPE,
                           SeriesOrder.TYPE)

@@ -58,7 +58,7 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
   }
 
   public void testLabelIsUpdatedOnRepositoryChanges() throws Exception {
-    textBox = init(repository, false, new GlobListStringifier() {
+    textBox = init(repository, false, false, new GlobListStringifier() {
       public String toString(GlobList selected, GlobRepository repository) {
         if (selected.isEmpty()) {
           return "";
@@ -162,7 +162,7 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
   }
 
   public void testAutoHideWithMatcher() throws Exception {
-    textBox = init(repository, false, stringifier, new GlobListMatcher() {
+    textBox = init(repository, false, false, stringifier, new GlobListMatcher() {
       public boolean matches(GlobList list, GlobRepository repository) {
         return list.contains(glob1);
       }
@@ -198,6 +198,17 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
     view.getComponent().setVisible(false);
     selectionService.select(glob1);
     assertFalse(textBox.isVisible());
+  }
+
+  public void testAutoDisableIfEmpty() throws Exception {
+    textBox = initWithAutoDisable(repository);
+    assertFalse(textBox.isEnable());
+
+    selectionService.select(glob1);
+    assertTrue(textBox.isEnable());
+
+    selectionService.clear(glob1.getType());
+    assertFalse(textBox.isEnable());
   }
 
   public void testForceSelection() throws Exception {
@@ -247,7 +258,11 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
   }
 
   protected TextComponent initWithAutoHide(final GlobRepository repository) {
-    return init(repository, true, stringifier, GlobListMatchers.ALL);
+    return init(repository, true, false, stringifier, GlobListMatchers.ALL);
+  }
+
+  protected TextComponent initWithAutoDisable(final GlobRepository repository) {
+    return init(repository, false, true, stringifier, GlobListMatchers.ALL);
   }
 
   protected final TextComponent init(GlobRepository repository, Glob glob) {
@@ -255,11 +270,12 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
   }
 
   protected final TextComponent init(GlobRepository repository, boolean autoHide,
-                                     GlobListStringifier stringifier, GlobListMatcher matcher) {
+                                     boolean autoDisable, GlobListStringifier stringifier, GlobListMatcher matcher) {
     AbstractGlobTextView view =
       initView(repository, stringifier)
         .setAutoHideMatcher(matcher)
-        .setAutoHideIfEmpty(autoHide);
+        .setAutoHideIfEmpty(autoHide)
+        .setAutoDisableIfEmpty(autoDisable);
     return createComponent(view);
   }
 
@@ -282,6 +298,8 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
     Assertion isVisible();
 
     Assertion isEditable();
+
+    Assertion isEnable();
   }
 
   protected class TextBoxComponent implements TextComponent {
@@ -311,6 +329,10 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
     public Assertion isEditable() {
       return textBox.isEditable();
     }
+
+    public Assertion isEnable() {
+      return textBox.isEnabled();
+    }
   }
 
   protected class ButtonComponent implements TextComponent {
@@ -334,6 +356,10 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
 
     public Assertion isEditable() {
       return UISpecAssert.failure("Buttons are not editable");
+    }
+
+    public Assertion isEnable() {
+      return button.isEnabled();
     }
   }
 }

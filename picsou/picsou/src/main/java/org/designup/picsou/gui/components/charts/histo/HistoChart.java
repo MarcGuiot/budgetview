@@ -194,7 +194,8 @@ public class HistoChart extends JPanel {
   }
 
   private boolean clickable() {
-    return clickable && (currentRolloverIndex != null) && (listener != null) && (painter != null);
+    return clickable && (currentRolloverIndex != null) && (listener != null) && (painter != null)
+           && painter.getDataset().size() > 0;
   }
 
   public void mouseMoved(int x, boolean dragging) {
@@ -255,26 +256,36 @@ public class HistoChart extends JPanel {
     addMouseListener(new MouseAdapter() {
 
       public void mousePressed(MouseEvent e) {
-        HistoChart.this.startClick();
+        if (isEnabled()) {
+          HistoChart.this.startClick();
+        }
       }
 
       public void mouseEntered(MouseEvent e) {
-        currentRolloverIndex = null;
+        if (isEnabled()) {
+          currentRolloverIndex = null;
+        }
       }
 
       public void mouseExited(MouseEvent e) {
-        currentRolloverIndex = null;
-        repaint();
+        if (isEnabled()) {
+          currentRolloverIndex = null;
+          repaint();
+        }
       }
     });
 
     addMouseMotionListener(new MouseMotionListener() {
       public void mouseDragged(MouseEvent e) {
-        HistoChart.this.mouseMoved(e.getX(), true);
+        if (isEnabled()) {
+          HistoChart.this.mouseMoved(e.getX(), true);
+        }
       }
 
       public void mouseMoved(MouseEvent e) {
-        HistoChart.this.mouseMoved(e.getX(), false);
+        if (isEnabled()) {
+          HistoChart.this.mouseMoved(e.getX(), false);
+        }
       }
     });
   }
@@ -297,5 +308,4 @@ public class HistoChart extends JPanel {
       return colors.getLabelColor();
     }
   }
-
 }

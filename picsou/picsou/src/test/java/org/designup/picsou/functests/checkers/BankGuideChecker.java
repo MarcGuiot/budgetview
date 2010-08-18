@@ -35,7 +35,7 @@ public class BankGuideChecker extends GuiChecker {
   }
 
   public BankGuideChecker setFilter(String filter) {
-    panel.getTextBox("bankEditor").setText(filter);
+    panel.getTextBox("bankEditor").setText(filter, false);
     return this;
   }
 

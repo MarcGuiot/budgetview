@@ -2,6 +2,7 @@ package org.globsframework.gui.utils;
 
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.EmptyGlobList;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 
@@ -57,7 +58,12 @@ public class GlobSelectionBuilder {
     }
 
     public GlobList getAll(GlobType type) {
-      return new GlobList(globs);
+      if (type.equals(this.type)) {
+        return new GlobList(globs);
+      }
+      else {
+        return new EmptyGlobList();
+      }
     }
 
     public String toString() {

@@ -142,8 +142,8 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
-    categorization.setNewVariable("Vinci", "Transports");
-    categorization.setNewVariable("Virgin", "Leisures");
+    categorization.setNewVariable("Vinci", "Transports", -5.);
+    categorization.setNewVariable("Virgin", "Leisures", -550.);
     categorization.setVariable("FNAC", "Leisures");
 
     views.selectData();

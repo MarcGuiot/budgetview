@@ -82,9 +82,8 @@ public class SeriesAmountEditionDialog {
 
     editionPanel.clear();
     loadGlobs(series);
-    editionPanel.changeSeries(series.getKey());
-    localDirectory.get(SelectionService.class).select(series);
     editionPanel.selectMonths(months);
+    localDirectory.get(SelectionService.class).select(series);
 
     GuiUtils.showCentered(dialog);
   }

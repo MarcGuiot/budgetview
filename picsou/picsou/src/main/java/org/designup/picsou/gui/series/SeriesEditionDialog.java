@@ -20,6 +20,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.gui.editors.GlobCheckBoxView;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
@@ -90,6 +91,8 @@ public class SeriesEditionDialog {
   private GlobLinkComboEditor budgetAreaCombo;
   private JTabbedPane tabbedPane;
   private GlobCheckBoxView reportCheckBox;
+  private ReadOnlyGlobTextFieldView startTextFieldView;
+  private ReadOnlyGlobTextFieldView endDateTextFieldView;
 
   public SeriesEditionDialog(final GlobRepository repository, Directory directory) {
     this(directory.get(JFrame.class), repository, directory);
@@ -338,8 +341,8 @@ public class SeriesEditionDialog {
 
   private void registerDateRangeComponents(GlobsPanelBuilder builder) {
 
-    ReadOnlyGlobTextFieldView startTextFieldView = ReadOnlyGlobTextFieldView.init(Series.TYPE, localRepository, localDirectory,
-                                                                                  new MonthYearStringifier(Series.FIRST_MONTH));
+    startTextFieldView = ReadOnlyGlobTextFieldView.init(Series.TYPE, localRepository, localDirectory,
+                                                        new MonthYearStringifier(Series.FIRST_MONTH));
     builder.add("seriesStartDate", startTextFieldView);
 
     deleteStartDateAction = new AbstractAction() {
@@ -368,15 +371,17 @@ public class SeriesEditionDialog {
       }
     };
     builder.add("seriesStartDateChooser", startDateChooserAction);
-    startTextFieldView.getComponent().addMouseListener(new MouseAdapter() {
+    this.startTextFieldView.getComponent().addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent e) {
-        startDateChooserAction.actionPerformed(null);
+        if (currentSeries != null){
+          startDateChooserAction.actionPerformed(null);
+        }
       }
     });
 
-    ReadOnlyGlobTextFieldView textFieldView = ReadOnlyGlobTextFieldView.init(Series.TYPE, localRepository, localDirectory,
-                                                                             new MonthYearStringifier(Series.LAST_MONTH));
-    builder.add("seriesEndDate", textFieldView);
+    endDateTextFieldView = ReadOnlyGlobTextFieldView.init(Series.TYPE, localRepository, localDirectory,
+                                                          new MonthYearStringifier(Series.LAST_MONTH));
+    builder.add("seriesEndDate", endDateTextFieldView);
 
     deleteEndDateAction = new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
@@ -403,9 +408,11 @@ public class SeriesEditionDialog {
       }
     };
     builder.add("seriesEndDateChooser", endDateChooserAction);
-    textFieldView.getComponent().addMouseListener(new MouseAdapter() {
+    this.endDateTextFieldView.getComponent().addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent e) {
-        endDateChooserAction.actionPerformed(null);
+        if (currentSeries != null){
+          endDateChooserAction.actionPerformed(null);
+        }
       }
     });
   }
@@ -664,15 +671,15 @@ public class SeriesEditionDialog {
     setCurrentSeries(series);
     this.currentMonthIds = new TreeSet<Integer>(monthIds);
     this.lastSelectedSubSeriesId = null;
+    amountEditionPanel.selectMonths(monthIds);
     if (currentSeries != null) {
+      amountEditionPanel.changeSeries(currentSeries.getKey());
       selectionService.select(currentSeries);
     }
     else {
       seriesList.selectFirst();
     }
     if (currentSeries != null) {
-      amountEditionPanel.changeSeries(currentSeries.getKey());
-      amountEditionPanel.selectMonths(monthIds);
       updateMonthSelectionCard();
     }
 
@@ -716,9 +723,11 @@ public class SeriesEditionDialog {
     }
     this.currentSeries = currentSeries;
     this.subSeriesEditionPanel.setCurrentSeries(currentSeries);
+    endDateTextFieldView.getComponent().setEnabled(this.currentSeries != null);
+    startTextFieldView.getComponent().setEnabled(this.currentSeries != null);
     reportCheckBox.getComponent().setEnabled(this.currentSeries != null);
     reportCheckBox.getComponent().setVisible(this.currentSeries != null && !currentSeries.get(Series.IS_AUTOMATIC));
-    if (currentSeries != null){
+    if (currentSeries != null) {
       isAutomatic = currentSeries.get(Series.IS_AUTOMATIC);
     }
   }

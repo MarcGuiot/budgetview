@@ -100,6 +100,12 @@ public class AmountEditor {
     numericEditor.getComponent().addActionListener(action);
   }
 
+  public void setEnabled(boolean enabled) {
+    numericEditor.setEditable(enabled);
+    positiveRadio.setEnabled(enabled);
+    negativeRadio.setEnabled(enabled);
+  }
+
   private class NumericEditor extends GlobNumericEditor {
     private NumericEditor(Field field, GlobRepository repository, Directory directory) {
       super(field, repository, directory);

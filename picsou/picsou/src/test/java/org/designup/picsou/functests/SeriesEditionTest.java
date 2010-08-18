@@ -309,7 +309,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthIsChecked("Aug")
       .checkChart(new Object[][]{
         {"2008", "July", 0.00, 0.00, true},
-        {"2008", "August", 29.00, 29.00},
+        {"2008", "August", 29.00, 29.00, true},
       })
       .toggleMonth("Jul")
       .selectSeries("Electricity")
@@ -322,7 +322,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNoSeriesSelected() throws Exception {
-    fail("Gerer le unselect...");
     views.selectBudget();
     budgetView.recurring.createSeries()
       .setName("series")
@@ -332,6 +331,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .unselectSeries()
       .checkAllMonthsDisabled()
       .checkCalendarsAreDisabled()
+      .checkRadioAreDisabled()
+      .checkEditorAreDisabled()
+      .selectSeries("series")
+      .selectFirstMonth()
       .cancel();
   }
 
@@ -404,6 +407,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .createSeries();
     seriesEdition
       .setCustom()
+      .validate();
+    budgetView.recurring
+      .editSeriesList()
       .createSeries()
       .setCustom()
       .checkSeriesListEquals("New series", "New series");
@@ -424,7 +430,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkChart(new Object[][]{
         {"2008", "August", 0.00, 0.00, true},
       })
-
       .selectSeries(0)
       .checkMonthIsChecked("Jul")
       .checkMonthIsNotChecked("Aug")
@@ -620,34 +625,34 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     // L'histoChart ne montre qu'une partie des mois
     edition.setStartDate(200709)
       .checkChart(new Object[][]{
-        {"2007", "October", 0.00, 30.00},
-        {"2007", "December", 0.00, 30.00},
-        {"2008", "February", 0.00, 30.00},
+        {"2007", "October", 0.00, 30.00, true},
+        {"2007", "December", 0.00, 30.00, true},
+        {"2008", "February", 0.00, 30.00, true},
       });
 
     edition.setEndDate(200801)
       .checkChart(new Object[][]{
-        {"2007", "October", 0.00, 30.00},
-        {"2007", "December", 0.00, 30.00},
+        {"2007", "October", 0.00, 30.00, true},
+        {"2007", "December", 0.00, 30.00, true},
       });
 
     edition.setEndDate(200802)
       .checkChart(new Object[][]{
-        {"2007", "October", 0.00, 30.00},
-        {"2007", "December", 0.00, 30.00},
-        {"2008", "February", 0.00, 0.00},
+        {"2007", "October", 0.00, 30.00, true},
+        {"2007", "December", 0.00, 30.00, true},
+        {"2008", "February", 0.00, 0.00, true},
       });
 
     edition.setStartDate(200712)
       .checkChart(new Object[][]{
-        {"2007", "December", 0.00, 30.00},
-        {"2008", "February", 0.00, 0.00},
+        {"2007", "December", 0.00, 30.00, true},
+        {"2008", "February", 0.00, 0.00, true},
       });
     edition.selectAllMonths().setAmount("30")
       .toggleMonth("Dec", "Feb").toggleMonth("Dec", "Feb")
       .checkChart(new Object[][]{
-        {"2007", "December", 0.00, 30.00},
-        {"2008", "February", 0.00, 30.00},
+        {"2007", "December", 0.00, 30.00, true},
+        {"2008", "February", 0.00, 30.00, true},
       });
     edition.cancel();
   }
@@ -857,7 +862,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectPositiveAmounts()
       .setAmount("35")
       .checkChart(new Object[][]{
-        {"2008", "June", 0.00, 35.00, true},
+        {"2008", "June", 0.00, -35.00, true},
         {"2008", "July", 0.00, 0.00},
         {"2008", "August", 0.00, 0.00},
       });
@@ -866,8 +871,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkNegativeAmountsSelected()
       .setAmount("20")
       .checkChart(new Object[][]{
-        {"2008", "June", 0.00, 35.00},
-        {"2008", "July", 0.00, 20.00},
+        {"2008", "June", 0.00, -35.00},
+        {"2008", "July", 0.00, 20.00, true},
         {"2008", "August", 0.00, 0.00},
       });
 
@@ -875,7 +880,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkNegativeAmountsSelected()
       .setAmount("10")
       .checkChart(new Object[][]{
-        {"2008", "June", 0.00, 35.00},
+        {"2008", "June", 0.00, -35.00},
         {"2008", "July", 0.00, 20.00},
         {"2008", "August", 0.00, 10.00, true},
       });
@@ -890,8 +895,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         {"2008", "August", 0.00, 10.00},
       });
 
-    edition.selectNoMonth()
-      .checkAmountIsDisabled();
+//    edition.selectNoMonth()
+//      .checkAmountIsDisabled();
 
     edition.selectMonth(200807)
       .checkNegativeAmountsSelected()
@@ -899,7 +904,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectPositiveAmounts()
       .checkChart(new Object[][]{
         {"2008", "June", 0.00, 35.00},
-        {"2008", "July", 0.00, 20.00, true},
+        {"2008", "July", 0.00, -20.00, true},
         {"2008", "August", 0.00, 10.00},
       });
 
@@ -947,8 +952,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectNegativeAmounts()
       .setAmount("20")
       .checkChart(new Object[][]{
-        {"2008", "June", 0.00, 35.00, true},
-        {"2008", "July", 0.00, -20.00},
+        {"2008", "June", 0.00, 35.00},
+        {"2008", "July", 0.00, -20.00, true},
         {"2008", "August", 0.00, 0.00},
       });
 
@@ -957,9 +962,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setAmount("10")
       .selectNegativeAmounts()
       .checkChart(new Object[][]{
-        {"2008", "June", 0.00, 35.00, true},
+        {"2008", "June", 0.00, 35.00},
         {"2008", "July", 0.00, -20.00},
-        {"2008", "August", 0.00, -10.00},
+        {"2008", "August", 0.00, -10.00, true},
       });
 
     edition.selectMonth(200806)
@@ -972,16 +977,16 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         {"2008", "August", 0.00, -10.00},
       });
 
-    edition.selectNoMonth()
-      .checkAmountIsDisabled();
+//    edition.selectNoMonth()
+//      .checkAmountIsDisabled();
 
     edition.selectMonth(200807)
       .checkNegativeAmountsSelected()
       .checkAmount(20.00)
       .selectPositiveAmounts()
       .checkChart(new Object[][]{
-        {"2008", "June", 0.00, 30.00, true},
-        {"2008", "July", 0.00, 20.00},
+        {"2008", "June", 0.00, 30.00},
+        {"2008", "July", 0.00, 20.00, true},
         {"2008", "August", 0.00, -10.00},
       });
 
@@ -1006,14 +1011,14 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthIsChecked(3, 9)
       .validate();
     timeline.selectMonth("2008/08");
-    budgetView.variable.editSeriesList().selectSeries("S1").checkAmountIsDisabled()
+    budgetView.variable.editSeriesList().selectSeries("S1")
+      .toggleMonth(8)
+      .selectAllMonths()
+      .setAmount(-200.)
       .cancel();
   }
 
   public void testAutomaticAndManualModes() throws Exception {
-
-    System.out.println("SeriesEditionTest.testAutomaticAndManualModes ---  A VALIDER");
-
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/28", -30., "EAU")
@@ -1100,7 +1105,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectSavings().editSeries("epargne")
       .setIrregular()
       .checkChart(new Object[][]{
-        {"2008", "June", 100.00, 100.00, true},
+        {"2008", "June", -100.00, -100.00, true},
         {"2008", "July", 0.00, 0.00, true},
         {"2008", "August", 0.00, 0.00},
       })

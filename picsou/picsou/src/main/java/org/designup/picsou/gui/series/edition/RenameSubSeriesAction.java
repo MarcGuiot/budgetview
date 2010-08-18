@@ -16,13 +16,12 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class RenameSubSeriesAction extends RenameGlobAction implements GlobSelectionListener {
+public class RenameSubSeriesAction extends RenameGlobAction {
   private JDialog owner;
 
   public RenameSubSeriesAction(GlobRepository repository, Directory directory, JDialog owner) {
     super(Lang.get("rename"), SubSeries.NAME, repository, directory);
     this.owner = owner;
-    directory.get(SelectionService.class).addListener(this, SubSeries.TYPE);
     setEnabled(false);
   }
 

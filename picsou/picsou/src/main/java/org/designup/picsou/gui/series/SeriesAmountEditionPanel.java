@@ -77,14 +77,14 @@ public class SeriesAmountEditionPanel {
           }
           else {
             changeSeries(first.getKey());
-            if (selectedMonthIds != null) {
-              selectMonths(selectedMonthIds);
-            }
           }
+          updateBudgetFromMonth();
         }
         if (selection.isRelevantForType(Month.TYPE)) {
-          Set<Integer> selectedMonths = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
-          doSelectMonths(SeriesAmountEditionPanel.this.repository.find(currentSeries), selectedMonths);
+          if (currentSeries != null) {
+            Set<Integer> selectedMonths = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
+            doSelectMonths(SeriesAmountEditionPanel.this.repository.find(currentSeries), selectedMonths);
+          }
         }
       }
     }, Month.TYPE, Series.TYPE);
@@ -185,31 +185,42 @@ public class SeriesAmountEditionPanel {
 
   public void clear() {
     changeSeries(null);
-    selectedMonthIds = null;
+    selectionService.clear(SeriesBudget.TYPE);
+    chart.init(null, null);
   }
 
   public void changeSeries(Key seriesKey) {
+    propagationCheckBox.setEnabled(seriesKey != null);
+    chart.getChart().setEnabled(seriesKey != null);
+    amountEditor.setEnabled(seriesKey != null);
     currentSeries = seriesKey;
     autoSelectFutureMonths = false;
     propagationCheckBox.setSelected(false);
-    chart.init(null, null);
   }
 
   public void selectMonths(Set<Integer> months) {
 
+    if (months == null || months.isEmpty()) {
+      return;
+    }
+    selectedMonthIds = months;
+    currentMonth = Utils.min(months);  //TODO Regis : il y avait max.
+
+    updateBudgetFromMonth();
+  }
+
+  private void updateBudgetFromMonth() {
     if (currentSeries == null) {
       return;
     }
-
     Glob series = repository.get(currentSeries);
     currentSeries = series.getKey();
-    currentMonth = Utils.max(months);
 
     chart.init(currentSeries.get(Series.ID), currentMonth);
 
     updatePositiveOrNegativeRadio();
 
-    doSelectMonths(series, months);
+    doSelectMonths(series, selectedMonthIds);
 
     amountEditor.selectAll();
   }
@@ -223,12 +234,6 @@ public class SeriesAmountEditionPanel {
     amountEditor.update(isUsuallyPositive, budgetArea == BudgetArea.SAVINGS);
   }
 
-  private void toto(Glob series) {
-    BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
-    amountEditor.update(isUsuallyPositive(series, budgetArea),
-                        budgetArea == BudgetArea.SAVINGS);
-  }
-
   private boolean isUsuallyPositive(Glob series, BudgetArea budgetArea) {
     double multiplier = Account.computeAmountMultiplier(series, repository);
     return budgetArea.isIncome() || (budgetArea == BudgetArea.SAVINGS && multiplier > 0);
@@ -238,26 +243,63 @@ public class SeriesAmountEditionPanel {
     if (selectionInProgress) {
       return;
     }
-
     selectionInProgress = true;
+
     try {
-      selectedMonthIds = monthIds;
       GlobSelectionBuilder selection = GlobSelectionBuilder.init();
       Integer seriesId = series.get(Series.ID);
+      boolean selectionOK = false;
       for (Integer monthId : getMonths(monthIds)) {
-        GlobList list = repository
-          .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
-          .findByIndex(SeriesBudget.MONTH, monthId)
-          .getGlobs();
-        list.filterSelf(GlobMatchers.isTrue(SeriesBudget.ACTIVE), repository);
-        selection.add(list, SeriesBudget.TYPE);
-        selection.add(repository.get(Key.create(Month.TYPE, monthId)));
+        GlobList list = getBudget(seriesId, monthId);
+        if (!list.isEmpty()) {
+          selection.add(list, SeriesBudget.TYPE);
+          selection.add(repository.get(Key.create(Month.TYPE, monthId)));
+          selectionOK = true;
+        }
+      }
+      if (!selectionOK) {
+        Integer firstMonth = monthIds.iterator().next();
+        int previous = firstMonth;
+        int next = firstMonth;
+        GlobList list = repository.getAll(Month.TYPE);
+        int realFirst = list.getFirst().get(Month.ID);
+        int realLast = list.getLast().get(Month.ID);
+
+        while (!selectionOK && (previous > realFirst || next < realLast)) {
+          if (previous > realFirst) {
+            previous = Month.previous(previous);
+            GlobList budget = getBudget(seriesId, previous);
+            if (!budget.isEmpty()) {
+              selectionOK = true;
+              selection.add(budget, SeriesBudget.TYPE);
+              selection.add(repository.get(Key.create(Month.TYPE, previous)));
+            }
+          }
+          if (next < realLast) {
+            next = Month.next(next);
+            GlobList budget = getBudget(seriesId, previous);
+            if (!budget.isEmpty()) {
+              selectionOK = true;
+              selection.add(budget, SeriesBudget.TYPE);
+              selection.add(repository.get(Key.create(Month.TYPE, next)));
+            }
+          }
+        }
       }
       selectionService.select(selection.get());
     }
     finally {
       selectionInProgress = false;
     }
+  }
+
+  private GlobList getBudget(Integer seriesId, Integer monthId) {
+    GlobList list = repository
+      .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
+      .findByIndex(SeriesBudget.MONTH, monthId)
+      .getGlobs();
+    list.filterSelf(GlobMatchers.isTrue(SeriesBudget.ACTIVE), repository);
+    return list;
   }
 
   private void updateAutoSelect(boolean enabled) {
@@ -293,10 +335,11 @@ public class SeriesAmountEditionPanel {
     return nextMonths.getValueSet(Month.ID);
   }
 
+  // peut-on enlever ce code
   public void applyChanges(boolean containsChanges) {
-    if (propagationCheckBox.isSelected()) {
-      propagateValue(SeriesAmountEditionPanel.this.currentMonth);
-    }
+//    if (propagationCheckBox.isSelected()) {
+//      propagateValue(SeriesAmountEditionPanel.this.currentMonth);
+//    }
   }
 
   private void propagateValue(Integer startMonth) {

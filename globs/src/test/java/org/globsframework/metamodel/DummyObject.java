@@ -29,6 +29,10 @@ public class DummyObject {
   @Target(DummyObject.class)
   public static LinkField LINK;
 
+  @Target(DummyObject2.class)
+  public static LinkField LINK2;
+
+
   public static UniqueIndex NAME_INDEX;
   public static NotUniqueIndex DATE_INDEX;
 

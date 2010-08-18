@@ -24,7 +24,7 @@ public class XmlChangeSetParserTest extends TestCase {
     changeSet.visit(new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         assertEquals(1, key.get(DummyObject.ID).intValue());
-        assertEquals(7, values.size());
+        assertEquals(8, values.size());
         assertEquals("name1", values.get(DummyObject.NAME));
         assertEquals(2.0, values.get(DummyObject.VALUE), 0.01);
         assertTrue(values.get(DummyObject.PRESENT));
@@ -43,7 +43,7 @@ public class XmlChangeSetParserTest extends TestCase {
 
       public void visitDeletion(Key key, FieldValues values) throws Exception {
         assertEquals(3, key.get(DummyObject.ID).intValue());
-        assertEquals(7, values.size());
+        assertEquals(8, values.size());
         assertEquals("name3", values.get(DummyObject.NAME));
         assertNull(values.get(DummyObject.VALUE));
         assertNull(values.get(DummyObject.PRESENT));

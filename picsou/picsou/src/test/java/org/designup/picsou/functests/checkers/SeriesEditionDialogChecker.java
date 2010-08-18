@@ -459,6 +459,23 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
+  public SeriesEditionDialogChecker checkRadioAreDisabled() {
+    for (UIComponent radio : dialog.getUIComponents(RadioButton.class)) {
+      assertFalse(radio.isEnabled());
+    }
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkEditorAreDisabled() {
+    for (UIComponent textbox : dialog.getUIComponents(TextBox.class)) {
+      if (textbox.getAwtComponent() instanceof JTextField){
+        assertFalse(textbox.getDescription(), textbox.isEnabled());
+      }
+    }
+
+    return this;
+  }
+
   public SeriesEditionDialogChecker checkNameIsSelected() {
     JTextField textEditor = (JTextField)dialog.getInputTextBox("nameField").getAwtComponent();
     Assert.assertEquals(textEditor.getText(), textEditor.getSelectedText());
