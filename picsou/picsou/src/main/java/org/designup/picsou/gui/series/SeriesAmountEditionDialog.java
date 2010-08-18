@@ -7,8 +7,11 @@ import org.designup.picsou.triggers.savings.UpdateMirrorSeriesBudgetChangeSetVis
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.*;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -21,6 +24,7 @@ import java.util.Set;
 public class SeriesAmountEditionDialog {
 
   private SeriesAmountEditionPanel editionPanel;
+  private JLabel seriesNameLabel = new JLabel();
   private PicsouDialog dialog;
 
   private LocalGlobRepository localRepository;
@@ -28,6 +32,7 @@ public class SeriesAmountEditionDialog {
   private Directory localDirectory;
 
   private SeriesEditionDialog seriesEditionDialog;
+  private GlobStringifier seriesNameStringifier;
 
   public SeriesAmountEditionDialog(GlobRepository parentRepository,
                                    Directory parentDirectory,
@@ -41,6 +46,8 @@ public class SeriesAmountEditionDialog {
 
     this.seriesEditionDialog = seriesEditionDialog;
 
+    this.seriesNameStringifier = parentDirectory.get(DescriptionService.class).getStringifier(Series.TYPE);
+
     createDialog();
   }
 
@@ -48,6 +55,8 @@ public class SeriesAmountEditionDialog {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesAmountEditionDialog.class,
                                                       "/layout/series/seriesAmountEditionDialog.splits",
                                                       localRepository, localDirectory);
+
+    builder.add("seriesName", seriesNameLabel);
 
     editionPanel = new SeriesAmountEditionPanel(localRepository, localDirectory, new SeriesEditor());
     builder.add("editionPanel", editionPanel.getPanel());
@@ -68,6 +77,8 @@ public class SeriesAmountEditionDialog {
     if (series != null && series.isTrue(Series.IS_MIRROR)) {
       series = parentRepository.findLinkTarget(series, Series.MIRROR_SERIES);
     }
+
+    seriesNameLabel.setText(seriesNameStringifier.toString(series, localRepository));
 
     editionPanel.clear();
     loadGlobs(series);

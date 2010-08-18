@@ -1,14 +1,21 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.title" marginBottom="5" weightY="0.1"/>
+    <style selector="label.subtitle" font="-,plain,10"  foreground="dialog.subtitle"
+           weightY="0.1" fill="none" anchor="north" marginBottom="10"/>
+  </styles>
 
-  <panel styleClass="dialog" preferredSize="(460,400)">
+  <panel styleClass="dialog" preferredSize="(480,400)">
 
     <column styleClass="innerDialog">
 
       <label name="title" text="$seriesAmountEdition.title" styleClass="title"/>
 
-      <column name="innerBlock" styleClass="dialogBlock">
+      <label ref="seriesName" styleClass="subtitle"/>
+
+      <column name="innerBlock" styleClass="dialogBlock" weightY="10">
 
         <panel ref="editionPanel"/>
 

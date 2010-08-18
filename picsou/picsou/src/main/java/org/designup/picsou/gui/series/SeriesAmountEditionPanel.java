@@ -147,7 +147,7 @@ public class SeriesAmountEditionPanel {
 
     builder.addSlider("slider",
                       SeriesBudget.AMOUNT,
-                      new SeriesBudgetSliderAdapter(amountEditor, repository, directory));
+                      new SeriesBudgetSliderAdapter(amountEditor, repository));
 
 
     final JButton editSeriesButton;

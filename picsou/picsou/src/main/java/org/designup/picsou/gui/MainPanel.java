@@ -38,7 +38,10 @@ import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.utils.*;
-import org.designup.picsou.model.CurrentMonth;
+import org.designup.picsou.gui.utils.dev.ClearAllSignpostsAction;
+import org.designup.picsou.gui.utils.dev.GotoNextMonthAction;
+import org.designup.picsou.gui.utils.dev.ThrowExceptionAction;
+import org.designup.picsou.gui.utils.dev.ThrowInRepoExceptionAction;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
@@ -291,7 +294,8 @@ public class MainPanel {
     editMenu.add(new DataCheckerAction(repository, directory));
     editMenu.add(new ThrowExceptionAction());
     editMenu.add(new ThrowInRepoExceptionAction(repository));
-    editMenu.add(new NextMonthAction());
+    editMenu.add(new GotoNextMonthAction(repository));
+    editMenu.add(new ClearAllSignpostsAction(repository));
 //    Utils.endRemove();
 
     JRootPane rootPane = frame.getRootPane();
@@ -327,17 +331,4 @@ public class MainPanel {
     windowManager.logOutAndDeleteUser(userName, chars);
   }
 
-  private class NextMonthAction extends AbstractAction {
-    public NextMonthAction() {
-      super("goto to 10 of next month");
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      Glob currentMonth = repository.get(CurrentMonth.KEY);
-      Integer currentMonthId = Month.next(currentMonth.get(CurrentMonth.CURRENT_MONTH));
-      repository.update(CurrentMonth.KEY,
-                        FieldValue.value(CurrentMonth.CURRENT_MONTH, currentMonthId),
-                        FieldValue.value(CurrentMonth.CURRENT_DAY, 10));
-    }
-  }
 }

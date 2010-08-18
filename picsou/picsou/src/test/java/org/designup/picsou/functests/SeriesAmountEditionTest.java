@@ -213,6 +213,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     // First update with propagation + switching to manual mode
     views.selectBudget();
     budgetView.recurring.editPlannedAmount("Internet")
+      .checkSeriesName("Internet")
       .checkNegativeAmountsSelected()
       .checkAmountLabel("Planned amount for july 2008")
       .setAmount("100")
@@ -239,6 +240,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/08");
     budgetView.recurring.editPlannedAmount("Internet")
+      .checkSeriesName("Internet")      
       .checkAmount(29.00)
 //      .checkActualAmount("Actual")
       .alignPlannedAndActual()
@@ -263,6 +265,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.income.editPlannedAmount("Salary")
+      .checkSeriesName("Salary")
       .checkPositiveAmountsSelected()
       .checkAmount(1500.00)
       .checkActualAmount("1500.00")

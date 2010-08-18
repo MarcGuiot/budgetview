@@ -46,9 +46,9 @@ public class ApplicationLAF {
     return uiService;
   }
 
-  public static void initUI(UIDefaults defaults, Class buttonClass, String uiName) throws ClassNotFoundException {
-    String className = buttonClass.getName();
+  public static void initUI(UIDefaults defaults, Class componentClass, String uiName) throws ClassNotFoundException {
+    String className = componentClass.getName();
     defaults.put(uiName, className);
-    defaults.put(className, buttonClass);
+    defaults.put(className, componentClass);
   }
 }
