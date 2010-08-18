@@ -58,6 +58,12 @@ public class CategorizationWidget extends AbstractNavigationWidget implements Up
 
   public void update() {
     if (!repository.contains(Transaction.TYPE)) {
+      label.setText(Lang.get("categorizationWidget.noTransactionsInRepo"));
+      gauge.setVisible(false);
+      return;
+    }
+
+    if (level.hasNoTransactions()) {
       label.setText(Lang.get("categorizationWidget.noTransactions"));
       gauge.setVisible(false);
       return;

@@ -29,6 +29,7 @@ public class CategorizationLevel implements ChangeSetListener {
   private double percentage;
   private Set<Integer> selectedMonths = Collections.emptySet();
   private boolean filterOnCurrentMonth;
+  private boolean hasNoTransactions;
 
   public CategorizationLevel(GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -69,11 +70,17 @@ public class CategorizationLevel implements ChangeSetListener {
     }
   }
 
+  public boolean hasNoTransactions() {
+    return hasNoTransactions;
+  }
+
   private void update() {
     GlobMatcher monthFilter =
       filterOnCurrentMonth ? GlobMatchers.fieldIn(Transaction.MONTH, selectedMonths) : GlobMatchers.ALL;
     GlobList transactions =
       repository.getAll(Transaction.TYPE, and(not(isTrue(Transaction.PLANNED)), monthFilter));
+
+    hasNoTransactions = transactions.isEmpty();
 
     total = 0;
     double uncategorized = 0;

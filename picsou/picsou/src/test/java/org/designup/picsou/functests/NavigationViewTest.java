@@ -85,6 +85,8 @@ public class NavigationViewTest extends LoggedInFunctionalTestCase {
 
   public void testCategorizationWidget() throws Exception {
 
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+
     views.selectHome();
     navigation.checkCategorizationLabel("You must first load your bank operations");
     navigation.checkCategorizationGaugeHidden();
@@ -134,6 +136,10 @@ public class NavigationViewTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     navigation.checkCategorizationLabel("All operations are categorized");
+    navigation.checkCategorizationGaugeHidden();
+
+    timeline.selectMonth("2008/07");
+    navigation.checkCategorizationLabel("No operations to categorize");
     navigation.checkCategorizationGaugeHidden();
   }
 }
