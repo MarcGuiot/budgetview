@@ -49,6 +49,8 @@ public class SeriesAmountEditionPanel {
   private SeriesAmountChartPanel chart;
   private boolean autoSelectFutureMonths;
   private SeriesEditorAccess seriesEditorAccess;
+  private SeriesAmountLabelStringifier selectionStringifier = new SeriesAmountLabelStringifier();
+;
 
   public interface SeriesEditorAccess {
     void openSeriesEditor(Key series, Set<Integer> selectedMonthIds);
@@ -123,7 +125,7 @@ public class SeriesAmountEditionPanel {
                                                       "/layout/series/seriesAmountEditionPanel.splits",
                                                       repository, directory);
 
-    builder.addLabel("dateLabel", SeriesBudget.TYPE, new SeriesAmountLabelStringifier());
+    builder.addLabel("dateLabel", SeriesBudget.TYPE, selectionStringifier);
 
     chart = new SeriesAmountChartPanel(repository, directory);
     builder.add("chart", chart.getChart());
@@ -194,8 +196,13 @@ public class SeriesAmountEditionPanel {
     chart.getChart().setEnabled(seriesKey != null);
     amountEditor.setEnabled(seriesKey != null);
     currentSeries = seriesKey;
-    autoSelectFutureMonths = false;
+    setAutoSelectFutureMonths(false);
     propagationCheckBox.setSelected(false);
+  }
+
+  private void setAutoSelectFutureMonths(boolean enabled) {
+    this.autoSelectFutureMonths = enabled;
+    this.selectionStringifier.setAutoSelectFutureMonths(enabled);
   }
 
   public void selectMonths(Set<Integer> months) {
@@ -304,7 +311,7 @@ public class SeriesAmountEditionPanel {
 
   private void updateAutoSelect(boolean enabled) {
 
-    autoSelectFutureMonths = enabled;
+    setAutoSelectFutureMonths(enabled);
 
     SortedSet<Integer> monthIds = selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID);
     if (monthIds.isEmpty()) {
