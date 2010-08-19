@@ -1160,7 +1160,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     savingsView.checkAccount("Epargne", 1300.00, "31/08/2008");
 
-    savingsView.checkTotalPosition(1300.00, "31/08/2008");
+    savingsView.checkTotalPosition("1300.00", "31/08/2008");
   }
 
   public void testAllInManualTransactionModeFromSavingsToMainWithCreationOfTransactionInMain() throws Exception {

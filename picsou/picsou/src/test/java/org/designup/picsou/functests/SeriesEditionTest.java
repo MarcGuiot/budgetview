@@ -428,14 +428,15 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthIsChecked("Aug")
       .toggleMonth("Jul")
       .checkChart(new Object[][]{
-        {"2008", "August", 0.00, 0.00},
-      })
-
+        {"2008", "August", 0.00, 0.00, true},
+      });
+    
+    seriesEdition
       .selectSeries(0)
       .checkMonthIsChecked("Jul")
       .checkMonthIsNotChecked("Aug")
       .checkChart(new Object[][]{
-        {"2008", "July", 0.00, 70.00, true},
+        {"2008", "July", 0.00, 70.00},
       })
       .cancel();
   }

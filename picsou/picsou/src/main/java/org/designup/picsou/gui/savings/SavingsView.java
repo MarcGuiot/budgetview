@@ -7,23 +7,32 @@ import org.designup.picsou.gui.budget.SeriesEditionButtons;
 import org.designup.picsou.gui.projects.NextProjectsView;
 import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Month;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
-public class SavingsView extends View {
+public class SavingsView extends View implements GlobSelectionListener {
+  private Matchers.AccountDateMatcher accountDateMatcher;
+  private GlobRepeat repeat;
 
   public SavingsView(GlobRepository repository, Directory directory) {
     super(repository, directory);
+    selectionService.addListener(this, Month.TYPE);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -65,11 +74,22 @@ public class SavingsView extends View {
     builder.add("totalSavingsPositionDate",
                 positionLabels.getEstimatedAccountPositionDateLabel());
 
-    builder.addRepeat("savingsAccounts", Account.TYPE,
-                      GlobMatchers.and(new AccountMatcher(),
-                                       GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID,
-                                                                                 Account.MAIN_SUMMARY_ACCOUNT_ID))),
+    repeat = builder.addRepeat("savingsAccounts", Account.TYPE,
+                      getFilter(),
                       new SavingsAccountsComponentFactory(seriesButtons));
+  }
+
+  private GlobMatcher getFilter() {
+    return GlobMatchers.and(new AccountMatcher(),
+                            accountDateMatcher,
+                            GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID,
+                                                                      Account.MAIN_SUMMARY_ACCOUNT_ID)));
+  }
+
+  public void selectionUpdated(GlobSelection selection) {
+    GlobList selectedMonth = selection.getAll(Month.TYPE);
+    accountDateMatcher = new Matchers.AccountDateMatcher(selectedMonth);
+    repeat.setFilter(getFilter());
   }
 
   private class AccountMatcher implements GlobMatcher {

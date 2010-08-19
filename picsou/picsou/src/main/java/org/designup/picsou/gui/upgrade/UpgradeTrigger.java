@@ -82,7 +82,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       updateSavings(repository);
     }
 
-    if (currentJarVersion < 47) {
+    if (currentJarVersion < 48) {
       SignpostStatus.setAllCompleted(repository);
     }
 

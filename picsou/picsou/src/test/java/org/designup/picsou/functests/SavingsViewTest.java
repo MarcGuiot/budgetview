@@ -90,4 +90,26 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .checkLineColumn(3, "O", "2009", 900.00)
       .checkLineColumn(6, "J", "2010", 1500.00);
   }
+
+  public void testWithBeginOfAccount() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/07/30")
+      .addTransaction("2009/06/04", -10.00, "McDo")
+      .addTransaction("2009/07/10", -200.00, "Virt")
+      .load();
+
+    savingsAccounts
+      .createNewAccount()
+      .setAccountName("ING")
+      .selectBank("ING Direct")
+      .setPosition(0)
+      .setStartDate("2009/07/02")
+      .validate();
+
+    views.selectCategorization();
+    categorization.setNewSavings("Virt", "Epargne", "Main accounts", "ING");
+    views.selectSavings();
+    timeline.selectMonth("2009/06");
+    savingsView.checkTotalPosition("-", "30/06/2009");
+  }
 }

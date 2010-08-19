@@ -23,10 +23,10 @@ public class SavingsViewChecker extends GuiChecker {
     assertThat(getPanel().getTextBox("totalSavingsPositionAmount").textEquals("-"));
   }
 
-  public void checkTotalPosition(double amount, String updateDate) {
+  public void checkTotalPosition(String amount, String updateDate) {
     TextBox position = getPanel().getTextBox("totalSavingsPositionAmount");
     assertThat(position.isVisible());
-    assertThat(position.textEquals(toString(amount)));
+    assertThat(position.textEquals(amount));
 
     TextBox date = getPanel().getTextBox("totalSavingsPositionDate");
     assertThat(date.isVisible());
