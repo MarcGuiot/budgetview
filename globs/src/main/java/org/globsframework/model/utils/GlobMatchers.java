@@ -282,7 +282,7 @@ public class GlobMatchers {
 
   public static GlobMatcher and(final GlobMatcher... matchers) {
     for (GlobMatcher matcher : matchers) {
-      if (matcher.equals(NONE)) {
+      if (NONE.equals(matcher)) {
         return NONE;
       }
     }
@@ -301,7 +301,7 @@ public class GlobMatchers {
     return new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {
         for (GlobMatcher matcher : matchers) {
-          if (!matcher.matches(item, repository)) {
+          if (matcher != null && !matcher.matches(item, repository)) {
             return false;
           }
         }
