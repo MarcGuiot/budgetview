@@ -18,7 +18,7 @@
       </row>
 
       <label text="$split.transaction.initial.title" styleClass="separatorTitle" marginTop="15"/>
-      <panel styleClass="separator">
+      <row styleClass="separator">
         <grid marginLeft="20" marginRight="20" defaultMarginTop="10">
           <label text="$split.transaction.amount" gridPos="(0,0)" fill="none" anchor="east"
                  marginRight="10"/>
@@ -28,8 +28,8 @@
                  marginRight="10"/>
           <textField ref="note" gridPos="(1,1)" fill="horizontal" weightX="100"/>
         </grid>
-      </panel>
-      <label marginTop="5" ref="message" horizontalAlignment="center" foreground="split.error.label"/>
+        <button action="add" fill="none" anchor="north" marginTop="10"/>
+      </row>
 
     </column>
 

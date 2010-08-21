@@ -41,7 +41,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthSelected(200807)
       .checkAmountLabel("Planned amount for july 2008")
       .selectAllMonths()
-      .checkAmountLabel("Planned amount for july - august 2008")
+      .checkAmountLabel("Planned amount from july 2008")
       .validate();
 
     budgetView.recurring.checkSeries("Free", -29.00, -29.00);

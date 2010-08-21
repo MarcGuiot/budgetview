@@ -87,7 +87,7 @@ public class AccountTypeSelectionPanel implements AdditionalImportPanel {
         cellBuilder.add("accountType", combo);
 
         if (showErrors && (errorTip == null)) {
-          errorTip = ErrorTip.show(combo, Lang.get("import.accountTypeSelectionPanel.errorTip"), directory);
+          errorTip = ErrorTip.showRight(combo, Lang.get("import.accountTypeSelectionPanel.errorTip"), directory);
           AutoDispose.registerComboSelection(combo, errorTip);
         }
 

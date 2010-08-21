@@ -10,7 +10,7 @@ import static org.uispec4j.assertion.UISpecAssert.*;
 
 import java.awt.*;
 
-public class SplitDialogChecker {
+public class SplitDialogChecker extends GuiChecker {
   private Window window;
   private Table table;
   private Button closeButton;
@@ -41,14 +41,24 @@ public class SplitDialogChecker {
     return this;
   }
 
-  public SplitDialogChecker checkOkFailure(String expectedMessage) {
-    getOkButton().click();
+  public SplitDialogChecker checkErrorOnOk(String expectedMessage) {
+    checkError(expectedMessage, "OK");
+    return this;
+  }
 
+  public SplitDialogChecker checkErrorOnAdd(String expectedMessage) {
+    checkError(expectedMessage, "Add");
+    return this;
+  }
+
+  private void checkError(String expectedMessage, String buttonName) {
+    window.getButton(buttonName).click();
     assertTrue(window.isVisible());
+    checkErrorTipVisible(window, window.getInputTextBox("amount"), expectedMessage);
+  }
 
-    TextBox message = window.getTextBox("message");
-    assertTrue(message.isVisible());
-    assertTrue(message.textEquals(expectedMessage));
+  public SplitDialogChecker checkNoError() {
+    checkNoErrorTip(window);
     return this;
   }
 
@@ -57,13 +67,14 @@ public class SplitDialogChecker {
     return this;
   }
 
-  public SplitDialogChecker validate() {
-    Button addButton = getOkButton();
-    TextBox box = window.getTextBox("message");
-    addButton.click();
-    assertTrue(box.textIsEmpty());
-    assertFalse(window.isVisible());
+  public SplitDialogChecker add() {
+    getAddButton().click();
     return this;
+  }
+
+  public void validateAndClose() {
+    getOkButton().click();
+    assertFalse(window.isVisible());
   }
 
   public void close() {
@@ -114,5 +125,9 @@ public class SplitDialogChecker {
 
   private Button getOkButton() {
     return window.getButton("OK");
+  }
+
+  private Button getAddButton() {
+    return window.getButton("Add");
   }
 }

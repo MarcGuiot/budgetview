@@ -221,7 +221,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     transactionDetails.openSplitDialog()
       .deleteRow(1)
-      .validate();
+      .validateAndClose();
     categorization.checkTable(new Object[][]{
       {"15/07/2008", "Groceries", "MONOPRIX / JULY", -12.0},
       {"25/06/2008", "Groceries", "MONOPRIX / JUNE", -25.0},

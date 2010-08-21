@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.transactions.shift.ShiftTransactionAction;
@@ -32,6 +33,7 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
+import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import java.util.HashSet;

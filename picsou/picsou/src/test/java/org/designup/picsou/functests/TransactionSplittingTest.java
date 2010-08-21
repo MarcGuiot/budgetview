@@ -27,7 +27,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       })
       .enterAmount("12.50")
       .enterNote("DVD")
-      .validate();
+      .validateAndClose();
 
     categorization
       .initContent()
@@ -46,7 +46,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .checkSelectedTableRow(1)
       .enterAmount("2.50")
       .enterNote("Youth Elixir")
-      .validate();
+      .validateAndClose();
 
     categorization
       .initContent()
@@ -131,7 +131,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       })
       .enterAmount("12.50")
       .enterNote("DVD")
-      .validate();
+      .validateAndClose();
 
     categorization
       .initContent()
@@ -146,7 +146,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
   public void testSplittingASplitPart() throws Exception {
     openDialogWith("2006/01/15", -20.0, "Auchan", "Food")
       .enterAmount("12.50")
-      .validate();
+      .validateAndClose();
 
     categorization
       .initContent()
@@ -161,7 +161,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
         {"Leisures", "Auchan", -12.50, ""},
       })
       .enterAmount("2.50")
-      .validate();
+      .validateAndClose();
 
     categorization
       .initContent()
@@ -180,7 +180,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
   public void testAmountIsSubtractedWhateverTheSign() throws Exception {
     openDialogWith("2006/01/15", -20.0, "Auchan", "Food")
       .enterAmount("12.50")
-      .validate();
+      .validateAndClose();
 
     categorization
       .initContent()
@@ -192,7 +192,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
   public void testEnteringSeveralAmounts() throws Exception {
     openDialogWith("2006/01/15", -20.0, "Auchan", "Food")
       .enterAmount("  2.50 1 4. 5.000 ")
-      .validate();
+      .validateAndClose();
 
     categorization
       .initContent()
@@ -204,7 +204,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
   public void testCommasAreConvertedIntoDots() throws Exception {
     openDialogWith("2006/01/15", -20.0, "Auchan", "Food")
       .enterAmount(" 12,50 ")
-      .validate();
+      .validateAndClose();
 
     categorization
       .initContent()
@@ -223,14 +223,18 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
   public void testInvalidValueInAmountField() throws Exception {
     openDialogWith("2006/01/15", -20.0, "Auchan", "Food")
       .enterAmount(" . . ")
-      .checkOkFailure("Invalid amount")
+      .checkErrorOnOk("Invalid amount")
       .close();
   }
 
   public void testAmountGreaterThanInitialTransactionAmount() throws Exception {
     openDialogWith("2006/01/15", -20.0, "Auchan", "Food")
       .enterAmount("100")
-      .checkOkFailure("Amount must be less than 20")
+      .checkErrorOnOk("Amount must be less than 20")
+      .enterAmount("")
+      .checkNoError()
+      .enterAmount("21")
+      .checkErrorOnAdd("Amount must be less than 20")
       .close();
 
     categorization
@@ -243,17 +247,15 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
     openDialogWith("2006/01/15", -20.0, "Auchan", "Food")
       .enterAmount("5")
       .enterNote("DVD")
-      .validate();
+      .validateAndClose();
 
     transactionDetails.openSplitDialog()
       .enterAmount("8")
       .enterNote("Youth Elixir")
-      .validate();
-
-    transactionDetails.openSplitDialog()
+      .add()
       .enterAmount("3")
       .enterNote("Cool Sticker")
-      .validate();
+      .validateAndClose();
 
     transactionDetails.openSplitDialog()
       .checkTable(new Object[][]{
@@ -274,7 +276,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       })
       .enterAmount("7")
       .enterNote("Another DVD")
-      .validate();
+      .validateAndClose();
 
     categorization
       .initContent()
@@ -295,13 +297,13 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRow(0);
     transactionDetails.openSplitDialog()
       .enterAmount("12.50")
-      .validate();
+      .validateAndClose();
 
     categorization.selectTableRow(1).selectVariable().selectNewSeries("Courses");
 
     transactionDetails.openSplitDialog()
       .deleteRow(1)
-      .validate();
+      .validateAndClose();
 
     categorization
       .initContent()
@@ -320,7 +322,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
     transactionDetails.openSplitDialog()
       .enterAmount("10")
       .enterNote("CD")
-      .validate();
+      .validateAndClose();
 
     categorization
       .initContent()
@@ -331,7 +333,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     transactionDetails.openSplitDialog()
       .deleteRow(1)
-      .validate();
+      .validateAndClose();
 
     categorization
       .initContent()
@@ -369,7 +371,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRow(0);
     transactionDetails.openSplitDialog()
       .enterAmount("12.50")
-      .validate();
+      .validateAndClose();
 
     transactionDetails.openSplitDialog()
       .checkTable(new Object[][]{
@@ -382,7 +384,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
         {"Food", "Auchan", -7.50, "note 0"},
         {"", "Auchan", -12.50, "note 1"},
       })
-      .validate();
+      .validateAndClose();
     
     transactionDetails.openSplitDialog()
       .checkTable(new Object[][]{
@@ -397,7 +399,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
         {"Food", "Monoprix", -50.0, ""},
       })
       .enterAmount("22")
-      .validate();
+      .validateAndClose();
     
     categorization.selectTableRow(0);
     transactionDetails.openSplitDialog()

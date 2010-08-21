@@ -43,11 +43,22 @@ public abstract class GuiChecker {
                             new ComponentIsVisibleAssertion<T>(panel, swingComponentClass, componentName, visible));
   }
 
-  protected void checkSignpostVisible(final Panel enclosingPanel,
-                                      final UIComponent targetUIComponent,
-                                      final String text) {
+  protected void checkSignpostVisible(Panel enclosingPanel,
+                                      UIComponent targetUIComponent,
+                                      String text) {
     BalloonTipTesting.checkBalloonTipVisible(enclosingPanel, targetUIComponent, text,
                                              "Signpost is not visible for this component");
+  }
+
+  protected void checkErrorTipVisible(Panel enclosingPanel,
+                                      UIComponent targetUIComponent,
+                                      String text) {
+    BalloonTipTesting.checkBalloonTipVisible(enclosingPanel, targetUIComponent, text,
+                                             "Error tip is not visible for this component");
+  }
+
+  protected void checkNoErrorTip(Panel enclosingPanel) {
+    BalloonTipTesting.checkNoBalloonTipVisible(enclosingPanel);
   }
 
   public static void pressEsc(final Window dialog) {
