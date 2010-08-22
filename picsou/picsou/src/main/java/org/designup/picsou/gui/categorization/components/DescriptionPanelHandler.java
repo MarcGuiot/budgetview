@@ -45,6 +45,7 @@ public class DescriptionPanelHandler {
         }
       }
     });
+    update();
   }
 
   public JPanel getPanel() {
@@ -59,11 +60,11 @@ public class DescriptionPanelHandler {
     return hideAction;
   }
 
-  private void update() {
+  public void update() {
     Glob userPreferences = repository.find(UserPreferences.KEY);
-
     boolean showDescription =
-      (userPreferences == null) || userPreferences.isTrue(UserPreferences.SHOW_BUDGET_AREA_DESCRIPTIONS);
+      (userPreferences == null) ||
+      userPreferences.isTrue(UserPreferences.SHOW_BUDGET_AREA_DESCRIPTIONS);
 
     panel.setVisible(showDescription);
     showAction.setEnabled(!showDescription);
