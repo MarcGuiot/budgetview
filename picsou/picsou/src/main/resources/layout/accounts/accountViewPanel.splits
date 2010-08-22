@@ -83,8 +83,6 @@
         <row styleClass="footer">
           <button action="createAccount" styleClass="create" tooltipText="$accountView.create.tooltip"/>
           <filler fill="horizontal"/>
-          <button action="accountPositionThreshold"
-                  tooltipText="$accountPositionThresholdAction.tooltip"/>
         </row>
       </column>
     </column>

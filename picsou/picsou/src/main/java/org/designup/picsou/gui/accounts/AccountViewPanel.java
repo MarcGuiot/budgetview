@@ -102,10 +102,6 @@ public abstract class AccountViewPanel {
 
     builder.add("createAccount", new NewAccountAction(getAccountType(), repository, directory));
 
-    AccountPositionThresholdAction action = new AccountPositionThresholdAction(repository, directory);
-    action.setEnabled(showPositionThreshold());
-    builder.add("accountPositionThreshold", action);
-
     panel = builder.load();
   }
 
@@ -124,8 +120,6 @@ public abstract class AccountViewPanel {
   }
 
   protected abstract AccountType getAccountType();
-
-  protected abstract boolean showPositionThreshold();
 
   public JPanel getPanel() {
     if (panel == null) {
@@ -195,7 +189,7 @@ public abstract class AccountViewPanel {
 
     private Directory directory;
 
-    private EditAccountFunctor(GlobRepository repository, Directory directory) {
+    private EditAccountFunctor(Directory directory) {
       this.directory = directory;
     }
 
@@ -222,6 +216,6 @@ public abstract class AccountViewPanel {
 
   public static GlobButtonView createAccountNameButton(Glob account, final GlobRepository repository, final Directory directory) {
     return GlobButtonView.init(Account.NAME, repository, directory,
-                               new EditAccountFunctor(repository, directory)).forceSelection(account.getKey());
+                               new EditAccountFunctor(directory)).forceSelection(account.getKey());
   }
 }

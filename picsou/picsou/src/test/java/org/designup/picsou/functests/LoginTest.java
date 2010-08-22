@@ -316,7 +316,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
 
   public void testCannotCreateOperationsInDemoMode() throws Exception {
     login.clickDemoLink();
-    MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
+    AccountViewChecker mainAccounts = new MainAccountViewChecker(window);
     mainAccounts.createNewAccount()
       .setAccountName("Cash")
       .setAccountNumber("012345")

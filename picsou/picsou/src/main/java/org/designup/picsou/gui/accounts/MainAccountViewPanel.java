@@ -43,10 +43,6 @@ public class MainAccountViewPanel extends AccountViewPanel {
                not(fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)));
   }
 
-  protected boolean showPositionThreshold() {
-    return true;
-  }
-
   protected AccountType getAccountType() {
     return AccountType.MAIN;
   }

@@ -2,6 +2,7 @@ package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.accounts.utils.Day;
+import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.DatePicker;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
@@ -124,7 +125,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
 
     this.builder = builder;
     dialog.addPanelWithButtons(this.builder.<JPanel>load(),
-                               new OkAction(), new CancelAction(),
+                               new OkAction(), new CancelAction(dialog),
                                new DeleteAction());
   }
 
@@ -209,16 +210,6 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
       finally {
         dialog.setVisible(false);
       }
-    }
-  }
-
-  private class CancelAction extends AbstractAction {
-    public CancelAction() {
-      super(Lang.get("cancel"));
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      dialog.setVisible(false);
     }
   }
 

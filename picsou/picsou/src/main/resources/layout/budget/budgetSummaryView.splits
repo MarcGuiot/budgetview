@@ -36,8 +36,15 @@
     <style selector=".subRow .totalAmountTitle"
            marginRight="10" weightX="1"/>
     <style selector=".subRow button.totalAmount"
-           font="-,bold,12"  horizontalTextPosition="left"
+           font="-,bold,12" horizontalTextPosition="left"
            weightX="1" fill="none" anchor="left"/>
+
+    <ui name="thresholdButton" class="org.designup.picsou.gui.components.ColorButtonUI"
+        borderTop="budgetSummary.thresholdButton.borderTop"
+        borderBottom="budgetSummary.thresholdButton.borderBottom"/>
+    <style selector="button#showThreshold" ui="thresholdButton" preferredSize="(15,8)"
+           fill="none" anchor="left" marginLeft="7"/>
+    <style selector="button#nextPositionLabel" anchor="right"/>
 
   </styles>
 
@@ -52,7 +59,10 @@
       <filler fill="horizontal"/>
       <column>
         <label ref="nextPositionTitle" styleClass="totalAmountTitle"/>
-        <button ref="nextPositionLabel" styleClass="totalAmount"/>
+        <row>
+          <button ref="nextPositionLabel" styleClass="totalAmount"/>
+          <button ref="showThreshold"/>
+        </row>
       </column>
       <filler fill="horizontal"/>
     </row>

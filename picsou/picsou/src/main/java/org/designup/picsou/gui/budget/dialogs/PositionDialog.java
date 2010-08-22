@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.budget;
+package org.designup.picsou.gui.budget.dialogs;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
@@ -48,7 +48,7 @@ public class PositionDialog {
 
     this.dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budget/positionDialog.splits", repository, directory);
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budget/dialogs/positionDialog.splits", repository, directory);
     cardHandler = builder.addCardHandler("cardHandler");
 
     builder.add("valueLabel", valueLabel);

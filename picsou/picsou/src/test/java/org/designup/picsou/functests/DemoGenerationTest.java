@@ -293,12 +293,8 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     //======== POSITION LEVEL ===========
 
-    views.selectHome();
-    mainAccounts.setThreshold(3100);
-
-    //======== SAVINGS ===========
-
     views.selectBudget();
+    budgetView.getSummary().openThresholdDialog().setThreshold(3100).validate();
 
     //======== PROVISIONS ===========
 

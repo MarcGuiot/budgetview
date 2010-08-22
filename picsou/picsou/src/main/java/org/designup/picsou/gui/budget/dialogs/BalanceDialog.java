@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.budget;
+package org.designup.picsou.gui.budget.dialogs;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.budget.wizard.BudgetBalancePage;
@@ -18,7 +18,7 @@ public class BalanceDialog {
   public BalanceDialog(GlobRepository repository, Directory directory) {
 
     GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/budget/balanceDialog.splits", repository, directory);
+      new GlobsPanelBuilder(getClass(), "/layout/budget/dialogs/balanceDialog.splits", repository, directory);
 
     balancePanel = new BudgetBalancePage(repository, directory);
     balancePanel.init();
