@@ -8,7 +8,7 @@
 
   <column>
 
-    <label ref="dateLabel" margin="10" marginTop="15"/>
+    <label ref="dateLabel" margin="10" marginTop="15" marginBottom="0"/>
 
     <component ref="chart" preferredSize="(300,100)" margin="10" weightY="10"
                background="dialogBlock.bg"/>
@@ -27,13 +27,13 @@
 
     <component ref="slider" opaque="false" border="empty(0,10,10,10)" preferredSize="(200,60)" weightY="2"/>
 
-    <row>
+    <row marginBottom="10">
       <filler fill="horizontal"/>
       <checkBox ref="propagate" text="$seriesAmountEdition.propagate" weightX="0"/>
       <filler fill="horizontal"/>
     </row>
 
-    <row border="empty(10)" autoHideSource="editSeries">
+    <row border="empty(0,10,10,10)" autoHideSource="editSeries">
       <filler fill="horizontal"/>
       <label text="$seriesAmountEdition.periodicity" styleClass="small" weightX="0"/>
       <button ref="editSeries" styleClass="hyperlink" font="-,plain,11" marginLeft="5"

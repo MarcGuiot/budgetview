@@ -26,7 +26,7 @@
           </column>
         </column>
 
-        <column weightX="7" preferredSize="(680,460)">
+        <column weightX="7" preferredSize="(680,490)">
 
           <row weightY="0.1">
             <label text="$seriesEdition.name" styleClass="formLabel" marginBottom="4"/>
@@ -66,12 +66,12 @@
                     <comboBox ref="profileCombo"/>
                     <panel ref="monthSelectionPanel" opaque="false">
                       <column>
-                        <repeat ref="monthRepeat" styleClass="innerBlock" margin="5" marginTop="2"
+                        <repeat ref="monthRepeat" styleClass="innerBlock" border="empty(5,0,2,0)"
                                 layout="horizontalGrid" gridWrapLimit="3" weightY="0.1">
                           <label ref="monthLabel" styleClass="month" labelFor="monthSelector"
                                  fill="none" anchor="south" marginBottom="0"/>
                           <checkBox ref="monthSelector"
-                                    fill="none" anchor="north" marginTop="0" marginBottom="3"/>
+                                    fill="none" anchor="north" border="empty(0,0,3,0)"/>
                         </repeat>
                       </column>
                     </panel>
@@ -127,6 +127,7 @@
                                     marginLeft="5" fill="none" tooltipText="$seriesEdition.begin.edit.tooltip"/>
                             <filler fill="horizontal" weightX="0.1"/>
                           </row>
+                          <filler fill="vertical"/>
                         </column>
                       </card>
 
@@ -143,13 +144,15 @@
                   <column name="innerBlock" styleClass="dialogBlock" weightY="100">
                     <panel ref="seriesAmountEditionPanel"/>
                   </column>
-                  <checkBox ref="autoReport" text="$seriesEdition.autoReport" marginTop="5"/>
+                  <checkBox ref="autoReport" text="$seriesEdition.autoReport" border="empty(5,0,0,0)"/>
                 </column>
               </row>
             </tab>
+
             <tab title="$seriesEdition.tabs.subseries">
               <panel ref="subSeriesEditionPanel" border="empty(10)"/>
             </tab>
+            
             <tab title="$seriesEdition.tabs.description">
               <row border="empty(10)">
                 <label text="$seriesEdition.description" styleClass="formLabel" anchor="top"/>

@@ -219,8 +219,8 @@ public class NextProjectsViewTest extends LoggedInFunctionalTestCase {
     nextProjects.checkCellTextColorIsNormal(0, 3);
     nextProjects.checkCellTextColorIsError(1, 3);
 
-    views.selectHome();
-    mainAccounts.setThreshold(500);
+    views.selectBudget();
+    budgetView.getSummary().openThresholdDialog().setThreshold(500).validate();
 
     views.selectSavings();
     nextProjects.checkCellTextColorIsError(0, 3);

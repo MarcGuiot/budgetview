@@ -1,6 +1,8 @@
 package org.designup.picsou.gui.components.tips;
 
 import net.java.balloontip.BalloonTip;
+import net.java.balloontip.positioners.BalloonTipPositioner;
+import net.java.balloontip.positioners.Left_Above_Positioner;
 import net.java.balloontip.positioners.Right_Above_Positioner;
 import net.java.balloontip.styles.RoundedBalloonStyle;
 import org.designup.picsou.gui.utils.Gui;
@@ -23,11 +25,19 @@ public class ErrorTip implements Disposable {
   private HierarchyListener visibilityUpdater;
   private JComponent component;
 
-  public static ErrorTip show(JComponent component, String text, Directory directory) {
-    return new ErrorTip(component, text, directory);
+  public static ErrorTip showLeft(JComponent component, String text, Directory directory) {
+    return show(component, text, directory, new Left_Above_Positioner(10, 20));
   }
 
-  private ErrorTip(final JComponent component, String text, Directory directory) {
+  public static ErrorTip showRight(JComponent component, String text, Directory directory) {
+    return show(component, text, directory, new Right_Above_Positioner(10, 20));
+  }
+  
+  private static ErrorTip show(JComponent component, String text, Directory directory, BalloonTipPositioner positioner) {
+    return new ErrorTip(component, text, directory, positioner);
+  }
+
+  private ErrorTip(final JComponent component, String text, Directory directory, BalloonTipPositioner positioner) {
     this.component = component;
 
     directory.get(ColorService.class).addListener(new ColorChangeListener() {
@@ -44,7 +54,7 @@ public class ErrorTip implements Disposable {
                                 BalloonTip.AttachLocation.NORTHEAST,
                                 0, 20,
                                 false);
-    balloonTip.setPositioner(new Right_Above_Positioner(10, 20));
+    balloonTip.setPositioner(positioner);
 
     visibilityUpdater = new HierarchyListener() {
       public void hierarchyChanged(HierarchyEvent e) {

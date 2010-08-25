@@ -27,7 +27,7 @@ public class SeriesBudgetSliderAdapter implements GlobSliderAdapter, ColorChange
   private AmountEditor amountEditor;
   private GlobRepository repository;
 
-  public SeriesBudgetSliderAdapter(AmountEditor amountEditor, GlobRepository repository, Directory directory) {
+  public SeriesBudgetSliderAdapter(AmountEditor amountEditor, GlobRepository repository) {
     this.amountEditor = amountEditor;
     this.repository = repository;
 

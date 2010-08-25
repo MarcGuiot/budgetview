@@ -1,5 +1,8 @@
-package org.designup.picsou.gui.budget.wizard;
+package org.designup.picsou.gui.budget.dialogs;
 
+import org.designup.picsou.gui.budget.wizard.PositionThresholdIndicator;
+import org.designup.picsou.gui.components.CancelAction;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.utils.Gui;
@@ -10,6 +13,7 @@ import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -22,17 +26,18 @@ import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 
-public class BudgetThresholdPage {
+public class PositionThresholdDialog {
 
   private Directory directory;
   private LocalGlobRepository localRepository;
-  private JPanel panel;
+  private PicsouDialog dialog;
   private Directory parentDirectory;
   private JTextField thresholdField;
+  private JScrollPane scrollPane = new JScrollPane();
 
-  public BudgetThresholdPage(GlobRepository repository, Directory parentDirectory) {
-    this.parentDirectory = parentDirectory;
+  public PositionThresholdDialog(GlobRepository repository, Directory parentDirectory) {
     this.localRepository =
       LocalGlobRepositoryBuilder.init(repository)
         .copy(BudgetStat.TYPE)
@@ -41,27 +46,19 @@ public class BudgetThresholdPage {
         .copy(CurrentMonth.TYPE)
         .get();
 
+    this.parentDirectory = parentDirectory;
     this.directory = createDirectory(parentDirectory);
+    createDialog();
   }
 
-  public String getId() {
-    return "threshold";
-  }
-
-  public String getHelpRef() {
-    return null;
-  }
-
-  public JComponent getPanel() {
-    return panel;
-  }
-
-  public void init() {
+  public void createDialog() {
     GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/budget/budgetWizard/budgetThresholdPage.splits", localRepository, directory);
+      new GlobsPanelBuilder(getClass(), "/layout/budget/dialogs/positionThresholdDialog.splits", localRepository, directory);
 
     builder.add("textTop", Gui.createHelpTextComponent("budgetWizard/threshold1.html"));
     builder.add("textBottom", Gui.createHelpTextComponent("budgetWizard/threshold2.html"));
+
+    builder.add("scroll", scrollPane);
 
     builder.addLabel("estimatedPosition", BudgetStat.TYPE,
                      new EspectedPositionStringifier());
@@ -71,27 +68,43 @@ public class BudgetThresholdPage {
                                                "budgetSummaryDialog.threshold.top",
                                                "budgetSummaryDialog.threshold.bottom",
                                                "budgetSummaryDialog.threshold.border"));
+
     thresholdField = builder.addEditor("thresholdField", AccountPositionThreshold.THRESHOLD)
       .forceSelection(AccountPositionThreshold.KEY)
       .setNotifyOnKeyPressed(true)
       .setValueForNull(0.00)
       .getComponent();
+
     builder.addLabel("thresholdMessage", BudgetStat.TYPE, new ThresholdStringifier())
       .setUpdateMatcher(ChangeSetMatchers.changesForKey(AccountPositionThreshold.KEY));
 
-    panel = builder.load();
+    JPanel panel = builder.load();
+    dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+    dialog.addPanelWithButtons(panel, new OkAction(), new CancelAction(dialog));
+    dialog.pack();
+  }
+
+  public void show() {
+    updateBeforeDisplay();
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        thresholdField.requestFocus();
+      }
+    });
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        GuiUtils.scrollToTop(scrollPane);
+      }
+    });
+
+    GuiUtils.showCentered(dialog);
   }
 
   public void updateBeforeDisplay() {
     localRepository.rollback();
 
     GlobList selectedMonths = getSelectedMonths();
-    Integer maxMonthId = selectedMonths.getLast().get(Month.ID);
     selectStats(selectedMonths);
-  }
-
-  public void updateAfterDisplay() {
-    thresholdField.requestFocus();
   }
 
   private GlobList getSelectedMonths() {
@@ -148,6 +161,17 @@ public class BudgetThresholdPage {
         return Lang.get("budgetThresholdPage.positive");
       }
       return Lang.get("budgetThresholdPage.equal");
+    }
+  }
+
+  private class OkAction extends AbstractAction {
+    private OkAction() {
+      super(Lang.get("ok"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      localRepository.commitChanges(true);
+      dialog.setVisible(false);
     }
   }
 }

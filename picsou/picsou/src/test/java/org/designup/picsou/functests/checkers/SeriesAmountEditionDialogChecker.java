@@ -15,6 +15,11 @@ public class SeriesAmountEditionDialogChecker extends SeriesAmountEditionChecker
     super(dialog);
   }
 
+  public SeriesAmountEditionDialogChecker checkSeriesName(String text) {
+    assertThat(dialog.getTextBox("seriesName").textEquals(text));
+    return this;
+  }
+
   public SeriesAmountEditionDialogChecker checkAmountLabel(String text) {
     assertThat(dialog.getTextBox("dateLabel").textEquals(text));
     return this;

@@ -2,8 +2,9 @@ package org.designup.picsou.gui.budget.summary;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.AccountViewPanel;
-import org.designup.picsou.gui.budget.BalanceDialog;
-import org.designup.picsou.gui.budget.PositionDialog;
+import org.designup.picsou.gui.budget.dialogs.BalanceDialog;
+import org.designup.picsou.gui.budget.dialogs.PositionDialog;
+import org.designup.picsou.gui.budget.dialogs.PositionThresholdDialog;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
@@ -38,6 +39,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   private JButton uncategorizedButton = new JButton();
   private SplitsNode<JButton> uncategorizedButtonNode;
   private JLabel multiSelectionLabel = new JLabel();
+  private JButton showThresholdButton;
 
   private final DecimalFormat format = Formatting.DECIMAL_FORMAT;
 
@@ -80,6 +82,9 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     estimatedPositionButton.addActionListener(new OpenPositionAction());
     Signpost signpost = new EndOfMonthPositionSignpost(repository, directory);
     signpost.attach(estimatedPositionButton);
+    
+    showThresholdButton = new JButton(new ShowThresholdAction());
+    builder.add("showThreshold", showThresholdButton);
 
     parentBuilder.add("budgetSummaryView", builder);
   }
@@ -156,9 +161,6 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
       return;
     }
 
-    String lastDay = Formatting.toString(Month.getLastDay(lastSelectedMonthId));
-    String dateLabel = Lang.get("accountView.total.date", lastDay);
-
     Double amount = getEndOfMonthPosition(budgetStat);
     setEstimatedPosition(amount);
 
@@ -190,6 +192,7 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
 
     double diff = amount - AccountPositionThreshold.getValue(repository);
     estimatedPositionButton.setForeground(amountColors.getTextColor(diff));
+    showThresholdButton.setForeground(amountColors.getIndicatorColor(diff));
   }
 
   private Glob getBudgetStat(Integer lastSelectedMonthId) {
@@ -247,6 +250,13 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
   private class GotoUncategorizedAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
       directory.get(NavigationService.class).gotoUncategorizedForSelectedMonths();
+    }
+  }
+
+  private class ShowThresholdAction extends AbstractAction {
+    public void actionPerformed(ActionEvent e) {
+      PositionThresholdDialog dialog = new PositionThresholdDialog(repository, directory);
+      dialog.show();
     }
   }
 }

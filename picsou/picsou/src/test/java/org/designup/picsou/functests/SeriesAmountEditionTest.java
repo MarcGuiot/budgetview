@@ -213,11 +213,13 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     // First update with propagation + switching to manual mode
     views.selectBudget();
     budgetView.recurring.editPlannedAmount("Internet")
+      .checkSeriesName("Internet")
       .checkNegativeAmountsSelected()
       .checkAmountLabel("Planned amount for july 2008")
       .setAmount("100")
       .checkPropagationDisabled()
       .setPropagationEnabled()
+      .checkAmountLabel("Planned amount from july 2008")
       .validate();
     budgetView.recurring.checkSeries("Internet", -29.00, -100.00);
     timeline.selectMonth("2008/08");
@@ -239,8 +241,8 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/08");
     budgetView.recurring.editPlannedAmount("Internet")
+      .checkSeriesName("Internet")      
       .checkAmount(29.00)
-//      .checkActualAmount("Actual")
       .alignPlannedAndActual()
       .setPropagationEnabled()
       .validate();
@@ -263,6 +265,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.income.editPlannedAmount("Salary")
+      .checkSeriesName("Salary")
       .checkPositiveAmountsSelected()
       .checkAmount(1500.00)
       .checkActualAmount("1500.00")
@@ -349,11 +352,16 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.recurring.editPlannedAmount("Internet")
       .checkSelectedMonths(201008)
+      .checkAmountLabel("Planned amount for august 2010")
       .setPropagationEnabled()
       .checkSelectedMonths(201008, 201009, 201010)
+      .checkAmountLabel("Planned amount from august 2010")
       .clickMonth(201009)
       .checkSelectedMonths(201009, 201010)
+      .checkAmountLabel("Planned amount from september 2010")
       .setAmount(50.00)
+      .setPropagationDisabled()
+      .checkAmountLabel("Planned amount for september 2010")
       .validate();
 
     timeline.selectMonth("2010/08");

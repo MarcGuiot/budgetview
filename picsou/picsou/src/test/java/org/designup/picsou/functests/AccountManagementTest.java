@@ -83,7 +83,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkDisplayIsEmpty("Main account");
   }
 
-  public void testEditingTheAccountBalanceLimit() throws Exception {
+  public void testEditingTheAccountPositionThreshold() throws Exception {
 
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "000123", 100, "2008/08/26")
@@ -97,27 +97,39 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     timeline.selectMonth("2008/08");
-
     mainAccounts
-      .checkEstimatedPosition(100)
-      .checkEstimatedPositionColor("darkGray")
-      .checkThreshold(0);
-
-    mainAccounts
-      .setThreshold(1000, true)
-      .checkThreshold(1000)
-      .checkEstimatedPositionColor("red");
-
-    mainAccounts.setThreshold(-2000, false)
-      .checkThreshold(-2000)
+      .checkEstimatedPosition(100.00)
       .checkEstimatedPositionColor("darkGray");
 
-    mainAccounts.setThreshold(0, false)
-      .checkEstimatedPositionColor("darkGray");
+    views.selectBudget();
+    budgetView.getSummary().openThresholdDialog()    
+      .checkThreshold(0.00)
+      .setThreshold(1000.00)
+      .validate();
+
+    views.selectHome();
+    mainAccounts.checkEstimatedPositionColor("red");
+
+    views.selectBudget();
+    budgetView.getSummary().openThresholdDialog()
+      .checkThreshold(1000.00)
+      .setThreshold(-2000.00)
+      .validate();
+
+    views.selectHome();
+    mainAccounts.checkEstimatedPositionColor("darkGray");
+
+    views.selectBudget();
+    budgetView.getSummary().openThresholdDialog()
+      .setThreshold(0.00)
+      .validate();
+
+    views.selectHome();
+    mainAccounts.checkEstimatedPositionColor("darkGray");
 
     timeline.selectMonth("2008/07");
     mainAccounts
-      .checkEstimatedPosition(-100)
+      .checkEstimatedPosition(-100.00)
       .checkEstimatedPositionColor("darkRed");
   }
 

@@ -35,9 +35,12 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    mainAccounts
-      .checkEstimatedPosition(0.00)
-      .setThreshold(25.00);
+    mainAccounts.checkEstimatedPosition(0.00);
+
+    views.selectBudget();
+    budgetView.getSummary().openThresholdDialog()
+      .setThreshold(25.00)
+      .validate();
 
     views.selectData();
     transactions.initContent()
@@ -49,9 +52,12 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     operations.checkUndoNotAvailable();
 
     views.selectHome();
-    mainAccounts
-      .checkEstimatedPosition(0.00)
-      .checkThreshold(25.00);
+    mainAccounts.checkEstimatedPosition(0.00);
+
+    views.selectBudget();
+    budgetView.getSummary().openThresholdDialog()
+      .checkThreshold(25.00)
+      .cancel();
 
     views.selectData();
     transactions.initContent()

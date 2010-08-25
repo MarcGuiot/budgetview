@@ -90,6 +90,10 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     return new PositionChecker(window);
   }
 
+  public ThresholdDialogChecker openThresholdDialog() {
+    return ThresholdDialogChecker.open(mainWindow.getButton("showThreshold"));
+  }
+
   public void checkPositionSignpostDisplayed() {
     checkSignpostVisible(mainWindow, getPanel().getButton("positionLabel"),
                          "Use the estimated end of month position");

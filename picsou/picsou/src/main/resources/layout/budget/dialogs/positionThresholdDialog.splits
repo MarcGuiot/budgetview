@@ -1,0 +1,49 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.thresholdInfo" foreground="budgetSummaryDialog.label" font="-,plain,12"
+           fill="horizontal" anchor="left" horizontalAlignment="left" marginBottom="5"/>
+
+    <style selector="label.threshold" foreground="budgetSummaryDialog.label" font="-,plain,12"
+           fill="horizontal" anchor="center" horizontalAlignment="left"
+           weightX="1" marginRight="5"/>
+  </styles>
+
+  <panel styleClass="dialog" preferredSize="(550,520)">
+
+  <column styleClass="innerDialog">
+
+    <label name="title" text="$budgetThresholdPage.title" styleClass="title"/>
+
+    <column styleClass="blockScrollBorder">
+
+      <scrollPane ref="scroll" forceVerticalScroll="true" border="none">
+
+        <verticalBoxes opaque="true" background="block.inner.bg" weightY="10">
+
+          <htmlEditorPane ref="textTop" useImageLocator="true"/>
+
+          <row margin="10" border="line(#CCCCCC)" opaque="true" background="#EEEEEE">
+            <filler fill="horizontal"/>
+            <label text="$budgetThresholdPage.label" styleClass="threshold"/>
+            <textField ref="thresholdField"/>
+
+            <component ref="thresholdIndicator" margin="10"
+                       fill="none" anchor="center"/>
+            <column>
+              <label ref="estimatedPosition" styleClass="thresholdInfo" anchor="south" marginBottom="5"/>
+              <label ref="thresholdMessage" styleClass="thresholdInfo" anchor="north"/>
+            </column>
+            <filler fill="horizontal"/>
+          </row>
+
+          <htmlEditorPane ref="textBottom" useImageLocator="true"/>
+
+        </verticalBoxes>
+      </scrollPane>
+    </column>
+  </column>
+
+  </panel>
+</splits>

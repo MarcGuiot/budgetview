@@ -1,31 +1,33 @@
 package org.designup.picsou.gui.transactions.split;
 
 import org.designup.picsou.gui.categorization.components.CompactSeriesStringifier;
-import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.components.tips.ErrorTip;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.transactions.columns.AbstractTransactionEditor;
 import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
 import org.designup.picsou.gui.transactions.columns.TransactionNoteEditor;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.Icons;
-import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.model.*;
-import static org.designup.picsou.model.Transaction.*;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SubSeries;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.Colors;
+import org.globsframework.gui.splits.utils.AutoDispose;
 import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
-import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifiers;
 import org.globsframework.model.utils.*;
@@ -42,6 +44,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Set;
 
+import static org.designup.picsou.model.Transaction.*;
+import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
+import static org.globsframework.model.FieldValue.value;
+
 public class SplitTransactionDialog {
   public static final int CATEGORY_COLUMN_INDEX = 0;
   public static final int LABEL_COLUMN_INDEX = 1;
@@ -57,7 +63,6 @@ public class SplitTransactionDialog {
   private SelectionService parentSelectionService;
 
   private TransactionRendererColors rendererColors;
-  private JLabel messageLabel = new JLabel("");
   private JTextField amountField;
   private JTextField noteField;
   private PicsouDialog dialog;
@@ -66,6 +71,7 @@ public class SplitTransactionDialog {
   private GlobTableView tableView;
   private GlobsPanelBuilder builder;
   private PicsouTableHeaderPainter headerPainter;
+  private SplitTransactionDialog.AddAction addAction;
 
   public SplitTransactionDialog(GlobRepository repository, Directory directory) {
     this.parentRepository = repository;
@@ -88,11 +94,14 @@ public class SplitTransactionDialog {
 
   private void createDialog(Directory directory) {
     builder = new GlobsPanelBuilder(getClass(), "/layout/transactions/splitTransactionDialog.splits",
-                                                      localRepository, localDirectory);
+                                    localRepository, localDirectory);
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
     addAmountPanel(builder);
     addTable(builder);
+
+    addAction = new AddAction();
+    builder.add("add", addAction);
 
     okAction = new OkAction();
     dialog = PicsouDialog.createWithButtons(directory.get(JFrame.class),
@@ -122,12 +131,18 @@ public class SplitTransactionDialog {
 
     splittedTransaction = createSplittedTransaction();
 
-    okAction.setEnabled(false);
+    boolean enabled = false;
+    setValidationEnabled(enabled);
     amountField.requestFocus();
     dialog.showCentered();
     builder.dispose();
     headerPainter.dispose();
     rendererColors.dispose();
+  }
+
+  private void setValidationEnabled(boolean enabled) {
+    addAction.setEnabled(enabled);
+    okAction.setEnabled(enabled);
   }
 
   private void addAmountPanel(GlobsPanelBuilder builder) {
@@ -140,7 +155,6 @@ public class SplitTransactionDialog {
     noteField.addKeyListener(validator);
 
     builder.add("amount", amountField);
-    builder.add("message", messageLabel);
     builder.add("note", noteField);
   }
 
@@ -178,21 +192,20 @@ public class SplitTransactionDialog {
     TableUtils.setSize(table, DELETE_SPLIT_COLUMN_INDEX, 18);
   }
 
-  private void validate() {
+  private void validate(boolean applyAndClose) {
     Double initialAmount = sourceTransaction.get(Transaction.AMOUNT);
-
     Double amount = null;
     if (!Strings.isNullOrEmpty(amountField.getText())) {
       try {
         amount = getEnteredAmount() * Math.signum(initialAmount);
       }
       catch (NumberFormatException e) {
-        messageLabel.setText(Lang.get("split.transaction.invalid.amount"));
+        showErrorMessage("split.transaction.invalid.amount");
         return;
       }
 
       if (Math.abs(amount) >= Math.abs(initialAmount)) {
-        messageLabel.setText(Lang.get("split.transaction.amount.too.large", Math.abs(initialAmount)));
+        showErrorMessage("split.transaction.amount.too.large", Math.abs(initialAmount));
         return;
       }
     }
@@ -215,17 +228,28 @@ public class SplitTransactionDialog {
       localRepository.completeChangeSet();
     }
 
-    localRepository.commitChanges(false);
+    if (applyAndClose) {
+      localRepository.commitChanges(false);
 
-    if (splittedTransaction != null) {
-      parentSelectionService.select(parentRepository.get(splittedTransaction.getKey()));
+      if (splittedTransaction != null) {
+        parentSelectionService.select(parentRepository.get(splittedTransaction.getKey()));
+      }
+      else {
+        parentSelectionService.select(parentRepository.get(sourceTransaction.getKey()));
+      }
+
+      dialog.setVisible(false);
     }
     else {
-      parentSelectionService.select(parentRepository.get(sourceTransaction.getKey()));
+      splittedTransaction = createSplittedTransaction();
     }
 
-    dialog.setVisible(false);
     resetAddAmountFields();
+  }
+
+  private void showErrorMessage(String message, Object... args) {
+    ErrorTip errorTip = ErrorTip.showLeft(amountField, Lang.get(message, args), localDirectory);
+    AutoDispose.registerTextEdition(amountField, errorTip);
   }
 
   private Glob createSplittedTransaction() {
@@ -270,8 +294,17 @@ public class SplitTransactionDialog {
   private void resetAddAmountFields() {
     amountField.setText("");
     noteField.setText("");
-    messageLabel.setText("");
     amountField.requestFocus();
+  }
+
+  private class AddAction extends AbstractAction {
+    public AddAction() {
+      super(Lang.get("split.transaction.add"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      validate(false);
+    }
   }
 
   private class OkAction extends AbstractAction {
@@ -280,7 +313,7 @@ public class SplitTransactionDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
-      validate();
+      validate(true);
     }
   }
 
@@ -298,16 +331,16 @@ public class SplitTransactionDialog {
     Document document = amountField.getDocument();
     document.addDocumentListener(new AbstractDocumentListener() {
       protected void documentChanged(DocumentEvent e) {
-        okAction.setEnabled(true);
+        setValidationEnabled(true);
       }
     });
     localRepository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        okAction.setEnabled(true);
+        setValidationEnabled(true);
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        okAction.setEnabled(false);
+        setValidationEnabled(false);
       }
     });
     ((AbstractDocument)document).setDocumentFilter(new DocumentFilter() {
@@ -325,8 +358,8 @@ public class SplitTransactionDialog {
     public void keyPressed(KeyEvent e) {
       if (e.getKeyCode() == KeyEvent.VK_ENTER) {
         try {
-          if (okAction.isEnabled()) {
-            okAction.actionPerformed(null);
+          if (addAction.isEnabled()) {
+            addAction.actionPerformed(null);
           }
         }
         catch (Exception ex) {

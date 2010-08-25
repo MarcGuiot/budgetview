@@ -13,8 +13,10 @@ import java.util.Locale;
 public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   private static final String PREVAYLER_DIR = "tmp/demo/";
   private static final String OFX_PATH = "tmp/demo.ofx";
+  private static final String OFX_UPDATE_PATH = "tmp/demo_update.ofx";
   private static final String OFX_SAVINGS_PATH = "tmp/demo_savings.ofx";
 
+  private int fourthMonth;
   private int thirdMonth;
   private int secondMonth;
   private int firstMonth;
@@ -22,32 +24,14 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
     Locale.setDefault(Locale.FRENCH);
 
-    thirdMonth = Month.getMonthId(new Date());
+    thirdMonth = 201006;//Month.getMonthId(new Date());
     secondMonth = Month.previous(thirdMonth);
     firstMonth = Month.previous(secondMonth);
+    fourthMonth = Month.next(thirdMonth);
 
     setCurrentMonth(Month.toString(thirdMonth) + "/20");
 
     super.setUp();
-  }
-
-  public static void main(String[] args) throws Exception {
-
-    System.setProperty("uispec4j.test.library", "junit");
-
-    Locale.setDefault(Locale.ENGLISH);
-
-    DemoGenerationTest test = new DemoGenerationTest();
-    test.setLocalPrevaylerPath(PREVAYLER_DIR);
-    test.setInMemory(false);
-    test.setDeleteLocalPrevayler(true);
-    test.setUp();
-    test.test();
-    test.tearDown();
-    System.exit(0);
-  }
-
-  public void test() throws Exception {
 
     operations.logout();
     LoginChecker loginChecker = new LoginChecker(mainWindow);
@@ -57,6 +41,35 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     Locale.setDefault(Locale.FRENCH);
 
     operations.openPreferences().setFutureMonthsCount(12).validate();
+  }
+
+  public static void main(String[] args) throws Exception {
+
+    System.setProperty("uispec4j.test.library", "junit");
+
+    Locale.setDefault(Locale.ENGLISH);
+
+    DemoGenerationTest test = createTest();
+    test.test();
+    test.tearDown();
+
+    DemoGenerationTest test2 = createTest();
+    test2.testCreateNextMonthFile();
+    test2.tearDown();
+
+    System.exit(0);
+  }
+
+  private static DemoGenerationTest createTest() throws Exception {
+    DemoGenerationTest test = new DemoGenerationTest();
+    test.setLocalPrevaylerPath(PREVAYLER_DIR);
+    test.setInMemory(false);
+    test.setDeleteLocalPrevayler(true);
+    test.setUp();
+    return test;
+  }
+
+  public void test() throws Exception {
 
     OfxBuilder.init(OFX_PATH)
       .addBankAccount(30066, 10678, "00000123456", 1410.20, third(20))
@@ -69,8 +82,8 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addTransaction(first(9), -1010.00, "PRET IMMO N.3325566")
       .addTransaction(second(9), -1010.00, "PRET IMMO N.3325566")
       .addTransaction(third(9), -1010.00, "PRET IMMO N.3325566")
-      .addTransaction(first(20), -289.75, "PRET CONSO N.6784562 F657")
-      .addTransaction(second(20), -289.75, "PRET CONSO N.6784562 F657")
+      .addTransaction(first(20), -189.75, "PRET CONSO N.6784562 F657")
+      .addTransaction(second(20), -189.75, "PRET CONSO N.6784562 F657")
       .addTransaction(first(9), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR")
       .addTransaction(second(8), second(9), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR")
       .addTransaction(third(12), third(14), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR")
@@ -139,7 +152,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addTransaction(second(9), -16.80, "PHARMACIE DES 4 CHEMINS")
       .addTransaction(first(7), -57.00, "CENTRE MEDICAL DES FLORETTES")
       .addTransaction(second(8), -35.00, "DR PHU")
-      .addTransaction(third(22), 25.80, "REMB. MUTUELLE SANTEPLUS")
+      .addTransaction(third(19), 25.80, "REMB. MUTUELLE SANTEPLUS")
 
         // EXTRAS
       .addTransaction(second(28), -680.50, "PLOMBERIE 24/7")
@@ -280,12 +293,8 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     //======== POSITION LEVEL ===========
 
-    views.selectHome();
-    mainAccounts.setThreshold(3100);
-
-    //======== SAVINGS ===========
-
     views.selectBudget();
+    budgetView.getSummary().openThresholdDialog().setThreshold(3100).validate();
 
     //======== PROVISIONS ===========
 
@@ -329,6 +338,66 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     }
   }
 
+  public void testCreateNextMonthFile() throws Exception {
+
+    OfxBuilder.init(OFX_UPDATE_PATH)
+      .addBankAccount(30066, 10678, "00000123456", 1688.12, fourth(18))
+        // Income
+      .addTransaction(third(28), 1760.50, "WORLDCO")
+      .addTransaction(third(28), 1312.80, "BIGCORP PAIE " + third(28))
+        // Fixed
+      .addTransaction(fourth(9), -1010.00, "PRET IMMO N.3325566")
+      .addTransaction(third(21), -189.75, "PRET CONSO N.6784562 F657")
+      .addTransaction(fourth(18), -189.75, "PRET CONSO N.6784562 F657")
+      .addTransaction(fourth(13), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR")
+      .addTransaction(fourth(5), -110.70, "TRESOR PUBLIC I.R. 23225252323")
+      .addTransaction(fourth(2), -70.30, "RATP NAVIGO 07/08")
+      .addTransaction(fourth(12), -25.50, "TVSAT")
+      .addTransaction(fourth(17), -66.10, "RED TELECOMS MOBILE")
+      .addTransaction(fourth(2), -29.90, "OPTIBOX ABT INTERNET 2523Z233")
+      .addTransaction(fourth(15), -65.89, "EDF")
+        // Envelopes
+      .addTransaction(third(15), -105.00, "HYPER M")
+      .addTransaction(third(23), -271.30, "HYPER M")
+      .addTransaction(third(29), -81.60, "HYPER M")
+      .addTransaction(third(18), -98.20, "HYPER M")
+
+      .addTransaction(third(19), -35.50, "BIO PLUS")
+      .addTransaction(fourth(1), -41.15, "BIO PLUS")
+      .addTransaction(fourth(5), -41.15, "BIO PLUS")
+
+      .addTransaction(third(1), -20.00, "RETRAIT GAB 1867")
+      .addTransaction(third(9), -20.00, "RETRAIT GAB 9011")
+      .addTransaction(fourth(15), -20.00, "RETRAIT LILLE 29A11")
+      .addTransaction(fourth(10), -35.30, "RESA CONCERTS. N1Y3454")
+      .addTransaction(fourth(17), -19.30, "CINE MAX BERCY")
+      .addTransaction(third(15), -13.70, "JOURNAUX 2000")
+      .addTransaction(third(16), -3.70, "JOURNAUX 2000")
+      .addTransaction(third(24), -12.50, "JOURNAUX 2000")
+      .addTransaction(third(17), -55.65, "CHAUSS'MODE")
+      .addTransaction(fourth(5), -126.00, "MOD MOD")
+      .addTransaction(third(27), -50.00, "PARIS MODE CENTRE")
+      .addTransaction(third(29), -6.50, "DAILY MAGAZINES")
+      .addTransaction(fourth(5), -7.50, "DAILY MAGAZINES")
+      .addTransaction(fourth(12), -8.80, "DAILY MAGAZINES")
+      .addTransaction(fourth(12), -14.20, "677 LEO MAGS")
+      .addTransaction(fourth(12), -160.20, "HI-FI MEDIA STORE 632526")
+      .addTransaction(third(24), -16.80, "PHARMACIE DES 4 CHEMINS")
+      .addTransaction(fourth(9), -16.80, "PHARMACIE DES 4 CHEMINS")
+      .addTransaction(fourth(15), 35.00, "REMB. MUTUELLE SANTEPLUS")
+      .addTransaction(fourth(22), 12.50, "REMB. MUTUELLE SANTEPLUS")
+      .addTransaction(fourth(5), 7.80, "REMB. MUTUELLE SANTEPLUS")
+      .addTransaction(fourth(9), -16.80, "PHARMACIE DES 4 CHEMINS")
+      .addTransaction(fourth(11), -45.00, "PHARMA DES LYS")
+      .addTransaction(fourth(8), -35.00, "DR PHU")
+      .addTransaction(fourth(22), 25.80, "REMB. MUTUELLE SANTEPLUS")
+        // SAVINGS
+      .addTransaction(fourth(17), -200.00, "VIRT MENS. LIVRET A")
+      .save();
+
+    System.out.println("OFX File update saved in: " + new File(OFX_UPDATE_PATH).getAbsolutePath());
+  }
+
   private String first(int day) {
     return Month.toString(firstMonth) + "/" + day;
   }
@@ -339,5 +408,9 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
   private String third(int day) {
     return Month.toString(thirdMonth) + "/" + day;
+  }
+
+  private String fourth(int day) {
+    return Month.toString(fourthMonth) + "/" + day;
   }
 }

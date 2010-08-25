@@ -53,8 +53,8 @@ public class OperationChecker {
     undoMenu = editMenu.getSubMenu("Undo");
     redoMenu = editMenu.getSubMenu("Redo");
     checkMenu = editMenu.getSubMenu("[Check data (see logs)]");
-    throwExceptionMenu = editMenu.getSubMenu("Throw exception");
-    throwExceptionInRepositoryMenu = editMenu.getSubMenu("Throw exception in repo");
+    throwExceptionMenu = editMenu.getSubMenu("[Throw exception]");
+    throwExceptionInRepositoryMenu = editMenu.getSubMenu("Throw exception in repository");
   }
 
   public ImportDialogChecker openImportDialog() {

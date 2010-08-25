@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.utils;
+package org.designup.picsou.gui.utils.dev;
 
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
@@ -12,7 +12,7 @@ public class ThrowInRepoExceptionAction extends AbstractAction {
   private GlobRepository repository;
 
   public ThrowInRepoExceptionAction(GlobRepository repository) {
-    super("Throw exception in repo");
+    super("[Throw exception in repository]");
     this.repository = repository;
   }
 

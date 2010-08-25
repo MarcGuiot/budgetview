@@ -922,7 +922,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/05");
     categorization.selectTableRows(
       categorization.getTable().getRowIndex(CategorizationChecker.LABEL_COLUMN_INDEX, "AUCHAN"));
-    transactionDetails.openSplitDialog().deleteRow(1).validate();
+    transactionDetails.openSplitDialog().deleteRow(1).validateAndClose();
 
     views.selectBudget();
     timeline.selectMonth("2008/05");
