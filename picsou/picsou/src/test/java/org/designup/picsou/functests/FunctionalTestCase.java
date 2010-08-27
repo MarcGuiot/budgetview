@@ -17,14 +17,14 @@ public abstract class FunctionalTestCase extends UISpecTestCase {
   
   static {
     TestUtils.clearTmpDir();
-    Locale.setDefault(Locale.ENGLISH);
+    Locale.setDefault(Locale.ROOT);
     UISpec4J.setAssertionTimeLimit(1000);
     DummyRepaintManager.init();
   }
 
   protected void setUp() throws Exception {
     super.setUp();
-    Locale.setDefault(Locale.ENGLISH);
+    Locale.setDefault(Locale.ROOT);
     Log.reset();
     AWTAutoShutdown.notifyToolkitThreadBusy();
   }

@@ -149,7 +149,7 @@ public class OperationChecker {
             importDialog
               .defineAccount(bank, "Main account", DEFAULT_ACCOUNT_NUMBER);
           }
-          else if (bank != null && dialog.findSwingComponent(JButton.class, "Set the bank") != null) { // OFX
+          else if (bank != null && dialog.findSwingComponent(JButton.class, "Select the bank") != null) { // OFX
             importDialog
               .openEntityEditor()
               .selectBank(bank)
@@ -462,7 +462,7 @@ public class OperationChecker {
 
   public void checkChangeUserName(){
     MenuItem fileMenu = window.getMenuBar().getMenu("File");
-    UISpecAssert.assertThat(fileMenu.contain("Change identifier"));
+    UISpecAssert.assertThat(fileMenu.contain("Change identifiers..."));
   }
 
   public void nextMonth() {

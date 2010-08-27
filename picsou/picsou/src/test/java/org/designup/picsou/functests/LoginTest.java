@@ -310,7 +310,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     login.clickDemoLink();
     OperationChecker operations = new OperationChecker(window);
     MessageDialogChecker dialogChecker = MessageDialogChecker.init(operations.getImportTrigger());
-    dialogChecker.checkMessageContains("You cannot import operations in demo");
+    dialogChecker.checkMessageContains("You cannot import operations in the demo account");
     dialogChecker.close();
   }
 

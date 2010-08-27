@@ -74,9 +74,9 @@ public class LicenseTest extends LicenseTestCase {
 
   public void testConnectAtStartup() throws Exception {
     DbChecker dbChecker = new DbChecker();
-    String mail = "alfred@free.fr";
-    dbChecker.registerMail(mail, "1234");
-    register(dbChecker, mail, "1234");
+    String email = "alfred@free.fr";
+    dbChecker.registerMail(email, "1234");
+    register(dbChecker, email, "1234");
     checkValidLicense(false);
 
     exit();
@@ -85,7 +85,7 @@ public class LicenseTest extends LicenseTestCase {
     startApplication(false);
     login.logExistingUser("user", "passw@rd", true);
 
-    Glob license = dbChecker.getLicense(mail, License.ACCESS_COUNT, 3L);
+    Glob license = dbChecker.getLicense(email, License.ACCESS_COUNT, 3L);
     assertEquals(3L, license.get(License.ACCESS_COUNT).longValue());
     checkValidLicense(false);
   }
@@ -121,13 +121,13 @@ public class LicenseTest extends LicenseTestCase {
     dbChecker.checkRepoIdIsUpdated(1L, Constraints.notEqual(RepoInfo.REPO_ID, repoId));
     checkDaysLeftMessage();
 
-    LicenseActivationChecker.enterBadLicense(window, MAIL, "1234", "Activation failed a mail was sent at " + MAIL);
+    LicenseActivationChecker.enterBadLicense(window, MAIL, "1234", "Activation failed. An email was sent at " + MAIL + " with further information.");
     checkDaysLeftMessage();
-    String mailcontent = checkReceivedMail(MAIL);
-    assertTrue(mailcontent, mailcontent.contains("Your new activation code"));
+    String emailcontent = checkReceivedMail(MAIL);
+    assertTrue(emailcontent, emailcontent.contains("Your new activation code"));
 
-    int startCode = mailcontent.indexOf("is ") + 3;
-    String newActivationCode = mailcontent.substring(startCode, startCode + 4);
+    int startCode = emailcontent.indexOf("is ") + 3;
+    String newActivationCode = emailcontent.substring(startCode, startCode + 4);
     exit();
 
     checkVersionValidity(false, PATH_TO_DATA);
@@ -153,17 +153,17 @@ public class LicenseTest extends LicenseTestCase {
 
   public void testRegisterAndReRegisterWithBadEmail() throws Exception {
     DbChecker dbChecker = new DbChecker();
-    String mail = "alfred@free.fr";
-    dbChecker.registerMail(mail, "1234");
-    register(dbChecker, mail, "1234");
+    String email = "alfred@free.fr";
+    dbChecker.registerMail(email, "1234");
+    register(dbChecker, email, "1234");
     checkValidLicense(false);
 
     exit();
     startApplication(false);
     login.logExistingUser("user", "passw@rd", true);
-    LicenseActivationChecker.enterBadLicense(window, "titi@foo.org", "4321", "Unknown mail adress");
+    LicenseActivationChecker.enterBadLicense(window, "titi@foo.org", "4321", "Unknown email address");
 
-    dbChecker.checkLicenseCount(mail, 3);
+    dbChecker.checkLicenseCount(email, 3);
     checkValidLicense(false);
     exit();
     startApplication(false);
@@ -173,9 +173,9 @@ public class LicenseTest extends LicenseTestCase {
 
   public void testRegisterAndReRegisterWithBadActivationCode() throws Exception {
     DbChecker dbChecker = new DbChecker();
-    String mail = "alfred@free.fr";
-    dbChecker.registerMail(mail, "1234");
-    register(dbChecker, mail, "1234");
+    String email = "alfred@free.fr";
+    dbChecker.registerMail(email, "1234");
+    register(dbChecker, email, "1234");
     checkValidLicense(false);
 
     exit();
@@ -183,7 +183,7 @@ public class LicenseTest extends LicenseTestCase {
     login.logExistingUser("user", "passw@rd", true);
     LicenseActivationChecker.enterBadLicense(window, "alfred@free.fr", "4321", "Activation failed");
 
-    dbChecker.checkLicenseCount(mail, 3);
+    dbChecker.checkLicenseCount(email, 3);
     checkValidLicense(false);
     exit();
     startApplication(false);
@@ -193,9 +193,9 @@ public class LicenseTest extends LicenseTestCase {
 
   public void testRegisterAndReRegisterWithBadActivationCodeWithoutRestart() throws Exception {
     DbChecker dbChecker = new DbChecker();
-    String mail = "alfred@free.fr";
-    dbChecker.registerMail(mail, "1234");
-    register(dbChecker, mail, "1234");
+    String email = "alfred@free.fr";
+    dbChecker.registerMail(email, "1234");
+    register(dbChecker, email, "1234");
     checkValidLicense(false);
     LicenseActivationChecker.enterBadLicense(window, "alfred@free.fr", "4321", "Activation failed");
 
@@ -212,9 +212,9 @@ public class LicenseTest extends LicenseTestCase {
     LicenseActivationChecker activationChecker = LicenseActivationChecker.open(window);
     activationChecker
       .enterLicenseAndValidate("titi@foo.org", "az")
-      .checkErrorMessage("Unknown mail adress")
+      .checkErrorMessage("Unknown email address")
       .checkActivationCodeIsEmptyAndMailIs("titi@foo.org");
-    checkMessage("Unknown mail adress");
+    checkMessage("Unknown email address");
     DbChecker dbChecker = new DbChecker();
     dbChecker.registerMail("toto@zer", "1234");
     activationChecker
@@ -234,7 +234,7 @@ public class LicenseTest extends LicenseTestCase {
       .checkErrorMessage("Activation failed")
       .cancel();
     checkMessage("31 days left for trying CashPilot");
-    checkMessage("Activation code not valid. You can ");
+    checkMessage("This activation code is not valid. You can request");
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     exit();
     startApplication(false);
@@ -253,7 +253,7 @@ public class LicenseTest extends LicenseTestCase {
       .cancel();
 
     checkMessage("31 days left for trying CashPilot");
-    checkMessage("Can not connect to remote server");
+    checkMessage("Cannot connect to remote server");
 
     exit();
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
@@ -277,7 +277,7 @@ public class LicenseTest extends LicenseTestCase {
     license.cancel();
 
     checkMessage("31 days left for trying CashPilot");
-    checkMessage("Activation code not valid. You can ask for ");
+    checkMessage("This activation code is not valid. You can request");
 
     exit();
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
@@ -294,9 +294,9 @@ public class LicenseTest extends LicenseTestCase {
 
   public void testRegisterAndReRegisterToOtherFailedAndSendAMail() throws Exception {
     DbChecker dbChecker = new DbChecker();
-    String mail = "alfred@free.fr";
-    dbChecker.registerMail(mail, "1234");
-    register(dbChecker, mail, "1234");
+    String email = "alfred@free.fr";
+    dbChecker.registerMail(email, "1234");
+    register(dbChecker, email, "1234");
     checkValidLicense(false);
 
     exit();
@@ -316,8 +316,9 @@ public class LicenseTest extends LicenseTestCase {
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startApplication(false);
     login.logExistingUser("user", "passw@rd", true);
-    LicenseActivationChecker.enterBadLicense(window, mail, "1234", "Activation failed a mail was sent at alfred@free.fr");
-    checkReceivedMail(mail);
+    LicenseActivationChecker.enterBadLicense(window, email, "1234",
+                                             "Activation failed. An email was sent at " + MAIL + " with further information.");
+    checkReceivedMail(email);
     checkWithMailKilled();
   }
 
@@ -332,7 +333,8 @@ public class LicenseTest extends LicenseTestCase {
 
     mailServer.stop();
     mailThread.join();
-    LicenseActivationChecker.enterBadLicense(window, MAIL, "1234", "Activation failed a mail was sent at alfred@free.fr");
+    LicenseActivationChecker.enterBadLicense(window, MAIL, "1234",
+                                             "Activation failed. An email was sent at " + MAIL + " with further information.");
     boolean received = false;
     try {
       checkReceivedMail(MAIL);
@@ -367,7 +369,8 @@ public class LicenseTest extends LicenseTestCase {
     startApplication(false);
     login.logExistingUser("user", "passw@rd", true);
 
-    LicenseActivationChecker.enterBadLicense(window, MAIL, "1234", "Activation failed a mail was sent at alfred@free.fr");
+    LicenseActivationChecker.enterBadLicense(window, MAIL, "1234",
+                                             "Activation failed. An email was sent at " + MAIL + " with further information.");
     String messageCode = checkReceivedMail(MAIL);
     String newCode = messageCode.substring(messageCode.length() - 5, messageCode.length() - 1).trim();
     LicenseActivationChecker.enterLicense(window, "alfred@free.fr", newCode);
@@ -402,7 +405,7 @@ public class LicenseTest extends LicenseTestCase {
     startApplication(false);
     login.logExistingUser("user", "passw@rd", true);
     LicenseMessageChecker messageChecker = new LicenseMessageChecker(window);
-    messageChecker.checkMessage("Your free trial period is over. You can buy");
+    messageChecker.checkMessage("Your free trial period is over.");
   }
 
   public void testActivationFailDuringTrial() throws Exception {
@@ -488,14 +491,14 @@ public class LicenseTest extends LicenseTestCase {
   private void checkWithMailKilled() {
     TextBox message = window.getTextBox("licenseMessage");
     assertThat(message.isVisible());
-    assertTrue(message.textContains("Activation failed a mail was sent at alfred@free.fr"));
+    assertTrue(message.textContains("Activation failed. An email was sent at " + MAIL + " with further information."));
   }
 
   private void checkActivationFailed() {
     TextBox message = window.getTextBox("licenseMessage");
     assertThat(message.isVisible());
-    assertTrue(message.textContains("Activation code not valid"));
-    assertTrue(message.textContains("You can ask"));
+    assertTrue(message.textContains("This activation code is not valid."));
+    assertTrue(message.textContains("You can request"));
   }
 
   private void checkKilled() {
@@ -505,14 +508,14 @@ public class LicenseTest extends LicenseTestCase {
   }
 
 
-  private void register(DbChecker dbChecker, String mail, final String code) throws InterruptedException {
+  private void register(DbChecker dbChecker, String email, final String code) throws InterruptedException {
     dbChecker.checkRepoIdIsUpdated(1L, null);
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
-    LicenseActivationChecker.enterLicense(window, mail, code);
+    LicenseActivationChecker.enterLicense(window, email, code);
     OperationChecker operation = new OperationChecker(window);
     operation.openPreferences().setFutureMonthsCount(24).validate();
-    dbChecker.checkLicenseCount(mail, 1);
+    dbChecker.checkLicenseCount(email, 1);
   }
 
   class DbChecker {
@@ -522,9 +525,9 @@ public class LicenseTest extends LicenseTestCase {
       connection = getSqlConnection();
     }
 
-    public void registerMail(String mail, String code) {
+    public void registerMail(String email, String code) {
       connection.getCreateBuilder(License.TYPE)
-        .set(License.MAIL, mail)
+        .set(License.MAIL, email)
         .set(License.ACTIVATION_CODE, code)
         .getRequest()
         .run();
@@ -553,8 +556,8 @@ public class LicenseTest extends LicenseTestCase {
       return glob.get(0);
     }
 
-    public Glob getLicense(String mail, Field field, Object expected) throws InterruptedException {
-      return getGlob(field, expected, Constraints.equal(License.MAIL, mail));
+    public Glob getLicense(String email, Field field, Object expected) throws InterruptedException {
+      return getGlob(field, expected, Constraints.equal(License.MAIL, email));
     }
 
     public String checkRepoIdIsUpdated(long repoCount, Constraint constraint) throws InterruptedException {
@@ -565,8 +568,8 @@ public class LicenseTest extends LicenseTestCase {
       return repoInfo.get(RepoInfo.REPO_ID);
     }
 
-    public void checkLicenseCount(String mail, long count) throws InterruptedException {
-      Glob license = getLicense(mail, License.ACCESS_COUNT, count);
+    public void checkLicenseCount(String email, long count) throws InterruptedException {
+      Glob license = getLicense(email, License.ACCESS_COUNT, count);
       assertEquals(count, license.get(License.ACCESS_COUNT).longValue());
       assertTrue(license.get(License.SIGNATURE).length > 1);
     }

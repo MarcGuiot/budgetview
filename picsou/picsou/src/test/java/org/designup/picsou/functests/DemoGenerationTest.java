@@ -47,7 +47,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     System.setProperty("uispec4j.test.library", "junit");
 
-    Locale.setDefault(Locale.ENGLISH);
+    Locale.setDefault(Locale.ROOT);
 
     DemoGenerationTest test = createTest();
     test.test();

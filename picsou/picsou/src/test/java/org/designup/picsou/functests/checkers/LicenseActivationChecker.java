@@ -85,7 +85,8 @@ public class LicenseActivationChecker {
   public void checkConnectionNotAvailable() {
     assertFalse(dialog.getInputTextBox("ref-mail").isEnabled());
     assertFalse(dialog.getInputTextBox("ref-code").isEnabled());
-    assertTrue(dialog.getTextBox("connectionMessage").textEquals("You must be connected to Internet to register"));
+    assertTrue(dialog.getTextBox("connectionMessage")
+      .textEquals("You must be connected to the Internet to register your license"));
   }
 
   public void checkConnectionIsAvailable() {

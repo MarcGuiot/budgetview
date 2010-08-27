@@ -178,7 +178,7 @@ public class TransactionCreationChecker extends GuiChecker {
 
   public void checkDemoMessage(){
     MessageDialogChecker.init(getShowHideButton().triggerClick())
-      .checkMessageContains("You cannot create operation in demo")
+      .checkMessageContains("You cannot create operations in the demo account")
       .close();
   }
 

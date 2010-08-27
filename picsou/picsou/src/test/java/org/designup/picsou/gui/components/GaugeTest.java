@@ -18,7 +18,7 @@ import java.util.Locale;
 public class GaugeTest extends TestCase {
   protected void setUp() throws Exception {
     super.setUp();
-    Locale.setDefault(Locale.ENGLISH);
+    Locale.setDefault(Locale.ROOT);
   }
 
   public void testInit() throws Exception {

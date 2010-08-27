@@ -262,7 +262,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public BankEntityEditionChecker openEntityEditor() {
-    Window window = WindowInterceptor.getModalDialog(dialog.getButton("Set the bank").triggerClick());
+    Window window = WindowInterceptor.getModalDialog(dialog.getButton("Select the bank").triggerClick());
     return new BankEntityEditionChecker(window);
   }
 
@@ -288,7 +288,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker checkMessageEmptyFile() {
-    dialog.getTextBox("No operations in file");
+    dialog.getTextBox("This file contains no operations");
     return this;
   }
 

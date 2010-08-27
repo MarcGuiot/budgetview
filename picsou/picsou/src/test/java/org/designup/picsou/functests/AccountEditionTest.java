@@ -91,7 +91,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.edit("Account n. 0000123")
       .checkAccountName("Account n. 0000123")
       .setAccountName("")
-      .checkValidationError("You must enter a name for the account")
+      .checkValidationError("You must enter a name for this account")
       .cancel();
 
     mainAccounts.checkAccountNames("Account n. 0000123");

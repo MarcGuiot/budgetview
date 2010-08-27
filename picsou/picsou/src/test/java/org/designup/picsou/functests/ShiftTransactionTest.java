@@ -251,9 +251,9 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkShiftEnabled();
     SeriesEditionDialogChecker.open(
       transactionDetails.openShiftDialog()
-        .checkTitle("Shift impossible")
-        .checkMessageContains("The operation is assigned to a series which is not active for July 2008. " +
-                              "Do you want to edit the series?")
+        .checkTitle("Shift denied")
+        .checkMessageContains("The operation is assigned to an envelope which is not active for July 2008. " +
+                              "Do you want to edit the envelope anyway?")
         .getOkTrigger())
       .checkName("Groceries")
       .removeEndDate()
@@ -273,9 +273,9 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkShiftEnabled();
     SeriesEditionDialogChecker.open(
       transactionDetails.openShiftDialog()
-        .checkTitle("Shift impossible")
-        .checkMessageContains("The operation is assigned to a series which is not active for June 2008. " +
-                              "Do you want to edit the series?")
+        .checkTitle("Shift denied")
+        .checkMessageContains("The operation is assigned to an envelope which is not active for June 2008. " +
+                              "Do you want to edit the envelope anyway?")
         .getOkTrigger())
       .checkName("Groceries")
       .removeStartDate()

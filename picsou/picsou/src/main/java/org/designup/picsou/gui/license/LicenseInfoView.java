@@ -100,6 +100,7 @@ public class LicenseInfoView extends View {
     StringBuilder htmlText = new StringBuilder();
     htmlText.append("<html>");
     htmlText.append(getDaysLeftMessage(user, days, state));
+    htmlText.append(' ');
     htmlText.append(getRegisterMessage(user, days, state));
     htmlText.append("</html>");
 
@@ -140,7 +141,7 @@ public class LicenseInfoView extends View {
       return Lang.get("license.activation.failed");
     }
     else if (state == User.ACTIVATION_FAILED_MAIL_NOT_SENT) {
-      return Lang.get("license.code.invalide");
+      return Lang.get("license.code.invalid");
     }
     else if (state == User.STARTUP_CHECK_KILL_USER) {
       if (days < 0) {

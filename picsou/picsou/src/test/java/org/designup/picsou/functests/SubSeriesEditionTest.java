@@ -254,12 +254,12 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     seriesDialog
       .gotoSubSeriesTab()
       .deleteSubSeriesWithConfirmation("subSeries1", "subSeries3")
-      .checkDeletionOptions("Move them to series 'series1'",
-                            "Move them to sub-series 'subSeries2'",
-                            "Move them to sub-series 'subSeries4'",
-                            "Move them to sub-series 'subSeries5'",
+      .checkDeletionOptions("Move them to envelope 'series1'",
+                            "Move them to sub-envelope 'subSeries2'",
+                            "Move them to sub-envelope 'subSeries4'",
+                            "Move them to sub-envelope 'subSeries5'",
                             "Uncategorize them")
-      .selectDeletionOption("Move them to series 'series1'")
+      .selectDeletionOption("Move them to envelope 'series1'")
       .validate();
     seriesDialog
       .checkSubSeriesList("subSeries2", "subSeries4", "subSeries5")
@@ -277,11 +277,11 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     dialog2
       .gotoSubSeriesTab()
       .deleteSubSeriesWithConfirmation("subSeries2")
-      .checkDeletionOptions("Move them to series 'series1'",
-                            "Move them to sub-series 'subSeries4'",
-                            "Move them to sub-series 'subSeries5'",
+      .checkDeletionOptions("Move them to envelope 'series1'",
+                            "Move them to sub-envelope 'subSeries4'",
+                            "Move them to sub-envelope 'subSeries5'",
                             "Uncategorize them")
-      .selectDeletionOption("Move them to sub-series 'subSeries4'")
+      .selectDeletionOption("Move them to sub-envelope 'subSeries4'")
       .validate();
     dialog2
       .checkSubSeriesList("subSeries4", "subSeries5")
@@ -299,8 +299,8 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     dialog3
       .gotoSubSeriesTab()
       .deleteSubSeriesWithConfirmation("subSeries4")
-      .checkDeletionOptions("Move them to series 'series1'",
-                            "Move them to sub-series 'subSeries5'",
+      .checkDeletionOptions("Move them to envelope 'series1'",
+                            "Move them to sub-envelope 'subSeries5'",
                             "Uncategorize them")
       .selectDeletionOption("Uncategorize them")
       .validate();

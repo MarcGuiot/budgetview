@@ -1,6 +1,7 @@
 package org.designup.picsou.utils;
 
 import org.globsframework.gui.splits.TextLocator;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import org.globsframework.utils.Files;
@@ -14,7 +15,7 @@ import java.io.InputStream;
 
 public class Lang {
   private static ResourceBundle bundle;
-  private static Locale LOCALE = Locale.ENGLISH;
+  private static Locale LOCALE = Locale.ROOT;
 
   public static TextLocator TEXT_LOCATOR = new TextLocator() {
     public String get(String code) {
@@ -81,7 +82,11 @@ public class Lang {
   }
 
   private static String getFilePath(String dir, String fileName) {
-    return "/" + dir + "/" + LOCALE.getLanguage() + "/" + fileName;
+    String langDir = LOCALE.getLanguage();
+    if (Strings.isNullOrEmpty(langDir)) {
+      langDir = "en";
+    }
+    return "/" + dir + "/" + langDir + "/" + fileName;
   }
 
   private static String getMessage(String key) {
