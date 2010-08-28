@@ -25,7 +25,7 @@
       <filler fill="horizontal"/>
     </row>
 
-    <component ref="slider" border="empty(0,10,10,10)" preferredSize="(200,60)" weightY="2"/>
+    <component ref="slider" opaque="false" border="empty(0,10,10,10)" preferredSize="(200,60)" weightY="2"/>
 
     <row marginBottom="10">
       <filler fill="horizontal"/>

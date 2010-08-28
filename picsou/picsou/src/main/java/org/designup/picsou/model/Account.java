@@ -8,19 +8,20 @@ import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Pair;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import static org.globsframework.model.FieldValue.value;
 
 public class Account {
   public static final String SUMMARY_ACCOUNT_NUMBER = null;
@@ -186,7 +187,7 @@ value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
     double multiplier;
     Integer forAccountIdPointOfView = toAccount == null ?
                                       (fromAccount == null ? null : fromAccount.get(ID))
-                                                        : toAccount.get(ID);
+                                      : toAccount.get(ID);
     if (forAccountIdPointOfView == null) {
       multiplier = 0;
     }
@@ -251,6 +252,32 @@ value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
     else {
       return Lang.get("account.defaultName.standard", number);
     }
+  }
+
+  public static Pair<Integer, Integer> getValidMonth(Glob series, GlobRepository repository) {
+    int startMonth = 0;
+    int endMonth = Integer.MAX_VALUE;
+    if (series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
+      Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
+      Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
+      Date fromOpenDate = fromAccount != null ? fromAccount.get(OPEN_DATE) : null;
+      if (fromOpenDate != null) {
+        startMonth = Month.getMonthId(fromOpenDate);
+      }
+      Date toOpenDate = toAccount != null ? toAccount.get(OPEN_DATE) : null;
+      if (toOpenDate != null) {
+        startMonth = Math.max(startMonth, Month.getMonthId(toOpenDate));
+      }
+      Date fromCloseDate = fromAccount != null ? fromAccount.get(CLOSED_DATE) : null;
+      if (fromCloseDate != null) {
+        endMonth = Month.getMonthId(fromCloseDate);
+      }
+      Date toCloseDate = toAccount != null ? toAccount.get(CLOSED_DATE) : null;
+      if (toCloseDate != null) {
+        endMonth = Math.min(endMonth, Month.getMonthId(toCloseDate));
+      }
+    }
+    return new Pair<Integer, Integer>(startMonth, endMonth);
   }
 
   public static class Serializer implements PicsouGlobSerializer {
@@ -353,7 +380,7 @@ value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
       isCard = isCard == null ? false : isCard;
       fieldSetter.set(CARD_TYPE, isCard ?
                                  AccountCardType.DEFERRED.getId()
-                                        : AccountCardType.NOT_A_CARD.getId());
+                                 : AccountCardType.NOT_A_CARD.getId());
     }
 
     private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {

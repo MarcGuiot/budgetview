@@ -90,4 +90,100 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .checkLineColumn(3, "O", "2009", 900.00)
       .checkLineColumn(6, "J", "2010", 1500.00);
   }
+
+  public void testWithBeginOfAccount() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/07/30")
+      .addTransaction("2009/06/04", -10.00, "McDo")
+      .addTransaction("2009/07/10", -200.00, "Virt")
+      .load();
+
+    savingsAccounts
+      .createNewAccount()
+      .setAccountName("ING")
+      .selectBank("ING Direct")
+      .setPosition(0)
+      .setStartDate("2009/07/02")
+      .validate();
+
+    views.selectCategorization();
+    categorization.setNewSavings("Virt", "Epargne", "Main accounts", "ING");
+    views.selectSavings();
+    timeline.selectMonth("2009/06");
+    savingsView.checkTotalPosition("-", "30/06/2009");
+
+    views.selectHome();
+    timeline.selectMonth("2009/10");
+    savingsAccounts.edit("ING").setEndDate("2009/09/02").validate();
+
+    views.selectSavings();
+    savingsView.checkTotalPosition("-", "31/10/2009");
+  }
+
+  public void testAddMonth() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/07/30")
+      .addTransaction("2009/05/04", -10.00, "McDo")
+      .addTransaction("2009/06/04", -10.00, "McDo")
+      .addTransaction("2009/07/10", -200.00, "Virt")
+      .load();
+
+    savingsAccounts
+      .createNewAccount()
+      .setAccountName("ING")
+      .selectBank("ING Direct")
+      .setPosition(0)
+      .setStartDate("2009/06/02")
+      .validate();
+
+    views.selectCategorization();
+    categorization.setNewSavings("Virt", "Epargne", "Main accounts", "ING");
+    views.selectSavings();
+    timeline.selectMonth("2009/05");
+    savingsView.checkTotalPosition("-", "31/05/2009");
+
+    views.selectHome();
+    timeline.selectMonth("2009/07");
+    savingsAccounts
+      .edit("ING")
+      .setEndDate("2009/11/02")
+      .validate();
+
+    views.selectSavings();
+    savingsView.checkTotalPosition("0.00", "31/07/2009");
+
+    operations.openPreferences()
+      .setFutureMonthsCount(6)
+      .validate();
+    timeline.selectMonth("2009/11");
+    savingsView.checkTotalPosition("800.00", "30/11/2009");
+    timeline.selectMonth("2009/12");
+    savingsView.checkTotalPosition("-", "31/12/2009");
+    views.selectHome();
+    timeline.selectMonth("2009/10");
+    savingsAccounts.edit("ING")
+      .setEndDate("2009/10/02")
+      .validate();
+    views.selectSavings();
+    timeline.selectMonth("2009/10");
+    savingsView.checkTotalPosition("600.00", "31/10/2009");
+    timeline.selectMonth("2009/12");
+    savingsView.checkTotalPosition("-", "31/12/2009");
+
+    views.selectHome();
+    timeline.selectMonth("2009/10");
+    savingsAccounts.edit("ING")
+      .setStartDate("2009/07/02")
+      .validate();
+    views.selectSavings();
+    timeline.selectMonth("2009/08");
+    savingsView.checkTotalPosition("200.00", "31/08/2009");
+    timeline.selectMonth("2009/10");
+    savingsView.checkTotalPosition("600.00", "31/10/2009");
+    timeline.selectMonth("2009/12");
+    savingsView.checkTotalPosition("-", "31/12/2009");
+
+  }
 }

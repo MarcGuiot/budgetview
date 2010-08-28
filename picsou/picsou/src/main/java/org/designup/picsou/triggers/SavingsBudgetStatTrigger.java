@@ -13,10 +13,7 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.MapOfMaps;
 import org.globsframework.utils.MultiMap;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class SavingsBudgetStatTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -246,6 +243,15 @@ public class SavingsBudgetStatTrigger implements ChangeSetListener {
             balance = endOfMonthPosition - beginOfMonthPosition;
           }
 
+          Glob account = repository.find(Key.create(Account.TYPE, accountId));
+          Date openDate = account.get(Account.OPEN_DATE);
+          if (openDate != null && Month.getMonthId(openDate) > monthId){
+            continue;
+          }
+          Date closeDate = account.get(Account.CLOSED_DATE);
+          if (closeDate != null && Month.getMonthId(closeDate) < monthId){
+            continue;
+          }
           Key key = Key.create(SavingsBudgetStat.MONTH, monthId, SavingsBudgetStat.ACCOUNT, accountId);
           repository.create(key,
                             FieldValue.value(SavingsBudgetStat.BALANCE, balance),

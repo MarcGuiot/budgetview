@@ -6,6 +6,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.Pair;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.*;
@@ -97,8 +98,11 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
     GlobList globs = index.getGlobs();
     Glob[] existingSeriesBudget = globs.sort(SeriesBudget.MONTH).toArray();
 
+    Pair<Integer,Integer> startEndMonth = Account.getValidMonth(series, repository);
+
     Glob budget = repository.create(SeriesBudget.TYPE,
-                                    value(SeriesBudget.ACTIVE, series.get(Series.getMonthField(monthId))),
+                                    value(SeriesBudget.ACTIVE, series.get(Series.getMonthField(monthId)) &&
+                                    monthId >= startEndMonth.getFirst() && monthId <= startEndMonth.getSecond()),
                                     value(SeriesBudget.SERIES, series.get(Series.ID)),
                                     value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId)),
                                     value(SeriesBudget.MONTH, monthId));

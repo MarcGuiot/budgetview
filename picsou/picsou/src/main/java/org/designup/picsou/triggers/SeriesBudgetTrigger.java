@@ -6,6 +6,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.Pair;
 
 import java.util.*;
 
@@ -49,6 +50,8 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
     if (monthIds.length == 0) {
       return;
     }
+
+    Pair<Integer, Integer> startEndValideMonth = Account.getValidMonth(series, repository);
     int fromIndex;
     Integer firstMonth = series.get(Series.FIRST_MONTH);
     Integer fromDate = firstMonth == null ? monthIds[0] : Math.max(firstMonth, monthIds[0]);
@@ -64,7 +67,8 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
       Calendar calendar = Calendar.getInstance();
       for (int i = fromIndex; i <= toIndex; i++) {
         int monthId = monthIds[i];
-        boolean active = series.isTrue(Series.getMonthField(monthId));
+        boolean active = series.isTrue(Series.getMonthField(monthId)) && (monthId >= startEndValideMonth.getFirst()
+                                                                          && monthId <= startEndValideMonth.getSecond());
         Glob seriesBudget = monthWithBudget.remove(monthId);
         if (seriesBudget == null) {
           Glob existingSeriesBudget =
