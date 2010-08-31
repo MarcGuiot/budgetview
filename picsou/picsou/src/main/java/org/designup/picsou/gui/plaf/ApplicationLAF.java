@@ -8,6 +8,7 @@ import org.globsframework.gui.splits.components.ShadowedLabelUI;
 import org.designup.picsou.gui.components.SelectionToggleUI;
 import org.designup.picsou.gui.components.ArrowButtonUI;
 import org.designup.picsou.gui.components.RoundButtonUI;
+import org.designup.picsou.gui.components.ColorButtonUI;
 
 import javax.swing.*;
 
@@ -23,6 +24,7 @@ public class ApplicationLAF {
   private static final String BUTTON_PANEL_UI = org() + "designup.picsou.gui.plaf.ButtonPanelItemUI";
   private static final String ARROW_BUTTON_UI = org() + "designup.picsou.gui.components.ArrowButtonUI";
   private static final String ROUND_BUTTON_UI = org() + "designup.picsou.gui.components.RoundButtonUI";
+  private static final String COLOR_BUTTON_UI = org() + "designup.picsou.gui.components.ColorButtonUI";
 
   private ApplicationLAF() {
   }
@@ -43,6 +45,7 @@ public class ApplicationLAF {
     uiService.registerClass(ROUND_BUTTON_UI, RoundButtonUI.class);
     uiService.registerClass(BUTTON_PANEL_UI, ButtonPanelItemUI.class);
     uiService.registerClass(ARROW_BUTTON_UI, ArrowButtonUI.class);
+    uiService.registerClass(COLOR_BUTTON_UI, ColorButtonUI.class);
     return uiService;
   }
 
