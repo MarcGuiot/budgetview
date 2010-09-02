@@ -112,6 +112,7 @@ public class PicsouApplication {
         }
         catch (Exception e) {
           Log.write("At startup ", e);
+          System.exit(-1);
         }
       }
     });
