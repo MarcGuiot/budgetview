@@ -7,6 +7,7 @@ import org.uispec4j.UISpec4J;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.utils.DummyRepaintManager;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
+import org.designup.picsou.utils.Lang;
 
 import java.io.File;
 import java.util.Locale;
@@ -17,14 +18,14 @@ public abstract class FunctionalTestCase extends UISpecTestCase {
   
   static {
     TestUtils.clearTmpDir();
-    Locale.setDefault(Locale.ROOT);
+    Locale.setDefault(Lang.ROOT);
     UISpec4J.setAssertionTimeLimit(1000);
     DummyRepaintManager.init();
   }
 
   protected void setUp() throws Exception {
     super.setUp();
-    Locale.setDefault(Locale.ROOT);
+    Locale.setDefault(Lang.ROOT);
     Log.reset();
     AWTAutoShutdown.notifyToolkitThreadBusy();
   }

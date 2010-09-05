@@ -5,6 +5,7 @@ import org.designup.picsou.functests.checkers.GaugeChecker;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.components.tips.DetailsTipFactory;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -18,7 +19,7 @@ import java.util.Locale;
 public class GaugeTest extends TestCase {
   protected void setUp() throws Exception {
     super.setUp();
-    Locale.setDefault(Locale.ROOT);
+    Locale.setDefault(Lang.ROOT);
   }
 
   public void testInit() throws Exception {
