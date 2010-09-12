@@ -184,6 +184,60 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     savingsView.checkTotalPosition("600.00", "31/10/2009");
     timeline.selectMonth("2009/12");
     savingsView.checkTotalPosition("-", "31/12/2009");
+  }
+
+  public void testAutomaticCreation() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/07/30")
+      .addTransaction("2009/05/04", -10.00, "McDo")
+      .addTransaction("2009/06/04", -10.00, "McDo")
+      .addTransaction("2009/07/10", 200.00, "Virt")
+      .load();
+
+    savingsAccounts
+      .createNewAccount()
+      .setAccountName("ING")
+      .selectBank("ING Direct")
+      .setPosition(0)
+      .validate();
+
+    views.selectCategorization();
+    categorization.setNewSavings("Virt", "Epargne", "ING", "Main accounts");
+    views.selectSavings();
+    savingsView.createSeries()
+      .setName("External")
+      .setFromAccount("External account")
+      .setToAccount("ING")
+      .selectAllMonths()
+      .setAmount(210)
+      .setDay("15")
+      .validate();
+
+
+    operations.nextMonth();
+    operations.nextSixDays();
+    timeline.selectMonth("2009/06");
+    savingsView.checkTotalPosition("200.00", "30/06/2009");
+    timeline.selectMonth("2009/07");
+    savingsView.checkTotalPosition("210.00", "31/07/2009");
+    timeline.selectMonth("2009/08");
+    savingsView.checkTotalPosition("220.00", "31/08/2009");
+
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/08/25")
+      .addTransaction("2009/08/25", -10.00, "ed")
+      .load();
+
+//    openApplication();
+
+    views.selectSavings();
+    timeline.selectMonth("2009/06");
+    savingsView.checkTotalPosition("200.00", "30/06/2009");
+    timeline.selectMonth("2009/07");
+    savingsView.checkTotalPosition("210.00", "31/07/2009");
+    timeline.selectMonth("2009/08");
+    savingsView.checkTotalPosition("220.00", "31/08/2009");
 
   }
 }

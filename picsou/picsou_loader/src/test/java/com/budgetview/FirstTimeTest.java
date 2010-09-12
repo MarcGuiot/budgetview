@@ -1,4 +1,4 @@
-package com.cashpilot;
+package com.budgetview;
 
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.utils.OfxBuilder;
@@ -21,7 +21,7 @@ public class FirstTimeTest extends UISpecTestCase {
     Lang.setLocale(Locale.ENGLISH);
     Locale.setDefault(Locale.ENGLISH);
     System.setProperty("SINGLE_INSTANCE_DISABLED", "true");
-    String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "cashpilot";
+    String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "budgetview";
     Files.deleteSubtree(new File(tmpDir));
   }
 
@@ -56,7 +56,7 @@ public class FirstTimeTest extends UISpecTestCase {
     Window window = WindowInterceptor.run(new Trigger() {
       public void run() throws Exception {
 
-        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "cashpilot";
+        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "budgetview";
         String tmpJarDir = tmpDir + File.separator + "jars";
         File jarDir = new File(tmpJarDir);
         File prevaylerDir = new File(tmpDir + File.separator + "data");
@@ -65,11 +65,11 @@ public class FirstTimeTest extends UISpecTestCase {
         jarDir.mkdirs();
         prevaylerDir.mkdirs();
         InputStream stream =
-          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "cashpilot.jar");
-        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot9999999.jar");
-        System.setProperty("cashpilot.exe.dir", jarDir.getAbsolutePath());
-        System.setProperty("cashpilot.prevayler.path", prevaylerDir.getAbsolutePath());
-        com.cashpilot.Main.main(new String[0]);
+          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "budgetview.jar");
+        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/budgetview9999999.jar");
+        System.setProperty("budgetview.exe.dir", jarDir.getAbsolutePath());
+        System.setProperty("budgetview.prevayler.path", prevaylerDir.getAbsolutePath());
+        com.budgetview.Main.main(new String[0]);
       }
     });
     LoginChecker login = new LoginChecker(window);
@@ -343,7 +343,7 @@ public class FirstTimeTest extends UISpecTestCase {
     Window window = WindowInterceptor.run(new Trigger() {
       public void run() throws Exception {
         String userId = "795391559";
-        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "cashpilot";
+        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "budgetview";
         String tmpJarDir = tmpDir + File.separator + "jars";
         File jarDir = new File(tmpJarDir);
         File prevaylerDir = new File(tmpDir + File.separator + "data");
@@ -365,11 +365,11 @@ public class FirstTimeTest extends UISpecTestCase {
         Files.copyStreamTofile(usersDataStream, userDir.getAbsolutePath() + "/0000000000000000003.snapshot");
 
         InputStream stream =
-          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "cashpilot.jar");
-        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot9999999.jar");
-        System.setProperty("cashpilot.exe.dir", jarDir.getAbsolutePath());
-        System.setProperty("cashpilot.prevayler.path", prevaylerDir.getAbsolutePath());
-        com.cashpilot.Main.main(new String[0]);
+          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "budgetview.jar");
+        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/budgetview9999999.jar");
+        System.setProperty("budgetview.exe.dir", jarDir.getAbsolutePath());
+        System.setProperty("budgetview.prevayler.path", prevaylerDir.getAbsolutePath());
+        com.budgetview.Main.main(new String[0]);
       }
     });
     LoginChecker login = new LoginChecker(window);
@@ -426,7 +426,7 @@ public class FirstTimeTest extends UISpecTestCase {
     Window window = WindowInterceptor.run(new Trigger() {
       public void run() throws Exception {
         String userId = "49585955";
-        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "cashpilot";
+        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "budgetview";
         String tmpJarDir = tmpDir + File.separator + "jars";
         File jarDir = new File(tmpJarDir);
         File prevaylerDir = new File(tmpDir + File.separator + "data");
@@ -448,10 +448,10 @@ public class FirstTimeTest extends UISpecTestCase {
         Files.copyStreamTofile(usersDataStream, userDir.getAbsolutePath() + "/0000000000000000003.snapshot");
 
         InputStream stream =
-          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "cashpilot.jar");
-        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot9999999.jar");
-        System.setProperty("cashpilot.exe.dir", jarDir.getAbsolutePath());
-        System.setProperty("cashpilot.prevayler.path", prevaylerDir.getAbsolutePath());
+          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "budgetview.jar");
+        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/budgetview9999999.jar");
+        System.setProperty("budgetview.exe.dir", jarDir.getAbsolutePath());
+        System.setProperty("budgetview.prevayler.path", prevaylerDir.getAbsolutePath());
         Main.main(new String[0]);
       }
     });
@@ -509,7 +509,7 @@ public class FirstTimeTest extends UISpecTestCase {
     Window window = WindowInterceptor.run(new Trigger() {
       public void run() throws Exception {
         String userId = "1801464342";
-        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "cashpilot";
+        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "budgetview";
         String tmpJarDir = tmpDir + File.separator + "jars";
         File jarDir = new File(tmpJarDir);
         File prevaylerDir = new File(tmpDir + File.separator + "data");
@@ -531,10 +531,10 @@ public class FirstTimeTest extends UISpecTestCase {
         Files.copyStreamTofile(usersDataStream, userDir.getAbsolutePath() + "/0000000000000000003.snapshot");
 
         InputStream stream =
-          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "cashpilot.jar");
-        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot9999999.jar");
-        System.setProperty("cashpilot.exe.dir", jarDir.getAbsolutePath());
-        System.setProperty("cashpilot.prevayler.path", prevaylerDir.getAbsolutePath());
+          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "budgetview.jar");
+        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/budgetview9999999.jar");
+        System.setProperty("budgetview.exe.dir", jarDir.getAbsolutePath());
+        System.setProperty("budgetview.prevayler.path", prevaylerDir.getAbsolutePath());
         Main.main(new String[0]);
       }
     });
@@ -664,7 +664,7 @@ public class FirstTimeTest extends UISpecTestCase {
     Window window = WindowInterceptor.run(new Trigger() {
       public void run() throws Exception {
         String userId = "2109354532";
-        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "cashpilot";
+        String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "budgetview";
         String tmpJarDir = tmpDir + File.separator + "jars";
         File jarDir = new File(tmpJarDir);
         File prevaylerDir = new File(tmpDir + File.separator + "data");
@@ -686,10 +686,10 @@ public class FirstTimeTest extends UISpecTestCase {
         Files.copyStreamTofile(usersDataStream, userDir.getAbsolutePath() + "/0000000000000000003.snapshot");
 
         InputStream stream =
-          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "cashpilot.jar");
-        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/cashpilot9999999.jar");
-        System.setProperty("cashpilot.exe.dir", jarDir.getAbsolutePath());
-        System.setProperty("cashpilot.prevayler.path", prevaylerDir.getAbsolutePath());
+          getClass().getResourceAsStream(File.separator + "jars" + File.separator + "budgetview.jar");
+        Files.copyStreamTofile(stream, jarDir.getAbsolutePath() + "/budgetview9999999.jar");
+        System.setProperty("budgetview.exe.dir", jarDir.getAbsolutePath());
+        System.setProperty("budgetview.prevayler.path", prevaylerDir.getAbsolutePath());
         Main.main(new String[0]);
       }
     });

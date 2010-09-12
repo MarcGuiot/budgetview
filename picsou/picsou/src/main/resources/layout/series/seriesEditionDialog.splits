@@ -112,6 +112,7 @@
                                     cursor="hand"/>
                             <filler fill="horizontal" weightX="0.1"/>
                           </row>
+                          <filler fill="horizontal"/>
                         </column>
                       </card>
 
@@ -130,7 +131,6 @@
                           <filler fill="vertical"/>
                         </column>
                       </card>
-
                     </cards>
 
                     <label text="$seriesEdition.dayChooser" styleClass="formLabelTop" autoHideSource="dayChooser"/>

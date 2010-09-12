@@ -38,10 +38,7 @@ import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.utils.*;
-import org.designup.picsou.gui.utils.dev.ClearAllSignpostsAction;
-import org.designup.picsou.gui.utils.dev.GotoNextMonthAction;
-import org.designup.picsou.gui.utils.dev.ThrowExceptionAction;
-import org.designup.picsou.gui.utils.dev.ThrowInRepoExceptionAction;
+import org.designup.picsou.gui.utils.dev.*;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
@@ -59,6 +56,7 @@ import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.ReplicationGlobRepository;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -288,15 +286,16 @@ public class MainPanel {
     editMenu.add(undoAction);
     editMenu.add(redoAction);
 
-//    Utils.beginRemove();
+    Utils.beginRemove();
     editMenu.addSeparator();
     editMenu.add(new DumpDataAction(repository));
     editMenu.add(new DataCheckerAction(repository, directory));
     editMenu.add(new ThrowExceptionAction());
     editMenu.add(new ThrowInRepoExceptionAction(repository));
     editMenu.add(new GotoNextMonthAction(repository));
+    editMenu.add(new AddSixDayAction(repository));
     editMenu.add(new ClearAllSignpostsAction(repository));
-//    Utils.endRemove();
+    Utils.endRemove();
 
     JRootPane rootPane = frame.getRootPane();
     GuiUtils.addShortcut(rootPane, "UNDO", undoAction, GuiUtils.ctrl(KeyEvent.VK_Z));

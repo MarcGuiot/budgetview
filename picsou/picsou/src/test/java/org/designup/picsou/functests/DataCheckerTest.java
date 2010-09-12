@@ -18,7 +18,7 @@ public class DataCheckerTest extends LoggedInFunctionalTestCase {
     PicsouApplication.EXIT_ON_DATA_ERROR = false;
 
     operations.throwExceptionInRepository()
-      .checkMessageContains("Something just went wrong with CashPilot")
+      .checkMessageContains("Something just went wrong with BudgetView")
       .checkDetailsContain("Object user[id=0] already exists")
       .checkCopy()
       .close();

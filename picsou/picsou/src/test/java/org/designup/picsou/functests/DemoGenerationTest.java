@@ -5,6 +5,7 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.gui.MainWindow;
+import org.designup.picsou.utils.Lang;
 
 import java.io.File;
 import java.util.Date;
@@ -47,7 +48,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     System.setProperty("uispec4j.test.library", "junit");
 
-    Locale.setDefault(Locale.ROOT);
+    Locale.setDefault(Lang.ROOT);
 
     DemoGenerationTest test = createTest();
     test.test();

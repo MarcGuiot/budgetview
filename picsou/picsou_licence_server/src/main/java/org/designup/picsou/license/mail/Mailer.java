@@ -24,7 +24,7 @@ public class Mailer {
   private static final int WAIT_BEFORE_RETRY = 1000;
   private int port = 25;
   private String host = "localhost";
-  private String fromAdress = "noreply@cashpilot.fr";
+  private String fromAdress = "support@mybudgetview.fr";
   private BlockingQueue<MailToSent> pendingsMail = new LinkedBlockingQueue<MailToSent>();
   private Map<String, Long> currentIdForMail = new ConcurrentHashMap<String, Long>();
   private Thread thread = new ReSendMailThread(pendingsMail);

@@ -8,7 +8,7 @@ public class Client {
   public static void main(String[] args) throws Exception {
     System.setProperty(ConfigService.COM_APP_LICENSE_URL, "http://localhost:8443");
     System.setProperty(PicsouApplication.LOG_SOUT, "true");
-    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, "/tmp/cashpilot");
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, "/tmp/budgetview");
     PicsouApplication.main("-l", "fr");
   }
 }

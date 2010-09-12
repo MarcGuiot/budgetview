@@ -11,23 +11,22 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Date;
 
-public class GotoNextMonthAction extends AbstractAction {
+public class AddSixDayAction extends AbstractAction {
 
   private GlobRepository repository;
 
-  public GotoNextMonthAction(GlobRepository repository) {
-    super("[Goto to 10 of next month]");
+  public AddSixDayAction(GlobRepository repository) {
+    super("[Add 6 days]");
     this.repository = repository;
   }
 
   public void actionPerformed(ActionEvent e) {
     Glob currentMonth = repository.get(CurrentMonth.KEY);
-    Integer currentMonthId = Month.next(currentMonth.get(CurrentMonth.CURRENT_MONTH));
+    Date date = Month.toDate(currentMonth.get(CurrentMonth.CURRENT_MONTH), currentMonth.get(CurrentMonth.CURRENT_DAY));
+    Date nextDate = Month.addDays(date, 6);
+    TimeService.setCurrentDate(nextDate);
     repository.update(CurrentMonth.KEY,
-                      FieldValue.value(CurrentMonth.CURRENT_MONTH, currentMonthId),
-                      FieldValue.value(CurrentMonth.CURRENT_DAY, 10));
-    Date date = Month.toDate(currentMonth.get(CurrentMonth.CURRENT_MONTH),
-                             currentMonth.get(CurrentMonth.CURRENT_DAY));
-    TimeService.setCurrentDate(date);
+                      FieldValue.value(CurrentMonth.CURRENT_MONTH, Month.getMonthId(nextDate)),
+                      FieldValue.value(CurrentMonth.CURRENT_DAY, Month.getDay(nextDate)));
   }
 }

@@ -1,8 +1,8 @@
-open "cashpilot.jar"
-     -"cashpilot.jar!demo/demo.snapshot"
-     -"cashpilot.jar!apple/laf/*.class"
-     -"cashpilot.jar!net/roydesign/mac/*.class"
-     -"cashpilot.jar!net/roydesign/event/*.class";
+open "budgetview.jar"
+     -"budgetview.jar!demo/demo.snapshot"
+     -"budgetview.jar!apple/laf/*.class"
+     -"budgetview.jar!net/roydesign/mac/*.class"
+     -"budgetview.jar!net/roydesign/event/*.class";
 
 exclude   picsou.^ExceptionHandler and
           picsou.^Main and
