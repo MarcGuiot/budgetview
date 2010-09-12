@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="ISO-8859-15"?>
 <jsmoothproject>
   <JVMSearchPath>registry</JVMSearchPath>
   <JVMSearchPath>javahome</JVMSearchPath>
@@ -28,7 +28,7 @@
   <skeletonName>Windowed Wrapper</skeletonName>
   <skeletonProperties>
     <key>Message</key>
-    <value>Java n'a pas été trouvé sur votre ordinateur. Voulez vous le télécharger ? Une fois installé, il vous suffira de lancer BudgetView à nouveau.</value>
+    <value>Java est absent de votre ordinateur. Voulez vous l'installer ? Cela fait, il vous suffira de lancer BudgetView une nouvelle fois..</value>
   </skeletonProperties>
   <skeletonProperties>
     <key>URL</key>
