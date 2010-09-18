@@ -51,7 +51,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     views.selectEvolution();
     seriesEvolution.checkColumnNames(
-      "", "June 08", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09"
+      "", "June 2008", "Jul 2008", "Aug 2008", "Sep 2008", "Oct 2008", "Nov 2008", "Dec 2008", "Jan 2009"
     );
 
     seriesEvolution.initContent()
@@ -73,22 +73,22 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
-    seriesEvolution.checkForeground("To categorize", "Jul 08", "red");
+    seriesEvolution.checkForeground("To categorize", "Jul 2008", "red");
 
-    seriesEvolution.checkForeground("Main accounts", "Jul 08", "darkRed");
-    seriesEvolution.checkForeground("Main accounts", "Aug 08", "darkGrey");
+    seriesEvolution.checkForeground("Main accounts", "Jul 2008", "darkRed");
+    seriesEvolution.checkForeground("Main accounts", "Aug 2008", "darkGrey");
 
-    seriesEvolution.checkForeground("Groceries", "Jul 08", "red");
-    seriesEvolution.checkForeground("Groceries", "Aug 08", "0022BB");
+    seriesEvolution.checkForeground("Groceries", "Jul 2008", "red");
+    seriesEvolution.checkForeground("Groceries", "Aug 2008", "0022BB");
 
-    seriesEvolution.checkForeground("Variable", "Jul 08", "AA0000"); // should be darkRed
-    seriesEvolution.checkForeground("Variable", "Aug 08", "darkGrey");
+    seriesEvolution.checkForeground("Variable", "Jul 2008", "AA0000"); // should be darkRed
+    seriesEvolution.checkForeground("Variable", "Aug 2008", "darkGrey");
 
-    seriesEvolution.checkForeground("Recurring", "Jul 08", "darkGrey");
-    seriesEvolution.checkForeground("Recurring", "Aug 08", "darkGrey");
+    seriesEvolution.checkForeground("Recurring", "Jul 2008", "darkGrey");
+    seriesEvolution.checkForeground("Recurring", "Aug 2008", "darkGrey");
 
-    seriesEvolution.checkForeground("Energy", "Jul 08", "0022BB");
-    seriesEvolution.checkForeground("Energy", "Aug 08", "0022BB");
+    seriesEvolution.checkForeground("Energy", "Jul 2008", "0022BB");
+    seriesEvolution.checkForeground("Energy", "Aug 2008", "0022BB");
   }
 
   public void testShowsActualAmountsInThePast() throws Exception {
@@ -175,7 +175,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     timeline.checkSelection("2008/07");
     views.selectEvolution();
     seriesEvolution.checkColumnNames(
-      "", "June 08", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09"
+      "", "June 2008", "Jul 2008", "Aug 2008", "Sep 2008", "Oct 2008", "Nov 2008", "Dec 2008", "Jan 2009"
     );
     seriesEvolution.checkTableIsEmpty(
       "Main accounts", "Balance", "Savings accounts", "To categorize",
@@ -198,7 +198,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/07");
     seriesEvolution.checkColumnNames(
-      "", "June 08", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09"
+      "", "June 2008", "Jul 2008", "Aug 2008", "Sep 2008", "Oct 2008", "Nov 2008", "Dec 2008", "Jan 2009"
     );
     seriesEvolution.checkRow(
       "Christmas", "", "", "", "", "", "", "200.00", ""
@@ -206,7 +206,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/10");
     seriesEvolution.checkColumnNames(
-      "", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09", "Feb 09", "Mar 09", "Apr 09"
+      "", "Sep 2008", "Oct 2008", "Nov 2008", "Dec 2008", "Jan 2009", "Feb 2009", "Mar 2009", "Apr 2009"
     );
     seriesEvolution.checkRow(
       "Christmas", "", "", "", "200.00", "", "", "", ""
@@ -214,7 +214,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/09", "2008/10", "2008/11");
     seriesEvolution.checkColumnNames(
-      "", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09", "Feb 09", "Mar 09"
+      "", "Aug 2008", "Sep 2008", "Oct 2008", "Nov 2008", "Dec 2008", "Jan 2009", "Feb 2009", "Mar 2009"
     );
     seriesEvolution.checkRow(
       "Christmas", "", "", "", "", "200.00", "", "", ""
@@ -250,7 +250,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
-    seriesEvolution.editSeries("John's", "Jul 08")
+    seriesEvolution.editSeries("John's", "Jul 2008")
       .checkPositiveAmountsSelected()
       .setAmount(400.00)
       .setPropagationEnabled()
@@ -271,7 +271,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
-    seriesEvolution.editSeries("John's", "Sep 08")
+    seriesEvolution.editSeries("John's", "Sep 2008")
       .checkPositiveAmountsSelected()
       .setAmount(500.00)
       .checkPropagationDisabled()
@@ -292,7 +292,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
-    seriesEvolution.editSeries("John's", "Sep 08")
+    seriesEvolution.editSeries("John's", "Sep 2008")
       .checkPositiveAmountsSelected()
       .checkAmount(500.00)
       .checkPeriodicity("Every month")
@@ -316,7 +316,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
-    seriesEvolution.editSeries("John's", "Sep 08")
+    seriesEvolution.editSeries("John's", "Sep 2008")
       .checkPositiveAmountsSelected()
       .setAmount(500.00)
       .checkPeriodicity("Every two months until december 2008")
@@ -399,7 +399,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     views.selectEvolution();
     timeline.selectMonths("2008/08");
     seriesEvolution.checkColumnNames(
-      "", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09", "Feb 09"
+      "", "Jul 2008", "Aug 2008", "Sep 2008", "Oct 2008", "Nov 2008", "Dec 2008", "Jan 2009", "Feb 2009"
     );
     seriesEvolution.checkRow(
       "Groceries", "100.00", "100.00", "100.00", "100.00", "", "", "", ""
@@ -463,13 +463,13 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     views.selectEvolution();
     timeline.selectMonth("2008/07");
     seriesEvolution.checkColumnNames(
-      "", "June 08", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09"
+      "", "June 2008", "Jul 2008", "Aug 2008", "Sep 2008", "Oct 2008", "Nov 2008", "Dec 2008", "Jan 2009"
     );
     seriesEvolution.checkRow(
       "Groceries", "", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00", "100.00"
     );
 
-    seriesEvolution.editSeries("Groceries", "Sep 08")
+    seriesEvolution.editSeries("Groceries", "Sep 2008")
       .setAmount(150.00)
       .checkPropagationDisabled()
       .validate();
@@ -479,7 +479,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     seriesEvolution.checkColumnNames(
-      "", "June 08", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09"
+      "", "June 2008", "Jul 2008", "Aug 2008", "Sep 2008", "Oct 2008", "Nov 2008", "Dec 2008", "Jan 2009"
     );
     seriesEvolution.checkRow(
       "Groceries", "", "100.00", "100.00", "150.00", "100.00", "", "", ""
@@ -555,7 +555,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     views.selectEvolution();
     seriesEvolution.checkClipboardExport(
-      "\t\tJune 08\tJul 08\tAug 08\tSep 08\tOct 08\tNov 08\tDec 08\tJan 09\tFeb 09\tMar 09\tApr 09\tMay 09\n" +
+      "\t\tJune 2008\tJul 2008\tAug 2008\tSep 2008\tOct 2008\tNov 2008\tDec 2008\tJan 2009\tFeb 2009\tMar 2009\tApr 2009\tMay 2009\n" +
       "\tMain accounts\t\t-200.00\t-400.00\t-600.00\t-800.00\t-1000.00\t-1200.00\t-1400.00\t\t\t\t\n" +
       "\tBalance\t\t3416.00\t-200.00\t-200.00\t-200.00\t-200.00\t-200.00\t-200.00\t\t\t\t\n" +
       "\tSavings accounts\t\t\t\t\t\t\t\t\t\t\t\t\n" +
@@ -578,20 +578,20 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     views.selectEvolution();
     timeline.checkSelection("2008/07");
     seriesEvolution.checkColumnNames(
-      "", "June 08", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09"
+      "", "June 2008", "Jul 2008", "Aug 2008", "Sep 2008", "Oct 2008", "Nov 2008", "Dec 2008", "Jan 2009"
     );
 
     seriesEvolution.checkPreviousMonthSelectionDisabled();
     seriesEvolution.selectNextMonth();
     timeline.checkSelection("2008/08");
     seriesEvolution.checkColumnNames(
-      "", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09", "Feb 09"
+      "", "Jul 2008", "Aug 2008", "Sep 2008", "Oct 2008", "Nov 2008", "Dec 2008", "Jan 2009", "Feb 2009"
     );
 
     seriesEvolution.selectPreviousMonth();
     timeline.checkSelection("2008/07");
     seriesEvolution.checkColumnNames(
-      "", "June 08", "Jul 08", "Aug 08", "Sep 08", "Oct 08", "Nov 08", "Dec 08", "Jan 09"
+      "", "June 2008", "Jul 2008", "Aug 2008", "Sep 2008", "Oct 2008", "Nov 2008", "Dec 2008", "Jan 2009"
     );
 
     timeline.selectMonth("2009/01");
@@ -599,7 +599,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesEvolution.selectPreviousMonth();
     timeline.checkSelection("2008/12");
     seriesEvolution.checkColumnNames(
-      "", "Nov 08", "Dec 08", "Jan 09", "Feb 09", "Mar 09", "Apr 09", "May 09", "June 09"
+      "", "Nov 2008", "Dec 2008", "Jan 2009", "Feb 2009", "Mar 2009", "Apr 2009", "May 2009", "June 2009"
     );
 
     timeline.selectMonths("2008/07", "2009/01");

@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.series.evolution.histobuilders;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
+import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffBarLinePainter;
 import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffColors;
 import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffDataset;
 import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffPainter;
@@ -16,7 +17,6 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
   private int multiplier = 1;
   private boolean showActualInTheFuture = true;
   private int lastMonthWithTransactions;
-  private boolean focusOnPlanned;
 
   HistoDiffDatasetBuilder(HistoChart histoChart, JLabel label, GlobRepository repository, String tooltipKey) {
     super(histoChart, label, repository);
@@ -45,15 +45,8 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
     add(monthId, 0.0, 0.0, isSelectedMonth);
   }
 
-  public void setFocusOnPlanned() {
-    this.focusOnPlanned = true;
-  }
-
   public void apply(HistoDiffColors colors, String messageKey, String... args) {
-    HistoDiffPainter painter = new HistoDiffPainter(dataset, colors, showActualInTheFuture);
-    if (focusOnPlanned) {
-      painter.setActualLineStroke(new BasicStroke(1));
-    }
+    HistoDiffBarLinePainter painter = new HistoDiffBarLinePainter(dataset, colors, false);
     histoChart.update(painter);
     updateHistoLabel(messageKey, args);
   }

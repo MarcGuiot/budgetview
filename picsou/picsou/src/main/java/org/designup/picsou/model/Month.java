@@ -188,7 +188,7 @@ public class Month {
     }
     int month = toMonth(monthId);
     int year = toYear(monthId);
-    return Lang.get("month." + toMonth(month) + ".medium") + " " + getTwoDigitsYearLabel(year);
+    return Lang.get("month." + toMonth(month) + ".medium") + " " + year;
   }
 
   private static String getTwoDigitsYearLabel(int year) {

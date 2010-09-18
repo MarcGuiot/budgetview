@@ -95,6 +95,11 @@ public class HistoChartMetrics {
     return Math.max(MIN_SCALE_ZONE_WIDTH, valueWidth + RIGHT_SCALE_MARGIN);
   }
 
+  public int middleX(int columnIndex) {
+    checkIndex(columnIndex);
+    return scaleZoneWidth + columnIndex * columnWidth + columnWidth / 2;
+  }
+
   public int left(int columnIndex) {
     checkIndex(columnIndex);
     return scaleZoneWidth + columnIndex * columnWidth;
@@ -135,6 +140,19 @@ public class HistoChartMetrics {
     else {
       return VERTICAL_CHART_PADDING + positiveHeight + (int)(negativeHeight * Math.abs(value) / maxNegativeValue);
     }
+  }
+
+  public int barTop(double value) {
+    if (value >= 0) {
+      return VERTICAL_CHART_PADDING + (int)(positiveHeight * (1 - value / maxPositiveValue));
+    }
+    else {
+      return VERTICAL_CHART_PADDING + positiveHeight;
+    }
+  }
+
+  public int barHeight(double value) {
+    return Math.abs(y(value) - y(0));
   }
 
   public int chartX() {

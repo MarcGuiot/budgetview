@@ -50,7 +50,6 @@ public class SeriesAmountEditionPanel {
   private boolean autoSelectFutureMonths;
   private SeriesEditorAccess seriesEditorAccess;
   private SeriesAmountLabelStringifier selectionStringifier = new SeriesAmountLabelStringifier();
-;
 
   public interface SeriesEditorAccess {
     void openSeriesEditor(Key series, Set<Integer> selectedMonthIds);
@@ -198,6 +197,10 @@ public class SeriesAmountEditionPanel {
     currentSeries = seriesKey;
     setAutoSelectFutureMonths(false);
     propagationCheckBox.setSelected(false);
+
+// TODO: pour activer la propagation par defaut
+//    setAutoSelectFutureMonths(true);
+//    propagationCheckBox.setSelected(true);
   }
 
   private void setAutoSelectFutureMonths(boolean enabled) {
@@ -211,7 +214,7 @@ public class SeriesAmountEditionPanel {
       return;
     }
     selectedMonthIds = months;
-    currentMonth = Utils.min(months);  //TODO Regis : il y avait max.
+    currentMonth = Utils.min(months);
 
     updateBudgetFromMonth();
   }
@@ -239,11 +242,6 @@ public class SeriesAmountEditionPanel {
     boolean isUsuallyPositive = budgetArea.isIncome() ||
                                 (budgetArea == BudgetArea.SAVINGS && multiplier > 0);
     amountEditor.update(isUsuallyPositive, budgetArea == BudgetArea.SAVINGS);
-  }
-
-  private boolean isUsuallyPositive(Glob series, BudgetArea budgetArea) {
-    double multiplier = Account.computeAmountMultiplier(series, repository);
-    return budgetArea.isIncome() || (budgetArea == BudgetArea.SAVINGS && multiplier > 0);
   }
 
   private void doSelectMonths(Glob series, Set<Integer> monthIds) {
@@ -340,13 +338,6 @@ public class SeriesAmountEditionPanel {
     GlobList nextMonths =
       repository.getAll(Month.TYPE, fieldGreaterOrEqual(Month.ID, Utils.min(monthIds)));
     return nextMonths.getValueSet(Month.ID);
-  }
-
-  // peut-on enlever ce code
-  public void applyChanges(boolean containsChanges) {
-//    if (propagationCheckBox.isSelected()) {
-//      propagateValue(SeriesAmountEditionPanel.this.currentMonth);
-//    }
   }
 
   private void propagateValue(Integer startMonth) {

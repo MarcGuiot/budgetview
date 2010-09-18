@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.experiment;
 
+import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffBarLinePainter;
 import org.globsframework.gui.splits.layout.SingleComponentPanels;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -25,8 +26,8 @@ public class HistoChartDemo {
     dataset.add(200805, 3700, 4200, "A", "tooltip", "2009", false, false);
     dataset.add(200806, 3500, 3000, "M", "tooltip", "2009", false, false);
     dataset.add(200807, 6000, 3200, "J", "tooltip", "2009", false, false);
-    dataset.add(200808, 2100, 3000, "J", "tooltip", "2009", true, false);
-    dataset.add(200809, 3600, 3000, "A", "tooltip", "2009", false, true);
+    dataset.add(200808, -2100, -3000, "J", "tooltip", "2009", true, false);
+    dataset.add(200809, 3600, 3000, "A", "tooltip", "2009", true, true);
     dataset.add(200810, 3700, 3400, "S", "tooltip", "2009", false, true);
     dataset.add(200811, 3800, 3500, "O", "tooltip", "2009", false, true);
     dataset.add(200812, 3900, 3400, "N", "tooltip", "2009", false, true);
@@ -55,7 +56,7 @@ public class HistoChartDemo {
       }
     });
 
-    chart.update(new HistoDiffPainter(dataset, colors));
+    chart.update(new HistoDiffBarLinePainter(dataset, colors, false));
 
 
     JFrame frame = new JFrame();

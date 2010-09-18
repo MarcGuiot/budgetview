@@ -258,7 +258,6 @@ public class HistoChartBuilder {
     }
 
     HistoDiffDatasetBuilder dataset = createDiffDataset("series");
-    dataset.setFocusOnPlanned();
 
     BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
     dataset.setInverted(!budgetArea.isIncome());
