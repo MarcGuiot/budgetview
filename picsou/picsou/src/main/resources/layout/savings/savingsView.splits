@@ -4,50 +4,18 @@
   <styles>
     <ui name="accountLineBg" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="savingsView.accountLine.top" bottomColor="savingsView.accountLine.bottom"/>
-    <style selector=".accountLine" opaque="true" ui="accountLineBg"/>
+    <style selector=".accountLine" opaque="true" ui="accountLineBg"
+           border="matte(1,0,1,0,savingsView.accountLine.border)"/>
 
-    <style selector="label.accountName" font="-,bold,12" foreground="savingsView.accountName"/>
+    <style selector="label.accountName" font="-,bold,12" foreground="savingsView.accountName" marginLeft="5"/>
     <style selector="label.accountPosition" font="-,bold,11" foreground="savingsView.accountPosition"/>
-    <style selector="label.accountPositionDate" font="-,plain,9" foreground="savingsView.accountDate"/>
+    <style selector="label.accountPositionDate" font="-,plain,9" foreground="savingsView.accountDate" marginRight="5"/>
+    <style selector="#header label" anchor="center"/>
 
   </styles>
 
   <panel styleClass="main">
     <horizontalSplit>
-
-      <verticalSplit weightX="6">
-        <column weightY="6">
-          <label text="$savingsView.projects.next" styleClass="blockTitle" marginTop="5"/>
-          <panel styleClass="block" preferredSize="(300,400)" name="nextProjectsPanel">
-            <column styleClass="innerBlock">
-              <column styleClass="blockScrollBorder">
-                <scrollPane verticalUnitIncrement="10" border="matte(1,1,0,1,block.scroll.border)">
-                  <table ref="nextProjects" rowHeight="20"/>
-                </scrollPane>
-                <row styleClass="footer">
-                  <button action="createProject" styleClass="create" tooltipText="$series.create.tooltip"/>
-                  <button action="editAllProjects" styleClass="list" tooltipText="$series.list.tooltip"/>
-                  <filler fill="horizontal"/>
-                </row>
-              </column>
-            </column>
-          </panel>
-        </column>
-
-        <column weightY="3">
-          <label text="$savingsView.accounts.evolution" styleClass="blockTitle" marginTop="5"/>
-          <panel styleClass="block" preferredSize="(300,300)" name="savingsEvolutionPanel">
-            <column styleClass="innerBlock">
-              <panel background="seriesEvolution.chart.bg" border="line(block.inner.border)">
-                <component ref="histoChart" margin="15" opaque="true" background="seriesEvolution.chart.bg"/>
-              </panel>
-            </column>
-          </panel>
-        </column>
-
-
-      </verticalSplit>
-
 
       <column weightX="4">
         <label text="$savingsView.accounts.savings" styleClass="blockTitle" marginTop="5"/>
@@ -55,19 +23,19 @@
         <panel styleClass="block">
           <column styleClass="innerBlock">
 
-            <grid ref="header" marginLeft="10" marginRight="10" marginBottom="5">
-              <label text="$accountView.reference.title" gridPos="(0,0)"
-                     styleClass="totalAmountTitle" autoHideSource="totalSavingsPositionAmount"
-                     marginTop="0" marginBottom="0" weightY="0"/>
-              <label ref="totalSavingsPositionAmount" gridPos="(1,0)"
-                     styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"
-                     marginTop="0" marginBottom="0"
-                     anchor="north"/>
-              <label ref="totalSavingsPositionDate" gridPos="(2,0)"
-                     styleClass="totalAmountTitle" autoHideSource="totalSavingsPositionAmount"
-                     marginTop="0" marginBottom="0" weightY="0"/>
-
-            </grid>
+            <row>
+              <filler fill="horizontal"/>
+              <grid ref="header" marginBottom="5">
+                <label text="$accountView.reference.title" gridPos="(0,0)"
+                       styleClass="totalAmountTitle" autoHideSource="totalSavingsPositionAmount"/>
+                <label ref="totalSavingsPositionAmount" gridPos="(1,0)"
+                       styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"
+                       marginLeft="10" marginRight="10"/>
+                <label ref="totalSavingsPositionDate" gridPos="(2,0)"
+                       styleClass="totalAmountTitle" autoHideSource="totalSavingsPositionAmount"/>
+              </grid>
+              <filler fill="horizontal"/>
+            </row>
 
             <column styleClass="blockScrollBorder">
               <scrollPane marginTop="0" marginBottom="0">
@@ -97,8 +65,40 @@
           </column>
         </panel>
 
-
       </column>
+
+      <verticalSplit weightX="6">
+
+        <column weightY="6">
+          <label text="$savingsView.accounts.evolution" styleClass="blockTitle" marginTop="5"/>
+          <panel styleClass="block" preferredSize="(300,300)" name="savingsEvolutionPanel">
+            <column styleClass="innerBlock">
+              <panel background="seriesEvolution.chart.bg" border="line(block.inner.border)">
+                <component ref="histoChart" margin="15" opaque="true" background="seriesEvolution.chart.bg"/>
+              </panel>
+            </column>
+          </panel>
+        </column>
+
+        <column weightY="4">
+          <label text="$savingsView.projects.next" styleClass="blockTitle" marginTop="5"/>
+          <panel styleClass="block" preferredSize="(300,400)" name="nextProjectsPanel">
+            <column styleClass="innerBlock">
+              <column styleClass="blockScrollBorder">
+                <scrollPane verticalUnitIncrement="10" border="matte(1,1,0,1,block.scroll.border)">
+                  <table ref="nextProjects" rowHeight="20"/>
+                </scrollPane>
+                <row styleClass="footer">
+                  <button action="createProject" styleClass="create" tooltipText="$series.create.tooltip"/>
+                  <button action="editAllProjects" styleClass="list" tooltipText="$series.list.tooltip"/>
+                  <filler fill="horizontal"/>
+                </row>
+              </column>
+            </column>
+          </panel>
+        </column>
+
+      </verticalSplit>
 
     </horizontalSplit>
 
