@@ -15,7 +15,8 @@ import java.io.InputStream;
 
 public class Lang {
   private static ResourceBundle bundle;
-  private static Locale LOCALE = Locale.ROOT;
+  public static final Locale ROOT = new Locale("");
+  private static Locale LOCALE = ROOT;
 
   public static TextLocator TEXT_LOCATOR = new TextLocator() {
     public String get(String code) {

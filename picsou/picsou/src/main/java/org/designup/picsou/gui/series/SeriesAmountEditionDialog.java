@@ -61,7 +61,7 @@ public class SeriesAmountEditionDialog {
     editionPanel = new SeriesAmountEditionPanel(localRepository, localDirectory, new SeriesEditor());
     builder.add("editionPanel", editionPanel.getPanel());
 
-    dialog = PicsouDialog.create(localDirectory.get(JFrame.class), false, localDirectory);
+    dialog = PicsouDialog.create(localDirectory.get(JFrame.class), localDirectory);
 
     OkAction okAction = new OkAction();
     editionPanel.setOkAction(okAction);
@@ -84,8 +84,6 @@ public class SeriesAmountEditionDialog {
     loadGlobs(series);
     editionPanel.selectMonths(months);
     localDirectory.get(SelectionService.class).select(series);
-
-    SplitsEditor.show(dialog, localDirectory);
 
     GuiUtils.showCentered(dialog);
   }

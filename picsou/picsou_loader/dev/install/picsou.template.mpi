@@ -3,7 +3,7 @@ AllowLanguageSelection
 No
 
 AppName
-CashPilot
+BudgetView
 
 ApplicationID
 C2342569-C720-485C-A1B4-2453930EEB03
@@ -27,7 +27,7 @@ CommandLineFailureAction
 {Fail (recommended)}
 
 Company
-CashPilot
+MyBudgetView
 
 CompressionLevel
 6
@@ -57,10 +57,10 @@ ExtractSolidArchivesOnStartup
 No
 
 Icon
-../images/cashpilot_icon_48.png
+../images/budgetview_icon_48.png
 
 Image
-../images/cashpilot_icon_48.png
+../images/budgetview_icon_48.png
 
 IncludeDebugging
 Yes
@@ -147,7 +147,7 @@ ScriptExt
 .sh
 
 ShortAppName
-CashPilot
+BudgetView
 
 SkipUnusedFileGroups
 Yes
@@ -212,8 +212,8 @@ test
 FileGroup ::8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42 -setup Install -active Yes -platforms Windows -name {Program Files} -parent FileGroups
 File ::2B46BFAC-3F00-4290-B80A-D790CCEB6778 -name msvcr71.dll -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::09B3F2A4-3934-FAA3-B4DF-514E8A7332E9 -name license.txt -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
-File ::2FD90047-B823-2003-90B2-D3469C68FBE9 -name cashpilot.exe -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
-File ::7D0C4D57-E1C1-C244-4722-B0DDFF5C6150 -name ../images/cashpilot.ico -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
+File ::2FD90047-B823-2003-90B2-D3469C68FBE9 -name budgetview.exe -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
+File ::7D0C4D57-E1C1-C244-4722-B0DDFF5C6150 -name ../images/budgetview.ico -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::A427121E-CA00-2A1E-B0AF-61AAE6EB9666 -name ../../../picsou/obfuscated/JAR_FOURMICS.jar -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 Component ::89CFA7AC-2A3E-4B5F-AFAA-A115D2FE6F92 -setup Install -active Yes -platforms Windows -name {Default Component} -parent Components
 SetupType ::C40711B9-D384-4BA7-BD59-C41C7FDE9BA0 -setup Install -active Yes -platforms Windows -name Typical -parent SetupTypes
@@ -404,7 +404,7 @@ disabled
 {2 conditions}
 
 0BC06F61-0237-40A3-B3CB-99DB85BEAEA5,IconPath
-{<%InstallDir%>\cashpilot.ico}
+{<%InstallDir%>\budgetview.ico}
 
 0BC06F61-0237-40A3-B3CB-99DB85BEAEA5,ShortcutName
 <%AppName%>
@@ -686,7 +686,7 @@ text/ofx
 text/qif
 
 4A6ADC8C-83B7-433C-AE38-4A306C5E9671,IconPath
-{<%InstallDir%>\cashpilot.ico}
+{<%InstallDir%>\budgetview.ico}
 
 4A6ADC8C-83B7-433C-AE38-4A306C5E9671,Title
 {qif file}
@@ -722,7 +722,7 @@ false
 {can create}
 
 518566B8-E4AF-6C59-4C80-8E4545D21CA6,Command
-{<%InstallDir%>\cashpilot.exe -l <%Language%> "%1"}
+{<%InstallDir%>\budgetview.exe -l <%Language%> "%1"}
 
 518566B8-E4AF-6C59-4C80-8E4545D21CA6,CommandName
 Open
@@ -734,7 +734,7 @@ Open
 text/ofx
 
 518566B8-E4AF-6C59-4C80-8E4545D21CA6,MenuName
-CashPilot
+BudgetView
 
 543B491A-8B68-44DC-87A8-C63B7444E8E5,CheckCondition
 {Before Action is Executed}
@@ -824,7 +824,7 @@ ViewReadme
 <%ProgramExecutable%>
 
 6675DC28-02ED-FB0F-408A-825F4402B665,Command
-{<%InstallDir%>\cashpilot.exe -l <%Language%> "%1"}
+{<%InstallDir%>\budgetview.exe -l <%Language%> "%1"}
 
 6675DC28-02ED-FB0F-408A-825F4402B665,CommandName
 open
@@ -836,7 +836,7 @@ open
 text/ofc
 
 6675DC28-02ED-FB0F-408A-825F4402B665,MenuName
-CashPilot
+BudgetView
 
 66A7BFAC-4AF5-482B-849D-28B2920AC872,Conditions
 {0 conditions}
@@ -995,7 +995,7 @@ CreateDesktopShortcut
 text/ofx
 
 7CF1E2B3-AFC2-9E68-1E2B-50FE90B9420C,IconPath
-{<%InstallDir%>\cashpilot.ico}
+{<%InstallDir%>\budgetview.ico}
 
 7CF1E2B3-AFC2-9E68-1E2B-50FE90B9420C,Title
 {ofx file}
@@ -1019,7 +1019,7 @@ Finish
 {1 condition}
 
 7ED948AD-24B3-4EDB-A79B-0F00DACFAC57,IconPath
-{<%InstallDir%>\cashpilot.ico}
+{<%InstallDir%>\budgetview.ico}
 
 7ED948AD-24B3-4EDB-A79B-0F00DACFAC57,InstallForAllUsers
 Yes
@@ -1178,7 +1178,7 @@ A885B9C6-B280-06FC-EBA7-09F0E2F969B8,FileType
 text/ofc
 
 A885B9C6-B280-06FC-EBA7-09F0E2F969B8,IconPath
-{<%InstallDir%>\cashpilot.ico}
+{<%InstallDir%>\budgetview.ico}
 
 A885B9C6-B280-06FC-EBA7-09F0E2F969B8,Title
 {ofc file}
@@ -1247,7 +1247,7 @@ AIX-ppc,InstallType
 Typical
 
 AIX-ppc,ProgramExecutable
-<%InstallDir%>/cashpilot
+<%InstallDir%>/budgetview
 
 AIX-ppc,ProgramFolderAllUsers
 No
@@ -1349,7 +1349,7 @@ BEF85513-C17E-C854-1584-C6A50E5E906C,Name
 {unix component}
 
 C02FF264-188D-4CAA-9DB6-68552CDEE2A2,Command
-{<%InstallDir%>\cashpilot.exe  -l <%Language%> "%1"}
+{<%InstallDir%>\budgetview.exe  -l <%Language%> "%1"}
 
 C02FF264-188D-4CAA-9DB6-68552CDEE2A2,CommandName
 Open
@@ -1361,7 +1361,7 @@ C02FF264-188D-4CAA-9DB6-68552CDEE2A2,FileType
 text/qif
 
 C02FF264-188D-4CAA-9DB6-68552CDEE2A2,MenuName
-CashPilot
+BudgetView
 
 C0B3224F-2662-4A1D-A052-7CB2682D290D,CheckCondition
 {Before Action is Executed}
@@ -1544,7 +1544,7 @@ E55E8D57-A5BC-4017-A1D1-89F2C6D6AADB,Conditions
 {2 conditions}
 
 E55E8D57-A5BC-4017-A1D1-89F2C6D6AADB,IconPath
-{<%InstallDir%>\cashpilot.ico}
+{<%InstallDir%>\budgetview.ico}
 
 E55E8D57-A5BC-4017-A1D1-89F2C6D6AADB,ShortcutDirectory
 <%QUICK_LAUNCH%>
@@ -1691,7 +1691,7 @@ FreeBSD-4-x86,InstallType
 Typical
 
 FreeBSD-4-x86,ProgramExecutable
-<%InstallDir%>/cashpilot
+<%InstallDir%>/budgetview
 
 FreeBSD-4-x86,ProgramFolderAllUsers
 No
@@ -1745,7 +1745,7 @@ FreeBSD-x86,InstallType
 Typical
 
 FreeBSD-x86,ProgramExecutable
-<%InstallDir%>/cashpilot
+<%InstallDir%>/budgetview
 
 FreeBSD-x86,ProgramFolderAllUsers
 No
@@ -1799,7 +1799,7 @@ HPUX-hppa,InstallType
 Typical
 
 HPUX-hppa,ProgramExecutable
-<%InstallDir%>/cashpilot
+<%InstallDir%>/budgetview
 
 HPUX-hppa,ProgramFolderAllUsers
 No
@@ -1853,7 +1853,7 @@ Linux-x86,InstallType
 Typical
 
 Linux-x86,ProgramExecutable
-<%InstallDir%>/cashpilot
+<%InstallDir%>/budgetview
 
 Linux-x86,ProgramFolderAllUsers
 No
@@ -1907,7 +1907,7 @@ Solaris-sparc,InstallType
 Typical
 
 Solaris-sparc,ProgramExecutable
-<%InstallDir%>/cashpilot
+<%InstallDir%>/budgetview
 
 Solaris-sparc,ProgramFolderAllUsers
 No
@@ -2021,7 +2021,7 @@ Windows,InstallType
 Typical
 
 Windows,ProgramExecutable
-<%InstallDir%>/cashpilot.exe
+<%InstallDir%>/budgetview.exe
 
 Windows,ProgramFolderAllUsers
 Yes
@@ -2039,7 +2039,7 @@ Windows,ProgramReadme
 <%InstallDir%>/README.txt
 
 Windows,WindowsIcon
-../images/cashpilot.ico
+../images/budgetview.ico
 
 ZipArchive,Active
 No
@@ -2197,7 +2197,7 @@ E689421D-9EA4-434B-B9D5-98479BADB35C,Description
 <%CustomInstallDescription%>
 
 SeparatorText
-CashPilot
+BudgetView
 
 }
 ::msgcat::mcmset es {
@@ -2228,7 +2228,7 @@ C3370D3D-2F47-44F1-900B-89CF5199FD74,Message
 <%InstallingApplicationText%>
 
 SeparatorText
-CashPilot
+BudgetView
 
 }
 ::msgcat::mcmset pl {

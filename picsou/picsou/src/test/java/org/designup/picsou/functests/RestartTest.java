@@ -449,7 +449,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("05/11/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF")
       .add("05/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF")
-      .add("05/09/2008", TransactionType.VIREMENT, "CAF", "", 100.00, "CAF")
+      .add("05/09/2008", TransactionType.VIREMENT, "Planned: CAF", "", 100.00, "CAF")
       .add("05/08/2008", TransactionType.VIREMENT, "CAF", "", 100.00, "CAF")
       .check();
   }

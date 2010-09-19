@@ -83,8 +83,8 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
   }
 
   private void updateFromCurrentMonthChange(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsChanges(CurrentMonth.KEY, CurrentMonth.CURRENT_MONTH)
-        || changeSet.containsChanges(CurrentMonth.KEY, CurrentMonth.CURRENT_DAY)) {
+    if (changeSet.containsChanges(CurrentMonth.KEY, CurrentMonth.LAST_TRANSACTION_MONTH)
+        || changeSet.containsChanges(CurrentMonth.KEY, CurrentMonth.LAST_TRANSACTION_DAY)) {
       GlobList series = repository.getAll(Series.TYPE);
       for (Glob oneSeries : series) {
         Integer seriesId = oneSeries.get(Series.ID);
@@ -95,8 +95,8 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
         GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
           .getGlobs();
         Glob currentMonth = repository.get(CurrentMonth.KEY);
-        Integer currentMonthId = currentMonth.get(CurrentMonth.CURRENT_MONTH);
-        Integer currentDay = currentMonth.get(CurrentMonth.CURRENT_DAY);
+        Integer currentMonthId = currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH);
+        Integer currentDay = currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY);
         for (Glob transaction : transactions) {
           boolean isPlanned = (transaction.get(Transaction.MONTH) >= currentMonthId) &&
                               ((transaction.get(Transaction.MONTH) > currentMonthId)

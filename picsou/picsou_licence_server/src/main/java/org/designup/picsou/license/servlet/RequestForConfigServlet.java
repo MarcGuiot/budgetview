@@ -87,8 +87,11 @@ public class RequestForConfigServlet extends HttpServlet {
     else {
       computeAnonymous(id, resp, ip);
     }
-    resp.setHeader(ConfigService.HEADER_NEW_JAR_VERSION, Long.toString(versionService.getJarVersion()));
-    resp.setHeader(ConfigService.HEADER_NEW_CONFIG_VERSION, Long.toString(versionService.getConfigVersion()));
+    ValueLongAccessor jarVersion = new ValueLongAccessor();
+    ValueLongAccessor configVersion = new ValueLongAccessor();
+    versionService.getVersion(jarVersion, configVersion);
+    resp.setHeader(ConfigService.HEADER_NEW_JAR_VERSION, Long.toString(jarVersion.getValue()));
+    resp.setHeader(ConfigService.HEADER_NEW_CONFIG_VERSION, Long.toString(configVersion.getValue()));
   }
 
   private void computeAnonymous(String id, HttpServletResponse resp, String ip) {

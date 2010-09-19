@@ -101,7 +101,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
     WindowInterceptor
       .init(operations.getBackupTrigger())
       .process(FileChooserHandler.init()
-        .assertCurrentFileNameEquals("backup-2008-08-30.cashpilot")
+        .assertCurrentFileNameEquals("backup-2008-08-30.budgetview")
         .select(filePath))
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {

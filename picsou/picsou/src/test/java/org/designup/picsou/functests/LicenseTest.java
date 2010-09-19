@@ -25,7 +25,7 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
   public void testMessage() throws Exception {
     TextBox box = mainWindow.getTextBox("licenseMessage");
     assertThat(box.isVisible());
-    assertThat(box.textEquals("30 days left for trying CashPilot."));
+    assertThat(box.textEquals("30 days left for trying BudgetView."));
 
     LicenseActivationChecker.enterLicense(mainWindow, "admin", "zz");
     UISpecAssert.assertFalse(box.isVisible());
@@ -37,7 +37,7 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
     restartApplication();
     TextBox box = mainWindow.getTextBox("licenseMessage");
     assertThat(box.isVisible());
-    assertThat(box.textEquals("You have one day left for trying CashPilot."));
+    assertThat(box.textEquals("You have one day left for trying BudgetView."));
   }
 
   public void testLastDay() throws Exception {
@@ -46,7 +46,7 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
     restartApplication();
     TextBox box = mainWindow.getTextBox("licenseMessage");
     assertThat(box.isVisible());
-    assertThat(box.textEquals("This is your last day for trying CashPilot."));
+    assertThat(box.textEquals("This is your last day for trying BudgetView."));
   }
 
   public void testTrialOver() throws Exception {

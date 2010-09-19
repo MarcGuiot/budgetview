@@ -1,4 +1,4 @@
-CashPilot est l'application de gestion de finances personnelles qui permet de voir dans le futur. Son principe central est de construire un modèle de ses dépenses, pour établir une vision synthétique de son budget et anticiper ce budget sur les mois à venir. L'application présente ensuite un tableau de bord qui permet de suivre ce budget, prendre le contrôle de ses dépenses et préparer ses projets.
+BudgetView est l'application de gestion de finances personnelles qui permet de voir dans le futur. Son principe central est de construire un modèle de ses dépenses, pour établir une vision synthétique de son budget et anticiper ce budget sur les mois à venir. L'application présente ensuite un tableau de bord qui permet de suivre ce budget, prendre le contrôle de ses dépenses et préparer ses projets.
 
 Pour démarrer, on télécharge ses relevés bancaires sur le site de sa banque. On les importe dans l'outil, puis on classe ses opérations.
 

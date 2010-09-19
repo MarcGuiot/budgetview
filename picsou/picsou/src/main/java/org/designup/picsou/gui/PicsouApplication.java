@@ -51,7 +51,7 @@ public class PicsouApplication {
   public static final Long BANK_CONFIG_VERSION = 7L;
   private static final String JAR_DIRECTORY = "jars";
   private static final String BANK_CONFIG_DIRECTORY = "configs";
-  public static final String APPNAME = "cashpilot";
+  public static final String APPNAME = "budgetview";
   private static final String CONFIG = "config";
   private static final Pattern CONFIG_FILTER = Pattern.compile(CONFIG + "[0-9][0-9]*" + "\\.jar");
 
@@ -265,16 +265,16 @@ public class PicsouApplication {
   public static String getDataPath() {
     if (System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
       if (GuiUtils.isMacOSX()) {
-        return System.getProperty("user.home") + "/Library/Application Support/CashPilot";
+        return System.getProperty("user.home") + "/Library/Application Support/BudgetView";
       }
       if (GuiUtils.isVista()) {
-        return System.getProperty("user.home") + "/AppData/Local/CashPilot";
+        return System.getProperty("user.home") + "/AppData/Local/BudgetView";
       }
       if (GuiUtils.isWindows()) {
-        return System.getProperty("user.home") + "/Application Data/CashPilot";
+        return System.getProperty("user.home") + "/Application Data/BudgetView";
       }
     }
-    return getSystemValue(LOCAL_PREVAYLER_PATH_PROPERTY, System.getProperty("user.home") + "/.cashpilot");
+    return getSystemValue(LOCAL_PREVAYLER_PATH_PROPERTY, System.getProperty("user.home") + "/.budgetview");
   }
 
   public static String getBankConfigPath() {

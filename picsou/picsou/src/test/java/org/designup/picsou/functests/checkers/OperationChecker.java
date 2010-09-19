@@ -370,7 +370,7 @@ public class OperationChecker {
   }
 
   public void backupAndLaunchApplication(String user, String password, Date currentDate) throws Exception {
-    File file = File.createTempFile("cashpilot", ".snapshot");
+    File file = File.createTempFile("budgetview", ".snapshot");
     String backupFile = file.getAbsoluteFile().getAbsolutePath();
     file.delete();
 
@@ -468,5 +468,10 @@ public class OperationChecker {
   public void nextMonth() {
     MenuItem fileMenu = window.getMenuBar().getMenu("Edit");
     fileMenu.getSubMenu("goto to 10 of next month").click();
+  }
+
+  public void nextSixDays() {
+    MenuItem fileMenu = window.getMenuBar().getMenu("Edit");
+    fileMenu.getSubMenu("Add 6 days").click();
   }
 }

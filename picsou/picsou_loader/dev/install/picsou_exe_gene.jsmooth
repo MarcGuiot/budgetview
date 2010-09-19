@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="ISO-8859-15"?>
 <jsmoothproject>
   <JVMSearchPath>registry</JVMSearchPath>
   <JVMSearchPath>javahome</JVMSearchPath>
@@ -9,26 +9,26 @@
   <arguments></arguments>
   <currentDirectory>${EXECUTABLEPATH}</currentDirectory>
   <embeddedJar>true</embeddedJar>
-  <executableName>cashpilot.exe</executableName>
-  <iconLocation>../images/cashpilot_icon_128.png</iconLocation>
+  <executableName>budgetview.exe</executableName>
+  <iconLocation>../images/budgetview_icon_128.png</iconLocation>
   <initialMemoryHeap>-1</initialMemoryHeap>
-  <jarLocation>../../target/cashpilotloader-1.0.jar</jarLocation>
+  <jarLocation>../../target/budgetviewloader-1.0.jar</jarLocation>
   <javaProperties>
-    <name>cashpilot.exe.dir</name>
+    <name>budgetview.exe.dir</name>
     <value>${EXECUTABLEPATH}</value>
   </javaProperties>
   <javaProperties>
     <name>sun.awt.exception.handler</name>
     <value>picsou.AwtExceptionHandler</value>
   </javaProperties>
-  <mainClassName>com.cashpilot.Main</mainClassName>
+  <mainClassName>com.budgetview.Main</mainClassName>
   <maximumMemoryHeap>134217728</maximumMemoryHeap>
   <maximumVersion></maximumVersion>
   <minimumVersion>1.5</minimumVersion>
   <skeletonName>Windowed Wrapper</skeletonName>
   <skeletonProperties>
     <key>Message</key>
-    <value>Java n'a pas été trouvé sur votre ordinateur. Voulez vous le télécharger ? Une fois installé, il vous suffira de lancer CashPilot à nouveau.</value>
+    <value>Java est absent de votre ordinateur. Voulez vous l'installer ? Cela fait, il vous suffira de lancer BudgetView une nouvelle fois..</value>
   </skeletonProperties>
   <skeletonProperties>
     <key>URL</key>

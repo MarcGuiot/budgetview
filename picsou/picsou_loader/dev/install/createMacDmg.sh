@@ -3,22 +3,22 @@
 #             ./dev/dmg/dmg_template.dmg
 #
 
-if [ -a /Volumes/CashPilot ]
+if [ -a /Volumes/BudgetView ]
 then
-  echo "Unmounting CashPilot..."
-  diskutil unmount CashPilot
+  echo "Unmounting BudgetView..."
+  diskutil unmount BudgetView
 fi
 
-TMP_DMG=./target/CashPilot-tmp.dmg
-OUT_DMG=./target/CashPilot-out.dmg
+TMP_DMG=./target/BudgetView-tmp.dmg
+OUT_DMG=./target/BudgetView-out.dmg
 
 cp ./dev/dmg/dmg_template.dmg $TMP_DMG
 
 open -W $TMP_DMG
 
-cp -r ./CashPilot/CashPilot.app /Volumes/CashPilot/
+cp -r ./BudgetView/BudgetView.app /Volumes/BudgetView/
 
-diskutil unmount CashPilot
+diskutil unmount BudgetView
 
 hdiutil attach $TMP_DMG -noautoopen -quiet -mountpoint ./target/dmg
 
