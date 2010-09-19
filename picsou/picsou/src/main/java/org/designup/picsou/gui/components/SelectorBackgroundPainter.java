@@ -17,7 +17,7 @@ public class SelectorBackgroundPainter implements CellPainter {
   public SelectorBackgroundPainter(Directory directory) {
     ColorService colorService = directory.get(ColorService.class);
     normalPainter = new FillPainter(ApplicationColors.CATEGORIES_BG, colorService);
-    selectionPainter = ApplicationColors.createTableSelectionBackgroundPainter(colorService);
+    selectionPainter = new FillPainter(ApplicationColors.CATEGORIES_SELECTED_BG, colorService);
   }
 
   public void paint(Graphics g, Glob glob, int row, int column,
