@@ -156,11 +156,11 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public void selectAccount(String accountName) {
-    mainWindow.getComboBox("accountFilterCombo").select(accountName);
+    mainWindow.getListBox("accountFilterList").select(accountName);
   }
 
   public void checkSelectedAccount(String selection) {
-    assertThat(mainWindow.getComboBox("accountFilterCombo").selectionEquals(selection));
+    assertThat(mainWindow.getListBox("accountFilterList").selectionEquals(selection));
   }
 
   public void checkNotEmpty() {

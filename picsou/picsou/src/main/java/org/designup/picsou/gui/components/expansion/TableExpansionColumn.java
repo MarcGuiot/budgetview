@@ -64,14 +64,20 @@ public class TableExpansionColumn
       renderButton.setBackground(UIManager.getColor("Button.background"));
     }
     setIcon(renderButton, glob);
-    renderButton.setUI(new PainterUI(backgroundPainter, (Glob)value, row, column, isSelected, hasFocus));
+    setUI(renderButton, value, isSelected, hasFocus, row, column);
     return renderButton;
   }
 
   public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
     setIcon(editButton, (Glob)value);
-    editButton.setUI(new PainterUI(backgroundPainter, (Glob)value, row, column, true, true));
+    setUI(editButton, value, true, true, row, column);
     return editButton;
+  }
+
+  private void setUI(JButton button, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+    if (backgroundPainter != null) {
+    button.setUI(new PainterUI(backgroundPainter, (Glob)value, row, column, isSelected, hasFocus));
+    }
   }
 
   public Object getCellEditorValue() {

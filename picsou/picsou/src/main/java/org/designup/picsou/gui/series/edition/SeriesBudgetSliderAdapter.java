@@ -10,7 +10,6 @@ import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +46,7 @@ public class SeriesBudgetSliderAdapter implements GlobSliderAdapter, ColorChange
   public void init(final JSlider slider) {
     slider.setExtent(0);
     slider.setMinimum(0);
-    slider.setMaximum(1000);
+    slider.setMaximum(1);
     slider.setPaintTicks(true);
     slider.setPaintLabels(true);
     slider.setSnapToTicks(true);
@@ -55,7 +54,7 @@ public class SeriesBudgetSliderAdapter implements GlobSliderAdapter, ColorChange
 
   public void setSliderValue(Double value, final JSlider slider, GlobList selection) {
     if (value == null) {
-      updateScale(0, slider, scales.get(0));
+      updateScale(0, slider, scales.get(2));
       return;
     }
 
@@ -129,6 +128,10 @@ public class SeriesBudgetSliderAdapter implements GlobSliderAdapter, ColorChange
       this.major = major;
       this.minor = minor;
       this.label = label;
+    }
+
+    public String toString() {
+      return label + " max:" + max + " major:" + major + " minor:" + minor;
     }
   }
 

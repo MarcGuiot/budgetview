@@ -2,7 +2,7 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.accounts.utils.AccountFilteringCombo;
+import org.designup.picsou.gui.accounts.utils.AccountFilteringList;
 import org.designup.picsou.gui.components.DefaultTableCellPainter;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.FilterClearer;
@@ -11,6 +11,7 @@ import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.components.filtering.components.FilterClearingPanel;
 import org.designup.picsou.gui.description.TransactionBudgetAreaStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
+import org.designup.picsou.gui.series.view.SeriesView;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Transaction;
@@ -18,11 +19,12 @@ import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.font.FontLocator;
-import org.globsframework.gui.views.GlobComboView;
+import org.globsframework.gui.views.GlobListView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
@@ -33,7 +35,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.*;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.designup.picsou.model.Transaction.TYPE;
@@ -56,7 +58,7 @@ public class TransactionView extends View implements Filterable {
   private static final int[] COLUMN_SIZES = {10, 10, 10, 15, 10, 30, 9, 15, 10, 10, 30};
 
   private GlobTableView view;
-  private AccountFilteringCombo accountFilteringCombo;
+  private AccountFilteringList accountFilteringList;
   private TransactionRendererColors rendererColors;
   private TransactionSelection transactionSelection;
   private GlobMatcher showPlannedTransactionsMatcher = GlobMatchers.ALL;
@@ -77,7 +79,7 @@ public class TransactionView extends View implements Filterable {
     builder.add(view.getComponent());
 
     FilterClearingPanel filterClearingPanel = new FilterClearingPanel(filterManager, repository, directory);
-    builder.add("customFilterMessage", filterClearingPanel.getPanel());    
+    builder.add("customFilterMessage", filterClearingPanel.getPanel());
   }
 
   public void setFilter(GlobMatcher matcher) {
@@ -93,9 +95,9 @@ public class TransactionView extends View implements Filterable {
   }
 
   private void addAccountCombo(GlobsPanelBuilder builder) {
-    accountFilteringCombo = new AccountFilteringCombo(repository, directory, new GlobComboView.GlobSelectionHandler() {
-      public void processSelection(Glob glob) {
-        filterManager.set(ACCOUNT_FILTER, accountFilteringCombo.getCurrentAccountFilter());
+    accountFilteringList = new AccountFilteringList(repository, directory, new GlobListView.GlobSelectionHandler() {
+      public void processSelection(GlobList selection) {
+        filterManager.set(ACCOUNT_FILTER, accountFilteringList.getCurrentAccountFilter());
       }
     });
     filterManager.addClearer(new FilterClearer() {
@@ -104,10 +106,10 @@ public class TransactionView extends View implements Filterable {
       }
 
       public void clear() {
-        accountFilteringCombo.reset();
+        accountFilteringList.reset();
       }
     });
-    builder.add("accountFilterCombo", accountFilteringCombo.getComponent());
+    builder.add("accountFilterList", accountFilteringList.getComponent());
   }
 
   private void addShowTransactionsCheckbox(GlobsPanelBuilder builder) {
@@ -215,7 +217,7 @@ public class TransactionView extends View implements Filterable {
   public void reset() {
     view.resetSort();
     transactionSelection.init();
-    accountFilteringCombo.reset();
+    accountFilteringList.reset();
     setFilter(GlobMatchers.ALL);
   }
 
@@ -236,7 +238,7 @@ public class TransactionView extends View implements Filterable {
         }
       }
       else {
-        if (isSelected){
+        if (isSelected) {
           label.setForeground(rendererColors.getTransactionSelectedTextColor());
         }
         else {

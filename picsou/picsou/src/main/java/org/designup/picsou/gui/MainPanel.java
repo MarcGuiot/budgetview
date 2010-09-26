@@ -120,9 +120,9 @@ public class MainPanel {
 
     TitleView titleView = new TitleView(repository, directory);
 
+    seriesView = new SeriesView(repository, directory);
     transactionView = new TransactionView(repository, directory);
     categorizationView = new CategorizationView(repository, directory);
-    seriesView = new SeriesView(repository, directory);
     timeView = new TimeView(repository, directory);
 
     directory.add(new NavigationService(categorizationView, seriesView, repository, directory));
