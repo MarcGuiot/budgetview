@@ -2,6 +2,7 @@ package org.designup.picsou.gui;
 
 import net.roydesign.event.ApplicationEvent;
 import net.roydesign.mac.MRJAdapter;
+import org.designup.picsou.bank.BankPluginService;
 import org.designup.picsou.client.http.MD5PasswordBasedEncryptor;
 import org.designup.picsou.client.http.PasswordBasedEncryptor;
 import org.designup.picsou.client.http.RedirectPasswordBasedEncryptor;
@@ -17,7 +18,6 @@ import org.designup.picsou.gui.upgrade.UpgradeService;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.bank.BankPluginService;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
@@ -46,8 +46,8 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "0.51";
-  public static final Long JAR_VERSION = 48L;
+  public static final String APPLICATION_VERSION = "0.52";
+  public static final Long JAR_VERSION = 49L;
   public static final Long BANK_CONFIG_VERSION = 7L;
   private static final String JAR_DIRECTORY = "jars";
   private static final String BANK_CONFIG_DIRECTORY = "configs";
@@ -234,18 +234,27 @@ public class PicsouApplication {
   }
 
   public static String[] parseLanguage(String... args) {
-    if (args[0].equals("-l")) {
-      if (args[1].equals("fr")) {
-        Locale.setDefault(Locale.FRANCE);
-        Lang.setLocale(Locale.FRANCE);
+    List<String> arguments = new ArrayList<String>();
+    arguments.addAll(Arrays.asList(args));
+    for (Iterator<String> iterator = arguments.iterator(); iterator.hasNext();) {
+      String arg = iterator.next();
+      if (arg.equals("-l")) {
+        iterator.remove();
+        if (!iterator.hasNext()) {
+          return args;
+        }
+        String lang = iterator.next();
+        iterator.remove();
+        if (lang.equals("fr")) {
+          Locale.setDefault(Locale.FRANCE);
+          Lang.setLocale(Locale.FRANCE);
+        }
+        else if (lang.equals("en")) {
+          Locale.setDefault(Locale.ENGLISH);
+          Lang.setLocale(Locale.ENGLISH);
+        }
+        return arguments.toArray(new String[arguments.size()]);
       }
-      else if (args[1].equals("en")) {
-        Locale.setDefault(Locale.ENGLISH);
-        Lang.setLocale(Locale.ENGLISH);
-      }
-      String[] strings = new String[args.length - 2];
-      System.arraycopy(args, 2, strings, 0, args.length - 2);
-      args = strings;
     }
     return args;
   }

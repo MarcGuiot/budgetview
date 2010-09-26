@@ -4,7 +4,7 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BankEntity;
 
-public class SeriesReportTest extends LoggedInFunctionalTestCase {
+public abstract class SeriesReportTest extends LoggedInFunctionalTestCase {
 
   public void test() throws Exception {
     operations.openPreferences()
@@ -142,5 +142,55 @@ public class SeriesReportTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkSeries("CA", 0, 150);
     views.selectSavings();
     savingsView.checkSeriesAmounts("Account n. 111", "CA", 0, 150);
+  }
+
+  public void testWithPreviousBudgetMonthChange() throws Exception {
+    operations.openPreferences()
+      .setFutureMonthsCount(3)
+      .validate();
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/29", -40.00, "Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewVariable("Auchan", "Courses");
+    categorization
+      .editSeries("Courses")
+      .selectAllMonths()
+      .setAmount("100")
+      .toggleAutoReport()
+      .validate();
+
+    views.selectBudget();
+    budgetView.variable.checkSeries("Courses", -40, -100);
+    timeline.selectMonth("2008/09");
+    budgetView.variable.checkSeries("Courses", 0, -100);
+
+    operations.nextMonth();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/09/01", -10.00, "Auchan")
+      .addTransaction("2008/09/09", -30.00, "Auchan")
+      .load();
+
+    openApplication();
+    timeline.selectMonth("2008/08");
+    budgetView.variable.checkSeries("Courses", -40, -40);
+    timeline.selectMonth("2008/09");
+    budgetView.variable.checkSeries("Courses", 0, -160);
+    timeline.selectMonth("2008/10");
+    budgetView.variable.checkSeries("Fringues", 0, -20);
+
+    timeline.selectMonth("2008/09");
+    views.selectCategorization();
+
+    categorization.selectTableRow(0);
+    transactionDetails.shift();
+
+    timeline.selectMonth("2008/08");
+    budgetView.variable.checkSeries("Courses", -40, -40);
+    timeline.selectMonth("2008/09");
+    budgetView.variable.checkSeries("Courses", 0, -160);
+
   }
 }

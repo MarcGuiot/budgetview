@@ -85,6 +85,9 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (currentJarVersion < 48) {
       SignpostStatus.setAllCompleted(repository);
     }
+    if (currentJarVersion < 49){
+      repository.safeApply(Series.TYPE, ALL, new DisableSeriesReportGlobFunctor());
+    }
 
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
   }
@@ -285,5 +288,11 @@ public class UpgradeTrigger implements ChangeSetListener {
       }
       repository.update(glob.getKey(), Transaction.LABEL, label);
     }
+  }
+
+  private static class DisableSeriesReportGlobFunctor implements GlobFunctor {
+    public void run(Glob glob, GlobRepository repository) throws Exception {
+            repository.update(glob.getKey(), Series.SHOULD_REPORT, false);
+          }
   }
 }

@@ -186,7 +186,7 @@ public class SeriesEditionDialog {
                 reportCheckBox.getComponent().setVisible(false);
               }
               else {
-                reportCheckBox.getComponent().setVisible(true);
+                reportCheckBox.getComponent().setVisible(false);
               }
             }
           }

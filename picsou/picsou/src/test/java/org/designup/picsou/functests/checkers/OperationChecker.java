@@ -400,6 +400,8 @@ public class OperationChecker {
       args.add("-p");
       args.add(password);
     }
+    args.add("-l");
+    args.add("fr");
     args.add("-s");
     args.add(backupFile);
     Process process = Runtime.getRuntime().exec(args.toArray(new String[args.size()]));

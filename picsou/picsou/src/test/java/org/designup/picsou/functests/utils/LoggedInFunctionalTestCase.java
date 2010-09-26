@@ -227,6 +227,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   public void openApplication() throws Exception {
+    currentDate = TimeService.getToday();
     operations.backupAndLaunchApplication(LoginPanel.AUTOLOG_USER, LoginPanel.AUTOLOG_USER, currentDate);
   }
 
