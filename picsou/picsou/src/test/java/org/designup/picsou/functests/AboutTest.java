@@ -9,6 +9,7 @@ public class AboutTest extends LoggedInFunctionalTestCase {
     AboutChecker about = operations.openAbout();
     about.checkVersion();
     about.checkConfigurationContains(PicsouApplication.getDataPath());
+    about.checkLicensesContain("Apache");
     about.close();
   }
 }

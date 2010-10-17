@@ -1,15 +1,21 @@
 package org.designup.picsou.gui.about;
 
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.CloseAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.utils.Files;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import java.io.InputStream;
 
 public class AboutDialog {
 
@@ -29,8 +35,11 @@ public class AboutDialog {
 
   private PicsouDialog dialog;
   private SplitsBuilder builder;
+  private Directory directory;
 
   public AboutDialog(Directory directory) {
+
+    this.directory = directory;
 
     builder = new SplitsBuilder(directory);
     builder.setSource(getClass(), "/layout/general/aboutDialog.splits");
@@ -40,9 +49,30 @@ public class AboutDialog {
 
     builder.add("configurationArea", Gui.createHtmlEditor(getConfiguration()));
 
+    builder.add("licensesArea", createLicensesArea());
+
     dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
     dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction(dialog));
     dialog.pack();
+  }
+
+  private JEditorPane createLicensesArea() {
+
+    JEditorPane editor = Gui.createHtmlEditor(loadLicensesContent());
+    editor.addHyperlinkListener(new HyperlinkHandler(directory) {
+      protected void processCustomLink(String href) {
+        directory.get(BrowsingService.class).launchBrowser(href);
+      }
+    });
+    return editor;
+  }
+
+  private String loadLicensesContent() {
+    InputStream stream = Lang.class.getResourceAsStream("/docs/licenses.html");
+    if (stream == null) {
+      return "Unable to load< licenses file";
+    }
+    return Files.loadStreamToString(stream, "UTF-8");
   }
 
   private String getConfiguration() {

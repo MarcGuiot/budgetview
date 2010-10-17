@@ -2,19 +2,30 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(500,500)">
+  <panel styleClass="dialog" preferredSize="(500,600)">
     <column styleClass="innerDialog">
 
       <label name="title" text="aboutDialog" visible="false"/>
 
-      <label icon="app_icon_128.png" fill="none" anchor="center" marginTop="20" marginBottom="5"/>
+      <label icon="app_icon_128.png" fill="none" anchor="center" marginTop="10" marginBottom="5"/>
 
       <label ref="versionLabel" marginBottom="10" fill="horizontal" horizontalAlignment="center"/>
 
-      <label text="$about.configuration" styleClass="separatorTitle"/>
-      <scrollPane weightY="100">
-        <htmlEditorPane ref="configurationArea"/>
-      </scrollPane>
+      <tabs weightY="100">
+
+        <tab title="$about.configuration">
+          <scrollPane margin="10">
+            <htmlEditorPane ref="configurationArea"/>
+          </scrollPane>
+        </tab>
+
+        <tab title="$about.licenses">
+          <scrollPane margin="10">
+            <htmlEditorPane ref="licensesArea"/>
+          </scrollPane>
+        </tab>
+
+      </tabs>
 
     </column>
   </panel>

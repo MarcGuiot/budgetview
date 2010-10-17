@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import org.uispec4j.Panel;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
@@ -23,7 +24,15 @@ public class AboutChecker extends GuiChecker {
   }
 
   public void checkConfigurationContains(String text) {
-    UISpecAssert.assertThat(dialog.getTextBox("configurationArea").textContains(text));
+    dialog.getTabGroup().selectTab("Configuration");
+    Panel tab = dialog.getTabGroup().getSelectedTab();
+    UISpecAssert.assertThat(tab.getTextBox("configurationArea").textContains(text));
+  }
+
+  public void checkLicensesContain(String text) {
+    dialog.getTabGroup().selectTab("Licenses");
+    Panel tab = dialog.getTabGroup().getSelectedTab();
+    UISpecAssert.assertThat(tab.getTextBox("licensesArea").textContains(text));
   }
 
   public void close() {
