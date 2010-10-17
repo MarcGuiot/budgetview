@@ -46,8 +46,8 @@ fi
 
 scp ../picsou/obfuscated/budgetview${JAR_VERSION}.jar ../picsou/ChangeLogOutput-${JAR_VERSION}.txt.bz2 build@91.121.123.100:versions/
 
-if [ -a ../picsou_licence_server/picsouLicenceServer.jar ];
+if [ -a ../picsou_licence_server/budgetviewLicenceServer.jar ];
 then
-  scp ../picsou_licence_server/picsouLicenceServer.jar build@91.121.123.100:versions/picsouLicenceServer${JAR_VERSION}.jar
+  scp ../picsou_licence_server/budgetviewLicenceServer.jar build@91.121.123.100:versions/budgetviewLicenceServer${JAR_VERSION}.jar
 fi
 
