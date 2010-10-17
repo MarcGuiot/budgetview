@@ -27,9 +27,11 @@ public class DownloadTest extends LicenseTestCase {
   private PicsouApplication picsouApplication;
 
   protected void setUp() throws Exception {
+    System.setProperty("budgetview.log.sout", "true");
     super.setUp();
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
     TimeService.setCurrentDate(Dates.parseMonth("2008/07"));
+    updateDb();
     licenseServer.init();
   }
 
@@ -55,7 +57,6 @@ public class DownloadTest extends LicenseTestCase {
   }
 
   public void testJarIsSentAndConfigUpdated() throws Exception {
-    updateDb();
     startServers();
     final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
     final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);
@@ -107,7 +108,6 @@ public class DownloadTest extends LicenseTestCase {
   }
 
   public void testNewBankInConfig() throws Exception {
-    updateDb();
     startPicsou();
 //    LoginChecker loginChecker = new LoginChecker(window);
 //    loginChecker.logNewUser("user", "passw@rd");

@@ -63,10 +63,12 @@ public class DownloadThread extends Thread {
         }
       }
       else {
+        System.out.println("DownloadThread.run");
         Log.write("Fail to connect to ftp server " + (client.getReplyString()));
       }
     }
     catch (Exception e) {
+      System.out.println("DownloadThread.run");
       Log.write("in download", e);
       try {
         if (client.isConnected()) {

@@ -29,11 +29,11 @@ public class AskMailTest extends LicenseTestCase {
   }
 
   public void testSendMailInEn() throws Exception {
-    checkMail("en", "You ask for a new code");
+    checkMail("en", "You 'monPremierClient@pirate.du' ask for a new code");
   }
 
   public void testSendMailInfr() throws Exception {
-    checkMail("fr", "voici votre nouveau code");
+    checkMail("fr", "Suite a votre demande, veuillez trouver");
   }
 
   private void checkMail(String s, final String expected) throws IOException, InterruptedException {

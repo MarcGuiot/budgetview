@@ -8,6 +8,8 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeBodyPart;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -87,7 +89,7 @@ public class Mailer {
     message.setFrom(new InternetAddress(from));
     message.setSubject(subjet);
     message.setSentDate(new Date());
-    message.setText(content);
+    message.setContent(content, "text/html");
     message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
     Transport.send(message);
     logger.info("mail sent : " + to + "  " + subjet);
@@ -155,7 +157,7 @@ public class Mailer {
       try {
         inc();
         sendMail(mail, fromAdress, Lang.get("new.license.subject", lang),
-                 Lang.get("new.license.message", lang, code));
+                 Lang.get("new.license.message", lang, code, mail));
         return true;
       }
       catch (Exception e) {
@@ -185,7 +187,7 @@ public class Mailer {
       try {
         inc();
         sendMail(mail, fromAdress, Lang.get(prefix + ".license.subject", lang),
-                 Lang.get(prefix + ".license.message", lang, activationCode));
+                 Lang.get(prefix + ".license.message", lang, activationCode, mail));
         return true;
       }
       catch (Exception e) {
