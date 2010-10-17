@@ -27,7 +27,7 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
     assertThat(box.isVisible());
     assertThat(box.textEquals("30 days left for trying BudgetView."));
 
-    LicenseActivationChecker.enterLicense(mainWindow, "admin", "zz");
+    LicenseActivationChecker.enterLicense(mainWindow, "admin", "1234");
     UISpecAssert.assertFalse(box.isVisible());
   }
 

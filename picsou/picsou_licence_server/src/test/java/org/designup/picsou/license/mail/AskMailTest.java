@@ -17,6 +17,7 @@ public class AskMailTest extends LicenseTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
+    licenseServer.init();
     startServers();
     client = new HttpClient();
   }
@@ -28,11 +29,11 @@ public class AskMailTest extends LicenseTestCase {
   }
 
   public void testSendMailInEn() throws Exception {
-    checkMail("en", "Your new activation code is");
+    checkMail("en", "You ask for a new code");
   }
 
   public void testSendMailInfr() throws Exception {
-    checkMail("fr", "Votre nouveau code d'activation est le ");
+    checkMail("fr", "voici votre nouveau code");
   }
 
   private void checkMail(String s, final String expected) throws IOException, InterruptedException {

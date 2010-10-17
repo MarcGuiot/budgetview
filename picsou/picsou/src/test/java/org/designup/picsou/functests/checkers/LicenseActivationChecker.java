@@ -26,6 +26,7 @@ public class LicenseActivationChecker {
   }
 
   static public void enterLicense(Window window, final String mail, final String code) {
+    Integer.parseInt(code);
     enterLicense(window, new WindowHandler() {
       public Trigger process(Window window) throws Exception {
         window.getInputTextBox("ref-mail").setText(mail);

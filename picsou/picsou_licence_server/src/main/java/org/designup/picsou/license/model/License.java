@@ -41,6 +41,8 @@ public class License {
   @DefaultLong(0L)
   public static LongField KILLED_COUNT;
 
+  public static StringField TRANSACTION_ID;
+
   static {
     GlobTypeLoader.init(License.class);
   }

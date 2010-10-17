@@ -30,6 +30,7 @@ public class DownloadTest extends LicenseTestCase {
     super.setUp();
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
     TimeService.setCurrentDate(Dates.parseMonth("2008/07"));
+    licenseServer.init();
   }
 
   protected void tearDown() throws Exception {

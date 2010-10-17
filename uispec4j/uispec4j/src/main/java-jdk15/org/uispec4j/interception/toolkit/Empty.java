@@ -49,6 +49,7 @@ public final class Empty {
   public static final DummyLightweightPeer NULL_LIGHTWEIGHT_PEER = new DummyLightweightPeer();
   public static final DummyPanelPeer NULL_PANEL_PEER = new DummyPanelPeer();
   public static final DummyCanvasPeer NULL_CANVAS_PEER = new DummyCanvasPeer();
+  public static final MouseInfoPeer NULL_MOUSE_INFO = new DummyMouseInfoPeer();
 
   static {
     NULL_FONT_METRICS = new DummyFontMetrics(NULL_FONT);
@@ -1136,6 +1137,16 @@ public final class Empty {
 
     public int getIconHeight() {
       return 0;
+    }
+  }
+
+  private static class DummyMouseInfoPeer implements MouseInfoPeer {
+    public int fillPointWithCoords(Point point) {
+      return 0;
+    }
+
+    public boolean isWindowUnderMouse(Window w) {
+      return false;
     }
   }
 }

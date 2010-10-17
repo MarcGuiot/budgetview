@@ -162,7 +162,7 @@ public class UIComponentFactoryTest extends UnitTestCase {
       return this;
     }
 
-    public UIComponent pressKey(Key key) {
+    public DummyUIComponent pressKey(Key key) {
       return this;
     }
 

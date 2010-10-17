@@ -23,6 +23,7 @@ public class RegistrationTest extends LicenseTestCase {
     TimeService.setCurrentDate(Dates.parseMonth("2008/07"));
     previousRetry = ConfigService.RETRY_PERIOD;
     ConfigService.RETRY_PERIOD = 500;
+    licenseServer.init();
   }
 
   protected void tearDown() throws Exception {

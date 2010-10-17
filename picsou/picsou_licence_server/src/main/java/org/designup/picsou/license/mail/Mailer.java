@@ -1,8 +1,6 @@
 package org.designup.picsou.license.mail;
 
 import org.designup.picsou.license.Lang;
-import org.designup.picsou.license.model.License;
-import org.globsframework.model.Glob;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -41,19 +39,17 @@ public class Mailer {
     this.host = host;
   }
 
-  public void sendRequestLicence(String to, String lang) throws MessagingException {
-    try {
-      sendMail(to, fromAdress,
-               Lang.get("request.license.subject", lang),
-               Lang.get("request.license.message", lang));
+  public boolean sendRequestLicence(String lang, String activationCode, final String mail) {
+    MailToSent mailToSent = new ExistingLicenseMailToSent("resend", mail, lang, activationCode);
+    if (mailToSent.sent()) {
+      return true;
     }
-    catch (Exception e) {
-      logger.log(Level.INFO, "Mailer sendRequestLicence to=" + to + " lang=" + lang, e);
-    }
+    add(mailToSent);
+    return false;
   }
 
-  public boolean sendExistingLicense(Glob licence, String lang, String activationCode) {
-    MailToSent mailToSent = new ExistingLicenseMailToSent(licence.get(License.MAIL), lang, activationCode);
+  public boolean reSendExistingLicenseOnError(String lang, String activationCode, final String mail) {
+    MailToSent mailToSent = new ExistingLicenseMailToSent("resend.error", mail, lang, activationCode);
     if (mailToSent.sent()) {
       return true;
     }
@@ -67,6 +63,15 @@ public class Mailer {
       return true;
     }
     add(newLicenseMailToSent);
+    return false;
+  }
+
+  public boolean sendToAdmin(String message){
+    AdminMailToSent adminMailToSent = new AdminMailToSent(message);
+    if (adminMailToSent.sent()){
+      return true;
+    }
+    add(adminMailToSent);
     return false;
   }
 
@@ -85,6 +90,7 @@ public class Mailer {
     message.setText(content);
     message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
     Transport.send(message);
+    logger.info("mail sent : " + to + "  " + subjet);
   }
 
   private void add(MailToSent sent) {
@@ -164,11 +170,13 @@ public class Mailer {
   }
 
   private class ExistingLicenseMailToSent extends MailToSent {
+    private final String prefix;
     private final String lang;
     private final String activationCode;
 
-    public ExistingLicenseMailToSent(final String mail, String lang, String activationCode) {
+    public ExistingLicenseMailToSent(final String prefix, final String mail, String lang, String activationCode) {
       super(mail);
+      this.prefix = prefix;
       this.lang = lang;
       this.activationCode = activationCode;
     }
@@ -176,12 +184,12 @@ public class Mailer {
     boolean sent() {
       try {
         inc();
-        sendMail(mail, fromAdress, Lang.get("new.license.subject", lang),
-                 Lang.get("new.license.message", lang, activationCode));
+        sendMail(mail, fromAdress, Lang.get(prefix + ".license.subject", lang),
+                 Lang.get(prefix + ".license.message", lang, activationCode));
         return true;
       }
       catch (Exception e) {
-        logger.warning(toString());
+        logger.warning("Mail not sent : " + toString());
         return false;
       }
     }
@@ -235,4 +243,31 @@ public class Mailer {
       }
     }
   }
+
+  private class AdminMailToSent extends MailToSent {
+    private String message;
+
+    public AdminMailToSent(String message) {
+      super("support@mybudgetview.fr");
+      this.message = message;
+    }
+
+    public boolean sent() {
+      try {
+        inc();
+        sendMail(mail, "licenseServer@mybudgetview.fr", "admin mail",
+                 message);
+        return true;
+      }
+      catch (Exception e) {
+        logger.warning(toString());
+        return false;
+      }
+    }
+
+    public String toString() {
+      return "license server message" + message + " ; " + retryCount + " for " + count;
+    }
+  }
+
 }

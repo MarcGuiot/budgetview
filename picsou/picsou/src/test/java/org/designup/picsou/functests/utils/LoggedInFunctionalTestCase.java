@@ -110,7 +110,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     initCheckers();
 
     if (!notRegistered) {
-      LicenseActivationChecker.enterLicense(mainWindow, "admin", "zz");
+      LicenseActivationChecker.enterLicense(mainWindow, "admin", "1234");
       operations.openPreferences().setFutureMonthsCount(0).validate();
     }
 
@@ -261,7 +261,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
     initCheckers();
     if (!notRegistered) {
-      LicenseActivationChecker.enterLicense(mainWindow, "admin", "zz");
+      LicenseActivationChecker.enterLicense(mainWindow, "admin", "1234");
     }
   }
 
@@ -280,7 +280,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     loginChecker.logNewUser(user, password);
     initCheckers();
     if (!notRegistered) {
-      LicenseActivationChecker.enterLicense(mainWindow, "admin", "zz");
+      LicenseActivationChecker.enterLicense(mainWindow, "admin", "1234");
     }
   }
 

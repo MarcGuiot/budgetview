@@ -62,8 +62,8 @@ public class PicsouApplication {
   public static String IS_DATA_IN_MEMORY = APPNAME + ".data.in.memory";
   public static String FORCE_DATE = APPNAME + ".today";
   private static String DEFAULT_ADDRESS = "https://startupxp.dynalias.org";
-  public static final String REGISTER_URL = "https://91.121.123.100:8443"; //startupxp.dynalias.org";
-  public static final String FTP_URL = "ftp://91.121.123.100"; //startupxp.dynalias.org";
+  public static final String REGISTER_URL = "https://register.mybudgetview.fr:443"; //startupxp.dynalias.org";
+  public static final String FTP_URL = "ftp://ftpjar.mybudgetview.fr"; //startupxp.dynalias.org";
 
   private OpenRequestManager openRequestManager = new OpenRequestManager();
   private SingleApplicationInstanceListener singleInstanceListener;

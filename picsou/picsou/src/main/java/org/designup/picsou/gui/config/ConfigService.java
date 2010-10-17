@@ -28,7 +28,6 @@ import java.lang.reflect.Constructor;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 
 public class ConfigService {
@@ -357,14 +356,14 @@ public class ConfigService {
       configLoaded = configReceive.set(directory, repository);
     }
     if (!configLoaded && currentConfigFile != null) {
-      synchronized (this){
+      synchronized (this) {
         configLoaded = loadConfigFile(currentConfigFile, localConfigVersion, repository, directory);
       }
     }
     if (jarReceive != null) {
       jarReceive.set(directory, repository);
     }
-    synchronized (this){
+    synchronized (this) {
       this.directory = directory;
       this.repository = repository;
     }
@@ -472,7 +471,7 @@ public class ConfigService {
                 InputStream inputStream = jar.getInputStream(entry);
                 bankLoader.load(repository, directory, inputStream,
                                 className.substring(0, className.length() - ".class".length())
-                .replace("/", "."));
+                                  .replace("/", "."));
               }
               catch (IOException e) {
                 Log.write("fail to get entry for " + className, e);

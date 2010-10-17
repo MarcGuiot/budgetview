@@ -40,8 +40,6 @@ public class HttpsClientTransport implements ClientTransport {
 
   public HttpsClientTransport(String serverUrl) {
     this.serverUrl = serverUrl;
-    Protocol easyhttps = new Protocol("https", new EasySSLProtocolSocketFactory(), 8443);
-    Protocol.registerProtocol("https", easyhttps);
     this.httpClient = new HttpClient();
   }
 

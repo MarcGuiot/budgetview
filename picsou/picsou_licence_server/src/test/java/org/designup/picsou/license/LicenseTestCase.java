@@ -4,6 +4,7 @@ import com.dumbster.smtp.SimpleSmtpServer;
 import com.dumbster.smtp.SmtpMessage;
 import org.apache.commons.httpclient.protocol.DefaultProtocolSocketFactory;
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
@@ -11,8 +12,6 @@ import org.designup.picsou.license.model.License;
 import org.designup.picsou.license.model.MailError;
 import org.designup.picsou.license.model.RepoInfo;
 import org.designup.picsou.license.model.SoftwareInfo;
-import org.designup.picsou.license.servlet.LicenseServer;
-import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
@@ -21,15 +20,14 @@ import org.mockftpserver.core.command.InvocationRecord;
 import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.StubFtpServer;
 import org.mockftpserver.stub.command.AbstractStubDataCommandHandler;
-import org.uispec4j.UISpecTestCase;
 import org.uispec4j.UISpec4J;
+import org.uispec4j.UISpecTestCase;
 
 import java.util.Iterator;
 import java.util.Locale;
 
 public abstract class LicenseTestCase extends UISpecTestCase {
   protected SimpleSmtpServer mailServer;
-  private LicenseServer server;
   protected Thread mailThread;
   private static final String databaseUrl = "jdbc:hsqldb:.";
   private SqlService sqlService = null;
@@ -37,6 +35,7 @@ public abstract class LicenseTestCase extends UISpecTestCase {
   private StubFtpServer ftpServer;
   private String actualFilename;
   private boolean started;
+  protected LicenseServerChercker licenseServer;
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -49,11 +48,7 @@ public abstract class LicenseTestCase extends UISpecTestCase {
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, PATH_TO_DATA);
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
     mailServer = new SimpleSmtpServer(2500);
-    server = new LicenseServer();
-    server.useSsl(false);
-    server.usePort(5000);
-    server.setMailPort(2500);
-    server.setDatabaseUrl(databaseUrl);
+    licenseServer = new LicenseServerChercker(databaseUrl);
     Protocol http = new Protocol("http", new DefaultProtocolSocketFactory(), 5000);
     Protocol.registerProtocol("http", http);
     ftpServer = new StubFtpServer();
@@ -79,7 +74,7 @@ public abstract class LicenseTestCase extends UISpecTestCase {
     mailThread = null;
     sqlService = null;
     ftpServer = null;
-    server = null;
+    licenseServer = null;
     System.setProperty(ConfigService.COM_APP_LICENSE_URL, "");
   }
 
@@ -91,7 +86,7 @@ public abstract class LicenseTestCase extends UISpecTestCase {
     };
     mailThread.setDaemon(true);
     mailThread.start();
-    server.start();
+    licenseServer.start();
     ftpServer.start();
     started = true;
   }
@@ -107,11 +102,11 @@ public abstract class LicenseTestCase extends UISpecTestCase {
       mailThread.join();
     }
     mailThread = null;
-    if (server != null) {
+    if (licenseServer != null) {
       if (started) {
-        server.stop();
+        licenseServer.stop();
       }
-      server = null;
+      licenseServer = null;
     }
     if (ftpServer != null) {
       if (started) {

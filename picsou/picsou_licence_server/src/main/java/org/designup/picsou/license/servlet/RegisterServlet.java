@@ -115,7 +115,7 @@ public class RegisterServlet extends HttpServlet {
           .run();
         db.commit();
         resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "true");
-        if (!mailer.sendNewLicense(mail, newCode, lang)) {
+        if (!mailer.reSendExistingLicenseOnError(lang, newCode, mail)) {
           logger.finest("Fail to send mail retrying.");
         }
       }

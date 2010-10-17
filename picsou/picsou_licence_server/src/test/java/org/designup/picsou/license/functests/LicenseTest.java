@@ -31,9 +31,11 @@ public class LicenseTest extends LicenseTestCase {
   private static final String SECOND_PATH = "tmp/otherprevayler";
 
   protected void setUp() throws Exception {
+    System.setProperty("budgetview.log.sout", "true");
     super.setUp();
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
     TimeService.setCurrentDate(Dates.parseMonth("2008/07"));
+    licenseServer.init();
     startServers();
     startApplication(true);
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
@@ -124,10 +126,11 @@ public class LicenseTest extends LicenseTestCase {
     LicenseActivationChecker.enterBadLicense(window, MAIL, "1234", "Activation failed. An email was sent at " + MAIL + " with further information.");
     checkDaysLeftMessage();
     String emailcontent = checkReceivedMail(MAIL);
-    assertTrue(emailcontent, emailcontent.contains("Your new activation code"));
+    assertTrue(emailcontent, emailcontent.contains("Multiple use of the same license"));
 
-    int startCode = emailcontent.indexOf("is ") + 3;
+    int startCode = emailcontent.indexOf("new code ") + 9;
     String newActivationCode = emailcontent.substring(startCode, startCode + 4);
+    Integer.parseInt(newActivationCode);
     exit();
 
     checkVersionValidity(false, PATH_TO_DATA);
@@ -351,6 +354,7 @@ public class LicenseTest extends LicenseTestCase {
     };
     mailThread.setDaemon(true);
     mailThread.start();
+    System.out.println("LicenseTest.testMailSentLater started");
     checkReceivedMail(MAIL);
   }
 
@@ -372,7 +376,7 @@ public class LicenseTest extends LicenseTestCase {
     LicenseActivationChecker.enterBadLicense(window, MAIL, "1234",
                                              "Activation failed. An email was sent at " + MAIL + " with further information.");
     String messageCode = checkReceivedMail(MAIL);
-    String newCode = messageCode.substring(messageCode.length() - 5, messageCode.length() - 1).trim();
+    String newCode = messageCode.substring(messageCode.length() - 5, messageCode.length()).trim();
     LicenseActivationChecker.enterLicense(window, "alfred@free.fr", newCode);
     exit();
 
@@ -388,7 +392,7 @@ public class LicenseTest extends LicenseTestCase {
       .close();
 
     messageCode = checkReceivedMail(MAIL);
-    newCode = messageCode.substring(messageCode.length() - 5, messageCode.length() - 1).trim();
+    newCode = messageCode.substring(messageCode.length() - 5, messageCode.length()).trim();
     exit();
     SqlConnection connection = getSqlConnection();
     Glob glob = connection.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, MAIL))

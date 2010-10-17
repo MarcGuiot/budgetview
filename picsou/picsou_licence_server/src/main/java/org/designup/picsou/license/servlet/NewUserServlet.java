@@ -1,75 +1,137 @@
 package org.designup.picsou.license.servlet;
 
-import org.designup.picsou.gui.config.ConfigService;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.designup.picsou.license.generator.LicenseGenerator;
 import org.designup.picsou.license.mail.Mailer;
 import org.designup.picsou.license.model.License;
-import org.designup.picsou.license.model.RepoInfo;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SelectQuery;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.constraints.Constraints;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.serialization.Encoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Date;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class NewUserServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("NewUserServlet");
+  public static final String PAYPAL_CONFIRM_URL_PROPERTY = "PAYPAL_CONFIRM_URL";
+  //  private static String PAYPAL_CONFIRM_URL = "http://www.sandbox.paypal.com/fr/cgi-bin/webscr";
+  private static String PAYPAL_CONFIRM_URL = "http://www.paypal.com/fr/cgi-bin/webscr";
   private SqlService sqlService;
   private Mailer mailer;
+  public static final String PAYER_EMAIL = "payer_email";
+  public static final String TRANSACTION_ID = "txn_id";
+  public static final String PAYMENT_STATUS_ID = "payment_status";
+  public static final String RECEIVER_EMAIL = "receiver_email";
+
 
   public NewUserServlet(Directory directory) {
+    String url = System.getProperty(PAYPAL_CONFIRM_URL_PROPERTY);
+    if (url != null) {
+      PAYPAL_CONFIRM_URL = url;
+    }
     sqlService = directory.get(SqlService.class);
     mailer = directory.get(Mailer.class);
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    String mail = req.getParameter(ConfigService.HEADER_MAIL).trim();
-    String activationCode = req.getHeader(ConfigService.HEADER_CODE).trim();
-    String repoId = req.getHeader(ConfigService.HEADER_REPO_ID).trim();
-    String lang = req.getHeader(ConfigService.HEADER_LANG).trim();
-    logger.info("mail : '" + mail + "' code d'activation :'" + activationCode + "' repoId : '" +
-                repoId + "' lang : " + lang);
-    SqlConnection db = sqlService.getDb();
-    try {
-      register(resp, mail, lang, repoId, activationCode, sqlService.getDb());
-    }
-    catch (Exception e) {
-      logger.throwing("RegisterServlet", "doPost", e);
-      SqlConnection db2 = sqlService.getDb();
-      try {
-        register(resp, mail, lang, repoId, activationCode, db2);
+    logger.info("receive new User  : ");
+    String mail = req.getParameter(PAYER_EMAIL);
+    logger.info("mail : '" + mail);
+
+    String transactionId = "";
+    String paymentStatus = "";
+    String receiverEmail = "";
+    HttpClient client = new HttpClient();
+    PostMethod postMethod = new PostMethod(PAYPAL_CONFIRM_URL);
+    postMethod.setParameter("cmd", "_notify-validate");
+    Map<String, String> map = req.getParameterMap();
+    StringBuffer paramaters = new StringBuffer();
+    for (String key : map.keySet()) {
+      postMethod.setParameter(key, req.getParameter(key));
+      if (key.equalsIgnoreCase(TRANSACTION_ID)) {
+        transactionId = req.getParameter(key);
       }
-      catch (Exception e1) {
-        if (db2 != null) {
-          db2.commitAndClose();
+      else if (key.equalsIgnoreCase(PAYMENT_STATUS_ID)) {
+        paymentStatus = req.getParameter(key);
+      }
+      else if (key.equalsIgnoreCase(RECEIVER_EMAIL)) {
+        receiverEmail = req.getParameter(key);
+      }
+      paramaters.append(key).append("='").append(req.getParameter(key))
+        .append("'; ");
+    }
+    logger.info(paramaters.toString());
+    if (!receiverEmail.equalsIgnoreCase("paypal@mybudgetview.fr")) {
+      logger.finest("Bad mail : " + receiverEmail );
+      return;
+    }
+    if (!paymentStatus.equalsIgnoreCase("Completed")) {
+      logger.info("status " + paymentStatus);
+      return;
+    }
+    int result = client.executeMethod(postMethod);
+    if (result == 200) {
+      InputStream responseBodyAsStream = postMethod.getResponseBodyAsStream();
+      byte[] buffer = new byte[500];
+      int readed = responseBodyAsStream.read(buffer);
+      if (readed == -1) {
+        logger.finest("Paypal empty response");
+        return;
+      }
+      String content = new String(buffer, 0, readed);
+      if (content.equalsIgnoreCase("VERIFIED")) {
+        logger.info("mail : '" + mail + " VERIFIED");
+        SqlConnection db = sqlService.getDb();
+        try {
+          register(resp, mail, transactionId, sqlService.getDb());
+        }
+        catch (Exception e) {
+          logger.throwing("RegisterServlet", "doPost", e);
+          SqlConnection db2 = sqlService.getDb();
+          try {
+            register(resp, mail, transactionId, db2);
+          }
+          catch (Exception e1) {
+            resp.setStatus(HttpServletResponse.SC_OK);
+            if (db2 != null) {
+              db2.commitAndClose();
+            }
+          }
+        }
+        finally {
+          if (db != null) {
+            db.commitAndClose();
+          }
         }
       }
-    }
-    finally {
-      if (db != null) {
-        db.commitAndClose();
+      else {
+        logger.finest("Paypal refuse confirmation " + content);
+        resp.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
       }
+    }
+    else {
+      logger.finest("Paypal refuse connection " + result);
+      resp.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
     }
   }
 
-  private void register(HttpServletResponse resp, String mail, String lang, String repoId, String activationCode,
-                        SqlConnection db)
+  private void register(HttpServletResponse resp, String mail, String transactionId, SqlConnection db)
     throws NoSuchProviderException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException {
     SelectQuery query = db.getQueryBuilder(License.TYPE,
                                            Constraints.equal(License.MAIL, mail))
@@ -78,51 +140,42 @@ public class NewUserServlet extends HttpServlet {
     GlobList globList = query.executeAsGlobs();
     db.commit();
     if (globList.isEmpty()) {
-      resp.setHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
+      String code = LicenseGenerator.generateActivationCode();
+      byte[] signature = LicenseGenerator.generateSignature(mail);
+      db.getCreateBuilder(License.TYPE)
+        .set(License.ACCESS_COUNT, 1L)
+        .set(License.SIGNATURE, signature)
+        .set(License.ACTIVATION_CODE, code)
+        .set(License.MAIL, mail)
+        .set(License.TRANSACTION_ID, transactionId)
+        .getRequest()
+        .run();
+      db.commit();
+      mailer.sendNewLicense(mail, code, "fr");
+      resp.setStatus(HttpServletResponse.SC_OK);
     }
     else {
-      Glob license = globList.get(0);
-      if (activationCode.equals(license.get(License.ACTIVATION_CODE))) {
-        logger.info("License activation ok");
-        byte[] signature = LicenseGenerator.generateSignature(mail);
+      Glob glob = globList.get(0);
+      String code = glob.get(License.ACTIVATION_CODE);
+      if (code == null) {
+        code = LicenseGenerator.generateActivationCode();
         db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
-          .update(License.ACCESS_COUNT, 1L)
-          .update(License.SIGNATURE, signature)
-          .update(License.ACTIVATION_CODE, (String)null)
-          .update(License.LAST_ACTIVATION_CODE, activationCode)
-          .update(License.REPO_ID, repoId)
-          .update(License.KILLED_REPO_ID, license.get(License.REPO_ID))
-          .update(License.DATE_KILLED_1, new Date())
-          .update(License.DATE_KILLED_2, license.get(License.DATE_KILLED_1))
-          .update(License.DATE_KILLED_3, license.get(License.DATE_KILLED_2))
-          .update(License.DATE_KILLED_4, license.get(License.DATE_KILLED_3))
-          .update(License.KILLED_COUNT, license.get(License.KILLED_COUNT) + 1)
+          .update(License.ACTIVATION_CODE, code)
           .getRequest()
           .run();
-        db.getUpdateBuilder(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, repoId))
-          .update(RepoInfo.LICENSE_ID, license.get(License.ID))
-          .getRequest()
-          .run();
-        db.commit();
-        resp.setHeader(ConfigService.HEADER_SIGNATURE, Encoder.byteToString(signature));
       }
-      else if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
-        String newCode = LicenseGenerator.generateActivationCode();
-        logger.info("Mail sent with new code " + newCode);
-        db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
-          .update(License.ACTIVATION_CODE, newCode)
-          .getRequest()
-          .run();
-        db.commit();
-        resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "true");
-        if (!mailer.sendNewLicense(mail, newCode, lang)) {
-          logger.finest("Fail to send mail retrying.");
-        }
+      String previousTrId = glob.get(License.TRANSACTION_ID);
+      if (previousTrId != null && previousTrId.equals(transactionId)) {
+        logger.info("Receive transaction twice (resend code)");
       }
       else {
-        logger.info("No mail sent");
-        resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "false");
+        String message = "Receive different TransactionId for the same mail txId='" + transactionId +
+                         "' previousTxId='" + previousTrId + "' for '" + mail + "'";
+        logger.finest(message);
+        mailer.sendToAdmin(message + "'. We should contact them to ask them for an other mail.");
       }
+      mailer.sendNewLicense(mail, code, "fr");
+      resp.setStatus(HttpServletResponse.SC_OK);
     }
   }
 }

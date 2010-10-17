@@ -361,7 +361,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
 
   public void testAutoLoginAndImportInNewUser() throws Exception {
     login.clickAutoLogin();
-    LicenseActivationChecker.enterLicense(window, "admin", "zz");
+    LicenseActivationChecker.enterLicense(window, "admin", "1234");
 
     operations = new OperationChecker(window);
     String path = OfxBuilder

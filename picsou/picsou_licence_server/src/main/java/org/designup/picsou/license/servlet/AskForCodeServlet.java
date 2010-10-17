@@ -21,12 +21,12 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AskForMailServlet extends HttpServlet {
+public class AskForCodeServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("mail");
   private Mailer mailer;
   private SqlService sqlService;
 
-  public AskForMailServlet(Directory directory) {
+  public AskForCodeServlet(Directory directory) {
     mailer = directory.get(Mailer.class);
     sqlService = directory.get(SqlService.class);
   }
@@ -52,16 +52,23 @@ public class AskForMailServlet extends HttpServlet {
           return;
         }
         if (registeredMail.size() >= 1) {
-          SqlConnection db = sqlService.getDb();
-          try {
-            db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mailTo))
-              .update(License.ACTIVATION_CODE, activationCode)
-              .getRequest().run();
+          String currentCode = registeredMail.get(0).get(License.ACTIVATION_CODE);
+          if (Strings.isNotEmpty(currentCode)) {
+            logger.info("request for code on an not activated code, resend same code");
+            activationCode = currentCode;
           }
-          finally {
-            db.commitAndClose();
+          else {
+            SqlConnection db = sqlService.getDb();
+            try {
+              db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mailTo))
+                .update(License.ACTIVATION_CODE, activationCode)
+                .getRequest().run();
+            }
+            finally {
+              db.commitAndClose();
+            }
           }
-          if (mailer.sendExistingLicense(registeredMail.get(0), lang, activationCode)) {
+          if (mailer.sendRequestLicence(lang, activationCode, registeredMail.get(0).get(License.MAIL))) {
             logger.info("Send new activation code " + activationCode + " to " + mailTo);
             resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_SENT);
           }
@@ -87,7 +94,7 @@ public class AskForMailServlet extends HttpServlet {
       }
     }
     catch (Exception e) {
-      logger.throwing("AskForMailServlet", "doPost", e);
+      logger.throwing("AskForCodeServlet", "doPost", e);
       replyFailed(resp);
     }
   }
