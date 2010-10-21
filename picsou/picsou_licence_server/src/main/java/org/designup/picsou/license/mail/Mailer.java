@@ -1,6 +1,7 @@
 package org.designup.picsou.license.mail;
 
 import org.designup.picsou.license.Lang;
+import org.apache.log4j.Logger;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -8,15 +9,11 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.MimeBodyPart;
-import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.*;
 
 public class Mailer {
   static Logger logger = Logger.getLogger("mailer");
@@ -98,13 +95,13 @@ public class Mailer {
   private void add(MailToSent sent) {
     long current = count.incrementAndGet();
     sent.set(current);
-    logger.log(Level.INFO, "Mail to send : " + sent);
+    logger.info("Mail to send : " + sent);
     try {
       currentIdForMail.put(sent.getMail(), sent.current);
       this.pendingsMail.put(sent);
     }
     catch (InterruptedException e) {
-      logger.log(Level.INFO, "Mailer add", e);
+      logger.info("Mailer add", e);
     }
   }
 
@@ -161,7 +158,7 @@ public class Mailer {
         return true;
       }
       catch (Exception e) {
-        logger.warning(toString());
+        logger.warn(toString());
         return false;
       }
     }
@@ -191,7 +188,7 @@ public class Mailer {
         return true;
       }
       catch (Exception e) {
-        logger.warning("Mail not sent : " + toString());
+        logger.warn("Mail not sent : " + toString());
         return false;
       }
     }
@@ -221,7 +218,7 @@ public class Mailer {
             if (lastId != null && mailToSent.current >= lastId) {    // si le mail qu'on veux envoyer est plus vieux qu'un autre on ne l'envoie pas.
               if (!mailToSent.sent()) {
                 if (mailToSent.retryCount > 10) {
-                  logger.log(Level.SEVERE, "Message " + mailToSent + " will never been sent.");
+                  logger.error("Message " + mailToSent + " will never been sent.");
                 }
                 else {
                   mail.put(mailToSent);
@@ -241,7 +238,7 @@ public class Mailer {
         }
       }
       catch (InterruptedException e) {
-        logger.log(Level.INFO, "ReSendMailThread run", e);
+        logger.info("ReSendMailThread run", e);
       }
     }
   }
@@ -262,7 +259,7 @@ public class Mailer {
         return true;
       }
       catch (Exception e) {
-        logger.warning(toString());
+        logger.warn(toString());
         return false;
       }
     }

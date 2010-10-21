@@ -25,6 +25,8 @@ public interface ServerAccess {
 
   void localRegister(byte[] mail, byte[] signature, String activationCode);
 
+//  void downloadedVersion(long version);
+
   void applyChanges(ChangeSet changeSet, GlobRepository globRepository);
 
   void takeSnapshot();

@@ -14,6 +14,7 @@ import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.serialization.Encoder;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,7 +27,6 @@ import java.security.NoSuchProviderException;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
-import java.util.logging.Logger;
 
 public class RegisterServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("RegisterServlet");
@@ -50,7 +50,7 @@ public class RegisterServlet extends HttpServlet {
       register(resp, mail, lang, repoId, activationCode, sqlService.getDb());
     }
     catch (Exception e) {
-      logger.throwing("RegisterServlet", "doPost", e);
+      logger.error("RegisterServlet:doPost", e);
       SqlConnection db2 = sqlService.getDb();
       try {
         register(resp, mail, lang, repoId, activationCode, db2);
@@ -116,7 +116,7 @@ public class RegisterServlet extends HttpServlet {
         db.commit();
         resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "true");
         if (!mailer.reSendExistingLicenseOnError(lang, newCode, mail)) {
-          logger.finest("Fail to send mail retrying.");
+          logger.error("Fail to send mail retrying.");
         }
       }
       else {

@@ -1,11 +1,13 @@
 package org.designup.picsou.license.servlet;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.mail.Mailer;
 import org.designup.picsou.license.model.License;
-import org.designup.picsou.license.model.SoftwareInfo;
-import org.designup.picsou.license.model.RepoInfo;
 import org.designup.picsou.license.model.MailError;
+import org.designup.picsou.license.model.RepoInfo;
+import org.designup.picsou.license.model.SoftwareInfo;
 import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -16,13 +18,10 @@ import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Timer;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 public class LicenseServer {
   static Logger logger = Logger.getLogger("LicenseServer");
@@ -47,7 +46,8 @@ public class LicenseServer {
   private Context context;
 
   public LicenseServer() throws IOException {
-    initLogger();
+    PropertyConfigurator.configure("log4j.properties");
+    logger.info("init server");
     jetty = new Server();
   }
 
@@ -77,9 +77,6 @@ public class LicenseServer {
   }
 
   private static void initLogger() throws IOException {
-    System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.Jdk14Logger");
-    InputStream stream = LicenseServer.class.getClassLoader().getResourceAsStream("loggingLicenceServer.properties");
-    LogManager.getLogManager().readConfiguration(stream);
   }
 
   public void setMailPort(int mailPort) {
@@ -135,12 +132,12 @@ public class LicenseServer {
     context.addServlet(new ServletHolder(new NewUserServlet(directory)), NEW_USER);
   }
 
-  public void addServlet(ServletHolder holder, String name){
+  public void addServlet(ServletHolder holder, String name) {
     context.addServlet(holder, name);
   }
 
   private void initHslqDb(SqlService sqlService) {
-    if (databaseUrl.equals(JDBC_HSQLDB)){
+    if (databaseUrl.equals(JDBC_HSQLDB)) {
       sqlService.getDb().createTable(License.TYPE, SoftwareInfo.TYPE, RepoInfo.TYPE, MailError.TYPE);
     }
   }

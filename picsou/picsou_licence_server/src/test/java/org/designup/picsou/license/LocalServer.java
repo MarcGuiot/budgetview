@@ -5,8 +5,6 @@ import org.designup.picsou.license.servlet.NewUserServlet;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.jetty.servlet.DefaultServlet;
 
-import java.io.IOException;
-
 public class LocalServer {
   public static void main(String[] args) throws Exception {
     System.setProperty(NewUserServlet.PAYPAL_CONFIRM_URL_PROPERTY, "http://www.sandbox.paypal.com/fr/cgi-bin/webscr");

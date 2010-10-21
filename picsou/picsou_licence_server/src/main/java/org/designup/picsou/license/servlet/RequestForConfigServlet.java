@@ -17,6 +17,7 @@ import org.globsframework.streams.accessors.utils.ValueLongAccessor;
 import org.globsframework.streams.accessors.utils.ValueStringAccessor;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,8 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class RequestForConfigServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("requestForConfig");
@@ -99,14 +98,14 @@ public class RequestForConfigServlet extends HttpServlet {
       computeAnonymous(id, ip);
     }
     catch (Exception e) {
-      logger.log(Level.SEVERE, "RequestForConfigServlet : ", e);
+      logger.error("RequestForConfigServlet : ", e);
       closeDb();
       initDb();
       try {
         computeAnonymous(id, ip);
       }
       catch (Exception e1) {
-        logger.log(Level.SEVERE, "RequestForConfigServlet : Retry fail", e);
+        logger.error("RequestForConfigServlet : Retry fail", e);
       }
     }
     finally {
@@ -219,7 +218,7 @@ public class RequestForConfigServlet extends HttpServlet {
       db.commit();
     }
     else if (globList.size() > 1) {
-      logger.finest("compute_anonymous ip = " + ip + " id = " + id + " many repo with the same id");
+      logger.error("compute_anonymous ip = " + ip + " id = " + id + " many repo with the same id");
     }
     if (globList.size() >= 1) {
       Long accessCount = globList.get(0).get(RepoInfo.COUNT) + 1;
@@ -237,21 +236,21 @@ public class RequestForConfigServlet extends HttpServlet {
       computeLicense(resp, mail, activationCode, count, lang, ip);
     }
     catch (Exception e) {
-      logger.throwing("RequestForConfigServlet", "computeLicense", e);
+      logger.error("RequestForConfigServlet:computeLicense", e);
       try {
         closeDb();
         initDb();
         computeLicense(resp, mail, activationCode, count, lang, ip);
       }
       catch (Exception ex) {
-        logger.throwing("RequestForConfigServlet", "computeLicense retry", e);
+        logger.error("RequestForConfigServlet:computeLicense retry", e);
       }
       resp.setHeader(ConfigService.HEADER_IS_VALIDE, "true");
     }
   }
 
   private void logInfo(String message) {
-    logger.logrb(Level.INFO, "", "", null, "thread " + Thread.currentThread().getId() + " msg : " + message);
+    logger.info("thread " + Thread.currentThread().getId() + " msg : " + message);
   }
 
   private void computeLicense(HttpServletResponse resp, String mail,

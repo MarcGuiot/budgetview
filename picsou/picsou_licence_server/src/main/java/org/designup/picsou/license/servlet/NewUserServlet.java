@@ -1,7 +1,9 @@
 package org.designup.picsou.license.servlet;
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.log4j.Logger;
 import org.designup.picsou.license.generator.LicenseGenerator;
 import org.designup.picsou.license.mail.Mailer;
 import org.designup.picsou.license.model.License;
@@ -25,7 +27,6 @@ import java.security.NoSuchProviderException;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public class NewUserServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("NewUserServlet");
@@ -38,6 +39,7 @@ public class NewUserServlet extends HttpServlet {
   public static final String TRANSACTION_ID = "txn_id";
   public static final String PAYMENT_STATUS_ID = "payment_status";
   public static final String RECEIVER_EMAIL = "receiver_email";
+  private HttpClient client;
 
 
   public NewUserServlet(Directory directory) {
@@ -47,6 +49,8 @@ public class NewUserServlet extends HttpServlet {
     }
     sqlService = directory.get(SqlService.class);
     mailer = directory.get(Mailer.class);
+    client = new HttpClient();
+    client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -57,7 +61,6 @@ public class NewUserServlet extends HttpServlet {
     String transactionId = "";
     String paymentStatus = "";
     String receiverEmail = "";
-    HttpClient client = new HttpClient();
     PostMethod postMethod = new PostMethod(PAYPAL_CONFIRM_URL);
     postMethod.setParameter("cmd", "_notify-validate");
     Map<String, String> map = req.getParameterMap();
@@ -78,7 +81,7 @@ public class NewUserServlet extends HttpServlet {
     }
     logger.info(paramaters.toString());
     if (!receiverEmail.equalsIgnoreCase("paypal@mybudgetview.fr")) {
-      logger.finest("Bad mail : " + receiverEmail );
+      logger.error("Bad mail : " + receiverEmail );
       return;
     }
     if (!paymentStatus.equalsIgnoreCase("Completed")) {
@@ -91,7 +94,7 @@ public class NewUserServlet extends HttpServlet {
       byte[] buffer = new byte[500];
       int readed = responseBodyAsStream.read(buffer);
       if (readed == -1) {
-        logger.finest("Paypal empty response");
+        logger.error("Paypal empty response");
         return;
       }
       String content = new String(buffer, 0, readed);
@@ -102,7 +105,7 @@ public class NewUserServlet extends HttpServlet {
           register(resp, mail, transactionId, sqlService.getDb());
         }
         catch (Exception e) {
-          logger.throwing("RegisterServlet", "doPost", e);
+          logger.error("RegisterServlet:doPost", e);
           SqlConnection db2 = sqlService.getDb();
           try {
             register(resp, mail, transactionId, db2);
@@ -121,12 +124,12 @@ public class NewUserServlet extends HttpServlet {
         }
       }
       else {
-        logger.finest("Paypal refuse confirmation " + content);
+        logger.error("Paypal refuse confirmation " + content);
         resp.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
       }
     }
     else {
-      logger.finest("Paypal refuse connection " + result);
+      logger.error("Paypal refuse connection " + result);
       resp.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
     }
   }
@@ -151,6 +154,7 @@ public class NewUserServlet extends HttpServlet {
         .getRequest()
         .run();
       db.commit();
+      logger.info("ok  for " + mail + " code is " + code);
       mailer.sendNewLicense(mail, code, "fr");
       resp.setStatus(HttpServletResponse.SC_OK);
     }
@@ -171,7 +175,7 @@ public class NewUserServlet extends HttpServlet {
       else {
         String message = "Receive different TransactionId for the same mail txId='" + transactionId +
                          "' previousTxId='" + previousTrId + "' for '" + mail + "'";
-        logger.finest(message);
+        logger.error(message);
         mailer.sendToAdmin(message + "'. We should contact them to ask them for an other mail.");
       }
       mailer.sendNewLicense(mail, code, "fr");

@@ -11,13 +11,13 @@ import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -77,7 +77,7 @@ public class AskForCodeServlet extends HttpServlet {
           }
         }
         if (registeredMail.size() > 1) {
-          logger.severe("mail registered multiple time '" + mailTo + "'");
+          logger.error("mail registered multiple time '" + mailTo + "'");
         }
       }
       else {
@@ -94,7 +94,7 @@ public class AskForCodeServlet extends HttpServlet {
       }
     }
     catch (Exception e) {
-      logger.throwing("AskForCodeServlet", "doPost", e);
+      logger.error("AskForCodeServlet:doPost", e);
       replyFailed(resp);
     }
   }
