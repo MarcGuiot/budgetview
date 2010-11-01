@@ -60,6 +60,8 @@ public class PaypalTest extends LicenseTestCase {
     String content = checkReceivedMail("toto@bv.fr");
     assertTrue(content.contains(code));
     assertEquals(glob.get(License.TRANSACTION_ID), transactionId);
+    checkReceivedMail("support@mybudgetview.fr");
+    assertTrue(content.contains("toto@bv.fr"));
   }
 
   public void testNoValidated() throws Exception {

@@ -28,19 +28,23 @@ public interface RootDataManager {
                                                 String name, byte[] linkInfo, byte[] cryptedLinkInfo,
                                                 Integer userId);
 
+  void setDownloadedVersion(long version);
+
   static class RepoInfo {
     private byte[] id;
     private byte[] mail;
     private byte[] signature;
     private String activationCode;
     private long count;
+    private long downloadedVersion;
 
-    public RepoInfo(byte[] id, byte[] mail, byte[] signature, String activationCode, long count) {
+    public RepoInfo(byte[] id, byte[] mail, byte[] signature, String activationCode, long count, long downloadedVersion) {
       this.id = id;
       this.mail = mail;
       this.signature = signature;
       this.activationCode = activationCode;
       this.count = count;
+      this.downloadedVersion = downloadedVersion;
     }
 
     public byte[] getId() {
@@ -61,6 +65,10 @@ public interface RootDataManager {
 
     public String getActivationCode() {
       return activationCode;
+    }
+
+    public long getDownloadedVersion() {
+      return downloadedVersion;
     }
   }
 

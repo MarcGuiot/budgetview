@@ -42,6 +42,10 @@ public class ServerAccessDecorator implements ServerAccess {
     serverAccess.localRegister(mail, signature, activationCode);
   }
 
+  public void downloadedVersion(long version) {
+    serverAccess.downloadedVersion(version);
+  }
+
   public void applyChanges(ChangeSet changeSet, GlobRepository globRepository) {
     serverAccess.applyChanges(changeSet, globRepository);
   }

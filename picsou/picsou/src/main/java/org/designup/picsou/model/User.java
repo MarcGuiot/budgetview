@@ -49,6 +49,7 @@ public class User {
   public static final int ACTIVATION_FAILED_MAIL_NOT_SENT = 9;
   public static final int STARTUP_CHECK_KILL_USER = 10;
   public static final int STARTUP_CHECK_MAIL_SENT = 11;
+  public static final int STARTUP_CHECK_JAR_VERSION = 12;
 
 
   static {

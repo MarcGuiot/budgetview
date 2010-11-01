@@ -43,6 +43,8 @@ public interface Persistence {
                      byte[] linkInfo, byte[] encryptedLinkInfo,
                      Integer previousUserId, SerializedInput input);
 
+  void setDownloadedVersion(long version);
+
   class UserInfo {
     final public Integer userId;
     final public boolean isRegistered;

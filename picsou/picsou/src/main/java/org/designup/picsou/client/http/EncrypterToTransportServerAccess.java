@@ -57,9 +57,10 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
       byte[] signature = response.readBytes();
       String activationCode = response.readJavaString();
       long count = response.readNotNullLong();
+      long downloadVersion = response.readNotNullLong();
       sessionId = response.readLong();
       privateId = response.readBytes();
-      return new LocalInfo(repoId, mail, signature, activationCode, count);
+      return new LocalInfo(repoId, mail, signature, activationCode, count, downloadVersion);
     }
     sessionId = response.readLong();
     privateId = response.readBytes();
@@ -204,6 +205,10 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
 
   public void localRegister(byte[] mail, byte[] signature, String activationCode) {
     clientTransport.localRegister(sessionId, privateId, mail, signature, activationCode);
+  }
+
+  public void downloadedVersion(long version) {
+    clientTransport.localDownload(sessionId, privateId, version);
   }
 
   public List<UserInfo> getLocalUsers() {

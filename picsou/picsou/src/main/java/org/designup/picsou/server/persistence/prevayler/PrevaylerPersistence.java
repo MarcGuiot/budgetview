@@ -116,6 +116,10 @@ public class PrevaylerPersistence implements Persistence {
     return newUserId;
   }
 
+  public void setDownloadedVersion(long version) {
+    rootDataManager.setDownloadedVersion(version);
+  }
+
   public void getData(SerializedOutput output, Integer userId) {
     accountDataManager.getUserData(output, userId);
   }
@@ -132,6 +136,7 @@ public class PrevaylerPersistence implements Persistence {
     output.writeBytes(accountInfo.getSignature());
     output.writeJavaString(accountInfo.getActivationCode());
     output.write(accountInfo.getCount());
+    output.write(accountInfo.getDownloadedVersion());
   }
 
 }

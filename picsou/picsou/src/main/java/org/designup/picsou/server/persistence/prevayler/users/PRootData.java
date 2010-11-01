@@ -19,6 +19,7 @@ import java.util.Set;
 
 public class PRootData implements CustomSerializable {
   private static final byte V1 = 1;
+  private static final byte V2 = 2;
   private byte[] id = null;
   private byte[] mail = null;
   private byte[] signature = null;
@@ -27,6 +28,7 @@ public class PRootData implements CustomSerializable {
   private Map<String, Glob> hidenUsers = new HashMap<String, Glob>();
   private Map<String, Glob> users = new HashMap<String, Glob>();
   private static final String USERS_ROOT_DATA = "UsersRootData";
+  private long downloadedVersion = -1;
 
   public PRootData() {
   }
@@ -71,13 +73,21 @@ public class PRootData implements CustomSerializable {
       case V1:
         readV1(input);
         break;
+      case V2:
+        readV2(input);
+        break;
       default:
         throw new InvalidData("Unable to read version " + version);
     }
   }
 
   public void write(SerializedOutput output, Directory directory) {
-    output.writeByte(V1);
+    output.writeByte(V2);
+    writeV1Info(output);
+    output.write(downloadedVersion);
+  }
+
+  private void writeV1Info(SerializedOutput output) {
     {
       output.write(hidenUsers.size());
       Set<Map.Entry<String, Glob>> entries = hidenUsers.entrySet();
@@ -101,7 +111,16 @@ public class PRootData implements CustomSerializable {
     }
   }
 
+  private void readV2(SerializedInput input) {
+    readV1Info(input);
+    downloadedVersion = input.readNotNullLong();
+  }
+
   private void readV1(SerializedInput input) {
+    readV1Info(input);
+  }
+
+  private void readV1Info(SerializedInput input) {
     {
       int size = input.readNotNullInt();
       while (size != 0) {
@@ -162,7 +181,7 @@ public class PRootData implements CustomSerializable {
 
   public RootDataManager.RepoInfo getRepoInfo() {
     count++;
-    return new RootDataManager.RepoInfo(id, mail, signature, activationCode, count);
+    return new RootDataManager.RepoInfo(id, mail, signature, activationCode, count, downloadedVersion);
   }
 
   public void setRepoId(byte[] repoId) {
@@ -173,6 +192,10 @@ public class PRootData implements CustomSerializable {
 
   public GlobList getLocalUsers() {
     return new GlobList(users.values());
+  }
+
+  public void setDownloadedVersion(long version) {
+    this.downloadedVersion = version;
   }
 
   private static class Factory implements CustomSerializableFactory {

@@ -25,7 +25,7 @@ public interface ServerAccess {
 
   void localRegister(byte[] mail, byte[] signature, String activationCode);
 
-//  void downloadedVersion(long version);
+  void downloadedVersion(long version);
 
   void applyChanges(ChangeSet changeSet, GlobRepository globRepository);
 
@@ -77,6 +77,9 @@ public interface ServerAccess {
     public void localRegister(byte[] mail, byte[] signature, String activationCode) {
     }
 
+    public void downloadedVersion(long version) {
+    }
+
     public void applyChanges(ChangeSet changeSet, GlobRepository globRepository) {
     }
 
@@ -126,13 +129,15 @@ public interface ServerAccess {
     private byte[] signature;
     private String activationCode;
     private long count;
+    private long downloadVersion;
 
-    public LocalInfo(byte[] repoId, byte[] mail, byte[] signature, String activationCode, long count) {
+    public LocalInfo(byte[] repoId, byte[] mail, byte[] signature, String activationCode, long count, long downloadVersion) {
       this.repoId = repoId;
       this.mail = mail;
       this.signature = signature;
       this.activationCode = activationCode;
       this.count = count;
+      this.downloadVersion = downloadVersion;
     }
 
     public byte[] getRepoId() {
@@ -153,6 +158,10 @@ public interface ServerAccess {
 
     public long getCount() {
       return count;
+    }
+
+    public long getDownloadVersion() {
+      return downloadVersion;
     }
   }
 }

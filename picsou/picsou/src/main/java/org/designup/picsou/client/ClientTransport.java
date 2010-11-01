@@ -35,4 +35,6 @@ public interface ClientTransport {
   SerializedInput deleteUser(Long sessionId, byte[] bytes);
 
   SerializedInput rename(Long sessionId, byte[] bytes);
+
+  void localDownload(Long sessionId, byte[] privateId, long version);
 }

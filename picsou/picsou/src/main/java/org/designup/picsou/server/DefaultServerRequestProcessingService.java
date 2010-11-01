@@ -89,4 +89,9 @@ public class DefaultServerRequestProcessingService implements ServerRequestProce
     SessionState state = sessionService.getSessionState(sessionId);
     state.connected().renameUser(input, output);
   }
+
+  public void localDownload(Long sessionId, SerializedInput input) {
+    SessionState state = sessionService.getSessionState(sessionId);
+    state.localDownload(input);
+  }
 }

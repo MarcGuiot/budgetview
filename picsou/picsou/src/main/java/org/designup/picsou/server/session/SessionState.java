@@ -25,4 +25,6 @@ public interface SessionState {
   long getLastAccess();
 
   void register(SerializedInput input);
+
+  void localDownload(SerializedInput input);
 }

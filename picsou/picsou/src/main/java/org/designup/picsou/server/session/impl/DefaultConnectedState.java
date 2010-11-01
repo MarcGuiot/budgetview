@@ -70,6 +70,13 @@ public class DefaultConnectedState extends AbstractSessionState implements Conne
       output.writeBoolean(Boolean.FALSE);
     }
   }
+  
+  public void localDownload(SerializedInput input) {
+    lastAccess();
+    checkPrivateId(input);
+    long version = input.readNotNullLong();
+    persistence.setDownloadedVersion(version);
+  }
 
   public void register(SerializedInput input) {
     lastAccess();

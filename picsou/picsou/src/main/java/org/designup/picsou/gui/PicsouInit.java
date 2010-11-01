@@ -48,11 +48,11 @@ public class PicsouInit {
   private boolean firstReset = true;
   private ServerChangeSetListener changeSetListenerToDb;
 
-  public static PicsouInit init(ServerAccess serverAccess, Directory directory, boolean registeredUser) {
-    return new PicsouInit(serverAccess, directory, registeredUser);
+  public static PicsouInit init(ServerAccess serverAccess, Directory directory, boolean registeredUser, boolean badJarVersion) {
+    return new PicsouInit(serverAccess, directory, registeredUser, badJarVersion);
   }
 
-  private PicsouInit(ServerAccess serverAccess, final Directory directory, boolean registeredUser) {
+  private PicsouInit(ServerAccess serverAccess, final Directory directory, boolean registeredUser, boolean badJarVersion) {
     this.serverAccess = serverAccess;
     this.directory = directory;
 
@@ -63,6 +63,7 @@ public class PicsouInit {
         .get();
 
     repository.findOrCreate(User.KEY,
+                            value(User.ACTIVATION_STATE, badJarVersion ? User.STARTUP_CHECK_JAR_VERSION : null),
                             value(User.IS_REGISTERED_USER, registeredUser));
     repository.findOrCreate(AppVersionInformation.KEY,
                             value(AppVersionInformation.LATEST_AVALAIBLE_JAR_VERSION, PicsouApplication.JAR_VERSION),

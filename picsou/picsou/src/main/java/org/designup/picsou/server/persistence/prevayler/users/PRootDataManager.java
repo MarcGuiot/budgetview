@@ -66,6 +66,7 @@ public class PRootDataManager implements RootDataManager {
     serializablePolicy.registerFactory(InitialRepoIdTransaction.getFactory());
     serializablePolicy.registerFactory(Register.getFactory());
     serializablePolicy.registerFactory(PRootData.getFactory());
+    serializablePolicy.registerFactory(SetDownloadedVersion.getFactory());
     return serializablePolicy;
   }
 
@@ -164,6 +165,19 @@ public class PRootDataManager implements RootDataManager {
     }
     catch (Exception e) {
       throw new UnexpectedApplicationState(pathToPrevaylerDirectory, e);
+    }
+  }
+
+  public void setDownloadedVersion(long version) {
+    try {
+      prevayler.execute(new SetDownloadedVersion(version));
+      prevayler.takeSnapshot();
+    }
+    catch (GlobsException e) {
+      throw e;
+    }
+    catch (Exception e) {
+      throw new UnexpectedApplicationState(e);
     }
   }
 

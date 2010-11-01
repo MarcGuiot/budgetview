@@ -60,6 +60,7 @@ public class MainWindow implements WindowManager {
   private boolean initDone = false;
   private List<ServerAccess.UserInfo> localUsers;
   private LicenseCheckerThread licenseCheckerThread;
+  private boolean badJarVersion = false;
 
   public MainWindow(PicsouApplication picsouApplication, String serverAddress,
                     String prevaylerPath, boolean dataInMemory, Directory directory) throws Exception {
@@ -81,6 +82,16 @@ public class MainWindow implements WindowManager {
     if (info != null) {
       registered = configService.update(info.getRepoId(), info.getCount(), info.getMail(),
                                         info.getSignature(), info.getActivationCode());
+      long downloadVersion = info.getDownloadVersion();
+      if (downloadVersion != -1){
+         if (downloadVersion < PicsouApplication.JAR_VERSION){
+           badJarVersion = true;
+           registered = false;
+         }
+      }
+      else {
+        serverAccess.downloadedVersion(PicsouApplication.JAR_VERSION);
+      }
     }
     else {
       configService.update(null, 0, null, null, null);
@@ -113,7 +124,7 @@ public class MainWindow implements WindowManager {
 
   public void show() {
     loginPanel = new LoginPanel(this, directory);
-    picsouInit = PicsouInit.init(serverAccess, directory, registered);
+    picsouInit = PicsouInit.init(serverAccess, directory, registered, badJarVersion);
     mainPanel = MainPanel.init(picsouInit.getRepository(), picsouInit.getDirectory(), this);
 
     windowOpenListener = new WindowAdapter() {

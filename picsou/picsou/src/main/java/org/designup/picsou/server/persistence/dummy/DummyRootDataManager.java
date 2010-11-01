@@ -60,7 +60,10 @@ public class DummyRootDataManager implements RootDataManager {
   public void replaceUserAndHiddenUser(boolean autoLog, boolean isRegisteredUser, String newName, byte[] newCryptedPassword, byte[] newLinkInfo, byte[] newCryptedLinkInfo, String name, byte[] linkInfo, byte[] cryptedLinkInfo, Integer userId) {
   }
 
+  public void setDownloadedVersion(long version) {
+  }
+
   public RepoInfo getAndUpdateAccountInfo() {
-    return new RepoInfo(new byte[0], new byte[0], new byte[0], "", 0);
+    return new RepoInfo(new byte[0], new byte[0], new byte[0], "", 0, 0);
   }
 }

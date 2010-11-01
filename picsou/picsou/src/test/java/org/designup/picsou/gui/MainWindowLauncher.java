@@ -58,7 +58,7 @@ import net.roydesign.mac.MRJAdapter;
 
     boolean registered = isRegistered(user, password, serverAccess);
 
-    PicsouInit init = PicsouInit.init(serverAccess, directory, registered);
+    PicsouInit init = PicsouInit.init(serverAccess, directory, registered, false);
     init.loadUserData(user, false, false).load();
 
     Directory initDirectory = init.getDirectory();

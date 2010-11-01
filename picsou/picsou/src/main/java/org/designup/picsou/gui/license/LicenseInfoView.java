@@ -159,6 +159,9 @@ public class LicenseInfoView extends View {
         return Lang.get("license.registered.user.killed.trial.mail.sent");
       }
     }
+    else if (state == User.STARTUP_CHECK_JAR_VERSION) {
+      return Lang.get("license.registered.user.killed.jar.updated.manually");
+    }
     return "";
   }
 }

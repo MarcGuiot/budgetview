@@ -49,6 +49,13 @@ public class DefaultConnectingState extends AbstractSessionState implements Conn
     persistence.register(input.readBytes(), input.readBytes(), input.readJavaString());
   }
 
+  public void localDownload(SerializedInput input) {
+    lastAccess();
+    checkPrivateId(input);
+    long version = input.readNotNullLong();
+    persistence.setDownloadedVersion(version);
+  }
+
   public String getStateName() {
     return "Connecting";
   }

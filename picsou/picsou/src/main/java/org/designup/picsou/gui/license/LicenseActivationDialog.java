@@ -55,7 +55,7 @@ public class LicenseActivationDialog {
     dialog = PicsouDialog.create(parent, directory);
 
     builder = new GlobsPanelBuilder(getClass(), "/layout/general/licenseActivationDialog.splits",
-                                                      localRepository, this.localDirectory);
+                                    localRepository, this.localDirectory);
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
     mailEditor = builder.addEditor("ref-mail", User.MAIL).setNotifyOnKeyPressed(true);
     builder.addEditor("ref-code", User.ACTIVATION_CODE)
@@ -100,6 +100,9 @@ public class LicenseActivationDialog {
             }
             else if (activationState == User.ACTIVATION_FAILED_MAIL_SENT) {
               updateDialogState("license.activation.failed.mailSent", localRepository.get(User.KEY).get(User.MAIL));
+            }
+            else if (activationState == User.ACTIVATION_FAILED_MAIL_SENT) {
+              updateDialogState("license.code.invalid", localRepository.get(User.KEY).get(User.MAIL));
             }
             else if (activationState == User.ACTIVATION_FAILED_MAIL_UNKNOWN) {
               updateDialogState("license.mail.unknown");
@@ -159,16 +162,18 @@ public class LicenseActivationDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
-      Utils.beginRemove();
-      Glob user = localRepository.get(User.KEY);
-      if ("admin".equals(user.get(User.MAIL))) {
-        localRepository.update(User.KEY, User.IS_REGISTERED_USER, true);
-        localRepository.commitChanges(false);
-        localDirectory.get(UndoRedoService.class).cleanUndo();
-        dialog.setVisible(false);
-        return;
+      {
+        Utils.beginRemove();
+        Glob user = localRepository.get(User.KEY);
+        if ("admin".equals(user.get(User.MAIL))) {
+          localRepository.update(User.KEY, User.IS_REGISTERED_USER, true);
+          localRepository.commitChanges(false);
+          localDirectory.get(UndoRedoService.class).cleanUndo();
+          dialog.setVisible(false);
+          return;
+        }
+        Utils.endRemove();
       }
-      Utils.endRemove();
       if (checkContainsValidChange()) {
         localRepository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_IN_PROGRESS);
         connectionState.setIndeterminate(true);

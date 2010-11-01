@@ -79,6 +79,7 @@ public class RegisterServlet extends HttpServlet {
     db.commit();
     if (globList.isEmpty()) {
       resp.setHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
+      logger.info("unknown user " + mail);
     }
     else {
       Glob license = globList.get(0);

@@ -40,4 +40,6 @@ public interface ServerRequestProcessingService {
   void getLocalUsers(SerializedOutput output);
 
   void renameUser(long sessionId, SerializedInput input, SerializedOutput output);
+
+  void localDownload(Long sessionId, SerializedInput input);
 }

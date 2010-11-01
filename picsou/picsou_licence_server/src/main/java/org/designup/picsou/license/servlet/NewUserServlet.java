@@ -56,7 +56,7 @@ public class NewUserServlet extends HttpServlet {
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     logger.info("receive new User  : ");
     String mail = req.getParameter(PAYER_EMAIL);
-    logger.info("mail : '" + mail);
+    logger.info("NewUser : mail : '" + mail);
 
     String transactionId = "";
     String paymentStatus = "";
@@ -81,11 +81,11 @@ public class NewUserServlet extends HttpServlet {
     }
     logger.info(paramaters.toString());
     if (!receiverEmail.equalsIgnoreCase("paypal@mybudgetview.fr")) {
-      logger.error("Bad mail : " + receiverEmail );
+      logger.error("NewUser : Bad mail : " + receiverEmail );
       return;
     }
     if (!paymentStatus.equalsIgnoreCase("Completed")) {
-      logger.info("status " + paymentStatus);
+      logger.info("NewUser : status " + paymentStatus);
       return;
     }
     int result = client.executeMethod(postMethod);
@@ -94,18 +94,18 @@ public class NewUserServlet extends HttpServlet {
       byte[] buffer = new byte[500];
       int readed = responseBodyAsStream.read(buffer);
       if (readed == -1) {
-        logger.error("Paypal empty response");
+        logger.error("NewUser : Paypal empty response");
         return;
       }
       String content = new String(buffer, 0, readed);
       if (content.equalsIgnoreCase("VERIFIED")) {
-        logger.info("mail : '" + mail + " VERIFIED");
+        logger.info("NewUser : mail : '" + mail + " VERIFIED");
         SqlConnection db = sqlService.getDb();
         try {
           register(resp, mail, transactionId, sqlService.getDb());
         }
         catch (Exception e) {
-          logger.error("RegisterServlet:doPost", e);
+          logger.error("NewUser : RegisterServlet:doPost", e);
           SqlConnection db2 = sqlService.getDb();
           try {
             register(resp, mail, transactionId, db2);
@@ -124,12 +124,12 @@ public class NewUserServlet extends HttpServlet {
         }
       }
       else {
-        logger.error("Paypal refuse confirmation " + content);
+        logger.error("NewUser : Paypal refuse confirmation " + content);
         resp.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
       }
     }
     else {
-      logger.error("Paypal refuse connection " + result);
+      logger.error("NewUser : Paypal refuse connection " + result);
       resp.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
     }
   }
@@ -154,8 +154,9 @@ public class NewUserServlet extends HttpServlet {
         .getRequest()
         .run();
       db.commit();
-      logger.info("ok  for " + mail + " code is " + code);
+      logger.info("NewUser : ok  for " + mail + " code is " + code);
       mailer.sendNewLicense(mail, code, "fr");
+      mailer.sendToAdmin("New User : licence code " + code + " send to " + mail);
       resp.setStatus(HttpServletResponse.SC_OK);
     }
     else {
@@ -170,10 +171,10 @@ public class NewUserServlet extends HttpServlet {
       }
       String previousTrId = glob.get(License.TRANSACTION_ID);
       if (previousTrId != null && previousTrId.equals(transactionId)) {
-        logger.info("Receive transaction twice (resend code)");
+        logger.info("NewUser : Receive transaction twice (resend code)");
       }
       else {
-        String message = "Receive different TransactionId for the same mail txId='" + transactionId +
+        String message = "NewUser : Receive different TransactionId for the same mail txId='" + transactionId +
                          "' previousTxId='" + previousTrId + "' for '" + mail + "'";
         logger.error(message);
         mailer.sendToAdmin(message + "'. We should contact them to ask them for an other mail.");

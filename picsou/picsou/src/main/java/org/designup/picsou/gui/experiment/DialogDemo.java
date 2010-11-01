@@ -27,7 +27,7 @@ public class DialogDemo {
     MainWindow window = new MainWindow(null, "", "", false, directory);
     PicsouDialog.FORCE_NONMODAL = true;
     PicsouApplication.parseLanguage("-l", "fr");
-    GlobRepository repository = PicsouInit.init(ServerAccess.NULL, directory, true).getRepository();
+    GlobRepository repository = PicsouInit.init(ServerAccess.NULL, directory, true, false).getRepository();
     repository.startChangeSet();
     for (int monthId = 200701; monthId < 200812; monthId = Month.next(monthId)) {
       repository.findOrCreate(Key.create(Month.TYPE, monthId));

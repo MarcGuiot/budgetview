@@ -63,6 +63,9 @@ public class DummyServerAccess implements ServerAccess {
   public void localRegister(byte[] mail, byte[] signature, String activationCode) {
   }
 
+  public void downloadedVersion(long version) {
+  }
+
   public List<UserInfo> getLocalUsers() {
     return null;
   }

@@ -64,6 +64,9 @@ public class HttpsClientTransport implements ClientTransport {
     return sendRequest(sessionId, "/renameUser", data);
   }
 
+  public void localDownload(Long sessionId, byte[] privateId, long version) {
+  }
+
   public SerializedInput identifyUser(Long sessionId, byte[] data) {
     return sendRequest(sessionId, "/identifyUser", data);
   }
