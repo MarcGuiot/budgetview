@@ -29,6 +29,9 @@ public class StringListCellRenderer extends DefaultListCellRenderer {
     String value;
     if (glob != null) {
       value = stringifier.toString(glob, globRepository);
+      if (value == null){
+        value = getValueForNull();
+      }
     }
     else {
       value = getValueForNull();

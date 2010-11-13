@@ -20,7 +20,6 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.gui.editors.GlobCheckBoxView;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
@@ -176,7 +175,7 @@ public class SeriesEditionDialog {
       public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
         changeSet.safeVisit(Series.TYPE, new DefaultChangeSetVisitor() {
           public void visitCreation(Key key, FieldValues values) throws Exception {
-            reportCheckBox.getComponent().setVisible(!values.get(Series.IS_AUTOMATIC));
+            reportCheckBox.getComponent().setVisible(false && !values.get(Series.IS_AUTOMATIC));
           }
 
           public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
@@ -373,7 +372,7 @@ public class SeriesEditionDialog {
     builder.add("seriesStartDateChooser", startDateChooserAction);
     this.startTextFieldView.getComponent().addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent e) {
-        if (currentSeries != null){
+        if (currentSeries != null) {
           startDateChooserAction.actionPerformed(null);
         }
       }
@@ -410,7 +409,7 @@ public class SeriesEditionDialog {
     builder.add("seriesEndDateChooser", endDateChooserAction);
     this.endDateTextFieldView.getComponent().addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent e) {
-        if (currentSeries != null){
+        if (currentSeries != null) {
           endDateChooserAction.actionPerformed(null);
         }
       }
@@ -726,7 +725,7 @@ public class SeriesEditionDialog {
     endDateTextFieldView.getComponent().setEnabled(this.currentSeries != null);
     startTextFieldView.getComponent().setEnabled(this.currentSeries != null);
     reportCheckBox.getComponent().setEnabled(this.currentSeries != null);
-    reportCheckBox.getComponent().setVisible(this.currentSeries != null && !currentSeries.get(Series.IS_AUTOMATIC));
+    reportCheckBox.getComponent().setVisible(false); //this.currentSeries != null && !currentSeries.get(Series.IS_AUTOMATIC));
     if (currentSeries != null) {
       isAutomatic = currentSeries.get(Series.IS_AUTOMATIC);
     }

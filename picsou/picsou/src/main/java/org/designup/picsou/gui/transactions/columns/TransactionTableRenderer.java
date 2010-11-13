@@ -26,7 +26,13 @@ public class TransactionTableRenderer implements TableCellRenderer {
                                                  boolean hasFocus,
                                                  int row,
                                                  int column) {
+    if (value == null){
+      return null;
+    }
     Component component = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    if (component == null){
+      return null;
+    }
     if (column == seriesColumnIndex) {
       return component;
     }

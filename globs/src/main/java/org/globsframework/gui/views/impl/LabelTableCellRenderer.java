@@ -32,6 +32,10 @@ public class LabelTableCellRenderer extends DefaultTableCellRenderer {
     this.column = column;
     this.glob = object instanceof Glob ? (Glob)object : null;
 
+    if (object == null){
+      return null;
+    }
+
     this.setOpaque(backgroundPainter == null || backgroundPainter == CellPainter.NULL);
     super.getTableCellRendererComponent(table, getText(), isSelected, hasFocus, row, column);
     customizer.process(this, glob, isSelected, hasFocus, row, column);

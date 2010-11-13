@@ -189,7 +189,7 @@ public class CompositeKey extends Key {
     return (Boolean)doGet(field);
   }
 
-  public Boolean isTrue(BooleanField field) {
+  public boolean isTrue(BooleanField field) {
     return Boolean.TRUE.equals(doGet(field));
   }
   

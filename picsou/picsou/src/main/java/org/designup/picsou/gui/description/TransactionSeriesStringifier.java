@@ -12,6 +12,10 @@ public class TransactionSeriesStringifier extends AbstractGlobStringifier {
   private SeriesStringifier seriesStringifier = new SeriesStringifier();
 
   public String toString(Glob transaction, GlobRepository repository) {
+    if (transaction == null){
+      return null;
+    }
+
     Integer seriesId = transaction.get(Transaction.SERIES);
     if (Series.UNCATEGORIZED_SERIES_ID.equals(seriesId)) {
       return "";

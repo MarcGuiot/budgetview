@@ -27,6 +27,9 @@ public class TransactionDateStringifier extends AbstractGlobStringifier {
   }
 
   public String toString(Glob transaction, GlobRepository globRepository) {
+    if (transaction == null){
+      return null;
+    }
     int yearMonth = transaction.get(monthField);
     int year = Month.toYear(yearMonth);
     int month = Month.toMonth(yearMonth);

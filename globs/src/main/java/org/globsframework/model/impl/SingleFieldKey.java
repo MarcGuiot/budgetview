@@ -90,7 +90,7 @@ public class SingleFieldKey extends Key {
     return (Boolean)value;
   }
 
-  public Boolean isTrue(BooleanField field) {
+  public boolean isTrue(BooleanField field) {
     return Boolean.TRUE.equals(get(field));
   }
 

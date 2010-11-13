@@ -64,7 +64,8 @@ public class TsvExporter implements Exporter {
         if (!firstItem) {
           writer.write("\t");
         }
-        writer.write(stringifier.toString(transaction, repository));
+        String str = stringifier.toString(transaction, repository);
+        writer.write(str == null ? "" : str);
         firstItem = false;
       }
       writer.write("\n");

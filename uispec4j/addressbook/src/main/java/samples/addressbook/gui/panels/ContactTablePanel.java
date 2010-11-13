@@ -56,6 +56,9 @@ public class ContactTablePanel {
     table.setDefaultRenderer(String.class, new DefaultTableCellRenderer() {
       public Component getTableCellRendererComponent(JTable table, Object modelValue, boolean isSelected, boolean hasFocus, int row, int column) {
         Component component = super.getTableCellRendererComponent(table, modelValue, isSelected, hasFocus, row, column);
+        if (component == null){
+          return null;
+        }
         boolean isNameDefined = ((column != 0) && column != 1) || !"".equals(modelValue);
         component.setBackground(isNameDefined ? Color.WHITE : Color.PINK);
         return component;

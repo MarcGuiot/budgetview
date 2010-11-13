@@ -25,6 +25,6 @@ public class ImportService {
     if (type == BankFileType.QIF) {
       return new QifImporter();
     }
-    throw new ItemNotFound("Unknown file extension for " + type);
+   throw new ItemNotFound("Unknown file extension for " + type);
   }
 }

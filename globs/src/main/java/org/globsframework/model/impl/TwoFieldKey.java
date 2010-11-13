@@ -102,7 +102,7 @@ public class TwoFieldKey extends Key {
     return null;
   }
 
-  public Boolean isTrue(BooleanField field) {
+  public boolean isTrue(BooleanField field) {
     return Boolean.TRUE.equals(get(field));
   }
 

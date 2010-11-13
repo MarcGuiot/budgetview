@@ -146,7 +146,8 @@ public class MainPanel {
                       directory.get(DescriptionService.class).getStringifier(Transaction.AMOUNT);
 
                     public boolean matches(Glob item, GlobRepository repository) {
-                      return amountStringifier.toString(item, repository).contains(searchFilter);
+                      String s = amountStringifier.toString(item, repository);
+                      return s != null && s.contains(searchFilter);
                     }
                   });
       }

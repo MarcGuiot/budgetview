@@ -126,6 +126,9 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
   public GlobStringifier getStringifier() {
     return new AbstractGlobStringifier() {
       public String toString(Glob seriesWrapper, GlobRepository repository) {
+        if (seriesWrapper == null){
+          return null;
+        }
         return getText(seriesWrapper);
       }
     };

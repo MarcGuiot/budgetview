@@ -33,6 +33,9 @@ public class GlobFieldColumn extends AbstractGlobTableColumn {
     GlobStringifier stringifier = descriptionService.getStringifier(field);
     Glob glob = repository.get(key);
     String stringValue = stringifier.toString(glob, repository);
+    if (stringValue == null){
+      stringValue = "";
+    }
     return isLongText(stringValue) ?
            new CollapsibleTextPanel(id, stringValue, MAX_SIZE) :
            new Label(id, stringValue);

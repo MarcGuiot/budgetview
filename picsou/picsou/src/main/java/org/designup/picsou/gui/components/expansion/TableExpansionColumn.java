@@ -50,6 +50,9 @@ public class TableExpansionColumn
   public Component getTableCellRendererComponent(JTable table, Object value,
                                                  boolean isSelected, boolean hasFocus,
                                                  int row, int column) {
+    if (value == null){
+      return null;
+    }
     Glob glob = (Glob)value;
     if (hasFocus) {
       renderButton.setForeground(table.getForeground());

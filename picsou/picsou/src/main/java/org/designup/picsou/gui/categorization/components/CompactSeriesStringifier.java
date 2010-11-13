@@ -20,6 +20,9 @@ public class CompactSeriesStringifier extends AbstractGlobStringifier {
   }
 
   public String toString(Glob transaction, GlobRepository repository) {
+    if (transaction == null){
+      return "";
+    }
     Integer seriesId = transaction.get(Transaction.SERIES);
     if (Series.UNCATEGORIZED_SERIES_ID.equals(seriesId)) {
       return "";

@@ -322,7 +322,6 @@ public class ConfigService {
             }
             catch (Exception ex) {
             }
-            System.out.println("ConfigService.run");
             if (!connectionEstablished) {
               try {
                 Thread.sleep(RETRY_PERIOD);

@@ -115,6 +115,9 @@ public class NextProjectsView extends View implements GlobSelectionListener {
 
   private class MainAccountsPositionStringifier extends AbstractGlobStringifier implements LabelCustomizer {
     public String toString(Glob seriesBudget, GlobRepository repository) {
+      if (seriesBudget == null){
+        return null;
+      }
       Glob budgetStat = getBudgetStat(seriesBudget, repository);
       return budgetStatStringifier.toString(budgetStat, repository);
     }
@@ -137,6 +140,9 @@ public class NextProjectsView extends View implements GlobSelectionListener {
 
   private class SavingsAccountsPositionStringifier extends AbstractGlobStringifier implements LabelCustomizer {
     public String toString(Glob seriesBudget, GlobRepository repository) {
+      if (seriesBudget == null){
+        return null;
+      }
       Glob budgetStat = getBudgetStat(seriesBudget, repository);
       if (budgetStat == null) {
         return "";
@@ -163,6 +169,9 @@ public class NextProjectsView extends View implements GlobSelectionListener {
 
   private class TotalAccountsPositionStringifier extends AbstractGlobStringifier {
     public String toString(Glob seriesBudget, GlobRepository repository) {
+      if (seriesBudget == null){
+        return null;
+      }
       Integer monthId = seriesBudget.get(SeriesBudget.MONTH);
       Glob budgetStat = repository.get(Key.create(BudgetStat.TYPE, monthId));
       Glob savingsBudgetStat = SavingsBudgetStat.findSummary(monthId, repository);

@@ -790,4 +790,48 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
       .check();
   }
+
+
+  public void testImportSameTransactionWitSplited() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/8", 2.0, "V'lib")
+      .addTransaction("2008/06/9", 1.0, "V'lib")
+      .addTransaction("2008/06/10", 3.0, "V'lib")
+      .addTransaction("2008/06/10", 2.0, "other 1")
+      .addTransaction("2008/06/10", 2.0, "V'lib")
+      .addTransaction("2008/06/10", 4.0, "V lib")
+      .load();
+
+//    openApplication();
+    views.selectCategorization();
+    categorization.selectTableRows(4);
+    transactionDetails.split("1", "a pied");
+
+    categorization.selectTableRows(3);
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/9", 1.0, "V'lib")
+      .addTransaction("2008/06/10", 2.0, "other 1")
+      .addTransaction("2008/06/10", 2.0, "V'lib")
+      .addTransaction("2008/06/10", 3.0, "V'lib")
+      .addTransaction("2008/06/10", 4.0, "V'lib")
+      .addTransaction("2008/06/11", 2.0, "V'lib")
+      .load();
+
+    views.selectData();
+
+    transactions
+      .initContent()
+      .add("11/06/2008", TransactionType.VIREMENT, "V'lib", "", 2.00)
+      .add("10/06/2008", TransactionType.VIREMENT, "V lib", "", 4.00)
+      .add("10/06/2008", TransactionType.VIREMENT, "V'lib", "", 2.00)
+      .add("10/06/2008", TransactionType.VIREMENT, "other 1", "", 2.00)
+      .add("10/06/2008", TransactionType.VIREMENT, "V'lib", "", 2.00)
+      .add("10/06/2008", TransactionType.VIREMENT, "V'lib", "a pied", 1.00)
+      .add("09/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
+      .add("08/06/2008", TransactionType.VIREMENT, "V'lib", "", 2.00)
+      .check();
+  }
+
+
 }

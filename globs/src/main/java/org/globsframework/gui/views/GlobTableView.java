@@ -579,6 +579,9 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     public Component getTableCellRendererComponent(JTable table, Object value,
                                                    boolean isSelected, boolean hasFocus,
                                                    int row, int column) {
+      if (value == null) {
+        return null;
+      }
       TableCellRenderer renderer = columns.get(column).getRenderer();
       return renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     }

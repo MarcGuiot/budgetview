@@ -29,7 +29,7 @@ public interface FieldValues extends Serializable {
 
   Boolean get(BooleanField field, boolean defaultIfNull);
 
-  Boolean isTrue(BooleanField field) throws ItemNotFound;
+  boolean isTrue(BooleanField field) throws ItemNotFound;
 
   Long get(LongField field) throws ItemNotFound;
 
@@ -100,7 +100,7 @@ public interface FieldValues extends Serializable {
       throw new ItemNotFound(field.getName());
     }
 
-    public Boolean isTrue(BooleanField field) throws ItemNotFound {
+    public boolean isTrue(BooleanField field) throws ItemNotFound {
       throw new ItemNotFound(field.getName());
     }
 

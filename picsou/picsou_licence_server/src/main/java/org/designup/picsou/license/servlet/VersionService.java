@@ -6,7 +6,7 @@ public class VersionService {
   private Long jarVersion = 0L;
   private Long configVersion = 0L;
 
-  synchronized public void getVersion(ValueLongAccessor jarVersion, ValueLongAccessor configVersion){
+  synchronized public void getVersion(String mail, ValueLongAccessor jarVersion, ValueLongAccessor configVersion){
     if (jarVersion != null){
       jarVersion.setValue(this.jarVersion);
     }

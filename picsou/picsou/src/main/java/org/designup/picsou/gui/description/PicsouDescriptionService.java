@@ -77,6 +77,9 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
     if (globType.equals(Month.TYPE)) {
       return new AbstractGlobStringifier() {
         public String toString(Glob glob, GlobRepository repository) {
+          if (glob == null){
+            return null;
+          }
           return Month.getFullLabel(glob.get(Month.ID));
         }
       };
@@ -104,8 +107,12 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
     }
 
     public String toString(Glob glob, GlobRepository repository) {
+      if (glob == null){
+        return null;
+      }
       if (glob.isTrue(Transaction.PLANNED)) {
-        return planned + stringifier.toString(glob, repository);
+        String s = stringifier.toString(glob, repository);
+        return planned + (s == null ? "" : s);
       }
       return stringifier.toString(glob, repository);
     }
@@ -117,6 +124,9 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
 
   private static class DayGlobStringifier implements GlobStringifier {
     public String toString(Glob glob, GlobRepository repository) {
+      if (glob == null){
+        return null;
+      }
       return Integer.toString(glob.get(Day.ID));
     }
 

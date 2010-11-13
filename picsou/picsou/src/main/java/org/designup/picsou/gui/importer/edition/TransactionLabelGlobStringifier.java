@@ -8,6 +8,9 @@ import org.designup.picsou.model.ImportedTransaction;
 public class TransactionLabelGlobStringifier extends AbstractGlobStringifier {
 
   public String toString(Glob glob, GlobRepository repository) {
+    if (glob == null){
+      return null;
+    }
     if (glob.isTrue(ImportedTransaction.IS_OFX)) {
       StringBuilder builder = new StringBuilder();
       complete(builder, glob.get(ImportedTransaction.OFX_NAME));

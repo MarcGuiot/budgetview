@@ -23,6 +23,9 @@ public class MonthYearStringifier extends AbstractGlobStringifier implements Glo
   }
 
   public String toString(Glob glob, GlobRepository repository) {
+    if (glob == null){
+      return null;
+    }
     Integer monthId = glob.get(monthField);
     if (monthId == null) {
       return null;
