@@ -46,7 +46,12 @@ public class LicenseServer {
   private Context context;
 
   public LicenseServer() throws IOException {
-    PropertyConfigurator.configure("log4j.properties");
+    try {
+      PropertyConfigurator.configure("log4j.properties");
+    }
+    catch (Exception e) {
+      System.err.println("Fail to init log4j");
+    }
     logger.info("init server");
     jetty = new Server();
   }
