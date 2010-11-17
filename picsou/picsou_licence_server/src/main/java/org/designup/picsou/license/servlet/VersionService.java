@@ -1,30 +1,88 @@
 package org.designup.picsou.license.servlet;
 
 import org.globsframework.streams.accessors.utils.ValueLongAccessor;
+import org.globsframework.utils.Strings;
 import org.apache.log4j.Logger;
+
+import java.util.Map;
+import java.util.HashMap;
 
 public class VersionService {
   static Logger logger = Logger.getLogger("VersionService");
-  private Long jarVersion = 0L;
-  private Long configVersion = 0L;
+  public JarInfos jarInfos = new JarInfos();
+  public JarInfos tmp;
 
-  synchronized public void getVersion(String mail, ValueLongAccessor jarVersion, ValueLongAccessor configVersion){
+  public void getVersion(String mail, Integer group, ValueLongAccessor jarVersion, ValueLongAccessor configVersion){
+    JarInfo jarInfo = jarInfos.getInfo(mail, group);
     if (jarVersion != null){
-      jarVersion.setValue(this.jarVersion);
+      jarVersion.setValue(jarInfo.jarVersion);
     }
     if (configVersion != null){
-      configVersion.setValue(this.configVersion);
+      configVersion.setValue(jarInfo.configVersion);
     }
   }
 
-  synchronized public void setVersion(Long jarVersion, Long configVersion) {
-    if (!jarVersion.equals(this.jarVersion)) {
-      this.jarVersion = jarVersion;
-      logger.info("new jar version : " + this.jarVersion);
+  public void start() {
+    tmp = new JarInfos();
+  }
+
+  public void setVersion(String mail, Integer group, Long jarVersion, Long configVersion) {
+    logger.info("new jar version mail = '" + mail + "' group = '"  + group + "' : jarversion = "
+                + jarVersion +  " configVersion = " + configVersion);
+    tmp.add(mail, group, jarVersion, configVersion);
+  }
+
+  public void complete() {
+    jarInfos = tmp;
+  }
+
+  static class JarInfos {
+    private Map<String, JarInfo> mailToJarInfo = new HashMap<String, JarInfo>();
+    private Map<Integer, JarInfo> groupToJarInfo = new HashMap<Integer, JarInfo>();
+    private JarInfo defaultJarInfo = new JarInfo(0L, 0L);
+
+    void add(String mail, Integer group, long jarVersion, long configVersion){
+      if (Strings.isNotEmpty(mail)){
+        mailToJarInfo.put(mail, new JarInfo(jarVersion, configVersion));
+      }
+      if (group != null){
+        groupToJarInfo.put(group, new JarInfo(jarVersion, configVersion));
+      }
+      if (mail == null && group == null){
+        defaultJarInfo = new JarInfo(jarVersion, configVersion);
+      }
     }
-    if (!configVersion.equals(this.configVersion)) {
+
+    public JarInfo getInfo(String mail, Integer group){
+      JarInfo jarInfo = null;
+      if (Strings.isNotEmpty(mail)){
+        jarInfo = mailToJarInfo.get(mail);
+      }
+      if (jarInfo == null && group != null){
+        jarInfo = groupToJarInfo.get(group);
+      }
+      if (jarInfo == null){
+        jarInfo = defaultJarInfo;
+      }
+      return jarInfo;
+    }
+  }
+
+  static class JarInfo {
+    private Long jarVersion;
+    private Long configVersion;
+
+    JarInfo(Long jarVersion, Long configVersion) {
+      this.jarVersion = jarVersion;
       this.configVersion = configVersion;
-      logger.info("new config version : " + this.configVersion);
+    }
+
+    public Long getJarVersion() {
+      return jarVersion;
+    }
+
+    public Long getConfigVersion() {
+      return configVersion;
     }
   }
 }

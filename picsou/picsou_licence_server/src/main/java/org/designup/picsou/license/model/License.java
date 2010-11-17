@@ -43,6 +43,8 @@ public class License {
 
   public static StringField TRANSACTION_ID;
 
+  public static IntegerField GROUP_ID;
+
   static {
     GlobTypeLoader.init(License.class);
   }

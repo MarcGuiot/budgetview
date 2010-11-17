@@ -73,6 +73,7 @@ public class RequestForConfigServlet extends HttpServlet {
     String lang = req.getHeader(ConfigService.HEADER_LANG);
     String signature = req.getHeader(ConfigService.HEADER_SIGNATURE);
     String applicationVersion = req.getHeader(ConfigService.HEADER_CONFIG_VERSION);
+    Integer group = 0;
     if (mail != null && activationCode != null) {
       if (count == null || id == null || lang == null) {
         logInfo("For " + mail + " ip = " + ip + ", one element is missing count : " + count + ", id :" + id + ", lang : " + lang);
@@ -80,7 +81,7 @@ public class RequestForConfigServlet extends HttpServlet {
         resp.setHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
       }
       else {
-        computeLicense(resp, mail, activationCode, Long.parseLong(count), id, lang, ip);
+        group = computeLicense(resp, mail, activationCode, Long.parseLong(count), id, lang, ip);
       }
     }
     else {
@@ -88,7 +89,7 @@ public class RequestForConfigServlet extends HttpServlet {
     }
     ValueLongAccessor jarVersion = new ValueLongAccessor();
     ValueLongAccessor configVersion = new ValueLongAccessor();
-    versionService.getVersion(mail, jarVersion, configVersion);
+    versionService.getVersion(mail, group, jarVersion, configVersion);
     resp.setHeader(ConfigService.HEADER_NEW_JAR_VERSION, Long.toString(jarVersion.getValue()));
     resp.setHeader(ConfigService.HEADER_NEW_CONFIG_VERSION, Long.toString(configVersion.getValue()));
   }
@@ -228,32 +229,34 @@ public class RequestForConfigServlet extends HttpServlet {
     }
   }
 
-  private void computeLicense(HttpServletResponse resp, String mail, String activationCode,
+  private Integer computeLicense(HttpServletResponse resp, String mail, String activationCode,
                               Long count, String repoId, String lang, String ip) {
     logInfo("compute_license ip = " + ip + " mail = " + mail + " count = " + count +
             " id = " + repoId + " code = " + activationCode);
+    Integer group = null;
     try {
-      computeLicense(resp, mail, activationCode, count, lang, ip);
+      group = computeLicense(resp, mail, activationCode, count, lang, ip);
     }
     catch (Exception e) {
       logger.error("RequestForConfigServlet:computeLicense", e);
       try {
         closeDb();
         initDb();
-        computeLicense(resp, mail, activationCode, count, lang, ip);
+        group = computeLicense(resp, mail, activationCode, count, lang, ip);
       }
       catch (Exception ex) {
         logger.error("RequestForConfigServlet:computeLicense retry", e);
       }
       resp.setHeader(ConfigService.HEADER_IS_VALIDE, "true");
     }
+    return group;
   }
 
   private void logInfo(String message) {
     logger.info("thread " + Thread.currentThread().getId() + " msg : " + message);
   }
 
-  private void computeLicense(HttpServletResponse resp, String mail,
+  private Integer computeLicense(HttpServletResponse resp, String mail,
                               String activationCode, Long count, String lang, String ip) {
     GlobList globList = licenseRequest.execute(mail);
     db.commit();
@@ -285,6 +288,7 @@ public class RequestForConfigServlet extends HttpServlet {
           db.commit();
           resp.setHeader(ConfigService.HEADER_IS_VALIDE, "true");
           logInfo("ok_for mail = " + mail + " count = " + count);
+          return license.get(License.GROUP_ID);
         }
         else {
           resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
@@ -293,6 +297,7 @@ public class RequestForConfigServlet extends HttpServlet {
         }
       }
     }
+    return null;
   }
 
   static class LicenseRequest {
@@ -302,7 +307,10 @@ public class RequestForConfigServlet extends HttpServlet {
     LicenseRequest(SqlConnection db) {
       mail = new ValueStringAccessor();
       query = db.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
-        .selectAll()
+        .select(License.ACCESS_COUNT)
+        .select(License.ACTIVATION_CODE)
+        .select(License.LAST_ACTIVATION_CODE)
+        .select(License.GROUP_ID)
         .getNotAutoCloseQuery();
     }
 
