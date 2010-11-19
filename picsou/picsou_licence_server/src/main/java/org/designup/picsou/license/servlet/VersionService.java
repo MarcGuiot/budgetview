@@ -27,8 +27,11 @@ public class VersionService {
   }
 
   public void setVersion(String mail, Integer group, Long jarVersion, Long configVersion) {
-    logger.info("new jar version mail = '" + mail + "' group = '"  + group + "' : jarversion = "
-                + jarVersion +  " configVersion = " + configVersion);
+    JarInfo jarInfo = jarInfos.getInfo(mail, group);
+    if (!jarInfo.getJarVersion().equals(jarVersion) || !jarInfo.getConfigVersion().equals(configVersion)){
+      logger.info("new jar version mail = '" + mail + "' group = '"  + group + "' : jarversion = "
+                  + jarVersion +  " configVersion = " + configVersion);
+    }
     tmp.add(mail, group, jarVersion, configVersion);
   }
 
