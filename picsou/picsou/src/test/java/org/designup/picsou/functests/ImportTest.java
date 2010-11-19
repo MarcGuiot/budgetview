@@ -684,6 +684,10 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .completeImportNone(2);
 
+    views.selectCategorization();
+    categorization.showLastImportedFileOnly();
+    categorization.selectTableRows(0); // check that there are operations (the last import is the last import with operations)
+
     String otherFile = OfxBuilder
       .init(this)
       .addTransaction("2006/01/13", -1.3, "Menu K 2")

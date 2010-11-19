@@ -14,6 +14,7 @@ import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.LocalGlobRepository;
+import org.globsframework.model.utils.GlobFieldMatcher;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -145,6 +146,7 @@ public class ImportController {
         completed = true;
         Set<Integer> months = createMonths();
         AutoCategorizationFunctor autoCategorizationFunctor = autocategorize();
+        deleteEmptyImport();
         importDialog.showPositionDialog();
 
         importDialog.showCompleteMessage(importSession.getImportedOperationsCount(),
@@ -181,6 +183,18 @@ public class ImportController {
       Log.write(message, e);
       importDialog.showStep1Message(message, e);
       return false;
+    }
+  }
+
+  private void deleteEmptyImport() {
+    for (Integer key : importKeys) {
+      HasOperationFunctor hasOperations = new HasOperationFunctor();
+      localRepository.safeApply(Transaction.TYPE,
+                                new GlobFieldMatcher(Transaction.IMPORT, key),
+                                hasOperations);
+      if (hasOperations.isEmpty()){
+        localRepository.delete(Key.create(TransactionImport.TYPE, key));
+      }
     }
   }
 
@@ -264,5 +278,17 @@ public class ImportController {
 
   public boolean isAccountNeeded() {
     return importSession.isAccountNeeded();
+  }
+
+  private static class HasOperationFunctor implements GlobFunctor {
+    private boolean isEmpty = true;
+
+    public void run(Glob glob, GlobRepository repository) throws Exception {
+      isEmpty = false;
+    }
+
+    boolean isEmpty(){
+      return isEmpty;
+    }
   }
 }

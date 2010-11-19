@@ -522,62 +522,6 @@ public class LicenseTest extends LicenseTestCase {
     dbChecker.checkLicenseCount(email, 1);
   }
 
-  class DbChecker {
-    SqlConnection connection;
-
-    DbChecker() {
-      connection = getSqlConnection();
-    }
-
-    public void registerMail(String email, String code) {
-      connection.getCreateBuilder(License.TYPE)
-        .set(License.MAIL, email)
-        .set(License.ACTIVATION_CODE, code)
-        .getRequest()
-        .run();
-      connection.commit();
-
-    }
-
-    private Glob getGlob(Field field, Object expected,
-                         Constraint constraint) throws InterruptedException {
-      long end = System.currentTimeMillis() + 3000;
-      GlobList glob = new EmptyGlobList();
-      while (end > System.currentTimeMillis()) {
-        glob = connection.getQueryBuilder(field.getGlobType(), constraint)
-          .selectAll()
-          .getQuery().executeAsGlobs();
-        connection.commit();
-        if (glob.size() == 1) {
-          Object actual = glob.get(0).getValue(field);
-          if (actual != null && (expected == null || actual.equals(expected))) {
-            break;
-          }
-        }
-        Thread.sleep(50);
-      }
-      assertEquals(1, glob.size());
-      return glob.get(0);
-    }
-
-    public Glob getLicense(String email, Field field, Object expected) throws InterruptedException {
-      return getGlob(field, expected, Constraints.equal(License.MAIL, email));
-    }
-
-    public String checkRepoIdIsUpdated(long repoCount, Constraint constraint) throws InterruptedException {
-      Glob repoInfo = getGlob(RepoInfo.COUNT, repoCount, constraint);
-      Date target = repoInfo.get(RepoInfo.LAST_ACCESS_DATE);
-      assertTrue(Dates.isNear(new Date(), target, 10000));
-      assertEquals(repoCount, repoInfo.get(RepoInfo.COUNT).longValue());
-      return repoInfo.get(RepoInfo.REPO_ID);
-    }
-
-    public void checkLicenseCount(String email, long count) throws InterruptedException {
-      Glob license = getLicense(email, License.ACCESS_COUNT, count);
-      assertEquals(count, license.get(License.ACCESS_COUNT).longValue());
-      assertTrue(license.get(License.SIGNATURE).length > 1);
-    }
-  }
 
   private void exit() {
     new OperationChecker(window).exit();

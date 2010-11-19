@@ -35,8 +35,8 @@ public class BankEntityEditionChecker extends GuiChecker {
     BankChooserChecker chooserChecker = new BankChooserChecker(bankChooserWindow);
     chooserChecker.selectBank(bank);
     chooserChecker.checkListContent("Autre", "AXA Banque", "Banque Populaire", "BNP Paribas",
-                                    "Caisse d'épargne", "CIC",
-                                    "Crédit Agricole", "Crédit Mutuel", "Fortis", "HSBC", "ING Direct", "La Banque Postale",
+                                    "BNPPF", "Caisse d'épargne", "CIC",
+                                    "Crédit Agricole", "Crédit Mutuel", "HSBC", "ING Direct", "La Banque Postale",
                                     "LCL",
                                     "Société Générale");
     chooserChecker.validate();

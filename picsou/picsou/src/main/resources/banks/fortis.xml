@@ -2,8 +2,9 @@
 <globs>
   <bankFormat id='13'>
 
-    <bank name="Fortis" id="13" downloadUrl="https://www.bnpparibasfortis.be">
+    <bank name="BNPPF" id="13" downloadUrl="https://www.bnpparibasfortis.be">
       <bankEntity label="FORTIS"/>
+      <bankEntity label="BNPPF"/>
     </bank>
 
     <transactionMatcher

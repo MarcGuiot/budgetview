@@ -14,7 +14,14 @@ import org.designup.picsou.license.model.RepoInfo;
 import org.designup.picsou.license.model.SoftwareInfo;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlService;
+import org.globsframework.sqlstreams.constraints.Constraint;
+import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.EmptyGlobList;
+import org.globsframework.metamodel.Field;
+import org.globsframework.utils.Dates;
 import org.mockftpserver.core.command.Command;
 import org.mockftpserver.core.command.InvocationRecord;
 import org.mockftpserver.core.session.Session;
@@ -25,6 +32,7 @@ import org.uispec4j.UISpecTestCase;
 
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Date;
 
 public abstract class LicenseTestCase extends UISpecTestCase {
   protected SimpleSmtpServer mailServer;
@@ -165,6 +173,7 @@ public abstract class LicenseTestCase extends UISpecTestCase {
     private final String firstContent;
     private final String secondExpectedFile;
     private final byte[] secondContent;
+    private int exptectedResult;
 
     public CompositeRetrHandler(String firstExpectedFile, String firstContent,
                                 String secondExpectedFile, byte[] secondContent) {
@@ -173,6 +182,13 @@ public abstract class LicenseTestCase extends UISpecTestCase {
       this.secondExpectedFile = secondExpectedFile;
       this.secondContent = secondContent;
       result = 0;
+      exptectedResult = 0;
+      if (firstExpectedFile != null){
+        exptectedResult++;
+      }
+      if (secondExpectedFile != null){
+        exptectedResult++;
+      }
     }
 
     protected void processData(Command command, Session session,
@@ -195,14 +211,72 @@ public abstract class LicenseTestCase extends UISpecTestCase {
 
     public void assertOk() {
       long end = System.currentTimeMillis() + 30000;
-      while (result != 2 && System.currentTimeMillis() < end) {
+      while (result != exptectedResult && System.currentTimeMillis() < end) {
         try {
           Thread.sleep(100);
         }
         catch (InterruptedException e) {
         }
       }
-      assertEquals(2, result);
+      assertEquals(exptectedResult, result);
     }
   }
+
+  public class DbChecker {
+    SqlConnection connection;
+
+    public DbChecker() {
+      connection = getSqlConnection();
+    }
+
+    public void registerMail(String email, String code) {
+      connection.getCreateBuilder(License.TYPE)
+        .set(License.MAIL, email)
+        .set(License.ACTIVATION_CODE, code)
+        .getRequest()
+        .run();
+      connection.commit();
+
+    }
+
+    private Glob getGlob(Field field, Object expected,
+                         Constraint constraint) throws InterruptedException {
+      long end = System.currentTimeMillis() + 3000;
+      GlobList glob = new EmptyGlobList();
+      while (end > System.currentTimeMillis()) {
+        glob = connection.getQueryBuilder(field.getGlobType(), constraint)
+          .selectAll()
+          .getQuery().executeAsGlobs();
+        connection.commit();
+        if (glob.size() == 1) {
+          Object actual = glob.get(0).getValue(field);
+          if (actual != null && (expected == null || actual.equals(expected))) {
+            break;
+          }
+        }
+        Thread.sleep(50);
+      }
+      assertEquals(1, glob.size());
+      return glob.get(0);
+    }
+
+    public Glob getLicense(String email, Field field, Object expected) throws InterruptedException {
+      return getGlob(field, expected, Constraints.equal(License.MAIL, email));
+    }
+
+    public String checkRepoIdIsUpdated(long repoCount, Constraint constraint) throws InterruptedException {
+      Glob repoInfo = getGlob(RepoInfo.COUNT, repoCount, constraint);
+      Date target = repoInfo.get(RepoInfo.LAST_ACCESS_DATE);
+      assertTrue(Dates.isNear(new Date(), target, 10000));
+      assertEquals(repoCount, repoInfo.get(RepoInfo.COUNT).longValue());
+      return repoInfo.get(RepoInfo.REPO_ID);
+    }
+
+    public void checkLicenseCount(String email, long count) throws InterruptedException {
+      Glob license = getLicense(email, License.ACCESS_COUNT, count);
+      assertEquals(count, license.get(License.ACCESS_COUNT).longValue());
+      assertTrue(license.get(License.SIGNATURE).length > 1);
+    }
+  }
+
 }

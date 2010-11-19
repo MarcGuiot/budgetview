@@ -9,6 +9,7 @@ import org.designup.picsou.license.LicenseTestCase;
 import org.designup.picsou.license.model.SoftwareInfo;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.sqlstreams.SqlConnection;
+import org.globsframework.sqlstreams.metadata.DbChecker;
 import org.globsframework.utils.Dates;
 import org.objectweb.asm.*;
 import org.uispec4j.Trigger;
@@ -31,8 +32,6 @@ public class DownloadTest extends LicenseTestCase {
     super.setUp();
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
     TimeService.setCurrentDate(Dates.parseMonth("2008/07"));
-    updateDb();
-    licenseServer.init();
   }
 
   protected void tearDown() throws Exception {
@@ -49,14 +48,20 @@ public class DownloadTest extends LicenseTestCase {
   }
 
   private void startPicsou() {
-
     StartupChecker startupChecker = new StartupChecker();
     window = startupChecker.enterMain();
-
     picsouApplication = startupChecker.getApplication();
   }
 
-  public void testJarIsSentAndConfigUpdated() throws Exception {
+  public void testJarIsSendToSpecificUser() throws Exception {
+    DbChecker dbChecker = new DbChecker();
+    String email = "alfred@free.fr";
+    dbChecker.registerMail(email, "1234");
+    updateDb();
+    updateDb(email, PicsouApplication.JAR_VERSION + 2L);
+
+    licenseServer.init();
+
     startServers();
     final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
     final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);
@@ -64,8 +69,37 @@ public class DownloadTest extends LicenseTestCase {
     LicenseTestCase.Retr retr = setFtpReply(jarName, "jar content", configJarName, content);
     startPicsou();
     retr.assertOk();
-//    LoginChecker loginChecker = new LoginChecker(window);
-//    loginChecker.logNewUser("user", "passw@rd");
+
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
+    
+    OperationChecker operations = new OperationChecker(window);
+    LicenseActivationChecker.enterLicense(window, email, "1234");
+    operations.exit();
+    window.dispose();
+
+    final String jarName2 = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 2L);
+    LicenseTestCase.Retr retr2 = setFtpReply(jarName2, "jar content", null, null);
+
+    picsouApplication = new PicsouApplication();
+    window = WindowInterceptor.run(new Trigger() {
+      public void run() throws Exception {
+        picsouApplication.run();
+      }
+    });
+
+    retr2.assertOk();
+  }
+
+  public void testJarIsSentAndConfigUpdated() throws Exception {
+    updateDb();
+    licenseServer.init();
+    startServers();
+    final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
+    final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);
+    byte[] content = generateConfigContent();
+    LicenseTestCase.Retr retr = setFtpReply(jarName, "jar content", configJarName, content);
+    startPicsou();
+    retr.assertOk();
     VersionInfoChecker versionInfo = new VersionInfoChecker(window);
     versionInfo.checkNewVersion();
 
@@ -107,10 +141,20 @@ public class DownloadTest extends LicenseTestCase {
     connection.commitAndClose();
   }
 
+  private void updateDb(String mail, long version) {
+    SqlConnection connection = getSqlConnection();
+    connection.getCreateBuilder(SoftwareInfo.TYPE)
+      .set(SoftwareInfo.MAIL, mail)
+      .set(SoftwareInfo.LATEST_JAR_VERSION, version)
+      .set(SoftwareInfo.LATEST_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION + 1L)
+      .getRequest().run();
+    connection.commitAndClose();
+  }
+
   public void testNewBankInConfig() throws Exception {
+    updateDb();
+    licenseServer.init();
     startPicsou();
-//    LoginChecker loginChecker = new LoginChecker(window);
-//    loginChecker.logNewUser("user", "passw@rd");
 
     OperationChecker operations = new OperationChecker(window);
     String fileName = OfxBuilder.init(this)
