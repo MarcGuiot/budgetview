@@ -656,7 +656,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkContainsBanks("BNP Paribas", "CIC", "Crédit Agricole", "ING Direct", "Société Générale")
       .checkHelpAvailable(false)
       .setFilter("BNP")
-      .checkBankList("Autre", "BNP Paribas")
+      .checkBankList("Autre", "BNP Paribas", "BNPPF")
       .selectBank("BNP Paribas")
       .checkHelpAvailable(true)
       .openHelp()

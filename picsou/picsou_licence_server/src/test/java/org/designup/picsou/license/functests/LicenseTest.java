@@ -236,7 +236,7 @@ public class LicenseTest extends LicenseTestCase {
       .enterLicenseAndValidate("titi@foo.org", "az")
       .checkErrorMessage("Activation failed")
       .cancel();
-    checkMessage("31 days left for trying BudgetView");
+    checkMessage("46 days left for trying BudgetView");
     checkMessage("This activation code is not valid. You can request");
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     exit();
@@ -255,7 +255,7 @@ public class LicenseTest extends LicenseTestCase {
     license.checkErrorMessage("Activation failed")
       .cancel();
 
-    checkMessage("31 days left for trying BudgetView");
+    checkMessage("46 days left for trying BudgetView");
     checkMessage("Cannot connect to remote server");
 
     exit();
@@ -279,7 +279,7 @@ public class LicenseTest extends LicenseTestCase {
     license.checkErrorMessage("Activation failed");
     license.cancel();
 
-    checkMessage("31 days left for trying BudgetView");
+    checkMessage("46 days left for trying BudgetView");
     checkMessage("This activation code is not valid. You can request");
 
     exit();

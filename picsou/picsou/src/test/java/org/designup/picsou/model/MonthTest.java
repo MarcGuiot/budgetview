@@ -2,9 +2,11 @@ package org.designup.picsou.model;
 
 import junit.framework.TestCase;
 import org.globsframework.utils.TestUtils;
+import org.globsframework.utils.Dates;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Date;
 
 public class MonthTest extends TestCase {
   public void test() throws Exception {
@@ -72,4 +74,15 @@ public class MonthTest extends TestCase {
     assertEquals(-4, Month.distance(200903, 200811));
     assertEquals(-13, Month.distance(200912, 200811));
   }
+
+  public void testaddDurationMonth() throws Exception {
+    shift("2010/11/10", "2010/12/26");
+    shift("2010/12/10", "2011/01/25");
+  }
+
+  private void shift(final String from, final String to) {
+    Date date = Month.addDurationMonth(Dates.parse(from));
+    assertEquals(Dates.parse(to), date);
+  }
+
 }

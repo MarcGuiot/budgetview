@@ -254,9 +254,9 @@ public class Month {
     return CALENDAR.getTime();
   }
 
-  public static Date addOneMonth(Date date) {
+  public static Date addDurationMonth(Date date) {
     CALENDAR.setTime(date);
-    CALENDAR.add(Calendar.MONTH, 1);
+    CALENDAR.add(Calendar.DAY_OF_MONTH, 46);
     return CALENDAR.getTime();
   }
 

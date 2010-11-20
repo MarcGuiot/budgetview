@@ -212,7 +212,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(LAST_VALID_DAY, Month.addOneMonth(TimeService.getToday()));
+      fieldSetter.set(LAST_VALID_DAY, Month.addDurationMonth(TimeService.getToday()));
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, true);
     }
 
@@ -221,7 +221,7 @@ public class UserPreferences {
       fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readJavaString());
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
-      fieldSetter.set(LAST_VALID_DAY, Month.addOneMonth(TimeService.getToday()));
+      fieldSetter.set(LAST_VALID_DAY, Month.addDurationMonth(TimeService.getToday()));
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, true);
     }
   }
