@@ -271,10 +271,13 @@ public class LicenseTest extends LicenseTestCase {
     DbChecker dbChecker = new DbChecker();
     dbChecker.registerMail("titi@foo.org", "4321");
     LicenseActivationChecker license = LicenseActivationChecker.open(window);
+    license.checkMsgToReceiveNewCode();
     license.enterLicense("titi@foo.org", "az");
+    license.checkMsgSendNewCode();
     license.validate();
     license.checkErrorMessage("Activation failed");
     license.enterLicense("titi@foo.org", "");
+    license.checkMsgSendNewCode();
     license.validate();
     license.checkErrorMessage("Activation failed");
     license.cancel();
@@ -323,6 +326,29 @@ public class LicenseTest extends LicenseTestCase {
                                              "Activation failed. An email was sent at " + MAIL + " with further information.");
     checkReceivedMail(email);
     checkWithMailKilled();
+  }
+
+  public void testSendCodeFromActivation() throws Exception {
+    DbChecker dbChecker = new DbChecker();
+    String email = "alfred@free.fr";
+    dbChecker.registerMail(email, "1234");
+    login.logNewUser("user", "passw@rd");
+    LicenseActivationChecker activation = LicenseActivationChecker.open(window);
+    activation.enterLicense("alfred@free.fr", "");
+    activation.askForCode();
+    String newCode = checkMailAndExtractCode();
+    assertFalse(newCode.equals("1234"));
+    activation.cancel();
+  }
+
+  public void testSendFeedback() throws Exception {
+    login.logNewUser("user", "passw@rd");
+    OperationChecker operation = new OperationChecker(window);
+    FeedbackDialogChecker feedback = operation.getFeedback();
+    feedback.send("my title", "me@gg.fr", "some content");
+    String messageCode = checkReceivedMail("support@mybudgetview.fr");
+    assertTrue(messageCode.contains("some content"));
+    assertTrue(messageCode.contains("me@gg.fr"));
   }
 
   public void testMailSentLater() throws Exception {
@@ -375,8 +401,8 @@ public class LicenseTest extends LicenseTestCase {
 
     LicenseActivationChecker.enterBadLicense(window, MAIL, "1234",
                                              "Activation failed. An email was sent at " + MAIL + " with further information.");
-    String messageCode = checkReceivedMail(MAIL);
-    String newCode = messageCode.substring(messageCode.length() - 5, messageCode.length()).trim();
+    String newCode = checkMailAndExtractCode();
+    String messageCode;
     LicenseActivationChecker.enterLicense(window, "alfred@free.fr", newCode);
     exit();
 
@@ -399,6 +425,11 @@ public class LicenseTest extends LicenseTestCase {
       .selectAll()
       .getQuery().executeUnique();
     assertEquals(newCode, glob.get(License.ACTIVATION_CODE));
+  }
+
+  private String checkMailAndExtractCode() throws InterruptedException {
+    String messageCode = checkReceivedMail(MAIL);
+    return messageCode.substring(messageCode.length() - 5, messageCode.length()).trim();
   }
 
   public void testTrialVersionIsOver() throws Exception {

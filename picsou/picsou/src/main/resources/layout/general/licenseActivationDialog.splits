@@ -13,6 +13,7 @@
         <label gridPos="(0,1)" text="$license.code" styleClass="formLabel"/>
         <textField gridPos="(1,1)" ref="ref-code"/>
       </grid>
+      <htmlEditorPane ref="messageSendNewCode" hyperlinkListener="hyperlinkHandler" marginTop="5" marginBottom="5"/>
       <progressBar ref="connectionState" visible="false"/>
       <htmlEditorPane ref="connectionMessage" styleClass="errorMessage" border="empty(5,0,0,0)"/>
       <filler fill="vertical" weightY="20"/>

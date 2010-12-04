@@ -135,6 +135,7 @@ public class LicenseServer {
     context.addServlet(new ServletHolder(new RequestForConfigServlet(directory)), ConfigService.REQUEST_FOR_CONFIG);
     context.addServlet(new ServletHolder(new RegisterServlet(directory)), ConfigService.REQUEST_FOR_REGISTER);
     context.addServlet(new ServletHolder(new NewUserServlet(directory)), NEW_USER);
+    context.addServlet(new ServletHolder(new SendMailServlet(directory)), ConfigService.REQUEST_SEND_MAIL);
   }
 
   public void addServlet(ServletHolder holder, String name) {

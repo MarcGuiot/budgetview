@@ -27,6 +27,7 @@ import java.util.List;
 public class OperationChecker {
   private MenuItem importMenu;
   private MenuItem exportMenu;
+  private MenuItem feedbackMenu;
   private MenuItem preferencesMenu;
   private MenuItem undoMenu;
   private MenuItem redoMenu;
@@ -47,6 +48,7 @@ public class OperationChecker {
     fileMenu = window.getMenuBar().getMenu("File");
     importMenu = fileMenu.getSubMenu("Import");
     exportMenu = fileMenu.getSubMenu("Export");
+    feedbackMenu = fileMenu.getSubMenu("Feedback");
     preferencesMenu = fileMenu.getSubMenu("Preferences");
 
     MenuItem editMenu = window.getMenuBar().getMenu("Edit");
@@ -475,5 +477,9 @@ public class OperationChecker {
   public void nextSixDays() {
     MenuItem fileMenu = window.getMenuBar().getMenu("Edit");
     fileMenu.getSubMenu("Add 6 days").click();
+  }
+  
+  public FeedbackDialogChecker getFeedback(){
+    return FeedbackDialogChecker.init(feedbackMenu.triggerClick());
   }
 }

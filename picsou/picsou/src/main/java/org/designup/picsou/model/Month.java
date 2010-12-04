@@ -33,11 +33,15 @@ public class Month {
   private static final Calendar CALENDAR = Calendar.getInstance();
 
   public static String toString(int yyyymm) {
-    return toYearString(yyyymm) + "/" + MONTH_FORMAT.format(Month.toMonth(yyyymm));
+    synchronized (MONTH_FORMAT){
+      return toYearString(yyyymm) + "/" + MONTH_FORMAT.format(Month.toMonth(yyyymm));
+    }
   }
 
   public static String toString(int yyyymm, int day) {
-    return toYearString(yyyymm) + "/" + MONTH_FORMAT.format(Month.toMonth(yyyymm)) + "/" + MONTH_FORMAT.format(day);
+    synchronized (MONTH_FORMAT){
+      return toYearString(yyyymm) + "/" + MONTH_FORMAT.format(Month.toMonth(yyyymm)) + "/" + MONTH_FORMAT.format(day);
+    }
   }
 
   public static String toYearString(int yyyymm) {
@@ -57,8 +61,10 @@ public class Month {
   }
 
   public static int getMonthId(Date date) {
-    CALENDAR.setTime(date);
-    return toYyyyMm(CALENDAR.get(Calendar.YEAR), CALENDAR.get(Calendar.MONTH) + 1);
+    synchronized (CALENDAR) {
+      CALENDAR.setTime(date);
+      return toYyyyMm(CALENDAR.get(Calendar.YEAR), CALENDAR.get(Calendar.MONTH) + 1);
+    }
   }
 
   public static Calendar createCalendar(int yyyymm) {
@@ -70,14 +76,18 @@ public class Month {
   }
 
   public static int getDay(Date date) {
-    CALENDAR.setTime(date);
-    return CALENDAR.get(Calendar.DAY_OF_MONTH);
+    synchronized (CALENDAR) {
+      CALENDAR.setTime(date);
+      return CALENDAR.get(Calendar.DAY_OF_MONTH);
+    }
   }
 
   public static Date toDate(int yyyymm, int day) {
-    CALENDAR.clear();
-    CALENDAR.set(toYear(yyyymm), toMonth(yyyymm) - 1, day);
-    return CALENDAR.getTime();
+    synchronized (CALENDAR) {
+      CALENDAR.clear();
+      CALENDAR.set(toYear(yyyymm), toMonth(yyyymm) - 1, day);
+      return CALENDAR.getTime();
+    }
   }
 
   public static int offset(int yyyymm, int offset) {
@@ -192,7 +202,9 @@ public class Month {
   }
 
   private static String getTwoDigitsYearLabel(int year) {
-    return TWO_DIGITS_YEAR_FORMAT.format(year % 100);
+    synchronized (TWO_DIGITS_YEAR_FORMAT){
+      return TWO_DIGITS_YEAR_FORMAT.format(year % 100);
+    }
   }
 
   public static String getOneLetterMonthLabel(Integer month) {
@@ -225,14 +237,18 @@ public class Month {
   }
 
   public static int getLastDayNumber(int monthId) {
-    CALENDAR.setTime(toDate(monthId, 1));
-    return CALENDAR.getActualMaximum(Calendar.DAY_OF_MONTH);
+    synchronized (CALENDAR) {
+      CALENDAR.setTime(toDate(monthId, 1));
+      return CALENDAR.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
   }
 
   public static Date getLastDay(int monthId) {
-    CALENDAR.setTime(toDate(monthId, 1));
-    CALENDAR.set(Calendar.DAY_OF_MONTH, CALENDAR.getActualMaximum(Calendar.DAY_OF_MONTH));
-    return CALENDAR.getTime();
+    synchronized (CALENDAR) {
+      CALENDAR.setTime(toDate(monthId, 1));
+      CALENDAR.set(Calendar.DAY_OF_MONTH, CALENDAR.getActualMaximum(Calendar.DAY_OF_MONTH));
+      return CALENDAR.getTime();
+    }
   }
 
   public static Integer getDay(Integer day, int monthId) {
@@ -248,16 +264,20 @@ public class Month {
     return day;
   }
 
-  public static Date addDays(Date date, int day){
-    CALENDAR.setTime(date);
-    CALENDAR.add(Calendar.DAY_OF_MONTH, day);
-    return CALENDAR.getTime();
+  public static Date addDays(Date date, int day) {
+    synchronized (CALENDAR) {
+      CALENDAR.setTime(date);
+      CALENDAR.add(Calendar.DAY_OF_MONTH, day);
+      return CALENDAR.getTime();
+    }
   }
 
   public static Date addDurationMonth(Date date) {
-    CALENDAR.setTime(date);
-    CALENDAR.add(Calendar.DAY_OF_MONTH, 46);
-    return CALENDAR.getTime();
+    synchronized (CALENDAR) {
+      CALENDAR.setTime(date);
+      CALENDAR.add(Calendar.DAY_OF_MONTH, 46);
+      return CALENDAR.getTime();
+    }
   }
 
   public static boolean isContinuousSequence(int[] months) {

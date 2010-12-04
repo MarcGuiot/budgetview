@@ -9,6 +9,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.AddressException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -65,12 +66,12 @@ public class Mailer {
     return false;
   }
 
-  public boolean sendToAdmin(String message){
-    AdminMailToSent adminMailToSent = new AdminMailToSent(message);
-    if (adminMailToSent.sent()){
+  public boolean sendToSupport(String fromMail, String title, String content){
+    SupportMailToSent supportMailToSent = new SupportMailToSent(fromMail, title, content);
+    if (supportMailToSent.sent()){
       return true;
     }
-    add(adminMailToSent);
+    add(supportMailToSent);
     return false;
   }
 
@@ -114,7 +115,6 @@ public class Mailer {
       e.printStackTrace();
     }
   }
-
 
   static abstract class MailToSent {
     protected long retryCount;
@@ -243,19 +243,26 @@ public class Mailer {
     }
   }
 
-  private class AdminMailToSent extends MailToSent {
-    private String message;
+  private class SupportMailToSent extends MailToSent {
+    private String fromMail;
+    private String title;
+    private String content;
 
-    public AdminMailToSent(String message) {
+    public SupportMailToSent(String fromMail, String title, String content) {
       super("support@mybudgetview.fr");
-      this.message = message;
+      this.title = title;
+      this.content = "declared mail :'" + fromMail + "'\ncontent:\n" + content;
+      this.fromMail = "feedback@mybudgetview.fr";
     }
 
     public boolean sent() {
       try {
         inc();
-        sendMail(mail, "licenseServer@mybudgetview.fr", "admin mail",
-                 message);
+        sendMail(mail, fromMail, title, content);
+        return true;
+      }
+      catch (AddressException badAdress){
+        logger.error(toString(), badAdress);
         return true;
       }
       catch (Exception e) {
@@ -265,7 +272,7 @@ public class Mailer {
     }
 
     public String toString() {
-      return "license server message" + message + " ; " + retryCount + " for " + count;
+      return "license server message : " + title + ", content : " + content + " ; " + retryCount + " for " + count;
     }
   }
 

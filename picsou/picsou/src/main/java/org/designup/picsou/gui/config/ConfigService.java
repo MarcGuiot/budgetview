@@ -34,7 +34,10 @@ public class ConfigService {
 
   public static final String COM_APP_LICENSE_URL = PicsouApplication.APPNAME + ".license.url";
   public static final String COM_APP_LICENSE_FTP_URL = PicsouApplication.APPNAME + ".license.ftp.url";
+  public static final String HEADER_TO_MAIL = "toMail";
   public static final String HEADER_MAIL = "mail";
+  public static final String HEADER_MAIL_TITLE = "title";
+  public static final String HEADER_MAIL_CONTENT = "content";
   public static final String HEADER_SIGNATURE = "signature";
   public static final String HEADER_IS_VALIDE = "isValide";
   public static final String HEADER_CODE = "code";
@@ -55,6 +58,7 @@ public class ConfigService {
   public static final String REQUEST_FOR_REGISTER = "/register";
   public static final String REQUEST_FOR_CONFIG = "/requestForConfig";
   public static final String REQUEST_FOR_MAIL = "/mailTo";
+  public static final String REQUEST_SEND_MAIL = "/sendMailToUs";
 
   private String URL = PicsouApplication.REGISTER_URL;
   private String FTP_URL = PicsouApplication.FTP_URL;
@@ -74,6 +78,7 @@ public class ConfigService {
   public static final String HEADER_BAD_ADRESS = "badAdress";
   private Directory directory = null;
   private GlobRepository repository = null;
+  public static final String MAIL_CONTACT = "contact";
 
   public ConfigService(String applicationVersion, Long jarVersion, Long localConfigVersion, File currentConfigFile) {
     this.currentConfigFile = currentConfigFile;
@@ -281,6 +286,55 @@ public class ConfigService {
     finally {
       repository.completeChangeSet();
     }
+  }
+
+  public interface Listener {
+    void sent();
+
+    void sendFail();
+  }
+
+  synchronized public void sendMail(final String toMail, final String fromMail,
+                                    final String title, final String content, final Listener listener) {
+    Thread thread = new Thread() {
+      public void run() {
+        String url = URL + REQUEST_SEND_MAIL;
+        PostMethod postMethod = new PostMethod(url);
+        postMethod.setRequestHeader(HEADER_LANG, Lang.get("lang"));
+        postMethod.setRequestHeader(HEADER_MAIL, fromMail);
+        postMethod.setRequestHeader(HEADER_TO_MAIL, toMail);
+        postMethod.setRequestHeader(HEADER_MAIL_TITLE, title);
+        postMethod.setRequestHeader(HEADER_MAIL_CONTENT, content);
+        try {
+          httpClient.executeMethod(postMethod);
+        }
+        catch (Exception e) {
+          SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+              listener.sendFail();
+            }
+          });
+          return;
+        }
+        int statusCode = postMethod.getStatusCode();
+        if (statusCode == 200) {
+          SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+              listener.sent();
+            }
+          });
+        }
+        else {
+          SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+              listener.sendFail();
+            }
+          });
+        }
+      }
+    };
+    thread.setDaemon(true);
+    thread.start();
   }
 
   synchronized public boolean update(final byte[] repoId, final long launchCount, byte[] mailInBytes,

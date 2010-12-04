@@ -87,7 +87,7 @@ public class LicenseActivationChecker {
     assertFalse(dialog.getInputTextBox("ref-mail").isEnabled());
     assertFalse(dialog.getInputTextBox("ref-code").isEnabled());
     assertTrue(dialog.getTextBox("connectionMessage")
-      .textEquals("You must be connected to the Internet to register your license"));
+      .textEquals("You must be connected to the Internet"));
   }
 
   public void checkConnectionIsAvailable() {
@@ -121,5 +121,21 @@ public class LicenseActivationChecker {
 
   public void checkClosed() {
     assertFalse(dialog.isVisible());
+  }
+
+  public LicenseActivationChecker checkMsgToReceiveNewCode() {
+    assertTrue(dialog.getTextBox("messageSendNewCode").textContains("to receive a new code"));
+    return this;
+  }
+
+  public LicenseActivationChecker checkMsgSendNewCode() {
+    assertTrue(dialog.getTextBox("messageSendNewCode").textContains("Send a new code"));
+    return this;
+  }
+
+  public LicenseActivationChecker askForCode() throws Exception {
+    Trigger trigger = dialog.getTextBox("messageSendNewCode").triggerClickOnHyperlink("Send a new code");
+    trigger.run();
+    return this;
   }
 }
