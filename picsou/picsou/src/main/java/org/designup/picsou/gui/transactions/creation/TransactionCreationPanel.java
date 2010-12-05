@@ -248,7 +248,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
   private void show() {
 
     if (User.isDemoUser(repository.get(User.KEY))){
-      MessageDialog.show("demo.transaction.creation.title", "demo.transaction.creation.content", 
+      MessageDialog.show("demo.transaction.creation.title", "demo.transaction.creation.content",
                          directory.get(JFrame.class), directory);
       return;
     }
