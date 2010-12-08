@@ -3,7 +3,7 @@ package org.designup.picsou.license.functests;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.designup.picsou.gui.config.ConfigService;
-import org.designup.picsou.license.LicenseTestCase;
+import org.designup.picsou.license.ConnectedTestCase;
 import org.designup.picsou.license.model.License;
 import org.designup.picsou.license.servlet.LicenseServer;
 import org.designup.picsou.license.servlet.NewUserServlet;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class PaypalTest extends LicenseTestCase {
+public class PaypalTest extends ConnectedTestCase {
   private static String SERVER_URL;
 
   protected void setUp() throws Exception {

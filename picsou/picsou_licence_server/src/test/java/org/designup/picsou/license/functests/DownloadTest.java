@@ -5,11 +5,10 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.config.ConfigService;
-import org.designup.picsou.license.LicenseTestCase;
+import org.designup.picsou.license.ConnectedTestCase;
 import org.designup.picsou.license.model.SoftwareInfo;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.sqlstreams.SqlConnection;
-import org.globsframework.sqlstreams.metadata.DbChecker;
 import org.globsframework.utils.Dates;
 import org.objectweb.asm.*;
 import org.uispec4j.Trigger;
@@ -23,7 +22,7 @@ import java.io.FilenameFilter;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
-public class DownloadTest extends LicenseTestCase {
+public class DownloadTest extends ConnectedTestCase {
   private Window window;
   private PicsouApplication picsouApplication;
 
@@ -66,7 +65,7 @@ public class DownloadTest extends LicenseTestCase {
     final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
     final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);
     byte[] content = generateConfigContent();
-    LicenseTestCase.Retr retr = setFtpReply(jarName, "jar content", configJarName, content);
+    ConnectedTestCase.Retr retr = setFtpReply(jarName, "jar content", configJarName, content);
     startPicsou();
     retr.assertOk();
 
@@ -78,7 +77,7 @@ public class DownloadTest extends LicenseTestCase {
     window.dispose();
 
     final String jarName2 = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 2L);
-    LicenseTestCase.Retr retr2 = setFtpReply(jarName2, "jar content", null, null);
+    ConnectedTestCase.Retr retr2 = setFtpReply(jarName2, "jar content", null, null);
 
     picsouApplication = new PicsouApplication();
     window = WindowInterceptor.run(new Trigger() {
@@ -97,7 +96,7 @@ public class DownloadTest extends LicenseTestCase {
     final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
     final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);
     byte[] content = generateConfigContent();
-    LicenseTestCase.Retr retr = setFtpReply(jarName, "jar content", configJarName, content);
+    ConnectedTestCase.Retr retr = setFtpReply(jarName, "jar content", configJarName, content);
     startPicsou();
     retr.assertOk();
     VersionInfoChecker versionInfo = new VersionInfoChecker(window);
@@ -166,7 +165,7 @@ public class DownloadTest extends LicenseTestCase {
     final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
     final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);
     byte[] content = generateConfigContent();
-    LicenseTestCase.Retr retr = setFtpReply(jarName, "jar content", configJarName, content);
+    ConnectedTestCase.Retr retr = setFtpReply(jarName, "jar content", configJarName, content);
     startServers();
 
     retr.assertOk();

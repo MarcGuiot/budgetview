@@ -28,7 +28,7 @@ public abstract class Signpost implements Disposable {
   private BalloonTip.Orientation orientation;
   private BalloonTip.AttachLocation attachLocation;
 
-  private static ModernBalloonStyle createBalloonStyle() {
+  public static ModernBalloonStyle createBalloonStyle() {
     ModernBalloonStyle style =
       new ModernBalloonStyle(15, 7, Color.YELLOW.brighter(), Color.YELLOW, Color.ORANGE);
     style.setBorderThickness(2);

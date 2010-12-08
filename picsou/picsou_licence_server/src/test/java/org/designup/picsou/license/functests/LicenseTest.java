@@ -5,15 +5,11 @@ import junit.framework.AssertionFailedError;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.license.LicenseTestCase;
+import org.designup.picsou.license.ConnectedTestCase;
 import org.designup.picsou.license.model.License;
 import org.designup.picsou.license.model.RepoInfo;
-import org.globsframework.metamodel.Field;
-import org.globsframework.model.EmptyGlobList;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SqlConnection;
-import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.utils.Dates;
 import org.uispec4j.TextBox;
@@ -21,9 +17,7 @@ import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
 
-import java.util.Date;
-
-public class LicenseTest extends LicenseTestCase {
+public class LicenseTest extends ConnectedTestCase {
   private PicsouApplication picsouApplication;
   private Window window;
   private LoginChecker login;
@@ -339,16 +333,6 @@ public class LicenseTest extends LicenseTestCase {
     String newCode = checkMailAndExtractCode();
     assertFalse(newCode.equals("1234"));
     activation.cancel();
-  }
-
-  public void testSendFeedback() throws Exception {
-    login.logNewUser("user", "passw@rd");
-    OperationChecker operation = new OperationChecker(window);
-    FeedbackDialogChecker feedback = operation.getFeedback();
-    feedback.send("my title", "me@gg.fr", "some content");
-    String messageCode = checkReceivedMail("support@mybudgetview.fr");
-    assertTrue(messageCode.contains("some content"));
-    assertTrue(messageCode.contains("me@gg.fr"));
   }
 
   public void testMailSentLater() throws Exception {

@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.interception.WindowInterceptor;
 
 public class FeedbackDialogChecker extends GuiChecker{
@@ -22,5 +23,18 @@ public class FeedbackDialogChecker extends GuiChecker{
     dialog.getTextBox("mailContent").setText(content);
     dialog.getButton("Send").click();
     assertFalse(dialog.isVisible());
+  }
+
+  public void checkNotConnected() {
+    assertFalse(dialog.getButton("Send").isEnabled());
+  }
+
+  public void cancel() {
+    dialog.getButton("cancel").click();
+    assertFalse(dialog.isVisible());
+  }
+
+  public void checkConnected() {
+    assertTrue(dialog.getButton("Send").isEnabled());
   }
 }

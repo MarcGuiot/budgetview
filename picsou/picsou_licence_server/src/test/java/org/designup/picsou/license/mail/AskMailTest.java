@@ -4,7 +4,7 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.designup.picsou.gui.config.ConfigService;
-import org.designup.picsou.license.LicenseTestCase;
+import org.designup.picsou.license.ConnectedTestCase;
 import org.designup.picsou.license.model.License;
 import org.designup.picsou.license.model.MailError;
 import org.globsframework.sqlstreams.SqlConnection;
@@ -12,7 +12,7 @@ import org.globsframework.sqlstreams.constraints.Constraints;
 
 import java.io.IOException;
 
-public class AskMailTest extends LicenseTestCase {
+public class AskMailTest extends ConnectedTestCase {
   private HttpClient client;
 
   protected void setUp() throws Exception {

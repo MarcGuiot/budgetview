@@ -36,6 +36,7 @@ public class PicsouDialog extends JDialog {
   private final int dialogId = dialogCount++;
 
   private List<Action> onCloseActions;
+  private JButton okButton;
 
   public static PicsouDialog create(Window owner, Directory directory) {
     return create(owner, true, directory);
@@ -111,7 +112,7 @@ public class PicsouDialog extends JDialog {
     if (cancel != null) {
       cancelButton = createButton(cancel);
     }
-    JButton okButton = createButton(ok);
+    okButton = createButton(ok);
     if (cancel != null) {
       adjustSizes(cancelButton, okButton);
     }
@@ -284,6 +285,10 @@ public class PicsouDialog extends JDialog {
         });
       }
     }
+  }
+
+  public JButton getOkButton() {
+    return okButton;
   }
 
   public String toString() {

@@ -5,15 +5,15 @@
   <panel styleClass="dialog" minimumSize="(470,180)" preferredSize="(470,250)" opaque="true">
     <column styleClass="innerDialog">
       <label name="title" text="$feedback.title" styleClass="title"/>
-      <row defaultMarginTop="20">
-        <label text="$feedback.mailSubject"/>
-        <textField ref="mailSubject"/>
-      </row>
       <row defaultMarginTop="10">
         <label text="$feedback.fromMail"/>
         <textField ref="fromMail"/>
       </row>
       <label text="$feedback.toMail" marginTop="10"/>
+      <row defaultMarginTop="20">
+        <label text="$feedback.mailSubject"/>
+        <textField ref="mailSubject"/>
+      </row>
       <editorPane ref="mailContent" marginTop="10"/>
       <filler fill="vertical" weightY="20"/>
     </column>

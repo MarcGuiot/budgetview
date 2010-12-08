@@ -479,7 +479,7 @@ public class OperationChecker {
     fileMenu.getSubMenu("Add 6 days").click();
   }
   
-  public FeedbackDialogChecker getFeedback(){
+  public FeedbackDialogChecker openFeedback(){
     return FeedbackDialogChecker.init(feedbackMenu.triggerClick());
   }
 }
