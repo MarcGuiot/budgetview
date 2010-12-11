@@ -69,6 +69,7 @@ public class MainPanel {
   private PicsouFrame parent;
   private ImportFileAction importFileAction;
   private ExportFileAction exportFileAction;
+  private SendFeedbackAction sendFeedbackAction;
   private ProtectAction protectAction;
   private BackupAction backupAction;
   private RestoreAction restoreAction;
@@ -129,6 +130,7 @@ public class MainPanel {
 
     importFileAction = ImportFileAction.initForMenu(Lang.get("import"), repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
+    sendFeedbackAction = new SendFeedbackAction(repository, directory);
     backupAction = new BackupAction(repository, directory);
     restoreAction = new RestoreAction(repository, directory);
     preferencesAction = new PreferencesAction(repository, directory);
@@ -250,6 +252,8 @@ public class MainPanel {
     JMenu menu = new JMenu(Lang.get("file"));
     menu.add(importFileAction);
     menu.add(exportFileAction);
+    menu.addSeparator();
+    menu.add(sendFeedbackAction);
     menu.addSeparator();
     menu.add(backupAction);
     menu.add(restoreAction);

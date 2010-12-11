@@ -3,6 +3,7 @@ package org.designup.picsou.gui.license;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.undo.UndoRedoService;
+import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -35,6 +36,7 @@ public class LicenseActivationDialog {
   private SelectionService selectionService;
 
   private JEditorPane connectionMessage = new JEditorPane();
+  private JEditorPane messageSendCode = new JEditorPane();
   private JLabel expirationLabel = new JLabel();
   private JProgressBar connectionState = new JProgressBar();
   private ValidateAction validateAction = new ValidateAction();
@@ -42,7 +44,7 @@ public class LicenseActivationDialog {
   private GlobsPanelBuilder builder;
   private GlobTextEditor mailEditor;
 
-  public LicenseActivationDialog(Window parent, GlobRepository repository, Directory directory) {
+  public LicenseActivationDialog(Window parent, GlobRepository repository, final Directory directory) {
     this.repository = repository;
     this.localDirectory = new DefaultDirectory(directory);
     this.selectionService = new SelectionService();
@@ -54,13 +56,39 @@ public class LicenseActivationDialog {
 
     dialog = PicsouDialog.create(parent, directory);
 
+    Glob user = localRepository.get(User.KEY);
     builder = new GlobsPanelBuilder(getClass(), "/layout/general/licenseActivationDialog.splits",
                                     localRepository, this.localDirectory);
-    builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
+    builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog){
+      protected void processCustomLink(String href) {
+        if ("newCode".equals(href)) {
+          final String mail = localRepository.get(User.KEY).get(User.MAIL);
+          if (Strings.isNotEmpty(mail)) {
+            Thread thread = new Thread() {
+              public void run() {
+                final String response = directory.get(ConfigService.class).askForNewCodeByMail(mail);
+                SwingUtilities.invokeLater(new Runnable() {
+                  public void run() {
+                    connectionMessage.setText(response);
+                    connectionMessage.setVisible(true);
+                  }
+                });
+              }
+            };
+            thread.setDaemon(true);
+            thread.run();
+          }
+        }
+      }
+    });
     mailEditor = builder.addEditor("ref-mail", User.MAIL).setNotifyOnKeyPressed(true);
     builder.addEditor("ref-code", User.ACTIVATION_CODE)
       .setValidationAction(validateAction)
       .setNotifyOnKeyPressed(true);
+    GuiUtils.initHtmlComponent(messageSendCode);
+    builder.add("messageSendNewCode", messageSendCode);
+    updateSendNewCodeMessage(user);
+
     GuiUtils.initHtmlComponent(connectionMessage);
     connectionMessage.setText(Lang.get("license.connect"));
     builder.add("connectionMessage", connectionMessage);
@@ -70,11 +98,22 @@ public class LicenseActivationDialog {
 
     dialog.addPanelWithButtons(builder.<JPanel>load(), validateAction, new CancelAction());
 
-    Boolean isConnected = localRepository.get(User.KEY).isTrue(User.CONNECTED);
+    Boolean isConnected = user.isTrue(User.CONNECTED);
     connectionMessage.setVisible(!isConnected);
+    messageSendCode.setVisible(isConnected);
 
     initRegisterChangeListener();
     dialog.pack();
+  }
+
+  private void updateSendNewCodeMessage(Glob user) {
+    String mail = user.get(User.MAIL);
+    if (Strings.isNullOrEmpty(mail)) {
+      messageSendCode.setText(Lang.get("license.askForCode.noMail"));
+    }
+    else {
+      messageSendCode.setText(Lang.get("license.askForCode", mail));
+    }
   }
 
   private void initRegisterChangeListener() {
@@ -91,7 +130,8 @@ public class LicenseActivationDialog {
           }
           validateAction.setEnabled(true);
           connectionMessage.setVisible(false);
-          activationState = repository.get(User.KEY).get(User.ACTIVATION_STATE);
+          Glob user = repository.get(User.KEY);
+          activationState = user.get(User.ACTIVATION_STATE);
           if (activationState != null) {
             if (activationState == User.ACTIVATION_OK) {
               dialog.setVisible(false);
@@ -118,6 +158,18 @@ public class LicenseActivationDialog {
       }
     };
     repository.addChangeListener(changeSetListener);
+
+    localRepository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(User.KEY)){
+          Glob user = repository.get(User.KEY);
+          updateSendNewCodeMessage(user);
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+      }
+    });
   }
 
   private boolean updateConnectionState(GlobRepository repository) {
@@ -125,6 +177,7 @@ public class LicenseActivationDialog {
     if (!isConnected) {
       connectionMessage.setText(Lang.get("license.connect"));
       connectionMessage.setVisible(true);
+      messageSendCode.setVisible(false);
       selectionService.clear(User.TYPE);
       validateAction.setEnabled(false);
     }
@@ -138,6 +191,7 @@ public class LicenseActivationDialog {
     connectionMessage.setText(Lang.get(message, args));
     connectionMessage.setVisible(true);
     connectionState.setVisible(false);
+    messageSendCode.setVisible(true);
   }
 
   public void show(boolean expiration) {

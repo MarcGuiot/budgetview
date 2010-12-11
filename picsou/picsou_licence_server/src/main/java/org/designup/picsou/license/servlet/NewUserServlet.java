@@ -156,7 +156,7 @@ public class NewUserServlet extends HttpServlet {
       db.commit();
       logger.info("NewUser : ok  for " + mail + " code is " + code);
       mailer.sendNewLicense(mail, code, "fr");
-      mailer.sendToAdmin("New User : licence code " + code + " send to " + mail);
+      mailer.sendToSupport(mail, "New User", " Licence code : " + code);
       resp.setStatus(HttpServletResponse.SC_OK);
     }
     else {
@@ -177,7 +177,7 @@ public class NewUserServlet extends HttpServlet {
         String message = "NewUser : Receive different TransactionId for the same mail txId='" + transactionId +
                          "' previousTxId='" + previousTrId + "' for '" + mail + "'";
         logger.error(message);
-        mailer.sendToAdmin(message + "'. We should contact them to ask them for an other mail.");
+        mailer.sendToSupport(mail, "different TransactionId", message + "'. We should contact them to ask them for an other mail.");
       }
       mailer.sendNewLicense(mail, code, "fr");
       resp.setStatus(HttpServletResponse.SC_OK);

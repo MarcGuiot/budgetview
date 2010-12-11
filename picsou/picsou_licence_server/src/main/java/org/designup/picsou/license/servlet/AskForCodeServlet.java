@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AskForCodeServlet extends HttpServlet {
-  static Logger logger = Logger.getLogger("mail");
+  static Logger logger = Logger.getLogger("askForCode");
   private Mailer mailer;
   private SqlService sqlService;
 
