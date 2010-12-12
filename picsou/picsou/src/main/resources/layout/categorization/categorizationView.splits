@@ -24,6 +24,13 @@
         topColor="categorization.budgetAreaSelectionPanel.top"
         bottomColor="categorization.budgetAreaSelectionPanel.bottom"/>
     <style selector="#budgetAreaSelectionPanel" ui="budgetAreaSelectionPanel"/>
+
+    <style selector="button.showTransactionCreation"
+           ui="hyperlinkButtonWithoutUnderline"
+           font="-,plain,12"
+           foreground="categorization.createTransaction.button"
+           icon="arrow_right_grey.png"
+           rolloverIcon="arrow_right_grey_rollover.png"/>
   </styles>
 
   <column styleClass="main">
@@ -51,7 +58,7 @@
               <label text="$transactionCreation.title" styleClass="separatorTitle" marginTop="15"
                      autoHideSource="transactionCreation"/>
               <filler fill="horizontal"/>
-              <button action="showHideTransactionCreation" styleClass="hyperlink"/>
+              <button action="showHideTransactionCreation" styleClass="showTransactionCreation"/>
             </row>
             <panel ref="transactionCreation"/>
           </column>

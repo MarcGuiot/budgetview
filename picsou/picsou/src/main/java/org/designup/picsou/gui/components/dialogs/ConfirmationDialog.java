@@ -16,9 +16,27 @@ public abstract class ConfirmationDialog {
   protected AbstractAction ok;
   private SplitsBuilder builder;
 
-  public ConfirmationDialog(String titleKey, String contentKey, Window owner, Directory directory, String... args) {
+  public enum Mode {
+    STANDARD("/layout/utils/confirmationDialog.splits"),
+    EXPANDED("/layout/utils/confirmationDialogExpanded.splits");
+
+    final String sourceFile;
+
+    Mode(String sourceFile) {
+      this.sourceFile = sourceFile;
+    }
+  }
+
+  public ConfirmationDialog(String titleKey, String contentKey, Window owner, Directory directory,
+                            String... args) {
+    this(titleKey, contentKey, owner, directory, Mode.STANDARD, args);
+  }
+
+  public ConfirmationDialog(String titleKey, String contentKey,
+                            Window owner, Directory directory,
+                            Mode mode, String... args) {
     builder = SplitsBuilder.init(directory)
-      .setSource(getClass(), "/layout/utils/confirmationDialog.splits");
+      .setSource(getClass(), mode.sourceFile);
 
     dialog = PicsouDialog.create(owner, directory);
 
@@ -40,8 +58,12 @@ public abstract class ConfirmationDialog {
     // override this
   }
 
+  protected String getOkButtonText() {
+    return Lang.get("ok");
+  }
+
   private AbstractAction createOkAction() {
-    ok = new AbstractAction(Lang.get("ok")) {
+    ok = new AbstractAction(getOkButtonText()) {
       public void actionPerformed(ActionEvent e) {
         dialog.setVisible(false);
         postValidate();
@@ -49,6 +71,7 @@ public abstract class ConfirmationDialog {
     };
     return ok;
   }
+
 
   protected AbstractAction createCancelAction() {
     cancel = new AbstractAction(Lang.get("cancel")) {

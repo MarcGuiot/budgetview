@@ -32,7 +32,11 @@ public class ConfirmationDialogChecker extends GuiChecker {
   }
 
   public Trigger getOkTrigger() {
-    return dialog.getButton("OK").triggerClick();
+    return getOkTrigger("OK");
+  }
+
+  public Trigger getOkTrigger(String buttonName) {
+    return dialog.getButton(buttonName).triggerClick();
   }
 
   public void cancel() {

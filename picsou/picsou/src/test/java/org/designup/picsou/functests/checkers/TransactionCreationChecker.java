@@ -165,7 +165,7 @@ public class TransactionCreationChecker extends GuiChecker {
     ConfirmationDialogChecker dialog = ConfirmationDialogChecker.init(getShowHideButton().triggerClick());
     dialog.checkTitle("No manual accounts");
     dialog.checkMessageContains("you must create a dedicated account");
-    return AccountEditionChecker.open(dialog.getOkTrigger());
+    return AccountEditionChecker.open(dialog.getOkTrigger("Create a manual account"));
   }
 
   public TransactionCreationChecker createAndCheckErrorMessage(String message) {

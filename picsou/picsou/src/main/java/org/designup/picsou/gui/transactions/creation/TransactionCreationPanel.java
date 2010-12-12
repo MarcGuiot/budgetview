@@ -252,6 +252,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
                          directory.get(JFrame.class), directory);
       return;
     }
+
     if (LicenseService.trialExpired(parentRepository)) {
       LicenseActivationDialog dialog = new LicenseActivationDialog(directory.get(JFrame.class),
                                                                    repository, directory);
@@ -263,7 +264,13 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
       final JFrame frame = directory.get(JFrame.class);
       ConfirmationDialog dialog = new ConfirmationDialog("transactionCreation.noAccounts.title",
                                                          "transactionCreation.noAccounts.message",
-                                                         frame, directory) {
+                                                         frame, directory,
+                                                         ConfirmationDialog.Mode.EXPANDED) {
+
+        protected String getOkButtonText() {
+          return Lang.get("transactionCreation.createAccount.okButton");
+        }
+
         protected void postValidate() {
           AccountEditionDialog accountEdition = new AccountEditionDialog(frame, parentRepository, directory);
           accountEdition.showWithNewAccount(AccountType.MAIN, true, AccountUpdateMode.MANUAL, true);
