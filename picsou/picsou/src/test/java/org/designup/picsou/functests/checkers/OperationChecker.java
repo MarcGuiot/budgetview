@@ -27,7 +27,6 @@ import java.util.List;
 public class OperationChecker {
   private MenuItem importMenu;
   private MenuItem exportMenu;
-  private MenuItem feedbackMenu;
   private MenuItem preferencesMenu;
   private MenuItem undoMenu;
   private MenuItem redoMenu;
@@ -48,7 +47,6 @@ public class OperationChecker {
     fileMenu = window.getMenuBar().getMenu("File");
     importMenu = fileMenu.getSubMenu("Import");
     exportMenu = fileMenu.getSubMenu("Export");
-    feedbackMenu = fileMenu.getSubMenu("Feedback");
     preferencesMenu = fileMenu.getSubMenu("Preferences");
 
     MenuItem editMenu = window.getMenuBar().getMenu("Edit");
@@ -360,15 +358,24 @@ public class OperationChecker {
   }
 
   public HelpChecker openHelp() {
-    return HelpChecker.open(window.getMenuBar().getMenu("Help").getSubMenu("Index").triggerClick());
+    return HelpChecker.open(getHelpMenu().getSubMenu("Index").triggerClick());
   }
 
   public HelpChecker openHelp(String title) {
-    return HelpChecker.open(window.getMenuBar().getMenu("Help").getSubMenu(title).triggerClick());
+    return HelpChecker.open(getHelpMenu().getSubMenu(title).triggerClick());
   }
 
   public AboutChecker openAbout() {
-    return AboutChecker.open(window.getMenuBar().getMenu("Help").getSubMenu("About").triggerClick());
+    return AboutChecker.open(getHelpMenu().getSubMenu("About").triggerClick());
+  }
+
+  public FeedbackDialogChecker openFeedback(){
+    MenuItem feedbackMenu = getHelpMenu().getSubMenu("Feedback");
+    return FeedbackDialogChecker.init(feedbackMenu.triggerClick());
+  }
+
+  private MenuItem getHelpMenu() {
+    return window.getMenuBar().getMenu("Help");
   }
 
   public void backupAndLaunchApplication(String user, String password, Date currentDate) throws Exception {
@@ -477,9 +484,5 @@ public class OperationChecker {
   public void nextSixDays() {
     MenuItem fileMenu = window.getMenuBar().getMenu("Edit");
     fileMenu.getSubMenu("Add 6 days").click();
-  }
-  
-  public FeedbackDialogChecker getFeedback(){
-    return FeedbackDialogChecker.init(feedbackMenu.triggerClick());
   }
 }

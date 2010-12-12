@@ -253,8 +253,6 @@ public class MainPanel {
     menu.add(importFileAction);
     menu.add(exportFileAction);
     menu.addSeparator();
-    menu.add(sendFeedbackAction);
-    menu.addSeparator();
     menu.add(backupAction);
     menu.add(restoreAction);
 
@@ -317,6 +315,9 @@ public class MainPanel {
       }
     });
     menu.add(cardView.getHelpAction());
+
+    menu.addSeparator();
+    menu.add(sendFeedbackAction);
 
     if (!Gui.useMacOSMenu()) {
       menu.addSeparator();

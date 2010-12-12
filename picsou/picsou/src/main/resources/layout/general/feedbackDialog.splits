@@ -1,21 +1,24 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.formLabelTop" marginTop="10"/>
+  </styles>
 
-  <panel styleClass="dialog" minimumSize="(470,180)" preferredSize="(470,250)" opaque="true">
+  <panel styleClass="dialog" minimumSize="(400,180)" preferredSize="(500,500)" opaque="true">
     <column styleClass="innerDialog">
       <label name="title" text="$feedback.title" styleClass="title"/>
-      <row defaultMarginTop="20">
-        <label text="$feedback.mailSubject"/>
-        <textField ref="mailSubject"/>
-      </row>
-      <row defaultMarginTop="10">
-        <label text="$feedback.fromMail"/>
-        <textField ref="fromMail"/>
-      </row>
-      <label text="$feedback.toMail" marginTop="10"/>
-      <editorPane ref="mailContent" marginTop="10"/>
-      <filler fill="vertical" weightY="20"/>
+
+      <label text="$feedback.fromMail" styleClass="formLabelTop"/>
+      <textField ref="fromMail"/>
+
+      <label text="$feedback.mailSubject" styleClass="formLabelTop"/>
+      <textField ref="mailSubject"/>
+
+      <label text="$feedback.content" styleClass="formLabelTop"/>
+      <scrollPane forceVerticalScroll="true" weightY="100">
+        <editorPane ref="mailContent"/>
+      </scrollPane>
     </column>
   </panel>
 

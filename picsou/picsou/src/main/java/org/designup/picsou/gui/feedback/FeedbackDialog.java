@@ -13,20 +13,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class FeedbackDialog {
-  private GlobRepository repository;
-  private Directory directory;
   private PicsouDialog dialog;
   private JTextField userMail;
   private JTextField mailSubject;
 
   public FeedbackDialog(Window parent, GlobRepository repository, final Directory directory) {
-    this.repository = repository;
-    this.directory = directory;
 
     dialog = PicsouDialog.create(parent, directory);
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/general/feedbackDialog.splits",
-                                                      repository, this.directory);
+                                                      repository, directory);
     JEditorPane jEditorPane = new JEditorPane();
     builder.add("mailContent", jEditorPane);
 

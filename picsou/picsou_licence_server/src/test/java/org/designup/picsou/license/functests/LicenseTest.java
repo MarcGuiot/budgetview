@@ -8,20 +8,14 @@ import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.license.LicenseTestCase;
 import org.designup.picsou.license.model.License;
 import org.designup.picsou.license.model.RepoInfo;
-import org.globsframework.metamodel.Field;
-import org.globsframework.model.EmptyGlobList;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SqlConnection;
-import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.utils.Dates;
 import org.uispec4j.TextBox;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
-
-import java.util.Date;
 
 public class LicenseTest extends LicenseTestCase {
   private PicsouApplication picsouApplication;
@@ -344,7 +338,7 @@ public class LicenseTest extends LicenseTestCase {
   public void testSendFeedback() throws Exception {
     login.logNewUser("user", "passw@rd");
     OperationChecker operation = new OperationChecker(window);
-    FeedbackDialogChecker feedback = operation.getFeedback();
+    FeedbackDialogChecker feedback = operation.openFeedback();
     feedback.send("my title", "me@gg.fr", "some content");
     String messageCode = checkReceivedMail("support@mybudgetview.fr");
     assertTrue(messageCode.contains("some content"));
