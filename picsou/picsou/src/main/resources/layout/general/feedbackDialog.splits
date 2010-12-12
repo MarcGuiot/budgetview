@@ -19,6 +19,7 @@
       <scrollPane forceVerticalScroll="true" weightY="100">
         <editorPane ref="mailContent"/>
       </scrollPane>
+
     </column>
   </panel>
 

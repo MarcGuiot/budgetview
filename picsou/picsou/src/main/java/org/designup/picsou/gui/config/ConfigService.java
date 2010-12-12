@@ -230,6 +230,7 @@ public class ConfigService {
       }
     }
     catch (final Exception e) {
+      updateConnectionStatus(e);
       updateRepository(repository, User.ACTIVATION_FAILED_CAN_NOT_CONNECT);
       // pas de stack (juste les message) risque de faciliter le piratage
       Thread thread = new Thread() {
@@ -308,7 +309,8 @@ public class ConfigService {
         try {
           httpClient.executeMethod(postMethod);
         }
-        catch (Exception e) {
+        catch (final Exception e){
+          updateConnectionStatus(e);
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
               listener.sendFail();
@@ -335,6 +337,16 @@ public class ConfigService {
     };
     thread.setDaemon(true);
     thread.start();
+  }
+
+  private void updateConnectionStatus(Exception e) {
+//    if (e instanceof IOException){
+//      SwingUtilities.invokeLater(new Runnable() {
+//        public void run() {
+//          repository.update(User.KEY, User.CONNECTED, false);
+//        }
+//      });
+//    }
   }
 
   synchronized public boolean update(final byte[] repoId, final long launchCount, byte[] mailInBytes,

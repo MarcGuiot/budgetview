@@ -5,7 +5,7 @@ import junit.framework.AssertionFailedError;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.license.LicenseTestCase;
+import org.designup.picsou.license.ConnectedTestCase;
 import org.designup.picsou.license.model.License;
 import org.designup.picsou.license.model.RepoInfo;
 import org.globsframework.model.Glob;
@@ -17,7 +17,7 @@ import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
 
-public class LicenseTest extends LicenseTestCase {
+public class LicenseTest extends ConnectedTestCase {
   private PicsouApplication picsouApplication;
   private Window window;
   private LoginChecker login;
@@ -333,16 +333,6 @@ public class LicenseTest extends LicenseTestCase {
     String newCode = checkMailAndExtractCode();
     assertFalse(newCode.equals("1234"));
     activation.cancel();
-  }
-
-  public void testSendFeedback() throws Exception {
-    login.logNewUser("user", "passw@rd");
-    OperationChecker operation = new OperationChecker(window);
-    FeedbackDialogChecker feedback = operation.openFeedback();
-    feedback.send("my title", "me@gg.fr", "some content");
-    String messageCode = checkReceivedMail("support@mybudgetview.fr");
-    assertTrue(messageCode.contains("some content"));
-    assertTrue(messageCode.contains("me@gg.fr"));
   }
 
   public void testMailSentLater() throws Exception {

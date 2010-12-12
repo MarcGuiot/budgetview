@@ -34,7 +34,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Date;
 
-public abstract class LicenseTestCase extends UISpecTestCase {
+public abstract class ConnectedTestCase extends UISpecTestCase {
   protected SimpleSmtpServer mailServer;
   protected Thread mailThread;
   private static final String databaseUrl = "jdbc:hsqldb:.";
