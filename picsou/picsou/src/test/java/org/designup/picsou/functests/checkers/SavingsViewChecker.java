@@ -111,4 +111,9 @@ public class SavingsViewChecker extends GuiChecker {
   private String getButtonName(String accountName, String seriesName) {
     return accountName + "." + seriesName + ".edit";
   }
+
+  public SavingsViewChecker alignAndPropagate(String accountName, String seriesName) {
+    editSeries(accountName, seriesName).alignPlannedAndActual().setPropagationEnabled().validate();
+    return this;
+  }
 }

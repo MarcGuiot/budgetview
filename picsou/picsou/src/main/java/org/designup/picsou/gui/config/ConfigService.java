@@ -6,6 +6,7 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.designup.picsou.bank.BankPluginService;
 import org.designup.picsou.client.http.HttpsClientTransport;
+import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.utils.KeyService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;

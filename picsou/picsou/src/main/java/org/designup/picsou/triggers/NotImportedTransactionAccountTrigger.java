@@ -77,7 +77,8 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
       GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES,
                                                      key.get(Series.ID)).getGlobs();
       repository.delete(transactions.filter(and(fieldEquals(Transaction.ACCOUNT, previousAccountId),
-                                                isTrue(Transaction.CREATED_BY_SERIES)),
+                                                or(isTrue(Transaction.CREATED_BY_SERIES),
+                                                   isTrue(Transaction.PLANNED))),
                                             repository));
     }
   }

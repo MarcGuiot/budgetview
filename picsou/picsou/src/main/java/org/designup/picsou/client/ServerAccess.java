@@ -23,7 +23,7 @@ public interface ServerAccess {
   boolean initConnection(String name, char[] password, boolean privateComputer)
     throws BadPassword, UserNotRegistered;
 
-  void localRegister(byte[] mail, byte[] signature, String activationCode);
+  void localRegister(byte[] mail, byte[] signature, String activationCode, long jarVersion);
 
   void downloadedVersion(long version);
 
@@ -74,7 +74,7 @@ public interface ServerAccess {
       return true;
     }
 
-    public void localRegister(byte[] mail, byte[] signature, String activationCode) {
+    public void localRegister(byte[] mail, byte[] signature, String activationCode, long jarVersion) {
     }
 
     public void downloadedVersion(long version) {

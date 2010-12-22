@@ -21,7 +21,7 @@ public enum BudgetArea implements GlobConstantContainer {
   RECURRING("RECURRING", 1, false, false, true),
   VARIABLE("VARIABLE", 2, false, false, false),
   EXTRAS("EXTRAS", 4, false, false, false),
-  SAVINGS("SAVINGS", 5, false, true, true),
+  SAVINGS("SAVINGS", 5, false, true, false),
   UNCATEGORIZED("UNCATEGORIZED", 6, false, false, true),
   OTHER("OTHER", 7, false, false, true);
 

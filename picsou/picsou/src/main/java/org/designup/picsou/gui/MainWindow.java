@@ -83,14 +83,11 @@ public class MainWindow implements WindowManager {
       registered = configService.update(info.getRepoId(), info.getCount(), info.getMail(),
                                         info.getSignature(), info.getActivationCode());
       long downloadVersion = info.getDownloadVersion();
-      if (downloadVersion != -1){
-         if (downloadVersion < PicsouApplication.JAR_VERSION){
+      if (downloadVersion != -1) {
+         if (downloadVersion < PicsouApplication.JAR_VERSION && downloadVersion >= 52L) {
            badJarVersion = true;
            registered = false;
          }
-      }
-      else {
-        serverAccess.downloadedVersion(PicsouApplication.JAR_VERSION);
       }
     }
     else {

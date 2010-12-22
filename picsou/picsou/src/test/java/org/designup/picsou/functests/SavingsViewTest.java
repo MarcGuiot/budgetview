@@ -25,6 +25,8 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewSavings("Virt", "Epargne", "Main accounts", "ING");
+    views.selectBudget();
+    budgetView.savings.alignAndPropagate("Epargne");
 
     views.selectSavings();
     savingsView.checkContainsSeries("ING", "Epargne");
@@ -54,6 +56,9 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewSavings("Virt", "Epargne", "Main accounts", "ING");
+
+    views.selectBudget();
+    budgetView.savings.alignAndPropagate("Epargne");
 
     views.selectSavings();
     savingsView.histoChart
@@ -140,6 +145,9 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewSavings("Virt", "Epargne", "Main accounts", "ING");
+    views.selectBudget();
+    budgetView.savings.alignAndPropagate("Epargne");
+
     views.selectSavings();
     timeline.selectMonth("2009/05");
     savingsView.checkTotalPosition("-", "31/05/2009");
@@ -204,6 +212,10 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewSavings("Virt", "Epargne", "ING", "Main accounts");
+
+    views.selectBudget();
+    budgetView.savings.alignAndPropagate("Epargne");
+
     views.selectSavings();
     savingsView.createSeries()
       .setName("External")
@@ -213,7 +225,6 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .setAmount(210)
       .setDay("15")
       .validate();
-
 
     operations.nextMonth();
     operations.nextSixDays();

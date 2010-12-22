@@ -33,14 +33,14 @@ public class ConnectionRetryServerAccess extends ServerAccessDecorator {
     return super.initConnection(this.name, this.password, privateComputer);
   }
 
-  public void localRegister(byte[] mail, byte[] signature, String activationCode) {
+  public void localRegister(byte[] mail, byte[] signature, String activationCode, long jarVersion) {
     try {
-      super.localRegister(mail, signature, activationCode);
+      super.localRegister(mail, signature, activationCode, jarVersion);
     }
     catch (GlobsException e) {
       super.connect();
       super.initConnection(name, password, privateComputer);
-      super.localRegister(mail, signature, activationCode);
+      super.localRegister(mail, signature, activationCode, jarVersion);
     }
   }
 

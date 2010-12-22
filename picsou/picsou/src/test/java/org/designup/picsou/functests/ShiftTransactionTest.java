@@ -306,6 +306,10 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTransaction("Epargne / July");
     transactionDetails.shift();
+    timeline.selectMonth("2008/06");
+    views.selectBudget();
+    budgetView.savings.alignAndPropagate("Epargne");
+
     timeline.selectAll();
     views.selectData();
     transactions.initContent()
