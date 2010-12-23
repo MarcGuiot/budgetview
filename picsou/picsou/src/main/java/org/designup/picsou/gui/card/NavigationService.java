@@ -4,6 +4,7 @@ import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.series.view.SeriesView;
+import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.globsframework.gui.GlobSelection;
@@ -14,6 +15,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.GlobsException;
 
 import java.util.Stack;
 
@@ -22,20 +24,20 @@ public class NavigationService implements GlobSelectionListener {
   public static final Card INITIAL_CARD = Card.HOME;
 
   private SelectionService selectionService;
+  private TransactionView transactionView;
   private CategorizationView categorizationView;
-  private SeriesView seriesView;
   private GlobRepository repository;
 
   private Card currentCard = INITIAL_CARD;
   private Stack<Card> backStack = new Stack<Card>();
   private Stack<Card> forwardStack = new Stack<Card>();
 
-  public NavigationService(CategorizationView categorizationView,
-                           SeriesView seriesView,
+  public NavigationService(TransactionView transactionView,
+                           CategorizationView categorizationView,
                            GlobRepository repository,
                            Directory directory) {
+    this.transactionView = transactionView;
     this.categorizationView = categorizationView;
-    this.seriesView = seriesView;
     this.repository = repository;
     this.selectionService = directory.get(SelectionService.class);
     this.selectionService.addListener(this, Card.TYPE);
@@ -79,24 +81,13 @@ public class NavigationService implements GlobSelectionListener {
 
   public void gotoDataForAccount(Key accountKey) {
     selectionService.select(repository.get(accountKey));
-    seriesView.selectAll();
+    transactionView.setAccountFilter(accountKey);
     select(Card.DATA, false);
   }
 
   public void gotoDataForSeries(Glob series) {
     selectionService.select(repository.get(Account.ALL_SUMMARY_KEY));
-    seriesView.selectSeries(series);
-    select(Card.DATA, false);
-  }
-
-  public void gotoData(BudgetArea budgetArea) {
-    selectionService.select(repository.get(Account.ALL_SUMMARY_KEY));
-    seriesView.selectBudgetArea(budgetArea);
-    select(Card.DATA, false);
-  }
-
-  public void gotoDataForSavingsAccount(Integer accountId) {
-    selectionService.select(repository.get(Key.create(Account.TYPE, accountId)));
+    transactionView.setSeriesFilter(series);
     select(Card.DATA, false);
   }
 

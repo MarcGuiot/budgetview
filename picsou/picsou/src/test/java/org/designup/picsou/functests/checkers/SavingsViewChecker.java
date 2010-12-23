@@ -1,36 +1,69 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.Assert;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
+
 import static org.uispec4j.assertion.UISpecAssert.*;
-import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import static org.uispec4j.finder.ComponentMatchers.*;
 
 import javax.swing.*;
 
-public class SavingsViewChecker extends GuiChecker {
+public class SavingsViewChecker extends ViewChecker {
 
   public HistoChecker histoChart;
-  
-  private Window window;
 
-  public SavingsViewChecker(Window window) {
-    this.window = window;
-    this.histoChart = new HistoChecker(window, "savingsEvolutionPanel", "histoChart");
+  private Panel savingsView;
+
+  public SavingsViewChecker(Window mainWindow) {
+    super(mainWindow);
+    this.histoChart = new HistoChecker(mainWindow, "savingsEvolutionPanel", "histoChart");
   }
 
-  public void checkNoTotalPosition() {
-    assertThat(getPanel().getTextBox("totalSavingsPositionAmount").textEquals("-"));
+  public void checkNoEstimatedTotalPosition() {
+    assertThat(getPanel().getTextBox("totalEstimatedSavingsPositionAmount").textEquals("-"));
   }
 
-  public void checkTotalPosition(String amount, String updateDate) {
-    TextBox position = getPanel().getTextBox("totalSavingsPositionAmount");
+  public void checkTotalReferencePosition(String amount, String updateDate) {
+    TextBox position = getPanel().getTextBox("totalReferenceSavingsPositionAmount");
     assertThat(position.isVisible());
     assertThat(position.textEquals(amount));
 
-    TextBox date = getPanel().getTextBox("totalSavingsPositionDate");
+    TextBox date = getPanel().getTextBox("totalReferenceSavingsPositionDate");
     assertThat(date.isVisible());
     assertThat(date.textContains(updateDate));
+  }
+
+  public SavingsViewChecker checkNoEstimatedPosition() {
+    Assert.fail("TBD");
+    return this;
+  }
+
+  public SavingsViewChecker checkTotalEstimatedPosition(double amount) {
+    checkTotalEstimatedPosition(toString(amount));
+    return this;
+  }
+
+  public SavingsViewChecker checkTotalEstimatedPosition(String amount) {
+    TextBox position = getPanel().getTextBox("totalEstimatedSavingsPositionAmount");
+    assertThat(position.isVisible());
+    assertThat(position.textEquals(amount));
+    return this;
+  }
+
+  public void checkTotalEstimatedPositionDate(String updateDate) {
+    TextBox date = getPanel().getTextBox("totalEstimatedSavingsPositionDate");
+    assertThat(date.isVisible());
+    assertThat(date.textContains(updateDate));
+  }
+
+  public void checkTotalEstimatedPosition(String amount, String updateDate) {
+    checkTotalEstimatedPosition(amount);
+    checkTotalEstimatedPositionDate(updateDate);
+  }
+
+  public void checkTotalEstimatedPositionColor(String color) {
+    assertThat(getPanel().getTextBox("totalEstimatedSavingsPositionAmount").foregroundNear(color));
   }
 
   public void checkContainsSeries(String accountName, String seriesName) {
@@ -59,15 +92,20 @@ public class SavingsViewChecker extends GuiChecker {
   }
 
   public void checkAccountWithNoPosition(String accountName) {
-    final Panel accountPanel = getAccountPanel(accountName);
+    Panel accountPanel = getAccountPanel(accountName);
     assertThat(accountPanel.getTextBox("estimatedAccountPosition." + accountName).textEquals("-"));
     assertTrue(accountPanel.getTextBox("estimatedAccountPositionDate." + accountName).isVisible());
   }
 
   public void checkAccount(String accountName, Double position, String updateDate) {
-    final Panel accountPanel = getAccountPanel(accountName);
+    Panel accountPanel = getAccountPanel(accountName);
     assertTrue(accountPanel.getTextBox("estimatedAccountPosition." + accountName).textEquals(toString(position)));
     assertTrue(accountPanel.getTextBox("estimatedAccountPositionDate." + accountName).textEquals("on " + updateDate));
+  }
+
+  public void checkEstimatedPosition(String accountName, double position) {
+    Panel accountPanel = getAccountPanel(accountName);
+    assertTrue(accountPanel.getTextBox("estimatedAccountPosition." + accountName).textEquals(toString(position)));
   }
 
   private Panel getAccountPanel(String accountName) {
@@ -86,7 +124,12 @@ public class SavingsViewChecker extends GuiChecker {
   }
 
   private Panel getPanel() {
-    return window.getPanel("savingsView");
+    if (savingsView == null) {
+      views.selectSavings();
+      savingsView = mainWindow.getPanel("savingsView");
+    }
+
+    return savingsView;
   }
 
   public SeriesEditionDialogChecker createSeries() {

@@ -27,15 +27,30 @@
               <filler fill="horizontal"/>
               <grid ref="header" marginBottom="5">
                 <label text="$accountView.reference.title" gridPos="(0,0)"
-                       styleClass="totalAmountTitle" autoHideSource="totalSavingsPositionAmount"/>
-                <label ref="totalSavingsPositionAmount" gridPos="(1,0)"
+                       styleClass="totalAmountTitle" autoHideSource="totalReferenceSavingsPositionAmount"/>
+                <label ref="totalReferenceSavingsPositionAmount" gridPos="(1,0)"
                        styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"
                        marginLeft="10" marginRight="10"/>
-                <label ref="totalSavingsPositionDate" gridPos="(2,0)"
-                       styleClass="totalAmountTitle" autoHideSource="totalSavingsPositionAmount"/>
+                <label ref="totalReferenceSavingsPositionDate" gridPos="(2,0)"
+                       styleClass="totalAmountTitle" autoHideSource="totalReferenceSavingsPositionAmount"/>
               </grid>
               <filler fill="horizontal"/>
             </row>
+
+            <row>
+              <filler fill="horizontal"/>
+              <grid ref="header" marginBottom="5">
+                <label text="$accountView.estimated.title" gridPos="(0,0)"
+                       styleClass="totalAmountTitle" autoHideSource="totalEstimatedSavingsPositionAmount"/>
+                <label ref="totalEstimatedSavingsPositionAmount" gridPos="(1,0)"
+                       styleClass="totalAmount" tooltipText="$accountView.estimated.tooltip"
+                       marginLeft="10" marginRight="10"/>
+                <label ref="totalEstimatedSavingsPositionDate" gridPos="(2,0)"
+                       styleClass="totalAmountTitle" autoHideSource="totalEstimatedSavingsPositionAmount"/>
+              </grid>
+              <filler fill="horizontal"/>
+            </row>
+
 
             <column styleClass="blockScrollBorder">
               <scrollPane marginTop="0" marginBottom="0">

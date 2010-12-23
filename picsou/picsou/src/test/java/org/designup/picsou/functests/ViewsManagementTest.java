@@ -20,7 +20,6 @@ public class ViewsManagementTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.checkVisible(true);
-    series.checkVisible(true);
   }
 
   public void testBackForward() throws Exception {

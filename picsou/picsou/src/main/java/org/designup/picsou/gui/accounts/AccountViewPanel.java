@@ -6,7 +6,6 @@ import org.designup.picsou.gui.accounts.utils.GotoAccountOperationsAction;
 import org.designup.picsou.gui.description.AccountComparator;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
-import org.designup.picsou.gui.monthsummary.AccountPositionThresholdAction;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
@@ -81,12 +80,14 @@ public abstract class AccountViewPanel {
 
     header = builder.add("header", new JPanel()).getComponent();
 
-    registerReferencePositionLabels(builder, summaryId,
-                                      "referencePosition",
-                                      "referencePositionDate",
-                                      "accountView.total.date");
+    AccountPositionLabels.registerReferencePositionLabels(builder, summaryId,
+                                                          "referencePosition",
+                                                          "referencePositionDate",
+                                                          "accountView.total.date");
 
     Key summaryAccount = Key.create(Account.TYPE, summaryId);
+
+    // TODO: SUPPRIMER LES MONTANTS ATTENDUS
     AccountPositionLabels positionLabels = createPositionLabels(summaryAccount);
     builder.add("estimatedPosition",
                 positionLabels.getEstimatedAccountPositionLabel(true));
@@ -103,20 +104,6 @@ public abstract class AccountViewPanel {
     builder.add("createAccount", new NewAccountAction(getAccountType(), repository, directory));
 
     panel = builder.load();
-  }
-
-  public static void registerReferencePositionLabels(GlobsPanelBuilder builder, 
-                                                    Integer summaryId,
-                                                    String positionLabelName,
-                                                    String titleLabelName,
-                                                    String titleLabelKey) {
-    Key summaryAccount = Key.create(Account.TYPE, summaryId);
-    builder.addLabel(positionLabelName, Account.POSITION)
-      .setAutoHideIfEmpty(true)
-      .forceSelection(summaryAccount);
-    builder.addLabel(titleLabelName, Account.TYPE, new ReferenceAmountStringifier(titleLabelKey))
-      .setAutoHideIfEmpty(true)
-      .forceSelection(summaryAccount);
   }
 
   protected abstract AccountType getAccountType();
@@ -196,21 +183,6 @@ public abstract class AccountViewPanel {
     public void run(GlobList list, GlobRepository repository) {
       AccountEditionDialog dialog = new AccountEditionDialog(repository, directory);
       dialog.show(list.get(0));
-    }
-  }
-
-  private static class ReferenceAmountStringifier implements GlobListStringifier {
-    private String key;
-
-    private ReferenceAmountStringifier(String key) {
-      this.key = key;
-    }
-
-    public String toString(GlobList list, GlobRepository repository) {
-      if (list.isEmpty() || list.get(0).get(Account.POSITION_DATE) == null) {
-        return "";
-      }
-      return Lang.get(key, Formatting.toString(list.get(0).get(Account.POSITION_DATE)));
     }
   }
 

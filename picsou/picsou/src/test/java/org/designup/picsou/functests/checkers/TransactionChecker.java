@@ -3,8 +3,8 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.functests.checkers.converters.SeriesCellConverter;
-import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.PicsouFrame;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.SubSeries;
 import org.designup.picsou.model.Transaction;
@@ -17,9 +17,6 @@ import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.KeyUtils;
@@ -28,15 +25,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+import static org.uispec4j.assertion.UISpecAssert.*;
+
 public class TransactionChecker extends ViewChecker {
   public static final String TO_CATEGORIZE = "To categorize";
 
   private Table table;
-  private Window mainWindow;
+  private Table amountTable;
 
   public TransactionChecker(Window window) {
     super(window);
-    mainWindow = window;
   }
 
   public void checkTableIsEmpty() {
@@ -49,16 +47,17 @@ public class TransactionChecker extends ViewChecker {
 
   public Table getTable() {
     if (table == null) {
-      table = window.getTable("transactionsTable");
+      views.selectData();
+      table = mainWindow.getTable("transactionsTable");
       table.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter());
-      table.setCellValueConverter(TransactionView.SUBSERIES_COLUMN_INDEX, new SubSeriesCellValueConverter(window));
+      table.setCellValueConverter(TransactionView.SUBSERIES_COLUMN_INDEX, new SubSeriesCellValueConverter(mainWindow));
       table.setCellValueConverter(TransactionView.SERIES_COLUMN_INDEX, new SeriesCellConverter(true));
     }
     return table;
   }
 
-  protected UIComponent findMainComponent(Window window) {
-    return window.findUIComponent(ComponentMatchers.innerNameIdentity("transactionsTable"));
+  protected UIComponent getMainComponent() {
+    return mainWindow.findUIComponent(ComponentMatchers.innerNameIdentity("transactionsTable"));
   }
 
   public TransactionChecker categorize(String... labels) {
@@ -129,26 +128,33 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public TransactionChecker checkClearFilterButtonShown() {
-    checkComponentVisible(window, JPanel.class, "customFilterMessage", true);
+    checkComponentVisible(this.mainWindow, JPanel.class, "customFilterMessage", true);
     return this;
   }
 
   public TransactionChecker checkClearFilterButtonHidden() {
-    checkComponentVisible(window, JPanel.class, "customFilterMessage", false);
+    checkComponentVisible(this.mainWindow, JPanel.class, "customFilterMessage", false);
     return this;
   }
 
   public TransactionChecker clearFilters() {
-    window.getPanel("customFilterMessage").getButton().click();
+    this.mainWindow.getPanel("customFilterMessage").getButton().click();
     return this;
   }
 
   public TransactionAmountChecker initAmountContent() {
-    Table table = window.getTable(Transaction.TYPE.getName());
-    table.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter());
-    table.setCellValueConverter(TransactionView.SUBSERIES_COLUMN_INDEX, new SubSeriesCellValueConverter(window));
-    table.setCellValueConverter(TransactionView.SERIES_COLUMN_INDEX, new SeriesCellConverter(false));
-    return new TransactionAmountChecker(table);
+    return new TransactionAmountChecker(getAmountTable());
+  }
+
+  private Table getAmountTable() {
+    if (amountTable == null) {
+      views.selectData();
+      amountTable = mainWindow.getTable(Transaction.TYPE.getName());
+      amountTable.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter());
+      amountTable.setCellValueConverter(TransactionView.SUBSERIES_COLUMN_INDEX, new SubSeriesCellValueConverter(mainWindow));
+      amountTable.setCellValueConverter(TransactionView.SERIES_COLUMN_INDEX, new SeriesCellConverter(false));
+    }
+    return amountTable;
   }
 
   public void checkSelectedRow(int row) {
@@ -156,11 +162,11 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public void selectAccount(String accountName) {
-    mainWindow.getListBox("accountFilterList").select(accountName);
+    mainWindow.getComboBox("accountFilterCombo").select(accountName);
   }
 
   public void checkSelectedAccount(String selection) {
-    assertThat(mainWindow.getListBox("accountFilterList").selectionEquals(selection));
+    assertThat(mainWindow.getComboBox("accountFilterCombo").selectionEquals(selection));
   }
 
   public void checkNotEmpty() {
@@ -375,14 +381,14 @@ public class TransactionChecker extends ViewChecker {
     public void check() {
       Object[][] expectedContent = content.toArray(new Object[content.size()][]);
       UISpecAssert.assertTrue(getTable()
-        .contentEquals(new String[]{Lang.get("transactionView.date.user"),
-                                    Lang.get("transactionView.date.bank"),
-                                    Lang.get("series"),
-                                    Lang.get("subSeries"),
-                                    Lang.get("label"),
-                                    Lang.get("amount"),
-                                    Lang.get("note")},
-                       expectedContent));
+                                .contentEquals(new String[]{Lang.get("transactionView.date.user"),
+                                                            Lang.get("transactionView.date.bank"),
+                                                            Lang.get("series"),
+                                                            Lang.get("subSeries"),
+                                                            Lang.get("label"),
+                                                            Lang.get("amount"),
+                                                            Lang.get("note")},
+                                               expectedContent));
     }
 
   }

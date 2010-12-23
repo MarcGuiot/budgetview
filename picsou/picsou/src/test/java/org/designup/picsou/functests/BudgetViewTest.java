@@ -434,9 +434,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .selectRecurring()
       .selectSeries("Groceries");
 
-    views.selectData();
-    series.select("Groceries");
-
     views.selectBudget();
     budgetView.recurring.checkSeries("Fuel", -60, -120);
 
@@ -487,28 +484,23 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("Auchan", "Groceries");
     categorization.setVariable("Monoprix", "Groceries");
 
-    views.selectData();
-    series.checkExpanded("Variable", true);
-    series.toggleExpansion("Variable");
-    series.checkExpanded("Variable", false);
-
     views.selectBudget();
     budgetView.variable.gotoData("Groceries");
 
     views.checkDataSelected();
-    views.selectData();
-    series.checkSelection("Groceries");
     transactions.initContent()
       .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00, "Groceries")
       .add("10/07/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00, "Groceries")
       .check();
-    series.checkExpanded("Variable", true);
+    transactions.clearFilters();
 
     views.selectBudget();
     budgetView.variable.gotoData("Groceries");
     views.checkDataSelected();
-    series.checkSelection("Groceries");
-    series.checkExpanded("Variable", true);
+    transactions.initContent()
+      .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00, "Groceries")
+      .add("10/07/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00, "Groceries")
+      .check();
   }
 
   public void testSeriesAreOrderedByDecreasingAmounts() throws Exception {

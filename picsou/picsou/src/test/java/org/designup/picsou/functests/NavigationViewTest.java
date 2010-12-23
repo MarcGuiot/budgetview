@@ -4,6 +4,7 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 
 public class NavigationViewTest extends LoggedInFunctionalTestCase {
+
   public void testNavigation() throws Exception {
     views.selectHome();
 

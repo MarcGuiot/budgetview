@@ -54,7 +54,7 @@ public abstract class ExpandableTableChecker extends ViewChecker {
     getPanel().getButton("collapse").click();
   }
 
-  protected UIComponent findMainComponent(Window window) {
+  protected UIComponent getMainComponent() {
     return getTable();
   }
 }

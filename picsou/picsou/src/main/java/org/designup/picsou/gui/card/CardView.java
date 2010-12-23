@@ -29,7 +29,7 @@ public class CardView extends View implements GlobSelectionListener {
 
   private Card lastSelectedCard = NavigationService.INITIAL_CARD;
   private JToggleButton[] toggles = new JToggleButton[Card.values().length];
-  private static final Card[] CARDS = {Card.HOME, Card.CATEGORIZATION, Card.BUDGET, Card.EVOLUTION, Card.SAVINGS, Card.DATA};
+  private static final Card[] CARDS = {Card.HOME, Card.DATA, Card.CATEGORIZATION, Card.BUDGET, Card.SAVINGS, Card.EVOLUTION};
   private CardView.ViewHelpAction viewHelpAction;
   private Signpost categorizationCompletionSignpost;
 
@@ -45,7 +45,6 @@ public class CardView extends View implements GlobSelectionListener {
     cards = builder.addCardHandler("mainCards");
 
     final ButtonGroup masterGroup = new ButtonGroup();
-    final ButtonGroup secondaryGroup = new ButtonGroup();
     final ImageLocator images = directory.get(ImageLocator.class);
     for (Card card : CARDS) {
       JToggleButton toggle = new JToggleButton(new ToggleAction(card));

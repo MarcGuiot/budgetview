@@ -456,9 +456,9 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
   public void testSavingsSeries() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
-    views.selectHome();
+
     savingsAccounts.createSavingsAccount("Epargne", 1000.);
-    views.selectBudget();
+
     budgetView.savings.createSeries()
       .setName("CAF")
       .setFromAccount("External account")
@@ -468,15 +468,13 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .setDay("25")
       .validate();
 
-    views.selectHome();
     timeline.selectMonth("2008/08");
-    savingsAccounts.checkPosition("Epargne", 1000);
+    savingsAccounts.checkEstimatedPosition("Epargne", 1000);
     timeline.selectMonth("2008/09");
-    savingsAccounts.checkPosition("Epargne", 1300);
+    savingsAccounts.checkEstimatedPosition("Epargne", 1300);
     timeline.selectMonth("2008/10");
-    savingsAccounts.checkPosition("Epargne", 1600);
+    savingsAccounts.checkEstimatedPosition("Epargne", 1600);
 
-    views.selectData();
     timeline.selectAll();
     transactions.initContent()
       .add("25/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF")
@@ -484,27 +482,23 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .add("25/08/2008", TransactionType.PLANNED, "CAF", "", 300.00, "CAF")
       .check();
 
-    views.selectBudget();
     timeline.selectMonth("2008/08");
     budgetView.savings.checkTotalAmounts(0, 0);
 
-    views.selectSavings();
     savingsView.checkSeriesAmounts("Epargne", "CAF", 300, 300);
 
     restartApplication();
-
-    views.selectSavings();
 
     savingsView.checkSeriesAmounts("Epargne", "CAF", 300, 300);
     timeline.selectMonth("2008/08");
 
     views.selectHome();
     timeline.selectMonth("2008/08");
-    savingsAccounts.checkPosition("Epargne", 1000);
+    savingsAccounts.checkEstimatedPosition("Epargne", 1000);
     timeline.selectMonth("2008/09");
-    savingsAccounts.checkPosition("Epargne", 1300);
+    savingsAccounts.checkEstimatedPosition("Epargne", 1300);
     timeline.selectMonth("2008/10");
-    savingsAccounts.checkPosition("Epargne", 1600);
+    savingsAccounts.checkEstimatedPosition("Epargne", 1600);
 
     views.selectData();
     timeline.selectAll();

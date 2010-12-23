@@ -1,16 +1,45 @@
 package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Window;
-import org.uispec4j.assertion.UISpecAssert;
 
 public class SavingsAccountViewChecker extends AccountViewChecker<SavingsAccountViewChecker> {
+
+  private SavingsViewChecker savings;
 
   public SavingsAccountViewChecker(Window window) {
     super(window, "savingsAccountView");
   }
 
-  public SavingsAccountViewChecker checkPosition(String accountName, double position) {
-    UISpecAssert.assertThat(panel.getTextBox("estimatedAccountPosition." + accountName).textEquals(toString(position)));
+  public SavingsAccountViewChecker checkEstimatedPosition(String accountName, double position) {
+    getSavings().checkEstimatedPosition(accountName, position);
     return this;
+  }
+
+  public SavingsAccountViewChecker checkEstimatedPosition(double amount) {
+    getSavings().checkTotalEstimatedPosition(amount);
+    return this;
+  }
+
+  public SavingsAccountViewChecker checkNoEstimatedPosition() {
+    getSavings().checkNoEstimatedPosition();
+    return this;
+  }
+
+  public SavingsAccountViewChecker checkEstimatedPositionColor(String color) {
+    getSavings().checkTotalEstimatedPositionColor(color);
+    return this;
+  }
+
+  public SavingsAccountViewChecker checkEstimatedPositionDate(String date) {
+    getSavings().checkTotalEstimatedPositionDate(date);
+    return this;
+  }
+
+  private SavingsViewChecker getSavings() {
+    if (savings == null) {
+      views.selectSavings();
+      savings = new SavingsViewChecker(mainWindow);
+    }
+    return savings;
   }
 }

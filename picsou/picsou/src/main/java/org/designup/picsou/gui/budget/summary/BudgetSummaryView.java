@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.budget.summary;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.accounts.AccountViewPanel;
+import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.budget.dialogs.BalanceDialog;
 import org.designup.picsou.gui.budget.dialogs.PositionDialog;
 import org.designup.picsou.gui.budget.dialogs.PositionThresholdDialog;
@@ -67,9 +67,9 @@ public class BudgetSummaryView extends View implements GlobSelectionListener, Ch
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budget/budgetSummaryView.splits",
                                                       repository, directory);
 
-    AccountViewPanel.registerReferencePositionLabels(builder, Account.MAIN_SUMMARY_ACCOUNT_ID,
-                                                     "lastPositionLabel", "lastPositionTitle",
-                                                     "budgetSummaryView.position.title");
+    AccountPositionLabels.registerReferencePositionLabels(builder, Account.MAIN_SUMMARY_ACCOUNT_ID,
+                                                          "lastPositionLabel", "lastPositionTitle",
+                                                          "budgetSummaryView.position.title");
 
     builder.add("nextPositionLabel", estimatedPositionButton);
     builder.add("nextPositionTitle", estimatedPositionTitle);

@@ -28,7 +28,6 @@ import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.series.evolution.SeriesEvolutionView;
-import org.designup.picsou.gui.series.view.SeriesView;
 import org.designup.picsou.gui.startup.LogoutService;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.time.TimeView;
@@ -82,7 +81,6 @@ public class MainPanel {
   private Directory directory;
   private WindowManager windowManager;
   private RegisterLicenseAction registerAction;
-  private SeriesView seriesView;
   private JMenuBar menuBar;
   private JPanel panel;
   private TimeView timeView;
@@ -121,12 +119,11 @@ public class MainPanel {
 
     TitleView titleView = new TitleView(repository, directory);
 
-    seriesView = new SeriesView(repository, directory);
     transactionView = new TransactionView(repository, directory);
     categorizationView = new CategorizationView(repository, directory);
     timeView = new TimeView(repository, directory);
 
-    directory.add(new NavigationService(categorizationView, seriesView, repository, directory));
+    directory.add(new NavigationService(transactionView, categorizationView, repository, directory));
 
     importFileAction = ImportFileAction.initForMenu(Lang.get("import"), repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
@@ -181,7 +178,6 @@ public class MainPanel {
       new ActionView(repository, directory),
       new NavigationView(repository, directory),
       new BudgetView(replicationGlobRepository, directory),
-      seriesView,
       seriesEvolutionView,
       new SavingsView(replicationGlobRepository, directory),
       licenseInfoView,
@@ -228,7 +224,6 @@ public class MainPanel {
     timeView.selectCurrentMonth();
     selectLastMonthWithATransaction(repository, directory);
     timeView.centerToSelected();
-    seriesView.selectAll();
 
     SplitsEditor.show(builder, parent);
 

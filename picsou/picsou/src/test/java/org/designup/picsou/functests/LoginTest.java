@@ -410,7 +410,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     UISpecAssert.waitUntil(window.containsSwingComponent(JPasswordField.class, "password"), 2000);
   }
 
-  public void testLoginWithPwdAndAutologin() throws Exception {
+  public void testLoginWithPasswordAndAutologin() throws Exception {
     login.clickAutoLogin();
     operations = new OperationChecker(window);
     operations.logout();

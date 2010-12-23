@@ -89,7 +89,7 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
 
   protected Table getTable() {
     if (table == null) {
-      table = window.getTable("seriesEvolutionTable");
+      table = mainWindow.getTable("seriesEvolutionTable");
       table.setCellValueConverter(0, new BlankColumnConverter());
       ColumnConverter converter = new ColumnConverter();
       for (int i = 1; i < 3 + table.getColumnCount() - 1; i++) {
@@ -104,7 +104,7 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
   }
 
   protected Panel getPanel() {
-    return window.getPanel(PANEL_NAME);
+    return mainWindow.getPanel(PANEL_NAME);
   }
 
   public SeriesEditionDialogChecker editSeries(String rowLabel) {

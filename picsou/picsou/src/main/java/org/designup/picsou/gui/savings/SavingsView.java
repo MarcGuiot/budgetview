@@ -67,11 +67,16 @@ public class SavingsView extends View implements GlobSelectionListener {
     seriesButtons.setNames("createSavingsSeries", "editAllSavingsSeries");
     seriesButtons.registerButtons(builder);
 
+    AccountPositionLabels.registerReferencePositionLabels(builder, Account.SAVINGS_SUMMARY_ACCOUNT_ID,
+                                                          "totalReferenceSavingsPositionAmount",
+                                                          "totalReferenceSavingsPositionDate",
+                                                          "accountView.total.date");
+
     Key accountKey = Key.create(Account.TYPE, Account.SAVINGS_SUMMARY_ACCOUNT_ID);
     AccountPositionLabels positionLabels = new SavingsAccountPositionLabels(accountKey, repository, directory);
-    builder.add("totalSavingsPositionAmount",
+    builder.add("totalEstimatedSavingsPositionAmount",
                 positionLabels.getEstimatedAccountPositionLabel(true));
-    builder.add("totalSavingsPositionDate",
+    builder.add("totalEstimatedSavingsPositionDate",
                 positionLabels.getEstimatedAccountPositionDateLabel());
 
     repeat = builder.addRepeat("savingsAccounts", Account.TYPE,

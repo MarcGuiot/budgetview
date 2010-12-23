@@ -7,6 +7,7 @@ import org.designup.picsou.model.AccountPositionThreshold;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
@@ -35,6 +36,20 @@ public abstract class AccountPositionLabels {
     this.amountColors = new AmountColors(directory);
   }
 
+  public static void registerReferencePositionLabels(GlobsPanelBuilder builder,
+                                                    Integer accountId,
+                                                    String positionLabelName,
+                                                    String titleLabelName,
+                                                    String titleLabelKey) {
+    Key summaryAccount = Key.create(Account.TYPE, accountId);
+    builder.addLabel(positionLabelName, Account.POSITION)
+      .setAutoHideIfEmpty(true)
+      .forceSelection(summaryAccount);
+    builder.addLabel(titleLabelName, Account.TYPE, new ReferenceAmountStringifier(titleLabelKey))
+      .setAutoHideIfEmpty(true)
+      .forceSelection(summaryAccount);
+  }
+
   protected abstract GlobType getType();
 
   protected abstract Double getEndOfMonthPosition(Key accountKey, GlobRepository repository, Integer monthId);
@@ -51,6 +66,32 @@ public abstract class AccountPositionLabels {
       accountPosition.setName("estimatedAccountPosition." + account.get(Account.NAME));
     }
     return accountPosition.getComponent();
+  }
+
+  public JLabel getEstimatedAccountPositionDateLabel() {
+    GlobLabelView accountPosition =
+      GlobLabelView.init(Month.TYPE, repository, directory,
+                         new EstimatedPositionDateStringifier());
+    Glob account = repository.find(accountKey);
+    if (account != null) {
+      accountPosition.setName("estimatedAccountPositionDate." + account.get(Account.NAME));
+    }
+    return accountPosition.getComponent();
+  }
+
+  private static class ReferenceAmountStringifier implements GlobListStringifier {
+    private String key;
+
+    private ReferenceAmountStringifier(String key) {
+      this.key = key;
+    }
+
+    public String toString(GlobList list, GlobRepository repository) {
+      if (list.isEmpty() || list.get(0).get(Account.POSITION_DATE) == null) {
+        return "";
+      }
+      return Lang.get(key, Formatting.toString(list.get(0).get(Account.POSITION_DATE)));
+    }
   }
 
   private class EstimatedPositionStringifier implements GlobListStringifier {
@@ -84,16 +125,6 @@ public abstract class AccountPositionLabels {
     }
   }
 
-  public JLabel getEstimatedAccountPositionDateLabel() {
-    GlobLabelView accountPosition =
-      GlobLabelView.init(Month.TYPE, repository, directory,
-                         new EstimatedPositionDateStringifier());
-    Glob account = repository.find(accountKey);
-    if (account != null) {
-      accountPosition.setName("estimatedAccountPositionDate." + account.get(Account.NAME));
-    }
-    return accountPosition.getComponent();
-  }
 
   private static class EstimatedPositionDateStringifier implements GlobListStringifier {
     public String toString(GlobList months, GlobRepository repository) {

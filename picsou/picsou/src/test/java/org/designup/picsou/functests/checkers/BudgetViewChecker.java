@@ -18,7 +18,7 @@ import java.util.Arrays;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
-public class BudgetViewChecker extends GuiChecker {
+public class BudgetViewChecker extends ViewChecker {
 
   public final BudgetAreaChecker income;
   public final BudgetAreaChecker recurring;
@@ -26,10 +26,8 @@ public class BudgetViewChecker extends GuiChecker {
   public final BudgetAreaChecker extras;
   public final BudgetAreaChecker savings;
 
-  private Window window;
-
-  public BudgetViewChecker(Window window) {
-    this.window = window;
+  public BudgetViewChecker(Window mainWindow) {
+    super(mainWindow);
     this.income = new BudgetAreaChecker("incomeBudgetView", BudgetArea.INCOME);
     this.recurring = new BudgetAreaChecker("recurringBudgetView", BudgetArea.RECURRING);
     this.variable = new BudgetAreaChecker("variableBudgetView", BudgetArea.VARIABLE);
@@ -47,12 +45,14 @@ public class BudgetViewChecker extends GuiChecker {
   }
 
   public BudgetSummaryViewChecker getSummary() {
-    return new BudgetSummaryViewChecker(window);
+    views.selectBudget();
+    return new BudgetSummaryViewChecker(mainWindow);
   }
 
   public class BudgetAreaChecker {
 
     private String panelName;
+    private Panel panel;
     private BudgetArea budgetArea;
 
     private static final int OBSERVED_LABEL_OFFSET = 1;
@@ -71,7 +71,11 @@ public class BudgetViewChecker extends GuiChecker {
     }
 
     public Panel getPanel() {
-      return window.getPanel(panelName);
+      views.selectBudget();
+      if (panel == null) {
+        panel = mainWindow.getPanel(panelName);
+      }
+      return panel;
     }
 
     public BudgetAreaChecker checkTotalAmounts(double observed, double planned) {
@@ -277,7 +281,7 @@ public class BudgetViewChecker extends GuiChecker {
     public void clickGaugeAndCloseTip(String seriesName) {
       GaugeChecker gauge = getGauge(seriesName);
       gauge.click();
-      BalloonTipTesting.closeTip(window, gauge.getPanel());
+      BalloonTipTesting.closeTip(mainWindow, gauge.getPanel());
 
     }
 
@@ -290,17 +294,17 @@ public class BudgetViewChecker extends GuiChecker {
 
     public BudgetAreaChecker checkNameSignpostDisplayed(String seriesName, String text) {
       Button nameButton = getPanel().getButton(seriesName);
-      BudgetViewChecker.this.checkSignpostVisible(window, nameButton, text);
+      BudgetViewChecker.this.checkSignpostVisible(mainWindow, nameButton, text);
       return this;
     }
 
     public BudgetAreaChecker checkGaugeSignpostDisplayed(String seriesName, String text) {
-      BudgetViewChecker.this.checkSignpostVisible(window, getGauge(seriesName).getPanel(), text);
+      BudgetViewChecker.this.checkSignpostVisible(mainWindow, getGauge(seriesName).getPanel(), text);
       return this;
     }
 
     public BudgetAreaChecker checkAmountSignpostDisplayed(String seriesName, String text) {
-      BudgetViewChecker.this.checkSignpostVisible(window, getAmountButton(seriesName), text);
+      BudgetViewChecker.this.checkSignpostVisible(mainWindow, getAmountButton(seriesName), text);
       return this;
     }
 

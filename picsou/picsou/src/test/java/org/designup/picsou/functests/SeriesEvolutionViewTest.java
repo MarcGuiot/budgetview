@@ -644,9 +644,5 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       "Main accounts", "Balance", "Savings accounts", "To categorize", "Income", "Recurring", "Variable", "Extras",
       "Savings", "To account Livret", "Other"
     );
-
-    views.selectData();
-    series.checkContains("All", "To categorize", "Income", "Recurring", "Variable", "Extras",
-                         "Savings", "From account Livret", "To account Livret", "Other");
   }
 }

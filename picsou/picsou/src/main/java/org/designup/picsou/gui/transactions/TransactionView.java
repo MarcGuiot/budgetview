@@ -2,7 +2,7 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.accounts.utils.AccountFilteringList;
+import org.designup.picsou.gui.accounts.utils.AccountFilteringCombo;
 import org.designup.picsou.gui.components.DefaultTableCellPainter;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.FilterClearer;
@@ -11,21 +11,23 @@ import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.components.filtering.components.FilterClearingPanel;
 import org.designup.picsou.gui.description.TransactionBudgetAreaStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
-import org.designup.picsou.gui.series.view.SeriesView;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.font.FontLocator;
-import org.globsframework.gui.views.GlobListView;
+import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobMatcher;
@@ -36,6 +38,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.designup.picsou.model.Transaction.TYPE;
@@ -58,7 +61,7 @@ public class TransactionView extends View implements Filterable {
   private static final int[] COLUMN_SIZES = {10, 10, 10, 15, 10, 30, 9, 15, 10, 10, 30};
 
   private GlobTableView view;
-  private AccountFilteringList accountFilteringList;
+  private AccountFilteringCombo accountFilteringCombo;
   private TransactionRendererColors rendererColors;
   private TransactionSelection transactionSelection;
   private GlobMatcher showPlannedTransactionsMatcher = GlobMatchers.ALL;
@@ -95,9 +98,9 @@ public class TransactionView extends View implements Filterable {
   }
 
   private void addAccountCombo(GlobsPanelBuilder builder) {
-    accountFilteringList = new AccountFilteringList(repository, directory, new GlobListView.GlobSelectionHandler() {
-      public void processSelection(GlobList selection) {
-        filterManager.set(ACCOUNT_FILTER, accountFilteringList.getCurrentAccountFilter());
+    accountFilteringCombo = new AccountFilteringCombo(repository, directory, new GlobComboView.GlobSelectionHandler() {
+      public void processSelection(Glob glob) {
+        filterManager.set(ACCOUNT_FILTER, accountFilteringCombo.getCurrentAccountFilter());
       }
     });
     filterManager.addClearer(new FilterClearer() {
@@ -106,10 +109,24 @@ public class TransactionView extends View implements Filterable {
       }
 
       public void clear() {
-        accountFilteringList.reset();
+        accountFilteringCombo.reset();
       }
     });
-    builder.add("accountFilterList", accountFilteringList.getComponent());
+    builder.add("accountFilterCombo", accountFilteringCombo.getComponent());
+  }
+
+  public void setAccountFilter(Key accountKey) {
+    GlobMatcher matcher = Matchers.transactionsForAccounts(Collections.singleton(accountKey.get(Account.ID)), repository);
+    filterManager.set(ACCOUNT_FILTER, matcher);
+  }
+
+  public void setSeriesFilter(Glob series) {
+    GlobMatcher matcher =
+      Matchers.transactionsForSeries(
+        Collections.singleton(series.get(Series.BUDGET_AREA)),
+        Collections.singleton(series.get(Series.ID)),
+        repository);
+    filterManager.set(ACCOUNT_FILTER, matcher);
   }
 
   private void addShowTransactionsCheckbox(GlobsPanelBuilder builder) {
@@ -217,7 +234,7 @@ public class TransactionView extends View implements Filterable {
   public void reset() {
     view.resetSort();
     transactionSelection.init();
-    accountFilteringList.reset();
+    accountFilteringCombo.reset();
     setFilter(GlobMatchers.ALL);
   }
 

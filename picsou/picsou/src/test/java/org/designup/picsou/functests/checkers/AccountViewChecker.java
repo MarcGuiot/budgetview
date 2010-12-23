@@ -4,12 +4,8 @@ import junit.framework.Assert;
 import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
-import org.uispec4j.Button;
-import org.uispec4j.Panel;
-import org.uispec4j.UIComponent;
-import org.uispec4j.Window;
+import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.finder.ComponentMatcher;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
@@ -17,11 +13,17 @@ import org.uispec4j.interception.WindowInterceptor;
 import javax.swing.*;
 import java.util.*;
 
-public class AccountViewChecker<T extends AccountViewChecker> extends GuiChecker {
-  protected Panel panel;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
-  public AccountViewChecker(Panel panel, String panelName) {
-    this.panel = panel.getPanel(panelName);
+public abstract class AccountViewChecker<T extends AccountViewChecker> extends ViewChecker {
+  protected Window mainWindow;
+  protected String panelName;
+  protected Panel accountsPanel;
+
+  public AccountViewChecker(Window mainWindow, String panelName) {
+    super(mainWindow);
+    this.mainWindow = mainWindow;
+    this.panelName = panelName;
   }
 
   public void checkAccountNames(String... expectedNames) {
@@ -29,7 +31,7 @@ public class AccountViewChecker<T extends AccountViewChecker> extends GuiChecker
   }
 
   private Set<String> getDisplayedAccounts() {
-    UIComponent[] uiComponents = panel.getUIComponents(Button.class, "accountName");
+    UIComponent[] uiComponents = getAccountsPanel().getUIComponents(Button.class, "accountName");
     Set<String> existingNames = new HashSet<String>();
     for (UIComponent uiComponent : uiComponents) {
       Button button = (Button)uiComponent;
@@ -39,7 +41,7 @@ public class AccountViewChecker<T extends AccountViewChecker> extends GuiChecker
   }
 
   public T checkAccountOrder(String... accounts) {
-    UIComponent[] uiComponents = panel.getUIComponents(Button.class, "accountName");
+    UIComponent[] uiComponents = getAccountsPanel().getUIComponents(Button.class, "accountName");
     List<String> existingNames = new ArrayList<String>();
     for (UIComponent uiComponent : uiComponents) {
       Button button = (Button)uiComponent;
@@ -84,31 +86,18 @@ public class AccountViewChecker<T extends AccountViewChecker> extends GuiChecker
 
   public T checkSummary(double amount, String updateDate) {
     Date date = Dates.parse(updateDate);
-    assertThat(panel.getTextBox("referencePosition").textEquals(toString(amount)));
-    assertThat(panel.getTextBox("referencePositionDate")
-      .textEquals("on " + Formatting.toString(date)));
+    assertThat(getAccountsPanel().getTextBox("referencePosition").textEquals(toString(amount)));
+    assertThat(getAccountsPanel().getTextBox("referencePositionDate").textEquals("on " + Formatting.toString(date)));
     return (T)this;
   }
 
-  public T checkEstimatedPosition(double amount) {
-    assertThat(panel.getTextBox("estimatedPosition").textEquals(toString(amount)));
-    return (T)this;
-  }
+  public abstract T checkEstimatedPosition(double amount);
 
-  public T checkNoEstimatedPosition() {
-    assertThat(panel.getTextBox("estimatedPosition").textEquals("-"));
-    return (T)this;
-  }
+  public abstract T checkNoEstimatedPosition();
 
-  public T checkEstimatedPositionColor(String color) {
-    assertThat(panel.getTextBox("estimatedPosition").foregroundNear(color));
-    return (T)this;
-  }
+  public abstract T checkEstimatedPositionColor(String color);
 
-  public T checkEstimatedPositionDate(String text) {
-    assertThat(panel.getTextBox("estimatedPositionDate").textEquals("on " + text));
-    return (T)this;
-  }
+  public abstract T checkEstimatedPositionDate(String text);
 
   public AccountPositionEditionChecker editPosition(String accountName) {
     Panel parentPanel = getAccountPanel(accountName);
@@ -128,10 +117,11 @@ public class AccountViewChecker<T extends AccountViewChecker> extends GuiChecker
   }
 
   private Panel getAccountPanel(final String accountName) {
+    views.selectData();
     Button account = null;
     try {
       final ComponentMatcher componentMatcher = ComponentMatchers.displayedNameIdentity(accountName);
-      account = panel.getButton(componentMatcher);
+      account = getAccountsPanel().getButton(componentMatcher);
     }
     catch (Throwable e) {
       Assert.fail("Account '" + accountName + "' not found - available accounts: " + getDisplayedAccounts());
@@ -140,7 +130,7 @@ public class AccountViewChecker<T extends AccountViewChecker> extends GuiChecker
   }
 
   public AccountEditionChecker createNewAccount() {
-    return AccountEditionChecker.open(panel.getButton("createAccount").triggerClick());
+    return AccountEditionChecker.open(getAccountsPanel().getButton("createAccount").triggerClick());
   }
 
   public void createSavingsAccount(String name, Double position) {
@@ -180,4 +170,13 @@ public class AccountViewChecker<T extends AccountViewChecker> extends GuiChecker
     Panel panel = getAccountPanel(accountName);
     checkComponentVisible(panel, JButton.class, "gotoWebsite", false);
   }
+
+  private Panel getAccountsPanel() {
+    if (accountsPanel == null) {
+      views.selectData();
+      accountsPanel = mainWindow.getPanel(panelName);
+    }
+    return accountsPanel;
+  }
+
 }

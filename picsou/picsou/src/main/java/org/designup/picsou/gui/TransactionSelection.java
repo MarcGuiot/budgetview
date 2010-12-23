@@ -25,7 +25,6 @@ public class TransactionSelection implements GlobSelectionListener {
   private Set<Integer> currentBudgetAreas;
   private Set<Integer> currentSeries;
 
-  private List<GlobSelectionListener> listeners = new ArrayList<GlobSelectionListener>();
   private GlobRepository repository;
   private FilterManager filterManager;
   private SelectionService selectionService;

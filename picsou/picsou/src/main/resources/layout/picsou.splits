@@ -69,8 +69,9 @@
             <row anchor="left" fill="horizontal" marginBottom="5">
               <button name="backView" action="backView" styleClass="backforward" tooltipText="$back"/>
               <button name="forwardView" action="forwardView" styleClass="backforward" tooltipText="$forward"/>
-              <label ref="title" opaque="false" font="Arial,bold,12" weightX="0"
-                     horizontalAlignment="center" foreground="title" shadowDirection="northwest" shadowColor="#222222"/>
+              <label ref="title" opaque="false" font="Arial,bold,14" weightX="0"
+                     horizontalAlignment="center" foreground="title" shadowDirection="northwest"
+                     shadowColor="#222222"/>
               <filler fill="horizontal"/>
             </row>
             <repeat ref="cards" layout="row" weightX="0" weightY="0.1" fill="horizontal">
@@ -136,14 +137,9 @@
                 </column>
               </verticalSplit>
 
-              <column weightX="3">
-                <panel ref="accountView" minimumSize="(250,200)" preferredSize="(400,700)"/>
-              </column>
-
-              <column weightX="2">
+              <column weightX="5">
                 <panel ref="navigationView"/>
               </column>
-
 
             </horizontalSplit>
           </column>
@@ -168,39 +164,8 @@
         <card name="data">
           <row opaque="false">
 
-            <column preferredSize="(220,800)" minimumSize="(220,800)" weightX="0.1" marginRight="20">
+            <panel ref="accountView" minimumSize="(320,200)" preferredSize="(320,700)" marginRight="20" weightX="0.1"/>
 
-              <label text="$transactionView.filtering.title" styleClass="blockTitle"/>
-              <column styleClass="block" name="seriesViewPanel">
-                <verticalSplit margin="10">
-                  <column>
-
-                    <label text="$transactionView.filter.label" styleClass="formLabelTop" marginRight="5"/>
-                    <scrollPane border="line(transactionView.filters.border)"
-                                viewportBackground="transactionView.filters.bg"
-                                background="transactionView.filters.bg"
-                                minimumSize="(200,40)" >
-                      <list ref="accountFilterList" margin="5"/>
-                    </scrollPane>
-                  </column>
-
-                  <column>
-                    <label text="$seriesView.title" styleClass="formLabelTop"/>
-                    <scrollPane border="matte(1,1,0,1,transactionView.filters.border)" 
-                                viewportBackground="transactionView.filters.bg"
-                                background="transactionView.filters.bg"
-                                minimumSize="(200,40)">
-                      <table ref="seriesView" opaque="false" margin="5"/>
-                    </scrollPane>
-                    <row styleClass="footer">
-                      <button action="expand" tooltipText="$series.expand.tooltip"/>
-                      <button action="collapse" tooltipText="$series.collapse.tooltip"/>
-                      <filler fill="horizontal"/>
-                    </row>
-                  </column>
-                </verticalSplit>
-              </column>
-            </column>
 
             <column weightX="100">
               <label text="$transactionView.operations.title" styleClass="blockTitle"/>
@@ -208,6 +173,9 @@
                 <column>
                   <column styleClass="innerBlock" margin="10" marginLeft="15" marginRight="15">
                     <row marginBottom="5">
+                      <label text="$transactionView.filter.label" styleClass="formLabelTop" marginRight="5"/>
+                      <comboBox ref="accountFilterCombo"/>
+                      <filler fill="horizontal"/>
                       <panel ref="customFilterMessage" fill="none" anchor="center"/>
                       <filler fill="horizontal"/>
                       <checkBox ref="showPlannedTransactions" text="$transactionView.showPlannedTransactions"

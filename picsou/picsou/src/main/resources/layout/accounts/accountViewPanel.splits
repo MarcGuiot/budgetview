@@ -30,26 +30,18 @@
     <column styleClass="innerBlock">
       <row marginBottom="5">
 
-        <label ref="referencePosition" gridPos="(0,1)"
-               styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"/>
-        <column styleClass="left">
-          <label text="$accountView.reference.title" gridPos="(0,0)"
-                 styleClass="totalAmountTitle" autoHideSource="referencePosition"/>
-          <label ref="referencePositionDate" gridPos="(0,2)"
-                 styleClass="totalAmountTitle" autoHideSource="referencePosition"/>
-        </column>
-
         <filler fill="horizontal"/>
 
         <column styleClass="right">
-          <label text="$accountView.estimated.title" gridPos="(1,0)"
-                 styleClass="totalAmountTitle" autoHideSource="estimatedPosition"/>
-          <label ref="estimatedPositionDate" gridPos="(1,2)"
-                 styleClass="totalAmountTitle" autoHideSource="estimatedPosition"/>
+          <label text="$accountView.reference.title"
+                 styleClass="totalAmountTitle" autoHideSource="referencePosition"/>
+          <label ref="referencePositionDate"
+                 styleClass="totalAmountTitle" autoHideSource="referencePosition"/>
         </column>
-        <label ref="estimatedPosition" gridPos="(1,1)"
-               styleClass="totalAmount"
-               foreground="" tooltipText="$accountView.estimated.tooltip"/>
+        <label ref="referencePosition"
+               styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"/>
+
+        <filler fill="horizontal"/>
 
       </row>
 
@@ -67,12 +59,15 @@
                   </row>
                   <button ref="accountPosition" gridPos="(1,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
                   <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east" styleClass="subitem"/>
-                  <label ref="estimatedAccountPosition" gridPos="(2,0)"
-                         tooltipText="$budgetSummaryView.estimated.tooltip"
-                         anchor="east" styleClass="subitem" font="-,plain,12" marginLeft="10"/>
-                  <label ref="estimatedAccountPositionDate" gridPos="(2,1)"
-                         anchor="east" styleClass="subitem" marginLeft="10"
-                         autoHideSource="estimatedAccountPosition"/>
+
+
+                  <!-- A SUPPRIMER -->
+                  <!--<label ref="estimatedAccountPosition" gridPos="(2,0)"-->
+                         <!--tooltipText="$budgetSummaryView.estimated.tooltip"-->
+                         <!--anchor="east" styleClass="subitem" font="-,plain,12" marginLeft="10"/>-->
+                  <!--<label ref="estimatedAccountPositionDate" gridPos="(2,1)"-->
+                         <!--anchor="east" styleClass="subitem" marginLeft="10"-->
+                         <!--autoHideSource="estimatedAccountPosition"/>-->
                 </grid>
               </column>
             </repeat>

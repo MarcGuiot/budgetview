@@ -20,17 +20,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 
-public class CategorizationChecker extends GuiChecker {
-  private Window mainWindow;
+public class CategorizationChecker extends ViewChecker {
   public static final int LABEL_COLUMN_INDEX = 2;
   public static final int AMOUNT_COLUMN_INDEX = 3;
+  private Panel panel;
 
   public CategorizationChecker(Window mainWindow) {
-    this.mainWindow = mainWindow;
+    super(mainWindow);
   }
 
   Panel getPanel() {
-    return mainWindow.getPanel("categorizationView");
+    if (panel == null) {
+      views.selectCategorization();
+      panel = mainWindow.getPanel("categorizationView");
+    }
+    return panel;
   }
 
   Panel selectAndGetBudgetArea(BudgetArea budgetArea) {
@@ -389,6 +393,7 @@ public class CategorizationChecker extends GuiChecker {
   }
 
   public Table getTable() {
+    views.selectCategorization();
     Table table = getPanel().getTable("transactionsToCategorize");
     table.setCellValueConverter(0, new DateCellConverter());
     table.setCellValueConverter(3, new TableCellValueConverter() {

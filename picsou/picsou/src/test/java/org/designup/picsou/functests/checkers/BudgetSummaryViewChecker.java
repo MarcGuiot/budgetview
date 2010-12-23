@@ -36,6 +36,11 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     return this;
   }
 
+  public BudgetSummaryViewChecker checkEndPositionColor(String color) {
+    assertThat(getPanel().getButton("nextPositionLabel").foregroundNear(color));
+    return this;
+  }
+
   public BudgetSummaryViewChecker checkEndPosition(String title, double amount) {
     assertThat(getPanel().getTextBox("nextPositionTitle").textEquals(title));
     return checkEndPosition(amount);

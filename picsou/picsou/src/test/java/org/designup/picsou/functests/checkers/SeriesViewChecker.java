@@ -15,7 +15,8 @@ public class SeriesViewChecker extends ExpandableTableChecker {
   }
 
   public void checkContains(String... items) {
-    assertThat(getTable().columnEquals(SeriesView.LABEL_COLUMN_INDEX, items));
+    throw new RuntimeException("IN PROGRESS");
+//    assertThat(getTable().columnEquals(SeriesView.LABEL_COLUMN_INDEX, items));
   }
 
   public void select(String label) {
@@ -25,11 +26,13 @@ public class SeriesViewChecker extends ExpandableTableChecker {
   }
 
   protected Table getTable() {
-    return window.getTable("seriesView");
+    views.selectSavings();
+    return mainWindow.getTable("seriesView");
   }
 
   protected Panel getPanel() {
-    return window.getPanel("seriesViewPanel");
+    views.selectSavings();
+    return mainWindow.getPanel("seriesViewPanel");
   }
 
   public void checkSelection(String label) {

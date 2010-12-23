@@ -21,6 +21,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
+/** @deprecated A SUPPRIMER */
 public class SeriesView extends View {
   public static final int LABEL_COLUMN_INDEX = 1;
   private SelectionService parentSelectionService;
