@@ -110,9 +110,6 @@
           <column>
             <horizontalSplit>
               <verticalSplit weightX="2">
-                <column weightY="3">
-                  <panel ref="actionView"/>
-                </column>
                 <column weightY="5">
                   <label text="$notesView.label" styleClass="blockTitle"/>
                   <panel styleClass="block">
@@ -137,10 +134,6 @@
                 </column>
               </verticalSplit>
 
-              <column weightX="5">
-                <panel ref="navigationView"/>
-              </column>
-
             </horizontalSplit>
           </column>
         </card>
@@ -162,10 +155,12 @@
         </card>
 
         <card name="data">
-          <row opaque="false">
+          <horizontalBoxes opaque="false">
 
-            <panel ref="accountView" minimumSize="(320,200)" preferredSize="(320,700)" marginRight="20" weightX="0.1"/>
-
+            <column minimumSize="(320,200)" preferredSize="(320,700)" marginRight="20">
+              <panel ref="importPanel" weightY="0" marginBottom="10"/>
+              <panel ref="accountView" weightY="1.0"/>
+            </column>
 
             <column weightX="100">
               <label text="$transactionView.operations.title" styleClass="blockTitle"/>
@@ -198,7 +193,7 @@
                 </column>
               </panel>
             </column>
-          </row>
+          </horizontalBoxes>
         </card>
       </cards>
     </column>

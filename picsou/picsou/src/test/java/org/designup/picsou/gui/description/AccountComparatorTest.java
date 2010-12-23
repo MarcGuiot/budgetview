@@ -2,9 +2,9 @@ package org.designup.picsou.gui.description;
 
 import junit.framework.TestCase;
 import static org.designup.picsou.model.Account.*;
+
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.AccountCardType;
-import org.designup.picsou.gui.description.AccountComparator;
-import org.designup.picsou.gui.TimeService;
 import org.globsframework.model.*;
 import org.globsframework.model.impl.DefaultGlobRepository;
 import org.globsframework.utils.TestUtils;

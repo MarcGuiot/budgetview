@@ -383,7 +383,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .save();
 
     views.selectHome();
-    ImportDialogChecker importDialog = actions.openImport()
+    ImportDialogChecker importDialog = importPanel.openImport()
       .selectFiles(file)
       .acceptFile()
       .selectOfxAccountBank("Autre")

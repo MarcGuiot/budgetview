@@ -110,9 +110,6 @@ public class LoginTest extends StartUpFunctionalTestCase {
       login.logNewUser("toto", "p4ssw0rd");
 
       {
-        NavigationViewChecker navigation = new NavigationViewChecker(window);
-        navigation.gotoBudget();
-
         BudgetViewChecker budgetView = new BudgetViewChecker(window);
         budgetView.income.checkSeriesPresent("Income 1", "Income 2");
         budgetView.variable.checkSeriesPresent("Groceries", "Health", "Fuel");
@@ -131,9 +128,6 @@ public class LoginTest extends StartUpFunctionalTestCase {
       login.logExistingUser("toto", "p4ssw0rd", false);
 
       {
-        NavigationViewChecker navigation = new NavigationViewChecker(window);
-        navigation.gotoCategorization();
-
         CategorizationChecker categorization = new CategorizationChecker(window);
         categorization.selectTransaction("WorldCo");
         categorization.selectIncome().checkSeriesListEquals("Income 1", "Income 2");

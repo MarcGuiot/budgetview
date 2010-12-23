@@ -5,7 +5,7 @@ import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;

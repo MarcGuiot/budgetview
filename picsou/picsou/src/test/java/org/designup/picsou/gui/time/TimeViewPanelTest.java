@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.time;
 
 import junit.framework.TestCase;
-import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.time.mousestates.MouseState;
 import org.designup.picsou.gui.time.mousestates.ReleasedMouseState;
 import org.designup.picsou.gui.time.selectable.Selectable;

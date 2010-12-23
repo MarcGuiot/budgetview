@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.components;
 
 import org.designup.picsou.functests.checkers.MonthChooserChecker;
-import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.globsframework.gui.GuiTestCase;
@@ -12,9 +12,6 @@ import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.util.Arrays;
-import java.util.Date;
-
-import sun.awt.AWTAutoShutdown;
 
 public class MonthChooserTest extends GuiTestCase {
   private int selectedMonth;

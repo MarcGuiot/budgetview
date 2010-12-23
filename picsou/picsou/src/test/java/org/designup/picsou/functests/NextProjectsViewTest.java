@@ -2,7 +2,7 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.time.TimeService;
 import org.globsframework.utils.Dates;
 
 public class NextProjectsViewTest extends LoggedInFunctionalTestCase {

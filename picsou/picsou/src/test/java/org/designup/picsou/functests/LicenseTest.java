@@ -2,7 +2,7 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.LicenseActivationChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
-import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.time.TimeService;
 import org.globsframework.utils.Dates;
 import org.uispec4j.TextBox;
 import org.uispec4j.assertion.UISpecAssert;

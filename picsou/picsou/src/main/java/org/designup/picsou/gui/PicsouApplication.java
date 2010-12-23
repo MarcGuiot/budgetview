@@ -14,6 +14,7 @@ import org.designup.picsou.gui.plaf.ApplicationLAF;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.upgrade.UpgradeService;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.gui.utils.Gui;

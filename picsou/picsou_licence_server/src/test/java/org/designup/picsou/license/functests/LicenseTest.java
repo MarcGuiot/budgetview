@@ -4,7 +4,7 @@ import com.dumbster.smtp.SimpleSmtpServer;
 import junit.framework.AssertionFailedError;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.license.ConnectedTestCase;
 import org.designup.picsou.license.model.License;
 import org.designup.picsou.license.model.RepoInfo;

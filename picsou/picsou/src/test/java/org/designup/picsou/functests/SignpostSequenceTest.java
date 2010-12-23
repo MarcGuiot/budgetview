@@ -22,16 +22,14 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     // === Import ===
 
-    views.selectHome();
-    actions.checkImportSignpostDisplayed("Click here to import your operations");
+    importPanel.checkImportSignpostDisplayed("Click here to import your operations");
 
     views.selectCategorization();
     checkNoSignpostVisible();
 
-    views.selectHome();
-    actions.checkImportSignpostDisplayed("Click here to import your operations");
+    importPanel.checkImportSignpostDisplayed("Click here to import your operations");
 
-    actions.openImport().close();
+    importPanel.openImport().close();
     checkNoSignpostVisible();
 
     OfxBuilder

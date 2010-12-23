@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.series.evolution.histobuilders;
 
+import org.designup.picsou.gui.time.TimeService;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -9,7 +10,6 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
-import org.designup.picsou.gui.TimeService;
 
 import java.util.Set;
 import java.util.SortedSet;

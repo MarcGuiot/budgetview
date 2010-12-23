@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.series;
 
-import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Month;
@@ -16,9 +15,7 @@ import org.globsframework.gui.SelectionService;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.Collections;
 import java.util.Set;
-import java.util.HashSet;
 
 public class EditSeriesAction extends AbstractAction {
   private Directory directory;

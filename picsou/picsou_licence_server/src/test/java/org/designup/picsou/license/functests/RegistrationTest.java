@@ -3,7 +3,7 @@ package org.designup.picsou.license.functests;
 import org.designup.picsou.functests.checkers.LicenseActivationChecker;
 import org.designup.picsou.functests.checkers.SlaValidationDialogChecker;
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.ConnectedTestCase;
 import org.globsframework.utils.Dates;

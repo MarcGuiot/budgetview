@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.accounts;
 
-import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.DatePicker;

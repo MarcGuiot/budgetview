@@ -1,6 +1,6 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.PicsouTestCase;
 import org.globsframework.model.FieldValue;

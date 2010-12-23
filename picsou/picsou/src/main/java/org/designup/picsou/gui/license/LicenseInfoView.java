@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.license;
 
-import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.startup.LogoutService;

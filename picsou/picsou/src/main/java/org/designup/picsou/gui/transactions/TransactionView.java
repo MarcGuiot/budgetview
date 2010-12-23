@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.transactions;
 
-import org.designup.picsou.gui.TransactionSelection;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.utils.AccountFilteringCombo;
 import org.designup.picsou.gui.components.DefaultTableCellPainter;

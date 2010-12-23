@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components.dialogs;
 
-import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;

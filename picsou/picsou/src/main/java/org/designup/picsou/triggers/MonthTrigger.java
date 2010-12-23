@@ -1,6 +1,6 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;

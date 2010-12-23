@@ -3,19 +3,15 @@ package org.designup.picsou.functests.utils;
 import org.designup.picsou.functests.FunctionalTestCase;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.TimeService;
-import org.designup.picsou.gui.MainPanel;
-import org.designup.picsou.gui.MainWindow;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.startup.LoginPanel;
 import org.designup.picsou.gui.time.TimeViewPanel;
-import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.initial.DefaultSeriesFactory;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecAdapter;
@@ -45,8 +41,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public CategorizationChecker categorization;
   public SeriesEvolutionChecker seriesEvolution;
   public VersionInfoChecker versionInfo;
-  public ActionViewChecker actions;
-  public NavigationViewChecker navigation;
+  public ImportPanelChecker importPanel;
   public NotesChecker notes;
   public BackupChecker backup;
 
@@ -148,8 +143,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     seriesEvolution = new SeriesEvolutionChecker(mainWindow);
     license = new LicenseActivationChecker(mainWindow);
     versionInfo = new VersionInfoChecker(mainWindow);
-    actions = new ActionViewChecker(mainWindow);
-    navigation = new NavigationViewChecker(mainWindow);
+    importPanel = new ImportPanelChecker(mainWindow);
     notes = new NotesChecker(mainWindow);
   }
 
@@ -195,8 +189,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     categorization = null;
     seriesEvolution = null;
     license = null;
-    actions = null;
-    navigation = null;
+    importPanel = null;
     notes = null;
     repository = null;
   }

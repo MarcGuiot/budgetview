@@ -3,10 +3,8 @@ package org.designup.picsou.gui.card;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.gui.model.Card;
-import org.designup.picsou.gui.series.view.SeriesView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.Account;
-import org.designup.picsou.model.BudgetArea;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -15,7 +13,6 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.GlobsException;
 
 import java.util.Stack;
 
@@ -134,7 +131,7 @@ public class NavigationService implements GlobSelectionListener {
     selectionService.select(repository.get(card.getKey()));
   }
 
-  public void reset(){
+  public void reset() {
     backStack.clear();
     forwardStack.clear();
     select(Card.HOME, true);

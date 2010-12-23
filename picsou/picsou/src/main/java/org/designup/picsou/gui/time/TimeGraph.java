@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.time;
 
-import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.time.selectable.ChainedSelectableElement;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.gui.time.selectable.TransformationAdapter;

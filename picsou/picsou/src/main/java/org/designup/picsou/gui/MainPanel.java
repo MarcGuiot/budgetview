@@ -7,10 +7,9 @@ import org.designup.picsou.gui.actions.*;
 import org.designup.picsou.gui.backup.BackupAction;
 import org.designup.picsou.gui.backup.RestoreAction;
 import org.designup.picsou.gui.budget.BudgetView;
-import org.designup.picsou.gui.card.ActionView;
 import org.designup.picsou.gui.card.CardView;
+import org.designup.picsou.gui.card.ImportPanel;
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.card.NavigationView;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.filtering.components.TextFilterPanel;
@@ -173,10 +172,9 @@ public class MainPanel {
       timeView,
       new VersionInfoView(repository, directory),
       new AccountView(repository, directory),
+      new ImportPanel(repository, directory),
       categorizationView,
       cardView,
-      new ActionView(repository, directory),
-      new NavigationView(repository, directory),
       new BudgetView(replicationGlobRepository, directory),
       seriesEvolutionView,
       new SavingsView(replicationGlobRepository, directory),

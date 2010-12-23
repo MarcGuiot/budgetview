@@ -3,7 +3,7 @@ package org.designup.picsou.gui.utils.datacheck;
 import junit.framework.TestCase;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.PicsouInit;
-import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
 import org.globsframework.model.Key;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;

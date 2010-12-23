@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.time;
 
-import org.designup.picsou.gui.TimeService;
 import org.designup.picsou.gui.time.selectable.*;
 import org.designup.picsou.gui.time.utils.MonthFontMetricInfo;
 import org.designup.picsou.gui.time.utils.TimeViewColors;

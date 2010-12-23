@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.series;
 
-import org.designup.picsou.gui.TimeService;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.accounts.NewAccountAction;
 import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
