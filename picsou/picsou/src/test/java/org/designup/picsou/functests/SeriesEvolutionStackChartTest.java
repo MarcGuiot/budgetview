@@ -45,9 +45,12 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("Auchan", "Groceries", -450.);
     categorization.setNewSavings("Virt Epargne", "Virt Livret", "Main accounts", "Livret");
 
+    timeline.selectMonth("2009/06");
+    views.selectBudget();
+    budgetView.savings.alignAndPropagate("Virt Livret");
+
     views.selectEvolution();
 
-    timeline.selectMonth("2009/06");
     seriesEvolution.balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 650.00);

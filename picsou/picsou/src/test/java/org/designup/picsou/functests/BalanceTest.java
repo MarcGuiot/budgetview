@@ -204,6 +204,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .selectSavings().selectSeries("epargne");
 
     views.selectBudget();
+    budgetView.savings.alignAndPropagate("Epargne");
 
     budgetView.recurring.editSeries("courses")
       .setCustom()

@@ -325,5 +325,10 @@ public class BudgetViewChecker extends ViewChecker {
       button.click();
       return this;
     }
+
+    public BudgetAreaChecker alignAndPropagate(String seriesName) {
+      editSeries(seriesName).alignPlannedAndActual().setPropagationEnabled().validate();
+      return this;
+    }
   }
 }

@@ -38,8 +38,8 @@ public class ServerAccessDecorator implements ServerAccess {
     return serverAccess.initConnection(name, password, privateComputer);
   }
 
-  public void localRegister(byte[] mail, byte[] signature, String activationCode) {
-    serverAccess.localRegister(mail, signature, activationCode);
+  public void localRegister(byte[] mail, byte[] signature, String activationCode, long jarVersion) {
+    serverAccess.localRegister(mail, signature, activationCode, jarVersion);
   }
 
   public void downloadedVersion(long version) {

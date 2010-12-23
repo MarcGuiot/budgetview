@@ -32,6 +32,10 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     categorization.setNewExtra("Air France", "Trips");
     categorization.setNewSavings("VIRT ING", "Epargne", "Main accounts", "External account");
 
+    timeline.selectMonth("2008/07");
+    views.selectBudget();
+    budgetView.savings.alignAndPropagate("Epargne");
+
     double incomeFor200807 = 2200;
     double expensesFor200807 = (30 + 1500) + (300 + 100) + 200 + 100 + 20;
     double balanceFor200807 = incomeFor200807 - expensesFor200807;
@@ -40,8 +44,6 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     double expensesFor200808 = 30 + 1500 + 300 + 100 + 100;
     double balanceFor200808 = incomeFor200808 - expensesFor200808;
 
-    timeline.selectMonth("2008/07");
-    views.selectBudget();
 
     budgetView.getSummary()
       .checkMonthBalance(balanceFor200807)
@@ -219,9 +221,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewRecurring("ED", "courses");
-    System.err.println("BudgetWizardTest.testWithPositiveEnvelope 1" );
     categorization.setNewVariable("remboursement", "secu", 40.);
-    System.err.println("BudgetWizardTest.testWithPositiveEnvelope 2");
     categorization.setNewIncome("Salaire", "Salaire");
 
     views.selectBudget();

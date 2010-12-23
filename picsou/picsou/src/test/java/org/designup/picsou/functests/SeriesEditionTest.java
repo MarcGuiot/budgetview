@@ -1094,6 +1094,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectSavings()
       .selectAndCreateSavingsSeries("epargne", "Main accounts");
 
+    views.selectBudget();
+    budgetView.savings.alignAndPropagate("epargne");
+
     views.selectData();
     timeline.selectMonths("2008/06", "2008/07");
     transactions.initContent()
@@ -1181,9 +1184,14 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTransactions("Virement");
     categorization.selectSavings()
       .selectAndCreateSavingsSeries("epargne", "Main accounts");
+
     categorization.selectSavings().editSeries("epargne")
       .setTwoMonths()
       .validate();
+    timeline.selectMonth("2008/06");
+    views.selectBudget();
+    budgetView.savings.alignAndPropagate("Epargne");
+
     timeline.selectAll();
     views.selectData();
     transactions.initContent()
@@ -1211,12 +1219,16 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTransactions("Virement");
     categorization.selectSavings()
       .selectAndCreateSavingsSeries("epargne", "Main accounts");
+
     operations.openPreferences().setFutureMonthsCount(1).validate();
     categorization.selectSavings().editSeries("epargne")
       .selectMonth(200809)
       .setAmount("0")
       .setTwoMonths()
       .validate();
+    timeline.selectMonth("2008/06");
+    views.selectBudget();
+    budgetView.savings.alignAndPropagate("Epargne");
     timeline.selectAll();
     views.selectData();
     transactions.initContent()
