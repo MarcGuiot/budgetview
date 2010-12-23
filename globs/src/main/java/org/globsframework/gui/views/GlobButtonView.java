@@ -15,7 +15,6 @@ import java.awt.event.ActionEvent;
 
 public class GlobButtonView extends AbstractGlobTextView<GlobButtonView> {
   private JButton button;
-  private GlobListFunctor callback;
 
   public static GlobButtonView init(GlobType type, GlobRepository repository,
                                     Directory directory, GlobListFunctor callback) {
@@ -47,7 +46,6 @@ public class GlobButtonView extends AbstractGlobTextView<GlobButtonView> {
   private GlobButtonView(GlobType type, final GlobRepository repository, Directory directory,
                          GlobListStringifier stringifier, final GlobListFunctor callback) {
     super(type, repository, directory, stringifier);
-    this.callback = callback;
     this.button = new JButton(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         callback.run(getFilteredSelection(), repository);
