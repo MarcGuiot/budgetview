@@ -37,7 +37,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public LicenseActivationChecker license;
   public BudgetViewChecker budgetView;
   public SavingsViewChecker savingsView;
-  public NextProjectsChecker nextProjects;
+  public HistoChecker savingsAccountsChart;
   public CategorizationChecker categorization;
   public SeriesEvolutionChecker seriesEvolution;
   public VersionInfoChecker versionInfo;
@@ -138,7 +138,8 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     title = new TitleChecker(mainWindow);
     budgetView = new BudgetViewChecker(mainWindow);
     savingsView = new SavingsViewChecker(mainWindow);
-    nextProjects = new NextProjectsChecker(mainWindow);
+    savingsAccountsChart = new HistoChecker(mainWindow, "savingsEvolutionPanel", "savingsHistoChart");
+    savingsView = new SavingsViewChecker(mainWindow);
     categorization = new CategorizationChecker(mainWindow);
     seriesEvolution = new SeriesEvolutionChecker(mainWindow);
     license = new LicenseActivationChecker(mainWindow);
@@ -185,7 +186,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     versionInfo = null;
     budgetView = null;
     savingsView = null;
-    nextProjects = null;
     categorization = null;
     seriesEvolution = null;
     license = null;

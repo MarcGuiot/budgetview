@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.savings;
+package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.series.evolution.histobuilders.AccountHistoChartUpdater;
@@ -8,11 +8,11 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
-public class SavingsChartView extends View {
+public class MainAccountsChartView extends View {
 
   private HistoChartBuilder histoChartBuilder;
 
-  public SavingsChartView(GlobRepository repository, Directory directory) {
+  public MainAccountsChartView(GlobRepository repository, Directory directory) {
     super(repository, directory);
 
     histoChartBuilder = createChartBuilder(true, true, repository, directory);
@@ -22,14 +22,14 @@ public class SavingsChartView extends View {
     HistoChartBuilder histoChartBuilder = new HistoChartBuilder(drawLabels, clickable, repository, directory, directory.get(SelectionService.class), 12, 12);
     new AccountHistoChartUpdater(histoChartBuilder, repository, directory) {
       protected void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId) {
-        histoChartBuilder.showSavingsAccountsHisto(currentMonthId);
+        histoChartBuilder.showMainAccountsHisto(currentMonthId);
       }
     };
     return histoChartBuilder;
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
-    builder.add("savingsHistoChart", histoChartBuilder.getChart());
+    builder.add("mainAccountsHistoChart", histoChartBuilder.getChart());
   }
 
 }

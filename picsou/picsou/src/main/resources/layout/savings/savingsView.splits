@@ -2,16 +2,11 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <styles>
-    <ui name="accountLineBg" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        topColor="savingsView.accountLine.top" bottomColor="savingsView.accountLine.bottom"/>
-    <style selector=".accountLine" opaque="true" ui="accountLineBg"
-           border="matte(1,0,1,0,savingsView.accountLine.border)"/>
-
-    <style selector="label.accountName" font="-,bold,12" foreground="savingsView.accountName" marginLeft="5"/>
-    <style selector="label.accountPosition" font="-,bold,11" foreground="savingsView.accountPosition"/>
-    <style selector="label.accountPositionDate" font="-,plain,9" foreground="savingsView.accountDate" marginRight="5"/>
+    <style selector="label.accountName" font="-,bold,16" foreground="savingsView.accountName"
+           marginLeft="5"/>
+    <style selector="label.accountPosition" font="-,bold,13" foreground="savingsView.accountPosition"/>
+    <style selector="label.accountPositionDate" font="-,plain,9" foreground="savingsView.accountDate"/>
     <style selector="#header label" anchor="center"/>
-
   </styles>
 
   <panel styleClass="main">
@@ -35,10 +30,6 @@
                        styleClass="totalAmountTitle" autoHideSource="totalReferenceSavingsPositionAmount"/>
               </grid>
               <filler fill="horizontal"/>
-            </row>
-
-            <row>
-              <filler fill="horizontal"/>
               <grid ref="header" marginBottom="5">
                 <label text="$accountView.estimated.title" gridPos="(0,0)"
                        styleClass="totalAmountTitle" autoHideSource="totalEstimatedSavingsPositionAmount"/>
@@ -51,22 +42,21 @@
               <filler fill="horizontal"/>
             </row>
 
-
             <column styleClass="blockScrollBorder">
               <scrollPane marginTop="0" marginBottom="0">
                 <column marginTop="5">
-                  <repeat ref="savingsAccounts" marginTop="5" marginBottom="15">
-                    <column name="savingsAccountPanel">
-                      <grid styleClass="accountLine">
-                        <label ref="accountName" gridPos="(0,0)" anchor="west" styleClass="accountName"/>
-                        <label ref="estimatedAccountPosition" gridPos="(1,0)" anchor="east"
+                  <repeat ref="savingsAccounts" margin="10" marginTop="0" marginBottom="15">
+                    <row name="savingsAccountPanel" border="matte(0,0,1,0,savingsView.separator)">
+                      <label ref="accountName" anchor="center" styleClass="accountName" minimumSize="(120,40)"/>
+                      <column>
+                        <label ref="estimatedAccountPosition" anchor="south"
                                styleClass="accountPosition"/>
-                        <label ref="estimatedAccountPositionDate" gridPos="(2,0)" anchor="east"
+                        <label ref="estimatedAccountPositionDate" anchor="north"
                                styleClass="accountPositionDate"
                                autoHideSource="estimatedAccountPosition"/>
-                      </grid>
-                      <panel ref="savingsSeries" margin="5" marginBottom="10"/>
-                    </column>
+                      </column>
+                      <panel ref="savingsSeries" margin="5" marginBottom="20"/>
+                    </row>
                   </repeat>
                   <filler fill="vertical"/>
                 </column>
@@ -81,39 +71,6 @@
         </panel>
 
       </column>
-
-      <verticalSplit weightX="6">
-
-        <column weightY="6">
-          <label text="$savingsView.accounts.evolution" styleClass="blockTitle" marginTop="5"/>
-          <panel styleClass="block" preferredSize="(300,300)" name="savingsEvolutionPanel">
-            <column styleClass="innerBlock">
-              <panel background="seriesEvolution.chart.bg" border="line(block.inner.border)">
-                <component ref="histoChart" margin="15" opaque="true" background="seriesEvolution.chart.bg"/>
-              </panel>
-            </column>
-          </panel>
-        </column>
-
-        <column weightY="4">
-          <label text="$savingsView.projects.next" styleClass="blockTitle" marginTop="5"/>
-          <panel styleClass="block" preferredSize="(300,400)" name="nextProjectsPanel">
-            <column styleClass="innerBlock">
-              <column styleClass="blockScrollBorder">
-                <scrollPane verticalUnitIncrement="10" border="matte(1,1,0,1,block.scroll.border)">
-                  <table ref="nextProjects" rowHeight="20"/>
-                </scrollPane>
-                <row styleClass="footer">
-                  <button action="createProject" styleClass="create" tooltipText="$series.create.tooltip"/>
-                  <button action="editAllProjects" styleClass="list" tooltipText="$series.list.tooltip"/>
-                  <filler fill="horizontal"/>
-                </row>
-              </column>
-            </column>
-          </panel>
-        </column>
-
-      </verticalSplit>
 
     </horizontalSplit>
 

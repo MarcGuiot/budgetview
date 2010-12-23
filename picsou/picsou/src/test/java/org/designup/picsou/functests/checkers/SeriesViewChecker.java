@@ -8,6 +8,7 @@ import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
+/** @deprecated A SUPPRIMER */
 public class SeriesViewChecker extends ExpandableTableChecker {
 
   public SeriesViewChecker(Window mainWindow) {

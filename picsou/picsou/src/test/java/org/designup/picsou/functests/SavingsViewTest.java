@@ -57,8 +57,8 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.alignAndPropagate("Epargne");
 
-    views.selectSavings();
-    savingsView.histoChart
+    views.selectHome();
+    savingsAccountsChart
       .checkColumnCount(13)
       .checkLineColumn(0, "J", "2009", 200.00, true)
       .checkLineColumn(1, "A", "2009", 400.00)
@@ -66,13 +66,12 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .checkLineColumn(3, "O", "2009", 800.00)
       .checkLineColumn(6, "J", "2010", 1400.00)
       .checkLineColumn(12, "J", "2010", 2600.00);
-    savingsView.histoChart.checkTooltip(1, "End of August 2009 position: 400.00");
+    savingsAccountsChart.checkTooltip(1, "End of August 2009 position: 400.00");
 
-    views.selectHome();
     savingsAccounts.editPosition("ING").setAmount(300.00).validate();
 
-    views.selectSavings();
-    savingsView.histoChart
+    views.selectHome();
+    savingsAccountsChart
       .checkColumnCount(13)
       .checkLineColumn(0, "J", "2009", 300.00, true)
       .checkLineColumn(1, "A", "2009", 500.00)
@@ -83,8 +82,8 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
-    views.selectSavings();
-    savingsView.histoChart
+    views.selectHome();
+    savingsAccountsChart
       .checkColumnCount(7)
       .checkLineColumn(0, "J", "2009", 300.00, true)
       .checkLineColumn(1, "A", "2009", 500.00)

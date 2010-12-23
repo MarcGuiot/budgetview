@@ -134,6 +134,33 @@
                 </column>
               </verticalSplit>
 
+              <verticalSplit weightX="5">
+
+                <column>
+                  <label text="$mainAccountsEvolution.title" styleClass="blockTitle"/>
+                  <panel styleClass="block" preferredSize="(300,300)" name="mainAccountsEvolutionPanel">
+                    <column styleClass="innerBlock">
+                      <panel background="seriesEvolution.chart.bg" border="line(block.inner.border)">
+                        <component ref="mainAccountsHistoChart" margin="15" opaque="true" background="seriesEvolution.chart.bg"/>
+                      </panel>
+                    </column>
+                  </panel>
+                </column>
+
+                <column>
+                  <label text="$savingsEvolution.title" styleClass="blockTitle"/>
+                  <panel styleClass="block" preferredSize="(300,300)" name="savingsEvolutionPanel">
+                    <column styleClass="innerBlock">
+                      <panel background="seriesEvolution.chart.bg" border="line(block.inner.border)">
+                        <component ref="savingsHistoChart" margin="15" opaque="true" background="seriesEvolution.chart.bg"/>
+                      </panel>
+                    </column>
+                  </panel>
+                </column>
+
+              </verticalSplit>
+
+
             </horizontalSplit>
           </column>
         </card>

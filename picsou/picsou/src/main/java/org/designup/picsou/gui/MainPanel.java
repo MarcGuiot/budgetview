@@ -3,6 +3,7 @@ package org.designup.picsou.gui;
 import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.accounts.AccountView;
+import org.designup.picsou.gui.accounts.MainAccountsChartView;
 import org.designup.picsou.gui.actions.*;
 import org.designup.picsou.gui.backup.BackupAction;
 import org.designup.picsou.gui.backup.RestoreAction;
@@ -22,6 +23,7 @@ import org.designup.picsou.gui.monthsummary.VersionInfoView;
 import org.designup.picsou.gui.notes.InitializationView;
 import org.designup.picsou.gui.notes.NotesView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
+import org.designup.picsou.gui.savings.SavingsChartView;
 import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
@@ -35,7 +37,9 @@ import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
-import org.designup.picsou.gui.utils.*;
+import org.designup.picsou.gui.utils.DataCheckerAction;
+import org.designup.picsou.gui.utils.DumpDataAction;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.dev.*;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.SignpostStatus;
@@ -47,14 +51,17 @@ import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.model.*;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.ReplicationGlobRepository;
-import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -178,6 +185,8 @@ public class MainPanel {
       new BudgetView(replicationGlobRepository, directory),
       seriesEvolutionView,
       new SavingsView(replicationGlobRepository, directory),
+      new MainAccountsChartView(repository, directory),
+      new SavingsChartView(repository, directory),
       licenseInfoView,
       notesView);
 

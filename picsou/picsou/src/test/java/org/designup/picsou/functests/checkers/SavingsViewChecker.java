@@ -11,13 +11,10 @@ import javax.swing.*;
 
 public class SavingsViewChecker extends ViewChecker {
 
-  public HistoChecker histoChart;
-
   private Panel savingsView;
 
   public SavingsViewChecker(Window mainWindow) {
     super(mainWindow);
-    this.histoChart = new HistoChecker(mainWindow, "savingsEvolutionPanel", "histoChart");
   }
 
   public void checkNoEstimatedTotalPosition() {

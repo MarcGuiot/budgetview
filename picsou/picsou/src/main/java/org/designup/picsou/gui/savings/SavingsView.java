@@ -4,7 +4,6 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.accounts.position.SavingsAccountPositionLabels;
 import org.designup.picsou.gui.budget.SeriesEditionButtons;
-import org.designup.picsou.gui.projects.NextProjectsView;
 import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.utils.Matchers;
@@ -39,25 +38,9 @@ public class SavingsView extends View implements GlobSelectionListener {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/savings/savingsView.splits",
                                                       repository, directory);
 
-    createNextProjectsBlock(builder);
     createSavingsBlock(builder);
 
     parentBuilder.add("savingsView", builder);
-  }
-
-  private void createNextProjectsBlock(GlobsPanelBuilder builder) {
-
-    NextProjectsView nextProjectsView = new NextProjectsView(repository, directory);
-    nextProjectsView.registerComponents(builder);
-
-    SavingsChartView savingsChartView = new SavingsChartView(repository, directory);
-    savingsChartView.registerComponents(builder);
-
-    SeriesEditionButtons seriesButtons = new SeriesEditionButtons(BudgetArea.EXTRAS,
-                                                                  repository, directory,
-                                                                  directory.get(SeriesEditionDialog.class));
-    seriesButtons.setNames("createProject", "editAllProjects");
-    seriesButtons.registerButtons(builder);
   }
 
   private void createSavingsBlock(GlobsPanelBuilder builder) {
