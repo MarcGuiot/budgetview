@@ -155,7 +155,7 @@ public class PropertySetterTest extends UISpecTestCase {
   }
 
   public void testUnknownParameterError() throws Exception {
-    checkError("toto", "blah", "No property 'toto' found for class JButton");
+    checkError("toto", "blah", "No property 'toto' found for class JButton (target value: 'blah')");
   }
 
   public void testUnparseableValueError() throws Exception {
