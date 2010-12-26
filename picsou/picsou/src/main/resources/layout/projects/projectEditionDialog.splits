@@ -1,0 +1,41 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+
+  </styles>
+
+  <panel styleClass="dialog" preferredSize="(440,400)">
+    <column styleClass="innerDialog">
+
+      <label ref="title" styleClass="title"/>
+
+      <row>
+        <label text="$projectEdition.name" styleClass="formLabel"/>
+        <textField ref="projectName"/>
+      </row>
+
+      <column styleClass="blockScrollBorder">
+        <scrollPane>
+          <column>
+            <repeat ref="items" layout="verticalGrid">
+              <textField ref="label"/>
+              <button ref="month"/>
+              <radioButton ref="positiveAmounts"/>
+              <radioButton ref="negativeAmounts"/>
+              <textField ref="amount"/>
+            </repeat>
+            <filler fill="vertical"/>
+          </column>
+        </scrollPane>
+
+        <row styleClass="footer">
+          <button action="addItem" styleClass="create" tooltipText="$projectEdition.addItem.tooltip"/>
+          <filler fill="horizontal"/>
+        </row>
+      </column>
+
+    </column>
+  </panel>
+
+</splits>

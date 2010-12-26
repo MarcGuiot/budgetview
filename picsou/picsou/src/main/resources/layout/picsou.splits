@@ -110,6 +110,8 @@
           <column>
             <horizontalSplit>
               <verticalSplit weightX="2">
+                <panel ref="projectView" weightY="4"/>
+
                 <column weightY="5">
                   <label text="$notesView.label" styleClass="blockTitle"/>
                   <panel styleClass="block">

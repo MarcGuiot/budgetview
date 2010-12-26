@@ -9,6 +9,7 @@ import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.utils.AutoDispose;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.utils.directory.Directory;
 
@@ -27,6 +28,18 @@ public class ErrorTip implements Disposable {
 
   public static ErrorTip showLeft(JComponent component, String text, Directory directory) {
     return show(component, text, directory, new Left_Above_Positioner(10, 20));
+  }
+
+  public static ErrorTip showLeft(JTextField component, String text, Directory directory) {
+    ErrorTip tip = showLeft((JComponent)component, text, directory);
+    AutoDispose.registerTextEdition(component, tip);
+    return tip;
+  }
+
+  public static ErrorTip showRight(JTextField component, String text, Directory directory) {
+    ErrorTip tip = showRight((JComponent)component, text, directory);
+    AutoDispose.registerTextEdition(component, tip);
+    return tip;
   }
 
   public static ErrorTip showRight(JComponent component, String text, Directory directory) {

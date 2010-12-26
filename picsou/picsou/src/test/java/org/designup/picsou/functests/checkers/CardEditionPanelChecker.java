@@ -5,14 +5,11 @@ import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
-import org.uispec4j.Trigger;
-import org.uispec4j.Window;
-import static org.uispec4j.assertion.UISpecAssert.*;
-import org.uispec4j.interception.WindowHandler;
-import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class CardEditionPanelChecker extends GuiChecker {
   Panel panel;
@@ -66,29 +63,8 @@ public class CardEditionPanelChecker extends GuiChecker {
   }
 
   public CardEditionPanelChecker changeMonth(int monthId, final int newMonth) {
-    TextBox box = getDeferredLabel(monthId);
-    Panel panel = box.getContainer("deferredPeriodPanel");
-    WindowInterceptor.init(panel.getButton("changeDeferredMonthAction").triggerClick())
-      .process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          MonthChooserChecker monthChooser = new MonthChooserChecker(window);
-          return monthChooser.triggerMonth(newMonth);
-        }
-      }).run();
-    return this;
-  }
-
-  public CardEditionPanelChecker checkNotSelectableMonth(int monthId, final int... monthIds){
-    TextBox box = getDeferredLabel(monthId);
-    Panel panel = box.getContainer("deferredPeriodPanel");
-    WindowInterceptor.init(panel.getButton("changeDeferredMonthAction").triggerClick())
-      .process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          MonthChooserChecker monthChooser = new MonthChooserChecker(window);
-          monthChooser.checkIsDisabled(monthIds);
-          return monthChooser.triggerCancel();
-        }
-      }).run();
+    Panel container = getDeferredLabel(monthId).getContainer("deferredPeriodPanel");
+    MonthChooserChecker.selectMonth(container.getButton("changeDeferredMonthAction").triggerClick(), newMonth);
     return this;
   }
 

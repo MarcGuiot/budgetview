@@ -11,11 +11,13 @@ import org.globsframework.metamodel.index.MultiFieldUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
-import org.globsframework.utils.Utils;
 
 public class SeriesBudget {
   public static GlobType TYPE;
@@ -44,12 +46,18 @@ public class SeriesBudget {
   @Required
   public static BooleanField ACTIVE;
 
-
   public static MultiFieldUniqueIndex SERIES_INDEX;
 
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(SeriesBudget.class, "seriesBudget");
     loader.defineMultiFieldUniqueIndex(SERIES_INDEX, SERIES, MONTH);
+  }
+
+  public static GlobList getAll(Integer seriesId, Integer monthId, GlobRepository repository) {
+    return repository
+      .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
+      .findByIndex(SeriesBudget.MONTH, monthId)
+      .getGlobs();
   }
 
   public static class Serializer implements PicsouGlobSerializer {
@@ -94,7 +102,6 @@ public class SeriesBudget {
       fieldSetter.set(SeriesBudget.ACTIVE, input.readBoolean());
       fieldSetter.set(SeriesBudget.OBSERVED_AMOUNT, input.readDouble());
     }
-
 
     public int getWriteVersion() {
       return 2;

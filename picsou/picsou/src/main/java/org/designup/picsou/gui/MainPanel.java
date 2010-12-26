@@ -23,6 +23,7 @@ import org.designup.picsou.gui.monthsummary.VersionInfoView;
 import org.designup.picsou.gui.notes.InitializationView;
 import org.designup.picsou.gui.notes.NotesView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
+import org.designup.picsou.gui.projects.ProjectView;
 import org.designup.picsou.gui.savings.SavingsChartView;
 import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
@@ -187,6 +188,7 @@ public class MainPanel {
       new SavingsView(replicationGlobRepository, directory),
       new MainAccountsChartView(repository, directory),
       new SavingsChartView(repository, directory),
+      new ProjectView(repository, directory),
       licenseInfoView,
       notesView);
 

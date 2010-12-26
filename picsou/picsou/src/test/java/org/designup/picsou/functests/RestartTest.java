@@ -219,6 +219,53 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .checkDescriptionHidden();
   }
 
+  public void testProjects() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2008/08/01")
+      .addTransaction("2008/08/01", 1000.00, "Income")
+      .load();
+
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+
+    projects.create()
+      .setName("MyProject")
+      .setItemName(0, "Reservation")
+      .setItemDate(0, 200809)
+      .setItemAmount(0, -200.00)
+      .addItem(1, "Travel", 200810, -100.00)
+      .addItem(2, "Hotel", 200810, -500.00)
+      .validate();
+
+    projects.checkProjectList("MyProject");
+    projects.checkProject("MyProject", "Sep-Oct 2008", 800.00);
+
+    timeline.selectMonth("2008/09");
+    budgetView.extras.checkSeries("MyProject", 0, -200.00);
+    budgetView.getSummary().checkEndPosition(800.00);
+
+    timeline.selectMonth("2008/10");
+    budgetView.extras.checkSeries("MyProject", 0, -600.00);
+    budgetView.getSummary().checkEndPosition(200.00);
+
+    restartApplication();
+
+    projects.checkProjectList("MyProject");
+    projects.checkProject("MyProject", "Sep-Oct 2008", 800.00);
+    projects.edit("MyProject")
+      .checkItems("Reservation | September 2008 | -200.00\n" +
+                  "Travel | October 2008 | -100.00\n" +
+                  "Hotel | October 2008 | -500.00")
+      .cancel();
+
+    timeline.selectMonth("2008/09");
+    budgetView.extras.checkSeries("MyProject", 0, -200.00);
+    budgetView.getSummary().checkEndPosition(800.00);
+
+    timeline.selectMonth("2008/10");
+    budgetView.extras.checkSeries("MyProject", 0, -600.00);
+    budgetView.getSummary().checkEndPosition(200.00);
+  }
+
   public void testRestartAfterCurrentMonthChanged() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "Company")

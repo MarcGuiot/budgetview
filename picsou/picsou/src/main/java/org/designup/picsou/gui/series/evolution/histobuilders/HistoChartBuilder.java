@@ -51,7 +51,6 @@ public class HistoChartBuilder {
         GlobList months = new GlobList();
         for (Integer monthId : monthIds) {
           months.add(repository.get(Key.create(Month.TYPE, monthId)));
-
         }
         parentSelectionService.select(months, Month.TYPE);
       }

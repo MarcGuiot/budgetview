@@ -41,7 +41,7 @@ public class MonthListStringifier implements GlobListStringifier {
   }
 
   public static String toString(Collection<Integer> monthIds) {
-    return toString(monthIds, MonthRangeFormatter.COMPACT);
+    return toString(monthIds, MonthRangeFormatter.STANDARD);
   }
 
   public static String toString(Collection<Integer> monthIds, MonthRangeFormatter rangeFormatter) {

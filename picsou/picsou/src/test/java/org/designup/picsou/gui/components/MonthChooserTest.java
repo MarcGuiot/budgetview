@@ -102,7 +102,7 @@ public class MonthChooserTest extends GuiTestCase {
       .checkDisabledInCurrentYear(3);
   }
 
-  public void testWihoutSelectedMonth() throws Exception {
+  public void testWithoutSelectedMonth() throws Exception {
     final MonthChooserDialog monthChooser = new MonthChooserDialog(new JFrame(), directory);
     Window window = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
