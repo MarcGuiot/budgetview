@@ -21,20 +21,20 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     projects.create()
       .checkTitle("Create a project")
-      .setName("MyProject")
+      .setName("My project")
       .setItemName(0, "Reservation")
       .setItemDate(0, 201101)
       .setItemAmount(0, -200.00)
       .validate();
 
-    projects.checkProjectList("MyProject");
-    projects.checkProject("MyProject", "Jan 2011", 200.00);
+    projects.checkProjectList("My project");
+    projects.checkProject("My project", "Jan 2011", 200.00);
 
     timeline.selectMonth("2011/01");
-    budgetView.extras.checkSeries("MyProject", 0, -200.00);
+    budgetView.extras.checkSeries("My project", 0, -200.00);
     budgetView.getSummary().checkEndPosition(800.00);
 
-    projects.edit("MyProject")
+    projects.edit("My project")
       .addItem(1, "Travel", 201102, -100.00)
       .addItem(2, "Hotel", 201102, -500.00)
       .checkItems("Reservation | January 2011 | -200.00\n" +
@@ -42,21 +42,41 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
                   "Hotel | February 2011 | -500.00")
       .validate();
 
-    projects.checkProjectList("MyProject");
-    projects.checkProject("MyProject", "Jan-Feb 2011", 800.00);
-    budgetView.extras.checkSeries("MyProject", 0, -200.00);
+    projects.checkProjectList("My project");
+    projects.checkProject("My project", "Jan-Feb 2011", 800.00);
+    budgetView.extras.checkSeries("My project", 0, -200.00);
     budgetView.getSummary().checkEndPosition(800.00);
 
     timeline.selectMonth("2011/02");
-    budgetView.extras.checkSeries("MyProject", 0, -600.00);
+    budgetView.extras.checkSeries("My project", 0, -600.00);
     budgetView.getSummary().checkEndPosition(200.00);
 
-    projects.edit("MyProject")
-    .checkItems("Reservation | January 2011 | -200.00\n" +
-                "Travel | February 2011 | -100.00\n" +
-                "Hotel | February 2011 | -500.00");
+    projects.edit("My project")
+      .checkItems("Reservation | January 2011 | -200.00\n" +
+                  "Travel | February 2011 | -100.00\n" +
+                  "Hotel | February 2011 | -500.00")
+      .deleteItem(1)
+      .validate();
 
-    // TODO: Debut / fin de serie (comment gerer les start/end VS les SeriesBudget.ACTIVE?)
+    timeline.selectMonth("2011/02");
+    projects.checkProject("My project", "Jan-Feb 2011", 700.00);
+    budgetView.extras.checkSeries("My project", 0, -500.00);
+    budgetView.getSummary().checkEndPosition(300.00);
+
+    projects.edit("My project")
+      .checkItems("Reservation | January 2011 | -200.00\n" +
+                  "Hotel | February 2011 | -500.00")
+      .deleteItem(1)
+      .validate();
+
+    projects.checkProject("My project", "Jan 2011", 200.00);
+
+    timeline.selectMonth("2011/02");
+    budgetView.extras.checkSeriesNotPresent("My project");
+
+    timeline.selectMonth("2011/01");
+    budgetView.extras.checkSeries("My project", 0, -200.00);
+    budgetView.getSummary().checkEndPosition(800.00);
   }
 
   public void testCannotHaveEmptyProjectOrProjectItemNames() {
@@ -64,17 +84,29 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .validateAndCheckOpen()
       .checkProjectNameMessage("You must provide a name for this project")
       .setName("My project")
+      .checkNoErrorTipDisplayed()
       .validateAndCheckOpen()
       .checkProjectItemMessage(0, "You must provide a name for this item")
       .setItemName(0, "Item 1")
+      .checkNoErrorTipDisplayed()
+      .setItemDate(0, 201101)
+      .setItemAmount(0, -200.00)
       .validate();
 
-    // TODO: A continuer
+    projects.checkProject("My project", "Jan 2011", 200.00);
   }
 
-//  public void testCannotHaveProjectWithNoItems() throws Exception {
-//    fail("tbd");
-//  }
+  public void testCannotHaveProjectWithNoItems() throws Exception {
+    projects.create()
+      .checkTitle("Create a project")
+      .setName("My project")
+      .setItemName(0, "Reservation")
+      .setItemDate(0, 201101)
+      .setItemAmount(0, -200.00)
+      .deleteItem(0)
+      .checkItems(" | December 2010 | 0.00")
+      .cancel();
+  }
 //
 //  public void testSeriesIsUpdatedWhenProjectIsUpdated() throws Exception {
 //    fail("tbd");

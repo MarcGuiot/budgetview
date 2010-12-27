@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
 public class ProjectEditionDialog {
   private PicsouDialog dialog;
@@ -103,7 +104,7 @@ public class ProjectEditionDialog {
 
   private void doShow() {
     projectNameEditor.forceSelection(currentProjectKey);
-    repeat.setFilter(GlobMatchers.linkedTo(currentProjectKey, ProjectItem.PROJECT));
+    repeat.setFilter(linkedTo(currentProjectKey, ProjectItem.PROJECT));
     dialog.setVisible(true);
   }
 
@@ -162,6 +163,8 @@ public class ProjectEditionDialog {
       cellBuilder.add("amount", amountField);
       cellBuilder.add("positiveAmounts", amountEditor.getPositiveRadio());
       cellBuilder.add("negativeAmounts", amountEditor.getNegativeRadio());
+
+      cellBuilder.add("deleteItem", new DeleteItemAction(itemKey));
     }
   }
 
@@ -187,6 +190,21 @@ public class ProjectEditionDialog {
     public void actionPerformed(ActionEvent actionEvent) {
       localRepository.delete(currentProjectKey);
       dialog.setVisible(false);
+    }
+  }
+
+  private class DeleteItemAction extends AbstractAction {
+    private Key projectItemKey;
+
+    private DeleteItemAction(Key projectItemKey) {
+      this.projectItemKey = projectItemKey;
+    }
+
+    public void actionPerformed(ActionEvent actionEvent) {
+      localRepository.delete(projectItemKey);
+      if (!localRepository.contains(ProjectItem.TYPE, linkedTo(currentProjectKey, ProjectItem.PROJECT))) {
+        createItem();
+      }
     }
   }
 
@@ -226,7 +244,7 @@ public class ProjectEditionDialog {
   private Integer getLastMonth() {
     GlobList existingItems =
       localRepository.getAll(ProjectItem.TYPE,
-                             GlobMatchers.linkedTo(currentProjectKey, ProjectItem.PROJECT));
+                             linkedTo(currentProjectKey, ProjectItem.PROJECT));
     if (existingItems.isEmpty()) {
       return directory.get(TimeService.class).getCurrentMonthId();
     }

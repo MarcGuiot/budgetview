@@ -3,11 +3,12 @@ package org.designup.picsou.triggers;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.utils.GlobMatchers;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
 public class ProjectTrigger implements ChangeSetListener {
 
@@ -33,32 +34,79 @@ public class ProjectTrigger implements ChangeSetListener {
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
         Key seriesKey = Key.create(Series.TYPE, previousValues.get(Project.SERIES));
         repository.delete(seriesKey);
-        repository.delete(ProjectItem.TYPE, GlobMatchers.linkedTo(key, ProjectItem.PROJECT));
-        repository.delete(SeriesBudget.TYPE, GlobMatchers.linkedTo(seriesKey, SeriesBudget.SERIES));
+        repository.delete(ProjectItem.TYPE, linkedTo(key, ProjectItem.PROJECT));
+        repository.delete(SeriesBudget.TYPE, linkedTo(seriesKey, SeriesBudget.SERIES));
       }
     });
 
+    final Set<Integer> projectIds = getProjectsForChangedItems(changeSet, repository);
+    for (Integer projectId : projectIds) {
+      updateProject(projectId, repository);
+    }
+  }
+
+  private Set<Integer> getProjectsForChangedItems(ChangeSet changeSet, final GlobRepository repository) {
+    final Set<Integer> projectIds = new HashSet<Integer>();
     changeSet.safeVisit(ProjectItem.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        updateProjectAmounts(key, values, repository, false);
+        projectIds.add(values.get(ProjectItem.PROJECT));
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(ProjectItem.AMOUNT)) {
-          updateProjectAmounts(key, values, repository, false);
-        }
+        projectIds.add(repository.get(key).get(ProjectItem.PROJECT));
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        updateProjectAmounts(key, previousValues, repository, true);
+        projectIds.add(previousValues.get(ProjectItem.PROJECT));
       }
     });
+    return projectIds;
   }
 
-  private void updateProjectAmounts(Key projectItemKey,
-                                    FieldValues projectItemValues,
-                                    GlobRepository repository,
-                                    boolean deleted) {
+  private void updateProject(Integer projectId, GlobRepository repository) {
+    Glob project = repository.get(Key.create(Project.TYPE, projectId));
+    if (project == null) {
+      return;
+    }
+
+    Integer seriesId = project.get(Project.SERIES);
+    Key seriesKey = Key.create(Series.TYPE, seriesId);
+    for (Glob seriesBudget : repository.getAll(SeriesBudget.TYPE, linkedTo(seriesKey, SeriesBudget.SERIES))) {
+      repository.update(seriesBudget.getKey(),
+                        value(SeriesBudget.AMOUNT, 0.00),
+                        value(SeriesBudget.ACTIVE, false));
+    }
+
+
+    int firstMonth = Integer.MAX_VALUE;
+    int lastMonth = Integer.MIN_VALUE;
+    double totalAmount = 0.00;
+    for (Glob item : repository.getAll(ProjectItem.TYPE, linkedTo(project, ProjectItem.PROJECT))) {
+      Double itemAmount = item.get(ProjectItem.AMOUNT);
+      totalAmount += itemAmount;
+
+      Integer monthId = item.get(ProjectItem.MONTH);
+      firstMonth = Math.min(firstMonth, monthId);
+      lastMonth = Math.max(lastMonth, monthId);
+
+      GlobList seriesBudgetList = SeriesBudget.getAll(seriesId, monthId, repository);
+      if (seriesBudgetList.isEmpty()) {
+        seriesBudgetList.add(repository.create(SeriesBudget.TYPE,
+                                               value(SeriesBudget.SERIES, seriesId),
+                                               value(SeriesBudget.MONTH, monthId)));
+      }
+      Glob seriesBudget = seriesBudgetList.getFirst();
+      repository.update(seriesBudget.getKey(),
+                        value(SeriesBudget.AMOUNT, seriesBudget.get(SeriesBudget.AMOUNT) + itemAmount),
+                        value(SeriesBudget.ACTIVE, true));
+    }
+    repository.update(project.getKey(), value(Project.TOTAL_AMOUNT, totalAmount));
+
+    repository.update(seriesKey, Series.FIRST_MONTH, firstMonth);
+    repository.update(seriesKey, Series.LAST_MONTH, lastMonth);
+  }
+
+  private Glob findProject(Key projectItemKey, FieldValues projectItemValues, GlobRepository repository) {
     Integer projectId = null;
     if (projectItemValues.contains(ProjectItem.PROJECT)) {
       projectId = projectItemValues.get(ProjectItem.PROJECT);
@@ -69,32 +117,7 @@ public class ProjectTrigger implements ChangeSetListener {
         projectId = projectItem.get(ProjectItem.PROJECT);
       }
     }
-    Glob project = repository.find(Key.create(Project.TYPE, projectId));
-    if (project == null) {
-      return;
-    }
-
-    double newValue = project.get(Project.TOTAL_AMOUNT) +
-                      projectItemValues.get(ProjectItem.AMOUNT) * (deleted ? -1 : +1);
-    repository.update(project.getKey(), value(Project.TOTAL_AMOUNT, newValue));
-
-    int monthId = getMonthId(projectItemKey, projectItemValues, repository);
-    GlobList seriesBudgetList = SeriesBudget.getAll(project.get(Project.SERIES), monthId, repository);
-    if (seriesBudgetList.isEmpty() && !deleted) {
-      repository.create(SeriesBudget.TYPE,
-                        value(SeriesBudget.SERIES, project.get(Project.SERIES)),
-                        value(SeriesBudget.MONTH, monthId),
-                        value(SeriesBudget.AMOUNT, projectItemValues.get(ProjectItem.AMOUNT)),
-                        value(SeriesBudget.ACTIVE, true));
-    }
-    else if (!seriesBudgetList.isEmpty()) {
-      Glob seriesBudget = seriesBudgetList.getFirst();
-      double seriesBudgetValue = seriesBudget.get(SeriesBudget.AMOUNT) +
-                                 projectItemValues.get(ProjectItem.AMOUNT) * (deleted ? -1 : +1);
-      repository.update(seriesBudget.getKey(),
-                        value(SeriesBudget.AMOUNT, seriesBudgetValue),
-                        value(SeriesBudget.ACTIVE, true));
-    }
+    return repository.find(Key.create(Project.TYPE, projectId));
   }
 
   private int getMonthId(Key projectItemKey, FieldValues projectItemValues, GlobRepository repository) {

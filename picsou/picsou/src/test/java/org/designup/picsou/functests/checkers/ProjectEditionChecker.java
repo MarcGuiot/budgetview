@@ -3,10 +3,8 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
-import org.uispec4j.finder.ComponentMatchers;
 
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class ProjectEditionChecker extends GuiChecker {
 
@@ -27,7 +25,7 @@ public class ProjectEditionChecker extends GuiChecker {
   }
 
   public ProjectEditionChecker checkItems(String expected) {
-    Assert.assertEquals(expected.trim(), getContent());
+    Assert.assertEquals(expected.trim(), getContent().trim());
     return this;
   }
 
@@ -49,6 +47,11 @@ public class ProjectEditionChecker extends GuiChecker {
       getItemComponent(index, RadioButton.class, "negativeAmounts").click();
     }
     getItemComponent(index, TextBox.class, "amount").setText(toString(Math.abs(amount)));
+    return this;
+  }
+
+  public ProjectEditionChecker deleteItem(int index) {
+    getItemComponent(index, Button.class, "delete").click();
     return this;
   }
 
@@ -95,10 +98,11 @@ public class ProjectEditionChecker extends GuiChecker {
       if (((RadioButton)positiveRadios[i]).isSelected().isTrue()) {
         builder.append("+");
       }
-      if (((RadioButton)negativeRadios[i]).isSelected().isTrue()) {
+      String amount = ((TextBox)amounts[i]).getText();
+      if (((RadioButton)negativeRadios[i]).isSelected().isTrue() && !amount.equals("0.00")) {
         builder.append("-");
       }
-      builder.append(((TextBox)amounts[i]).getText());
+      builder.append(amount);
     }
     return builder.toString();
   }
@@ -110,6 +114,11 @@ public class ProjectEditionChecker extends GuiChecker {
 
   public ProjectEditionChecker checkProjectItemMessage(int index, String expectedMessage) {
     checkErrorTipVisible(dialog, getItemComponent(index, TextBox.class, "label"), expectedMessage);
+    return this;
+  }
+
+  public ProjectEditionChecker checkNoErrorTipDisplayed() {
+    super.checkNoErrorTip(dialog);
     return this;
   }
 
