@@ -108,62 +108,58 @@
 
         <card name="home">
           <column>
-            <horizontalSplit>
-              <verticalSplit weightX="2">
-                <panel ref="projectView" weightY="4"/>
+            <verticalSplit>
+              <horizontalSplit weightY="5">
+                <panel ref="projectView" weightX="1"/>
 
-                <column weightY="5">
-                  <label text="$notesView.label" styleClass="blockTitle"/>
-                  <panel styleClass="block">
-                    <panel styleClass="innerBlock">
-                      <column>
-                        <panel ref="notesView" minimumSize="(200,100)" preferredSize="(200,100)"/>
-                        <panel autoHideSource="newVersionMessage" styleClass="infoMessage"
-                               border="empty(10,0,0,0)">
-                          <panel styleClass="infoMessageBorder">
-                            <htmlEditorPane ref="newVersionMessage"/>
-                          </panel>
-                        </panel>
-                        <panel autoHideSource="licenseMessage" styleClass="infoMessage"
-                               border="empty(10,0,0,0)">
-                          <panel styleClass="infoMessageBorder">
-                            <htmlEditorPane ref="licenseMessage"/>
-                          </panel>
-                        </panel>
-                      </column>
+                <column weightX="3">
+                  <label text="$mainSummary.title" styleClass="blockTitle"/>
+                  <column styleClass="block">
+                    <column name="mainAccountsEvolutionPanel" styleClass="innerBlock">
+                      <label text="$mainAccountsEvolution.title"/>
+                      <panel background="seriesEvolution.chart.bg" border="line(block.inner.border)">
+                        <component ref="mainAccountsHistoChart" margin="15" opaque="true"
+                                   background="seriesEvolution.chart.bg"/>
+                      </panel>
+                    </column>
+                    <column name="savingsEvolutionPanel" styleClass="innerBlock">
+                      <label text="$savingsEvolution.title"/>
+                      <panel background="seriesEvolution.chart.bg" border="line(block.inner.border)">
+                        <component ref="savingsHistoChart" margin="15" opaque="true"
+                                   background="seriesEvolution.chart.bg"/>
+                      </panel>
+                    </column>
+                  </column>
+                </column>
+
+              </horizontalSplit>
+
+              <column weightY="2">
+                <label text="$notesView.label" styleClass="blockTitle"/>
+                <panel styleClass="block">
+                  <row styleClass="innerBlock">
+
+                    <panel ref="notesView" minimumSize="(200,100)" preferredSize="(200,100)"/>
+
+                    <panel autoHideSource="newVersionMessage" styleClass="infoMessage"
+                           border="empty(10,0,0,10)">
+                      <panel styleClass="infoMessageBorder">
+                        <htmlEditorPane ref="newVersionMessage"/>
+                      </panel>
                     </panel>
-                  </panel>
-                </column>
-              </verticalSplit>
 
-              <verticalSplit weightX="5">
-
-                <column>
-                  <label text="$mainAccountsEvolution.title" styleClass="blockTitle"/>
-                  <panel styleClass="block" preferredSize="(300,300)" name="mainAccountsEvolutionPanel">
-                    <column styleClass="innerBlock">
-                      <panel background="seriesEvolution.chart.bg" border="line(block.inner.border)">
-                        <component ref="mainAccountsHistoChart" margin="15" opaque="true" background="seriesEvolution.chart.bg"/>
+                    <panel autoHideSource="licenseMessage" styleClass="infoMessage"
+                           border="empty(10,0,0,10)">
+                      <panel styleClass="infoMessageBorder">
+                        <htmlEditorPane ref="licenseMessage"/>
                       </panel>
-                    </column>
-                  </panel>
-                </column>
-
-                <column>
-                  <label text="$savingsEvolution.title" styleClass="blockTitle"/>
-                  <panel styleClass="block" preferredSize="(300,300)" name="savingsEvolutionPanel">
-                    <column styleClass="innerBlock">
-                      <panel background="seriesEvolution.chart.bg" border="line(block.inner.border)">
-                        <component ref="savingsHistoChart" margin="15" opaque="true" background="seriesEvolution.chart.bg"/>
-                      </panel>
-                    </column>
-                  </panel>
-                </column>
-
-              </verticalSplit>
+                    </panel>
+                  </row>
+                </panel>
+              </column>
 
 
-            </horizontalSplit>
+            </verticalSplit>
           </column>
         </card>
 

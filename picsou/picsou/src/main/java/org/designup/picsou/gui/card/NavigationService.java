@@ -88,6 +88,10 @@ public class NavigationService implements GlobSelectionListener {
     select(Card.DATA, false);
   }
 
+  public void gotoSavings() {
+    gotoCard(Card.SAVINGS);
+  }
+
   public boolean backEnabled() {
     return !backStack.isEmpty();
   }

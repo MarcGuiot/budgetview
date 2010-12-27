@@ -4,7 +4,7 @@
 
   <panel styleClass="innerBlock">
 
-    <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true">
+    <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true" border="line(block.inner.border)">
       <textArea ref="notesEditor" lineWrap="true" wrapStyleWord="true" margin="5" fill="both"/>
     </scrollPane>
 
