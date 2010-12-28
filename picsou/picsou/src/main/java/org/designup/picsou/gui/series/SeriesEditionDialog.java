@@ -71,9 +71,7 @@ public class SeriesEditionDialog {
   private OpenMonthChooserAction singleMonthChooserAction;
   private GlobTextEditor nameEditor;
   private JPanel monthSelectionPanel;
-  private JPanel seriesPanel;
   private Key createdSeries;
-  private JPanel seriesListButtonPanel;
   private SeriesAmountEditionPanel amountEditionPanel;
   private GlobList selectedTransactions = new EmptyGlobList();
   private GlobLinkComboEditor fromAccountsCombo;
@@ -118,7 +116,6 @@ public class SeriesEditionDialog {
     localRepository.addTrigger(new UpdateBudgetOnSeriesAccountsChange());
     localRepository.addChangeListener(new ProfileTypeChangeListener());
 
-// TODO: A REINTEGRER ?
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (currentSeries == null) {
@@ -158,14 +155,8 @@ public class SeriesEditionDialog {
     titleLabel = builder.add("title", new JLabel("SeriesEditionDialog")).getComponent();
 
     seriesList = GlobListView.init(Series.TYPE, localRepository, localDirectory);
-    seriesPanel = builder.add("seriesPanel", new JPanel()).getComponent();
 
     builder.add("seriesList", seriesList.getComponent());
-
-    seriesListButtonPanel = new JPanel();
-    builder.add("seriesListButtonPanel", seriesListButtonPanel);
-    builder.add("create", new CreateSeriesAction());
-    builder.add("delete", new DeleteSeriesAction("seriesEdition.delete", false));
 
     nameEditor = builder.addEditor("nameField", Series.NAME).setNotifyOnKeyPressed(true);
     nameEditor.getComponent().addActionListener(okAction);
@@ -448,7 +439,6 @@ public class SeriesEditionDialog {
     finally {
       localRepository.completeChangeSet();
     }
-    setSeriesListVisible(true);
     Glob series = null;
     if (seriesId != null) {
       series = localRepository.get(Key.create(Series.TYPE, seriesId));
@@ -472,9 +462,6 @@ public class SeriesEditionDialog {
     finally {
       localRepository.completeChangeSet();
     }
-    setSeriesListVisible(false);
-    seriesPanel.setVisible(false);
-    seriesListButtonPanel.setVisible(false);
     doShow(monthIds, localRepository.get(series.getKey()), false, false);
   }
 
@@ -514,16 +501,9 @@ public class SeriesEditionDialog {
     finally {
       localRepository.completeChangeSet();
     }
-    setSeriesListVisible(false);
     this.createdSeries = null;
     doShow(selectedMonths.getValueSet(Month.ID), createdSeries, true, true);
     return this.createdSeries;
-  }
-
-  private void setSeriesListVisible(boolean visible) {
-    seriesPanel.setVisible(false);
-    seriesListButtonPanel.setVisible(false);
-    singleSeriesDeleteButton.setVisible(true);
   }
 
   private Glob createSeries(String label, Integer day, Integer fromAccountId, Integer toAccountId, FieldValue... forcedValues) {
@@ -800,23 +780,6 @@ public class SeriesEditionDialog {
     public void actionPerformed(ActionEvent e) {
       localRepository.rollback();
       dialog.setVisible(false);
-    }
-  }
-
-  private class CreateSeriesAction extends AbstractAction {
-    public CreateSeriesAction() {
-      super(Lang.get("seriesEdition.create"));
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      Glob newSeries = createSeries(Lang.get("seriesEdition.newSeries"), 1, null, null);
-      selectionService.select(newSeries);
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          nameEditor.getComponent().requestFocusInWindow();
-          nameEditor.getComponent().selectAll();
-        }
-      });
     }
   }
 
