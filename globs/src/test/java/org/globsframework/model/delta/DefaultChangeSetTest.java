@@ -59,6 +59,7 @@ public class DefaultChangeSetTest extends TestCase {
 
     changeSet.processCreation(DummyObject.TYPE, creationValues);
     assertTrue(changeSet.isCreated(key1));
+    assertFalse(changeSet.isDeleted(key1));
     assertTrue(changeSet.containsChanges(key1));
     assertTrue(changeSet.containsChanges(key1, DummyObject.ID));
     assertTrue(changeSet.containsChanges(DummyObject.TYPE));
@@ -87,6 +88,7 @@ public class DefaultChangeSetTest extends TestCase {
     assertTrue(changeSet.containsChanges(DummyObject.TYPE));
     assertFalse(changeSet.containsCreationsOrDeletions(DummyObject.TYPE));
     assertFalse(changeSet.isCreated(key1));
+    assertFalse(changeSet.isDeleted(key1));
     assertTrue(changeSet.containsUpdates(DummyObject.VALUE));
     assertFalse(changeSet.containsUpdates(DummyObject.NAME));
     assertFalse(changeSet.containsChanges(DummyObject2.TYPE));
@@ -118,6 +120,8 @@ public class DefaultChangeSetTest extends TestCase {
 
     changeSet.processDeletion(key1, FieldValues.EMPTY);
     assertTrue(changeSet.containsChanges(key1));
+    assertFalse(changeSet.isCreated(key1));
+    assertTrue(changeSet.isDeleted(key1));
     assertTrue(changeSet.containsChanges(DummyObject.TYPE));
     assertTrue(changeSet.containsChanges(key1, DummyObject.NAME));
     assertTrue(changeSet.containsCreationsOrDeletions(DummyObject.TYPE));
