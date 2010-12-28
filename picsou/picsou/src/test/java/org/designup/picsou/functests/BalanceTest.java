@@ -49,7 +49,9 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
 
     timeline.selectAll();
     views.selectData();
-    transactions.initAmountContent()
+    transactions
+      .showPlannedTransactions()
+      .initAmountContent()
       .add("22/08/2009", "Planned: Courses", -10.00, "Courses", -159.60, "Main accounts")
       .add("20/08/2009", "Planned: Tel", -29.90, "Tel", -149.60, "Main accounts")
       .add("20/07/2009", "Planned: Tel", -29.90, "Tel", -119.70, "Main accounts")

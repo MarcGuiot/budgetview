@@ -7,21 +7,26 @@ import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.*;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 
-public class TransactionDetailsChecker extends GuiChecker {
-  private Window window;
+import static org.uispec4j.assertion.UISpecAssert.*;
 
-  public TransactionDetailsChecker(Window window) {
-    this.window = window;
+public class TransactionDetailsChecker extends ViewChecker {
+
+  private Panel panel;
+
+  public TransactionDetailsChecker(Window mainWindow) {
+    super(mainWindow);
   }
 
   private Panel getPanel() {
-    return window.getPanel("transactionDetails");
+    if (panel == null) {
+      views.selectCategorization();
+      panel = mainWindow.getPanel("transactionDetails");
+    }
+    return panel;
   }
 
   public void checkLabel(String expected) {

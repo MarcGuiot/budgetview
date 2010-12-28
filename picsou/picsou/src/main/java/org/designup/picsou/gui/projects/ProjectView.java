@@ -18,7 +18,6 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
@@ -71,7 +70,6 @@ public class ProjectView extends View {
                                          new ProjectAmountStringifier())
                         .forceSelection(projectKey)
                         .getComponent());
-
     }
 
   }

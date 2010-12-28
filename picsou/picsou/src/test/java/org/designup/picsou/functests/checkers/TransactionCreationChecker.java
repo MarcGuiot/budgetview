@@ -1,20 +1,20 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.Assert;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
-import static org.uispec4j.assertion.UISpecAssert.*;
 
 import javax.swing.*;
 
-import junit.framework.Assert;
+import static org.uispec4j.assertion.UISpecAssert.*;
 
-public class TransactionCreationChecker extends GuiChecker {
-  private Window window;
+public class TransactionCreationChecker extends ViewChecker {
+  private Panel panel;
 
-  public TransactionCreationChecker(Window window) {
-    this.window = window;
+  public TransactionCreationChecker(Window mainWindow) {
+    super(mainWindow);
   }
 
   public TransactionCreationChecker setAmount(double amount) {
@@ -128,13 +128,14 @@ public class TransactionCreationChecker extends GuiChecker {
   }
 
   public TransactionCreationChecker checkShowing() {
-    checkVisible(true);
+    checkPanelVisible(true);
     assertThat(getShowHideButton().textEquals("Hide"));
     return this;
   }
 
   private Button getShowHideButton() {
-    return window.getButton("showHideTransactionCreation");
+    views.selectCategorization();
+    return mainWindow.getButton("showHideTransactionCreation");
   }
 
   public TransactionCreationChecker hide() {
@@ -143,13 +144,14 @@ public class TransactionCreationChecker extends GuiChecker {
   }
 
   public TransactionCreationChecker checkHidden() {
-    checkVisible(false);
+    views.selectCategorization();
+    checkPanelVisible(false);
     assertThat(getShowHideButton().textEquals("Input operations manually"));
     return this;
   }
 
-  private TransactionCreationChecker checkVisible(boolean visible) {
-    checkComponentVisible(window, JPanel.class, "transactionCreation", visible);
+  private TransactionCreationChecker checkPanelVisible(boolean visible) {
+    checkComponentVisible(mainWindow, JPanel.class, "transactionCreation", visible);
     return this;
   }
 
@@ -176,7 +178,7 @@ public class TransactionCreationChecker extends GuiChecker {
     return this;
   }
 
-  public void checkDemoMessage(){
+  public void checkDemoMessage() {
     MessageDialogChecker.init(getShowHideButton().triggerClick())
       .checkMessageContains("You cannot create operations in the demo account")
       .close();
@@ -194,6 +196,10 @@ public class TransactionCreationChecker extends GuiChecker {
   }
 
   private Panel getPanel() {
-    return window.getPanel("transactionCreation");
+    if (panel == null) {
+      views.selectCategorization();
+      panel = mainWindow.getPanel("transactionCreation");
+    }
+    return panel;
   }
 }

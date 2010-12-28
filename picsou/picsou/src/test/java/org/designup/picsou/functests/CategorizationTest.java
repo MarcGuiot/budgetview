@@ -19,7 +19,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/30", -1129.90, "WorldCo/june")
       .load();
 
-    views.selectCategorization();
     categorization.selectTableRow(0)
       .checkLabel("WORLDCO/JUNE")
       .selectIncome()
@@ -28,10 +27,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectNewSeries("Salary", "My income")
       .checkNoSeriesMessageHidden();
 
-    views.selectData();
     transactions.checkSeries("WorldCo/june", "Salary");
 
-    views.selectCategorization();
     categorization.checkSelectedTableRows(0);
     categorization.checkIncomeSeriesIsSelected("Salary");
     categorization.getIncome().checkSeriesTooltip("Salary", "My income");
@@ -51,7 +48,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/30", -29.90, "Free Telecom")
       .load();
 
-    views.selectCategorization();
     categorization
       .selectTableRow(0)
       .checkLabel("FREE TELECOM")
@@ -62,10 +58,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectNewSeries("Internet", "WWW connection")
       .checkNoSeriesMessageHidden();
 
-    views.selectData();
     transactions.checkSeries(0, "Internet");
 
-    views.selectCategorization();
     categorization.checkSelectedTableRows(0);
     categorization.checkRecurringSeriesIsSelected("Internet");
     categorization.getRecurring().checkSeriesTooltip("Internet", "WWW connection");
@@ -80,7 +74,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/30", -29.90, "AUCHAN C'EST BON")
       .load();
 
-    views.selectCategorization();
     categorization.selectTableRows(0)
       .checkLabel("AUCHAN C'EST BON")
       .selectVariable()
@@ -90,7 +83,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .checkSeriesIsSelected("Courant")
       .checkNoSeriesMessageHidden();
 
-    views.selectData();
     transactions.checkSeries(0, "Courant");
   }
 
@@ -102,7 +94,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/15", -40, "Auchan")
       .load();
 
-    views.selectCategorization();
     categorization.selectTableRows(0, 1);
     categorization.checkTable(new Object[][]{
       {"15/06/2008", "", "Auchan", -40.00},
@@ -156,7 +147,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/15", -60, "Monops")
       .load();
 
-    views.selectCategorization();
     categorization.checkTable(new Object[][]{
       {"15/06/2008", "", "Auchan", -40.00},
       {"25/06/2008", "", "France Telecom", -59.90},
@@ -476,7 +466,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     timeline.selectAll();
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("26/06/2008", TransactionType.PLANNED, "Planned: Groceries", "", -170.00, "Groceries")
       .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet")
       .add("25/05/2008", TransactionType.PRELEVEMENT, "Free Telecom 25/05", "", -29.90, "Internet")
@@ -568,6 +560,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectData();
     timeline.selectAll();
     transactions
+      .showPlannedTransactions()
       .initContent()
       .add("26/06/2008", TransactionType.PLANNED, "Planned: Groceries", "", -170.00, "Groceries")
       .add("26/06/2008", TransactionType.PRELEVEMENT, "Free Telecom 26/06", "", -29.90, "Internet")
@@ -630,7 +623,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/29", -29.00, "ED")
       .load();
 
-    views.selectBudget();
     budgetView.variable.createSeries().setName("courantED")
       .setEndDate(200805)
       .selectAllMonths()
@@ -647,7 +639,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectAllMonths()
       .setAmount("100")
       .validate();
-    views.selectCategorization();
+
     categorization.selectTransactions("ED");
     categorization.selectVariable()
       .checkContainsSeries("courantED")
@@ -705,10 +697,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/10", -10, "Auchan")
       .load();
 
-    views.selectCategorization();
     categorization.setRecurring("Auchan", "Courant");
 
-    views.selectBudget();
     timeline.selectMonth("2008/05");
     budgetView.recurring.checkSeries("Courant", -20, -20);
     timeline.selectMonth("2008/06");
@@ -722,11 +712,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/10", -10, "ED")
       .load();
 
-    views.selectCategorization();
     categorization.setRecurring("ED", "Courant");
     categorization.setRecurring("ATAC", "Courant");
 
-    views.selectBudget();
     timeline.selectMonth("2008/04");
     budgetView.recurring.checkSeries("Courant", -100, -100);
     timeline.selectMonth("2008/05");
@@ -736,11 +724,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     budgetView.recurring.checkSeries("Courant", 0, -30);
 
-    views.selectCategorization();
     timeline.selectMonth("2008/05");
     categorization.setNewExtra("ED", "Occasional");
 
-    views.selectBudget();
     timeline.selectMonth("2008/05");
     budgetView.recurring.checkSeries("Courant", -20, -100);
     timeline.selectMonth("2008/06");
@@ -748,9 +734,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     budgetView.recurring.checkSeries("Courant", 0, -20);
 
-    views.selectData();
     timeline.selectAll();
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("01/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant")
       .add("01/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant")
       .add("10/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -10.00, "Courant")
@@ -935,21 +922,19 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
   public void testAutomaticShouldNotTakeInAccountPreviousEmptyMonthWhenPositiveBudget() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
-    views.selectBudget();
-    budgetView.income.createSeries().setName("Revenue")
-      .validate();
+
+    budgetView.income.createSeries("Revenue");
     OfxBuilder
       .init(this)
       .addTransaction("2008/05/10", 10, "revenue 2")
       .addTransaction("2008/06/20", 20, "revenue 1")
       .load();
 
-    views.selectCategorization();
     categorization.setIncome("revenue 1", "Revenue");
 
-    views.selectData();
     timeline.selectAll();
     transactions
+      .showPlannedTransactions()
       .initContent()
       .add("01/08/2008", TransactionType.PLANNED, "Planned: Revenue", "", 20.00, "Revenue")
       .add("01/07/2008", TransactionType.PLANNED, "Planned: Revenue", "", 20.00, "Revenue")
@@ -961,9 +946,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   public void testAutomaticShouldNotTakeInAccountPreviousEmptyMonth() throws Exception {
 
     operations.openPreferences().setFutureMonthsCount(2).validate();
-    views.selectBudget();
-    budgetView.recurring.createSeries().setName("Courant")
-      .validate();
+    budgetView.recurring.createSeries("Courant");
 
     OfxBuilder
       .init(this)
@@ -971,12 +954,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/20", -20, "ED")
       .load();
 
-    views.selectCategorization();
     categorization.setRecurring("ED", "Courant");
 
-    views.selectData();
     timeline.selectAll();
     transactions
+      .showPlannedTransactions()
       .initContent()
       .add("01/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant")
       .add("01/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant")
@@ -994,11 +976,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/05/10", -5, "ATAC")
       .load();
 
-    views.selectCategorization();
     categorization.setNewRecurring("Auchan", "Courant");
     categorization.setRecurring("ATAC", "Courant");
 
-    views.selectBudget();
     timeline.selectMonth("2008/04");
     budgetView.recurring.checkSeries("Courant", -10, -10);
     timeline.selectMonth("2008/05");
@@ -1010,7 +990,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2008/06/20", -20.00, "Auchan")
       .load();
-    views.selectBudget();
 
     timeline.selectMonth("2008/05");
     budgetView.recurring.checkSeries("Courant", -5, -10);

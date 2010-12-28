@@ -134,15 +134,15 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/15", -500, "FNAC")
       .load();
 
-    views.selectCategorization();
     categorization.setNewVariable("Vinci", "Transports", -5.);
     categorization.setNewVariable("Virgin", "Leisures", -550.);
     categorization.setVariable("FNAC", "Leisures");
 
-    views.selectData();
     timeline.selectAll();
 
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("20/08/2008", TransactionType.PLANNED, "Planned: Transports", "", -5.00, "Transports")
       .add("15/08/2008", TransactionType.PLANNED, "Planned: Leisures", "", -550.00, "Leisures")
       .add("20/07/2008", TransactionType.PLANNED, "Planned: Transports", "", -5.00, "Transports")

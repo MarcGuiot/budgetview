@@ -18,8 +18,6 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/25", -27.50, "Non shiftable - Last month")
       .load();
 
-    views.selectCategorization();
-
     transactionDetails.checkShiftDisabled();
 
     categorization.selectAllTransactions();
@@ -88,8 +86,6 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/01/15", -15.10, "Non shiftable 2")
       .load();
 
-    views.selectCategorization();
-
     transactionDetails.checkShiftDisabled();
 
     categorization.selectTransaction("SHIFTABLE TO NEXT");
@@ -116,15 +112,12 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/15", -12.00, "Monoprix / July")
       .load();
 
-    views.selectCategorization();
     categorization.selectAllTransactions();
     categorization.selectRecurring().selectNewSeries("Groceries");
 
-    views.selectHome();
     mainAccounts.checkAccount("Account n. 00001234", 100.00, "2008/07/15");
     timeline.selectMonth("2008/06");
 
-    views.selectBudget();
     budgetView.getSummary()
       .checkMonthBalance(-25.00)
       .checkEndPosition(112.00);
@@ -134,26 +127,22 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .checkMonthBalance(-25.00)
       .checkEndPosition(87.00);
 
-    views.selectBudget();
     timeline.selectMonth("2008/06");
     budgetView.recurring.checkTotalAmounts(-25.00, -25.00);
     timeline.selectMonth("2008/07");
     budgetView.recurring.checkTotalAmounts(-12.00, -25.00);
 
-    views.selectCategorization();
     categorization.selectTransaction("Monoprix / End of june");
     transactionDetails.shift();
     categorization.checkUserDate(transactionDetails, "01/07/2008", "MONOPRIX / END OF JUNE");
 
     // Account positions are unchanged
-    views.selectHome();
     timeline.selectMonth("2008/06");
     mainAccounts.checkEstimatedPosition(112.00);
     timeline.selectMonth("2008/07");
     mainAccounts.checkEstimatedPosition(100.00);
 
     // Balances are updated
-    views.selectBudget();
     timeline.selectMonth("2008/06");
     budgetView.getSummary().checkMonthBalance(-15.00);
     timeline.selectMonth("2008/07");
@@ -173,24 +162,20 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/15", -12.00, "Monoprix / July")
       .load();
 
-    views.selectCategorization();
     categorization.selectAllTransactions();
     categorization.selectRecurring().selectNewSeries("Groceries");
 
-    views.selectHome();
     mainAccounts.checkAccount("Account n. 00001234", 100.00, "2008/07/15");
     timeline.selectMonth("2008/06");
     mainAccounts.checkEstimatedPosition(112.00);
     timeline.selectMonth("2008/07");
     mainAccounts.checkEstimatedPosition(87.00);
 
-    views.selectBudget();
     timeline.selectMonth("2008/06");
     budgetView.recurring.checkTotalAmounts(-25.00, -25.00);
     timeline.selectMonth("2008/07");
     budgetView.recurring.checkTotalAmounts(-12.00, -25.00);
 
-    views.selectCategorization();
     categorization.selectTransaction("Monoprix / June");
     transactionDetails.split("10.00", "dvd");
     categorization.checkTable(new Object[][]{
@@ -205,20 +190,17 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkBudgetDate("01/07/2008");
 
     // Account positions are unchanged
-    views.selectHome();
     timeline.selectMonth("2008/06");
     mainAccounts.checkEstimatedPosition(112.00);
     timeline.selectMonth("2008/07");
     mainAccounts.checkEstimatedPosition(97.00);
 
     // Series are updated
-    views.selectBudget();
     timeline.selectMonth("2008/06");
     budgetView.recurring.checkTotalAmounts(-15.00, -15.00);
     timeline.selectMonth("2008/07");
     budgetView.recurring.checkTotalAmounts(-22.00, -25.00);
 
-    views.selectCategorization();
     transactionDetails.openSplitDialog()
       .deleteRow(1)
       .validateAndClose();
@@ -227,7 +209,6 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       {"25/06/2008", "Groceries", "MONOPRIX / JUNE", -25.0},
     });
 
-    views.selectBudget();
     timeline.selectMonth("2008/06");
     budgetView.recurring.checkTotalAmounts(-25.00, -25.00);
     timeline.selectMonth("2008/07");
@@ -240,7 +221,6 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/05", -30.00, "Monoprix / July")
       .load();
 
-    views.selectCategorization();
     categorization.selectTransaction("Monoprix / June");
     categorization.selectVariable().createSeries("Groceries");
 
@@ -291,28 +271,25 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/05", -30.00, "Epargne / July")
       .load();
 
-    views.selectHome();
     savingsAccounts.createSavingsAccount("Epargne", 0.);
 
-    views.selectBudget();
     budgetView.savings.createSeries()
       .setName("Epargne")
       .setFromAccount("Main accounts")
       .setToAccount("Epargne")
       .validate();
 
-    views.selectCategorization();
     categorization.selectAllTransactions().selectSavings().selectSeries("Epargne");
 
     categorization.selectTransaction("Epargne / July");
     transactionDetails.shift();
     timeline.selectMonth("2008/06");
-    views.selectBudget();
     budgetView.savings.alignAndPropagate("Epargne");
 
     timeline.selectAll();
-    views.selectData();
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("01/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", 55.00, "Epargne")
       .add("01/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", -55.00, "Epargne")
       .add("05/07/2008", TransactionType.PLANNED, "Planned: Epargne", "", 55.00, "Epargne")
@@ -330,30 +307,25 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/01/3", 15.00, "McDo")
       .load();
 
-    views.selectCategorization();
     categorization.selectTransaction("Orange");
 
     transactionDetails.shift();
 
     categorization.checkUserDate(transactionDetails, "01/01/2008", "ORANGE");
-    views.selectData();
     transactions
       .initContent()
       .add("03/01/2008", TransactionType.VIREMENT, "MCDO", "", 15.00)
       .add("25/12/2007", TransactionType.PRELEVEMENT, "ORANGE", "", -50.00)
       .check();
 
-    views.selectCategorization();
     categorization.selectTransaction("Orange");
     transactionDetails.unshift();
     timeline.selectAll();
-    views.selectData();
     transactions
       .initContent()
       .add("03/01/2008", TransactionType.VIREMENT, "MCDO", "", 15.00)
       .add("25/12/2007", TransactionType.PRELEVEMENT, "ORANGE", "", -50.00)
       .check();
-    views.selectCategorization();
     transactionDetails.checkBudgetDateNotVisible("ORANGE");
   }
 
@@ -363,23 +335,19 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/01/3", 15.00, "McDo")
       .load();
 
-    views.selectCategorization();
     categorization.selectTransaction("Orange");
 
     transactionDetails.shift();
 
     timeline.selectAll();
 
-    views.selectData();
     transactions
       .initContent()
       .add("03/01/2008", TransactionType.VIREMENT, "MCDO", "", 15.00)
       .add("25/12/2007", TransactionType.PRELEVEMENT, "ORANGE", "", -50.00)
       .check();
-    views.selectCategorization();
     categorization.checkUserDate(transactionDetails, "01/01/2008", "ORANGE");
 
-    views.selectData();
     operations.undo();
     transactions
       .initContent()
@@ -392,7 +360,6 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .add("03/01/2008", TransactionType.VIREMENT, "MCDO", "", 15.00)
       .add("25/12/2007", TransactionType.PRELEVEMENT, "ORANGE", "", -50.00)
       .check();
-    views.selectCategorization();
     categorization.checkUserDate(transactionDetails, "01/01/2008", "ORANGE");
   }
 }

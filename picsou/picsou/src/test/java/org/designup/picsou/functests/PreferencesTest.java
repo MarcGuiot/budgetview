@@ -19,7 +19,6 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/01", 1200.00, "Salaire Aout")
       .load();
 
-    views.selectCategorization();
     categorization.setNewVariable("Auchan", "Courant", -95.00);
     categorization.setNewRecurring("EDF", "EDF");
     categorization.setNewIncome("Salaire Aout", "Salaire");
@@ -27,8 +26,9 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(24).validate();
 
     timeline.selectLast();
-    views.selectData();
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("12/08/2010", TransactionType.PLANNED, "Planned: Courant", "", -95.00, "Courant")
       .add("04/08/2010", TransactionType.PLANNED, "Planned: EDF", "", -55.00, "EDF")
       .add("01/08/2010", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire")
@@ -46,7 +46,6 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(36).validate();
 
     timeline.selectLast();
-    views.selectData();
     transactions.initContent()
       .add("12/08/2011", TransactionType.PLANNED, "Planned: Courant", "", -95.00, "Courant")
       .add("04/08/2011", TransactionType.PLANNED, "Planned: EDF", "", -55.00, "EDF")

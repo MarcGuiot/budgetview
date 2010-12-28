@@ -106,28 +106,6 @@ public class ProjectTrigger implements ChangeSetListener {
     repository.update(seriesKey, Series.LAST_MONTH, lastMonth);
   }
 
-  private Glob findProject(Key projectItemKey, FieldValues projectItemValues, GlobRepository repository) {
-    Integer projectId = null;
-    if (projectItemValues.contains(ProjectItem.PROJECT)) {
-      projectId = projectItemValues.get(ProjectItem.PROJECT);
-    }
-    else {
-      Glob projectItem = repository.find(projectItemKey);
-      if (projectItem != null) {
-        projectId = projectItem.get(ProjectItem.PROJECT);
-      }
-    }
-    return repository.find(Key.create(Project.TYPE, projectId));
-  }
-
-  private int getMonthId(Key projectItemKey, FieldValues projectItemValues, GlobRepository repository) {
-    if ((projectItemValues.contains(ProjectItem.MONTH))) {
-      return projectItemValues.get(ProjectItem.MONTH);
-    }
-
-    return repository.get(projectItemKey).get(ProjectItem.MONTH);
-  }
-
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }

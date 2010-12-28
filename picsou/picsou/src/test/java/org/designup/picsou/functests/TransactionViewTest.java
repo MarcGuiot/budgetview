@@ -20,7 +20,6 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .addTransactionWithNote("2006/05/02", -200.00, "sg", "")
       .addTransactionWithNote("2006/05/06", -100.00, "nounou", "nourrice")
       .load();
-    views.selectData();
     table = transactions.getTable();
   }
 
@@ -79,12 +78,10 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
   public void testFullLine() throws Exception {
 
-    views.selectCategorization();
     categorization.selectTransaction("essence")
       .selectVariable()
       .selectNewSeriesWithSubSeries("Voiture", "Carburant");
 
-    views.selectData();
     Table table = transactions.getTable();
     UISpecAssert.assertTrue(
       table.rowEquals(table.getRowIndex(TransactionView.LABEL_COLUMN_INDEX, "ESSENCE"),
@@ -132,7 +129,6 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/11", -100.0, "Virement")
       .load();
 
-    views.selectHome();
     savingsAccounts.createSavingsAccount("Epargne", 1000.);
 
     transactions.categorize(0);
@@ -143,7 +139,6 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .setToAccount("Epargne")
       .validate();
 
-    views.selectData();
     transactions
       .initContent()
       .add("11/01/2006", TransactionType.VIREMENT, "Virement", "", 100.00, "Epargne")
@@ -152,11 +147,9 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
     transactions.checkCategorizeIsDisabled(0);
 
-    views.selectCategorization();
     categorization.selectTransaction("Virement")
       .setUncategorized();
-    
-    views.selectSavings();
+
     savingsView.editSeries("Epargne", "Epargne")
       .setName("NEW NAME FOR EPARGNE")
       .setFromAccount("External account")
@@ -164,7 +157,6 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .setAmount("100")
       .validate();
 
-    views.selectData();
     transactions
       .initContent()
       .add("11/01/2006", TransactionType.VIREMENT, "NEW NAME FOR EPARGNE", "", 100.00, "NEW NAME FOR EPARGNE")
@@ -202,7 +194,6 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .check();
     categorization.checkNoTransactionSelected();
 
-    views.selectData();
     transactions.initContent()
       .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00)
       .add("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00, "Leisures")
@@ -237,21 +228,22 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     transactions.checkSeriesTooltipContains("SOMETHING ELSE", "Stuff to dress with");
 
     timeline.selectMonth("2006/06");
-    transactions.checkSeriesTooltipContains("Planned: Clothes", "Stuff to dress with");
+    transactions
+      .showPlannedTransactions()
+      .checkSeriesTooltipContains("Planned: Clothes", "Stuff to dress with");
   }
 
   public void testFutureBalance() throws Exception {
 
-    views.selectCategorization();
     categorization.setNewVariable("essence", "Voiture", -70.);
     categorization.setNewRecurring("nounou", "Nounou");
 
-    views.selectHome();
     mainAccounts.changePosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 500, "nounou");
 
-    views.selectData();
     timeline.selectAll();
-    transactions.initAmountContent()
+    transactions
+      .showPlannedTransactions()
+      .initAmountContent()
       .add("06/07/2006", "Planned: Nounou", -100.00, "Nounou", 160.00, "Main accounts")
       .add("01/07/2006", "Planned: Voiture", -70.00, "Voiture", 260.00, "Main accounts")
       .add("06/06/2006", "Planned: Nounou", -100.00, "Nounou", 330.00, "Main accounts")
@@ -264,7 +256,6 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDeleteATransactionASplitedTransationAndALastImportedTransaction() throws Exception {
-    views.selectData();
     transactions.initContent()
       .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00)
       .add("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00)
@@ -283,7 +274,6 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     transactions.delete("nounou")
       .validate();
 
-    views.selectCategorization();
     categorization.selectTransactions("sg");
     transactionDetails.split("100", "sg2");
     transactions.initContent()
@@ -292,14 +282,11 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00)
       .check();
 
-    views.selectData();
     transactions.delete("sg").validate();
 
-    views.selectCategorization();
     categorization.selectTransactions("essence");
     transactionDetails.split("30", "essence2");
 
-    views.selectData();
     transactions.deleteTransactionWithNote("essence2")
       .checkMessageContains("Use the split function")
       .validate();
@@ -310,9 +297,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDeleteATransactionWithMirrorSavings() throws Exception {
-    views.selectHome();
     savingsAccounts.createSavingsAccount("Epargne LCL", 1000.);
-    views.selectCategorization();
     categorization
       .selectTransactions("sg")
       .selectSavings().createSeries()
@@ -321,7 +306,6 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .setToAccount("Epargne LCL")
       .validate();
 
-    views.selectData();
     transactions.initContent()
       .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00)
       .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
@@ -342,14 +326,21 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testToggleShowPlannedTransactions() throws Exception {
-    views.selectCategorization();
     categorization.setNewVariable("essence", "Voiture", -70.);
     categorization.setNewRecurring("nounou", "Nounou");
 
     views.selectData();
     timeline.selectAll();
 
-    transactions.checkShowsPlannedTransaction(true);
+    transactions.checkShowsPlannedTransaction(false);
+    transactions.initContent()
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00, "Nounou")
+      .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "SG", "", -200.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00, "Voiture")
+      .check();
+
+    transactions.showPlannedTransactions();
     transactions.initContent()
       .add("06/07/2006", TransactionType.PLANNED, "Planned: Nounou", "", -100.00, "Nounou")
       .add("01/07/2006", TransactionType.PLANNED, "Planned: Voiture", "", -70.00, "Voiture")
