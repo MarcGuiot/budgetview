@@ -12,6 +12,7 @@ import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.utils.KeyUtils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -69,4 +70,21 @@ public abstract class GuiChecker {
   protected int parseMonthId(String date) {
     return Month.getMonthId(Dates.parseMonth(date));
   }
+
+  protected Component getSibling(UIComponent source, int offset, String name) {
+    Component jComponent = source.getAwtComponent();
+    Container container = jComponent.getParent();
+    for (int i = 0; i < container.getComponentCount(); i++) {
+      if (jComponent == container.getComponent(i)) {
+        Component result = container.getComponent(i + offset);
+        if (result == null) {
+          UISpecAssert.fail("No sibling component found at offset " + offset + " for component: " + name);
+        }
+        return result;
+      }
+    }
+    UISpecAssert.fail("Component '" + name + "' not found in own container");
+    return null;
+  }
+
 }

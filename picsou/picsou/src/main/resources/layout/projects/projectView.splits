@@ -1,36 +1,24 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
-
   <styleImport file="/layout/picsouStyles.splits"/>
-  <styles>
-    <style selector="#budgetAreaSeriesView .amount" font="-,plain,11" anchor="right"/>
-    <style selector="label.totalAmount" font="-,bold,16" weightY="10" marginBottom="2"/>
-
-    <style selector="header label" font="-,plain,11"
-           foreground="block.inner.columnTitle" horizontalTextPosition="right"
-           fill="none"/>
-    <style selector="header button" font="-,plain,11"
-           foreground="block.inner.columnTitle" horizontalTextPosition="left"
-           fill="none"/>
-  </styles>
 
   <column name="projectView" styleClass="main">
 
     <label text="$projectView.title" styleClass="blockTitle"/>
 
     <panel styleClass="block" preferredSize="(300,400)">
-      <column border="empty(10)">
+      <column styleClass="innerBlock">
         <column styleClass="blockScrollBorder">
           <scrollPane marginTop="0" marginBottom="0" weightY="100">
             <column>
               <repeat ref="projectRepeat" marginTop="5" marginBottom="15">
                 <column name="projectRow" margin="5" marginBottom="5">
-                    <button ref="projectName" anchor="west" styleClass="itemLink"/>
-                    <row>
-                      <label ref="projectPeriod" styleClass="subitem"/>
-                      <filler fill="horizontal"/>
-                      <label ref="projectAmount" anchor="east" styleClass="subitem"/>
-                    </row>
+                  <button ref="projectName" anchor="west" styleClass="itemLink" font="-,plain,13"/>
+                  <row>
+                    <label ref="projectPeriod" anchor="northwest" styleClass="subitem"/>
+                    <filler fill="horizontal"/>
+                    <label ref="projectAmount" anchor="northeast" styleClass="subitem"/>
+                  </row>
                 </column>
               </repeat>
               <filler fill="vertical"/>
@@ -38,8 +26,8 @@
           </scrollPane>
 
           <row styleClass="footer">
-            <button action="createProject" styleClass="create" tooltipText="$projectView.create.tooltip"/>
             <filler fill="horizontal"/>
+            <button action="createProject" styleClass="create" tooltipText="$projectView.create.tooltip"/>
           </row>
         </column>
 

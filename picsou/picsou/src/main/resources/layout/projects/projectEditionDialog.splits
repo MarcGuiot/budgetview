@@ -24,7 +24,7 @@
               <radioButton ref="positiveAmounts"/>
               <radioButton ref="negativeAmounts"/>
               <textField ref="amount"/>
-              <button action="deleteItem"/>
+              <button action="deleteItem" styleClass="icon" icon="button_delete.png"/>
             </repeat>
             <filler fill="vertical"/>
           </column>

@@ -252,6 +252,18 @@ public class HistoChartBuilder {
     dataset.apply(accountColors, "savingsAccounts");
   }
 
+  public void showSavingsAccountHisto(int currentMonthId, int accountId) {
+    HistoLineDatasetBuilder dataset = createLineDataset("savingsAccounts");
+
+    for (int monthId : getMonthIdsToShow(currentMonthId)) {
+      Glob stat = SavingsBudgetStat.find(monthId, accountId, repository);
+      Double value = stat != null ? stat.get(SavingsBudgetStat.END_OF_MONTH_POSITION) : 0.0;
+      dataset.add(monthId, value, monthId == currentMonthId);
+    }
+
+    dataset.apply(accountColors, "savingsAccounts");
+  }
+
   public void showSeriesBudget(Integer seriesId, int currentMonthId, Set<Integer> selectedMonths) {
 
     Glob series = repository.find(Key.create(Series.TYPE, seriesId));

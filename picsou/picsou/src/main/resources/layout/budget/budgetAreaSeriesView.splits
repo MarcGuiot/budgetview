@@ -7,10 +7,10 @@
     <style selector="htmlEditorPane.hints" foreground="block.inner.hints"/>
     <style selector="label.totalAmount" font="-,bold,16" weightY="10" marginBottom="2"/>
 
-    <style selector="header label" font="-,plain,11"
+    <style selector="repeat header label" font="-,plain,11"
            foreground="block.inner.columnTitle" horizontalTextPosition="right"
            fill="none"/>
-    <style selector="header button" font="-,plain,11"
+    <style selector="repeat header button" font="-,plain,11"
            foreground="block.inner.columnTitle" horizontalTextPosition="left"
            fill="none"/>
     <style id="up" selector="x" icon="button_up_blue.png"/>
