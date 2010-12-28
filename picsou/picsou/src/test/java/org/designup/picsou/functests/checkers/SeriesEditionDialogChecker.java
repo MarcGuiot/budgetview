@@ -90,13 +90,6 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
-  public SeriesEditionDialogChecker unselectSeries() {
-    ListBox seriesList = dialog.getListBox("seriesList");
-    assertThat(seriesList.isVisible());
-    seriesList.clearSelection();
-    return this;
-  }
-
   public SeriesEditionDialogChecker selectAllMonths() {
     setPropagationEnabled();
     selectFirstMonth();
@@ -281,61 +274,6 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   public void cancel() {
     dialog.getButton("Cancel").click();
     checkClosed();
-  }
-
-  public SeriesEditionDialogChecker checkSeriesListIsEmpty() {
-    return checkSeriesListEquals();
-  }
-
-  public SeriesEditionDialogChecker checkSeriesListEquals(String... names) {
-    assertThat(dialog.getListBox("seriesList").contentEquals(names));
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkSeriesListContains(String... names) {
-    assertThat(dialog.getListBox("seriesList").contains(names));
-    return this;
-  }
-
-  public SeriesEditionDialogChecker selectSeries(final int index) {
-    try {
-      SwingUtilities.invokeAndWait(new Runnable() {
-        public void run() {
-          dialog.getListBox("seriesList").selectIndex(index);
-        }
-      });
-    }
-    catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
-    catch (InvocationTargetException e) {
-      throw new RuntimeException(e);
-    }
-    return this;
-  }
-
-  public SeriesEditionDialogChecker selectSeries(String name) {
-    dialog.getListBox("seriesList").select(name);
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkSeriesSelected(String name) {
-    assertThat(dialog.getListBox("seriesList").selectionEquals(name));
-    return this;
-  }
-
-  public SeriesEditionDialogChecker createSeries() {
-    dialog.getButton("create").click();
-    return this;
-  }
-
-  public SeriesEditionDialogChecker deleteSelectedSeries() {
-    dialog.getButton("deleteSelected").click();
-    return this;
-  }
-
-  public SeriesDeleteDialogChecker deleteSelectedSeriesWithConfirmation() {
-    return SeriesDeleteDialogChecker.init(dialog.getButton("deleteSelected").triggerClick());
   }
 
   public void deleteCurrentSeries() {
@@ -556,17 +494,21 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
+  /** @deprecated A SUPPRIMER */
   public SeriesEditionDialogChecker checkSeriesListIsHidden() {
     checkSeriesListVisible(false);
     return this;
   }
 
+  /** @deprecated A SUPPRIMER */
   public SeriesEditionDialogChecker checkSeriesListIsVisible() {
     checkSeriesListVisible(true);
     return this;
   }
 
+  /** @deprecated A SUPPRIMER */
   private void checkSeriesListVisible(boolean visible) {
+    UISpecAssert.fail("A SUPPRIMER");
     checkComponentVisible(dialog, JPanel.class, "seriesListButtonPanel", visible);
     checkComponentVisible(dialog, JPanel.class, "seriesPanel", visible);
     checkComponentVisible(dialog, JButton.class, "deleteSingleSeries", !visible);

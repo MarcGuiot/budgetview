@@ -52,7 +52,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     timeline.checkSpanEquals("2008/06", "2008/08");
 
     timeline.selectAll();
-    budgetView.variable.editSeriesList().selectSeries("Courant")
+    budgetView.variable.editSeries("Courant")
       .checkChart(new Object[][]{
         {"2008", "June", 100.00, 100.00, true},
         {"2008", "July", 0.00, 100.00, true},
@@ -95,8 +95,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("Auchan", "Courant");
     timeline.selectAll();
     views.selectBudget();
-    budgetView.variable.editSeriesList()
-      .selectSeries("Courant")
+    budgetView.variable.editSeries("Courant")
       .selectAllMonths()
       .setAmount("200")
       .validate();
@@ -156,8 +155,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/10", -100.00, "EDF")
       .load();
     categorization.setNewRecurring("EDF", "EDF");
-    budgetView.recurring.editSeriesList()
-      .selectSeries("EDF")
+    budgetView.recurring.editSeries("EDF")
       .selectAllMonths()
       .setAmount("150")
       .validate();

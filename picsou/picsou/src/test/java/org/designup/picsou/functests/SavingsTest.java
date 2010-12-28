@@ -460,10 +460,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("05/08/2008", "CAF", 100.00, "CAF", 1000.00, 1000.00, "Epargne")
       .check();
 
-    views.selectBudget();
-    budgetView.savings
-      .editSeriesList()
-      .selectSeries("CAF")
+    savingsView
+      .editSeries("Epargne", "CAF")
       .setFromAccount("Main accounts")
       .validate();
 
@@ -521,8 +519,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("10/08/2008", "VIREMENT", -100.00, "CA", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
 
-    budgetView.savings.editSeriesList()
-      .selectSeries("CA")
+    budgetView.savings.editSeries("CA")
       .validate();
 
     timeline.selectAll();
@@ -1101,7 +1098,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectBank("ING Direct")
       .validate();
     categorization.selectTransactions("Virement")
-      .editSeries()
+      .editSeries("Epargne")
       .setToAccount("Livret")
       .validate();
     categorization.selectSavings().selectSeries("Epargne");
@@ -1288,13 +1285,11 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     mainAccounts.edit(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setAsSavings()
       .validate();
-    views.selectBudget();
-    budgetView.savings.editSeriesList()
-      .selectSeries(0).deleteSelectedSeries()
-      .selectSeries(0).deleteSelectedSeries()
-      .selectSeries(0).deleteSelectedSeries()
-      .selectSeries(0).deleteSelectedSeries()
-      .validate();
+
+    budgetView.savings.editSeries("From Account n. 111222").deleteCurrentSeries();
+    budgetView.savings.editSeries("To Account n. 111222").deleteCurrentSeries();
+    budgetView.savings.editSeries("From Account n. 00001123").deleteCurrentSeries();
+    budgetView.savings.editSeries("To Account n. 00001123").deleteCurrentSeries();
 
     categorization.selectAllTransactions()
       .selectSavings()
@@ -1337,10 +1332,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("Virement vers Epargne")
       .checkSavingsSeriesIsSelected("Epargne");
 
-    SeriesEditionDialogChecker seriesEditionDialogChecker = categorization.editSeries();
+    SeriesEditionDialogChecker seriesEditionDialogChecker = categorization.editSeries("Epargne");
     seriesEditionDialogChecker
-      .selectSeries("Epargne")
-      .deleteSelectedSeriesWithConfirmation()
+      .deleteCurrentSeriesWithConfirmationAndCancel()
       .cancel();
     seriesEditionDialogChecker.cancel();
   }

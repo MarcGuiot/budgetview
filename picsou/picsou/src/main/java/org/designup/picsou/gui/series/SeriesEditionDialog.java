@@ -521,9 +521,9 @@ public class SeriesEditionDialog {
   }
 
   private void setSeriesListVisible(boolean visible) {
-    seriesPanel.setVisible(visible);
-    seriesListButtonPanel.setVisible(visible);
-    singleSeriesDeleteButton.setVisible(!visible);
+    seriesPanel.setVisible(false);
+    seriesListButtonPanel.setVisible(false);
+    singleSeriesDeleteButton.setVisible(true);
   }
 
   private Glob createSeries(String label, Integer day, Integer fromAccountId, Integer toAccountId, FieldValue... forcedValues) {

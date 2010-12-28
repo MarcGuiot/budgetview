@@ -676,10 +676,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectVariable()
-      .editSeries()
-      .selectSeries("series1")
-      .deleteSelectedSeries()
-      .validate();
+      .editSeries("series1")
+      .deleteCurrentSeries();
     categorization.getVariable()
       .checkDoesNotContainSeries("series1");
   }
@@ -1039,6 +1037,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectCategorization();
+
     categorization
       .selectTransactions("Virement")
       .selectSavings()
@@ -1052,11 +1051,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    budgetView.savings
-      .editSeriesList()
-      .selectSeries(0).deleteSelectedSeries()
-      .selectSeries(0).deleteSelectedSeries()
-      .validate();
+    budgetView.savings.editSeries("From account Epargne").deleteCurrentSeries();
+    budgetView.savings.editSeries("To account Epargne").deleteCurrentSeries();
 
     views.selectCategorization();
     categorization

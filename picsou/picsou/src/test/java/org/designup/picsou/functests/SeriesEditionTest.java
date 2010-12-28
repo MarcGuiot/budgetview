@@ -206,10 +206,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
-  public void testEditAllSeriesIsInitiallyDisabled() throws Exception {
-    budgetView.recurring.checkEditAllSeriesIsEnabled(false);
-  }
-
   public void testEditingAllTheSeriesForABudgetArea() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")
@@ -238,82 +234,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.setExceptionalIncome("WorldCo - Bonus", "Exceptional Income", true);
     categorization.setNewIncome("WorldCo", "Salary");
 
-    budgetView.recurring.editSeriesList()
-      .checkSeriesListEquals("Electricity", "Internet")
-      .validate();
-
-    budgetView.variable.editSeriesList()
-      .checkSeriesListEquals("Groceries")
-      .validate();
-
-    budgetView.income.editSeriesList()
-      .checkSeriesListEquals("Exceptional Income", "Salary")
-      .validate();
-  }
-
-  public void testSwitchingBetweenSeries() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/08/15", -29.00, "Free Telecom")
-      .addTransaction("2008/07/15", -55.00, "EDF")
-      .load();
-
-    timeline.selectAll();
-    transactions.initContent()
-      .add("15/08/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
-      .add("15/07/2008", TransactionType.PRELEVEMENT, "EDF", "", -55.00)
-      .check();
-
-    categorization.setNewRecurring("Free Telecom", "Internet");
-    categorization.setNewRecurring("EDF", "Electricity");
-
-    SeriesEditionDialogChecker editionDialog = budgetView.recurring.editSeriesList();
-
-    editionDialog
-      .checkSeriesListEquals("Electricity", "Internet")
-      .checkSeriesSelected("Electricity")
-      .setCustom()
-      .selectAllMonths()
-      .setAmount("70")
-      .checkChart(new Object[][]{
-        {"2008", "July", 55.00, 70.00, true},
-        {"2008", "August", 0.00, 70.00, true},
-      })
-      .toggleMonth("Aug")
-      .checkChart(new Object[][]{
-        {"2008", "July", 55.00, 70.00, true},
-      });
-
-    editionDialog
-      .selectSeries("Internet")
-      .checkMonthIsChecked("Aug")
-      .checkChart(new Object[][]{
-        {"2008", "July", 0.00, 0.00, true},
-        {"2008", "August", 29.00, 29.00, true},
-      })
-      .toggleMonth("Jul")
-      .selectSeries("Electricity")
-      .checkMonthIsChecked("Jul")
-      .checkMonthIsNotChecked("Aug")
-      .checkChart(new Object[][]{
-        {"2008", "July", 55.00, 70.00, true},
-      })
-      .validate();
-  }
-
-  public void testNoSeriesSelected() throws Exception {
-    budgetView.recurring.createSeries()
-      .setName("series")
-      .validate();
-
-    budgetView.recurring.editSeriesList()
-      .unselectSeries()
-      .checkAllMonthsDisabled()
-      .checkCalendarsAreDisabled()
-      .checkRadioAreDisabled()
-      .checkEditorAreDisabled()
-      .selectSeries("series")
-      .selectFirstMonth()
-      .cancel();
+    budgetView.recurring.checkSeriesList("Electricity", "Internet");
+    budgetView.variable.checkSeriesList("Groceries");
+    budgetView.income.checkSeriesList("Exceptional Income", "Salary");
   }
 
   public void testCreatingANewSeries() throws Exception {
@@ -327,13 +250,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .createSeries()
       .checkTitle("Creating a series")
       .checkNameIsSelected()
-      .checkSeriesListEquals("New series")
-      .checkSeriesSelected("New series")
       .checkName("New series")
       .setName("Free Telecom")
       .selectAllMonths()
       .setAmount("40")
-      .checkSeriesListEquals("Free Telecom")
       .checkChart(new Object[][]{
         {"2008", "July", 0.0, 40.00, true},
         {"2008", "August", 0.00, 40.00, true},
@@ -341,81 +261,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.recurring.checkSeries("Free Telecom", -0.0, -40.0);
-  }
-
-  public void testExistingSeriesAreVisibleWhenCreatingANewSeries() throws Exception {
-
-    budgetView.recurring.createSeries()
-      .checkTitle("Creating a series")
-      .checkBudgetArea("Recurring")
-      .setName("My recurrence")
-      .validate();
-
-    budgetView.variable.createSeries()
-      .checkTitle("Creating a series")
-      .checkBudgetArea("Variable")
-      .setName("My envelope")
-      .validate();
-
-    budgetView.variable.createSeries()
-      .checkSeriesListEquals("My envelope", "New series")
-      .checkSeriesSelected("New series")
-      .setName("My new envelope")
-      .validate();
-
-    budgetView.variable.createSeries()
-      .checkSeriesListEquals("My envelope", "My new envelope", "New series")
-      .cancel();
-
-    budgetView.recurring.createSeries()
-      .checkSeriesListEquals("My recurrence", "New series")
-      .cancel();
-  }
-
-  public void testSwitchingBetweenTwoNewSeriesWithTheSameName() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/08/15", -29.00, "Free Telecom")
-      .addTransaction("2008/07/15", -55.00, "EDF")
-      .load();
-
-    timeline.selectMonth("2008/08");
-
-    budgetView.recurring
-      .createSeries()
-      .setCustom()
-      .validate();
-
-    SeriesEditionDialogChecker seriesEdition = budgetView.recurring
-      .editSeriesList()
-      .createSeries()
-      .setCustom()
-      .checkSeriesListEquals("New series", "New series");
-
-    seriesEdition
-      .selectSeries(0)
-      .selectAllMonths()
-      .setAmount("70")
-      .toggleMonth("Aug")
-      .checkChart(new Object[][]{
-        {"2008", "July", 0.00, 70.00, true},
-      });
-
-    seriesEdition
-      .selectSeries(1)
-      .checkMonthIsChecked("Aug")
-      .toggleMonth("Jul")
-      .checkChart(new Object[][]{
-        {"2008", "August", 0.00, 0.00, true},
-      });
-
-    seriesEdition
-      .selectSeries(0)
-      .checkMonthIsChecked("Jul")
-      .checkMonthIsNotChecked("Aug")
-      .checkChart(new Object[][]{
-        {"2008", "July", 0.00, 70.00, true},
-      })
-      .cancel();
   }
 
   public void testCancel() throws Exception {
@@ -426,9 +271,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.variable.createSeries()
       .setName("A series")
       .cancel();
-    budgetView.variable.createSeries()
-      .checkSeriesListEquals("New series")
-      .cancel();
+
+    budgetView.variable.checkNoSeriesShown();
   }
 
   public void testEsc() throws Exception {
@@ -449,11 +293,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .removeEndDate()
       .checkNoStartDate()
       .checkNoEndDate()
-      .cancel();
-
-    budgetView.variable.createSeries()
-      .unselectSeries()
-      .checkCalendarsAreDisabled()
       .cancel();
   }
 
@@ -656,8 +495,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .add("30/06/2008", TransactionType.PRELEVEMENT, "Free", "", -60.00, "Internet")
       .check();
 
-    categorization.editSeries()
-      .selectSeries("Internet")
+    categorization.editSeries("Internet")
       .setName("Leisures")
       .validate();
     categorization.getRecurring().checkContainsSeries("Leisures");
@@ -676,8 +514,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     categorization.setNewRecurring(0, "Drinking");
 
-    budgetView.recurring.editSeriesList()
-      .selectSeries("Drinking")
+    budgetView.recurring.editSeries("Drinking")
       .setName("Leisures")
       .validate();
 
@@ -705,13 +542,12 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     edition
       .checkName("AA")
       .checkAmount("13")
-      .checkSeriesListEquals("AA");
-    edition.checkChart(new Object[][]{
+      .checkChart(new Object[][]{
       {"2008", "June", 0.00, 13.00, true},
       {"2008", "July", 0.00, 13.00, true},
       {"2008", "August", 0.00, 13.00, true},
-    });
-    edition.cancel();
+    })
+      .cancel();
   }
 
   public void testMonthsAreShownOrNotDependingOnThePeriodicity() throws Exception {
@@ -751,27 +587,34 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSwitchBetweenSeries() throws Exception {
-    SeriesEditionDialogChecker edition = budgetView.variable.createSeries()
-      .setName("S1");
-    edition.setSixMonths()
-      .toggleMonth(3)
-      .checkMonthIsChecked(3, 9);
+    operations.openPreferences().setFutureMonthsCount(12).validate();
 
-    edition.createSeries().setName("S2")
+    budgetView.variable.createSeries()
+      .setName("S1")
+      .setSixMonths()
+      .toggleMonth(3)
+      .checkMonthIsChecked(3, 9)
+      .validate();
+
+    budgetView.variable.createSeries()
+      .setName("S2")
       .setTwoMonths()
       .checkMonthIsChecked(1, 3, 5, 7, 9, 11)
       .toggleMonth(2)
-      .checkMonthIsChecked(2, 4, 6, 8, 10);
+      .checkMonthIsChecked(2, 4, 6, 8, 10)
+      .validate();
 
-    edition.selectSeries("S1")
+    timeline.selectAll();
+    
+    budgetView.variable.editSeries("S1")
       .checkMonthsAreVisible()
-      .checkMonthIsChecked(3, 9);
-    edition
-      .selectSeries("S2")
+      .checkMonthIsChecked(3, 9)
+      .cancel();
+
+    budgetView.variable.editSeries("S2")
       .checkMonthsAreVisible()
       .checkMonthIsChecked(2, 6, 10)
       .cancel();
-    edition.cancel();
   }
 
   public void testPeriodOrder() throws Exception {
@@ -781,17 +624,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         .checkProfiles("Every month", "Every two months", "Every three months", "Every six months",
                        "Once a year", "Single month", "Custom", "Irregular");
     edition.cancel();
-  }
-
-  public void testSeriesListVisibility() throws Exception {
-    budgetView.variable.createSeries()
-      .checkSeriesListIsHidden()
-      .setName("")
-      .validate();
-
-    budgetView.variable.editSeriesList()
-      .checkSeriesListIsVisible()
-      .cancel();
   }
 
   public void testEnteringPositiveOrNegativeValuesInAnExpensesBudgetArea() throws Exception {
@@ -952,6 +784,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testInManualDoNotSelectHiddenSeriesBudget() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(12).validate();
+
     budgetView.variable.createSeries()
       .setName("S1")
       .setSixMonths()
@@ -959,8 +793,12 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .toggleMonth(3)
       .checkMonthIsChecked(3, 9)
       .validate();
+
     timeline.selectMonth("2008/08");
-    budgetView.variable.editSeriesList().selectSeries("S1")
+    budgetView.variable.checkSeriesNotPresent("S1");
+
+    timeline.selectAll();
+    budgetView.variable.editSeries("S1")
       .toggleMonth(8)
       .selectAllMonths()
       .setAmount(-200.)
@@ -980,8 +818,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     categorization.setRecurring("EAU", "EAU");
     categorization.selectRecurring()
-      .editSeries()
-      .selectSeries("EAU")
+      .editSeries("EAU")
       .setTwoMonths()
       .toggleMonth(6)
       .validate();

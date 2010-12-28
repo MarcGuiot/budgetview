@@ -15,9 +15,6 @@
       <horizontalSplit>
         <column ref="seriesPanel" weightX="3" preferredSize="(200,400)">
           <column styleClass="blockScrollBorder">
-            <scrollPane>
-              <list ref="seriesList"/>
-            </scrollPane>
             <row ref="seriesListButtonPanel" styleClass="footer">
               <button action="create" name="create" tooltipText="$series.create.tooltip"/>
               <button action="delete" name="deleteSelected" tooltipText="$series.delete.tooltip"/>

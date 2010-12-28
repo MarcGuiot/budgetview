@@ -233,18 +233,15 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("Free Telecom", "Internet");
     categorization.setNewIncome("WorldCo", "Salary");
 
-    categorization.selectVariable().editSeries()
-      .selectSeries("Groceries")
+    categorization.selectVariable().editSeries("Groceries")
       .selectAllMonths()
       .setAmount("95")
       .validate();
-    categorization.selectRecurring().editSeries()
-      .selectSeries("Internet")
+    categorization.selectRecurring().editSeries("Internet")
       .selectAllMonths()
       .setAmount("29.0")
       .validate();
-    categorization.selectIncome().editSeries()
-      .selectSeries("Salary")
+    categorization.selectIncome().editSeries("Salary")
       .selectAllMonths()
       .setAmount("3540.0")
       .validate();
@@ -362,7 +359,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Groceries", 0, 0);
     budgetView.recurring.checkSeries("Fuel", 0, 0);
 
-    budgetView.recurring.editSeriesList().selectSeries("Groceries")
+    budgetView.recurring.editSeries("Groceries")
       .selectMonth(200807)
       .setAmount("200")
       .validate();
@@ -419,7 +416,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Groceries", 0, 0);
     budgetView.recurring.checkSeries("Fuel", 0, 0);
 
-    budgetView.recurring.editSeriesList().selectSeries("Groceries")
+    budgetView.recurring.editSeries("Groceries")
       .selectMonth(200807)
       .setAmount("200")
       .validate();
@@ -439,11 +436,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.recurring.checkSeries("Fuel", -60, -120);
 
-    SeriesEditionDialogChecker editionDialogChecker = budgetView.recurring.editSeriesList()
-      .selectSeries("Groceries");
+    SeriesEditionDialogChecker editionDialogChecker = budgetView.recurring.editSeries("Groceries");
     editionDialogChecker
-      .deleteSelectedSeriesWithConfirmation()
-      .validate();
+      .deleteCurrentSeriesWithConfirmation();
     editionDialogChecker.validate();
     budgetView.recurring.checkSeriesNotPresent("Groceries");
   }
@@ -465,7 +460,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectBudget();
-    budgetView.income.editSeriesList().setName("salaire").setCustom().toggleMonth("Aug").validate();
+    budgetView.income.editSeries("salaire").setCustom().toggleMonth("Aug").validate();
     budgetView.income.checkSeriesNotPresent("salaire");
     views.selectData();
     timeline.selectLast();
@@ -641,7 +636,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testMixPositifAndNegativeBudgetInTotalBudget() throws Exception {
+  public void testMixPositiveAndNegativeBudgetInTotalBudget() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", 15.00, "Loto")
       .addTransaction("2008/07/05", -19.00, "Auchan")
@@ -652,7 +647,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .selectAllMonths()
       .setAmount("100")
       .selectPositiveAmounts()
-      .createSeries()
+      .validate();
+
+    budgetView.variable.createSeries()
       .setName("Auchan")
       .selectAllMonths()
       .setAmount("100")

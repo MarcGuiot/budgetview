@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.budget;
 
-import org.designup.picsou.gui.series.EditSeriesAction;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.signpost.actions.SetSignpostStatusAction;
 import org.designup.picsou.model.BudgetArea;
@@ -29,7 +28,6 @@ public class SeriesEditionButtons {
   private SeriesEditionDialog seriesEditionDialog;
   private SelectionService selectionService;
   private String createButtonName = "createSeries";
-  private String editButtonName = "editAllSeries";
 
   public SeriesEditionButtons(final BudgetArea budgetArea,
                               final GlobRepository repository,
@@ -44,7 +42,6 @@ public class SeriesEditionButtons {
 
   public void registerButtons(SplitsBuilder builder) {
     builder.add(createButtonName, new CreateSeriesAction());
-    builder.add(editButtonName, new EditSeriesAction(repository, directory, seriesEditionDialog, budgetArea));
   }
 
   public GlobButtonView createSeriesButton(Glob series) {
@@ -59,7 +56,6 @@ public class SeriesEditionButtons {
 
   public void setNames(String createButtonName, String editButtonName) {
     this.createButtonName = createButtonName;
-    this.editButtonName = editButtonName;
   }
 
   private class CreateSeriesAction extends AbstractAction {

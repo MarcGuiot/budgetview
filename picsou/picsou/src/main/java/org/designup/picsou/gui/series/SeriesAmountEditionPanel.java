@@ -197,10 +197,6 @@ public class SeriesAmountEditionPanel {
     currentSeries = seriesKey;
     setAutoSelectFutureMonths(false);
     propagationCheckBox.setSelected(false);
-
-// TODO: pour activer la propagation par defaut
-//    setAutoSelectFutureMonths(true);
-//    propagationCheckBox.setSelected(true);
   }
 
   private void setAutoSelectFutureMonths(boolean enabled) {

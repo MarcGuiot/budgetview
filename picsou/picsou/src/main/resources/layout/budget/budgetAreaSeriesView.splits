@@ -64,7 +64,6 @@
           <row styleClass="footer">
             <filler fill="horizontal"/>
             <button action="createSeries" tooltipText="$series.create.tooltip"/>
-            <button action="editAllSeries" tooltipText="$series.list.tooltip"/>
           </row>
         </column>
       </column>

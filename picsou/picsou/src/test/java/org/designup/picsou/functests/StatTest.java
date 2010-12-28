@@ -70,7 +70,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     // je ne comprends pas pourquoi il faut faire un selectPositiveAmounts
     //alors que la series est deja en Positif.
     // non reproductible en vrai.
-    budgetView.variable.editSeriesList().selectSeries("Secu").selectAllMonths()
+    budgetView.variable.editSeries("Secu").selectAllMonths()
       .selectPositiveAmounts().setAmount("20").validate();
     transactions
       .showPlannedTransactions()
@@ -173,7 +173,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .checkInitialPosition(0)
       .close();
 
-    budgetView.income.editSeriesList()
+    budgetView.income.editSeries("Salaire")
       .selectMonth(200807)
       .selectNegativeAmounts()
       .setAmount("200")

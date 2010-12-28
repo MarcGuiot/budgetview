@@ -139,9 +139,7 @@ public class FirstTimeTest extends UISpecTestCase {
       .setRecurring("Gaz de France", "Gas")
       .setVariable("Retrait", "cash")
       .setRecurring("SFR", "Cell phone 1")
-      .selectRecurring();
-    categorization.editSeries()
-      .checkSeriesListContains("Gas", "Cell phone 1")
+      .selectRecurring()
       .createSeries()
       .setName("Assurance")
       .validate();
