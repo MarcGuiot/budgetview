@@ -102,8 +102,8 @@ public class CategorizationChecker extends ViewChecker {
     return selectAndReturn(BudgetArea.VARIABLE);
   }
 
-  public BudgetAreaCategorizationChecker selectExtras() {
-    return selectAndReturn(BudgetArea.EXTRAS);
+  public ExtrasBudgetAreaCategorizationChecker selectExtras() {
+    return new ExtrasBudgetAreaCategorizationChecker(this);
   }
 
   public SavingsCategorizationChecker selectSavings() {
@@ -291,7 +291,11 @@ public class CategorizationChecker extends ViewChecker {
   }
 
   public SeriesEditionDialogChecker editSeries() {
-    return SeriesEditionDialogChecker.open(getPanel().getButton("editSeries"));
+    return SeriesEditionDialogChecker.open(getEditSeriesButton());
+  }
+
+  Button getEditSeriesButton() {
+    return getPanel().getButton("editSeries");
   }
 
   public CategorizationChecker checkTable(Object[][] content) {

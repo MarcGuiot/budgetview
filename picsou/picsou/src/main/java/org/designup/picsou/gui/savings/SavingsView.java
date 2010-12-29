@@ -4,8 +4,7 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.accounts.position.SavingsAccountPositionLabels;
 import org.designup.picsou.gui.budget.SeriesEditionButtons;
-import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.evolution.histobuilders.AccountHistoChartUpdater;
 import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilder;
 import org.designup.picsou.gui.utils.Matchers;
@@ -19,13 +18,13 @@ import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobLabelView;
-import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.*;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
-
-import java.util.Set;
 
 public class SavingsView extends View implements GlobSelectionListener {
   private Matchers.AccountDateMatcher accountDateMatcher;
@@ -48,8 +47,8 @@ public class SavingsView extends View implements GlobSelectionListener {
   private void createSavingsBlock(GlobsPanelBuilder builder) {
 
     SeriesEditionButtons seriesButtons = new SeriesEditionButtons(BudgetArea.SAVINGS, repository, directory,
-                                                                  directory.get(SeriesEditionDialog.class));
-    seriesButtons.setNames("createSavingsSeries", "editAllSavingsSeries");
+                                                                  directory.get(SeriesEditor.class));
+    seriesButtons.setNames("createSavingsSeries");
     seriesButtons.registerButtons(builder);
 
     AccountPositionLabels.registerReferencePositionLabels(builder, Account.SAVINGS_SUMMARY_ACCOUNT_ID,
@@ -109,7 +108,7 @@ public class SavingsView extends View implements GlobSelectionListener {
                       positionLabels.getEstimatedAccountPositionDateLabel());
 
       final SavingsSeriesView seriesView = new SavingsSeriesView(account, repository, directory,
-                                                                 directory.get(SeriesAmountEditionDialog.class),
+                                                                 directory.get(SeriesEditor.class),
                                                                  seriesButtons);
       cellBuilder.add("savingsSeries", seriesView.getPanel());
       cellBuilder.addDisposeListener(seriesView);

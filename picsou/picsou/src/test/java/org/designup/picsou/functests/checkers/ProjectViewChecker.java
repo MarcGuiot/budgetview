@@ -18,13 +18,11 @@ public class ProjectViewChecker extends ViewChecker {
   }
 
   public ProjectEditionChecker create() {
-    Window dialog = WindowInterceptor.getModalDialog(getPanel().getButton("createProject").triggerClick());
-    return new ProjectEditionChecker(dialog);
+    return ProjectEditionChecker.open(getPanel().getButton("createProject"));
   }
 
   public ProjectEditionChecker edit(String projectName) {
-    Window dialog = WindowInterceptor.getModalDialog(getPanel().getButton(projectName).triggerClick());
-    return new ProjectEditionChecker(dialog);
+    return ProjectEditionChecker.open(getPanel().getButton(projectName));
   }
 
   public ProjectViewChecker checkProjectList(String... projectNames) {

@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.categorization.special;
 
+import org.designup.picsou.gui.series.SeriesEditor;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobRepository;
@@ -28,7 +29,7 @@ public class HtmlCategorizationPanel implements SpecialCategorizationPanel {
   public JPanel loadPanel(final GlobRepository repository,
                           final Directory directory,
                           FilteredRepeats filteredRepeats,
-                          SeriesEditionDialog seriesEditionDialog,
+                          SeriesEditor seriesEditor,
                           SeriesCreationHandler seriesCreationHandler) {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(CategorizationView.class,
@@ -36,7 +37,7 @@ public class HtmlCategorizationPanel implements SpecialCategorizationPanel {
                             repository, directory);
 
     builder.add("hyperlinkHandler", createHyperlinkHandler(repository, directory,
-                                                           seriesEditionDialog, seriesCreationHandler));
+                                                           seriesEditor, seriesCreationHandler));
 
     JEditorPane htmlEditor = GuiUtils.createReadOnlyHtmlComponent(getMessageKey(repository, directory));
     builder.add("message", htmlEditor);
@@ -45,17 +46,17 @@ public class HtmlCategorizationPanel implements SpecialCategorizationPanel {
   }
 
   protected HyperlinkHandler createHyperlinkHandler(final GlobRepository repository, final Directory directory,
-                                                    SeriesEditionDialog seriesEditionDialog,
+                                                    SeriesEditor seriesEditor,
                                                     SeriesCreationHandler seriesCreationHandler) {
     HyperlinkHandler handler = new HyperlinkHandler(directory);
-    registerHyperlinkActions(handler, repository, directory, seriesEditionDialog, seriesCreationHandler);
+    registerHyperlinkActions(handler, repository, directory, seriesEditor, seriesCreationHandler);
     return handler;
   }
 
   protected void registerHyperlinkActions(HyperlinkHandler handler,
                                           GlobRepository repository,
                                           Directory directory,
-                                          SeriesEditionDialog seriesEditionDialog,
+                                          SeriesEditor seriesEditionDialog,
                                           SeriesCreationHandler seriesCreationHandler) {
   }
 

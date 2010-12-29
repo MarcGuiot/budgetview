@@ -3,12 +3,17 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
+import org.uispec4j.interception.WindowInterceptor;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class ProjectEditionChecker extends GuiChecker {
 
   private Window dialog;
+
+  public static ProjectEditionChecker open(Button button) {
+    return new ProjectEditionChecker(WindowInterceptor.getModalDialog(button.triggerClick()));
+  }
 
   public ProjectEditionChecker(Window dialog) {
     this.dialog = dialog;
@@ -47,6 +52,13 @@ public class ProjectEditionChecker extends GuiChecker {
       getItemComponent(index, RadioButton.class, "negativeAmounts").click();
     }
     getItemComponent(index, TextBox.class, "amount").setText(toString(Math.abs(amount)));
+    return this;
+  }
+
+  public ProjectEditionChecker setItem(int index, String name, int monthId, double amount) {
+    setItemName(index, name);
+    setItemDate(index, monthId);
+    setItemAmount(index, amount);
     return this;
   }
 

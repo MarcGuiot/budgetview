@@ -107,12 +107,40 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .checkItems(" | December 2010 | 0.00")
       .cancel();
   }
+
+  public void testProjectDialogIsAlwaysShownWhenEditingTheSeries() throws Exception {
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/01/10")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2011/01/05", 100.00, "Resa")
+      .load();
+
+    projects.create()
+      .setName("Project 1")
+      .setItem(0, "Reservation", 201101, -100.00)
+      .addItem(1, "Hotel", 201102, -500.00)
+      .validate();
+
+    categorization.selectTransaction("Resa");
+    categorization.selectExtras().selectSeries("Project 1");
+    categorization.selectExtras().editProjectSeries("Project 1")
+      .checkItems("Reservation | January 2011 | -100.00\n" +
+                  "Hotel | February 2011 | -500.00")
+      .cancel();
+
+    budgetView.extras.editProjectSeries("Project 1")
+      .checkItems("Reservation | January 2011 | -100.00\n" +
+                  "Hotel | February 2011 | -500.00")
+      .cancel();
+
+    budgetView.extras.editPlannedAmountForProject("Project 1")
+      .checkItems("Reservation | January 2011 | -100.00\n" +
+                  "Hotel | February 2011 | -500.00")
+      .cancel();
+  }
 //
 //  public void testSeriesIsUpdatedWhenProjectIsUpdated() throws Exception {
-//    fail("tbd");
-//  }
-//
-//  public void testCannotEditOrDeleteProjectSeries() throws Exception {
 //    fail("tbd");
 //  }
 }

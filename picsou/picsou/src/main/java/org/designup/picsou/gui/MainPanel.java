@@ -27,8 +27,7 @@ import org.designup.picsou.gui.projects.ProjectView;
 import org.designup.picsou.gui.savings.SavingsChartView;
 import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
-import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.evolution.SeriesEvolutionView;
 import org.designup.picsou.gui.startup.LogoutService;
 import org.designup.picsou.gui.startup.OpenRequestManager;
@@ -118,9 +117,7 @@ public class MainPanel {
     };
     directory.add(LogoutService.class, logoutService);
 
-    SeriesEditionDialog seriesEditionDialog = new SeriesEditionDialog(repository, directory);
-    directory.add(SeriesEditionDialog.class, seriesEditionDialog);
-    directory.add(SeriesAmountEditionDialog.class, new SeriesAmountEditionDialog(repository, directory, seriesEditionDialog));
+    directory.add(SeriesEditor.class, new SeriesEditor(repository, directory));
 
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
 

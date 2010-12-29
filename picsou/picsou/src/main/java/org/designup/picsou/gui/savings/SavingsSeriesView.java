@@ -2,7 +2,7 @@ package org.designup.picsou.gui.savings;
 
 import org.designup.picsou.gui.budget.SeriesEditionButtons;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
+import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
@@ -32,7 +32,7 @@ public class SavingsSeriesView implements Disposable {
   private Glob account;
   private GlobRepository repository;
   private Directory directory;
-  private SeriesAmountEditionDialog seriesAmountEditionDialog;
+  private SeriesEditor seriesEditor;
   private SeriesEditionButtons seriesButtons;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
   private Matchers.SeriesFirstEndDateFilter seriesDateFilter;
@@ -48,12 +48,12 @@ public class SavingsSeriesView implements Disposable {
   public SavingsSeriesView(Glob account,
                            final GlobRepository repository,
                            Directory directory,
-                           final SeriesAmountEditionDialog seriesAmountEditionDialog,
+                           final SeriesEditor seriesEditor,
                            SeriesEditionButtons seriesButtons) {
     this.account = account;
     this.repository = repository;
     this.directory = directory;
-    this.seriesAmountEditionDialog = seriesAmountEditionDialog;
+    this.seriesEditor = seriesEditor;
     this.seriesButtons = seriesButtons;
     this.selectionService = directory.get(SelectionService.class);
     this.selectionListener = new GlobSelectionListener() {
@@ -86,7 +86,7 @@ public class SavingsSeriesView implements Disposable {
                         new GlobList(),
                         new SavingsSeriesComponentFactory(account,
                                                           repository, directory,
-                                                          seriesAmountEditionDialog,
+                                                          seriesEditor,
                                                           seriesButtons));
 
     seriesDateFilter = Matchers.seriesDateSavingsAndAccountFilter(account.get(Account.ID));

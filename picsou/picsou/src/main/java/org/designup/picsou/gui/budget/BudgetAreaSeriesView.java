@@ -11,8 +11,7 @@ import org.designup.picsou.gui.components.charts.GlobGaugeView;
 import org.designup.picsou.gui.components.tips.DetailsTipFactory;
 import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.signpost.guides.SeriesAmountSignpost;
 import org.designup.picsou.gui.signpost.guides.SeriesGaugeSignpost;
@@ -35,7 +34,10 @@ import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
-import org.globsframework.model.utils.*;
+import org.globsframework.model.utils.GlobListFunctor;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -51,13 +53,13 @@ public class BudgetAreaSeriesView extends View {
   private List<Key> currentSeries = Collections.emptyList();
 
   private BudgetAreaSeriesFooter footerGenerator;
+  private SeriesEditor seriesEditor;
 
   private Repeat<Glob> seriesRepeat;
   private GlobMatcher seriesFilter;
   private SeriesEditionButtons seriesButtons;
   private JEditorPane footerArea = GuiUtils.createReadOnlyHtmlComponent();
 
-  private SeriesAmountEditionDialog seriesAmountEditionDialog;
   private SeriesOrderManager orderManager;
   private Comparator<Glob> comparator;
 
@@ -66,13 +68,12 @@ public class BudgetAreaSeriesView extends View {
                               final GlobRepository repository,
                               Directory directory,
                               BudgetAreaSeriesFooter footerGenerator,
-                              final SeriesEditionDialog seriesEditionDialog,
-                              final SeriesAmountEditionDialog seriesAmountEditionDialog) {
+                              final SeriesEditor seriesEditor) {
     super(repository, directory);
     this.name = name;
     this.budgetArea = budgetArea;
     this.footerGenerator = footerGenerator;
-    this.seriesAmountEditionDialog = seriesAmountEditionDialog;
+    this.seriesEditor = seriesEditor;
 
     this.orderManager = new SeriesOrderManager(budgetArea, repository, directory) {
       protected void setComparator(Comparator<Glob> newComparator) {
@@ -82,7 +83,7 @@ public class BudgetAreaSeriesView extends View {
     };
     this.comparator = orderManager.getComparator();
 
-    this.seriesButtons = new SeriesEditionButtons(budgetArea, repository, directory, seriesEditionDialog);
+    this.seriesButtons = new SeriesEditionButtons(budgetArea, repository, directory, seriesEditor);
 
     this.selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
@@ -222,7 +223,7 @@ public class BudgetAreaSeriesView extends View {
       JButton amountButton = addAmountButton("plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder, new GlobListFunctor() {
         public void run(GlobList list, GlobRepository repository) {
           SignpostStatus.setCompleted(SignpostStatus.SERIES_AMOUNT_SHOWN, repository);
-          seriesAmountEditionDialog.show(series, selectedMonthIds);
+          seriesEditor.showAmount(series, selectedMonthIds);
         }
       });
 

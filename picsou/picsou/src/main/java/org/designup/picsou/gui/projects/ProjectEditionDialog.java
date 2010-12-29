@@ -16,6 +16,7 @@ import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.model.Glob;
@@ -105,7 +106,7 @@ public class ProjectEditionDialog {
   private void doShow() {
     projectNameEditor.forceSelection(currentProjectKey);
     repeat.setFilter(linkedTo(currentProjectKey, ProjectItem.PROJECT));
-    dialog.setVisible(true);
+    GuiUtils.showCentered(dialog);
   }
 
   private boolean check() {

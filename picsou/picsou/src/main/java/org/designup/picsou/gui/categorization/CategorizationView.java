@@ -1,27 +1,27 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.components.filtering.FilterClearer;
-import org.designup.picsou.gui.components.filtering.FilterListener;
-import org.designup.picsou.gui.components.filtering.FilterManager;
-import org.designup.picsou.gui.components.filtering.components.FilterClearingPanel;
-import org.designup.picsou.gui.signpost.guides.CategorizationAreaSignpost;
-import org.designup.picsou.gui.signpost.guides.CategorizationSelectionSignpost;
-import org.designup.picsou.gui.signpost.guides.CategorizationCompletionSignpost;
-import org.designup.picsou.gui.signpost.guides.FirstCategorizationDoneSignpost;
-import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.accounts.NewAccountAction;
 import org.designup.picsou.gui.categorization.components.*;
 import org.designup.picsou.gui.categorization.special.*;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
 import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
+import org.designup.picsou.gui.components.filtering.FilterClearer;
+import org.designup.picsou.gui.components.filtering.FilterListener;
+import org.designup.picsou.gui.components.filtering.FilterManager;
 import org.designup.picsou.gui.components.filtering.Filterable;
+import org.designup.picsou.gui.components.filtering.components.FilterClearingPanel;
 import org.designup.picsou.gui.description.SeriesDescriptionStringifier;
 import org.designup.picsou.gui.description.SeriesNameComparator;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.SeriesEditor;
+import org.designup.picsou.gui.signpost.Signpost;
+import org.designup.picsou.gui.signpost.guides.CategorizationAreaSignpost;
+import org.designup.picsou.gui.signpost.guides.CategorizationCompletionSignpost;
+import org.designup.picsou.gui.signpost.guides.CategorizationSelectionSignpost;
+import org.designup.picsou.gui.signpost.guides.FirstCategorizationDoneSignpost;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
@@ -49,14 +49,12 @@ import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.utils.ShowHideButton;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
-import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Pair;
 import org.globsframework.utils.Strings;
@@ -75,6 +73,10 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
+import static org.globsframework.gui.views.utils.LabelCustomizers.*;
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.*;
+
 public class CategorizationView extends View implements TableView, Filterable, ColorChangeListener {
 
   private Directory parentDirectory;
@@ -89,7 +91,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private static final int[] COLUMN_SIZES = {10, 12, 28, 10};
   public static final String TRANSACTIONS_FILTER = "transactions";
 
-  private SeriesEditionDialog seriesEditionDialog;
+  private SeriesEditor seriesEditor;
   private Signpost signpost;
   private TransactionRendererColors colors;
   private PicsouTableHeaderPainter headerPainter;
@@ -133,7 +135,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
   private GlobsPanelBuilder createPanelBuilder() {
 
-    seriesEditionDialog = directory.get(SeriesEditionDialog.class);
+    seriesEditor = directory.get(SeriesEditor.class);
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorization/categorizationView.splits",
                                                       this.repository, directory);
@@ -190,7 +192,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     FilterClearingPanel filterClearingPanel = new FilterClearingPanel(filterManager, repository, directory);
     builder.add("customFilterMessage", filterClearingPanel.getPanel());
-    
+
     builder.addLabel("transactionLabel", Transaction.TYPE, new GlobListStringifier() {
       public String toString(GlobList list, GlobRepository repository) {
         if (list.isEmpty()) {
@@ -343,7 +345,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     JRadioButton invisibleRadio = new JRadioButton("invisibleButton");
     builder.add("invisibleToggle", invisibleRadio);
-    
+
     DescriptionPanelHandler descriptionHandler = new DescriptionPanelHandler(repository);
     builder.add("descriptionPanel", descriptionHandler.getPanel());
     builder.add("showDescription", descriptionHandler.getShowAction());
@@ -351,7 +353,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     Matchers.CategorizationFilter filter = Matchers.seriesCategorizationFilter(budgetArea.getId());
     SeriesChooserComponentFactory componentFactory = new SeriesChooserComponentFactory(budgetArea, invisibleRadio,
-                                                                                       seriesEditionDialog,
+                                                                                       seriesEditor,
                                                                                        repository,
                                                                                        directory);
     GlobRepeat repeat = builder.addRepeat("seriesRepeat",
@@ -360,7 +362,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
                                           SeriesNameComparator.INSTANCE,
                                           componentFactory);
     seriesRepeat.add(filter, repeat);
-    
+
     JPanel groupForSeries = new JPanel();
     builder.add("groupCreateEditSeries", groupForSeries);
     builder.add("createSeries", new CreateSeriesAction(budgetArea));
@@ -425,7 +427,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
         }
       };
 
-      JPanel panel = categorizationPanel.loadPanel(repository, directory, seriesRepeat, seriesEditionDialog, handler);
+      JPanel panel = categorizationPanel.loadPanel(repository, directory, seriesRepeat, seriesEditor, handler);
       panel.setVisible(false);
       cellBuilder.add("specialCasePanel", panel);
 
@@ -508,10 +510,10 @@ public class CategorizationView extends View implements TableView, Filterable, C
     }
 
     public void actionPerformed(ActionEvent e) {
-      Key key = seriesEditionDialog.showNewSeries(currentTransactions,
-                                                  selectionService.getSelection(Month.TYPE),
-                                                  budgetArea,
-                                                  forcedValues);
+      Key key = seriesEditor.showNewSeries(currentTransactions,
+                                           selectionService.getSelection(Month.TYPE),
+                                           budgetArea,
+                                           forcedValues);
       Glob series = repository.find(key);
       if (key != null && series != null) {
         repository.startChangeSet();
@@ -538,11 +540,11 @@ public class CategorizationView extends View implements TableView, Filterable, C
       if (!noneMatch) {
         return false;
       }
-      Integer subSeriesId = seriesEditionDialog.getLastSelectedSubSeriesId();
+      Integer subSeriesId = seriesEditor.getLastSelectedSubSeriesId();
       for (Glob transaction : currentTransactions) {
         repository.update(transaction.getKey(),
-                          FieldValue.value(Transaction.SERIES, series.get(Series.ID)),
-                          FieldValue.value(Transaction.SUB_SERIES, subSeriesId));
+                          value(Transaction.SERIES, series.get(Series.ID)),
+                          value(Transaction.SUB_SERIES, subSeriesId));
       }
       return true;
     }

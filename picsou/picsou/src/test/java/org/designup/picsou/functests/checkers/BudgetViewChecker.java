@@ -23,7 +23,7 @@ public class BudgetViewChecker extends ViewChecker {
   public final BudgetAreaChecker income;
   public final BudgetAreaChecker recurring;
   public final BudgetAreaChecker variable;
-  public final BudgetAreaChecker extras;
+  public final ExtrasBudgetAreaChecker extras;
   public final BudgetAreaChecker savings;
 
   public BudgetViewChecker(Window mainWindow) {
@@ -31,7 +31,7 @@ public class BudgetViewChecker extends ViewChecker {
     this.income = new BudgetAreaChecker("incomeBudgetView", BudgetArea.INCOME);
     this.recurring = new BudgetAreaChecker("recurringBudgetView", BudgetArea.RECURRING);
     this.variable = new BudgetAreaChecker("variableBudgetView", BudgetArea.VARIABLE);
-    this.extras = new BudgetAreaChecker("extrasBudgetView", BudgetArea.EXTRAS);
+    this.extras = new ExtrasBudgetAreaChecker("extrasBudgetView");
     this.savings = new BudgetAreaChecker("savingsBudgetView", BudgetArea.SAVINGS);
   }
 
@@ -240,7 +240,7 @@ public class BudgetViewChecker extends ViewChecker {
       return SeriesAmountEditionDialogChecker.open(button.triggerClick());
     }
 
-    private Button getAmountButton(String seriesName) {
+    protected Button getAmountButton(String seriesName) {
       Button nameButton = getPanel().getButton(seriesName);
 
       JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
@@ -336,6 +336,20 @@ public class BudgetViewChecker extends ViewChecker {
     public BudgetAreaChecker alignAndPropagate(String seriesName) {
       editSeries(seriesName).alignPlannedAndActual().setPropagationEnabled().validate();
       return this;
+    }
+  }
+
+  public class ExtrasBudgetAreaChecker extends BudgetAreaChecker {
+    public ExtrasBudgetAreaChecker(String panelName) {
+      super(panelName, BudgetArea.EXTRAS);
+    }
+
+    public ProjectEditionChecker editProjectSeries(String seriesName) {
+      return ProjectEditionChecker.open(getPanel().getButton(seriesName));
+    }
+
+    public ProjectEditionChecker editPlannedAmountForProject(String seriesName) {
+      return ProjectEditionChecker.open(getAmountButton(seriesName));
     }
   }
 }

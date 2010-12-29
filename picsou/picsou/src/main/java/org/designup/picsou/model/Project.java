@@ -3,13 +3,15 @@ package org.designup.picsou.model;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
+import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.FieldSetter;
-import org.globsframework.model.FieldValues;
+import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -34,6 +36,17 @@ public class Project {
 
   static {
     GlobTypeLoader.init(Project.class, "project");
+  }
+
+  public static Glob findProject(Glob series, GlobRepository repository) {
+    GlobList projects = repository.getAll(Project.TYPE, GlobMatchers.linkedTo(series, Project.SERIES));
+    if (projects.isEmpty()) {
+      return null;
+    }
+    if (projects.size() > 1) {
+      throw new UnexpectedApplicationState("More than 1 project for series " + series + " : " + projects);
+    }
+    return projects.getFirst();
   }
 
   public static class Serializer implements PicsouGlobSerializer {
