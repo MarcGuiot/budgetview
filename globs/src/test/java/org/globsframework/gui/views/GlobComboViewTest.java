@@ -281,11 +281,11 @@ public class GlobComboViewTest extends GuiComponentTestCase {
                     "<dummyObject id='12' name='name12'/>" +
                     "<dummyObject id='20' name='name20'/>");
     ComboBox combo = createCombo(repository);
-    view.setFilter(createNameMatcher("1"));
-    assertThat(combo.selectionEquals("name10"));
+    view.setFilter(createNameMatcher("11"));
+    assertThat(combo.selectionEquals("name11"));
 
-    view.setFilter(createNameMatcher("2"));
-    assertThat(combo.selectionEquals("name12"));
+    view.setFilter(createNameMatcher("name"));
+    assertThat(combo.selectionEquals("name11"));
 
     view.setFilter(createNameMatcher("0"));
     assertThat(combo.selectionEquals("name10"));

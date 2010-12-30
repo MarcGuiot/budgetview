@@ -178,10 +178,14 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
       this.matcher = matcher;
     }
     else {
+      Glob glob = (Glob)jComboBox.getSelectedItem();
       model.model.setFilter(matcher, true);
-//      if (model.model.size() != 0) {
-//        jComboBox.setSelectedIndex(0);
-//      }
+      if (glob != null && matcher.matches(glob, repository)){
+        jComboBox.setSelectedItem(glob);
+      }
+      if ((glob == null || !matcher.matches(glob, repository)) && model.model.size() != 0) {
+        jComboBox.setSelectedIndex(0);
+      }
     }
     return this;
   }
