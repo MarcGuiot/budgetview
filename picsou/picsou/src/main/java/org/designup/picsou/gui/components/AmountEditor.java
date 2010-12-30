@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.components;
 
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.DoubleField;
@@ -16,10 +17,11 @@ import java.beans.PropertyChangeListener;
 public class AmountEditor {
   private NumericEditor numericEditor;
   private boolean positiveMode = true;
-  private JRadioButton positiveRadio = new JRadioButton(new RadioAction(Lang.get("amount.positive"), true));
-  private JRadioButton negativeRadio = new JRadioButton(new RadioAction(Lang.get("amount.negative"), false));
+  private JToggleButton positiveToggle = new JToggleButton(new RadioAction(Lang.get("amount.positive"), true));
+  private JToggleButton negativeToggle = new JToggleButton(new RadioAction(Lang.get("amount.negative"), false));
   private boolean updateInProgress = false;
   private boolean preferredPositive;
+  private JPanel panel;
 
   public AmountEditor(DoubleField field, GlobRepository repository, Directory directory,
                       boolean notifyOnKeyPressed, Double valueForNull) {
@@ -30,10 +32,28 @@ public class AmountEditor {
       .setNotifyOnKeyPressed(notifyOnKeyPressed);
 
     ButtonGroup group = new ButtonGroup();
-    group.add(positiveRadio);
-    group.add(negativeRadio);
+    group.add(positiveToggle);
+    group.add(negativeToggle);
 
-    positiveRadio.doClick(0);
+    positiveToggle.doClick(0);
+
+    createPanel(repository, directory);
+  }
+
+  public JPanel getPanel() {
+    return panel;
+  }
+
+  private void createPanel(GlobRepository repository, Directory directory) {
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(AmountEditor.class,
+                                                      "/layout/general/amountEditor.splits",
+                                                      repository, directory);
+
+    builder.add("positiveAmount", positiveToggle);
+    builder.add("negativeAmount", negativeToggle);
+    builder.add("amountEditor", numericEditor);
+
+    panel = builder.load();
   }
 
   public AmountEditor update(boolean preferredPositive, boolean hideRadio) {
@@ -41,8 +61,8 @@ public class AmountEditor {
       updateInProgress = true;
       this.preferredPositive = preferredPositive;
       updateRadios(preferredPositive);
-      positiveRadio.setVisible(!hideRadio);
-      negativeRadio.setVisible(!hideRadio);
+      positiveToggle.setVisible(!hideRadio);
+      negativeToggle.setVisible(!hideRadio);
     }
     finally {
       updateInProgress = false;
@@ -55,15 +75,15 @@ public class AmountEditor {
   }
 
   private void updateRadios(boolean positive) {
-    if (positive == positiveRadio.isSelected()) {
+    if (positive == positiveToggle.isSelected()) {
       return;
     }
     this.positiveMode = positive;
     if (positive) {
-      positiveRadio.doClick(0);
+      positiveToggle.doClick(0);
     }
     else {
-      negativeRadio.doClick(0);
+      negativeToggle.doClick(0);
     }
   }
 
@@ -73,14 +93,6 @@ public class AmountEditor {
       textField.requestFocusInWindow();
       textField.selectAll();
     }
-  }
-
-  public JRadioButton getPositiveRadio() {
-    return positiveRadio;
-  }
-
-  public JRadioButton getNegativeRadio() {
-    return negativeRadio;
   }
 
   public GlobNumericEditor getNumericEditor() {
@@ -102,8 +114,16 @@ public class AmountEditor {
 
   public void setEnabled(boolean enabled) {
     numericEditor.setEditable(enabled);
-    positiveRadio.setEnabled(enabled);
-    negativeRadio.setEnabled(enabled);
+    positiveToggle.setEnabled(enabled);
+    negativeToggle.setEnabled(enabled);
+  }
+
+  public void setPositiveAmounts() {
+    positiveToggle.doClick();
+  }
+
+  public void setNegativeAmounts() {
+    negativeToggle.doClick();
   }
 
   private class NumericEditor extends GlobNumericEditor {
@@ -116,8 +136,8 @@ public class AmountEditor {
       final JTextField textField = numericEditor.getComponent();
       textField.addPropertyChangeListener("enabled", new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent evt) {
-          positiveRadio.setEnabled(textField.isEnabled());
-          negativeRadio.setEnabled(textField.isEnabled());
+          positiveToggle.setEnabled(textField.isEnabled());
+          negativeToggle.setEnabled(textField.isEnabled());
         }
       });
     }

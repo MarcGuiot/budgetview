@@ -13,9 +13,7 @@
 
       <label gridPos="(0,1)" text="$amount" styleClass="formLabel"/>
       <row gridPos="(1,1)">
-        <textField ref="amount" columns="15" weightX="10"/>
-        <radioButton ref="positiveAmounts" weightX="0"/>
-        <radioButton ref="negativeAmounts" weightX="0"/>
+        <component ref="amountEditor"/>
         <filler fill="horizontal" weightX="10"/>
       </row>
 

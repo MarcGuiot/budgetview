@@ -35,7 +35,7 @@ public class ProjectEditionChecker extends GuiChecker {
   }
 
   public ProjectEditionChecker setItemName(int index, String name) {
-    getItemComponent(index, TextBox.class, "label").setText(name);
+    getItemComponent(index, TextBox.class, "itemLabel").setText(name);
     return this;
   }
 
@@ -46,12 +46,12 @@ public class ProjectEditionChecker extends GuiChecker {
 
   public ProjectEditionChecker setItemAmount(int index, double amount) {
     if (amount > 0) {
-      getItemComponent(index, RadioButton.class, "positiveAmounts").click();
+      getItemComponent(index, ToggleButton.class, "positiveAmount").click();
     }
     else {
-      getItemComponent(index, RadioButton.class, "negativeAmounts").click();
+      getItemComponent(index, ToggleButton.class, "negativeAmount").click();
     }
-    getItemComponent(index, TextBox.class, "amount").setText(toString(Math.abs(amount)));
+    getItemComponent(index, TextBox.class, "amountEditor").setText(toString(Math.abs(amount)));
     return this;
   }
 
@@ -94,11 +94,11 @@ public class ProjectEditionChecker extends GuiChecker {
   private String getContent() {
     StringBuilder builder = new StringBuilder();
     Panel itemsPanel = dialog.getPanel("items");
-    UIComponent[] labels = itemsPanel.getUIComponents(TextBox.class, "label");
+    UIComponent[] labels = itemsPanel.getUIComponents(TextBox.class, "itemLabel");
     UIComponent[] months = itemsPanel.getUIComponents(Button.class, "month");
-    UIComponent[] positiveRadios = itemsPanel.getUIComponents(RadioButton.class, "positiveAmounts");
-    UIComponent[] negativeRadios = itemsPanel.getUIComponents(RadioButton.class, "negativeAmounts");
-    UIComponent[] amounts = itemsPanel.getUIComponents(TextBox.class, "amount");
+    UIComponent[] positiveToggles = itemsPanel.getUIComponents(ToggleButton.class, "positiveAmount");
+    UIComponent[] negativeToggles = itemsPanel.getUIComponents(ToggleButton.class, "negativeAmount");
+    UIComponent[] amounts = itemsPanel.getUIComponents(TextBox.class, "amountEditor");
     for (int i = 0; i < labels.length; i++) {
       if (i > 0) {
         builder.append("\n");
@@ -107,11 +107,11 @@ public class ProjectEditionChecker extends GuiChecker {
       builder.append(" | ");
       builder.append(months[i].getLabel());
       builder.append(" | ");
-      if (((RadioButton)positiveRadios[i]).isSelected().isTrue()) {
+      if (((ToggleButton)positiveToggles[i]).isSelected().isTrue()) {
         builder.append("+");
       }
       String amount = ((TextBox)amounts[i]).getText();
-      if (((RadioButton)negativeRadios[i]).isSelected().isTrue() && !amount.equals("0.00")) {
+      if (((ToggleButton)negativeToggles[i]).isSelected().isTrue() && !amount.equals("0.00")) {
         builder.append("-");
       }
       builder.append(amount);
@@ -125,7 +125,7 @@ public class ProjectEditionChecker extends GuiChecker {
   }
 
   public ProjectEditionChecker checkProjectItemMessage(int index, String expectedMessage) {
-    checkErrorTipVisible(dialog, getItemComponent(index, TextBox.class, "label"), expectedMessage);
+    checkErrorTipVisible(dialog, getItemComponent(index, TextBox.class, "itemLabel"), expectedMessage);
     return this;
   }
 

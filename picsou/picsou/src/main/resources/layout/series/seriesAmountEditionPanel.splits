@@ -15,9 +15,7 @@
     
     <row border="empty(10,10,5,10)" weightY="0">
       <filler fill="horizontal"/>
-      <radioButton ref="positiveAmounts" weightX="0"/>
-      <radioButton ref="negativeAmounts" weightX="0"/>
-      <textField ref="amountEditor" columns="10"/>
+      <component ref="amountEditor"/>
       <row styleClass="iconButtonGroup" marginTop="0" marginLeft="5">
         <button action="alignValue" styleClass="align_value"/>
         <label ref="actualAmountLabel" styleClass="alignActualAmount"/>

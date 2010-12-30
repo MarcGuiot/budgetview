@@ -74,9 +74,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
       .forceSelection(PROTOTYPE_TRANSACTION_KEY)
       .update(false, false);
     amountField = amountEditor.getNumericEditor().getComponent();
-    builder.add("amount", amountField);
-    builder.add("positiveAmounts", amountEditor.getPositiveRadio());
-    builder.add("negativeAmounts", amountEditor.getNegativeRadio());
+    builder.add("amountEditor", amountEditor.getPanel());
 
     dayField = builder.addEditor("day", Transaction.DAY).forceSelection(PROTOTYPE_TRANSACTION_KEY).getComponent();
     labelField = builder.addEditor("label", Transaction.LABEL).forceSelection(PROTOTYPE_TRANSACTION_KEY).getComponent();
@@ -127,7 +125,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(Account.TYPE)) {
       updateAccount();
-      amountEditor.getNegativeRadio().doClick();
+      amountEditor.setNegativeAmounts();
     }
   }
 

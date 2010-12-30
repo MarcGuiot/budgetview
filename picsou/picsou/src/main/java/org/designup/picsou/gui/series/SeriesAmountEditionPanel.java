@@ -130,9 +130,7 @@ public class SeriesAmountEditionPanel {
     builder.add("chart", chart.getChart());
 
     amountEditor = new AmountEditor(SeriesBudget.AMOUNT, repository, directory, true, 0.0);
-    builder.add("amountEditor", amountEditor.getNumericEditor());
-    builder.add("positiveAmounts", amountEditor.getPositiveRadio());
-    builder.add("negativeAmounts", amountEditor.getNegativeRadio());
+    builder.add("amountEditor", amountEditor.getPanel());
 
     propagationCheckBox = new JCheckBox();
     propagationCheckBox.getModel().addActionListener(new AbstractAction() {
