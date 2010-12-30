@@ -29,6 +29,7 @@ R org/jdesktop/swingx/plaf/basic/resources/
 R org/jdesktop/swingx/plaf/linux/resources/
 R org/jdesktop/swingx/plaf/macosx/resources/
 R org/jdesktop/swingx/plaf/windows/resources/
+R net/java/balloontip/images/
 R layout/
 R banks/
 R logging/
