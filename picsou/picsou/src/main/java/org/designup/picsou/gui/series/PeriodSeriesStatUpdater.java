@@ -2,9 +2,8 @@ package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.model.Month;
 import org.designup.picsou.model.CurrentMonth;
-import org.designup.picsou.model.util.Amounts;
+import org.designup.picsou.model.Month;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -14,11 +13,9 @@ import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
-import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,7 +49,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     else if (changeSet.containsChanges(SeriesStat.TYPE)) {
       updateSelection();
     }
-    else if (changeSet.containsChanges(CurrentMonth.KEY)){
+    else if (changeSet.containsChanges(CurrentMonth.KEY)) {
       updateSelection();
     }
   }
@@ -89,7 +86,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
 
     public PeriodSeriesStatFunctor(GlobRepository repository) {
       this.repository = repository;
-      if (repository.contains(CurrentMonth.KEY)){
+      if (repository.contains(CurrentMonth.KEY)) {
         monthId = CurrentMonth.getCurrentMonth(repository);
       }
     }
@@ -99,13 +96,19 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
         repository.findOrCreate(Key.create(PeriodSeriesStat.TYPE, seriesStat.get(SeriesStat.SERIES)));
       double amount = periodStat.get(PeriodSeriesStat.AMOUNT) +
                       Utils.zeroIfNull(seriesStat.get(SeriesStat.AMOUNT));
-      double plannedAmount = periodStat.get(PeriodSeriesStat.PLANNED_AMOUNT) +
-                             Utils.zeroIfNull(seriesStat.get(SeriesStat.PLANNED_AMOUNT));
+      Double plannedAmount;
+      if (periodStat.get(PeriodSeriesStat.PLANNED_AMOUNT) == null && seriesStat.get(SeriesStat.PLANNED_AMOUNT) == null) {
+        plannedAmount = null;
+      }
+      else {
+        plannedAmount = periodStat.get(PeriodSeriesStat.PLANNED_AMOUNT, 0) +
+                        seriesStat.get(SeriesStat.PLANNED_AMOUNT, 0);
+      }
       double pastRemaining = periodStat.get(PeriodSeriesStat.PAST_REMAINING);
       double futureRemaining = periodStat.get(PeriodSeriesStat.FUTURE_REMAINING);
       double pastOverrun = periodStat.get(PeriodSeriesStat.PAST_OVERRUN);
       double futureOverrun = periodStat.get(PeriodSeriesStat.FUTURE_OVERRUN);
-      if (seriesStat.get(SeriesStat.MONTH) < monthId){
+      if (seriesStat.get(SeriesStat.MONTH) < monthId) {
         pastRemaining += seriesStat.get(SeriesStat.REMAINING_AMOUNT);
         pastOverrun += seriesStat.get(SeriesStat.OVERRUN_AMOUNT);
       }
@@ -121,7 +124,8 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
                         value(PeriodSeriesStat.PAST_OVERRUN, pastOverrun),
                         value(PeriodSeriesStat.FUTURE_OVERRUN, futureOverrun),
                         value(PeriodSeriesStat.ABS_SUM_AMOUNT,
-                              Math.abs(plannedAmount) > Math.abs(amount) ? Math.abs(plannedAmount) : Math.abs(amount)));
+                              Math.abs(plannedAmount == null ? 0 : plannedAmount) > Math.abs(amount) ?
+                              Math.abs(plannedAmount == null ? 0 : plannedAmount) : Math.abs(amount)));
       stats.add(periodStat);
     }
 

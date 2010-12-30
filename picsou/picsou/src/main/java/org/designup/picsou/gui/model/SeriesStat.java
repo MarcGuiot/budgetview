@@ -24,7 +24,6 @@ public class SeriesStat {
 
   public static DoubleField AMOUNT;
 
-  @DefaultDouble(0.0)
   public static DoubleField PLANNED_AMOUNT;
 
   @DefaultDouble(0.0)

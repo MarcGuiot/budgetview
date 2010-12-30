@@ -33,6 +33,10 @@ public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEd
     return this;
   }
 
+  public Object getValueForNull() {
+    return valueForNull;
+  }
+
   public GlobNumericEditor setAbsoluteValue(boolean value) {
     this.absoluteValueMode = value;
     return this;

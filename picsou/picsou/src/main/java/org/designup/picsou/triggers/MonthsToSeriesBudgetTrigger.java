@@ -117,7 +117,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
         if (seriesBudget.get(SeriesBudget.MONTH) < monthId
             && seriesBudget.isTrue(SeriesBudget.ACTIVE)
             && seriesBudget.get(SeriesBudget.MONTH) > lastmonthId) {
-          amount = seriesBudget.get(SeriesBudget.AMOUNT);
+          amount = seriesBudget.get(SeriesBudget.AMOUNT, 0);
           lastmonthId = seriesBudget.get(SeriesBudget.MONTH);
         }
         if (seriesBudget.get(SeriesBudget.MONTH) == nextMonth) {
@@ -143,7 +143,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
         while (pos >= 0) {
           Glob budgets = existingSeriesBudget[pos];
           if (budgets.isTrue(SeriesBudget.ACTIVE) && !budgets.get(SeriesBudget.MONTH).equals(monthId)) {
-            seriesAmount = budgets.get(SeriesBudget.AMOUNT);
+            seriesAmount = budgets.get(SeriesBudget.AMOUNT, 0);
             break;
           }
           pos--;
@@ -153,7 +153,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
           while (pos < existingSeriesBudget.length - 1) {
             Glob budgets = existingSeriesBudget[pos];
             if (budgets.isTrue(SeriesBudget.ACTIVE) && !budgets.get(SeriesBudget.MONTH).equals(monthId)) {
-              seriesAmount = budgets.get(SeriesBudget.AMOUNT);
+              seriesAmount = budgets.get(SeriesBudget.AMOUNT, 0);
               break;
             }
             pos++;

@@ -110,6 +110,7 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
     double futureOverrun = 0;
     double pastRemaining = 0;
     double futureRemaining = 0;
+    boolean isUnset = false;
     for (Iterator<Key> iter = currentSelection.iterator(); iter.hasNext();) {
       Key key = iter.next();
       Glob glob = repository.find(key);
@@ -118,6 +119,9 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
         continue;
       }
       actual += getValue(glob, actualField);
+      if (glob.get(actualField) == null){
+        isUnset = true;
+      }
       target += getValue(glob, targetField);
       pastOverrun += getValue(glob, pastOverrunField);
       futureOverrun += getValue(glob, futureOverrunField);
@@ -125,7 +129,7 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
       futureRemaining += getValue(glob, futureRemainingField);
     }
     GaugeUpdater.updateGauge(futureRemaining, futureOverrun, pastRemaining, pastOverrun,
-                             target, actual, gauge, budgetArea);
+                             target, actual, gauge, budgetArea, isUnset);
   }
 
   protected double getValue(Glob glob, DoubleField field) {

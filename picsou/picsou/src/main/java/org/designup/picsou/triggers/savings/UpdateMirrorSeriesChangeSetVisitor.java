@@ -99,7 +99,7 @@ public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {
                                                    existingSeries.get(Series.ID)).getGlobs();
     for (Glob glob : seriesBudget) {
       repository.create(SeriesBudget.TYPE,
-                        FieldValue.value(SeriesBudget.AMOUNT, -glob.get(SeriesBudget.AMOUNT)),
+                        FieldValue.value(SeriesBudget.AMOUNT, -glob.get(SeriesBudget.AMOUNT, 0)),
                         FieldValue.value(SeriesBudget.ACTIVE, glob.get(SeriesBudget.ACTIVE)),
                         FieldValue.value(SeriesBudget.MONTH, glob.get(SeriesBudget.MONTH)),
                         FieldValue.value(SeriesBudget.SERIES, newSeries.get(Series.ID)),
@@ -111,7 +111,7 @@ public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {
     private boolean from = false;
 
     public void run(Glob glob, GlobRepository repository) throws Exception {
-      if (glob.get(SeriesBudget.AMOUNT) < 0) {
+      if (glob.get(SeriesBudget.AMOUNT, 0) < 0) {
         from = true;
       }
     }

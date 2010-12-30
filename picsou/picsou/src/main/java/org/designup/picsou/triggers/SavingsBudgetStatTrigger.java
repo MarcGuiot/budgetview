@@ -187,10 +187,10 @@ public class SavingsBudgetStatTrigger implements ChangeSetListener {
             SavingsData data = getOrCreateStat(month.get(Month.ID), accountId);
             if (seriesBudget != null && seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
               if (isSavings) {
-                data.savingsPlanned += Math.abs(seriesBudget.get(SeriesBudget.AMOUNT));
+                data.savingsPlanned += Math.abs(seriesBudget.get(SeriesBudget.AMOUNT, 0));
               }
               else {
-                data.outPlanned += Math.abs(seriesBudget.get(SeriesBudget.AMOUNT));
+                data.outPlanned += Math.abs(seriesBudget.get(SeriesBudget.AMOUNT, 0));
               }
             }
           }

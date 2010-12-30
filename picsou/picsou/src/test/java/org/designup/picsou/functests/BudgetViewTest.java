@@ -11,6 +11,23 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     super.setUp();
   }
 
+
+  public void testUnset() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.00, "Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewVariable("Auchan", "Groceries");
+
+    views.selectBudget();
+    budgetView.variable.checkPlannedUset("Groceries");
+
+    timeline.selectAll();
+
+    budgetView.variable.checkPlannedUset("Groceries");
+  }
+
   public void test() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")
@@ -570,7 +587,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00, "Loto")
       .add("05/07/2008", TransactionType.VIREMENT, "Loto", "", 19.00, "Loto")
       .check();
-    
+
     views.selectBudget();
     budgetView.variable
       .editSeries("Loto")
@@ -734,7 +751,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.income.clickTitleRealAmount();
     budgetView.income.checkOrder("Retraite 1", "Retraite 2", "Retraite 3");
-    
+
     budgetView.income.clickTitleSeriesName();
     budgetView.income.checkOrder("Retraite 1", "Retraite 2", "Retraite 3");
   }

@@ -114,12 +114,12 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
     }
   }
 
-  private double getInitialAmount(Glob series, Boolean active) {
+  private Double getInitialAmount(Glob series, Boolean active) {
     if (active && !series.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId())) {
-      return Utils.zeroIfNull(series.get(Series.INITIAL_AMOUNT));
+      return series.get(Series.INITIAL_AMOUNT);
     }
     else {
-      return 0.0;
+      return null;
     }
   }
 

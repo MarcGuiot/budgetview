@@ -204,7 +204,7 @@ public class HistoChartBuilder {
     for (int monthId : getMonthIdsToShow(currentMonthId)) {
       Glob stat = repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
       if (stat != null) {
-        Double planned = stat.get(SeriesStat.PLANNED_AMOUNT);
+        Double planned = stat.get(SeriesStat.PLANNED_AMOUNT, 0);
         Double actual = stat.get(SeriesStat.AMOUNT);
         builder.add(monthId, planned, actual, monthId == currentMonthId);
       }
@@ -277,7 +277,7 @@ public class HistoChartBuilder {
       if (!monthsToShow.contains(monthId)) {
         continue;
       }
-      Double planned = adjust(seriesBudget.get(SeriesBudget.AMOUNT), multiplier);
+      Double planned = adjust(seriesBudget.get(SeriesBudget.AMOUNT, 0.), multiplier);
       Double actual = adjust(seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT), multiplier);
       dataset.add(monthId, planned, actual, selectedMonths.contains(monthId));
     }

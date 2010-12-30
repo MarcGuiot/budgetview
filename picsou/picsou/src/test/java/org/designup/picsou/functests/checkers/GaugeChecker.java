@@ -30,7 +30,7 @@ public class GaugeChecker extends GuiChecker {
   }
 
   public GaugeChecker set(double actualValue, double targetValue, double overrunPart, final double remaining) {
-    gauge.setValues(actualValue, targetValue, overrunPart, remaining, "");
+    gauge.setValues(actualValue, targetValue, overrunPart, remaining, "", false);
     Assert.assertEquals(1.0, gauge.getFillPercent() + gauge.getOverrunPercent() +
                              gauge.getEmptyPercent() + gauge.getBeginPercent(), 0.01);
     return this;

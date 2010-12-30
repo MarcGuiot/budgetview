@@ -76,7 +76,7 @@ public class GaugeDemo {
             Gauge gauge = new Gauge(overrunIsAnError);
             gauge.setPreferredSize(new Dimension(100, 28));
             gauge.setMaximumSize(new Dimension(100, 28));
-            gauge.setValues(triple[0], triple[1], triple[2], 0, "");
+            gauge.setValues(triple[0], triple[1], triple[2], 0, "", false);
             builder.add(gauge, column++, row, 1, 1, 1, 1, Fill.HORIZONTAL, Anchor.CENTER,
                         new Insets(5, 5, 5, 5));
 

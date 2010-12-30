@@ -62,7 +62,7 @@ public class DumpDataAction extends AbstractAction {
         series.get(Series.ID),
         budget.get(SeriesBudget.MONTH),
         series.get(Series.NAME),
-        budget.get(SeriesBudget.AMOUNT),
+        budget.get(SeriesBudget.AMOUNT, 0.),
         budget.get(SeriesBudget.ACTIVE)
       );
     }

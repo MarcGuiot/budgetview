@@ -130,7 +130,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
         repository.delete(transactions);
       }
       else if (monthId >= currentMonthId) {
-        Double wantedAmount = seriesBudget.get(SeriesBudget.AMOUNT);
+        Double wantedAmount = seriesBudget.get(SeriesBudget.AMOUNT, 0);
         double diff = wantedAmount - Utils.zeroIfNull(observedAmount);
         if (((wantedAmount > 0 && diff > 0) || (wantedAmount < 0 && diff < 0)) && !Amounts.isNearZero(diff)) {
           Glob transaction = transactions.getFirst();

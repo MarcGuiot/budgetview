@@ -19,6 +19,7 @@ import org.designup.picsou.gui.signpost.guides.SeriesGaugeSignpost;
 import org.designup.picsou.gui.signpost.guides.SeriesPeriodicitySignpost;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -274,8 +275,28 @@ public class BudgetAreaSeriesView extends View {
     }
 
     private GlobListStringifier getStringifier(final DoubleField field) {
-      return new ForcedPlusGlobListStringifier(budgetArea,
-                                               GlobListStringifiers.sum(field, decimalFormat, !budgetArea.isIncome()));
+      ForcedPlusGlobListStringifier plusGlobListStringifier = new ForcedPlusGlobListStringifier(budgetArea,
+                                                                                                GlobListStringifiers.sum(field, decimalFormat, !budgetArea.isIncome()));
+      return new UnsetGlobListStringifier(field, plusGlobListStringifier);
+    }
+
+    private class UnsetGlobListStringifier implements GlobListStringifier {
+      private final DoubleField field;
+      private ForcedPlusGlobListStringifier stringifier;
+
+      public UnsetGlobListStringifier(DoubleField field, ForcedPlusGlobListStringifier stringifier) {
+        this.field = field;
+        this.stringifier = stringifier;
+      }
+
+      public String toString(GlobList list, GlobRepository repository) {
+        for (Glob glob : list) {
+          if (glob.get(field) == null){
+            return Lang.get("gauge.plannetUnset");
+          }
+        }
+        return stringifier.toString(list, repository);
+      }
     }
   }
 }

@@ -45,7 +45,7 @@ public class TransactionUtils {
       Account.getMultiplierForInOrOutputOfTheAccount(repository.findLinkTarget(series, Series.FROM_ACCOUNT),
                                                      repository.findLinkTarget(series, Series.TO_ACCOUNT),
                                                      repository.get(Key.create(Account.TYPE, accountId)));
-    Double amount = multiplier * Math.abs(seriesBudget.get(SeriesBudget.AMOUNT));
+    Double amount = multiplier * Math.abs(seriesBudget.get(SeriesBudget.AMOUNT, 0));
     boolean isPlanned = (seriesBudget.get(SeriesBudget.MONTH) >= currentMonthId) &&
                         ((seriesBudget.get(SeriesBudget.MONTH) > currentMonthId)
                          || (seriesBudget.get(SeriesBudget.DAY) > currentDay));

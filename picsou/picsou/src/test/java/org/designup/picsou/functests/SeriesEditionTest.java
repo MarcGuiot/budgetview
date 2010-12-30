@@ -846,6 +846,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTransactions("McDo");
+//    openApplication();
     SeriesEditionDialogChecker edition = categorization.selectVariable().createSeries();
 
     edition.setName("Diet Food")
@@ -895,8 +896,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         {"2008", "August", 0.00, 10.00},
       });
 
-//    edition.selectNoMonth()
-//      .checkAmountIsDisabled();
 
     edition.selectMonth(200807)
       .checkNegativeAmountsSelected()

@@ -9,14 +9,14 @@ public class GaugeUpdater {
   public static void updateGauge(double futureRemaining, double futureOverrun,
                                  double pastRemaining,
                                  double pastOverrun, double gaugeTarget, double gaugeActual,
-                                 final Gauge gauge, BudgetArea budgetArea) {
+                                 final Gauge gauge, BudgetArea budgetArea, boolean isRemainingUnset) {
     String tooltips = computeTooltips(futureRemaining, futureOverrun,
                                       pastRemaining, pastOverrun,
                                       gaugeTarget, gauge.shouldInvertAll(),
                                       budgetArea);
     gauge.setValues(gaugeActual, gaugeTarget, futureOverrun + pastOverrun,
                     futureRemaining + pastRemaining,
-                    "<html>" + tooltips + "</html>");
+                    "<html>" + tooltips + "</html>", isRemainingUnset);
   }
 
   public static String computeTooltips(double futureRemaining, double futureOverrun,

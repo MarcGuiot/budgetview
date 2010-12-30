@@ -23,7 +23,8 @@ import java.util.Set;
 
 public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextComponent, PARENT extends AbstractGlobTextEditor>
   extends AbstractGlobComponentHolder implements GlobSelectionListener, ChangeSetListener {
-
+  private static final Object NULL = new Object();
+  private static final Object MUILTI_SELECTION = new Object();
   protected Field field;
   private GlobList currentGlobs = GlobList.EMPTY;
   protected COMPONENT_TYPE textComponent;
@@ -185,14 +186,25 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
       textComponent.setEditable(selectionNotEmpty);
     }
 
-    Object value = null;
+    Object value = NULL;
     for (Glob glob : currentGlobs) {
       Object globValue = glob.getValue(field);
-      if ((value != null) && (!value.equals(globValue))) {
-        value = valueForMultiSelection;
-        break;
+      if (value != NULL) {
+        if ((value == null && globValue != null) || (value != null && !value.equals(globValue))) {
+          value = MUILTI_SELECTION;
+          break;
+        }
       }
       value = globValue;
+    }
+    if (value == null) {
+      value = getValueForNull();
+    }
+    if (value == NULL) {
+      value = null;
+    }
+    if (value == MUILTI_SELECTION) {
+      value = valueForMultiSelection;
     }
     setDisplayedValue(value);
   }
@@ -274,5 +286,9 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
       currentGlobs = newCurrentsGlob;
       selectionUpdated(GlobSelectionBuilder.init().add(currentGlobs, type).get());
     }
+  }
+
+  public Object getValueForNull() {
+    return null;
   }
 }

@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.series;
 
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.accounts.NewAccountAction;
 import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
@@ -10,6 +9,7 @@ import org.designup.picsou.gui.description.MonthYearStringifier;
 import org.designup.picsou.gui.series.edition.MonthCheckBoxUpdater;
 import org.designup.picsou.gui.series.subseries.SubSeriesEditionPanel;
 import org.designup.picsou.gui.signpost.actions.SetSignpostStatusAction;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AutomaticSeriesBudgetTrigger;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
@@ -529,7 +529,7 @@ public class SeriesEditionDialog {
   private Glob createSeries(String label, Integer day, Integer fromAccountId, Integer toAccountId, FieldValue... forcedValues) {
     FieldValuesBuilder values =
       FieldValuesBuilder.init(value(Series.BUDGET_AREA, budgetArea.getId()),
-                              value(Series.INITIAL_AMOUNT, 0.),
+                              value(Series.INITIAL_AMOUNT, null),
                               value(Series.NAME, label),
                               value(Series.DAY, day),
                               value(Series.IS_AUTOMATIC, budgetArea.isAutomatic()),
@@ -1063,7 +1063,7 @@ public class SeriesEditionDialog {
                 fieldValues[i] = new FieldValue(SeriesBudget.SERIES, mirrorSeriesId);
               }
               else if (value.getField().equals(SeriesBudget.AMOUNT)) {
-                fieldValues[i] = new FieldValue(SeriesBudget.AMOUNT, -values.get(SeriesBudget.AMOUNT));
+                fieldValues[i] = new FieldValue(SeriesBudget.AMOUNT, -values.get(SeriesBudget.AMOUNT, 0));
               }
             }
             repository.create(Key.create(SeriesBudget.TYPE, repository.getIdGenerator()
@@ -1082,7 +1082,7 @@ public class SeriesEditionDialog {
             values.safeApply(new FieldValues.Functor() {
               public void process(Field field, Object value) throws Exception {
                 if (field.equals(SeriesBudget.AMOUNT)) {
-                  repository.update(mirrorBudget.getKey(), field, -((Double)value));
+                  repository.update(mirrorBudget.getKey(), field, value == null ? 0 : -((Double)value));
                 }
                 else {
                   repository.update(mirrorBudget.getKey(), field, value);
@@ -1128,7 +1128,7 @@ public class SeriesEditionDialog {
                                                          fieldEquals(SeriesBudget.SERIES, key.get(Series.ID)));
               for (Glob budget : seriesBudgets) {
                 repository.update(budget.getKey(), SeriesBudget.AMOUNT,
-                                  multiplier * Math.abs(budget.get(SeriesBudget.AMOUNT)));
+                                  multiplier * Math.abs(budget.get(SeriesBudget.AMOUNT, 0)));
               }
             }
           }

@@ -43,6 +43,7 @@ public class Gauge extends JPanel {
   private double remainder;
 
   private String description;
+  private boolean targetValueUnset = false;
 
   public Gauge() {
     this(false);
@@ -163,7 +164,9 @@ public class Gauge extends JPanel {
     repaint();
   }
 
-  public void setValues(double actualValue, double targetValue, double partialOverrun, double remaining, String text) {
+  public void setValues(double actualValue, double targetValue, double partialOverrun, double remaining, String text,
+                        boolean targetValueUnset) {
+    this.targetValueUnset = targetValueUnset;
     fillPercent = 0;
     overrunPercent = 0;
     emptyPercent = 1;
@@ -176,6 +179,9 @@ public class Gauge extends JPanel {
     this.remainder = remaining;
     boolean sameSign = Amounts.sameSign(this.actualValue, this.targetValue);
 
+    if (targetValueUnset){
+      text = Lang.get("gauge.plannetUnset");
+    }else
     if (Amounts.isNearZero(this.targetValue) && Amounts.isNearZero(this.actualValue)) {
       text = Lang.get("gauge.unset");
     }

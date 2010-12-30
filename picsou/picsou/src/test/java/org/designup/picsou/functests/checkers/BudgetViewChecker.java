@@ -4,6 +4,7 @@ import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.utils.Lang;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.*;
@@ -132,6 +133,12 @@ public class BudgetViewChecker extends ViewChecker {
       for (String s : text) {
         gauge.checkDescriptionContains(s);
       }
+      return this;
+    }
+
+    public BudgetAreaChecker checkPlannedUset(String seriesName){
+      Button button = getAmountButton(seriesName);
+      assertThat(button.textEquals("No value defined"));
       return this;
     }
 

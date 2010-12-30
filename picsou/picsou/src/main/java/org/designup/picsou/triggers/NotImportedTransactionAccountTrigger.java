@@ -183,10 +183,10 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
               .filterSelf(fieldIn(Transaction.ACCOUNT, accounts), repository);
             for (Glob transaction : transactions) {
               if (transaction.isTrue(Transaction.MIRROR)) {
-                repository.update(transaction.getKey(), Transaction.AMOUNT, -values.get(SeriesBudget.AMOUNT));
+                repository.update(transaction.getKey(), Transaction.AMOUNT, -values.get(SeriesBudget.AMOUNT, 0));
               }
               else {
-                repository.update(transaction.getKey(), Transaction.AMOUNT, values.get(SeriesBudget.AMOUNT));
+                repository.update(transaction.getKey(), Transaction.AMOUNT, values.get(SeriesBudget.AMOUNT, 0));
               }
             }
           }

@@ -132,7 +132,7 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
         if (first == null) {
           return "";
         }
-        Double amount = Math.abs(first.get(field));
+        Double amount = Math.abs(first.get(field, 0));
         return Formatting.DECIMAL_FORMAT.format(Amounts.isNearZero(amount) ? 0 : multiplier * amount);
       }
     };

@@ -514,9 +514,9 @@ public class CategorizationChecker extends ViewChecker {
       if (first) {
         SeriesEditionDialogChecker editionDialogChecker = selectVariable()
           .createSeries()
-          .setName(seriesName)
-          .selectAllMonths();
+          .setName(seriesName);
         if (amount != null) {
+          editionDialogChecker.selectAllMonths();
           if (amount < 0) {
             editionDialogChecker.selectNegativeAmounts();
             editionDialogChecker.checkNegativeAmountsSelected();
