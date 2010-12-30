@@ -40,7 +40,6 @@ import java.util.List;
 
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
-import static org.globsframework.model.utils.GlobMatchers.isFalse;
 
 public class ProjectEditionDialog {
   private PicsouDialog dialog;
@@ -51,7 +50,7 @@ public class ProjectEditionDialog {
   private GlobRepeat repeat;
   private GlobTextEditor projectNameEditor;
   private Key currentProjectKey;
-  private Map<Key, JTextField> itemNameCheckers = new HashMap<Key, JTextField>();
+  private Map<Key, JTextField> itemNameFields = new HashMap<Key, JTextField>();
 
   public ProjectEditionDialog(GlobRepository parentRepository, Directory directory) {
     this(parentRepository, directory, directory.get(JFrame.class));
@@ -125,7 +124,7 @@ public class ProjectEditionDialog {
     }
 
     for (Glob item : repeat.getCurrentGlobs()) {
-      JTextField itemNameField = itemNameCheckers.get(item.getKey());
+      JTextField itemNameField = itemNameFields.get(item.getKey());
       if (Strings.isNullOrEmpty(itemNameField.getText())) {
         ErrorTip.showLeft(itemNameField,
                           Lang.get("projectEdition.error.noItemName"),
@@ -145,11 +144,12 @@ public class ProjectEditionDialog {
         GlobTextEditor.init(ProjectItem.LABEL, localRepository, directory)
           .forceSelection(itemKey)
           .getComponent();
-      cellBuilder.add("label", nameField);
-      itemNameCheckers.put(itemKey, nameField);
+      nameField.setName("itemLabel");
+      cellBuilder.add("itemLabel", nameField);
+      itemNameFields.put(itemKey, nameField);
       cellBuilder.addDisposeListener(new Disposable() {
         public void dispose() {
-          itemNameCheckers.remove(itemKey);
+          itemNameFields.remove(itemKey);
         }
       });
 
@@ -165,10 +165,7 @@ public class ProjectEditionDialog {
         new AmountEditor(ProjectItem.AMOUNT, localRepository, directory, false, null)
           .forceSelection(itemKey)
           .update(false, false);
-      JTextField amountField = amountEditor.getNumericEditor().getComponent();
-      cellBuilder.add("amount", amountField);
-      cellBuilder.add("positiveAmounts", amountEditor.getPositiveRadio());
-      cellBuilder.add("negativeAmounts", amountEditor.getNegativeRadio());
+      cellBuilder.add("amountEditor", amountEditor.getPanel());
 
       cellBuilder.add("deleteItem", new DeleteItemAction(itemKey));
     }
@@ -300,15 +297,17 @@ public class ProjectEditionDialog {
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
-      createItem();
+      Key itemKey = createItem();
+      itemNameFields.get(itemKey).requestFocus();
     }
   }
 
-  private void createItem() {
-    localRepository.create(ProjectItem.TYPE,
-                           value(ProjectItem.LABEL, ""),
-                           value(ProjectItem.MONTH, getLastMonth()),
-                           value(ProjectItem.PROJECT, currentProjectKey.get(Project.ID)));
+  private Key createItem() {
+    Glob item = localRepository.create(ProjectItem.TYPE,
+                                       value(ProjectItem.LABEL, ""),
+                                       value(ProjectItem.MONTH, getLastMonth()),
+                                       value(ProjectItem.PROJECT, currentProjectKey.get(Project.ID)));
+    return item.getKey();
   }
 
   private Integer getLastMonth() {

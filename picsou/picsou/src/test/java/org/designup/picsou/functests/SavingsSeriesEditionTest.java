@@ -33,7 +33,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkToAccount("Epargne LCL")
       .setToAccount("Main accounts")
       .setFromAccount("Epargne LCL")
-      .checkAmountsRadioAreNotVisible()
+      .checkAmountTogglesAreNotVisible()
       .selectMonth(200808)
       .setAmount("100")
       .checkAmount("100")

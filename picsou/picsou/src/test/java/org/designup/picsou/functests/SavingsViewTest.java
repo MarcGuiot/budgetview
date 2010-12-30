@@ -30,7 +30,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     savingsView.checkContainsSeries("ING", "Epargne");
     savingsView.checkSeriesAmounts("ING", "Epargne", 200, 200);
     savingsView.editPlannedAmount("ING", "Epargne")
-      .checkAmountsRadioAreNotVisible()
+      .checkAmountTogglesAreNotVisible()
       .setAmount(300)
       .validate();
     savingsView.checkSeriesAmounts("ING", "Epargne", 200, 300);

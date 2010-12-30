@@ -32,8 +32,8 @@ public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> ex
 
   public T checkAmountIsDisabled() {
     assertFalse(getAmountTextBox().isEnabled());
-    assertFalse(dialog.getRadioButton("positiveAmounts").isEnabled());
-    assertFalse(dialog.getRadioButton("negativeAmounts").isEnabled());
+    assertFalse(dialog.getToggleButton("positiveAmount").isEnabled());
+    assertFalse(dialog.getToggleButton("negativeAmount").isEnabled());
     return (T)this;
   }
 
@@ -67,28 +67,28 @@ public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> ex
   }
 
   public T selectPositiveAmounts() {
-    dialog.getRadioButton("positiveAmounts").click();
+    dialog.getToggleButton("positiveAmount").click();
     return (T)this;
   }
 
   public T checkPositiveAmountsSelected() {
-    assertThat(dialog.getRadioButton("positiveAmounts").isSelected());
+    assertThat(dialog.getToggleButton("positiveAmount").isSelected());
     return (T)this;
   }
 
   public T selectNegativeAmounts() {
-    dialog.getRadioButton("negativeAmounts").click();
+    dialog.getToggleButton("negativeAmount").click();
     return (T)this;
   }
 
   public T checkNegativeAmountsSelected() {
-    assertThat(dialog.getRadioButton("negativeAmounts").isSelected());
+    assertThat(dialog.getToggleButton("negativeAmount").isSelected());
     return (T)this;
   }
 
-  public T checkAmountsRadioAreNotVisible() {
-    assertFalse(dialog.getRadioButton("negativeAmounts").isVisible());
-    assertFalse(dialog.getRadioButton("positiveAmounts").isVisible());
+  public T checkAmountTogglesAreNotVisible() {
+    assertFalse(dialog.getToggleButton("negativeAmount").isVisible());
+    assertFalse(dialog.getToggleButton("positiveAmount").isVisible());
     return (T)this;
   }
 

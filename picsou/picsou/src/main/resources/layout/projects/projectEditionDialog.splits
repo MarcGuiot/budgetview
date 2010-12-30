@@ -2,10 +2,17 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-
+    <style selector="button#month" ui="hyperlinkButtonWithoutUnderline"
+           icon="button_calendar.png"
+           pressedIcon="button_calendar_pressed.png"
+           disabledIcon="button_calendar_disabled.png"
+           rolloverIcon="button_calendar_rollover.png"
+           horizontalAlignment="right"
+           marginLeft="8" marginRight="8"/>
+    <style selector="component#amountEditor" marginRight="8"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(440,400)">
+  <panel styleClass="dialog" preferredSize="(550,400)">
     <column styleClass="innerDialog">
 
       <label ref="title" styleClass="title"/>
@@ -15,15 +22,20 @@
         <textField ref="projectName"/>
       </row>
 
-      <column styleClass="blockScrollBorder">
+      <htmlEditorPane text="$projectEdition.items.description" marginTop="10" weightY="0.1"/>
+
+      <column styleClass="blockScrollBorder" weightY="100.0">
         <scrollPane>
           <column>
-            <repeat ref="items" layout="verticalGrid">
-              <textField ref="label"/>
+            <repeat ref="items" layout="verticalGrid" margin="10">
+              <header>
+                <label text="$projectEdition.grid.label"/>
+                <label text="$projectEdition.grid.month"/>
+                <label text="$projectEdition.grid.amount"/>
+              </header>
+              <textField ref="itemLabel"/>
               <button ref="month"/>
-              <radioButton ref="positiveAmounts"/>
-              <radioButton ref="negativeAmounts"/>
-              <textField ref="amount"/>
+              <component ref="amountEditor"/>
               <button action="deleteItem" styleClass="icon" icon="button_delete.png"/>
             </repeat>
             <filler fill="vertical"/>
@@ -31,8 +43,8 @@
         </scrollPane>
 
         <row styleClass="footer">
-          <button action="addItem" styleClass="create" tooltipText="$projectEdition.addItem.tooltip"/>
           <filler fill="horizontal"/>
+          <button action="addItem" styleClass="create" tooltipText="$projectEdition.addItem.tooltip"/>
         </row>
       </column>
 

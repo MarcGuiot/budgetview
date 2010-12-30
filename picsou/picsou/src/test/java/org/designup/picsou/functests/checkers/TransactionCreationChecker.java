@@ -18,12 +18,12 @@ public class TransactionCreationChecker extends ViewChecker {
   }
 
   public TransactionCreationChecker setAmount(double amount) {
-    TextBox textBox = getPanel().getInputTextBox("amount");
+    TextBox textBox = getPanel().getInputTextBox("amountEditor");
     if (amount < 0) {
-      getPanel().getRadioButton("negativeAmount").click();
+      getPanel().getToggleButton("negativeAmount").click();
     }
     else {
-      getPanel().getRadioButton("positiveAmount").click();
+      getPanel().getToggleButton("positiveAmount").click();
     }
     textBox.setText(toString(Math.abs(amount)), false);
     textBox.focusLost();
@@ -31,25 +31,25 @@ public class TransactionCreationChecker extends ViewChecker {
   }
 
   public TransactionCreationChecker enterAmountWithoutValidating(double amount) {
-    TextBox textBox = getPanel().getInputTextBox("amount");
+    TextBox textBox = getPanel().getInputTextBox("amountEditor");
     textBox.setText(toString(amount), false);
     return this;
   }
 
   public TransactionCreationChecker checkAmount(double amount) {
-    assertThat(getPanel().getInputTextBox("amount").textEquals(toString(amount)));
+    assertThat(getPanel().getInputTextBox("amountEditor").textEquals(toString(amount)));
     return this;
   }
 
   public TransactionCreationChecker checkPositiveAmountsSelected() {
-    assertThat(getPanel().getRadioButton("positiveAmount").isSelected());
-    assertFalse(getPanel().getRadioButton("negativeAmount").isSelected());
+    assertThat(getPanel().getToggleButton("positiveAmount").isSelected());
+    assertFalse(getPanel().getToggleButton("negativeAmount").isSelected());
     return this;
   }
 
   public TransactionCreationChecker checkNegativeAmountsSelected() {
-    assertThat(getPanel().getRadioButton("negativeAmount").isSelected());
-    assertFalse(getPanel().getRadioButton("positiveAmount").isSelected());
+    assertThat(getPanel().getToggleButton("negativeAmount").isSelected());
+    assertFalse(getPanel().getToggleButton("positiveAmount").isSelected());
     return this;
   }
 
@@ -115,7 +115,7 @@ public class TransactionCreationChecker extends ViewChecker {
   }
 
   public TransactionCreationChecker checkFieldsAreEmpty() {
-    assertThat(getPanel().getInputTextBox("amount").textIsEmpty());
+    assertThat(getPanel().getInputTextBox("amountEditor").textIsEmpty());
     assertThat(getPanel().getInputTextBox("day").textIsEmpty());
     assertThat(getPanel().getInputTextBox("label").textIsEmpty());
     return this;

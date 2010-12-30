@@ -1,0 +1,22 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="toggleButton"
+           weightX="0" fill="none" anchor="center"
+           minimumSize="(21,21)" preferredSize="(21,21)"
+           text="" opaque="false" borderPainted="false"
+           cursor="hand"/>
+  </styles>
+
+  <row opaque="false">
+    <toggleButton ref="positiveAmount" weightX="0"
+                  icon="amount_sign_plus_unselected.png" selectedIcon="amount_sign_plus.png"/>
+
+    <toggleButton ref="negativeAmount" weightX="0"
+                  icon="amount_sign_minus_unselected.png" selectedIcon="amount_sign_minus.png"/>
+
+    <textField ref="amountEditor" columns="6" marginLeft="3"/>
+  </row>
+
+</splits>
