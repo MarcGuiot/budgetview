@@ -18,7 +18,7 @@
         rolloverColor="categorization.budgetAreaSelector.rollover"
         borderColor="categorization.budgetAreaSelector.border"/>
     <style selector="toggleButton.budgetAreaSelector" ui="budgetAreaSelector" margin="0"
-           font="-,bold,12" cursor="hand" rolloverEnabled="true"/>
+           font="-,bold,12" cursor="hand" rolloverEnabled="true" foreground="categorization.budgetAreaSelector.text"/>
 
     <ui name="budgetAreaSelectionPanel" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="categorization.budgetAreaSelectionPanel.top"

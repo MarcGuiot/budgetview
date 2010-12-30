@@ -34,7 +34,10 @@ public class PicsouModel {
                           DeferredCardPeriod.TYPE,
                           Notes.TYPE,
                           SignpostStatus.TYPE,
-                          SeriesOrder.TYPE)
+                          SeriesOrder.TYPE,
+                          Project.TYPE,
+                          ProjectItem.TYPE
+                          )
       .get();
 
   static {

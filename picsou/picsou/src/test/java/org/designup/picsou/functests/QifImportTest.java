@@ -153,6 +153,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/11", -2.23, "Tx 2")
       .load(0.);
     views.selectCategorization();
+    categorization.showAllTransactions();
     categorization.selectTransactions("Tx 2");
     transactionDetails.split("-1.19", "info 1");
     categorization.selectVariable().selectNewSeries("Income");

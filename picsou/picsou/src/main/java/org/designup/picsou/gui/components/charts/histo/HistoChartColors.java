@@ -18,6 +18,7 @@ public class HistoChartColors implements ColorChangeListener {
   private Color sectionLineColor;
   private Color selectedColumnColor;
   private Color selectedLabelBackgroundColor;
+  private Color selectedColumnBorder;
 
   public HistoChartColors(Directory directory) {
     directory.get(ColorService.class).addListener(this);
@@ -34,6 +35,7 @@ public class HistoChartColors implements ColorChangeListener {
     this.rolloverLabelColor = colorLocator.get("histo.label.rollover");
     this.selectedColumnColor = colorLocator.get("histo.selection.bg");
     this.selectedLabelBackgroundColor = colorLocator.get("histo.selection.label.bg");
+    this.selectedColumnBorder = colorLocator.get("histo.selection.border");
   }
 
   public Color getChartBgColor() {
@@ -74,6 +76,10 @@ public class HistoChartColors implements ColorChangeListener {
 
   public Color getSelectedLabelBackgroundColor() {
     return selectedLabelBackgroundColor;
+  }
+
+  public Color getSelectedColumnBorder() {
+    return selectedColumnBorder;
   }
 
 }

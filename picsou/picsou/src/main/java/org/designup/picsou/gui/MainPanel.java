@@ -3,7 +3,8 @@ package org.designup.picsou.gui;
 import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.accounts.AccountView;
-import org.designup.picsou.gui.accounts.MainAccountsChartView;
+import org.designup.picsou.gui.accounts.chart.MainAccountsChartView;
+import org.designup.picsou.gui.accounts.chart.SavingsAccountsChartView;
 import org.designup.picsou.gui.actions.*;
 import org.designup.picsou.gui.backup.BackupAction;
 import org.designup.picsou.gui.backup.RestoreAction;
@@ -23,11 +24,10 @@ import org.designup.picsou.gui.monthsummary.VersionInfoView;
 import org.designup.picsou.gui.notes.InitializationView;
 import org.designup.picsou.gui.notes.NotesView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
-import org.designup.picsou.gui.savings.SavingsChartView;
+import org.designup.picsou.gui.projects.ProjectView;
 import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
-import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.evolution.SeriesEvolutionView;
 import org.designup.picsou.gui.startup.LogoutService;
 import org.designup.picsou.gui.startup.OpenRequestManager;
@@ -117,9 +117,7 @@ public class MainPanel {
     };
     directory.add(LogoutService.class, logoutService);
 
-    SeriesEditionDialog seriesEditionDialog = new SeriesEditionDialog(repository, directory);
-    directory.add(SeriesEditionDialog.class, seriesEditionDialog);
-    directory.add(SeriesAmountEditionDialog.class, new SeriesAmountEditionDialog(repository, directory, seriesEditionDialog));
+    directory.add(SeriesEditor.class, new SeriesEditor(repository, directory));
 
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
 
@@ -186,7 +184,8 @@ public class MainPanel {
       seriesEvolutionView,
       new SavingsView(replicationGlobRepository, directory),
       new MainAccountsChartView(repository, directory),
-      new SavingsChartView(repository, directory),
+      new SavingsAccountsChartView(repository, directory),
+      new ProjectView(repository, directory),
       licenseInfoView,
       notesView);
 

@@ -70,7 +70,8 @@ public class PropertySetter {
     final Method setter = setterCache.findSetter(objectClass, property);
     if (setter == null) {
       throw new SplitsException("No property '" + property +
-                                "' found for class " + objectClass.getSimpleName());
+                                "' found for class " + objectClass.getSimpleName() +
+                                " (target value: '" + value + "')");
     }
     Class<?> targetClass = setter.getParameterTypes()[0];
     if (targetClass == Color.class) {

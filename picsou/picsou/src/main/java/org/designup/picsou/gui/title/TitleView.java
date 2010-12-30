@@ -2,6 +2,7 @@ package org.designup.picsou.gui.title;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.description.MonthListStringifier;
+import org.designup.picsou.gui.description.MonthRangeFormatter;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -62,7 +63,7 @@ public class TitleView extends View implements GlobSelectionListener {
       return;
     }
 
-    String monthDesc = MonthListStringifier.toString(months);
+    String monthDesc = MonthListStringifier.toString(months, MonthRangeFormatter.STANDARD);
     if (Strings.isNullOrEmpty(monthDesc)) {
       label.setText(Lang.get("title.card.only", card.getLabel()));
     }

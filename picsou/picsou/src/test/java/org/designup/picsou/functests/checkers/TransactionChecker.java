@@ -32,6 +32,8 @@ public class TransactionChecker extends ViewChecker {
 
   private Table table;
   private Table amountTable;
+  private CheckBox showPlannedTransactionsCheckbox;
+  private ComboBox accountFilterCombo;
 
   public TransactionChecker(Window window) {
     super(window);
@@ -162,11 +164,19 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public void selectAccount(String accountName) {
-    mainWindow.getComboBox("accountFilterCombo").select(accountName);
+    getAccountFilter().select(accountName);
+  }
+
+  private ComboBox getAccountFilter() {
+    if (accountFilterCombo == null) {
+      views.selectData();
+      accountFilterCombo = mainWindow.getComboBox("accountFilterCombo");
+    }
+    return accountFilterCombo;
   }
 
   public void checkSelectedAccount(String selection) {
-    assertThat(mainWindow.getComboBox("accountFilterCombo").selectionEquals(selection));
+    assertThat(getAccountFilter().selectionEquals(selection));
   }
 
   public void checkNotEmpty() {
@@ -201,16 +211,26 @@ public class TransactionChecker extends ViewChecker {
     editNote(getIndexOf(transactionLabel), note);
   }
 
-  public void showPlannedTransactions() {
-    mainWindow.getCheckBox("showPlannedTransactions").select();
-  }
-
-  public void hidePlannedTransactions() {
-    mainWindow.getCheckBox("showPlannedTransactions").unselect();
+  public TransactionChecker hidePlannedTransactions() {
+    getShowPlannedTransactionsCheckbox().unselect();
+    return this;
   }
 
   public void checkShowsPlannedTransaction(boolean show) {
-    UISpecAssert.assertEquals(show, mainWindow.getCheckBox("showPlannedTransactions").isSelected());
+    UISpecAssert.assertEquals(show, getShowPlannedTransactionsCheckbox().isSelected());
+  }
+
+  public TransactionChecker showPlannedTransactions() {
+    getShowPlannedTransactionsCheckbox().select();
+    return this;
+  }
+
+  private CheckBox getShowPlannedTransactionsCheckbox() {
+    if (showPlannedTransactionsCheckbox == null) {
+      views.selectData();
+      showPlannedTransactionsCheckbox = mainWindow.getCheckBox("showPlannedTransactions");
+    }
+    return showPlannedTransactionsCheckbox;
   }
 
   public class TransactionAmountChecker {

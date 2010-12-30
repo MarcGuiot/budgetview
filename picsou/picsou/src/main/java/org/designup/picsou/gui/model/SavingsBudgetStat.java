@@ -101,4 +101,9 @@ public class SavingsBudgetStat {
     return repository.find(org.globsframework.model.Key.create(MONTH, monthId,
                                                                ACCOUNT, Account.SAVINGS_SUMMARY_ACCOUNT_ID));
   }
+
+  public static Glob find(int monthId, int savingsAccountId, GlobRepository repository) {
+    return repository.find(org.globsframework.model.Key.create(MONTH, monthId,
+                                                               ACCOUNT, savingsAccountId));
+  }
 }

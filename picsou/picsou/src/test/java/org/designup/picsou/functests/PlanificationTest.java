@@ -20,27 +20,24 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .load();
     timeline.checkSpanEquals("2008/07", "2010/07");
 
-    views.selectCategorization();
     categorization.setNewRecurring(0, "Internet");
 
     timeline.selectMonth("2008/07");
 
-    views.selectData();
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("08/07/2008", TransactionType.PRELEVEMENT, "free telecom", "", -29.90, "Internet", "")
       .check();
 
     timeline.selectMonth("2008/07");
-    views.selectBudget();
     budgetView.recurring.checkTotalAmounts(-29.90, -29.90);
 
     timeline.selectMonth("2008/08");
-    views.selectData();
     transactions.initContent()
       .add("08/08/2008", TransactionType.PLANNED, "Planned: Internet", "", -29.90, "Internet")
       .check();
 
-    views.selectBudget();
     budgetView.recurring.checkTotalAmounts(0, -29.90);
   }
 
@@ -50,22 +47,20 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/30", -100., "Auchan")
       .load();
     
-    views.selectCategorization();
     categorization.setNewVariable("Auchan", "Courant", -100.);
     operations.openPreferences().setFutureMonthsCount(1).validate();
     timeline.checkSpanEquals("2008/06", "2008/08");
 
     timeline.selectAll();
-    views.selectBudget();
-    budgetView.variable.editSeriesList().selectSeries("Courant")
+    budgetView.variable.editSeries("Courant")
       .checkChart(new Object[][]{
         {"2008", "June", 100.00, 100.00, true},
         {"2008", "July", 0.00, 100.00, true},
         {"2008", "August", 0.00, 100.00, true},
       }).validate();
 
-    views.selectData();
     transactions
+      .showPlannedTransactions()
       .initContent()
       .add("30/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant")
       .add("30/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant")
@@ -100,13 +95,13 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("Auchan", "Courant");
     timeline.selectAll();
     views.selectBudget();
-    budgetView.variable.editSeriesList()
-      .selectSeries("Courant")
+    budgetView.variable.editSeries("Courant")
       .selectAllMonths()
       .setAmount("200")
       .validate();
     views.selectData();
     transactions
+      .showPlannedTransactions()
       .initContent()
       .add("20/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
       .add("20/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
@@ -147,32 +142,27 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/20", -100., "Auchan")
       .load();
 
-//    operations.openPreferences().setFutureMonthsCount(1).validate();
-    views.selectCategorization();
     categorization.setNewVariable("Auchan", "Courant");
+
     timeline.selectAll();
-    views.selectBudget();
-    budgetView.variable.editSeriesList()
-      .selectSeries("Courant")
+    budgetView.variable.editSeries("Courant")
       .selectAllMonths()
       .setAmount("200")
       .validate();
 
     OfxBuilder
       .init(this)
-      .addTransaction("2008/06/10", -100., "EDF")
+      .addTransaction("2008/06/10", -100.00, "EDF")
       .load();
-    views.selectCategorization();
     categorization.setNewRecurring("EDF", "EDF");
-    views.selectBudget();
-    budgetView.recurring.editSeriesList()
-      .selectSeries("EDF")
+    budgetView.recurring.editSeries("EDF")
       .selectAllMonths()
       .setAmount("150")
       .validate();
     
-    views.selectData();
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("20/06/2008", TransactionType.PLANNED, "Planned: EDF", "", -50.00, "EDF")
       .add("20/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant")
       .add("20/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")
@@ -184,15 +174,15 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     timeline.selectMonth("2008/09");
-    views.selectBudget();
     budgetView.extras.createSeries()
       .setName("Miami trip")
       .setAmount(2000.00)
       .validate();
 
     timeline.selectAll();
-    views.selectData();
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("01/09/2008", TransactionType.PLANNED, "Planned: Miami trip", "", -2000.00, "Miami trip")
       .check();
   }

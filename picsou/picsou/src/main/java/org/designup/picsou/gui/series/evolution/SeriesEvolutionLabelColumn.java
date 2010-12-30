@@ -1,13 +1,11 @@
 package org.designup.picsou.gui.series.evolution;
 
-import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
-import org.designup.picsou.model.Month;
 import org.globsframework.gui.views.GlobTableColumn;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.utils.directory.Directory;
 
@@ -23,9 +21,9 @@ public class SeriesEvolutionLabelColumn implements GlobTableColumn {
   public SeriesEvolutionLabelColumn(GlobTableView view,
                                     GlobRepository repository, Directory directory,
                                     SeriesEvolutionColors colors,
-                                    SeriesEditionDialog seriesEditionDialog) {
+                                    SeriesEditor seriesEditor) {
     this.repository = repository;
-    this.editor = new SeriesEvolutionLabelEditor(view, repository, directory, colors, seriesEditionDialog);
+    this.editor = new SeriesEvolutionLabelEditor(view, repository, directory, colors, seriesEditor);
   }
 
   public String getName() {

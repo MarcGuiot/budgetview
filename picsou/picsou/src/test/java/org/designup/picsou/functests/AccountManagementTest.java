@@ -141,7 +141,9 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .checkSavingsWarning()
       .validate();
 
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("26/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", -800.00, "Epargne")
       .add("26/08/2008", TransactionType.PRELEVEMENT, "Epargne", "", -800.00)
       .add("26/08/2008", TransactionType.VIREMENT, "WorldCo", "", 1000.00)

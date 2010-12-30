@@ -27,14 +27,11 @@ import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.gui.views.GlobListView;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.*;
-import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -46,6 +43,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
+
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesEditionDialog {
   private BudgetArea budgetArea;
@@ -62,7 +62,6 @@ public class SeriesEditionDialog {
   private Set<Integer> selectedSeries = new HashSet<Integer>();
 
   private JLabel titleLabel;
-  private GlobListView seriesList;
   private SeriesEditionDialog.ValidateAction okAction = new ValidateAction();
   private AbstractAction deleteStartDateAction;
   private OpenMonthChooserAction startDateChooserAction;
@@ -71,9 +70,7 @@ public class SeriesEditionDialog {
   private OpenMonthChooserAction singleMonthChooserAction;
   private GlobTextEditor nameEditor;
   private JPanel monthSelectionPanel;
-  private JPanel seriesPanel;
   private Key createdSeries;
-  private JPanel seriesListButtonPanel;
   private SeriesAmountEditionPanel amountEditionPanel;
   private GlobList selectedTransactions = new EmptyGlobList();
   private GlobLinkComboEditor fromAccountsCombo;
@@ -81,17 +78,18 @@ public class SeriesEditionDialog {
   private Boolean isAutomatic = false;
   private JComboBox dayChooser;
   private CardHandler monthSelectionCards;
-  private JButton singleSeriesDeleteButton;
+  private JButton deleteButton;
   private JLabel savingsMessage;
   private SubSeriesEditionPanel subSeriesEditionPanel;
   private GlobMatcher accountFilter;
-  static private Set<Integer> CHANGABLE_BUDGET_AREA =
-    new HashSet<Integer>(Arrays.asList(BudgetArea.VARIABLE.getId(), BudgetArea.RECURRING.getId(), BudgetArea.EXTRAS.getId()));
   private GlobLinkComboEditor budgetAreaCombo;
   private JTabbedPane tabbedPane;
   private GlobCheckBoxView reportCheckBox;
   private ReadOnlyGlobTextFieldView startTextFieldView;
   private ReadOnlyGlobTextFieldView endDateTextFieldView;
+
+  private static Set<Integer> CHANGEABLE_BUDGET_AREAS =
+    new HashSet<Integer>(Arrays.asList(BudgetArea.VARIABLE.getId(), BudgetArea.RECURRING.getId(), BudgetArea.EXTRAS.getId()));
 
   public SeriesEditionDialog(final GlobRepository repository, Directory directory) {
     this(directory.get(JFrame.class), repository, directory);
@@ -118,8 +116,7 @@ public class SeriesEditionDialog {
     localRepository.addTrigger(new UpdateBudgetOnSeriesAccountsChange());
     localRepository.addChangeListener(new ProfileTypeChangeListener());
 
-// TODO: A REINTEGRER ?
-    localRepository.addChangeListener(new DefaultChangeSetListener() {
+    localRepository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (currentSeries == null) {
           return;
@@ -139,6 +136,11 @@ public class SeriesEditionDialog {
           }
         }
       }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        currentSeries = null;
+        selectionService.clear(Series.TYPE);
+      }
     });
 
     selectionService = new SelectionService();
@@ -156,16 +158,6 @@ public class SeriesEditionDialog {
 
     tabbedPane = builder.add("tabs", new JTabbedPane()).getComponent();
     titleLabel = builder.add("title", new JLabel("SeriesEditionDialog")).getComponent();
-
-    seriesList = GlobListView.init(Series.TYPE, localRepository, localDirectory);
-    seriesPanel = builder.add("seriesPanel", new JPanel()).getComponent();
-
-    builder.add("seriesList", seriesList.getComponent());
-
-    seriesListButtonPanel = new JPanel();
-    builder.add("seriesListButtonPanel", seriesListButtonPanel);
-    builder.add("create", new CreateSeriesAction());
-    builder.add("delete", new DeleteSeriesAction("seriesEdition.delete", false));
 
     nameEditor = builder.addEditor("nameField", Series.NAME).setNotifyOnKeyPressed(true);
     nameEditor.getComponent().addActionListener(okAction);
@@ -193,6 +185,7 @@ public class SeriesEditionDialog {
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+
       }
     });
 
@@ -301,7 +294,7 @@ public class SeriesEditionDialog {
 
     budgetAreaCombo = builder.addComboEditor("budgetAreaChooser", Series.BUDGET_AREA)
       .setShowEmptyOption(false)
-      .setFilter(GlobMatchers.contained(BudgetArea.ID, CHANGABLE_BUDGET_AREA))
+      .setFilter(GlobMatchers.contained(BudgetArea.ID, CHANGEABLE_BUDGET_AREAS))
       .setComparator(new GlobFieldComparator(BudgetArea.ID));
 
     subSeriesEditionPanel = new SubSeriesEditionPanel(localRepository, localDirectory, dialog);
@@ -310,14 +303,14 @@ public class SeriesEditionDialog {
     localRepository.addChangeListener(new OkButtonUpdater());
 
     JPanel panel = builder.load();
-    singleSeriesDeleteButton = new JButton(new DeleteSeriesAction("seriesEdition.deleteCurrent", true));
-    singleSeriesDeleteButton.setOpaque(false);
-    singleSeriesDeleteButton.setName("deleteSingleSeries");
-    dialog.addPanelWithButtons(panel, okAction, new CancelAction(), singleSeriesDeleteButton);
+    deleteButton = new JButton(new DeleteSeriesAction("seriesEdition.deleteCurrent", true));
+    deleteButton.setOpaque(false);
+    deleteButton.setName("deleteSingleSeries");
+    dialog.addPanelWithButtons(panel, okAction, new CancelAction(), deleteButton);
   }
 
   private void updateBudgetAreaCombo() {
-    budgetAreaCombo.setVisible(CHANGABLE_BUDGET_AREA.contains(budgetArea.getId()));
+    budgetAreaCombo.setVisible((budgetArea != null) && CHANGEABLE_BUDGET_AREAS.contains(budgetArea.getId()));
   }
 
   public static void addSeriesCreationTriggers(GlobRepository repository,
@@ -448,7 +441,6 @@ public class SeriesEditionDialog {
     finally {
       localRepository.completeChangeSet();
     }
-    setSeriesListVisible(true);
     Glob series = null;
     if (seriesId != null) {
       series = localRepository.get(Key.create(Series.TYPE, seriesId));
@@ -472,9 +464,6 @@ public class SeriesEditionDialog {
     finally {
       localRepository.completeChangeSet();
     }
-    setSeriesListVisible(false);
-    seriesPanel.setVisible(false);
-    seriesListButtonPanel.setVisible(false);
     doShow(monthIds, localRepository.get(series.getKey()), false, false);
   }
 
@@ -489,11 +478,12 @@ public class SeriesEditionDialog {
   public Key showNewSeries(GlobList transactions, GlobList selectedMonths, BudgetArea budgetArea, FieldValue... forcedValues) {
     resetSeries();
     selectedTransactions = transactions;
-    this.budgetArea = BudgetArea.get(budgetArea.getId());
     Glob createdSeries;
     try {
       localRepository.startChangeSet();
       localRepository.rollback();
+
+      this.budgetArea = budgetArea;
       Ref<Integer> fromAccount = new Ref<Integer>();
       Ref<Integer> toAccount = new Ref<Integer>();
       initBudgetAreaSeries(budgetArea, fromAccount, toAccount);
@@ -507,6 +497,7 @@ public class SeriesEditionDialog {
       else {
         label = Lang.get("seriesEdition.newSeries");
       }
+
       SortedSet<Integer> days = transactions.getSortedSet(Transaction.DAY);
       Integer day = days.isEmpty() ? 1 : days.last();
       createdSeries = createSeries(label, day, fromAccount.get(), toAccount.get(), forcedValues);
@@ -514,16 +505,9 @@ public class SeriesEditionDialog {
     finally {
       localRepository.completeChangeSet();
     }
-    setSeriesListVisible(false);
     this.createdSeries = null;
     doShow(selectedMonths.getValueSet(Month.ID), createdSeries, true, true);
     return this.createdSeries;
-  }
-
-  private void setSeriesListVisible(boolean visible) {
-    seriesPanel.setVisible(visible);
-    seriesListButtonPanel.setVisible(visible);
-    singleSeriesDeleteButton.setVisible(!visible);
   }
 
   private Glob createSeries(String label, Integer day, Integer fromAccountId, Integer toAccountId, FieldValue... forcedValues) {
@@ -602,9 +586,6 @@ public class SeriesEditionDialog {
     }
     localRepository.reset(globsToLoad, SeriesBudget.TYPE, Series.TYPE, Transaction.TYPE);
 
-    this.seriesList.setFilter(or(and(fieldEquals(Series.BUDGET_AREA, budgetArea.getId()), isFalse(Series.IS_MIRROR)),
-                                 fieldContained(Series.ID, selectedSeries)));
-
     if (budgetArea == BudgetArea.SAVINGS) {
       Set<Integer> positiveAccount = new HashSet<Integer>();
       Set<Integer> negativeAccount = new HashSet<Integer>();
@@ -671,16 +652,9 @@ public class SeriesEditionDialog {
     this.currentMonthIds = new TreeSet<Integer>(monthIds);
     this.lastSelectedSubSeriesId = null;
     amountEditionPanel.selectMonths(monthIds);
-    if (currentSeries != null) {
-      amountEditionPanel.changeSeries(currentSeries.getKey());
-      selectionService.select(currentSeries);
-    }
-    else {
-      seriesList.selectFirst();
-    }
-    if (currentSeries != null) {
-      updateMonthSelectionCard();
-    }
+    amountEditionPanel.changeSeries(currentSeries.getKey());
+    selectionService.select(currentSeries);
+    updateMonthSelectionCard();
 
     tabbedPane.setSelectedIndex(0);
 
@@ -800,23 +774,6 @@ public class SeriesEditionDialog {
     public void actionPerformed(ActionEvent e) {
       localRepository.rollback();
       dialog.setVisible(false);
-    }
-  }
-
-  private class CreateSeriesAction extends AbstractAction {
-    public CreateSeriesAction() {
-      super(Lang.get("seriesEdition.create"));
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      Glob newSeries = createSeries(Lang.get("seriesEdition.newSeries"), 1, null, null);
-      selectionService.select(newSeries);
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          nameEditor.getComponent().requestFocusInWindow();
-          nameEditor.getComponent().selectAll();
-        }
-      });
     }
   }
 

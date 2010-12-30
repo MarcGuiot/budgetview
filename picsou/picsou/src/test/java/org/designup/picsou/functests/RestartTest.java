@@ -72,29 +72,22 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/26", 1000, "Company")
       .load();
 
-    views.selectCategorization();
     categorization.setNewIncome("Company", "Salary");
-
-    views.selectBudget();
     budgetView.income.checkSeries("Salary", 1000.0, 1000.0);
 
     timeline.selectMonth("2008/09");
     budgetView.income.checkSeries("Salary", 0.0, 1000.0);
     mainAccounts.checkEstimatedPosition(1000.0);
-    views.selectBudget();
     budgetView.getSummary()
       .openPositionDialog()
       .checkIncome(1000.0)
       .close();
 
     timeline.selectMonth("2008/08");
-    views.selectBudget();
     budgetView.income.checkTotalAmounts(1000.0, 1000.0);
 
-    views.selectHome();
     mainAccounts.checkEstimatedPosition(0.0);
 
-    views.selectBudget();
     budgetView.getSummary().openPositionDialog()
       .checkIncome(0.0)
       .close();
@@ -103,7 +96,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     timeline.checkSelection("2008/08");
 
-    views.selectBudget();
     budgetView.income.checkTotalAmounts(1000.0, 1000.0);
 
     budgetView.getSummary().openPositionDialog()
@@ -116,8 +108,9 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/08", "2008/09");
 
-    views.selectData();
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("26/09/2008", TransactionType.PLANNED, "Planned: Salary", "", 1000.00, "Salary")
       .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00, "Salary")
       .check();
@@ -219,6 +212,53 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .checkDescriptionHidden();
   }
 
+  public void testProjects() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2008/08/01")
+      .addTransaction("2008/08/01", 1000.00, "Income")
+      .load();
+
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+
+    projects.create()
+      .setName("MyProject")
+      .setItemName(0, "Reservation")
+      .setItemDate(0, 200809)
+      .setItemAmount(0, -200.00)
+      .addItem(1, "Travel", 200810, -100.00)
+      .addItem(2, "Hotel", 200810, -500.00)
+      .validate();
+
+    projects.checkProjectList("MyProject");
+    projects.checkProject("MyProject", "Sep-Oct 2008", 800.00);
+
+    timeline.selectMonth("2008/09");
+    budgetView.extras.checkSeries("MyProject", 0, -200.00);
+    budgetView.getSummary().checkEndPosition(800.00);
+
+    timeline.selectMonth("2008/10");
+    budgetView.extras.checkSeries("MyProject", 0, -600.00);
+    budgetView.getSummary().checkEndPosition(200.00);
+
+    restartApplication();
+
+    projects.checkProjectList("MyProject");
+    projects.checkProject("MyProject", "Sep-Oct 2008", 800.00);
+    projects.edit("MyProject")
+      .checkItems("Reservation | September 2008 | -200.00\n" +
+                  "Travel | October 2008 | -100.00\n" +
+                  "Hotel | October 2008 | -500.00")
+      .cancel();
+
+    timeline.selectMonth("2008/09");
+    budgetView.extras.checkSeries("MyProject", 0, -200.00);
+    budgetView.getSummary().checkEndPosition(800.00);
+
+    timeline.selectMonth("2008/10");
+    budgetView.extras.checkSeries("MyProject", 0, -600.00);
+    budgetView.getSummary().checkEndPosition(200.00);
+  }
+
   public void testRestartAfterCurrentMonthChanged() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "Company")
@@ -229,18 +269,15 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .load();
 
     // on crée une serie a la main sans l'associé des le debut : du coup le montant initial de la series est a 0
-    views.selectBudget();
     budgetView.variable.createSeries().setName("End date")
       .selectAllMonths()
       .setAmount("300")
       .validate();
-    views.selectCategorization();
     categorization.setNewIncome("Company", "Salaire")
       .setNewVariable("Auchan", "Course", -400.)
       .setVariable("ED", "End date")
       .setNewVariable("Monop", "Begin and end date", -200.)
       .setNewVariable("Fnac", "Begin date", -100.);
-    views.selectBudget();
     budgetView.variable.editSeries("End date").setEndDate(200812).validate();
     budgetView.variable.editSeries("Begin and end date")
       .setStartDate(200808)
@@ -250,9 +287,11 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .setStartDate(200808)
       .validate();
     operations.openPreferences().setFutureMonthsCount(2).validate();
-    views.selectData();
+
     timeline.selectAll();
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("26/10/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("10/10/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
       .add("10/10/2008", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")
@@ -277,7 +316,9 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().checkFutureMonthsCount(2).validate();
     timeline.selectAll();
     views.selectData();
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("26/11/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("10/11/2008", TransactionType.PLANNED, "Planned: Begin date", "", -100.00, "Begin date")
       .add("10/11/2008", TransactionType.PLANNED, "Planned: Begin and end date", "", -200.00, "Begin and end date")
@@ -423,9 +464,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
   public void testChangeDayChangeTransactionFromPlannedToRealAndViceversaForNotImportedAccount() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
-    views.selectHome();
     savingsAccounts.createSavingsAccount("Epargne", 1000.);
-    views.selectBudget();
     budgetView.income.createSeries()
       .setName("CAF")
       .setFromAccount("External account")
@@ -434,9 +473,11 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .setAmount("100")
       .setDay("5")
       .validate();
-    views.selectData();
+
     timeline.selectAll();
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("05/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF")
       .add("05/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF")
       .add("05/08/2008", TransactionType.VIREMENT, "CAF", "", 100.00, "CAF")
@@ -446,7 +487,9 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     timeline.selectAll();
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("05/11/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF")
       .add("05/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF")
       .add("05/09/2008", TransactionType.VIREMENT, "Planned: CAF", "", 100.00, "CAF")
@@ -476,7 +519,9 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkEstimatedPosition("Epargne", 1600);
 
     timeline.selectAll();
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("25/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF")
       .add("25/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF")
       .add("25/08/2008", TransactionType.PLANNED, "CAF", "", 300.00, "CAF")
@@ -502,7 +547,9 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     timeline.selectAll();
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("25/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF")
       .add("25/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF")
       .add("25/08/2008", TransactionType.PLANNED, "CAF", "", 300.00, "CAF")

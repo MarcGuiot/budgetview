@@ -38,7 +38,7 @@ public class MonthChooserDialog implements ColorChangeListener, Disposable {
   private int newMonth;
   private Color todayColor;
   private Color defaultForegroundColor;
-  private Set<Integer> forceDesable = new HashSet<Integer>();
+  private Set<Integer> forceDisabled = new HashSet<Integer>();
   private SplitsBuilder builder;
 
   public MonthChooserDialog(Window parent, final Directory directory) {
@@ -94,7 +94,7 @@ public class MonthChooserDialog implements ColorChangeListener, Disposable {
     return builder.load();
   }
 
-  public int show(int selectedMonthId, int lowerLimit, int upperLimit, Collection<Integer> forceDesables) {
+  public int show(int selectedMonthId, int lowerLimit, int upperLimit, Collection<Integer> forceDisabled) {
     this.newMonth = -1;
     bound = MonthRangeBound.BOTH;
     this.selectedMonth = Month.toMonth(selectedMonthId);
@@ -102,7 +102,7 @@ public class MonthChooserDialog implements ColorChangeListener, Disposable {
     initBoundLimit(MonthRangeBound.UPPER, lowerLimit);
     initBoundLimit(MonthRangeBound.LOWER, upperLimit);
     currentYear = selectedYear;
-    this.forceDesable.addAll(forceDesables);
+    this.forceDisabled.addAll(forceDisabled);
     return show();
   }
 
@@ -118,7 +118,7 @@ public class MonthChooserDialog implements ColorChangeListener, Disposable {
   private int show() {
     update();
     dialog.pack();
-    dialog.showCentered();
+    dialog.showCentered(true);
     builder.dispose();
     dialog = null;
     return newMonth;
@@ -218,7 +218,7 @@ public class MonthChooserDialog implements ColorChangeListener, Disposable {
               buttons[i].setEnabled(currentMonthId >= Month.toMonthId(yearUpperLimit, monthUpperLimit) &&
                                     currentMonthId <= Month.toMonthId(yearLowerLimit, monthLowerLimit));
           }
-          if (forceDesable.contains(currentMonthId)) {
+          if (forceDisabled.contains(currentMonthId)) {
             buttons[i].setEnabled(false);
           }
         }

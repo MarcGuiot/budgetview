@@ -20,7 +20,6 @@ import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.Colors;
-import org.globsframework.gui.splits.utils.AutoDispose;
 import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.GlobTableView;
@@ -134,7 +133,7 @@ public class SplitTransactionDialog {
     boolean enabled = false;
     setValidationEnabled(enabled);
     amountField.requestFocus();
-    dialog.showCentered();
+    dialog.showCentered(true);
     builder.dispose();
     headerPainter.dispose();
     rendererColors.dispose();
@@ -248,8 +247,7 @@ public class SplitTransactionDialog {
   }
 
   private void showErrorMessage(String message, Object... args) {
-    ErrorTip errorTip = ErrorTip.showLeft(amountField, Lang.get(message, args), localDirectory);
-    AutoDispose.registerTextEdition(amountField, errorTip);
+    ErrorTip.showLeft(amountField, Lang.get(message, args), localDirectory);
   }
 
   private Glob createSplittedTransaction() {

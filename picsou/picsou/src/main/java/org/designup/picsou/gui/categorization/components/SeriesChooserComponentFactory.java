@@ -1,7 +1,8 @@
 package org.designup.picsou.gui.categorization.components;
 
+import com.jidesoft.swing.DefaultOverlayable;
 import org.designup.picsou.gui.description.SeriesDescriptionStringifier;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -27,8 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.jidesoft.swing.DefaultOverlayable;
-
 public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glob> {
   protected JRadioButton invisibleSelector;
   protected ButtonGroup buttonGroup = new ButtonGroup();
@@ -37,7 +36,7 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
   protected GlobStringifier subSeriesStringifier;
   protected GlobStringifier budgetAreaStringifier;
 
-  protected SeriesEditionDialog seriesEditionDialog;
+  protected SeriesEditor seriesEditor;
   protected GlobRepository repository;
   protected Directory directory;
   protected Window parent;
@@ -50,13 +49,13 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
 
   public SeriesChooserComponentFactory(BudgetArea budgetArea,
                                        JRadioButton invisibleSelector,
-                                       SeriesEditionDialog seriesEditionDialog,
+                                       SeriesEditor seriesEditor,
                                        GlobRepository repository,
                                        Directory directory) {
     this.invisibleSelector = invisibleSelector;
     this.buttonGroup.add(invisibleSelector);
 
-    this.seriesEditionDialog = seriesEditionDialog;
+    this.seriesEditor = seriesEditor;
     this.repository = repository;
     this.directory = directory;
     this.parent = directory.get(JFrame.class);
@@ -194,7 +193,7 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
 
     public void actionPerformed(ActionEvent e) {
       Glob series = repository.get(seriesKey);
-      seriesEditionDialog.show(series, selectionService.getSelection(Month.TYPE).getValueSet(Month.ID));
+      seriesEditor.show(series, selectionService.getSelection(Month.TYPE).getValueSet(Month.ID));
     }
   }
 
@@ -272,20 +271,6 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
         }
       });
     }
-  }
-
-  public Rectangle getRectange(Key seriesId){
-    SplitsNode<JRadioButton> radioButtonSplitsNode = seriesToComponent.get(seriesId);
-    if (radioButtonSplitsNode != null){
-      Rectangle bounds = radioButtonSplitsNode.getComponent().getBounds();
-      Container parent = radioButtonSplitsNode.getComponent().getParent();
-      while (parent != null && !(parent instanceof DefaultOverlayable)){
-        parent = parent.getParent();
-        bounds.translate(parent.getX(), parent.getY());
-      }
-      return bounds;
-    }
-    return null;
   }
 
   private void setText(JRadioButton selector, String seriesName, Glob series) {

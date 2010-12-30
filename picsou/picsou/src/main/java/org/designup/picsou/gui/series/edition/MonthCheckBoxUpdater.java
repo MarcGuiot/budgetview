@@ -31,6 +31,17 @@ public class MonthCheckBoxUpdater implements GlobSelectionListener, ItemListener
     selectionService.addListener(this, Series.TYPE);
     checkBox.addItemListener(this);
     this.repository = repository;
+    repository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if ((currentSeries != null) && changeSet.isDeleted(currentSeries.getKey())) {
+          currentSeries = null;
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        currentSeries = null;
+      }
+    });
   }
 
   public JCheckBox getCheckBox() {

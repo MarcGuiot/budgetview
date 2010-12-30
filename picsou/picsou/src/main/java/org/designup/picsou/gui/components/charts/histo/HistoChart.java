@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -15,7 +16,7 @@ public class HistoChart extends JPanel {
 
   private HistoChartColors colors;
   private HistoPainter painter = HistoPainter.NULL;
-  private HistoChartListener listener;
+  private java.util.List<HistoChartListener> listeners;
   private HistoChartMetrics metrics;
   private Integer currentRolloverIndex;
   private Font selectedLabelFont;
@@ -34,8 +35,11 @@ public class HistoChart extends JPanel {
     registerMouseActions();
   }
 
-  public void setListener(HistoChartListener listener) {
-    this.listener = listener;
+  public void addListener(HistoChartListener listener) {
+    if (listeners == null) {
+      listeners = new ArrayList<HistoChartListener>();
+    }
+    this.listeners.add(listener);
   }
 
   public void setSnapToScale(boolean value) {
@@ -103,6 +107,7 @@ public class HistoChart extends JPanel {
     paintScale(g2, panelWidth);
     paintSections(g2, panelHeight, dataset);
     paintBorder(g2);
+    paintSelectionBorder(g2, dataset);
 
     painter.paint(g2, metrics, currentRolloverIndex);
   }
@@ -138,7 +143,20 @@ public class HistoChart extends JPanel {
         g2.setColor(getLabelColor(i));
         g2.drawString(label, metrics.labelX(label, i), metrics.labelY());
       }
-      
+    }
+  }
+
+  private void paintSelectionBorder(Graphics2D g2, HistoDataset dataset) {
+    g2.setStroke(new BasicStroke(1));
+    for (int i = 0; i < dataset.size(); i++) {
+      if (dataset.isSelected(i)) {
+
+        int columnHeight = metrics.columnHeight();
+        int left = metrics.left(i);
+
+        g2.setColor(colors.getSelectedColumnBorder());
+        g2.drawRect(left, 0, metrics.columnWidth(), columnHeight + metrics.labelZoneHeightWithMargin());
+      }
     }
   }
 
@@ -194,7 +212,7 @@ public class HistoChart extends JPanel {
   }
 
   private boolean clickable() {
-    return clickable && (currentRolloverIndex != null) && (listener != null) && (painter != null)
+    return clickable && (currentRolloverIndex != null) && (listeners != null) && (painter != null)
            && painter.getDataset().size() > 0;
   }
 
@@ -249,7 +267,9 @@ public class HistoChart extends JPanel {
         ids.add(id);
       }
     }
-    listener.columnsClicked(ids);
+    for (HistoChartListener listener : listeners) {
+      listener.columnsClicked(ids);
+    }
   }
 
   private void registerMouseActions() {

@@ -325,7 +325,9 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .setDeferred("Prelevement aout", "1111");
     timeline.selectAll();
     views.selectData();
-    transactions.initAmountContent()
+    transactions
+      .showPlannedTransactions()
+      .initAmountContent()
       .add("14/02/2010", "Planned: course", -30.00, "course", 840.00, "Main accounts")
       .add("14/01/2010", "Planned: course", -30.00, "course", 870.00, "Main accounts")
       .add("30/11/2009", "AUCHAN", -60.00, "course", -100.00, 900.00, "Card n. 1111")
@@ -361,8 +363,9 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .setNewVariable("Auchan", "course", -200.0);
     timeline.selectAll();
     views.selectData();
-    transactions.
-      initAmountContent()
+    transactions
+      .showPlannedTransactions()
+      .initAmountContent()
       .add("01/02/2010", "Planned: course", -200.00, "course", 400.00, "Main accounts")
       .add("01/01/2010", "Planned: course", -200.00, "course", 600.00, "Main accounts")
       .add("07/12/2009", "Planned: course", -90.00, "course", 910.00, "Main accounts")
@@ -435,7 +438,9 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     timeline.selectMonth("2009/12");
-    transactions.initAmountContent()
+    transactions
+      .showPlannedTransactions()
+      .initAmountContent()
       .add("07/12/2009", "Planned: Mc Do", -100.00, "Mc Do", 890.00, "Main accounts")
       .add("07/12/2009", "AUCHAN", -10.00, "To categorize", -110.00, 880.00, "Card n. 1111")
       .add("04/12/2009", "CHEQUE N°5", -10.00, "To categorize", 990.00, 990.00, "Account n. 1234")

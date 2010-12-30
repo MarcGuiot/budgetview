@@ -1,12 +1,8 @@
 package org.designup.picsou.gui.budget;
 
-import org.designup.picsou.gui.series.EditSeriesAction;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.signpost.actions.SetSignpostStatusAction;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SignpostStatus;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsBuilder;
@@ -14,6 +10,7 @@ import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobListFunctor;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -26,25 +23,23 @@ public class SeriesEditionButtons {
   private BudgetArea budgetArea;
   private GlobRepository repository;
   private Directory directory;
-  private SeriesEditionDialog seriesEditionDialog;
+  private SeriesEditor seriesEditor;
   private SelectionService selectionService;
   private String createButtonName = "createSeries";
-  private String editButtonName = "editAllSeries";
 
   public SeriesEditionButtons(final BudgetArea budgetArea,
                               final GlobRepository repository,
                               Directory directory,
-                              final SeriesEditionDialog seriesEditionDialog) {
+                              final SeriesEditor seriesEditor) {
     this.budgetArea = budgetArea;
     this.repository = repository;
     this.directory = directory;
     this.selectionService = directory.get(SelectionService.class);
-    this.seriesEditionDialog = seriesEditionDialog;
+    this.seriesEditor = seriesEditor;
   }
 
   public void registerButtons(SplitsBuilder builder) {
     builder.add(createButtonName, new CreateSeriesAction());
-    builder.add(editButtonName, new EditSeriesAction(repository, directory, seriesEditionDialog, budgetArea));
   }
 
   public GlobButtonView createSeriesButton(Glob series) {
@@ -57,9 +52,8 @@ public class SeriesEditionButtons {
     return buttonView;
   }
 
-  public void setNames(String createButtonName, String editButtonName) {
+  public void setNames(String createButtonName) {
     this.createButtonName = createButtonName;
-    this.editButtonName = editButtonName;
   }
 
   private class CreateSeriesAction extends AbstractAction {
@@ -69,9 +63,9 @@ public class SeriesEditionButtons {
     }
 
     public void actionPerformed(ActionEvent e) {
-      seriesEditionDialog.showNewSeries(GlobList.EMPTY,
-                                        selectionService.getSelection(Month.TYPE),
-                                        budgetArea);
+      seriesEditor.showNewSeries(GlobList.EMPTY,
+                                 selectionService.getSelection(Month.TYPE),
+                                 budgetArea);
     }
   }
 
@@ -83,7 +77,10 @@ public class SeriesEditionButtons {
 
   private void showSeriesEdition(Glob series) {
     Set<Integer> selectedMonthIds = selectionService.getSelection(Month.TYPE).getValueSet(Month.ID);
-    seriesEditionDialog.show(series, selectedMonthIds);
+    if (repository.contains(Project.TYPE, GlobMatchers.linkedTo(series.getKey(), Project.SERIES))) {
+
+    }
+    seriesEditor.show(series, selectedMonthIds);
   }
 
   private class TooltipUpdater implements ChangeSetListener {

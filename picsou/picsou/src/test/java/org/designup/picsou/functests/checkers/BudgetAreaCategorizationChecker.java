@@ -11,7 +11,7 @@ import java.util.List;
 import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class BudgetAreaCategorizationChecker extends GuiChecker {
-  private CategorizationChecker categorizationChecker;
+  protected CategorizationChecker categorizationChecker;
   private BudgetArea budgetArea;
   private Panel panel;
 

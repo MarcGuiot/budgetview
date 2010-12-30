@@ -2,7 +2,7 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <styles>
-    <style selector="label.accountName" font="-,bold,16" foreground="savingsView.accountName"
+    <style selector="label.accountName" font="-,bold,18" foreground="savingsView.accountName"
            marginLeft="5"/>
     <style selector="label.accountPosition" font="-,bold,13" foreground="savingsView.accountPosition"/>
     <style selector="label.accountPositionDate" font="-,plain,9" foreground="savingsView.accountDate"/>
@@ -43,27 +43,39 @@
             </row>
 
             <column styleClass="blockScrollBorder">
-              <scrollPane marginTop="0" marginBottom="0">
+              <scrollPane marginTop="0" marginBottom="0" forceVerticalScroll="true" verticalUnitIncrement="10">
                 <column marginTop="5">
-                  <repeat ref="savingsAccounts" margin="10" marginTop="0" marginBottom="15">
-                    <row name="savingsAccountPanel" border="matte(0,0,1,0,savingsView.separator)">
-                      <label ref="accountName" anchor="center" styleClass="accountName" minimumSize="(120,40)"/>
-                      <column>
+                  <repeat ref="savingsAccounts" layout="verticalGrid" margin="10" marginTop="0" marginBottom="15">
+                    <header>
+                      <label text="$savingsView.header.account"/>
+                      <label text="$savingsView.header.position"/>
+                      <label text="$savingsView.header.series"/>
+                      <label text="$savingsView.header.evolution"/>
+                    </header>
+                    <label ref="accountName" anchor="center" styleClass="accountName"
+                           minimumSize="(120,40)" weightX="0.5"/>
+                    <panel marginLeft="5" marginRight="5" opaque="false" weightX="0.5">
+                      <column border="matte(0,1,0,1,savingsView.verticalDivider)" marginLeft="5" marginRight="5">
                         <label ref="estimatedAccountPosition" anchor="south"
                                styleClass="accountPosition"/>
                         <label ref="estimatedAccountPositionDate" anchor="north"
                                styleClass="accountPositionDate"
                                autoHideSource="estimatedAccountPosition"/>
                       </column>
+                    </panel>
+                    <column weightX="0.5">
+                      <filler fill="vertical"/>
                       <panel ref="savingsSeries" margin="5" marginBottom="20"/>
-                    </row>
+                      <filler fill="vertical"/>
+                    </column>
+                    <component ref="savingsAccountChart" marginTop="15" marginBottom="15"
+                               marginLeft="20" preferredSize="(150,70)" weightX="1.0"/>
                   </repeat>
                   <filler fill="vertical"/>
                 </column>
               </scrollPane>
               <row styleClass="footer">
                 <button action="createSavingsSeries" styleClass="create" tooltipText="$series.create.tooltip"/>
-                <button action="editAllSavingsSeries" styleClass="list" tooltipText="$series.list.tooltip"/>
                 <filler fill="horizontal"/>
               </row>
             </column>

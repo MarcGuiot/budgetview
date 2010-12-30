@@ -176,7 +176,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
     titleLabel.setText(Lang.get(creation ? "account.panel.title.creation" : "account.panel.title.edition"));
     setAccount(localAccount);
     dialog.pack();
-    dialog.showCentered();
+    dialog.showCentered(true);
   }
 
   private boolean accountHasTransactions(Glob account) {

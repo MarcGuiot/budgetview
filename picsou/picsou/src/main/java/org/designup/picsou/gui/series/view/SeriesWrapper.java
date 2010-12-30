@@ -13,7 +13,6 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 
-/** @deprecated A SUPPRIMER */
 public class SeriesWrapper {
   public static GlobType TYPE;
 

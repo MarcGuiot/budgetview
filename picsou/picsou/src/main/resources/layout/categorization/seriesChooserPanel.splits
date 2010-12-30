@@ -52,7 +52,6 @@
       </scrollPane>
       <row styleClass="footer" ref="groupCreateEditSeries">
         <button action="createSeries" tooltipText="$series.create.tooltip"/>
-        <button action="editSeries" tooltipText="$series.list.tooltip"/>
         <button action="additionalAction"/>
         <filler fill="horizontal"/>
         <button action="showDescription" tooltipText="$categorization.showDescriptionButton.tooltip"/>

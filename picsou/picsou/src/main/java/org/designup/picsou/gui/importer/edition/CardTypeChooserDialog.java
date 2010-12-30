@@ -50,7 +50,7 @@ public class CardTypeChooserDialog {
                                             new ValidateAction(localRepository),
                                             new CancelAction());
     dialog.pack();
-    dialog.showCentered();
+    dialog.showCentered(true);
     builder.dispose();
   }
 

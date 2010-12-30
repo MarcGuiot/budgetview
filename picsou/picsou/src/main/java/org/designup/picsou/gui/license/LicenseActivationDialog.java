@@ -202,7 +202,7 @@ public class LicenseActivationDialog {
     selectionService.select(localRepository.get(User.KEY));
     updateConnectionState(localRepository);
     mailEditor.getComponent().requestFocus();
-    dialog.showCentered();
+    dialog.showCentered(true);
     builder.dispose();
   }
 

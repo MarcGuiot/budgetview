@@ -24,7 +24,7 @@ public class BudgetViewChecker extends ViewChecker {
   public final BudgetAreaChecker income;
   public final BudgetAreaChecker recurring;
   public final BudgetAreaChecker variable;
-  public final BudgetAreaChecker extras;
+  public final ExtrasBudgetAreaChecker extras;
   public final BudgetAreaChecker savings;
 
   public BudgetViewChecker(Window mainWindow) {
@@ -32,7 +32,7 @@ public class BudgetViewChecker extends ViewChecker {
     this.income = new BudgetAreaChecker("incomeBudgetView", BudgetArea.INCOME);
     this.recurring = new BudgetAreaChecker("recurringBudgetView", BudgetArea.RECURRING);
     this.variable = new BudgetAreaChecker("variableBudgetView", BudgetArea.VARIABLE);
-    this.extras = new BudgetAreaChecker("extrasBudgetView", BudgetArea.EXTRAS);
+    this.extras = new ExtrasBudgetAreaChecker("extrasBudgetView");
     this.savings = new BudgetAreaChecker("savingsBudgetView", BudgetArea.SAVINGS);
   }
 
@@ -206,24 +206,35 @@ public class BudgetViewChecker extends ViewChecker {
       return builder.toString();
     }
 
-    public BudgetAreaChecker checkSeriesPresent(String... seriesName) {
+    public BudgetAreaChecker checkNoSeriesShown() {
+      checkSeriesList();
+      return this;
+    }
+
+    public BudgetAreaChecker checkSeriesList(String... expectedNames) {
+      UIComponent[] components = getPanel().getPanel("seriesRepeat").getUIComponents(Button.class, "seriesName");
+      java.util.List<String> actualNames = new ArrayList<String>();
+      for (UIComponent component : components) {
+        actualNames.add(component.getLabel());
+      }
+      TestUtils.assertSetEquals(actualNames, expectedNames);
+      return this;
+    }
+
+    public BudgetAreaChecker checkSeriesPresent(String... expectedNames) {
       Panel budgetPanel = getPanel();
-      for (String name : seriesName) {
+      for (String name : expectedNames) {
         UISpecAssert.assertTrue(budgetPanel.containsUIComponent(Button.class, name));
       }
       return this;
     }
 
-    public BudgetAreaChecker checkSeriesNotPresent(String... seriesName) {
+    public BudgetAreaChecker checkSeriesNotPresent(String... seriesNames) {
       Panel budgetPanel = getPanel();
-      for (String name : seriesName) {
+      for (String name : seriesNames) {
         assertFalse(budgetPanel.containsUIComponent(Button.class, name));
       }
       return this;
-    }
-
-    public SeriesEditionDialogChecker editSeriesList() {
-      return openSeriesEditionDialog("editAllSeries");
     }
 
     public SeriesEditionDialogChecker editSeries(String seriesName) {
@@ -236,17 +247,13 @@ public class BudgetViewChecker extends ViewChecker {
       return SeriesAmountEditionDialogChecker.open(button.triggerClick());
     }
 
-    private Button getAmountButton(String seriesName) {
+    protected Button getAmountButton(String seriesName) {
       Button nameButton = getPanel().getButton(seriesName);
 
       JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
       int nameIndex = getIndex(panel, nameButton.getAwtComponent());
 
       return new Button((JButton)panel.getComponent(nameIndex + PLANNED_LABEL_OFFSET));
-    }
-
-    public void checkEditAllSeriesIsEnabled(boolean enabled) {
-      UISpecAssert.assertEquals(enabled, getPanel().getButton("editAllSeries").isEnabled());
     }
 
     public BudgetAreaChecker createSeries(String name) {
@@ -336,6 +343,20 @@ public class BudgetViewChecker extends ViewChecker {
     public BudgetAreaChecker alignAndPropagate(String seriesName) {
       editSeries(seriesName).alignPlannedAndActual().setPropagationEnabled().validate();
       return this;
+    }
+  }
+
+  public class ExtrasBudgetAreaChecker extends BudgetAreaChecker {
+    public ExtrasBudgetAreaChecker(String panelName) {
+      super(panelName, BudgetArea.EXTRAS);
+    }
+
+    public ProjectEditionChecker editProjectSeries(String seriesName) {
+      return ProjectEditionChecker.open(getPanel().getButton(seriesName));
+    }
+
+    public ProjectEditionChecker editPlannedAmountForProject(String seriesName) {
+      return ProjectEditionChecker.open(getAmountButton(seriesName));
     }
   }
 }

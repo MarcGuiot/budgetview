@@ -37,5 +37,7 @@ public class SerializationManager {
     SubSeries.TYPE.updateProperty(SERIALIZATION_PROPERTY, new SubSeries.Serializer());
     Notes.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Notes.Serializer());
     SignpostStatus.TYPE.updateProperty(SERIALIZATION_PROPERTY, new SignpostStatus.Serializer());
+    Project.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Project.Serializer());
+    ProjectItem.TYPE.updateProperty(SERIALIZATION_PROPERTY, new ProjectItem.Serializer());
   }
 }

@@ -38,6 +38,8 @@ public interface ChangeSet {
 
   boolean isCreated(Key key);
 
+  boolean isDeleted(Key key);
+
   FieldValues getPreviousValue(Key key);
 
   void visit(ChangeSetVisitor visitor) throws Exception;

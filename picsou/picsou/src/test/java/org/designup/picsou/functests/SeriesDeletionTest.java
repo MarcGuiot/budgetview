@@ -2,17 +2,14 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
-import org.designup.picsou.functests.checkers.SeriesDeleteDialogChecker;
 
 public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
-    public void testDeleteNewlyCreatedSeries() throws Exception {
+  public void testDeleteNewlyCreatedSeries() throws Exception {
     views.selectBudget();
     budgetView.income.createSeries()
       .setName("AA")
-      .deleteSelectedSeries()
-      .checkSeriesListIsEmpty()
-      .validate();
+      .deleteCurrentSeries();
+    budgetView.income.checkNoSeriesShown();
   }
 
   public void testDeleteUsedSeries() throws Exception {
@@ -30,18 +27,9 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     categorization.setVariable("Forfait Kro", "AA");
 
     views.selectBudget();
-    SeriesEditionDialogChecker edition = budgetView.variable.editSeriesList();
+    budgetView.variable.editSeries("AA")
+      .deleteCurrentSeriesWithConfirmation();
 
-    SeriesDeleteDialogChecker deleteDialog = edition
-      .selectSeries("AA")
-      .deleteSelectedSeriesWithConfirmation();
-
-    deleteDialog
-      .checkMessage()
-      .validate();
-
-    edition.checkSeriesListIsEmpty();
-    edition.validate();
     budgetView.variable.checkSeriesNotPresent("AA");
   }
 

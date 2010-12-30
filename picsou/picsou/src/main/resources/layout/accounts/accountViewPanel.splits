@@ -2,6 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
+
     <style selector="button.website" ui="hyperlinkButtonWithoutUnderline"
            font="-,plain,11" fill="none" anchor="left" marginLeft="10"
            foreground="block.item.link.light"
@@ -51,7 +52,7 @@
             <repeat ref="accountRepeat" marginTop="5" marginBottom="15">
               <column name="accountParent" margin="5" marginBottom="5">
                 <grid>
-                  <button ref="accountName" gridPos="(0,0)" anchor="west" styleClass="itemLink"/>
+                  <button ref="accountName" gridPos="(0,0)" anchor="west" styleClass="itemLink"  font="-,plain,13"/>
                   <row gridPos="(0,1)">
                     <button action="gotoWebsite" styleClass="website"/>
                     <button action="gotoOperations" styleClass="operations"/>
@@ -59,15 +60,6 @@
                   </row>
                   <button ref="accountPosition" gridPos="(1,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
                   <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east" styleClass="subitem"/>
-
-
-                  <!-- A SUPPRIMER -->
-                  <!--<label ref="estimatedAccountPosition" gridPos="(2,0)"-->
-                         <!--tooltipText="$budgetSummaryView.estimated.tooltip"-->
-                         <!--anchor="east" styleClass="subitem" font="-,plain,12" marginLeft="10"/>-->
-                  <!--<label ref="estimatedAccountPositionDate" gridPos="(2,1)"-->
-                         <!--anchor="east" styleClass="subitem" marginLeft="10"-->
-                         <!--autoHideSource="estimatedAccountPosition"/>-->
                 </grid>
               </column>
             </repeat>
@@ -76,8 +68,8 @@
         </scrollPane>
 
         <row styleClass="footer">
-          <button action="createAccount" styleClass="create" tooltipText="$accountView.create.tooltip"/>
           <filler fill="horizontal"/>
+          <button action="createAccount" styleClass="create" tooltipText="$accountView.create.tooltip"/>
         </row>
       </column>
     </column>

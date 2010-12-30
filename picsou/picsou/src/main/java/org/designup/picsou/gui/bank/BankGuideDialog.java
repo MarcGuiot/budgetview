@@ -54,7 +54,7 @@ public class BankGuideDialog {
     dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction(dialog));
 
     dialog.pack();
-    dialog.showCentered();
+    dialog.showCentered(true);
   }
 
   public class OpenHelpAction extends AbstractAction implements GlobSelectionListener {

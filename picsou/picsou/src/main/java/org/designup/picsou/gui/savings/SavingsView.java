@@ -4,8 +4,9 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.accounts.position.SavingsAccountPositionLabels;
 import org.designup.picsou.gui.budget.SeriesEditionButtons;
-import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.SeriesEditor;
+import org.designup.picsou.gui.series.evolution.histobuilders.AccountHistoChartUpdater;
+import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilder;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
@@ -13,9 +14,9 @@ import org.designup.picsou.model.Month;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -46,8 +47,8 @@ public class SavingsView extends View implements GlobSelectionListener {
   private void createSavingsBlock(GlobsPanelBuilder builder) {
 
     SeriesEditionButtons seriesButtons = new SeriesEditionButtons(BudgetArea.SAVINGS, repository, directory,
-                                                                  directory.get(SeriesEditionDialog.class));
-    seriesButtons.setNames("createSavingsSeries", "editAllSavingsSeries");
+                                                                  directory.get(SeriesEditor.class));
+    seriesButtons.setNames("createSavingsSeries");
     seriesButtons.registerButtons(builder);
 
     AccountPositionLabels.registerReferencePositionLabels(builder, Account.SAVINGS_SUMMARY_ACCOUNT_ID,
@@ -63,8 +64,8 @@ public class SavingsView extends View implements GlobSelectionListener {
                 positionLabels.getEstimatedAccountPositionDateLabel());
 
     repeat = builder.addRepeat("savingsAccounts", Account.TYPE,
-                      getFilter(),
-                      new SavingsAccountsComponentFactory(seriesButtons));
+                               getFilter(),
+                               new SavingsAccountsComponentFactory(seriesButtons));
   }
 
   private GlobMatcher getFilter() {
@@ -93,13 +94,13 @@ public class SavingsView extends View implements GlobSelectionListener {
       this.seriesButtons = seriesButtons;
     }
 
-    public void registerComponents(RepeatCellBuilder cellBuilder, Glob account) {
+    public void registerComponents(RepeatCellBuilder cellBuilder, final Glob account) {
 
       cellBuilder.add("accountName",
                       GlobLabelView.init(Account.NAME, repository, directory)
                         .forceSelection(account.getKey()).getComponent());
 
-      Key accountKey = account.getKey();
+      final Key accountKey = account.getKey();
       AccountPositionLabels positionLabels = new SavingsAccountPositionLabels(accountKey, repository, directory);
       cellBuilder.add("estimatedAccountPosition",
                       positionLabels.getEstimatedAccountPositionLabel(false));
@@ -107,10 +108,21 @@ public class SavingsView extends View implements GlobSelectionListener {
                       positionLabels.getEstimatedAccountPositionDateLabel());
 
       final SavingsSeriesView seriesView = new SavingsSeriesView(account, repository, directory,
-                                                                 directory.get(SeriesAmountEditionDialog.class),
+                                                                 directory.get(SeriesEditor.class),
                                                                  seriesButtons);
       cellBuilder.add("savingsSeries", seriesView.getPanel());
       cellBuilder.addDisposeListener(seriesView);
+
+      HistoChartBuilder histoChartBuilder = new HistoChartBuilder(false, false, repository, directory, selectionService, 6, 12);
+      AccountHistoChartUpdater updater = new AccountHistoChartUpdater(histoChartBuilder, repository, directory) {
+        protected void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId) {
+          if (account.exists()) {
+            histoChartBuilder.showSavingsAccountHisto(currentMonthId, account.get(Account.ID));
+          }
+        }
+      };
+      cellBuilder.addDisposeListener(updater);
+      cellBuilder.add("savingsAccountChart", histoChartBuilder.getChart());
     }
 
   }

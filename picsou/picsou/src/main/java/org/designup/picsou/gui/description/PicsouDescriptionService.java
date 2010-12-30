@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.description;
 
 import org.designup.picsou.gui.accounts.utils.Day;
+import org.designup.picsou.gui.projects.ProjectStringifier;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.Field;
@@ -86,6 +87,9 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
     }
     if (globType.equals(ProfileType.TYPE)) {
       return new BundleBasedStringifier(ProfileType.NAME, ProfileType.TYPE.getName() + ".");
+    }
+    if (globType.equals(Project.TYPE)) {
+      return new ProjectStringifier();
     }
     return super.getStringifier(globType);
   }

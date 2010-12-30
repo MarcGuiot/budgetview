@@ -11,7 +11,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     timeline.checkSelection("2008/08");
 
-    views.selectHome();
     mainAccounts.createNewAccount()
       .setAccountName("Main")
       .setUpdateModeToFileImport()
@@ -24,7 +23,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .selectBank("CIC")
       .validate();
 
-    views.selectCategorization();
     transactionCreation
       .checkHidden()
       .show()
@@ -45,7 +43,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     categorization.checkSelectedTableRow("TRANSACTION 1");
 
-    views.selectHome();
     mainAccounts.createNewAccount()
       .setAccountName("Misc")
       .setAccountNumber("012345")
@@ -55,7 +52,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/08", "2008/09");
 
-    views.selectCategorization();
     transactionCreation
       .checkShowing()
       .checkAccounts("Cash", "Misc")
@@ -78,7 +74,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     categorization.checkSelectedTableRow("TRANSACTION 2");
 
-    views.selectData();
     transactions.initContent()
       .add("03/09/2008", TransactionType.MANUAL, "TRANSACTION 2", "", 20.00)
       .add("15/08/2008", TransactionType.MANUAL, "TRANSACTION 1", "", -12.50)
@@ -103,19 +98,16 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
   public void testCreationPanelIsAvailableOnlyWhenManualInputAccountsExist() throws Exception {
 
-    views.selectCategorization();
     transactionCreation
       .checkHidden()
       .checkNoAccountAvailableMessage();
 
-    views.selectHome();
     mainAccounts.createNewAccount()
       .setAccountName("Main")
       .setUpdateModeToFileImport()
       .selectBank("CIC")
       .validate();
 
-    views.selectCategorization();
     transactionCreation
       .checkHidden()
       .checkNoAccountMessageAndOpenCreationDialog()
@@ -131,10 +123,8 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .checkHidden()
       .show();
 
-    views.selectHome();
     mainAccounts.edit("Cash").doDelete();
 
-    views.selectCategorization();
     transactionCreation
       .checkHidden()
       .checkNoAccountAvailableMessage();
@@ -144,7 +134,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(3).validate();
 
-    views.selectHome();
     mainAccounts.createNewAccount()
       .setAccountName("Cash")
       .setAccountNumber("012345")
@@ -152,7 +141,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .selectBank("CIC")
       .validate();
 
-    views.selectCategorization();
     transactionCreation
       .checkNoErrorMessage()
       .createAndCheckErrorMessage("You must enter an amount")
@@ -195,7 +183,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCreateButtonValidatesAllFields() throws Exception {
-    views.selectHome();
     mainAccounts.createNewAccount()
       .setAccountName("Cash")
       .setAccountNumber("012345")
@@ -203,7 +190,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .selectBank("CIC")
       .validate();
 
-    views.selectCategorization();
     transactionCreation
       .show()
       .enterAmountWithoutValidating(10.00)

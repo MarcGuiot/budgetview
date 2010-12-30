@@ -41,17 +41,16 @@ public class HistoChartBuilder {
   public HistoChartBuilder(boolean drawLabels,
                            boolean clickable,
                            final GlobRepository repository,
-                           Directory directory,
+                           final Directory directory,
                            final SelectionService parentSelectionService,
                            int monthsBack, int monthsLater) {
     this.repository = repository;
     histoChart = new HistoChart(drawLabels, clickable, directory);
-    histoChart.setListener(new HistoChartListener() {
+    histoChart.addListener(new HistoChartListener() {
       public void columnsClicked(Set<Integer> monthIds) {
         GlobList months = new GlobList();
         for (Integer monthId : monthIds) {
           months.add(repository.get(Key.create(Month.TYPE, monthId)));
-
         }
         parentSelectionService.select(months, Month.TYPE);
       }
@@ -62,6 +61,10 @@ public class HistoChartBuilder {
     this.monthsLater = monthsLater;
 
     initColors(directory);
+  }
+
+  public void addListener(HistoChartListener listener) {
+    histoChart.addListener(listener);
   }
 
   private void initColors(Directory directory) {
@@ -249,6 +252,18 @@ public class HistoChartBuilder {
     dataset.apply(accountColors, "savingsAccounts");
   }
 
+  public void showSavingsAccountHisto(int currentMonthId, int accountId) {
+    HistoLineDatasetBuilder dataset = createLineDataset("savingsAccounts");
+
+    for (int monthId : getMonthIdsToShow(currentMonthId)) {
+      Glob stat = SavingsBudgetStat.find(monthId, accountId, repository);
+      Double value = stat != null ? stat.get(SavingsBudgetStat.END_OF_MONTH_POSITION) : 0.0;
+      dataset.add(monthId, value, monthId == currentMonthId);
+    }
+
+    dataset.apply(accountColors, "savingsAccounts");
+  }
+
   public void showSeriesBudget(Integer seriesId, int currentMonthId, Set<Integer> selectedMonths) {
 
     Glob series = repository.find(Key.create(Series.TYPE, seriesId));
@@ -269,7 +284,7 @@ public class HistoChartBuilder {
         .getGlobs()
         .filterSelf(GlobMatchers.isTrue(SeriesBudget.ACTIVE), repository)
         .sort(SeriesBudget.MONTH);
-    
+
     double multiplier = Account.computeAmountMultiplier(series, repository);
 
     for (Glob seriesBudget : list) {

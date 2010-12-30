@@ -197,10 +197,6 @@ public class SeriesAmountEditionPanel {
     currentSeries = seriesKey;
     setAutoSelectFutureMonths(false);
     propagationCheckBox.setSelected(false);
-
-// TODO: pour activer la propagation par defaut
-//    setAutoSelectFutureMonths(true);
-//    propagationCheckBox.setSelected(true);
   }
 
   private void setAutoSelectFutureMonths(boolean enabled) {
@@ -299,12 +295,8 @@ public class SeriesAmountEditionPanel {
   }
 
   private GlobList getBudget(Integer seriesId, Integer monthId) {
-    GlobList list = repository
-      .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
-      .findByIndex(SeriesBudget.MONTH, monthId)
-      .getGlobs();
-    list.filterSelf(GlobMatchers.isTrue(SeriesBudget.ACTIVE), repository);
-    return list;
+    return SeriesBudget.getAll(seriesId, monthId, repository)
+      .filterSelf(GlobMatchers.isTrue(SeriesBudget.ACTIVE), repository);
   }
 
   private void updateAutoSelect(boolean enabled) {

@@ -7,7 +7,7 @@ import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.components.charts.GlobGaugeView;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
+import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
@@ -34,18 +34,18 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
   private GlobRepository repository;
   private Directory directory;
   private GlobStringifier seriesStringifier;
-  private SeriesAmountEditionDialog seriesAmountEditionDialog;
+  private SeriesEditor seriesEditor;
   private SeriesEditionButtons seriesButtons;
 
   public SavingsSeriesComponentFactory(Glob account,
                                        GlobRepository repository,
                                        Directory directory,
-                                       SeriesAmountEditionDialog seriesAmountEditionDialog,
+                                       SeriesEditor seriesEditor,
                                        SeriesEditionButtons seriesButtons) {
     this.account = account;
     this.repository = repository;
     this.directory = directory;
-    this.seriesAmountEditionDialog = seriesAmountEditionDialog;
+    this.seriesEditor = seriesEditor;
     this.seriesButtons = seriesButtons;
     this.seriesStringifier = directory.get(DescriptionService.class).getStringifier(Series.TYPE);
   }
@@ -139,6 +139,6 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
   }
 
   private void showSeriesAmountEdition(Glob series) {
-    seriesAmountEditionDialog.show(series, directory.get(SelectionService.class).getSelection(Month.TYPE).getValueSet(Month.ID));
+    seriesEditor.showAmount(series, directory.get(SelectionService.class).getSelection(Month.TYPE).getValueSet(Month.ID));
   }
 }

@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.transactions.shift;
 
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -151,14 +151,14 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
                              directory,
                              Month.getFullLabel(targetMonth)) {
         protected void postValidate() {
-          getSeriesEditionDialog().show(series, Collections.singleton(transaction.get(Transaction.BUDGET_MONTH)));
+          getSeriesEditor().show(series, Collections.singleton(transaction.get(Transaction.BUDGET_MONTH)));
         }
       };
     dialog.show();
   }
 
-  private SeriesEditionDialog getSeriesEditionDialog() {
-    return directory.get(SeriesEditionDialog.class);
+  private SeriesEditor getSeriesEditor() {
+    return directory.get(SeriesEditor.class);
   }
 
   private void openShiftDialog() {

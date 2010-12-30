@@ -25,5 +25,5 @@ public abstract class ViewChecker extends GuiChecker {
 
   protected UIComponent getMainComponent() {
     return mainWindow;
-  };
+  }
 }

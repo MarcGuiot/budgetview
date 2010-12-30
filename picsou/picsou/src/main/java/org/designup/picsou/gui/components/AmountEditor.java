@@ -53,7 +53,7 @@ public class AmountEditor {
   public Double adjustSign(Double value) {
     return positiveMode ? value : -value;
   }
- 
+
   private void updateRadios(boolean positive) {
     if (positive == positiveRadio.isSelected()) {
       return;

@@ -4,7 +4,7 @@ import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
+import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.BudgetArea;
@@ -31,10 +31,10 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
   protected SeriesEvolutionMonthEditor(int offset, GlobTableView view,
                                        GlobRepository repository, Directory directory,
                                        SeriesEvolutionColors colors,
-                                       SeriesAmountEditionDialog seriesAmountEditionDialog) {
+                                       SeriesEditor seriesEditor) {
     super(offset, view, directory.get(DescriptionService.class), repository, directory, colors);
 
-    complete(new OpenSeriesAmountEditionDialogAction(seriesAmountEditionDialog));
+    complete(new OpenSeriesAmountEditionDialogAction(seriesEditor));
   }
 
   protected String getText(Glob seriesWrapper) {
@@ -73,9 +73,9 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
 
   private String getSeriesButtonText(Integer itemId) {
     Glob seriesStat = repository.find(KeyBuilder.init(SeriesStat.TYPE)
-      .set(SeriesStat.MONTH, referenceMonthId)
-      .set(SeriesStat.SERIES, itemId)
-      .get());
+                                        .set(SeriesStat.MONTH, referenceMonthId)
+                                        .set(SeriesStat.SERIES, itemId)
+                                        .get());
     if (seriesStat == null) {
       return "";
     }
@@ -126,7 +126,7 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
   public GlobStringifier getStringifier() {
     return new AbstractGlobStringifier() {
       public String toString(Glob seriesWrapper, GlobRepository repository) {
-        if (seriesWrapper == null){
+        if (seriesWrapper == null) {
           return null;
         }
         return getText(seriesWrapper);
@@ -135,14 +135,14 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
   }
 
   private class OpenSeriesAmountEditionDialogAction extends AbstractAction {
-    private SeriesAmountEditionDialog seriesAmountEditionDialog;
+    private SeriesEditor seriesEditor;
 
-    public OpenSeriesAmountEditionDialogAction(SeriesAmountEditionDialog seriesAmountEditionDialog) {
-      this.seriesAmountEditionDialog = seriesAmountEditionDialog;
+    public OpenSeriesAmountEditionDialogAction(SeriesEditor seriesEditor) {
+      this.seriesEditor = seriesEditor;
     }
 
     public void actionPerformed(ActionEvent e) {
-      seriesAmountEditionDialog.show(currentSeries, Collections.singleton(referenceMonthId));
+      seriesEditor.showAmount(currentSeries, Collections.singleton(referenceMonthId));
     }
   }
 }

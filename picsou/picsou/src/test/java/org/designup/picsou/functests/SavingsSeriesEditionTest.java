@@ -83,19 +83,19 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setAmount(10000)
       .validate();
 
-    budgetView.savings.editSeriesList()
-      .selectSeries("Veranda")
+    timeline.selectMonth("2008/10");
+    budgetView.savings.editSeries("Veranda")
       .checkSingleMonthSelected()
       .checkSingleMonthDate("Oct 2008")
       .checkFromAccount("Epargne CA")
       .checkToAccount("Main accounts")
       .checkSingleMonthSelected()
-      .selectSeries("Epargne")
+      .cancel();
+
+    budgetView.savings.editSeries("Epargne")
       .checkFromAccount("Main accounts")
       .checkToAccount("Epargne LCL")
       .cancel();
-
-    views.selectCategorization();
   }
 
   public void testSwitchingBetweenManualAndAutomatic() throws Exception {
@@ -152,9 +152,8 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setToAccount("Account n. 111")
       .validate();
 
-    budgetView.savings.editSeriesList()
-      .checkSeriesListEquals("CA", "From Account n. 111", "To Account n. 111")
-      .validate();
+    budgetView.savings
+      .checkSeriesPresent("CA", "From Account n. 111", "To Account n. 111");
   }
 
   public void testUseSingleMonthCreateSeriesBudget() throws Exception {

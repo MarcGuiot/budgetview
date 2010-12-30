@@ -5,8 +5,6 @@ import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 
 public class RoundButtonUI extends BasicButtonUI {
-  protected static final int ARC_WIDTH = 10;
-  protected static final int ARC_HEIGHT = 10;
 
   protected Color topColor;
   protected Color bottomColor;

@@ -38,6 +38,12 @@ public class MonthListStringifierTest extends TestCase {
     checkResult("", 200801, 200803, 200804, 200805);
   }
 
+  public void testRange() throws Exception {
+    assertEquals("February - April 2008", MonthListStringifier.toString(200802, 200804, MonthRangeFormatter.STANDARD));
+    assertEquals("Feb-Apr 2008", MonthListStringifier.toString(200802, 200804, MonthRangeFormatter.COMPACT));
+    assertEquals("February 2008", MonthListStringifier.toString(200802, 200802, MonthRangeFormatter.STANDARD));
+  }
+
   private void checkResult(String expected, int... monthIds) {
     GlobRepository repository = GlobRepositoryBuilder.init().get();
     for (int monthId : monthIds) {

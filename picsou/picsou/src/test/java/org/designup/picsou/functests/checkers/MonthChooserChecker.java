@@ -6,11 +6,24 @@ import org.uispec4j.ToggleButton;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
+import org.uispec4j.interception.WindowHandler;
+import org.uispec4j.interception.WindowInterceptor;
+
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 
 public class MonthChooserChecker extends GuiChecker {
   private Window dialog;
+
+  public static void selectMonth(Trigger trigger, final int newMonth) {
+    WindowInterceptor.init(trigger)
+      .process(new WindowHandler() {
+        public Trigger process(Window window) throws Exception {
+          MonthChooserChecker monthChooser = new MonthChooserChecker(window);
+          return monthChooser.triggerMonth(newMonth);
+        }
+      }).run();
+  }
 
   public MonthChooserChecker(Window dialog) {
     this.dialog = dialog;

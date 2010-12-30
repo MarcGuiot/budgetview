@@ -30,7 +30,7 @@ public class HistoChartTest extends TestCase {
     );
 
     listener = new DummyHistoChartListener();
-    chart.setListener(listener);
+    chart.addListener(listener);
   }
 
   public void testSelectByDragging() throws Exception {

@@ -58,15 +58,17 @@ public class TransactionView extends View implements Filterable {
 
   public static final String ACCOUNT_FILTER = "accounts";
   private static final int[] COLUMN_SIZES = {10, 10, 10, 15, 10, 30, 9, 15, 10, 10, 30};
+  private static final GlobMatcher HIDE_PLANNED_MATCHER = not(isTrue(Transaction.PLANNED));
 
   private GlobTableView view;
   private AccountFilteringCombo accountFilteringCombo;
   private TransactionRendererColors rendererColors;
   private TransactionSelection transactionSelection;
-  private GlobMatcher showPlannedTransactionsMatcher = GlobMatchers.ALL;
+  private GlobMatcher showPlannedTransactionsMatcher = HIDE_PLANNED_MATCHER;
   private GlobMatcher filter = GlobMatchers.ALL;
   private FilterManager filterManager;
   private PicsouTableHeaderPainter headerPainter;
+  private JCheckBox showPlannedTransactionsCheckbox;
 
   public TransactionView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -77,7 +79,7 @@ public class TransactionView extends View implements Filterable {
 
   public void registerComponents(GlobsPanelBuilder builder) {
     addAccountCombo(builder);
-    addShowTransactionsCheckbox(builder);
+    addShowPlannedTransactionsCheckbox(builder);
     builder.add(view.getComponent());
 
     FilterClearingPanel filterClearingPanel = new FilterClearingPanel(filterManager, repository, directory);
@@ -90,8 +92,7 @@ public class TransactionView extends View implements Filterable {
   }
 
   private void updateFilter() {
-    GlobMatcher newFilter = and(showPlannedTransactionsMatcher,
-                                filter);
+    GlobMatcher newFilter = and(showPlannedTransactionsMatcher, filter);
     view.setFilter(newFilter);
     headerPainter.setFiltered(filterManager.hasClearableFilters());
   }
@@ -128,20 +129,24 @@ public class TransactionView extends View implements Filterable {
     filterManager.set(ACCOUNT_FILTER, matcher);
   }
 
-  private void addShowTransactionsCheckbox(GlobsPanelBuilder builder) {
-    final JCheckBox checkBox = builder.add("showPlannedTransactions", new JCheckBox()).getComponent();
-    checkBox.addActionListener(new AbstractAction() {
+  private void addShowPlannedTransactionsCheckbox(GlobsPanelBuilder builder) {
+    showPlannedTransactionsCheckbox = builder.add("showPlannedTransactions", new JCheckBox()).getComponent();
+    showPlannedTransactionsCheckbox.addActionListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
-        if (checkBox.isSelected()) {
-          showPlannedTransactionsMatcher = GlobMatchers.ALL;
-        }
-        else {
-          showPlannedTransactionsMatcher = not(isTrue(Transaction.PLANNED));
-        }
+        updateShowTransactionsMatcher();
         updateFilter();
       }
     });
-    checkBox.setSelected(true);
+    showPlannedTransactionsCheckbox.setSelected(false);
+  }
+
+  private void updateShowTransactionsMatcher() {
+    if (showPlannedTransactionsCheckbox.isSelected()) {
+      showPlannedTransactionsMatcher = GlobMatchers.ALL;
+    }
+    else {
+      showPlannedTransactionsMatcher = HIDE_PLANNED_MATCHER;
+    }
   }
 
   private JTable createTable() {
@@ -234,6 +239,8 @@ public class TransactionView extends View implements Filterable {
     view.resetSort();
     transactionSelection.init();
     accountFilteringCombo.reset();
+    showPlannedTransactionsCheckbox.setSelected(false);
+    updateShowTransactionsMatcher();
     setFilter(GlobMatchers.ALL);
   }
 

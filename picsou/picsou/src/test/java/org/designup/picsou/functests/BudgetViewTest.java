@@ -82,7 +82,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/08");
 
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions().initContent()
       .add("12/08/2008", TransactionType.PLANNED, "Planned: Groceries", "", -145.00, "Groceries")
       .add("05/08/2008", TransactionType.PLANNED, "Planned: Internet", "", -29.00, "Internet")
       .add("04/08/2008", TransactionType.PLANNED, "Planned: Electricity", "", -55.00, "Electricity")
@@ -249,18 +250,15 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("Free Telecom", "Internet");
     categorization.setNewIncome("WorldCo", "Salary");
 
-    categorization.selectVariable().editSeries()
-      .selectSeries("Groceries")
+    categorization.selectVariable().editSeries("Groceries")
       .selectAllMonths()
       .setAmount("95")
       .validate();
-    categorization.selectRecurring().editSeries()
-      .selectSeries("Internet")
+    categorization.selectRecurring().editSeries("Internet")
       .selectAllMonths()
       .setAmount("29.0")
       .validate();
-    categorization.selectIncome().editSeries()
-      .selectSeries("Salary")
+    categorization.selectIncome().editSeries("Salary")
       .selectAllMonths()
       .setAmount("3540.0")
       .validate();
@@ -378,7 +376,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Groceries", 0, 0);
     budgetView.recurring.checkSeries("Fuel", 0, 0);
 
-    budgetView.recurring.editSeriesList().selectSeries("Groceries")
+    budgetView.recurring.editSeries("Groceries")
       .selectMonth(200807)
       .setAmount("200")
       .validate();
@@ -435,7 +433,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Groceries", 0, 0);
     budgetView.recurring.checkSeries("Fuel", 0, 0);
 
-    budgetView.recurring.editSeriesList().selectSeries("Groceries")
+    budgetView.recurring.editSeries("Groceries")
       .selectMonth(200807)
       .setAmount("200")
       .validate();
@@ -455,11 +453,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.recurring.checkSeries("Fuel", -60, -120);
 
-    SeriesEditionDialogChecker editionDialogChecker = budgetView.recurring.editSeriesList()
-      .selectSeries("Groceries");
+    SeriesEditionDialogChecker editionDialogChecker = budgetView.recurring.editSeries("Groceries");
     editionDialogChecker
-      .deleteSelectedSeriesWithConfirmation()
-      .validate();
+      .deleteCurrentSeriesWithConfirmation();
     editionDialogChecker.validate();
     budgetView.recurring.checkSeriesNotPresent("Groceries");
   }
@@ -475,12 +471,13 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("salaire", 0, 1000);
     views.selectData();
     timeline.selectLast();
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions().initContent()
       .add("01/08/2008", TransactionType.PLANNED, "Planned: salaire", "", 1000, "salaire")
       .check();
 
     views.selectBudget();
-    budgetView.income.editSeriesList().setName("salaire").setCustom().toggleMonth("Aug").validate();
+    budgetView.income.editSeries("salaire").setCustom().toggleMonth("Aug").validate();
     budgetView.income.checkSeriesNotPresent("salaire");
     views.selectData();
     timeline.selectLast();
@@ -537,7 +534,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkOrder("Auchan", "Monop", "tel");
   }
 
-  public void testPositiveEnvelopeBudgetDoNotCreateNegativePlannedTransaction() throws Exception {
+  public void testPositiveEnvelopeBudgetDoesNotCreateNegativePlannedTransaction() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", 15.00, "Loto")
       .addTransaction("2008/07/05", 19.00, "Loto")
@@ -551,7 +548,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .selectPositiveAmounts()
       .validate();
     views.selectData();
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("12/07/2008", TransactionType.PLANNED, "Planned: Loto", "", 15.00, "Loto")
       .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00)
       .add("05/07/2008", TransactionType.VIREMENT, "Loto", "", 19.00)
@@ -571,7 +570,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/05", 19.00, "Loto")
       .load();
 
-    views.selectBudget();
     budgetView.variable.createSeries()
       .setName("Loto")
       .selectAllMonths()
@@ -579,32 +577,29 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .selectPositiveAmounts()
       .validate();
 
-    views.selectCategorization();
     categorization.setVariable("Loto", "Loto");
 
-    views.selectData();
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00, "Loto")
       .add("05/07/2008", TransactionType.VIREMENT, "Loto", "", 19.00, "Loto")
       .check();
 
-    views.selectBudget();
     budgetView.variable
       .editSeries("Loto")
       .selectAllMonths()
       .selectNegativeAmounts()
       .validate();
 
-    views.selectData();
-    transactions.initContent()
+    transactions
+      .initContent()
       .add("12/07/2008", TransactionType.PLANNED, "Planned: Loto", "", -49.00, "Loto")
       .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00, "Loto")
       .add("05/07/2008", TransactionType.VIREMENT, "Loto", "", 19.00, "Loto")
       .check();
 
-    views.selectCategorization();
     categorization.selectTransactions("Loto").setUncategorized();
-    views.selectData();
     transactions.initContent()
       .add("12/07/2008", TransactionType.PLANNED, "Planned: Loto", "", -15.00, "Loto")
       .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00)
@@ -618,7 +613,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/05", -19.00, "Auchan")
       .load();
 
-    views.selectBudget();
     budgetView.variable.createSeries()
       .setName("ZeroSeries")
       .selectAllMonths()
@@ -626,38 +620,32 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .selectPositiveAmounts()
       .validate();
 
-    views.selectCategorization();
     categorization.setVariable("Loto", "ZeroSeries");
 
-    views.selectData();
-    transactions.initContent()
+    transactions
+      .showPlannedTransactions()
+      .initContent()
       .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00, "ZeroSeries")
       .add("05/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -19.00)
       .check();
 
-    views.selectCategorization();
     categorization
       .selectTransactions("Loto")
       .setUncategorized();
     categorization.setVariable("Auchan", "ZeroSeries");
 
-    views.selectData();
     transactions.initContent()
       .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00)
       .add("05/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -19.00, "ZeroSeries")
       .check();
 
-    views.selectBudget();
     budgetView.variable.editSeries("ZeroSeries").selectAllMonths().setAmount("10").validate();
-    views.selectData();
     transactions.initContent()
       .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00)
       .add("05/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -19.00, "ZeroSeries")
       .check();
 
-    views.selectBudget();
     budgetView.variable.editSeries("ZeroSeries").selectAllMonths().setAmount("29").validate();
-    views.selectData();
     transactions.initContent()
       .add("12/07/2008", TransactionType.PLANNED, "Planned: ZeroSeries", "", -10.00, "ZeroSeries")
       .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00)
@@ -665,32 +653,30 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testMixPositifAndNegativeBudgetInTotalBudget() throws Exception {
+  public void testMixPositiveAndNegativeBudgetInTotalBudget() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", 15.00, "Loto")
       .addTransaction("2008/07/05", -19.00, "Auchan")
       .load();
 
-    views.selectBudget();
     budgetView.variable.createSeries()
       .setName("Loto")
       .selectAllMonths()
       .setAmount("100")
       .selectPositiveAmounts()
-      .createSeries()
+      .validate();
+
+    budgetView.variable.createSeries()
       .setName("Auchan")
       .selectAllMonths()
       .setAmount("100")
       .selectNegativeAmounts()
       .validate();
 
-    views.selectBudget();
     budgetView.variable.checkTotalAmounts(0, 0);
-    views.selectCategorization();
   }
 
   public void testDescriptionsAreUsedAsTooltips() throws Exception {
-    views.selectBudget();
     budgetView.variable.createSeries()
       .setName("Groceries")
       .setDescription("Everything about food")
@@ -716,7 +702,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/05", 400.00, "Retraite 3")
       .load();
 
-    views.selectCategorization();
     categorization
       .selectTransaction("Retraite 1")
       .selectIncome().selectNewSeries("Retraite 1");
@@ -728,7 +713,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .selectTransaction("Retraite 3")
       .selectIncome().selectNewSeries("Retraite 3");
 
-    views.selectBudget();
     budgetView.income.checkOrder("Retraite 3", "Retraite 2", "Retraite 1");
 
     budgetView.income.clickTitleSeriesName();

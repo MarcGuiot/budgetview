@@ -89,6 +89,7 @@ public class SeriesEvolutionChecker extends ExpandableTableChecker {
 
   protected Table getTable() {
     if (table == null) {
+      views.selectEvolution();
       table = mainWindow.getTable("seriesEvolutionTable");
       table.setCellValueConverter(0, new BlankColumnConverter());
       ColumnConverter converter = new ColumnConverter();

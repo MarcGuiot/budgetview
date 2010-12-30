@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.series.evolution;
 
-import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
+import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.Month;
 import org.globsframework.gui.views.GlobTableColumn;
@@ -25,10 +25,10 @@ public class SeriesEvolutionMonthColumn implements GlobTableColumn {
   public SeriesEvolutionMonthColumn(int offset, GlobTableView view,
                                     GlobRepository repository, Directory directory,
                                     SeriesEvolutionColors colors,
-                                    SeriesAmountEditionDialog seriesAmountEditionDialog) {
+                                    SeriesEditor seriesEditor) {
     this.offset = offset;
     this.repository = repository;
-    this.editor = new SeriesEvolutionMonthEditor(offset, view, repository, directory, colors, seriesAmountEditionDialog);
+    this.editor = new SeriesEvolutionMonthEditor(offset, view, repository, directory, colors, seriesEditor);
   }
 
   public void setReferenceMonthId(Integer monthId) {

@@ -7,7 +7,7 @@ import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
 import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
 import org.designup.picsou.gui.description.SeriesNameComparator;
 import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
@@ -40,7 +40,7 @@ public class DeferredCardCategorizationPanel implements SpecialCategorizationPan
   public JPanel loadPanel(final GlobRepository repository,
                           final Directory directory,
                           FilteredRepeats filteredRepeats,
-                          SeriesEditionDialog seriesEditionDialog, SeriesCreationHandler seriesCreationHandler) {
+                          SeriesEditor seriesEditionDialog, SeriesCreationHandler seriesCreationHandler) {
     this.repository = repository;
 
     registerUpdater();
