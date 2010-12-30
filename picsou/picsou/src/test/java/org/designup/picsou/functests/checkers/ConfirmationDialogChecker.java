@@ -26,9 +26,18 @@ public class ConfirmationDialogChecker extends GuiChecker {
     return this;
   }
 
+  public ConfirmationDialogChecker clickOnHyperlink(String linkText) {
+    dialog.getTextBox("message").clickOnHyperlink(linkText);
+    return this;
+  }
+
   public void validate() {
-    dialog.getButton("OK").click();
-    assertFalse(dialog.isVisible());
+    validate("OK");
+  }
+
+  public void validate(String okButtonLabel) {
+    dialog.getButton(okButtonLabel).click();
+    checkHidden();
   }
 
   public Trigger getOkTrigger() {
@@ -41,6 +50,10 @@ public class ConfirmationDialogChecker extends GuiChecker {
 
   public void cancel() {
     dialog.getButton("Cancel").click();
+    checkHidden();
+  }
+
+  public void checkHidden() {
     assertFalse(dialog.isVisible());
   }
 }

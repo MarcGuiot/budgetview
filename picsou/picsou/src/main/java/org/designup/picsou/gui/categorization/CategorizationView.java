@@ -406,6 +406,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
   }
 
   public void reset() {
+    filterManager.clear();
   }
 
   public void colorsChanged(ColorLocator colorLocator) {

@@ -244,13 +244,13 @@ public class PicsouDialog extends JDialog {
     this.openRequestIsManaged = openRequestIsManaged;
   }
 
-  public void showCentered() {
+  public void showCentered(boolean disposeOnClose) {
     if (colorUpdater == null) {
       colorUpdater = new BackgroundColorUpdater("dialog.bg.bottom", getContentPane());
       colorUpdater.install(colorService);
     }
     GuiUtils.showCentered(this);
-    if (isModal()) {
+    if (isModal() && disposeOnClose) {
       GuiUtils.removeShortcut(getRootPane(), "ESCAPE", KeyStroke.getKeyStroke("ESCAPE"));
       dispose();
     }

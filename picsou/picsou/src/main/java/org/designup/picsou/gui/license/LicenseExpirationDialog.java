@@ -77,7 +77,7 @@ public class LicenseExpirationDialog {
   }
 
   public void show() {
-    dialog.showCentered();
+    dialog.showCentered(true);
     builder.dispose();
   }
 

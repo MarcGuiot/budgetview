@@ -114,7 +114,7 @@ public class RenameDialog {
     else {
       currentPasswordField.requestFocusInWindow();
     }
-    dialog.showCentered();
+    dialog.showCentered(true);
     builder.dispose();
   }
 

@@ -96,7 +96,7 @@ public class PositionDialog {
     }
     setMonth(monthId);
     dialog.pack();
-    dialog.showCentered();
+    dialog.showCentered(true);
   }
 
   public void setMonth(SortedSet<Integer> monthIds) {

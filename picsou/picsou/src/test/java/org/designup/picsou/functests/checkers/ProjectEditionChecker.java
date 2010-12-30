@@ -144,6 +144,26 @@ public class ProjectEditionChecker extends GuiChecker {
     return this;
   }
 
+  public void delete() {
+    dialog.getButton("Delete").click();
+    assertFalse(dialog.isVisible());
+  }
+
+  public void deleteWithConfirmation(String title, String message) {
+    ConfirmationDialogChecker.init(dialog.getButton("Delete").triggerClick())
+    .checkTitle(title)
+    .checkMessageContains(message)
+    .validate("Delete project");
+    assertFalse(dialog.isVisible());
+  }
+
+  public void openDeleteAndNavigate() {
+    ConfirmationDialogChecker.init(dialog.getButton("Delete").triggerClick())
+    .clickOnHyperlink("see these operations")
+    .checkHidden();
+    assertFalse(dialog.isVisible());
+  }
+
   public void validate() {
     dialog.getButton("OK").click();
     assertFalse(dialog.isVisible());

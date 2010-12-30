@@ -59,7 +59,7 @@ public class ViewSelectionChecker extends GuiChecker {
   }
 
   private void assertSelected(String viewName) {
-    assertTrue("Selection: " + getSelectedToggle().getLabel(),
+    assertTrue("View '" + viewName + "' not selected. Current selection: " + getSelectedToggle().getName(),
                getToggle(viewName).isSelected());
   }
 

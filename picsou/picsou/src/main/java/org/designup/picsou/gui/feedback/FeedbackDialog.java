@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.feedback;
 
-import net.java.balloontip.BalloonTip;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.config.ConfigService;
@@ -84,7 +83,7 @@ public class FeedbackDialog {
 
   public void show() {
     dialog.pack();
-    dialog.showCentered();
+    dialog.showCentered(true);
     repository.removeChangeListener(tipsListener);
   }
 

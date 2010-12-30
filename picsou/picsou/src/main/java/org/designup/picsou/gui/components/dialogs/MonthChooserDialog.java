@@ -118,7 +118,7 @@ public class MonthChooserDialog implements ColorChangeListener, Disposable {
   private int show() {
     update();
     dialog.pack();
-    dialog.showCentered();
+    dialog.showCentered(true);
     builder.dispose();
     dialog = null;
     return newMonth;

@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.*;
+import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
 
 import java.util.ArrayList;
@@ -23,6 +24,14 @@ public class ProjectViewChecker extends ViewChecker {
 
   public ProjectEditionChecker edit(String projectName) {
     return ProjectEditionChecker.open(getPanel().getButton(projectName));
+  }
+
+  public ProjectViewChecker checkNoProjectShown() {
+    List<String> actualNames = getActualNames();
+    if (!actualNames.isEmpty()) {
+      UISpecAssert.fail("Unexpected projects shown: " + actualNames);
+    }
+    return this;
   }
 
   public ProjectViewChecker checkProjectList(String... projectNames) {

@@ -1,8 +1,10 @@
 package org.designup.picsou.gui.projects;
 
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.MonthRangeBound;
+import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.tips.ErrorTip;
@@ -12,11 +14,11 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.ProjectTrigger;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.model.Glob;
@@ -33,15 +35,17 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.linkedTo;
+import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.isFalse;
 
 public class ProjectEditionDialog {
   private PicsouDialog dialog;
   private LocalGlobRepository localRepository;
+  private GlobRepository parentRepository;
   private Directory directory;
   private JLabel titleLabel = new JLabel();
   private GlobRepeat repeat;
@@ -55,6 +59,7 @@ public class ProjectEditionDialog {
 
   public ProjectEditionDialog(GlobRepository parentRepository, Directory directory, Window owner) {
     this.directory = directory;
+    this.parentRepository = parentRepository;
     this.localRepository = LocalGlobRepositoryBuilder.init(parentRepository)
       .copy(Project.TYPE, ProjectItem.TYPE, Month.TYPE, Series.TYPE, SeriesBudget.TYPE)
       .get();
@@ -64,7 +69,7 @@ public class ProjectEditionDialog {
   }
 
   private void createDialog(Window owner) {
-    dialog = PicsouDialog.create(owner, directory);
+    dialog = PicsouDialog.create(owner, true, directory);
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectEditionDialog.splits",
                                                       localRepository, directory);
@@ -84,7 +89,7 @@ public class ProjectEditionDialog {
 
     dialog.addPanelWithButtons(builder.<JPanel>load(),
                                new OkAction(), new CancelAction(dialog),
-                               new DeleteAction());
+                               new DeleteProjectAction());
     dialog.pack();
   }
 
@@ -106,7 +111,7 @@ public class ProjectEditionDialog {
   private void doShow() {
     projectNameEditor.forceSelection(currentProjectKey);
     repeat.setFilter(linkedTo(currentProjectKey, ProjectItem.PROJECT));
-    GuiUtils.showCentered(dialog);
+    dialog.showCentered(false);
   }
 
   private boolean check() {
@@ -183,15 +188,79 @@ public class ProjectEditionDialog {
     }
   }
 
-  private class DeleteAction extends AbstractAction {
-    private DeleteAction() {
+  private class DeleteProjectAction extends AbstractAction {
+    private DeleteProjectAction() {
       super(Lang.get("projectEdition.delete"));
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
-      localRepository.delete(currentProjectKey);
-      dialog.setVisible(false);
+      Key seriesKey = localRepository.get(currentProjectKey).getTargetKey(Project.SERIES);
+      final List<Key> transactionKeys =
+        parentRepository.getAll(Transaction.TYPE,
+                                and(linkedTo(seriesKey, Transaction.SERIES),
+                                    isFalse(Transaction.PLANNED)))
+          .getKeyList();
+
+      if (!transactionKeys.isEmpty()) {
+        ConfirmationDialog confirm = new ConfirmationDialog("projectEdition.deleteConfirmation.title",
+                                                            "projectEdition.deleteConfirmation.message",
+                                                            dialog, directory) {
+
+          protected String getOkButtonText() {
+            return Lang.get("projectEdition.deleteConfirmation.ok");
+          }
+
+          protected void processCustomLink(String href) {
+            if (href.equals("seeOperations")) {
+              dispose();
+              dialog.setVisible(false);
+              showTransactions(transactionKeys);
+            }
+          }
+
+          protected void postValidate() {
+            deleteProject(transactionKeys);
+          }
+        };
+        confirm.show();
+      }
+      else {
+        deleteProject(Collections.<Key>emptyList());
+      }
     }
+  }
+
+  private void deleteProject(List<Key> transactions) {
+    localRepository.delete(currentProjectKey);
+    localRepository.commitChanges(false);
+    dialog.setVisible(false);
+    if (!transactions.isEmpty()) {
+      showTransactions(transactions);
+    }
+  }
+
+  private void showTransactions(List<Key> transactionKeys) {
+    selectMonthRange(transactionKeys);
+    GlobList transactions = new GlobList();
+    for (Key transactionKey : transactionKeys) {
+      transactions.add(parentRepository.get(transactionKey));
+    }
+    directory.get(NavigationService.class).gotoCategorization(transactions, false);
+  }
+
+  private void selectMonthRange(List<Key> transactionKeys) {
+    SelectionService selectionService = directory.get(SelectionService.class);
+    SortedSet<Integer> monthIds = new TreeSet<Integer>();
+    for (Key transactionKey : transactionKeys) {
+      monthIds.add(parentRepository.get(transactionKey).get(Transaction.MONTH));
+    }
+    monthIds.addAll(selectionService.getSelection(Month.TYPE).getValueSet(Month.ID));
+
+    GlobList months = new GlobList();
+    for (Integer monthId : Month.range(monthIds.first(), monthIds.last())) {
+      months.add(parentRepository.get(Key.create(Month.TYPE, monthId)));
+    }
+    selectionService.select(months, Month.TYPE);
   }
 
   private class DeleteItemAction extends AbstractAction {

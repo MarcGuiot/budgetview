@@ -42,7 +42,11 @@ public abstract class ConfirmationDialog {
 
     builder.add("title", new JLabel(Lang.get(titleKey)));
     editorPane = new JEditorPane("text/html", Lang.get(contentKey, args));
-    builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
+    builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog) {
+      protected void processCustomLink(String href) {
+        ConfirmationDialog.this.processCustomLink(href);
+      }
+    });
     builder.add("message", editorPane);
 
     dialog.addPanelWithButtons(builder.<JPanel>load(), createOkAction(), createCancelAction());
@@ -50,22 +54,30 @@ public abstract class ConfirmationDialog {
   }
 
   public final void show() {
-    dialog.showCentered();
-    builder.dispose();
+    dialog.showCentered(true);
   }
 
-  protected void postValidate() {
-    // override this
+  public final void dispose() {
+    dialog.setVisible(false);
+    builder.dispose();
   }
 
   protected String getOkButtonText() {
     return Lang.get("ok");
   }
 
+  protected void processCustomLink(String href) {
+  }
+
+  protected void postValidate() {
+    // override this
+  }
+
   private AbstractAction createOkAction() {
     ok = new AbstractAction(getOkButtonText()) {
       public void actionPerformed(ActionEvent e) {
         dialog.setVisible(false);
+        builder.dispose();
         postValidate();
       }
     };

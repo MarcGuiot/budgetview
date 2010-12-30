@@ -5,7 +5,6 @@ import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -59,7 +58,7 @@ public class AskPasswordDialog {
     dialog.addPanelWithButtons(builder.<JPanel>load(), validate, cancel);
     dialog.pack();
     passwordField.requestFocusInWindow();
-    dialog.showCentered();
+    dialog.showCentered(true);
     builder.dispose();
     return passwordField.getPassword();
   }

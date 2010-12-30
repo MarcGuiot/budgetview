@@ -77,6 +77,60 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2011/01");
     budgetView.extras.checkSeries("My project", 0, -200.00);
     budgetView.getSummary().checkEndPosition(800.00);
+
+    projects.edit("My project").delete();
+    projects.checkNoProjectShown();
+    budgetView.getSummary().checkEndPosition(1000.00);
+  }
+
+  public void testProjectDeletion() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/12/01")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .load();
+
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+
+    projects.create()
+      .checkTitle("Create a project")
+      .setName("My project")
+      .setItem(0, "Reservation", 201101, -200.00)
+      .addItem(1, "Hotel", 201101, -500.00)
+      .validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 800.00, "2011/01/10")
+      .addTransaction("2011/01/01", -200.00, "Resa")
+      .addTransaction("2011/01/01", -500.00, "Hotel")
+      .addTransaction("2011/01/01", -10.00, "Something else")
+      .load();
+
+    categorization.setExtra("Resa", "My project");
+    categorization.setExtra("Hotel", "My project");
+
+    projects.edit("My project")
+      .openDeleteAndNavigate();
+    views.checkCategorizationSelected();
+    categorization.checkTable(new Object[][]{
+      {"01/01/2011","My project",	"HOTEL",	-500.0},
+      {"01/01/2011","My project",	"RESA",	-200.0},
+    });
+    categorization.checkSelectedTableRows(0, 1);
+    categorization.unselectAllTransactions();
+    categorization.showAllTransactions();
+
+    projects.edit("My project")
+      .deleteWithConfirmation("Existing operations",
+                              "Some operations have been assigned to this project");
+    views.checkCategorizationSelected();
+    categorization.checkTable(new Object[][]{
+      {"01/01/2011","",	"HOTEL",	-500.0},
+      {"01/01/2011","",	"RESA",	-200.0},
+    });
+    categorization.checkSelectedTableRows(0, 1);
+
+    projects.checkNoProjectShown();
+    budgetView.getSummary().checkEndPosition(800.00);
   }
 
   public void testCannotHaveEmptyProjectOrProjectItemNames() {
@@ -122,19 +176,22 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addItem(1, "Hotel", 201102, -500.00)
       .validate();
 
-    categorization.selectTransaction("Resa");
-    categorization.selectExtras().selectSeries("Project 1");
-    categorization.selectExtras().editProjectSeries("Project 1")
-      .checkItems("Reservation | January 2011 | -100.00\n" +
-                  "Hotel | February 2011 | -500.00")
-      .cancel();
-
     budgetView.extras.editProjectSeries("Project 1")
       .checkItems("Reservation | January 2011 | -100.00\n" +
                   "Hotel | February 2011 | -500.00")
       .cancel();
 
     budgetView.extras.editPlannedAmountForProject("Project 1")
+      .checkItems("Reservation | January 2011 | -100.00\n" +
+                  "Hotel | February 2011 | -500.00")
+      .cancel();
+
+    timeline.selectAll();
+    categorization.showAllTransactions();
+    categorization.selectTransaction("Resa");
+
+    categorization.selectExtras().selectSeries("Project 1");
+    categorization.selectExtras().editProjectSeries("Project 1")
       .checkItems("Reservation | January 2011 | -100.00\n" +
                   "Hotel | February 2011 | -500.00")
       .cancel();

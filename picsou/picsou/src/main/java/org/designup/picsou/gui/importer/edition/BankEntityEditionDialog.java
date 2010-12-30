@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.importer.edition;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.importer.edition.BankEntityEditionPanel;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.BankEntity;
@@ -42,7 +41,7 @@ public class BankEntityEditionDialog {
                                new ValidateAction(localRepository),
                                new CancelAction());
     dialog.pack();
-    dialog.showCentered();
+    dialog.showCentered(true);
     panel.dispose();
     builder.dispose();
   }

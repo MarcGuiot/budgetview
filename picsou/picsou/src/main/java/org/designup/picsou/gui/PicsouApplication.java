@@ -231,7 +231,7 @@ public class PicsouApplication {
       }
     }, null);
     dialog.pack();
-    dialog.showCentered();
+    dialog.showCentered(true);
   }
 
   public static String[] parseLanguage(String... args) {

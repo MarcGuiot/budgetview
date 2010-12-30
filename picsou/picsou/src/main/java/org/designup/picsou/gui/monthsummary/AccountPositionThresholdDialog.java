@@ -72,7 +72,7 @@ public class AccountPositionThresholdDialog {
   }
 
   public void show() {
-    dialog.showCentered();
+    dialog.showCentered(true);
     builder.dispose();
   }
 }

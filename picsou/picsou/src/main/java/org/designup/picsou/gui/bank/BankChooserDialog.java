@@ -57,7 +57,7 @@ public class BankChooserDialog implements GlobSelectionListener {
     dialog.addPanelWithButtons(builder.<JPanel>load(), validateAction, new CancelAction(dialog));
 
     dialog.pack();
-    dialog.showCentered();
+    dialog.showCentered(true);
 
     builder.dispose();
 

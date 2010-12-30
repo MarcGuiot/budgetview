@@ -26,7 +26,7 @@ public class ProjectTrigger implements ChangeSetListener {
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         Glob project = repository.get(key);
         if (values.contains(Project.NAME)) {
-          repository.update(Key.create(Series.TYPE, project.get(Project.SERIES)),
+          repository.update(project.getTargetKey(Project.SERIES),
                             value(Series.NAME, values.get(Project.NAME)));
         }
       }
@@ -70,7 +70,7 @@ public class ProjectTrigger implements ChangeSetListener {
     }
 
     Integer seriesId = project.get(Project.SERIES);
-    Key seriesKey = Key.create(Series.TYPE, seriesId);
+    Key seriesKey = project.getTargetKey(Project.SERIES);
     for (Glob seriesBudget : repository.getAll(SeriesBudget.TYPE, linkedTo(seriesKey, SeriesBudget.SERIES))) {
       repository.update(seriesBudget.getKey(),
                         value(SeriesBudget.AMOUNT, 0.00),
