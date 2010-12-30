@@ -83,7 +83,7 @@ public class FeedbackDialog {
 
   public void show() {
     dialog.pack();
-    dialog.showCentered(true);
+    dialog.showCentered();
     repository.removeChangeListener(tipsListener);
   }
 

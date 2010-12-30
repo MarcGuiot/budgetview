@@ -54,7 +54,7 @@ public abstract class ConfirmationDialog {
   }
 
   public final void show() {
-    dialog.showCentered(true);
+    dialog.showCentered();
   }
 
   public final void dispose() {

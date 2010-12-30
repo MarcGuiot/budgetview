@@ -111,7 +111,7 @@ public class ProjectEditionDialog {
   private void doShow() {
     projectNameEditor.forceSelection(currentProjectKey);
     repeat.setFilter(linkedTo(currentProjectKey, ProjectItem.PROJECT));
-    dialog.showCentered(false);
+    dialog.showCentered();
   }
 
   private boolean check() {

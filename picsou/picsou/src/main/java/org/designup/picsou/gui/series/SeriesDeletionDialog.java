@@ -38,7 +38,7 @@ public class SeriesDeletionDialog {
   public boolean show() {
     ok = false;
     dialog.pack();
-    dialog.showCentered(true);
+    dialog.showCentered();
     builder.dispose();
     return ok;
   }

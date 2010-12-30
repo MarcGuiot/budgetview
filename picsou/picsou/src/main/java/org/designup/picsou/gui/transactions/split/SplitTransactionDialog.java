@@ -133,7 +133,7 @@ public class SplitTransactionDialog {
     boolean enabled = false;
     setValidationEnabled(enabled);
     amountField.requestFocus();
-    dialog.showCentered(true);
+    dialog.showCentered();
     builder.dispose();
     headerPainter.dispose();
     rendererColors.dispose();

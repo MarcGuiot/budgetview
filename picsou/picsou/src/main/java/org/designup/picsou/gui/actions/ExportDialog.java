@@ -40,7 +40,7 @@ public class ExportDialog {
   }
 
   public void show() {
-    dialog.showCentered(true);
+    dialog.showCentered();
   }
 
   private void createDialog() {

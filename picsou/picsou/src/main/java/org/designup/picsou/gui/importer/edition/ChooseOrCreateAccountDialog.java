@@ -104,7 +104,7 @@ public class ChooseOrCreateAccountDialog {
                                             new CancelAction()
     );
     dialog.pack();
-    dialog.showCentered(true);
+    dialog.showCentered();
     builder.dispose();
   }
 

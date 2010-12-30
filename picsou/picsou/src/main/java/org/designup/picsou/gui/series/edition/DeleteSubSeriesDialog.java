@@ -53,7 +53,7 @@ public class DeleteSubSeriesDialog {
 
   public void show() {
     dialog.pack();
-    dialog.showCentered(true);
+    dialog.showCentered();
     builder.dispose();
   }
 

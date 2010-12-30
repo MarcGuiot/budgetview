@@ -386,7 +386,7 @@ public class ImportDialog {
         public void windowDeiconified(WindowEvent e) {
           frame.removeWindowListener(this);
           dialog.pack();
-          dialog.showCentered(true);
+          dialog.showCentered();
           builder1.dispose();
           builder2.dispose();
           importedTransactionTable.dispose();
@@ -408,7 +408,7 @@ public class ImportDialog {
     else {
       dialog.pack();
       fileField.requestFocus();
-      dialog.showCentered(true);
+      dialog.showCentered();
       builder1.dispose();
       builder2.dispose();
       importedTransactionTable.dispose();

@@ -38,6 +38,6 @@ public class BalanceDialog {
     }
     balancePanel.updateBeforeDisplay();
     dialog.pack();
-    dialog.showCentered(true);
+    dialog.showCentered();
   }
 }

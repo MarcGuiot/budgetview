@@ -61,7 +61,7 @@ public class AccountPositionEditionDialog {
   }
 
   public void show() {
-    dialog.showCentered(true);
+    dialog.showCentered();
   }
 
   private class ValidateAction extends AbstractAction {

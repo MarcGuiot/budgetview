@@ -46,7 +46,7 @@ public class SlaValidationDialog {
   }
 
   public boolean show() {
-    dialog.showCentered(true);
+    dialog.showCentered();
     builder.dispose();
     return accepted;
   }

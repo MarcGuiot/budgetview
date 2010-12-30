@@ -41,7 +41,7 @@ public class BankEntityEditionDialog {
                                new ValidateAction(localRepository),
                                new CancelAction());
     dialog.pack();
-    dialog.showCentered(true);
+    dialog.showCentered();
     panel.dispose();
     builder.dispose();
   }

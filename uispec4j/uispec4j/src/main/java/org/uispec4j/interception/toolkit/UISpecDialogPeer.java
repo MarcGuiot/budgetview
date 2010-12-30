@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 public class UISpecDialogPeer extends Empty.DialogPeer {
   private JDialog dialog;
@@ -29,22 +30,31 @@ public class UISpecDialogPeer extends Empty.DialogPeer {
       }
     }
     if (!listenerRegistered) {
-      dialog.addComponentListener(new ComponentAdapter() {
-        public void componentShown(ComponentEvent e) {
-          try {
-            UISpecDisplay.instance().showDialog(dialog);
-          }
-          catch (Throwable t) {
-            throw new RuntimeException(t);
-          }
+      ComponentListener[] listeners = dialog.getComponentListeners();
+      for (ComponentListener listener : listeners) {
+        if (listener instanceof DialogComponentAdapter){
+          listenerRegistered = true;
+          return;
         }
-      });
+      }
+      dialog.addComponentListener(new DialogComponentAdapter());
       listenerRegistered = true;
     }
   }
 
   public Toolkit getToolkit() {
     return UISpecToolkit.instance();
+  }
+
+  private class DialogComponentAdapter extends ComponentAdapter {
+    public void componentShown(ComponentEvent e) {
+      try {
+        UISpecDisplay.instance().showDialog(dialog);
+      }
+      catch (Throwable t) {
+        throw new RuntimeException(t);
+      }
+    }
   }
 }
 

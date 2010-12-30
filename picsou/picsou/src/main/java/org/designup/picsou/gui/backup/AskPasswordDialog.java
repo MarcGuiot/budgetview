@@ -58,7 +58,7 @@ public class AskPasswordDialog {
     dialog.addPanelWithButtons(builder.<JPanel>load(), validate, cancel);
     dialog.pack();
     passwordField.requestFocusInWindow();
-    dialog.showCentered(true);
+    dialog.showCentered();
     builder.dispose();
     return passwordField.getPassword();
   }

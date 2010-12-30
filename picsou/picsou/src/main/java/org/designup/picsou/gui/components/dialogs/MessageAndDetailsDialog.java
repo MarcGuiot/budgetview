@@ -46,7 +46,7 @@ public class MessageAndDetailsDialog {
   }
 
   public final void show() {
-    dialog.showCentered(true);
+    dialog.showCentered();
     builder.dispose();
   }
 }
