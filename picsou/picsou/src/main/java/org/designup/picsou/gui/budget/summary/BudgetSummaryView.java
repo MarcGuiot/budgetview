@@ -31,7 +31,8 @@ import java.text.DecimalFormat;
 import java.util.Set;
 import java.util.SortedSet;
 
-public class BudgetSummaryView extends View implements GlobSelectionListener, ChangeSetListener, ColorChangeListener {
+public class
+  BudgetSummaryView extends View implements GlobSelectionListener, ChangeSetListener, ColorChangeListener {
 
   private JButton balanceButton = new JButton();
   private JButton estimatedPositionButton = new JButton();

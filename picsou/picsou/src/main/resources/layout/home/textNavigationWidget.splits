@@ -1,7 +1,0 @@
-<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
-
-  <styleImport file="/layout/picsouStyles.splits"/>
-
-  <htmlEditorPane ref="editor" styleClass="navigationWidgetLabel" opaque="false"/>
-  
-</splits>

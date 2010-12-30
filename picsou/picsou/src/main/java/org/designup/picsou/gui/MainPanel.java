@@ -3,7 +3,8 @@ package org.designup.picsou.gui;
 import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.accounts.AccountView;
-import org.designup.picsou.gui.accounts.MainAccountsChartView;
+import org.designup.picsou.gui.accounts.chart.MainAccountsChartView;
+import org.designup.picsou.gui.accounts.chart.SavingsAccountsChartView;
 import org.designup.picsou.gui.actions.*;
 import org.designup.picsou.gui.backup.BackupAction;
 import org.designup.picsou.gui.backup.RestoreAction;
@@ -24,7 +25,6 @@ import org.designup.picsou.gui.notes.InitializationView;
 import org.designup.picsou.gui.notes.NotesView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.projects.ProjectView;
-import org.designup.picsou.gui.savings.SavingsChartView;
 import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.series.SeriesEditor;
@@ -184,7 +184,7 @@ public class MainPanel {
       seriesEvolutionView,
       new SavingsView(replicationGlobRepository, directory),
       new MainAccountsChartView(repository, directory),
-      new SavingsChartView(repository, directory),
+      new SavingsAccountsChartView(repository, directory),
       new ProjectView(repository, directory),
       licenseInfoView,
       notesView);

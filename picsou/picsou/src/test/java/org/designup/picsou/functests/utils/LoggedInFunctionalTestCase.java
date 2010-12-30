@@ -139,7 +139,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     title = new TitleChecker(mainWindow);
     budgetView = new BudgetViewChecker(mainWindow);
     savingsView = new SavingsViewChecker(mainWindow);
-    savingsAccountsChart = new HistoChecker(mainWindow, "savingsEvolutionPanel", "savingsHistoChart");
+    savingsAccountsChart = new HistoChecker(mainWindow, "mainSummary", "savingsHistoChart");
     savingsView = new SavingsViewChecker(mainWindow);
     categorization = new CategorizationChecker(mainWindow);
     seriesEvolution = new SeriesEvolutionChecker(mainWindow);
