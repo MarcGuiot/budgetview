@@ -12,7 +12,7 @@
     <style selector="component#amountEditor" marginRight="8"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(550,400)">
+  <panel styleClass="dialog" preferredSize="(550,450)">
     <column styleClass="innerDialog">
 
       <label ref="title" styleClass="title"/>
@@ -27,7 +27,7 @@
       <column styleClass="blockScrollBorder" weightY="100.0">
         <scrollPane>
           <column>
-            <repeat ref="items" layout="verticalGrid" margin="10">
+            <repeat ref="items" layout="verticalGrid" margin="10" marginTop="5">
               <header>
                 <label text="$projectEdition.grid.label"/>
                 <label text="$projectEdition.grid.month"/>
@@ -47,6 +47,9 @@
           <button action="addItem" styleClass="create" tooltipText="$projectEdition.addItem.tooltip"/>
         </row>
       </column>
+
+      <htmlEditorPane text="$projectEdition.series.message"
+                      marginTop="10" marginBottom="15" weightY="0.1"/>
 
     </column>
   </panel>
