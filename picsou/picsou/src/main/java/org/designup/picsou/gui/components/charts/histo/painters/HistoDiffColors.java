@@ -10,28 +10,20 @@ import java.awt.*;
 public class HistoDiffColors implements ColorChangeListener {
 
   private String referenceLineKey;
-  private String referenceOverrunKey;
   private String actualLineKey;
-  private String actualOverrunKey;
   private String fillKey;
 
   private Color referenceLineColor;
-  private Color referenceOverrunColor;
   private Color actualLineColor;
-  private Color actualOverrunColor;
 
   private Color fillColor;
 
   public HistoDiffColors(String referenceLineKey,
-                         String referenceOverrunKey,
                          String actualLineKey,
-                         String actualOverrunKey,
                          String fillKey,
                          Directory directory) {
     this.referenceLineKey = referenceLineKey;
-    this.referenceOverrunKey = referenceOverrunKey;
     this.actualLineKey = actualLineKey;
-    this.actualOverrunKey = actualOverrunKey;
     this.fillKey = fillKey;
 
     directory.get(ColorService.class).addListener(this);
@@ -39,9 +31,7 @@ public class HistoDiffColors implements ColorChangeListener {
 
   public void colorsChanged(ColorLocator colorLocator) {
     referenceLineColor = colorLocator.get(referenceLineKey);
-    referenceOverrunColor = colorLocator.get(referenceOverrunKey);
     actualLineColor = colorLocator.get(actualLineKey);
-    actualOverrunColor = colorLocator.get(actualOverrunKey);
     fillColor = colorLocator.get(fillKey);
   }
 
@@ -49,16 +39,8 @@ public class HistoDiffColors implements ColorChangeListener {
     return referenceLineColor;
   }
 
-  public Color getReferenceOverrunColor() {
-    return referenceOverrunColor;
-  }
-
   public Color getActualLineColor() {
     return actualLineColor;
-  }
-
-  public Color getActualOverrunColor() {
-    return actualOverrunColor;
   }
 
   public Color getFillColor() {

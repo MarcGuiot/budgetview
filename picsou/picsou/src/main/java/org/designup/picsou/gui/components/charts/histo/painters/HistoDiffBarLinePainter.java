@@ -13,8 +13,9 @@ public class HistoDiffBarLinePainter implements HistoPainter {
   private HistoDiffDataset dataset;
   private HistoDiffColors colors;
   private boolean showActualInTheFuture;
-
+  private boolean actualPointsHighlighted = true;
   private BasicStroke actualLineStroke;
+
   private static final int PADDING = 4;
 
   public HistoDiffBarLinePainter(HistoDiffDataset dataset, HistoDiffColors colors, boolean showActualInTheFuture) {
@@ -22,6 +23,10 @@ public class HistoDiffBarLinePainter implements HistoPainter {
     this.colors = colors;
     this.showActualInTheFuture = showActualInTheFuture;
     this.actualLineStroke = DEFAULT_LINE_STROKE;
+  }
+
+  public void setActualPointsHighlighted(boolean highlighted) {
+    this.actualPointsHighlighted = highlighted;
   }
 
   public HistoDataset getDataset() {
@@ -66,7 +71,9 @@ public class HistoDiffBarLinePainter implements HistoPainter {
         int newX = metrics.middleX(i);
         int newY = metrics.y(dataset.getActualValue(i));
         g2.drawLine(currentX, currentY, newX, newY);
-        g2.fillOval(newX - 3, newY - 3, 6, 6);
+        if (actualPointsHighlighted) {
+          g2.fillOval(newX - 3, newY - 3, 6, 6);
+        }
         currentX = newX;
         currentY = newY;
       }

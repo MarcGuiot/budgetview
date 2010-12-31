@@ -40,9 +40,7 @@ public class HistoChartDemo {
 
     HistoDiffColors colors = new HistoDiffColors(
       "histo.income.line",
-      "histo.income.overrun",
       "histo.expenses.line",
-      "histo.expenses.overrun",
       "histo.balance.fill",
       directory
     );

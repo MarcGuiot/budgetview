@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.monthsummary;
+package org.designup.picsou.gui.summary.threshold;
 
 import org.designup.picsou.gui.components.CloseAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;

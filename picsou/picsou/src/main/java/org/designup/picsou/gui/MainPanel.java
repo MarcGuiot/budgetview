@@ -20,7 +20,8 @@ import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.monthsummary.VersionInfoView;
+import org.designup.picsou.gui.summary.SummaryView;
+import org.designup.picsou.gui.summary.version.VersionInfoView;
 import org.designup.picsou.gui.notes.InitializationView;
 import org.designup.picsou.gui.notes.NotesView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
@@ -183,8 +184,7 @@ public class MainPanel {
       new BudgetView(replicationGlobRepository, directory),
       seriesEvolutionView,
       new SavingsView(replicationGlobRepository, directory),
-      new MainAccountsChartView(repository, directory),
-      new SavingsAccountsChartView(repository, directory),
+      new SummaryView(repository, directory),
       new ProjectView(repository, directory),
       licenseInfoView,
       notesView);

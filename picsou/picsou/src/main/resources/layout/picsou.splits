@@ -115,7 +115,7 @@
 
                 <column weightY="4">
                   <panel styleClass="block">
-                    <column styleClass="innerBlock">
+                    <column styleClass="innerBlock" margin="5" marginTop="8">
                       <tabs>
                         <tab title="$messagesBlock.tabs.messages">
                           <column>
@@ -144,23 +144,7 @@
 
               </verticalSplit>
 
-              <column weightX="5">
-                <label text="$mainSummary.title" styleClass="blockTitle"/>
-                <column styleClass="block">
-                  <column styleClass="innerBlock"
-                          opaque="true" background="seriesEvolution.chart.bg"
-                          border="line(block.inner.border)">
-                    <column name="mainSummary">
-                      <label text="$mainAccountsEvolution.title"/>
-                      <component ref="mainAccountsHistoChart" margin="15" opaque="true"
-                                 background="seriesEvolution.chart.bg"/>
-                      <label text="$savingsEvolution.title"/>
-                      <component ref="savingsHistoChart" margin="15" opaque="true"
-                                 background="seriesEvolution.chart.bg"/>
-                    </column>
-                  </column>
-                </column>
-              </column>
+              <panel ref="summaryView" weightX="6"/>
 
             </horizontalSplit>
 

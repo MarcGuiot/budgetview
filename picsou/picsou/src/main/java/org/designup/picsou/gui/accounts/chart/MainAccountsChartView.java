@@ -13,10 +13,10 @@ public class MainAccountsChartView extends AccountsChartView {
   }
 
   protected void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId)  {
-    histoChartBuilder.showMainAccountsHisto(currentMonthId);
+    histoChartBuilder.showMainAccountsWithThresholdHisto(currentMonthId);
   }
 
-  protected void processClick(NavigationService navigationService) {
+  protected void processDoubleClick(NavigationService navigationService) {
     navigationService.gotoBudget();
   }
 }

@@ -35,9 +35,9 @@ public abstract class AccountsChartView extends View {
       }
     };
     final NavigationService navigationService = directory.get(NavigationService.class);
-    histoChartBuilder.addListener(new HistoChartListener() {
+    histoChartBuilder.addDoubleClickListener(new HistoChartListener() {
       public void columnsClicked(Set<Integer> ids) {
-        processClick(navigationService);
+        processDoubleClick(navigationService);
       }
     });
     return histoChartBuilder;
@@ -49,5 +49,5 @@ public abstract class AccountsChartView extends View {
 
   protected abstract void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId);
 
-  protected abstract void processClick(NavigationService navigationService);
+  protected abstract void processDoubleClick(NavigationService navigationService);
 }

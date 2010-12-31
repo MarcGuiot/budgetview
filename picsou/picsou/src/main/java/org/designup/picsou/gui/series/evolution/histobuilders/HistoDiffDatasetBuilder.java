@@ -1,15 +1,15 @@
 package org.designup.picsou.gui.series.evolution.histobuilders;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
+import org.designup.picsou.gui.components.charts.histo.HistoPainter;
 import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffBarLinePainter;
 import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffColors;
 import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffDataset;
-import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffPainter;
+import org.designup.picsou.gui.components.charts.histo.painters.HistoDoubleLinePainter;
 import org.designup.picsou.model.CurrentMonth;
 import org.globsframework.model.GlobRepository;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
 
@@ -20,7 +20,7 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
 
   HistoDiffDatasetBuilder(HistoChart histoChart, JLabel label, GlobRepository repository, String tooltipKey) {
     super(histoChart, label, repository);
-    this.dataset  = new HistoDiffDataset("seriesEvolution.chart.histo." + tooltipKey + ".tooltip");
+    this.dataset = new HistoDiffDataset("seriesEvolution.chart.histo." + tooltipKey + ".tooltip");
     this.lastMonthWithTransactions = CurrentMonth.getLastTransactionMonth(repository);
   }
 
@@ -45,8 +45,17 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
     add(monthId, 0.0, 0.0, isSelectedMonth);
   }
 
-  public void apply(HistoDiffColors colors, String messageKey, String... args) {
+  public void showBarLine(HistoDiffColors colors, String messageKey, String... args) {
     HistoDiffBarLinePainter painter = new HistoDiffBarLinePainter(dataset, colors, false);
+    apply(painter, messageKey, args);
+  }
+
+  public void showDoubleLine(HistoDiffColors colors, boolean showActualInTheFuture, String messageKey, String... args) {
+    HistoDoubleLinePainter painter = new HistoDoubleLinePainter(dataset, colors);
+    apply(painter, messageKey, args);
+  }
+
+  private void apply(HistoPainter painter, String messageKey, String[] args) {
     histoChart.update(painter);
     updateHistoLabel(messageKey, args);
   }

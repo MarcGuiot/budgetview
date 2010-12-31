@@ -1,0 +1,27 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.graphTitle" marginLeft="10" font="-,plain,11"/>
+    <style selector="component.chart" margin="15" marginTop="5" opaque="true"
+                     background="block.inner.bg"/>
+  </styles>
+
+  <column name="summaryView">
+
+    <label text="$summaryView.title" styleClass="blockTitle"/>
+    <column styleClass="block">
+      <column styleClass="innerBlock"
+              opaque="true" background="block.inner.bg"
+              border="line(block.inner.border)">
+        <column>
+          <label text="$summaryView.mainAccounts" styleClass="graphTitle"/>
+          <component ref="mainAccountsHistoChart" styleClass="chart" weightY="2"/>
+          <label text="$summaryView.savingsAccounts" styleClass="graphTitle"/>
+          <component ref="savingsHistoChart" styleClass="chart" weightY="1"/>
+        </column>
+      </column>
+    </column>
+  </column>
+
+</splits>

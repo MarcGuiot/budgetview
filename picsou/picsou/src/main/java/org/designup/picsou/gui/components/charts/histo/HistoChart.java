@@ -17,6 +17,7 @@ public class HistoChart extends JPanel {
   private HistoChartColors colors;
   private HistoPainter painter = HistoPainter.NULL;
   private java.util.List<HistoChartListener> listeners;
+  private java.util.List<HistoChartListener> doubleClickListeners;
   private HistoChartMetrics metrics;
   private Integer currentRolloverIndex;
   private Font selectedLabelFont;
@@ -40,6 +41,13 @@ public class HistoChart extends JPanel {
       listeners = new ArrayList<HistoChartListener>();
     }
     this.listeners.add(listener);
+  }
+
+  public void addDoubleClickListener(HistoChartListener listener) {
+    if (doubleClickListeners == null) {
+      doubleClickListeners = new ArrayList<HistoChartListener>();
+    }
+    this.doubleClickListeners.add(listener);
   }
 
   public void setSnapToScale(boolean value) {
@@ -106,8 +114,8 @@ public class HistoChart extends JPanel {
     paintLabels(g2, dataset);
     paintScale(g2, panelWidth);
     paintSections(g2, panelHeight, dataset);
-    paintBorder(g2);
     paintSelectionBorder(g2, dataset);
+    paintBorder(g2);
 
     painter.paint(g2, metrics, currentRolloverIndex);
   }
@@ -131,7 +139,7 @@ public class HistoChart extends JPanel {
         int left = metrics.left(i);
 
         g2.setColor(colors.getSelectedColumnColor());
-        g2.fillRect(left, 0, metrics.columnWidth(), columnHeight);
+        g2.fillRect(left, metrics.columnTop(), metrics.columnWidth(), columnHeight);
 
         g2.setColor(colors.getSelectedLabelBackgroundColor());
         g2.fillRect(left, columnHeight, metrics.columnWidth(), metrics.labelZoneHeightWithMargin());
@@ -155,7 +163,7 @@ public class HistoChart extends JPanel {
         int left = metrics.left(i);
 
         g2.setColor(colors.getSelectedColumnBorder());
-        g2.drawRect(left, 0, metrics.columnWidth(), columnHeight + metrics.labelZoneHeightWithMargin());
+        g2.drawRect(left, metrics.columnTop(), metrics.columnWidth(), columnHeight + metrics.labelZoneHeightWithMargin());
       }
     }
   }
@@ -269,7 +277,7 @@ public class HistoChart extends JPanel {
     }
     for (HistoChartListener listener : listeners) {
       listener.columnsClicked(ids);
-    }
+     }
   }
 
   private void registerMouseActions() {

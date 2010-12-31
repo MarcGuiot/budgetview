@@ -34,6 +34,7 @@ public class HistoChartBuilder {
   private HistoLineColors uncategorizedColors;
   private HistoLineColors accountColors;
   private HistoDiffColors seriesAmountColors;
+  private HistoDiffColors accountAndThresholdColors;
 
   private int monthsBack;
   private int monthsLater;
@@ -67,39 +68,35 @@ public class HistoChartBuilder {
     histoChart.addListener(listener);
   }
 
+  public void addDoubleClickListener(HistoChartListener listener) {
+    histoChart.addDoubleClickListener(listener);
+  }
+
   private void initColors(Directory directory) {
     balanceColors = new HistoDiffColors(
       "histo.income.line",
-      "histo.income.overrun",
       "histo.expenses.line",
-      "histo.expenses.overrun",
       "histo.balance.fill",
       directory
     );
 
     incomeColors = new HistoDiffColors(
       "histo.balance.income.line.planned",
-      null,
       "histo.income.line",
-      "histo.income.overrun",
       "histo.balance.income.fill",
       directory
     );
 
     expensesColors = new HistoDiffColors(
       "histo.balance.expenses.line.planned",
-      null,
       "histo.expenses.line",
-      "histo.expenses.overrun",
       "histo.expenses.fill",
       directory
     );
 
     seriesAmountColors = new HistoDiffColors(
       "histo.seriesAmount.line.planned",
-      null,
       "histo.seriesAmount.line",
-      "histo.seriesAmount.overrun",
       "histo.seriesAmount.fill",
       directory
     );
@@ -115,6 +112,13 @@ public class HistoChartBuilder {
       "histo.account.line",
       "histo.fill",
       "histo.expenses.overrun",
+      directory
+    );
+
+    accountAndThresholdColors = new HistoDiffColors(
+      "histo.account.threshold",
+      "histo.account.line",
+      "histo.fill",
       directory
     );
   }
@@ -150,10 +154,10 @@ public class HistoChartBuilder {
       }
     }
 
-    builder.apply(balanceColors,
-                  "mainBalance",
-                  Colors.toString(balanceColors.getReferenceLineColor()),
-                  Colors.toString(balanceColors.getActualLineColor()));
+    builder.showBarLine(balanceColors,
+                        "mainBalance",
+                        Colors.toString(balanceColors.getReferenceLineColor()),
+                        Colors.toString(balanceColors.getActualLineColor()));
   }
 
   public void showBudgetAreaHisto(BudgetArea budgetArea, int currentMonthId) {
@@ -177,11 +181,11 @@ public class HistoChartBuilder {
     }
 
     HistoDiffColors colors = budgetArea.isIncome() ? incomeColors : expensesColors;
-    builder.apply(colors,
-                  "budgetArea",
-                  budgetArea.getLabel(),
-                  Colors.toString(colors.getReferenceLineColor()),
-                  Colors.toString(colors.getActualLineColor()));
+    builder.showBarLine(colors,
+                        "budgetArea",
+                        budgetArea.getLabel(),
+                        Colors.toString(colors.getReferenceLineColor()),
+                        Colors.toString(colors.getActualLineColor()));
   }
 
   public void showUncategorizedHisto(int currentMonthId) {
@@ -217,11 +221,11 @@ public class HistoChartBuilder {
     }
 
     HistoDiffColors colors = budgetArea.isIncome() ? incomeColors : expensesColors;
-    builder.apply(colors,
-                  "series",
-                  series.get(Series.NAME),
-                  Colors.toString(colors.getReferenceLineColor()),
-                  Colors.toString(colors.getActualLineColor()));
+    builder.showBarLine(colors,
+                        "series",
+                        series.get(Series.NAME),
+                        Colors.toString(colors.getReferenceLineColor()),
+                        Colors.toString(colors.getActualLineColor()));
   }
 
   private HistoDiffDatasetBuilder createDiffDataset(String tooktipKey) {
@@ -238,6 +242,21 @@ public class HistoChartBuilder {
     }
 
     builder.apply(accountColors, "mainAccounts");
+  }
+
+  public void showMainAccountsWithThresholdHisto(int currentMonthId) {
+    HistoDiffDatasetBuilder builder = createDiffDataset("mainAccounts");
+    builder.setActualHiddenInTheFuture();
+
+    Double threshold = AccountPositionThreshold.getValue(repository);
+
+    for (int monthId : getMonthIdsToShow(currentMonthId)) {
+      Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
+      Double value = stat != null ? stat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION) : 0.0;
+      builder.add(monthId, threshold, value, monthId == currentMonthId);
+    }
+
+    builder.showDoubleLine(accountAndThresholdColors, true, "mainAccounts");
   }
 
   public void showSavingsAccountsHisto(int currentMonthId) {
@@ -297,11 +316,11 @@ public class HistoChartBuilder {
       dataset.add(monthId, planned, actual, selectedMonths.contains(monthId));
     }
 
-    dataset.apply(seriesAmountColors,
-                  "series",
-                  series.get(Series.NAME),
-                  Colors.toString(seriesAmountColors.getReferenceLineColor()),
-                  Colors.toString(seriesAmountColors.getActualLineColor()));
+    dataset.showBarLine(seriesAmountColors,
+                        "series",
+                        series.get(Series.NAME),
+                        Colors.toString(seriesAmountColors.getReferenceLineColor()),
+                        Colors.toString(seriesAmountColors.getActualLineColor()));
   }
 
   private Double adjust(Double value, double multiplier) {

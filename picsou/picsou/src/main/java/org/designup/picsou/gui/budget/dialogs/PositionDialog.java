@@ -2,7 +2,7 @@ package org.designup.picsou.gui.budget.dialogs;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.gui.monthsummary.AccountPositionThresholdDialog;
+import org.designup.picsou.gui.summary.threshold.AccountPositionThresholdDialog;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.utils.Lang;

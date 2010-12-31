@@ -121,6 +121,10 @@ public class HistoChartMetrics {
     return left(columnIndex) + columnWidth;
   }
 
+  public int columnTop() {
+    return 0;
+  }
+
   public int columnWidth() {
     return columnWidth;
   }

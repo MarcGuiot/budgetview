@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.series.evolution.histobuilders;
 
 import org.designup.picsou.gui.time.TimeService;
+import org.designup.picsou.model.CurrentMonth;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -70,7 +71,7 @@ public abstract class HistoChartUpdater implements GlobSelectionListener, Dispos
   }
 
   public void update() {
-    if (histoChartBuilder != null) {
+    if ((histoChartBuilder != null) && (repository.contains(CurrentMonth.TYPE))) {
       update(histoChartBuilder, currentMonthId == null ? todayId : currentMonthId);
     }
   }

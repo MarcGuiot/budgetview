@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.monthsummary;
+package org.designup.picsou.gui.summary.version;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.model.UserVersionInformation;
