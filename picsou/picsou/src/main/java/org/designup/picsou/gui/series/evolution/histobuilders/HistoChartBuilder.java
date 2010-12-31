@@ -244,7 +244,7 @@ public class HistoChartBuilder {
     builder.apply(accountColors, "mainAccounts");
   }
 
-  public void showMainAccountsWithThresholdHisto(int currentMonthId) {
+  public void showMainAccountsSummary(int currentMonthId) {
     HistoDiffDatasetBuilder builder = createDiffDataset("mainAccounts");
     builder.setActualHiddenInTheFuture();
 
@@ -256,7 +256,20 @@ public class HistoChartBuilder {
       builder.add(monthId, threshold, value, monthId == currentMonthId);
     }
 
-    builder.showDoubleLine(accountAndThresholdColors, true, "mainAccounts");
+    builder.showSummary(accountAndThresholdColors, true, "mainAccounts");
+  }
+
+  public void showSavingsAccountsSummary(int currentMonthId) {
+    HistoDiffDatasetBuilder builder = createDiffDataset("savingsAccounts");
+    builder.setActualHiddenInTheFuture();
+
+    for (int monthId : getMonthIdsToShow(currentMonthId)) {
+      Glob stat = SavingsBudgetStat.findSummary(monthId, repository);
+      Double value = stat != null ? stat.get(SavingsBudgetStat.END_OF_MONTH_POSITION) : 0.0;
+      builder.add(monthId, 0.00, value, monthId == currentMonthId);
+    }
+
+    builder.showSummary(accountAndThresholdColors, false,  "mainAccounts");
   }
 
   public void showSavingsAccountsHisto(int currentMonthId) {

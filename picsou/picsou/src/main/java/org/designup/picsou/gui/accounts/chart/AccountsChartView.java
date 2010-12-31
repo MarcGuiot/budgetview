@@ -13,8 +13,8 @@ import org.globsframework.utils.directory.Directory;
 import java.util.Set;
 
 public abstract class AccountsChartView extends View {
-  public static final int MONTHS_BACK = 12;
-  public static final int MONTHS_FORWARD = 12;
+  public static final int MONTHS_BACK = 6;
+  public static final int MONTHS_FORWARD = 9;
   protected HistoChartBuilder histoChartBuilder;
   private String componentName;
 

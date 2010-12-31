@@ -14,7 +14,7 @@ public class SavingsAccountsChartView extends AccountsChartView {
   }
 
   protected void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId) {
-    histoChartBuilder.showSavingsAccountsHisto(currentMonthId);
+    histoChartBuilder.showSavingsAccountsSummary(currentMonthId);
   }
 
   protected void processDoubleClick(NavigationService navigationService) {

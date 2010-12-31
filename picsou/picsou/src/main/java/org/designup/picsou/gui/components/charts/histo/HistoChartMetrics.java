@@ -15,8 +15,8 @@ public class HistoChartMetrics {
   private static final int RIGHT_SCALE_MARGIN = 10;
   private static final int LABEL_ZONE_HEIGHT = 15;
   private static final int LABEL_BOTTOM_MARGIN = 2;
-  private static final int SECTION_ZONE_HEIGHT = 15;
-  private static final int SECTION_BOTTOM_MARGIN = 2;
+  private static final int SECTION_ZONE_HEIGHT = 20;
+  private static final int SECTION_BOTTOM_MARGIN = 5;
 
   private final double[] SCALES = {0.25, 0.5, 1, 2, 2.5, 5};
 
@@ -122,7 +122,7 @@ public class HistoChartMetrics {
   }
 
   public int columnTop() {
-    return 0;
+    return sectionZoneHeight;
   }
 
   public int columnWidth() {
@@ -139,19 +139,19 @@ public class HistoChartMetrics {
 
   public int y(double value) {
     if (value >= 0) {
-      return VERTICAL_CHART_PADDING + (int)(positiveHeight * (1 - value / maxPositiveValue));
+      return VERTICAL_CHART_PADDING + (int)(positiveHeight * (1 - value / maxPositiveValue)) + columnTop();
     }
     else {
-      return VERTICAL_CHART_PADDING + positiveHeight + (int)(negativeHeight * Math.abs(value) / maxNegativeValue);
+      return VERTICAL_CHART_PADDING + positiveHeight + (int)(negativeHeight * Math.abs(value) / maxNegativeValue) + columnTop();
     }
   }
 
   public int barTop(double value) {
     if (value >= 0) {
-      return VERTICAL_CHART_PADDING + (int)(positiveHeight * (1 - value / maxPositiveValue));
+      return VERTICAL_CHART_PADDING + (int)(positiveHeight * (1 - value / maxPositiveValue)) + columnTop();
     }
     else {
-      return VERTICAL_CHART_PADDING + positiveHeight;
+      return VERTICAL_CHART_PADDING + positiveHeight + columnTop();
     }
   }
 
@@ -172,7 +172,7 @@ public class HistoChartMetrics {
   }
 
   public int labelY() {
-    return panelHeight - sectionZoneHeight - labelBottomMargin;
+    return panelHeight - labelBottomMargin;
   }
 
   public int labelX(String label, int index) {
@@ -238,10 +238,14 @@ public class HistoChartMetrics {
     public final int blockWidth;
     public final int blockY;
     public final int blockHeight;
+    public final int lineY;
+    public final int lineHeight;
 
     public Section(String text,
                    int textX, int textY,
-                   int blockX, int blockWidth, int blockY, int blockHeight) {
+                   int blockX, int blockWidth,
+                   int blockY, int blockHeight,
+                   int lineY, int lineHeight) {
       this.text = text;
       this.textX = textX;
       this.textY = textY;
@@ -249,6 +253,8 @@ public class HistoChartMetrics {
       this.blockWidth = blockWidth;
       this.blockY = blockY;
       this.blockHeight = blockHeight;
+      this.lineY = lineY;
+      this.lineHeight = lineHeight;
     }
 
     public String toString() {
@@ -294,7 +300,9 @@ public class HistoChartMetrics {
     int blockHeight = SECTION_ZONE_HEIGHT;
     int blockY = panelHeight - blockHeight;
     int textX = blockLeft + blockWidth / 2 - fontMetrics.stringWidth(previousName) / 2;
-    int textY = panelHeight - SECTION_BOTTOM_MARGIN;
-    return new Section(previousName, textX, textY, blockLeft, blockWidth, blockY, blockHeight);
+    int textY = sectionZoneHeight - SECTION_BOTTOM_MARGIN;
+    int lineY = sectionZoneHeight / 2;
+    int lineHeight = chartHeight - lineY;
+    return new Section(previousName, textX, textY, blockLeft, blockWidth, blockY, blockHeight, lineY, lineHeight);
   }
 }

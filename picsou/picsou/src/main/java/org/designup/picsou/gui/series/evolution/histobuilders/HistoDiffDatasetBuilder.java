@@ -2,10 +2,7 @@ package org.designup.picsou.gui.series.evolution.histobuilders;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoPainter;
-import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffBarLinePainter;
-import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffColors;
-import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffDataset;
-import org.designup.picsou.gui.components.charts.histo.painters.HistoDoubleLinePainter;
+import org.designup.picsou.gui.components.charts.histo.painters.*;
 import org.designup.picsou.model.CurrentMonth;
 import org.globsframework.model.GlobRepository;
 
@@ -47,6 +44,11 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
 
   public void showBarLine(HistoDiffColors colors, String messageKey, String... args) {
     HistoDiffBarLinePainter painter = new HistoDiffBarLinePainter(dataset, colors, false);
+    apply(painter, messageKey, args);
+  }
+
+  public void showSummary(HistoDiffColors colors, boolean showReference, String messageKey, String... args) {
+    HistoDiffSummaryPainter painter = new HistoDiffSummaryPainter(dataset, showReference, colors);
     apply(painter, messageKey, args);
   }
 

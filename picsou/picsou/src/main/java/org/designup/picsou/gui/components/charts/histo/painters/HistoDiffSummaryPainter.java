@@ -6,19 +6,20 @@ import org.designup.picsou.gui.components.charts.histo.HistoPainter;
 
 import java.awt.*;
 
-public class HistoDoubleLinePainter implements HistoPainter {
+public class HistoDiffSummaryPainter implements HistoPainter {
 
   private HistoDiffDataset dataset;
+  private boolean showReference;
   private HistoDiffColors colors;
-
-  private BasicStroke actualLineStroke;
   private BasicStroke referenceLineStroke;
 
-  public HistoDoubleLinePainter(HistoDiffDataset dataset, HistoDiffColors colors) {
+  private static final int PADDING = 4;
+
+  public HistoDiffSummaryPainter(HistoDiffDataset dataset, boolean showReference, HistoDiffColors colors) {
     this.dataset = dataset;
+    this.showReference = showReference;
     this.colors = colors;
-    this.actualLineStroke = new BasicStroke(2);
-    this.referenceLineStroke = new BasicStroke(1);
+    this.referenceLineStroke = new BasicStroke(2);
   }
 
   public HistoDataset getDataset() {
@@ -31,44 +32,35 @@ public class HistoDoubleLinePainter implements HistoPainter {
       return;
     }
 
-    int previousReferenceY = metrics.y(dataset.getReferenceValue(0));
-    int previousActualY = metrics.y(dataset.getActualValue(0));
-
     for (int i = 0; i < dataset.size(); i++) {
-      int left = metrics.left(i);
-      int right = metrics.right(i);
-
-      Double reference = dataset.getReferenceValue(i);
-      int referenceY = metrics.y(reference);
+      int left = metrics.left(i) + PADDING;
+      int width = metrics.columnWidth() - 2 * PADDING;
 
       Double actual = dataset.getActualValue(i);
-      int actualY = metrics.y(actual);
-
-      int width = right - left;
-
       boolean isRollover = (currentRollover != null) && (currentRollover == i);
       boolean isSelected = dataset.isSelected(i);
 
       g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, getFillAlpha(isSelected, isRollover)));
-      g2.setColor(colors.getFillColor());
-      g2.fillRect(left, actualY, width, metrics.y(0) - actualY);
+      g2.setColor(colors.getActualLineColor());
+      g2.fillRect(left, metrics.barTop(actual),
+                  width, metrics.barHeight(actual));
+    }
 
+    if (showReference) {
       g2.setComposite(AlphaComposite.Src);
       g2.setColor(colors.getReferenceLineColor());
       g2.setStroke(referenceLineStroke);
-      if (previousReferenceY != referenceY) {
-        g2.drawLine(left, previousReferenceY, left, referenceY);
-      }
-      g2.drawLine(left, referenceY, right, referenceY);
-      previousReferenceY = referenceY;
 
-      g2.setColor(colors.getActualLineColor());
-      g2.setStroke(actualLineStroke);
-      if (previousActualY != actualY) {
-        g2.drawLine(left, previousActualY, left, actualY);
+      int previousReferenceY = metrics.y(dataset.getReferenceValue(0));
+      for (int i = 0; i < dataset.size(); i++) {
+        int left = metrics.left(i);
+        Double reference = dataset.getReferenceValue(i);
+        int referenceY = metrics.y(reference);
+        if (previousReferenceY != referenceY) {
+          g2.drawLine(left, previousReferenceY, left, referenceY);
+        }
+        g2.drawLine(left, referenceY, metrics.right(i), referenceY);
       }
-      g2.drawLine(left, actualY, right, actualY);
-      previousActualY = actualY;
     }
   }
 
@@ -79,6 +71,6 @@ public class HistoDoubleLinePainter implements HistoPainter {
     if (rollover) {
       return 0.75f;
     }
-    return 0.5f;
+    return 0.3f;
   }
 }

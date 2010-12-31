@@ -90,7 +90,7 @@ public class HistoChartMetricsTest extends ChartTestCase {
 
   public void testSectionBlocks() throws Exception {
     HistoChartMetrics metrics =
-      new HistoChartMetrics(150, 130, getFontMetrics(), 10, 0, 100, true, false, false);
+      new HistoChartMetrics(150, 130, getFontMetrics(), 10, 0, 100, true, true, false);
 
     HistoLineDataset dataset = new HistoLineDataset(null);
     dataset.add(1, 1.0, "item1", "Item 1 A", "section A", false);
@@ -106,9 +106,9 @@ public class HistoChartMetricsTest extends ChartTestCase {
 
     List<HistoChartMetrics.Section> sections = metrics.getSections(dataset);
     assertEquals(3, sections.size());
-    checkSection(sections.get(0), "section A", 15, 128, 25, 24, 115, 15);
-    checkSection(sections.get(1), "section B", 69, 128, 49, 84, 115, 15);
-    checkSection(sections.get(2), "section C", 119, 128, 133, 17, 115, 15);
+    checkSection(sections.get(0), "section A", 15, 15, 25, 24, 110, 20);
+    checkSection(sections.get(1), "section B", 69, 15, 49, 84, 110, 20);
+    checkSection(sections.get(2), "section C", 119, 15, 133, 17, 110, 20);
   }
 
   private void checkSection(HistoChartMetrics.Section section,
@@ -116,7 +116,7 @@ public class HistoChartMetricsTest extends ChartTestCase {
                             int textX, int textY,
                             int blockX, int blockWidth, int blockY, int blockHeight) {
     HistoChartMetrics.Section expected =
-      new HistoChartMetrics.Section(text, textX, textY, blockX, blockWidth, blockY, blockHeight);
+      new HistoChartMetrics.Section(text, textX, textY, blockX, blockWidth, blockY, blockHeight, 10, 20);
     assertEquals(expected.toString(), section.toString());
   }
 

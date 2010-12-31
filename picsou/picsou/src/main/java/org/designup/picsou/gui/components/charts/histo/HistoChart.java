@@ -21,6 +21,7 @@ public class HistoChart extends JPanel {
   private HistoChartMetrics metrics;
   private Integer currentRolloverIndex;
   private Font selectedLabelFont;
+  private Font sectionLabelFont;
   private boolean drawLabels;
   private Integer columnSelectionMinIndex;
   private Integer columnSelectionMaxIndex;
@@ -33,6 +34,7 @@ public class HistoChart extends JPanel {
     this.colors = new HistoChartColors(directory);
     setFont(getFont().deriveFont(9f));
     this.selectedLabelFont = getFont().deriveFont(Font.BOLD);
+    this.sectionLabelFont = getFont().deriveFont(11f).deriveFont(Font.BOLD);
     registerMouseActions();
   }
 
@@ -122,12 +124,12 @@ public class HistoChart extends JPanel {
 
   private void paintBg(Graphics2D g2) {
     g2.setColor(colors.getChartBgColor());
-    g2.fillRect(metrics.chartX(), 0, metrics.chartWidth(), metrics.chartHeight());
+    g2.fillRect(metrics.chartX(), metrics.columnTop(), metrics.chartWidth(), metrics.chartHeight());
   }
 
   private void paintBorder(Graphics2D g2) {
     g2.setColor(colors.getChartBorderColor());
-    g2.drawRect(metrics.chartX(), 0, metrics.chartWidth(), metrics.chartHeight());
+    g2.drawRect(metrics.chartX(), metrics.columnTop(), metrics.chartWidth(), metrics.chartHeight());
   }
 
   private void paintLabels(Graphics2D g2, HistoDataset dataset) {
@@ -174,10 +176,11 @@ public class HistoChart extends JPanel {
     }
     g2.setStroke(new BasicStroke(1));
     boolean firstBlock = true;
+    g2.setFont(sectionLabelFont);
     for (HistoChartMetrics.Section section : metrics.getSections(dataset)) {
       if (!firstBlock) {
         g2.setColor(colors.getSectionLineColor());
-        g2.drawLine(section.blockX, 0, section.blockX, panelHeight);
+        g2.drawLine(section.blockX, section.lineY, section.blockX, section.lineHeight);
       }
 
       g2.setColor(colors.getLabelColor());

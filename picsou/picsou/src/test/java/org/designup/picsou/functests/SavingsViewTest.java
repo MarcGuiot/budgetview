@@ -59,37 +59,35 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     savingsAccountsChart
-      .checkColumnCount(13)
-      .checkLineColumn(0, "J", "2009", 200.00, true)
-      .checkLineColumn(1, "A", "2009", 400.00)
-      .checkLineColumn(2, "S", "2009", 600.00)
-      .checkLineColumn(3, "O", "2009", 800.00)
-      .checkLineColumn(6, "J", "2010", 1400.00)
-      .checkLineColumn(12, "J", "2010", 2600.00);
+      .checkColumnCount(10)
+      .checkDiffColumn(0, "J", "2009", 0, 200.00, true)
+      .checkDiffColumn(1, "A", "2009", 0, 400.00)
+      .checkDiffColumn(2, "S", "2009", 0, 600.00)
+      .checkDiffColumn(3, "O", "2009", 0, 800.00)
+      .checkDiffColumn(6, "J", "2010", 0, 1400.00);
     savingsAccountsChart.checkTooltip(1, "End of August 2009 position: 400.00");
 
     savingsAccounts.editPosition("ING").setAmount(300.00).validate();
 
     views.selectHome();
     savingsAccountsChart
-      .checkColumnCount(13)
-      .checkLineColumn(0, "J", "2009", 300.00, true)
-      .checkLineColumn(1, "A", "2009", 500.00)
-      .checkLineColumn(2, "S", "2009", 700.00)
-      .checkLineColumn(3, "O", "2009", 900.00)
-      .checkLineColumn(6, "J", "2010", 1500.00)
-      .checkLineColumn(12, "J", "2010", 2700.00);
+      .checkColumnCount(10)
+      .checkDiffColumn(0, "J", "2009", 0, 300.00, true)
+      .checkDiffColumn(1, "A", "2009", 0, 500.00)
+      .checkDiffColumn(2, "S", "2009", 0, 700.00)
+      .checkDiffColumn(3, "O", "2009", 0, 900.00)
+      .checkDiffColumn(6, "J", "2010", 0, 1500.00);
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     views.selectHome();
     savingsAccountsChart
       .checkColumnCount(7)
-      .checkLineColumn(0, "J", "2009", 300.00, true)
-      .checkLineColumn(1, "A", "2009", 500.00)
-      .checkLineColumn(2, "S", "2009", 700.00)
-      .checkLineColumn(3, "O", "2009", 900.00)
-      .checkLineColumn(6, "J", "2010", 1500.00);
+      .checkDiffColumn(0, "J", "2009", 0, 300.00, true)
+      .checkDiffColumn(1, "A", "2009", 0, 500.00)
+      .checkDiffColumn(2, "S", "2009", 0, 700.00)
+      .checkDiffColumn(3, "O", "2009", 0, 900.00)
+      .checkDiffColumn(6, "J", "2010", 0, 1500.00);
   }
 
   public void testWithBeginOfAccount() throws Exception {
