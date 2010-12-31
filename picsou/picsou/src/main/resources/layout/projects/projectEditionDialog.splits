@@ -10,9 +10,11 @@
            horizontalAlignment="right"
            marginLeft="8" marginRight="8"/>
     <style selector="component#amountEditor" marginRight="8"/>
+
+    <style selector="label.totalAmount" font="-,bold,14"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(550,450)">
+  <panel styleClass="dialog" preferredSize="(550,500)">
     <column styleClass="innerDialog">
 
       <label ref="title" styleClass="title"/>
@@ -48,8 +50,14 @@
         </row>
       </column>
 
+      <row marginTop="10" marginRight="5">
+        <filler fill="horizontal"/>
+        <label text="$projectEdition.totalAmount" styleClass="formLabel"/>
+        <label ref="totalAmount" styleClass="totalAmount"/>
+      </row>
+
       <htmlEditorPane text="$projectEdition.series.message"
-                      marginTop="10" marginBottom="15" weightY="0.1"/>
+                      marginTop="15" marginBottom="15" weightY="0.1"/>
 
     </column>
   </panel>

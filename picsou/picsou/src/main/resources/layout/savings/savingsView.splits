@@ -75,8 +75,8 @@
                 </column>
               </scrollPane>
               <row styleClass="footer">
-                <button action="createSavingsSeries" styleClass="create" tooltipText="$series.create.tooltip"/>
                 <filler fill="horizontal"/>
+                <button action="createSavingsSeries" styleClass="create" tooltipText="$series.create.tooltip"/>
               </row>
             </column>
           </column>

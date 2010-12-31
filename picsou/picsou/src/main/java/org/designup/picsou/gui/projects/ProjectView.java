@@ -1,10 +1,8 @@
 package org.designup.picsou.gui.projects;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.MonthListStringifier;
 import org.designup.picsou.gui.description.MonthRangeFormatter;
-import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.model.ProjectItem;
 import org.designup.picsou.utils.Lang;
@@ -72,17 +70,6 @@ public class ProjectView extends View {
                         .getComponent());
     }
 
-  }
-
-  private class ProjectAmountStringifier implements GlobListStringifier {
-
-    public String toString(GlobList list, GlobRepository repository) {
-      double total = 0.0;
-      for (Glob project : list) {
-        total += project.get(Project.TOTAL_AMOUNT);
-      }
-      return Formatting.toString(total, BudgetArea.EXTRAS);
-    }
   }
 
   private class ProjectPeriodStringifier implements GlobListStringifier {

@@ -21,10 +21,12 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     projects.create()
       .checkTitle("Create a project")
+      .checkTotalAmount(0.00)
       .setName("My project")
       .setItemName(0, "Reservation")
       .setItemDate(0, 201101)
       .setItemAmount(0, -200.00)
+      .checkTotalAmount(200.00)
       .validate();
 
     projects.checkProjectList("My project");
@@ -36,10 +38,12 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     projects.edit("My project")
       .addItem(1, "Travel", 201102, -100.00)
+      .checkTotalAmount(300.00)
       .addItem(2, "Hotel", 201102, -500.00)
       .checkItems("Reservation | January 2011 | -200.00\n" +
                   "Travel | February 2011 | -100.00\n" +
                   "Hotel | February 2011 | -500.00")
+      .checkTotalAmount(800.00)
       .validate();
 
     projects.checkProjectList("My project");
@@ -56,6 +60,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
                   "Travel | February 2011 | -100.00\n" +
                   "Hotel | February 2011 | -500.00")
       .deleteItem(1)
+      .checkTotalAmount(700.00)
       .validate();
 
     timeline.selectMonth("2011/02");

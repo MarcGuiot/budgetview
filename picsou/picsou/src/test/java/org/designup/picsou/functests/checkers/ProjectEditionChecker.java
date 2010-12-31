@@ -29,6 +29,11 @@ public class ProjectEditionChecker extends GuiChecker {
     return this;
   }
 
+  public ProjectEditionChecker checkTotalAmount(double amount) {
+    assertThat(dialog.getTextBox("totalAmount").textEquals(toString(amount)));
+    return this;
+  }
+
   public ProjectEditionChecker checkItems(String expected) {
     Assert.assertEquals(expected.trim(), getContent().trim());
     return this;

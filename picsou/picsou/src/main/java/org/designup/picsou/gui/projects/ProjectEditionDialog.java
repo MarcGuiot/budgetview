@@ -21,6 +21,7 @@ import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobButtonView;
+import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -51,6 +52,7 @@ public class ProjectEditionDialog {
   private GlobTextEditor projectNameEditor;
   private Key currentProjectKey;
   private Map<Key, JTextField> itemNameFields = new HashMap<Key, JTextField>();
+  private GlobLabelView totalAmountLabel;
 
   public ProjectEditionDialog(GlobRepository parentRepository, Directory directory) {
     this(parentRepository, directory, directory.get(JFrame.class));
@@ -86,6 +88,10 @@ public class ProjectEditionDialog {
 
     builder.add("addItem", new AddItemAction());
 
+    totalAmountLabel = GlobLabelView.init(Project.TYPE, localRepository, directory,
+                                          new ProjectAmountStringifier());
+    builder.add("totalAmount", totalAmountLabel);
+
     dialog.addPanelWithButtons(builder.<JPanel>load(),
                                new OkAction(), new CancelAction(dialog),
                                new DeleteProjectAction());
@@ -109,6 +115,7 @@ public class ProjectEditionDialog {
 
   private void doShow() {
     projectNameEditor.forceSelection(currentProjectKey);
+    totalAmountLabel.forceSelection(currentProjectKey);
     repeat.setFilter(linkedTo(currentProjectKey, ProjectItem.PROJECT));
     dialog.showCentered();
   }
