@@ -16,7 +16,7 @@ public class InitializationView extends View {
   private JPanel panel = new JPanel();
   private ImportFileAction importFileAction;
 
-  public InitializationView(ImportFileAction importFileAction, GlobRepository repository, Directory directory) {
+  public InitializationView(GlobRepository repository, Directory directory) {
     super(repository, directory);
     this.importFileAction = importFileAction;
   }

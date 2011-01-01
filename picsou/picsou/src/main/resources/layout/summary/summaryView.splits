@@ -14,7 +14,6 @@
            ui="hyperlinkButtonWithoutUnderline" foreground="summary.navigation.link"
            horizontalTextPosition="left" fill="none" anchor="right" marginRight="10"
            icon="arrow_right_grey.png" rolloverIcon="arrow_right_blue_full.png"/>
-
     <style selector="label.navigation" fill="none" anchor="center"/>
 
     <style selector="htmlEditorPane#message" fill="both" anchor="center" foreground="summary.message"
