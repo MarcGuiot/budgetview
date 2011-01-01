@@ -58,19 +58,19 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     budgetView.savings.alignAndPropagate("Epargne");
 
     views.selectHome();
-    savingsAccountsChart
+    summary.getSavingsChart()
       .checkColumnCount(10)
       .checkDiffColumn(0, "J", "2009", 0, 200.00, true)
       .checkDiffColumn(1, "A", "2009", 0, 400.00)
       .checkDiffColumn(2, "S", "2009", 0, 600.00)
       .checkDiffColumn(3, "O", "2009", 0, 800.00)
       .checkDiffColumn(6, "J", "2010", 0, 1400.00);
-    savingsAccountsChart.checkTooltip(1, "End of August 2009 position: 400.00");
+    summary.getSavingsChart().checkTooltip(1, "End of August 2009 position: 400.00");
 
     savingsAccounts.editPosition("ING").setAmount(300.00).validate();
 
     views.selectHome();
-    savingsAccountsChart
+    summary.getSavingsChart()
       .checkColumnCount(10)
       .checkDiffColumn(0, "J", "2009", 0, 300.00, true)
       .checkDiffColumn(1, "A", "2009", 0, 500.00)
@@ -81,7 +81,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     views.selectHome();
-    savingsAccountsChart
+    summary.getSavingsChart()
       .checkColumnCount(7)
       .checkDiffColumn(0, "J", "2009", 0, 300.00, true)
       .checkDiffColumn(1, "A", "2009", 0, 500.00)

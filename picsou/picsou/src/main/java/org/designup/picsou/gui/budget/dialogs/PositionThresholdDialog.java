@@ -26,6 +26,7 @@ import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class PositionThresholdDialog {
@@ -38,6 +39,10 @@ public class PositionThresholdDialog {
   private JScrollPane scrollPane = new JScrollPane();
 
   public PositionThresholdDialog(GlobRepository repository, Directory parentDirectory) {
+    this(parentDirectory.get(JFrame.class), repository, parentDirectory);
+  }
+
+  public PositionThresholdDialog(Window owner, GlobRepository repository, Directory parentDirectory) {
     this.localRepository =
       LocalGlobRepositoryBuilder.init(repository)
         .copy(BudgetStat.TYPE)
@@ -48,10 +53,10 @@ public class PositionThresholdDialog {
 
     this.parentDirectory = parentDirectory;
     this.directory = createDirectory(parentDirectory);
-    createDialog();
+    createDialog(owner);
   }
 
-  public void createDialog() {
+  public void createDialog(Window owner) {
     GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/budget/dialogs/positionThresholdDialog.splits", localRepository, directory);
 
@@ -79,7 +84,7 @@ public class PositionThresholdDialog {
       .setUpdateMatcher(ChangeSetMatchers.changesForKey(AccountPositionThreshold.KEY));
 
     JPanel panel = builder.load();
-    dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+    dialog = PicsouDialog.create(owner, directory);
     dialog.addPanelWithButtons(panel, new OkAction(), new CancelAction(dialog));
     dialog.pack();
   }
@@ -109,10 +114,6 @@ public class PositionThresholdDialog {
 
   private GlobList getSelectedMonths() {
     return parentDirectory.get(SelectionService.class).getSelection(Month.TYPE).sort(Month.ID);
-  }
-
-  public void applyChanges() {
-    localRepository.commitChanges(false);
   }
 
   private void selectStats(GlobList selectedMonths) {

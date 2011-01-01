@@ -93,6 +93,22 @@ public class HistoChecker extends GuiChecker {
     Assert.assertEquals("Invalid chart content", expected.toString(), actual.toString());
   }
 
+  public void dump() {
+    StringBuilder builder = new StringBuilder();
+    HistoDiffDataset dataset = getDataset(HistoDiffDataset.class);
+    builder.append(".checkColumnCount(").append(dataset.size()).append(")\n");
+    for (int i = 0; i < dataset.size(); i++) {
+        builder.append(".checkDiffColumn(").append(i).append(", \"")
+          .append(dataset.getLabel(i)).append("\", \"")
+          .append(dataset.getSection(i)).append("\", ")
+          .append(Formatting.toString(dataset.getReferenceValue(i))).append(", ")
+          .append(Formatting.toString(dataset.getActualValue(i)))
+          .append(dataset.isSelected(i) ? ", true" : "")
+          .append(")\n");
+    }
+    System.out.println(builder.toString());
+  }
+
   private TablePrinter createPrinter() {
     TablePrinter printer = new TablePrinter();
     printer.setHeader("Year", "Month", "Actual", "Planned", "Selected");

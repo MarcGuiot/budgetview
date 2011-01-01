@@ -37,7 +37,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public LicenseActivationChecker license;
   public BudgetViewChecker budgetView;
   public SavingsViewChecker savingsView;
-  public HistoChecker savingsAccountsChart;
   public CategorizationChecker categorization;
   public SeriesEvolutionChecker seriesEvolution;
   public VersionInfoChecker versionInfo;
@@ -45,6 +44,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public NotesChecker notes;
   public BackupChecker backup;
   public ProjectViewChecker projects;
+  public SummaryViewChecker summary;
 
   protected GlobRepository repository;
 
@@ -139,7 +139,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     title = new TitleChecker(mainWindow);
     budgetView = new BudgetViewChecker(mainWindow);
     savingsView = new SavingsViewChecker(mainWindow);
-    savingsAccountsChart = new HistoChecker(mainWindow, "summaryView", "savingsHistoChart");
     savingsView = new SavingsViewChecker(mainWindow);
     categorization = new CategorizationChecker(mainWindow);
     seriesEvolution = new SeriesEvolutionChecker(mainWindow);
@@ -148,6 +147,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     importPanel = new ImportPanelChecker(mainWindow);
     notes = new NotesChecker(mainWindow);
     projects = new ProjectViewChecker(mainWindow);
+    summary = new SummaryViewChecker(mainWindow);
   }
 
   protected void tearDown() throws Exception {
@@ -194,6 +194,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     importPanel = null;
     notes = null;
     projects = null;
+    summary = null;
     repository = null;
   }
 

@@ -1,22 +1,21 @@
 package org.designup.picsou.gui.budget.dialogs;
 
+import org.designup.picsou.gui.budget.AccountThresholdMessage;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.gui.summary.threshold.AccountPositionThresholdDialog;
-import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.utils.Lang;
+import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.Amounts;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Glob;
-import org.globsframework.model.Key;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.directory.Directory;
-import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.gui.splits.layout.CardHandler;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.fields.DoubleField;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -24,7 +23,7 @@ import java.util.SortedSet;
 
 public class PositionDialog {
   private PicsouDialog dialog;
-   private GlobRepository repository;
+  private GlobRepository repository;
 
   private JLabel valueLabel = new JLabel();
   private JLabel bankPositionAmount = new JLabel();
@@ -72,8 +71,8 @@ public class PositionDialog {
     HyperlinkHandler thresholdHandler = new HyperlinkHandler(directory) {
       protected void processCustomLink(String href) {
         if (href.equals("threshold")) {
-          AccountPositionThresholdDialog positionThresholdDialog =
-            new AccountPositionThresholdDialog(dialog, repository, directory);
+          PositionThresholdDialog positionThresholdDialog =
+            new PositionThresholdDialog(dialog, repository, directory);
           positionThresholdDialog.show();
           update();
         }
@@ -91,7 +90,7 @@ public class PositionDialog {
   }
 
   public void show(SortedSet<Integer> monthId) {
-    if (monthId.isEmpty()){
+    if (monthId.isEmpty()) {
       return;
     }
     setMonth(monthId);
@@ -201,37 +200,6 @@ public class PositionDialog {
     String positionDate = Formatting.toString(Month.getLastDay(lastMonthId));
     valueLabel.setText(Lang.get("position.valueLabel", positionAmount, positionDate));
 
-    updateLimiteMessage(lastMonthStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION));
-  }
-
-  private void updateLimiteMessage(final Double currentPosition) {
-    Double threshold = repository.get(AccountPositionThreshold.KEY).get(AccountPositionThreshold.THRESHOLD);
-    Double thresholdWarn = repository.get(AccountPositionThreshold.KEY).get(AccountPositionThreshold.THRESHOLD_FOR_WARN);
-    if (currentPosition < (threshold - thresholdWarn)) {
-      positionPanelLimit.setText(Lang.get("position.panel.threshold.inf", Formatting.toString(threshold)));
-    }
-    else {
-      boolean hasSavingsAccount =
-        !repository.getAll(Account.TYPE,
-                           GlobMatchers.and(
-                             GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()),
-                             GlobMatchers.not(GlobMatchers.fieldIn(Account.ID, Account.SUMMARY_ACCOUNT_IDS)))).isEmpty();
-      if (currentPosition > threshold + thresholdWarn) {
-        if (hasSavingsAccount) {
-          positionPanelLimit.setText(Lang.get("position.panel.threshold.sup.withSavings", Formatting.toString(threshold)));
-        }
-        else {
-          positionPanelLimit.setText(Lang.get("position.panel.threshold.sup.withoutSavings", Formatting.toString(threshold)));
-        }
-      }
-      else {
-        if (hasSavingsAccount) {
-          positionPanelLimit.setText(Lang.get("position.panel.threshold.zero.withSavings", Formatting.toString(threshold)));
-        }
-        else {
-          positionPanelLimit.setText(Lang.get("position.panel.threshold.zero.withoutSavings", Formatting.toString(threshold)));
-        }
-      }
-    }
+    positionPanelLimit.setText(AccountThresholdMessage.getMessage(lastMonthStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION), repository));
   }
 }

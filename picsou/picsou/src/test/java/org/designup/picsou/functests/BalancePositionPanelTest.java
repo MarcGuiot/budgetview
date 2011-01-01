@@ -52,7 +52,7 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
     PositionChecker position_09 = budgetView.getSummary().openPositionDialog();
     position_09.checkPresent(-100, 500, -500, 0, -100);
     position_09.checkThreshold(0)
-      .changeThreshold(100)
+      .setThreshold(100)
       .checkThreshold(100)
       .close();
 
@@ -91,9 +91,9 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     PositionChecker position_08 = budgetView.getSummary().openPositionDialog();
     position_08.checkTooMuchExpence()
-      .changeThreshold(-100)
+      .setThreshold(-100)
       .checkBalanceZeroWithoutSavings()
-      .changeThreshold(-200)
+      .setThreshold(-200)
       .checkOpenSavings()
       .close();
 
@@ -104,7 +104,7 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     PositionChecker new_position_08 = budgetView.getSummary().openPositionDialog();
     new_position_08.checkSavingsExpected()
-      .changeThreshold(-100)
+      .setThreshold(-100)
       .checkBalanceZeroWithSavings()
       .close();
   }

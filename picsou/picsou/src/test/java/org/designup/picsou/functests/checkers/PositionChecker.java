@@ -1,24 +1,36 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.Window;
-import org.uispec4j.interception.WindowInterceptor;
-import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.designup.picsou.gui.description.Formatting;
+import org.uispec4j.Window;
+import org.uispec4j.assertion.UISpecAssert;
 
-public class PositionChecker extends GuiChecker{
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
+
+public class PositionChecker extends GuiChecker {
   private Window window;
 
   public PositionChecker(Window window) {
     this.window = window;
   }
 
-  public PositionChecker checkPast(double amount){
+  public PositionChecker checkThreshold(double threshold) {
+    assertThat(window.getTextBox("positionPanelLimit").textContains(Formatting.toString(threshold)));
+    return this;
+  }
+
+  public PositionChecker setThreshold(double threshold) {
+    ThresholdDialogChecker
+      .open(window.getTextBox("positionPanelLimit").triggerClickOnHyperlink("alert"))
+      .setAmountAndClose(threshold);
+    return this;
+  }
+
+  public PositionChecker checkPast(double amount) {
     assertThat(window.getTextBox("positionPastAmount").textContains(Formatting.toString(amount)));
     return this;
   }
 
-  public PositionChecker checkPresent(double amount, double income, double expence, double savings, double enfOfMonth){
+  public PositionChecker checkPresent(double amount, double income, double expence, double savings, double enfOfMonth) {
     assertThat(window.getTextBox("bankPositionAmount").textContains(Formatting.toString(amount)));
     assertThat(window.getTextBox("waitedIncomeAmount").textContains(Formatting.toString(income)));
     assertThat(window.getTextBox("waitedExpenseAmount").textContains(Formatting.toString(expence)));
@@ -32,7 +44,7 @@ public class PositionChecker extends GuiChecker{
     return this;
   }
 
-  public PositionChecker checkIncome(double amount){
+  public PositionChecker checkIncome(double amount) {
     UISpecAssert.assertThat(window.getTextBox("waitedIncomeAmount").textContains(Formatting.toString(amount)));
     return this;
   }
@@ -47,17 +59,17 @@ public class PositionChecker extends GuiChecker{
     return this;
   }
 
-  public PositionChecker checkExpense(double amount){
+  public PositionChecker checkExpense(double amount) {
     UISpecAssert.assertThat(window.getTextBox("waitedExpenseAmount").textContains(Formatting.toString(amount)));
     return this;
   }
 
-  public PositionChecker checkSavingsIn(double amount){
+  public PositionChecker checkSavingsIn(double amount) {
     UISpecAssert.assertThat(window.getTextBox("waitedSavingsAmountToMain").textContains(Formatting.toString(amount)));
     return this;
   }
 
-  public PositionChecker checkSavingsOut(double amount){
+  public PositionChecker checkSavingsOut(double amount) {
     UISpecAssert.assertThat(window.getTextBox("waitedSavingsAmountFromMain").textContains(Formatting.toString(amount)));
     return this;
   }
@@ -67,47 +79,33 @@ public class PositionChecker extends GuiChecker{
     return this;
   }
 
-  public PositionChecker checkThreshold(double threshold){
-    assertThat(window.getTextBox("positionPanelLimit").textContains(Formatting.toString(threshold)));
-    return this;
-  }
-
-  public PositionChecker checkBalanceZeroWithSavings(){
+  public PositionChecker checkBalanceZeroWithSavings() {
     assertThat(window.getTextBox("positionPanelLimit")
-      .textContains("You can reduce your expenses to reinforce your savings"));
+                 .textContains("You can reduce your expenses to reinforce your savings"));
     return this;
   }
 
-  public PositionChecker checkBalanceZeroWithoutSavings(){
+  public PositionChecker checkBalanceZeroWithoutSavings() {
     assertThat(window.getTextBox("positionPanelLimit")
-      .textContains("You can reduce your expenses to open a savings account"));
+                 .textContains("You can reduce your expenses to open a savings account"));
     return this;
   }
 
-  public PositionChecker checkSavingsExpected(){
+  public PositionChecker checkSavingsExpected() {
     assertThat(window.getTextBox("positionPanelLimit")
-      .textContains("You can to more savings"));
+                 .textContains("You can to more savings"));
     return this;
   }
 
-  public PositionChecker checkOpenSavings(){
+  public PositionChecker checkOpenSavings() {
     assertThat(window.getTextBox("positionPanelLimit")
-      .textContains("Open a savings account"));
+                 .textContains("Open a savings account"));
     return this;
   }
 
-  public PositionChecker checkTooMuchExpence(){
+  public PositionChecker checkTooMuchExpence() {
     assertThat(window.getTextBox("positionPanelLimit")
-      .textContains("You should reduce your expence"));
-    return this;
-  }
-
-
-  public PositionChecker changeThreshold(double threshold){
-    AccountPositionThresholdChecker thresholdChecker =
-      new AccountPositionThresholdChecker(
-        WindowInterceptor.getModalDialog(window.getTextBox("positionPanelLimit").triggerClickOnHyperlink("alert")));
-    thresholdChecker.setAmountAndClose(threshold);
+                 .textContains("You should reduce your expence"));
     return this;
   }
 

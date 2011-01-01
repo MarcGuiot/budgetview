@@ -54,6 +54,10 @@ public class ViewSelectionChecker extends GuiChecker {
     assertSelected("budget");
   }
 
+  public void checkSavingsSelected() {
+    assertSelected("savings");
+  }
+
   private void select(String viewName) {
     getToggle(viewName).click();
   }
