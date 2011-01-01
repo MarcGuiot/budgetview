@@ -43,13 +43,13 @@ public class HistoDiffBarLinePainter implements HistoPainter {
       boolean isSelected = dataset.isSelected(i);
 
       g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, getFillAlpha(isSelected, isRollover)));
-      g2.setColor(colors.getReferenceLineColor());
+      g2.setColor(colors.getFillColor());
       g2.fillRect(left, metrics.barTop(reference),
                   width, metrics.barHeight(reference));
       g2.setComposite(AlphaComposite.Src);
     }
 
-    g2.setColor(colors.getActualLineColor());
+    g2.setColor(colors.getLineColor());
     g2.setStroke(actualLineStroke);
 
     int currentY = metrics.y(dataset.getActualValue(0));

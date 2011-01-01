@@ -59,7 +59,6 @@ public class SeriesEditionDialog {
   private Glob currentSeries;
   private Integer lastSelectedSubSeriesId;
   private Set<Integer> currentMonthIds = Collections.emptySet();
-  private Set<Integer> selectedSeries = new HashSet<Integer>();
 
   private JLabel titleLabel;
   private SeriesEditionDialog.ValidateAction okAction = new ValidateAction();
@@ -78,7 +77,6 @@ public class SeriesEditionDialog {
   private Boolean isAutomatic = false;
   private JComboBox dayChooser;
   private CardHandler monthSelectionCards;
-  private JButton deleteButton;
   private JLabel savingsMessage;
   private SubSeriesEditionPanel subSeriesEditionPanel;
   private GlobMatcher accountFilter;
@@ -303,7 +301,7 @@ public class SeriesEditionDialog {
     localRepository.addChangeListener(new OkButtonUpdater());
 
     JPanel panel = builder.load();
-    deleteButton = new JButton(new DeleteSeriesAction("seriesEdition.deleteCurrent", true));
+    JButton deleteButton = new JButton(new DeleteSeriesAction("seriesEdition.deleteCurrent", true));
     deleteButton.setOpaque(false);
     deleteButton.setName("deleteSingleSeries");
     dialog.addPanelWithButtons(panel, okAction, new CancelAction(), deleteButton);
@@ -449,7 +447,6 @@ public class SeriesEditionDialog {
   }
 
   private void resetSeries() {
-    selectedSeries.clear();
     amountEditionPanel.clear();
   }
 
@@ -691,9 +688,6 @@ public class SeriesEditionDialog {
   }
 
   public void setCurrentSeries(Glob currentSeries) {
-    if (currentSeries != null) {
-      selectedSeries.add(currentSeries.get(Series.ID));
-    }
     this.currentSeries = currentSeries;
     this.subSeriesEditionPanel.setCurrentSeries(currentSeries);
     endDateTextFieldView.getComponent().setEnabled(this.currentSeries != null);

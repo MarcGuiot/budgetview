@@ -34,7 +34,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
   private GlobRepository repository;
   private Directory directory;
 
-  private Integer currentMonthId;
+  private Integer selectedMonthId;
   private Key currentWrapperKey;
 
   private HistoChartBuilder histoChartBuilder;
@@ -117,7 +117,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
   }
 
   public void monthSelected(Integer monthId) {
-    this.currentMonthId = monthId;
+    this.selectedMonthId = monthId;
     update();
   }
 
@@ -147,7 +147,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     if (currentWrapperKey != null) {
       currentWrapper = repository.find(currentWrapperKey);
     }
-    if ((currentMonthId == null) || (currentWrapper == null) || repository.find(CurrentMonth.KEY) == null) {
+    if ((selectedMonthId == null) || (currentWrapper == null) || repository.find(CurrentMonth.KEY) == null) {
       histoChartBuilder.clear();
       return;
     }
@@ -155,12 +155,12 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       case BUDGET_AREA: {
         BudgetArea budgetArea = BudgetArea.get(currentWrapper.get(SeriesWrapper.ITEM_ID));
         if (budgetArea.equals(BudgetArea.UNCATEGORIZED)) {
-          histoChartBuilder.showUncategorizedHisto(currentMonthId);
+          histoChartBuilder.showUncategorizedHisto(selectedMonthId);
           updateUncategorizedBalanceStack();
           updateUncategorizedSeriesStack();
         }
         else {
-          histoChartBuilder.showBudgetAreaHisto(budgetArea, currentMonthId);
+          histoChartBuilder.showBudgetAreaHisto(budgetArea, selectedMonthId);
           updateMainBalanceStack(budgetArea);
           updateBudgetAreaSeriesStack(budgetArea, null);
         }
@@ -170,7 +170,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       case SERIES: {
         Integer seriesId = currentWrapper.get(SeriesWrapper.ITEM_ID);
         BudgetArea budgetArea = Series.getBudgetArea(seriesId, repository);
-        histoChartBuilder.showSeriesHisto(seriesId, currentMonthId);
+        histoChartBuilder.showSeriesHisto(seriesId, selectedMonthId);
         updateMainBalanceStack(budgetArea);
         updateBudgetAreaSeriesStack(budgetArea, seriesId);
       }
@@ -179,17 +179,17 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       case SUMMARY: {
         Integer id = currentWrapper.get(SeriesWrapper.ID);
         if (id.equals(SeriesWrapper.BALANCE_SUMMARY_ID)) {
-          histoChartBuilder.showMainBalanceHisto(currentMonthId);
+          histoChartBuilder.showMainBalanceHisto(selectedMonthId);
           updateMainBalanceStack(null);
           updateMainAccountExpensesSeriesStack();
         }
         else if (id.equals(SeriesWrapper.MAIN_POSITION_SUMMARY_ID)) {
-          histoChartBuilder.showMainAccountsHisto(currentMonthId);
+          histoChartBuilder.showMainAccountsHisto(selectedMonthId);
           updateMainBalanceStack(null);
           updateMainAccountExpensesSeriesStack();
         }
         else if (id.equals(SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID)) {
-          histoChartBuilder.showSavingsAccountsHisto(currentMonthId);
+          histoChartBuilder.showSavingsAccountsHisto(selectedMonthId);
           updateSavingsStacks();
         }
       }
@@ -202,7 +202,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
   private void updateMainBalanceStack(BudgetArea selectedBudgetArea) {
 
-    Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, currentMonthId));
+    Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, selectedMonthId));
     if (budgetStat == null) {
       balanceChart.clear();
       return;
@@ -227,7 +227,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     StackChartDataset dataset = new StackChartDataset();
 
     for (Glob stat : repository.getAll(SeriesStat.TYPE,
-                                       and(fieldEquals(SeriesStat.MONTH, currentMonthId),
+                                       and(fieldEquals(SeriesStat.MONTH, selectedMonthId),
                                            not(fieldEquals(SeriesStat.SERIES, Series.UNCATEGORIZED_SERIES_ID))))) {
       Integer seriesId = stat.getKey().get(SeriesStat.SERIES);
       Glob series = repository.get(Key.create(Series.TYPE, seriesId));
@@ -244,7 +244,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
   private void updateBudgetAreaSeriesStack(BudgetArea budgetArea, Integer selectedSeriesId) {
     StackChartDataset dataset = new StackChartDataset();
 
-    for (Glob stat : repository.getAll(SeriesStat.TYPE, fieldEquals(SeriesStat.MONTH, currentMonthId))) {
+    for (Glob stat : repository.getAll(SeriesStat.TYPE, fieldEquals(SeriesStat.MONTH, selectedMonthId))) {
       Integer seriesId = stat.getKey().get(SeriesStat.SERIES);
       Glob series = repository.get(Key.create(Series.TYPE, seriesId));
       if (budgetArea.getId().equals(series.get(Series.BUDGET_AREA))) {
@@ -263,7 +263,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
   private void updateUncategorizedBalanceStack() {
 
-    Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, currentMonthId));
+    Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, selectedMonthId));
     double uncategorized = budgetStat != null ? budgetStat.get(BudgetStat.UNCATEGORIZED_ABS) : 0;
 
     StackChartDataset dataset = new StackChartDataset();
@@ -274,7 +274,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
     double categorized = 0.0;
     for (Glob seriesStat : repository.getAll(SeriesStat.TYPE,
-                                             and(fieldEquals(SeriesStat.MONTH, currentMonthId),
+                                             and(fieldEquals(SeriesStat.MONTH, selectedMonthId),
                                                  not(fieldEquals(SeriesStat.SERIES, Series.UNCATEGORIZED_SERIES_ID))))) {
       categorized += Math.abs(Utils.zeroIfNull(seriesStat.get(SeriesStat.AMOUNT)));
     }
@@ -290,7 +290,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     GlobList uncategorizedTransactions =
       repository.getAll(Transaction.TYPE,
                         and(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                            fieldEquals(Transaction.BUDGET_MONTH, currentMonthId)));
+                            fieldEquals(Transaction.BUDGET_MONTH, selectedMonthId)));
 
     StackChartDataset dataset = new StackChartDataset();
     for (Glob transaction : uncategorizedTransactions) {
@@ -311,7 +311,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     StackChartDataset seriesInDataset = new StackChartDataset();
     StackChartDataset seriesOutDataset = new StackChartDataset();
 
-    for (Glob seriesStat : repository.getAll(SeriesStat.TYPE, fieldEquals(SeriesStat.MONTH, currentMonthId))) {
+    for (Glob seriesStat : repository.getAll(SeriesStat.TYPE, fieldEquals(SeriesStat.MONTH, selectedMonthId))) {
       Double amount = seriesStat.get(SeriesStat.SUMMARY_AMOUNT);
       if (amount == null) {
         continue;
@@ -391,7 +391,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
   }
 
   private void updateSavingsBalanceStack(double savingsIn, double savingsOut) {
-    Glob budgetStat = SavingsBudgetStat.findSummary(currentMonthId, repository);
+    Glob budgetStat = SavingsBudgetStat.findSummary(selectedMonthId, repository);
 
     StackChartDataset incomeDataset = new StackChartDataset();
     incomeDataset.add(Lang.get("seriesEvolution.chart.balance.savingsIn"), savingsIn, null);

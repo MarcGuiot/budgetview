@@ -13,7 +13,7 @@ public class SeriesAmountChartPanel {
   private HistoChart chart;
   private Integer currentSeriesId;
   private HistoChartUpdater updater;
-  private Integer currentMonthId;
+  private Integer selectedMonthId;
 
   public SeriesAmountChartPanel(GlobRepository repository, Directory directory) {
 
@@ -26,7 +26,7 @@ public class SeriesAmountChartPanel {
       protected void update(HistoChartBuilder histoChartBuilder, Integer monthId) {
         if (currentSeriesId != null) {
           histoChartBuilder.showSeriesBudget(currentSeriesId,
-                                             SeriesAmountChartPanel.this.currentMonthId,
+                                             SeriesAmountChartPanel.this.selectedMonthId,
                                              currentMonths);
         }
       }
@@ -37,7 +37,7 @@ public class SeriesAmountChartPanel {
 
   public void init(Integer seriesId, Integer currentMonthId) {
     this.currentSeriesId = seriesId;
-    this.currentMonthId = currentMonthId;
+    this.selectedMonthId = currentMonthId;
     this.updater.update();
   }
 

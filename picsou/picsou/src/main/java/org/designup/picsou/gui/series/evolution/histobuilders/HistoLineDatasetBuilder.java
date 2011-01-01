@@ -15,7 +15,7 @@ public class HistoLineDatasetBuilder extends HistoDatasetBuilder {
   }
   
   public void add(int monthId, double value, boolean isSelectedMonth) {
-    dataset.add(monthId, value, getLabel(monthId), getTooltipLabel(monthId), getSection(monthId), isSelectedMonth);    
+    dataset.add(monthId, value, getLabel(monthId), getMonthLabel(monthId), getSection(monthId), isSelectedMonth);
   }
 
   public void apply(HistoLineColors colors, String messageKey, String... args) {

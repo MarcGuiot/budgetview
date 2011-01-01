@@ -21,8 +21,8 @@ public class HistoDiffDataset implements HistoDataset {
     this.tooltipKey = tooltipKey;
   }
 
-  public void add(int id, double reference, double actual, String label, String tooltipLabel, String section, boolean isSelected, boolean isFuture) {
-    this.elements.add(new Element(id, label, tooltipLabel, section, reference, actual, isSelected, isFuture));
+  public void add(int id, double reference, double actual, String label, String monthLabel, String section, boolean isCurrent, boolean isSelected, boolean isFuture) {
+    this.elements.add(new Element(id, label, monthLabel, section, reference, actual, isCurrent, isSelected, isFuture));
     this.containsSections |= Strings.isNotEmpty(section);
     updateMax(reference);
     updateMax(actual);
@@ -71,7 +71,7 @@ public class HistoDiffDataset implements HistoDataset {
       return "";
     }
     return Lang.get(tooltipKey,
-                    elements.get(index).tooltipLabel,
+                    elements.get(index).monthLabel,
                     Formatting.toString(getReferenceValue(index)),
                     Formatting.toString(getActualValue(index)));
   }
@@ -109,6 +109,10 @@ public class HistoDiffDataset implements HistoDataset {
     return elements.get(index).future;
   }
 
+  public boolean isCurrent(int index) {
+    return elements.get(index).current;
+  }
+
   public boolean isSelected(int index) {
     return elements.get(index).selected;
   }
@@ -143,23 +147,25 @@ public class HistoDiffDataset implements HistoDataset {
   private class Element {
     final int id;
     final String label;
-    final String tooltipLabel;
+    final String monthLabel;
     final String section;
     final double referenceValue;
     final double actualValue;
+    final boolean current;
     final boolean selected;
     final boolean future;
 
     private Element(int id,
-                    String label, String tooltipLabel, String section,
+                    String label, String monthLabel, String section,
                     double referenceValue, double actualValue,
-                    boolean selected, boolean future) {
+                    boolean current, boolean selected, boolean future) {
       this.id = id;
       this.label = label;
-      this.tooltipLabel = tooltipLabel;
+      this.monthLabel = monthLabel;
       this.section = section;
       this.referenceValue = referenceValue;
       this.actualValue = actualValue;
+      this.current = current;
       this.selected = selected;
       this.future = future;
     }

@@ -98,7 +98,7 @@ public class HistoLineDataset implements HistoDataset {
     if ((index < 0) || (index >= elements.size())) {
       return "";
     }
-    return Lang.get(tooltipKey, elements.get(index).tooltipLabel, Formatting.toString(getValue(index)));
+    return Lang.get(tooltipKey, elements.get(index).monthLabel, Formatting.toString(getValue(index)));
   }
 
   public String toString() {
@@ -122,15 +122,15 @@ public class HistoLineDataset implements HistoDataset {
   private class Element {
     final int id;
     final String label;
-    final String tooltipLabel;
+    final String monthLabel;
     final String section;
     final double value;
     private boolean selected;
 
-    private Element(int id, String label, String tooltipLabel, String section, double value, boolean selected) {
+    private Element(int id, String label, String monthLabel, String section, double value, boolean selected) {
       this.id = id;
       this.label = label;
-      this.tooltipLabel = tooltipLabel;
+      this.monthLabel = monthLabel;
       this.section = section;
       this.value = value;
       this.selected = selected;

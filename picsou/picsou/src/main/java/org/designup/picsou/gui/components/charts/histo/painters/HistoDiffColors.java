@@ -9,41 +9,31 @@ import java.awt.*;
 
 public class HistoDiffColors implements ColorChangeListener {
 
-  private String referenceLineKey;
-  private String actualLineKey;
   private String fillKey;
-
-  private Color referenceLineColor;
-  private Color actualLineColor;
+  private String lineKey;
 
   private Color fillColor;
+  private Color lineColor;
 
-  public HistoDiffColors(String referenceLineKey,
-                         String actualLineKey,
+  public HistoDiffColors(String lineKey,
                          String fillKey,
                          Directory directory) {
-    this.referenceLineKey = referenceLineKey;
-    this.actualLineKey = actualLineKey;
+    this.lineKey = lineKey;
     this.fillKey = fillKey;
 
     directory.get(ColorService.class).addListener(this);
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    referenceLineColor = colorLocator.get(referenceLineKey);
-    actualLineColor = colorLocator.get(actualLineKey);
+    lineColor = colorLocator.get(lineKey);
     fillColor = colorLocator.get(fillKey);
-  }
-
-  public Color getReferenceLineColor() {
-    return referenceLineColor;
-  }
-
-  public Color getActualLineColor() {
-    return actualLineColor;
   }
 
   public Color getFillColor() {
     return fillColor;
+  }
+
+  public Color getLineColor() {
+    return lineColor;
   }
 }

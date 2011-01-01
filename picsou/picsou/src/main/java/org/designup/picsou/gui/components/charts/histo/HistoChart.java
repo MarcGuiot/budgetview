@@ -115,7 +115,7 @@ public class HistoChart extends JPanel {
     paintBg(g2);
     paintLabels(g2, dataset);
     paintScale(g2, panelWidth);
-    paintSections(g2, panelHeight, dataset);
+    paintSections(g2, dataset);
     paintSelectionBorder(g2, dataset);
     paintBorder(g2);
 
@@ -144,7 +144,7 @@ public class HistoChart extends JPanel {
         g2.fillRect(left, metrics.columnTop(), metrics.columnWidth(), columnHeight);
 
         g2.setColor(colors.getSelectedLabelBackgroundColor());
-        g2.fillRect(left, columnHeight, metrics.columnWidth(), metrics.labelZoneHeightWithMargin());
+        g2.fillRect(left, metrics.labelTop(), metrics.columnWidth(), metrics.labelZoneHeightWithMargin());
       }
 
       if (drawLabels) {
@@ -170,7 +170,7 @@ public class HistoChart extends JPanel {
     }
   }
 
-  private void paintSections(Graphics2D g2, int panelHeight, HistoDataset dataset) {
+  private void paintSections(Graphics2D g2, HistoDataset dataset) {
     if (!drawLabels) {
       return;
     }

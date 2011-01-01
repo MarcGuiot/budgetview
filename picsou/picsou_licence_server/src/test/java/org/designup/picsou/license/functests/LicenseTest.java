@@ -364,7 +364,6 @@ public class LicenseTest extends ConnectedTestCase {
     };
     mailThread.setDaemon(true);
     mailThread.start();
-    System.out.println("LicenseTest.testMailSentLater started");
     checkReceivedMail(MAIL);
   }
 

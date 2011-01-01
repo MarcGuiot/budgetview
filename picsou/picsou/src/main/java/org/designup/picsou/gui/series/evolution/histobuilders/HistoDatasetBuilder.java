@@ -23,7 +23,7 @@ public class HistoDatasetBuilder {
     return Month.getOneLetterMonthLabel(monthId);
   }
 
-  protected String getTooltipLabel(int monthId) {
+  protected String getMonthLabel(int monthId) {
     return Month.getFullMonthLabelWith4DigitYear(monthId);
   }
 

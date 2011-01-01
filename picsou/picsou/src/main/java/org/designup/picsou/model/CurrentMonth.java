@@ -10,6 +10,7 @@ import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
@@ -46,6 +47,11 @@ public class CurrentMonth {
 
   public static Integer getCurrentMonth(GlobRepository repository) {
     return repository.get(CurrentMonth.KEY).get(CURRENT_MONTH);
+  }
+
+  public static boolean isCurrentMonth(int monthId, GlobRepository repository) {
+    Glob currentMonth = repository.find(CurrentMonth.KEY);
+    return currentMonth != null && currentMonth.get(LAST_TRANSACTION_MONTH) == monthId;
   }
 
   public static class Serializer implements PicsouGlobSerializer {

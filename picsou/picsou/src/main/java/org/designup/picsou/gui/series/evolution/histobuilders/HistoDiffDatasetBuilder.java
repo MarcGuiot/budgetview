@@ -12,7 +12,6 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
 
   private HistoDiffDataset dataset;
   private int multiplier = 1;
-  private boolean showActualInTheFuture = true;
   private int lastMonthWithTransactions;
 
   HistoDiffDatasetBuilder(HistoChart histoChart, JLabel label, GlobRepository repository, String tooltipKey) {
@@ -21,25 +20,21 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
     this.lastMonthWithTransactions = CurrentMonth.getLastTransactionMonth(repository);
   }
 
-  public void setActualHiddenInTheFuture() {
-    showActualInTheFuture = false;
-  }
-
   public void setInverted(boolean inverted) {
     this.multiplier = inverted ? -1 : 1;
   }
 
-  public void add(int monthId, Double reference, Double actual, boolean isSelectedMonth) {
+  public void add(int monthId, Double reference, Double actual, boolean isCurrentMonth, boolean isSelectedMonth) {
     dataset.add(monthId,
                 reference != null ? reference * multiplier : 0,
                 actual != null ? actual * multiplier : 0,
-                getLabel(monthId), getTooltipLabel(monthId), getSection(monthId),
-                isSelectedMonth,
+                getLabel(monthId), getMonthLabel(monthId), getSection(monthId),
+                isCurrentMonth, isSelectedMonth,
                 monthId > lastMonthWithTransactions);
   }
 
-  public void addEmpty(int monthId, boolean isSelectedMonth) {
-    add(monthId, 0.0, 0.0, isSelectedMonth);
+  public void addEmpty(int monthId, boolean isCurrentMonth, boolean isSelectedMonth) {
+    add(monthId, 0.0, 0.0, isCurrentMonth, isSelectedMonth);
   }
 
   public void showBarLine(HistoDiffColors colors, String messageKey, String... args) {
@@ -49,11 +44,6 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
 
   public void showSummary(HistoDiffColors colors, boolean showReference, String messageKey, String... args) {
     HistoDiffSummaryPainter painter = new HistoDiffSummaryPainter(dataset, showReference, colors);
-    apply(painter, messageKey, args);
-  }
-
-  public void showDoubleLine(HistoDiffColors colors, boolean showActualInTheFuture, String messageKey, String... args) {
-    HistoDoubleLinePainter painter = new HistoDoubleLinePainter(dataset, colors);
     apply(painter, messageKey, args);
   }
 

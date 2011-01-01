@@ -38,17 +38,17 @@ public class HistoDiffSummaryPainter implements HistoPainter {
 
       Double actual = dataset.getActualValue(i);
       boolean isRollover = (currentRollover != null) && (currentRollover == i);
-      boolean isSelected = dataset.isSelected(i);
+      boolean isCurrent = dataset.isCurrent(i);
 
-      g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, getFillAlpha(isSelected, isRollover)));
-      g2.setColor(colors.getActualLineColor());
+      g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, getFillAlpha(isCurrent, isRollover)));
+      g2.setColor(colors.getFillColor());
       g2.fillRect(left, metrics.barTop(actual),
                   width, metrics.barHeight(actual));
     }
 
     if (showReference) {
       g2.setComposite(AlphaComposite.Src);
-      g2.setColor(colors.getReferenceLineColor());
+      g2.setColor(colors.getLineColor());
       g2.setStroke(referenceLineStroke);
 
       int previousReferenceY = metrics.y(dataset.getReferenceValue(0));

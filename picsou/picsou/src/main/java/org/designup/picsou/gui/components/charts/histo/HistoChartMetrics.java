@@ -171,6 +171,10 @@ public class HistoChartMetrics {
     return chartHeight;
   }
 
+  public int labelTop() {
+    return sectionZoneHeight + columnHeight();
+  }
+
   public int labelY() {
     return panelHeight - labelBottomMargin;
   }
