@@ -2,14 +2,18 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.utils.AccountFilteringCombo;
+import org.designup.picsou.gui.card.utils.GotoCardAction;
 import org.designup.picsou.gui.components.DefaultTableCellPainter;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.FilterClearer;
 import org.designup.picsou.gui.components.filtering.FilterManager;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.components.filtering.components.FilterClearingPanel;
+import org.designup.picsou.gui.components.filtering.components.TextFilterPanel;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.TransactionBudgetAreaStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
+import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.Matchers;
@@ -28,6 +32,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
@@ -69,6 +74,7 @@ public class TransactionView extends View implements Filterable {
   private FilterManager filterManager;
   private PicsouTableHeaderPainter headerPainter;
   private JCheckBox showPlannedTransactionsCheckbox;
+  private TextFilterPanel search;
 
   public TransactionView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -77,13 +83,40 @@ public class TransactionView extends View implements Filterable {
     this.transactionSelection = new TransactionSelection(filterManager, repository, directory);
   }
 
-  public void registerComponents(GlobsPanelBuilder builder) {
+  public void registerComponents(GlobsPanelBuilder parentBuilder) {
+
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/transactions/transactionView.splits",
+                                                      repository, directory);
+
     addAccountCombo(builder);
     addShowPlannedTransactionsCheckbox(builder);
     builder.add(view.getComponent());
 
     FilterClearingPanel filterClearingPanel = new FilterClearingPanel(filterManager, repository, directory);
     builder.add("customFilterMessage", filterClearingPanel.getPanel());
+
+    search = new TextFilterPanel(getFilterSet(), repository, directory) {
+      protected GlobMatcher createMatcher(final String searchFilter) {
+        return or(fieldContainsIgnoreCase(Transaction.LABEL, searchFilter),
+                  fieldContainsIgnoreCase(Transaction.NOTE, searchFilter),
+                  new GlobMatcher() {
+                    final GlobStringifier amountStringifier =
+                      directory.get(DescriptionService.class).getStringifier(Transaction.AMOUNT);
+
+                    public boolean matches(Glob item, GlobRepository repository) {
+                      String s = amountStringifier.toString(item, repository);
+                      return s != null && s.contains(searchFilter);
+                    }
+                  });
+      }
+    };
+    builder.add("transactionSearch", search.getPanel());
+
+    builder.addLabel("sum", Transaction.TYPE,
+                     GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT, false, Transaction.AMOUNT))
+      .setAutoHideIfEmpty(true);
+
+    parentBuilder.add("transactionView", builder);
   }
 
   public void setFilter(GlobMatcher matcher) {
@@ -240,6 +273,7 @@ public class TransactionView extends View implements Filterable {
     transactionSelection.init();
     accountFilteringCombo.reset();
     showPlannedTransactionsCheckbox.setSelected(false);
+    search.reset();
     updateShowTransactionsMatcher();
     setFilter(GlobMatchers.ALL);
   }

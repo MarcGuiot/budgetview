@@ -176,35 +176,7 @@
             </column>
 
             <column weightX="100">
-              <label text="$transactionView.operations.title" styleClass="blockTitle"/>
-              <panel styleClass="block">
-                <column>
-                  <column styleClass="innerBlock" margin="10" marginLeft="15" marginRight="15">
-                    <row marginBottom="5">
-                      <label text="$transactionView.filter.label" styleClass="formLabelTop" marginRight="5"/>
-                      <comboBox ref="accountFilterCombo"/>
-                      <filler fill="horizontal"/>
-                      <panel ref="customFilterMessage" fill="none" anchor="center"/>
-                      <filler fill="horizontal"/>
-                      <checkBox ref="showPlannedTransactions" text="$transactionView.showPlannedTransactions"
-                                weightX="0"/>
-                    </row>
-                    <scrollPane borderPos="center" viewportBackground="transactions.bg"
-                                border="line(transaction.border)" opaque="false"
-                                marginTop="5" marginLeft="5">
-                      <table ref="transactionsTable" background="transactions.bg" rowHeight="20"
-                             autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
-                    </scrollPane>
-                    <row marginBottom="5">
-                      <label text="$amount" styleClass="formLabelTop" autoHideSource="sum"
-                             border="empty(0,0,0,5)" tooltipText="$amount.tooltip"/>
-                      <label ref="sum"/>
-                      <filler fill="horizontal"/>
-                      <component ref="transactionSearch"/>
-                    </row>
-                  </column>
-                </column>
-              </panel>
+              <panel ref="transactionView"/>
             </column>
           </horizontalBoxes>
         </card>

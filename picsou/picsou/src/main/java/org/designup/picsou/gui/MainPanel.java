@@ -3,8 +3,6 @@ package org.designup.picsou.gui;
 import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.accounts.AccountView;
-import org.designup.picsou.gui.accounts.chart.MainAccountsChartView;
-import org.designup.picsou.gui.accounts.chart.SavingsAccountsChartView;
 import org.designup.picsou.gui.actions.*;
 import org.designup.picsou.gui.backup.BackupAction;
 import org.designup.picsou.gui.backup.RestoreAction;
@@ -15,7 +13,6 @@ import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.filtering.components.TextFilterPanel;
-import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
@@ -52,14 +49,9 @@ import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.format.DescriptionService;
-import org.globsframework.model.format.GlobListStringifiers;
-import org.globsframework.model.format.GlobStringifier;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.ReplicationGlobRepository;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
@@ -93,7 +85,6 @@ public class MainPanel {
   private TimeView timeView;
   private CardView cardView;
   private TransactionView transactionView;
-  private TextFilterPanel search;
   private SeriesEvolutionView seriesEvolutionView;
   private CategorizationView categorizationView;
 
@@ -141,25 +132,6 @@ public class MainPanel {
     logoutAction = new LogoutAction(logoutService);
     protectAction = new ProtectAction(repository, directory);
     deleteUserAction = new DeleteUserAction(this, repository, directory);
-    search = new TextFilterPanel(transactionView.getFilterSet(), repository, directory) {
-      protected GlobMatcher createMatcher(final String searchFilter) {
-        return or(fieldContainsIgnoreCase(Transaction.LABEL, searchFilter),
-                  fieldContainsIgnoreCase(Transaction.NOTE, searchFilter),
-                  new GlobMatcher() {
-                    final GlobStringifier amountStringifier =
-                      directory.get(DescriptionService.class).getStringifier(Transaction.AMOUNT);
-
-                    public boolean matches(Glob item, GlobRepository repository) {
-                      String s = amountStringifier.toString(item, repository);
-                      return s != null && s.contains(searchFilter);
-                    }
-                  });
-      }
-    };
-    builder.add("transactionSearch", search.getPanel());
-    builder.addLabel("sum", Transaction.TYPE,
-                     GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT, false, Transaction.AMOUNT))
-      .setAutoHideIfEmpty(true);
 
     LicenseInfoView licenseInfoView = new LicenseInfoView(repository, directory);
 
@@ -170,7 +142,6 @@ public class MainPanel {
 
     cardView = new CardView(repository, directory, categorizationView.getCompletionSignpost());
     NotesView notesView = new NotesView(repository, directory);
-    InitializationView initializationView = new InitializationView(importFileAction, repository, directory);
     seriesEvolutionView = new SeriesEvolutionView(repository, directory);
     createPanel(
       titleView,
@@ -218,7 +189,6 @@ public class MainPanel {
 
     parent.setJMenuBar(menuBar);
     cardView.showInitialCard();
-    search.reset();
     transactionView.reset();
     categorizationView.reset();
     directory.get(NavigationService.class).reset();
