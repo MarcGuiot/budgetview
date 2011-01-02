@@ -223,6 +223,7 @@ public class LicenseActivationDialog {
           localRepository.update(User.KEY, User.IS_REGISTERED_USER, true);
           localRepository.commitChanges(false);
           localDirectory.get(UndoRedoService.class).cleanUndo();
+          repository.removeChangeListener(changeSetListener);
           dialog.setVisible(false);
           return;
         }

@@ -21,6 +21,7 @@ import java.net.ServerSocket;
 public class SingleInstanceTest extends StartUpFunctionalTestCase {
 
   protected void setUp() throws Exception {
+    LoggedInFunctionalTestCase.resetWindow();
     super.setUp();
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "false");
     SingleApplicationInstanceListener.REMOTE_APPLICATION_DETECTION_TIMEOUT = 100;

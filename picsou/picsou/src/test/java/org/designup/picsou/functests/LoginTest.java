@@ -27,6 +27,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "");
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "");
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "");
+    System.setProperty(PicsouApplication.LOG_SOUT, "true");
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
 
     final StartupChecker startupChecker = new StartupChecker();
@@ -113,6 +114,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
         BudgetViewChecker budgetView = new BudgetViewChecker(window);
         budgetView.income.checkSeriesPresent("Income 1", "Income 2");
         budgetView.variable.checkSeriesPresent("Groceries", "Health", "Fuel");
+        budgetView.variable.checkPlannedUset("Groceries");
 
         operations = new OperationChecker(window);
         String filePath = OfxBuilder

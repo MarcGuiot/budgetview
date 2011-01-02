@@ -11,7 +11,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     super.setUp();
   }
 
-
   public void testUnset() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")

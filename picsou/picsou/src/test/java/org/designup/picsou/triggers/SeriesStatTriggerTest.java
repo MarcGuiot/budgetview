@@ -19,7 +19,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                                     "<create type='seriesStat' series='10' month='200807' overrunAmount='0.0'" +
                                     "        plannedAmount='150.0' remainingAmount='150.0'/>" +
                                     "<create type='seriesStat' series='1' month='200807' overrunAmount='0.0'" +
-                                    "        plannedAmount='0.0' remainingAmount='0.0'/>");
+                                    "        remainingAmount='0.0'/>");
     repository.startChangeSet();
     createTransaction(10, 10, 200807, 10.0);
     createTransaction(11, 1, 200807, -20.0);
@@ -52,7 +52,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
       "<create type='seriesStat' series='20' month='200807' overrunAmount='0.0'" +
       "        amount='-20.0' plannedAmount='-100.0' remainingAmount='-80.0'/>" +
       "<create type='seriesStat' series='1' month='200807' overrunAmount='-50.0'" +
-      "        amount='-50.0' plannedAmount='0.0' remainingAmount='0.0'/>");
+      "        amount='-50.0' remainingAmount='0.0'/>");
 
     repository.startChangeSet();
     repository.update(Key.create(Transaction.TYPE, 2), value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID));
@@ -140,7 +140,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
       "          remainingAmount='-700.0' series='30' type='seriesStat'/>\n" +
       "  <create amount='-90.0' month='200807' overrunAmount='0.0' plannedAmount='-100.0'\n" +
       "          remainingAmount='-10.0' series='10' type='seriesStat'/>" +
-      "  <create month='200807' overrunAmount='0.0' plannedAmount='0.0' remainingAmount='0.0'" +
+      "  <create month='200807' overrunAmount='0.0' remainingAmount='0.0'" +
       "          series='1' type='seriesStat'/>\n" +
       "  <create month='200807' overrunAmount='0.0' plannedAmount='1000.0' remainingAmount='1000.0'" +
       "          series='20' type='seriesStat'/>");

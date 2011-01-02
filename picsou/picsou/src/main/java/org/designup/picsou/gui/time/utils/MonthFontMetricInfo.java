@@ -13,8 +13,8 @@ public class MonthFontMetricInfo {
 
   public MonthFontMetricInfo(final FontMetrics fontMetrics) {
     for (int i = 1; i <= 12; i++) {
-      monthInfos.put(i, new MonthSizes(new Size(".long", i, Lang.getKeys(), fontMetrics),
-                                       new Size(".medium", i, Lang.getKeys(), fontMetrics)));
+      monthInfos.put(i, new MonthSizes(new Size(".long", i, fontMetrics),
+                                       new Size(".medium", i, fontMetrics)));
     }
   }
 
@@ -68,13 +68,9 @@ public class MonthFontMetricInfo {
     private int width;
     private int height;
 
-    public Size(String type, int month, Enumeration<String> keys, final FontMetrics fontMetrics) {
-      while (keys.hasMoreElements()) {
-        String element = keys.nextElement();
-        if (element.equals("month." + month + type)) {
-          name = Lang.get(element);
-        }
-      }
+    public Size(String type, int month, final FontMetrics fontMetrics) {
+      String key = "month." + month + type;
+      name = Lang.get(key);
       if (name == null) {
         throw new ResourceAccessFailed("for month " + month + " type : " + type);
       }

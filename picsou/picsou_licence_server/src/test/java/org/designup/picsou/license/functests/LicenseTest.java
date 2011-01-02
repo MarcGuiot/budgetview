@@ -3,6 +3,7 @@ package org.designup.picsou.license.functests;
 import com.dumbster.smtp.SimpleSmtpServer;
 import junit.framework.AssertionFailedError;
 import org.designup.picsou.functests.checkers.*;
+import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.license.ConnectedTestCase;
@@ -25,6 +26,7 @@ public class LicenseTest extends ConnectedTestCase {
   private static final String SECOND_PATH = "tmp/otherprevayler";
 
   protected void setUp() throws Exception {
+    LoggedInFunctionalTestCase.resetWindow();
     System.setProperty("budgetview.log.sout", "true");
     super.setUp();
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
@@ -45,6 +47,7 @@ public class LicenseTest extends ConnectedTestCase {
     picsouApplication.shutdown();
     picsouApplication = null;
     login = null;
+    window = null;
   }
 
   private void startApplication(boolean isFirst) {
