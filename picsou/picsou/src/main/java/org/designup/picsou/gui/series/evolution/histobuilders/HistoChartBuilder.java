@@ -229,7 +229,7 @@ public class HistoChartBuilder {
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
       Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
-      Double value = stat != null ? stat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION) : 0.0;
+      Double value = stat != null ? stat.get(BudgetStat.MIN_POSITION) : 0.0;
       builder.add(monthId, value, monthId == selectedMonthId);
     }
 
@@ -244,7 +244,7 @@ public class HistoChartBuilder {
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
       boolean isCurrentMonth = isCurrentMonth(monthId);
       Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
-      Double value = stat != null ? stat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION) : 0.0;
+      Double value = stat != null ? stat.get(BudgetStat.MIN_POSITION) : 0.0;
       builder.add(monthId, threshold, value, isCurrentMonth, monthId == selectedMonthId);
     }
 

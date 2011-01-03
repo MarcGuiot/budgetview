@@ -9,13 +9,13 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
   public void testShift() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/05/01", -10.00, "Non shiftable - First month")
+      .addTransaction("2008/05/01", -10.00, "shiftable - First month")
       .addTransaction("2008/06/09", -13.00, "Shiftable to previous")
       .addTransaction("2008/06/10", -15.10, "Non shiftable - middle of month 1")
       .addTransaction("2008/06/15", -17.10, "Non shiftable - middle of month 2")
       .addTransaction("2008/06/20", -11.10, "Non shiftable - middle of month 3")
       .addTransaction("2008/06/21", -77.50, "Shiftable to next")
-      .addTransaction("2008/07/25", -27.50, "Non shiftable - Last month")
+      .addTransaction("2008/07/25", -27.50, "shiftable - Last month")
       .load();
 
     transactionDetails.checkShiftDisabled();
@@ -43,11 +43,15 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("NON SHIFTABLE - MIDDLE OF MONTH 3");
     transactionDetails.checkShiftDisabled();
 
-    categorization.selectTransaction("NON SHIFTABLE - LAST MONTH");
-    transactionDetails.checkShiftDisabled();
+    categorization.selectTransaction("SHIFTABLE - LAST MONTH");
+    transactionDetails.checkShiftEnabled();
+    transactionDetails.shift();
+    timeline.checkDisplays("2008/05", "2008/06", "2008/07", "2008/08");
 
-    categorization.selectTransaction("NON SHIFTABLE - FIRST MONTH");
-    transactionDetails.checkShiftDisabled();
+    categorization.selectTransaction("SHIFTABLE - FIRST MONTH");
+    transactionDetails.checkShiftEnabled();
+    transactionDetails.shift();
+    timeline.checkDisplays("2008/04", "2008/05", "2008/06", "2008/07", "2008/08");
 
     categorization.selectTransaction("SHIFTABLE TO NEXT");
     transactionDetails.openShiftDialog()

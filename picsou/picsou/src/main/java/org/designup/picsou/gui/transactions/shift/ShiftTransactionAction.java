@@ -191,6 +191,12 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
         break;
     }
 
+    Key monthKey = Key.create(Month.TYPE, newMonth);
+    Glob glob = repository.find(monthKey);
+    if (glob == null){
+      repository.create(monthKey);
+    }
+
     repository.update(transaction.getKey(),
                       value(Transaction.BUDGET_MONTH, newMonth),
                       value(Transaction.BUDGET_DAY, newDay),
@@ -215,9 +221,10 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
   }
 
   private boolean containsTransactions(int monthToCheck) {
-    return repository.contains(Transaction.TYPE,
-                               and(fieldEquals(Transaction.BUDGET_MONTH, monthToCheck),
-                                   isFalse(Transaction.PLANNED)));
+    return true;
+//    return repository.contains(Transaction.TYPE,
+//                               and(fieldEquals(Transaction.BUDGET_MONTH, monthToCheck),
+//                                   isFalse(Transaction.PLANNED)));
   }
 
   private String getMessageKey(ShiftDirection direction) {
