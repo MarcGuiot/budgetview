@@ -40,6 +40,11 @@ public class CategorizationCompletionSignpost extends Signpost implements Updata
     }, Card.TYPE);
   }
 
+  protected void show(String text) {
+    SignpostStatus.setCompleted(SignpostStatus.CATEGORIZATION_COMPLETION_SHOWING, repository);
+    super.show(text);
+  }
+
   public void update() {
     double total = categorizationLevel.getTotal();
     double percentage = categorizationLevel.getPercentage();

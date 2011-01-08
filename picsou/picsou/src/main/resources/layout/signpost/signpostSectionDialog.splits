@@ -1,0 +1,35 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styleImport file="/layout/signpost/signpostStyles.splits"/>
+  <styles>
+
+  </styles>
+
+  <panel styleClass="dialog" preferredSize="(550,350)">
+    <column styleClass="innerDialog">
+
+      <label ref="title" styleClass="title"/>
+
+      <column styleClass="blockScrollBorder" weightY="100.0">
+        <scrollPane forceVerticalScroll="true" verticalUnitIncrement="10">
+          <column>
+            <row weightY="5">
+              <column weightX="1">
+                <repeat ref="sections" margin="10">
+                  <panel ref="sectionPanel">
+                    <label ref="sectionLabel" margin="10"/>
+                  </panel>
+                </repeat>
+                <filler fill="vertical"/>
+              </column>
+              <htmlEditorPane ref="message" styleClass="content" weightX="4"/>
+            </row>
+            <filler fill="vertical"/>
+          </column>
+        </scrollPane>
+      </column>
+    </column>
+  </panel>
+
+</splits>

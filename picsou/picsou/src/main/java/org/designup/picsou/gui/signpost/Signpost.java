@@ -22,11 +22,14 @@ public abstract class Signpost implements Disposable {
   protected JComponent component;
   private BooleanField completionField;
   protected GlobRepository repository;
+  protected Directory directory;
   protected SelectionService selectionService;
 
-  protected static final ModernBalloonStyle BALLOON_STYLE = createBalloonStyle();
+  private BalloonTip balloonTip;
   private BalloonTip.Orientation orientation;
   private BalloonTip.AttachLocation attachLocation;
+
+  protected static final ModernBalloonStyle BALLOON_STYLE = createBalloonStyle();
 
   public static ModernBalloonStyle createBalloonStyle() {
     ModernBalloonStyle style =
@@ -35,11 +38,10 @@ public abstract class Signpost implements Disposable {
     return style;
   }
 
-  private BalloonTip balloonTip;
-
   protected Signpost(BooleanField completionField, GlobRepository repository, Directory directory) {
     this.completionField = completionField;
     this.repository = repository;
+    this.directory = directory;
     this.selectionService = directory.get(SelectionService.class);
     this.orientation = BalloonTip.Orientation.RIGHT_BELOW;
     this.attachLocation = BalloonTip.AttachLocation.SOUTH;
@@ -77,7 +79,11 @@ public abstract class Signpost implements Disposable {
         if (balloonTip == null) {
           return;
         }
-        balloonTip.setVisible(Gui.isVisible(component));
+        boolean componentVisible = Gui.isVisible(component);
+        boolean tipVisible = balloonTip.isVisible();
+        if (componentVisible != tipVisible) {
+          balloonTip.setVisible(componentVisible);
+        }
       }
     });
     init();
@@ -106,7 +112,8 @@ public abstract class Signpost implements Disposable {
     }
     else {
       balloonTip = createBalloonTip(component, text);
-      balloonTip.setVisible(Gui.isVisible(component));
+      boolean visible = Gui.isVisible(component);
+      balloonTip.setVisible(visible);
     }
   }
 

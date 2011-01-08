@@ -17,7 +17,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.util.Set;
-import java.awt.*;
 
 public class FirstCategorizationDoneSignpost extends Signpost implements ChangeSetListener, GlobSelectionListener {
   private boolean operationCategorized = false;
@@ -69,7 +68,7 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
 
   protected BalloonTip createBalloonTip(JComponent component, String text) {
     int selectedRow = table.getSelectedRow();
-    if (selectedRow == -1){
+    if (selectedRow == -1) {
       selectedRow = 0;
     }
     return new TablecellBalloonTip(table, text,

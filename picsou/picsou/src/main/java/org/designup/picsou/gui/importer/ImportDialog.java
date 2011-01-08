@@ -419,15 +419,12 @@ public class ImportDialog {
     fileNameLabel.setText(absolutePath);
   }
 
-  public void showLastImportedMonthAndClose(boolean hasImportedOperations, Set<Integer> months) {
+  public void showLastImportedMonthAndClose(Set<Integer> months) {
     GlobList monthsToSelect =
       repository.getAll(Month.TYPE, GlobMatchers.fieldIn(Month.ID, months)).sort(Month.ID);
     if (!monthsToSelect.isEmpty()) {
       SelectionService selectionService = directory.get(SelectionService.class);
       selectionService.select(monthsToSelect.getLast());
-    }
-    if (hasImportedOperations) {
-      directory.get(NavigationService.class).gotoCategorization();
     }
     closeDialog();
   }
@@ -534,7 +531,7 @@ public class ImportDialog {
   public void showCompleteMessage(int importedTransactionCount, int autocategorizedTransaction, int transactionCount) {
     String messageKey = "close";
     if ((transactionCount > 0) && repository.contains(Series.TYPE, Series.USER_SERIES_MATCHER)) {
-      messageKey = "import.end.button.goto";
+      messageKey = "import.end.button";
     }
     MessageDialog.showWithButtonMessage("import.end.info.title",
                                         getEndOfImportMessageKey(importedTransactionCount, transactionCount, autocategorizedTransaction),

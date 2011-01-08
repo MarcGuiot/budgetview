@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import org.uispec4j.Panel;
 import org.uispec4j.ToggleButton;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
@@ -9,6 +10,7 @@ import junit.framework.Assert;
 
 public class ViewSelectionChecker extends GuiChecker {
   private Window window;
+  private Panel cardsPanel;
 
   public ViewSelectionChecker(Window window) {
     this.window = window;
@@ -79,7 +81,7 @@ public class ViewSelectionChecker extends GuiChecker {
   }
 
   private ToggleButton getToggle(String viewName) {
-    return window.getToggleButton(viewName + "CardToggle");
+    return getTogglesPanel().getToggleButton(viewName + "CardToggle");
   }
 
   public void checkBackForward(boolean backEnabled, boolean forwardEnabled) {
@@ -100,5 +102,20 @@ public class ViewSelectionChecker extends GuiChecker {
       ToggleButton button = getToggle(card.getName());
       UISpecAssert.assertThat(button.tooltipContains(card.getLabel()));
     }
+  }
+
+  public void checkDataSignpostVisible() {
+    checkSignpostVisible(window, getToggle("data"), "Accounts");
+  }
+
+  public void checkCategorizationSignpostVisible(String message) {
+    checkSignpostVisible(window, getToggle("categorization"), message);
+  }
+
+  private Panel getTogglesPanel() {
+    if (cardsPanel == null) {
+      cardsPanel = window.getPanel("viewToggles");
+    }
+    return cardsPanel;
   }
 }

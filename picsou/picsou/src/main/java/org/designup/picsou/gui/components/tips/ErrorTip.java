@@ -11,6 +11,7 @@ import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.utils.AutoDispose;
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -18,13 +19,15 @@ import java.awt.*;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 
-public class ErrorTip implements Disposable {
+public class ErrorTip implements Disposable, ColorChangeListener {
 
   private BalloonTip balloonTip;
   private Color fillColor;
   private Color borderColor;
   private HierarchyListener visibilityUpdater;
   private JComponent component;
+  private String text;
+  private Directory directory;
 
   public static ErrorTip showLeft(JComponent component, String text, Directory directory) {
     return show(component, text, directory, new Left_Above_Positioner(10, 20));
@@ -45,20 +48,17 @@ public class ErrorTip implements Disposable {
   public static ErrorTip showRight(JComponent component, String text, Directory directory) {
     return show(component, text, directory, new Right_Above_Positioner(10, 20));
   }
-  
+
   private static ErrorTip show(JComponent component, String text, Directory directory, BalloonTipPositioner positioner) {
     return new ErrorTip(component, text, directory, positioner);
   }
 
-  private ErrorTip(final JComponent component, String text, Directory directory, BalloonTipPositioner positioner) {
+  private ErrorTip(final JComponent component, final String text, Directory directory, BalloonTipPositioner positioner) {
     this.component = component;
+    this.text = text;
+    this.directory = directory;
 
-    directory.get(ColorService.class).addListener(new ColorChangeListener() {
-      public void colorsChanged(ColorLocator colorLocator) {
-        fillColor = colorLocator.get("errorTip.bg");
-        borderColor = colorLocator.get("errorTip.border");
-      }
-    });
+    directory.get(ColorService.class).addListener(this);
 
     balloonTip = new BalloonTip(component,
                                 text,
@@ -68,6 +68,7 @@ public class ErrorTip implements Disposable {
                                 0, 20,
                                 false);
     balloonTip.setPositioner(positioner);
+    balloonTip.setVisible(true);
 
     visibilityUpdater = new HierarchyListener() {
       public void hierarchyChanged(HierarchyEvent e) {
@@ -84,6 +85,11 @@ public class ErrorTip implements Disposable {
     component.addHierarchyListener(visibilityUpdater);
   }
 
+  public void colorsChanged(ColorLocator colorLocator) {
+    fillColor = colorLocator.get("errorTip.bg");
+    borderColor = colorLocator.get("errorTip.border");
+  }
+
   public void dispose() {
     if (component == null) {
       return;
@@ -92,5 +98,6 @@ public class ErrorTip implements Disposable {
     component = null;
     balloonTip.closeBalloon();
     balloonTip = null;
+    directory.get(ColorService.class).removeListener(this);
   }
 }

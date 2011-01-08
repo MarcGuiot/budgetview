@@ -14,7 +14,6 @@ import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.signpost.guides.SeriesAmountSignpost;
-import org.designup.picsou.gui.signpost.guides.SeriesGaugeSignpost;
 import org.designup.picsou.gui.signpost.guides.SeriesPeriodicitySignpost;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
@@ -251,10 +250,6 @@ public class BudgetAreaSeriesView extends View {
       }
 
       if (SignpostStatus.isAmountSeries(repository, series.getKey())) {
-        Signpost gaugeSignpost = new SeriesGaugeSignpost(repository, directory);
-        cellBuilder.addDisposeListener(gaugeSignpost);
-        gaugeSignpost.attach(gaugeView.getComponent());
-
         Signpost amountSignpost = new SeriesAmountSignpost(repository, directory);
         cellBuilder.addDisposeListener(amountSignpost);
         amountSignpost.attach(amountButton);

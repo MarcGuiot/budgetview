@@ -10,6 +10,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
     setCurrentMonth("2006/01");
     super.setUp();
     views.selectCategorization();
+    operations.hideSignposts();
   }
 
   public void testStandardUsage() throws Exception {
@@ -230,11 +231,11 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
   public void testAmountGreaterThanInitialTransactionAmount() throws Exception {
     openDialogWith("2006/01/15", -20.0, "Auchan", "Food")
       .enterAmount("100")
-      .checkErrorOnOk("Amount must be less than 20")
+      .checkErrorOnOk("Amount must be less than 20.00")
       .enterAmount("")
       .checkNoError()
       .enterAmount("21")
-      .checkErrorOnAdd("Amount must be less than 20")
+      .checkErrorOnAdd("Amount must be less than 20.00")
       .close();
 
     categorization

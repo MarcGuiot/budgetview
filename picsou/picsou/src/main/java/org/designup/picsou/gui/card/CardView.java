@@ -6,6 +6,8 @@ import org.designup.picsou.gui.card.utils.NavigationAction;
 import org.designup.picsou.gui.card.utils.NavigationIcons;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.model.Card;
+import org.designup.picsou.gui.signpost.guides.GotoCategorizationSignpost;
+import org.designup.picsou.gui.signpost.guides.GotoDataSignpost;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
@@ -60,9 +62,17 @@ public class CardView extends View implements GlobSelectionListener {
       if (card.equals(Card.BUDGET)) {
         categorizationCompletionSignpost.attach(toggle);
       }
+      else if (card.equals(Card.DATA)) {
+        Signpost signpost = new GotoDataSignpost(repository, directory);
+        signpost.attach(toggle);
+      }
+      else if (card.equals(Card.CATEGORIZATION)) {
+        Signpost signpost = new GotoCategorizationSignpost(repository, directory);
+        signpost.attach(toggle);
+      }
     }
 
-    builder.addRepeat("cards", Arrays.asList(CARDS), new RepeatComponentFactory<Card>() {
+    builder.addRepeat("viewToggles", Arrays.asList(CARDS), new RepeatComponentFactory<Card>() {
       public void registerComponents(RepeatCellBuilder cellBuilder, Card card) {
         cellBuilder.add("toggle", toggles[card.getId()]);
       }

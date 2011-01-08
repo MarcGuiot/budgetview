@@ -1,0 +1,36 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+  <styles>
+    <style selector=".content" font="-,plain,14" foreground="signpostView.content"/>
+
+    <style selector=".signpostSection" marginTop="5" marginBottom="5"/>
+
+    <style selector="#sectionPanel" marginTop="5" marginBottom="5" opaque="true"/>
+    <ui name="highlight" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="signpostView.section.top" bottomColor="signpostView.section.bottom"/>
+    <ui name="standard" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="block.inner.bg" bottomColor="block.inner.bg"/>
+    <style id="unavailablePanel" selector="x"
+           ui="standard" border=""/>
+    <style id="inprogressPanel" selector="x"
+           ui="highlight" border="matte(1,1,1,1,signpostView.section.border)"/>
+    <style id="completedPanel" selector="x"
+           ui="standard" border=""/>
+
+    <style selector="#sectionLabel" font="-,bold,16"/>
+    <style id="unavailableLabel" selector="x"
+           foreground="signpostView.section.title.unavailable" icon="status_unavailable.png"/>
+    <style id="inprogressLabel" selector="x"
+           foreground="signpostView.section.title.inprogress" icon="status_in_progress.png"/>
+    <style id="completedLabel" selector="x"
+           foreground="signpostView.section.title.completed" icon="status_completed.png"/>
+
+    <style selector="#sectionDescription" border="empty(5,0,5,0)"/>
+    <style id="unavailableDescription" selector="x" visible="true"
+           font="-,plain,11" foreground="signpostView.section.description.unavailable"/>
+    <style id="inprogressDescription" selector="x" visible="true"
+           font="-,plain,13" foreground="signpostView.section.description.inprogress"/>
+    <style id="completedDescription" selector="x" visible="false"/>
+
+  </styles>
+
+</splits>

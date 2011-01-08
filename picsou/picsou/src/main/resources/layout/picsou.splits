@@ -74,7 +74,7 @@
                      shadowColor="#222222"/>
               <filler fill="horizontal"/>
             </row>
-            <repeat ref="cards" layout="row" weightX="0" weightY="0.1" fill="horizontal">
+            <repeat ref="viewToggles" layout="row" weightX="0" weightY="0.1" fill="horizontal">
               <toggleButton ref="toggle" styleClass="masterViewSelector" marginBottom="2"/>
             </repeat>
           </column>
@@ -144,7 +144,23 @@
 
               </verticalSplit>
 
-              <panel ref="summaryView" weightX="6"/>
+              <column weightX="6">
+                <label text="$summaryView.title" styleClass="blockTitle"/>
+                <column styleClass="block">
+                  <column styleClass="innerBlock"
+                          opaque="true" background="block.inner.bg"
+                          border="line(block.inner.border)">
+                    <cards ref="signpostCard">
+                      <card name="signposts">
+                        <panel ref="signpostView"/>
+                      </card>
+                      <card name="summary">
+                        <panel ref="summaryView"/>
+                      </card>
+                    </cards>
+                  </column>
+                </column>
+              </column>
 
             </horizontalSplit>
 

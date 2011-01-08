@@ -45,6 +45,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public BackupChecker backup;
   public ProjectViewChecker projects;
   public SummaryViewChecker summary;
+  public SignpostViewChecker signpostView;
 
   protected GlobRepository repository;
 
@@ -148,6 +149,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     notes = new NotesChecker(mainWindow);
     projects = new ProjectViewChecker(mainWindow);
     summary = new SummaryViewChecker(mainWindow);
+    signpostView = new SignpostViewChecker(mainWindow);
   }
 
   protected void tearDown() throws Exception {
@@ -195,6 +197,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     notes = null;
     projects = null;
     summary = null;
+    signpostView = null;
     repository = null;
   }
 

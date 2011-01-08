@@ -22,7 +22,7 @@ public class ImportPanelChecker extends ViewChecker {
 
   public ImportPanelChecker checkImportSignpostDisplayed(String message) {
     views.selectData();
-    checkSignpostVisible(getPanel(), getPanel().getButton(), message);
+    checkSignpostVisible(mainWindow, getPanel().getButton(), message);
     return this;
   }
 

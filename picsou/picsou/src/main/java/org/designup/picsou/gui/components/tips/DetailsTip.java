@@ -49,6 +49,7 @@ public class DetailsTip implements Disposable {
                                 0, 20,
                                 false);
     balloonTip.setPositioner(new Right_Above_Positioner(10, 20));
+    balloonTip.setVisible(true);
 
     visibilityUpdater = new HierarchyListener() {
       public void hierarchyChanged(HierarchyEvent e) {

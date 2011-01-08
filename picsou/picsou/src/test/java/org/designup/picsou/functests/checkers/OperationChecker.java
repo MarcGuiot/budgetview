@@ -485,4 +485,9 @@ public class OperationChecker {
     MenuItem fileMenu = window.getMenuBar().getMenu("Edit");
     fileMenu.getSubMenu("Add 6 days").click();
   }
+
+  public void hideSignposts() {
+    MenuItem fileMenu = window.getMenuBar().getMenu("Edit");
+    fileMenu.getSubMenu("[Hide signposts]").click();
+  }
 }

@@ -36,7 +36,12 @@ public class ImportSignpost extends Signpost implements ChangeSetListener {
   }
 
   private void update() {
-    if (!SignpostStatus.isCompleted(SignpostStatus.WELCOME_SHOWN, repository)) {
+    if (!SignpostStatus.isCompleted(SignpostStatus.GOTO_DATA_SHOWN, repository)) {
+      return;
+    }
+
+    if (SignpostStatus.isCompleted(SignpostStatus.IMPORT_SHOWN, repository)) {
+      dispose();
       return;
     }
 
@@ -46,5 +51,10 @@ public class ImportSignpost extends Signpost implements ChangeSetListener {
     else if (repository.contains(Transaction.TYPE) && isShowing()) {
       dispose();
     }
+  }
+
+  protected void show(String text) {
+    System.out.println("ImportSignpost.show: ");
+    super.show(text);
   }
 }

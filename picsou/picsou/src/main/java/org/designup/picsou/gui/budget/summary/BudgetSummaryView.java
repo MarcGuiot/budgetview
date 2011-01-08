@@ -8,8 +8,6 @@ import org.designup.picsou.gui.budget.dialogs.PositionThresholdDialog;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
-import org.designup.picsou.gui.signpost.Signpost;
-import org.designup.picsou.gui.signpost.guides.EndOfMonthPositionSignpost;
 import org.designup.picsou.gui.utils.AmountColors;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -81,9 +79,7 @@ public class
     uncategorizedButton.addActionListener(new GotoUncategorizedAction());
     balanceButton.addActionListener(new OpenBalanceAction());
     estimatedPositionButton.addActionListener(new OpenPositionAction());
-    Signpost signpost = new EndOfMonthPositionSignpost(repository, directory);
-    signpost.attach(estimatedPositionButton);
-    
+
     showThresholdButton = new JButton(new ShowThresholdAction());
     builder.add("showThreshold", showThresholdButton);
 
@@ -240,9 +236,6 @@ public class
   private class OpenPositionAction extends AbstractAction {
 
     public void actionPerformed(ActionEvent e) {
-
-      SignpostStatus.setCompleted(SignpostStatus.END_OF_MONTH_POSITION_SHOWN, repository);
-
       PositionDialog dialog = new PositionDialog(repository, directory);
       dialog.show(selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID));
     }

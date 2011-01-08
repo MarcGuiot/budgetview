@@ -125,7 +125,7 @@ public class ImportDialogChecker extends GuiChecker {
     WindowInterceptor.init(dialog.getButton(Lang.get("import.step2.ok")).triggerClick())
       .process(new ImportCompleteWindowHandler(0,
                                                importedTransactionCount,
-                                               autocategorizedTransactionCount, "Categorize operations")).run();
+                                               autocategorizedTransactionCount, Lang.get("import.end.button"))).run();
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
@@ -302,8 +302,8 @@ public class ImportDialogChecker extends GuiChecker {
   public ImportDialogChecker checkAccountTypeWarningDisplayed(String accountName) {
     BalloonTipTesting.checkBalloonTipVisible(dialog,
                                              getAccountTypeSelectionCombo(accountName),
-                                             "Select the account type",
-                                             "No error tip shown for " + accountName);
+                                             "Select the account type"
+    );
     return this;
   }
 

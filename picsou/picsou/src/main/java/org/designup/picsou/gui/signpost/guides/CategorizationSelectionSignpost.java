@@ -9,22 +9,29 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import javax.swing.event.TableModelListener;
 import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 public class CategorizationSelectionSignpost extends Signpost {
   private JTable table;
   private TableModelListener tableListener;
   private GlobSelectionListener selectionListener;
+  private TypeChangeSetListener changeSetListener;
 
   public CategorizationSelectionSignpost(GlobRepository repository, Directory directory) {
     super(SignpostStatus.CATEGORIZATION_SELECTION_SHOWN, repository, directory);
-    selectionListener = new GlobSelectionListener() {
+    this.selectionListener = new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         update();
+      }
+    };
+    this.changeSetListener = new TypeChangeSetListener(SignpostStatus.TYPE) {
+      protected void update(GlobRepository repository) {
+        CategorizationSelectionSignpost.this.update();
       }
     };
   }
@@ -42,9 +49,21 @@ public class CategorizationSelectionSignpost extends Signpost {
   protected void init() {
     table.getModel().addTableModelListener(tableListener);
     selectionService.addListener(selectionListener, Transaction.TYPE);
+    repository.addChangeListener(changeSetListener);
+  }
+
+  public void dispose() {
+    table.getModel().removeTableModelListener(tableListener);
+    selectionService.removeListener(selectionListener);
+    repository.removeChangeListener(changeSetListener);
+    super.dispose();
   }
 
   public void update() {
+    if (!SignpostStatus.isCompleted(SignpostStatus.GOTO_CATEGORIZATION_SHOWN, repository)) {
+      return;
+    }
+
     int rowCount = table.getModel().getRowCount();
     if (rowCount == 0) {
       return;
@@ -64,7 +83,7 @@ public class CategorizationSelectionSignpost extends Signpost {
                                    0, 2,
                                    BALLOON_STYLE,
                                    BalloonTip.Orientation.RIGHT_BELOW,
-                                   BalloonTip.AttachLocation.SOUTH,
+                                   BalloonTip.AttachLocation.CENTER,
                                    20, 20, false);
   }
 }

@@ -375,6 +375,9 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAccountTypeSelection() throws Exception {
+
+    operations.hideSignposts();
+
     String file = OfxBuilder.init(this)
       .addBankAccount(SOCIETE_GENERALE, 111, "111", 1000.00, "2008/08/07")
       .addTransaction("2008/08/10", -50.00, "Virement")

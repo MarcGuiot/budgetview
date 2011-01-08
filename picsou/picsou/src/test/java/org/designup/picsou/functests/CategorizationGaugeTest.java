@@ -21,6 +21,8 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
     CategorizationGaugeChecker gauge = categorization.getCompletionGauge();
     gauge.checkHidden();
 
+    views.selectData();
+    
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/10", 1000.0, "WorldCo")
@@ -63,6 +65,8 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
   }
 
   public void testIgnoresPlannedTransactions() throws Exception {
+
+    views.selectData();
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/10", 1000.0, "WorldCo")

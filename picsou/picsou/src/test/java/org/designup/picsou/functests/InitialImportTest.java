@@ -5,9 +5,15 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 
 public class InitialImportTest extends LoggedInFunctionalTestCase {
 
-  public void testInitialImport() throws Exception {
+  protected void selectInitialView() {
     views.selectHome();
+  }
+
+  public void testInitialImport() throws Exception {
     versionInfo.checkNoNewVersion();
+
+    views.checkDataSignpostVisible();
+    views.selectData();
     importPanel.checkImportSignpostDisplayed("Click here to import your operations");
     mainAccounts.checkNoEstimatedPosition();
 

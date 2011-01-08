@@ -23,9 +23,6 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/12", -1.3, "Menu K 2")
       .loadAndGotoCategorize(1, 1);
 
-    views.checkCategorizationSelected();
-
-    views.selectData();
     transactions.checkSeries("Menu K 1", "dej");
     transactions.checkSeries("Menu K 2", "dej");
   }

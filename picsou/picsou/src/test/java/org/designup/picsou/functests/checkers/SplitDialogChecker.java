@@ -6,6 +6,7 @@ import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
+
 import static org.uispec4j.assertion.UISpecAssert.*;
 
 import java.awt.*;

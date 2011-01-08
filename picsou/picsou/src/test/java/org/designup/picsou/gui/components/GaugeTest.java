@@ -147,7 +147,7 @@ public class GaugeTest extends TestCase {
     frame.pack();
 
     click(gauge, gauge);
-    BalloonTipTesting.checkBalloonTipVisible(frame, gauge, "No value defined", "");
+    BalloonTipTesting.checkBalloonTipVisible(frame, gauge, "No value defined");
   }
 
   private void click(final JComponent targetComponent, final JComponent container) throws InvocationTargetException, InterruptedException {

@@ -49,6 +49,14 @@ public class CurrentMonth {
     return repository.get(CurrentMonth.KEY).get(CURRENT_MONTH);
   }
 
+  public static Integer findCurrentMonth(GlobRepository repository) {
+    Glob month = repository.find(CurrentMonth.KEY);
+    if (month != null) {
+      return month.get(CURRENT_MONTH);
+    }
+    return null;
+  }
+
   public static boolean isCurrentMonth(int monthId, GlobRepository repository) {
     Glob currentMonth = repository.find(CurrentMonth.KEY);
     return currentMonth != null && currentMonth.get(LAST_TRANSACTION_MONTH) == monthId;

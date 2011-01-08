@@ -18,9 +18,6 @@ public class DetailsTipFactory {
   }
 
   public void show(JComponent component, String text) {
-
-    SignpostStatus.setCompleted(SignpostStatus.SERIES_GAUGE_SHOWN, repository);
-
     DetailsTip tip = new DetailsTip(component, text, directory);
     tip.show();
   }

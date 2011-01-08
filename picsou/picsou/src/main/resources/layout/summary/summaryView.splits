@@ -17,49 +17,42 @@
     <style selector="label.navigation" fill="none" anchor="center"/>
 
     <style selector="htmlEditorPane#message" fill="both" anchor="center" foreground="summary.message"
-       marginBottom="20" marginLeft="60" marginRight="5"/>
+           marginBottom="20" marginLeft="60" marginRight="5"/>
 
   </styles>
 
-  <column name="summaryView">
+  <column>
 
-    <label text="$summaryView.title" styleClass="blockTitle"/>
-    <column styleClass="block">
-      <column styleClass="innerBlock"
-              opaque="true" background="block.inner.bg"
-              border="line(block.inner.border)">
-        <column>
+    <column>
 
-          <row weightY="0" marginTop="15">
-            <label text="$summaryView.mainAccounts.title" styleClass="graphTitle"/>
-            <label text="$summaryView.mainAccounts.subtitle" styleClass="graphSubTitle"/>
+      <row weightY="0" marginTop="15">
+        <label text="$summaryView.mainAccounts.title" styleClass="graphTitle"/>
+        <label text="$summaryView.mainAccounts.subtitle" styleClass="graphSubTitle"/>
+        <filler fill="horizontal"/>
+      </row>
+
+      <component ref="mainAccountsHistoChart" styleClass="chart" weightY="15"/>
+
+      <row weightY="1">
+        <column border="matte(0,0,0,1,summary.navigation.separator)">
+          <htmlEditorPane ref="message"/>
+          <row weightY="0">
+            <label text="$summaryView.savingsAccounts.title" styleClass="graphTitle"/>
+            <label text="$summaryView.savingsAccounts.subtitle" styleClass="graphSubTitle"/>
             <filler fill="horizontal"/>
           </row>
-          <component ref="mainAccountsHistoChart" styleClass="chart" weightY="15"/>
-
-          <row weightY="1">
-            <column border="matte(0,0,0,1,summary.navigation.separator)">
-            <htmlEditorPane ref="message"/>
-            <row weightY="0">
-              <label text="$summaryView.savingsAccounts.title" styleClass="graphTitle"/>
-              <label text="$summaryView.savingsAccounts.subtitle" styleClass="graphSubTitle"/>
-              <filler fill="horizontal"/>
-            </row>
-            </column>
-            <grid weightX="0" marginLeft="5">
-              <label icon="home/data.png" styleClass="navigation" gridPos="(0,0)"/>
-              <button action="gotoData" styleClass="navigation" gridPos="(1,0)"/>
-              <label icon="home/budget.png" styleClass="navigation" gridPos="(0,1)"/>
-              <button action="gotoBudget" styleClass="navigation" gridPos="(1,1)"/>
-              <label icon="home/savings.png" styleClass="navigation" gridPos="(0,2)"/>
-              <button action="gotoSavings" styleClass="navigation" gridPos="(1,2)"/>
-            </grid>
-
-          </row>
-
-          <component ref="savingsHistoChart" styleClass="chart" weightY="10"/>
         </column>
-      </column>
+        <grid weightX="0" marginLeft="5">
+          <label icon="home/data.png" styleClass="navigation" gridPos="(0,0)"/>
+          <button action="gotoData" styleClass="navigation" gridPos="(1,0)"/>
+          <label icon="home/budget.png" styleClass="navigation" gridPos="(0,1)"/>
+          <button action="gotoBudget" styleClass="navigation" gridPos="(1,1)"/>
+          <label icon="home/savings.png" styleClass="navigation" gridPos="(0,2)"/>
+          <button action="gotoSavings" styleClass="navigation" gridPos="(1,2)"/>
+        </grid>
+      </row>
+
+      <component ref="savingsHistoChart" styleClass="chart" weightY="10"/>
     </column>
   </column>
 

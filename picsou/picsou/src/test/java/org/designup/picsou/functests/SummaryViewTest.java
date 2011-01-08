@@ -37,6 +37,9 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNavigation() throws Exception {
+
+    operations.hideSignposts();
+    
     views.selectHome();
 
     summary.gotoBudget();

@@ -4,6 +4,7 @@ import org.designup.picsou.gui.categorization.components.CompactSeriesStringifie
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.tips.ErrorTip;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.transactions.columns.AbstractTransactionEditor;
 import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
@@ -204,7 +205,8 @@ public class SplitTransactionDialog {
       }
 
       if (Math.abs(amount) >= Math.abs(initialAmount)) {
-        showErrorMessage("split.transaction.amount.too.large", Math.abs(initialAmount));
+        showErrorMessage("split.transaction.amount.too.large",
+                         Formatting.toString(Math.abs(initialAmount)));
         return;
       }
     }

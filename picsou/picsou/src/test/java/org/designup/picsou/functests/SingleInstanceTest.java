@@ -233,18 +233,23 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
                     "MFAC.FRANCE 4561409787231717 19/04/06 STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS\n" +
                     "^");
     OperationChecker operations = new OperationChecker(mainWindow);
+    operations.hideSignposts();
+
     ImportDialogChecker importer = ImportDialogChecker.open(operations.getImportTrigger());
     AccountPositionEditionChecker accountPosition = importer.selectFiles(file)
       .acceptFile()
       .defineAccount(LoggedInFunctionalTestCase.SOCIETE_GENERALE, "Main account", "11111")
       .doImportWithBalance();
+
     NewApplicationThread newApplication = new NewApplicationThread(file);
     newApplication.start();
     Thread.sleep(1000);
     newApplication.checkNotOpen();
     accountPosition.setAmount(0.).validateFromImport();
+
     Window newImportDialog = newApplication.getImportDialog();
     assertNotNull(newImportDialog);
+
     new ImportDialogChecker(newImportDialog, false)
       .skipAndComplete();
     picsouApplication.shutdown();

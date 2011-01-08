@@ -1,0 +1,34 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styleImport file="/layout/signpost/signpostStyles.splits"/>
+  <styles>
+    <style selector="label.contentTitle" font="-,bold,24" foreground="signpostView.title"
+           marginTop="5" marginBottom="30" fill="none" anchor="center"/>
+  </styles>
+
+  <panel name="projectView" opaque="true" background="block.inner.bg">
+    <column margin="30">
+      <label text="$signpostView.title" styleClass="contentTitle" icon="app_icon_48.png"/>
+      <row>
+        <column border="matte(0,0,0,1,signpostView.verticalDivider)" weightX="4">
+          <htmlEditorPane text="$signpostView.intro" name="content" styleClass="content" marginRight="5"/>
+        </column>
+        <column weightX="2" minimumSize="(150,200)" preferredSize="(200,350)">
+          <column marginLeft="10">
+            <repeat ref="signpostRepeat">
+              <panel ref="sectionPanel" weightY="0">
+                <column margin="10">
+                  <label ref="sectionLabel"/>
+                  <htmlEditorPane ref="sectionDescription"/>
+                </column>
+              </panel>
+            </repeat>
+          </column>
+        </column>
+      </row>
+      <filler fill="vertical" weightY="1.0"/>
+    </column>
+  </panel>
+
+</splits>

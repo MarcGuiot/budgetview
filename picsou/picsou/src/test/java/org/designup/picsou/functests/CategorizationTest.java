@@ -1277,6 +1277,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDoNotSwitchToUncategorized() throws Exception {
+    operations.hideSignposts();
+
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/25", -50.0, "Auchan")

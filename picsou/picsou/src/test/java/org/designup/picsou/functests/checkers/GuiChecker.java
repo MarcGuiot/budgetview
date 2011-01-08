@@ -47,15 +47,13 @@ public abstract class GuiChecker {
   protected void checkSignpostVisible(Panel enclosingPanel,
                                       UIComponent targetUIComponent,
                                       String text) {
-    BalloonTipTesting.checkBalloonTipVisible(enclosingPanel, targetUIComponent, text,
-                                             "Signpost is not visible for this component");
+    BalloonTipTesting.checkBalloonTipVisible(enclosingPanel, targetUIComponent, text);
   }
 
   protected void checkErrorTipVisible(Panel enclosingPanel,
                                       UIComponent targetUIComponent,
                                       String text) {
-    BalloonTipTesting.checkBalloonTipVisible(enclosingPanel, targetUIComponent, text,
-                                             "Error tip is not visible for this component");
+    BalloonTipTesting.checkBalloonTipVisible(enclosingPanel, targetUIComponent, text);
   }
 
   protected void checkNoErrorTip(Panel enclosingPanel) {

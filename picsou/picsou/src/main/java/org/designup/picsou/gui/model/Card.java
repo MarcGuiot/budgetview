@@ -6,6 +6,8 @@ import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import static org.globsframework.model.FieldValue.value;
+
+import org.globsframework.model.FieldValues;
 import org.globsframework.model.KeyBuilder;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
@@ -51,6 +53,10 @@ public enum Card implements GlobConstantContainer {
 
   public ReadOnlyGlob getGlob() {
     return new ReadOnlyGlob(Card.TYPE, value(ID, id));
+  }
+
+  public static Card get(FieldValues cardValues) {
+    return get(cardValues.get(Card.ID));
   }
 
   public static Card get(int id) {

@@ -1,6 +1,5 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.PositionChecker;
 import org.designup.picsou.functests.checkers.SeriesAmountEditionDialogChecker;
 import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
@@ -18,15 +17,25 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     setDeleteLocalPrevayler(false);
   }
 
+  protected void selectInitialView() {
+    views.selectHome();
+  }
+
   public void testCompleteSequence() throws Exception {
+
+    signpostView.checkSignpostViewShown();
 
     // === Import ===
 
+    views.checkDataSignpostVisible();
+
+    views.selectData();
     importPanel.checkImportSignpostDisplayed("Click here to import your operations");
 
     views.selectCategorization();
     checkNoSignpostVisible();
 
+    views.selectData();
     importPanel.checkImportSignpostDisplayed("Click here to import your operations");
 
     importPanel.openImport().close();
@@ -43,21 +52,16 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     // === Categorization selection ===
 
-    views.checkCategorizationSelected();
-    categorization.checkSelectionSignpostDisplayed("Select the operations to categorize");
+    views.checkDataSelected();
+    views.checkCategorizationSignpostVisible("Categorization");
+
+    views.selectCategorization();
+//    categorization.checkSelectionSignpostDisplayed("Select the operations to categorize");
     categorization.selectTableRow(0);
-
-    // === Amount signpost is already visible in the budget view ===
-
-    views.selectBudget();
-    budgetView.variable.checkAmountSignpostDisplayed(
-      "Groceries", "Click on the planned amounts to set your own values");
 
     // === Back to the categorization ===
 
-    views.selectCategorization();
     categorization.checkAreaSelectionSignpostDisplayed("Select the budget area for this operation");
-
     categorization.selectVariable();
     checkNoSignpostVisible();
 
@@ -87,13 +91,6 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     checkNoSignpostVisible();
     amountDialog.cancel();
 
-    // === Gauge details ===
-
-    budgetView.variable.checkGaugeSignpostDisplayed(
-      "Groceries",
-      "Click on the gauges for a description");
-    budgetView.variable.clickGaugeAndCloseTip("Groceries");
-
     // === Series periodicity ===
 
     budgetView.recurring.checkNameSignpostDisplayed(
@@ -103,23 +100,32 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     SeriesEditionDialogChecker editionDialog = budgetView.recurring.editSeries("Electricity");
     checkNoSignpostVisible();
-
     editionDialog.cancel();
 
-    budgetView.getSummary().checkPositionSignpostDisplayed();
-
-    PositionChecker positionDialog = budgetView.getSummary().openPositionDialog();
     checkNoSignpostVisible();
 
-    positionDialog.close();
-    checkNoSignpostVisible();
-    
+    budgetView.variable.editPlannedAmount("Groceries").setAmount(10.00).validate();
+    budgetView.variable.editPlannedAmount("Fuel").setAmount(10.00).validate();
+    budgetView.variable.editPlannedAmount("Health").setAmount(10.00).validate();
+    budgetView.variable.editPlannedAmount("Clothing").setAmount(10.00).validate();
+    budgetView.variable.editPlannedAmount("Leisures").setAmount(10.00).validate();
+    budgetView.variable.editPlannedAmount("Beauty").setAmount(10.00).validate();
+    budgetView.variable.editPlannedAmount("Miscellaneous").setAmount(10.00).validate();
+    budgetView.variable.editPlannedAmount("Cash").setAmount(10.00).validate();
+
+    signpostView.checkSignpostViewShown();
+
+    budgetView.variable.editPlannedAmount("Bank fees").setAmount(10.00).validate();
+
+    signpostView.checkSummaryViewShown();
+
     // === Restart ===
 
     restartApplication();
 
     views.selectHome();
     checkNoSignpostVisible();
+    signpostView.checkSummaryViewShown();
 
     views.selectBudget();
     checkNoSignpostVisible();
@@ -130,6 +136,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
   public void testRestartDuringCategorization() throws Exception {
 
+    views.selectData();
     OfxBuilder
       .init(this)
       .addTransaction("2010/05/27", -100, "rent")
@@ -137,9 +144,9 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/05/29", -10, "auchan")
       .load();
 
-    views.checkCategorizationSelected();
-    categorization.selectTableRow(0);
-    categorization.selectVariable();
+    views.selectCategorization();
+    categorization.selectAllTransactions();
+    categorization.selectVariable().selectNewSeries("Misc");
 
     // === Amount signpost is shown in the budget view ===
     views.selectBudget();

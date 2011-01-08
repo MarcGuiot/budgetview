@@ -12,14 +12,13 @@ import org.designup.picsou.gui.card.ImportPanel;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
-import org.designup.picsou.gui.components.filtering.components.TextFilterPanel;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
+import org.designup.picsou.gui.signpost.SignpostView;
 import org.designup.picsou.gui.summary.SummaryView;
 import org.designup.picsou.gui.summary.version.VersionInfoView;
-import org.designup.picsou.gui.notes.InitializationView;
 import org.designup.picsou.gui.notes.NotesView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.projects.ProjectView;
@@ -87,6 +86,7 @@ public class MainPanel {
   private TransactionView transactionView;
   private SeriesEvolutionView seriesEvolutionView;
   private CategorizationView categorizationView;
+  private SignpostView signpostView;
 
   public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
@@ -143,6 +143,7 @@ public class MainPanel {
     cardView = new CardView(repository, directory, categorizationView.getCompletionSignpost());
     NotesView notesView = new NotesView(repository, directory);
     seriesEvolutionView = new SeriesEvolutionView(repository, directory);
+    signpostView = new SignpostView(repository, directory);
     createPanel(
       titleView,
       transactionView,
@@ -157,6 +158,7 @@ public class MainPanel {
       new SavingsView(replicationGlobRepository, directory),
       new SummaryView(repository, directory),
       new ProjectView(repository, directory),
+      signpostView,
       licenseInfoView,
       notesView);
 
@@ -194,6 +196,7 @@ public class MainPanel {
     directory.get(NavigationService.class).reset();
     directory.get(UndoRedoService.class).reset();
     directory.get(HelpService.class).reset();
+    signpostView.reset();
 
     windowManager.setPanel(panel);
     seriesEvolutionView.reset();
@@ -208,7 +211,7 @@ public class MainPanel {
 
   private void showInitialMessageIfNeeded() {
     if (!repository.contains(Transaction.TYPE)) {
-      SignpostStatus.setCompleted(SignpostStatus.WELCOME_SHOWN, repository);
+      SignpostStatus.init(repository);
     }
   }
 

@@ -39,8 +39,6 @@ public enum BudgetArea implements GlobConstantContainer {
   private boolean overrunAllowed;
   private boolean automatic;
 
-  public static final BudgetArea[] INCOME_AREAS = {INCOME};
-  public static final BudgetArea[] EXPENSES_AREAS = {RECURRING, VARIABLE, EXTRAS, SAVINGS};
   public static final BudgetArea[] INCOME_AND_EXPENSES_AREAS = {INCOME, RECURRING, VARIABLE, EXTRAS, SAVINGS};
 
   BudgetArea(String name, int id, boolean isIncome, boolean overrunAllowed, final boolean automatic) {

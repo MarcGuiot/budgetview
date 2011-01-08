@@ -13,6 +13,8 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
 
   public void testUndoRedoSequence() throws Exception {
 
+    operations.hideSignposts();
+
     //   operations.checkUndoNotAvailable();
     operations.checkRedoNotAvailable();
 
@@ -70,6 +72,9 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
 
 
   public void testOnSeriesCreation() throws Exception {
+
+    operations.hideSignposts();
+
     OfxBuilder.init(this)
       .addTransaction("2008/07/11", 95.00, "Auchan")
       .load();
@@ -104,9 +109,6 @@ public class UndoRedoTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions.checkSeries("Auchan", "To categorize");
     operations.undo();
-    operations.undo(); // signpost
-    operations.undo(); // signpost
-    operations.undo(); // signpost
     transactions.checkTableIsEmpty();
   }
 
