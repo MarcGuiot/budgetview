@@ -36,6 +36,7 @@ public class HistoChartBuilder {
   private HistoDiffColors seriesColors;
   private HistoDiffColors summaryColors;
 
+  private int scroolMonth;
   private int monthsBack;
   private int monthsLater;
 
@@ -54,6 +55,10 @@ public class HistoChartBuilder {
           months.add(repository.get(Key.create(Month.TYPE, monthId)));
         }
         parentSelectionService.select(months, Month.TYPE);
+      }
+
+      public void scroll(int count) {
+        scroolMonth += count;
       }
     });
     histoChartLabel = new JLabel();
@@ -134,7 +139,10 @@ public class HistoChartBuilder {
     histoChart.clear();
   }
 
-  public void showMainBalanceHisto(int selectedMonthId) {
+  public void showMainBalanceHisto(int selectedMonthId, boolean resetPosition) {
+    if (resetPosition) {
+      scroolMonth = 0;
+    }
     HistoDiffDatasetBuilder builder = createDiffDataset("mainBalance");
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
@@ -156,7 +164,11 @@ public class HistoChartBuilder {
                         Colors.toString(balanceColors.getLineColor()));
   }
 
-  public void showBudgetAreaHisto(BudgetArea budgetArea, int selectedMonthId) {
+  public void showBudgetAreaHisto(BudgetArea budgetArea, int selectedMonthId, boolean resetPosition) {
+    if (resetPosition) {
+      scroolMonth = 0;
+    }
+
     HistoDiffDatasetBuilder builder = createDiffDataset("budgetArea");
 
     DoubleField plannedField = BudgetStat.getPlanned(budgetArea);
@@ -184,7 +196,10 @@ public class HistoChartBuilder {
                         Colors.toString(colors.getLineColor()));
   }
 
-  public void showUncategorizedHisto(int selectedMonthId) {
+  public void showUncategorizedHisto(int selectedMonthId, boolean resetPosition) {
+    if (resetPosition) {
+      scroolMonth = 0;
+    }
     HistoLineDatasetBuilder builder = createLineDataset("uncategorized");
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
@@ -196,7 +211,10 @@ public class HistoChartBuilder {
     builder.apply(uncategorizedColors, "uncategorized");
   }
 
-  public void showSeriesHisto(Integer seriesId, int selectedMonthId) {
+  public void showSeriesHisto(Integer seriesId, int selectedMonthId, boolean resetPosition) {
+    if (resetPosition) {
+      scroolMonth = 0;
+    }
     HistoDiffDatasetBuilder builder = createDiffDataset("series");
 
     Glob series = repository.get(Key.create(Series.TYPE, seriesId));
@@ -224,7 +242,11 @@ public class HistoChartBuilder {
                         Colors.toString(colors.getLineColor()));
   }
 
-  public void showMainAccountsHisto(int selectedMonthId) {
+  public void showMainAccountsHisto(int selectedMonthId, boolean resetPosition) {
+    if (resetPosition) {
+      scroolMonth = 0;
+    }
+
     HistoLineDatasetBuilder builder = createLineDataset("mainAccounts");
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
@@ -236,7 +258,10 @@ public class HistoChartBuilder {
     builder.apply(accountColors, "mainAccounts");
   }
 
-  public void showMainAccountsSummary(int selectedMonthId) {
+  public void showMainAccountsSummary(int selectedMonthId, boolean resetPosition) {
+    if (resetPosition) {
+      scroolMonth = 0;
+    }
     HistoDiffDatasetBuilder builder = createDiffDataset("mainSummary");
 
     Double threshold = AccountPositionThreshold.getValue(repository);
@@ -251,7 +276,10 @@ public class HistoChartBuilder {
     builder.showSummary(summaryColors, true, "mainAccounts");
   }
 
-  public void showSavingsAccountsSummary(int selectedMonthId) {
+  public void showSavingsAccountsSummary(int selectedMonthId, boolean resetPosition) {
+    if (resetPosition) {
+      scroolMonth = 0;
+    }
     HistoDiffDatasetBuilder builder = createDiffDataset("savingsSummary");
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
@@ -261,10 +289,13 @@ public class HistoChartBuilder {
       builder.add(monthId, 0.00, value, isCurrentMonth, monthId == selectedMonthId);
     }
 
-    builder.showSummary(summaryColors, false,  "mainAccounts");
+    builder.showSummary(summaryColors, false, "mainAccounts");
   }
 
-  public void showSavingsAccountsHisto(int selectedMonthId) {
+  public void showSavingsAccountsHisto(int selectedMonthId, boolean resetPosition) {
+    if (resetPosition) {
+      scroolMonth = 0;
+    }
     HistoLineDatasetBuilder dataset = createLineDataset("savingsAccounts");
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
@@ -276,7 +307,10 @@ public class HistoChartBuilder {
     dataset.apply(accountColors, "savingsAccounts");
   }
 
-  public void showSavingsAccountHisto(int selectedMonthId, int accountId) {
+  public void showSavingsAccountHisto(int selectedMonthId, int accountId, boolean resetPosition) {
+    if (resetPosition) {
+      scroolMonth = 0;
+    }
     HistoLineDatasetBuilder dataset = createLineDataset("savingsAccounts");
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
@@ -288,7 +322,10 @@ public class HistoChartBuilder {
     dataset.apply(accountColors, "savingsAccounts");
   }
 
-  public void showSeriesBudget(Integer seriesId, int selectedMonthId, Set<Integer> selectedMonths) {
+  public void showSeriesBudget(Integer seriesId, int selectedMonthId, Set<Integer> selectedMonths, boolean resetPosition) {
+    if (resetPosition) {
+      scroolMonth = 0;
+    }
 
     Glob series = repository.find(Key.create(Series.TYPE, seriesId));
     if (series == null) {
@@ -351,9 +388,27 @@ public class HistoChartBuilder {
 
   private List<Integer> getMonthIdsToShow(Integer selectedMonthId) {
     List<Integer> result = new ArrayList<Integer>();
-    for (Integer monthId : Month.range(Month.previous(selectedMonthId, monthsBack),
-                                       Month.next(selectedMonthId, monthsLater))) {
-      if (repository.contains(Key.create(Month.TYPE, monthId))) {
+    int newCenterMonthId = Month.offset(selectedMonthId, scroolMonth);
+    int firstMonth = Month.previous(newCenterMonthId, monthsBack);
+    int lastMonth = Month.next(newCenterMonthId, monthsLater);
+    // On ne veux pas faire de decalage si il n'y a pas assez de mois
+    if (scroolMonth < 0) {
+      while (!repository.contains(Key.create(Month.TYPE, firstMonth)) && scroolMonth != 0) {
+        firstMonth = Month.next(firstMonth);
+        lastMonth = Month.next(lastMonth);
+        scroolMonth++;
+      }
+    }
+    else if (scroolMonth > 0) {
+      while (!repository.contains(Key.create(Month.TYPE, lastMonth)) && scroolMonth != 0) {
+        firstMonth = Month.previous(firstMonth);
+        lastMonth = Month.previous(lastMonth);
+        scroolMonth--;
+      }
+    }
+    for (Integer monthId : Month.range(firstMonth, lastMonth)) {
+      Key monthKey = Key.create(Month.TYPE, monthId);
+      if (repository.contains(monthKey)) {
         result.add(monthId);
       }
     }

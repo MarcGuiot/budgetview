@@ -4,6 +4,7 @@ import static org.uispec4j.Key.Modifier;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
 /**
  * Utility for simulating mouse inputs.
@@ -62,6 +63,18 @@ public class Mouse {
     component.dispatchEvent(new MouseEvent(component, MouseEvent.MOUSE_PRESSED, 1, modifiers, x, y, nbClicks, false));
     component.dispatchEvent(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, 1, modifiers, x, y, nbClicks, useRightClick));
     component.dispatchEvent(new MouseEvent(component, MouseEvent.MOUSE_CLICKED, 1, modifiers, x, y, nbClicks, false));
+  }
+
+  public static void wheel(UIComponent component, int clicks){
+    wheel(component, 0, 0, clicks);
+  }
+
+
+  public static void wheel(UIComponent component, int x, int y, int clicks){
+    Component awtComponent = component.getAwtComponent();
+    awtComponent.dispatchEvent(
+      new MouseWheelEvent(awtComponent, MouseEvent.MOUSE_WHEEL, 1, Modifier.NONE.getCode(), x, y,1, false,
+        MouseWheelEvent.WHEEL_UNIT_SCROLL, 1, clicks));
   }
 
   public static void pressed(UIComponent component, int x, int y) {

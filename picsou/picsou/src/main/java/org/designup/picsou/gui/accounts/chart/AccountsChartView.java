@@ -26,18 +26,29 @@ public abstract class AccountsChartView extends View {
   }
 
   public HistoChartBuilder createChartBuilder(boolean drawLabels, boolean clickable, final GlobRepository repository, final Directory directory) {
-    HistoChartBuilder histoChartBuilder = new HistoChartBuilder(drawLabels, clickable, repository, directory,
+    final HistoChartBuilder histoChartBuilder = new HistoChartBuilder(drawLabels, clickable, repository, directory,
                                                                 directory.get(SelectionService.class),
                                                                 MONTHS_BACK, MONTHS_FORWARD);
-    new AccountHistoChartUpdater(histoChartBuilder, repository, directory) {
-      protected void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId) {
-        updateChart(histoChartBuilder, currentMonthId);
+    final AccountHistoChartUpdater updater = new AccountHistoChartUpdater(histoChartBuilder, repository, directory) {
+      protected void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {
+        updateChart(histoChartBuilder, currentMonthId, true);
       }
     };
     final NavigationService navigationService = directory.get(NavigationService.class);
     histoChartBuilder.addDoubleClickListener(new HistoChartListener() {
       public void columnsClicked(Set<Integer> ids) {
         processDoubleClick(navigationService);
+      }
+
+      public void scroll(int count) {
+      }
+    });
+    histoChartBuilder.addListener(new HistoChartListener() {
+      public void columnsClicked(Set<Integer> ids) {
+      }
+
+      public void scroll(int count) {
+        updateChart(histoChartBuilder, updater.getCurrentMonthId(), false);
       }
     });
     return histoChartBuilder;
@@ -47,7 +58,7 @@ public abstract class AccountsChartView extends View {
     builder.add(componentName, histoChartBuilder.getChart());
   }
 
-  protected abstract void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId);
+  protected abstract void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition);
 
   protected abstract void processDoubleClick(NavigationService navigationService);
 }

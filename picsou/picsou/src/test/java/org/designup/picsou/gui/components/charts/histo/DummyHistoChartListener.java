@@ -21,6 +21,9 @@ public class DummyHistoChartListener implements HistoChartListener {
     }
   }
 
+  public void scroll(int count) {
+  }
+
   public void check(String expectedLog) throws IOException {
     logger.assertEquals("<log>\n" + expectedLog + "\n</log>");
   }

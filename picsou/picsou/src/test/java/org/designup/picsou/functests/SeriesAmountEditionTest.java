@@ -1,6 +1,5 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.SeriesAmountEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 
@@ -416,5 +415,24 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2010/10");
     budgetView.recurring.checkSeries("Internet", 0, -40.00);
+  }
+
+
+  public void testMouseWeel() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(24).validate();
+
+    OfxBuilder.init(this)
+      .addTransaction("2010/08/03", -29.00, "Free")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewRecurring("FREE", "Internet");
+   
+    budgetView.recurring.editPlannedAmount("Internet")
+      .checkChartColumn(0, "A", "2010", 29.00, 29.00, true)
+      .scroll(6)
+      .checkChartColumn(0, "O", "2010", 29.00, 0.00, false)
+      .validate();
+
   }
 }

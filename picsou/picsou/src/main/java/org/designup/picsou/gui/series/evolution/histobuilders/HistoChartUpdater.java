@@ -51,14 +51,14 @@ public abstract class HistoChartUpdater implements GlobSelectionListener, Dispos
         }
         for (GlobType type : types) {
           if (changeSet.containsChanges(type)) {
-            update();
+            update(true);
             return;
           }
         }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        update();
+        update(true);
       }
     };
     repository.addChangeListener(changeSetListener);
@@ -67,13 +67,17 @@ public abstract class HistoChartUpdater implements GlobSelectionListener, Dispos
   public void selectionUpdated(GlobSelection selection) {
     this.currentMonths = selection.getAll(selectionType).getSortedSet(selectionMonthField);
     this.currentMonthId = currentMonths.isEmpty() ? null : currentMonths.first();
-    update();
+    update(true);
   }
 
-  public void update() {
+  public void update(final boolean resetPosition) {
     if ((histoChartBuilder != null) && (repository.contains(CurrentMonth.TYPE))) {
-      update(histoChartBuilder, currentMonthId == null ? todayId : currentMonthId);
+      update(histoChartBuilder, currentMonthId == null ? todayId : currentMonthId, resetPosition);
     }
+  }
+
+  public Integer getCurrentMonthId() {
+    return currentMonthId;
   }
 
   public void dispose() {
@@ -89,5 +93,5 @@ public abstract class HistoChartUpdater implements GlobSelectionListener, Dispos
     changeSetListener = null;
   }
 
-  protected abstract void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId);
+  protected abstract void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition);
 }

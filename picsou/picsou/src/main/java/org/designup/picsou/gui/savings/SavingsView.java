@@ -115,9 +115,9 @@ public class SavingsView extends View implements GlobSelectionListener {
 
       HistoChartBuilder histoChartBuilder = new HistoChartBuilder(false, false, repository, directory, selectionService, 6, 12);
       AccountHistoChartUpdater updater = new AccountHistoChartUpdater(histoChartBuilder, repository, directory) {
-        protected void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId) {
+        protected void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {
           if (account.exists()) {
-            histoChartBuilder.showSavingsAccountHisto(currentMonthId, account.get(Account.ID));
+            histoChartBuilder.showSavingsAccountHisto(currentMonthId, account.get(Account.ID), true);
           }
         }
       };
