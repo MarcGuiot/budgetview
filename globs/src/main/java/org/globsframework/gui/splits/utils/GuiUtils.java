@@ -1,5 +1,7 @@
 package org.globsframework.gui.splits.utils;
 
+import com.sun.org.apache.xml.internal.utils.StringToStringTable;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import sun.security.action.GetPropertyAction;
 
@@ -166,6 +168,14 @@ public class GuiUtils {
     return (JFrame)getEnclosingComponent(component, new ComponentMatcher() {
       public boolean matches(Component component) {
         return JFrame.class.isInstance(component);
+      }
+    });
+  }
+
+  public static JDialog getEnclosingDialog(Component component) {
+    return (JDialog)getEnclosingComponent(component, new ComponentMatcher() {
+      public boolean matches(Component component) {
+        return JDialog.class.isInstance(component);
       }
     });
   }
@@ -343,4 +353,36 @@ public class GuiUtils {
       }
     }
   }
+
+  public static String toString(JComponent component) {
+    if (component == null) {
+      return null;
+    }
+    StringBuilder builder = new StringBuilder();
+    String name = component.getClass().getSimpleName();
+    builder.append(name);
+    builder.append("['");
+    builder.append(component.getName());
+    builder.append("'");
+
+    String text = getText(component);
+    if (Strings.isNotEmpty(text)) {
+     builder.append("', '").append(text).append("'");
+    }
+    builder.append("]");
+
+    return builder.toString();
+  }
+
+  public static String getText(JComponent component) {
+
+    if (component instanceof JLabel) {
+      return ((JLabel)component).getText();
+    }
+    else if (component instanceof AbstractButton) {
+      return ((AbstractButton)component).getText();
+    }
+    return "";
+  }
+
 }
