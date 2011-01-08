@@ -49,6 +49,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
   private class BudgetStatComputer implements GlobFunctor {
     private Map<Integer, Glob> firstTransactionForMonth = new HashMap<Integer, Glob>();
     private Map<Integer, Glob> lastTransactionForMonth = new HashMap<Integer, Glob>();
+    private Map<Integer, Double> minPosition = new HashMap<Integer, Double>();
     private Map<BudgetArea, BudgetAreaAmounts> budgetAreaAmounts = new HashMap<BudgetArea, BudgetAreaAmounts>();
     private Glob lastRealKnownTransaction;
     private Glob currentMonth;
@@ -73,6 +74,13 @@ public class BudgetStatTrigger implements ChangeSetListener {
       }
 
       Integer monthId = transaction.get(Transaction.BANK_MONTH);
+
+      Double currentPosition = transaction.get(Transaction.SUMMARY_POSITION);
+      Double min = minPosition.get(monthId);
+      if (min == null || (currentPosition != null && currentPosition < min) ){
+        minPosition.put(monthId, currentPosition);
+      }
+
       Glob firstTransactionInBankMonth = firstTransactionForMonth.get(monthId);
       if ((firstTransactionInBankMonth == null) ||
           (TransactionComparator.ASCENDING_BANK.compare(transaction, firstTransactionInBankMonth) < 0)) {
@@ -148,9 +156,14 @@ public class BudgetStatTrigger implements ChangeSetListener {
           }
         }
 
+        Double minPosition = this.minPosition.get(monthId);
+        if (minPosition == null && beginOfMonthPosition != null && endOfMonthPosition != null){
+          minPosition = Math.min(beginOfMonthPosition, endOfMonthPosition);
+        }
         FieldValuesBuilder values =
           FieldValuesBuilder.init()
             .set(BudgetStat.MONTH, monthId)
+            .set(BudgetStat.MIN_POSITION, minPosition)
             .set(BudgetStat.BEGIN_OF_MONTH_ACCOUNT_POSITION, beginOfMonthPosition)
             .set(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION, endOfMonthPosition);
 

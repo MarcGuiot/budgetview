@@ -105,17 +105,15 @@ public class Month {
   }
 
   public static int next(int yyyymm, int monthsLater) {
-    int year = toYear(yyyymm + monthsLater);
-    int month = toMonth(yyyymm + monthsLater);
+    int year = toYear(yyyymm);
+    int month = toMonth(yyyymm);
 
-    if (month == 0) {
-      year--;
-      month = 12;
-    }
-    else {
-      int years = (month - 1) / 12;
-      month = (month - 1) % 12 + 1;
-      year += years;
+    year += (monthsLater / 12);
+    month += monthsLater % 12;
+
+    if (month > 12) {
+      year++;
+      month = month - 12;
     }
     return toYyyyMm(year, month);
   }

@@ -117,6 +117,8 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.editPlannedAmount("Bank fees").setAmount(10.00).validate();
 
+    openApplication();
+
     signpostView.checkSummaryViewShown();
 
     // === Restart ===

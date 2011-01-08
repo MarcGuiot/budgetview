@@ -202,7 +202,16 @@ public class HistoChecker extends GuiChecker {
   }
 
   private HistoChart getChart() {
-    Panel panel = window.getPanel(panelName).getPanel(chartName);
+    Panel panel = getPanel();
     return (HistoChart)panel.getAwtComponent();
+  }
+
+  private Panel getPanel() {
+    return window.getPanel(panelName).getPanel(chartName);
+  }
+
+  public HistoChecker scroll(int i) {
+    Mouse.wheel(getPanel(), i);
+    return this;
   }
 }

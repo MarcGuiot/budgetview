@@ -50,6 +50,9 @@ public class HistoChartDemo {
       public void columnsClicked(Set<Integer> monthIds) {
         System.out.println("HistoChartDemo.columnClicked: " + monthIds);
       }
+
+      public void scroll(int count) {
+      }
     });
 
     chart.update(new HistoDiffBarLinePainter(dataset, colors, false));

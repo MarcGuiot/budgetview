@@ -80,4 +80,9 @@ public class SeriesAmountEditionDialogChecker extends SeriesAmountEditionChecker
   private HistoChecker getChart() {
     return new HistoChecker(dialog, "innerBlock", "chart");
   }
+
+  public SeriesAmountEditionDialogChecker scroll(int shift) {
+    getChart().scroll(shift);
+    return this;
+  }
 }

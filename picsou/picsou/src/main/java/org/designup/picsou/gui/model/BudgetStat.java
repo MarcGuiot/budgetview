@@ -221,6 +221,8 @@ public class BudgetStat {
   @DefaultDouble(0.0)
   public static DoubleField UNCATEGORIZED_ABS;
 
+  public static DoubleField MIN_POSITION;
+
   public static DoubleField[] EXPENSE_FIELDS;
   public static DoubleField[] EXPENSE_REMAINING_FIELDS;
 

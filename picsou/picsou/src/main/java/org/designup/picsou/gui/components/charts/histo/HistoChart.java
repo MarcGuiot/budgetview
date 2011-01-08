@@ -5,9 +5,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -317,6 +315,13 @@ public class HistoChart extends JPanel {
         if (isEnabled()) {
           HistoChart.this.mouseMoved(e.getX(), false);
         }
+      }
+    });
+    addMouseWheelListener(new MouseWheelListener() {
+      public void mouseWheelMoved(MouseWheelEvent e) {
+        for (HistoChartListener listener : listeners) {
+          listener.scroll(e.getWheelRotation());
+         }
       }
     });
   }

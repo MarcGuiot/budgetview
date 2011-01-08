@@ -4,6 +4,7 @@ import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
 import org.designup.picsou.gui.components.charts.stack.StackChartColors;
 import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
+import org.designup.picsou.gui.components.charts.histo.HistoChartListener;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
@@ -61,6 +62,14 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     this.currentWrapperKey = getMainSummaryWrapper();
 
     histoChartBuilder = new HistoChartBuilder(true, true, repository, directory, parentSelectionService, 12, 6);
+    histoChartBuilder.addListener(new HistoChartListener() {
+      public void columnsClicked(Set<Integer> ids) {
+      }
+
+      public void scroll(int count) {
+        update(false);
+      }
+    });
     balanceChart = new StackChart();
     seriesChart = new StackChart();
 
@@ -76,12 +85,12 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
         if (changeSet.containsChanges(BudgetStat.TYPE)
             || changeSet.containsChanges(SavingsBudgetStat.TYPE)
             || changeSet.containsChanges(SeriesStat.TYPE)) {
-          update();
+          update(true);
         }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        update();
+        update(true);
       }
     });
   }
@@ -118,7 +127,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
   public void monthSelected(Integer monthId) {
     this.selectedMonthId = monthId;
-    update();
+    update(true);
   }
 
   public void selectionUpdated(GlobSelection selection) {
@@ -135,14 +144,14 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       }
     }
 
-    update();
+    update(true);
   }
 
   private Key getMainSummaryWrapper() {
     return Key.create(SeriesWrapper.TYPE, SeriesWrapper.BALANCE_SUMMARY_ID);
   }
 
-  private void update() {
+  private void update(final boolean resetPosition) {
     Glob currentWrapper = null;
     if (currentWrapperKey != null) {
       currentWrapper = repository.find(currentWrapperKey);
@@ -155,12 +164,12 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       case BUDGET_AREA: {
         BudgetArea budgetArea = BudgetArea.get(currentWrapper.get(SeriesWrapper.ITEM_ID));
         if (budgetArea.equals(BudgetArea.UNCATEGORIZED)) {
-          histoChartBuilder.showUncategorizedHisto(selectedMonthId);
+          histoChartBuilder.showUncategorizedHisto(selectedMonthId, resetPosition);
           updateUncategorizedBalanceStack();
           updateUncategorizedSeriesStack();
         }
         else {
-          histoChartBuilder.showBudgetAreaHisto(budgetArea, selectedMonthId);
+          histoChartBuilder.showBudgetAreaHisto(budgetArea, selectedMonthId, resetPosition);
           updateMainBalanceStack(budgetArea);
           updateBudgetAreaSeriesStack(budgetArea, null);
         }
@@ -170,7 +179,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       case SERIES: {
         Integer seriesId = currentWrapper.get(SeriesWrapper.ITEM_ID);
         BudgetArea budgetArea = Series.getBudgetArea(seriesId, repository);
-        histoChartBuilder.showSeriesHisto(seriesId, selectedMonthId);
+        histoChartBuilder.showSeriesHisto(seriesId, selectedMonthId, resetPosition);
         updateMainBalanceStack(budgetArea);
         updateBudgetAreaSeriesStack(budgetArea, seriesId);
       }
@@ -179,17 +188,17 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       case SUMMARY: {
         Integer id = currentWrapper.get(SeriesWrapper.ID);
         if (id.equals(SeriesWrapper.BALANCE_SUMMARY_ID)) {
-          histoChartBuilder.showMainBalanceHisto(selectedMonthId);
+          histoChartBuilder.showMainBalanceHisto(selectedMonthId, resetPosition);
           updateMainBalanceStack(null);
           updateMainAccountExpensesSeriesStack();
         }
         else if (id.equals(SeriesWrapper.MAIN_POSITION_SUMMARY_ID)) {
-          histoChartBuilder.showMainAccountsHisto(selectedMonthId);
+          histoChartBuilder.showMainAccountsHisto(selectedMonthId, resetPosition);
           updateMainBalanceStack(null);
           updateMainAccountExpensesSeriesStack();
         }
         else if (id.equals(SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID)) {
-          histoChartBuilder.showSavingsAccountsHisto(selectedMonthId);
+          histoChartBuilder.showSavingsAccountsHisto(selectedMonthId, resetPosition);
           updateSavingsStacks();
         }
       }

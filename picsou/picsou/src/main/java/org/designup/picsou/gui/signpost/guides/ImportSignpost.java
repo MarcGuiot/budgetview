@@ -52,9 +52,4 @@ public class ImportSignpost extends Signpost implements ChangeSetListener {
       dispose();
     }
   }
-
-  protected void show(String text) {
-    System.out.println("ImportSignpost.show: ");
-    super.show(text);
-  }
 }

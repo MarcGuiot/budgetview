@@ -12,6 +12,8 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
 
   public void test() throws Exception {
 
+    operations.hideSignposts();
+
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     OfxBuilder.init(this)
@@ -27,13 +29,13 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
     summary.getMainChart()
       .checkColumnCount(8)
       .checkDiffColumn(0, "D", "2010", 0.00, 4000.00)
-      .checkDiffColumn(1, "J", "2011", 0.00, 5800.00, true)
-      .checkDiffColumn(2, "F", "2011", 0.00, 7800.00)
-      .checkDiffColumn(3, "M", "2011", 0.00, 9800.00)
-      .checkDiffColumn(4, "A", "2011", 0.00, 11800.00)
-      .checkDiffColumn(5, "M", "2011", 0.00, 13800.00)
-      .checkDiffColumn(6, "J", "2011", 0.00, 15800.00)
-      .checkDiffColumn(7, "J", "2011", 0.00, 17800.00);
+      .checkDiffColumn(1, "J", "2011", 0.00, 2800.00, true)
+      .checkDiffColumn(2, "F", "2011", 0.00, 4800.00)
+      .checkDiffColumn(3, "M", "2011", 0.00, 6800.00)
+      .checkDiffColumn(4, "A", "2011", 0.00, 8800.00)
+      .checkDiffColumn(5, "M", "2011", 0.00, 10800.00)
+      .checkDiffColumn(6, "J", "2011", 0.00, 12800.00)
+      .checkDiffColumn(7, "J", "2011", 0.00, 14800.00);
   }
 
   public void testNavigation() throws Exception {

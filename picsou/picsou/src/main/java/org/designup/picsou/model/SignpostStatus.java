@@ -82,7 +82,6 @@ public class SignpostStatus {
   }
 
   public static void setAllCompleted(GlobRepository repository) {
-    System.out.println("SignpostStatus.setAllCompleted: ");
     repository.startChangeSet();
     try {
       repository.findOrCreate(KEY);

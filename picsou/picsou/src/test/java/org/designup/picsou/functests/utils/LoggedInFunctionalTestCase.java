@@ -164,6 +164,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     catch (Throwable e) {
 //      e.printStackTrace();  // on perd l'assert si il y en a eu un.
       try {
+        mainWindow.getAwtComponent().setVisible(false);
         mainWindow.dispose();
       }
       catch (Throwable e1) {
@@ -230,6 +231,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   protected void restartApplication(String user, String passwd) throws Exception {
     if (mainWindow != null) {
+      mainWindow.getAwtComponent().setVisible(false);
       mainWindow.dispose();
     }
     this.firstLogin = false;
@@ -249,6 +251,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   public void restartApplication(boolean firstLogin) throws Exception {
     operations.exit();
+    mainWindow.getAwtComponent().setVisible(false);
     mainWindow.dispose();
     mainWindow = null;
     this.firstLogin = firstLogin;
@@ -264,6 +267,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   public static void resetWindow() {
     if (mainWindow != null) {
+      mainWindow.getAwtComponent().setVisible(false);
       mainWindow.dispose();
       mainWindow = null;
     }

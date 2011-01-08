@@ -35,11 +35,11 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "        month='200808' series='100' type='seriesBudget' />" +
       "<create active='true' amount='-29.9' day='7' id='" + budgetId[0] + "'" +
       "        month='200807' series='100' type='seriesBudget' />" +
-      "<create active='true' amount='0.0' id='" + unknownBudget[2] + "' month='200809'" +
+      "<create active='true' id='" + unknownBudget[2] + "' month='200809'" +
       "        series='1' day='1' type='seriesBudget'/>" +
-      "<create active='true' amount='0.0' id='" + unknownBudget[1] + "' month='200808'" +
+      "<create active='true' id='" + unknownBudget[1] + "' month='200808'" +
       "        series='1' day='1' type='seriesBudget'/>" +
-      "<create active='true' amount='0.0' id='" + unknownBudget[0] + "' month='200807'" +
+      "<create active='true' id='" + unknownBudget[0] + "' month='200807'" +
       "        series='1' day='1' type='seriesBudget'/>");
     Key transactionKey = Key.create(Transaction.TYPE, 10);
     repository.create(transactionKey,
@@ -128,11 +128,11 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "        month='200808' series='101' type='seriesBudget'/>" +
       "<create active='true' amount='-1000.0' day='25' id='" + enveloppeBudgetIds[2] + "'" +
       "        month='200809' series='101' type='seriesBudget'/>" +
-      "<create active='true' amount='0.0' id='" + unknownBudgetIds[2] + "' day='1' month='200809'" +
+      "<create active='true' id='" + unknownBudgetIds[2] + "' day='1' month='200809'" +
       "        series='1' type='seriesBudget'/>" +
-      "<create active='true' amount='0.0' id='" + unknownBudgetIds[1] + "' day='1' month='200808'" +
+      "<create active='true' id='" + unknownBudgetIds[1] + "' day='1' month='200808'" +
       "        series='1' type='seriesBudget'/>" +
-      "<create active='true' amount='0.0' id='" + unknownBudgetIds[0] + "' day='1' month='200807'" +
+      "<create active='true' id='" + unknownBudgetIds[0] + "' day='1' month='200807'" +
       "        series='1' type='seriesBudget'/>");
     repository.startChangeSet();
     repository.create(Transaction.TYPE,

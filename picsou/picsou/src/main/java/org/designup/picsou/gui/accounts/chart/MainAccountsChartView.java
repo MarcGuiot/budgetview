@@ -12,8 +12,8 @@ public class MainAccountsChartView extends AccountsChartView {
 
   }
 
-  protected void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId)  {
-    histoChartBuilder.showMainAccountsSummary(currentMonthId);
+  protected void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition)  {
+    histoChartBuilder.showMainAccountsSummary(currentMonthId, resetPosition);
   }
 
   protected void processDoubleClick(NavigationService navigationService) {

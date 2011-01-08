@@ -22,6 +22,8 @@ public class MonthTest extends TestCase {
     assertEquals(200703, Month.next(200610, 5));
     assertEquals(200712, Month.next(200612, 12));
     assertEquals(200901, Month.next(200612, 25));
+    assertEquals(201612, Month.next(200612, 12 * 10));
+    assertEquals(201701, Month.next(200612, 12 * 10 + 1));
   }
 
   public void testPrevious() throws Exception {
@@ -31,6 +33,9 @@ public class MonthTest extends TestCase {
 
     assertEquals(200910, Month.previous(201001, 3));
     assertEquals(200810, Month.previous(201001, 15));
+    assertEquals(200001, Month.previous(201001, 12 * 10));
+    assertEquals(200002, Month.previous(201001, 12 * 10 - 1));
+    assertEquals(199912, Month.previous(201001, 12 * 10 + 1));
   }
 
   public void testRange() throws Exception {

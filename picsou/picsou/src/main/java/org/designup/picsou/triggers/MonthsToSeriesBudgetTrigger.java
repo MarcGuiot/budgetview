@@ -80,8 +80,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
 
   public static void addMonthForSeries(GlobRepository repository, Integer monthId, Glob series) {
     if (ProfileType.IRREGULAR.getId().equals(series.get(Series.PROFILE_TYPE))) {
-      repository.create(SeriesBudget.TYPE,
-                        value(SeriesBudget.AMOUNT, 0.),
+      repository.create(SeriesBudget.TYPE,                        
                         value(SeriesBudget.ACTIVE, true),
                         value(SeriesBudget.SERIES, series.get(Series.ID)),
                         value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId)),
