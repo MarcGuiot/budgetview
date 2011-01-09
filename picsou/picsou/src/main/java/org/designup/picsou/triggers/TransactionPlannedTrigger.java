@@ -1,8 +1,8 @@
 package org.designup.picsou.triggers;
 
+import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.Amounts;
-import org.designup.picsou.gui.model.SeriesStat;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
@@ -180,16 +180,11 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
   }
 
   Double computeObservedAmount(GlobRepository repository, int seriesId, int monthId) {
-    try {
-      Glob seriesStat = repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
-      if (seriesStat == null){ // il n'y a pas d'operations.
-        return null;
-      }
-      return seriesStat.get(SeriesStat.AMOUNT);
+    Glob seriesStat = repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
+    if (seriesStat == null) { // il n'y a pas d'operations.
+      return null;
     }
-    catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    return seriesStat.get(SeriesStat.AMOUNT);
   }
 
   public static void createPlannedTransaction(Glob series, GlobRepository repository, int monthId,
@@ -205,7 +200,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
     Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
     if (series.get(Series.MIRROR_SERIES) != null) {
-      if (fromAccount == null || toAccount == null){
+      if (fromAccount == null || toAccount == null) {
         Log.write("Series " + series.get(Series.NAME) + " is a saving series with both accounts imported" +
                   " but one of the account is missing.");
         return;
