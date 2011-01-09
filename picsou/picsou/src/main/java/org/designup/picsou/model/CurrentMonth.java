@@ -45,6 +45,10 @@ public class CurrentMonth {
     return repository.get(CurrentMonth.KEY).get(LAST_TRANSACTION_MONTH);
   }
 
+  public static Integer getLastTransactionDay(GlobRepository repository) {
+    return repository.get(CurrentMonth.KEY).get(LAST_TRANSACTION_DAY);
+  }
+
   public static Integer getCurrentMonth(GlobRepository repository) {
     return repository.get(CurrentMonth.KEY).get(CURRENT_MONTH);
   }

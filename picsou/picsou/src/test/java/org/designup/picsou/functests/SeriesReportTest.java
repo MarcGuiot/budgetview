@@ -173,7 +173,6 @@ public abstract class SeriesReportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/09/09", -30.00, "Auchan")
       .load();
 
-    openApplication();
     timeline.selectMonth("2008/08");
     budgetView.variable.checkSeries("Courses", -40, -40);
     timeline.selectMonth("2008/09");

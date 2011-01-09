@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.summary;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.accounts.chart.MainAccountsChartView;
+import org.designup.picsou.gui.accounts.chart.MainDailyPositionsChartView;
 import org.designup.picsou.gui.accounts.chart.SavingsAccountsChartView;
 import org.designup.picsou.gui.budget.AccountThresholdMessage;
 import org.designup.picsou.gui.budget.dialogs.PositionThresholdDialog;
@@ -47,8 +47,8 @@ public class SummaryView extends View {
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/summary/summaryView.splits",
                                                       repository, directory);
-    MainAccountsChartView mainAccountsView = new MainAccountsChartView(repository, directory);
-    mainAccountsView.registerComponents(builder);
+    MainDailyPositionsChartView mainDailyPositionsView = new MainDailyPositionsChartView(repository, directory);
+    mainDailyPositionsView.registerComponents(builder);
 
     SavingsAccountsChartView savingsAccountsView = new SavingsAccountsChartView(repository, directory);
     savingsAccountsView.registerComponents(builder);

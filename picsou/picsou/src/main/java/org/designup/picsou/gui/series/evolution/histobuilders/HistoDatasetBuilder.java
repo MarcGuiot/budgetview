@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.series.evolution.histobuilders;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
+import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
@@ -32,6 +33,10 @@ public class HistoDatasetBuilder {
   }
 
   protected void updateLabel(JLabel label, String messageKey, String... args) {
-    label.setText(Lang.get("seriesEvolution." + messageKey, args));
+    label.setText(Lang.get(messageKey, args));
+  }
+
+  protected boolean isCurrentMonth(int monthId) {
+    return CurrentMonth.isCurrentMonth(monthId, repository);
   }
 }

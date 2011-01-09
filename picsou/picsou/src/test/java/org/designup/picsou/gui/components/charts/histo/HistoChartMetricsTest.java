@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.components.charts.histo;
 
 import org.designup.picsou.gui.components.ChartTestCase;
-import org.designup.picsou.gui.components.charts.histo.painters.HistoLineDataset;
+import org.designup.picsou.gui.components.charts.histo.line.HistoLineDataset;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
@@ -93,16 +93,16 @@ public class HistoChartMetricsTest extends ChartTestCase {
       new HistoChartMetrics(150, 130, getFontMetrics(), 10, 0, 100, true, true, false);
 
     HistoLineDataset dataset = new HistoLineDataset(null);
-    dataset.add(1, 1.0, "item1", "Item 1 A", "section A", false);
-    dataset.add(2, 2.0, "item2", "Item 2 A", "section A", false);
-    dataset.add(3, 3.0, "item3", "Item 3 B", "section B", false);
-    dataset.add(4, 4.0, "item4", "Item 4 B", "section B", false);
-    dataset.add(5, 5.0, "item5", "Item 5 B", "section B", false);
-    dataset.add(6, 6.0, "item6", "Item 6 B", "section B", false);
-    dataset.add(7, 7.0, "item7", "Item 7 B", "section B", false);
-    dataset.add(8, 8.0, "item8", "Item 8 B", "section B", false);
-    dataset.add(9, 9.0, "item9", "Item 9 B", "section B", false);
-    dataset.add(10, 10.0, "item10", "Item 10 C", "section C", false);
+    dataset.add(1, 1.0, "item1", "Item 1 A", "section A", false, false);
+    dataset.add(2, 2.0, "item2", "Item 2 A", "section A", false, false);
+    dataset.add(3, 3.0, "item3", "Item 3 B", "section B", false, false);
+    dataset.add(4, 4.0, "item4", "Item 4 B", "section B", false, false);
+    dataset.add(5, 5.0, "item5", "Item 5 B", "section B", false, false);
+    dataset.add(6, 6.0, "item6", "Item 6 B", "section B", true, false);
+    dataset.add(7, 7.0, "item7", "Item 7 B", "section B", false, false);
+    dataset.add(8, 8.0, "item8", "Item 8 B", "section B", false, false);
+    dataset.add(9, 9.0, "item9", "Item 9 B", "section B", false, false);
+    dataset.add(10, 10.0, "item10", "Item 10 C", "section C", false, false);
 
     List<HistoChartMetrics.Section> sections = metrics.getSections(dataset);
     assertEquals(3, sections.size());

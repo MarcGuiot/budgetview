@@ -2,7 +2,10 @@ package org.designup.picsou.gui.series.evolution.histobuilders;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoPainter;
-import org.designup.picsou.gui.components.charts.histo.painters.*;
+import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffBarLinePainter;
+import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffColors;
+import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffDataset;
+import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffSummaryPainter;
 import org.designup.picsou.model.CurrentMonth;
 import org.globsframework.model.GlobRepository;
 
@@ -24,17 +27,17 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
     this.multiplier = inverted ? -1 : 1;
   }
 
-  public void add(int monthId, Double reference, Double actual, boolean isCurrentMonth, boolean isSelectedMonth) {
+  public void add(int monthId, Double reference, Double actual, boolean isSelectedMonth) {
     dataset.add(monthId,
                 reference != null ? reference * multiplier : 0,
                 actual != null ? actual * multiplier : 0,
                 getLabel(monthId), getMonthLabel(monthId), getSection(monthId),
-                isCurrentMonth, isSelectedMonth,
+                isCurrentMonth(monthId), isSelectedMonth,
                 monthId > lastMonthWithTransactions);
   }
 
-  public void addEmpty(int monthId, boolean isCurrentMonth, boolean isSelectedMonth) {
-    add(monthId, 0.0, 0.0, isCurrentMonth, isSelectedMonth);
+  public void addEmpty(int monthId, boolean isSelectedMonth) {
+    add(monthId, 0.0, 0.0, isSelectedMonth);
   }
 
   public void showBarLine(HistoDiffColors colors, String messageKey, String... args) {
@@ -53,6 +56,6 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
   }
 
   private void updateHistoLabel(String messageKey, String... args) {
-    updateLabel(label, "chart.histo." + messageKey, args);
+    updateLabel(label, "seriesEvolution.chart.histo." + messageKey, args);
   }
 }

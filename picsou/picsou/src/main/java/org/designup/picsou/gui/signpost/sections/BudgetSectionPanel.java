@@ -4,7 +4,6 @@ import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.directory.Directory;
 
 import static org.globsframework.model.utils.GlobMatchers.*;

@@ -1,13 +1,13 @@
 package org.designup.picsou.gui.experiment;
 
-import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffBarLinePainter;
+import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffBarLinePainter;
+import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffDataset;
 import org.globsframework.gui.splits.layout.SingleComponentPanels;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoChartListener;
-import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffDataset;
-import org.designup.picsou.gui.components.charts.histo.painters.HistoDiffColors;
+import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffColors;
 import org.designup.picsou.gui.utils.ApplicationColors;
 
 import javax.swing.*;

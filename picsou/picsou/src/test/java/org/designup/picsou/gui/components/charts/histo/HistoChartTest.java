@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.components.charts.histo;
 
 import junit.framework.TestCase;
-import org.designup.picsou.gui.components.charts.histo.painters.HistoLineColors;
-import org.designup.picsou.gui.components.charts.histo.painters.HistoLineDataset;
-import org.designup.picsou.gui.components.charts.histo.painters.HistoLinePainter;
+import org.designup.picsou.gui.components.charts.histo.line.HistoLineColors;
+import org.designup.picsou.gui.components.charts.histo.line.HistoLineDataset;
+import org.designup.picsou.gui.components.charts.histo.line.HistoLinePainter;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -36,11 +36,11 @@ public class HistoChartTest extends TestCase {
   public void testSelectByDragging() throws Exception {
 
     HistoLineDataset dataset = new HistoLineDataset("seriesEvolution.chart.histo.series.tooltip");
-    dataset.add(201005, 5, "5", "", "", false);
-    dataset.add(201006, 6, "6", "", "", false);
-    dataset.add(201007, 7, "7", "", "", false);
-    dataset.add(201008, 8, "8", "", "", false);
-    dataset.add(201009, 9, "9", "", "", false);
+    dataset.add(201005, 5, "5", "", "", false, false);
+    dataset.add(201006, 6, "6", "", "", false, false);
+    dataset.add(201007, 7, "7", "", "", false, false);
+    dataset.add(201008, 8, "8", "", "", false, false);
+    dataset.add(201009, 9, "9", "", "", false, false);
     init(dataset);
 
     Mouse.enter(chart, 50, 10);
@@ -69,9 +69,9 @@ public class HistoChartTest extends TestCase {
 
   public void testWithDiscontinuousMonths() throws Exception {
     HistoLineDataset dataset = new HistoLineDataset("seriesEvolution.chart.histo.series.tooltip");
-    dataset.add(201005, 5, "5", "", "", false);
-    dataset.add(201007, 7, "7", "", "", false);
-    dataset.add(201009, 9, "9", "", "", false);
+    dataset.add(201005, 5, "5", "", "", false, false);
+    dataset.add(201007, 7, "7", "", "", false, false);
+    dataset.add(201009, 9, "9", "", "", false, false);
     init(dataset);
 
     Mouse.enter(chart, 20, 10);
