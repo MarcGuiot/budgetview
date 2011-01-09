@@ -3,6 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.model.initial.DefaultSeriesFactory;
@@ -124,6 +125,9 @@ public class LoginTest extends StartUpFunctionalTestCase {
           .save();
         operations.importOfxFile(filePath);
 
+        TimeViewChecker timeView = new TimeViewChecker(window);
+        timeView.selectMonth("2006/01");
+        budgetView.variable.checkPlannedUset("Groceries");
         operations.logout();
       }
 

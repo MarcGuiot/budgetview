@@ -109,14 +109,14 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
     // attention les creation de mois arrive dans un ordre aleatoire
     // attention aussi a la creation de mois en debut de periode et non en fin
     if (series.isTrue(Series.IS_AUTOMATIC)) {
-      Double amount = 0.;
+      Double amount = null;
       int lastmonthId = 0;
       int nextMonth = Month.next(monthId);
       for (Glob seriesBudget : existingSeriesBudget) {
         if (seriesBudget.get(SeriesBudget.MONTH) < monthId
             && seriesBudget.isTrue(SeriesBudget.ACTIVE)
             && seriesBudget.get(SeriesBudget.MONTH) > lastmonthId) {
-          amount = seriesBudget.get(SeriesBudget.AMOUNT, 0);
+          amount = seriesBudget.get(SeriesBudget.AMOUNT);
           lastmonthId = seriesBudget.get(SeriesBudget.MONTH);
         }
         if (seriesBudget.get(SeriesBudget.MONTH) == nextMonth) {
@@ -125,7 +125,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
           break;
         }
       }
-      repository.update(budget.getKey(), SeriesBudget.AMOUNT, Utils.zeroIfNull(amount));
+      repository.update(budget.getKey(), SeriesBudget.AMOUNT, amount);
     }
     else {
       Double seriesAmount = null; // pour les tests de triggers
@@ -142,7 +142,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
         while (pos >= 0) {
           Glob budgets = existingSeriesBudget[pos];
           if (budgets.isTrue(SeriesBudget.ACTIVE) && !budgets.get(SeriesBudget.MONTH).equals(monthId)) {
-            seriesAmount = budgets.get(SeriesBudget.AMOUNT, 0);
+            seriesAmount = budgets.get(SeriesBudget.AMOUNT);
             break;
           }
           pos--;
@@ -152,7 +152,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
           while (pos < existingSeriesBudget.length - 1) {
             Glob budgets = existingSeriesBudget[pos];
             if (budgets.isTrue(SeriesBudget.ACTIVE) && !budgets.get(SeriesBudget.MONTH).equals(monthId)) {
-              seriesAmount = budgets.get(SeriesBudget.AMOUNT, 0);
+              seriesAmount = budgets.get(SeriesBudget.AMOUNT);
               break;
             }
             pos++;
@@ -162,7 +162,8 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
       if (seriesAmount == null) {
         seriesAmount = series.get(Series.INITIAL_AMOUNT);
       }
-      if (seriesAmount != null) {
+//      if (seriesAmount != null)
+      {
         repository.update(budget.getKey(), SeriesBudget.AMOUNT, seriesAmount);
       }
     }

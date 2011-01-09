@@ -14,7 +14,6 @@ import java.util.Set;
 public class SeriesRenameTrigger implements ChangeSetListener {
 
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
-    final Set<Integer> updatedSeries = new HashSet<Integer>();
 
     if (changeSet.containsChanges(Series.TYPE)) {
       changeSet.safeVisit(Series.TYPE, new DefaultChangeSetVisitor() {
