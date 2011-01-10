@@ -19,6 +19,11 @@
     <style selector="htmlEditorPane#message" fill="both" anchor="center" foreground="summary.message"
            marginBottom="20" marginLeft="60" marginRight="5"/>
 
+    <style selector=".navBlock" weightX="0"/>
+
+    <style selector=".navBlock button" marginLeft="10"/>
+    <style selector=".navBlock label" marginLeft="10"/>
+
   </styles>
 
   <column>
@@ -29,30 +34,40 @@
         <label text="$summaryView.mainAccounts.title" styleClass="graphTitle"/>
         <label text="$summaryView.mainAccounts.subtitle" styleClass="graphSubTitle"/>
         <filler fill="horizontal"/>
+        <row styleClass="navBlock">
+          <label icon="home/data.png" styleClass="navigation"/>
+          <button action="gotoData" styleClass="navigation"/>
+        </row>
       </row>
 
-      <component ref="mainAccountsHistoChart" styleClass="chart" weightY="15"/>
+      <component ref="mainAccountsHistoChart" styleClass="chart" weightY="10"/>
 
-      <row weightY="1">
-        <column border="matte(0,0,0,1,summary.navigation.separator)">
-          <htmlEditorPane ref="message"/>
-          <row weightY="0">
-            <label text="$summaryView.savingsAccounts.title" styleClass="graphTitle"/>
-            <label text="$summaryView.savingsAccounts.subtitle" styleClass="graphSubTitle"/>
-            <filler fill="horizontal"/>
-          </row>
-        </column>
-        <grid weightX="0" marginLeft="5">
-          <label icon="home/data.png" styleClass="navigation" gridPos="(0,0)"/>
-          <button action="gotoData" styleClass="navigation" gridPos="(1,0)"/>
-          <label icon="home/budget.png" styleClass="navigation" gridPos="(0,1)"/>
-          <button action="gotoBudget" styleClass="navigation" gridPos="(1,1)"/>
-          <label icon="home/savings.png" styleClass="navigation" gridPos="(0,2)"/>
-          <button action="gotoSavings" styleClass="navigation" gridPos="(1,2)"/>
-        </grid>
+      <row weightY="0">
+        <label text="$summaryView.savingsAccountsBalance.title" styleClass="graphTitle"/>
+        <label text="$summaryView.savingsAccountsBalance.subtitle" styleClass="graphSubTitle"/>
+        <filler fill="horizontal"/>
+        <row styleClass="navBlock">
+          <label icon="home/budget.png" styleClass="navigation"/>
+          <button action="gotoBudget" styleClass="navigation"/>
+        </row>
+      </row>
+
+      <component ref="savingsBalanceHistoChart" styleClass="chart" weightY="10"/>
+
+      <row weightY="0">
+        <label text="$summaryView.savingsAccounts.title" styleClass="graphTitle"/>
+        <label text="$summaryView.savingsAccounts.subtitle" styleClass="graphSubTitle"/>
+        <filler fill="horizontal"/>
+        <row styleClass="navBlock">
+          <label icon="home/savings.png" styleClass="navigation"/>
+          <button action="gotoSavings" styleClass="navigation"/>
+        </row>
       </row>
 
       <component ref="savingsHistoChart" styleClass="chart" weightY="10"/>
+
+      <htmlEditorPane ref="message"/>
+
     </column>
   </column>
 

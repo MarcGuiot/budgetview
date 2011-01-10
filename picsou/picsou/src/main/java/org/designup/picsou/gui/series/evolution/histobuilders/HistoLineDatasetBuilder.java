@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.series.evolution.histobuilders;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
+import org.designup.picsou.gui.components.charts.histo.line.HistoBarPainter;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineColors;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineDataset;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLinePainter;
@@ -22,8 +23,13 @@ public class HistoLineDatasetBuilder extends HistoDatasetBuilder {
                 isCurrentMonth(monthId), isSelectedMonth);
   }
 
-  public void apply(HistoLineColors colors, String messageKey, String... args) {
+  public void showLine(HistoLineColors colors, String messageKey, String... args) {
     histoChart.update(new HistoLinePainter(dataset, colors));
+    updateLabel(label, "seriesEvolution.chart.histo." + messageKey, args);
+  }
+
+  public void showBars(HistoLineColors colors, String messageKey, String... args) {
+    histoChart.update(new HistoBarPainter(dataset, colors));
     updateLabel(label, "seriesEvolution.chart.histo." + messageKey, args);
   }
 }

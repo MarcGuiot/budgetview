@@ -18,11 +18,10 @@ public abstract class AccountsChartView extends View {
   protected HistoChartBuilder histoChartBuilder;
   private String componentName;
 
-  public AccountsChartView(GlobRepository repository, Directory directory,
-                           String mainAccountsHistoChart) {
+  public AccountsChartView(GlobRepository repository, Directory directory, String componentName) {
     super(repository, directory);
     this.histoChartBuilder = createChartBuilder(true, true, repository, directory);
-    this.componentName = mainAccountsHistoChart;
+    this.componentName = componentName;
   }
 
   public HistoChartBuilder createChartBuilder(boolean drawLabels, boolean clickable, final GlobRepository repository, final Directory directory) {

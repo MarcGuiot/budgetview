@@ -2,6 +2,7 @@ package org.designup.picsou.gui.summary;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.chart.MainDailyPositionsChartView;
+import org.designup.picsou.gui.accounts.chart.SavingsAccountsBalanceChartView;
 import org.designup.picsou.gui.accounts.chart.SavingsAccountsChartView;
 import org.designup.picsou.gui.budget.AccountThresholdMessage;
 import org.designup.picsou.gui.budget.dialogs.PositionThresholdDialog;
@@ -52,6 +53,9 @@ public class SummaryView extends View {
 
     SavingsAccountsChartView savingsAccountsView = new SavingsAccountsChartView(repository, directory);
     savingsAccountsView.registerComponents(builder);
+
+    SavingsAccountsBalanceChartView savingsAccountsBalanceView = new SavingsAccountsBalanceChartView(repository, directory);
+    savingsAccountsBalanceView.registerComponents(builder);
 
     builder.add("gotoData", new GotoCardAction(Card.DATA, directory));
     builder.add("gotoBudget", new GotoCardAction(Card.BUDGET, directory));

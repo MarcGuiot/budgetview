@@ -38,6 +38,7 @@ public class HistoChartBuilder {
   private HistoDiffColors expensesColors;
   private HistoLineColors uncategorizedColors;
   private HistoLineColors accountColors;
+  private HistoLineColors accountBalanceColors;
   private HistoDiffColors seriesColors;
   private HistoDiffColors summaryColors;
   private HistoDailyColors dailyColors;
@@ -119,6 +120,13 @@ public class HistoChartBuilder {
       "histo.account.line",
       "histo.account.fill.positive",
       "histo.account.fill.negative",
+      directory
+    );
+
+    accountBalanceColors = new HistoLineColors(
+      "histo.account.balance.line",
+      "histo.account.balance.fill.positive",
+      "histo.account.balance.fill.negative",
       directory
     );
 
@@ -265,7 +273,7 @@ public class HistoChartBuilder {
       builder.add(monthId, value, monthId == selectedMonthId);
     }
 
-    builder.apply(uncategorizedColors, "uncategorized");
+    builder.showLine(uncategorizedColors, "uncategorized");
   }
 
   public void showSeriesHisto(Integer seriesId, int selectedMonthId, boolean resetPosition) {
@@ -311,7 +319,7 @@ public class HistoChartBuilder {
       builder.add(monthId, value, monthId == selectedMonthId);
     }
 
-    builder.apply(accountColors, "mainAccounts");
+    builder.showLine(accountColors, "mainAccounts");
   }
 
   public void showMainAccountsSummary(int selectedMonthId, boolean resetPosition) {
@@ -358,8 +366,24 @@ public class HistoChartBuilder {
       dataset.add(monthId, value, monthId == selectedMonthId);
     }
 
-    dataset.apply(accountColors, "savingsAccounts");
+    dataset.showLine(accountColors, "savingsAccounts");
   }
+
+  public void showSavingsBalanceHisto(int selectedMonthId, boolean resetPosition) {
+    if (resetPosition) {
+      scrollMonth = 0;
+    }
+    HistoLineDatasetBuilder dataset = createLineDataset("savingsAccounts");
+
+    for (int monthId : getMonthIdsToShow(selectedMonthId)) {
+      Glob stat = SavingsBudgetStat.findSummary(monthId, repository);
+      Double value = stat != null ? stat.get(SavingsBudgetStat.BALANCE) : 0.0;
+      dataset.add(monthId, value, monthId == selectedMonthId);
+    }
+
+    dataset.showBars(accountBalanceColors, "savingsAccounts");
+  }
+
 
   public void showSavingsAccountHisto(int selectedMonthId, int accountId, boolean resetPosition) {
     if (resetPosition) {
@@ -373,7 +397,7 @@ public class HistoChartBuilder {
       dataset.add(monthId, value, monthId == selectedMonthId);
     }
 
-    dataset.apply(accountColors, "savingsAccounts");
+    dataset.showLine(accountColors, "savingsAccounts");
   }
 
   public void showSeriesBudget(Integer seriesId, int selectedMonthId, Set<Integer> selectedMonths, boolean resetPosition) {
