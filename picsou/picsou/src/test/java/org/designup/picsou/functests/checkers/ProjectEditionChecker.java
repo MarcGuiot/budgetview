@@ -60,6 +60,14 @@ public class ProjectEditionChecker extends GuiChecker {
     return this;
   }
 
+  public ProjectEditionChecker deleteLastValueChars(int index, int numberOfChars) {
+    TextBox field = getItemComponent(index, TextBox.class, "amountEditor");
+    for (int i = 0; i < numberOfChars; i++) {
+      field.pressKey(Key.BACKSPACE);
+    }
+    return this;
+  }
+
   public ProjectEditionChecker setItem(int index, String name, int monthId, double amount) {
     setItemName(index, name);
     setItemDate(index, monthId);

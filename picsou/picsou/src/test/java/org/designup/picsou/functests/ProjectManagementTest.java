@@ -71,6 +71,10 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projects.edit("My project")
       .checkItems("Reservation | January 2011 | -200.00\n" +
                   "Hotel | February 2011 | -500.00")
+      .deleteLastValueChars(1, 4)
+      .checkTotalAmount(250.00)
+      .checkItems("Reservation | January 2011 | -200.00\n" +
+                  "Hotel | February 2011 | -50")
       .deleteItem(1)
       .validate();
 

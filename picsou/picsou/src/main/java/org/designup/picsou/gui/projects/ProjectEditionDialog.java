@@ -169,7 +169,7 @@ public class ProjectEditionDialog {
                         .getComponent());
 
       AmountEditor amountEditor =
-        new AmountEditor(ProjectItem.AMOUNT, localRepository, directory, false, null)
+        new AmountEditor(ProjectItem.AMOUNT, localRepository, directory, true, null)
           .forceSelection(itemKey)
           .update(false, false);
       cellBuilder.add("amountEditor", amountEditor.getPanel());
