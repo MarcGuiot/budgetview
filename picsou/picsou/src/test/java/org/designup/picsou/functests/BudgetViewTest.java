@@ -494,9 +494,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/01", 3540.00, "WorldCo")
       .load();
 
-    views.selectCategorization();
     categorization.setNewVariable("Auchan", "Groceries");
     categorization.setVariable("Monoprix", "Groceries");
+    categorization.setNewVariable("McDo", "Food");
 
     views.selectBudget();
     budgetView.variable.gotoData("Groceries");

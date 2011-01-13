@@ -22,8 +22,6 @@ import static org.designup.picsou.gui.utils.Matchers.*;
 public class TransactionSelection implements GlobSelectionListener {
 
   private Set<Integer> currentMonths;
-  private Set<Integer> currentBudgetAreas;
-  private Set<Integer> currentSeries;
 
   private GlobRepository repository;
   private FilterManager filterManager;
@@ -44,8 +42,6 @@ public class TransactionSelection implements GlobSelectionListener {
   }
 
   public void init() {
-    currentSeries = Collections.emptySet();
-    currentBudgetAreas = Collections.singleton(BudgetArea.ALL.getId());
     currentMonths = Collections.emptySet();
   }
 
@@ -53,14 +49,9 @@ public class TransactionSelection implements GlobSelectionListener {
     if (selection.isRelevantForType(Month.TYPE)) {
       currentMonths = selection.getAll(Month.TYPE).getValueSet(Month.ID);
     }
-    if (selection.isRelevantForType(BudgetArea.TYPE) || selection.isRelevantForType(Series.TYPE)) {
-      currentBudgetAreas = selection.getAll(BudgetArea.TYPE).getValueSet(BudgetArea.ID);
-      currentSeries = selection.getAll(Series.TYPE).getValueSet(Series.ID);
-    }
 
     filterManager.set(FilterSetBuilder.init()
       .set(MONTHS_FILTER, transactionsForMonths(currentMonths))
-      .set(SERIES_FILTER, transactionsForSeries(currentBudgetAreas, currentSeries, repository))
       .get());
   }
 

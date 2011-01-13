@@ -130,8 +130,8 @@ public class NavigationService implements GlobSelectionListener {
     currentCard = newCard;
   }
 
-  private void select(final Card card, boolean backForward) {
-    if (!backForward) {
+  private void select(final Card card, boolean updateBackForward) {
+    if (!updateBackForward) {
       backStack.push(currentCard);
       forwardStack.clear();
     }

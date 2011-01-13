@@ -44,31 +44,15 @@ public class Matchers {
     return GlobMatchers.contained(Transaction.BUDGET_MONTH, months);
   }
 
-  public static GlobMatcher transactionsForSeries(final Set<Integer> targetBudgetAreas,
-                                                  final Set<Integer> targetSeries,
-                                                  GlobRepository repository) {
-    if (targetBudgetAreas.contains(BudgetArea.ALL.getId())) {
-      return GlobMatchers.ALL;
-    }
-    final Set<Integer> reducedSeriesSet = new HashSet<Integer>();
-    for (Integer seriesId : targetSeries) {
-      Glob series = repository.find(Key.create(Series.TYPE, seriesId));
-      if (series != null && !targetBudgetAreas.contains(series.get(Series.BUDGET_AREA))) {
-        reducedSeriesSet.add(seriesId);
-      }
-    }
+  public static GlobMatcher transactionsForSeries(final Set<Integer> targetSeries) {
     return new GlobMatcher() {
       public boolean matches(Glob transaction, GlobRepository repository) {
         Integer seriesId = transaction.get(Transaction.SERIES);
-        if (reducedSeriesSet.contains(seriesId)) {
-          return true;
-        }
-        Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-        return targetBudgetAreas.contains(series.get(Series.BUDGET_AREA));
+        return targetSeries.contains(seriesId);
       }
 
       public String toString() {
-        return "transaction for series " + targetSeries + " from BudgetAreas " + targetBudgetAreas;
+        return "transaction for series " + targetSeries;
       }
     };
   }

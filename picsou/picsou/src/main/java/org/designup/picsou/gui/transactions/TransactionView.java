@@ -2,7 +2,6 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.utils.AccountFilteringCombo;
-import org.designup.picsou.gui.card.utils.GotoCardAction;
 import org.designup.picsou.gui.components.DefaultTableCellPainter;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.FilterClearer;
@@ -13,7 +12,6 @@ import org.designup.picsou.gui.components.filtering.components.TextFilterPanel;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.TransactionBudgetAreaStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
-import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.Matchers;
@@ -44,6 +42,7 @@ import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static org.designup.picsou.model.Transaction.TYPE;
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -154,12 +153,8 @@ public class TransactionView extends View implements Filterable {
   }
 
   public void setSeriesFilter(Glob series) {
-    GlobMatcher matcher =
-      Matchers.transactionsForSeries(
-        Collections.singleton(series.get(Series.BUDGET_AREA)),
-        Collections.singleton(series.get(Series.ID)),
-        repository);
-    filterManager.set(ACCOUNT_FILTER, matcher);
+    Set<Integer> seriesSet = Collections.singleton(series.get(Series.ID));
+    filterManager.set(ACCOUNT_FILTER, Matchers.transactionsForSeries(seriesSet));
   }
 
   private void addShowPlannedTransactionsCheckbox(GlobsPanelBuilder builder) {
