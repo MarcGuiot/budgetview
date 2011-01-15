@@ -112,8 +112,8 @@ public class StackChartMetrics {
 
   public StackChartLayout leftLayout() {
     return new StackChartLayout() {
-      public int barTextX(String text, boolean selected) {
-        return panelWidth / 2 - barWidth / 2 - getStringWidth(text, selected) / 2;
+      public int barTextX(String text) {
+        return panelWidth / 2 - barWidth / 2 - getStringWidth(text) / 2;
       }
 
       public int labelTextX(String text, boolean selected) {
@@ -136,8 +136,8 @@ public class StackChartMetrics {
 
   public StackChartLayout rightLayout() {
     return new StackChartLayout() {
-      public int barTextX(String text, boolean selected) {
-        return panelWidth / 2 + barWidth / 2 - getStringWidth(text, selected) / 2;
+      public int barTextX(String text) {
+        return panelWidth / 2 + barWidth / 2 - getStringWidth(text) / 2;
       }
 
       public int labelTextX(String text, boolean selected) {
@@ -163,8 +163,8 @@ public class StackChartMetrics {
     final int labelWidth = getStringWidth(longestLabel, true);
 
     return new StackChartLayout() {
-      public int barTextX(String text, boolean selected) {
-        return barX() + (barWidth - getStringWidth(text, selected)) / 2;
+      public int barTextX(String text) {
+        return barX() + (barWidth - getStringWidth(text)) / 2;
       }
 
       public int labelTextX(String text, boolean selected) {
@@ -183,6 +183,10 @@ public class StackChartMetrics {
         return panelWidth;
       }
     };
+  }
+
+  private int getStringWidth(String text) {
+    return labelFontMetrics.stringWidth(text);
   }
 
   private int getStringWidth(String text, boolean selected) {

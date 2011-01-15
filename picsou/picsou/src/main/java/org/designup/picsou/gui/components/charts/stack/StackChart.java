@@ -160,7 +160,7 @@ public class StackChart extends JPanel {
 
       g2.setColor(Colors.getLabelColor(blockColor, colors.getBarTextColor(), Color.DARK_GRAY));
       g2.setFont(barTextFont);
-      g2.drawString(block.barText, layout.barTextX(block.barText, block.selected), block.barTextY);
+      g2.drawString(block.barText, layout.barTextX(block.barText), block.barTextY);
 
       g2.setColor(colors.getLabelColor(isRollover(block)));
       g2.setFont(block.selected ? selectedLabelFont : labelFont);
