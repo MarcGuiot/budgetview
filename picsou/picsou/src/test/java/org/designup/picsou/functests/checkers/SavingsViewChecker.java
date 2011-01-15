@@ -133,6 +133,10 @@ public class SavingsViewChecker extends ViewChecker {
     return savingsView;
   }
 
+  public AccountEditionChecker createAccount() {
+    return AccountEditionChecker.open(getPanel().getButton("createSavingsAccount").triggerClick());
+  }
+
   public SeriesEditionDialogChecker createSeries() {
     return SeriesEditionDialogChecker.open(getPanel().getButton("createSavingsSeries"));
   }

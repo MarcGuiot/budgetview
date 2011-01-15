@@ -59,7 +59,7 @@ public class SeriesEditionButtons {
   private class CreateSeriesAction extends AbstractAction {
 
     private CreateSeriesAction() {
-      super(Lang.get("add"));
+      super(Lang.get("series.add"));
     }
 
     public void actionPerformed(ActionEvent e) {

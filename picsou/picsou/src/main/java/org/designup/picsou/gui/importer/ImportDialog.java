@@ -2,10 +2,9 @@ package org.designup.picsou.gui.importer;
 
 import com.jidesoft.swing.AutoResizingTextArea;
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
-import org.designup.picsou.gui.accounts.NewAccountAction;
+import org.designup.picsou.gui.accounts.CreateAccountAction;
 import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.gui.bank.BankGuideDialog;
-import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
@@ -209,10 +208,10 @@ public class ImportDialog {
     builder2.add("table", importedTransactionTable.getTable());
     builder2.add("fileName", fileNameLabel);
 
-    NewAccountAction newAccountAction =
-      new NewAccountAction(AccountType.MAIN, sessionRepository, sessionDirectory, dialog)
+    CreateAccountAction createAccountAction =
+      new CreateAccountAction(AccountType.MAIN, sessionRepository, sessionDirectory, dialog)
         .setUpdateModeEditable(false);
-    newAccountButton = builder2.add("newAccount", new JButton(newAccountAction)).getComponent();
+    newAccountButton = builder2.add("newAccount", new JButton(createAccountAction)).getComponent();
 
     GlobComboView comboView = GlobComboView.init(Account.TYPE, sessionRepository, sessionDirectory)
       .setEmptyOptionLabel(Lang.get("import.account.combo.select"))

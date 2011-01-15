@@ -85,15 +85,6 @@ public abstract class AccountViewPanel {
                                                           "referencePositionDate",
                                                           "accountView.total.date");
 
-    Key summaryAccount = Key.create(Account.TYPE, summaryId);
-
-    // TODO: SUPPRIMER LES MONTANTS ATTENDUS
-    AccountPositionLabels positionLabels = createPositionLabels(summaryAccount);
-    builder.add("estimatedPosition",
-                positionLabels.getEstimatedAccountPositionLabel(true));
-    builder.add("estimatedPositionDate",
-                positionLabels.getEstimatedAccountPositionDateLabel());
-
     JLabel labelTypeName = new JLabel();
     builder.add("labelTypeName", labelTypeName);
 
@@ -101,7 +92,7 @@ public abstract class AccountViewPanel {
                                       new AccountComparator(),
                                       new AccountRepeatFactory());
 
-    builder.add("createAccount", new NewAccountAction(getAccountType(), repository, directory));
+    builder.add("createAccount", new CreateAccountAction(getAccountType(), repository, directory));
 
     panel = builder.load();
   }

@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.series;
 
-import org.designup.picsou.gui.accounts.NewAccountAction;
+import org.designup.picsou.gui.accounts.CreateAccountAction;
 import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
 import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
@@ -206,7 +206,7 @@ public class SeriesEditionDialog {
       .setEmptyOptionLabel(Lang.get("seriesEdition.account.external"));
     builder.add("toAccount", toAccountsCombo);
 
-    NewAccountAction action = new NewAccountAction(AccountType.SAVINGS, localRepository, directory, dialog);
+    CreateAccountAction action = new CreateAccountAction(AccountType.SAVINGS, localRepository, directory, dialog);
     builder.add("createAccount", action);
     action.setAccountTypeEditable(false);
 

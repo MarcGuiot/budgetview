@@ -16,8 +16,9 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/07/10", -200.00, "Virt")
       .load();
 
-    savingsAccounts
-      .createNewAccount()
+    savingsView
+      .createAccount()
+      .checkIsSavings()
       .setAccountName("ING")
       .selectBank("ING Direct")
       .setPosition(200)

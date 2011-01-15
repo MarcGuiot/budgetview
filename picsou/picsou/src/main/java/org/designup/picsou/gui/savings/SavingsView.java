@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.savings;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.accounts.CreateAccountAction;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.accounts.position.SavingsAccountPositionLabels;
 import org.designup.picsou.gui.budget.SeriesEditionButtons;
@@ -9,6 +10,7 @@ import org.designup.picsou.gui.series.evolution.histobuilders.AccountHistoChartU
 import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilder;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
+import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.globsframework.gui.GlobSelection;
@@ -50,6 +52,8 @@ public class SavingsView extends View implements GlobSelectionListener {
                                                                   directory.get(SeriesEditor.class));
     seriesButtons.setNames("createSavingsSeries");
     seriesButtons.registerButtons(builder);
+
+    builder.add("createSavingsAccount", new CreateAccountAction(AccountType.SAVINGS, repository, directory));
 
     AccountPositionLabels.registerReferencePositionLabels(builder, Account.SAVINGS_SUMMARY_ACCOUNT_ID,
                                                           "totalReferenceSavingsPositionAmount",

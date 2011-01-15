@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.accounts.NewAccountAction;
+import org.designup.picsou.gui.accounts.CreateAccountAction;
 import org.designup.picsou.gui.categorization.components.*;
 import org.designup.picsou.gui.categorization.special.*;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
@@ -374,7 +374,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
   private Action getAdditionalAction(BudgetArea budgetArea) {
     if (BudgetArea.SAVINGS.equals(budgetArea)) {
-      NewAccountAction action = new NewAccountAction(AccountType.SAVINGS, repository, directory);
+      CreateAccountAction action = new CreateAccountAction(AccountType.SAVINGS, repository, directory);
       action.setAccountTypeEditable(false);
       return action;
     }
