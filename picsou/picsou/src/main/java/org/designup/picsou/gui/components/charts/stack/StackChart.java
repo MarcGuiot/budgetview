@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.components.charts.stack;
 
-import org.globsframework.utils.Utils;
 import org.globsframework.gui.splits.color.Colors;
+import org.globsframework.utils.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +24,7 @@ public class StackChart extends JPanel {
   private boolean clickEnabled;
 
   private Font labelFont;
+  private Font selectedLabelFont;
   private Font barTextFont;
 
   private static final BasicStroke SELECTION_STROKE = new BasicStroke(2);
@@ -34,6 +35,7 @@ public class StackChart extends JPanel {
     setMinimumSize(new Dimension(190, 40));
     setPreferredSize(new Dimension(190, 1000));
     labelFont = getFont().deriveFont(10f);
+    selectedLabelFont = getFont().deriveFont(Font.BOLD);
     barTextFont = getFont().deriveFont(9f);
     registerMouseActions();
   }
@@ -98,7 +100,9 @@ public class StackChart extends JPanel {
     if ((leftDataset != null) && (rightDataset != null)) {
       StackChartMetrics metrics =
         new StackChartMetrics(height, width,
-                              g2.getFontMetrics(labelFont), g2.getFontMetrics(barTextFont),
+                              g2.getFontMetrics(labelFont),
+                              g2.getFontMetrics(selectedLabelFont),
+                              g2.getFontMetrics(barTextFont),
                               Math.max(leftDataset.getTotal(), rightDataset.getTotal()));
 
       paintBlocks(g2, metrics, leftDataset,
@@ -111,7 +115,9 @@ public class StackChart extends JPanel {
     else if (leftDataset != null) {
       StackChartMetrics metrics =
         new StackChartMetrics(height, width,
-                              g2.getFontMetrics(labelFont), g2.getFontMetrics(barTextFont),
+                              g2.getFontMetrics(labelFont),
+                              g2.getFontMetrics(selectedLabelFont),
+                              g2.getFontMetrics(barTextFont),
                               leftDataset.getTotal());
       paintBlocks(g2, metrics,
                   leftDataset,
@@ -142,29 +148,30 @@ public class StackChart extends JPanel {
     StackChartBlock[] blocks = metrics.computeBlocks(dataset);
     Color blockColor = barColor;
     for (StackChartBlock block : blocks) {
-      g2.setColor(blockColor);
+
+      g2.setColor(isRollover(block) ? Colors.brighten(blockColor, 0.1f) : blockColor);
       g2.fillRect(layout.barX(), block.blockY, metrics.barWidth(), block.blockHeight);
 
       if (block.selected) {
         g2.setColor(colors.getSelectionBorderColor());
         g2.setStroke(SELECTION_STROKE);
-        g2.drawRect(layout.barX(), block.blockY, metrics.barWidth(), block.blockHeight);
+        g2.drawRect(layout.barX(), block.blockY, metrics.barWidth() - 1, block.blockHeight);
       }
 
       g2.setColor(Colors.getLabelColor(blockColor, colors.getBarTextColor(), Color.DARK_GRAY));
       g2.setFont(barTextFont);
-      g2.drawString(block.barText, layout.barTextX(block.barText), block.barTextY);
+      g2.drawString(block.barText, layout.barTextX(block.barText, block.selected), block.barTextY);
 
-      g2.setColor(isRollover(block) ? colors.getRolloverTextColor() : colors.getLabelColor());
-      g2.setFont(labelFont);
-      g2.drawString(block.label, layout.labelTextX(block.label), block.labelTextY);
+      g2.setColor(colors.getLabelColor(isRollover(block)));
+      g2.setFont(block.selected ? selectedLabelFont : labelFont);
+      g2.drawString(block.label, layout.labelTextX(block.label, block.selected), block.labelTextY);
 
       if (rebuildClickAreas && clickEnabled && (block.datasetIndex >= 0)) {
         Rectangle rectangle = new Rectangle(layout.blockX(), block.blockY, layout.blockWidth(), block.blockHeight);
         StackChartSelection selection = new StackChartSelection(block.dataset, block.datasetIndex);
         clickAreas.put(rectangle, selection);
       }
-      blockColor = Colors.brighten(blockColor, 0.25f);      
+      blockColor = Colors.brighten(blockColor, 0.25f);
     }
   }
 

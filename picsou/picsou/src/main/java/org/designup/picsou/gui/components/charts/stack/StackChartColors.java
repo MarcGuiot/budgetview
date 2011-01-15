@@ -25,7 +25,7 @@ public class StackChartColors implements ColorChangeListener {
   private Color borderColor;
   private Color floorColor;
   private Color selectionBorderColor;
-  private Color rolloverTextColor;
+  private Color rolloverLabelColor;
 
   public StackChartColors(String leftBarKey,
                           String rightBarKey,
@@ -56,7 +56,7 @@ public class StackChartColors implements ColorChangeListener {
     floorColor = colorLocator.get(floorKey);
     borderColor = colorLocator.get(borderKey);
     selectionBorderColor = colorLocator.get(selectionBorderKey);
-    rolloverTextColor = colorLocator.get(rolloverTextKey);
+    rolloverLabelColor = colorLocator.get(rolloverTextKey);
   }
 
   public Color getLeftBarColor() {
@@ -71,8 +71,8 @@ public class StackChartColors implements ColorChangeListener {
     return barTextColor;
   }
 
-  public Color getLabelColor() {
-    return labelColor;
+  public Color getLabelColor(boolean rollover) {
+    return rollover ? rolloverLabelColor : labelColor;
   }
 
   public Color getBorderColor() {
@@ -85,9 +85,5 @@ public class StackChartColors implements ColorChangeListener {
 
   public Color getSelectionBorderColor() {
     return selectionBorderColor;
-  }
-
-  public Color getRolloverTextColor() {
-    return rolloverTextColor;
   }
 }

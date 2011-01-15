@@ -32,10 +32,6 @@
       <label text="$summaryView.mainAccounts.title" styleClass="graphTitle"/>
       <label text="$summaryView.mainAccounts.subtitle" styleClass="graphSubTitle"/>
       <filler fill="horizontal"/>
-      <row styleClass="navBlock">
-        <label icon="home/data.png" styleClass="navigation"/>
-        <button action="gotoData" styleClass="navigation"/>
-      </row>
     </row>
 
     <component ref="mainAccountsHistoChart" styleClass="chart" weightY="15"/>
@@ -44,10 +40,6 @@
       <label text="$summaryView.savingsAccountsBalance.title" styleClass="graphTitle"/>
       <label text="$summaryView.savingsAccountsBalance.subtitle" styleClass="graphSubTitle"/>
       <filler fill="horizontal"/>
-      <row styleClass="navBlock">
-        <label icon="home/budget.png" styleClass="navigation"/>
-        <button action="gotoBudget" styleClass="navigation"/>
-      </row>
     </row>
 
     <component ref="savingsBalanceHistoChart" styleClass="chart" weightY="10"/>
@@ -56,15 +48,22 @@
       <label text="$summaryView.savingsAccounts.title" styleClass="graphTitle"/>
       <label text="$summaryView.savingsAccounts.subtitle" styleClass="graphSubTitle"/>
       <filler fill="horizontal"/>
-      <row styleClass="navBlock">
-        <label icon="home/savings.png" styleClass="navigation"/>
-        <button action="gotoSavings" styleClass="navigation"/>
-      </row>
     </row>
 
     <component ref="savingsHistoChart" styleClass="chart" weightY="10"/>
 
-    <htmlEditorPane ref="message"/>
+    <row>
+      <htmlEditorPane ref="message"/>
+      <grid styleClass="navBlock">
+        <label icon="home/data.png" styleClass="navigation" gridPos="(0,0)"/>
+        <button action="gotoData" styleClass="navigation" gridPos="(1,0)"/>
+        <label icon="home/budget.png" styleClass="navigation" gridPos="(0,1)"/>
+        <button action="gotoBudget" styleClass="navigation" gridPos="(1,1)"/>
+        <label icon="home/savings.png" styleClass="navigation" gridPos="(0,2)"/>
+        <button action="gotoSavings" styleClass="navigation" gridPos="(1,2)"/>
+      </grid>
+
+    </row>
 
   </column>
 

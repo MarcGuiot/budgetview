@@ -18,7 +18,7 @@ public class StackChartMetricsTest extends ChartTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
-    metrics = new StackChartMetrics(210, 200, getFontMetrics(), getFontMetrics(), 1000);
+    metrics = new StackChartMetrics(210, 200, getFontMetrics(), getFontMetrics(), getFontMetrics(), 1000);
   }
 
   public void testStandardBlocks() throws Exception {
