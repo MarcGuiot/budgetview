@@ -78,48 +78,6 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkDisplayIsEmpty("Main account");
   }
 
-  public void testEditingTheAccountPositionThreshold() throws Exception {
-
-    OfxBuilder.init(this)
-      .addBankAccount(-1, 10674, "000123", 100, "2008/08/26")
-      .addTransaction("2008/07/26", 1000, "WorldCo")
-      .addTransaction("2008/08/26", 1000, "WorldCo")
-      .addTransaction("2008/08/26", -800, "FNAC")
-      .load();
-
-    categorization.setNewIncome("WorldCo", "Salary");
-
-    timeline.selectMonth("2008/08");
-    mainAccounts
-      .checkEstimatedPosition(100.00)
-      .checkEstimatedPositionColor("darkGray");
-
-    budgetView.getSummary().openThresholdDialog()
-      .checkThreshold(0.00)
-      .setThreshold(1000.00)
-      .validate();
-
-    mainAccounts.checkEstimatedPositionColor("red");
-
-    budgetView.getSummary().openThresholdDialog()
-      .checkThreshold(1000.00)
-      .setThreshold(-2000.00)
-      .validate();
-
-    mainAccounts.checkEstimatedPositionColor("darkGray");
-
-    budgetView.getSummary().openThresholdDialog()
-      .setThreshold(0.00)
-      .validate();
-
-    mainAccounts.checkEstimatedPositionColor("darkGray");
-
-    timeline.selectMonth("2008/07");
-    mainAccounts
-      .checkEstimatedPosition(-100.00)
-      .checkEstimatedPositionColor("darkRed");
-  }
-
   public void testChangeAccountTypeUncategorizeTransactionIfAssociatedSeriesIsNotSavings() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "000123", 100, "2008/08/26")

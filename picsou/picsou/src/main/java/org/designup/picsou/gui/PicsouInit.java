@@ -232,7 +232,6 @@ public class PicsouInit {
 
     repository.startChangeSet();
     try {
-      repository.findOrCreate(AccountPositionThreshold.KEY);
       repository.findOrCreate(Notes.KEY, value(Notes.TEXT, Lang.get("notes.initial")));
       repository.findOrCreate(UserVersionInformation.KEY,
                               value(UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION),

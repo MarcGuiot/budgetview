@@ -9,6 +9,8 @@
         underline="true" useNormalColorWhenDisabled="true" autoHideEnabled="false"
         lineColor="block.total.underline"/>
 
+    <style selector=".totalAmountTitle" anchor="center" fill="none"/>
+    <style selector=".totalAmount" anchor="center" fill="none" font="-,bold,14"/>
     <style selector="button.totalAmount" ui="underlinedButtonUI" foreground=""/>
 
     <style selector="button#balanceLabel" fill="none" anchor="center"/>
@@ -30,8 +32,6 @@
     <style selector="htmlEditorPane#helpMessage"
            border="empty(5,0,0,0)" foreground="budgetSummary.help.message"/>
 
-    <style selector=".totalAmountTitle" anchor="center" fill="none"/>
-    <style selector=".totalAmount" anchor="center" fill="none"/>
 
     <style selector=".subRow .totalAmountTitle"
            marginRight="10" weightX="1"/>
@@ -39,18 +39,15 @@
            font="-,bold,12" horizontalTextPosition="left"
            weightX="1" fill="none" anchor="left"/>
 
-    <ui name="thresholdButton" class="org.designup.picsou.gui.components.ColorButtonUI"
-        borderTop="budgetSummary.thresholdButton.borderTop"
-        borderBottom="budgetSummary.thresholdButton.borderBottom"/>
-    <style selector="button#showThreshold" ui="thresholdButton" preferredSize="(15,8)"
-           fill="none" anchor="left" marginLeft="7"/>
     <style selector="button#nextPositionLabel" anchor="right"/>
 
   </styles>
 
   <column border="empty(10,10,10,10)">
 
-    <row>
+    <component ref="chart" minimumSize="(100,100)" weightY="10"/>
+
+    <row weightY="0" marginTop="4">
       <filler fill="horizontal"/>
       <column>
         <label ref="lastPositionTitle" styleClass="totalAmountTitle"/>
@@ -61,13 +58,12 @@
         <label ref="nextPositionTitle" styleClass="totalAmountTitle"/>
         <row>
           <button ref="nextPositionLabel" styleClass="totalAmount"/>
-          <button ref="showThreshold"/>
         </row>
       </column>
       <filler fill="horizontal"/>
     </row>
 
-    <column border="matte(1,0,0,0,block.header.separator)" marginTop="4">
+    <column border="matte(1,0,0,0,block.header.separator)" marginTop="4" weightY="0">
       <row marginTop="4" styleClass="subRow">
         <filler fill="horizontal"/>
         <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle"/>
@@ -79,7 +75,7 @@
       </row>
     </column>
 
-    <label ref="multiSelectionLabel" styleClass="message"/>
+    <label ref="multiSelectionLabel" styleClass="message" weightY="0"/>
 
   </column>
 

@@ -37,11 +37,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     mainAccounts.checkEstimatedPosition(0.00);
 
-    views.selectBudget();
-    budgetView.getSummary().openThresholdDialog()
-      .setThreshold(25.00)
-      .validate();
-
     views.selectData();
     transactions.initContent()
       .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00)
@@ -53,11 +48,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     mainAccounts.checkEstimatedPosition(0.00);
-
-    views.selectBudget();
-    budgetView.getSummary().openThresholdDialog()
-      .checkThreshold(25.00)
-      .cancel();
 
     views.selectData();
     transactions.initContent()

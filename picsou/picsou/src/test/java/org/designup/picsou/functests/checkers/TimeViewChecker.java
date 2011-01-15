@@ -140,7 +140,7 @@ public class TimeViewChecker extends GuiChecker {
     Assert.assertTrue("Expected balance: " + balance + " - " + tooltip,
                       tooltip.contains("Balance: " + toString(balance, true)));
     Assert.assertTrue("Expected position: " + position + " - " + tooltip,
-                      tooltip.contains("Position: " + toString(position)));
+                      tooltip.contains("Min position: " + toString(position)));
     return this;
   }
 

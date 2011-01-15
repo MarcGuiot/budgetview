@@ -55,7 +55,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     views.selectHome();
 
     mainAccounts.changePosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000, "VIRT ING");
-    timeline.checkMonthTooltip("2008/07", balanceFor200807, 1000.00);
+    timeline.checkMonthTooltip("2008/07", balanceFor200807, -880.00);
 
     timeline.selectMonth("2008/08");
     mainAccounts.checkEstimatedPosition(1000 + balanceFor200808);
@@ -130,7 +130,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .checkMonthBalance(balanceFor200807)
       .checkEndPosition(1529.90);
 
-    timeline.checkMonthTooltip("2008/07", balanceFor200807, 1529.90);
+    timeline.checkMonthTooltip("2008/07", balanceFor200807, 29.90);
 
     timeline.selectMonth("2008/08");
 
@@ -151,7 +151,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .close();
     views.selectHome();
     mainAccounts.checkEstimatedPosition(1410);
-    timeline.checkMonthTooltip("2008/08", balanceFor200808, 1410.00);
+    timeline.checkMonthTooltip("2008/08", balanceFor200808, -90.00);
 
     timeline.selectMonths("2008/07", "2008/08");
     views.selectBudget();
@@ -165,7 +165,6 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.getSummary()
       .openPositionDialog()
-//      .checkPositionDate("31/08/2008")
       .checkInitialPosition(0)
       .checkIncome(1500)
       .checkExpense(90)
@@ -239,7 +238,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .close();
     views.selectHome();
     mainAccounts.checkEstimatedPosition(1440.00);
-    timeline.checkMonthTooltip("2008/08", balanceFor200808, 1440.00);
+    timeline.checkMonthTooltip("2008/08", balanceFor200808, -100.00);
   }
 
   public void testDetailForInAndOutOfSavings() throws Exception {

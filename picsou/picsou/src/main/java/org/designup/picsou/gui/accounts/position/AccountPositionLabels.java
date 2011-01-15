@@ -37,10 +37,10 @@ public abstract class AccountPositionLabels {
   }
 
   public static void registerReferencePositionLabels(GlobsPanelBuilder builder,
-                                                    Integer accountId,
-                                                    String positionLabelName,
-                                                    String titleLabelName,
-                                                    String titleLabelKey) {
+                                                     Integer accountId,
+                                                     String positionLabelName,
+                                                     String titleLabelName,
+                                                     String titleLabelKey) {
     Key summaryAccount = Key.create(Account.TYPE, accountId);
     builder.addLabel(positionLabelName, Account.POSITION)
       .setAutoHideIfEmpty(true)
@@ -56,10 +56,13 @@ public abstract class AccountPositionLabels {
 
   protected abstract Color getLabelColor(Double position, AmountColors amountColors);
 
+  /**
+   * @deprecated
+   */
   public JLabel getEstimatedAccountPositionLabel(boolean updateColor) {
     accountPosition = GlobLabelView.init(Month.TYPE, repository, directory,
                                          new EstimatedPositionStringifier(accountKey, updateColor))
-      .setUpdateMatcher(ChangeSetMatchers.changesForTypes(getType(), AccountPositionThreshold.TYPE))
+      .setUpdateMatcher(ChangeSetMatchers.changesForTypes(getType()))
       .setAutoHideIfEmpty(true);
     Glob account = repository.find(accountKey);
     if (account != null) {
@@ -124,7 +127,6 @@ public abstract class AccountPositionLabels {
       return Formatting.toString(position);
     }
   }
-
 
   private static class EstimatedPositionDateStringifier implements GlobListStringifier {
     public String toString(GlobList months, GlobRepository repository) {

@@ -13,11 +13,11 @@
 
       <column weightX="3">
         <label text="$budgetSummaryView.title" styleClass="blockTitle"/>
-        <column styleClass="block" marginBottom="10">
-          <panel ref="budgetSummaryView" weightY="0.1"/>
+        <column styleClass="block" marginBottom="10" weightY="0.1">
+          <panel ref="budgetSummaryView"/>
         </column>
 
-        <verticalSplit ref="firstVerticalSplitPane">
+        <verticalSplit ref="firstVerticalSplitPane" weightY="10">
           <panel ref="incomeBudgetView" weightY="5"/>
           <panel ref="savingsBudgetView" weightY="5"/>
         </verticalSplit>

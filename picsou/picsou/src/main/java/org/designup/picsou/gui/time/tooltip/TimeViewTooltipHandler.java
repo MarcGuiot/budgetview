@@ -28,8 +28,8 @@ public class TimeViewTooltipHandler implements TimeViewMouseHandler {
 
   public void enterMonth(int monthId) {
     String month = Month.getFullLabel(monthId);
-    Double position = panel.getPosition(monthId);
-    if (!repository.contains(Transaction.TYPE) || (position == null)) {
+    Double minPosition = panel.getMinPosition(monthId);
+    if (!repository.contains(Transaction.TYPE) || (minPosition == null)) {
       panel.setToolTipText(Lang.get("timeView.tooltip.month.noData", month));
       return;
     }
@@ -39,13 +39,12 @@ public class TimeViewTooltipHandler implements TimeViewMouseHandler {
       return;
     }
     Double balance = budgetStat.get(BudgetStat.MONTH_BALANCE);
-    double positionLimit = panel.getPositionThreshold(monthId);
     panel.setToolTipText(
       Lang.get("timeView.tooltip.month.standard",
                month,
                Formatting.toStringWithPlus(balance),
-               Formatting.toString(position),
-               Colors.toString(colors.getAmountTextColor(position - positionLimit, Color.BLACK))));
+               Formatting.toString(minPosition),
+               Colors.toString(colors.getAmountTextColor(minPosition, Color.BLACK))));
   }
 
   public void enterYear(int year) {

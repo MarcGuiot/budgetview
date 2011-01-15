@@ -161,16 +161,12 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     this.visibilityListener = visibilityListener;
   }
 
-  public Double getPosition(int monthId) {
+  public Double getMinPosition(int monthId) {
     Glob balance = repository.find(Key.create(BudgetStat.TYPE, monthId));
     if (balance == null) {
       return 0.0;
     }
-    return balance.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
-  }
-
-  public double getPositionThreshold(int monthId) {
-    return AccountPositionThreshold.getValue(repository);
+    return balance.get(BudgetStat.MIN_POSITION);
   }
 
   public void mouseWheelMoved(MouseWheelEvent e) {
@@ -372,7 +368,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       repaint();
       return;
     }
-    if (changeSet.containsChanges(BudgetStat.TYPE) || changeSet.containsChanges(AccountPositionThreshold.TYPE)) {
+    if (changeSet.containsChanges(BudgetStat.TYPE)) {
       repaint();
     }
   }

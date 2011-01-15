@@ -26,10 +26,6 @@ public class SavingsAccountViewPanel extends AccountViewPanel {
     return AccountType.SAVINGS;
   }
 
-  protected boolean showPositionThreshold() {
-    return false;
-  }
-
   protected AccountPositionLabels createPositionLabels(Key accountKey) {
     return new SavingsAccountPositionLabels(accountKey, repository, directory);
   }

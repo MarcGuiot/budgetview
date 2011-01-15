@@ -2,7 +2,6 @@ package org.designup.picsou.gui.accounts.position;
 
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.utils.AmountColors;
-import org.designup.picsou.model.AccountPositionThreshold;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -33,7 +32,6 @@ public class MainAccountPositionLabels extends AccountPositionLabels {
       return amountColors.getNormalColor();
     }
 
-    Double threshold = AccountPositionThreshold.getValue(repository);
-    return amountColors.getTextColor(position - threshold);
+    return amountColors.getTextColor(position);
   }
 }

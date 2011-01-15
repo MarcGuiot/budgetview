@@ -36,8 +36,6 @@
 
                   <label ref="valueLabel" marginBottom="15"/>
 
-                  <htmlEditorPane ref="positionPanelLimit" marginBottom="15"/>
-
                   <column opaque="true" background="help.content.innerBlock.bg" border="line(help.content.innerBlock.border)">
 
                     <label text="$position.detailsIntro" margin="10" marginBottom="0"/>

@@ -16,6 +16,7 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
+/** @deprecated */
 public class AccountPositionThreshold {
   public static final Integer SINGLETON_ID = 0;
   public static org.globsframework.model.Key KEY;
@@ -65,7 +66,6 @@ public class AccountPositionThreshold {
       if (version == 2) {
         deserializeDataV2(fieldSetter, data);
       }
-
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {

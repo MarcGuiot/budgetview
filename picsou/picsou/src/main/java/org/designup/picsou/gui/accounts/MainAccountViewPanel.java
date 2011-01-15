@@ -22,15 +22,13 @@ public class MainAccountViewPanel extends AccountViewPanel {
 
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(BudgetStat.TYPE) ||
-            changeSet.containsUpdates(AccountPositionThreshold.THRESHOLD)) {
+        if (changeSet.containsChanges(BudgetStat.TYPE)) {
           updateEstimatedPosition();
         }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        if (changedTypes.contains(BudgetStat.TYPE) ||
-            changedTypes.contains(AccountPositionThreshold.TYPE)) {
+        if (changedTypes.contains(BudgetStat.TYPE)) {
           updateEstimatedPosition();
         }
       }

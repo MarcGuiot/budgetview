@@ -51,10 +51,6 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
 
     PositionChecker position_09 = budgetView.getSummary().openPositionDialog();
     position_09.checkPresent(-100, 500, -500, 0, -100);
-    position_09.checkThreshold(0)
-      .setThreshold(100)
-      .checkThreshold(100)
-      .close();
 
     timeline.selectMonths("2008/07", "2008/08");
     BalanceChecker balance_past = budgetView.getSummary().openBalancePanel();
@@ -62,51 +58,6 @@ public class BalancePositionPanelTest extends LoggedInFunctionalTestCase {
 
     PositionChecker position_past = budgetView.getSummary().openPositionDialog();
     position_past.checkPresent(0., 0, -100, 0, -100).close();
-  }
-
-
-  public void testThresholdInPosition() throws Exception {
-    operations.openPreferences().setFutureMonthsCount(2).validate();
-    OfxBuilder
-      .init(this)
-      .addTransaction("2008/06/20", -50.00, "ed")
-      .addTransaction("2008/06/30", "2008/07/02", -40.00, "ed")
-      .addTransaction("2008/07/10", -200.00, "ed")
-      .addTransaction("2008/07/10", -200.00, "loyer")
-      .addTransaction("2008/07/20", 500, "revenu")
-      .addTransaction("2008/07/30", "2008/08/02", -25.00, "ed")
-      .addTransaction("2008/08/10", -200.00, "ed")
-      .addTransaction("2008/08/10", -200.00, "loyer")
-      .addTransaction("2008/08/20", 500, "revenu")
-      .load();
-
-    views.selectCategorization();
-    categorization
-      .setNewRecurring("loyer", "loyer")
-      .setNewVariable("ed", "courses", -300.)
-      .setNewIncome("revenu", "revenue");
-
-    views.selectBudget();
-
-    timeline.selectMonth("2008/08");
-    PositionChecker position_08 = budgetView.getSummary().openPositionDialog();
-    position_08.checkTooMuchExpence()
-      .setThreshold(-100)
-      .checkBalanceZeroWithoutSavings()
-      .setThreshold(-200)
-      .checkOpenSavings()
-      .close();
-
-    views.selectHome();
-    savingsAccounts.createSavingsAccount("ING", 100.);
-
-    views.selectBudget();
-    timeline.selectMonth("2008/08");
-    PositionChecker new_position_08 = budgetView.getSummary().openPositionDialog();
-    new_position_08.checkSavingsExpected()
-      .setThreshold(-100)
-      .checkBalanceZeroWithSavings()
-      .close();
   }
 
   public void testWithSavings() throws Exception {

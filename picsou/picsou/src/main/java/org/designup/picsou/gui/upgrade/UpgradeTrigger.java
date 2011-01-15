@@ -89,7 +89,13 @@ public class UpgradeTrigger implements ChangeSetListener {
       repository.safeApply(Series.TYPE, ALL, new DisableSeriesReportGlobFunctor());
     }
 
+    deleteDeprecatedGlobs(repository);
+
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
+  }
+
+  private void deleteDeprecatedGlobs(GlobRepository repository) {
+    repository.deleteAll(Category.TYPE, AccountPositionThreshold.TYPE);
   }
 
   private void updateSavings(GlobRepository repository) {
@@ -112,8 +118,8 @@ public class UpgradeTrigger implements ChangeSetListener {
                             GlobMatchers.isTrue(Transaction.PLANNED)));
       for (Glob glob : planned) {
         repository.update(glob.getKey(),
-                          FieldValue.value(Transaction.ACCOUNT_POSITION, null),
-                          FieldValue.value(Transaction.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID));
+                          value(Transaction.ACCOUNT_POSITION, null),
+                          value(Transaction.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID));
       }
     }
   }
@@ -185,15 +191,15 @@ public class UpgradeTrigger implements ChangeSetListener {
       if (bankEntity != null) {
         Glob bank = repository.findLinkTarget(bankEntity, BankEntity.BANK);
         repository.update(account.getKey(),
-                          FieldValue.value(Account.BANK_ENTITY_LABEL, bankEntity.get(BankEntity.LABEL)),
-                          FieldValue.value(Account.BANK, bank.get(Bank.ID)));
+                          value(Account.BANK_ENTITY_LABEL, bankEntity.get(BankEntity.LABEL)),
+                          value(Account.BANK, bank.get(Bank.ID)));
 
       }
       else {
         repository.update(account.getKey(),
-                          FieldValue.value(Account.BANK_ENTITY, -1),
-                          FieldValue.value(Account.BANK_ENTITY_LABEL, ""),
-                          FieldValue.value(Account.BANK, -123456));
+                          value(Account.BANK_ENTITY, -1),
+                          value(Account.BANK_ENTITY_LABEL, ""),
+                          value(Account.BANK, -123456));
       }
     }
   }

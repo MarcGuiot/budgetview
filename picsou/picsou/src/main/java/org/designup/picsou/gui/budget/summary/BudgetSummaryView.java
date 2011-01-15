@@ -4,10 +4,11 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.budget.dialogs.BalanceDialog;
 import org.designup.picsou.gui.budget.dialogs.PositionDialog;
-import org.designup.picsou.gui.budget.dialogs.PositionThresholdDialog;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
+import org.designup.picsou.gui.series.evolution.histobuilders.AccountHistoChartUpdater;
+import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilder;
 import org.designup.picsou.gui.utils.AmountColors;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -29,8 +30,9 @@ import java.text.DecimalFormat;
 import java.util.Set;
 import java.util.SortedSet;
 
-public class
-  BudgetSummaryView extends View implements GlobSelectionListener, ChangeSetListener, ColorChangeListener {
+public class BudgetSummaryView
+  extends View
+  implements GlobSelectionListener, ChangeSetListener, ColorChangeListener {
 
   private JButton balanceButton = new JButton();
   private JButton estimatedPositionButton = new JButton();
@@ -38,7 +40,6 @@ public class
   private JButton uncategorizedButton = new JButton();
   private SplitsNode<JButton> uncategorizedButtonNode;
   private JLabel multiSelectionLabel = new JLabel();
-  private JButton showThresholdButton;
 
   private final DecimalFormat format = Formatting.DECIMAL_FORMAT;
 
@@ -80,8 +81,14 @@ public class
     balanceButton.addActionListener(new OpenBalanceAction());
     estimatedPositionButton.addActionListener(new OpenPositionAction());
 
-    showThresholdButton = new JButton(new ShowThresholdAction());
-    builder.add("showThreshold", showThresholdButton);
+    HistoChartBuilder histoChartBuilder =
+      new HistoChartBuilder(false, false, repository, directory, selectionService, 0, 1);
+    new AccountHistoChartUpdater(histoChartBuilder, repository, directory) {
+      protected void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {
+        histoChartBuilder.showMainDailyHisto(currentMonthId);
+      }
+    };
+    builder.add("chart", histoChartBuilder.getChart());
 
     parentBuilder.add("budgetSummaryView", builder);
   }
@@ -187,9 +194,7 @@ public class
     String text = Formatting.toString(amount);
     estimatedPositionButton.setText(text);
 
-    double diff = amount - AccountPositionThreshold.getValue(repository);
-    estimatedPositionButton.setForeground(amountColors.getTextColor(diff));
-    showThresholdButton.setForeground(amountColors.getIndicatorColor(diff));
+    estimatedPositionButton.setForeground(amountColors.getTextColor(amount));
   }
 
   private Glob getBudgetStat(Integer lastSelectedMonthId) {
@@ -211,16 +216,14 @@ public class
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
     if (changeSet.containsChanges(BudgetStat.TYPE) ||
-        changeSet.containsChanges(Series.TYPE) ||
-        changeSet.containsChanges(AccountPositionThreshold.TYPE)) {
+        changeSet.containsChanges(Series.TYPE)) {
       update();
     }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(BudgetStat.TYPE) ||
-        changedTypes.contains(Series.TYPE) ||
-        changedTypes.contains(AccountPositionThreshold.TYPE)) {
+        changedTypes.contains(Series.TYPE)) {
       update();
     }
   }
@@ -244,13 +247,6 @@ public class
   private class GotoUncategorizedAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
       directory.get(NavigationService.class).gotoUncategorizedForSelectedMonths();
-    }
-  }
-
-  private class ShowThresholdAction extends AbstractAction {
-    public void actionPerformed(ActionEvent e) {
-      PositionThresholdDialog dialog = new PositionThresholdDialog(repository, directory);
-      dialog.show();
     }
   }
 }

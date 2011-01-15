@@ -328,12 +328,10 @@ public class HistoChartBuilder {
     }
     HistoDiffDatasetBuilder builder = createDiffDataset("mainSummary");
 
-    Double threshold = AccountPositionThreshold.getValue(repository);
-
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
       Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
       Double value = stat != null ? stat.get(BudgetStat.MIN_POSITION) : 0.0;
-      builder.add(monthId, threshold, value, monthId == selectedMonthId);
+      builder.add(monthId, 0.0, value, monthId == selectedMonthId);
     }
 
     builder.showSummary(summaryColors, true, "mainAccounts");

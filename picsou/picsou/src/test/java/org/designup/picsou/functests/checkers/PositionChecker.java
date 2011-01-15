@@ -13,18 +13,6 @@ public class PositionChecker extends GuiChecker {
     this.window = window;
   }
 
-  public PositionChecker checkThreshold(double threshold) {
-    assertThat(window.getTextBox("positionPanelLimit").textContains(Formatting.toString(threshold)));
-    return this;
-  }
-
-  public PositionChecker setThreshold(double threshold) {
-    ThresholdDialogChecker
-      .open(window.getTextBox("positionPanelLimit").triggerClickOnHyperlink("alert"))
-      .setAmountAndClose(threshold);
-    return this;
-  }
-
   public PositionChecker checkPast(double amount) {
     assertThat(window.getTextBox("positionPastAmount").textContains(Formatting.toString(amount)));
     return this;

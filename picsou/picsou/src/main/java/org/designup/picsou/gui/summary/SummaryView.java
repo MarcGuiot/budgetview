@@ -4,10 +4,8 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.chart.MainDailyPositionsChartView;
 import org.designup.picsou.gui.accounts.chart.SavingsAccountsBalanceChartView;
 import org.designup.picsou.gui.accounts.chart.SavingsAccountsChartView;
-import org.designup.picsou.gui.budget.AccountThresholdMessage;
-import org.designup.picsou.gui.budget.dialogs.PositionThresholdDialog;
+import org.designup.picsou.gui.budget.AccountManagementMessage;
 import org.designup.picsou.gui.card.utils.GotoCardAction;
-import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.model.Month;
@@ -62,17 +60,6 @@ public class SummaryView extends View {
     builder.add("gotoSavings", new GotoCardAction(Card.SAVINGS, directory));
 
     messageField = GuiUtils.createReadOnlyHtmlComponent();
-    HyperlinkHandler thresholdHandler = new HyperlinkHandler(directory) {
-      protected void processCustomLink(String href) {
-        if (href.equals("threshold")) {
-          PositionThresholdDialog positionThresholdDialog =
-            new PositionThresholdDialog(repository, directory);
-          positionThresholdDialog.show();
-          updateMessage();
-        }
-      }
-    };
-    messageField.addHyperlinkListener(thresholdHandler);
     builder.add("message", messageField);
 
     parentBuilder.add("summaryView", builder);
@@ -87,8 +74,8 @@ public class SummaryView extends View {
 
     int lastMonthId = months.getSortedSet(Month.ID).last();
     Glob lastMonthStat = repository.find(Key.create(BudgetStat.TYPE, lastMonthId));
-    Double endOfMonthPosition = lastMonthStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
-    String text = AccountThresholdMessage.getMessage(endOfMonthPosition, repository);
+    Double minPosition = lastMonthStat.get(BudgetStat.MIN_POSITION);
+    String text = AccountManagementMessage.getMessage(minPosition, repository);
     messageField.setText(text);
     GuiUtils.revalidate(messageField);
   }

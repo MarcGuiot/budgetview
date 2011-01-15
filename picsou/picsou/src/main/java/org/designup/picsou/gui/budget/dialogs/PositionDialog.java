@@ -1,11 +1,10 @@
 package org.designup.picsou.gui.budget.dialogs;
 
-import org.designup.picsou.gui.budget.AccountThresholdMessage;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.model.BudgetStat;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.CurrentMonth;
+import org.designup.picsou.model.Month;
 import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -34,7 +33,6 @@ public class PositionDialog {
   private JLabel waitedExpenseAmount = new JLabel();
   private JLabel waitedSavingsAmountToMain = new JLabel();
   private JLabel waitedSavingsAmountFromMain = new JLabel();
-  private JEditorPane positionPanelLimit = GuiUtils.createReadOnlyHtmlComponent();
 
   private JEditorPane positionPast = GuiUtils.createReadOnlyHtmlComponent();
   private JLabel positionPastAmount = new JLabel();
@@ -62,24 +60,11 @@ public class PositionDialog {
 
     builder.add("estimatedPositionLabel", estimatedPositionLabel);
     builder.add("estimatedPosition", estimatedPosition);
-    builder.add("positionPanelLimit", positionPanelLimit);
 
     builder.add("positionPast", positionPast);
     builder.add("positionPastAmount", positionPastAmount);
     builder.add("thresholdPast", thresholdPast);
 
-    HyperlinkHandler thresholdHandler = new HyperlinkHandler(directory) {
-      protected void processCustomLink(String href) {
-        if (href.equals("threshold")) {
-          PositionThresholdDialog positionThresholdDialog =
-            new PositionThresholdDialog(dialog, repository, directory);
-          positionThresholdDialog.show();
-          update();
-        }
-      }
-    };
-    positionPanelLimit.addHyperlinkListener(thresholdHandler);
-    thresholdPast.addHyperlinkListener(thresholdHandler);
     JPanel panel = builder.load();
 
     dialog.setPanelAndButton(panel, new AbstractAction(Lang.get("close")) {
@@ -135,18 +120,14 @@ public class PositionDialog {
                                              Month.toYearString(lastMonthId)));
     Double amount = lastMonthStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
     positionPastAmount.setText(Formatting.toStringWithPlus(amount));
-    Double threshold = repository.get(AccountPositionThreshold.KEY).get(AccountPositionThreshold.THRESHOLD);
-    Double thresholdWarm = repository.get(AccountPositionThreshold.KEY).get(AccountPositionThreshold.THRESHOLD_FOR_WARN);
-    if (amount < threshold - thresholdWarm) {
-      thresholdPast.setText(Lang.get("position.panel.past.threshold.inf",
-                                     Formatting.toString(threshold)));
+    if (amount < 0) {
+      thresholdPast.setText(Lang.get("position.panel.past.threshold.inf"));
     }
-    else if (amount > threshold + thresholdWarm) {
-      thresholdPast.setText(Lang.get("position.panel.past.threshold.sup",
-                                     Formatting.toString(threshold)));
+    else if (amount > 0) {
+      thresholdPast.setText(Lang.get("position.panel.past.threshold.sup"));
     }
     else {
-      thresholdPast.setText(Lang.get("position.panel.past.threshold.equal", Formatting.toString(threshold)));
+      thresholdPast.setText(Lang.get("position.panel.past.threshold.equal"));
     }
   }
 
@@ -199,7 +180,5 @@ public class PositionDialog {
 
     String positionDate = Formatting.toString(Month.getLastDay(lastMonthId));
     valueLabel.setText(Lang.get("position.valueLabel", positionAmount, positionDate));
-
-    positionPanelLimit.setText(AccountThresholdMessage.getMessage(lastMonthStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION), repository));
   }
 }

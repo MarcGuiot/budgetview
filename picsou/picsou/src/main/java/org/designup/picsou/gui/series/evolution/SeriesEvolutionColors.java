@@ -8,7 +8,6 @@ import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.gui.utils.AmountColors;
 import org.designup.picsou.gui.utils.ApplicationColors;
-import org.designup.picsou.model.AccountPositionThreshold;
 import org.designup.picsou.model.BudgetArea;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
@@ -132,13 +131,11 @@ public class SeriesEvolutionColors implements ColorChangeListener {
     if (SeriesWrapper.MAIN_POSITION_SUMMARY_ID.equals(wrapperId)) {
       Glob budgetStat = parentRepository.find(Key.create(BudgetStat.TYPE, referenceMonthId));
       if (budgetStat != null) {
-        Double threshold = AccountPositionThreshold.getValue(parentRepository);
         Double amount = budgetStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
         if (amount == null) {
           return amountColors.getTextColor(0.0, summaryText);
         }
-        final double diff = amount - threshold;
-        return amountColors.getTextColor(diff, summaryText);
+        return amountColors.getTextColor(amount, summaryText);
       }
     }
 

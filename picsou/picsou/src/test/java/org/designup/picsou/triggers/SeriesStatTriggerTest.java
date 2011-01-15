@@ -166,7 +166,6 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                       value(Transaction.DAY, 1),
                       value(Transaction.BANK_DAY, 1),
                       value(Transaction.BANK_MONTH, monthId),
-                      value(Transaction.AMOUNT, amount),
-                      value(Transaction.CATEGORY, Category.NONE));
+                      value(Transaction.AMOUNT, amount));
   }
 }
