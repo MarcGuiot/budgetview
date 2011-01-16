@@ -24,8 +24,10 @@ public class HistoChartTest extends TestCase {
 
     colors = new HistoLineColors(
       "histo.expenses.line",
+      "histo.expenses.line",
       "histo.expenses.fill",
       "histo.expenses.fill",
+      "histo.vertical.divider",
       directory
     );
 
@@ -36,11 +38,11 @@ public class HistoChartTest extends TestCase {
   public void testSelectByDragging() throws Exception {
 
     HistoLineDataset dataset = new HistoLineDataset("seriesEvolution.chart.histo.series.tooltip");
-    dataset.add(201005, 5, "5", "", "", false, false);
-    dataset.add(201006, 6, "6", "", "", false, false);
-    dataset.add(201007, 7, "7", "", "", false, false);
-    dataset.add(201008, 8, "8", "", "", false, false);
-    dataset.add(201009, 9, "9", "", "", false, false);
+    dataset.add(201005, 5, "5", "", "", false, false, false);
+    dataset.add(201006, 6, "6", "", "", false, false, false);
+    dataset.add(201007, 7, "7", "", "", false, false, false);
+    dataset.add(201008, 8, "8", "", "", false, false, false);
+    dataset.add(201009, 9, "9", "", "", false, false, false);
     init(dataset);
 
     Mouse.enter(chart, 50, 10);
@@ -69,9 +71,9 @@ public class HistoChartTest extends TestCase {
 
   public void testWithDiscontinuousMonths() throws Exception {
     HistoLineDataset dataset = new HistoLineDataset("seriesEvolution.chart.histo.series.tooltip");
-    dataset.add(201005, 5, "5", "", "", false, false);
-    dataset.add(201007, 7, "7", "", "", false, false);
-    dataset.add(201009, 9, "9", "", "", false, false);
+    dataset.add(201005, 5, "5", "", "", false, false, false);
+    dataset.add(201007, 7, "7", "", "", false, false, false);
+    dataset.add(201009, 9, "9", "", "", false, false, false);
     init(dataset);
 
     Mouse.enter(chart, 20, 10);

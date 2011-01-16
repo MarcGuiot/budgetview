@@ -39,4 +39,8 @@ public class HistoDatasetBuilder {
   protected boolean isCurrentMonth(int monthId) {
     return CurrentMonth.isCurrentMonth(monthId, repository);
   }
+
+  protected boolean isFutureMonth(int monthId) {
+    return monthId > CurrentMonth.getCurrentMonth(repository);
+  }
 }

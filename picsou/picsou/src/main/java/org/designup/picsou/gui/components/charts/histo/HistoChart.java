@@ -26,6 +26,9 @@ public class HistoChart extends JPanel {
   private boolean clickable;
   private boolean snapToScale;
 
+  public static final BasicStroke SCALE_STROKE = new BasicStroke(1);
+  public static final BasicStroke SCALE_ORIGIN_STROKE = new BasicStroke(1);
+
   public HistoChart(boolean drawLabels, boolean clickable, Directory directory) {
     this.drawLabels = drawLabels;
     this.clickable = clickable;
@@ -112,7 +115,7 @@ public class HistoChart extends JPanel {
 
     paintBg(g2);
     paintLabels(g2, dataset);
-    paintScale(g2, panelWidth);
+    paintScale(g2, panelWidth, dataset);
     paintSections(g2, dataset);
     paintSelectionBorder(g2, dataset);
     paintBorder(g2);
@@ -188,11 +191,19 @@ public class HistoChart extends JPanel {
     }
   }
 
-  private void paintScale(Graphics2D g2, int panelWidth) {
+  private void paintScale(Graphics2D g2, int panelWidth, HistoDataset dataset) {
     double[] scaleValues = metrics.scaleValues();
+    double min = dataset.getMaxNegativeValue();
+    double max = dataset.getMaxPositiveValue();
     for (double scaleValue : scaleValues) {
-
-      g2.setColor(colors.getScaleLineColor());
+      if ((scaleValue == 0) && (scaleValue != min) && (scaleValue != max)) {
+        g2.setStroke(SCALE_ORIGIN_STROKE);
+        g2.setColor(colors.getScaleOriginLineColor());
+      }
+      else {
+        g2.setStroke(SCALE_STROKE);
+        g2.setColor(colors.getScaleLineColor());
+      }
       g2.drawLine(metrics.chartX(), metrics.y(scaleValue), panelWidth, metrics.y(scaleValue));
 
       if (drawLabels) {
@@ -235,11 +246,12 @@ public class HistoChart extends JPanel {
       return;
     }
 
-    currentRolloverIndex = columnIndex;
-    setCursor(clickable && (currentRolloverIndex != null) ?
-              Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-
-    setToolTipText(painter.getDataset().getTooltip(currentRolloverIndex));
+    if (clickable) {
+      currentRolloverIndex = columnIndex;
+      setCursor((currentRolloverIndex != null) ?
+                Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+      setToolTipText(painter.getDataset().getTooltip(currentRolloverIndex));
+    }
 
     if (dragging) {
       addColumnIndexToSelection(currentRolloverIndex);
@@ -278,7 +290,7 @@ public class HistoChart extends JPanel {
     }
     for (HistoChartListener listener : listeners) {
       listener.columnsClicked(ids);
-     }
+    }
   }
 
   private void registerMouseActions() {
@@ -321,7 +333,7 @@ public class HistoChart extends JPanel {
       public void mouseWheelMoved(MouseWheelEvent e) {
         for (HistoChartListener listener : listeners) {
           listener.scroll(e.getWheelRotation());
-         }
+        }
       }
     });
   }

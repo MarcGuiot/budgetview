@@ -2,7 +2,6 @@ package org.designup.picsou.gui.series.evolution.histobuilders;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoChartListener;
-import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyColors;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffColors;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineColors;
 import org.designup.picsou.gui.model.BudgetStat;
@@ -41,8 +40,7 @@ public class HistoChartBuilder {
   private HistoLineColors accountBalanceColors;
   private HistoDiffColors seriesColors;
   private HistoDiffColors summaryColors;
-  private HistoDailyColors dailyColors;
-  
+
   private int scrollMonth;
   private int monthsBack;
   private int monthsLater;
@@ -111,22 +109,28 @@ public class HistoChartBuilder {
 
     uncategorizedColors = new HistoLineColors(
       "histo.uncategorized.line",
+      "histo.uncategorized.line",
       "histo.uncategorized.fill.positive",
       "histo.uncategorized.fill.negative",
+      "histo.vertical.divider",
       directory
     );
 
     accountColors = new HistoLineColors(
-      "histo.account.line",
+      "histo.account.line.positive",
+      "histo.account.line.negative",
       "histo.account.fill.positive",
       "histo.account.fill.negative",
+      "histo.vertical.divider",
       directory
     );
 
     accountBalanceColors = new HistoLineColors(
-      "histo.account.balance.line",
+      "histo.account.balance.line.positive",
+      "histo.account.balance.line.negative",
       "histo.account.balance.fill.positive",
       "histo.account.balance.fill.negative",
+      "histo.vertical.divider",
       directory
     );
 
@@ -135,20 +139,6 @@ public class HistoChartBuilder {
       "histo.summary.fill",
       directory
     );
-    
-    dailyColors = new HistoDailyColors(
-      "histo.daily.past.positive.line",
-      "histo.daily.past.negative.line",
-      "histo.daily.past.positive.fill",
-      "histo.daily.past.negative.fill",
-      "histo.daily.future.positive.line",
-      "histo.daily.future.negative.line",
-      "histo.daily.future.positive.fill",
-      "histo.daily.future.negative.fill",
-      "histo.daily.vertical.divider",
-      directory
-    );
-    
   }
 
   public HistoChart getChart() {
@@ -202,8 +192,8 @@ public class HistoChartBuilder {
 
       builder.add(monthId, values, monthId == selectedMonthId);
     }
-    
-    builder.apply(dailyColors, "daily");
+
+    builder.apply(accountColors, "daily");
   }
 
   public void showMainBalanceHisto(int selectedMonthId, boolean resetPosition) {
@@ -337,21 +327,6 @@ public class HistoChartBuilder {
     builder.showSummary(summaryColors, true, "mainAccounts");
   }
 
-  public void showSavingsAccountsSummary(int selectedMonthId, boolean resetPosition) {
-    if (resetPosition) {
-      scrollMonth = 0;
-    }
-    HistoDiffDatasetBuilder builder = createDiffDataset("savingsSummary");
-
-    for (int monthId : getMonthIdsToShow(selectedMonthId)) {
-      Glob stat = SavingsBudgetStat.findSummary(monthId, repository);
-      Double value = stat != null ? stat.get(SavingsBudgetStat.END_OF_MONTH_POSITION) : 0.0;
-      builder.add(monthId, 0.00, value, monthId == selectedMonthId);
-    }
-
-    builder.showSummary(summaryColors, false, "mainAccounts");
-  }
-
   public void showSavingsAccountsHisto(int selectedMonthId, boolean resetPosition) {
     if (resetPosition) {
       scrollMonth = 0;
@@ -364,7 +339,7 @@ public class HistoChartBuilder {
       dataset.add(monthId, value, monthId == selectedMonthId);
     }
 
-    dataset.showLine(accountColors, "savingsAccounts");
+    dataset.showBars(accountColors, "savingsAccounts");
   }
 
   public void showSavingsBalanceHisto(int selectedMonthId, boolean resetPosition) {
@@ -381,7 +356,6 @@ public class HistoChartBuilder {
 
     dataset.showBars(accountBalanceColors, "savingsAccounts");
   }
-
 
   public void showSavingsAccountHisto(int selectedMonthId, int accountId, boolean resetPosition) {
     if (resetPosition) {

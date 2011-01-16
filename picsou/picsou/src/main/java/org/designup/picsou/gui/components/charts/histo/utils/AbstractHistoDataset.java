@@ -82,12 +82,20 @@ public abstract class AbstractHistoDataset<E extends HistoDatasetElement> implem
     }
   }
 
+  public boolean containsSections() {
+    return containsSections;
+  }
+
   public boolean isSelected(int index) {
     return elements.get(index).selected;
   }
 
-  public boolean containsSections() {
-    return containsSections;
+  public boolean isCurrent(int index) {
+    return elements.get(index).current;
+  }
+
+  public boolean isFuture(int index) {
+    return elements.get(index).future;
   }
 
   public String toString() {

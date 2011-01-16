@@ -11,6 +11,7 @@ public class HistoChartColors implements ColorChangeListener {
   private Color chartBgColor;
   private Color chartBorderColor;
   private Color scaleLineColor;
+  private Color scaleOriginLineColor;
   private Color scaleTextColor;
   private Color labelColor;
   private Color selectedLabelColor;
@@ -28,6 +29,7 @@ public class HistoChartColors implements ColorChangeListener {
     this.chartBgColor = colorLocator.get("histo.chart.bg");
     this.chartBorderColor = colorLocator.get("histo.chart.border");
     this.scaleLineColor = colorLocator.get("histo.scale.line");
+    this.scaleOriginLineColor = scaleLineColor.darker();
     this.scaleTextColor = colorLocator.get("histo.scale.text");
     this.sectionLineColor = colorLocator.get("histo.section.line");
     this.labelColor = colorLocator.get("histo.label");
@@ -48,6 +50,10 @@ public class HistoChartColors implements ColorChangeListener {
 
   public Color getScaleLineColor() {
     return scaleLineColor;
+  }
+
+  public Color getScaleOriginLineColor() {
+    return scaleOriginLineColor;
   }
 
   public Color getScaleTextColor() {

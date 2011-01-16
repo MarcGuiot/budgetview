@@ -33,25 +33,24 @@ public class HistoLinePainter implements HistoPainter {
       int left = metrics.left(i);
       int right = metrics.right(i);
 
-      Double income = dataset.getValue(i);
-      int y = metrics.y(income);
+      Double value = dataset.getValue(i);
+      int y = metrics.y(value);
 
       int width = right - left;
 
       boolean isRollover = (currentRollover != null) && (currentRollover == i);
-      
-      g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, isRollover ? 0.9f : 0.6f));
+
+      boolean future = dataset.isFuture(i);
+      boolean positive = value >= 0;
+      colors.setFillStyle(g2, positive, dataset.isCurrent(i), future, dataset.isSelected(i), isRollover);
       if (y < y0) {
-        g2.setColor(colors.getPositiveFillColor());
         g2.fillRect(left, y, width, y0 - y);
       }
       else {
-        g2.setColor(colors.getNegativeFillColor());
         g2.fillRect(left, y0, width, y - y0);
       }
 
-      g2.setComposite(AlphaComposite.Src);
-      g2.setColor(colors.getLineColor());
+      colors.setLineStyle(g2, positive, future);
       g2.setStroke(new BasicStroke(2));
       g2.drawLine(left, previousY, left, y);
       g2.drawLine(left, y, right, y);

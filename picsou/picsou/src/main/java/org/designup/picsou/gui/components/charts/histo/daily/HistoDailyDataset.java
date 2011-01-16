@@ -15,7 +15,7 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
   }
 
   public void add(int monthId, Double[] values, String label, String tooltip, String section, boolean current, boolean selected) {
-    add(new HistoDailyElement(monthId, values, label, tooltip, section, current, selected));
+    add(new HistoDailyElement(monthId, values, label, tooltip, section, current, monthId > currentMonth, selected));
     updateMax(values);
   }
 

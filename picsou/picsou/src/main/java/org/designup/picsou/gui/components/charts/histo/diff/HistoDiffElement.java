@@ -11,7 +11,7 @@ public class HistoDiffElement extends HistoDatasetElement {
                    String label, String tooltip, String section,
                    double referenceValue, double actualValue,
                    boolean current, boolean selected, boolean future) {
-    super(id, label, tooltip, section, current, selected);
+    super(id, label, tooltip, section, current, future, selected);
     this.referenceValue = referenceValue;
     this.actualValue = actualValue;
     this.future = future;

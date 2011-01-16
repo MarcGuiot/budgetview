@@ -18,11 +18,15 @@ public interface HistoDataset {
 
   public String getSection(int index);
 
-  boolean isSelected(int index);
-
   boolean containsSections();
 
   String getTooltip(int index);
+
+  boolean isSelected(int index);
+
+  boolean isCurrent(int index);
+
+  boolean isFuture(int index);
 
   public static final HistoDataset NULL = new HistoDataset() {
 
@@ -62,11 +66,19 @@ public interface HistoDataset {
       return "";
     }
 
+    public boolean containsSections() {
+      return false;
+    }
+
     public boolean isSelected(int index) {
       return false;
     }
 
-    public boolean containsSections() {
+    public boolean isCurrent(int index) {
+      return false;
+    }
+
+    public boolean isFuture(int index) {
       return false;
     }
 

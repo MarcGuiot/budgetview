@@ -10,8 +10,9 @@ public class HistoLineDataset extends AbstractHistoDataset<HistoLineElement> {
     super(tooltipKey);
   }
 
-  public void add(int id, double value, String label, String tooltip, String section, boolean current, boolean selected) {
-    add(new HistoLineElement(id, label, tooltip, section, value, current, selected));
+  public void add(int id, double value, String label, String tooltip, String section,
+                  boolean current, boolean future, boolean selected) {
+    add(new HistoLineElement(id, label, tooltip, section, value, current, future, selected));
     updateMax(value);
   }
 

@@ -34,22 +34,11 @@ public class HistoBarPainter implements HistoPainter {
 
       Double value = dataset.getValue(i);
       boolean isRollover = (currentRollover != null) && (currentRollover == i);
-      boolean isSelected = dataset.isSelected(i);
 
-      g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, getFillAlpha(isSelected, isRollover)));
-      g2.setColor(value >=0 ? colors.getPositiveFillColor() : colors.getNegativeFillColor());
+      colors.setFillStyle(g2, value >= 0,
+                          dataset.isCurrent(i), dataset.isFuture(i),
+                          dataset.isSelected(i), isRollover);
       g2.fillRect(left, metrics.barTop(value), width, metrics.barHeight(value));
-      g2.setComposite(AlphaComposite.Src);
     }
-  }
-
-  private float getFillAlpha(boolean selected, boolean rollover) {
-    if (selected) {
-      return 0.9f;
-    }
-    if (rollover) {
-      return 0.75f;
-    }
-    return 0.3f;
   }
 }
