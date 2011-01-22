@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.importer;
 
+import org.designup.picsou.gui.importer.utils.NoOperations;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.startup.AutoCategorizationFunctor;
 import org.designup.picsou.gui.startup.OpenRequestManager;
