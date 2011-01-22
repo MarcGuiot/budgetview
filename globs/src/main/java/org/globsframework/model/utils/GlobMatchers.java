@@ -382,6 +382,19 @@ public class GlobMatchers {
     };
   }
 
+  public static GlobMatcher keyIn(final Collection<Key> keys) {
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        return keys.contains(item.getKey());
+      }
+
+      public String toString() {
+        return "key in " + keys;
+      }
+    };
+  }
+
+
   public static GlobMatcher fieldIn(final IntegerField field, final Set<Integer> values) {
     return new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {
