@@ -33,7 +33,7 @@ public class ImportController {
   private OpenRequestManager openRequestManager;
 
   private ImportDialog importDialog;
-  private final JTextField fileField;
+  private final JTextField fileField = new JTextField();
 
   private boolean step1 = true;
   private boolean step2 = true;
@@ -42,10 +42,10 @@ public class ImportController {
   private final List<File> selectedFiles = new ArrayList<File>();
   private Set<Integer> importKeys = new HashSet<Integer>();
 
-  public ImportController(ImportDialog importDialog, JTextField fileField,
-                          GlobRepository repository, LocalGlobRepository localRepository, Directory directory) {
+  public ImportController(ImportDialog importDialog,
+                          GlobRepository repository, LocalGlobRepository localRepository, 
+                          Directory directory) {
     this.importDialog = importDialog;
-    this.fileField = fileField;
     this.repository = repository;
     this.localRepository = localRepository;
     this.directory = directory;
@@ -278,6 +278,14 @@ public class ImportController {
 
   public boolean isAccountNeeded() {
     return importSession.isAccountNeeded();
+  }
+
+  public void closeDialog() {
+    importDialog.closeDialog();
+  }
+
+  public JTextField getFileField() {
+    return fileField;
   }
 
   private static class HasOperationFunctor implements GlobFunctor {

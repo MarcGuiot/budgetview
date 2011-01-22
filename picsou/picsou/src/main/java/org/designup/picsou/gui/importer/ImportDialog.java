@@ -4,19 +4,14 @@ import com.jidesoft.swing.AutoResizingTextArea;
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
 import org.designup.picsou.gui.accounts.CreateAccountAction;
 import org.designup.picsou.gui.accounts.utils.Day;
-import org.designup.picsou.gui.bank.BankGuideDialog;
 import org.designup.picsou.gui.components.PicsouFrame;
-import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.importer.additionalactions.*;
-import org.designup.picsou.gui.importer.edition.BrowseFilesAction;
 import org.designup.picsou.gui.importer.edition.DateFormatSelectionPanel;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionDateRenderer;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionsTable;
 import org.designup.picsou.gui.importer.utils.QifAccountFinder;
-import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -28,17 +23,14 @@ import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.*;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
@@ -60,11 +52,6 @@ public class ImportDialog {
   private GlobRepository sessionRepository;
   private DefaultDirectory sessionDirectory;
 
-  private boolean usePreferredPath;
-
-  private JEditorPane step1Message = new JEditorPane();
-  private JPanel filePanel = new JPanel();
-  private final JTextField fileField = new JTextField();
   private JLabel fileNameLabel = new JLabel();
 
   private Key currentlySelectedAccount;
@@ -78,7 +65,6 @@ public class ImportDialog {
   private Glob defaultAccount;
 
   private JPanel mainPanel;
-  private JPanel step1Panel;
   private JPanel step2Panel;
   private PicsouDialog dialog;
 
@@ -90,10 +76,9 @@ public class ImportDialog {
   private Repeat<AdditionalImportAction> additionalActionsRepeat;
   private Repeat<AdditionalImportPanel> additionalPanelsRepeat;
   private GlobsPanelBuilder builder2;
-  private GlobsPanelBuilder builder1;
   private ImportedTransactionsTable importedTransactionTable;
 
-  private Exception lastException;
+  private ImportedFileSelectionPanel step1Panel;
 
   public ImportDialog(String textForCloseButton, List<File> files, Glob defaultAccount,
                       final Window owner, final GlobRepository repository, Directory directory,
@@ -102,23 +87,23 @@ public class ImportDialog {
     this.defaultAccount = defaultAccount;
     this.repository = repository;
     this.directory = directory;
-    this.usePreferredPath = usePreferredPath;
-
-    updateFileField(files);
 
     loadLocalRepository(repository);
 
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(new SelectionService());
 
-    controller = new ImportController(this, fileField, repository, localRepository, directory);
+    controller = new ImportController(this, repository, localRepository, directory);
+    step1Panel = new ImportedFileSelectionPanel(controller, usePreferredPath, localRepository, localDirectory);
 
     dialog = PicsouDialog.create(owner, directory);
     dialog.setOpenRequestIsManaged(true);
 
-    initStep1Panel(textForCloseButton, directory);
+    step1Panel.init(dialog, textForCloseButton);
     initStep2Panel(textForCloseButton);
     initMainPanel();
+
+    updateFileField(files);
 
     dialog.setContentPane(mainPanel);
 
@@ -131,53 +116,11 @@ public class ImportDialog {
   private void initMainPanel() {
     mainPanel = new JPanel();
     mainPanel.setLayout(new SingleComponentLayout(null));
-    mainPanel.add(step1Panel);
+    mainPanel.add(step1Panel.getPanel());
     dialog.setCloseAction(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         dialog.setVisible(false);
         controller.complete();
-      }
-    });
-  }
-
-  private void initStep1Panel(String textForCloseButton, Directory directory) {
-
-    initFileField();
-
-    builder1 = new GlobsPanelBuilder(getClass(), "/layout/importexport/importDialogStep1.splits", localRepository, localDirectory);
-    builder1.add("importMessage", step1Message);
-    builder1.add("filePanel", filePanel);
-    builder1.add("fileField", fileField);
-    builder1.add("browseFiles", new BrowseFilesAction(fileField, localRepository, usePreferredPath, dialog));
-    builder1.add("import", new ImportAction());
-    builder1.add("close", new AbstractAction(textForCloseButton) {
-      public void actionPerformed(ActionEvent e) {
-        controller.complete();
-        closeDialog();
-      }
-    });
-
-    final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(directory, dialog);
-    hyperlinkHandler.registerLinkAction("openBankList", new Runnable() {
-      public void run() {
-        BankGuideDialog chooser = new BankGuideDialog(dialog, localRepository, localDirectory);
-        chooser.show();
-      }
-    });
-    hyperlinkHandler.registerLinkAction("openErrorDetails", new Runnable() {
-      public void run() {
-        showLastException();
-      }
-    });
-    builder1.add("hyperlinkHandler", hyperlinkHandler);
-
-    step1Panel = builder1.load();
-  }
-
-  private void initFileField() {
-    fileField.getDocument().addDocumentListener(new AbstractDocumentListener() {
-      protected void documentChanged(DocumentEvent e) {
-        clearErrorMessage();
       }
     });
   }
@@ -311,71 +254,11 @@ public class ImportDialog {
   }
 
   public void updateFileField(List<File> files) {
-    StringBuilder builder = new StringBuilder(fileField.getText().trim());
-    for (File file : files) {
-      if (builder.length() != 0) {
-        builder.append(";");
-      }
-      builder.append(file.getAbsolutePath());
-    }
-    fileField.setText(builder.toString());
+    step1Panel.updateFieldField(files);
   }
 
   protected void closeDialog() {
     dialog.setVisible(false);
-  }
-
-  public void acceptFiles() {
-    if (!initialFileAccepted()) {
-      return;
-    }
-    controller.doImport();
-  }
-
-  private boolean initialFileAccepted() {
-    String path = fileField.getText();
-    if (Strings.isNullOrEmpty(path)) {
-      displayErrorMessage("login.data.file.required");
-      return false;
-    }
-
-    String[] strings = path.split(";");
-    for (String fileName : strings) {
-      File file = new File(fileName);
-      if (!file.exists()) {
-        displayErrorMessage("login.data.file.not.found", fileName);
-        return false;
-      }
-      if (file.isDirectory()) {
-        if (strings.length == 1) {
-          displayErrorMessage("import.file.is.directory", fileName);
-          return false;
-        }
-      }
-      else {
-        TypedInputStream inputStream;
-        try {
-          inputStream = new TypedInputStream(file);
-        }
-        catch (IOException e) {
-          displayErrorMessage("login.data.file.not.found", fileName);
-          return false;
-        }
-        if (inputStream.getType() == null) {
-          displayErrorMessage("import.invalid.extension", fileName);
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  private void displayErrorMessage(String key, String... args) {
-    showStep1Message("<html><font color=red>" + Lang.get(key, args) + "</font></html>");
-  }
-
-  private void clearErrorMessage() {
-    showStep1Message("");
   }
 
   public void show() {
@@ -386,7 +269,7 @@ public class ImportDialog {
           frame.removeWindowListener(this);
           dialog.pack();
           dialog.showCentered();
-          builder1.dispose();
+          step1Panel.dispose();
           builder2.dispose();
           importedTransactionTable.dispose();
         }
@@ -400,15 +283,15 @@ public class ImportDialog {
           dialog.setVisible(false);
         }
       });
-      fileField.requestFocus();
+      step1Panel.requestFocus();
       dialog.setModal(true);
       dialog.setVisible(true);
     }
     else {
       dialog.pack();
-      fileField.requestFocus();
+      step1Panel.requestFocus();
       dialog.showCentered();
-      builder1.dispose();
+      step1Panel.dispose();
       builder2.dispose();
       importedTransactionTable.dispose();
     }
@@ -426,16 +309,6 @@ public class ImportDialog {
       selectionService.select(monthsToSelect.getLast());
     }
     closeDialog();
-  }
-
-  public void showStep1Message(String message, Exception exception) {
-    lastException = exception;
-    step1Message.setText(message);
-  }
-
-  public void showStep1Message(String message) {
-    lastException = null;
-    step1Message.setText(message);
   }
 
   public void showStep2Message(String message) {
@@ -564,14 +437,15 @@ public class ImportDialog {
     return "many";
   }
 
-  private class ImportAction extends AbstractAction {
-    public ImportAction() {
-      super(Lang.get("import.step1.ok"));
-    }
+  public void acceptFiles() {
+    step1Panel.acceptFiles();
+  }
 
-    public void actionPerformed(ActionEvent event) {
-      acceptFiles();
-    }
+  public void showStep1Message(String message) {
+    step1Panel.showMessage(message);
+  }
+  public void showStep1Message(String message, Exception exception) {
+    step1Panel.showMessage(message, exception);
   }
 
   private class FinishAction extends AbstractAction {
@@ -582,7 +456,7 @@ public class ImportDialog {
     public void actionPerformed(ActionEvent event) {
       setEnabled(false);
       try {
-        showStep1Message("");
+        step1Panel.showMessage("");
         showStep2Message("");
         if (!dateFormatSelectionPanel.check()) {
           return;
@@ -630,14 +504,5 @@ public class ImportDialog {
     public void actionPerformed(ActionEvent e) {
       closeDialog();
     }
-  }
-
-  private void showLastException() {
-    MessageAndDetailsDialog dialog = new MessageAndDetailsDialog("import.file.error.title",
-                                                                 "import.file.error.message",
-                                                                 Strings.toString(lastException),
-                                                                 directory.get(JFrame.class),
-                                                                 directory);
-    dialog.show();
   }
 }
