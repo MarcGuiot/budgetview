@@ -39,15 +39,11 @@
            font="-,bold,12" horizontalTextPosition="left"
            weightX="1" fill="none" anchor="left"/>
 
-    <style selector="button#nextPositionLabel" anchor="right"/>
-
   </styles>
 
   <column border="empty(10,10,10,10)">
 
-    <component ref="chart" minimumSize="(100,100)" weightY="10"/>
-
-    <row weightY="0" marginTop="4">
+    <row weightY="0" marginBottom="4">
       <filler fill="horizontal"/>
       <column>
         <label ref="lastPositionTitle" styleClass="totalAmountTitle"/>
@@ -56,14 +52,14 @@
       <filler fill="horizontal"/>
       <column>
         <label ref="nextPositionTitle" styleClass="totalAmountTitle"/>
-        <row>
-          <button ref="nextPositionLabel" styleClass="totalAmount"/>
-        </row>
+        <button ref="nextPositionLabel" styleClass="totalAmount"/>
       </column>
       <filler fill="horizontal"/>
     </row>
 
-    <column border="matte(1,0,0,0,block.header.separator)" marginTop="4" weightY="0">
+    <component ref="chart" minimumSize="(100,100)" weightY="10"/>
+
+    <column marginTop="4" weightY="0">
       <row marginTop="4" styleClass="subRow">
         <filler fill="horizontal"/>
         <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle"/>

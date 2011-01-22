@@ -359,7 +359,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.setVariable("Carouf", "Food");
-    categorization.checkTableIsEmpty();
+    categorization.checkTable(new Object[][]{
+      {"30/06/2008", "Food", "Carouf", -29.90}
+    });
 
     categorization.showAllTransactions();
     categorization.checkTable(new Object[][]{
@@ -540,22 +542,26 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable(0, "Groceries", -170);
 
     categorization.checkTable(new Object[][]{
+      {"15/05/2008", "Groceries", "Auchan", -90.00},
       {"14/05/2008", "", "Carouf", -80.00},
       {"25/05/2008", "", "Free Telecom 25/05", -29.90},
       {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
 
-    categorization.selectTableRows(1, 2);
+    categorization.selectTableRows(2, 3);
     categorization.checkBudgetAreaSelectionPanelDisplayed();
     categorization.selectRecurring().selectNewSeries("Internet");
 
     categorization.checkTable(new Object[][]{
       {"14/05/2008", "", "Carouf", -80.00},
+      {"25/05/2008", "Internet", "Free Telecom 25/05", -29.90},
+      {"26/06/2008", "Internet", "Free Telecom 26/06", -29.90}
     });
 
     categorization.setVariable(0, "Groceries");
 
-    categorization.checkTableIsEmpty();
+    categorization.checkTable(new Object[][]{
+      {"14/05/2008", "Groceries", "Carouf", -80.00}});
 
     views.selectData();
     timeline.selectAll();

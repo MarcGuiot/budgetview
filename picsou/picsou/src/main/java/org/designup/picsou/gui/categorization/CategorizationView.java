@@ -53,6 +53,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
@@ -147,6 +148,17 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     addFilteringModeCombo(builder);
 
+    repository.addChangeListener(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(Transaction.TYPE) &&
+            changeSet.containsUpdates(Transaction.SERIES)) {
+          modifiedTransactions.clear();
+          modifiedTransactions.addAll(changeSet.getUpdated(Transaction.SERIES));
+          updateTableFilter();
+        }
+      }
+    });
+
     Comparator<Glob> transactionComparator = getTransactionComparator();
     DescriptionService descriptionService = directory.get(DescriptionService.class);
     transactionTable =
@@ -223,16 +235,12 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     initSelectionListener();
     updateTableFilter();
-    repository.addChangeListener(new ChangeSetListener() {
+    repository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(Transaction.TYPE) &&
             changeSet.containsUpdates(Transaction.SERIES)) {
-          modifiedTransactions = changeSet.getUpdated(Transaction.SERIES);
           table.repaint();
         }
-      }
-
-      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
       }
     });
 
@@ -263,6 +271,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
     filteringModeCombo.addActionListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         CategorizationFilteringMode mode = (CategorizationFilteringMode)filteringModeCombo.getSelectedItem();
+        modifiedTransactions.clear();
         repository.update(UserPreferences.KEY, UserPreferences.CATEGORIZATION_FILTERING_MODE, mode.getId());
         updateTableFilter();
       }
@@ -273,8 +282,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
           Glob preferences = repository.find(UserPreferences.KEY);
           Integer defaultFilteringModeId =
             preferences.get(UserPreferences.CATEGORIZATION_FILTERING_MODE);
-          Object o = CategorizationFilteringMode.get(defaultFilteringModeId);
-          filteringModeCombo.setSelectedItem(o);
+          Object mode = CategorizationFilteringMode.get(defaultFilteringModeId);
+          filteringModeCombo.setSelectedItem(mode);
         }
       }
 
@@ -285,8 +294,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
         }
         Integer defaultFilteringModeId =
           preferences.get(UserPreferences.CATEGORIZATION_FILTERING_MODE);
-        Object o = CategorizationFilteringMode.get(defaultFilteringModeId);
-        filteringModeCombo.setSelectedItem(o);
+        Object mode = CategorizationFilteringMode.get(defaultFilteringModeId);
+        filteringModeCombo.setSelectedItem(mode);
       }
     });
   }
@@ -466,6 +475,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
   }
 
   public void show(GlobList transactions, boolean forceShowUncategorized) {
+    modifiedTransactions.clear();
     updateFilteringMode(transactions, forceShowUncategorized);
 
     if (transactions.size() < 2) {
@@ -601,7 +611,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
   private GlobMatcher getCurrentFilteringModeMatcher() {
     CategorizationFilteringMode mode = (CategorizationFilteringMode)filteringModeCombo.getSelectedItem();
-    return mode.getMatcher(repository, selectionService);
+    return mode.getMatcher(repository, selectionService, modifiedTransactions);
   }
 
   private class TransactionLabelCustomizer implements LabelCustomizer {

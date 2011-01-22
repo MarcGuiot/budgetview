@@ -8,12 +8,15 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -35,7 +38,9 @@ public enum CategorizationFilteringMode {
     return id;
   }
 
-  public GlobMatcher getMatcher(GlobRepository repository, SelectionService selectionService) {
+  public GlobMatcher getMatcher(GlobRepository repository,
+                                SelectionService selectionService,
+                                Collection<Key> modifiedTransactions) {
     switch (this) {
 
       case ALL:
@@ -55,7 +60,8 @@ public enum CategorizationFilteringMode {
         return fieldEquals(Transaction.IMPORT, imports.getLast().get(TransactionImport.ID));
 
       case UNCATEGORIZED:
-        return fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID);
+        return or(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+                  keyIn(modifiedTransactions));
 
       case UNCATEGORIZED_SELECTED_MONTHS: {
         Set<Integer> selectedMonthIds = selectionService.getSelection(Month.TYPE).getValueSet(Month.ID);
@@ -63,8 +69,9 @@ public enum CategorizationFilteringMode {
           return GlobMatchers.NONE;
         }
         return
-          and(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-              fieldIn(Transaction.BUDGET_MONTH, selectedMonthIds));
+          or(and(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+                 fieldIn(Transaction.BUDGET_MONTH, selectedMonthIds)),
+             keyIn(modifiedTransactions));
       }
     }
     throw new UnexpectedApplicationState(name());
