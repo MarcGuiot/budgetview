@@ -32,7 +32,8 @@ public class InitialImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .selectOfxAccountBank("Autre")
       .setMainAccount()
-      .doImport();
+      .doImport()
+      .completeLastStep();
 
     timeline.checkSelection("2008/08");
 

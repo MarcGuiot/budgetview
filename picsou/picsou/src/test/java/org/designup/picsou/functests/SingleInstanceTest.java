@@ -246,7 +246,8 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     newApplication.start();
     Thread.sleep(1000);
     newApplication.checkNotOpen();
-    accountPosition.setAmount(0.).validateFromImport();
+    accountPosition.setAmount(0.00).validate();
+    importer.completeLastStep();
 
     Window newImportDialog = newApplication.getImportDialog();
     assertNotNull(newImportDialog);

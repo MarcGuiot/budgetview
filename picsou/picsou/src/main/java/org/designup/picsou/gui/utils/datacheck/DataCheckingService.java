@@ -70,8 +70,8 @@ public class DataCheckingService {
           dialog.show();
         }
         else {
-          MessageDialog.show("data.checker.ok.title", "data.checker.ok.message",
-                             directory.get(JFrame.class), directory);
+          MessageDialog.show("data.checker.ok.title", directory.get(JFrame.class), directory, "data.checker.ok.message"
+          );
         }
       }
     }

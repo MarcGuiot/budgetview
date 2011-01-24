@@ -54,7 +54,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
   public void testCategorizationMessageAllowsToImportTheCardAccount() throws Exception {
     QifBuilder.init(this)
       .addTransaction("2008/06/28", -550, "Prelevement carte")
-      .load(0.);
+      .load(0.00);
 
     views.selectCategorization();
     DeferredCardCategorizationChecker cardCategorization = categorization.selectTransaction("Prelevement carte")
@@ -149,7 +149,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/11/28", -30, "Prelevement novembre")
       .addTransaction("2009/10/28", -35 - 15 /* -15 : transaction precedente non importée */, "Prelevement octobre")
       .save();
-    operations.importQifFile(mainAccount, "Autre", 1000.);
+    operations.importQifFile(mainAccount, "Autre", 1000.00);
 
     String deferredAccount = QifBuilder.init(this)
       .addTransaction("2009/11/30", -60, "Auchan")
@@ -159,7 +159,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/09/29", -35, "Auchan")
       .addTransaction("2009/09/14", -15, "Auchan")
       .save();
-    operations.importQifFileWithDeferred(deferredAccount, "Autre", -100.);
+    operations.importQifFileWithDeferred(deferredAccount, "Autre", -100.00);
 
     timeline.selectAll();
 
@@ -190,7 +190,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/11/28", -30, "Prelevement novembre")
       .addTransaction("2009/10/28", -35 - 15 /* -15 : transaction precedente non importé */, "Prelevement octobre")
       .save();
-    operations.importQifFile(mainAccount, "Autre", 1000.);
+    operations.importQifFile(mainAccount, "Autre", 1000.00);
 
     String deferredAccount = QifBuilder.init(this)
       .addTransaction("2009/11/30", -60, "Auchan")
@@ -199,7 +199,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/10/29", -20, "Auchan")
       .addTransaction("2009/09/14", -35, "Auchan")
       .save();
-    operations.importQifFileWithDeferred(deferredAccount, "Autre", -100.);
+    operations.importQifFileWithDeferred(deferredAccount, "Autre", -100.00);
 
     views.selectCategorization();
     categorization.setDeferred("Prelevement novembre", "card 1111");
@@ -319,7 +319,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization
-      .setNewVariable("Auchan", "course", -30.);
+      .setNewVariable("Auchan", "course", -30.00);
     categorization.setDeferred("Prelevement novembre", "1111")
       .setDeferred("Prelevement octobre", "1111")
       .setDeferred("Prelevement aout", "1111");

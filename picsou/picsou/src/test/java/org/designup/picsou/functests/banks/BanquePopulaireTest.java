@@ -29,12 +29,11 @@ public class BanquePopulaireTest extends SpecificBankTestCase {
       .check();
   }
 
-  public void testWithDifferedAccount() throws Exception {
+  public void testWithDeferredAccount() throws Exception {
     operations.importOfxFile(getFile("banque_pop.ofx"));
-    operations.importOfxFile(getFile("banque_pop_facturette.ofx"));
+    operations.importOfxFile(getFile("banque_pop_facturette.ofx"), 0.00);
     operations.importOfxFile(getFile("banque_pop_en_cours.ofx"));
 
-    views.selectCategorization();
     timeline.selectAll();
     categorization.selectTransaction("CARTE FACTURETTES CB VOTRE RELEVE ARRETE AU 30/01/09")
       .selectOther()
@@ -42,7 +41,6 @@ public class BanquePopulaireTest extends SpecificBankTestCase {
       .checkActiveSeries("Card n. 123123123")
       .selectSeries("Card n. 123123123");
 
-    views.selectData();
     transactions.initAmountContent()
       .add("18/02/2009", "MAG SUPER U 39MONTMOROT", -30.82, "To categorize", -554.53, 1976.64, "Card n. 123123123")
       .add("17/02/2009", "SCP DE MEDECINS 39LONS LE SAUNI", -47.88, "To categorize", -523.71, 2007.46, "Card n. 123123123")

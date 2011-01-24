@@ -455,8 +455,10 @@ public class LoginTest extends StartUpFunctionalTestCase {
           importDialog.setFilePath(path)
             .doImport();
 
-          return window.getButton("Skip file").triggerClick();
+          window.getButton("Skip file").click();
+          return window.getButton("OK").triggerClick();
         }
-      }).run();
+      })
+      .run();
   }
 }

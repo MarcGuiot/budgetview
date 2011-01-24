@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.accounts;
 
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.description.AccountStringifier;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
@@ -15,13 +15,13 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.Date;
 import java.util.SortedSet;
+
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class AccountPositionEditionPanel {
 
@@ -38,15 +38,14 @@ public class AccountPositionEditionPanel {
   private JLabel accountNameField;
   private JPanel panel;
 
-  public AccountPositionEditionPanel(boolean accountInitialization,
-                                     AbstractAction validateAction,
+  public AccountPositionEditionPanel(AbstractAction validateAction,
                                      GlobRepository repository,
-                                     Directory directory,
-                                     Window parent) {    
+                                     Directory directory) {
     this.repository = repository;
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountPositionEditionPanel.splits",
-                                                      repository, directory);
+    GlobsPanelBuilder builder =
+      new GlobsPanelBuilder(getClass(), "/layout/accounts/accountPositionEditionPanel.splits",
+                            repository, directory);
 
     editor = builder.addEditor("amountField", Account.POSITION)
       .setValidationAction(validateAction)
@@ -123,7 +122,6 @@ public class AccountPositionEditionPanel {
     else {
       balanceDate = Month.toDate(TimeService.getCurrentMonth(), TimeService.getCurrentDay());
     }
-
 
     transactionDateField.setText(date);
     transactionLabelField.setText(label);

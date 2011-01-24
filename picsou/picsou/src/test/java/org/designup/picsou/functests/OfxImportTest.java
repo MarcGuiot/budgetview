@@ -400,7 +400,8 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .checkAccountTypeWarningDisplayed("Account n. 222")
       .setMainAccount()
       .checkNoAccountTypeMessageDisplayed()
-      .doImport();
+      .doImport()
+      .completeLastStep();
 
     views.selectHome();
     savingsAccounts.edit("Account n. 111")
@@ -434,7 +435,8 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .checkNoneAreSelected("Card n. 1234")
       .selectDeferredCard("Card n. 1234")
       .validate();
-    importDialog.doImport();
+    importDialog.doImport()
+      .completeLastStep();
 
     views.selectHome();
     mainAccounts.edit("Card n. 1234")
@@ -457,7 +459,8 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .checkNoneAreSelected("Card n. 1234")
       .selectCreditCard("Card n. 1234")
       .validate();
-    importDialog.doImport();
+    importDialog.doImport()
+      .completeLastStep();
 
     views.selectHome();
     mainAccounts.edit("Card n. 1234")
@@ -533,8 +536,5 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .setMainAccountForAll()
       .completeImport();
 
-  }
-
-  public void testImport() throws Exception {
   }
 }

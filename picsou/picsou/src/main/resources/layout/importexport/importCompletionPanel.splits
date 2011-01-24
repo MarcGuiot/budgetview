@@ -1,0 +1,30 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <styles>
+    <style selector="scrollPane" marginBottom="10"/>
+    <style selector="htmlEditorPane.multiLineLabel" font="-,plain,12"/>
+  </styles>
+
+  <panel styleClass="dialog" preferredSize="(500,450)">
+
+    <column styleClass="innerDialog">
+
+      <label text="$import.end.info.title" name="title" styleClass="title"/>
+
+      <scrollPane marginTop="20">
+        <htmlEditorPane ref="message" styleClass="multiLineLabel" hyperlinkListener="hyperlinkHandler"/>
+      </scrollPane>
+
+      <row>
+        <filler fill="horizontal"/>
+        <button action="ok" margin="10" fill="horizontal"/>
+        <button action="close" margin="10" marginRight="0" fill="horizontal"/>
+      </row>
+
+    </column>
+
+  </panel>
+
+</splits>

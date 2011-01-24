@@ -31,7 +31,7 @@ public class BackupAction extends AbstractBackupRestoreAction {
 
     Glob glob = repository.get(User.KEY);
     if (!glob.isTrue(User.IS_REGISTERED_USER)){
-      MessageDialog.show("backup.trial.title", "backup.trial.content", frame, directory);
+      MessageDialog.show("backup.trial.title", frame, directory, "backup.trial.content");
     }
 
     JFileChooser chooser = getFileChooser();

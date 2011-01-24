@@ -99,8 +99,7 @@ public class ImportFileAction extends AbstractAction {
       }
       else {
         if (User.isDemoUser(repository.get(User.KEY))) {
-          MessageDialog.show("demo.import.title", "demo.import.content",
-                             directory.get(JFrame.class), directory);
+          MessageDialog.show("demo.import.title", directory.get(JFrame.class), directory, "demo.import.content");
         }
         else {
           LicenseActivationDialog dialog = new LicenseActivationDialog(directory.get(JFrame.class),

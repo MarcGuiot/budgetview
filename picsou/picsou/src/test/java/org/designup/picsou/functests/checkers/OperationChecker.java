@@ -7,9 +7,6 @@ import org.globsframework.utils.Dates;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.*;
-import org.uispec4j.Button;
-import org.uispec4j.Window;
-import org.uispec4j.MenuItem;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
@@ -65,7 +62,11 @@ public class OperationChecker {
     importFile(new String[]{name}, null, null, null);
   }
 
-  public void importOfxWithDeferred(String fileName, String cardAccountName, int day) {
+  public void importOfxFile(String name, double initialAmount) {
+    importFile(new String[]{name}, null, initialAmount, null);
+  }
+
+  public void importOfxWithDeferred(String fileName, String cardAccountName) {
     ImportDialogChecker importDialog = openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
@@ -75,13 +76,15 @@ public class OperationChecker {
       .validate();
     importDialog
       .setMainAccount()
-      .doImport();
+      .doImport()
+      .completeLastStep();
   }
 
   public void importQifFileWithDeferred(String fileName, String bank, double position) {
     ImportDialogChecker importDialog = openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
+
     importDialog
       .addNewAccount()
       .selectBank(bank)
@@ -89,8 +92,10 @@ public class OperationChecker {
       .setAccountName("card 1111")
       .setAsDeferredCard()
       .validate();
+
     importDialog.doImportWithBalance()
-      .setAmountAndEnterInImport(position);
+      .setAmountAndEnter(position);
+    importDialog.completeLastStep();
   }
 
   public void importOfxFile(String name, String bank) {
@@ -129,59 +134,51 @@ public class OperationChecker {
   }
 
   private void importFile(final String[] fileNames, final String bank, final Double amount, final String targetAccount) {
-    WindowInterceptor
-      .init(importMenu.triggerClick())
-      .process(new WindowHandler() {
-        public Trigger process(Window dialog) throws Exception {
-          TextBox fileField = dialog.getInputTextBox("fileField");
-          String txt = "";
-          for (String name : fileNames) {
-            txt += name + ";";
-          }
-          fileField.setText(txt);
+    Window dialog = WindowInterceptor.getModalDialog(importMenu.triggerClick());
+    TextBox fileField = dialog.getInputTextBox("fileField");
+    String txt = "";
+    for (String name : fileNames) {
+      txt += name + ";";
+    }
+    fileField.setText(txt);
 
-          dialog.getButton("Import").click();
+    dialog.getButton("Import").click();
 
-          ImportDialogChecker importDialog = ImportDialogChecker.create(dialog);
+    ImportDialogChecker importDialog = ImportDialogChecker.create(dialog);
 
-          JButton createFirstAccount = dialog.findSwingComponent(JButton.class, "Create an account");
-          if (createFirstAccount != null) {
-            importDialog
-              .defineAccount(bank, "Main account", DEFAULT_ACCOUNT_NUMBER);
-          }
-          else if (bank != null && dialog.findSwingComponent(JButton.class, "Select the bank") != null) { // OFX
-            importDialog
-              .openEntityEditor()
-              .selectBank(bank)
-              .validate();
-          }
-          if (targetAccount != null) {
-            dialog.getComboBox("accountCombo").select(targetAccount);
-          }
-          if (importDialog.hasAccountType()) {
-            importDialog.setMainAccountForAll();
-          }
+    JButton createFirstAccount = dialog.findSwingComponent(JButton.class, "Create an account");
+    if (createFirstAccount != null) {
+      importDialog
+        .defineAccount(bank, "Main account", DEFAULT_ACCOUNT_NUMBER);
+    }
+    else if (bank != null && dialog.findSwingComponent(JButton.class, "Select the bank") != null) { // OFX
+      importDialog
+        .openEntityEditor()
+        .selectBank(bank)
+        .validate();
+    }
+    if (targetAccount != null) {
+      dialog.getComboBox("accountCombo").select(targetAccount);
+    }
+    if (importDialog.hasAccountType()) {
+      importDialog.setMainAccountForAll();
+    }
 
-          final Button okButton = dialog.getButton(Lang.get("import.step1.ok"));
-          for (int i = 0; i < fileNames.length - 2; i++) {
-            okButton.click();
-          }
-          Trigger trigger;
-          if (amount != null) {
-            Window window = WindowInterceptor.getModalDialog(okButton.triggerClick());
-            AccountPositionEditionChecker accountPosition = new AccountPositionEditionChecker(window);
-            accountPosition.setAmount(amount);
-            trigger = accountPosition.triggerValidate();
-          }
-          else {
-            trigger = okButton.triggerClick();
-          }
-          ImportDialogChecker.ImportCompleteWindowHandler importCompleteWindowHandler =
-            new ImportDialogChecker.ImportCompleteWindowHandler(-1, -1, -1);
-          return importCompleteWindowHandler.process(WindowInterceptor.getModalDialog(trigger));
-        }
-      })
-      .run();
+    final Button step2Button = dialog.getButton(Lang.get("import.step2.ok"));
+    for (int i = 0; i < fileNames.length - 2; i++) {
+      step2Button.click();
+    }
+    if (amount != null) {
+      Window window = WindowInterceptor.getModalDialog(step2Button.triggerClick());
+      AccountPositionEditionChecker accountPosition = new AccountPositionEditionChecker(window);
+      accountPosition.setAmount(amount);
+      accountPosition.validate();
+    }
+    else {
+      step2Button.click();
+    }
+    importDialog.checkLastStep();
+    importDialog.completeLastStep();
   }
 
   public void exportOfxFile(String name) {
@@ -369,7 +366,7 @@ public class OperationChecker {
     return AboutChecker.open(getHelpMenu().getSubMenu("About").triggerClick());
   }
 
-  public FeedbackDialogChecker openFeedback(){
+  public FeedbackDialogChecker openFeedback() {
     MenuItem feedbackMenu = getHelpMenu().getSubMenu("Feedback");
     return FeedbackDialogChecker.init(feedbackMenu.triggerClick());
   }
@@ -471,7 +468,7 @@ public class OperationChecker {
     UISpecAssert.assertThat(fileMenu.contain("protect"));
   }
 
-  public void checkChangeUserName(){
+  public void checkChangeUserName() {
     MenuItem fileMenu = window.getMenuBar().getMenu("File");
     UISpecAssert.assertThat(fileMenu.contain("Change identifiers..."));
   }

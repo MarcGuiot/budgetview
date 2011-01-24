@@ -109,7 +109,7 @@ public class ImportedFileSelectionPanel {
     builder.dispose();
   }
 
-  public void updateFieldField(List<File> files) {
+  public void preselectFiles(List<File> files) {
     StringBuilder builder = new StringBuilder(fileField.getText().trim());
     for (File file : files) {
       if (builder.length() != 0) {

@@ -62,7 +62,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
   public void testCloseButtonLabelBeforeImport() throws Exception {
     operations.openImportDialog()
-      .checkCloseButton(Lang.get("import.step1.close"));
+      .checkCloseButton(Lang.get("import.step1.close"))
+      .close();
   }
 
   public void testImportSeveralFiles() throws Exception {
@@ -125,7 +126,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/09", -1.1, "Menu K")
       .save();
 
-    operations.importQifFile(path, SOCIETE_GENERALE, 0.);
+    operations.importQifFile(path, SOCIETE_GENERALE, 0.00);
 
     views.selectData();
     transactions
@@ -142,16 +143,17 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
 
-    operations.openImportDialog()
+    ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(path1)
       .acceptFile()
       .checkFileContent(new Object[][]{
         {"10/01/2006", "Menu K", "-1.10"}
       })
-      .defineAccount(SOCIETE_GENERALE, "My SG account", "0123546")
-      .doImportWithBalance()
-      .setAmount(0.)
-      .validateFromImport();
+      .defineAccount(SOCIETE_GENERALE, "My SG account", "0123546");
+    importDialog.doImportWithBalance()
+      .setAmount(0.00)
+      .validate();
+    importDialog.completeLastStep();
 
     views.selectData();
     transactions
@@ -223,9 +225,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkInitialAmountSelected("0.0")
       .checkInitialMessageDisplayed()
       .setAmount(12.33)
-      .validateFromImport();
+      .validate();
 
-    importDialog.checkClosed();
+    importDialog.completeLastStep();
 
     views.selectHome();
     mainAccounts.checkAccount("Main", 12.33, "2006/01/10");
@@ -240,7 +242,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setFilePath(firstQif)
       .acceptFile()
       .defineAccount(SOCIETE_GENERALE, "Main account", "00011")
-      .completeImport(0.);
+      .completeImport(0.00);
 
     String secondQif = QifBuilder
       .init(this)
@@ -298,7 +300,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
         {"20/01/2006", "Second operation", "-2.20"}
       })
       .defineAccount(SOCIETE_GENERALE, "main", "1111")
-      .completeImport(0.);
+      .completeImport(0.00);
 
     views.selectData();
     transactions
@@ -316,7 +318,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setFilePath(firstQif)
       .acceptFile()
       .defineAccount(SOCIETE_GENERALE, "Main account", "12345")
-      .completeImport(0.);
+      .completeImport(0.00);
 
     String qifFile = QifBuilder
       .init(this)
@@ -433,7 +435,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setAccountNumber("012345")
       .setUpdateModeToManualInput()
       .selectBank("CIC")
-      .setPosition(0.)
+      .setPosition(0.00)
       .validate();
 
     OfxBuilder.init(this)
@@ -466,7 +468,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkFileContent(new Object[][]{
         {"01/02/2001", "Menu K", "-1.10"}
       })
-      .completeImport(0.);
+      .completeImport(0.00);
 
     views.selectData();
     transactions.initContent()
@@ -534,9 +536,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -2, "Menu K")
       .addTransaction("2006/01/09", -1, "Menu K")
       .save();
-    operations.importQifFile(file1, SOCIETE_GENERALE, 100.);
-
-    views.selectData();
+    operations.importQifFile(file1, SOCIETE_GENERALE, 100.00);
 
     String file2 = QifBuilder
       .init(this)
@@ -546,7 +546,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .save();
     operations.importQifFile(file2, SOCIETE_GENERALE);
 
-    views.selectData();
     transactions.getTable().getHeader().click(1);
     transactions
       .initAmountContent()
@@ -564,7 +563,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addBankAccount(666, 1024, "12345678a", 12.0, "2008/06/11")
       .addTransaction("2008/06/10", 1.0, "V'lib")
       .save();
-
     operations.importOfxFile(fileName1, "Autre");
 
     String fileName2 = OfxBuilder.init(this)
@@ -572,7 +570,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/10", 1.0, "V'lib")
       .save();
     operations.importOfxFile(fileName2, "Autre");
-    views.selectData();
     transactions
       .initContent()
       .add("10/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
@@ -586,7 +583,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/09", -1, "Menu K")
       .save();
 
-    operations.importQifFile(file1, SOCIETE_GENERALE, 100.);
+    operations.importQifFile(file1, SOCIETE_GENERALE, 100.00);
 
     mainAccounts.createNewAccount()
       .setAccountName("other")
@@ -611,39 +608,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-//  public void testImportOfxWithDeferredAndCreditCards() throws Exception {
-//    String fileName = OfxBuilder.init(this)
-//      .addCardAccount("1111", 0.00, "2008/01/01")
-//      .addTransaction("2008/01/01", -100.00, "Auchan")
-//      .addCardAccount("2222", 0.00, "2008/01/01")
-//      .addTransaction("2008/01/15", -200.00, "FNAC")
-//      .save();
-//
-//    ImportChecker importDialog = operations.openImportDialog()
-//      .setFilePath(fileName)
-//      .doImport();
-//
-//    importDialog
-//      .openCardTypeChooser()
-//      .checkValidateDisabled()
-//      .selectDeferredCard("Card n. 1111", 15)
-//      .checkValidateDisabled()
-//      .selectCreditCard("Card n. 2222")
-//      .checkValidateEnabled()
-//      .validate();
-//
-//    importDialog.completeImport();
-//
-//    views.selectData();
-//    transactions.initContent()
-//      .add("15/01/2008", TransactionType.CREDIT_CARD, "FNAC", "", -200.00)
-//      .add("01/01/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", -100.00)
-//      .check();
-//  }
-
   public void testImportDialogGivesAccessToBankSites() throws Exception {
 
-    String path1 = OfxBuilder
+    OfxBuilder
       .init(this)
       .addBankAccount(30004, 12345, "00000111", 0.0, "2009/12/22")
       .addTransaction("2009/12/21", -15.00, "Menu K")
@@ -699,7 +666,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .doImport()
       .completeImport();
     
-    views.selectData();
     transactions.initContent()
       .add("13/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
       .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
@@ -725,7 +691,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .setMainAccount()
       .completeImport();
-    views.selectData();
+
     transactions.initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
       .check();
@@ -744,16 +710,19 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/12", -1.3, "Menu K 2")
       .save();
+
     File file = new File(fileName);
     File newFileName = new File(fileName.replace(".ofx", ".toto"));
     file.renameTo(newFileName);
+
     operations.openImportDialog()
       .setFilePath(newFileName.getPath())
       .acceptFile()
       .checkNoErrorMessage()
       .setMainAccount()
-      .doImport();
-    views.selectData();
+      .doImport()
+      .completeLastStep();
+
     transactions.initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
       .check();
@@ -771,8 +740,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .checkNoErrorMessage()
       .defineAccount("CIC", "main", "1111")
-      .completeImport(0.);
-    views.selectData();
+      .completeImport(0.00);
+
     transactions.initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
       .check();
@@ -788,8 +757,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .checkNoErrorMessage()
       .setMainAccount()
-      .doImport();
-    views.selectData();
+      .doImport()
+      .completeLastStep();
+
     transactions.initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
       .check();

@@ -274,7 +274,6 @@ public class ImportPreviewPanel {
     public void actionPerformed(ActionEvent event) {
       setEnabled(false);
       try {
-//        step1Panel.showMessage("");
         showStep2Message("");
         if (!dateFormatSelectionPanel.check()) {
           return;
@@ -290,7 +289,7 @@ public class ImportPreviewPanel {
           showStep2Message(Lang.get("import.no.account"));
           return;
         }
-        controller.finish(currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
+        controller.completeImport(currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
       }
       finally {
         setEnabled(true);

@@ -36,8 +36,8 @@ public class AccountPositionEditionDialog {
 
     ValidateAction validateAction = new ValidateAction();
 
-    editionPanel = new AccountPositionEditionPanel(accountInitialization, validateAction,
-                                                   localRepository, directory, parent);
+    editionPanel = new AccountPositionEditionPanel(validateAction,
+                                                   localRepository, directory);
     builder.add("editionPanel", editionPanel.getPanel());
 
     editionPanel.setAccount(account, repository);

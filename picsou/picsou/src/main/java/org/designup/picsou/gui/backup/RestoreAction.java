@@ -30,7 +30,7 @@ public class RestoreAction extends AbstractBackupRestoreAction {
 
     Glob user = repository.get(User.KEY);
     if (!user.isTrue(User.IS_REGISTERED_USER)){
-      MessageDialog.show("restore.trial.title", "restore.trial.content", frame, directory);
+      MessageDialog.show("restore.trial.title", frame, directory, "restore.trial.content");
       return;
     }
 
@@ -51,7 +51,7 @@ public class RestoreAction extends AbstractBackupRestoreAction {
             Gui.setDefaultCursor(frame);
           }
           if (completed == BackupService.Status.BAD_VERSION){
-            MessageDialog.show("restore.error.title", "restore.bad.version", frame, directory);
+            MessageDialog.show("restore.error.title", frame, directory, "restore.bad.version");
             return;
           }
           if (completed == BackupService.Status.OK) {

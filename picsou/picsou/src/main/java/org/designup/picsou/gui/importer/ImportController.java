@@ -72,7 +72,7 @@ public class ImportController {
           public void run() {
             synchronized (fileField) {
               if (step1) {
-                importDialog.updateFileField(files);
+                importDialog.preselectFiles(files);
                 importDialog.acceptFiles();
               }
               else {
@@ -128,7 +128,7 @@ public class ImportController {
       selectedFiles.addAll(file);
     }
     if (nextImport()) {
-      importDialog.showStep2();
+      importDialog.showPreview();
     }
   }
 
@@ -148,15 +148,12 @@ public class ImportController {
         Set<Integer> months = createMonths();
         AutoCategorizationFunctor autoCategorizationFunctor = autocategorize();
         deleteEmptyImport();
-        importDialog.showPositionDialog();
-
-        importDialog.showCompleteMessage(importSession.getImportedOperationsCount(),
+        importDialog.showAccountPositionDialogsIfNeeded();
+        importDialog.showCompleteMessage(months,
+                                         importSession.getImportedOperationsCount(),
                                          autoCategorizationFunctor.getAutocategorizedTransaction(),
                                          autoCategorizationFunctor.getTransactionCount());
-        openRequestManager.popCallback();
-        localRepository.commitChanges(true);
-        importDialog.showLastImportedMonthAndClose(months);
-        return true;
+        return false;
       }
       catch (Exception e) {
         Log.write("nextImport", e);
@@ -169,9 +166,8 @@ public class ImportController {
       file = selectedFiles.remove(0);
     }
     try {
-      importDialog.setFileName(file.getAbsolutePath());
       List<String> dateFormats = importSession.loadFile(file);
-      importDialog.updateForNextImport(isAccountNeeded(), dateFormats);
+      importDialog.updateForNextImport(file.getAbsolutePath(), isAccountNeeded(), dateFormats);
       return true;
     }
     catch (NoOperations e) {
@@ -185,6 +181,12 @@ public class ImportController {
       importDialog.showStep1Message(message, e);
       return false;
     }
+  }
+
+  public void commitAndClose(Set<Integer> months) {
+    openRequestManager.popCallback();
+    localRepository.commitChanges(true);
+    importDialog.showLastImportedMonthAndClose(months);
   }
 
   private void deleteEmptyImport() {
@@ -204,7 +206,7 @@ public class ImportController {
     nextImport();
   }
 
-  public void finish(Key currentAccount, String dateFormat) {
+  public void completeImport(Key currentAccount, String dateFormat) {
     Key importKey = importSession.importTransactions(currentAccount, dateFormat);
     if (importKey != null) {
       importKeys.add(importKey.get(TransactionImport.ID));

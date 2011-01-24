@@ -2,18 +2,19 @@ package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
-import org.designup.picsou.gui.importer.ImportDialog;
+import org.designup.picsou.gui.importer.ImportCompletionPanel;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.FileChooserHandler;
-import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.io.File;
+
+import static org.uispec4j.assertion.UISpecAssert.*;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class ImportDialogChecker extends GuiChecker {
   private Panel dialog;
@@ -32,7 +33,7 @@ public class ImportDialogChecker extends GuiChecker {
 
   public ImportDialogChecker(Panel dialog, final boolean step1) {
     this.dialog = dialog;
-    if (step1){
+    if (step1) {
       fileField = dialog.getInputTextBox("fileField");
       importButton = dialog.getButton("Import");
     }
@@ -96,47 +97,65 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
+  public ImportDialogChecker checkLastStep() {
+    assertThat(dialog.getTextBox("title").textEquals("Import done"));
+    return this;
+  }
+
+  public void completeLastStep() {
+    dialog.getButton(Lang.get("ok")).click();
+    UISpecAssert.assertFalse(dialog.isVisible());
+  }
+
   public void completeImport() {
-    validate(-1, -1, -1, dialog, "import.step2.ok");
+    validateAndComplete(-1, -1, -1, dialog, "import.step2.ok");
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
   public void completeImport(double amount) {
-    doImportWithBalance().setAmount(amount).validateFromImport();
+    doImportWithBalance().setAmount(amount).validate();
+    ImportDialogChecker.complete(-1, -1, -1, dialog);
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
   public void completeImport(final int importedTransactionCount, final int autocategorizedTransactionCount) {
-    validate(-1, importedTransactionCount, autocategorizedTransactionCount, dialog, "import.step2.ok");
+    validateAndComplete(-1, importedTransactionCount, autocategorizedTransactionCount, dialog, "import.step2.ok");
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
   public void completeImportNone(int loadTransaction) {
-    validate(loadTransaction, 0, 0, dialog, "import.step2.ok");
+    validateAndComplete(loadTransaction, 0, 0, dialog, "import.step2.ok");
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
-  public void skipAndComplete(){
-    validate(-1, -1, -1, dialog, "import.skip.file");
+  public void skipAndComplete() {
+    validateAndComplete(-1, -1, -1, dialog, "import.skip.file");
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
   public void completeImportAndGotoCategorize(int importedTransactionCount, int autocategorizedTransactionCount) {
-    WindowInterceptor.init(dialog.getButton(Lang.get("import.step2.ok")).triggerClick())
-      .process(new ImportCompleteWindowHandler(0,
-                                               importedTransactionCount,
-                                               autocategorizedTransactionCount, Lang.get("import.end.button"))).run();
+    dialog.getButton(Lang.get("import.step2.ok")).click();
+
+    CompletionChecker handler =
+      new CompletionChecker(0, importedTransactionCount,
+                                      autocategorizedTransactionCount, Lang.get("import.end.button"));
+    handler.checkAndClose(dialog);
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
-  public static void validate(final int loadedTransaction, final int importedTransactionCount, final int autocategorizedTransactionCount,
-                              final Panel dialog, final String key) {
-    WindowInterceptor.init(dialog.getButton(Lang.get(key)).triggerClick())
-      .process(new ImportCompleteWindowHandler(loadedTransaction, importedTransactionCount, autocategorizedTransactionCount)).run();
+  public static void validateAndComplete(final int loadedTransaction, final int importedTransactionCount, final int autocategorizedTransactionCount,
+                                         final Panel dialog, final String key) {
+    dialog.getButton(Lang.get(key)).click();
+    complete(loadedTransaction, importedTransactionCount, autocategorizedTransactionCount, dialog);
+  }
+
+  public static void complete(int loadedTransaction, int importedTransactionCount, int autocategorizedTransactionCount, Panel dialog) {
+    CompletionChecker handler = new CompletionChecker(loadedTransaction, importedTransactionCount, autocategorizedTransactionCount);
+    handler.checkAndClose(dialog);
   }
 
   public AccountPositionEditionChecker doImportWithBalance() {
-    return new AccountPositionEditionChecker(WindowInterceptor.getModalDialog(dialog.getButton(Lang.get("import.step1.ok")).triggerClick()));
+    return new AccountPositionEditionChecker(dialog, "import.step1.ok");
   }
 
   public void close() {
@@ -164,8 +183,10 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public void checkCloseButton(String text) {
-    assertThat(dialog.getButton("close").textEquals(text));
+  public ImportDialogChecker checkCloseButton(String text) {
+    Button close = dialog.getButton("close");
+    assertThat(close.textEquals(text));
+    return this;
   }
 
   public ImportDialogChecker checkSelectedAccount(String accountNumber) {
@@ -327,7 +348,7 @@ public class ImportDialogChecker extends GuiChecker {
     return new ComponentIsVisibleAssertion<JPanel>(dialog, JPanel.class, "accountTypeSelection", true).isTrue();
   }
 
-  public ImportDialogChecker setMainAccountForAll(){
+  public ImportDialogChecker setMainAccountForAll() {
     UIComponent[] uiComponents = getAccountTypeSelectionPanel().getUIComponents(ComboBox.class);
     for (UIComponent component : uiComponents) {
       ((ComboBox)component).select("main");
@@ -361,41 +382,51 @@ public class ImportDialogChecker extends GuiChecker {
 
   private Panel getAccountTypeSelectionPanel() {
     Panel selectionPanel = dialog.getPanel("accountTypeSelection");
-    UISpecAssert.assertThat(selectionPanel.isVisible());
+    assertThat(selectionPanel.isVisible());
     return selectionPanel;
   }
 
-  public static class ImportCompleteWindowHandler extends WindowHandler {
+  public static class CompletionChecker {
     private int loadedTransactionCount;
     private final int importedTransactionCount;
     private final int autocategorizedTransactionCount;
     private String buttonMessage = null;
 
-    public ImportCompleteWindowHandler(int loadedTransactionCount, int importedTransactionCount, int autocategorizedTransactionCount) {
+    public CompletionChecker(int loadedTransactionCount, int importedTransactionCount, int autocategorizedTransactionCount) {
       this.loadedTransactionCount = loadedTransactionCount;
       this.importedTransactionCount = importedTransactionCount;
       this.autocategorizedTransactionCount = autocategorizedTransactionCount;
     }
 
-    public ImportCompleteWindowHandler(int loadedTransactionCount, int importedTransactionCount, int autocategorizedTransactionCount, String buttonMessage) {
+    public CompletionChecker(int loadedTransactionCount, int importedTransactionCount, int autocategorizedTransactionCount, String buttonMessage) {
       this(loadedTransactionCount, importedTransactionCount, autocategorizedTransactionCount);
       this.buttonMessage = buttonMessage;
     }
 
-    public Trigger process(Window window) throws Exception {
-      MessageDialogChecker checker = new MessageDialogChecker(window);
+    public Trigger checkAndGetTrigger(Panel dialog) {
+      TextBox contentBox = dialog.getTextBox("message");
       if (importedTransactionCount != -1) {
-        checker
-          .checkMessageContains(Lang.get(ImportDialog.getEndOfImportMessageKey(loadedTransactionCount, importedTransactionCount, autocategorizedTransactionCount),
-                                         Integer.toString(importedTransactionCount),
-                                         Integer.toString(autocategorizedTransactionCount),
-                                         Integer.toString(loadedTransactionCount)));
+        String expectedMessage =
+          Lang.get(ImportCompletionPanel.getEndOfImportMessageKey(loadedTransactionCount, importedTransactionCount, autocategorizedTransactionCount),
+                   Integer.toString(importedTransactionCount),
+                   Integer.toString(autocategorizedTransactionCount),
+                   Integer.toString(loadedTransactionCount));
+        assertThat(contentBox.textContains(expectedMessage));
       }
       if (buttonMessage == null) {
-        return checker.triggerCloseUndefined();
+        return dialog.getButton("OK").triggerClick();
       }
       else {
-        return checker.triggerClose(buttonMessage);
+        return dialog.getButton(buttonMessage).triggerClick();
+      }
+    }
+
+    public void checkAndClose(Panel dialog) {
+      try {
+        checkAndGetTrigger(dialog).run();
+      }
+      catch (Exception e) {
+        throw new RuntimeException(e);
       }
     }
   }

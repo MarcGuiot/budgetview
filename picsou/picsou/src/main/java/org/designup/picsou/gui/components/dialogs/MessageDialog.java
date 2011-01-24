@@ -12,33 +12,28 @@ public class MessageDialog {
   private PicsouDialog dialog;
   private SplitsBuilder builder;
 
-  public static void showWithButtonMessage(String titleKey, String contentKey,
-                                                                   Window owner, Directory directory,
-                                                                   String key,
-                                                                   String... args) {
-    MessageDialog dialog = new MessageDialog(titleKey, contentKey, owner, directory, key, args);
+  public static void showWithButtonMessage(String titleKey, String buttonKey, Window owner, Directory directory,
+                                           String contentKey, String... contentArgs) {
+    MessageDialog dialog = new MessageDialog(titleKey, buttonKey, owner, directory, contentKey, contentArgs);
     dialog.show();
   }
 
-  public static void show(String titleKey, String contentKey,
-                                           Window owner, Directory directory,
-                                           String... args) {
-    MessageDialog dialog = new MessageDialog(titleKey, contentKey, owner, directory, "close", args);
+  public static void show(String titleKey, Window owner, Directory directory, String contentKey, String... args) {
+    MessageDialog dialog = new MessageDialog(titleKey, "close", owner, directory, contentKey, args);
     dialog.show();
   }
 
-  private MessageDialog(String titleKey, String contentKey,
+  private MessageDialog(String titleKey, String buttonKey,
                         Window owner, Directory directory,
-                        String key,
-                        String... args) {
+                        String contentKey, String... contentArgs) {
     builder = SplitsBuilder.init(directory)
       .setSource(getClass(), "/layout/utils/messageDialog.splits");
 
     builder.add("title", new JLabel(Lang.get(titleKey)));
-    builder.add("message", new JEditorPane("text/html", Lang.get(contentKey, args)));
+    builder.add("message", new JEditorPane("text/html", Lang.get(contentKey, contentArgs)));
 
     dialog = PicsouDialog.create(owner, directory);
-    dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction(key, dialog));
+    dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction(buttonKey, dialog));
     dialog.pack();
   }
 

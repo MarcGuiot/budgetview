@@ -37,9 +37,7 @@ public class LoginFuncTest extends ServerFuncTestCase {
       .selectFiles(fileName)
       .acceptFile()
       .defineAccount("Société Générale", "Main account", "1111")
-      .doImportWithBalance()
-      .setAmount(10.00)
-      .validateFromImport();
+      .completeImport(10.00);
 
   }
 }
