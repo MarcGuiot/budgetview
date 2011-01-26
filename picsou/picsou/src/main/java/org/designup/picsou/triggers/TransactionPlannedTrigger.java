@@ -1,9 +1,11 @@
 package org.designup.picsou.triggers;
 
+import org.designup.picsou.gui.model.SeriesShape;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobFunctor;
@@ -13,8 +15,10 @@ import org.globsframework.utils.Log;
 import org.globsframework.utils.Pair;
 import org.globsframework.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
 
 public class TransactionPlannedTrigger implements ChangeSetListener {
 
@@ -23,7 +27,22 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
 
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
 
+    repository.startChangeSet();
     final Set<Pair<Integer, Integer>> listOfSeriesAndMonth = new HashSet<Pair<Integer, Integer>>();
+    if (changeSet.containsChanges(UserPreferences.KEY, UserPreferences.MULTIPLE_PLANNED,
+                                  UserPreferences.MONTH_FOR_PLANNED, UserPreferences.PERIOD_COUNT_FOR_PLANNED)){
+      Glob currenMonth = repository.get(CurrentMonth.KEY);
+      SortedSet<Integer> seriesId = repository.getAll(Series.TYPE).getSortedSet(Series.ID);
+      repository.delete(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, true));
+      GlobList months = repository.getAll(Month.TYPE);
+      for (Integer id : seriesId) {
+        for (Glob glob : months) {
+          if (glob.get(Month.ID) >= currenMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)){
+            listOfSeriesAndMonth.add(new Pair<Integer, Integer>(id, glob.get(Month.ID)));
+          }
+        }
+      }
+    }
 
     changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
@@ -99,7 +118,25 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       }
     });
 
+    changeSet.safeVisit(SeriesShape.TYPE, new ChangeSetVisitor() {
+      public void visitCreation(Key key, FieldValues values) throws Exception {
+        for (Glob month : repository.getAll(Month.TYPE)) {
+          listOfSeriesAndMonth.add(new Pair<Integer, Integer>(key.get(SeriesShape.SERIES_ID), month.get(Month.ID)));
+        }
+      }
+
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+        for (Glob month : repository.getAll(Month.TYPE)) {
+          listOfSeriesAndMonth.add(new Pair<Integer, Integer>(key.get(SeriesShape.SERIES_ID), month.get(Month.ID)));
+        }
+      }
+
+      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+      }
+    });
+
     updatePlannedTransactions(repository, listOfSeriesAndMonth);
+    repository.completeChangeSet();
   }
 
   private void updatePlannedTransactions(GlobRepository repository, Set<Pair<Integer, Integer>> listOfSeriesAndMonth) {
@@ -133,21 +170,26 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
         Double wantedAmount = seriesBudget.get(SeriesBudget.AMOUNT, 0);
         double diff = wantedAmount - Utils.zeroIfNull(observedAmount);
         if (((wantedAmount > 0 && diff > 0) || (wantedAmount < 0 && diff < 0)) && !Amounts.isNearZero(diff)) {
-          Glob transaction = transactions.getFirst();
-          if (transaction == null) {
-            Glob series = repository.findLinkTarget(seriesBudget, SeriesBudget.SERIES);
-            if (series == null) { // on a un bug : une series a disparu on continue
-              Log.write("Missing series " + seriesBudget.get(SeriesBudget.SERIES));
-            }
-            else {
-              createPlannedTransaction(series, repository,
-                                       monthId,
-                                       seriesBudget.get(SeriesBudget.DAY),
-                                       diff);
-            }
+          if (repository.get(UserPreferences.KEY).isTrue(UserPreferences.MULTIPLE_PLANNED)) {
+            distributePlannedAmount(repository, monthId, transactions, seriesBudget);
           }
           else {
-            repository.update(transaction.getKey(), Transaction.AMOUNT, diff);
+            Glob transaction = transactions.getFirst();
+            if (transaction == null) {
+              Glob series = repository.findLinkTarget(seriesBudget, SeriesBudget.SERIES);
+              if (series == null) { // on a un bug : une series a disparu on continue
+                Log.write("Missing series " + seriesBudget.get(SeriesBudget.SERIES));
+              }
+              else {
+                createPlannedTransaction(series, repository,
+                                         monthId,
+                                         seriesBudget.get(SeriesBudget.DAY),
+                                         diff);
+              }
+            }
+            else {
+              repository.update(transaction.getKey(), Transaction.AMOUNT, diff);
+            }
           }
         }
         else {
@@ -156,6 +198,30 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       }
       else {
         repository.delete(transactions);
+      }
+    }
+  }
+
+  private void distributePlannedAmount(GlobRepository repository, Integer monthId, GlobList transactions, Glob seriesBudget) {
+    repository.delete(transactions);
+    Glob series = repository.findLinkTarget(seriesBudget, SeriesBudget.SERIES);
+    if (series == null) { // on a un bug : une series a disparu on continue
+      Log.write("Missing series " + seriesBudget.get(SeriesBudget.SERIES));
+    }
+    else {
+      GlobList createPlanned =
+        createPlannedTransaction(series, repository, monthId, seriesBudget.get(SeriesBudget.AMOUNT));
+      Double observedAmount = Utils.zeroIfNull(seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT));
+      for (Glob glob : createPlanned) {
+        Double wantedAmount = glob.get(Transaction.AMOUNT);
+        double diff = wantedAmount - observedAmount;
+        if (((wantedAmount > 0 && diff > 0) || (wantedAmount < 0 && diff < 0)) && !Amounts.isNearZero(diff)) {
+          repository.update(glob.getKey(), Transaction.AMOUNT, diff);
+          return;
+        }
+        else {
+          repository.delete(glob.getKey());
+        }
       }
     }
   }
@@ -185,6 +251,176 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       return null;
     }
     return seriesStat.get(SeriesStat.AMOUNT);
+  }
+
+  static class TheoricalPlanned {
+    final int accountId;
+    final int day;
+    final double amountForPeriod;
+
+    TheoricalPlanned(int accountId, int day, double amountForPeriod) {
+      this.accountId = accountId;
+      this.day = day;
+      this.amountForPeriod = amountForPeriod;
+    }
+  }
+
+  public static TheoricalPlanned[] getTheoricalPlanned(Glob series, GlobRepository repository, int monthId, double amount) {
+    final ArrayList<TheoricalPlanned> planneds = new ArrayList<TheoricalPlanned>();
+    computePlanned(series, repository, monthId, amount, new DeclarePlanned() {
+      public void declare(int account, int day, double amountForPeriod) {
+        planneds.add(new TheoricalPlanned(account, day, amountForPeriod));
+      }
+    });
+    return planneds.toArray(new TheoricalPlanned[planneds.size()]);
+  }
+
+  public static GlobList createPlannedTransaction(Glob series, GlobRepository repository, int monthId, double amount) {
+    CreateDeclarePlanned createDeclarePlanned = new CreateDeclarePlanned(series, repository, monthId);
+    computePlanned(series, repository, monthId, amount, createDeclarePlanned);
+    return createDeclarePlanned.created;
+  }
+
+  private static void computePlanned(Glob series, GlobRepository repository, int monthId, double amount, final DeclarePlanned declarePlanned) {
+    Integer minDay = 0;
+    Glob currentMonth = repository.get(CurrentMonth.KEY);
+    if ((currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH) == monthId)) {
+      minDay = currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY);
+    }
+
+    int account;
+    Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
+    Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
+    if (series.get(Series.MIRROR_SERIES) != null) {
+      if (fromAccount == null || toAccount == null) {
+        Log.write("Series " + series.get(Series.NAME) + " is a saving series with both accounts imported" +
+                  " but one of the account is missing.");
+        return;
+      }
+      if (series.isTrue(Series.IS_MIRROR)) {
+        account = fromAccount.get(Account.ID);
+      }
+      else {
+        account = toAccount.get(Account.ID);
+      }
+    }
+    else if (fromAccount == null && toAccount == null) {
+      account = Account.MAIN_SUMMARY_ACCOUNT_ID;
+    }
+    else {
+      if (fromAccount != null && fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+        account = fromAccount.get(Account.ID);
+      }
+      else if (toAccount != null && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+        account = toAccount.get(Account.ID);
+      }
+      else {
+        if (fromAccount == null) {
+          account = toAccount.get(Account.ID);
+        }
+        else { //if (toAccount == null)
+          account = fromAccount.get(Account.ID);
+        }
+      }
+    }
+    computePlanned(series, repository, monthId, amount, minDay, declarePlanned, account);
+  }
+
+  interface DeclarePlanned {
+    void declare(int account, int day, double amountForPeriod);
+  }
+
+  private static void computePlanned(Glob series, GlobRepository repository, int monthId, double amount,
+                                     Integer minDay, final DeclarePlanned planned, int account) {
+    Integer seriesId = series.get(Series.ID);
+
+    Integer period = repository.get(UserPreferences.KEY).get(UserPreferences.PERIOD_COUNT_FOR_PLANNED);
+    Key key = Key.create(SeriesShape.TYPE, seriesId);
+    Glob seriesShape = repository.find(key);
+    if (seriesShape == null) {
+      seriesShape = SeriesShape.getDefault(key, period);
+    }
+
+    Integer percentToPropagate = 0;
+    double alreadyAssignedAmount = 0;
+    for (int i = 1; i <= period; i++) {
+      IntegerField field = SeriesShape.getField(i);
+      Integer percent = seriesShape.get(field);
+      int day = SeriesShape.getDay(period, i, monthId, amount > 0);
+      if (minDay != 0 && day < minDay) {
+        int nextDay = SeriesShape.getDay(period, i + 1, monthId, amount > 0);
+        if (nextDay < minDay) {
+          percentToPropagate += percent;
+        }
+        else {
+          double amountForPeriod = getAmount(alreadyAssignedAmount, amount, percentToPropagate + percent, i == period);
+          if (!Amounts.isNearZero(amountForPeriod)) {
+            alreadyAssignedAmount += amountForPeriod;
+            percentToPropagate = 0;
+            planned.declare(account, minDay, amountForPeriod);
+          }
+        }
+      }
+      else {
+        double amountForPeriod = getAmount(alreadyAssignedAmount, amount, percentToPropagate + percent, i == period);
+        if (!Amounts.isNearZero(amountForPeriod)) {
+          alreadyAssignedAmount += amountForPeriod;
+          percentToPropagate = 0;
+          planned.declare(account, day, amountForPeriod);
+        }
+      }
+    }
+  }
+
+  private static Glob createPlanned(Glob series, GlobRepository repository, int monthId, int account, Integer seriesId, int day, double amountForPeriod) {
+    return repository.create(Transaction.TYPE,
+                             value(Transaction.ACCOUNT, account),
+                             value(Transaction.AMOUNT, amountForPeriod),
+                             value(Transaction.SERIES, seriesId),
+                             value(Transaction.BANK_MONTH, monthId),
+                             value(Transaction.BANK_DAY, day),
+                             value(Transaction.POSITION_MONTH, monthId),
+                             value(Transaction.POSITION_DAY, day),
+                             value(Transaction.MONTH, monthId),
+                             value(Transaction.DAY, day),
+                             value(Transaction.BUDGET_MONTH, monthId),
+                             value(Transaction.BUDGET_DAY, day),
+                             value(Transaction.LABEL, Series.getPlannedTransactionLabel(seriesId, series)),
+                             value(Transaction.PLANNED, true),
+                             value(Transaction.TRANSACTION_TYPE,
+                                   amountForPeriod > 0 ? TransactionType.VIREMENT.getId() : TransactionType.PRELEVEMENT.getId()));
+  }
+
+  static double getAmount(double alreadyAssignedAmount, double totalAmount, int percent, boolean isLast) {
+    if (isLast) {
+      return totalAmount - alreadyAssignedAmount;
+    }
+    else {
+      int amount = (int)((totalAmount * percent) / 100);
+      if (Math.abs(amount + alreadyAssignedAmount - totalAmount) < 10){
+        return totalAmount - alreadyAssignedAmount;
+      }
+      return amount;
+    }
+  }
+
+  private static class CreateDeclarePlanned implements DeclarePlanned {
+    private final GlobList created = new GlobList();
+    private final Glob series;
+    private final GlobRepository repository;
+    private final int monthId;
+    private final Integer seriesId;
+
+    public CreateDeclarePlanned(Glob series, GlobRepository repository, int monthId) {
+      this.series = series;
+      this.repository = repository;
+      this.monthId = monthId;
+      this.seriesId = series.get(Series.ID);
+    }
+
+    public void declare(int account, int day, double amountForPeriod) {
+      created.add(createPlanned(series, repository, monthId, account, seriesId, day, amountForPeriod));
+    }
   }
 
   public static void createPlannedTransaction(Glob series, GlobRepository repository, int monthId,
@@ -249,4 +485,5 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
                       value(Transaction.TRANSACTION_TYPE,
                             amount > 0 ? TransactionType.VIREMENT.getId() : TransactionType.PRELEVEMENT.getId()));
   }
+
 }

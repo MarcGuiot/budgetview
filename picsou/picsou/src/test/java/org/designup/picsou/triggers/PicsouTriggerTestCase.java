@@ -35,6 +35,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
                       value(Series.PROFILE_TYPE, ProfileType.IRREGULAR.getId()),
                       value(Series.IS_AUTOMATIC, false),
                       value(Series.BUDGET_AREA, BudgetArea.VARIABLE.getId()));
+    repository.create(UserPreferences.KEY);
   }
 
   protected void createSeries(int seriesId, double amount) {
