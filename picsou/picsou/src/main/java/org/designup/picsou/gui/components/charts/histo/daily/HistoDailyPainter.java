@@ -12,7 +12,9 @@ public class HistoDailyPainter implements HistoPainter {
   private HistoDailyDataset dataset;
   private HistoLineColors colors;
 
-  public static final BasicStroke LINE_STROKE = new BasicStroke(1);
+  public static final BasicStroke DEFAULT_LINE_STROKE = new BasicStroke(1);
+  public static final BasicStroke FUTURE_LINE_STROKE =
+    new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{2, 3}, 0);
 
   public HistoDailyPainter(HistoDailyDataset dataset, HistoLineColors colors) {
     this.dataset = dataset;
@@ -29,7 +31,7 @@ public class HistoDailyPainter implements HistoPainter {
       return;
     }
 
-    g2.setStroke(LINE_STROKE);
+    g2.setStroke(DEFAULT_LINE_STROKE);
 
     Double previousValue = null;
     Integer previousY = null;
@@ -96,6 +98,7 @@ public class HistoDailyPainter implements HistoPainter {
     polygon.addPoint(previousX,y0);
     g2.fill(polygon);
 
+    g2.setStroke(future ? FUTURE_LINE_STROKE : DEFAULT_LINE_STROKE);
     colors.setLineStyle(g2, positive, future);
     g2.drawLine(previousX, previousY, x, y);
   }
