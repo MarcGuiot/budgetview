@@ -60,8 +60,7 @@ public class CurrentMonthTrigger implements ChangeSetListener {
             for (Glob aSeries : series) {
               if (aSeries.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())){
                 if (Account.shouldCreateMirror(repository.findLinkTarget(aSeries, Series.FROM_ACCOUNT),
-                                               repository.findLinkTarget(aSeries, Series.TO_ACCOUNT))
-                  && aSeries.isTrue(Transaction.MIRROR)){
+                                               repository.findLinkTarget(aSeries, Series.TO_ACCOUNT))){
                   continue;
                 }
               }

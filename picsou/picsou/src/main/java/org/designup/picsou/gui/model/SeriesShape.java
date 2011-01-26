@@ -32,7 +32,7 @@ public class SeriesShape {
   }
 
   public static IntegerField getField(int period) {
-    switch (period + 1) {
+    switch (period) {
       case 1:
         return PERCENT_1;
       case 2:
