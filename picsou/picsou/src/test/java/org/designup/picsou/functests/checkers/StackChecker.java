@@ -3,21 +3,20 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
 import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
-import org.designup.picsou.gui.description.Formatting;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
 import org.uispec4j.interception.toolkit.Empty;
 
 import java.awt.*;
 
-public class StackChecker extends GuiChecker {
+public class StackChecker extends ViewChecker {
 
-  private Window window;
   private String containerName;
   private String name;
+  private Panel panel;
 
   public StackChecker(Window window, String containerName, String name) {
-    this.window = window;
+    super(window);
     this.containerName = containerName;
     this.name = name;
   }
@@ -80,10 +79,34 @@ public class StackChecker extends GuiChecker {
       return "Actual dataset contents:\n" + dataset;
     }
 
+    public void dump() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("  .checkSize(").append(dataset.size()).append(")\n");
+      for (int i = 0; i < dataset.size(); i++) {
+        double value = dataset.getValue(i);
+        builder.append("  .checkValue(\"").append(dataset.getLabel(i)).append("\", ")
+          .append(StackChecker.this.toString(value))
+        .append(")");
+        if (i < dataset.size() - 1) {
+          builder.append("\n");
+        }
+        else {
+          builder.append(";");
+        }
+      }
+      Assert.fail("Insert: \n" + builder.toString());
+    }
+
+    public void checkEmpty() {
+      checkSize(0);
+    }
   }
 
   private StackChart getChart() {
-    Panel panel = window.getPanel(containerName).getPanel(name);
+    if (panel == null) {
+      views.selectEvolution();
+      panel = mainWindow.getPanel(containerName).getPanel(name);
+    }
     return (StackChart)panel.getAwtComponent();
   }
 

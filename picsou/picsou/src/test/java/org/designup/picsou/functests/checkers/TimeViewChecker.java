@@ -134,11 +134,9 @@ public class TimeViewChecker extends GuiChecker {
     Assert.assertEquals(toYyyyMm, Month.toString(list.get(list.size() - 1).get(Month.ID)));
   }
 
-  public TimeViewChecker checkMonthTooltip(String monthId, double balance, double position) {
+  public TimeViewChecker checkMonthTooltip(String monthId, double position) {
     timeViewPanel.getMouseOverHandler().enterMonth(parseMonthId(monthId));
     String tooltip = timeViewPanel.getToolTipText();
-    Assert.assertTrue("Expected balance: " + balance + " - " + tooltip,
-                      tooltip.contains("Balance: " + toString(balance, true)));
     Assert.assertTrue("Expected position: " + position + " - " + tooltip,
                       tooltip.contains("Min position: " + toString(position)));
     return this;

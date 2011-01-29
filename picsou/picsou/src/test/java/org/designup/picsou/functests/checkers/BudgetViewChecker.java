@@ -4,13 +4,12 @@ import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.utils.Lang;
+import org.globsframework.utils.TestUtils;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import org.globsframework.utils.TestUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -136,7 +135,7 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
-    public BudgetAreaChecker checkPlannedUset(String seriesName){
+    public BudgetAreaChecker checkPlannedUset(String seriesName) {
       Button button = getAmountButton(seriesName);
       assertThat(button.textEquals("No value defined"));
       return this;
@@ -144,8 +143,8 @@ public class BudgetViewChecker extends ViewChecker {
 
     public BudgetAreaChecker checkTotalTooltips(double overrun, double newAmount) {
       assertThat(getPanel().getTextBox("totalPlannedAmount")
-        .tooltipEquals("Planned with overrun: " + Formatting.DECIMAL_FORMAT.format(newAmount) +
-                       " - Overrun: " + Formatting.DECIMAL_FORMAT.format(overrun)));
+                   .tooltipEquals("Planned with overrun: " + Formatting.DECIMAL_FORMAT.format(newAmount) +
+                                  " - Overrun: " + Formatting.DECIMAL_FORMAT.format(overrun)));
       return this;
     }
 

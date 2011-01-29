@@ -74,7 +74,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .checkAccount("Manual", 0, "2009/05/15");
   }
 
-  public void testBalanceWithNoOperationsForAMonth() throws Exception {
+  public void testPositionWithNoOperationsForAMonth() throws Exception {
     operations.openPreferences()
       .setFutureMonthsCount(3)
       .validate();
@@ -89,14 +89,13 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth("2009/04");
-    budgetView.getSummary()
-      .checkMonthBalance(-29.90);
+    budgetView.getSummary().checkEndPosition(0.00);
 
     timeline.selectMonth("2009/05");
-    budgetView.getSummary().checkMonthBalance(0);
+    budgetView.getSummary().checkEndPosition(0.00);
 
     timeline.selectMonth("2009/06");
-    budgetView.getSummary().checkMonthBalance(0);
+    budgetView.getSummary().checkEndPosition(0.00);
   }
 
   public void testSavingsWithMonthWithoutTransaction() throws Exception {
@@ -111,11 +110,10 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/10", -100.00, "Auchan")
       .load();
     operations.openPreferences().setFutureMonthsCount(2).validate();
-    views.selectHome();
     mainAccounts.edit(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setAsSavings()
       .validate();
-    
+
     // sur compte courant
     timeline.selectMonth("2008/08");
     mainAccounts.checkEstimatedPosition(1000);

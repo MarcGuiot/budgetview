@@ -128,16 +128,6 @@ public class BudgetPositionPage {
     return list.getLast();
   }
 
-  private class BalanceStringifier implements GlobListStringifier {
-    public String toString(GlobList list, GlobRepository repository) {
-      if (list.isEmpty()) {
-        return "";
-      }
-      double total = list.getSum(BudgetStat.MONTH_BALANCE);
-      return Formatting.toStringWithPlus(total);
-    }
-  }
-
   private static class EspectedPositionStringifier implements GlobListStringifier {
     public String toString(GlobList list, GlobRepository repository) {
       Glob budgetStat = getLastBudgetStat(list);

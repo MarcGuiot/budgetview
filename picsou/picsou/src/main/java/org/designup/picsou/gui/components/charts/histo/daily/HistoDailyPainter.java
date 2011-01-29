@@ -70,6 +70,11 @@ public class HistoDailyPainter implements HistoPainter {
         boolean selected = dataset.isSelected(i);
         boolean rollover = (currentRollover != null) && (currentRollover == i);
 
+        if (dataset.isCurrent(i,j)) {
+          g2.setColor(Color.red);
+          g2.drawLine(x, metrics.columnTop(), x, metrics.columnBottom());
+        }
+
         if (Math.signum(previousValue) == Math.signum(value)) {
           drawBlock(g2, previousX, previousY, x, y, y0, value >= 0, current, future, selected, rollover);
         }

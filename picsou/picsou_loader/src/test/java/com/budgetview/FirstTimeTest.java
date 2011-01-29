@@ -186,12 +186,6 @@ public class FirstTimeTest extends UISpecTestCase {
     budget.variable.checkTotalAmounts(-415.00, -415.00);
     budget.recurring.checkTotalAmounts(-1413.90, -1413.90);
 
-    views.selectBudget();
-    BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
-    budgetSummary.openPositionDialog()
-      .checkPosition(1900.00)
-      .close();
-
     views.selectData();
     transaction.initContent()
       .add("28/09/2008", TransactionType.PRELEVEMENT, "ECOLE", "", -40.00, "Ecole")
@@ -272,14 +266,6 @@ public class FirstTimeTest extends UISpecTestCase {
       .check();
 
     views.selectBudget();
-    budgetSummary.openPositionDialog()
-      .checkPosition(1971.10)
-      .checkInitialPosition(1900)
-      .checkVariable(415)
-      .checkFixed(1413.9)
-      .checkSavingsOut(100)
-      .checkIncome(2000)
-      .close();
 
     String file2 = QifBuilder.init(this)
       .addTransaction("2008/10/03", -100, "VIR epargne")
@@ -297,16 +283,6 @@ public class FirstTimeTest extends UISpecTestCase {
     OperationChecker operation = new OperationChecker(window);
 
     operation.importQifFile(file2, "CIC");
-
-    views.selectBudget();
-    budgetSummary.openPositionDialog()
-      .checkPosition(1831.10)
-      .checkInitialPosition(780.1)
-      .checkIncome(2000)
-      .checkFixed(584)
-      .checkSavingsOut(100)
-      .checkVariable(265)
-      .close();
 
     views.selectData();
     transaction.initAmountContent()
@@ -378,15 +354,15 @@ public class FirstTimeTest extends UISpecTestCase {
     TimeViewChecker timeView = new TimeViewChecker(window);
     timeView.selectMonth("2008/10");
 
-    BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
-    budgetSummary.openPositionDialog()
-      .checkPosition(2386.10)
-      .checkInitialPosition(780.10)
-      .checkIncome(2000)
-      .checkFixed(184)
-      .checkSavingsIn(0)
-      .checkVariable(210)
-      .close();
+//    BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
+//    budgetSummary.openPositionDialog()
+//      .checkPosition(2386.10)
+//      .checkInitialPosition(780.10)
+//      .checkIncome(2000)
+//      .checkFixed(184)
+//      .checkSavingsIn(0)
+//      .checkVariable(210)
+//      .close();
 
     views.selectData();
 
@@ -459,16 +435,16 @@ public class FirstTimeTest extends UISpecTestCase {
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectBudget();
 
-    BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
-    budgetSummary.openPositionDialog()
-      .checkPosition(2386.10)
-      .checkInitialPosition(780.1)
-      .checkIncome(2000)
-      .checkFixed(184)
-      .checkSavingsIn(0)
-      .checkSavingsOut(0)
-      .checkVariable(210)
-      .close();
+//    BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
+//    budgetSummary.openPositionDialog()
+//      .checkPosition(2386.10)
+//      .checkInitialPosition(780.1)
+//      .checkIncome(2000)
+//      .checkFixed(184)
+//      .checkSavingsIn(0)
+//      .checkSavingsOut(0)
+//      .checkVariable(210)
+//      .close();
 
     views.selectData();
 
@@ -543,16 +519,16 @@ public class FirstTimeTest extends UISpecTestCase {
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectBudget();
 
-    BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
-    budgetSummary.openPositionDialog()
-      .checkPosition(2386.10)
-      .checkInitialPosition(780.1)
-      .checkIncome(2000)
-      .checkFixed(184)
-      .checkSavingsIn(0)
-      .checkSavingsOut(0)
-      .checkVariable(210)
-      .close();
+//    BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
+//    budgetSummary.openPositionDialog()
+//      .checkPosition(2386.10)
+//      .checkInitialPosition(780.1)
+//      .checkIncome(2000)
+//      .checkFixed(184)
+//      .checkSavingsIn(0)
+//      .checkSavingsOut(0)
+//      .checkVariable(210)
+//      .close();
 
     views.selectData();
 
@@ -693,7 +669,6 @@ public class FirstTimeTest extends UISpecTestCase {
     });
     LoginChecker login = new LoginChecker(window);
     login.logExistingUser("toto", "toto", true);
-    MainAccountViewChecker mainAccounts = new MainAccountViewChecker(window);
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectBudget();
@@ -701,16 +676,22 @@ public class FirstTimeTest extends UISpecTestCase {
     TimeViewChecker checker = new TimeViewChecker(window);
     checker.selectMonths("2008/10");
 
-    BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
-    budgetSummary.openPositionDialog()
-      .checkPosition(1886.10)
-      .checkInitialPosition(780.1)
-      .checkIncome(2000)
-      .checkFixed(584)
-      .checkSavingsIn(0)
-      .checkSavingsOut(100)
-      .checkVariable(210)
-      .close();
+    SeriesEvolutionChecker seriesEvolution = new SeriesEvolutionChecker(window);
+    seriesEvolution.balanceChart.getLeftDataset()
+      .dump();
+    seriesEvolution.balanceChart.getRightDataset()
+      .dump();
+
+//    BudgetSummaryViewChecker budgetSummary = new BudgetSummaryViewChecker(window);
+//    budgetSummary.openPositionDialog()
+//      .checkPosition(1886.10)
+//      .checkInitialPosition(780.1)
+//      .checkIncome(2000)
+//      .checkFixed(584)
+//      .checkSavingsIn(0)
+//      .checkSavingsOut(100)
+//      .checkVariable(210)
+//      .close();
 
     checker.selectMonths("2008/10", "2008/11");
     views.selectData();

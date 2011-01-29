@@ -122,13 +122,10 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkAccount("Account n. 00001234", 100.00, "2008/07/15");
     timeline.selectMonth("2008/06");
 
-    budgetView.getSummary()
-      .checkMonthBalance(-25.00)
-      .checkEndPosition(112.00);
+    budgetView.getSummary().checkEndPosition(112.00);
 
     timeline.selectMonth("2008/07");
     budgetView.getSummary()
-      .checkMonthBalance(-25.00)
       .checkEndPosition(87.00);
 
     timeline.selectMonth("2008/06");
@@ -148,9 +145,9 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     // Balances are updated
     timeline.selectMonth("2008/06");
-    budgetView.getSummary().checkMonthBalance(-15.00);
+    budgetView.getSummary().checkEndPosition(112.00);
     timeline.selectMonth("2008/07");
-    budgetView.getSummary().checkMonthBalance(-22.00);
+    budgetView.getSummary().checkEndPosition(100.00);
 
     // Series are updated
     timeline.selectMonth("2008/06");

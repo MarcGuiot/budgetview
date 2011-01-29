@@ -68,19 +68,16 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/09");
     budgetView.income.checkSeries("Salary", 0.0, 1000.0);
     mainAccounts.checkEstimatedPosition(1000.0);
-    budgetView.getSummary()
-      .openPositionDialog()
-      .checkIncome(1000.0)
-      .close();
+    seriesEvolution.balanceChart.getLeftDataset()
+      .checkSize(1)
+      .checkValue("Income", 1000.00);
+    seriesEvolution.balanceChart.getRightDataset()
+      .checkEmpty();
 
     timeline.selectMonth("2008/08");
     budgetView.income.checkTotalAmounts(1000.0, 1000.0);
 
     mainAccounts.checkEstimatedPosition(0.0);
-
-    budgetView.getSummary().openPositionDialog()
-      .checkIncome(0.0)
-      .close();
 
     restartApplication();
 
@@ -88,9 +85,11 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     budgetView.income.checkTotalAmounts(1000.0, 1000.0);
 
-    budgetView.getSummary().openPositionDialog()
-      .checkIncome(0.0)
-      .close();
+    seriesEvolution.balanceChart.getLeftDataset()
+      .checkSize(1)
+      .checkValue("Income", 1000.00);
+    seriesEvolution.balanceChart.getRightDataset()
+      .checkEmpty();
     budgetView.income.checkSeries("Salary", 1000.0, 1000.0);
 
     timeline.selectMonth("2008/09");
@@ -147,14 +146,14 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .setAmount("1000")
       .validate();
 
-    budgetView.getSummary().checkMonthBalance(-600.00);
+    budgetView.getSummary().checkEndPosition(-600.00);
     budgetView.recurring.clickTitleSeriesName().checkOrder("EDF", "Loyer");
 
     restartApplication();
 
     views.selectBudget();
     timeline.selectMonth("2008/08");
-    budgetView.getSummary().checkMonthBalance(-600.00);
+    budgetView.getSummary().checkEndPosition(-600.00);
     budgetView.recurring.checkOrder("EDF", "Loyer");
   }
 

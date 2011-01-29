@@ -95,8 +95,6 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
 
   public abstract T checkNoEstimatedPosition();
 
-  public abstract T checkEstimatedPositionColor(String color);
-
   public abstract T checkEstimatedPositionDate(String text);
 
   public AccountPositionEditionChecker editPosition(String accountName) {

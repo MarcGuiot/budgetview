@@ -11,6 +11,11 @@ public class MainDailyPositionsChartView extends AccountsChartView {
     super(repository, directory, "mainAccountsHistoChart");
   }
 
+  public MainDailyPositionsChartView(GlobRepository repository, Directory directory, String componentName,
+                                     int monthsBack, int monthsForward, boolean drawLabels, boolean clickable) {
+    super(repository, directory, componentName, monthsBack, monthsForward, drawLabels, clickable);
+  }
+
   protected void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition)  {
     histoChartBuilder.showMainDailyHisto(currentMonthId);
   }

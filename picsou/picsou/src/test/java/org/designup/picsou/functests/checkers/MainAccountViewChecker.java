@@ -22,11 +22,6 @@ public class MainAccountViewChecker extends AccountViewChecker<MainAccountViewCh
     return this;
   }
 
-  public MainAccountViewChecker checkEstimatedPositionColor(String color) {
-    getBudgetSummary().checkEndPositionColor(color);
-    return this;
-  }
-
   public MainAccountViewChecker checkEstimatedPositionDate(String text) {
     Assert.fail("TBD");
     return this;

@@ -109,7 +109,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testRemoveAllAccount() throws Exception {
+  public void testRemoveAllAccounts() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "000123", 100, "2008/08/26")
       .addTransaction("2008/07/26", 1000, "WorldCo")
@@ -125,8 +125,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .checkNoAccountsDisplayed()
       .checkNoEstimatedPosition();
 
-    budgetView.getSummary()
-      .checkNoEstimatedPosition();
+    budgetView.getSummary().checkNoEstimatedPosition();
   }
 
   public void testNavigatingToOperations() throws Exception {

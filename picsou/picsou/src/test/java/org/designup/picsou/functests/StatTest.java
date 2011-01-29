@@ -123,14 +123,10 @@ public class StatTest extends LoggedInFunctionalTestCase {
     categorization.setRecurring("Carouf", "courses");
 
     timeline.selectMonth("2008/06");
-    budgetView.getSummary()
-      .checkMonthBalance(200 - 90 - 80)
-      .checkEndPosition(80);
+    budgetView.getSummary().checkEndPosition(80);
 
     timeline.selectMonth("2008/07");
-    budgetView.getSummary()
-      .checkMonthBalance(200 - 90 - 80)
-      .checkEndPosition(200 - 170);
+    budgetView.getSummary().checkEndPosition(200 - 170);
   }
 
   public void testWithIncomeReimbursement() throws Exception {
@@ -142,9 +138,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("Salaire", "Salaire");
     categorization.setNewVariable("Auchan", "courses");
 
-    budgetView.getSummary()
-      .checkMonthBalance(110)
-      .checkEndPosition(0);
+    budgetView.getSummary().checkEndPosition(0);
 
     mainAccounts.checkEstimatedPosition(0);
     mainAccounts.checkAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0., "2008/06/15");
@@ -166,12 +160,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .check();
     mainAccounts.checkEstimatedPosition(400);
 
-    budgetView.getSummary()
-      .checkMonthBalance(110)
-      .checkEndPosition(400);
-    budgetView.getSummary().openPositionDialog()
-      .checkInitialPosition(0)
-      .close();
+    budgetView.getSummary().checkEndPosition(400);
 
     budgetView.income.editSeries("Salaire")
       .selectMonth(200807)
@@ -188,11 +177,6 @@ public class StatTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkEstimatedPosition(0);
 
-    budgetView.getSummary()
-      .checkMonthBalance(-290)
-      .checkEndPosition(0);
-    budgetView.getSummary().openPositionDialog()
-      .checkInitialPosition(0)
-      .close();
+    budgetView.getSummary().checkEndPosition(0);
   }
 }

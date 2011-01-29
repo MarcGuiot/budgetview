@@ -45,15 +45,10 @@
 
     <row weightY="0" marginBottom="4">
       <filler fill="horizontal"/>
-      <column>
+      <row>
         <label ref="lastPositionTitle" styleClass="totalAmountTitle"/>
         <label ref="lastPositionLabel" styleClass="totalAmount"/>
-      </column>
-      <filler fill="horizontal"/>
-      <column>
-        <label ref="nextPositionTitle" styleClass="totalAmountTitle"/>
-        <button ref="nextPositionLabel" styleClass="totalAmount"/>
-      </column>
+      </row>
       <filler fill="horizontal"/>
     </row>
 
@@ -61,9 +56,6 @@
 
     <column marginTop="4" weightY="0">
       <row marginTop="4" styleClass="subRow">
-        <filler fill="horizontal"/>
-        <label text="$budgetSummaryView.balance" styleClass="totalAmountTitle"/>
-        <button ref="balanceLabel" styleClass="totalAmount" tooltipText="$budgetSummaryView.balance.tooltip"/>
         <filler fill="horizontal"/>
         <label text="$budgetSummaryView.uncategorized" styleClass="totalAmountTitle"/>
         <button ref="uncategorized" styleClass="uncategorized"/>

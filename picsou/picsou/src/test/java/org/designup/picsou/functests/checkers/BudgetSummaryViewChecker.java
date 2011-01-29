@@ -4,21 +4,23 @@ import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
-import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 
-public class BudgetSummaryViewChecker extends GuiChecker {
-  private Panel mainWindow;
+import static org.uispec4j.assertion.UISpecAssert.*;
 
-  public BudgetSummaryViewChecker(Panel mainWindow) {
+public class BudgetSummaryViewChecker extends GuiChecker {
+  private Window mainWindow;
+  private HistoDailyChecker chart;
+
+  public BudgetSummaryViewChecker(Window mainWindow) {
     this.mainWindow = mainWindow;
   }
 
+  /** @deprecated  */
   public BudgetSummaryViewChecker checkMonthBalance(double amount) {
-    assertThat(getPanel().getButton("balanceLabel").textEquals(toString(amount, true)));
-    return this;
+    throw new RuntimeException("to be removed");
   }
 
   public BudgetSummaryViewChecker checkReferencePosition(double amount) {
@@ -31,19 +33,21 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     return checkReferencePosition(amount);
   }
 
+  private HistoDailyChecker getChart() {
+    if (chart == null) {
+      chart = new HistoDailyChecker(mainWindow, "budgetSummaryView", "chart");
+    }
+    return chart;
+  }
+
   public BudgetSummaryViewChecker checkEndPosition(double amount) {
-    assertThat(getPanel().getButton("nextPositionLabel").textEquals(toString(amount, false)));
+    getChart().checkEndOfMonthValue(amount);
     return this;
   }
 
-  public BudgetSummaryViewChecker checkEndPositionColor(String color) {
-    assertThat(getPanel().getButton("nextPositionLabel").foregroundNear(color));
+  public BudgetSummaryViewChecker checkNoEstimatedPosition() {
+    getChart().checkEndOfMonthValue(0.0);
     return this;
-  }
-
-  public BudgetSummaryViewChecker checkEndPosition(String title, double amount) {
-    assertThat(getPanel().getTextBox("nextPositionTitle").textEquals(title));
-    return checkEndPosition(amount);
   }
 
   public BudgetSummaryViewChecker checkUncategorized(double amount) {
@@ -78,20 +82,5 @@ public class BudgetSummaryViewChecker extends GuiChecker {
 
   private Panel getPanel() {
     return mainWindow.getPanel("budgetSummaryView");
-  }
-
-  public BudgetSummaryViewChecker checkNoEstimatedPosition() {
-    assertThat(getPanel().getButton("positionLabel").textEquals("-"));
-    return this;
-  }
-
-  public BalanceChecker openBalancePanel() {
-    Window window = WindowInterceptor.getModalDialog(getPanel().getButton("balanceLabel").triggerClick());
-    return new BalanceChecker(window);
-  }
-
-  public PositionChecker openPositionDialog() {
-    Window window = WindowInterceptor.getModalDialog(getPanel().getButton("positionLabel").triggerClick());
-    return new PositionChecker(window);
   }
 }

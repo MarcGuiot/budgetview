@@ -125,6 +125,10 @@ public class HistoChartMetrics {
     return sectionZoneHeight;
   }
 
+  public int columnBottom() {
+    return columnTop() + columnHeight();
+  }
+
   public int columnWidth() {
     return columnWidth;
   }

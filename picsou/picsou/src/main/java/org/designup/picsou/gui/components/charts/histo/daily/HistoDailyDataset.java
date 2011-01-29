@@ -27,6 +27,11 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
     }
   }
 
+  public boolean isCurrent(int index, int day) {
+    int month = getElement(index).id;
+    return month == currentMonth && day - 1 == currentDay;
+  }
+
   public boolean isFuture(int index, int day) {
     int month = getElement(index).id;
     if (month > currentMonth) {
@@ -47,5 +52,17 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
       return "";
     }
     return Lang.get(getTooltipKey(), getElement(index).tooltip);
+  }
+
+  public Double getLastValue(int index) {
+    return getElement(index).getLastValue();
+  }
+
+  public String toString() {
+    return "daily(" + currentMonth + " / " + currentDay + ")\n" + super.toString();
+  }
+
+  public String toString(int index) {
+    return getElement(index).toString();
   }
 }

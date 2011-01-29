@@ -44,10 +44,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     double expensesFor200808 = 30 + 1500 + 300 + 100 + 100;
     double balanceFor200808 = incomeFor200808 - expensesFor200808;
 
-
-    budgetView.getSummary()
-      .checkMonthBalance(balanceFor200807)
-      .checkEndPosition(0.00);
+    budgetView.getSummary().checkEndPosition(0.00);
     budgetView.income.checkTotalObserved(incomeFor200807);
     budgetView.recurring.checkTotalObserved(-1530.00);
     budgetView.savings.checkTotalObserved(100.);
@@ -55,48 +52,24 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     views.selectHome();
 
     mainAccounts.changePosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000, "VIRT ING");
-    timeline.checkMonthTooltip("2008/07", balanceFor200807, -880.00);
+    timeline.checkMonthTooltip("2008/07", -880.00);
 
     timeline.selectMonth("2008/08");
     mainAccounts.checkEstimatedPosition(1000 + balanceFor200808);
 
-    views.selectBudget();
-    budgetView.getSummary()
-      .checkMonthBalance(balanceFor200808)
-      .openPositionDialog()
-      .checkInitialPosition(1000.00)
-      .checkIncome(2200.00)
-      .checkExpense(-1930.)
-      .checkSavingsIn(0.00)
-      .checkSavingsOut(100.00)
-      .close();
     budgetView.recurring.checkTotalPlanned(-30 - 1500);
     budgetView.variable.checkTotalPlanned(-300 - 100);
 
     timeline.selectAll();
-    views.selectHome();
     mainAccounts.checkEstimatedPosition(1000 + incomeFor200808 - expensesFor200808);
-    views.selectBudget();
-    budgetView.getSummary()
-      .checkMonthBalance(balanceFor200807 + balanceFor200808);
     budgetView.income.checkTotalPlanned(4400);
-    budgetView.getSummary()
-      .openPositionDialog()
-      .checkInitialPosition(1000.00)
-      .checkIncome(2200.00)
-      .checkExpense(30 + 1500 + 300 + 100)
-      .checkSavingsOut(100.00)
-      .checkSavingsIn(0.00)
-      .close();
 
     timeline.selectMonth("2008/08");
-    views.selectBudget();
     budgetView.extras.createSeries()
       .setName("Trip")
       .setAmount(170)
       .validate();
-    budgetView.getSummary()
-      .checkMonthBalance(0);
+    budgetView.getSummary().checkEndPosition(1000.00);
   }
 
   public void testTwoMonths() throws Exception {
@@ -125,12 +98,9 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
 
-    double balanceFor200807 = 1500 - (29.9 + 1500 + 60 + 20 + 10);
-    budgetView.getSummary()
-      .checkMonthBalance(balanceFor200807)
-      .checkEndPosition(1529.90);
+    budgetView.getSummary().checkEndPosition(1529.90);
 
-    timeline.checkMonthTooltip("2008/07", balanceFor200807, 29.90);
+    timeline.checkMonthTooltip("2008/07", 29.90);
 
     timeline.selectMonth("2008/08");
 
@@ -139,49 +109,41 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .setRecurring("Free", "internet")
       .setRecurring("Loyer", "rental");
 
-    double balanceFor200808 = 1500 - (29.9 + 1500 + 60 + 20 + 10);
     views.selectBudget();
-    budgetView.getSummary()
-      .checkMonthBalance(balanceFor200808)
-      .checkEndPosition(1410.00);
-    budgetView.getSummary().openPositionDialog()
-      .checkInitialPosition(0.0)
-      .checkIncome(1500)
-      .checkExpense(90)
-      .close();
+    budgetView.getSummary().checkEndPosition(1410.00);
+
+    seriesEvolution.balanceChart.getLeftDataset()
+      .checkSize(1)
+      .checkValue("Income", 1500.00);
+    seriesEvolution.balanceChart.getRightDataset()
+      .checkSize(2)
+      .checkValue("Recurring", 1529.90)
+      .checkValue("Variable", 90.00);
+
     views.selectHome();
     mainAccounts.checkEstimatedPosition(1410);
-    timeline.checkMonthTooltip("2008/08", balanceFor200808, -90.00);
+    timeline.checkMonthTooltip("2008/08", -90.00);
 
     timeline.selectMonths("2008/07", "2008/08");
-    views.selectBudget();
-    budgetView.getSummary()
-      .checkMonthBalance((1500 + 1500) - ((29.9 + 1500 + 60 + 20 + 10) + (29.9 + 1500 + 60 + 20 + 10)))
-      .checkEndPosition(1410);
-
-    views.selectHome();
+    budgetView.getSummary().checkEndPosition(1410);
     mainAccounts.checkEstimatedPosition(1410);
-
-    views.selectBudget();
-    budgetView.getSummary()
-      .openPositionDialog()
-      .checkInitialPosition(0)
-      .checkIncome(1500)
-      .checkExpense(90)
-      .close();
+    seriesEvolution.balanceChart.getLeftDataset()
+      .checkSize(1)
+      .checkValue("Income", 1500.00);
+    seriesEvolution.balanceChart.getRightDataset()
+      .checkSize(2)
+      .checkValue("Recurring", 1529.90)
+      .checkValue("Variable", 90.00);
 
     timeline.selectMonth("2008/09");
-    views.selectHome();
     mainAccounts.checkEstimatedPosition(1420 + 1500 - 1529.90 - 80 - 10 - 10);
-
-    views.selectBudget();
-    budgetView.getSummary()
-      .openPositionDialog()
-//      .checkPositionDate("30/09/2008")
-      .checkInitialPosition(1410)
-      .checkIncome(1500)
-      .checkExpense(1529.90 + 90)
-      .close();
+    seriesEvolution.balanceChart.getLeftDataset()
+      .checkSize(1)
+      .checkValue("Income", 1500.00);
+    seriesEvolution.balanceChart.getRightDataset()
+      .checkSize(2)
+      .checkValue("Recurring", 1529.90)
+      .checkValue("Variable", 90.00);
   }
 
   public void testBudgetSummaryDetailsShowsActualPositionInThePast() throws Exception {
@@ -201,9 +163,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     views.selectHome();
     views.selectBudget();
-    budgetView.getSummary()
-      .checkMonthBalance(1000.00)
-      .checkEndPosition(500);
+    budgetView.getSummary().checkEndPosition(500);
   }
 
   public void testWithPositiveEnvelope() throws Exception {
@@ -224,68 +184,11 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("Salaire", "Salaire");
 
     views.selectBudget();
-    budgetView.getSummary()
-      .checkMonthBalance(1500 - (200 - 40));
+    budgetView.getSummary().checkEndPosition(100.00);
 
     timeline.selectMonth("2008/08");
-    double balanceFor200808 = 1500 - (200 - 40);
-
-    budgetView.getSummary().checkMonthBalance(balanceFor200808);
-    budgetView.getSummary().openPositionDialog()
-      .checkInitialPosition(0.0)
-      .checkExpense(100 -40)
-      .checkIncome(1500)
-      .close();
-    views.selectHome();
+    budgetView.getSummary().checkEndPosition(1440.00);
     mainAccounts.checkEstimatedPosition(1440.00);
-    timeline.checkMonthTooltip("2008/08", balanceFor200808, -100.00);
-  }
-
-  public void testDetailForInAndOutOfSavings() throws Exception {
-
-    operations.openPreferences().setFutureMonthsCount(2).validate();
-    OfxBuilder.init(this)
-      .addBankAccount(-1, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.00, "2008/08/05")
-      .addTransaction("2008/08/01", 1500, "WorldCo")
-      .addTransaction("2008/08/05", -20, "Virement vers Livret A")
-      .addTransaction("2008/08/05", 200, "Virement du Livret A")
-      .load();
-
-    views.selectCategorization();
-    categorization.setNewIncome("WorldCo", "Salary");
-    categorization.setNewSavings("Virement vers Livret A", "Epargne",
-                                 "Main accounts", "External account");
-    categorization.setNewSavings("Virement du Livret A", "Finanencement tele",
-                                 "External account", "Main accounts");
-
-    timeline.selectMonth("2008/08");
-    views.selectBudget();
-    budgetView.savings.editSeries("Epargne")
-      .selectAllMonths()
-      .setAmount("50")
-      .validate();
-
-    budgetView.savings.editSeries("Finanencement tele")
-      .selectAllMonths()
-      .setAmount("300")
-      .validate();
-
-    views.selectHome();
-    views.selectBudget();
-    budgetView.getSummary().openPositionDialog()
-//      .checkPositionDate("31/08/2008")
-      .checkInitialPosition(1000)
-      .checkSavingsOut(30)
-      .checkSavingsIn(100)
-      .close();
-
-    timeline.selectMonth("2008/09");
-    views.selectBudget();
-    budgetView.getSummary().openPositionDialog()
-//      .checkPositionDate("30/09/2008")
-      .checkInitialPosition(1070)
-      .checkSavingsOut(50)
-      .checkSavingsIn(300)
-      .close();
+    timeline.checkMonthTooltip("2008/08", -100.00);
   }
 }

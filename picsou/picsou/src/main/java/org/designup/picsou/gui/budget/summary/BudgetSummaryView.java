@@ -1,16 +1,15 @@
 package org.designup.picsou.gui.budget.summary;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.accounts.chart.MainDailyPositionsChartView;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
-import org.designup.picsou.gui.budget.dialogs.BalanceDialog;
-import org.designup.picsou.gui.budget.dialogs.PositionDialog;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
-import org.designup.picsou.gui.series.evolution.histobuilders.AccountHistoChartUpdater;
-import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilder;
-import org.designup.picsou.gui.utils.AmountColors;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Series;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -19,8 +18,10 @@ import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.*;
-import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.ChangeSetListener;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -30,20 +31,18 @@ import java.text.DecimalFormat;
 import java.util.Set;
 import java.util.SortedSet;
 
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+
 public class BudgetSummaryView
   extends View
   implements GlobSelectionListener, ChangeSetListener, ColorChangeListener {
 
-  private JButton balanceButton = new JButton();
-  private JButton estimatedPositionButton = new JButton();
-  private JLabel estimatedPositionTitle = new JLabel();
   private JButton uncategorizedButton = new JButton();
   private SplitsNode<JButton> uncategorizedButtonNode;
   private JLabel multiSelectionLabel = new JLabel();
 
   private final DecimalFormat format = Formatting.DECIMAL_FORMAT;
 
-  private AmountColors amountColors;
   private Color normalColor;
   private Color errorColor;
 
@@ -52,8 +51,6 @@ public class BudgetSummaryView
     repository.addChangeListener(this);
     selectionService.addListener(this, Month.TYPE);
     colorService.addListener(this);
-
-    this.amountColors = new AmountColors(directory);
 
     update();
   }
@@ -71,24 +68,14 @@ public class BudgetSummaryView
                                                           "lastPositionLabel", "lastPositionTitle",
                                                           "budgetSummaryView.position.title");
 
-    builder.add("nextPositionLabel", estimatedPositionButton);
-    builder.add("nextPositionTitle", estimatedPositionTitle);
-    builder.add("balanceLabel", balanceButton);
     uncategorizedButtonNode = builder.add("uncategorized", uncategorizedButton);
     builder.add("multiSelectionLabel", multiSelectionLabel);
 
     uncategorizedButton.addActionListener(new GotoUncategorizedAction());
-    balanceButton.addActionListener(new OpenBalanceAction());
-    estimatedPositionButton.addActionListener(new OpenPositionAction());
 
-    HistoChartBuilder histoChartBuilder =
-      new HistoChartBuilder(false, false, repository, directory, selectionService, 0, 1);
-    new AccountHistoChartUpdater(histoChartBuilder, repository, directory) {
-      protected void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {
-        histoChartBuilder.showMainDailyHisto(currentMonthId);
-      }
-    };
-    builder.add("chart", histoChartBuilder.getChart());
+    MainDailyPositionsChartView chartView =
+      new MainDailyPositionsChartView(repository, directory, "chart", 0, 1, true, true);
+    chartView.registerComponents(builder);
 
     parentBuilder.add("budgetSummaryView", builder);
   }
@@ -105,26 +92,13 @@ public class BudgetSummaryView
     }
 
     GlobList budgetStats =
-      repository.getAll(BudgetStat.TYPE, GlobMatchers.fieldIn(BudgetStat.MONTH, selectedMonthIds))
+      repository.getAll(BudgetStat.TYPE, fieldIn(BudgetStat.MONTH, selectedMonthIds))
         .sort(BudgetStat.MONTH);
 
     if (!repository.contains(Transaction.TYPE) || budgetStats.isEmpty()) {
-      clear(balanceButton);
-      clear(estimatedPositionButton);
       clearUncategorized();
       return;
     }
-
-    Double balance = budgetStats.getSum(BudgetStat.MONTH_BALANCE);
-    if (balance == null) {
-      clear(balanceButton);
-    }
-    else {
-      balanceButton.setText((balance > 0 ? "+" : "") + format.format(balance));
-      balanceButton.setForeground(balance >= 0 ? normalColor : errorColor);
-    }
-
-    updateEstimatedPosition(selectedMonthIds);
 
     Double uncategorized = budgetStats.getSum(BudgetStat.UNCATEGORIZED_ABS);
     if ((uncategorized != null) && (uncategorized > 0.01)) {
@@ -152,59 +126,6 @@ public class BudgetSummaryView
     }
   }
 
-  private void updateEstimatedPosition(SortedSet<Integer> selectedMonthIds) {
-    if (selectedMonthIds.isEmpty()) {
-      setEstimatedPosition(null);
-      return;
-    }
-    Integer lastSelectedMonthId = selectedMonthIds.last();
-
-    Glob budgetStat = getBudgetStat(lastSelectedMonthId);
-    if (budgetStat == null) {
-      setEstimatedPosition(null);
-      return;
-    }
-
-    Double amount = getEndOfMonthPosition(budgetStat);
-    setEstimatedPosition(amount);
-
-    Integer lastImportDate = repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH);
-    if (lastSelectedMonthId >= lastImportDate) {
-      String title = getEstimatedPositionTitle(lastSelectedMonthId, "budgetSummaryView.estimated.title");
-      estimatedPositionTitle.setText(title);
-      estimatedPositionButton.setToolTipText(Lang.get("budgetSummaryView.estimated.tooltip"));
-    }
-    else {
-      String title = getEstimatedPositionTitle(lastSelectedMonthId, "budgetSummaryView.real.title");
-      estimatedPositionTitle.setText(title);
-      estimatedPositionButton.setToolTipText(null);
-    }
-  }
-
-  public static String getEstimatedPositionTitle(Integer monthId, String key) {
-    return Lang.get(key, Month.getShortMonthLabelWithYear(monthId).toLowerCase());
-  }
-
-  private void setEstimatedPosition(Double amount) {
-    if (amount == null) {
-      clear(estimatedPositionButton);
-      return;
-    }
-
-    String text = Formatting.toString(amount);
-    estimatedPositionButton.setText(text);
-
-    estimatedPositionButton.setForeground(amountColors.getTextColor(amount));
-  }
-
-  private Glob getBudgetStat(Integer lastSelectedMonthId) {
-    return repository.find(Key.create(BudgetStat.TYPE, lastSelectedMonthId));
-  }
-
-  private Double getEndOfMonthPosition(Glob budgetStat) {
-    return budgetStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
-  }
-
   private void clear(JButton button) {
     button.setText("-");
     button.setForeground(normalColor);
@@ -225,22 +146,6 @@ public class BudgetSummaryView
     if (changedTypes.contains(BudgetStat.TYPE) ||
         changedTypes.contains(Series.TYPE)) {
       update();
-    }
-  }
-
-  private class OpenBalanceAction extends AbstractAction {
-
-    public void actionPerformed(ActionEvent e) {
-      BalanceDialog dialog = new BalanceDialog(repository, directory);
-      dialog.show(selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID));
-    }
-  }
-
-  private class OpenPositionAction extends AbstractAction {
-
-    public void actionPerformed(ActionEvent e) {
-      PositionDialog dialog = new PositionDialog(repository, directory);
-      dialog.show(selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID));
     }
   }
 

@@ -16,18 +16,22 @@ public abstract class AccountsChartView extends View {
   public static final int MONTHS_BACK = 3;
   public static final int MONTHS_FORWARD = 9;
   protected HistoChartBuilder histoChartBuilder;
-  private String componentName;
+  protected String componentName;
 
   public AccountsChartView(GlobRepository repository, Directory directory, String componentName) {
+    this(repository, directory, componentName, MONTHS_BACK, MONTHS_FORWARD, true, true);
+  }
+
+  public AccountsChartView(GlobRepository repository, Directory directory, String componentName, int monthsBack, int monthsForward, boolean drawLabels, boolean clickable) {
     super(repository, directory);
-    this.histoChartBuilder = createChartBuilder(true, true, repository, directory);
+    this.histoChartBuilder = createChartBuilder(drawLabels, clickable, monthsBack, monthsForward, repository, directory);
     this.componentName = componentName;
   }
 
-  public HistoChartBuilder createChartBuilder(boolean drawLabels, boolean clickable, final GlobRepository repository, final Directory directory) {
-    final HistoChartBuilder histoChartBuilder = new HistoChartBuilder(drawLabels, clickable, repository, directory,
-                                                                directory.get(SelectionService.class),
-                                                                MONTHS_BACK, MONTHS_FORWARD);
+  public HistoChartBuilder createChartBuilder(boolean drawLabels, boolean clickable, int monthsBack, int monthsForward, final GlobRepository repository, final Directory directory) {
+    final HistoChartBuilder histoChartBuilder =
+      new HistoChartBuilder(drawLabels, clickable, repository, directory, directory.get(SelectionService.class),
+                            monthsBack, monthsForward);
     final AccountHistoChartUpdater updater = new AccountHistoChartUpdater(histoChartBuilder, repository, directory) {
       protected void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {
         updateChart(histoChartBuilder, currentMonthId, true);

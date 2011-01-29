@@ -31,7 +31,7 @@ public class NotesViewTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(1).validate();
 
-    timeline.checkMonthTooltip("2008/07", 1000, 100);
-    timeline.checkMonthTooltip("2008/08", 0, 100);
+    timeline.checkMonthTooltip("2008/07", 100);
+    timeline.checkMonthTooltip("2008/08", 100);
   }
 }

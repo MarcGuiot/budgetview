@@ -190,6 +190,16 @@ public class HistoChartBuilder {
         }
       }
 
+      if (lastValue == null) {
+        Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
+        if (stat != null) {
+          lastValue = stat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
+          for (int i = 0; i < values.length; i++) {
+            values[i] = lastValue;
+          }
+        }
+      }
+
       builder.add(monthId, values, monthId == selectedMonthId);
     }
 
@@ -310,21 +320,6 @@ public class HistoChartBuilder {
     }
 
     builder.showLine(accountColors, "mainAccounts");
-  }
-
-  public void showMainAccountsSummary(int selectedMonthId, boolean resetPosition) {
-    if (resetPosition) {
-      scrollMonth = 0;
-    }
-    HistoDiffDatasetBuilder builder = createDiffDataset("mainSummary");
-
-    for (int monthId : getMonthIdsToShow(selectedMonthId)) {
-      Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
-      Double value = stat != null ? stat.get(BudgetStat.MIN_POSITION) : 0.0;
-      builder.add(monthId, 0.0, value, monthId == selectedMonthId);
-    }
-
-    builder.showSummary(summaryColors, true, "mainAccounts");
   }
 
   public void showSavingsAccountsHisto(int selectedMonthId, boolean resetPosition) {

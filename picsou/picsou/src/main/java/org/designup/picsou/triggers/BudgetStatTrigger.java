@@ -170,7 +170,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
         FieldValues budgetAreaValues = getBudgetAreaValues(repository, monthId);
         values.set(budgetAreaValues);
         values.set(BudgetStat.MONTH_BALANCE, getBalance(budgetAreaValues, monthId));
-        Glob stat = repository.create(BudgetStat.TYPE, values.toArray());
+        repository.create(BudgetStat.TYPE, values.toArray());
 
         if (lastRealKnownTransaction != null) {
           Integer currentMonthId = lastRealKnownTransaction.get(Transaction.BANK_MONTH);

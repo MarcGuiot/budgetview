@@ -66,7 +66,7 @@ public abstract class HistoChartUpdater implements GlobSelectionListener, Dispos
 
   public void selectionUpdated(GlobSelection selection) {
     this.currentMonths = selection.getAll(selectionType).getSortedSet(selectionMonthField);
-    this.currentMonthId = currentMonths.isEmpty() ? null : currentMonths.first();
+    this.currentMonthId = currentMonths.isEmpty() ? null : currentMonths.last();
     update(true);
   }
 

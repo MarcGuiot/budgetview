@@ -25,11 +25,6 @@ public class SavingsAccountViewChecker extends AccountViewChecker<SavingsAccount
     return this;
   }
 
-  public SavingsAccountViewChecker checkEstimatedPositionColor(String color) {
-    getSavings().checkTotalEstimatedPositionColor(color);
-    return this;
-  }
-
   public SavingsAccountViewChecker checkEstimatedPositionDate(String date) {
     getSavings().checkTotalEstimatedPositionDate(date);
     return this;

@@ -1232,7 +1232,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/09");
 
     views.selectBudget();
-    budgetView.getSummary().checkMonthBalance(-50);
+    budgetView.getSummary().checkEndPosition(900.00);
   }
 
   public void testCheckComboAccountContents() throws Exception {

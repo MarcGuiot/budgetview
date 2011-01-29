@@ -38,11 +38,9 @@ public class TimeViewTooltipHandler implements TimeViewMouseHandler {
     if (budgetStat == null) {
       return;
     }
-    Double balance = budgetStat.get(BudgetStat.MONTH_BALANCE);
     panel.setToolTipText(
       Lang.get("timeView.tooltip.month.standard",
                month,
-               Formatting.toStringWithPlus(balance),
                Formatting.toString(minPosition),
                Colors.toString(colors.getAmountTextColor(minPosition, Color.BLACK))));
   }
