@@ -32,7 +32,6 @@
     <style selector="htmlEditorPane#helpMessage"
            border="empty(5,0,0,0)" foreground="budgetSummary.help.message"/>
 
-
     <style selector=".subRow .totalAmountTitle"
            marginRight="10" weightX="1"/>
     <style selector=".subRow button.totalAmount"
@@ -43,25 +42,18 @@
 
   <column border="empty(10,10,10,10)">
 
-    <row weightY="0" marginBottom="4">
+    <panel opaque="true" weightY="100" background="block.inner.bg" border="line(block.inner.border)">
+      <component ref="chart" minimumSize="(100,100)" background="block.inner.bg" margin="5"/>
+    </panel>
+
+    <row marginTop="4" styleClass="subRow">
+      <label ref="lastPositionTitle" styleClass="totalAmountTitle"/>
+      <label ref="lastPositionLabel" styleClass="totalAmount"/>
       <filler fill="horizontal"/>
-      <row>
-        <label ref="lastPositionTitle" styleClass="totalAmountTitle"/>
-        <label ref="lastPositionLabel" styleClass="totalAmount"/>
-      </row>
+      <label text="$budgetSummaryView.uncategorized" styleClass="totalAmountTitle"/>
+      <button ref="uncategorized" styleClass="uncategorized"/>
       <filler fill="horizontal"/>
     </row>
-
-    <component ref="chart" minimumSize="(100,100)" weightY="10"/>
-
-    <column marginTop="4" weightY="0">
-      <row marginTop="4" styleClass="subRow">
-        <filler fill="horizontal"/>
-        <label text="$budgetSummaryView.uncategorized" styleClass="totalAmountTitle"/>
-        <button ref="uncategorized" styleClass="uncategorized"/>
-        <filler fill="horizontal"/>
-      </row>
-    </column>
 
     <label ref="multiSelectionLabel" styleClass="message" weightY="0"/>
 

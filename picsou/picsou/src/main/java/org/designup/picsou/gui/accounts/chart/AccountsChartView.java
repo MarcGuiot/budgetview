@@ -19,18 +19,18 @@ public abstract class AccountsChartView extends View {
   protected String componentName;
 
   public AccountsChartView(GlobRepository repository, Directory directory, String componentName) {
-    this(repository, directory, componentName, MONTHS_BACK, MONTHS_FORWARD, true, true);
+    this(repository, directory, componentName, MONTHS_BACK, MONTHS_FORWARD, true, true, true);
   }
 
-  public AccountsChartView(GlobRepository repository, Directory directory, String componentName, int monthsBack, int monthsForward, boolean drawLabels, boolean clickable) {
+  public AccountsChartView(GlobRepository repository, Directory directory, String componentName, int monthsBack, int monthsForward, boolean drawLabels, boolean drawSections, boolean clickable) {
     super(repository, directory);
-    this.histoChartBuilder = createChartBuilder(drawLabels, clickable, monthsBack, monthsForward, repository, directory);
+    this.histoChartBuilder = createChartBuilder(drawLabels, drawSections, clickable, monthsBack, monthsForward, repository, directory);
     this.componentName = componentName;
   }
 
-  public HistoChartBuilder createChartBuilder(boolean drawLabels, boolean clickable, int monthsBack, int monthsForward, final GlobRepository repository, final Directory directory) {
+  public HistoChartBuilder createChartBuilder(boolean drawLabels, boolean drawSections, boolean clickable, int monthsBack, int monthsForward, final GlobRepository repository, final Directory directory) {
     final HistoChartBuilder histoChartBuilder =
-      new HistoChartBuilder(drawLabels, clickable, repository, directory, directory.get(SelectionService.class),
+      new HistoChartBuilder(drawLabels, drawSections, clickable, repository, directory, directory.get(SelectionService.class),
                             monthsBack, monthsForward);
     final AccountHistoChartUpdater updater = new AccountHistoChartUpdater(histoChartBuilder, repository, directory) {
       protected void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {

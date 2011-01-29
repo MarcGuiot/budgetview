@@ -21,7 +21,7 @@ public class HistoDatasetBuilder {
   }
 
   protected String getLabel(int monthId) {
-    return Month.getOneLetterMonthLabel(monthId);
+    return Month.getShortMonthLabel(monthId);
   }
 
   protected String getMonthLabel(int monthId) {

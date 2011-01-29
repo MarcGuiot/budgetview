@@ -20,17 +20,19 @@ public class HistoChart extends JPanel {
   private Integer currentRolloverIndex;
   private Font selectedLabelFont;
   private Font sectionLabelFont;
-  private boolean drawLabels;
   private Integer columnSelectionMinIndex;
   private Integer columnSelectionMaxIndex;
+  private boolean drawLabels;
+  private boolean drawSections;
   private boolean clickable;
   private boolean snapToScale;
 
   public static final BasicStroke SCALE_STROKE = new BasicStroke(1);
   public static final BasicStroke SCALE_ORIGIN_STROKE = new BasicStroke(1);
 
-  public HistoChart(boolean drawLabels, boolean clickable, Directory directory) {
+  public HistoChart(boolean drawLabels, boolean drawSections, boolean clickable, Directory directory) {
     this.drawLabels = drawLabels;
+    this.drawSections = drawSections;
     this.clickable = clickable;
     this.colors = new HistoChartColors(directory);
     setFont(getFont().deriveFont(9f));
@@ -109,7 +111,7 @@ public class HistoChart extends JPanel {
                                       dataset.size(),
                                       dataset.getMaxNegativeValue(), dataset.getMaxPositiveValue(),
                                       drawLabels,
-                                      dataset.containsSections(),
+                                      drawSections && dataset.containsSections(),
                                       snapToScale);
     }
 
