@@ -354,12 +354,12 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return getMonthChooser("seriesEndDateChooser");
   }
 
-  public SeriesEditionDialogChecker removeStartDate() {
+  public SeriesEditionDialogChecker clearStartDate() {
     dialog.getButton("deleteSeriesStartDate").click();
     return this;
   }
 
-  public SeriesEditionDialogChecker removeEndDate() {
+  public SeriesEditionDialogChecker clearEndDate() {
     dialog.getButton("deleteSeriesEndDate").click();
     return this;
   }

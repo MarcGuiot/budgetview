@@ -14,5 +14,4 @@ public class Day {
   static {
     GlobTypeLoader.init(Day.class, "day");
   }
-
 }

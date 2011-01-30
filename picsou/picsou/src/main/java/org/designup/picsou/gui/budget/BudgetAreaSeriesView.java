@@ -164,7 +164,7 @@ public class BudgetAreaSeriesView extends View {
         Matchers.seriesDateSavingsAndAccountFilter(Account.MAIN_SUMMARY_ACCOUNT_ID);
     }
     else {
-      seriesDateFilter = Matchers.seriesDateFilter(budgetArea.getId(), false);
+      seriesDateFilter = Matchers.seriesActiveInPeriod(budgetArea.getId(), false);
     }
 
     seriesFilter = new GlobMatcher() {

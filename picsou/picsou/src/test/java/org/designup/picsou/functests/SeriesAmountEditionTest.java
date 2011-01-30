@@ -136,7 +136,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.recurring.editSeries("Internet")
       .setIrregular()
-      .removeEndDate()
+      .clearEndDate()
       .validate();
     budgetView.recurring.editPlannedAmount("Internet")
       .checkAmountLabel("Planned amount for july 2008")
