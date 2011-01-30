@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import junit.framework.ComparisonFailure;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.functests.checkers.converters.SeriesCellConverter;
 import org.designup.picsou.gui.components.PicsouFrame;
@@ -13,6 +14,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.exceptions.ItemNotFound;
 import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Window;
@@ -434,7 +436,6 @@ public class TransactionChecker extends ViewChecker {
                                                             Lang.get("note")},
                                                expectedContent));
     }
-
   }
 
   private static class SubSeriesCellValueConverter implements TableCellValueConverter {

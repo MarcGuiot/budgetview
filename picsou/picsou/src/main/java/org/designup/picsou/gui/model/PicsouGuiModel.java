@@ -16,6 +16,7 @@ import java.util.Arrays;
 public class PicsouGuiModel {
   private static GlobModel MODEL = new DefaultGlobModel(
     PicsouModel.get(),
+    SeriesShape.TYPE,
     BudgetStat.TYPE,
     Card.TYPE,
     PeriodSeriesStat.TYPE,

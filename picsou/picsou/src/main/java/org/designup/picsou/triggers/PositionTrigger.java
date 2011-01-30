@@ -24,7 +24,8 @@ public class PositionTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
 
     if (changeSet.containsCreationsOrDeletions(Transaction.TYPE) ||
-        changeSet.containsUpdates(Transaction.AMOUNT) || changeSet.containsChanges(Account.TYPE)) {
+        changeSet.containsUpdates(Transaction.AMOUNT) || changeSet.containsChanges(Account.TYPE)
+        || changeSet.containsUpdates(Transaction.DAY)) {
       GlobList account = repository.getAll(Account.TYPE);
       updateTransactionPosition(repository, account);
     }
@@ -45,6 +46,11 @@ public class PositionTrigger implements ChangeSetListener {
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+//    GlobList account = repository.getAll(Account.TYPE);
+//    if (account.isEmpty()){
+//      return;
+//    }
+//    updateTransactionPosition(repository, account);
   }
 
   private void updateTransactionPosition(GlobRepository repository, GlobList updatedAccount) {

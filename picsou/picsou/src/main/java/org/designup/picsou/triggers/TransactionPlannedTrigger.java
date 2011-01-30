@@ -33,7 +33,6 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
                                   UserPreferences.MONTH_FOR_PLANNED, UserPreferences.PERIOD_COUNT_FOR_PLANNED)){
       Glob currenMonth = repository.get(CurrentMonth.KEY);
       SortedSet<Integer> seriesId = repository.getAll(Series.TYPE).getSortedSet(Series.ID);
-      repository.delete(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.PLANNED, true));
       GlobList months = repository.getAll(Month.TYPE);
       for (Integer id : seriesId) {
         for (Glob glob : months) {
@@ -189,6 +188,8 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
             }
             else {
               repository.update(transaction.getKey(), Transaction.AMOUNT, diff);
+              transactions.remove(0);
+              repository.delete(transactions);
             }
           }
         }
@@ -203,26 +204,55 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
   }
 
   private void distributePlannedAmount(GlobRepository repository, Integer monthId, GlobList transactions, Glob seriesBudget) {
-    repository.delete(transactions);
     Glob series = repository.findLinkTarget(seriesBudget, SeriesBudget.SERIES);
     if (series == null) { // on a un bug : une series a disparu on continue
+      repository.delete(transactions);
       Log.write("Missing series " + seriesBudget.get(SeriesBudget.SERIES));
     }
     else {
-      GlobList createPlanned =
-        createPlannedTransaction(series, repository, monthId, seriesBudget.get(SeriesBudget.AMOUNT));
+//      GlobList createPlanned =
+//        createPlannedTransaction(series, repository, monthId, seriesBudget.get(SeriesBudget.AMOUNT));
+      TheoricalPlanned[] theoricalPlanneds =
+        getTheoricalPlanned(series, repository, monthId, seriesBudget.get(SeriesBudget.AMOUNT));
       Double observedAmount = Utils.zeroIfNull(seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT));
-      for (Glob glob : createPlanned) {
-        Double wantedAmount = glob.get(Transaction.AMOUNT);
+      for (TheoricalPlanned theoricalPlanned : theoricalPlanneds) {
+        Double wantedAmount = theoricalPlanned.amountForPeriod;
         double diff = wantedAmount - observedAmount;
         if (((wantedAmount > 0 && diff > 0) || (wantedAmount < 0 && diff < 0)) && !Amounts.isNearZero(diff)) {
-          repository.update(glob.getKey(), Transaction.AMOUNT, diff);
-          return;
+          theoricalPlanned.amountForPeriod = diff;
+          break;
         }
         else {
-          repository.delete(glob.getKey());
+          observedAmount -= theoricalPlanned.amountForPeriod; 
+          theoricalPlanned.amountForPeriod = 0;
         }
       }
+
+      for (TheoricalPlanned theoricalPlanned : theoricalPlanneds) {
+        Glob existing = null;
+        if (transactions.size() != 0){
+          existing = transactions.remove(0);
+        }
+        if (theoricalPlanned.amountForPeriod != 0){
+          if (existing != null){
+            repository.update(existing.getKey(), FieldValue.value(Transaction.AMOUNT, theoricalPlanned.amountForPeriod),
+                              FieldValue.value(Transaction.DAY, theoricalPlanned.day),
+                              FieldValue.value(Transaction.POSITION_DAY, theoricalPlanned.day),
+                              FieldValue.value(Transaction.BANK_DAY, theoricalPlanned.day),
+                              FieldValue.value(Transaction.BUDGET_DAY, theoricalPlanned.day));
+          }
+          else {
+            createPlanned(series, repository, monthId, theoricalPlanned.accountId, series.get(Series.ID),
+                          theoricalPlanned.day, theoricalPlanned.amountForPeriod);
+          }
+        }
+        else {
+          if (existing != null){
+            repository.delete(existing.getKey());
+          }
+        }
+      }
+      repository.delete(transactions);
     }
   }
 
@@ -236,13 +266,13 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    final Set<Pair<Integer, Integer>> listOfSeriesAndMonth = new HashSet<Pair<Integer, Integer>>();
-    repository.safeApply(SeriesBudget.TYPE, GlobMatchers.ALL, new GlobFunctor() {
-      public void run(Glob glob, GlobRepository repository) throws Exception {
-        listOfSeriesAndMonth.add(new Pair<Integer, Integer>(glob.get(SeriesBudget.SERIES), glob.get(SeriesBudget.MONTH)));
-      }
-    });
-    updatePlannedTransactions(repository, listOfSeriesAndMonth);
+//    final Set<Pair<Integer, Integer>> listOfSeriesAndMonth = new HashSet<Pair<Integer, Integer>>();
+//    repository.safeApply(SeriesBudget.TYPE, GlobMatchers.ALL, new GlobFunctor() {
+//      public void run(Glob glob, GlobRepository repository) throws Exception {
+//        listOfSeriesAndMonth.add(new Pair<Integer, Integer>(glob.get(SeriesBudget.SERIES), glob.get(SeriesBudget.MONTH)));
+//      }
+//    });
+//    updatePlannedTransactions(repository, listOfSeriesAndMonth);
   }
 
   Double computeObservedAmount(GlobRepository repository, int seriesId, int monthId) {
@@ -256,7 +286,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
   static class TheoricalPlanned {
     final int accountId;
     final int day;
-    final double amountForPeriod;
+    double amountForPeriod;
 
     TheoricalPlanned(int accountId, int day, double amountForPeriod) {
       this.accountId = accountId;
@@ -337,7 +367,9 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     Integer period = repository.get(UserPreferences.KEY).get(UserPreferences.PERIOD_COUNT_FOR_PLANNED);
     Key key = Key.create(SeriesShape.TYPE, seriesId);
     Glob seriesShape = repository.find(key);
-    if (seriesShape == null) {
+    if (seriesShape == null
+        || seriesShape.get(SeriesShape.TOTAL, 0) == 0
+        || Math.abs(amount / seriesShape.get(SeriesShape.TOTAL)) > 3) {
       seriesShape = SeriesShape.getDefault(key, period);
     }
 
@@ -346,10 +378,11 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     for (int i = 1; i <= period; i++) {
       IntegerField field = SeriesShape.getField(i);
       Integer percent = seriesShape.get(field);
+      percent = percent == null ? 0 : percent;
       int day = SeriesShape.getDay(period, i, monthId, amount > 0);
       if (minDay != 0 && day < minDay) {
         int nextDay = SeriesShape.getDay(period, i + 1, monthId, amount > 0);
-        if (nextDay < minDay) {
+        if (nextDay < minDay && i != period) {
           percentToPropagate += percent;
         }
         else {

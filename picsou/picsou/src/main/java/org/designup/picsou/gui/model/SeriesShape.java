@@ -4,9 +4,10 @@ import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Target;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
+import org.globsframework.metamodel.fields.DoubleField;
+import org.globsframework.metamodel.utils.GlobTypeLoader;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
@@ -18,7 +19,7 @@ public class SeriesShape {
   @Target(Series.class)
   @org.globsframework.metamodel.annotations.Key
   public static LinkField SERIES_ID;
-
+//attention PERCENT_1 doit etre le field numero 1...
   public static IntegerField PERCENT_1; // 1->4     1->5    1->6
   public static IntegerField PERCENT_2; // 5->8     6->10   7->12
   public static IntegerField PERCENT_3; // 9->12   11->15  13->18
@@ -26,6 +27,7 @@ public class SeriesShape {
   public static IntegerField PERCENT_5; //17->20   21->25  25->31
   public static IntegerField PERCENT_6; //21->24   26->31
   public static IntegerField PERCENT_7; //25->31
+  public static DoubleField TOTAL;
 
   static {
     GlobTypeLoader.init(SeriesShape.class);
@@ -53,27 +55,35 @@ public class SeriesShape {
 
   public static int getDay(int periodCount, int period, int monthId, boolean isPositive) {
     int day = 0;
-    if (periodCount <= 5) {
-      if (isPositive){
+    if (periodCount <= 4) {
+      if (isPositive) {
+        day = getEnd4(period);
+      }
+      else {
+        day = getBegin4(period);
+      }
+    }
+    else if (periodCount <= 5) {
+      if (isPositive) {
         day = getEnd5(period);
       }
       else {
         day = getBegin5(period);
       }
     }
-    if (periodCount == 6) {
-      if (isPositive){
+    else if (periodCount == 6) {
+      if (isPositive) {
         day = getEnd6(period);
       }
-      else{
+      else {
         day = getBegin6(period);
       }
     }
-    if (periodCount >= 7) {
-      if (isPositive){
+    else if (periodCount >= 7) {
+      if (isPositive) {
         day = getEnd7(period);
       }
-      else{
+      else {
         day = getBegin7(period);
       }
     }
@@ -85,27 +95,27 @@ public class SeriesShape {
     return day;
   }
 
-  public static int getBegin(int periodCount, int period){
-    if (periodCount <=5){
+  public static int getBegin(int periodCount, int period) {
+    if (periodCount <= 5) {
       return getBegin5(period);
     }
-    if (periodCount == 6){
+    if (periodCount == 6) {
       return getBegin6(period);
     }
-    if (periodCount >= 7){
+    if (periodCount >= 7) {
       return getBegin7(period);
     }
     return 0;
   }
 
-  public static int getEnd(int periodCount, int period){
-    if (periodCount <=5){
+  public static int getEnd(int periodCount, int period) {
+    if (periodCount <= 5) {
       return getEnd5(period);
     }
-    if (periodCount == 6){
+    if (periodCount == 6) {
       return getEnd6(period);
     }
-    if (periodCount >= 7){
+    if (periodCount >= 7) {
       return getEnd7(period);
     }
     return 0;
@@ -225,25 +235,48 @@ public class SeriesShape {
     }
   }
 
+  private static int getBegin4(int period) {
+    switch (period) {
+      case 1:
+        return 1;
+      case 2:
+        return 8;
+      case 3:
+        return 16;
+      case 4:
+        return 24;
+      default:
+        return 24;
+    }
+  }
+
+  private static int getEnd4(int period) {
+    switch (period) {
+      case 1:
+        return 7;
+      case 2:
+        return 15;
+      case 3:
+        return 23;
+      case 4:
+        return 31;
+      default:
+        return 31;
+    }
+  }
+
   public static Glob getDefault(Key key, int periodSize) {
-    if (periodSize <= 5) {
-      int size = 100 / 5;
-      return GlobBuilder.init(key,
-                              value(PERCENT_1, size), value(PERCENT_2, size), value(PERCENT_3, size),
-                              value(PERCENT_4, size), value(PERCENT_5, size)).get();
+    if (periodSize <= 4) {
+      return GlobBuilder.init(key, value(PERCENT_2, 100)).get();
+    }
+    if (periodSize == 5) {
+      return GlobBuilder.init(key, value(PERCENT_3, 100)).get();
     }
     if (periodSize == 6) {
-      int size = 100 / 6;
-      return GlobBuilder.init(key,
-                              value(PERCENT_1, size), value(PERCENT_2, size), value(PERCENT_3, size),
-                              value(PERCENT_4, size), value(PERCENT_5, size), value(PERCENT_6, size)).get();
+      return GlobBuilder.init(key, value(PERCENT_4, 100)).get();
 
     }
-    int size = 100 / 7;
-    return GlobBuilder.init(key,
-                            value(PERCENT_1, size), value(PERCENT_2, size), value(PERCENT_3, size),
-                            value(PERCENT_4, size), value(PERCENT_5, size), value(PERCENT_6, size),
-                            value(PERCENT_7, size)).get();
+    return GlobBuilder.init(key, value(PERCENT_5, 100)).get();
 
   }
 }

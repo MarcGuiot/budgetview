@@ -386,7 +386,7 @@ public class OperationChecker {
     List<String> args = new ArrayList<String>();
     args.add(javaHome + System.getProperty("file.separator") + "bin" + System.getProperty("file.separator") + "java");
     args.add("-Xdebug");
-    args.add("-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005");
+    args.add("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005");
     args.add("-cp");
     args.add(classPath);
     args.add("-Dsplits.editor.enabled=false");
