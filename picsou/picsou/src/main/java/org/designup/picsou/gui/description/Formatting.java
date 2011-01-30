@@ -41,15 +41,10 @@ public class Formatting {
     }
   }
 
-  public static String toMinimumValueString(Double value, boolean future) {
+  public static String toMinimumValueString(Double value) {
     if (value == null) {
       return "";
     }
-
-    if (future) {
-      value = Math.floor((value + 2.5) / 5) * 5;
-    }
-
     if (Amounts.isNearZero(value)) {
       return "0";
     }

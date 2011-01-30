@@ -88,7 +88,13 @@ public class CardView extends View implements GlobSelectionListener {
   }
 
   private String getTooltip(Card card) {
-    return "<html>Vue <b>" + card.getLabel() + "</b><br><hr><p>" + card.getDescription() + "</p></html>";
+    return "<html>" +
+           "<div style=\"margin:5px\">" +
+           "<p style=\"text-align:center\"><b>" + card.getLabel() + "</b></p>" +
+           "<hr>" +
+           "<p>" + card.getDescription() + "</p>" +
+           "</div>" +
+           "</html>";
   }
 
   private void addBackForwardActions(GlobsPanelBuilder builder) {
