@@ -1,12 +1,27 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <ui name="roundButton" class="org.designup.picsou.gui.components.RoundButtonUI"
+        topColor="roundButton.normal.bg.top"
+        bottomColor="roundButton.normal.bg.bottom"
+        innerBorderTopColor="roundButton.normal.inner.border.top"
+        innerBorderBottomColor="roundButton.normal.inner.border.bottom"
+        outerBorderTopColor="roundButton.normal.outer.border.top"
+        outerBorderBottomColor="roundButton.normal.outer.border.bottom"
+        pressedTopColor="roundButton.pressed.bg.top"
+        pressedBottomColor="roundButton.pressed.bg.bottom"
+        pressedInnerBorderTopColor="roundButton.pressed.inner.border.top"
+        pressedInnerBorderBottomColor="roundButton.pressed.inner.border.bottom"
+        pressedOuterBorderTopColor="roundButton.pressed.outer.border.top"
+        pressedOuterBorderBottomColor="roundButton.pressed.outer.border.bottom"/>
+  </styles>
 
-  <column>
-    <label text="$importPanel.title" styleClass="blockTitle"/>
-    <panel styleClass="block">
-      <button ref="import" fill="none" margin="10"/>
-    </panel>
-  </column>
+  <row>
+    <button ref="import" fill="none" weightX="0" weightY="0"
+            icon="button_import.png" rolloverIcon="button_import_rollover.png" pressedIcon="button_import.png"
+            ui="roundButton"/>
+    <label text="$import.button" icon="arrow_left_lightgrey.png" foreground="import.label" fill="none" marginLeft="10"/>
+  </row>
 
 </splits>

@@ -38,7 +38,7 @@ public class InitialImportTest extends LoggedInFunctionalTestCase {
     timeline.checkSelection("2008/08");
 
     views.selectHome();
-    importPanel.checkImportMessage("Import your operations");
+    importPanel.checkImportMessage("Import");
     mainAccounts.checkEstimatedPosition(125.00);
 
     timeline.checkYearTooltip(2008, "2008");

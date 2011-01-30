@@ -21,8 +21,7 @@ public class ImportPanel extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importPanel.splits",
                                                       repository, directory);
 
-
-    Action action = ImportFileAction.init(Lang.get("importPanel.button"), repository, directory, null);
+    Action action = ImportFileAction.init(Lang.get("import"), repository, directory, null);
     JButton button = new JButton(action);
     builder.add("import", button);
     

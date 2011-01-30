@@ -3,6 +3,8 @@ package org.designup.picsou.gui.components;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class RoundButtonUI extends BasicButtonUI {
 
@@ -28,14 +30,23 @@ public class RoundButtonUI extends BasicButtonUI {
     button.setFocusPainted(false);
     button.setRolloverEnabled(true);
     button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+  }
 
-    Icon icon = button.getIcon();
-    int diameter = Math.max(icon.getIconWidth(), icon.getIconHeight()) + 8;
-    Dimension size = new Dimension(diameter, diameter);
-    button.setSize(diameter, diameter);
-    button.setPreferredSize(size);
-    button.setMaximumSize(size);
-    button.setMinimumSize(size);
+  protected void installListeners(final AbstractButton button) {
+    super.installListeners(button);
+    button.addPropertyChangeListener("icon", new PropertyChangeListener() {
+      public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+        Icon icon = button.getIcon();
+        if (icon != null) {
+          int diameter = Math.max(icon.getIconWidth(), icon.getIconHeight()) + 15;
+          Dimension size = new Dimension(diameter, diameter);
+          button.setSize(diameter, diameter);
+          button.setPreferredSize(size);
+          button.setMaximumSize(size);
+          button.setMinimumSize(size);
+        }
+      }
+    });
   }
 
   public void paint(Graphics g, JComponent c) {
@@ -69,7 +80,7 @@ public class RoundButtonUI extends BasicButtonUI {
                                  Color outerBorderBottomColor) {
 
     g2.setPaint(new GradientPaint(0, 0, topColor, 0, button.getHeight(), bottomColor));
-    g2.fillOval(2, 2, button.getWidth() - 5, button.getHeight() - 5);
+    g2.fillOval(2, 2, button.getWidth() - 4, button.getHeight() - 4);
 
     g2.setPaint(new GradientPaint(0, 0, innerBorderTopColor, 0, button.getHeight(), innerBorderBottomColor));
     g2.drawOval(1, 1, button.getWidth() - 3, button.getHeight() - 3);

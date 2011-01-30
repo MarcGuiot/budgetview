@@ -7,10 +7,10 @@
     <label text="$transactionView.operations.title" styleClass="blockTitle"/>
     <panel styleClass="block">
       <column styleClass="innerBlock" margin="10" marginLeft="15" marginRight="15">
-        <row marginBottom="5">
+        <row marginBottom="5" weightY="0">
+          <panel ref="importPanel" marginLeft="10"/>
           <filler fill="horizontal"/>
           <panel ref="customFilterMessage" fill="none" anchor="center"/>
-          <filler fill="horizontal"/>
         </row>
         <scrollPane borderPos="center" viewportBackground="transactions.bg"
                     border="line(transaction.border)" opaque="false"

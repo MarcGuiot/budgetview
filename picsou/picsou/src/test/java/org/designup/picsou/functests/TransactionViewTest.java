@@ -409,13 +409,17 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .check();
 
     timeline.selectAll();
-    transactions.selectSeries("Voiture");
+    transactions.selectSeries("Nounou");
     budgetView.recurring.editSeries("Nounou").setEndDate(200605).validate();
     transactions.checkSelectableSeries("All", "Nounou", "Voiture");
 
     timeline.selectMonth("2006/06");
     transactions.checkSelectedSeries("All");
     transactions.checkSelectableSeries("All", "Voiture");
+    transactions.initContent()
+      .check();
+
+    timeline.selectMonth("2006/05");
     transactions.initContent()
       .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00, "Nounou")
       .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)

@@ -187,7 +187,6 @@
           <horizontalBoxes opaque="false">
 
             <column minimumSize="(320,200)" preferredSize="(320,700)" marginRight="20">
-              <panel ref="importPanel" weightY="0" marginBottom="10"/>
               <panel ref="accountView" weightY="1.0"/>
             </column>
 

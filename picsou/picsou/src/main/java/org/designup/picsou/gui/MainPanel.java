@@ -150,7 +150,6 @@ public class MainPanel {
       timeView,
       new VersionInfoView(repository, directory),
       new AccountView(repository, directory),
-      new ImportPanel(repository, directory),
       categorizationView,
       cardView,
       new BudgetView(replicationGlobRepository, directory),

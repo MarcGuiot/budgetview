@@ -3,6 +3,7 @@ package org.designup.picsou.gui.transactions;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.utils.AccountFilteringCombo;
 import org.designup.picsou.gui.accounts.utils.SeriesFilteringCombo;
+import org.designup.picsou.gui.card.ImportPanel;
 import org.designup.picsou.gui.components.DefaultTableCellPainter;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.FilterClearer;
@@ -94,6 +95,9 @@ public class TransactionView extends View implements Filterable {
     addSeriesCombo(builder);
     addShowPlannedTransactionsCheckbox(builder);
     builder.add(view.getComponent());
+
+    ImportPanel importPanel = new ImportPanel(repository, directory);
+    importPanel.registerComponents(builder);
 
     FilterClearingPanel filterClearingPanel = new FilterClearingPanel(filterManager, repository, directory);
     builder.add("customFilterMessage", filterClearingPanel.getPanel());
