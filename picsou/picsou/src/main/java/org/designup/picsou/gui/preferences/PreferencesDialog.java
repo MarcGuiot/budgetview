@@ -40,9 +40,9 @@ public class PreferencesDialog {
     builder.add("futureMonth", futureMonth);
     multiplePlanned = new JCheckBox();
     builder.add("multiplePlanned", multiplePlanned);
-    periodComboBox = new JComboBox(new Integer[]{4, 5, 6});
+    periodComboBox = new JComboBox(new Integer[]{4, 5, 6, 7});
     builder.add("period", periodComboBox);
-    monthBackComboBox = new JComboBox(new Integer[]{1, 2, 3, 4});
+    monthBackComboBox = new JComboBox(new Integer[]{1, 2, 3});
     builder.add("monthBack", monthBackComboBox);
     multiplePlanned.addChangeListener(new ChangeListener() {
       public void stateChanged(ChangeEvent e) {

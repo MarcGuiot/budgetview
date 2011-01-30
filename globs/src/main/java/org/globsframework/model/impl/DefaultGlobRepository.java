@@ -209,7 +209,12 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     SortedSet<Glob> set = new TreeSet<Glob>(comparator);
     for (Glob glob : globs.values(type)) {
       if (matcher.matches(glob, this)) {
-        set.add(glob);
+        boolean added = set.add(glob);
+        Utils.beginRemove();
+        if (!added){
+          throw new RuntimeException("comparator not exclisif");
+        }
+        Utils.endRemove();
       }
     }
     return set;

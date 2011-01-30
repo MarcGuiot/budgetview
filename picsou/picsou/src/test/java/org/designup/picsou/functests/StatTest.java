@@ -75,7 +75,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("13/08/2008", TransactionType.PLANNED, "Planned: Secu", "", 10.00, "Secu")
+      .add("15/08/2008", TransactionType.PLANNED, "Planned: Secu", "", 10.00, "Secu")
       .add("13/08/2008", TransactionType.VIREMENT, "Pharma", "", 10.00, "Secu")
       .check();
   }
