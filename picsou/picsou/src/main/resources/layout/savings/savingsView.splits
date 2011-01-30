@@ -4,7 +4,7 @@
   <styles>
     <style selector="label.accountName" font="-,bold,18" foreground="savingsView.accountName"
            marginLeft="5"/>
-    <style selector="label.accountPosition" font="-,bold,13" foreground="savingsView.accountPosition"/>
+    <style selector="label.accountPosition" font="-,bold,15" foreground="savingsView.accountPosition"/>
     <style selector="label.accountPositionDate" font="-,plain,9" foreground="savingsView.accountDate"/>
     <style selector="#header label" anchor="center"/>
   </styles>

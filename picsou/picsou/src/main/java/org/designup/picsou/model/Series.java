@@ -190,10 +190,6 @@ public class Series {
     return series.get(Series.NAME); //Lang.get("transaction.planned", );
   }
 
-  public static String getOccasionalName() {
-    return Lang.get("series.occasional");
-  }
-
   public static String getUncategorizedName() {
     return Lang.get("series.uncategorized");
   }

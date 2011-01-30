@@ -36,6 +36,7 @@ public class TransactionChecker extends ViewChecker {
   private Table amountTable;
   private CheckBox showPlannedTransactionsCheckbox;
   private ComboBox accountFilterCombo;
+  private ComboBox seriesFilterCombo;
 
   public TransactionChecker(Window window) {
     super(window);
@@ -132,11 +133,13 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public TransactionChecker checkClearFilterButtonShown() {
+    views.selectData();
     checkComponentVisible(this.mainWindow, JPanel.class, "customFilterMessage", true);
     return this;
   }
 
   public TransactionChecker checkClearFilterButtonHidden() {
+    views.selectData();
     checkComponentVisible(this.mainWindow, JPanel.class, "customFilterMessage", false);
     return this;
   }
@@ -179,6 +182,27 @@ public class TransactionChecker extends ViewChecker {
 
   public void checkSelectedAccount(String selection) {
     assertThat(getAccountFilter().selectionEquals(selection));
+  }
+  
+  public void selectSeries(String seriesName) {
+    getSeriesFilter().select(seriesName);
+  }
+
+  public void checkSelectedSeries(String seriesName) {
+    assertThat(getSeriesFilter().selectionEquals(seriesName));
+  }
+
+  private ComboBox getSeriesFilter() {
+    if (seriesFilterCombo == null) {
+      views.selectData();
+      seriesFilterCombo = mainWindow.getComboBox("seriesFilterCombo");
+    }
+    return seriesFilterCombo;
+  }
+
+  public TransactionChecker checkSelectableSeries(String... series) {
+    assertThat(getSeriesFilter().contentEquals(series));
+    return this;
   }
 
   public void checkNotEmpty() {

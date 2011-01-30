@@ -2,6 +2,7 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.utils.AccountFilteringCombo;
+import org.designup.picsou.gui.accounts.utils.SeriesFilteringCombo;
 import org.designup.picsou.gui.components.DefaultTableCellPainter;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.FilterClearer;
@@ -61,11 +62,13 @@ public class TransactionView extends View implements Filterable {
   public static final int ACCOUNT_NAME_INDEX = 10;
 
   public static final String ACCOUNT_FILTER = "accounts";
+  public static final String SERIES_FILTER = "series";
   private static final int[] COLUMN_SIZES = {10, 10, 10, 15, 10, 30, 9, 15, 10, 10, 30};
   private static final GlobMatcher HIDE_PLANNED_MATCHER = not(isTrue(Transaction.PLANNED));
 
   private GlobTableView view;
   private AccountFilteringCombo accountFilteringCombo;
+  private SeriesFilteringCombo seriesFilteringCombo;
   private TransactionRendererColors rendererColors;
   private TransactionSelection transactionSelection;
   private GlobMatcher showPlannedTransactionsMatcher = HIDE_PLANNED_MATCHER;
@@ -88,6 +91,7 @@ public class TransactionView extends View implements Filterable {
                                                       repository, directory);
 
     addAccountCombo(builder);
+    addSeriesCombo(builder);
     addShowPlannedTransactionsCheckbox(builder);
     builder.add(view.getComponent());
 
@@ -147,6 +151,24 @@ public class TransactionView extends View implements Filterable {
     builder.add("accountFilterCombo", accountFilteringCombo.getComponent());
   }
 
+  private void addSeriesCombo(GlobsPanelBuilder builder) {
+    seriesFilteringCombo = new SeriesFilteringCombo(repository, directory, new GlobComboView.GlobSelectionHandler() {
+      public void processSelection(Glob glob) {
+        filterManager.set(SERIES_FILTER, seriesFilteringCombo.getCurrentSeriesFilter());
+      }
+    });
+    filterManager.addClearer(new FilterClearer() {
+      public List<String> getAssociatedFilters() {
+        return Arrays.asList(SERIES_FILTER);
+      }
+
+      public void clear() {
+        seriesFilteringCombo.reset();
+      }
+    });
+    builder.add("seriesFilterCombo", seriesFilteringCombo.getComponent());
+  }
+  
   public void setAccountFilter(Key accountKey) {
     GlobMatcher matcher = Matchers.transactionsForAccounts(Collections.singleton(accountKey.get(Account.ID)), repository);
     filterManager.set(ACCOUNT_FILTER, matcher);
@@ -154,7 +176,7 @@ public class TransactionView extends View implements Filterable {
 
   public void setSeriesFilter(Glob series) {
     Set<Integer> seriesSet = Collections.singleton(series.get(Series.ID));
-    filterManager.set(ACCOUNT_FILTER, Matchers.transactionsForSeries(seriesSet));
+    filterManager.set(SERIES_FILTER, Matchers.transactionsForSeries(seriesSet));
   }
 
   private void addShowPlannedTransactionsCheckbox(GlobsPanelBuilder builder) {

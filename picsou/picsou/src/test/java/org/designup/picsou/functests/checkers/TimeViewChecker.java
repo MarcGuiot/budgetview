@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.model.Month;
@@ -138,7 +139,7 @@ public class TimeViewChecker extends GuiChecker {
     timeViewPanel.getMouseOverHandler().enterMonth(parseMonthId(monthId));
     String tooltip = timeViewPanel.getToolTipText();
     Assert.assertTrue("Expected position: " + position + " - " + tooltip,
-                      tooltip.contains("Min position: " + toString(position)));
+                      tooltip.contains("Min position: " + Formatting.toMinimumValueString(position)));
     return this;
   }
 

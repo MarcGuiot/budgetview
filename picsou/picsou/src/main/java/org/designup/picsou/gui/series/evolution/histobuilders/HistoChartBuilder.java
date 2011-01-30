@@ -41,7 +41,6 @@ public class HistoChartBuilder {
   private HistoDailyColors accountDailyColors;
   private HistoLineColors accountBalanceColors;
   private HistoDiffColors seriesColors;
-  private HistoDiffColors summaryColors;
 
   private int scrollMonth;
   private int monthsBack;
@@ -143,12 +142,6 @@ public class HistoChartBuilder {
       "histo.account.balance.fill.positive",
       "histo.account.balance.fill.negative",
       "histo.vertical.divider",
-      directory
-    );
-
-    summaryColors = new HistoDiffColors(
-      "histo.summary.line",
-      "histo.summary.fill",
       directory
     );
   }
@@ -353,7 +346,7 @@ public class HistoChartBuilder {
     if (resetPosition) {
       scrollMonth = 0;
     }
-    HistoLineDatasetBuilder dataset = createLineDataset("savingsAccounts");
+    HistoLineDatasetBuilder dataset = createLineDataset("savingsBalance");
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
       Glob stat = SavingsBudgetStat.findSummary(monthId, repository);
@@ -361,7 +354,7 @@ public class HistoChartBuilder {
       dataset.add(monthId, value, monthId == selectedMonthId);
     }
 
-    dataset.showBars(accountBalanceColors, "savingsAccounts");
+    dataset.showBars(accountBalanceColors, "savingsBalance");
   }
 
   public void showSavingsAccountHisto(int selectedMonthId, int accountId, boolean resetPosition) {

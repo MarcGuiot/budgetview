@@ -52,7 +52,6 @@
       <filler fill="horizontal"/>
       <label text="$budgetSummaryView.uncategorized" styleClass="totalAmountTitle"/>
       <button ref="uncategorized" styleClass="uncategorized"/>
-      <filler fill="horizontal"/>
     </row>
 
     <label ref="multiSelectionLabel" styleClass="message" weightY="0"/>

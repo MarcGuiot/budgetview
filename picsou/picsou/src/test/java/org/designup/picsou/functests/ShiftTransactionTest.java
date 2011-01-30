@@ -237,7 +237,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
                               "Do you want to edit the envelope anyway?")
         .getOkTrigger())
       .checkName("Groceries")
-      .removeEndDate()
+      .clearEndDate()
       .validate();
     transactionDetails.checkShiftEnabled();
     transactionDetails.shift();
@@ -259,7 +259,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
                               "Do you want to edit the envelope anyway?")
         .getOkTrigger())
       .checkName("Groceries")
-      .removeStartDate()
+      .clearStartDate()
       .validate();
     transactionDetails.shift();
 

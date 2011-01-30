@@ -135,6 +135,6 @@ public class HistoDailyPainter implements HistoPainter {
   }
 
   private String getMinText(int index, Double minValue) {
-    return Formatting.toMinimumValueString(minValue, dataset.minInFuture(index));
+    return Formatting.toMinimumValueString(minValue);
   }
 }

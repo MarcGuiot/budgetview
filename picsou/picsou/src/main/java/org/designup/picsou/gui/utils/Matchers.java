@@ -4,9 +4,9 @@ import org.designup.picsou.model.*;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Utils;
 
 import java.util.*;
 
@@ -64,9 +64,16 @@ public class Matchers {
     );
   }
 
-  public static SeriesFirstEndDateFilter seriesDateFilter(final Integer budgetAreaId, boolean isExclusive) {
-    return new SeriesFirstEndDateFilter(isExclusive) {
+  public static SeriesFirstEndDateFilter userSeriesActiveInPeriod() {
+    return new SeriesFirstEndDateFilter(false) {
+      protected boolean isEligible(Glob series, GlobRepository repository) {
+        return !Utils.equal(series.get(Series.ID), Series.UNCATEGORIZED_SERIES_ID);
+      }
+    };
+  }
 
+  public static SeriesFirstEndDateFilter seriesActiveInPeriod(final Integer budgetAreaId, boolean isExclusive) {
+    return new SeriesFirstEndDateFilter(isExclusive) {
       protected boolean isEligible(Glob series, GlobRepository repository) {
         return budgetAreaId.equals(series.get(Series.BUDGET_AREA));
       }
@@ -149,7 +156,7 @@ public class Matchers {
     private SeriesFirstEndDateFilter filter;
 
     public CategorizationFilter(final Integer budgetAreaId) {
-      filter = seriesDateFilter(budgetAreaId, true);
+      filter = seriesActiveInPeriod(budgetAreaId, true);
     }
 
     public boolean matches(Glob series, GlobRepository repository) {

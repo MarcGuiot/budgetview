@@ -289,8 +289,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setEndDate(200810)
       .checkStartDate("Sep 2008")
       .checkEndDate("Oct 2008")
-      .removeStartDate()
-      .removeEndDate()
+      .clearStartDate()
+      .clearEndDate()
       .checkNoStartDate()
       .checkNoEndDate()
       .cancel();
@@ -318,7 +318,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkIsEnabled(200809, 200901)
       .cancel();
 
-    edition.removeStartDate();
+    edition.clearStartDate();
     edition.editEndDate()
       .checkIsEnabled(200701, 200901)
       .cancel();
@@ -1145,10 +1145,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.editSeries("Serie")
       .setEndDate(200808)
-      .removeEndDate()
+      .clearEndDate()
       .setStartDate(200808)
       .setEndDate(200812)
-      .removeStartDate()
+      .clearStartDate()
       .validate();
   }
 
