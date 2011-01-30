@@ -20,7 +20,7 @@ public class SeriesAmountChartPanel {
 
   public SeriesAmountChartPanel(GlobRepository repository, Directory directory) {
 
-    HistoChartBuilder histoChartBuilder = new HistoChartBuilder(true, true, true, repository, directory,
+    HistoChartBuilder histoChartBuilder = new HistoChartBuilder(true, true, true, false, repository, directory,
                                                                 directory.get(SelectionService.class), 4, 12);
     histoChartBuilder.addListener(new HistoChartListener() {
       public void columnsClicked(Set<Integer> ids) {

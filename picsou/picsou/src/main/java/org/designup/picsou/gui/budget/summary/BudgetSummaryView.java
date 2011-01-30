@@ -74,7 +74,7 @@ public class BudgetSummaryView
     uncategorizedButton.addActionListener(new GotoUncategorizedAction());
 
     MainDailyPositionsChartView chartView =
-      new MainDailyPositionsChartView(repository, directory, "chart", 0, 1, true, false, false);
+      new MainDailyPositionsChartView(repository, directory, "chart", 0, 1, true, false, true, false);
     chartView.registerComponents(builder);
 
     parentBuilder.add("budgetSummaryView", builder);

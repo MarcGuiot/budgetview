@@ -2,6 +2,7 @@ package org.designup.picsou.gui.series.evolution.histobuilders;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoChartListener;
+import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyColors;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffColors;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineColors;
 import org.designup.picsou.gui.model.BudgetStat;
@@ -37,6 +38,7 @@ public class HistoChartBuilder {
   private HistoDiffColors expensesColors;
   private HistoLineColors uncategorizedColors;
   private HistoLineColors accountColors;
+  private HistoDailyColors accountDailyColors;
   private HistoLineColors accountBalanceColors;
   private HistoDiffColors seriesColors;
   private HistoDiffColors summaryColors;
@@ -48,12 +50,13 @@ public class HistoChartBuilder {
   public HistoChartBuilder(boolean drawLabels,
                            boolean drawSections,
                            boolean clickable,
+                           boolean drawInnerLabels,
                            final GlobRepository repository,
                            final Directory directory,
                            final SelectionService parentSelectionService,
                            int monthsBack, int monthsLater) {
     this.repository = repository;
-    histoChart = new HistoChart(drawLabels, drawSections, clickable, directory);
+    histoChart = new HistoChart(drawLabels, drawSections, drawInnerLabels, clickable, directory);
     histoChart.addListener(new HistoChartListener() {
       public void columnsClicked(Set<Integer> monthIds) {
         GlobList months = new GlobList();
@@ -123,6 +126,14 @@ public class HistoChartBuilder {
       "histo.account.fill.positive",
       "histo.account.fill.negative",
       "histo.vertical.divider",
+      directory
+    );
+
+    accountDailyColors = new HistoDailyColors(
+      accountColors,
+      "histo.account.daily.current",
+      "histo.account.inner.label.positive",
+      "histo.account.inner.label.negative",
       directory
     );
 
@@ -204,7 +215,7 @@ public class HistoChartBuilder {
       builder.add(monthId, values, monthId == selectedMonthId);
     }
 
-    builder.apply(accountColors, "daily");
+    builder.apply(accountDailyColors, "daily");
   }
 
   public void showMainBalanceHisto(int selectedMonthId, boolean resetPosition) {

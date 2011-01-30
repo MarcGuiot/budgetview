@@ -61,7 +61,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
     this.currentWrapperKey = getMainSummaryWrapper();
 
-    histoChartBuilder = new HistoChartBuilder(true, true, true, repository, directory, parentSelectionService, 12, 6);
+    histoChartBuilder = new HistoChartBuilder(true, true, true, false, repository, directory, parentSelectionService, 12, 6);
     histoChartBuilder.addListener(new HistoChartListener() {
       public void columnsClicked(Set<Integer> ids) {
       }

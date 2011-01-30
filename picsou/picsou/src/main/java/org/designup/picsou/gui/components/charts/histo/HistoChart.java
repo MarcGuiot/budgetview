@@ -24,15 +24,17 @@ public class HistoChart extends JPanel {
   private Integer columnSelectionMaxIndex;
   private boolean drawLabels;
   private boolean drawSections;
+  private boolean drawInnerLabels;
   private boolean clickable;
   private boolean snapToScale;
 
   public static final BasicStroke SCALE_STROKE = new BasicStroke(1);
   public static final BasicStroke SCALE_ORIGIN_STROKE = new BasicStroke(1);
 
-  public HistoChart(boolean drawLabels, boolean drawSections, boolean clickable, Directory directory) {
+  public HistoChart(boolean drawLabels, boolean drawSections, boolean drawInnerLabels, boolean clickable, Directory directory) {
     this.drawLabels = drawLabels;
     this.drawSections = drawSections;
+    this.drawInnerLabels = drawInnerLabels;
     this.clickable = clickable;
     this.colors = new HistoChartColors(directory);
     setFont(getFont().deriveFont(9f));
@@ -112,6 +114,7 @@ public class HistoChart extends JPanel {
                                       dataset.getMaxNegativeValue(), dataset.getMaxPositiveValue(),
                                       drawLabels,
                                       drawSections && dataset.containsSections(),
+                                      drawInnerLabels,
                                       snapToScale);
     }
 
@@ -122,6 +125,7 @@ public class HistoChart extends JPanel {
     paintSelectionBorder(g2, dataset);
     paintBorder(g2);
 
+    g2.setFont(getFont());
     painter.paint(g2, metrics, currentRolloverIndex);
   }
 

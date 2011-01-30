@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.components.charts.histo.daily;
 
+import org.designup.picsou.gui.components.charts.histo.line.HistoLineColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -7,92 +8,44 @@ import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
 
-public class HistoDailyColors implements ColorChangeListener {
+public class HistoDailyColors  {
+  
+  public final HistoLineColors line;
 
-  private String pastPositiveLineKey;
-  private String pastNegativeLineKey;
-  private String pastPositiveFillKey;
-  private String pastNegativeFillKey;
-  private String futurePositiveLineKey;
-  private String futureNegativeLineKey;
-  private String futurePositiveFillKey;
-  private String futureNegativeFillKey;
-  private String verticalDividerKey;
+  private String currentDayKey;
+  private String positiveInnerLabelKey;
+  private String negativeInnerLabelKey;
 
-  private Color pastPositiveLineColor;
-  private Color pastNegativeLineColor;
-  private Color pastPositiveFillColor;
-  private Color pastNegativeFillColor;
-  private Color futurePositiveLineColor;
-  private Color futureNegativeLineColor;
-  private Color futurePositiveFillColor;
-  private Color futureNegativeFillColor;
-  private Color verticalDividerColor;
-
-  public HistoDailyColors(String pastPositiveLineKey, String pastNegativeLineKey,
-                          String pastPositiveFillKey, String pastNegativeFillKey,
-                          String futurePositiveLineKey, String futureNegativeLineKey,
-                          String futurePositiveFillKey, String futureNegativeFillKey,
-                          String verticalDividerKey,
+  private Color currentDayColor;
+  private Color positiveInnerLabelColor;
+  private Color negativeInnerLabelColor;
+  
+  public HistoDailyColors(HistoLineColors line,
+                          String currentDayKey,
+                          String positiveInnerLabelKey,
+                          String negativeInnerLabelKey,
                           Directory directory) {
-    this.pastPositiveLineKey = pastPositiveLineKey;
-    this.pastNegativeLineKey = pastNegativeLineKey;
-    this.pastPositiveFillKey = pastPositiveFillKey;
-    this.pastNegativeFillKey = pastNegativeFillKey;
-    this.futurePositiveLineKey = futurePositiveLineKey;
-    this.futureNegativeLineKey = futureNegativeLineKey;
-    this.futurePositiveFillKey = futurePositiveFillKey;
-    this.futureNegativeFillKey = futureNegativeFillKey;
-    this.verticalDividerKey = verticalDividerKey;
+    this.line = line;
+    this.currentDayKey = currentDayKey;
+    this.positiveInnerLabelKey = positiveInnerLabelKey;
+    this.negativeInnerLabelKey = negativeInnerLabelKey;
 
-    directory.get(ColorService.class).addListener(this);
+    directory.get(ColorService.class).addListener(new ColorUpdater());
   }
 
-  public void colorsChanged(ColorLocator colorLocator) {
-    this.pastPositiveLineColor = colorLocator.get(pastPositiveLineKey);
-    this.pastNegativeLineColor = colorLocator.get(pastNegativeLineKey);
-    this.pastPositiveFillColor = colorLocator.get(pastPositiveFillKey);
-    this.pastNegativeFillColor = colorLocator.get(pastNegativeFillKey);
-    this.futurePositiveLineColor = colorLocator.get(futurePositiveLineKey);
-    this.futureNegativeLineColor = colorLocator.get(futureNegativeLineKey);
-    this.futurePositiveFillColor = colorLocator.get(futurePositiveFillKey);
-    this.futureNegativeFillColor = colorLocator.get(futureNegativeFillKey);
-    this.verticalDividerColor = colorLocator.get(verticalDividerKey);
+  private class ColorUpdater implements ColorChangeListener {
+    public void colorsChanged(ColorLocator colorLocator) {
+      currentDayColor = colorLocator.get(currentDayKey);
+      positiveInnerLabelColor = colorLocator.get(positiveInnerLabelKey);
+      negativeInnerLabelColor = colorLocator.get(negativeInnerLabelKey);
+    }
   }
 
-  public Color getPastPositiveLineColor() {
-    return pastPositiveLineColor;
+  public Color getCurrentDayColor() {
+    return currentDayColor;
   }
 
-  public Color getPastNegativeLineColor() {
-    return pastNegativeLineColor;
-  }
-
-  public Color getPastPositiveFillColor() {
-    return pastPositiveFillColor;
-  }
-
-  public Color getPastNegativeFillColor() {
-    return pastNegativeFillColor;
-  }
-
-  public Color getFuturePositiveLineColor() {
-    return futurePositiveLineColor;
-  }
-
-  public Color getFutureNegativeLineColor() {
-    return futureNegativeLineColor;
-  }
-
-  public Color getFuturePositiveFillColor() {
-    return futurePositiveFillColor;
-  }
-
-  public Color getFutureNegativeFillColor() {
-    return futureNegativeFillColor;
-  }
-
-  public Color getVerticalDividerColor() {
-    return verticalDividerColor;
+  public Color getInnerLabelColor(double value) {
+    return value >= 0 ? positiveInnerLabelColor : negativeInnerLabelColor;
   }
 }

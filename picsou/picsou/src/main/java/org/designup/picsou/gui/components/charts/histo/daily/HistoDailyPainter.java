@@ -3,20 +3,20 @@ package org.designup.picsou.gui.components.charts.histo.daily;
 import org.designup.picsou.gui.components.charts.histo.HistoChartMetrics;
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.HistoPainter;
-import org.designup.picsou.gui.components.charts.histo.line.HistoLineColors;
+import org.designup.picsou.gui.description.Formatting;
 
 import java.awt.*;
 
 public class HistoDailyPainter implements HistoPainter {
 
   private HistoDailyDataset dataset;
-  private HistoLineColors colors;
+  private HistoDailyColors colors;
 
   public static final BasicStroke DEFAULT_LINE_STROKE = new BasicStroke(1);
   public static final BasicStroke FUTURE_LINE_STROKE =
     new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{2, 3}, 0);
 
-  public HistoDailyPainter(HistoDailyDataset dataset, HistoLineColors colors) {
+  public HistoDailyPainter(HistoDailyDataset dataset, HistoDailyColors colors) {
     this.dataset = dataset;
     this.colors = colors;
   }
@@ -25,8 +25,11 @@ public class HistoDailyPainter implements HistoPainter {
     return dataset;
   }
 
-  public void paint(Graphics2D g2, HistoChartMetrics metrics, Integer currentRollover) {
+  public void paint(Graphics2D g2, HistoChartMetrics chartMetrics, Integer currentRollover) {
 
+    HistoDailyMetrics metrics = new HistoDailyMetrics(chartMetrics);
+    
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     if (dataset.size() == 0) {
       return;
     }
@@ -49,16 +52,16 @@ public class HistoDailyPainter implements HistoPainter {
       int previousX = left;
       int y0 = metrics.y(0);
 
-      colors.setVerticalDividerStyle(g2);
+      colors.line.setVerticalDividerStyle(g2);
       g2.drawLine(right, metrics.columnTop(), right, metrics.columnTop() + metrics.columnHeight());
 
-      for (int j = 0; j < values.length; j++) {
-        Double value = values[j];
+      for (int day = 0; day < values.length; day++) {
+        Double value = values[day];
         if (value == null) {
           continue;
         }
 
-        int x = left + (width * (j + 1)) / values.length;
+        int x = left + (width * (day + 1)) / values.length;
         int y = metrics.y(value);
         if (previousY == null) {
           previousY = y;
@@ -66,13 +69,13 @@ public class HistoDailyPainter implements HistoPainter {
         }
 
         boolean current = dataset.isCurrent(i);
-        boolean future = dataset.isFuture(i, j);
+        boolean future = dataset.isFuture(i, day);
         boolean selected = dataset.isSelected(i);
         boolean rollover = (currentRollover != null) && (currentRollover == i);
 
-        if (dataset.isCurrent(i,j)) {
-          g2.setColor(Color.red);
-          g2.drawLine(x, metrics.columnTop(), x, metrics.columnBottom());
+        if (dataset.isCurrent(i, day)) {
+          g2.setColor(colors.getCurrentDayColor());
+          g2.drawLine(x, metrics.currentDayLineTop(), x, metrics.currentDayLineBottom());
         }
 
         if (Math.signum(previousValue) == Math.signum(value)) {
@@ -89,22 +92,49 @@ public class HistoDailyPainter implements HistoPainter {
         previousY = y;
         previousValue = value;
       }
+
+      drawMinLabel(g2, dataset, i, metrics);
     }
   }
 
   private void drawBlock(Graphics2D g2, int previousX, Integer previousY, int x, int y, int y0,
                          boolean positive, boolean current, boolean future, boolean selected, boolean rollover) {
 
-    colors.setFillStyle(g2, positive, current, future, selected, rollover);
+    colors.line.setFillStyle(g2, positive, current, future, selected, rollover);
     Polygon polygon = new Polygon();
-    polygon.addPoint(previousX,previousY);
-    polygon.addPoint(x,y);
-    polygon.addPoint(x,y0);
-    polygon.addPoint(previousX,y0);
+    polygon.addPoint(previousX, previousY);
+    polygon.addPoint(x, y);
+    polygon.addPoint(x, y0);
+    polygon.addPoint(previousX, y0);
     g2.fill(polygon);
 
     g2.setStroke(future ? FUTURE_LINE_STROKE : DEFAULT_LINE_STROKE);
-    colors.setLineStyle(g2, positive, future);
+    colors.line.setLineStyle(g2, positive, future);
     g2.drawLine(previousX, previousY, x, y);
+  }
+
+  private void drawMinLabel(Graphics2D g2, HistoDailyDataset dataset, int index, HistoDailyMetrics metrics) {
+    int minDay = dataset.getMinDay(index);
+    Double minValue = dataset.getValue(index, minDay);
+    if ((minValue == null) || !metrics.isDrawingInnerLabels()) {
+      return;
+    }
+
+    String text = getMinText(index, minValue);
+    int minX = metrics.minX(minDay, dataset.getValues(index).length, index);
+
+    g2.setStroke(new BasicStroke(1));
+    g2.setComposite(AlphaComposite.Src);
+    g2.setColor(colors.getInnerLabelColor(minValue));
+    g2.drawString(text, metrics.innerLabelX(index, minX, text), metrics.innerLabelY());
+
+    g2.drawLine(metrics.innerLabelLineX(index, minX, text),
+                metrics.innerLabelLineY(),
+                minX,
+                metrics.y(minValue));
+  }
+
+  private String getMinText(int index, Double minValue) {
+    return Formatting.toMinimumValueString(minValue, dataset.minInFuture(index));
   }
 }

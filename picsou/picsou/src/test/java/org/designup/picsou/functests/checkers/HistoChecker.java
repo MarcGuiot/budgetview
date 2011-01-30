@@ -56,7 +56,7 @@ public class HistoChecker extends GuiChecker {
 
   public HistoChecker checkLineColumn(int index, String label, String section, double value, boolean selected) {
     HistoLineDataset dataset = getDataset(HistoLineDataset.class);
-    Assert.assertEquals(getErrorMessage(index, dataset), label, dataset.getLabel(index));
+    Assert.assertEquals(getErrorMessage(index, dataset), label, dataset.getLabel(index).substring(0, 1));
     Assert.assertEquals(getErrorMessage(index, dataset), section, dataset.getSection(index));
     Assert.assertEquals(getErrorMessage(index, dataset), value, dataset.getValue(index));
     Assert.assertEquals(getErrorMessage(index, dataset), selected, dataset.isSelected(index));
@@ -74,7 +74,7 @@ public class HistoChecker extends GuiChecker {
     TablePrinter expected = createPrinter();
     for (Object[] row : content) {
       expected.addRow(row[0],
-                      row[1].toString().substring(0, 1),
+                      row[1].toString().substring(0, 3),
                       Formatting.toString((Double)row[2]),
                       Formatting.toString((Double)row[3]),
                       row.length > 4 ? (Boolean)row[4] : "");
@@ -84,7 +84,7 @@ public class HistoChecker extends GuiChecker {
     HistoDiffDataset dataset = getDataset(HistoDiffDataset.class);
     for (int i = 0; i < dataset.size(); i++) {
       actual.addRow(dataset.getSection(i),
-                    dataset.getLabel(i),
+                    dataset.getLabel(i).substring(0, 3),
                     Formatting.toString(dataset.getActualValue(i)),
                     Formatting.toString(dataset.getReferenceValue(i)),
                     dataset.isSelected(i) ? "true" : "");

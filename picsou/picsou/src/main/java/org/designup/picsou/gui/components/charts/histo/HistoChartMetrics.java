@@ -17,6 +17,8 @@ public class HistoChartMetrics {
   private static final int LABEL_BOTTOM_MARGIN = 2;
   private static final int SECTION_ZONE_HEIGHT = 20;
   private static final int SECTION_BOTTOM_MARGIN = 5;
+  private static final int INNER_LABEL_HEIGHT = 18;
+  private static final int INNER_LABEL_BOTTOM_MARGIN = 4;
 
   private final double[] SCALES = {0.25, 0.5, 1, 2, 2.5, 5};
 
@@ -24,6 +26,7 @@ public class HistoChartMetrics {
   private int panelHeight;
   private FontMetrics fontMetrics;
   private int columnCount;
+  private boolean drawInnerLabels;
   private double maxPositiveValue;
   private double maxNegativeValue;
 
@@ -37,6 +40,8 @@ public class HistoChartMetrics {
 
   private int labelZoneHeight;
   private int labelBottomMargin;
+  private int innerLabelY;
+  private int usableChartHeight;
 
   public HistoChartMetrics(int panelWidth,
                            int panelHeight,
@@ -46,32 +51,37 @@ public class HistoChartMetrics {
                            double maxPositiveValue,
                            boolean drawLabels,
                            boolean drawSections,
+                           boolean drawInnerLabels,
                            boolean snapToScale) {
     this.panelWidth = panelWidth;
     this.panelHeight = panelHeight;
     this.fontMetrics = fontMetrics;
     this.columnCount = columnCount;
+    this.drawInnerLabels = drawInnerLabels;
     this.maxPositiveValue = adjustLimit(maxPositiveValue, snapToScale);
     this.maxNegativeValue = adjustLimit(maxNegativeValue, snapToScale);
 
     this.scaleZoneWidth = drawLabels ? scaleZoneWidth() : 0;
     this.sectionZoneHeight = drawLabels && drawSections ? SECTION_ZONE_HEIGHT : 0;
     this.chartWidth = panelWidth - scaleZoneWidth;
+    this.columnWidth = columnCount != 0 ? chartWidth / columnCount : 0;
 
     this.labelZoneHeight = drawLabels ? LABEL_ZONE_HEIGHT : 0;
     this.labelBottomMargin = drawLabels ? LABEL_BOTTOM_MARGIN : 0;
 
     this.chartHeight = panelHeight - labelZoneHeight - sectionZoneHeight;
+    this.usableChartHeight = chartHeight - (drawInnerLabels ? INNER_LABEL_HEIGHT : 0);
     if (maxNegativeValue != 0.0) {
-      this.positiveHeight = (int)((chartHeight - 2 * VERTICAL_CHART_PADDING) * this.maxPositiveValue
+      this.positiveHeight = (int)((usableChartHeight - 2 * VERTICAL_CHART_PADDING) * this.maxPositiveValue
                                   / (this.maxPositiveValue + this.maxNegativeValue));
-      this.negativeHeight = chartHeight - 2 * VERTICAL_CHART_PADDING - positiveHeight;
+      this.negativeHeight = usableChartHeight - 2 * VERTICAL_CHART_PADDING - positiveHeight;
     }
     else {
-      this.positiveHeight = chartHeight - VERTICAL_CHART_PADDING;
+      this.positiveHeight = usableChartHeight - VERTICAL_CHART_PADDING;
       this.negativeHeight = 0;
     }
-    this.columnWidth = columnCount != 0 ? chartWidth / columnCount : 0;
+
+    innerLabelY = columnTop() + chartHeight - INNER_LABEL_BOTTOM_MARGIN;
   }
 
   private double adjustLimit(double value, boolean snapToScale) {
@@ -129,6 +139,10 @@ public class HistoChartMetrics {
     return columnTop() + columnHeight();
   }
 
+  public int usableColumnBottom() {
+    return columnTop() + usableChartHeight;
+  }
+
   public int columnWidth() {
     return columnWidth;
   }
@@ -143,10 +157,10 @@ public class HistoChartMetrics {
 
   public int y(double value) {
     if (value >= 0) {
-      return VERTICAL_CHART_PADDING + (int)(positiveHeight * (1 - value / maxPositiveValue)) + columnTop();
+      return (int)(positiveHeight * (1 - value / maxPositiveValue)) + columnTop() + VERTICAL_CHART_PADDING;
     }
     else {
-      return VERTICAL_CHART_PADDING + positiveHeight + (int)(negativeHeight * Math.abs(value) / maxNegativeValue) + columnTop();
+      return positiveHeight + (int)(negativeHeight * Math.abs(value) / maxNegativeValue) + columnTop() + VERTICAL_CHART_PADDING;
     }
   }
 
@@ -230,6 +244,18 @@ public class HistoChartMetrics {
 
   public int scaleY(double value) {
     return y(value) + fontMetrics.getAscent() / 2;
+  }
+
+  public boolean isDrawingInnerLabels() {
+    return drawInnerLabels;
+  }
+
+  public int innerLabelY() {
+    return innerLabelY;
+  }
+
+  public int textWidth(String text) {
+    return fontMetrics.stringWidth(text);
   }
 
   private void checkIndex(int index) {

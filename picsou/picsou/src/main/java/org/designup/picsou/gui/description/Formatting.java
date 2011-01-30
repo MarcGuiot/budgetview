@@ -41,6 +41,26 @@ public class Formatting {
     }
   }
 
+  public static String toMinimumValueString(Double value, boolean future) {
+    if (value == null) {
+      return "";
+    }
+
+    if (future) {
+      value = Math.floor((value + 2.5) / 5) * 5;
+    }
+
+    if (Amounts.isNearZero(value)) {
+      return "0";
+    }
+    if (value < 0) {
+      return INTEGER_FORMAT.format(value);
+    }
+    else {
+      return "+" + INTEGER_FORMAT.format(value);
+    }
+  }
+
   public static String toString(Date date) {
     return DATE_FORMAT.format(date);
   }

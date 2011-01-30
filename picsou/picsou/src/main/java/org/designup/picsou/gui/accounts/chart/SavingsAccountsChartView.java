@@ -10,7 +10,7 @@ public class SavingsAccountsChartView extends AccountsChartView {
   public SavingsAccountsChartView(GlobRepository repository, Directory directory) {
     super(repository, directory, "savingsHistoChart");
 
-    histoChartBuilder = createChartBuilder(true, true, true, MONTHS_BACK, MONTHS_FORWARD, repository, directory);
+    histoChartBuilder = createChartBuilder(true, true, false, true, MONTHS_BACK, MONTHS_FORWARD, repository, directory);
   }
 
   protected void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {

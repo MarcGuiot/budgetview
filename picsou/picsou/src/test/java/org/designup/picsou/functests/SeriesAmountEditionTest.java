@@ -392,14 +392,14 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.editPlannedAmount("Internet")
       .checkPropagationDisabled()
       .checkSelectedMonths(201008)
-      .checkChartColumn(0, "A", "2010", 40.00, 29.00, true)
-      .checkChartColumn(1, "S", "2010", 50.00, 0.00)
-      .checkChartColumn(2, "O", "2010", 50.00, 0.00)
+      .checkChartColumn(0, "Aug", "2010", 40.00, 29.00, true)
+      .checkChartColumn(1, "Sep", "2010", 50.00, 0.00)
+      .checkChartColumn(2, "Oct", "2010", 50.00, 0.00)
       .setPropagationEnabled()
       .checkSelectedMonths(201008, 201009, 201010)
-      .checkChartColumn(0, "A", "2010", 40.00, 29.00, true)
-      .checkChartColumn(1, "S", "2010", 40.00, 0.00, true)
-      .checkChartColumn(2, "O", "2010", 40.00, 0.00, true)
+      .checkChartColumn(0, "Aug", "2010", 40.00, 29.00, true)
+      .checkChartColumn(1, "Sep", "2010", 40.00, 0.00, true)
+      .checkChartColumn(2, "Oct", "2010", 40.00, 0.00, true)
       .clickMonth(201009)
       .checkSelectedMonths(201009, 201010)
       .setPropagationDisabled()
@@ -429,9 +429,9 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("FREE", "Internet");
    
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkChartColumn(0, "A", "2010", 29.00, 29.00, true)
+      .checkChartColumn(0, "Aug", "2010", 29.00, 29.00, true)
       .scroll(6)
-      .checkChartColumn(0, "O", "2010", 29.00, 0.00, false)
+      .checkChartColumn(0, "Oct", "2010", 29.00, 0.00, false)
       .validate();
 
   }

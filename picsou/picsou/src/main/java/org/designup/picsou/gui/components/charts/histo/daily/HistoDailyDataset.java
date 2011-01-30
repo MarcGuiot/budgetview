@@ -27,6 +27,22 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
     }
   }
 
+  public Double[] getValues(int index) {
+    return getElement(index).values;
+  }
+
+  public Double getValue(int index, int day) {
+    return getElement(index).values[day];
+  }
+
+  public int getMinDay(int index) {
+    return getElement(index).minDay;
+  }
+
+  public Double getLastValue(int index) {
+    return getElement(index).getLastValue();
+  }
+
   public boolean isCurrent(int index, int day) {
     int month = getElement(index).id;
     return month == currentMonth && day - 1 == currentDay;
@@ -43,8 +59,8 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
     return day - 1 > currentDay;
   }
 
-  public Double[] getValues(int index) {
-    return getElement(index).values;
+  public boolean minInFuture(int index) {
+    return (isFuture(index, getMinDay(index)));
   }
 
   public String getTooltip(int index) {
@@ -52,10 +68,6 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
       return "";
     }
     return Lang.get(getTooltipKey(), getElement(index).tooltip);
-  }
-
-  public Double getLastValue(int index) {
-    return getElement(index).getLastValue();
   }
 
   public String toString() {
