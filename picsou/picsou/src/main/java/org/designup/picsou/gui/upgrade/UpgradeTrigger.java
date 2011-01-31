@@ -88,6 +88,9 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (currentJarVersion < 49){
       repository.safeApply(Series.TYPE, ALL, new DisableSeriesReportGlobFunctor());
     }
+    if (currentJarVersion < 54){
+      repository.update(UserPreferences.KEY, UserPreferences.MULTIPLE_PLANNED, true);
+    }
 
     deleteDeprecatedGlobs(repository);
 

@@ -2,6 +2,7 @@ package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.model.SeriesShape;
 import org.designup.picsou.model.*;
+import org.designup.picsou.model.util.Amounts;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -18,12 +19,14 @@ public class SeriesShapeTrigger implements ChangeSetListener {
     Integer monthId1;
     Integer monthId2;
     Integer monthId3;
+    private Boolean positif;
 
-    SeriesToReCompute(Integer seriesId, int monthId1, int monthId2, int monthId3) {
+    SeriesToReCompute(Integer seriesId, int monthId1, int monthId2, int monthId3, Boolean isPositif) {
       this.seriesId = seriesId;
       this.monthId1 = monthId1;
       this.monthId2 = monthId2;
       this.monthId3 = monthId3;
+      positif = isPositif;
     }
   }
 
@@ -169,13 +172,13 @@ public class SeriesShapeTrigger implements ChangeSetListener {
     repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
       .saveApply(globFunctor, repository);
     if (monthCount == 1) {
-      return new SeriesToReCompute(seriesId, globFunctor.lastId1, globFunctor.lastId1, globFunctor.lastId1);
+      return new SeriesToReCompute(seriesId, globFunctor.lastId1, globFunctor.lastId1, globFunctor.lastId1, globFunctor.isPositif);
     }
     if (monthCount == 2) {
-      return new SeriesToReCompute(seriesId, globFunctor.lastId1, globFunctor.lastId2, globFunctor.lastId2);
+      return new SeriesToReCompute(seriesId, globFunctor.lastId1, globFunctor.lastId2, globFunctor.lastId2, globFunctor.isPositif);
     }
     if (monthCount == 3) {
-      return new SeriesToReCompute(seriesId, globFunctor.lastId1, globFunctor.lastId1, globFunctor.lastId3);
+      return new SeriesToReCompute(seriesId, globFunctor.lastId1, globFunctor.lastId1, globFunctor.lastId3, globFunctor.isPositif);
     }
     throw new RuntimeException("only 3 month max");
   }
@@ -206,18 +209,19 @@ public class SeriesShapeTrigger implements ChangeSetListener {
         return;
       }
       int budgetMonthId = glob.get(Transaction.BUDGET_MONTH);
+      double amount = glob.get(Transaction.AMOUNT, 0);
+      if (series.positif != null && (amount > 0 ? !series.positif : series.positif)){
+        return;
+      }
       if (budgetMonthId == series.monthId1) {
-        double amount = glob.get(Transaction.AMOUNT, 0);
         amountForMonth1[glob.get(Transaction.BUDGET_DAY)] += amount;
         total1 += amount;
       }
       else if (budgetMonthId == series.monthId2) {
-        double amount = glob.get(Transaction.AMOUNT, 0);
         amountForMonth2[glob.get(Transaction.BUDGET_DAY)] += amount;
         total2 += amount;
       }
       else if (budgetMonthId == series.monthId1) {
-        double amount = glob.get(Transaction.AMOUNT, 0);
         amountForMonth3[glob.get(Transaction.BUDGET_DAY)] += amount;
         total3 += amount;
       }
@@ -261,6 +265,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
 
   private static class SelectActiveGlobFunctor implements GlobFunctor {
     private Integer lastTransactionMonthId;
+    private Boolean isPositif;
     private int lastId1 = -1;
     private int lastId2 = -1;
     private int lastId3 = -1;
@@ -276,6 +281,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
           lastId3 = lastId2;
           lastId2 = lastId1;
           lastId1 = monthId;
+          isPositif = glob.get(SeriesBudget.AMOUNT) != null ? Boolean.valueOf(glob.get(SeriesBudget.AMOUNT) >= 0) : isPositif;
           return;
         }
         if (monthId > lastId2) {
