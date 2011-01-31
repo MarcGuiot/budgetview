@@ -28,18 +28,6 @@ public class SummaryViewChecker extends ViewChecker {
     return savingsChart;
   }
 
-  public void gotoBudget() {
-    getPanel().getButton("gotoBudget").click();
-  }
-
-  public void gotoData() {
-    getPanel().getButton("gotoData").click();
-  }
-
-  public void gotoSavings() {
-    getPanel().getButton("gotoSavings").click();
-  }
-
   private Panel getPanel() {
     if (panel == null) {
       views.selectHome();

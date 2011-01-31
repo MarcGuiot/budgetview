@@ -308,6 +308,12 @@ public class HistoChart extends JPanel {
         }
       }
 
+      public void mouseReleased(MouseEvent mouseEvent) {
+        if (mouseEvent.getClickCount() == 2) {
+        }
+        super.mouseReleased(mouseEvent);
+      }
+
       public void mouseEntered(MouseEvent e) {
         if (isEnabled()) {
           currentRolloverIndex = null;

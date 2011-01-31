@@ -25,21 +25,9 @@ import javax.swing.*;
 
 public class SummaryView extends View {
   private SelectionService selectionService;
-  private JEditorPane messageField;
 
   public SummaryView(GlobRepository repository, Directory directory) {
     super(repository, directory);
-    repository.addChangeListener(new TypeChangeSetListener(BudgetStat.TYPE) {
-      protected void update(GlobRepository repository) {
-        updateMessage();
-      }
-    });
-    selectionService = directory.get(SelectionService.class);
-    selectionService.addListener(new GlobSelectionListener() {
-      public void selectionUpdated(GlobSelection selection) {
-        updateMessage();
-      }
-    }, Month.TYPE);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -55,28 +43,6 @@ public class SummaryView extends View {
     SavingsAccountsBalanceChartView savingsAccountsBalanceView = new SavingsAccountsBalanceChartView(repository, directory);
     savingsAccountsBalanceView.registerComponents(builder);
 
-    builder.add("gotoData", new GotoCardAction(Card.DATA, directory));
-    builder.add("gotoBudget", new GotoCardAction(Card.BUDGET, directory));
-    builder.add("gotoSavings", new GotoCardAction(Card.SAVINGS, directory));
-
-    messageField = GuiUtils.createReadOnlyHtmlComponent();
-    builder.add("message", messageField);
-
     parentBuilder.add("summaryView", builder);
-  }
-
-  private void updateMessage() {
-    GlobList months = selectionService.getSelection(Month.TYPE);
-    if (months.isEmpty()) {
-      messageField.setText("");
-      return;
-    }
-
-    int lastMonthId = months.getSortedSet(Month.ID).last();
-    Glob lastMonthStat = repository.find(Key.create(BudgetStat.TYPE, lastMonthId));
-    Double minPosition = lastMonthStat.get(BudgetStat.MIN_POSITION);
-    String text = AccountManagementMessage.getMessage(minPosition, repository);
-    messageField.setText(text);
-    GuiUtils.revalidate(messageField);
   }
 }

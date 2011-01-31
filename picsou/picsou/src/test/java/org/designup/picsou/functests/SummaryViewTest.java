@@ -26,23 +26,4 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("WorldCo", "Income");
     categorization.setNewRecurring("Foncia", "Loyer");
   }
-
-  public void testNavigation() throws Exception {
-
-    operations.hideSignposts();
-    
-    views.selectHome();
-
-    summary.gotoBudget();
-    views.checkBudgetSelected();
-
-    views.selectHome();
-    summary.gotoData();
-    views.checkDataSelected();
-
-    views.selectHome();
-    summary.gotoSavings();
-    views.checkSavingsSelected();
-  }
-
 }

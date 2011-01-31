@@ -11,6 +11,8 @@
           <panel ref="importPanel" marginLeft="10"/>
           <filler fill="horizontal"/>
           <panel ref="customFilterMessage" fill="none" anchor="center"/>
+          <filler fill="horizontal"/>
+          <checkBox ref="showPlannedTransactions" text="$transactionView.showPlannedTransactions" weightX="0"/>
         </row>
         <scrollPane borderPos="center" viewportBackground="transactions.bg"
                     border="line(transaction.border)" opaque="false"
@@ -22,15 +24,13 @@
           <label text="$transactionView.filter.label" styleClass="formLabel" marginRight="5"/>
           <comboBox ref="accountFilterCombo"/>
           <filler fill="horizontal"/>
-          <label text="$transactionView.series.filter.label" styleClass="formLabel" marginRight="5"/>
-          <comboBox ref="seriesFilterCombo"/>
-          <filler fill="horizontal"/>
           <label text="$amount" styleClass="formLabelTop" autoHideSource="sum"
                  border="empty(0,0,0,5)" tooltipText="$amount.tooltip"/>
           <label ref="sum" font="-,bold,12"/>
         </row>
         <row marginBottom="5">
-          <checkBox ref="showPlannedTransactions" text="$transactionView.showPlannedTransactions" weightX="0"/>
+          <label text="$transactionView.series.filter.label" styleClass="formLabel" marginRight="5"/>
+          <comboBox ref="seriesFilterCombo"/>
           <filler fill="horizontal"/>
           <component ref="transactionSearch"/>
         </row>

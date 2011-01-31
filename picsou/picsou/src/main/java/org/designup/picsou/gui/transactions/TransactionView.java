@@ -4,6 +4,7 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.utils.AccountFilteringCombo;
 import org.designup.picsou.gui.accounts.utils.SeriesFilteringCombo;
 import org.designup.picsou.gui.card.ImportPanel;
+import org.designup.picsou.gui.card.utils.GotoCardAction;
 import org.designup.picsou.gui.components.DefaultTableCellPainter;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.FilterClearer;
@@ -14,6 +15,7 @@ import org.designup.picsou.gui.components.filtering.components.TextFilterPanel;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.TransactionBudgetAreaStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
+import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.Matchers;
@@ -98,6 +100,8 @@ public class TransactionView extends View implements Filterable {
 
     ImportPanel importPanel = new ImportPanel(repository, directory);
     importPanel.registerComponents(builder);
+
+    builder.add("gotoCategorization", new GotoCardAction(Card.CATEGORIZATION, directory));
 
     FilterClearingPanel filterClearingPanel = new FilterClearingPanel(filterManager, repository, directory);
     builder.add("customFilterMessage", filterClearingPanel.getPanel());

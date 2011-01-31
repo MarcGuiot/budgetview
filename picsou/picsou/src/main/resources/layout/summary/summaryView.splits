@@ -10,20 +10,6 @@
     <style selector="component.chart" margin="15" marginTop="5" marginLeft="25" opaque="true"
            background="block.inner.bg"/>
 
-    <style selector="button.navigation"
-           ui="hyperlinkButtonWithoutUnderline" foreground="summary.navigation.link"
-           horizontalTextPosition="left" fill="none" anchor="right" marginRight="10"
-           icon="arrow_right_grey.png" rolloverIcon="arrow_right_blue_full.png"/>
-    <style selector="label.navigation" fill="none" anchor="center"/>
-
-    <style selector="htmlEditorPane#message" fill="both" anchor="center" foreground="summary.message"
-           marginBottom="20" marginLeft="60" marginRight="5"/>
-
-    <style selector=".navBlock" weightX="0"/>
-
-    <style selector=".navBlock button" marginLeft="10"/>
-    <style selector=".navBlock label" marginLeft="10"/>
-
   </styles>
 
   <column>
@@ -51,19 +37,6 @@
     </row>
 
     <component ref="savingsHistoChart" styleClass="chart" weightY="10"/>
-
-    <row>
-      <htmlEditorPane ref="message"/>
-      <grid styleClass="navBlock">
-        <label icon="home/data.png" styleClass="navigation" gridPos="(0,0)"/>
-        <button action="gotoData" styleClass="navigation" gridPos="(1,0)"/>
-        <label icon="home/budget.png" styleClass="navigation" gridPos="(0,1)"/>
-        <button action="gotoBudget" styleClass="navigation" gridPos="(1,1)"/>
-        <label icon="home/savings.png" styleClass="navigation" gridPos="(0,2)"/>
-        <button action="gotoSavings" styleClass="navigation" gridPos="(1,2)"/>
-      </grid>
-
-    </row>
 
   </column>
 
