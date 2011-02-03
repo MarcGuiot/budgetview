@@ -738,6 +738,43 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkTotalAmounts(100, 200);
   }
 
+//  public void testBothImportedButCategorizedOnlyOne() throws Exception {
+//    OfxBuilder.init(this)
+//      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")  //compte d'épargne
+//      .addTransaction("2008/08/10", 100.00, "Virement Epargne")
+//      .addTransaction("2008/07/10", -200.00, "Prelevement Epargne")
+//      .load();
+//    OfxBuilder.init(this)
+//      .addTransaction("2008/08/10", -100.00, "Prelevement CC")
+//      .addTransaction("2008/07/10", 200.00, "Virement CC")
+//      .load();
+//    operations.openPreferences().setFutureMonthsCount(2).validate();
+//
+//    this.mainAccounts.edit("Account n. 111")
+//      .setAsSavings()
+//      .validate();
+//
+//    openApplication();
+//    this.categorization
+//      .setSavings("Prelevement Epargne", "From Account n. 111");
+//    this.savingsView.editPlannedAmount("Account n. 111", "From Account n. 111")
+//      .checkActualAmount("-200")
+//      .checkAmount("0");
+//
+//    this.budgetView.savings.checkSeries("To Account n. 111", -200, 0);
+//    this.budgetView.savings.editPlannedAmount("To Account n. 111")
+//      .checkActualAmount("200")
+//      .checkAmount("0")
+//      .setPropagationEnabled()
+//      .alignPlannedAndActual();
+//
+//    this.savingsView.editPlannedAmount("Account n. 111", "From Account n. 111")
+//      .checkActualAmount("-200")
+//      .checkAmount("-200");
+//
+//  }
+
+
   public void testImportedSavingsAccountWithMainAccountInManual() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")

@@ -1,9 +1,9 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import junit.framework.ComparisonFailure;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.functests.checkers.converters.SeriesCellConverter;
+import org.designup.picsou.functests.checkers.converters.BankDateCellConverter;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.transactions.TransactionView;
@@ -14,11 +14,12 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.exceptions.ItemNotFound;
 import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.KeyUtils;
@@ -26,8 +27,6 @@ import org.uispec4j.utils.KeyUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-
-import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class TransactionChecker extends ViewChecker {
   public static final String TO_CATEGORIZE = "To categorize";
@@ -55,6 +54,7 @@ public class TransactionChecker extends ViewChecker {
       views.selectData();
       table = mainWindow.getTable("transactionsTable");
       table.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter());
+      table.setCellValueConverter(TransactionView.BANK_DATE_COLUMN_INDEX, new BankDateCellConverter());
       table.setCellValueConverter(TransactionView.SUBSERIES_COLUMN_INDEX, new SubSeriesCellValueConverter(mainWindow));
       table.setCellValueConverter(TransactionView.SERIES_COLUMN_INDEX, new SeriesCellConverter(true));
     }
@@ -183,7 +183,7 @@ public class TransactionChecker extends ViewChecker {
   public void checkSelectedAccount(String selection) {
     assertThat(getAccountFilter().selectionEquals(selection));
   }
-  
+
   public void selectSeries(String seriesName) {
     getSeriesFilter().select(seriesName);
   }
@@ -427,14 +427,14 @@ public class TransactionChecker extends ViewChecker {
     public void check() {
       Object[][] expectedContent = content.toArray(new Object[content.size()][]);
       UISpecAssert.assertTrue(getTable()
-                                .contentEquals(new String[]{Lang.get("transactionView.date.user"),
-                                                            Lang.get("transactionView.date.bank"),
-                                                            Lang.get("series"),
-                                                            Lang.get("subSeries"),
-                                                            Lang.get("label"),
-                                                            Lang.get("amount"),
-                                                            Lang.get("note")},
-                                               expectedContent));
+        .contentEquals(new String[]{Lang.get("transactionView.date.user"),
+                                    Lang.get("transactionView.date.bank"),
+                                    Lang.get("series"),
+                                    Lang.get("subSeries"),
+                                    Lang.get("label"),
+                                    Lang.get("amount"),
+                                    Lang.get("note")},
+                       expectedContent));
     }
   }
 

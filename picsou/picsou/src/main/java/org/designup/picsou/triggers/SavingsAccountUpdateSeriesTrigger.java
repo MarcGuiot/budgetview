@@ -143,7 +143,7 @@ public class SavingsAccountUpdateSeriesTrigger implements ChangeSetListener {
                               FieldValue.value(Series.TO_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
                               FieldValue.value(Series.NAME,
                                                getSeriesName(values, "savings.series.auto.create.name.from.savings")),
-                              FieldValue.value(Series.IS_AUTOMATIC, true));
+                              FieldValue.value(Series.IS_AUTOMATIC, false));
     }
     {
 
@@ -154,7 +154,7 @@ public class SavingsAccountUpdateSeriesTrigger implements ChangeSetListener {
                               FieldValue.value(Series.FROM_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
                               FieldValue.value(Series.NAME,
                                                getSeriesName(values, "savings.series.auto.create.name.to.savings")),
-                              FieldValue.value(Series.IS_AUTOMATIC, true));
+                              FieldValue.value(Series.IS_AUTOMATIC, false));
     }
     ChangeSet currentChanges = localRespository.getCurrentChanges();
 
