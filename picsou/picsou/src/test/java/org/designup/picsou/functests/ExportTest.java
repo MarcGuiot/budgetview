@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.utils.ConfirmationHandler;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
@@ -219,7 +220,8 @@ public class ExportTest extends LoggedInFunctionalTestCase {
         }
       })
       .process(FileChooserHandler.init().select(fileName))
-      .processWithButtonClick("Confirmation", "No")
+      .process(ConfirmationHandler.cancel("Confirmation",
+                                          "This file already exists. Do you want to replace it?"))
       .run();
 
     assertEquals("Blah", Files.loadFileToString(fileName).trim());
@@ -228,7 +230,8 @@ public class ExportTest extends LoggedInFunctionalTestCase {
       .init(operations.getExportTrigger())
       .processWithButtonClick("OK")
       .process(FileChooserHandler.init().select(fileName))
-      .processWithButtonClick("Confirmation", "Yes")
+      .process(ConfirmationHandler.validate("Confirmation",
+                                            "This file already exists. Do you want to replace it?"))
       .run();
 
     assertTrue(Files.loadFileToString(fileName).startsWith("<OFX>"));

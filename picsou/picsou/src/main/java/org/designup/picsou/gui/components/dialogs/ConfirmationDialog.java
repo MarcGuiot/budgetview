@@ -3,6 +3,7 @@ package org.designup.picsou.gui.components.dialogs;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.utils.Ref;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -15,6 +16,17 @@ public abstract class ConfirmationDialog {
   protected AbstractAction cancel;
   protected AbstractAction ok;
   private SplitsBuilder builder;
+
+  public static boolean confirmed(String titleKey, String contentKey, JFrame parent, Directory directory) {
+    final Ref<Boolean> result = new Ref<Boolean>(false);
+    ConfirmationDialog dialog = new ConfirmationDialog(titleKey, contentKey, parent, directory) {
+      protected void postValidate() {
+        result.set(true);
+      }
+    };
+    dialog.show();
+    return result.get();
+  }
 
   public enum Mode {
     STANDARD("/layout/utils/confirmationDialog.splits"),

@@ -1,14 +1,15 @@
 package org.designup.picsou.gui.backup;
 
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.components.dialogs.MessageFileDialog;
+import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
-import org.designup.picsou.utils.Lang;
+import org.designup.picsou.gui.components.dialogs.MessageFileDialog;
+import org.designup.picsou.gui.time.TimeService;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.User;
-import org.globsframework.model.GlobRepository;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 
@@ -20,8 +21,8 @@ import java.text.SimpleDateFormat;
 public class BackupAction extends AbstractBackupRestoreAction {
 
   private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-  private static final String PREFIX =  "backup-";
-  private static final String EXTENSION = "."  + PicsouApplication.APPNAME.toLowerCase();
+  private static final String PREFIX = "backup-";
+  private static final String EXTENSION = "." + PicsouApplication.APPNAME.toLowerCase();
 
   public BackupAction(GlobRepository repository, Directory directory) {
     super(Lang.get("backup"), repository, directory);
@@ -30,7 +31,7 @@ public class BackupAction extends AbstractBackupRestoreAction {
   public void actionPerformed(ActionEvent event) {
 
     Glob glob = repository.get(User.KEY);
-    if (!glob.isTrue(User.IS_REGISTERED_USER)){
+    if (!glob.isTrue(User.IS_REGISTERED_USER)) {
       MessageDialog.show("backup.trial.title", frame, directory, "backup.trial.content");
     }
 
@@ -40,15 +41,11 @@ public class BackupAction extends AbstractBackupRestoreAction {
 
     int returnVal = chooser.showSaveDialog(frame);
     if (returnVal == JFileChooser.APPROVE_OPTION) {
-      File file = chooser.getSelectedFile();
-      if (file.exists()) {
-        int result = JOptionPane.showConfirmDialog(frame,
-                                                   Lang.get("backup.confirm.message"),
-                                                   Lang.get("backup.confirm.title"),
-                                                   JOptionPane.YES_NO_OPTION);
-        if (result != JOptionPane.YES_OPTION) {
-          return;
-        }
+      final File file = chooser.getSelectedFile();
+      if (file.exists() && !ConfirmationDialog.confirmed("backup.confirm.title",
+                                                         "backup.confirm.message",
+                                                         frame, directory)) {
+        return;
       }
 
       try {
@@ -68,6 +65,7 @@ public class BackupAction extends AbstractBackupRestoreAction {
         Gui.setDefaultCursor(frame);
       }
     }
+
   }
 
   private File getSafeBackupFile() {

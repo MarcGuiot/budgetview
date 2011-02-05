@@ -4,6 +4,7 @@ import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.MessageFileDialogChecker;
 import org.designup.picsou.functests.checkers.PasswordDialogChecker;
 import org.designup.picsou.functests.checkers.LoginChecker;
+import org.designup.picsou.functests.checkers.utils.ConfirmationHandler;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
@@ -103,12 +104,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
       .process(FileChooserHandler.init()
         .assertCurrentFileNameEquals("backup-2008-08-30.budgetview")
         .select(filePath))
-      .process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          assertThat(window.containsLabel("Do you want to overwrite this file?"));
-          return window.getButton("No").triggerClick();
-        }
-      })
+      .process(ConfirmationHandler.cancel("Confirmation", "Do you want to overwrite this file?"))
       .run();
 
     Assert.assertTrue(Files.loadFileToString(filePath).contains("blah"));
@@ -116,12 +112,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
     WindowInterceptor
       .init(operations.getBackupTrigger())
       .process(FileChooserHandler.init().select(filePath))
-      .process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          assertThat(window.containsLabel("Do you want to overwrite this file?"));
-          return window.getButton("Yes").triggerClick();
-        }
-      })
+      .process(ConfirmationHandler.validate("Confirmation", "Do you want to overwrite this file?"))
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           MessageFileDialogChecker dialog = new MessageFileDialogChecker(window);

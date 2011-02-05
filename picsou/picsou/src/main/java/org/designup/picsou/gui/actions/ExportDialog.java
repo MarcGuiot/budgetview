@@ -3,6 +3,7 @@ package org.designup.picsou.gui.actions;
 import org.designup.picsou.exporter.Exporter;
 import org.designup.picsou.exporter.Exporters;
 import org.designup.picsou.gui.components.CloseAction;
+import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -25,7 +26,7 @@ import java.io.IOException;
 
 public class ExportDialog {
   private GlobRepository repository;
-  private Component parent;
+  private JFrame parent;
   private PicsouDialog dialog;
   private Directory directory;
   private Exporters exporters;
@@ -92,7 +93,7 @@ public class ExportDialog {
     final String type = exporter.getType();
     final String extension = exporter.getExtension();
 
-    JFileChooser chooser = new JFileChooser();
+    final JFileChooser chooser = new JFileChooser();
     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
     chooser.addChoosableFileFilter(new FileFilter() {
       public boolean accept(File file) {
@@ -111,25 +112,27 @@ public class ExportDialog {
       return;
     }
 
-    File file = chooser.getSelectedFile();
-    if (!file.getName().endsWith(extension)) {
-      file = new File(file.getParentFile(), file.getName() + "." + extension);
+    final File file = getFile(chooser, extension);
+    if (file.exists() && !ConfirmationDialog.confirmed("export.confirm.title",
+                                                       "export.confirm.message",
+                                                       parent, directory)) {
+      return;
     }
-    if (file.exists()) {
-      int result = JOptionPane.showConfirmDialog(parent,
-                                                 Lang.get("export.confirm.message"),
-                                                 Lang.get("export.confirm.title"),
-                                                 JOptionPane.YES_NO_OPTION);
-      if (result != JOptionPane.YES_OPTION) {
-        return;
-      }
-    }
+
     try {
       writeFile(exporter, file);
     }
     catch (IOException e) {
       JOptionPane.showMessageDialog(chooser, "Error writing file: " + file.getName());
     }
+  }
+
+  private File getFile(JFileChooser chooser, String extension) {
+    File file = chooser.getSelectedFile();
+    if (!file.getName().endsWith(extension)) {
+      file = new File(file.getParentFile(), file.getName() + "." + extension);
+    }
+    return file;
   }
 
   private void writeFile(Exporter exporter, File file) throws IOException {
