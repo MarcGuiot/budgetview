@@ -13,6 +13,12 @@
     <style selector=".totalAmount" anchor="center" fill="none" font="-,bold,14"/>
     <style selector="button.totalAmount" ui="underlinedButtonUI" foreground=""/>
 
+    <style selector=".subRow .totalAmountTitle"
+           marginRight="10" weightX="1"/>
+    <style selector=".subRow button.totalAmount"
+           font="-,bold,12" horizontalTextPosition="left"
+           weightX="1" fill="none" anchor="left"/>
+
     <style selector="button#balanceLabel" fill="none" anchor="center"/>
 
     <style selector="button#uncategorized" ui="underlinedButtonUI"
@@ -24,19 +30,14 @@
     <style id="uncategorizedDisabled" selector="x"
            icon="" rolloverIcon=""/>
 
-    <style selector="label.message"
-           foreground="block.total.title" font="-,plain,10"
-           horizontalAlignment="center" border="empty(5,0,0,0)"
+    <style selector="panel.multiSelection"
+           background="budgetSummary.multiSelection.bg"
+           border="matte(1,0,1,0,budgetSummary.multiSelection.border)"/>
+
+    <style selector="panel.multiSelection label"
+           foreground="budgetSummary.multiSelection.text" font="-,plain,11"
+           horizontalAlignment="center" border="empty(5,0,5,0)"
            fill="horizontal" anchor="bottom" weightY="0"/>
-
-    <style selector="htmlEditorPane#helpMessage"
-           border="empty(5,0,0,0)" foreground="budgetSummary.help.message"/>
-
-    <style selector=".subRow .totalAmountTitle"
-           marginRight="10" weightX="1"/>
-    <style selector=".subRow button.totalAmount"
-           font="-,bold,12" horizontalTextPosition="left"
-           weightX="1" fill="none" anchor="left"/>
 
   </styles>
 
@@ -54,7 +55,11 @@
       <button ref="uncategorized" styleClass="uncategorized"/>
     </row>
 
-    <label ref="multiSelectionLabel" styleClass="message" weightY="0"/>
+    <panel border="empty(5,0,0,0)" autoHideSource="multiSelectionLabel">
+      <panel styleClass="multiSelection">
+        <label ref="multiSelectionLabel"/>
+      </panel>
+    </panel>
 
   </column>
 
