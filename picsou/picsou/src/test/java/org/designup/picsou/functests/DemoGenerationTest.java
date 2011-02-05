@@ -25,7 +25,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
     Locale.setDefault(Locale.FRENCH);
 
-    thirdMonth = 201006;//Month.getMonthId(new Date());
+    thirdMonth = Month.getMonthId(new Date());
     secondMonth = Month.previous(thirdMonth);
     firstMonth = Month.previous(secondMonth);
     fourthMonth = Month.next(thirdMonth);

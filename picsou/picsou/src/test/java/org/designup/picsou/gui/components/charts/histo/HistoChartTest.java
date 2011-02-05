@@ -20,7 +20,8 @@ public class HistoChartTest extends TestCase {
     Directory directory = new DefaultDirectory();
     directory.add(new ColorService());
 
-    chart = new HistoChart(true, true, false, true, directory);
+
+    chart = new HistoChart(new HistoChartConfig(true, true, false, true), directory);
 
     colors = new HistoLineColors(
       "histo.expenses.line",

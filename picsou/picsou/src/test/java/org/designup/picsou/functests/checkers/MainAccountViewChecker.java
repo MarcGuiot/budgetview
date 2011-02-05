@@ -6,7 +6,7 @@ import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class MainAccountViewChecker extends AccountViewChecker<MainAccountViewChecker> {
 
-  private BudgetViewChecker budget;
+  private BudgetSummaryViewChecker budgetSummary;
 
   public MainAccountViewChecker(Window window) {
     super(window, "mainAccountView");
@@ -28,11 +28,11 @@ public class MainAccountViewChecker extends AccountViewChecker<MainAccountViewCh
   }
 
   protected BudgetSummaryViewChecker getBudgetSummary() {
-    if (budget == null) {
+    if (budgetSummary == null) {
       views.selectBudget();
-      budget = new BudgetViewChecker(mainWindow);
+      budgetSummary = new BudgetViewChecker(mainWindow).getSummary();
     }
-    return budget.getSummary();
+    return budgetSummary;
   }
 
 

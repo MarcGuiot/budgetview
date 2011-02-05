@@ -11,9 +11,6 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void test() throws Exception {
-
-    operations.hideSignposts();
-
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     OfxBuilder.init(this)
@@ -25,5 +22,60 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
 
     categorization.setNewIncome("WorldCo", "Income");
     categorization.setNewRecurring("Foncia", "Loyer");
+
+    summary.getMainChart()
+      .checkEndOfMonthValue(4000.00)
+      .checkRange(201012, 201107)
+      .checkSelected(201101);
+  }
+
+  public void testScrolling() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(18).validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "00000123", 2800.0, "2011/01/10")
+      .addTransaction("2010/12/28", 3000.00, "WorldCo")
+      .addTransaction("2010/09/28", 3000.00, "WorldCo")
+      .load();
+
+    checkRange(201010, 201110);
+
+    summary.getMainChart().scroll(-8);
+    checkRange(201009, 201109);
+
+    summary.getMainChart().scroll(+1);
+    checkRange(201010, 201110);
+
+    timeline.selectMonth("2011/12");
+
+    summary.getMainChart();
+    checkRange(201012, 201112);
+
+    summary.getMainChart().scroll(-1);
+    checkRange(201012, 201112);
+
+    summary.getMainChart().scroll(+1);
+    checkRange(201101, 201201);
+  }
+
+  public void testDoubleClick() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "00000123", 2800.0, "2011/01/10")
+      .addTransaction("2010/12/28", 3000.00, "WorldCo")
+      .addTransaction("2010/09/28", 3000.00, "WorldCo")
+      .load();
+
+    views.selectHome();
+    summary.getMainChart().doubleClick();
+
+    views.checkBudgetSelected();
+    timeline.checkSelection("2010/12");
+  }
+
+  private void checkRange(int start, int end) {
+    summary.getMainChart().checkRange(start, end);
+    summary.getSavingsBalanceChart().checkRange(start, end);
+    summary.getSavingsChart().checkRange(start, end);
   }
 }

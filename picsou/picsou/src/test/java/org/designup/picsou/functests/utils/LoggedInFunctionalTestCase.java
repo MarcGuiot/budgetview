@@ -3,13 +3,14 @@ package org.designup.picsou.functests.utils;
 import org.designup.picsou.functests.FunctionalTestCase;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.config.ConfigService;
-import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.startup.LoginPanel;
+import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.time.TimeViewPanel;
+import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.initial.DefaultSeriesFactory;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Dates;
@@ -61,6 +62,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected String user = "anonymous";
   protected String password = null;
   private boolean firstLogin = true;
+  private boolean initialGuidesShown = false;
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -113,7 +115,19 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
         .validate();
     }
 
+    if (!initialGuidesShown) {
+      SignpostStatus.setInitialGuidanceCompleted(repository);
+    }
+
     selectInitialView();
+  }
+
+  public void setInitialGuidesShown(boolean initialGuidesShown) {
+    this.initialGuidesShown = initialGuidesShown;
+  }
+
+  protected void disableSignposts() {
+    operations.hideSignposts();
   }
 
   protected void selectInitialView() {

@@ -48,7 +48,7 @@ import net.roydesign.mac.MRJAdapter;
 
     Directory directory = PicsouApplication.createDirectory();
     MRJAdapter.addAboutListener(new AboutAction(directory));
-           
+
     ServerDirectory serverDirectory = createServerDirectory(snapshot);
     directory.add(ServerDirectory.class, serverDirectory);
     ServerAccess serverAccess =

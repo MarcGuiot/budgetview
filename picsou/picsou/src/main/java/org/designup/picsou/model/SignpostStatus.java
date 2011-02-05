@@ -90,11 +90,15 @@ public class SignpostStatus {
           repository.update(KEY, field, Boolean.TRUE);
         }
       }
-      repository.update(KEY, CURRENT_SECTION, SignpostSectionType.COMPLETED.getId());
+      setInitialGuidanceCompleted(repository);
     }
     finally {
       repository.completeChangeSet();
     }
+  }
+
+  public static void setInitialGuidanceCompleted(GlobRepository repository) {
+    repository.update(KEY, CURRENT_SECTION, SignpostSectionType.COMPLETED.getId());
   }
 
   public static void setAmountSeriesKey(org.globsframework.model.Key seriesKey,

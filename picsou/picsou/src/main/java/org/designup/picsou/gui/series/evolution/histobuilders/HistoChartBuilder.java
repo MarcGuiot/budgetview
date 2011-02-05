@@ -5,6 +5,9 @@ import org.designup.picsou.gui.components.charts.histo.HistoChartListener;
 import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyColors;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffColors;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineColors;
+import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
+import org.designup.picsou.gui.components.charts.histo.utils.ScrollGroup;
+import org.designup.picsou.gui.components.charts.histo.utils.Scrollable;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
@@ -24,13 +27,15 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 
 import static org.designup.picsou.gui.utils.Matchers.transactionsForMainAccounts;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
-public class HistoChartBuilder {
+public class HistoChartBuilder implements Scrollable {
   private HistoChart histoChart;
   private JLabel histoChartLabel;
+  private HistoChartBuilderConfig config;
   private GlobRepository repository;
 
   private HistoDiffColors balanceColors;
@@ -42,21 +47,17 @@ public class HistoChartBuilder {
   private HistoLineColors accountBalanceColors;
   private HistoDiffColors seriesColors;
 
+  private ScrollGroup scrollGroup;
   private int scrollMonth;
-  private int monthsBack;
-  private int monthsLater;
 
-  public HistoChartBuilder(boolean drawLabels,
-                           boolean drawSections,
-                           boolean clickable,
-                           boolean drawInnerLabels,
+  public HistoChartBuilder(HistoChartBuilderConfig config,
                            final GlobRepository repository,
                            final Directory directory,
-                           final SelectionService parentSelectionService,
-                           int monthsBack, int monthsLater) {
+                           final SelectionService parentSelectionService) {
+    this.config = config;
     this.repository = repository;
-    histoChart = new HistoChart(drawLabels, drawSections, drawInnerLabels, clickable, directory);
-    histoChart.addListener(new HistoChartListener() {
+    this.histoChart = new HistoChart(config, directory);
+    this.histoChart.addListener(new HistoChartListenerAdapter() {
       public void columnsClicked(Set<Integer> monthIds) {
         GlobList months = new GlobList();
         for (Integer monthId : monthIds) {
@@ -66,23 +67,30 @@ public class HistoChartBuilder {
       }
 
       public void scroll(int count) {
-        scrollMonth += count;
+        if (scrollGroup != null) {
+          scrollGroup.scroll(count);
+        }
+        else {
+          HistoChartBuilder.this.scroll(count);
+        }
       }
     });
     histoChartLabel = new JLabel();
 
-    this.monthsBack = monthsBack;
-    this.monthsLater = monthsLater;
-
     initColors(directory);
+  }
+
+  public void register(ScrollGroup group) {
+    this.scrollGroup = group;
+    group.add(this);
+  }
+
+  public void scroll(int count) {
+    scrollMonth += count;
   }
 
   public void addListener(HistoChartListener listener) {
     histoChart.addListener(listener);
-  }
-
-  public void addDoubleClickListener(HistoChartListener listener) {
-    histoChart.addDoubleClickListener(listener);
   }
 
   private void initColors(Directory directory) {
@@ -435,26 +443,48 @@ public class HistoChartBuilder {
   }
 
   private List<Integer> getMonthIdsToShow(Integer selectedMonthId) {
-    List<Integer> result = new ArrayList<Integer>();
-    int newCenterMonthId = Month.offset(selectedMonthId, scrollMonth);
-    int firstMonth = Month.previous(newCenterMonthId, monthsBack);
-    int lastMonth = Month.next(newCenterMonthId, monthsLater);
-    // On ne veut pas faire de decalage si il n'y a pas assez de mois
+    SortedSet<Integer> monthIds = repository.getAll(Month.TYPE).getSortedSet(Month.ID);
+    int firstMonth = monthIds.first();
+    int lastMonth = monthIds.last();
+
+    Integer currentMonth = config.centerOnSelection ? selectedMonthId : CurrentMonth.getCurrentMonth(repository);
+    int offsetCenter = Month.offset(currentMonth, scrollMonth);
+    int rangeStart = Month.previous(offsetCenter, config.monthsBack);
+    int rangeEnd = Month.next(offsetCenter, config.monthsLater);
+
+    if (selectedMonthId < rangeStart) {
+      rangeStart = selectedMonthId;
+      offsetCenter = Month.next(rangeStart, config.monthsBack);
+      scrollMonth = Month.distance(currentMonth, offsetCenter);
+      rangeEnd = Math.min(lastMonth, Month.next(offsetCenter, config.monthsLater));
+    }
+    if (selectedMonthId > rangeEnd) {
+      rangeEnd = selectedMonthId;
+      offsetCenter = Month.previous(rangeEnd, config.monthsLater);
+      scrollMonth = Month.distance(currentMonth, offsetCenter);
+      rangeStart = Math.max(firstMonth, Month.previous(offsetCenter, config.monthsBack));
+    }
+
     if (scrollMonth < 0) {
-      while (!repository.contains(Key.create(Month.TYPE, firstMonth)) && scrollMonth != 0) {
-        firstMonth = Month.next(firstMonth);
-        lastMonth = Month.next(lastMonth);
+      while ((scrollMonth != 0) && (rangeStart < firstMonth)) {
         scrollMonth++;
+        offsetCenter = Month.offset(currentMonth, scrollMonth);
+        rangeStart = Month.previous(offsetCenter, config.monthsBack);
       }
+      rangeEnd = Math.min(lastMonth, Month.next(offsetCenter, config.monthsLater));
     }
     else if (scrollMonth > 0) {
-      while (!repository.contains(Key.create(Month.TYPE, lastMonth)) && scrollMonth != 0) {
-        firstMonth = Month.previous(firstMonth);
-        lastMonth = Month.previous(lastMonth);
+      while ((scrollMonth != 0) && (rangeEnd > lastMonth)) {
         scrollMonth--;
+        offsetCenter = Month.offset(currentMonth, scrollMonth);
+        rangeEnd = Month.next(offsetCenter, config.monthsLater);
       }
+      rangeStart = Math.max(firstMonth, Month.previous(offsetCenter, config.monthsBack));
+
     }
-    for (Integer monthId : Month.range(firstMonth, lastMonth)) {
+
+    List<Integer> result = new ArrayList<Integer>();
+    for (Integer monthId : Month.range(rangeStart, rangeEnd)) {
       Key monthKey = Key.create(Month.TYPE, monthId);
       if (repository.contains(monthKey)) {
         result.add(monthId);

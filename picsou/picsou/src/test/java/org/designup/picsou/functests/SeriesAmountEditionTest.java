@@ -417,7 +417,6 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Internet", 0, -40.00);
   }
 
-
   public void testMouseWeel() throws Exception {
     operations.openPreferences().setFutureMonthsCount(24).validate();
 
@@ -430,8 +429,12 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
    
     budgetView.recurring.editPlannedAmount("Internet")
       .checkChartColumn(0, "Aug", "2010", 29.00, 29.00, true)
-      .scroll(6)
-      .checkChartColumn(0, "Oct", "2010", 29.00, 0.00, false)
+      .checkChartRange(201008,201108)
+      .scroll(2)
+      .checkChartColumn(0, "Aug", "2010", 29.00, 29.00, true)
+      .checkChartRange(201008,201110)
+      .scroll(20)
+      .checkChartRange(201008,201112)
       .validate();
 
   }

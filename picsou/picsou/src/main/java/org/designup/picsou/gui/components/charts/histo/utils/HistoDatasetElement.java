@@ -19,5 +19,12 @@ public class HistoDatasetElement {
     this.future = future;
     this.selected = selected;
   }
+
+  public String toString() {
+    return label + " / " + section +
+           (current ? "current" : "") + ":" +
+           (future ? "future" : "") + ":" +
+           (selected ? "selected" : "");
+  }
 }
 

@@ -1,14 +1,15 @@
 package org.designup.picsou.gui.series.evolution;
 
 import org.designup.picsou.gui.card.NavigationService;
+import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
 import org.designup.picsou.gui.components.charts.stack.StackChartColors;
 import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
-import org.designup.picsou.gui.components.charts.histo.HistoChartListener;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilder;
+import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilderConfig;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.*;
@@ -19,7 +20,6 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
@@ -29,6 +29,8 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
+
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
@@ -61,11 +63,9 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
     this.currentWrapperKey = getMainSummaryWrapper();
 
-    histoChartBuilder = new HistoChartBuilder(true, true, true, false, repository, directory, parentSelectionService, 12, 6);
-    histoChartBuilder.addListener(new HistoChartListener() {
-      public void columnsClicked(Set<Integer> ids) {
-      }
-
+    histoChartBuilder = new HistoChartBuilder(new HistoChartBuilderConfig(true, true, false, true, 12, 6, false),
+                                              repository, directory, parentSelectionService);
+    histoChartBuilder.addListener(new HistoChartListenerAdapter() {
       public void scroll(int count) {
         update(false);
       }

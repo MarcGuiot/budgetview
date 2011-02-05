@@ -98,13 +98,13 @@ public class HistoChecker extends GuiChecker {
     HistoDiffDataset dataset = getDataset(HistoDiffDataset.class);
     builder.append(".checkColumnCount(").append(dataset.size()).append(")\n");
     for (int i = 0; i < dataset.size(); i++) {
-        builder.append(".checkDiffColumn(").append(i).append(", \"")
-          .append(dataset.getLabel(i)).append("\", \"")
-          .append(dataset.getSection(i)).append("\", ")
-          .append(Formatting.toString(dataset.getReferenceValue(i))).append(", ")
-          .append(Formatting.toString(dataset.getActualValue(i)))
-          .append(dataset.isSelected(i) ? ", true" : "")
-          .append(")\n");
+      builder.append(".checkDiffColumn(").append(i).append(", \"")
+        .append(dataset.getLabel(i)).append("\", \"")
+        .append(dataset.getSection(i)).append("\", ")
+        .append(Formatting.toString(dataset.getReferenceValue(i))).append(", ")
+        .append(Formatting.toString(dataset.getActualValue(i)))
+        .append(dataset.isSelected(i) ? ", true" : "")
+        .append(")\n");
     }
     System.out.println(builder.toString());
   }
@@ -192,6 +192,16 @@ public class HistoChecker extends GuiChecker {
     return "Error at index: " + index + " - dataset contents:\n" + dataset;
   }
 
+  public HistoChecker checkRange(int firstMonth, int lastMonth) {
+    HistoDataset dataset = getDataset(HistoDataset.class);
+    int actualFirst = dataset.getId(0);
+    int actualLast = dataset.getId(dataset.size() - 1);
+    if ((actualFirst != firstMonth) || (actualLast != lastMonth)) {
+      Assert.fail("expected: [" + firstMonth + "," + lastMonth + "] but was: [" + actualFirst + "," + actualLast + "]");
+    }
+    return this;
+  }
+
   private <T extends HistoDataset> T getDataset(Class<T> datasetClass) {
     HistoChart chart = getChart();
     HistoDataset dataset = chart.getCurrentDataset();
@@ -210,8 +220,8 @@ public class HistoChecker extends GuiChecker {
     return window.getPanel(panelName).getPanel(chartName);
   }
 
-  public HistoChecker scroll(int i) {
-    Mouse.wheel(getPanel(), i);
+  public HistoChecker scroll(int offset) {
+    Mouse.wheel(getPanel(), offset);
     return this;
   }
 }

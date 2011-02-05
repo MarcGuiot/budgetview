@@ -21,6 +21,9 @@ public class DummyHistoChartListener implements HistoChartListener {
     }
   }
 
+  public void doubleClick() {
+  }
+
   public void scroll(int count) {
   }
 

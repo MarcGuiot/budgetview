@@ -15,27 +15,20 @@ public class HistoChart extends JPanel {
   private HistoChartColors colors;
   private HistoPainter painter = HistoPainter.NULL;
   private java.util.List<HistoChartListener> listeners;
-  private java.util.List<HistoChartListener> doubleClickListeners;
   private HistoChartMetrics metrics;
   private Integer currentRolloverIndex;
   private Font selectedLabelFont;
   private Font sectionLabelFont;
   private Integer columnSelectionMinIndex;
   private Integer columnSelectionMaxIndex;
-  private boolean drawLabels;
-  private boolean drawSections;
-  private boolean drawInnerLabels;
-  private boolean clickable;
   private boolean snapToScale;
+  private HistoChartConfig config;
 
   public static final BasicStroke SCALE_STROKE = new BasicStroke(1);
   public static final BasicStroke SCALE_ORIGIN_STROKE = new BasicStroke(1);
 
-  public HistoChart(boolean drawLabels, boolean drawSections, boolean drawInnerLabels, boolean clickable, Directory directory) {
-    this.drawLabels = drawLabels;
-    this.drawSections = drawSections;
-    this.drawInnerLabels = drawInnerLabels;
-    this.clickable = clickable;
+  public HistoChart(HistoChartConfig config, Directory directory) {
+    this.config = config;
     this.colors = new HistoChartColors(directory);
     setFont(getFont().deriveFont(9f));
     this.selectedLabelFont = getFont().deriveFont(Font.BOLD);
@@ -48,13 +41,6 @@ public class HistoChart extends JPanel {
       listeners = new ArrayList<HistoChartListener>();
     }
     this.listeners.add(listener);
-  }
-
-  public void addDoubleClickListener(HistoChartListener listener) {
-    if (doubleClickListeners == null) {
-      doubleClickListeners = new ArrayList<HistoChartListener>();
-    }
-    this.doubleClickListeners.add(listener);
   }
 
   public void setSnapToScale(boolean value) {
@@ -112,9 +98,9 @@ public class HistoChart extends JPanel {
                                       getFontMetrics(getFont()),
                                       dataset.size(),
                                       dataset.getMaxNegativeValue(), dataset.getMaxPositiveValue(),
-                                      drawLabels,
-                                      drawSections && dataset.containsSections(),
-                                      drawInnerLabels,
+                                      config.drawLabels,
+                                      config.drawSections && dataset.containsSections(),
+                                      config.drawInnerLabels,
                                       snapToScale);
     }
 
@@ -154,7 +140,7 @@ public class HistoChart extends JPanel {
         g2.fillRect(left, metrics.labelTop(), metrics.columnWidth(), metrics.labelZoneHeightWithMargin());
       }
 
-      if (drawLabels) {
+      if (config.drawLabels) {
         String label = dataset.getLabel(i);
         g2.setFont(getLabelFont(dataset, i));
         g2.setColor(getLabelColor(i));
@@ -178,7 +164,7 @@ public class HistoChart extends JPanel {
   }
 
   private void paintSections(Graphics2D g2, HistoDataset dataset) {
-    if (!drawLabels) {
+    if (!config.drawLabels) {
       return;
     }
     g2.setStroke(new BasicStroke(1));
@@ -212,7 +198,7 @@ public class HistoChart extends JPanel {
       }
       g2.drawLine(metrics.chartX(), metrics.y(scaleValue), panelWidth, metrics.y(scaleValue));
 
-      if (drawLabels) {
+      if (config.drawLabels) {
         g2.setColor(colors.getLabelColor());
         String label = Integer.toString((int)scaleValue);
         g2.drawString(label, metrics.scaleX(label), metrics.scaleY(scaleValue));
@@ -238,7 +224,7 @@ public class HistoChart extends JPanel {
   }
 
   private boolean clickable() {
-    return clickable && (currentRolloverIndex != null) && (listeners != null) && (painter != null)
+    return config.clickable && (currentRolloverIndex != null) && (listeners != null) && (painter != null)
            && painter.getDataset().size() > 0;
   }
 
@@ -252,7 +238,7 @@ public class HistoChart extends JPanel {
       return;
     }
 
-    if (clickable) {
+    if (config.clickable) {
       currentRolloverIndex = columnIndex;
       setCursor((currentRolloverIndex != null) ?
                 Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -303,15 +289,17 @@ public class HistoChart extends JPanel {
     addMouseListener(new MouseAdapter() {
 
       public void mousePressed(MouseEvent e) {
-        if (isEnabled()) {
+        if (isEnabled() && e.getClickCount() == 1) {
           HistoChart.this.startClick();
+        }
+        if (e.getClickCount() == 2) {
+          for (HistoChartListener listener : listeners) {
+            listener.doubleClick();
+          }
         }
       }
 
-      public void mouseReleased(MouseEvent mouseEvent) {
-        if (mouseEvent.getClickCount() == 2) {
-        }
-        super.mouseReleased(mouseEvent);
+      public void mouseReleased(MouseEvent e) {
       }
 
       public void mouseEntered(MouseEvent e) {

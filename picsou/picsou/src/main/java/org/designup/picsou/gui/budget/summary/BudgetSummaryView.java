@@ -6,6 +6,7 @@ import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
+import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilderConfig;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
@@ -74,7 +75,8 @@ public class BudgetSummaryView
     uncategorizedButton.addActionListener(new GotoUncategorizedAction());
 
     MainDailyPositionsChartView chartView =
-      new MainDailyPositionsChartView(repository, directory, "chart", 0, 1, true, false, true, false);
+      new MainDailyPositionsChartView(repository, directory, "chart",
+                                      new HistoChartBuilderConfig(true, false, true, false, 0, 1, true));
     chartView.registerComponents(builder);
 
     parentBuilder.add("budgetSummaryView", builder);

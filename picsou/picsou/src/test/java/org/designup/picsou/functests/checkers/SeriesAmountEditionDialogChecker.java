@@ -72,6 +72,11 @@ public class SeriesAmountEditionDialogChecker extends SeriesAmountEditionChecker
     return this;
   }
 
+  public SeriesAmountEditionDialogChecker checkChartRange(int firstMonth, int lastMonth) {
+    getChart().checkRange(firstMonth, lastMonth);
+    return this;
+  }
+
   public SeriesAmountEditionDialogChecker clickMonth(int month) {
     getChart().clickColumnId(month);
     return this;

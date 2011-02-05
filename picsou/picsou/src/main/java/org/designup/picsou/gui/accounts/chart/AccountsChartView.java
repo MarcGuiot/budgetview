@@ -2,63 +2,65 @@ package org.designup.picsou.gui.accounts.chart;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.components.charts.histo.HistoChartListener;
+import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
+import org.designup.picsou.gui.components.charts.histo.utils.ScrollGroup;
+import org.designup.picsou.gui.components.charts.histo.utils.Scrollable;
 import org.designup.picsou.gui.series.evolution.histobuilders.AccountHistoChartUpdater;
 import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilder;
+import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilderConfig;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
-import java.util.Set;
-
-public abstract class AccountsChartView extends View {
+public abstract class AccountsChartView extends View implements Scrollable {
   public static final int MONTHS_BACK = 3;
   public static final int MONTHS_FORWARD = 9;
   protected HistoChartBuilder histoChartBuilder;
   protected String componentName;
+  private AccountHistoChartUpdater updater;
 
   public AccountsChartView(GlobRepository repository, Directory directory, String componentName) {
-    this(repository, directory, componentName, MONTHS_BACK, MONTHS_FORWARD, true, true, false, true);
+    this(repository, directory, componentName,
+         new HistoChartBuilderConfig(true, true, false, true, MONTHS_BACK, MONTHS_FORWARD, false));
   }
 
   public AccountsChartView(GlobRepository repository, Directory directory, String componentName,
-                           int monthsBack, int monthsForward,
-                           boolean drawLabels, boolean drawSections, boolean drawInnerLabels,
-                           boolean clickable) {
+                           HistoChartBuilderConfig config) {
     super(repository, directory);
-    this.histoChartBuilder = createChartBuilder(drawLabels, drawSections, drawInnerLabels, clickable, monthsBack, monthsForward, repository, directory);
+    this.histoChartBuilder = createChartBuilder(config, repository, directory);
     this.componentName = componentName;
   }
 
-  public HistoChartBuilder createChartBuilder(boolean drawLabels, boolean drawSections, boolean drawInnerLabels, boolean clickable, int monthsBack, int monthsForward, final GlobRepository repository, final Directory directory) {
+  public void register(ScrollGroup group) {
+    histoChartBuilder.register(group);
+    group.add(this);
+  }
+
+  public HistoChartBuilder createChartBuilder(HistoChartBuilderConfig config, final GlobRepository repository, final Directory directory) {
     final HistoChartBuilder histoChartBuilder =
-      new HistoChartBuilder(drawLabels, drawSections, clickable, drawInnerLabels,
-                            repository, directory, directory.get(SelectionService.class),
-                            monthsBack, monthsForward);
-    final AccountHistoChartUpdater updater = new AccountHistoChartUpdater(histoChartBuilder, repository, directory) {
+      new HistoChartBuilder(config,
+                            repository, directory, directory.get(SelectionService.class));
+    updater = new AccountHistoChartUpdater(histoChartBuilder, repository, directory) {
       protected void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {
         updateChart(histoChartBuilder, currentMonthId, true);
       }
     };
     final NavigationService navigationService = directory.get(NavigationService.class);
-    histoChartBuilder.addDoubleClickListener(new HistoChartListener() {
-      public void columnsClicked(Set<Integer> ids) {
+    histoChartBuilder.addListener(new HistoChartListenerAdapter() {
+      public void doubleClick() {
         processDoubleClick(navigationService);
       }
 
       public void scroll(int count) {
-      }
-    });
-    histoChartBuilder.addListener(new HistoChartListener() {
-      public void columnsClicked(Set<Integer> ids) {
-      }
-
-      public void scroll(int count) {
-        updateChart(histoChartBuilder, updater.getCurrentMonthId(), false);
+        AccountsChartView.this.scroll(count);
       }
     });
     return histoChartBuilder;
+  }
+
+  public void scroll(int units) {
+    updateChart(histoChartBuilder, updater.getCurrentMonthId(), false);
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {

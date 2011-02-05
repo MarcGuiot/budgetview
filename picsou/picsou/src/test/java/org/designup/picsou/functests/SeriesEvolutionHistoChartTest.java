@@ -46,7 +46,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2009/06");
     seriesEvolution.select("Balance");
     seriesEvolution.histoChart
-      .checkColumnCount(7)
+      .checkColumnCount(8)
       .checkDiffColumn(0, "June", "2009", 650.00, 450.00, true);
     seriesEvolution.checkHistoChartLabel("Global balance evolution --- income --- expenses");
     seriesEvolution.histoChart.checkTooltip(1, "July 2009: Income: 670.00 - Expenses: 450.00");

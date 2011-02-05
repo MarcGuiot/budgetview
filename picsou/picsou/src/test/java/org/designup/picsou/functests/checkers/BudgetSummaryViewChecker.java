@@ -10,17 +10,12 @@ import javax.swing.*;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
-public class BudgetSummaryViewChecker extends GuiChecker {
-  private Window mainWindow;
+public class BudgetSummaryViewChecker extends ViewChecker {
   private HistoDailyChecker chart;
+  private Panel panel;
 
   public BudgetSummaryViewChecker(Window mainWindow) {
-    this.mainWindow = mainWindow;
-  }
-
-  /** @deprecated  */
-  public BudgetSummaryViewChecker checkMonthBalance(double amount) {
-    throw new RuntimeException("to be removed");
+    super(mainWindow);
   }
 
   public BudgetSummaryViewChecker checkReferencePosition(double amount) {
@@ -31,13 +26,6 @@ public class BudgetSummaryViewChecker extends GuiChecker {
   public BudgetSummaryViewChecker checkReferencePosition(String title, double amount) {
     assertThat(getPanel().getTextBox("lastPositionTitle").textEquals(title));
     return checkReferencePosition(amount);
-  }
-
-  private HistoDailyChecker getChart() {
-    if (chart == null) {
-      chart = new HistoDailyChecker(mainWindow, "budgetSummaryView", "chart");
-    }
-    return chart;
   }
 
   public BudgetSummaryViewChecker checkEndPosition(double amount) {
@@ -80,7 +68,18 @@ public class BudgetSummaryViewChecker extends GuiChecker {
     return this;
   }
 
+  private HistoDailyChecker getChart() {
+    if (chart == null) {
+      chart = new HistoDailyChecker(getPanel(), "chart");
+    }
+    return chart;
+  }
+
   private Panel getPanel() {
-    return mainWindow.getPanel("budgetSummaryView");
+    if (panel == null) {
+      views.selectBudget();
+      panel = mainWindow.getPanel("budgetSummaryView");
+    }
+    return panel;
   }
 }

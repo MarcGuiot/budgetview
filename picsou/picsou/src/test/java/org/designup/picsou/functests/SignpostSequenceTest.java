@@ -13,6 +13,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     setCurrentDate("2010/05/31");
     setInMemory(false);
     setDeleteLocalPrevayler(true);
+    setInitialGuidesShown(true);
     super.setUp();
     setDeleteLocalPrevayler(false);
   }

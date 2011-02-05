@@ -20,6 +20,6 @@ public class HistoDailyElement extends HistoDatasetElement {
   }
 
   public String toString() {
-    return id + "==>"  + Arrays.toString(values);
+    return id + " " + super.toString() + "==>" + Arrays.toString(values);
   }
 }

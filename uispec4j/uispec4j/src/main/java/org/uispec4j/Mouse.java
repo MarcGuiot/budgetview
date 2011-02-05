@@ -56,10 +56,10 @@ public class Mouse {
   }
 
   private static void doClickInRectangle(Component component, Rectangle rect, boolean useRightClick, Key.Modifier keyModifier, int nbClicks) {
-    int modifiers = useRightClick ? MouseEvent.BUTTON3_MASK : MouseEvent.BUTTON1_MASK;
-    modifiers |= keyModifier.getCode();
     final int x = rect.x + (rect.width / 2);
     final int y = rect.y + (rect.height / 2);
+    int modifiers = useRightClick ? MouseEvent.BUTTON3_MASK : MouseEvent.BUTTON1_MASK;
+    modifiers |= keyModifier.getCode();
     component.dispatchEvent(new MouseEvent(component, MouseEvent.MOUSE_PRESSED, 1, modifiers, x, y, nbClicks, false));
     component.dispatchEvent(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, 1, modifiers, x, y, nbClicks, useRightClick));
     component.dispatchEvent(new MouseEvent(component, MouseEvent.MOUSE_CLICKED, 1, modifiers, x, y, nbClicks, false));

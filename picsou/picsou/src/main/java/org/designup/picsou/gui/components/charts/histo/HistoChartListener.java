@@ -6,5 +6,7 @@ import java.util.Set;
 public interface HistoChartListener {
   void columnsClicked(Set<Integer> ids);
 
+  void doubleClick();
+
   void scroll(int count);
 }

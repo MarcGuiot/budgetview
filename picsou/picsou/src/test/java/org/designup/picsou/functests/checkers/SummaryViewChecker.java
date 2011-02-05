@@ -5,21 +5,30 @@ import org.uispec4j.Window;
 
 public class SummaryViewChecker extends ViewChecker {
   private Panel panel;
-  private HistoChecker mainChart;
+  private HistoDailyChecker mainChart;
+  private HistoChecker savingsBalanceChart;
   private HistoChecker savingsChart;
 
   public SummaryViewChecker(Window mainWindow) {
     super(mainWindow);
   }
 
-  public HistoChecker getMainChart() {
+  public HistoDailyChecker getMainChart() {
     if  (mainChart == null) {
       views.selectHome();
-      mainChart = new HistoChecker(mainWindow, "summaryView", "mainAccountsHistoChart");
+      mainChart = new HistoDailyChecker(getPanel(), "mainAccountsHistoChart");
     }
     return mainChart;
   }
-  
+
+  public HistoChecker getSavingsBalanceChart() {
+    if  (savingsBalanceChart == null) {
+      views.selectHome();
+      savingsBalanceChart = new HistoChecker(mainWindow, "summaryView", "savingsBalanceHistoChart");
+    }
+    return savingsBalanceChart;
+  }
+
   public HistoChecker getSavingsChart() {
     if  (savingsChart == null) {
       views.selectHome();
