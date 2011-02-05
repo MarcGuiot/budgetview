@@ -85,6 +85,9 @@ public class Series {
   @Required
   public static BooleanField IS_MIRROR;
 
+//  @Target(Account.class)
+//  public static LinkField TARGET_ACCOUNT;
+
   @DefaultBoolean(true)
   @Required
   public static BooleanField JANUARY;

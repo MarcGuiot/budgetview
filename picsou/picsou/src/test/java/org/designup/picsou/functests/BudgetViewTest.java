@@ -736,4 +736,26 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.clickTitleSeriesName();
     budgetView.income.checkOrder("Retraite 1", "Retraite 2", "Retraite 3");
   }
+
+  public void testNegativeAndPositiveOperations() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/10", -10.00, "Auchan")
+      .addTransaction("2008/07/01", -150.00, "Auchan")
+      .addTransaction("2008/07/20", 50.00, "Auchan")
+      .load();
+
+    categorization
+      .selectTransactions("Auchan")
+      .selectVariable()
+      .selectNewSeries("Course", -250);
+    timeline.selectMonth("2008/08");
+    transactions
+      .showPlannedTransactions()
+      .initContent()
+      .add("10/08/2008", TransactionType.PLANNED, "Planned: Course", "", -240.0, "Course")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -10.00, "Course")
+      .check();
+
+  }
+
 }

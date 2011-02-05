@@ -163,8 +163,9 @@ public class UserPreferences {
       fieldSetter.set(SERIES_ORDER_SAVINGS, input.readInteger());
       fieldSetter.set(SERIES_ORDER_EXTRA, input.readInteger());
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, input.readBoolean());
-      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 5);
+      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
+      fieldSetter.set(MULTIPLE_PLANNED, false);
     }
 
     private void deserializeDataV7(FieldSetter fieldSetter, byte[] data) {
@@ -185,8 +186,9 @@ public class UserPreferences {
       fieldSetter.set(SERIES_ORDER_SAVINGS, input.readInteger());
       fieldSetter.set(SERIES_ORDER_EXTRA, input.readInteger());
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, true);
-      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 5);
-      fieldSetter.set(MONTH_FOR_PLANNED, 3);
+      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
+      fieldSetter.set(MONTH_FOR_PLANNED, 1);
+      fieldSetter.set(MULTIPLE_PLANNED, false);
     }
 
     private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {
@@ -202,8 +204,9 @@ public class UserPreferences {
       input.readBoolean(); // SHOW_VARIABLE_EDITION_MESSAGE
       fieldSetter.set(LAST_VALID_DAY, input.readDate());
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, true);
-      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 5);
-      fieldSetter.set(MONTH_FOR_PLANNED, 3);
+      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
+      fieldSetter.set(MONTH_FOR_PLANNED, 1);
+      fieldSetter.set(MULTIPLE_PLANNED, false);
     }
 
     private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
@@ -218,8 +221,9 @@ public class UserPreferences {
       input.readBoolean(); // SHOW_VARIABLE_EDITION_MESSAGE
       fieldSetter.set(LAST_VALID_DAY, input.readDate());
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, true);
-      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 5);
-      fieldSetter.set(MONTH_FOR_PLANNED, 3);
+      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
+      fieldSetter.set(MONTH_FOR_PLANNED, 1);
+      fieldSetter.set(MULTIPLE_PLANNED, false);
     }
 
     private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
@@ -233,8 +237,9 @@ public class UserPreferences {
       input.readBoolean(); // SHOW_CATEGORIZATION_HELP_MESSAGE
       fieldSetter.set(LAST_VALID_DAY, input.readDate());
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, true);
-      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 5);
-      fieldSetter.set(MONTH_FOR_PLANNED, 3);
+      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
+      fieldSetter.set(MONTH_FOR_PLANNED, 1);
+      fieldSetter.set(MULTIPLE_PLANNED, false);
     }
 
     private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
@@ -247,8 +252,9 @@ public class UserPreferences {
       input.readBoolean(); // SHOW_CATEGORIZATION_HELP_MESSAGE
       fieldSetter.set(LAST_VALID_DAY, input.readDate());
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, true);
-      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 5);
-      fieldSetter.set(MONTH_FOR_PLANNED, 3);
+      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
+      fieldSetter.set(MONTH_FOR_PLANNED, 1);
+      fieldSetter.set(MULTIPLE_PLANNED, false);
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
@@ -259,8 +265,9 @@ public class UserPreferences {
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
       fieldSetter.set(LAST_VALID_DAY, Month.addDurationMonth(TimeService.getToday()));
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, true);
-      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 5);
-      fieldSetter.set(MONTH_FOR_PLANNED, 3);
+      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
+      fieldSetter.set(MONTH_FOR_PLANNED, 1);
+      fieldSetter.set(MULTIPLE_PLANNED, false);
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
@@ -270,8 +277,9 @@ public class UserPreferences {
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(LAST_VALID_DAY, Month.addDurationMonth(TimeService.getToday()));
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, true);
-      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 5);
-      fieldSetter.set(MONTH_FOR_PLANNED, 3);
+      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
+      fieldSetter.set(MONTH_FOR_PLANNED, 1);
+      fieldSetter.set(MULTIPLE_PLANNED, false);
     }
   }
 

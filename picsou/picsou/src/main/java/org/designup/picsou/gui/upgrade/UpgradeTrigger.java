@@ -31,12 +31,7 @@ public class UpgradeTrigger implements ChangeSetListener {
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     PicsouInit.createTransientDataForNewUser(repository);
 
-    Glob appVersion = repository.get(AppVersionInformation.KEY);
     Glob userVersion = repository.get(UserVersionInformation.KEY);
-    if (userVersion.get(UserVersionInformation.CURRENT_BANK_CONFIG_VERSION)
-        < (appVersion.get(AppVersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION))) {
-      directory.get(UpgradeService.class).upgradeBankData(repository, appVersion);
-    }
 
     Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
     if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
@@ -85,11 +80,25 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (currentJarVersion < 48) {
       SignpostStatus.setAllCompleted(repository);
     }
-    if (currentJarVersion < 49){
+    if (currentJarVersion < 49) {
       repository.safeApply(Series.TYPE, ALL, new DisableSeriesReportGlobFunctor());
+    }
+    if (currentJarVersion < 54) {
+      repository.safeApply(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()), new GlobFunctor() {
+        public void run(Glob glob, GlobRepository repository) throws Exception {
+          repository.update(glob.getKey(), Series.IS_AUTOMATIC, Boolean.FALSE);
+        }
+      });
+      repository.update(UserPreferences.KEY, UserPreferences.MULTIPLE_PLANNED, true); // declenche les triggers
     }
 
     deleteDeprecatedGlobs(repository);
+
+    Glob appVersion = repository.get(AppVersionInformation.KEY);
+    if (userVersion.get(UserVersionInformation.CURRENT_BANK_CONFIG_VERSION)
+        < (appVersion.get(AppVersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION))) {
+      directory.get(UpgradeService.class).upgradeBankData(repository, appVersion);
+    }
 
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
   }
@@ -182,6 +191,7 @@ public class UpgradeTrigger implements ChangeSetListener {
         repository.update(glob.getKey(), Series.FROM_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID);
       }
     }
+    PicsouInit.createPersistentDataForNewUser(repository, directory);
   }
 
   private void migrateBankEntity(GlobRepository repository) {
