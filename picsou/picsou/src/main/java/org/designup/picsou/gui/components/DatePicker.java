@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.components;
 
+import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -14,17 +15,13 @@ import java.beans.PropertyChangeListener;
 import java.util.Set;
 
 public class DatePicker {
-  private DateField dateField;
-  private GlobRepository repository;
-  private Directory directory;
   private JXDatePicker datePicker;
   private Key selectedKey;
 
   public DatePicker(final DateField dateField, final GlobRepository repository, Directory directory) {
-    this.dateField = dateField;
-    this.repository = repository;
-    this.directory = directory;
     datePicker = new JXDatePicker();
+    datePicker.setFormats(Formatting.DATE_FORMAT);
+    datePicker.getEditor().setName(dateField.getName() + "Field");
     datePicker.addPropertyChangeListener(new PropertyChangeListener() {
       public void propertyChange(PropertyChangeEvent evt) {
         if ("date".equals(evt.getPropertyName())) {

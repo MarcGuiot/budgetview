@@ -252,6 +252,12 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
+  public AccountEditionChecker checkDisplayedStartDate(String text) {
+    TextBox textBox = dialog.getTextBox("openDateField");
+    UISpecAssert.assertThat(textBox.textEquals(text));
+    return this;
+  }
+
   public AccountEditionChecker checkStartDate(String yyyyMMdd) {
     Component[] swingComponents = dialog.getSwingComponents(JXDatePicker.class, "startDatePicker");
     Assert.assertEquals(1, swingComponents.length);
@@ -263,6 +269,12 @@ public class AccountEditionChecker extends GuiChecker {
     Component[] swingComponents = dialog.getSwingComponents(JXDatePicker.class, "endDatePicker");
     Assert.assertEquals(1, swingComponents.length);
     ((JXDatePicker)swingComponents[0]).setDate(Dates.parse(yyyyMMdd));
+    return this;
+  }
+
+  public AccountEditionChecker checkDisplayedEndDate(String text) {
+    TextBox textBox = dialog.getTextBox("closed");
+    UISpecAssert.assertThat(textBox.textEquals(text));
     return this;
   }
 

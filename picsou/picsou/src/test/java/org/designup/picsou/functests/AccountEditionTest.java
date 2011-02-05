@@ -354,11 +354,13 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.edit("Account n. 0000100")
       .setStartDate("2008/09/01")
+      .checkDisplayedStartDate("01/09/2008")
       .validate();
 
     timeline.selectMonth("2008/10");
     mainAccounts.edit("Main")
       .checkStartDate("2008/10/01")
+      .checkDisplayedStartDate("01/10/2008")
       .cancel();
 
     timeline.selectMonth("2008/09");
@@ -428,7 +430,9 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.edit("Account n. 0000100")
       .setStartDate("2008/06/01")
+      .checkDisplayedStartDate("01/06/2008")
       .setEndDate("2008/07/01")
+      .checkDisplayedEndDate("01/07/2008")
       .validate();
 
     timeline.selectMonth("2008/04");
