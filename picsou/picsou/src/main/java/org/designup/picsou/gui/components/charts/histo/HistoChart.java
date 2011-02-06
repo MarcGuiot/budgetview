@@ -107,12 +107,13 @@ public class HistoChart extends JPanel {
     paintBg(g2);
     paintLabels(g2, dataset);
     paintScale(g2, panelWidth, dataset);
-    paintSections(g2, dataset);
     paintSelectionBorder(g2, dataset);
     paintBorder(g2);
 
     g2.setFont(getFont());
     painter.paint(g2, metrics, currentRolloverIndex);
+
+    paintSections(g2, dataset);
   }
 
   private void paintBg(Graphics2D g2) {
@@ -127,16 +128,22 @@ public class HistoChart extends JPanel {
 
   private void paintLabels(Graphics2D g2, HistoDataset dataset) {
     g2.setStroke(new BasicStroke(1));
+    g2.setComposite(AlphaComposite.Src);
     for (int i = 0; i < dataset.size(); i++) {
+
+      int columnHeight = metrics.columnHeight();
+      int left = metrics.left(i);
+
       if (dataset.isSelected(i)) {
-
-        int columnHeight = metrics.columnHeight();
-        int left = metrics.left(i);
-
         g2.setColor(colors.getSelectedColumnColor());
         g2.fillRect(left, metrics.columnTop(), metrics.columnWidth(), columnHeight);
 
         g2.setColor(colors.getSelectedLabelBackgroundColor());
+        g2.fillRect(left, metrics.labelTop(), metrics.columnWidth(), metrics.labelZoneHeightWithMargin());
+      }
+      else {
+        g2.setColor(colors.getChartBgColor());
+        g2.fillRect(left, metrics.columnTop(), metrics.columnWidth(), columnHeight);
         g2.fillRect(left, metrics.labelTop(), metrics.columnWidth(), metrics.labelZoneHeightWithMargin());
       }
 
@@ -167,6 +174,7 @@ public class HistoChart extends JPanel {
     if (!config.drawLabels) {
       return;
     }
+    g2.setComposite(AlphaComposite.Src);
     g2.setStroke(new BasicStroke(1));
     boolean firstBlock = true;
     g2.setFont(sectionLabelFont);

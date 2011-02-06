@@ -336,7 +336,7 @@ public class HistoChartMetrics {
     int textX = blockLeft + blockWidth / 2 - fontMetrics.stringWidth(previousName) / 2;
     int textY = sectionZoneHeight - SECTION_BOTTOM_MARGIN;
     int lineY = sectionZoneHeight / 2;
-    int lineHeight = chartHeight - lineY;
+    int lineHeight = panelHeight - lineY;
     return new Section(previousName, textX, textY, blockLeft, blockWidth, blockY, blockHeight, lineY, lineHeight);
   }
 }

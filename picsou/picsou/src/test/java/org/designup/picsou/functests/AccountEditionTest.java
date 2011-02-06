@@ -348,7 +348,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .setPosition(1000)
       .setStartDate("2008/10/01")
       .setEndDate("2009/06/03")
-      .checkEndDate("2009/06/03")
+      .checkDisplayedEndDate("03/06/2009")
       .cancelEndDate()
       .validate();
 

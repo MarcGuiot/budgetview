@@ -93,18 +93,23 @@ public class LicenseInfoView extends View {
     }
 
     licenseMessage.setVisible(true);
-    long days =
-      (userPreferences.get(UserPreferences.LAST_VALID_DAY).getTime() - TimeService.getToday().getTime()) / Millis.ONE_DAY;
-    Integer state = user.get(User.ACTIVATION_STATE);
+    long days = getDaysLeft(userPreferences);
+    licenseMessage.setText(getTrialMessage(user, days));
+  }
 
+  private String getTrialMessage(Glob user, long days) {
+    Integer state = user.get(User.ACTIVATION_STATE);
     StringBuilder htmlText = new StringBuilder();
     htmlText.append("<html>");
     htmlText.append(getDaysLeftMessage(user, days, state));
     htmlText.append(' ');
     htmlText.append(getRegisterMessage(user, days, state));
     htmlText.append("</html>");
+    return htmlText.toString();
+  }
 
-    licenseMessage.setText(htmlText.toString());
+  private long getDaysLeft(Glob userPreferences) {
+    return (userPreferences.get(UserPreferences.LAST_VALID_DAY).getTime() - TimeService.getToday().getTime()) / Millis.ONE_DAY;
   }
 
   private String getDaysLeftMessage(Glob user, long days, Integer state) {
