@@ -34,19 +34,24 @@ public class RoundButtonUI extends BasicButtonUI {
 
   protected void installListeners(final AbstractButton button) {
     super.installListeners(button);
-    button.addPropertyChangeListener("icon", new PropertyChangeListener() {
+    button.addPropertyChangeListener(AbstractButton.ICON_CHANGED_PROPERTY, new PropertyChangeListener() {
       public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-        Icon icon = button.getIcon();
-        if (icon != null) {
-          int diameter = Math.max(icon.getIconWidth(), icon.getIconHeight()) + 15;
-          Dimension size = new Dimension(diameter, diameter);
-          button.setSize(diameter, diameter);
-          button.setPreferredSize(size);
-          button.setMaximumSize(size);
-          button.setMinimumSize(size);
-        }
+        updateSize(button);
       }
     });
+    updateSize(button);
+  }
+
+  private void updateSize(AbstractButton button) {
+    Icon icon = button.getIcon();
+    if (icon != null) {
+      int diameter = Math.max(icon.getIconWidth(), icon.getIconHeight()) + 15;
+      Dimension size = new Dimension(diameter, diameter);
+      button.setSize(diameter, diameter);
+      button.setPreferredSize(size);
+      button.setMaximumSize(size);
+      button.setMinimumSize(size);
+    }
   }
 
   public void paint(Graphics g, JComponent c) {
@@ -148,5 +153,13 @@ public class RoundButtonUI extends BasicButtonUI {
 
   public void setPressedOuterBorderBottomColor(Color pressedOuterBorderBottomColor) {
     this.pressedOuterBorderBottomColor = pressedOuterBorderBottomColor;
+  }
+
+  public Dimension getMaximumSize(JComponent c) {
+    return super.getMaximumSize(c);
+  }
+
+  public Dimension getPreferredSize(JComponent c) {
+    return super.getPreferredSize(c);
   }
 }
