@@ -8,23 +8,21 @@
            horizontalAlignment="left" font="-,plain,10"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(740,330)">
+  <panel styleClass="dialog" preferredSize="(400,330)">
     <column styleClass="innerDialog">
 
       <label ref="title" styleClass="title"/>
 
-      <horizontalBoxes>
-        <column preferredSize="(350,300)" border="matte(0,0,0,1,dialog.separator.light)" opaque="false">
-          <column marginRight="10">
+      <tabs>
 
-            <label text="$form.mandatory.legend" styleClass="columnTitle"/>
-
+        <tab title="$form.mandatory.legend">
+          <column margin="15">
             <grid defaultMarginBottom="5">
               <label text="$account.name" gridPos="(0,0)" styleClass="formLabel"/>
-              <textField ref="name" gridPos="(1,0)"/>
+              <textField ref="name" gridPos="(1,0)" marginBottom="10"/>
 
               <label text="$account.bank" gridPos="(0,1)" styleClass="formLabel"/>
-              <row gridPos="(1,1)">
+              <row gridPos="(1,1)" marginBottom="10">
                 <label ref="bankLabel" marginRight="5" font="-,bold,12"/>
                 <button ref="bankSelector" styleClass="itemLink" anchor="southeast" font="-,plain,11"/>
                 <filler fill="horizontal"/>
@@ -32,7 +30,6 @@
 
               <label text="$account.position" gridPos="(0,2)" styleClass="formLabel" autoHideSource="position"/>
               <textField ref="position" gridPos="(1,2)"/>
-
             </grid>
 
             <label text="$account.panel.type" styleClass="formLabel" anchor="left" marginTop="10"/>
@@ -43,40 +40,38 @@
 
             <filler fill="vertical"/>
           </column>
-        </column>
+        </tab>
 
-        <column marginLeft="10" preferredSize="(350,300)">
+        <tab title="$form.optional.legend">
+          <column margin="15">
+            <grid defaultMarginBottom="5">
 
-          <label text="$form.optional.legend" styleClass="columnTitle"/>
+              <label text="$account.number" gridPos="(0,3)" styleClass="formLabel"/>
+              <textField ref="number" gridPos="(1,3)" marginBottom="10"/>
 
-          <grid defaultMarginBottom="5">
+              <label text="$account.updateMode" gridPos="(0,4)" styleClass="formLabel"/>
+              <comboBox ref="updateMode" gridPos="(1,4)" marginBottom="10"/>
 
-            <label text="$account.number" gridPos="(0,3)" styleClass="formLabel"/>
-            <textField ref="number" gridPos="(1,3)"/>
+              <label text="$account.date.start" gridPos="(0,6)" styleClass="formLabel"/>
+              <row gridPos="(1,6)" marginBottom="10">
+                <component ref="startDatePicker" styleClass="datePicker"/>
+                <button action="removeStartDate" icon="button_delete.png" styleClass="icon"
+                        pressedIcon="button_delete_pressed.png" fill="none"/>
+              </row>
 
-            <label text="$account.updateMode" gridPos="(0,4)" styleClass="formLabel"/>
-            <comboBox ref="updateMode" gridPos="(1,4)"/>
+              <label text="$account.date.end" gridPos="(0,7)" styleClass="formLabel"/>
+              <row gridPos="(1,7)" marginBottom="10">
+                <component ref="endDatePicker" styleClass="datePicker"/>
+                <button action="removeEndDate" icon="button_delete.png" styleClass="icon"
+                        pressedIcon="button_delete_pressed.png" fill="none"/>
+              </row>
+            </grid>
 
-            <label text="$account.date.start" gridPos="(0,6)" styleClass="formLabel"/>
-            <row gridPos="(1,6)">
-              <component ref="startDatePicker" styleClass="datePicker"/>
-              <button action="removeStartDate" icon="button_delete.png" styleClass="icon"
-                      pressedIcon="button_delete_pressed.png" fill="none"/>
-            </row>
+            <filler fill="vertical" weightY="100"/>
 
-            <label text="$account.date.end" gridPos="(0,7)" styleClass="formLabel"/>
-            <row gridPos="(1,7)">
-              <component ref="endDatePicker" styleClass="datePicker"/>
-              <button action="removeEndDate" icon="button_delete.png" styleClass="icon"
-                      pressedIcon="button_delete_pressed.png" fill="none"/>
-            </row>
-
-          </grid>
-
-          <filler fill="vertical" weightY="100"/>
-
-        </column>
-      </horizontalBoxes>
+          </column>
+        </tab>
+      </tabs>
 
       <label ref="message" foreground="#FF0000" fill="none" anchor="center" marginTop="5"/>
 
