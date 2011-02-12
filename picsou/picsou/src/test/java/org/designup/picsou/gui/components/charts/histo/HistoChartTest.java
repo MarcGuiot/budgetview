@@ -46,27 +46,27 @@ public class HistoChartTest extends TestCase {
     dataset.add(201009, 9, "9", "", "", false, false, false);
     init(dataset);
 
-    Mouse.enter(chart, 50, 10);
-    Mouse.move(chart, 50, 50);
-    Mouse.pressed(chart, 50, 50);
+    Mouse.enter(chart, 60, 10);
+    Mouse.move(chart, 60, 50);
+    Mouse.pressed(chart, 60, 50);
     listener.check("<select ids='[201006]'/>");
 
-    Mouse.drag(chart, 70, 50);
+    Mouse.drag(chart, 80, 50);
     listener.check("<select ids='[201006, 201007, 201008]'/>");
 
-    Mouse.drag(chart, 50, 50);
+    Mouse.drag(chart, 60, 50);
     listener.checkEmpty();
 
-    Mouse.drag(chart, 30, 50);
+    Mouse.drag(chart, 40, 50);
     listener.check("<select ids='[201005, 201006, 201007, 201008]'/>");
 
-    Mouse.released(chart, 100, 100);
+    Mouse.released(chart, 110, 100);
     listener.checkEmpty();
 
-    Mouse.move(chart, 50, 50);
+    Mouse.move(chart, 60, 50);
     listener.checkEmpty();
 
-    Mouse.exit(chart, 100, 100);
+    Mouse.exit(chart, 110, 100);
     listener.checkEmpty();
   }
 
@@ -77,25 +77,25 @@ public class HistoChartTest extends TestCase {
     dataset.add(201009, 9, "9", "", "", false, false, false);
     init(dataset);
 
-    Mouse.enter(chart, 20, 10);
-    Mouse.move(chart, 20, 50);
-    Mouse.pressed(chart, 20, 50);
+    Mouse.enter(chart, 30, 10);
+    Mouse.move(chart, 30, 50);
+    Mouse.pressed(chart, 30, 50);
     listener.check("<select ids='[201005]'/>");
 
-    Mouse.drag(chart, 90, 50);
+    Mouse.drag(chart, 100, 50);
     listener.check("<select ids='[201005, 201007, 201009]'/>");
 
-    Mouse.drag(chart, 50, 50);
+    Mouse.drag(chart, 60, 50);
     listener.checkEmpty();
 
-    Mouse.exit(chart, 100, 100);
+    Mouse.exit(chart, 110, 100);
     listener.checkEmpty();
   }
 
   private void init(HistoLineDataset dataset) {
     HistoLinePainter painter = new HistoLinePainter(dataset, colors);
     chart.update(painter);
-    chart.setSize(100, 100);
+    chart.setSize(100, 115);
     chart.paint(Empty.NULL_GRAPHICS_2D);
   }
 }
