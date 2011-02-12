@@ -8,7 +8,6 @@ import org.designup.picsou.gui.backup.BackupAction;
 import org.designup.picsou.gui.backup.RestoreAction;
 import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
-import org.designup.picsou.gui.card.ImportPanel;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
@@ -16,9 +15,6 @@ import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.signpost.SignpostView;
-import org.designup.picsou.gui.summary.SummaryView;
-import org.designup.picsou.gui.summary.version.VersionInfoView;
 import org.designup.picsou.gui.notes.NotesView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.projects.ProjectView;
@@ -26,8 +22,11 @@ import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.evolution.SeriesEvolutionView;
+import org.designup.picsou.gui.signpost.SignpostView;
 import org.designup.picsou.gui.startup.LogoutService;
 import org.designup.picsou.gui.startup.OpenRequestManager;
+import org.designup.picsou.gui.summary.SummaryView;
+import org.designup.picsou.gui.summary.version.VersionInfoView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
@@ -60,7 +59,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.isFalse;
 
 public class MainPanel {
   private PicsouFrame parent;
@@ -229,14 +228,12 @@ public class MainPanel {
     menu.add(backupAction);
     menu.add(restoreAction);
 
-    if (Gui.useMacOSMenu()) {
-      MRJAdapter.setPreferencesEnabled(true);
-      MRJAdapter.addPreferencesListener(preferencesAction);
-    }
-    else {
-      menu.addSeparator();
-      menu.add(preferencesAction);
-    }
+    // A Restaurer - ne fonctionne plus sur Mac
+    // MRJAdapter.setPreferencesEnabled(true);
+    // MRJAdapter.addPreferencesListener(preferencesAction);
+
+    menu.addSeparator();
+    menu.add(preferencesAction);
 
     menu.addSeparator();
     menu.add(registerAction);
