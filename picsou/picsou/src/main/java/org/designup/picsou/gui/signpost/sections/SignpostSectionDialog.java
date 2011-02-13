@@ -2,6 +2,7 @@ package org.designup.picsou.gui.signpost.sections;
 
 import org.designup.picsou.gui.components.CloseAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.model.SignpostSectionType;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
@@ -17,6 +18,7 @@ public class SignpostSectionDialog {
 
   private GlobRepository repository;
   private Directory directory;
+  private PicsouDialog dialog;
 
   public SignpostSectionDialog(GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -30,7 +32,7 @@ public class SignpostSectionDialog {
 
   private PicsouDialog createDialog(SignpostSection completedSection) {
 
-    PicsouDialog dialog = PicsouDialog.create(directory.get(JFrame.class), true, directory);
+    dialog = PicsouDialog.create(directory.get(JFrame.class), true, directory);
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/signpost/signpostSectionDialog.splits",
                                                       repository, directory);
@@ -49,7 +51,7 @@ public class SignpostSectionDialog {
     return dialog;
   }
 
-  private static class RepeatFactory implements RepeatComponentFactory<SignpostSection> {
+  private class RepeatFactory implements RepeatComponentFactory<SignpostSection> {
     private SignpostSection completedSection;
 
     public RepeatFactory(SignpostSection completedSection) {
@@ -57,20 +59,21 @@ public class SignpostSectionDialog {
     }
 
     public void registerComponents(RepeatCellBuilder cellBuilder,
-                                   SignpostSection section) {
+                                   final SignpostSection section) {
       SplitsNode<JPanel> sectionPanel = cellBuilder.add("sectionPanel", new JPanel());
-      SplitsNode<JLabel> label = cellBuilder.add("sectionLabel", new JLabel(section.getLabel()));
+      SplitsNode<JLabel> label = cellBuilder.add("sectionTitle", new JLabel(section.getLabel()));
 
       sectionPanel.applyStyle(getPanelStyle(section));
       label.applyStyle(getLabelStyle(section));
+      label.getComponent().setEnabled(true);
       GuiUtils.revalidate(sectionPanel.getComponent());
     }
 
     private String getPanelStyle(SignpostSection section) {
-      if (section == completedSection) {
+      if (isNextStep(section)) {
         return "inprogressPanel";
       }
-      else if (section.getType().isCompleted(completedSection.getType())) {
+      else if (isCompleted(section)) {
         return "completedPanel";
       }
       else {
@@ -79,15 +82,27 @@ public class SignpostSectionDialog {
     }
 
     private String getLabelStyle(SignpostSection section) {
-      if (section == completedSection) {
+      if (isNextStep(section)) {
         return "completedLabel";
       }
-      else if (section.getType().isCompleted(completedSection.getType())) {
+      else if (isCompleted(section)) {
         return "completedLabel";
       }
       else {
         return "unavailableLabel";
       }
+    }
+
+    private boolean isNextStep(SignpostSection section) {
+      return section.getType() == getNextStep();
+    }
+
+    private SignpostSectionType getNextStep() {
+      return (completedSection == SignpostSection.BUDGET) ? completedSection.getType() : completedSection.getType().getNextSection();
+    }
+
+    private boolean isCompleted(SignpostSection section) {
+      return section == completedSection || section.getType().isCompleted(completedSection.getType());
     }
   }
 }

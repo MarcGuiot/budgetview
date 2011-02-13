@@ -3,6 +3,12 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styleImport file="/layout/signpost/signpostStyles.splits"/>
   <styles>
+
+    <ui name="sectionTitleButtonUI"
+        class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+        underline="false" autoHideEnabled="false" useNormalColorWhenDisabled="true"/>
+    <style selector="#sectionTitle" ui="sectionTitleButtonUI" anchor="left" fill="none"/>
+
     <style selector="label.contentTitle" font="-,bold,24" foreground="signpostView.title"
            marginTop="5" marginBottom="30" fill="none" anchor="center"/>
   </styles>
@@ -19,7 +25,7 @@
             <repeat ref="signpostRepeat">
               <panel ref="sectionPanel" weightY="0">
                 <column margin="10">
-                  <label ref="sectionLabel"/>
+                  <button ref="sectionTitle"/>
                   <htmlEditorPane ref="sectionDescription"/>
                 </column>
               </panel>

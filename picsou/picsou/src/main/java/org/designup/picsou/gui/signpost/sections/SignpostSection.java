@@ -1,19 +1,22 @@
 package org.designup.picsou.gui.signpost.sections;
 
+import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.model.SignpostSectionType;
 import org.designup.picsou.utils.Lang;
 
 public enum SignpostSection {
 
-  IMPORT(SignpostSectionType.IMPORT, "import"),
-  CATEGORIZATION(SignpostSectionType.CATEGORIZATION, "categorization"),
-  BUDGET(SignpostSectionType.BUDGET, "budget");
+  IMPORT(SignpostSectionType.IMPORT, Card.DATA, "import"),
+  CATEGORIZATION(SignpostSectionType.CATEGORIZATION, Card.CATEGORIZATION, "categorization"),
+  BUDGET(SignpostSectionType.BUDGET, Card.BUDGET, "budget");
 
   private SignpostSectionType type;
+  private Card card;
   private String key;
 
-  private SignpostSection(SignpostSectionType type, String key) {
+  private SignpostSection(SignpostSectionType type, Card card, String key) {
     this.type = type;
+    this.card = card;
     this.key = key;
   }
 
@@ -39,6 +42,10 @@ public enum SignpostSection {
 
   public SignpostSectionType getType() {
     return type;
+  }
+
+  public Card getCard() {
+    return card;
   }
 
   public String toString() {

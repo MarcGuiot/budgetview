@@ -3,6 +3,7 @@ package org.designup.picsou.gui.signpost.guides;
 import net.java.balloontip.BalloonTip;
 import net.java.balloontip.TablecellBalloonTip;
 import org.designup.picsou.gui.signpost.Signpost;
+import org.designup.picsou.model.SignpostSectionType;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -41,6 +42,14 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+
+    if (!isCompleted() && changeSet.containsChanges(SignpostStatus.TYPE)) {
+      if (SignpostSectionType.isCurrentTypeAfter(SignpostSectionType.BUDGET, repository)) {
+        dispose();
+        return;
+      }
+    }
+
     if (!isCompleted() && changeSet.containsChanges(Transaction.TYPE)) {
       Set<Key> keySet = changeSet.getUpdated(Transaction.SERIES);
       if (!keySet.isEmpty()) {
