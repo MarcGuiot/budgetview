@@ -171,7 +171,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     categorization
       .selectTransactions("Virement")
-      .selectSavings().createSeries()
+      .selectSavings()
+      .createSeries()
       .setName("Epargne")
       .setFromAccount("Main accounts")
       .validate();

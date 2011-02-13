@@ -77,7 +77,7 @@ public class SeriesAmountEditionPanel {
             clear();
           }
           else {
-            changeSeries(first.getKey());
+            setCurrentSeries(first.getKey());
           }
           updateBudgetFromMonth();
         }
@@ -148,7 +148,6 @@ public class SeriesAmountEditionPanel {
                       SeriesBudget.AMOUNT,
                       new SeriesBudgetSliderAdapter(amountEditor, repository));
 
-
     final JButton editSeriesButton;
     if (seriesEditorAccess != null) {
       editSeriesButton = GlobButtonView.init(Series.TYPE, repository, directory,
@@ -182,19 +181,30 @@ public class SeriesAmountEditionPanel {
     getFocusComponent().requestFocus();
   }
 
-  public void clear() {
-    changeSeries(null);
-    selectionService.clear(SeriesBudget.TYPE);
-    chart.init(null, null);
-  }
-
-  public void changeSeries(Key seriesKey) {
+  public void setCurrentSeries(Key seriesKey) {
     propagationCheckBox.setEnabled(seriesKey != null);
     chart.getChart().setEnabled(seriesKey != null);
     amountEditor.setEnabled(seriesKey != null);
     currentSeries = seriesKey;
-    setAutoSelectFutureMonths(false);
-    propagationCheckBox.setSelected(false);
+
+    boolean noValueDefined =
+      !repository.contains(SeriesBudget.TYPE,
+                          and(linkedTo(currentSeries, SeriesBudget.SERIES),
+                              isTrue(SeriesBudget.ACTIVE),
+                              isNotNull(SeriesBudget.AMOUNT)));
+
+    if (noValueDefined) {
+      selectMonths(repository.getAll(Month.TYPE).getValueSet(Month.ID));
+    }
+
+    setAutoSelectFutureMonths(noValueDefined);
+    propagationCheckBox.setSelected(noValueDefined);
+  }
+
+  public void clear() {
+    setCurrentSeries(null);
+    selectionService.clear(SeriesBudget.TYPE);
+    chart.init(null, null);
   }
 
   private void setAutoSelectFutureMonths(boolean enabled) {
