@@ -40,7 +40,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
     if (lastTransactionMonthId == 0) {
       return;
     }
-    if (changeSet.containsChanges(UserPreferences.KEY, UserPreferences.MONTH_FOR_PLANNED, UserPreferences.PERIOD_COUNT_FOR_PLANNED)) {
+    if (changeSet.containsChanges(UserPreferences.KEY, UserPreferences.MONTH_FOR_PLANNED, UserPreferences.PERIOD_COUNT_FOR_PLANNED, UserPreferences.MULTIPLE_PLANNED)) {
       recomputeAll(repository, userPreference);
       return;
     }

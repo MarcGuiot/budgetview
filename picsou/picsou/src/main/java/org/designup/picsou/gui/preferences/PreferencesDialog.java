@@ -22,7 +22,6 @@ public class PreferencesDialog {
   private GlobRepository repository;
   private JComboBox futureMonth;
   private GlobsPanelBuilder builder;
-  private JCheckBox multiplePlanned;
   private JComboBox periodComboBox;
   private JComboBox monthBackComboBox;
 
@@ -38,18 +37,10 @@ public class PreferencesDialog {
     Utils.endRemove();
     futureMonth = new JComboBox(items);
     builder.add("futureMonth", futureMonth);
-    multiplePlanned = new JCheckBox();
-    builder.add("multiplePlanned", multiplePlanned);
     periodComboBox = new JComboBox(new Integer[]{4, 5, 6, 7});
     builder.add("period", periodComboBox);
     monthBackComboBox = new JComboBox(new Integer[]{1, 2, 3});
     builder.add("monthBack", monthBackComboBox);
-    multiplePlanned.addChangeListener(new ChangeListener() {
-      public void stateChanged(ChangeEvent e) {
-        monthBackComboBox.setEnabled(multiplePlanned.isSelected());
-        periodComboBox.setEnabled(multiplePlanned.isSelected());
-      }
-    });
     dialog = PicsouDialog.create(parent, directory);
     dialog.addPanelWithButtons((JPanel)builder.load(),
                                new AbstractAction(Lang.get("ok")) {
@@ -63,13 +54,10 @@ public class PreferencesDialog {
                                                          UserPreferences.FUTURE_MONTH_COUNT,
                                                          futureMonth);
                                      }
-                                     repository.update(UserPreferences.KEY, UserPreferences.MULTIPLE_PLANNED, multiplePlanned.isSelected());
-                                     if (multiplePlanned.isSelected()){
-                                       repository.update(UserPreferences.KEY,
-                                                         UserPreferences.MONTH_FOR_PLANNED, monthBackComboBox.getSelectedItem());
-                                       repository.update(UserPreferences.KEY,
-                                                         UserPreferences.PERIOD_COUNT_FOR_PLANNED, periodComboBox.getSelectedItem());
-                                     }
+                                     repository.update(UserPreferences.KEY,
+                                                       UserPreferences.MONTH_FOR_PLANNED, monthBackComboBox.getSelectedItem());
+                                     repository.update(UserPreferences.KEY,
+                                                       UserPreferences.PERIOD_COUNT_FOR_PLANNED, periodComboBox.getSelectedItem());
                                    }
                                    finally {
                                      repository.completeChangeSet();
@@ -84,7 +72,6 @@ public class PreferencesDialog {
     Glob preference = repository.get(UserPreferences.KEY);
     futureMonth.setSelectedItem(preference.get(UserPreferences.FUTURE_MONTH_COUNT));
     Boolean isMultiPlanned = preference.get(UserPreferences.MULTIPLE_PLANNED);
-    multiplePlanned.setSelected(isMultiPlanned);
     monthBackComboBox.setEnabled(isMultiPlanned);
     periodComboBox.setEnabled(isMultiPlanned);
     if (isMultiPlanned) {

@@ -7,6 +7,7 @@ import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.Pair;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.*;
 
@@ -20,12 +21,24 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        updateSeriesBudget(repository.get(key), repository);
+        try {
+          repository.startChangeSet();
+          updateSeriesBudget(repository.get(key), repository);
+        }
+        finally {
+          repository.completeChangeSet();
+        }
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         Glob series = repository.get(key);
-        updateSeriesBudget(series, repository);
+        try {
+          repository.startChangeSet();
+          updateSeriesBudget(series, repository);
+        }
+        finally {
+          repository.completeChangeSet();
+        }
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {

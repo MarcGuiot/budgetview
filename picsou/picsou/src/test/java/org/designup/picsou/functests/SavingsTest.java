@@ -1686,17 +1686,22 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkSeriesPresent("From Account n. 111222");
     categorization.selectTransaction("Virement de Epargne")
       .selectSavings()
-      .selectSeries("From Account n. 111222");
+      .selectSeries("From Account n. 111222")
+      .editSeries("From Account n. 111222").alignPlannedAndActual().setPropagationEnabled().validate();
     categorization.selectTransaction("Virement vers Epargne")
       .selectSavings()
-      .selectSeries("To Account n. 111222");
+      .selectSeries("To Account n. 111222")
+      .editSeries("To Account n. 111222").alignPlannedAndActual().setPropagationEnabled().validate();
     categorization.selectTransaction("Virement de courant")
       .selectSavings()
       .checkDoesNotContainSeries("suisse account")
-      .selectSeries("To Account n. 111222");
+      .selectSeries("To Account n. 111222")
+      .editSeries("To Account n. 111222").alignPlannedAndActual().setPropagationEnabled().validate();
     categorization.selectTransaction("Virement vers courant")
       .selectSavings()
-      .selectSeries("From Account n. 111222");
+      .selectSeries("From Account n. 111222")
+      .editSeries("From Account n. 111222").alignPlannedAndActual().setPropagationEnabled().validate();
+
 
     timeline.selectAll();
     transactions
@@ -1734,10 +1739,12 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTransaction("Virement de Epargne")
       .selectSavings()
-      .selectSeries("From Account epargne");
+      .selectSeries("From Account epargne")
+      .editSeries("From Account epargne").alignPlannedAndActual().setPropagationEnabled().validate();
     categorization.selectTransaction("Virement vers Epargne")
       .selectSavings()
-      .selectSeries("To Account epargne");
+      .selectSeries("To Account epargne")
+      .editSeries("To Account epargne").alignPlannedAndActual().setPropagationEnabled().validate();
 
     timeline.selectAll();
     transactions
