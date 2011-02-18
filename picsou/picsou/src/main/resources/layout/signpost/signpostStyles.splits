@@ -16,13 +16,16 @@
     <style id="completedPanel" selector="x"
            ui="standard" border=""/>
 
-    <style selector="#sectionLabel" font="-,bold,16"/>
+    <style selector="#sectionTitle" font="-,bold,16"/>
     <style id="unavailableLabel" selector="x"
-           foreground="signpostView.section.title.unavailable" icon="status_unavailable.png"/>
+           foreground="signpostView.section.title.unavailable"
+           enabled="false" icon="status_unavailable.png" disabledIcon="status_unavailable.png"/>
     <style id="inprogressLabel" selector="x"
-           foreground="signpostView.section.title.inprogress" icon="status_in_progress.png"/>
+           foreground="signpostView.section.title.inprogress"
+           enabled="true" icon="status_in_progress.png"/>
     <style id="completedLabel" selector="x"
-           foreground="signpostView.section.title.completed" icon="status_completed.png"/>
+           foreground="signpostView.section.title.completed"
+           enabled="false" icon="status_completed.png" disabledIcon="status_completed.png"/>
 
     <style selector="#sectionDescription" border="empty(5,0,5,0)"/>
     <style id="unavailableDescription" selector="x" visible="true"

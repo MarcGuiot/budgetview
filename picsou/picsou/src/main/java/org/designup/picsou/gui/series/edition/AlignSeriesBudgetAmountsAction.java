@@ -57,12 +57,14 @@ public class AlignSeriesBudgetAmountsAction extends AbstractAction implements Gl
   public void actionPerformed(ActionEvent e) {
     repository.startChangeSet();
     try {
-      for (Glob seriesBudget : seriesBudgets) {
+      double lastValue = 0.00;
+      for (Glob seriesBudget : seriesBudgets.sort(SeriesBudget.MONTH)) {
         Double newValue = seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT);
         if (newValue == null) {
-          newValue = 0.00;
+          newValue = lastValue;
         }
         repository.update(seriesBudget.getKey(), SeriesBudget.AMOUNT, newValue);
+        lastValue = newValue;
       }
     }
     finally {

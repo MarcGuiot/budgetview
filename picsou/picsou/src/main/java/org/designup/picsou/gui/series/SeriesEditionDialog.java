@@ -426,24 +426,6 @@ public class SeriesEditionDialog {
     singleMonthChooserAction.setEnabled(currentSeries != null);
   }
 
-  public void show(BudgetArea budgetArea, Set<Integer> monthIds, Integer seriesId) {
-    resetSeries();
-    retrieveAssociatedTransactions(seriesId);
-    try {
-      localRepository.startChangeSet();
-      localRepository.rollback();
-      initBudgetAreaSeries(budgetArea, new Ref<Integer>(), new Ref<Integer>());
-    }
-    finally {
-      localRepository.completeChangeSet();
-    }
-    Glob series = null;
-    if (seriesId != null) {
-      series = localRepository.get(Key.create(Series.TYPE, seriesId));
-    }
-    doShow(monthIds, series, false, null);
-  }
-
   private void resetSeries() {
     amountEditionPanel.clear();
   }
@@ -460,14 +442,6 @@ public class SeriesEditionDialog {
       localRepository.completeChangeSet();
     }
     doShow(monthIds, localRepository.get(series.getKey()), false, false);
-  }
-
-  private void retrieveAssociatedTransactions(Integer seriesId) {
-    selectedTransactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES,
-                                                  seriesId).getGlobs();
-    selectedTransactions.removeAll(and(isTrue(Transaction.PLANNED),
-                                       isTrue(Transaction.CREATED_BY_SERIES)),
-                                   repository);
   }
 
   public Key showNewSeries(GlobList transactions, GlobList selectedMonths, BudgetArea budgetArea, FieldValue... forcedValues) {
@@ -503,6 +477,14 @@ public class SeriesEditionDialog {
     this.createdSeries = null;
     doShow(selectedMonths.getValueSet(Month.ID), createdSeries, true, true);
     return this.createdSeries;
+  }
+
+  private void retrieveAssociatedTransactions(Integer seriesId) {
+    selectedTransactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES,
+                                                  seriesId).getGlobs();
+    selectedTransactions.removeAll(and(isTrue(Transaction.PLANNED),
+                                       isTrue(Transaction.CREATED_BY_SERIES)),
+                                   repository);
   }
 
   private Glob createSeries(String label, Integer day, Integer fromAccountId, Integer toAccountId, FieldValue... forcedValues) {
@@ -639,7 +621,7 @@ public class SeriesEditionDialog {
     this.currentMonthIds = new TreeSet<Integer>(monthIds);
     this.lastSelectedSubSeriesId = null;
     amountEditionPanel.selectMonths(monthIds);
-    amountEditionPanel.changeSeries(currentSeries.getKey());
+    amountEditionPanel.setCurrentSeries(currentSeries.getKey());
     selectionService.select(currentSeries);
     updateMonthSelectionCard();
 

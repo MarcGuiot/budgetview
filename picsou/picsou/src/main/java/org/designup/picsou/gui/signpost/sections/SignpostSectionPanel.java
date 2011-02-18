@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.signpost.sections;
 
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.model.SignpostSectionType;
 import org.designup.picsou.model.SignpostStatus;
 import org.globsframework.gui.splits.SplitsNode;
@@ -13,6 +14,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.util.Set;
 
 public abstract class SignpostSectionPanel {
@@ -22,7 +24,7 @@ public abstract class SignpostSectionPanel {
   private Directory directory;
 
   private SplitsNode<JPanel> sectionPanel;
-  private SplitsNode<JLabel> label;
+  private SplitsNode<JButton> titleButton;
   private SplitsNode<JEditorPane> descriptionEditor;
 
   private boolean inProgress = false;
@@ -37,7 +39,11 @@ public abstract class SignpostSectionPanel {
 
   public void registerComponents(RepeatCellBuilder cellBuilder) {
     sectionPanel = cellBuilder.add("sectionPanel", new JPanel());
-    label = cellBuilder.add("sectionLabel", new JLabel(section.getLabel()));
+    titleButton = cellBuilder.add("sectionTitle", new JButton(new AbstractAction(section.getLabel()) {
+      public void actionPerformed(ActionEvent actionEvent) {
+        directory.get(NavigationService.class).gotoCard(section.getCard());
+      }
+    }));
     descriptionEditor = cellBuilder.add("sectionDescription",
                                         GuiUtils.createReadOnlyHtmlComponent(section.getDescription()));
   }
@@ -99,10 +105,10 @@ public abstract class SignpostSectionPanel {
 
   private void updateComponents(String style) {
     sectionPanel.applyStyle(style + "Panel");
-    label.applyStyle(style + "Label");
+    titleButton.applyStyle(style + "Label");
     descriptionEditor.applyStyle(style + "Description");
     GuiUtils.revalidate(sectionPanel.getComponent());
     GuiUtils.revalidate(descriptionEditor.getComponent());
-    GuiUtils.revalidate(label.getComponent());
+    GuiUtils.revalidate(titleButton.getComponent());
   }
 }

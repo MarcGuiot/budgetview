@@ -639,6 +639,12 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     edition.setName("Diet Food")
       .checkChart(new Object[][]{
         {"2008", "June", 0.00, 0.00, true},
+        {"2008", "July", 0.00, 0.00, true},
+        {"2008", "August", 0.00, 0.00, true},
+      })
+      .setPropagationDisabled()
+      .checkChart(new Object[][]{
+        {"2008", "June", 0.00, 0.00, true},
         {"2008", "July", 0.00, 0.00},
         {"2008", "August", 0.00, 0.00},
       });
@@ -876,7 +882,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectSavings()
       .selectAndCreateSavingsSeries("epargne", "Main accounts");
 
-    budgetView.savings.alignAndPropagate("epargne");
+    budgetView.savings.align("epargne");
 
     timeline.selectMonths("2008/06", "2008/07");
     transactions
@@ -1001,8 +1007,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setAmount("0")
       .setTwoMonths()
       .validate();
+
     timeline.selectMonth("2008/06");
     budgetView.savings.alignAndPropagate("Epargne");
+
     timeline.selectAll();
     transactions
       .showPlannedTransactions()
@@ -1188,12 +1196,12 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectAllMonths()
       .checkActualAmount("Actual")
       .alignPlannedAndActual()
-      .checkAmount("")
+      .checkAmount("29.00")
       .validate();
     timeline.selectMonth("2008/07");
     budgetView.recurring.checkSeries("Internet", -29.00, -29.00);
     timeline.selectMonth("2008/08");
-    budgetView.recurring.checkSeries("Internet", 0.00, 0.00);
+    budgetView.recurring.checkSeries("Internet", 0.00, -29.00);
   }
 
   public void testAutomaticAdjustPlannedAndObservedForFirstMonthWithObserved() throws Exception {

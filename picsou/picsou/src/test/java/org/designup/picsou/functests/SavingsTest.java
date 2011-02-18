@@ -172,7 +172,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     categorization
       .selectTransactions("Virement")
-      .selectSavings().createSeries()
+      .selectSavings()
+      .createSeries()
       .setName("Epargne")
       .setFromAccount("Main accounts")
       .setToAccount("External Account")
@@ -1818,6 +1819,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("06/06/2008", "VIREMENT DE EPARGNE", 100.00, "From account epargne", 0.00, 0.00, "Account n. 00001123")
       .add("06/06/2008", "VIREMENT VERS EPARGNE", -100.00, "To account epargne", -100.00, -100.00, "Account n. 00001123")
       .check();
+    fail("Pourquoi 01 et non 08");
   }
 
   public void testImportOnSavingWithExternalSeries() throws Exception {

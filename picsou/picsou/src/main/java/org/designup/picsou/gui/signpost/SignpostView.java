@@ -81,7 +81,7 @@ public class SignpostView extends View {
   }
 
   private void updateCard() {
-    if (SignpostSectionType.isCompleted(repository)) {
+    if (SignpostSectionType.isAllCompleted(repository)) {
       cardHandler.show("summary");
     }
     else {
