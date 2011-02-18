@@ -125,16 +125,6 @@ public class HistoChecker extends AbstractHistoChecker<HistoChecker> {
     return "Error at index: " + index + " - dataset contents:\n" + dataset;
   }
 
-  public HistoChecker checkRange(int firstMonth, int lastMonth) {
-    HistoDataset dataset = getDataset(HistoDataset.class);
-    int actualFirst = dataset.getId(0);
-    int actualLast = dataset.getId(dataset.size() - 1);
-    if ((actualFirst != firstMonth) || (actualLast != lastMonth)) {
-      Assert.fail("expected: [" + firstMonth + "," + lastMonth + "] but was: [" + actualFirst + "," + actualLast + "]");
-    }
-    return this;
-  }
-
   public HistoChecker scroll(int offset) {
     Mouse.wheel(getPanel(), offset);
     return this;
@@ -147,5 +137,9 @@ public class HistoChecker extends AbstractHistoChecker<HistoChecker> {
 
   protected Panel getPanel() {
     return window.getPanel(panelName).getPanel(chartName);
+  }
+
+  protected String getName() {
+    return chartName;
   }
 }

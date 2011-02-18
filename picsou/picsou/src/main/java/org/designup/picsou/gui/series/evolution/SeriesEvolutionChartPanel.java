@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.series.evolution;
 
 import org.designup.picsou.gui.card.NavigationService;
+import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
 import org.designup.picsou.gui.components.charts.stack.StackChartColors;
@@ -9,7 +10,7 @@ import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilder;
-import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilderConfig;
+import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartRange;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.*;
@@ -63,7 +64,8 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
     this.currentWrapperKey = getMainSummaryWrapper();
 
-    histoChartBuilder = new HistoChartBuilder(new HistoChartBuilderConfig(true, true, false, true, 12, 6, false),
+    histoChartBuilder = new HistoChartBuilder(new HistoChartConfig(true, true, false, true),
+                                              new HistoChartRange(12, 6, false, repository),
                                               repository, directory, parentSelectionService);
     histoChartBuilder.addListener(new HistoChartListenerAdapter() {
       public void scroll(int count) {

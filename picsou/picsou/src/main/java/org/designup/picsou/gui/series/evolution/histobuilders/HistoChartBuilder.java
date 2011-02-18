@@ -1,13 +1,12 @@
 package org.designup.picsou.gui.series.evolution.histobuilders;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
+import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.components.charts.histo.HistoChartListener;
 import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyColors;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffColors;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineColors;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
-import org.designup.picsou.gui.components.charts.histo.utils.ScrollGroup;
-import org.designup.picsou.gui.components.charts.histo.utils.Scrollable;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
@@ -24,18 +23,15 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
 
 import static org.designup.picsou.gui.utils.Matchers.transactionsForMainAccounts;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
-public class HistoChartBuilder implements Scrollable {
+public class HistoChartBuilder {
   private HistoChart histoChart;
   private JLabel histoChartLabel;
-  private HistoChartBuilderConfig config;
   private GlobRepository repository;
 
   private HistoDiffColors balanceColors;
@@ -47,14 +43,14 @@ public class HistoChartBuilder implements Scrollable {
   private HistoLineColors accountBalanceColors;
   private HistoDiffColors seriesColors;
 
-  private ScrollGroup scrollGroup;
-  private int scrollMonth;
+  private HistoChartRange range;
 
-  public HistoChartBuilder(HistoChartBuilderConfig config,
+  public HistoChartBuilder(HistoChartConfig config,
+                           final HistoChartRange range,
                            final GlobRepository repository,
                            final Directory directory,
                            final SelectionService parentSelectionService) {
-    this.config = config;
+    this.range = range;
     this.repository = repository;
     this.histoChart = new HistoChart(config, directory);
     this.histoChart.addListener(new HistoChartListenerAdapter() {
@@ -67,26 +63,12 @@ public class HistoChartBuilder implements Scrollable {
       }
 
       public void scroll(int count) {
-        if (scrollGroup != null) {
-          scrollGroup.scroll(count);
-        }
-        else {
-          HistoChartBuilder.this.scroll(count);
-        }
+        range.scroll(count);
       }
     });
     histoChartLabel = new JLabel();
 
     initColors(directory);
-  }
-
-  public void register(ScrollGroup group) {
-    this.scrollGroup = group;
-    group.add(this);
-  }
-
-  public void scroll(int count) {
-    scrollMonth += count;
   }
 
   public void addListener(HistoChartListener listener) {
@@ -174,7 +156,6 @@ public class HistoChartBuilder implements Scrollable {
     HistoDailyDatasetBuilder builder = createDailyDataset("daily");
 
     Double lastValue = null;
-
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
 
       GlobList transactions =
@@ -221,7 +202,7 @@ public class HistoChartBuilder implements Scrollable {
 
   public void showMainBalanceHisto(int selectedMonthId, boolean resetPosition) {
     if (resetPosition) {
-      scrollMonth = 0;
+      range.reset();
     }
     HistoDiffDatasetBuilder builder = createDiffDataset("mainBalance");
 
@@ -245,7 +226,7 @@ public class HistoChartBuilder implements Scrollable {
 
   public void showBudgetAreaHisto(BudgetArea budgetArea, int selectedMonthId, boolean resetPosition) {
     if (resetPosition) {
-      scrollMonth = 0;
+      range.reset();
     }
 
     HistoDiffDatasetBuilder builder = createDiffDataset("budgetArea");
@@ -276,7 +257,7 @@ public class HistoChartBuilder implements Scrollable {
 
   public void showUncategorizedHisto(int selectedMonthId, boolean resetPosition) {
     if (resetPosition) {
-      scrollMonth = 0;
+      range.reset();
     }
     HistoLineDatasetBuilder builder = createLineDataset("uncategorized");
 
@@ -291,7 +272,7 @@ public class HistoChartBuilder implements Scrollable {
 
   public void showSeriesHisto(Integer seriesId, int selectedMonthId, boolean resetPosition) {
     if (resetPosition) {
-      scrollMonth = 0;
+      range.reset();
     }
     HistoDiffDatasetBuilder builder = createDiffDataset("series");
 
@@ -321,7 +302,7 @@ public class HistoChartBuilder implements Scrollable {
 
   public void showMainAccountsHisto(int selectedMonthId, boolean resetPosition) {
     if (resetPosition) {
-      scrollMonth = 0;
+      range.reset();
     }
 
     HistoLineDatasetBuilder builder = createLineDataset("mainAccounts");
@@ -337,7 +318,7 @@ public class HistoChartBuilder implements Scrollable {
 
   public void showSavingsAccountsHisto(int selectedMonthId, boolean resetPosition) {
     if (resetPosition) {
-      scrollMonth = 0;
+      range.reset();
     }
     HistoLineDatasetBuilder dataset = createLineDataset("savingsAccounts");
 
@@ -352,7 +333,7 @@ public class HistoChartBuilder implements Scrollable {
 
   public void showSavingsBalanceHisto(int selectedMonthId, boolean resetPosition) {
     if (resetPosition) {
-      scrollMonth = 0;
+      range.reset();
     }
     HistoLineDatasetBuilder dataset = createLineDataset("savingsBalance");
 
@@ -367,7 +348,7 @@ public class HistoChartBuilder implements Scrollable {
 
   public void showSavingsAccountHisto(int selectedMonthId, int accountId, boolean resetPosition) {
     if (resetPosition) {
-      scrollMonth = 0;
+      range.reset();
     }
     HistoLineDatasetBuilder dataset = createLineDataset("savingsAccounts");
 
@@ -382,7 +363,7 @@ public class HistoChartBuilder implements Scrollable {
 
   public void showSeriesBudget(Integer seriesId, int selectedMonthId, Set<Integer> selectedMonths, boolean resetPosition) {
     if (resetPosition) {
-      scrollMonth = 0;
+      range.reset();
     }
 
     Glob series = repository.find(Key.create(Series.TYPE, seriesId));
@@ -443,52 +424,6 @@ public class HistoChartBuilder implements Scrollable {
   }
 
   private List<Integer> getMonthIdsToShow(Integer selectedMonthId) {
-    SortedSet<Integer> monthIds = repository.getAll(Month.TYPE).getSortedSet(Month.ID);
-    int firstMonth = monthIds.first();
-    int lastMonth = monthIds.last();
-
-    Integer currentMonth = config.centerOnSelection ? selectedMonthId : CurrentMonth.getCurrentMonth(repository);
-    int offsetCenter = Month.offset(currentMonth, scrollMonth);
-    int rangeStart = Month.previous(offsetCenter, config.monthsBack);
-    int rangeEnd = Month.next(offsetCenter, config.monthsLater);
-
-    if (selectedMonthId < rangeStart) {
-      rangeStart = selectedMonthId;
-      offsetCenter = Month.next(rangeStart, config.monthsBack);
-      scrollMonth = Month.distance(currentMonth, offsetCenter);
-      rangeEnd = Math.min(lastMonth, Month.next(offsetCenter, config.monthsLater));
-    }
-    if (selectedMonthId > rangeEnd) {
-      rangeEnd = selectedMonthId;
-      offsetCenter = Month.previous(rangeEnd, config.monthsLater);
-      scrollMonth = Month.distance(currentMonth, offsetCenter);
-      rangeStart = Math.max(firstMonth, Month.previous(offsetCenter, config.monthsBack));
-    }
-
-    if (scrollMonth < 0) {
-      while ((scrollMonth != 0) && (rangeStart < firstMonth)) {
-        scrollMonth++;
-        offsetCenter = Month.offset(currentMonth, scrollMonth);
-        rangeStart = Month.previous(offsetCenter, config.monthsBack);
-      }
-      rangeEnd = Math.min(lastMonth, Month.next(offsetCenter, config.monthsLater));
-    }
-    else if (scrollMonth > 0) {
-      while ((scrollMonth != 0) && (rangeEnd > lastMonth)) {
-        scrollMonth--;
-        offsetCenter = Month.offset(currentMonth, scrollMonth);
-        rangeEnd = Month.next(offsetCenter, config.monthsLater);
-      }
-      rangeStart = Math.max(firstMonth, Month.previous(offsetCenter, config.monthsBack));
-    }
-
-    List<Integer> result = new ArrayList<Integer>();
-    for (Integer monthId : Month.range(rangeStart, rangeEnd)) {
-      Key monthKey = Key.create(Month.TYPE, monthId);
-      if (repository.contains(monthKey)) {
-        result.add(monthId);
-      }
-    }
-    return result;
+    return range.getMonthIds(selectedMonthId);
   }
 }

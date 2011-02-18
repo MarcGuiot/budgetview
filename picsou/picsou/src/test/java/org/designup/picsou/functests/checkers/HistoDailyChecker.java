@@ -11,8 +11,10 @@ import org.uispec4j.Panel;
 public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
 
   private Panel chartPanel;
+  private String chartName;
 
   public HistoDailyChecker(Panel rootPanel, String chartName) {
+    this.chartName = chartName;
     this.chartPanel = rootPanel.getPanel(chartName);
   }
 
@@ -52,5 +54,9 @@ public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
 
   protected Panel getPanel() {
     return chartPanel;
+  }
+
+  protected String getName() {
+    return chartName;
   }
 }

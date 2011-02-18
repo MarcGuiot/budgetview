@@ -1,16 +1,15 @@
 package org.designup.picsou.gui.experiment;
 
+import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffBarLinePainter;
+import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffColors;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffDataset;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
-import org.globsframework.gui.splits.layout.SingleComponentPanels;
-import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.directory.DefaultDirectory;
-import org.designup.picsou.gui.components.charts.histo.HistoChart;
-import org.designup.picsou.gui.components.charts.histo.HistoChartListener;
-import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffColors;
 import org.designup.picsou.gui.utils.ApplicationColors;
+import org.globsframework.gui.splits.layout.SingleComponentPanels;
+import org.globsframework.utils.directory.DefaultDirectory;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,7 +54,6 @@ public class HistoChartDemo {
     });
 
     chart.update(new HistoDiffBarLinePainter(dataset, colors, false));
-
 
     JFrame frame = new JFrame();
     frame.setContentPane(SingleComponentPanels.create(chart, new Insets(20, 20, 20, 20)));

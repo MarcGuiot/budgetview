@@ -37,10 +37,12 @@ public abstract class AbstractHistoChecker<T extends AbstractHistoChecker> exten
     int actualFirst = dataset.getId(0);
     int actualLast = dataset.getId(dataset.size() - 1);
     if ((actualFirst != firstMonth) || (actualLast != lastMonth)) {
-      Assert.fail("expected: [" + firstMonth + "," + lastMonth + "] but was: [" + actualFirst + "," + actualLast + "]");
+      Assert.fail("expected: [" + firstMonth + "," + lastMonth + "] but was: [" + actualFirst + "," + actualLast + "] in " + getName());
     }
     return (T)this;
   }
+
+  protected abstract String getName();
 
   public T scroll(int offset) {
     Mouse.wheel(getPanel(), offset);

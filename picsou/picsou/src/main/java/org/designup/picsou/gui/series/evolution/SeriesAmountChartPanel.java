@@ -1,9 +1,10 @@
 package org.designup.picsou.gui.series.evolution;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
+import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilder;
-import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilderConfig;
+import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartRange;
 import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartUpdater;
 import org.designup.picsou.model.SeriesBudget;
 import org.globsframework.gui.SelectionService;
@@ -19,8 +20,10 @@ public class SeriesAmountChartPanel {
 
   public SeriesAmountChartPanel(GlobRepository repository, Directory directory) {
 
-    HistoChartBuilderConfig config = new HistoChartBuilderConfig(true, true, false, true, 4, 12, true);
-    HistoChartBuilder histoChartBuilder = new HistoChartBuilder(config, repository, directory, directory.get(SelectionService.class));
+    HistoChartBuilder histoChartBuilder =
+      new HistoChartBuilder(new HistoChartConfig(true, true, false, true),
+                            new HistoChartRange(4, 12, true, repository),
+                            repository, directory, directory.get(SelectionService.class));
     histoChartBuilder.addListener(new HistoChartListenerAdapter() {
       public void scroll(int count) {
         updater.update(false);
